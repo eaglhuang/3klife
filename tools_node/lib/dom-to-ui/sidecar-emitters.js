@@ -107,14 +107,37 @@ function buildSyncReport(screenId, mergeMode, before, after, syncDelta) {
       manualEdits: countKind(syncDelta, 'manual-edit'),
       lockedPreserved: countKind(syncDelta, 'locked-preserved'),
       preservedExisting: countKind(syncDelta, 'preserved-existing'),
+      existingRuntimeAssetsPreserved: countKind(syncDelta, 'existing-runtime-asset-preserved'),
+      explicitRuntimeAssetReplacements: countKind(syncDelta, 'explicit-runtime-asset-replace-approved'),
       added: countKind(syncDelta, 'added'),
       removedFromHtml: countKind(syncDelta, 'removed-from-html'),
       overwrittenByHtml: countKind(syncDelta, 'overwritten-by-html'),
     },
     before: snapshotMeta(before),
     after: snapshotMeta(after),
+    assetReplacementAudit: buildAssetReplacementAudit(syncDelta),
     fieldChanges: (syncDelta && syncDelta.fieldChanges) || [],
     conflicts: (syncDelta && syncDelta.conflicts) || [],
+  };
+}
+
+function buildAssetReplacementAudit(syncDelta) {
+  const changes = (syncDelta && syncDelta.fieldChanges) || [];
+  const preservedRuntimeAssets = changes
+    .filter(c => c && c.kind === 'existing-runtime-asset-preserved')
+    .map(c => ({ path: c.path, action: 'preserve-existing-runtime-asset', detail: c.detail || null }));
+  const explicitReplaceApprovals = changes
+    .filter(c => c && c.kind === 'explicit-runtime-asset-replace-approved')
+    .map(c => ({ path: c.path, action: 'replace-existing-runtime-asset', detail: c.detail || null, approval: c.approval || null }));
+  return {
+    summary: {
+      preservedRuntimeAssetCount: preservedRuntimeAssets.length,
+      explicitReplaceApprovalCount: explicitReplaceApprovals.length,
+      reviewItemCount: preservedRuntimeAssets.length + explicitReplaceApprovals.length,
+    },
+    preservedRuntimeAssets,
+    explicitReplaceApprovals,
+    reviewItems: preservedRuntimeAssets.concat(explicitReplaceApprovals),
   };
 }
 

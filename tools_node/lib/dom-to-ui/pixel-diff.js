@@ -34,6 +34,9 @@ function pixelDiff(leftPath, rightPath, opts) {
   const H = Math.min(left.height, right.height);
 
   const heatmap = new PNG({ width: W, height: H });
+  const bucketSize = opts.diffBucketSize != null ? Math.max(1, opts.diffBucketSize) : 64;
+  const maxDiffBuckets = opts.maxDiffBuckets != null ? Math.max(0, opts.maxDiffBuckets) : 20;
+  const diffBuckets = new Map();
   let total = 0, matched = 0, waiverPx = 0;
 
   function inWaiver(x, y) {
@@ -70,6 +73,15 @@ function pixelDiff(leftPath, rightPath, opts) {
         // green
         heatmap.data[hi] = 0; heatmap.data[hi + 1] = 200; heatmap.data[hi + 2] = 0; heatmap.data[hi + 3] = 80;
       } else {
+        const bx = Math.floor(x / bucketSize) * bucketSize;
+        const by = Math.floor(y / bucketSize) * bucketSize;
+        const key = `${bx},${by}`;
+        const bucket = diffBuckets.get(key) || {
+          rect: { x: bx, y: by, w: Math.min(bucketSize, W - bx), h: Math.min(bucketSize, H - by) },
+          mismatchPixels: 0,
+        };
+        bucket.mismatchPixels += 1;
+        diffBuckets.set(key, bucket);
         // red
         heatmap.data[hi] = 230; heatmap.data[hi + 1] = 30; heatmap.data[hi + 2] = 30; heatmap.data[hi + 3] = 200;
       }
@@ -80,6 +92,13 @@ function pixelDiff(leftPath, rightPath, opts) {
   const adjustedTotal = total + waiverPx;
   const adjustedCoverage = adjustedTotal > 0 ? (matched + waiverPx) / adjustedTotal : 1;
 
+  const unwaivedDiffTopList = [...diffBuckets.values()]
+    .sort((a, b) => b.mismatchPixels - a.mismatchPixels)
+    .slice(0, maxDiffBuckets)
+    .map((bucket, index) => Object.assign({ rank: index + 1 }, bucket, {
+      mismatchRatio: bucket.rect.w * bucket.rect.h > 0 ? bucket.mismatchPixels / (bucket.rect.w * bucket.rect.h) : 0,
+    }));
+
   return {
     width: W, height: H,
     totalPixels: total,
@@ -87,6 +106,7 @@ function pixelDiff(leftPath, rightPath, opts) {
     waiverPixels: waiverPx,
     coveragePercent,
     adjustedCoverage,
+    unwaivedDiffTopList,
     heatmap,
   };
 }

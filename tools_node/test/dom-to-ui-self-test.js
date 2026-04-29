@@ -17,8 +17,11 @@ const { spawnSync } = require('child_process');
 const { PNG } = require('pngjs');
 const { buildDraftFromHtml } = require('../lib/dom-to-ui/draft-builder');
 const { smartMerge } = require('../lib/dom-to-ui/smart-merge');
+const { buildSyncReport } = require('../lib/dom-to-ui/sidecar-emitters');
 const { snapshotToSlots } = require('../lib/dom-to-ui/snapshot-to-slots');
 const { resolveSourcePackage, writeHtmlWithSourceCss } = require('../lib/html-to-ucuf/source-package');
+const { validateArtAuthorityWaivers } = require('../lib/dom-to-ui/art-authority-waivers');
+const { buildReadinessReport } = require('../lib/dom-to-ui/readiness-gate');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const FIXTURE = path.join(REPO_ROOT, 'tests', 'fixtures', 'dom-to-ui', 'gacha-banner.html');
@@ -31,6 +34,7 @@ const LOGIC_GUARD_CLI = path.join(REPO_ROOT, 'tools_node', 'dom-to-ui-logic-guar
 const SCAFFOLD_CLI = path.join(REPO_ROOT, 'tools_node', 'scaffold-ui-component.js');
 const HTML_COCOS_COMPARE_CLI = path.join(REPO_ROOT, 'tools_node', 'compare-html-to-cocos-editor.js');
 const HTML_TO_UCUF_WORKFLOW_CLI = path.join(REPO_ROOT, 'tools_node', 'run-html-to-ucuf-workflow.js');
+const TEST_RUNTIME_BUTTON_ASSET = 'sprites/ui_families/general_detail/tab_active_button';
 
 function fail(msg) {
   console.error(`[FAIL] ${msg}`);
@@ -258,9 +262,22 @@ function main() {
     if (!replacedAsset || replacedAsset.kind !== 'color-rect' || replacedAsset.color !== 'backgroundDeep') {
       fail(`explicit assetPolicy=replace-existing should allow replacing existing asset: ${JSON.stringify(replacedAsset)}`);
     }
+    if (!assetReplace.fieldChanges.some(change => change.kind === 'explicit-runtime-asset-replace-approved')) {
+      fail('explicit runtime asset replacement must be recorded in sync fieldChanges');
+    }
+    const assetAuditReport = buildSyncReport('asset-audit-test', 'html-authoritative', { type: 'container', name: 'Root' }, { type: 'container', name: 'Root' }, {
+      fieldChanges: assetPreserve.fieldChanges.concat(assetReplace.fieldChanges),
+      conflicts: [],
+    });
+    if (!assetAuditReport.assetReplacementAudit || assetAuditReport.assetReplacementAudit.summary.preservedRuntimeAssetCount < 1) {
+      fail('sync-report assetReplacementAudit must list preserved runtime assets');
+    }
+    if (assetAuditReport.assetReplacementAudit.summary.explicitReplaceApprovalCount < 1) {
+      fail('sync-report assetReplacementAudit must list explicit replace approvals');
+    }
     ok('--sync-existing html-authoritative preserves existing runtime sprite assets unless replacement is explicit');
 
-    const tabButtonAssetPath = 'sprites/ui_families/general_detail/tab_active_button';
+    const tabButtonAssetPath = TEST_RUNTIME_BUTTON_ASSET;
     const tabButtonSkinPreserve = smartMerge(
       { type: 'container', name: 'Root' },
       { type: 'container', name: 'Root' },
@@ -1377,6 +1394,8 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
   {
     const { buildBakeManifest } =
       require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'bake-manifest.js'));
+    const { buildCssSkinKindContractReport } =
+      require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-skin-kind-contract.js'));
 
     const snapshots = [
       // (a) assetize: large 3-layer background mix -> review entry, not auto-bake.
@@ -1472,14 +1491,40 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
       fail('R-27 bakerHint must document explicit fragment opt-in');
     }
 
-    ok('R-25/R-27 bake-manifest builder: deterministic review list emitted from snapshots; auto-bake is art-gated to explicit small fragments; large regions and clip geometry are skipped');
+    const contract = buildCssSkinKindContractReport([
+      { property: 'background', value: 'linear-gradient(180deg,#000,#fff)', expectedCapability: 'supported', expectedSkinKind: 'gradient-rect' },
+      { property: 'background', value: 'radial-gradient(red,blue)', expectedCapability: 'assetize', expectedSkinKind: 'background-set' },
+      { property: 'background-image', value: 'url("panel.png")', expectedCapability: 'supported', expectedSkinKind: 'sprite-frame' },
+      { property: 'box-shadow', value: '0 6px 20px #000', expectedCapability: 'supported', expectedSkinKind: 'shadow-set' },
+      { property: 'box-shadow', value: 'inset 0 0 16px #fff', expectedCapability: 'assetize', expectedSkinKind: 'shadow-set' },
+      { property: 'filter', value: 'brightness(1.15)', expectedCapability: 'assetize', expectedSkinKind: 'shadow-set' },
+      { property: 'clip-path', value: 'polygon(0 0, 100% 0, 100% 86%, 91% 100%, 0 100%)', expectedCapability: 'assetize', expectedSkinKind: 'mask-set' },
+      { property: 'clip-path', value: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', expectedCapability: 'supported', expectedSkinKind: 'mask-and-clip' },
+      { property: 'mix-blend-mode', value: 'screen', expectedCapability: 'supported', expectedSkinKind: 'opacity-and-blend' },
+    ]);
+    if (!contract.ok) fail(`R-34 CSS capability / skin kind contract failed: ${contract.errors.join('; ')}`);
+
+    ok('R-25/R-27/R-34 bake-manifest builder: deterministic review list emitted from snapshots; auto-bake is art-gated; CSS capability and skin-kind mapping stay aligned');
   }
 
   const editorBlue = path.join(tmp, 'v2-editor-blue.png');
   const editorRed = path.join(tmp, 'v2-editor-red.png');
+  const editorSmallDiff = path.join(tmp, 'v2-editor-small-diff.png');
   writeSolidPng(editorBlue, 64, 64, [0x33, 0x66, 0x99, 0xff]);
   writeSolidPng(editorRed, 64, 64, [0x99, 0x22, 0x22, 0xff]);
+  writeSolidPng(editorSmallDiff, 64, 64, [0x33, 0x66, 0x99, 0xff]);
+  paintPngRect(editorSmallDiff, { x: 0, y: 0, w: 8, h: 8 }, [0x99, 0x22, 0x22, 0xff]);
   const compareOut = path.join(tmp, 'html-cocos-compare');
+  fs.writeFileSync(path.join(sourceDir, 'v2-source-package.final-capture-protocol.json'), JSON.stringify({
+    schemaVersion: '1.0.0',
+    screenId: 'v2-source-package',
+    viewport: { width: 64, height: 64, dpr: 1 },
+    safeArea: { x: 0, y: 0, width: 64, height: 64 },
+    settleMs: 0,
+    threshold: 0.99,
+    tolerance: 12,
+    artAuthorityWaivers: null,
+  }, null, 2), 'utf8');
   const evolutionLog = path.join(tmp, 'html_skill_rule-evolution2.md');
   fs.writeFileSync(evolutionLog, '# Evolution v2 Test\n', 'utf8');
   p = spawnSync(process.execPath, [HTML_COCOS_COMPARE_CLI,
@@ -1488,13 +1533,15 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     '--screen-id', 'v2-source-package',
     '--editor-screenshot', editorBlue,
     '--output', compareOut,
-    '--viewport', '64x64',
     '--threshold', '0.99',
     '--evolution-log', evolutionLog,
   ], { encoding: 'utf8' });
   if (p.status !== 0) fail(`html-cocos compare pass exit=${p.status}\nstdout=${p.stdout}\nstderr=${p.stderr}`);
   const verdict = JSON.parse(fs.readFileSync(path.join(compareOut, 'v2-source-package.html-cocos-verdict.json'), 'utf8'));
   if (verdict.runtimeVsSource.verdict !== 'pass' || verdict.runtimeVsSource.score < 0.99) fail(`html-cocos pass verdict invalid: ${JSON.stringify(verdict.runtimeVsSource)}`);
+  if (!verdict.captureProtocol || verdict.captureProtocol.viewport.width !== 64 || verdict.captureProtocol.settleMs !== 0) {
+    fail(`R-33 capture protocol not applied: ${JSON.stringify(verdict.captureProtocol)}`);
+  }
 
   const compareOutFail = path.join(tmp, 'html-cocos-compare-fail');
   p = spawnSync(process.execPath, [HTML_COCOS_COMPARE_CLI,
@@ -1509,7 +1556,66 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
   ], { encoding: 'utf8' });
   if (p.status !== 12) fail(`html-cocos compare fail should exit 12, got ${p.status}\nstdout=${p.stdout}\nstderr=${p.stderr}`);
   if (!/html-cocos-runtime-gap/.test(fs.readFileSync(evolutionLog, 'utf8'))) fail('failed html-cocos compare did not append evolution2 candidate');
-  ok('HTML source vs Cocos Editor screenshot gate passes, fails, and emits evolution2 candidate');
+
+  const artWaiversPath = path.join(tmp, 'v2-source-package-art.art-authority-waivers.json');
+  const validArtWaiver = {
+    schemaVersion: '1.0.0',
+    screenId: 'v2-source-package-art',
+    sourcePackageId: 'self-test-source-package',
+    coordinateSpace: 'normalized-viewport',
+    viewport: { width: 64, height: 64, dpr: 1 },
+    policy: {
+      maxWaiverViewportRatio: 0.08,
+      maxTotalWaiverViewportRatio: 0.08,
+      allowedScopes: ['chrome'],
+      allowedAssetKinds: ['button-skin'],
+    },
+    waivers: [{
+      id: 'approved-runtime-art-square',
+      zoneId: 'approved-runtime-art-square',
+      rect: { x: 0, y: 0, width: 8, height: 8, unit: 'px' },
+      scope: 'chrome',
+      assetRefs: [{ kind: 'button-skin', path: TEST_RUNTIME_BUTTON_ASSET }],
+      authority: { approvedBy: 'art-director-self-test', approvedAt: '2026-04-29', source: 'self-test', decisionId: 'R-30A-self-test' },
+      reason: 'fixture exercises approved runtime art delta without changing raw score',
+      expectation: { sourceHtmlExpectation: 'solid source color remains raw authority', runtimeExpectation: 'small approved runtime chrome differs intentionally' },
+      scoreImpact: { mayAffectScore: true, channel: 'visual' },
+    }],
+  };
+  const validation = validateArtAuthorityWaivers(validArtWaiver, { repoRoot: REPO_ROOT, screenId: 'v2-source-package-art', targetWidth: 64, targetHeight: 64 });
+  if (!validation.ok) fail(`valid art-authority waiver rejected: ${validation.errors.join('; ')}`);
+  const invalidValidation = validateArtAuthorityWaivers(Object.assign({}, validArtWaiver, {
+    waivers: [Object.assign({}, validArtWaiver.waivers[0], { id: 'bad-text-waiver', coversText: true })],
+  }), { repoRoot: REPO_ROOT, screenId: 'v2-source-package-art', targetWidth: 64, targetHeight: 64 });
+  if (invalidValidation.ok) fail('art-authority validator must reject text/data/interaction/mount coverage flags');
+  fs.writeFileSync(artWaiversPath, JSON.stringify(validArtWaiver, null, 2), 'utf8');
+  const compareOutArt = path.join(tmp, 'html-cocos-compare-art');
+  p = spawnSync(process.execPath, [HTML_COCOS_COMPARE_CLI,
+    '--source-dir', sourceDir,
+    '--main-html', 'index.html',
+    '--screen-id', 'v2-source-package-art',
+    '--editor-screenshot', editorSmallDiff,
+    '--output', compareOutArt,
+    '--viewport', '64x64',
+    '--threshold', '0.99',
+    '--art-authority-waivers', artWaiversPath,
+    '--evolution-log', evolutionLog,
+  ], { encoding: 'utf8' });
+  if (p.status !== 0) fail(`html-cocos compare approved art delta exit=${p.status}\nstdout=${p.stdout}\nstderr=${p.stderr}`);
+  const artVerdict = JSON.parse(fs.readFileSync(path.join(compareOutArt, 'v2-source-package-art.html-cocos-verdict.json'), 'utf8'));
+  if (!(artVerdict.runtimeVsSource.score < 0.99)) fail(`art-authority test must preserve raw failing score: ${JSON.stringify(artVerdict.runtimeVsSource)}`);
+  if (artVerdict.runtimeVsSource.verdict !== 'pass-with-approved-art-delta' || artVerdict.runtimeVsSource.adjustedScore < 0.99) {
+    fail(`approved art delta verdict invalid: ${JSON.stringify(artVerdict.runtimeVsSource)}`);
+  }
+  if (!artVerdict.adjustedPixelDiff.unwaivedDiffTopList || artVerdict.adjustedPixelDiff.unwaivedDiffTopList.length !== 0) {
+    fail('approved art delta should remove waived bucket from unwaived diff top list');
+  }
+  const zoneOwnership = JSON.parse(fs.readFileSync(path.join(compareOutArt, 'v2-source-package-art.zone-ownership.json'), 'utf8'));
+  if (!zoneOwnership.summary || zoneOwnership.summary.byTaxonomy['art-authority'] !== 1) {
+    fail(`R-31 zone ownership should classify approved art waiver: ${JSON.stringify(zoneOwnership.summary)}`);
+  }
+  if (!artVerdict.zoneOwnership || !artVerdict.zoneOwnership.report) fail('R-31 verdict must link zone ownership report');
+  ok('HTML source vs Cocos Editor screenshot gate passes, fails, emits evolution2 candidate, applies capture protocol, classifies zone ownership, and supports approved art delta');
 
   const workflowOut = path.join(tmp, 'v2-workflow');
   p = spawnSync(process.execPath, [HTML_TO_UCUF_WORKFLOW_CLI,
@@ -1774,7 +1880,71 @@ function runFidelitySteps() {
     const hasAccepted = Object.values(acceptedTokens).some(bucket => bucket && bucket.richAccent === '#6d5dff');
     if (!hasAccepted) fail('M18 accepted token not written to registry');
     ok('M18 token suggestion acceptance writes token registry and evolution entry');
+
+    runReadinessGateStep(tmp);
   });
+}
+
+function runReadinessGateStep(tmp) {
+  const layoutPath = path.join(tmp, 'ready.layout.json');
+  const skinPath = path.join(tmp, 'ready.skin.json');
+  const capturePath = path.join(tmp, 'ready.final-capture-protocol.json');
+  const zonePath = path.join(tmp, 'ready.zone-ownership.json');
+  const tabPath = path.join(tmp, 'ready.tab-routing.json');
+  const preloadPath = path.join(tmp, 'ready.preload.json');
+  const performancePath = path.join(tmp, 'ready.performance.json');
+  const bakePath = path.join(tmp, 'ready.layout.bake-manifest.json');
+  const verdictPath = path.join(tmp, 'ready.html-cocos-verdict.json');
+  fs.writeFileSync(layoutPath, JSON.stringify({
+    type: 'container',
+    name: 'ReadyRoot',
+    children: [{ type: 'container', name: 'ReadyTabMount', children: [{ type: 'label', name: 'ReadyValue', text: '98', bindPath: 'general.stats.force' }] }],
+  }, null, 2), 'utf8');
+  fs.writeFileSync(skinPath, JSON.stringify({ slots: {} }, null, 2), 'utf8');
+  fs.writeFileSync(capturePath, JSON.stringify({
+    schemaVersion: '1.0.0',
+    screenId: 'ready',
+    viewport: { width: 64, height: 64, dpr: 1 },
+    safeArea: { x: 0, y: 0, width: 64, height: 64 },
+    settleMs: 100,
+    threshold: 0.95,
+    tolerance: 12,
+  }, null, 2), 'utf8');
+  fs.writeFileSync(zonePath, JSON.stringify({ screenId: 'ready', zones: [], summary: { byTaxonomy: {} } }, null, 2), 'utf8');
+  fs.writeFileSync(tabPath, JSON.stringify({ screenId: 'ready', tabs: [{ id: 'Overview', mount: 'ReadyTabMount' }] }, null, 2), 'utf8');
+  fs.writeFileSync(preloadPath, JSON.stringify({ firstScreen: {}, deferred: { lazySlots: [] } }, null, 2), 'utf8');
+  fs.writeFileSync(performancePath, JSON.stringify({ rendering: { nodeCount: 3, maxDepth: 3 }, verdict: { blockers: [] } }, null, 2), 'utf8');
+  fs.writeFileSync(bakePath, JSON.stringify({ entries: [], summary: { byBakeAction: {} } }, null, 2), 'utf8');
+  fs.writeFileSync(verdictPath, JSON.stringify({ runtimeVsSource: { score: 0.96, adjustedScore: 0.96, verdict: 'pass' } }, null, 2), 'utf8');
+  const passReport = buildReadinessReport({ repoRoot: tmp, screenId: 'ready', paths: {
+    layout: layoutPath,
+    skin: skinPath,
+    captureProtocol: capturePath,
+    zoneOwnership: zonePath,
+    tabRouting: tabPath,
+    preload: preloadPath,
+    performance: performancePath,
+    bakeManifest: bakePath,
+    finalVerdict: verdictPath,
+  } });
+  if (passReport.gates.tabMounts.status !== 'pass') fail('readiness gate should accept real tab mount nodes');
+  if (passReport.gates.textBinding.missingContractCount !== 0) fail('readiness gate should honor bound dynamic text');
+
+  fs.writeFileSync(tabPath, JSON.stringify({ screenId: 'ready', tabs: [{ id: 'Overview', mount: 'SyntheticMissingMount' }] }, null, 2), 'utf8');
+  const failReport = buildReadinessReport({ repoRoot: tmp, screenId: 'ready', paths: {
+    layout: layoutPath,
+    skin: skinPath,
+    captureProtocol: capturePath,
+    zoneOwnership: zonePath,
+    tabRouting: tabPath,
+    preload: preloadPath,
+    performance: performancePath,
+    bakeManifest: bakePath,
+    finalVerdict: verdictPath,
+  } });
+  if (failReport.gates.tabMounts.status !== 'blocker') fail('readiness gate must reject synthetic tab mount names');
+  if (failReport.summary.blockerUnits < 1) fail('readiness gate blocker units missing for unresolved tab mount');
+  ok('R-35 readiness gate quantifies final gate, tab mounts, text binding, and sidecar freshness');
 }
 
 function runAccuracyStep() {
@@ -1846,6 +2016,20 @@ function writeSolidPng(filePath, width, height, rgba) {
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       const idx = (y * width + x) * 4;
+      png.data[idx] = rgba[0];
+      png.data[idx + 1] = rgba[1];
+      png.data[idx + 2] = rgba[2];
+      png.data[idx + 3] = rgba[3];
+    }
+  }
+  fs.writeFileSync(filePath, PNG.sync.write(png));
+}
+
+function paintPngRect(filePath, rect, rgba) {
+  const png = PNG.sync.read(fs.readFileSync(filePath));
+  for (let y = rect.y; y < rect.y + rect.h; y += 1) {
+    for (let x = rect.x; x < rect.x + rect.w; x += 1) {
+      const idx = (y * png.width + x) * 4;
       png.data[idx] = rgba[0];
       png.data[idx + 1] = rgba[1];
       png.data[idx + 2] = rgba[2];

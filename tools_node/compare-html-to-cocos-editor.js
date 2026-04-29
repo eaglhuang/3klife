@@ -11,6 +11,20 @@ const { resolveSourcePackage, writeHtmlWithSourceCss } = require('./lib/html-to-
 const { pixelDiff, writeHeatmap } = require('./lib/dom-to-ui/pixel-diff');
 const { buildCssCapabilityReport } = require('./lib/dom-to-ui/css-capability-matrix');
 const { appendRuntimeVisualCandidate } = require('./lib/dom-to-ui/rule-evolution2');
+const { buildZoneOwnershipReport } = require('./lib/dom-to-ui/zone-ownership');
+const {
+  findFinalCaptureProtocolPath,
+  readFinalCaptureProtocol,
+  normalizeFinalCaptureProtocol,
+  applyFinalCaptureProtocol,
+} = require('./lib/dom-to-ui/final-capture-protocol');
+const {
+  readArtAuthorityWaivers,
+  findArtAuthorityWaiverPath,
+  validateArtAuthorityWaivers,
+  artAuthorityRectsForPixelDiff,
+  buildArtAuthorityScoreReport,
+} = require('./lib/dom-to-ui/art-authority-waivers');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -22,14 +36,20 @@ function parseArgs(argv) {
     editorScreenshot: null,
     output: null,
     browser: null,
-    viewport: '1920x1080',
-    threshold: 0.95,
-    tolerance: 12,
+    viewport: null,
+    threshold: null,
+    tolerance: null,
     editorCrop: null,
     sourceCrop: null,
+    captureProtocol: null,
+    noCaptureProtocol: false,
+    settleMs: null,
+    artAuthorityWaivers: null,
+    noArtAuthorityWaivers: false,
     evolutionLog: null,
     noEvolution: false,
     help: false,
+    provided: {},
   };
   for (let i = 2; i < argv.length; i += 1) {
     const token = argv[i];
@@ -41,11 +61,16 @@ function parseArgs(argv) {
       case '--editor-screenshot': opts.editorScreenshot = next(); break;
       case '--output': opts.output = next(); break;
       case '--browser': opts.browser = next(); break;
-      case '--viewport': opts.viewport = next(); break;
-      case '--threshold': opts.threshold = parseFloat(next()); break;
-      case '--tolerance': opts.tolerance = parseInt(next(), 10); break;
-      case '--editor-crop': opts.editorCrop = parseRect(next()); break;
-      case '--source-crop': opts.sourceCrop = parseRect(next()); break;
+      case '--viewport': opts.viewport = next(); opts.provided.viewport = true; break;
+      case '--threshold': opts.threshold = parseFloat(next()); opts.provided.threshold = true; break;
+      case '--tolerance': opts.tolerance = parseInt(next(), 10); opts.provided.tolerance = true; break;
+      case '--editor-crop': opts.editorCrop = parseRect(next()); opts.provided.editorCrop = true; break;
+      case '--source-crop': opts.sourceCrop = parseRect(next()); opts.provided.sourceCrop = true; break;
+      case '--capture-protocol': opts.captureProtocol = next(); opts.provided.captureProtocol = true; break;
+      case '--no-capture-protocol': opts.noCaptureProtocol = true; break;
+      case '--settle-ms': opts.settleMs = parseInt(next(), 10); opts.provided.settleMs = true; break;
+      case '--art-authority-waivers': opts.artAuthorityWaivers = next(); opts.provided.artAuthorityWaivers = true; break;
+      case '--no-art-authority-waivers': opts.noArtAuthorityWaivers = true; break;
       case '--evolution-log': opts.evolutionLog = next(); break;
       case '--no-evolution': opts.noEvolution = true; break;
       case '--help':
@@ -71,6 +96,13 @@ Options:
   --tolerance <n>           RGB channel tolerance for pixel diff (default: 12)
   --editor-crop x,y,w,h     crop Editor screenshot before resize
   --source-crop x,y,w,h     crop source screenshot before compare
+  --capture-protocol <json> fixed viewport/crop/DPR/settle protocol sidecar
+  --no-capture-protocol     disable auto-discovery of <screen>.final-capture-protocol.json
+  --settle-ms <n>           HTML screenshot settle delay after fonts load
+  --art-authority-waivers <json>
+                            optional approved runtime-art delta sidecar
+  --no-art-authority-waivers
+                            disable auto-discovery of <screen>.art-authority-waivers.json
   --evolution-log <md>      append candidate here when score fails
   --no-evolution            do not append evolution candidate on failure
 `);
@@ -102,9 +134,28 @@ async function main() {
   const sourceNormalized = `${base}.html-cocos-source-normalized.png`;
   const editorNormalized = `${base}.html-cocos-editor-normalized.png`;
   const heatmapPng = `${base}.html-cocos-heatmap.png`;
+  const adjustedHeatmapPng = `${base}.html-cocos-adjusted-heatmap.png`;
   const comparePng = `${base}.html-cocos-compare.png`;
   const offendersJson = `${base}.html-cocos-top-offenders.json`;
+  const artAuthorityReportJson = `${base}.art-authority-report.json`;
+  const zoneOwnershipJson = `${base}.zone-ownership.json`;
   const verdictJson = `${base}.html-cocos-verdict.json`;
+
+  const captureProtocol = loadCaptureProtocolForCompare({
+    opts,
+    outDir,
+    sourceDir: sourcePackage.manifest.sourceDir,
+  });
+  if (captureProtocol.normalized && captureProtocol.normalized.ok) {
+    applyFinalCaptureProtocol(opts, captureProtocol.normalized, opts.provided);
+  } else if (captureProtocol.normalized && !captureProtocol.normalized.ok) {
+    for (const error of captureProtocol.normalized.errors) console.error(`[compare-html-to-cocos-editor] capture protocol invalid: ${error}`);
+    process.exit(2);
+  }
+  if (!opts.viewport) opts.viewport = '1920x1080';
+  if (opts.threshold == null || Number.isNaN(opts.threshold)) opts.threshold = 0.95;
+  if (opts.tolerance == null || Number.isNaN(opts.tolerance)) opts.tolerance = 12;
+  if (opts.settleMs == null || Number.isNaN(opts.settleMs)) opts.settleMs = 250;
 
   writeHtmlWithSourceCss({
     htmlPath: sourcePackage.mainHtmlPath,
@@ -114,17 +165,38 @@ async function main() {
   });
 
   const viewport = parseViewport(opts.viewport);
-  await captureHtml(preparedHtml, sourcePng, viewport, opts.browser);
+  await captureHtml(preparedHtml, sourcePng, viewport, opts.browser, opts.settleMs, captureProtocol.normalized);
   normalizePng(sourcePng, sourceNormalized, viewport.width, viewport.height, opts.sourceCrop);
   normalizePng(path.resolve(opts.editorScreenshot), editorNormalized, viewport.width, viewport.height, opts.editorCrop);
 
-  const diff = pixelDiff(sourceNormalized, editorNormalized, { tolerance: opts.tolerance });
-  writeHeatmap(diff.heatmap, heatmapPng);
+  const rawDiff = pixelDiff(sourceNormalized, editorNormalized, { tolerance: opts.tolerance });
+  writeHeatmap(rawDiff.heatmap, heatmapPng);
   writeCompareBoard(sourceNormalized, editorNormalized, comparePng);
 
+  const artAuthority = loadArtAuthorityForCompare({
+    opts,
+    outDir,
+    sourceDir: sourcePackage.manifest.sourceDir,
+    viewport,
+    artAuthorityReportJson,
+  });
+  const artAuthorityRects = artAuthority.validation && artAuthority.validation.ok
+    ? artAuthorityRectsForPixelDiff(artAuthority.validation, { targetWidth: viewport.width, targetHeight: viewport.height })
+    : [];
+  const adjustedDiff = artAuthorityRects.length > 0
+    ? pixelDiff(sourceNormalized, editorNormalized, { tolerance: opts.tolerance, waivers: artAuthorityRects })
+    : rawDiff;
+  if (adjustedDiff !== rawDiff) writeHeatmap(adjustedDiff.heatmap, adjustedHeatmapPng);
+
   const cssCapabilities = buildCssCapabilityReport(sourcePackage.cssText);
-  const score = diff.adjustedCoverage;
-  const pass = score >= opts.threshold;
+  const scoreReport = buildArtAuthorityScoreReport({
+    rawDiff,
+    adjustedDiff,
+    validation: artAuthority.validation,
+    threshold: opts.threshold,
+  });
+  const score = scoreReport.rawScore;
+  const pass = scoreReport.verdict !== 'fail';
   const topOffenders = cssCapabilities.topOffenders.map(item => ({
     property: item.property,
     kind: item.capability,
@@ -132,6 +204,13 @@ async function main() {
     impact: `css ${item.capability} occurrences=${item.count}`,
   }));
   fs.writeFileSync(offendersJson, JSON.stringify({ cssCapabilities, sourceWarnings: sourcePackage.warnings }, null, 2) + '\n', 'utf8');
+  const zoneOwnership = buildZoneOwnershipReport({
+    screenId: opts.screenId,
+    pixelDiff: adjustedDiff,
+    cssCapabilities,
+    artAuthorityValidation: artAuthority.validation,
+  });
+  fs.writeFileSync(zoneOwnershipJson, JSON.stringify(zoneOwnership, null, 2) + '\n', 'utf8');
 
   let evolution = null;
   if (!pass && !opts.noEvolution) {
@@ -141,7 +220,12 @@ async function main() {
       sourcePackage: sourcePackage.manifest,
       score,
       threshold: opts.threshold,
-      topOffenders,
+      topOffenders: topOffenders.concat((scoreReport.unwaivedDiffTopList || []).slice(0, 5).map(item => ({
+        property: 'pixel-diff',
+        kind: 'unwaived-diff-bucket',
+        count: item.mismatchPixels,
+        impact: `rect=${item.rect.x},${item.rect.y},${item.rect.w},${item.rect.h}`,
+      }))),
       proposedRule: '依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。',
       verification: `node tools_node/compare-html-to-cocos-editor.js --source-dir "${sourcePackage.manifest.sourceDir}" --main-html "${sourcePackage.manifest.mainHtml}" --screen-id ${opts.screenId} --editor-screenshot <png> --output ${rel(outDir)}`,
     });
@@ -153,19 +237,61 @@ async function main() {
     sourcePackage: sourcePackage.manifest,
     runtimeVsSource: {
       score,
+      adjustedScore: scoreReport.adjustedScore,
       threshold: opts.threshold,
-      verdict: pass ? 'pass' : 'fail',
+      verdict: scoreReport.verdict,
+      passMode: scoreReport.passMode,
       source: 'html-source-screenshot-vs-cocos-editor-screenshot',
+      waiverCoverageRatio: scoreReport.waiverCoverageRatio,
+      artDeltaScore: scoreReport.artDeltaScore,
+      converterResidualScore: scoreReport.converterResidualScore,
     },
     pixelDiff: {
-      width: diff.width,
-      height: diff.height,
-      totalPixels: diff.totalPixels,
-      matchedPixels: diff.matchedPixels,
-      waiverPixels: diff.waiverPixels,
-      coveragePercent: diff.coveragePercent,
-      adjustedCoverage: diff.adjustedCoverage,
+      width: rawDiff.width,
+      height: rawDiff.height,
+      totalPixels: rawDiff.totalPixels,
+      matchedPixels: rawDiff.matchedPixels,
+      waiverPixels: rawDiff.waiverPixels,
+      coveragePercent: rawDiff.coveragePercent,
+      adjustedCoverage: rawDiff.adjustedCoverage,
       tolerance: opts.tolerance,
+      unwaivedDiffTopList: rawDiff.unwaivedDiffTopList,
+    },
+    adjustedPixelDiff: {
+      width: adjustedDiff.width,
+      height: adjustedDiff.height,
+      totalPixels: adjustedDiff.totalPixels,
+      matchedPixels: adjustedDiff.matchedPixels,
+      waiverPixels: adjustedDiff.waiverPixels,
+      coveragePercent: adjustedDiff.coveragePercent,
+      adjustedCoverage: adjustedDiff.adjustedCoverage,
+      tolerance: opts.tolerance,
+      unwaivedDiffTopList: adjustedDiff.unwaivedDiffTopList,
+    },
+    captureProtocol: captureProtocol.normalized ? {
+      path: captureProtocol.path ? rel(captureProtocol.path) : null,
+      ok: captureProtocol.normalized.ok,
+      warnings: captureProtocol.normalized.warnings,
+      viewport: captureProtocol.normalized.viewport,
+      safeArea: captureProtocol.normalized.safeArea,
+      sourceCrop: captureProtocol.normalized.sourceCrop,
+      editorCrop: captureProtocol.normalized.editorCrop,
+      settleMs: captureProtocol.normalized.settleMs,
+    } : null,
+    zoneOwnership: {
+      report: rel(zoneOwnershipJson),
+      summary: zoneOwnership.summary,
+    },
+    artAuthority: {
+      path: artAuthority.path ? rel(artAuthority.path) : null,
+      report: artAuthority.wroteReport ? rel(artAuthorityReportJson) : null,
+      validation: artAuthority.validation ? {
+        ok: artAuthority.validation.ok,
+        errors: artAuthority.validation.errors,
+        warnings: artAuthority.validation.warnings,
+        waiverCount: artAuthority.validation.waiverCount,
+        totalCoverageRatio: artAuthority.validation.totalCoverageRatio,
+      } : null,
     },
     artifacts: {
       preparedHtml: rel(preparedHtml),
@@ -174,18 +300,77 @@ async function main() {
       editorNormalized: rel(editorNormalized),
       comparePng: rel(comparePng),
       heatmapPng: rel(heatmapPng),
+      adjustedHeatmapPng: adjustedDiff !== rawDiff ? rel(adjustedHeatmapPng) : null,
       topOffendersJson: rel(offendersJson),
+      zoneOwnershipJson: rel(zoneOwnershipJson),
+      artAuthorityReportJson: artAuthority.wroteReport ? rel(artAuthorityReportJson) : null,
       evolutionLog: evolution ? rel(evolution.logPath) : null,
     },
   };
   fs.writeFileSync(verdictJson, JSON.stringify(verdict, null, 2) + '\n', 'utf8');
 
-  console.log(`[compare-html-to-cocos-editor] runtimeVsSource=${score.toFixed(4)} threshold=${opts.threshold} verdict=${verdict.runtimeVsSource.verdict}`);
+  console.log(`[compare-html-to-cocos-editor] runtimeVsSource.raw=${score.toFixed(4)} adjusted=${scoreReport.adjustedScore.toFixed(4)} threshold=${opts.threshold} verdict=${verdict.runtimeVsSource.verdict}`);
   console.log(`[compare-html-to-cocos-editor] verdict=${rel(verdictJson)}`);
   if (!pass) process.exit(12);
 }
 
-async function captureHtml(htmlPath, outputPng, viewport, browserPath) {
+function loadArtAuthorityForCompare(args) {
+  const opts = args.opts;
+  if (opts.noArtAuthorityWaivers) return { path: null, validation: null, wroteReport: false };
+  const waiverPath = findArtAuthorityWaiverPath({
+    explicitPath: opts.artAuthorityWaivers,
+    screenId: opts.screenId,
+    outputDir: args.outDir,
+    sourceDir: args.sourceDir,
+    repoRoot: ROOT,
+  });
+  if (!waiverPath) return { path: null, validation: null, wroteReport: false };
+  if (!fs.existsSync(path.resolve(waiverPath))) {
+    console.error(`[compare-html-to-cocos-editor] art-authority sidecar not found: ${waiverPath}`);
+    process.exit(2);
+  }
+  const report = readArtAuthorityWaivers(waiverPath);
+  const validation = validateArtAuthorityWaivers(report, {
+    repoRoot: ROOT,
+    screenId: opts.screenId,
+    targetWidth: args.viewport.width,
+    targetHeight: args.viewport.height,
+  });
+  fs.writeFileSync(args.artAuthorityReportJson, JSON.stringify({
+    path: rel(waiverPath),
+    validation,
+  }, null, 2) + '\n', 'utf8');
+  if (!validation.ok) {
+    for (const error of validation.errors) console.error(`[compare-html-to-cocos-editor] art-authority invalid: ${error}`);
+    process.exit(2);
+  }
+  return { path: waiverPath, validation, wroteReport: true };
+}
+
+function loadCaptureProtocolForCompare(args) {
+  const opts = args.opts;
+  if (opts.noCaptureProtocol) return { path: null, raw: null, normalized: null };
+  const protocolPath = findFinalCaptureProtocolPath({
+    explicitPath: opts.captureProtocol,
+    screenId: opts.screenId,
+    outputDir: args.outDir,
+    sourceDir: args.sourceDir,
+    repoRoot: ROOT,
+  });
+  if (!protocolPath) return { path: null, raw: null, normalized: null };
+  if (!fs.existsSync(path.resolve(protocolPath))) {
+    console.error(`[compare-html-to-cocos-editor] capture protocol not found: ${protocolPath}`);
+    process.exit(2);
+  }
+  const raw = readFinalCaptureProtocol(protocolPath);
+  const normalized = normalizeFinalCaptureProtocol(raw, { screenId: opts.screenId });
+  if (normalized && normalized.artAuthorityWaivers && !path.isAbsolute(normalized.artAuthorityWaivers)) {
+    normalized.artAuthorityWaivers = path.resolve(path.dirname(protocolPath), normalized.artAuthorityWaivers);
+  }
+  return { path: protocolPath, raw, normalized };
+}
+
+async function captureHtml(htmlPath, outputPng, viewport, browserPath, settleMs, captureProtocol) {
   let puppeteer;
   try { puppeteer = require('puppeteer-core'); }
   catch (error) { throw new Error('puppeteer-core is required for HTML source screenshot'); }
@@ -196,10 +381,11 @@ async function captureHtml(htmlPath, outputPng, viewport, browserPath) {
   });
   try {
     const page = await browser.newPage();
-    await page.setViewport(viewport);
+    const dpr = captureProtocol && captureProtocol.viewport && captureProtocol.viewport.dpr ? captureProtocol.viewport.dpr : 1;
+    await page.setViewport({ width: viewport.width, height: viewport.height, deviceScaleFactor: dpr });
     await page.goto(toFileUrl(htmlPath), { waitUntil: 'networkidle0', timeout: 30000 });
     try { await page.evaluate(() => document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()); } catch (_) {}
-    await new Promise(resolve => setTimeout(resolve, 250));
+    await new Promise(resolve => setTimeout(resolve, settleMs));
     await page.screenshot({ path: outputPng, clip: { x: 0, y: 0, width: viewport.width, height: viewport.height } });
     await page.close();
   } finally {

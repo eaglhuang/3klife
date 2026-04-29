@@ -39,6 +39,7 @@
 'use strict';
 
 const { classifyCssProperty } = require('./css-capability-matrix');
+const { assetizeSkinSlotKindForCssProperty } = require('./css-skin-kind-contract');
 
 // Subset of properties that drive a bake. Mirrors the assetize-capable set
 // in css-capability-matrix.js. Kept separate (instead of reading the matrix)
@@ -88,9 +89,7 @@ function readDeclProperty(snap, prop) {
 }
 
 function skinSlotKindOf(prop) {
-  return prop === 'box-shadow' || prop === 'text-shadow' || prop === 'filter' || prop === 'backdrop-filter' ? 'shadow-set'
-    : prop === 'clip-path' || prop === 'mask' || prop === 'mask-image' ? 'mask-set'
-    : 'background-set';
+  return assetizeSkinSlotKindForCssProperty(prop);
 }
 
 function normaliseBakeMode(snap) {
@@ -284,4 +283,4 @@ function buildBakeManifest(args) {
   };
 }
 
-module.exports = { buildBakeManifest, BAKE_RELEVANT_PROPS };
+module.exports = { buildBakeManifest, BAKE_RELEVANT_PROPS, skinSlotKindOf };

@@ -9,6 +9,7 @@
  *   node tools_node/capture-ui-screens.js --target LobbyMain
  *   node tools_node/capture-ui-screens.js --target Gacha --outDir artifacts/ui-qa/UI-2-0023
  *   node tools_node/capture-ui-screens.js --browser "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe"
+ *   node tools_node/capture-ui-screens.js --target CharacterDs3 --viewport 1920x1128 --maxWidth 0
  */
 
 const fs = require('fs');
@@ -87,6 +88,19 @@ function parseArg(name, fallback = '') {
         return fallback;
     }
     return process.argv[index + 1];
+}
+
+function parseViewport(value, fallback = { width: 1920, height: 1080 }) {
+    const match = String(value || '').trim().match(/^(\d+)x(\d+)$/i);
+    if (!match) {
+        return fallback;
+    }
+    const width = Number(match[1]);
+    const height = Number(match[2]);
+    if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+        return fallback;
+    }
+    return { width, height };
 }
 
 function readBattleTacticArg() {
@@ -667,7 +681,7 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
             }
             return 30;
         });
-        const vp = { width: 1920, height: 1080 };
+        const vp = page.viewport() || { width: 1920, height: 1080 };
         const clip = toolbarHeight > 0
             ? { x: 0, y: toolbarHeight, width: vp.width, height: vp.height - toolbarHeight }
             : undefined;
@@ -730,6 +744,7 @@ async function main() {
     const refreshBefore = parseArg('refreshBefore', 'true') !== 'false';
     const maxWidth = Number(parseArg('maxWidth', '125'));
     const hidePaths = parseArg('hidePaths', '').trim();
+    const viewport = parseViewport(parseArg('viewport', '1920x1080'));
 
     const browserExecutable = resolveBrowserExecutable(browserArg);
     if (!browserExecutable) {
@@ -751,6 +766,7 @@ async function main() {
     console.log(`- browser: ${browserExecutable}`);
     console.log(`- sceneUuid: ${sceneUuid || '(none)'}`);
     console.log(`- retries: ${retries}`);
+    console.log(`- viewport: ${viewport.width}x${viewport.height}`);
     console.log('='.repeat(70));
 
     if (refreshBefore) {
@@ -762,7 +778,7 @@ async function main() {
     const browser = await puppeteer.launch({
         executablePath: browserExecutable,
         headless: true,
-        defaultViewport: { width: 1920, height: 1080 },
+        defaultViewport: viewport,
         args: [
             '--disable-gpu',
             '--disable-http-cache',

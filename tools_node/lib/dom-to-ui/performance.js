@@ -24,6 +24,8 @@ const DEPTH_LIMITS = {
  */
 function analyzeLayout(layoutDraft) {
   let nodeCount = 0;
+  let deferredNodeCount = 0;
+  let totalNodeCount = 0;
   let maxDepth = 0;
   let colorRectCount = 0;
   let lazySlotCount = 0;
@@ -31,12 +33,15 @@ function analyzeLayout(layoutDraft) {
 
   function walk(node, depth) {
     if (!node || typeof node !== 'object') return;
+    totalNodeCount += 1;
     nodeCount += 1;
     if (depth > maxDepth) maxDepth = depth;
     if (node.lazySlot === true) {
       lazySlotCount += 1;
       const hint = node.warmupHint || 'manual';
       warmupHints[hint] = (warmupHints[hint] || 0) + 1;
+      deferredNodeCount += countDescendants(node);
+      return;
     }
     // panel without skinSlot/skinLayers is treated as solid color rect
     if (node.type === 'panel' && !node.skinSlot && !Array.isArray(node.skinLayers)) {
@@ -47,7 +52,16 @@ function analyzeLayout(layoutDraft) {
     }
   }
   walk(layoutDraft, 1);
-  return { nodeCount, maxDepth, colorRectCount, lazySlotCount, warmupHints };
+  return { nodeCount, deferredNodeCount, totalNodeCount: nodeCount + deferredNodeCount, maxDepth, colorRectCount, lazySlotCount, warmupHints };
+}
+
+function countDescendants(node) {
+  if (!node || !Array.isArray(node.children)) return 0;
+  let count = 0;
+  for (const child of node.children) {
+    count += 1 + countDescendants(child);
+  }
+  return count;
 }
 
 /**
@@ -119,6 +133,8 @@ function buildPerformanceReport(layoutDraft, skinDraft, preloadManifest, options
     screenId: opts.screenId,
     rendering: {
       nodeCount: layoutStats.nodeCount,
+      deferredNodeCount: layoutStats.deferredNodeCount,
+      totalNodeCount: layoutStats.totalNodeCount,
       maxDepth: layoutStats.maxDepth,
       estimatedDrawCalls: drawCalls,
       colorRectCount: layoutStats.colorRectCount,

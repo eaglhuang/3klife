@@ -31,6 +31,13 @@ const { snapshotToSlots } = require('./lib/dom-to-ui/snapshot-to-slots');
 const { slotToCss } = require('./lib/dom-to-ui/skin-to-css');
 const { pixelDiff, writeHeatmap } = require('./lib/dom-to-ui/pixel-diff');
 const { buildWaivers, waiverRectsForPixelDiff } = require('./lib/dom-to-ui/image-waiver');
+const {
+  readArtAuthorityWaivers,
+  findArtAuthorityWaiverPath,
+  validateArtAuthorityWaivers,
+  artAuthorityRectsForPixelDiff,
+  buildArtAuthorityScoreReport,
+} = require('./lib/dom-to-ui/art-authority-waivers');
 const { buildTokenSuggestions } = require('./lib/dom-to-ui/token-suggestion');
 const { buildFidelityEntries, appendEntries } = require('./lib/dom-to-ui/fidelity-feedback');
 const { auditFonts, buildFontOverrideStyle, buildBrokenImageHiderScript, buildProjectFontFaces, PROJECT_FONT_FAMILIES } = require('./lib/dom-to-ui/font-audit');
@@ -72,6 +79,8 @@ function parseArgs() {
     else if (a === '--strict-coverage') { opts.strictCoverage = parseFloat(args[++i]); }
     else if (a === '--emit-feedback') { opts.emitFeedback = true; }
     else if (a === '--manual-waivers') { opts.manualWaivers = args[++i]; }
+    else if (a === '--art-authority-waivers') { opts.artAuthorityWaivers = args[++i]; }
+    else if (a === '--no-art-authority-waivers') { opts.noArtAuthorityWaivers = true; }
     else if (a === '--pre-eval') { opts.preEval = args[++i]; }
     else if (a === '--settle-ms') { opts.settleMs = parseInt(args[++i], 10); }
     else if (a === '--save-panels') { opts.savePanels = args[++i]; }
@@ -988,6 +997,37 @@ async function main() {
     }
   }
 
+  let artAuthorityValidation = null;
+  let artAuthorityPath = null;
+  if (!opts.noArtAuthorityWaivers) {
+    artAuthorityPath = findArtAuthorityWaiverPath({
+      explicitPath: opts.artAuthorityWaivers,
+      screenId: opts.screenId,
+      outputDir: path.dirname(outputPngAbs),
+      sourceDir: path.dirname(path.resolve(opts.html)),
+      repoRoot,
+    });
+    if (artAuthorityPath) {
+      if (!fs.existsSync(path.resolve(artAuthorityPath))) {
+        console.error(`[dom-to-ui-compare] art-authority sidecar not found: ${artAuthorityPath}`);
+        process.exit(2);
+      }
+      artAuthorityValidation = validateArtAuthorityWaivers(readArtAuthorityWaivers(artAuthorityPath), {
+        repoRoot,
+        screenId: opts.screenId,
+        targetWidth: CANVAS_W,
+        targetHeight: CANVAS_H,
+      });
+      const artReportPath = outputPngAbs.replace(/\.png$/i, '.art-authority-report.json');
+      fs.writeFileSync(artReportPath, JSON.stringify({ path: artAuthorityPath, validation: artAuthorityValidation }, null, 2), 'utf8');
+      if (!artAuthorityValidation.ok) {
+        for (const error of artAuthorityValidation.errors) console.error(`[dom-to-ui-compare] art-authority invalid: ${error}`);
+        process.exit(2);
+      }
+      console.log(`[dom-to-ui-compare] art-authority=${artAuthorityValidation.waiverCount} (${artReportPath})`);
+    }
+  }
+
   // -----------------------------------------------------------------------
   // M16 — Pixel diff harness
   // -----------------------------------------------------------------------
@@ -996,22 +1036,46 @@ async function main() {
     try {
       // We need the raw left/right PNGs; tmpLeft/tmpRight have already been removed below.
       // Run pixel-diff BEFORE the cleanup section.
-      const waiverRects = waiverReport ? waiverRectsForPixelDiff(waiverReport) : [];
-      pixelDiffResult = pixelDiff(tmpLeft, tmpRight, { tolerance: 12, waivers: waiverRects });
+      const imageWaiverRects = waiverReport ? waiverRectsForPixelDiff(waiverReport) : [];
+      const artAuthorityRects = artAuthorityValidation ? artAuthorityRectsForPixelDiff(artAuthorityValidation, { targetWidth: CANVAS_W, targetHeight: CANVAS_H }) : [];
+      const waiverRects = imageWaiverRects.concat(artAuthorityRects);
+      const rawPixelDiffResult = pixelDiff(tmpLeft, tmpRight, { tolerance: 12 });
+      pixelDiffResult = waiverRects.length > 0
+        ? pixelDiff(tmpLeft, tmpRight, { tolerance: 12, waivers: waiverRects })
+        : rawPixelDiffResult;
+      const artScore = buildArtAuthorityScoreReport({
+        rawDiff: rawPixelDiffResult,
+        adjustedDiff: pixelDiffResult,
+        validation: artAuthorityValidation,
+        threshold: typeof opts.strictPixel === 'number' && !Number.isNaN(opts.strictPixel) ? opts.strictPixel : 0.95,
+      });
       const heatmapPath = outputPngAbs.replace(/\.png$/i, '.pixel-diff.heatmap.png');
       writeHeatmap(pixelDiffResult.heatmap, heatmapPath);
       const diffPath = outputPngAbs.replace(/\.png$/i, '.pixel-diff.json');
       fs.writeFileSync(diffPath, JSON.stringify({
-        coveragePercent: pixelDiffResult.coveragePercent,
+        rawCoveragePercent: rawPixelDiffResult.coveragePercent,
+        coveragePercent: rawPixelDiffResult.coveragePercent,
         adjustedCoverage: pixelDiffResult.adjustedCoverage,
         totalPixels: pixelDiffResult.totalPixels,
         matchedPixels: pixelDiffResult.matchedPixels,
         waiverPixels: pixelDiffResult.waiverPixels,
+        imageWaiverRects: imageWaiverRects.length,
+        artAuthorityWaiverRects: artAuthorityRects.length,
+        artAuthority: artAuthorityValidation ? {
+          path: artAuthorityPath,
+          ok: artAuthorityValidation.ok,
+          waiverCount: artAuthorityValidation.waiverCount,
+          totalCoverageRatio: artAuthorityValidation.totalCoverageRatio,
+          artDeltaScore: artScore.artDeltaScore,
+          converterResidualScore: artScore.converterResidualScore,
+          verdict: artScore.verdict,
+        } : null,
+        unwaivedDiffTopList: pixelDiffResult.unwaivedDiffTopList,
         width: pixelDiffResult.width,
         height: pixelDiffResult.height,
         heatmap: heatmapPath,
       }, null, 2), 'utf8');
-      console.log(`[dom-to-ui-compare] pixel-diff coverage=${(pixelDiffResult.coveragePercent * 100).toFixed(1)}% (adj=${(pixelDiffResult.adjustedCoverage * 100).toFixed(1)}%) heatmap=${heatmapPath}`);
+      console.log(`[dom-to-ui-compare] pixel-diff raw=${(rawPixelDiffResult.coveragePercent * 100).toFixed(1)}% adj=${(pixelDiffResult.adjustedCoverage * 100).toFixed(1)}% heatmap=${heatmapPath}`);
       if (typeof opts.strictPixel === 'number' && !Number.isNaN(opts.strictPixel)
           && pixelDiffResult.adjustedCoverage < opts.strictPixel) {
         console.error(`[dom-to-ui-compare] strict pixel fail: ${pixelDiffResult.adjustedCoverage} < ${opts.strictPixel}`);

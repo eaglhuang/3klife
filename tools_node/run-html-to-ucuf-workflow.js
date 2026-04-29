@@ -29,6 +29,8 @@ function parseArgs(argv) {
     skipEditorCompare: false,
     noValidate: false,
     editorScreenshot: null,
+    captureProtocol: null,
+    artAuthorityWaivers: null,
     evolutionLog: null,
     help: false,
   };
@@ -55,6 +57,8 @@ function parseArgs(argv) {
       case '--skip-editor-compare': opts.skipEditorCompare = true; break;
       case '--no-validate': opts.noValidate = true; break;
       case '--editor-screenshot': opts.editorScreenshot = next(); break;
+      case '--capture-protocol': opts.captureProtocol = next(); break;
+      case '--art-authority-waivers': opts.artAuthorityWaivers = next(); break;
       case '--evolution-log': opts.evolutionLog = next(); break;
       case '--help':
       case '-h':
@@ -81,6 +85,9 @@ Options:
   --source-dir <dir>         v2 source package dir containing tokens/CSS/HTML
   --main-html <path>         main HTML relative to source-dir (required if ambiguous)
   --editor-screenshot <png>  Cocos Editor screenshot for final runtimeVsSource gate
+  --capture-protocol <json>  final gate viewport/crop/DPR/settle sidecar
+  --art-authority-waivers <json>
+                             optional approved runtime-art delta sidecar for visual gates
   --skip-editor-compare      debug only: skip required v2 Editor visual gate
   --evolution-log <md>       rule evolution2 log path for failed runtime visual gate
   --browser <path>           Chrome / Edge executable path
@@ -433,6 +440,7 @@ function main() {
     ];
     if (opts.browser) compareArgs.push('--browser', opts.browser);
     if (sourcePackage) compareArgs.push('--tokens', sourcePackage.tokensPath);
+    if (opts.artAuthorityWaivers) compareArgs.push('--art-authority-waivers', opts.artAuthorityWaivers);
     compareProc = runNodeStep('dom-to-ui-compare', 'dom-to-ui-compare.js', compareArgs);
     steps.push({ step: 'dom-to-ui-compare', exitCode: compareProc.status ?? 1, ok: compareProc.status === 0, issues: extractIssues((compareProc.stdout || '') + '\n' + (compareProc.stderr || '')) });
   }
@@ -448,6 +456,8 @@ function main() {
       '--threshold', '0.95',
     ];
     if (opts.browser) editorArgs.push('--browser', opts.browser);
+    if (opts.captureProtocol) editorArgs.push('--capture-protocol', opts.captureProtocol);
+    if (opts.artAuthorityWaivers) editorArgs.push('--art-authority-waivers', opts.artAuthorityWaivers);
     if (opts.evolutionLog) editorArgs.push('--evolution-log', opts.evolutionLog);
     editorCompareProc = runNodeStep('compare-html-to-cocos-editor', 'compare-html-to-cocos-editor.js', editorArgs);
     steps.push({ step: 'compare-html-to-cocos-editor', exitCode: editorCompareProc.status ?? 1, ok: editorCompareProc.status === 0, issues: extractIssues((editorCompareProc.stdout || '') + '\n' + (editorCompareProc.stderr || '')) });
@@ -465,7 +475,7 @@ function main() {
   metrics.runtimeReadiness = assessRuntimeReadiness(paths, sourceHtml);
   const editorGatePass = !sourcePackage
     ? true
-    : !!(metrics.htmlCocos && metrics.htmlCocos.runtimeVsSource && metrics.htmlCocos.runtimeVsSource.verdict === 'pass');
+    : !!(metrics.htmlCocos && metrics.htmlCocos.runtimeVsSource && ['pass', 'pass-with-approved-art-delta'].includes(metrics.htmlCocos.runtimeVsSource.verdict));
   const verdict = {
     rawPass: baseProc.status === 0,
     strictReplayPass: strictProc.status === 0,

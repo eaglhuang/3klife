@@ -230,7 +230,19 @@ function mergeSkin(draftSkin, existingSkin, mergeMode, fieldChanges, conflicts) 
 
 function preserveExistingRuntimeAssetSlot(slotId, draftSlot, existingSlot, path, fieldChanges) {
   if (!isExistingRuntimeAssetSlot(existingSlot)) return null;
-  if (isExplicitAssetReplace(draftSlot)) return null;
+  if (isExplicitAssetReplace(draftSlot)) {
+    fieldChanges.push({
+      path,
+      kind: 'explicit-runtime-asset-replace-approved',
+      detail: `${runtimeAssetDescription(existingSlot)} -> ${runtimeAssetDescription(draftSlot) || ((draftSlot && draftSlot.kind) || '<generated-slot>')}`,
+      approval: {
+        assetPolicy: draftSlot && draftSlot.assetPolicy || null,
+        assetReplaceApproved: draftSlot && draftSlot.assetReplaceApproved === true,
+        replaceExistingAsset: draftSlot && draftSlot._replaceExistingAsset === true,
+      },
+    });
+    return null;
+  }
   const draftIsUsableAsset = isExistingRuntimeAssetSlot(draftSlot);
   if (draftIsUsableAsset && runtimeAssetSignature(draftSlot) === runtimeAssetSignature(existingSlot)) return null;
   fieldChanges.push({
