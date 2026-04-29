@@ -41,12 +41,20 @@ class EventCandidate(BaseModel):
     chapterNo: int | None = Field(default=None, description="Chapter number")
     eventKey: str = Field(description="Stable event key")
     eventType: str = Field(description="battle, alias-smoke, dialogue, or mention-cluster")
+    subtype: str | None = Field(default=None, description="Stable taxonomy subtype when available")
     generalIds: list[str] = Field(default_factory=list, description="Resolved participant ids")
     location: str | None = Field(default=None, description="Main location label")
     summary: str = Field(description="Short deterministic event summary")
     sourceQuote: str = Field(description="Representative source quote/snippet")
     relationshipEdges: list[RelationshipEdge] = Field(default_factory=list, description="Deterministic relationship edges")
     moodTags: list[str] = Field(default_factory=list, description="Mood tags for persona/dialogue projection")
+    affectTags: list[str] = Field(default_factory=list, description="Affect story tags such as family_affection or friendship_loyalty")
+    aptitudeTags: list[str] = Field(default_factory=list, description="Talent tags such as martial_weapon, governance, or literary_art")
+    roleActivityTags: list[str] = Field(default_factory=list, description="Work, livelihood, or social role tags")
+    activitySeedHints: list[str] = Field(default_factory=list, description="Quest/activity seed hints projected from evidence")
+    itemRefs: list[str] = Field(default_factory=list, description="Equipment, object, or gift references")
+    decisionWeightHints: list[str] = Field(default_factory=list, description="AI decision weight hints projected from this event")
+    choiceWeightHints: list[str] = Field(default_factory=list, description="Moral-neutral activity choice weight hints")
     confidence: float = Field(default=0.0, description="Overall deterministic confidence")
     sourceRefs: list[str] = Field(default_factory=list, description="Source refs supporting this event")
     extractionMode: str = Field(default="deterministic-pilot", description="Extraction mode")
@@ -237,6 +245,7 @@ def build_gold_seed_battle_event(rows: list[dict], spec: GoldSeedBattleSpec) -> 
         chapterNo=spec.chapterNo,
         eventKey=spec.eventKey,
         eventType="battle",
+        subtype="battle_duel",
         generalIds=general_ids,
         location=location,
         summary=spec.summary,
@@ -287,6 +296,7 @@ def build_generic_battle_candidates(rows: list[dict], max_candidates: int) -> li
                 chapterNo=chapter_no,
                 eventKey=event_key,
                 eventType="battle-candidate",
+                subtype="battle_candidate",
                 generalIds=general_ids,
                 location=None,
                 summary=f"第 {chapter_no} 回 {source_ref} 偵測到戰事候選段落，需人工確認事件邊界與關係 edge。",
@@ -319,6 +329,7 @@ def build_alias_smoke_event(label: str, expected_general_id: str, rows: list[dic
         chapterNo=chapter_no,
         eventKey=event_key,
         eventType="alias-smoke",
+        subtype="alias_resolution",
         generalIds=unique_sorted([expected_general_id] + collect_general_ids(selected)),
         location=None,
         summary=f"稱呼「{label}」已由正式對照表召回為 {expected_general_id}，可供事件抽取使用。",
@@ -354,6 +365,7 @@ def build_dialogue_resolution_events(dialogue_data: list[dict]) -> list[EventCan
                     chapterNo=paragraph.get("chapterNo"),
                     eventKey=event_key,
                     eventType="dialogue",
+                    subtype="gift_offer",
                     generalIds=unique_sorted([addressee_id] + ([utterance.get("speakerGeneralId")] if utterance.get("speakerGeneralId") else [])),
                     location=None,
                     summary=f"對話解析將「{item_entities[0].get('label')}」辨識為可互動物件，並以「{address_entities[0].get('label')}」指向 {addressee_id}。",
@@ -368,6 +380,9 @@ def build_dialogue_resolution_events(dialogue_data: list[dict]) -> list[EventCan
                         )
                     ],
                     moodTags=["dialogue", "gift"],
+                    itemRefs=[item_key],
+                    activitySeedHints=["host_banquet"],
+                    decisionWeightHints=["likes_gifts"],
                     confidence=min(float(utterance.get("confidence") or 0.0), 0.86),
                     sourceRefs=[source_ref],
                     extractionMode="dialogue-resolution-pilot",

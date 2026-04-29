@@ -19,10 +19,16 @@ DEFAULT_GEMINI_THINKING_BUDGET = 128
 DEFAULT_GEMINI_FLASH_LITE_THINKING_BUDGET = 512
 DEFAULT_GEMINI_MAX_OUTPUT_TOKENS = 512
 DEFAULT_GEMINI_RETRY_COUNT = 2
-DEFAULT_LOCAL_LLAMA_MODEL = "llama3:latest"
+DEFAULT_LOCAL_LLAMA_MODEL = "qwen2.5:7b"
+DEFAULT_DEEPSEEK_REASONER_MODEL = "deepseek-r1:7b"
 DEFAULT_LOCAL_LLAMA_TIMEOUT_MS = 6000
 DEFAULT_LOCAL_LLAMA_API_BASE = "http://127.0.0.1:11434"
 DEFAULT_LOCAL_LLAMA_API_PATH = "/api/chat"
+DEFAULT_LOCAL_LLAMA_TEMPERATURE = 0.45
+DEFAULT_LOCAL_LLAMA_TOP_P = 0.85
+DEFAULT_LOCAL_LLAMA_REPEAT_PENALTY = 1.12
+DEFAULT_LOCAL_LLAMA_NUM_CTX = 4096
+DEFAULT_LOCAL_LLAMA_REPAIR_RETRY_COUNT = 1
 DEFAULT_HISTORY_CACHE_PATH = "local/npc-dialogue-history.jsonl"
 DEFAULT_LOCALE = "zh-TW"
 DEFAULT_SPEECH_CONTEXT_MODE = "life_chat"
@@ -49,21 +55,51 @@ LOCALE_INSTRUCTIONS = {
 SPEECH_CONTEXT_INSTRUCTIONS = {
     "life_chat": {
         "label": "生活聊天",
-        "instruction": "The NPC is casually chatting with the player about the selected keyword. Keep it conversational and personal.",
+        "instruction": "The NPC is casually chatting with the player because the selected keyword came up as a topic in everyday conversation. Speak to the player, not to the keyword target.",
+        "keywordAngle": "The selected keyword is a conversation topic mentioned by the player or recalled during casual talk.",
+        "must": ["address the player or speak generally", "sound relaxed and personal", "treat the keyword as the subject of conversation"],
+        "avoid": ["battle challenge phrasing", "formal council language", "speaking directly to the keyword target as if they are present"],
     },
     "encounter_speech": {
         "label": "遭遇發言",
-        "instruction": "The NPC is directly facing or addressing the selected keyword target in the current scene. Make it immediate and outward-facing.",
+        "instruction": "The NPC is directly facing, challenging, warning, greeting, or addressing the selected keyword target in the current scene.",
+        "keywordAngle": "The selected keyword is the addressee or immediate target standing before the NPC.",
+        "must": ["speak outward toward the keyword target", "make the line immediate and scene-facing", "allow direct second-person challenge or warning when appropriate"],
+        "avoid": ["private reflection", "detached historical explanation", "council report wording"],
     },
     "inner_monologue": {
         "label": "想法獨白",
-        "instruction": "The NPC is expressing an inner thought, memory, judgment, or association about the selected keyword. Make it reflective but still in character.",
+        "instruction": "The NPC is not speaking to anyone directly. Render an inner thought, memory, judgment, doubt, or association triggered by the selected keyword.",
+        "keywordAngle": "The selected keyword is an internal association in the NPC's mind, not a listener.",
+        "must": ["make it inward-facing", "avoid directly addressing the player or keyword target", "show the NPC's private feeling or judgment"],
+        "avoid": ["calling out to the target", "public meeting phrasing", "instructional explanation"],
     },
     "meeting_statement": {
         "label": "會議發言",
-        "instruction": "The NPC is speaking formally in a meeting to allies or officers. Make it public, concise, and suitable for council discussion.",
+        "instruction": "The NPC is formally presenting an opinion in a council or military meeting to allies, officers, or the lord. The selected keyword is the agenda item.",
+        "keywordAngle": "The selected keyword is the meeting topic or agenda subject being discussed in front of others.",
+        "must": ["sound public and deliberate", "speak to the group rather than one private listener", "state an opinion or recommendation about the keyword"],
+        "avoid": ["casual banter", "private inner thought", "single-target battlefield taunt"],
     },
 }
+
+
+GENERAL_IDENTITY_GUARDS = {
+    "zhang-fei": {
+        "allowedSelfNames": ["張飛", "張翼德", "翼德", "俺"],
+        "forbiddenSelfNamePatterns": [
+            r"(^|[，。！？；：\s「『])亮(?=以為|以|觀|請|曰|言|豈|敢|認)",
+            r"(^|[，。！？；：\s「『])孔明(?=以為|以|觀|請|曰|言|認)",
+            r"(^|[，。！？；：\s「『])雲(?=以為|以|觀|請|曰|言|認)",
+            r"(^|[，。！？；：\s「『])子龍(?=以為|以|觀|請|曰|言|認)",
+            r"(^|[，。！？；：\s「『])關某(?=以為|以|觀|請|曰|言|認)",
+            r"(^|[，。！？；：\s「『])孟德(?=以為|以|觀|請|曰|言|認)",
+        ],
+    },
+}
+
+ZH_TW_SIMPLIFIED_MARKERS = set("这为国马见关刘备张飞赵云诸葛说与对会战将军汉长东风无发过气众门当问处后")
+ALLOWED_ASCII_WORDS = {"json", "id", "npc", "api"}
 
 
 def _is_debug_enabled() -> bool:
@@ -118,6 +154,8 @@ class DialogueGenerationResult:
     fallbackUsed: bool
     providerTrace: list[str] = field(default_factory=list)
     usedEvidenceRefs: list[str] = field(default_factory=list)
+    qualityWarnings: list[str] = field(default_factory=list)
+    repairUsed: bool = False
 
 
 class DialogueProvider(Protocol):
@@ -273,7 +311,7 @@ class GeminiDialogueProvider:
         )
 
         return DialogueGenerationResult(
-            text=dialogue_text[: package.maxChars],
+            text=self._compact_dialogue_text(dialogue_text, package.maxChars),
             provider=self.name,
             model=self.model,
             generationMode="gemini-json-v1+persona-card",
@@ -311,8 +349,12 @@ class GeminiDialogueProvider:
                 "Use only personaCardSubset, selectedContext, selectedKeywords, and resolvedEvidence.",
                 "Do not invent major historical facts not supported by resolvedEvidence.",
                 "Do not mention being an AI or model.",
+                "Never write from the identity of another Three Kingdoms character.",
+                "The speechContextDirective is binding: choose the addressee, emotional distance, and public/private register from it.",
+                "For zh-TW output, do not mix English words, pinyin, simplified Chinese, mojibake, code fragments, or slash artifacts.",
                 "If selectedKeywords is not empty, the final line must directly mention or clearly allude to at least one selected keyword label.",
             ],
+            "speakerIdentityGuard": self._speaker_identity_guard(package),
             "localeDirective": {
                 "locale": package.locale,
                 "languageLabel": locale_instruction["label"],
@@ -322,6 +364,9 @@ class GeminiDialogueProvider:
                 "mode": package.speechContextMode,
                 "label": speech_instruction["label"],
                 "instruction": speech_instruction["instruction"],
+                "keywordAngle": speech_instruction["keywordAngle"],
+                "must": speech_instruction["must"],
+                "avoid": speech_instruction["avoid"],
             },
             "personaCardSubset": package.personaCardSubset,
             "selectedContext": package.selectedContext,
@@ -347,6 +392,16 @@ class GeminiDialogueProvider:
         }
         return json.dumps(payload, ensure_ascii=False)
 
+    def _speaker_identity_guard(self, package: DialoguePromptPackage) -> dict:
+        guard = GENERAL_IDENTITY_GUARDS.get(package.generalId, {})
+        display_name = str(package.personaCardSubset.get("displayName") or package.generalId)
+        return {
+            "speakerGeneralId": package.generalId,
+            "displayName": display_name,
+            "allowedSelfNames": guard.get("allowedSelfNames") or [display_name],
+            "rule": "The text must be spoken by speakerGeneralId only. It may mention selected keyword characters, but must not use their first-person self-name.",
+        }
+
     def _extract_text(self, payload: dict) -> str:
         candidates = payload.get("candidates") or []
         if not candidates:
@@ -358,7 +413,7 @@ class GeminiDialogueProvider:
         return "".join(text_parts).strip()
 
     def _parse_json_text(self, text: str) -> dict:
-        cleaned = text.strip()
+        cleaned = self._strip_reasoning_tags(text.strip())
         cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
         cleaned = re.sub(r"\s*```$", "", cleaned)
         try:
@@ -378,6 +433,26 @@ class GeminiDialogueProvider:
         if not isinstance(parsed, dict):
             raise ProviderOutputError("gemini:json-not-object")
         return parsed
+
+    def _strip_reasoning_tags(self, text: str) -> str:
+        cleaned = re.sub(r"<think>.*?</think>", "", text, flags=re.IGNORECASE | re.DOTALL).strip()
+        cleaned = re.sub(r"^思考[:：].*?(?=\{|```)", "", cleaned, flags=re.DOTALL).strip()
+        json_start = cleaned.find("{")
+        json_end = cleaned.rfind("}")
+        if json_start > 0 and json_end > json_start:
+            return cleaned[json_start:json_end + 1].strip()
+        return cleaned
+
+    def _compact_dialogue_text(self, text: str, max_chars: int) -> str:
+        cleaned = re.sub(r"\s+", " ", text).strip()
+        if len(cleaned) <= max_chars:
+            return cleaned
+        minimum = max(12, int(max_chars * 0.55))
+        candidates = [index + 1 for index, char in enumerate(cleaned[:max_chars]) if char in "。！？!?；;，,"]
+        candidates = [index for index in candidates if index >= minimum]
+        if candidates:
+            return cleaned[:candidates[-1]].rstrip()
+        return cleaned[: max(max_chars - 1, 1)].rstrip() + "…"
 
     def _repair_json_contract(self, cleaned: str) -> dict | None:
         text_value = self._extract_string_field(cleaned, "text")
@@ -559,6 +634,56 @@ class GeminiDialogueProvider:
             return True
         return False
 
+    def _quality_warnings(self, text: str, package: DialoguePromptPackage) -> list[str]:
+        warnings: list[str] = []
+        if self._violates_taboos(text, package):
+            warnings.append("taboo-violation")
+        warnings.extend(self._speaker_identity_warnings(text, package))
+        warnings.extend(self._language_quality_warnings(text, package))
+        warnings.extend(self._gibberish_warnings(text))
+        if package.speechContextMode != "meeting_statement" and ("\n" in text or re.search(r"(^|\n)\s*[一二三四五六七八九十0-9]+[、.．]", text)):
+            warnings.append("format:too-structured-for-speech-context")
+        return list(dict.fromkeys(warnings))
+
+    def _speaker_identity_warnings(self, text: str, package: DialoguePromptPackage) -> list[str]:
+        guard = GENERAL_IDENTITY_GUARDS.get(package.generalId)
+        if not guard:
+            return []
+        warnings: list[str] = []
+        for pattern in guard.get("forbiddenSelfNamePatterns", []):
+            if re.search(pattern, text):
+                warnings.append("speaker-identity:wrong-self-name")
+                break
+        return warnings
+
+    def _language_quality_warnings(self, text: str, package: DialoguePromptPackage) -> list[str]:
+        warnings: list[str] = []
+        ascii_words = [word.lower() for word in re.findall(r"[A-Za-z]{2,}", text)]
+        unexpected_ascii = [word for word in ascii_words if word not in ALLOWED_ASCII_WORDS]
+        if package.locale == "zh-TW":
+            if unexpected_ascii:
+                warnings.append("language:unexpected-ascii")
+            simplified_count = sum(1 for char in text if char in ZH_TW_SIMPLIFIED_MARKERS)
+            if simplified_count >= 2:
+                warnings.append("language:simplified-chinese-mix")
+        if package.locale == "en" and re.search(r"[\u3040-\u30ff]", text):
+            warnings.append("language:japanese-in-english")
+        if package.locale == "ja" and re.search(r"[A-Za-z]{4,}", text):
+            warnings.append("language:ascii-in-japanese")
+        return warnings
+
+    def _gibberish_warnings(self, text: str) -> list[str]:
+        warnings: list[str] = []
+        if "�" in text or "\ufffd" in text:
+            warnings.append("gibberish:replacement-character")
+        if re.search(r"/[A-Za-z]{2,}", text) or re.search(r"[xXfF]{5,}", text):
+            warnings.append("gibberish:artifact-token")
+        if re.search(r"(.)\1{5,}", text):
+            warnings.append("gibberish:repeated-character")
+        if "```" in text or "{\"" in text:
+            warnings.append("gibberish:code-fragment")
+        return warnings
+
 
 class LocalLlamaDialogueProvider(GeminiDialogueProvider):
     name = "local_llama"
@@ -569,27 +694,109 @@ class LocalLlamaDialogueProvider(GeminiDialogueProvider):
         base_url = os.environ.get("NPC_LLM_LOCAL_LLAMA_API_BASE") or DEFAULT_LOCAL_LLAMA_API_BASE
         self.api_url = api_url or os.environ.get("NPC_LLM_LOCAL_LLAMA_API_URL") or f"{base_url.rstrip('/')}{DEFAULT_LOCAL_LLAMA_API_PATH}"
         self.max_output_tokens = int(os.environ.get("NPC_LLM_LOCAL_LLAMA_MAX_OUTPUT_TOKENS") or DEFAULT_GEMINI_MAX_OUTPUT_TOKENS)
+        self.temperature = float(os.environ.get("NPC_LLM_LOCAL_LLAMA_TEMPERATURE") or DEFAULT_LOCAL_LLAMA_TEMPERATURE)
+        self.top_p = float(os.environ.get("NPC_LLM_LOCAL_LLAMA_TOP_P") or DEFAULT_LOCAL_LLAMA_TOP_P)
+        self.repeat_penalty = float(os.environ.get("NPC_LLM_LOCAL_LLAMA_REPEAT_PENALTY") or DEFAULT_LOCAL_LLAMA_REPEAT_PENALTY)
+        self.num_ctx = int(os.environ.get("NPC_LLM_LOCAL_LLAMA_NUM_CTX") or DEFAULT_LOCAL_LLAMA_NUM_CTX)
+        self.repair_retry_count = max(0, int(os.environ.get("NPC_LLM_LOCAL_LLAMA_REPAIR_RETRY_COUNT") or DEFAULT_LOCAL_LLAMA_REPAIR_RETRY_COUNT))
 
     def generate(self, package: DialoguePromptPackage) -> DialogueGenerationResult:
         if not package.resolvedEvidence:
             raise ProviderUnavailableError("local_llama:no-resolved-evidence")
 
         prompt = self._build_prompt(package)
-        request_body = {
+        request_body = self._build_local_request(package, prompt)
+        response_text = self._request_local_llama(request_body, package, prompt, repair=False)
+        original_warnings: list[str] = []
+        repair_used = False
+        try:
+            parsed, dialogue_text, used_keyword_keys, used_refs = self._parse_and_validate_local_response(response_text, package)
+            original_warnings = self._quality_warnings(dialogue_text, package)
+        except ProviderOutputError as exc:
+            original_warnings = [str(exc)]
+            if self.repair_retry_count <= 0:
+                raise
+            repair_used = True
+            repair_prompt = self._build_repair_prompt(package, response_text, original_warnings)
+            response_text = self._request_local_llama(self._build_local_request(package, repair_prompt), package, repair_prompt, repair=True)
+            parsed, dialogue_text, used_keyword_keys, used_refs = self._parse_and_validate_local_response(response_text, package)
+        if original_warnings and not repair_used and self.repair_retry_count > 0:
+            repair_used = True
+            repair_prompt = self._build_repair_prompt(package, response_text, original_warnings)
+            response_text = self._request_local_llama(self._build_local_request(package, repair_prompt), package, repair_prompt, repair=True)
+            parsed, dialogue_text, used_keyword_keys, used_refs = self._parse_and_validate_local_response(response_text, package)
+
+        final_warnings = self._quality_warnings(dialogue_text, package)
+        if final_warnings:
+            raise ProviderOutputError(f"local_llama:quality:{','.join(final_warnings)}")
+
+        quality_warnings = [f"repaired:{warning}" for warning in original_warnings[:4]] if repair_used else []
+        log_debug_event(
+            "provider.response.parsed",
+            provider=self.name,
+            model=self.model,
+            usedEvidenceRefs=used_refs,
+            usedKeywordKeys=used_keyword_keys,
+            repairUsed=repair_used,
+            qualityWarnings=quality_warnings,
+            textPreview=_preview_text(dialogue_text),
+        )
+        return DialogueGenerationResult(
+            text=self._compact_dialogue_text(dialogue_text, package.maxChars),
+            provider=self.name,
+            model=self.model,
+            generationMode="local-llama-json-v2+persona-card+quality-guard",
+            fallbackUsed=False,
+            usedEvidenceRefs=used_refs,
+            qualityWarnings=quality_warnings,
+            repairUsed=repair_used,
+        )
+
+    def _build_local_request(self, package: DialoguePromptPackage, user_prompt: str) -> dict:
+        return {
             "model": self.model,
-            "messages": [{"role": "user", "content": prompt}],
+            "messages": [
+                {"role": "system", "content": self._build_local_system_prompt(package)},
+                {"role": "user", "content": user_prompt},
+            ],
             "stream": False,
             "format": "json",
             "options": {
-                "temperature": 0.75,
+                "temperature": self.temperature,
+                "top_p": self.top_p,
+                "repeat_penalty": self.repeat_penalty,
+                "num_ctx": self.num_ctx,
                 "num_predict": self.max_output_tokens,
             },
         }
+
+    def _build_local_system_prompt(self, package: DialoguePromptPackage) -> str:
+        locale_instruction = LOCALE_INSTRUCTIONS.get(package.locale, LOCALE_INSTRUCTIONS[DEFAULT_LOCALE])
+        speech_instruction = SPEECH_CONTEXT_INSTRUCTIONS.get(package.speechContextMode, SPEECH_CONTEXT_INSTRUCTIONS[DEFAULT_SPEECH_CONTEXT_MODE])
+        identity_guard = self._speaker_identity_guard(package)
+        return "\n".join([
+            "You are the strict NPC dialogue renderer for a Three Kingdoms game.",
+            "Return one JSON object only. Do not include markdown or commentary.",
+            f"Speaker generalId: {package.generalId}; displayName: {identity_guard['displayName']}.",
+            f"Allowed first-person speaker names: {', '.join(identity_guard['allowedSelfNames'])}.",
+            "Never speak as another character, even if that character is the selected keyword.",
+            f"Locale: {package.locale}. {locale_instruction['instruction']}",
+            f"Speech context: {package.speechContextMode}. {speech_instruction['instruction']}",
+            f"Keyword angle: {speech_instruction['keywordAngle']}",
+            "Speech context must: " + "; ".join(speech_instruction["must"]),
+            "Speech context must avoid: " + "; ".join(speech_instruction["avoid"]),
+            "Use only the persona, keywords, context, and evidence provided by the user payload.",
+            "For zh-TW: no English words, pinyin, simplified Chinese, mojibake, slash artifacts, or code-like tokens.",
+            "The output must follow the requested JSON contract exactly.",
+        ])
+
+    def _request_local_llama(self, request_body: dict, package: DialoguePromptPackage, prompt: str, repair: bool) -> str:
         log_debug_event(
             "provider.request",
             provider=self.name,
             model=self.model,
             apiUrl=self.api_url,
+            repair=repair,
             generalId=package.generalId,
             selectedKeywordKeys=[str(keyword.get("keywordKey") or "") for keyword in package.selectedKeywords],
             selectedKeywordLabels=[str(keyword.get("label") or "") for keyword in package.selectedKeywords],
@@ -618,9 +825,13 @@ class LocalLlamaDialogueProvider(GeminiDialogueProvider):
             "provider.response.raw",
             provider=self.name,
             model=self.model,
+            repair=repair,
             payloadSummary=self._summarize_local_llama_payload(payload),
             textPreview=_preview_text(response_text),
         )
+        return response_text
+
+    def _parse_and_validate_local_response(self, response_text: str, package: DialoguePromptPackage) -> tuple[dict, str, list[str], list[str]]:
         parsed = self._parse_json_text(response_text)
         dialogue_text = self._extract_dialogue_text(parsed)
         if not dialogue_text:
@@ -635,23 +846,22 @@ class LocalLlamaDialogueProvider(GeminiDialogueProvider):
         used_refs = [ref for ref in parsed.get("usedEvidenceRefs", []) if ref in allowed_refs]
         if not used_refs:
             used_refs = [package.resolvedEvidence[0].evidenceRef]
+        return parsed, dialogue_text, used_keyword_keys, used_refs
 
-        log_debug_event(
-            "provider.response.parsed",
-            provider=self.name,
-            model=self.model,
-            usedEvidenceRefs=used_refs,
-            usedKeywordKeys=used_keyword_keys,
-            textPreview=_preview_text(dialogue_text),
-        )
-        return DialogueGenerationResult(
-            text=dialogue_text[: package.maxChars],
-            provider=self.name,
-            model=self.model,
-            generationMode="local-llama-json-v1+persona-card",
-            fallbackUsed=False,
-            usedEvidenceRefs=used_refs,
-        )
+    def _build_repair_prompt(self, package: DialoguePromptPackage, raw_text: str, warnings: list[str]) -> str:
+        payload = {
+            "task": "Repair the previous local LLM output so it becomes a valid in-character NPC dialogue JSON object.",
+            "blockingIssues": warnings,
+            "previousOutput": raw_text[:1200],
+            "repairRules": [
+                "Return JSON only.",
+                "Keep the same speakerGeneralId, locale, speechContextMode, selectedKeywords, and resolvedEvidence intent.",
+                "Fix wrong speaker identity, mixed language, gibberish artifacts, and invalid format.",
+                "Do not add unsupported historical facts.",
+            ],
+            "originalPrompt": json.loads(self._build_prompt(package)),
+        }
+        return json.dumps(payload, ensure_ascii=False)
 
     def _extract_local_llama_text(self, payload: dict) -> str:
         message = payload.get("message") or {}
@@ -691,6 +901,17 @@ class GeminiFlashLiteDialogueProvider(GeminiDialogueProvider):
             timeout_ms=timeout_ms,
         )
         self.thinking_budget = int(os.environ.get("NPC_LLM_GEMINI_FLASH_LITE_THINKING_BUDGET") or DEFAULT_GEMINI_FLASH_LITE_THINKING_BUDGET)
+
+
+class DeepSeekReasoningDialogueProvider(LocalLlamaDialogueProvider):
+    name = "deepseek_reasoner"
+
+    def __init__(self, api_url: str | None = None, model: str | None = None, timeout_ms: int | None = None) -> None:
+        super().__init__(
+            api_url=api_url,
+            model=model or os.environ.get("NPC_LLM_MODEL_DEEPSEEK_REASONER") or DEFAULT_DEEPSEEK_REASONER_MODEL,
+            timeout_ms=timeout_ms,
+        )
 
 
 class DialogueHistoryCacheProvider:
@@ -783,11 +1004,18 @@ class DialogueProviderRouter:
     def __init__(self, provider_order: list[str] | None = None) -> None:
         self.provider_order = provider_order or self._read_provider_order()
 
-    def generate(self, package: DialoguePromptPackage) -> DialogueGenerationResult:
+    def generate(
+        self,
+        package: DialoguePromptPackage,
+        provider_order: list[str] | None = None,
+        model_overrides: dict[str, str] | None = None,
+        allow_deterministic_fallback: bool = True,
+    ) -> DialogueGenerationResult:
         trace: list[str] = []
-        for provider_name in self.provider_order:
+        active_provider_order = provider_order or self.provider_order
+        for provider_name in active_provider_order:
             try:
-                provider = self._create_provider(provider_name)
+                provider = self._create_provider(provider_name, model_overrides or {})
                 result = provider.generate(package)
                 return DialogueGenerationResult(
                     text=result.text,
@@ -797,10 +1025,14 @@ class DialogueProviderRouter:
                     fallbackUsed=result.fallbackUsed or bool(trace),
                     providerTrace=[*trace, f"{provider.name}:ok"],
                     usedEvidenceRefs=result.usedEvidenceRefs,
+                    qualityWarnings=result.qualityWarnings,
+                    repairUsed=result.repairUsed,
                 )
             except (ProviderUnavailableError, ProviderOutputError) as exc:
                 trace.append(str(exc))
                 continue
+        if not allow_deterministic_fallback:
+            raise ProviderUnavailableError(f"provider-chain-failed:{' > '.join(trace) or 'no-provider-succeeded'}")
         deterministic = DeterministicTemplateProvider().generate(package)
         return DialogueGenerationResult(
             text=deterministic.text,
@@ -810,6 +1042,8 @@ class DialogueProviderRouter:
             fallbackUsed=True,
             providerTrace=[*trace, "deterministic:ok"],
             usedEvidenceRefs=deterministic.usedEvidenceRefs,
+            qualityWarnings=deterministic.qualityWarnings,
+            repairUsed=deterministic.repairUsed,
         )
 
     def _read_provider_order(self) -> list[str]:
@@ -817,15 +1051,18 @@ class DialogueProviderRouter:
         providers = [part.strip() for part in raw.split(",") if part.strip()]
         return providers or ["deterministic"]
 
-    def _create_provider(self, provider_name: str) -> DialogueProvider:
+    def _create_provider(self, provider_name: str, model_overrides: dict[str, str] | None = None) -> DialogueProvider:
+        model_overrides = model_overrides or {}
         if provider_name == "gemini":
-            return GeminiDialogueProvider()
+            return GeminiDialogueProvider(model=model_overrides.get("gemini"))
         if provider_name == "gemini_flash":
-            return GeminiFlashDialogueProvider()
+            return GeminiFlashDialogueProvider(model=model_overrides.get("gemini_flash"))
         if provider_name == "gemini_flash_lite":
-            return GeminiFlashLiteDialogueProvider()
+            return GeminiFlashLiteDialogueProvider(model=model_overrides.get("gemini_flash_lite"))
         if provider_name == "local_llama":
-            return LocalLlamaDialogueProvider()
+            return LocalLlamaDialogueProvider(model=model_overrides.get("local_llama"))
+        if provider_name == "deepseek_reasoner":
+            return DeepSeekReasoningDialogueProvider(model=model_overrides.get("deepseek_reasoner"))
         if provider_name == "history_cache":
             return DialogueHistoryCacheProvider()
         if provider_name == "mock":

@@ -8,9 +8,18 @@ from pathlib import Path
 from pydantic import BaseModel, Field, model_validator
 
 from .llm_dialogue_renderer import (
+    DEFAULT_DEEPSEEK_REASONER_MODEL,
+    DEFAULT_GEMINI_FLASH_LITE_MODEL,
+    DEFAULT_GEMINI_FLASH_MODEL,
+    DEFAULT_GEMINI_MODEL,
     DEFAULT_HISTORY_CACHE_PATH,
     DEFAULT_LOCALE,
     DEFAULT_LOCAL_LLAMA_MODEL,
+    DEFAULT_LOCAL_LLAMA_NUM_CTX,
+    DEFAULT_LOCAL_LLAMA_REPEAT_PENALTY,
+    DEFAULT_LOCAL_LLAMA_REPAIR_RETRY_COUNT,
+    DEFAULT_LOCAL_LLAMA_TEMPERATURE,
+    DEFAULT_LOCAL_LLAMA_TOP_P,
     DEFAULT_SPEECH_CONTEXT_MODE,
     LOCALE_INSTRUCTIONS,
     DialoguePromptPackage,
@@ -29,6 +38,66 @@ PERSONA_VERSION = "general_persona_v2"
 LLM_HISTORY_PROVIDERS = {"gemini", "gemini_flash", "gemini_flash_lite", "local_llama"}
 SUPPORTED_LOCALES = set(LOCALE_INSTRUCTIONS.keys())
 SUPPORTED_SPEECH_CONTEXT_MODES = set(SPEECH_CONTEXT_INSTRUCTIONS.keys())
+DEFAULT_LLM_MODEL_PRESET = "fallback_chain"
+LLM_MODEL_PRESETS = {
+    "fallback_chain": {
+        "label": "Fallback Chain",
+        "description": "Use NPC_LLM_PROVIDER_ORDER exactly as configured in the server environment.",
+        "providerOrder": None,
+        "modelOverrides": {},
+        "allowDeterministicFallback": True,
+    },
+    "gemini_pro": {
+        "label": "Gemini 2.5 Pro",
+        "description": "Test Gemini Pro only; fail loudly if it is unavailable.",
+        "providerOrder": ["gemini"],
+        "modelOverrides": {"gemini": DEFAULT_GEMINI_MODEL},
+        "allowDeterministicFallback": False,
+    },
+    "gemini_flash": {
+        "label": "Gemini 2.5 Flash",
+        "description": "Test Gemini Flash only; fail loudly if it is unavailable.",
+        "providerOrder": ["gemini_flash"],
+        "modelOverrides": {"gemini_flash": DEFAULT_GEMINI_FLASH_MODEL},
+        "allowDeterministicFallback": False,
+    },
+    "gemini_flash_lite": {
+        "label": "Gemini 2.5 Flash Lite",
+        "description": "Test Gemini Flash Lite only; fail loudly if it is unavailable.",
+        "providerOrder": ["gemini_flash_lite"],
+        "modelOverrides": {"gemini_flash_lite": DEFAULT_GEMINI_FLASH_LITE_MODEL},
+        "allowDeterministicFallback": False,
+    },
+    "qwen2_5_7b": {
+        "label": "Qwen2.5 7B Local",
+        "description": "Test local Ollama qwen2.5:7b only; fail loudly if Ollama or the model is unavailable.",
+        "providerOrder": ["local_llama"],
+        "modelOverrides": {"local_llama": "qwen2.5:7b"},
+        "allowDeterministicFallback": False,
+    },
+    "qwen2_5_3b": {
+        "label": "Qwen2.5 3B Local",
+        "description": "Test local Ollama qwen2.5:3b only; fail loudly if Ollama or the model is unavailable.",
+        "providerOrder": ["local_llama"],
+        "modelOverrides": {"local_llama": "qwen2.5:3b"},
+        "allowDeterministicFallback": False,
+    },
+        "deepseek_r1_7b": {
+            "label": "DeepSeek R1 7B Reasoning",
+            "description": "Reasoning test model for ETL/review experiments; fail loudly if Ollama or the model is unavailable.",
+            "providerOrder": ["deepseek_reasoner"],
+            "modelOverrides": {"deepseek_reasoner": DEFAULT_DEEPSEEK_REASONER_MODEL},
+            "allowDeterministicFallback": False,
+        },
+    "local_llama_env": {
+        "label": "Local Llama Env",
+        "description": "Test local_llama only, using NPC_LLM_MODEL_LOCAL_LLAMA from .env; fail loudly if unavailable.",
+        "providerOrder": ["local_llama"],
+        "modelOverrides": {},
+        "allowDeterministicFallback": False,
+    },
+}
+SUPPORTED_LLM_MODEL_PRESETS = set(LLM_MODEL_PRESETS.keys())
 
 
 class ContextOption(BaseModel):
@@ -66,6 +135,7 @@ class DialogueRequest(BaseModel):
     toneMode: str = "in-character"
     locale: str = DEFAULT_LOCALE
     speechContextMode: str = DEFAULT_SPEECH_CONTEXT_MODE
+    llmModelPreset: str = DEFAULT_LLM_MODEL_PRESET
     maxChars: int = Field(default=80, ge=12, le=240)
 
     @model_validator(mode="after")
@@ -75,6 +145,8 @@ class DialogueRequest(BaseModel):
             self.locale = DEFAULT_LOCALE
         if self.speechContextMode not in SUPPORTED_SPEECH_CONTEXT_MODES:
             self.speechContextMode = DEFAULT_SPEECH_CONTEXT_MODE
+        if self.llmModelPreset not in SUPPORTED_LLM_MODEL_PRESETS:
+            self.llmModelPreset = DEFAULT_LLM_MODEL_PRESET
         return self
 
 
@@ -101,6 +173,7 @@ class DialogueResponse(BaseModel):
     contextKey: str | None
     locale: str = DEFAULT_LOCALE
     speechContextMode: str = DEFAULT_SPEECH_CONTEXT_MODE
+    llmModelPreset: str = DEFAULT_LLM_MODEL_PRESET
     text: str
     evidenceRefs: list[str]
     usedEvidenceRefs: list[str] = Field(default_factory=list)
@@ -111,6 +184,8 @@ class DialogueResponse(BaseModel):
     provider: str | None = None
     model: str | None = None
     providerTrace: list[str] = Field(default_factory=list)
+    qualityWarnings: list[str] = Field(default_factory=list)
+    repairUsed: bool = False
 
 
 class NpcDialogueService:
@@ -144,10 +219,27 @@ class NpcDialogueService:
                 "geminiFlashLiteModel": os.environ.get("NPC_LLM_MODEL_GEMINI_FLASH_LITE") or "gemini-2.5-flash-lite",
                 "localLlamaEnabled": "local_llama" in provider_order,
                 "localLlamaModel": os.environ.get("NPC_LLM_MODEL_LOCAL_LLAMA") or DEFAULT_LOCAL_LLAMA_MODEL,
+                "localLlamaOptions": {
+                    "temperature": float(os.environ.get("NPC_LLM_LOCAL_LLAMA_TEMPERATURE") or DEFAULT_LOCAL_LLAMA_TEMPERATURE),
+                    "topP": float(os.environ.get("NPC_LLM_LOCAL_LLAMA_TOP_P") or DEFAULT_LOCAL_LLAMA_TOP_P),
+                    "repeatPenalty": float(os.environ.get("NPC_LLM_LOCAL_LLAMA_REPEAT_PENALTY") or DEFAULT_LOCAL_LLAMA_REPEAT_PENALTY),
+                    "numCtx": int(os.environ.get("NPC_LLM_LOCAL_LLAMA_NUM_CTX") or DEFAULT_LOCAL_LLAMA_NUM_CTX),
+                    "repairRetryCount": int(os.environ.get("NPC_LLM_LOCAL_LLAMA_REPAIR_RETRY_COUNT") or DEFAULT_LOCAL_LLAMA_REPAIR_RETRY_COUNT),
+                },
                 "historyCacheEnabled": "history_cache" in provider_order,
                 "historyCachePath": str(self.history_cache_path),
                 "supportedLocales": sorted(SUPPORTED_LOCALES),
                 "supportedSpeechContextModes": sorted(SUPPORTED_SPEECH_CONTEXT_MODES),
+                "supportedModelPresets": [
+                    {
+                        "preset": preset,
+                        "label": config["label"],
+                        "description": config["description"],
+                        "providerOrder": config["providerOrder"],
+                        "modelOverrides": config["modelOverrides"],
+                    }
+                    for preset, config in LLM_MODEL_PRESETS.items()
+                ],
             },
         }
 
@@ -188,6 +280,7 @@ class NpcDialogueService:
             toneMode=request.toneMode,
             locale=request.locale,
             speechContextMode=request.speechContextMode,
+            llmModelPreset=request.llmModelPreset,
             maxChars=request.maxChars,
         )
         context_response = self.get_context_options(request.generalId)
@@ -240,6 +333,7 @@ class NpcDialogueService:
             resolvedEvidenceRefs=[evidence.evidenceRef for evidence in resolved_evidence],
             deterministicPreview=deterministic_text,
         )
+        preset_config = LLM_MODEL_PRESETS.get(request.llmModelPreset, LLM_MODEL_PRESETS[DEFAULT_LLM_MODEL_PRESET])
         generation = self.provider_router.generate(
             DialoguePromptPackage(
                 generalId=request.generalId,
@@ -253,7 +347,10 @@ class NpcDialogueService:
                 toneMode=request.toneMode,
                 locale=request.locale,
                 speechContextMode=request.speechContextMode,
-            )
+            ),
+            provider_order=preset_config["providerOrder"],
+            model_overrides=preset_config["modelOverrides"],
+            allow_deterministic_fallback=preset_config["allowDeterministicFallback"],
         )
         self._record_llm_dialogue_history(request, selected_context, used_keywords, evidence_refs, generation)
         log_debug_event(
@@ -261,9 +358,12 @@ class NpcDialogueService:
             generalId=request.generalId,
             locale=request.locale,
             speechContextMode=request.speechContextMode,
+            llmModelPreset=request.llmModelPreset,
             provider=generation.provider,
             model=generation.model,
             providerTrace=generation.providerTrace,
+            qualityWarnings=generation.qualityWarnings,
+            repairUsed=generation.repairUsed,
             usedEvidenceRefs=generation.usedEvidenceRefs,
             text=generation.text,
         )
@@ -272,6 +372,7 @@ class NpcDialogueService:
             contextKey=selected_context.contextKey if selected_context else request.contextKey,
             locale=request.locale,
             speechContextMode=request.speechContextMode,
+            llmModelPreset=request.llmModelPreset,
             text=generation.text,
             evidenceRefs=evidence_refs,
             usedEvidenceRefs=generation.usedEvidenceRefs,
@@ -282,6 +383,8 @@ class NpcDialogueService:
             provider=generation.provider,
             model=generation.model,
             providerTrace=generation.providerTrace,
+            qualityWarnings=generation.qualityWarnings,
+            repairUsed=generation.repairUsed,
         )
 
     def get_persona_card(self, general_id: str) -> PersonaCard | None:
@@ -373,6 +476,7 @@ class NpcDialogueService:
             "contextKey": selected_context.contextKey if selected_context else request.contextKey,
             "locale": request.locale,
             "speechContextMode": request.speechContextMode,
+            "llmModelPreset": request.llmModelPreset,
             "keywordKeys": [keyword.keywordKey for keyword in used_keywords],
             "keywordLabels": [keyword.label for keyword in used_keywords],
             "evidenceRefs": evidence_refs,
@@ -380,6 +484,8 @@ class NpcDialogueService:
             "provider": generation.provider,
             "model": generation.model,
             "generationMode": generation.generationMode,
+            "qualityWarnings": generation.qualityWarnings,
+            "repairUsed": generation.repairUsed,
             "text": text,
         }
         try:

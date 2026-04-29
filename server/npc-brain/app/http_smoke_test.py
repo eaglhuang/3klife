@@ -14,6 +14,12 @@ def main() -> None:
     health = client.get("/healthz")
     assert health.status_code == 200, health.text
     assert health.json()["ok"] is True
+    supported_presets = health.json()["llm"]["supportedModelPresets"]
+    supported_by_key = {preset["preset"]: preset for preset in supported_presets}
+    assert "qwen2_5_7b" in supported_by_key, supported_presets
+    assert supported_by_key["qwen2_5_7b"]["providerOrder"] == ["local_llama"], supported_by_key["qwen2_5_7b"]
+    assert "deepseek_r1_7b" in supported_by_key, supported_presets
+    assert supported_by_key["deepseek_r1_7b"]["providerOrder"] == ["deepseek_reasoner"], supported_by_key["deepseek_r1_7b"]
 
     contexts = client.get("/v1/npc/context-options", params={"generalId": "zhang-fei"})
     assert contexts.status_code == 200, contexts.text
@@ -35,10 +41,11 @@ def main() -> None:
     assert dialogue.status_code == 200, dialogue.text
     payload = dialogue.json()
     assert payload["evidenceRefs"], "dialogue response should include evidence refs"
+    assert payload["llmModelPreset"] == "fallback_chain", "dialogue response should echo default model preset"
     assert payload["rejectedKeywordKeys"] == ["unknown-key"], "unknown keyword should be rejected explicitly"
 
     print("[npc-brain-http-smoke] PASS")
-    print(f"[npc-brain-http-smoke] contexts={len(contexts.json()['options'])} categories={len(keywords.json()['categories'])} evidenceRefs={len(payload['evidenceRefs'])}")
+    print(f"[npc-brain-http-smoke] contexts={len(contexts.json()['options'])} categories={len(keywords.json()['categories'])} evidenceRefs={len(payload['evidenceRefs'])} presets={len(supported_presets)}")
 
 
 if __name__ == "__main__":

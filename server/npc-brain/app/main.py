@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 try:
-    from fastapi import FastAPI, Query
+    from fastapi import FastAPI, HTTPException, Query
 except ModuleNotFoundError as exc:
     raise RuntimeError(
         "FastAPI is not installed. Install API dependencies with: "
@@ -17,6 +17,7 @@ from .npc_dialogue_service import (
     KeywordOptionsResponse,
     NpcDialogueService,
 )
+from .llm_dialogue_renderer import ProviderUnavailableError
 
 
 DEV_CORS_ORIGINS = [
@@ -55,7 +56,10 @@ def create_app() -> FastAPI:
 
     @app.post("/v1/npc/dialogue", response_model=DialogueResponse)
     def dialogue(request: DialogueRequest):
-        return service.build_dialogue(request)
+        try:
+            return service.build_dialogue(request)
+        except ProviderUnavailableError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
 
     return app
 

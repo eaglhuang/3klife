@@ -18,6 +18,7 @@ def main() -> None:
             selectedKeywordKeys=["cao-cao", "serpent-spear", "changban-bridge", "unknown-key"],
             locale="zh-TW",
             speechContextMode="inner_monologue",
+            llmModelPreset="fallback_chain",
             maxChars=90,
         )
     )
@@ -29,6 +30,7 @@ def main() -> None:
     assert response.generationMode.endswith("persona-card"), "dialogue response should report persona-card mode"
     assert response.locale == "zh-TW", "dialogue response should echo locale"
     assert response.speechContextMode == "inner_monologue", "dialogue response should echo speech context mode"
+    assert response.llmModelPreset == "fallback_chain", "dialogue response should echo model preset"
     assert response.rejectedKeywordKeys == ["unknown-key"], "unknown keyword should be rejected explicitly"
     print("[npc-brain-smoke] PASS")
     print(f"[npc-brain-smoke] contexts={len(contexts.options)} categories={len(keywords.categories)} evidenceRefs={len(response.evidenceRefs)}")

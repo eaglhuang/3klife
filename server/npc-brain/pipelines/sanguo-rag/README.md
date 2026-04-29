@@ -138,6 +138,94 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/validate
 - `artifacts/data-pipeline/sanguo-rag/extracted/llm-extraction-trial/llm-trial-report.json`
 - `artifacts/data-pipeline/sanguo-rag/extracted/llm-extraction-trial/llm-trial-report.md`
 
+若本機已安裝 Ollama `deepseek-r1:7b`，可再跑 DeepSeek 推理 sidecar。這一步會依 `--general-id` 過濾 deterministic `events.jsonl` 與 review-only `generic-battle-candidates.jsonl`，再讀對應 keyword pack，輸出事件/關鍵字 review hints；它不會改 canonical events 或 keyword fixtures：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/run_deepseek_reasoning_trial.py \
+	--general-id zhang-fei \
+	--model deepseek-r1:7b \
+	--overwrite
+```
+
+輸出：
+
+- `artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-prompt-bundle.json`
+- `artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.json`
+- `artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.md`
+- `artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-raw.json`
+
+DeepSeek R1 常見的 `<think>...</think>` 會被清洗，只保留短 `reasoningTracePreview` 供 debug；report 中的 reasons / notes 會壓縮長度，避免把推理鏈污染到正式資料。若只想產生 prompt bundle、不呼叫本地模型，可加 `--prompt-only`。
+
+若 Ollama 裝在 Windows，而 pipeline 從 WSL 執行，請確認 WSL 能連到 Ollama `/api/chat`。Windows 版 Ollama 若只 listen 在 Windows `127.0.0.1:11434`，WSL 可能會看到 `Connection refused` 或 timeout；此時可改在 WSL 安裝 Ollama，或讓 Windows Ollama 以 WSL 可達的 host/port 提供服務，再用 `--api-url http://<host>:11434/api/chat` 指定。
+
+## ETL Quality Pilot
+
+要開始把「所有武將回答品質」變成可量測資料流，先跑 review-only pilot，不直接改正式事件或 keyword fixtures：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/run_etl_quality_pilot.py \
+	--top 24 \
+	--include-cold 4 \
+	--overwrite
+```
+
+輸出：
+
+- `artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/etl-quality-pilot-report.json`
+- `artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/etl-quality-pilot-report.md`
+- `artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/review-queue.todo.json`
+- `artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/keyword-options/*.keywords.json`
+- `artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/persona-cards/*.persona.json`
+
+這個 pilot 的用途是找出每位武將目前屬於：
+
+- `ready-for-dialogue-smoke`：已有 event / keyword / evidence，可進 Cocos 或 provider A/B 台詞測試。
+- `thin-but-testable`：有 evidence 但 keyword 類別偏薄，先補關鍵字或 review generic candidates。
+- `needs-etl-evidence`：不能先拿去評台詞品質，應先抽事件或接受候選事件。
+
+`review-queue.todo.json` 是下一輪人工/DeepSeek sidecar review 的入口。它只列建議，不 publish；正式入庫仍要走 event review / apply answers 流程。
+
+若某位武將已有 `generic-battle-candidates`，可以把候選轉成可人工審的 MCQ / todo：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/generate_event_review_choices.py \
+	--general-id lu-bu \
+	--reasoning-report artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/deepseek-lu-bu/deepseek-reasoning-report.json \
+	--output-root artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-lu-bu \
+	--overwrite
+```
+
+輸出：
+
+- `event-review-choices.<generalId>.md`
+- `event-review-answers.<generalId>.todo.json`
+
+選項固定為 `A accept` / `B accept-with-edits` / `C reject` / `D defer`。DeepSeek sidecar 的建議只會填入 `deepseekHint` 與 `suggestedAnswer`，不會自動套用。
+
+若人類或 DeepSeek 因單段 `sourceQuote` 被截斷而無法判斷 `location` / `relationshipEdges`，先展開 sourceRef 前後文，再讓 DeepSeek 產生 review-only edits：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/enrich_event_review_context.py \
+	--answers artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-lu-bu/event-review-answers.lu-bu.todo.json \
+	--api-url http://172.31.80.1:11435/api/chat \
+	--model deepseek-r1:7b \
+	--window-before 2 \
+	--window-after 2 \
+	--fill-answers \
+	--overwrite
+```
+
+輸出：
+
+- `event-review-context.<generalId>-bundle.json`
+- `event-review-context.<generalId>-report.json`
+- `event-review-context.<generalId>-report.md`
+- `event-review-answers.<generalId>.enriched.todo.json`
+
+`--fill-answers` 只會填 enriched todo，不會改 canonical events。若 DeepSeek 補齊 `summary`、`location` 與合法 `relationshipEdges`，該題可標為 `A`；若欄位仍缺，腳本會保守降回 `B`。
+
+`enrich_event_review_context.py` 會先從 expandedContext 產生 `candidateHints`，包含 source-grounded `locationCandidates` 與合法 `generalIds/sourceRefs` 的 `relationshipCandidates`，再交給 DeepSeek 逐題判讀。若 DeepSeek 回傳壞 JSON、回抄 payload 或漏欄位，逐題流程不會中斷；腳本會記錄 error，並只在候選提示同時補齊 summary / location / 目標武將參與的強 relationshipEdge 時產生待審 `A` proposal。沒有目標武將強 edge 的題目會保守留 `B`。
+
 最後可產出 API / embedding readiness fixtures：
 
 ```bash
