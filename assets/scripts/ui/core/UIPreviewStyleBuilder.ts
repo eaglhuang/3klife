@@ -14,9 +14,11 @@
  *
  * Unity 對照：相當於 UIStyleApplier + UILayoutHelper 的組合
  */
-import { Node, Sprite, UITransform, Label, Button, Font, Color } from 'cc';
+import { Node, Sprite, UITransform, Label, Button, Font, Color, Vec2 } from 'cc';
 import { RoundedRectBackground } from '../components/RoundedRectBackground';
 import { SolidBackground } from '../components/SolidBackground';
+import { GradientBackground, GradientColorStop } from '../components/GradientBackground';
+import { ShadowBackground, ShadowLayerDef } from '../components/ShadowBackground';
 import { UISkinResolver, ResolvedButtonSkin, ResolvedLabelStyle } from './UISkinResolver';
 import type { UILayoutNodeSpec } from './UISpecTypes';
 import { UIPreviewDiagnostics } from './UIPreviewDiagnostics';
@@ -47,6 +49,88 @@ export class UIPreviewStyleBuilder {
             const opacityValue = rawOpacity <= 1 ? Math.round(rawOpacity * 255) : Math.round(rawOpacity);
             return Math.max(0, Math.min(255, opacityValue));
         };
+
+        if (slot && (slot as any).kind === 'gradient-rect') {
+            const solid = node.getComponent(SolidBackground);
+            if (solid) {
+                solid.enabled = false;
+            }
+            const shadow = node.getComponent(ShadowBackground);
+            if (shadow) {
+                shadow.enabled = false;
+            }
+            const roundedRect = node.getComponent(RoundedRectBackground);
+            if (roundedRect) {
+                roundedRect.enabled = false;
+            }
+
+            const gradient = (slot as any).gradient || {};
+            const stops: GradientColorStop[] = Array.isArray(gradient.stops)
+                ? gradient.stops.map((stop: any) => ({
+                    color: this._resolveGradientColor(stop.color, stop.opacity),
+                    offset: typeof stop.offset === 'number' ? stop.offset : 0,
+                }))
+                : [];
+            const background = node.getComponent(GradientBackground) || node.addComponent(GradientBackground);
+            background.enabled = true;
+            const borderWidthRaw = (slot as any).borderWidth ?? (slot as any).strokeWidth;
+            const borderWidth = typeof borderWidthRaw === 'number' && !Number.isNaN(borderWidthRaw)
+                ? Math.max(0, borderWidthRaw)
+                : 0;
+            const cornerRadiusRaw = (slot as any).cornerRadius;
+            const cornerRadius = typeof cornerRadiusRaw === 'number' && !Number.isNaN(cornerRadiusRaw)
+                ? Math.max(0, cornerRadiusRaw)
+                : 0;
+            const borderColorKey = (slot as any).borderColor ?? (slot as any).strokeColor;
+            background.setLinearGradient(typeof gradient.angle === 'number' ? gradient.angle : 180, stops, {
+                cornerRadius,
+                borderWidth,
+                borderColor: typeof borderColorKey === 'string'
+                    ? this.skinResolver.resolveColor(borderColorKey)
+                    : new Color(255, 255, 255, 0),
+            });
+            const alpha = resolveOpacity((slot as any).alpha ?? (slot as any).opacity);
+            const sprite = node.getComponent(Sprite);
+            if (sprite && alpha !== null) {
+                sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, alpha);
+            }
+            return true;
+        }
+
+        if (slot && (slot as any).kind === 'shadow-set') {
+            const solid = node.getComponent(SolidBackground);
+            if (solid) {
+                solid.enabled = false;
+            }
+            const roundedRect = node.getComponent(RoundedRectBackground);
+            if (roundedRect) {
+                roundedRect.enabled = false;
+            }
+            const gradient = node.getComponent(GradientBackground);
+            if (gradient) {
+                gradient.enabled = false;
+            }
+
+            const shadowLayers: ShadowLayerDef[] = Array.isArray((slot as any).boxShadows)
+                ? (slot as any).boxShadows.map((shadow: any) => ({
+                    x: typeof shadow.x === 'number' ? shadow.x : 0,
+                    y: typeof shadow.y === 'number' ? shadow.y : 0,
+                    blur: typeof shadow.blur === 'number' ? shadow.blur : 0,
+                    spread: typeof shadow.spread === 'number' ? shadow.spread : 0,
+                    color: this._resolveGradientColor(shadow.color || 'rgba(0,0,0,0.35)'),
+                    inset: !!shadow.inset,
+                }))
+                : [];
+            const background = node.getComponent(ShadowBackground) || node.addComponent(ShadowBackground);
+            background.enabled = true;
+            background.setShadows(shadowLayers, (slot as any).padding, (slot as any).cornerRadius);
+            const alpha = resolveOpacity((slot as any).alpha ?? (slot as any).opacity);
+            const sprite = node.getComponent(Sprite);
+            if (sprite && alpha !== null) {
+                sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, alpha);
+            }
+            return true;
+        }
 
         // 純色背景
         if (slot && (slot.kind === 'color-rect' || (slot as any).kind === 'color')) {
@@ -94,6 +178,10 @@ export class UIPreviewStyleBuilder {
             if (roundedRect) {
                 roundedRect.enabled = false;
             }
+            const shadow = node.getComponent(ShadowBackground);
+            if (shadow) {
+                shadow.enabled = false;
+            }
 
             const sprite = node.getComponent(Sprite);
             if (sprite) {
@@ -123,6 +211,32 @@ export class UIPreviewStyleBuilder {
             this.applySpriteSkin(sprite, slot.spriteType, slot.border);
         }
         return true;
+    }
+
+    private _resolveGradientColor(rawColor: unknown, rawOpacity?: unknown): Color {
+        const opacity = typeof rawOpacity === 'number' && !Number.isNaN(rawOpacity)
+            ? Math.max(0, Math.min(1, rawOpacity))
+            : 1;
+        if (typeof rawColor !== 'string') {
+            return new Color(255, 255, 255, Math.round(255 * opacity));
+        }
+        const raw = rawColor.trim();
+        if (raw.toLowerCase() === 'transparent') {
+            return new Color(0, 0, 0, 0);
+        }
+        const rgb = raw.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)$/i);
+        if (rgb) {
+            const alpha = rgb[4] != null ? Math.max(0, Math.min(1, Number(rgb[4]))) : 1;
+            return new Color(
+                Math.max(0, Math.min(255, Number(rgb[1]) || 0)),
+                Math.max(0, Math.min(255, Number(rgb[2]) || 0)),
+                Math.max(0, Math.min(255, Number(rgb[3]) || 0)),
+                Math.round(255 * alpha * opacity),
+            );
+        }
+        const color = this.skinResolver.resolveColor(raw);
+        color.a = Math.round(color.a * opacity);
+        return color;
     }
 
     // ─── 按鈕 Skin ────────────────────────────────────────────────────────────
@@ -230,6 +344,14 @@ export class UIPreviewStyleBuilder {
         }
         if (style.outlineWidth !== undefined) {
             label.outlineWidth = style.outlineWidth;
+        }
+        // R-11: 原生 Label shadow，converter 在 layout 階段已把 CSS text-shadow
+        // 解析為 { color, offsetX, offsetY, blur }；此處只做 runtime wiring。
+        if (style.shadow) {
+            label.enableShadow = true;
+            label.shadowColor  = style.shadow.color;
+            label.shadowOffset = new Vec2(style.shadow.offsetX, style.shadow.offsetY);
+            label.shadowBlur   = style.shadow.blur || 0;
         }
         if (style.isBold) label.isBold = true;
         if (style.fontPath) {

@@ -3,22 +3,17 @@
   "version": 1,
   "firstScreen": {
     "bundles": [
-      "lobby_ui",
-      "ui_common"
+      "lobby_ui"
     ],
-    "spriteFrames": [
-      "sprites/ui_common/placeholder/missing_sprite"
-    ],
-    "fonts": [
-      "fonts/newsreader/font"
-    ],
+    "spriteFrames": [],
+    "fonts": [],
     "fragments": []
   },
   "deferred": {
     "lazySlots": []
   },
   "counts": {
-    "firstScreenSpriteCount": 1,
+    "firstScreenSpriteCount": 0,
     "deferredSpriteCount": 0
   },
   "_warnings": []

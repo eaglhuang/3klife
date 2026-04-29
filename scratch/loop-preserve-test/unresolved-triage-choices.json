@@ -1,0 +1,62 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-04-28T11:02:29+00:00",
+  "summaryPath": "artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-label-summary.json",
+  "decisionPath": "server/npc-brain/pipelines/sanguo-rag/config/unresolved-triage-decisions.json",
+  "totalMentions": 20027,
+  "resolvedMentionCount": 18328,
+  "unresolvedMentionCount": 1598,
+  "excludedMentionCount": 93,
+  "reviewPendingMentionCount": 8,
+  "questions": [
+    {
+      "id": "Q001",
+      "label": "任他",
+      "normalized": "任他",
+      "count": 6,
+      "mentionType": "unknown-candidate",
+      "sourceRefs": [
+        "018#p2",
+        "047#p9",
+        "099#p9",
+        "102#p22",
+        "103#p6"
+      ],
+      "sampleSnippets": [
+        "。卻教百姓假扮軍士，虛守西北。夜間，任他在東南角上爬城；俟其爬進城時，一聲炮",
+        "，休言人可渡，馬亦可走矣，乘此而行，任他風浪潮水上下，復何懼哉？」曹操下席而",
+        "引一萬精兵伏於山谷中，只待魏兵趕上，任他過盡，汝等卻引伏兵從後掩殺。若司馬懿"
+      ],
+      "options": [
+        {
+          "key": "A",
+          "decision": "person",
+          "meaning": "確定是人物；請補 generalId/faction 後移入 manual-roster-seeds.json 或 personRecords。"
+        },
+        {
+          "key": "B",
+          "decision": "noise",
+          "meaning": "確定不是人物；加入 noiseLabels，之後不再算 unresolved。"
+        },
+        {
+          "key": "C",
+          "decision": "ambiguous",
+          "meaning": "暫時保留人工複核；加入 ambiguousLabels，之後分流為 review-pending。"
+        },
+        {
+          "key": "D",
+          "decision": "defer",
+          "meaning": "本輪不裁決；下一輪仍維持 unresolved。"
+        }
+      ],
+      "answer": "",
+      "personRecord": {
+        "generalId": "",
+        "name": "任他",
+        "faction": "",
+        "title": "【任他】",
+        "alias": []
+      }
+    }
+  ]
+}

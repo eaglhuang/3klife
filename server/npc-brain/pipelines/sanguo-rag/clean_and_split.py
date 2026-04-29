@@ -38,6 +38,20 @@ class ChapterRecord(BaseModel):
     paragraphs: list[ParagraphRecord] = Field(description="Paragraph index and source offset metadata")
 
 
+class TextChunkRecord(BaseModel):
+    chapter_id: str = Field(description="Stable chapter file stem")
+    chapter_no: int = Field(description="Parsed chapter number if available")
+    chunk_index: int = Field(description="1-based chunk index within the chapter")
+    chunk_id: str = Field(description="Stable chunk id like ch_042_chunk_001")
+    output_path: str = Field(description="Relative path to chunk markdown file")
+    start_paragraph_index: int = Field(description="First paragraph index overlapped by this chunk")
+    end_paragraph_index: int = Field(description="Last paragraph index overlapped by this chunk")
+    source_refs: list[str] = Field(description="Source refs overlapped by this chunk")
+    source_offset_start: int = Field(description="Start offset in cleaned source.md")
+    source_offset_end: int = Field(description="End offset in cleaned source.md")
+    char_count: int = Field(description="Character count of the chunk text")
+
+
 class ConversionReport(BaseModel):
     input_path: str = Field(description="Input source path")
     cleaned_source_path: str = Field(description="Output source.md path")
@@ -50,6 +64,16 @@ class ChaptersManifest(BaseModel):
     source_path: str = Field(description="Cleaned source markdown path")
     chapter_count: int = Field(description="Number of chapters written")
     chapters: list[ChapterRecord] = Field(description="Output chapter metadata")
+
+
+class ChunkManifest(BaseModel):
+    source_path: str = Field(description="Cleaned source markdown path")
+    chunker: str = Field(description="Chunking strategy name")
+    chunk_size: int = Field(description="Configured chunk size")
+    chunk_overlap: int = Field(description="Configured chunk overlap")
+    chapter_count: int = Field(description="Number of chapters scanned")
+    total_chunks: int = Field(description="Total emitted chunks")
+    chunks: list[TextChunkRecord] = Field(description="Chunk metadata records")
 
 
 class CleanResult(BaseModel):
@@ -72,6 +96,23 @@ def parse_args() -> argparse.Namespace:
         "--overwrite",
         action="store_true",
         help="Allow overwriting existing source.md, chapters, and manifest files",
+    )
+    parser.add_argument(
+        "--chunk-with-langchain",
+        action="store_true",
+        help="Also emit token-agnostic text chunks with LangChain RecursiveCharacterTextSplitter",
+    )
+    parser.add_argument(
+        "--chunk-size",
+        type=int,
+        default=500,
+        help="Target character size per LangChain chunk",
+    )
+    parser.add_argument(
+        "--chunk-overlap",
+        type=int,
+        default=80,
+        help="Character overlap between adjacent LangChain chunks",
     )
     return parser.parse_args()
 
@@ -215,10 +256,12 @@ def split_paragraphs(chapter_id: str, chapter_body: str, chapter_start: int, cle
     return records
 
 
-def ensure_output_root(output_root: Path, overwrite: bool) -> None:
+def ensure_output_root(output_root: Path, overwrite: bool, emit_langchain_chunks: bool = False) -> None:
     output_root.mkdir(parents=True, exist_ok=True)
     chapters_dir = output_root / "chapters"
     chapters_dir.mkdir(parents=True, exist_ok=True)
+    if emit_langchain_chunks:
+        (output_root / "chunks").mkdir(parents=True, exist_ok=True)
 
     if not overwrite:
         collisions = [
@@ -227,11 +270,103 @@ def ensure_output_root(output_root: Path, overwrite: bool) -> None:
                 output_root / "source.md",
                 output_root / "conversion-report.json",
                 output_root / "chapters-manifest.json",
+                output_root / "chunks-manifest.json",
             )
+            if emit_langchain_chunks or path.name != "chunks-manifest.json"
             if path.exists()
         ]
         if collisions:
             raise FileExistsError(f"Output already exists. Re-run with --overwrite: {collisions}")
+
+
+def build_langchain_chunk_manifest(
+    source_path: Path,
+    output_root: Path,
+    chapter_records: list[ChapterRecord],
+    chunk_size: int,
+    chunk_overlap: int,
+) -> ChunkManifest:
+    try:
+        from langchain_text_splitters import RecursiveCharacterTextSplitter
+    except ImportError as exc:
+        raise ModuleNotFoundError(
+            "langchain_text_splitters is required for --chunk-with-langchain. "
+            "Install it with `pip install langchain-text-splitters`."
+        ) from exc
+
+    splitter = RecursiveCharacterTextSplitter(
+        separators=["\n\n", "\n", "。", "！", "？", "；", "，", ""],
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        length_function=len,
+        add_start_index=True,
+        strip_whitespace=True,
+    )
+
+    chunk_records: list[TextChunkRecord] = []
+    chunks_root = output_root / "chunks"
+
+    for chapter in chapter_records:
+        chapter_dir = chunks_root / chapter.chapter_id
+        chapter_dir.mkdir(parents=True, exist_ok=True)
+        chapter_text = "\n\n".join(paragraph.text for paragraph in chapter.paragraphs)
+        if not chapter_text:
+            continue
+
+        paragraph_ranges: list[tuple[ParagraphRecord, int, int]] = []
+        cursor = 0
+        for paragraph in chapter.paragraphs:
+            local_start = cursor
+            local_end = local_start + len(paragraph.text)
+            paragraph_ranges.append((paragraph, local_start, local_end))
+            cursor = local_end + 2
+
+        documents = splitter.create_documents([chapter_text])
+        for chunk_index, document in enumerate(documents, start=1):
+            start_index = int(document.metadata.get("start_index", 0))
+            end_index = start_index + len(document.page_content)
+            overlapped = [
+                (paragraph, local_start, local_end)
+                for paragraph, local_start, local_end in paragraph_ranges
+                if start_index < local_end and local_start < end_index
+            ]
+            if not overlapped:
+                continue
+
+            first_paragraph, first_local_start, _first_local_end = overlapped[0]
+            last_paragraph, last_local_start, last_local_end = overlapped[-1]
+            source_offset_start = first_paragraph.source_offset_start + max(0, start_index - first_local_start)
+            source_offset_end = last_paragraph.source_offset_start + min(len(last_paragraph.text), end_index - last_local_start)
+
+            chunk_id = f"{chapter.chapter_id}_chunk_{chunk_index:03d}"
+            chunk_path = chapter_dir / f"{chunk_id}.md"
+            chunk_path.write_text(document.page_content.strip() + "\n", encoding="utf-8")
+
+            chunk_records.append(
+                TextChunkRecord(
+                    chapter_id=chapter.chapter_id,
+                    chapter_no=chapter.chapter_no,
+                    chunk_index=chunk_index,
+                    chunk_id=chunk_id,
+                    output_path=str(chunk_path.relative_to(output_root)),
+                    start_paragraph_index=first_paragraph.paragraph_index,
+                    end_paragraph_index=last_paragraph.paragraph_index,
+                    source_refs=[paragraph.source_ref for paragraph, _local_start, _local_end in overlapped],
+                    source_offset_start=source_offset_start,
+                    source_offset_end=source_offset_end,
+                    char_count=len(document.page_content),
+                )
+            )
+
+    return ChunkManifest(
+        source_path=str(source_path),
+        chunker="langchain-recursive-character-text-splitter",
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        chapter_count=len(chapter_records),
+        total_chunks=len(chunk_records),
+        chunks=chunk_records,
+    )
 
 
 def write_json(path: Path, model: BaseModel) -> None:
@@ -246,7 +381,10 @@ def main() -> None:
     if not input_path.exists():
         raise FileNotFoundError(f"Input file not found: {input_path}")
 
-    ensure_output_root(output_root, overwrite=args.overwrite)
+    if args.chunk_overlap >= args.chunk_size:
+        raise ValueError("--chunk-overlap must be smaller than --chunk-size")
+
+    ensure_output_root(output_root, overwrite=args.overwrite, emit_langchain_chunks=args.chunk_with_langchain)
 
     raw_text = read_text(input_path)
     clean_result = clean_text(raw_text)
@@ -300,10 +438,26 @@ def main() -> None:
     write_json(output_root / "conversion-report.json", conversion_report)
     write_json(output_root / "chapters-manifest.json", manifest)
 
+    chunk_manifest: ChunkManifest | None = None
+    if args.chunk_with_langchain:
+        chunk_manifest = build_langchain_chunk_manifest(
+            source_path=cleaned_source_path,
+            output_root=output_root,
+            chapter_records=chapter_records,
+            chunk_size=args.chunk_size,
+            chunk_overlap=args.chunk_overlap,
+        )
+        write_json(output_root / "chunks-manifest.json", chunk_manifest)
+
     print(f"[clean_and_split] wrote {cleaned_source_path}")
     print(f"[clean_and_split] wrote {len(chapter_records)} chapter files to {chapters_dir}")
     print(f"[clean_and_split] wrote {output_root / 'conversion-report.json'}")
     print(f"[clean_and_split] wrote {output_root / 'chapters-manifest.json'}")
+    if chunk_manifest is not None:
+        print(
+            f"[clean_and_split] wrote {chunk_manifest.total_chunks} LangChain chunks to {output_root / 'chunks'}"
+        )
+        print(f"[clean_and_split] wrote {output_root / 'chunks-manifest.json'}")
 
 
 if __name__ == "__main__":

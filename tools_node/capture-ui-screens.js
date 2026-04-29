@@ -59,6 +59,7 @@ const targets = [
     { id: 'GeneralDetailBloodlineV3', screenId: 'general-detail-bloodline-v3-screen', targetIndex: 6, uiSourceDir: 'general-detail-bloodline-v3', runtimeScreenId: 'GeneralDetailBloodlineV3', hiddenAlias: true },
     { id: 'SpiritTallyDetail', screenId: 'spirit-tally-detail-screen', targetIndex: 7, uiSourceDir: 'spirit-tally-detail', runtimeScreenId: 'SpiritTallyDetail' },
     { id: 'GeneralList', screenId: 'general-list-screen', targetIndex: 8, uiSourceDir: 'general-list', runtimeScreenId: 'GeneralList' },
+    { id: 'GeneralListNpcDialogueDev', screenId: 'general-list-screen', targetIndex: 21, previewVariant: 'zhang-fei', uiSourceDir: 'general-list', runtimeScreenId: 'GeneralListNpcDialogueDev' },
     { id: 'EliteTroopCodex', screenId: 'elite-troop-codex-screen', targetIndex: 9, uiSourceDir: 'elite-troop-codex', runtimeScreenId: 'EliteTroopCodex' },
     { id: 'NurtureSession', screenId: 'nurture-session-screen', targetIndex: 10, uiSourceDir: 'nurture-session', runtimeScreenId: 'NurtureSession' },
     { id: 'BattleSceneFromLobby', screenId: 'battle-scene', targetIndex: 11, uiSourceDir: 'battle-hud', runtimeScreenId: 'BattleSceneFromLobby' },

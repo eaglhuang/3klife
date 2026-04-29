@@ -229,6 +229,10 @@ export interface UILayoutNodeSpec {
     id?: string;
     /** 按鈕/圖片是否可互動（Button.interactable） */
     interactable?: boolean;
+    /** CSS image object-fit 對應；用於 HTML-to-UCUF 高保真圖片縮放。 */
+    objectFit?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down';
+    /** CSS image object-position 對應，例如 "center bottom" 或 "50% 100%"。 */
+    objectPosition?: string;
 
     // ── 動畫 ──
     /** 過渡動畫（保留在 JSON，UIPreviewBuilder 提供預設） */
@@ -376,6 +380,17 @@ export interface SkinLabelSlot {
     outlineColor?: string;
     /** 描邊寬度 */
     outlineWidth?: number;
+    /**
+     * R-11: 文字陰影（Cocos Label 原生 enableShadow / shadowOffset / shadowBlur / shadowColor）。
+     * 由 converter 從 CSS `text-shadow` 解析，僅承接 single-layer non-inset 形式；
+     * 多層或 inset 由 css-capability-matrix 標記為 assetize、走 sidecar pipeline。
+     */
+    shadow?: {
+        color: string;
+        offsetX: number;
+        offsetY: number;
+        blur?: number;
+    };
 }
 
 /** 純色區塊 slot */
@@ -389,8 +404,45 @@ export interface SkinColorRectSlot {
     borderWidth?: number;
 }
 
+export interface SkinGradientRectSlot {
+    kind: 'gradient-rect';
+    gradient: {
+        type: 'linear';
+        angle?: number;
+        stops: Array<{ color: string; offset: number; opacity?: number }>;
+    };
+    opacity?: number;
+    borderColor?: string;
+    borderWidth?: number;
+    cornerRadius?: number;
+}
+
+export interface SkinShadowDef {
+    x?: number;
+    y?: number;
+    blur?: number;
+    spread?: number;
+    color?: string;
+    inset?: boolean;
+}
+
+export interface SkinShadowSetSlot {
+    kind: 'shadow-set';
+    boxShadows?: SkinShadowDef[];
+    textShadows?: SkinShadowDef[];
+    padding?: { left?: number; right?: number; top?: number; bottom?: number };
+    cornerRadius?: number;
+    opacity?: number;
+}
+
+export interface SkinFilterStackSlot {
+    kind: 'filter-stack';
+    filters: Array<{ type: string; value: string }>;
+    target?: 'self' | 'backdrop';
+}
+
 /** Skin Slot 聯合型別 */
-export type SkinSlot = SkinSpriteSlot | SkinButtonSlot | SkinLabelSlot | SkinColorRectSlot;
+export type SkinSlot = SkinSpriteSlot | SkinButtonSlot | SkinLabelSlot | SkinColorRectSlot | SkinGradientRectSlot | SkinShadowSetSlot | SkinFilterStackSlot;
 
 /** 皮膚碎片 (Skin Fragment)
  *  可被多個 Skin Manifest 引用，用於標準化 item-cell 或 parchment 樣式。

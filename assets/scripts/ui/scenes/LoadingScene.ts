@@ -57,6 +57,7 @@ enum LoadingPreviewTarget {
     CharacterDs3 = 18,
     GeneralDetailFromLobbyGeneralsButton = 19,
     GeneralDetailFromSceneGeneralListButton = 20,
+    GeneralListNpcDialogueDev = 21,
 }
 
 type GeneralDetailPreviewTab = 'Overview' | 'Basics' | 'Stats' | 'Bloodline' | 'Skills' | 'Aptitude';
@@ -167,6 +168,7 @@ export class LoadingScene extends Component {
         case LoadingPreviewTarget.GeneralDetailAptitude:
             return 'general-detail-unified-screen';
         case LoadingPreviewTarget.GeneralList:
+        case LoadingPreviewTarget.GeneralListNpcDialogueDev:
             return 'general-list-screen';
         case LoadingPreviewTarget.EliteTroopCodex:
             return 'elite-troop-codex-screen';
@@ -389,7 +391,7 @@ export class LoadingScene extends Component {
         // 💡 Cocos 3.x 技巧：resources.load 載入 SpriteFrame。
         const path = this.bgTexturePath;
         
-        console.log(`[LoadingScene] 嘗試載入背景: ${path}`);
+        UCUFLogger.info(LogCategory.LIFECYCLE, `[LoadingScene] 嘗試載入背景: ${path}`);
         
         resources.load<SpriteFrame>(path, SpriteFrame, (err, sf) => {
             if (!this._bgNode || !this._bgNode.isValid || !this.isValid) return;
@@ -397,7 +399,7 @@ export class LoadingScene extends Component {
                 // 備援：嘗試強制 /spriteFrame 後綴
                 resources.load<SpriteFrame>(path + '/spriteFrame', SpriteFrame, (err2, sf2) => {
                     if (err2) {
-                        console.warn(`[LoadingScene] 背景圖載入失敗: ${path}，Fallback 黑畫面。`);
+                        UCUFLogger.warn(LogCategory.LIFECYCLE, `[LoadingScene] 背景圖載入失敗: ${path}，Fallback 黑畫面。`);
                         return;
                     }
                     this._applySpriteFrame(sf2);
@@ -481,6 +483,10 @@ export class LoadingScene extends Component {
                 await this._previewGeneralList();
                 this._setCaptureState('ready', 'general-list-screen');
                 return;
+            case LoadingPreviewTarget.GeneralListNpcDialogueDev:
+                await this._previewGeneralListNpcDialogueDev();
+                this._setCaptureState('ready', 'general-list-screen');
+                return;
             case LoadingPreviewTarget.EliteTroopCodex:
                 await this._previewEliteTroopCodex();
                 return;
@@ -497,7 +503,7 @@ export class LoadingScene extends Component {
                 return;
             case LoadingPreviewTarget.Disabled:
             default:
-                console.warn('[LoadingScene] previewMode=true 但 previewTarget 未指定，預設載入 lobby-main-screen');
+                UCUFLogger.warn(LogCategory.LIFECYCLE, '[LoadingScene] previewMode=true 但 previewTarget 未指定，預設載入 lobby-main-screen');
                 await this._previewLobbyMain();
                 this._setCaptureState('ready', 'lobby-main-screen');
                 return;
@@ -509,7 +515,7 @@ export class LoadingScene extends Component {
     }
 
     private async _previewLobbyMain(): Promise<void> {
-        console.log('[LoadingScene] Preview target -> lobby-main-screen');
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> lobby-main-screen');
         await this._previewHost?.showScreen('lobby-main-screen');
 
         const binder = this._previewHost?.binder;
@@ -578,12 +584,12 @@ export class LoadingScene extends Component {
     }
 
     private async _previewShopMain(): Promise<void> {
-        console.log('[LoadingScene] Preview target -> shop-main-screen');
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> shop-main-screen');
         await this._previewHost?.showScreen('shop-main-screen');
     }
 
     private async _previewGacha(): Promise<void> {
-        console.log('[LoadingScene] Preview target -> gacha-main-screen');
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> gacha-main-screen');
         await this._previewHost?.showScreen('gacha-main-screen');
         if (this._previewHost?.binder) {
             await applyUIScreenRuntimeState(this._previewHost.binder, 'gacha-main-screen', {
@@ -732,7 +738,7 @@ export class LoadingScene extends Component {
     }
 
     private async _previewDuelChallenge(): Promise<void> {
-        console.log('[LoadingScene] Preview target -> duel-challenge-screen');
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> duel-challenge-screen');
         await this._previewHost?.showScreen('duel-challenge-screen');
     }
 
@@ -798,7 +804,7 @@ export class LoadingScene extends Component {
     }
 
     private async _previewBattleScene(): Promise<void> {
-        console.log('[LoadingScene] Preview target -> BattleScene.scene');
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> BattleScene.scene');
         services().scene.setNextScene('BattleScene', this._resolvePreviewBattleParams());
         await new Promise<void>((resolve, reject) => {
             director.loadScene('BattleScene', (error) => {
@@ -812,12 +818,12 @@ export class LoadingScene extends Component {
     }
 
     private async _previewGeneralDetailOverview(): Promise<void> {
-        console.log('[LoadingScene] Preview target -> LobbyScene GeneralDetailOverview smoke route');
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> LobbyScene GeneralDetailOverview smoke route');
         await this._previewGeneralDetailByTab('Overview');
     }
 
     private async _previewGeneralDetailSkills(): Promise<void> {
-        console.log('[LoadingScene] Preview target -> LobbyScene GeneralDetailSkills smoke route');
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> LobbyScene GeneralDetailSkills smoke route');
         await this._previewGeneralDetailByTab('Skills');
     }
 
@@ -838,7 +844,7 @@ export class LoadingScene extends Component {
     }
 
     private async _previewGeneralList(): Promise<void> {
-        console.log('[LoadingScene] Preview target -> LobbyScene GeneralList smoke route');
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> LobbyScene GeneralList smoke route');
 
         await new Promise<void>((resolve, reject) => {
             director.loadScene('LobbyScene', (error) => {
@@ -897,8 +903,40 @@ export class LoadingScene extends Component {
         this._fitPreviewHostToViewport();
     }
 
+    private async _previewGeneralListNpcDialogueDev(): Promise<void> {
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> LobbyScene GeneralList NPC dialogue dev route', {
+            previewVariant: this.previewVariant,
+        });
+
+        await new Promise<void>((resolve, reject) => {
+            director.loadScene('LobbyScene', (error) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve();
+            });
+        });
+
+        const lobbyScene = director.getScene()?.getComponentInChildren(LobbyScene) ?? null;
+        if (!lobbyScene) {
+            throw new Error('LobbyScene component not found after NPC dialogue preview load');
+        }
+
+        const isReady = await lobbyScene.waitForReady(10000);
+        if (!isReady) {
+            throw new Error('[LoadingScene] LobbyScene not ready within 10s (NPC dialogue route)');
+        }
+
+        await lobbyScene.previewGeneralListNpcDialogueSmoke(this.previewVariant || 'zhang-fei');
+        await this._delay(180);
+        this._fitPreviewHostToViewport();
+        await this._delay(80);
+        this._fitPreviewHostToViewport();
+    }
+
     private async _previewEliteTroopCodex(): Promise<void> {
-        console.log('[LoadingScene] Preview target -> LobbyScene EliteTroopCodex smoke route');
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> LobbyScene EliteTroopCodex smoke route');
 
         await new Promise<void>((resolve, reject) => {
             director.loadScene('LobbyScene', (error) => {
@@ -928,7 +966,7 @@ export class LoadingScene extends Component {
     }
 
     private async _previewLobbyMissionDetailDialog(): Promise<void> {
-        console.log('[LoadingScene] Preview target -> LobbyScene LobbyMissionDetailDialog smoke route');
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> LobbyScene LobbyMissionDetailDialog smoke route');
 
         await new Promise<void>((resolve, reject) => {
             director.loadScene('LobbyScene', (error) => {
@@ -1199,7 +1237,7 @@ export class LoadingScene extends Component {
     }
 
     private async _previewSpiritTallyDetail(): Promise<void> {
-        console.log('[LoadingScene] Preview target -> spirit-tally-detail-screen');
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> spirit-tally-detail-screen');
         await this._previewHost?.showScreen('spirit-tally-detail-screen');
         const previewState = await this._loadSpiritTallyDetailPreviewState();
         if (previewState && this._previewHost?.binder) {
@@ -1247,7 +1285,7 @@ export class LoadingScene extends Component {
                 ],
             };
         } catch (error) {
-            console.warn('[LoadingScene] 載入 SpiritTallyDetail preview state 失敗', error);
+            UCUFLogger.warn(LogCategory.DATA, '[LoadingScene] 載入 SpiritTallyDetail preview state 失敗', error);
             return null;
         }
     }
@@ -1473,7 +1511,7 @@ export class LoadingScene extends Component {
         const target = services().scene.getTargetScene();
         if (!target.name) return;
 
-        console.log(`[LoadingScene] 資源清理完畢，開始預載入 ${target.name}...`);
+        UCUFLogger.info(LogCategory.LIFECYCLE, `[LoadingScene] 資源清理完畢，開始預載入 ${target.name}...`);
 
         // 徹底釋放舊資源
         // @ts-ignore
@@ -1490,7 +1528,7 @@ export class LoadingScene extends Component {
             // 此處可更新進度條 UI
         }, async (error) => {
             if (error) {
-                console.error(`[LoadingScene] 載入場景 ${target.name}失敗:`, error);
+                UCUFLogger.error(LogCategory.LIFECYCLE, `[LoadingScene] 載入場景 ${target.name}失敗:`, error);
                 return;
             }
 

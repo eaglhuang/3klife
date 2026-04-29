@@ -1,0 +1,60 @@
+{
+  "screenId": "character-ds3-main",
+  "mergeMode": "html-authoritative",
+  "summary": {
+    "fieldChangeCount": 7,
+    "conflictCount": 0,
+    "manualEdits": 0,
+    "lockedPreserved": 0,
+    "preservedExisting": 0,
+    "added": 0,
+    "removedFromHtml": 0,
+    "overwrittenByHtml": 0
+  },
+  "before": {
+    "nodeCount": 174,
+    "maxDepth": 11
+  },
+  "after": {
+    "nodeCount": 174,
+    "maxDepth": 11
+  },
+  "fieldChanges": [
+    {
+      "path": "skin.slots.auto.character-ds3-main.characterds3main_div_2",
+      "kind": "existing-runtime-asset-preserved",
+      "detail": "color-rect -> sprites/ui_families/general_detail/generated/general_detail_bg_v5_civil"
+    },
+    {
+      "path": "skin.slots.auto.character-ds3-main.characterds3main_button_4",
+      "kind": "existing-runtime-asset-preserved",
+      "detail": "gradient-rect -> sprites/ui_families/general_detail/tab_active_button,sprites/ui_families/general_detail/tab_active_button,sprites/ui_families/general_detail/tab_disabled_button,sprites/ui_families/general_detail/detail_tab_active_frame"
+    },
+    {
+      "path": "skin.slots.auto.character-ds3-main.characterds3main_button_5",
+      "kind": "existing-runtime-asset-preserved",
+      "detail": "gradient-rect -> sprites/ui_families/general_detail/tab_idle_button,sprites/ui_families/general_detail/tab_active_button,sprites/ui_families/general_detail/tab_disabled_button,sprites/ui_families/general_detail/detail_tab_active_frame"
+    },
+    {
+      "path": "skin.slots.auto.character-ds3-main.characterds3main_button_6",
+      "kind": "existing-runtime-asset-preserved",
+      "detail": "gradient-rect -> sprites/ui_families/general_detail/tab_idle_button,sprites/ui_families/general_detail/tab_active_button,sprites/ui_families/general_detail/tab_disabled_button,sprites/ui_families/general_detail/detail_tab_active_frame"
+    },
+    {
+      "path": "skin.slots.auto.character-ds3-main.characterds3main_button_7",
+      "kind": "existing-runtime-asset-preserved",
+      "detail": "gradient-rect -> sprites/ui_families/general_detail/tab_idle_button,sprites/ui_families/general_detail/tab_active_button,sprites/ui_families/general_detail/tab_disabled_button,sprites/ui_families/general_detail/detail_tab_active_frame"
+    },
+    {
+      "path": "skin.slots.auto.character-ds3-main.characterds3main_button_8",
+      "kind": "existing-runtime-asset-preserved",
+      "detail": "gradient-rect -> sprites/ui_families/general_detail/tab_idle_button,sprites/ui_families/general_detail/tab_active_button,sprites/ui_families/general_detail/tab_disabled_button,sprites/ui_families/general_detail/detail_tab_active_frame"
+    },
+    {
+      "path": "skin.slots.auto.character-ds3-main.characterds3main_button_9",
+      "kind": "existing-runtime-asset-preserved",
+      "detail": "gradient-rect -> sprites/ui_families/general_detail/tab_idle_button,sprites/ui_families/general_detail/tab_active_button,sprites/ui_families/general_detail/tab_disabled_button,sprites/ui_families/general_detail/detail_tab_active_frame"
+    }
+  ],
+  "conflicts": []
+}

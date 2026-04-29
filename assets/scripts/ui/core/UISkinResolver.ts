@@ -27,6 +27,13 @@ export interface ResolvedLabelStyle {
     overflow: number;          // Label.Overflow 的數值
     outlineColor?: Color;
     outlineWidth?: number;
+    /** R-11: 原生 Label shadow（converter 由 CSS text-shadow 預先解析）。 */
+    shadow?: {
+        color: Color;
+        offsetX: number;
+        offsetY: number;
+        blur: number;
+    };
     /** 字型資源路徑（Bundle 內，空 = 系統預設字型） */
     fontPath?: string;
 }
@@ -126,6 +133,12 @@ export class UISkinResolver {
             overflow: this._parseOverflow(s.overflow),
             outlineColor: outlineColor ? this.resolveColor(outlineColor) : undefined,
             outlineWidth,
+            shadow: s.shadow ? {
+                color: this.resolveColor(s.shadow.color),
+                offsetX: s.shadow.offsetX || 0,
+                offsetY: s.shadow.offsetY || 0,
+                blur: s.shadow.blur || 0,
+            } : undefined,
             fontPath: s.font ?? this._resolveFontPathFromStyle(s.style, preset),
         };
     }

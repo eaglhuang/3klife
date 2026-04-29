@@ -1,4 +1,9 @@
 <!-- doc_id: doc_ai_0008 -->
+## 語言與推理規範
+
+1. **全繁體中文模式**: 推理與回覆一律繁體中文，使用台灣慣用術語。
+2. **Unity 對照**: 解釋 Cocos Creator 概念時，主動對照 Unity 的對應概念與設計理念。
+
 # Cocos Creator Project Guidelines
 
 ## Code Style & TypeScript Setup
@@ -30,8 +35,3 @@
 4. **視覺症狀**: 先用 `cocos-screenshot` skill 截圖；同時有 runtime 錯誤用 `cocos-bug-triage`。
 5. **UI / 武將 / Token 節流等領域流程**: 見 `.github/instructions/` 下的 path-specific instructions（自動按路徑載入）。
 6. **日誌系統**: `assets/scripts/` 內**禁用裸 `console.log`**，統一使用 `UCUFLogger`（`assets/scripts/ui/core/UCUFLogger.ts`）。新增 debug 功能前先確認目標 `LogCategory` 存在或補 enum；不得自建平行 log 模組。詳見 keep §3.2。
-
-## 語言與推理規範
-
-1. **全繁體中文模式**: 推理與回覆一律繁體中文，使用台灣慣用術語。
-2. **Unity 對照**: 解釋 Cocos Creator 概念時，主動對照 Unity 的對應概念與設計理念。

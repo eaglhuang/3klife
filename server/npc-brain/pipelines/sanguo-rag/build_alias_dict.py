@@ -309,7 +309,15 @@ def merge_manual_roster_entries(generals: list[dict], config: ManualRosterConfig
 def load_top_unresolved_labels(path: Path, limit: int) -> tuple[str | None, dict[str, int], list[TopUnresolvedLabelRecord]]:
     if not path.exists():
         return None, {}, []
-    payload = read_json(path)
+    try:
+        payload = read_json(path)
+    except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        print(f"[build_alias_dict] warning: skip observed mentions stats, unreadable file: {path} ({exc})")
+        return None, {}, []
+    if not isinstance(payload, dict):
+        print(f"[build_alias_dict] warning: skip observed mentions stats, unexpected payload type: {path}")
+        return None, {}, []
+
     type_counts: dict[str, int] = defaultdict(int)
     grouped: dict[str, dict[str, object]] = defaultdict(
         lambda: {
@@ -321,6 +329,8 @@ def load_top_unresolved_labels(path: Path, limit: int) -> tuple[str | None, dict
         }
     )
     for raw_mention in payload.get("data") or []:
+        if not isinstance(raw_mention, dict):
+            continue
         if raw_mention.get("matchStatus") != "unresolved":
             continue
         mention_type = raw_mention.get("mentionType") or "unknown"

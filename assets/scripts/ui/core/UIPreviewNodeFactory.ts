@@ -303,6 +303,16 @@ export class UIPreviewNodeFactory {
             return;
         }
 
+        if (this._usesFittedImage(spec)) {
+            this._buildFittedImage(node, spec, frame, resolveOpacity((slot as any)?.opacity ?? (slot as any)?.alpha));
+            if (spec.interactable) {
+                const button = node.getComponent(Button) || node.addComponent(Button);
+                button.target = node;
+                button.interactable = true;
+            }
+            return;
+        }
+
         const sprite       = node.addComponent(Sprite);
         sprite.sizeMode    = Sprite.SizeMode.CUSTOM;
         sprite.spriteFrame = frame;
@@ -319,6 +329,85 @@ export class UIPreviewNodeFactory {
             const button = node.getComponent(Button) || node.addComponent(Button);
             button.target = node;
             button.interactable = true;
+        }
+    }
+
+    private _usesFittedImage(spec: UILayoutNodeSpec): boolean {
+        const fit = spec.objectFit || 'fill';
+        return fit !== 'fill';
+    }
+
+    private _buildFittedImage(node: Node, spec: UILayoutNodeSpec, frame: NonNullable<Sprite['spriteFrame']>, alpha: number | null): void {
+        const hostTransform = node.getComponent(UITransform) || node.addComponent(UITransform);
+        const boxWidth = Math.max(1, hostTransform.width || frame.width || frame.originalSize.width || 1);
+        const boxHeight = Math.max(1, hostTransform.height || frame.height || frame.originalSize.height || 1);
+        const naturalWidth = Math.max(1, frame.originalSize.width || frame.width || 1);
+        const naturalHeight = Math.max(1, frame.originalSize.height || frame.height || 1);
+        const fit = spec.objectFit || 'fill';
+
+        const containScale = Math.min(boxWidth / naturalWidth, boxHeight / naturalHeight);
+        const coverScale = Math.max(boxWidth / naturalWidth, boxHeight / naturalHeight);
+        let scale = containScale;
+        if (fit === 'cover') scale = coverScale;
+        else if (fit === 'none') scale = 1;
+        else if (fit === 'scale-down') scale = Math.min(1, containScale);
+
+        const contentWidth = Math.max(1, naturalWidth * scale);
+        const contentHeight = Math.max(1, naturalHeight * scale);
+        const position = this._parseObjectPosition(spec.objectPosition);
+
+        if (fit === 'cover') {
+            const mask = node.getComponent(Mask) || node.addComponent(Mask);
+            mask.type = Mask.Type.RECT;
+        }
+
+        const contentNode = new Node(`${node.name}_ImageContent`);
+        contentNode.layer = node.layer;
+        contentNode.parent = node;
+        const contentTransform = contentNode.addComponent(UITransform);
+        contentTransform.setContentSize(contentWidth, contentHeight);
+
+        const x = -boxWidth / 2 + (boxWidth - contentWidth) * position.x + contentWidth / 2;
+        const y = boxHeight / 2 - (boxHeight - contentHeight) * position.y - contentHeight / 2;
+        contentNode.setPosition(x, y, 0);
+
+        const sprite = contentNode.addComponent(Sprite);
+        sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+        sprite.spriteFrame = frame;
+        if (alpha !== null) {
+            sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, alpha);
+        }
+    }
+
+    private _parseObjectPosition(raw: string | undefined): { x: number; y: number } {
+        if (!raw) return { x: 0.5, y: 0.5 };
+        const parts = raw.trim().toLowerCase().split(/\s+/).filter(Boolean);
+        let x: number | null = null;
+        let y: number | null = null;
+        for (const part of parts) {
+            const parsed = this._parseObjectPositionToken(part);
+            if (!parsed) continue;
+            if (parsed.axis === 'x') x = parsed.value;
+            else if (parsed.axis === 'y') y = parsed.value;
+            else if (x === null) x = parsed.value;
+            else if (y === null) y = parsed.value;
+        }
+        return { x: x ?? 0.5, y: y ?? 0.5 };
+    }
+
+    private _parseObjectPositionToken(token: string): { axis: 'x' | 'y' | 'any'; value: number } | null {
+        switch (token) {
+            case 'left': return { axis: 'x', value: 0 };
+            case 'center': return { axis: 'any', value: 0.5 };
+            case 'right': return { axis: 'x', value: 1 };
+            case 'top': return { axis: 'y', value: 0 };
+            case 'bottom': return { axis: 'y', value: 1 };
+            default: {
+                const percent = token.match(/^(-?\d+(?:\.\d+)?)%$/);
+                if (!percent) return null;
+                const value = Math.max(0, Math.min(1, Number.parseFloat(percent[1]) / 100));
+                return { axis: 'any', value };
+            }
         }
     }
 }

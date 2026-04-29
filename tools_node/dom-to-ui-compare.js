@@ -15,6 +15,7 @@
 //     [--tokens <tokens.json>]
 //     [--width 512] [--height 256]
 //     [--no-labels]
+//     [--manual-waivers <json>]
 //
 // Exit codes:  0=ok  1=error
 
@@ -70,6 +71,7 @@ function parseArgs() {
     else if (a === '--strict-pixel') { opts.strictPixel = parseFloat(args[++i]); }
     else if (a === '--strict-coverage') { opts.strictCoverage = parseFloat(args[++i]); }
     else if (a === '--emit-feedback') { opts.emitFeedback = true; }
+    else if (a === '--manual-waivers') { opts.manualWaivers = args[++i]; }
     else if (a === '--pre-eval') { opts.preEval = args[++i]; }
     else if (a === '--settle-ms') { opts.settleMs = parseInt(args[++i], 10); }
     else if (a === '--save-panels') { opts.savePanels = args[++i]; }
@@ -977,6 +979,7 @@ async function main() {
       repoRoot,
       sourceDir: path.dirname(path.resolve(opts.html)),
       screenId: opts.screenId,
+      manualWaiverPath: opts.manualWaivers,
     });
     const waiverPath = outputPngAbs.replace(/\.png$/i, '.image-waivers.json');
     fs.writeFileSync(waiverPath, JSON.stringify(waiverReport, null, 2), 'utf8');

@@ -1,6 +1,4 @@
 {
-  "id": "character-ds3-default",
-  "version": 1,
   "slots": {
     "auto.character-ds3-main.characterds3main_div_1": {
       "kind": "color-rect",
@@ -13,19 +11,108 @@
       "opacity": 1
     },
     "auto.character-ds3-main.characterds3main_button_1": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 135,
+        "stops": [
+          {
+            "color": "secondary",
+            "offset": 0,
+            "opacity": 0.18
+          },
+          {
+            "color": "gdv3GoldBorder",
+            "offset": 1,
+            "opacity": 0.1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_button_1_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 0,
+          "blur": 24,
+          "spread": 0,
+          "color": "rgba(212, 175, 55, 0.2)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 24,
+        "right": 24,
+        "top": 24,
+        "bottom": 24
+      },
+      "cornerRadius": 0
     },
     "auto.character-ds3-main.characterds3main_img_1": {
       "kind": "sprite-frame",
-      "path": "sprites/generals/zhang_fei_portrait",
-      "expectedHeight": "98%"
+      "path": "sprites/ui_common/placeholder/missing_sprite",
+      "expectedWidth": 595,
+      "expectedHeight": 1058
+    },
+    "auto.character-ds3-main.characterds3main_img_1_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 20,
+          "blur": 40,
+          "spread": 0,
+          "color": "rgba(0, 0, 0, 0.7)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 40,
+        "right": 40,
+        "top": 20,
+        "bottom": 60
+      },
+      "cornerRadius": 0
     },
     "auto.character-ds3-main.characterds3main_button_2": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 135,
+        "stops": [
+          {
+            "color": "secondary",
+            "offset": 0,
+            "opacity": 0.18
+          },
+          {
+            "color": "gdv3GoldBorder",
+            "offset": 1,
+            "opacity": 0.1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_button_2_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 0,
+          "blur": 24,
+          "spread": 0,
+          "color": "rgba(212, 175, 55, 0.2)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 24,
+        "right": 24,
+        "top": 24,
+        "bottom": 24
+      },
+      "cornerRadius": 0
     },
     "auto.character-ds3-main.characterds3main_div_3": {
       "kind": "label-style",
@@ -36,13 +123,47 @@
       "color": "surfaceParchment",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_div_4": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 135,
+        "stops": [
+          {
+            "color": "stdButtonPrimary",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(31, 51, 46)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_div_4_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 6,
+          "blur": 20,
+          "spread": 0,
+          "color": "rgba(0, 0, 0, 0.5)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 20,
+        "right": 20,
+        "top": 14,
+        "bottom": 26
+      },
+      "cornerRadius": 16
     },
     "auto.character-ds3-main.characterds3main_span_1": {
       "kind": "label-style",
@@ -53,29 +174,58 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_2": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 3,
       "color": "mirrorSigilField",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
-    },
-    "auto.character-ds3-main.characterds3main_div_5": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+      "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_button_3": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceContainer",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "backgroundMid",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_button_3_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 4,
+          "blur": 16,
+          "spread": 0,
+          "color": "rgba(0, 0, 0, 0.5)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 16,
+        "right": 16,
+        "top": 12,
+        "bottom": 20
+      },
+      "cornerRadius": 0
     },
     "auto.character-ds3-main.characterds3main_span_3": {
       "kind": "label-style",
@@ -86,18 +236,18 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "CENTER"
     },
     "auto.character-ds3-main.characterds3main_span_4": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "CENTER"
     },
     "auto.character-ds3-main.characterds3main_span_5": {
       "kind": "label-style",
@@ -108,8 +258,14 @@
       "color": "stdLabelButton",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
-      "isBold": true
+      "horizontalAlign": "START",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 2,
+        "blur": 6,
+        "color": "#00000099"
+      }
     },
     "auto.character-ds3-main.characterds3main_span_6": {
       "kind": "label-style",
@@ -120,9 +276,9 @@
       "color": "gdv3TextMutedWarm",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
-    "auto.character-ds3-main.characterds3main_div_13": {
+    "auto.character-ds3-main.characterds3main_div_11": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
       "fontSize": 16,
@@ -131,85 +287,99 @@
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "style": "labelLg"
     },
     "auto.character-ds3-main.characterds3main_span_7": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 15,
       "lineHeight": 21,
       "letterSpacing": 3,
       "color": "gdv3InkDeep",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_8": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_9": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_10": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_11": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_12": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 22,
       "lineHeight": 31,
       "letterSpacing": 0,
       "color": "outline",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
-    "auto.character-ds3-main.characterds3main_div_17": {
+    "auto.character-ds3-main.characterds3main_div_15": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.03
     },
-    "auto.character-ds3-main.characterds3main_div_19": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_17": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_13": {
       "kind": "label-style",
@@ -220,19 +390,19 @@
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_14": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_15": {
       "kind": "label-style",
@@ -243,19 +413,19 @@
       "color": "gdv3StatStr",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_16": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_17": {
@@ -267,19 +437,19 @@
       "color": "tertiaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_18": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_19": {
@@ -291,19 +461,19 @@
       "color": "gdv3StatCha",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_20": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_21": {
@@ -315,19 +485,19 @@
       "color": "gdv3StatInt",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_22": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_23": {
@@ -339,19 +509,19 @@
       "color": "rarityWhite",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_24": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_25": {
@@ -363,30 +533,44 @@
       "color": "gdv3StatLuk",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_26": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 20,
       "lineHeight": 28,
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_div_27": {
+    "auto.character-ds3-main.characterds3main_div_25": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.03
     },
-    "auto.character-ds3-main.characterds3main_div_29": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_27": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_27": {
       "kind": "label-style",
@@ -397,30 +581,30 @@
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_28": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_29": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
       "color": "textPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "style": "labelLg"
     },
     "auto.character-ds3-main.characterds3main_span_30": {
@@ -432,19 +616,19 @@
       "color": "textOffWhite",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_31": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
       "color": "textPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "style": "labelLg"
     },
     "auto.character-ds3-main.characterds3main_span_32": {
@@ -456,18 +640,32 @@
       "color": "textOffWhite",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_div_32": {
+    "auto.character-ds3-main.characterds3main_div_30": {
       "kind": "color-rect",
       "color": "colorWhite",
       "opacity": 0.03
     },
-    "auto.character-ds3-main.characterds3main_div_34": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_32": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_33": {
       "kind": "label-style",
@@ -478,30 +676,30 @@
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_34": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_35": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
       "color": "textPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "style": "labelLg"
     },
     "auto.character-ds3-main.characterds3main_span_36": {
@@ -513,19 +711,19 @@
       "color": "textOffWhite",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_37": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
       "color": "textPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "style": "labelLg"
     },
     "auto.character-ds3-main.characterds3main_span_38": {
@@ -537,18 +735,32 @@
       "color": "textOffWhite",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_div_37": {
+    "auto.character-ds3-main.characterds3main_div_35": {
       "kind": "color-rect",
       "color": "stdButtonPrimary",
       "opacity": 0.08
     },
-    "auto.character-ds3-main.characterds3main_div_39": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_37": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_39": {
       "kind": "label-style",
@@ -559,23 +771,23 @@
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_40": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
-    "auto.character-ds3-main.characterds3main_div_42": {
+    "auto.character-ds3-main.characterds3main_div_40": {
       "kind": "color-rect",
-      "color": "parchmentBase",
+      "color": "unmappedColor",
       "opacity": 1
     },
     "auto.character-ds3-main.characterds3main_span_41": {
@@ -587,9 +799,9 @@
       "color": "stdButtonPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
-    "auto.character-ds3-main.characterds3main_div_44": {
+    "auto.character-ds3-main.characterds3main_div_42": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
       "fontSize": 22,
@@ -598,7 +810,7 @@
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_42": {
@@ -610,28 +822,42 @@
       "color": "stdButtonPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
-    "auto.character-ds3-main.characterds3main_div_46": {
+    "auto.character-ds3-main.characterds3main_div_44": {
       "kind": "color-rect",
       "color": "colorBlack",
       "opacity": 0.2
     },
-    "auto.character-ds3-main.characterds3main_div_47": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_45": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 90,
+        "stops": [
+          {
+            "color": "stdButtonPrimary",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdCrestColor",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_43": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "style": "labelLg",
       "isBold": true
     },
@@ -644,19 +870,19 @@
       "color": "stdButtonPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_45": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "style": "labelLg"
     },
     "auto.character-ds3-main.characterds3main_span_46": {
@@ -668,30 +894,44 @@
       "color": "stdButtonPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_47": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "style": "labelLg"
     },
-    "auto.character-ds3-main.characterds3main_div_50": {
+    "auto.character-ds3-main.characterds3main_div_48": {
       "kind": "color-rect",
       "color": "secondary",
       "opacity": 0.04
     },
-    "auto.character-ds3-main.characterds3main_div_52": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_50": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_48": {
       "kind": "label-style",
@@ -702,23 +942,23 @@
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_49": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 10,
       "lineHeight": 14,
       "letterSpacing": 2,
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
-    "auto.character-ds3-main.characterds3main_div_53": {
+    "auto.character-ds3-main.characterds3main_div_51": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 15,
       "lineHeight": 30,
       "letterSpacing": 1,
@@ -727,7 +967,7 @@
       "outlineWidth": 2,
       "horizontalAlign": "JUSTIFY"
     },
-    "auto.character-ds3-main.characterds3main_div_54": {
+    "auto.character-ds3-main.characterds3main_div_52": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
       "fontSize": 18,
@@ -740,9 +980,23 @@
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_button_4": {
-      "kind": "color-rect",
-      "color": "parchmentBase",
-      "opacity": 1
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "secondary",
+            "offset": 0,
+            "opacity": 0.25
+          },
+          {
+            "color": "gdv3GoldBorder",
+            "offset": 1,
+            "opacity": 0.12
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_50": {
       "kind": "label-style",
@@ -753,25 +1007,39 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_51": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_button_5": {
-      "kind": "color-rect",
-      "color": "parchmentBase",
-      "opacity": 1
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceContainer",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "backgroundMid",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_52": {
       "kind": "label-style",
@@ -782,25 +1050,39 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_53": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_button_6": {
-      "kind": "color-rect",
-      "color": "parchmentBase",
-      "opacity": 1
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceContainer",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "backgroundMid",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_54": {
       "kind": "label-style",
@@ -811,25 +1093,39 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_55": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_button_7": {
-      "kind": "color-rect",
-      "color": "parchmentBase",
-      "opacity": 1
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceContainer",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "backgroundMid",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_56": {
       "kind": "label-style",
@@ -840,25 +1136,39 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_57": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_button_8": {
-      "kind": "color-rect",
-      "color": "parchmentBase",
-      "opacity": 1
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceContainer",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "backgroundMid",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_58": {
       "kind": "label-style",
@@ -869,25 +1179,39 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_59": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_button_9": {
-      "kind": "color-rect",
-      "color": "parchmentBase",
-      "opacity": 1
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceContainer",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "backgroundMid",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_60": {
       "kind": "label-style",
@@ -898,37 +1222,57 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_61": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 12,
       "lineHeight": 17,
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_div_56": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_54": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "#000000",
+            "offset": 0,
+            "opacity": 0
+          },
+          {
+            "color": "colorBlack",
+            "offset": 0.18,
+            "opacity": 0.78
+          },
+          {
+            "color": "colorBlack",
+            "offset": 1,
+            "opacity": 0.97
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_h4_1": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
       "fontSize": 16,
       "lineHeight": 22,
-      "letterSpacing": 0,
-      "color": "textPrimary",
+      "letterSpacing": 6,
+      "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
-      "style": "labelLg"
+      "horizontalAlign": "START",
+      "style": "labelLg",
+      "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_62": {
       "kind": "label-style",
@@ -939,24 +1283,43 @@
       "color": "gdv3TextMutedWarm",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_63": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/notosans_tc/font",
       "fontSize": 16,
       "lineHeight": 22,
       "letterSpacing": 0,
       "color": "textPrimary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "style": "labelLg"
     },
-    "auto.character-ds3-main.characterds3main_div_60": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_58": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 145,
+        "stops": [
+          {
+            "color": "rgb(122, 96, 64)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(58, 46, 24)",
+            "offset": 0.45,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(26, 19, 10)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_64": {
       "kind": "label-style",
@@ -967,10 +1330,10 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_div_62": {
+    "auto.character-ds3-main.characterds3main_div_60": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
       "fontSize": 13,
@@ -979,24 +1342,43 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_65": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
-    "auto.character-ds3-main.characterds3main_div_64": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_62": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 145,
+        "stops": [
+          {
+            "color": "rgb(122, 32, 32)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(58, 18, 18)",
+            "offset": 0.45,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(18, 6, 8)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_66": {
       "kind": "label-style",
@@ -1007,10 +1389,10 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_div_66": {
+    "auto.character-ds3-main.characterds3main_div_64": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
       "fontSize": 13,
@@ -1019,24 +1401,43 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_67": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
-    "auto.character-ds3-main.characterds3main_div_68": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_66": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 145,
+        "stops": [
+          {
+            "color": "rgb(90, 16, 16)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(42, 8, 8)",
+            "offset": 0.45,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(14, 4, 4)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_68": {
       "kind": "label-style",
@@ -1047,10 +1448,10 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_div_70": {
+    "auto.character-ds3-main.characterds3main_div_68": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
       "fontSize": 13,
@@ -1059,24 +1460,43 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_69": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
-    "auto.character-ds3-main.characterds3main_div_72": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_70": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 145,
+        "stops": [
+          {
+            "color": "rgb(56, 72, 32)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(30, 44, 16)",
+            "offset": 0.45,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(10, 14, 6)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_70": {
       "kind": "label-style",
@@ -1087,10 +1507,10 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_div_74": {
+    "auto.character-ds3-main.characterds3main_div_72": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
       "fontSize": 13,
@@ -1099,24 +1519,43 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_71": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
-    "auto.character-ds3-main.characterds3main_div_76": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_74": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 145,
+        "stops": [
+          {
+            "color": "rgb(106, 58, 24)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(52, 28, 10)",
+            "offset": 0.45,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(18, 10, 4)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_72": {
       "kind": "label-style",
@@ -1127,10 +1566,10 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_div_78": {
+    "auto.character-ds3-main.characterds3main_div_76": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
       "fontSize": 13,
@@ -1139,24 +1578,43 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_73": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
-    "auto.character-ds3-main.characterds3main_div_80": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+    "auto.character-ds3-main.characterds3main_div_78": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 145,
+        "stops": [
+          {
+            "color": "rgb(30, 58, 58)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(14, 32, 32)",
+            "offset": 0.45,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(6, 12, 12)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.character-ds3-main.characterds3main_span_74": {
       "kind": "label-style",
@@ -1167,10 +1625,10 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_div_82": {
+    "auto.character-ds3-main.characterds3main_div_80": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
       "fontSize": 13,
@@ -1179,34 +1637,41 @@
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT",
+      "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_75": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 9,
       "lineHeight": 13,
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
     },
-    "auto.character-ds3-main.characterds3main_div_83": {
+    "auto.character-ds3-main.characterds3main_div_81": {
       "kind": "label-style",
-      "font": "fonts/newsreader/font",
+      "font": "fonts/manrope/font",
       "fontSize": 11,
       "lineHeight": 15,
       "letterSpacing": 3,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 2,
-      "horizontalAlign": "LEFT"
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_5": {
+      "kind": "color-rect",
+      "color": "surfaceDeep",
+      "opacity": 0.72
     }
   },
+  "id": "character-ds3-default",
+  "version": 1,
   "bundles": [
-    "lobby_ui"
+    "resources"
   ],
   "meta": {
     "tokenUsageReport": {
@@ -1245,7 +1710,7 @@
         },
         {
           "token": "gdv3TextMetaDim",
-          "detail": "auto.character-ds3-main.characterds3main_div_13.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_11.color"
         },
         {
           "token": "gdv3InkDeep",
@@ -1273,7 +1738,7 @@
         },
         {
           "token": "colorWhite",
-          "detail": "auto.character-ds3-main.characterds3main_div_17.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_15.color"
         },
         {
           "token": "stdCrestColor",
@@ -1333,7 +1798,7 @@
         },
         {
           "token": "colorWhite",
-          "detail": "auto.character-ds3-main.characterds3main_div_27.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_25.color"
         },
         {
           "token": "stdCrestColor",
@@ -1361,7 +1826,7 @@
         },
         {
           "token": "colorWhite",
-          "detail": "auto.character-ds3-main.characterds3main_div_32.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_30.color"
         },
         {
           "token": "stdCrestColor",
@@ -1389,7 +1854,7 @@
         },
         {
           "token": "stdButtonPrimary",
-          "detail": "auto.character-ds3-main.characterds3main_div_37.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_35.color"
         },
         {
           "token": "stdCrestColor",
@@ -1405,7 +1870,7 @@
         },
         {
           "token": "stdCrestColor",
-          "detail": "auto.character-ds3-main.characterds3main_div_44.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_42.color"
         },
         {
           "token": "stdButtonPrimary",
@@ -1413,7 +1878,7 @@
         },
         {
           "token": "colorBlack",
-          "detail": "auto.character-ds3-main.characterds3main_div_46.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_44.color"
         },
         {
           "token": "stdCrestColor",
@@ -1437,7 +1902,7 @@
         },
         {
           "token": "secondary",
-          "detail": "auto.character-ds3-main.characterds3main_div_50.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_48.color"
         },
         {
           "token": "stdCrestColor",
@@ -1449,11 +1914,11 @@
         },
         {
           "token": "textSecondary",
-          "detail": "auto.character-ds3-main.characterds3main_div_53.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_51.color"
         },
         {
           "token": "gdv3TextMetaDim",
-          "detail": "auto.character-ds3-main.characterds3main_div_54.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_52.color"
         },
         {
           "token": "secondaryLight",
@@ -1504,7 +1969,7 @@
           "detail": "auto.character-ds3-main.characterds3main_span_61.color"
         },
         {
-          "token": "textPrimary",
+          "token": "secondaryLight",
           "detail": "auto.character-ds3-main.characterds3main_h4_1.color"
         },
         {
@@ -1521,7 +1986,7 @@
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_div_62.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_60.color"
         },
         {
           "token": "textSecondary",
@@ -1533,7 +1998,7 @@
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_div_66.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_64.color"
         },
         {
           "token": "textSecondary",
@@ -1545,7 +2010,7 @@
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_div_70.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_68.color"
         },
         {
           "token": "textSecondary",
@@ -1557,7 +2022,7 @@
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_div_74.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_72.color"
         },
         {
           "token": "textSecondary",
@@ -1569,7 +2034,7 @@
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_div_78.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_76.color"
         },
         {
           "token": "textSecondary",
@@ -1581,7 +2046,7 @@
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_div_82.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_80.color"
         },
         {
           "token": "textSecondary",
@@ -1589,34 +2054,38 @@
         },
         {
           "token": "textKhaki",
-          "detail": "auto.character-ds3-main.characterds3main_div_83.color"
+          "detail": "auto.character-ds3-main.characterds3main_div_81.color"
         }
       ],
       "cssVars": [],
       "spacing": [
         {
           "token": "spacing.md",
-          "detail": "CharacterDs3Main_div_9.gap"
+          "detail": "CharacterDs3Main_div_7.gap"
         },
         {
           "token": "spacing.md",
-          "detail": "CharacterDs3Main_div_12.gap"
+          "detail": "CharacterDs3Main_div_10.gap"
         },
         {
           "token": "spacing.md",
-          "detail": "CharacterDs3Main_div_17.padding"
+          "detail": "CharacterDs3Main_div_15.padding"
         },
         {
           "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_16.gap"
+        },
+        {
+          "token": "spacing.md",
           "detail": "CharacterDs3Main_div_18.gap"
         },
         {
           "token": "spacing.md",
-          "detail": "CharacterDs3Main_div_20.gap"
+          "detail": "CharacterDs3Main_div_25.padding"
         },
         {
-          "token": "spacing.md",
-          "detail": "CharacterDs3Main_div_27.padding"
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_26.gap"
         },
         {
           "token": "spacing.sm",
@@ -1624,15 +2093,15 @@
         },
         {
           "token": "spacing.sm",
-          "detail": "CharacterDs3Main_div_30.gap"
+          "detail": "CharacterDs3Main_div_29.gap"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "CharacterDs3Main_div_30.padding"
         },
         {
           "token": "spacing.sm",
           "detail": "CharacterDs3Main_div_31.gap"
-        },
-        {
-          "token": "spacing.md",
-          "detail": "CharacterDs3Main_div_32.padding"
         },
         {
           "token": "spacing.sm",
@@ -1640,7 +2109,11 @@
         },
         {
           "token": "spacing.sm",
-          "detail": "CharacterDs3Main_div_35.gap"
+          "detail": "CharacterDs3Main_div_34.gap"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "CharacterDs3Main_div_35.padding"
         },
         {
           "token": "spacing.sm",
@@ -1648,35 +2121,27 @@
         },
         {
           "token": "spacing.lg",
-          "detail": "CharacterDs3Main_div_37.padding"
-        },
-        {
-          "token": "spacing.sm",
           "detail": "CharacterDs3Main_div_38.gap"
         },
         {
-          "token": "spacing.lg",
-          "detail": "CharacterDs3Main_div_40.gap"
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_41.gap"
         },
         {
           "token": "spacing.sm",
-          "detail": "CharacterDs3Main_div_43.gap"
-        },
-        {
-          "token": "spacing.sm",
-          "detail": "CharacterDs3Main_div_51.gap"
+          "detail": "CharacterDs3Main_div_49.gap"
         },
         {
           "token": "spacing.md",
-          "detail": "CharacterDs3Main_div_57.gap"
+          "detail": "CharacterDs3Main_div_55.gap"
         },
         {
           "token": "spacing.sm",
-          "detail": "CharacterDs3Main_div_57.padding"
+          "detail": "CharacterDs3Main_div_55.padding"
         },
         {
           "token": "spacing.xs",
-          "detail": "CharacterDs3Main_div_58.gap"
+          "detail": "CharacterDs3Main_div_56.gap"
         }
       ],
       "typography": [
@@ -1686,27 +2151,43 @@
         },
         {
           "token": "typography.labelLg",
-          "detail": "auto.character-ds3-main.characterds3main_div_13.style"
+          "detail": "auto.character-ds3-main.characterds3main_div_11.style"
         },
         {
           "token": "spacing.lg",
-          "detail": "auto.character-ds3-main.characterds3main_div_13.fontSize"
+          "detail": "auto.character-ds3-main.characterds3main_div_11.fontSize"
         },
         {
           "token": "typography.labelLg",
           "detail": "auto.character-ds3-main.characterds3main_span_29.style"
         },
         {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_29.fontSize"
+        },
+        {
           "token": "typography.labelLg",
           "detail": "auto.character-ds3-main.characterds3main_span_31.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_31.fontSize"
         },
         {
           "token": "typography.labelLg",
           "detail": "auto.character-ds3-main.characterds3main_span_35.style"
         },
         {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_35.fontSize"
+        },
+        {
           "token": "typography.labelLg",
           "detail": "auto.character-ds3-main.characterds3main_span_37.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_37.fontSize"
         },
         {
           "token": "typography.labelLg",
@@ -1737,12 +2218,20 @@
           "detail": "auto.character-ds3-main.characterds3main_span_50.fontSize"
         },
         {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_50.lineHeight"
+        },
+        {
           "token": "spacing.md",
           "detail": "auto.character-ds3-main.characterds3main_span_51.fontSize"
         },
         {
           "token": "spacing.xxl",
           "detail": "auto.character-ds3-main.characterds3main_span_52.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_52.lineHeight"
         },
         {
           "token": "spacing.md",
@@ -1753,12 +2242,20 @@
           "detail": "auto.character-ds3-main.characterds3main_span_54.fontSize"
         },
         {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_54.lineHeight"
+        },
+        {
           "token": "spacing.md",
           "detail": "auto.character-ds3-main.characterds3main_span_55.fontSize"
         },
         {
           "token": "spacing.xxl",
           "detail": "auto.character-ds3-main.characterds3main_span_56.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_56.lineHeight"
         },
         {
           "token": "spacing.md",
@@ -1769,12 +2266,20 @@
           "detail": "auto.character-ds3-main.characterds3main_span_58.fontSize"
         },
         {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_58.lineHeight"
+        },
+        {
           "token": "spacing.md",
           "detail": "auto.character-ds3-main.characterds3main_span_59.fontSize"
         },
         {
           "token": "spacing.xxl",
           "detail": "auto.character-ds3-main.characterds3main_span_60.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_60.lineHeight"
         },
         {
           "token": "spacing.md",
@@ -1785,20 +2290,23 @@
           "detail": "auto.character-ds3-main.characterds3main_h4_1.style"
         },
         {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_h4_1.fontSize"
+        },
+        {
           "token": "spacing.md",
           "detail": "auto.character-ds3-main.characterds3main_span_62.fontSize"
         },
         {
           "token": "typography.labelLg",
           "detail": "auto.character-ds3-main.characterds3main_span_63.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_63.fontSize"
         }
       ],
       "artWarnings": [
-        {
-          "code": "css-transform-manual-layout-risk",
-          "node": "CharacterDs3Main_div_1",
-          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
-        },
         {
           "code": "overflow-hidden-clipping-risk",
           "node": "CharacterDs3Main_div_1",
@@ -1810,11 +2318,6 @@
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
-          "code": "css-transform-manual-layout-risk",
-          "node": "CharacterDs3Main_button_1",
-          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
-        },
-        {
           "code": "z-index-manual-zorder-risk",
           "node": "CharacterDs3Main_button_1",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
@@ -1825,9 +2328,9 @@
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
-          "code": "css-transform-manual-layout-risk",
+          "code": "overflow-hidden-clipping-risk",
           "node": "CharacterDs3Main_img_1",
-          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
           "code": "z-index-manual-zorder-risk",
@@ -1838,11 +2341,6 @@
           "code": "css-effect-needs-art-review",
           "node": "CharacterDs3Main_img_1",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
-        },
-        {
-          "code": "css-transform-manual-layout-risk",
-          "node": "CharacterDs3Main_button_2",
-          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
         },
         {
           "code": "z-index-manual-zorder-risk",
@@ -1870,21 +2368,6 @@
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
-          "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_div_5",
-          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
-        },
-        {
-          "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_5",
-          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
-        },
-        {
-          "code": "node-opacity-washes-children-risk",
-          "node": "CharacterDs3Main_div_5",
-          "detail": "容器 opacity 會連子文字一起洗淡，應優先放到背景 skin"
-        },
-        {
           "code": "z-index-manual-zorder-risk",
           "node": "CharacterDs3Main_button_3",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
@@ -1896,12 +2379,27 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_7",
+          "node": "CharacterDs3Main_div_5",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_div_46",
+          "node": "CharacterDs3Main_div_6",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_svg_1",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_44",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_53",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
@@ -1936,17 +2434,17 @@
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_div_56",
+          "node": "CharacterDs3Main_div_54",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_56",
+          "node": "CharacterDs3Main_div_54",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_div_59",
+          "node": "CharacterDs3Main_div_57",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
@@ -1956,12 +2454,12 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_61",
+          "node": "CharacterDs3Main_div_59",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_div_63",
+          "node": "CharacterDs3Main_div_61",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
@@ -1971,12 +2469,12 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_65",
+          "node": "CharacterDs3Main_div_63",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_div_67",
+          "node": "CharacterDs3Main_div_65",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
@@ -1986,12 +2484,12 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_69",
+          "node": "CharacterDs3Main_div_67",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_div_71",
+          "node": "CharacterDs3Main_div_69",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
@@ -2001,12 +2499,12 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_73",
+          "node": "CharacterDs3Main_div_71",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_div_75",
+          "node": "CharacterDs3Main_div_73",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
@@ -2016,12 +2514,12 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_77",
+          "node": "CharacterDs3Main_div_75",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_div_79",
+          "node": "CharacterDs3Main_div_77",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
@@ -2031,22 +2529,17 @@
         },
         {
           "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_div_79",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
           "node": "CharacterDs3Main_div_81",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
-          "code": "css-transform-manual-layout-risk",
-          "node": "CharacterDs3Main_div_83",
-          "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
-        },
-        {
-          "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_83",
-          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
-        },
-        {
           "code": "asymmetric-border-radius-approximated",
-          "node": "CharacterDs3Main_div_83",
+          "node": "CharacterDs3Main_div_81",
           "detail": "非對稱圓角不適合直接轉成單一九宮或 color-rect"
         }
       ]
@@ -2054,13 +2547,13 @@
     "tokenSources": {
       "runtimePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\ui-design-tokens.json",
       "handoffPath": "C:\\Users\\User\\3KLife\\Design System\\design_handoff\\source\\ui-design-tokens.json",
-      "sourcePath": "C:\\Users\\User\\3KLife\\Design System 3\\source\\ui-design-tokens.json"
+      "sourcePath": null
     },
     "tokenConflictReport": [],
     "atlasUsageReport": {
       "atlases": [
         {
-          "atlasId": "generals/zhang_fei_portrait",
+          "atlasId": "ui_common/placeholder",
           "slotCount": 1
         }
       ],

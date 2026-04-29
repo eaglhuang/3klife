@@ -1,0 +1,7786 @@
+{
+  "version": "1.2.0",
+  "generatedAt": "2026-04-28T11:31:04+00:00",
+  "generalsPath": "assets/resources/data/generals.json",
+  "overridesPath": "server/npc-brain/pipelines/sanguo-rag/config/general-alias-overrides.json",
+  "data": [
+    {
+      "generalId": "ahui-nan",
+      "name": "阿會喃",
+      "faction": "enemy",
+      "title": "【阿會喃】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "阿會喃",
+          "normalized": "阿會喃",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "bao-san-niang",
+      "name": "鮑三娘",
+      "faction": "shu",
+      "title": "【鮑三娘】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "鮑三娘",
+          "normalized": "鮑三娘",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "武穆夫人",
+          "normalized": "武穆夫人",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "bian-fu-ren",
+      "name": "卞夫人",
+      "faction": "wei",
+      "title": "【卞夫人】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "卞夫人",
+          "normalized": "卞夫人",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "卞氏",
+          "normalized": "卞氏",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "武宣卞皇后",
+          "normalized": "武宣卞皇后",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "bian-xi",
+      "name": "卞喜",
+      "faction": "enemy",
+      "title": "【卞喜】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "卞喜",
+          "normalized": "卞喜",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "bu-lian-shi",
+      "name": "步練師",
+      "faction": "wu",
+      "title": "【步練師】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "步練師",
+          "normalized": "步練師",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "步夫人",
+          "normalized": "步夫人",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "bu-zhi",
+      "name": "步騭",
+      "faction": "wu",
+      "title": "【步騭】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "步騭",
+          "normalized": "步騭",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cai-shi",
+      "name": "蔡氏",
+      "faction": "wei",
+      "title": "【蔡氏】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "蔡氏",
+          "normalized": "蔡氏",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "荊州蔡氏",
+          "normalized": "荊州蔡氏",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "蔡夫人",
+          "normalized": "蔡夫人",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cai-yan",
+      "name": "蔡琰",
+      "faction": "enemy",
+      "title": "【蔡琰】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "蔡琰",
+          "normalized": "蔡琰",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "蔡文姬",
+          "normalized": "蔡文姬",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-ang",
+      "name": "曹昂",
+      "faction": "wei",
+      "title": "【曹昂】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "曹昂",
+          "normalized": "曹昂",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-cao",
+      "name": "曹操",
+      "faction": "wei",
+      "title": "【魏武】",
+      "aliasCount": 5,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "曹操",
+          "normalized": "曹操",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name"
+          ]
+        },
+        {
+          "label": "孟德",
+          "normalized": "孟德",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "曹孟德",
+          "normalized": "曹孟德",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "阿瞞",
+          "normalized": "阿瞞",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "魏武",
+          "normalized": "魏武",
+          "aliasSource": "title-derived",
+          "aliasType": "title-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-hong",
+      "name": "曹洪",
+      "faction": "wei",
+      "title": "【曹洪】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "曹洪",
+          "normalized": "曹洪",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-hua",
+      "name": "曹華",
+      "faction": "wei",
+      "title": "【曹華】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "曹華",
+          "normalized": "曹華",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "魏武三女",
+          "normalized": "魏武三女",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-jie",
+      "name": "曹節",
+      "faction": "wei",
+      "title": "【曹節】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "曹節",
+          "normalized": "曹節",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "獻穆皇后",
+          "normalized": "獻穆皇后",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-pi",
+      "name": "曹丕",
+      "faction": "wei",
+      "title": "【曹丕】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "曹丕",
+          "normalized": "曹丕",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-ren",
+      "name": "曹仁",
+      "faction": "wei",
+      "title": "【曹仁】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "曹仁",
+          "normalized": "曹仁",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-rui",
+      "name": "曹睿",
+      "faction": "wei",
+      "title": "【曹睿】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "曹睿",
+          "normalized": "曹睿",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-shuang",
+      "name": "曹爽",
+      "faction": "wei",
+      "title": "【曹爽】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "曹爽",
+          "normalized": "曹爽",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-xian",
+      "name": "曹憲",
+      "faction": "wei",
+      "title": "【曹憲】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "曹憲",
+          "normalized": "曹憲",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "魏武次女",
+          "normalized": "魏武次女",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-xiu",
+      "name": "曹休",
+      "faction": "wei",
+      "title": "【曹休】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "曹休",
+          "normalized": "曹休",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-zhang",
+      "name": "曹彰",
+      "faction": "wei",
+      "title": "【曹璋】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "曹彰",
+          "normalized": "曹彰",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name"
+          ]
+        },
+        {
+          "label": "曹璋",
+          "normalized": "曹璋",
+          "aliasSource": "title-derived",
+          "aliasType": "title-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-zhen",
+      "name": "曹真",
+      "faction": "wei",
+      "title": "【曹真】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "曹真",
+          "normalized": "曹真",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "子丹",
+          "normalized": "子丹",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cao-zhi",
+      "name": "曹植",
+      "faction": "wei",
+      "title": "【曹植】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "曹植",
+          "normalized": "曹植",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "chen-dao",
+      "name": "陳到",
+      "faction": "shu",
+      "title": "【陳到】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "陳到",
+          "normalized": "陳到",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "chen-deng",
+      "name": "陳登",
+      "faction": "wei",
+      "title": "【陳登】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "陳登",
+          "normalized": "陳登",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "元龍",
+          "normalized": "元龍",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "陳元龍",
+          "normalized": "陳元龍",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "chen-gong",
+      "name": "陳宮",
+      "faction": "enemy",
+      "title": "【陳宮】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "陳宮",
+          "normalized": "陳宮",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "公台",
+          "normalized": "公台",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "chen-qun",
+      "name": "陳群",
+      "faction": "wei",
+      "title": "【陳群】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "陳群",
+          "normalized": "陳群",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "chen-shi",
+      "name": "陳式",
+      "faction": "shu",
+      "title": "【陳式】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "陳式",
+          "normalized": "陳式",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "chen-tai",
+      "name": "陳泰",
+      "faction": "wei",
+      "title": "【陳泰】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "陳泰",
+          "normalized": "陳泰",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "chen-wu",
+      "name": "陳武",
+      "faction": "wu",
+      "title": "【陳武】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "陳武",
+          "normalized": "陳武",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "chen-ying",
+      "name": "陳應",
+      "faction": "enemy",
+      "title": "【陳應】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "陳應",
+          "normalized": "陳應",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "chen-zhi",
+      "name": "陳祗",
+      "faction": "shu",
+      "title": "【陳祗】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "陳祗",
+          "normalized": "陳祗",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cheng-bing",
+      "name": "程秉",
+      "faction": "wu",
+      "title": "【程秉】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "程秉",
+          "normalized": "程秉",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cheng-pu",
+      "name": "程普",
+      "faction": "wu",
+      "title": "【程普】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "程普",
+          "normalized": "程普",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "cheng-yu",
+      "name": "程昱",
+      "faction": "wei",
+      "title": "【程昱】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "程昱",
+          "normalized": "程昱",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "da-qiao",
+      "name": "大喬",
+      "faction": "wu",
+      "title": "【大喬】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "大喬",
+          "normalized": "大喬",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "喬國老長女",
+          "normalized": "喬國老長女",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "喬姊",
+          "normalized": "喬姊",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "deng-ai",
+      "name": "鄧艾",
+      "faction": "wei",
+      "title": "【鄧艾】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "鄧艾",
+          "normalized": "鄧艾",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "deng-zhi",
+      "name": "鄧芝",
+      "faction": "shu",
+      "title": "【鄧芝】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "鄧芝",
+          "normalized": "鄧芝",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "dian-wei",
+      "name": "典韋",
+      "faction": "wei",
+      "title": "【典韋】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "典韋",
+          "normalized": "典韋",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "diao-chan",
+      "name": "貂蟬",
+      "faction": "enemy",
+      "title": "【貂蟬】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "貂蟬",
+          "normalized": "貂蟬",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "連環計美人",
+          "normalized": "連環計美人",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "閉月",
+          "normalized": "閉月",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "ding-feng",
+      "name": "丁奉",
+      "faction": "wu",
+      "title": "【丁奉】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "丁奉",
+          "normalized": "丁奉",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "dong-bai",
+      "name": "董白",
+      "faction": "enemy",
+      "title": "【董白】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "董白",
+          "normalized": "董白",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "董氏姪孫女",
+          "normalized": "董氏姪孫女",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "dong-tu-na",
+      "name": "董荼那",
+      "faction": "enemy",
+      "title": "【董荼那】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "董荼那",
+          "normalized": "董荼那",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "dong-yun",
+      "name": "董允",
+      "faction": "shu",
+      "title": "【董允】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "董允",
+          "normalized": "董允",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "dong-zhao",
+      "name": "董昭",
+      "faction": "wei",
+      "title": "【董昭】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "董昭",
+          "normalized": "董昭",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "dong-zhuo",
+      "name": "董卓",
+      "faction": "enemy",
+      "title": "【董卓】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "董卓",
+          "normalized": "董卓",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "du-qiong",
+      "name": "杜瓊",
+      "faction": "shu",
+      "title": "【杜瓊】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "杜瓊",
+          "normalized": "杜瓊",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "e-huan",
+      "name": "鄂煥",
+      "faction": "enemy",
+      "title": "【鄂煥】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "鄂煥",
+          "normalized": "鄂煥",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "fa-zheng",
+      "name": "法正",
+      "faction": "shu",
+      "title": "【法正】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "法正",
+          "normalized": "法正",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "fan-shi",
+      "name": "樊氏",
+      "faction": "enemy",
+      "title": "【樊氏】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "樊氏",
+          "normalized": "樊氏",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "桂陽樊氏",
+          "normalized": "桂陽樊氏",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "fei-guan",
+      "name": "費觀",
+      "faction": "shu",
+      "title": "【費觀】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "費觀",
+          "normalized": "費觀",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "fei-shi",
+      "name": "費詩",
+      "faction": "shu",
+      "title": "【費詩】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "費詩",
+          "normalized": "費詩",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "fei-yi",
+      "name": "費禕",
+      "faction": "shu",
+      "title": "【費禕】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "費禕",
+          "normalized": "費禕",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "fu-qian",
+      "name": "傅僉",
+      "faction": "shu",
+      "title": "【傅僉】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "傅僉",
+          "normalized": "傅僉",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "fu-shou",
+      "name": "傅肜",
+      "faction": "shu",
+      "title": "【傅肜】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "傅肜",
+          "normalized": "傅肜",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "fu-tong",
+      "name": "傅彤",
+      "faction": "shu",
+      "title": "【傅彤】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "傅彤",
+          "normalized": "傅彤",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "gan-ning",
+      "name": "甘寧",
+      "faction": "wu",
+      "title": "【甘寧】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "甘寧",
+          "normalized": "甘寧",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "gan-shi",
+      "name": "甘氏",
+      "faction": "shu",
+      "title": "【甘氏】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "甘氏",
+          "normalized": "甘氏",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "昭烈皇后",
+          "normalized": "昭烈皇后",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "甘夫人",
+          "normalized": "甘夫人",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "gao-gan",
+      "name": "高幹",
+      "faction": "enemy",
+      "title": "【高幹】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "高幹",
+          "normalized": "高幹",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "gao-lan",
+      "name": "高覽",
+      "faction": "enemy",
+      "title": "【高覽】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "高覽",
+          "normalized": "高覽",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "gongsun-yuan",
+      "name": "公孫淵",
+      "faction": "enemy",
+      "title": "【公孫淵】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "公孫淵",
+          "normalized": "公孫淵",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "gongsun-zan",
+      "name": "公孫瓚",
+      "faction": "enemy",
+      "title": "【公孫瓚】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "公孫瓚",
+          "normalized": "公孫瓚",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "gou-fu",
+      "name": "句扶",
+      "faction": "shu",
+      "title": "【句扶】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "句扶",
+          "normalized": "句扶",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "gu-yong",
+      "name": "顧雍",
+      "faction": "wu",
+      "title": "【顧雍】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "顧雍",
+          "normalized": "顧雍",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "guan-ning",
+      "name": "管寧",
+      "faction": "neutral",
+      "title": "【管寧】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "管寧",
+          "normalized": "管寧",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "guan-suo",
+      "name": "關索",
+      "faction": "shu",
+      "title": "【關索】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "關索",
+          "normalized": "關索",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "guan-xing",
+      "name": "關興",
+      "faction": "shu",
+      "title": "【關興】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "關興",
+          "normalized": "關興",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "guan-yin-ping",
+      "name": "關銀屏",
+      "faction": "shu",
+      "title": "【關銀屏】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "關銀屏",
+          "normalized": "關銀屏",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "虎女",
+          "normalized": "虎女",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "關三小姐",
+          "normalized": "關三小姐",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "guan-yu",
+      "name": "關羽",
+      "faction": "shu",
+      "title": "【美髯公】",
+      "aliasCount": 5,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "關羽",
+          "normalized": "關羽",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name"
+          ]
+        },
+        {
+          "label": "美髯公",
+          "normalized": "美髯公",
+          "aliasSource": "title-derived",
+          "aliasType": "title-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "title"
+          ]
+        },
+        {
+          "label": "美髯公關雲長",
+          "normalized": "美髯公關雲長",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "關雲長",
+          "normalized": "關雲長",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "雲長",
+          "normalized": "雲長",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "guo-huai",
+      "name": "郭淮",
+      "faction": "wei",
+      "title": "【郭淮】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "郭淮",
+          "normalized": "郭淮",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "guo-jia",
+      "name": "郭嘉",
+      "faction": "wei",
+      "title": "【郭嘉】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "郭嘉",
+          "normalized": "郭嘉",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "guo-nu-wang",
+      "name": "郭女王",
+      "faction": "wei",
+      "title": "【郭女王】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "郭女王",
+          "normalized": "郭女王",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "文德皇后",
+          "normalized": "文德皇后",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "guo-tu",
+      "name": "郭圖",
+      "faction": "enemy",
+      "title": "【郭圖】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "郭圖",
+          "normalized": "郭圖",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "han-dang",
+      "name": "韓當",
+      "faction": "wu",
+      "title": "【韓當】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "韓當",
+          "normalized": "韓當",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "han-fu",
+      "name": "韓福",
+      "faction": "enemy",
+      "title": "【韓福】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "韓福",
+          "normalized": "韓福",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "han-hao",
+      "name": "韓浩",
+      "faction": "wei",
+      "title": "【韓浩】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "韓浩",
+          "normalized": "韓浩",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "han-sui",
+      "name": "韓遂",
+      "faction": "enemy",
+      "title": "【韓遂】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "韓遂",
+          "normalized": "韓遂",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "han-xian",
+      "name": "韓暹",
+      "faction": "enemy",
+      "title": "【韓暹】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "韓暹",
+          "normalized": "韓暹",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "han-xuan",
+      "name": "韓玄",
+      "faction": "neutral",
+      "title": "【韓玄】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "韓玄",
+          "normalized": "韓玄",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "hao-meng",
+      "name": "郝萌",
+      "faction": "enemy",
+      "title": "【郝萌】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "郝萌",
+          "normalized": "郝萌",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "hao-zhao",
+      "name": "郝昭",
+      "faction": "wei",
+      "title": "【郝昭】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "郝昭",
+          "normalized": "郝昭",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "伯道",
+          "normalized": "伯道",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "he-qi",
+      "name": "賀齊",
+      "faction": "wu",
+      "title": "【賀齊】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "賀齊",
+          "normalized": "賀齊",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "hou-cheng",
+      "name": "侯成",
+      "faction": "enemy",
+      "title": "【侯成】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "侯成",
+          "normalized": "侯成",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "hu-zun",
+      "name": "胡遵",
+      "faction": "wei",
+      "title": "【胡遵】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "胡遵",
+          "normalized": "胡遵",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "hua-man",
+      "name": "花鬘",
+      "faction": "other",
+      "title": "【花鬘】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "花鬘",
+          "normalized": "花鬘",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "朵思之女",
+          "normalized": "朵思之女",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "hua-tuo",
+      "name": "華佗",
+      "faction": "neutral",
+      "title": "【華佗】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "華佗",
+          "normalized": "華佗",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "hua-xin",
+      "name": "華歆",
+      "faction": "wei",
+      "title": "【華歆】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "華歆",
+          "normalized": "華歆",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "huang-gai",
+      "name": "黃蓋",
+      "faction": "wu",
+      "title": "【黃蓋】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "黃蓋",
+          "normalized": "黃蓋",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "huang-quan",
+      "name": "黃權",
+      "faction": "shu",
+      "title": "【黃權】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "黃權",
+          "normalized": "黃權",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "huang-yue-ying",
+      "name": "黃月英",
+      "faction": "shu",
+      "title": "【黃月英】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "黃月英",
+          "normalized": "黃月英",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "月英",
+          "normalized": "月英",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "黃阿醜",
+          "normalized": "黃阿醜",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "huang-zhong",
+      "name": "黃忠",
+      "faction": "shu",
+      "title": "【黃忠】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "黃忠",
+          "normalized": "黃忠",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "huang-zu",
+      "name": "黃祖",
+      "faction": "enemy",
+      "title": "【黃祖】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "黃祖",
+          "normalized": "黃祖",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "huangfu-song",
+      "name": "皇甫嵩",
+      "faction": "enemy",
+      "title": "【皇甫嵩】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "皇甫嵩",
+          "normalized": "皇甫嵩",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "huo-yi",
+      "name": "霍弋",
+      "faction": "shu",
+      "title": "【霍弋】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "霍弋",
+          "normalized": "霍弋",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "jia-xu",
+      "name": "賈詡",
+      "faction": "wei",
+      "title": "【賈詡】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "賈詡",
+          "normalized": "賈詡",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "jian-yong",
+      "name": "簡雍",
+      "faction": "shu",
+      "title": "【簡雍】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "簡雍",
+          "normalized": "簡雍",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "jiang-gan",
+      "name": "蔣幹",
+      "faction": "wei",
+      "title": "【蔣幹】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "蔣幹",
+          "normalized": "蔣幹",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "子翼",
+          "normalized": "子翼",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "jiang-qin",
+      "name": "蔣欽",
+      "faction": "wu",
+      "title": "【蔣欽】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "蔣欽",
+          "normalized": "蔣欽",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "公奕",
+          "normalized": "公奕",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "jiang-wan",
+      "name": "蔣琬",
+      "faction": "shu",
+      "title": "【蔣琬】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "蔣琬",
+          "normalized": "蔣琬",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "jiang-wei",
+      "name": "姜維",
+      "faction": "shu",
+      "title": "【姜維】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "姜維",
+          "normalized": "姜維",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "jin-huan-san-jie",
+      "name": "金環三結",
+      "faction": "enemy",
+      "title": "【金環三結】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "金環三結",
+          "normalized": "金環三結",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "jin-xuan",
+      "name": "金旋",
+      "faction": "neutral",
+      "title": "【金旋】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "金旋",
+          "normalized": "金旋",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "ju-shou",
+      "name": "沮授",
+      "faction": "enemy",
+      "title": "【沮授】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "沮授",
+          "normalized": "沮授",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "ke-bi-neng",
+      "name": "軻比能",
+      "faction": "enemy",
+      "title": "【軻比能】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "軻比能",
+          "normalized": "軻比能",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "kong-rong",
+      "name": "孔融",
+      "faction": "neutral",
+      "title": "【孔融】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孔融",
+          "normalized": "孔融",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "le-jin",
+      "name": "樂進",
+      "faction": "wei",
+      "title": "【樂進】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "樂進",
+          "normalized": "樂進",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lei-tong",
+      "name": "雷銅",
+      "faction": "shu",
+      "title": "【雷銅】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "雷銅",
+          "normalized": "雷銅",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "雷同",
+          "normalized": "雷同",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "li-dian",
+      "name": "李典",
+      "faction": "wei",
+      "title": "【李典】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "李典",
+          "normalized": "李典",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "li-hui",
+      "name": "李恢",
+      "faction": "shu",
+      "title": "【李恢】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "李恢",
+          "normalized": "李恢",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "li-jue",
+      "name": "李傕",
+      "faction": "enemy",
+      "title": "【李傕】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "李傕",
+          "normalized": "李傕",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "li-le",
+      "name": "李樂",
+      "faction": "enemy",
+      "title": "【李樂】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "李樂",
+          "normalized": "李樂",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "li-ru",
+      "name": "李儒",
+      "faction": "enemy",
+      "title": "【李儒】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "李儒",
+          "normalized": "李儒",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "文優",
+          "normalized": "文優",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "李文優",
+          "normalized": "李文優",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "li-su",
+      "name": "李肅",
+      "faction": "enemy",
+      "title": "【李肅】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "李肅",
+          "normalized": "李肅",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "li-yan",
+      "name": "李嚴",
+      "faction": "shu",
+      "title": "【李嚴】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "李嚴",
+          "normalized": "李嚴",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "liao-hua",
+      "name": "廖化",
+      "faction": "shu",
+      "title": "【廖化】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "廖化",
+          "normalized": "廖化",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "liao-li",
+      "name": "廖立",
+      "faction": "shu",
+      "title": "【廖立】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "廖立",
+          "normalized": "廖立",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "ling-tong",
+      "name": "凌統",
+      "faction": "wu",
+      "title": "【凌統】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "凌統",
+          "normalized": "凌統",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "liu-ba",
+      "name": "劉巴",
+      "faction": "shu",
+      "title": "【劉巴】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "劉巴",
+          "normalized": "劉巴",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "liu-bao",
+      "name": "劉豹",
+      "faction": "enemy",
+      "title": "【劉豹】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "劉豹",
+          "normalized": "劉豹",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "liu-bei",
+      "name": "劉備",
+      "faction": "shu",
+      "title": "【劉備】",
+      "aliasCount": 4,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "劉備",
+          "normalized": "劉備",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "劉使君",
+          "normalized": "劉使君",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "劉玄德",
+          "normalized": "劉玄德",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "玄德",
+          "normalized": "玄德",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "liu-biao",
+      "name": "劉表",
+      "faction": "neutral",
+      "title": "【劉表】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "劉表",
+          "normalized": "劉表",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "liu-chen",
+      "name": "劉諶",
+      "faction": "shu",
+      "title": "【劉諶】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "劉諶",
+          "normalized": "劉諶",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "liu-du",
+      "name": "劉度",
+      "faction": "neutral",
+      "title": "【劉度】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "劉度",
+          "normalized": "劉度",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "liu-feng",
+      "name": "劉封",
+      "faction": "shu",
+      "title": "【劉封】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "劉封",
+          "normalized": "劉封",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "liu-yan",
+      "name": "劉焉",
+      "faction": "neutral",
+      "title": "【劉焉】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "劉焉",
+          "normalized": "劉焉",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "liu-ye",
+      "name": "劉曄",
+      "faction": "wei",
+      "title": "【劉曄】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "劉曄",
+          "normalized": "劉曄",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "liu-zhang",
+      "name": "劉璋",
+      "faction": "neutral",
+      "title": "【劉璋】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "劉璋",
+          "normalized": "劉璋",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lu-bu",
+      "name": "呂布",
+      "faction": "enemy",
+      "title": "【飛將】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "呂布",
+          "normalized": "呂布",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name"
+          ]
+        },
+        {
+          "label": "飛將",
+          "normalized": "飛將",
+          "aliasSource": "title-derived",
+          "aliasType": "title-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lu-kang",
+      "name": "陸抗",
+      "faction": "wu",
+      "title": "【陸抗】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "陸抗",
+          "normalized": "陸抗",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lu-ling-qi",
+      "name": "呂玲綺",
+      "faction": "enemy",
+      "title": "【呂玲綺】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "呂玲綺",
+          "normalized": "呂玲綺",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "飛將之女",
+          "normalized": "飛將之女",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lu-meng",
+      "name": "呂蒙",
+      "faction": "wu",
+      "title": "【呂蒙】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "呂蒙",
+          "normalized": "呂蒙",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lu-su",
+      "name": "魯肅",
+      "faction": "wu",
+      "title": "【魯肅】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "魯肅",
+          "normalized": "魯肅",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lu-xun",
+      "name": "陸遜",
+      "faction": "wu",
+      "title": "【陸遜】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "陸遜",
+          "normalized": "陸遜",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lu-yin",
+      "name": "陸胤",
+      "faction": "wu",
+      "title": "【陸胤】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "陸胤",
+          "normalized": "陸胤",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "luo-xian",
+      "name": "羅憲",
+      "faction": "shu",
+      "title": "【羅憲】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "羅憲",
+          "normalized": "羅憲",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lv-dai",
+      "name": "呂岱",
+      "faction": "wu",
+      "title": "【呂岱】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "呂岱",
+          "normalized": "呂岱",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lv-fan",
+      "name": "呂範",
+      "faction": "wu",
+      "title": "【呂範】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "呂範",
+          "normalized": "呂範",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lv-kai",
+      "name": "呂凱",
+      "faction": "shu",
+      "title": "【呂凱】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "呂凱",
+          "normalized": "呂凱",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lv-qian",
+      "name": "呂虔",
+      "faction": "wei",
+      "title": "【呂虔】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "呂虔",
+          "normalized": "呂虔",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "lv-xiang",
+      "name": "呂翔",
+      "faction": "enemy",
+      "title": "【呂翔】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "呂翔",
+          "normalized": "呂翔",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "ma-chao",
+      "name": "馬超",
+      "faction": "shu",
+      "title": "【馬超】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "馬超",
+          "normalized": "馬超",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "ma-dai",
+      "name": "馬岱",
+      "faction": "shu",
+      "title": "【馬岱】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "馬岱",
+          "normalized": "馬岱",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "ma-liang",
+      "name": "馬良",
+      "faction": "shu",
+      "title": "【馬良】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "馬良",
+          "normalized": "馬良",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "ma-su",
+      "name": "馬謖",
+      "faction": "shu",
+      "title": "【馬謖】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "馬謖",
+          "normalized": "馬謖",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "幼常",
+          "normalized": "幼常",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "ma-teng",
+      "name": "馬騰",
+      "faction": "neutral",
+      "title": "【馬騰】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "馬騰",
+          "normalized": "馬騰",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "ma-yun-lu",
+      "name": "馬雲騄",
+      "faction": "shu",
+      "title": "【馬雲騄】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "馬雲騄",
+          "normalized": "馬雲騄",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "馬家姝騎",
+          "normalized": "馬家姝騎",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "ma-zhong",
+      "name": "馬忠",
+      "faction": "wu",
+      "title": "【馬忠】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "馬忠",
+          "normalized": "馬忠",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "ma-zun",
+      "name": "馬遵",
+      "faction": "wei",
+      "title": "【馬遵】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "馬遵",
+          "normalized": "馬遵",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "man-chong",
+      "name": "滿寵",
+      "faction": "wei",
+      "title": "【滿寵】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "滿寵",
+          "normalized": "滿寵",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "mao-jie",
+      "name": "毛玠",
+      "faction": "wei",
+      "title": "【毛玠】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "毛玠",
+          "normalized": "毛玠",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "meng-da",
+      "name": "孟達",
+      "faction": "neutral",
+      "title": "【孟達】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孟達",
+          "normalized": "孟達",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "meng-huo",
+      "name": "孟獲",
+      "faction": "enemy",
+      "title": "【孟獲】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孟獲",
+          "normalized": "孟獲",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "meng-you",
+      "name": "孟優",
+      "faction": "enemy",
+      "title": "【孟優】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孟優",
+          "normalized": "孟優",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "mi-heng",
+      "name": "禰衡",
+      "faction": "neutral",
+      "title": "【禰衡】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "禰衡",
+          "normalized": "禰衡",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "mi-shi",
+      "name": "糜氏",
+      "faction": "shu",
+      "title": "【糜氏】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "糜氏",
+          "normalized": "糜氏",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "糜夫人",
+          "normalized": "糜夫人",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "麋夫人",
+          "normalized": "麋夫人",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "mi-zhu",
+      "name": "麋竺",
+      "faction": "shu",
+      "title": "【麋竺】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "麋竺",
+          "normalized": "麋竺",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "mu-lu-da-wang",
+      "name": "木鹿大王",
+      "faction": "enemy",
+      "title": "【木鹿大王】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "木鹿大王",
+          "normalized": "木鹿大王",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "pan-jun",
+      "name": "潘浚",
+      "faction": "wu",
+      "title": "【潘浚】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "潘浚",
+          "normalized": "潘浚",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "pan-zhang",
+      "name": "潘璋",
+      "faction": "wu",
+      "title": "【潘璋】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "潘璋",
+          "normalized": "潘璋",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "pang-de",
+      "name": "龐德",
+      "faction": "enemy",
+      "title": "【龐德】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "龐德",
+          "normalized": "龐德",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "pang-tong",
+      "name": "龐統",
+      "faction": "shu",
+      "title": "【龐統】",
+      "aliasCount": 4,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "龐統",
+          "normalized": "龐統",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "士元",
+          "normalized": "士元",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "鳳雛",
+          "normalized": "鳳雛",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "龐士元",
+          "normalized": "龐士元",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "peng-yang",
+      "name": "彭羕",
+      "faction": "shu",
+      "title": "【彭羕】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "彭羕",
+          "normalized": "彭羕",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "qin-mi",
+      "name": "秦宓",
+      "faction": "shu",
+      "title": "【秦宓】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "秦宓",
+          "normalized": "秦宓",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "quan-cong",
+      "name": "全琮",
+      "faction": "wu",
+      "title": "【全琮】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "全琮",
+          "normalized": "全琮",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sha-mo-ke",
+      "name": "沙摩柯",
+      "faction": "enemy",
+      "title": "【沙摩柯】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "沙摩柯",
+          "normalized": "沙摩柯",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "shen-pei",
+      "name": "審配",
+      "faction": "enemy",
+      "title": "【審配】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "審配",
+          "normalized": "審配",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sima-shi",
+      "name": "司馬師",
+      "faction": "wei",
+      "title": "【司馬師】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "司馬師",
+          "normalized": "司馬師",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sima-wang",
+      "name": "司馬望",
+      "faction": "wei",
+      "title": "【司馬望】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "司馬望",
+          "normalized": "司馬望",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sima-yan",
+      "name": "司馬炎",
+      "faction": "wei",
+      "title": "【司馬炎】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "司馬炎",
+          "normalized": "司馬炎",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sima-yi",
+      "name": "司馬懿",
+      "faction": "wei",
+      "title": "【司馬懿】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "司馬懿",
+          "normalized": "司馬懿",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sima-zhao",
+      "name": "司馬昭",
+      "faction": "wei",
+      "title": "【司馬昭】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "司馬昭",
+          "normalized": "司馬昭",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-ce",
+      "name": "孫策",
+      "faction": "wu",
+      "title": "【孫策】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孫策",
+          "normalized": "孫策",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-hao",
+      "name": "孫皓",
+      "faction": "enemy",
+      "title": "【孫皓】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孫皓",
+          "normalized": "孫皓",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-huan",
+      "name": "孫桓",
+      "faction": "wu",
+      "title": "【孫桓】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孫桓",
+          "normalized": "孫桓",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-jian",
+      "name": "孫堅",
+      "faction": "wu",
+      "title": "【孫堅】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孫堅",
+          "normalized": "孫堅",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-jun",
+      "name": "孫峻",
+      "faction": "wu",
+      "title": "【孫峻】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孫峻",
+          "normalized": "孫峻",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-li",
+      "name": "孫禮",
+      "faction": "wei",
+      "title": "【孫禮】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孫禮",
+          "normalized": "孫禮",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-lu-ban",
+      "name": "孫魯班",
+      "faction": "wu",
+      "title": "【孫魯班】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "孫魯班",
+          "normalized": "孫魯班",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "全公主",
+          "normalized": "全公主",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "大虎",
+          "normalized": "大虎",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-lu-yu",
+      "name": "孫魯育",
+      "faction": "wu",
+      "title": "【孫魯育】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "孫魯育",
+          "normalized": "孫魯育",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "小虎",
+          "normalized": "小虎",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "朱公主",
+          "normalized": "朱公主",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-qian",
+      "name": "孫乾",
+      "faction": "shu",
+      "title": "【孫乾】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孫乾",
+          "normalized": "孫乾",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-quan",
+      "name": "孫權",
+      "faction": "wu",
+      "title": "【孫權】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "孫權",
+          "normalized": "孫權",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "吳侯",
+          "normalized": "吳侯",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-shang-xiang",
+      "name": "孫尚香",
+      "faction": "wu",
+      "title": "【孫尚香】",
+      "aliasCount": 5,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "孫尚香",
+          "normalized": "孫尚香",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "孫仁",
+          "normalized": "孫仁",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "孫夫",
+          "normalized": "孫夫",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "孫夫人",
+          "normalized": "孫夫人",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "弓腰姬",
+          "normalized": "弓腰姬",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-shao",
+      "name": "孫邵",
+      "faction": "wu",
+      "title": "【孫邵】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孫邵",
+          "normalized": "孫邵",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-sheng",
+      "name": "孫盛",
+      "faction": "wu",
+      "title": "【孫盛】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孫盛",
+          "normalized": "孫盛",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "sun-yi",
+      "name": "孫翊",
+      "faction": "wu",
+      "title": "【孫翊】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "孫翊",
+          "normalized": "孫翊",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "taishi-ci",
+      "name": "太史慈",
+      "faction": "wu",
+      "title": "【太史慈】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "太史慈",
+          "normalized": "太史慈",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "tao-qian",
+      "name": "陶謙",
+      "faction": "neutral",
+      "title": "【陶謙】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "陶謙",
+          "normalized": "陶謙",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "tian-chou",
+      "name": "田疇",
+      "faction": "neutral",
+      "title": "【田疇】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "田疇",
+          "normalized": "田疇",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "tian-feng",
+      "name": "田豐",
+      "faction": "enemy",
+      "title": "【田豐】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "田豐",
+          "normalized": "田豐",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-bi",
+      "name": "王必",
+      "faction": "wei",
+      "title": "【王必】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "王必",
+          "normalized": "王必",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-fang",
+      "name": "王方",
+      "faction": "enemy",
+      "title": "【王方】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "王方",
+          "normalized": "王方",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-hun",
+      "name": "王渾",
+      "faction": "wei",
+      "title": "【王渾】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "王渾",
+          "normalized": "王渾",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-ji",
+      "name": "王基",
+      "faction": "wei",
+      "title": "【王基】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "王基",
+          "normalized": "王基",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-jing",
+      "name": "王經",
+      "faction": "wei",
+      "title": "【王經】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "王經",
+          "normalized": "王經",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "彥緯",
+          "normalized": "彥緯",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-kai",
+      "name": "王楷",
+      "faction": "enemy",
+      "title": "【王楷】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "王楷",
+          "normalized": "王楷",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-lang",
+      "name": "王朗",
+      "faction": "wei",
+      "title": "【王朗】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "王朗",
+          "normalized": "王朗",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-ping",
+      "name": "王平",
+      "faction": "shu",
+      "title": "【王平】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "王平",
+          "normalized": "王平",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-shuang",
+      "name": "王雙",
+      "faction": "wei",
+      "title": "【王雙】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "王雙",
+          "normalized": "王雙",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-yi",
+      "name": "王異",
+      "faction": "wei",
+      "title": "【王異】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "王異",
+          "normalized": "王異",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-yuan-ji",
+      "name": "王元姬",
+      "faction": "wei",
+      "title": "【王元姬】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "王元姬",
+          "normalized": "王元姬",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "文明皇后",
+          "normalized": "文明皇后",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-yun",
+      "name": "王允",
+      "faction": "enemy",
+      "title": "【王允】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "王允",
+          "normalized": "王允",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "子師",
+          "normalized": "子師",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wang-zhong",
+      "name": "王忠",
+      "faction": "enemy",
+      "title": "【王忠】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "王忠",
+          "normalized": "王忠",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wei-huang",
+      "name": "韋晃",
+      "faction": "enemy",
+      "title": "【韋晃】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "韋晃",
+          "normalized": "韋晃",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wei-xu",
+      "name": "魏續",
+      "faction": "enemy",
+      "title": "【魏續】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "魏續",
+          "normalized": "魏續",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wei-yan",
+      "name": "魏延",
+      "faction": "shu",
+      "title": "【魏延】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "魏延",
+          "normalized": "魏延",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wei-zhao",
+      "name": "韋昭",
+      "faction": "wu",
+      "title": "【韋昭】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "韋昭",
+          "normalized": "韋昭",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wen-chou",
+      "name": "文醜",
+      "faction": "enemy",
+      "title": "【文醜】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "文醜",
+          "normalized": "文醜",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wen-pin",
+      "name": "文聘",
+      "faction": "wei",
+      "title": "【文聘】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "文聘",
+          "normalized": "文聘",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wen-qin",
+      "name": "文欽",
+      "faction": "wei",
+      "title": "【文欽】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "文欽",
+          "normalized": "文欽",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wu-ban",
+      "name": "吳班",
+      "faction": "shu",
+      "title": "【吳班】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "吳班",
+          "normalized": "吳班",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wu-guo-tai",
+      "name": "吳國太",
+      "faction": "wu",
+      "title": "【吳國太】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "吳國太",
+          "normalized": "吳國太",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "吳夫人",
+          "normalized": "吳夫人",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "國太",
+          "normalized": "國太",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wu-lan",
+      "name": "吳蘭",
+      "faction": "shu",
+      "title": "【吳蘭】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "吳蘭",
+          "normalized": "吳蘭",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wu-tugu",
+      "name": "兀突骨",
+      "faction": "enemy",
+      "title": "【兀突骨】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "兀突骨",
+          "normalized": "兀突骨",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "wu-yi",
+      "name": "吳懿",
+      "faction": "shu",
+      "title": "【吳懿】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "吳懿",
+          "normalized": "吳懿",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xi-zhi-cai",
+      "name": "戲志才",
+      "faction": "wei",
+      "title": "【戲志才】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "戲志才",
+          "normalized": "戲志才",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xiahou-ba",
+      "name": "夏侯霸",
+      "faction": "wei",
+      "title": "【夏侯霸】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "夏侯霸",
+          "normalized": "夏侯霸",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "仲權",
+          "normalized": "仲權",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xiahou-dun",
+      "name": "夏侯惇",
+      "faction": "wei",
+      "title": "【夏侯惇】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "夏侯惇",
+          "normalized": "夏侯惇",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xiahou-ling-nv",
+      "name": "夏侯令女",
+      "faction": "wei",
+      "title": "【夏侯令女】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "夏侯令女",
+          "normalized": "夏侯令女",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "魏室節女",
+          "normalized": "魏室節女",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xiahou-mao",
+      "name": "夏侯楙",
+      "faction": "wei",
+      "title": "【夏侯楙】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "夏侯楙",
+          "normalized": "夏侯楙",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "子林",
+          "normalized": "子林",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xiahou-shang",
+      "name": "夏侯尚",
+      "faction": "wei",
+      "title": "【夏侯尚】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "夏侯尚",
+          "normalized": "夏侯尚",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "伯仁",
+          "normalized": "伯仁",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xiahou-shi",
+      "name": "夏侯氏",
+      "faction": "shu",
+      "title": "【夏侯氏】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "夏侯氏",
+          "normalized": "夏侯氏",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "張飛夫人",
+          "normalized": "張飛夫人",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xiahou-yuan",
+      "name": "夏侯淵",
+      "faction": "wei",
+      "title": "【夏侯淵】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "夏侯淵",
+          "normalized": "夏侯淵",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xiao-qiao",
+      "name": "小喬",
+      "faction": "wu",
+      "title": "【小喬】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "小喬",
+          "normalized": "小喬",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "周郎夫人",
+          "normalized": "周郎夫人",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "喬妹",
+          "normalized": "喬妹",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xin-xian-ying",
+      "name": "辛憲英",
+      "faction": "wei",
+      "title": "【辛憲英】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "辛憲英",
+          "normalized": "辛憲英",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "辛家女史",
+          "normalized": "辛家女史",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xu-huang",
+      "name": "徐晃",
+      "faction": "wei",
+      "title": "【徐晃】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "徐晃",
+          "normalized": "徐晃",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xu-sheng",
+      "name": "徐盛",
+      "faction": "wu",
+      "title": "【徐盛】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "徐盛",
+          "normalized": "徐盛",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xu-shi",
+      "name": "徐氏",
+      "faction": "wu",
+      "title": "【徐氏】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "徐氏",
+          "normalized": "徐氏",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "孫翊妻",
+          "normalized": "孫翊妻",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "烈婦",
+          "normalized": "烈婦",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xu-shu",
+      "name": "徐庶",
+      "faction": "shu",
+      "title": "【徐庶】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "徐庶",
+          "normalized": "徐庶",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "元直",
+          "normalized": "元直",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "徐元直",
+          "normalized": "徐元直",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xu-you",
+      "name": "許攸",
+      "faction": "enemy",
+      "title": "【許攸】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "許攸",
+          "normalized": "許攸",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "子遠",
+          "normalized": "子遠",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xu-zhu",
+      "name": "許褚",
+      "faction": "wei",
+      "title": "【許褚】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "許褚",
+          "normalized": "許褚",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xue-zong",
+      "name": "薛綜",
+      "faction": "wu",
+      "title": "【薛綜】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "薛綜",
+          "normalized": "薛綜",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xun-you",
+      "name": "荀攸",
+      "faction": "wei",
+      "title": "【荀攸】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "荀攸",
+          "normalized": "荀攸",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "xun-yu",
+      "name": "荀彧",
+      "faction": "wei",
+      "title": "【荀彧】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "荀彧",
+          "normalized": "荀彧",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yan-liang",
+      "name": "顏良",
+      "faction": "enemy",
+      "title": "【顏良】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "顏良",
+          "normalized": "顏良",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yan-yan",
+      "name": "嚴顏",
+      "faction": "shu",
+      "title": "【嚴顏】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "嚴顏",
+          "normalized": "嚴顏",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yang-ang",
+      "name": "楊昂",
+      "faction": "enemy",
+      "title": "【楊昂】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "楊昂",
+          "normalized": "楊昂",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yang-feng",
+      "name": "楊奉",
+      "faction": "enemy",
+      "title": "【楊奉】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "楊奉",
+          "normalized": "楊奉",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yang-fu",
+      "name": "楊阜",
+      "faction": "wei",
+      "title": "【楊阜】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "楊阜",
+          "normalized": "楊阜",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "義山",
+          "normalized": "義山",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yang-huai",
+      "name": "楊懷",
+      "faction": "enemy",
+      "title": "【楊懷】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "楊懷",
+          "normalized": "楊懷",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yang-hui-yu",
+      "name": "羊徽瑜",
+      "faction": "wei",
+      "title": "【羊徽瑜】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "羊徽瑜",
+          "normalized": "羊徽瑜",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "景獻皇后",
+          "normalized": "景獻皇后",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yang-ling",
+      "name": "楊陵",
+      "faction": "wei",
+      "title": "【楊陵】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "楊陵",
+          "normalized": "楊陵",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yang-qiu",
+      "name": "楊秋",
+      "faction": "enemy",
+      "title": "【楊秋】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "楊秋",
+          "normalized": "楊秋",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yang-ren",
+      "name": "楊任",
+      "faction": "enemy",
+      "title": "【楊任】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "楊任",
+          "normalized": "楊任",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yang-song",
+      "name": "楊松",
+      "faction": "enemy",
+      "title": "【楊松】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "楊松",
+          "normalized": "楊松",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yang-yi",
+      "name": "楊儀",
+      "faction": "shu",
+      "title": "【楊儀】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "楊儀",
+          "normalized": "楊儀",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yi-ji",
+      "name": "伊籍",
+      "faction": "shu",
+      "title": "【伊籍】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "伊籍",
+          "normalized": "伊籍",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yin-mo",
+      "name": "尹默",
+      "faction": "shu",
+      "title": "【尹默】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "尹默",
+          "normalized": "尹默",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yin-shang",
+      "name": "尹賞",
+      "faction": "wei",
+      "title": "【尹賞】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "尹賞",
+          "normalized": "尹賞",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yu-fan",
+      "name": "虞翻",
+      "faction": "wu",
+      "title": "【虞翻】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "虞翻",
+          "normalized": "虞翻",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yu-ji",
+      "name": "于吉",
+      "faction": "neutral",
+      "title": "【于吉】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "于吉",
+          "normalized": "于吉",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yu-jin",
+      "name": "于禁",
+      "faction": "wei",
+      "title": "【于禁】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "于禁",
+          "normalized": "于禁",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yuan-shang",
+      "name": "袁尚",
+      "faction": "enemy",
+      "title": "【袁尚】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "袁尚",
+          "normalized": "袁尚",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yuan-shao",
+      "name": "袁紹",
+      "faction": "enemy",
+      "title": "【袁紹】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "袁紹",
+          "normalized": "袁紹",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yuan-shu",
+      "name": "袁術",
+      "faction": "enemy",
+      "title": "【袁術】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "袁術",
+          "normalized": "袁術",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yuan-tan",
+      "name": "袁譚",
+      "faction": "enemy",
+      "title": "【袁譚】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "袁譚",
+          "normalized": "袁譚",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yuan-xi",
+      "name": "袁熙",
+      "faction": "enemy",
+      "title": "【袁熙】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "袁熙",
+          "normalized": "袁熙",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "yue-lin",
+      "name": "樂琳",
+      "faction": "wei",
+      "title": "【樂琳】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "樂琳",
+          "normalized": "樂琳",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-bao",
+      "name": "張苞",
+      "faction": "shu",
+      "title": "【張苞】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張苞",
+          "normalized": "張苞",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-bao-enemy",
+      "name": "張寶",
+      "faction": "enemy",
+      "title": "【張寶】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張寶",
+          "normalized": "張寶",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-chun-hua",
+      "name": "張春華",
+      "faction": "wei",
+      "title": "【張春華】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "張春華",
+          "normalized": "張春華",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "宣穆皇后",
+          "normalized": "宣穆皇后",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-da",
+      "name": "張達",
+      "faction": "shu",
+      "title": "【張達】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張達",
+          "normalized": "張達",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-fei",
+      "name": "張飛",
+      "faction": "shu",
+      "title": "【燕人】",
+      "aliasCount": 5,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "張飛",
+          "normalized": "張飛",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name"
+          ]
+        },
+        {
+          "label": "張翼德",
+          "normalized": "張翼德",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "燕人",
+          "normalized": "燕人",
+          "aliasSource": "title-derived",
+          "aliasType": "title-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "title"
+          ]
+        },
+        {
+          "label": "燕人張翼德",
+          "normalized": "燕人張翼德",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "翼德",
+          "normalized": "翼德",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-he",
+      "name": "張郃",
+      "faction": "wei",
+      "title": "【張郃】",
+      "aliasCount": 4,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "張郃",
+          "normalized": "張郃",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "俊乂",
+          "normalized": "俊乂",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "儁乂",
+          "normalized": "儁乂",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "張合",
+          "normalized": "張合",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-ji",
+      "name": "張濟",
+      "faction": "enemy",
+      "title": "【張濟】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張濟",
+          "normalized": "張濟",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-jue",
+      "name": "張角",
+      "faction": "enemy",
+      "title": "【張角】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張角",
+          "normalized": "張角",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-liang-enemy",
+      "name": "張梁",
+      "faction": "enemy",
+      "title": "【張梁】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張梁",
+          "normalized": "張梁",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-liao",
+      "name": "張遼",
+      "faction": "wei",
+      "title": "【張遼】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張遼",
+          "normalized": "張遼",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-lu",
+      "name": "張魯",
+      "faction": "neutral",
+      "title": "【張魯】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張魯",
+          "normalized": "張魯",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-nan",
+      "name": "張南",
+      "faction": "shu",
+      "title": "【張南】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張南",
+          "normalized": "張南",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-rang",
+      "name": "張讓",
+      "faction": "enemy",
+      "title": "【張讓】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張讓",
+          "normalized": "張讓",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-ren",
+      "name": "張任",
+      "faction": "enemy",
+      "title": "【張任】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張任",
+          "normalized": "張任",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-song",
+      "name": "張松",
+      "faction": "enemy",
+      "title": "【張松】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張松",
+          "normalized": "張松",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-xian",
+      "name": "張羨",
+      "faction": "neutral",
+      "title": "【張羨】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張羨",
+          "normalized": "張羨",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-xiu",
+      "name": "張繡",
+      "faction": "enemy",
+      "title": "【張繡】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張繡",
+          "normalized": "張繡",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-yi",
+      "name": "張嶷",
+      "faction": "shu",
+      "title": "【張嶷】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張嶷",
+          "normalized": "張嶷",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-yi-shu",
+      "name": "張翼（蜀）",
+      "faction": "shu",
+      "title": "【張翼（蜀）】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "伯恭",
+          "normalized": "伯恭",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "張翼",
+          "normalized": "張翼",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "張翼（蜀",
+          "normalized": "張翼（蜀",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-yi-yuan",
+      "name": "張顗",
+      "faction": "enemy",
+      "title": "【張顗】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張顗",
+          "normalized": "張顗",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-yun",
+      "name": "張允",
+      "faction": "enemy",
+      "title": "【張允】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張允",
+          "normalized": "張允",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhang-zhao",
+      "name": "張昭",
+      "faction": "wu",
+      "title": "【張昭】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "張昭",
+          "normalized": "張昭",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhao-ang",
+      "name": "趙昂",
+      "faction": "wei",
+      "title": "【趙昂】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "趙昂",
+          "normalized": "趙昂",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhao-e",
+      "name": "趙娥",
+      "faction": "enemy",
+      "title": "【趙娥】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "趙娥",
+          "normalized": "趙娥",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "酒泉烈女",
+          "normalized": "酒泉烈女",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhao-fan",
+      "name": "趙范",
+      "faction": "neutral",
+      "title": "【趙范】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "趙范",
+          "normalized": "趙范",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "趙範",
+          "normalized": "趙範",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhao-yun",
+      "name": "趙雲",
+      "faction": "shu",
+      "title": "【常山造子】",
+      "aliasCount": 5,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "趙雲",
+          "normalized": "趙雲",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name"
+          ]
+        },
+        {
+          "label": "子龍",
+          "normalized": "子龍",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "常山趙子龍",
+          "normalized": "常山趙子龍",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "常山造子",
+          "normalized": "常山造子",
+          "aliasSource": "title-derived",
+          "aliasType": "title-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "title"
+          ]
+        },
+        {
+          "label": "趙子龍",
+          "normalized": "趙子龍",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhen-ji",
+      "name": "甄姬",
+      "faction": "wei",
+      "title": "【甄姬】",
+      "aliasCount": 4,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "甄姬",
+          "normalized": "甄姬",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "洛神",
+          "normalized": "洛神",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "甄宓",
+          "normalized": "甄宓",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "甄氏",
+          "normalized": "甄氏",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zheng-wen",
+      "name": "鄭文",
+      "faction": "shu",
+      "title": "【鄭文】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "鄭文",
+          "normalized": "鄭文",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhong-hui",
+      "name": "鍾會",
+      "faction": "wei",
+      "title": "【鍾會】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "鍾會",
+          "normalized": "鍾會",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhou-cang",
+      "name": "周倉",
+      "faction": "shu",
+      "title": "【周倉】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "周倉",
+          "normalized": "周倉",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "元福",
+          "normalized": "元福",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "周元福",
+          "normalized": "周元福",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhou-shan",
+      "name": "周善",
+      "faction": "wu",
+      "title": "【周善】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "周善",
+          "normalized": "周善",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhou-tai",
+      "name": "周泰",
+      "faction": "wu",
+      "title": "【周泰】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "周泰",
+          "normalized": "周泰",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhou-yu",
+      "name": "周瑜",
+      "faction": "wu",
+      "title": "【周瑜】",
+      "aliasCount": 2,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "周瑜",
+          "normalized": "周瑜",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "周郎",
+          "normalized": "周郎",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhu-bao",
+      "name": "朱褒",
+      "faction": "shu",
+      "title": "【朱褒】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "朱褒",
+          "normalized": "朱褒",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhu-huan",
+      "name": "朱桓",
+      "faction": "wu",
+      "title": "【朱桓】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "朱桓",
+          "normalized": "朱桓",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhu-ji",
+      "name": "朱績",
+      "faction": "wu",
+      "title": "【朱績】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "朱績",
+          "normalized": "朱績",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhu-jun",
+      "name": "朱治",
+      "faction": "wu",
+      "title": "【朱治】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "朱治",
+          "normalized": "朱治",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhu-jun-han",
+      "name": "朱雋",
+      "faction": "enemy",
+      "title": "【朱雋】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "朱雋",
+          "normalized": "朱雋",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "公偉",
+          "normalized": "公偉",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "朱儁",
+          "normalized": "朱儁",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhu-ran",
+      "name": "朱然",
+      "faction": "wu",
+      "title": "【朱然】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "朱然",
+          "normalized": "朱然",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhu-rong",
+      "name": "祝融",
+      "faction": "enemy",
+      "title": "【祝融】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "祝融",
+          "normalized": "祝融",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "collision",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhu-rong-furen",
+      "name": "祝融夫人",
+      "faction": "other",
+      "title": "【祝融夫人】",
+      "aliasCount": 3,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "祝融夫人",
+          "normalized": "祝融夫人",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "南中飛刀",
+          "normalized": "南中飛刀",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "alias"
+          ]
+        },
+        {
+          "label": "祝融",
+          "normalized": "祝融",
+          "aliasSource": "roster-alias",
+          "aliasType": "accepted-alias",
+          "reviewStatus": "collision",
+          "sources": [
+            "alias"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhu-yi",
+      "name": "朱異",
+      "faction": "wu",
+      "title": "【朱異】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "朱異",
+          "normalized": "朱異",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhuge-jin",
+      "name": "諸葛瑾",
+      "faction": "wu",
+      "title": "【諸葛瑾】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "諸葛瑾",
+          "normalized": "諸葛瑾",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhuge-ke",
+      "name": "諸葛恪",
+      "faction": "wu",
+      "title": "【諸葛恪】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "諸葛恪",
+          "normalized": "諸葛恪",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zhuge-liang",
+      "name": "諸葛亮",
+      "faction": "shu",
+      "title": "【諸葛亮】",
+      "aliasCount": 5,
+      "reviewStatus": "ready",
+      "needsManualReview": false,
+      "aliases": [
+        {
+          "label": "諸葛亮",
+          "normalized": "諸葛亮",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        },
+        {
+          "label": "孔明",
+          "normalized": "孔明",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "臥龍",
+          "normalized": "臥龍",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "臥龍先生",
+          "normalized": "臥龍先生",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        },
+        {
+          "label": "諸葛孔明",
+          "normalized": "諸葛孔明",
+          "aliasSource": "manual-override",
+          "aliasType": "curated-alias",
+          "reviewStatus": "accepted",
+          "sources": [
+            "override"
+          ]
+        }
+      ]
+    },
+    {
+      "generalId": "zuo-ci",
+      "name": "左慈",
+      "faction": "neutral",
+      "title": "【左慈】",
+      "aliasCount": 1,
+      "reviewStatus": "needs-more-coverage",
+      "needsManualReview": true,
+      "aliases": [
+        {
+          "label": "左慈",
+          "normalized": "左慈",
+          "aliasSource": "roster-name",
+          "aliasType": "canonical-name",
+          "reviewStatus": "accepted",
+          "sources": [
+            "name",
+            "title"
+          ]
+        }
+      ]
+    }
+  ]
+}

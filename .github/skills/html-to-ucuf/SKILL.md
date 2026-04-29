@@ -218,6 +218,8 @@ node tools_node/dom-to-ui-json.js \
 
 ### 4. 增量同步（保留人手欄位）
 
+增量同步的「HTML 權威」只代表結構、可直譯 style 與未有人手接管的 generated slot；**不代表 HTML draft 可以覆蓋已存在的 runtime 美術資產**。當既有 `auto.*` skin slot 已是可在 `assets/resources/` 找到實檔的 `kind: "sprite-frame"`，`--sync-existing` 會保留該 slot，即使 `--merge-mode html-authoritative` 也一樣。新 HTML 產生的 gradient / color / placeholder 只能當重新比對用草稿，不能把已交付 JPG/PNG 洗掉；若真的要換圖，draft 必須明確帶 `assetPolicy: "replace-existing"`、`assetReplaceApproved: true` 或 `_replaceExistingAsset: true` 之一，並由 reviewer 確認。
+
 ```bash
 # Step A: 覆蓋前 logic inventory（M9）
 node tools_node/dom-to-ui-logic-guard.js \
@@ -372,6 +374,18 @@ node tools_node/scan-ucuf-screen-coverage.js
 
 ## Sidecar 檔案速查
 
+### Sidecar Bake 美術規則（R-27）
+
+`assetize` 代表 Cocos 目前不能原生重建某個 CSS value，**不等於**應該把整個 HTML element 截圖成 PNG。Puppeteer bake 只能用於「缺乏的小型、獨立、可替換視覺碎片」：source HTML 必須在該小碎片節點明確標 `data-ucuf-bake="fragment"`（或 `data-bake="fragment"`），且通過尺寸門檻後 manifest 才會給 `autoBake=true` 與 `outputPath`。大型背景走正式 JPG / family art asset；`clip-path` / `mask` 類走 Cocos mask/vector/converter geometry；未標記的小紋理先列 `review-only` 給美術判斷。
+
+### Existing Runtime Asset Preservation（R-28）
+
+HTML→UCUF update mode 不得讓新 HTML 的暫時性 CSS 背景、placeholder 或 screenshot sidecar 回頭覆蓋已存在的正式美術資源。只要既有 skin slot 指向可載入的 runtime asset（`sprite-frame` 的 `path`，或 `button-skin` 的 `normal` / `pressed` / `disabled` / `selected`，且檔案存在於 `assets/resources/<path>.png|.jpg|.jpeg|.webp|.json`），smart merge 會保留原 slot 並標記 `_assetPreserveReason: "existing-runtime-asset"`；這是所有畫面的通則，不是單一 screen 例外。替換正式圖必須先有明確 replace approval marker，否則下一輪 `html-authoritative` 重跑也只能保留既有資源。
+
+正式 tab / button / icon / panel chrome 也是 runtime art asset，不得因為 HTML source 當下用 gradient / border / box-shadow 畫出近似樣式就被放棄。若已存在正式 `button-skin` 或 sprite slot，converter 必須把 HTML 草稿視為「結構與 fallback」而非「資產替換命令」；sync-report 需留下 `existing-runtime-asset-preserved`，讓 reviewer 能看到哪些正式圖被保留。只有 `assetPolicy: "replace-existing"`、`assetReplaceApproved: true` 或 `_replaceExistingAsset: true` 才能替換。
+
+分數解讀採雙軸：raw `runtimeVsSource.score` 保持誠實，不改寫歷史 reference；但已核准的正式 runtime asset zone 需要用 image waiver / art-authority sidecar 記錄，進入 adjusted score 與 reviewer 報告。這不是把差異藏起來，而是把「HTML 草稿與正式美術不同」從 converter failure 中分離；若 HTML 要成為最終 reference，應更新 HTML source 或補 approved waiver，不能讓正式資產因追分被退回 CSS placeholder。
+
 | 副檔名 | 預設 | 用途 |
 |---|---|---|
 | `<screen>.layout.json` | always | UCUF layout |
@@ -389,6 +403,7 @@ node tools_node/scan-ucuf-screen-coverage.js
 | `<screen>.logic-inventory.json` | auto | M9 既有功能清單 |
 | `<screen>.logic-guard.json` | auto | M9 覆蓋前後 verdict |
 | `<screen>.visual-review.json` | auto | M11 美術視覺回歸 metrics |
+| `<screen>.bake-manifest.json` | `--use-computed-style` 時 auto | CSS fidelity gap resolution manifest；只有 `autoBake=true` 的小碎片可交給 `tools_node/bake-ucuf-sidecars.js` 產 PNG，其餘 entry 必須走 art asset / converter geometry / waiver |
 
 ## 失敗 / Exit Code 速查
 

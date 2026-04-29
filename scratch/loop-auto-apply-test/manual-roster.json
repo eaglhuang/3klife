@@ -1,0 +1,570 @@
+{
+  "version": "1.0.0",
+  "entries": [
+    {
+      "generalId": "zhang-yi-shu",
+      "alias": [
+        "張翼",
+        "伯恭"
+      ]
+    },
+    {
+      "generalId": "zhang-he",
+      "alias": [
+        "張合",
+        "儁乂",
+        "俊乂"
+      ]
+    },
+    {
+      "generalId": "sun-quan",
+      "alias": [
+        "吳侯"
+      ]
+    },
+    {
+      "generalId": "xu-shu",
+      "alias": [
+        "元直",
+        "徐元直"
+      ]
+    },
+    {
+      "generalId": "pang-tong",
+      "alias": [
+        "鳳雛",
+        "士元",
+        "龐士元"
+      ]
+    },
+    {
+      "generalId": "sun-shang-xiang",
+      "alias": [
+        "孫夫",
+        "孫夫人"
+      ]
+    },
+    {
+      "generalId": "zhou-yu",
+      "alias": [
+        "周郎"
+      ]
+    },
+    {
+      "generalId": "zhang-ren",
+      "name": "張任",
+      "faction": "enemy",
+      "title": "【張任】",
+      "alias": []
+    },
+    {
+      "generalId": "li-jue",
+      "name": "李傕",
+      "faction": "enemy",
+      "title": "【李傕】",
+      "alias": []
+    },
+    {
+      "generalId": "cao-zhen",
+      "name": "曹真",
+      "faction": "wei",
+      "title": "【曹真】",
+      "alias": [
+        "子丹"
+      ]
+    },
+    {
+      "generalId": "yan-yan",
+      "name": "嚴顏",
+      "faction": "shu",
+      "title": "【嚴顏】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-feng",
+      "name": "楊奉",
+      "faction": "enemy",
+      "title": "【楊奉】",
+      "alias": []
+    },
+    {
+      "generalId": "wu-yi",
+      "name": "吳懿",
+      "faction": "shu",
+      "title": "【吳懿】",
+      "alias": []
+    },
+    {
+      "generalId": "chen-gong",
+      "name": "陳宮",
+      "faction": "enemy",
+      "title": "【陳宮】",
+      "alias": [
+        "公台"
+      ]
+    },
+    {
+      "generalId": "xiahou-mao",
+      "name": "夏侯楙",
+      "faction": "wei",
+      "title": "【夏侯楙】",
+      "alias": [
+        "子林"
+      ]
+    },
+    {
+      "generalId": "xiahou-ba",
+      "name": "夏侯霸",
+      "faction": "wei",
+      "title": "【夏侯霸】",
+      "alias": [
+        "仲權"
+      ]
+    },
+    {
+      "generalId": "wang-yun",
+      "name": "王允",
+      "faction": "enemy",
+      "title": "【王允】",
+      "alias": [
+        "子師"
+      ]
+    },
+    {
+      "generalId": "zhu-jun-han",
+      "name": "朱雋",
+      "faction": "enemy",
+      "title": "【朱雋】",
+      "alias": [
+        "公偉",
+        "朱儁"
+      ]
+    },
+    {
+      "generalId": "jiang-qin",
+      "name": "蔣欽",
+      "faction": "wu",
+      "title": "【蔣欽】",
+      "alias": [
+        "公奕"
+      ]
+    },
+    {
+      "generalId": "ma-su",
+      "name": "馬謖",
+      "faction": "shu",
+      "title": "【馬謖】",
+      "alias": [
+        "幼常"
+      ]
+    },
+    {
+      "generalId": "zhou-cang",
+      "name": "周倉",
+      "faction": "shu",
+      "title": "【周倉】",
+      "alias": [
+        "元福",
+        "周元福"
+      ]
+    },
+    {
+      "generalId": "huang-zu",
+      "name": "黃祖",
+      "faction": "enemy",
+      "title": "【黃祖】",
+      "alias": []
+    },
+    {
+      "generalId": "chen-deng",
+      "name": "陳登",
+      "faction": "wei",
+      "title": "【陳登】",
+      "alias": [
+        "元龍",
+        "陳元龍"
+      ]
+    },
+    {
+      "generalId": "xiahou-shang",
+      "name": "夏侯尚",
+      "faction": "wei",
+      "title": "【夏侯尚】",
+      "alias": [
+        "伯仁"
+      ]
+    },
+    {
+      "generalId": "li-ru",
+      "name": "李儒",
+      "faction": "enemy",
+      "title": "【李儒】",
+      "alias": [
+        "文優",
+        "李文優"
+      ]
+    },
+    {
+      "generalId": "wang-zhong",
+      "name": "王忠",
+      "faction": "enemy",
+      "title": "【王忠】",
+      "alias": []
+    },
+    {
+      "generalId": "zhang-yun",
+      "name": "張允",
+      "faction": "enemy",
+      "title": "【張允】",
+      "alias": []
+    },
+    {
+      "generalId": "li-le",
+      "name": "李樂",
+      "faction": "enemy",
+      "title": "【李樂】",
+      "alias": []
+    },
+    {
+      "generalId": "wei-xu",
+      "name": "魏續",
+      "faction": "enemy",
+      "title": "【魏續】",
+      "alias": []
+    },
+    {
+      "generalId": "lv-xiang",
+      "name": "呂翔",
+      "faction": "enemy",
+      "title": "【呂翔】",
+      "alias": []
+    },
+    {
+      "generalId": "zhang-ji",
+      "name": "張濟",
+      "faction": "enemy",
+      "title": "【張濟】",
+      "alias": []
+    },
+    {
+      "generalId": "hou-cheng",
+      "name": "侯成",
+      "faction": "enemy",
+      "title": "【侯成】",
+      "alias": []
+    },
+    {
+      "generalId": "lv-qian",
+      "name": "呂虔",
+      "faction": "wei",
+      "title": "【呂虔】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-ren",
+      "name": "楊任",
+      "faction": "enemy",
+      "title": "【楊任】",
+      "alias": []
+    },
+    {
+      "generalId": "han-xian",
+      "name": "韓暹",
+      "faction": "enemy",
+      "title": "【韓暹】",
+      "alias": []
+    },
+    {
+      "generalId": "zhang-rang",
+      "name": "張讓",
+      "faction": "enemy",
+      "title": "【張讓】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-fu",
+      "name": "楊阜",
+      "faction": "wei",
+      "title": "【楊阜】",
+      "alias": [
+        "義山"
+      ]
+    },
+    {
+      "generalId": "yue-lin",
+      "name": "樂琳",
+      "faction": "wei",
+      "title": "【樂琳】",
+      "alias": []
+    },
+    {
+      "generalId": "hao-zhao",
+      "name": "郝昭",
+      "faction": "wei",
+      "title": "【郝昭】",
+      "alias": [
+        "伯道"
+      ]
+    },
+    {
+      "generalId": "zhou-shan",
+      "name": "周善",
+      "faction": "wu",
+      "title": "【周善】",
+      "alias": []
+    },
+    {
+      "generalId": "ma-zun",
+      "name": "馬遵",
+      "faction": "wei",
+      "title": "【馬遵】",
+      "alias": []
+    },
+    {
+      "generalId": "lei-tong",
+      "name": "雷銅",
+      "faction": "shu",
+      "title": "【雷銅】",
+      "alias": [
+        "雷同"
+      ]
+    },
+    {
+      "generalId": "wu-lan",
+      "name": "吳蘭",
+      "faction": "shu",
+      "title": "【吳蘭】",
+      "alias": []
+    },
+    {
+      "generalId": "li-su",
+      "name": "李肅",
+      "faction": "enemy",
+      "title": "【李肅】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-ang",
+      "name": "楊昂",
+      "faction": "enemy",
+      "title": "【楊昂】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-qiu",
+      "name": "楊秋",
+      "faction": "enemy",
+      "title": "【楊秋】",
+      "alias": []
+    },
+    {
+      "generalId": "meng-you",
+      "name": "孟優",
+      "faction": "enemy",
+      "title": "【孟優】",
+      "alias": []
+    },
+    {
+      "generalId": "wang-jing",
+      "name": "王經",
+      "faction": "wei",
+      "title": "【王經】",
+      "alias": [
+        "彥緯"
+      ]
+    },
+    {
+      "generalId": "xu-you",
+      "name": "許攸",
+      "faction": "enemy",
+      "title": "【許攸】",
+      "alias": [
+        "子遠"
+      ]
+    },
+    {
+      "generalId": "hao-meng",
+      "name": "郝萌",
+      "faction": "enemy",
+      "title": "【郝萌】",
+      "alias": []
+    },
+    {
+      "generalId": "zheng-wen",
+      "name": "鄭文",
+      "faction": "shu",
+      "title": "【鄭文】",
+      "alias": []
+    },
+    {
+      "generalId": "chen-shi",
+      "name": "陳式",
+      "faction": "shu",
+      "title": "【陳式】",
+      "alias": []
+    },
+    {
+      "generalId": "chen-ying",
+      "name": "陳應",
+      "faction": "enemy",
+      "title": "【陳應】",
+      "alias": []
+    },
+    {
+      "generalId": "wei-huang",
+      "name": "韋晃",
+      "faction": "enemy",
+      "title": "【韋晃】",
+      "alias": []
+    },
+    {
+      "generalId": "han-fu",
+      "name": "韓福",
+      "faction": "enemy",
+      "title": "【韓福】",
+      "alias": []
+    },
+    {
+      "generalId": "fu-qian",
+      "name": "傅僉",
+      "faction": "shu",
+      "title": "【傅僉】",
+      "alias": []
+    },
+    {
+      "generalId": "sima-yan",
+      "name": "司馬炎",
+      "faction": "wei",
+      "title": "【司馬炎】",
+      "alias": []
+    },
+    {
+      "generalId": "zhang-da",
+      "name": "張達",
+      "faction": "shu",
+      "title": "【張達】",
+      "alias": []
+    },
+    {
+      "generalId": "zhang-yi-yuan",
+      "name": "張顗",
+      "faction": "enemy",
+      "title": "【張顗】",
+      "alias": []
+    },
+    {
+      "generalId": "cao-rui",
+      "name": "曹睿",
+      "faction": "wei",
+      "title": "【曹睿】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-huai",
+      "name": "楊懷",
+      "faction": "enemy",
+      "title": "【楊懷】",
+      "alias": []
+    },
+    {
+      "generalId": "wang-bi",
+      "name": "王必",
+      "faction": "wei",
+      "title": "【王必】",
+      "alias": []
+    },
+    {
+      "generalId": "huangfu-song",
+      "name": "皇甫嵩",
+      "faction": "enemy",
+      "title": "【皇甫嵩】",
+      "alias": []
+    },
+    {
+      "generalId": "jiang-gan",
+      "name": "蔣幹",
+      "faction": "wei",
+      "title": "【蔣幹】",
+      "alias": [
+        "子翼"
+      ]
+    },
+    {
+      "generalId": "bian-xi",
+      "name": "卞喜",
+      "faction": "enemy",
+      "title": "【卞喜】",
+      "alias": []
+    },
+    {
+      "generalId": "sima-wang",
+      "name": "司馬望",
+      "faction": "wei",
+      "title": "【司馬望】",
+      "alias": []
+    },
+    {
+      "generalId": "zhang-song",
+      "name": "張松",
+      "faction": "enemy",
+      "title": "【張松】",
+      "alias": []
+    },
+    {
+      "generalId": "yin-shang",
+      "name": "尹賞",
+      "faction": "wei",
+      "title": "【尹賞】",
+      "alias": []
+    },
+    {
+      "generalId": "cao-shuang",
+      "name": "曹爽",
+      "faction": "wei",
+      "title": "【曹爽】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-song",
+      "name": "楊松",
+      "faction": "enemy",
+      "title": "【楊松】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-ling",
+      "name": "楊陵",
+      "faction": "wei",
+      "title": "【楊陵】",
+      "alias": []
+    },
+    {
+      "generalId": "wang-fang",
+      "name": "王方",
+      "faction": "enemy",
+      "title": "【王方】",
+      "alias": []
+    },
+    {
+      "generalId": "wang-kai",
+      "name": "王楷",
+      "faction": "enemy",
+      "title": "【王楷】",
+      "alias": []
+    },
+    {
+      "generalId": "zhao-ang",
+      "name": "趙昂",
+      "faction": "wei",
+      "title": "【趙昂】",
+      "alias": []
+    },
+    {
+      "generalId": "zhao-fan",
+      "name": "趙範",
+      "faction": "enemy",
+      "title": "【趙範】",
+      "alias": []
+    }
+  ]
+}

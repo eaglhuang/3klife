@@ -10,11 +10,11 @@
           "value": "rgb(10, 10, 10)"
         },
         {
-          "path": "div#stage.stage[0]>div.right-shell[5]>div#right-content.right-content[0]>div[0]>div[0]>div[1]>span[0]",
+          "path": "div#stage.stage[0]>div.right-shell[4]>div#right-content.right-content[0]>div[0]>div[0]>div[1]>span[0]",
           "value": "rgb(255, 193, 7)"
         },
         {
-          "path": "div#stage.stage[0]>div.right-shell[5]>div#right-content.right-content[0]>div[0]>div[1]>div[0]",
+          "path": "div#stage.stage[0]>div.right-shell[4]>div#right-content.right-content[0]>div[0]>div[1]>div[0]",
           "value": "rgba(255, 255, 255, 0.03)"
         }
       ]
@@ -27,11 +27,11 @@
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "rgb(229, 226, 225)"
         }
       ]
@@ -44,11 +44,11 @@
           "value": "16px"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "16px"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "16px"
         }
       ]
@@ -61,11 +61,11 @@
           "value": "NotoSansTC, \"PingFang TC\", \"Microsoft JhengHei\", sans-serif"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "NotoSansTC, \"PingFang TC\", \"Microsoft JhengHei\", sans-serif"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "NotoSansTC, \"PingFang TC\", \"Microsoft JhengHei\", sans-serif"
         }
       ]
@@ -78,11 +78,11 @@
           "value": "400"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "400"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "400"
         }
       ]
@@ -95,11 +95,11 @@
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "normal"
         }
       ]
@@ -112,11 +112,11 @@
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "normal"
         }
       ]
@@ -129,11 +129,11 @@
           "value": "start"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "start"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "start"
         }
       ]
@@ -146,11 +146,11 @@
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "rgb(229, 226, 225)"
         }
       ]
@@ -163,11 +163,11 @@
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "rgb(229, 226, 225)"
         }
       ]
@@ -180,11 +180,11 @@
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "rgb(229, 226, 225)"
         }
       ]
@@ -197,29 +197,12 @@
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "rgb(229, 226, 225)"
-        }
-      ]
-    },
-    "transform": {
-      "occurrences": 5,
-      "samples": [
-        {
-          "path": "div#stage.stage[0]",
-          "value": "matrix(0.694444, 0, 0, 0.694444, 0.333333, 0)"
-        },
-        {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
-          "value": "matrix(1, 0, 0, 1, 0, -48)"
-        },
-        {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
-          "value": "matrix(1, 0, 0, 1, -267.905, 0)"
         }
       ]
     },
@@ -231,11 +214,11 @@
           "value": "0px 0px"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "595.195px 540px"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "595.195px 540px"
         }
       ]
@@ -248,11 +231,11 @@
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "rgb(229, 226, 225)"
         }
       ]
@@ -265,11 +248,11 @@
           "value": "solid"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "solid"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "solid"
         }
       ]
@@ -282,11 +265,11 @@
           "value": "auto"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "auto"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "auto"
         }
       ]
@@ -299,11 +282,11 @@
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "rgb(229, 226, 225)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "rgb(229, 226, 225)"
         }
       ]
@@ -316,11 +299,11 @@
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "normal"
         }
       ]
@@ -333,11 +316,11 @@
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "normal"
         }
       ]
@@ -350,11 +333,11 @@
           "value": "hidden"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "hidden"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
           "value": "clip"
         }
       ]
@@ -367,11 +350,11 @@
           "value": "hidden"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "hidden"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
           "value": "clip"
         }
       ]
@@ -384,11 +367,11 @@
           "value": "hidden"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "hidden"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
           "value": "clip"
         }
       ]
@@ -401,11 +384,11 @@
           "value": "row"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "row"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "row"
         }
       ]
@@ -418,11 +401,11 @@
           "value": "nowrap"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "nowrap"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "nowrap"
         }
       ]
@@ -435,11 +418,11 @@
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "normal"
         }
       ]
@@ -452,11 +435,11 @@
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "normal"
         }
       ]
@@ -469,11 +452,11 @@
           "value": "auto"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "auto"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "auto"
         }
       ]
@@ -486,11 +469,11 @@
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "normal"
         }
       ]
@@ -503,11 +486,11 @@
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "normal"
         }
       ]
@@ -520,11 +503,11 @@
           "value": "auto"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "auto"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "auto"
         }
       ]
@@ -537,11 +520,11 @@
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "normal"
         }
       ]
@@ -554,11 +537,11 @@
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "normal"
         }
       ]
@@ -571,11 +554,11 @@
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "normal"
         }
       ]
@@ -588,11 +571,11 @@
           "value": "baseline"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "baseline"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "baseline"
         }
       ]
@@ -605,11 +588,11 @@
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "normal"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "normal"
         }
       ]
@@ -622,11 +605,11 @@
           "value": "clip"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "clip"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "clip"
         }
       ]
@@ -635,15 +618,15 @@
       "occurrences": 38,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "radial-gradient(at 30% 40%, rgba(139, 98, 42, 0.3), rgba(0, 0, 0, 0) 55%), radial-gradient(at 80% 70%, rgba(44, 58, 66, 0.25), rgba(0, 0, 0, 0) 60%), linear-gradient(rgb(42, 39, 32) 0%, rgb(26, 24, 20) 40%, rgb(16, 14, 10) 100%)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "linear-gradient(90deg, rgba(0, 0, 0, 0) 45%, rgba(10, 10, 10, 0.7) 75%, rgb(10, 10, 10) 100%)"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "linear-gradient(135deg, rgba(212, 175, 55, 0.18), rgba(138, 110, 31, 0.1))"
         }
       ]
@@ -652,15 +635,15 @@
       "occurrences": 25,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "3px"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "3px"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "2px"
         }
       ]
@@ -669,15 +652,15 @@
       "occurrences": 24,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "3px"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "3px"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "2px"
         }
       ]
@@ -686,15 +669,15 @@
       "occurrences": 24,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "3px"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "3px"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "2px"
         }
       ]
@@ -703,15 +686,15 @@
       "occurrences": 24,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "3px"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "3px"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "2px"
         }
       ]
@@ -720,15 +703,15 @@
       "occurrences": 25,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "solid"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "solid"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "solid"
         }
       ]
@@ -737,15 +720,15 @@
       "occurrences": 24,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "solid"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "solid"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "solid"
         }
       ]
@@ -754,15 +737,15 @@
       "occurrences": 24,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "solid"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "solid"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "solid"
         }
       ]
@@ -771,15 +754,15 @@
       "occurrences": 24,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "solid"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "solid"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "solid"
         }
       ]
@@ -788,15 +771,15 @@
       "occurrences": 29,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "50%"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "50%"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "16px"
         }
       ]
@@ -805,15 +788,15 @@
       "occurrences": 29,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "50%"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "50%"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "16px"
         }
       ]
@@ -822,15 +805,15 @@
       "occurrences": 28,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "50%"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "50%"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "16px"
         }
       ]
@@ -839,15 +822,15 @@
       "occurrences": 28,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "50%"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "50%"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "16px"
         }
       ]
@@ -856,16 +839,33 @@
       "occurrences": 10,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
           "value": "rgba(212, 175, 55, 0.1) 0px 0px 16px 0px inset, rgba(212, 175, 55, 0.2) 0px 0px 24px 0px"
         },
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
           "value": "rgba(212, 175, 55, 0.1) 0px 0px 16px 0px inset, rgba(212, 175, 55, 0.2) 0px 0px 24px 0px"
         },
         {
-          "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+          "path": "div#stage.stage[0]>div.rank-badge[2]",
           "value": "rgba(0, 0, 0, 0.5) 0px 6px 20px 0px, rgba(140, 207, 196, 0.15) 0px 0px 20px 0px inset"
+        }
+      ]
+    },
+    "transform": {
+      "occurrences": 4,
+      "samples": [
+        {
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
+          "value": "matrix(1, 0, 0, 1, 0, -48)"
+        },
+        {
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
+          "value": "matrix(1, 0, 0, 1, -267.905, 0)"
+        },
+        {
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
+          "value": "matrix(1, 0, 0, 1, 0, -48)"
         }
       ]
     },
@@ -873,7 +873,7 @@
       "occurrences": 1,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
           "value": "drop-shadow(rgba(0, 0, 0, 0.7) 0px 20px 40px)"
         }
       ]
@@ -882,7 +882,7 @@
       "occurrences": 1,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
           "value": "contain"
         }
       ]
@@ -891,8 +891,25 @@
       "occurrences": 1,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
           "value": "50% 100%"
+        }
+      ]
+    },
+    "text-transform": {
+      "occurrences": 18,
+      "samples": [
+        {
+          "path": "div#stage.stage[0]>div.rank-badge[2]>span.r-sub[1]",
+          "value": "uppercase"
+        },
+        {
+          "path": "div#stage.stage[0]>div.right-shell[4]>div#right-content.right-content[0]>div[0]>div[1]>div[0]>div[0]>span[2]",
+          "value": "uppercase"
+        },
+        {
+          "path": "div#stage.stage[0]>div.right-shell[4]>div#right-content.right-content[0]>div[0]>div[1]>div[1]>div[0]>span[2]",
+          "value": "uppercase"
         }
       ]
     },
@@ -900,15 +917,15 @@
       "occurrences": 7,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div.right-shell[5]>div#right-content.right-content[0]>div[0]>div[0]>div[0]>div[0]>span[0]",
+          "path": "div#stage.stage[0]>div.right-shell[4]>div#right-content.right-content[0]>div[0]>div[0]>div[0]>div[0]>span[0]",
           "value": "rgba(0, 0, 0, 0.6) 0px 2px 6px"
         },
         {
-          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]>div.cell-label[2]>div.t[0]",
+          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]>div.cell-label[2]>div.t[0]",
           "value": "rgb(0, 0, 0) 0px 1px 0px, rgba(0, 0, 0, 0.9) 0px 0px 10px"
         },
         {
-          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[1]>div.cell-label[2]>div.t[0]",
+          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[1]>div.cell-label[2]>div.t[0]",
           "value": "rgb(0, 0, 0) 0px 1px 0px, rgba(0, 0, 0, 0.9) 0px 0px 10px"
         }
       ]
@@ -917,15 +934,15 @@
       "occurrences": 5,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]",
+          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]",
           "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
         },
         {
-          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[1]",
+          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[1]",
           "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
         },
         {
-          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[2]",
+          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[2]",
           "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
         }
       ]
@@ -934,15 +951,15 @@
       "occurrences": 5,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]",
+          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]",
           "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
         },
         {
-          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[1]",
+          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[1]",
           "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
         },
         {
-          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[2]",
+          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[2]",
           "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
         }
       ]
@@ -953,7 +970,7 @@
       "occurrences": 1,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "auto, auto, auto"
         }
       ]
@@ -962,7 +979,7 @@
       "occurrences": 1,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "0% 0%, 0% 0%, 0% 0%"
         }
       ]
@@ -971,7 +988,7 @@
       "occurrences": 1,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]",
           "value": "repeat, repeat, repeat"
         }
       ]
@@ -980,15 +997,15 @@
       "occurrences": 13,
       "samples": [
         {
-          "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+          "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
           "value": "\"\""
         },
         {
-          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]::before",
+          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]::before",
           "value": "\"\""
         },
         {
-          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]::after",
+          "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]::after",
           "value": "\"\""
         }
       ]
@@ -996,10 +1013,12 @@
   },
   "cssCapability": {
     "summary": {
-      "supported": 6250,
-      "assetize": 58,
-      "unsupported": 29,
-      "unknown": 0
+      "supported": 6292,
+      "assetize": 43,
+      "unsupported": 9,
+      "unknown": 0,
+      "tokenDeclaration": 0,
+      "partial-supported": 10
     },
     "topOffenders": [
       {
@@ -1008,73 +1027,35 @@
         "occurrences": 38,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "radial-gradient(at 30% 40%, rgba(139, 98, 42, 0.3), rgba(0, 0, 0, 0) 55%), radial-gradient(at 80% 70%, rgba(44, 58, 66, 0.25), rgba(0, 0, 0, 0) 60%), linear-gradient(rgb(42, 39, 32) 0%, rgb(26, 24, 20) 40%, rgb(16, 14, 10) 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "linear-gradient(90deg, rgba(0, 0, 0, 0) 45%, rgba(10, 10, 10, 0.7) 75%, rgb(10, 10, 10) 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "linear-gradient(135deg, rgba(212, 175, 55, 0.18), rgba(138, 110, 31, 0.1))"
           }
         ]
       },
       {
-        "property": "content",
-        "capability": "unsupported",
-        "occurrences": 13,
-        "samples": [
-          {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
-            "value": "\"\""
-          },
-          {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]::before",
-            "value": "\"\""
-          },
-          {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]::after",
-            "value": "\"\""
-          }
-        ]
-      },
-      {
         "property": "box-shadow",
-        "capability": "assetize",
+        "capability": "partial-supported",
         "occurrences": 10,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "rgba(212, 175, 55, 0.1) 0px 0px 16px 0px inset, rgba(212, 175, 55, 0.2) 0px 0px 24px 0px"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "rgba(212, 175, 55, 0.1) 0px 0px 16px 0px inset, rgba(212, 175, 55, 0.2) 0px 0px 24px 0px"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "rgba(0, 0, 0, 0.5) 0px 6px 20px 0px, rgba(140, 207, 196, 0.15) 0px 0px 20px 0px inset"
-          }
-        ]
-      },
-      {
-        "property": "text-shadow",
-        "capability": "assetize",
-        "occurrences": 7,
-        "samples": [
-          {
-            "path": "div#stage.stage[0]>div.right-shell[5]>div#right-content.right-content[0]>div[0]>div[0]>div[0]>div[0]>span[0]",
-            "value": "rgba(0, 0, 0, 0.6) 0px 2px 6px"
-          },
-          {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]>div.cell-label[2]>div.t[0]",
-            "value": "rgb(0, 0, 0) 0px 1px 0px, rgba(0, 0, 0, 0.9) 0px 0px 10px"
-          },
-          {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[1]>div.cell-label[2]>div.t[0]",
-            "value": "rgb(0, 0, 0) 0px 1px 0px, rgba(0, 0, 0, 0.9) 0px 0px 10px"
           }
         ]
       },
@@ -1084,34 +1065,34 @@
         "occurrences": 5,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]",
             "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[1]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[1]",
             "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[2]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[2]",
             "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           }
         ]
       },
       {
         "property": "clip-path",
-        "capability": "unsupported",
+        "capability": "assetize",
         "occurrences": 5,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]",
             "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[1]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[1]",
             "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[2]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[2]",
             "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           }
         ]
@@ -1119,63 +1100,19 @@
       {
         "property": "transform",
         "capability": "unsupported",
-        "occurrences": 5,
+        "occurrences": 4,
         "samples": [
           {
-            "path": "div#stage.stage[0]",
-            "value": "matrix(0.694444, 0, 0, 0.694444, 0.333333, 0)"
-          },
-          {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "matrix(1, 0, 0, 1, 0, -48)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
             "value": "matrix(1, 0, 0, 1, -267.905, 0)"
-          }
-        ]
-      },
-      {
-        "property": "background-position",
-        "capability": "assetize",
-        "occurrences": 1,
-        "samples": [
+          },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
-            "value": "0% 0%, 0% 0%, 0% 0%"
-          }
-        ]
-      },
-      {
-        "property": "background-repeat",
-        "capability": "assetize",
-        "occurrences": 1,
-        "samples": [
-          {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
-            "value": "repeat, repeat, repeat"
-          }
-        ]
-      },
-      {
-        "property": "background-size",
-        "capability": "assetize",
-        "occurrences": 1,
-        "samples": [
-          {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
-            "value": "auto, auto, auto"
-          }
-        ]
-      },
-      {
-        "property": "filter",
-        "capability": "unsupported",
-        "occurrences": 1,
-        "samples": [
-          {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
-            "value": "drop-shadow(rgba(0, 0, 0, 0.7) 0px 20px 40px)"
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
+            "value": "matrix(1, 0, 0, 1, 0, -48)"
           }
         ]
       }
@@ -1187,92 +1124,36 @@
         "occurrences": 38,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "radial-gradient(at 30% 40%, rgba(139, 98, 42, 0.3), rgba(0, 0, 0, 0) 55%), radial-gradient(at 80% 70%, rgba(44, 58, 66, 0.25), rgba(0, 0, 0, 0) 60%), linear-gradient(rgb(42, 39, 32) 0%, rgb(26, 24, 20) 40%, rgb(16, 14, 10) 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "linear-gradient(90deg, rgba(0, 0, 0, 0) 45%, rgba(10, 10, 10, 0.7) 75%, rgb(10, 10, 10) 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "linear-gradient(135deg, rgba(212, 175, 55, 0.18), rgba(138, 110, 31, 0.1))"
           }
         ],
         "suggestedTask": "assetize-css-effect"
       },
       {
-        "property": "box-shadow",
+        "property": "clip-path",
         "capability": "assetize",
-        "occurrences": 10,
+        "occurrences": 5,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
-            "value": "rgba(212, 175, 55, 0.1) 0px 0px 16px 0px inset, rgba(212, 175, 55, 0.2) 0px 0px 24px 0px"
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]",
+            "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
-            "value": "rgba(212, 175, 55, 0.1) 0px 0px 16px 0px inset, rgba(212, 175, 55, 0.2) 0px 0px 24px 0px"
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[1]",
+            "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
-            "value": "rgba(0, 0, 0, 0.5) 0px 6px 20px 0px, rgba(140, 207, 196, 0.15) 0px 0px 20px 0px inset"
-          }
-        ],
-        "suggestedTask": "assetize-css-effect"
-      },
-      {
-        "property": "text-shadow",
-        "capability": "assetize",
-        "occurrences": 7,
-        "samples": [
-          {
-            "path": "div#stage.stage[0]>div.right-shell[5]>div#right-content.right-content[0]>div[0]>div[0]>div[0]>div[0]>span[0]",
-            "value": "rgba(0, 0, 0, 0.6) 0px 2px 6px"
-          },
-          {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]>div.cell-label[2]>div.t[0]",
-            "value": "rgb(0, 0, 0) 0px 1px 0px, rgba(0, 0, 0, 0.9) 0px 0px 10px"
-          },
-          {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[1]>div.cell-label[2]>div.t[0]",
-            "value": "rgb(0, 0, 0) 0px 1px 0px, rgba(0, 0, 0, 0.9) 0px 0px 10px"
-          }
-        ],
-        "suggestedTask": "assetize-css-effect"
-      },
-      {
-        "property": "background-position",
-        "capability": "assetize",
-        "occurrences": 1,
-        "samples": [
-          {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
-            "value": "0% 0%, 0% 0%, 0% 0%"
-          }
-        ],
-        "suggestedTask": "assetize-css-effect"
-      },
-      {
-        "property": "background-repeat",
-        "capability": "assetize",
-        "occurrences": 1,
-        "samples": [
-          {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
-            "value": "repeat, repeat, repeat"
-          }
-        ],
-        "suggestedTask": "assetize-css-effect"
-      },
-      {
-        "property": "background-size",
-        "capability": "assetize",
-        "occurrences": 1,
-        "samples": [
-          {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
-            "value": "auto, auto, auto"
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[2]",
+            "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           }
         ],
         "suggestedTask": "assetize-css-effect"
@@ -1289,11 +1170,11 @@
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "rgb(229, 226, 225)"
           }
         ]
@@ -1308,11 +1189,11 @@
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "normal"
           }
         ]
@@ -1327,11 +1208,11 @@
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "normal"
           }
         ]
@@ -1346,11 +1227,11 @@
             "value": "auto"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "auto"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "auto"
           }
         ]
@@ -1365,11 +1246,11 @@
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "rgb(229, 226, 225)"
           }
         ]
@@ -1384,11 +1265,11 @@
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "rgb(229, 226, 225)"
           }
         ]
@@ -1403,11 +1284,11 @@
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "rgb(229, 226, 225)"
           }
         ]
@@ -1422,11 +1303,11 @@
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "rgb(229, 226, 225)"
           }
         ]
@@ -1441,11 +1322,11 @@
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "rgb(229, 226, 225)"
           }
         ]
@@ -1460,11 +1341,11 @@
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "normal"
           }
         ]
@@ -1479,11 +1360,11 @@
             "value": "row"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "row"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "row"
           }
         ]
@@ -1498,11 +1379,11 @@
             "value": "nowrap"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "nowrap"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "nowrap"
           }
         ]
@@ -1517,11 +1398,11 @@
             "value": "NotoSansTC, \"PingFang TC\", \"Microsoft JhengHei\", sans-serif"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "NotoSansTC, \"PingFang TC\", \"Microsoft JhengHei\", sans-serif"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "NotoSansTC, \"PingFang TC\", \"Microsoft JhengHei\", sans-serif"
           }
         ]
@@ -1536,11 +1417,11 @@
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "normal"
           }
         ]
@@ -1555,11 +1436,11 @@
             "value": "16px"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "16px"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "16px"
           }
         ]
@@ -1574,11 +1455,11 @@
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "normal"
           }
         ]
@@ -1593,11 +1474,11 @@
             "value": "400"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "400"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "400"
           }
         ]
@@ -1612,11 +1493,11 @@
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "normal"
           }
         ]
@@ -1631,11 +1512,11 @@
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "normal"
           }
         ]
@@ -1650,11 +1531,11 @@
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "normal"
           }
         ]
@@ -1669,11 +1550,11 @@
             "value": "auto"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "auto"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "auto"
           }
         ]
@@ -1688,11 +1569,11 @@
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "normal"
           }
         ]
@@ -1707,11 +1588,11 @@
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "normal"
           }
         ]
@@ -1726,11 +1607,11 @@
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "normal"
           }
         ]
@@ -1745,11 +1626,11 @@
             "value": "start"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "start"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "start"
           }
         ]
@@ -1764,11 +1645,11 @@
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "rgb(229, 226, 225)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "rgb(229, 226, 225)"
           }
         ]
@@ -1783,11 +1664,11 @@
             "value": "solid"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "solid"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "solid"
           }
         ]
@@ -1802,11 +1683,11 @@
             "value": "auto"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "auto"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "auto"
           }
         ]
@@ -1821,11 +1702,11 @@
             "value": "clip"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "clip"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "clip"
           }
         ]
@@ -1840,11 +1721,11 @@
             "value": "0px 0px"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "595.195px 540px"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "595.195px 540px"
           }
         ]
@@ -1859,11 +1740,11 @@
             "value": "baseline"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "baseline"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "baseline"
           }
         ]
@@ -1878,11 +1759,11 @@
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "normal"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "normal"
           }
         ]
@@ -1893,15 +1774,15 @@
         "occurrences": 38,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "radial-gradient(at 30% 40%, rgba(139, 98, 42, 0.3), rgba(0, 0, 0, 0) 55%), radial-gradient(at 80% 70%, rgba(44, 58, 66, 0.25), rgba(0, 0, 0, 0) 60%), linear-gradient(rgb(42, 39, 32) 0%, rgb(26, 24, 20) 40%, rgb(16, 14, 10) 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "linear-gradient(90deg, rgba(0, 0, 0, 0) 45%, rgba(10, 10, 10, 0.7) 75%, rgb(10, 10, 10) 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "linear-gradient(135deg, rgba(212, 175, 55, 0.18), rgba(138, 110, 31, 0.1))"
           }
         ]
@@ -1912,15 +1793,15 @@
         "occurrences": 29,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "50%"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "50%"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "16px"
           }
         ]
@@ -1931,15 +1812,15 @@
         "occurrences": 29,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "50%"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "50%"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "16px"
           }
         ]
@@ -1950,15 +1831,15 @@
         "occurrences": 28,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "50%"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "50%"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "16px"
           }
         ]
@@ -1969,15 +1850,15 @@
         "occurrences": 28,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "50%"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "50%"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "16px"
           }
         ]
@@ -1988,15 +1869,15 @@
         "occurrences": 25,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "solid"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "solid"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "solid"
           }
         ]
@@ -2007,15 +1888,15 @@
         "occurrences": 25,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "3px"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "3px"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "2px"
           }
         ]
@@ -2026,15 +1907,15 @@
         "occurrences": 24,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "solid"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "solid"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "solid"
           }
         ]
@@ -2045,15 +1926,15 @@
         "occurrences": 24,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "3px"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "3px"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "2px"
           }
         ]
@@ -2064,15 +1945,15 @@
         "occurrences": 24,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "solid"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "solid"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "solid"
           }
         ]
@@ -2083,15 +1964,15 @@
         "occurrences": 24,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "3px"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "3px"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "2px"
           }
         ]
@@ -2102,15 +1983,15 @@
         "occurrences": 24,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "solid"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "solid"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "solid"
           }
         ]
@@ -2121,16 +2002,35 @@
         "occurrences": 24,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "3px"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "3px"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "2px"
+          }
+        ]
+      },
+      {
+        "property": "text-transform",
+        "capability": "supported",
+        "occurrences": 18,
+        "samples": [
+          {
+            "path": "div#stage.stage[0]>div.rank-badge[2]>span.r-sub[1]",
+            "value": "uppercase"
+          },
+          {
+            "path": "div#stage.stage[0]>div.right-shell[4]>div#right-content.right-content[0]>div[0]>div[1]>div[0]>div[0]>span[2]",
+            "value": "uppercase"
+          },
+          {
+            "path": "div#stage.stage[0]>div.right-shell[4]>div#right-content.right-content[0]>div[0]>div[1]>div[1]>div[0]>span[2]",
+            "value": "uppercase"
           }
         ]
       },
@@ -2144,30 +2044,30 @@
             "value": "rgb(10, 10, 10)"
           },
           {
-            "path": "div#stage.stage[0]>div.right-shell[5]>div#right-content.right-content[0]>div[0]>div[0]>div[1]>span[0]",
+            "path": "div#stage.stage[0]>div.right-shell[4]>div#right-content.right-content[0]>div[0]>div[0]>div[1]>span[0]",
             "value": "rgb(255, 193, 7)"
           },
           {
-            "path": "div#stage.stage[0]>div.right-shell[5]>div#right-content.right-content[0]>div[0]>div[1]>div[0]",
+            "path": "div#stage.stage[0]>div.right-shell[4]>div#right-content.right-content[0]>div[0]>div[1]>div[0]",
             "value": "rgba(255, 255, 255, 0.03)"
           }
         ]
       },
       {
         "property": "content",
-        "capability": "unsupported",
+        "capability": "supported",
         "occurrences": 13,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]::after",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]::after",
             "value": "\"\""
           },
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]::before",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]::before",
             "value": "\"\""
           },
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]::after",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]::after",
             "value": "\"\""
           }
         ]
@@ -2182,11 +2082,11 @@
             "value": "hidden"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "hidden"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
             "value": "clip"
           }
         ]
@@ -2201,11 +2101,11 @@
             "value": "hidden"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "hidden"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
             "value": "clip"
           }
         ]
@@ -2220,49 +2120,49 @@
             "value": "hidden"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "hidden"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
             "value": "clip"
           }
         ]
       },
       {
         "property": "box-shadow",
-        "capability": "assetize",
+        "capability": "partial-supported",
         "occurrences": 10,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "rgba(212, 175, 55, 0.1) 0px 0px 16px 0px inset, rgba(212, 175, 55, 0.2) 0px 0px 24px 0px"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.right[2]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
             "value": "rgba(212, 175, 55, 0.1) 0px 0px 16px 0px inset, rgba(212, 175, 55, 0.2) 0px 0px 24px 0px"
           },
           {
-            "path": "div#stage.stage[0]>div#rank-badge.rank-badge[2]",
+            "path": "div#stage.stage[0]>div.rank-badge[2]",
             "value": "rgba(0, 0, 0, 0.5) 0px 6px 20px 0px, rgba(140, 207, 196, 0.15) 0px 0px 20px 0px inset"
           }
         ]
       },
       {
         "property": "text-shadow",
-        "capability": "assetize",
+        "capability": "supported",
         "occurrences": 7,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div.right-shell[5]>div#right-content.right-content[0]>div[0]>div[0]>div[0]>div[0]>span[0]",
+            "path": "div#stage.stage[0]>div.right-shell[4]>div#right-content.right-content[0]>div[0]>div[0]>div[0]>div[0]>span[0]",
             "value": "rgba(0, 0, 0, 0.6) 0px 2px 6px"
           },
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]>div.cell-label[2]>div.t[0]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]>div.cell-label[2]>div.t[0]",
             "value": "rgb(0, 0, 0) 0px 1px 0px, rgba(0, 0, 0, 0.9) 0px 0px 10px"
           },
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[1]>div.cell-label[2]>div.t[0]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[1]>div.cell-label[2]>div.t[0]",
             "value": "rgb(0, 0, 0) 0px 1px 0px, rgba(0, 0, 0, 0.9) 0px 0px 10px"
           }
         ]
@@ -2273,34 +2173,34 @@
         "occurrences": 5,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]",
             "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[1]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[1]",
             "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[2]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[2]",
             "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           }
         ]
       },
       {
         "property": "clip-path",
-        "capability": "unsupported",
+        "capability": "assetize",
         "occurrences": 5,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[0]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]",
             "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[1]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[1]",
             "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           },
           {
-            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[6]>div#strip-cells.strip[1]>div.cell[2]",
+            "path": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[2]",
             "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)"
           }
         ]
@@ -2308,62 +2208,62 @@
       {
         "property": "transform",
         "capability": "unsupported",
-        "occurrences": 5,
+        "occurrences": 4,
         "samples": [
           {
-            "path": "div#stage.stage[0]",
-            "value": "matrix(0.694444, 0, 0, 0.694444, 0.333333, 0)"
-          },
-          {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>button.portrait-nav.left[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.left[0]",
             "value": "matrix(1, 0, 0, 1, 0, -48)"
           },
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
             "value": "matrix(1, 0, 0, 1, -267.905, 0)"
+          },
+          {
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>button.portrait-nav.right[2]",
+            "value": "matrix(1, 0, 0, 1, 0, -48)"
           }
         ]
       },
       {
         "property": "background-position",
-        "capability": "assetize",
+        "capability": "supported",
         "occurrences": 1,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "0% 0%, 0% 0%, 0% 0%"
           }
         ]
       },
       {
         "property": "background-repeat",
-        "capability": "assetize",
+        "capability": "supported",
         "occurrences": 1,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "repeat, repeat, repeat"
           }
         ]
       },
       {
         "property": "background-size",
-        "capability": "assetize",
+        "capability": "supported",
         "occurrences": 1,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]",
             "value": "auto, auto, auto"
           }
         ]
       },
       {
         "property": "filter",
-        "capability": "unsupported",
+        "capability": "supported",
         "occurrences": 1,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
             "value": "drop-shadow(rgba(0, 0, 0, 0.7) 0px 20px 40px)"
           }
         ]
@@ -2374,7 +2274,7 @@
         "occurrences": 1,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
             "value": "contain"
           }
         ]
@@ -2385,12 +2285,12 @@
         "occurrences": 1,
         "samples": [
           {
-            "path": "div#stage.stage[0]>div#portrait-bg.portrait-bg[0]>img.portrait-img[1]",
+            "path": "div#stage.stage[0]>div.portrait-bg[0]>img.portrait-img[1]",
             "value": "50% 100%"
           }
         ]
       }
     ]
   },
-  "coveragePercent": 0.9974751459681237
+  "coveragePercent": 0.9974819011646208
 }

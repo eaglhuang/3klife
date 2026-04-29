@@ -76,6 +76,10 @@ function mergeNode(draftNode, existingNode, pathStr, mergeMode, fieldChanges, co
       fieldChanges.push({ path: fieldPath, kind: 'added' });
     } else if (deepEqual(draftV, existingV)) {
       merged[key] = existingV;
+    } else if (key === 'root' && isPlainObject(draftV) && isPlainObject(existingV)) {
+      merged[key] = mergeNode(draftV, existingV, fieldPath, mergeMode, fieldChanges, conflicts);
+    } else if (key === 'widget' && isPlainObject(draftV) && isPlainObject(existingV) && mergeMode !== 'html-authoritative') {
+      merged[key] = mergeWidgetPreserveHuman(draftV, existingV, fieldPath, fieldChanges, conflicts, mergeMode);
     } else {
       // conflict
       if (mergeMode === 'html-authoritative') {
@@ -119,6 +123,8 @@ function mergeNode(draftNode, existingNode, pathStr, mergeMode, fieldChanges, co
       if (!usedExisting.has(key)) {
         if (mergeMode === 'html-authoritative') {
           fieldChanges.push({ path: `${pathStr || 'root'}.${key}`, kind: 'removed-by-html' });
+        } else if (isGeneratedNode(ec)) {
+          fieldChanges.push({ path: `${pathStr || 'root'}.${key}`, kind: generatedRemovalKind(ec) });
         } else {
           mergedChildren.push(ec);
           fieldChanges.push({ path: `${pathStr || 'root'}.${key}`, kind: 'preserved-existing' });
@@ -129,6 +135,35 @@ function mergeNode(draftNode, existingNode, pathStr, mergeMode, fieldChanges, co
   }
 
   return merged;
+}
+
+function mergeWidgetPreserveHuman(draftWidget, existingWidget, fieldPath, fieldChanges, conflicts, mergeMode) {
+  const merged = {};
+  const keys = new Set([...Object.keys(draftWidget), ...Object.keys(existingWidget)]);
+  for (const key of keys) {
+    const draftV = draftWidget[key];
+    const existingV = existingWidget[key];
+    const subPath = `${fieldPath}.${key}`;
+    if (draftV === undefined) {
+      merged[key] = existingV;
+    } else if (existingV === undefined) {
+      merged[key] = draftV;
+      fieldChanges.push({ path: subPath, kind: 'added' });
+    } else if (deepEqual(draftV, existingV)) {
+      merged[key] = existingV;
+    } else {
+      merged[key] = existingV;
+      fieldChanges.push({ path: subPath, kind: 'manual-edit' });
+      if (options_conflictFail(mergeMode)) {
+        conflicts.push(`${subPath}: existing=${jsonShort(existingV)} html=${jsonShort(draftV)}`);
+      }
+    }
+  }
+  return merged;
+}
+
+function isPlainObject(value) {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
 }
 
 function collectLockedFields(draftNode, existingNode) {
@@ -143,6 +178,10 @@ function collectLockedFields(draftNode, existingNode) {
 
 function mergeSkin(draftSkin, existingSkin, mergeMode, fieldChanges, conflicts) {
   const out = { slots: {} };
+  for (const key of ['id', 'version', 'specVersion']) {
+    if (existingSkin[key] !== undefined) out[key] = existingSkin[key];
+    else if (draftSkin[key] !== undefined) out[key] = draftSkin[key];
+  }
   if (existingSkin.bundles) out.bundles = existingSkin.bundles.slice();
   if (draftSkin.bundles) {
     const set = new Set([...(out.bundles || []), ...draftSkin.bundles]);
@@ -158,6 +197,10 @@ function mergeSkin(draftSkin, existingSkin, mergeMode, fieldChanges, conflicts) 
     const e = existingSlots[slotId];
     const path = `skin.slots.${slotId}`;
     if (!d && e) {
+      if (isGeneratedSlot(slotId, e)) {
+        fieldChanges.push({ path, kind: generatedSlotRemovalKind(slotId, e) });
+        continue;
+      }
       out.slots[slotId] = e;
       // Existing-only slot is preserved silently.
     } else if (d && !e) {
@@ -166,6 +209,11 @@ function mergeSkin(draftSkin, existingSkin, mergeMode, fieldChanges, conflicts) 
     } else if (deepEqual(d, e)) {
       out.slots[slotId] = e;
     } else {
+      const preservedAsset = preserveExistingRuntimeAssetSlot(slotId, d, e, path, fieldChanges);
+      if (preservedAsset) {
+        out.slots[slotId] = preservedAsset;
+        continue;
+      }
       if (mergeMode === 'html-authoritative') {
         out.slots[slotId] = d;
         fieldChanges.push({ path, kind: 'overwritten-by-html' });
@@ -180,8 +228,127 @@ function mergeSkin(draftSkin, existingSkin, mergeMode, fieldChanges, conflicts) 
   return out;
 }
 
+function preserveExistingRuntimeAssetSlot(slotId, draftSlot, existingSlot, path, fieldChanges) {
+  if (!isExistingRuntimeAssetSlot(existingSlot)) return null;
+  if (isExplicitAssetReplace(draftSlot)) return null;
+  const draftIsUsableAsset = isExistingRuntimeAssetSlot(draftSlot);
+  if (draftIsUsableAsset && runtimeAssetSignature(draftSlot) === runtimeAssetSignature(existingSlot)) return null;
+  fieldChanges.push({
+    path,
+    kind: 'existing-runtime-asset-preserved',
+    detail: `${(draftSlot && draftSlot.kind) || '<missing>'} -> ${runtimeAssetDescription(existingSlot)}`,
+  });
+  return Object.assign({}, cleanRuntimeAssetSlot(existingSlot), {
+    _assetPreserveReason: 'existing-runtime-asset',
+  });
+}
+
+function cleanRuntimeAssetSlot(slot) {
+  const out = Object.assign({}, slot || {});
+  if (out.color === 'unmappedColor') {
+    delete out.color;
+    if (out.opacity === 1) delete out.opacity;
+  }
+  delete out.gradient;
+  return out;
+}
+
+function isExplicitAssetReplace(slot) {
+  return !!(slot && (
+    slot.assetPolicy === 'replace-existing' ||
+    slot.assetReplaceApproved === true ||
+    slot._replaceExistingAsset === true
+  ));
+}
+
+function isExistingRuntimeAssetSlot(slot) {
+  const paths = collectRuntimeAssetPaths(slot);
+  if (paths.length === 0) return false;
+  return paths.every(runtimeAssetPathExists);
+}
+
+function collectRuntimeAssetPaths(slot) {
+  if (!slot || typeof slot !== 'object') return [];
+  if (slot.kind === 'sprite-frame' && slot.path) return [slot.path];
+  if (slot.kind === 'button-skin') {
+    return ['normal', 'pressed', 'disabled', 'selected']
+      .map(key => slot[key])
+      .filter(value => typeof value === 'string' && value.length > 0);
+  }
+  return [];
+}
+
+function runtimeAssetPathExists(assetPath) {
+  if (!assetPath) return false;
+  if (/missing_sprite$/i.test(String(assetPath))) return false;
+  return assetLikelyExists(assetPath);
+}
+
+function runtimeAssetSignature(slot) {
+  return collectRuntimeAssetPaths(slot).slice().sort().join('|');
+}
+
+function runtimeAssetDescription(slot) {
+  const paths = collectRuntimeAssetPaths(slot);
+  return paths.length ? paths.join(',') : '<asset>';
+}
+
+function assetLikelyExists(cleanPath) {
+  const path = require('path');
+  const fs = require('fs');
+  const repoRoot = path.resolve(__dirname, '..', '..', '..');
+  const normalized = String(cleanPath || '').split(String.fromCharCode(92)).join('/').replace(/\/spriteFrame$/, '');
+  const base = path.join(repoRoot, 'assets', 'resources', normalized);
+  return fs.existsSync(base)
+    || ['.png', '.jpg', '.jpeg', '.webp', '.json'].some(ext => fs.existsSync(base + ext));
+}
+
+function isGeneratedPseudoNode(node) {
+  return !!(node && typeof node._cssPseudo === 'string');
+}
+
+function isGeneratedEffectNode(node) {
+  return !!(node && typeof node._cssEffect === 'string');
+}
+
+function isGeneratedNode(node) {
+  return isGeneratedPseudoNode(node) || isGeneratedEffectNode(node);
+}
+
+function generatedRemovalKind(node) {
+  return isGeneratedEffectNode(node) ? 'removed-generated-css-effect' : 'removed-generated-pseudo';
+}
+
+function isGeneratedPseudoSlot(slotId, slot) {
+  if (!slot || !slotId) return false;
+  return /[._-]pseudo(before|after)$/i.test(String(slotId));
+}
+
+function isGeneratedEffectSlot(slotId, slot) {
+  if (!slot || !slotId) return false;
+  return /[._-]cssshadow$/i.test(String(slotId));
+}
+
+function isGeneratedSlot(slotId, slot) {
+  return isGeneratedPseudoSlot(slotId, slot) || isGeneratedEffectSlot(slotId, slot);
+}
+
+function generatedSlotRemovalKind(slotId, slot) {
+  return isGeneratedEffectSlot(slotId, slot) ? 'removed-generated-css-effect-slot' : 'removed-generated-pseudo-slot';
+}
+
 function mergeSlotPreserveHuman(draftSlot, existingSlot, path, fieldChanges) {
+  const promotedGradient = promoteAutoColorToGradient(draftSlot, existingSlot, path);
+  if (promotedGradient) {
+    fieldChanges.push({ path, kind: 'auto-color-promoted-to-gradient' });
+    return promotedGradient;
+  }
   const merged = Object.assign({}, draftSlot, existingSlot);
+  if (canPromotePlaceholderColor(draftSlot, existingSlot)) {
+    merged.color = draftSlot.color;
+    if (draftSlot.opacity != null) merged.opacity = draftSlot.opacity;
+    fieldChanges.push({ path: `${path}.color`, kind: 'placeholder-promoted' });
+  }
   // For each key that differs, mark as manual-edit
   for (const k of new Set([...Object.keys(draftSlot || {}), ...Object.keys(existingSlot || {})])) {
     if (!deepEqual(draftSlot[k], existingSlot[k])) {
@@ -189,6 +356,28 @@ function mergeSlotPreserveHuman(draftSlot, existingSlot, path, fieldChanges) {
     }
   }
   return merged;
+}
+
+function promoteAutoColorToGradient(draftSlot, existingSlot, path) {
+  if (!draftSlot || !existingSlot) return false;
+  if (draftSlot.kind !== 'gradient-rect' || existingSlot.kind !== 'color-rect') return false;
+  if (!/^skin\.slots\.auto\./.test(String(path || ''))) return false;
+  const safeExistingKeys = new Set(['kind', 'color', 'alpha', 'opacity', 'gradient', 'borderColor', 'borderWidth', 'cornerRadius', 'strokeColor', 'strokeWidth']);
+  if (!Object.keys(existingSlot).every(key => safeExistingKeys.has(key))) return null;
+  const merged = Object.assign({}, existingSlot, draftSlot, { kind: 'gradient-rect', gradient: draftSlot.gradient });
+  for (const key of ['borderColor', 'borderWidth', 'cornerRadius', 'strokeColor', 'strokeWidth']) {
+    if (existingSlot[key] !== undefined && draftSlot[key] === undefined) merged[key] = existingSlot[key];
+  }
+  if (existingSlot.opacity !== undefined && draftSlot.opacity === undefined) merged.opacity = existingSlot.opacity;
+  if (existingSlot.alpha !== undefined && draftSlot.alpha === undefined) merged.alpha = existingSlot.alpha;
+  return merged;
+}
+
+function canPromotePlaceholderColor(draftSlot, existingSlot) {
+  if (!draftSlot || !existingSlot) return false;
+  if (draftSlot.kind !== existingSlot.kind) return false;
+  if (existingSlot.color !== 'unmappedColor') return false;
+  return !!(draftSlot.color && draftSlot.color !== 'unmappedColor');
 }
 
 function options_conflictFail(_) { return false; }

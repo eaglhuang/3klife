@@ -1,0 +1,88 @@
+﻿  [CharacterDs3Main_div_3] type=label parent=CharacterDs3Main_div_1 text="??鈭?甇???
+   [CharacterDs3Main_span_1] type=label parent=CharacterDs3Main_div_4 text="??
+   [CharacterDs3Main_span_2] type=label parent=CharacterDs3Main_div_4 text="LEGEND"
+   [CharacterDs3Main_span_3] type=label parent=CharacterDs3Main_button_3 text="??
+   [CharacterDs3Main_span_4] type=label parent=CharacterDs3Main_button_3 text="餈?"
+        [OverviewName] type=label parent=CharacterDs3Main_div_12 text="撘菟?"
+        [CharacterDs3Main_span_6] type=label parent=CharacterDs3Main_div_12 text="??鈭箝?
+       [OverviewRoleBadge] type=label parent=CharacterDs3Main_div_11 text="蝧澆噸 繚 ? 繚 ??"
+       [OverviewRarityTier] type=label parent=CharacterDs3Main_div_14 text="UR"
+        [CharacterDs3Main_span_8] type=label parent=OverviewRarityStars text="??
+        [CharacterDs3Main_span_9] type=label parent=OverviewRarityStars text="??
+        [CharacterDs3Main_span_10] type=label parent=OverviewRarityStars text="??
+        [CharacterDs3Main_span_11] type=label parent=OverviewRarityStars text="??
+        [CharacterDs3Main_span_12] type=label parent=OverviewRarityStars text="??
+        [CharacterDs3Main_span_13] type=label parent=CharacterDs3Main_div_18 text="?詨?撅祆?
+        [CharacterDs3Main_span_14] type=label parent=CharacterDs3Main_div_18 text="CORE"
+         [CharacterDs3Main_span_15] type=label parent=CharacterDs3Main_div_21 text="甇?
+         [CharacterDs3Main_span_16] type=label parent=CharacterDs3Main_div_21 text="98"
+         [CharacterDs3Main_span_17] type=label parent=CharacterDs3Main_div_22 text="蝯?
+         [CharacterDs3Main_span_18] type=label parent=CharacterDs3Main_div_22 text="88"
+         [CharacterDs3Main_span_19] type=label parent=CharacterDs3Main_div_23 text="擳?
+         [CharacterDs3Main_span_20] type=label parent=CharacterDs3Main_div_23 text="74"
+         [CharacterDs3Main_span_21] type=label parent=CharacterDs3Main_div_24 text="??
+         [CharacterDs3Main_span_22] type=label parent=CharacterDs3Main_div_24 text="52"
+         [CharacterDs3Main_span_23] type=label parent=CharacterDs3Main_div_25 text="??
+         [CharacterDs3Main_span_24] type=label parent=CharacterDs3Main_div_25 text="38"
+         [CharacterDs3Main_span_25] type=label parent=CharacterDs3Main_div_26 text="??
+         [CharacterDs3Main_span_26] type=label parent=CharacterDs3Main_div_26 text="76"
+        [CharacterDs3Main_span_27] type=label parent=CharacterDs3Main_div_28 text="?啣摰?"
+        [CharacterDs3Main_span_28] type=label parent=CharacterDs3Main_div_28 text="ROLE"
+        [CharacterDs3Main_span_29] type=label parent=CharacterDs3Main_div_30 text=""
+        [CharacterDs3Main_span_30] type=label parent=CharacterDs3Main_div_30 text="??蝒"
+        [CharacterDs3Main_span_31] type=label parent=CharacterDs3Main_div_31 text=""
+        [CharacterDs3Main_span_32] type=label parent=CharacterDs3Main_div_31 text="?湧銝餅"
+        [CharacterDs3Main_span_33] type=label parent=CharacterDs3Main_div_33 text="?扳瘞?釭"
+        [CharacterDs3Main_span_34] type=label parent=CharacterDs3Main_div_33 text="TRAITS"
+        [CharacterDs3Main_span_35] type=label parent=CharacterDs3Main_div_35 text=""
+        [CharacterDs3Main_span_36] type=label parent=CharacterDs3Main_div_35 text="?唳??寡?"
+        [CharacterDs3Main_span_37] type=label parent=CharacterDs3Main_div_36 text=""
+        [CharacterDs3Main_span_38] type=label parent=CharacterDs3Main_div_36 text="撟喳??拇?
+       [CharacterDs3Main_span_39] type=label parent=CharacterDs3Main_div_38 text="銵??
+       [CharacterDs3Main_span_40] type=label parent=CharacterDs3Main_div_38 text="BLOODLINE"
+        [CharacterDs3Main_span_41] type=label parent=CharacterDs3Main_div_41 text="?賜?憿舐"
+        [CharacterDs3Main_div_44] type=label parent=CharacterDs3Main_div_43 text="????
+         [CharacterDs3Main_span_42] type=label parent=CharacterDs3Main_div_45 text="閬粹??曉?"
+         [CharacterDs3Main_span_43] type=label parent=CharacterDs3Main_div_45 text="58%"
+         [CharacterDs3Main_span_44] type=label parent=CharacterDs3Main_div_48 text="蟡?"
+         [CharacterDs3Main_span_45] type=label parent=CharacterDs3Main_div_48 text="撌脣遣蝡?14 鈭箄?蝯勗?"
+         [CharacterDs3Main_span_46] type=label parent=CharacterDs3Main_div_49 text="?啗情"
+         [CharacterDs3Main_span_47] type=label parent=CharacterDs3Main_div_49 text="???瘚"
+       [CharacterDs3Main_span_48] type=label parent=CharacterDs3Main_div_51 text="鈭箇?唾?"
+       [CharacterDs3Main_span_49] type=label parent=CharacterDs3Main_div_51 text="BIOGRAPHY"
+      [CharacterDs3Main_div_53] type=label parent=CharacterDs3Main_div_50 text="撘菟?嚗?蝧澆噸嚗厭撌馭?∩犖??撟港誑撅惇鞈???箸平嚗??潭???????蝢賜儔蝯??哨?隤??香?抒?憒嚗??????瑽?
+     [CharacterDs3Main_div_54] type=label parent=TabOverviewContent text="?犖甇西?"
+     [CharacterDs3Main_span_50] type=label parent=CharacterDs3Main_button_4 text="撠?
+     [CharacterDs3Main_span_51] type=label parent=CharacterDs3Main_button_4 text="GEN"
+     [CharacterDs3Main_span_52] type=label parent=CharacterDs3Main_button_5 text="撅?
+     [CharacterDs3Main_span_53] type=label parent=CharacterDs3Main_button_5 text="STAT"
+     [CharacterDs3Main_span_54] type=label parent=CharacterDs3Main_button_6 text="?"
+     [CharacterDs3Main_span_55] type=label parent=CharacterDs3Main_button_6 text="TACT"
+     [CharacterDs3Main_span_56] type=label parent=CharacterDs3Main_button_7 text="??
+     [CharacterDs3Main_span_57] type=label parent=CharacterDs3Main_button_7 text="FATE"
+     [CharacterDs3Main_span_58] type=label parent=CharacterDs3Main_button_8 text="撖?
+     [CharacterDs3Main_span_59] type=label parent=CharacterDs3Main_button_8 text="GEAR"
+     [CharacterDs3Main_span_60] type=label parent=CharacterDs3Main_button_9 text="??
+     [CharacterDs3Main_span_61] type=label parent=CharacterDs3Main_button_9 text="APT"
+    [CharacterDs3Main_h4_1] type=label parent=CharacterDs3Main_div_57 text="??鈭?
+    [CharacterDs3Main_span_62] type=label parent=CharacterDs3Main_div_57 text="Chronicles"
+    [CharacterDs3Main_span_63] type=label parent=CharacterDs3Main_div_57 text=""
+     [CharacterDs3Main_span_64] type=label parent=CharacterDs3Main_div_59 text="01"
+      [CharacterDs3Main_div_62] type=label parent=CharacterDs3Main_div_61 text="瘨???撅???
+      [CharacterDs3Main_span_65] type=label parent=CharacterDs3Main_div_61 text="Butcher of Zhuo"
+     [CharacterDs3Main_span_66] type=label parent=CharacterDs3Main_div_63 text="02"
+      [CharacterDs3Main_div_66] type=label parent=CharacterDs3Main_div_65 text="獢???蝯?蝢?
+      [CharacterDs3Main_span_67] type=label parent=CharacterDs3Main_div_65 text="Oath of the Peach Garden"
+     [CharacterDs3Main_span_68] type=label parent=CharacterDs3Main_div_67 text="03"
+      [CharacterDs3Main_div_70] type=label parent=CharacterDs3Main_div_69 text="????????
+      [CharacterDs3Main_span_69] type=label parent=CharacterDs3Main_div_69 text="Roar at Changban"
+     [CharacterDs3Main_span_70] type=label parent=CharacterDs3Main_div_71 text="04"
+      [CharacterDs3Main_div_74] type=label parent=CharacterDs3Main_div_73 text="蝢?????憿?
+      [CharacterDs3Main_span_71] type=label parent=CharacterDs3Main_div_73 text="Mercy to Yan Yan"
+     [CharacterDs3Main_span_72] type=label parent=CharacterDs3Main_div_75 text="05"
+      [CharacterDs3Main_div_78] type=label parent=CharacterDs3Main_div_77 text="??敺?????
+      [CharacterDs3Main_span_73] type=label parent=CharacterDs3Main_div_77 text="Drunken Discipline"
+     [CharacterDs3Main_span_74] type=label parent=CharacterDs3Main_div_79 text="06"
+      [CharacterDs3Main_div_82] type=label parent=CharacterDs3Main_div_81 text="??銵 ????
+      [CharacterDs3Main_span_75] type=label parent=CharacterDs3Main_div_81 text="Legacy of Yan Blood"
+  [CharacterDs3Main_div_83] type=label parent=CharacterDs3Main_div_1 text="????鈭???

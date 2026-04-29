@@ -16,6 +16,7 @@ const os = require('os');
 const { spawnSync } = require('child_process');
 const { PNG } = require('pngjs');
 const { buildDraftFromHtml } = require('../lib/dom-to-ui/draft-builder');
+const { smartMerge } = require('../lib/dom-to-ui/smart-merge');
 const { snapshotToSlots } = require('../lib/dom-to-ui/snapshot-to-slots');
 const { resolveSourcePackage, writeHtmlWithSourceCss } = require('../lib/html-to-ucuf/source-package');
 
@@ -165,11 +166,152 @@ function main() {
     if (p.status !== 0) fail(`--sync-existing exit=${p.status}\n${p.stderr}`);
 
     const layoutAfter = JSON.parse(fs.readFileSync(layout, 'utf8'));
+    const skinAfter = JSON.parse(fs.readFileSync(skin, 'utf8'));
     const panelAfter = findNode(layoutAfter, n => n.type === 'panel');
     const imageAfter = findNode(panelAfter, n => n.type === 'image');
     if (panelAfter._humanNote !== 'manual') fail('preserve-human dropped _humanNote');
     if (imageAfter.width !== 12345) fail(`preserve-human dropped width override (got ${imageAfter.width})`);
+    if (skinAfter.id !== skinObj.id) fail(`preserve-human dropped skin id (got ${skinAfter.id})`);
     ok('--sync-existing preserve-human kept manual edits');
+
+    const widgetMerge = smartMerge(
+      { type: 'image', name: 'Hero', widget: { left: 284, bottom: 0 }, width: 540 },
+      { type: 'image', name: 'Hero', widget: { bottom: 0 }, height: '90%' },
+      { id: 'skin-draft', slots: {} },
+      { id: 'skin-existing', slots: {} },
+      { mergeMode: 'preserve-human' },
+    );
+    if (!widgetMerge.layout.widget || widgetMerge.layout.widget.left !== 284 || widgetMerge.layout.widget.bottom !== 0) {
+      fail(`preserve-human widget subfield merge failed: ${JSON.stringify(widgetMerge.layout.widget)}`);
+    }
+    if (widgetMerge.layout.height !== '90%' || widgetMerge.layout.width !== 540) {
+      fail(`preserve-human widget merge should preserve existing height and add missing width: ${JSON.stringify(widgetMerge.layout)}`);
+    }
+    ok('--sync-existing preserve-human merges missing widget subfields');
+
+    const wrappedRootMerge = smartMerge(
+      { id: 'wrapped', root: { type: 'container', name: 'Root', children: [{ type: 'image', name: 'Hero', widget: { left: 12 }, width: 100 }] } },
+      { id: 'wrapped', root: { type: 'container', name: 'Root', children: [{ type: 'image', name: 'Hero', widget: { bottom: 0 }, height: 80 }] } },
+      { id: 'skin-draft', slots: {} },
+      { id: 'skin-existing', slots: {} },
+      { mergeMode: 'preserve-human' },
+    );
+    const wrappedHero = findNode(wrappedRootMerge.layout.root, n => n.name === 'Hero');
+    if (!wrappedHero || wrappedHero.width !== 100 || wrappedHero.height !== 80 || wrappedHero.widget.left !== 12 || wrappedHero.widget.bottom !== 0) {
+      fail(`preserve-human wrapped root merge failed: ${JSON.stringify(wrappedRootMerge.layout)}`);
+    }
+    ok('--sync-existing preserve-human recurses into wrapped layout root');
+
+    const placeholderPromotion = smartMerge(
+      { type: 'container', name: 'Root' },
+      { type: 'container', name: 'Root' },
+      { id: 'skin-draft', slots: { Panel: { kind: 'color-rect', color: 'backgroundDeep', opacity: 0.8 } } },
+      { id: 'skin-existing', slots: { Panel: { kind: 'color-rect', color: 'unmappedColor', opacity: 1 } } },
+      { mergeMode: 'preserve-human' },
+    );
+    const promotedSlot = placeholderPromotion.skin.slots.Panel;
+    if (!promotedSlot || promotedSlot.color !== 'backgroundDeep' || promotedSlot.opacity !== 0.8) {
+      fail('preserve-human did not promote unmappedColor placeholder to resolved draft color');
+    }
+    ok('--sync-existing preserve-human promotes unmappedColor placeholders');
+
+    const gradientSlotPromotion = smartMerge(
+      { type: 'container', name: 'Root' },
+      { type: 'container', name: 'Root' },
+      { id: 'skin-draft', slots: { 'auto.gradient.panel': { kind: 'gradient-rect', gradient: { type: 'linear', angle: 90, stops: [{ color: '#111111', offset: 0 }, { color: '#222222', offset: 1 }] } } } },
+      { id: 'skin-existing', slots: { 'auto.gradient.panel': { kind: 'color-rect', color: 'backgroundDeep', opacity: 1, borderColor: 'secondary', borderWidth: 2, cornerRadius: 8 } } },
+      { mergeMode: 'preserve-human' },
+    );
+    const promotedGradient = gradientSlotPromotion.skin.slots['auto.gradient.panel'];
+    if (!promotedGradient || promotedGradient.kind !== 'gradient-rect' || promotedGradient.gradient.angle !== 90) {
+      fail(`preserve-human did not promote safe auto color slot to gradient-rect: ${JSON.stringify(promotedGradient)}`);
+    }
+    if (promotedGradient.borderWidth !== 2 || promotedGradient.cornerRadius !== 8) fail(`gradient promotion should preserve border fields: ${JSON.stringify(promotedGradient)}`);
+    ok('--sync-existing preserve-human promotes safe auto color slots to gradient-rect');
+
+    const existingAssetPath = 'sprites/ui_families/general_detail/generated/general_detail_bg_v5_civil';
+    const assetPreserve = smartMerge(
+      { type: 'container', name: 'Root' },
+      { type: 'container', name: 'Root' },
+      { id: 'skin-draft', slots: { 'auto.asset.panel': { kind: 'gradient-rect', gradient: { type: 'linear', angle: 90, stops: [{ color: '#111111', offset: 0 }, { color: '#222222', offset: 1 }] } } } },
+      { id: 'skin-existing', slots: { 'auto.asset.panel': { kind: 'sprite-frame', path: existingAssetPath, expectedWidth: 827, expectedHeight: 750 } } },
+      { mergeMode: 'html-authoritative' },
+    );
+    const preservedAsset = assetPreserve.skin.slots['auto.asset.panel'];
+    if (!preservedAsset || preservedAsset.kind !== 'sprite-frame' || preservedAsset.path !== existingAssetPath) {
+      fail(`html-authoritative should not overwrite existing runtime sprite asset with generated gradient/color slot: ${JSON.stringify(preservedAsset)}`);
+    }
+    if (preservedAsset.color !== undefined || preservedAsset.opacity !== undefined || preservedAsset.gradient !== undefined) {
+      fail(`preserved runtime sprite should not inherit generated draft paint fields: ${JSON.stringify(preservedAsset)}`);
+    }
+    if (!assetPreserve.fieldChanges.some(change => change.kind === 'existing-runtime-asset-preserved')) {
+      fail('asset preservation must be recorded in sync fieldChanges');
+    }
+    const assetReplace = smartMerge(
+      { type: 'container', name: 'Root' },
+      { type: 'container', name: 'Root' },
+      { id: 'skin-draft', slots: { 'auto.asset.panel': { kind: 'color-rect', color: 'backgroundDeep', assetPolicy: 'replace-existing' } } },
+      { id: 'skin-existing', slots: { 'auto.asset.panel': { kind: 'sprite-frame', path: existingAssetPath } } },
+      { mergeMode: 'html-authoritative' },
+    );
+    const replacedAsset = assetReplace.skin.slots['auto.asset.panel'];
+    if (!replacedAsset || replacedAsset.kind !== 'color-rect' || replacedAsset.color !== 'backgroundDeep') {
+      fail(`explicit assetPolicy=replace-existing should allow replacing existing asset: ${JSON.stringify(replacedAsset)}`);
+    }
+    ok('--sync-existing html-authoritative preserves existing runtime sprite assets unless replacement is explicit');
+
+    const tabButtonAssetPath = 'sprites/ui_families/general_detail/tab_active_button';
+    const tabButtonSkinPreserve = smartMerge(
+      { type: 'container', name: 'Root' },
+      { type: 'container', name: 'Root' },
+      { id: 'skin-draft', slots: { 'detail.tab.formal': { kind: 'gradient-rect', gradient: { type: 'linear', angle: 180, stops: [{ color: '#111111', offset: 0 }, { color: '#222222', offset: 1 }] } } } },
+      { id: 'skin-existing', slots: { 'detail.tab.formal': { kind: 'button-skin', normal: tabButtonAssetPath, pressed: tabButtonAssetPath, disabled: tabButtonAssetPath, selected: 'sprites/ui_families/general_detail/detail_tab_active_frame', spriteType: 'simple', allowAutoAtlas: true } } },
+      { mergeMode: 'html-authoritative' },
+    );
+    const preservedTabButton = tabButtonSkinPreserve.skin.slots['detail.tab.formal'];
+    if (!preservedTabButton || preservedTabButton.kind !== 'button-skin' || preservedTabButton.normal !== tabButtonAssetPath) {
+      fail(`html-authoritative should preserve existing formal button-skin assets: ${JSON.stringify(preservedTabButton)}`);
+    }
+    if (preservedTabButton.gradient !== undefined) {
+      fail(`preserved formal button-skin should not inherit generated gradient fields: ${JSON.stringify(preservedTabButton)}`);
+    }
+    if (!tabButtonSkinPreserve.fieldChanges.some(change => change.path === 'skin.slots.detail.tab.formal' && change.kind === 'existing-runtime-asset-preserved')) {
+      fail('formal button-skin preservation must be recorded in sync fieldChanges');
+    }
+    const tabButtonReplace = smartMerge(
+      { type: 'container', name: 'Root' },
+      { type: 'container', name: 'Root' },
+      { id: 'skin-draft', slots: { 'detail.tab.formal': { kind: 'color-rect', color: 'backgroundDeep', assetPolicy: 'replace-existing' } } },
+      { id: 'skin-existing', slots: { 'detail.tab.formal': { kind: 'button-skin', normal: tabButtonAssetPath, pressed: tabButtonAssetPath, disabled: tabButtonAssetPath } } },
+      { mergeMode: 'html-authoritative' },
+    );
+    const replacedTabButton = tabButtonReplace.skin.slots['detail.tab.formal'];
+    if (!replacedTabButton || replacedTabButton.kind !== 'color-rect' || replacedTabButton.color !== 'backgroundDeep') {
+      fail(`explicit assetPolicy=replace-existing should allow replacing formal button-skin assets: ${JSON.stringify(replacedTabButton)}`);
+    }
+    ok('--sync-existing html-authoritative preserves formal button-skin assets unless replacement is explicit');
+
+    const pseudoCleanup = smartMerge(
+      { type: 'container', name: 'Root', children: [] },
+      { type: 'container', name: 'Root', children: [{ type: 'panel', name: 'Root_PseudoAfter', _cssPseudo: 'after', skinSlot: 'auto.cleanup.root_pseudoafter' }] },
+      { id: 'skin-draft', slots: {} },
+      { id: 'skin-existing', slots: { 'auto.cleanup.root_pseudoafter': { kind: 'gradient-rect', gradient: { type: 'linear', angle: 90, stops: [{ color: '#000000', offset: 0 }, { color: '#ffffff', offset: 1 }] } } } },
+      { mergeMode: 'preserve-human' },
+    );
+    if ((pseudoCleanup.layout.children || []).some(n => n && n._cssPseudo)) fail(`generated pseudo node should be removed when absent from draft: ${JSON.stringify(pseudoCleanup.layout)}`);
+    if (pseudoCleanup.skin.slots['auto.cleanup.root_pseudoafter']) fail('generated pseudo slot should be removed when absent from draft');
+    ok('--sync-existing preserve-human removes stale generated pseudo overlays');
+
+    const effectCleanup = smartMerge(
+      { type: 'container', name: 'Root', children: [] },
+      { type: 'container', name: 'Root', children: [{ type: 'panel', name: 'Root_CssShadow', _cssEffect: 'shadow', skinSlot: 'auto.cleanup.root_cssshadow' }] },
+      { id: 'skin-draft', slots: {} },
+      { id: 'skin-existing', slots: { 'auto.cleanup.root_cssshadow': { kind: 'shadow-set', boxShadows: [{ x: 0, y: 4, blur: 12, spread: 0, color: 'rgba(0,0,0,0.4)' }] } } },
+      { mergeMode: 'preserve-human' },
+    );
+    if ((effectCleanup.layout.children || []).some(childNode => childNode && childNode._cssEffect)) fail(`generated css effect node should be removed when absent from draft: ${JSON.stringify(effectCleanup.layout)}`);
+    if (effectCleanup.skin.slots['auto.cleanup.root_cssshadow']) fail('generated css effect slot should be removed when absent from draft');
+    ok('--sync-existing preserve-human removes stale generated CSS effect layers');
 
     // 8. dry-run does not write files
     const probeMtime = fs.statSync(layout).mtimeMs;
@@ -245,6 +387,76 @@ function main() {
     if (!tokenUsage || !tokenUsage.spacing.some(t => t.token === 'spacing.md')) fail('spacing token usage report missing spacing.md');
     if (!tokenUsage.typography.some(t => /^typography\./.test(t.token))) fail('typography token usage report missing');
     ok('M2 art token mapping + visual guard warnings');
+
+    const gradientHtml = `
+      <div data-name="GradientStage">
+        <div data-name="GradientPanel" style="width:100px;height:50px;background-image:linear-gradient(90deg, rgb(10, 20, 30) 0%, rgba(40, 50, 60, 0.5) 100%)"></div>
+      </div>`;
+    const gradientDraft = buildDraftFromHtml(gradientHtml, { screenId: 'gradient-rect', bundle: 'ui_test' });
+    const gradientPanel = findNode(gradientDraft.layoutDraft, n => n.name === 'GradientPanel');
+    const gradientSlot = gradientPanel && gradientPanel.skinSlot && gradientDraft.skinDraft.slots[gradientPanel.skinSlot];
+    if (!gradientSlot || gradientSlot.kind !== 'gradient-rect') fail(`linear-gradient should map to gradient-rect: ${JSON.stringify(gradientSlot)}`);
+    if (gradientSlot.gradient.angle !== 90 || gradientSlot.gradient.stops.length !== 2) fail(`gradient-rect payload malformed: ${JSON.stringify(gradientSlot)}`);
+    if (gradientSlot.gradient.stops[1].opacity !== 0.5) fail(`gradient rgba alpha should become stop opacity: ${JSON.stringify(gradientSlot)}`);
+    ok('linear-gradient maps to reusable gradient-rect skin slot');
+
+    const pseudoHtml = `
+      <div data-name="PseudoRoot">
+        <div data-name="PseudoStage" data-ucuf-capture-id="1" style="width:100px;height:50px"></div>
+      </div>`;
+    const pseudoDraft = buildDraftFromHtml(pseudoHtml, {
+      screenId: 'pseudo-overlay',
+      bundle: 'ui_test',
+      useComputedStyle: true,
+      fidelitySnapshots: [
+        { id: 1, parentId: 0, styles: { _rect: { x: 0, y: 0, w: 100, h: 50 }, 'background-color': 'rgba(0, 0, 0, 0)' }, pseudo: null },
+        { id: 1002, parentId: 1, styles: { 'background-image': 'linear-gradient(90deg, transparent 0%, rgba(10, 10, 10, 0.7) 100%)', 'opacity': '0.5' }, pseudo: 'after' },
+      ],
+    });
+    const pseudoOverlay = findNode(pseudoDraft.layoutDraft, n => n.name === 'PseudoStage_PseudoAfter');
+    if (!pseudoOverlay || pseudoOverlay.type !== 'panel') fail(`pseudo ::after overlay node missing: ${JSON.stringify(pseudoDraft.layoutDraft)}`);
+    if (pseudoOverlay.opacity !== 0.5) fail(`pseudo opacity should map to node opacity: ${JSON.stringify(pseudoOverlay)}`);
+    const pseudoSlot = pseudoOverlay.skinSlot && pseudoDraft.skinDraft.slots[pseudoOverlay.skinSlot];
+    if (!pseudoSlot || pseudoSlot.kind !== 'gradient-rect') fail(`pseudo gradient should map to gradient-rect: ${JSON.stringify(pseudoSlot)}`);
+    if (pseudoSlot.gradient.stops[0].opacity !== 0) fail(`transparent gradient stop should map opacity=0: ${JSON.stringify(pseudoSlot)}`);
+    ok('computed ::after pseudo overlay maps to reusable fill child skin slot');
+
+    const shadowDraft = buildDraftFromHtml(`
+      <div data-name="ShadowRoot">
+        <div data-name="ShadowPanel" data-ucuf-capture-id="1" style="position:absolute;left:20px;top:30px;width:100px;height:50px"></div>
+      </div>`, {
+      screenId: 'shadow-effect',
+      bundle: 'ui_test',
+      useComputedStyle: true,
+      fidelitySnapshots: [
+        {
+          id: 1,
+          parentId: 0,
+          styles: {
+            _rect: { x: 20, y: 30, w: 100, h: 50 },
+            'background-color': 'rgb(10, 20, 30)',
+            'box-shadow': 'rgba(0, 0, 0, 0.45) 0px 6px 20px 0px',
+            filter: 'drop-shadow(4px 8px 16px rgba(0, 0, 0, 0.5))',
+            'border-top-left-radius': '12px',
+            'border-top-right-radius': '12px',
+            'border-bottom-right-radius': '12px',
+            'border-bottom-left-radius': '12px',
+          },
+        },
+      ],
+    });
+    const shadowChildren = shadowDraft.layoutDraft.children || [];
+    const effectNode = shadowChildren.find(node => node.name === 'ShadowPanel_CssShadow');
+    const targetNode = shadowChildren.find(node => node.name === 'ShadowPanel');
+    if (!effectNode || !targetNode) fail(`shadow effect sibling missing: ${JSON.stringify(shadowDraft.layoutDraft)}`);
+    if (shadowChildren.indexOf(effectNode) > shadowChildren.indexOf(targetNode)) fail('shadow effect sibling should be inserted before target node');
+    if (effectNode.width <= targetNode.width || effectNode.height <= targetNode.height) fail(`shadow effect node should expand bounds: ${JSON.stringify(effectNode)}`);
+    const shadowSlot = effectNode.skinSlot && shadowDraft.skinDraft.slots[effectNode.skinSlot];
+    if (!shadowSlot || shadowSlot.kind !== 'shadow-set') fail(`shadow effect slot should be shadow-set: ${JSON.stringify(shadowSlot)}`);
+    if (!shadowSlot.boxShadows || shadowSlot.boxShadows.length !== 2) fail(`box-shadow + drop-shadow should both map: ${JSON.stringify(shadowSlot)}`);
+    if (!shadowSlot.padding || shadowSlot.padding.bottom <= shadowSlot.padding.top) fail(`shadow padding should reflect downward shadow: ${JSON.stringify(shadowSlot)}`);
+    if (shadowSlot.cornerRadius !== 12) fail(`shadow corner radius should follow computed radius: ${JSON.stringify(shadowSlot)}`);
+    ok('computed box-shadow/drop-shadow maps to reusable shadow-set effect sibling');
 
     // 9b. CSS-hidden overlay must not render active in runtime by default.
     const hiddenHtml = `
@@ -455,6 +667,814 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
   }
   ok('v2 source package validates, injects CSS, and maps source tokens');
 
+  // R-6 (general rule): CSS custom property declarations must not pollute the
+  // unsupported bucket or top offenders. Test the classifier directly so the
+  // guarantee covers every UI source that uses design-system tokens.
+  {
+    const { classifyCssProperty, buildCssCapabilityReport } = require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
+    if (classifyCssProperty('--accent-gold', '#D4AF37') !== 'token-declaration') {
+      fail('R-6 classifier should classify --accent-gold as token-declaration');
+    }
+    if (classifyCssProperty('--bg', '#0F0F0F') !== 'token-declaration') {
+      fail('R-6 classifier should classify --bg as token-declaration');
+    }
+    if (classifyCssProperty('color', '#fff') !== 'supported') {
+      fail('R-6 classifier regression: real properties must remain supported');
+    }
+    const report = buildCssCapabilityReport(':root{--accent-gold:#D4AF37;--bg:#000;}body{color:#fff;background:linear-gradient(red,blue);}');
+    if ((report.summary.unsupported || 0) !== 0) {
+      fail(`R-6 token declarations leaked into unsupported summary: ${report.summary.unsupported}`);
+    }
+    if ((report.summary.tokenDeclaration || 0) < 2) {
+      fail(`R-6 tokenDeclaration summary missing: ${report.summary.tokenDeclaration}`);
+    }
+    if (report.topOffenders.some(item => String(item.property).startsWith('--'))) {
+      fail('R-6 topOffenders must exclude CSS custom property declarations');
+    }
+    ok('R-6 css custom property declarations classified as token-declaration (not unsupported)');
+
+    // R-7 (general rule): CSS comments must be stripped before scanning so that
+    // documentation comments (e.g. `/* SOURCE: ... */`, `/* spec 1920x1080 */`)
+    // do not leak as fake `source` / `spec` properties in top offenders.
+    const commentReport = buildCssCapabilityReport('/* SOURCE: design-handoff/source/tokens.json */\n/* spec 1920x1080 native */\nbody{color:#fff;}');
+    if (commentReport.topOffenders.some(item => ['source', 'spec'].includes(item.property))) {
+      fail(`R-7 css comments leaked into topOffenders: ${commentReport.topOffenders.map(i => i.property).join(',')}`);
+    }
+    ok('R-7 css comments do not leak as fake property declarations');
+
+    // R-8 (general rule): `background` must be classified by value. Plain solid
+    // color or `var(--token)` resolves to a color-rect → `supported`; only
+    // gradient / url / multi-layer values are `assetize`. Without this rule
+    // every design-system UI using `background: var(--bg)` triggers a false
+    // assetize warning.
+    if (classifyCssProperty('background', '#0F0F0F') !== 'supported') {
+      fail('R-8 plain background color must classify as supported');
+    }
+    if (classifyCssProperty('background', 'var(--bg)') !== 'supported') {
+      fail('R-8 background var(...) without gradient/url must classify as supported');
+    }
+    if (classifyCssProperty('background', 'rgb(20,20,20)') !== 'supported') {
+      fail('R-8 background rgb(...) must classify as supported');
+    }
+    if (classifyCssProperty('background', 'linear-gradient(red,blue)') !== 'supported') {
+      fail('R-19 supersedes R-8: single-layer linear-gradient is runtime-supported (GradientBackground)');
+    }
+    if (classifyCssProperty('background', 'url(./bg.png)') !== 'supported') {
+      fail('R-19 supersedes R-8: single-layer url() is runtime-supported (sprite-frame)');
+    }
+    // background-image longhand: same R-19 alignment.
+    if (classifyCssProperty('background-image', 'url(./x.png)') !== 'supported') {
+      fail('R-19 supersedes R-8: background-image url() is runtime-supported');
+    }
+    // R-19 invariant: only mixed multi-layer mixes remain assetize.
+    if (classifyCssProperty('background', 'linear-gradient(red,blue), url(./bg.png)') !== 'assetize') {
+      fail('R-19 mixed gradient + url multi-layer must remain assetize');
+    }
+    ok('R-8/R-19 background classifier: solid/gradient/url single-layer all supported; multi-layer mixes remain assetize');
+
+    // R-9 (general rule): `text-transform` is applied offline at convert time
+    // because Cocos Label has no runtime equivalent. Test the helper directly
+    // so every UI source going through draft-builder is covered.
+    const { applyTextTransformGeneral } = require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'draft-builder.js'));
+    if (applyTextTransformGeneral('Tab Overview', 'uppercase') !== 'TAB OVERVIEW') {
+      fail(`R-9 uppercase failed: ${applyTextTransformGeneral('Tab Overview', 'uppercase')}`);
+    }
+    if (applyTextTransformGeneral('Hello World', 'lowercase') !== 'hello world') {
+      fail('R-9 lowercase failed');
+    }
+    if (applyTextTransformGeneral('hello world', 'capitalize') !== 'Hello World') {
+      fail('R-9 capitalize failed');
+    }
+    if (applyTextTransformGeneral('張飛', 'uppercase') !== '張飛') {
+      fail('R-9 uppercase must leave CJK unchanged');
+    }
+    if (applyTextTransformGeneral('preserved', 'none') !== 'preserved') {
+      fail('R-9 none must pass through');
+    }
+    if (applyTextTransformGeneral('preserved', '') !== 'preserved') {
+      fail('R-9 empty transform must pass through');
+    }
+    if (applyTextTransformGeneral('preserved', undefined) !== 'preserved') {
+      fail('R-9 undefined transform must pass through');
+    }
+    ok('R-9 text-transform applied offline (uppercase/lowercase/capitalize), CJK and none preserved');
+  }
+
+  // R-10: font-family stack 必須走 registry-based 解析。converter 不能把整個
+  // stack 都打成同一份字型資產（舊 pickFontByTag 寫死回 newsreader）。任何走
+  // v2 source-package flow 的 UI 都應該照 stack 順序找到第一個有資產的 family。
+  {
+    const { resolveFontFamilyToAsset, PROJECT_FONT_REGISTRY, PROJECT_FONT_DEFAULT } = require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'draft-builder.js'));
+    if (!Array.isArray(PROJECT_FONT_REGISTRY) || PROJECT_FONT_REGISTRY.length < 4) {
+      fail('R-10 PROJECT_FONT_REGISTRY must be exported and non-trivial');
+    }
+    // 具名專案字型優先
+    if (resolveFontFamilyToAsset('"Newsreader", "NotoSansTC", "Songti TC", "STSong", serif') !== 'fonts/newsreader/font') {
+      fail('R-10 headline stack must resolve to newsreader');
+    }
+    if (resolveFontFamilyToAsset('"NotoSansTC", "PingFang TC", "Microsoft JhengHei", sans-serif') !== 'fonts/notosans_tc/font') {
+      fail('R-10 body stack must resolve to notosans_tc');
+    }
+    if (resolveFontFamilyToAsset('"Manrope", "NotoSansTC", system-ui, sans-serif') !== 'fonts/manrope/font') {
+      fail('R-10 label stack must resolve to manrope (Latin first)');
+    }
+    if (resolveFontFamilyToAsset('"Manrope", "Newsreader", serif') !== 'fonts/manrope/font') {
+      fail('R-10 num stack must resolve to manrope');
+    }
+    // System CJK aliases 落到 notosans_tc
+    if (resolveFontFamilyToAsset('"PingFang TC"') !== 'fonts/notosans_tc/font') {
+      fail('R-10 PingFang TC alias must resolve to notosans_tc');
+    }
+    // Generic fallback
+    if (resolveFontFamilyToAsset('serif') !== 'fonts/newsreader/font') {
+      fail('R-10 generic serif must resolve to newsreader');
+    }
+    if (resolveFontFamilyToAsset('sans-serif') !== 'fonts/notosans_tc/font') {
+      fail('R-10 generic sans-serif must resolve to notosans_tc');
+    }
+    // 完全未知 → default（CJK-safe）
+    if (resolveFontFamilyToAsset('"Comic Sans Whatever"') !== PROJECT_FONT_DEFAULT) {
+      fail('R-10 unknown family must fall back to PROJECT_FONT_DEFAULT');
+    }
+    if (resolveFontFamilyToAsset('') !== PROJECT_FONT_DEFAULT) {
+      fail('R-10 empty value must fall back to PROJECT_FONT_DEFAULT');
+    }
+    if (resolveFontFamilyToAsset(undefined) !== PROJECT_FONT_DEFAULT) {
+      fail('R-10 undefined must fall back to PROJECT_FONT_DEFAULT');
+    }
+    // 自訂 registry 仍可覆寫（保證資料導向）
+    const customAsset = resolveFontFamilyToAsset('CustomFont', [{ match: /^customfont$/i, asset: 'fonts/custom/font' }], 'fonts/notosans_tc/font');
+    if (customAsset !== 'fonts/custom/font') {
+      fail('R-10 custom registry must take effect');
+    }
+    ok('R-10 font-family stack resolves via registry; first project-font match wins; CJK-safe fallback');
+  }
+
+  // R-11: text-shadow → native Cocos Label shadow API. Single non-inset shadow
+  // must parse offline; multi-layer / inset must return null so the capability
+  // matrix can route them to assetize.
+  {
+    const { parseSimpleTextShadow } = require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'draft-builder.js'));
+    const { classifyCssProperty } = require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
+    if (typeof parseSimpleTextShadow !== 'function') fail('R-11 parseSimpleTextShadow must be exported');
+    const a = parseSimpleTextShadow('1px 2px 3px rgba(0,0,0,0.5)');
+    if (!a || a.offsetX !== 1 || a.offsetY !== 2 || a.blur !== 3 || a.color !== '#00000080') fail('R-11 X Y B color form must parse to hex8');
+    const b = parseSimpleTextShadow('rgba(0,0,0,0.6) 0 1px 0');
+    if (!b || b.offsetX !== 0 || b.offsetY !== 1 || b.blur !== 0 || b.color !== '#00000099') fail('R-11 color-leading form must parse to hex8');
+    const c = parseSimpleTextShadow('2px 4px #000');
+    if (!c || c.offsetX !== 2 || c.offsetY !== 4 || c.blur !== 0 || c.color !== '#000000FF') fail('R-11 hex without blur must normalize to hex8');
+    if (parseSimpleTextShadow('none') !== null) fail('R-11 none must return null');
+    if (parseSimpleTextShadow('') !== null) fail('R-11 empty must return null');
+    if (parseSimpleTextShadow('1px 1px 0 #000, 2px 2px 0 #fff') !== null) fail('R-11 multi-layer must return null');
+    if (classifyCssProperty('text-shadow', '1px 2px 3px rgba(0,0,0,0.5)') !== 'supported') fail('R-11 single shadow must classify supported');
+    if (classifyCssProperty('text-shadow', '1px 1px 0 #000, 2px 2px 0 #fff') !== 'partial-supported') fail('R-11+R-23 multi-layer text-shadow must classify partial-supported');
+    if (classifyCssProperty('text-shadow', 'inset 1px 1px 0 #000') !== 'assetize') fail('R-11 inset must classify assetize');
+    if (classifyCssProperty('text-shadow', 'none') !== 'supported') fail('R-11 none must classify supported');
+    ok('R-11 text-shadow parses offline; single shadow supported; multi-layer/inset routed to assetize');
+  }
+
+  // R-12: @font-face → font asset registry. Source CSS declaring custom fonts
+  // via @font-face must (a) NOT pollute the capability gap report with `src`
+  // / `font-family` / `font-weight` rows, (b) surface a fontFaceMappings
+  // structured list, and (c) extend the converter font registry per
+  // conversion so the new family resolves without code change.
+  {
+    const { classifyCssProperty, buildCssCapabilityReport, extractFontFaceMappings } = require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
+    const { buildFontFaceRegistry, resolveFontAssetByConvention, resolveFontFamilyToAsset, PROJECT_FONT_DEFAULT } = require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'draft-builder.js'));
+    const css = `
+      @font-face {
+        font-family: "Manrope";
+        src: url("../fonts/Manrope-Variable.woff2") format("woff2-variations"),
+             url("../fonts/Manrope-Variable.woff") format("woff");
+        font-weight: 100 900;
+        font-display: swap;
+      }
+      @font-face { font-family: 'Newsreader'; src: url('../fonts/Newsreader.ttf'); }
+      body { font-family: 'Manrope', sans-serif; color: #fff; }
+    `;
+    const report = buildCssCapabilityReport(css);
+    if (!Array.isArray(report.fontFaceMappings) || report.fontFaceMappings.length !== 2) fail('R-12 must extract 2 font-face mappings');
+    if (report.fontFaceMappings[0].family !== 'Manrope') fail('R-12 family parsed');
+    if (!report.fontFaceMappings[0].srcs || report.fontFaceMappings[0].srcs.length !== 2) fail('R-12 must capture all url() sources');
+    if (report.summary.unsupported !== 0) fail('R-12 @font-face inner declarations must NOT count as unsupported, got ' + report.summary.unsupported);
+    if (report.summary.fontFaceDeclaration < 1) fail('R-12 fontFaceDeclaration summary must be >= 1');
+    if (report.topOffenders.some(o => o.property === 'src' || o.property === '@font-face')) fail('R-12 top offenders must not include src / @font-face');
+
+    // Direct extractor: must handle quoted/unquoted families and missing src.
+    const direct = extractFontFaceMappings('@font-face{font-family:Foo;src:url(./foo.ttf);}');
+    if (direct.length !== 1 || direct[0].family !== 'Foo' || direct[0].src !== './foo.ttf') fail('R-12 unquoted family + url must parse');
+    const noSrc = extractFontFaceMappings('@font-face{font-family:"BareBoned";}');
+    if (noSrc.length !== 1 || noSrc[0].family !== 'BareBoned' || noSrc[0].src !== null) fail('R-12 missing src must yield null src, not throw');
+
+    // Convention resolver
+    if (resolveFontAssetByConvention('NotoSansTC') !== 'fonts/notosanstc/font') fail('R-12 convention resolver must sanitize family');
+    if (resolveFontAssetByConvention('Manrope', './x.ttf') !== 'fonts/manrope/font') fail('R-12 convention resolver simple case');
+    if (resolveFontAssetByConvention('') !== null) fail('R-12 empty family must resolve null');
+
+    // Built registry layering: source @font-face entry must take precedence
+    // over PROJECT_FONT_REGISTRY for the declared family, and fall through to
+    // defaults for unrelated stacks.
+    const sheets = ['@font-face{font-family:"BrandX";src:url(./brandx.woff);}'];
+    const reg = buildFontFaceRegistry(sheets);
+    if (reg.length !== 1 || reg[0].asset !== 'fonts/brandx/font') fail('R-12 buildFontFaceRegistry default convention');
+    const layered = reg.concat(require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'draft-builder.js')).PROJECT_FONT_REGISTRY);
+    if (resolveFontFamilyToAsset('"BrandX", sans-serif', layered, PROJECT_FONT_DEFAULT) !== 'fonts/brandx/font') fail('R-12 layered registry resolves @font-face family first');
+    if (resolveFontFamilyToAsset('"Newsreader", serif', layered, PROJECT_FONT_DEFAULT) !== 'fonts/newsreader/font') fail('R-12 layered registry must still resolve project fonts when not declared');
+
+    // Custom resolver override
+    const reg2 = buildFontFaceRegistry(sheets, (family) => `custom/${family}/font`);
+    if (reg2[0].asset !== 'custom/BrandX/font') fail('R-12 customResolver override must take effect');
+
+    ok('R-12 @font-face mappings extract; classifier excludes from unsupported; per-conversion registry layers ahead of project defaults');
+  }
+
+  // R-13: declaration-block extraction (selector text must not leak as fake
+  // properties) + value-aware `border` shorthand classification. Both rules
+  // are generic for every UI flow, not specific to character-ds3-main.
+  {
+    const { buildCssCapabilityReport, classifyCssProperty, extractDeclarationBlocks } =
+      require(path.join(REPO_ROOT, 'tools_node/lib/dom-to-ui/css-capability-matrix.js'));
+
+    // (a) Selector text with pseudo-classes / pseudo-elements / nested at-rules
+    // must produce zero phantom properties. Without R-13, `.cell:last-child`
+    // would leak property=`cell` value=`last-child`; `a:hover` leaks
+    // property=`a`; `div::before` leaks property=`div`.
+    const selectorCss = [
+      '.cell:last-child { color: #fff; }',
+      'a:hover { color: red; }',
+      'div::before { content: ""; }',
+      '@media (min-width: 600px) { .x:focus { opacity: 0.5; } }',
+    ].join('\n');
+    const r1 = buildCssCapabilityReport(selectorCss);
+    const phantomProps = r1.items.filter(i => ['cell', 'a', 'div', 'x'].includes(i.property));
+    if (phantomProps.length > 0) {
+      fail('R-13 declaration-block extraction must reject selector-leak phantoms; found: ' +
+        phantomProps.map(p => p.property).join(','));
+    }
+    // Real declarations from inside `{ ... }` must still be classified.
+    if (!r1.items.some(i => i.property === 'color')) fail('R-13 must still classify real `color` declaration inside selector blocks');
+    if (!r1.items.some(i => i.property === 'opacity')) fail('R-13 must still classify declarations inside @media nested blocks');
+    if (!r1.items.some(i => i.property === 'content')) fail('R-13 must still classify `content` declaration inside ::before block');
+
+    // (b) `extractDeclarationBlocks` is a pure helper; verify it joins leaf
+    // bodies with `;` and ignores wrapper text.
+    const decls = extractDeclarationBlocks('.foo { a: 1; b: 2; } .bar { c: 3; }');
+    if (!/a: 1/.test(decls) || !/c: 3/.test(decls)) fail('R-13 extractDeclarationBlocks must include leaf body text');
+    if (/\.foo|\.bar/.test(decls)) fail('R-13 extractDeclarationBlocks must exclude selector text');
+
+    // (c) Nested at-rule (`@media { ... { ... } }`): only inner leaf body
+    // should be extracted, not the wrapper.
+    const nested = extractDeclarationBlocks('@media print { .p { d: 4; } }');
+    if (!/d: 4/.test(nested)) fail('R-13 must extract inner leaf body from nested at-rule');
+
+    // (d) value-aware `border` shorthand:
+    if (classifyCssProperty('border', '1px solid #fff') !== 'supported') fail('R-13 simple solid border must be supported');
+    if (classifyCssProperty('border', '2px solid rgba(212,175,55,.28)') !== 'supported') fail('R-13 solid border with rgba color must be supported');
+    if (classifyCssProperty('border', 'none') !== 'supported') fail('R-13 `border: none` must be supported');
+    if (classifyCssProperty('border', '0') !== 'supported') fail('R-13 `border: 0` must be supported');
+    if (classifyCssProperty('border', '1px dashed #888') !== 'assetize') fail('R-13 dashed border must be assetize');
+    if (classifyCssProperty('border', '2px dotted red') !== 'assetize') fail('R-13 dotted border must be assetize');
+    if (classifyCssProperty('border', '3px double black') !== 'assetize') fail('R-13 double border must be assetize');
+
+    // (e) `text-transform` is consumed by the R-9 converter (text content is
+    // baked); it is NOT a render-time gap and must not be classified
+    // unsupported.
+    if (classifyCssProperty('text-transform', 'uppercase') !== 'supported') fail('R-13 text-transform must be classified supported (R-9 converter consumes it)');
+
+    ok('R-13 declaration-block structural extraction rejects selector-leak phantoms; value-aware border shorthand; text-transform reclassified supported');
+  }
+
+  // R-14: value-aware `box-shadow` / `drop-shadow` classification. The repo
+  // ships a ShadowBackground component that natively renders any number of
+  // non-inset shadow layers; only `inset` truly needs sidecar bake. Generic
+  // for every UI flow.
+  {
+    const { classifyCssProperty } = require(path.join(REPO_ROOT, 'tools_node/lib/dom-to-ui/css-capability-matrix.js'));
+    if (classifyCssProperty('box-shadow', 'none') !== 'supported') fail('R-14 box-shadow none must be supported');
+    if (classifyCssProperty('box-shadow', '0 4px 8px rgba(0,0,0,.3)') !== 'supported') fail('R-14 single non-inset box-shadow must be supported (ShadowBackground renders it)');
+    if (classifyCssProperty('box-shadow', '0 4px 8px rgba(0,0,0,.3), 0 2px 4px rgba(0,0,0,.5)') !== 'supported') fail('R-14 multi-layer non-inset box-shadow must be supported (ShadowBackground accepts shadow array)');
+    if (classifyCssProperty('box-shadow', 'inset 0 2px 4px rgba(0,0,0,.5)') !== 'assetize') fail('R-14 inset box-shadow must be assetize (sidecar bake, R-15)');
+    // R-22 supersedes the old R-14 mixed expectation: mixed inset+outer is
+    // now `partial-supported` (runtime ShadowBackground renders the outer
+    // half today; only the inset half needs R-15 bake).
+    if (classifyCssProperty('box-shadow', '0 4px 8px rgba(0,0,0,.3), inset 0 2px 4px rgba(0,0,0,.5)') !== 'partial-supported') fail('R-14+R-22 mixed inset+outer must be partial-supported');
+    if (classifyCssProperty('drop-shadow', '0 2px 4px rgba(0,0,0,.5)') !== 'supported') fail('R-14 drop-shadow simple must be supported');
+    ok('R-14 box-shadow / drop-shadow value-aware: non-inset routes to ShadowBackground (supported); inset routes to sidecar bake (assetize)');
+  }
+
+  // R-16: non-render-time bucket separation (motion-only / interaction-only)
+  // + value-aware `transform` + positioning `inset` shorthand + side-shorthand
+  // border + `box-sizing` no-op. All generic for any UI flow.
+  {
+    const { classifyCssProperty, buildCssCapabilityReport } =
+      require(path.join(REPO_ROOT, 'tools_node/lib/dom-to-ui/css-capability-matrix.js'));
+
+    // (a) motion-only bucket
+    if (classifyCssProperty('transition', 'all 200ms') !== 'motion-only') fail('R-16 transition must be motion-only');
+    if (classifyCssProperty('transition-property', 'opacity') !== 'motion-only') fail('R-16 transition-property must be motion-only');
+    if (classifyCssProperty('animation', 'spin 1s linear infinite') !== 'motion-only') fail('R-16 animation must be motion-only');
+    if (classifyCssProperty('animation-delay', '200ms') !== 'motion-only') fail('R-16 animation-delay must be motion-only');
+    if (classifyCssProperty('will-change', 'transform') !== 'motion-only') fail('R-16 will-change must be motion-only');
+
+    // (b) interaction-only bucket
+    if (classifyCssProperty('cursor', 'pointer') !== 'interaction-only') fail('R-16 cursor must be interaction-only');
+    if (classifyCssProperty('pointer-events', 'none') !== 'interaction-only') fail('R-16 pointer-events must be interaction-only');
+    if (classifyCssProperty('user-select', 'none') !== 'interaction-only') fail('R-16 user-select must be interaction-only');
+    if (classifyCssProperty('scrollbar-width', 'thin') !== 'interaction-only') fail('R-16 scrollbar-width must be interaction-only');
+    if (classifyCssProperty('-webkit-scrollbar-thumb', 'red') !== 'interaction-only') fail('R-16 -webkit-scrollbar-* must be interaction-only');
+
+    // (c) value-aware transform
+    if (classifyCssProperty('transform', 'none') !== 'supported') fail('R-16 transform: none must be supported');
+    if (classifyCssProperty('transform', 'translateX(-50%)') !== 'supported') fail('R-16 translateX absorbed by widget => supported');
+    if (classifyCssProperty('transform', 'translate(10px, 20px)') !== 'supported') fail('R-16 translate must be supported');
+    if (classifyCssProperty('transform', 'scale(1.06)') !== 'supported') fail('R-16 scale absorbed by sprite scale => supported');
+    if (classifyCssProperty('transform', 'translateY(-50%) scale(1.06)') !== 'supported') fail('R-16 combined translate+scale must be supported');
+    if (classifyCssProperty('transform', 'rotate(45deg)') !== 'supported') fail('R-16 2D rotate absorbed by node angle => supported');
+    if (classifyCssProperty('transform', 'rotate3d(1,1,0,30deg)') !== 'unsupported') fail('R-16 rotate3d must be unsupported');
+    if (classifyCssProperty('transform', 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)') !== 'unsupported') fail('R-16 matrix3d must be unsupported');
+    if (classifyCssProperty('transform', 'skew(10deg)') !== 'unsupported') fail('R-16 skew must be unsupported');
+
+    // (d) `inset` positioning shorthand absorbed by Cocos Widget
+    if (classifyCssProperty('inset', '0') !== 'supported') fail('R-16 `inset: 0` (Widget anchor) must be supported');
+    if (classifyCssProperty('inset-block', '10px') !== 'supported') fail('R-16 inset-block must be supported');
+
+    // (e) side-shorthand border value-aware (companion of R-13)
+    if (classifyCssProperty('border-bottom', '1px solid #fff') !== 'supported') fail('R-16 border-bottom solid must be supported');
+    if (classifyCssProperty('border-top', 'none') !== 'supported') fail('R-16 border-top none must be supported');
+    if (classifyCssProperty('border-left', '2px dashed #888') !== 'assetize') fail('R-16 border-left dashed must be assetize');
+
+    // (f) box-sizing no-op
+    if (classifyCssProperty('box-sizing', 'border-box') !== 'supported') fail('R-16 box-sizing border-box must be supported');
+
+    // (g) summary report adds new buckets and excludes them from topOffenders
+    const css = '.x { transition: all 200ms; cursor: pointer; transform: translateX(-50%); }';
+    const r = buildCssCapabilityReport(css);
+    if (r.summary.motionOnly !== 1) fail('R-16 summary.motionOnly must count transition');
+    if (r.summary.interactionOnly !== 1) fail('R-16 summary.interactionOnly must count cursor');
+    if (r.topOffenders.some(o => o.capability === 'motion-only' || o.capability === 'interaction-only')) {
+      fail('R-16 motion-only / interaction-only must NOT appear in topOffenders');
+    }
+
+    ok('R-16 motion-only / interaction-only buckets; value-aware transform & side-border; inset positioning & box-sizing as supported; non-render-time properties never pollute topOffenders');
+  }
+
+  // R-17: value-aware classification of every property previously hard-classified
+  // as `unsupported`. Mirrors R-8 / R-11 / R-13 / R-14 / R-16 (shorthand value-
+  // aware): classifier MUST inspect VALUE for renderable special cases (`none`,
+  // `normal`, empty pseudo `""`, axis-aligned simple shapes, native blend modes)
+  // before falling back to unsupported. Generic for every UI: `clip-path: none`,
+  // `filter: none`, `content: ""`, `mix-blend-mode: multiply`, etc. all have
+  // trivially renderable special forms.
+  {
+    const { classifyCssProperty, buildCssCapabilityReport } =
+      require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
+
+    // (a) `content` value-aware: empty/none/normal -> supported decorative slot;
+    //     non-empty marker text / counter() / attr() / url() -> assetize.
+    if (classifyCssProperty('content', '""') !== 'supported') fail('R-17 content: "" must be supported');
+    if (classifyCssProperty('content', "''") !== 'supported') fail("R-17 content: '' must be supported");
+    if (classifyCssProperty('content', 'none') !== 'supported') fail('R-17 content: none must be supported');
+    if (classifyCssProperty('content', 'normal') !== 'supported') fail('R-17 content: normal must be supported');
+    if (classifyCssProperty('content', '"★"') !== 'assetize') fail('R-17 content with marker text must be assetize');
+    if (classifyCssProperty('content', 'counter(section)') !== 'assetize') fail('R-17 content: counter() must be assetize');
+    if (classifyCssProperty('content', 'attr(data-label)') !== 'assetize') fail('R-17 content: attr() must be assetize');
+
+    // (b) `clip-path` value-aware: none -> supported; inset()/circle()/ellipse()
+    //     -> supported (Cocos Mask); polygon with 4 points -> supported (rect-
+    //     like); path()/url()/complex polygon -> assetize.
+    if (classifyCssProperty('clip-path', 'none') !== 'supported') fail('R-17 clip-path: none must be supported');
+    if (classifyCssProperty('clip-path', 'inset(10px 20px)') !== 'supported') fail('R-17 clip-path: inset() must be supported');
+    if (classifyCssProperty('clip-path', 'circle(50%)') !== 'supported') fail('R-17 clip-path: circle() must be supported');
+    if (classifyCssProperty('clip-path', 'ellipse(50% 25%)') !== 'supported') fail('R-17 clip-path: ellipse() must be supported');
+    if (classifyCssProperty('clip-path', 'polygon(0 0, 100% 0, 100% 100%, 0 100%)') !== 'supported') fail('R-17 clip-path: 4-pt polygon must be supported');
+    if (classifyCssProperty('clip-path', 'polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 50%)') !== 'assetize') fail('R-17 clip-path: complex polygon must be assetize');
+    if (classifyCssProperty('clip-path', 'path("M 0,0 L 100,0 ...")') !== 'assetize') fail('R-17 clip-path: path() must be assetize');
+    if (classifyCssProperty('clip-path', 'url(#mask)') !== 'assetize') fail('R-17 clip-path: url() must be assetize');
+
+    // (c) `filter` / `backdrop-filter` value-aware: none -> supported;
+    //     drop-shadow() -> supported (R-14 sibling); blur/brightness/etc -> assetize.
+    if (classifyCssProperty('filter', 'none') !== 'supported') fail('R-17 filter: none must be supported');
+    if (classifyCssProperty('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,.3))') !== 'supported') fail('R-17 filter: drop-shadow() must be supported');
+    if (classifyCssProperty('filter', 'blur(8px)') !== 'assetize') fail('R-17 filter: blur() must be assetize');
+    if (classifyCssProperty('filter', 'brightness(1.1)') !== 'assetize') fail('R-17 filter: brightness() must be assetize');
+    if (classifyCssProperty('backdrop-filter', 'none') !== 'supported') fail('R-17 backdrop-filter: none must be supported');
+    if (classifyCssProperty('backdrop-filter', 'blur(20px)') !== 'assetize') fail('R-17 backdrop-filter: blur() must be assetize');
+
+    // (d) `mask` / `mask-image` value-aware: none -> supported; gradient/url -> assetize.
+    if (classifyCssProperty('mask', 'none') !== 'supported') fail('R-17 mask: none must be supported');
+    if (classifyCssProperty('mask-image', 'none') !== 'supported') fail('R-17 mask-image: none must be supported');
+    if (classifyCssProperty('mask-image', 'linear-gradient(black, transparent)') !== 'assetize') fail('R-17 mask gradient must be assetize');
+    if (classifyCssProperty('mask-image', 'url(./mask.png)') !== 'assetize') fail('R-17 mask url() must be assetize');
+
+    // (e) `mix-blend-mode` value-aware: normal + native Cocos blend modes -> supported.
+    if (classifyCssProperty('mix-blend-mode', 'normal') !== 'supported') fail('R-17 mix-blend-mode: normal must be supported');
+    if (classifyCssProperty('mix-blend-mode', 'multiply') !== 'supported') fail('R-17 mix-blend-mode: multiply must be supported');
+    if (classifyCssProperty('mix-blend-mode', 'screen') !== 'supported') fail('R-17 mix-blend-mode: screen must be supported');
+    if (classifyCssProperty('mix-blend-mode', 'overlay') !== 'supported') fail('R-17 mix-blend-mode: overlay must be supported');
+    if (classifyCssProperty('mix-blend-mode', 'hue') !== 'assetize') fail('R-17 mix-blend-mode: hue must be assetize');
+    if (classifyCssProperty('mix-blend-mode', 'luminosity') !== 'assetize') fail('R-17 mix-blend-mode: luminosity must be assetize');
+
+    // (f) `transform-style` / `perspective` / `shape-outside` value-aware.
+    if (classifyCssProperty('transform-style', 'flat') !== 'supported') fail('R-17 transform-style: flat must be supported');
+    if (classifyCssProperty('transform-style', 'preserve-3d') !== 'unsupported') fail('R-17 transform-style: preserve-3d must be unsupported');
+    if (classifyCssProperty('perspective', 'none') !== 'supported') fail('R-17 perspective: none must be supported');
+    if (classifyCssProperty('perspective', '0') !== 'supported') fail('R-17 perspective: 0 must be supported');
+    if (classifyCssProperty('perspective', '600px') !== 'unsupported') fail('R-17 perspective: 600px must be unsupported');
+    if (classifyCssProperty('shape-outside', 'none') !== 'supported') fail('R-17 shape-outside: none must be supported');
+    if (classifyCssProperty('shape-outside', 'circle(50%)') !== 'unsupported') fail('R-17 shape-outside non-none must be unsupported');
+
+    // (g) summary: a CSS that uses only renderable special cases of these
+    //     properties must produce zero unsupported entries.
+    const r = buildCssCapabilityReport(
+      '.x { content: ""; clip-path: none; filter: none; mask: none; mix-blend-mode: normal; transform-style: flat; perspective: none; shape-outside: none; }'
+    );
+    if (r.summary.unsupported !== 0) fail(`R-17 all-none property set must yield 0 unsupported, got ${r.summary.unsupported}`);
+    if (r.topOffenders.length !== 0) fail(`R-17 all-none property set must yield 0 topOffenders, got ${r.topOffenders.length}`);
+
+    ok('R-17 value-aware completion of UNSUPPORTED set: content/clip-path/filter/mask/mix-blend-mode/transform-style/perspective/shape-outside all inspect VALUE before falling back to unsupported');
+  }
+
+  // R-18: layout shorthand classification. `max-width` / `min-width` /
+  // `max-height` / `min-height` / `aspect-ratio` are absorbed by Cocos
+  // UITransform / Widget -> supported. CSS Grid shorthand and `place-*`
+  // alignment are consumed by converter at build time (Cocos Layout) and
+  // bucket as `layout-only` so they appear in summary but never in
+  // topOffenders. Mirrors R-16 motion-only / interaction-only.
+  {
+    const { classifyCssProperty, buildCssCapabilityReport } =
+      require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
+
+    if (classifyCssProperty('max-width', '320px') !== 'supported') fail('R-18 max-width must be supported');
+    if (classifyCssProperty('min-width', '120px') !== 'supported') fail('R-18 min-width must be supported');
+    if (classifyCssProperty('max-height', '480px') !== 'supported') fail('R-18 max-height must be supported');
+    if (classifyCssProperty('min-height', '60px') !== 'supported') fail('R-18 min-height must be supported');
+    if (classifyCssProperty('aspect-ratio', '16 / 9') !== 'supported') fail('R-18 aspect-ratio must be supported');
+
+    if (classifyCssProperty('grid-template-columns', 'repeat(3, 1fr)') !== 'layout-only') fail('R-18 grid-template-columns must be layout-only');
+    if (classifyCssProperty('grid-template-rows', 'auto auto') !== 'layout-only') fail('R-18 grid-template-rows must be layout-only');
+    if (classifyCssProperty('grid-template-areas', '"a b" "c d"') !== 'layout-only') fail('R-18 grid-template-areas must be layout-only');
+    if (classifyCssProperty('grid-area', 'header') !== 'layout-only') fail('R-18 grid-area must be layout-only');
+    if (classifyCssProperty('grid-column', '1 / 3') !== 'layout-only') fail('R-18 grid-column must be layout-only');
+    if (classifyCssProperty('grid-row', '1 / 2') !== 'layout-only') fail('R-18 grid-row must be layout-only');
+    if (classifyCssProperty('grid-auto-flow', 'row') !== 'layout-only') fail('R-18 grid-auto-flow must be layout-only');
+    if (classifyCssProperty('place-items', 'center') !== 'layout-only') fail('R-18 place-items must be layout-only');
+    if (classifyCssProperty('place-content', 'space-between') !== 'layout-only') fail('R-18 place-content must be layout-only');
+    if (classifyCssProperty('place-self', 'center') !== 'layout-only') fail('R-18 place-self must be layout-only');
+
+    const r = buildCssCapabilityReport(
+      '.x { max-width: 320px; aspect-ratio: 16/9; grid-template-columns: repeat(3, 1fr); place-items: center; }'
+    );
+    if (r.summary.unsupported !== 0) fail(`R-18 layout shorthand must yield 0 unsupported, got ${r.summary.unsupported}`);
+    if (r.summary.layoutOnly !== 2) fail(`R-18 expected layoutOnly=2, got ${r.summary.layoutOnly}`);
+    if (r.topOffenders.some(o => o.capability === 'layout-only')) fail('R-18 layout-only must NOT appear in topOffenders');
+
+    ok('R-18 layout shorthand: max/min/aspect-ratio supported; grid/place-* bucketed as layout-only and excluded from topOffenders');
+  }
+
+  // R-19: classifier capability must equal runtime + converter + sidecar
+  // capability sum (recursive principle from R-16 evolution2). The runtime
+  // already renders `linear-gradient(...)` / `radial-gradient(...)` /
+  // `conic-gradient(...)` via `GradientBackground` component routed through
+  // `gradient-rect` skin slot, and renders `url(...)` via sprite-frame slot.
+  // Therefore single-layer gradients / url() must be `supported`, NOT
+  // `assetize`. Same for `background-image` / `background-position` /
+  // `background-size` / `background-repeat` longhand which are slot CONFIG.
+  // Only mixed multi-layer (`linear-gradient(...) , url(...)`) genuinely
+  // need sidecar bake. Generic for every UI: gradient/url backgrounds are
+  // pervasive and were being falsely flagged as render gaps.
+  {
+    const { classifyCssProperty, buildCssCapabilityReport } =
+      require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
+
+    // (a) `background` value-aware reclassification: gradients & url single-
+    //     layer become supported (runtime renders them); multi-layer mixes
+    //     remain assetize.
+    if (classifyCssProperty('background', 'linear-gradient(red, blue)') !== 'supported') fail('R-19 background linear-gradient must be supported (runtime: GradientBackground)');
+    // R-24 supersedes the old R-19 expectations: converter `buildGradientRectSlot`
+    // only accepts single linear-gradient; radial / conic are rejected and have
+    // ZERO native render. Now correctly classified `assetize`.
+    if (classifyCssProperty('background', 'radial-gradient(circle, red, blue)') !== 'assetize') fail('R-19+R-24 background radial-gradient must be assetize');
+    if (classifyCssProperty('background', 'conic-gradient(red, blue)') !== 'assetize') fail('R-19+R-24 background conic-gradient must be assetize');
+    if (classifyCssProperty('background', 'url(./bg.png)') !== 'supported') fail('R-19 background url() must be supported (runtime: sprite-frame)');
+    if (classifyCssProperty('background', 'url(./bg.png) center / cover no-repeat') !== 'supported') fail('R-19 single-layer url with config must be supported');
+    if (classifyCssProperty('background', 'linear-gradient(red, blue), url(./bg.png)') !== 'assetize') fail('R-19 mixed gradient + url must remain assetize');
+    if (classifyCssProperty('background', 'url(./a.png), url(./b.png)') !== 'assetize') fail('R-19 multi-layer urls must remain assetize');
+    if (classifyCssProperty('background', '#0F0F0F') !== 'supported') fail('R-19 regression: solid color must remain supported');
+
+    // (b) `background-image` longhand: same rule as `background`.
+    if (classifyCssProperty('background-image', 'linear-gradient(red, blue)') !== 'supported') fail('R-19 background-image gradient must be supported');
+    if (classifyCssProperty('background-image', 'url(./x.png)') !== 'supported') fail('R-19 background-image url() must be supported');
+    if (classifyCssProperty('background-image', 'none') !== 'supported') fail('R-19 background-image: none must be supported');
+    if (classifyCssProperty('background-image', 'linear-gradient(red, blue), url(./x.png)') !== 'assetize') fail('R-19 background-image mixed must remain assetize');
+
+    // (c) `background-position` / `background-size` / `background-repeat`:
+    //     pure config, always supported.
+    if (classifyCssProperty('background-position', 'center') !== 'supported') fail('R-19 background-position must be supported');
+    if (classifyCssProperty('background-size', 'cover') !== 'supported') fail('R-19 background-size must be supported');
+    if (classifyCssProperty('background-repeat', 'no-repeat') !== 'supported') fail('R-19 background-repeat must be supported');
+
+    // (d) Summary impact: a CSS that uses only single-layer gradient/url
+    //     backgrounds must produce zero assetize entries.
+    const r = buildCssCapabilityReport(
+      '.x { background: linear-gradient(red, blue); } .y { background: url(./bg.png); } .z { background-image: linear-gradient(black, white); background-size: cover; background-position: center; }'
+    );
+    if (r.summary.assetize !== 0) fail(`R-19 single-layer gradient/url CSS must yield 0 assetize, got ${r.summary.assetize}`);
+    if (r.summary.unsupported !== 0) fail(`R-19 single-layer gradient/url CSS must yield 0 unsupported, got ${r.summary.unsupported}`);
+
+    ok('R-19 classifier aligned with runtime: single-layer gradient/url backgrounds + background-image/position/size/repeat all supported; only mixed multi-layer remains assetize');
+  }
+
+  // R-20: declaration-boundary anchoring + digit-aware property names.
+  // The legacy `[A-Za-z-]+` regex had two structural bugs that leaked
+  // phantom properties for every UI: (1) no boundary anchor — values like
+  // `--sp-2xl: 32px;` backed up and matched `xl: 32px` because the engine
+  // retried after the digit `2`; (2) no digit support — CSS custom
+  // properties allow digits anywhere (`--sp-2xl`, `--font-3xl`, `--col-4k`).
+  // The fix anchors property names at `^` / `;` / `{` / `}` and splits the
+  // pattern into custom (`--[\w-]+`) vs standard (`[A-Za-z][A-Za-z0-9-]*`).
+  // Generic for any design token system using xs/sm/md/lg/xl/2xl/3xl
+  // naming conventions or k-resolution markers.
+  {
+    const { buildCssCapabilityReport } =
+      require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
+
+    // (a) Custom property with embedded digit must be classified as
+    //     token-declaration (not leak `xl` as phantom unsupported).
+    const r1 = buildCssCapabilityReport(':root { --sp-2xl: 32px; --font-3xl: 48px; --col-4k: 3840px; }');
+    if (r1.summary.tokenDeclaration !== 3) fail(`R-20 expected 3 token-declaration entries, got ${r1.summary.tokenDeclaration}`);
+    if (r1.summary.unsupported !== 0) fail(`R-20 digit tokens must NOT leak as phantom unsupported, got ${r1.summary.unsupported}`);
+    if (r1.items.some(i => i.property === 'xl' || i.property === '3xl' || i.property === '4k')) {
+      fail('R-20 partial-name phantoms (xl/3xl/4k) must NOT appear in items');
+    }
+
+    // (b) Boundary anchor: a value containing `:` text inside parens (e.g.
+    //     `url(data:image/png;...)`) must not produce phantom properties
+    //     for the embedded `image/png`. The brace-balanced extractor already
+    //     guards selector text; the boundary anchor guards value text.
+    const r2 = buildCssCapabilityReport('.x { background: url("data:image/png;base64,iVBORw0KGgo"); }');
+    if (r2.items.some(i => i.property === 'image' || i.property === 'png')) {
+      fail('R-20 URL data-scheme must NOT produce phantom image/png properties');
+    }
+
+    // (c) Standard property with digit (e.g. `padding-block-end`) — ensure
+    //     digit-aware regex still accepts standard properties WITHOUT digits.
+    //     Note: standard CSS property names today don't actually contain digits,
+    //     but the regex tolerates them via `[A-Za-z][A-Za-z0-9-]*` for safety.
+    const r3 = buildCssCapabilityReport('.y { color: red; padding: 8px; --my-2xs: 2px; }');
+    if (r3.summary.unsupported !== 0) fail(`R-20 standard CSS must remain clean, got ${r3.summary.unsupported}`);
+    if (r3.summary.tokenDeclaration !== 1) fail(`R-20 expected 1 token-declaration, got ${r3.summary.tokenDeclaration}`);
+
+    ok('R-20 declaration-boundary anchoring + digit-aware custom properties: --sp-2xl / --font-3xl / --col-4k tokens classified as token-declaration; no phantom xl/png/image leakage');
+  }
+
+  // R-21: nested-paren-aware multi-layer detection. CSS shorthand layer
+  // splits MUST respect paren depth; a naive single-pass paren-strip
+  // (`replace(/\([^()]*\)/g)`) only erases INNERMOST parens, leaving outer
+  // gradient parens intact and producing fake layer counts. Generic for
+  // ANY UI using gradients with rgba/hsla/var/nested function arguments.
+  {
+    const { classifyCssProperty, buildCssCapabilityReport } =
+      require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
+
+    // (a) Single linear-gradient with rgba color stops: must be supported.
+    const v1 = 'linear-gradient(90deg, transparent 45%, rgba(10,10,10,.7) 75%, #0a0a0a 100%)';
+    if (classifyCssProperty('background', v1) !== 'supported') fail(`R-21 single linear-gradient with rgba stops must be supported, got ${classifyCssProperty('background', v1)}`);
+    if (classifyCssProperty('background-image', v1) !== 'supported') fail('R-21 background-image single linear-gradient must be supported');
+
+    // (b) Single radial-gradient with multiple rgba stops: R-21 originally
+    //     classified as supported (paren-aware split worked). R-24 supersedes:
+    //     converter rejects radial-gradient (only linear-gradient is realised),
+    //     so single radial is now `assetize` — but the R-21 paren-aware split
+    //     still works (single layer detected), this test now verifies the
+    //     subtype routing works correctly.
+    const v2 = 'radial-gradient(ellipse at 30% 40%, rgba(139,98,42,.3), rgba(44,58,66,.25), transparent 60%)';
+    if (classifyCssProperty('background', v2) !== 'assetize') fail(`R-21+R-24 single radial-gradient with rgba stops must be assetize, got ${classifyCssProperty('background', v2)}`);
+
+    // (c) Two stacked radial-gradients: genuinely multi-layer, must be assetize.
+    const v3 = 'radial-gradient(ellipse at 30% 40%, rgba(139,98,42,.3), transparent 55%), radial-gradient(ellipse at 80% 70%, rgba(44,58,66,.25), transparent 60%)';
+    if (classifyCssProperty('background', v3) !== 'assetize') fail(`R-21 stacked radial-gradients must be assetize, got ${classifyCssProperty('background', v3)}`);
+
+    // (d) Single text-shadow with rgba: supported. Two-layer text-shadow with rgba: assetize.
+    const t1 = '0 0 10px rgba(0,0,0,.9)';
+    const t2 = '0 0 2px rgba(0,0,0,0.9), 0 1px 2px rgba(0,0,0,0.7)';
+    if (classifyCssProperty('text-shadow', t1) !== 'supported') fail(`R-21 single rgba text-shadow must be supported, got ${classifyCssProperty('text-shadow', t1)}`);
+    // R-23 supersedes the old R-21 expectation: multi-layer text-shadow is
+    // now `partial-supported` (Cocos Label renders FIRST layer natively;
+    // remaining layers need R-15 bake).
+    if (classifyCssProperty('text-shadow', t2) !== 'partial-supported') fail(`R-21+R-23 two-layer rgba text-shadow must be partial-supported, got ${classifyCssProperty('text-shadow', t2)}`);
+
+    // (e) DS3-shape regression at scanner level.
+    const css = `:root { --bg-1: linear-gradient(90deg, transparent 45%, rgba(10,10,10,.7) 75%, #0a0a0a 100%); }
+.a { background: linear-gradient(135deg, rgba(212,175,55,.18), rgba(138,110,31,.1)); }
+.b { background: radial-gradient(ellipse at 30% 40%, rgba(1,1,1,.3), transparent 55%), radial-gradient(ellipse at 80% 70%, rgba(2,2,2,.25), transparent 60%); }`;
+    const r = buildCssCapabilityReport(css);
+    const bgItems = r.items.filter(i => i.property === 'background');
+    const bgSupportedCount = bgItems.filter(i => i.capability === 'supported').reduce((n, i) => n + i.count, 0);
+    const bgAssetizeCount = bgItems.filter(i => i.capability === 'assetize').reduce((n, i) => n + i.count, 0);
+    if (bgSupportedCount !== 1) fail(`R-21 single linear-gradient with nested rgba expected 1 background-supported, got ${bgSupportedCount}`);
+    if (bgAssetizeCount !== 1) fail(`R-21 stacked radial-gradients expected 1 background-assetize, got ${bgAssetizeCount}`);
+
+    ok('R-21 nested-paren-aware multi-layer detection: single-layer gradients with rgba/hsla/var stops correctly supported; only true multi-layer mixes routed to assetize');
+  }
+
+  // R-22: partial-supported capability bucket for mixed inset+outer
+  // box-shadow. Runtime ShadowBackground.setShadows() filters !shadow.inset
+  // and renders outer layers, so a `inset 0 0 16px rgba(...), 0 6px 20px
+  // rgba(...)` declaration is HALF-rendered today. Classifier must mirror
+  // this real runtime behaviour (R-19 recursive principle). Generic for
+  // any UI using "outer glow + inset highlight" shadow patterns.
+  {
+    const { classifyCssProperty, buildCssCapabilityReport } =
+      require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
+
+    // Pure outer -> supported.
+    if (classifyCssProperty('box-shadow', '0 6px 20px rgba(0,0,0,.5)') !== 'supported') fail('R-22 pure outer box-shadow must be supported');
+    // Pure inset -> assetize.
+    if (classifyCssProperty('box-shadow', 'inset 0 0 16px rgba(212,175,55,.1)') !== 'assetize') fail('R-22 pure inset box-shadow must be assetize');
+    // Mixed inset + outer -> partial-supported.
+    const mix1 = 'inset 0 0 16px rgba(212,175,55,.1), 0 0 24px rgba(212,175,55,.2)';
+    if (classifyCssProperty('box-shadow', mix1) !== 'partial-supported') fail(`R-22 mixed inset+outer must be partial-supported, got ${classifyCssProperty('box-shadow', mix1)}`);
+    const mix2 = '0 6px 20px rgba(0,0,0,.5), inset 0 0 20px rgba(140,207,196,.15)';
+    if (classifyCssProperty('box-shadow', mix2) !== 'partial-supported') fail(`R-22 mixed outer+inset must be partial-supported, got ${classifyCssProperty('box-shadow', mix2)}`);
+    // All-inset multi-layer -> assetize.
+    if (classifyCssProperty('box-shadow', 'inset 0 0 4px red, inset 0 0 8px blue') !== 'assetize') fail('R-22 all-inset multi-layer must be assetize');
+
+    // Summary: partial-supported reported in summary, excluded from topOffenders.
+    const css = '.a { box-shadow: inset 0 0 16px rgba(0,0,0,.1), 0 0 24px rgba(0,0,0,.2); } .b { box-shadow: 0 6px 20px rgba(0,0,0,.5); }';
+    const r = buildCssCapabilityReport(css);
+    if (r.summary.partialSupported !== 1) fail(`R-22 expected partialSupported 1, got ${r.summary.partialSupported}`);
+    if (r.summary.supported < 1) fail(`R-22 expected supported >= 1, got ${r.summary.supported}`);
+    if (r.topOffenders.some(o => o.capability === 'partial-supported')) fail('R-22 partial-supported MUST be excluded from topOffenders');
+
+    ok('R-22 partial-supported bucket: mixed inset+outer box-shadow classified separately to mirror runtime ShadowBackground filter; outer-only fully supported, all-inset routed to assetize');
+  }
+
+  // R-23: Cocos Label exposes ONE shadow surface
+  // (`enableShadow`/`shadowOffset`/`shadowBlur`/`shadowColor`). Multi-layer
+  // text-shadow is therefore HALF-rendered today (Label paints first layer;
+  // rest needs R-15 bake). Apply the R-22 partial-supported pattern to
+  // text-shadow for the same recursive runtime-alignment principle.
+  // Generic for any UI using stacked text shadows for outline / glow effects.
+  {
+    const { classifyCssProperty, buildCssCapabilityReport } =
+      require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
+
+    if (classifyCssProperty('text-shadow', 'none') !== 'supported') fail('R-23 text-shadow none must be supported');
+    if (classifyCssProperty('text-shadow', '0 1px 0 #000') !== 'supported') fail('R-23 single non-inset text-shadow must be supported');
+    if (classifyCssProperty('text-shadow', '0 0 2px rgba(0,0,0,0.9), 0 1px 2px rgba(0,0,0,0.7)') !== 'partial-supported') fail('R-23 two-layer text-shadow must be partial-supported');
+    if (classifyCssProperty('text-shadow', '0 1px 0 #000, 0 0 10px rgba(0,0,0,.9), 0 0 2px #fff') !== 'partial-supported') fail('R-23 three-layer text-shadow must be partial-supported');
+    if (classifyCssProperty('text-shadow', 'inset 0 0 4px red') !== 'assetize') fail('R-23 inset text-shadow (rare/CSS quirk) must be assetize');
+
+    // Summary check: multi-layer text-shadow excluded from topOffenders.
+    const css = '.a { text-shadow: 0 0 2px rgba(0,0,0,0.9), 0 1px 2px rgba(0,0,0,0.7); } .b { text-shadow: 0 1px 0 #000; }';
+    const r = buildCssCapabilityReport(css);
+    if (r.summary.partialSupported !== 1) fail(`R-23 expected partialSupported 1, got ${r.summary.partialSupported}`);
+    if (r.topOffenders.some(o => o.property === 'text-shadow')) fail('R-23 multi-layer text-shadow MUST NOT appear in topOffenders');
+
+    ok('R-23 text-shadow partial-supported: Cocos Label single-shadow API renders first layer natively; multi-layer routes to partial-supported (same R-22 recursive runtime-alignment principle)');
+  }
+
+  // R-24: gradient-subtype accuracy fix on background / background-image.
+  // Converter `buildGradientRectSlot` only accepts single linear-gradient;
+  // radial-gradient and conic-gradient are rejected and therefore have
+  // ZERO native render. Classifier must mirror this (R-19 recursive
+  // principle) instead of blanket-saying `supported` for any gradient.
+  // Generic for any UI using radial spotlights / conic ring effects.
+  {
+    const { classifyCssProperty } =
+      require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
+
+    // Solid color / var / transparent / url stays supported.
+    if (classifyCssProperty('background', '#0F0F0F') !== 'supported') fail('R-24 solid color background must be supported');
+    if (classifyCssProperty('background', 'var(--bg)') !== 'supported') fail('R-24 var() background must be supported');
+    if (classifyCssProperty('background', 'transparent') !== 'supported') fail('R-24 transparent background must be supported');
+    if (classifyCssProperty('background', 'url(data:image/png;base64,xxx)') !== 'supported') fail('R-24 single url background must be supported');
+
+    // Single linear-gradient = supported (converter renders).
+    if (classifyCssProperty('background', 'linear-gradient(180deg, #000, #fff)') !== 'supported') fail('R-24 single linear-gradient background must be supported');
+    if (classifyCssProperty('background-image', 'linear-gradient(90deg, transparent 45%, rgba(10,10,10,.7) 100%)') !== 'supported') fail('R-24 single linear-gradient background-image must be supported');
+
+    // Single radial-gradient = assetize (converter rejects, was false-positive supported).
+    if (classifyCssProperty('background', 'radial-gradient(ellipse at 50% 50%, #000, transparent 70%)') !== 'assetize') fail('R-24 single radial-gradient background MUST be assetize, not supported');
+    if (classifyCssProperty('background-image', 'radial-gradient(circle, red, blue)') !== 'assetize') fail('R-24 single radial-gradient background-image MUST be assetize');
+
+    // Single conic-gradient = assetize.
+    if (classifyCssProperty('background', 'conic-gradient(from 0deg, red, yellow, green)') !== 'assetize') fail('R-24 single conic-gradient background MUST be assetize');
+    if (classifyCssProperty('background-image', 'conic-gradient(red, blue)') !== 'assetize') fail('R-24 single conic-gradient background-image MUST be assetize');
+
+    // Multi-layer mix = assetize (unchanged from R-21).
+    if (classifyCssProperty('background', 'linear-gradient(180deg,#000,#fff), url(a.png)') !== 'assetize') fail('R-24 multi-layer linear+url must remain assetize');
+    if (classifyCssProperty('background', 'radial-gradient(red,blue), linear-gradient(0deg,green,yellow)') !== 'assetize') fail('R-24 multi-layer radial+linear must remain assetize');
+
+    ok('R-24 gradient-subtype accuracy: single radial / conic gradient correctly routed to assetize (was false-positive supported); single linear remains supported; multi-layer mix unchanged');
+  }
+
+  // R-25/R-27: deterministic bake-manifest builder. Pure function over
+  // snapshots[] produces a review list (selector + property + value + target
+  // dimensions) for CSS gaps, but R-27 art-direction gating prevents blindly
+  // screenshotting full UI regions. Only small nodes explicitly marked with
+  // data-ucuf-bake="fragment" become autoBake entries.
+  {
+    const { buildBakeManifest } =
+      require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'bake-manifest.js'));
+
+    const snapshots = [
+      // (a) assetize: large 3-layer background mix -> review entry, not auto-bake.
+      { id: 1, tag: 'div', path: 'body > div.bg-mix', styles: {
+        background: 'radial-gradient(red,blue), radial-gradient(green,yellow), linear-gradient(0deg,#000,#fff)',
+        _rect: { x: 0, y: 0, w: 1334, h: 750 },
+      }, pseudo: null },
+      // (b) supported: single linear-gradient -> NO entry.
+      { id: 2, tag: 'div', path: 'body > div.bg-linear', styles: {
+        background: 'linear-gradient(180deg,#000,#fff)',
+        _rect: { x: 0, y: 0, w: 100, h: 100 },
+      }, pseudo: null },
+      // (c) assetize + explicit fragment: small radial background -> auto-bake.
+      { id: 8, tag: 'div', path: 'body > div.small-fragment', bakeMode: 'fragment', styles: {
+        background: 'radial-gradient(red,blue)',
+        _rect: { x: 10.25, y: 20.5, w: 48, h: 48 },
+      }, pseudo: null },
+      // (d) assetize: clip-path 5-point polygon -> converter geometry, not screenshot.
+      { id: 3, tag: 'div', path: 'body > div.cut', styles: {
+        'clip-path': 'polygon(0 0, 100% 0, 100% 86%, 91% 100%, 0 100%)',
+        _rect: { x: 0, y: 0, w: 600, h: 400 },
+      }, pseudo: null },
+      // (e) partial-supported: mixed box-shadow -> NO entry (R-22 half-rendered).
+      { id: 4, tag: 'div', path: 'body > div.mixed-shadow', styles: {
+        'box-shadow': '0 6px 20px #000, inset 0 0 20px #fff',
+        _rect: { x: 0, y: 0, w: 200, h: 200 },
+      }, pseudo: null },
+      // (f) zero-area -> filtered.
+      { id: 5, tag: 'span', path: 'body > span.empty', styles: {
+        background: 'radial-gradient(red,blue)',
+        _rect: { x: 0, y: 0, w: 0, h: 0 },
+      }, pseudo: null },
+      // (g) pseudo -> skipped.
+      { id: 6001, tag: 'div', path: 'body > div.x::before', styles: {
+        background: 'radial-gradient(red,blue)',
+        _rect: { x: 0, y: 0, w: 50, h: 50 },
+      }, pseudo: 'before' },
+      // (h) box-shadow pure inset + explicit fragment -> auto-bake shadow fragment.
+      { id: 7, tag: 'div', path: 'body > div.inset-only', bakeMode: 'fragment', styles: {
+        'box-shadow': 'inset 0 0 16px rgba(212,175,55,.2)',
+        _rect: { x: 0, y: 0, w: 120, h: 60 },
+      }, pseudo: null },
+    ];
+
+    const m = buildBakeManifest({ snapshots, screenId: 'test-screen', sidecarBundle: 'resources', viewport: { width: 1334, height: 750 } });
+
+    if (m.entries.length !== 4) fail(`R-27 expected 4 review entries, got ${m.entries.length}`);
+    if (!m.entries.every(e => e.capability === 'assetize')) fail('R-25 every entry must be capability=assetize');
+    if (m.summary.autoBakeEntries !== 2) fail(`R-27 expected 2 autoBake entries, got ${m.summary.autoBakeEntries}`);
+    if (m.summary.reviewOnlyEntries !== 2) fail(`R-27 expected 2 review-only entries, got ${m.summary.reviewOnlyEntries}`);
+
+    // Deterministic ordering: by property name first.
+    const props = m.entries.map(e => e.property);
+    const sortedProps = [...props].sort();
+    if (props.join(',') !== sortedProps.join(',')) fail(`R-25 entries must be sorted by property, got ${props.join(',')}`);
+
+    // skinSlotKind routing.
+    const bg = m.entries.find(e => e.property === 'background' && e.autoBake);
+    if (!bg || bg.skinSlotKind !== 'background-set') fail('R-25 background must route to background-set');
+    const mask = m.entries.find(e => e.property === 'clip-path');
+    if (!mask || mask.skinSlotKind !== 'mask-set') fail('R-25 clip-path must route to mask-set');
+    const shadow = m.entries.find(e => e.property === 'box-shadow');
+    if (!shadow || shadow.skinSlotKind !== 'shadow-set') fail('R-25 box-shadow must route to shadow-set');
+    if (mask.autoBake !== false || mask.bakeAction !== 'converter-geometry') fail('R-27 clip-path must be converter geometry, not auto-bake');
+    const largeBg = m.entries.find(e => e.property === 'background' && e.target.width === 1334);
+    if (!largeBg || largeBg.autoBake !== false || largeBg.bakeAction !== 'manual-art-asset') fail('R-27 large background must require manual art asset');
+
+    // outputPath exists only for autoBake entries.
+    if (!bg.outputPath.startsWith('assets/resources/sidecars/test-screen/')) fail(`R-25 outputPath wrong: ${bg.outputPath}`);
+    if (!/\.png$/.test(bg.outputPath)) fail('R-25 outputPath must end with .png');
+    if (largeBg.outputPath !== null || mask.outputPath !== null) fail('R-27 review-only entries must not get outputPath');
+
+    // Target dimensions copied from _rect.
+    if (bg.target.width !== 48 || bg.target.height !== 48 || bg.target.x !== 10.25 || bg.target.y !== 20.5) fail(`R-27 target dims wrong: ${JSON.stringify(bg.target)}`);
+    if (bg.target.dpr !== 2) fail('R-25 target.dpr must default to 2');
+
+    // Stable bakeId is deterministic w.r.t. screenId + tag + nodeId + property.
+    const m2 = buildBakeManifest({ snapshots, screenId: 'test-screen', sidecarBundle: 'resources' });
+    if (m.entries.map(e => e.bakeId).join('|') !== m2.entries.map(e => e.bakeId).join('|')) fail('R-25 bakeId must be deterministic across runs');
+
+    // Summary aggregates.
+    if (m.summary.totalEntries !== 4) fail(`R-25 summary.totalEntries wrong: ${m.summary.totalEntries}`);
+    if (m.summary.byProperty.background !== 2) fail('R-27 byProperty.background must be 2');
+    if (m.summary.bySkinSlotKind['mask-set'] !== 1) fail('R-25 bySkinSlotKind.mask-set must be 1');
+    if (m.summary.byBakeAction['auto-screenshot-fragment'] !== 2) fail('R-27 auto-screenshot-fragment count must be 2');
+
+    // Schema metadata (forward contract for R-15 puppeteer bake).
+    if (!m.schemaVersion) fail('R-25 schemaVersion required');
+    if (!m.bakerHint || m.bakerHint.runtimeCost !== 'zero — runtime only loads pre-baked PNGs as SpriteFrame') {
+      fail('R-25 bakerHint must document zero runtime cost');
+    }
+    if (!m.bakerHint.autoBakeContract || !m.bakerHint.autoBakeContract.includes('data-ucuf-bake="fragment"')) {
+      fail('R-27 bakerHint must document explicit fragment opt-in');
+    }
+
+    ok('R-25/R-27 bake-manifest builder: deterministic review list emitted from snapshots; auto-bake is art-gated to explicit small fragments; large regions and clip geometry are skipped');
+  }
+
   const editorBlue = path.join(tmp, 'v2-editor-blue.png');
   const editorRed = path.join(tmp, 'v2-editor-red.png');
   writeSolidPng(editorBlue, 64, 64, [0x33, 0x66, 0x99, 0xff]);
@@ -622,6 +1642,82 @@ function runFidelitySteps() {
     if (!waivers.waivers.some(w => /missing-banner/.test(String(w.url)))) fail('M20 missing image URL waiver missing');
     ok('M13/M18/M19/M20 sidecars: coverage, css capability, pseudo capture, token suggestions, image waivers');
 
+    const computedHtml = path.join(tmp, 'computed-style-injection.html');
+    const computedTokens = path.join(tmp, 'computed-style-tokens.json');
+    const computedLayout = path.join(tmp, 'computed-style.layout.json');
+    const computedSkin = path.join(tmp, 'computed-style.skin.json');
+    fs.writeFileSync(computedTokens, JSON.stringify({
+      colors: {
+        computedPanel: '#123456',
+        computedText: '#abcdef',
+      },
+    }, null, 2), 'utf8');
+    fs.writeFileSync(computedHtml, `<!doctype html>
+<html><head><style>
+  @media (min-width: 1px) {
+    .computed-panel { background-color: #123456; color: #abcdef; }
+  }
+  .computed-panel { width: 64px; height: 64px; }
+</style></head><body>
+  <div class="computed-panel" data-name="ComputedPanel"><span data-name="ComputedText">OK</span></div>
+</body></html>
+`, 'utf8');
+    p = run([
+      '--input', computedHtml,
+      '--output', computedLayout,
+      '--skin-output', computedSkin,
+      '--screen-id', 'computed-style',
+      '--bundle', 'ui_test',
+      '--tokens-source', computedTokens,
+      '--use-computed-style',
+    ], { DOM_TO_UI_TELEMETRY: '0' });
+    if (p.status !== 0) fail(`M16 computed-style injection exit=${p.status}\nstdout=${p.stdout}\nstderr=${p.stderr}`);
+    const computedLayoutObj = JSON.parse(fs.readFileSync(computedLayout, 'utf8'));
+    const computedSkinObj = JSON.parse(fs.readFileSync(computedSkin, 'utf8'));
+    if (/(_captureId|data-ucuf-capture-id)/.test(JSON.stringify(computedLayoutObj))) {
+      fail('M16 computed-style injection serialized transient capture ids');
+    }
+    const computedPanel = findNode(computedLayoutObj, n => n.name === 'ComputedPanel');
+    const computedText = findNode(computedLayoutObj, n => n.name === 'ComputedText');
+    const computedPanelSlot = computedPanel && computedPanel.skinSlot && computedSkinObj.slots[computedPanel.skinSlot];
+    const computedTextSlot = computedText && computedText.styleSlot && computedSkinObj.slots[computedText.styleSlot];
+    if (!computedPanelSlot || computedPanelSlot.color !== 'computedPanel') fail(`M16 computed panel color mismatch: ${computedPanelSlot && computedPanelSlot.color}`);
+    if (!computedTextSlot || computedTextSlot.color !== 'computedText') fail(`M16 computed text color mismatch: ${computedTextSlot && computedTextSlot.color}`);
+    ok('M16 computed-style flag injects browser styles without serializing capture ids');
+
+    const geometryHtml = `
+      <div data-name="Stage" data-ucuf-capture-id="1" style="position:relative;width:1000px;height:600px;">
+        <img data-name="HeroImage" data-ucuf-capture-id="2" src="./hero.png" style="position:absolute;left:50%;bottom:0;height:90%;transform:translateX(-40%);object-fit:contain;object-position:center bottom;" />
+      </div>`;
+    const geometryDraft = buildDraftFromHtml(geometryHtml, {
+      screenId: 'computed-geometry',
+      bundle: 'ui_test',
+      useComputedStyle: true,
+      fidelitySnapshots: {
+        1: { id: 1, parentId: 0, styles: { _rect: { x: 0, y: 0, w: 1000, h: 600 } } },
+        2: {
+          id: 2,
+          parentId: 1,
+          styles: {
+            position: 'absolute',
+            left: '50%',
+            bottom: '0px',
+            transform: 'matrix(1, 0, 0, 1, -216, 0)',
+            'object-fit': 'contain',
+            'object-position': '50% 100%',
+            _rect: { x: 284, y: 60, w: 540, h: 540 },
+          },
+        },
+      },
+    });
+    const heroImage = findNode(geometryDraft.layoutDraft, n => n.name === 'HeroImage');
+    if (!heroImage) fail('computed geometry image missing');
+    if (heroImage.width !== 540 || heroImage.height !== 540) fail(`computed geometry did not use browser rect size: ${heroImage.width}x${heroImage.height}`);
+    if (!heroImage.widget || heroImage.widget.left !== 284 || heroImage.widget.bottom !== 0) fail(`computed geometry widget mismatch: ${JSON.stringify(heroImage.widget)}`);
+    if (heroImage.objectFit !== 'contain' || heroImage.objectPosition !== '50% 100%') fail(`object-fit metadata missing: ${heroImage.objectFit}/${heroImage.objectPosition}`);
+    if (geometryDraft.warnings.some(w => w.code === 'css-transform-manual-layout-risk')) fail('computed geometry transform should not remain a manual layout risk');
+    ok('M16 computed geometry maps absolute transform/object-fit to UCUF size + widget');
+
     const comparePng = path.join(tmp, 'visual-rich.compare.png');
     p = spawnSync(process.execPath, [COMPARE_CLI,
       '--html', VISUAL_RICH_FIXTURE,
@@ -632,13 +1728,20 @@ function runFidelitySteps() {
       '--pixel-diff',
       '--strict-coverage', '0.1',
       '--strict-pixel', '0.1',
+      '--manual-waivers', manualWaivers,
       '--save-panels', path.join(tmp, 'compare-panels'),
     ], { encoding: 'utf8', env: Object.assign({}, process.env, { DOM_TO_UI_TELEMETRY: '0' }) });
     if (p.status !== 0) fail(`M15/M16 compare exit=${p.status}\nstdout=${p.stdout}\nstderr=${p.stderr}`);
     const pixelPath = comparePng.replace(/\.png$/i, '.pixel-diff.json');
+    const compareWaiverPath = comparePng.replace(/\.png$/i, '.image-waivers.json');
     if (!fs.existsSync(pixelPath)) fail('M16 pixel-diff sidecar missing');
+    if (!fs.existsSync(compareWaiverPath)) fail('M20 compare image-waiver sidecar missing');
     const pixel = JSON.parse(fs.readFileSync(pixelPath, 'utf8'));
+    const compareWaivers = JSON.parse(fs.readFileSync(compareWaiverPath, 'utf8'));
     if (typeof pixel.adjustedCoverage !== 'number') fail('M16 adjustedCoverage missing');
+    if (!compareWaivers.waivers.some(w => w.manualOverride && w.reason === 'fixture-expected-decorative-image-gap')) {
+      fail('M20 compare manual image waiver missing');
+    }
     ok('M15/M16 high-fidelity renderer + pixel diff strict gate');
 
     const evolutionLog = path.join(tmp, 'html_skill_rule-evolution.md');

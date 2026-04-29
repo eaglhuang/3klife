@@ -13,6 +13,7 @@ from pydantic import BaseModel, Field
 DEFAULT_CHAPTERS_ROOT = Path("artifacts/data-pipeline/sanguo-rag/markdown/chapters")
 DEFAULT_FORMAL_MAP_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/formal-mention-map.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions")
+DEFAULT_TRIAGE_DECISIONS_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/unresolved-triage-decisions.json")
 DECORATIVE_WRAPPER_CHARS = "【】[]()（）「」『』《》〈〉"
 ADDRESS_TITLES = ["將軍", "軍師", "先生", "大人", "主公", "縣令", "太守", "都督", "丞相"]
 CJK_CANDIDATE_RE = re.compile(r"[\u4e00-\u9fff]{2,4}")
@@ -69,6 +70,13 @@ class FormalMentionEntry(BaseModel):
     status: str = Field(default="", description="high-confidence or collision")
 
 
+class TriageDecisionConfig(BaseModel):
+    version: str = Field(default="1.0.0", description="Decision schema version")
+    noiseLabels: list[str] = Field(default_factory=list, description="Labels confirmed as non-person noise")
+    ambiguousLabels: list[str] = Field(default_factory=list, description="Labels that need review but should not block unresolved convergence")
+    personLabels: list[str] = Field(default_factory=list, description="Labels confirmed as person names but not yet seeded")
+
+
 class ObservedMention(BaseModel):
     label: str = Field(description="Observed surface form")
     normalized: str = Field(description="Normalized surface form")
@@ -111,6 +119,7 @@ class ObservedMentionsBundle(BaseModel):
     generatedAt: str = Field(description="UTC timestamp")
     chaptersRoot: str = Field(description="Input chapters root")
     formalMapPath: str = Field(description="Input formal mention map path")
+    triageDecisionPath: str | None = Field(default=None, description="Input unresolved triage decision path when available")
     collectCjkCandidates: bool = Field(description="Whether CJK candidate scan was enabled")
     data: list[ObservedMention] = Field(description="Observed mentions")
 
@@ -121,9 +130,13 @@ class ObservedLabelSummaryBundle(BaseModel):
     totalMentions: int = Field(description="Total observed mention records")
     resolvedMentionCount: int = Field(description="Resolved mention records")
     unresolvedMentionCount: int = Field(description="Unresolved mention records")
+    excludedMentionCount: int = Field(default=0, description="Mentions excluded by triage decisions")
+    reviewPendingMentionCount: int = Field(default=0, description="Mentions moved to review-pending by triage decisions")
     chapters: list[ChapterMentionSummary] = Field(description="Per-chapter summary")
     topResolvedLabels: list[ObservedLabelSummaryEntry] = Field(description="Most frequent resolved labels")
     topUnresolvedLabels: list[ObservedLabelSummaryEntry] = Field(description="Most frequent unresolved labels")
+    topExcludedLabels: list[ObservedLabelSummaryEntry] = Field(default_factory=list, description="Most frequent excluded labels")
+    topReviewPendingLabels: list[ObservedLabelSummaryEntry] = Field(default_factory=list, description="Most frequent review-pending labels")
 
 
 def parse_args() -> argparse.Namespace:
@@ -131,6 +144,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--chapters-root", default=str(DEFAULT_CHAPTERS_ROOT), help="Directory containing ch_###.md files")
     parser.add_argument("--formal-map", default=str(DEFAULT_FORMAL_MAP_PATH), help="formal-mention-map.json path")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory for observed mention files")
+    parser.add_argument(
+        "--triage-decisions",
+        default=str(DEFAULT_TRIAGE_DECISIONS_PATH),
+        help="Optional unresolved triage decision file used to split noise/review-pending labels out of unresolved",
+    )
     parser.add_argument("--collect-cjk-candidates", action="store_true", help="Also collect 2-4 CJK character unknown candidates")
     parser.add_argument("--candidate-mode", choices=("conservative", "wide"), default="conservative", help="Unknown CJK candidate filtering mode")
     parser.add_argument("--top", type=int, default=50, help="Number of top labels to keep in summaries")
@@ -200,6 +218,30 @@ def load_formal_map(path: Path) -> dict[str, FormalMentionEntry]:
         if entry.normalized:
             formal_map[entry.normalized] = entry
     return formal_map
+
+
+def load_triage_decisions(path: Path) -> tuple[str | None, dict[str, str]]:
+    if not path.exists():
+        return None, {}
+    config = TriageDecisionConfig.model_validate(read_json(path))
+    decisions: dict[str, str] = {}
+    for label in config.noiseLabels:
+        normalized = normalize_label(label)
+        if normalized:
+            decisions[normalized] = "excluded"
+    for label in config.ambiguousLabels:
+        normalized = normalize_label(label)
+        if normalized:
+            decisions[normalized] = "review-pending"
+    for label in config.personLabels:
+        normalized = normalize_label(label)
+        if normalized:
+            decisions[normalized] = "review-pending"
+    return str(path), decisions
+
+
+def decide_unresolved_status(label: str, triage_decisions: dict[str, str]) -> str:
+    return triage_decisions.get(normalize_label(label), "unresolved")
 
 
 def make_snippet(paragraph: str, start: int, end: int, radius: int = 18) -> str:
@@ -337,6 +379,7 @@ def collect_from_paragraph(
     formal_normalized: set[str],
     collect_cjk_candidates: bool,
     candidate_mode: str,
+    triage_decisions: dict[str, str],
 ) -> tuple[list[ObservedMention], int]:
     mentions: list[ObservedMention] = []
     occupied_ranges: list[tuple[int, int]] = []
@@ -353,7 +396,7 @@ def collect_from_paragraph(
                 mentions,
                 formal_entry.alias,
                 "formal-match",
-                "resolved" if formal_entry.status == "high-confidence" else "unresolved",
+                "resolved" if formal_entry.status == "high-confidence" else decide_unresolved_status(formal_entry.alias, triage_decisions),
                 formal_entry.generalIds if formal_entry.status == "high-confidence" else [],
                 source_ref,
                 chapter_no,
@@ -378,7 +421,7 @@ def collect_from_paragraph(
                 mentions,
                 title,
                 "address-title",
-                "unresolved",
+                decide_unresolved_status(title, triage_decisions),
                 [],
                 source_ref,
                 chapter_no,
@@ -404,7 +447,7 @@ def collect_from_paragraph(
                 mentions,
                 label,
                 "unknown-candidate",
-                "unresolved",
+                decide_unresolved_status(label, triage_decisions),
                 [],
                 source_ref,
                 chapter_no,
@@ -492,6 +535,7 @@ def main() -> None:
     formal_map = load_formal_map(formal_map_path)
     formal_entries = sorted(formal_map.values(), key=lambda item: (-len(item.alias), item.alias))
     formal_normalized = set(formal_map)
+    triage_decision_path, triage_decisions = load_triage_decisions(Path(args.triage_decisions))
     ensure_output_root(output_root, overwrite=args.overwrite)
 
     all_mentions: list[ObservedMention] = []
@@ -512,6 +556,7 @@ def main() -> None:
                 formal_normalized,
                 args.collect_cjk_candidates,
                 args.candidate_mode,
+                triage_decisions,
             )
             chapter_mentions.extend(paragraph_mentions)
             skipped_unknown_candidate_count += skipped_count
@@ -534,6 +579,7 @@ def main() -> None:
         generatedAt=timestamp,
         chaptersRoot=str(chapters_root),
         formalMapPath=str(formal_map_path),
+        triageDecisionPath=triage_decision_path,
         collectCjkCandidates=bool(args.collect_cjk_candidates),
         data=all_mentions,
     )
@@ -543,9 +589,13 @@ def main() -> None:
         totalMentions=len(all_mentions),
         resolvedMentionCount=sum(1 for mention in all_mentions if mention.matchStatus == "resolved"),
         unresolvedMentionCount=sum(1 for mention in all_mentions if mention.matchStatus == "unresolved"),
+        excludedMentionCount=sum(1 for mention in all_mentions if mention.matchStatus == "excluded"),
+        reviewPendingMentionCount=sum(1 for mention in all_mentions if mention.matchStatus == "review-pending"),
         chapters=chapter_summaries,
         topResolvedLabels=summarize_labels(all_mentions, "resolved", args.top),
         topUnresolvedLabels=summarize_labels(all_mentions, "unresolved", args.top),
+        topExcludedLabels=summarize_labels(all_mentions, "excluded", args.top),
+        topReviewPendingLabels=summarize_labels(all_mentions, "review-pending", args.top),
     )
 
     write_json(output_root / "observed-mentions.json", mentions_bundle)
@@ -556,7 +606,8 @@ def main() -> None:
     print(
         "[collect_observed_mentions] "
         f"mentions={summary_bundle.totalMentions} resolved={summary_bundle.resolvedMentionCount} "
-        f"unresolved={summary_bundle.unresolvedMentionCount}"
+        f"unresolved={summary_bundle.unresolvedMentionCount} excluded={summary_bundle.excludedMentionCount} "
+        f"reviewPending={summary_bundle.reviewPendingMentionCount}"
     )
 
 

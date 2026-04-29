@@ -1,0 +1,19 @@
+{
+  "screenId": "character-ds3-main",
+  "currentBundle": "resources",
+  "distribution": [
+    {
+      "bundle": "ui_families",
+      "spriteCount": 1
+    },
+    {
+      "bundle": "ui_common",
+      "spriteCount": 1
+    }
+  ],
+  "suggestion": {
+    "primary": "ui_families",
+    "confidence": "high",
+    "reason": "current=resources 但實際資產主要落在 ui_families (1)"
+  }
+}

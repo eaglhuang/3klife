@@ -3,7 +3,56 @@
   "entries": [
     {
       "generalId": "zhang-yi-shu",
-      "alias": ["張翼", "伯恭"]
+      "alias": [
+        "張翼",
+        "伯恭"
+      ]
+    },
+    {
+      "generalId": "zhang-he",
+      "alias": [
+        "張合",
+        "儁乂",
+        "俊乂",
+        "張邰"
+      ],
+      "name": "張郃",
+      "faction": "wei",
+      "title": "【張郃】"
+    },
+    {
+      "generalId": "sun-quan",
+      "alias": [
+        "吳侯"
+      ]
+    },
+    {
+      "generalId": "xu-shu",
+      "alias": [
+        "元直",
+        "徐元直"
+      ]
+    },
+    {
+      "generalId": "pang-tong",
+      "alias": [
+        "鳳雛",
+        "士元",
+        "龐士元"
+      ]
+    },
+    {
+      "generalId": "sun-shang-xiang",
+      "alias": [
+        "孫夫",
+        "孫夫人"
+      ]
+    },
+    {
+      "generalId": "zhou-yu",
+      "alias": [
+        "周郎"
+      ]
     },
     {
       "generalId": "zhang-ren",
@@ -24,7 +73,9 @@
       "name": "曹真",
       "faction": "wei",
       "title": "【曹真】",
-      "alias": ["子丹"]
+      "alias": [
+        "子丹"
+      ]
     },
     {
       "generalId": "yan-yan",
@@ -52,21 +103,2562 @@
       "name": "陳宮",
       "faction": "enemy",
       "title": "【陳宮】",
-      "alias": ["公台"]
+      "alias": [
+        "公台"
+      ]
     },
     {
       "generalId": "xiahou-mao",
       "name": "夏侯楙",
       "faction": "wei",
       "title": "【夏侯楙】",
-      "alias": ["子林"]
+      "alias": [
+        "子林"
+      ]
     },
     {
       "generalId": "xiahou-ba",
       "name": "夏侯霸",
       "faction": "wei",
       "title": "【夏侯霸】",
-      "alias": ["仲權"]
+      "alias": [
+        "仲權"
+      ]
+    },
+    {
+      "generalId": "wang-yun",
+      "name": "王允",
+      "faction": "enemy",
+      "title": "【王允】",
+      "alias": [
+        "子師"
+      ]
+    },
+    {
+      "generalId": "zhu-jun-han",
+      "name": "朱雋",
+      "faction": "enemy",
+      "title": "【朱雋】",
+      "alias": [
+        "公偉",
+        "朱儁"
+      ]
+    },
+    {
+      "generalId": "jiang-qin",
+      "name": "蔣欽",
+      "faction": "wu",
+      "title": "【蔣欽】",
+      "alias": [
+        "公奕"
+      ]
+    },
+    {
+      "generalId": "ma-su",
+      "name": "馬謖",
+      "faction": "shu",
+      "title": "【馬謖】",
+      "alias": [
+        "幼常"
+      ]
+    },
+    {
+      "generalId": "zhou-cang",
+      "name": "周倉",
+      "faction": "shu",
+      "title": "【周倉】",
+      "alias": [
+        "元福",
+        "周元福"
+      ]
+    },
+    {
+      "generalId": "huang-zu",
+      "name": "黃祖",
+      "faction": "enemy",
+      "title": "【黃祖】",
+      "alias": []
+    },
+    {
+      "generalId": "chen-deng",
+      "name": "陳登",
+      "faction": "wei",
+      "title": "【陳登】",
+      "alias": [
+        "元龍",
+        "陳元龍"
+      ]
+    },
+    {
+      "generalId": "xiahou-shang",
+      "name": "夏侯尚",
+      "faction": "wei",
+      "title": "【夏侯尚】",
+      "alias": [
+        "伯仁"
+      ]
+    },
+    {
+      "generalId": "li-ru",
+      "name": "李儒",
+      "faction": "enemy",
+      "title": "【李儒】",
+      "alias": [
+        "文優",
+        "李文優"
+      ]
+    },
+    {
+      "generalId": "wang-zhong",
+      "name": "王忠",
+      "faction": "enemy",
+      "title": "【王忠】",
+      "alias": []
+    },
+    {
+      "generalId": "zhang-yun",
+      "name": "張允",
+      "faction": "enemy",
+      "title": "【張允】",
+      "alias": []
+    },
+    {
+      "generalId": "li-le",
+      "name": "李樂",
+      "faction": "enemy",
+      "title": "【李樂】",
+      "alias": []
+    },
+    {
+      "generalId": "wei-xu",
+      "name": "魏續",
+      "faction": "enemy",
+      "title": "【魏續】",
+      "alias": []
+    },
+    {
+      "generalId": "lv-xiang",
+      "name": "呂翔",
+      "faction": "enemy",
+      "title": "【呂翔】",
+      "alias": []
+    },
+    {
+      "generalId": "zhang-ji",
+      "name": "張濟",
+      "faction": "enemy",
+      "title": "【張濟】",
+      "alias": []
+    },
+    {
+      "generalId": "hou-cheng",
+      "name": "侯成",
+      "faction": "enemy",
+      "title": "【侯成】",
+      "alias": []
+    },
+    {
+      "generalId": "lv-qian",
+      "name": "呂虔",
+      "faction": "wei",
+      "title": "【呂虔】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-ren",
+      "name": "楊任",
+      "faction": "enemy",
+      "title": "【楊任】",
+      "alias": []
+    },
+    {
+      "generalId": "han-xian",
+      "name": "韓暹",
+      "faction": "enemy",
+      "title": "【韓暹】",
+      "alias": []
+    },
+    {
+      "generalId": "zhang-rang",
+      "name": "張讓",
+      "faction": "enemy",
+      "title": "【張讓】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-fu",
+      "name": "楊阜",
+      "faction": "wei",
+      "title": "【楊阜】",
+      "alias": [
+        "義山"
+      ]
+    },
+    {
+      "generalId": "yue-lin",
+      "name": "樂琳",
+      "faction": "wei",
+      "title": "【樂琳】",
+      "alias": []
+    },
+    {
+      "generalId": "hao-zhao",
+      "name": "郝昭",
+      "faction": "wei",
+      "title": "【郝昭】",
+      "alias": [
+        "伯道"
+      ]
+    },
+    {
+      "generalId": "zhou-shan",
+      "name": "周善",
+      "faction": "wu",
+      "title": "【周善】",
+      "alias": []
+    },
+    {
+      "generalId": "ma-zun",
+      "name": "馬遵",
+      "faction": "wei",
+      "title": "【馬遵】",
+      "alias": []
+    },
+    {
+      "generalId": "lei-tong",
+      "name": "雷銅",
+      "faction": "shu",
+      "title": "【雷銅】",
+      "alias": [
+        "雷同"
+      ]
+    },
+    {
+      "generalId": "wu-lan",
+      "name": "吳蘭",
+      "faction": "shu",
+      "title": "【吳蘭】",
+      "alias": []
+    },
+    {
+      "generalId": "li-su",
+      "name": "李肅",
+      "faction": "enemy",
+      "title": "【李肅】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-ang",
+      "name": "楊昂",
+      "faction": "enemy",
+      "title": "【楊昂】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-qiu",
+      "name": "楊秋",
+      "faction": "enemy",
+      "title": "【楊秋】",
+      "alias": []
+    },
+    {
+      "generalId": "meng-you",
+      "name": "孟優",
+      "faction": "enemy",
+      "title": "【孟優】",
+      "alias": []
+    },
+    {
+      "generalId": "wang-jing",
+      "name": "王經",
+      "faction": "wei",
+      "title": "【王經】",
+      "alias": [
+        "彥緯"
+      ]
+    },
+    {
+      "generalId": "xu-you",
+      "name": "許攸",
+      "faction": "enemy",
+      "title": "【許攸】",
+      "alias": [
+        "子遠"
+      ]
+    },
+    {
+      "generalId": "hao-meng",
+      "name": "郝萌",
+      "faction": "enemy",
+      "title": "【郝萌】",
+      "alias": []
+    },
+    {
+      "generalId": "zheng-wen",
+      "name": "鄭文",
+      "faction": "shu",
+      "title": "【鄭文】",
+      "alias": []
+    },
+    {
+      "generalId": "chen-shi",
+      "name": "陳式",
+      "faction": "shu",
+      "title": "【陳式】",
+      "alias": []
+    },
+    {
+      "generalId": "chen-ying",
+      "name": "陳應",
+      "faction": "enemy",
+      "title": "【陳應】",
+      "alias": []
+    },
+    {
+      "generalId": "wei-huang",
+      "name": "韋晃",
+      "faction": "enemy",
+      "title": "【韋晃】",
+      "alias": []
+    },
+    {
+      "generalId": "han-fu",
+      "name": "韓福",
+      "faction": "enemy",
+      "title": "【韓福】",
+      "alias": []
+    },
+    {
+      "generalId": "fu-qian",
+      "name": "傅僉",
+      "faction": "shu",
+      "title": "【傅僉】",
+      "alias": []
+    },
+    {
+      "generalId": "sima-yan",
+      "name": "司馬炎",
+      "faction": "wei",
+      "title": "【司馬炎】",
+      "alias": []
+    },
+    {
+      "generalId": "zhang-da",
+      "name": "張達",
+      "faction": "shu",
+      "title": "【張達】",
+      "alias": []
+    },
+    {
+      "generalId": "zhang-yi-yuan",
+      "name": "張顗",
+      "faction": "enemy",
+      "title": "【張顗】",
+      "alias": []
+    },
+    {
+      "generalId": "cao-rui",
+      "name": "曹睿",
+      "faction": "wei",
+      "title": "【曹睿】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-huai",
+      "name": "楊懷",
+      "faction": "enemy",
+      "title": "【楊懷】",
+      "alias": []
+    },
+    {
+      "generalId": "wang-bi",
+      "name": "王必",
+      "faction": "wei",
+      "title": "【王必】",
+      "alias": []
+    },
+    {
+      "generalId": "huangfu-song",
+      "name": "皇甫嵩",
+      "faction": "enemy",
+      "title": "【皇甫嵩】",
+      "alias": []
+    },
+    {
+      "generalId": "jiang-gan",
+      "name": "蔣幹",
+      "faction": "wei",
+      "title": "【蔣幹】",
+      "alias": [
+        "子翼"
+      ]
+    },
+    {
+      "generalId": "bian-xi",
+      "name": "卞喜",
+      "faction": "enemy",
+      "title": "【卞喜】",
+      "alias": []
+    },
+    {
+      "generalId": "sima-wang",
+      "name": "司馬望",
+      "faction": "wei",
+      "title": "【司馬望】",
+      "alias": []
+    },
+    {
+      "generalId": "zhang-song",
+      "name": "張松",
+      "faction": "enemy",
+      "title": "【張松】",
+      "alias": []
+    },
+    {
+      "generalId": "yin-shang",
+      "name": "尹賞",
+      "faction": "wei",
+      "title": "【尹賞】",
+      "alias": []
+    },
+    {
+      "generalId": "cao-shuang",
+      "name": "曹爽",
+      "faction": "wei",
+      "title": "【曹爽】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-song",
+      "name": "楊松",
+      "faction": "enemy",
+      "title": "【楊松】",
+      "alias": []
+    },
+    {
+      "generalId": "yang-ling",
+      "name": "楊陵",
+      "faction": "wei",
+      "title": "【楊陵】",
+      "alias": []
+    },
+    {
+      "generalId": "wang-fang",
+      "name": "王方",
+      "faction": "enemy",
+      "title": "【王方】",
+      "alias": []
+    },
+    {
+      "generalId": "wang-kai",
+      "name": "王楷",
+      "faction": "enemy",
+      "title": "【王楷】",
+      "alias": []
+    },
+    {
+      "generalId": "zhao-ang",
+      "name": "趙昂",
+      "faction": "wei",
+      "title": "【趙昂】",
+      "alias": []
+    },
+    {
+      "generalId": "zhao-fan",
+      "name": "趙範",
+      "faction": "enemy",
+      "title": "【趙範】",
+      "alias": []
+    },
+    {
+      "generalId": "pei-yuan-shao",
+      "name": "裴元紹",
+      "faction": "enemy",
+      "title": "【裴元紹】",
+      "alias": [
+        "元紹"
+      ]
+    },
+    {
+      "generalId": "gongsun-kang",
+      "name": "公孫康",
+      "faction": "neutral",
+      "title": "【公孫康】",
+      "alias": [
+        "公孫康"
+      ]
+    },
+    {
+      "generalId": "sun-chen",
+      "name": "孫綝",
+      "faction": "wu",
+      "title": "【孫綝】",
+      "alias": [
+        "孫綝"
+      ]
+    },
+    {
+      "generalId": "zhang-ying",
+      "name": "張英",
+      "faction": "enemy",
+      "title": "【張英】",
+      "alias": [
+        "張英"
+      ]
+    },
+    {
+      "generalId": "li-yi",
+      "name": "李異",
+      "faction": "wu",
+      "title": "【李異】",
+      "alias": [
+        "李異"
+      ]
+    },
+    {
+      "generalId": "yang-feng-yan-yi",
+      "name": "楊鋒",
+      "faction": "neutral",
+      "title": "【楊鋒】",
+      "alias": [
+        "楊鋒"
+      ]
+    },
+    {
+      "generalId": "hua-xiong",
+      "name": "華雄",
+      "faction": "enemy",
+      "title": "【華雄】",
+      "alias": [
+        "華雄"
+      ]
+    },
+    {
+      "generalId": "zhuge-liang",
+      "name": "諸葛亮",
+      "faction": "shu",
+      "title": "【諸葛亮】",
+      "alias": [
+        "諸葛武侯"
+      ]
+    },
+    {
+      "generalId": "zhuge-dan",
+      "name": "諸葛誕",
+      "faction": "wei",
+      "title": "【諸葛誕】",
+      "alias": [
+        "諸葛誕"
+      ]
+    },
+    {
+      "generalId": "chen-gui",
+      "name": "陳珪",
+      "faction": "neutral",
+      "title": "【陳珪】",
+      "alias": [
+        "陳珪"
+      ]
+    },
+    {
+      "generalId": "chen-zhen",
+      "name": "陳震",
+      "faction": "shu",
+      "title": "【陳震】",
+      "alias": [
+        "陳震"
+      ]
+    },
+    {
+      "generalId": "zhou-fang",
+      "name": "周魴",
+      "faction": "wu",
+      "title": "【周魴】",
+      "alias": [
+        "周魴"
+      ]
+    },
+    {
+      "generalId": "tang-zi",
+      "name": "唐諮",
+      "faction": "neutral",
+      "title": "【唐諮】",
+      "alias": [
+        "唐諮"
+      ]
+    },
+    {
+      "generalId": "xiahou-wei",
+      "name": "夏侯威",
+      "faction": "wei",
+      "title": "【夏侯威】",
+      "alias": [
+        "季權"
+      ]
+    },
+    {
+      "generalId": "xiahou-de",
+      "name": "夏侯德",
+      "faction": "wei",
+      "title": "【夏侯德】",
+      "alias": []
+    },
+    {
+      "generalId": "xiahou-hui",
+      "name": "夏侯惠",
+      "faction": "wei",
+      "title": "【夏侯惠】",
+      "alias": [
+        "稚權"
+      ]
+    },
+    {
+      "generalId": "romance-person-5c39-5949",
+      "name": "尹奉",
+      "faction": "neutral",
+      "title": "【尹奉】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-694a",
+      "name": "張楊",
+      "faction": "neutral",
+      "title": "【張楊】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-6eab",
+      "name": "張溫",
+      "faction": "neutral",
+      "title": "【張溫】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-864e",
+      "name": "張虎",
+      "faction": "neutral",
+      "title": "【張虎】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-66f9-5d69",
+      "name": "曹嵩",
+      "faction": "neutral",
+      "title": "【曹嵩】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-66f9-7d14",
+      "name": "曹純",
+      "faction": "neutral",
+      "title": "【曹純】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-66f9-8c79",
+      "name": "曹豹",
+      "faction": "neutral",
+      "title": "【曹豹】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-6731-9748",
+      "name": "朱靈",
+      "faction": "neutral",
+      "title": "【朱靈】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-52dd",
+      "name": "李勝",
+      "faction": "neutral",
+      "title": "【李勝】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-6b46",
+      "name": "李歆",
+      "faction": "neutral",
+      "title": "【李歆】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-694a-6b23",
+      "name": "楊欣",
+      "faction": "neutral",
+      "title": "【楊欣】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-980e",
+      "name": "王頎",
+      "faction": "neutral",
+      "title": "【王頎】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8523-658c",
+      "name": "蔣斌",
+      "faction": "neutral",
+      "title": "【蔣斌】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8a31-9756",
+      "name": "許靖",
+      "faction": "neutral",
+      "title": "【許靖】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8d99-7d2f",
+      "name": "趙累",
+      "faction": "neutral",
+      "title": "【趙累】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8d99-984f",
+      "name": "趙顏",
+      "faction": "neutral",
+      "title": "【趙顏】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-5fb7",
+      "name": "韓德",
+      "faction": "neutral",
+      "title": "【韓德】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-731b",
+      "name": "韓猛",
+      "faction": "neutral",
+      "title": "【韓猛】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9b91-4fe1",
+      "name": "鮑信",
+      "faction": "neutral",
+      "title": "【鮑信】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9ec3-7693",
+      "name": "黃皓",
+      "faction": "neutral",
+      "title": "【黃皓】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5442-66e0",
+      "name": "呂曠",
+      "faction": "neutral",
+      "title": "【呂曠】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-59dc-6558",
+      "name": "姜敘",
+      "faction": "neutral",
+      "title": "【姜敘】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b5f-5766",
+      "name": "孟坦",
+      "faction": "neutral",
+      "title": "【孟坦】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b6b-4ef2",
+      "name": "孫仲",
+      "faction": "neutral",
+      "title": "【孫仲】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-7d18",
+      "name": "張紘",
+      "faction": "neutral",
+      "title": "【張紘】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-8457",
+      "name": "張著",
+      "faction": "neutral",
+      "title": "【張著】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-66f9-6027",
+      "name": "曹性",
+      "faction": "neutral",
+      "title": "【曹性】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-66f9-9075",
+      "name": "曹遵",
+      "faction": "neutral",
+      "title": "【曹遵】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-6731-8d0a",
+      "name": "朱贊",
+      "faction": "neutral",
+      "title": "【朱贊】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-582a",
+      "name": "李堪",
+      "faction": "neutral",
+      "title": "【李堪】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-5c01",
+      "name": "李封",
+      "faction": "neutral",
+      "title": "【李封】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-610f",
+      "name": "李意",
+      "faction": "neutral",
+      "title": "【李意】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-8499",
+      "name": "李蒙",
+      "faction": "neutral",
+      "title": "【李蒙】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-6ed5-80e4",
+      "name": "滕胤",
+      "faction": "neutral",
+      "title": "【滕胤】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-5321",
+      "name": "王匡",
+      "faction": "neutral",
+      "title": "【王匡】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-690d",
+      "name": "王植",
+      "faction": "neutral",
+      "title": "【王植】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-696d",
+      "name": "王業",
+      "faction": "neutral",
+      "title": "【王業】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-752b",
+      "name": "王甫",
+      "faction": "neutral",
+      "title": "【王甫】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-79e6-742a",
+      "name": "秦琪",
+      "faction": "neutral",
+      "title": "【秦琪】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-859b-862d",
+      "name": "薛蘭",
+      "faction": "neutral",
+      "title": "【薛蘭】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8a31-660c",
+      "name": "許昌",
+      "faction": "neutral",
+      "title": "【許昌】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8af8-845b-7dd2",
+      "name": "諸葛緒",
+      "faction": "neutral",
+      "title": "【諸葛緒】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8af8-845b-975a",
+      "name": "諸葛靚",
+      "faction": "neutral",
+      "title": "【諸葛靚】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8d99-5f18",
+      "name": "趙弘",
+      "faction": "neutral",
+      "title": "【趙弘】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8d99-5fe0",
+      "name": "趙忠",
+      "faction": "neutral",
+      "title": "【趙忠】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9673-5c31",
+      "name": "陳就",
+      "faction": "neutral",
+      "title": "【陳就】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9673-862d",
+      "name": "陳蘭",
+      "faction": "neutral",
+      "title": "【陳蘭】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9673-9a2b",
+      "name": "陳騫",
+      "faction": "neutral",
+      "title": "【陳騫】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-5fe0",
+      "name": "韓忠",
+      "faction": "neutral",
+      "title": "【韓忠】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-99a5",
+      "name": "韓馥",
+      "faction": "neutral",
+      "title": "【韓馥】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-99ac-5ef6",
+      "name": "馬延",
+      "faction": "neutral",
+      "title": "【馬延】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-4e8e-8a6e",
+      "name": "于詮",
+      "faction": "neutral",
+      "title": "【于詮】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5085-5b30",
+      "name": "傅嬰",
+      "faction": "neutral",
+      "title": "【傅嬰】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5433-6566",
+      "name": "吳敦",
+      "faction": "neutral",
+      "title": "【吳敦】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5433-78a9",
+      "name": "吳碩",
+      "faction": "neutral",
+      "title": "【吳碩】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5442-5e38",
+      "name": "呂常",
+      "faction": "neutral",
+      "title": "【呂常】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5442-5efa",
+      "name": "呂建",
+      "faction": "neutral",
+      "title": "【呂建】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5468-6615",
+      "name": "周昕",
+      "faction": "neutral",
+      "title": "【周昕】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5510-5983",
+      "name": "唐妃",
+      "faction": "neutral",
+      "title": "【唐妃】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-590f-4faf-548c",
+      "name": "夏侯和",
+      "faction": "neutral",
+      "title": "【夏侯和】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-590f-4faf-862d",
+      "name": "夏侯蘭",
+      "faction": "neutral",
+      "title": "【夏侯蘭】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b6b-6b46",
+      "name": "孫歆",
+      "faction": "neutral",
+      "title": "【孫歆】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b6b-89c0",
+      "name": "孫觀",
+      "faction": "neutral",
+      "title": "【孫觀】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b6b-975c",
+      "name": "孫靜",
+      "faction": "neutral",
+      "title": "【孫靜】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5c39-5927-76ee",
+      "name": "尹大目",
+      "faction": "neutral",
+      "title": "【尹大目】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5c39-79ae",
+      "name": "尹禮",
+      "faction": "neutral",
+      "title": "【尹禮】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5c91-5a01",
+      "name": "岑威",
+      "faction": "neutral",
+      "title": "【岑威】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-6b66",
+      "name": "張武",
+      "faction": "neutral",
+      "title": "【張武】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-8d85",
+      "name": "張超",
+      "faction": "neutral",
+      "title": "【張超】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-9088",
+      "name": "張邈",
+      "faction": "neutral",
+      "title": "【張邈】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-8c50",
+      "name": "李豐",
+      "faction": "neutral",
+      "title": "【李豐】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-8f14",
+      "name": "李輔",
+      "faction": "neutral",
+      "title": "【李輔】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-694a-5f6a",
+      "name": "楊彪",
+      "faction": "neutral",
+      "title": "【楊彪】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-694a-795a",
+      "name": "楊祚",
+      "faction": "neutral",
+      "title": "【楊祚】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-6a02-5c31",
+      "name": "樂就",
+      "faction": "neutral",
+      "title": "【樂就】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-5a01",
+      "name": "王威",
+      "faction": "neutral",
+      "title": "【王威】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-79e6-6717",
+      "name": "秦朗",
+      "faction": "neutral",
+      "title": "【秦朗】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-7a46-9806",
+      "name": "穆順",
+      "faction": "neutral",
+      "title": "【穆順】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8523-5947",
+      "name": "蔣奇",
+      "faction": "neutral",
+      "title": "【蔣奇】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8523-6fdf",
+      "name": "蔣濟",
+      "faction": "neutral",
+      "title": "【蔣濟】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8523-8212",
+      "name": "蔣舒",
+      "faction": "neutral",
+      "title": "【蔣舒】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-859b-79ae",
+      "name": "薛禮",
+      "faction": "neutral",
+      "title": "【薛禮】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8607-9852",
+      "name": "蘇顒",
+      "faction": "neutral",
+      "title": "【蘇顒】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8607-98db",
+      "name": "蘇飛",
+      "faction": "neutral",
+      "title": "【蘇飛】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8881-907a",
+      "name": "袁遺",
+      "faction": "neutral",
+      "title": "【袁遺】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8a31-6c5c",
+      "name": "許汜",
+      "faction": "neutral",
+      "title": "【許汜】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8af8-845b-5747",
+      "name": "諸葛均",
+      "faction": "neutral",
+      "title": "【諸葛均】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8af8-845b-77bb",
+      "name": "諸葛瞻",
+      "faction": "neutral",
+      "title": "【諸葛瞻】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8d99-8862",
+      "name": "趙衢",
+      "faction": "neutral",
+      "title": "【趙衢】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9112-9756",
+      "name": "鄒靖",
+      "faction": "neutral",
+      "title": "【鄒靖】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9673-5b6b",
+      "name": "陳孫",
+      "faction": "neutral",
+      "title": "【陳孫】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9673-77ef",
+      "name": "陳矯",
+      "faction": "neutral",
+      "title": "【陳矯】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9673-7d00",
+      "name": "陳紀",
+      "faction": "neutral",
+      "title": "【陳紀】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-96f7-8584",
+      "name": "雷薄",
+      "faction": "neutral",
+      "title": "【雷薄】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-99ac-9435",
+      "name": "馬鐵",
+      "faction": "neutral",
+      "title": "【馬鐵】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-99ae-79ae",
+      "name": "馮禮",
+      "faction": "neutral",
+      "title": "【馮禮】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9b91-9686",
+      "name": "鮑隆",
+      "faction": "neutral",
+      "title": "【鮑隆】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-4f0d-74ca",
+      "name": "伍瓊",
+      "faction": "neutral",
+      "title": "【伍瓊】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-4faf-89bd",
+      "name": "侯覽",
+      "faction": "neutral",
+      "title": "【侯覽】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-4faf-9078",
+      "name": "侯選",
+      "faction": "neutral",
+      "title": "【侯選】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-516c-5b6b-5ea6",
+      "name": "公孫度",
+      "faction": "neutral",
+      "title": "【公孫度】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-516c-5b6b-606d",
+      "name": "公孫恭",
+      "faction": "neutral",
+      "title": "【公孫恭】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5442-64da",
+      "name": "呂據",
+      "faction": "neutral",
+      "title": "【呂據】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5468-65e8",
+      "name": "周旨",
+      "faction": "neutral",
+      "title": "【周旨】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-56b4-767d-864e",
+      "name": "嚴白虎",
+      "faction": "neutral",
+      "title": "【嚴白虎】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-590f-4faf-5b58",
+      "name": "夏侯存",
+      "faction": "neutral",
+      "title": "【夏侯存】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-590f-4faf-7384",
+      "name": "夏侯玄",
+      "faction": "neutral",
+      "title": "【夏侯玄】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-590f-60f2",
+      "name": "夏惲",
+      "faction": "neutral",
+      "title": "【夏惲】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b5f-7bc0",
+      "name": "孟節",
+      "faction": "neutral",
+      "title": "【孟節】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b6b-7570",
+      "name": "孫異",
+      "faction": "neutral",
+      "title": "【孫異】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b6b-97f6",
+      "name": "孫韶",
+      "faction": "neutral",
+      "title": "【孫韶】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b6b-9ad8",
+      "name": "孫高",
+      "faction": "neutral",
+      "title": "【孫高】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-52f3",
+      "name": "張勳",
+      "faction": "neutral",
+      "title": "【張勳】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-5e03",
+      "name": "張布",
+      "faction": "neutral",
+      "title": "【張布】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-608c",
+      "name": "張悌",
+      "faction": "neutral",
+      "title": "【張悌】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-6a6b",
+      "name": "張橫",
+      "faction": "neutral",
+      "title": "【張橫】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-71d5",
+      "name": "張燕",
+      "faction": "neutral",
+      "title": "【張燕】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-7d04",
+      "name": "張約",
+      "faction": "neutral",
+      "title": "【張約】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-7d14",
+      "name": "張純",
+      "faction": "neutral",
+      "title": "【張純】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-83ef",
+      "name": "張華",
+      "faction": "neutral",
+      "title": "【張華】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-885b",
+      "name": "張衛",
+      "faction": "neutral",
+      "title": "【張衛】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-95d3",
+      "name": "張闓",
+      "faction": "neutral",
+      "title": "【張闓】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-65bd-6714",
+      "name": "施朔",
+      "faction": "neutral",
+      "title": "【施朔】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-660c-8c68",
+      "name": "昌豨",
+      "faction": "neutral",
+      "title": "【昌豨】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-66f9-5f65",
+      "name": "曹彥",
+      "faction": "neutral",
+      "title": "【曹彥】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-66f9-82b3",
+      "name": "曹芳",
+      "faction": "neutral",
+      "title": "【曹芳】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-66f9-8a13",
+      "name": "曹訓",
+      "faction": "neutral",
+      "title": "【曹訓】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-6731-5149",
+      "name": "朱光",
+      "faction": "neutral",
+      "title": "【朱光】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-6731-6069",
+      "name": "朱恩",
+      "faction": "neutral",
+      "title": "【朱恩】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-5225",
+      "name": "李別",
+      "faction": "neutral",
+      "title": "【李別】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-73ea",
+      "name": "李珪",
+      "faction": "neutral",
+      "title": "【李珪】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-798f",
+      "name": "李福",
+      "faction": "neutral",
+      "title": "【李福】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-901a",
+      "name": "李通",
+      "faction": "neutral",
+      "title": "【李通】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-9d6c",
+      "name": "李鵬",
+      "faction": "neutral",
+      "title": "【李鵬】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-694a-67cf",
+      "name": "楊柏",
+      "faction": "neutral",
+      "title": "【楊柏】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-694a-6d2a",
+      "name": "楊洪",
+      "faction": "neutral",
+      "title": "【楊洪】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-694a-9f61",
+      "name": "楊齡",
+      "faction": "neutral",
+      "title": "【楊齡】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-6a02-7d9d",
+      "name": "樂綝",
+      "faction": "neutral",
+      "title": "【樂綝】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-6f58-9cf3",
+      "name": "潘鳳",
+      "faction": "neutral",
+      "title": "【潘鳳】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-542b",
+      "name": "王含",
+      "faction": "neutral",
+      "title": "【王含】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-7cb2",
+      "name": "王粲",
+      "faction": "neutral",
+      "title": "【王粲】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-7d2f",
+      "name": "王累",
+      "faction": "neutral",
+      "title": "【王累】",
+      "alias": []
+    },
+    {
+      "generalId": "huang-shao",
+      "name": "黃劭",
+      "faction": "enemy",
+      "title": "【黃劭】",
+      "alias": []
+    },
+    {
+      "generalId": "yue-yi",
+      "name": "樂毅",
+      "faction": "neutral",
+      "title": "【樂毅】",
+      "alias": []
+    },
+    {
+      "generalId": "sima-zhou",
+      "name": "司馬冑",
+      "faction": "neutral",
+      "title": "【司馬冑】",
+      "alias": [
+        "司馬冑并"
+      ]
+    },
+    {
+      "generalId": "zhang-yi-warring-states",
+      "name": "張儀",
+      "faction": "neutral",
+      "title": "【張儀】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-79e6-826f",
+      "name": "秦良",
+      "faction": "neutral",
+      "title": "【秦良】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-82d7-6fa4",
+      "name": "苗澤",
+      "faction": "neutral",
+      "title": "【苗澤】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8607-8d8a",
+      "name": "蘇越",
+      "faction": "neutral",
+      "title": "【蘇越】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-885b-5f18",
+      "name": "衛弘",
+      "faction": "neutral",
+      "title": "【衛弘】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8a31-829d",
+      "name": "許芝",
+      "faction": "neutral",
+      "title": "【許芝】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8af8-845b-539f",
+      "name": "諸葛原",
+      "faction": "neutral",
+      "title": "【諸葛原】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-912d-6cf0",
+      "name": "鄭泰",
+      "faction": "neutral",
+      "title": "【鄭泰】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9673-6a6b",
+      "name": "陳橫",
+      "faction": "neutral",
+      "title": "【陳橫】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9673-7433",
+      "name": "陳琳",
+      "faction": "neutral",
+      "title": "【陳琳】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97cb-5eb7",
+      "name": "韋康",
+      "faction": "neutral",
+      "title": "【韋康】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-7d9c",
+      "name": "韓綜",
+      "faction": "neutral",
+      "title": "【韓綜】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-878d",
+      "name": "韓融",
+      "faction": "neutral",
+      "title": "【韓融】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-99ac-73a9",
+      "name": "馬玩",
+      "faction": "neutral",
+      "title": "【馬玩】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9ec3-594e",
+      "name": "黃奎",
+      "faction": "neutral",
+      "title": "【黃奎】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-4efb-5914",
+      "name": "任夔",
+      "faction": "neutral",
+      "title": "【任夔】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-4efb-5cfb",
+      "name": "任峻",
+      "faction": "neutral",
+      "title": "【任峻】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-4f0d-5b5a",
+      "name": "伍孚",
+      "faction": "neutral",
+      "title": "【伍孚】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-4f0d-5ef6",
+      "name": "伍延",
+      "faction": "neutral",
+      "title": "【伍延】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-4f0d-7fd2",
+      "name": "伍習",
+      "faction": "neutral",
+      "title": "【伍習】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-4fde-6d89",
+      "name": "俞涉",
+      "faction": "neutral",
+      "title": "【俞涉】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5085-58eb-4ec1",
+      "name": "傅士仁",
+      "faction": "neutral",
+      "title": "【傅士仁】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5085-5dfd",
+      "name": "傅巽",
+      "faction": "neutral",
+      "title": "【傅巽】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-516c-5b6b-4fee",
+      "name": "公孫修",
+      "faction": "neutral",
+      "title": "【公孫修】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-516c-5b6b-8d8a",
+      "name": "公孫越",
+      "faction": "neutral",
+      "title": "【公孫越】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-53f8-99ac-5b5a",
+      "name": "司馬孚",
+      "faction": "neutral",
+      "title": "【司馬孚】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-53f8-99ac-6538",
+      "name": "司馬攸",
+      "faction": "neutral",
+      "title": "【司馬攸】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-53f8-99ac-6717",
+      "name": "司馬朗",
+      "faction": "neutral",
+      "title": "【司馬朗】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5433-5321",
+      "name": "吳匡",
+      "faction": "neutral",
+      "title": "【吳匡】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5433-666f",
+      "name": "吳景",
+      "faction": "neutral",
+      "title": "【吳景】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5433-7db1",
+      "name": "吳綱",
+      "faction": "neutral",
+      "title": "【吳綱】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5433-81e3",
+      "name": "吳臣",
+      "faction": "neutral",
+      "title": "【吳臣】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5442-5a01-749c",
+      "name": "呂威璜",
+      "faction": "neutral",
+      "title": "【呂威璜】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5442-7fa9",
+      "name": "呂義",
+      "faction": "neutral",
+      "title": "【呂義】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5468-5e73",
+      "name": "周平",
+      "faction": "neutral",
+      "title": "【周平】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5468-6bd6",
+      "name": "周毖",
+      "faction": "neutral",
+      "title": "【周毖】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5468-7fa4",
+      "name": "周群",
+      "faction": "neutral",
+      "title": "【周群】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-548c-6d3d",
+      "name": "和洽",
+      "faction": "neutral",
+      "title": "【和洽】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5510-5468",
+      "name": "唐周",
+      "faction": "neutral",
+      "title": "【唐周】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-56b4-7db1",
+      "name": "嚴綱",
+      "faction": "neutral",
+      "title": "【嚴綱】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-56b4-8c61",
+      "name": "嚴象",
+      "faction": "neutral",
+      "title": "【嚴象】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-56b4-8f3f",
+      "name": "嚴輿",
+      "faction": "neutral",
+      "title": "【嚴輿】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-590f-4faf-5091",
+      "name": "夏侯傑",
+      "faction": "neutral",
+      "title": "【夏侯傑】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-590f-4faf-54b8",
+      "name": "夏侯咸",
+      "faction": "neutral",
+      "title": "【夏侯咸】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-595a-6ce5",
+      "name": "奚泥",
+      "faction": "neutral",
+      "title": "【奚泥】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b54-79c0",
+      "name": "孔秀",
+      "faction": "neutral",
+      "title": "【孔秀】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b5f-5149",
+      "name": "孟光",
+      "faction": "neutral",
+      "title": "【孟光】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b6b-4eae",
+      "name": "孫亮",
+      "faction": "neutral",
+      "title": "【孫亮】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b6b-606d",
+      "name": "孫恭",
+      "faction": "neutral",
+      "title": "【孫恭】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b6b-6977",
+      "name": "孫楷",
+      "faction": "neutral",
+      "title": "【孫楷】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b6b-745c",
+      "name": "孫瑜",
+      "faction": "neutral",
+      "title": "【孫瑜】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5b6b-95d3",
+      "name": "孫闓",
+      "faction": "neutral",
+      "title": "【孫闓】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-4e16-5e73",
+      "name": "張世平",
+      "faction": "neutral",
+      "title": "【張世平】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-5148",
+      "name": "張先",
+      "faction": "neutral",
+      "title": "【張先】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-627f",
+      "name": "張承",
+      "faction": "neutral",
+      "title": "【張承】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-7279",
+      "name": "張特",
+      "faction": "neutral",
+      "title": "【張特】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-7403",
+      "name": "張球",
+      "faction": "neutral",
+      "title": "【張球】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-7bc0",
+      "name": "張節",
+      "faction": "neutral",
+      "title": "【張節】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-7d39",
+      "name": "張紹",
+      "faction": "neutral",
+      "title": "【張紹】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-7ddd",
+      "name": "張緝",
+      "faction": "neutral",
+      "title": "【張緝】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-8085",
+      "name": "張肅",
+      "faction": "neutral",
+      "title": "【張肅】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-8209",
+      "name": "張舉",
+      "faction": "neutral",
+      "title": "【張舉】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-88d4",
+      "name": "張裔",
+      "faction": "neutral",
+      "title": "【張裔】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-9075",
+      "name": "張遵",
+      "faction": "neutral",
+      "title": "【張遵】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-5f35-921e",
+      "name": "張鈞",
+      "faction": "neutral",
+      "title": "【張鈞】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-66f9-5950",
+      "name": "曹奐",
+      "faction": "neutral",
+      "title": "【曹奐】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-66f9-5fb7",
+      "name": "曹德",
+      "faction": "neutral",
+      "title": "【曹德】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-6731-82b3",
+      "name": "朱芳",
+      "faction": "neutral",
+      "title": "【朱芳】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-4f0f",
+      "name": "李伏",
+      "faction": "neutral",
+      "title": "【李伏】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-674e-7403",
+      "name": "李球",
+      "faction": "neutral",
+      "title": "【李球】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-694a-4fee",
+      "name": "楊修",
+      "faction": "neutral",
+      "title": "【楊修】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-694a-5927-5c07",
+      "name": "楊大將",
+      "faction": "neutral",
+      "title": "【楊大將】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-694a-66a8",
+      "name": "楊暨",
+      "faction": "neutral",
+      "title": "【楊暨】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-694a-7426",
+      "name": "楊琦",
+      "faction": "neutral",
+      "title": "【楊琦】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-694a-7d9c",
+      "name": "楊綜",
+      "faction": "neutral",
+      "title": "【楊綜】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-6c88-7469",
+      "name": "沈瑩",
+      "faction": "neutral",
+      "title": "【沈瑩】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-4f09",
+      "name": "王伉",
+      "faction": "neutral",
+      "title": "【王伉】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-5247",
+      "name": "王則",
+      "faction": "neutral",
+      "title": "【王則】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-5795",
+      "name": "王垕",
+      "faction": "neutral",
+      "title": "【王垕】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-60c7",
+      "name": "王惇",
+      "faction": "neutral",
+      "title": "【王惇】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-6636",
+      "name": "王昶",
+      "faction": "neutral",
+      "title": "【王昶】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-6c0f",
+      "name": "王氏",
+      "faction": "neutral",
+      "title": "【王氏】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-6c88",
+      "name": "王沈",
+      "faction": "neutral",
+      "title": "【王沈】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-7965",
+      "name": "王祥",
+      "faction": "neutral",
+      "title": "【王祥】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-7acb",
+      "name": "王立",
+      "faction": "neutral",
+      "title": "【王立】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-738b-9023",
+      "name": "王連",
+      "faction": "neutral",
+      "title": "【王連】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-7687-752b-95d3",
+      "name": "皇甫闓",
+      "faction": "neutral",
+      "title": "【皇甫闓】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-7ac7-6b66",
+      "name": "竇武",
+      "faction": "neutral",
+      "title": "【竇武】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8303-6210",
+      "name": "范成",
+      "faction": "neutral",
+      "title": "【范成】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8303-7586",
+      "name": "范疆",
+      "faction": "neutral",
+      "title": "【范疆】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8523-5ef6",
+      "name": "蔣延",
+      "faction": "neutral",
+      "title": "【蔣延】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-859b-5247",
+      "name": "薛則",
+      "faction": "neutral",
+      "title": "【薛則】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-859b-55ac",
+      "name": "薛喬",
+      "faction": "neutral",
+      "title": "【薛喬】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8607-96d9",
+      "name": "蘇雙",
+      "faction": "neutral",
+      "title": "【蘇雙】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-885b-51f1",
+      "name": "衛凱",
+      "faction": "neutral",
+      "title": "【衛凱】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-885b-74d8",
+      "name": "衛瓘",
+      "faction": "neutral",
+      "title": "【衛瓘】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8881-9697",
+      "name": "袁隗",
+      "faction": "neutral",
+      "title": "【袁隗】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8a31-5100",
+      "name": "許儀",
+      "faction": "neutral",
+      "title": "【許儀】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8a31-5141",
+      "name": "許允",
+      "faction": "neutral",
+      "title": "【許允】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8a31-664f",
+      "name": "許晏",
+      "faction": "neutral",
+      "title": "【許晏】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8a31-8ca2",
+      "name": "許貢",
+      "faction": "neutral",
+      "title": "【許貢】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8af8-845b-5c1a",
+      "name": "諸葛尚",
+      "faction": "neutral",
+      "title": "【諸葛尚】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8af8-845b-8654",
+      "name": "諸葛虔",
+      "faction": "neutral",
+      "title": "【諸葛虔】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8cbb-8000",
+      "name": "費耀",
+      "faction": "neutral",
+      "title": "【費耀】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8d99-5c91",
+      "name": "趙岑",
+      "faction": "neutral",
+      "title": "【趙岑】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8d99-5ee3",
+      "name": "趙廣",
+      "faction": "neutral",
+      "title": "【趙廣】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8d99-76f4",
+      "name": "趙直",
+      "faction": "neutral",
+      "title": "【趙直】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8d99-840c",
+      "name": "趙萌",
+      "faction": "neutral",
+      "title": "【趙萌】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-8d99-878d",
+      "name": "趙融",
+      "faction": "neutral",
+      "title": "【趙融】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9673-751f",
+      "name": "陳生",
+      "faction": "neutral",
+      "title": "【陳生】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9673-803d",
+      "name": "陳耽",
+      "faction": "neutral",
+      "title": "【陳耽】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9673-8543",
+      "name": "陳蕃",
+      "faction": "neutral",
+      "title": "【陳蕃】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-5d69",
+      "name": "韓嵩",
+      "faction": "neutral",
+      "title": "【韓嵩】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-73e9",
+      "name": "韓珩",
+      "faction": "neutral",
+      "title": "【韓珩】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-742a",
+      "name": "韓琪",
+      "faction": "neutral",
+      "title": "【韓琪】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-7464",
+      "name": "韓瑤",
+      "faction": "neutral",
+      "title": "【韓瑤】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-74ca",
+      "name": "韓瓊",
+      "faction": "neutral",
+      "title": "【韓瓊】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-798e",
+      "name": "韓禎",
+      "faction": "neutral",
+      "title": "【韓禎】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-80e4",
+      "name": "韓胤",
+      "faction": "neutral",
+      "title": "【韓胤】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-97d3-8392-5b50",
+      "name": "韓莒子",
+      "faction": "neutral",
+      "title": "【韓莒子】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-99ac-4f11",
+      "name": "馬休",
+      "faction": "neutral",
+      "title": "【馬休】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-99ac-5143-7fa9",
+      "name": "馬元義",
+      "faction": "neutral",
+      "title": "【馬元義】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-99ac-6f22",
+      "name": "馬漢",
+      "faction": "neutral",
+      "title": "【馬漢】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-99ac-7389",
+      "name": "馬玉",
+      "faction": "neutral",
+      "title": "【馬玉】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-99ac-9088",
+      "name": "馬邈",
+      "faction": "neutral",
+      "title": "【馬邈】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-99ac-921e",
+      "name": "馬鈞",
+      "faction": "neutral",
+      "title": "【馬鈞】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-99ae-7d1e",
+      "name": "馮紞",
+      "faction": "neutral",
+      "title": "【馮紞】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-99ae-7fd2",
+      "name": "馮習",
+      "faction": "neutral",
+      "title": "【馮習】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9b4f-9088",
+      "name": "魏邈",
+      "faction": "neutral",
+      "title": "【魏邈】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9b91-7d20",
+      "name": "鮑素",
+      "faction": "neutral",
+      "title": "【鮑素】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9ec3-5d07",
+      "name": "黃崇",
+      "faction": "neutral",
+      "title": "【黃崇】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9ec3-627f-5f65",
+      "name": "黃承彥",
+      "faction": "neutral",
+      "title": "【黃承彥】",
+      "alias": []
+    },
+    {
+      "generalId": "romance-person-9ec3-742c",
+      "name": "黃琬",
+      "faction": "neutral",
+      "title": "【黃琬】",
+      "alias": []
     }
   ]
 }

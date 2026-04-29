@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "sourceChoicesPath": "scratch/loop-auto-apply-test/unresolved-triage-choices.json",
+  "preservedActiveAnswerCount": 0,
+  "carriedForwardAnsweredCount": 1,
+  "answers": [
+    {
+      "id": "Q001",
+      "label": "元紹",
+      "normalized": "元紹",
+      "answer": "",
+      "personRecord": {
+        "generalId": "",
+        "name": "元紹",
+        "faction": "",
+        "title": "【元紹】",
+        "alias": []
+      }
+    },
+    {
+      "id": "Q001",
+      "label": "任他",
+      "normalized": "任他",
+      "answer": "B",
+      "personRecord": {
+        "generalId": "",
+        "name": "任他",
+        "faction": "",
+        "title": "【任他】",
+        "alias": []
+      },
+      "carriedForward": true
+    }
+  ]
+}

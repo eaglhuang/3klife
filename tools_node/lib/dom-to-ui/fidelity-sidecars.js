@@ -11,6 +11,7 @@ const { buildTokenSuggestions } = require('./token-suggestion');
 const { buildWaivers } = require('./image-waiver');
 const { loadTokenRegistry } = require('./token-registry');
 const { appendCssCapabilityCandidate } = require('./rule-evolution2');
+const { buildBakeManifest } = require('./bake-manifest');
 
 const CHROME_CANDIDATES = [
   'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
@@ -133,14 +134,37 @@ async function buildFidelitySidecars(args) {
     written.imageWaiversPath = waiverPath;
   }
 
+  // R-25 (general rule, build-time bake handoff): emit a deterministic
+  // bake-manifest.json describing every (selector, property, value, target
+  // dimensions) tuple still classified `assetize`. This is the contract for
+  // future R-15 puppeteer bake AND the immediate placeholder shopping list
+  // for artists. Generic for every UI run through this pipeline. Skipping
+  // this when the host caller opts out (`emitBakeManifest: false`) keeps
+  // self-test runs deterministic without DOM snapshots.
+  let bakeManifest = null;
+  if (args.emitBakeManifest !== false) {
+    bakeManifest = buildBakeManifest({
+      snapshots: captureResult.snapshots,
+      screenId: args.screenId || 'unknown-screen',
+      sidecarBundle: args.sidecarBundle || 'resources',
+      sourceHtml: path.relative(args.repoRoot || path.resolve(__dirname, '..', '..', '..'), path.resolve(htmlPath)).replace(/\\/g, '/'),
+      viewport: { width: viewport.width, height: viewport.height },
+    });
+    const bakePath = deriveSidecarPath(outputBasePath, '.bake-manifest.json');
+    fs.writeFileSync(bakePath, JSON.stringify(bakeManifest, null, 2) + '\n', 'utf8');
+    written.bakeManifestPath = bakePath;
+  }
+
   return {
     ok: true,
     skipped: false,
     browserPath,
     coverage: captureResult.coverage,
     snapshots: captureResult.snapshots,
+    annotatedHtml: captureResult.annotatedHtml || null,
     tokenSuggestions,
     waiverReport,
+    bakeManifest,
     written,
   };
 }

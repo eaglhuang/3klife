@@ -14,32 +14,93 @@
   "entries": [
     {
       "generalId": "zhang-fei",
-      "add": ["張翼德", "翼德", "燕人張翼德"],
+      "add": [
+        "張翼德",
+        "翼德",
+        "燕人張翼德"
+      ],
       "remove": []
     },
     {
       "generalId": "guan-yu",
-      "add": ["關雲長", "雲長", "美髯公關雲長"],
+      "add": [
+        "關雲長",
+        "雲長",
+        "美髯公關雲長"
+      ],
       "remove": []
     },
     {
       "generalId": "zhao-yun",
-      "add": ["趙子龍", "子龍", "常山趙子龍"],
+      "add": [
+        "趙子龍",
+        "子龍",
+        "常山趙子龍"
+      ],
+      "remove": []
+    },
+    {
+      "generalId": "zhao-fan",
+      "add": [
+        "趙範"
+      ],
       "remove": []
     },
     {
       "generalId": "liu-bei",
-      "add": ["劉玄德", "玄德", "劉使君"],
+      "add": [
+        "劉玄德",
+        "玄德",
+        "劉使君"
+      ],
       "remove": []
     },
     {
       "generalId": "cao-cao",
-      "add": ["曹孟德", "孟德", "阿瞞"],
+      "add": [
+        "曹孟德",
+        "孟德",
+        "阿瞞",
+        "曹瞞"
+      ],
+      "remove": []
+    },
+    {
+      "generalId": "sun-ce",
+      "add": [
+        "孫郎"
+      ],
+      "remove": []
+    },
+    {
+      "generalId": "xu-zhu",
+      "add": [
+        "許諸"
+      ],
+      "remove": []
+    },
+    {
+      "generalId": "zhu-rong",
+      "add": [],
+      "remove": [
+        "祝融"
+      ]
+    },
+    {
+      "generalId": "zhu-rong-furen",
+      "add": [
+        "祝融"
+      ],
       "remove": []
     },
     {
       "generalId": "zhuge-liang",
-      "add": ["諸葛孔明", "孔明", "臥龍", "臥龍先生"],
+      "add": [
+        "諸葛孔明",
+        "孔明",
+        "臥龍",
+        "臥龍先生"
+      ],
       "remove": []
     }
   ]

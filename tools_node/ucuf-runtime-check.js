@@ -146,6 +146,21 @@ function loadScreens() {
             if (!json) {
                 return null;
             }
+            const isScreenManifest = Boolean(
+                json.layoutId ||
+                    json.layout ||
+                    json.layoutRef ||
+                    json.skinId ||
+                    json.skin ||
+                    json.skinRef ||
+                    json.type ||
+                    Array.isArray(json.panels) ||
+                    Array.isArray(json.screens) ||
+                    Array.isArray(json.childPanels),
+            );
+            if (!isScreenManifest) {
+                return null;
+            }
             const screenId = json.id || json.screenId || path.basename(filePath, '.json');
             return {
                 filePath,
@@ -155,6 +170,35 @@ function loadScreens() {
             };
         })
         .filter(Boolean);
+}
+
+function resolveIndexedRef(index, ref, specSubdir) {
+    if (!ref) {
+        return null;
+    }
+
+    const normalized = toPosix(String(ref).trim()).replace(/^\.\//, '');
+    const withoutAssetsPrefix = normalized.replace(/^assets\/resources\/ui-spec\//, '');
+    const withoutDbPrefix = withoutAssetsPrefix.replace(/^db:\/\/assets\/resources\/ui-spec\//, '');
+    const withoutJson = withoutDbPrefix.replace(/\.json$/, '');
+    const withoutSubdir = withoutJson.replace(new RegExp(`^${specSubdir}/`), '');
+
+    const candidates = [
+        normalized,
+        withoutAssetsPrefix,
+        withoutDbPrefix,
+        withoutJson,
+        withoutSubdir,
+    ];
+
+    for (const candidate of candidates) {
+        const entry = index.get(candidate);
+        if (entry) {
+            return entry;
+        }
+    }
+
+    return null;
 }
 
 function runGitLines(args) {
@@ -460,8 +504,8 @@ function checkScreen(screen, indexes) {
     const layoutRef = s.layoutId || s.layout || s.layoutRef;
     const skinRef = s.skinId || s.skin || s.skinRef;
 
-    const layoutEntry = layoutRef ? indexes.layouts.get(layoutRef) : null;
-    const skinEntry = skinRef ? indexes.skins.get(skinRef) : null;
+    const layoutEntry = resolveIndexedRef(indexes.layouts, layoutRef, 'layouts');
+    const skinEntry = resolveIndexedRef(indexes.skins, skinRef, 'skins');
 
     const childPanels = Array.isArray(s.childPanels) ? s.childPanels : [];
 

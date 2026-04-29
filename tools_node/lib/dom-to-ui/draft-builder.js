@@ -6,6 +6,8 @@ const { parseHtml, parseStylesheets, parseInlineStyle } = require('./html-parser
 const { loadTokenRegistry, normalizeHex } = require('./token-registry');
 const { extractInteraction, buildInteractionDraft } = require('./interaction-translator');
 const { extractKeyframes, extractMotion, buildMotionDraft } = require('./motion-translator');
+const { parseBackgroundImage, parseShadowList } = require('./snapshot-to-slots');
+const { extractFontFaceMappings } = require('./css-capability-matrix');
 
 const ANCHOR_MAP = {
   'fill': { top: 0, left: 0, right: 0, bottom: 0 },
@@ -71,6 +73,8 @@ function buildDraftFromHtml(html, opts) {
       typography: [],
       artWarnings: [],
     },
+    computedStyleByCaptureId: normalizeFidelitySnapshotMap(opts.fidelitySnapshots),
+    pseudoStyleByParentCaptureId: normalizeFidelityPseudoMap(opts.fidelitySnapshots),
   };
 
   const parsed = parseHtml(html);
@@ -79,6 +83,14 @@ function buildDraftFromHtml(html, opts) {
   ctx.classRules = classRules;
   ctx.idRules = idRules;
   ctx.keyframes = extractKeyframes(parsed.styleSheets || []);
+  // R-12: build a per-conversion font registry from any `@font-face` blocks
+  // in the source CSS. Each entry maps the declared family (case-insensitive
+  // exact match) to a Cocos font asset path resolved by convention from the
+  // url(...) target. This is layered AHEAD of `PROJECT_FONT_REGISTRY` so that
+  // source CSS can introduce a new family without requiring a code change in
+  // the converter. Generic: any UI whose handoff CSS declares custom fonts
+  // via @font-face benefits.
+  ctx.fontFaceRegistry = buildFontFaceRegistry(parsed.styleSheets || [], opts.fontFaceResolver);
 
   // Find a single root element if present, else wrap children.
   const elementChildren = parsed.children.filter(c => c.type === 'element');
@@ -111,7 +123,7 @@ function buildDraftFromHtml(html, opts) {
   for (const child of rootEl.children) {
     if (child.type !== 'element') continue;
     const node = processElement(child, ctx, 1);
-    if (node) rootNode.children.push(node);
+    appendNodeWithGeneratedSiblings(rootNode.children, node);
   }
 
   return {
@@ -173,7 +185,11 @@ function processElement(el, ctx, depth) {
   const styleFromInline = parseInlineStyle(attrs.style || '');
   const styleFromClass = mergeClassStyles(cls, ctx.classRules);
   const styleFromId = attrs.id ? (ctx.idRules[attrs.id] || {}) : {};
-  const style = Object.assign({}, styleFromClass, styleFromId, styleFromInline);
+  const style = mergeComputedStyle(
+    Object.assign({}, styleFromClass, styleFromId, styleFromInline),
+    attrs,
+    ctx,
+  );
 
   // ---- depth guard (RT-01) ----
   if (depth > 8) {
@@ -231,6 +247,7 @@ function processElement(el, ctx, depth) {
 
   // M4: stable identifier + lock flags
   applyCommonNodeAttrs(node, attrs);
+  applyCaptureNodeAttrs(node, attrs);
 
   // M1: collect composite nodes for sidecar report
   if (nodeType === 'composite') {
@@ -246,8 +263,14 @@ function processElement(el, ctx, depth) {
   }
 
   // ---- 4. dimensions ----
-  const width = pickDim(style.width, attrs.width);
-  const height = pickDim(style.height, attrs.height);
+  const computedGeometry = deriveComputedGeometry(ctx, style, nodeType);
+  if (computedGeometry && computedGeometry.widget) node.widget = computedGeometry.widget;
+  const width = computedGeometry && computedGeometry.width != null
+    ? computedGeometry.width
+    : pickDim(style.width, attrs.width);
+  const height = computedGeometry && computedGeometry.height != null
+    ? computedGeometry.height
+    : pickDim(style.height, attrs.height);
   if (width != null) node.width = width;
   if (height != null) node.height = height;
 
@@ -260,6 +283,7 @@ function processElement(el, ctx, depth) {
 
   // ---- 6. by-type wiring ----
   if (nodeType === 'image') {
+    applyImageFit(node, style);
     const slotId = attrs['data-skin'] || autoSlotId(ctx, name);
     node.skinSlot = slotId;
     ensureSpriteSlot(ctx, slotId, attrs, style, /*sizeHint*/ { width, height });
@@ -273,7 +297,13 @@ function processElement(el, ctx, depth) {
       ensureSpriteOrColorSlot(ctx, slotId, style, attrs, /*sizeHint*/ { width, height });
     }
   } else if (nodeType === 'label') {
-    const text = collectText(el);
+    const rawText = collectText(el);
+    // R-9 (general rule): apply CSS `text-transform` offline at convert time
+    // because Cocos Label has no runtime equivalent. Without this, every UI
+    // source that uses `text-transform: uppercase|lowercase|capitalize` shows
+    // the original casing in Cocos and a transformed casing in the browser
+    // reference, producing constant pixel diff in compare gates.
+    const text = applyTextTransformGeneral(rawText, style && style.textTransform);
     if (text) node.text = text;
     const styleSlotId = attrs['data-style'] || autoSlotId(ctx, name);
     node.styleSlot = styleSlotId;
@@ -288,15 +318,23 @@ function processElement(el, ctx, depth) {
     ensureSpriteOrColorSlot(ctx, slotId, style, attrs, { width, height });
   }
 
+  const generatedEffectNodes = buildEffectSiblingNodes(ctx, node, style, name, width, height);
+  if (generatedEffectNodes.length > 0) node._generatedBefore = generatedEffectNodes;
+
   if (nodeType === 'composite') return node;
 
   // ---- 7. recurse children ----
   const childNodes = [];
+  const hasElementChildren = (el.children || []).some(child => child.type === 'element');
+  const beforePseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'before', hasElementChildren);
   for (const child of el.children) {
     if (child.type !== 'element') continue;
     const sub = processElement(child, ctx, depth + 1);
-    if (sub) childNodes.push(sub);
+    appendNodeWithGeneratedSiblings(childNodes, sub);
   }
+  const afterPseudoNodes = buildPseudoVisualNodes(ctx, style, name, 'after', hasElementChildren);
+  if (beforePseudoNodes.length > 0) childNodes.unshift(...beforePseudoNodes);
+  if (afterPseudoNodes.length > 0) childNodes.push(...afterPseudoNodes);
 
   // §7.8 color-rect 濫發防護
   enforceColorRectGuard(ctx, name, childNodes);
@@ -307,6 +345,112 @@ function processElement(el, ctx, depth) {
   }
 
   return node;
+}
+
+function deriveComputedGeometry(ctx, style, nodeType) {
+  if (!ctx || !ctx.opts || !ctx.opts.useComputedStyle || !style || !style._computedRect) return null;
+  const position = String(style.position || '').trim().toLowerCase();
+  const hasOutOfFlowPosition = position === 'absolute' || position === 'fixed';
+  const hasTransform = hasMeaningfulTransform(style.transform);
+  const hasImageFit = nodeType === 'image' && hasMeaningfulObjectFit(style.objectFit);
+  const hasPercentEdge = [style.left, style.right, style.top, style.bottom]
+    .some(value => typeof value === 'string' && /%\s*$/.test(value.trim()));
+  const shouldMap = hasOutOfFlowPosition && (hasTransform || hasImageFit || hasPercentEdge);
+  if (!shouldMap) return null;
+
+  const rect = normalizeRect(style._computedRect);
+  if (!rect) return null;
+  const parentRect = lookupComputedParentRect(ctx, style) || {
+    x: 0,
+    y: 0,
+    w: ctx.canvas && ctx.canvas.designWidth ? ctx.canvas.designWidth : 1334,
+    h: ctx.canvas && ctx.canvas.designHeight ? ctx.canvas.designHeight : 750,
+  };
+  const edges = rectToParentEdges(rect, parentRect);
+  const widget = {};
+
+  if (style.left != null || style.right == null) widget.left = edges.left;
+  if (style.right != null && style.left == null) widget.right = edges.right;
+  if (style.left != null && style.right != null) {
+    widget.left = edges.left;
+    widget.right = edges.right;
+  }
+
+  if (style.top != null || style.bottom == null) widget.top = edges.top;
+  if (style.bottom != null && style.top == null) widget.bottom = edges.bottom;
+  if (style.top != null && style.bottom != null) {
+    widget.top = edges.top;
+    widget.bottom = edges.bottom;
+  }
+
+  return {
+    width: Math.max(1, Math.round(rect.w)),
+    height: Math.max(1, Math.round(rect.h)),
+    widget: Object.keys(widget).length > 0 ? widget : null,
+  };
+}
+
+function lookupComputedParentRect(ctx, style) {
+  const parentId = style && style._computedParentId;
+  if (!parentId || !ctx || !ctx.computedStyleByCaptureId) return null;
+  const parentSnapshot = ctx.computedStyleByCaptureId[String(parentId)];
+  const parentStyles = parentSnapshot && (parentSnapshot.styles || parentSnapshot);
+  return normalizeRect(parentStyles && parentStyles._rect);
+}
+
+function normalizeRect(rect) {
+  if (!rect || typeof rect !== 'object') return null;
+  const x = Number(rect.x);
+  const y = Number(rect.y);
+  const w = Number(rect.w);
+  const h = Number(rect.h);
+  if (![x, y, w, h].every(Number.isFinite) || w <= 0 || h <= 0) return null;
+  return { x, y, w, h };
+}
+
+function rectToParentEdges(rect, parentRect) {
+  const left = rect.x - parentRect.x;
+  const top = rect.y - parentRect.y;
+  const right = (parentRect.x + parentRect.w) - (rect.x + rect.w);
+  const bottom = (parentRect.y + parentRect.h) - (rect.y + rect.h);
+  return {
+    left: Math.round(left),
+    top: Math.round(top),
+    right: Math.round(right),
+    bottom: Math.round(bottom),
+  };
+}
+
+function hasMeaningfulTransform(value) {
+  if (!value) return false;
+  const raw = String(value).trim().toLowerCase();
+  return raw && raw !== 'none' && raw !== 'matrix(1, 0, 0, 1, 0, 0)';
+}
+
+function hasMeaningfulObjectFit(value) {
+  if (!value) return false;
+  const raw = String(value).trim().toLowerCase();
+  return raw && raw !== 'fill';
+}
+
+function applyImageFit(node, style) {
+  if (!node || !style) return;
+  const fit = normalizeObjectFit(style.objectFit);
+  if (fit && fit !== 'fill') node.objectFit = fit;
+  const position = normalizeObjectPosition(style.objectPosition);
+  if (position) node.objectPosition = position;
+}
+
+function normalizeObjectFit(value) {
+  if (!value) return null;
+  const raw = String(value).trim().toLowerCase();
+  return ['fill', 'contain', 'cover', 'none', 'scale-down'].includes(raw) ? raw : null;
+}
+
+function normalizeObjectPosition(value) {
+  if (!value) return null;
+  const raw = String(value).trim().toLowerCase().replace(/\s+/g, ' ');
+  return raw && raw !== '50% 50%' ? raw : null;
 }
 
 function applyCommonNodeAttrs(node, attrs) {
@@ -321,6 +465,16 @@ function applyCommonNodeAttrs(node, attrs) {
     }
   }
   if (attrs['data-visual-zone']) node._visualZone = attrs['data-visual-zone'];
+}
+
+function applyCaptureNodeAttrs(node, attrs) {
+  const captureId = attrs['data-ucuf-capture-id'];
+  if (!captureId) return;
+  Object.defineProperty(node, '_captureId', {
+    value: String(captureId),
+    enumerable: false,
+    configurable: true,
+  });
 }
 
 function applyVisibilityState(node, style, ctx, name) {
@@ -365,7 +519,7 @@ function inferNodeType(tag, cls, style, attrs, el) {
   if (TEXT_TAGS.has(tag)) return 'label';
   if (hasOnlyTextContent(el)) return 'label';
 
-  const hasBg = !!(style.background || style.backgroundColor || style.backgroundImage);
+  const hasBg = hasMeaningfulBackground(style);
   if (hasBg) return 'panel';
   return 'container';
 }
@@ -396,8 +550,12 @@ function anchorToWidget(anchor, style) {
 function assignWidgetEdge(target, key, rawValue) {
   if (!rawValue) return;
   const px = parsePx(rawValue);
-  if (px == null) return;
-  target[key] = px;
+  if (px != null) {
+    target[key] = px;
+    return;
+  }
+  const raw = String(rawValue).trim();
+  if (/^-?\d+(?:\.\d+)?%$/.test(raw)) target[key] = raw;
 }
 
 function inferLayout(style, ctx, nodeName, el) {
@@ -663,6 +821,16 @@ function autoSlotId(ctx, nodeName) {
   return `auto.${ctx.opts.screenId}.${safeName}`;
 }
 
+function appendNodeWithGeneratedSiblings(target, node) {
+  if (!node) return;
+  const generatedBefore = Array.isArray(node._generatedBefore) ? node._generatedBefore : [];
+  for (const generatedNode of generatedBefore) {
+    if (generatedNode) target.push(generatedNode);
+  }
+  delete node._generatedBefore;
+  target.push(node);
+}
+
 function pascal(s) {
   return String(s || 'Screen').replace(/(^|[-_\s]+)(\w)/g, (_, __, c) => c.toUpperCase());
 }
@@ -682,6 +850,25 @@ function collectText(el) {
     else if (c.type === 'element') parts.push(collectText(c));
   }
   return parts.join('').trim().replace(/\s+/g, ' ');
+}
+
+// R-9 (general rule): offline `text-transform` for Label text. Exported as a
+// pure helper so the same general rule applies to every UI source going through
+// the converter. Locale-safe via String.prototype.toLocaleUpperCase /
+// toLocaleLowerCase, which leave non-cased scripts (e.g. CJK) unchanged.
+function applyTextTransformGeneral(text, transform) {
+  if (!text) return text;
+  const t = String(transform || '').trim().toLowerCase();
+  if (!t || t === 'none') return text;
+  if (t === 'uppercase') return text.toLocaleUpperCase();
+  if (t === 'lowercase') return text.toLocaleLowerCase();
+  if (t === 'capitalize') {
+    return text.replace(/(^|\s)(\S)/g, (_, ws, ch) => ws + ch.toLocaleUpperCase());
+  }
+  if (t === 'full-width') {
+    return text.replace(/[!-~]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0xFEE0));
+  }
+  return text;
 }
 
 function containsRichInner(el) {
@@ -719,12 +906,19 @@ function ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint) {
   if (attrs['data-sprite']) {
     return ensureSpriteSlot(ctx, slotId, attrs, style, sizeHint);
   }
-  if (style.backgroundImage && /url\(/.test(style.backgroundImage)) {
-    const m = style.backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
+  const backgroundImage = meaningfulBackgroundImage(style.backgroundImage);
+  const gradientBackgroundImage = backgroundImage || meaningfulGradientBackground(style.background);
+  const gradientSlot = buildGradientRectSlot(ctx, gradientBackgroundImage, slotId);
+  if (gradientSlot) {
+    ctx.skinSlots[slotId] = gradientSlot;
+    return;
+  }
+  if (backgroundImage && /url\(/.test(backgroundImage)) {
+    const m = backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
     return ensureSpriteSlot(ctx, slotId, { 'data-sprite': m ? stripExt(m[1]) : '' }, style, sizeHint);
   }
   // color rect
-  const bg = style.background || style.backgroundColor;
+  const bg = pickBackgroundFill(style);
   if (bg) {
     const { color, opacity, warning, tokenSource } = parseColor(bg, ctx.tokenRegistry);
     if (warning) ctx.warnings.push({ code: warning, slotId });
@@ -742,6 +936,159 @@ function ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint) {
   }
 }
 
+function buildGradientRectSlot(ctx, backgroundImage, slotId) {
+  if (!backgroundImage) return null;
+  const layers = parseBackgroundImage(backgroundImage);
+  if (layers.length !== 1 || layers[0].kind !== 'gradient') return null;
+  const gradient = layers[0].gradient;
+  if (!gradient || gradient.type !== 'linear') return null;
+  const stops = (gradient.stops || []).map((stop) => {
+    const parsed = parseColor(stop.color, ctx.tokenRegistry);
+    if (parsed.warning) ctx.warnings.push({ code: parsed.warning, slotId });
+    return {
+      color: parsed.color || stop.color,
+      offset: typeof stop.offset === 'number' ? stop.offset : 0,
+      opacity: parsed.opacity != null ? parsed.opacity : undefined,
+    };
+  });
+  if (stops.length < 2) return null;
+  return {
+    kind: 'gradient-rect',
+    gradient: {
+      type: 'linear',
+      angle: typeof gradient.angle === 'number' ? gradient.angle : 180,
+      stops,
+    },
+  };
+}
+
+function buildEffectSiblingNodes(ctx, node, style, name, width, height) {
+  if (!ctx || !style || !node || !canUseGeneratedEffectSibling(node, width, height)) return [];
+  const shadows = collectOuterShadows(style);
+  if (shadows.length === 0) return [];
+
+  const padding = calculateShadowPadding(shadows);
+  const slotId = autoSlotId(ctx, `${name}_cssShadow`);
+  if (!ctx.skinSlots[slotId]) {
+    ctx.skinSlots[slotId] = {
+      kind: 'shadow-set',
+      boxShadows: shadows,
+      padding,
+      cornerRadius: resolveUniformCornerRadius(style),
+    };
+  }
+
+  const effectNode = {
+    type: 'panel',
+    name: `${name}_CssShadow`,
+    width: Math.max(1, Math.round(width + padding.left + padding.right)),
+    height: Math.max(1, Math.round(height + padding.top + padding.bottom)),
+    widget: expandWidgetForEffect(node.widget, padding),
+    skinSlot: slotId,
+    _cssEffect: 'shadow',
+    _generatedEffectFor: name,
+  };
+  if (node.active === false) effectNode.active = false;
+  return [effectNode];
+}
+
+function canUseGeneratedEffectSibling(node, width, height) {
+  if (typeof width !== 'number' || typeof height !== 'number' || width <= 0 || height <= 0) return false;
+  const widget = node && node.widget;
+  if (!widget || typeof widget !== 'object') return false;
+  const hasHorizontalAnchor = widget.left !== undefined || widget.right !== undefined || widget.hCenter !== undefined;
+  const hasVerticalAnchor = widget.top !== undefined || widget.bottom !== undefined || widget.vCenter !== undefined;
+  return hasHorizontalAnchor && hasVerticalAnchor;
+}
+
+function collectOuterShadows(style) {
+  const shadows = [];
+  for (const shadow of parseShadowList(style.boxShadow || '')) {
+    if (shadow && !shadow.inset) shadows.push(normalizeShadow(shadow));
+  }
+  for (const shadow of parseDropShadowFilters(style.filter || '')) {
+    if (shadow && !shadow.inset) shadows.push(normalizeShadow(shadow));
+  }
+  return shadows.filter(Boolean);
+}
+
+function normalizeShadow(shadow) {
+  return {
+    x: Math.round(Number(shadow.x) || 0),
+    y: Math.round(Number(shadow.y) || 0),
+    blur: Math.max(0, Math.round(Number(shadow.blur) || 0)),
+    spread: Math.round(Number(shadow.spread) || 0),
+    color: shadow.color || 'rgba(0,0,0,0.35)',
+    inset: !!shadow.inset,
+  };
+}
+
+function parseDropShadowFilters(filterValue) {
+  if (!filterValue || String(filterValue).trim().toLowerCase() === 'none') return [];
+  const raw = String(filterValue);
+  const shadows = [];
+  let cursor = 0;
+  while (cursor < raw.length) {
+    const start = raw.toLowerCase().indexOf('drop-shadow(', cursor);
+    if (start < 0) break;
+    const argsStart = start + 'drop-shadow('.length;
+    let depth = 1;
+    let index = argsStart;
+    for (; index < raw.length; index += 1) {
+      const char = raw[index];
+      if (char === '(') depth += 1;
+      else if (char === ')') {
+        depth -= 1;
+        if (depth === 0) break;
+      }
+    }
+    if (depth !== 0) break;
+    const args = raw.slice(argsStart, index).trim();
+    shadows.push(...parseShadowList(args));
+    cursor = index + 1;
+  }
+  return shadows;
+}
+
+function calculateShadowPadding(shadows) {
+  const padding = { left: 0, right: 0, top: 0, bottom: 0 };
+  for (const shadow of shadows) {
+    const spread = Number(shadow.spread) || 0;
+    const blur = Number(shadow.blur) || 0;
+    const extent = Math.max(0, spread + blur);
+    const offsetX = Number(shadow.x) || 0;
+    const offsetY = Number(shadow.y) || 0;
+    padding.left = Math.max(padding.left, Math.ceil(extent - offsetX));
+    padding.right = Math.max(padding.right, Math.ceil(extent + offsetX));
+    padding.top = Math.max(padding.top, Math.ceil(extent - offsetY));
+    padding.bottom = Math.max(padding.bottom, Math.ceil(extent + offsetY));
+  }
+  return padding;
+}
+
+function expandWidgetForEffect(widget, padding) {
+  const out = Object.assign({}, widget || {});
+  if (typeof out.left === 'number') out.left = out.left - padding.left;
+  if (typeof out.right === 'number') out.right = out.right - padding.right;
+  if (typeof out.top === 'number') out.top = out.top - padding.top;
+  if (typeof out.bottom === 'number') out.bottom = out.bottom - padding.bottom;
+  if (typeof out.hCenter === 'number') out.hCenter = out.hCenter + (padding.right - padding.left) * 0.5;
+  if (typeof out.vCenter === 'number') out.vCenter = out.vCenter + (padding.top - padding.bottom) * 0.5;
+  return out;
+}
+
+function resolveUniformCornerRadius(style) {
+  const values = [
+    style.borderTopLeftRadius,
+    style.borderTopRightRadius,
+    style.borderBottomRightRadius,
+    style.borderBottomLeftRadius,
+  ].map(parsePx).filter(value => value != null);
+  if (values.length === 0) return 0;
+  if (values.every(value => value === values[0])) return values[0];
+  return Math.max(...values);
+}
+
 function emitSkinLayers(ctx, name, style, attrs) {
   // 多層視覺合併建議：背景圖 + 背景色 + 描邊 -> 三層 skinLayers
   const layers = [];
@@ -756,6 +1103,233 @@ function emitSkinLayers(ctx, name, style, attrs) {
   return layers.length > 0 ? layers : null;
 }
 
+function normalizeFidelitySnapshotMap(input) {
+  const out = {};
+  if (!input) return out;
+  if (Array.isArray(input)) {
+    for (const snapshot of input) {
+      if (!snapshot || snapshot.pseudo || snapshot.id == null) continue;
+      out[String(snapshot.id)] = normalizeFidelitySnapshot(snapshot, String(snapshot.id));
+    }
+    return out;
+  }
+  for (const [key, value] of Object.entries(input)) {
+    if (!value) continue;
+    out[String(key)] = normalizeFidelitySnapshot(value, String(key));
+  }
+  return out;
+}
+
+function normalizeFidelityPseudoMap(input) {
+  const out = {};
+  const values = Array.isArray(input) ? input : Object.values(input || {});
+  for (const snapshot of values) {
+    if (!snapshot || !snapshot.pseudo || snapshot.parentId == null) continue;
+    const parentId = String(snapshot.parentId);
+    if (!out[parentId]) out[parentId] = [];
+    out[parentId].push({
+      id: snapshot.id != null ? String(snapshot.id) : '',
+      pseudo: snapshot.pseudo,
+      styles: snapshot.styles || {},
+    });
+  }
+  for (const list of Object.values(out)) {
+    list.sort((a, b) => pseudoOrder(a.pseudo) - pseudoOrder(b.pseudo));
+  }
+  return out;
+}
+
+function pseudoOrder(pseudo) {
+  return pseudo === 'before' ? 0 : pseudo === 'after' ? 1 : 2;
+}
+
+function normalizeFidelitySnapshot(value, fallbackId) {
+  const styles = value && value.styles ? value.styles : value;
+  return {
+    id: value && value.id != null ? value.id : fallbackId,
+    parentId: value && value.parentId != null ? value.parentId : null,
+    offsetParentId: value && value.offsetParentId != null ? value.offsetParentId : null,
+    styles: styles || {},
+  };
+}
+
+function mergeComputedStyle(style, attrs, ctx) {
+  if (!ctx || !ctx.opts || !ctx.opts.useComputedStyle) return style;
+  const captureId = attrs && attrs['data-ucuf-capture-id'];
+  if (!captureId) return style;
+  const snapshot = ctx.computedStyleByCaptureId[String(captureId)];
+  if (!snapshot) return style;
+  const computed = snapshot.styles || snapshot;
+  const out = Object.assign({}, style);
+  out._computedCaptureId = String(captureId);
+  if (snapshot.parentId != null) out._computedParentId = String(snapshot.parentId);
+  if (snapshot.offsetParentId != null) out._computedOffsetParentId = String(snapshot.offsetParentId);
+  if (computed._rect) out._computedRect = computed._rect;
+  if (computed._localRect) out._computedLocalRect = computed._localRect;
+  const computedBgColor = meaningfulCssColor(computed['background-color']);
+  if (computedBgColor) out._computedBackgroundColor = computedBgColor;
+  const computedBgImage = meaningfulBackgroundImage(computed['background-image']);
+  if (computedBgImage) out.backgroundImage = computedBgImage;
+  assignComputed(out, 'color', computed.color, meaningfulCssColor);
+  assignComputed(out, 'fontSize', computed['font-size'], meaningfulCssLength);
+  assignComputed(out, 'fontFamily', computed['font-family'], meaningfulCssText);
+  assignComputed(out, 'fontWeight', computed['font-weight'], meaningfulCssText);
+  assignComputed(out, 'lineHeight', computed['line-height'], meaningfulLineHeight);
+  assignComputed(out, 'letterSpacing', computed['letter-spacing'], meaningfulCssLength);
+  assignComputed(out, 'textAlign', computed['text-align'], meaningfulCssText);
+  assignComputed(out, 'textTransform', computed['text-transform'], meaningfulCssText);
+  assignComputed(out, 'position', computed.position, meaningfulCssText);
+  assignComputed(out, 'transform', computed.transform, meaningfulCssText);
+  assignComputed(out, 'objectFit', computed['object-fit'], meaningfulCssText);
+  assignComputed(out, 'objectPosition', computed['object-position'], meaningfulCssText);
+  assignComputed(out, 'overflow', computed.overflow, meaningfulCssText);
+  assignComputed(out, 'boxShadow', computed['box-shadow'], meaningfulNonDefaultCssText);
+  assignComputed(out, 'textShadow', computed['text-shadow'], meaningfulNonDefaultCssText);
+  assignComputed(out, 'filter', computed.filter, meaningfulNonDefaultCssText);
+  assignComputed(out, 'backdropFilter', computed['backdrop-filter'], meaningfulNonDefaultCssText);
+  assignComputed(out, 'borderTopLeftRadius', computed['border-top-left-radius'], meaningfulCssLength);
+  assignComputed(out, 'borderTopRightRadius', computed['border-top-right-radius'], meaningfulCssLength);
+  assignComputed(out, 'borderBottomRightRadius', computed['border-bottom-right-radius'], meaningfulCssLength);
+  assignComputed(out, 'borderBottomLeftRadius', computed['border-bottom-left-radius'], meaningfulCssLength);
+  return out;
+}
+
+function buildPseudoVisualNodes(ctx, parentStyle, parentName, pseudoKind, hasElementChildren) {
+  if (!ctx || !ctx.opts || !ctx.opts.useComputedStyle || !parentStyle || !parentStyle._computedCaptureId) return [];
+  const list = ctx.pseudoStyleByParentCaptureId && ctx.pseudoStyleByParentCaptureId[String(parentStyle._computedCaptureId)];
+  if (!Array.isArray(list) || list.length === 0) return [];
+  if (hasElementChildren) {
+    if (pseudoKind === 'after') {
+      ctx.warnings.push({ code: 'pseudo-overlay-skipped-child-stacking-risk', detail: parentName });
+    }
+    return [];
+  }
+  return list
+    .filter(snapshot => snapshot.pseudo === pseudoKind)
+    .map(snapshot => buildPseudoVisualNode(ctx, parentName, snapshot))
+    .filter(Boolean);
+}
+
+function buildPseudoVisualNode(ctx, parentName, snapshot) {
+  const style = normalizeComputedVisualStyle(snapshot.styles || {});
+  if (!hasMeaningfulBackground(style)) return null;
+  const suffix = snapshot.pseudo === 'before' ? 'Before' : 'After';
+  const nodeName = `${parentName}_Pseudo${suffix}`;
+  const slotId = autoSlotId(ctx, nodeName);
+  ensureSpriteOrColorSlot(ctx, slotId, style, {}, {});
+  const slot = ctx.skinSlots[slotId];
+  if (!slot || slot.kind === 'transparent') return null;
+  const node = {
+    type: 'panel',
+    name: nodeName,
+    widget: { top: 0, left: 0, right: 0, bottom: 0 },
+    skinSlot: slotId,
+    _cssPseudo: snapshot.pseudo,
+  };
+  const opacity = parseOpacity(style.opacity);
+  if (opacity !== null) node.opacity = opacity;
+  return node;
+}
+
+function normalizeComputedVisualStyle(computed) {
+  const out = {};
+  const computedBgColor = meaningfulCssColor(computed['background-color']);
+  if (computedBgColor) out._computedBackgroundColor = computedBgColor;
+  const computedBgImage = meaningfulBackgroundImage(computed['background-image']);
+  if (computedBgImage) out.backgroundImage = computedBgImage;
+  assignComputed(out, 'opacity', computed.opacity, meaningfulCssText);
+  assignComputed(out, 'overflow', computed.overflow, meaningfulCssText);
+  return out;
+}
+
+function parseOpacity(value) {
+  if (value == null) return null;
+  const n = Number(String(value).trim());
+  if (!Number.isFinite(n) || n >= 1) return null;
+  return Math.max(0, Math.min(1, n));
+}
+
+function assignComputed(target, key, value, normalize) {
+  const normalized = normalize(value);
+  if (normalized) target[key] = normalized;
+}
+
+function hasMeaningfulBackground(style) {
+  return !!(meaningfulBackgroundImage(style && style.backgroundImage) || pickBackgroundFill(style));
+}
+
+function pickBackgroundFill(style) {
+  if (!style) return null;
+  return meaningfulCssColor(style._computedBackgroundColor)
+    || meaningfulBackgroundValue(style.background)
+    || meaningfulCssColor(style.backgroundColor);
+}
+
+function meaningfulBackgroundValue(value) {
+  if (!value) return null;
+  const raw = String(value).trim().toLowerCase();
+  if (!raw || raw === 'none' || raw === 'transparent' || isTransparentCssColor(raw)) return null;
+  return value;
+}
+
+function meaningfulBackgroundImage(value) {
+  if (!value) return null;
+  const raw = String(value).trim();
+  if (!raw || raw.toLowerCase() === 'none') return null;
+  return raw;
+}
+
+function meaningfulGradientBackground(value) {
+  if (!value) return null;
+  const raw = String(value).trim();
+  if (!/gradient\(/i.test(raw)) return null;
+  return raw;
+}
+
+function meaningfulCssColor(value) {
+  if (!value) return null;
+  const raw = String(value).trim();
+  if (!raw || raw.toLowerCase() === 'transparent' || isTransparentCssColor(raw)) return null;
+  return raw;
+}
+
+function meaningfulCssLength(value) {
+  if (!value) return null;
+  const raw = String(value).trim();
+  if (!raw || raw.toLowerCase() === 'normal') return null;
+  return raw;
+}
+
+function meaningfulLineHeight(value) {
+  if (!value) return null;
+  const raw = String(value).trim();
+  if (!raw || raw.toLowerCase() === 'normal') return null;
+  return raw;
+}
+
+function meaningfulCssText(value) {
+  if (!value) return null;
+  const raw = String(value).trim();
+  return raw || null;
+}
+
+function meaningfulNonDefaultCssText(value) {
+  const raw = meaningfulCssText(value);
+  if (!raw) return null;
+  const normalized = raw.toLowerCase();
+  if (normalized === 'none' || normalized === 'normal') return null;
+  return raw;
+}
+
+function isTransparentCssColor(value) {
+  const raw = String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  if (raw === 'rgba(0, 0, 0, 0)' || raw === 'rgb(0 0 0 / 0)' || raw === 'rgba(0 0 0 / 0)') return true;
+  const comma = raw.match(/^rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*(0(?:\.0+)?)\s*\)$/);
+  if (comma) return true;
+  const slash = raw.match(/^rgba?\(\s*\d+\s+\d+\s+\d+\s*\/\s*(0(?:\.0+)?|0%)\s*\)$/);
+  return !!slash;
+}
+
 function ensureLabelStyle(ctx, slotId, style, attrs) {
   if (ctx.skinSlots[slotId]) return;
   const fontSizeResolved = resolveLength(style.fontSize, ctx.tokenRegistry);
@@ -767,7 +1341,7 @@ function ensureLabelStyle(ctx, slotId, style, attrs) {
   const typographyToken = resolveTypographyToken(ctx.tokenRegistry, fontSize, lineHeight);
   const slot = {
     kind: 'label-style',
-    font: attrs['data-font'] || pickFontByTag(style),
+    font: attrs['data-font'] || pickFontByTag(style, ctx),
     fontSize,
     lineHeight,
     letterSpacing,
@@ -782,6 +1356,13 @@ function ensureLabelStyle(ctx, slotId, style, attrs) {
     recordTokenUsage(ctx, 'typography', `typography.${typographyToken}`, `${slotId}.style`);
   }
   if (isBoldWeight(style.fontWeight)) slot.isBold = true;
+  // R-11: emit native Cocos Label shadow data when source CSS has a single,
+  // non-inset text-shadow. Multi-layer / inset shadows fall back to assetize
+  // via css-capability-matrix and are not attached here.
+  const textShadow = parseSimpleTextShadow(style.textShadow);
+  if (textShadow) {
+    slot.shadow = textShadow;
+  }
   if (colorParsed.color) recordTokenUsage(ctx, 'colors', colorParsed.color, `${slotId}.color`);
   if (fontSizeResolved.token) recordTokenUsage(ctx, 'typography', fontSizeResolved.token, `${slotId}.fontSize`);
   if (lineHeightResolved.token) recordTokenUsage(ctx, 'typography', lineHeightResolved.token, `${slotId}.lineHeight`);
@@ -801,9 +1382,180 @@ function computeLetterSpacing(value, fontSize) {
   return px != null ? px : 0;
 }
 
-function pickFontByTag(style) {
-  if (style.fontFamily && /serif/i.test(style.fontFamily)) return 'fonts/newsreader/font';
-  return 'fonts/newsreader/font';
+// R-10: Generic font-family stack → project font asset resolver.
+// 通則：CSS font-family 是優先級堆疊（"A","B",fallback），converter 必須依序嘗試
+// 比對到第一個有資產的 family；不能因為堆疊裡有一個 generic `serif` 就把所有
+// font 都打成同一份資產。Registry 為資料導向，加新字型只需要在此加一筆。
+const PROJECT_FONT_REGISTRY = [
+  // 具名專案字型（exact / alias）
+  { match: /^newsreader$/i,                            asset: 'fonts/newsreader/font' },
+  { match: /^manrope$/i,                               asset: 'fonts/manrope/font' },
+  { match: /^notosans[\s_-]?tc$|^noto sans tc$|^noto sans cjk tc$/i, asset: 'fonts/notosans_tc/font' },
+  // 系統 CJK（落到 NotoSansTC，runtime 字模幾何最接近）
+  { match: /^pingfang tc$|^microsoft jhengHei$|^microsoft yahei$|^hiragino sans gb$|^思源黑體$|^蘋方$/i, asset: 'fonts/notosans_tc/font' },
+  // 系統 serif（落到 Newsreader）
+  { match: /^songti tc$|^stsong$|^playfair display$|^merriweather$/i, asset: 'fonts/newsreader/font' },
+  // CSS generic family（最後一道保險）
+  { match: /^serif$/i,                                 asset: 'fonts/newsreader/font' },
+  { match: /^sans-serif$|^system-ui$|^ui-sans-serif$/i, asset: 'fonts/notosans_tc/font' },
+];
+
+const PROJECT_FONT_DEFAULT = 'fonts/notosans_tc/font';
+
+function resolveFontFamilyToAsset(fontFamilyValue, registry, defaultAsset) {
+  const reg = Array.isArray(registry) ? registry : PROJECT_FONT_REGISTRY;
+  const def = typeof defaultAsset === 'string' ? defaultAsset : PROJECT_FONT_DEFAULT;
+  if (!fontFamilyValue || typeof fontFamilyValue !== 'string') return def;
+  const families = fontFamilyValue
+    .split(',')
+    .map(s => s.trim().replace(/^["']|["']$/g, '').trim())
+    .filter(Boolean);
+  for (const fam of families) {
+    for (const entry of reg) {
+      if (entry.match.test(fam)) return entry.asset;
+    }
+  }
+  return def;
+}
+
+function pickFontByTag(style, ctx) {
+  const extra = (ctx && Array.isArray(ctx.fontFaceRegistry)) ? ctx.fontFaceRegistry : [];
+  // Layered registry: source-CSS @font-face mappings win over project defaults.
+  const layered = extra.length > 0 ? extra.concat(PROJECT_FONT_REGISTRY) : PROJECT_FONT_REGISTRY;
+  return resolveFontFamilyToAsset(style && style.fontFamily, layered, PROJECT_FONT_DEFAULT);
+}
+
+// R-12: build per-conversion font registry from `@font-face` blocks in the
+// source stylesheets. Each block contributes one regex→asset entry that takes
+// precedence over `PROJECT_FONT_REGISTRY`. `customResolver` (optional) lets
+// callers override the default convention-based asset path. Generic helper —
+// reusable by any pipeline that wants to inject ad-hoc font mappings.
+function buildFontFaceRegistry(styleSheets, customResolver) {
+  const reg = [];
+  for (const sheet of (styleSheets || [])) {
+    const mappings = extractFontFaceMappings(sheet);
+    for (const m of mappings) {
+      if (!m.family) continue;
+      const asset = (typeof customResolver === 'function')
+        ? customResolver(m.family, m.src, m.srcs)
+        : resolveFontAssetByConvention(m.family, m.src);
+      if (!asset) continue;
+      const escaped = m.family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      reg.push({ match: new RegExp(`^${escaped}$`, 'i'), asset, source: '@font-face', family: m.family });
+    }
+  }
+  return reg;
+}
+
+// R-12 helper: convention-based resolver — derives a Cocos font asset path
+// from the @font-face family + src URL. Default convention:
+//   `fonts/<sanitized-family>/font` (matches existing repo layout
+//    assets/resources/fonts/<family>/font.ttf)
+// `src` is currently unused but retained for future hash-based mapping.
+function resolveFontAssetByConvention(family, src) {
+  if (!family) return null;
+  const sanitized = String(family)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+  if (!sanitized) return null;
+  return `fonts/${sanitized}/font`;
+}
+
+// R-11 (general rule): `text-shadow` simple single-shadow form is natively
+// supported by Cocos Label (`enableShadow`/`shadowOffset`/`shadowBlur`/
+// `shadowColor`). The converter must parse the CSS value offline and emit
+// structured `{ color, offsetX, offsetY, blur }` onto the label-style slot, so
+// runtime never has to re-parse CSS strings. Multi-layer / inset shadows
+// remain `assetize` (handled by css-capability-matrix R-11). This helper is
+// exported so any mapper / future label slot generator can reuse it.
+function parseSimpleTextShadow(value) {
+  if (!value || typeof value !== 'string') return null;
+  const raw = value.trim();
+  if (!raw || raw.toLowerCase() === 'none') return null;
+  // Reject multi-layer shadows (multiple comma-separated shadow descriptors).
+  // Commas inside rgba(...)/hsla(...) must not count.
+  const probe = raw.replace(/rgba?\([^)]*\)/gi, 'C').replace(/hsla?\([^)]*\)/gi, 'C');
+  if (probe.split(',').filter(s => s.trim()).length > 1) return null;
+  // Tokenize: keep parenthesized color groups intact.
+  const tokens = [];
+  let i = 0;
+  while (i < raw.length) {
+    const ch = raw[i];
+    if (/\s/.test(ch)) { i++; continue; }
+    if (ch === '(') break; // shouldn't happen at top-level
+    // color forms with parentheses
+    const colorParen = raw.slice(i).match(/^(rgba?|hsla?)\([^)]*\)/i);
+    if (colorParen) { tokens.push(colorParen[0]); i += colorParen[0].length; continue; }
+    // hex / named color / length
+    const tok = raw.slice(i).match(/^[^\s]+/);
+    if (!tok) break;
+    tokens.push(tok[0]); i += tok[0].length;
+  }
+  if (tokens.length < 2) return null;
+  // Color may appear at start or end. Identify color token.
+  const colorRe = /^(#[0-9a-f]{3,8}|rgba?\(|hsla?\(|[a-z]+)/i;
+  const isLength = (t) => /^-?\d+(?:\.\d+)?(px|em|rem|%)?$/.test(t);
+  let colorTok = null;
+  let lengths = [];
+  for (const t of tokens) {
+    if (isLength(t)) lengths.push(t);
+    else if (!colorTok && colorRe.test(t)) colorTok = t;
+    else if (isLength(t)) lengths.push(t);
+  }
+  if (lengths.length < 2) return null;
+  const toPx = (t) => {
+    const n = parseFloat(t);
+    return Number.isFinite(n) ? n : 0;
+  };
+  const offsetX = toPx(lengths[0]);
+  const offsetY = toPx(lengths[1]);
+  const blur = lengths.length >= 3 ? Math.max(0, toPx(lengths[2])) : 0;
+  return {
+    offsetX,
+    offsetY,
+    blur,
+    color: normalizeCssColorToHex(colorTok) || '#00000080',
+  };
+}
+
+// R-11 helper: normalize rgb()/rgba()/#hex/#hex8 forms to `#RRGGBBAA` so that
+// downstream UISkinResolver.resolveColor() (which only understands hex/token)
+// can consume converter output without a CSS parser at runtime. Returns null
+// if the value cannot be normalized; caller decides fallback.
+function normalizeCssColorToHex(value) {
+  if (!value || typeof value !== 'string') return null;
+  const v = value.trim();
+  if (!v) return null;
+  if (/^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(v)) {
+    let h = v.slice(1);
+    if (h.length === 3) h = h.split('').map(c => c + c).join('') + 'ff';
+    else if (h.length === 4) h = h.split('').map(c => c + c).join('');
+    else if (h.length === 6) h = h + 'ff';
+    return '#' + h.toUpperCase();
+  }
+  const m = v.match(/^rgba?\(\s*([^)]+)\)$/i);
+  if (m) {
+    const parts = m[1].split(/\s*[,/]\s*|\s+/).filter(Boolean);
+    if (parts.length < 3) return null;
+    const toByte = (p) => {
+      if (/%$/.test(p)) return Math.round(parseFloat(p) * 255 / 100);
+      const n = parseFloat(p);
+      return Number.isFinite(n) ? Math.max(0, Math.min(255, Math.round(n))) : 0;
+    };
+    const r = toByte(parts[0]);
+    const g = toByte(parts[1]);
+    const b = toByte(parts[2]);
+    let a = 255;
+    if (parts.length >= 4) {
+      const ap = parts[3];
+      const an = /%$/.test(ap) ? parseFloat(ap) / 100 : parseFloat(ap);
+      if (Number.isFinite(an)) a = Math.max(0, Math.min(255, Math.round(an * 255)));
+    }
+    const hex = (n) => n.toString(16).padStart(2, '0').toUpperCase();
+    return '#' + hex(r) + hex(g) + hex(b) + hex(a);
+  }
+  return null;
 }
 
 function resolveTypographyToken(registry, fontSize, lineHeight) {
@@ -849,6 +1601,7 @@ const NAMED_COLOR_TOKENS = {
 function parseColor(input, registry) {
   if (!input) return { color: null, opacity: null };
   const v = String(input).trim().toLowerCase();
+  if (v === 'transparent') return { color: '#000000', opacity: 0 };
   const cssVar = parseCssVar(v);
   if (cssVar) {
     const hit = registry && registry.cssVars ? registry.cssVars.get(cssVar) : null;
@@ -878,7 +1631,9 @@ function parseColor(input, registry) {
 function inspectArtDirectionRisks(style, name, ctx, el) {
   if (!style) return;
   if (style.transform && style.transform !== 'none') {
-    pushArtWarning(ctx, 'css-transform-manual-layout-risk', name, 'CSS transform 可能造成 Cocos widget 對位與縮放殘差');
+    if (!deriveComputedGeometry(ctx, style, null)) {
+      pushArtWarning(ctx, 'css-transform-manual-layout-risk', name, 'CSS transform 可能造成 Cocos widget 對位與縮放殘差');
+    }
   }
   if (style.overflow && style.overflow !== 'visible') {
     pushArtWarning(ctx, 'overflow-hidden-clipping-risk', name, 'overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿');
@@ -984,4 +1739,12 @@ module.exports = {
   anchorToWidget,
   parseColor,
   computeLetterSpacing,
+  applyTextTransformGeneral,
+  resolveFontFamilyToAsset,
+  PROJECT_FONT_REGISTRY,
+  PROJECT_FONT_DEFAULT,
+  parseSimpleTextShadow,
+  normalizeCssColorToHex,
+  buildFontFaceRegistry,
+  resolveFontAssetByConvention,
 };

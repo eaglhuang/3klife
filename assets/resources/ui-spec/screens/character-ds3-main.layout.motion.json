@@ -1,0 +1,367 @@
+{
+  "screenId": "character-ds3-main",
+  "motionTokens": {
+    "instant": {
+      "durationMs": 80,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "fast": {
+      "durationMs": 120,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "standard": {
+      "durationMs": 180,
+      "easing": "quadOut",
+      "emphasis": "medium"
+    },
+    "slow": {
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "emphasis": "medium"
+    },
+    "emphasis": {
+      "durationMs": 360,
+      "easing": "backOut",
+      "emphasis": "high"
+    }
+  },
+  "motions": [
+    {
+      "id": "character-ds3main_button_1.transition",
+      "target": "CharacterDs3Main_button_1",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_button_2.transition",
+      "target": "CharacterDs3Main_button_2",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_button_3.transition",
+      "target": "CharacterDs3Main_button_3",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_button_4.transition",
+      "target": "CharacterDs3Main_button_4",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_button_5.transition",
+      "target": "CharacterDs3Main_button_5",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_button_6.transition",
+      "target": "CharacterDs3Main_button_6",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_button_7.transition",
+      "target": "CharacterDs3Main_button_7",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_button_8.transition",
+      "target": "CharacterDs3Main_button_8",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_button_9.transition",
+      "target": "CharacterDs3Main_button_9",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_div_54.transition",
+      "target": "CharacterDs3Main_div_54",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "slow",
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "properties": [
+        "height",
+        "0",
+        ".2",
+        "1)"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_div_57.transition",
+      "target": "CharacterDs3Main_div_57",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform",
+        "border-color",
+        "box-shadow"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_div_61.transition",
+      "target": "CharacterDs3Main_div_61",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform",
+        "border-color",
+        "box-shadow"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_div_65.transition",
+      "target": "CharacterDs3Main_div_65",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform",
+        "border-color",
+        "box-shadow"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_div_69.transition",
+      "target": "CharacterDs3Main_div_69",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform",
+        "border-color",
+        "box-shadow"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_div_73.transition",
+      "target": "CharacterDs3Main_div_73",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform",
+        "border-color",
+        "box-shadow"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_div_77.transition",
+      "target": "CharacterDs3Main_div_77",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform",
+        "border-color",
+        "box-shadow"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "character-ds3main_div_81.transition",
+      "target": "CharacterDs3Main_div_81",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "slow",
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "properties": [
+        "bottom",
+        "0",
+        ".2",
+        "1)"
+      ],
+      "source": "css-transition"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_54:height"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_54:0"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_54:.2"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_54:1)"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_57:border-color"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_57:box-shadow"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_61:border-color"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_61:box-shadow"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_65:border-color"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_65:box-shadow"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_69:border-color"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_69:box-shadow"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_73:border-color"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_73:box-shadow"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_77:border-color"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_77:box-shadow"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_81:bottom"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_81:0"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_81:.2"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "CharacterDs3Main_div_81:1)"
+    }
+  ],
+  "summary": {
+    "motionCount": 17,
+    "tokenCount": 5,
+    "manualRewriteCount": 47
+  }
+}

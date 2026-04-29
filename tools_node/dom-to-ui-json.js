@@ -143,6 +143,10 @@ function parseArgs(argv) {
       case '--tokens-handoff': opts.tokensHandoff = next(); break;
       case '--source-css': opts.sourceCss = next(); break;
       case '--evolution-log': opts.evolutionLog = next(); break;
+      case '--use-computed-style':
+        // M16/Stage 5 (2026-04-28): flag-gated fidelity snapshot injection.
+        opts.useComputedStyle = true;
+        break;
       case '--help':
       case '-h':
         printHelp();
@@ -250,6 +254,72 @@ function loadSpriteRegistry(p) {
   try { return readJson(full); } catch (_) { return {}; }
 }
 
+function buildSnapshotStyleMap(snapshots) {
+  const out = {};
+  for (const snapshot of snapshots || []) {
+    if (!snapshot || snapshot.id == null) continue;
+    out[String(snapshot.id)] = snapshot;
+  }
+  return out;
+}
+
+function wrapDraftLayoutForExistingShape(draftLayout, existingLayout, screenId) {
+  if (!draftLayout || !existingLayout || !existingLayout.root || draftLayout.root) return draftLayout;
+  const rootNode = Object.assign({}, draftLayout);
+  delete rootNode.id;
+  delete rootNode.version;
+  delete rootNode.specVersion;
+  delete rootNode.canvas;
+  return {
+    id: existingLayout.id || screenId,
+    version: existingLayout.version || 1,
+    specVersion: draftLayout.specVersion || existingLayout.specVersion || 1,
+    canvas: draftLayout.canvas || existingLayout.canvas,
+    root: rootNode,
+  };
+}
+
+function normalizeExistingLayoutForMerge(existingLayout) {
+  if (!existingLayout || !existingLayout.root) return existingLayout;
+  const out = Object.assign({}, existingLayout);
+  delete out.type;
+  delete out.name;
+  delete out.widget;
+  delete out.children;
+  delete out.skinSlot;
+  delete out.skinLayers;
+  return out;
+}
+
+function extractLayoutCanvas(layout) {
+  if (!layout || typeof layout !== 'object') return null;
+  const canvas = layout.canvas;
+  if (!canvas || typeof canvas !== 'object') return null;
+  const width = Number(canvas.designWidth);
+  const height = Number(canvas.designHeight);
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) return null;
+  return Object.assign({}, canvas, { designWidth: width, designHeight: height });
+}
+
+function ensureSkinEnvelope(skinDraft, opts, existingSkin) {
+  const skin = skinDraft || { slots: {} };
+  const outputSkinId = path.basename(opts.skinOutput, path.extname(opts.skinOutput));
+  const generatedDefaultId = `${opts.screenId}-default`;
+  const existingId = existingSkin && typeof existingSkin.id === 'string' ? existingSkin.id : null;
+  const normalizedSkinOutput = path.resolve(opts.skinOutput).replace(/\\/g, '/');
+  const isRuntimeSkinOutput = normalizedSkinOutput.includes('/assets/resources/ui-spec/skins/');
+  const existingIdIsGeneratedDefault = isRuntimeSkinOutput && opts.syncExisting && existingId === generatedDefaultId && outputSkinId && outputSkinId !== generatedDefaultId;
+  if (existingId && !existingIdIsGeneratedDefault) {
+    skin.id = existingSkin.id;
+  } else if (!skin.id || typeof skin.id !== 'string'
+      || (isRuntimeSkinOutput && opts.syncExisting && outputSkinId && skin.id === generatedDefaultId)) {
+    skin.id = outputSkinId || generatedDefaultId;
+  }
+  if (!Number.isFinite(skin.version)) skin.version = 1;
+  if (!skin.slots || typeof skin.slots !== 'object') skin.slots = {};
+  return skin;
+}
+
 async function main(argv) {
   const startedAt = Date.now();
   const opts = parseArgs(argv);
@@ -263,16 +333,25 @@ async function main(argv) {
     opts.screenId = path.basename(opts.output, path.extname(opts.output));
   }
 
+  if (opts.useComputedStyle) {
+    console.warn('[dom-to-ui-json] --use-computed-style flag accepted (M16/Stage 5): fidelity snapshots will be injected into draft-builder when browser capture is available.');
+  }
+
   const warnings = [];
   let layoutDraft;
   let skinDraft;
   let inputBytes = 0;
   let inputHash = null;
   let inputPath = null;
+  let precomputedFidelity = null;
 
   let compositeNodes = [];
   let interactionDraft = { screenId: opts.screenId, actions: [], warnings: [], summary: { actionCount: 0, missingTargetCount: 0, manualAdapterCount: 0 } };
   let motionDraft = { screenId: opts.screenId, motionTokens: {}, motions: [], warnings: [], summary: { motionCount: 0, tokenCount: 0, manualRewriteCount: 0 } };
+  const existingLayoutForCapture = opts.syncExisting && opts.output && fs.existsSync(path.resolve(opts.output))
+    ? readJson(opts.output)
+    : null;
+  const captureCanvas = extractLayoutCanvas(existingLayoutForCapture);
   if (opts.layoutInput && opts.skinInput) {
     layoutDraft = readJson(opts.layoutInput);
     skinDraft = readJson(opts.skinInput);
@@ -282,7 +361,35 @@ async function main(argv) {
     const html = fs.readFileSync(path.resolve(opts.input), 'utf8');
     inputBytes = Buffer.byteLength(html, 'utf8');
     inputHash = sha256(html);
-    const parsed = buildDraftFromHtml(html, {
+    let htmlForDraft = html;
+    let fidelitySnapshots = null;
+    if (opts.useComputedStyle) {
+      precomputedFidelity = await buildFidelitySidecars({
+        htmlPath: opts.input,
+        outputBasePath: opts.output,
+        screenId: opts.screenId,
+        viewport: captureCanvas
+          ? { width: captureCanvas.designWidth, height: captureCanvas.designHeight }
+          : { width: 1334, height: 750 },
+        browserPath: opts.browser,
+        tokensSource: opts.tokensSource,
+        tokensRuntime: opts.tokensRuntime,
+        tokensHandoff: opts.tokensHandoff,
+        emitCssCoverage: false,
+        emitTokenSuggestions: false,
+        emitImageWaivers: false,
+        sourceDir: opts.sourceCss ? path.dirname(path.resolve(opts.sourceCss)) : path.dirname(path.resolve(opts.input)),
+      });
+      if (precomputedFidelity.ok && precomputedFidelity.annotatedHtml) {
+        htmlForDraft = precomputedFidelity.annotatedHtml;
+        fidelitySnapshots = buildSnapshotStyleMap(precomputedFidelity.snapshots);
+        console.warn(`[dom-to-ui-json] --use-computed-style active: injected ${Object.keys(fidelitySnapshots).length} computed snapshots into draft-builder.`);
+      } else {
+        const reason = precomputedFidelity.reason || 'unknown';
+        console.warn(`[dom-to-ui-json] --use-computed-style skipped: ${reason}; falling back to parsed CSS only.`);
+      }
+    }
+    const parsed = buildDraftFromHtml(htmlForDraft, {
       screenId: opts.screenId,
       bundle: opts.bundle,
       defaultBundle: opts.defaultBundle,
@@ -290,6 +397,9 @@ async function main(argv) {
       tokensSource: opts.tokensSource,
       tokensRuntime: opts.tokensRuntime,
       tokensHandoff: opts.tokensHandoff,
+      useComputedStyle: opts.useComputedStyle,
+      fidelitySnapshots,
+      canvas: captureCanvas || undefined,
     });
     layoutDraft = parsed.layoutDraft;
     skinDraft = parsed.skinDraft;
@@ -303,6 +413,7 @@ async function main(argv) {
   }
 
   const variantInfo = applyVariantMode(layoutDraft, skinDraft, opts.variantMode, warnings);
+  skinDraft = ensureSkinEnvelope(skinDraft, opts);
 
   // Atlas / sprite analysis
   const atlasReport = checkAtlasBudget(skinDraft);
@@ -318,12 +429,14 @@ async function main(argv) {
   let syncBefore = null;
   let syncAfter = null;
   let logicBefore = null;
+  let existingSkinForEnvelope = null;
   const logicScreen = readJsonIfExists(opts.screenInput);
   const componentSource = readTextIfExists(opts.componentInput);
   const errorLogText = readTextIfExists(opts.errorLog);
   if (opts.syncExisting) {
     const existingLayout = fs.existsSync(path.resolve(opts.output)) ? readJson(opts.output) : null;
     const existingSkin = fs.existsSync(path.resolve(opts.skinOutput)) ? readJson(opts.skinOutput) : null;
+    existingSkinForEnvelope = existingSkin;
     syncBefore = existingLayout;
     if (opts.emitLogicGuard && existingLayout) {
       logicBefore = buildLogicInventory({
@@ -336,7 +449,9 @@ async function main(argv) {
       });
     }
     if (existingLayout || existingSkin) {
-      const merged = smartMerge(layoutDraft, existingLayout, skinDraft, existingSkin, {
+      const existingLayoutForMerge = normalizeExistingLayoutForMerge(existingLayout);
+      const draftLayoutForMerge = wrapDraftLayoutForExistingShape(layoutDraft, existingLayoutForMerge, opts.screenId);
+      const merged = smartMerge(draftLayoutForMerge, existingLayoutForMerge, skinDraft, existingSkin, {
         mergeMode: opts.mergeMode,
         conflictPolicy: opts.conflictPolicy,
       });
@@ -362,6 +477,7 @@ async function main(argv) {
       }
     }
   }
+  skinDraft = ensureSkinEnvelope(skinDraft, opts, existingSkinForEnvelope);
 
   // Pre-write backup: copy all existing files that are about to be overwritten
   if (opts.backup) {
@@ -653,6 +769,7 @@ async function main(argv) {
       cssCoveragePath: fidelitySidecars && fidelitySidecars.written && fidelitySidecars.written.cssCoveragePath,
       tokenSuggestionsPath: fidelitySidecars && fidelitySidecars.written && fidelitySidecars.written.tokenSuggestionsPath,
       imageWaiversPath: fidelitySidecars && fidelitySidecars.written && fidelitySidecars.written.imageWaiversPath,
+      bakeManifestPath: fidelitySidecars && fidelitySidecars.written && fidelitySidecars.written.bakeManifestPath,
       sourceCssPath: opts.sourceCss,
     },
     warnings: groupWarningCounts(warnings),
@@ -740,6 +857,7 @@ async function main(argv) {
     (fidelitySidecars && fidelitySidecars.written && fidelitySidecars.written.cssCoveragePath ? ` css-coverage=${fidelitySidecars.written.cssCoveragePath}` : '') +
     (fidelitySidecars && fidelitySidecars.written && fidelitySidecars.written.tokenSuggestionsPath ? ` token-suggestions=${fidelitySidecars.written.tokenSuggestionsPath}` : '') +
     (fidelitySidecars && fidelitySidecars.written && fidelitySidecars.written.imageWaiversPath ? ` image-waivers=${fidelitySidecars.written.imageWaiversPath}` : '') +
+    (fidelitySidecars && fidelitySidecars.written && fidelitySidecars.written.bakeManifestPath ? ` bake-manifest=${fidelitySidecars.written.bakeManifestPath}` : '') +
     ` durationMs=${durationMs}`);
 }
 

@@ -150,6 +150,7 @@
 | **培育** | `Data.Nurture_Sessions` | 培育系統.md (doc_spec_0026) I 區 | Mentor_ID, Current_Round(1~36), TP_Accumulated, Snapshot_Stats, Phase_Block, Graduation_Tags |
 | **戰法** | `Data.Generals[UID].Learned_Tactics` | 戰法系統.md (doc_spec_0038) I 區 | Tactic_ID, Level, Exp, Source (INC_COMMIT/SCROLL/AWAKEN/GACHA/BLOOD/BATTLE_LOOT), Available_TP |
 | **奧義** | `Data.Generals[UID].Ultimates` | 奧義系統.md (doc_spec_0030) I 區 | Slot(1~5), Ult_ID, Level, Is_Inherited, Vitality_Cost_Pct |
+| **血脈奧義** | `Data.Generals[UID].Bloodline_Ultimate` | 奧義系統.md (doc_spec_0030) / 血統理論系統.md (doc_spec_0011) | Bloodline_Beast, Beast_Archetype, Persona_Tags, Stage_Current, Stage_Cap, Stage_Progress, Stage_Requirements |
 | **結緣** | `Data.Bonding_Sessions` | 結緣系統（配種）.md (doc_spec_0028) I 區 | Father_UID, Mother_UID, Breeding_Mode, EP_Estimate, Child 結構 |
 | **因子** | `Data.Generals[UID].Genes[]` | 因子爆發系統.md (doc_spec_0010) I 區 | Type(六色), ID, Level, Is_Locked, Discovery_Level |
 | **血統** | `Data.Generals[UID].Ancestors_JSON` | 血統理論系統.md (doc_spec_0011) I 區 | 3 代 14 人矩陣、Bloodline_ID |
@@ -366,7 +367,10 @@
 29. `Generals[*].Prowess_Stats.Source_Session_ID` 可為空，表示此角色尚未形成正式培育畢業快照；UI 不得因此回填虛構戰力值。
 30. `Generals[*].Profile_Presentation.Story_Strip_Cells` 固定使用 `origin / faction / role / awakening / bloodline / future` 六格語意槽位，不得任意改成流水號 key。
 31. `Generals[*].Profile_Presentation.Default_Tab` 只允許 `Overview / Stats / Bloodline / Tactics / Equip / Aptitude`，確保人物頁路由與 UI 契約一致；本地化顯示分別對應 `將 / 屬 / 命 / 技 / 寶 / 兵`。
+31a. `Generals[*].Profile_Presentation.Bloodline_StoryDock_State` 只允許 `COLLAPSED / HALF / EXPANDED`，供命頁底部故事條抽拉狀態使用。
 32. `Generals[*].Equipped_Spirit_UID` 若存在，必須能對回 `Data.Spirit_Card_Collection[*].Spirit_ID`，且同一時間一名武將只能掛一張。
+32a. `Generals[*].Bloodline_Ultimate.Stage_Cap` 必須只由升星結果推導；不得被名聲直接推高。
+32b. `Generals[*].Bloodline_Ultimate.Stage_Progress` 的主來源為 `General_Fame` 與 `Beast_Aligned_Deeds`；不得只用抽卡次數直接灌滿。
 33. `Sortie_Loadout.Strategist_UID` 與 `Sortie_Loadout.Deputy_UID` 不得與 `Commander_UID` 重覆，也不得彼此重覆；若 UI 想支援替換，必須透過顯式確認流程。
 34. `Sortie_Loadout` 的支援角色不參與 `Triggered_Set_Bonus` 判定，也不得回寫成 `Battle_State` 中的在場虎符單位。
 

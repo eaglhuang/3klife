@@ -12,6 +12,7 @@ import { MemoryManager } from "../systems/MemoryManager";
 import { PoolSystem } from "../systems/PoolSystem";
 import { ResourceManager } from "../systems/ResourceManager";
 import { ActionSystem } from "../systems/ActionSystem";
+import { NpcDialogueService } from "../services/NpcDialogueService";
 import { BattleSystem } from "../systems/BattleSystem";
 import { NetworkService } from "../systems/NetworkService";
 import { SyncManager } from "../systems/SyncManager";
@@ -19,6 +20,7 @@ import { SceneManager } from "./SceneManager";
 import { GameManager } from "./GameManager";
 import { UIManager } from "./UIManager";
 import { UISpecLoader } from "../../ui/core/UISpecLoader";
+import { UCUFLogger, LogCategory } from "../../ui/core/UCUFLogger";
 import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
 
 export class ServiceLoader {
@@ -43,6 +45,8 @@ export class ServiceLoader {
     public readonly ui = new UIManager();
     public readonly network = new NetworkService();
     public readonly sync = new SyncManager();
+    /** 三國大腦中台 API facade：Cocos UI 只透過此服務呼叫 NPC brain，不直接散落 HTTP。 */
+    public readonly npcDialogue = new NpcDialogueService();
     /** 音效系統：BGM、SFX、循環音效，含 50ms 防重複播放 */
     public readonly audio = new AudioSystem();
     /** 多國語系系統：t(key) 字串查詢 + 語系字型懶載入 / 卸載 */
@@ -105,7 +109,7 @@ export class ServiceLoader {
         if (hostNode) {
             this.audio.setup(hostNode);
         } else {
-            console.warn("[ServiceLoader] 未傳入 hostNode，AudioSystem 未初始化（音效功能停用）");
+            UCUFLogger.warn(LogCategory.LIFECYCLE, "[ServiceLoader] 未傳入 hostNode，AudioSystem 未初始化（音效功能停用）");
         }
 
         // 啟動跨平台網路偵測與自動離線佇列同步服務
@@ -124,7 +128,7 @@ export class ServiceLoader {
             const defs = await this.resource.loadJson<import('../systems/ActionSystem').SkillDef[]>('data/skills');
             this.action.registerSkills(defs);
         } catch (e) {
-            console.warn('[ServiceLoader] skills.json 載入失敗，技能演出停用:', e);
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] skills.json 載入失敗，技能演出停用:', e);
         }
     }
 
@@ -138,7 +142,7 @@ export class ServiceLoader {
             const table = normalizeVfxEffectTable(rawTable);
             this.effect.registerEffects(table.effects);
         } catch (e) {
-            console.warn('[ServiceLoader] vfx-effects.json 載入失敗，三位一體特效停用:', e);
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] vfx-effects.json 載入失敗，三位一體特效停用:', e);
         }
     }
 }

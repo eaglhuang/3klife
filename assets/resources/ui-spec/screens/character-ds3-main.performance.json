@@ -1,17 +1,17 @@
 {
   "screenId": "character-ds3-main",
   "rendering": {
-    "nodeCount": 156,
-    "maxDepth": 12,
-    "estimatedDrawCalls": 2,
+    "nodeCount": 1,
+    "maxDepth": 1,
+    "estimatedDrawCalls": 3,
     "colorRectCount": 0
   },
   "loading": {
-    "atlasCount": 1,
+    "atlasCount": 2,
     "atlasLimit": 4,
-    "preloadSpriteCount": 1,
+    "preloadSpriteCount": 0,
     "deferredSpriteCount": 0,
-    "estimatedTextureBytes": 262144,
+    "estimatedTextureBytes": 5563712,
     "fontCount": 1
   },
   "lifecycle": {
@@ -25,30 +25,22 @@
   },
   "runtimeGate": {
     "nodeCount": {
-      "value": 156,
+      "value": 1,
       "warning": 35,
       "blocker": 60,
-      "status": "fail",
-      "acceptedException": {
-        "reason": "multi-tab-content-page",
-        "rationale": "6-tab character profile: 76 labels + 33 panels reflect real content density. Active subtree ~26 nodes per tab when lazy-loaded; total 156 is the union of all tabs at design-time.",
-        "effectiveActiveBudget": 60,
-        "estimatedActiveNodes": 50,
-        "mitigation": "tab-level ChildPanel lazy-mount via bundle-suggestion"
-      }
+      "status": "pass"
     },
     "maxDepth": {
-      "value": 12,
+      "value": 1,
       "warning": 8,
       "blocker": 12,
-      "status": "warn"
+      "status": "pass"
     }
   },
   "verdict": {
-    "level": "warn",
+    "level": "warning",
     "warnings": [
-      "node-count-warn-accepted: total=156 with tab-lazy-load mitigation",
-      "max-depth-warning: 12 (>8)"
+      "texture-memory-warning: 5.31MB > 4.00MB"
     ],
     "blockers": []
   }

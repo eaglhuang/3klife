@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-04-28T11:31:04+00:00",
+  "summaryPath": "scratch/loop-auto-apply-test/observed-mentions/observed-label-summary.json",
+  "decisionPath": "scratch/loop-auto-apply-test/decisions.json",
+  "totalMentions": 20027,
+  "resolvedMentionCount": 18328,
+  "unresolvedMentionCount": 1592,
+  "excludedMentionCount": 99,
+  "reviewPendingMentionCount": 8,
+  "questions": [
+    {
+      "id": "Q001",
+      "label": "元紹",
+      "normalized": "元紹",
+      "count": 6,
+      "mentionType": "unknown-candidate",
+      "sourceRefs": [
+        "028#p3",
+        "028#p4"
+      ],
+      "sampleSnippets": [
+        "前。關公問其姓名。告曰：「某姓裴，名元紹。自張角死後，一向無主，嘯聚山林，權",
+        "元紹曰：「汝不識吾面，何以知吾名？」元紹曰：「離此三十里，有一臥牛山。山上有",
+        "公等今後可各去邪歸正，勿自陷其身。」元紹拜謝。正說話間，遙望一彪人馬來到。元"
+      ],
+      "options": [
+        {
+          "key": "A",
+          "decision": "person",
+          "meaning": "確定是人物；請補 generalId/faction 後移入 manual-roster-seeds.json 或 personRecords。"
+        },
+        {
+          "key": "B",
+          "decision": "noise",
+          "meaning": "確定不是人物；加入 noiseLabels，之後不再算 unresolved。"
+        },
+        {
+          "key": "C",
+          "decision": "ambiguous",
+          "meaning": "暫時保留人工複核；加入 ambiguousLabels，之後分流為 review-pending。"
+        },
+        {
+          "key": "D",
+          "decision": "defer",
+          "meaning": "本輪不裁決；下一輪仍維持 unresolved。"
+        }
+      ],
+      "answer": "",
+      "personRecord": {
+        "generalId": "",
+        "name": "元紹",
+        "faction": "",
+        "title": "【元紹】",
+        "alias": []
+      }
+    }
+  ]
+}

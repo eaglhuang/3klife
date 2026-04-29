@@ -1,0 +1,2508 @@
+{
+  "slots": {
+    "auto.character-ds3-main.characterds3main_div_1": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "opacity": 1
+    },
+    "auto.character-ds3-main.characterds3main_div_2": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_families/general_detail/generated/general_detail_bg_v5_civil",
+      "expectedWidth": 827,
+      "expectedHeight": 750,
+      "_assetPreserveReason": "existing-runtime-asset"
+    },
+    "auto.character-ds3-main.characterds3main_button_1": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 135,
+        "stops": [
+          {
+            "color": "secondary",
+            "offset": 0,
+            "opacity": 0.18
+          },
+          {
+            "color": "gdv3GoldBorder",
+            "offset": 1,
+            "opacity": 0.1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_button_1_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 0,
+          "blur": 24,
+          "spread": 0,
+          "color": "rgba(212, 175, 55, 0.2)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 24,
+        "right": 24,
+        "top": 24,
+        "bottom": 24
+      },
+      "cornerRadius": 0
+    },
+    "auto.character-ds3-main.characterds3main_img_1": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_common/placeholder/missing_sprite",
+      "expectedWidth": 413,
+      "expectedHeight": 735
+    },
+    "auto.character-ds3-main.characterds3main_img_1_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 20,
+          "blur": 40,
+          "spread": 0,
+          "color": "rgba(0, 0, 0, 0.7)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 40,
+        "right": 40,
+        "top": 20,
+        "bottom": 60
+      },
+      "cornerRadius": 0
+    },
+    "auto.character-ds3-main.characterds3main_button_2": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 135,
+        "stops": [
+          {
+            "color": "secondary",
+            "offset": 0,
+            "opacity": 0.18
+          },
+          {
+            "color": "gdv3GoldBorder",
+            "offset": 1,
+            "opacity": 0.1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_button_2_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 0,
+          "blur": 24,
+          "spread": 0,
+          "color": "rgba(212, 175, 55, 0.2)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 24,
+        "right": 24,
+        "top": 24,
+        "bottom": 24
+      },
+      "cornerRadius": 0
+    },
+    "auto.character-ds3-main.characterds3main_div_3": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 12,
+      "color": "surfaceParchment",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_div_4": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 135,
+        "stops": [
+          {
+            "color": "stdButtonPrimary",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(31, 51, 46)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_div_4_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 6,
+          "blur": 20,
+          "spread": 0,
+          "color": "rgba(0, 0, 0, 0.5)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 20,
+        "right": 20,
+        "top": 14,
+        "bottom": 26
+      },
+      "cornerRadius": 16
+    },
+    "auto.character-ds3-main.characterds3main_span_1": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 32,
+      "lineHeight": 45,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_2": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 3,
+      "color": "mirrorSigilField",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_button_3": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceContainer",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "backgroundMid",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_button_3_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 4,
+          "blur": 16,
+          "spread": 0,
+          "color": "rgba(0, 0, 0, 0.5)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 16,
+        "right": 16,
+        "top": 12,
+        "bottom": 20
+      },
+      "cornerRadius": 0
+    },
+    "auto.character-ds3-main.characterds3main_span_3": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 28,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER"
+    },
+    "auto.character-ds3-main.characterds3main_span_4": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 2,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER"
+    },
+    "auto.character-ds3-main.characterds3main_span_5": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 54,
+      "lineHeight": 54,
+      "letterSpacing": 5,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 2,
+        "blur": 6,
+        "color": "#00000099"
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_6": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 3,
+      "color": "gdv3TextMutedWarm",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_11": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 1,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg"
+    },
+    "auto.character-ds3-main.characterds3main_span_7": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 3,
+      "color": "gdv3InkDeep",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_8": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 31,
+      "letterSpacing": 0,
+      "color": "secondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_span_9": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 31,
+      "letterSpacing": 0,
+      "color": "secondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_span_10": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 31,
+      "letterSpacing": 0,
+      "color": "secondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_span_11": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 31,
+      "letterSpacing": 0,
+      "color": "secondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_span_12": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 22,
+      "lineHeight": 31,
+      "letterSpacing": 0,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_15": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.03
+    },
+    "auto.character-ds3-main.characterds3main_div_17": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_13": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 4,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_14": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_span_15": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "gdv3StatStr",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_16": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_17": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "tertiaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_18": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_19": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "gdv3StatCha",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_20": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_21": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "gdv3StatInt",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_22": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_23": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "rarityWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_24": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_25": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "gdv3StatLuk",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_26": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_div_25": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.03
+    },
+    "auto.character-ds3-main.characterds3main_div_27": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_27": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 4,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_28": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_span_29": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "textPrimary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg"
+    },
+    "auto.character-ds3-main.characterds3main_span_30": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_31": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "textPrimary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg"
+    },
+    "auto.character-ds3-main.characterds3main_span_32": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_div_30": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.03
+    },
+    "auto.character-ds3-main.characterds3main_div_32": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_33": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 4,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_34": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_span_35": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "textPrimary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg"
+    },
+    "auto.character-ds3-main.characterds3main_span_36": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_37": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "textPrimary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg"
+    },
+    "auto.character-ds3-main.characterds3main_span_38": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_div_35": {
+      "kind": "color-rect",
+      "color": "stdButtonPrimary",
+      "opacity": 0.08
+    },
+    "auto.character-ds3-main.characterds3main_div_37": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_39": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 4,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_40": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_40": {
+      "kind": "color-rect",
+      "color": "unmappedColor",
+      "opacity": 1
+    },
+    "auto.character-ds3-main.characterds3main_span_41": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 3,
+      "color": "stdButtonPrimary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_42": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 22,
+      "lineHeight": 31,
+      "letterSpacing": 7,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_42": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 2,
+      "color": "stdButtonPrimary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_44": {
+      "kind": "color-rect",
+      "color": "colorBlack",
+      "opacity": 0.2
+    },
+    "auto.character-ds3-main.characterds3main_div_45": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 90,
+        "stops": [
+          {
+            "color": "stdButtonPrimary",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdCrestColor",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_43": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_44": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 2,
+      "color": "stdButtonPrimary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_45": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg"
+    },
+    "auto.character-ds3-main.characterds3main_span_46": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 2,
+      "color": "stdButtonPrimary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_47": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg"
+    },
+    "auto.character-ds3-main.characterds3main_div_48": {
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 0.04
+    },
+    "auto.character-ds3-main.characterds3main_div_50": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_48": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 4,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_49": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_51": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 15,
+      "lineHeight": 30,
+      "letterSpacing": 1,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "JUSTIFY"
+    },
+    "auto.character-ds3-main.characterds3main_div_52": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 9,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_button_4": {
+      "kind": "button-skin",
+      "normal": "sprites/ui_families/general_detail/tab_active_button",
+      "pressed": "sprites/ui_families/general_detail/tab_active_button",
+      "disabled": "sprites/ui_families/general_detail/tab_disabled_button",
+      "selected": "sprites/ui_families/general_detail/detail_tab_active_frame",
+      "spriteType": "simple",
+      "allowAutoAtlas": true,
+      "_assetPreserveReason": "existing-runtime-asset"
+    },
+    "auto.character-ds3-main.characterds3main_span_50": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 32,
+      "lineHeight": 32,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_51": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 2,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_button_5": {
+      "kind": "button-skin",
+      "normal": "sprites/ui_families/general_detail/tab_idle_button",
+      "pressed": "sprites/ui_families/general_detail/tab_active_button",
+      "disabled": "sprites/ui_families/general_detail/tab_disabled_button",
+      "selected": "sprites/ui_families/general_detail/detail_tab_active_frame",
+      "spriteType": "simple",
+      "allowAutoAtlas": true,
+      "_assetPreserveReason": "existing-runtime-asset"
+    },
+    "auto.character-ds3-main.characterds3main_span_52": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 32,
+      "lineHeight": 32,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_53": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 2,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_button_6": {
+      "kind": "button-skin",
+      "normal": "sprites/ui_families/general_detail/tab_idle_button",
+      "pressed": "sprites/ui_families/general_detail/tab_active_button",
+      "disabled": "sprites/ui_families/general_detail/tab_disabled_button",
+      "selected": "sprites/ui_families/general_detail/detail_tab_active_frame",
+      "spriteType": "simple",
+      "allowAutoAtlas": true,
+      "_assetPreserveReason": "existing-runtime-asset"
+    },
+    "auto.character-ds3-main.characterds3main_span_54": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 32,
+      "lineHeight": 32,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_55": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 2,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_button_7": {
+      "kind": "button-skin",
+      "normal": "sprites/ui_families/general_detail/tab_idle_button",
+      "pressed": "sprites/ui_families/general_detail/tab_active_button",
+      "disabled": "sprites/ui_families/general_detail/tab_disabled_button",
+      "selected": "sprites/ui_families/general_detail/detail_tab_active_frame",
+      "spriteType": "simple",
+      "allowAutoAtlas": true,
+      "_assetPreserveReason": "existing-runtime-asset"
+    },
+    "auto.character-ds3-main.characterds3main_span_56": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 32,
+      "lineHeight": 32,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_57": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 2,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_button_8": {
+      "kind": "button-skin",
+      "normal": "sprites/ui_families/general_detail/tab_idle_button",
+      "pressed": "sprites/ui_families/general_detail/tab_active_button",
+      "disabled": "sprites/ui_families/general_detail/tab_disabled_button",
+      "selected": "sprites/ui_families/general_detail/detail_tab_active_frame",
+      "spriteType": "simple",
+      "allowAutoAtlas": true,
+      "_assetPreserveReason": "existing-runtime-asset"
+    },
+    "auto.character-ds3-main.characterds3main_span_58": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 32,
+      "lineHeight": 32,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_59": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 2,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_button_9": {
+      "kind": "button-skin",
+      "normal": "sprites/ui_families/general_detail/tab_idle_button",
+      "pressed": "sprites/ui_families/general_detail/tab_active_button",
+      "disabled": "sprites/ui_families/general_detail/tab_disabled_button",
+      "selected": "sprites/ui_families/general_detail/detail_tab_active_frame",
+      "spriteType": "simple",
+      "allowAutoAtlas": true,
+      "_assetPreserveReason": "existing-runtime-asset"
+    },
+    "auto.character-ds3-main.characterds3main_span_60": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 32,
+      "lineHeight": 32,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_61": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 2,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_div_54": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "#000000",
+            "offset": 0,
+            "opacity": 0
+          },
+          {
+            "color": "colorBlack",
+            "offset": 0.18,
+            "opacity": 0.78
+          },
+          {
+            "color": "colorBlack",
+            "offset": 1,
+            "opacity": 0.97
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_h4_1": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 6,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_62": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "gdv3TextMutedWarm",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_span_63": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "textPrimary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg"
+    },
+    "auto.character-ds3-main.characterds3main_div_58": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 145,
+        "stops": [
+          {
+            "color": "rgb(122, 96, 64)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(58, 46, 24)",
+            "offset": 0.45,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(26, 19, 10)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_64": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 30,
+      "lineHeight": 30,
+      "letterSpacing": -1,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_div_60": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 2,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_65": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_62": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 145,
+        "stops": [
+          {
+            "color": "rgb(122, 32, 32)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(58, 18, 18)",
+            "offset": 0.45,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(18, 6, 8)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_66": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 30,
+      "lineHeight": 30,
+      "letterSpacing": -1,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_div_64": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 2,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_67": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_66": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 145,
+        "stops": [
+          {
+            "color": "rgb(90, 16, 16)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(42, 8, 8)",
+            "offset": 0.45,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(14, 4, 4)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_68": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 30,
+      "lineHeight": 30,
+      "letterSpacing": -1,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_div_68": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 2,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_69": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_70": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 145,
+        "stops": [
+          {
+            "color": "rgb(56, 72, 32)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(30, 44, 16)",
+            "offset": 0.45,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(10, 14, 6)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_70": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 30,
+      "lineHeight": 30,
+      "letterSpacing": -1,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_div_72": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 2,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_71": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_74": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 145,
+        "stops": [
+          {
+            "color": "rgb(106, 58, 24)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(52, 28, 10)",
+            "offset": 0.45,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(18, 10, 4)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_72": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 30,
+      "lineHeight": 30,
+      "letterSpacing": -1,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_div_76": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 2,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_73": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_78": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 145,
+        "stops": [
+          {
+            "color": "rgb(30, 58, 58)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(14, 32, 32)",
+            "offset": 0.45,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(6, 12, 12)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.character-ds3-main.characterds3main_span_74": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 30,
+      "lineHeight": 30,
+      "letterSpacing": -1,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_div_80": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 2,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.character-ds3-main.characterds3main_span_75": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 9,
+      "lineHeight": 13,
+      "letterSpacing": 1,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.character-ds3-main.characterds3main_div_81": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 3,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    }
+  },
+  "id": "character-ds3-main.skin",
+  "version": 1,
+  "bundles": [
+    "resources"
+  ],
+  "meta": {
+    "tokenUsageReport": {
+      "colors": [
+        {
+          "token": "backgroundDeep",
+          "detail": "auto.character-ds3-main.characterds3main_div_1.color"
+        },
+        {
+          "token": "surfaceParchment",
+          "detail": "auto.character-ds3-main.characterds3main_div_3.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_1.color"
+        },
+        {
+          "token": "mirrorSigilField",
+          "detail": "auto.character-ds3-main.characterds3main_span_2.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_3.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-main.characterds3main_span_4.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.character-ds3-main.characterds3main_span_5.color"
+        },
+        {
+          "token": "gdv3TextMutedWarm",
+          "detail": "auto.character-ds3-main.characterds3main_span_6.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-main.characterds3main_div_11.color"
+        },
+        {
+          "token": "gdv3InkDeep",
+          "detail": "auto.character-ds3-main.characterds3main_span_7.color"
+        },
+        {
+          "token": "secondary",
+          "detail": "auto.character-ds3-main.characterds3main_span_8.color"
+        },
+        {
+          "token": "secondary",
+          "detail": "auto.character-ds3-main.characterds3main_span_9.color"
+        },
+        {
+          "token": "secondary",
+          "detail": "auto.character-ds3-main.characterds3main_span_10.color"
+        },
+        {
+          "token": "secondary",
+          "detail": "auto.character-ds3-main.characterds3main_span_11.color"
+        },
+        {
+          "token": "outline",
+          "detail": "auto.character-ds3-main.characterds3main_span_12.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-main.characterds3main_div_15.color"
+        },
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-main.characterds3main_span_13.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-main.characterds3main_span_14.color"
+        },
+        {
+          "token": "gdv3StatStr",
+          "detail": "auto.character-ds3-main.characterds3main_span_15.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_16.color"
+        },
+        {
+          "token": "tertiaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_17.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_18.color"
+        },
+        {
+          "token": "gdv3StatCha",
+          "detail": "auto.character-ds3-main.characterds3main_span_19.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_20.color"
+        },
+        {
+          "token": "gdv3StatInt",
+          "detail": "auto.character-ds3-main.characterds3main_span_21.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_22.color"
+        },
+        {
+          "token": "rarityWhite",
+          "detail": "auto.character-ds3-main.characterds3main_span_23.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_24.color"
+        },
+        {
+          "token": "gdv3StatLuk",
+          "detail": "auto.character-ds3-main.characterds3main_span_25.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_26.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-main.characterds3main_div_25.color"
+        },
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-main.characterds3main_span_27.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-main.characterds3main_span_28.color"
+        },
+        {
+          "token": "textPrimary",
+          "detail": "auto.character-ds3-main.characterds3main_span_29.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-main.characterds3main_span_30.color"
+        },
+        {
+          "token": "textPrimary",
+          "detail": "auto.character-ds3-main.characterds3main_span_31.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-main.characterds3main_span_32.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-main.characterds3main_div_30.color"
+        },
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-main.characterds3main_span_33.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-main.characterds3main_span_34.color"
+        },
+        {
+          "token": "textPrimary",
+          "detail": "auto.character-ds3-main.characterds3main_span_35.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-main.characterds3main_span_36.color"
+        },
+        {
+          "token": "textPrimary",
+          "detail": "auto.character-ds3-main.characterds3main_span_37.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-main.characterds3main_span_38.color"
+        },
+        {
+          "token": "stdButtonPrimary",
+          "detail": "auto.character-ds3-main.characterds3main_div_35.color"
+        },
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-main.characterds3main_span_39.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-main.characterds3main_span_40.color"
+        },
+        {
+          "token": "stdButtonPrimary",
+          "detail": "auto.character-ds3-main.characterds3main_span_41.color"
+        },
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-main.characterds3main_div_42.color"
+        },
+        {
+          "token": "stdButtonPrimary",
+          "detail": "auto.character-ds3-main.characterds3main_span_42.color"
+        },
+        {
+          "token": "colorBlack",
+          "detail": "auto.character-ds3-main.characterds3main_div_44.color"
+        },
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-main.characterds3main_span_43.color"
+        },
+        {
+          "token": "stdButtonPrimary",
+          "detail": "auto.character-ds3-main.characterds3main_span_44.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-main.characterds3main_span_45.color"
+        },
+        {
+          "token": "stdButtonPrimary",
+          "detail": "auto.character-ds3-main.characterds3main_span_46.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-main.characterds3main_span_47.color"
+        },
+        {
+          "token": "secondary",
+          "detail": "auto.character-ds3-main.characterds3main_div_48.color"
+        },
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-main.characterds3main_span_48.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-main.characterds3main_span_49.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-main.characterds3main_div_51.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-main.characterds3main_div_52.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_50.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-main.characterds3main_span_51.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_52.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-main.characterds3main_span_53.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_54.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-main.characterds3main_span_55.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_56.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-main.characterds3main_span_57.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_58.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-main.characterds3main_span_59.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_60.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-main.characterds3main_span_61.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_h4_1.color"
+        },
+        {
+          "token": "gdv3TextMutedWarm",
+          "detail": "auto.character-ds3-main.characterds3main_span_62.color"
+        },
+        {
+          "token": "textPrimary",
+          "detail": "auto.character-ds3-main.characterds3main_span_63.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_64.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_div_60.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-main.characterds3main_span_65.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_66.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_div_64.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-main.characterds3main_span_67.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_68.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_div_68.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-main.characterds3main_span_69.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_70.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_div_72.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-main.characterds3main_span_71.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_72.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_div_76.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-main.characterds3main_span_73.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_span_74.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-main.characterds3main_div_80.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-main.characterds3main_span_75.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-main.characterds3main_div_81.color"
+        }
+      ],
+      "cssVars": [],
+      "spacing": [
+        {
+          "token": "spacing.md",
+          "detail": "CharacterDs3Main_div_7.gap"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "CharacterDs3Main_div_10.gap"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "CharacterDs3Main_div_15.padding"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_16.gap"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "CharacterDs3Main_div_18.gap"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "CharacterDs3Main_div_25.padding"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_26.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_28.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_29.gap"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "CharacterDs3Main_div_30.padding"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_31.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_33.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_34.gap"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "CharacterDs3Main_div_35.padding"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_36.gap"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "CharacterDs3Main_div_38.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_41.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_49.gap"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "CharacterDs3Main_div_55.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3Main_div_55.padding"
+        },
+        {
+          "token": "spacing.xs",
+          "detail": "CharacterDs3Main_div_56.gap"
+        }
+      ],
+      "typography": [
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_1.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.character-ds3-main.characterds3main_div_11.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_div_11.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.character-ds3-main.characterds3main_span_29.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_29.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.character-ds3-main.characterds3main_span_31.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_31.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.character-ds3-main.characterds3main_span_35.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_35.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.character-ds3-main.characterds3main_span_37.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_37.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.character-ds3-main.characterds3main_span_43.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_43.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.character-ds3-main.characterds3main_span_45.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_45.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.character-ds3-main.characterds3main_span_47.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_47.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_50.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_50.lineHeight"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.character-ds3-main.characterds3main_span_51.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_52.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_52.lineHeight"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.character-ds3-main.characterds3main_span_53.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_54.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_54.lineHeight"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.character-ds3-main.characterds3main_span_55.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_56.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_56.lineHeight"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.character-ds3-main.characterds3main_span_57.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_58.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_58.lineHeight"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.character-ds3-main.characterds3main_span_59.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_60.fontSize"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-main.characterds3main_span_60.lineHeight"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.character-ds3-main.characterds3main_span_61.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.character-ds3-main.characterds3main_h4_1.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_h4_1.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.character-ds3-main.characterds3main_span_62.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.character-ds3-main.characterds3main_span_63.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-main.characterds3main_span_63.fontSize"
+        }
+      ],
+      "artWarnings": [
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_1",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_2",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_button_1",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3Main_button_1",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_img_1",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_img_1",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3Main_img_1",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_button_2",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3Main_button_2",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_div_3",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_div_4",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3Main_div_4",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_button_3",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3Main_button_3",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_div_5",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_6",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_svg_1",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_44",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_53",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3Main_button_4",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3Main_button_5",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3Main_button_6",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3Main_button_7",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3Main_button_8",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3Main_button_9",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_54",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_div_54",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_57",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_span_64",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_div_59",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_61",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_span_66",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_div_63",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_65",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_span_68",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_div_67",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_69",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_span_70",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_div_71",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_73",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_span_72",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_div_75",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3Main_div_77",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_span_74",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_div_79",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "CharacterDs3Main_div_81",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "asymmetric-border-radius-approximated",
+          "node": "CharacterDs3Main_div_81",
+          "detail": "非對稱圓角不適合直接轉成單一九宮或 color-rect"
+        }
+      ]
+    },
+    "tokenSources": {
+      "runtimePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "sourcePath": null
+    },
+    "tokenConflictReport": [],
+    "atlasUsageReport": {
+      "atlases": [
+        {
+          "atlasId": "ui_common/placeholder",
+          "slotCount": 1
+        }
+      ],
+      "atlasCount": 1,
+      "limit": 4,
+      "_warning": null
+    }
+  }
+}

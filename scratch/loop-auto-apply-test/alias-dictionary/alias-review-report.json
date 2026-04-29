@@ -1,0 +1,1109 @@
+{
+  "version": "1.2.0",
+  "generatedAt": "2026-04-28T11:31:04+00:00",
+  "totalGenerals": 302,
+  "totalAliasEntries": 416,
+  "highConfidenceAliasCount": 414,
+  "collisionCount": 1,
+  "excludedCount": 0,
+  "aliasSourceCounts": {
+    "manual-override": 20,
+    "roster-alias": 88,
+    "roster-name": 302,
+    "title-derived": 6
+  },
+  "aliasTypeCounts": {
+    "accepted-alias": 88,
+    "canonical-name": 302,
+    "curated-alias": 20,
+    "title-alias": 6
+  },
+  "aliasReviewStatusCounts": {
+    "accepted": 414,
+    "collision": 2
+  },
+  "generalReviewStatusCounts": {
+    "needs-more-coverage": 234,
+    "ready": 68
+  },
+  "observedMentionsPath": "scratch/loop-auto-apply-test/observed-mentions/observed-mentions.json",
+  "unresolvedLabelTypeCounts": {
+    "address-title": 2,
+    "formal-match": 2,
+    "unknown-candidate": 1588
+  },
+  "topUnresolvedLabels": [
+    {
+      "label": "元紹",
+      "normalized": "元紹",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "028#p3",
+        "028#p4"
+      ],
+      "sampleSnippets": [
+        "前。關公問其姓名。告曰：「某姓裴，名元紹。自張角死後，一向無主，嘯聚山林，權",
+        "元紹曰：「汝不識吾面，何以知吾名？」元紹曰：「離此三十里，有一臥牛山。山上有",
+        "公等今後可各去邪歸正，勿自陷其身。」元紹拜謝。正說話間，遙望一彪人馬來到。元"
+      ]
+    },
+    {
+      "label": "公孫康",
+      "normalized": "公孫康",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "033#p15",
+        "033#p16",
+        "033#p17",
+        "106#p2"
+      ],
+      "sampleSnippets": [
+        "說袁熙、袁尚引數千騎奔遼東。遼東太守公孫康，本襄平人，武威將軍公孫度之子也。當",
+        "騎，足可與曹操爭衡。今暫投之，後當殺公孫康而奪其地，養成氣力而抗中原，可復河北",
+        "中原，可復河北也。」商議已定，乃入見公孫康。康留於館驛，只推有病，不即相見。不"
+      ]
+    },
+    {
+      "label": "孫綝",
+      "normalized": "孫綝",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "113#p5",
+        "113#p7",
+        "113#p8"
+      ],
+      "sampleSnippets": [
+        "全紀在側，紀乃國舅也。亮因泣告曰：「孫綝專權妄殺，欺朕太甚；今不圖之，必爲後",
+        "聽得宮門外金鼓大震。內伺慌入奏曰：「孫綝領兵圍了內苑。」亮大怒，指全後罵曰：",
+        "與伺中近臣，皆牽其衣而哭，不放亮出。孫綝先將全尚、劉丞等殺訖，然後召文武於朝"
+      ]
+    },
+    {
+      "label": "張英",
+      "normalized": "張英",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "015#p8",
+        "015#p13"
+      ],
+      "sampleSnippets": [
+        "，只在吾左右聽命。」太史慈不喜而退。張英領兵至牛渚，積糧十萬於邸閣。孫策引兵",
+        "至牛渚，積糧十萬於邸閣。孫策引兵到，張英出迎，兩軍會於牛渚灘上。孫策出馬，張",
+        "英出迎，兩軍會於牛渚灘上。孫策出馬，張英大罵，黃蓋便出。與張英戰不數合，忽然"
+      ]
+    },
+    {
+      "label": "張邰",
+      "normalized": "張邰",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "030#p3",
+        "030#p16",
+        "030#p17",
+        "030#p18",
+        "031#p11"
+      ],
+      "sampleSnippets": [
+        "吾奉衣帶詔討賊！」操怒，使張遼出戰。張邰躍馬來迎。二將鬥了四五十合，不分勝負",
+        "必速還。此孫臏『圍魏救韓』之計也。」張邰曰：「非也。曹操多謀，外出必爲內備，",
+        "到，曹操又從背後殺來，四下圍住掩殺。張邰、高覽奪路走脫。袁紹收得烏巢敗殘軍馬"
+      ]
+    },
+    {
+      "label": "李異",
+      "normalized": "李異",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "082#p6",
+        "082#p7"
+      ],
+      "sampleSnippets": [
+        "策勝之？」桓曰：「臣有大將二員：一名李異，一名謝旌，俱有萬夫不當之勇。乞數萬",
+        "將戰有三十餘合，旌敗走，苞乘勝趕來。李異見謝旌敗了，慌忙拍馬輪蘸金斧，接戰張",
+        "分勝負。吳軍中裨將譚雄，見張苞英勇，李異不能勝，卻放一冷箭，正射中張苞所騎之"
+      ]
+    },
+    {
+      "label": "楊鋒",
+      "normalized": "楊鋒",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "089#p17",
+        "090#p2"
+      ],
+      "sampleSnippets": [
+        "，我必勝矣！」即與朵思大王出洞迎接。楊鋒引兵入曰：「吾有精兵三萬，皆披鐵甲，",
+        "，從帳外舞跳而入，群蠻拍手以歌和之。楊鋒令二子把盞。二子舉杯詣孟獲、孟優前。",
+        "何不擒獻？」於是各洞蠻兵皆走回本鄉。楊鋒將孟獲、孟優、朵思等解赴孔明寨來。孔"
+      ]
+    },
+    {
+      "label": "華雄",
+      "normalized": "華雄",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "005#p11",
+        "005#p12",
+        "005#p14"
+      ],
+      "sampleSnippets": [
+        "馬步軍三千，徑抄小路，直到關下搦戰。華雄引鐵騎五百，飛下關來，大喝：「賊將休",
+        "雄手起刀落，斬於馬下。生擒將校極多。華雄遣人齋鮑忠首級來相府報捷，卓加雄爲都",
+        "關上而罵曰：「助惡匹夫，何不早降！」華雄副將胡軫引兵五千，出關迎戰。程普飛馬"
+      ]
+    },
+    {
+      "label": "諸葛武侯",
+      "normalized": "諸葛武侯",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "106#p2",
+        "111#p10",
+        "113#p9",
+        "116#p12",
+        "117#p5"
+      ],
+      "sampleSnippets": [
+        "，實爲不順。更兼司馬懿善能用兵，西蜀諸葛武侯且不能取勝，何況主公乎？」淵大怒，叱",
+        "孫綝。綝問其故。綱曰：「諸葛誕乃蜀漢諸葛武侯之族弟也，向事魏國；今見司馬昭欺君罔",
+        "不知大廈之將焚』者也。」休歎曰：「若諸葛武侯在時，何至如此乎！」於是又寫國書，教"
+      ]
+    },
+    {
+      "label": "諸葛誕",
+      "normalized": "諸葛誕",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "111#p9",
+        "111#p10",
+        "112#p2",
+        "112#p17"
+      ],
+      "sampleSnippets": [
+        "」賈充領命，徑到淮南，入見鎮東大將軍諸葛誕。誕字公休，乃琅琊南陽人，即武侯之族",
+        "兩淮軍馬。當日賈充託名勞軍，至淮南見諸葛誕。誕設宴待之。酒至半酣，充以言挑誕曰",
+        "石頭城，入拜孫綝。綝問其故。綱曰：「諸葛誕乃蜀漢諸葛武侯之族弟也，向事魏國；今"
+      ]
+    },
+    {
+      "label": "陳珪",
+      "normalized": "陳珪",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "016#p10",
+        "017#p3",
+        "018#p7",
+        "019#p5",
+        "019#p6"
+      ],
+      "sampleSnippets": [
+        "，只說女兒妝奩未備，俟備畢便自送來。陳珪又說呂布，使解韓胤赴許都。布猶豫未決",
+        "」布曰：「汝若有計破敵、免汝死罪。」陳珪曰：「將軍若用老夫之言，徐州可保無虞",
+        "、楊奉爲琅琊牧，商議欲留二人在徐州。陳珪曰：「不可。韓、楊二人據山東，不出一"
+      ]
+    },
+    {
+      "label": "陳留",
+      "normalized": "陳留",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "003#p9",
+        "003#p10",
+        "004#p4",
+        "119#p22",
+        "120#p29"
+      ],
+      "sampleSnippets": [
+        "問曰：「二少年誰家之子？」帝不敢應。陳留王指帝曰：「此是當今皇帝，遭十常侍之",
+        "厲聲問：「天子何在？」帝戰慄不能言。陳留王勒馬向前，叱曰：「來者何人？」卓曰",
+        "下馬！」卓大驚，慌忙下馬，拜於道左。陳留王以言撫慰董卓，自初至終，并無失語。"
+      ]
+    },
+    {
+      "label": "陳震",
+      "normalized": "陳震",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "026#p12",
+        "029#p7",
+        "081#p6",
+        "081#p11",
+        "091#p16"
+      ],
+      "sampleSnippets": [
+        "陳震得書自回。",
+        "人，吾殺之何異屠豬狗！」眾官皆苦諫，陳震亦勸。策怒未息，命且囚於獄中。眾官俱",
+        "。策怒未息，命且囚於獄中。眾官俱散。陳震自歸館驛安歇。"
+      ]
+    },
+    {
+      "label": "馬步",
+      "normalized": "馬步",
+      "mentionType": "unknown-candidate",
+      "count": 6,
+      "sourceRefs": [
+        "017#p5",
+        "043#p13",
+        "048#p10",
+        "062#p10",
+        "073#p14"
+      ],
+      "sampleSnippets": [
+        "興兵南征。令曹仁守許都，其餘皆從征。馬步兵十七萬，糧食輜重千餘車。一面先發人",
+        "」權曰：「曹兵共有多少？」孔明曰：「馬步水軍，約有一百餘萬。」權曰：「莫非詐",
+        "旗呂虔，左軍青旗文聘，右軍白旗呂通；馬步前軍紅旗徐晃，後軍皂旗李典，左軍青旗"
+      ]
+    },
+    {
+      "label": "任從",
+      "normalized": "任從",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "054#p7",
+        "061#p6",
+        "067#p5",
+        "071#p10",
+        "111#p11"
+      ],
+      "sampleSnippets": [
+        "叔。明日約在甘露寺相見：如不中我意，任從你們行事；若中我的意，我自把女兒嫁他",
+        "水急，船皆隨流而去。趙雲沿江趕叫：「任從夫人去。只有一句話拜稟。」周善不睬，",
+        "淵戰三十餘合，不分勝負。淵佯敗而走，任從後追來，被淵用拖刀計斬於馬下。軍士大"
+      ]
+    },
+    {
+      "label": "周魴",
+      "normalized": "周魴",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "096#p9",
+        "096#p11",
+        "096#p12"
+      ],
+      "sampleSnippets": [
+        "州司馬大都督曹休上表，說東吳鄱陽太守周魴，願以郡來降，密遣人陳言七事，說東吳",
+        "曰：「吳人之言，反覆不一，未可深信。周魴智謀之士，必不肯降，此特誘兵之詭計也",
+        "卻說曹休兵臨皖城，周魴來迎，徑到曹休帳下。休問曰：「近得足"
+      ]
+    },
+    {
+      "label": "唐諮",
+      "normalized": "唐諮",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "108#p7",
+        "111#p10",
+        "111#p12",
+        "112#p10",
+        "113#p4"
+      ],
+      "sampleSnippets": [
+        "就引三千水兵從江中去，吾隨後令呂據、唐諮、劉纂各引一萬馬步兵，分三路來接應。",
+        "全懌、全端爲主將，于詮爲合後，朱異、唐諮爲先鋒，文欽爲鄉導，起兵七萬，分三隊",
+        "出馬，朱異來迎。戰不三合，朱異敗走。唐諮出馬，戰不三合，亦大敗而走。王基驅兵"
+      ]
+    },
+    {
+      "label": "夏侯威",
+      "normalized": "夏侯威",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "102#p5",
+        "102#p8",
+        "106#p4",
+        "106#p7"
+      ],
+      "sampleSnippets": [
+        "。此四人常欲爲父報仇。臣今保夏侯霸、夏侯威爲左右先鋒，夏侯惠、夏侯和爲行軍司馬",
+        "吾後，卻攻吾前也。」即傳令與夏侯霸、夏侯威曰：「若聽得北原發喊，便提兵於渭水南",
+        "。懿笑曰：「中吾計矣！」乃令夏侯霸、夏侯威：「各引一軍，伏於遼水之濱，如遼兵到"
+      ]
+    },
+    {
+      "label": "夏侯德",
+      "normalized": "夏侯德",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "070#p7",
+        "071#p3"
+      ],
+      "sampleSnippets": [
+        "。」於是張郃與二將連夜投天蕩山來，見夏侯德，具言前事。夏侯德曰：「吾此處屯十萬",
+        "連夜投天蕩山來，見夏侯德，具言前事。夏侯德曰：「吾此處屯十萬兵，你可引去，復取",
+        "來救火時，正遇老將嚴顏，手起刀落，斬夏侯德於馬下。原來黃忠預先使嚴顏引軍埋伏於"
+      ]
+    },
+    {
+      "label": "夏侯惠",
+      "normalized": "夏侯惠",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "102#p5",
+        "103#p7",
+        "103#p8",
+        "103#p9"
+      ],
+      "sampleSnippets": [
+        "仇。臣今保夏侯霸、夏侯威爲左右先鋒，夏侯惠、夏侯和爲行軍司馬，共贊軍機，以退蜀",
+        "且說夏侯惠、夏侯和二人入寨告司馬懿曰：「今蜀兵",
+        "：「既如此，汝二人可分頭出戰。」遂令夏侯惠、夏侯和，各引五千兵去訖。懿坐待回音"
+      ]
+    },
+    {
+      "label": "夏侯駙馬",
+      "normalized": "夏侯駙馬",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "091#p18",
+        "092#p8",
+        "092#p10",
+        "093#p7"
+      ],
+      "sampleSnippets": [
+        "軍馬前去迎敵。司徒王朗諫曰：「不可。夏侯駙馬素不曾經戰，今付以大任，非其所宜。更",
+        "。多官曰：「若不去救，失了南安，送了夏侯駙馬，皆我兩郡之罪也：只得救之。」諒即點",
+        "功曹梁緒、主簿尹賞、主記梁虔等曰：「夏侯駙馬乃金枝玉葉，倘有疏虞，難逃坐視之罪。"
+      ]
+    },
+    {
+      "label": "尹奉",
+      "normalized": "尹奉",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "064#p15",
+        "064#p16",
+        "064#p17"
+      ],
+      "sampleSnippets": [
+        "吾當先死，以絕汝念。」敘乃與統兵校尉尹奉、趙昂商議。",
+        "見其妻王氏曰：「吾今日與姜敘、楊阜、尹奉一處商議，欲報韋康之仇。吾想子趙月現",
+        "決。次日一同起兵。姜敘、楊阜屯歷城，尹奉、趙昂屯祁山。王氏乃盡將首飾資帛，親"
+      ]
+    },
+    {
+      "label": "張楊",
+      "normalized": "張楊",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "005#p6",
+        "005#p17",
+        "014#p8",
+        "019#p11",
+        "022#p9"
+      ],
+      "sampleSnippets": [
+        "，北平太守公孫瓚。第十五鎮，上黨太守張楊。第十六鎮，烏程侯長沙太守孫堅。第十",
+        "紹乃分王匡、喬瑁、鮑信、袁遺、孔融、張楊、陶謙、公孫瓚八路諸侯往虎牢關迎敵。",
+        "何職？」對曰：「某居孝廉，原爲袁紹、張楊從事。今聞天子還都，特來朝覲，官封正"
+      ]
+    },
+    {
+      "label": "張溫",
+      "normalized": "張溫",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "008#p3",
+        "086#p5",
+        "086#p6",
+        "086#p7"
+      ],
+      "sampleSnippets": [
+        "。百官魂不附體。卓笑曰：「諸公勿驚。張溫結連袁術，欲圖害我，因使人寄書來，錯",
+        "結盟好，并力破魏。望大夫善言回奏。」張溫領諾。酒至半酣，張溫喜笑自若，頗有傲",
+        "時秦宓語言清朗，答問如流，滿座皆驚。張溫無語。宓乃問曰：「先生東吳名士，既以"
+      ]
+    },
+    {
+      "label": "張虎",
+      "normalized": "張虎",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "007#p11",
+        "100#p11",
+        "102#p22",
+        "103#p10"
+      ],
+      "sampleSnippets": [
+        "扯弓搭箭，正射中陳生面門，應弦落馬。張虎見陳生墜地，吃了一驚，措手不及，被韓",
+        "管打來。」司馬懿回到本陣中，喚戴淩、張虎、樂琳三將，吩咐曰：「今孔明所布之陣",
+        "可破。汝等小心在意。」於是戴淩在中，張虎在前，樂琳在後，各引三十騎，從生門打"
+      ]
+    },
+    {
+      "label": "曹嵩",
+      "normalized": "曹嵩",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "001#p18",
+        "010#p8"
+      ],
+      "sampleSnippets": [
+        "氏，因爲中常侍曹騰之養子，故冒姓曹。曹嵩生操，小字阿瞞，一名吉利。操幼時，好",
+        "迎接，再拜致敬，大設筵宴，款待兩日。曹嵩要行，陶謙親送出郭，特差都尉張闓將部",
+        "送出郭，特差都尉張闓將部兵五百護送。曹嵩率家小行到華、費間，時夏末秋初，大雨"
+      ]
+    },
+    {
+      "label": "曹純",
+      "normalized": "曹純",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "051#p7",
+        "051#p10"
+      ],
+      "sampleSnippets": [
+        "。」仁遂令曹純與牛金暗地引兵救曹洪。曹純先使人報知曹洪，令洪出城誘敵。甘寧引",
+        "餘合，洪敗走。寧奪了彝陵。至黃昏時，曹純、牛金兵到，兩下相合，圍了彝陵。探馬",
+        "教軍士嚴裝飽食，準備內應。卻說曹洪、曹純、牛金聞周瑜兵將至，先使人往南郡報知"
+      ]
+    },
+    {
+      "label": "曹豹",
+      "normalized": "曹豹",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "010#p11",
+        "014#p15",
+        "014#p16",
+        "014#p17"
+      ],
+      "sampleSnippets": [
+        "使徐州之民受此大難！」急聚眾官商議。曹豹曰：「曹兵既至，豈有束手待死，某願助",
+        "應聲而出。陶謙慌走入陣。夏侯惇趕來，曹豹挺槍躍馬，前去迎敵。兩馬相交，忽然狂",
+        "曰：「你文官只管文官事，休來管我。」曹豹無奈，只得告求曰：「翼德公看我女婿之"
+      ]
+    },
+    {
+      "label": "朱靈",
+      "normalized": "朱靈",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "021#p10",
+        "058#p12",
+        "059#p4",
+        "059#p9"
+      ],
+      "sampleSnippets": [
+        "州來。」玄德知袁朮將至，乃引關、張、朱靈、路昭五萬軍出，正迎著先鋒紀靈至。張",
+        "奔走。袁術自引軍來鬥。玄德分兵三路，朱靈、路昭在左，關、張在右，玄德自引兵居",
+        "之中，待我渡河北，同時擊之。」徐晃、朱靈領命、先引四千軍暗暗去了。操下令，先"
+      ]
+    },
+    {
+      "label": "李勝",
+      "normalized": "李勝",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "106#p9",
+        "106#p11",
+        "106#p12",
+        "107#p2",
+        "107#p7"
+      ],
+      "sampleSnippets": [
+        "、鄧揚、丁謐爲尚書，畢軌爲司隸校尉，李勝爲河南尹：此五人日夜與爽議事。於是曹",
+        "覷二子！」言訖，倒在床上，聲嘶氣喘。李勝拜辭仲達，回見曹爽，細言其事。爽大喜",
+        "司馬懿見李勝去了，遂起身謂二子曰：「李勝此去，回報消息，曹爽必不忌我矣。只待"
+      ]
+    },
+    {
+      "label": "李歆",
+      "normalized": "李歆",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "107#p16",
+        "107#p18"
+      ],
+      "sampleSnippets": [
+        "千兵，往曲山前連築二城：句安守東城，李歆守西城。早有細作報與雍州剌史郭淮。淮",
+        "泰引兵五萬，來曲山與蜀兵交戰。句安、李歆各引一軍出迎，因兵少不能抵敵，退入城",
+        "圍住攻打，又以兵斷其漢中糧道，句安、李歆城中糧缺。郭淮自引兵亦到，看了地勢，"
+      ]
+    },
+    {
+      "label": "楊欣",
+      "normalized": "楊欣",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "116#p4",
+        "116#p15"
+      ],
+      "sampleSnippets": [
+        "天水太守王頎，隴西太守牽弘，金城太守楊欣，各調本部兵前來聽令。比及軍馬雲集，",
+        "一萬五千人，從右攻遝水；又遣金城太守楊欣，引一萬五千人，於甘松邀姜維之後。艾",
+        "，前面一軍擺開，爲首魏將乃是金城太守楊欣。維大怒，縱馬交鋒，只一合，楊欣敗走"
+      ]
+    },
+    {
+      "label": "殷勤",
+      "normalized": "殷勤",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "016#p15",
+        "047#p9",
+        "088#p8",
+        "088#p9",
+        "104#p11"
+      ],
+      "sampleSnippets": [
+        "各寨。至期，令賈詡致意，請典韋到寨，殷勤待酒。至晚醉歸，胡車兒雜在眾人隊裏，",
+        "機。統高談雄辯，應答如流。操深敬服，殷勤相待。統佯醉曰：「敢問軍中有良醫否？",
+        "之士。孔明就令隨席而坐，教諸將勸酒，殷勤相待。"
+      ]
+    },
+    {
+      "label": "王頎",
+      "normalized": "王頎",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "009#p15",
+        "116#p4",
+        "117#p15",
+        "118#p11"
+      ],
+      "sampleSnippets": [
+        "、大鴻臚周奐、城門校尉崔烈、越騎校尉王頎皆死於國難。賊兵圍繞內庭至急，侍臣請",
+        "遏羌人。又遣雍州刺史諸葛緒，天水太守王頎，隴西太守牽弘，金城太守楊欣，各調本",
+        "一萬五千，先斷姜維歸路；次遣天水太守王頎，引兵一萬五千，從左攻遝中；隴西太守"
+      ]
+    },
+    {
+      "label": "蔣斌",
+      "normalized": "蔣斌",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "113#p10",
+        "113#p11",
+        "115#p9"
+      ],
+      "sampleSnippets": [
+        "將軍姜維，以廖化、張翼爲先鋒，王含、蔣斌爲左軍，蔣舒、傅僉爲右軍，胡濟爲合後",
+        "分作三寨，地道正在左寨之中，乃王含、蔣斌下寨之處。鄧艾喚子鄧忠，與師纂各引一",
+        "卻說王含、蔣斌因立寨未定，恐魏兵來劫寨，不散解甲而"
+      ]
+    },
+    {
+      "label": "袁氏",
+      "normalized": "袁氏",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "032#p5",
+        "032#p7",
+        "033#p5",
+        "033#p17"
+      ],
+      "sampleSnippets": [
+        "聲勢。操兵連日攻打不下。郭嘉進曰：「袁氏廢長立幼，而兄弟之間權力相并，各自樹",
+        "之間，不敢展足，其無四方之志可知矣；袁氏據四州之地，帶甲數十萬，若二子和睦，",
+        "：「明公勿問真與詐也，只論其勢可耳。袁氏連年喪敗，兵革疲於外，謀臣誅於內；兄"
+      ]
+    },
+    {
+      "label": "許靖",
+      "normalized": "許靖",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "065#p8",
+        "065#p10",
+        "073#p4",
+        "077#p15",
+        "080#p19"
+      ],
+      "sampleSnippets": [
+        "，欲斬之。劉璋擋住。忽報：「蜀郡太守許靖，逾城出降矣。」劉璋大哭歸府。次日，",
+        "，法正爲蜀郡太守，董和爲掌軍中郎將，許靖爲左將軍長史，龐義爲營中司馬，劉巴爲",
+        "方，各設旌旗儀仗。群臣皆依次序排列。許靖、法正請玄德登壇，進冠冕璽綬訖，面南"
+      ]
+    },
+    {
+      "label": "趙累",
+      "normalized": "趙累",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "073#p13",
+        "076#p8",
+        "077#p3"
+      ],
+      "sampleSnippets": [
+        "可任用。可差軍前都督糧料官趙累代之。趙累爲人忠城廉直。若用此人，萬無一失。」",
+        "吾素知潘浚爲人。今既差定，不必更改。趙累現掌糧料，亦是重事。汝勿多言，只與我",
+        "前至麥城。分兵緊守四門，聚將士商議。趙累曰：「此處相近上庸，現有劉封、孟達在"
+      ]
+    },
+    {
+      "label": "趙顏",
+      "normalized": "趙顏",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "069#p4"
+      ],
+      "sampleSnippets": [
+        "氣，三日內必死。汝貌美，可惜無壽。』趙顏回家，急告其父。父聞之，趕上管輅，哭",
+        "父告曰：『老夫止有此子，望乞垂救！』趙顏亦哭求。輅見其父子情切，乃謂趙顏曰：",
+        "勿言是吾所教。』老人留輅在家。次日，趙顏攜酒脯杯盤入南山之中。約行五六里，果"
+      ]
+    },
+    {
+      "label": "韓德",
+      "normalized": "韓德",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "092#p3",
+        "092#p5",
+        "092#p6"
+      ],
+      "sampleSnippets": [
+        "韓瑛，次子韓瑤，三子韓瓊，四子韓琪。韓德帶四子并西羌兵八萬，取路至鳳鳴山，正",
+        "，取路至鳳鳴山，正遇蜀兵。兩陣對圓。韓德出馬，四子列於兩邊。德厲聲大罵曰：「",
+        "，生擒韓瑤歸陣，復縱馬取槍殺過陣來。韓德見四子皆喪趙雲之手，肝膽皆裂，先走入"
+      ]
+    },
+    {
+      "label": "韓猛",
+      "normalized": "韓猛",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "030#p3",
+        "030#p7",
+        "030#p8"
+      ],
+      "sampleSnippets": [
+        "帶，立馬陣前。左右排列著張郃、高覽、韓猛、淳于瓊等諸將，旌旗節鉞，甚是嚴整。",
+        "。」徐晃便將此事報知曹操。荀攸曰：「韓猛匹夫之勇耳。若遣一人引輕騎數千，從半",
+        "之間，山谷內徐晃、史渙引軍截住去路。韓猛飛馬來戰，徐晃接住廝殺，史渙便殺散人"
+      ]
+    },
+    {
+      "label": "魏國",
+      "normalized": "魏國",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "080#p2",
+        "097#p11",
+        "107#p15",
+        "108#p10",
+        "116#p8"
+      ],
+      "sampleSnippets": [
+        "，見炎漢氣數已終，陛下帝星隱匿不明；魏國乾象，極天察地，言之難盡。更兼上應圖",
+        "：「伯道賢弟，何太情薄耶？」昭曰：「魏國法度，兄所知也。吾受國恩，但有死而已",
+        "投降。目今司馬懿父子專權，曹芳懦弱，魏國將危。臣在漢中有年，兵精糧足。臣願領"
+      ]
+    },
+    {
+      "label": "鮑信",
+      "normalized": "鮑信",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "003#p10",
+        "003#p11",
+        "005#p17",
+        "010#p6"
+      ],
+      "sampleSnippets": [
+        "軍校尉淳于瓊、右軍校尉趙萌、後軍校尉鮑信、中軍校尉袁紹，一行人眾，接著車駕。",
+        "不安。卓出入宮庭，略無忌憚。後軍校尉鮑信來見袁紹，言：「董卓必有異心，可速除",
+        "之。」紹曰：「朝廷新定，未可輕動。」鮑信見王允，亦言其事。允曰：「且容商議。"
+      ]
+    },
+    {
+      "label": "黃劭",
+      "normalized": "黃劭",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "012#p8",
+        "012#p9"
+      ],
+      "sampleSnippets": [
+        "，使軍就食汝南、潁川。黃巾餘黨何儀、黃劭等，劫掠州郡，多有金帛糧食。此等賊徒",
+        "引兵先略陳地，次及汝、潁。黃巾何儀、黃劭知曹兵到，引眾來迎，會於羊山。時賊兵",
+        "馬下。操引眾乘勢趕過羊山下寨。次日，黃劭自引軍來。陣圓處，一將步行出戰，頭裹"
+      ]
+    },
+    {
+      "label": "黃皓",
+      "normalized": "黃皓",
+      "mentionType": "unknown-candidate",
+      "count": 5,
+      "sourceRefs": [
+        "113#p15",
+        "115#p9",
+        "116#p16",
+        "118#p7"
+      ],
+      "sampleSnippets": [
+        "子，不久投魏。於是成都人人所說皆同。黃皓奏知後主，即遣人星夜宣姜維入朝。",
+        "意爲何？」後主默然不語。維又奏曰：「黃皓奸巧專權，乃靈帝時十常侍也。陛下近則",
+        "然清平，中原方可恢復。」後主笑曰：「黃皓乃趨走小臣，縱使專權，亦無能爲。昔者"
+      ]
+    },
+    {
+      "label": "呂曠",
+      "normalized": "呂曠",
+      "mentionType": "unknown-candidate",
+      "count": 4,
+      "sourceRefs": [
+        "033#p10",
+        "033#p12",
+        "035#p10"
+      ],
+      "sampleSnippets": [
+        "自攻之。」操用其言，隨差焦觸、張南、呂曠、呂翔、馬延、張顗各引本部兵，分三路",
+        "喚降將呂曠、呂翔，附耳低言如此如此。呂曠等引軍數十，直抵關下，叫曰：「吾等原",
+        "關相迎。行不數里，只見山後塵頭大起，呂曠、呂翔引軍來到。兩邊各射住陣角。玄德"
+      ]
+    },
+    {
+      "label": "夏侯",
+      "normalized": "夏侯",
+      "mentionType": "unknown-candidate",
+      "count": 4,
+      "sourceRefs": [
+        "092#p8",
+        "093#p5",
+        "097#p7",
+        "107#p8"
+      ],
+      "sampleSnippets": [
+        "有機密事。崔諒喚入問之，答曰：「某是夏侯都督帳下心腹將裴緒。今奉都督將令，特",
+        "中見姜維在城下挺槍勒馬，大叫曰：「請夏侯都督答話！」夏侯楙與馬遵等皆到城上；",
+        "越巢湖不成，任用李服而李服圖之，委任夏侯而夏侯敗亡，先帝每稱操爲能，猶有此失"
+      ]
+    },
+    {
+      "label": "姜敘",
+      "normalized": "姜敘",
+      "mentionType": "unknown-candidate",
+      "count": 4,
+      "sourceRefs": [
+        "064#p16",
+        "064#p17"
+      ],
+      "sampleSnippets": [
+        "當先死矣！」趙昂乃決。次日一同起兵。姜敘、楊阜屯歷城，尹奉、趙昂屯祁山。王氏",
+        "。令龐德、馬岱盡起軍馬，殺奔歷城來。姜敘、楊阜引兵出。兩陣圓處，楊阜、姜敘衣",
+        "。姜敘、楊阜引兵出。兩陣圓處，楊阜、姜敘衣白袍而出，大罵曰：「叛君無義之賊！"
+      ]
+    },
+    {
+      "label": "孟坦",
+      "normalized": "孟坦",
+      "mentionType": "unknown-candidate",
+      "count": 4,
+      "sourceRefs": [
+        "027#p5"
+      ],
+      "sampleSnippets": [
+        "爲所殺。今不可力敵，只須設計擒之。」孟坦曰：「吾有一計：先將鹿角攔定關口，待",
+        "尋死耶？」韓福曰：「誰人與我擒之？」孟坦出馬，輪雙刀來取關公。關公約退車仗，",
+        "刀來取關公。關公約退車仗，拍馬來迎。孟坦戰不三合，撥回馬便走。關公趕來。孟坦"
+      ]
+    },
+    {
+      "label": "孫仲",
+      "normalized": "孫仲",
+      "mentionType": "unknown-candidate",
+      "count": 4,
+      "sourceRefs": [
+        "002#p4",
+        "061#p21"
+      ],
+      "sampleSnippets": [
+        "時又黃巾餘黨三人：趙弘、韓忠、孫仲，聚眾數萬，望風燒劫，稱與張角報仇。",
+        "韓忠，餘皆四散奔走。正追趕間，趙弘、孫仲引賊眾到，與雋交戰。雋見弘勢大，引軍",
+        "槊，刺弘下馬，卻騎弘馬飛身往來殺賊。孫仲引賊突出北門，正迎玄德，無心戀戰，只"
+      ]
+    }
+  ],
+  "generalsNeedingManualReview": [
+    "ahui-nan",
+    "bian-xi",
+    "bu-zhi",
+    "cao-ang",
+    "cao-hong",
+    "cao-pi",
+    "cao-ren",
+    "cao-rui",
+    "cao-shuang",
+    "cao-xiu",
+    "cao-zhi",
+    "chen-dao",
+    "chen-qun",
+    "chen-shi",
+    "chen-tai",
+    "chen-wu",
+    "chen-ying",
+    "chen-zhi",
+    "cheng-bing",
+    "cheng-pu",
+    "cheng-yu",
+    "deng-ai",
+    "deng-zhi",
+    "dian-wei",
+    "ding-feng",
+    "dong-tu-na",
+    "dong-yun",
+    "dong-zhao",
+    "dong-zhuo",
+    "du-qiong",
+    "e-huan",
+    "fa-zheng",
+    "fei-guan",
+    "fei-shi",
+    "fei-yi",
+    "fu-qian",
+    "fu-shou",
+    "fu-tong",
+    "gan-ning",
+    "gao-gan",
+    "gao-lan",
+    "gongsun-yuan",
+    "gongsun-zan",
+    "gou-fu",
+    "gu-yong",
+    "guan-ning",
+    "guan-suo",
+    "guan-xing",
+    "guo-huai",
+    "guo-jia",
+    "guo-tu",
+    "han-dang",
+    "han-fu",
+    "han-hao",
+    "han-sui",
+    "han-xian",
+    "han-xuan",
+    "hao-meng",
+    "he-qi",
+    "hou-cheng",
+    "hu-zun",
+    "hua-tuo",
+    "hua-xin",
+    "huang-gai",
+    "huang-quan",
+    "huang-zhong",
+    "huang-zu",
+    "huangfu-song",
+    "huo-yi",
+    "jia-xu",
+    "jian-yong",
+    "jiang-wan",
+    "jiang-wei",
+    "jin-huan-san-jie",
+    "jin-xuan",
+    "ju-shou",
+    "ke-bi-neng",
+    "kong-rong",
+    "le-jin",
+    "li-dian",
+    "li-hui",
+    "li-jue",
+    "li-le",
+    "li-su",
+    "li-yan",
+    "liao-hua",
+    "liao-li",
+    "ling-tong",
+    "liu-ba",
+    "liu-bao",
+    "liu-biao",
+    "liu-chen",
+    "liu-du",
+    "liu-feng",
+    "liu-yan",
+    "liu-ye",
+    "liu-zhang",
+    "lu-kang",
+    "lu-meng",
+    "lu-su",
+    "lu-xun",
+    "lu-yin",
+    "luo-xian",
+    "lv-dai",
+    "lv-fan",
+    "lv-kai",
+    "lv-qian",
+    "lv-xiang",
+    "ma-chao",
+    "ma-dai",
+    "ma-liang",
+    "ma-teng",
+    "ma-zhong",
+    "ma-zun",
+    "man-chong",
+    "mao-jie",
+    "meng-da",
+    "meng-huo",
+    "meng-you",
+    "mi-heng",
+    "mi-zhu",
+    "mu-lu-da-wang",
+    "pan-jun",
+    "pan-zhang",
+    "pang-de",
+    "peng-yang",
+    "qin-mi",
+    "quan-cong",
+    "sha-mo-ke",
+    "shen-pei",
+    "sima-shi",
+    "sima-wang",
+    "sima-yan",
+    "sima-yi",
+    "sima-zhao",
+    "sun-ce",
+    "sun-hao",
+    "sun-huan",
+    "sun-jian",
+    "sun-jun",
+    "sun-li",
+    "sun-qian",
+    "sun-shao",
+    "sun-sheng",
+    "sun-yi",
+    "taishi-ci",
+    "tao-qian",
+    "tian-chou",
+    "tian-feng",
+    "wang-bi",
+    "wang-fang",
+    "wang-hun",
+    "wang-ji",
+    "wang-kai",
+    "wang-lang",
+    "wang-ping",
+    "wang-shuang",
+    "wang-yi",
+    "wang-zhong",
+    "wei-huang",
+    "wei-xu",
+    "wei-yan",
+    "wei-zhao",
+    "wen-chou",
+    "wen-pin",
+    "wen-qin",
+    "wu-ban",
+    "wu-lan",
+    "wu-tugu",
+    "wu-yi",
+    "xi-zhi-cai",
+    "xiahou-dun",
+    "xiahou-yuan",
+    "xu-huang",
+    "xu-sheng",
+    "xu-zhu",
+    "xue-zong",
+    "xun-you",
+    "xun-yu",
+    "yan-liang",
+    "yan-yan",
+    "yang-ang",
+    "yang-feng",
+    "yang-huai",
+    "yang-ling",
+    "yang-qiu",
+    "yang-ren",
+    "yang-song",
+    "yang-yi",
+    "yi-ji",
+    "yin-mo",
+    "yin-shang",
+    "yu-fan",
+    "yu-ji",
+    "yu-jin",
+    "yuan-shang",
+    "yuan-shao",
+    "yuan-shu",
+    "yuan-tan",
+    "yuan-xi",
+    "yue-lin",
+    "zhang-bao",
+    "zhang-bao-enemy",
+    "zhang-da",
+    "zhang-ji",
+    "zhang-jue",
+    "zhang-liang-enemy",
+    "zhang-liao",
+    "zhang-lu",
+    "zhang-nan",
+    "zhang-rang",
+    "zhang-ren",
+    "zhang-song",
+    "zhang-xian",
+    "zhang-xiu",
+    "zhang-yi",
+    "zhang-yi-yuan",
+    "zhang-yun",
+    "zhang-zhao",
+    "zhao-ang",
+    "zheng-wen",
+    "zhong-hui",
+    "zhou-shan",
+    "zhou-tai",
+    "zhu-bao",
+    "zhu-huan",
+    "zhu-ji",
+    "zhu-jun",
+    "zhu-ran",
+    "zhu-rong",
+    "zhu-yi",
+    "zhuge-jin",
+    "zhuge-ke",
+    "zuo-ci"
+  ],
+  "unknownOverrideGeneralIds": [],
+  "collisions": [
+    {
+      "alias": "祝融",
+      "normalized": "祝融",
+      "generalIds": [
+        "zhu-rong",
+        "zhu-rong-furen"
+      ]
+    }
+  ],
+  "excludedAliases": []
+}

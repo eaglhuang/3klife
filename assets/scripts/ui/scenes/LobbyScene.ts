@@ -34,6 +34,7 @@ interface GeneralListOpenPayload {
     onSelectGeneral: (config: GeneralConfig) => void | Promise<void>;
     options?: {
         factionFilter?: 'all' | 'player' | 'enemy';
+        npcDialogueDevControls?: boolean;
     };
 }
 
@@ -120,7 +121,7 @@ export class LobbyScene extends Component {
             );
             this._encounters = encounterEnvelope.encounters ?? [];
         } catch (error) {
-            console.error('[LobbyScene] 載入資料失敗:', error);
+            UCUFLogger.error(LogCategory.DATA, '[LobbyScene] 載入資料失敗:', error);
         }
 
         // 測試 Toast
@@ -602,7 +603,9 @@ export class LobbyScene extends Component {
 
                 this._listPanel!.onSelectGeneral = activePayload.onSelectGeneral;
                 this._bringNodeToFront(this._listPanel!.node);
-                await this._listPanel!.show(activePayload.generals, activePayload.options?.factionFilter ?? 'all');
+                await this._listPanel!.show(activePayload.generals, activePayload.options?.factionFilter ?? 'all', {
+                    npcDialogueDevControls: activePayload.options?.npcDialogueDevControls,
+                });
             },
             hide: () => {
                 this._listPanel!.node.active = false;
@@ -626,7 +629,7 @@ export class LobbyScene extends Component {
 
     private async _showGeneralListWithHandler(
         onSelectGeneral: (config: GeneralConfig) => void | Promise<void>,
-        options: { factionFilter?: 'all' | 'player' | 'enemy' } = { factionFilter: 'all' },
+        options: { factionFilter?: 'all' | 'player' | 'enemy'; npcDialogueDevControls?: boolean } = { factionFilter: 'all' },
     ): Promise<void> {
         await services().ui.open(UIID.GeneralList, {
             generals: this._generals,
@@ -674,7 +677,7 @@ export class LobbyScene extends Component {
         void services().ui.open(UIID.GeneralList, {
             generals: displayList,
             onSelectGeneral: (config: GeneralConfig) => this._openGeneralDetailDirect(config),
-            options: { factionFilter: 'all' },
+            options: { factionFilter: 'all', npcDialogueDevControls: true },
         } satisfies GeneralListOpenPayload);
     }
 
@@ -683,6 +686,19 @@ export class LobbyScene extends Component {
         await this._showGeneralListWithHandler((config: GeneralConfig) => this._openGeneralDetailDirect(config), {
             factionFilter: 'all',
         });
+    }
+
+    public async previewGeneralListNpcDialogueSmoke(previewGeneralId = 'zhang-fei'): Promise<void> {
+        await this._showGeneralListWithHandler((config: GeneralConfig) => this._openGeneralDetailDirect(config), {
+            factionFilter: 'all',
+            npcDialogueDevControls: true,
+        });
+
+        if (!this._listPanel) {
+            throw new Error('[LobbyScene] GeneralListComposite 尚未初始化，無法執行 NPC dialogue smoke route');
+        }
+
+        await this._listPanel.previewNpcDialogueDevSmoke(previewGeneralId || 'zhang-fei', true);
     }
 
     public async previewGeneralDetailEntrySmoke(source: GeneralDetailEntrySmokeSource, previewVariant = ''): Promise<void> {
@@ -1170,17 +1186,17 @@ export class LobbyScene extends Component {
 
     private async _openGeneralDetailSmoke(defaultTab: GeneralDetailDefaultTab, previewVariant = '') {
         if (!this._detailPanel) {
-            console.warn('[LobbyScene] GeneralDetailOverview smoke 失敗：detail panel 未就緒');
+            UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] GeneralDetailOverview smoke 失敗：detail panel 未就緒');
             return;
         }
         if (this._generals.length === 0) {
-            console.warn('[LobbyScene] GeneralDetailOverview smoke 失敗：尚未載入武將資料');
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] GeneralDetailOverview smoke 失敗：尚未載入武將資料');
             return;
         }
 
         const smokeGeneral = this._resolveGeneralDetailSmokeGeneral(previewVariant);
         if (!smokeGeneral) {
-            console.warn(`[LobbyScene] GeneralDetailOverview smoke 失敗：找不到對應武將 variant=${previewVariant || '(default)'}`);
+            UCUFLogger.warn(LogCategory.DATA, `[LobbyScene] GeneralDetailOverview smoke 失敗：找不到對應武將 variant=${previewVariant || '(default)'}`);
             return;
         }
 

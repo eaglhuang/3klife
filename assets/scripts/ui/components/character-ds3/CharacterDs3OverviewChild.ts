@@ -10,6 +10,7 @@
 //   - OverviewRoleBadge        (label,    原 CharacterDs3Main_div_13)
 //   - OverviewRarityTier       (label,    原 CharacterDs3Main_span_7，"UR" 等)
 //   - OverviewRarityStars      (container, 原 CharacterDs3Main_div_15，5 個 ★ 子 Label)
+//   - OverviewBio              (label,    原 CharacterDs3Main_div_53，歷史軑事長文）
 
 import { Label, Node } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
@@ -23,6 +24,7 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
     private _roleLabel:        Label | null = null;
     private _rarityTierLabel:  Label | null = null;
     private _rarityStarsRoot:  Node  | null = null;
+    private _bioLabel:         Label | null = null;
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3OverviewChild] onMount', { rootPath: CharacterDs3OverviewChild.ROOT_PATH });
@@ -30,6 +32,7 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         this._roleLabel       = this.binder.getLabel('OverviewRoleBadge');
         this._rarityTierLabel = this.binder.getLabel('OverviewRarityTier');
         this._rarityStarsRoot = this.binder.getNode('OverviewRarityStars');
+        this._bioLabel        = this.binder.getLabel('OverviewBio');
 
         if (!this._nameLabel) {
             UCUFLogger.warn(LogCategory.LIFECYCLE,
@@ -51,6 +54,7 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         setText(this._nameLabel, d.name);
         setText(this._roleLabel, d.roleArchetype);
         setText(this._rarityTierLabel, d.rarityLabel);
+        setText(this._bioLabel, d.historicalAnecdote);
 
         if (this._rarityStarsRoot && typeof d.rarityTier === 'number') {
             const tier = Math.max(0, Math.min(7, d.rarityTier as number));
@@ -74,5 +78,6 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         this._roleLabel       = null;
         this._rarityTierLabel = null;
         this._rarityStarsRoot = null;
+        this._bioLabel        = null;
     }
 }

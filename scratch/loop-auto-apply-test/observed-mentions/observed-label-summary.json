@@ -1,0 +1,1389 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-04-28T11:31:03+00:00",
+  "totalMentions": 20027,
+  "resolvedMentionCount": 18328,
+  "unresolvedMentionCount": 1592,
+  "excludedMentionCount": 99,
+  "reviewPendingMentionCount": 8,
+  "chapters": [
+    {
+      "chapterNo": 1,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/001.md",
+      "mentionCount": 148,
+      "formalMatchCount": 135,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 13,
+      "skippedUnknownCandidateCount": 78
+    },
+    {
+      "chapterNo": 2,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/002.md",
+      "mentionCount": 156,
+      "formalMatchCount": 123,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 33,
+      "skippedUnknownCandidateCount": 132
+    },
+    {
+      "chapterNo": 3,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/003.md",
+      "mentionCount": 98,
+      "formalMatchCount": 76,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 22,
+      "skippedUnknownCandidateCount": 117
+    },
+    {
+      "chapterNo": 4,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/004.md",
+      "mentionCount": 80,
+      "formalMatchCount": 69,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 11,
+      "skippedUnknownCandidateCount": 63
+    },
+    {
+      "chapterNo": 5,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/005.md",
+      "mentionCount": 213,
+      "formalMatchCount": 171,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 42,
+      "skippedUnknownCandidateCount": 148
+    },
+    {
+      "chapterNo": 6,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/006.md",
+      "mentionCount": 98,
+      "formalMatchCount": 88,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 10,
+      "skippedUnknownCandidateCount": 75
+    },
+    {
+      "chapterNo": 7,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/007.md",
+      "mentionCount": 183,
+      "formalMatchCount": 171,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 12,
+      "skippedUnknownCandidateCount": 103
+    },
+    {
+      "chapterNo": 8,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/008.md",
+      "mentionCount": 91,
+      "formalMatchCount": 88,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 3,
+      "skippedUnknownCandidateCount": 48
+    },
+    {
+      "chapterNo": 9,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/009.md",
+      "mentionCount": 151,
+      "formalMatchCount": 142,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 9,
+      "skippedUnknownCandidateCount": 60
+    },
+    {
+      "chapterNo": 10,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/010.md",
+      "mentionCount": 156,
+      "formalMatchCount": 137,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 19,
+      "skippedUnknownCandidateCount": 98
+    },
+    {
+      "chapterNo": 11,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/011.md",
+      "mentionCount": 245,
+      "formalMatchCount": 228,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 17,
+      "skippedUnknownCandidateCount": 111
+    },
+    {
+      "chapterNo": 12,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/012.md",
+      "mentionCount": 190,
+      "formalMatchCount": 168,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 22,
+      "skippedUnknownCandidateCount": 84
+    },
+    {
+      "chapterNo": 13,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/013.md",
+      "mentionCount": 170,
+      "formalMatchCount": 151,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 19,
+      "skippedUnknownCandidateCount": 85
+    },
+    {
+      "chapterNo": 14,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/014.md",
+      "mentionCount": 245,
+      "formalMatchCount": 228,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 17,
+      "skippedUnknownCandidateCount": 105
+    },
+    {
+      "chapterNo": 15,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/015.md",
+      "mentionCount": 258,
+      "formalMatchCount": 226,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 32,
+      "skippedUnknownCandidateCount": 121
+    },
+    {
+      "chapterNo": 16,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/016.md",
+      "mentionCount": 246,
+      "formalMatchCount": 220,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 26,
+      "skippedUnknownCandidateCount": 137
+    },
+    {
+      "chapterNo": 17,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/017.md",
+      "mentionCount": 148,
+      "formalMatchCount": 127,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 21,
+      "skippedUnknownCandidateCount": 83
+    },
+    {
+      "chapterNo": 18,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/018.md",
+      "mentionCount": 147,
+      "formalMatchCount": 138,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 9,
+      "skippedUnknownCandidateCount": 62
+    },
+    {
+      "chapterNo": 19,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/019.md",
+      "mentionCount": 260,
+      "formalMatchCount": 241,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 19,
+      "skippedUnknownCandidateCount": 111
+    },
+    {
+      "chapterNo": 20,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/020.md",
+      "mentionCount": 63,
+      "formalMatchCount": 52,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 11,
+      "skippedUnknownCandidateCount": 91
+    },
+    {
+      "chapterNo": 21,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/021.md",
+      "mentionCount": 196,
+      "formalMatchCount": 181,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 15,
+      "skippedUnknownCandidateCount": 77
+    },
+    {
+      "chapterNo": 22,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/022.md",
+      "mentionCount": 186,
+      "formalMatchCount": 176,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 10,
+      "skippedUnknownCandidateCount": 94
+    },
+    {
+      "chapterNo": 23,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/023.md",
+      "mentionCount": 134,
+      "formalMatchCount": 114,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 20,
+      "skippedUnknownCandidateCount": 117
+    },
+    {
+      "chapterNo": 24,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/024.md",
+      "mentionCount": 100,
+      "formalMatchCount": 99,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 1,
+      "skippedUnknownCandidateCount": 23
+    },
+    {
+      "chapterNo": 25,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/025.md",
+      "mentionCount": 123,
+      "formalMatchCount": 120,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 3,
+      "skippedUnknownCandidateCount": 74
+    },
+    {
+      "chapterNo": 26,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/026.md",
+      "mentionCount": 155,
+      "formalMatchCount": 154,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 1,
+      "skippedUnknownCandidateCount": 64
+    },
+    {
+      "chapterNo": 27,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/027.md",
+      "mentionCount": 115,
+      "formalMatchCount": 95,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 20,
+      "skippedUnknownCandidateCount": 98
+    },
+    {
+      "chapterNo": 28,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/028.md",
+      "mentionCount": 192,
+      "formalMatchCount": 179,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 13,
+      "skippedUnknownCandidateCount": 88
+    },
+    {
+      "chapterNo": 29,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/029.md",
+      "mentionCount": 139,
+      "formalMatchCount": 124,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 15,
+      "skippedUnknownCandidateCount": 86
+    },
+    {
+      "chapterNo": 30,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/030.md",
+      "mentionCount": 219,
+      "formalMatchCount": 194,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 25,
+      "skippedUnknownCandidateCount": 128
+    },
+    {
+      "chapterNo": 31,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/031.md",
+      "mentionCount": 234,
+      "formalMatchCount": 230,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 4,
+      "skippedUnknownCandidateCount": 76
+    },
+    {
+      "chapterNo": 32,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/032.md",
+      "mentionCount": 166,
+      "formalMatchCount": 155,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 11,
+      "skippedUnknownCandidateCount": 114
+    },
+    {
+      "chapterNo": 33,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/033.md",
+      "mentionCount": 159,
+      "formalMatchCount": 133,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 26,
+      "skippedUnknownCandidateCount": 110
+    },
+    {
+      "chapterNo": 34,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/034.md",
+      "mentionCount": 178,
+      "formalMatchCount": 166,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 12,
+      "skippedUnknownCandidateCount": 71
+    },
+    {
+      "chapterNo": 35,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/035.md",
+      "mentionCount": 136,
+      "formalMatchCount": 132,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 4,
+      "skippedUnknownCandidateCount": 74
+    },
+    {
+      "chapterNo": 36,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/036.md",
+      "mentionCount": 180,
+      "formalMatchCount": 172,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 8,
+      "skippedUnknownCandidateCount": 74
+    },
+    {
+      "chapterNo": 37,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/037.md",
+      "mentionCount": 169,
+      "formalMatchCount": 156,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 13,
+      "skippedUnknownCandidateCount": 104
+    },
+    {
+      "chapterNo": 38,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/038.md",
+      "mentionCount": 192,
+      "formalMatchCount": 164,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 28,
+      "skippedUnknownCandidateCount": 75
+    },
+    {
+      "chapterNo": 39,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/039.md",
+      "mentionCount": 226,
+      "formalMatchCount": 217,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 9,
+      "skippedUnknownCandidateCount": 85
+    },
+    {
+      "chapterNo": 40,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/040.md",
+      "mentionCount": 157,
+      "formalMatchCount": 153,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 4,
+      "skippedUnknownCandidateCount": 62
+    },
+    {
+      "chapterNo": 41,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/041.md",
+      "mentionCount": 231,
+      "formalMatchCount": 219,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 12,
+      "skippedUnknownCandidateCount": 121
+    },
+    {
+      "chapterNo": 42,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/042.md",
+      "mentionCount": 173,
+      "formalMatchCount": 171,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 2,
+      "skippedUnknownCandidateCount": 76
+    },
+    {
+      "chapterNo": 43,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/043.md",
+      "mentionCount": 204,
+      "formalMatchCount": 183,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 21,
+      "skippedUnknownCandidateCount": 78
+    },
+    {
+      "chapterNo": 44,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/044.md",
+      "mentionCount": 149,
+      "formalMatchCount": 143,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 6,
+      "skippedUnknownCandidateCount": 65
+    },
+    {
+      "chapterNo": 45,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/045.md",
+      "mentionCount": 208,
+      "formalMatchCount": 205,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 3,
+      "skippedUnknownCandidateCount": 63
+    },
+    {
+      "chapterNo": 46,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/046.md",
+      "mentionCount": 138,
+      "formalMatchCount": 136,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 2,
+      "skippedUnknownCandidateCount": 65
+    },
+    {
+      "chapterNo": 47,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/047.md",
+      "mentionCount": 72,
+      "formalMatchCount": 68,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 4,
+      "skippedUnknownCandidateCount": 64
+    },
+    {
+      "chapterNo": 48,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/048.md",
+      "mentionCount": 101,
+      "formalMatchCount": 97,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 4,
+      "skippedUnknownCandidateCount": 45
+    },
+    {
+      "chapterNo": 49,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/049.md",
+      "mentionCount": 221,
+      "formalMatchCount": 213,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 8,
+      "skippedUnknownCandidateCount": 63
+    },
+    {
+      "chapterNo": 50,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/050.md",
+      "mentionCount": 143,
+      "formalMatchCount": 133,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 10,
+      "skippedUnknownCandidateCount": 80
+    },
+    {
+      "chapterNo": 51,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/051.md",
+      "mentionCount": 198,
+      "formalMatchCount": 190,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 8,
+      "skippedUnknownCandidateCount": 101
+    },
+    {
+      "chapterNo": 52,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/052.md",
+      "mentionCount": 193,
+      "formalMatchCount": 172,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 21,
+      "skippedUnknownCandidateCount": 90
+    },
+    {
+      "chapterNo": 53,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/053.md",
+      "mentionCount": 235,
+      "formalMatchCount": 230,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 5,
+      "skippedUnknownCandidateCount": 75
+    },
+    {
+      "chapterNo": 54,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/054.md",
+      "mentionCount": 235,
+      "formalMatchCount": 228,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 7,
+      "skippedUnknownCandidateCount": 68
+    },
+    {
+      "chapterNo": 55,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/055.md",
+      "mentionCount": 212,
+      "formalMatchCount": 208,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 4,
+      "skippedUnknownCandidateCount": 55
+    },
+    {
+      "chapterNo": 56,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/056.md",
+      "mentionCount": 198,
+      "formalMatchCount": 187,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 11,
+      "skippedUnknownCandidateCount": 94
+    },
+    {
+      "chapterNo": 57,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/057.md",
+      "mentionCount": 225,
+      "formalMatchCount": 212,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 13,
+      "skippedUnknownCandidateCount": 86
+    },
+    {
+      "chapterNo": 58,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/058.md",
+      "mentionCount": 200,
+      "formalMatchCount": 189,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 11,
+      "skippedUnknownCandidateCount": 60
+    },
+    {
+      "chapterNo": 59,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/059.md",
+      "mentionCount": 201,
+      "formalMatchCount": 183,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 18,
+      "skippedUnknownCandidateCount": 104
+    },
+    {
+      "chapterNo": 60,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/060.md",
+      "mentionCount": 238,
+      "formalMatchCount": 229,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 9,
+      "skippedUnknownCandidateCount": 116
+    },
+    {
+      "chapterNo": 61,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/061.md",
+      "mentionCount": 169,
+      "formalMatchCount": 162,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 7,
+      "skippedUnknownCandidateCount": 81
+    },
+    {
+      "chapterNo": 62,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/062.md",
+      "mentionCount": 224,
+      "formalMatchCount": 216,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 8,
+      "skippedUnknownCandidateCount": 66
+    },
+    {
+      "chapterNo": 63,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/063.md",
+      "mentionCount": 263,
+      "formalMatchCount": 258,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 5,
+      "skippedUnknownCandidateCount": 60
+    },
+    {
+      "chapterNo": 64,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/064.md",
+      "mentionCount": 317,
+      "formalMatchCount": 296,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 21,
+      "skippedUnknownCandidateCount": 97
+    },
+    {
+      "chapterNo": 65,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/065.md",
+      "mentionCount": 392,
+      "formalMatchCount": 370,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 22,
+      "skippedUnknownCandidateCount": 85
+    },
+    {
+      "chapterNo": 66,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/066.md",
+      "mentionCount": 171,
+      "formalMatchCount": 161,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 10,
+      "skippedUnknownCandidateCount": 69
+    },
+    {
+      "chapterNo": 67,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/067.md",
+      "mentionCount": 299,
+      "formalMatchCount": 282,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 17,
+      "skippedUnknownCandidateCount": 112
+    },
+    {
+      "chapterNo": 68,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/068.md",
+      "mentionCount": 175,
+      "formalMatchCount": 166,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 9,
+      "skippedUnknownCandidateCount": 87
+    },
+    {
+      "chapterNo": 69,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/069.md",
+      "mentionCount": 102,
+      "formalMatchCount": 84,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 18,
+      "skippedUnknownCandidateCount": 95
+    },
+    {
+      "chapterNo": 70,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/070.md",
+      "mentionCount": 280,
+      "formalMatchCount": 272,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 8,
+      "skippedUnknownCandidateCount": 54
+    },
+    {
+      "chapterNo": 71,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/071.md",
+      "mentionCount": 219,
+      "formalMatchCount": 207,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 12,
+      "skippedUnknownCandidateCount": 106
+    },
+    {
+      "chapterNo": 72,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/072.md",
+      "mentionCount": 161,
+      "formalMatchCount": 157,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 4,
+      "skippedUnknownCandidateCount": 80
+    },
+    {
+      "chapterNo": 73,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/073.md",
+      "mentionCount": 200,
+      "formalMatchCount": 173,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 27,
+      "skippedUnknownCandidateCount": 107
+    },
+    {
+      "chapterNo": 74,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/074.md",
+      "mentionCount": 99,
+      "formalMatchCount": 96,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 3,
+      "skippedUnknownCandidateCount": 97
+    },
+    {
+      "chapterNo": 75,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/075.md",
+      "mentionCount": 110,
+      "formalMatchCount": 99,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 11,
+      "skippedUnknownCandidateCount": 68
+    },
+    {
+      "chapterNo": 76,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/076.md",
+      "mentionCount": 111,
+      "formalMatchCount": 97,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 14,
+      "skippedUnknownCandidateCount": 106
+    },
+    {
+      "chapterNo": 77,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/077.md",
+      "mentionCount": 138,
+      "formalMatchCount": 123,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 15,
+      "skippedUnknownCandidateCount": 89
+    },
+    {
+      "chapterNo": 78,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/078.md",
+      "mentionCount": 89,
+      "formalMatchCount": 69,
+      "addressTitleCount": 1,
+      "unknownCandidateCount": 19,
+      "skippedUnknownCandidateCount": 85
+    },
+    {
+      "chapterNo": 79,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/079.md",
+      "mentionCount": 132,
+      "formalMatchCount": 120,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 12,
+      "skippedUnknownCandidateCount": 66
+    },
+    {
+      "chapterNo": 80,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/080.md",
+      "mentionCount": 95,
+      "formalMatchCount": 73,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 22,
+      "skippedUnknownCandidateCount": 136
+    },
+    {
+      "chapterNo": 81,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/081.md",
+      "mentionCount": 90,
+      "formalMatchCount": 80,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 10,
+      "skippedUnknownCandidateCount": 61
+    },
+    {
+      "chapterNo": 82,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/082.md",
+      "mentionCount": 166,
+      "formalMatchCount": 142,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 24,
+      "skippedUnknownCandidateCount": 97
+    },
+    {
+      "chapterNo": 83,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/083.md",
+      "mentionCount": 157,
+      "formalMatchCount": 148,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 9,
+      "skippedUnknownCandidateCount": 132
+    },
+    {
+      "chapterNo": 84,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/084.md",
+      "mentionCount": 125,
+      "formalMatchCount": 124,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 1,
+      "skippedUnknownCandidateCount": 111
+    },
+    {
+      "chapterNo": 85,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/085.md",
+      "mentionCount": 163,
+      "formalMatchCount": 154,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 9,
+      "skippedUnknownCandidateCount": 98
+    },
+    {
+      "chapterNo": 86,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/086.md",
+      "mentionCount": 130,
+      "formalMatchCount": 108,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 22,
+      "skippedUnknownCandidateCount": 149
+    },
+    {
+      "chapterNo": 87,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/087.md",
+      "mentionCount": 245,
+      "formalMatchCount": 242,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 3,
+      "skippedUnknownCandidateCount": 86
+    },
+    {
+      "chapterNo": 88,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/088.md",
+      "mentionCount": 202,
+      "formalMatchCount": 197,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 5,
+      "skippedUnknownCandidateCount": 52
+    },
+    {
+      "chapterNo": 89,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/089.md",
+      "mentionCount": 149,
+      "formalMatchCount": 138,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 11,
+      "skippedUnknownCandidateCount": 85
+    },
+    {
+      "chapterNo": 90,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/090.md",
+      "mentionCount": 236,
+      "formalMatchCount": 229,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 7,
+      "skippedUnknownCandidateCount": 66
+    },
+    {
+      "chapterNo": 91,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/091.md",
+      "mentionCount": 172,
+      "formalMatchCount": 152,
+      "addressTitleCount": 1,
+      "unknownCandidateCount": 19,
+      "skippedUnknownCandidateCount": 83
+    },
+    {
+      "chapterNo": 92,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/092.md",
+      "mentionCount": 186,
+      "formalMatchCount": 169,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 17,
+      "skippedUnknownCandidateCount": 120
+    },
+    {
+      "chapterNo": 93,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/093.md",
+      "mentionCount": 211,
+      "formalMatchCount": 199,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 12,
+      "skippedUnknownCandidateCount": 90
+    },
+    {
+      "chapterNo": 94,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/094.md",
+      "mentionCount": 192,
+      "formalMatchCount": 184,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 8,
+      "skippedUnknownCandidateCount": 95
+    },
+    {
+      "chapterNo": 95,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/095.md",
+      "mentionCount": 203,
+      "formalMatchCount": 195,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 8,
+      "skippedUnknownCandidateCount": 110
+    },
+    {
+      "chapterNo": 96,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/096.md",
+      "mentionCount": 153,
+      "formalMatchCount": 138,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 15,
+      "skippedUnknownCandidateCount": 106
+    },
+    {
+      "chapterNo": 97,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/097.md",
+      "mentionCount": 177,
+      "formalMatchCount": 156,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 21,
+      "skippedUnknownCandidateCount": 97
+    },
+    {
+      "chapterNo": 98,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/098.md",
+      "mentionCount": 203,
+      "formalMatchCount": 188,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 15,
+      "skippedUnknownCandidateCount": 102
+    },
+    {
+      "chapterNo": 99,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/099.md",
+      "mentionCount": 188,
+      "formalMatchCount": 182,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 6,
+      "skippedUnknownCandidateCount": 100
+    },
+    {
+      "chapterNo": 100,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/100.md",
+      "mentionCount": 184,
+      "formalMatchCount": 178,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 6,
+      "skippedUnknownCandidateCount": 86
+    },
+    {
+      "chapterNo": 101,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/101.md",
+      "mentionCount": 175,
+      "formalMatchCount": 174,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 1,
+      "skippedUnknownCandidateCount": 104
+    },
+    {
+      "chapterNo": 102,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/102.md",
+      "mentionCount": 236,
+      "formalMatchCount": 217,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 19,
+      "skippedUnknownCandidateCount": 133
+    },
+    {
+      "chapterNo": 103,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/103.md",
+      "mentionCount": 177,
+      "formalMatchCount": 161,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 16,
+      "skippedUnknownCandidateCount": 113
+    },
+    {
+      "chapterNo": 104,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/104.md",
+      "mentionCount": 117,
+      "formalMatchCount": 107,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 10,
+      "skippedUnknownCandidateCount": 39
+    },
+    {
+      "chapterNo": 105,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/105.md",
+      "mentionCount": 129,
+      "formalMatchCount": 113,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 16,
+      "skippedUnknownCandidateCount": 120
+    },
+    {
+      "chapterNo": 106,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/106.md",
+      "mentionCount": 120,
+      "formalMatchCount": 89,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 31,
+      "skippedUnknownCandidateCount": 143
+    },
+    {
+      "chapterNo": 107,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/107.md",
+      "mentionCount": 132,
+      "formalMatchCount": 99,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 33,
+      "skippedUnknownCandidateCount": 128
+    },
+    {
+      "chapterNo": 108,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/108.md",
+      "mentionCount": 106,
+      "formalMatchCount": 85,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 21,
+      "skippedUnknownCandidateCount": 109
+    },
+    {
+      "chapterNo": 109,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/109.md",
+      "mentionCount": 92,
+      "formalMatchCount": 74,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 18,
+      "skippedUnknownCandidateCount": 122
+    },
+    {
+      "chapterNo": 110,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/110.md",
+      "mentionCount": 109,
+      "formalMatchCount": 97,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 12,
+      "skippedUnknownCandidateCount": 98
+    },
+    {
+      "chapterNo": 111,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/111.md",
+      "mentionCount": 94,
+      "formalMatchCount": 70,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 24,
+      "skippedUnknownCandidateCount": 88
+    },
+    {
+      "chapterNo": 112,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/112.md",
+      "mentionCount": 89,
+      "formalMatchCount": 56,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 33,
+      "skippedUnknownCandidateCount": 99
+    },
+    {
+      "chapterNo": 113,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/113.md",
+      "mentionCount": 107,
+      "formalMatchCount": 71,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 36,
+      "skippedUnknownCandidateCount": 119
+    },
+    {
+      "chapterNo": 114,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/114.md",
+      "mentionCount": 93,
+      "formalMatchCount": 81,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 12,
+      "skippedUnknownCandidateCount": 85
+    },
+    {
+      "chapterNo": 115,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/115.md",
+      "mentionCount": 83,
+      "formalMatchCount": 75,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 8,
+      "skippedUnknownCandidateCount": 50
+    },
+    {
+      "chapterNo": 116,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/116.md",
+      "mentionCount": 88,
+      "formalMatchCount": 61,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 27,
+      "skippedUnknownCandidateCount": 127
+    },
+    {
+      "chapterNo": 117,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/117.md",
+      "mentionCount": 75,
+      "formalMatchCount": 45,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 30,
+      "skippedUnknownCandidateCount": 91
+    },
+    {
+      "chapterNo": 118,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/118.md",
+      "mentionCount": 68,
+      "formalMatchCount": 53,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 15,
+      "skippedUnknownCandidateCount": 73
+    },
+    {
+      "chapterNo": 119,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/119.md",
+      "mentionCount": 94,
+      "formalMatchCount": 74,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 20,
+      "skippedUnknownCandidateCount": 106
+    },
+    {
+      "chapterNo": 120,
+      "chapterPath": "artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters/120.md",
+      "mentionCount": 88,
+      "formalMatchCount": 55,
+      "addressTitleCount": 0,
+      "unknownCandidateCount": 33,
+      "skippedUnknownCandidateCount": 182
+    }
+  ],
+  "topResolvedLabels": [
+    {
+      "label": "玄德",
+      "normalized": "玄德",
+      "mentionType": "formal-match",
+      "matchStatus": "resolved",
+      "count": 1747,
+      "matchedGeneralIds": [
+        "liu-bei"
+      ],
+      "sceneParticipants": [
+        "cai-shi",
+        "cao-cao",
+        "cao-hong",
+        "cao-pi",
+        "cao-ren",
+        "cao-xiu",
+        "cao-zhang",
+        "cao-zhen",
+        "chen-deng",
+        "chen-gong",
+        "chen-wu",
+        "chen-ying",
+        "cheng-pu",
+        "cheng-yu",
+        "deng-ai",
+        "deng-zhi",
+        "dian-wei",
+        "diao-chan",
+        "ding-feng",
+        "dong-zhuo",
+        "fa-zheng",
+        "fan-shi",
+        "fei-guan",
+        "fei-shi",
+        "fei-yi",
+        "gan-ning",
+        "gan-shi",
+        "gao-lan",
+        "gongsun-zan",
+        "gu-yong",
+        "guan-xing",
+        "guan-yu",
+        "guo-jia",
+        "guo-tu",
+        "han-dang",
+        "han-hao",
+        "han-sui",
+        "han-xian",
+        "han-xuan",
+        "hao-meng",
+        "hou-cheng",
+        "huang-gai",
+        "huang-quan",
+        "huang-zhong",
+        "huang-zu",
+        "huangfu-song",
+        "jia-xu",
+        "jian-yong",
+        "jiang-qin",
+        "jiang-wan",
+        "jiang-wei",
+        "jin-xuan",
+        "ju-shou",
+        "kong-rong",
+        "le-jin",
+        "lei-tong",
+        "li-dian",
+        "li-hui",
+        "li-jue",
+        "li-ru",
+        "li-su",
+        "li-yan",
+        "liao-hua",
+        "liu-ba",
+        "liu-bei",
+        "liu-biao",
+        "liu-du",
+        "liu-feng",
+        "liu-yan",
+        "liu-ye",
+        "liu-zhang",
+        "lu-bu",
+        "lu-meng",
+        "lu-su",
+        "lu-xun",
+        "lv-fan",
+        "lv-qian",
+        "lv-xiang",
+        "ma-chao",
+        "ma-dai",
+        "ma-liang",
+        "ma-su",
+        "ma-teng",
+        "man-chong",
+        "mao-jie",
+        "meng-da",
+        "mi-shi",
+        "pan-zhang",
+        "pang-de",
+        "pang-tong",
+        "peng-yang",
+        "qin-mi",
+        "shen-pei",
+        "sima-yi",
+        "sun-ce",
+        "sun-jian",
+        "sun-qian",
+        "sun-quan",
+        "sun-shang-xiang",
+        "taishi-ci",
+        "tao-qian",
+        "tian-feng",
+        "wang-kai",
+        "wang-ping",
+        "wang-yun",
+        "wang-zhong",
+        "wei-xu",
+        "wei-yan",
+        "wen-chou",
+        "wen-pin",
+        "wu-ban",
+        "wu-guo-tai",
+        "wu-lan",
+        "wu-yi",
+        "xiahou-dun",
+        "xiahou-shang",
+        "xiahou-shi",
+        "xiahou-yuan",
+        "xu-huang",
+        "xu-sheng",
+        "xu-shu",
+        "xu-you",
+        "xu-zhu",
+        "xun-you",
+        "xun-yu",
+        "yan-liang",
+        "yan-yan",
+        "yang-feng",
+        "yang-huai",
+        "yang-song",
+        "yi-ji",
+        "yu-jin",
+        "yuan-shang",
+        "yuan-shao",
+        "yuan-shu",
+        "yuan-tan",
+        "yuan-xi",
+        "zhang-bao-enemy",
+        "zhang-fei",
+        "zhang-he",
+        "zhang-ji",
+        "zhang-jue",
+        "zhang-liang-enemy",
+        "zhang-liao",
+        "zhang-lu",
+        "zhang-rang",
+        "zhang-ren",
+        "zhang-song",
+        "zhang-xiu",
+        "zhang-yi-shu",
+        "zhang-yun",
+        "zhang-zhao",
+        "zhao-fan",
+        "zhao-yun",
+        "zhong-hui",
+        "zhou-cang",
+        "zhou-shan",
+        "zhou-tai",
+        "zhou-yu",
+        "zhu-jun-han",
+        "zhuge-jin",
+        "zhuge-liang"
+      ],
+      "sourceRefs": [
+        "001#p10",
+        "001#p11",
+        "001#p12",
+        "001#p13",
+        "001#p15"
+      ],
+      "sampleSnippets": [
+        "勝之後，漢景帝閣下玄孫，姓劉名備，字玄德。昔劉勝之子劉貞，漢武時封涿鹿亭侯，",
+        "後坐酎金，失侯，因此遺這一枝在涿縣。玄德祖劉雄，父劉弘。弘曾舉孝廉，亦嘗作吏",
+        "父劉弘。弘曾舉孝廉，亦嘗作吏，早喪。玄德幼孤，事母至孝。家貧，販屨織席爲業。"
+      ]
+    }
+  ],
+  "topUnresolvedLabels": [
+    {
+      "label": "元紹",
+      "normalized": "元紹",
+      "mentionType": "unknown-candidate",
+      "matchStatus": "unresolved",
+      "count": 6,
+      "matchedGeneralIds": [],
+      "sceneParticipants": [
+        "gan-shi",
+        "guan-yu",
+        "liao-hua",
+        "sun-qian",
+        "zhang-bao-enemy",
+        "zhang-jue",
+        "zhou-cang"
+      ],
+      "sourceRefs": [
+        "028#p3",
+        "028#p4"
+      ],
+      "sampleSnippets": [
+        "前。關公問其姓名。告曰：「某姓裴，名元紹。自張角死後，一向無主，嘯聚山林，權",
+        "元紹曰：「汝不識吾面，何以知吾名？」元紹曰：「離此三十里，有一臥牛山。山上有",
+        "公等今後可各去邪歸正，勿自陷其身。」元紹拜謝。正說話間，遙望一彪人馬來到。元"
+      ]
+    }
+  ],
+  "topExcludedLabels": [
+    {
+      "label": "陳倉",
+      "normalized": "陳倉",
+      "mentionType": "unknown-candidate",
+      "matchStatus": "excluded",
+      "count": 10,
+      "matchedGeneralIds": [],
+      "sceneParticipants": [
+        "cao-rui",
+        "cao-zhen",
+        "guan-xing",
+        "guo-huai",
+        "hao-zhao",
+        "jiang-wei",
+        "li-hui",
+        "liao-hua",
+        "lu-xun",
+        "ma-dai",
+        "man-chong",
+        "sima-yi",
+        "sun-li",
+        "sun-quan",
+        "wang-ping",
+        "wang-shuang",
+        "wei-yan",
+        "zhang-bao",
+        "zhang-he",
+        "zhang-yi",
+        "zhuge-liang"
+      ],
+      "sourceRefs": [
+        "097#p11",
+        "097#p12",
+        "098#p9",
+        "098#p14",
+        "098#p17"
+      ],
+      "sampleSnippets": [
+        "說蜀兵前隊哨至陳倉，回報孔明，說：「陳倉口已築起一城，內有大將郝昭守把，深溝",
+        "從太白嶺鳥道出祁山甚便。」孔明曰：「陳倉正北是街亭，必得此城，方可進兵。」命",
+        "欺吾無攻城之具耶？」隨叫土人問曰：「陳倉城中，有多少人馬？」土人告曰：「雖不"
+      ]
+    }
+  ],
+  "topReviewPendingLabels": [
+    {
+      "label": "樂毅",
+      "normalized": "樂毅",
+      "mentionType": "unknown-candidate",
+      "matchStatus": "review-pending",
+      "count": 8,
+      "matchedGeneralIds": [],
+      "sceneParticipants": [
+        "cao-cao",
+        "cao-ren",
+        "gu-yong",
+        "guan-yu",
+        "liu-bei",
+        "liu-biao",
+        "pang-tong",
+        "sun-quan",
+        "xiahou-dun",
+        "xu-shu",
+        "zhang-zhao",
+        "zhao-yun",
+        "zhuge-liang"
+      ],
+      "sourceRefs": [
+        "036#p11",
+        "037#p6",
+        "043#p5",
+        "079#p13",
+        "113#p17"
+      ],
+      "sampleSnippets": [
+        "麟、寒鴉配鸞鳳耳。此人每嘗自比管仲，樂毅；以吾觀之，管、樂殆不及此人。此人有",
+        "若何，孔明但笑而不答。每常自比管仲、樂毅，其才不可量也。」玄德曰：「何潁川之",
+        "多賢士。」時雲長在側曰：「某聞管仲、樂毅乃春秋、戰國名人，功蓋寰宇。孔明自比"
+      ]
+    }
+  ]
+}

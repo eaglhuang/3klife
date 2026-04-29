@@ -1,0 +1,228 @@
+{
+  "schemaVersion": "1.2.0",
+  "schemaSpec": "doc_other_0017 (R-25 + R-26 sourceHtml/viewport + R-27 art-gated autoBake)",
+  "screenId": "character-ds3-main",
+  "sidecarBundle": "resources",
+  "sidecarRoot": "assets/resources/sidecars/character-ds3-main/",
+  "sourceHtml": "Design System/design_handoff/character/index.html",
+  "viewport": {
+    "width": 1334,
+    "height": 750
+  },
+  "bakerHint": {
+    "tool": "puppeteer-core (build-time)",
+    "runWhen": "developer / CI; never at runtime",
+    "runtimeCost": "zero — runtime only loads pre-baked PNGs as SpriteFrame",
+    "autoBakeContract": "Only entries with autoBake=true and bakeAction=auto-screenshot-fragment may be baked automatically. Authors must mark small standalone missing fragments with data-ucuf-bake=\"fragment\"; large UI regions and geometry masks are review/converter work.",
+    "artistOverride": "For autoBake entries only: drop a same-named PNG at outputPath to replace the placeholder; converter loads via uuid, no code change required."
+  },
+  "summary": {
+    "totalEntries": 7,
+    "autoBakeEntries": 0,
+    "reviewOnlyEntries": 7,
+    "byProperty": {
+      "background-image": 2,
+      "clip-path": 5
+    },
+    "bySkinSlotKind": {
+      "background-set": 2,
+      "mask-set": 5
+    },
+    "byBakeAction": {
+      "manual-art-asset": 1,
+      "review-only": 1,
+      "converter-geometry": 5
+    }
+  },
+  "entries": [
+    {
+      "bakeId": "character-ds3-main__div_2__background-image",
+      "screenId": "character-ds3-main",
+      "selector": "div#stage.stage[0]>div.portrait-bg[0]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 2,
+      "property": "background-image",
+      "value": "radial-gradient(at 30% 40%, rgba(139, 98, 42, 0.3), rgba(0, 0, 0, 0) 55%), radial-gradient(at 80% 70%, rgba(44, 58, 66, 0.25), rgba(0, 0, 0, 0) 60%), linear-gradient(rgb(42, 39, 32) 0%, rgb(26, 24, 20) 40%, rgb(16, 14, 10) 100%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 0.33,
+        "y": 0,
+        "width": 827,
+        "height": 750,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "background-set",
+      "autoBake": false,
+      "bakeAction": "manual-art-asset",
+      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
+      "status": "needs-art-asset"
+    },
+    {
+      "bakeId": "character-ds3-main__div_84__background-image",
+      "screenId": "character-ds3-main",
+      "selector": "div#stage.stage[0]>div.right-shell[4]>div#right-content.right-content[0]>div[0]>div[2]>div[1]>div[0]>div[0]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 84,
+      "property": "background-image",
+      "value": "radial-gradient(circle, rgba(140, 207, 196, 0.12), rgba(63, 106, 98, 0.06))",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 864.92,
+        "y": 267.01,
+        "width": 58,
+        "height": 58,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "background-set",
+      "autoBake": false,
+      "bakeAction": "review-only",
+      "artGuidance": "Not auto-baked by default. Add data-ucuf-bake=\"fragment\" only to small standalone missing visual fragments.",
+      "status": "needs-art-direction"
+    },
+    {
+      "bakeId": "character-ds3-main__div_135__clip-path",
+      "screenId": "character-ds3-main",
+      "selector": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[0]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 135,
+      "property": "clip-path",
+      "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 19.78,
+        "y": 781.94,
+        "width": 123,
+        "height": 117,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "mask-set",
+      "autoBake": false,
+      "bakeAction": "converter-geometry",
+      "artGuidance": "Geometry/mask CSS is not a missing picture. Implement as Cocos mask/vector/shape logic; do not screenshot rendered content.",
+      "status": "needs-converter-rule"
+    },
+    {
+      "bakeId": "character-ds3-main__div_141__clip-path",
+      "screenId": "character-ds3-main",
+      "selector": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[1]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 141,
+      "property": "clip-path",
+      "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 145.7,
+        "y": 781.94,
+        "width": 123,
+        "height": 117,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "mask-set",
+      "autoBake": false,
+      "bakeAction": "converter-geometry",
+      "artGuidance": "Geometry/mask CSS is not a missing picture. Implement as Cocos mask/vector/shape logic; do not screenshot rendered content.",
+      "status": "needs-converter-rule"
+    },
+    {
+      "bakeId": "character-ds3-main__div_147__clip-path",
+      "screenId": "character-ds3-main",
+      "selector": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[2]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 147,
+      "property": "clip-path",
+      "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 271.62,
+        "y": 781.94,
+        "width": 123,
+        "height": 117,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "mask-set",
+      "autoBake": false,
+      "bakeAction": "converter-geometry",
+      "artGuidance": "Geometry/mask CSS is not a missing picture. Implement as Cocos mask/vector/shape logic; do not screenshot rendered content.",
+      "status": "needs-converter-rule"
+    },
+    {
+      "bakeId": "character-ds3-main__div_153__clip-path",
+      "screenId": "character-ds3-main",
+      "selector": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[3]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 153,
+      "property": "clip-path",
+      "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 397.54,
+        "y": 781.94,
+        "width": 123,
+        "height": 117,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "mask-set",
+      "autoBake": false,
+      "bakeAction": "converter-geometry",
+      "artGuidance": "Geometry/mask CSS is not a missing picture. Implement as Cocos mask/vector/shape logic; do not screenshot rendered content.",
+      "status": "needs-converter-rule"
+    },
+    {
+      "bakeId": "character-ds3-main__div_159__clip-path",
+      "screenId": "character-ds3-main",
+      "selector": "div#stage.stage[0]>div#strip-wrap.story-strip-wrap[5]>div#strip-cells.strip[1]>div.cell[4]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 159,
+      "property": "clip-path",
+      "value": "polygon(0px 0px, 100% 0px, 100% 86%, 91% 100%, 0px 100%)",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 523.48,
+        "y": 781.94,
+        "width": 123,
+        "height": 117,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "mask-set",
+      "autoBake": false,
+      "bakeAction": "converter-geometry",
+      "artGuidance": "Geometry/mask CSS is not a missing picture. Implement as Cocos mask/vector/shape logic; do not screenshot rendered content.",
+      "status": "needs-converter-rule"
+    }
+  ]
+}

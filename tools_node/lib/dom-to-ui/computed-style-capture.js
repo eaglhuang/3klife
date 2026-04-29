@@ -2,6 +2,7 @@
 // Uses a live puppeteer page to capture *actual* getComputedStyle for each
 // visible element, including ::before / ::after pseudo-elements, and produces:
 //   1. A flat list of "fidelity-snapshots" keyed by stable element path
+//      plus a transient data-ucuf-capture-id for draft-builder alignment
 //   2. A css-coverage report (which properties were captured / dropped)
 //
 // This is the source of truth for high-fidelity rendering — it bypasses the
@@ -35,6 +36,11 @@ const CAPTURED = new Set([
   'text-decoration', 'text-decoration-color', 'text-decoration-style', 'text-decoration-thickness',
   '-webkit-text-stroke', '-webkit-text-stroke-width', '-webkit-text-stroke-color',
   'font-feature-settings', 'font-variant',
+  // R-9 (general rule): Cocos Label has no native `text-transform`; capture the
+  // value here so draft-builder can apply the transformation offline at convert
+  // time. Applies to every label across every UI source, not bound to any single
+  // screen.
+  'text-transform',
   // M30: image fit properties
   'object-fit', 'object-position',
   // M31: overflow clipping for visual reconstruction (circular portraits, HP bars, etc.)
@@ -83,6 +89,7 @@ const DEFAULT_VALUES = {
   '-webkit-mask-image': ['none'],
   'text-decoration':   ['none', 'none solid currentcolor', 'none solid rgb(229, 226, 225)'],
   'text-decoration-line': ['none'],
+  'text-transform':    ['none'],
   '-webkit-text-stroke-width': ['0px'],
   // M30: image fit defaults (browser defaults for <img>)
   'object-fit':      ['fill'],
@@ -106,7 +113,7 @@ function isDefault(prop, value) {
  */
 async function captureComputedStyles(page) {
   // Run inside the page; serialize result back.
-  const captured = await page.evaluate(() => {
+  const capturedResult = await page.evaluate(() => {
     const ALL_PROPS = [
       // Visual
       'background-color', 'background-image', 'background-size', 'background-position', 'background-repeat',
@@ -129,6 +136,7 @@ async function captureComputedStyles(page) {
       'text-decoration-line', 'text-decoration-color', 'text-decoration-style', 'text-decoration-thickness',
       '-webkit-text-stroke-width', '-webkit-text-stroke-color',
       'font-feature-settings', 'font-variant',
+      'text-transform',
       // Stacking & overflow
       'z-index', 'overflow', 'overflow-x', 'overflow-y',
       // Image fit (M30)
@@ -228,6 +236,9 @@ async function captureComputedStyles(page) {
       if (r.width === 0 || r.height === 0) return;
       idMap.set(el, ++nodeId);
     });
+    all.forEach(el => {
+      if (idMap.has(el)) el.setAttribute('data-ucuf-capture-id', String(idMap.get(el)));
+    });
     function parentIdOf(el) {
       let p = el.parentElement;
       while (p && p !== document.body && p !== document.documentElement) {
@@ -251,6 +262,8 @@ async function captureComputedStyles(page) {
       const id = idMap.get(el);
       if (!id) return;
       const ucufId = el.getAttribute('data-ucuf-id') || null;
+      const bakeMode = el.getAttribute('data-ucuf-bake') || el.getAttribute('data-bake') || null;
+      const bakeNote = el.getAttribute('data-ucuf-bake-note') || null;
       const styles = pickProps(el, null);
       // Capture <img>/<input type=image> src so the renderer can re-emit them.
       if (tag === 'img' && el.src) {
@@ -263,14 +276,20 @@ async function captureComputedStyles(page) {
       }
       const parentId = parentIdOf(el);
       const offsetParentId = offsetParentIdOf(el);
-      snapshots.push({ id, parentId, offsetParentId, ucufId, tag, path: pathOf(el), styles, pseudo: null });
+      snapshots.push({ id, parentId, offsetParentId, ucufId, bakeMode, bakeNote, tag, path: pathOf(el), styles, pseudo: null });
       const before = pickProps(el, '::before');
       if (before) snapshots.push({ id: id * 1000 + 1, parentId: id, offsetParentId: id, ucufId: ucufId ? `${ucufId}::before` : null, tag, path: pathOf(el) + '::before', styles: before, pseudo: 'before' });
       const after = pickProps(el, '::after');
       if (after) snapshots.push({ id: id * 1000 + 2, parentId: id, offsetParentId: id, ucufId: ucufId ? `${ucufId}::after` : null, tag, path: pathOf(el) + '::after', styles: after, pseudo: 'after' });
     });
-    return snapshots;
+    return {
+      snapshots,
+      annotatedHtml: document.documentElement ? document.documentElement.outerHTML : null,
+    };
   });
+
+  const captured = Array.isArray(capturedResult) ? capturedResult : capturedResult.snapshots;
+  const annotatedHtml = Array.isArray(capturedResult) ? null : capturedResult.annotatedHtml;
 
   // Build coverage report
   const propUsage = {};   // prop → { occurrences, samples: [{path, value}] }
@@ -296,6 +315,7 @@ async function captureComputedStyles(page) {
 
   return {
     snapshots: captured,
+    annotatedHtml,
     coverage: {
       totalNodes: captured.filter(s => !s.pseudo).length,
       pseudoNodes: captured.filter(s => s.pseudo).length,
@@ -334,11 +354,16 @@ function buildCssCapabilityFromUsage(propUsage, droppedProps) {
     }
   }
   const items = [...byKey.values()].sort((a, b) => b.occurrences - a.occurrences || a.property.localeCompare(b.property));
-  const summary = { supported: 0, assetize: 0, unsupported: 0, unknown: 0 };
-  for (const item of items) summary[item.capability] = (summary[item.capability] || 0) + item.occurrences;
+  const summary = { supported: 0, assetize: 0, unsupported: 0, unknown: 0, tokenDeclaration: 0 };
+  for (const item of items) {
+    const bucket = item.capability === 'token-declaration' ? 'tokenDeclaration' : item.capability;
+    summary[bucket] = (summary[bucket] || 0) + item.occurrences;
+  }
   return {
     summary,
-    topOffenders: items.filter(item => item.capability !== 'supported').slice(0, 20),
+    topOffenders: items
+      .filter(item => item.capability !== 'supported' && item.capability !== 'token-declaration')
+      .slice(0, 20),
     assetizeHints: items
       .filter(item => item.capability === 'assetize')
       .map(item => Object.assign({}, item, { suggestedTask: 'assetize-css-effect' }))

@@ -1,4 +1,5 @@
 <!-- doc_id: doc_ai_0018 -->
+**全繁體中文模式**: 推理與回覆一律繁體中文，使用台灣慣用術語。
 # 3KLife Agent Overrides
 
 本檔補充專案內的高優先級 Agent 行為規則。
@@ -25,9 +26,9 @@
 8. 只有在使用者明確表示「放開縮圖原則 / 允許讀原圖」時，才可查看 `>500px` 原圖。
 9. 截圖工具流應優先直接產出可讀的小圖；若工具先產大圖，必須立刻接 `prepare-view-image.js` 或 progressive wrapper，不得把原始大圖直接送進 `view_image`。
 
-## `(best)` 嚴格模式
+## 嚴格模式
 
-只要使用者訊息以 `(best)` 開頭，Agent 必須視為進入「最佳上下文節流模式」。
+所有對話都一律生效，Agent 必須進入「最佳上下文節流模式」。
 
 ### 強制行為
 
@@ -76,4 +77,4 @@
 
 ## Skill 指名
 
-若使用者直接提到 `$context-budget-guard` 或 `$best-mode`，Agent 必須優先套用對應 skill。
+若使用者直接提到 `$context-budget-guard`，Agent 必須優先套用對應 skill。
