@@ -2,17 +2,19 @@
   "screenId": "character-ds3-main",
   "rendering": {
     "nodeCount": 1,
+    "deferredNodeCount": 0,
+    "totalNodeCount": 1,
     "maxDepth": 1,
-    "estimatedDrawCalls": 3,
+    "estimatedDrawCalls": 10,
     "colorRectCount": 0
   },
   "loading": {
-    "atlasCount": 2,
+    "atlasCount": 7,
     "atlasLimit": 4,
     "preloadSpriteCount": 0,
     "deferredSpriteCount": 0,
-    "estimatedTextureBytes": 5563712,
-    "fontCount": 1
+    "estimatedTextureBytes": 5401624,
+    "fontCount": 3
   },
   "lifecycle": {
     "lazySlotCount": 0,
@@ -40,7 +42,8 @@
   "verdict": {
     "level": "warning",
     "warnings": [
-      "texture-memory-warning: 5.31MB > 4.00MB"
+      "atlas-batch-limit-exceeded: 7 atlases (R24 limit: 4)",
+      "texture-memory-warning: 5.15MB > 4.00MB"
     ],
     "blockers": []
   }

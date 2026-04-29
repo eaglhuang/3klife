@@ -4,37 +4,49 @@
   "tabs": [
     {
       "id": "Overview",
-      "mount": "TabOverviewContent",
+      "mount": "CharacterDs3Main_div_6",
+      "mountSource": "source-portal:right-content",
+      "buttonNode": "CharacterDs3Main_button_4",
       "lifecycle": "lazy",
       "childPanelClass": "CharacterDs3OverviewChild"
     },
     {
       "id": "Stats",
-      "mount": "TabStatsContent",
+      "mount": "CharacterDs3Main_div_6",
+      "mountSource": "source-portal:right-content",
+      "buttonNode": "CharacterDs3Main_button_5",
       "lifecycle": "lazy",
       "childPanelClass": "CharacterDs3StatsChild"
     },
     {
       "id": "Tactics",
-      "mount": "TabTacticsContent",
+      "mount": "CharacterDs3Main_div_6",
+      "mountSource": "source-portal:right-content",
+      "buttonNode": "CharacterDs3Main_button_6",
       "lifecycle": "lazy",
       "childPanelClass": "CharacterDs3TacticsChild"
     },
     {
       "id": "Bloodline",
-      "mount": "TabBloodlineContent",
+      "mount": "CharacterDs3Main_div_6",
+      "mountSource": "source-portal:right-content",
+      "buttonNode": "CharacterDs3Main_button_7",
       "lifecycle": "lazy",
       "childPanelClass": "CharacterDs3BloodlineChild"
     },
     {
       "id": "Equip",
-      "mount": "TabEquipContent",
+      "mount": "CharacterDs3Main_div_6",
+      "mountSource": "source-portal:right-content",
+      "buttonNode": "CharacterDs3Main_button_8",
       "lifecycle": "lazy",
       "childPanelClass": "CharacterDs3EquipChild"
     },
     {
       "id": "Aptitude",
-      "mount": "TabAptitudeContent",
+      "mount": "CharacterDs3Main_div_6",
+      "mountSource": "source-portal:right-content",
+      "buttonNode": "CharacterDs3Main_button_9",
       "lifecycle": "lazy",
       "childPanelClass": "CharacterDs3AptitudeChild"
     }

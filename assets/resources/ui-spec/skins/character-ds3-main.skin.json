@@ -7,10 +7,9 @@
     },
     "auto.character-ds3-main.characterds3main_div_2": {
       "kind": "sprite-frame",
-      "path": "sprites/ui_families/general_detail/generated/general_detail_bg_v5_civil",
-      "expectedWidth": 827,
-      "expectedHeight": 750,
-      "_assetPreserveReason": "existing-runtime-asset"
+      "path": "sprites/ui_character_ds3/portrait_bg",
+      "spriteType": "simple",
+      "opacity": 1
     },
     "auto.character-ds3-main.characterds3main_button_1": {
       "kind": "gradient-rect",
@@ -53,9 +52,8 @@
     },
     "auto.character-ds3-main.characterds3main_img_1": {
       "kind": "sprite-frame",
-      "path": "sprites/ui_common/placeholder/missing_sprite",
-      "expectedWidth": 413,
-      "expectedHeight": 735
+      "path": "sprites/generals/zhang_fei_portrait",
+      "spriteType": "simple"
     },
     "auto.character-ds3-main.characterds3main_img_1_cssshadow": {
       "kind": "shadow-set",

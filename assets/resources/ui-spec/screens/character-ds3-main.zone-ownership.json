@@ -1,0 +1,445 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "character-ds3-main",
+  "taxonomy": [
+    "art-authority",
+    "manual-art-asset",
+    "converter-geometry",
+    "source-html-fix",
+    "runtime-bug"
+  ],
+  "summary": {
+    "totalZones": 20,
+    "byTaxonomy": {
+      "art-authority": 0,
+      "manual-art-asset": 0,
+      "converter-geometry": 20,
+      "source-html-fix": 0,
+      "runtime-bug": 0
+    },
+    "waiverEligibleCount": 0,
+    "missingRectCount": 0
+  },
+  "zones": [
+    {
+      "id": "pixel-diff:1",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-1",
+      "rect": {
+        "x": 1664,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 3165,
+          "mismatchRatio": 0.772705078125
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:2",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-2",
+      "rect": {
+        "x": 1344,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 3055,
+          "mismatchRatio": 0.745849609375
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:3",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-3",
+      "rect": {
+        "x": 1280,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2990,
+          "mismatchRatio": 0.72998046875
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:4",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-4",
+      "rect": {
+        "x": 1216,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2969,
+          "mismatchRatio": 0.724853515625
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:5",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-5",
+      "rect": {
+        "x": 768,
+        "y": 704,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2760,
+          "mismatchRatio": 0.673828125
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:6",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-6",
+      "rect": {
+        "x": 448,
+        "y": 256,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2722,
+          "mismatchRatio": 0.66455078125
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:7",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-7",
+      "rect": {
+        "x": 1600,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2700,
+          "mismatchRatio": 0.6591796875
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:8",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-8",
+      "rect": {
+        "x": 832,
+        "y": 192,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2430,
+          "mismatchRatio": 0.59326171875
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:9",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-9",
+      "rect": {
+        "x": 768,
+        "y": 768,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2425,
+          "mismatchRatio": 0.592041015625
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:10",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-10",
+      "rect": {
+        "x": 832,
+        "y": 320,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2202,
+          "mismatchRatio": 0.53759765625
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:11",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-11",
+      "rect": {
+        "x": 768,
+        "y": 448,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2197,
+          "mismatchRatio": 0.536376953125
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:12",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-12",
+      "rect": {
+        "x": 832,
+        "y": 128,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2093,
+          "mismatchRatio": 0.510986328125
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:13",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-13",
+      "rect": {
+        "x": 384,
+        "y": 576,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2091,
+          "mismatchRatio": 0.510498046875
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:14",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-14",
+      "rect": {
+        "x": 640,
+        "y": 256,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2064,
+          "mismatchRatio": 0.50390625
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:15",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-15",
+      "rect": {
+        "x": 832,
+        "y": 256,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 2033,
+          "mismatchRatio": 0.496337890625
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:16",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-16",
+      "rect": {
+        "x": 768,
+        "y": 640,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 1979,
+          "mismatchRatio": 0.483154296875
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:17",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-17",
+      "rect": {
+        "x": 1408,
+        "y": 640,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 1942,
+          "mismatchRatio": 0.47412109375
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:18",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-18",
+      "rect": {
+        "x": 1792,
+        "y": 704,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 1917,
+          "mismatchRatio": 0.468017578125
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:19",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-19",
+      "rect": {
+        "x": 704,
+        "y": 448,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 1915,
+          "mismatchRatio": 0.467529296875
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:20",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-20",
+      "rect": {
+        "x": 832,
+        "y": 384,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 1910,
+          "mismatchRatio": 0.46630859375
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    }
+  ]
+}

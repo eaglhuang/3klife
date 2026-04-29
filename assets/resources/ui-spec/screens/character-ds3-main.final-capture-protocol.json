@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "character-ds3-main",
+  "sourcePackageId": "Design System 3 / character-ds3-main",
+  "viewport": {
+    "width": 1920,
+    "height": 1080,
+    "dpr": 1
+  },
+  "safeArea": {
+    "x": 0,
+    "y": 0,
+    "width": 1920,
+    "height": 1080
+  },
+  "sourceCrop": null,
+  "editorCrop": null,
+  "settleMs": 800,
+  "threshold": 0.95,
+  "tolerance": 12,
+  "artAuthorityWaivers": null,
+  "notes": [
+    "R-33 final capture protocol: fixed 1920x1080 viewport, DPR, safe area, crop and settle time for the final HTML source vs Cocos Editor gate.",
+    "Cocos runtime capture uses --viewport 1920x1130 --maxWidth 0 so the captured game image matches the 1920x1080 comparison viewport after toolbar cropping.",
+    "Art-authority waiver sidecar remains null; current final gate uses raw runtimeVsSource without waiver."
+  ]
+}

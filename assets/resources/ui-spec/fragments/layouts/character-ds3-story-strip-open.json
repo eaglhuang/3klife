@@ -1,0 +1,343 @@
+{
+  "type": "container",
+  "name": "CharacterDs3Main_div_54OpenFragment",
+  "widget": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+  },
+  "children": [
+    {
+      "type": "container",
+      "name": "CharacterDs3Main_div_55",
+      "layout": {
+        "type": "horizontal",
+        "spacingX": 12,
+        "paddingTop": 14,
+        "paddingRight": 28,
+        "paddingBottom": 8,
+        "paddingLeft": 28
+      },
+      "children": [
+        {
+          "type": "label",
+          "name": "CharacterDs3Main_h4_1",
+          "text": "逸 事",
+          "styleSlot": "auto.character-ds3-main.characterds3main_h4_1"
+        },
+        {
+          "type": "label",
+          "name": "CharacterDs3Main_span_62",
+          "i18nKey": "ui.character.section.chronicles",
+          "text": "Chronicles",
+          "styleSlot": "auto.character-ds3-main.characterds3main_span_62"
+        },
+        {
+          "type": "label",
+          "name": "CharacterDs3Main_span_63",
+          "height": 1,
+          "styleSlot": "auto.character-ds3-main.characterds3main_span_63"
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "name": "CharacterDs3Main_div_56",
+      "height": 168,
+      "layout": {
+        "type": "grid",
+        "spacingX": 4,
+        "spacingY": 4,
+        "constraint": "fixed-col",
+        "constraintNum": 6,
+        "cellWidth": 160,
+        "cellHeight": 168
+      },
+      "children": [
+        {
+          "type": "container",
+          "name": "CharacterDs3Main_div_57",
+          "_motionId": "character-ds3main_div_57.transition",
+          "children": [
+            {
+              "type": "panel",
+              "name": "CharacterDs3Main_div_58",
+              "skinSlot": "auto.character-ds3-main.characterds3main_div_58"
+            },
+            {
+              "type": "label",
+              "name": "CharacterDs3Main_span_64",
+              "bindPath": "storyStrip.0.num",
+              "widget": {
+                "top": 0,
+                "left": 0
+              },
+              "text": "01",
+              "styleSlot": "auto.character-ds3-main.characterds3main_span_64"
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3Main_div_59",
+              "widget": {
+                "left": 0,
+                "right": 0,
+                "bottom": 0
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3Main_div_60",
+                  "text": "涿 郡 屠 戶",
+                  "styleSlot": "auto.character-ds3-main.characterds3main_div_60"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3Main_span_65",
+                  "bindPath": "storyStrip.0.en",
+                  "text": "BUTCHER OF ZHUO",
+                  "styleSlot": "auto.character-ds3-main.characterds3main_span_65"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "container",
+          "name": "CharacterDs3Main_div_61",
+          "_motionId": "character-ds3main_div_61.transition",
+          "children": [
+            {
+              "type": "panel",
+              "name": "CharacterDs3Main_div_62",
+              "skinSlot": "auto.character-ds3-main.characterds3main_div_62"
+            },
+            {
+              "type": "label",
+              "name": "CharacterDs3Main_span_66",
+              "bindPath": "storyStrip.1.num",
+              "widget": {
+                "top": 0,
+                "left": 0
+              },
+              "text": "02",
+              "styleSlot": "auto.character-ds3-main.characterds3main_span_66"
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3Main_div_63",
+              "widget": {
+                "left": 0,
+                "right": 0,
+                "bottom": 0
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3Main_div_64",
+                  "text": "桃 園 結 義",
+                  "styleSlot": "auto.character-ds3-main.characterds3main_div_64"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3Main_span_67",
+                  "bindPath": "storyStrip.1.en",
+                  "text": "OATH OF THE PEACH GARDEN",
+                  "styleSlot": "auto.character-ds3-main.characterds3main_span_67"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "container",
+          "name": "CharacterDs3Main_div_65",
+          "_motionId": "character-ds3main_div_65.transition",
+          "children": [
+            {
+              "type": "panel",
+              "name": "CharacterDs3Main_div_66",
+              "skinSlot": "auto.character-ds3-main.characterds3main_div_66"
+            },
+            {
+              "type": "label",
+              "name": "CharacterDs3Main_span_68",
+              "bindPath": "storyStrip.2.num",
+              "widget": {
+                "top": 0,
+                "left": 0
+              },
+              "text": "03",
+              "styleSlot": "auto.character-ds3-main.characterds3main_span_68"
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3Main_div_67",
+              "widget": {
+                "left": 0,
+                "right": 0,
+                "bottom": 0
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3Main_div_68",
+                  "text": "長 坂 怒 吼",
+                  "styleSlot": "auto.character-ds3-main.characterds3main_div_68"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3Main_span_69",
+                  "bindPath": "storyStrip.2.en",
+                  "text": "ROAR AT CHANGBAN",
+                  "styleSlot": "auto.character-ds3-main.characterds3main_span_69"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "container",
+          "name": "CharacterDs3Main_div_69",
+          "_motionId": "character-ds3main_div_69.transition",
+          "children": [
+            {
+              "type": "panel",
+              "name": "CharacterDs3Main_div_70",
+              "skinSlot": "auto.character-ds3-main.characterds3main_div_70"
+            },
+            {
+              "type": "label",
+              "name": "CharacterDs3Main_span_70",
+              "bindPath": "storyStrip.3.num",
+              "widget": {
+                "top": 0,
+                "left": 0
+              },
+              "text": "04",
+              "styleSlot": "auto.character-ds3-main.characterds3main_span_70"
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3Main_div_71",
+              "widget": {
+                "left": 0,
+                "right": 0,
+                "bottom": 0
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3Main_div_72",
+                  "text": "義 釋 嚴 顏",
+                  "styleSlot": "auto.character-ds3-main.characterds3main_div_72"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3Main_span_71",
+                  "bindPath": "storyStrip.3.en",
+                  "text": "MERCY TO YAN YAN",
+                  "styleSlot": "auto.character-ds3-main.characterds3main_span_71"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "container",
+          "name": "CharacterDs3Main_div_73",
+          "_motionId": "character-ds3main_div_73.transition",
+          "children": [
+            {
+              "type": "panel",
+              "name": "CharacterDs3Main_div_74",
+              "skinSlot": "auto.character-ds3-main.characterds3main_div_74"
+            },
+            {
+              "type": "label",
+              "name": "CharacterDs3Main_span_72",
+              "bindPath": "storyStrip.4.num",
+              "widget": {
+                "top": 0,
+                "left": 0
+              },
+              "text": "05",
+              "styleSlot": "auto.character-ds3-main.characterds3main_span_72"
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3Main_div_75",
+              "widget": {
+                "left": 0,
+                "right": 0,
+                "bottom": 0
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3Main_div_76",
+                  "text": "醉 後 鞭 督",
+                  "styleSlot": "auto.character-ds3-main.characterds3main_div_76"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3Main_span_73",
+                  "bindPath": "storyStrip.4.en",
+                  "text": "DRUNKEN DISCIPLINE",
+                  "styleSlot": "auto.character-ds3-main.characterds3main_span_73"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "container",
+          "name": "CharacterDs3Main_div_77",
+          "_motionId": "character-ds3main_div_77.transition",
+          "children": [
+            {
+              "type": "panel",
+              "name": "CharacterDs3Main_div_78",
+              "skinSlot": "auto.character-ds3-main.characterds3main_div_78"
+            },
+            {
+              "type": "label",
+              "name": "CharacterDs3Main_span_74",
+              "bindPath": "storyStrip.5.num",
+              "widget": {
+                "top": 0,
+                "left": 0
+              },
+              "text": "06",
+              "styleSlot": "auto.character-ds3-main.characterds3main_span_74"
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3Main_div_79",
+              "widget": {
+                "left": 0,
+                "right": 0,
+                "bottom": 0
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3Main_div_80",
+                  "text": "燕 血 傳 承",
+                  "styleSlot": "auto.character-ds3-main.characterds3main_div_80"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3Main_span_75",
+                  "bindPath": "storyStrip.5.en",
+                  "text": "LEGACY OF YAN BLOOD",
+                  "styleSlot": "auto.character-ds3-main.characterds3main_span_75"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

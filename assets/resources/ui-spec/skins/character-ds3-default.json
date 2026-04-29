@@ -6,28 +6,15 @@
       "opacity": 1
     },
     "auto.character-ds3-main.characterds3main_div_2": {
-      "kind": "color-rect",
-      "color": "unmappedColor",
+      "kind": "sprite-frame",
+      "path": "sprites/ui_character_ds3/portrait_bg",
+      "spriteType": "simple",
       "opacity": 1
     },
     "auto.character-ds3-main.characterds3main_button_1": {
-      "kind": "gradient-rect",
-      "gradient": {
-        "type": "linear",
-        "angle": 135,
-        "stops": [
-          {
-            "color": "secondary",
-            "offset": 0,
-            "opacity": 0.18
-          },
-          {
-            "color": "gdv3GoldBorder",
-            "offset": 1,
-            "opacity": 0.1
-          }
-        ]
-      }
+      "kind": "sprite-frame",
+      "path": "sprites/ui_character_ds3/portrait_nav",
+      "spriteType": "simple"
     },
     "auto.character-ds3-main.characterds3main_button_1_cssshadow": {
       "kind": "shadow-set",
@@ -51,7 +38,7 @@
     },
     "auto.character-ds3-main.characterds3main_img_1": {
       "kind": "sprite-frame",
-      "path": "sprites/ui_common/placeholder/missing_sprite",
+      "path": "sprites/generals/zhang_fei_portrait",
       "expectedWidth": 595,
       "expectedHeight": 1058
     },
@@ -76,23 +63,9 @@
       "cornerRadius": 0
     },
     "auto.character-ds3-main.characterds3main_button_2": {
-      "kind": "gradient-rect",
-      "gradient": {
-        "type": "linear",
-        "angle": 135,
-        "stops": [
-          {
-            "color": "secondary",
-            "offset": 0,
-            "opacity": 0.18
-          },
-          {
-            "color": "gdv3GoldBorder",
-            "offset": 1,
-            "opacity": 0.1
-          }
-        ]
-      }
+      "kind": "sprite-frame",
+      "path": "sprites/ui_character_ds3/portrait_nav",
+      "spriteType": "simple"
     },
     "auto.character-ds3-main.characterds3main_button_2_cssshadow": {
       "kind": "shadow-set",
@@ -122,28 +95,14 @@
       "letterSpacing": 12,
       "color": "surfaceParchment",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_div_4": {
-      "kind": "gradient-rect",
-      "gradient": {
-        "type": "linear",
-        "angle": 135,
-        "stops": [
-          {
-            "color": "stdButtonPrimary",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "rgb(31, 51, 46)",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      }
+      "kind": "sprite-frame",
+      "path": "sprites/ui_character_ds3/rank_badge_bg",
+      "spriteType": "simple"
     },
     "auto.character-ds3-main.characterds3main_div_4_cssshadow": {
       "kind": "shadow-set",
@@ -165,6 +124,11 @@
       },
       "cornerRadius": 16
     },
+    "auto.character-ds3-main.characterds3main_div_5": {
+      "kind": "color-rect",
+      "color": "surfaceDeep",
+      "opacity": 0.72
+    },
     "auto.character-ds3-main.characterds3main_span_1": {
       "kind": "label-style",
       "font": "fonts/newsreader/font",
@@ -173,7 +137,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -185,27 +149,13 @@
       "letterSpacing": 3,
       "color": "mirrorSigilField",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_button_3": {
-      "kind": "gradient-rect",
-      "gradient": {
-        "type": "linear",
-        "angle": 180,
-        "stops": [
-          {
-            "color": "surfaceContainer",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "backgroundMid",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      }
+      "kind": "sprite-frame",
+      "path": "sprites/ui_character_ds3/back_button",
+      "spriteType": "simple"
     },
     "auto.character-ds3-main.characterds3main_button_3_cssshadow": {
       "kind": "shadow-set",
@@ -235,7 +185,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER"
     },
     "auto.character-ds3-main.characterds3main_span_4": {
@@ -246,7 +196,7 @@
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER"
     },
     "auto.character-ds3-main.characterds3main_span_5": {
@@ -257,7 +207,7 @@
       "letterSpacing": 5,
       "color": "stdLabelButton",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true,
       "shadow": {
@@ -275,7 +225,7 @@
       "letterSpacing": 3,
       "color": "gdv3TextMutedWarm",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_div_11": {
@@ -286,7 +236,7 @@
       "letterSpacing": 1,
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "style": "labelLg"
     },
@@ -298,7 +248,7 @@
       "letterSpacing": 3,
       "color": "gdv3InkDeep",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -310,7 +260,7 @@
       "letterSpacing": 0,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_9": {
@@ -321,7 +271,7 @@
       "letterSpacing": 0,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_10": {
@@ -332,7 +282,7 @@
       "letterSpacing": 0,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_11": {
@@ -343,7 +293,7 @@
       "letterSpacing": 0,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_12": {
@@ -354,7 +304,7 @@
       "letterSpacing": 0,
       "color": "outline",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_div_15": {
@@ -389,7 +339,7 @@
       "letterSpacing": 4,
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -401,7 +351,7 @@
       "letterSpacing": 2,
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_15": {
@@ -412,7 +362,7 @@
       "letterSpacing": 2,
       "color": "gdv3StatStr",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -424,7 +374,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -436,7 +386,7 @@
       "letterSpacing": 2,
       "color": "tertiaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -448,7 +398,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -460,7 +410,7 @@
       "letterSpacing": 2,
       "color": "gdv3StatCha",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -472,7 +422,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -484,7 +434,7 @@
       "letterSpacing": 2,
       "color": "gdv3StatInt",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -496,7 +446,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -508,7 +458,7 @@
       "letterSpacing": 2,
       "color": "rarityWhite",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -520,7 +470,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -532,7 +482,7 @@
       "letterSpacing": 2,
       "color": "gdv3StatLuk",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -544,7 +494,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -580,7 +530,7 @@
       "letterSpacing": 4,
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -592,7 +542,7 @@
       "letterSpacing": 2,
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_29": {
@@ -603,7 +553,7 @@
       "letterSpacing": 0,
       "color": "textPrimary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "style": "labelLg"
     },
@@ -615,7 +565,7 @@
       "letterSpacing": 2,
       "color": "textOffWhite",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -627,7 +577,7 @@
       "letterSpacing": 0,
       "color": "textPrimary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "style": "labelLg"
     },
@@ -639,7 +589,7 @@
       "letterSpacing": 2,
       "color": "textOffWhite",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -675,7 +625,7 @@
       "letterSpacing": 4,
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -687,7 +637,7 @@
       "letterSpacing": 2,
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_35": {
@@ -698,7 +648,7 @@
       "letterSpacing": 0,
       "color": "textPrimary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "style": "labelLg"
     },
@@ -710,7 +660,7 @@
       "letterSpacing": 2,
       "color": "textOffWhite",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -722,7 +672,7 @@
       "letterSpacing": 0,
       "color": "textPrimary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "style": "labelLg"
     },
@@ -734,7 +684,7 @@
       "letterSpacing": 2,
       "color": "textOffWhite",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -770,7 +720,7 @@
       "letterSpacing": 4,
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -782,7 +732,7 @@
       "letterSpacing": 2,
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_div_40": {
@@ -798,7 +748,7 @@
       "letterSpacing": 3,
       "color": "stdButtonPrimary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_div_42": {
@@ -809,7 +759,7 @@
       "letterSpacing": 7,
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -821,7 +771,7 @@
       "letterSpacing": 2,
       "color": "stdButtonPrimary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_div_44": {
@@ -856,7 +806,7 @@
       "letterSpacing": 0,
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "style": "labelLg",
       "isBold": true
@@ -869,7 +819,7 @@
       "letterSpacing": 2,
       "color": "stdButtonPrimary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -881,7 +831,7 @@
       "letterSpacing": 0,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "style": "labelLg"
     },
@@ -893,7 +843,7 @@
       "letterSpacing": 2,
       "color": "stdButtonPrimary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -905,7 +855,7 @@
       "letterSpacing": 0,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "style": "labelLg"
     },
@@ -941,7 +891,7 @@
       "letterSpacing": 4,
       "color": "stdCrestColor",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -953,7 +903,7 @@
       "letterSpacing": 2,
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_div_51": {
@@ -964,7 +914,7 @@
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "JUSTIFY"
     },
     "auto.character-ds3-main.characterds3main_div_52": {
@@ -975,28 +925,14 @@
       "letterSpacing": 9,
       "color": "gdv3TextMetaDim",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_button_4": {
-      "kind": "gradient-rect",
-      "gradient": {
-        "type": "linear",
-        "angle": 180,
-        "stops": [
-          {
-            "color": "secondary",
-            "offset": 0,
-            "opacity": 0.25
-          },
-          {
-            "color": "gdv3GoldBorder",
-            "offset": 1,
-            "opacity": 0.12
-          }
-        ]
-      }
+      "kind": "sprite-frame",
+      "path": "sprites/ui_character_ds3/tab_active",
+      "spriteType": "simple"
     },
     "auto.character-ds3-main.characterds3main_span_50": {
       "kind": "label-style",
@@ -1006,7 +942,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
@@ -1018,28 +954,14 @@
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_button_5": {
-      "kind": "gradient-rect",
-      "gradient": {
-        "type": "linear",
-        "angle": 180,
-        "stops": [
-          {
-            "color": "surfaceContainer",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "backgroundMid",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      }
+      "kind": "sprite-frame",
+      "path": "sprites/ui_character_ds3/tab_inactive",
+      "spriteType": "simple"
     },
     "auto.character-ds3-main.characterds3main_span_52": {
       "kind": "label-style",
@@ -1049,7 +971,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
@@ -1061,28 +983,14 @@
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_button_6": {
-      "kind": "gradient-rect",
-      "gradient": {
-        "type": "linear",
-        "angle": 180,
-        "stops": [
-          {
-            "color": "surfaceContainer",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "backgroundMid",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      }
+      "kind": "sprite-frame",
+      "path": "sprites/ui_character_ds3/tab_inactive",
+      "spriteType": "simple"
     },
     "auto.character-ds3-main.characterds3main_span_54": {
       "kind": "label-style",
@@ -1092,7 +1000,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
@@ -1104,28 +1012,14 @@
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_button_7": {
-      "kind": "gradient-rect",
-      "gradient": {
-        "type": "linear",
-        "angle": 180,
-        "stops": [
-          {
-            "color": "surfaceContainer",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "backgroundMid",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      }
+      "kind": "sprite-frame",
+      "path": "sprites/ui_character_ds3/tab_inactive",
+      "spriteType": "simple"
     },
     "auto.character-ds3-main.characterds3main_span_56": {
       "kind": "label-style",
@@ -1135,7 +1029,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
@@ -1147,28 +1041,14 @@
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_button_8": {
-      "kind": "gradient-rect",
-      "gradient": {
-        "type": "linear",
-        "angle": 180,
-        "stops": [
-          {
-            "color": "surfaceContainer",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "backgroundMid",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      }
+      "kind": "sprite-frame",
+      "path": "sprites/ui_character_ds3/tab_inactive",
+      "spriteType": "simple"
     },
     "auto.character-ds3-main.characterds3main_span_58": {
       "kind": "label-style",
@@ -1178,7 +1058,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
@@ -1190,28 +1070,14 @@
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_button_9": {
-      "kind": "gradient-rect",
-      "gradient": {
-        "type": "linear",
-        "angle": 180,
-        "stops": [
-          {
-            "color": "surfaceContainer",
-            "offset": 0,
-            "opacity": 1
-          },
-          {
-            "color": "backgroundMid",
-            "offset": 1,
-            "opacity": 1
-          }
-        ]
-      }
+      "kind": "sprite-frame",
+      "path": "sprites/ui_character_ds3/tab_inactive",
+      "spriteType": "simple"
     },
     "auto.character-ds3-main.characterds3main_span_60": {
       "kind": "label-style",
@@ -1221,7 +1087,7 @@
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
@@ -1233,7 +1099,7 @@
       "letterSpacing": 2,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "CENTER",
       "isBold": true
     },
@@ -1269,7 +1135,7 @@
       "letterSpacing": 6,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "style": "labelLg",
       "isBold": true
@@ -1282,7 +1148,7 @@
       "letterSpacing": 0,
       "color": "gdv3TextMutedWarm",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_63": {
@@ -1293,7 +1159,7 @@
       "letterSpacing": 0,
       "color": "textPrimary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "style": "labelLg"
     },
@@ -1329,7 +1195,7 @@
       "letterSpacing": -1,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -1341,7 +1207,7 @@
       "letterSpacing": 2,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -1353,7 +1219,7 @@
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_div_62": {
@@ -1388,7 +1254,7 @@
       "letterSpacing": -1,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -1400,7 +1266,7 @@
       "letterSpacing": 2,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -1412,7 +1278,7 @@
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_div_66": {
@@ -1447,7 +1313,7 @@
       "letterSpacing": -1,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -1459,7 +1325,7 @@
       "letterSpacing": 2,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -1471,7 +1337,7 @@
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_div_70": {
@@ -1506,7 +1372,7 @@
       "letterSpacing": -1,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -1518,7 +1384,7 @@
       "letterSpacing": 2,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -1530,7 +1396,7 @@
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_div_74": {
@@ -1565,7 +1431,7 @@
       "letterSpacing": -1,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -1577,7 +1443,7 @@
       "letterSpacing": 2,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -1589,7 +1455,7 @@
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_div_78": {
@@ -1624,7 +1490,7 @@
       "letterSpacing": -1,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -1636,7 +1502,7 @@
       "letterSpacing": 2,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START",
       "isBold": true
     },
@@ -1648,7 +1514,7 @@
       "letterSpacing": 1,
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_div_81": {
@@ -1659,13 +1525,8 @@
       "letterSpacing": 3,
       "color": "textKhaki",
       "outlineColor": "colorOutlineDark",
-      "outlineWidth": 2,
+      "outlineWidth": 0,
       "horizontalAlign": "START"
-    },
-    "auto.character-ds3-main.characterds3main_div_5": {
-      "kind": "color-rect",
-      "color": "surfaceDeep",
-      "opacity": 0.72
     }
   },
   "id": "character-ds3-default",

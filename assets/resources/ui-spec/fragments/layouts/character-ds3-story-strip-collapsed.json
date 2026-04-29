@@ -1,0 +1,18 @@
+{
+  "type": "container",
+  "name": "CharacterDs3Main_div_54CollapsedFragment",
+  "widget": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+  },
+  "children": [
+    {
+      "type": "spacer",
+      "name": "CharacterDs3Main_div_54CollapsedFragmentAnchor",
+      "width": 1,
+      "height": 1
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "type": "container",
+  "name": "CharacterDs3Main_div_6CollapsedFragment",
+  "widget": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+  },
+  "layout": {
+    "type": "vertical",
+    "paddingTop": 50,
+    "paddingRight": 20,
+    "paddingBottom": 60,
+    "paddingLeft": 20
+  },
+  "children": [
+    {
+      "type": "spacer",
+      "name": "CharacterDs3Main_div_6CollapsedFragmentAnchor",
+      "width": 1,
+      "height": 1
+    }
+  ]
+}

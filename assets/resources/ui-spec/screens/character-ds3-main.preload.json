@@ -3,7 +3,8 @@
   "version": 1,
   "firstScreen": {
     "bundles": [
-      "lobby_ui"
+      "ui_character_ds3",
+      "resources"
     ],
     "spriteFrames": [],
     "fonts": [],
