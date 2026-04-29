@@ -1,12 +1,21 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator } from 'cc';
+import { _decorator, Node } from 'cc';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
 import { UISpecLoader } from '../core/UISpecLoader';
 import { services } from '../../core/managers/ServiceLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { applyUIScreenRuntimeState } from '../core/UIScreenRuntimeStateRegistry';
+import type { UILayoutNodeSpec } from '../core/UISpecTypes';
 
 const { ccclass, property } = _decorator;
+
+interface PreviewLazySlotEntry {
+    spec: UILayoutNodeSpec;
+    node: Node;
+    parentW: number;
+    parentH: number;
+    currentFragmentId?: string;
+}
 
 /**
  * UIScreenPreviewHost — 供 Editor / QA 使用的 screen-driven 預覽掛載點。
@@ -23,6 +32,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
     private _currentScreenId = '';
     private _isLoading = false;
     private _binder: UITemplateBinder | null = null;
+    private readonly _lazySlots = new Map<string, PreviewLazySlotEntry>();
 
     public get binder(): UITemplateBinder | null {
         return this._binder;
@@ -54,6 +64,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             const tokens = await this._specLoader.loadDesignTokens();
 
             await this.buildScreen(layout, skin, i18n, tokens);
+            await this._loadDefaultFragments();
             this._currentScreenId = screenId;
             await this._applyRuntimeState(screenId);
 
@@ -68,6 +79,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
     private _destroyBuiltChildren(): void {
         this._binder = null;
+        this._lazySlots.clear();
         const children = [...this.node.children];
         for (const child of children) {
             child.destroy();
@@ -76,6 +88,43 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
     protected onReady(binder: UITemplateBinder): void {
         this._binder = binder;
+    }
+
+    protected override _onLazySlotCreated(spec: UILayoutNodeSpec, node: Node, w: number, h: number): void {
+        if (!spec.name) {
+            throw new Error('[UIScreenPreviewHost] lazySlot 缺少 spec.name，無法載入 defaultFragment');
+        }
+        this._lazySlots.set(spec.name, { spec, node, parentW: w, parentH: h });
+    }
+
+    private async _loadDefaultFragments(): Promise<void> {
+        for (const entry of this._lazySlots.values()) {
+            const fragmentId = entry.spec.defaultFragment;
+            if (!fragmentId) {
+                continue;
+            }
+            await this._switchPreviewSlot(entry, fragmentId);
+        }
+    }
+
+    private async _switchPreviewSlot(entry: PreviewLazySlotEntry, fragmentId: string): Promise<void> {
+        if (entry.currentFragmentId === fragmentId && entry.node.children.length > 0) {
+            return;
+        }
+
+        for (const child of [...entry.node.children]) {
+            child.destroy();
+        }
+
+        const fragmentLayout = await this._specLoader.loadLayout(fragmentId);
+        await this._buildNode(fragmentLayout.root, entry.node, entry.parentW, entry.parentH);
+        this._postBuildPass(entry.node);
+
+        const fragmentRootNode = entry.node.children[entry.node.children.length - 1] ?? null;
+        if (this._binder && fragmentRootNode) {
+            this._binder.bindLazyFragment(fragmentRootNode, fragmentLayout.root);
+        }
+        entry.currentFragmentId = fragmentId;
     }
 
     private async _applyRuntimeState(screenId: string): Promise<void> {

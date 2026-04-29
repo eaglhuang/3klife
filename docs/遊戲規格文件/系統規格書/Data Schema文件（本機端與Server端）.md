@@ -120,6 +120,7 @@
       "Profile_Presentation": {
         "Default_Tab": "Overview",
         "Crest_State": "revealed",
+        "Bloodline_StoryDock_State": "HALF",
         "Story_Strip_Cells": {
           "origin": "常山出身",
           "faction": "蜀軍白馬前鋒",
@@ -154,7 +155,7 @@
 | **結緣** | `Data.Bonding_Sessions` | 結緣系統（配種）.md (doc_spec_0028) I 區 | Father_UID, Mother_UID, Breeding_Mode, EP_Estimate, Child 結構 |
 | **因子** | `Data.Generals[UID].Genes[]` | 因子爆發系統.md (doc_spec_0010) I 區 | Type(六色), ID, Level, Is_Locked, Discovery_Level |
 | **血統** | `Data.Generals[UID].Ancestors_JSON` | 血統理論系統.md (doc_spec_0011) I 區 | 3 代 14 人矩陣、Bloodline_ID |
-| **人物頁呈現** | `Data.Generals[UID].Profile_Presentation` | 武將人物介面規格書.md (doc_ui_0012) | Default_Tab, Crest_State, Story_Strip_Cells |
+| **人物頁呈現** | `Data.Generals[UID].Profile_Presentation` | 武將人物介面規格書.md (doc_ui_0012) 2.0 | Default_Tab, Crest_State, Bloodline_StoryDock_State, Story_Strip_Cells |
 | **教官** | `Data.Mentor_Pool` | 教官系統（支援卡）.md (doc_spec_0027) I 區 | Support_ID, TP_Bonus, Skill_Hints[], Stat_Bonus, Current_Star, Role_Boundary |
 | **統一物件庫** | `Data.Inventory_Service` | 武將裝備道具系統.md (doc_spec_0174) | Inventory_ID, Item_Type, Slot_Type, Bound_General_UID, Quantity, Quality, Source_Type, Display_Bucket, Is_Displayed |
 | **兵種虎符** | `Data.Talisman_Inventory` | 兵種（虎符）系統.md (doc_spec_0012) I 區 / `Data.Inventory_Service` projection | Tally_ID, TigerTallyScore, Star, Source_Type, Source_General_UID, Equipped_General_UID, Linked_Troop_ID, Is_Displayed |
@@ -222,7 +223,7 @@
 
 #### 2-1a. 虎符 / 英靈卡 / 戰場最小 read model 形狀
 
-以下 shape 為 battle UI 與人物頁 `寶 / GEAR` 頁查詢虎符、命槽英靈卡與出征支援時的正式最小讀模型，目的不是重複定義所有平衡規則，而是讓前端知道哪些欄位可以直接讀。
+以下 shape 為 battle UI、人物頁 `命 / Bloodline` 英靈卡槽、人物頁 `兵 / Aptitude` 虎符槽與出征支援時的正式最小讀模型，目的不是重複定義所有平衡規則，而是讓前端知道哪些欄位可以直接讀。`寶 / GEAR` 頁只查一般裝備、傳家寶與道具，不再查虎符或英靈卡。
 
 ```json
 {

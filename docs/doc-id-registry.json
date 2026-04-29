@@ -159,7 +159,7 @@
     },
     "doc_ui_0012": {
       "path": "docs/遊戲規格文件/系統規格書/武將人物介面規格書.md",
-      "title": "武將人物介面規格書",
+      "title": "武將人物介面規格書 2.0",
       "category": "ui"
     },
     "doc_ui_0013": {
@@ -2443,156 +2443,161 @@
       "category": "agentskill"
     },
     "doc_agentskill_0012": {
+      "path": ".agents/skills/sanguo-knowledge-growth-loop/SKILL.md",
+      "title": "Sanguo Knowledge Growth Loop",
+      "category": "agentskill"
+    },
+    "doc_agentskill_0013": {
       "path": ".agents/skills/sanguo-rag-resolution-loop/SKILL.md",
       "title": "Sanguo RAG Resolution Loop",
       "category": "agentskill"
     },
-    "doc_agentskill_0013": {
+    "doc_agentskill_0014": {
       "path": ".agents/skills/task-card-opener/SKILL.md",
       "title": "Task Card Opener",
       "category": "agentskill"
     },
-    "doc_agentskill_0014": {
+    "doc_agentskill_0015": {
       "path": ".agents/skills/ui-vibe-pipeline/SKILL.md",
       "title": "UI Vibe Pipeline",
       "category": "agentskill"
     },
-    "doc_agentskill_0015": {
+    "doc_agentskill_0016": {
       "path": ".github/skills/cocos-bug-triage/SKILL.md",
       "title": "Cocos Bug Triage（鏡像索引）",
       "category": "agentskill"
     },
-    "doc_agentskill_0016": {
+    "doc_agentskill_0017": {
       "path": ".github/skills/cocos-log-reader/SKILL.md",
       "title": "Cocos Log Reader（鏡像索引）",
       "category": "agentskill"
     },
-    "doc_agentskill_0017": {
+    "doc_agentskill_0018": {
       "path": ".github/skills/cocos-preview-qa/SKILL.md",
       "title": "Cocos Preview QA（Browser Review 自動截圖 + 比對）",
       "category": "agentskill"
     },
-    "doc_agentskill_0018": {
+    "doc_agentskill_0019": {
       "path": ".github/skills/cocos-screenshot/SKILL.md",
       "title": "Cocos Screenshot（Editor Preview / Editor 視窗截圖）",
       "category": "agentskill"
     },
-    "doc_agentskill_0019": {
+    "doc_agentskill_0020": {
       "path": ".github/skills/cocos-vfx-browser-qa/SKILL.md",
       "title": "Cocos VFX Browser QA",
       "category": "agentskill"
     },
-    "doc_agentskill_0020": {
+    "doc_agentskill_0021": {
       "path": ".github/skills/comfyui-sdxl-partial-asset-gen/SKILL.md",
       "title": "ComfyUI SDXL Partial Asset Gen",
       "category": "agentskill"
     },
-    "doc_agentskill_0021": {
+    "doc_agentskill_0022": {
       "path": ".github/skills/crossref-progress-scanner/SKILL.md",
       "title": "crossref-progress-scanner Skill",
       "category": "agentskill"
     },
-    "doc_agentskill_0022": {
+    "doc_agentskill_0023": {
       "path": ".github/skills/dalle3-image-gen/SKILL.md",
       "title": "DALL-E 3 Image Generation",
       "category": "agentskill"
     },
-    "doc_agentskill_0023": {
+    "doc_agentskill_0024": {
       "path": ".github/skills/doc-consolidation-flow/SKILL.md",
       "title": "Doc Consolidation Flow",
       "category": "agentskill"
     },
-    "doc_agentskill_0024": {
+    "doc_agentskill_0025": {
       "path": ".github/skills/doc-shard-manager/SKILL.md",
       "title": "Doc Shard Manager SKILL",
       "category": "agentskill"
     },
-    "doc_agentskill_0025": {
+    "doc_agentskill_0026": {
       "path": ".github/skills/encoding-touched-guard/SKILL.md",
       "title": "Encoding Touched Guard",
       "category": "agentskill"
     },
-    "doc_agentskill_0026": {
+    "doc_agentskill_0027": {
       "path": ".github/skills/general-balance-tuner/SKILL.md",
       "title": "General Balance Tuner",
       "category": "agentskill"
     },
-    "doc_agentskill_0027": {
+    "doc_agentskill_0028": {
       "path": ".github/skills/general-data-pipeline/SKILL.md",
       "title": "General Data Pipeline",
       "category": "agentskill"
     },
-    "doc_agentskill_0028": {
+    "doc_agentskill_0029": {
       "path": ".github/skills/general-story-writer/SKILL.md",
       "title": "General Story Writer",
       "category": "agentskill"
     },
-    "doc_agentskill_0029": {
+    "doc_agentskill_0030": {
       "path": ".github/skills/html-to-ucuf/SKILL.md",
       "title": "HTML -> UCUF 轉換 SKILL",
       "category": "agentskill"
     },
-    "doc_agentskill_0030": {
+    "doc_agentskill_0031": {
       "path": ".github/skills/nano-banana-gen/SKILL.md",
       "title": "Nano Banana 圖像生成",
       "category": "agentskill"
     },
-    "doc_agentskill_0031": {
+    "doc_agentskill_0032": {
       "path": ".github/skills/task-card-opener/SKILL.md",
       "title": "Task Card Opener（鏡像索引）",
       "category": "agentskill"
     },
-    "doc_agentskill_0032": {
+    "doc_agentskill_0033": {
       "path": ".github/skills/ui-asset-gen-director/SKILL.md",
       "title": "UI Asset Gen Director",
       "category": "agentskill"
     },
-    "doc_agentskill_0033": {
+    "doc_agentskill_0034": {
       "path": ".github/skills/ui-asset-qc/SKILL.md",
       "title": "UI Asset QC",
       "category": "agentskill"
     },
-    "doc_agentskill_0034": {
+    "doc_agentskill_0035": {
       "path": ".github/skills/ui-asset-slice-pipeline/SKILL.md",
       "title": "UI Asset Slice Pipeline",
       "category": "agentskill"
     },
-    "doc_agentskill_0035": {
+    "doc_agentskill_0036": {
       "path": ".github/skills/ui-brief-generator/SKILL.md",
       "title": "UI Brief Generator",
       "category": "agentskill"
     },
-    "doc_agentskill_0036": {
+    "doc_agentskill_0037": {
       "path": ".github/skills/ui-family-architect/SKILL.md",
       "title": "UI Family Architect",
       "category": "agentskill"
     },
-    "doc_agentskill_0037": {
+    "doc_agentskill_0038": {
       "path": ".github/skills/ui-i18n-localize/SKILL.md",
       "title": "UI I18N Localize",
       "category": "agentskill"
     },
-    "doc_agentskill_0038": {
+    "doc_agentskill_0039": {
       "path": ".github/skills/ui-preview-judge/SKILL.md",
       "title": "UI Preview Judge",
       "category": "agentskill"
     },
-    "doc_agentskill_0039": {
+    "doc_agentskill_0040": {
       "path": ".github/skills/ui-reference-decompose/SKILL.md",
       "title": "UI Reference Decompose",
       "category": "agentskill"
     },
-    "doc_agentskill_0040": {
+    "doc_agentskill_0041": {
       "path": ".github/skills/ui-runtime-verify/SKILL.md",
       "title": "UI Runtime Verify",
       "category": "agentskill"
     },
-    "doc_agentskill_0041": {
+    "doc_agentskill_0042": {
       "path": ".github/skills/ui-spec-scaffold/SKILL.md",
       "title": "UI Spec Scaffold",
       "category": "agentskill"
     },
-    "doc_agentskill_0042": {
+    "doc_agentskill_0043": {
       "path": ".github/skills/ui-vibe-pipeline/SKILL.md",
       "title": "UI Vibe Pipeline（鏡像索引）",
       "category": "agentskill"

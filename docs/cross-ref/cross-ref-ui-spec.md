@@ -38,9 +38,9 @@
 | `contracts/lobby-mission-detail-dialog-content.schema.json` | contract | doc_spec_0002 | ??| 隞餃?閰單?敶??批捆憟?嚗??急??勗漲?郎撠祥???菔? AI 憪遙 |
 | `content/lobby-mission-detail-dialog-states-v1.json` | content | doc_spec_0002 | ??| `smoke-military-partial` / `smoke-domestic-revealed` 璅? |
 | `screens/lobby-mission-detail-dialog-screen.json` | screen | doc_spec_0002 | ??| 頠? / ?扳隞餃?閰單?銝剖亢敶?嚗?鞎祆??勗漲璅∠??郎撠?瘣曇? AI 憪遙 |
-| `layouts/general-detail-unified-main.json` | layout | doc_ui_0012?oc_spec_0174 | general_detail | 甇血?鈭箇????銝駁爸?塚?`撖跆 ??亥?????蝚衣畾局 |
-| `skins/general-detail-unified-default.json` | skin | doc_ui_0012?oc_spec_0174 | general_detail | 甇血?鈭箇?迤撘????`撖跆 ?畾局???tab chrome |
-| `screens/general-detail-unified-screen.json` | screen | doc_ui_0012?oc_spec_0174 | ??| 甇血?鈭箇?迤撘?screen嚗???`撠?/ 撅?/ ? / ??/ 撖跆 |
+| `layouts/general-detail-unified-main.json` | layout | doc_ui_0012 / doc_spec_0174 | general_detail | 武將人物介面 2.0 六分頁 layout；含 `將 / 屬 / 命 / 技 / 寶 / 兵`、命頁血統舞台、右側命格資訊欄與 StoryDock |
+| `skins/general-detail-unified-default.json` | skin | doc_ui_0012 / doc_spec_0174 | general_detail | 武將人物介面 2.0 skin；維持同一套 tab chrome，命頁採祖紋命篆 / 命紋靈獸語彙 |
+| `screens/general-detail-unified-screen.json` | screen | doc_ui_0012 / doc_spec_0174 | general_detail | 武將人物介面 2.0 screen；route key 固定為 `Overview / Stats / Bloodline / Tactics / Equip / Aptitude` |
 | `layouts/spirit-tally-detail-main.json` | layout | doc_spec_0012?oc_spec_0022?oc_spec_0174 | general_detail | ?梢???/ ?泵閰單????梁鈭箇??`撖跆 ?底???|
 | `skins/spirit-tally-detail-default.json` | skin | doc_spec_0012?oc_spec_0022?oc_spec_0174 | general_detail | ?梢???/ ?泵閰單????|
 | `screens/spirit-tally-detail-screen.json` | screen | doc_spec_0012?oc_spec_0022?oc_spec_0174 | ??| ?梢???/ ?泵閰單? screen |
@@ -53,6 +53,6 @@
 | gacha-*.json (?3) | doc_spec_0042 禮C, 禮E, 禮F, 禮I | Hero_Pool, Support_Pool, Pool_Positioning, Pity_Independent, Player_Currency嚗pirit_Jade/Bronze_Charm/Divination_Token嚗?|
 | lobby-main-*.json (?3) | doc_spec_0002 禮E, 禮I?oc_spec_0014 禮E, 禮I | Mission_Boards, Task_Title, Task_Brief, Task_Detail, Intel_Reveal_Percent, Selected_General_UID, Rewards, Costs, Available_Actions, AI_Assign_Enabled, Officer_Snapshot, World_Sandtable, Wish_Altar, Volunteer_Event_Log, Morning_Report_Summary, Dispatch_Board_State |
 | lobby-mission-detail-dialog-screen.json | doc_spec_0002 禮E, 禮F, 禮H | Mission_Boards, Intel_Reveal_Percent, Selected_General_UID, Rewards, Costs, Available_Actions, AI_Assign_Enabled |
-| general-detail-unified-*.json (?2) | doc_ui_0012 禮3????1.2.2嚗oc_spec_0174 禮H | Default_Tab, Story_Strip_Cells, Equipped_Spirit_UID, Equipped_Tally_UID, Slot_Type, Display_Bucket, Card_Role |
+| general-detail-unified-*.json (?3) | doc_ui_0012 §2~§11 / doc_spec_0174 §I | Default_Tab, Bloodline_StoryDock_State, Story_Strip_Cells, Bloodline_Ultimate, Special_Lineage_Factors, Birth_Burst, Equipped_Spirit_UID, Equipped_Tally_UID, Slot_Type, Display_Bucket, Card_Role |
 | spirit-tally-detail-*.json (?2) | doc_spec_0012 禮A, 禮F嚗oc_spec_0022 禮E嚗oc_spec_0174 禮H | Spirit_ID, Resonance_Band, Glow_State, TigerTallyScore, Linked_Troop_ID, grainCost |
 | spirit-collection-room-main.json | doc_spec_0022 禮I-5、doc_ui_0012 禮9.4 | Spirit_Collection_Room, Spirit_Display_Row, Spirit_Archive_Snapshot, Display_Weight, Featured_Archive_Spirit_UIDs |

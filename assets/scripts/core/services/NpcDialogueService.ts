@@ -17,6 +17,7 @@ export interface NpcKeywordOptionsResponse {
 
 export type NpcDialogueLocale = 'zh-TW' | 'en' | 'ja';
 export type NpcDialogueSpeechContextMode = 'life_chat' | 'encounter_speech' | 'inner_monologue' | 'meeting_statement';
+export type NpcDialogueModelPreset = 'fallback_chain' | 'gemini_pro' | 'gemini_flash' | 'gemini_flash_lite' | 'qwen2_5_7b' | 'qwen2_5_3b' | 'deepseek_r1_7b' | 'local_llama_env';
 
 export interface NpcDialogueRequest {
     generalId: string;
@@ -25,6 +26,7 @@ export interface NpcDialogueRequest {
     toneMode?: string;
     locale?: NpcDialogueLocale;
     speechContextMode?: NpcDialogueSpeechContextMode;
+    llmModelPreset?: NpcDialogueModelPreset;
     maxChars?: number;
 }
 
@@ -33,6 +35,7 @@ export interface NpcDialogueResponse {
     contextKey?: string | null;
     locale?: NpcDialogueLocale;
     speechContextMode?: NpcDialogueSpeechContextMode;
+    llmModelPreset?: NpcDialogueModelPreset;
     text: string;
     evidenceRefs: string[];
     usedEvidenceRefs?: string[];
@@ -48,6 +51,8 @@ export interface NpcDialogueResponse {
     provider?: string | null;
     model?: string | null;
     providerTrace?: string[];
+    qualityWarnings?: string[];
+    repairUsed?: boolean;
 }
 
 export interface NpcDialogueKeywordSelection extends NpcKeywordOption {
@@ -96,6 +101,7 @@ export class NpcDialogueService {
             toneMode: request.toneMode ?? 'in-character',
             locale: request.locale ?? 'zh-TW',
             speechContextMode: request.speechContextMode ?? 'life_chat',
+            llmModelPreset: request.llmModelPreset ?? 'fallback_chain',
             maxChars: request.maxChars ?? 90,
         };
         UCUFLogger.info(LogCategory.DATA, '[NpcDialogueService] requestDialogue', payload);
@@ -104,9 +110,12 @@ export class NpcDialogueService {
             generalId: response.generalId,
             locale: response.locale ?? null,
             speechContextMode: response.speechContextMode ?? null,
+            llmModelPreset: response.llmModelPreset ?? null,
             provider: response.provider ?? null,
             model: response.model ?? null,
             providerTrace: response.providerTrace ?? [],
+            qualityWarnings: response.qualityWarnings ?? [],
+            repairUsed: response.repairUsed ?? false,
             usedEvidenceRefs: response.usedEvidenceRefs ?? [],
             textPreview: response.text.slice(0, 64),
         });

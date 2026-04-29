@@ -173,7 +173,7 @@
 | 戰場部署 | 已有 DeployPanel（scene 手動綁定） | — (已實現於 BattleScene) | 戰場部署系統.md (doc_spec_0040) |
 | 關卡設計 / 戰前偵查 | 「參謀官 HUD 摘要 / 後勤官補給摘要 / 關卡回收摘要」；先維持 pending contract，不直接拆出新 fullscreen | `pending contract: strategist-hud-summary / stage-salvage-summary` | 關卡設計系統.md (doc_spec_0044)、主戰場UI規格書.md (doc_ui_0001)、UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md (doc_ui_0031) |
 | 奧義演出 | 全屏演出層（覆蓋戰場） | `ultimate-cutscene-main.json` | 奧義系統.md (doc_spec_0030) F 節 |
-| 武將人物頁 | 「將 / 屬 / 命 / 技 / 寶 / 兵」六分頁；`命` 頁承接英靈卡與血脈、`寶` 頁承接一般裝備 / 傳家寶 / 道具、`兵` 頁承接虎符與戰場適性 | `general-detail-unified-screen.json` | 武將人物介面規格書.md (doc_ui_0012)、武將裝備道具系統.md (doc_spec_0174)、英靈世家系統.md (doc_spec_0022)、兵種（虎符）系統.md (doc_spec_0012) |
+| 武將人物頁 | 「將 / 屬 / 命 / 技 / 寶 / 兵」六分頁；以 `武將人物介面規格書 2.0` 為母本；`命` 頁承接 14 人祖先血統圖、隱藏立繪、右側命格資訊欄、血脈傳承奧義、特殊傳承因子、出生爆發力、血脈覺醒進度、世家入口、英靈卡操作與底部可抽拉 `StoryDock`；`寶` 頁承接一般裝備 / 傳家寶 / 道具；`兵` 頁承接虎符與戰場適性 | `general-detail-unified-screen.json` | 武將人物介面規格書.md (doc_ui_0012)、武將裝備道具系統.md (doc_spec_0174)、英靈世家系統.md (doc_spec_0022)、兵種（虎符）系統.md (doc_spec_0012) |
 | 血脈逸聞 | 「歷史趣聞 / 血脈傳聞」抽屜 | `general-bloodline-vignette-main.json` | 武將人物介面規格書.md (doc_ui_0012) § 8.4 |
 | 命槽英靈卡 / 虎符詳情 | 「命槽英靈卡 / 虎符」詳情頁 | `spirit-tally-detail-main.json` | 兵種（虎符）系統.md (doc_spec_0012)、英靈世家系統.md (doc_spec_0022) |
 | 英靈陳列室 / 家族展示列 | 「家族英靈展示列」；每張卡都帶死亡快照、英勇事蹟、完整屬性與技能；支援排序與篩選 | `spirit-collection-room-main.json` | 英靈世家系統.md (doc_spec_0022)、武將人物介面規格書.md (doc_ui_0012) |

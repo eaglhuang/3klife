@@ -5,7 +5,7 @@
 //   - rarity stars 用 container 子 Label 數量 toggle，避免破壞 5 顆星 layout
 //
 // 對應 layout 節點：
-//   - TabOverviewContent       (container, 原 CharacterDs3Main_div_9)
+//   - CharacterDs3Main_div_6   (container, source portal right-content mount)
 //   - OverviewName             (label,    原 CharacterDs3Main_span_5)
 //   - OverviewRoleBadge        (label,    原 CharacterDs3Main_div_13)
 //   - OverviewRarityTier       (label,    原 CharacterDs3Main_span_7，"UR" 等)
@@ -18,7 +18,7 @@ import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
 
 export class CharacterDs3OverviewChild extends ChildPanelBase {
     override dataSource = 'config';
-    private static readonly ROOT_PATH = 'TabOverviewContent';
+    private static readonly ROOT_PATH = 'CharacterDs3Main_div_6';
 
     private _nameLabel:        Label | null = null;
     private _roleLabel:        Label | null = null;

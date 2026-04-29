@@ -10,7 +10,7 @@ import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
 
 export class CharacterDs3BloodlineChild extends ChildPanelBase {
     override dataSource = 'config';
-    private static readonly ROOT_PATH = 'TabBloodlineContent';
+    private static readonly ROOT_PATH = 'CharacterDs3Main_div_6';
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3BloodlineChild] onMount', { rootPath: CharacterDs3BloodlineChild.ROOT_PATH });

@@ -13,7 +13,7 @@
  */
 import { _decorator, Node, Label, Button, UITransform, Layout, Widget, HorizontalTextAlignment, VerticalTextAlignment, Color } from 'cc';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
-import type { NpcDialogueKeywordSelection, NpcDialogueLocale, NpcDialogueSpeechContextMode } from '../../core/services/NpcDialogueService';
+import type { NpcDialogueKeywordSelection, NpcDialogueLocale, NpcDialogueModelPreset, NpcDialogueResponse, NpcDialogueSpeechContextMode } from '../../core/services/NpcDialogueService';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
@@ -82,6 +82,7 @@ const HEADER_ROW_REL_PATH = `${LIST_PANEL_REL_PATH}/ColumnHeaderRow`;
 const CONTENT_REL_PATH = `${LIST_REL_PATH}/view/Content`;
 const NPC_DIALOGUE_TOOLBAR_NAME = 'NpcDialogueDevToolbar';
 const NPC_DIALOGUE_MENU_NAME = 'NpcDialogueKeywordMenu';
+type NpcDialogueMenuMode = 'keyword' | 'speechContext' | 'model';
 
 const NPC_DIALOGUE_LOCALE_OPTIONS: Array<{ value: NpcDialogueLocale; label: string }> = [
     { value: 'zh-TW', label: '繁中' },
@@ -94,6 +95,17 @@ const NPC_DIALOGUE_SPEECH_CONTEXT_OPTIONS: Array<{ value: NpcDialogueSpeechConte
     { value: 'encounter_speech', label: '遭遇發言' },
     { value: 'inner_monologue', label: '想法獨白' },
     { value: 'meeting_statement', label: '會議發言' },
+];
+
+const NPC_DIALOGUE_MODEL_OPTIONS: Array<{ value: NpcDialogueModelPreset; label: string }> = [
+    { value: 'fallback_chain', label: 'Fallback' },
+    { value: 'gemini_pro', label: 'Gemini Pro' },
+    { value: 'gemini_flash', label: 'Gemini Flash' },
+    { value: 'gemini_flash_lite', label: 'Flash Lite' },
+    { value: 'qwen2_5_7b', label: 'Qwen 7B' },
+    { value: 'qwen2_5_3b', label: 'Qwen 3B' },
+    { value: 'deepseek_r1_7b', label: 'DeepSeek R1' },
+    { value: 'local_llama_env', label: 'Local Env' },
 ];
 
 @ccclass('GeneralListComposite')
@@ -121,14 +133,17 @@ export class GeneralListComposite extends CompositePanel {
     private _npcDialogueSelectedKeyword: NpcDialogueKeywordSelection | null = null;
     private _npcDialogueLocale: NpcDialogueLocale = 'zh-TW';
     private _npcDialogueSpeechContextMode: NpcDialogueSpeechContextMode = 'life_chat';
+    private _npcDialogueModelPreset: NpcDialogueModelPreset = 'fallback_chain';
     private _npcDialogueStatusLabel: Label | null = null;
     private _npcDialogueKeywordLabel: Label | null = null;
     private _npcDialogueLocaleLabel: Label | null = null;
     private _npcDialogueSpeechContextLabel: Label | null = null;
+    private _npcDialogueModelLabel: Label | null = null;
     private _npcDialogueHintLabel: Label | null = null;
     private _npcDialogueProviderLabel: Label | null = null;
     private _npcDialogueProviderTraceLabel: Label | null = null;
     private _npcDialogueMenuNode: Node | null = null;
+    private _npcDialogueMenuMode: NpcDialogueMenuMode = 'keyword';
 
     // ── 生命週期 ─────────────────────────────────────────────
 
@@ -414,6 +429,7 @@ export class GeneralListComposite extends CompositePanel {
             this._npcDialogueKeywordLabel = null;
             this._npcDialogueLocaleLabel = null;
             this._npcDialogueSpeechContextLabel = null;
+            this._npcDialogueModelLabel = null;
             this._npcDialogueHintLabel = null;
             this._npcDialogueProviderLabel = null;
             this._npcDialogueProviderTraceLabel = null;
@@ -441,19 +457,21 @@ export class GeneralListComposite extends CompositePanel {
             toolbarWidget.left = 24;
             toolbarWidget.right = 24;
 
-            this._npcDialogueStatusLabel = this._addToolbarLabel(toolbar, 'SelectedGeneralLabel', 270, 28, -705, 28, '選取武將：尚未選取', 19, HorizontalTextAlignment.LEFT);
-            this._npcDialogueKeywordLabel = this._addToolbarButton(toolbar, 'KeywordDropdownButton', 360, 34, -375, 28, '關鍵字：尚未載入', () => this._toggleNpcDialogueKeywordMenu());
-            this._npcDialogueSpeechContextLabel = this._addToolbarButton(toolbar, 'SpeechContextButton', 220, 34, -80, 28, this._npcDialogueSpeechContextButtonText(), () => this._cycleNpcDialogueSpeechContextMode());
-            this._npcDialogueLocaleLabel = this._addToolbarButton(toolbar, 'LocaleButton', 150, 34, 115, 28, this._npcDialogueLocaleButtonText(), () => this._cycleNpcDialogueLocale());
-            this._addToolbarButton(toolbar, 'DialogueTestButton', 150, 34, 255, 28, '對話測試', () => { void this._runNpcDialogueTest(); });
-            this._npcDialogueProviderLabel = this._addToolbarLabel(toolbar, 'DialogueProviderLabel', 280, 26, 540, 28, 'Provider：-', 18, HorizontalTextAlignment.LEFT);
+            this._npcDialogueStatusLabel = this._addToolbarLabel(toolbar, 'SelectedGeneralLabel', 250, 28, -720, 28, '選取武將：尚未選取', 19, HorizontalTextAlignment.LEFT);
+            this._npcDialogueKeywordLabel = this._addToolbarButton(toolbar, 'KeywordDropdownButton', 300, 34, -450, 28, '關鍵字：尚未載入', () => this._toggleNpcDialogueKeywordMenu());
+            this._npcDialogueSpeechContextLabel = this._addToolbarButton(toolbar, 'SpeechContextButton', 190, 34, -205, 28, this._npcDialogueSpeechContextButtonText(), () => this._toggleNpcDialogueSpeechContextMenu());
+            this._npcDialogueModelLabel = this._addToolbarButton(toolbar, 'ModelPresetButton', 200, 34, -5, 28, this._npcDialogueModelButtonText(), () => this._toggleNpcDialogueModelMenu());
+            this._npcDialogueLocaleLabel = this._addToolbarButton(toolbar, 'LocaleButton', 120, 34, 160, 28, this._npcDialogueLocaleButtonText(), () => this._cycleNpcDialogueLocale());
+            this._addToolbarButton(toolbar, 'DialogueTestButton', 130, 34, 290, 28, '對話測試', () => { void this._runNpcDialogueTest(); });
+            this._npcDialogueProviderLabel = this._addToolbarLabel(toolbar, 'DialogueProviderLabel', 360, 26, 540, 28, 'Provider：-', 18, HorizontalTextAlignment.LEFT);
             this._npcDialogueHintLabel = this._addToolbarLabel(toolbar, 'DialogueResultLabel', 960, 32, -360, -26, '點擊武將後載入可選關鍵字。', 18, HorizontalTextAlignment.LEFT);
-            this._npcDialogueProviderTraceLabel = this._addToolbarLabel(toolbar, 'DialogueProviderTraceLabel', 680, 28, 470, -26, 'Trace：-', 16, HorizontalTextAlignment.LEFT);
+            this._npcDialogueProviderTraceLabel = this._addToolbarLabel(toolbar, 'DialogueProviderTraceLabel', 760, 28, 470, -26, 'Quality：-｜Trace：-', 16, HorizontalTextAlignment.LEFT);
         } else {
             this._npcDialogueStatusLabel = toolbar.getChildByName('SelectedGeneralLabel')?.getComponent(Label) ?? null;
             this._npcDialogueKeywordLabel = toolbar.getChildByName('KeywordDropdownButton')?.getComponent(Label) ?? null;
             this._npcDialogueLocaleLabel = toolbar.getChildByName('LocaleButton')?.getComponent(Label) ?? null;
             this._npcDialogueSpeechContextLabel = toolbar.getChildByName('SpeechContextButton')?.getComponent(Label) ?? null;
+            this._npcDialogueModelLabel = toolbar.getChildByName('ModelPresetButton')?.getComponent(Label) ?? null;
             this._npcDialogueHintLabel = toolbar.getChildByName('DialogueResultLabel')?.getComponent(Label) ?? null;
             this._npcDialogueProviderLabel = toolbar.getChildByName('DialogueProviderLabel')?.getComponent(Label) ?? null;
             this._npcDialogueProviderTraceLabel = toolbar.getChildByName('DialogueProviderTraceLabel')?.getComponent(Label) ?? null;
@@ -462,7 +480,7 @@ export class GeneralListComposite extends CompositePanel {
         toolbar.setSiblingIndex(listPanel.children.length - 1);
         this._syncNpcDialogueModeLabels();
         this._setNpcDialogueProvider('Provider：-');
-        this._setNpcDialogueProviderTrace('Trace：-');
+        this._setNpcDialogueProviderTrace('Quality：-｜Trace：-');
         this._ensureNpcDialogueKeywordMenu(listPanel);
     }
 
@@ -545,11 +563,38 @@ export class GeneralListComposite extends CompositePanel {
         if (!this._npcDialogueMenuNode) {
             return;
         }
-        if (this._npcDialogueMenuNode.active) {
+        if (this._npcDialogueMenuNode.active && this._npcDialogueMenuMode === 'keyword') {
             this._hideNpcDialogueKeywordMenu();
             return;
         }
+        this._npcDialogueMenuMode = 'keyword';
         this._renderNpcDialogueKeywordMenu();
+        this._npcDialogueMenuNode.active = true;
+    }
+
+    private _toggleNpcDialogueSpeechContextMenu(): void {
+        if (!this._npcDialogueMenuNode) {
+            return;
+        }
+        if (this._npcDialogueMenuNode.active && this._npcDialogueMenuMode === 'speechContext') {
+            this._hideNpcDialogueKeywordMenu();
+            return;
+        }
+        this._npcDialogueMenuMode = 'speechContext';
+        this._renderNpcDialogueSpeechContextMenu();
+        this._npcDialogueMenuNode.active = true;
+    }
+
+    private _toggleNpcDialogueModelMenu(): void {
+        if (!this._npcDialogueMenuNode) {
+            return;
+        }
+        if (this._npcDialogueMenuNode.active && this._npcDialogueMenuMode === 'model') {
+            this._hideNpcDialogueKeywordMenu();
+            return;
+        }
+        this._npcDialogueMenuMode = 'model';
+        this._renderNpcDialogueModelMenu();
         this._npcDialogueMenuNode.active = true;
     }
 
@@ -568,6 +613,32 @@ export class GeneralListComposite extends CompositePanel {
         }
         visibleKeywords.forEach((keyword, index) => {
             this._addMenuItem(menu, index, `${this._categoryLabel(keyword.category)}｜${keyword.label}`, keyword);
+        });
+    }
+
+    private _renderNpcDialogueSpeechContextMenu(): void {
+        const menu = this._npcDialogueMenuNode;
+        if (!menu) {
+            return;
+        }
+        for (const child of [...menu.children]) {
+            child.destroy();
+        }
+        NPC_DIALOGUE_SPEECH_CONTEXT_OPTIONS.forEach((option, index) => {
+            this._addSpeechContextMenuItem(menu, index, option.label, option.value);
+        });
+    }
+
+    private _renderNpcDialogueModelMenu(): void {
+        const menu = this._npcDialogueMenuNode;
+        if (!menu) {
+            return;
+        }
+        for (const child of [...menu.children]) {
+            child.destroy();
+        }
+        NPC_DIALOGUE_MODEL_OPTIONS.forEach((option, index) => {
+            this._addModelMenuItem(menu, index, option.label, option.value);
         });
     }
 
@@ -597,44 +668,104 @@ export class GeneralListComposite extends CompositePanel {
         }
     }
 
+    private _addSpeechContextMenuItem(parent: Node, index: number, text: string, mode: NpcDialogueSpeechContextMode): void {
+        const node = new Node(`SpeechContextOption_${index}`);
+        node.layer = parent.layer;
+        parent.addChild(node);
+        node.setPosition(0, 132 - index * 30);
+        node.addComponent(UITransform).setContentSize(540, 28);
+        const label = node.addComponent(Label);
+        label.string = `${mode === this._npcDialogueSpeechContextMode ? '✓ ' : ''}${text}`;
+        label.fontSize = 17;
+        label.lineHeight = 24;
+        label.color = new Color(44, 38, 28, 255);
+        label.horizontalAlign = HorizontalTextAlignment.LEFT;
+        label.verticalAlign = VerticalTextAlignment.CENTER;
+        label.overflow = Label.Overflow.SHRINK;
+        const button = node.addComponent(Button);
+        button.transition = Button.Transition.NONE;
+        button.node.on(Button.EventType.CLICK, () => {
+            this._npcDialogueSpeechContextMode = mode;
+            this._syncNpcDialogueModeLabels();
+            this._setNpcDialogueHint(`情境已切換：${text}`);
+            this._hideNpcDialogueKeywordMenu();
+        }, this);
+    }
+
+    private _addModelMenuItem(parent: Node, index: number, text: string, preset: NpcDialogueModelPreset): void {
+        const node = new Node(`ModelPresetOption_${index}`);
+        node.layer = parent.layer;
+        parent.addChild(node);
+        node.setPosition(0, 132 - index * 30);
+        node.addComponent(UITransform).setContentSize(540, 28);
+        const label = node.addComponent(Label);
+        label.string = `${preset === this._npcDialogueModelPreset ? '✓ ' : ''}${text}`;
+        label.fontSize = 17;
+        label.lineHeight = 24;
+        label.color = new Color(44, 38, 28, 255);
+        label.horizontalAlign = HorizontalTextAlignment.LEFT;
+        label.verticalAlign = VerticalTextAlignment.CENTER;
+        label.overflow = Label.Overflow.SHRINK;
+        const button = node.addComponent(Button);
+        button.transition = Button.Transition.NONE;
+        button.node.on(Button.EventType.CLICK, () => {
+            this._npcDialogueModelPreset = preset;
+            this._syncNpcDialogueModeLabels();
+            this._setNpcDialogueHint(`模型已切換：${text}`);
+            this._hideNpcDialogueKeywordMenu();
+        }, this);
+    }
+
     private async _runNpcDialogueTest(): Promise<void> {
         if (!this._npcDialogueSelectedGeneral || !this._npcDialogueSelectedKeyword) {
             services().event.emit('SHOW_TOAST', { message: '請先點選武將並選擇關鍵字', duration: 2.5 });
             return;
         }
+        const requestedSpeechContextMode = this._npcDialogueSpeechContextMode;
+        const requestedModelPreset = this._npcDialogueModelPreset;
         this._setNpcDialogueHint('正在產生測試對白...');
-        this._setNpcDialogueProvider('Provider：請求中...');
-        this._setNpcDialogueProviderTrace(`Trace：${this._npcDialogueSelectedKeyword.keywordKey}`);
+        this._setNpcDialogueProvider(`Provider：請求中 / preset：${this._npcDialogueModelPresetLabel(requestedModelPreset)}`);
+        this._setNpcDialogueProviderTrace(`Quality：-｜Trace：${requestedSpeechContextMode} / ${requestedModelPreset} / ${this._npcDialogueSelectedKeyword.keywordKey}`);
         try {
             const response = await services().npcDialogue.requestDialogue({
                 generalId: this._npcDialogueSelectedGeneral.id,
                 selectedKeywordKeys: [this._npcDialogueSelectedKeyword.keywordKey],
                 toneMode: 'in-character',
                 locale: this._npcDialogueLocale,
-                speechContextMode: this._npcDialogueSpeechContextMode,
+                speechContextMode: requestedSpeechContextMode,
+                llmModelPreset: requestedModelPreset,
                 maxChars: 90,
             });
             this._setNpcDialogueHint(response.text);
-            this._setNpcDialogueProvider(`Provider：${response.provider ?? 'unknown'}`);
-            this._setNpcDialogueProviderTrace(`Trace：${(response.providerTrace ?? []).join(' > ') || '-'}`);
+            this._setNpcDialogueProvider(this._npcDialogueProviderButtonText(response, requestedModelPreset));
+            const presetMismatch = response.llmModelPreset !== requestedModelPreset;
+            const presetWarning = presetMismatch ? [`preset-mismatch:${requestedModelPreset}->${response.llmModelPreset ?? 'missing'}`] : [];
+            const qualityText = [...presetWarning, ...(response.qualityWarnings ?? [])].join(',') || (response.repairUsed ? 'repaired' : 'pass');
+            this._setNpcDialogueProviderTrace(`Quality：${qualityText}｜Trace：${(response.providerTrace ?? []).join(' > ') || '-'}`);
             services().event.emit('SHOW_TOAST', { message: response.text, duration: 4 });
             UCUFLogger.info(LogCategory.DATA, '[GeneralListComposite] npc dialogue response', {
                 generalId: response.generalId,
                 selectedKeywordKey: this._npcDialogueSelectedKeyword.keywordKey,
                 locale: response.locale ?? this._npcDialogueLocale,
-                speechContextMode: response.speechContextMode ?? this._npcDialogueSpeechContextMode,
+                requestedSpeechContextMode,
+                speechContextMode: response.speechContextMode ?? null,
+                requestedModelPreset,
+                llmModelPreset: response.llmModelPreset ?? null,
                 evidenceRefs: response.evidenceRefs,
                 usedEvidenceRefs: response.usedEvidenceRefs ?? [],
                 usedKeywords: response.usedKeywords,
                 provider: response.provider ?? null,
                 model: response.model ?? null,
                 providerTrace: response.providerTrace ?? [],
+                qualityWarnings: response.qualityWarnings ?? [],
+                presetMismatch,
+                repairUsed: response.repairUsed ?? false,
                 fallbackUsed: response.fallbackUsed,
             });
         } catch (error) {
             this._setNpcDialogueHint('對話測試失敗，請確認 NPC brain server。');
             this._setNpcDialogueProvider('Provider：request-failed');
-            this._setNpcDialogueProviderTrace('Trace：NpcDialogueService request failed');
+            this._setNpcDialogueProviderTrace(`Quality：request-failed｜Trace：${this._npcDialogueErrorPreview(error)}`);
             services().event.emit('SHOW_TOAST', { message: '對話測試失敗', duration: 2.5 });
             UCUFLogger.warn(LogCategory.DATA, '[GeneralListComposite] npc dialogue request failed', { error });
         }
@@ -654,20 +785,15 @@ export class GeneralListComposite extends CompositePanel {
         this._setNpcDialogueHint(`語系已切換：${nextOption.label}`);
     }
 
-    private _cycleNpcDialogueSpeechContextMode(): void {
-        const currentIndex = NPC_DIALOGUE_SPEECH_CONTEXT_OPTIONS.findIndex(option => option.value === this._npcDialogueSpeechContextMode);
-        const nextOption = NPC_DIALOGUE_SPEECH_CONTEXT_OPTIONS[(currentIndex + 1) % NPC_DIALOGUE_SPEECH_CONTEXT_OPTIONS.length];
-        this._npcDialogueSpeechContextMode = nextOption.value;
-        this._syncNpcDialogueModeLabels();
-        this._setNpcDialogueHint(`情境已切換：${nextOption.label}`);
-    }
-
     private _syncNpcDialogueModeLabels(): void {
         if (this._npcDialogueLocaleLabel) {
             this._npcDialogueLocaleLabel.string = this._npcDialogueLocaleButtonText();
         }
         if (this._npcDialogueSpeechContextLabel) {
             this._npcDialogueSpeechContextLabel.string = this._npcDialogueSpeechContextButtonText();
+        }
+        if (this._npcDialogueModelLabel) {
+            this._npcDialogueModelLabel.string = this._npcDialogueModelButtonText();
         }
     }
 
@@ -679,6 +805,31 @@ export class GeneralListComposite extends CompositePanel {
     private _npcDialogueSpeechContextButtonText(): string {
         const option = NPC_DIALOGUE_SPEECH_CONTEXT_OPTIONS.find(item => item.value === this._npcDialogueSpeechContextMode);
         return `情境：${option?.label ?? this._npcDialogueSpeechContextMode}`;
+    }
+
+    private _npcDialogueModelButtonText(): string {
+        const option = NPC_DIALOGUE_MODEL_OPTIONS.find(item => item.value === this._npcDialogueModelPreset);
+        return `模型：${option?.label ?? this._npcDialogueModelPreset}`;
+    }
+
+    private _npcDialogueModelPresetLabel(preset: NpcDialogueModelPreset | string | null | undefined): string {
+        const option = NPC_DIALOGUE_MODEL_OPTIONS.find(item => item.value === preset);
+        return option?.label ?? preset ?? 'missing';
+    }
+
+    private _npcDialogueProviderButtonText(response: NpcDialogueResponse, requestedPreset: NpcDialogueModelPreset): string {
+        const provider = response.provider ?? 'unknown';
+        const model = response.model ? `/${response.model}` : '';
+        const actualPreset = response.llmModelPreset ?? 'missing';
+        const presetText = actualPreset === requestedPreset
+            ? this._npcDialogueModelPresetLabel(actualPreset)
+            : `${this._npcDialogueModelPresetLabel(requestedPreset)}→${this._npcDialogueModelPresetLabel(actualPreset)}`;
+        return `Provider：${provider}${model} / preset：${presetText} / repair：${response.repairUsed ? 'yes' : 'no'}`;
+    }
+
+    private _npcDialogueErrorPreview(error: unknown): string {
+        const message = error instanceof Error ? error.message : String(error);
+        return message.length > 120 ? `${message.slice(0, 117)}...` : message;
     }
 
     private _setNpcDialogueStatus(text: string): void {

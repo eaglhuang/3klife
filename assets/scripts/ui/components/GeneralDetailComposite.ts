@@ -147,7 +147,7 @@ export class GeneralDetailComposite extends CompositePanel {
             // 這條路徑暫不走 fragment / slot 機制，待 layout 補 OverviewSlot 定義後再升級。
             try {
                 if (this._gdBinder) {
-                    const overviewHost = this._gdBinder.getNode('TabOverviewContent') ?? this.node;
+                    const overviewHost = this._gdBinder.getNode('CharacterDs3Main_div_6') ?? this.node;
                     const overviewChild = new CharacterDs3OverviewChild(overviewHost, this.skinResolver, this._gdBinder);
                     void overviewChild.onMount({}).then(() => {
                         overviewChild.onDataUpdate(config);

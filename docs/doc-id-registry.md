@@ -17,9 +17,9 @@
 | 索引類 | `doc_index` | 17 |
 | 任務卡類 | `doc_task` | 176 |
 | AI Agent 專用 | `doc_ai` | 28 |
-| Agent Skill 專用 | `doc_agentskill` | 42 |
+| Agent Skill 專用 | `doc_agentskill` | 43 |
 | 其它類 | `doc_other` | 18 |
-| **合計** | — | **537** |
+| **合計** | — | **538** |
 
 ---
 
@@ -63,7 +63,7 @@
 | `doc_ui_0009` | docs/遊戲規格文件/系統規格書/血統樹14人UI規格書.md | 血統樹14人UI規格書 |
 | `doc_ui_0010` | docs/遊戲規格文件/系統規格書/角色血脈符號插槽規格補遺_2026-04-02.md | 角色血脈符號插槽規格補遺 2026-04-02 |
 | `doc_ui_0011` | docs/遊戲規格文件/系統規格書/武將人物介面美術接線清單.md | 武將人物介面美術接線清單 |
-| `doc_ui_0012` | docs/遊戲規格文件/系統規格書/武將人物介面規格書.md | 武將人物介面規格書 |
+| `doc_ui_0012` | docs/遊戲規格文件/系統規格書/武將人物介面規格書.md | 武將人物介面規格書 2.0 |
 | `doc_ui_0013` | docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-02.md | 武將人物介面規格補遺 2026-04-02 |
 | `doc_ui_0014` | docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-14.md | 武將人物介面規格補遺_2026-04-14：人性化與生活感擴充 |
 | `doc_ui_0015` | docs/遊戲規格文件/系統規格書/英靈虎符與特種軍隊視覺契約補遺_2026-04-04.md | 英靈虎符與特種軍隊視覺契約補遺 2026-04-04 |
@@ -555,37 +555,38 @@
 | `doc_agentskill_0009` | .agents/skills/general-avatar-crop/SKILL.md | Skill: general-avatar-crop |
 | `doc_agentskill_0010` | .agents/skills/handoff-text-spacing-extractor/SKILL.md | Handoff Text Spacing Extractor |
 | `doc_agentskill_0011` | .agents/skills/sanguo-event-review-loop/SKILL.md | Sanguo Event Review Loop |
-| `doc_agentskill_0012` | .agents/skills/sanguo-rag-resolution-loop/SKILL.md | Sanguo RAG Resolution Loop |
-| `doc_agentskill_0013` | .agents/skills/task-card-opener/SKILL.md | Task Card Opener |
-| `doc_agentskill_0014` | .agents/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline |
-| `doc_agentskill_0015` | .github/skills/cocos-bug-triage/SKILL.md | Cocos Bug Triage（鏡像索引） |
-| `doc_agentskill_0016` | .github/skills/cocos-log-reader/SKILL.md | Cocos Log Reader（鏡像索引） |
-| `doc_agentskill_0017` | .github/skills/cocos-preview-qa/SKILL.md | Cocos Preview QA（Browser Review 自動截圖 + 比對） |
-| `doc_agentskill_0018` | .github/skills/cocos-screenshot/SKILL.md | Cocos Screenshot（Editor Preview / Editor 視窗截圖） |
-| `doc_agentskill_0019` | .github/skills/cocos-vfx-browser-qa/SKILL.md | Cocos VFX Browser QA |
-| `doc_agentskill_0020` | .github/skills/comfyui-sdxl-partial-asset-gen/SKILL.md | ComfyUI SDXL Partial Asset Gen |
-| `doc_agentskill_0021` | .github/skills/crossref-progress-scanner/SKILL.md | crossref-progress-scanner Skill |
-| `doc_agentskill_0022` | .github/skills/dalle3-image-gen/SKILL.md | DALL-E 3 Image Generation |
-| `doc_agentskill_0023` | .github/skills/doc-consolidation-flow/SKILL.md | Doc Consolidation Flow |
-| `doc_agentskill_0024` | .github/skills/doc-shard-manager/SKILL.md | Doc Shard Manager SKILL |
-| `doc_agentskill_0025` | .github/skills/encoding-touched-guard/SKILL.md | Encoding Touched Guard |
-| `doc_agentskill_0026` | .github/skills/general-balance-tuner/SKILL.md | General Balance Tuner |
-| `doc_agentskill_0027` | .github/skills/general-data-pipeline/SKILL.md | General Data Pipeline |
-| `doc_agentskill_0028` | .github/skills/general-story-writer/SKILL.md | General Story Writer |
-| `doc_agentskill_0029` | .github/skills/html-to-ucuf/SKILL.md | HTML -> UCUF 轉換 SKILL |
-| `doc_agentskill_0030` | .github/skills/nano-banana-gen/SKILL.md | Nano Banana 圖像生成 |
-| `doc_agentskill_0031` | .github/skills/task-card-opener/SKILL.md | Task Card Opener（鏡像索引） |
-| `doc_agentskill_0032` | .github/skills/ui-asset-gen-director/SKILL.md | UI Asset Gen Director |
-| `doc_agentskill_0033` | .github/skills/ui-asset-qc/SKILL.md | UI Asset QC |
-| `doc_agentskill_0034` | .github/skills/ui-asset-slice-pipeline/SKILL.md | UI Asset Slice Pipeline |
-| `doc_agentskill_0035` | .github/skills/ui-brief-generator/SKILL.md | UI Brief Generator |
-| `doc_agentskill_0036` | .github/skills/ui-family-architect/SKILL.md | UI Family Architect |
-| `doc_agentskill_0037` | .github/skills/ui-i18n-localize/SKILL.md | UI I18N Localize |
-| `doc_agentskill_0038` | .github/skills/ui-preview-judge/SKILL.md | UI Preview Judge |
-| `doc_agentskill_0039` | .github/skills/ui-reference-decompose/SKILL.md | UI Reference Decompose |
-| `doc_agentskill_0040` | .github/skills/ui-runtime-verify/SKILL.md | UI Runtime Verify |
-| `doc_agentskill_0041` | .github/skills/ui-spec-scaffold/SKILL.md | UI Spec Scaffold |
-| `doc_agentskill_0042` | .github/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline（鏡像索引） |
+| `doc_agentskill_0012` | .agents/skills/sanguo-knowledge-growth-loop/SKILL.md | Sanguo Knowledge Growth Loop |
+| `doc_agentskill_0013` | .agents/skills/sanguo-rag-resolution-loop/SKILL.md | Sanguo RAG Resolution Loop |
+| `doc_agentskill_0014` | .agents/skills/task-card-opener/SKILL.md | Task Card Opener |
+| `doc_agentskill_0015` | .agents/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline |
+| `doc_agentskill_0016` | .github/skills/cocos-bug-triage/SKILL.md | Cocos Bug Triage（鏡像索引） |
+| `doc_agentskill_0017` | .github/skills/cocos-log-reader/SKILL.md | Cocos Log Reader（鏡像索引） |
+| `doc_agentskill_0018` | .github/skills/cocos-preview-qa/SKILL.md | Cocos Preview QA（Browser Review 自動截圖 + 比對） |
+| `doc_agentskill_0019` | .github/skills/cocos-screenshot/SKILL.md | Cocos Screenshot（Editor Preview / Editor 視窗截圖） |
+| `doc_agentskill_0020` | .github/skills/cocos-vfx-browser-qa/SKILL.md | Cocos VFX Browser QA |
+| `doc_agentskill_0021` | .github/skills/comfyui-sdxl-partial-asset-gen/SKILL.md | ComfyUI SDXL Partial Asset Gen |
+| `doc_agentskill_0022` | .github/skills/crossref-progress-scanner/SKILL.md | crossref-progress-scanner Skill |
+| `doc_agentskill_0023` | .github/skills/dalle3-image-gen/SKILL.md | DALL-E 3 Image Generation |
+| `doc_agentskill_0024` | .github/skills/doc-consolidation-flow/SKILL.md | Doc Consolidation Flow |
+| `doc_agentskill_0025` | .github/skills/doc-shard-manager/SKILL.md | Doc Shard Manager SKILL |
+| `doc_agentskill_0026` | .github/skills/encoding-touched-guard/SKILL.md | Encoding Touched Guard |
+| `doc_agentskill_0027` | .github/skills/general-balance-tuner/SKILL.md | General Balance Tuner |
+| `doc_agentskill_0028` | .github/skills/general-data-pipeline/SKILL.md | General Data Pipeline |
+| `doc_agentskill_0029` | .github/skills/general-story-writer/SKILL.md | General Story Writer |
+| `doc_agentskill_0030` | .github/skills/html-to-ucuf/SKILL.md | HTML -> UCUF 轉換 SKILL |
+| `doc_agentskill_0031` | .github/skills/nano-banana-gen/SKILL.md | Nano Banana 圖像生成 |
+| `doc_agentskill_0032` | .github/skills/task-card-opener/SKILL.md | Task Card Opener（鏡像索引） |
+| `doc_agentskill_0033` | .github/skills/ui-asset-gen-director/SKILL.md | UI Asset Gen Director |
+| `doc_agentskill_0034` | .github/skills/ui-asset-qc/SKILL.md | UI Asset QC |
+| `doc_agentskill_0035` | .github/skills/ui-asset-slice-pipeline/SKILL.md | UI Asset Slice Pipeline |
+| `doc_agentskill_0036` | .github/skills/ui-brief-generator/SKILL.md | UI Brief Generator |
+| `doc_agentskill_0037` | .github/skills/ui-family-architect/SKILL.md | UI Family Architect |
+| `doc_agentskill_0038` | .github/skills/ui-i18n-localize/SKILL.md | UI I18N Localize |
+| `doc_agentskill_0039` | .github/skills/ui-preview-judge/SKILL.md | UI Preview Judge |
+| `doc_agentskill_0040` | .github/skills/ui-reference-decompose/SKILL.md | UI Reference Decompose |
+| `doc_agentskill_0041` | .github/skills/ui-runtime-verify/SKILL.md | UI Runtime Verify |
+| `doc_agentskill_0042` | .github/skills/ui-spec-scaffold/SKILL.md | UI Spec Scaffold |
+| `doc_agentskill_0043` | .github/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline（鏡像索引） |
 
 ## 其它類 (`doc_other`)
 
