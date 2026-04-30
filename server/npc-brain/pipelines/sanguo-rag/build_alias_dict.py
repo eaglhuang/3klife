@@ -15,11 +15,13 @@ DEFAULT_OVERRIDES_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/gene
 DEFAULT_MANUAL_ROSTER_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary")
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
+DEFAULT_WIKI_COURTESY_ALIASES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/romance-courtesy-aliases.json")
 DECORATIVE_WRAPPER_CHARS = "【】[]()（）「」『』《》〈〉"
-SOURCE_PRIORITY = {"name": 0, "override": 1, "alias": 2, "title": 3}
+SOURCE_PRIORITY = {"name": 0, "override": 1, "alias": 2, "courtesy": 3, "title": 4}
 SOURCE_LABELS = {
     "name": "roster-name",
     "alias": "roster-alias",
+    "courtesy": "wiki-courtesy-alias",
     "title": "title-derived",
     "override": "manual-override",
 }
@@ -164,6 +166,11 @@ def parse_args() -> argparse.Namespace:
         default=str(DEFAULT_OBSERVED_MENTIONS_PATH),
         help="Optional observed-mentions.json path used to add top unresolved label stats",
     )
+    parser.add_argument(
+        "--wiki-courtesy-aliases",
+        default=str(DEFAULT_WIKI_COURTESY_ALIASES_PATH),
+        help="Optional romance-courtesy-aliases.json generated from Wikipedia character-list courtesy names",
+    )
     parser.add_argument("--top-unresolved", type=int, default=50, help="Number of unresolved labels to keep in review report")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting existing output files")
     return parser.parse_args()
@@ -261,6 +268,26 @@ def load_manual_roster_config(path: Path) -> ManualRosterConfig:
     if not path.exists():
         return ManualRosterConfig(version="1.0.0", entries=[])
     return ManualRosterConfig.model_validate(read_json(path))
+
+
+def load_wiki_courtesy_aliases(path: Path) -> dict[str, list[str]]:
+    if not path.exists():
+        return {}
+    payload = read_json(path)
+    aliases_by_general: dict[str, list[str]] = defaultdict(list)
+    for entry in payload.get("entries") or []:
+        general_id = str(entry.get("generalId") or "").strip()
+        if not general_id:
+            continue
+        seen = {normalize_alias(alias) for alias in aliases_by_general[general_id]}
+        for alias in entry.get("courtesyAliases") or []:
+            cleaned_alias = str(alias).strip()
+            normalized_alias = normalize_alias(cleaned_alias)
+            if not normalized_alias or normalized_alias in seen:
+                continue
+            aliases_by_general[general_id].append(cleaned_alias)
+            seen.add(normalized_alias)
+    return dict(aliases_by_general)
 
 
 def merge_manual_roster_entries(generals: list[dict], config: ManualRosterConfig) -> list[dict]:
@@ -371,6 +398,7 @@ def build_records(
     generals: list[dict],
     override_config: AliasOverrideConfig,
     overrides_by_id: dict[str, AliasOverrideEntry],
+    wiki_courtesy_aliases_by_id: dict[str, list[str]] | None = None,
 ) -> tuple[list[GeneralAliasRecord], list[ExcludedAliasRecord], list[str]]:
     excluded_normalized = {normalize_alias(alias) for alias in override_config.globalExcludedAliases if normalize_alias(alias)}
     excluded_aliases: list[ExcludedAliasRecord] = []
@@ -432,6 +460,8 @@ def build_records(
         add_candidate(name, "name")
         for alias in base_aliases:
             add_candidate(str(alias), "alias")
+        for alias in (wiki_courtesy_aliases_by_id or {}).get(general_id, []):
+            add_candidate(str(alias), "courtesy")
         for alias in derive_title_aliases(title):
             add_candidate(alias, "title")
         if override_entry:
@@ -528,6 +558,7 @@ def main() -> None:
     generals_path = Path(args.generals)
     overrides_path = Path(args.overrides)
     manual_roster_path = Path(args.manual_roster)
+    wiki_courtesy_aliases_path = Path(args.wiki_courtesy_aliases)
     output_root = Path(args.output_root)
 
     if not generals_path.exists():
@@ -543,7 +574,13 @@ def main() -> None:
     generals = merge_manual_roster_entries(generals, load_manual_roster_config(manual_roster_path))
 
     override_config, overrides_by_id = load_override_config(overrides_path)
-    records, excluded_aliases, unknown_override_general_ids = build_records(generals, override_config, overrides_by_id)
+    wiki_courtesy_aliases_by_id = load_wiki_courtesy_aliases(wiki_courtesy_aliases_path)
+    records, excluded_aliases, unknown_override_general_ids = build_records(
+        generals,
+        override_config,
+        overrides_by_id,
+        wiki_courtesy_aliases_by_id,
+    )
     alias_map_entries, collisions = build_alias_map(records)
     alias_source_counts, alias_type_counts, alias_review_status_counts, general_review_status_counts = summarize_metadata_counts(records)
     observed_mentions_path, unresolved_label_type_counts, top_unresolved_labels = load_top_unresolved_labels(

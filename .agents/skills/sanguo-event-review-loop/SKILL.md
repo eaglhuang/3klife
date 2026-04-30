@@ -78,6 +78,40 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/extract_
 $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/generate_event_review_choices.py --top 20
 ```
 
+快速 preview 優先用本地 `agent-reviewer`，不要用 qwen 判斷；每步 30 秒 timeout：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/run_knowledge_growth_round.py \
+  --round-id wenyan-preview-r1 \
+  --candidates artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl \
+  --max-generals 5 \
+  --top-per-general 2 \
+  --reviewer-preset agent \
+  --reviewer-provider agent-reviewer \
+  --step-timeout-seconds 30 \
+  --overwrite
+```
+
+女性高互動候選應指定女性本人，避免 cohort 被男性參與者稀釋：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/run_knowledge_growth_round.py \
+  --round-id wenyan-preview-female-focus \
+  --candidates artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl \
+  --general-id sun-shang-xiang \
+  --general-id wu-guo-tai \
+  --general-id zhu-rong-furen \
+  --general-id cai-shi \
+  --general-id diao-chan \
+  --top-per-general 3 \
+  --reviewer-preset agent \
+  --reviewer-provider agent-reviewer \
+  --step-timeout-seconds 30 \
+  --overwrite
+```
+
+Generic battle preview 的 B 不一定是失敗：如果 focus general 只是盟主、統籌者、旁觀者或 scene participant，但 strong relationship edge 發生在其他人之間，應保守留 B，不要為了提高 A 率放寬 focus edge gate。
+
 輸出必須包含：
 
 - candidate id / event key

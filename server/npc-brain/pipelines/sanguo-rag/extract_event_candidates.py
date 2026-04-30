@@ -15,6 +15,7 @@ from gold_seed_registry import GOLD_SEED_BATTLE_SPECS as RAW_GOLD_SEED_BATTLE_SP
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_DIALOGUE_RESOLUTION_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/dialogue-resolution/dialogue-resolution.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/events")
+DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
 DEFAULT_PILOT_GENERAL = "zhang-fei"
 DEFAULT_ALIAS_SMOKE_TARGETS = {
     "許諸": "xu-zhu",
@@ -24,7 +25,36 @@ DEFAULT_ALIAS_SMOKE_TARGETS = {
 }
 DECORATIVE_WRAPPER_CHARS = "【】[]()（）「」『』《》〈〉"
 LOCATION_PATTERN = re.compile(r"([一-龥]{1,8}(?:津口|橋|口|坡|寨|城|津|渡|關|山|江|河))")
+LOCATION_FALSE_POSITIVE_TERMS = ["有寶劍", "殺出", "送至", "迎接入", "親自渡", "指曰", "便問"]
 BATTLE_SIGNAL_TERMS = ["戰", "軍", "兵", "陣", "敵", "殺", "斬", "攻", "追", "退", "走", "敗", "馬"]
+DIRECT_BATTLE_SIGNAL_TERMS = ["交鋒", "廝殺", "交戰", "搦戰", "迎敵", "迎戰", "攻打", "殺敗", "大敗", "截住", "追趕", "追襲", "斬", "殺", "攻"]
+GENERIC_BATTLE_EXCLUDE_TERMS = ["表陳", "薦爲", "除", "遷", "奏其功", "前功", "司馬", "縣令", "丞", "尉", "現居何職", "白身"]
+FEMALE_INTERACTION_SIGNAL_TERMS = [
+    "夫人", "主母", "嫂嫂", "小姐", "母親", "母病", "結親", "成親", "婚", "嫁", "娶", "妾", "妻", "夫主",
+    "阿斗", "國太", "侍婢", "槍刀", "佩劍", "兵器", "回吳", "歸", "思歸", "灑淚", "哭", "投江", "驚", "怒",
+    "不肯", "復仇", "報仇", "雪讎", "病危", "情願", "愛敬", "歡洽", "商議", "祭祖", "抱", "孩子",
+]
+FEMALE_INTERACTION_LOCATION_TERMS = ["東吳", "甘露寺", "南徐", "荊州", "江邊", "沙頭鎮", "油江夾口", "白帝城", "長坂坡", "長阪坡", "下邳", "小沛", "徐州", "吳", "船"]
+FEMALE_RELATIONSHIP_TYPE_OVERRIDES = {
+    ("cai-shi", "liu-biao"): "spouse",
+    ("cai-shi", "liu-cong"): "parent_child",
+    ("gan-shi", "liu-bei"): "spouse",
+    ("gan-shi", "liu-shan"): "parent_child",
+    ("mi-shi", "liu-bei"): "spouse",
+    ("mi-shi", "liu-shan"): "protects",
+    ("sun-shang-xiang", "liu-bei"): "spouse",
+    ("sun-shang-xiang", "sun-quan"): "sibling",
+    ("wu-guo-tai", "sun-jian"): "spouse",
+    ("wu-guo-tai", "sun-ce"): "parent_child",
+    ("wu-guo-tai", "sun-quan"): "parent_child",
+    ("wu-guo-tai", "sun-shang-xiang"): "parent_child",
+    ("zhu-rong-furen", "meng-huo"): "spouse",
+}
+FEMALE_CONTEXT_GENERAL_INJECTIONS = [
+    {"femaleId": "cai-shi", "cueTerms": ["與母蔡夫人", "母蔡夫人"], "generalId": "liu-cong"},
+    {"femaleId": "gan-shi", "cueTerms": ["阿斗", "孩兒", "孩子"], "generalId": "liu-shan"},
+    {"femaleId": "mi-shi", "cueTerms": ["阿斗", "孩兒", "孩子"], "generalId": "liu-shan"},
+]
 
 
 class RelationshipEdge(BaseModel):
@@ -83,6 +113,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--observed-mentions", default=str(DEFAULT_OBSERVED_MENTIONS_PATH), help="observed-mentions.json path")
     parser.add_argument("--dialogue-resolution", default=str(DEFAULT_DIALOGUE_RESOLUTION_PATH), help="dialogue-resolution.json path")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory for event candidates")
+    parser.add_argument("--stable-knowledge", default=str(DEFAULT_STABLE_KNOWLEDGE_PATH), help="stable-knowledge-bootstrap.json path for female priority profiles")
     parser.add_argument("--pilot-general", default=DEFAULT_PILOT_GENERAL, help="Primary generalId for the pilot event")
     parser.add_argument(
         "--alias-smoke-target",
@@ -92,6 +123,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--max-snippets", type=int, default=8, help="Maximum snippets per event review section")
     parser.add_argument("--max-generic-battle-candidates", type=int, default=12, help="Maximum generic battle candidates to write into review queue")
+    parser.add_argument("--max-female-interaction-candidates", type=int, default=40, help="Maximum female interaction candidates to write into review queue")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting output files")
     return parser.parse_args()
 
@@ -135,6 +167,8 @@ def ensure_output_root(output_root: Path, overwrite: bool) -> None:
         output_root / "events-summary.json",
         output_root / "generic-battle-candidates.jsonl",
         output_root / "generic-battle-candidates-review.md",
+        output_root / "female-interaction-candidates.jsonl",
+        output_root / "female-interaction-candidates-review.md",
     ]
     existing = [path for path in outputs if path.exists()]
     if existing and not overwrite:
@@ -196,13 +230,24 @@ def battle_signal_score(rows: list[dict]) -> int:
     return sum(1 for term in BATTLE_SIGNAL_TERMS if term in text)
 
 
+def looks_like_non_battle_biography(rows: list[dict]) -> bool:
+    text = "".join(str(row.get("textSnippet") or "") for row in rows)
+    if not any(term in text for term in GENERIC_BATTLE_EXCLUDE_TERMS):
+        return False
+    return not any(term in text for term in DIRECT_BATTLE_SIGNAL_TERMS)
+
+
 def derive_battle_location(rows: list[dict], fallback_location: str | None) -> str | None:
     if fallback_location:
         return fallback_location
     candidates: list[str] = []
     for row in rows:
         snippet = str(row.get("textSnippet") or "")
-        candidates.extend(match.group(1) for match in LOCATION_PATTERN.finditer(snippet))
+        candidates.extend(
+            match.group(1)
+            for match in LOCATION_PATTERN.finditer(snippet)
+            if not any(term in match.group(1) for term in LOCATION_FALSE_POSITIVE_TERMS)
+        )
     if not candidates:
         return fallback_location
     return sorted(Counter(candidates).items(), key=lambda item: (-item[1], len(item[0]), item[0]))[0][0]
@@ -285,6 +330,8 @@ def build_generic_battle_candidates(rows: list[dict], max_candidates: int) -> li
         signal_score = battle_signal_score(source_rows)
         if len(general_ids) < 3 or signal_score < 2:
             continue
+        if looks_like_non_battle_biography(source_rows):
+            continue
         source_quote = representative_quote(source_rows, preferred_terms=BATTLE_SIGNAL_TERMS)
         if not source_quote:
             continue
@@ -306,6 +353,146 @@ def build_generic_battle_candidates(rows: list[dict], max_candidates: int) -> li
                 confidence=round(confidence, 2),
                 sourceRefs=[source_ref],
                 extractionMode="generic-battle-candidate-v1",
+                reviewStatus="needs-review",
+            )
+        )
+    return sorted(candidates, key=lambda event: (-event.confidence, event.chapterNo or 0, event.eventKey))[: max(max_candidates, 0)]
+
+
+def load_female_priority_profiles(path: Path) -> dict[str, dict]:
+    if not path.exists():
+        return {}
+    payload = read_json(path)
+    profiles = {}
+    for profile in payload.get("femalePriorityProfiles") or []:
+        general_id = str(profile.get("generalId") or "").strip()
+        if general_id:
+            profiles[general_id] = profile
+    return profiles
+
+
+def female_interaction_signal_score(rows: list[dict]) -> int:
+    text = "".join(str(row.get("textSnippet") or "") for row in rows)
+    return sum(1 for term in FEMALE_INTERACTION_SIGNAL_TERMS if term in text)
+
+
+def derive_female_interaction_location(rows: list[dict]) -> str | None:
+    text = "".join(str(row.get("textSnippet") or "") for row in rows)
+    for term in FEMALE_INTERACTION_LOCATION_TERMS:
+        if term in text:
+            return term
+    return derive_battle_location(rows, None)
+
+
+def infer_female_interaction_subtype(rows: list[dict]) -> tuple[str, list[str], list[str], list[str]]:
+    text = "".join(str(row.get("textSnippet") or "") for row in rows)
+    if any(term in text for term in ["結親", "成親", "婚", "嫁", "娶", "夫主", "歡洽"]):
+        return "marriage_alliance", ["romance_love"], ["marriage_alliance"], ["family_duty", "host_banquet"]
+    if any(term in text for term in ["母親", "母病", "病危", "阿斗", "孩子", "主母", "嫂嫂", "抱"]):
+        return "family_affection", ["family_affection"], ["family_or_lineage_scene"], ["family_duty", "household_travel"]
+    if any(term in text for term in ["槍刀", "佩劍", "兵器", "侍婢", "戰", "殺", "截住"]):
+        return "armed_household", ["ambition_pride", "fear_shame"], ["battle_or_training_scene"], ["serve_army", "household_travel"]
+    if any(term in text for term in ["灑淚", "哭", "投江", "流離", "死"]):
+        return "grief_or_exile", ["grief_regret"], ["grief_or_exile_memory"], ["household_travel"]
+    if any(term in text for term in ["復仇", "報仇", "雪讎", "不肯", "拒絕", "怒"]):
+        return "revenge_or_refusal", ["anger_revenge"], ["revenge_or_refusal_scene"], ["family_duty"]
+    return "female_interaction", ["family_affection"], ["relationship_discovery"], ["daily_dialogue"]
+
+
+def build_female_relationship_edges(general_ids: list[str], female_ids: list[str], profiles: dict[str, dict], source_ref: str, subtype: str) -> list[RelationshipEdge]:
+    edges: list[RelationshipEdge] = []
+    seen: set[tuple[str, str, str]] = set()
+    relation_type = "spouse" if subtype == "marriage_alliance" else "mentions"
+    for female_id in female_ids:
+        focus_ids = list(profiles.get(female_id, {}).get("relationshipFocusIds") or [])
+        focus_ids.extend(target_id for source_id, target_id in FEMALE_RELATIONSHIP_TYPE_OVERRIDES if source_id == female_id and target_id in general_ids)
+        for target_id in general_ids:
+            if target_id == female_id or target_id not in focus_ids:
+                continue
+            edge_type = FEMALE_RELATIONSHIP_TYPE_OVERRIDES.get((female_id, target_id), relation_type)
+            key = (female_id, target_id, edge_type)
+            if key in seen:
+                continue
+            seen.add(key)
+            edges.append(
+                RelationshipEdge(
+                    fromId=female_id,
+                    toId=target_id,
+                    type=edge_type,
+                    evidenceRefs=[source_ref],
+                    edgeConfidence=0.82 if edge_type != "mentions" else 0.62,
+                    edgeStrength=0.65 if edge_type != "mentions" else 0.35,
+                )
+            )
+    return edges[:4]
+
+
+def apply_female_context_general_injections(general_ids: list[str], female_ids: list[str], rows: list[dict]) -> list[str]:
+    text = "".join(str(row.get("textSnippet") or "") for row in rows)
+    enriched = list(general_ids)
+    for injection in FEMALE_CONTEXT_GENERAL_INJECTIONS:
+        if injection["femaleId"] not in female_ids:
+            continue
+        if not any(term in text for term in injection["cueTerms"]):
+            continue
+        general_id = injection["generalId"]
+        if general_id not in enriched:
+            enriched.append(general_id)
+    return unique_sorted(enriched)
+
+
+def build_female_interaction_candidates(rows: list[dict], profiles: dict[str, dict], max_candidates: int) -> list[EventCandidate]:
+    if not profiles:
+        return []
+    female_general_ids = set(profiles)
+    grouped: dict[tuple[int, str], list[dict]] = defaultdict(list)
+    for row in rows:
+        if row.get("matchStatus") != "resolved":
+            continue
+        chapter_no = row.get("chapterNo")
+        source_ref = str(row.get("sourceRef") or "")
+        if not isinstance(chapter_no, int) or not source_ref:
+            continue
+        row_general_ids = set((row.get("matchedGeneralIds") or []) + (row.get("sceneParticipants") or []))
+        if row_general_ids.intersection(female_general_ids):
+            grouped[(chapter_no, source_ref)].append(row)
+
+    candidates: list[EventCandidate] = []
+    for (chapter_no, source_ref), source_rows in grouped.items():
+        general_ids = collect_general_ids(source_rows)
+        female_ids = sorted(set(general_ids).intersection(female_general_ids))
+        signal_score = female_interaction_signal_score(source_rows)
+        if not female_ids or signal_score < 1:
+            continue
+        general_ids = apply_female_context_general_injections(general_ids, female_ids, source_rows)
+        source_quote = representative_quote(source_rows, preferred_terms=FEMALE_INTERACTION_SIGNAL_TERMS)
+        if not source_quote:
+            continue
+        subtype, affect_tags, interaction_tags, activity_hints = infer_female_interaction_subtype(source_rows)
+        profile_tags = unique_sorted(tag for female_id in female_ids for tag in profiles.get(female_id, {}).get("interactionPriorities") or [])
+        location = derive_female_interaction_location(source_rows)
+        confidence = min(0.82, 0.5 + len(female_ids) * 0.04 + len(general_ids) * 0.015 + signal_score * 0.035)
+        display_names = "、".join(profiles.get(female_id, {}).get("name") or female_id for female_id in female_ids)
+        event_key = f"female-interaction-{source_ref_key(source_ref)}"
+        candidates.append(
+            EventCandidate(
+                eventId=f"romance.female-interaction.{source_ref_key(source_ref)}",
+                chapterNo=chapter_no,
+                eventKey=event_key,
+                eventType="female-interaction-candidate",
+                subtype=subtype,
+                generalIds=general_ids,
+                location=location,
+                summary=f"第 {chapter_no} 回 {source_ref} 偵測到女性高互動候選段落（{display_names}），需人工確認情緒、關係與互動事件。",
+                sourceQuote=source_quote,
+                relationshipEdges=build_female_relationship_edges(general_ids, female_ids, profiles, source_ref, subtype),
+                moodTags=["female-priority", subtype],
+                affectTags=affect_tags,
+                activitySeedHints=activity_hints,
+                decisionWeightHints=interaction_tags + profile_tags[:4],
+                confidence=round(confidence, 2),
+                sourceRefs=[source_ref],
+                extractionMode="female-interaction-candidate-v1",
                 reviewStatus="needs-review",
             )
         )
@@ -465,12 +652,55 @@ def render_generic_battle_review(candidates: list[EventCandidate], observed_ment
     return "\n".join(lines).rstrip() + "\n"
 
 
-def write_outputs(output_root: Path, events: list[EventCandidate], generic_battle_candidates: list[EventCandidate], observed_mentions_path: Path) -> None:
+def render_female_interaction_review(candidates: list[EventCandidate], observed_mentions_path: Path) -> str:
+    lines = [
+        "# Female Interaction Candidates Review",
+        "",
+        f"- Generated At: `{utc_now()}`",
+        f"- Observed Mentions: `{observed_mentions_path}`",
+        f"- Candidate Count: `{len(candidates)}`",
+        "- Status: all candidates are `needs-review`; female priority profiles are prompt grounding, not canonical evidence.",
+        "",
+        "| Candidate | Subtype | Confidence | Generals | Source Refs | Location | Affect |",
+        "|---|---|---:|---|---|---|---|",
+    ]
+    for candidate in candidates:
+        lines.append(
+            f"| `{candidate.eventKey}` | `{candidate.subtype or '-'}` | {candidate.confidence:.2f} | `"
+            f"{', '.join(candidate.generalIds[:12])}` | `{', '.join(candidate.sourceRefs)}` | `{candidate.location or '-'}` | "
+            f"`{', '.join(candidate.affectTags)}` |"
+        )
+    lines.append("")
+    for candidate in candidates:
+        lines.extend(
+            [
+                f"## {candidate.eventKey}",
+                "",
+                f"- Event ID: `{candidate.eventId}`",
+                f"- Summary: {candidate.summary}",
+                f"- Source Quote: {candidate.sourceQuote}",
+                f"- Activity Hints: `{', '.join(candidate.activitySeedHints) or '-'}`",
+                f"- Decision Hints: `{', '.join(candidate.decisionWeightHints[:8]) or '-'}`",
+                "",
+            ]
+        )
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def write_outputs(
+    output_root: Path,
+    events: list[EventCandidate],
+    generic_battle_candidates: list[EventCandidate],
+    female_interaction_candidates: list[EventCandidate],
+    observed_mentions_path: Path,
+) -> None:
     events_jsonl = output_root / "events.jsonl"
     events_review = output_root / "events-review.md"
     events_summary = output_root / "events-summary.json"
     generic_candidates_jsonl = output_root / "generic-battle-candidates.jsonl"
     generic_candidates_review = output_root / "generic-battle-candidates-review.md"
+    female_candidates_jsonl = output_root / "female-interaction-candidates.jsonl"
+    female_candidates_review = output_root / "female-interaction-candidates-review.md"
     events_jsonl.write_text(
         "".join(json.dumps(event.model_dump(), ensure_ascii=False) + "\n" for event in events),
         encoding="utf-8",
@@ -481,6 +711,11 @@ def write_outputs(output_root: Path, events: list[EventCandidate], generic_battl
         encoding="utf-8",
     )
     generic_candidates_review.write_text(render_generic_battle_review(generic_battle_candidates, observed_mentions_path), encoding="utf-8")
+    female_candidates_jsonl.write_text(
+        "".join(json.dumps(candidate.model_dump(), ensure_ascii=False) + "\n" for candidate in female_interaction_candidates),
+        encoding="utf-8",
+    )
+    female_candidates_review.write_text(render_female_interaction_review(female_interaction_candidates, observed_mentions_path), encoding="utf-8")
     summary = {
         "version": "1.0.0",
         "generatedAt": utc_now(),
@@ -488,6 +723,7 @@ def write_outputs(output_root: Path, events: list[EventCandidate], generic_battl
         "eventCount": len(events),
         "readyEventCount": sum(1 for event in events if event.reviewStatus == "ready"),
         "genericBattleCandidateCount": len(generic_battle_candidates),
+        "femaleInteractionCandidateCount": len(female_interaction_candidates),
         "eventKeys": [event.eventKey for event in events],
     }
     events_summary.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -495,10 +731,13 @@ def write_outputs(output_root: Path, events: list[EventCandidate], generic_battl
     print(f"[extract_event_candidates] wrote {events_review}")
     print(f"[extract_event_candidates] wrote {generic_candidates_jsonl}")
     print(f"[extract_event_candidates] wrote {generic_candidates_review}")
+    print(f"[extract_event_candidates] wrote {female_candidates_jsonl}")
+    print(f"[extract_event_candidates] wrote {female_candidates_review}")
     print(f"[extract_event_candidates] wrote {events_summary}")
     print(
         f"[extract_event_candidates] events={len(events)} ready={summary['readyEventCount']} "
-        f"genericBattleCandidates={len(generic_battle_candidates)}"
+        f"genericBattleCandidates={len(generic_battle_candidates)} "
+        f"femaleInteractionCandidates={len(female_interaction_candidates)}"
     )
 
 
@@ -510,12 +749,18 @@ def main() -> None:
     ensure_output_root(output_root, args.overwrite)
     observed_mentions = load_observed_mentions(observed_mentions_path)
     dialogue_data = load_dialogue_resolution(dialogue_resolution_path)
+    female_priority_profiles = load_female_priority_profiles(Path(args.stable_knowledge))
     targets = parse_alias_smoke_targets(args.alias_smoke_target)
     events = build_gold_seed_battle_events(observed_mentions)
     events.extend(build_alias_smoke_event(label, general_id, observed_mentions) for label, general_id in targets.items())
     events.extend(build_dialogue_resolution_events(dialogue_data))
     generic_battle_candidates = build_generic_battle_candidates(observed_mentions, args.max_generic_battle_candidates)
-    write_outputs(output_root, events, generic_battle_candidates, observed_mentions_path)
+    female_interaction_candidates = build_female_interaction_candidates(
+        observed_mentions,
+        female_priority_profiles,
+        args.max_female_interaction_candidates,
+    )
+    write_outputs(output_root, events, generic_battle_candidates, female_interaction_candidates, observed_mentions_path)
     if any(event.reviewStatus != "ready" for event in events):
         raise SystemExit(1)
 

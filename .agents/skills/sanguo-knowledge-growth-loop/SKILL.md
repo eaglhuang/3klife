@@ -27,6 +27,79 @@ Unity 對照：這不是單次資料匯入，而是一條會反覆重跑的 Asse
 4. DeepSeek is reviewer, not author：DeepSeek 只能做 context enrichment、補欄位 proposal、風險提示；不能直接 publish canonical events。
 5. Quantify every round：每輪都要回報 ready event count、generic candidate count、accepted count、keyword/persona delta、covered generals delta。
 6. Moral-neutral choice weights：所有職業、生計、專長與社會角色都只是「選擇權重」，不是善惡評分。當官、當賊、當兵、乞討、經商、耕作、加入暴民或黃巾賊都要能被 evidence 收集，未來再由任務系統和世界狀態決定它們如何成為活動、風險或劇情。
+7. Reviewer adaptor first：LLM reviewer 不可寫死 DeepSeek。日常品質迭代先用 `hints-only` 或 `agent` reviewer preset；`agent` 是專案內本地小 reviewer，從 candidateHints 補 summary/location/relationshipEdges proposal，再交 strict gate；`fast` 只產 proposal 並保守留 B，避免快模型 relationship hallucination 直接升 A。等 deterministic gate 與 review pack 穩定後，再用 `quality/deepseek` 複核高價值候選。
+8. 文言 preview first：文言文多輪優化先跑 `agent-reviewer` preview，不用 qwen 判斷；每個 generate/enrich step 預設 30 秒 timeout。preview 只用毛本文言 sourceRef、expandedContext 與 candidateHints 做快篩，產出 A/B/風險供人工或 quality reviewer 複核，不 publish canonical。
+9. Live candidate cohort：文言 preview cohort 必須優先從目前的 `generic-battle-candidates.jsonl` 或 `female-interaction-candidates.jsonl` 選人，不要依賴舊 `etl-quality-pilot-report.json`。女性互動輪要用女性本人 `--general-id` 指定重跑，避免男性參與者把 focus edge gate 稀釋成 B。
+10. Focus relevance ranking：`generate_event_review_choices.py --general-id` 會先排 sourceQuote 直接命中該武將正式 name/alias、且有 direct battle cue 的候選；任官、薦舉、招募、傳記段落降權。單字 alias 只能走白名單（例如 `卓/布/飛`），不可自動用姓名最後一字，避免 `除堅`、`紹問` 這類 false focus。
+11. Progress estimate every round：每輪 preview 或 extractor 調整後，先跑 `extract_relationship_evidence.py --overwrite` 重建 source-grounded relationship evidence，再跑 `build_event_question_seed_bank.py --overwrite` 壓出人物 × 題目角度 seeds，最後跑 `estimate_knowledge_completion.py --round-id current --overwrite`。這個百分比是保守 pipeline 完成度估算，不是內容品質宣告；人物/mention foundation 不能蓋過 source-grounded event slots、relationship graph 與 taxonomy maturity。
+
+## Progress Estimate Formula
+
+每輪完成度用固定權重重算，輸出到 `artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/`。
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/extract_relationship_evidence.py \
+  --overwrite
+
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/build_event_question_seed_bank.py \
+  --overwrite
+
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/estimate_knowledge_completion.py \
+  --round-id current \
+  --overwrite
+```
+
+公式：`overall = sum(componentScore * componentWeight)`，權重總和 100。預設權重為 sourceResolution 6、personFoundation 12、relationshipGraph 22、eventQuestionCoverage 32、taxonomyAngles 13、reviewValidation 6、femalePriority 5、pipelineReliability 4。
+
+判讀規則：如果 mention / 人物基礎很高，但 eventQuestionCoverage 或 relationshipGraph 仍低，總進度仍應停在低到中段；只有當 source-grounded 題目與關係邊大量變成可接受資料，百分比才會穩定上升。`relationship-evidence` 與 `event-question-seeds` 都是 review artifact，不直接寫 canonical；完成度公式依 confidence / slot strength 分層折算，避免把寬鬆 pattern 灌成滿分。`event-question-seeds` 應覆蓋 11 個 angle families；`female_interaction` 必須命中 female priority generalId 才能建 slot，避免只靠泛稱誤判。
+
+## Stable Knowledge Bootstrap
+
+在擴充事件抽取前，先跑一輪穩定知識層 bootstrap。這層只收「版本差異不太會改變」的事實，用來幫後續 reviewer 降低猜測。
+
+1. Alias baseline：先跑 `build_alias_dict.py -> collect_observed_mentions.py -> build_alias_dict.py`，確認全體人物 alias、collision、top unresolved。反向剔除寫入 `general-alias-overrides.json.entries[].remove` 或 `globalExcludedAliases`；只有時段/陣營才能判斷的字號，不可硬升全局 high-confidence，改放 `timeScopedAliasHints` sidecar。
+2. Roster gap closure：若穩定關係或大事件需要的人物沒有 `generalId`，先補 `server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json`，再重跑 bootstrap。不要用未解析姓名硬塞 relationshipEdges；缺 ID 時寧可留 missingCoverage。
+3. Identity baseline：每輪 bootstrap 要從 `generals.json` + `manual-roster-seeds.json` 產出全人物 `identitySeeds`，包含 `generalId/name/aliases/baseFaction/sourceLayer`。這是 prompt grounding，不是 canonical evidence，不能單獨升 A。
+4. Structured plain-data extraction：可從既有白話式欄位（例如 `parentsSummary`、`historicalAnecdote`、`storyStripCells`、`role/stats/title/source`）自動抽穩定事實；父子雙方都有 `generalId` 時可產 `parent_child`，但 sourceLayer 必須標成欄位來源（例如 `generals-parent-summary`），避免混成毛本文言證據。角色/職能只能產 `autoSocialRoleSeeds` 或 `plainFactProposals`，並維持 review-only。
+5. Plain-field heuristic guard：自動角色推斷要偏保守，避免用「武將」這類泛詞直接推出 `general_commander`；Support 角色也不能無條件變成 `strategist_advisor`，需有高智/高政或明確謀略、治理、文學、器械等詞。任何 plain-field hint 都不能單獨升 A。
+6. Hard relationships：優先抽 `parent_child`、`spouse`、`sibling`、`sworn_sibling`。義父子可進 `parent_child`，但若關係隨章回轉折，必須帶 `validFromChapter` / `validToChapter`。朋友、收留、薦舉可先入 sidecar；君臣必須帶 `validFrom/validTo`、`chapterRange`、`battleTag` 或 `eventTag`，不可當永久硬關係。
+7. Faction timeline：`generals.json.faction` 只當 base faction；事件判斷要看 `factionTimeline`。投降、反叛、短暫同盟、受命、降將都要建立 interval，避免同陣營/敵陣營 gate 誤判。
+8. Event-location seed：大事件與地點關係先獨立成穩定索引，例如桃園結義、虎牢關、官渡、赤壁、長坂坡、取西川、夷陵、五丈原、三國歸晉。每筆要有 `chapterRange`、`locationIds`、`participantIds`、`factionIds`、`eventTags`。
+9. 白話 sidecar 不直接 canonical：繁體白話或簡體白話轉繁都只能產 `plainFactProposal` / `plainTextInterpretation`。升 A/ready 前必須回到毛本文言 sourceRef，以原文 gate 找到對應證據。
+10. 簡體來源可用 OpenCC 類工具先轉繁，但必須保留 `originalSimplifiedTextHash`、`convertedTraditionalText`、`conversionProfile` 與 `qualityFlags`。簡轉繁結果可幫助語意理解，不能取代原文證據。
+11. 8book / 無限小說來源先走 manifest，不抓全文：`artifacts/data-pipeline/sanguo-rag/extracted/plaintext-source-candidates/8book-baihua-sanguo-source-manifest.json` 只保存 catalog、chapter id range、URL pattern 與風險註記。若未取得授權或本地文本，管線只能用它做 source candidate 與交叉校驗計畫；不可把 120 回正文寫入 repo。
+12. 8book 讀取 guard：若未來建立 authorized loader，必須從 `https://www.8book.com/read/412204/?{chapterId}` 入口驗證正文 marker；不可直接信任 `sport.thepaperbooks.com` 直連，因為直連可能落到無關 SEO 頁。抓到的頁面必須檢查章題、小說正文關鍵字、下一章/章節列表 marker，並清除 `8book` 浮水印後才進 sidecar。
+13. Stable bootstrap artifact：每輪文言文 enrichment 前可先跑 `build_stable_knowledge_bootstrap.py --overwrite`，產出 `artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json`。這份資料目前包含 identity seeds、basic profile seeds、ready hard relationship edges、plain relationship proposals、event-location seeds、time-scoped alias hints、review-only faction timelines、social role seeds、auto social role seeds 與 plain fact proposals。
+14. 白話推理 sidecar：`basicProfileSeeds` 必須覆蓋全人物，從 generals/manual roster/observed mentions 推出身份、出場章回、角色、能力傾向、情緒、個性、活動種子與選擇權重；`plainRelationshipProposals` 只能從結構欄位或白話欄位抓人名共現、父母/子女/配偶/君臣/仇敵等候選，標成 `plain-*-proposal-only`。兩者都是讓文言 extractor 回查更準的索引，不是 canonical。
+15. A 升級規則：若候選題的 `generalIds`、chapter/sourceRef、location 與 stable bootstrap 的 `relationshipEdges` / `eventLocationSeeds` / `timeScopedAliasHints` 同時匹配，可作為從 B 升 A 的 deterministic evidence boost；但仍必須有毛本文言 sourceRef gate。若只命中 identity seeds、basic profile seeds、白話 sidecar、plain relationship proposals、欄位 sidecar、auto social roles、plain fact proposals、陣營 timeline、君臣推測或社會角色 tag，最多只能 B/review-only。
+
+## Female Priority Profiles
+
+女性角色在遊戲互動價值上優先級高於同覆蓋度的男性角色。每輪 knowledge growth 都要特別檢查可對上 `generalId` 的女性、疑似女性、或史料欄位 gender 錯置但已知為女性的人物，例如王異。不要先改 canonical 人物資料；先用 sidecar 標出 `genderCorrection=female-priority-sidecar`，等人工確認後再開資料修正任務。
+
+1. Bootstrap 必須產出 `femalePriorityProfiles`，至少包含 `generalId/name/aliases/baseFaction/archetype/affectTags/personalityTags/interactionPriorities/relationshipFocusIds/eventHooks/sourceLayer/reviewStatus/contentGapPolicy`。
+2. 每個已映射女性都要個案處理；不能只套「女性角色」泛型。貂蟬、孫尚香、蔡琰、黃月英、大小喬、甄姬、王異、張春華、辛憲英、祝融夫人、徐氏、孫魯班/孫魯育等高互動角色要有明確情緒、個性、愛恨傾向與互動事件 hook。
+3. `femalePriorityProfiles` 是互動與 prompt grounding，不是 canonical evidence。它可以提醒 reviewer 優先保留婚盟、家族、宮廷、復仇、流離、武事、母子、姊妹、妯娌、主僕等互動線，但不能單獨把題目升 A；仍必須有毛本文言 sourceRef。
+4. 若 generic candidates 對女性角色產題數為 0，這不是通過，而是 coverage gap。下一輪應新增女性別名與事件 pattern，例如 `孫夫人/夫人/主母/嫂嫂`、`貂蟬/閉月`、`蔡文姬/文姬`、`祝融/夫人`，並優先補 `relationshipEdges` 與 `affectTags`。
+5. 白話文、民間故事、地方誌或網路來源可以補女性性格與互動素材，但必須先進 `plainFactProposal` / `femalePriorityProfiles` / external source queue，保留來源與授權資訊；未通過毛本文言或正式來源 gate 前，不得寫 canonical event。
+6. 女性互動 profile 應覆蓋基本資料、情緒、個性、愛恨傾向、情感事件、互動事件、關係焦點與可玩活動鉤子。缺資料時標 `externalSourceNeeded` 或 `low-source-personal_scene`，而不是憑空補滿。
+7. `extract_event_candidates.py` 必須同步輸出 `female-interaction-candidates.jsonl` 與 review md。這條 queue 專收婚盟、家族、宮廷/家內政治、武事家眷、流離、復仇、拒絕、母子/姊妹/主僕等女性高互動段落；它與 `generic-battle-candidates.jsonl` 分流，避免 battle gate 把女性事件吃掉。
+8. 女性互動候選即使 location / relationshipEdges 已補齊，也只建議 `B accept-with-edits`，不自動建議 A。升 A 必須由人工或 quality reviewer 確認毛本文言 sourceRef、情緒分類、關係 edge 與互動邊界。
+
+女性候選產題範例：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/extract_event_candidates.py \
+  --overwrite \
+  --max-female-interaction-candidates 80
+
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/generate_event_review_choices.py \
+  --candidates artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl \
+  --general-id sun-shang-xiang \
+  --output-root artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-female-sun-shang-xiang \
+  --top 8 \
+  --overwrite
+```
 
 ## Knowledge Taxonomy
 
@@ -325,14 +398,43 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/generate
 
 對 `genericCandidateCount > 0` 的武將，批次跑 context enrichment。若尚未有批次 wrapper，先用 shell loop 或建立正式 runner；每位武將輸出獨立 `event-review-answers.<generalId>.enriched.todo.json`。
 
+Reviewer preset 建議分層：
+
+- `hints-only`：最快，不打 LLM，只測 deterministic candidateHints 與 gate，適合大批掃 coverage。
+- `agent` / `agent-reviewer`：不打 LLM，使用專案內 reviewer logic 產 proposal；只有 strict gate 完整通過才可升 A，且同陣營 co-mention 不可因句中有「戰」字被誤判成 confronts。
+- `agent` 強邊 gate 必須保守處理假陽性：任官 / 推薦句（如 `薦爲`、`表陳`、`縣令`）不可誤升為 commands；戰前宣言或事後回述（如 `活拿`、`斬了`）不可當成當場 confronts；`棄了 X，便戰 Y` 只能產生轉戰後的對手 edge，不可把 X 誤配到 Y。
+- `agent` 自動優化心得：battle enrichment 的 context window 下限用 `2/2`；`1/1` 會漏掉有效近鄰 edge，`3/3`、`4/4` 在目前 cohort 沒增加 A。location 先偏好非 generic 地點，避免 `寨` 壓過 `汜水關 / 虎牢關 / 陽城`；但必須先套用共同行動 / 提議 / 身份介紹 / 意圖句 gate（如 `各選精兵`、`斬關入內`、`使一弓手出戰`、`平原令`、`呼玄德出`、`便欲殺之`）。`玄德使張飛擊之` 這類句型應產 directed `commands`，不是雙向 `confronts`。華雄相關戰鬥若候選地點含 `汜水關`，優先選 `汜水關`。
+- `agent` alias / command 優化心得：既有 early generalId 的 fallback aliases（如 `劉焉`、`皇甫嵩`、`張寶`、`張角`、`張梁`、`朱雋/朱儁`）能顯著提高可審 A，但必須搭配 gate。`劉焉令...同玄德`、`雋令玄德`、`雋遣玄德` 可產 directed `commands`；`將玄德功勞` 不是 command。`近聞/欲往助之`、`遣副將高升`、`攻城西南角`、`率三軍掩殺`、`一齊趕上` 是轉述、委派或同盟分工，不可產雙向 `confronts`。phrase gate 比對前要去空白，避免 `compact_text` 把 `攻城西南角` 切成 `攻城西 南角` 後漏判。
+- `agent` 字號 alias 來源：先跑 `build_romance_courtesy_aliases.py --overwrite` 生成 `artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/romance-courtesy-aliases.json`，再讓 enrichment 合併 `GENERAL_ALIASES`、`person-registry.json/persons[]`、`manual-roster-seeds.json` 與該 artifact。維基《三國演義角色列表》的「字」欄可補 `玄德`、`益德/翼德`、`文遠`、`儁乂`、`君郎`、`義真`、`公偉` 等稱呼；但 alias 擴充後會暴露更多人物邊，需要 gate，例如 `遣兵追襲張讓` 不可誤判為 `曹操 commands 張讓`。
+- `agent` 字號上游化心得：字號 alias 不能只放在 enrichment，還要讓 `build_alias_dict.py` 合併 `romance-courtesy-aliases.json` 產生 `formal-mention-map.json`，再重跑 `collect_observed_mentions.py -> extract_event_candidates.py -> run_etl_quality_pilot.py`。若要多跑不同批武將，使用 `run_knowledge_growth_round.py --cohort-offset <n>`，否則只會反覆跑最高 `genericCandidateCount` 的同一批。上游化後須特別 gate 同陣營部署/列隊句：`領夏侯惇...星夜來趕董卓`、`爲左軍/右軍/合後`、`操先令許褚、曹仁、典韋領三百鐵騎`、`引軍刺斜殺來` 不能產 peer commands/confronts；但 `X 與 Y 交鋒/廝殺` 要補回雙向 `confronts`，避免 command false-positive gate 擋掉真單挑。
+- `agent` top-per-general audit 心得：把 `--top-per-general` 從 10 放大到 20 時，新增 A 先視為 precision audit，不要直接當 coverage 成長。已驗證的 review-only gate 包含投奔/任官/解和/罷兵/約會/召副將/前來保駕不可自動升 `commands`；馬匹搶奪指控、轉述死亡、部隊劫掠不可自動升 `confronts`；`救出曹操` 是友軍救援，不是曹操/典韋互相 confront；`殺入曹兵寨邊` 中劉備/張飛是同側行動，不可產 peer confront；若 summary 本身含 `送還馬匹`、`兩相罷兵`、`解和`，即使附近 edge 完整也只留 B 給人工 review。
+- `agent` depth audit 心得：`--cohort-offset 15` 若回傳空 cohort，代表目前 generic-candidate pool 已沒有下一批可跑；不要反覆加 offset，應改重建 upstream candidate source 或新增非 battle taxonomy。`--top-per-general 30` 可用來挖後段假陽性，但若 `30` 與 `40` 產生相同 question count，視為本批深度平台並停止加深。已驗證的後段 gate 包含 `前奔許都 / 特來相投 / 來相投` 屬投奔或求援上下文，不自動升 battle A；`遣人至 / 喚入問之` 屬使者到訪，不自動產 commands A；`不見了曹操 / 復殺入城來 / 特來求救 / 來救援` 屬尋主、求援或友軍救援，不可把救援方與被救援方互判為 `confronts`，但仍可保留救援方對敵方的真戰鬥 edge。
+- `agent` 語意理解分層心得：battle auto-A 不應只靠 LLM 猜古文；先用正向表列要求 `confronts` 至少命中明確戰鬥 cue（如 `交鋒 / 廝殺 / 交戰 / 大戰 / 搦戰 / 迎戰 / 截住 / 追襲 / 殺敗 / 攻打 / 刺 / 斬`），再用負向表列排除救援、投奔、使者、任官、停戰、同側行動。白話文對照版可作為 `sourceRef -> plainText` sidecar 加進 expandedContext，但必須能精準對齊原文 sourceRef，且不得單獨寫 canonical；沒有對照版時，疑難 B/D 題可請 LLM 先翻成繁體白話，輸出 `plainTextInterpretation` 與 `roleInteractionGuess` 作 reviewer trace，但只有原文 gate 也通過時才可升 A。同陣營人物預設不產 `confronts`，除非原文有明確反叛/內訌/倒戈 cue 或成對直接戰鬥句；叛亂比例低，應獨立 taxonomy / exception table 處理。
+- `runner` 防卡死規則：避免用一長串 shell + `set -e` 直接跑完整輪。`run_knowledge_growth_round.py` 必須保留 per-general error isolation、`--step-timeout-seconds`、snapshot error capture；單一武將 generate/enrich/snapshot 失敗時寫入 batch JSON 的 `generate/enrich stderr` 或 `paths.*SnapshotError`，整輪仍繼續。WSL `/mnt/c` snapshot 用 `shutil.copyfile()`，不要用會複製 metadata 的 `copy2()`，避免 Windows 權限造成 `PermissionError`。
+- `fast`：預設日常 reviewer，使用較快模型如 `qwen2.5:7b`；只填 proposal，保守留 B。
+- `quality` / `deepseek`：慢但較適合最後複核；只有通過 strict gate 的題目才允許升 A。
+
 ```bash
 $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/enrich_event_review_context.py \
   --answers <event-review-answers.todo.json> \
+  --reviewer-preset fast \
   --api-url <ollama-api-url> \
-  --model deepseek-r1:7b \
   --window-before 2 \
   --window-after 2 \
   --fill-answers \
+  --overwrite
+```
+
+批次 runner 優先使用 adaptor preset：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/run_knowledge_growth_round.py \
+  --round-id round-001-fast-review \
+  --reviewer-preset fast \
+  --max-generals 5 \
+  --top-per-general 1 \
+  --window-before 1 \
+  --window-after 1 \
   --overwrite
 ```
 

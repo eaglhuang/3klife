@@ -10,6 +10,15 @@ from typing import Any
 DEFAULT_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/events")
 DEFAULT_REASONING_REPORT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.json")
+DEFAULT_GENERALS_PATH = Path("assets/resources/data/generals.json")
+DEFAULT_MANUAL_ROSTER_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json")
+DIRECT_BATTLE_TERMS = ["交鋒", "廝殺", "交戰", "搦戰", "親戰", "迎敵", "迎戰", "便戰", "酣戰", "直取", "攻打", "殺敗", "大敗", "截住", "追趕", "追襲", "斬", "殺"]
+LOW_REVIEW_VALUE_TERMS = ["表陳", "薦爲", "除", "遷", "奏其功", "前功", "司馬", "縣令", "現居何職", "白身", "太守", "鎮", "招募", "來投", "來會", "帳前吏", "族弟", "弟兄", "習槍棒", "散家資"]
+RANKING_SINGLE_ALIAS_HINTS = {
+    "dong-zhuo": ["卓"],
+    "lu-bu": ["布"],
+    "zhang-fei": ["飛"],
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -18,6 +27,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory")
     parser.add_argument("--general-id", default=None, help="Optional generalId filter")
     parser.add_argument("--reasoning-report", default=None, help="Optional DeepSeek sidecar report JSON path")
+    parser.add_argument("--generals", default=str(DEFAULT_GENERALS_PATH), help="generals.json path for focus alias ranking")
+    parser.add_argument("--manual-roster", default=str(DEFAULT_MANUAL_ROSTER_PATH), help="manual roster path for focus alias ranking")
     parser.add_argument("--top", type=int, default=20, help="Maximum candidate count")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting outputs")
     return parser.parse_args()
@@ -51,10 +62,62 @@ def ensure_output_root(output_root: Path, general_id: str | None, overwrite: boo
     return choices_path, answers_path
 
 
-def filter_candidates(candidates: list[dict], general_id: str | None, top: int) -> list[dict]:
+def focus_aliases(general_id: str | None, people_aliases: dict[str, list[str]]) -> list[str]:
+    if not general_id:
+        return []
+    aliases = [alias for alias in people_aliases.get(general_id) or [] if len(alias) > 1]
+    aliases.extend(RANKING_SINGLE_ALIAS_HINTS.get(general_id) or [])
+    return sorted({alias for alias in aliases if alias}, key=len, reverse=True)
+
+
+def load_people_aliases(generals_path: Path, manual_roster_path: Path) -> dict[str, list[str]]:
+    people: list[dict] = []
+    if generals_path.exists():
+        people.extend(read_json(generals_path))
+    if manual_roster_path.exists():
+        people.extend(read_json(manual_roster_path).get("entries") or [])
+    aliases: dict[str, list[str]] = {}
+    for person in people:
+        general_id = str(person.get("generalId") or person.get("id") or "").strip()
+        name = str(person.get("name") or "").strip()
+        if not general_id:
+            continue
+        labels = [name] + [str(alias).strip() for alias in person.get("alias") or [] if str(alias).strip()]
+        aliases[general_id] = sorted({label for label in labels if label}, key=len, reverse=True)
+    return aliases
+
+
+def focus_candidate_score(candidate: dict, general_id: str | None, people_aliases: dict[str, list[str]]) -> tuple:
+    if not general_id:
+        return (0, float(candidate.get("confidence") or 0), str(candidate.get("eventKey") or ""))
+    text = "".join(str(candidate.get(key) or "") for key in ("sourceQuote", "summary"))
+    aliases = focus_aliases(general_id, people_aliases)
+    focus_hits = sum(1 for alias in aliases if alias and alias in text)
+    has_direct_battle = any(term in text for term in DIRECT_BATTLE_TERMS)
+    has_low_value = any(term in text for term in LOW_REVIEW_VALUE_TERMS)
+    focus_edges = [
+        edge for edge in candidate.get("relationshipEdges") or []
+        if general_id in {edge.get("fromId"), edge.get("toId")}
+    ]
+    score = 0
+    score += 80 if focus_hits else -20
+    score += min(focus_hits, 3) * 8
+    score += 30 if focus_edges else 0
+    score += 22 if has_direct_battle else 0
+    score -= 140 if has_low_value and not has_direct_battle else 0
+    score -= 45 if has_low_value and has_direct_battle and not focus_edges else 0
+    score += 8 if candidate.get("location") else 0
+    score += 8 if candidate.get("relationshipEdges") else 0
+    return (score, float(candidate.get("confidence") or 0), str(candidate.get("eventKey") or ""))
+
+
+def filter_candidates(candidates: list[dict], general_id: str | None, top: int, people_aliases: dict[str, list[str]] | None = None) -> list[dict]:
     if general_id:
         candidates = [candidate for candidate in candidates if general_id in (candidate.get("generalIds") or [])]
     candidates = [candidate for candidate in candidates if candidate.get("reviewStatus", "needs-review") != "ready"]
+    if general_id:
+        aliases = people_aliases or {}
+        candidates = sorted(candidates, key=lambda candidate: focus_candidate_score(candidate, general_id, aliases), reverse=True)
     return candidates[: max(top, 0)]
 
 
@@ -84,6 +147,8 @@ def suggested_answer(candidate: dict, hint: dict | None) -> str | None:
     if recommendation == "reject":
         return "C"
     if missing_fields(candidate):
+        return "B"
+    if candidate.get("eventType") == "female-interaction-candidate":
         return "B"
     if recommendation == "accept":
         return "A"
@@ -116,11 +181,11 @@ def choice_record(candidate: dict, hint: dict | None) -> dict:
             "D": "defer",
         },
         "edits": {
-            "eventKey": None,
-            "summary": None,
-            "location": None,
-            "relationshipEdges": [],
-            "moodTags": [],
+            "eventKey": event_key,
+            "summary": candidate.get("summary"),
+            "location": candidate.get("location"),
+            "relationshipEdges": candidate.get("relationshipEdges") or [],
+            "moodTags": candidate.get("moodTags") or [],
         },
     }
 
@@ -182,7 +247,8 @@ def render_markdown(payload: dict[str, Any]) -> str:
 
 
 def build_payload(args: argparse.Namespace) -> dict:
-    candidates = filter_candidates(read_jsonl(Path(args.candidates)), args.general_id, args.top)
+    people_aliases = load_people_aliases(Path(args.generals), Path(args.manual_roster)) if args.general_id else {}
+    candidates = filter_candidates(read_jsonl(Path(args.candidates)), args.general_id, args.top, people_aliases)
     reasoning_path = Path(args.reasoning_report) if args.reasoning_report else default_reasoner_path(args.general_id)
     hints = load_reasoning_hints(reasoning_path)
     questions = [choice_record(candidate, hints.get(candidate.get("eventKey") or candidate.get("eventId"))) for candidate in candidates]

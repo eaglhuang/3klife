@@ -2659,6 +2659,51 @@
       "faction": "neutral",
       "title": "【黃琬】",
       "alias": []
+    },
+    {
+      "generalId": "liu-shan",
+      "name": "劉禪",
+      "faction": "shu",
+      "title": "【劉禪】",
+      "alias": [
+        "阿斗",
+        "後主"
+      ]
+    },
+    {
+      "generalId": "liu-qi",
+      "name": "劉琦",
+      "faction": "neutral",
+      "title": "【劉琦】",
+      "alias": []
+    },
+    {
+      "generalId": "liu-cong",
+      "name": "劉琮",
+      "faction": "neutral",
+      "title": "【劉琮】",
+      "alias": []
+    },
+    {
+      "generalId": "guan-ping",
+      "name": "關平",
+      "faction": "shu",
+      "title": "【關平】",
+      "alias": []
+    },
+    {
+      "generalId": "gao-shun",
+      "name": "高順",
+      "faction": "enemy",
+      "title": "【高順】",
+      "alias": []
+    },
+    {
+      "generalId": "ding-yuan",
+      "name": "丁原",
+      "faction": "enemy",
+      "title": "【丁原】",
+      "alias": []
     }
   ]
 }
