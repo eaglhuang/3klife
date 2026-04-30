@@ -1,0 +1,22 @@
+{
+  "name": "gpt-image-2-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for OpenAI GPT Image 2 generation.",
+  "main": "index.js",
+  "scripts": {
+    "self-test": "node ../../.github/skills/gpt-image-2-gen/scripts/generate-gpt-image-2.js --self-test --json"
+  },
+  "keywords": [
+    "mcp",
+    "openai",
+    "gpt-image-2"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "dotenv": "^17.4.0",
+    "openai": "^6.33.0"
+  }
+}
