@@ -4,6 +4,37 @@
   "uiId": "GeneralDetail",
   "layout": "character-ds3-main",
   "skin": "character-ds3-default",
+  "preview": {
+    "lazySlotFragments": {
+      "CharacterDs3Main_div_54": "fragments/layouts/character-ds3-story-strip-open"
+    }
+  },
+  "tabRouting": {
+    "Overview": {
+      "slotId": "CharacterDs3Main_div_6",
+      "fragment": "fragments/layouts/character-ds3-overview-content"
+    },
+    "Stats": {
+      "slotId": "CharacterDs3Main_div_6",
+      "fragment": "fragments/layouts/character-ds3-right-content-empty"
+    },
+    "Tactics": {
+      "slotId": "CharacterDs3Main_div_6",
+      "fragment": "fragments/layouts/character-ds3-right-content-empty"
+    },
+    "Bloodline": {
+      "slotId": "CharacterDs3Main_div_6",
+      "fragment": "fragments/layouts/character-ds3-right-content-empty"
+    },
+    "Equip": {
+      "slotId": "CharacterDs3Main_div_6",
+      "fragment": "fragments/layouts/character-ds3-right-content-empty"
+    },
+    "Aptitude": {
+      "slotId": "CharacterDs3Main_div_6",
+      "fragment": "fragments/layouts/character-ds3-right-content-empty"
+    }
+  },
   "layer": "Popup",
   "bundle": "lobby_ui",
   "migrationStatus": {

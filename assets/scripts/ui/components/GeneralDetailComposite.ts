@@ -29,6 +29,14 @@ type TabKey = 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitu
 type UnifiedOverviewContentState = GeneralDetailOverviewContentState;
 
 const TAB_ORDER: TabKey[] = ['Overview', 'Stats', 'Tactics', 'Bloodline', 'Equip', 'Aptitude'];
+const DS3_TAB_BUTTON_NODE: Record<TabKey, string> = {
+    Overview: 'CharacterDs3Main_button_4',
+    Stats: 'CharacterDs3Main_button_5',
+    Tactics: 'CharacterDs3Main_button_6',
+    Bloodline: 'CharacterDs3Main_button_7',
+    Equip: 'CharacterDs3Main_button_8',
+    Aptitude: 'CharacterDs3Main_button_9',
+};
 const PORTRAIT_ARTWORK_OVERLAY_HOST_NAME = 'PortraitArtworkOverlayHost';
 const SPIRIT_FAMILY_SHORTCUT_ROOT_PATH = 'RightContentArea/ContentSlot/TabBloodlineContent/SpiritFamilyState';
 const PORTRAIT_RARITY_BADGE_PATHS: Record<GeneralDetailRarityTier, string> = {
@@ -55,6 +63,7 @@ export class GeneralDetailComposite extends CompositePanel {
     private _currentBackgroundResource: string | null = null;
     private _currentPortraitRarityBadgeResource: string | null = null;
     private _gdBinder: UITemplateBinder | null = null;
+    private _ds3OverviewChild: CharacterDs3OverviewChild | null = null;
 
     /**
      * 解析要載入的 screen 規格 ID。
@@ -83,13 +92,6 @@ export class GeneralDetailComposite extends CompositePanel {
     protected override _onAfterBuildReady(binder: UITemplateBinder): void {
         this._gdBinder = binder;
         this.setCompositeRenderer(new CocosCompositeRenderer());
-        if (this._isDs3Active()) {
-            // DS3 cutover (2026-04-28)：DS3 layout 沒有 unified-only 的 GeneralDetailRoot/RightTabBar
-            // 等同名節點，因此跳過 unified-specific 靜態事件綁定。Tab 切換與資料綁定改由
-            // DS3 ChildPanel（CharacterDs3OverviewChild 等，目前為骨架）負責，等 wiring 完成。
-            UCUFLogger.info(LogCategory.LIFECYCLE, '[GeneralDetailComposite] DS3 mode: skip unified static events');
-            return;
-        }
         this._bindStaticEvents();
     }
 
@@ -138,27 +140,14 @@ export class GeneralDetailComposite extends CompositePanel {
         this._currentConfig = config;
 
         if (this._isDs3Active()) {
-            // DS3 cutover Step-1：layout 已掛載即視為「新畫面」可被使用者看到。
-            // overview chrome / background / tab switching 仍依賴 unified 節點，DS3 不適用，先跳過。
-            // ChildPanel data wiring 將在後續 turn 補齊（CharacterDs3OverviewChild 等目前是骨架）。
-            (this.node as Node & { __generalDetailReadyTab?: string }).__generalDetailReadyTab = 'Overview';
-            // 2026-04-28 (M16 階段 3)：smoke wiring — 直接實例化 CharacterDs3OverviewChild
-            // 並把當前 GeneralConfig 餵進去，用 binder.getLabel(name) 寫到改名後的 Label 節點。
-            // 這條路徑暫不走 fragment / slot 機制，待 layout 補 OverviewSlot 定義後再升級。
-            try {
-                if (this._gdBinder) {
-                    const overviewHost = this._gdBinder.getNode('CharacterDs3Main_div_6') ?? this.node;
-                    const overviewChild = new CharacterDs3OverviewChild(overviewHost, this.skinResolver, this._gdBinder);
-                    void overviewChild.onMount({}).then(() => {
-                        overviewChild.onDataUpdate(config);
-                    });
-                }
-            } catch (err) {
-                UCUFLogger.warn(LogCategory.LIFECYCLE, '[GeneralDetailComposite] DS3 Overview smoke wiring failed', { err: String(err) });
-            }
-            UCUFLogger.info(LogCategory.LIFECYCLE, '[GeneralDetailComposite] DS3 show complete (chrome wiring pending)', {
+            const overview = this._buildUnifiedOverviewState(config);
+            const entryTab = this._resolveEntryTab(config);
+            await this._switchToDs3Tab(entryTab, overview);
+            (this.node as Node & { __generalDetailReadyTab?: string }).__generalDetailReadyTab = entryTab;
+            UCUFLogger.info(LogCategory.LIFECYCLE, '[GeneralDetailComposite] DS3 show complete', {
                 generalId: config.id,
                 nodeActive: this.node.active,
+                activeTab: this._activeTab,
                 screenId: 'character-ds3-main',
             });
             return;
@@ -213,6 +202,10 @@ export class GeneralDetailComposite extends CompositePanel {
         if (config) {
             this._currentConfig = config;
             const overview = this._buildUnifiedOverviewState(config);
+            if (this._isDs3Active()) {
+                this._ds3OverviewChild?.onDataUpdate(overview);
+                return;
+            }
             this._applyOverviewChrome(overview);
             super.applyContentState({ config, overview });
             return;
@@ -226,10 +219,16 @@ export class GeneralDetailComposite extends CompositePanel {
             this.unmount();
         }
         this._isMounted = false;
+        this._ds3OverviewChild = null;
         this._gdBinder = null;
     }
 
     private _bindStaticEvents(): void {
+        if (this._isDs3Active()) {
+            this._bindDs3StaticEvents();
+            return;
+        }
+
         this._bindOptionalClick('TopCloseBtn', () => {
             this.requestClose();
         });
@@ -238,6 +237,57 @@ export class GeneralDetailComposite extends CompositePanel {
             this._bindClick(`RightTabBar/BtnTab${tab}`, () => {
                 void this._switchToTab(tab);
             });
+        }
+    }
+
+    private _bindDs3StaticEvents(): void {
+        this._bindOptionalClickByNodeName('CharacterDs3Main_button_3', () => {
+            this.requestClose();
+        });
+
+        for (const tab of TAB_ORDER) {
+            const nodeName = DS3_TAB_BUTTON_NODE[tab];
+            this._bindOptionalClickByNodeName(nodeName, () => {
+                const overview = this._currentConfig ? this._buildUnifiedOverviewState(this._currentConfig) : null;
+                void this._switchToDs3Tab(tab, overview);
+            });
+        }
+        this._syncDs3TabVisualState();
+    }
+
+    private async _switchToDs3Tab(tab: TabKey, overview: UnifiedOverviewContentState | null): Promise<void> {
+        this._activeTab = tab;
+        await this.switchTab(tab);
+
+        if (tab === 'Overview') {
+            try {
+                if (this._gdBinder && !this._ds3OverviewChild) {
+                    const overviewHost = this.getSlotNode('CharacterDs3Main_div_6') ?? this.node;
+                    this._ds3OverviewChild = new CharacterDs3OverviewChild(overviewHost, this.skinResolver, this._gdBinder);
+                    await this._ds3OverviewChild.onMount({});
+                }
+                if (this._ds3OverviewChild && overview) {
+                    this._ds3OverviewChild.onDataUpdate(overview);
+                }
+            } catch (err) {
+                UCUFLogger.warn(LogCategory.LIFECYCLE, '[GeneralDetailComposite] DS3 overview wiring failed', { err: String(err) });
+            }
+        }
+
+        this._syncDs3TabVisualState();
+    }
+
+    private _syncDs3TabVisualState(): void {
+        if (!this._gdBinder) {
+            return;
+        }
+
+        for (const tab of TAB_ORDER) {
+            const button = this._gdBinder.getButton(DS3_TAB_BUTTON_NODE[tab]);
+            if (!button) {
+                continue;
+            }
+            this.setButtonVisualState(button.node, tab === this._activeTab ? 'selected' : 'normal');
         }
     }
 
@@ -694,6 +744,16 @@ export class GeneralDetailComposite extends CompositePanel {
 
         const button = node.getComponent(Button) || node.addComponent(Button);
         button.node.off(Button.EventType.CLICK);
+        button.node.on(Button.EventType.CLICK, handler, this);
+    }
+
+    private _bindOptionalClickByNodeName(nodeName: string, handler: () => void): void {
+        const button = this._gdBinder?.getButton(nodeName);
+        if (!button) {
+            return;
+        }
+
+        button.node.off(Button.EventType.CLICK, handler, this);
         button.node.on(Button.EventType.CLICK, handler, this);
     }
 

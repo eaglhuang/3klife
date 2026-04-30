@@ -29,6 +29,24 @@ const { ccclass } = _decorator;
 type GeneralDetailRuntimeTab = 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitude';
 type GeneralDetailEntrySmokeSource = 'ucuf-nav' | 'scene-button';
 
+const CHARACTER_DS3_PREVIEW_TAB_BUTTONS: Record<GeneralDetailRuntimeTab, string> = {
+    Overview: 'CharacterDs3Main_button_4',
+    Stats: 'CharacterDs3Main_button_5',
+    Tactics: 'CharacterDs3Main_button_6',
+    Bloodline: 'CharacterDs3Main_button_7',
+    Equip: 'CharacterDs3Main_button_8',
+    Aptitude: 'CharacterDs3Main_button_9',
+};
+
+const CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS: Record<GeneralDetailRuntimeTab, string> = {
+    Overview: 'fragments/layouts/character-ds3-overview-content',
+    Stats: 'fragments/layouts/character-ds3-right-content-empty',
+    Tactics: 'fragments/layouts/character-ds3-right-content-empty',
+    Bloodline: 'fragments/layouts/character-ds3-right-content-empty',
+    Equip: 'fragments/layouts/character-ds3-right-content-empty',
+    Aptitude: 'fragments/layouts/character-ds3-right-content-empty',
+};
+
 interface GeneralListOpenPayload {
     generals: GeneralConfig[];
     onSelectGeneral: (config: GeneralConfig) => void | Promise<void>;
@@ -297,6 +315,34 @@ export class LobbyScene extends Component {
 
     private async _mountCharacterDs3Host(): Promise<void> {
         this._characterDs3Host = await this._mountPreviewScreenHost('CharacterDs3Host', 'character-ds3-main');
+        this._bindCharacterDs3PreviewTabRouting();
+    }
+
+    private _bindCharacterDs3PreviewTabRouting(): void {
+        const host = this._characterDs3Host;
+        const binder = host?.binder;
+        if (!host || !binder) {
+            return;
+        }
+
+        const bindTab = (tab: GeneralDetailRuntimeTab): void => {
+            const button = binder.getButton(CHARACTER_DS3_PREVIEW_TAB_BUTTONS[tab]);
+            if (!button) {
+                return;
+            }
+
+            button.node.off(Button.EventType.CLICK, undefined, this);
+            button.node.on(Button.EventType.CLICK, () => {
+                void host.switchLazySlot('CharacterDs3Main_div_6', CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS[tab]);
+            }, this);
+        };
+
+        bindTab('Overview');
+        bindTab('Stats');
+        bindTab('Tactics');
+        bindTab('Bloodline');
+        bindTab('Equip');
+        bindTab('Aptitude');
     }
 
     private _bindScreenButtons(host: UIScreenPreviewHost, bindings: ScreenButtonBinding[]): void {
@@ -662,6 +708,7 @@ export class LobbyScene extends Component {
         this._characterDs3Host.node.active = true;
         this._bringNodeToFront(this._characterDs3Host.node);
         await this._characterDs3Host.showScreen('character-ds3-main');
+        this._bindCharacterDs3PreviewTabRouting();
 
         UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] CharacterDs3 smoke selection opened screen host', {
             generalId: config.id,

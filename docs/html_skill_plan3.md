@@ -12,8 +12,13 @@
 - R-29 已完成：6 個右側 tab `button-skin` slot 在 `--sync-existing --merge-mode html-authoritative` 下保留正式 runtime art，且已有 `existing-runtime-asset-preserved` 證據。
 - R-30 是目前美術總監裁決：converter failure 與 approved art delta 必須分開稽核。這是審計，不是洗分。
 - R-35 已完成：`html-to-ucuf-readiness` 會把剩餘工作轉成 blocker / warning / action unit，不再用主觀 checklist 追 95%。
-- 2026-04-29 最新 raw 最佳：`runtimeVsSource.score=0.8657831790123457`，來源為 `2026-04-29-final-compare-protocol-refresh`；仍未達 `0.95`，不可宣稱通過。
+- 2026-04-30 最新 final compare：`runtimeVsSource.score=0.8559490740740741`（`adjustedScore` 同值），來源為 `2026-04-30-plan3-r37-sprite-trim`；仍未達 `0.95`，不可宣稱通過。
+- 2026-04-30 r53→r54 推進已驗證：score `0.7102 -> 0.8814`（`+17.1%`），主因是補齊血脈/傳記區塊的大色塊邊框與圓角。
 - 最新 `zone-ownership` 來自 final compare pixel buckets：`converter-geometry=20`、`waiverEligibleCount=0`；目前沒有可用 waiver 路徑。
+- 最新 readiness 報告：`verdict=not-ready`、`readinessScore=0.958`、`blockerUnits=1`、`actionUnits=1`；唯一 blocker 仍是 final gate。
+- 2026-04-30 DS3 preview route（`previewTarget=18`）已改為通用 lazySlot tab 切換流程，tab click 互動恢復。
+- 2026-04-30 `previewTarget=18` 根因已確認：該路由走 `UIScreenPreviewHost`（不是 `GeneralDetailComposite`）；已補 `switchLazySlot(slotId, fragmentId)` 通用 API 與 `LobbyScene` tab 綁定，並在 `showScreen('character-ds3-main')` 後重綁，避免重建節點後 click handler 遺失。
+- 2026-04-30 DS3 右側 tab 現況：`Overview` 外的 `Stats/Tactics/Bloodline/Equip/Aptitude` 仍指向 `fragments/layouts/character-ds3-right-content-empty`；點擊可切換但內容為 placeholder，不可視為功能完成。
 
 ## 2. 通過規則
 
@@ -38,8 +43,16 @@
 - [x] R-30B：更新 compare / workflow summary，輸出 raw score、adjusted score、waiver coverage、art delta score、converter residual score、unwaived diff top list。
 - [x] R-30C：在 sync-report 加入 asset replacement audit；preserved runtime assets 與 explicit replace approvals 必須能在同一份清單 review。
 - [x] DS3 初版 waiver 裁決：本輪不建立 waiver file。最新 final compare zone ownership 全為 `converter-geometry` pixel buckets，`waiverEligibleCount=0`；不得用舊 sync-report 的 tab art 證據洗分。
-- [x] 重新截取 Cocos Editor screenshot，並用 raw / adjusted 雙軌 report 跑 final compare；最新 raw `0.8657831790123457`，adjusted 同值，verdict 仍 fail。
+- [x] 重新截取 Cocos Editor screenshot，並用 raw / adjusted 雙軌 report 跑 final compare；最新 raw `0.8559490740740741`，adjusted 同值，verdict 仍 fail（`2026-04-30-plan3-r37-sprite-trim`）。
 - [x] 將 unwaived top diff 分類為 `art-authority`、`manual-art-asset`、`converter-geometry`、`source-html-fix`、`runtime-bug`。
+- [x] R-53 checkpoint：`overview-crop` 比對基線已入檔（raw `0.7102`），作為後續大色塊修正前對照。
+- [x] R-54 checkpoint：`r54-border-fix` compare 已執行（raw `0.8814`，仍 `<0.95`），結果已回流到 `R-37 follow-up` 的 geometry 收斂待辦。
+- [ ] R-37 follow-up：針對最新 top pixel buckets（header / tab rail / portrait-side）做 source-measured geometry 修正，至少先回到 raw `>= 0.8658`，再續推 `0.95` gate。
+- [x] R-38A：`previewTarget=18` tab click 改為通用 lazySlot 切換（修復「tab 無法點擊」）。
+- [x] R-38C：`UIScreenPreviewHost` 新增通用 `switchLazySlot` API，`LobbyScene` DS3 preview tab（button_4~9）改為資料映射綁定；`showScreen` 後重綁避免 handler 掉失。
+- [x] R-54A：半透明邊框 panel 通則落地（`color-rect` 對應 HTML 有 border 時，必須同時配置 `borderColor + borderWidth + cornerRadius`）。
+- [x] R-54B：HTML `rgba(color, alpha)` 邊框採 token 映射策略（允許輕微色差，不可回退成無邊框或硬編碼 hex 特例）。
+- [ ] R-38B：DS3 `Stats/Tactics/Bloodline/Equip/Aptitude` 由 empty fragment 過渡到可驗收內容（至少要有非空內容 contract 與 smoke-ready 標記）。
 
 ### P1 - 視覺權責切分
 
@@ -58,14 +71,15 @@
 - [x] R-35：新增 readiness gate，統一量化 final compare、zone rect、tab mount、text binding、visual policy、preload/performance freshness。
 - [x] M13 carry-over：tab-routing mount 必須由真實 layout node 推導，不再硬碼名稱。
 - [x] M10 carry-over：替 text node 做 i18n / bindPath 抽取。
-- [ ] M14 carry-over：performance sidecar freshness 已修正；目前剩 true `node-count-blocker`，需 optimizer / fragment split 另切。
+- [x] M14 carry-over：performance sidecar freshness 與 node count blocker 已清空；loading gate 目前為 pass，無額外 blocker。
 
 ## 4. 下一個執行切片
 
 1. 每輪先跑 `node tools_node/html-to-ucuf-readiness.js --screen-id character-ds3-main --final-verdict <latest-verdict> --output assets/resources/ui-spec/screens/character-ds3-main.readiness.json`。
-2. 目前 DS3 readiness：`readinessScore=0.917`、`actionUnits=2`、`blockerUnits=1`；剩餘 blocker 已收斂成 final gate raw `0.8658 < 0.95`。
-3. M13 tab mount 已過關：6/6 tab mounts resolve to real layout nodes；M10 text binding 已過關：0/35 dynamic text candidates missing contract。最新 zone ownership 已對齊 final compare：20 個 converter-geometry pixel buckets、0 個 waiver-eligible art zone。
-4. 下個高價值動作是針對 top pixel buckets 做 source-measured geometry / runtime rendering 修正；不可回到 blanket waiver，也不可用舊 tab sync-report 當 adjusted score 依據。
+2. 目前 DS3 readiness：`readinessScore=0.958`、`actionUnits=1`、`blockerUnits=1`；剩餘 blocker 仍是 final gate raw `0.8559 < 0.95`。
+3. R-38A + R-38C 已完成：`previewTarget=18` tab click 已恢復且重建後不掉 handler；但 R-38B 尚未完成（5 個 tab 仍是 empty fragment placeholder）。
+4. M13 tab mount 已過關：6/6 tab mounts resolve to real layout nodes；M10 text binding 已過關：0/1 dynamic text candidates missing contract。最新 zone ownership 已對齊 final compare：20 個 converter-geometry pixel buckets、0 個 waiver-eligible art zone。
+5. 下個高價值動作是雙軌並行：先完成 R-38B（tab 非空內容 contract），再針對 top pixel buckets 做 source-measured geometry / runtime rendering 修正；不可回到 blanket waiver，也不可用舊 tab sync-report 當 adjusted score 依據。
 
 ## 5. Context Budget 政策
 
@@ -93,12 +107,12 @@ changed-file token 不是說那些檔案已經被完整送進 LLM；它是保守
 
 目標不是讓 Cocos 不惜代價模仿過期 CSS 草稿；目標是讓 Cocos 在保留動態 UI 行為的前提下，達成已核准產品美術方向的 95%+。正式 runtime art 高於 draft CSS，但每個差異都必須可稽核。
 
-## 8. 2026-04-29 美術總監推進裁決
+## 8. 2026-04-29 ~ 2026-04-30 美術總監推進裁決
 
 本輪不再擴大 waiver 範圍，也不再回頭把 HTML CSS 草稿當最高權威。95% 推進要先把「可稽核的正式美術差異」與「真正 converter / runtime 缺口」切乾淨。
 
 - [x] 先做 R-30A schema，不做整頁視覺修補；sidecar 是稽核契約，不是遮罩工具。
-- [ ] 初版 DS3 waiver 只允許 6 個已證實 tab button-skin zone；其他區域即使拉低 score，也必須留在 unwaived diff。
+- [x] DS3 waiver 裁決更新：最新 final compare 仍是 `waiverEligibleCount=0`，本輪維持不建立 waiver file；所有差異留在 unwaived diff。
 - [x] compare 報告必須把 `raw score`、`adjusted score`、`artDeltaScore`、`converterResidualScore` 並列；若 raw < 0.95，只能標 `pass-with-approved-art-delta`，不能標 raw pass。
 - [ ] 美術修正順序：先處理最新 top pixel buckets（右欄 header / tab rail / portrait-side geometry），再右欄紙紋 / 背景正式 JPG 或 family layer，再 clip-path geometry，最後才判斷 58x58 texture 是否需要 fragment bake。
 - [ ] 任何想新增 waiver 的 diff，必須先回答三件事：它是不是正式 runtime art？是否有 asset path？是否能用小 rect 描述？任一答案為否，就回到 converter / runtime 修正。
@@ -168,7 +182,7 @@ R-34 已新增 CSS capability 到 skin kind 的契約測試，覆蓋 `linear-gra
 
 2026-04-29 已新增通用 readiness gate：`tools_node/lib/dom-to-ui/readiness-gate.js` 與 CLI `tools_node/html-to-ucuf-readiness.js`。它不做 DS3 特例，只讀 layout / skin / screen sidecar，輸出 `<screen>.readiness.json`，把 95% 前的剩餘工作拆成 final gate、capture protocol、zone ownership / waiver、tab routing mount、text binding、visual policy、loading / performance freshness。
 
-DS3 目前報告位於 `assets/resources/ui-spec/screens/character-ds3-main.readiness.json`：`verdict=not-ready`、`readinessScore=0.917`、`actionUnits=2`、`blockerUnits=1`。M13 已從 synthetic `Tab*Content` 改成 source portal 對應的真實 layout mount；M10 已把 35 個 dynamic text candidates 全部補上 `bindPath` / `i18nKey` 契約；preload / performance / final capture protocol 已刷新到目前 layout 狀態與 `1920x1080` final compare。具體剩餘量已收斂為 final Cocos Editor compare 1；最新 raw `0.8657831790123457`、adjusted 同值、`waiverEligibleCount=0`。這表示下一輪要繼續沿 top pixel buckets 做通用 geometry / runtime rendering 修正，而不是新增 waiver checklist。
+DS3 目前報告位於 `assets/resources/ui-spec/screens/character-ds3-main.readiness.json`：`verdict=not-ready`、`readinessScore=0.958`、`actionUnits=1`、`blockerUnits=1`。M13 仍維持 6/6 tab mounts resolve to real layout nodes；M10 目前是 0/1 dynamic text candidates missing contract；loading gate 也已是 pass（含 performance sidecar freshness 與 node count blocker 清空）。目前唯一 blocker 仍是 final compare：最新 raw `0.8559490740740741`、adjusted 同值、`waiverEligibleCount=0`。這表示下一輪要聚焦 top pixel buckets 的通用 geometry / runtime rendering 修正，而不是新增 waiver checklist。
 
 ## 14. 2026-04-29 source-measured geometry checkpoint
 

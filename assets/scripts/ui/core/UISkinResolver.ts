@@ -22,6 +22,8 @@ export interface ResolvedLabelStyle {
     lineHeight: number;
     color: Color;
     isBold: boolean;
+    isItalic: boolean;
+    letterSpacing: number;
     horizontalAlign: number;   // Label.HorizontalAlign 的數值
     verticalAlign: number;     // Label.VerticalAlign 的數值
     overflow: number;          // Label.Overflow 的數值
@@ -128,6 +130,8 @@ export class UISkinResolver {
             lineHeight,
             color: this.resolveColor(s.color),
             isBold: s.isBold ?? preset?.fontWeight === 'bold',
+            isItalic: !!s.isItalic,
+            letterSpacing: typeof s.letterSpacing === 'number' && !Number.isNaN(s.letterSpacing) ? s.letterSpacing : 0,
             horizontalAlign: this._parseHAlign(s.horizontalAlign),
             verticalAlign: this._parseVAlign(s.verticalAlign),
             overflow: this._parseOverflow(s.overflow),

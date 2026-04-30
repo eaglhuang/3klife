@@ -77,6 +77,18 @@ export interface LayoutDef {
     /** 垂直排列方向。 */
     verticalDirection?: 'top-to-bottom' | 'bottom-to-top';
     /**
+     * Flex cross-axis 對齊，對應 CSS align-items。
+     * horizontal layout 時控制垂直對齊；vertical layout 時控制水平對齊。
+     */
+    alignItems?: 'start' | 'center' | 'end' | 'baseline' | 'stretch';
+    /** Flex main-axis 分布，對應 CSS justify-content。 */
+    justifyContent?: 'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly';
+    /**
+     * 是否在子節點超出容器主軸時自動縮放子節點。
+     * HTML flex 預設不會整組縮放；只有明確需要 Cocos 邊界保護的舊規格才開啟。
+     */
+    enforceBounds?: boolean;
+    /**
      * 子節點尺寸策略（Cocos Layout.ResizeMode）：
      *   - 'none'：Layout 僅排位，不調整子節點尺寸（預設）
      *   - 'container'：容器自動調整大小以容納所有子節點
@@ -211,6 +223,8 @@ export interface UILayoutNodeSpec {
     styleSlot?: string;
     /** 圖示的 skin slot 名稱 */
     iconSlot?: string;
+    /** CSS clip-path 幾何遮罩，供 HTML-to-UCUF converter 落地 cut-corner / inset / circle / ellipse 等通用 clipping。 */
+    clipPath?: string;
 
     // ── 內容 ──
     /** 直接文字（不走 i18n，用於固定標籤如「戰鬥日誌」） */
@@ -370,8 +384,12 @@ export interface SkinLabelSlot {
     color: string;
     /** 是否粗體 */
     isBold?: boolean;
+    /** 是否斜體 */
+    isItalic?: boolean;
+    /** 字距，對應 CSS letter-spacing / Cocos Label.spacingX */
+    letterSpacing?: number;
     /** 水平對齊 */
-    horizontalAlign?: 'LEFT' | 'CENTER' | 'RIGHT';
+    horizontalAlign?: 'LEFT' | 'CENTER' | 'RIGHT' | 'JUSTIFY';
     /** 垂直對齊 */
     verticalAlign?: 'TOP' | 'CENTER' | 'BOTTOM';
     /** 溢出處理 */
@@ -536,6 +554,10 @@ export interface UIScreenSpec {
     skin: string;
     /** 預覽場景路徑（可選） */
     previewScene?: string;
+    /** 預覽專用資料驅動覆寫；不得改變正式 screen/layout 契約。 */
+    preview?: {
+        lazySlotFragments?: Record<string, string>;
+    };
     /** Prefab 輸出路徑（可選） */
     prefabOutput?: string;
     /** 驗證規則 */

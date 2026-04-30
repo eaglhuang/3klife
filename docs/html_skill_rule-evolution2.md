@@ -1300,3 +1300,213 @@ if (!gradient || gradient.type !== 'linear') return null;
 - classifier：unsupported 55→0、supported ~210→285、assetize ~25→3、partialSupported 0→5
 - 工具：update mode 已能保住正式背景 sprite 與 tab/button `button-skin`；compare adjusted score 可透過 manual/art-authority waiver 稽核正式 asset 差異。
 - **距離 95% pixel similarity 還缺**：正式 art asset 要成為 source authority 時，應同步更新 HTML source 或產生 approved art-authority waiver；剩餘 renderer gap 仍是 clip-path geometry、明確 opt-in 小碎片 bake、Cocos Editor 重 capture hard pixel gate。
+
+## Entry 2026-04-29 — html-cocos-runtime-gap-49d4b385
+
+- suggestion id: `html-cocos-runtime-gap-49d4b385`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/character/index.html`
+- screenId: `character-ds3-main`
+- source hashes: `html=sha256:2d6bfca1ae9c76f2d3ddb85cdcd202f4` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:a09e5c5b44eb9ab25e2da79b23b0e8ee`
+- before: `runtimeVsSource.score=0.8556172839506173`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1664,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=448,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1216,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1280,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=384,576,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-source/character-ds3/review/2026-04-29-pill-cornerradius-fix`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-04-29 — html-cocos-runtime-gap-40d05097
+
+- suggestion id: `html-cocos-runtime-gap-40d05097`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/character/index.html`
+- screenId: `character-ds3-main`
+- source hashes: `html=sha256:2d6bfca1ae9c76f2d3ddb85cdcd202f4` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:a09e5c5b44eb9ab25e2da79b23b0e8ee`
+- before: `runtimeVsSource.score=0.8403356481481481`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1472,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1600,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1664,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=448,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1216,64,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-source/character-ds3/review/2026-04-30-r38-align-pass`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-04-29 — html-cocos-runtime-gap-74be2cf6
+
+- suggestion id: `html-cocos-runtime-gap-74be2cf6`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/character/index.html`
+- screenId: `character-ds3-main`
+- source hashes: `html=sha256:2d6bfca1ae9c76f2d3ddb85cdcd202f4` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:a09e5c5b44eb9ab25e2da79b23b0e8ee`
+- before: `runtimeVsSource.score=0.8405020254629629`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=448,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1600,192,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1664,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1216,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1280,64,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-source/character-ds3/review/2026-04-30-r38-align-pass-after`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-04-29 — html-cocos-runtime-gap-155ce92a
+
+- suggestion id: `html-cocos-runtime-gap-155ce92a`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/character/index.html`
+- screenId: `character-ds3-main`
+- source hashes: `html=sha256:2d6bfca1ae9c76f2d3ddb85cdcd202f4` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:a09e5c5b44eb9ab25e2da79b23b0e8ee`
+- before: `runtimeVsSource.score=0.8408029513888889`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=448,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1216,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1600,192,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1664,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=384,576,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-source/character-ds3/review/2026-04-30-r39-paragraph-overflow`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-04-29 — html-cocos-runtime-gap-02b914c3
+
+- suggestion id: `html-cocos-runtime-gap-02b914c3`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/character/index.html`
+- screenId: `character-ds3-main`
+- source hashes: `html=sha256:2d6bfca1ae9c76f2d3ddb85cdcd202f4` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:a09e5c5b44eb9ab25e2da79b23b0e8ee`
+- before: `runtimeVsSource.score=0.812160976080247`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1280,640,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1344,640,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1408,640,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1472,640,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1536,640,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-source/character-ds3/review/2026-04-30-r40-panel-readability`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-04-29 — html-cocos-runtime-gap-e91b2c6d
+
+- suggestion id: `html-cocos-runtime-gap-e91b2c6d`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/character/index.html`
+- screenId: `character-ds3-main`
+- source hashes: `html=sha256:2d6bfca1ae9c76f2d3ddb85cdcd202f4` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:a09e5c5b44eb9ab25e2da79b23b0e8ee`
+- before: `runtimeVsSource.score=0.8139086612654322`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1280,640,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1344,640,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1408,640,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1472,640,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1536,640,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-source/character-ds3/review/2026-04-30-r41-subtle-panels`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-04-29 — html-cocos-runtime-gap-05caa0c8
+
+- suggestion id: `html-cocos-runtime-gap-05caa0c8`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/character/index.html`
+- screenId: `character-ds3-main`
+- source hashes: `html=sha256:2d6bfca1ae9c76f2d3ddb85cdcd202f4` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:a09e5c5b44eb9ab25e2da79b23b0e8ee`
+- before: `runtimeVsSource.score=0.8408858989197531`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=448,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1600,192,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1664,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1216,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1280,64,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-source/character-ds3/review/2026-04-30-r42-alignment-overflow-final`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-04-29 — html-cocos-runtime-gap-d4033106
+
+- suggestion id: `html-cocos-runtime-gap-d4033106`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/character/index.html`
+- screenId: `character-ds3-main`
+- source hashes: `html=sha256:2d6bfca1ae9c76f2d3ddb85cdcd202f4` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:a09e5c5b44eb9ab25e2da79b23b0e8ee`
+- before: `runtimeVsSource.score=0.8405473572530864`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=448,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1600,192,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1216,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1280,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=384,576,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-source/character-ds3/review/2026-04-30-r43-no-auto-shrink`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-04-30 — html-cocos-runtime-gap-71c0bc89
+
+- suggestion id: `html-cocos-runtime-gap-71c0bc89`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/character/index.html`
+- screenId: `character-ds3-main`
+- source hashes: `html=sha256:2d6bfca1ae9c76f2d3ddb85cdcd202f4` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:a09e5c5b44eb9ab25e2da79b23b0e8ee`
+- before: `runtimeVsSource.score=0.7102261766975309`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=0,0,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=64,0,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=128,0,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=192,0,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=256,0,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-source/character-ds3/review/2026-04-30-r53-overview-crop/character-ds3-main`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-04-30 — html-cocos-runtime-gap-39d26ac2
+
+- suggestion id: `html-cocos-runtime-gap-39d26ac2`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/character/index.html`
+- screenId: `character-ds3-main`
+- source hashes: `html=sha256:2d6bfca1ae9c76f2d3ddb85cdcd202f4` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:5ce59139d44bcb9e980cc8ab51204985`
+- before: `runtimeVsSource.score=0.881379726080247`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=448,960,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1792,512,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=448,896,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1600,768,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1216,192,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-qa/r54-border-fix`
+- impact: pending — 需 reviewer 接受後才可自動套用。

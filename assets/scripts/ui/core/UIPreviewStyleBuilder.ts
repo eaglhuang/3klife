@@ -77,10 +77,7 @@ export class UIPreviewStyleBuilder {
             const borderWidth = typeof borderWidthRaw === 'number' && !Number.isNaN(borderWidthRaw)
                 ? Math.max(0, borderWidthRaw)
                 : 0;
-            const cornerRadiusRaw = (slot as any).cornerRadius;
-            const cornerRadius = typeof cornerRadiusRaw === 'number' && !Number.isNaN(cornerRadiusRaw)
-                ? Math.max(0, cornerRadiusRaw)
-                : 0;
+            const cornerRadius = this._resolveCornerRadius(slot);
             const borderColorKey = (slot as any).borderColor ?? (slot as any).strokeColor;
             background.setLinearGradient(typeof gradient.angle === 'number' ? gradient.angle : 180, stops, {
                 cornerRadius,
@@ -123,7 +120,7 @@ export class UIPreviewStyleBuilder {
                 : [];
             const background = node.getComponent(ShadowBackground) || node.addComponent(ShadowBackground);
             background.enabled = true;
-            background.setShadows(shadowLayers, (slot as any).padding, (slot as any).cornerRadius);
+            background.setShadows(shadowLayers, (slot as any).padding, this._resolveCornerRadius(slot));
             const alpha = resolveOpacity((slot as any).alpha ?? (slot as any).opacity);
             const sprite = node.getComponent(Sprite);
             if (sprite && alpha !== null) {
@@ -145,10 +142,7 @@ export class UIPreviewStyleBuilder {
             const borderWidth = typeof borderWidthRaw === 'number' && !Number.isNaN(borderWidthRaw)
                 ? Math.max(0, borderWidthRaw)
                 : 0;
-            const cornerRadiusRaw = (slot as any).cornerRadius;
-            const cornerRadius = typeof cornerRadiusRaw === 'number' && !Number.isNaN(cornerRadiusRaw)
-                ? Math.max(0, cornerRadiusRaw)
-                : 0;
+            const cornerRadius = this._resolveCornerRadius(slot);
             const borderColorKey = (slot as any).borderColor ?? (slot as any).strokeColor;
             const usesRoundedRect = cornerRadius > 0 || borderWidth > 0 || typeof borderColorKey === 'string';
 
@@ -237,6 +231,24 @@ export class UIPreviewStyleBuilder {
         const color = this.skinResolver.resolveColor(raw);
         color.a = Math.round(color.a * opacity);
         return color;
+    }
+
+    private _resolveCornerRadius(slot: unknown): number {
+        const raw = (slot as any)?.cornerRadius ?? (slot as any)?.radius ?? (slot as any)?.border?.radius;
+        if (typeof raw === 'number' && !Number.isNaN(raw)) {
+            return Math.max(0, raw);
+        }
+        if (typeof raw === 'string') {
+            const parsed = Number(raw.replace(/px$/i, '').trim());
+            return Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
+        }
+        if (raw && typeof raw === 'object') {
+            const values = ['tl', 'tr', 'br', 'bl']
+                .map(key => (raw as Record<string, unknown>)[key])
+                .filter((value): value is number => typeof value === 'number' && !Number.isNaN(value));
+            return values.length > 0 ? Math.max(0, ...values) : 0;
+        }
+        return 0;
     }
 
     // ─── 按鈕 Skin ────────────────────────────────────────────────────────────
@@ -332,6 +344,7 @@ export class UIPreviewStyleBuilder {
         label.fontSize        = style.fontSize;
         label.lineHeight      = style.lineHeight;
         label.color           = style.color;
+        label.spacingX        = style.letterSpacing;
         label.horizontalAlign = style.horizontalAlign;
         label.verticalAlign   = style.verticalAlign;
         // overflow floor：不允許 skin 將 overflow 設為 NONE（0），
@@ -353,7 +366,8 @@ export class UIPreviewStyleBuilder {
             label.shadowOffset = new Vec2(style.shadow.offsetX, style.shadow.offsetY);
             label.shadowBlur   = style.shadow.blur || 0;
         }
-        if (style.isBold) label.isBold = true;
+        label.isBold = !!style.isBold;
+        label.isItalic = !!style.isItalic;
         if (style.fontPath) {
             const font = this.fontCache.get(style.fontPath);
             if (font) label.font = font;

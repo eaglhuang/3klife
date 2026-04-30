@@ -1,10 +1,10 @@
 {
   "screenId": "character-ds3-main",
   "rendering": {
-    "nodeCount": 1,
-    "deferredNodeCount": 0,
-    "totalNodeCount": 1,
-    "maxDepth": 1,
+    "nodeCount": 41,
+    "deferredNodeCount": 2,
+    "totalNodeCount": 43,
+    "maxDepth": 6,
     "estimatedDrawCalls": 10,
     "colorRectCount": 0
   },
@@ -17,23 +17,23 @@
     "fontCount": 3
   },
   "lifecycle": {
-    "lazySlotCount": 0,
+    "lazySlotCount": 2,
     "warmupHints": {
-      "next-frame": 0,
+      "next-frame": 1,
       "idle": 0,
       "tab-hover": 0,
-      "manual": 0
+      "manual": 1
     }
   },
   "runtimeGate": {
     "nodeCount": {
-      "value": 1,
+      "value": 41,
       "warning": 35,
       "blocker": 60,
-      "status": "pass"
+      "status": "warn"
     },
     "maxDepth": {
-      "value": 1,
+      "value": 6,
       "warning": 8,
       "blocker": 12,
       "status": "pass"
@@ -43,6 +43,7 @@
     "level": "warning",
     "warnings": [
       "atlas-batch-limit-exceeded: 7 atlases (R24 limit: 4)",
+      "node-count-warning: 41 (>35)",
       "texture-memory-warning: 5.15MB > 4.00MB"
     ],
     "blockers": []

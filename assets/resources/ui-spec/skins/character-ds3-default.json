@@ -126,7 +126,7 @@
     },
     "auto.character-ds3-main.characterds3main_div_5": {
       "kind": "color-rect",
-      "color": "surfaceDeep",
+      "color": "backgroundDeep",
       "opacity": 0.72
     },
     "auto.character-ds3-main.characterds3main_span_1": {
@@ -238,25 +238,37 @@
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 0,
       "horizontalAlign": "START",
+      "isItalic": true,
       "style": "labelLg"
+    },
+    "auto.character-ds3-main.characterds3main_div_8_border": {
+      "kind": "color-rect",
+      "color": "outline",
+      "opacity": 1
+    },
+    "auto.character-ds3-main.characterds3main_div_12_pill": {
+      "kind": "color-rect",
+      "color": "rarityGold",
+      "opacity": 1,
+      "radius": 5
     },
     "auto.character-ds3-main.characterds3main_span_7": {
       "kind": "label-style",
       "font": "fonts/manrope/font",
       "fontSize": 15,
-      "lineHeight": 21,
+      "lineHeight": 29,
       "letterSpacing": 3,
-      "color": "gdv3InkDeep",
+      "color": "textInk",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 0,
-      "horizontalAlign": "START",
+      "horizontalAlign": "CENTER",
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_8": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
-      "lineHeight": 31,
+      "lineHeight": 32,
       "letterSpacing": 0,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
@@ -267,7 +279,7 @@
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
-      "lineHeight": 31,
+      "lineHeight": 32,
       "letterSpacing": 0,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
@@ -278,7 +290,7 @@
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
-      "lineHeight": 31,
+      "lineHeight": 32,
       "letterSpacing": 0,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
@@ -289,7 +301,7 @@
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
-      "lineHeight": 31,
+      "lineHeight": 32,
       "letterSpacing": 0,
       "color": "secondary",
       "outlineColor": "colorOutlineDark",
@@ -300,7 +312,7 @@
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 22,
-      "lineHeight": 31,
+      "lineHeight": 32,
       "letterSpacing": 0,
       "color": "outline",
       "outlineColor": "colorOutlineDark",
@@ -310,7 +322,10 @@
     "auto.character-ds3-main.characterds3main_div_15": {
       "kind": "color-rect",
       "color": "colorWhite",
-      "opacity": 0.03
+      "opacity": 0.03,
+      "borderColor": "outline",
+      "borderWidth": 1,
+      "cornerRadius": 8
     },
     "auto.character-ds3-main.characterds3main_div_17": {
       "kind": "gradient-rect",
@@ -501,7 +516,10 @@
     "auto.character-ds3-main.characterds3main_div_25": {
       "kind": "color-rect",
       "color": "colorWhite",
-      "opacity": 0.03
+      "opacity": 0.03,
+      "borderColor": "outline",
+      "borderWidth": 1,
+      "cornerRadius": 8
     },
     "auto.character-ds3-main.characterds3main_div_27": {
       "kind": "gradient-rect",
@@ -546,16 +564,10 @@
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_29": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
-      "fontSize": 16,
-      "lineHeight": 22,
-      "letterSpacing": 0,
-      "color": "textPrimary",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 0,
-      "horizontalAlign": "START",
-      "style": "labelLg"
+      "kind": "color-rect",
+      "color": "stdButtonPrimary",
+      "opacity": 1,
+      "cornerRadius": 4
     },
     "auto.character-ds3-main.characterds3main_span_30": {
       "kind": "label-style",
@@ -570,16 +582,10 @@
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_31": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
-      "fontSize": 16,
-      "lineHeight": 22,
-      "letterSpacing": 0,
-      "color": "textPrimary",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 0,
-      "horizontalAlign": "START",
-      "style": "labelLg"
+      "kind": "color-rect",
+      "color": "stdButtonPrimary",
+      "opacity": 1,
+      "cornerRadius": 4
     },
     "auto.character-ds3-main.characterds3main_span_32": {
       "kind": "label-style",
@@ -596,7 +602,10 @@
     "auto.character-ds3-main.characterds3main_div_30": {
       "kind": "color-rect",
       "color": "colorWhite",
-      "opacity": 0.03
+      "opacity": 0.03,
+      "borderColor": "outline",
+      "borderWidth": 1,
+      "cornerRadius": 8
     },
     "auto.character-ds3-main.characterds3main_div_32": {
       "kind": "gradient-rect",
@@ -641,16 +650,10 @@
       "horizontalAlign": "START"
     },
     "auto.character-ds3-main.characterds3main_span_35": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
-      "fontSize": 16,
-      "lineHeight": 22,
-      "letterSpacing": 0,
-      "color": "textPrimary",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 0,
-      "horizontalAlign": "START",
-      "style": "labelLg"
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 1,
+      "cornerRadius": 4
     },
     "auto.character-ds3-main.characterds3main_span_36": {
       "kind": "label-style",
@@ -665,16 +668,10 @@
       "isBold": true
     },
     "auto.character-ds3-main.characterds3main_span_37": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/font",
-      "fontSize": 16,
-      "lineHeight": 22,
-      "letterSpacing": 0,
-      "color": "textPrimary",
-      "outlineColor": "colorOutlineDark",
-      "outlineWidth": 0,
-      "horizontalAlign": "START",
-      "style": "labelLg"
+      "kind": "color-rect",
+      "color": "secondary",
+      "opacity": 1,
+      "cornerRadius": 4
     },
     "auto.character-ds3-main.characterds3main_span_38": {
       "kind": "label-style",
@@ -691,7 +688,10 @@
     "auto.character-ds3-main.characterds3main_div_35": {
       "kind": "color-rect",
       "color": "stdButtonPrimary",
-      "opacity": 0.08
+      "opacity": 0.08,
+      "borderColor": "stdButtonPrimary",
+      "borderWidth": 2,
+      "cornerRadius": 10
     },
     "auto.character-ds3-main.characterds3main_div_37": {
       "kind": "gradient-rect",
@@ -737,8 +737,11 @@
     },
     "auto.character-ds3-main.characterds3main_div_40": {
       "kind": "color-rect",
-      "color": "unmappedColor",
-      "opacity": 1
+      "color": "stdButtonPrimary",
+      "opacity": 0.09,
+      "borderColor": "stdButtonPrimary",
+      "borderWidth": 2,
+      "cornerRadius": 42
     },
     "auto.character-ds3-main.characterds3main_span_41": {
       "kind": "label-style",
@@ -862,7 +865,10 @@
     "auto.character-ds3-main.characterds3main_div_48": {
       "kind": "color-rect",
       "color": "secondary",
-      "opacity": 0.04
+      "opacity": 0.04,
+      "borderColor": "secondary",
+      "borderWidth": 2,
+      "cornerRadius": 10
     },
     "auto.character-ds3-main.characterds3main_div_50": {
       "kind": "gradient-rect",
@@ -915,7 +921,8 @@
       "color": "textSecondary",
       "outlineColor": "colorOutlineDark",
       "outlineWidth": 0,
-      "horizontalAlign": "JUSTIFY"
+      "horizontalAlign": "JUSTIFY",
+      "overflow": "RESIZE_HEIGHT"
     },
     "auto.character-ds3-main.characterds3main_div_52": {
       "kind": "label-style",

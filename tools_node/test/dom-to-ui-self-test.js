@@ -1824,6 +1824,51 @@ function runFidelitySteps() {
     if (geometryDraft.warnings.some(w => w.code === 'css-transform-manual-layout-risk')) fail('computed geometry transform should not remain a manual layout risk');
     ok('M16 computed geometry maps absolute transform/object-fit to UCUF size + widget');
 
+    const clipDraft = buildDraftFromHtml(`
+      <div data-name="CutCard" style="width:120px;height:80px;clip-path:polygon(0 0, 100% 0, 100% 86%, 91% 100%, 0 100%);background:#111;"></div>
+    `, { screenId: 'clip-path-fixture', bundle: 'ui_test' });
+    const cutCard = findNode(clipDraft.layoutDraft, n => n.name === 'CutCard');
+    if (!cutCard || !/^polygon\(/.test(cutCard.clipPath || '')) fail(`clip-path metadata missing: ${cutCard && cutCard.clipPath}`);
+    ok('R-36 generic clip-path metadata is emitted into UCUF layout nodes');
+
+    const cssPrimitiveDraft = buildDraftFromHtml(`
+      <div data-name="BorderCard" style="width:120px;height:80px;background:rgba(255,255,255,.03);border:1px solid #4D4635;border-radius:8px"></div>
+      <span data-name="VisualDot" style="display:inline-block;width:8px;height:8px;border-radius:4px;background:#D4AF37"></span>
+      <span data-name="ItalicText" style="font-style:italic;letter-spacing:.2em;font-size:20px;color:#fff">Meta</span>
+    `, { screenId: 'css-primitive-fixture', bundle: 'ui_test' });
+    const borderCard = findNode(cssPrimitiveDraft.layoutDraft, n => n.name === 'BorderCard');
+    const borderCardSlot = borderCard && cssPrimitiveDraft.skinDraft.slots[borderCard.skinSlot];
+    if (!borderCardSlot || borderCardSlot.borderWidth !== 1 || borderCardSlot.cornerRadius !== 8) fail(`border/card skin metadata missing: ${JSON.stringify(borderCardSlot)}`);
+    const visualDot = findNode(cssPrimitiveDraft.layoutDraft, n => n.name === 'VisualDot');
+    const visualDotSlot = visualDot && cssPrimitiveDraft.skinDraft.slots[visualDot.skinSlot];
+    if (!visualDot || visualDot.type !== 'panel' || !visualDotSlot || visualDotSlot.cornerRadius !== 4) fail(`visual-only span should become a rounded panel: ${JSON.stringify({ node: visualDot, slot: visualDotSlot })}`);
+    const italicText = findNode(cssPrimitiveDraft.layoutDraft, n => n.name === 'ItalicText');
+    const italicTextSlot = italicText && cssPrimitiveDraft.skinDraft.slots[italicText.styleSlot];
+    if (!italicTextSlot || italicTextSlot.isItalic !== true || italicTextSlot.letterSpacing !== 4) fail(`italic/letter-spacing style missing: ${JSON.stringify(italicTextSlot)}`);
+    ok('R-37 generic CSS border/radius, visual-only spans, and typography spacing emit renderable UCUF metadata');
+
+    const flexAlignDraft = buildDraftFromHtml(`
+      <div data-name="FlexCenterBetween" style="display:flex;align-items:center;justify-content:space-between;width:200px;height:40px;gap:8px"><span>Left</span><span>Right</span></div>
+      <div data-name="FlexColumnEnd" style="display:flex;flex-direction:column;align-items:flex-end;justify-content:center;width:100px;height:80px"><span>Top</span></div>
+      <div data-name="FlexBaseline" style="display:flex;align-items:baseline"><span>Big</span><span>Small</span></div>
+    `, { screenId: 'flex-align-fixture', bundle: 'ui_test' });
+    const flexCenter = findNode(flexAlignDraft.layoutDraft, n => n.name === 'FlexCenterBetween');
+    const flexColumn = findNode(flexAlignDraft.layoutDraft, n => n.name === 'FlexColumnEnd');
+    const flexBaseline = findNode(flexAlignDraft.layoutDraft, n => n.name === 'FlexBaseline');
+    if (!flexCenter || flexCenter.layout.alignItems !== 'center' || flexCenter.layout.justifyContent !== 'space-between') fail(`flex center/between metadata missing: ${JSON.stringify(flexCenter && flexCenter.layout)}`);
+    if (!flexColumn || flexColumn.layout.type !== 'vertical' || flexColumn.layout.alignItems !== 'end' || flexColumn.layout.justifyContent !== 'center') fail(`flex column alignment metadata missing: ${JSON.stringify(flexColumn && flexColumn.layout)}`);
+    if (!flexBaseline || flexBaseline.layout.alignItems !== 'baseline') fail(`flex baseline metadata missing: ${JSON.stringify(flexBaseline && flexBaseline.layout)}`);
+    ok('R-38 generic CSS flex align-items and justify-content emit UCUF layout metadata');
+
+    const paragraphDraft = buildDraftFromHtml(`
+      <div data-name="ParagraphText" style="font-size:15px;line-height:30px;text-align:justify;color:#D0C5AF">張飛，字翼德，幽州涿郡人。少年以屠豬賣酒為業，後於桃園與劉備、關羽義結金蘭，誓同生死。</div>
+      <div data-name="ParagraphSibling">S</div>
+    `, { screenId: 'paragraph-wrap-fixture', bundle: 'ui_test' });
+    const paragraphText = findNode(paragraphDraft.layoutDraft, n => n.name === 'ParagraphText');
+    const paragraphSlot = paragraphText && paragraphDraft.skinDraft.slots[paragraphText.styleSlot];
+    if (!paragraphSlot || paragraphSlot.overflow !== 'RESIZE_HEIGHT') fail(`paragraph overflow should resize height for readable wrapped text: ${JSON.stringify(paragraphSlot)}`);
+    ok('R-39 generic long paragraph labels use RESIZE_HEIGHT instead of shrink-to-invisible');
+
     const comparePng = path.join(tmp, 'visual-rich.compare.png');
     p = spawnSync(process.execPath, [COMPARE_CLI,
       '--html', VISUAL_RICH_FIXTURE,

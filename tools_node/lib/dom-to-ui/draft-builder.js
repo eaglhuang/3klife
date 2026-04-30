@@ -244,6 +244,7 @@ function processElement(el, ctx, depth) {
   };
 
   applyVisibilityState(node, style, ctx, name);
+  applyClipPathMetadata(node, style);
 
   // M4: stable identifier + lock flags
   applyCommonNodeAttrs(node, attrs);
@@ -307,7 +308,7 @@ function processElement(el, ctx, depth) {
     if (text) node.text = text;
     const styleSlotId = attrs['data-style'] || autoSlotId(ctx, name);
     node.styleSlot = styleSlotId;
-    ensureLabelStyle(ctx, styleSlotId, style, attrs);
+    ensureLabelStyle(ctx, styleSlotId, style, attrs, text);
     if (attrs['data-contract']) node._contract = attrs['data-contract'];
     if (containsRichInner(el)) ctx.warnings.push({ code: 'rich-text-not-supported', detail: name });
     if (looksSimplified(text)) ctx.warnings.push({ code: 'text-locale-mismatch', detail: name });
@@ -516,12 +517,25 @@ function inferNodeType(tag, cls, style, attrs, el) {
   if (cls.some(c => /chart|radar|progress-ring|gauge/.test(c))) return 'composite';
   if (tag === 'img') return 'image';
   if (tag === 'button') return 'button';
-  if (TEXT_TAGS.has(tag)) return 'label';
-  if (hasOnlyTextContent(el)) return 'label';
 
   const hasBg = hasMeaningfulBackground(style);
+  if (TEXT_TAGS.has(tag)) {
+    if (isVisualOnlyInlinePrimitive(tag, style, attrs, el, hasBg)) return 'panel';
+    return 'label';
+  }
+  if (hasOnlyTextContent(el)) return 'label';
+
   if (hasBg) return 'panel';
   return 'container';
+}
+
+function isVisualOnlyInlinePrimitive(tag, style, attrs, el, hasBg) {
+  if (!TEXT_TAGS.has(tag)) return false;
+  if (String(collectText(el) || '').trim()) return false;
+  const width = pickDim(style && style.width, attrs && attrs.width);
+  const height = pickDim(style && style.height, attrs && attrs.height);
+  if (width == null || height == null) return false;
+  return !!hasBg || hasRenderableBorder(style);
 }
 
 function hasOnlyTextContent(el) {
@@ -564,6 +578,10 @@ function inferLayout(style, ctx, nodeName, el) {
   if (style.display !== 'flex') return inferBlockFlowLayout(style, ctx, nodeName, el);
   const isRow = (style.flexDirection || 'row').startsWith('row');
   const out = { type: isRow ? 'horizontal' : 'vertical' };
+  const alignItems = mapFlexAlignItems(style.alignItems);
+  if (alignItems) out.alignItems = alignItems;
+  const justifyContent = mapFlexJustifyContent(style.justifyContent);
+  if (justifyContent) out.justifyContent = justifyContent;
   const gap = resolveLength(style.gap, ctx && ctx.tokenRegistry);
   if (gap.value != null) {
     if (isRow) out.spacingX = gap.value; else out.spacingY = gap.value;
@@ -580,6 +598,29 @@ function inferLayout(style, ctx, nodeName, el) {
     }
   }
   return out;
+}
+
+function mapFlexAlignItems(value) {
+  const raw = String(value || '').trim().toLowerCase();
+  if (!raw) return null;
+  if (raw === 'flex-start' || raw === 'start') return 'start';
+  if (raw === 'center') return 'center';
+  if (raw === 'flex-end' || raw === 'end') return 'end';
+  if (raw === 'baseline') return 'baseline';
+  if (raw === 'stretch') return 'stretch';
+  return null;
+}
+
+function mapFlexJustifyContent(value) {
+  const raw = String(value || '').trim().toLowerCase();
+  if (!raw) return null;
+  if (raw === 'flex-start' || raw === 'start' || raw === 'normal') return 'start';
+  if (raw === 'center') return 'center';
+  if (raw === 'flex-end' || raw === 'end') return 'end';
+  if (raw === 'space-between') return 'space-between';
+  if (raw === 'space-around') return 'space-around';
+  if (raw === 'space-evenly') return 'space-evenly';
+  return null;
 }
 
 function inferGridLayout(style, ctx, nodeName) {
@@ -910,6 +951,7 @@ function ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint) {
   const gradientBackgroundImage = backgroundImage || meaningfulGradientBackground(style.background);
   const gradientSlot = buildGradientRectSlot(ctx, gradientBackgroundImage, slotId);
   if (gradientSlot) {
+    attachBoxShapeMetadata(ctx, gradientSlot, style, slotId);
     ctx.skinSlots[slotId] = gradientSlot;
     return;
   }
@@ -923,17 +965,152 @@ function ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint) {
     const { color, opacity, warning, tokenSource } = parseColor(bg, ctx.tokenRegistry);
     if (warning) ctx.warnings.push({ code: warning, slotId });
     if (color) recordTokenUsage(ctx, 'colors', color, `${slotId}.color${tokenSource ? ':' + tokenSource : ''}`);
-    ctx.skinSlots[slotId] = {
+    const slot = {
       kind: 'color-rect',
       color: color || 'unmappedColor',
       opacity: opacity != null ? opacity : 1,
     };
+    attachBoxShapeMetadata(ctx, slot, style, slotId);
+    ctx.skinSlots[slotId] = slot;
     if (!color) ctx.warnings.push({ code: 'unmapped-color', detail: bg });
+  } else if (hasRenderableBorder(style)) {
+    const slot = {
+      kind: 'color-rect',
+      color: '#000000',
+      opacity: 0,
+    };
+    attachBoxShapeMetadata(ctx, slot, style, slotId);
+    ctx.skinSlots[slotId] = slot;
   } else {
     // No CSS background at all -> emit transparent skin so we don't render
     // a fake unmappedColor rectangle that visually pollutes the runtime.
     ctx.skinSlots[slotId] = { kind: 'transparent' };
   }
+}
+
+function attachBoxShapeMetadata(ctx, slot, style, slotId) {
+  const radius = resolveUniformCornerRadius(style);
+  if (radius > 0) slot.cornerRadius = radius;
+
+  const borderWidth = resolveUniformBorderWidth(style);
+  if (borderWidth <= 0) return;
+
+  slot.borderWidth = borderWidth;
+  const borderColor = resolveUniformBorderColor(ctx, style, slotId);
+  if (borderColor) {
+    slot.borderColor = borderColor;
+  } else {
+    ctx.warnings.push({ code: 'unmapped-border-color', slotId, detail: style && (style.borderColor || style.border) });
+  }
+}
+
+function hasRenderableBorder(style) {
+  return resolveUniformBorderWidth(style) > 0;
+}
+
+function resolveUniformBorderWidth(style) {
+  if (!style) return 0;
+  const styleCandidates = [style.borderStyle, style.borderTopStyle, style.borderRightStyle, style.borderBottomStyle, style.borderLeftStyle, style.border];
+  if (styleCandidates.some(value => /(^|\s)(none|hidden)(\s|$)/i.test(String(value || '')))) return 0;
+
+  const candidates = [
+    style.borderWidth,
+    style.borderTopWidth,
+    style.borderRightWidth,
+    style.borderBottomWidth,
+    style.borderLeftWidth,
+    style.border,
+  ];
+  for (const candidate of candidates) {
+    const width = parseBorderWidthValue(candidate);
+    if (width > 0) return width;
+  }
+  return 0;
+}
+
+function parseBorderWidthValue(value) {
+  if (value == null) return 0;
+  const raw = String(value).trim().toLowerCase();
+  if (!raw || raw === 'none' || raw === 'hidden') return 0;
+  if (raw === 'thin') return 1;
+  if (raw === 'medium') return 3;
+  if (raw === 'thick') return 5;
+  const match = raw.match(/(?:^|\s)([\d.]+)px(?:\s|$)/) || raw.match(/^([\d.]+)$/);
+  if (!match) return 0;
+  const width = Number.parseFloat(match[1]);
+  return Number.isFinite(width) ? Math.max(0, width) : 0;
+}
+
+function resolveUniformBorderColor(ctx, style, slotId) {
+  if (!style) return null;
+  const candidate = firstMeaningfulBorderColor([
+    style.borderColor,
+    style.borderTopColor,
+    style.borderRightColor,
+    style.borderBottomColor,
+    style.borderLeftColor,
+    extractBorderColor(style.border),
+  ]);
+  if (!candidate) return null;
+
+  const parsed = parseColor(candidate, ctx.tokenRegistry);
+  if (parsed.color && parsed.opacity == null) {
+    recordTokenUsage(ctx, 'colors', parsed.color, `${slotId}.borderColor`);
+    return parsed.color;
+  }
+
+  const literal = normalizeCssColorLiteral(candidate);
+  if (literal) return literal;
+
+  if (parsed.color) {
+    recordTokenUsage(ctx, 'colors', parsed.color, `${slotId}.borderColor`);
+    return parsed.color;
+  }
+  return null;
+}
+
+function firstMeaningfulBorderColor(candidates) {
+  for (const candidate of candidates) {
+    const raw = String(candidate || '').trim();
+    if (!raw || /^(currentcolor|transparent)$/i.test(raw)) continue;
+    return raw;
+  }
+  return null;
+}
+
+function extractBorderColor(value) {
+  if (!value) return null;
+  const raw = String(value).trim();
+  const rgba = raw.match(/rgba?\([^)]*\)/i);
+  if (rgba) return rgba[0];
+  const hex = raw.match(/#[0-9a-f]{3,8}\b/i);
+  if (hex) return hex[0];
+  const cssVar = raw.match(/var\([^)]*\)/i);
+  if (cssVar) return cssVar[0];
+  return null;
+}
+
+function normalizeCssColorLiteral(value) {
+  const raw = String(value || '').trim().toLowerCase();
+  const hex = raw.match(/^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/);
+  if (hex) {
+    if (hex[1].length === 8) return `#${hex[1]}`;
+    return normalizeHex(raw);
+  }
+
+  const rgba = raw.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)$/);
+  if (!rgba) return null;
+  const r = clampCssByte(+rgba[1]);
+  const g = clampCssByte(+rgba[2]);
+  const b = clampCssByte(+rgba[3]);
+  const a = rgba[4] != null ? clampCssByte(Math.round(+rgba[4] * 255)) : 255;
+  const channels = [r, g, b, a].map(n => n.toString(16).padStart(2, '0'));
+  return a < 255 ? `#${channels.join('')}` : `#${channels.slice(0, 3).join('')}`;
+}
+
+function clampCssByte(value) {
+  if (!Number.isFinite(value)) return 0;
+  return Math.max(0, Math.min(255, Math.round(value)));
 }
 
 function buildGradientRectSlot(ctx, backgroundImage, slotId) {
@@ -1078,14 +1255,26 @@ function expandWidgetForEffect(widget, padding) {
 }
 
 function resolveUniformCornerRadius(style) {
+  if (!style) return 0;
   const values = [
     style.borderTopLeftRadius,
     style.borderTopRightRadius,
     style.borderBottomRightRadius,
     style.borderBottomLeftRadius,
   ].map(parsePx).filter(value => value != null);
-  if (values.length === 0) return 0;
+  const shorthand = parseUniformBorderRadius(style.borderRadius);
+  if (values.length === 0) return shorthand != null ? shorthand : 0;
   if (values.every(value => value === values[0])) return values[0];
+  return shorthand != null ? shorthand : Math.max(...values);
+}
+
+function parseUniformBorderRadius(value) {
+  if (value == null) return null;
+  const raw = String(value).split('/')[0].trim();
+  if (!raw) return null;
+  const values = raw.split(/\s+/).map(parsePx).filter(item => item != null);
+  if (values.length === 0) return null;
+  if (values.every(item => item === values[0])) return values[0];
   return Math.max(...values);
 }
 
@@ -1174,9 +1363,18 @@ function mergeComputedStyle(style, attrs, ctx) {
   assignComputed(out, 'fontSize', computed['font-size'], meaningfulCssLength);
   assignComputed(out, 'fontFamily', computed['font-family'], meaningfulCssText);
   assignComputed(out, 'fontWeight', computed['font-weight'], meaningfulCssText);
+  assignComputed(out, 'fontStyle', computed['font-style'], meaningfulCssText);
+  assignComputed(out, 'display', computed.display, meaningfulCssText);
+  assignComputed(out, 'flexDirection', computed['flex-direction'], meaningfulCssText);
+  assignComputed(out, 'alignItems', computed['align-items'], meaningfulCssText);
+  assignComputed(out, 'justifyContent', computed['justify-content'], meaningfulCssText);
+  assignComputed(out, 'gap', computed.gap, meaningfulCssLength);
+  assignComputed(out, 'rowGap', computed['row-gap'], meaningfulCssLength);
+  assignComputed(out, 'columnGap', computed['column-gap'], meaningfulCssLength);
   assignComputed(out, 'lineHeight', computed['line-height'], meaningfulLineHeight);
   assignComputed(out, 'letterSpacing', computed['letter-spacing'], meaningfulCssLength);
   assignComputed(out, 'textAlign', computed['text-align'], meaningfulCssText);
+  assignComputed(out, 'whiteSpace', computed['white-space'], meaningfulCssText);
   assignComputed(out, 'textTransform', computed['text-transform'], meaningfulCssText);
   assignComputed(out, 'position', computed.position, meaningfulCssText);
   assignComputed(out, 'transform', computed.transform, meaningfulCssText);
@@ -1187,11 +1385,46 @@ function mergeComputedStyle(style, attrs, ctx) {
   assignComputed(out, 'textShadow', computed['text-shadow'], meaningfulNonDefaultCssText);
   assignComputed(out, 'filter', computed.filter, meaningfulNonDefaultCssText);
   assignComputed(out, 'backdropFilter', computed['backdrop-filter'], meaningfulNonDefaultCssText);
+  assignComputed(out, 'clipPath', computed['clip-path'], meaningfulNonDefaultCssText);
+  assignComputed(out, 'WebkitClipPath', computed['-webkit-clip-path'], meaningfulNonDefaultCssText);
+  assignComputed(out, 'maskImage', computed['mask-image'], meaningfulNonDefaultCssText);
+  assignComputed(out, 'WebkitMaskImage', computed['-webkit-mask-image'], meaningfulNonDefaultCssText);
+  assignComputed(out, 'border', computed.border, meaningfulNonDefaultCssText);
+  assignComputed(out, 'borderWidth', computed['border-width'], meaningfulCssLength);
+  assignComputed(out, 'borderColor', computed['border-color'], meaningfulCssColor);
+  assignComputed(out, 'borderStyle', computed['border-style'], meaningfulCssText);
+  assignComputed(out, 'borderTopWidth', computed['border-top-width'], meaningfulCssLength);
+  assignComputed(out, 'borderRightWidth', computed['border-right-width'], meaningfulCssLength);
+  assignComputed(out, 'borderBottomWidth', computed['border-bottom-width'], meaningfulCssLength);
+  assignComputed(out, 'borderLeftWidth', computed['border-left-width'], meaningfulCssLength);
+  assignComputed(out, 'borderTopColor', computed['border-top-color'], meaningfulCssColor);
+  assignComputed(out, 'borderRightColor', computed['border-right-color'], meaningfulCssColor);
+  assignComputed(out, 'borderBottomColor', computed['border-bottom-color'], meaningfulCssColor);
+  assignComputed(out, 'borderLeftColor', computed['border-left-color'], meaningfulCssColor);
+  assignComputed(out, 'borderTopStyle', computed['border-top-style'], meaningfulCssText);
+  assignComputed(out, 'borderRightStyle', computed['border-right-style'], meaningfulCssText);
+  assignComputed(out, 'borderBottomStyle', computed['border-bottom-style'], meaningfulCssText);
+  assignComputed(out, 'borderLeftStyle', computed['border-left-style'], meaningfulCssText);
   assignComputed(out, 'borderTopLeftRadius', computed['border-top-left-radius'], meaningfulCssLength);
   assignComputed(out, 'borderTopRightRadius', computed['border-top-right-radius'], meaningfulCssLength);
   assignComputed(out, 'borderBottomRightRadius', computed['border-bottom-right-radius'], meaningfulCssLength);
   assignComputed(out, 'borderBottomLeftRadius', computed['border-bottom-left-radius'], meaningfulCssLength);
   return out;
+}
+
+function applyClipPathMetadata(node, style) {
+  const clipPath = meaningfulClipPath(
+    style && (style.clipPath || style.WebkitClipPath || style.webkitClipPath)
+  );
+  if (clipPath) node.clipPath = clipPath;
+}
+
+function meaningfulClipPath(value) {
+  if (!value) return null;
+  const raw = String(value).trim();
+  if (!raw || raw.toLowerCase() === 'none') return null;
+  if (/^(polygon|inset|circle|ellipse)\s*\(/i.test(raw)) return raw;
+  return null;
 }
 
 function buildPseudoVisualNodes(ctx, parentStyle, parentName, pseudoKind, hasElementChildren) {
@@ -1330,7 +1563,7 @@ function isTransparentCssColor(value) {
   return !!slash;
 }
 
-function ensureLabelStyle(ctx, slotId, style, attrs) {
+function ensureLabelStyle(ctx, slotId, style, attrs, text = '') {
   if (ctx.skinSlots[slotId]) return;
   const fontSizeResolved = resolveLength(style.fontSize, ctx.tokenRegistry);
   const fontSize = fontSizeResolved.value || numAttr(attrs['data-font-size']) || 16;
@@ -1351,11 +1584,14 @@ function ensureLabelStyle(ctx, slotId, style, attrs) {
     outlineWidth: 2,
     horizontalAlign: (style.textAlign || 'LEFT').toUpperCase(),
   };
+  const overflow = inferLabelOverflow(style, text);
+  if (overflow) slot.overflow = overflow;
   if (typographyToken) {
     slot.style = typographyToken;
     recordTokenUsage(ctx, 'typography', `typography.${typographyToken}`, `${slotId}.style`);
   }
   if (isBoldWeight(style.fontWeight)) slot.isBold = true;
+  if (isItalicStyle(style.fontStyle)) slot.isItalic = true;
   // R-11: emit native Cocos Label shadow data when source CSS has a single,
   // non-inset text-shadow. Multi-layer / inset shadows fall back to assetize
   // via css-capability-matrix and are not attached here.
@@ -1370,6 +1606,23 @@ function ensureLabelStyle(ctx, slotId, style, attrs) {
   if (!colorParsed.color && style.color) {
     ctx.warnings.push({ code: 'unmapped-color', slotId, detail: style.color });
   }
+}
+
+function inferLabelOverflow(style, text) {
+  const whiteSpace = String(style.whiteSpace || '').trim().toLowerCase();
+  if (whiteSpace === 'nowrap' || whiteSpace === 'pre') return null;
+  const normalizedText = String(text || '').trim();
+  if (!normalizedText) return null;
+  const textAlign = String(style.textAlign || '').trim().toLowerCase();
+  const longText = Array.from(normalizedText).length >= 48;
+  if (textAlign === 'justify' || longText || /[。！？.!?]\s*/.test(normalizedText)) {
+    return 'RESIZE_HEIGHT';
+  }
+  return null;
+}
+
+function isItalicStyle(value) {
+  return /^(italic|oblique)/i.test(String(value || '').trim());
 }
 
 function computeLetterSpacing(value, fontSize) {

@@ -274,6 +274,7 @@ export class UITemplateResolver {
         if (spec.skinSlot !== undefined)        clone.skinSlot       = spec.skinSlot;
         if (spec.styleSlot !== undefined)       clone.styleSlot      = spec.styleSlot;
         if (spec.iconSlot !== undefined)        clone.iconSlot       = spec.iconSlot;
+        if (spec.clipPath !== undefined)        clone.clipPath       = spec.clipPath;
         if (spec.text !== undefined)            clone.text           = spec.text;
         if (spec.textKey !== undefined)         clone.textKey        = spec.textKey;
         if (spec.bind !== undefined)            clone.bind           = spec.bind;

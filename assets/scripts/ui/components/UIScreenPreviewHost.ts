@@ -5,7 +5,7 @@ import { UISpecLoader } from '../core/UISpecLoader';
 import { services } from '../../core/managers/ServiceLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { applyUIScreenRuntimeState } from '../core/UIScreenRuntimeStateRegistry';
-import type { UILayoutNodeSpec } from '../core/UISpecTypes';
+import type { UILayoutNodeSpec, UIScreenSpec } from '../core/UISpecTypes';
 
 const { ccclass, property } = _decorator;
 
@@ -38,6 +38,21 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         return this._binder;
     }
 
+    /**
+     * 供 Preview route 動態切換 lazySlot 內容。
+     * Unity 對照：Editor preview 下手動切換同一個 ContentHost 的 SubView prefab。
+     */
+    public async switchLazySlot(slotId: string, fragmentId: string): Promise<boolean> {
+        const entry = this._lazySlots.get(slotId);
+        if (!entry) {
+            console.warn(`[UIScreenPreviewHost] switchLazySlot: 找不到 slotId=${slotId}`);
+            return false;
+        }
+
+        await this._switchPreviewSlot(entry, fragmentId);
+        return true;
+    }
+
     public async showScreen(screenId: string): Promise<void> {
         if (!screenId) {
             console.warn('[UIScreenPreviewHost] screenId 為空，略過載入');
@@ -64,7 +79,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
             const tokens = await this._specLoader.loadDesignTokens();
 
             await this.buildScreen(layout, skin, i18n, tokens);
-            await this._loadDefaultFragments();
+            await this._loadDefaultFragments(screen);
             this._currentScreenId = screenId;
             await this._applyRuntimeState(screenId);
 
@@ -97,9 +112,10 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         this._lazySlots.set(spec.name, { spec, node, parentW: w, parentH: h });
     }
 
-    private async _loadDefaultFragments(): Promise<void> {
+    private async _loadDefaultFragments(screen: UIScreenSpec): Promise<void> {
+        const previewFragments = screen.preview?.lazySlotFragments ?? {};
         for (const entry of this._lazySlots.values()) {
-            const fragmentId = entry.spec.defaultFragment;
+            const fragmentId = previewFragments[entry.spec.name] ?? entry.spec.defaultFragment;
             if (!fragmentId) {
                 continue;
             }

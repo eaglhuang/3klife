@@ -27,16 +27,18 @@
           "type": "container",
           "name": "CharacterDs3Main_div_8",
           "height": 91,
-          "layout": {
-            "type": "horizontal"
-          },
           "children": [
             {
               "type": "container",
               "name": "CharacterDs3Main_div_9",
               "width": 390,
+              "widget": {
+                "left": 0,
+                "bottom": 10
+              },
               "layout": {
-                "type": "vertical"
+                "type": "vertical",
+                "spacingY": 2
               },
               "children": [
                 {
@@ -44,7 +46,8 @@
                   "name": "CharacterDs3Main_div_10",
                   "layout": {
                     "type": "horizontal",
-                    "spacingX": 12
+                    "spacingX": 12,
+                    "alignItems": "baseline"
                   },
                   "children": [
                     {
@@ -76,28 +79,60 @@
             {
               "type": "container",
               "name": "CharacterDs3Main_div_12",
-              "width": 120,
+              "width": 102,
+              "height": 67,
+              "widget": {
+                "right": 0,
+                "bottom": 11
+              },
               "layout": {
                 "type": "vertical",
-                "spacingY": 6
+                "spacingY": 6,
+                "alignItems": "end"
               },
               "children": [
                 {
-                  "type": "label",
-                  "name": "CharacterDs3Main_span_7",
-                  "id": "OverviewRarityTier",
-                  "bindPath": "rarity",
-                  "text": "UR",
-                  "styleSlot": "auto.character-ds3-main.characterds3main_span_7"
+                  "type": "container",
+                  "name": "CharacterDs3Main_div_12_pill_row",
+                  "width": 102,
+                  "height": 29,
+                  "layout": {
+                    "type": "horizontal",
+                    "horizontalDirection": "right-to-left",
+                    "justifyContent": "end"
+                  },
+                  "children": [
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3Main_div_12_pill",
+                      "width": 62,
+                      "height": 29,
+                      "skinSlot": "auto.character-ds3-main.characterds3main_div_12_pill",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3Main_span_7",
+                          "id": "OverviewRarityTier",
+                          "bindPath": "rarity",
+                          "text": "UR",
+                          "styleSlot": "auto.character-ds3-main.characterds3main_span_7"
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "container",
                   "name": "CharacterDs3Main_div_13",
                   "id": "OverviewRarityStars",
                   "bindPath": "stars",
+                  "width": 102,
+                  "height": 32,
                   "layout": {
                     "type": "horizontal",
-                    "spacingX": 3
+                    "spacingX": 3,
+                    "horizontalDirection": "right-to-left",
+                    "justifyContent": "end"
                   },
                   "children": [
                     {
@@ -133,6 +168,17 @@
                   ]
                 }
               ]
+            },
+            {
+              "type": "panel",
+              "name": "CharacterDs3Main_div_8_border",
+              "widget": {
+                "left": 0,
+                "right": 0,
+                "bottom": 0
+              },
+              "height": 1,
+              "skinSlot": "auto.character-ds3-main.characterds3main_div_8_border"
             }
           ]
         },
@@ -166,7 +212,8 @@
                   "height": 26,
                   "layout": {
                     "type": "horizontal",
-                    "spacingX": 8
+                    "spacingX": 8,
+                    "alignItems": "center"
                   },
                   "children": [
                     {
@@ -193,7 +240,7 @@
                 {
                   "type": "container",
                   "name": "CharacterDs3Main_div_18",
-                  "height": 89,
+                  "height": 92,
                   "layout": {
                     "type": "grid",
                     "spacingX": 12,
@@ -201,7 +248,7 @@
                     "constraint": "fixed-col",
                     "constraintNum": 2,
                     "cellWidth": 71,
-                    "cellHeight": 27
+                    "cellHeight": 28
                   },
                   "children": [
                     {
@@ -209,7 +256,8 @@
                       "name": "CharacterDs3Main_div_19",
                       "layout": {
                         "type": "horizontal",
-                        "spacingX": 6
+                        "spacingX": 6,
+                        "alignItems": "baseline"
                       },
                       "children": [
                         {
@@ -233,7 +281,8 @@
                       "name": "CharacterDs3Main_div_20",
                       "layout": {
                         "type": "horizontal",
-                        "spacingX": 6
+                        "spacingX": 6,
+                        "alignItems": "baseline"
                       },
                       "children": [
                         {
@@ -257,7 +306,8 @@
                       "name": "CharacterDs3Main_div_21",
                       "layout": {
                         "type": "horizontal",
-                        "spacingX": 6
+                        "spacingX": 6,
+                        "alignItems": "baseline"
                       },
                       "children": [
                         {
@@ -281,7 +331,8 @@
                       "name": "CharacterDs3Main_div_22",
                       "layout": {
                         "type": "horizontal",
-                        "spacingX": 6
+                        "spacingX": 6,
+                        "alignItems": "baseline"
                       },
                       "children": [
                         {
@@ -305,7 +356,8 @@
                       "name": "CharacterDs3Main_div_23",
                       "layout": {
                         "type": "horizontal",
-                        "spacingX": 6
+                        "spacingX": 6,
+                        "alignItems": "baseline"
                       },
                       "children": [
                         {
@@ -329,7 +381,8 @@
                       "name": "CharacterDs3Main_div_24",
                       "layout": {
                         "type": "horizontal",
-                        "spacingX": 6
+                        "spacingX": 6,
+                        "alignItems": "baseline"
                       },
                       "children": [
                         {
@@ -372,7 +425,8 @@
                   "name": "CharacterDs3Main_div_26",
                   "layout": {
                     "type": "horizontal",
-                    "spacingX": 8
+                    "spacingX": 8,
+                    "alignItems": "center"
                   },
                   "children": [
                     {
@@ -401,15 +455,16 @@
                   "name": "CharacterDs3Main_div_28",
                   "layout": {
                     "type": "horizontal",
-                    "spacingX": 8
+                    "spacingX": 8,
+                    "alignItems": "center"
                   },
                   "children": [
                     {
-                      "type": "label",
+                      "type": "panel",
                       "name": "CharacterDs3Main_span_29",
                       "width": 8,
                       "height": 8,
-                      "styleSlot": "auto.character-ds3-main.characterds3main_span_29"
+                      "skinSlot": "auto.character-ds3-main.characterds3main_span_29"
                     },
                     {
                       "type": "label",
@@ -424,15 +479,16 @@
                   "name": "CharacterDs3Main_div_29",
                   "layout": {
                     "type": "horizontal",
-                    "spacingX": 8
+                    "spacingX": 8,
+                    "alignItems": "center"
                   },
                   "children": [
                     {
-                      "type": "label",
+                      "type": "panel",
                       "name": "CharacterDs3Main_span_31",
                       "width": 8,
                       "height": 8,
-                      "styleSlot": "auto.character-ds3-main.characterds3main_span_31"
+                      "skinSlot": "auto.character-ds3-main.characterds3main_span_31"
                     },
                     {
                       "type": "label",
@@ -464,7 +520,8 @@
                   "name": "CharacterDs3Main_div_31",
                   "layout": {
                     "type": "horizontal",
-                    "spacingX": 8
+                    "spacingX": 8,
+                    "alignItems": "center"
                   },
                   "children": [
                     {
@@ -493,15 +550,16 @@
                   "name": "CharacterDs3Main_div_33",
                   "layout": {
                     "type": "horizontal",
-                    "spacingX": 8
+                    "spacingX": 8,
+                    "alignItems": "center"
                   },
                   "children": [
                     {
-                      "type": "label",
+                      "type": "panel",
                       "name": "CharacterDs3Main_span_35",
                       "width": 8,
                       "height": 8,
-                      "styleSlot": "auto.character-ds3-main.characterds3main_span_35"
+                      "skinSlot": "auto.character-ds3-main.characterds3main_span_35"
                     },
                     {
                       "type": "label",
@@ -516,15 +574,16 @@
                   "name": "CharacterDs3Main_div_34",
                   "layout": {
                     "type": "horizontal",
-                    "spacingX": 8
+                    "spacingX": 8,
+                    "alignItems": "center"
                   },
                   "children": [
                     {
-                      "type": "label",
+                      "type": "panel",
                       "name": "CharacterDs3Main_span_37",
                       "width": 8,
                       "height": 8,
-                      "styleSlot": "auto.character-ds3-main.characterds3main_span_37"
+                      "skinSlot": "auto.character-ds3-main.characterds3main_span_37"
                     },
                     {
                       "type": "label",
@@ -548,7 +607,7 @@
             "paddingRight": 16,
             "paddingBottom": 14,
             "paddingLeft": 16,
-            "spacingY": 10
+                "spacingY": 10
           },
           "skinSlot": "auto.character-ds3-main.characterds3main_div_35",
           "children": [

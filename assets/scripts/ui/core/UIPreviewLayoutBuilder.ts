@@ -1,4 +1,4 @@
-import { Node, Layout, Size, Widget } from 'cc';
+import { Node, Layout, Size, UITransform, Widget } from 'cc';
 import type { UILayoutNodeSpec } from './UISpecTypes';
 import { resolveSize } from './UISpecTypes';
 
@@ -64,6 +64,7 @@ export class UIPreviewLayoutBuilder {
     public setupLayout(node: Node, spec: UILayoutNodeSpec): void {
         if (!spec.layout) return;
         const layout = node.getComponent(Layout) || node.addComponent(Layout);
+        (node as any).__ucufLayoutDef = spec.layout;
         
         switch (spec.layout.type) {
             case 'horizontal': layout.type = Layout.Type.HORIZONTAL; break;
@@ -131,5 +132,162 @@ export class UIPreviewLayoutBuilder {
             case 'children':  layout.resizeMode = Layout.ResizeMode.CHILDREN;  break;
             default:          layout.resizeMode = Layout.ResizeMode.NONE;      break;
         }
+    }
+
+    /**
+     * Cocos Layout 只負責基礎排列；這裡補上 CSS flex 的 cross/main-axis 對齊。
+     * Unity 對照：LayoutGroup 排版後，再套用 Child Alignment / spacing distribution。
+     */
+    public applyPostLayoutAlignment(root: Node): void {
+        for (const child of root.children) {
+            this.applyPostLayoutAlignment(child);
+        }
+
+        const layout = root.getComponent(Layout);
+        const layoutDef = (root as any).__ucufLayoutDef as UILayoutNodeSpec['layout'] | undefined;
+        if (!layout || !layoutDef) return;
+        if (layout.type !== Layout.Type.HORIZONTAL && layout.type !== Layout.Type.VERTICAL) return;
+
+        const parentTransform = root.getComponent(UITransform);
+        if (!parentTransform) return;
+
+        const flowChildren = root.children
+            .filter(child => child.active && child.getComponent(UITransform))
+            .map(child => ({ node: child, transform: child.getComponent(UITransform)! }));
+        if (flowChildren.length === 0) return;
+
+        const bounds = this._contentBounds(parentTransform, layoutDef);
+        if (layoutDef.justifyContent) {
+            this._applyMainAxisDistribution(layout, layoutDef, flowChildren, bounds);
+        }
+        if (layoutDef.alignItems) {
+            this._applyCrossAxisAlignment(layout, layoutDef, flowChildren, bounds);
+        }
+    }
+
+    private _contentBounds(transform: UITransform, layoutDef: UILayoutNodeSpec['layout']): { left: number; right: number; top: number; bottom: number; width: number; height: number } {
+        const left = -transform.width * transform.anchorX + (layoutDef?.paddingLeft ?? 0);
+        const right = transform.width * (1 - transform.anchorX) - (layoutDef?.paddingRight ?? 0);
+        const bottom = -transform.height * transform.anchorY + (layoutDef?.paddingBottom ?? 0);
+        const top = transform.height * (1 - transform.anchorY) - (layoutDef?.paddingTop ?? 0);
+        return { left, right, top, bottom, width: Math.max(0, right - left), height: Math.max(0, top - bottom) };
+    }
+
+    private _applyCrossAxisAlignment(
+        layout: Layout,
+        layoutDef: UILayoutNodeSpec['layout'],
+        flowChildren: Array<{ node: Node; transform: UITransform }>,
+        bounds: { left: number; right: number; top: number; bottom: number },
+    ): void {
+        const align = layoutDef?.alignItems;
+        if (!align || align === 'stretch') return;
+
+        for (const child of flowChildren) {
+            const pos = child.node.position;
+            if (layout.type === Layout.Type.HORIZONTAL) {
+                const targetY = this._alignedY(child.transform, bounds, align === 'baseline' ? 'end' : align);
+                child.node.setPosition(pos.x, targetY, pos.z);
+            } else if (layout.type === Layout.Type.VERTICAL) {
+                const targetX = this._alignedX(child.transform, bounds, align === 'baseline' ? 'start' : align);
+                child.node.setPosition(targetX, pos.y, pos.z);
+            }
+        }
+    }
+
+    private _applyMainAxisDistribution(
+        layout: Layout,
+        layoutDef: UILayoutNodeSpec['layout'],
+        flowChildren: Array<{ node: Node; transform: UITransform }>,
+        bounds: { left: number; right: number; top: number; bottom: number; width: number; height: number },
+    ): void {
+        const justify = layoutDef?.justifyContent;
+        if (!justify || justify === 'start') return;
+        if (layout.type === Layout.Type.HORIZONTAL) {
+            this._distributeHorizontal(layoutDef, flowChildren, bounds, justify);
+        } else if (layout.type === Layout.Type.VERTICAL) {
+            this._distributeVertical(layoutDef, flowChildren, bounds, justify);
+        }
+    }
+
+    private _distributeHorizontal(
+        layoutDef: UILayoutNodeSpec['layout'],
+        flowChildren: Array<{ node: Node; transform: UITransform }>,
+        bounds: { left: number; right: number; width: number },
+        justify: NonNullable<UILayoutNodeSpec['layout']>['justifyContent'],
+    ): void {
+        const widths = flowChildren.map(child => child.transform.width);
+        const sumWidth = widths.reduce((sum, width) => sum + width, 0);
+        const spacing = layoutDef?.spacingX ?? layoutDef?.spacing ?? 0;
+        const distributed = this._resolveDistributedSpacing(justify, bounds.width, sumWidth, flowChildren.length, spacing);
+        const rightToLeft = layoutDef?.horizontalDirection === 'right-to-left';
+        let cursor = rightToLeft ? bounds.right - distributed.leading : bounds.left + distributed.leading;
+
+        for (let index = 0; index < flowChildren.length; index += 1) {
+            const child = flowChildren[index];
+            const width = widths[index];
+            const pos = child.node.position;
+            const x = rightToLeft
+                ? cursor - width * (1 - child.transform.anchorX)
+                : cursor + width * child.transform.anchorX;
+            child.node.setPosition(x, pos.y, pos.z);
+            cursor += rightToLeft ? -(width + distributed.spacing) : width + distributed.spacing;
+        }
+    }
+
+    private _distributeVertical(
+        layoutDef: UILayoutNodeSpec['layout'],
+        flowChildren: Array<{ node: Node; transform: UITransform }>,
+        bounds: { top: number; bottom: number; height: number },
+        justify: NonNullable<UILayoutNodeSpec['layout']>['justifyContent'],
+    ): void {
+        const heights = flowChildren.map(child => child.transform.height);
+        const sumHeight = heights.reduce((sum, height) => sum + height, 0);
+        const spacing = layoutDef?.spacingY ?? layoutDef?.spacing ?? 0;
+        const distributed = this._resolveDistributedSpacing(justify, bounds.height, sumHeight, flowChildren.length, spacing);
+        const bottomToTop = layoutDef?.verticalDirection === 'bottom-to-top';
+        let cursor = bottomToTop ? bounds.bottom + distributed.leading : bounds.top - distributed.leading;
+
+        for (let index = 0; index < flowChildren.length; index += 1) {
+            const child = flowChildren[index];
+            const height = heights[index];
+            const pos = child.node.position;
+            const y = bottomToTop
+                ? cursor + height * child.transform.anchorY
+                : cursor - height * (1 - child.transform.anchorY);
+            child.node.setPosition(pos.x, y, pos.z);
+            cursor += bottomToTop ? height + distributed.spacing : -(height + distributed.spacing);
+        }
+    }
+
+    private _resolveDistributedSpacing(
+        justify: NonNullable<UILayoutNodeSpec['layout']>['justifyContent'],
+        available: number,
+        childTotal: number,
+        childCount: number,
+        fallbackSpacing: number,
+    ): { leading: number; spacing: number } {
+        const fallbackContent = childTotal + Math.max(0, childCount - 1) * fallbackSpacing;
+        const fallbackExtra = Math.max(0, available - fallbackContent);
+        const free = Math.max(0, available - childTotal);
+        switch (justify) {
+            case 'center': return { leading: fallbackExtra / 2, spacing: fallbackSpacing };
+            case 'end': return { leading: fallbackExtra, spacing: fallbackSpacing };
+            case 'space-between': return childCount > 1 ? { leading: 0, spacing: free / (childCount - 1) } : { leading: fallbackExtra / 2, spacing: fallbackSpacing };
+            case 'space-around': return childCount > 0 ? { leading: free / childCount / 2, spacing: free / childCount } : { leading: 0, spacing: fallbackSpacing };
+            case 'space-evenly': return childCount > 0 ? { leading: free / (childCount + 1), spacing: free / (childCount + 1) } : { leading: 0, spacing: fallbackSpacing };
+            default: return { leading: 0, spacing: fallbackSpacing };
+        }
+    }
+
+    private _alignedX(transform: UITransform, bounds: { left: number; right: number }, align: string): number {
+        if (align === 'center') return (bounds.left + bounds.right) / 2 + transform.width * (transform.anchorX - 0.5);
+        if (align === 'end') return bounds.right - transform.width * (1 - transform.anchorX);
+        return bounds.left + transform.width * transform.anchorX;
+    }
+
+    private _alignedY(transform: UITransform, bounds: { top: number; bottom: number }, align: string): number {
+        if (align === 'center') return (bounds.top + bounds.bottom) / 2 + transform.height * (transform.anchorY - 0.5);
+        if (align === 'end') return bounds.bottom + transform.height * transform.anchorY;
+        return bounds.top - transform.height * (1 - transform.anchorY);
     }
 }

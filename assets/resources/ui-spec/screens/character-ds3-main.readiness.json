@@ -1,12 +1,12 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "character-ds3-main",
-  "generatedAt": "2026-04-29T13:05:05.851Z",
+  "generatedAt": "2026-04-29T16:55:54.474Z",
   "verdict": "not-ready",
-  "readinessScore": 0.917,
+  "readinessScore": 0.958,
   "summary": {
     "blockerUnits": 1,
-    "actionUnits": 2,
+    "actionUnits": 1,
     "bounded": true,
     "nextCriticalAction": "capture Cocos Editor target screen and run final compare"
   },
@@ -21,16 +21,16 @@
     "performance": "assets/resources/ui-spec/screens/character-ds3-main.performance.json",
     "bakeManifest": "assets/resources/ui-spec/layouts/character-ds3-main.layout.bake-manifest.json",
     "artAuthorityWaivers": "assets/resources/ui-spec/screens/character-ds3-main.art-authority-waivers.json",
-    "finalVerdict": "artifacts/ui-source/character-ds3/review/2026-04-29-final-compare-protocol-refresh/character-ds3-main.html-cocos-verdict.json"
+    "finalVerdict": "artifacts/ui-source/character-ds3/review/2026-04-30-plan3-r37-sprite-trim/character-ds3-main.html-cocos-verdict.json"
   },
   "gates": {
     "finalGate": {
       "status": "blocker",
       "pass": false,
       "workUnits": 1,
-      "summary": "runtimeVsSource raw=0.8658 adjusted=0.8658 verdict=fail",
-      "rawScore": 0.8657831790123457,
-      "adjustedScore": 0.8657831790123457,
+      "summary": "runtimeVsSource raw=0.8559 adjusted=0.8559 verdict=fail",
+      "rawScore": 0.8559490740740741,
+      "adjustedScore": 0.8559490740740741,
       "verdict": "fail"
     },
     "capture": {
@@ -145,9 +145,9 @@
       "unsafeAutoBakeCount": 0
     },
     "loading": {
-      "status": "warn",
-      "workUnits": 1,
-      "summary": "performance report stale: nodeCount 1 != actual 41",
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "preload/performance sidecars present and current",
       "actualLayoutStats": {
         "nodeCount": 41,
         "deferredNodeCount": 2,
@@ -163,30 +163,22 @@
         }
       },
       "reportedRendering": {
-        "nodeCount": 1,
-        "deferredNodeCount": 0,
-        "totalNodeCount": 1,
-        "maxDepth": 1,
+        "nodeCount": 41,
+        "deferredNodeCount": 2,
+        "totalNodeCount": 43,
+        "maxDepth": 6,
         "estimatedDrawCalls": 10,
         "colorRectCount": 0
       },
-      "skinSlotCount": 127,
-      "issues": [
-        "performance report stale: nodeCount 1 != actual 41"
-      ]
+      "skinSlotCount": 129,
+      "issues": []
     }
   },
   "issues": [
     {
       "severity": "blocker",
       "code": "final-gate",
-      "summary": "runtimeVsSource raw=0.8658 adjusted=0.8658 verdict=fail",
-      "workUnits": 1
-    },
-    {
-      "severity": "warn",
-      "code": "loading-performance",
-      "summary": "performance report stale: nodeCount 1 != actual 41",
+      "summary": "runtimeVsSource raw=0.8559 adjusted=0.8559 verdict=fail",
       "workUnits": 1
     }
   ]

@@ -58,6 +58,7 @@
         {
           "type": "container",
           "name": "CharacterDs3Main_div_57",
+          "clipPath": "polygon(0 0, 100% 0, 100% 86%, 91% 100%, 0 100%)",
           "_motionId": "character-ds3main_div_57.transition",
           "children": [
             {
@@ -105,6 +106,7 @@
         {
           "type": "container",
           "name": "CharacterDs3Main_div_61",
+          "clipPath": "polygon(0 0, 100% 0, 100% 86%, 91% 100%, 0 100%)",
           "_motionId": "character-ds3main_div_61.transition",
           "children": [
             {
@@ -152,6 +154,7 @@
         {
           "type": "container",
           "name": "CharacterDs3Main_div_65",
+          "clipPath": "polygon(0 0, 100% 0, 100% 86%, 91% 100%, 0 100%)",
           "_motionId": "character-ds3main_div_65.transition",
           "children": [
             {
@@ -199,6 +202,7 @@
         {
           "type": "container",
           "name": "CharacterDs3Main_div_69",
+          "clipPath": "polygon(0 0, 100% 0, 100% 86%, 91% 100%, 0 100%)",
           "_motionId": "character-ds3main_div_69.transition",
           "children": [
             {
@@ -246,6 +250,7 @@
         {
           "type": "container",
           "name": "CharacterDs3Main_div_73",
+          "clipPath": "polygon(0 0, 100% 0, 100% 86%, 91% 100%, 0 100%)",
           "_motionId": "character-ds3main_div_73.transition",
           "children": [
             {

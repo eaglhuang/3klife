@@ -316,6 +316,7 @@ export class UIPreviewNodeFactory {
         const sprite       = node.addComponent(Sprite);
         sprite.sizeMode    = Sprite.SizeMode.CUSTOM;
         sprite.spriteFrame = frame;
+        sprite.trim        = false;
         const alpha = resolveOpacity((slot as any)?.opacity ?? (slot as any)?.alpha);
         if (alpha !== null) {
             sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, alpha);
@@ -374,6 +375,7 @@ export class UIPreviewNodeFactory {
         const sprite = contentNode.addComponent(Sprite);
         sprite.sizeMode = Sprite.SizeMode.CUSTOM;
         sprite.spriteFrame = frame;
+        sprite.trim = false;
         if (alpha !== null) {
             sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, alpha);
         }

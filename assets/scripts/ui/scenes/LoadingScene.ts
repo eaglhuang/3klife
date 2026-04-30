@@ -1387,6 +1387,10 @@ export class LoadingScene extends Component {
     }
 
     private _assertGeneralDetailSkillsVisualReady(detailPanel: GeneralDetailComposite): void {
+        if (this._isGeneralDetailDs3TabReady(detailPanel, 'Tactics')) {
+            return;
+        }
+
         const root = detailPanel.node.getChildByPath('__safeArea/GeneralDetailRoot')
             ?? detailPanel.node.getChildByName('GeneralDetailRoot');
         if (!root) {
@@ -1403,6 +1407,10 @@ export class LoadingScene extends Component {
     }
 
     private _assertGeneralDetailStatsVisualReady(detailPanel: GeneralDetailComposite): void {
+        if (this._isGeneralDetailDs3TabReady(detailPanel, 'Stats')) {
+            return;
+        }
+
         const root = detailPanel.node.getChildByPath('__safeArea/GeneralDetailRoot')
             ?? detailPanel.node.getChildByName('GeneralDetailRoot');
         if (!root) {
@@ -1416,6 +1424,10 @@ export class LoadingScene extends Component {
     }
 
     private _assertGeneralDetailBloodlineVisualReady(detailPanel: GeneralDetailComposite): void {
+        if (this._isGeneralDetailDs3TabReady(detailPanel, 'Bloodline')) {
+            return;
+        }
+
         const root = detailPanel.node.getChildByPath('__safeArea/GeneralDetailRoot')
             ?? detailPanel.node.getChildByName('GeneralDetailRoot');
         if (!root) {
@@ -1429,6 +1441,10 @@ export class LoadingScene extends Component {
     }
 
     private _assertGeneralDetailBasicsVisualReady(detailPanel: GeneralDetailComposite): void {
+        if (this._isGeneralDetailDs3TabReady(detailPanel, 'Equip')) {
+            return;
+        }
+
         const root = detailPanel.node.getChildByPath('__safeArea/GeneralDetailRoot')
             ?? detailPanel.node.getChildByName('GeneralDetailRoot');
         if (!root) {
@@ -1442,6 +1458,10 @@ export class LoadingScene extends Component {
     }
 
     private _assertGeneralDetailAptitudeVisualReady(detailPanel: GeneralDetailComposite): void {
+        if (this._isGeneralDetailDs3TabReady(detailPanel, 'Aptitude')) {
+            return;
+        }
+
         const root = detailPanel.node.getChildByPath('__safeArea/GeneralDetailRoot')
             ?? detailPanel.node.getChildByName('GeneralDetailRoot');
         if (!root) {
@@ -1452,6 +1472,16 @@ export class LoadingScene extends Component {
         this._requireNonEmptyDescendantLabel(root, 'TroopValue');
         this._requireNonEmptyDescendantLabel(root, 'PreferredTerrainValue');
         this._requireNonEmptyDescendantLabel(root, 'TerrainBonusValue');
+    }
+
+    private _isGeneralDetailDs3TabReady(detailPanel: GeneralDetailComposite, expectedTab: 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitude'): boolean {
+        const ds3Root = detailPanel.node.getChildByName('CharacterDs3Main');
+        if (!ds3Root || !ds3Root.activeInHierarchy) {
+            return false;
+        }
+
+        const readyTab = (detailPanel.node as Node & { __generalDetailReadyTab?: string }).__generalDetailReadyTab;
+        return readyTab === expectedTab;
     }
 
     private _requireActiveDescendant(root: Node, nodeName: string): Node {

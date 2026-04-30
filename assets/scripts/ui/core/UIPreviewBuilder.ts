@@ -25,6 +25,7 @@ import { UIPreviewNodeFactory } from './UIPreviewNodeFactory';
 import { UIPreviewLayoutBuilder } from './UIPreviewLayoutBuilder';
 import { UITemplateBinder } from './UITemplateBinder';
 import { UCUFLogger, LogCategory } from './UCUFLogger';
+import { CssClipPathMask } from './CssClipPathMask';
 
 const { ccclass } = _decorator;
 
@@ -284,13 +285,16 @@ export class UIPreviewBuilder extends Component {
         const widgetDef = flowChildInLayout ? undefined : spec.widget;
         const parentLayout = parent.getComponent(Layout);
         const parentLayoutType = parentLayout?.type;
+        // Grid flow child 通用規則支援：取父容器 cellSize 供 _resolveNodeSize 使用。
+        const parentGridCellW = parentLayoutType === Layout.Type.GRID ? (parentLayout?.cellSize.width ?? 0) : undefined;
+        const parentGridCellH = parentLayoutType === Layout.Type.GRID ? (parentLayout?.cellSize.height ?? 0) : undefined;
 
         if (spec.active === false) node.active = false;
 
         // UITransform（Unity 對照：RectTransform）
         const transform = node.addComponent(UITransform);
-        const w = this._resolveNodeSize(spec.width, parentWidth, flowChildInLayout, spec, 'width', parentLayoutType, parentWidth);
-        const h = this._resolveNodeSize(spec.height, parentHeight, flowChildInLayout, spec, 'height', parentLayoutType, w || parentWidth);
+        const w = this._resolveNodeSize(spec.width, parentWidth, flowChildInLayout, spec, 'width', parentLayoutType, parentWidth, parentGridCellW);
+        const h = this._resolveNodeSize(spec.height, parentHeight, flowChildInLayout, spec, 'height', parentLayoutType, w || parentWidth, parentGridCellH);
         transform.setContentSize(w, h);
 
         // Widget 對齊（Unity 對照：RectTransform anchor / stretch）
@@ -347,6 +351,7 @@ export class UIPreviewBuilder extends Component {
         }
 
         this._applySpecOpacity(node, spec.opacity);
+        this._applySpecClipPath(node, spec.clipPath);
 
         // lazySlot：延遲載入插槽 — 建立空容器後停止遞迴（由 CompositePanel._onLazySlotCreated 接管）
         if (spec.lazySlot === true) {
@@ -411,6 +416,19 @@ export class UIPreviewBuilder extends Component {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected _onLazySlotCreated(_spec: UILayoutNodeSpec, _node: Node, _w: number, _h: number): void { /* no-op */ }
+
+    private _applySpecClipPath(node: Node, clipPath?: string): void {
+        const normalized = typeof clipPath === 'string' ? clipPath.trim() : '';
+        const existing = node.getComponent(CssClipPathMask);
+        if (!normalized) {
+            if (existing) existing.enabled = false;
+            return;
+        }
+
+        const clipMask = existing || node.addComponent(CssClipPathMask);
+        clipMask.enabled = true;
+        clipMask.clipPath = normalized;
+    }
 
     private _allocateHorizontalFlowWidths(parentSpec: UILayoutNodeSpec, availableWidth: number): Map<UILayoutNodeSpec, number> {
         const allocations = new Map<UILayoutNodeSpec, number>();
@@ -484,6 +502,7 @@ export class UIPreviewBuilder extends Component {
         axis?: 'width' | 'height',
         parentLayoutType?: number,
         availableWidth?: number,
+        gridCellSize?: number,
     ): number {
         if (rawValue !== undefined) {
             return resolveSize(rawValue, parentSize);
@@ -493,6 +512,12 @@ export class UIPreviewBuilder extends Component {
         }
         if (flowChildInLayout && spec && parentLayoutType === Layout.Type.HORIZONTAL && axis === 'width') {
             return Math.max(1, parentSize);
+        }
+        // Grid flow child 通用規則：未宣告尺寸時繼承 cellSize，避免 container 0×0 導致
+        // 子節點 Label 觸發 SHRINK 縮字。此規則適用於任何使用 Grid layout 的 UI。
+        // Unity 對照：GridLayoutGroup.cellSize 作為子節點的預設 RectTransform 尺寸。
+        if (flowChildInLayout && parentLayoutType === Layout.Type.GRID && gridCellSize !== undefined && gridCellSize > 0) {
+            return Math.max(1, Math.round(gridCellSize));
         }
         if (flowChildInLayout && spec && axis) {
             return this._estimateFlowNodeSize(spec, axis, availableWidth);
@@ -742,9 +767,11 @@ export class UIPreviewBuilder extends Component {
         const t = UCUFLogger.perfBegin('UIPreviewBuilder._postBuildPass');
         this._realignAllWidgets(root);
         this._updateAllLayouts(root);
+        this.layoutBuilder.applyPostLayoutAlignment(root);
         this._realignAllWidgets(root);
         this._enforceContainerBounds(root);
         this._updateAllLayouts(root);
+        this.layoutBuilder.applyPostLayoutAlignment(root);
         this._realignAllWidgets(root);
         UCUFLogger.perfEnd('UIPreviewBuilder._postBuildPass', t);
     }
@@ -832,6 +859,9 @@ export class UIPreviewBuilder extends Component {
 
         const layout = node.getComponent(Layout);
         if (!layout || layout.type === Layout.Type.NONE || layout.type === Layout.Type.GRID) return;
+
+        const layoutDef = (node as any).__ucufLayoutDef as UILayoutNodeSpec['layout'] | undefined;
+        if (layoutDef?.enforceBounds !== true) return;
 
         const containerT = node.getComponent(UITransform);
         if (!containerT) return;
