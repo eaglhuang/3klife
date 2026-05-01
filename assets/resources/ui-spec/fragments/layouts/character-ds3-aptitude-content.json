@@ -1,0 +1,965 @@
+{
+  "type": "container",
+  "name": "CharacterDs3TabAptitude",
+  "contentContract": {
+    "status": "contract-ready",
+    "requiredNodes": [
+      "CharacterDs3TabAptitude_div_2",
+      "CharacterDs3TabAptitude_div_6",
+      "CharacterDs3TabAptitude_div_18"
+    ],
+    "bindPaths": [
+      "general.aptitude.infantry",
+      "general.aptitude.cavalry",
+      "general.aptitude.archery"
+    ],
+    "minNonEmptyNodes": 3
+  },
+  "widget": {
+    "top": 0,
+    "left": 0,
+    "right": 0,
+    "bottom": 0
+  },
+  "children": [
+    {
+      "type": "container",
+      "name": "CharacterDs3TabAptitude_div_1",
+      "layout": {
+        "type": "vertical",
+        "paddingTop": 50,
+        "paddingRight": 20,
+        "paddingBottom": 60,
+        "paddingLeft": 20
+      },
+      "children": [
+        {
+          "type": "container",
+          "name": "CharacterDs3TabAptitude_div_2",
+          "layout": {
+            "type": "vertical",
+            "spacingY": 4
+          },
+          "children": [
+            {
+              "type": "container",
+              "name": "CharacterDs3TabAptitude_div_3",
+              "layout": {
+                "type": "vertical",
+                "spacingY": 10
+              },
+              "children": [
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabAptitude_div_4",
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "spacingX": 8
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabAptitude_span_1",
+                      "text": "兵種適性",
+                      "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_1"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabAptitude_span_2",
+                      "text": "TROOP TYPE",
+                      "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_2"
+                    }
+                  ],
+                  "skinLayers": [
+                    {
+                      "layerId": "CharacterDs3TabAptitude_div_5",
+                      "slotId": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_5",
+                      "zOrder": 0,
+                      "expand": false,
+                      "width": 4,
+                      "height": 16
+                    }
+                  ]
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabAptitude_div_6",
+                  "layout": {
+                    "type": "horizontal",
+                    "spacingX": 8
+                  },
+                  "children": [
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_7",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_7",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_8",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "S",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_8"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_9",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_3",
+                              "text": "步兵",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_3"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_4",
+                              "text": "Infantry",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_4"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_10",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_10",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_11",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "A",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_11"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_12",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_5",
+                              "text": "騎兵",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_5"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_6",
+                              "text": "Cavalry",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_6"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_13",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_13",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_14",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "C",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_14"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_15",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_7",
+                              "text": "弓兵",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_7"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_8",
+                              "text": "Archer",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_8"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_16",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_16",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_17",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "D",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_17"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_18",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_9",
+                              "text": "機械",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_9"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_10",
+                              "text": "Siege",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_10"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabAptitude_div_19",
+              "layout": {
+                "type": "vertical",
+                "spacingY": 10
+              },
+              "children": [
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabAptitude_div_20",
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "spacingX": 8
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabAptitude_span_11",
+                      "text": "地形適性",
+                      "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_11"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabAptitude_span_12",
+                      "text": "TERRAIN",
+                      "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_12"
+                    }
+                  ],
+                  "skinLayers": [
+                    {
+                      "layerId": "CharacterDs3TabAptitude_div_21",
+                      "slotId": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_21",
+                      "zOrder": 0,
+                      "expand": false,
+                      "width": 4,
+                      "height": 16
+                    }
+                  ]
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabAptitude_div_22",
+                  "layout": {
+                    "type": "horizontal",
+                    "spacingX": 8
+                  },
+                  "children": [
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_23",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_23",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_24",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "S",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_24"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_25",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_13",
+                              "text": "平原",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_13"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_14",
+                              "text": "Plains",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_14"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_26",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_26",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_27",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "A",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_27"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_28",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_15",
+                              "text": "山地",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_15"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_16",
+                              "text": "Mountain",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_16"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_29",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_29",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_30",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "D",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_30"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_31",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_17",
+                              "text": "水域",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_17"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_18",
+                              "text": "Water",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_18"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_32",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_32",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_33",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "B",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_33"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_34",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_19",
+                              "text": "林地",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_19"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_20",
+                              "text": "Forest",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_20"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_35",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_35",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_36",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "C",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_36"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_37",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_21",
+                              "text": "沙漠",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_21"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_22",
+                              "text": "Desert",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_22"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabAptitude_div_38",
+              "layout": {
+                "type": "vertical",
+                "spacingY": 10
+              },
+              "children": [
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabAptitude_div_39",
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "spacingX": 8
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabAptitude_span_23",
+                      "text": "天氣適性",
+                      "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_23"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabAptitude_span_24",
+                      "text": "WEATHER",
+                      "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_24"
+                    }
+                  ],
+                  "skinLayers": [
+                    {
+                      "layerId": "CharacterDs3TabAptitude_div_40",
+                      "slotId": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_40",
+                      "zOrder": 0,
+                      "expand": false,
+                      "width": 4,
+                      "height": 16
+                    }
+                  ]
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabAptitude_div_41",
+                  "layout": {
+                    "type": "horizontal",
+                    "spacingX": 8
+                  },
+                  "children": [
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_42",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_42",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_43",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "A",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_43"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_44",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_25",
+                              "text": "晴",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_25"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_26",
+                              "text": "Clear",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_26"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_45",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_45",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_46",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "B",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_46"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_47",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_27",
+                              "text": "雨",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_27"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_28",
+                              "text": "Rain",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_28"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_48",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_48",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_49",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "C",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_49"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_50",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_29",
+                              "text": "霧",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_29"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_30",
+                              "text": "Fog",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_30"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_51",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_51",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_52",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "A",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_52"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_53",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_31",
+                              "text": "風",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_31"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_32",
+                              "text": "Wind",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_32"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_54",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_54",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_55",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "S",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_55"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_56",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_33",
+                              "text": "夜",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_33"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_34",
+                              "text": "Night",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_34"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabAptitude_div_57",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_57",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabAptitude_div_58",
+                          "width": 36,
+                          "height": 36,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 36
+                          },
+                          "text": "B",
+                          "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_58"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabAptitude_div_59",
+                          "layout": {
+                            "type": "vertical",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_35",
+                              "text": "雷",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_35"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabAptitude_span_36",
+                              "text": "Thunder",
+                              "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_36"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "widget": {
+        "top": 0,
+        "left": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "_geometryContract": "fill-root"
+    }
+  ]
+}

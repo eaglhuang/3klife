@@ -40,6 +40,7 @@ Design System 3/
 *.zip
 Design System/design_handoff/PLAN.md
 server/npc-brain/pipelines/sanguo-rag/tmp/
+server/npc-brain/.langgraph_api/
 
 #//////////////////////////
 # Python

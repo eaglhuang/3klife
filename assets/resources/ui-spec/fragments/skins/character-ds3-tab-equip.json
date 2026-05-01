@@ -1,0 +1,965 @@
+{
+  "id": "character-ds3-tab-equip-default",
+  "version": 1,
+  "slots": {
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_4": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 2
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_1": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 4,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_2": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_6": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceSepia",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "unmappedColor",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 10,
+      "borderWidth": 2,
+      "borderColor": "#ffc107"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_3": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 32,
+      "lineHeight": 45,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_4": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_5": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 14,
+      "lineHeight": 20,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "style": "bodySm",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_6": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 1,
+      "color": "rarityGold",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_7": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceSepia",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "unmappedColor",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 10,
+      "borderWidth": 2,
+      "borderColor": "#9c27b0"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_7": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 32,
+      "lineHeight": 45,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_8": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_9": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 14,
+      "lineHeight": 20,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "style": "bodySm",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_10": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 1,
+      "color": "rarityPurple",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_8": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceSepia",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "unmappedColor",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 10,
+      "borderWidth": 2,
+      "borderColor": "#2196f3"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_11": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 32,
+      "lineHeight": 45,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_12": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_13": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 14,
+      "lineHeight": 20,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "style": "bodySm",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_14": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 1,
+      "color": "rarityBlue",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_9": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceSepia",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "unmappedColor",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 10,
+      "borderWidth": 2,
+      "borderColor": "#9c27b0"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_15": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 32,
+      "lineHeight": 45,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_16": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_17": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 14,
+      "lineHeight": 20,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "style": "bodySm",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_18": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 1,
+      "color": "rarityPurple",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_10": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceSepia",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "unmappedColor",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 10,
+      "borderWidth": 2,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_19": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "style": "labelLg",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_11": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceSepia",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "unmappedColor",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 10,
+      "borderWidth": 2,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_20": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "outline",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "style": "labelLg",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_13": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 2
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_21": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 4,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_22": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_14": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_23": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 42,
+      "lineHeight": 59,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_24": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 14,
+      "lineHeight": 20,
+      "letterSpacing": 0,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "style": "bodySm"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_25": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_26": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 14,
+      "lineHeight": 20,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "style": "bodySm",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_18": {
+      "kind": "color-rect",
+      "color": "colorBlack",
+      "opacity": 0.2,
+      "cornerRadius": 6,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_19": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 90,
+        "stops": [
+          {
+            "color": "secondary",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "secondaryLight",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 6
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_div_21": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 2
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_27": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 4,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_span_28": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_button_1": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "rgb(58, 40, 16)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(32, 24, 10)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#8a6e1f",
+      "states": {
+        "normal": "#888888",
+        "hover": "#9c9c9c",
+        "pressed": "#747474",
+        "disabled": "#555555"
+      }
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_button_2": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "rgb(58, 40, 16)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(32, 24, 10)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#8a6e1f",
+      "states": {
+        "normal": "#888888",
+        "hover": "#9c9c9c",
+        "pressed": "#747474",
+        "disabled": "#555555"
+      }
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_button_3": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "rgb(58, 40, 16)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(32, 24, 10)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#8a6e1f",
+      "states": {
+        "normal": "#888888",
+        "hover": "#9c9c9c",
+        "pressed": "#747474",
+        "disabled": "#555555"
+      }
+    },
+    "auto.character-ds3-tab-equip.characterds3tabequip_button_4": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "rgb(58, 40, 16)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(32, 24, 10)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#8a6e1f",
+      "states": {
+        "normal": "#888888",
+        "hover": "#9c9c9c",
+        "pressed": "#747474",
+        "disabled": "#555555"
+      }
+    }
+  },
+  "bundles": [
+    "resources"
+  ],
+  "meta": {
+    "tokenUsageReport": {
+      "colors": [
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_1.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_2.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_3.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_4.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_5.color"
+        },
+        {
+          "token": "rarityGold",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_6.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_7.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_8.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_9.color"
+        },
+        {
+          "token": "rarityPurple",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_10.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_11.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_12.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_13.color"
+        },
+        {
+          "token": "rarityBlue",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_14.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_15.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_16.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_17.color"
+        },
+        {
+          "token": "rarityPurple",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_18.color"
+        },
+        {
+          "token": "outline",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_19.color"
+        },
+        {
+          "token": "outline",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_20.color"
+        },
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_21.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_22.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_div_14.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_23.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_24.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_25.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_26.color"
+        },
+        {
+          "token": "colorBlack",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_div_18.color"
+        },
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_27.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_28.color"
+        }
+      ],
+      "cssVars": [],
+      "spacing": [
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3TabEquip_div_3.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3TabEquip_div_12.gap"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "CharacterDs3TabEquip_div_14.padding"
+        },
+        {
+          "token": "spacing.xs",
+          "detail": "CharacterDs3TabEquip_div_16.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3TabEquip_div_20.gap"
+        }
+      ],
+      "typography": [
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_3.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_4.fontSize"
+        },
+        {
+          "token": "typography.bodySm",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_5.style"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_7.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_8.fontSize"
+        },
+        {
+          "token": "typography.bodySm",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_9.style"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_11.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_12.fontSize"
+        },
+        {
+          "token": "typography.bodySm",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_13.style"
+        },
+        {
+          "token": "spacing.xxl",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_15.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_16.fontSize"
+        },
+        {
+          "token": "typography.bodySm",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_17.style"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_19.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_19.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_20.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_20.fontSize"
+        },
+        {
+          "token": "typography.bodySm",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_24.style"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_25.fontSize"
+        },
+        {
+          "token": "typography.bodySm",
+          "detail": "auto.character-ds3-tab-equip.characterds3tabequip_span_26.style"
+        }
+      ],
+      "artWarnings": [
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3TabEquip_div_1",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabEquip_div_6",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabEquip_div_7",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabEquip_div_8",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabEquip_div_9",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabEquip_div_10",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabEquip_div_11",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3TabEquip_div_18",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        }
+      ]
+    },
+    "tokenSources": {
+      "runtimePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "sourcePath": "C:\\Users\\User\\3KLife\\Design System 3\\source\\ui-design-tokens.json"
+    },
+    "tokenConflictReport": [],
+    "atlasUsageReport": {
+      "atlases": [],
+      "atlasCount": 0,
+      "limit": 4,
+      "_warning": null
+    }
+  }
+}

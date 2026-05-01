@@ -23,6 +23,7 @@ from .llm_dialogue_renderer import ProviderUnavailableError
 DEV_CORS_ORIGINS = [
     "http://localhost:7456",
     "http://127.0.0.1:7456",
+    "https://smith.langchain.com",
 ]
 
 

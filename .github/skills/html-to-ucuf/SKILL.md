@@ -441,6 +441,8 @@ Copy-Item $bak/<screen>.skin.json assets/resources/ui-spec/skins/<screen>.skin.j
 - [ ] `auto-fix-ucuf-skin.js` 補 button state layers + token migration（消除 visual-review.button-state-layer-review-required blocker）
 - [ ] `render-ucuf-layout.js` 產出 UCUF preview HTML，與 source HTML / captured DOM 三方比對
 - [ ] HTML 含必要 `data-*` 語意標記
+- [ ] 若畫面含 lazySlot/tab-routing：確認所有被引用 fragment 遵守 fill-root 幾何契約（不得依賴固定尺寸 root/wrapper 才能貼齊 mount slot）
+- [ ] 可用 `node tools_node/normalize-ucuf-fragment-geometry.js --screen-id <screen> --write` 套用 fill-root 正規化，並用 `validate-ui-specs.js --strict --rules tab-fragment-geometry-contract` 驗證
 - [ ] dry-run 沒有 R25/R27/R28 / unmapped-token / forbidden-node 警告
 - [ ] 正式覆蓋時印出 `[dom-to-ui-json] backup created: ...` 一行
 - [ ] `dom-to-ui-compare.js` 產出 `<screen>.compare.png`（人工確認左右大框架一致）
@@ -459,6 +461,7 @@ Copy-Item $bak/<screen>.skin.json assets/resources/ui-spec/skins/<screen>.skin.j
 - [x] CompositePanel 改用 `UIVariantRouter.resolve(panelKey)` 取代硬寫 `mount(literal)`
 - [ ] （可選）`annotate-html-bindings.js --apply` 補 `data-contract` / `data-slot` / `data-ucuf-action`
 - [x] （多 tab 畫面）`generate-tab-childpanels.js` 產 N 個 ChildPanel scaffold + tab-routing.json + `<screen>.tab-routing-codemod.txt`
+- [ ] （多 tab 畫面）tab 內容 fragment 必須通過 geometry contract gate（screen-agnostic）：禁止以畫面專名或 button id 寫死修正分支
 - [x] `runtime-screen-diff.js` 在「未接 runtime」前先看到 source vs UCUF 比對；verdict ≥ `warn`
 - [ ] dev toggle 切到新版做手動目視確認後，runtime screenshot 補進 `--runtime`，verdict=`pass`
 - [x] `plan-screen-migration.js` 產逐步 plan，逐步通過 logic-guard + runtime-diff

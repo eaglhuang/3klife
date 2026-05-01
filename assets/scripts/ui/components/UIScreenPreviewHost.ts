@@ -1,5 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Node } from 'cc';
+import { _decorator, Node, Button } from 'cc';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
 import { UISpecLoader } from '../core/UISpecLoader';
 import { services } from '../../core/managers/ServiceLoader';
@@ -46,11 +46,58 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         const entry = this._lazySlots.get(slotId);
         if (!entry) {
             console.warn(`[UIScreenPreviewHost] switchLazySlot: 找不到 slotId=${slotId}`);
+            console.warn(`[UIScreenPreviewHost] 已知 slotId 清單: ${JSON.stringify([...this._lazySlots.keys()])}`);
             return false;
         }
 
         await this._switchPreviewSlot(entry, fragmentId);
         return true;
+    }
+
+    /**
+     * 診斷鉤子：強制在 host 層直接綁定 tab 點擊 → switchLazySlot，
+     * 繞開 LobbyScene 的事件路徑，用於切開
+     * 「事件沒進來」vs「事件進來但切換失敗」兩種情況。
+     *
+     * @param slotId           lazySlot 節點名（如 'CharacterDs3Main_div_6'）
+     * @param buttonFragmentMap button 節點名 → fragment resource path 的對照表
+     * @returns 成功綁定的按鈕數量
+     */
+    public installTabSwitchHook(slotId: string, buttonFragmentMap: Record<string, string>): number {
+        const binder = this._binder;
+        if (!binder) {
+            console.error('[UIScreenPreviewHost-DIAG] installTabSwitchHook: binder 尚未就緒，請在 showScreen() 完成後呼叫');
+            return 0;
+        }
+
+        const knownSlots = [...this._lazySlots.keys()];
+        console.log(`[UIScreenPreviewHost-DIAG] slotId=${slotId}, 已知 lazySlots=${JSON.stringify(knownSlots)}`);
+
+        let boundCount = 0;
+
+        for (const [buttonName, fragmentId] of Object.entries(buttonFragmentMap)) {
+            const button = binder.getButton(buttonName);
+            if (!button) {
+                console.warn(`[UIScreenPreviewHost-DIAG] 找不到 button: ${buttonName}（可能 binder 未包含此節點）`);
+                continue;
+            }
+
+            // 診斷：確認 Button component 的 interactable 狀態
+            console.log(`[UIScreenPreviewHost-DIAG] found button: ${buttonName}, interactable=${button.interactable}, node.active=${button.node.active}`);
+
+            button.node.off('__diagHook__', undefined, this);
+            button.node.on(Node.EventType.TOUCH_END, () => {
+                console.log(`[UIScreenPreviewHost-DIAG] TOUCH_END → ${buttonName} → fragment=${fragmentId}`);
+                void this.switchLazySlot(slotId, fragmentId).then((ok) => {
+                    console.log(`[UIScreenPreviewHost-DIAG] switchLazySlot result=${ok}, slotId=${slotId}, fragment=${fragmentId}`);
+                });
+            }, this);
+
+            boundCount += 1;
+        }
+
+        console.log(`[UIScreenPreviewHost-DIAG] installTabSwitchHook 完成：boundCount=${boundCount}/${Object.keys(buttonFragmentMap).length}`);
+        return boundCount;
     }
 
     public async showScreen(screenId: string): Promise<void> {

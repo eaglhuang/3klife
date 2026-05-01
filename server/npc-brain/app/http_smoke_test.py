@@ -27,14 +27,21 @@ def main() -> None:
 
     keywords = client.get("/v1/npc/keyword-options", params={"generalId": "zhang-fei"})
     assert keywords.status_code == 200, keywords.text
-    assert keywords.json()["categories"].get("person"), "person keyword options should not be empty"
+    keyword_payload = keywords.json()
+    assert keyword_payload["categories"].get("event"), "event keyword options should not be empty"
+    selected_keyword_keys = [
+        item["keywordKey"]
+        for items in keyword_payload["categories"].values()
+        for item in items[:1]
+    ][:3]
+    assert selected_keyword_keys, "runtime keyword options should contain selectable keys"
 
     dialogue = client.post(
         "/v1/npc/dialogue",
         json={
             "generalId": "zhang-fei",
             "contextKey": "changban-bridge",
-            "selectedKeywordKeys": ["cao-cao", "serpent-spear", "changban-bridge", "unknown-key"],
+            "selectedKeywordKeys": selected_keyword_keys + ["unknown-key"],
             "maxChars": 90,
         },
     )

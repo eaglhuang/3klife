@@ -229,7 +229,6 @@ function mergeSkin(draftSkin, existingSkin, mergeMode, fieldChanges, conflicts) 
 }
 
 function preserveExistingRuntimeAssetSlot(slotId, draftSlot, existingSlot, path, fieldChanges) {
-  if (!isExistingRuntimeAssetSlot(existingSlot)) return null;
   if (isExplicitAssetReplace(draftSlot)) {
     fieldChanges.push({
       path,
@@ -243,6 +242,28 @@ function preserveExistingRuntimeAssetSlot(slotId, draftSlot, existingSlot, path,
     });
     return null;
   }
+
+  // Hard guard: existing button-skin must not be downgraded to non-button slot kinds.
+  // This prevents recurring regressions where tab/stateful buttons lose normal/selected states
+  // after HTML-authoritative conversion.
+  if (
+    existingSlot
+    && existingSlot.kind === 'button-skin'
+    && draftSlot
+    && draftSlot.kind !== 'button-skin'
+    && hasUsableButtonSkinState(existingSlot)
+  ) {
+    fieldChanges.push({
+      path,
+      kind: 'existing-runtime-asset-preserved',
+      detail: `${draftSlot.kind} -> ${runtimeAssetDescription(existingSlot)}`,
+    });
+    return Object.assign({}, cleanRuntimeAssetSlot(existingSlot), {
+      _assetPreserveReason: 'existing-runtime-asset',
+    });
+  }
+
+  if (!isExistingRuntimeAssetSlot(existingSlot)) return null;
   const draftIsUsableAsset = isExistingRuntimeAssetSlot(draftSlot);
   if (draftIsUsableAsset && runtimeAssetSignature(draftSlot) === runtimeAssetSignature(existingSlot)) return null;
   fieldChanges.push({
@@ -274,9 +295,22 @@ function isExplicitAssetReplace(slot) {
 }
 
 function isExistingRuntimeAssetSlot(slot) {
+  if (slot && slot.kind === 'button-skin') {
+    // For button-skin, do not require every optional state to physically exist.
+    // Keeping a valid normal-state runtime art is enough to treat it as preservable runtime asset.
+    if (typeof slot.normal !== 'string' || slot.normal.length === 0) return false;
+    return runtimeAssetPathExists(slot.normal);
+  }
+
   const paths = collectRuntimeAssetPaths(slot);
   if (paths.length === 0) return false;
   return paths.every(runtimeAssetPathExists);
+}
+
+function hasUsableButtonSkinState(slot) {
+  if (!slot || slot.kind !== 'button-skin') return false;
+  const stateKeys = ['normal', 'pressed', 'disabled', 'selected'];
+  return stateKeys.some((key) => typeof slot[key] === 'string' && slot[key].length > 0);
 }
 
 function collectRuntimeAssetPaths(slot) {

@@ -7,6 +7,7 @@ const path = require('path');
 const { analyzeLayout } = require('./performance');
 const { normalizeFinalCaptureProtocol } = require('./final-capture-protocol');
 const { validateArtAuthorityWaivers } = require('./art-authority-waivers');
+const { assessReferencedFragmentGeometry } = require('./fragment-geometry-contract');
 
 function buildReadinessReport(args) {
   args = args || {};
@@ -32,6 +33,13 @@ function buildReadinessReport(args) {
   const finalGate = assessFinalGate(finalVerdict);
   const zones = assessZones(zoneOwnership, artAuthorityWaivers, { repoRoot, screenId, capture });
   const tabMounts = assessTabMounts(tabRouting, nodeIndex);
+  const fragmentGeometry = assessReferencedFragmentGeometry({
+    repoRoot,
+    screenId,
+    layout,
+    screen,
+    tabRouting: screen && screen.tabRouting,
+  });
   const textBinding = assessTextBinding(nodeIndex.textNodes);
   const visualPolicy = assessVisualPolicy(bakeManifest);
   const loading = assessLoading(layoutRoot, preload, performance, skin);
@@ -41,6 +49,7 @@ function buildReadinessReport(args) {
   pushIssue(issues, capture.status, 'capture-protocol', capture.summary, capture.workUnits);
   pushIssue(issues, zones.status, 'zone-ownership-waivers', zones.summary, zones.workUnits);
   pushIssue(issues, tabMounts.status, 'tab-routing-mounts', tabMounts.summary, tabMounts.workUnits);
+  pushIssue(issues, fragmentGeometry.status, 'tab-fragment-geometry-contract', fragmentGeometry.summary, fragmentGeometry.workUnits);
   pushIssue(issues, textBinding.status, 'text-binding', textBinding.summary, textBinding.workUnits);
   pushIssue(issues, visualPolicy.status, 'visual-policy', visualPolicy.summary, visualPolicy.workUnits);
   pushIssue(issues, loading.status, 'loading-performance', loading.summary, loading.workUnits);
@@ -65,6 +74,7 @@ function buildReadinessReport(args) {
       capture,
       zones,
       tabMounts,
+      fragmentGeometry,
       textBinding,
       visualPolicy,
       loading,
@@ -315,6 +325,7 @@ function nextCriticalAction(issues) {
   if (issue.code === 'final-gate') return 'capture Cocos Editor target screen and run final compare';
   if (issue.code === 'zone-ownership-waivers') return 'fill traceable rects for waiver-eligible art zones, then create art-authority waivers';
   if (issue.code === 'tab-routing-mounts') return 'replace synthetic tab-routing mount names with real layout node names or add lazy slot nodes';
+  if (issue.code === 'tab-fragment-geometry-contract') return 'normalize referenced lazySlot fragments to fill-root contract, keeping fixed card/list dimensions inside content nodes';
   return issue.summary;
 }
 
@@ -357,6 +368,7 @@ module.exports = {
   resolveReadinessPaths,
   buildNodeIndex,
   assessTabMounts,
+  assessReferencedFragmentGeometry,
   assessTextBinding,
   assessVisualPolicy,
 };

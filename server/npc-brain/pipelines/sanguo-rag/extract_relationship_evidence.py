@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from relationship_type_refinement import refine_relationship_type
+
 
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
@@ -123,12 +125,12 @@ def make_edge(
     evidence_text: str,
     aliases: tuple[str, str],
 ) -> dict[str, Any]:
-    return {
-        "edgeId": f"rel.{source_ref}.{from_id}.{relation_type}.{to_id}".replace("#", "-"),
+    edge = {
         "chapterNo": chapter_no,
         "fromId": from_id,
         "toId": to_id,
         "type": relation_type,
+        "originalType": relation_type,
         "evidenceRefs": [source_ref],
         "evidenceText": evidence_text[:220],
         "matchedAliases": list(aliases),
@@ -138,6 +140,11 @@ def make_edge(
         "reviewStatus": "source-grounded-review" if confidence < 0.8 else "source-grounded-strong",
         "sourceLayer": "mao-hant-observed-mentions",
     }
+    refined_type, reasons = refine_relationship_type(edge, evidence_text)
+    edge["type"] = refined_type
+    edge["refinementReasons"] = reasons
+    edge["edgeId"] = f"rel.{source_ref}.{from_id}.{refined_type}.{to_id}".replace("#", "-")
+    return edge
 
 
 def find_pair_edges(row: dict[str, Any], ids: list[str], aliases: dict[str, list[str]]) -> list[dict[str, Any]]:

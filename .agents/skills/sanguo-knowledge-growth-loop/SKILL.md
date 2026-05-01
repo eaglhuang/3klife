@@ -31,7 +31,7 @@ Unity 對照：這不是單次資料匯入，而是一條會反覆重跑的 Asse
 8. 文言 preview first：文言文多輪優化先跑 `agent-reviewer` preview，不用 qwen 判斷；每個 generate/enrich step 預設 30 秒 timeout。preview 只用毛本文言 sourceRef、expandedContext 與 candidateHints 做快篩，產出 A/B/風險供人工或 quality reviewer 複核，不 publish canonical。
 9. Live candidate cohort：文言 preview cohort 必須優先從目前的 `generic-battle-candidates.jsonl` 或 `female-interaction-candidates.jsonl` 選人，不要依賴舊 `etl-quality-pilot-report.json`。女性互動輪要用女性本人 `--general-id` 指定重跑，避免男性參與者把 focus edge gate 稀釋成 B。
 10. Focus relevance ranking：`generate_event_review_choices.py --general-id` 會先排 sourceQuote 直接命中該武將正式 name/alias、且有 direct battle cue 的候選；任官、薦舉、招募、傳記段落降權。單字 alias 只能走白名單（例如 `卓/布/飛`），不可自動用姓名最後一字，避免 `除堅`、`紹問` 這類 false focus。
-11. Progress estimate every round：每輪 preview 或 extractor 調整後，先跑 `extract_relationship_evidence.py --overwrite` 重建 source-grounded relationship evidence，再跑 `build_event_question_seed_bank.py --overwrite` 壓出人物 × 題目角度 seeds，最後跑 `estimate_knowledge_completion.py --round-id current --overwrite`。這個百分比是保守 pipeline 完成度估算，不是內容品質宣告；人物/mention foundation 不能蓋過 source-grounded event slots、relationship graph 與 taxonomy maturity。
+11. Progress estimate every round：每輪 preview 或 extractor 調整後，先跑 `extract_relationship_evidence.py --overwrite` 重建 source-grounded relationship evidence，再跑 `build_event_question_seed_bank.py --overwrite` 壓出人物 × 題目角度 seeds，接著跑 `build_source_event_packets.py --overwrite` 聚合 sourceRef 事件包，最後跑 `estimate_knowledge_completion.py --round-id current --overwrite`。這個百分比是保守 pipeline 完成度估算，不是內容品質宣告；人物/mention foundation 不能蓋過 source-grounded event slots、relationship graph 與 taxonomy maturity。
 
 ## Progress Estimate Formula
 
@@ -44,14 +44,33 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/extract_
 $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/build_event_question_seed_bank.py \
   --overwrite
 
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/build_source_event_packets.py \
+  --overwrite
+
 $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/estimate_knowledge_completion.py \
+  --round-id current \
+  --overwrite
+
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/estimate_core_person_completion.py \
   --round-id current \
   --overwrite
 ```
 
 公式：`overall = sum(componentScore * componentWeight)`，權重總和 100。預設權重為 sourceResolution 6、personFoundation 12、relationshipGraph 22、eventQuestionCoverage 32、taxonomyAngles 13、reviewValidation 6、femalePriority 5、pipelineReliability 4。
 
-判讀規則：如果 mention / 人物基礎很高，但 eventQuestionCoverage 或 relationshipGraph 仍低，總進度仍應停在低到中段；只有當 source-grounded 題目與關係邊大量變成可接受資料，百分比才會穩定上升。`relationship-evidence` 與 `event-question-seeds` 都是 review artifact，不直接寫 canonical；完成度公式依 confidence / slot strength 分層折算，避免把寬鬆 pattern 灌成滿分。`event-question-seeds` 應覆蓋 11 個 angle families；`female_interaction` 必須命中 female priority generalId 才能建 slot，避免只靠泛稱誤判。
+判讀規則：如果 mention / 人物基礎很高，但 eventQuestionCoverage 或 relationshipGraph 仍低，總進度仍應停在低到中段；只有當 source-grounded 題目與關係邊大量變成可接受資料，百分比才會穩定上升。`relationship-evidence`、`event-question-seeds` 與 `source-event-packets` 都是 review artifact，不直接寫 canonical；完成度公式依 confidence / slot strength / packet strength 分層折算，避免把寬鬆 pattern 灌成滿分。`event-question-seeds` 應覆蓋 11 個 angle families；`female_interaction` 必須命中 female priority generalId 才能建 slot，避免只靠泛稱誤判。
+
+核心人物進度：`estimate_core_person_completion.py` 預設用 observed mentions、event-question seeds、source-event packets、relationship evidence 與 preview rounds 的綜合 coreScore 選出前 10 人，輸出 `core-person-progress/current.md` 與 `current-core10-boost-queue.jsonl`。boost queue 是 review-only source packet candidates，可接 `generate_event_review_choices.py --candidates <queue> --general-id <id>` 與 `enrich_event_review_context.py --reviewer-provider agent-reviewer --step-timeout-seconds 30`。
+
+Review A staging：核心人物 boost round 跑完後，用 `stage_reviewed_a_ready_events.py --review-root <round-review-root> --round-id <round-id> --core-general-id <id>... --overwrite` 將 enriched A 題整理成 staged ready event candidates，並同步輸出 staged relationship evidence。這仍是 `canonicalWrites=false`，B 題只進 edit backlog；若要估算本輪拉升幅度，可把輸出的 `*-staged-ready-events.jsonl` 與 `*-staged-relationship-evidence.jsonl` 傳給 `estimate_core_person_completion.py --ready-events ... --relationship-evidence ...`。
+
+Max progress boost：若使用者問「一次增加最多的方法」，優先聚合既有 enriched A review，而不是立刻再請 LLM 產新資料。用 `stage_reviewed_a_ready_events.py --review-root artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds --review-root artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot --round-id <round-id> --overwrite` 先產全域 staged ready events / relationship evidence；接著用該 relationship evidence 重跑 `build_event_question_seed_bank.py` 與 `build_source_event_packets.py` 到 round-specific output root；最後用 `estimate_knowledge_completion.py --ready-events <round-staged-ready-events> --relationship-evidence <round-staged-relationship-evidence> --event-question-seeds <round-seeds> --source-event-packets <round-packets> --round-json <batch...> --round-id <round-id> --overwrite` 估算增益。這條路線只消化已審 A 題，仍維持 `canonicalWrites=false`；estimator 的 ready event count 必須採實際 ready-events 檔案筆數與 events-summary 的較大值，避免 staged run 被舊 summary 低估。
+
+B backlog repair loop：每次 Review A staging 後，立刻跑 `build_backlog_repair_tasks.py --edit-backlog <round-reviewed-b-edit-backlog.jsonl> --round-id <round-id> --overwrite`，把 B 題轉成 repair task queue。任務會依 `missingFields`、sourceRefs、generalIds、summary boundary 與 relationshipEdges 產生 `fill_location`、`repair_relationship_edges`、`narrow_event_boundary`、`sanitize_summary_boundary` 等 action；這些 task 仍是 `canonicalWrites=false`，下一輪 enrichment/review 應優先消化 high priority task，才能實際提升 `reviewValidation`。
+
+`build_backlog_repair_tasks.py` 也會同時輸出 `*-repair-review-candidates.jsonl`，可直接餵給 `run_knowledge_growth_round.py --candidates ...` 或 `generate_event_review_choices.py --candidates ...`，讓 repair queue 變成下一輪 review cohort。若要最大化單輪增益，優先挑 `repairActionCounts` 裡 `repair_relationship_edges` 與 `fill_location` 最高的 generals，再把 repair-review 結果疊回目前 baseline 做 merge 後估算。
+
+Relationship graph refinement：`commands` 不可長期留在 relationshipGraph。規則抽取與 reviewed-A staging 都要經過 `relationship_type_refinement.py`，把粗類型拆成 `ruler_subject`、`patron_client`、`mentor_student`、`betrayal_surrender`、`enemy_rival`、`alliance_oath`；runtime export 若看到這些已細分 graph types 必須保留，不再覆蓋回舊展示分類。每輪驗證至少確認 staged relationship evidence 與 core runtime profiles 的 `commandsCount=0`。
 
 ## Stable Knowledge Bootstrap
 

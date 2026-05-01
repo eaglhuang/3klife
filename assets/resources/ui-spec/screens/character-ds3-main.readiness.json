@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "character-ds3-main",
-  "generatedAt": "2026-04-29T16:55:54.474Z",
+  "generatedAt": "2026-04-30T16:48:41.706Z",
   "verdict": "not-ready",
   "readinessScore": 0.958,
   "summary": {
@@ -21,16 +21,16 @@
     "performance": "assets/resources/ui-spec/screens/character-ds3-main.performance.json",
     "bakeManifest": "assets/resources/ui-spec/layouts/character-ds3-main.layout.bake-manifest.json",
     "artAuthorityWaivers": "assets/resources/ui-spec/screens/character-ds3-main.art-authority-waivers.json",
-    "finalVerdict": "artifacts/ui-source/character-ds3/review/2026-04-30-plan3-r37-sprite-trim/character-ds3-main.html-cocos-verdict.json"
+    "finalVerdict": "artifacts/ui-qa/r61-compare-a/character-ds3-main.html-cocos-verdict.json"
   },
   "gates": {
     "finalGate": {
       "status": "blocker",
       "pass": false,
       "workUnits": 1,
-      "summary": "runtimeVsSource raw=0.8559 adjusted=0.8559 verdict=fail",
-      "rawScore": 0.8559490740740741,
-      "adjustedScore": 0.8559490740740741,
+      "summary": "runtimeVsSource raw=0.8312 adjusted=0.8312 verdict=fail",
+      "rawScore": 0.8312056327160494,
+      "adjustedScore": 0.8312056327160494,
       "verdict": "fail"
     },
     "capture": {
@@ -67,8 +67,13 @@
       },
       "waiverEligibleCount": 0,
       "eligibleMissingRectCount": 0,
-      "waiverPresent": false,
-      "waiverValidation": null,
+      "waiverPresent": true,
+      "waiverValidation": {
+        "ok": true,
+        "errors": [],
+        "waiverCount": 0,
+        "totalCoverageRatio": 0
+      },
       "samples": []
     },
     "tabMounts": {
@@ -120,6 +125,122 @@
         }
       ],
       "missing": []
+    },
+    "fragmentGeometry": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "9 referenced fragments follow fill-root geometry contract",
+      "checks": [
+        {
+          "fragment": "fragments/layouts/character-ds3-overview-content",
+          "source": "layout.defaultFragment",
+          "slotId": "CharacterDs3Main_div_6",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-overview-content.json",
+          "path": "fragments/layouts/character-ds3-overview-content.json"
+        },
+        {
+          "fragment": "fragments/layouts/character-ds3-right-content-empty",
+          "source": "layout.fragments",
+          "slotId": "CharacterDs3Main_div_6",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-right-content-empty.json",
+          "path": "fragments/layouts/character-ds3-right-content-empty.json"
+        },
+        {
+          "fragment": "fragments/layouts/character-ds3-stats-content",
+          "source": "layout.fragments",
+          "slotId": "CharacterDs3Main_div_6",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-stats-content.json",
+          "path": "fragments/layouts/character-ds3-stats-content.json"
+        },
+        {
+          "fragment": "fragments/layouts/character-ds3-tactics-content",
+          "source": "layout.fragments",
+          "slotId": "CharacterDs3Main_div_6",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-tactics-content.json",
+          "path": "fragments/layouts/character-ds3-tactics-content.json"
+        },
+        {
+          "fragment": "fragments/layouts/character-ds3-bloodline-content",
+          "source": "layout.fragments",
+          "slotId": "CharacterDs3Main_div_6",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-bloodline-content.json",
+          "path": "fragments/layouts/character-ds3-bloodline-content.json"
+        },
+        {
+          "fragment": "fragments/layouts/character-ds3-equip-content",
+          "source": "layout.fragments",
+          "slotId": "CharacterDs3Main_div_6",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-equip-content.json",
+          "path": "fragments/layouts/character-ds3-equip-content.json"
+        },
+        {
+          "fragment": "fragments/layouts/character-ds3-aptitude-content",
+          "source": "layout.fragments",
+          "slotId": "CharacterDs3Main_div_6",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-aptitude-content.json",
+          "path": "fragments/layouts/character-ds3-aptitude-content.json"
+        },
+        {
+          "fragment": "fragments/layouts/character-ds3-story-strip-collapsed",
+          "source": "layout.defaultFragment",
+          "slotId": "CharacterDs3Main_div_54",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-story-strip-collapsed.json",
+          "path": "fragments/layouts/character-ds3-story-strip-collapsed.json"
+        },
+        {
+          "fragment": "fragments/layouts/character-ds3-story-strip-open",
+          "source": "layout.fragments",
+          "slotId": "CharacterDs3Main_div_54",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\character-ds3-story-strip-open.json",
+          "path": "fragments/layouts/character-ds3-story-strip-open.json"
+        }
+      ],
+      "failures": []
     },
     "textBinding": {
       "status": "pass",
@@ -178,7 +299,7 @@
     {
       "severity": "blocker",
       "code": "final-gate",
-      "summary": "runtimeVsSource raw=0.8559 adjusted=0.8559 verdict=fail",
+      "summary": "runtimeVsSource raw=0.8312 adjusted=0.8312 verdict=fail",
       "workUnits": 1
     }
   ]

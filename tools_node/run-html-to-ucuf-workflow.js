@@ -6,6 +6,10 @@ const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
 const { resolveSourcePackage, writeSourcePackageManifest, writeHtmlWithSourceCss } = require('./lib/html-to-ucuf/source-package');
+const {
+  assessReferencedFragmentGeometry,
+  normalizeReferencedFragmentFiles,
+} = require('./lib/dom-to-ui/fragment-geometry-contract');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -172,11 +176,13 @@ function extractPerfMetrics(layoutJsonPath) {
   };
 }
 
-function assessRuntimeReadiness(paths, sourceHtml) {
+function assessRuntimeReadiness(paths, sourceHtml, screenId) {
   const layoutPath = fs.existsSync(paths.finalLayout) ? paths.finalLayout : paths.optimizedLayout;
   const skinPath = fs.existsSync(paths.finalSkin) ? paths.finalSkin : paths.rawSkin;
   const layout = readJsonIfExists(layoutPath);
   const skin = readJsonIfExists(skinPath);
+  const runtime = screenId ? resolveRuntimeSpecPaths(screenId) : null;
+  const screen = runtime && runtime.screenPath ? readJsonIfExists(runtime.screenPath) : null;
   const blockers = [];
   const warnings = [];
   const markerMatches = String(sourceHtml || '').match(/data-(slot|contract|panel|name|ucuf-id|ucuf-action)\b/gi) || [];
@@ -187,6 +193,7 @@ function assessRuntimeReadiness(paths, sourceHtml) {
     hasTabbedSource,
     lazySlotCount: 0,
     childPanelCount: 0,
+    fragmentGeometryStatus: 'pass',
     placeholderSpriteCount: 0,
     unmappedColorCount: 0,
   };
@@ -216,6 +223,18 @@ function assessRuntimeReadiness(paths, sourceHtml) {
   if (hasTabbedSource && stats.lazySlotCount === 0 && stats.childPanelCount === 0) {
     blockers.push('runtime-readiness: tabbed layout has no lazySlot or child-panel mount points');
   }
+  const fragmentGeometry = assessReferencedFragmentGeometry({
+    repoRoot: ROOT,
+    screenId,
+    layout: layout || null,
+    screen,
+    tabRouting: screen && screen.tabRouting,
+  });
+  stats.fragmentGeometryStatus = fragmentGeometry.status;
+  stats.fragmentGeometryFailures = fragmentGeometry.workUnits;
+  if (fragmentGeometry.status === 'blocker') {
+    blockers.push(`runtime-readiness: tab-fragment-geometry-contract ${fragmentGeometry.summary}`);
+  }
   if (stats.unmappedColorCount > 0) {
     warnings.push(`runtime-readiness: unmappedColor fallback slots remain (${stats.unmappedColorCount})`);
   }
@@ -225,6 +244,7 @@ function assessRuntimeReadiness(paths, sourceHtml) {
     blockers,
     warnings,
     stats,
+    fragmentGeometry,
   };
 }
 
@@ -264,6 +284,46 @@ function buildPaths(opts) {
     optimizeReport: `${base}.optimize-report.json`,
     skinFixReport: `${base}.skin-autofix.json`,
     summary: `${base}.workflow-summary.json`,
+  };
+}
+
+function resolveRuntimeSpecPaths(screenId) {
+  const screenPath = path.join(ROOT, 'assets', 'resources', 'ui-spec', 'screens', `${screenId}.json`);
+  const screen = readJsonIfExists(screenPath);
+  if (!screen || typeof screen !== 'object') return null;
+
+  const layoutId = typeof screen.layout === 'string' ? screen.layout.trim() : '';
+  const skinId = typeof screen.skin === 'string' ? screen.skin.trim() : '';
+  return {
+    screenPath,
+    layoutPath: layoutId ? path.join(ROOT, 'assets', 'resources', 'ui-spec', 'layouts', `${layoutId}.json`) : null,
+    skinPath: skinId ? path.join(ROOT, 'assets', 'resources', 'ui-spec', 'skins', `${skinId}.json`) : null,
+  };
+}
+
+function bootstrapFinalDraftFromRuntime(paths, screenId) {
+  const runtime = resolveRuntimeSpecPaths(screenId);
+  if (!runtime) return { ok: true, copiedLayout: false, copiedSkin: false, reason: 'runtime-screen-spec-missing' };
+
+  let copiedLayout = false;
+  let copiedSkin = false;
+
+  if (!fs.existsSync(paths.finalLayout) && runtime.layoutPath && fs.existsSync(runtime.layoutPath)) {
+    fs.copyFileSync(runtime.layoutPath, paths.finalLayout);
+    copiedLayout = true;
+  }
+  if (!fs.existsSync(paths.finalSkin) && runtime.skinPath && fs.existsSync(runtime.skinPath)) {
+    fs.copyFileSync(runtime.skinPath, paths.finalSkin);
+    copiedSkin = true;
+  }
+
+  return {
+    ok: true,
+    copiedLayout,
+    copiedSkin,
+    runtimeScreenPath: runtime.screenPath,
+    runtimeLayoutPath: runtime.layoutPath,
+    runtimeSkinPath: runtime.skinPath,
   };
 }
 
@@ -363,6 +423,19 @@ function main() {
   const sanitizeResult = sanitizeUcufReadyHtml(paths.readyHtml);
   steps.push({ step: 'sanitize-ucuf-ready-html', exitCode: 0, ok: true, rewrittenInlineHandlers: sanitizeResult.rewrittenInlineHandlers });
 
+  const bootstrapResult = bootstrapFinalDraftFromRuntime(paths, opts.screenId);
+  steps.push({
+    step: 'bootstrap-final-from-runtime',
+    exitCode: 0,
+    ok: true,
+    copiedLayout: bootstrapResult.copiedLayout,
+    copiedSkin: bootstrapResult.copiedSkin,
+    runtimeScreenPath: bootstrapResult.runtimeScreenPath ? rel(bootstrapResult.runtimeScreenPath) : null,
+    runtimeLayoutPath: bootstrapResult.runtimeLayoutPath ? rel(bootstrapResult.runtimeLayoutPath) : null,
+    runtimeSkinPath: bootstrapResult.runtimeSkinPath ? rel(bootstrapResult.runtimeSkinPath) : null,
+    reason: bootstrapResult.reason || null,
+  });
+
   const baseArgs = [
     '--input', paths.readyHtml,
     '--output', paths.rawLayout,
@@ -419,12 +492,28 @@ function main() {
     '--emit-performance-report',
     '--emit-warnings',
     '--strict',
+    '--sync-existing',
+    '--merge-mode', 'html-authoritative',
     '--no-backup',
   ];
   if (sourcePackage) strictArgs.push('--tokens-source', sourcePackage.tokensPath, '--source-css', sourcePackage.cssPath);
   if (!opts.noValidate) strictArgs.push('--validate');
   const strictProc = runNodeStep('dom-to-ui-json:strict-replay', 'dom-to-ui-json.js', strictArgs);
   steps.push({ step: 'dom-to-ui-json:strict-replay', exitCode: strictProc.status ?? 1, ok: strictProc.status === 0, issues: extractIssues((strictProc.stdout || '') + '\n' + (strictProc.stderr || '')) });
+
+  const fragmentGeometryNormalize = normalizeReferencedFragmentFiles({
+    repoRoot: ROOT,
+    screenId: opts.screenId,
+    write: true,
+  });
+  steps.push({
+    step: 'normalize-fragment-geometry-contract',
+    exitCode: fragmentGeometryNormalize.ok ? 0 : 1,
+    ok: fragmentGeometryNormalize.ok,
+    normalizedCount: fragmentGeometryNormalize.normalizedCount,
+    skippedCount: fragmentGeometryNormalize.skippedCount,
+    failures: fragmentGeometryNormalize.failures,
+  });
 
   let compareProc = { status: 0, stdout: '', stderr: '' };
   if (!opts.skipCompare) {
@@ -472,7 +561,7 @@ function main() {
     compare: opts.skipCompare ? null : extractCompareMetrics(paths.comparePng),
     htmlCocos: readJsonIfExists(paths.htmlCocosVerdict),
   };
-  metrics.runtimeReadiness = assessRuntimeReadiness(paths, sourceHtml);
+  metrics.runtimeReadiness = assessRuntimeReadiness(paths, sourceHtml, opts.screenId);
   const editorGatePass = !sourcePackage
     ? true
     : !!(metrics.htmlCocos && metrics.htmlCocos.runtimeVsSource && ['pass', 'pass-with-approved-art-delta'].includes(metrics.htmlCocos.runtimeVsSource.verdict));
@@ -481,14 +570,16 @@ function main() {
     strictReplayPass: strictProc.status === 0,
     comparePass: opts.skipCompare ? true : compareProc.status === 0,
     editorVisualPass: editorGatePass,
+    fragmentGeometryPass: fragmentGeometryNormalize.ok && metrics.runtimeReadiness.fragmentGeometry.status !== 'blocker',
     runtimeReadinessPass: metrics.runtimeReadiness.ok,
-    workflowPass: baseProc.status === 0 && strictProc.status === 0 && (opts.skipCompare || compareProc.status === 0) && metrics.runtimeReadiness.ok && editorGatePass,
+    workflowPass: baseProc.status === 0 && strictProc.status === 0 && fragmentGeometryNormalize.ok && (opts.skipCompare || compareProc.status === 0) && metrics.runtimeReadiness.ok && editorGatePass,
     remainingIssues: [
       ...extractIssues((strictProc.stdout || '') + '\n' + (strictProc.stderr || '')),
       ...extractIssues((compareProc.stdout || '') + '\n' + (compareProc.stderr || '')),
       ...(editorCompareProc ? extractIssues((editorCompareProc.stdout || '') + '\n' + (editorCompareProc.stderr || '')) : []),
       ...(sourcePackage && opts.skipEditorCompare ? ['editor-compare-skipped'] : []),
       ...(sourcePackage && !opts.skipEditorCompare && !opts.editorScreenshot ? ['editor-screenshot-required'] : []),
+      ...fragmentGeometryNormalize.failures.map(item => `fragment-geometry-normalize: ${item.ref} ${item.code}`),
       ...metrics.runtimeReadiness.blockers,
     ],
   };

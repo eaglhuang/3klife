@@ -123,14 +123,32 @@ export class UIPreviewLayoutBuilder {
                 : Layout.VerticalDirection.TOP_TO_BOTTOM;
         }
         
-        // resizeMode：預設 NONE（僅排位），可由 spec 指定
+        // resizeMode：可由 spec 顯式指定。
+        // 若未指定，且節點沒有明確 width/height、也沒有 widget 錨點，
+        // 以 CONTAINER 作為 auto 模式，避免 Cocos UITransform 預設 100x100
+        // 讓純內容容器（例如 stats row）被放大成錯誤尺寸。
+        // Unity 對照：ContentSizeFitter (Preferred Size)
+        const hasExplicitSize = spec.width !== undefined || spec.height !== undefined;
+        const widgetDef = spec.widget as Record<string, unknown> | undefined;
+        const hasWidgetAnchors = !!(widgetDef
+            && (widgetDef.top !== undefined
+                || widgetDef.right !== undefined
+                || widgetDef.bottom !== undefined
+                || widgetDef.left !== undefined
+                || widgetDef.hCenter !== undefined
+                || widgetDef.vCenter !== undefined));
+
+        let autoResizeMode = Layout.ResizeMode.NONE;
+        if (!hasExplicitSize && !hasWidgetAnchors && layout.type !== Layout.Type.NONE) {
+            autoResizeMode = Layout.ResizeMode.CONTAINER;
+        }
+
         //   'container' → 容器自適應子節點總尺寸
         //   'children'  → 子節點自適應容器尺寸（均分）
-        // Unity 對照：ContentSizeFitter / LayoutGroup.childForceExpand
         switch (spec.layout.resizeMode) {
             case 'container': layout.resizeMode = Layout.ResizeMode.CONTAINER; break;
             case 'children':  layout.resizeMode = Layout.ResizeMode.CHILDREN;  break;
-            default:          layout.resizeMode = Layout.ResizeMode.NONE;      break;
+            default:          layout.resizeMode = autoResizeMode;              break;
         }
     }
 

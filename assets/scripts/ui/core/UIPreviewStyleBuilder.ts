@@ -284,6 +284,7 @@ export class UIPreviewStyleBuilder {
         button.hoverSprite   = stateMap.hover;
         button.disabledSprite = stateMap.disabled;
         // 快取各狀態 frame 供 setButtonVisualState 使用
+        (button as any)._buttonSkinStateMap = stateMap;
         (node as any)._buttonSkinStateMap = stateMap;
         return true;
     }

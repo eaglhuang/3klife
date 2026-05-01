@@ -341,6 +341,7 @@ function processElement(el, ctx, depth) {
   enforceColorRectGuard(ctx, name, childNodes);
 
   if (childNodes.length > 0) node.children = childNodes;
+  stabilizeGridLayout(node);
   if (nodeType === 'container' && childNodes.length === 0 && !node.width && !node.height && !node.skinSlot && !node.skinLayers && !node.compositeImageLayers) {
     return null;
   }
@@ -625,6 +626,22 @@ function mapFlexJustifyContent(value) {
 
 function inferGridLayout(style, ctx, nodeName) {
   const columnSpec = String(style.gridTemplateColumns || '').trim();
+  const rowSpec = String(style.gridTemplateRows || '').trim();
+
+  // 若 gridTemplateColumns 含有 fr 單位（如 "220px 1fr"、"1fr 1fr"），
+  // 這種「彈性欄」無法映射到 Cocos 的固定格 grid。
+  // 改為 horizontal layout，讓子節點依內容尺寸橫向排列。
+  if (/\bfr\b/.test(columnSpec)) {
+    const out = { type: 'horizontal' };
+    const gap = resolveGridGap(style, ctx && ctx.tokenRegistry);
+    if (gap.x != null) out.spacingX = gap.x;
+    if (gap.y != null) out.spacingY = gap.y;
+    if (gap.token && ctx) recordTokenUsage(ctx, 'spacing', gap.token, `${nodeName}.gap`);
+    const alignItems = mapFlexAlignItems(style.alignItems);
+    if (alignItems) out.alignItems = alignItems;
+    return out;
+  }
+
   const cols = countGridTracks(columnSpec);
   const out = { type: 'grid' };
   const gap = resolveGridGap(style, ctx && ctx.tokenRegistry);
@@ -634,9 +651,11 @@ function inferGridLayout(style, ctx, nodeName) {
   if (cols > 0) {
     out.constraint = 'fixed-col';
     out.constraintNum = cols;
-    out.cellWidth = inferGridCellWidth(style, cols, gap.x || 0);
+    const inferredCellWidth = inferGridCellWidth(style, cols, gap.x || 0, columnSpec);
+    if (inferredCellWidth != null) out.cellWidth = inferredCellWidth;
   }
-  out.cellHeight = inferGridCellHeight(style);
+  const inferredCellHeight = inferGridCellHeight(style, rowSpec);
+  if (inferredCellHeight != null) out.cellHeight = inferredCellHeight;
   return out;
 }
 
@@ -671,19 +690,52 @@ function countGridTracks(spec) {
   return spec.split(/\s+/).filter(Boolean).length;
 }
 
-function inferGridCellWidth(style, cols, gap) {
+function inferGridCellWidth(style, cols, gap, columnSpec) {
   const width = parsePx(style.width);
   if (width != null && cols > 0) {
     return Math.max(1, Math.floor((width - Math.max(0, cols - 1) * gap) / cols));
   }
-  if (cols >= 3) return 160;
-  if (cols === 2) return 120;
-  return 160;
+  const trackWidths = parseGridTrackPixels(columnSpec);
+  if (trackWidths && trackWidths.length === cols) {
+    const first = trackWidths[0];
+    if (trackWidths.every(value => value === first)) return first;
+  }
+  return null;
 }
 
-function inferGridCellHeight(style) {
+function inferGridCellHeight(style, rowSpec) {
   const height = parsePx(style.height);
-  return height != null ? height : 96;
+  if (height != null) return height;
+  const trackHeights = parseGridTrackPixels(rowSpec);
+  if (trackHeights && trackHeights.length > 0) {
+    const first = trackHeights[0];
+    if (trackHeights.every(value => value === first)) return first;
+  }
+  return null;
+}
+
+function parseGridTrackPixels(spec) {
+  const expanded = expandGridRepeat(String(spec || '').trim());
+  if (!expanded) return null;
+  const tokens = expanded.split(/\s+/).filter(Boolean);
+  if (tokens.length === 0) return null;
+  const out = [];
+  for (const token of tokens) {
+    const px = parsePx(token);
+    if (px == null) return null;
+    out.push(px);
+  }
+  return out;
+}
+
+function expandGridRepeat(spec) {
+  if (!spec || spec === 'none') return '';
+  return spec.replace(/repeat\(\s*(\d+)\s*,\s*([^\)]+)\)/gi, (_all, countRaw, bodyRaw) => {
+    const count = parseInt(countRaw, 10);
+    const body = String(bodyRaw || '').trim();
+    if (!Number.isFinite(count) || count <= 0 || !body) return '';
+    return Array.from({ length: count }, () => body).join(' ');
+  });
 }
 
 function resolveGridGap(style, registry) {
@@ -741,6 +793,31 @@ function inferChildBlockSpacing(childElements, ctx) {
     spacing = Math.max(spacing, marginBottom);
   }
   return spacing;
+}
+
+function stabilizeGridLayout(node) {
+  if (!node || !node.layout || node.layout.type !== 'grid') return;
+  const children = Array.isArray(node.children) ? node.children : [];
+  if (children.length === 0) return;
+
+  const maxChildWidth = maxFinite(children.map(child => child && child.width));
+  const maxChildHeight = maxFinite(children.map(child => child && child.height));
+
+  if (Number.isFinite(node.layout.cellWidth) && maxChildWidth > node.layout.cellWidth) {
+    delete node.layout.cellWidth;
+  }
+  if (Number.isFinite(node.layout.cellHeight) && maxChildHeight > node.layout.cellHeight) {
+    delete node.layout.cellHeight;
+  }
+}
+
+function maxFinite(values) {
+  let out = 0;
+  for (const value of values) {
+    if (!Number.isFinite(value)) continue;
+    if (value > out) out = value;
+  }
+  return out;
 }
 
 function parseBox(v, registry) {

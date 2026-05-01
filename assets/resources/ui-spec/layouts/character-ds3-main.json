@@ -271,7 +271,12 @@
                 "defaultFragment": "fragments/layouts/character-ds3-overview-content",
                 "fragments": [
                   "fragments/layouts/character-ds3-right-content-empty",
-                  "fragments/layouts/character-ds3-overview-content"
+                  "fragments/layouts/character-ds3-overview-content",
+                  "fragments/layouts/character-ds3-stats-content",
+                  "fragments/layouts/character-ds3-tactics-content",
+                  "fragments/layouts/character-ds3-bloodline-content",
+                  "fragments/layouts/character-ds3-equip-content",
+                  "fragments/layouts/character-ds3-aptitude-content"
                 ],
                 "warmupHint": "next-frame",
                 "_deferredFragmentReason": "source-portal-default-fragment"

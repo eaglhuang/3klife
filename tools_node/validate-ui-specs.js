@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const config = require('./lib/project-config');
 const { isKnownKind } = require('./lib/dom-to-ui/skin-kinds');
+const { assessReferencedFragmentGeometry } = require('./lib/dom-to-ui/fragment-geometry-contract');
 
 function getArgValue(flag) {
     const index = process.argv.indexOf(flag);
@@ -272,6 +273,30 @@ function validateRecipeRef(recipeRef, filePath, recipes, failures, warnings, con
                     );
                 }
             }
+        }
+    }
+
+    // R30: tab-fragment-geometry-contract -- lazySlot/defaultFragment and
+    // tabRouting fragments must mount with a fill-root outer contract. This
+    // prevents a generated fixed-size wrapper from making tab content render
+    // offset or clipped inside the runtime slot.
+    if (!skipRules.has('tab-fragment-geometry-contract')) {
+        const geometry = assessReferencedFragmentGeometry({
+            uiSpecRoot,
+            layout: layoutJson,
+            screen: screenNode,
+            tabRouting: screenNode.tabRouting,
+        });
+        for (const failure of geometry.failures || []) {
+            const detail = (failure.findings || [])
+                .map((finding) => `${finding.path} width=${finding.width} height=${finding.height}`)
+                .join('; ');
+            strictFail('tab-fragment-geometry-contract',
+                `${rel} - fragment "${failure.fragment || failure.ref}" breaks fill-root contract` +
+                (failure.path ? ` (${failure.path})` : '') +
+                (detail ? `: ${detail}` : `: ${failure.summary || failure.code}`) +
+                `. Fix: ${failure.recommendation || 'make the fragment root/outer wrapper fill its lazySlot.'}`,
+                failures, exceptions);
         }
     }
 }

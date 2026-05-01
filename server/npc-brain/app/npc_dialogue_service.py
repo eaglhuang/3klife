@@ -34,6 +34,7 @@ from .llm_dialogue_renderer import (
 DEFAULT_ARTIFACT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/api-readiness")
 DEFAULT_EVENT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/events")
 DEFAULT_PERSONA_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/persona-cards")
+DEFAULT_RUNTIME_PROFILE_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/runtime-general-profiles")
 PERSONA_VERSION = "general_persona_v2"
 LLM_HISTORY_PROVIDERS = {"gemini", "gemini_flash", "gemini_flash_lite", "local_llama"}
 SUPPORTED_LOCALES = set(LOCALE_INSTRUCTIONS.keys())
@@ -194,6 +195,7 @@ class NpcDialogueService:
         repo_root: Path | None = None,
         artifact_root: Path | None = None,
         persona_root: Path | None = None,
+        runtime_profile_root: Path | None = None,
         event_root: Path | None = None,
         provider_router: DialogueProviderRouter | None = None,
     ) -> None:
@@ -201,6 +203,7 @@ class NpcDialogueService:
         load_local_env(self.repo_root)
         self.artifact_root = self._resolve_path(artifact_root or DEFAULT_ARTIFACT_ROOT)
         self.persona_root = self._resolve_path(persona_root or DEFAULT_PERSONA_ROOT)
+        self.runtime_profile_root = self._resolve_path(runtime_profile_root or Path(os.environ.get("NPC_RUNTIME_PROFILE_ROOT") or DEFAULT_RUNTIME_PROFILE_ROOT))
         self.event_root = self._resolve_path(event_root or DEFAULT_EVENT_ROOT)
         self.history_cache_path = self._resolve_path(Path(os.environ.get("NPC_LLM_HISTORY_CACHE_PATH") or DEFAULT_HISTORY_CACHE_PATH))
         self.provider_router = provider_router or DialogueProviderRouter()
@@ -244,6 +247,22 @@ class NpcDialogueService:
         }
 
     def get_context_options(self, general_id: str, limit: int | None = None) -> ContextOptionsResponse:
+        runtime_persona = self._read_runtime_persona(general_id)
+        if runtime_persona:
+            options = [
+                ContextOption(
+                    contextKey=str(beat.get("eventKey") or beat.get("eventId") or f"story-{index}"),
+                    label=str(beat.get("location") or beat.get("summary") or beat.get("eventKey") or beat.get("eventId")),
+                    sourceType="romance-runtime-profile",
+                    confidence=float(beat.get("confidence") or 0.72),
+                    evidenceRefs=beat.get("sourceRefs") or [],
+                )
+                for index, beat in enumerate(runtime_persona.get("storyBeats") or [])
+                if beat.get("sourceRefs")
+            ]
+            if limit is not None:
+                options = options[: max(limit, 0)]
+            return ContextOptionsResponse(generalId=general_id, options=options)
         payload = self._read_json("context-options.response.json")
         response = ContextOptionsResponse.model_validate(payload)
         if response.generalId != general_id:
@@ -258,6 +277,21 @@ class NpcDialogueService:
         categories: list[str] | None = None,
         limit_per_category: int | None = None,
     ) -> KeywordOptionsResponse:
+        runtime_keywords = self._read_runtime_keywords(general_id)
+        if runtime_keywords:
+            response = KeywordOptionsResponse.model_validate({
+                "generalId": runtime_keywords.get("generalId") or general_id,
+                "keywordVersion": runtime_keywords.get("keywordVersion") or "general_runtime_keywords_v1",
+                "categories": runtime_keywords.get("categories") or {},
+            })
+            if categories:
+                response.categories = {category: response.categories[category] for category in categories if category in response.categories}
+            if limit_per_category is not None:
+                response.categories = {
+                    category: options[: max(limit_per_category, 0)]
+                    for category, options in response.categories.items()
+                }
+            return response
         payload = self._read_json("keyword-options.response.json")
         response = KeywordOptionsResponse.model_validate(payload)
         if response.generalId != general_id:
@@ -388,6 +422,20 @@ class NpcDialogueService:
         )
 
     def get_persona_card(self, general_id: str) -> PersonaCard | None:
+        runtime_persona = self._read_runtime_persona(general_id)
+        if runtime_persona:
+            voice = runtime_persona.get("voiceAndPrompt") or {}
+            profile = runtime_persona.get("profile") or {}
+            return PersonaCard.model_validate({
+                "generalId": general_id,
+                "personaVersion": runtime_persona.get("personaVersion") or "general_runtime_persona_v1",
+                "displayName": runtime_persona.get("displayName") or general_id,
+                "voiceStyle": voice.get("voiceStyle") or [],
+                "personalityTraits": profile.get("personalityTags") or [],
+                "safeFallbackLine": voice.get("safeFallbackLine") or f"{runtime_persona.get('displayName') or general_id}仍須有憑有據，不可妄言。",
+                "taboos": voice.get("taboos") or [],
+                "evidenceRefs": runtime_persona.get("evidenceRefs") or [],
+            })
         path = self.persona_root / f"{general_id}.persona.json"
         if not path.exists():
             payload = self._read_optional_json("persona-card.response.json")
@@ -402,6 +450,18 @@ class NpcDialogueService:
 
     def _read_optional_json(self, filename: str):
         path = self.artifact_root / filename
+        if not path.exists():
+            return None
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    def _read_runtime_persona(self, general_id: str):
+        path = self.runtime_profile_root / general_id / f"{general_id}.persona.json"
+        if not path.exists():
+            return None
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    def _read_runtime_keywords(self, general_id: str):
+        path = self.runtime_profile_root / general_id / f"{general_id}.keywords.json"
         if not path.exists():
             return None
         return json.loads(path.read_text(encoding="utf-8"))
@@ -529,6 +589,34 @@ class NpcDialogueService:
     ) -> list[ResolvedEvidence]:
         if not evidence_refs:
             return []
+        runtime_persona = self._read_runtime_persona(general_id)
+        if runtime_persona:
+            event_key_candidates = {context.contextKey for context in [context] if context is not None}
+            evidence_ref_set = set(evidence_refs)
+            resolved: list[ResolvedEvidence] = []
+            seen_refs: set[str] = set()
+            for beat in runtime_persona.get("storyBeats") or []:
+                beat_refs = [str(ref) for ref in beat.get("sourceRefs") or []]
+                has_context_match = (beat.get("eventKey") in event_key_candidates) or (beat.get("eventId") in event_key_candidates)
+                has_ref_match = bool(evidence_ref_set.intersection(beat_refs))
+                if not has_context_match and not has_ref_match:
+                    continue
+                evidence_ref = next((ref for ref in beat_refs if ref in evidence_ref_set), beat_refs[0] if beat_refs else beat.get("eventId", "event"))
+                if evidence_ref in seen_refs:
+                    continue
+                seen_refs.add(evidence_ref)
+                resolved.append(
+                    ResolvedEvidence(
+                        evidenceRef=evidence_ref,
+                        sourceType="romance-runtime-profile",
+                        sourceQuote=beat.get("sourceQuote"),
+                        factSummary=beat.get("summary"),
+                        confidence=float(beat.get("confidence") or 0.72),
+                    )
+                )
+                if len(resolved) >= 5:
+                    break
+            return resolved
         event_key_candidates = {context.contextKey for context in [context] if context is not None}
         event_key_candidates.update(keyword.keywordKey for keyword in keywords if keyword.category == "event")
         evidence_ref_set = set(evidence_refs)

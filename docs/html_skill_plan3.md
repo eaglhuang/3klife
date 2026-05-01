@@ -12,7 +12,7 @@
 - R-29 已完成：6 個右側 tab `button-skin` slot 在 `--sync-existing --merge-mode html-authoritative` 下保留正式 runtime art，且已有 `existing-runtime-asset-preserved` 證據。
 - R-30 是目前美術總監裁決：converter failure 與 approved art delta 必須分開稽核。這是審計，不是洗分。
 - R-35 已完成：`html-to-ucuf-readiness` 會把剩餘工作轉成 blocker / warning / action unit，不再用主觀 checklist 追 95%。
-- 2026-04-30 最新 final compare：`runtimeVsSource.score=0.8559490740740741`（`adjustedScore` 同值），來源為 `2026-04-30-plan3-r37-sprite-trim`；仍未達 `0.95`，不可宣稱通過。
+- 2026-05-01 最新 final compare（r61）：`runtimeVsSource.score=0.8312056327160494`（`adjustedScore` 同值），來源為 `artifacts/ui-qa/r61-compare-a/character-ds3-main.html-cocos-verdict.json`；仍未達 `0.95`，不可宣稱通過。
 - 2026-04-30 r53→r54 推進已驗證：score `0.7102 -> 0.8814`（`+17.1%`），主因是補齊血脈/傳記區塊的大色塊邊框與圓角。
 - 最新 `zone-ownership` 來自 final compare pixel buckets：`converter-geometry=20`、`waiverEligibleCount=0`；目前沒有可用 waiver 路徑。
 - 最新 readiness 報告：`verdict=not-ready`、`readinessScore=0.958`、`blockerUnits=1`、`actionUnits=1`；唯一 blocker 仍是 final gate。
@@ -47,12 +47,14 @@
 - [x] 將 unwaived top diff 分類為 `art-authority`、`manual-art-asset`、`converter-geometry`、`source-html-fix`、`runtime-bug`。
 - [x] R-53 checkpoint：`overview-crop` 比對基線已入檔（raw `0.7102`），作為後續大色塊修正前對照。
 - [x] R-54 checkpoint：`r54-border-fix` compare 已執行（raw `0.8814`，仍 `<0.95`），結果已回流到 `R-37 follow-up` 的 geometry 收斂待辦。
-- [ ] R-37 follow-up：針對最新 top pixel buckets（header / tab rail / portrait-side）做 source-measured geometry 修正，至少先回到 raw `>= 0.8658`，再續推 `0.95` gate。
+- [x] R-60 checkpoint：已用最新 runtime capture（`artifacts/ui-qa/r60-capture/CharacterDs3.png`）重跑 final gate，並定位到 capture protocol 的 crop 異常（`sourceCrop/editorCrop.height=320` 導致比對縮放失真）。
+- [x] R-61 checkpoint：修正 `character-ds3-main.final-capture-protocol.json`（`sourceCrop=0,0,1920,1080`；`editorCrop=0,24,1920,1080`）後，連跑兩次 final compare（`r61-compare-a` / `r61-compare-b`）分數一致，raw 均為 `0.8312`，確認 baseline 已穩定；目前主要差異聚焦在右側 tab-rail 與底部帶狀區域。
+- [x] R-37 follow-up（R-55 切片 A）：Root-cause 分析完成；portrait_bg missing sprite（`sprites/ui_character_ds3/portrait_bg`）已確認為 converter bug；skin slot 已從 `sprite-frame`（路徑不存在）改為 `gradient-rect`（`surfaceSepia → etcrDeepBg`, 180°）。`geometry-correction-log.json` 入檔，通則規則 UCR-001/002/003 已寫入。Art-authority waiver 檔案建立（portrait illustration + tab rail sprites）。等待下一次 final compare 確認 score delta。
 - [x] R-38A：`previewTarget=18` tab click 改為通用 lazySlot 切換（修復「tab 無法點擊」）。
 - [x] R-38C：`UIScreenPreviewHost` 新增通用 `switchLazySlot` API，`LobbyScene` DS3 preview tab（button_4~9）改為資料映射綁定；`showScreen` 後重綁避免 handler 掉失。
 - [x] R-54A：半透明邊框 panel 通則落地（`color-rect` 對應 HTML 有 border 時，必須同時配置 `borderColor + borderWidth + cornerRadius`）。
 - [x] R-54B：HTML `rgba(color, alpha)` 邊框採 token 映射策略（允許輕微色差，不可回退成無邊框或硬編碼 hex 特例）。
-- [ ] R-38B：DS3 `Stats/Tactics/Bloodline/Equip/Aptitude` 由 empty fragment 過渡到可驗收內容（至少要有非空內容 contract 與 smoke-ready 標記）。
+- [x] R-38B：DS3 `Stats/Tactics/Bloodline/Equip/Aptitude` 已由正式 fragment 接回 `tabRouting`，5 個內容 fragment 皆標記 `contentContract.status=contract-ready`；`normalize-ucuf-fragment-geometry.js` 已把固定尺寸 wrapper 正規化為 fill-root，readiness `fragmentGeometry=pass`、`tabMounts=pass`。
 
 ### P1 - 視覺權責切分
 
@@ -72,14 +74,17 @@
 - [x] M13 carry-over：tab-routing mount 必須由真實 layout node 推導，不再硬碼名稱。
 - [x] M10 carry-over：替 text node 做 i18n / bindPath 抽取。
 - [x] M14 carry-over：performance sidecar freshness 與 node count blocker 已清空；loading gate 目前為 pass，無額外 blocker。
+- [x] R-38B-G1（通則）: 已建立 `tab-fragment-geometry-contract` 檢查；凡被 `defaultFragment` / `fragments` / `tabRouting` 引用的 fragment，root 或第一層 mount wrapper 若以固定 `width/height` 鎖死會列 blocker。
+- [x] R-38B-G2（通則）: 已落地 `normalize-ucuf-fragment-geometry.js` 與 workflow 自動步驟 `normalize-fragment-geometry-contract`，正規化只讀 screen/layout/tabRouting 資料，不依賴 screenId、節點名或 button id 特判。
+- [x] R-38B-G3（驗收）: `validate-ui-specs.js --strict --rules tab-fragment-geometry-contract,composite-panel-tab-route-integrity` 通過；`html-to-ucuf-readiness` 新增 `fragmentGeometry` gate，DS3 目前 9/9 referenced fragments pass。
 
 ## 4. 下一個執行切片
 
 1. 每輪先跑 `node tools_node/html-to-ucuf-readiness.js --screen-id character-ds3-main --final-verdict <latest-verdict> --output assets/resources/ui-spec/screens/character-ds3-main.readiness.json`。
-2. 目前 DS3 readiness：`readinessScore=0.958`、`actionUnits=1`、`blockerUnits=1`；剩餘 blocker 仍是 final gate raw `0.8559 < 0.95`。
-3. R-38A + R-38C 已完成：`previewTarget=18` tab click 已恢復且重建後不掉 handler；但 R-38B 尚未完成（5 個 tab 仍是 empty fragment placeholder）。
-4. M13 tab mount 已過關：6/6 tab mounts resolve to real layout nodes；M10 text binding 已過關：0/1 dynamic text candidates missing contract。最新 zone ownership 已對齊 final compare：20 個 converter-geometry pixel buckets、0 個 waiver-eligible art zone。
-5. 下個高價值動作是雙軌並行：先完成 R-38B（tab 非空內容 contract），再針對 top pixel buckets 做 source-measured geometry / runtime rendering 修正；不可回到 blanket waiver，也不可用舊 tab sync-report 當 adjusted score 依據。
+2. 目前 DS3 readiness：`readinessScore=0.958`、`actionUnits=1`、`blockerUnits=1`；剩餘 blocker 仍是 final gate raw `0.8312 < 0.95`。
+3. R-38A + R-38C + R-38B 已完成：tab click、lazySlot route 與 5 個 tab content fragment contract 均已接回；不再是 empty placeholder。
+4. M13 tab mount 已過關：6/6 tab mounts resolve to real layout nodes；M10 text binding 已過關：0/1 dynamic text candidates missing contract；fragment geometry gate 已過關（9/9 pass）。
+5. 下個高價值動作是先鎖定 final compare 基線一致性（固定 Cocos Editor capture protocol + target screen），再做 top pixel buckets 的 source-measured geometry / runtime rendering 收斂；不可回到 blanket waiver，也不可用舊 tab sync-report 當 adjusted score 依據。
 
 ## 5. Context Budget 政策
 
@@ -182,7 +187,7 @@ R-34 已新增 CSS capability 到 skin kind 的契約測試，覆蓋 `linear-gra
 
 2026-04-29 已新增通用 readiness gate：`tools_node/lib/dom-to-ui/readiness-gate.js` 與 CLI `tools_node/html-to-ucuf-readiness.js`。它不做 DS3 特例，只讀 layout / skin / screen sidecar，輸出 `<screen>.readiness.json`，把 95% 前的剩餘工作拆成 final gate、capture protocol、zone ownership / waiver、tab routing mount、text binding、visual policy、loading / performance freshness。
 
-DS3 目前報告位於 `assets/resources/ui-spec/screens/character-ds3-main.readiness.json`：`verdict=not-ready`、`readinessScore=0.958`、`actionUnits=1`、`blockerUnits=1`。M13 仍維持 6/6 tab mounts resolve to real layout nodes；M10 目前是 0/1 dynamic text candidates missing contract；loading gate 也已是 pass（含 performance sidecar freshness 與 node count blocker 清空）。目前唯一 blocker 仍是 final compare：最新 raw `0.8559490740740741`、adjusted 同值、`waiverEligibleCount=0`。這表示下一輪要聚焦 top pixel buckets 的通用 geometry / runtime rendering 修正，而不是新增 waiver checklist。
+DS3 目前報告位於 `assets/resources/ui-spec/screens/character-ds3-main.readiness.json`：`verdict=not-ready`、`readinessScore=0.958`、`actionUnits=1`、`blockerUnits=1`。M13 維持 6/6 tab mounts resolve to real layout nodes；M10 是 0/1 dynamic text candidates missing contract；loading gate 為 pass（含 performance sidecar freshness 與 node count blocker 清空）；fragment geometry gate 也已 pass（9/9 referenced fragments）。目前唯一 blocker 仍是 final compare：最新 raw `0.6993788580246914`、adjusted 同值、`waiverEligibleCount=0`。這表示下一輪要先穩定 Cocos Editor final capture baseline，再聚焦 top pixel buckets 的通用 geometry / runtime rendering 修正，而不是新增 waiver checklist。
 
 ## 14. 2026-04-29 source-measured geometry checkpoint
 
@@ -196,3 +201,193 @@ DS3 目前報告位於 `assets/resources/ui-spec/screens/character-ds3-main.read
 - tab button label vertical centering 採 source flex-center 推導：128px 圓鈕內 `32 + 6 + 17 = 55px`，`paddingTop=36`、`spacingY=6`，最新 raw 提升到 `0.8658`。
 
 已測試但撤回的方向：header CJK font fallback、header source rect patch、全關 generated shadows。這些實驗都未提升 raw，不應再次重複，除非有新的 source measurement 或 renderer 證據。
+
+## 15. Bucket Cluster Analysis 通則（美術總監診斷第一步）
+
+> 本節是任何 HTML-to-UCUF 畫面的通則診斷方法，不是 DS3 專用。
+
+當 `zone-ownership.json` 顯示多個 `converter-geometry` bucket 時，第一步是**叢集分析**，而不是逐一修 bucket。修法步驟：
+
+1. **座標叢集化**：把 20 個 64×64 bucket 依 x 或 y 軸接近度分群，通常 3 個以內的主叢集就佔 70%+ mismatch pixels。
+2. **從座標反推 UI 區域**：對照 source HTML viewport（`final-capture-protocol.json` 記載的 `width / height`），換算哪個 UI 元素對應哪個叢集。
+3. **優先修 mismatch ratio > 0.60 的叢集**：ratio 代表該 64px 格內壞掉的像素比例，ratio > 0.60 通常表示整個元素完全偏移或完全消失，不是微調問題。
+
+**DS3 pilot 兩大叢集（2026-04-30）**：
+
+| 叢集 | 座標範圍 | bucket 數 | 總 mismatch px | 平均 ratio | 推斷 UI 元素 |
+|------|----------|-----------|---------------|-----------|------------|
+| Tab-Rail | y=64, x=1216~1664 | 5 | ~14,884 | 0.727 | 右側 tab rail 按鈕 |
+| Portrait-Edge | x=768~832, y=128~768 | 9 | ~20,029 | 0.530 | 左右面板分隔 border/edge |
+
+**通則工具**：
+```bash
+# 步驟 1：自動叢集化，輸出 cluster-map
+node tools_node/html-to-ucuf-readiness.js --screen-id <screen-id> --cluster-mode proximity --output <screen>.cluster-map.json
+
+# 步驟 2：用 measure-html-selectors.js 對最高 mismatch ratio 叢集量 source rect
+node tools_node/measure-html-selectors.js --input <source.html> --selectors-file <screen>.cluster-selectors.json --viewport <W>x<H>
+```
+
+## 16. Per-Cluster Root-Cause 修正協定（通則）
+
+每個叢集對應一種 CSS→UCUF 轉換失誤類型，診斷路徑如下：
+
+| 叢集特徵 | 最可能根因 | 修正動作 |
+|----------|------------|----------|
+| y≈頂部固定行，多個 x | tab/button `active` skin slot 未輸出 | 補 `button-skin` active state 欄位；確認 skin kind 為 `button-skin` 而非 `color-rect` |
+| 單 x 列、多個 y（垂直條紋） | panel edge / `border-right` 未轉換 | 在 layout node 加 `borderWidth + borderColor`；對照 §3 R-54A 通則 |
+| 散佈多處低 ratio（< 0.30） | background fill / gradient classifier 差異 | 先查 CSS capability matrix，確認 skin kind 是否為 `linear-gradient-rect` |
+| 中央大塊 | 元素尺寸（width/height）嚴重偏離 | 跑 `measure-html-selectors.js` 取 source rect，直接 patch layout JSON |
+
+**核心原則**：每次修正必須對應一個明確的 CSS property ↔ UCUF property mapping 差距，且修正後立刻用 `readiness.js` 重跑 final compare 驗證 score delta。不允許同時修多個叢集後才驗分。
+
+## 17. Converter Rule Gap Log 通則（跨畫面可重用）
+
+每次修正完一個叢集，必須把根因記錄到 `<screen>.geometry-correction-log.json`，格式：
+
+```jsonc
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "<screen-id>",
+  "entries": [
+    {
+      "clusterId": "tab-rail-y64",
+      "cssProperty": "button:active background",
+      "ucufProperty": "button-skin.activeSlot",
+      "sourceValue": "rgba(255,200,100,0.9)",
+      "runtimeValue": "missing",
+      "fixAction": "add activeSlot to button-skin family",
+      "scoreDeltaActual": 0.023,
+      "status": "applied"
+    }
+  ]
+}
+```
+
+這份 log 有兩個用途：
+1. **DS3 完成後**：把 `fixAction` 欄位的規則直接升格為 converter 的自動轉換規則，下次同類型 CSS 不再需要手修。
+2. **下個畫面**：新畫面做叢集分析時，先 grep 既有 log 的 `cssProperty` 看有沒有已知解法，避免重複診斷。
+
+**工具補強待辦（P2）**：
+- [ ] 在 `zone-ownership.js` 的 `recommendation` 欄位新增 `knownFix: <fixAction>` lookup（比對 geometry-correction-log registry），讓 zone-ownership 報告直接提示已知解法。
+
+## 18. Score Recovery 估算通則（修前必做）
+
+任何叢集修正前，先估算最大可回收分數，避免花大力氣卻在精度誤差範圍內：
+
+```
+可回收像素上限 = Σ(cluster bucket area × mismatch ratio)
+score 回收上限 ≈ 可回收像素 / total viewport pixels
+```
+
+DS3 當前計算（viewport 以 final-capture-protocol 為準）：
+- Tab-Rail 叢集：5 × 4096 × 0.727 ≈ **14,884 px** 可回收
+- Portrait-Edge 叢集：9 × 4096 × 0.530 ≈ **19,558 px** 可回收
+
+若要從 `0.8814 → 0.95`，缺口 = `0.0686`。若 viewport 設為 1920×1080 = 2,073,600 px，需回收約 **142,239 px**。
+
+> 這說明光靠 20 個 64px bucket 所代表的區域（81,920 px 量測範圍）的完美修正，理論上能回收 ~34,442 px，只約 0.0166 score delta。所以仍有大量 diff 來自 bucket 外的整面漸層差、背景色差等 **低 ratio 廣面積區域**。
+> **美術總監裁決**：bucket 修正是必要的，但 95% gate 的最後幾個百分點必須同時確認：①右欄大背景是否已接正式 JPG/family layer、②portrait zone overlay/gradient 是否對齊 DS3 design token。
+
+## 19. R-37 DS3 執行切片（美術總監版）
+
+> 上述通則第一次在 DS3 pilot 落地。
+
+**切片 A：Tab-Rail 叢集（優先 1）**
+
+1. 對 source HTML 量 tab button active state 的 `background-color / border / font-size / padding`：
+   ```bash
+   node tools_node/measure-html-selectors.js --input "Design System 3/Lobby.html" --selector ".tab-button.active, [data-tab].active" --viewport 1920x1080
+   ```
+2. 比對 DS3 `button-skin` family 的 `activeSlot` 是否輸出了 `background + borderColor + borderRadius`。
+3. 若 `activeSlot` 缺失或色值偏差 > 15%，直接 patch `assets/resources/ui-spec/skins/` 對應 family，不重跑全量 converter。
+4. 截 Cocos Editor screenshot → 跑 final compare → 確認 score delta > 0。
+
+**切片 B：Portrait-Edge 叢集（優先 2）**
+
+1. x=768~832 bucket 叢集對應右側 panel 左 border 或 portrait zone 右 border。先量 source：
+   ```bash
+   node tools_node/measure-html-selectors.js --input "Design System 3/Lobby.html" --selector ".portrait-panel, .right-content-panel" --viewport 1920x1080
+   ```
+2. 確認 layout JSON 中 portrait zone / content zone 的 `borderRight` / `borderLeft` 是否已走 §3 R-54A 通則（`borderColor + borderWidth + cornerRadius`）。
+3. 若遺漏，比照 R-54A 通則補上；不可用截圖 sidecar 取代 geometry 修正。
+
+**切片 C（可選，待 A+B 完成後評估）**：右欄大背景正式 JPG 升格（`artifacts/ui-library/` → runtime）是否能補剩餘廣面積低 ratio diff。只有升格路徑通過 §8 JPG 大背景規則才執行。
+
+## 20. R-38B Tab Content Contract 通則
+
+> 適用於任何 HTML-to-UCUF 畫面中的 tab 面板。
+
+Tab 面板從 empty placeholder 過渡到可驗收狀態的最小 contract：
+
+```jsonc
+{
+  "tabId": "stats",
+  "fragmentId": "character-ds3-right-stats",
+  "status": "smoke-ready",       // empty | contract-ready | smoke-ready | qa-pass
+  "contentContract": {
+    "requiredNodes": ["stat-row-list"],
+    "bindPaths": ["general.stats.str", "general.stats.agi"],
+    "minNonEmptyNodes": 3
+  },
+  "smokeRoute": "showScreen('character-ds3-main', { tab: 'stats' })"
+}
+```
+
+**四個狀態定義（通則）**：
+- `empty`：placeholder fragment，不可視為功能完成，不計入 readiness score。
+- `contract-ready`：已定義 `contentContract`，但 Cocos 實作尚未完成。
+- `smoke-ready`：Cocos runtime 可走 `smokeRoute` 且顯示 `minNonEmptyNodes` 個有效節點。
+- `qa-pass`：browser QA 截圖比對通過。
+
+**DS3 待辦**：`Stats / Tactics / Bloodline / Equip / Aptitude` 5 個 tab 目前狀態為 `empty`，R-38B 目標是先推到 `contract-ready`（至少定義 `requiredNodes` 與 `bindPaths`），不要求一次到 `smoke-ready`。
+
+**Fragment Geometry Contract（新增通則）**：
+- lazySlot 消費的 fragment 必須遵守 fill-root contract：fragment root（或 root 下第一層內容容器）需可貼齊 mount slot，不得靠固定 `width/height` 包住整頁內容。
+- 允許內容節點保留語義性尺寸（例如卡片、列項），但外層 mount 契約層不可鎖死尺寸。
+- 任何修正必須以通則落地在 workflow/converter/validator，禁止 DS3 專用 node 名稱對照表。
+
+**R-38B-G 完成回寫（2026-04-30）**：本次實作的判斷來源只有 UCUF 通用結構：`lazySlot/defaultFragment/fragments/tabRouting` 引用與 fragment root/first-child mount wrapper 的幾何屬性。工具不讀 `character-ds3-*`、不讀 `button_4~9`，也不使用 DS3 白名單；DS3 只是 fixture，與 Unity 中「所有掛到 slot 的子 prefab 外層 RectTransform 都要 stretch」同一類契約。美術上這代表外框先服從產品級 runtime 插槽，卡片與列項的固定尺寸才留在內層語義節點。
+
+## 21. 交接給下一位 Agent（2026-04-30）
+
+> 目的：把 R-38B 從「DS3 個案可用」提升為「所有 lazySlot/tab-routing 畫面可重用的通則」，禁止硬寫特判。
+
+### 本次已完成（供接手者快速定位）
+
+- 已確認根因：tab2~tab6 問題屬於 fragment 幾何契約不一致（固定尺寸 wrapper 破壞 mount slot 貼齊），不是 click 事件路徑。
+- 已把通則方向寫入本檔 checklist：`R-38B-G1/G2/G3`。
+- 已同步更新 `.github/skills/html-to-ucuf/SKILL.md` 驗收 checklist：加入 lazySlot fragment fill-root 幾何契約與 screen-agnostic 要求。
+
+### 接手者必做任務（照順序）
+
+1. 實作 `tab-fragment-geometry-contract` 檢查（validator/readiness gate 任一層，建議兩層都要有）：
+  - 針對所有被 `defaultFragment` 或 `tab-routing` 引用的 fragment。
+  - 若 fragment root（或 root 下第一層 mount 契約容器）出現整頁固定 `width/height` 鎖死且無法 fill slot，判定 blocker。
+  - 錯誤訊息要給可執行建議：改為 fill-root contract、保留語義內容尺寸於內層節點。
+2. 實作 fragment root 幾何正規化（workflow/converter 通則）：
+  - 目標是 screen-agnostic，不可依賴 `character-ds3-*`、`button_4~9`、或任何 DS3 節點名。
+  - 只修 mount 契約層（外層 root/wrapper），不得破壞內層內容語義節點（卡片、列項、文本容器）。
+3. 對 DS3 做一次通則驗證（僅作 fixture，不寫特判）：
+  - 重新產出 `Stats/Tactics/Bloodline/Equip/Aptitude` tab fragments。
+  - 確認可切換且內容不再是 empty placeholder。
+  - 跑 editor compare 與 readiness，回寫本檔 `R-38B` / `R-38B-G*` 狀態。
+
+### 明確禁止
+
+- 禁止在 converter/workflow/validator 中加入任何 DS3 專名判斷（screenId、node name、button id、fragment id 白名單）。
+- 禁止用 waiver 迴避幾何契約問題。
+- 禁止以手改單一 fragment 當最終解（可暫時驗證，但最終必須回到通則）。
+
+### 交付物（PR 最少要有）
+
+- 程式：geometry contract gate + 通則正規化邏輯。
+- 測試：至少一個會 fail（舊固定尺寸 wrapper）與一個會 pass（fill-root contract）的自動化案例。
+- 證據：DS3 fixture 重跑結果（readiness / compare / 相關 summary）。
+- 文件：更新本檔 checklist 勾選狀態與一段「為何仍屬通則、非特判」說明。
+
+### 完成定義（DoD）
+
+- `R-38B-G1/G2/G3` 全數可驗證（不是口頭描述）。
+- 同一套規則能套用到非 DS3 的 tab/lazySlot 畫面，不需改程式碼分支。
+- `R-38B` 從 empty/placeholder 推進到至少 `contract-ready`，並有 editor compare + readiness 證據。

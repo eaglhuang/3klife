@@ -27,12 +27,27 @@ EVENT_LABEL_OVERRIDES = {
     "changban-bridge": "長坂橋斷後",
 }
 KNOWN_ITEM_KEYWORDS = {
+    "寶刀": "treasured-saber",
     "矛": "serpent-spear",
     "蛇矛": "serpent-spear",
     "丈八蛇矛": "serpent-spear",
+    "青龍寶刀": "green-dragon-blade",
+    "青龍刀": "green-dragon-blade",
+    "青龍偃月刀": "green-dragon-blade",
+    "赤兔": "red-hare",
+    "赤兔馬": "red-hare",
     "橋樑": "bridge-beam",
     "傘蓋": "command-canopy",
     "旌旗": "battle-flags",
+}
+ITEM_DISPLAY_LABELS = {
+    "treasured-saber": "寶刀",
+    "serpent-spear": "蛇矛",
+    "green-dragon-blade": "青龍刀",
+    "red-hare": "赤兔馬",
+    "bridge-beam": "橋樑",
+    "command-canopy": "傘蓋",
+    "battle-flags": "旌旗",
 }
 KNOWN_CREATURE_KEYWORDS = {"馬": "warhorse"}
 
@@ -236,14 +251,14 @@ def build_keyword_pack(events: list[dict], roster: dict[str, dict], general_id: 
                     faction=roster_entry.get("faction"),
                 ),
             )
-        source_quote = str(event.get("sourceQuote") or "")
+        item_text = f"{str(event.get('summary') or '')} {str(event.get('sourceQuote') or '')}"
         for label, keyword_key in KNOWN_ITEM_KEYWORDS.items():
-            if label in source_quote:
+            if label in item_text:
                 add_keyword(
                     category_buckets["item"],
                     make_keyword(
                         keyword_key=keyword_key,
-                        label=label,
+                        label=ITEM_DISPLAY_LABELS.get(keyword_key, label),
                         category="item",
                         general_ids=event.get("generalIds") or [general_id],
                         source_refs=source_refs,
@@ -251,7 +266,7 @@ def build_keyword_pack(events: list[dict], roster: dict[str, dict], general_id: 
                     ),
                 )
         for label, keyword_key in KNOWN_CREATURE_KEYWORDS.items():
-            if label in source_quote:
+            if label in item_text:
                 add_keyword(
                     category_buckets["creature"],
                     make_keyword(

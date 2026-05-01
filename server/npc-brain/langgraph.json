@@ -1,0 +1,59 @@
+{
+  "$schema": "https://langgra.ph/schema.json",
+  "dependencies": [
+    "./"
+  ],
+  "graphs": {
+    "npc_brain_graph": "langgraph_app.graph:graph",
+    "sanguo_etl_graph": "langgraph_app.etl_graph:graph"
+  },
+  "auth": {
+    "path": "auth.py:auth",
+    "disable_studio_auth": true,
+    "openapi": {
+      "securitySchemes": {
+        "apiKeyAuth": {
+          "type": "apiKey",
+          "in": "header",
+          "name": "X-API-Key"
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ]
+    }
+  },
+  "env": ".env",
+  "python_version": "3.11",
+  "http": {
+    "app": "app.main:app",
+    "enable_custom_route_auth": true,
+    "logging_headers": {
+      "excludes": [
+        "x-api-key",
+        "authorization"
+      ]
+    },
+    "cors": {
+      "allow_origins": [
+        "https://smith.langchain.com",
+        "http://localhost:7456",
+        "http://127.0.0.1:7456"
+      ],
+      "allow_methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+        "OPTIONS"
+      ],
+      "allow_headers": [
+        "*"
+      ],
+      "allow_credentials": false
+    }
+  }
+}

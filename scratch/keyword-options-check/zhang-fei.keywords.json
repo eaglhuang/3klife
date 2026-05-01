@@ -1,0 +1,518 @@
+{
+  "generalId": "zhang-fei",
+  "keywordVersion": "general_keywords_v1",
+  "generatedAt": "2026-04-30T09:34:28+00:00",
+  "sourceEventsPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl",
+  "categories": {
+    "event": [
+      {
+        "keywordKey": "changban-bridge",
+        "label": "長坂橋斷後",
+        "fullLabel": "張飛據長坂橋斷後，以大喝震懾曹軍，為劉備爭取退走時間。",
+        "uiLabelMaxChars": 10,
+        "category": "event",
+        "generalIds": [
+          "cao-cao",
+          "cao-ren",
+          "guan-yu",
+          "le-jin",
+          "li-dian",
+          "liu-bei",
+          "mi-shi",
+          "romance-person-590f-4faf-5091",
+          "wen-pin",
+          "xiahou-dun",
+          "xiahou-yuan",
+          "xu-zhu",
+          "zhang-fei",
+          "zhang-he",
+          "zhang-liao",
+          "zhao-yun",
+          "zhuge-liang"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.9,
+        "faction": null,
+        "retired": false
+      }
+    ],
+    "location": [
+      {
+        "keywordKey": "u9577-5742-6a4b-location",
+        "label": "長坂橋",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "location",
+        "generalIds": [
+          "cao-cao",
+          "cao-ren",
+          "guan-yu",
+          "le-jin",
+          "li-dian",
+          "liu-bei",
+          "mi-shi",
+          "romance-person-590f-4faf-5091",
+          "wen-pin",
+          "xiahou-dun",
+          "xiahou-yuan",
+          "xu-zhu",
+          "zhang-fei",
+          "zhang-he",
+          "zhang-liao",
+          "zhao-yun",
+          "zhuge-liang"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.9,
+        "faction": null,
+        "retired": false
+      }
+    ],
+    "person": [
+      {
+        "keywordKey": "cao-cao",
+        "label": "曹操",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "cao-cao",
+          "zhang-fei"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "wei",
+        "retired": false
+      },
+      {
+        "keywordKey": "cao-ren",
+        "label": "曹仁",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "cao-ren",
+          "zhang-fei"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "wei",
+        "retired": false
+      },
+      {
+        "keywordKey": "guan-yu",
+        "label": "關羽",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "guan-yu",
+          "zhang-fei"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "shu",
+        "retired": false
+      },
+      {
+        "keywordKey": "le-jin",
+        "label": "樂進",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "le-jin",
+          "zhang-fei"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "wei",
+        "retired": false
+      },
+      {
+        "keywordKey": "li-dian",
+        "label": "李典",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "li-dian",
+          "zhang-fei"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "wei",
+        "retired": false
+      },
+      {
+        "keywordKey": "liu-bei",
+        "label": "劉備",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "liu-bei",
+          "zhang-fei"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "shu",
+        "retired": false
+      },
+      {
+        "keywordKey": "mi-shi",
+        "label": "糜氏",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "mi-shi",
+          "zhang-fei"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "shu",
+        "retired": false
+      },
+      {
+        "keywordKey": "romance-person-590f-4faf-5091",
+        "label": "夏侯傑",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "romance-person-590f-4faf-5091",
+          "zhang-fei"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "neutral",
+        "retired": false
+      },
+      {
+        "keywordKey": "wen-pin",
+        "label": "文聘",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "wen-pin",
+          "zhang-fei"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "wei",
+        "retired": false
+      },
+      {
+        "keywordKey": "xiahou-dun",
+        "label": "夏侯惇",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "xiahou-dun",
+          "zhang-fei"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "wei",
+        "retired": false
+      },
+      {
+        "keywordKey": "xiahou-yuan",
+        "label": "夏侯淵",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "xiahou-yuan",
+          "zhang-fei"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "wei",
+        "retired": false
+      },
+      {
+        "keywordKey": "xu-zhu",
+        "label": "許褚",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "xu-zhu",
+          "zhang-fei"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "wei",
+        "retired": false
+      },
+      {
+        "keywordKey": "zhang-he",
+        "label": "張郃",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "zhang-fei",
+          "zhang-he"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "wei",
+        "retired": false
+      },
+      {
+        "keywordKey": "zhang-liao",
+        "label": "張遼",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "zhang-fei",
+          "zhang-liao"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "wei",
+        "retired": false
+      },
+      {
+        "keywordKey": "zhao-yun",
+        "label": "趙雲",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "zhang-fei",
+          "zhao-yun"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "shu",
+        "retired": false
+      },
+      {
+        "keywordKey": "zhuge-liang",
+        "label": "諸葛亮",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "person",
+        "generalIds": [
+          "zhang-fei",
+          "zhuge-liang"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.88,
+        "faction": "shu",
+        "retired": false
+      }
+    ],
+    "item": [
+      {
+        "keywordKey": "serpent-spear",
+        "label": "蛇矛",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "item",
+        "generalIds": [
+          "cao-cao",
+          "cao-ren",
+          "guan-yu",
+          "le-jin",
+          "li-dian",
+          "liu-bei",
+          "mi-shi",
+          "romance-person-590f-4faf-5091",
+          "wen-pin",
+          "xiahou-dun",
+          "xiahou-yuan",
+          "xu-zhu",
+          "zhang-fei",
+          "zhang-he",
+          "zhang-liao",
+          "zhao-yun",
+          "zhuge-liang"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.78,
+        "faction": null,
+        "retired": false
+      }
+    ],
+    "creature": [
+      {
+        "keywordKey": "warhorse",
+        "label": "戰馬",
+        "fullLabel": null,
+        "uiLabelMaxChars": 8,
+        "category": "creature",
+        "generalIds": [
+          "cao-cao",
+          "cao-ren",
+          "guan-yu",
+          "le-jin",
+          "li-dian",
+          "liu-bei",
+          "mi-shi",
+          "romance-person-590f-4faf-5091",
+          "wen-pin",
+          "xiahou-dun",
+          "xiahou-yuan",
+          "xu-zhu",
+          "zhang-fei",
+          "zhang-he",
+          "zhang-liao",
+          "zhao-yun",
+          "zhuge-liang"
+        ],
+        "sourceRefs": [
+          "042#p1",
+          "042#p2",
+          "042#p3",
+          "042#p4",
+          "042#p6",
+          "042#p7"
+        ],
+        "confidence": 0.72,
+        "faction": null,
+        "retired": false
+      }
+    ]
+  }
+}

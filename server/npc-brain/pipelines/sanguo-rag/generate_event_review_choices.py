@@ -70,6 +70,27 @@ def focus_aliases(general_id: str | None, people_aliases: dict[str, list[str]]) 
     return sorted({alias for alias in aliases if alias}, key=len, reverse=True)
 
 
+def normalize_candidate(candidate: dict) -> dict:
+    normalized = dict(candidate)
+    if not normalized.get("eventId"):
+        normalized["eventId"] = normalized.get("candidateId") or normalized.get("taskId") or normalized.get("eventKey")
+    if not normalized.get("candidateId"):
+        normalized["candidateId"] = normalized.get("eventId")
+    if not normalized.get("summary") and normalized.get("currentSummary"):
+        normalized["summary"] = normalized.get("currentSummary")
+    if not normalized.get("sourceQuote") and normalized.get("currentSourceQuote"):
+        normalized["sourceQuote"] = normalized.get("currentSourceQuote")
+    if not normalized.get("location") and normalized.get("currentLocation"):
+        normalized["location"] = normalized.get("currentLocation")
+    if not normalized.get("relationshipEdges") and normalized.get("currentRelationshipEdges"):
+        normalized["relationshipEdges"] = normalized.get("currentRelationshipEdges")
+    if not normalized.get("generalIds") and normalized.get("focusGeneralId"):
+        normalized["generalIds"] = [normalized.get("focusGeneralId")]
+    if not normalized.get("reviewStatus"):
+        normalized["reviewStatus"] = normalized.get("repairStatus") or "needs-review"
+    return normalized
+
+
 def load_people_aliases(generals_path: Path, manual_roster_path: Path) -> dict[str, list[str]]:
     people: list[dict] = []
     if generals_path.exists():
@@ -88,6 +109,7 @@ def load_people_aliases(generals_path: Path, manual_roster_path: Path) -> dict[s
 
 
 def focus_candidate_score(candidate: dict, general_id: str | None, people_aliases: dict[str, list[str]]) -> tuple:
+    candidate = normalize_candidate(candidate)
     if not general_id:
         return (0, float(candidate.get("confidence") or 0), str(candidate.get("eventKey") or ""))
     text = "".join(str(candidate.get(key) or "") for key in ("sourceQuote", "summary"))
@@ -112,6 +134,7 @@ def focus_candidate_score(candidate: dict, general_id: str | None, people_aliase
 
 
 def filter_candidates(candidates: list[dict], general_id: str | None, top: int, people_aliases: dict[str, list[str]] | None = None) -> list[dict]:
+    candidates = [normalize_candidate(candidate) for candidate in candidates]
     if general_id:
         candidates = [candidate for candidate in candidates if general_id in (candidate.get("generalIds") or [])]
     candidates = [candidate for candidate in candidates if candidate.get("reviewStatus", "needs-review") != "ready"]
@@ -143,6 +166,7 @@ def default_reasoner_path(general_id: str | None) -> Path | None:
 
 
 def suggested_answer(candidate: dict, hint: dict | None) -> str | None:
+    candidate = normalize_candidate(candidate)
     recommendation = (hint or {}).get("recommendation")
     if recommendation == "reject":
         return "C"
@@ -160,9 +184,10 @@ def suggested_answer(candidate: dict, hint: dict | None) -> str | None:
 
 
 def choice_record(candidate: dict, hint: dict | None) -> dict:
+    candidate = normalize_candidate(candidate)
     event_key = candidate.get("eventKey") or candidate.get("eventId")
     return {
-        "candidateId": candidate.get("eventId"),
+        "candidateId": candidate.get("candidateId") or candidate.get("eventId"),
         "eventKey": event_key,
         "chapterNo": candidate.get("chapterNo"),
         "sourceRefs": candidate.get("sourceRefs") or [],
@@ -191,6 +216,7 @@ def choice_record(candidate: dict, hint: dict | None) -> dict:
 
 
 def missing_fields(candidate: dict) -> list[str]:
+    candidate = normalize_candidate(candidate)
     missing = []
     if not candidate.get("location"):
         missing.append("location")

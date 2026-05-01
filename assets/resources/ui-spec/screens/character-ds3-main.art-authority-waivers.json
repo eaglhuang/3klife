@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "character-ds3-main",
+  "sourcePackageId": "Design System 3 / character-ds3-main",
+  "coordinateSpace": "source-screenshot",
+  "viewport": {
+    "width": 1920,
+    "height": 1080,
+    "dpr": 1
+  },
+  "policy": {
+    "allowedScopes": [
+      "approved-illustration",
+      "background",
+      "chrome",
+      "ornament"
+    ],
+    "allowedAssetKinds": [
+      "sprite-frame",
+      "button-skin",
+      "font"
+    ],
+    "maxWaiverViewportRatio": 0.08,
+    "maxTotalWaiverViewportRatio": 0.15
+  },
+  "waivers": [],
+  "notes": [
+    "R-38B art-director ruling: current final compare has no waiver-eligible zones; large portrait/tab-rail differences stay in raw converter/runtime residuals until traceable small rects qualify."
+  ]
+}

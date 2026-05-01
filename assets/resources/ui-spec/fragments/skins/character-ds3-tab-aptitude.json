@@ -1,0 +1,1179 @@
+{
+  "id": "character-ds3-tab-aptitude-default",
+  "version": 1,
+  "slots": {
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_5": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 2
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_1": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 4,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_2": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_7": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#ffd70066"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_8": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "gdv3InkDeep",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_3": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_4": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_10": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_11": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "tertiaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_5": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_6": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_13": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_14": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_7": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_8": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_16": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_17": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "error",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_9": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_10": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_21": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 2
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_11": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 4,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_12": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_23": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#ffd70066"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_24": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "gdv3InkDeep",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_13": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_14": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_26": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_27": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "tertiaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_15": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_16": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_29": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_30": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "error",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_17": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_18": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_32": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_33": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "gdv3StatStr",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_19": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_20": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_35": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_36": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_21": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_22": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_40": {
+      "kind": "gradient-rect",
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "stops": [
+          {
+            "color": "stdCrestColor",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 2
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_23": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 18,
+      "lineHeight": 25,
+      "letterSpacing": 4,
+      "color": "stdCrestColor",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_24": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_42": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_43": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "tertiaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_25": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_26": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_45": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_46": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "gdv3StatStr",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_27": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_28": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_48": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_49": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_29": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_30": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_51": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_52": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "tertiaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_31": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_32": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_54": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#ffd70066"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_55": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "gdv3InkDeep",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_33": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_34": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_57": {
+      "kind": "color-rect",
+      "color": "colorWhite",
+      "opacity": 0.02,
+      "cornerRadius": 10,
+      "borderWidth": 1.5,
+      "borderColor": "#4d4635"
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_58": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 0,
+      "color": "gdv3StatStr",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_35": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 17,
+      "lineHeight": 24,
+      "letterSpacing": 2,
+      "color": "textOffWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT",
+      "isBold": true
+    },
+    "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_36": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2,
+      "color": "gdv3TextMetaDim",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "LEFT"
+    }
+  },
+  "bundles": [
+    "resources"
+  ],
+  "meta": {
+    "tokenUsageReport": {
+      "colors": [
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_1.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_2.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_7.color"
+        },
+        {
+          "token": "gdv3InkDeep",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_8.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_3.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_4.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_10.color"
+        },
+        {
+          "token": "tertiaryLight",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_11.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_5.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_6.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_13.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_14.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_7.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_8.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_16.color"
+        },
+        {
+          "token": "error",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_17.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_9.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_10.color"
+        },
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_11.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_12.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_23.color"
+        },
+        {
+          "token": "gdv3InkDeep",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_24.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_13.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_14.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_26.color"
+        },
+        {
+          "token": "tertiaryLight",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_27.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_15.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_16.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_29.color"
+        },
+        {
+          "token": "error",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_30.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_17.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_18.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_32.color"
+        },
+        {
+          "token": "gdv3StatStr",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_33.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_19.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_20.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_35.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_36.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_21.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_22.color"
+        },
+        {
+          "token": "stdCrestColor",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_23.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_24.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_42.color"
+        },
+        {
+          "token": "tertiaryLight",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_43.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_25.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_26.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_45.color"
+        },
+        {
+          "token": "gdv3StatStr",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_46.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_27.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_28.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_48.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_49.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_29.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_30.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_51.color"
+        },
+        {
+          "token": "tertiaryLight",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_52.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_31.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_32.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_54.color"
+        },
+        {
+          "token": "gdv3InkDeep",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_55.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_33.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_34.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_57.color"
+        },
+        {
+          "token": "gdv3StatStr",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_div_58.color"
+        },
+        {
+          "token": "textOffWhite",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_35.color"
+        },
+        {
+          "token": "gdv3TextMetaDim",
+          "detail": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_36.color"
+        }
+      ],
+      "cssVars": [],
+      "spacing": [
+        {
+          "token": "spacing.xs",
+          "detail": "CharacterDs3TabAptitude_div_2.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3TabAptitude_div_4.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3TabAptitude_div_6.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3TabAptitude_div_20.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3TabAptitude_div_22.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3TabAptitude_div_39.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "CharacterDs3TabAptitude_div_41.gap"
+        }
+      ],
+      "typography": [],
+      "artWarnings": [
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "CharacterDs3TabAptitude_div_1",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_7",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_10",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_13",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_16",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_23",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_26",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_29",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_32",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_35",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_42",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_45",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_48",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_51",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_54",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "CharacterDs3TabAptitude_div_57",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        }
+      ]
+    },
+    "tokenSources": {
+      "runtimePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "sourcePath": "C:\\Users\\User\\3KLife\\Design System 3\\source\\ui-design-tokens.json"
+    },
+    "tokenConflictReport": [],
+    "atlasUsageReport": {
+      "atlases": [],
+      "atlasCount": 0,
+      "limit": 4,
+      "_warning": null
+    }
+  }
+}

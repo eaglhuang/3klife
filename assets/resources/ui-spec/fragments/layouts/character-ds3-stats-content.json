@@ -1,0 +1,906 @@
+{
+  "type": "container",
+  "name": "CharacterDs3TabStats",
+  "contentContract": {
+    "status": "contract-ready",
+    "requiredNodes": [
+      "CharacterDs3TabStats_div_2",
+      "CharacterDs3TabStats_div_5",
+      "CharacterDs3TabStats_div_35"
+    ],
+    "bindPaths": [
+      "general.stats.core",
+      "general.stats.radar",
+      "general.stats.resources"
+    ],
+    "minNonEmptyNodes": 3
+  },
+  "widget": {
+    "top": 0,
+    "left": 0,
+    "right": 0,
+    "bottom": 0
+  },
+  "children": [
+    {
+      "type": "container",
+      "name": "CharacterDs3TabStats_div_1",
+      "layout": {
+        "type": "vertical",
+        "paddingTop": 50,
+        "paddingRight": 20,
+        "paddingBottom": 60,
+        "paddingLeft": 20
+      },
+      "children": [
+        {
+          "type": "container",
+          "name": "CharacterDs3TabStats_div_2",
+          "layout": {
+            "type": "vertical",
+            "spacingY": 14
+          },
+          "children": [
+            {
+              "type": "container",
+              "name": "CharacterDs3TabStats_div_3",
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "spacingX": 8
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabStats_span_1",
+                  "text": "資質 · 實力",
+                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_1"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabStats_span_2",
+                  "text": "DUAL-LAYER ATTRIBUTES",
+                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_2"
+                }
+              ],
+              "skinLayers": [
+                {
+                  "layerId": "CharacterDs3TabStats_div_4",
+                  "slotId": "auto.character-ds3-tab-stats.characterds3tabstats_div_4",
+                  "zOrder": 0,
+                  "expand": false,
+                  "width": 4,
+                  "height": 16
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabStats_div_5",
+              "layout": {
+                "type": "horizontal",
+                "spacingX": 20
+              },
+              "children": [
+                {
+                  "type": "composite",
+                  "name": "CharacterDs3TabStats_svg_1",
+                  "width": 220,
+                  "height": 220,
+                  "layout": {
+                    "type": "vertical"
+                  }
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabStats_div_6",
+                  "layout": {
+                    "type": "vertical",
+                    "spacingY": 10
+                  },
+                  "children": [
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabStats_div_7",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 8,
+                        "paddingRight": 12,
+                        "paddingBottom": 8,
+                        "paddingLeft": 12
+                      },
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_7",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_3",
+                          "width": 48,
+                          "text": "武力",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_3"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_4",
+                          "width": 32,
+                          "text": "STR",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_4"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_div_8",
+                          "width": 38,
+                          "height": 26,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 26
+                          },
+                          "text": "98",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_8"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_5",
+                          "text": "→",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_5"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_6",
+                          "width": 56,
+                          "text": "1,820",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_6"
+                        }
+                      ],
+                      "skinLayers": [
+                        {
+                          "layerId": "CharacterDs3TabStats_div_9",
+                          "slotId": "auto.character-ds3-tab-stats.characterds3tabstats_div_9",
+                          "zOrder": 0,
+                          "expand": false,
+                          "height": 8
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabStats_div_11",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 8,
+                        "paddingRight": 12,
+                        "paddingBottom": 8,
+                        "paddingLeft": 12
+                      },
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_11",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_7",
+                          "width": 48,
+                          "text": "智力",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_7"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_8",
+                          "width": 32,
+                          "text": "INT",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_8"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_div_12",
+                          "width": 38,
+                          "height": 26,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 26
+                          },
+                          "text": "52",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_12"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_9",
+                          "text": "→",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_9"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_10",
+                          "width": 56,
+                          "text": "890",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_10"
+                        }
+                      ],
+                      "skinLayers": [
+                        {
+                          "layerId": "CharacterDs3TabStats_div_13",
+                          "slotId": "auto.character-ds3-tab-stats.characterds3tabstats_div_13",
+                          "zOrder": 0,
+                          "expand": false,
+                          "height": 8
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabStats_div_15",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 8,
+                        "paddingRight": 12,
+                        "paddingBottom": 8,
+                        "paddingLeft": 12
+                      },
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_15",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_11",
+                          "width": 48,
+                          "text": "統率",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_11"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_12",
+                          "width": 32,
+                          "text": "LEA",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_12"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_div_16",
+                          "width": 38,
+                          "height": 26,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 26
+                          },
+                          "text": "88",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_16"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_13",
+                          "text": "→",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_13"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_14",
+                          "width": 56,
+                          "text": "1,540",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_14"
+                        }
+                      ],
+                      "skinLayers": [
+                        {
+                          "layerId": "CharacterDs3TabStats_div_17",
+                          "slotId": "auto.character-ds3-tab-stats.characterds3tabstats_div_17",
+                          "zOrder": 0,
+                          "expand": false,
+                          "height": 8
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabStats_div_19",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 8,
+                        "paddingRight": 12,
+                        "paddingBottom": 8,
+                        "paddingLeft": 12
+                      },
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_19",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_15",
+                          "width": 48,
+                          "text": "政治",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_15"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_16",
+                          "width": 32,
+                          "text": "POL",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_16"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_div_20",
+                          "width": 38,
+                          "height": 26,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 26
+                          },
+                          "text": "38",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_20"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_17",
+                          "text": "→",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_17"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_18",
+                          "width": 56,
+                          "text": "640",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_18"
+                        }
+                      ],
+                      "skinLayers": [
+                        {
+                          "layerId": "CharacterDs3TabStats_div_21",
+                          "slotId": "auto.character-ds3-tab-stats.characterds3tabstats_div_21",
+                          "zOrder": 0,
+                          "expand": false,
+                          "height": 8
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabStats_div_23",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 8,
+                        "paddingRight": 12,
+                        "paddingBottom": 8,
+                        "paddingLeft": 12
+                      },
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_23",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_19",
+                          "width": 48,
+                          "text": "魅力",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_19"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_20",
+                          "width": 32,
+                          "text": "CHA",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_20"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_div_24",
+                          "width": 38,
+                          "height": 26,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 26
+                          },
+                          "text": "74",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_24"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_21",
+                          "text": "→",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_21"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_22",
+                          "width": 56,
+                          "text": "1,280",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_22"
+                        }
+                      ],
+                      "skinLayers": [
+                        {
+                          "layerId": "CharacterDs3TabStats_div_25",
+                          "slotId": "auto.character-ds3-tab-stats.characterds3tabstats_div_25",
+                          "zOrder": 0,
+                          "expand": false,
+                          "height": 8
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabStats_div_27",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 10,
+                        "paddingTop": 8,
+                        "paddingRight": 12,
+                        "paddingBottom": 8,
+                        "paddingLeft": 12
+                      },
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_27",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_23",
+                          "width": 48,
+                          "text": "運氣",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_23"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_24",
+                          "width": 32,
+                          "text": "LUK",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_24"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_div_28",
+                          "width": 38,
+                          "height": 26,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 26
+                          },
+                          "text": "76",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_28"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_25",
+                          "text": "→",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_25"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_26",
+                          "width": 56,
+                          "text": "1,120",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_26"
+                        }
+                      ],
+                      "skinLayers": [
+                        {
+                          "layerId": "CharacterDs3TabStats_div_29",
+                          "slotId": "auto.character-ds3-tab-stats.characterds3tabstats_div_29",
+                          "zOrder": 0,
+                          "expand": false,
+                          "height": 8
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabStats_div_31",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 14,
+                        "paddingTop": 10,
+                        "paddingRight": 14,
+                        "paddingBottom": 10,
+                        "paddingLeft": 14
+                      },
+                      "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_31",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_27",
+                          "text": "總評等級",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_27"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_div_32",
+                          "width": 42,
+                          "height": 42,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 42
+                          },
+                          "text": "S",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_32"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_28",
+                          "text": "良才美質",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_28"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabStats_div_33",
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "spacingX": 8
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabStats_span_29",
+                  "text": "生命狀態",
+                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_29"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabStats_span_30",
+                  "text": "VITALS",
+                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_30"
+                }
+              ],
+              "skinLayers": [
+                {
+                  "layerId": "CharacterDs3TabStats_div_34",
+                  "slotId": "auto.character-ds3-tab-stats.characterds3tabstats_div_34",
+                  "zOrder": 0,
+                  "expand": false,
+                  "width": 4,
+                  "height": 16
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabStats_div_35",
+              "layout": {
+                "type": "grid",
+                "spacingX": 10,
+                "spacingY": 10,
+                "constraint": "fixed-col",
+                "constraintNum": 3,
+                "cellWidth": 160,
+                "cellHeight": 96
+              },
+              "children": [
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabStats_div_36",
+                  "layout": {
+                    "type": "vertical",
+                    "paddingTop": 10,
+                    "paddingRight": 12,
+                    "paddingBottom": 10,
+                    "paddingLeft": 12,
+                    "spacingY": 6
+                  },
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_36",
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_37",
+                      "layout": {
+                        "type": "horizontal",
+                        "justifyContent": "space-between"
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_31",
+                          "text": "HP 生命",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_31"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_32",
+                          "text": "16,800",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_32"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_div_40",
+                      "text": "/ 16,800",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_40"
+                    }
+                  ],
+                  "skinLayers": [
+                    {
+                      "layerId": "CharacterDs3TabStats_div_38",
+                      "slotId": "auto.character-ds3-tab-stats.characterds3tabstats_div_38",
+                      "zOrder": 0,
+                      "expand": false,
+                      "height": 10
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabStats_div_41",
+                  "layout": {
+                    "type": "vertical",
+                    "paddingTop": 10,
+                    "paddingRight": 12,
+                    "paddingBottom": 10,
+                    "paddingLeft": 12,
+                    "spacingY": 6
+                  },
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_41",
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_42",
+                      "layout": {
+                        "type": "horizontal",
+                        "justifyContent": "space-between"
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_33",
+                          "text": "SP 戰氣",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_33"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_34",
+                          "text": "120",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_34"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_div_45",
+                      "text": "/ 120",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_45"
+                    }
+                  ],
+                  "skinLayers": [
+                    {
+                      "layerId": "CharacterDs3TabStats_div_43",
+                      "slotId": "auto.character-ds3-tab-stats.characterds3tabstats_div_43",
+                      "zOrder": 0,
+                      "expand": false,
+                      "height": 10
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabStats_div_46",
+                  "layout": {
+                    "type": "vertical",
+                    "paddingTop": 10,
+                    "paddingRight": 12,
+                    "paddingBottom": 10,
+                    "paddingLeft": 12,
+                    "spacingY": 6
+                  },
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_46",
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabStats_div_47",
+                      "layout": {
+                        "type": "horizontal",
+                        "justifyContent": "space-between"
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_35",
+                          "text": "精力值",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_35"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabStats_span_36",
+                          "text": "85",
+                          "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_36"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_div_50",
+                      "text": "/ 100",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_50"
+                    }
+                  ],
+                  "skinLayers": [
+                    {
+                      "layerId": "CharacterDs3TabStats_div_48",
+                      "slotId": "auto.character-ds3-tab-stats.characterds3tabstats_div_48",
+                      "zOrder": 0,
+                      "expand": false,
+                      "height": 10
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabStats_div_51",
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "spacingX": 8
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabStats_span_37",
+                  "text": "基本資料",
+                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_37"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabStats_span_38",
+                  "text": "PROFILE",
+                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_38"
+                }
+              ],
+              "skinLayers": [
+                {
+                  "layerId": "CharacterDs3TabStats_div_52",
+                  "slotId": "auto.character-ds3-tab-stats.characterds3tabstats_div_52",
+                  "zOrder": 0,
+                  "expand": false,
+                  "width": 4,
+                  "height": 16
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabStats_div_53",
+              "layout": {
+                "type": "grid",
+                "spacingX": 8,
+                "spacingY": 8,
+                "constraint": "fixed-col",
+                "constraintNum": 2,
+                "cellWidth": 120,
+                "cellHeight": 96
+              },
+              "children": [
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabStats_div_54",
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "spacingX": 10,
+                    "paddingTop": 8,
+                    "paddingRight": 12,
+                    "paddingBottom": 8,
+                    "paddingLeft": 12
+                  },
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_54",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_39",
+                      "text": "年齡",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_39"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_40",
+                      "text": "34 歲",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_40"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabStats_div_55",
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "spacingX": 10,
+                    "paddingTop": 8,
+                    "paddingRight": 12,
+                    "paddingBottom": 8,
+                    "paddingLeft": 12
+                  },
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_55",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_41",
+                      "text": "精力",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_41"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_42",
+                      "text": "85 / 100",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_42"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabStats_div_56",
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "spacingX": 10,
+                    "paddingTop": 8,
+                    "paddingRight": 12,
+                    "paddingBottom": 8,
+                    "paddingLeft": 12
+                  },
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_56",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_43",
+                      "text": "狀態",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_43"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_44",
+                      "text": "Active",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_44"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabStats_div_57",
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "spacingX": 10,
+                    "paddingTop": 8,
+                    "paddingRight": 12,
+                    "paddingBottom": 8,
+                    "paddingLeft": 12
+                  },
+                  "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_57",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_45",
+                      "text": "等級",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_45"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabStats_span_46",
+                      "text": "42 / 60",
+                      "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_46"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "widget": {
+        "top": 0,
+        "left": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "_geometryContract": "fill-root"
+    }
+  ]
+}

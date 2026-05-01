@@ -16,23 +16,23 @@
     },
     "Stats": {
       "slotId": "CharacterDs3Main_div_6",
-      "fragment": "fragments/layouts/character-ds3-right-content-empty"
+      "fragment": "fragments/layouts/character-ds3-stats-content"
     },
     "Tactics": {
       "slotId": "CharacterDs3Main_div_6",
-      "fragment": "fragments/layouts/character-ds3-right-content-empty"
+      "fragment": "fragments/layouts/character-ds3-tactics-content"
     },
     "Bloodline": {
       "slotId": "CharacterDs3Main_div_6",
-      "fragment": "fragments/layouts/character-ds3-right-content-empty"
+      "fragment": "fragments/layouts/character-ds3-bloodline-content"
     },
     "Equip": {
       "slotId": "CharacterDs3Main_div_6",
-      "fragment": "fragments/layouts/character-ds3-right-content-empty"
+      "fragment": "fragments/layouts/character-ds3-equip-content"
     },
     "Aptitude": {
       "slotId": "CharacterDs3Main_div_6",
-      "fragment": "fragments/layouts/character-ds3-right-content-empty"
+      "fragment": "fragments/layouts/character-ds3-aptitude-content"
     }
   },
   "layer": "Popup",

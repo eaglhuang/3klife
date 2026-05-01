@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-29",
+  "generated": "2026-04-30",
   "note": "doc_id 系統唯一真相來源。文件路徑異動後 doc_id 不變。Agent 可用 `grep -r \"doc_id: <id>\"` 或 `node tools_node/resolve-doc-id.js <id>` 定位文件。",
   "registry": {
     "doc_tech_0001": {
@@ -2378,11 +2378,16 @@
       "category": "ai"
     },
     "doc_ai_0027": {
+      "path": "docs/agent-briefs/sanguo-central-brain-rollout-handoff-2026-05-01.md",
+      "title": "三國中台大腦推行計畫交接書",
+      "category": "ai"
+    },
+    "doc_ai_0028": {
       "path": "docs/agent-collaboration-protocol.md",
       "title": "多 Agent 協作協議",
       "category": "ai"
     },
-    "doc_ai_0028": {
+    "doc_ai_0029": {
       "path": "docs/agent-context-budget.md",
       "title": "Agent Context Budget Guideline",
       "category": "ai"
@@ -2533,71 +2538,76 @@
       "category": "agentskill"
     },
     "doc_agentskill_0030": {
+      "path": ".github/skills/gpt-image-2-gen/SKILL.md",
+      "title": "GPT Image 2 Image Generation",
+      "category": "agentskill"
+    },
+    "doc_agentskill_0031": {
       "path": ".github/skills/html-to-ucuf/SKILL.md",
       "title": "HTML -> UCUF 轉換 SKILL",
       "category": "agentskill"
     },
-    "doc_agentskill_0031": {
+    "doc_agentskill_0032": {
       "path": ".github/skills/nano-banana-gen/SKILL.md",
       "title": "Nano Banana 圖像生成",
       "category": "agentskill"
     },
-    "doc_agentskill_0032": {
+    "doc_agentskill_0033": {
       "path": ".github/skills/task-card-opener/SKILL.md",
       "title": "Task Card Opener（鏡像索引）",
       "category": "agentskill"
     },
-    "doc_agentskill_0033": {
+    "doc_agentskill_0034": {
       "path": ".github/skills/ui-asset-gen-director/SKILL.md",
       "title": "UI Asset Gen Director",
       "category": "agentskill"
     },
-    "doc_agentskill_0034": {
+    "doc_agentskill_0035": {
       "path": ".github/skills/ui-asset-qc/SKILL.md",
       "title": "UI Asset QC",
       "category": "agentskill"
     },
-    "doc_agentskill_0035": {
+    "doc_agentskill_0036": {
       "path": ".github/skills/ui-asset-slice-pipeline/SKILL.md",
       "title": "UI Asset Slice Pipeline",
       "category": "agentskill"
     },
-    "doc_agentskill_0036": {
+    "doc_agentskill_0037": {
       "path": ".github/skills/ui-brief-generator/SKILL.md",
       "title": "UI Brief Generator",
       "category": "agentskill"
     },
-    "doc_agentskill_0037": {
+    "doc_agentskill_0038": {
       "path": ".github/skills/ui-family-architect/SKILL.md",
       "title": "UI Family Architect",
       "category": "agentskill"
     },
-    "doc_agentskill_0038": {
+    "doc_agentskill_0039": {
       "path": ".github/skills/ui-i18n-localize/SKILL.md",
       "title": "UI I18N Localize",
       "category": "agentskill"
     },
-    "doc_agentskill_0039": {
+    "doc_agentskill_0040": {
       "path": ".github/skills/ui-preview-judge/SKILL.md",
       "title": "UI Preview Judge",
       "category": "agentskill"
     },
-    "doc_agentskill_0040": {
+    "doc_agentskill_0041": {
       "path": ".github/skills/ui-reference-decompose/SKILL.md",
       "title": "UI Reference Decompose",
       "category": "agentskill"
     },
-    "doc_agentskill_0041": {
+    "doc_agentskill_0042": {
       "path": ".github/skills/ui-runtime-verify/SKILL.md",
       "title": "UI Runtime Verify",
       "category": "agentskill"
     },
-    "doc_agentskill_0042": {
+    "doc_agentskill_0043": {
       "path": ".github/skills/ui-spec-scaffold/SKILL.md",
       "title": "UI Spec Scaffold",
       "category": "agentskill"
     },
-    "doc_agentskill_0043": {
+    "doc_agentskill_0044": {
       "path": ".github/skills/ui-vibe-pipeline/SKILL.md",
       "title": "UI Vibe Pipeline（鏡像索引）",
       "category": "agentskill"
@@ -2658,36 +2668,41 @@
       "category": "other"
     },
     "doc_other_0012": {
+      "path": "docs/RAG_ETL_管線應用分析.md",
+      "title": "RAG ETL 管線應用分析",
+      "category": "other"
+    },
+    "doc_other_0013": {
       "path": "docs/sanguo-rag-phase4b-phase5-execution-plan.md",
       "title": "Sanguo RAG Phase 4b / Phase 5 Execution Plan",
       "category": "other"
     },
-    "doc_other_0013": {
+    "doc_other_0014": {
       "path": "docs/UCUF-developer-guide.md",
       "title": "UCUF 開發者指南",
       "category": "other"
     },
-    "doc_other_0014": {
+    "doc_other_0015": {
       "path": "docs/UCUF-migration-completion-2026-04-13.md",
       "title": "UCUF Migration Active Checklist (2026-04-13)",
       "category": "other"
     },
-    "doc_other_0015": {
+    "doc_other_0016": {
       "path": "docs/UCUF已驗收功能.md",
       "title": "UCUF 已驗收功能索引",
       "category": "other"
     },
-    "doc_other_0016": {
+    "doc_other_0017": {
       "path": "docs/UCUF規劃書.md",
       "title": "Universal Composite UI Framework (UCUF) — 規劃書",
       "category": "other"
     },
-    "doc_other_0017": {
+    "doc_other_0018": {
       "path": "docs/UI_PANELS_COMPLETE_INVENTORY.md",
       "title": "3KLife UI Panels & Components — Complete Inventory",
       "category": "other"
     },
-    "doc_other_0018": {
+    "doc_other_0019": {
       "path": "docs/ui-screen-migration-coverage.md",
       "title": "UI Screen Migration Coverage",
       "category": "other"

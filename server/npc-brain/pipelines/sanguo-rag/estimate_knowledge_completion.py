@@ -16,6 +16,7 @@ DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extra
 DEFAULT_FEMALE_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl")
 DEFAULT_RELATIONSHIP_EVIDENCE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/relationship-evidence/source-grounded-relationship-edges.jsonl")
 DEFAULT_EVENT_QUESTION_SEEDS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/event-question-seeds/event-question-seeds.jsonl")
+DEFAULT_SOURCE_EVENT_PACKETS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/source-event-packets/source-event-packets.jsonl")
 DEFAULT_ROUNDS_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress")
 
@@ -57,6 +58,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--female-candidates", default=str(DEFAULT_FEMALE_CANDIDATES_PATH))
     parser.add_argument("--relationship-evidence", default=str(DEFAULT_RELATIONSHIP_EVIDENCE_PATH))
     parser.add_argument("--event-question-seeds", default=str(DEFAULT_EVENT_QUESTION_SEEDS_PATH))
+    parser.add_argument("--source-event-packets", default=str(DEFAULT_SOURCE_EVENT_PACKETS_PATH))
     parser.add_argument("--rounds-root", default=str(DEFAULT_ROUNDS_ROOT))
     parser.add_argument("--round-json", action="append", default=[], help="Batch JSON to include. Defaults to latest generic + latest female round.")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
@@ -181,6 +183,9 @@ def event_angle_families(records: list[dict[str, Any]]) -> set[str]:
         angle_family = str(record.get("angleFamily") or "")
         if angle_family:
             families.add(angle_family)
+        for item in record.get("angleFamilies") or []:
+            if str(item or "").strip():
+                families.add(str(item).strip())
         event_type = str(record.get("eventType") or "")
         subtype = str(record.get("subtype") or "")
         if "battle" in event_type or "battle" in subtype:
@@ -264,6 +269,19 @@ def event_question_seed_units(records: list[dict[str, Any]]) -> float:
     return units
 
 
+def source_event_packet_units(records: list[dict[str, Any]]) -> float:
+    units = 0.0
+    seen_packets: set[str] = set()
+    for record in records:
+        packet_id = str(record.get("packetId") or record.get("sourceRef") or "").strip()
+        if not packet_id or packet_id in seen_packets:
+            continue
+        seen_packets.add(packet_id)
+        weight = float(record.get("eventPacketUnitWeight") or 0.0)
+        units += min(0.4, max(0.0, weight))
+    return units
+
+
 def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[str, Any]:
     stable = read_json(Path(args.stable_knowledge))
     stable_summary = stable.get("summary") or {}
@@ -274,6 +292,7 @@ def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[
     female_candidates = read_jsonl(Path(args.female_candidates))
     relationship_evidence = read_jsonl(Path(args.relationship_evidence))
     event_question_seeds = read_jsonl(Path(args.event_question_seeds))
+    source_event_packets = read_jsonl(Path(args.source_event_packets))
     round_summary = summarize_rounds(round_paths)
 
     people_count = int(stable_summary.get("identitySeedCount") or len(stable.get("identitySeeds") or []) or 0)
@@ -311,16 +330,18 @@ def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[
     candidate_count = len(generic_candidates) + len(female_candidates)
     accepted_a = float(round_summary.get("acceptedA") or 0)
     review_b = float(round_summary.get("reviewB") or 0)
-    ready_event_count = float(events_summary.get("readyEventCount") or len(ready_events))
+    ready_event_count = float(max(int(events_summary.get("readyEventCount") or 0), len(ready_events)))
     seed_units = event_question_seed_units(event_question_seeds)
-    event_question_units = ready_event_count + accepted_a * 0.75 + review_b * 0.25 + candidate_count * 0.15 + seed_units
+    packet_units = source_event_packet_units(source_event_packets)
+    event_question_units = ready_event_count + accepted_a * 0.75 + review_b * 0.25 + candidate_count * 0.15 + seed_units + packet_units
     event_question_coverage = safe_ratio(event_question_units, target_event_slots)
 
     ready_families = event_angle_families(ready_events)
     candidate_families = event_angle_families(generic_candidates + female_candidates)
     seed_families = event_angle_families(event_question_seeds)
+    packet_families = event_angle_families(source_event_packets)
     sidecar_families = sidecar_angle_families(stable_summary)
-    source_grounded_families = ready_families | candidate_families | seed_families
+    source_grounded_families = ready_families | candidate_families | seed_families | packet_families
     all_observed_families = source_grounded_families | sidecar_families
     taxonomy_angles = clamp(
         safe_ratio(len(all_observed_families), len(ANGLE_FAMILIES)) * 0.20
@@ -390,6 +411,8 @@ def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[
             "readyEventCount": int(ready_event_count),
             "sourceGroundedEventQuestionSeedCount": len(event_question_seeds),
             "sourceGroundedEventQuestionSeedUnits": round(seed_units, 2),
+            "sourceGroundedEventPacketCount": len(source_event_packets),
+            "sourceGroundedEventPacketUnits": round(packet_units, 2),
             "genericBattleCandidateCount": len(generic_candidates),
             "femaleInteractionCandidateCount": len(female_candidates),
             "previewAcceptedA": int(accepted_a),
@@ -406,7 +429,7 @@ def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[
             "sourceResolution": "resolvedMentions / (resolvedMentions + unresolvedMentions + reviewPendingMentions)",
             "personFoundation": "0.25*identityCoverage + 0.45*basicProfileDepth + 0.20*roleCoverage + 0.10*missingCoverageScore",
             "relationshipGraph": "0.75*((readyRelationshipEdges + weightedSourceGroundedRelationshipEvidence + 0.25*plainRelationshipProposals) / targetRelationshipEdges) + 0.25*(relationshipTypeCount / 11); evidence weights: confidence>=0.8 => 0.70, >=0.7 => 0.45, >=0.6 => 0.20",
-            "eventQuestionCoverage": "(readyEvents + 0.75*previewA + 0.25*previewB + 0.15*candidates + weightedSourceGroundedQuestionSeeds) / targetEventQuestionSlots; seed slots are capped at 0.35 units each",
+            "eventQuestionCoverage": "(readyEvents + 0.75*previewA + 0.25*previewB + 0.15*candidates + weightedSourceGroundedQuestionSeeds + weightedSourceEventPackets) / targetEventQuestionSlots; seed slots are capped at 0.35 units each; source event packets are capped at 0.40 units each",
             "taxonomyAngles": "0.20*allObservedAngleBreadth + 0.35*sourceGroundedAngleBreadth + 0.45*eventQuestionCoverage",
             "reviewValidation": "0.65*previewARate + 0.25*sampledGeneralCoverage + 0.10*reviewReliability",
             "femalePriority": "0.35*femaleProfileCoverage + 0.35*femaleValidatedCoverage + 0.30*femalePreviewARate",
@@ -479,6 +502,7 @@ def main() -> None:
             "femaleCandidatesPath": args.female_candidates,
             "relationshipEvidencePath": args.relationship_evidence,
             "eventQuestionSeedsPath": args.event_question_seeds,
+            "sourceEventPacketsPath": args.source_event_packets,
             "roundJsonPaths": [str(path) for path in round_paths],
         },
         "completion": completion,

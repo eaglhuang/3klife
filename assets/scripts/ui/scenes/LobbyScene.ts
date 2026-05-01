@@ -1,5 +1,5 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Button, Color, Component, Label, Node, UITransform, Widget } from 'cc';
+import { _decorator, Button, Color, Component, Label, Node, Sprite, UITransform, Widget } from 'cc';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
@@ -40,12 +40,21 @@ const CHARACTER_DS3_PREVIEW_TAB_BUTTONS: Record<GeneralDetailRuntimeTab, string>
 
 const CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS: Record<GeneralDetailRuntimeTab, string> = {
     Overview: 'fragments/layouts/character-ds3-overview-content',
-    Stats: 'fragments/layouts/character-ds3-right-content-empty',
-    Tactics: 'fragments/layouts/character-ds3-right-content-empty',
-    Bloodline: 'fragments/layouts/character-ds3-right-content-empty',
-    Equip: 'fragments/layouts/character-ds3-right-content-empty',
-    Aptitude: 'fragments/layouts/character-ds3-right-content-empty',
+    Stats: 'fragments/layouts/character-ds3-stats-content',
+    Tactics: 'fragments/layouts/character-ds3-tactics-content',
+    Bloodline: 'fragments/layouts/character-ds3-bloodline-content',
+    Equip: 'fragments/layouts/character-ds3-equip-content',
+    Aptitude: 'fragments/layouts/character-ds3-aptitude-content',
 };
+
+const CHARACTER_DS3_PREVIEW_TAB_ORDER: GeneralDetailRuntimeTab[] = [
+    'Overview',
+    'Stats',
+    'Tactics',
+    'Bloodline',
+    'Equip',
+    'Aptitude',
+];
 
 interface GeneralListOpenPayload {
     generals: GeneralConfig[];
@@ -78,6 +87,9 @@ export class LobbyScene extends Component {
     private _characterDs3Host: UIScreenPreviewHost | null = null;
     private _eliteTroopCodexPanel: EliteTroopCodexComposite | null = null;
     private _missionDetailDialogPanel: LobbyMissionDetailDialogComposite | null = null;
+    private _characterDs3ActiveTab: GeneralDetailRuntimeTab = 'Overview';
+    private _isCharacterDs3TabSwitching = false;
+    private _characterDs3TabBindRetryCount = 0;
     private readonly _singlePlayerModeToggleHandles: Array<{ root: Node; label: Label }> = [];
     private readonly _localGachaService = new LocalGachaService();
     private _ready = false;
@@ -321,20 +333,42 @@ export class LobbyScene extends Component {
     private _bindCharacterDs3PreviewTabRouting(): void {
         const host = this._characterDs3Host;
         const binder = host?.binder;
-        if (!host || !binder) {
+        if (!host) {
             return;
         }
+
+        if (!binder) {
+            if (this._characterDs3TabBindRetryCount < 8) {
+                this._characterDs3TabBindRetryCount += 1;
+                this.scheduleOnce(() => {
+                    this._bindCharacterDs3PreviewTabRouting();
+                }, 0.12);
+            }
+            return;
+        }
+
+        let boundCount = 0;
 
         const bindTab = (tab: GeneralDetailRuntimeTab): void => {
             const button = binder.getButton(CHARACTER_DS3_PREVIEW_TAB_BUTTONS[tab]);
             if (!button) {
+                UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 tab button missing', {
+                    tab,
+                    buttonNode: CHARACTER_DS3_PREVIEW_TAB_BUTTONS[tab],
+                });
                 return;
             }
 
+            boundCount += 1;
+
+            const onTabInput = (): void => {
+                void this._handleCharacterDs3PreviewTabClick(tab);
+            };
+
             button.node.off(Button.EventType.CLICK, undefined, this);
-            button.node.on(Button.EventType.CLICK, () => {
-                void host.switchLazySlot('CharacterDs3Main_div_6', CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS[tab]);
-            }, this);
+            button.node.off(Node.EventType.TOUCH_END, undefined, this);
+            button.node.on(Button.EventType.CLICK, onTabInput, this);
+            button.node.on(Node.EventType.TOUCH_END, onTabInput, this);
         };
 
         bindTab('Overview');
@@ -343,6 +377,85 @@ export class LobbyScene extends Component {
         bindTab('Bloodline');
         bindTab('Equip');
         bindTab('Aptitude');
+
+        UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 tab routing bound', {
+            boundCount,
+            expectedCount: CHARACTER_DS3_PREVIEW_TAB_ORDER.length,
+            retryCount: this._characterDs3TabBindRetryCount,
+        });
+
+        if (boundCount < CHARACTER_DS3_PREVIEW_TAB_ORDER.length && this._characterDs3TabBindRetryCount < 8) {
+            this._characterDs3TabBindRetryCount += 1;
+            this.scheduleOnce(() => {
+                this._bindCharacterDs3PreviewTabRouting();
+            }, 0.12);
+            return;
+        }
+
+        this._characterDs3TabBindRetryCount = 0;
+
+        this._syncCharacterDs3PreviewTabVisualState();
+    }
+
+    private async _handleCharacterDs3PreviewTabClick(tab: GeneralDetailRuntimeTab): Promise<void> {
+        const host = this._characterDs3Host;
+        if (!host || this._isCharacterDs3TabSwitching) {
+            return;
+        }
+
+        this._isCharacterDs3TabSwitching = true;
+
+        try {
+            const switched = await host.switchLazySlot('CharacterDs3Main_div_6', CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS[tab]);
+            if (!switched) {
+                UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 tab switch failed', {
+                    tab,
+                    slotId: 'CharacterDs3Main_div_6',
+                    fragment: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS[tab],
+                });
+                return;
+            }
+
+            this._characterDs3ActiveTab = tab;
+            this._syncCharacterDs3PreviewTabVisualState();
+
+            UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 tab switched', {
+                tab,
+                fragment: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS[tab],
+            });
+        } finally {
+            this._isCharacterDs3TabSwitching = false;
+        }
+    }
+
+    private _syncCharacterDs3PreviewTabVisualState(): void {
+        const binder = this._characterDs3Host?.binder;
+        if (!binder) {
+            return;
+        }
+
+        for (const tab of CHARACTER_DS3_PREVIEW_TAB_ORDER) {
+            const button = binder.getButton(CHARACTER_DS3_PREVIEW_TAB_BUTTONS[tab]);
+            if (!button) {
+                continue;
+            }
+
+            const sprite = button.node.getComponent(Sprite);
+            const stateMap = (button as Button & {
+                _buttonSkinStateMap?: Record<string, unknown>;
+            })._buttonSkinStateMap ?? (button.node as Node & {
+                _buttonSkinStateMap?: Record<string, unknown>;
+            })._buttonSkinStateMap;
+            if (!sprite || !stateMap) {
+                continue;
+            }
+
+            const targetState = tab === this._characterDs3ActiveTab ? 'selected' : 'normal';
+            const frame = stateMap[targetState] ?? stateMap.normal;
+            if (frame) {
+                sprite.spriteFrame = frame as Sprite['spriteFrame'];
+            }
+        }
     }
 
     private _bindScreenButtons(host: UIScreenPreviewHost, bindings: ScreenButtonBinding[]): void {
@@ -710,10 +823,24 @@ export class LobbyScene extends Component {
         await this._characterDs3Host.showScreen('character-ds3-main');
         this._bindCharacterDs3PreviewTabRouting();
 
+        // 診斷鉤子：在 host 層直接綁定 tab 點擊，繞開 LobbyScene 事件路徑
+        const hookCount = this._characterDs3Host.installTabSwitchHook(
+            'CharacterDs3Main_div_6',
+            {
+                CharacterDs3Main_button_4: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Overview,
+                CharacterDs3Main_button_5: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Stats,
+                CharacterDs3Main_button_6: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Tactics,
+                CharacterDs3Main_button_7: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Bloodline,
+                CharacterDs3Main_button_8: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Equip,
+                CharacterDs3Main_button_9: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Aptitude,
+            },
+        );
+
         UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] CharacterDs3 smoke selection opened screen host', {
             generalId: config.id,
             generalName: config.name,
             screenId: 'character-ds3-main',
+            diagHookCount: hookCount,
         });
     }
 
@@ -837,29 +964,13 @@ export class LobbyScene extends Component {
     }
 
     public async previewCharacterDs3Smoke(previewVariant = ''): Promise<void> {
-        if (!this._listPanel) {
-            throw new Error('[LobbyScene] GeneralListComposite 尚未初始化，無法執行 CharacterDs3 smoke route');
-        }
-
         const smokeGeneral = this._resolveCharacterDs3SmokeGeneral(previewVariant);
         if (!smokeGeneral) {
             throw new Error(`[LobbyScene] CharacterDs3 smoke route 找不到目標武將 variant=${previewVariant || '(default)'}`);
         }
 
-        await this._showGeneralListWithHandler(
-            (config: GeneralConfig) => this._openCharacterDs3FromListSelection(config),
-            { factionFilter: 'all' },
-        );
-
-        const opened = await this._waitForManagedUIOpen(UIID.GeneralList, this._listPanel.node);
-        if (!opened) {
-            throw new Error('[LobbyScene] CharacterDs3 smoke route did not open GeneralList within timeout');
-        }
-
-        const selected = this._listPanel.selectGeneralById(smokeGeneral.id);
-        if (!selected) {
-            throw new Error(`[LobbyScene] CharacterDs3 smoke route failed to click general row: ${smokeGeneral.id}`);
-        }
+        this._ensureSmokeGeneralInPlayerRoster(smokeGeneral);
+        await this._openCharacterDs3FromListSelection(smokeGeneral);
 
         await this._waitForCharacterDs3HostVisualReady(smokeGeneral);
     }

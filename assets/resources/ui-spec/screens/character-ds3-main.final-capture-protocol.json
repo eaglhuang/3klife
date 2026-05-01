@@ -13,8 +13,8 @@
     "width": 1920,
     "height": 1080
   },
-  "sourceCrop": { "x": 0, "y": 0, "width": 1920, "height": 320 },
-  "editorCrop": { "x": 0, "y": 0, "width": 1920, "height": 320 },
+  "sourceCrop": { "x": 0, "y": 0, "width": 1920, "height": 1080 },
+  "editorCrop": { "x": 0, "y": 24, "width": 1920, "height": 1080 },
   "settleMs": 800,
   "threshold": 0.95,
   "tolerance": 12,
@@ -23,6 +23,6 @@
     "R-33 final capture protocol: fixed 1920x1080 viewport, DPR, safe area, crop and settle time for the final HTML source vs Cocos Editor gate.",
     "Cocos runtime capture uses --viewport 1920x1130 --maxWidth 0 so the captured game image matches the 1920x1080 comparison viewport after toolbar cropping.",
     "Art-authority waiver sidecar remains null; current final gate uses raw runtimeVsSource without waiver.",
-    "R-51 editorCrop fix: Cocos Editor canvas is 1920x1128 but HTML source is designed at 1920x1080 (overflow:hidden). editorCrop clips editor screenshot to 1080px height before pixel-diff, eliminating the 4.3% scale mismatch that caused systematic pixel offset and suppressed scores."
+    "R-51 editorCrop fix: Cocos Editor capture is 1920x1128 while HTML source is 1920x1080 (overflow:hidden). editorCrop now uses y=24,height=1080 to remove editor chrome and keep the gameplay canvas aligned for pixel-diff."
   ]
 }

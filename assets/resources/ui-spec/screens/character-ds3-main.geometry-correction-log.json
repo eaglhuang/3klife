@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "doc_id": "doc_screen_char_ds3_geocorrect_r55",
+  "screenId": "character-ds3-main",
+  "sourcePackage": "Design System 3 / character / index.html",
+  "lastRun": "2026-04-30",
+  "baselineRun": "r54",
+  "targetRun": "r55",
+  "baselineScore": 0.8814,
+  "entries": [
+    {
+      "entryId": "portrait-bg-gradient-fix",
+      "clusterId": "portrait-left-cluster",
+      "runDiscovered": "r54",
+      "runFixed": "r55",
+      "cssElement": ".portrait-bg",
+      "cssProperty": "background",
+      "cssValue": "radial-gradient(at 30% 40%, rgba(139,98,42,0.3), rgba(0,0,0,0) 55%), radial-gradient(at 80% 70%, rgba(44,58,66,0.25), rgba(0,0,0,0) 60%), linear-gradient(rgb(42,39,32) 0%, rgb(26,24,20) 40%, rgb(16,14,10) 100%)",
+      "converterBugType": "sprite-frame-emitted-for-missing-png",
+      "ucufPropertyBefore": { "kind": "sprite-frame", "path": "sprites/ui_character_ds3/portrait_bg" },
+      "ucufPropertyAfter": {
+        "kind": "gradient-rect",
+        "gradient": {
+          "type": "linear",
+          "angle": 180,
+          "stops": [
+            { "color": "surfaceSepia", "offset": 0, "opacity": 1 },
+            { "color": "etcrDeepBg", "offset": 1, "opacity": 1 }
+          ]
+        }
+      },
+      "fixAction": "Change skin slot from sprite-frame (path missing) to gradient-rect using closest design tokens. Radial glow layers (amber 0.3, blue-grey 0.25) are deferred as art-authority diff.",
+      "tokenMapping": [
+        { "cssColor": "rgb(42,39,32)", "token": "surfaceSepia", "hex": "#2A2520", "distanceDelta": 2.0, "stop": 0 },
+        { "cssColor": "rgb(16,14,10)", "token": "etcrDeepBg", "hex": "#100D0A", "distanceDelta": 1.0, "stop": 1 }
+      ],
+      "approxQuality": "linear-base-only",
+      "deferredLayers": "radial glows (amber rgba(139,98,42,0.3), blue-grey rgba(44,58,66,0.25)) require bake or Cocos gradient override",
+      "status": "applied",
+      "estimatedScoreRecovery": "medium",
+      "_notes": "Converter must NOT emit sprite-frame kind for CSS gradient elements without verifying asset file exists first."
+    },
+    {
+      "entryId": "tab-rail-js-generated-elements",
+      "clusterId": "right-content-cluster",
+      "runDiscovered": "r54",
+      "runFixed": "r55",
+      "cssElement": ".tab-rail-wrap > button (JS-generated)",
+      "cssProperty": "background / border / boxShadow",
+      "cssValue": "JS: idle = linear-gradient(180deg,#20201F,#111) + 3px solid #4D4635; active = linear-gradient(180deg,rgba(212,175,55,.25),rgba(138,110,31,.12)) + 4px solid #D4AF37",
+      "converterBugType": "js-generated-elements-not-captured-by-puppeteer",
+      "ucufPropertyBefore": "empty / not present in layout (tab rail buttons not hydrated)",
+      "ucufPropertyAfter": "button-skin: tab_active_button (button_4), tab_idle_button (button_5~9) via skin JSON",
+      "fixAction": "No skin change needed — existing skin correctly maps to sprite-family buttons. Registered as art-authority waiver (waiver-tab-rail-sprites-r55) for CSS gradient circles vs runtime sprites.",
+      "status": "waivered",
+      "waiverRef": "waiver-tab-rail-sprites-r55",
+      "estimatedScoreRecovery": "low-to-medium",
+      "_notes": "Future converter improvement: detect React/JS-generated tab arrays from component source code analysis, not just static HTML."
+    }
+  ],
+  "universalConverterRules": [
+    {
+      "ruleId": "UCR-001",
+      "title": "Missing sprite pre-flight check",
+      "description": "Before emitting 'sprite-frame' kind for any CSS background-image or background gradient element, the converter MUST verify the target sprite file exists in assets/resources/sprites/. If the file does not exist: fall back to 'gradient-rect' (linear approximation of dominant gradient axis), set _assetStatus: 'bake-needed', and flag in geometry-correction-log.",
+      "appliesTo": "dom-to-ui converter, skin-patch tools",
+      "severity": "critical",
+      "addedByRun": "r55",
+      "sourceScreen": "character-ds3-main"
+    },
+    {
+      "ruleId": "UCR-002",
+      "title": "Multi-radial-gradient linear approximation",
+      "description": "When CSS contains multi-stop radial-gradient + linear-gradient composite backgrounds, extract the dominant linear base stops and map to closest design tokens. Mark intermediate radial glows as 'deferred layers' in the skin slot's _converterNote. Use tools_node/lib/dom-to-ui/token-registry.js distance function to select tokens.",
+      "appliesTo": "dom-to-ui converter, gradient classifier",
+      "severity": "high",
+      "addedByRun": "r55",
+      "sourceScreen": "character-ds3-main"
+    },
+    {
+      "ruleId": "UCR-003",
+      "title": "JS-generated elements require alternative detection",
+      "description": "Static HTML processed by puppeteer may not hydrate React useEffect or inline JS. Before concluding an element is absent, check: (1) static HTML source for inline JS arrays, (2) React component source for JSX tab definitions. Register absent JS-generated elements as art-authority diffs if runtime sprites are verified to exist.",
+      "appliesTo": "dom-to-ui converter, puppeteer crawl phase",
+      "severity": "medium",
+      "addedByRun": "r55",
+      "sourceScreen": "character-ds3-main"
+    }
+  ]
+}

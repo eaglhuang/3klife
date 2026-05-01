@@ -1,0 +1,618 @@
+{
+  "type": "container",
+  "name": "CharacterDs3TabTactics",
+  "contentContract": {
+    "status": "contract-ready",
+    "requiredNodes": [
+      "CharacterDs3TabTactics_div_2",
+      "CharacterDs3TabTactics_div_5",
+      "CharacterDs3TabTactics_div_11"
+    ],
+    "bindPaths": [
+      "general.tactics.primary",
+      "general.tactics.formation",
+      "general.tactics.support"
+    ],
+    "minNonEmptyNodes": 3
+  },
+  "widget": {
+    "top": 0,
+    "left": 0,
+    "right": 0,
+    "bottom": 0
+  },
+  "children": [
+    {
+      "type": "container",
+      "name": "CharacterDs3TabTactics_div_1",
+      "layout": {
+        "type": "vertical",
+        "paddingTop": 50,
+        "paddingRight": 20,
+        "paddingBottom": 60,
+        "paddingLeft": 20
+      },
+      "children": [
+        {
+          "type": "container",
+          "name": "CharacterDs3TabTactics_div_2",
+          "layout": {
+            "type": "vertical",
+            "spacingY": 12
+          },
+          "children": [
+            {
+              "type": "container",
+              "name": "CharacterDs3TabTactics_div_3",
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "spacingX": 8
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabTactics_span_1",
+                  "text": "已習得戰法",
+                  "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_1"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabTactics_span_2",
+                  "text": "LEARNED TACTICS",
+                  "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_2"
+                }
+              ],
+              "skinLayers": [
+                {
+                  "layerId": "CharacterDs3TabTactics_div_4",
+                  "slotId": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_4",
+                  "zOrder": 0,
+                  "expand": false,
+                  "width": 4,
+                  "height": 16
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "CharacterDs3TabTactics_div_5",
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "start",
+                "spacingX": 14,
+                "paddingTop": 14,
+                "paddingRight": 14,
+                "paddingBottom": 14,
+                "paddingLeft": 14
+              },
+              "skinSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_5",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabTactics_div_6",
+                  "width": 58,
+                  "height": 58,
+                  "layout": {
+                    "type": "grid",
+                    "cellHeight": 58
+                  },
+                  "text": "矛",
+                  "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_6"
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabTactics_div_7",
+                  "layout": {
+                    "type": "vertical",
+                    "spacingY": 5
+                  },
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabTactics_div_8",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 8
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_3",
+                          "text": "丈八蛇矛",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_3"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_4",
+                          "text": "主動",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_4"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_5",
+                          "text": "單體",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_5"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_6",
+                          "text": "TP 45",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_6"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_div_9",
+                      "text": "對單體造成 280% 物理傷害，附帶震懾效果 2 回合",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_9"
+                    }
+                  ]
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabTactics_div_10",
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "center",
+                    "spacingY": 2
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_span_7",
+                      "text": "LV.7",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_7"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_span_8",
+                      "text": "MAX 10",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "CharacterDs3TabTactics_div_11",
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "start",
+                "spacingX": 14,
+                "paddingTop": 14,
+                "paddingRight": 14,
+                "paddingBottom": 14,
+                "paddingLeft": 14
+              },
+              "skinSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_11",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabTactics_div_12",
+                  "width": 58,
+                  "height": 58,
+                  "layout": {
+                    "type": "grid",
+                    "cellHeight": 58
+                  },
+                  "text": "吼",
+                  "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_12"
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabTactics_div_13",
+                  "layout": {
+                    "type": "vertical",
+                    "spacingY": 5
+                  },
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabTactics_div_14",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 8
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_9",
+                          "text": "燕人咆哮",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_9"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_10",
+                          "text": "被動",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_10"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_div_15",
+                      "text": "全體步兵攻擊 +15%，受到智力傷害 −10%",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_15"
+                    }
+                  ]
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabTactics_div_16",
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "center",
+                    "spacingY": 2
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_span_11",
+                      "text": "LV.5",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_11"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_span_12",
+                      "text": "MAX 10",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_12"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "CharacterDs3TabTactics_div_17",
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "start",
+                "spacingX": 14,
+                "paddingTop": 14,
+                "paddingRight": 14,
+                "paddingBottom": 14,
+                "paddingLeft": 14
+              },
+              "skinSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_17",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabTactics_div_18",
+                  "width": 58,
+                  "height": 58,
+                  "layout": {
+                    "type": "grid",
+                    "cellHeight": 58
+                  },
+                  "text": "嘯",
+                  "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_18"
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabTactics_div_19",
+                  "layout": {
+                    "type": "vertical",
+                    "spacingY": 5
+                  },
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabTactics_div_20",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 8
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_13",
+                          "text": "長坂橋嘯",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_13"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_14",
+                          "text": "奧義",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_14"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_15",
+                          "text": "範圍",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_15"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_16",
+                          "text": "TP 80",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_16"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_div_21",
+                      "text": "對前方全體造成 520% 真實傷害，50% 機率使敵方逃跑 2 回合",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_21"
+                    }
+                  ]
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabTactics_div_22",
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "center",
+                    "spacingY": 2
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_span_17",
+                      "text": "LV.4",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_17"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_span_18",
+                      "text": "MAX 8",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_18"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "CharacterDs3TabTactics_div_23",
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "start",
+                "spacingX": 14,
+                "paddingTop": 14,
+                "paddingRight": 14,
+                "paddingBottom": 14,
+                "paddingLeft": 14
+              },
+              "skinSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_23",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabTactics_div_24",
+                  "width": 58,
+                  "height": 58,
+                  "layout": {
+                    "type": "grid",
+                    "cellHeight": 58
+                  },
+                  "text": "鞭",
+                  "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_24"
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabTactics_div_25",
+                  "layout": {
+                    "type": "vertical",
+                    "spacingY": 5
+                  },
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabTactics_div_26",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 8
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_19",
+                          "text": "醉酒鞭撻",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_19"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_20",
+                          "text": "主動",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_20"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_21",
+                          "text": "單體",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_21"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabTactics_span_22",
+                          "text": "TP 35",
+                          "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_22"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_div_27",
+                      "text": "攻擊單體造成 180% 傷害，自身受傷 +20% 但暴擊率 +40%",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_27"
+                    }
+                  ]
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabTactics_div_28",
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "center",
+                    "spacingY": 2
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_span_23",
+                      "text": "LV.3",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_23"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_span_24",
+                      "text": "MAX 10",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_24"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "name": "CharacterDs3TabTactics_div_29",
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "spacingX": 8
+              },
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabTactics_span_25",
+                  "text": "未啟發戰法",
+                  "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_25"
+                },
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabTactics_span_26",
+                  "text": "LOCKED",
+                  "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_26"
+                }
+              ],
+              "skinLayers": [
+                {
+                  "layerId": "CharacterDs3TabTactics_div_30",
+                  "slotId": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_30",
+                  "zOrder": 0,
+                  "expand": false,
+                  "width": 4,
+                  "height": 16
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "CharacterDs3TabTactics_div_31",
+              "opacity": 0.5,
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "spacingX": 14,
+                "paddingTop": 12,
+                "paddingRight": 14,
+                "paddingBottom": 12,
+                "paddingLeft": 14
+              },
+              "skinSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_31",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabTactics_div_32",
+                  "width": 52,
+                  "height": 52,
+                  "layout": {
+                    "type": "grid",
+                    "cellHeight": 52
+                  },
+                  "text": "焰",
+                  "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_32"
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabTactics_div_33",
+                  "layout": {
+                    "type": "vertical"
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_div_34",
+                      "text": "烈焰衝鋒",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_34"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_div_35",
+                      "text": "🔒 需紅色因子 Lv.3",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_35"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "CharacterDs3TabTactics_div_36",
+              "opacity": 0.5,
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "spacingX": 14,
+                "paddingTop": 12,
+                "paddingRight": 14,
+                "paddingBottom": 12,
+                "paddingLeft": 14
+              },
+              "skinSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_36",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "CharacterDs3TabTactics_div_37",
+                  "width": 52,
+                  "height": 52,
+                  "layout": {
+                    "type": "grid",
+                    "cellHeight": 52
+                  },
+                  "text": "義",
+                  "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_37"
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabTactics_div_38",
+                  "layout": {
+                    "type": "vertical"
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_div_39",
+                      "text": "義結金蘭",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_39"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabTactics_div_40",
+                      "text": "🔒 需關羽同隊",
+                      "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_40"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "widget": {
+        "top": 0,
+        "left": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "_geometryContract": "fill-root"
+    }
+  ]
+}

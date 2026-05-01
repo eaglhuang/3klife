@@ -1,0 +1,1144 @@
+{
+  "type": "container",
+  "name": "CharacterDs3TabBloodline",
+  "contentContract": {
+    "status": "contract-ready",
+    "requiredNodes": [
+      "CharacterDs3TabBloodline_body",
+      "CharacterDs3TabBloodline_div_1",
+      "CharacterDs3TabBloodline_div_16"
+    ],
+    "bindPaths": [
+      "general.bloodline.lineage",
+      "general.bloodline.crest",
+      "general.bloodline.awakening"
+    ],
+    "minNonEmptyNodes": 3
+  },
+  "widget": {
+    "top": 0,
+    "left": 0,
+    "right": 0,
+    "bottom": 0
+  },
+  "children": [
+    {
+      "type": "container",
+      "name": "CharacterDs3TabBloodline_body",
+      "widget": {
+        "top": 0,
+        "left": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "children": [
+        {
+          "type": "container",
+          "name": "CharacterDs3TabBloodline_div_1",
+          "width": 540,
+          "height": 970,
+          "layout": {
+            "type": "vertical",
+            "paddingTop": 50,
+            "paddingRight": 20,
+            "paddingBottom": 60,
+            "paddingLeft": 20
+          },
+          "children": [
+            {
+              "type": "container",
+              "name": "CharacterDs3TabBloodline_div_2",
+              "layout": {
+                "type": "vertical",
+                "spacingY": 12
+              },
+              "children": [
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabBloodline_div_3",
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "stretch",
+                    "spacingX": 14
+                  },
+                  "children": [
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabBloodline_div_4",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 14,
+                        "paddingTop": 12,
+                        "paddingRight": 16,
+                        "paddingBottom": 12,
+                        "paddingLeft": 16
+                      },
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_4",
+                      "children": [
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabBloodline_div_5",
+                          "layout": {
+                            "type": "vertical",
+                            "alignItems": "center",
+                            "spacingY": 2
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabBloodline_span_1",
+                              "text": "爆發力 EP",
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_1"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabBloodline_span_2",
+                              "text": "82",
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_2"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabBloodline_div_7",
+                          "text": "良才美質",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_7"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "panel",
+                      "name": "CharacterDs3TabBloodline_div_10",
+                      "layout": {
+                        "type": "vertical",
+                        "justifyContent": "center",
+                        "spacingY": 6,
+                        "paddingTop": 12,
+                        "paddingRight": 16,
+                        "paddingBottom": 12,
+                        "paddingLeft": 16
+                      },
+                      "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_10",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabBloodline_span_3",
+                          "text": "燕血脈",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_3"
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabBloodline_div_11",
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "spacingX": 8
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabBloodline_span_4",
+                              "text": "覺醒傾向",
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_4"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabBloodline_span_5",
+                              "text": "58%",
+                              "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_5"
+                            }
+                          ],
+                          "skinLayers": [
+                            {
+                              "layerId": "CharacterDs3TabBloodline_div_12",
+                              "slotId": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_12",
+                              "zOrder": 0,
+                              "expand": false,
+                              "height": 8
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "container",
+                  "name": "CharacterDs3TabBloodline_div_14",
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "spacingX": 8
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabBloodline_span_6",
+                      "text": "家族血統 · 十四人",
+                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_6"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabBloodline_span_7",
+                      "text": "14-PERSON ANCESTRY MATRIX",
+                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_7"
+                    }
+                  ],
+                  "skinLayers": [
+                    {
+                      "layerId": "CharacterDs3TabBloodline_div_15",
+                      "slotId": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_15",
+                      "zOrder": 0,
+                      "expand": false,
+                      "width": 4,
+                      "height": 16
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "CharacterDs3TabBloodline_div_16",
+                  "skinSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_16",
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabBloodline_div_17",
+                      "layout": {
+                        "type": "vertical",
+                        "spacingY": 0
+                      },
+                      "children": [
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabBloodline_div_18",
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "start",
+                            "spacingX": 3
+                          },
+                          "children": [
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabBloodline_div_19",
+                              "width": 54,
+                              "layout": {
+                                "type": "vertical",
+                                "alignItems": "end",
+                                "justifyContent": "start"
+                              },
+                              "children": [
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabBloodline_span_8",
+                                  "text": "曾祖父母",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_8"
+                                },
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabBloodline_span_9",
+                                  "text": "(8人)",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_9"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabBloodline_div_20",
+                              "layout": {
+                                "type": "horizontal",
+                                "justifyContent": "space-around"
+                              },
+                              "children": [
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_21",
+                                  "width": 64,
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_div_22",
+                                      "width": 28,
+                                      "height": 28,
+                                      "layout": {
+                                        "type": "grid",
+                                        "cellHeight": 28
+                                      },
+                                      "text": "張",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_22"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_10",
+                                      "text": "張祖父",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_10"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_11",
+                                      "text": "(燕地)",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_11"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_24",
+                                  "width": 64,
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_div_25",
+                                      "width": 28,
+                                      "height": 28,
+                                      "layout": {
+                                        "type": "grid",
+                                        "cellHeight": 28
+                                      },
+                                      "text": "張",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_25"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_14",
+                                      "text": "張祖母",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_14"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_15",
+                                      "text": "(幽州)",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_15"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_27",
+                                  "width": 64,
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_div_28",
+                                      "width": 28,
+                                      "height": 28,
+                                      "layout": {
+                                        "type": "grid",
+                                        "cellHeight": 28
+                                      },
+                                      "text": "張",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_28"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_17",
+                                      "text": "張外祖父",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_17"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_18",
+                                      "text": "(北境)",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_18"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_30",
+                                  "width": 64,
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_div_31",
+                                      "width": 28,
+                                      "height": 28,
+                                      "layout": {
+                                        "type": "grid",
+                                        "cellHeight": 28
+                                      },
+                                      "text": "張",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_31"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_21",
+                                      "text": "張外祖母",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_21"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_22",
+                                      "text": "(燕地)",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_22"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_33",
+                                  "width": 64,
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_div_34",
+                                      "width": 28,
+                                      "height": 28,
+                                      "layout": {
+                                        "type": "grid",
+                                        "cellHeight": 28
+                                      },
+                                      "text": "燕",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_34"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_24",
+                                      "text": "燕祖父",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_24"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_25",
+                                      "text": "(南蠻)",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_25"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_36",
+                                  "width": 64,
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_div_37",
+                                      "width": 28,
+                                      "height": 28,
+                                      "layout": {
+                                        "type": "grid",
+                                        "cellHeight": 28
+                                      },
+                                      "text": "燕",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_37"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_27",
+                                      "text": "燕祖母",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_27"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_28",
+                                      "text": "(蠻裔)",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_28"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_39",
+                                  "width": 64,
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_div_40",
+                                      "width": 28,
+                                      "height": 28,
+                                      "layout": {
+                                        "type": "grid",
+                                        "cellHeight": 28
+                                      },
+                                      "text": "燕",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_40"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_30",
+                                      "text": "燕外祖父",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_30"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_31",
+                                      "text": "(北境)",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_31"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_42",
+                                  "width": 64,
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_div_43",
+                                      "width": 28,
+                                      "height": 28,
+                                      "layout": {
+                                        "type": "grid",
+                                        "cellHeight": 28
+                                      },
+                                      "text": "燕",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_43"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_33",
+                                      "text": "燕外祖母",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_33"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_34",
+                                      "text": "(南蠻)",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_34"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabBloodline_div_45",
+                          "height": 20,
+                          "children": [
+                            {
+                              "type": "composite",
+                              "name": "CharacterDs3TabBloodline_svg_1",
+                              "width": "100%",
+                              "height": 20,
+                              "layout": {
+                                "type": "vertical"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabBloodline_div_46",
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "start",
+                            "spacingX": 3
+                          },
+                          "children": [
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabBloodline_div_47",
+                              "width": 54,
+                              "layout": {
+                                "type": "vertical",
+                                "alignItems": "end",
+                                "justifyContent": "start"
+                              },
+                              "children": [
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabBloodline_span_36",
+                                  "text": "祖父母",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_36"
+                                },
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabBloodline_span_37",
+                                  "text": "(4人)",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_37"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabBloodline_div_48",
+                              "layout": {
+                                "type": "horizontal",
+                                "justifyContent": "space-around"
+                              },
+                              "children": [
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_49",
+                                  "width": 64,
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_div_50",
+                                      "width": 28,
+                                      "height": 28,
+                                      "layout": {
+                                        "type": "grid",
+                                        "cellHeight": 28
+                                      },
+                                      "text": "張",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_50"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_38",
+                                      "text": "張父父",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_38"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_39",
+                                      "text": "(幽州)",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_39"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_52",
+                                  "width": 64,
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_div_53",
+                                      "width": 28,
+                                      "height": 28,
+                                      "layout": {
+                                        "type": "grid",
+                                        "cellHeight": 28
+                                      },
+                                      "text": "張",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_53"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_42",
+                                      "text": "張父母",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_42"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_43",
+                                      "text": "(燕地)",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_43"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_55",
+                                  "width": 64,
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_div_56",
+                                      "width": 28,
+                                      "height": 28,
+                                      "layout": {
+                                        "type": "grid",
+                                        "cellHeight": 28
+                                      },
+                                      "text": "燕",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_56"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_45",
+                                      "text": "燕氏父",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_45"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_46",
+                                      "text": "(南蠻)",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_46"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_58",
+                                  "width": 64,
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_div_59",
+                                      "width": 28,
+                                      "height": 28,
+                                      "layout": {
+                                        "type": "grid",
+                                        "cellHeight": 28
+                                      },
+                                      "text": "燕",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_59"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_49",
+                                      "text": "燕氏母",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_49"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_50",
+                                      "text": "(蠻裔)",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_50"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabBloodline_div_61",
+                          "height": 20,
+                          "children": [
+                            {
+                              "type": "composite",
+                              "name": "CharacterDs3TabBloodline_svg_2",
+                              "width": "100%",
+                              "height": 20,
+                              "layout": {
+                                "type": "vertical"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabBloodline_div_62",
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "start",
+                            "spacingX": 3
+                          },
+                          "children": [
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabBloodline_div_63",
+                              "width": 54,
+                              "layout": {
+                                "type": "vertical",
+                                "alignItems": "end",
+                                "justifyContent": "start"
+                              },
+                              "children": [
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabBloodline_span_52",
+                                  "text": "父母",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_52"
+                                },
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabBloodline_span_53",
+                                  "text": "(2人)",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_53"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabBloodline_div_64",
+                              "layout": {
+                                "type": "horizontal",
+                                "justifyContent": "space-around"
+                              },
+                              "children": [
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_65",
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "container",
+                                      "name": "CharacterDs3TabBloodline_div_66",
+                                      "width": 78,
+                                      "layout": {
+                                        "type": "vertical",
+                                        "alignItems": "center",
+                                        "spacingY": 2
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "label",
+                                          "name": "CharacterDs3TabBloodline_div_67",
+                                          "width": 36,
+                                          "height": 36,
+                                          "layout": {
+                                            "type": "grid",
+                                            "cellHeight": 36
+                                          },
+                                          "text": "張",
+                                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_67"
+                                        },
+                                        {
+                                          "type": "label",
+                                          "name": "CharacterDs3TabBloodline_span_54",
+                                          "text": "張威",
+                                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_54"
+                                        },
+                                        {
+                                          "type": "label",
+                                          "name": "CharacterDs3TabBloodline_span_55",
+                                          "text": "(幽州)",
+                                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_55"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_59",
+                                      "text": "父·幽州武人",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_59"
+                                    },
+                                    {
+                                      "type": "container",
+                                      "name": "CharacterDs3TabBloodline_div_69",
+                                      "layout": {
+                                        "type": "horizontal",
+                                        "justifyContent": "center",
+                                        "spacingX": 2
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "label",
+                                          "name": "CharacterDs3TabBloodline_span_60",
+                                          "text": "武力★5",
+                                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_60"
+                                        },
+                                        {
+                                          "type": "label",
+                                          "name": "CharacterDs3TabBloodline_span_61",
+                                          "text": "戰法★4",
+                                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_61"
+                                        },
+                                        {
+                                          "type": "label",
+                                          "name": "CharacterDs3TabBloodline_span_62",
+                                          "text": "體魄★3",
+                                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_62"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_70",
+                                  "layout": {
+                                    "type": "vertical",
+                                    "alignItems": "center",
+                                    "spacingY": 2
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "container",
+                                      "name": "CharacterDs3TabBloodline_div_71",
+                                      "width": 78,
+                                      "layout": {
+                                        "type": "vertical",
+                                        "alignItems": "center",
+                                        "spacingY": 2
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "label",
+                                          "name": "CharacterDs3TabBloodline_div_72",
+                                          "width": 36,
+                                          "height": 36,
+                                          "layout": {
+                                            "type": "grid",
+                                            "cellHeight": 36
+                                          },
+                                          "text": "燕",
+                                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_72"
+                                        },
+                                        {
+                                          "type": "label",
+                                          "name": "CharacterDs3TabBloodline_span_63",
+                                          "text": "燕氏",
+                                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_63"
+                                        },
+                                        {
+                                          "type": "label",
+                                          "name": "CharacterDs3TabBloodline_span_64",
+                                          "text": "(南蠻)",
+                                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_64"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_67",
+                                      "text": "母·燕人女將",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_67"
+                                    },
+                                    {
+                                      "type": "container",
+                                      "name": "CharacterDs3TabBloodline_div_74",
+                                      "layout": {
+                                        "type": "horizontal",
+                                        "justifyContent": "center",
+                                        "spacingX": 2
+                                      },
+                                      "children": [
+                                        {
+                                          "type": "label",
+                                          "name": "CharacterDs3TabBloodline_span_68",
+                                          "text": "魅力★3",
+                                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_68"
+                                        },
+                                        {
+                                          "type": "label",
+                                          "name": "CharacterDs3TabBloodline_span_69",
+                                          "text": "運氣★2",
+                                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_69"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabBloodline_div_75",
+                          "height": 20,
+                          "children": [
+                            {
+                              "type": "composite",
+                              "name": "CharacterDs3TabBloodline_svg_3",
+                              "width": "100%",
+                              "height": 20
+                            }
+                          ]
+                        },
+                        {
+                          "type": "container",
+                          "name": "CharacterDs3TabBloodline_div_76",
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "start",
+                            "spacingX": 3
+                          },
+                          "children": [
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabBloodline_div_77",
+                              "width": 54,
+                              "layout": {
+                                "type": "vertical",
+                                "alignItems": "end",
+                                "justifyContent": "start"
+                              },
+                              "children": [
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabBloodline_span_70",
+                                  "text": "本代",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_70"
+                                },
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabBloodline_span_71",
+                                  "text": "(1人)",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_71"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "container",
+                              "name": "CharacterDs3TabBloodline_div_79",
+                              "layout": {
+                                "type": "vertical",
+                                "alignItems": "center",
+                                "spacingY": 4
+                              },
+                              "children": [
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabBloodline_div_80",
+                                  "width": 62,
+                                  "height": 62,
+                                  "layout": {
+                                    "type": "grid",
+                                    "cellHeight": 62
+                                  },
+                                  "text": "張",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_80"
+                                },
+                                {
+                                  "type": "label",
+                                  "name": "CharacterDs3TabBloodline_span_72",
+                                  "text": "張飛",
+                                  "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_72"
+                                },
+                                {
+                                  "type": "container",
+                                  "name": "CharacterDs3TabBloodline_div_81",
+                                  "layout": {
+                                    "type": "horizontal",
+                                    "justifyContent": "center",
+                                    "spacingX": 4
+                                  },
+                                  "children": [
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_73",
+                                      "text": "武力★5",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_73"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_74",
+                                      "text": "戰法★4",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_74"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_75",
+                                      "text": "體魄★4",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_75"
+                                    },
+                                    {
+                                      "type": "label",
+                                      "name": "CharacterDs3TabBloodline_span_76",
+                                      "text": "🔒 ???",
+                                      "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_76"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "container",
+                      "name": "CharacterDs3TabBloodline_div_82",
+                      "layout": {
+                        "type": "horizontal",
+                        "spacingX": 14
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabBloodline_span_78",
+                          "text": "藍·武力",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_78"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabBloodline_span_80",
+                          "text": "粉·傳授",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_80"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabBloodline_span_82",
+                          "text": "綠·戰法",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_82"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabBloodline_span_84",
+                          "text": "紫·運氣",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_84"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabBloodline_span_86",
+                          "text": "白·靈獸",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_86"
+                        },
+                        {
+                          "type": "label",
+                          "name": "CharacterDs3TabBloodline_span_88",
+                          "text": "紅·體魄",
+                          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_span_88"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "label",
+          "name": "CharacterDs3TabBloodline_div_90",
+          "text": "▼ 收 起 ▼",
+          "styleSlot": "auto.character-ds3-tab-bloodline.characterds3tabbloodline_div_90"
+        }
+      ]
+    }
+  ]
+}
