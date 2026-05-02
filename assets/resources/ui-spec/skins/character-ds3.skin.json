@@ -1,13 +1,13 @@
 {
-  "id": "character-ds3-main.skin",
+  "id": "character-ds3.skin",
   "version": 1,
   "slots": {
-    "auto.character-ds3-main.characterds3main_div_1": {
+    "auto.character-ds3.characterds3_div_1": {
       "kind": "color-rect",
       "color": "backgroundDeep",
       "opacity": 1
     },
-    "auto.character-ds3-main.characterds3main_div_2": {
+    "auto.character-ds3.characterds3_div_2": {
       "kind": "gradient-rect",
       "gradient": {
         "type": "linear",
@@ -28,7 +28,7 @@
         ]
       }
     },
-    "auto.character-ds3-main.characterds3main_button_1": {
+    "auto.character-ds3.characterds3_button_1": {
       "kind": "gradient-rect",
       "gradient": {
         "type": "linear",
@@ -55,12 +55,12 @@
         "disabled": "#555555"
       }
     },
-    "auto.character-ds3-main.characterds3main_img_1": {
+    "auto.character-ds3.characterds3_img_1": {
       "kind": "sprite-frame",
       "path": "sprites/generals/zhang_fei_portrait",
       "expectedHeight": "98%"
     },
-    "auto.character-ds3-main.characterds3main_button_2": {
+    "auto.character-ds3.characterds3_button_2": {
       "kind": "gradient-rect",
       "gradient": {
         "type": "linear",
@@ -87,7 +87,7 @@
         "disabled": "#555555"
       }
     },
-    "auto.character-ds3-main.characterds3main_div_3": {
+    "auto.character-ds3.characterds3_div_3": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 20,
@@ -99,7 +99,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_div_4": {
+    "auto.character-ds3.characterds3_div_4": {
       "kind": "gradient-rect",
       "gradient": {
         "type": "linear",
@@ -119,7 +119,7 @@
       "borderWidth": 2,
       "borderColor": "stdCrestColor"
     },
-    "auto.character-ds3-main.characterds3main_div_4_cssshadow": {
+    "auto.character-ds3.characterds3_div_4_cssshadow": {
       "kind": "shadow-set",
       "boxShadows": [
         {
@@ -139,7 +139,7 @@
       },
       "cornerRadius": 16
     },
-    "auto.character-ds3-main.characterds3main_span_1": {
+    "auto.character-ds3.characterds3_span_1": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 32,
@@ -151,7 +151,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_span_2": {
+    "auto.character-ds3.characterds3_span_2": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 9,
@@ -162,7 +162,7 @@
       "outlineWidth": 2,
       "horizontalAlign": "LEFT"
     },
-    "auto.character-ds3-main.characterds3main_div_5": {
+    "auto.character-ds3.characterds3_div_5": {
       "kind": "gradient-rect",
       "gradient": {
         "type": "linear",
@@ -183,7 +183,7 @@
         ]
       }
     },
-    "auto.character-ds3-main.characterds3main_button_3": {
+    "auto.character-ds3.characterds3_button_3": {
       "kind": "gradient-rect",
       "gradient": {
         "type": "linear",
@@ -208,7 +208,7 @@
         "disabled": "#555555"
       }
     },
-    "auto.character-ds3-main.characterds3main_button_3_cssshadow": {
+    "auto.character-ds3.characterds3_button_3_cssshadow": {
       "kind": "shadow-set",
       "boxShadows": [
         {
@@ -228,7 +228,7 @@
       },
       "cornerRadius": 0
     },
-    "auto.character-ds3-main.characterds3main_span_3": {
+    "auto.character-ds3.characterds3_span_3": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 28,
@@ -239,7 +239,7 @@
       "outlineWidth": 2,
       "horizontalAlign": "LEFT"
     },
-    "auto.character-ds3-main.characterds3main_span_4": {
+    "auto.character-ds3.characterds3_span_4": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 11,
@@ -250,7 +250,7 @@
       "outlineWidth": 2,
       "horizontalAlign": "LEFT"
     },
-    "auto.character-ds3-main.characterds3main_button_4": {
+    "auto.character-ds3.characterds3_button_4": {
       "kind": "button-skin",
       "normal": "sprites/ui_families/general_detail/tab_active_button",
       "pressed": "sprites/ui_families/general_detail/tab_active_button",
@@ -259,7 +259,7 @@
       "spriteType": "simple",
       "allowAutoAtlas": true
     },
-    "auto.character-ds3-main.characterds3main_span_5": {
+    "auto.character-ds3.characterds3_span_5": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 32,
@@ -271,7 +271,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_span_6": {
+    "auto.character-ds3.characterds3_span_6": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 12,
@@ -283,7 +283,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_button_5": {
+    "auto.character-ds3.characterds3_button_5": {
       "kind": "button-skin",
       "normal": "sprites/ui_families/general_detail/tab_active_button",
       "pressed": "sprites/ui_families/general_detail/tab_active_button",
@@ -292,7 +292,7 @@
       "spriteType": "simple",
       "allowAutoAtlas": true
     },
-    "auto.character-ds3-main.characterds3main_span_7": {
+    "auto.character-ds3.characterds3_span_7": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 32,
@@ -304,7 +304,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_span_8": {
+    "auto.character-ds3.characterds3_span_8": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 12,
@@ -316,7 +316,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_button_6": {
+    "auto.character-ds3.characterds3_button_6": {
       "kind": "button-skin",
       "normal": "sprites/ui_families/general_detail/tab_active_button",
       "pressed": "sprites/ui_families/general_detail/tab_active_button",
@@ -325,7 +325,7 @@
       "spriteType": "simple",
       "allowAutoAtlas": true
     },
-    "auto.character-ds3-main.characterds3main_span_9": {
+    "auto.character-ds3.characterds3_span_9": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 32,
@@ -337,7 +337,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_span_10": {
+    "auto.character-ds3.characterds3_span_10": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 12,
@@ -349,7 +349,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_button_7": {
+    "auto.character-ds3.characterds3_button_7": {
       "kind": "button-skin",
       "normal": "sprites/ui_families/general_detail/tab_active_button",
       "pressed": "sprites/ui_families/general_detail/tab_active_button",
@@ -358,7 +358,7 @@
       "spriteType": "simple",
       "allowAutoAtlas": true
     },
-    "auto.character-ds3-main.characterds3main_span_11": {
+    "auto.character-ds3.characterds3_span_11": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 32,
@@ -370,7 +370,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_span_12": {
+    "auto.character-ds3.characterds3_span_12": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 12,
@@ -382,7 +382,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_button_8": {
+    "auto.character-ds3.characterds3_button_8": {
       "kind": "button-skin",
       "normal": "sprites/ui_families/general_detail/tab_active_button",
       "pressed": "sprites/ui_families/general_detail/tab_active_button",
@@ -391,7 +391,7 @@
       "spriteType": "simple",
       "allowAutoAtlas": true
     },
-    "auto.character-ds3-main.characterds3main_span_13": {
+    "auto.character-ds3.characterds3_span_13": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 32,
@@ -403,7 +403,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_span_14": {
+    "auto.character-ds3.characterds3_span_14": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 12,
@@ -415,7 +415,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_button_9": {
+    "auto.character-ds3.characterds3_button_9": {
       "kind": "button-skin",
       "normal": "sprites/ui_families/general_detail/tab_active_button",
       "pressed": "sprites/ui_families/general_detail/tab_active_button",
@@ -424,7 +424,7 @@
       "spriteType": "simple",
       "allowAutoAtlas": true
     },
-    "auto.character-ds3-main.characterds3main_span_15": {
+    "auto.character-ds3.characterds3_span_15": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 32,
@@ -436,7 +436,7 @@
       "horizontalAlign": "LEFT",
       "isBold": true
     },
-    "auto.character-ds3-main.characterds3main_span_16": {
+    "auto.character-ds3.characterds3_span_16": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/font",
       "fontSize": 12,
@@ -457,303 +457,303 @@
       "colors": [
         {
           "token": "backgroundDeep",
-          "detail": "auto.character-ds3-main.characterds3main_div_1.color"
+          "detail": "auto.character-ds3.characterds3_div_1.color"
         },
         {
           "token": "secondary",
-          "detail": "auto.character-ds3-main.characterds3main_button_1.borderColor"
+          "detail": "auto.character-ds3.characterds3_button_1.borderColor"
         },
         {
           "token": "secondary",
-          "detail": "auto.character-ds3-main.characterds3main_button_2.borderColor"
+          "detail": "auto.character-ds3.characterds3_button_2.borderColor"
         },
         {
           "token": "surfaceParchment",
-          "detail": "auto.character-ds3-main.characterds3main_div_3.color"
+          "detail": "auto.character-ds3.characterds3_div_3.color"
         },
         {
           "token": "stdCrestColor",
-          "detail": "auto.character-ds3-main.characterds3main_div_4.borderColor"
+          "detail": "auto.character-ds3.characterds3_div_4.borderColor"
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_span_1.color"
+          "detail": "auto.character-ds3.characterds3_span_1.color"
         },
         {
           "token": "mirrorSigilField",
-          "detail": "auto.character-ds3-main.characterds3main_span_2.color"
+          "detail": "auto.character-ds3.characterds3_span_2.color"
         },
         {
           "token": "outline",
-          "detail": "auto.character-ds3-main.characterds3main_button_3.borderColor"
+          "detail": "auto.character-ds3.characterds3_button_3.borderColor"
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_span_3.color"
+          "detail": "auto.character-ds3.characterds3_span_3.color"
         },
         {
           "token": "textKhaki",
-          "detail": "auto.character-ds3-main.characterds3main_span_4.color"
+          "detail": "auto.character-ds3.characterds3_span_4.color"
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_span_5.color"
+          "detail": "auto.character-ds3.characterds3_span_5.color"
         },
         {
           "token": "textKhaki",
-          "detail": "auto.character-ds3-main.characterds3main_span_6.color"
+          "detail": "auto.character-ds3.characterds3_span_6.color"
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_span_7.color"
+          "detail": "auto.character-ds3.characterds3_span_7.color"
         },
         {
           "token": "textKhaki",
-          "detail": "auto.character-ds3-main.characterds3main_span_8.color"
+          "detail": "auto.character-ds3.characterds3_span_8.color"
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_span_9.color"
+          "detail": "auto.character-ds3.characterds3_span_9.color"
         },
         {
           "token": "textKhaki",
-          "detail": "auto.character-ds3-main.characterds3main_span_10.color"
+          "detail": "auto.character-ds3.characterds3_span_10.color"
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_span_11.color"
+          "detail": "auto.character-ds3.characterds3_span_11.color"
         },
         {
           "token": "textKhaki",
-          "detail": "auto.character-ds3-main.characterds3main_span_12.color"
+          "detail": "auto.character-ds3.characterds3_span_12.color"
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_span_13.color"
+          "detail": "auto.character-ds3.characterds3_span_13.color"
         },
         {
           "token": "textKhaki",
-          "detail": "auto.character-ds3-main.characterds3main_span_14.color"
+          "detail": "auto.character-ds3.characterds3_span_14.color"
         },
         {
           "token": "secondaryLight",
-          "detail": "auto.character-ds3-main.characterds3main_span_15.color"
+          "detail": "auto.character-ds3.characterds3_span_15.color"
         },
         {
           "token": "textKhaki",
-          "detail": "auto.character-ds3-main.characterds3main_span_16.color"
+          "detail": "auto.character-ds3.characterds3_span_16.color"
         }
       ],
       "cssVars": [],
       "spacing": [
         {
           "token": "spacing.lg",
-          "detail": "CharacterDs3Main_div_9.padding"
+          "detail": "CharacterDs3_div_9.padding"
         }
       ],
       "typography": [
         {
           "token": "spacing.xxl",
-          "detail": "auto.character-ds3-main.characterds3main_span_1.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_1.fontSize"
         },
         {
           "token": "spacing.xxl",
-          "detail": "auto.character-ds3-main.characterds3main_span_5.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_5.fontSize"
         },
         {
           "token": "spacing.md",
-          "detail": "auto.character-ds3-main.characterds3main_span_6.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_6.fontSize"
         },
         {
           "token": "spacing.xxl",
-          "detail": "auto.character-ds3-main.characterds3main_span_7.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_7.fontSize"
         },
         {
           "token": "spacing.md",
-          "detail": "auto.character-ds3-main.characterds3main_span_8.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_8.fontSize"
         },
         {
           "token": "spacing.xxl",
-          "detail": "auto.character-ds3-main.characterds3main_span_9.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_9.fontSize"
         },
         {
           "token": "spacing.md",
-          "detail": "auto.character-ds3-main.characterds3main_span_10.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_10.fontSize"
         },
         {
           "token": "spacing.xxl",
-          "detail": "auto.character-ds3-main.characterds3main_span_11.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_11.fontSize"
         },
         {
           "token": "spacing.md",
-          "detail": "auto.character-ds3-main.characterds3main_span_12.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_12.fontSize"
         },
         {
           "token": "spacing.xxl",
-          "detail": "auto.character-ds3-main.characterds3main_span_13.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_13.fontSize"
         },
         {
           "token": "spacing.md",
-          "detail": "auto.character-ds3-main.characterds3main_span_14.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_14.fontSize"
         },
         {
           "token": "spacing.xxl",
-          "detail": "auto.character-ds3-main.characterds3main_span_15.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_15.fontSize"
         },
         {
           "token": "spacing.md",
-          "detail": "auto.character-ds3-main.characterds3main_span_16.fontSize"
+          "detail": "auto.character-ds3.characterds3_span_16.fontSize"
         }
       ],
       "artWarnings": [
         {
           "code": "css-transform-manual-layout-risk",
-          "node": "CharacterDs3Main_div_1",
+          "node": "CharacterDs3_div_1",
           "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_div_1",
+          "node": "CharacterDs3_div_1",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_div_2",
+          "node": "CharacterDs3_div_2",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
           "code": "css-transform-manual-layout-risk",
-          "node": "CharacterDs3Main_button_1",
+          "node": "CharacterDs3_button_1",
           "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_button_1",
+          "node": "CharacterDs3_button_1",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "CharacterDs3Main_button_1",
+          "node": "CharacterDs3_button_1",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "css-transform-manual-layout-risk",
-          "node": "CharacterDs3Main_img_1",
+          "node": "CharacterDs3_img_1",
           "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_img_1",
+          "node": "CharacterDs3_img_1",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "CharacterDs3Main_img_1",
+          "node": "CharacterDs3_img_1",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "css-transform-manual-layout-risk",
-          "node": "CharacterDs3Main_button_2",
+          "node": "CharacterDs3_button_2",
           "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_button_2",
+          "node": "CharacterDs3_button_2",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "CharacterDs3Main_button_2",
+          "node": "CharacterDs3_button_2",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_3",
+          "node": "CharacterDs3_div_3",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_4",
+          "node": "CharacterDs3_div_4",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "CharacterDs3Main_div_4",
+          "node": "CharacterDs3_div_4",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "overflow-hidden-clipping-risk",
-          "node": "CharacterDs3Main_div_5",
+          "node": "CharacterDs3_div_5",
           "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_5",
+          "node": "CharacterDs3_div_5",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "node-opacity-washes-children-risk",
-          "node": "CharacterDs3Main_div_5",
+          "node": "CharacterDs3_div_5",
           "detail": "容器 opacity 會連子文字一起洗淡，應優先放到背景 skin"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_button_3",
+          "node": "CharacterDs3_button_3",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "CharacterDs3Main_button_3",
+          "node": "CharacterDs3_button_3",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_7",
+          "node": "CharacterDs3_div_7",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "CharacterDs3Main_button_4",
+          "node": "CharacterDs3_button_4",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "CharacterDs3Main_button_5",
+          "node": "CharacterDs3_button_5",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "CharacterDs3Main_button_6",
+          "node": "CharacterDs3_button_6",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "CharacterDs3Main_button_7",
+          "node": "CharacterDs3_button_7",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "CharacterDs3Main_button_8",
+          "node": "CharacterDs3_button_8",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "css-effect-needs-art-review",
-          "node": "CharacterDs3Main_button_9",
+          "node": "CharacterDs3_button_9",
           "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
         },
         {
           "code": "css-transform-manual-layout-risk",
-          "node": "CharacterDs3Main_div_10",
+          "node": "CharacterDs3_div_10",
           "detail": "CSS transform 可能造成 Cocos widget 對位與縮放殘差"
         },
         {
           "code": "z-index-manual-zorder-risk",
-          "node": "CharacterDs3Main_div_10",
+          "node": "CharacterDs3_div_10",
           "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
         },
         {
           "code": "asymmetric-border-radius-approximated",
-          "node": "CharacterDs3Main_div_10",
+          "node": "CharacterDs3_div_10",
           "detail": "非對稱圓角不適合直接轉成單一九宮或 color-rect"
         }
       ]

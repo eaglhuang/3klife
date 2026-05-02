@@ -3,7 +3,7 @@
   "version": 1,
   "uiId": "GeneralDetail",
   "layout": "character-ds3-main",
-  "skin": "character-ds3-default",
+  "skin": "character-ds3-main.skin",
   "preview": {
     "lazySlotFragments": {
       "CharacterDs3Main_div_54": "fragments/layouts/character-ds3-story-strip-open"
@@ -11,32 +11,32 @@
   },
   "tabRouting": {
     "Overview": {
-      "slotId": "CharacterDs3Main_div_6",
+      "slotId": "CharacterDs3Main_div_8",
       "fragment": "fragments/layouts/character-ds3-overview-content"
     },
     "Stats": {
-      "slotId": "CharacterDs3Main_div_6",
+      "slotId": "CharacterDs3Main_div_8",
       "fragment": "fragments/layouts/character-ds3-stats-content"
     },
     "Tactics": {
-      "slotId": "CharacterDs3Main_div_6",
+      "slotId": "CharacterDs3Main_div_8",
       "fragment": "fragments/layouts/character-ds3-tactics-content"
     },
     "Bloodline": {
-      "slotId": "CharacterDs3Main_div_6",
+      "slotId": "CharacterDs3Main_div_8",
       "fragment": "fragments/layouts/character-ds3-bloodline-content"
     },
     "Equip": {
-      "slotId": "CharacterDs3Main_div_6",
+      "slotId": "CharacterDs3Main_div_8",
       "fragment": "fragments/layouts/character-ds3-equip-content"
     },
     "Aptitude": {
-      "slotId": "CharacterDs3Main_div_6",
+      "slotId": "CharacterDs3Main_div_8",
       "fragment": "fragments/layouts/character-ds3-aptitude-content"
     }
   },
   "layer": "Popup",
-  "bundle": "lobby_ui",
+  "bundle": "resources",
   "migrationStatus": {
     "source": "Design System 3/ui_kits/character/index.html",
     "stage": "runtime-fidelity-preview",
@@ -46,5 +46,7 @@
       "DS3 ChildPanel (CharacterDs3OverviewChild 等 6 個) 目前是 TODO 骨架；尚需補 data wiring 與 portrait/background loader。",
       "開發階段可用 ?ui=ds3 或 localStorage __ucuf_general_detail_variant=ds3 顯式測試。"
     ]
-  }
+  },
+  "runtimeVersion": "chads3-20260502-014",
+  "runtimeVersionUpdatedAt": "2026-05-02T05:55:02.735Z"
 }

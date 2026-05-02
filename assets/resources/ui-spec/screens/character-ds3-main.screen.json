@@ -1,7 +1,9 @@
 {
   "screenId": "character-ds3-main",
-  "layoutRef": "assets/resources/ui-spec/layouts/character-ds3-main.json",
-  "skinRef": "assets/resources/ui-spec/skins/character-ds3-default.json",
+  "layout": "character-ds3-main",
+  "skin": "character-ds3-main.skin",
+  "layoutRef": "artifacts/skill-test-html-to-ucuf/character-ds3-main/character-ds3-main.final.layout.json",
+  "skinRef": "artifacts/skill-test-html-to-ucuf/character-ds3-main/character-ds3-main.final.skin.json",
   "meta": {
     "scaffoldHints": {
       "useUCUFLogger": true

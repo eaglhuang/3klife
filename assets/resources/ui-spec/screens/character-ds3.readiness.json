@@ -1,27 +1,27 @@
 {
   "schemaVersion": "1.0.0",
-  "screenId": "character-ds3-main",
-  "generatedAt": "2026-05-02T05:55:14.878Z",
+  "screenId": "character-ds3",
+  "generatedAt": "2026-05-02T03:16:37.793Z",
   "verdict": "not-ready",
-  "readinessScore": 0.917,
+  "readinessScore": 0.792,
   "summary": {
-    "blockerUnits": 1,
-    "actionUnits": 2,
+    "blockerUnits": 3,
+    "actionUnits": 5,
     "bounded": true,
     "nextCriticalAction": "capture Cocos Editor target screen and run final compare"
   },
   "paths": {
-    "layout": "assets/resources/ui-spec/layouts/character-ds3-main.json",
-    "skin": "assets/resources/ui-spec/skins/character-ds3-main.skin.json",
-    "screen": "assets/resources/ui-spec/screens/character-ds3-main.json",
-    "captureProtocol": "assets/resources/ui-spec/screens/character-ds3-main.final-capture-protocol.json",
-    "zoneOwnership": "assets/resources/ui-spec/screens/character-ds3-main.zone-ownership.json",
-    "tabRouting": "assets/resources/ui-spec/screens/character-ds3-main.tab-routing.json",
-    "preload": "assets/resources/ui-spec/screens/character-ds3-main.preload.json",
-    "performance": "assets/resources/ui-spec/screens/character-ds3-main.performance.json",
-    "bakeManifest": "assets/resources/ui-spec/layouts/character-ds3-main.layout.bake-manifest.json",
-    "artAuthorityWaivers": "assets/resources/ui-spec/screens/character-ds3-main.art-authority-waivers.json",
-    "finalVerdict": "artifacts/skill-test-html-to-ucuf/character-ds3-main/character-ds3-main.html-cocos-verdict.json"
+    "layout": "assets/resources/ui-spec/layouts/character-ds3.json",
+    "skin": "assets/resources/ui-spec/skins/character-ds3.skin.json",
+    "screen": "assets/resources/ui-spec/screens/character-ds3.json",
+    "captureProtocol": "assets/resources/ui-spec/screens/character-ds3.final-capture-protocol.json",
+    "zoneOwnership": "assets/resources/ui-spec/screens/character-ds3.zone-ownership.json",
+    "tabRouting": "assets/resources/ui-spec/screens/character-ds3.tab-routing.json",
+    "preload": "assets/resources/ui-spec/screens/character-ds3.preload.json",
+    "performance": "assets/resources/ui-spec/screens/character-ds3.performance.json",
+    "bakeManifest": "assets/resources/ui-spec/layouts/character-ds3.layout.bake-manifest.json",
+    "artAuthorityWaivers": "assets/resources/ui-spec/screens/character-ds3.art-authority-waivers.json",
+    "finalVerdict": "artifacts/skill-test-html-to-ucuf/r92-converter-geometry-fix/character-ds3.html-cocos-verdict.json"
   },
   "gates": {
     "finalGate": {
@@ -31,47 +31,15 @@
       "summary": "no measured Cocos Editor final compare verdict"
     },
     "capture": {
-      "status": "pass",
-      "ok": true,
-      "workUnits": 0,
-      "summary": "capture protocol present",
-      "viewport": {
-        "width": 1920,
-        "height": 1080,
-        "dpr": 1
-      },
-      "settleMs": 800,
-      "warnings": [],
-      "errors": []
+      "status": "blocker",
+      "ok": false,
+      "workUnits": 1,
+      "summary": "missing final capture protocol"
     },
     "zones": {
-      "status": "pass",
-      "workUnits": 0,
-      "summary": "0 waiver-eligible art zones, 0 missing rects",
-      "taxonomy": [
-        "art-authority",
-        "manual-art-asset",
-        "converter-geometry",
-        "source-html-fix",
-        "runtime-bug"
-      ],
-      "byTaxonomy": {
-        "art-authority": 0,
-        "manual-art-asset": 0,
-        "converter-geometry": 20,
-        "source-html-fix": 0,
-        "runtime-bug": 0
-      },
-      "waiverEligibleCount": 0,
-      "eligibleMissingRectCount": 0,
-      "waiverPresent": true,
-      "waiverValidation": {
-        "ok": true,
-        "errors": [],
-        "waiverCount": 0,
-        "totalCoverageRatio": 0
-      },
-      "samples": []
+      "status": "blocker",
+      "workUnits": 1,
+      "summary": "missing zone ownership report"
     },
     "tabMounts": {
       "status": "pass",
@@ -80,42 +48,42 @@
       "checks": [
         {
           "id": "Overview",
-          "mount": "CharacterDs3Main_div_8",
+          "mount": "CharacterDs3_div_8",
           "exists": true,
           "matchType": "name",
           "childPanelClass": "CharacterDs3OverviewChild"
         },
         {
           "id": "Stats",
-          "mount": "CharacterDs3Main_div_8",
+          "mount": "CharacterDs3_div_8",
           "exists": true,
           "matchType": "name",
           "childPanelClass": "CharacterDs3StatsChild"
         },
         {
           "id": "Tactics",
-          "mount": "CharacterDs3Main_div_8",
+          "mount": "CharacterDs3_div_8",
           "exists": true,
           "matchType": "name",
           "childPanelClass": "CharacterDs3TacticsChild"
         },
         {
           "id": "Bloodline",
-          "mount": "CharacterDs3Main_div_8",
+          "mount": "CharacterDs3_div_8",
           "exists": true,
           "matchType": "name",
           "childPanelClass": "CharacterDs3BloodlineChild"
         },
         {
           "id": "Equip",
-          "mount": "CharacterDs3Main_div_8",
+          "mount": "CharacterDs3_div_8",
           "exists": true,
           "matchType": "name",
           "childPanelClass": "CharacterDs3EquipChild"
         },
         {
           "id": "Aptitude",
-          "mount": "CharacterDs3Main_div_8",
+          "mount": "CharacterDs3_div_8",
           "exists": true,
           "matchType": "name",
           "childPanelClass": "CharacterDs3AptitudeChild"
@@ -131,7 +99,7 @@
         {
           "fragment": "fragments/layouts/character-ds3-overview-content",
           "source": "layout.defaultFragment",
-          "slotId": "CharacterDs3Main_div_8",
+          "slotId": "CharacterDs3_div_8",
           "status": "pass",
           "code": "fill-root-ok",
           "summary": "fragment mount layers fill lazySlot",
@@ -168,7 +136,7 @@
           "fragment": "fragments/layouts/character-ds3-stats-content",
           "source": "screen.tabRouting",
           "tabId": "Stats",
-          "slotId": "CharacterDs3Main_div_8",
+          "slotId": "CharacterDs3_div_8",
           "status": "pass",
           "code": "fill-root-ok",
           "summary": "fragment mount layers fill lazySlot",
@@ -181,7 +149,7 @@
           "fragment": "fragments/layouts/character-ds3-tactics-content",
           "source": "screen.tabRouting",
           "tabId": "Tactics",
-          "slotId": "CharacterDs3Main_div_8",
+          "slotId": "CharacterDs3_div_8",
           "status": "pass",
           "code": "fill-root-ok",
           "summary": "fragment mount layers fill lazySlot",
@@ -194,7 +162,7 @@
           "fragment": "fragments/layouts/character-ds3-bloodline-content",
           "source": "screen.tabRouting",
           "tabId": "Bloodline",
-          "slotId": "CharacterDs3Main_div_8",
+          "slotId": "CharacterDs3_div_8",
           "status": "pass",
           "code": "fill-root-ok",
           "summary": "fragment mount layers fill lazySlot",
@@ -207,7 +175,7 @@
           "fragment": "fragments/layouts/character-ds3-equip-content",
           "source": "screen.tabRouting",
           "tabId": "Equip",
-          "slotId": "CharacterDs3Main_div_8",
+          "slotId": "CharacterDs3_div_8",
           "status": "pass",
           "code": "fill-root-ok",
           "summary": "fragment mount layers fill lazySlot",
@@ -220,7 +188,7 @@
           "fragment": "fragments/layouts/character-ds3-aptitude-content",
           "source": "screen.tabRouting",
           "tabId": "Aptitude",
-          "slotId": "CharacterDs3Main_div_8",
+          "slotId": "CharacterDs3_div_8",
           "status": "pass",
           "code": "fill-root-ok",
           "summary": "fragment mount layers fill lazySlot",
@@ -241,25 +209,16 @@
       "missingContractCount": 1,
       "samples": [
         {
-          "name": "CharacterDs3Main_div_3",
-          "path": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_3",
+          "name": "CharacterDs3_div_3",
+          "path": "CharacterDs3/CharacterDs3_div_1/CharacterDs3_div_3",
           "text": "燕 人 武 聖"
         }
       ]
     },
     "visualPolicy": {
-      "status": "pass",
-      "workUnits": 0,
-      "summary": "5 clip/mask geometry entries, 1 small texture entries, 0 unsafe auto-bake entries",
-      "totalEntries": 7,
-      "byBakeAction": {
-        "manual-art-asset": 1,
-        "review-only": 1,
-        "converter-geometry": 5
-      },
-      "clipGeometryCount": 5,
-      "smallTextureCount": 1,
-      "unsafeAutoBakeCount": 0
+      "status": "warn",
+      "workUnits": 1,
+      "summary": "missing bake manifest; texture/clip review cannot be quantified"
     },
     "loading": {
       "status": "pass",
@@ -300,9 +259,27 @@
       "workUnits": 1
     },
     {
+      "severity": "blocker",
+      "code": "capture-protocol",
+      "summary": "missing final capture protocol",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "zone-ownership-waivers",
+      "summary": "missing zone ownership report",
+      "workUnits": 1
+    },
+    {
       "severity": "warn",
       "code": "text-binding",
       "summary": "1/1 dynamic text candidates missing bind/i18n contract",
+      "workUnits": 1
+    },
+    {
+      "severity": "warn",
+      "code": "visual-policy",
+      "summary": "missing bake manifest; texture/clip review cannot be quantified",
       "workUnits": 1
     }
   ]

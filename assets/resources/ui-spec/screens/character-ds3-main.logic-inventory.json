@@ -2,8 +2,224 @@
   "screenId": "character-ds3-main",
   "generatedBy": "dom-to-ui-logic-guard",
   "summary": {
-    "featureCount": 0,
-    "byKind": {}
+    "featureCount": 19,
+    "byKind": {
+      "button-handler": 9,
+      "lazy-slot-fragment": 2,
+      "bind-path": 8
+    }
   },
-  "features": []
+  "features": [
+    {
+      "featureId": "button-handler:character-ds3-main.portrait-nav",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_2/CharacterDs3Main_button_1",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_2/CharacterDs3Main_button_1",
+      "targetNode": "CharacterDs3Main_button_1",
+      "ucufId": "character-ds3-main.portrait-nav",
+      "contract": null,
+      "autoSmoke": true
+    },
+    {
+      "featureId": "button-handler:character-ds3-main.portrait-nav-2",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_2/CharacterDs3Main_button_2",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_2/CharacterDs3Main_button_2",
+      "targetNode": "CharacterDs3Main_button_2",
+      "ucufId": "character-ds3-main.portrait-nav-2",
+      "contract": null,
+      "autoSmoke": true
+    },
+    {
+      "featureId": "button-handler:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_button_3",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_button_3",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_button_3",
+      "targetNode": "CharacterDs3Main_button_3",
+      "ucufId": null,
+      "contract": null,
+      "autoSmoke": true
+    },
+    {
+      "featureId": "lazy-slot-fragment:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_8",
+      "kind": "lazy-slot-fragment",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_8",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_8",
+      "targetNode": "CharacterDs3Main_div_8",
+      "ucufId": null,
+      "defaultFragment": "fragments/layouts/character-ds3-overview-content",
+      "warmupHint": "first-frame",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "bind-path:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_8",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_8",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_8",
+      "targetNode": "CharacterDs3Main_div_8",
+      "ucufId": null,
+      "bindPath": "tab.content.host",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "button-handler:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_4",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_4",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_4",
+      "targetNode": "CharacterDs3Main_button_4",
+      "ucufId": null,
+      "contract": "tab.switch.overview",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "bind-path:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_4",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_4",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_4",
+      "targetNode": "CharacterDs3Main_button_4",
+      "ucufId": null,
+      "bindPath": "tab.switch.overview",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "button-handler:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_5",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_5",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_5",
+      "targetNode": "CharacterDs3Main_button_5",
+      "ucufId": null,
+      "contract": "tab.switch.stats",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "bind-path:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_5",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_5",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_5",
+      "targetNode": "CharacterDs3Main_button_5",
+      "ucufId": null,
+      "bindPath": "tab.switch.stats",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "button-handler:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_6",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_6",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_6",
+      "targetNode": "CharacterDs3Main_button_6",
+      "ucufId": null,
+      "contract": "tab.switch.tactics",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "bind-path:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_6",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_6",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_6",
+      "targetNode": "CharacterDs3Main_button_6",
+      "ucufId": null,
+      "bindPath": "tab.switch.tactics",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "button-handler:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_7",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_7",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_7",
+      "targetNode": "CharacterDs3Main_button_7",
+      "ucufId": null,
+      "contract": "tab.switch.bloodline",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "bind-path:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_7",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_7",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_7",
+      "targetNode": "CharacterDs3Main_button_7",
+      "ucufId": null,
+      "bindPath": "tab.switch.bloodline",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "button-handler:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_8",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_8",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_8",
+      "targetNode": "CharacterDs3Main_button_8",
+      "ucufId": null,
+      "contract": "tab.switch.equip",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "bind-path:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_8",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_8",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_8",
+      "targetNode": "CharacterDs3Main_button_8",
+      "ucufId": null,
+      "bindPath": "tab.switch.equip",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "button-handler:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_9",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_9",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_9",
+      "targetNode": "CharacterDs3Main_button_9",
+      "ucufId": null,
+      "contract": "tab.switch.aptitude",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "bind-path:CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_9",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_9",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/CharacterDs3Main_div_7/CharacterDs3Main_div_9/CharacterDs3Main_button_9",
+      "targetNode": "CharacterDs3Main_button_9",
+      "ucufId": null,
+      "bindPath": "tab.switch.aptitude",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "lazy-slot-fragment:CharacterDs3Main/CharacterDs3Main_div_1/slot.story-strip",
+      "kind": "lazy-slot-fragment",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/slot.story-strip",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/slot.story-strip",
+      "targetNode": "slot.story-strip",
+      "ucufId": null,
+      "defaultFragment": "fragments/layouts/character-ds3-story-strip-collapsed",
+      "warmupHint": "manual",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "bind-path:CharacterDs3Main/CharacterDs3Main_div_1/slot.story-strip",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "CharacterDs3Main/CharacterDs3Main_div_1/slot.story-strip",
+      "triggerNode": "CharacterDs3Main/CharacterDs3Main_div_1/slot.story-strip",
+      "targetNode": "slot.story-strip",
+      "ucufId": null,
+      "bindPath": "tab.owner.bloodline",
+      "autoSmoke": true
+    }
+  ]
 }

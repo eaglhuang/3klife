@@ -1,20 +1,6 @@
 {
   "type": "container",
   "name": "CharacterDs3TabEquip",
-  "contentContract": {
-    "status": "contract-ready",
-    "requiredNodes": [
-      "CharacterDs3TabEquip_div_2",
-      "CharacterDs3TabEquip_div_5",
-      "CharacterDs3TabEquip_div_13"
-    ],
-    "bindPaths": [
-      "general.equipment.weapon",
-      "general.equipment.armor",
-      "general.equipment.mount"
-    ],
-    "minNonEmptyNodes": 3
-  },
   "widget": {
     "top": 0,
     "left": 0,
@@ -24,7 +10,7 @@
   "children": [
     {
       "type": "container",
-      "name": "CharacterDs3TabEquip_div_1",
+      "name": "CharacterDs3TabEquipRoot",
       "layout": {
         "type": "vertical",
         "paddingTop": 50,
@@ -35,61 +21,144 @@
       "children": [
         {
           "type": "container",
-          "name": "CharacterDs3TabEquip_div_2",
+          "name": "CharacterDs3TabEquip_div_1",
+          "height": 844,
           "layout": {
             "type": "vertical",
+            "justifyContent": "start",
             "spacingY": 14
           },
           "children": [
             {
               "type": "container",
-              "name": "CharacterDs3TabEquip_div_3",
+              "name": "CharacterDs3TabEquip_div_2",
+              "height": 26,
               "layout": {
                 "type": "horizontal",
                 "alignItems": "center",
+                "justifyContent": "start",
                 "spacingX": 8
               },
               "children": [
                 {
+                  "type": "panel",
+                  "name": "CharacterDs3TabEquip_div_3",
+                  "width": 4,
+                  "height": 16,
+                  "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_div_3"
+                },
+                {
                   "type": "label",
                   "name": "CharacterDs3TabEquip_span_1",
+                  "width": 51,
+                  "height": 26,
                   "text": "裝 備",
                   "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_1"
                 },
                 {
                   "type": "label",
                   "name": "CharacterDs3TabEquip_span_2",
+                  "width": 72,
+                  "height": 14,
                   "text": "EQUIPMENT",
                   "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_2"
                 }
               ],
-              "skinLayers": [
-                {
-                  "layerId": "CharacterDs3TabEquip_div_4",
-                  "slotId": "auto.character-ds3-tab-equip.characterds3tabequip_div_4",
-                  "zOrder": 0,
-                  "expand": false,
-                  "width": 4,
-                  "height": 16
-                }
-              ]
+              "widget": {
+                "left": 0,
+                "right": 0
+              }
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabEquip_div_5",
+              "name": "CharacterDs3TabEquip_div_4",
+              "height": 450,
               "layout": {
                 "type": "grid",
                 "spacingX": 10,
                 "spacingY": 10,
                 "constraint": "fixed-col",
                 "constraintNum": 3,
-                "cellWidth": 160,
-                "cellHeight": 96
+                "cellWidth": 220,
+                "cellHeight": 450
               },
               "children": [
                 {
                   "type": "panel",
+                  "name": "CharacterDs3TabEquip_div_5",
+                  "widget": {
+                    "top": 0,
+                    "left": 0,
+                    "right": 0,
+                    "bottom": 0
+                  },
+                  "width": 220,
+                  "height": 220,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                    "spacingY": 6
+                  },
+                  "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_div_5",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabEquip_span_3",
+                      "width": 32,
+                      "height": 46,
+                      "text": "矛",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_3"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabEquip_span_4",
+                      "width": 62,
+                      "height": 17,
+                      "text": "丈八蛇矛",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_4"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabEquip_span_5",
+                      "widget": {
+                        "top": 191,
+                        "left": 191,
+                        "right": 8,
+                        "bottom": 6
+                      },
+                      "width": 17,
+                      "height": 19,
+                      "text": "+9",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_5"
+                    },
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabEquip_span_6",
+                      "widget": {
+                        "top": 6,
+                        "left": 8,
+                        "right": 193,
+                        "bottom": 196
+                      },
+                      "width": 15,
+                      "height": 14,
+                      "text": "UR",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_6"
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
                   "name": "CharacterDs3TabEquip_div_6",
+                  "widget": {
+                    "top": 0,
+                    "left": 0,
+                    "right": 0,
+                    "bottom": 0
+                  },
+                  "width": 220,
+                  "height": 220,
                   "layout": {
                     "type": "vertical",
                     "alignItems": "center",
@@ -100,41 +169,61 @@
                   "children": [
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_3",
-                      "text": "矛",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_3"
+                      "name": "CharacterDs3TabEquip_span_7",
+                      "width": 32,
+                      "height": 46,
+                      "text": "盔",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_7"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_4",
-                      "text": "丈八蛇矛",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_4"
+                      "name": "CharacterDs3TabEquip_span_8",
+                      "width": 74,
+                      "height": 17,
+                      "text": "虎頭鑌鐵盔",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_8"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_5",
+                      "name": "CharacterDs3TabEquip_span_9",
                       "widget": {
+                        "top": 191,
+                        "left": 191,
                         "right": 8,
                         "bottom": 6
                       },
-                      "text": "+9",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_5"
+                      "width": 17,
+                      "height": 19,
+                      "text": "+6",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_9"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_6",
+                      "name": "CharacterDs3TabEquip_span_10",
                       "widget": {
                         "top": 6,
-                        "left": 8
+                        "left": 8,
+                        "right": 187,
+                        "bottom": 196
                       },
-                      "text": "UR",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_6"
+                      "width": 21,
+                      "height": 14,
+                      "text": "SSR",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_10"
                     }
                   ]
                 },
                 {
                   "type": "panel",
                   "name": "CharacterDs3TabEquip_div_7",
+                  "widget": {
+                    "top": 0,
+                    "left": 0,
+                    "right": 0,
+                    "bottom": 0
+                  },
+                  "width": 220,
+                  "height": 220,
                   "layout": {
                     "type": "vertical",
                     "alignItems": "center",
@@ -145,41 +234,61 @@
                   "children": [
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_7",
-                      "text": "盔",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_7"
+                      "name": "CharacterDs3TabEquip_span_11",
+                      "width": 32,
+                      "height": 46,
+                      "text": "甲",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_11"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_8",
-                      "text": "虎頭鑌鐵盔",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_8"
+                      "name": "CharacterDs3TabEquip_span_12",
+                      "width": 62,
+                      "height": 17,
+                      "text": "精鋼重甲",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_12"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_9",
+                      "name": "CharacterDs3TabEquip_span_13",
                       "widget": {
+                        "top": 191,
+                        "left": 192,
                         "right": 8,
                         "bottom": 6
                       },
-                      "text": "+6",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_9"
+                      "width": 16,
+                      "height": 19,
+                      "text": "+4",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_13"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_10",
+                      "name": "CharacterDs3TabEquip_span_14",
                       "widget": {
                         "top": 6,
-                        "left": 8
+                        "left": 8,
+                        "right": 194,
+                        "bottom": 196
                       },
-                      "text": "SSR",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_10"
+                      "width": 14,
+                      "height": 14,
+                      "text": "SR",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_14"
                     }
                   ]
                 },
                 {
                   "type": "panel",
                   "name": "CharacterDs3TabEquip_div_8",
+                  "widget": {
+                    "top": 0,
+                    "left": 0,
+                    "right": 0,
+                    "bottom": 0
+                  },
+                  "width": 220,
+                  "height": 220,
                   "layout": {
                     "type": "vertical",
                     "alignItems": "center",
@@ -190,41 +299,61 @@
                   "children": [
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_11",
-                      "text": "甲",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_11"
+                      "name": "CharacterDs3TabEquip_span_15",
+                      "width": 32,
+                      "height": 46,
+                      "text": "靴",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_15"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_12",
-                      "text": "精鋼重甲",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_12"
+                      "name": "CharacterDs3TabEquip_span_16",
+                      "width": 62,
+                      "height": 17,
+                      "text": "鐵蹄雲靴",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_16"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_13",
+                      "name": "CharacterDs3TabEquip_span_17",
                       "widget": {
+                        "top": 191,
+                        "left": 192,
                         "right": 8,
                         "bottom": 6
                       },
-                      "text": "+4",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_13"
+                      "width": 16,
+                      "height": 19,
+                      "text": "+5",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_17"
                     },
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_14",
+                      "name": "CharacterDs3TabEquip_span_18",
                       "widget": {
                         "top": 6,
-                        "left": 8
+                        "left": 8,
+                        "right": 187,
+                        "bottom": 196
                       },
-                      "text": "SR",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_14"
+                      "width": 21,
+                      "height": 14,
+                      "text": "SSR",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_18"
                     }
                   ]
                 },
                 {
                   "type": "panel",
                   "name": "CharacterDs3TabEquip_div_9",
+                  "widget": {
+                    "top": 0,
+                    "left": 0,
+                    "right": 0,
+                    "bottom": 0
+                  },
+                  "width": 220,
+                  "height": 220,
                   "layout": {
                     "type": "vertical",
                     "alignItems": "center",
@@ -235,90 +364,93 @@
                   "children": [
                     {
                       "type": "label",
-                      "name": "CharacterDs3TabEquip_span_15",
-                      "text": "靴",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_15"
-                    },
-                    {
-                      "type": "label",
-                      "name": "CharacterDs3TabEquip_span_16",
-                      "text": "鐵蹄雲靴",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_16"
-                    },
-                    {
-                      "type": "label",
-                      "name": "CharacterDs3TabEquip_span_17",
-                      "widget": {
-                        "right": 8,
-                        "bottom": 6
-                      },
-                      "text": "+5",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_17"
-                    },
-                    {
-                      "type": "label",
-                      "name": "CharacterDs3TabEquip_span_18",
-                      "widget": {
-                        "top": 6,
-                        "left": 8
-                      },
-                      "text": "SSR",
-                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_18"
+                      "name": "CharacterDs3TabEquip_span_19",
+                      "width": 16,
+                      "height": 24,
+                      "text": "鐲",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_19"
                     }
                   ]
                 },
                 {
-                  "type": "label",
+                  "type": "panel",
                   "name": "CharacterDs3TabEquip_div_10",
+                  "widget": {
+                    "top": 0,
+                    "left": 0,
+                    "right": 0,
+                    "bottom": 0
+                  },
+                  "width": 220,
+                  "height": 220,
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                    "spacingY": 6
+                  },
                   "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_div_10",
-                  "text": "鐲",
-                  "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_19"
-                },
-                {
-                  "type": "label",
-                  "name": "CharacterDs3TabEquip_div_11",
-                  "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_div_11",
-                  "text": "玉",
-                  "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_20"
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "CharacterDs3TabEquip_span_20",
+                      "width": 16,
+                      "height": 24,
+                      "text": "玉",
+                      "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_20"
+                    }
+                  ]
                 }
-              ]
+              ],
+              "widget": {
+                "left": 0,
+                "right": 0
+              }
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabEquip_div_12",
+              "name": "CharacterDs3TabEquip_div_11",
+              "height": 26,
               "layout": {
                 "type": "horizontal",
                 "alignItems": "center",
+                "justifyContent": "start",
                 "spacingX": 8
               },
               "children": [
                 {
+                  "type": "panel",
+                  "name": "CharacterDs3TabEquip_div_12",
+                  "width": 4,
+                  "height": 16,
+                  "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_div_12"
+                },
+                {
                   "type": "label",
                   "name": "CharacterDs3TabEquip_span_21",
+                  "width": 51,
+                  "height": 26,
                   "text": "等 級",
                   "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_21"
                 },
                 {
                   "type": "label",
                   "name": "CharacterDs3TabEquip_span_22",
+                  "width": 118,
+                  "height": 14,
                   "text": "LEVEL & PROGRESS",
                   "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_22"
                 }
               ],
-              "skinLayers": [
-                {
-                  "layerId": "CharacterDs3TabEquip_div_13",
-                  "slotId": "auto.character-ds3-tab-equip.characterds3tabequip_div_13",
-                  "zOrder": 0,
-                  "expand": false,
-                  "width": 4,
-                  "height": 16
-                }
-              ]
+              "widget": {
+                "left": 0,
+                "right": 0
+              }
             },
             {
               "type": "panel",
-              "name": "CharacterDs3TabEquip_div_14",
+              "name": "CharacterDs3TabEquip_div_13",
+              "height": 98,
               "layout": {
                 "type": "vertical",
                 "paddingTop": 14,
@@ -327,104 +459,159 @@
                 "paddingLeft": 16,
                 "spacingY": 10
               },
-              "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_div_14",
+              "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_div_13",
               "children": [
                 {
                   "type": "container",
-                  "name": "CharacterDs3TabEquip_div_15",
+                  "name": "CharacterDs3TabEquip_div_14",
+                  "width": 646,
+                  "height": 58,
                   "layout": {
                     "type": "horizontal",
                     "alignItems": "center",
+                    "justifyContent": "start",
                     "spacingX": 14
                   },
                   "children": [
                     {
                       "type": "label",
                       "name": "CharacterDs3TabEquip_span_23",
+                      "width": 47,
+                      "height": 58,
                       "text": "42",
                       "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_23"
                     },
                     {
                       "type": "label",
                       "name": "CharacterDs3TabEquip_span_24",
+                      "width": 56,
+                      "height": 19,
                       "text": "/ 60 MAX",
                       "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_24"
                     },
                     {
                       "type": "container",
-                      "name": "CharacterDs3TabEquip_div_17",
+                      "name": "CharacterDs3TabEquip_div_15",
+                      "width": 515,
+                      "height": 35,
                       "layout": {
-                        "type": "horizontal",
-                        "justifyContent": "space-between"
+                        "type": "vertical",
+                        "justifyContent": "start",
+                        "spacingY": 4
                       },
                       "children": [
                         {
-                          "type": "label",
-                          "name": "CharacterDs3TabEquip_span_25",
-                          "text": "經驗值",
-                          "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_25"
+                          "type": "container",
+                          "name": "CharacterDs3TabEquip_div_16",
+                          "width": 515,
+                          "height": 19,
+                          "layout": {
+                            "type": "horizontal",
+                            "justifyContent": "space-between"
+                          },
+                          "children": [
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabEquip_span_25",
+                              "width": 36,
+                              "height": 19,
+                              "text": "經驗值",
+                              "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_25"
+                            },
+                            {
+                              "type": "label",
+                              "name": "CharacterDs3TabEquip_span_26",
+                              "width": 94,
+                              "height": 19,
+                              "text": "18,400 / 24,000",
+                              "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_26"
+                            }
+                          ]
                         },
                         {
-                          "type": "label",
-                          "name": "CharacterDs3TabEquip_span_26",
-                          "text": "18,400 / 24,000",
-                          "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_26"
+                          "type": "panel",
+                          "name": "CharacterDs3TabEquip_div_17",
+                          "width": 515,
+                          "height": 12,
+                          "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_div_17",
+                          "children": [
+                            {
+                              "type": "panel",
+                              "name": "CharacterDs3TabEquip_div_18",
+                              "width": 395,
+                              "height": 10,
+                              "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_div_18"
+                            }
+                          ]
                         }
                       ]
                     }
                   ]
                 }
-              ]
+              ],
+              "widget": {
+                "left": 0,
+                "right": 0
+              }
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabEquip_div_20",
+              "name": "CharacterDs3TabEquip_div_19",
+              "height": 26,
               "layout": {
                 "type": "horizontal",
                 "alignItems": "center",
+                "justifyContent": "start",
                 "spacingX": 8
               },
               "children": [
                 {
+                  "type": "panel",
+                  "name": "CharacterDs3TabEquip_div_20",
+                  "width": 4,
+                  "height": 16,
+                  "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_div_20"
+                },
+                {
                   "type": "label",
                   "name": "CharacterDs3TabEquip_span_27",
+                  "width": 51,
+                  "height": 26,
                   "text": "操 作",
                   "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_27"
                 },
                 {
                   "type": "label",
                   "name": "CharacterDs3TabEquip_span_28",
+                  "width": 54,
+                  "height": 14,
                   "text": "ACTIONS",
                   "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_28"
                 }
               ],
-              "skinLayers": [
-                {
-                  "layerId": "CharacterDs3TabEquip_div_21",
-                  "slotId": "auto.character-ds3-tab-equip.characterds3tabequip_div_21",
-                  "zOrder": 0,
-                  "expand": false,
-                  "width": 4,
-                  "height": 16
-                }
-              ]
+              "widget": {
+                "left": 0,
+                "right": 0
+              }
             },
             {
               "type": "container",
-              "name": "CharacterDs3TabEquip_div_22",
+              "name": "CharacterDs3TabEquip_div_21",
+              "height": 118,
               "layout": {
                 "type": "grid",
                 "spacingX": 10,
                 "spacingY": 10,
                 "constraint": "fixed-col",
                 "constraintNum": 2,
-                "cellWidth": 120,
-                "cellHeight": 96
+                "cellWidth": 335,
+                "cellHeight": 118
               },
               "children": [
                 {
                   "type": "button",
                   "name": "CharacterDs3TabEquip_button_1",
+                  "width": 335,
                   "height": 54,
                   "_motionId": "character-ds3tab-equip_button_1.transition",
                   "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_button_1"
@@ -432,6 +619,7 @@
                 {
                   "type": "button",
                   "name": "CharacterDs3TabEquip_button_2",
+                  "width": 335,
                   "height": 54,
                   "_motionId": "character-ds3tab-equip_button_2.transition",
                   "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_button_2"
@@ -439,6 +627,7 @@
                 {
                   "type": "button",
                   "name": "CharacterDs3TabEquip_button_3",
+                  "width": 335,
                   "height": 54,
                   "_motionId": "character-ds3tab-equip_button_3.transition",
                   "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_button_3"
@@ -446,13 +635,22 @@
                 {
                   "type": "button",
                   "name": "CharacterDs3TabEquip_button_4",
+                  "width": 335,
                   "height": 54,
                   "_motionId": "character-ds3tab-equip_button_4.transition",
                   "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_button_4"
                 }
-              ]
+              ],
+              "widget": {
+                "left": 0,
+                "right": 0
+              }
             }
-          ]
+          ],
+          "widget": {
+            "left": 0,
+            "right": 0
+          }
         }
       ],
       "widget": {
@@ -460,8 +658,7 @@
         "left": 0,
         "right": 0,
         "bottom": 0
-      },
-      "_geometryContract": "fill-root"
+      }
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "screenId": "character-ds3-main",
+  "screenId": "character-ds3",
   "verdict": "pass",
   "metrics": {
     "screenshotZoneConfidence": 0.3333333333333333,
@@ -10,42 +10,42 @@
   },
   "zones": [
     {
-      "node": "CharacterDs3Main_div_2",
+      "node": "CharacterDs3_div_2",
       "width": "62%",
       "height": null,
       "stableBounds": false,
       "zone": "portrait"
     },
     {
-      "node": "CharacterDs3Main_button_1",
+      "node": "CharacterDs3_button_1",
       "width": 96,
       "height": 96,
       "stableBounds": true,
       "zone": "portrait"
     },
     {
-      "node": "CharacterDs3Main_img_1",
+      "node": "CharacterDs3_img_1",
       "width": null,
       "height": "98%",
       "stableBounds": false,
       "zone": "portrait"
     },
     {
-      "node": "CharacterDs3Main_button_2",
+      "node": "CharacterDs3_button_2",
       "width": 96,
       "height": 96,
       "stableBounds": true,
       "zone": "portrait"
     },
     {
-      "node": "CharacterDs3Main_div_3",
+      "node": "CharacterDs3_div_3",
       "width": null,
       "height": null,
       "stableBounds": false,
       "zone": "portrait"
     },
     {
-      "node": "CharacterDs3Main_div_5",
+      "node": "CharacterDs3_div_5",
       "width": "62%",
       "height": null,
       "stableBounds": false,

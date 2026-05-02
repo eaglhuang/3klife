@@ -1,0 +1,34 @@
+{
+  "id": "character-ds3",
+  "version": "1.0.0",
+  "uiId": "character-ds3",
+  "layout": "character-ds3",
+  "skin": "character-ds3.skin",
+  "bundle": "resources",
+  "tabRouting": {
+    "Overview": {
+      "slotId": "CharacterDs3_div_8",
+      "fragment": "fragments/layouts/character-ds3-overview-content"
+    },
+    "Stats": {
+      "slotId": "CharacterDs3_div_8",
+      "fragment": "fragments/layouts/character-ds3-stats-content"
+    },
+    "Tactics": {
+      "slotId": "CharacterDs3_div_8",
+      "fragment": "fragments/layouts/character-ds3-tactics-content"
+    },
+    "Bloodline": {
+      "slotId": "CharacterDs3_div_8",
+      "fragment": "fragments/layouts/character-ds3-bloodline-content"
+    },
+    "Equip": {
+      "slotId": "CharacterDs3_div_8",
+      "fragment": "fragments/layouts/character-ds3-equip-content"
+    },
+    "Aptitude": {
+      "slotId": "CharacterDs3_div_8",
+      "fragment": "fragments/layouts/character-ds3-aptitude-content"
+    }
+  }
+}

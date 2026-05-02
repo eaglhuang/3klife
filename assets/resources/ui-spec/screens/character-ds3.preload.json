@@ -1,5 +1,5 @@
 {
-  "screenId": "character-ds3-main",
+  "screenId": "character-ds3",
   "version": 1,
   "firstScreen": {
     "bundles": [
@@ -17,7 +17,7 @@
   "deferred": {
     "lazySlots": [
       {
-        "slotName": "CharacterDs3Main_div_8",
+        "slotName": "CharacterDs3_div_8",
         "warmupHint": "first-frame",
         "fragments": [
           "fragments/layouts/character-ds3-overview-content"

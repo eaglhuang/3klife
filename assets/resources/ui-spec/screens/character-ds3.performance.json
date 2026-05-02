@@ -1,5 +1,5 @@
 {
-  "screenId": "character-ds3-main",
+  "screenId": "character-ds3",
   "rendering": {
     "nodeCount": 36,
     "deferredNodeCount": 0,

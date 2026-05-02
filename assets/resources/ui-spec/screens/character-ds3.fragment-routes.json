@@ -1,8 +1,8 @@
 {
-  "screenId": "character-ds3-main",
+  "screenId": "character-ds3",
   "lazySlots": [
     {
-      "slot": "CharacterDs3Main_div_8",
+      "slot": "CharacterDs3_div_8",
       "ucufId": null,
       "defaultFragment": "fragments/layouts/character-ds3-overview-content",
       "warmupHint": "first-frame",
@@ -18,51 +18,51 @@
   ],
   "tabRoutes": [
     {
-      "trigger": "CharacterDs3Main_button_1",
+      "trigger": "CharacterDs3_button_1",
       "target": "pool.prev",
-      "interactionId": "character-ds3main_button_1.tab-switch",
+      "interactionId": "character-ds3_button_1.tab-switch",
       "status": "ready"
     },
     {
-      "trigger": "CharacterDs3Main_button_2",
+      "trigger": "CharacterDs3_button_2",
       "target": "pool.next",
-      "interactionId": "character-ds3main_button_2.tab-switch",
+      "interactionId": "character-ds3_button_2.tab-switch",
       "status": "ready"
     },
     {
-      "trigger": "CharacterDs3Main_button_4",
+      "trigger": "CharacterDs3_button_4",
       "target": "overview",
-      "interactionId": "character-ds3main_button_4.tab-switch",
+      "interactionId": "character-ds3_button_4.tab-switch",
       "status": "ready"
     },
     {
-      "trigger": "CharacterDs3Main_button_5",
+      "trigger": "CharacterDs3_button_5",
       "target": "stats",
-      "interactionId": "character-ds3main_button_5.tab-switch",
+      "interactionId": "character-ds3_button_5.tab-switch",
       "status": "ready"
     },
     {
-      "trigger": "CharacterDs3Main_button_6",
+      "trigger": "CharacterDs3_button_6",
       "target": "tactics",
-      "interactionId": "character-ds3main_button_6.tab-switch",
+      "interactionId": "character-ds3_button_6.tab-switch",
       "status": "ready"
     },
     {
-      "trigger": "CharacterDs3Main_button_7",
+      "trigger": "CharacterDs3_button_7",
       "target": "bloodline",
-      "interactionId": "character-ds3main_button_7.tab-switch",
+      "interactionId": "character-ds3_button_7.tab-switch",
       "status": "ready"
     },
     {
-      "trigger": "CharacterDs3Main_button_8",
+      "trigger": "CharacterDs3_button_8",
       "target": "equip",
-      "interactionId": "character-ds3main_button_8.tab-switch",
+      "interactionId": "character-ds3_button_8.tab-switch",
       "status": "ready"
     },
     {
-      "trigger": "CharacterDs3Main_button_9",
+      "trigger": "CharacterDs3_button_9",
       "target": "aptitude",
-      "interactionId": "character-ds3main_button_9.tab-switch",
+      "interactionId": "character-ds3_button_9.tab-switch",
       "status": "ready"
     }
   ],

@@ -1,27 +1,108 @@
 {
   "screenId": "character-ds3-main",
-  "actions": [],
+  "actions": [
+    {
+      "id": "character-ds3main_button_1.tab-switch",
+      "trigger": "CharacterDs3Main_button_1",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "pool.prev",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "pool.prev"
+      }
+    },
+    {
+      "id": "character-ds3main_button_2.tab-switch",
+      "trigger": "CharacterDs3Main_button_2",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "pool.next",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "pool.next"
+      }
+    },
+    {
+      "id": "character-ds3main_button_4.tab-switch",
+      "trigger": "CharacterDs3Main_button_4",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "overview",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "overview"
+      }
+    },
+    {
+      "id": "character-ds3main_button_5.tab-switch",
+      "trigger": "CharacterDs3Main_button_5",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "stats",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "stats"
+      }
+    },
+    {
+      "id": "character-ds3main_button_6.tab-switch",
+      "trigger": "CharacterDs3Main_button_6",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "tactics",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "tactics"
+      }
+    },
+    {
+      "id": "character-ds3main_button_7.tab-switch",
+      "trigger": "CharacterDs3Main_button_7",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "bloodline",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "bloodline"
+      }
+    },
+    {
+      "id": "character-ds3main_button_8.tab-switch",
+      "trigger": "CharacterDs3Main_button_8",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "equip",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "equip"
+      }
+    },
+    {
+      "id": "character-ds3main_button_9.tab-switch",
+      "trigger": "CharacterDs3Main_button_9",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "aptitude",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "aptitude"
+      }
+    }
+  ],
   "warnings": [
-    {
-      "code": "manual-adapter-required",
-      "detail": "CharacterDs3Main_button_1: inline onclick is not executed; rewrite as data-ucuf-action"
-    },
-    {
-      "code": "manual-adapter-required",
-      "detail": "CharacterDs3Main_button_2: inline onclick is not executed; rewrite as data-ucuf-action"
-    },
     {
       "code": "manual-adapter-required",
       "detail": "CharacterDs3Main_button_3: inline onclick is not executed; rewrite as data-ucuf-action"
     },
     {
       "code": "manual-adapter-required",
-      "detail": "CharacterDs3Main_div_81: inline onclick is not executed; rewrite as data-ucuf-action"
+      "detail": "CharacterDs3Main_div_10: inline onclick is not executed; rewrite as data-ucuf-action"
     }
   ],
   "summary": {
-    "actionCount": 0,
+    "actionCount": 8,
     "missingTargetCount": 0,
-    "manualAdapterCount": 4
+    "manualAdapterCount": 2
   }
 }

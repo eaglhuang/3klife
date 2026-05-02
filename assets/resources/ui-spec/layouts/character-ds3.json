@@ -1,5 +1,5 @@
 {
-  "id": "character-ds3-main",
+  "id": "character-ds3",
   "version": 1,
   "specVersion": 1,
   "canvas": {
@@ -8,7 +8,7 @@
   },
   "root": {
     "type": "container",
-    "name": "CharacterDs3Main",
+    "name": "CharacterDs3",
     "widget": {
       "top": 0,
       "left": 0,
@@ -18,18 +18,18 @@
     "children": [
       {
         "type": "panel",
-        "name": "CharacterDs3Main_div_1",
+        "name": "CharacterDs3_div_1",
         "widget": {
           "top": 0,
           "left": 0
         },
         "width": 1920,
         "height": 1080,
-        "skinSlot": "auto.character-ds3-main.characterds3main_div_1",
+        "skinSlot": "auto.character-ds3.characterds3_div_1",
         "children": [
           {
             "type": "panel",
-            "name": "CharacterDs3Main_div_2",
+            "name": "CharacterDs3_div_2",
             "widget": {
               "top": 0,
               "left": 0,
@@ -38,12 +38,12 @@
             "_ucufId": "character-ds3-main.portrait-bg",
             "_visualZone": "portrait",
             "width": "62%",
-            "_motionId": "character-ds3main_div_2.transition",
-            "skinSlot": "auto.character-ds3-main.characterds3main_div_2",
+            "_motionId": "character-ds3_div_2.transition",
+            "skinSlot": "auto.character-ds3.characterds3_div_2",
             "children": [
               {
                 "type": "button",
-                "name": "CharacterDs3Main_button_1",
+                "name": "CharacterDs3_button_1",
                 "widget": {
                   "top": "50%",
                   "left": 24
@@ -52,17 +52,17 @@
                 "_visualZone": "portrait",
                 "width": 96,
                 "height": 96,
-                "_interactionId": "character-ds3main_button_1.tab-switch",
-                "_motionId": "character-ds3main_button_1.transition",
+                "_interactionId": "character-ds3_button_1.tab-switch",
+                "_motionId": "character-ds3_button_1.transition",
                 "layout": {
                   "type": "grid",
                   "cellHeight": 96
                 },
-                "skinSlot": "auto.character-ds3-main.characterds3main_button_1"
+                "skinSlot": "auto.character-ds3.characterds3_button_1"
               },
               {
                 "type": "image",
-                "name": "CharacterDs3Main_img_1",
+                "name": "CharacterDs3_img_1",
                 "widget": {
                   "left": "50%",
                   "bottom": 0
@@ -72,11 +72,11 @@
                 "height": "98%",
                 "objectFit": "contain",
                 "objectPosition": "center bottom",
-                "skinSlot": "auto.character-ds3-main.characterds3main_img_1"
+                "skinSlot": "auto.character-ds3.characterds3_img_1"
               },
               {
                 "type": "button",
-                "name": "CharacterDs3Main_button_2",
+                "name": "CharacterDs3_button_2",
                 "widget": {
                   "top": "50%",
                   "right": 24
@@ -85,19 +85,19 @@
                 "_visualZone": "portrait",
                 "width": 96,
                 "height": 96,
-                "_interactionId": "character-ds3main_button_2.tab-switch",
-                "_motionId": "character-ds3main_button_2.transition",
+                "_interactionId": "character-ds3_button_2.tab-switch",
+                "_motionId": "character-ds3_button_2.transition",
                 "layout": {
                   "type": "grid",
                   "cellHeight": 96
                 },
-                "skinSlot": "auto.character-ds3-main.characterds3main_button_2"
+                "skinSlot": "auto.character-ds3.characterds3_button_2"
               }
             ]
           },
           {
             "type": "label",
-            "name": "CharacterDs3Main_div_3",
+            "name": "CharacterDs3_div_3",
             "widget": {
               "left": 36,
               "bottom": 36
@@ -105,11 +105,11 @@
             "_ucufId": "character-ds3-main.portrait-title",
             "_visualZone": "portrait",
             "text": "燕 人 武 聖",
-            "styleSlot": "auto.character-ds3-main.characterds3main_div_3"
+            "styleSlot": "auto.character-ds3.characterds3_div_3"
           },
           {
             "type": "panel",
-            "name": "CharacterDs3Main_div_4",
+            "name": "CharacterDs3_div_4",
             "widget": {
               "top": 28,
               "left": 28
@@ -122,25 +122,25 @@
               "justifyContent": "center",
               "spacingY": 2
             },
-            "skinSlot": "auto.character-ds3-main.characterds3main_div_4",
+            "skinSlot": "auto.character-ds3.characterds3_div_4",
             "children": [
               {
                 "type": "label",
-                "name": "CharacterDs3Main_span_1",
+                "name": "CharacterDs3_span_1",
                 "text": "傳",
-                "styleSlot": "auto.character-ds3-main.characterds3main_span_1"
+                "styleSlot": "auto.character-ds3.characterds3_span_1"
               },
               {
                 "type": "label",
-                "name": "CharacterDs3Main_span_2",
+                "name": "CharacterDs3_span_2",
                 "text": "LEGEND",
-                "styleSlot": "auto.character-ds3-main.characterds3main_span_2"
+                "styleSlot": "auto.character-ds3.characterds3_span_2"
               }
             ]
           },
           {
             "type": "panel",
-            "name": "CharacterDs3Main_div_5",
+            "name": "CharacterDs3_div_5",
             "widget": {
               "top": 0,
               "left": 0,
@@ -151,44 +151,44 @@
             "_ucufId": "character-ds3-main.bloodline-fullscreen",
             "_visualZone": "bloodline",
             "width": "62%",
-            "_motionId": "character-ds3main_div_5.transition",
-            "skinSlot": "auto.character-ds3-main.characterds3main_div_5"
+            "_motionId": "character-ds3_div_5.transition",
+            "skinSlot": "auto.character-ds3.characterds3_div_5"
           },
           {
             "type": "button",
-            "name": "CharacterDs3Main_button_3",
+            "name": "CharacterDs3_button_3",
             "widget": {
               "top": 28,
               "right": 28
             },
             "width": 88,
             "height": 88,
-            "_motionId": "character-ds3main_button_3.transition",
+            "_motionId": "character-ds3_button_3.transition",
             "layout": {
               "type": "vertical",
               "alignItems": "center",
               "justifyContent": "center",
               "spacingY": 2
             },
-            "skinSlot": "auto.character-ds3-main.characterds3main_button_3",
+            "skinSlot": "auto.character-ds3.characterds3_button_3",
             "children": [
               {
                 "type": "label",
-                "name": "CharacterDs3Main_span_3",
+                "name": "CharacterDs3_span_3",
                 "text": "←",
-                "styleSlot": "auto.character-ds3-main.characterds3main_span_3"
+                "styleSlot": "auto.character-ds3.characterds3_span_3"
               },
               {
                 "type": "label",
-                "name": "CharacterDs3Main_span_4",
+                "name": "CharacterDs3_span_4",
                 "text": "返回",
-                "styleSlot": "auto.character-ds3-main.characterds3main_span_4"
+                "styleSlot": "auto.character-ds3.characterds3_span_4"
               }
             ]
           },
           {
             "type": "container",
-            "name": "CharacterDs3Main_div_7",
+            "name": "CharacterDs3_div_7",
             "widget": {
               "top": 0,
               "right": 0,
@@ -202,7 +202,7 @@
             "children": [
               {
                 "type": "container",
-                "name": "CharacterDs3Main_div_8",
+                "name": "CharacterDs3_div_8",
                 "lazySlot": true,
                 "defaultFragment": "fragments/layouts/character-ds3-overview-content",
                 "warmupHint": "first-frame",
@@ -211,7 +211,7 @@
               },
               {
                 "type": "container",
-                "name": "CharacterDs3Main_div_9",
+                "name": "CharacterDs3_div_9",
                 "width": 160,
                 "layout": {
                   "type": "vertical",
@@ -225,11 +225,11 @@
                 "children": [
                   {
                     "type": "button",
-                    "name": "CharacterDs3Main_button_4",
+                    "name": "CharacterDs3_button_4",
                     "width": 128,
                     "height": 128,
-                    "_interactionId": "character-ds3main_button_4.tab-switch",
-                    "_motionId": "character-ds3main_button_4.transition",
+                    "_interactionId": "character-ds3_button_4.tab-switch",
+                    "_motionId": "character-ds3_button_4.transition",
                     "layout": {
                       "type": "vertical",
                       "alignItems": "center",
@@ -237,29 +237,29 @@
                       "spacingY": 6
                     },
                     "_contract": "tab.switch.overview",
-                    "skinSlot": "auto.character-ds3-main.characterds3main_button_4",
+                    "skinSlot": "auto.character-ds3.characterds3_button_4",
                     "children": [
                       {
                         "type": "label",
-                        "name": "CharacterDs3Main_span_5",
+                        "name": "CharacterDs3_span_5",
                         "text": "將",
-                        "styleSlot": "auto.character-ds3-main.characterds3main_span_5"
+                        "styleSlot": "auto.character-ds3.characterds3_span_5"
                       },
                       {
                         "type": "label",
-                        "name": "CharacterDs3Main_span_6",
+                        "name": "CharacterDs3_span_6",
                         "text": "GEN",
-                        "styleSlot": "auto.character-ds3-main.characterds3main_span_6"
+                        "styleSlot": "auto.character-ds3.characterds3_span_6"
                       }
                     ]
                   },
                   {
                     "type": "button",
-                    "name": "CharacterDs3Main_button_5",
+                    "name": "CharacterDs3_button_5",
                     "width": 128,
                     "height": 128,
-                    "_interactionId": "character-ds3main_button_5.tab-switch",
-                    "_motionId": "character-ds3main_button_5.transition",
+                    "_interactionId": "character-ds3_button_5.tab-switch",
+                    "_motionId": "character-ds3_button_5.transition",
                     "layout": {
                       "type": "vertical",
                       "alignItems": "center",
@@ -267,29 +267,29 @@
                       "spacingY": 6
                     },
                     "_contract": "tab.switch.stats",
-                    "skinSlot": "auto.character-ds3-main.characterds3main_button_5",
+                    "skinSlot": "auto.character-ds3.characterds3_button_5",
                     "children": [
                       {
                         "type": "label",
-                        "name": "CharacterDs3Main_span_7",
+                        "name": "CharacterDs3_span_7",
                         "text": "屬",
-                        "styleSlot": "auto.character-ds3-main.characterds3main_span_7"
+                        "styleSlot": "auto.character-ds3.characterds3_span_7"
                       },
                       {
                         "type": "label",
-                        "name": "CharacterDs3Main_span_8",
+                        "name": "CharacterDs3_span_8",
                         "text": "STAT",
-                        "styleSlot": "auto.character-ds3-main.characterds3main_span_8"
+                        "styleSlot": "auto.character-ds3.characterds3_span_8"
                       }
                     ]
                   },
                   {
                     "type": "button",
-                    "name": "CharacterDs3Main_button_6",
+                    "name": "CharacterDs3_button_6",
                     "width": 128,
                     "height": 128,
-                    "_interactionId": "character-ds3main_button_6.tab-switch",
-                    "_motionId": "character-ds3main_button_6.transition",
+                    "_interactionId": "character-ds3_button_6.tab-switch",
+                    "_motionId": "character-ds3_button_6.transition",
                     "layout": {
                       "type": "vertical",
                       "alignItems": "center",
@@ -297,29 +297,29 @@
                       "spacingY": 6
                     },
                     "_contract": "tab.switch.tactics",
-                    "skinSlot": "auto.character-ds3-main.characterds3main_button_6",
+                    "skinSlot": "auto.character-ds3.characterds3_button_6",
                     "children": [
                       {
                         "type": "label",
-                        "name": "CharacterDs3Main_span_9",
+                        "name": "CharacterDs3_span_9",
                         "text": "技",
-                        "styleSlot": "auto.character-ds3-main.characterds3main_span_9"
+                        "styleSlot": "auto.character-ds3.characterds3_span_9"
                       },
                       {
                         "type": "label",
-                        "name": "CharacterDs3Main_span_10",
+                        "name": "CharacterDs3_span_10",
                         "text": "TACT",
-                        "styleSlot": "auto.character-ds3-main.characterds3main_span_10"
+                        "styleSlot": "auto.character-ds3.characterds3_span_10"
                       }
                     ]
                   },
                   {
                     "type": "button",
-                    "name": "CharacterDs3Main_button_7",
+                    "name": "CharacterDs3_button_7",
                     "width": 128,
                     "height": 128,
-                    "_interactionId": "character-ds3main_button_7.tab-switch",
-                    "_motionId": "character-ds3main_button_7.transition",
+                    "_interactionId": "character-ds3_button_7.tab-switch",
+                    "_motionId": "character-ds3_button_7.transition",
                     "layout": {
                       "type": "vertical",
                       "alignItems": "center",
@@ -327,29 +327,29 @@
                       "spacingY": 6
                     },
                     "_contract": "tab.switch.bloodline",
-                    "skinSlot": "auto.character-ds3-main.characterds3main_button_7",
+                    "skinSlot": "auto.character-ds3.characterds3_button_7",
                     "children": [
                       {
                         "type": "label",
-                        "name": "CharacterDs3Main_span_11",
+                        "name": "CharacterDs3_span_11",
                         "text": "命",
-                        "styleSlot": "auto.character-ds3-main.characterds3main_span_11"
+                        "styleSlot": "auto.character-ds3.characterds3_span_11"
                       },
                       {
                         "type": "label",
-                        "name": "CharacterDs3Main_span_12",
+                        "name": "CharacterDs3_span_12",
                         "text": "FATE",
-                        "styleSlot": "auto.character-ds3-main.characterds3main_span_12"
+                        "styleSlot": "auto.character-ds3.characterds3_span_12"
                       }
                     ]
                   },
                   {
                     "type": "button",
-                    "name": "CharacterDs3Main_button_8",
+                    "name": "CharacterDs3_button_8",
                     "width": 128,
                     "height": 128,
-                    "_interactionId": "character-ds3main_button_8.tab-switch",
-                    "_motionId": "character-ds3main_button_8.transition",
+                    "_interactionId": "character-ds3_button_8.tab-switch",
+                    "_motionId": "character-ds3_button_8.transition",
                     "layout": {
                       "type": "vertical",
                       "alignItems": "center",
@@ -357,29 +357,29 @@
                       "spacingY": 6
                     },
                     "_contract": "tab.switch.equip",
-                    "skinSlot": "auto.character-ds3-main.characterds3main_button_8",
+                    "skinSlot": "auto.character-ds3.characterds3_button_8",
                     "children": [
                       {
                         "type": "label",
-                        "name": "CharacterDs3Main_span_13",
+                        "name": "CharacterDs3_span_13",
                         "text": "寶",
-                        "styleSlot": "auto.character-ds3-main.characterds3main_span_13"
+                        "styleSlot": "auto.character-ds3.characterds3_span_13"
                       },
                       {
                         "type": "label",
-                        "name": "CharacterDs3Main_span_14",
+                        "name": "CharacterDs3_span_14",
                         "text": "GEAR",
-                        "styleSlot": "auto.character-ds3-main.characterds3main_span_14"
+                        "styleSlot": "auto.character-ds3.characterds3_span_14"
                       }
                     ]
                   },
                   {
                     "type": "button",
-                    "name": "CharacterDs3Main_button_9",
+                    "name": "CharacterDs3_button_9",
                     "width": 128,
                     "height": 128,
-                    "_interactionId": "character-ds3main_button_9.tab-switch",
-                    "_motionId": "character-ds3main_button_9.transition",
+                    "_interactionId": "character-ds3_button_9.tab-switch",
+                    "_motionId": "character-ds3_button_9.transition",
                     "layout": {
                       "type": "vertical",
                       "alignItems": "center",
@@ -387,19 +387,19 @@
                       "spacingY": 6
                     },
                     "_contract": "tab.switch.aptitude",
-                    "skinSlot": "auto.character-ds3-main.characterds3main_button_9",
+                    "skinSlot": "auto.character-ds3.characterds3_button_9",
                     "children": [
                       {
                         "type": "label",
-                        "name": "CharacterDs3Main_span_15",
+                        "name": "CharacterDs3_span_15",
                         "text": "適",
-                        "styleSlot": "auto.character-ds3-main.characterds3main_span_15"
+                        "styleSlot": "auto.character-ds3.characterds3_span_15"
                       },
                       {
                         "type": "label",
-                        "name": "CharacterDs3Main_span_16",
+                        "name": "CharacterDs3_span_16",
                         "text": "APT",
-                        "styleSlot": "auto.character-ds3-main.characterds3main_span_16"
+                        "styleSlot": "auto.character-ds3.characterds3_span_16"
                       }
                     ]
                   }
@@ -427,8 +427,8 @@
         ],
         "skinLayers": [
           {
-            "layerId": "CharacterDs3Main_div_4_CssShadow",
-            "slotId": "auto.character-ds3-main.characterds3main_div_4_cssshadow",
+            "layerId": "CharacterDs3_div_4_CssShadow",
+            "slotId": "auto.character-ds3.characterds3_div_4_cssshadow",
             "zOrder": 0,
             "expand": false,
             "width": 96,
@@ -439,8 +439,8 @@
             }
           },
           {
-            "layerId": "CharacterDs3Main_button_3_CssShadow",
-            "slotId": "auto.character-ds3-main.characterds3main_button_3_cssshadow",
+            "layerId": "CharacterDs3_button_3_CssShadow",
+            "slotId": "auto.character-ds3.characterds3_button_3_cssshadow",
             "zOrder": 1,
             "expand": false,
             "width": 92,

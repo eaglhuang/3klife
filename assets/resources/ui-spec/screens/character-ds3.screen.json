@@ -1,0 +1,12 @@
+{
+  "screenId": "character-ds3",
+  "layout": "character-ds3",
+  "skin": "character-ds3.skin",
+  "layoutRef": "artifacts/skill-test-html-to-ucuf/r92-converter-geometry-fix/character-ds3.final.layout.json",
+  "skinRef": "artifacts/skill-test-html-to-ucuf/r92-converter-geometry-fix/character-ds3.final.skin.json",
+  "meta": {
+    "scaffoldHints": {
+      "useUCUFLogger": true
+    }
+  }
+}
