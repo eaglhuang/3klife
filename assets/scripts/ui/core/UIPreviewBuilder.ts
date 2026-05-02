@@ -118,6 +118,7 @@ export class UIPreviewBuilder extends Component {
         // Unity 對照：Canvas.ForceUpdateCanvases() — 強制更新所有 RectTransform
         // ─────────────────────────────────────────────────────────────────────
         this._postBuildPass(rootNode);
+        this._dedupeTabSwitchNodes(rootNode);
         UCUFLogger.perfEnd('UIPreviewBuilder.buildScreen', _tBuildScreen);
 
         // 通用佔位符清除：所有 UIPreviewBuilder 子類在 onBuildComplete 鉤子前
@@ -280,6 +281,8 @@ export class UIPreviewBuilder extends Component {
         const node   = new Node(spec.name);
         node.layer   = parent.layer;  // 繼承 UI_2D layer，確保 2D 攝影機下可見
         node.parent  = parent;
+        const contract = typeof (spec as any)._contract === 'string' ? String((spec as any)._contract).trim().toLowerCase() : '';
+        if (contract.length > 0) (node as any)._ucufContract = contract;
 
         const flowChildInLayout = this._isLayoutFlowChild(spec, parent);
         const widgetDef = flowChildInLayout ? undefined : spec.widget;
@@ -416,6 +419,34 @@ export class UIPreviewBuilder extends Component {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected _onLazySlotCreated(_spec: UILayoutNodeSpec, _node: Node, _w: number, _h: number): void { /* no-op */ }
+
+    private _dedupeTabSwitchNodes(rootNode: Node): void {
+        const seenContracts = new Set<string>();
+        const duplicates: Array<{ contract: string; path: string }> = [];
+
+        const walk = (node: Node, path: string): void => {
+            const contract = String((node as any)._ucufContract || '').trim().toLowerCase();
+            if (/^tab\.switch(?:\.|$)/.test(contract)) {
+                if (seenContracts.has(contract)) {
+                    node.active = false;
+                    duplicates.push({ contract, path });
+                } else {
+                    seenContracts.add(contract);
+                }
+            }
+
+            for (const child of node.children) {
+                walk(child, `${path}/${child.name}`);
+            }
+        };
+
+        walk(rootNode, rootNode.name || 'Root');
+        if (duplicates.length > 0) {
+            UCUFLogger.warn(LogCategory.LIFECYCLE,
+                `[UIPreviewBuilder] duplicate tab.switch nodes disabled count=${duplicates.length}`,
+                { duplicates });
+        }
+    }
 
     private _applySpecClipPath(node: Node, clipPath?: string): void {
         const normalized = typeof clipPath === 'string' ? clipPath.trim() : '';

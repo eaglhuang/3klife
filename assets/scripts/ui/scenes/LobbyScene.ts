@@ -27,7 +27,7 @@ import { showGachaHistory, showGachaResults, attachCurrencyCheatPanel, detachCur
 const { ccclass } = _decorator;
 
 type GeneralDetailRuntimeTab = 'Overview' | 'Stats' | 'Tactics' | 'Bloodline' | 'Equip' | 'Aptitude';
-type GeneralDetailEntrySmokeSource = 'ucuf-nav' | 'scene-button';
+type GeneralDetailEntrySmokeSource = 'ucuf-nav';
 
 const CHARACTER_DS3_PREVIEW_TAB_BUTTONS: Record<GeneralDetailRuntimeTab, string> = {
     Overview: 'CharacterDs3Main_button_4',
@@ -56,6 +56,10 @@ const CHARACTER_DS3_PREVIEW_TAB_ORDER: GeneralDetailRuntimeTab[] = [
     'Aptitude',
 ];
 
+const CHARACTER_DS3_PREVIEW_SLOT_CANDIDATES = [
+    'CharacterDs3Main_div_8',
+] as const;
+
 interface GeneralListOpenPayload {
     generals: GeneralConfig[];
     onSelectGeneral: (config: GeneralConfig) => void | Promise<void>;
@@ -79,7 +83,6 @@ export class LobbyScene extends Component {
     private _detailPanel: GeneralDetailComposite | null = null;
     private _lobbyMainHost: UIScreenPreviewHost | null = null;
     private _shopMainHost: UIScreenPreviewHost | null = null;
-    private _gachaMainHost: UIScreenPreviewHost | null = null;
     private _gachaHost: UIScreenPreviewHost | null = null;
     private _spiritFamilyOverviewHost: UIScreenPreviewHost | null = null;
     private _bloodlineMirrorLoadingHost: UIScreenPreviewHost | null = null;
@@ -173,6 +176,7 @@ export class LobbyScene extends Component {
 
     private async _mountLobbyMainHub(): Promise<void> {
         const hostNode = this.node.getChildByName('LobbyMainHost') ?? new Node('LobbyMainHost');
+        hostNode.active = false; // 先隱藏，避免 showScreen 期間閃屏
         hostNode.layer = this.node.layer;
         if (!hostNode.parent) {
             hostNode.parent = this.node;
@@ -199,7 +203,8 @@ export class LobbyScene extends Component {
         const spiritFamilyOverviewButton = binder?.getButton('DispatchBoardActionButton');
 
         if (!binder || !generalsButton || !battleButton || !shopButton || !gachaButton || !supportCardButton || !floodBattleButton) {
-            throw new Error('[LobbyScene] lobby-main-screen 缺少 btnGenerals / btnBattle / btnShop / btnGacha / btnSupportCard / btnFloodBattle 綁定');
+            UCUFLogger.error(LogCategory.LIFECYCLE, '[LobbyScene] lobby-main-screen 缺少 btnGenerals / btnBattle / btnShop / btnGacha / btnSupportCard / btnFloodBattle 綁定');
+            return;
         }
 
         generalsButton.node.off(Button.EventType.CLICK, this.onClickGeneralList, this);
@@ -238,14 +243,6 @@ export class LobbyScene extends Component {
     private async _mountSecondaryMainHubs(): Promise<void> {
         this._shopMainHost = await this._mountPreviewScreenHost('ShopMainHost', 'shop-main-screen', [
             { buttonId: 'btnClose', handler: () => { void services().ui.goBack(); } },
-        ]);
-
-        this._gachaMainHost = await this._mountPreviewScreenHost('GachaMainHost', 'gacha-main-screen', [
-            { buttonId: 'Pull1Btn',      handler: () => { this._openUIOnNextTick(UIID.Gacha); } },
-            { buttonId: 'Pull10Btn',     handler: () => { this._openUIOnNextTick(UIID.Gacha); } },
-            { buttonId: 'HistoryBtn',    handler: () => { void this._showGachaHistory(); } },
-            { buttonId: 'GoldSummonBtn', handler: () => { this._openUIOnNextTick(UIID.Gacha); } },
-            { buttonId: 'UseTicketBtn',  handler: () => { this._openUIOnNextTick(UIID.Gacha); } },
         ]);
 
         this._gachaHost = await this._mountPreviewScreenHost('GachaHost', 'gacha-main-screen', [
@@ -309,6 +306,7 @@ export class LobbyScene extends Component {
         bindings: ScreenButtonBinding[] = [],
     ): Promise<UIScreenPreviewHost> {
         const hostNode = this.node.getChildByName(hostName) ?? new Node(hostName);
+        hostNode.active = false; // 先隱藏，避免 showScreen 期間閃屏
         hostNode.layer = this.node.layer;
         if (!hostNode.parent) {
             hostNode.parent = this.node;
@@ -406,11 +404,11 @@ export class LobbyScene extends Component {
         this._isCharacterDs3TabSwitching = true;
 
         try {
-            const switched = await host.switchLazySlot('CharacterDs3Main_div_6', CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS[tab]);
-            if (!switched) {
+            const switchedSlotId = await this._switchCharacterDs3SlotFragment(host, CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS[tab]);
+            if (!switchedSlotId) {
                 UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 tab switch failed', {
                     tab,
-                    slotId: 'CharacterDs3Main_div_6',
+                    slotCandidates: [...CHARACTER_DS3_PREVIEW_SLOT_CANDIDATES],
                     fragment: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS[tab],
                 });
                 return;
@@ -421,11 +419,22 @@ export class LobbyScene extends Component {
 
             UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 tab switched', {
                 tab,
+                slotId: switchedSlotId,
                 fragment: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS[tab],
             });
         } finally {
             this._isCharacterDs3TabSwitching = false;
         }
+    }
+
+    private async _switchCharacterDs3SlotFragment(host: UIScreenPreviewHost, fragmentId: string): Promise<string | null> {
+        for (const slotId of CHARACTER_DS3_PREVIEW_SLOT_CANDIDATES) {
+            const switched = await host.switchLazySlot(slotId, fragmentId);
+            if (switched) {
+                return slotId;
+            }
+        }
+        return null;
     }
 
     private _syncCharacterDs3PreviewTabVisualState(): void {
@@ -486,9 +495,6 @@ export class LobbyScene extends Component {
         const generalListController = this._createGeneralListController();
         const generalDetailController = this._createGeneralDetailController();
         const shopMainController = this._createPreviewScreenController(this._shopMainHost, 'shop-main-screen');
-        const gachaMainController = this._createPreviewScreenController(this._gachaMainHost, 'gacha-main-screen', () => {
-            this._refreshWalletPreviewState();
-        });
         const gachaController = this._createPreviewScreenController(this._gachaHost, 'gacha-main-screen', () => {
             this._applyGachaFlowPresentation(this._gachaHost, true);
             this._refreshWalletPreviewState();
@@ -503,7 +509,7 @@ export class LobbyScene extends Component {
         services().ui.register(UIID.GeneralList, generalListController);
         services().ui.register(UIID.GeneralDetail, generalDetailController);
         services().ui.register(UIID.ShopMain, shopMainController);
-        services().ui.register(UIID.GachaMain, gachaMainController);
+        services().ui.register(UIID.GachaMain, gachaController);
         services().ui.register(UIID.Gacha, gachaController);
         services().ui.register(UIID.SpiritFamilyOverview, spiritFamilyOverviewController);
         services().ui.register(UIID.BloodlineMirrorLoading, bloodlineMirrorLoadingController);
@@ -707,10 +713,6 @@ export class LobbyScene extends Component {
             ResourceGem: gemText,
         });
 
-        this._gachaMainHost?.binder?.setTexts({
-            CostBalanceValue: gachaBalanceText,
-        });
-
         this._gachaHost?.binder?.setTexts({
             CostBalanceValue: gachaBalanceText,
         });
@@ -797,7 +799,18 @@ export class LobbyScene extends Component {
         } satisfies GeneralListOpenPayload);
     }
 
+    /**
+     * 正式產品入口：Lobby -> GeneralList -> 點武將，一律進 DS3 人物頁。
+     * Unity 對照：等同把 roster item click 統一路由到新版 Character Detail scene/prefab host。
+     */
     private async _openGeneralDetailDirect(config: GeneralConfig): Promise<void> {
+        await this._openCharacterDs3FromListSelection(config);
+    }
+
+    /**
+     * 舊版 GeneralDetailComposite 保留為備援 smoke/debug 路徑，避免直接刪除造成測試斷鏈。
+     */
+    private async _openGeneralDetailLegacy(config: GeneralConfig): Promise<void> {
         if (!this._detailPanel) {
             throw new Error('[LobbyScene] GeneralDetailComposite 尚未初始化，無法直接開啟武將詳情');
         }
@@ -824,17 +837,20 @@ export class LobbyScene extends Component {
         this._bindCharacterDs3PreviewTabRouting();
 
         // 診斷鉤子：在 host 層直接綁定 tab 點擊，繞開 LobbyScene 事件路徑
-        const hookCount = this._characterDs3Host.installTabSwitchHook(
-            'CharacterDs3Main_div_6',
-            {
-                CharacterDs3Main_button_4: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Overview,
-                CharacterDs3Main_button_5: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Stats,
-                CharacterDs3Main_button_6: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Tactics,
-                CharacterDs3Main_button_7: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Bloodline,
-                CharacterDs3Main_button_8: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Equip,
-                CharacterDs3Main_button_9: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Aptitude,
-            },
-        );
+        let hookCount = 0;
+        for (const slotId of CHARACTER_DS3_PREVIEW_SLOT_CANDIDATES) {
+            hookCount += this._characterDs3Host.installTabSwitchHook(
+                slotId,
+                {
+                    CharacterDs3Main_button_4: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Overview,
+                    CharacterDs3Main_button_5: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Stats,
+                    CharacterDs3Main_button_6: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Tactics,
+                    CharacterDs3Main_button_7: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Bloodline,
+                    CharacterDs3Main_button_8: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Equip,
+                    CharacterDs3Main_button_9: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Aptitude,
+                },
+            );
+        }
 
         UCUFLogger.info(LogCategory.LIFECYCLE, '[LobbyScene] CharacterDs3 smoke selection opened screen host', {
             generalId: config.id,
@@ -842,6 +858,22 @@ export class LobbyScene extends Component {
             screenId: 'character-ds3-main',
             diagHookCount: hookCount,
         });
+
+        // 每次由正式入口打開人物頁都回到 Overview，避免沿用前一次停留 tab。
+        const resetSlotId = await this._switchCharacterDs3SlotFragment(
+            this._characterDs3Host,
+            CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Overview,
+        );
+        if (resetSlotId) {
+            this._characterDs3ActiveTab = 'Overview';
+            this._syncCharacterDs3PreviewTabVisualState();
+        } else {
+            UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] Character DS3 default tab reset failed', {
+                tab: 'Overview',
+                slotCandidates: [...CHARACTER_DS3_PREVIEW_SLOT_CANDIDATES],
+                fragment: CHARACTER_DS3_PREVIEW_TAB_FRAGMENTS.Overview,
+            });
+        }
     }
 
     /** 「武將列表」按鈕：顯示玄家已取得武將（源自轉蛋 / PlayerRosterService） */
@@ -851,7 +883,7 @@ export class LobbyScene extends Component {
         void services().ui.open(UIID.GeneralList, {
             generals: displayList,
             onSelectGeneral: (config: GeneralConfig) => this._openGeneralDetailDirect(config),
-            options: { factionFilter: 'all', npcDialogueDevControls: true },
+            options: { factionFilter: 'all' },
         } satisfies GeneralListOpenPayload);
     }
 
@@ -933,34 +965,16 @@ export class LobbyScene extends Component {
     }
 
     private _openGeneralListFromSmokeEntry(source: GeneralDetailEntrySmokeSource): void {
-        if (source === 'ucuf-nav') {
-            const host = this._lobbyMainHost;
-            const button = host?.binder?.getButton('btnGenerals') ?? null;
-            if (!host || !button) {
-                throw new Error('[LobbyScene] 正式入口 smoke route 找不到 lobby-main btnGenerals');
-            }
-
-            host.node.active = true;
-            this._bringNodeToFront(host.node);
-            this._configureLobbyMainHub(host.binder);
-            button.node.emit(Button.EventType.CLICK, button);
-            return;
+        const host = this._lobbyMainHost;
+        const button = host?.binder?.getButton('btnGenerals') ?? null;
+        if (!host || !button) {
+            throw new Error('[LobbyScene] 正式入口 smoke route 找不到 lobby-main btnGenerals');
         }
 
-        const buttonNode = this.node.getChildByName('BtnGeneralList');
-        const button = buttonNode?.getComponent(Button) ?? null;
-        if (!buttonNode || !button) {
-            throw new Error('[LobbyScene] 正式入口 smoke route 找不到 scene-authored BtnGeneralList');
-        }
-
-        const hasInspectorBinding = button.clickEvents.some((event) => (
-            event.component === 'LobbyScene' && event.handler === 'onClickGeneralList'
-        ));
-        if (!hasInspectorBinding) {
-            throw new Error('[LobbyScene] BtnGeneralList 未綁定 LobbyScene.onClickGeneralList');
-        }
-
-        this.onClickGeneralList();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._configureLobbyMainHub(host.binder);
+        button.node.emit(Button.EventType.CLICK, button);
     }
 
     public async previewCharacterDs3Smoke(previewVariant = ''): Promise<void> {
@@ -975,10 +989,21 @@ export class LobbyScene extends Component {
         await this._waitForCharacterDs3HostVisualReady(smokeGeneral);
     }
 
+    /**
+     * 正式入口 smoke route 專用：外部呼叫後等待 DS3 人物頁視覺元素到齊。
+     */
+    public async waitForCharacterDs3VisualReady(previewVariant = '', timeoutMs = 4000): Promise<void> {
+        const smokeGeneral = this._resolveCharacterDs3SmokeGeneral(previewVariant || 'zhang-fei');
+        if (!smokeGeneral) {
+            throw new Error(`[LobbyScene] CharacterDs3 visual-ready wait 找不到目標武將 variant=${previewVariant || '(default)'}`);
+        }
+        await this._waitForCharacterDs3HostVisualReady(smokeGeneral, timeoutMs);
+    }
+
     /** 供 LoadingScene / headless preview 使用的大廳轉蛋 smoke route。 */
     public async previewGachaMainSmoke(): Promise<void> {
         this.onClickGachaMain();
-        const opened = await this._waitForManagedUIOpen(UIID.GachaMain, this._gachaMainHost?.node ?? null);
+        const opened = await this._waitForManagedUIOpen(UIID.GachaMain, this._gachaHost?.node ?? null);
         if (!opened) {
             throw new Error('[LobbyScene] GachaMain smoke route did not open UIID.GachaMain within timeout');
         }
@@ -1358,7 +1383,7 @@ export class LobbyScene extends Component {
             return;
         }
 
-        await services().ui.open(UIID.GeneralDetail, {
+        await this._openGeneralDetailLegacy({
             ...smokeGeneral,
             profilePresentation: {
                 ...smokeGeneral.profilePresentation,
@@ -1423,11 +1448,6 @@ export class LobbyScene extends Component {
 
     public onClickFloodBattle() {
         services().scene.switchScene(SceneName.Battle, this._buildBattleEntryParams(BattleTactic.FloodAttack));
-    }
-
-    /** 「退出」按鈕 */
-    public onClickExit() {
-        services().scene.switchScene(SceneName.Login);
     }
 
     private _buildBattleEntryParams(battleTactic?: BattleTactic): BattleEntryParams {

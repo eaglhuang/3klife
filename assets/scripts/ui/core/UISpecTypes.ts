@@ -459,8 +459,15 @@ export interface SkinFilterStackSlot {
     target?: 'self' | 'backdrop';
 }
 
+export interface SkinTransparentSlot {
+    kind: 'transparent';
+    alpha?: number;
+    opacity?: number;
+    _unmappedBackground?: string;
+}
+
 /** Skin Slot 聯合型別 */
-export type SkinSlot = SkinSpriteSlot | SkinButtonSlot | SkinLabelSlot | SkinColorRectSlot | SkinGradientRectSlot | SkinShadowSetSlot | SkinFilterStackSlot;
+export type SkinSlot = SkinSpriteSlot | SkinButtonSlot | SkinLabelSlot | SkinColorRectSlot | SkinGradientRectSlot | SkinShadowSetSlot | SkinFilterStackSlot | SkinTransparentSlot;
 
 /** 皮膚碎片 (Skin Fragment)
  *  可被多個 Skin Manifest 引用，用於標準化 item-cell 或 parchment 樣式。

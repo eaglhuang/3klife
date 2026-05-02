@@ -6,11 +6,11 @@ import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
 
 export class CharacterDs3TacticsChild extends ChildPanelBase {
     override dataSource = 'config';
-    private static readonly ROOT_PATH = 'CharacterDs3Main_div_6';
+    private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3TacticsChild] onMount', { rootPath: CharacterDs3TacticsChild.ROOT_PATH });
-        // TODO(B-stage4): cache Label / Sprite refs from binder under CharacterDs3Main_div_6 (戰法習得清單)
+        // TODO(B-stage4): cache Label / Sprite refs from binder under CharacterDs3Main_div_8 (戰法習得清單)
     }
 
     public override onDataUpdate(_data: unknown): void {

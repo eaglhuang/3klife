@@ -7,14 +7,17 @@ import {
     sys,
     Enum,
     Label,
+    LabelOutline,
     Button,
     SpriteFrame,
     Sprite,
     Node,
+    Color,
     UIOpacity,
     UITransform,
     Widget,
     resources,
+    JsonAsset,
 } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
@@ -56,7 +59,6 @@ enum LoadingPreviewTarget {
     GachaFromLobby = 17,
     CharacterDs3 = 18,
     GeneralDetailFromLobbyGeneralsButton = 19,
-    GeneralDetailFromSceneGeneralListButton = 20,
     GeneralListNpcDialogueDev = 21,
 }
 
@@ -92,6 +94,8 @@ export class LoadingScene extends Component {
     private _bgSpriteFrame: SpriteFrame | null = null;
     private _previewHost: UIScreenPreviewHost | null = null;
     private _previewViewportFitTimer: number | null = null;
+    private _previewVersionBadge: Node | null = null;
+    private _previewVersionSerial = 0;
     private readonly _previewGachaService = new LocalGachaService();
     private _previewGeneralListPanel: GeneralListComposite | null = null;
     private _generalsCatalog: GeneralConfig[] = [];
@@ -110,6 +114,134 @@ export class LoadingScene extends Component {
         } catch {
             // localStorage 在部分環境可能不可用，不影響主流程
         }
+
+        if (status === 'ready' && this.previewMode) {
+            void this._refreshPreviewVersionBadge(screenId);
+        }
+    }
+
+    private _ensurePreviewVersionBadgeLabel(): Label | null {
+        const root = this._resolveRootNode();
+        let badge = this._previewVersionBadge;
+        if (!badge || !badge.isValid) {
+            badge = root.getChildByName('PreviewVersionBadge');
+        }
+        if (!badge) {
+            badge = new Node('PreviewVersionBadge');
+            badge.layer = root.layer;
+            root.addChild(badge);
+        }
+
+        const tf = badge.getComponent(UITransform) ?? badge.addComponent(UITransform);
+        tf.setContentSize(420, 20);
+
+        const widget = badge.getComponent(Widget) ?? badge.addComponent(Widget);
+        widget.isAlignTop = true;
+        widget.isAlignLeft = true;
+        widget.isAlignRight = false;
+        widget.isAlignBottom = false;
+        widget.top = 4;
+        widget.left = 4;
+
+        const opacity = badge.getComponent(UIOpacity) ?? badge.addComponent(UIOpacity);
+        opacity.opacity = 255;
+
+        const label = badge.getComponent(Label) ?? badge.addComponent(Label);
+        label.fontSize = 14;
+        label.lineHeight = 16;
+        label.color = new Color(214, 245, 255, 255);
+        label.string = '';
+
+        const outline = badge.getComponent(LabelOutline) ?? badge.addComponent(LabelOutline);
+        outline.width = 2;
+        outline.color = new Color(0, 0, 0, 220);
+
+        this._previewVersionBadge = badge;
+        return label;
+    }
+
+    private _resolveVersionFromQuery(): string {
+        const search = (globalThis as any)?.window?.location?.search as string | undefined;
+        if (!search) return '';
+        const query = new URLSearchParams(search);
+        const raw = query.get('uiVersion') ?? query.get('UI_VERSION') ?? '';
+        return raw.trim();
+    }
+
+    private _ensureBrowserPreviewVersionBadge(versionText: string): void {
+        if (typeof document === 'undefined' || !versionText) return;
+
+        const canvasEl = document.querySelector('canvas') as HTMLElement | null;
+        const wrapperEl = document.querySelector('#GameDiv') as HTMLElement | null;
+        const anchorEl = canvasEl ?? wrapperEl;
+        const anchorRect = anchorEl?.getBoundingClientRect?.() ?? null;
+        const topOffset = anchorRect ? Math.max(0, Math.round(anchorRect.top) + 4) : 4;
+
+        let badge = document.getElementById('__ucuf-runtime-version-badge');
+        if (!badge) {
+            badge = document.createElement('div');
+            badge.id = '__ucuf-runtime-version-badge';
+            document.body.appendChild(badge);
+        }
+
+        badge.textContent = versionText;
+        Object.assign(badge.style, {
+            position: 'fixed',
+            left: '6px',
+            top: `${topOffset}px`,
+            zIndex: '2147483647',
+            fontFamily: 'Consolas, Menlo, monospace',
+            fontSize: '12px',
+            lineHeight: '1.2',
+            padding: '2px 6px',
+            color: '#d6f5ff',
+            background: 'rgba(0,0,0,0.62)',
+            border: '1px solid rgba(120, 196, 214, 0.45)',
+            borderRadius: '3px',
+            boxShadow: '0 0 0 1px rgba(0,0,0,0.35)',
+            pointerEvents: 'none',
+            userSelect: 'none',
+            whiteSpace: 'nowrap',
+        } as Partial<CSSStyleDeclaration>);
+    }
+
+    private async _resolveRuntimeVersionByScreenId(screenId: string): Promise<string> {
+        if (!screenId) return '';
+        const assetPath = `ui-spec/screens/${screenId}.runtime-version`;
+        const jsonAsset = await new Promise<JsonAsset | null>((resolve) => {
+            resources.load<JsonAsset>(assetPath, JsonAsset, (err, asset) => {
+                if (err || !asset) {
+                    resolve(null);
+                    return;
+                }
+                resolve(asset);
+            });
+        });
+        const payload = jsonAsset?.json as { uiVersion?: string } | null;
+        const version = typeof payload?.uiVersion === 'string' ? payload.uiVersion.trim() : '';
+        return version;
+    }
+
+    private async _refreshPreviewVersionBadge(screenId: string): Promise<void> {
+        const serial = ++this._previewVersionSerial;
+        const fromQuery = this._resolveVersionFromQuery();
+        const fromStorage = (sys.localStorage.getItem('UI_CAPTURE_VERSION') ?? sys.localStorage.getItem('UI_VERSION') ?? '').trim();
+        const resolvedVersion = fromQuery || fromStorage || await this._resolveRuntimeVersionByScreenId(screenId);
+
+        if (!this.isValid || serial !== this._previewVersionSerial) {
+            return;
+        }
+
+        const text = resolvedVersion || 'version: n/a';
+        const label = this._ensurePreviewVersionBadgeLabel();
+        if (!label || !this._previewVersionBadge) {
+            this._ensureBrowserPreviewVersionBadge(text);
+            return;
+        }
+
+        label.string = text;
+        this._previewVersionBadge.active = true;
+        this._ensureBrowserPreviewVersionBadge(text);
     }
 
     private _applyPreviewParamsFromQuery(): void {
@@ -151,7 +283,6 @@ export class LoadingScene extends Component {
         case LoadingPreviewTarget.CharacterDs3:
             return 'character-ds3-main';
         case LoadingPreviewTarget.GeneralDetailFromLobbyGeneralsButton:
-        case LoadingPreviewTarget.GeneralDetailFromSceneGeneralListButton:
             return 'character-ds3-main';
         case LoadingPreviewTarget.DuelChallenge:
             return 'duel-challenge-screen';
@@ -214,6 +345,11 @@ export class LoadingScene extends Component {
     onLoad() {
         this._applyPreviewParamsFromQuery();
 
+        const eagerQueryVersion = this._resolveVersionFromQuery();
+        if (eagerQueryVersion) {
+            this._ensureBrowserPreviewVersionBadge(eagerQueryVersion);
+        }
+
         // [UI-2-0023] 支援從 sys.localStorage 注入 previewMode，方便 headless 自動化
         const storedPreviewMode = sys.localStorage.getItem('PREVIEW_MODE');
         if (storedPreviewMode === 'true') {
@@ -225,6 +361,11 @@ export class LoadingScene extends Component {
             const storedVariant = sys.localStorage.getItem('PREVIEW_VARIANT');
             if (storedVariant) {
                 this.previewVariant = storedVariant.trim();
+            }
+
+            const storedVersion = (sys.localStorage.getItem('UI_CAPTURE_VERSION') ?? sys.localStorage.getItem('UI_VERSION') ?? '').trim();
+            if (!eagerQueryVersion && storedVersion) {
+                this._ensureBrowserPreviewVersionBadge(storedVersion);
             }
         }
 
@@ -376,6 +517,8 @@ export class LoadingScene extends Component {
             window.clearInterval(this._previewViewportFitTimer);
             this._previewViewportFitTimer = null;
         }
+        services().ui.onSceneWillChange();
+        void services().ui.closeAll();
         detachCurrencyCheatPanel();
         detachRosterClearButton();
     }
@@ -475,9 +618,6 @@ export class LoadingScene extends Component {
                 return;
             case LoadingPreviewTarget.GeneralDetailFromLobbyGeneralsButton:
                 await this._previewGeneralDetailFromLobbyEntry('ucuf-nav');
-                return;
-            case LoadingPreviewTarget.GeneralDetailFromSceneGeneralListButton:
-                await this._previewGeneralDetailFromLobbyEntry('scene-button');
                 return;
             case LoadingPreviewTarget.GeneralList:
                 await this._previewGeneralList();
@@ -771,7 +911,7 @@ export class LoadingScene extends Component {
         await this._delay(180);
     }
 
-    private async _previewGeneralDetailFromLobbyEntry(source: 'ucuf-nav' | 'scene-button'): Promise<void> {
+    private async _previewGeneralDetailFromLobbyEntry(source: 'ucuf-nav'): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> LobbyScene formal GeneralDetail entry smoke route', {
             source,
             previewVariant: this.previewVariant,
@@ -798,7 +938,7 @@ export class LoadingScene extends Component {
         }
 
         await lobbyScene.previewGeneralDetailEntrySmoke(source, this.previewVariant || 'zhang-fei');
-        await this._waitForGeneralDetailVisualReady('Overview');
+        await lobbyScene.waitForCharacterDs3VisualReady(this.previewVariant || 'zhang-fei');
         await this._delay(180);
         this._setCaptureState('ready', 'character-ds3-main');
     }
@@ -1541,12 +1681,7 @@ export class LoadingScene extends Component {
         const target = services().scene.getTargetScene();
         if (!target.name) return;
 
-        UCUFLogger.info(LogCategory.LIFECYCLE, `[LoadingScene] 資源清理完畢，開始預載入 ${target.name}...`);
-
-        // 徹底釋放舊資源
-        // @ts-ignore
-        const resBundle = resources as any;
-        if (typeof resBundle.releaseAll === 'function') resBundle.releaseAll();
+        UCUFLogger.info(LogCategory.LIFECYCLE, `[LoadingScene] 開始預載入 ${target.name}...`);
 
         if (sys.isNative) {
             // @ts-ignore
@@ -1554,13 +1689,16 @@ export class LoadingScene extends Component {
         }
 
         // 預載入目標場景
-        director.preloadScene(target.name, (completedCount, totalCount) => {
+        director.preloadScene(target.name, (_completedCount, _totalCount) => {
             // 此處可更新進度條 UI
         }, async (error) => {
             if (error) {
                 UCUFLogger.error(LogCategory.LIFECYCLE, `[LoadingScene] 載入場景 ${target.name}失敗:`, error);
                 return;
             }
+
+            // 場景切換由 Cocos director 負責資源生命週期；
+            // 舊場景在 loadScene 後自然 unload，不需要手動 releaseAll。
 
             // ⚠️ 關鍵：切換前釋放 LoadingScene 自身的資源
             if (this._bgSpriteFrame) {

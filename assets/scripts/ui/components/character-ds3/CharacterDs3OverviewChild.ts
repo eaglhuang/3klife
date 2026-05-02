@@ -75,7 +75,7 @@ const INACTIVE_STAR_COLOR = new Color(77, 70, 53, 255);
 
 export class CharacterDs3OverviewChild extends ChildPanelBase {
     override dataSource = 'overview';
-    private static readonly ROOT_PATH = 'CharacterDs3Main_div_6';
+    private static readonly ROOT_PATH = 'CharacterDs3Main_div_8';
 
     public override async onMount(_spec: Record<string, unknown>): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CharacterDs3OverviewChild] onMount', { rootPath: CharacterDs3OverviewChild.ROOT_PATH });

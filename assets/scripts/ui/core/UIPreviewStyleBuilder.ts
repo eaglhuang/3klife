@@ -50,6 +50,30 @@ export class UIPreviewStyleBuilder {
             return Math.max(0, Math.min(255, opacityValue));
         };
 
+        if (slot && (slot as any).kind === 'transparent') {
+            const sprite = node.getComponent(Sprite);
+            if (sprite) {
+                sprite.enabled = false;
+            }
+            const solid = node.getComponent(SolidBackground);
+            if (solid) {
+                solid.enabled = false;
+            }
+            const shadow = node.getComponent(ShadowBackground);
+            if (shadow) {
+                shadow.enabled = false;
+            }
+            const roundedRect = node.getComponent(RoundedRectBackground);
+            if (roundedRect) {
+                roundedRect.enabled = false;
+            }
+            const gradient = node.getComponent(GradientBackground);
+            if (gradient) {
+                gradient.enabled = false;
+            }
+            return true;
+        }
+
         if (slot && (slot as any).kind === 'gradient-rect') {
             const solid = node.getComponent(SolidBackground);
             if (solid) {

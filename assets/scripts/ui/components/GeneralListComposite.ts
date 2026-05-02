@@ -133,6 +133,7 @@ export class GeneralListComposite extends CompositePanel {
     private _npcDialogueSelectedKeyword: NpcDialogueKeywordSelection | null = null;
     private _npcDialogueLocale: NpcDialogueLocale = 'zh-TW';
     private _npcDialogueSpeechContextMode: NpcDialogueSpeechContextMode = 'life_chat';
+
     private _npcDialogueModelPreset: NpcDialogueModelPreset = 'fallback_chain';
     private _npcDialogueStatusLabel: Label | null = null;
     private _npcDialogueKeywordLabel: Label | null = null;
@@ -226,7 +227,13 @@ export class GeneralListComposite extends CompositePanel {
             generalId: normalizedId,
             rowName: row.name,
         });
-        row.emit(Button.EventType.CLICK);
+        // 程式化呼叫（smoke route）直接觸發，繞過雙擊保護
+        const general = this._allGenerals.find((g) => g.id === normalizedId) ?? null;
+        if (general) {
+            this.onSelectGeneral?.(general);
+        } else {
+            row.emit(Button.EventType.CLICK);
+        }
         return true;
     }
 
@@ -262,6 +269,7 @@ export class GeneralListComposite extends CompositePanel {
         this._binder = binder;
         binder.getButton('BtnBack')?.node.on(Button.EventType.CLICK, this.requestClose, this);
         this._bindSortHandlers();
+        this._ensureDialogueModeToggle();
     }
 
     // ── 私有邏輯 ─────────────────────────────────────────────
@@ -414,6 +422,62 @@ export class GeneralListComposite extends CompositePanel {
         if (applied) {
             headerRow.getComponent(Layout)?.updateLayout(true);
         }
+    }
+
+    /** 在 ListPanel 頂部建立「對話測試模式」開關按鈕，並維持其狀態同步 */
+    private _ensureDialogueModeToggle(): void {
+        const listPanel = this.node.getChildByPath(this._mainPath(LIST_PANEL_REL_PATH));
+        if (!listPanel) return;
+
+        const TOGGLE_NAME = 'DialogueModeToggle';
+        let toggleNode = listPanel.getChildByName(TOGGLE_NAME);
+        if (!toggleNode) {
+            toggleNode = new Node(TOGGLE_NAME);
+            toggleNode.layer = listPanel.layer;
+            listPanel.addChild(toggleNode);
+
+            const tf = toggleNode.addComponent(UITransform);
+            tf.setContentSize(180, 32);
+
+            const w = toggleNode.addComponent(Widget);
+            w.isAlignTop = true;
+            w.isAlignRight = true;
+            w.top = 4;
+            w.right = 8;
+            w.alignMode = Widget.AlignMode.ON_WINDOW_RESIZE;
+
+            const lbl = toggleNode.addComponent(Label);
+            lbl.horizontalAlign = HorizontalTextAlignment.CENTER;
+            lbl.verticalAlign = VerticalTextAlignment.CENTER;
+            lbl.fontSize = 18;
+            lbl.color = new Color(220, 200, 120, 255);
+
+            toggleNode.addComponent(Button).transition = Button.Transition.NONE;
+        }
+
+        // 同步標籤文字
+        const label = toggleNode.getComponent(Label)!;
+        label.string = this._npcDialogueDevControls ? '✦ 對話測試模式 ON' : '☐ 對話測試模式 OFF';
+        label.color = this._npcDialogueDevControls
+            ? new Color(80, 220, 120, 255)
+            : new Color(160, 160, 160, 255);
+
+        // 綁定點擊（先清除舊監聽再重掛）
+        toggleNode.off(Button.EventType.CLICK);
+        toggleNode.on(Button.EventType.CLICK, () => {
+            this._npcDialogueDevControls = !this._npcDialogueDevControls;
+            UCUFLogger.info(LogCategory.LIFECYCLE, '[GeneralListComposite] dialogue mode toggled', {
+                npcDialogueDevControls: this._npcDialogueDevControls,
+            });
+            // 同步標籤
+            label.string = this._npcDialogueDevControls ? '✦ 對話測試模式 ON' : '☐ 對話測試模式 OFF';
+            label.color = this._npcDialogueDevControls
+                ? new Color(80, 220, 120, 255)
+                : new Color(160, 160, 160, 255);
+            // 同步 NPC 工具列顯示 + 刷新列表
+            this._syncNpcDialogueDevToolbarVisibility();
+            void this._repopulate();
+        }, this);
     }
 
     private _syncNpcDialogueDevToolbarVisibility(): void {

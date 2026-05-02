@@ -37,6 +37,7 @@ const DS3_TAB_BUTTON_NODE: Record<TabKey, string> = {
     Equip: 'CharacterDs3Main_button_8',
     Aptitude: 'CharacterDs3Main_button_9',
 };
+const DS3_CONTENT_SLOT_CANDIDATES = ['ContentSlot', 'CharacterDs3Main_div_8', 'CharacterDs3Main_div_6'] as const;
 const PORTRAIT_ARTWORK_OVERLAY_HOST_NAME = 'PortraitArtworkOverlayHost';
 const SPIRIT_FAMILY_SHORTCUT_ROOT_PATH = 'RightContentArea/ContentSlot/TabBloodlineContent/SpiritFamilyState';
 const PORTRAIT_RARITY_BADGE_PATHS: Record<GeneralDetailRarityTier, string> = {
@@ -262,7 +263,7 @@ export class GeneralDetailComposite extends CompositePanel {
         if (tab === 'Overview') {
             try {
                 if (this._gdBinder && !this._ds3OverviewChild) {
-                    const overviewHost = this.getSlotNode('CharacterDs3Main_div_6') ?? this.node;
+                    const overviewHost = this._resolveDs3ContentSlotHost() ?? this.node;
                     this._ds3OverviewChild = new CharacterDs3OverviewChild(overviewHost, this.skinResolver, this._gdBinder);
                     await this._ds3OverviewChild.onMount({});
                 }
@@ -275,6 +276,16 @@ export class GeneralDetailComposite extends CompositePanel {
         }
 
         this._syncDs3TabVisualState();
+    }
+
+    private _resolveDs3ContentSlotHost(): Node | null {
+        for (const slotId of DS3_CONTENT_SLOT_CANDIDATES) {
+            const slotNode = this.getSlotNode(slotId);
+            if (slotNode) {
+                return slotNode;
+            }
+        }
+        return null;
     }
 
     private _syncDs3TabVisualState(): void {

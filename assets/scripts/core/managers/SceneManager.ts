@@ -13,6 +13,7 @@ export class SceneManager {
     public switchScene(targetSceneName: string, data?: any): void {
         this.targetScene = targetSceneName;
         this.sceneData = data;
+        this.boardRenderer = null; // 場景切換時清除舊場景的 boardRenderer 參照
         director.loadScene(SceneName.Loading);
     }
 
