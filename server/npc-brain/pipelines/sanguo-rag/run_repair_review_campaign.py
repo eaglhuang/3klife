@@ -110,6 +110,24 @@ def selected_generals(summary: dict[str, Any], requested_generals: list[str], to
     return [str(general_id) for general_id, _count in pairs[: max(top_generals, 0)] if str(general_id or "").strip()]
 
 
+def existing_round_json_paths(base_progress_path: str) -> list[str]:
+    payload = read_json(Path(base_progress_path))
+    rows = list(((payload.get("inputs") or {}).get("roundJsonPaths") or []))
+    resolved_rows: list[str] = []
+    seen: set[str] = set()
+    for row in rows:
+        raw = Path(str(row))
+        resolved = raw if raw.is_absolute() else (REPO_ROOT / raw)
+        if not resolved.exists():
+            continue
+        key = str(resolved.resolve())
+        if key in seen:
+            continue
+        seen.add(key)
+        resolved_rows.append(str(raw))
+    return resolved_rows
+
+
 def render_markdown(summary: dict[str, Any]) -> str:
     lines = [
         "# Repair Review Campaign",
@@ -181,6 +199,8 @@ def main() -> None:
         round_id,
         "--candidates",
         str(repair_candidates_path),
+        "--output-root",
+        str(rounds_root),
         "--max-generals",
         str(len(generals)),
         "--top-per-general",
@@ -269,8 +289,14 @@ def main() -> None:
         str(event_seed_root / "event-question-seeds.jsonl"),
         "--source-event-packets",
         str(packet_root / "source-event-packets.jsonl"),
+        "--rounds-root",
+        str(rounds_root),
+        "--output-root",
+        str(progress_root),
         "--overwrite",
     ]
+    for batch_path in existing_round_json_paths(args.base_progress):
+        estimate_args.extend(["--round-json", batch_path])
     for batch_path in sorted(rounds_root.glob("*.batch.json")):
         estimate_args.extend(["--round-json", str(batch_path)])
     commands.append({"name": "estimate_knowledge_completion", **run_command(script_command("estimate_knowledge_completion.py", estimate_args))})

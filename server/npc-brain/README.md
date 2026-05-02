@@ -288,6 +288,69 @@ $HOME/.venv/3klife-etl/bin/langgraph dev --no-browser
 
 `/info` 這類 meta route 仍保持可讀，方便 Studio bootstrap 與基礎診斷；真正的 graph / assistant / custom API 執行面則由 shared API key 保護。
 
+### 臨時對外測試：`localtunnel` 版
+
+如果你只是要讓外部瀏覽器短時間連進來測，不想先開通付費的 LangSmith Deployments，可以直接把本機 `langgraph dev` 經由 `localtunnel` 暫時公開。這條路已在 2026-05-01 實測通過：透過 tunnel URL 帶 `X-API-Key` 呼叫 `/healthz` 與 `/assistants/search` 都回 `200`。
+
+最簡單的做法是直接跑：
+
+```bash
+cd server/npc-brain
+bash ./run-temporary-external-test.sh
+```
+
+成功後 terminal 會印出像這樣的 public URL：
+
+```text
+your url is: https://<random-subdomain>.loca.lt
+```
+
+交給外部測試者的資訊只需要：
+
+- tunnel URL
+- `NPC_BRAIN_DEPLOY_API_KEY`
+
+不要提供：
+
+- `LANGSMITH_API_KEY`
+- `.env` 原文
+- 長時間常駐的 tunnel URL
+
+若你要指定固定 port 或 subdomain：
+
+```bash
+cd server/npc-brain
+LANGGRAPH_PORT=2025 LT_SUBDOMAIN=my-3klife-npc bash ./run-temporary-external-test.sh
+```
+
+若要看 tunnel request log：
+
+```bash
+cd server/npc-brain
+LT_PRINT_REQUESTS=1 bash ./run-temporary-external-test.sh
+```
+
+最小 smoke test：
+
+```bash
+curl -H "X-API-Key: <NPC_BRAIN_DEPLOY_API_KEY>" \
+	"https://<random-subdomain>.loca.lt/healthz"
+```
+
+```bash
+curl -X POST \
+	-H "Content-Type: application/json" \
+	-H "X-API-Key: <NPC_BRAIN_DEPLOY_API_KEY>" \
+	"https://<random-subdomain>.loca.lt/assistants/search" \
+	-d '{}'
+```
+
+注意事項：
+
+- 這是短期測試通道，不是正式 production 入口。
+- tunnel URL 會暴露在公網，雖然 API 有 shared key 保護，仍應只在短時間、少數測試者範圍內使用。
+- 測完就 `Ctrl+C` 關掉 script，避免本機 `langgraph dev` 長時間對外開放。
+
 目前固定枚舉欄位 `generalId`、`locale`、`speechContextMode`、`llmModelPreset`、`keywordCategories` 已在 graph schema 宣告成 enum；Studio 重新整理後，通常會把這些欄位顯示成下拉或固定可選值。`customGeneralId` 是進階 override：若你想測不在熱門清單裡的武將，可直接填它，graph 會優先採用 `customGeneralId`。
 
 ### 這版最小 graph 在做什麼
@@ -431,6 +494,46 @@ graph ID 是 `npc_brain_graph`，流程固定是：
 }
 ```
 
+如果你要驗證的不是「Studio 頁面有沒有打開」，而是「這台 service 會不會真的把 ETL graph 跑完並回傳結果」，可以直接跑：
+
+```bash
+cd server/npc-brain
+bash ./test-etl-service.sh
+```
+
+預設會用：
+
+- `Base URL = http://127.0.0.1:2025`
+- graph = `sanguo_etl_graph`
+- input = `{"focusGeneralId":"lu-bu"}`
+
+你也可以指定別的輸入：
+
+```bash
+bash ./test-etl-service.sh zhou-yu
+```
+
+```bash
+bash ./test-etl-service.sh '{"focusStatus":"needs-etl-evidence","topFocusGenerals":3}'
+```
+
+若你要測 tunnel / deployment，不要改腳本內容，只要改 `LANGGRAPH_BASE_URL`：
+
+```bash
+LANGGRAPH_BASE_URL="https://<your-tunnel-or-deployment-url>" \
+	bash ./test-etl-service.sh lu-bu
+```
+
+這支腳本會依序做 5 件事：
+
+1. 打 `/healthz`
+2. 打 `/assistants/search` 找到 `sanguo_etl_graph`
+3. 建立 `/threads`
+4. 呼叫 `/threads/{thread_id}/runs/wait`
+5. 把 `bottlenecks`、`focusGenerals`、`recommendedCommands` 摘要印出來
+
+所以它驗證的是「ETL service 真的可執行」，不是只驗證 `langgraph dev` 程序有沒有活著。
+
 跑完後最值得看的輸出是：
 
 - `bottlenecks`：依 `weight x gap` 排過的 completion 缺口
@@ -448,6 +551,122 @@ graph ID 是 `npc_brain_graph`，流程固定是：
 - `build_api_readiness_index.py`
 
 也就是先量測、再把 candidates 轉成 review MCQ、補 context、推回 repair-review wave，最後重建 runtime fixtures。這是目前最接近「讓 ETL 自己收斂優化」的第一版 graph 化入口。
+
+### 第三張 graph：`sanguo_etl_repair_graph`
+
+如果你不只想看診斷，而是想把「抽事件 → 審候選 → repair-review → readiness refresh」這條路徑直接顯示在 Studio 上，可以改選這張 graph。
+
+目前節點流程是：
+
+1. `load_completion_summary`
+2. `load_campaign_summary`
+3. `load_etl_pilot_report`
+4. `load_review_queue`
+5. `assess_completion_bottlenecks`
+6. `select_focus_generals`
+7. `prepare_focus_workspace`
+8. `refresh_focus_pilot`
+9. `extract_event_review_candidates`
+10. `review_candidates`
+11. `enrich_review_context`
+12. `run_targeted_repair_review`
+13. `refresh_api_readiness`
+14. `summarize_dialogue_smoke`
+
+這張 graph 預設把輸出寫到 `local/studio-etl-repair/`，目的是讓你在 Studio 看到完整 repair flow，但不要直接覆寫平常看的主 ETL artifact。
+
+最小輸入範例：
+
+```json
+{
+	"focusGeneralId": "lu-bu"
+}
+```
+
+若你只想先把節點顯示出來、不跑 context enrich，可以沿用預設；
+若你要真的開啟 enrich，可在 Raw input 補：
+
+```json
+{
+	"focusGeneralId": "lu-bu",
+	"runContextEnrichment": true,
+	"fillReviewAnswers": false
+}
+```
+
+幾組可直接貼進 Studio 的 preset：
+
+#### A. 只看 repair flow 節點，有輸出但不真正改 repair campaign
+
+```json
+{
+	"focusGeneralId": "lu-bu",
+	"runRepairCampaign": false,
+	"runApiReadinessRefresh": false,
+	"runContextEnrichment": false
+}
+```
+
+#### B. 跑完整 repair campaign，但不做人審 interrupt
+
+```json
+{
+	"focusGeneralId": "lu-bu",
+	"runRepairCampaign": true,
+	"runApiReadinessRefresh": true,
+	"runContextEnrichment": false,
+	"requireHumanReviewInterrupt": false
+}
+```
+
+#### C. 在 `review_candidates` 節點停下來做人審
+
+```json
+{
+	"focusGeneralId": "lu-bu",
+	"runRepairCampaign": false,
+	"runApiReadinessRefresh": false,
+	"runContextEnrichment": false,
+	"requireHumanReviewInterrupt": true,
+	"reviewInterruptBatchSize": 3
+}
+```
+
+若你開了 `requireHumanReviewInterrupt=true`，Studio 在 `review_candidates` 會暫停，resume 時可回傳：
+
+```json
+{
+	"decisions": [
+		{
+			"candidateId": "romance.generic-battle.006-p7",
+			"answer": "B",
+			"notes": "保留，但補 location 與 relationshipEdges",
+			"edits": {
+				"location": "虎牢關",
+				"relationshipEdges": [
+					{
+						"fromId": "xiahou-dun",
+						"toId": "lu-bu",
+						"type": "confronts"
+					}
+				]
+			}
+		}
+	]
+}
+```
+
+也可以把 `answer` 寫成 `accept` / `accept-with-edits` / `reject` / `defer`，graph 會自動轉成 A/B/C/D。
+
+你在最後一個 `summarize_dialogue_smoke` 節點會看到：
+
+- `pendingReviewQuestions`
+- `repairDeltaOverallPercent`
+- `dialogueProbeReadiness`
+- `readyForDialogueSmoke`
+- `nextBestMove`
+
+也就是這條 Studio flow 不只把修復步驟畫出來，還會告訴你這一輪跑完後，是否已經適合切回 `npc_brain_graph` 做真正的 dialogue smoke。
 
 ### LangGraph Deployments：正式外部測試版
 
@@ -500,6 +719,10 @@ curl -X POST \
 ```
 
 目前這套 external-test auth 是 shared-key 模式：所有持有同一把 key 的測試者都視為同一個 identity，threads / runs 可見性也是共享的。若你下一步要做「每個外部測試者互相看不到彼此 thread / run」，就要再補 `@auth.on` 的 resource filter 或接 OAuth / Auth0 / Supabase Auth。
+
+若你目前只有 Personal / free 的 LangSmith organization，無法使用 Deployments，建議優先採用上面的 `localtunnel` 臨時對外流程；等拿到 Plus 以上方案的 organization 後，再切回正式 deployment 路線。
+
+若你的 repo 放在 `/mnt/c/...` 這類 Windows 掛載路徑，可能無法直接 `chmod +x`；這時直接用 `bash ./run-temporary-external-test.sh` 啟動即可。
 
 ### 預期輸出怎麼看
 

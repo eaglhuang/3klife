@@ -5,7 +5,9 @@
   ],
   "graphs": {
     "npc_brain_graph": "langgraph_app.graph:graph",
-    "sanguo_etl_graph": "langgraph_app.etl_graph:graph"
+    "sanguo_etl_graph": "langgraph_app.etl_graph:graph",
+    "sanguo_etl_repair_graph": "langgraph_app.etl_repair_graph:graph",
+    "sanguo_progress_advancement_graph": "langgraph_app.progress_advancement_graph:graph"
   },
   "auth": {
     "path": "auth.py:auth",
