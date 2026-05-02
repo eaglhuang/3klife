@@ -432,9 +432,8 @@ skill 開始時讀取 evolution2：
 - [x] 打通 `LoadingScene -> LobbyScene -> GeneralList -> 張飛 -> character-ds3-main` 正式 smoke route。
 - [x] `node tools_node/capture-ui-screens.js --target CharacterDs3 --outDir artifacts/ui-source/character-ds3/review` 產出 runtime screenshot / verdict。
 - [x] `capture-ui-screens.js` 已支援顯式 `uiVariant`，可強制 unified / ds3 route，避免 sticky localStorage 誤判。
-- [x] 正式玩家路徑補雙入口驗證 target：`GeneralDetailFromLobbyGeneralsButton` 走 UCUF 底部 `btnGenerals`；`GeneralDetailFromSceneGeneralListButton` 走 scene-authored `BtnGeneralList`，兩者都開 `GeneralList` 後點張飛進 `GeneralDetailComposite`。
+- [x] 正式玩家路徑收斂為單入口驗證 target：`GeneralDetailFromLobbyGeneralsButton` 走 UCUF 底部 `btnGenerals`，開 `GeneralList` 後點張飛進 `GeneralDetailComposite`。
 - [x] `node tools_node/capture-ui-screens.js --target GeneralDetailFromLobbyGeneralsButton --outDir artifacts/ui-source/general-detail-overview/formal-route-lobby-generals-pass` 通過；runtime guard PASS，僅 AudioSystem preview warning。
-- [x] `node tools_node/capture-ui-screens.js --target GeneralDetailFromSceneGeneralListButton --outDir artifacts/ui-source/general-detail-overview/formal-route-scene-general-list` 通過；runtime guard PASS，僅 AudioSystem preview warning。
 - [ ] 正式產品 default cutover 仍 blocked：`ui=ds3` 走 `GeneralDetailComposite` 會 fail-fast 缺 `GeneralDetailRoot/RightTabBar/BtnTabOverview`；`character-ds3-main` 尚未補齊 GeneralDetailComposite shell / tabRouting 契約。
 - [ ] 取得 Cocos Editor screenshot。
 - [ ] HTML vs Editor score >= 0.95，或產出 top blockers 與 evolution2 candidates。

@@ -9,16 +9,16 @@
 - 最終 gate 仍是 Cocos Editor screenshot vs HTML source screenshot。
 - raw `runtimeVsSource.score` 必須誠實保留，不得改寫。
 - 已核准 runtime art 差異只能透過 rect-scoped art-authority waiver 進 `runtimeVsSource.adjustedScore`。
-- R-29 已完成：6 個右側 tab `button-skin` slot 在 `--sync-existing --merge-mode html-authoritative` 下保留正式 runtime art，且已有 `existing-runtime-asset-preserved` 證據。
+- R-29 已完成：6 個右側 tab `button-skin` slot 在明確 `--update-mode --sync-existing` 下保留正式 runtime art，且已有 `existing-runtime-asset-preserved` 證據；這是 opt-in 更新模式，不是正式轉換預設值。
 - R-30 是目前美術總監裁決：converter failure 與 approved art delta 必須分開稽核。這是審計，不是洗分。
 - R-35 已完成：`html-to-ucuf-readiness` 會把剩餘工作轉成 blocker / warning / action unit，不再用主觀 checklist 追 95%。
-- 2026-05-01 最新 final compare（r61）：`runtimeVsSource.score=0.8312056327160494`（`adjustedScore` 同值），來源為 `artifacts/ui-qa/r61-compare-a/character-ds3-main.html-cocos-verdict.json`；仍未達 `0.95`，不可宣稱通過。
+- 2026-05-01 最後已知 final compare（r61）：`runtimeVsSource.score=0.8312056327160494`（`adjustedScore` 同值），來源為 `artifacts/ui-qa/r61-compare-a/character-ds3-main.html-cocos-verdict.json`；仍未達 `0.95`，不可宣稱通過。後續比較必須使用本輪 workflow 同步到正式 runtime spec 的 JSON，不得拿舊 default skin 或舊 screen entry 代測。
 - 2026-04-30 r53→r54 推進已驗證：score `0.7102 -> 0.8814`（`+17.1%`），主因是補齊血脈/傳記區塊的大色塊邊框與圓角。
 - 最新 `zone-ownership` 來自 final compare pixel buckets：`converter-geometry=20`、`waiverEligibleCount=0`；目前沒有可用 waiver 路徑。
-- 最新 readiness 報告：`verdict=not-ready`、`readinessScore=0.958`、`blockerUnits=1`、`actionUnits=1`；唯一 blocker 仍是 final gate。
+- 最新 readiness 報告必須由 `run-html-to-ucuf-workflow.js` 在 final replay、per-tab replay、正式 runtime sync 後輸出；若 readiness 指向舊 `skin`、舊 `CharacterDs3Main_div_6` 或舊 placeholder fragment，該報告作廢。
 - 2026-04-30 DS3 preview route（`previewTarget=18`）已改為通用 lazySlot tab 切換流程，tab click 互動恢復。
 - 2026-04-30 `previewTarget=18` 根因已確認：該路由走 `UIScreenPreviewHost`（不是 `GeneralDetailComposite`）；已補 `switchLazySlot(slotId, fragmentId)` 通用 API 與 `LobbyScene` tab 綁定，並在 `showScreen('character-ds3-main')` 後重綁，避免重建節點後 click handler 遺失。
-- 2026-04-30 DS3 右側 tab 現況：`Overview` 外的 `Stats/Tactics/Bloodline/Equip/Aptitude` 仍指向 `fragments/layouts/character-ds3-right-content-empty`；點擊可切換但內容為 placeholder，不可視為功能完成。
+- 2026-05-02 新通則：layout / screen / `<screen>.tab-routing.json` / readiness / ChildPanel 的 tab host 皆以當輪轉換推導出的正式 layout node 為準；本輪 DS3 為 `CharacterDs3Main_div_8`，不得回退到 `CharacterDs3Main_div_6`。右側六個 tab 內容必須走 per-tab replay，各自輸出正式 fragment JSON，不得用 empty placeholder 代表低分結果。
 
 ## 2. 通過規則
 
@@ -77,14 +77,19 @@
 - [x] R-38B-G1（通則）: 已建立 `tab-fragment-geometry-contract` 檢查；凡被 `defaultFragment` / `fragments` / `tabRouting` 引用的 fragment，root 或第一層 mount wrapper 若以固定 `width/height` 鎖死會列 blocker。
 - [x] R-38B-G2（通則）: 已落地 `normalize-ucuf-fragment-geometry.js` 與 workflow 自動步驟 `normalize-fragment-geometry-contract`，正規化只讀 screen/layout/tabRouting 資料，不依賴 screenId、節點名或 button id 特判。
 - [x] R-38B-G3（驗收）: `validate-ui-specs.js --strict --rules tab-fragment-geometry-contract,composite-panel-tab-route-integrity` 通過；`html-to-ucuf-readiness` 新增 `fragmentGeometry` gate，DS3 目前 9/9 referenced fragments pass。
+- [x] R-39A（通則）: `run-html-to-ucuf-workflow.js` 預設改為 HTML source-authoritative；`--update-mode` 才會讀既有 runtime spec 做增量合併，避免舊 skin / 舊 slot / 舊 sidecar 先污染新結果。
+- [x] R-39B（通則）: final replay 後自動把 final layout、skin、screen、tab-routing、preload/performance/interaction 等 sidecar 同步到正式 runtime spec 入口；Cocos Editor final gate 必須測這份同步後 JSON，不得因分數低改測舊 default skin。
+- [x] R-39C（通則）: workflow 內建 per-tab replay，會自動切 tab 並把每個 tab 的 `right-content` 輸出成獨立 fragment JSON，再把 fragment skin slots 併回主 skin。
+- [x] R-39D（通則）: `compare-html-to-cocos-editor.js` 若收到已裁成 gameplay canvas 的 `1920x1080` runtime capture，不得再硬套 `editorCrop` 做第二次裁切；工具需明確記錄 `auto-skip-out-of-bounds-crop`，避免把 canvas-only debug capture 誤判成 converter fidelity 退步。
 
 ## 4. 下一個執行切片
 
-1. 每輪先跑 `node tools_node/html-to-ucuf-readiness.js --screen-id character-ds3-main --final-verdict <latest-verdict> --output assets/resources/ui-spec/screens/character-ds3-main.readiness.json`。
-2. 目前 DS3 readiness：`readinessScore=0.958`、`actionUnits=1`、`blockerUnits=1`；剩餘 blocker 仍是 final gate raw `0.8312 < 0.95`。
-3. R-38A + R-38C + R-38B 已完成：tab click、lazySlot route 與 5 個 tab content fragment contract 均已接回；不再是 empty placeholder。
-4. M13 tab mount 已過關：6/6 tab mounts resolve to real layout nodes；M10 text binding 已過關：0/1 dynamic text candidates missing contract；fragment geometry gate 已過關（9/9 pass）。
-5. 下個高價值動作是先鎖定 final compare 基線一致性（固定 Cocos Editor capture protocol + target screen），再做 top pixel buckets 的 source-measured geometry / runtime rendering 收斂；不可回到 blanket waiver，也不可用舊 tab sync-report 當 adjusted score 依據。
+1. 每輪正式執行先跑 `node tools_node/run-html-to-ucuf-workflow.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --bundle lobby_ui --editor-screenshot <current-editor-png> --capture-protocol assets/resources/ui-spec/screens/character-ds3-main.final-capture-protocol.json`；此 wrapper 會負責 readiness 與正式 runtime sync。
+2. 若只做 debug，可加 `--skip-editor-compare`，但不得宣稱 95% 通過；正式分數只看同步後 Cocos Editor screenshot vs HTML source。
+2a. 若 debug compare 使用 `capture-ui-screens.js` 產出的 browser preview canvas 圖，只能當診斷，不是 final pass；compare tool 應自動略過超出邊界的 `editorCrop`，避免 double-crop 造成假性低分。
+3. Tab host、tab-routing、ChildPanel mount 與 readiness 必須同源：以當輪 final layout 推導出的 mount 為準；DS3 目前應為 `CharacterDs3Main_div_8`，任何 `CharacterDs3Main_div_6` 都視為舊規則殘留。
+4. 六個 tab 的右側內容必須由 per-tab replay 輸出 fragment JSON；若 fragment 是舊 placeholder 或內容不是當輪 HTML replay 產物，readiness / final compare 需標為未完成。
+5. 下個高價值動作是在同步後重新擷取 Cocos Editor screenshot，確認 `runtimeVsSource.score >= 0.95` 或列出 top pixel buckets 的 converter / runtime rendering 殘差；不可回到 blanket waiver，也不可用舊 tab sync-report 當 adjusted score 依據。
 
 ## 5. Context Budget 政策
 
@@ -187,7 +192,7 @@ R-34 已新增 CSS capability 到 skin kind 的契約測試，覆蓋 `linear-gra
 
 2026-04-29 已新增通用 readiness gate：`tools_node/lib/dom-to-ui/readiness-gate.js` 與 CLI `tools_node/html-to-ucuf-readiness.js`。它不做 DS3 特例，只讀 layout / skin / screen sidecar，輸出 `<screen>.readiness.json`，把 95% 前的剩餘工作拆成 final gate、capture protocol、zone ownership / waiver、tab routing mount、text binding、visual policy、loading / performance freshness。
 
-DS3 目前報告位於 `assets/resources/ui-spec/screens/character-ds3-main.readiness.json`：`verdict=not-ready`、`readinessScore=0.958`、`actionUnits=1`、`blockerUnits=1`。M13 維持 6/6 tab mounts resolve to real layout nodes；M10 是 0/1 dynamic text candidates missing contract；loading gate 為 pass（含 performance sidecar freshness 與 node count blocker 清空）；fragment geometry gate 也已 pass（9/9 referenced fragments）。目前唯一 blocker 仍是 final compare：最新 raw `0.6993788580246914`、adjusted 同值、`waiverEligibleCount=0`。這表示下一輪要先穩定 Cocos Editor final capture baseline，再聚焦 top pixel buckets 的通用 geometry / runtime rendering 修正，而不是新增 waiver checklist。
+DS3 目前報告位於 `assets/resources/ui-spec/screens/character-ds3-main.readiness.json`：`verdict=not-ready`、`readinessScore=0.958`、`actionUnits=1`、`blockerUnits=1`。M13 維持 6/6 tab mounts resolve to real layout nodes；M10 是 0/1 dynamic text candidates missing contract；loading gate 為 pass（含 performance sidecar freshness 與 node count blocker 清空）；fragment geometry gate 也已 pass（9/9 referenced fragments）。目前唯一 blocker 仍是 final compare：2026-05-01 最新 r61 raw `0.8312056327160494`、adjusted 同值、`waiverEligibleCount=0`。這表示下一輪要先穩定 Cocos Editor final capture baseline，再聚焦 top pixel buckets 的通用 geometry / runtime rendering 修正，而不是新增 waiver checklist。
 
 ## 14. 2026-04-29 source-measured geometry checkpoint
 
@@ -340,7 +345,7 @@ Tab 面板從 empty placeholder 過渡到可驗收狀態的最小 contract：
 - `smoke-ready`：Cocos runtime 可走 `smokeRoute` 且顯示 `minNonEmptyNodes` 個有效節點。
 - `qa-pass`：browser QA 截圖比對通過。
 
-**DS3 待辦**：`Stats / Tactics / Bloodline / Equip / Aptitude` 5 個 tab 目前狀態為 `empty`，R-38B 目標是先推到 `contract-ready`（至少定義 `requiredNodes` 與 `bindPaths`），不要求一次到 `smoke-ready`。
+**DS3 狀態更新（2026-05-02）**：`Stats / Tactics / Bloodline / Equip / Aptitude` 不得再使用 `empty` placeholder 作為正式結果；workflow 已要求 per-tab replay，把 HTML 右側內容逐 tab 轉為 fragment JSON。若某 tab replay 失敗，該 tab 必須回到 converter bug，不得以舊 placeholder 或舊 hand-written fragment 充數。
 
 **Fragment Geometry Contract（新增通則）**：
 - lazySlot 消費的 fragment 必須遵守 fill-root contract：fragment root（或 root 下第一層內容容器）需可貼齊 mount slot，不得靠固定 `width/height` 包住整頁內容。
