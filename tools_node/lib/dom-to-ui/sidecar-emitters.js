@@ -89,9 +89,20 @@ function detectSkinLayerAtlasRisk(layoutDraft, skinDraft) {
 }
 
 function walk(node, visit) {
+  const start = layoutRoot(node);
+  recWalk(start, visit);
+}
+
+function recWalk(node, visit) {
   if (!node || typeof node !== 'object') return;
   visit(node);
-  if (Array.isArray(node.children)) for (const c of node.children) walk(c, visit);
+  if (Array.isArray(node.children)) for (const c of node.children) recWalk(c, visit);
+}
+
+function layoutRoot(layout) {
+  return layout && layout.root && typeof layout.root === 'object'
+    ? layout.root
+    : layout;
 }
 
 /**
@@ -148,13 +159,14 @@ function countKind(syncDelta, kind) {
 
 function snapshotMeta(layout) {
   if (!layout) return { nodeCount: 0 };
+  const root = layoutRoot(layout);
   let count = 0; let maxDepth = 0;
   (function rec(n, d) {
     if (!n || typeof n !== 'object') return;
     count += 1;
     if (d > maxDepth) maxDepth = d;
     if (Array.isArray(n.children)) for (const c of n.children) rec(c, d + 1);
-  })(layout, 1);
+  })(root, 1);
   return { nodeCount: count, maxDepth };
 }
 
@@ -222,6 +234,86 @@ function buildFragmentRoutePatch(screenId, layoutDraft, interactionDraft) {
   };
 }
 
+const TAB_TARGET_TO_RUNTIME = {
+  overview: 'Overview',
+  stats: 'Stats',
+  tactics: 'Tactics',
+  bloodline: 'Bloodline',
+  equip: 'Equip',
+  aptitude: 'Aptitude',
+};
+
+const TAB_TARGET_TO_CHILD_PANEL = {
+  overview: 'CharacterDs3OverviewChild',
+  stats: 'CharacterDs3StatsChild',
+  tactics: 'CharacterDs3TacticsChild',
+  bloodline: 'CharacterDs3BloodlineChild',
+  equip: 'CharacterDs3EquipChild',
+  aptitude: 'CharacterDs3AptitudeChild',
+};
+
+function deriveFragmentPrefix(screenId) {
+  return String(screenId || '').trim().replace(/-main$/i, '') || 'screen';
+}
+
+function inferPrimaryTabContentSlot(lazySlots, screenId) {
+  const slots = Array.isArray(lazySlots) ? lazySlots : [];
+  const prefix = deriveFragmentPrefix(screenId);
+  const overviewFragment = `fragments/layouts/${prefix}-overview-content`;
+  return slots.find(slot => slot && slot.defaultFragment === overviewFragment)
+    || slots.find(slot => slot && /overview-content$/i.test(String(slot.defaultFragment || '')) && !/story-strip/i.test(String(slot.defaultFragment || '')))
+    || slots.find(slot => slot && !/story-strip/i.test(`${slot.slot || ''} ${slot.defaultFragment || ''}`))
+    || null;
+}
+
+function buildTabRoutingSidecar(screenId, layoutDraft, interactionDraft) {
+  const fragmentRoutePatch = buildFragmentRoutePatch(screenId, layoutDraft, interactionDraft);
+  const primarySlot = inferPrimaryTabContentSlot(fragmentRoutePatch.lazySlots, screenId);
+  const prefix = deriveFragmentPrefix(screenId);
+  const seenTabs = new Set();
+  const tabs = [];
+  for (const route of fragmentRoutePatch.tabRoutes) {
+    const key = String(route && route.target || '').trim().toLowerCase();
+    const runtimeTab = TAB_TARGET_TO_RUNTIME[key];
+    if (!runtimeTab || seenTabs.has(runtimeTab)) continue;
+    seenTabs.add(runtimeTab);
+    tabs.push({
+      id: runtimeTab,
+      mount: primarySlot ? primarySlot.slot : null,
+      mountSource: primarySlot ? 'converter-lazy-slot' : 'missing-lazy-slot',
+      buttonNode: route.trigger || null,
+      lifecycle: 'lazy',
+      fragment: `fragments/layouts/${prefix}-${key}-content`,
+      childPanelClass: TAB_TARGET_TO_CHILD_PANEL[key] || null,
+      interactionId: route.interactionId || null,
+    });
+  }
+
+  return {
+    screenId,
+    generatedAt: new Date().toISOString(),
+    tabs,
+    summary: {
+      tabCount: tabs.length,
+      mountSlotId: primarySlot ? primarySlot.slot : null,
+      missingMountCount: tabs.filter(tab => !tab.mount).length,
+      missingTriggerCount: tabs.filter(tab => !tab.buttonNode).length,
+    },
+  };
+}
+
+function buildScreenTabRoutingMap(tabRoutingSidecar) {
+  const map = {};
+  for (const tab of (tabRoutingSidecar && tabRoutingSidecar.tabs) || []) {
+    if (!tab || !tab.id || !tab.mount || !tab.fragment) continue;
+    map[tab.id] = {
+      slotId: tab.mount,
+      fragment: tab.fragment,
+    };
+  }
+  return map;
+}
+
 module.exports = {
   buildCompositeReport,
   buildBundleSuggestion,
@@ -229,4 +321,6 @@ module.exports = {
   buildSyncReport,
   buildRGuardSummary,
   buildFragmentRoutePatch,
+  buildTabRoutingSidecar,
+  buildScreenTabRoutingMap,
 };

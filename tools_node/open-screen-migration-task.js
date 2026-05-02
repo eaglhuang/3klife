@@ -16,7 +16,7 @@
 //   node tools_node/open-screen-migration-task.js \
 //     --task-id UI-2-9001 \
 //     --screen character-ds3-main \
-//     --html "Design System 2/ui_kits/character/index.html" \
+//     --html "Design System 3/ui_kits/character/index.html" \
 //     --from-variant unified \
 //     --to-variant ds3 \
 //     --md-out docs/agent-briefs/tasks/UI-2-9001.md \

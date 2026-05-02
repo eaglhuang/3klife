@@ -266,9 +266,62 @@ function foldOnce(node, foldedNames, droppedNames, absorbedNames, collapsedNames
       }
       nextChildren.push(folded);
     }
-    node.children = nextChildren;
+    node.children = dedupeLargeSiblingSubtrees(nextChildren, droppedNames);
   }
   return node;
+}
+
+function dedupeLargeSiblingSubtrees(children, droppedNames) {
+  if (!Array.isArray(children) || children.length <= 1) return children;
+
+  const seen = new Set();
+  const out = [];
+  for (const child of children) {
+    if (!child || typeof child !== 'object') {
+      out.push(child);
+      continue;
+    }
+
+    const labelCount = countLabelNodes(child);
+    if (labelCount < 12) {
+      out.push(child);
+      continue;
+    }
+
+    const signature = buildStructuralSignature(child);
+    if (seen.has(signature)) {
+      droppedNames.push(child.name || '<duplicate-large-subtree>');
+      continue;
+    }
+    seen.add(signature);
+    out.push(child);
+  }
+  return out;
+}
+
+function countLabelNodes(node) {
+  if (!node || typeof node !== 'object') return 0;
+  let count = node.type === 'label' && String(node.text || '').trim() ? 1 : 0;
+  for (const child of node.children || []) count += countLabelNodes(child);
+  return count;
+}
+
+function buildStructuralSignature(node) {
+  if (!node || typeof node !== 'object') return '';
+  const payload = {
+    type: node.type || '',
+    text: node.type === 'label' ? String(node.text || '').trim() : '',
+    contract: node._contract || '',
+    lazySlot: !!node.lazySlot,
+    skinSlot: node.skinSlot || '',
+    styleSlot: node.styleSlot || '',
+    width: Number.isFinite(node.width) ? node.width : null,
+    height: Number.isFinite(node.height) ? node.height : null,
+    widget: node.widget || null,
+    layout: node.layout || null,
+    children: Array.isArray(node.children) ? node.children.map(buildStructuralSignature) : [],
+  };
+  return JSON.stringify(payload);
 }
 
 function foldRoot(root, foldedNames, droppedNames, absorbedNames, collapsedNames) {

@@ -1053,6 +1053,12 @@ async function main() {
       writeHeatmap(pixelDiffResult.heatmap, heatmapPath);
       const diffPath = outputPngAbs.replace(/\.png$/i, '.pixel-diff.json');
       fs.writeFileSync(diffPath, JSON.stringify({
+        scoreScope: 'source-vs-ucuf-preview',
+        waiverPolicy: {
+          imageWaivers: 'preview-diagnostic-only; missing source assets must not adjust final runtimeVsSource gate',
+          artAuthorityWaivers: 'approved-runtime-art-delta sidecar; final authority is compare-html-to-cocos-editor runtimeVsSource',
+          finalRuntimeGate: 'tools_node/compare-html-to-cocos-editor.js',
+        },
         rawCoveragePercent: rawPixelDiffResult.coveragePercent,
         coveragePercent: rawPixelDiffResult.coveragePercent,
         adjustedCoverage: pixelDiffResult.adjustedCoverage,

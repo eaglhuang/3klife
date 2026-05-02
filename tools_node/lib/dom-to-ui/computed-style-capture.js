@@ -17,6 +17,12 @@ const CAPTURED = new Set([
   'background-image',
   'color',
   'font-size', 'font-family', 'font-weight', 'line-height', 'letter-spacing', 'text-align',
+  // Box metrics are consumed by draft-builder from the snapshot payload. They
+  // stay ignored in coverage accounting to avoid inflating the CSS score.
+  'width', 'height',
+  'top', 'right', 'bottom', 'left',
+  'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
+  'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
   // Alignment & layout (M23) — applied directly in renderNode, not via skin slots
   'display', 'flex-direction', 'flex-wrap',
   'align-items', 'align-content', 'align-self',
@@ -119,6 +125,11 @@ async function captureComputedStyles(page) {
       'background-color', 'background-image', 'background-size', 'background-position', 'background-repeat',
       'color',
       'font-size', 'font-family', 'font-weight', 'line-height', 'letter-spacing', 'text-align',
+      // Box metrics used by draft-builder for UCUF width/height/widget/layout.
+      'width', 'height',
+      'top', 'right', 'bottom', 'left',
+      'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
+      'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
       // Border
       'border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width',
       'border-top-style', 'border-right-style', 'border-bottom-style', 'border-left-style',

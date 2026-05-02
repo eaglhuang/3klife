@@ -74,6 +74,13 @@ function listCanonicalSpecFiles(dir) {
     return listJsonFiles(dir).filter((p) => !path.basename(p, '.json').includes('.'));
 }
 
+function listCanonicalSkinSpecFiles(dir) {
+    return listJsonFiles(dir).filter((p) => {
+        const base = path.basename(p, '.json');
+        return !base.includes('.') || base.endsWith('.skin');
+    });
+}
+
 function collectRuntimeRouteKnownScreenIds(screenDir, canonicalScreenIds) {
     const screenSet = new Set(canonicalScreenIds);
     for (const filePath of listJsonFiles(screenDir)) {
@@ -369,7 +376,8 @@ function validateLayoutStrict(layoutJson, filePath, allSkinSlots, failures, warn
             const hasSkinSlot = typeof node.skinSlot === 'string' && node.skinSlot.trim().length > 0;
             const hasSkinLayers = Array.isArray(node.skinLayers) && node.skinLayers.length > 0;
             const hasCompositeImageLayers = Array.isArray(node.compositeImageLayers) && node.compositeImageLayers.length > 0;
-            if (!hasChildren && !hasSkinSlot && !hasSkinLayers && !hasCompositeImageLayers) {
+            const isLazySlotHost = node.lazySlot === true;
+            if (!isLazySlotHost && !hasChildren && !hasSkinSlot && !hasSkinLayers && !hasCompositeImageLayers) {
                 strictFail('no-empty-container', `${loc} 是空容器（無子節點且無 skinSlot / skinLayers / compositeImageLayers）`, failures, exceptions);
             }
         }
@@ -632,7 +640,7 @@ function validateLayoutStrict(layoutJson, filePath, allSkinSlots, failures, warn
     }
 }
 
-function validateScreenStrict(screenNode, screenFilePath, layoutJsons, failures, warnings) {
+function validateScreenStrict(screenNode, screenFilePath, layoutJsons, skinJsons, failures, warnings) {
     const rel = relative(screenFilePath);
     const exceptions = (screenNode.validation && screenNode.validation.exceptions) || null;
 
@@ -689,6 +697,25 @@ function validateScreenStrict(screenNode, screenFilePath, layoutJsons, failures,
     if (!skipRules.has('composite-panel-tab-route-integrity')) {
         const tabRouting = screenNode.tabRouting;
         if (tabRouting && typeof tabRouting === 'object' && !Array.isArray(tabRouting)) {
+            const tabSwitchButtonsByContract = new Map();
+            walkLayoutNodes(layoutJson.root, (node) => {
+                const contract = typeof node._contract === 'string' ? node._contract.trim().toLowerCase() : '';
+                if (node.type !== 'button' || !/^tab\.switch(?:\.|$)/.test(contract)) return;
+                if (!tabSwitchButtonsByContract.has(contract)) tabSwitchButtonsByContract.set(contract, []);
+                tabSwitchButtonsByContract.get(contract).push(node);
+            }, 0);
+
+            for (const [contract, nodes] of tabSwitchButtonsByContract.entries()) {
+                if (nodes.length > 1) {
+                    strictFail('composite-panel-tab-route-integrity',
+                        `${rel} - layout "${layoutId}" 出現重複 tab button contract "${contract}"（count=${nodes.length}），已阻擋部署`,
+                        failures, exceptions);
+                }
+            }
+
+            const skinId = typeof screenNode.skin === 'string' ? screenNode.skin.trim() : null;
+            const skinJson = skinId && skinJsons.has(skinId) ? skinJsons.get(skinId) : null;
+
             // 收集 layout 中所有 lazySlot 節點的 name
             const lazySlotNames = new Set();
             walkLayoutNodes(layoutJson.root, (node) => {
@@ -697,12 +724,53 @@ function validateScreenStrict(screenNode, screenFilePath, layoutJsons, failures,
                 }
             }, 0);
 
+            // Hard rule (fail-fast): tabRouting 存在時，layout 必須至少有一個 lazySlot。
+            // 否則 tab 面板切換會在 runtime 出現重複內容或掛載失敗。
+            if (lazySlotNames.size === 0) {
+                strictFail('composite-panel-tab-route-integrity',
+                    `${rel} - screen 宣告 tabRouting，但 layout "${layoutId}" 沒有任何 lazySlot（lazySlotCount=0），已阻擋部署`,
+                    failures, exceptions);
+            }
+
             const fragBase = path.join(uiSpecRoot, 'fragments');
             for (const [tabKey, route] of Object.entries(tabRouting)) {
                 const routeObj = (typeof route === 'object' && route !== null) ? route : {};
                 const slotId = typeof routeObj.slotId === 'string' ? routeObj.slotId :
                                typeof route === 'string' ? route : null;
                 const fragmentId = typeof routeObj.fragment === 'string' ? routeObj.fragment : null;
+                const tabContract = `tab.switch.${String(tabKey).trim().toLowerCase()}`;
+                const tabButtons = tabSwitchButtonsByContract.get(tabContract) || [];
+
+                if (tabButtons.length === 0) {
+                    strictWarn('composite-panel-tab-route-integrity',
+                        `${rel} - tabRouting["${tabKey}"] 缺少對應 button contract "${tabContract}"，runtime tab skin/互動可能失配`,
+                        warnings, exceptions);
+                }
+
+                if (skinJson && tabButtons.length > 0) {
+                    const tabButton = tabButtons[0];
+                    const tabSkinSlotId = typeof tabButton.skinSlot === 'string' ? tabButton.skinSlot.trim() : '';
+                    if (!tabSkinSlotId) {
+                        strictFail('composite-panel-tab-route-integrity',
+                            `${rel} - tabRouting["${tabKey}"] 對應 button 缺少 skinSlot，無法套用 tab button-skin 契約`,
+                            failures, exceptions);
+                    } else {
+                        const slot = skinJson.slots && skinJson.slots[tabSkinSlotId];
+                        if (!slot) {
+                            strictFail('composite-panel-tab-route-integrity',
+                                `${rel} - tabRouting["${tabKey}"] 的 skinSlot "${tabSkinSlotId}" 不存在於 skin "${skinId}"`,
+                                failures, exceptions);
+                        } else if (slot.kind !== 'button-skin') {
+                            strictFail('composite-panel-tab-route-integrity',
+                                `${rel} - tabRouting["${tabKey}"] 的 skinSlot "${tabSkinSlotId}" kind=${slot.kind}，必須為 button-skin`,
+                                failures, exceptions);
+                        } else if (!slot.normal || !slot.selected) {
+                            strictFail('composite-panel-tab-route-integrity',
+                                `${rel} - tabRouting["${tabKey}"] 的 button-skin "${tabSkinSlotId}" 缺少 normal/selected 狀態貼圖，已阻擋部署`,
+                                failures, exceptions);
+                        }
+                    }
+                }
 
                 // slotId 必須對應 layout 中的 lazySlot 節點
                 if (slotId && lazySlotNames.size > 0 && !lazySlotNames.has(slotId)) {
@@ -926,7 +994,7 @@ for (const filePath of listCanonicalSpecFiles(layoutDir)) {
     }
 }
 
-for (const filePath of listCanonicalSpecFiles(skinDir)) {
+for (const filePath of listCanonicalSkinSpecFiles(skinDir)) {
     try {
         const json = readJson(filePath);
         const okId = assertNonEmptyString(json.id, 'skin.id', filePath, failures);
@@ -1041,7 +1109,7 @@ const contracts = (checkContentContract || strictMode) ? loadContracts(failures)
 const recipes = loadRecipes(failures);
 
 // skin recipeRef 驗證（第二輪，現在 recipes 已就緒）
-for (const filePath of listCanonicalSpecFiles(skinDir)) {
+for (const filePath of listCanonicalSkinSpecFiles(skinDir)) {
     try {
         const json = readJson(filePath);
         if (json.recipeRef) {
@@ -1062,7 +1130,7 @@ for (const filePath of listCanonicalSpecFiles(screenDir)) {
                     validateScreenContentRequirements(screenNode, filePath, contracts, failures, warnings);
                 }
                 if (strictMode) {
-                    validateScreenStrict(screenNode, filePath, layoutJsons, failures, warnings);
+                    validateScreenStrict(screenNode, filePath, layoutJsons, skinJsons, failures, warnings);
                 }
                 // R18/R19/R20 recipe ref（無論是否 strict，有宣告就驗證）
                 if (screenNode.recipeRef) {
@@ -1079,7 +1147,7 @@ for (const filePath of listCanonicalSpecFiles(screenDir)) {
                 validateScreenContentRequirements(json, filePath, contracts, failures, warnings);
             }
             if (strictMode) {
-                validateScreenStrict(json, filePath, layoutJsons, failures, warnings);
+                validateScreenStrict(json, filePath, layoutJsons, skinJsons, failures, warnings);
             }
             if (json.recipeRef) {
                 validateRecipeRef(json.recipeRef, filePath, recipes, failures, warnings, 'screen');
@@ -1090,7 +1158,7 @@ for (const filePath of listCanonicalSpecFiles(screenDir)) {
                 validateScreenContentRequirements(json, filePath, contracts, failures, warnings);
             }
             if (strictMode) {
-                validateScreenStrict(json, filePath, layoutJsons, failures, warnings);
+                validateScreenStrict(json, filePath, layoutJsons, skinJsons, failures, warnings);
             }
             // R18/R19/R20 recipe ref（無論是否 strict，有宣告就驗證）
             if (json.recipeRef) {

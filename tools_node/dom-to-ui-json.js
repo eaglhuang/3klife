@@ -28,6 +28,8 @@ const {
   buildSyncReport,
   buildRGuardSummary,
   buildFragmentRoutePatch,
+  buildTabRoutingSidecar,
+  buildScreenTabRoutingMap,
 } = require('./lib/dom-to-ui/sidecar-emitters');
 const { hasInteractionBlockers } = require('./lib/dom-to-ui/interaction-translator');
 const { hasMotionBlockers } = require('./lib/dom-to-ui/motion-translator');
@@ -44,6 +46,7 @@ function parseArgs(argv) {
     output: null,
     skinOutput: null,
     screenId: null,
+    skinId: null,
     rootName: null,
     bundle: null,
     defaultBundle: 'ui_common',
@@ -84,6 +87,7 @@ function parseArgs(argv) {
     emitImageWaivers: true,
     manualWaivers: null,
     browser: null,
+    viewport: null,
     tokensSource: null,
     tokensRuntime: null,
     tokensHandoff: null,
@@ -98,6 +102,7 @@ function parseArgs(argv) {
       case '--output': opts.output = next(); break;
       case '--skin-output': opts.skinOutput = next(); break;
       case '--screen-id': opts.screenId = next(); break;
+      case '--skin-id': opts.skinId = next(); break;
       case '--root-name': opts.rootName = next(); break;
       case '--bundle': opts.bundle = next(); break;
       case '--default-bundle': opts.defaultBundle = next(); break;
@@ -138,6 +143,7 @@ function parseArgs(argv) {
       case '--no-image-waivers': opts.emitImageWaivers = false; break;
       case '--manual-waivers': opts.manualWaivers = next(); break;
       case '--browser': opts.browser = next(); break;
+      case '--viewport': opts.viewport = next(); break;
       case '--tokens-source': opts.tokensSource = next(); break;
       case '--tokens-runtime': opts.tokensRuntime = next(); break;
       case '--tokens-handoff': opts.tokensHandoff = next(); break;
@@ -174,6 +180,7 @@ Required:
   --output <path>          layout JSON output path
   --skin-output <path>     skin JSON output path
   --screen-id <id>         screen identifier
+  --skin-id <id>           skin manifest id for screen.skin/runtime lookup
 
 Inputs (one of):
   --input <html>           HTML source file
@@ -207,6 +214,7 @@ Optional:
   --no-image-waivers       skip M20 image waiver sidecar
   --manual-waivers <json>  merge manual image waivers into M20 sidecar
   --browser <path>         Chrome/Edge path for computed-style capture
+  --viewport <WxH>         design canvas / computed-style capture viewport
   --tokens-source <json>   source package ui-design-tokens.json (highest priority)
   --tokens-runtime <json>  runtime token supplement override
   --tokens-handoff <json>  handoff token supplement override
@@ -301,15 +309,72 @@ function extractLayoutCanvas(layout) {
   return Object.assign({}, canvas, { designWidth: width, designHeight: height });
 }
 
+function parseViewportCanvas(value) {
+  if (!value) return null;
+  const match = String(value).trim().match(/^(\d+)x(\d+)$/i);
+  if (!match) return null;
+  const designWidth = Number(match[1]);
+  const designHeight = Number(match[2]);
+  if (!Number.isFinite(designWidth) || !Number.isFinite(designHeight) || designWidth <= 0 || designHeight <= 0) return null;
+  return { designWidth, designHeight };
+}
+
+function ensureLayoutEnvelope(layoutDraft, opts, canvasOverride) {
+  const source = layoutDraft && typeof layoutDraft === 'object' ? layoutDraft : {};
+  const outputLayoutId = path.basename(opts.output, path.extname(opts.output)).replace(/\.layout$/i, '');
+  const layoutId = (typeof source.id === 'string' && source.id.trim())
+    || (typeof opts.screenId === 'string' && opts.screenId.trim())
+    || outputLayoutId;
+  const version = Number.isFinite(source.version) ? source.version : 1;
+  const specVersion = Number.isFinite(source.specVersion) ? source.specVersion : 1;
+  const canvas = Object.assign(
+    { designWidth: 1334, designHeight: 750 },
+    extractLayoutCanvas(source) || {},
+    canvasOverride || {},
+  );
+
+  if (source.root && typeof source.root === 'object') {
+    source.id = layoutId;
+    source.version = version;
+    source.specVersion = specVersion;
+    source.canvas = canvas;
+    return source;
+  }
+
+  const rootNode = Object.assign({}, source);
+  delete rootNode.id;
+  delete rootNode.version;
+  delete rootNode.specVersion;
+  delete rootNode.canvas;
+  delete rootNode.meta;
+  delete rootNode.validation;
+
+  const envelope = {
+    id: layoutId,
+    version,
+    specVersion,
+    canvas,
+    root: rootNode,
+  };
+  if (source.meta && typeof source.meta === 'object') envelope.meta = source.meta;
+  if (source.validation && typeof source.validation === 'object') envelope.validation = source.validation;
+  return envelope;
+}
+
 function ensureSkinEnvelope(skinDraft, opts, existingSkin) {
   const skin = skinDraft || { slots: {} };
+  const explicitSkinId = typeof opts.skinId === 'string' && opts.skinId.trim().length > 0
+    ? opts.skinId.trim()
+    : null;
   const outputSkinId = path.basename(opts.skinOutput, path.extname(opts.skinOutput));
   const generatedDefaultId = `${opts.screenId}-default`;
   const existingId = existingSkin && typeof existingSkin.id === 'string' ? existingSkin.id : null;
   const normalizedSkinOutput = path.resolve(opts.skinOutput).replace(/\\/g, '/');
   const isRuntimeSkinOutput = normalizedSkinOutput.includes('/assets/resources/ui-spec/skins/');
   const existingIdIsGeneratedDefault = isRuntimeSkinOutput && opts.syncExisting && existingId === generatedDefaultId && outputSkinId && outputSkinId !== generatedDefaultId;
-  if (existingId && !existingIdIsGeneratedDefault) {
+  if (explicitSkinId) {
+    skin.id = explicitSkinId;
+  } else if (existingId && !existingIdIsGeneratedDefault) {
     skin.id = existingSkin.id;
   } else if (!skin.id || typeof skin.id !== 'string'
       || (isRuntimeSkinOutput && opts.syncExisting && outputSkinId && skin.id === generatedDefaultId)) {
@@ -352,9 +417,12 @@ async function main(argv) {
     ? readJson(opts.output)
     : null;
   const captureCanvas = extractLayoutCanvas(existingLayoutForCapture);
+  const requestedCanvas = parseViewportCanvas(opts.viewport);
+  const effectiveCanvas = requestedCanvas || captureCanvas;
   if (opts.layoutInput && opts.skinInput) {
     layoutDraft = readJson(opts.layoutInput);
     skinDraft = readJson(opts.skinInput);
+    if (requestedCanvas) layoutDraft.canvas = requestedCanvas;
     inputPath = opts.layoutInput;
   } else if (opts.input) {
     inputPath = opts.input;
@@ -368,8 +436,8 @@ async function main(argv) {
         htmlPath: opts.input,
         outputBasePath: opts.output,
         screenId: opts.screenId,
-        viewport: captureCanvas
-          ? { width: captureCanvas.designWidth, height: captureCanvas.designHeight }
+        viewport: effectiveCanvas
+          ? { width: effectiveCanvas.designWidth, height: effectiveCanvas.designHeight }
           : { width: 1334, height: 750 },
         browserPath: opts.browser,
         tokensSource: opts.tokensSource,
@@ -399,7 +467,7 @@ async function main(argv) {
       tokensHandoff: opts.tokensHandoff,
       useComputedStyle: opts.useComputedStyle,
       fidelitySnapshots,
-      canvas: captureCanvas || undefined,
+      canvas: effectiveCanvas || undefined,
     });
     layoutDraft = parsed.layoutDraft;
     skinDraft = parsed.skinDraft;
@@ -411,6 +479,8 @@ async function main(argv) {
     console.error('[dom-to-ui-json] one of --input or (--layout-input + --skin-input) is required');
     process.exit(2);
   }
+
+  layoutDraft = ensureLayoutEnvelope(layoutDraft, opts, effectiveCanvas || requestedCanvas);
 
   const variantInfo = applyVariantMode(layoutDraft, skinDraft, opts.variantMode, warnings);
   skinDraft = ensureSkinEnvelope(skinDraft, opts);
@@ -515,14 +585,23 @@ async function main(argv) {
     writeJson(opts.skinOutput, skinDraft);
   }
 
+  const fragmentRouteDraft = opts.emitFragmentRoutePatch
+    ? buildFragmentRoutePatch(opts.screenId, layoutDraft, interactionDraft)
+    : null;
+  const tabRoutingDraft = buildTabRoutingSidecar(opts.screenId, layoutDraft, interactionDraft);
+  const screenTabRouting = buildScreenTabRoutingMap(tabRoutingDraft);
+
   // Optional: screen draft
   let screenPath = null;
   if (opts.emitScreenDraft) {
     screenPath = deriveScreenSidecarPath(opts.output, '.screen.json');
     writeJson(screenPath, {
       screenId: opts.screenId,
+      layout: opts.screenId,
+      skin: opts.skinId || null,
       layoutRef: relRef(opts.output),
       skinRef: relRef(opts.skinOutput),
+      tabRouting: Object.keys(screenTabRouting).length > 0 ? screenTabRouting : undefined,
       meta: {
         scaffoldHints: {
           useUCUFLogger: true, // §37.2
@@ -612,9 +691,15 @@ async function main(argv) {
   }
 
   let fragmentRoutePath = null;
-  if (opts.emitFragmentRoutePatch) {
+  if (fragmentRouteDraft) {
     fragmentRoutePath = deriveScreenSidecarPath(opts.output, '.fragment-routes.json');
-    writeJson(fragmentRoutePath, buildFragmentRoutePatch(opts.screenId, layoutDraft, interactionDraft));
+    writeJson(fragmentRoutePath, fragmentRouteDraft);
+  }
+
+  let tabRoutingPath = null;
+  if (Array.isArray(tabRoutingDraft.tabs) && tabRoutingDraft.tabs.length > 0) {
+    tabRoutingPath = deriveScreenSidecarPath(opts.output, '.tab-routing.json');
+    writeJson(tabRoutingPath, tabRoutingDraft);
   }
 
   let logicInventoryPath = null;
@@ -763,6 +848,7 @@ async function main(argv) {
       interactionPath,
       motionPath,
       fragmentRoutePath,
+      tabRoutingPath,
       logicInventoryPath,
       logicGuardPath,
       visualReviewPath,
@@ -887,11 +973,14 @@ function applyVariantMode(layoutDraft, skinDraft, variantMode, warnings) {
 }
 
 function countNodes(node) {
+  const start = node && node.root && typeof node.root === 'object' ? node.root : node;
+  return countLayoutNodes(start);
+}
+
+function countLayoutNodes(node) {
   if (!node || typeof node !== 'object') return 0;
   let n = 1;
-  if (Array.isArray(node.children)) {
-    for (const c of node.children) n += countNodes(c);
-  }
+  if (Array.isArray(node.children)) for (const c of node.children) n += countLayoutNodes(c);
   return n;
 }
 

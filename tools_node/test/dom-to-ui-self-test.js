@@ -884,7 +884,7 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     if (noSrc.length !== 1 || noSrc[0].family !== 'BareBoned' || noSrc[0].src !== null) fail('R-12 missing src must yield null src, not throw');
 
     // Convention resolver
-    if (resolveFontAssetByConvention('NotoSansTC') !== 'fonts/notosanstc/font') fail('R-12 convention resolver must sanitize family');
+    if (resolveFontAssetByConvention('NotoSansTC') !== 'fonts/notosans_tc/font') fail('R-12 convention resolver must prefer registered project font assets');
     if (resolveFontAssetByConvention('Manrope', './x.ttf') !== 'fonts/manrope/font') fail('R-12 convention resolver simple case');
     if (resolveFontAssetByConvention('') !== null) fail('R-12 empty family must resolve null');
 
@@ -1064,6 +1064,7 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     if (classifyCssProperty('clip-path', 'circle(50%)') !== 'supported') fail('R-17 clip-path: circle() must be supported');
     if (classifyCssProperty('clip-path', 'ellipse(50% 25%)') !== 'supported') fail('R-17 clip-path: ellipse() must be supported');
     if (classifyCssProperty('clip-path', 'polygon(0 0, 100% 0, 100% 100%, 0 100%)') !== 'supported') fail('R-17 clip-path: 4-pt polygon must be supported');
+    if (classifyCssProperty('-webkit-clip-path', 'polygon(0 0, 100% 0, 100% 100%, 0 100%)') !== 'supported') fail('R-17 -webkit-clip-path alias must match clip-path');
     if (classifyCssProperty('clip-path', 'polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 50%)') !== 'assetize') fail('R-17 clip-path: complex polygon must be assetize');
     if (classifyCssProperty('clip-path', 'path("M 0,0 L 100,0 ...")') !== 'assetize') fail('R-17 clip-path: path() must be assetize');
     if (classifyCssProperty('clip-path', 'url(#mask)') !== 'assetize') fail('R-17 clip-path: url() must be assetize');
@@ -1080,6 +1081,7 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     // (d) `mask` / `mask-image` value-aware: none -> supported; gradient/url -> assetize.
     if (classifyCssProperty('mask', 'none') !== 'supported') fail('R-17 mask: none must be supported');
     if (classifyCssProperty('mask-image', 'none') !== 'supported') fail('R-17 mask-image: none must be supported');
+    if (classifyCssProperty('-webkit-mask-image', 'none') !== 'supported') fail('R-17 -webkit-mask-image alias must match mask-image');
     if (classifyCssProperty('mask-image', 'linear-gradient(black, transparent)') !== 'assetize') fail('R-17 mask gradient must be assetize');
     if (classifyCssProperty('mask-image', 'url(./mask.png)') !== 'assetize') fail('R-17 mask url() must be assetize');
 
@@ -1890,6 +1892,9 @@ function runFidelitySteps() {
     const pixel = JSON.parse(fs.readFileSync(pixelPath, 'utf8'));
     const compareWaivers = JSON.parse(fs.readFileSync(compareWaiverPath, 'utf8'));
     if (typeof pixel.adjustedCoverage !== 'number') fail('M16 adjustedCoverage missing');
+    if (!pixel.waiverPolicy || !/preview-diagnostic-only/.test(pixel.waiverPolicy.imageWaivers || '')) {
+      fail(`M20 image waiver policy should be preview-only: ${JSON.stringify(pixel.waiverPolicy)}`);
+    }
     if (!compareWaivers.waivers.some(w => w.manualOverride && w.reason === 'fixture-expected-decorative-image-gap')) {
       fail('M20 compare manual image waiver missing');
     }
@@ -2039,6 +2044,9 @@ function runAdditionalAccuracyBaselines() {
 }
 
 function findNode(root, pred) {
+  if (root && root.root && typeof root.root === 'object' && typeof root.root.type === 'string') {
+    root = root.root;
+  }
   if (!root || typeof root !== 'object') return null;
   if (pred(root)) return root;
   for (const c of root.children || []) {
@@ -2049,6 +2057,9 @@ function findNode(root, pred) {
 }
 
 function collectNodes(root, pred, acc) {
+  if (!acc && root && root.root && typeof root.root === 'object' && typeof root.root.type === 'string') {
+    root = root.root;
+  }
   acc = acc || [];
   if (!root || typeof root !== 'object') return acc;
   if (pred(root)) acc.push(root);

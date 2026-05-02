@@ -23,6 +23,7 @@ const DEPTH_LIMITS = {
  * Walk layout to compute node count, max depth, color rect count, etc.
  */
 function analyzeLayout(layoutDraft) {
+  const root = layoutRoot(layoutDraft);
   let nodeCount = 0;
   let deferredNodeCount = 0;
   let totalNodeCount = 0;
@@ -51,8 +52,14 @@ function analyzeLayout(layoutDraft) {
       for (const c of node.children) walk(c, depth + 1);
     }
   }
-  walk(layoutDraft, 1);
+  walk(root, 1);
   return { nodeCount, deferredNodeCount, totalNodeCount: nodeCount + deferredNodeCount, maxDepth, colorRectCount, lazySlotCount, warmupHints };
+}
+
+function layoutRoot(layoutDraft) {
+  return layoutDraft && layoutDraft.root && typeof layoutDraft.root === 'object'
+    ? layoutDraft.root
+    : layoutDraft;
 }
 
 function countDescendants(node) {

@@ -91,7 +91,7 @@ function buildPreloadManifest(layoutDraft, skinDraft, options) {
     }
   }
 
-  walk(layoutDraft, null);
+  walk(layoutRoot(layoutDraft), null);
 
   const firstScreenSpriteFrames = [];
   const firstScreenBundles = new Set();
@@ -147,6 +147,12 @@ function buildPreloadManifest(layoutDraft, skinDraft, options) {
     },
     _warnings: collectPreloadWarnings(deferred),
   };
+}
+
+function layoutRoot(layoutDraft) {
+  return layoutDraft && layoutDraft.root && typeof layoutDraft.root === 'object'
+    ? layoutDraft.root
+    : layoutDraft;
 }
 
 function countDeferredSprites(deferredSlotsByOwner, skinSlots) {

@@ -21,9 +21,9 @@
 // Usage (preview-time, before wire-up):
 //   node tools_node/runtime-screen-diff.js \
 //     --screen character-ds3-main \
-//     --html "Design System 2/ui_kits/character/index.html" \
+//     --html "Design System 3/ui_kits/character/index.html" \
 //     --layout assets/resources/ui-spec/layouts/character-ds3-main.json \
-//     --skin assets/resources/ui-spec/skins/character-ds3-default.json \
+//     --skin assets/resources/ui-spec/skins/character-ds3-main.skin.json \
 //     --output artifacts/runtime-diff/character-ds3
 //
 // Usage (post wire-up, with runtime screenshot):

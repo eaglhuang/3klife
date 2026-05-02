@@ -59,12 +59,19 @@ function isFillWidget(widget) {
 
 function collectNodes(root, pred) {
   const out = [];
+  const start = layoutRoot(root);
   (function rec(node) {
     if (!node || typeof node !== 'object') return;
     if (pred(node)) out.push(node);
     for (const child of node.children || []) rec(child);
-  })(root);
+  })(start);
   return out;
+}
+
+function layoutRoot(layout) {
+  return layout && layout.root && typeof layout.root === 'object'
+    ? layout.root
+    : layout;
 }
 
 function thresholdByProfile(profile) {

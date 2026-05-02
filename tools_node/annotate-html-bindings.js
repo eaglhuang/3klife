@@ -16,7 +16,7 @@
 //
 // Usage:
 //   node tools_node/annotate-html-bindings.js \
-//     --html "Design System 2/ui_kits/character/index.html" \
+//     --html "Design System 3/ui_kits/character/index.html" \
 //     --screen-id character-ds3-main \
 //     [--apply] [--report <json>] [--content-contract <screen.json>]
 //

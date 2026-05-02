@@ -33,8 +33,19 @@ const RICH_TEXT_INNER_TAGS = new Set(['strong', 'em', 'a', 'small']);
 const NINESLICE_FAMILY_HINTS = ['parchment', 'dark_metal', 'dark-metal', 'gold_cta', 'gold-cta'];
 
 const PLACEHOLDER_SPRITE = 'sprites/ui_common/placeholder/missing_sprite';
+const TAB_BUTTON_SKIN_NORMAL = 'sprites/ui_families/general_detail/tab_active_button';
+const TAB_BUTTON_SKIN_SELECTED = 'sprites/ui_families/general_detail/detail_tab_active_frame';
 
 const SIMPLIFIED_CHINESE_HINTS = ['国', '将', '历', '战', '门', '画', '员']; // partial set; warn only
+
+const TAB_TOKEN_ALIASES = {
+  overview: ['overview', 'general', 'gen', '將'],
+  stats: ['stats', 'stat', 'attributes', '屬'],
+  tactics: ['tactics', 'tact', 'skill', '技'],
+  bloodline: ['bloodline', 'lineage', 'fate', '命'],
+  equip: ['equip', 'equipment', 'gear', '寶'],
+  aptitude: ['aptitude', 'apt', '適'],
+};
 
 /**
  * Build layout + skin draft from HTML source.
@@ -77,7 +88,8 @@ function buildDraftFromHtml(html, opts) {
     pseudoStyleByParentCaptureId: normalizeFidelityPseudoMap(opts.fidelitySnapshots),
   };
 
-  const parsed = parseHtml(html);
+  const sanitizedHtml = stripNonVisualBlocksForParsing(html);
+  const parsed = parseHtml(sanitizedHtml);
   for (const w of parsed.warnings) ctx.warnings.push(w);
   const { classRules, idRules } = parseStylesheets(parsed.styleSheets || []);
   ctx.classRules = classRules;
@@ -92,14 +104,12 @@ function buildDraftFromHtml(html, opts) {
   // via @font-face benefits.
   ctx.fontFaceRegistry = buildFontFaceRegistry(parsed.styleSheets || [], opts.fontFaceResolver);
 
-  // Find a single root element if present, else wrap children.
+  // Convert the source root itself when HTML has a single element. Older
+  // behavior only walked root.children, which dropped single-node screens.
   const elementChildren = parsed.children.filter(c => c.type === 'element');
-  let rootEl;
-  if (elementChildren.length === 1) {
-    rootEl = elementChildren[0];
-  } else {
-    rootEl = { type: 'element', tag: 'div', attrs: { class: '' }, children: elementChildren };
-  }
+  const conversionRoots = elementChildren.length === 1 && isTransparentSourceWrapper(elementChildren[0])
+    ? elementChildren[0].children.filter(c => c.type === 'element')
+    : elementChildren;
 
   // M1: specVersion + canvas meta on layout root
   // Canvas can be hinted via <html data-canvas-width="1334" data-canvas-height="750"> or opts.canvas.
@@ -120,7 +130,7 @@ function buildDraftFromHtml(html, opts) {
     children: [],
   };
 
-  for (const child of rootEl.children) {
+  for (const child of conversionRoots) {
     if (child.type !== 'element') continue;
     const node = processElement(child, ctx, 1);
     appendNodeWithGeneratedSiblings(rootNode.children, node);
@@ -147,6 +157,17 @@ function buildDraftFromHtml(html, opts) {
   };
 }
 
+function stripNonVisualBlocksForParsing(html) {
+  if (!html || typeof html !== 'string') return html;
+  // Parser guard: rendered snapshots may inline large transpiled scripts.
+  // Strip non-visual code/template blocks before structural conversion so
+  // script payload cannot be mis-tokenized into duplicate UI nodes.
+  return String(html)
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi, '')
+    .replace(/<template\b[^>]*>[\s\S]*?<\/template>/gi, '');
+}
+
 function readCanvasFromHtml(parsed) {
   // walk top-level for <html> attrs
   for (const c of parsed.children || []) {
@@ -158,6 +179,16 @@ function readCanvasFromHtml(parsed) {
     }
   }
   return null;
+}
+
+function isTransparentSourceWrapper(el) {
+  if (!el || !Array.isArray(el.children)) return false;
+  if (!el.children.some(child => child.type === 'element')) return false;
+  const attrs = el.attrs || {};
+  const meaningfulAttrs = Object.keys(attrs)
+    .filter(key => key !== 'data-name')
+    .filter(key => attrs[key] !== '');
+  return meaningfulAttrs.length === 0;
 }
 
 function processElement(el, ctx, depth) {
@@ -180,16 +211,28 @@ function processElement(el, ctx, depth) {
     if (out.children.length === 1) return out.children[0];
     return out.children.length === 0 ? null : out;
   }
-  const attrs = el.attrs || {};
-  const cls = (attrs.class || '').split(/\s+/).filter(Boolean);
-  const styleFromInline = parseInlineStyle(attrs.style || '');
-  const styleFromClass = mergeClassStyles(cls, ctx.classRules);
-  const styleFromId = attrs.id ? (ctx.idRules[attrs.id] || {}) : {};
-  const style = mergeComputedStyle(
-    Object.assign({}, styleFromClass, styleFromId, styleFromInline),
-    attrs,
-    ctx,
-  );
+  const styleInfo = collectElementStyle(el, ctx);
+  const attrs = styleInfo.attrs;
+  const cls = styleInfo.cls;
+  const style = styleInfo.style;
+  registerTabZoneHint(attrs, cls, ctx);
+  const semanticHints = inferTabSemanticHints(el, tag, attrs, cls, style, ctx);
+  const storyStripHints = inferStoryStripHints(el, tag, attrs, cls, ctx);
+
+  if (!attrs['data-slot'] && semanticHints.dataSlot) attrs['data-slot'] = semanticHints.dataSlot;
+  if (!attrs['data-panel'] && semanticHints.dataPanel) attrs['data-panel'] = semanticHints.dataPanel;
+  if (!attrs['data-contract'] && semanticHints.dataContract) attrs['data-contract'] = semanticHints.dataContract;
+  if (!attrs['data-default-fragment'] && semanticHints.defaultFragment) attrs['data-default-fragment'] = semanticHints.defaultFragment;
+  if (!attrs['data-warmup-hint'] && semanticHints.warmupHint) attrs['data-warmup-hint'] = semanticHints.warmupHint;
+  if (storyStripHints) {
+    attrs['data-slot'] = attrs['data-slot'] || storyStripHints.dataSlot;
+    if (storyStripHints.dataContract) attrs['data-contract'] = attrs['data-contract'] || storyStripHints.dataContract;
+    attrs['data-default-fragment'] = attrs['data-default-fragment'] || storyStripHints.defaultFragment;
+    attrs['data-warmup-hint'] = attrs['data-warmup-hint'] || storyStripHints.warmupHint;
+    attrs['data-lazy-slot'] = 'true';
+    if (storyStripHints.fragments) attrs['data-fragments'] = storyStripHints.fragments.join(',');
+    if (storyStripHints.deferredReason) attrs['data-deferred-fragment-reason'] = storyStripHints.deferredReason;
+  }
 
   // ---- depth guard (RT-01) ----
   if (depth > 8) {
@@ -197,8 +240,9 @@ function processElement(el, ctx, depth) {
   }
 
   // ---- 1. lazy slot ----
-  if (attrs['data-slot']) {
+  if (attrs['data-slot'] && shouldMaterializeLazySlot(attrs, tag)) {
     const slotName = attrs['data-slot'];
+    const fragments = parseFragmentList(attrs['data-fragments']);
     const node = {
       type: 'container',
       name: slotName,
@@ -206,16 +250,23 @@ function processElement(el, ctx, depth) {
       lazySlot: true,
       defaultFragment: attrs['data-default-fragment'] || undefined,
       warmupHint: attrs['data-warmup-hint'] || undefined,
+      _contract: attrs['data-contract'] || undefined,
     };
+    if (fragments.length > 0) node.fragments = fragments;
+    if (attrs['data-deferred-fragment-reason']) {
+      node._deferredFragmentReason = String(attrs['data-deferred-fragment-reason']);
+    }
     applyCommonNodeAttrs(node, attrs);
     if (!node.defaultFragment) {
       ctx.warnings.push({ code: 'lazy-slot-missing-default-fragment', detail: slotName });
     }
+    const flexValLS = String(style.flex || style.flexGrow || '').trim();
+    if (parseFloat(flexValLS.split(/\s+/)[0]) > 0) node._flexFill = true;
     return node;
   }
 
   // ---- 2. child-panel ----
-  if (attrs['data-panel']) {
+  if (attrs['data-panel'] && attrs['data-panel'] !== 'tab-button') {
     const panelNode = {
       type: 'child-panel',
       name: attrs['data-name'] || autoName(ctx, tag),
@@ -226,6 +277,8 @@ function processElement(el, ctx, depth) {
     };
     applyCommonNodeAttrs(panelNode, attrs);
     collectBehavior(el, panelNode, style, ctx);
+    const flexValCP = String(style.flex || style.flexGrow || '').trim();
+    if (parseFloat(flexValCP.split(/\s+/)[0]) > 0) panelNode._flexFill = true;
     return panelNode;
   }
 
@@ -249,6 +302,21 @@ function processElement(el, ctx, depth) {
   // M4: stable identifier + lock flags
   applyCommonNodeAttrs(node, attrs);
   applyCaptureNodeAttrs(node, attrs);
+
+  if (semanticHints.inferredLazySlot === true) {
+    node.lazySlot = true;
+    node.defaultFragment = attrs['data-default-fragment'] || inferDefaultTabFragment(ctx.opts.screenId);
+    node.warmupHint = attrs['data-warmup-hint'] || 'first-frame';
+    if (attrs['data-contract']) node._contract = attrs['data-contract'];
+    if (!node.defaultFragment) {
+      ctx.warnings.push({ code: 'lazy-slot-missing-default-fragment', detail: name });
+    } else {
+      ctx.warnings.push({ code: 'tab-semantic-inferred-lazy-slot', detail: `${name} -> ${node.defaultFragment}` });
+    }
+    const flexValIL = String(style.flex || style.flexGrow || '').trim();
+    if (parseFloat(flexValIL.split(/\s+/)[0]) > 0) node._flexFill = true;
+    return node;
+  }
 
   // M1: collect composite nodes for sidecar report
   if (nodeType === 'composite') {
@@ -274,6 +342,11 @@ function processElement(el, ctx, depth) {
     : pickDim(style.height, attrs.height);
   if (width != null) node.width = width;
   if (height != null) node.height = height;
+
+  // Mark flex-grow children so the parent can compute fill widths.
+  const flexVal = String(style.flex || style.flexGrow || '').trim();
+  const flexGrowNum = parseFloat(flexVal.split(/\s+/)[0]);
+  if (flexGrowNum > 0) node._flexFill = true;
 
   // M10: declarative interaction + motion draft collection.
   collectBehavior(el, node, style, ctx);
@@ -306,6 +379,10 @@ function processElement(el, ctx, depth) {
     // reference, producing constant pixel diff in compare gates.
     const text = applyTextTransformGeneral(rawText, style && style.textTransform);
     if (text) node.text = text;
+    if (shouldPruneStandaloneStoryStripLabel(text, attrs, ctx)) {
+      ctx.warnings.push({ code: 'story-strip-standalone-label-pruned', detail: name });
+      return null;
+    }
     const styleSlotId = attrs['data-style'] || autoSlotId(ctx, name);
     node.styleSlot = styleSlotId;
     ensureLabelStyle(ctx, styleSlotId, style, attrs, text);
@@ -316,7 +393,11 @@ function processElement(el, ctx, depth) {
     if (attrs['data-contract']) node._contract = attrs['data-contract'];
     const slotId = attrs['data-skin'] || autoSlotId(ctx, name);
     node.skinSlot = slotId;
-    ensureSpriteOrColorSlot(ctx, slotId, style, attrs, { width, height });
+    if (isTabSwitchContract(node._contract)) {
+      ensureTabButtonSkinSlot(ctx, slotId, attrs, style);
+    } else {
+      ensureSpriteOrColorSlot(ctx, slotId, style, attrs, { width, height });
+    }
   }
 
   const generatedEffectNodes = buildEffectSiblingNodes(ctx, node, style, name, width, height);
@@ -340,13 +421,428 @@ function processElement(el, ctx, depth) {
   // §7.8 color-rect 濫發防護
   enforceColorRectGuard(ctx, name, childNodes);
 
+  // §7.9 resolve flex-fill child widths for horizontal containers
+  resolveFillChildWidths(node, childNodes);
+
   if (childNodes.length > 0) node.children = childNodes;
+  normalizeTabRailAndButtonLayout(node, ctx);
+  dedupeTabSwitchChildren(node, ctx);
+  dedupeIdenticalLargeChildren(node, ctx);
   stabilizeGridLayout(node);
+  normalizeSingleChildFill(node, ctx);
   if (nodeType === 'container' && childNodes.length === 0 && !node.width && !node.height && !node.skinSlot && !node.skinLayers && !node.compositeImageLayers) {
     return null;
   }
 
   return node;
+}
+
+function normalizeSingleChildFill(node, ctx) {
+  if (!node || node.type !== 'container' || !Array.isArray(node.children) || node.children.length !== 1) return;
+  if (!node.widget || typeof node.widget !== 'object') return;
+  const fillsParent = node.widget.top != null && node.widget.left != null && node.widget.right != null && node.widget.bottom != null;
+  if (!fillsParent) return;
+
+  const child = node.children[0];
+  if (!child || child.type !== 'container' || child.widget) return;
+  if (child.width != null || child.height != null) return;
+  if (!child.layout || typeof child.layout !== 'object') return;
+
+  child.widget = { top: 0, left: 0, right: 0, bottom: 0 };
+  delete child.x;
+  delete child.y;
+  if (ctx && Array.isArray(ctx.warnings)) {
+    ctx.warnings.push({
+      code: 'single-child-fill-recovered',
+      detail: `${node.name || 'container'} -> ${child.name || 'child'}`,
+    });
+  }
+}
+
+/**
+ * For horizontal-layout containers with a known numeric width, compute and
+ * assign widths for children tagged with _flexFill=true (CSS flex:1 / flex-grow>0).
+ * After assignment the _flexFill marker is removed from all children.
+ */
+function resolveFillChildWidths(node, childNodes) {
+  // Remove the _flexFill marker from all children regardless.
+  const fillChildren = [];
+  for (const child of childNodes) {
+    if (!child || typeof child !== 'object') continue;
+    if (child._flexFill) {
+      fillChildren.push(child);
+      delete child._flexFill;
+    }
+  }
+  if (fillChildren.length === 0) return;
+  if (!node || !node.layout || node.layout.type !== 'horizontal') return;
+  const parentWidth = typeof node.width === 'number' ? node.width : null;
+  if (parentWidth == null) return;
+
+  // Sum up widths of fixed children (those without _flexFill already removed).
+  let fixedSum = 0;
+  let fixedCount = 0;
+  for (const child of childNodes) {
+    if (!child || typeof child !== 'object') continue;
+    if (typeof child.width === 'number') { fixedSum += child.width; fixedCount++; }
+  }
+  // Subtract fill children that might already have a width assigned.
+  for (const child of fillChildren) {
+    if (typeof child.width === 'number') { fixedSum -= child.width; fixedCount--; }
+  }
+
+  const spacingX = typeof node.layout.spacingX === 'number' ? node.layout.spacingX : 0;
+  const paddingL = typeof node.layout.paddingLeft === 'number' ? node.layout.paddingLeft : 0;
+  const paddingR = typeof node.layout.paddingRight === 'number' ? node.layout.paddingRight : 0;
+  const totalChildren = childNodes.filter(c => c && typeof c === 'object').length;
+  const spacingTotal = spacingX * Math.max(0, totalChildren - 1);
+
+  const remaining = parentWidth - fixedSum - paddingL - paddingR - spacingTotal;
+  if (remaining <= 0) return;
+  const perChild = Math.round(remaining / fillChildren.length);
+  for (const child of fillChildren) {
+    child.width = perChild;
+  }
+}
+
+function dedupeTabSwitchChildren(node, ctx) {
+  if (!node || !Array.isArray(node.children) || node.children.length <= 1) return;
+  const seen = new Set();
+  const deduped = [];
+  let pruned = 0;
+  for (const child of node.children) {
+    if (!child || typeof child !== 'object') {
+      deduped.push(child);
+      continue;
+    }
+    const contract = typeof child._contract === 'string' ? child._contract.trim().toLowerCase() : '';
+    if (isTabSwitchContract(contract)) {
+      if (seen.has(contract)) {
+        pruned += 1;
+        continue;
+      }
+      seen.add(contract);
+    }
+    deduped.push(child);
+  }
+  if (pruned > 0) {
+    node.children = deduped;
+    if (ctx && Array.isArray(ctx.warnings)) {
+      ctx.warnings.push({
+        code: 'tab-rail-duplicate-pruned',
+        detail: `${node.name || 'unknown-parent'} pruned ${pruned} duplicated tab buttons`,
+      });
+    }
+  }
+}
+
+function dedupeIdenticalLargeChildren(node, ctx) {
+  if (!node || !Array.isArray(node.children) || node.children.length <= 1) return;
+
+  const signatureSeen = new Map();
+  const deduped = [];
+  let pruned = 0;
+
+  for (const child of node.children) {
+    if (!child || typeof child !== 'object') {
+      deduped.push(child);
+      continue;
+    }
+
+    const labelCount = countLabelDescendants(child);
+    const shouldGuard = labelCount >= 12;
+    if (!shouldGuard) {
+      deduped.push(child);
+      continue;
+    }
+
+    const textFingerprint = buildLabelTextFingerprint(child);
+    const signature = textFingerprint || buildStructuralSignature(child);
+    if (signatureSeen.has(signature)) {
+      pruned += 1;
+      continue;
+    }
+    signatureSeen.set(signature, true);
+    deduped.push(child);
+  }
+
+  if (pruned > 0) {
+    node.children = deduped;
+    if (ctx && Array.isArray(ctx.warnings)) {
+      ctx.warnings.push({
+        code: 'duplicate-large-subtree-pruned',
+        detail: `${node.name || 'unknown-parent'} pruned ${pruned} repeated large subtree nodes`,
+      });
+    }
+  }
+}
+
+function countLabelDescendants(node) {
+  if (!node || typeof node !== 'object') return 0;
+  let count = 0;
+  if (node.type === 'label' && String(node.text || '').trim()) count += 1;
+  for (const child of node.children || []) count += countLabelDescendants(child);
+  return count;
+}
+
+function buildLabelTextFingerprint(node) {
+  if (!node || typeof node !== 'object') return '';
+  const labels = [];
+  collectLabelTexts(node, labels);
+  if (labels.length < 12) return '';
+  return labels.join('||');
+}
+
+function collectLabelTexts(node, out) {
+  if (!node || typeof node !== 'object') return;
+  if (node.type === 'label') {
+    const text = String(node.text || '').replace(/\s+/g, ' ').trim();
+    if (text) out.push(text);
+  }
+  for (const child of node.children || []) collectLabelTexts(child, out);
+}
+
+function buildStructuralSignature(node) {
+  if (!node || typeof node !== 'object') return '';
+  const payload = {
+    type: node.type || '',
+    text: node.type === 'label' ? String(node.text || '').trim() : '',
+    contract: node._contract || '',
+    lazySlot: !!node.lazySlot,
+    skinSlot: node.skinSlot || '',
+    styleSlot: node.styleSlot || '',
+    width: Number.isFinite(node.width) ? node.width : null,
+    height: Number.isFinite(node.height) ? node.height : null,
+    widget: node.widget || null,
+    layout: node.layout || null,
+    children: Array.isArray(node.children) ? node.children.map(buildStructuralSignature) : [],
+  };
+  return JSON.stringify(payload);
+}
+
+function isTabSwitchButtonNode(node) {
+  if (!node || typeof node !== 'object') return false;
+  return node.type === 'button' && isTabSwitchContract(node._contract || '');
+}
+
+function normalizeTabRailAndButtonLayout(node, ctx) {
+  if (!node || typeof node !== 'object') return;
+
+  if (isTabSwitchButtonNode(node)) {
+    if (!node.layout || node.layout.type !== 'vertical') {
+      node.layout = Object.assign({ type: 'vertical' }, node.layout || {});
+    }
+    if (!node.layout.alignItems) node.layout.alignItems = 'center';
+    if (!node.layout.justifyContent || node.layout.justifyContent === 'start') {
+      node.layout.justifyContent = 'center';
+    }
+    if (node.layout.spacingY == null) {
+      // HTML tab button 的英文副標通常有 margin-top，映射到垂直間距避免擠在一起。
+      node.layout.spacingY = 6;
+    }
+  }
+
+  if (!Array.isArray(node.children) || node.children.length === 0) return;
+  const tabChildren = node.children.filter(isTabSwitchButtonNode);
+  if (tabChildren.length < 4) return;
+
+  if (!node.layout || node.layout.type !== 'vertical') {
+    node.layout = Object.assign({ type: 'vertical' }, node.layout || {});
+  }
+  if (!node.layout.alignItems) node.layout.alignItems = 'center';
+  // Only force center if there is no padding-top providing the vertical offset.
+  // When paddingTop > 0 the source CSS intends flex-start + padding offset;
+  // forcing center would negate the padding intent.
+  const hasPaddingOffset = node.layout.paddingTop != null && node.layout.paddingTop > 0;
+  if (!hasPaddingOffset && (!node.layout.justifyContent || node.layout.justifyContent === 'start')) {
+    node.layout.justifyContent = 'center';
+    if (ctx && Array.isArray(ctx.warnings)) {
+      ctx.warnings.push({
+        code: 'tab-rail-justify-center-recovered',
+        detail: `${node.name || 'unknown-tab-rail'} set justifyContent=center`,
+      });
+    }
+  }
+}
+
+function isTabSwitchContract(contract) {
+  return typeof contract === 'string' && /^tab\.switch(?:\.|$)/i.test(contract.trim());
+}
+
+function shouldMaterializeLazySlot(attrs, tag) {
+  if (!attrs || !attrs['data-slot']) return false;
+  const slotName = String(attrs['data-slot']).trim().toLowerCase();
+  if (attrs['data-lazy-slot'] === 'true') return true;
+  if (typeof attrs['data-default-fragment'] === 'string' && attrs['data-default-fragment'].trim().length > 0) return true;
+  if (slotName.startsWith('slot.') || slotName.startsWith('lazy.')) return true;
+  // tab/page slot markers are semantic routing hints, not lazy-slot containers.
+  if (slotName.startsWith('tab.') || slotName.startsWith('page.')) return false;
+  // data-slot on buttons is treated as semantic marker unless explicitly opted-in.
+  if (tag === 'button') return false;
+  return false;
+}
+
+function inferTabSemanticHints(el, tag, attrs, cls, style, ctx) {
+  const hints = {
+    dataSlot: null,
+    dataPanel: null,
+    dataContract: null,
+    defaultFragment: null,
+    warmupHint: null,
+    inferredLazySlot: false,
+  };
+
+  const id = String(attrs.id || '').trim();
+  const clsText = String(cls || '').trim();
+  const haystack = `${id} ${clsText}`.toLowerCase();
+
+  if (tag === 'button') {
+    const tabId = inferTabIdFromElement(el, attrs);
+    const isTabButton = tabId != null || /\btab\b|tab-rail|tabs?\b/.test(haystack);
+    if (isTabButton) {
+      hints.dataPanel = 'tab-button';
+      hints.dataContract = tabId ? `tab.switch.${tabId}` : 'tab.switch';
+      if (tabId) hints.dataSlot = `tab.${tabId}`;
+      return hints;
+    }
+  }
+
+  // Runtime portal mount containers should map to lazySlot.
+  // Note: prerendered HTML often contains the *current tab snapshot* inside
+  // right-content; this content must not be materialized as static layout,
+  // otherwise tab switch看起來永遠不變。
+  if (tag === 'div') {
+    const hasElementChildren = Array.isArray(el.children) && el.children.some((c) => c && c.type === 'element');
+    const explicitTabHost = /right-content|tab-content|tab-panel|tab-body/.test(haystack);
+    const emptyMountLike = /tab.*(mount|slot|host)/.test(haystack);
+    if (explicitTabHost || (!hasElementChildren && emptyMountLike)) {
+      hints.inferredLazySlot = true;
+      hints.dataContract = 'tab.content.host';
+      hints.defaultFragment = inferDefaultTabFragment(ctx && ctx.opts && ctx.opts.screenId);
+      hints.warmupHint = 'first-frame';
+      return hints;
+    }
+  }
+
+  return hints;
+}
+
+function inferTabIdFromElement(el, attrs) {
+  const raw = String(collectText(el) || '').replace(/\s+/g, '').toUpperCase();
+  if (!raw) return null;
+  const map = [
+    ['將', 'overview'],
+    ['GEN', 'overview'],
+    ['屬', 'stats'],
+    ['STAT', 'stats'],
+    ['技', 'tactics'],
+    ['TACT', 'tactics'],
+    ['命', 'bloodline'],
+    ['FATE', 'bloodline'],
+    ['寶', 'equip'],
+    ['GEAR', 'equip'],
+    ['適', 'aptitude'],
+    ['APT', 'aptitude'],
+  ];
+  for (const [hint, tabId] of map) {
+    if (raw.includes(hint)) return tabId;
+  }
+  const dataTab = attrs && typeof attrs['data-tab'] === 'string' ? attrs['data-tab'].trim().toLowerCase() : '';
+  return dataTab || null;
+}
+
+function inferDefaultTabFragment(screenId) {
+  const base = String(screenId || '').trim();
+  if (!base) return null;
+  const prefix = base.replace(/-main$/i, '');
+  return `fragments/layouts/${prefix}-overview-content`;
+}
+
+function inferStoryStripHints(el, tag, attrs, cls, ctx) {
+  if (tag !== 'div') return null;
+  const id = String((attrs && attrs.id) || '').trim();
+  const zone = String((attrs && attrs['data-visual-zone']) || '').trim().toLowerCase();
+  const clsText = String(cls || '').trim();
+  const haystack = `${id} ${zone} ${clsText}`.toLowerCase();
+  const hasStoryKey = /story|chronicle|storydock|story-strip|strip-wrap/.test(haystack);
+  if (!hasStoryKey) return null;
+
+  const ownerTab = inferOwnerTabFromElement(attrs, cls, el, ctx) || 'unknown';
+  const screenId = String((ctx && ctx.opts && ctx.opts.screenId) || '').trim();
+  const prefix = screenId ? screenId.replace(/-main$/i, '') : 'screen';
+  if (ctx) ctx._hasStoryStripSlot = true;
+
+  return {
+    dataSlot: 'slot.story-strip',
+    dataContract: `tab.owner.${ownerTab}`,
+    defaultFragment: `fragments/layouts/${prefix}-story-strip-collapsed`,
+    fragments: [`fragments/layouts/${prefix}-story-strip-open`],
+    warmupHint: 'manual',
+    deferredReason: `${ownerTab}-tab-owned-story-strip`,
+  };
+}
+
+function parseFragmentList(raw) {
+  if (!raw) return [];
+  return String(raw)
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
+function shouldPruneStandaloneStoryStripLabel(text, attrs, ctx) {
+  if (!ctx || !ctx._hasStoryStripSlot) return false;
+  const rawText = String(text || '').replace(/\s+/g, '').toLowerCase();
+  const id = String((attrs && attrs.id) || '').toLowerCase();
+  const cls = String((attrs && attrs.class) || '').toLowerCase();
+  const onclick = String((attrs && attrs.onclick) || '').toLowerCase();
+  const hasStoryLabel = /逸事|chronicles/.test(rawText);
+  const looksLikeStoryToggle = /strip-toggle|story|chronicle/.test(`${id} ${cls}`) || /togglestrip/.test(onclick);
+  const hasInlineAction = !!(attrs && (attrs.onclick || attrs['data-ucuf-action']));
+  return hasStoryLabel && looksLikeStoryToggle && hasInlineAction;
+}
+
+function registerTabZoneHint(attrs, cls, ctx) {
+  if (!ctx) return;
+  const tabId = inferOwnerTabFromElement(attrs, cls, null, null);
+  if (!tabId) return;
+  if (!ctx._knownTabZones) ctx._knownTabZones = new Set();
+  ctx._knownTabZones.add(tabId);
+}
+
+function inferOwnerTabFromElement(attrs, cls, el, ctx) {
+  const candidates = [
+    attrs && attrs['data-owner-tab'],
+    attrs && attrs['data-tab'],
+    attrs && attrs['data-visual-zone'],
+    attrs && attrs['data-target'],
+    attrs && attrs.id,
+    cls,
+  ];
+
+  for (const value of candidates) {
+    const tabId = normalizeTabToken(value);
+    if (tabId) return tabId;
+  }
+
+  const text = String((el && collectText(el)) || '').replace(/\s+/g, '').toLowerCase();
+  const textTab = normalizeTabToken(text);
+  if (textTab) return textTab;
+
+  if (ctx && ctx._knownTabZones && ctx._knownTabZones.size === 1) {
+    for (const tabId of ctx._knownTabZones.values()) return tabId;
+  }
+  return null;
+}
+
+function normalizeTabToken(raw) {
+  if (!raw) return null;
+  const text = String(raw).trim().toLowerCase();
+  if (!text) return null;
+  for (const [tabId, aliases] of Object.entries(TAB_TOKEN_ALIASES)) {
+    if (aliases.some(alias => text.includes(String(alias).toLowerCase()))) return tabId;
+  }
+  return null;
 }
 
 function deriveComputedGeometry(ctx, style, nodeType) {
@@ -573,6 +1069,20 @@ function assignWidgetEdge(target, key, rawValue) {
   if (/^-?\d+(?:\.\d+)?%$/.test(raw)) target[key] = raw;
 }
 
+function collectElementStyle(el, ctx) {
+  const attrs = (el && el.attrs) || {};
+  const cls = (attrs.class || '').split(/\s+/).filter(Boolean);
+  const styleFromInline = parseInlineStyle(attrs.style || '');
+  const styleFromClass = mergeClassStyles(cls, ctx.classRules || {});
+  const styleFromId = attrs.id ? ((ctx.idRules || {})[attrs.id] || {}) : {};
+  const style = mergeComputedStyle(
+    Object.assign({}, styleFromClass, styleFromId, styleFromInline),
+    attrs,
+    ctx,
+  );
+  return { attrs, cls, style };
+}
+
 function inferLayout(style, ctx, nodeName, el) {
   if (!style) return null;
   if (style.display === 'grid') return inferGridLayout(style, ctx, nodeName);
@@ -588,7 +1098,7 @@ function inferLayout(style, ctx, nodeName, el) {
     if (isRow) out.spacingX = gap.value; else out.spacingY = gap.value;
     if (gap.token && ctx) recordTokenUsage(ctx, 'spacing', gap.token, `${nodeName}.gap`);
   }
-  const box = parseBox(style.padding, ctx && ctx.tokenRegistry);
+  const box = resolveBoxEdges(style, 'padding', ctx && ctx.tokenRegistry);
   if (box) {
     out.paddingTop = box.top;
     out.paddingRight = box.right;
@@ -607,7 +1117,8 @@ function mapFlexAlignItems(value) {
   if (raw === 'flex-start' || raw === 'start') return 'start';
   if (raw === 'center') return 'center';
   if (raw === 'flex-end' || raw === 'end') return 'end';
-  if (raw === 'baseline') return 'baseline';
+  // Cocos layout does not provide reliable CSS-like baseline alignment.
+  if (raw === 'baseline') return 'end';
   if (raw === 'stretch') return 'stretch';
   return null;
 }
@@ -763,14 +1274,7 @@ function resolveGapPair(value, registry) {
 }
 
 function childHasOutOfFlowPosition(child, ctx) {
-  const attrs = child.attrs || {};
-  const cls = (attrs.class || '').split(/\s+/).filter(Boolean);
-  const childStyle = Object.assign(
-    {},
-    mergeClassStyles(cls, ctx.classRules || {}),
-    attrs.id ? ((ctx.idRules || {})[attrs.id] || {}) : {},
-    parseInlineStyle(attrs.style || ''),
-  );
+  const childStyle = collectElementStyle(child, ctx).style;
   const position = String(childStyle.position || '').trim().toLowerCase();
   return position === 'absolute' || position === 'fixed';
 }
@@ -778,14 +1282,7 @@ function childHasOutOfFlowPosition(child, ctx) {
 function inferChildBlockSpacing(childElements, ctx) {
   let spacing = 0;
   for (const child of childElements) {
-    const attrs = child.attrs || {};
-    const cls = (attrs.class || '').split(/\s+/).filter(Boolean);
-    const childStyle = Object.assign(
-      {},
-      mergeClassStyles(cls, ctx.classRules || {}),
-      attrs.id ? ((ctx.idRules || {})[attrs.id] || {}) : {},
-      parseInlineStyle(attrs.style || ''),
-    );
+    const childStyle = collectElementStyle(child, ctx).style;
     const margin = parseBox(childStyle.margin, ctx && ctx.tokenRegistry);
     const marginBottom = resolveLength(childStyle.marginBottom, ctx && ctx.tokenRegistry).value
       ?? (margin && margin.bottom)
@@ -855,6 +1352,7 @@ function resolveBoxEdges(style, prefix, registry) {
     bottom: bottom.value ?? base.bottom,
     left: left.value ?? base.left,
   };
+  if (tokens.length === 0 && out.top === 0 && out.right === 0 && out.bottom === 0 && out.left === 0) return null;
   return tokens.length ? Object.assign(out, { tokens: [...new Set(tokens)] }) : out;
 }
 
@@ -1041,15 +1539,22 @@ function ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint) {
   if (bg) {
     const { color, opacity, warning, tokenSource } = parseColor(bg, ctx.tokenRegistry);
     if (warning) ctx.warnings.push({ code: warning, slotId });
+    if (!color) {
+      ctx.skinSlots[slotId] = {
+        kind: 'transparent',
+        _unmappedBackground: bg,
+      };
+      ctx.warnings.push({ code: 'unmapped-color', detail: bg });
+      return;
+    }
     if (color) recordTokenUsage(ctx, 'colors', color, `${slotId}.color${tokenSource ? ':' + tokenSource : ''}`);
     const slot = {
       kind: 'color-rect',
-      color: color || 'unmappedColor',
+      color,
       opacity: opacity != null ? opacity : 1,
     };
     attachBoxShapeMetadata(ctx, slot, style, slotId);
     ctx.skinSlots[slotId] = slot;
-    if (!color) ctx.warnings.push({ code: 'unmapped-color', detail: bg });
   } else if (hasRenderableBorder(style)) {
     const slot = {
       kind: 'color-rect',
@@ -1063,6 +1568,33 @@ function ensureSpriteOrColorSlot(ctx, slotId, style, attrs, sizeHint) {
     // a fake unmappedColor rectangle that visually pollutes the runtime.
     ctx.skinSlots[slotId] = { kind: 'transparent' };
   }
+}
+
+function ensureTabButtonSkinSlot(ctx, slotId, attrs, style) {
+  if (ctx.skinSlots[slotId]) return;
+
+  const explicitNormal = attrs['data-tab-normal'] || attrs['data-sprite'] || null;
+  const explicitSelected = attrs['data-tab-selected'] || null;
+  const normalPath = guardSpritePath(ctx, explicitNormal || TAB_BUTTON_SKIN_NORMAL, `${slotId}.normal`, !!explicitNormal).path;
+  const selectedPath = guardSpritePath(ctx, explicitSelected || TAB_BUTTON_SKIN_SELECTED, `${slotId}.selected`, !!explicitSelected).path;
+
+  const slot = {
+    kind: 'button-skin',
+    normal: normalPath,
+    pressed: normalPath,
+    disabled: normalPath,
+    selected: selectedPath,
+    spriteType: 'simple',
+    allowAutoAtlas: true,
+  };
+
+  const radius = resolveUniformCornerRadius(style);
+  if (radius > 0) {
+    const edge = Math.max(12, Math.round(radius));
+    slot.border = [edge, edge, edge, edge];
+  }
+
+  ctx.skinSlots[slotId] = slot;
 }
 
 function attachBoxShapeMetadata(ctx, slot, style, slotId) {
@@ -1193,8 +1725,23 @@ function clampCssByte(value) {
 function buildGradientRectSlot(ctx, backgroundImage, slotId) {
   if (!backgroundImage) return null;
   const layers = parseBackgroundImage(backgroundImage);
-  if (layers.length !== 1 || layers[0].kind !== 'gradient') return null;
-  const gradient = layers[0].gradient;
+  let gradientLayer = null;
+  if (layers.length === 1 && layers[0].kind === 'gradient') {
+    gradientLayer = layers[0];
+  } else if (layers.length > 1) {
+    const linearLayers = layers.filter(layer => layer && layer.kind === 'gradient'
+      && layer.gradient && layer.gradient.type === 'linear');
+    if (linearLayers.length > 0) {
+      gradientLayer = linearLayers[linearLayers.length - 1];
+      ctx.warnings.push({
+        code: 'multi-layer-background-approximated',
+        slotId,
+        detail: 'using last linear-gradient layer; radial/image overlays require art assetization',
+      });
+    }
+  }
+  if (!gradientLayer) return null;
+  const gradient = gradientLayer.gradient;
   if (!gradient || gradient.type !== 'linear') return null;
   const stops = (gradient.stops || []).map((stop) => {
     const parsed = parseColor(stop.color, ctx.tokenRegistry);
@@ -1437,6 +1984,20 @@ function mergeComputedStyle(style, attrs, ctx) {
   const computedBgImage = meaningfulBackgroundImage(computed['background-image']);
   if (computedBgImage) out.backgroundImage = computedBgImage;
   assignComputed(out, 'color', computed.color, meaningfulCssColor);
+  assignComputed(out, 'width', computed.width, meaningfulCssLength);
+  assignComputed(out, 'height', computed.height, meaningfulCssLength);
+  assignComputed(out, 'top', computed.top, meaningfulCssLength);
+  assignComputed(out, 'right', computed.right, meaningfulCssLength);
+  assignComputed(out, 'bottom', computed.bottom, meaningfulCssLength);
+  assignComputed(out, 'left', computed.left, meaningfulCssLength);
+  assignComputed(out, 'marginTop', computed['margin-top'], meaningfulCssLength);
+  assignComputed(out, 'marginRight', computed['margin-right'], meaningfulCssLength);
+  assignComputed(out, 'marginBottom', computed['margin-bottom'], meaningfulCssLength);
+  assignComputed(out, 'marginLeft', computed['margin-left'], meaningfulCssLength);
+  assignComputed(out, 'paddingTop', computed['padding-top'], meaningfulCssLength);
+  assignComputed(out, 'paddingRight', computed['padding-right'], meaningfulCssLength);
+  assignComputed(out, 'paddingBottom', computed['padding-bottom'], meaningfulCssLength);
+  assignComputed(out, 'paddingLeft', computed['padding-left'], meaningfulCssLength);
   assignComputed(out, 'fontSize', computed['font-size'], meaningfulCssLength);
   assignComputed(out, 'fontFamily', computed['font-family'], meaningfulCssText);
   assignComputed(out, 'fontWeight', computed['font-weight'], meaningfulCssText);
@@ -1579,6 +2140,7 @@ function meaningfulBackgroundValue(value) {
   if (!value) return null;
   const raw = String(value).trim().toLowerCase();
   if (!raw || raw === 'none' || raw === 'transparent' || isTransparentCssColor(raw)) return null;
+  if (!/gradient\(|url\(/i.test(raw) && /\bnone\b/i.test(raw) && containsTransparentCssColor(raw)) return null;
   return value;
 }
 
@@ -1601,6 +2163,13 @@ function meaningfulCssColor(value) {
   const raw = String(value).trim();
   if (!raw || raw.toLowerCase() === 'transparent' || isTransparentCssColor(raw)) return null;
   return raw;
+}
+
+function containsTransparentCssColor(value) {
+  const raw = String(value || '').trim().toLowerCase();
+  if (!raw) return false;
+  if (/\btransparent\b/.test(raw)) return true;
+  return /rgba?\(\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+(?:\s*,\s*(0|0?\.0+))\s*\)/i.test(raw);
 }
 
 function meaningfulCssLength(value) {
@@ -1784,6 +2353,8 @@ function buildFontFaceRegistry(styleSheets, customResolver) {
 // `src` is currently unused but retained for future hash-based mapping.
 function resolveFontAssetByConvention(family, src) {
   if (!family) return null;
+  const known = PROJECT_FONT_REGISTRY.find(entry => entry.match && entry.match.test(String(family).trim()));
+  if (known && known.asset) return known.asset;
   const sanitized = String(family)
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '_')

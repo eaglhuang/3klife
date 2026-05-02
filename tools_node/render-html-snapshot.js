@@ -177,7 +177,16 @@ async function main() {
   console.log(`[render-html-snapshot] wrote ${opts.output} (${wrapped.length} bytes)`);
 }
 
-main().catch(err => {
-  console.error('[render-html-snapshot] error:', err && err.stack || err);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch(err => {
+    console.error('[render-html-snapshot] error:', err && err.stack || err);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  findBrowser,
+  prepareSource,
+  toFileUrl,
+  waitForPageSettle,
+};

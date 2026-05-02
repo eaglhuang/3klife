@@ -17,9 +17,11 @@ function extractInteraction(el, node, opts) {
 
   let type = attrs['data-ucuf-action'] || attrs['data-action'] || null;
   let target = attrs['data-target'] || attrs['data-open-panel'] || attrs['aria-controls'] || hrefTarget(attrs.href);
+  const contract = String(attrs['data-contract'] || '').trim();
   if (!type && attrs['data-open-panel']) type = 'openPanel';
   if (!type && attrs['data-tab']) type = 'tabSwitch';
   if (!type && (attrs.role === 'tab' || attrs['aria-selected'] != null)) type = 'tabSwitch';
+  if (!type && isTabSwitchContract(contract)) type = 'tabSwitch';
   if (!type && tag === 'button' && target) type = 'openPanel';
   if (!type && tag === 'a' && target) type = 'routePush';
   if (!type && (tag === 'dialog' || attrs.role === 'dialog')) type = 'dialogRoot';
@@ -30,6 +32,10 @@ function extractInteraction(el, node, opts) {
   if (type === 'open' || type === 'open-panel') type = 'openPanel';
   if (type === 'tab' || type === 'tab-switch') type = 'tabSwitch';
   if (type === 'route' || type === 'push') type = 'routePush';
+
+  if (!target && type === 'tabSwitch') {
+    target = inferTabTarget(attrs, contract);
+  }
 
   if (type && type !== 'dialogRoot') {
     const id = attrs['data-interaction-id'] || safeId(`${nodeName}.${type}`);
@@ -61,6 +67,24 @@ function extractInteraction(el, node, opts) {
   }
 
   return { actions, warnings };
+}
+
+function isTabSwitchContract(contract) {
+  return /^tab\.switch(?:\.|$)/i.test(String(contract || '').trim());
+}
+
+function inferTabTarget(attrs, contract) {
+  const contractRaw = String(contract || '').trim();
+  const m = contractRaw.match(/^tab\.switch\.([a-z0-9_-]+)$/i);
+  if (m && m[1]) return m[1].toLowerCase();
+
+  const slotRaw = String(attrs['data-slot'] || '').trim().toLowerCase();
+  const slotMatch = slotRaw.match(/^tab\.([a-z0-9_-]+)$/);
+  if (slotMatch && slotMatch[1]) return slotMatch[1];
+
+  const dataTab = String(attrs['data-tab'] || '').trim().toLowerCase();
+  if (dataTab) return dataTab;
+  return null;
 }
 
 function buildInteractionDraft(screenId, actions, warnings) {

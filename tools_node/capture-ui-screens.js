@@ -43,14 +43,13 @@ const targets = [
     { id: 'GeneralDetailOverview', screenId: 'general-detail-unified-screen', targetIndex: 6, uiVariant: 'unified', uiSourceDir: 'general-detail-overview', runtimeScreenId: 'GeneralDetailOverview' },
     { id: 'GeneralDetailOverviewProd', screenId: 'general-detail-unified-screen', targetIndex: 6, previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
     { id: 'GeneralDetailOverviewDs3', screenId: 'general-detail-unified-screen', targetIndex: 6, uiVariant: 'ds3', previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
-    { id: 'GeneralDetailFromLobbyGeneralsButton', screenId: 'character-ds3-main', targetIndex: 19, uiVariant: 'ds3', previewVariant: 'zhang-fei', uiSourceDir: 'general-detail-overview', runtimeScreenId: 'GeneralDetailOverview' },
-    { id: 'GeneralDetailFromSceneGeneralListButton', screenId: 'character-ds3-main', targetIndex: 20, uiVariant: 'ds3', previewVariant: 'zhang-fei', uiSourceDir: 'general-detail-overview', runtimeScreenId: 'GeneralDetailOverview' },
+    // Product flow parity: LobbyScene btnGenerals -> GeneralList -> select general -> Character DS3 screen host.
+    { id: 'GeneralDetailFromLobbyGeneralsButton', screenId: 'character-ds3-main', targetIndex: 19, uiVariant: 'ds3', previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
     { id: 'GeneralDetailSkills', screenId: 'general-detail-unified-screen', targetIndex: 12, uiVariant: 'unified', uiSourceDir: 'general-detail-skills', runtimeScreenId: 'GeneralDetailSkills' },
     { id: 'GeneralDetailSkillsDs3', screenId: 'general-detail-unified-screen', targetIndex: 12, uiVariant: 'ds3', previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
     { id: 'GeneralDetailStats', screenId: 'general-detail-unified-screen', targetIndex: 13, uiVariant: 'unified', uiSourceDir: 'general-detail-stats', runtimeScreenId: 'GeneralDetailStats' },
     { id: 'GeneralDetailStatsDs3', screenId: 'general-detail-unified-screen', targetIndex: 13, uiVariant: 'ds3', previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
     { id: 'GeneralDetailBloodline', screenId: 'general-detail-unified-screen', targetIndex: 14, uiVariant: 'unified', uiSourceDir: 'general-detail-bloodline', runtimeScreenId: 'GeneralDetailBloodline' },
-    { id: 'GeneralDetailBloodlineUnified', screenId: 'general-detail-unified-screen', targetIndex: 14, uiVariant: 'unified', uiSourceDir: 'general-detail-bloodline', runtimeScreenId: 'GeneralDetailBloodline' },
     { id: 'GeneralDetailBloodlineDs3', screenId: 'general-detail-unified-screen', targetIndex: 14, uiVariant: 'ds3', previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
     { id: 'GeneralDetailBasics', screenId: 'general-detail-unified-screen', targetIndex: 15, uiVariant: 'unified', uiSourceDir: 'general-detail-basics', runtimeScreenId: 'GeneralDetailBasics' },
     { id: 'GeneralDetailBasicsDs3', screenId: 'general-detail-unified-screen', targetIndex: 15, uiVariant: 'ds3', previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
@@ -62,8 +61,6 @@ const targets = [
     { id: 'GeneralList', screenId: 'general-list-screen', targetIndex: 8, uiSourceDir: 'general-list', runtimeScreenId: 'GeneralList' },
     { id: 'GeneralListNpcDialogueDev', screenId: 'general-list-screen', targetIndex: 21, previewVariant: 'zhang-fei', uiSourceDir: 'general-list', runtimeScreenId: 'GeneralListNpcDialogueDev' },
     { id: 'EliteTroopCodex', screenId: 'elite-troop-codex-screen', targetIndex: 9, uiSourceDir: 'elite-troop-codex', runtimeScreenId: 'EliteTroopCodex' },
-    { id: 'NurtureSession', screenId: 'nurture-session-screen', targetIndex: 10, uiSourceDir: 'nurture-session', runtimeScreenId: 'NurtureSession' },
-    { id: 'BattleSceneFromLobby', screenId: 'battle-scene', targetIndex: 11, uiSourceDir: 'battle-hud', runtimeScreenId: 'BattleSceneFromLobby' },
 ];
 
 function resolveLoadingSceneUuid() {
@@ -88,6 +85,27 @@ function parseArg(name, fallback = '') {
         return fallback;
     }
     return process.argv[index + 1];
+}
+
+function readJsonIfExists(filePath) {
+    const full = path.resolve(filePath);
+    if (!fs.existsSync(full)) return null;
+    try {
+        return JSON.parse(fs.readFileSync(full, 'utf8').replace(/^\uFEFF/, ''));
+    } catch {
+        return null;
+    }
+}
+
+function resolveUiVersionForTarget(target, explicitVersion) {
+    if (explicitVersion && explicitVersion.trim()) return explicitVersion.trim();
+    const runtimeScreenId = target.runtimeScreenId || target.screenId || target.id;
+    const versionPath = path.join(__dirname, '..', 'assets', 'resources', 'ui-spec', 'screens', `${runtimeScreenId}.runtime-version.json`);
+    const payload = readJsonIfExists(versionPath);
+    if (payload && typeof payload.uiVersion === 'string' && payload.uiVersion.trim()) {
+        return payload.uiVersion.trim();
+    }
+    return '';
 }
 
 function parseViewport(value, fallback = { width: 1920, height: 1080 }) {
@@ -402,9 +420,7 @@ async function collectTargetRuntimeGuard(page, target) {
     if (target.id !== 'GeneralDetailOverview'
         && target.id !== 'GeneralDetailOverviewProd'
         && target.id !== 'GeneralDetailOverviewZhenJi'
-        && target.id !== 'GeneralDetailOverviewDs3'
-        && target.id !== 'GeneralDetailFromLobbyGeneralsButton'
-        && target.id !== 'GeneralDetailFromSceneGeneralListButton') {
+        && target.id !== 'GeneralDetailOverviewDs3') {
         return null;
     }
 
@@ -487,7 +503,6 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
         || target.id === 'GeneralDetailOverviewZhenJi'
         || target.id === 'GeneralDetailOverviewDs3'
         || target.id === 'GeneralDetailFromLobbyGeneralsButton'
-        || target.id === 'GeneralDetailFromSceneGeneralListButton'
         ? Math.max(timeoutMs, 70000)
         : timeoutMs;
 
@@ -498,7 +513,7 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
         Expires: '0',
     });
 
-    await page.evaluateOnNewDocument((targetIndex, previewVariant, debugHidePaths, uiVariant) => {
+    await page.evaluateOnNewDocument((targetIndex, previewVariant, debugHidePaths, uiVariant, uiVersion) => {
         localStorage.setItem('PREVIEW_MODE', 'true');
         localStorage.setItem('PREVIEW_TARGET', String(targetIndex));
         if (previewVariant) {
@@ -516,7 +531,49 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
         } else {
             localStorage.removeItem('GENERAL_DETAIL_OVERVIEW_HIDE_PATHS');
         }
-    }, target.targetIndex, target.previewVariant ?? '', target.debugHidePaths ?? '', target.uiVariant ?? '');
+
+        if (uiVersion) {
+            localStorage.setItem('UI_CAPTURE_VERSION', uiVersion);
+        } else {
+            localStorage.removeItem('UI_CAPTURE_VERSION');
+        }
+
+        const ensureVersionBadge = () => {
+            if (!uiVersion) return;
+            const canvasEl = document.querySelector('canvas') || document.querySelector('#GameDiv');
+            const canvasRect = canvasEl && canvasEl.getBoundingClientRect ? canvasEl.getBoundingClientRect() : null;
+            const topOffset = canvasRect ? Math.max(0, Math.round(canvasRect.top) + 4) : 4;
+            let badge = document.getElementById('__ucuf-runtime-version-badge');
+            if (!badge) {
+                badge = document.createElement('div');
+                badge.id = '__ucuf-runtime-version-badge';
+                document.body.appendChild(badge);
+            }
+            badge.textContent = uiVersion;
+            Object.assign(badge.style, {
+                position: 'fixed',
+                left: '4px',
+                top: `${topOffset}px`,
+                zIndex: '2147483647',
+                fontFamily: 'monospace',
+                fontSize: '11px',
+                lineHeight: '1.2',
+                padding: '1px 4px',
+                color: '#d6f5ff',
+                background: 'rgba(0,0,0,0.45)',
+                borderRadius: '2px',
+                pointerEvents: 'none',
+                userSelect: 'none',
+                opacity: '0.95',
+            });
+        };
+
+        window.addEventListener('DOMContentLoaded', ensureVersionBadge, { once: true });
+        window.addEventListener('load', ensureVersionBadge, { once: true });
+        const prev = window.__UCUF_VERSION_BADGE_TIMER__;
+        if (prev) clearInterval(prev);
+        window.__UCUF_VERSION_BADGE_TIMER__ = window.setInterval(ensureVersionBadge, 300);
+    }, target.targetIndex, target.previewVariant ?? '', target.debugHidePaths ?? '', target.uiVariant ?? '', target.uiVersion ?? '');
 
     const query = new URLSearchParams();
     query.set('previewMode', 'true');
@@ -526,6 +583,9 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
     }
     if (target.uiVariant) {
         query.set('ui', target.uiVariant);
+    }
+    if (target.uiVersion) {
+        query.set('uiVersion', target.uiVersion);
     }
     if (target.debugHidePaths) {
         query.set('debugHidePaths', target.debugHidePaths);
@@ -555,6 +615,16 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
             `${target.id} waitForCaptureReady`,
         );
         console.log(`[capture-ui-screens] ${target.id} capture ready`);
+
+        if (target.uiVersion) {
+            const badgeVersion = await page.evaluate(() => {
+                const el = document.getElementById('__ucuf-runtime-version-badge');
+                return el ? String(el.textContent || '').trim() : '';
+            });
+            if (badgeVersion !== String(target.uiVersion).trim()) {
+                throw new Error(`${target.id} ui version badge mismatch: expected=${target.uiVersion} actual=${badgeVersion || '(empty)'}`);
+            }
+        }
 
         const runtimeGuard = await collectTargetRuntimeGuard(page, target);
         if (runtimeGuard && !runtimeGuard.passed) {
@@ -692,7 +762,7 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
             `${target.id} page.screenshot`,
         );
         console.log(`[capture-ui-screens] ${target.id} screenshot written`);
-        return { filePath, page, diagnostics, runtimeGuard };
+        return { filePath, page, diagnostics, runtimeGuard, uiVersion: target.uiVersion || null };
     } catch (error) {
         error.diagnostics = diagnostics;
         error.page = page;
@@ -744,6 +814,7 @@ async function main() {
     const refreshBefore = parseArg('refreshBefore', 'true') !== 'false';
     const maxWidth = Number(parseArg('maxWidth', '125'));
     const hidePaths = parseArg('hidePaths', '').trim();
+    const uiVersionArg = parseArg('uiVersion', '').trim();
     const viewport = parseViewport(parseArg('viewport', '1920x1080'));
 
     const browserExecutable = resolveBrowserExecutable(browserArg);
@@ -752,10 +823,14 @@ async function main() {
         process.exit(1);
     }
 
-    const selectedTargets = selectTargets(targetId).map((target) => ({
-        ...target,
-        debugHidePaths: hidePaths,
-    }));
+    const selectedTargets = selectTargets(targetId).map((target) => {
+        const uiVersion = resolveUiVersionForTarget(target, uiVersionArg);
+        return {
+            ...target,
+            debugHidePaths: hidePaths,
+            uiVersion,
+        };
+    });
     fs.mkdirSync(outDir, { recursive: true });
 
     console.log('='.repeat(70));
@@ -811,6 +886,7 @@ async function main() {
                     captured.push({
                         target: target.id,
                         screenId: target.runtimeScreenId || target.screenId,
+                        uiVersion: target.uiVersion || null,
                         file: captureResult.filePath,
                         diagnosticsSummary,
                         diagnosticSamples,
@@ -895,6 +971,7 @@ async function main() {
         createdAt: new Date().toISOString(),
         host: baseUrl,
         machine: os.hostname(),
+        uiVersion: uiVersionArg || null,
         captures: captured,
         runtimeUpdates,
     };

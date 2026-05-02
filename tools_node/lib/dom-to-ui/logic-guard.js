@@ -123,13 +123,20 @@ function readTextIfExists(p) {
 }
 
 function walk(root, visit) {
+  const start = layoutRoot(root);
   (function rec(node, path) {
     if (!node || typeof node !== 'object') return;
     const name = node.name || node.id || node.type || 'node';
     const next = path.concat(name);
     visit(node, next);
     for (const child of node.children || []) rec(child, next);
-  })(root, []);
+  })(start, []);
+}
+
+function layoutRoot(layout) {
+  return layout && layout.root && typeof layout.root === 'object'
+    ? layout.root
+    : layout;
 }
 
 function feature(kind, base, node, path, extra) {

@@ -57,7 +57,9 @@ function splitTopLevelLayers(value) {
 }
 
 function classifyCssProperty(property, value) {
-  const prop = String(property || '').trim().toLowerCase();
+  let prop = String(property || '').trim().toLowerCase();
+  if (prop === '-webkit-clip-path') prop = 'clip-path';
+  if (prop === '-webkit-mask-image') prop = 'mask-image';
   const rawValue = String(value || '').trim().toLowerCase();
   if (!prop) return 'unknown';  // R-6 (general rule): CSS custom property declarations (`--token`) are token
   // sources, not render-time properties. Their visual effect is realised through

@@ -28,6 +28,7 @@ function smartMerge(draftLayout, existingLayout, draftSkin, existingSkin, option
   const mergeMode = (options && options.mergeMode) || 'preserve-human';
   const fieldChanges = [];
   const conflicts = [];
+  const protectedLazySlotSlots = collectLazySlotBoundSlotIds(existingLayout);
 
   const layout = mergeNode(draftLayout, existingLayout, '', mergeMode, fieldChanges, conflicts);
 
@@ -35,6 +36,7 @@ function smartMerge(draftLayout, existingLayout, draftSkin, existingSkin, option
     draftSkin || { slots: {} },
     existingSkin || { slots: {} },
     mergeMode,
+    protectedLazySlotSlots,
     fieldChanges,
     conflicts,
   );
@@ -54,6 +56,11 @@ function mergeNode(draftNode, existingNode, pathStr, mergeMode, fieldChanges, co
   }
 
   const merged = {};
+  const preserveLazySlotChildren = (
+    mergeMode === 'html-authoritative'
+    && subtreeHasLazySlot(existingNode)
+    && !subtreeHasLazySlot(draftNode)
+  );
   const keys = new Set([...Object.keys(draftNode), ...Object.keys(existingNode)]);
   // M4: data-ucuf-lock — fields listed in _lockedFields are always preserved from existing
   const locked = collectLockedFields(draftNode, existingNode);
@@ -100,6 +107,12 @@ function mergeNode(draftNode, existingNode, pathStr, mergeMode, fieldChanges, co
   const draftChildren = Array.isArray(draftNode.children) ? draftNode.children : [];
   const existingChildren = Array.isArray(existingNode.children) ? existingNode.children : [];
   if (draftChildren.length || existingChildren.length) {
+    if (preserveLazySlotChildren) {
+      merged.children = existingChildren;
+      fieldChanges.push({ path: `${pathStr || 'root'}.children`, kind: 'lazy-slot-children-preserved' });
+      return merged;
+    }
+
     const byId = new Map();
     const byName = new Map();
     for (const ec of existingChildren) {
@@ -122,7 +135,12 @@ function mergeNode(draftNode, existingNode, pathStr, mergeMode, fieldChanges, co
       const key = ec._ucufId || ec.name;
       if (!usedExisting.has(key)) {
         if (mergeMode === 'html-authoritative') {
-          fieldChanges.push({ path: `${pathStr || 'root'}.${key}`, kind: 'removed-by-html' });
+          if (subtreeHasLazySlot(ec)) {
+            mergedChildren.push(ec);
+            fieldChanges.push({ path: `${pathStr || 'root'}.${key}`, kind: 'lazy-slot-subtree-preserved' });
+          } else {
+            fieldChanges.push({ path: `${pathStr || 'root'}.${key}`, kind: 'removed-by-html' });
+          }
         } else if (isGeneratedNode(ec)) {
           fieldChanges.push({ path: `${pathStr || 'root'}.${key}`, kind: generatedRemovalKind(ec) });
         } else {
@@ -135,6 +153,19 @@ function mergeNode(draftNode, existingNode, pathStr, mergeMode, fieldChanges, co
   }
 
   return merged;
+}
+
+function subtreeHasLazySlot(node) {
+  if (!node || typeof node !== 'object') return false;
+  const stack = [node];
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (!current || typeof current !== 'object') continue;
+    if (current.lazySlot === true) return true;
+    const children = Array.isArray(current.children) ? current.children : [];
+    for (const child of children) stack.push(child);
+  }
+  return false;
 }
 
 function mergeWidgetPreserveHuman(draftWidget, existingWidget, fieldPath, fieldChanges, conflicts, mergeMode) {
@@ -176,7 +207,7 @@ function collectLockedFields(draftNode, existingNode) {
   return set.size > 0 ? set : null;
 }
 
-function mergeSkin(draftSkin, existingSkin, mergeMode, fieldChanges, conflicts) {
+function mergeSkin(draftSkin, existingSkin, mergeMode, protectedLazySlotSlots, fieldChanges, conflicts) {
   const out = { slots: {} };
   for (const key of ['id', 'version', 'specVersion']) {
     if (existingSkin[key] !== undefined) out[key] = existingSkin[key];
@@ -196,6 +227,19 @@ function mergeSkin(draftSkin, existingSkin, mergeMode, fieldChanges, conflicts) 
     const d = draftSlots[slotId];
     const e = existingSlots[slotId];
     const path = `skin.slots.${slotId}`;
+    const lazySlotProtected = mergeMode === 'html-authoritative'
+      && !!e
+      && protectedLazySlotSlots
+      && protectedLazySlotSlots.has(slotId);
+
+    if (lazySlotProtected) {
+      out.slots[slotId] = e;
+      if (!deepEqual(d, e)) {
+        fieldChanges.push({ path, kind: 'lazy-slot-slot-preserved' });
+      }
+      continue;
+    }
+
     if (!d && e) {
       if (isGeneratedSlot(slotId, e)) {
         fieldChanges.push({ path, kind: generatedSlotRemovalKind(slotId, e) });
@@ -226,6 +270,29 @@ function mergeSkin(draftSkin, existingSkin, mergeMode, fieldChanges, conflicts) 
     }
   }
   return out;
+}
+
+function collectLazySlotBoundSlotIds(layout) {
+  const protectedSlots = new Set();
+  const root = layout && layout.root ? layout.root : layout;
+  if (!root || typeof root !== 'object') return protectedSlots;
+
+  const stack = [{ node: root, inLazySubtree: false }];
+  while (stack.length > 0) {
+    const { node, inLazySubtree } = stack.pop();
+    if (!node || typeof node !== 'object') continue;
+
+    const currentInLazy = inLazySubtree || node.lazySlot === true;
+    if (currentInLazy) {
+      if (typeof node.styleSlot === 'string' && node.styleSlot.length > 0) protectedSlots.add(node.styleSlot);
+      if (typeof node.skinSlot === 'string' && node.skinSlot.length > 0) protectedSlots.add(node.skinSlot);
+    }
+
+    const children = Array.isArray(node.children) ? node.children : [];
+    for (const child of children) stack.push({ node: child, inLazySubtree: currentInLazy });
+  }
+
+  return protectedSlots;
 }
 
 function preserveExistingRuntimeAssetSlot(slotId, draftSlot, existingSlot, path, fieldChanges) {

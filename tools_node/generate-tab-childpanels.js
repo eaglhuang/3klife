@@ -13,7 +13,7 @@
 //     --tabs Overview,Stats,Tactics,Bloodline,Equip,Aptitude \
 //     --component-prefix CharacterDs3 \
 //     --out-dir assets/scripts/ui/components/character-ds3 \
-//     [--content-mount CharacterDs3Main_div_6]
+//     [--content-mount CharacterDs3Main_div_8]
 //     [--tab-mounts Overview:NodeA,Stats:NodeB]
 //     [--dry-run]
 //

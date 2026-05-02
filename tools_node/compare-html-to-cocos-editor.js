@@ -166,8 +166,28 @@ async function main() {
 
   const viewport = parseViewport(opts.viewport);
   await captureHtml(preparedHtml, sourcePng, viewport, opts.browser, opts.settleMs, captureProtocol.normalized);
-  normalizePng(sourcePng, sourceNormalized, viewport.width, viewport.height, opts.sourceCrop);
-  normalizePng(path.resolve(opts.editorScreenshot), editorNormalized, viewport.width, viewport.height, opts.editorCrop);
+  const sourceNormalization = normalizePng(
+    sourcePng,
+    sourceNormalized,
+    viewport.width,
+    viewport.height,
+    opts.sourceCrop,
+    'source-screenshot',
+  );
+  const editorNormalization = normalizePng(
+    path.resolve(opts.editorScreenshot),
+    editorNormalized,
+    viewport.width,
+    viewport.height,
+    opts.editorCrop,
+    'runtime-screenshot',
+  );
+  for (const warning of sourceNormalization.warnings || []) {
+    console.warn(`[compare-html-to-cocos-editor] ${warning}`);
+  }
+  for (const warning of editorNormalization.warnings || []) {
+    console.warn(`[compare-html-to-cocos-editor] ${warning}`);
+  }
 
   const rawDiff = pixelDiff(sourceNormalized, editorNormalized, { tolerance: opts.tolerance });
   writeHeatmap(rawDiff.heatmap, heatmapPng);
@@ -278,6 +298,10 @@ async function main() {
       editorCrop: captureProtocol.normalized.editorCrop,
       settleMs: captureProtocol.normalized.settleMs,
     } : null,
+    normalization: {
+      source: sourceNormalization,
+      runtime: editorNormalization,
+    },
     zoneOwnership: {
       report: rel(zoneOwnershipJson),
       summary: zoneOwnership.summary,
@@ -393,9 +417,10 @@ async function captureHtml(htmlPath, outputPng, viewport, browserPath, settleMs,
   }
 }
 
-function normalizePng(inputPath, outputPath, targetW, targetH, crop) {
+function normalizePng(inputPath, outputPath, targetW, targetH, crop, label) {
   const src = PNG.sync.read(fs.readFileSync(inputPath));
-  const rect = crop || { x: 0, y: 0, w: src.width, h: src.height };
+  const resolved = resolveNormalizeRect(src, targetW, targetH, crop, label || path.basename(inputPath));
+  const rect = resolved.rect;
   const out = new PNG({ width: targetW, height: targetH });
   for (let y = 0; y < targetH; y += 1) {
     for (let x = 0; x < targetW; x += 1) {
@@ -410,6 +435,47 @@ function normalizePng(inputPath, outputPath, targetW, targetH, crop) {
     }
   }
   fs.writeFileSync(outputPath, PNG.sync.write(out));
+  return {
+    input: rel(inputPath),
+    sourceWidth: src.width,
+    sourceHeight: src.height,
+    cropMode: resolved.mode,
+    appliedCrop: rect,
+    warnings: resolved.warnings,
+  };
+}
+
+function resolveNormalizeRect(src, targetW, targetH, crop, label) {
+  const fullRect = { x: 0, y: 0, w: src.width, h: src.height };
+  if (!crop) {
+    return { rect: fullRect, mode: 'full-image', warnings: [] };
+  }
+
+  const fits = crop.x >= 0
+    && crop.y >= 0
+    && crop.w > 0
+    && crop.h > 0
+    && crop.x + crop.w <= src.width
+    && crop.y + crop.h <= src.height;
+  if (fits) {
+    return { rect: crop, mode: 'configured-crop', warnings: [] };
+  }
+
+  const alreadyMatchesViewport = src.width === targetW && src.height === targetH;
+  if (alreadyMatchesViewport) {
+    return {
+      rect: fullRect,
+      mode: 'auto-skip-out-of-bounds-crop',
+      warnings: [
+        `${label}: configured crop ${crop.x},${crop.y},${crop.w},${crop.h} exceeds input ${src.width}x${src.height}; `
+        + 'input already matches target viewport, so crop was skipped to avoid double-cropping a canvas-only capture.',
+      ],
+    };
+  }
+
+  throw new Error(
+    `${label}: configured crop ${crop.x},${crop.y},${crop.w},${crop.h} exceeds input ${src.width}x${src.height}`,
+  );
 }
 
 function writeCompareBoard(leftPath, rightPath, outputPath) {
