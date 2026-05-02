@@ -46,9 +46,9 @@ node tools_node/capture-ui-screens.js --target <Target> --outDir artifacts/ui-so
 目前 script 內建 target（完整清單見 `tools_node/capture-ui-screens.js` 的 `targets` 陣列）：
 
 - `LobbyMain`, `ShopMain`, `Gacha`, `GachaHero`, `GachaSupport`, `GachaLimited`
-- `DuelChallenge`, `BattleScene`, `BattleSceneFromLobby`
+- `DuelChallenge`, `BattleScene`
 - `GeneralDetailOverview`, `GeneralDetailSkills`, `GeneralDetailOverviewZhenJi`, `GeneralDetailBloodlineV3`
-- `SpiritTallyDetail`, `GeneralList`, `NurtureSession`
+- `SpiritTallyDetail`, `GeneralList`
 
 ### 路徑 B：使用者已把畫面開在 Cocos Editor / Editor Preview
 

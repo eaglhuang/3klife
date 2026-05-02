@@ -2,7 +2,7 @@
 doc_id: doc_agentskill_0036
 name: html-to-ucuf
 description: 'HTML -> UCUF (Cocos Creator UI) 轉換 SKILL — 以 source package（同一來源目錄內的 ui-design-tokens.json、colors_and_type.css、主要 HTML）為正式輸入，轉成符合 UCUF 規範的 layout/skin/screen JSON 與 Composite/Child Panel 骨架，最後以 HTML source screenshot vs Cocos Editor screenshot 的 runtimeVsSource.score >= 95% 作為通過條件。USE FOR: 從設計稿或前端 HTML 草稿落地 Cocos UI 規格、批次更新既有 UCUF JSON、需要建立 Cocos Editor 實畫面視覺閉環的情境。DO NOT USE FOR: 純 runtime 除錯（用 cocos-bug-triage）、純美術 QA（用 ui-preview-judge）、純資產切件（用 ui-asset-slice-pipeline）、未經 proof / family 收斂的純參考圖（用 ui-reference-decompose 先收斂）。'
-argument-hint: '提供 source 目錄、main HTML 相對路徑、screenId、bundle，以及 Cocos Editor screenshot 或 editor target；舊 --input 單檔流程只作 debug / legacy。'
+argument-hint: '提供 source 目錄、main HTML 相對路徑、screenId、bundle，以及 Cocos Editor screenshot 或 editor target；--input 單檔流程只作 single-file debug。'
 ---
 
 # HTML -> UCUF 轉換 SKILL
@@ -31,6 +31,7 @@ Unity 對照：相當於把 React/UI Toolkit XML 一鍵轉成 ScriptableObject +
 - `node tools_node/run-ui-workflow.js --workflow html-to-ucuf` — **（統一入口）** recurring HTML 版本的首選入口；會先走 UI context guard，再自動分流到 `run-html-to-ucuf-workflow.js`，完成 pre-render、`*.ucuf-ready.html`、raw 轉譯、layout optimize、skin autofix、strict replay、compare / pixel diff 與 `*.workflow-summary.json`
 - `node tools_node/run-html-to-ucuf-workflow.js` — **（底層 wrapper）** 當你需要直接除錯 workflow 細節時再單獨呼叫
 - `node tools_node/render-html-snapshot.js` — **（M12 新增）** Puppeteer pre-render 助手；當 HTML 是 React / Vue / Babel / 任何需要 JS 執行才會產生節點的「shell-only」HTML 時，**必須**先用此工具把 runtime DOM 拍照成靜態 HTML，再交給 `dom-to-ui-json.js`
+- `node tools_node/render-html-tab-fragments.js` — tab replay 助手；自動切 tab、擷取每個 `right-content`，交給 workflow 轉成正式 fragment JSON
 - `node tools_node/optimize-ucuf-layout.js` — **（M13 新增）** layout 節點收斂；自動折疊 auto-generated 單子 wrapper、刪除 empty leaf container，能在不破壞語意下把 nodeCount 降 10–15%
 - `node tools_node/auto-fix-ucuf-skin.js` — **（M13 新增）** skin 自動修補；補 button hover/pressed/disabled state layers（HSL 演算法）+ 把 hard-coded hex 升級成 ui-design-tokens 鍵
 - `node tools_node/render-ucuf-layout.js` — **（M13 新增）** UCUF JSON -> HTML 預覽；把 layout+skin 還原成可 diff 的 HTML，給 dom-to-ui-compare 做 fidelity 三方對照（source HTML / captured DOM / UCUF preview）
@@ -59,7 +60,7 @@ Unity 對照：相當於把 React/UI Toolkit XML 一鍵轉成 ScriptableObject +
 
 啟動 v2 flow 前，先讀 `docs/html_skill_rule-evolution2.md` 中狀態為 `accepted` 的 entries：
 
-- `auto-applicable`：只能先套到 sandbox / workflow output，不直接改正式資產；套用後必須重跑 source package validation、UCUF generation gate、HTML source vs Cocos Editor final gate。
+- `auto-applicable`：規則變更先套到 sandbox / workflow output；正式 runtime spec 只能由 `run-html-to-ucuf-workflow.js` 在 final replay 後統一同步，且同步後必須重跑 source package validation、UCUF generation gate、HTML source vs Cocos Editor final gate。
 - `reviewer-required`：只可列為報告與人工提示，不自動修改 layout / skin / screen / Panel。
 - `candidate` / `rejected`：不得自動套用。
 
@@ -80,13 +81,13 @@ node tools_node/run-ui-workflow.js --workflow html-to-ucuf \
   --editor-screenshot artifacts/screenshots/character-ds3-editor.png
 ```
 
-注意：`--input <html>` 是 legacy / debug alias；如果沒有同時驗證 source token 與 `colors_and_type.css`，不得宣稱正式通過。`dom-to-ui-compare` / `runtime-screen-diff` 產出的 browser `sourceVsUcuf` 分數只作前置診斷，最後仍必須以 Cocos Editor screenshot 的 `runtimeVsSource.score >= 0.95` 通過。
+注意：`--input <html>` 是 single-file debug alias；如果沒有同時驗證 source token 與 `colors_and_type.css`，不得宣稱正式通過。`dom-to-ui-compare` / `runtime-screen-diff` 產出的 browser `sourceVsUcuf` 分數只作前置診斷，最後仍必須以 Cocos Editor screenshot 的 `runtimeVsSource.score >= 0.95` 通過。
 
 ### 過時或降級參數
 
 | 參數 | 狀態 | 說明 |
 |---|---|---|
-| `--input <html>` | legacy / debug | 無法保證 token / CSS / HTML 同源 |
+| `--input <html>` | single-file debug | 無法保證 token / CSS / HTML 同源 |
 | `--tokens-runtime` / `--tokens-handoff` | internal | source package token 才是畫面 authority |
 | `--content-contract` | optional | 已接 annotation；正式 flow 可用來補 content bind path |
 | `--skip-annotate` / `--skip-optimize` / `--skip-editor-compare` | debug only | v2 source package flow 不可 skip Editor gate 後宣稱 pass |
@@ -120,8 +121,8 @@ CSS 端：用 token-friendly 寫法（`color: var(--text-primary)` 或專案常�
 
 ```bash
 node tools_node/run-ui-workflow.js --workflow html-to-ucuf \
-  --source-dir "Design System 3/source" \
-  --main-html index.html \
+  --source-dir "Design System 3" \
+  --main-html "ui_kits/character/index.html" \
   --screen-id gacha-ds3 \
   --bundle ui_gacha \
   --editor-screenshot artifacts/screenshots/gacha-ds3-editor.png
@@ -136,9 +137,13 @@ node tools_node/run-ui-workflow.js --workflow html-to-ucuf \
 5. 跑 `optimize-ucuf-layout`
 6. 跑 `auto-fix-ucuf-skin`
 7. 用 optimized layout + fixed skin 做 strict replay
-8. 跑 `dom-to-ui-compare` / pixel diff（diagnostic）
-9. 跑 HTML source screenshot vs Cocos Editor screenshot final gate
-10. 輸出 `*.workflow-summary.json`
+8. 跑 per-tab replay，自動切換每個 tab，將各 tab 的 `right-content` 轉成正式 fragment JSON
+9. 將 final layout / skin / screen / tab-routing / readiness 所需 sidecars 同步到正式 runtime spec 入口
+10. 跑 `dom-to-ui-compare` / pixel diff（diagnostic）
+11. 跑 HTML source screenshot vs Cocos Editor screenshot final gate
+12. 輸出 `*.workflow-summary.json`
+
+正式 source package flow 的 raw pass 會啟用 `--use-computed-style`，把 browser `getComputedStyle()` 的版型、顏色、字型、字級、字距、對齊與 spacing 回灌成 UCUF layout / skin；靜態 CSS parser 只作為 browser 不可用時的 fallback。
 
 輸出目錄預設為：
 
@@ -217,6 +222,8 @@ node tools_node/dom-to-ui-json.js \
 關掉備份（CI 環境）：附 `--no-backup`；自訂備份目錄：`--backup-dir <path>`。
 
 ### 4. 增量同步（保留人手欄位）
+
+正式 source package 轉換預設是 HTML source-authoritative；只有明確加 `--update-mode` 時才啟用 `--sync-existing` 的增量合併，避免舊 runtime 規則先污染新轉換結果。
 
 增量同步的「HTML 權威」只代表結構、可直譯 style 與未有人手接管的 generated slot；**不代表 HTML draft 可以覆蓋已存在的 runtime 美術資產**。當既有 `auto.*` skin slot 已是可在 `assets/resources/` 找到實檔的 `kind: "sprite-frame"`，`--sync-existing` 會保留該 slot，即使 `--merge-mode html-authoritative` 也一樣。新 HTML 產生的 gradient / color / placeholder 只能當重新比對用草稿，不能把已交付 JPG/PNG 洗掉；若真的要換圖，draft 必須明確帶 `assetPolicy: "replace-existing"`、`assetReplaceApproved: true` 或 `_replaceExistingAsset: true` 之一，並由 reviewer 確認。
 
@@ -384,7 +391,7 @@ HTML→UCUF update mode 不得讓新 HTML 的暫時性 CSS 背景、placeholder 
 
 正式 tab / button / icon / panel chrome 也是 runtime art asset，不得因為 HTML source 當下用 gradient / border / box-shadow 畫出近似樣式就被放棄。若已存在正式 `button-skin` 或 sprite slot，converter 必須把 HTML 草稿視為「結構與 fallback」而非「資產替換命令」；sync-report 需留下 `existing-runtime-asset-preserved`，讓 reviewer 能看到哪些正式圖被保留。只有 `assetPolicy: "replace-existing"`、`assetReplaceApproved: true` 或 `_replaceExistingAsset: true` 才能替換。
 
-分數解讀採雙軸：raw `runtimeVsSource.score` 保持誠實，不改寫歷史 reference；但已核准的正式 runtime asset zone 需要用 image waiver / art-authority sidecar 記錄，進入 adjusted score 與 reviewer 報告。這不是把差異藏起來，而是把「HTML 草稿與正式美術不同」從 converter failure 中分離；若 HTML 要成為最終 reference，應更新 HTML source 或補 approved waiver，不能讓正式資產因追分被退回 CSS placeholder。
+分數解讀採雙軸：raw `runtimeVsSource.score` 保持誠實，不改寫歷史 reference；final Cocos runtime gate 只有已核准、asset-backed、rect-scoped 的 art-authority sidecar 可以進入 `runtimeVsSource.adjustedScore` 與 reviewer 報告。`image-waiver` 只屬於 browser source-vs-UCUF preview 診斷，用來標出 source 缺圖或草稿資產缺口，不得作為 final runtimeVsSource 的調分依據。這不是把差異藏起來，而是把「HTML 草稿與正式美術不同」從 converter failure 中分離；若 HTML 要成為最終 reference，應更新 HTML source 或補 approved art-authority waiver，不能讓正式資產因追分被退回 CSS placeholder。
 
 | 副檔名 | 預設 | 用途 |
 |---|---|---|
@@ -403,7 +410,7 @@ HTML→UCUF update mode 不得讓新 HTML 的暫時性 CSS 背景、placeholder 
 | `<screen>.logic-inventory.json` | auto | M9 既有功能清單 |
 | `<screen>.logic-guard.json` | auto | M9 覆蓋前後 verdict |
 | `<screen>.visual-review.json` | auto | M11 美術視覺回歸 metrics |
-| `<screen>.bake-manifest.json` | `--use-computed-style` 時 auto | CSS fidelity gap resolution manifest；只有 `autoBake=true` 的小碎片可交給 `tools_node/bake-ucuf-sidecars.js` 產 PNG，其餘 entry 必須走 art asset / converter geometry / waiver |
+| `<screen>.bake-manifest.json` | `--use-computed-style` 時 auto | CSS fidelity gap resolution manifest；只有 `autoBake=true` 的小碎片可交給 `tools_node/bake-ucuf-sidecars.js` 產 PNG，其餘 entry 必須走 formal art asset / converter geometry；若要影響 final score，另需 art-authority sidecar |
 
 ## 失敗 / Exit Code 速查
 

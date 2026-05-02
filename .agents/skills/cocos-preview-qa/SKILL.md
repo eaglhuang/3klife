@@ -76,8 +76,7 @@ http://localhost:7456
 | `GeneralDetailBloodlineV3` | `general-detail-bloodline-v3-screen` | 6 | `hiddenAlias: true` |
 | `SpiritTallyDetail` | `spirit-tally-detail-screen` | 7 | |
 | `GeneralList` | `general-list-screen` | 8 | |
-| `NurtureSession` | `nurture-session-screen` | 10 | |
-| `BattleSceneFromLobby` | `battle-scene` | 11 | |
+
 
 > 同一 `screenId` 可有多個 target（如 Gacha 的 `previewVariant`）。新增 target 時需同步更新 `LoadingScene.ts` 的 switch case。
 
