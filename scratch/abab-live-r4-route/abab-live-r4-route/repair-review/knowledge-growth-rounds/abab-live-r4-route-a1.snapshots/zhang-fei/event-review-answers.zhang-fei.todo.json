@@ -1,0 +1,408 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:25+00:00",
+  "mode": "event-review-mcq",
+  "canonicalWrites": false,
+  "generalId": "zhang-fei",
+  "inputs": {
+    "candidatesPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl",
+    "reasoningReportPath": "artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.json"
+  },
+  "questions": [
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0744",
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0744",
+      "chapterNo": 11,
+      "sourceRefs": [
+        "011#p8"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "guan-yu",
+        "kong-rong",
+        "liu-bei",
+        "tao-qian",
+        "yu-jin",
+        "zhang-fei",
+        "zhao-yun"
+      ],
+      "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+      "sourceQuote": "如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0744",
+        "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "liu-bei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0650",
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0650",
+      "chapterNo": 11,
+      "sourceRefs": [
+        "011#p8"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "guan-yu",
+        "kong-rong",
+        "liu-bei",
+        "tao-qian",
+        "yu-jin",
+        "zhang-fei",
+        "zhao-yun"
+      ],
+      "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+      "sourceQuote": "如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0650",
+        "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "liu-bei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0563",
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0563",
+      "chapterNo": 11,
+      "sourceRefs": [
+        "011#p8"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "guan-yu",
+        "kong-rong",
+        "liu-bei",
+        "tao-qian",
+        "yu-jin",
+        "zhang-fei",
+        "zhao-yun"
+      ],
+      "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+      "sourceQuote": "如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0563",
+        "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "liu-bei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0496",
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0496",
+      "chapterNo": 11,
+      "sourceRefs": [
+        "011#p8"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "guan-yu",
+        "kong-rong",
+        "liu-bei",
+        "tao-qian",
+        "yu-jin",
+        "zhang-fei",
+        "zhao-yun"
+      ],
+      "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+      "sourceQuote": "如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0496",
+        "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "liu-bei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0430",
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0430",
+      "chapterNo": 11,
+      "sourceRefs": [
+        "011#p8"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "guan-yu",
+        "kong-rong",
+        "liu-bei",
+        "tao-qian",
+        "yu-jin",
+        "zhang-fei",
+        "zhao-yun"
+      ],
+      "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+      "sourceQuote": "如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0430",
+        "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "liu-bei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    }
+  ]
+}

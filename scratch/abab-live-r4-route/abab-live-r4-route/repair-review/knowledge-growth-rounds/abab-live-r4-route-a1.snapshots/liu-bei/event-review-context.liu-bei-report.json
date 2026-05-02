@@ -1,0 +1,249 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:23+00:00",
+  "mode": "event-review-context-enrichment",
+  "canonicalWrites": false,
+  "reviewerAdapter": {
+    "provider": "agent-reviewer",
+    "preset": "agent",
+    "model": "sanguo-agent-reviewer-v1",
+    "apiUrl": null,
+    "timeoutMs": 0,
+    "numCtx": 0,
+    "numPredict": 0,
+    "temperature": 0.0,
+    "topP": 0.0,
+    "repeatPenalty": 0.0
+  },
+  "model": "sanguo-agent-reviewer-v1",
+  "apiUrl": null,
+  "requestMode": "per-question",
+  "payloadSummary": {
+    "provider": "agent-reviewer",
+    "preset": "agent",
+    "model": "sanguo-agent-reviewer-v1",
+    "apiUrl": null,
+    "timeoutMs": 0,
+    "numCtx": 0,
+    "numPredict": 0,
+    "temperature": 0.0,
+    "topP": 0.0,
+    "repeatPenalty": 0.0
+  },
+  "reasoningTracePreview": "",
+  "answers": [
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1375",
+      "recommendedAnswer": "A",
+      "confidence": 0.86,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1375",
+        "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+        "location": "徐州",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "yuan-shu",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yuan-shu",
+            "toId": "liu-bei",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "agent reviewer selected source-grounded location `徐州`",
+        "agent reviewer selected 2 strong relationship edge(s)",
+        "summary derived from candidate hint evidence text",
+        "expanded context candidate hints completed required fields"
+      ],
+      "risks": []
+    },
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1264",
+      "recommendedAnswer": "A",
+      "confidence": 0.86,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1264",
+        "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+        "location": "徐州",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "yuan-shu",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yuan-shu",
+            "toId": "liu-bei",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "agent reviewer selected source-grounded location `徐州`",
+        "agent reviewer selected 2 strong relationship edge(s)",
+        "summary derived from candidate hint evidence text",
+        "expanded context candidate hints completed required fields"
+      ],
+      "risks": []
+    },
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1153",
+      "recommendedAnswer": "A",
+      "confidence": 0.86,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1153",
+        "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+        "location": "徐州",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "yuan-shu",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yuan-shu",
+            "toId": "liu-bei",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "agent reviewer selected source-grounded location `徐州`",
+        "agent reviewer selected 2 strong relationship edge(s)",
+        "summary derived from candidate hint evidence text",
+        "expanded context candidate hints completed required fields"
+      ],
+      "risks": []
+    },
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1043",
+      "recommendedAnswer": "A",
+      "confidence": 0.86,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1043",
+        "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+        "location": "徐州",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "yuan-shu",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yuan-shu",
+            "toId": "liu-bei",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "agent reviewer selected source-grounded location `徐州`",
+        "agent reviewer selected 2 strong relationship edge(s)",
+        "summary derived from candidate hint evidence text",
+        "expanded context candidate hints completed required fields"
+      ],
+      "risks": []
+    },
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.0935",
+      "recommendedAnswer": "A",
+      "confidence": 0.86,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.0935",
+        "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+        "location": "徐州",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "yuan-shu",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yuan-shu",
+            "toId": "liu-bei",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "agent reviewer selected source-grounded location `徐州`",
+        "agent reviewer selected 2 strong relationship edge(s)",
+        "summary derived from candidate hint evidence text",
+        "expanded context candidate hints completed required fields"
+      ],
+      "risks": []
+    }
+  ],
+  "pipelineNotes": [
+    "agent reviewer used candidateHints, strict location gate, and strong relationship edge gate"
+  ]
+}

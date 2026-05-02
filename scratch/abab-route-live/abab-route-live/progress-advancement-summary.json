@@ -1,0 +1,226 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:54:31+00:00",
+  "mode": "sanguo-progress-advancement-loop",
+  "canonicalWrites": false,
+  "dryRun": false,
+  "runId": "abab-route-live",
+  "runRoot": "scratch/abab-route-live/abab-route-live",
+  "initialBaselinePaths": {
+    "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-ready-events.jsonl",
+    "baseProgress": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/repair-review-r1-merged.json",
+    "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-relationship-evidence.jsonl",
+    "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-refine-r1-reviewed-b-edit-backlog.jsonl"
+  },
+  "finalBaselinePaths": {
+    "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-ready-events.jsonl",
+    "baseProgress": "scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress/abab-route-live-a1-merged.json",
+    "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-relationship-evidence.jsonl",
+    "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-reviewed-b-edit-backlog.jsonl"
+  },
+  "policy": {
+    "maxRounds": 2,
+    "maxABCycles": 3,
+    "topGenerals": 1,
+    "topPerGeneral": 2,
+    "noImprovementThreshold": 0.05,
+    "noImprovementPatience": 2,
+    "pendingReviewLimit": 15,
+    "sameResidualRepeatLimit": 2,
+    "reviewBatchSize": 2,
+    "failureRateLimit": 0.2,
+    "reviewerPreset": "agent",
+    "reviewerProvider": "agent-reviewer",
+    "stepTimeoutSeconds": 30
+  },
+  "roundsExecuted": 2,
+  "abCyclesExecuted": 1,
+  "bReviewCount": 0,
+  "pilotPendingReviewCount": 4,
+  "pendingReviewCount": 4,
+  "stopReason": "failure-rate-limit",
+  "nextRoute": "C-residual-dossier",
+  "nextRecommendedAction": "Inspect the failing command stderr in the summary before continuing.",
+  "baselineOverallPercent": 58.22,
+  "finalOverallPercent": 58.24,
+  "totalDeltaOverallPercent": 0.02,
+  "reviewBatches": [],
+  "bReviews": [],
+  "residualSummary": {
+    "rootCauseCounts": {},
+    "repeatedResidualCount": 0
+  },
+  "repeatedResiduals": [],
+  "rounds": [
+    {
+      "roundIndex": 1,
+      "roundId": "abab-route-live-a1",
+      "success": true,
+      "summaryPath": "scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress/abab-route-live-a1-campaign-summary.json",
+      "baselineInputs": {
+        "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-ready-events.jsonl",
+        "baseProgress": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/repair-review-r1-merged.json",
+        "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-relationship-evidence.jsonl",
+        "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-refine-r1-reviewed-b-edit-backlog.jsonl"
+      },
+      "nextBaselineCandidates": {
+        "baseProgress": "scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress/abab-route-live-a1-merged.json",
+        "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-ready-events.jsonl",
+        "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-relationship-evidence.jsonl",
+        "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-reviewed-b-edit-backlog.jsonl"
+      },
+      "command": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python /mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/run_repair_review_campaign.py --round-id abab-route-live-a1 --edit-backlog artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-refine-r1-reviewed-b-edit-backlog.jsonl --base-events artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-ready-events.jsonl --base-relationship-evidence artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-relationship-evidence.jsonl --base-progress artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/repair-review-r1-merged.json --repair-output-root scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks --rounds-root scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-rounds --event-seed-root scratch/abab-route-live/abab-route-live/repair-review/event-question-seeds --packet-root scratch/abab-route-live/abab-route-live/repair-review/source-event-packets --progress-root scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress --top-generals 1 --top-per-general 2 --reviewer-preset agent --reviewer-provider agent-reviewer --step-timeout-seconds 30 --overwrite",
+        "returnCode": 0,
+        "dryRun": false,
+        "stdout": "[run_repair_review_campaign] wrote scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress/abab-route-live-a1-campaign-summary.json\n[run_repair_review_campaign] wrote scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress/abab-route-live-a1-campaign-summary.md\n[run_repair_review_campaign] round=abab-route-live-a1 mergedRound=abab-route-live-a1-merged selectedGenerals=1 deltaOverall=0.02",
+        "stderr": ""
+      },
+      "campaignSummary": {
+        "version": "1.0.0",
+        "generatedAt": "2026-05-02T04:54:29+00:00",
+        "mode": "repair-review-campaign",
+        "canonicalWrites": false,
+        "roundId": "abab-route-live-a1",
+        "mergedRoundId": "abab-route-live-a1-merged",
+        "selectedGenerals": [
+          "cao-cao"
+        ],
+        "repairTaskSummaryPath": "scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks/abab-route-live-a1-repair-tasks-summary.json",
+        "repairCandidatesPath": "scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks/abab-route-live-a1-repair-review-candidates.jsonl",
+        "baselineOverallPercent": 58.22,
+        "resultOverallPercent": 58.24,
+        "deltaOverallPercent": 0.02,
+        "resultRelationshipGraph": 0.4076,
+        "resultEventQuestionCoverage": 0.4619,
+        "resultReviewValidation": 0.3588,
+        "commands": [
+          {
+            "name": "build_backlog_repair_tasks",
+            "command": "/home/eagl/.venv/3klife-etl/bin/python /mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/build_backlog_repair_tasks.py --edit-backlog artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-refine-r1-reviewed-b-edit-backlog.jsonl --output-root scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks --round-id abab-route-live-a1 --overwrite",
+            "returnCode": 0,
+            "stdout": "[build_backlog_repair_tasks] wrote scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks/abab-route-live-a1-repair-tasks.jsonl\n[build_backlog_repair_tasks] wrote scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks/abab-route-live-a1-repair-review-candidates.jsonl\n[build_backlog_repair_tasks] wrote scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks/abab-route-live-a1-repair-tasks-summary.json\n[build_backlog_repair_tasks] wrote scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks/abab-route-live-a1-repair-tasks.md\n[build_backlog_repair_tasks] wrote scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks/abab-route-live-a1-repair-review-candidates-summary.json\n[build_backlog_repair_tasks] wrote scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks/abab-route-live-a1-repair-review-candidates.md\n[build_backlog_repair_tasks] tasks=1766 priorities={'high': 1747, 'low': 6, 'medium': 13}",
+            "stderr": ""
+          },
+          {
+            "name": "run_knowledge_growth_round",
+            "command": "/home/eagl/.venv/3klife-etl/bin/python /mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/run_knowledge_growth_round.py --round-id abab-route-live-a1 --candidates scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks/abab-route-live-a1-repair-review-candidates.jsonl --output-root scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-rounds --max-generals 1 --top-per-general 2 --reviewer-preset agent --reviewer-provider agent-reviewer --step-timeout-seconds 30 --overwrite --general-id cao-cao",
+            "returnCode": 0,
+            "stdout": "[run_knowledge_growth_round] wrote scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-rounds/abab-route-live-a1.batch.json\n[run_knowledge_growth_round] wrote scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-rounds/abab-route-live-a1.batch.md\n[run_knowledge_growth_round] roundId=abab-route-live-a1 cohort=1 canonicalWrites=false promptOnly=False",
+            "stderr": ""
+          },
+          {
+            "name": "stage_reviewed_a_ready_events",
+            "command": "/home/eagl/.venv/3klife-etl/bin/python /mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/stage_reviewed_a_ready_events.py --review-root scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-rounds/abab-route-live-a1.snapshots --round-id abab-route-live-a1-merged --base-events artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-ready-events.jsonl --base-relationship-evidence artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-relationship-evidence.jsonl --overwrite",
+            "returnCode": 0,
+            "stdout": "[stage_reviewed_a_ready_events] wrote artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-reviewed-a-ready-candidates.jsonl\n[stage_reviewed_a_ready_events] wrote artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-reviewed-b-edit-backlog.jsonl\n[stage_reviewed_a_ready_events] wrote artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-ready-events.jsonl\n[stage_reviewed_a_ready_events] wrote artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-relationship-evidence.jsonl\n[stage_reviewed_a_ready_events] stagedReady=2 stagedRelationships=2 editBacklog=0 canonicalWrites=false",
+            "stderr": ""
+          },
+          {
+            "name": "build_event_question_seed_bank",
+            "command": "/home/eagl/.venv/3klife-etl/bin/python /mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/build_event_question_seed_bank.py --relationship-evidence /mnt/c/Users/User/3KLife/artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-relationship-evidence.jsonl --output-root scratch/abab-route-live/abab-route-live/repair-review/event-question-seeds/abab-route-live-a1-merged --overwrite",
+            "returnCode": 0,
+            "stdout": "[build_event_question_seed_bank] wrote scratch/abab-route-live/abab-route-live/repair-review/event-question-seeds/abab-route-live-a1-merged/event-question-seeds.jsonl\n[build_event_question_seed_bank] wrote scratch/abab-route-live/abab-route-live/repair-review/event-question-seeds/abab-route-live-a1-merged/event-question-seeds-summary.json\n[build_event_question_seed_bank] wrote scratch/abab-route-live/abab-route-live/repair-review/event-question-seeds/abab-route-live-a1-merged/event-question-seeds-review.md\n[build_event_question_seed_bank] slots=2631 units=759.85 coveredGenerals=291",
+            "stderr": ""
+          },
+          {
+            "name": "build_source_event_packets",
+            "command": "/home/eagl/.venv/3klife-etl/bin/python /mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/build_source_event_packets.py --relationship-evidence /mnt/c/Users/User/3KLife/artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-relationship-evidence.jsonl --output-root scratch/abab-route-live/abab-route-live/repair-review/source-event-packets/abab-route-live-a1-merged --overwrite",
+            "returnCode": 0,
+            "stdout": "[build_source_event_packets] wrote scratch/abab-route-live/abab-route-live/repair-review/source-event-packets/abab-route-live-a1-merged/source-event-packets.jsonl\n[build_source_event_packets] wrote scratch/abab-route-live/abab-route-live/repair-review/source-event-packets/abab-route-live-a1-merged/source-event-packets-summary.json\n[build_source_event_packets] wrote scratch/abab-route-live/abab-route-live/repair-review/source-event-packets/abab-route-live-a1-merged/source-event-packets-review.md\n[build_source_event_packets] packets=1601 units=586.38 coveredGenerals=291",
+            "stderr": ""
+          },
+          {
+            "name": "estimate_knowledge_completion",
+            "command": "/home/eagl/.venv/3klife-etl/bin/python /mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/estimate_knowledge_completion.py --round-id abab-route-live-a1-merged --ready-events /mnt/c/Users/User/3KLife/artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-ready-events.jsonl --relationship-evidence /mnt/c/Users/User/3KLife/artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-relationship-evidence.jsonl --event-question-seeds scratch/abab-route-live/abab-route-live/repair-review/event-question-seeds/abab-route-live-a1-merged/event-question-seeds.jsonl --source-event-packets scratch/abab-route-live/abab-route-live/repair-review/source-event-packets/abab-route-live-a1-merged/source-event-packets.jsonl --rounds-root scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-rounds --output-root scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress --overwrite --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/baihua-r2-basic-profile-prompt.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/core-guanyu-boost-r1.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/repair-review-r1.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-adapter-fast-smoke.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-adapter-hints-smoke.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-llm-smoke.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-relationship-location-optimized.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-relationship-location.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-002-fast-proposals.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-002-hints-gate.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-003-agent-reviewer.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-004-agent-reviewer-wide.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-005-agent-reviewer-deep.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-006-agent-reviewer-tight-gate.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-007-agent-reviewer-transfer-filter.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-008-agent-reviewer-window-1.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-009-agent-reviewer-window-3.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-010-agent-reviewer-window-4.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-011-agent-reviewer-location-priority.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-012-agent-reviewer-directed-command.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-013-agent-reviewer-edge-aware-location.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-014-agent-reviewer-alias-fill.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-015-agent-reviewer-alias-gated.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-016-agent-reviewer-directed-command-v2.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-017-agent-reviewer-command-filter-v3.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-018-agent-reviewer-siege-gate-v4.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-019-agent-reviewer-normalized-gates.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-020-agent-reviewer-allied-pursuit-gate.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-021-agent-reviewer-wiki-courtesy-aliases.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-022-agent-reviewer-wiki-courtesy-pursuit-gate.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-023-agent-reviewer-wiki-courtesy-stability.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-024-courtesy-upstream-cohort-0.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-025-courtesy-upstream-cohort-5.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-026-courtesy-upstream-cohort-10.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-027-peer-deployment-gate.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-028-command-fp-gate.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-029-direct-confrontation-pattern.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-030-command-edge-cleanup.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-031-location-and-ally-guard.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-032-snapshot-and-report-gate.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-033-copyfile-snapshot.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-034-positioning-command-gate.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-035-expanded-top20-audit.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-036-expanded-top20-fp-gates.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-037-rescue-truce-peer-gates.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-038-review-only-summary-gate.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-039-cohort15-top20-audit.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-040-top30-depth-audit.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-041-top30-envoy-defection-gates.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-042-rescue-request-gates.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-043-top40-depth-audit.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-044-positive-battle-faction-gates.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-045-balanced-positive-faction-gates.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-female-focus-r2.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-female-focus-r3.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-female-focus.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-female-live.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-focus-rank-r1.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-focus-rank-r2.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-focus-rank-r3.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-focus-rank-r4.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-live-r2.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-live.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-r1-agent-offset-0.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-r2-agent-offset-5.batch.json --round-json artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-r3-agent-offset-10.batch.json --round-json scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-rounds/abab-route-live-a1.batch.json",
+            "returnCode": 0,
+            "stdout": "[estimate_knowledge_completion] wrote scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress/abab-route-live-a1-merged.json\n[estimate_knowledge_completion] wrote scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress/abab-route-live-a1-merged.md\n[estimate_knowledge_completion] overall=58.24% canonicalWrites=false",
+            "stderr": ""
+          }
+        ]
+      },
+      "repairTaskSummary": {
+        "priorityCounts": {
+          "high": 1747,
+          "low": 6,
+          "medium": 13
+        },
+        "repairActionCounts": {
+          "fill_location": 1742,
+          "manual_review_confirm_publishability": 6,
+          "narrow_event_boundary": 1588,
+          "repair_relationship_edges": 1738
+        },
+        "topFocusGenerals": {
+          "cao-cao": 357,
+          "liu-bei": 255,
+          "xiahou-dun": 170,
+          "zhang-fei": 146,
+          "li-dian": 140,
+          "lu-bu": 127,
+          "le-jin": 97,
+          "cao-ren": 84,
+          "xu-zhu": 80,
+          "xiahou-yuan": 78,
+          "guan-yu": 56,
+          "zhang-liao": 41,
+          "zhao-yun": 32,
+          "sun-quan": 17,
+          "zhou-yu": 15,
+          "sun-jian": 14,
+          "yuan-shao": 12,
+          "dong-zhuo": 9,
+          "gongsun-zan": 9,
+          "zhuge-liang": 8,
+          "wei-yan": 6,
+          "cai-shi": 5,
+          "mi-shi": 2,
+          "wu-guo-tai": 2
+        }
+      },
+      "pilotPendingReviewCountAfterRound": 4,
+      "eventReviewPendingCountAfterRound": 0,
+      "repeatedResidualCountAfterRound": 0,
+      "repeatedResidualsPreview": [],
+      "weakImprovementCount": 1,
+      "failureRate": 0.0
+    },
+    {
+      "roundIndex": 2,
+      "roundId": "abab-route-live-a2",
+      "success": false,
+      "summaryPath": "scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress/abab-route-live-a2-campaign-summary.json",
+      "baselineInputs": {
+        "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-ready-events.jsonl",
+        "baseProgress": "scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress/abab-route-live-a1-merged.json",
+        "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-relationship-evidence.jsonl",
+        "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-reviewed-b-edit-backlog.jsonl"
+      },
+      "nextBaselineCandidates": {
+        "baseProgress": "scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress/abab-route-live-a2-merged.json",
+        "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a2-merged-staged-ready-events.jsonl",
+        "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a2-merged-staged-relationship-evidence.jsonl",
+        "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a2-merged-reviewed-b-edit-backlog.jsonl"
+      },
+      "command": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python /mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/run_repair_review_campaign.py --round-id abab-route-live-a2 --edit-backlog artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-reviewed-b-edit-backlog.jsonl --base-events artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-ready-events.jsonl --base-relationship-evidence artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-staged-relationship-evidence.jsonl --base-progress scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress/abab-route-live-a1-merged.json --repair-output-root scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks --rounds-root scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-rounds --event-seed-root scratch/abab-route-live/abab-route-live/repair-review/event-question-seeds --packet-root scratch/abab-route-live/abab-route-live/repair-review/source-event-packets --progress-root scratch/abab-route-live/abab-route-live/repair-review/knowledge-growth-progress --top-generals 1 --top-per-general 2 --reviewer-preset agent --reviewer-provider agent-reviewer --step-timeout-seconds 30 --overwrite",
+        "returnCode": 1,
+        "dryRun": false,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"/mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/run_repair_review_campaign.py\", line 339, in <module>\n    main()\n  File \"/mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/run_repair_review_campaign.py\", line 195, in main\n    raise ValueError(\"No repair generals selected from backlog summary.\")\nValueError: No repair generals selected from backlog summary."
+      },
+      "campaignSummary": {},
+      "repairTaskSummary": {
+        "priorityCounts": {},
+        "repairActionCounts": {},
+        "topFocusGenerals": {}
+      },
+      "pilotPendingReviewCountAfterRound": 4,
+      "eventReviewPendingCountAfterRound": 0,
+      "repeatedResidualCountAfterRound": 0,
+      "repeatedResidualsPreview": [],
+      "weakImprovementCount": 2,
+      "failureRate": 0.5
+    }
+  ]
+}

@@ -1,0 +1,469 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:31+00:00",
+  "mode": "progress-advancement-b-review-batch",
+  "canonicalWrites": false,
+  "runId": "abab-live-r4-route",
+  "sourceRoundId": "abab-live-r4-route-a1",
+  "itemCount": 10,
+  "selectedItemCount": 10,
+  "remainingItemCount": 0,
+  "pilotPendingReviewCount": 4,
+  "rootCauseCounts": {
+    "identity ambiguity": 6,
+    "event boundary": 4
+  },
+  "items": [
+    {
+      "generalId": "li-dian",
+      "reviewFilePath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/li-dian/event-review-answers.li-dian.enriched.todo.json",
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+      "chapterNo": 12,
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "missingFields": [],
+      "suggestedAnswer": "B",
+      "answerCode": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "rootCause": "identity ambiguity"
+    },
+    {
+      "generalId": "li-dian",
+      "reviewFilePath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/li-dian/event-review-answers.li-dian.enriched.todo.json",
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+      "chapterNo": 12,
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "missingFields": [],
+      "suggestedAnswer": "B",
+      "answerCode": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "rootCause": "identity ambiguity"
+    },
+    {
+      "generalId": "li-dian",
+      "reviewFilePath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/li-dian/event-review-answers.li-dian.enriched.todo.json",
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+      "chapterNo": 12,
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "missingFields": [],
+      "suggestedAnswer": "B",
+      "answerCode": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "rootCause": "identity ambiguity"
+    },
+    {
+      "generalId": "li-dian",
+      "reviewFilePath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/li-dian/event-review-answers.li-dian.enriched.todo.json",
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+      "chapterNo": 12,
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "missingFields": [],
+      "suggestedAnswer": "B",
+      "answerCode": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "rootCause": "identity ambiguity"
+    },
+    {
+      "generalId": "li-dian",
+      "reviewFilePath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/li-dian/event-review-answers.li-dian.enriched.todo.json",
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+      "chapterNo": 12,
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "missingFields": [],
+      "suggestedAnswer": "B",
+      "answerCode": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "rootCause": "identity ambiguity"
+    },
+    {
+      "generalId": "xiahou-dun",
+      "reviewFilePath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/xiahou-dun/event-review-answers.xiahou-dun.enriched.todo.json",
+      "candidateId": "repair.abab-live-r4-route-a1.xiahou-dun.generic-battle-012-p13.1351",
+      "eventKey": "repair.abab-live-r4-route-a1.xiahou-dun.generic-battle-012-p13.1351",
+      "chapterNo": 12,
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "missingFields": [],
+      "suggestedAnswer": "B",
+      "answerCode": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.xiahou-dun.generic-battle-012-p13.1351",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "rootCause": "identity ambiguity"
+    },
+    {
+      "generalId": "xiahou-dun",
+      "reviewFilePath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/xiahou-dun/event-review-answers.xiahou-dun.enriched.todo.json",
+      "candidateId": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0422",
+      "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0422",
+      "chapterNo": 16,
+      "summary": "青州：時夏侯惇所領青州之兵，乘勢下鄉劫掠民家，平虜校尉于禁即將本部軍於路剿殺，安撫鄉民。",
+      "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "sourceRefs": [
+        "016#p17"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "liu-biao",
+        "xiahou-dun",
+        "xu-zhu",
+        "yu-jin",
+        "zhang-xiu"
+      ],
+      "missingFields": [],
+      "suggestedAnswer": "B",
+      "answerCode": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0422",
+        "summary": "青州：禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+        "location": "青州",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "rootCause": "event boundary"
+    },
+    {
+      "generalId": "xiahou-dun",
+      "reviewFilePath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/xiahou-dun/event-review-answers.xiahou-dun.enriched.todo.json",
+      "candidateId": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0488",
+      "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0488",
+      "chapterNo": 16,
+      "summary": "青州：時夏侯惇所領青州之兵，乘勢下鄉劫掠民家，平虜校尉于禁即將本部軍於路剿殺，安撫鄉民。",
+      "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "sourceRefs": [
+        "016#p17"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "liu-biao",
+        "xiahou-dun",
+        "xu-zhu",
+        "yu-jin",
+        "zhang-xiu"
+      ],
+      "missingFields": [],
+      "suggestedAnswer": "B",
+      "answerCode": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0488",
+        "summary": "青州：禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+        "location": "青州",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "rootCause": "event boundary"
+    },
+    {
+      "generalId": "xiahou-dun",
+      "reviewFilePath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/xiahou-dun/event-review-answers.xiahou-dun.enriched.todo.json",
+      "candidateId": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0554",
+      "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0554",
+      "chapterNo": 16,
+      "summary": "青州：時夏侯惇所領青州之兵，乘勢下鄉劫掠民家，平虜校尉于禁即將本部軍於路剿殺，安撫鄉民。",
+      "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "sourceRefs": [
+        "016#p17"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "liu-biao",
+        "xiahou-dun",
+        "xu-zhu",
+        "yu-jin",
+        "zhang-xiu"
+      ],
+      "missingFields": [],
+      "suggestedAnswer": "B",
+      "answerCode": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0554",
+        "summary": "青州：禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+        "location": "青州",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "rootCause": "event boundary"
+    },
+    {
+      "generalId": "xiahou-dun",
+      "reviewFilePath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/xiahou-dun/event-review-answers.xiahou-dun.enriched.todo.json",
+      "candidateId": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0640",
+      "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0640",
+      "chapterNo": 16,
+      "summary": "青州：時夏侯惇所領青州之兵，乘勢下鄉劫掠民家，平虜校尉于禁即將本部軍於路剿殺，安撫鄉民。",
+      "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "sourceRefs": [
+        "016#p17"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "liu-biao",
+        "xiahou-dun",
+        "xu-zhu",
+        "yu-jin",
+        "zhang-xiu"
+      ],
+      "missingFields": [],
+      "suggestedAnswer": "B",
+      "answerCode": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0640",
+        "summary": "青州：禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+        "location": "青州",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "rootCause": "event boundary"
+    }
+  ],
+  "decisionTemplate": {
+    "decisions": [
+      {
+        "candidateId": "candidate-id",
+        "answer": "B",
+        "notes": "保留，但需補 location 與 relationshipEdges。",
+        "edits": {
+          "location": "來源片語",
+          "relationshipEdges": []
+        }
+      }
+    ]
+  }
+}

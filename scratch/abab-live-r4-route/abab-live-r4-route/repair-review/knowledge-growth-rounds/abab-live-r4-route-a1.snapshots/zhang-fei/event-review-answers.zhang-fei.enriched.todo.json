@@ -1,0 +1,568 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:25+00:00",
+  "mode": "event-review-context-enriched",
+  "canonicalWrites": false,
+  "generalId": "zhang-fei",
+  "inputs": {
+    "candidatesPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl",
+    "reasoningReportPath": "artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.json"
+  },
+  "questions": [
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0744",
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0744",
+      "chapterNo": 11,
+      "sourceRefs": [
+        "011#p8"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "guan-yu",
+        "kong-rong",
+        "liu-bei",
+        "tao-qian",
+        "yu-jin",
+        "zhang-fei",
+        "zhao-yun"
+      ],
+      "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+      "sourceQuote": "如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0744",
+        "summary": "平原：」張飛見了，更不打話，直取于禁。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "zhang-fei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "011#p6",
+          "isAnchor": false,
+          "text": "孔融迎接玄德入城，敘禮畢，大設筵宴慶賀。又引糜竺來見玄德，具言張闓殺曹嵩之事：「今曹操縱兵大掠，圍住徐州，特來求救。」玄德曰：「陶恭祖乃仁人君子，不意受此無辜之冤！」孔融曰：「公乃漢室宗親，今曹操殘害百姓，倚強欺弱，何不與融同往救之？」玄德曰：「備非敢推辭，奈兵微將寡，恐難輕動。」孔融曰：「融之欲救陶恭祖，雖因舊誼，亦爲大義。公豈獨無仗義之心耶？」玄德曰：「既如此，請文舉先行，容備去公孫瓚處，借三五千人馬，隨後便來。」融曰：「公切勿失信。」玄德曰：「公以備爲何如人也？聖人云：『自古皆有死，人無信不立。』劉備借得軍或借不得軍，必然親至。」孔融應允，教糜竺先回徐州去報，融便收拾起程。太史慈拜謝曰：「慈奉母命，前來相助，今幸無虞。有揚州刺史劉繇，與慈同郡，有書來喚，不敢不去。容圖再見。」融以金帛相酬，慈不肯受而歸。其母見之，喜曰：「我喜汝有以報北海也！」遂遣慈往揚州去了。"
+        },
+        {
+          "sourceRef": "011#p7",
+          "isAnchor": false,
+          "text": "不說孔融起兵。且說玄德離北海來見公孫瓚，具說欲救徐州之事。瓚曰：「曹操與君無仇，何苦替人出力？」玄德曰：「備已許人，不敢失信。」瓚曰：「我借與君馬步軍二千。」玄德曰：「更望借趙子龍一行。」瓚許之。玄德遂與關、張引本部三千人爲前部，子龍引二千人隨後，往徐州來。卻說糜竺回報陶謙，言北海又請得劉玄德來助；陳元龍也回報青州田楷欣然領兵來救。陶謙心安。原來孔融、田楷兩路軍馬，懼怕曹兵勢猛，遠遠依山下寨，未敢輕進；曹操見兩路軍到，亦分了軍勢，不敢向前攻城。"
+        },
+        {
+          "sourceRef": "011#p8",
+          "isAnchor": true,
+          "text": "卻說劉玄德軍到，見孔融。融曰：「曹兵勢大，操又善於用兵，未可輕戰。且觀其動靜，然後進兵。」玄德曰：「但恐城中無糧，難以持久。備令雲長、子龍領軍四千，在公部下相助；備與張飛殺奔曹營，徑投徐州去見陶使君商議。」融大喜，會合田楷，爲掎角之勢；雲長、子龍領兵兩邊接應。是日玄德、張飛引一千人馬，殺入曹兵寨邊。正行之間，寨內一聲鼓響，馬軍步兵如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」張飛見了，更不打話，直取于禁。兩馬相交，戰到數合，玄德掣雙股劍麾兵大進，于禁敗走。張飛當前追殺，直到徐州城下。城上望見紅旗白字，大書「平原劉玄德」，陶謙急令開門。玄德入城，陶謙接著，共到府衙。禮畢，設宴相待，一壁勞軍。陶謙見玄德儀錶軒昂，語言豁達，心中大喜，便命糜竺取徐州牌印，讓與玄德。玄德愕然曰：「公何意也？」謙曰：「今天下擾亂，王綱不振，公乃漢室宗親，正宜力扶社稷。老夫年邁無能，情願將徐州相讓。公勿推辭。謙當自寫表文，申奏朝廷。」玄德離席再拜曰：「劉備雖漢朝苗裔，功微德薄，爲平原相猶恐不稱職。今爲大義，故來相助。公出此言，莫非疑劉備有吞併之心耶？若舉此念，皇天不佑！」謙曰：「此老夫之實情也。」再三相讓，玄德那裏肯受。糜竺進曰：「今兵臨城下，且當商議退敵之策。待事平之日，再當相讓可也。」玄德曰：「備當遺書於曹操，勸令解和。操若不從，廝殺未遲。」於是傳檄二寨，且按兵不動；遣人齎書以達曹操。"
+        },
+        {
+          "sourceRef": "011#p9",
+          "isAnchor": false,
+          "text": "卻說曹操正在軍中，與諸將議事，人報徐州有戰書到。操拆而觀之，乃劉備書也。書略曰："
+        },
+        {
+          "sourceRef": "011#p10",
+          "isAnchor": false,
+          "text": "備自關外得拜君顏，嗣後天各一方，不及趨侍。向者尊父曹侯，實因張闓不仁，以致被害，非陶恭祖之罪也。目今黃巾遺孽擾亂於外，董卓餘黨盤踞於內。願明公先朝廷之急而後私仇，撤徐州之兵，以救國難。則徐州幸甚！天下幸甚！"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0744",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0744",
+          "summary": "平原：」張飛見了，更不打話，直取于禁。",
+          "location": "平原",
+          "relationshipEdges": [
+            {
+              "fromId": "zhang-fei",
+              "toId": "yu-jin",
+              "type": "confronts",
+              "evidenceRefs": [
+                "011#p8"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `平原`",
+          "agent reviewer selected 1 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0650",
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0650",
+      "chapterNo": 11,
+      "sourceRefs": [
+        "011#p8"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "guan-yu",
+        "kong-rong",
+        "liu-bei",
+        "tao-qian",
+        "yu-jin",
+        "zhang-fei",
+        "zhao-yun"
+      ],
+      "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+      "sourceQuote": "如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0650",
+        "summary": "平原：」張飛見了，更不打話，直取于禁。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "zhang-fei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "011#p6",
+          "isAnchor": false,
+          "text": "孔融迎接玄德入城，敘禮畢，大設筵宴慶賀。又引糜竺來見玄德，具言張闓殺曹嵩之事：「今曹操縱兵大掠，圍住徐州，特來求救。」玄德曰：「陶恭祖乃仁人君子，不意受此無辜之冤！」孔融曰：「公乃漢室宗親，今曹操殘害百姓，倚強欺弱，何不與融同往救之？」玄德曰：「備非敢推辭，奈兵微將寡，恐難輕動。」孔融曰：「融之欲救陶恭祖，雖因舊誼，亦爲大義。公豈獨無仗義之心耶？」玄德曰：「既如此，請文舉先行，容備去公孫瓚處，借三五千人馬，隨後便來。」融曰：「公切勿失信。」玄德曰：「公以備爲何如人也？聖人云：『自古皆有死，人無信不立。』劉備借得軍或借不得軍，必然親至。」孔融應允，教糜竺先回徐州去報，融便收拾起程。太史慈拜謝曰：「慈奉母命，前來相助，今幸無虞。有揚州刺史劉繇，與慈同郡，有書來喚，不敢不去。容圖再見。」融以金帛相酬，慈不肯受而歸。其母見之，喜曰：「我喜汝有以報北海也！」遂遣慈往揚州去了。"
+        },
+        {
+          "sourceRef": "011#p7",
+          "isAnchor": false,
+          "text": "不說孔融起兵。且說玄德離北海來見公孫瓚，具說欲救徐州之事。瓚曰：「曹操與君無仇，何苦替人出力？」玄德曰：「備已許人，不敢失信。」瓚曰：「我借與君馬步軍二千。」玄德曰：「更望借趙子龍一行。」瓚許之。玄德遂與關、張引本部三千人爲前部，子龍引二千人隨後，往徐州來。卻說糜竺回報陶謙，言北海又請得劉玄德來助；陳元龍也回報青州田楷欣然領兵來救。陶謙心安。原來孔融、田楷兩路軍馬，懼怕曹兵勢猛，遠遠依山下寨，未敢輕進；曹操見兩路軍到，亦分了軍勢，不敢向前攻城。"
+        },
+        {
+          "sourceRef": "011#p8",
+          "isAnchor": true,
+          "text": "卻說劉玄德軍到，見孔融。融曰：「曹兵勢大，操又善於用兵，未可輕戰。且觀其動靜，然後進兵。」玄德曰：「但恐城中無糧，難以持久。備令雲長、子龍領軍四千，在公部下相助；備與張飛殺奔曹營，徑投徐州去見陶使君商議。」融大喜，會合田楷，爲掎角之勢；雲長、子龍領兵兩邊接應。是日玄德、張飛引一千人馬，殺入曹兵寨邊。正行之間，寨內一聲鼓響，馬軍步兵如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」張飛見了，更不打話，直取于禁。兩馬相交，戰到數合，玄德掣雙股劍麾兵大進，于禁敗走。張飛當前追殺，直到徐州城下。城上望見紅旗白字，大書「平原劉玄德」，陶謙急令開門。玄德入城，陶謙接著，共到府衙。禮畢，設宴相待，一壁勞軍。陶謙見玄德儀錶軒昂，語言豁達，心中大喜，便命糜竺取徐州牌印，讓與玄德。玄德愕然曰：「公何意也？」謙曰：「今天下擾亂，王綱不振，公乃漢室宗親，正宜力扶社稷。老夫年邁無能，情願將徐州相讓。公勿推辭。謙當自寫表文，申奏朝廷。」玄德離席再拜曰：「劉備雖漢朝苗裔，功微德薄，爲平原相猶恐不稱職。今爲大義，故來相助。公出此言，莫非疑劉備有吞併之心耶？若舉此念，皇天不佑！」謙曰：「此老夫之實情也。」再三相讓，玄德那裏肯受。糜竺進曰：「今兵臨城下，且當商議退敵之策。待事平之日，再當相讓可也。」玄德曰：「備當遺書於曹操，勸令解和。操若不從，廝殺未遲。」於是傳檄二寨，且按兵不動；遣人齎書以達曹操。"
+        },
+        {
+          "sourceRef": "011#p9",
+          "isAnchor": false,
+          "text": "卻說曹操正在軍中，與諸將議事，人報徐州有戰書到。操拆而觀之，乃劉備書也。書略曰："
+        },
+        {
+          "sourceRef": "011#p10",
+          "isAnchor": false,
+          "text": "備自關外得拜君顏，嗣後天各一方，不及趨侍。向者尊父曹侯，實因張闓不仁，以致被害，非陶恭祖之罪也。目今黃巾遺孽擾亂於外，董卓餘黨盤踞於內。願明公先朝廷之急而後私仇，撤徐州之兵，以救國難。則徐州幸甚！天下幸甚！"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0650",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0650",
+          "summary": "平原：」張飛見了，更不打話，直取于禁。",
+          "location": "平原",
+          "relationshipEdges": [
+            {
+              "fromId": "zhang-fei",
+              "toId": "yu-jin",
+              "type": "confronts",
+              "evidenceRefs": [
+                "011#p8"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `平原`",
+          "agent reviewer selected 1 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0563",
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0563",
+      "chapterNo": 11,
+      "sourceRefs": [
+        "011#p8"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "guan-yu",
+        "kong-rong",
+        "liu-bei",
+        "tao-qian",
+        "yu-jin",
+        "zhang-fei",
+        "zhao-yun"
+      ],
+      "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+      "sourceQuote": "如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0563",
+        "summary": "平原：」張飛見了，更不打話，直取于禁。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "zhang-fei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "011#p6",
+          "isAnchor": false,
+          "text": "孔融迎接玄德入城，敘禮畢，大設筵宴慶賀。又引糜竺來見玄德，具言張闓殺曹嵩之事：「今曹操縱兵大掠，圍住徐州，特來求救。」玄德曰：「陶恭祖乃仁人君子，不意受此無辜之冤！」孔融曰：「公乃漢室宗親，今曹操殘害百姓，倚強欺弱，何不與融同往救之？」玄德曰：「備非敢推辭，奈兵微將寡，恐難輕動。」孔融曰：「融之欲救陶恭祖，雖因舊誼，亦爲大義。公豈獨無仗義之心耶？」玄德曰：「既如此，請文舉先行，容備去公孫瓚處，借三五千人馬，隨後便來。」融曰：「公切勿失信。」玄德曰：「公以備爲何如人也？聖人云：『自古皆有死，人無信不立。』劉備借得軍或借不得軍，必然親至。」孔融應允，教糜竺先回徐州去報，融便收拾起程。太史慈拜謝曰：「慈奉母命，前來相助，今幸無虞。有揚州刺史劉繇，與慈同郡，有書來喚，不敢不去。容圖再見。」融以金帛相酬，慈不肯受而歸。其母見之，喜曰：「我喜汝有以報北海也！」遂遣慈往揚州去了。"
+        },
+        {
+          "sourceRef": "011#p7",
+          "isAnchor": false,
+          "text": "不說孔融起兵。且說玄德離北海來見公孫瓚，具說欲救徐州之事。瓚曰：「曹操與君無仇，何苦替人出力？」玄德曰：「備已許人，不敢失信。」瓚曰：「我借與君馬步軍二千。」玄德曰：「更望借趙子龍一行。」瓚許之。玄德遂與關、張引本部三千人爲前部，子龍引二千人隨後，往徐州來。卻說糜竺回報陶謙，言北海又請得劉玄德來助；陳元龍也回報青州田楷欣然領兵來救。陶謙心安。原來孔融、田楷兩路軍馬，懼怕曹兵勢猛，遠遠依山下寨，未敢輕進；曹操見兩路軍到，亦分了軍勢，不敢向前攻城。"
+        },
+        {
+          "sourceRef": "011#p8",
+          "isAnchor": true,
+          "text": "卻說劉玄德軍到，見孔融。融曰：「曹兵勢大，操又善於用兵，未可輕戰。且觀其動靜，然後進兵。」玄德曰：「但恐城中無糧，難以持久。備令雲長、子龍領軍四千，在公部下相助；備與張飛殺奔曹營，徑投徐州去見陶使君商議。」融大喜，會合田楷，爲掎角之勢；雲長、子龍領兵兩邊接應。是日玄德、張飛引一千人馬，殺入曹兵寨邊。正行之間，寨內一聲鼓響，馬軍步兵如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」張飛見了，更不打話，直取于禁。兩馬相交，戰到數合，玄德掣雙股劍麾兵大進，于禁敗走。張飛當前追殺，直到徐州城下。城上望見紅旗白字，大書「平原劉玄德」，陶謙急令開門。玄德入城，陶謙接著，共到府衙。禮畢，設宴相待，一壁勞軍。陶謙見玄德儀錶軒昂，語言豁達，心中大喜，便命糜竺取徐州牌印，讓與玄德。玄德愕然曰：「公何意也？」謙曰：「今天下擾亂，王綱不振，公乃漢室宗親，正宜力扶社稷。老夫年邁無能，情願將徐州相讓。公勿推辭。謙當自寫表文，申奏朝廷。」玄德離席再拜曰：「劉備雖漢朝苗裔，功微德薄，爲平原相猶恐不稱職。今爲大義，故來相助。公出此言，莫非疑劉備有吞併之心耶？若舉此念，皇天不佑！」謙曰：「此老夫之實情也。」再三相讓，玄德那裏肯受。糜竺進曰：「今兵臨城下，且當商議退敵之策。待事平之日，再當相讓可也。」玄德曰：「備當遺書於曹操，勸令解和。操若不從，廝殺未遲。」於是傳檄二寨，且按兵不動；遣人齎書以達曹操。"
+        },
+        {
+          "sourceRef": "011#p9",
+          "isAnchor": false,
+          "text": "卻說曹操正在軍中，與諸將議事，人報徐州有戰書到。操拆而觀之，乃劉備書也。書略曰："
+        },
+        {
+          "sourceRef": "011#p10",
+          "isAnchor": false,
+          "text": "備自關外得拜君顏，嗣後天各一方，不及趨侍。向者尊父曹侯，實因張闓不仁，以致被害，非陶恭祖之罪也。目今黃巾遺孽擾亂於外，董卓餘黨盤踞於內。願明公先朝廷之急而後私仇，撤徐州之兵，以救國難。則徐州幸甚！天下幸甚！"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0563",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0563",
+          "summary": "平原：」張飛見了，更不打話，直取于禁。",
+          "location": "平原",
+          "relationshipEdges": [
+            {
+              "fromId": "zhang-fei",
+              "toId": "yu-jin",
+              "type": "confronts",
+              "evidenceRefs": [
+                "011#p8"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `平原`",
+          "agent reviewer selected 1 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0496",
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0496",
+      "chapterNo": 11,
+      "sourceRefs": [
+        "011#p8"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "guan-yu",
+        "kong-rong",
+        "liu-bei",
+        "tao-qian",
+        "yu-jin",
+        "zhang-fei",
+        "zhao-yun"
+      ],
+      "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+      "sourceQuote": "如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0496",
+        "summary": "平原：」張飛見了，更不打話，直取于禁。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "zhang-fei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "011#p6",
+          "isAnchor": false,
+          "text": "孔融迎接玄德入城，敘禮畢，大設筵宴慶賀。又引糜竺來見玄德，具言張闓殺曹嵩之事：「今曹操縱兵大掠，圍住徐州，特來求救。」玄德曰：「陶恭祖乃仁人君子，不意受此無辜之冤！」孔融曰：「公乃漢室宗親，今曹操殘害百姓，倚強欺弱，何不與融同往救之？」玄德曰：「備非敢推辭，奈兵微將寡，恐難輕動。」孔融曰：「融之欲救陶恭祖，雖因舊誼，亦爲大義。公豈獨無仗義之心耶？」玄德曰：「既如此，請文舉先行，容備去公孫瓚處，借三五千人馬，隨後便來。」融曰：「公切勿失信。」玄德曰：「公以備爲何如人也？聖人云：『自古皆有死，人無信不立。』劉備借得軍或借不得軍，必然親至。」孔融應允，教糜竺先回徐州去報，融便收拾起程。太史慈拜謝曰：「慈奉母命，前來相助，今幸無虞。有揚州刺史劉繇，與慈同郡，有書來喚，不敢不去。容圖再見。」融以金帛相酬，慈不肯受而歸。其母見之，喜曰：「我喜汝有以報北海也！」遂遣慈往揚州去了。"
+        },
+        {
+          "sourceRef": "011#p7",
+          "isAnchor": false,
+          "text": "不說孔融起兵。且說玄德離北海來見公孫瓚，具說欲救徐州之事。瓚曰：「曹操與君無仇，何苦替人出力？」玄德曰：「備已許人，不敢失信。」瓚曰：「我借與君馬步軍二千。」玄德曰：「更望借趙子龍一行。」瓚許之。玄德遂與關、張引本部三千人爲前部，子龍引二千人隨後，往徐州來。卻說糜竺回報陶謙，言北海又請得劉玄德來助；陳元龍也回報青州田楷欣然領兵來救。陶謙心安。原來孔融、田楷兩路軍馬，懼怕曹兵勢猛，遠遠依山下寨，未敢輕進；曹操見兩路軍到，亦分了軍勢，不敢向前攻城。"
+        },
+        {
+          "sourceRef": "011#p8",
+          "isAnchor": true,
+          "text": "卻說劉玄德軍到，見孔融。融曰：「曹兵勢大，操又善於用兵，未可輕戰。且觀其動靜，然後進兵。」玄德曰：「但恐城中無糧，難以持久。備令雲長、子龍領軍四千，在公部下相助；備與張飛殺奔曹營，徑投徐州去見陶使君商議。」融大喜，會合田楷，爲掎角之勢；雲長、子龍領兵兩邊接應。是日玄德、張飛引一千人馬，殺入曹兵寨邊。正行之間，寨內一聲鼓響，馬軍步兵如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」張飛見了，更不打話，直取于禁。兩馬相交，戰到數合，玄德掣雙股劍麾兵大進，于禁敗走。張飛當前追殺，直到徐州城下。城上望見紅旗白字，大書「平原劉玄德」，陶謙急令開門。玄德入城，陶謙接著，共到府衙。禮畢，設宴相待，一壁勞軍。陶謙見玄德儀錶軒昂，語言豁達，心中大喜，便命糜竺取徐州牌印，讓與玄德。玄德愕然曰：「公何意也？」謙曰：「今天下擾亂，王綱不振，公乃漢室宗親，正宜力扶社稷。老夫年邁無能，情願將徐州相讓。公勿推辭。謙當自寫表文，申奏朝廷。」玄德離席再拜曰：「劉備雖漢朝苗裔，功微德薄，爲平原相猶恐不稱職。今爲大義，故來相助。公出此言，莫非疑劉備有吞併之心耶？若舉此念，皇天不佑！」謙曰：「此老夫之實情也。」再三相讓，玄德那裏肯受。糜竺進曰：「今兵臨城下，且當商議退敵之策。待事平之日，再當相讓可也。」玄德曰：「備當遺書於曹操，勸令解和。操若不從，廝殺未遲。」於是傳檄二寨，且按兵不動；遣人齎書以達曹操。"
+        },
+        {
+          "sourceRef": "011#p9",
+          "isAnchor": false,
+          "text": "卻說曹操正在軍中，與諸將議事，人報徐州有戰書到。操拆而觀之，乃劉備書也。書略曰："
+        },
+        {
+          "sourceRef": "011#p10",
+          "isAnchor": false,
+          "text": "備自關外得拜君顏，嗣後天各一方，不及趨侍。向者尊父曹侯，實因張闓不仁，以致被害，非陶恭祖之罪也。目今黃巾遺孽擾亂於外，董卓餘黨盤踞於內。願明公先朝廷之急而後私仇，撤徐州之兵，以救國難。則徐州幸甚！天下幸甚！"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0496",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0496",
+          "summary": "平原：」張飛見了，更不打話，直取于禁。",
+          "location": "平原",
+          "relationshipEdges": [
+            {
+              "fromId": "zhang-fei",
+              "toId": "yu-jin",
+              "type": "confronts",
+              "evidenceRefs": [
+                "011#p8"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `平原`",
+          "agent reviewer selected 1 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0430",
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0430",
+      "chapterNo": 11,
+      "sourceRefs": [
+        "011#p8"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "guan-yu",
+        "kong-rong",
+        "liu-bei",
+        "tao-qian",
+        "yu-jin",
+        "zhang-fei",
+        "zhao-yun"
+      ],
+      "summary": "平原：是日玄德、張飛引一千人馬，殺入曹兵寨邊。",
+      "sourceQuote": "如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0430",
+        "summary": "平原：」張飛見了，更不打話，直取于禁。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "zhang-fei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "011#p6",
+          "isAnchor": false,
+          "text": "孔融迎接玄德入城，敘禮畢，大設筵宴慶賀。又引糜竺來見玄德，具言張闓殺曹嵩之事：「今曹操縱兵大掠，圍住徐州，特來求救。」玄德曰：「陶恭祖乃仁人君子，不意受此無辜之冤！」孔融曰：「公乃漢室宗親，今曹操殘害百姓，倚強欺弱，何不與融同往救之？」玄德曰：「備非敢推辭，奈兵微將寡，恐難輕動。」孔融曰：「融之欲救陶恭祖，雖因舊誼，亦爲大義。公豈獨無仗義之心耶？」玄德曰：「既如此，請文舉先行，容備去公孫瓚處，借三五千人馬，隨後便來。」融曰：「公切勿失信。」玄德曰：「公以備爲何如人也？聖人云：『自古皆有死，人無信不立。』劉備借得軍或借不得軍，必然親至。」孔融應允，教糜竺先回徐州去報，融便收拾起程。太史慈拜謝曰：「慈奉母命，前來相助，今幸無虞。有揚州刺史劉繇，與慈同郡，有書來喚，不敢不去。容圖再見。」融以金帛相酬，慈不肯受而歸。其母見之，喜曰：「我喜汝有以報北海也！」遂遣慈往揚州去了。"
+        },
+        {
+          "sourceRef": "011#p7",
+          "isAnchor": false,
+          "text": "不說孔融起兵。且說玄德離北海來見公孫瓚，具說欲救徐州之事。瓚曰：「曹操與君無仇，何苦替人出力？」玄德曰：「備已許人，不敢失信。」瓚曰：「我借與君馬步軍二千。」玄德曰：「更望借趙子龍一行。」瓚許之。玄德遂與關、張引本部三千人爲前部，子龍引二千人隨後，往徐州來。卻說糜竺回報陶謙，言北海又請得劉玄德來助；陳元龍也回報青州田楷欣然領兵來救。陶謙心安。原來孔融、田楷兩路軍馬，懼怕曹兵勢猛，遠遠依山下寨，未敢輕進；曹操見兩路軍到，亦分了軍勢，不敢向前攻城。"
+        },
+        {
+          "sourceRef": "011#p8",
+          "isAnchor": true,
+          "text": "卻說劉玄德軍到，見孔融。融曰：「曹兵勢大，操又善於用兵，未可輕戰。且觀其動靜，然後進兵。」玄德曰：「但恐城中無糧，難以持久。備令雲長、子龍領軍四千，在公部下相助；備與張飛殺奔曹營，徑投徐州去見陶使君商議。」融大喜，會合田楷，爲掎角之勢；雲長、子龍領兵兩邊接應。是日玄德、張飛引一千人馬，殺入曹兵寨邊。正行之間，寨內一聲鼓響，馬軍步兵如潮似浪擁將出來。當頭一員大將，乃是于禁，勒馬大叫：「何處狂徒！往那裏去！」張飛見了，更不打話，直取于禁。兩馬相交，戰到數合，玄德掣雙股劍麾兵大進，于禁敗走。張飛當前追殺，直到徐州城下。城上望見紅旗白字，大書「平原劉玄德」，陶謙急令開門。玄德入城，陶謙接著，共到府衙。禮畢，設宴相待，一壁勞軍。陶謙見玄德儀錶軒昂，語言豁達，心中大喜，便命糜竺取徐州牌印，讓與玄德。玄德愕然曰：「公何意也？」謙曰：「今天下擾亂，王綱不振，公乃漢室宗親，正宜力扶社稷。老夫年邁無能，情願將徐州相讓。公勿推辭。謙當自寫表文，申奏朝廷。」玄德離席再拜曰：「劉備雖漢朝苗裔，功微德薄，爲平原相猶恐不稱職。今爲大義，故來相助。公出此言，莫非疑劉備有吞併之心耶？若舉此念，皇天不佑！」謙曰：「此老夫之實情也。」再三相讓，玄德那裏肯受。糜竺進曰：「今兵臨城下，且當商議退敵之策。待事平之日，再當相讓可也。」玄德曰：「備當遺書於曹操，勸令解和。操若不從，廝殺未遲。」於是傳檄二寨，且按兵不動；遣人齎書以達曹操。"
+        },
+        {
+          "sourceRef": "011#p9",
+          "isAnchor": false,
+          "text": "卻說曹操正在軍中，與諸將議事，人報徐州有戰書到。操拆而觀之，乃劉備書也。書略曰："
+        },
+        {
+          "sourceRef": "011#p10",
+          "isAnchor": false,
+          "text": "備自關外得拜君顏，嗣後天各一方，不及趨侍。向者尊父曹侯，實因張闓不仁，以致被害，非陶恭祖之罪也。目今黃巾遺孽擾亂於外，董卓餘黨盤踞於內。願明公先朝廷之急而後私仇，撤徐州之兵，以救國難。則徐州幸甚！天下幸甚！"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0430",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0430",
+          "summary": "平原：」張飛見了，更不打話，直取于禁。",
+          "location": "平原",
+          "relationshipEdges": [
+            {
+              "fromId": "zhang-fei",
+              "toId": "yu-jin",
+              "type": "confronts",
+              "evidenceRefs": [
+                "011#p8"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `平原`",
+          "agent reviewer selected 1 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    }
+  ],
+  "contextExpansion": {
+    "generatedAt": "2026-05-02T04:55:26+00:00",
+    "fillAnswers": true,
+    "note": "DeepSeek proposals are review-only and do not publish canonical events."
+  }
+}

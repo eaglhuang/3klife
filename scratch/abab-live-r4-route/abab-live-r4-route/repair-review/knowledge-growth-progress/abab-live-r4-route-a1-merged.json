@@ -1,0 +1,878 @@
+{
+  "version": "1.0.0",
+  "roundId": "abab-live-r4-route-a1-merged",
+  "generatedAt": "2026-05-02T04:55:30+00:00",
+  "mode": "sanguo-knowledge-completion-estimate",
+  "canonicalWrites": false,
+  "inputs": {
+    "stableKnowledgePath": "artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json",
+    "observedSummaryPath": "artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-label-summary.json",
+    "eventsSummaryPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/events-summary.json",
+    "readyEventsPath": "/mnt/c/Users/User/3KLife/artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-live-r4-route-a1-merged-staged-ready-events.jsonl",
+    "genericCandidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl",
+    "femaleCandidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl",
+    "relationshipEvidencePath": "/mnt/c/Users/User/3KLife/artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-live-r4-route-a1-merged-staged-relationship-evidence.jsonl",
+    "eventQuestionSeedsPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/event-question-seeds/abab-live-r4-route-a1-merged/event-question-seeds.jsonl",
+    "sourceEventPacketsPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/source-event-packets/abab-live-r4-route-a1-merged/source-event-packets.jsonl",
+    "roundJsonPaths": [
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/baihua-r2-basic-profile-prompt.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/core-guanyu-boost-r1.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/repair-review-r1.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-adapter-fast-smoke.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-adapter-hints-smoke.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-llm-smoke.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-relationship-location-optimized.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-relationship-location.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-002-fast-proposals.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-002-hints-gate.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-003-agent-reviewer.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-004-agent-reviewer-wide.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-005-agent-reviewer-deep.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-006-agent-reviewer-tight-gate.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-007-agent-reviewer-transfer-filter.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-008-agent-reviewer-window-1.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-009-agent-reviewer-window-3.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-010-agent-reviewer-window-4.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-011-agent-reviewer-location-priority.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-012-agent-reviewer-directed-command.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-013-agent-reviewer-edge-aware-location.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-014-agent-reviewer-alias-fill.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-015-agent-reviewer-alias-gated.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-016-agent-reviewer-directed-command-v2.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-017-agent-reviewer-command-filter-v3.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-018-agent-reviewer-siege-gate-v4.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-019-agent-reviewer-normalized-gates.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-020-agent-reviewer-allied-pursuit-gate.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-021-agent-reviewer-wiki-courtesy-aliases.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-022-agent-reviewer-wiki-courtesy-pursuit-gate.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-023-agent-reviewer-wiki-courtesy-stability.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-024-courtesy-upstream-cohort-0.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-025-courtesy-upstream-cohort-5.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-026-courtesy-upstream-cohort-10.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-027-peer-deployment-gate.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-028-command-fp-gate.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-029-direct-confrontation-pattern.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-030-command-edge-cleanup.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-031-location-and-ally-guard.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-032-snapshot-and-report-gate.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-033-copyfile-snapshot.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-034-positioning-command-gate.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-035-expanded-top20-audit.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-036-expanded-top20-fp-gates.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-037-rescue-truce-peer-gates.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-038-review-only-summary-gate.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-039-cohort15-top20-audit.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-040-top30-depth-audit.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-041-top30-envoy-defection-gates.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-042-rescue-request-gates.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-043-top40-depth-audit.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-044-positive-battle-faction-gates.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-045-balanced-positive-faction-gates.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-female-focus-r2.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-female-focus-r3.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-female-focus.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-female-live.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-focus-rank-r1.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-focus-rank-r2.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-focus-rank-r3.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-focus-rank-r4.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-live-r2.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-live.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-r1-agent-offset-0.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-r2-agent-offset-5.batch.json",
+      "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-r3-agent-offset-10.batch.json",
+      "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.batch.json"
+    ]
+  },
+  "completion": {
+    "overallPercent": 58.39,
+    "rawScores": {
+      "sourceResolution": 0.965,
+      "personFoundation": 0.753,
+      "relationshipGraph": 0.4076,
+      "eventQuestionCoverage": 0.4657,
+      "taxonomyAngles": 0.7596,
+      "reviewValidation": 0.3596,
+      "femalePriority": 0.7333,
+      "pipelineReliability": 0.998
+    },
+    "weightedPoints": {
+      "sourceResolution": 5.79,
+      "personFoundation": 9.04,
+      "relationshipGraph": 8.97,
+      "eventQuestionCoverage": 14.9,
+      "taxonomyAngles": 9.87,
+      "reviewValidation": 2.16,
+      "femalePriority": 3.67,
+      "pipelineReliability": 3.99
+    },
+    "weights": {
+      "sourceResolution": 6.0,
+      "personFoundation": 12.0,
+      "relationshipGraph": 22.0,
+      "eventQuestionCoverage": 32.0,
+      "taxonomyAngles": 13.0,
+      "reviewValidation": 6.0,
+      "femalePriority": 5.0,
+      "pipelineReliability": 4.0
+    },
+    "targets": {
+      "people": 601,
+      "angleFamilies": 11,
+      "eventQuestionSlots": 6611,
+      "relationshipEdges": 1803,
+      "femaleProfiles": 36
+    },
+    "observedCounts": {
+      "resolvedMentionCount": 20718,
+      "unresolvedMentionCount": 109,
+      "reviewPendingMentionCount": 642,
+      "identitySeedCount": 601,
+      "basicProfileCoverageCounts": {
+        "identity-only": 6,
+        "observed-only": 360,
+        "plain-rich": 235
+      },
+      "relationshipEdgeCount": 39,
+      "sourceGroundedRelationshipEvidenceCount": 422,
+      "sourceGroundedRelationshipEvidenceUnits": 259.4,
+      "sourceGroundedRelationshipTypeCounts": {
+        "alliance_oath": 1,
+        "betrayal_surrender": 27,
+        "enemy_rival": 135,
+        "mentor_student": 23,
+        "parent_child": 15,
+        "patron_client": 35,
+        "protects": 14,
+        "ruler_subject": 126,
+        "sibling": 6,
+        "spouse": 28,
+        "sworn_sibling": 12
+      },
+      "plainRelationshipProposalCount": 322,
+      "readyEventCount": 206,
+      "sourceGroundedEventQuestionSeedCount": 2631,
+      "sourceGroundedEventQuestionSeedUnits": 759.85,
+      "sourceGroundedEventPacketCount": 1601,
+      "sourceGroundedEventPacketUnits": 586.38,
+      "genericBattleCandidateCount": 24,
+      "femaleInteractionCandidateCount": 90,
+      "previewAcceptedA": 1308,
+      "previewReviewB": 2114,
+      "previewTotalAnswers": 3422,
+      "sampledGeneralCount": 28,
+      "sampledFemaleGeneralCount": 12,
+      "sourceGroundedAngleFamilies": [
+        "activity_seed",
+        "affect_story",
+        "aptitude_talent",
+        "battle",
+        "decision_weight",
+        "faction_timeline",
+        "female_interaction",
+        "item_equipment",
+        "location_context",
+        "relationship",
+        "work_role"
+      ],
+      "sidecarAngleFamilies": [
+        "activity_seed",
+        "affect_story",
+        "aptitude_talent",
+        "decision_weight",
+        "faction_timeline",
+        "female_interaction",
+        "location_context",
+        "relationship",
+        "work_role"
+      ]
+    },
+    "roundSummary": {
+      "includedRounds": [
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/baihua-r2-basic-profile-prompt.batch.json",
+          "roundId": "baihua-r2-basic-profile-prompt",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 23,
+            "B": 76
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/core-guanyu-boost-r1.batch.json",
+          "roundId": "core-guanyu-boost-r1",
+          "candidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/current-guanyu-core10-core10-boost-queue.jsonl",
+          "answerCounts": {
+            "A": 34,
+            "B": 14
+          },
+          "cohortSize": 4
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/repair-review-r1.batch.json",
+          "roundId": "repair-review-r1",
+          "candidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/backlog-repair-tasks/repair-review-r1-repair-review-candidates.jsonl",
+          "answerCounts": {
+            "A": 20,
+            "B": 10
+          },
+          "cohortSize": 6
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-adapter-fast-smoke.batch.json",
+          "roundId": "round-001-adapter-fast-smoke",
+          "candidatesPath": "",
+          "answerCounts": {
+            "B": 1
+          },
+          "cohortSize": 1
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-adapter-hints-smoke.batch.json",
+          "roundId": "round-001-adapter-hints-smoke",
+          "candidatesPath": "",
+          "answerCounts": {
+            "B": 1
+          },
+          "cohortSize": 1
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-llm-smoke.batch.json",
+          "roundId": "round-001-llm-smoke",
+          "candidatesPath": "",
+          "answerCounts": {
+            "B": 1
+          },
+          "cohortSize": 1
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-relationship-location-optimized.batch.json",
+          "roundId": "round-001-relationship-location-optimized",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 2,
+            "B": 3
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-001-relationship-location.batch.json",
+          "roundId": "round-001-relationship-location",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 7
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-002-fast-proposals.batch.json",
+          "roundId": "round-002-fast-proposals",
+          "candidatesPath": "",
+          "answerCounts": {
+            "B": 6
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-002-hints-gate.batch.json",
+          "roundId": "round-002-hints-gate",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 4,
+            "B": 4
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-003-agent-reviewer.batch.json",
+          "roundId": "round-003-agent-reviewer",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 2,
+            "B": 11
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-004-agent-reviewer-wide.batch.json",
+          "roundId": "round-004-agent-reviewer-wide",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 2,
+            "B": 11
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-005-agent-reviewer-deep.batch.json",
+          "roundId": "round-005-agent-reviewer-deep",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 5,
+            "B": 16
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-006-agent-reviewer-tight-gate.batch.json",
+          "roundId": "round-006-agent-reviewer-tight-gate",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 4,
+            "B": 17
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-007-agent-reviewer-transfer-filter.batch.json",
+          "roundId": "round-007-agent-reviewer-transfer-filter",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 4,
+            "B": 17
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-008-agent-reviewer-window-1.batch.json",
+          "roundId": "round-008-agent-reviewer-window-1",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 2,
+            "B": 19
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-009-agent-reviewer-window-3.batch.json",
+          "roundId": "round-009-agent-reviewer-window-3",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 4,
+            "B": 17
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-010-agent-reviewer-window-4.batch.json",
+          "roundId": "round-010-agent-reviewer-window-4",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 4,
+            "B": 17
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-011-agent-reviewer-location-priority.batch.json",
+          "roundId": "round-011-agent-reviewer-location-priority",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 9,
+            "B": 12
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-012-agent-reviewer-directed-command.batch.json",
+          "roundId": "round-012-agent-reviewer-directed-command",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 7,
+            "B": 14
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-013-agent-reviewer-edge-aware-location.batch.json",
+          "roundId": "round-013-agent-reviewer-edge-aware-location",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 7,
+            "B": 14
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-014-agent-reviewer-alias-fill.batch.json",
+          "roundId": "round-014-agent-reviewer-alias-fill",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 13,
+            "B": 8
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-015-agent-reviewer-alias-gated.batch.json",
+          "roundId": "round-015-agent-reviewer-alias-gated",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 11,
+            "B": 10
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-016-agent-reviewer-directed-command-v2.batch.json",
+          "roundId": "round-016-agent-reviewer-directed-command-v2",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 12,
+            "B": 9
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-017-agent-reviewer-command-filter-v3.batch.json",
+          "roundId": "round-017-agent-reviewer-command-filter-v3",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 11,
+            "B": 10
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-018-agent-reviewer-siege-gate-v4.batch.json",
+          "roundId": "round-018-agent-reviewer-siege-gate-v4",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 11,
+            "B": 10
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-019-agent-reviewer-normalized-gates.batch.json",
+          "roundId": "round-019-agent-reviewer-normalized-gates",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 11,
+            "B": 10
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-020-agent-reviewer-allied-pursuit-gate.batch.json",
+          "roundId": "round-020-agent-reviewer-allied-pursuit-gate",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 11,
+            "B": 10
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-021-agent-reviewer-wiki-courtesy-aliases.batch.json",
+          "roundId": "round-021-agent-reviewer-wiki-courtesy-aliases",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 12,
+            "B": 9
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-022-agent-reviewer-wiki-courtesy-pursuit-gate.batch.json",
+          "roundId": "round-022-agent-reviewer-wiki-courtesy-pursuit-gate",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 11,
+            "B": 10
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-023-agent-reviewer-wiki-courtesy-stability.batch.json",
+          "roundId": "round-023-agent-reviewer-wiki-courtesy-stability",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 11,
+            "B": 10
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-024-courtesy-upstream-cohort-0.batch.json",
+          "roundId": "round-024-courtesy-upstream-cohort-0",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 22,
+            "B": 28
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-025-courtesy-upstream-cohort-5.batch.json",
+          "roundId": "round-025-courtesy-upstream-cohort-5",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 24,
+            "B": 20
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-026-courtesy-upstream-cohort-10.batch.json",
+          "roundId": "round-026-courtesy-upstream-cohort-10",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 12,
+            "B": 6
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-027-peer-deployment-gate.batch.json",
+          "roundId": "round-027-peer-deployment-gate",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 51,
+            "B": 61
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-028-command-fp-gate.batch.json",
+          "roundId": "round-028-command-fp-gate",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 42,
+            "B": 70
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-029-direct-confrontation-pattern.batch.json",
+          "roundId": "round-029-direct-confrontation-pattern",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 44,
+            "B": 68
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-030-command-edge-cleanup.batch.json",
+          "roundId": "round-030-command-edge-cleanup",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 42,
+            "B": 70
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-031-location-and-ally-guard.batch.json",
+          "roundId": "round-031-location-and-ally-guard",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 46,
+            "B": 66
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-032-snapshot-and-report-gate.batch.json",
+          "roundId": "round-032-snapshot-and-report-gate",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 46,
+            "B": 66
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-033-copyfile-snapshot.batch.json",
+          "roundId": "round-033-copyfile-snapshot",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 46,
+            "B": 66
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-034-positioning-command-gate.batch.json",
+          "roundId": "round-034-positioning-command-gate",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 45,
+            "B": 67
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-035-expanded-top20-audit.batch.json",
+          "roundId": "round-035-expanded-top20-audit",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 63,
+            "B": 87
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-036-expanded-top20-fp-gates.batch.json",
+          "roundId": "round-036-expanded-top20-fp-gates",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 56,
+            "B": 94
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-037-rescue-truce-peer-gates.batch.json",
+          "roundId": "round-037-rescue-truce-peer-gates",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 53,
+            "B": 97
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-038-review-only-summary-gate.batch.json",
+          "roundId": "round-038-review-only-summary-gate",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 50,
+            "B": 100
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-039-cohort15-top20-audit.batch.json",
+          "roundId": "round-039-cohort15-top20-audit",
+          "candidatesPath": "",
+          "answerCounts": {},
+          "cohortSize": 0
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-040-top30-depth-audit.batch.json",
+          "roundId": "round-040-top30-depth-audit",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 54,
+            "B": 108
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-041-top30-envoy-defection-gates.batch.json",
+          "roundId": "round-041-top30-envoy-defection-gates",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 52,
+            "B": 110
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-042-rescue-request-gates.batch.json",
+          "roundId": "round-042-rescue-request-gates",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 51,
+            "B": 111
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-043-top40-depth-audit.batch.json",
+          "roundId": "round-043-top40-depth-audit",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 51,
+            "B": 111
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-044-positive-battle-faction-gates.batch.json",
+          "roundId": "round-044-positive-battle-faction-gates",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 21,
+            "B": 141
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/round-045-balanced-positive-faction-gates.batch.json",
+          "roundId": "round-045-balanced-positive-faction-gates",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 31,
+            "B": 131
+          },
+          "cohortSize": 15
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-female-focus-r2.batch.json",
+          "roundId": "wenyan-preview-next-female-focus-r2",
+          "candidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl",
+          "answerCounts": {
+            "A": 21
+          },
+          "cohortSize": 7
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-female-focus-r3.batch.json",
+          "roundId": "wenyan-preview-next-female-focus-r3",
+          "candidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl",
+          "answerCounts": {
+            "A": 21
+          },
+          "cohortSize": 7
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-female-focus.batch.json",
+          "roundId": "wenyan-preview-next-female-focus",
+          "candidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl",
+          "answerCounts": {
+            "A": 19,
+            "B": 2
+          },
+          "cohortSize": 7
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-female-live.batch.json",
+          "roundId": "wenyan-preview-next-female-live",
+          "candidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl",
+          "answerCounts": {
+            "A": 11,
+            "B": 7
+          },
+          "cohortSize": 6
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-focus-rank-r1.batch.json",
+          "roundId": "wenyan-preview-next-generic-focus-rank-r1",
+          "candidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl",
+          "answerCounts": {
+            "A": 9,
+            "B": 7
+          },
+          "cohortSize": 8
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-focus-rank-r2.batch.json",
+          "roundId": "wenyan-preview-next-generic-focus-rank-r2",
+          "candidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl",
+          "answerCounts": {
+            "A": 12,
+            "B": 4
+          },
+          "cohortSize": 8
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-focus-rank-r3.batch.json",
+          "roundId": "wenyan-preview-next-generic-focus-rank-r3",
+          "candidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl",
+          "answerCounts": {
+            "A": 11,
+            "B": 5
+          },
+          "cohortSize": 8
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-focus-rank-r4.batch.json",
+          "roundId": "wenyan-preview-next-generic-focus-rank-r4",
+          "candidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl",
+          "answerCounts": {
+            "A": 13,
+            "B": 3
+          },
+          "cohortSize": 8
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-live-r2.batch.json",
+          "roundId": "wenyan-preview-next-generic-live-r2",
+          "candidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl",
+          "answerCounts": {
+            "A": 7,
+            "B": 9
+          },
+          "cohortSize": 8
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-next-generic-live.batch.json",
+          "roundId": "wenyan-preview-next-generic-live",
+          "candidatesPath": "artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl",
+          "answerCounts": {
+            "A": 7,
+            "B": 9
+          },
+          "cohortSize": 8
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-r1-agent-offset-0.batch.json",
+          "roundId": "wenyan-preview-r1-agent-offset-0",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 5,
+            "B": 1
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-r2-agent-offset-5.batch.json",
+          "roundId": "wenyan-preview-r2-agent-offset-5",
+          "candidatesPath": "",
+          "answerCounts": {
+            "B": 2
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds/wenyan-preview-r3-agent-offset-10.batch.json",
+          "roundId": "wenyan-preview-r3-agent-offset-10",
+          "candidatesPath": "",
+          "answerCounts": {
+            "A": 1
+          },
+          "cohortSize": 5
+        },
+        {
+          "path": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.batch.json",
+          "roundId": "abab-live-r4-route-a1",
+          "candidatesPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl",
+          "answerCounts": {
+            "A": 15,
+            "B": 10
+          },
+          "cohortSize": 5
+        }
+      ],
+      "answerCounts": {
+        "A": 1308,
+        "B": 2114
+      },
+      "acceptedA": 1308,
+      "reviewB": 2114,
+      "totalAnswers": 3422,
+      "aRate": 0.38223261250730567,
+      "sampledGeneralCount": 28,
+      "sampledFemaleGeneralCount": 12,
+      "rawErrorCount": 17,
+      "rawParsedCount": 512,
+      "timedOutStepCount": 0,
+      "resultCount": 523
+    },
+    "formula": {
+      "overall": "sum(componentScore * componentWeight), weights sum to 100",
+      "sourceResolution": "resolvedMentions / (resolvedMentions + unresolvedMentions + reviewPendingMentions)",
+      "personFoundation": "0.25*identityCoverage + 0.45*basicProfileDepth + 0.20*roleCoverage + 0.10*missingCoverageScore",
+      "relationshipGraph": "0.75*((readyRelationshipEdges + weightedSourceGroundedRelationshipEvidence + 0.25*plainRelationshipProposals) / targetRelationshipEdges) + 0.25*(relationshipTypeCount / 11); evidence weights: confidence>=0.8 => 0.70, >=0.7 => 0.45, >=0.6 => 0.20",
+      "eventQuestionCoverage": "(readyEvents + 0.75*previewA + 0.25*previewB + 0.15*candidates + weightedSourceGroundedQuestionSeeds + weightedSourceEventPackets) / targetEventQuestionSlots; seed slots are capped at 0.35 units each; source event packets are capped at 0.40 units each",
+      "taxonomyAngles": "0.20*allObservedAngleBreadth + 0.35*sourceGroundedAngleBreadth + 0.45*eventQuestionCoverage",
+      "reviewValidation": "0.65*previewARate + 0.25*sampledGeneralCoverage + 0.10*reviewReliability",
+      "femalePriority": "0.35*femaleProfileCoverage + 0.35*femaleValidatedCoverage + 0.30*femalePreviewARate",
+      "pipelineReliability": "stable/events artifacts present plus latest preview no-error/no-timeout reliability"
+    }
+  }
+}

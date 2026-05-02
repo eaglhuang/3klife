@@ -1,0 +1,99 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:15:57+00:00",
+  "mode": "sanguo-progress-advancement-loop",
+  "canonicalWrites": false,
+  "dryRun": true,
+  "runId": "progress-advancement-smoke",
+  "runRoot": "scratch/progress-advancement-smoke/progress-advancement-smoke",
+  "initialBaselinePaths": {
+    "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-ready-events.jsonl",
+    "baseProgress": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/repair-review-r1-merged.json",
+    "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-relationship-evidence.jsonl",
+    "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-refine-r1-reviewed-b-edit-backlog.jsonl"
+  },
+  "finalBaselinePaths": {
+    "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/progress-advancement-smoke-a1-merged-staged-ready-events.jsonl",
+    "baseProgress": "scratch/progress-advancement-smoke/progress-advancement-smoke/repair-review/knowledge-growth-progress/progress-advancement-smoke-a1-merged.json",
+    "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/progress-advancement-smoke-a1-merged-staged-relationship-evidence.jsonl",
+    "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/progress-advancement-smoke-a1-merged-reviewed-b-edit-backlog.jsonl"
+  },
+  "policy": {
+    "maxRounds": 1,
+    "maxABCycles": 1,
+    "topGenerals": 5,
+    "topPerGeneral": 5,
+    "noImprovementThreshold": 0.05,
+    "noImprovementPatience": 2,
+    "pendingReviewLimit": 15,
+    "sameResidualRepeatLimit": 2,
+    "reviewBatchSize": 3,
+    "failureRateLimit": 0.2,
+    "reviewerPreset": "agent",
+    "reviewerProvider": "agent-reviewer",
+    "stepTimeoutSeconds": 30
+  },
+  "roundsExecuted": 1,
+  "abCyclesExecuted": 1,
+  "bReviewCount": 0,
+  "pilotPendingReviewCount": 4,
+  "pendingReviewCount": 4,
+  "stopReason": "max-ab-cycles",
+  "nextRoute": "C-residual-dossier",
+  "nextRecommendedAction": "AB cycle cap reached; convert the remaining residuals into human/rule-fix tasks before continuing.",
+  "baselineOverallPercent": 58.22,
+  "finalOverallPercent": null,
+  "totalDeltaOverallPercent": null,
+  "reviewBatches": [],
+  "bReviews": [],
+  "residualSummary": {
+    "rootCauseCounts": {},
+    "repeatedResidualCount": 0
+  },
+  "repeatedResiduals": [],
+  "rounds": [
+    {
+      "roundIndex": 1,
+      "roundId": "progress-advancement-smoke-a1",
+      "success": true,
+      "summaryPath": "scratch/progress-advancement-smoke/progress-advancement-smoke/repair-review/knowledge-growth-progress/progress-advancement-smoke-a1-campaign-summary.json",
+      "baselineInputs": {
+        "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-ready-events.jsonl",
+        "baseProgress": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/repair-review-r1-merged.json",
+        "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-relationship-evidence.jsonl",
+        "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-refine-r1-reviewed-b-edit-backlog.jsonl"
+      },
+      "nextBaselineCandidates": {
+        "baseProgress": "scratch/progress-advancement-smoke/progress-advancement-smoke/repair-review/knowledge-growth-progress/progress-advancement-smoke-a1-merged.json",
+        "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/progress-advancement-smoke-a1-merged-staged-ready-events.jsonl",
+        "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/progress-advancement-smoke-a1-merged-staged-relationship-evidence.jsonl",
+        "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/progress-advancement-smoke-a1-merged-reviewed-b-edit-backlog.jsonl"
+      },
+      "command": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python /mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/run_repair_review_campaign.py --round-id progress-advancement-smoke-a1 --edit-backlog artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-refine-r1-reviewed-b-edit-backlog.jsonl --base-events artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-ready-events.jsonl --base-relationship-evidence artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-relationship-evidence.jsonl --base-progress artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/repair-review-r1-merged.json --repair-output-root scratch/progress-advancement-smoke/progress-advancement-smoke/repair-review/backlog-repair-tasks --rounds-root scratch/progress-advancement-smoke/progress-advancement-smoke/repair-review/knowledge-growth-rounds --event-seed-root scratch/progress-advancement-smoke/progress-advancement-smoke/repair-review/event-question-seeds --packet-root scratch/progress-advancement-smoke/progress-advancement-smoke/repair-review/source-event-packets --progress-root scratch/progress-advancement-smoke/progress-advancement-smoke/repair-review/knowledge-growth-progress --top-generals 5 --top-per-general 5 --reviewer-preset agent --reviewer-provider agent-reviewer --step-timeout-seconds 30",
+        "returnCode": 0,
+        "dryRun": true,
+        "stdout": "",
+        "stderr": ""
+      },
+      "campaignSummary": {
+        "mode": "repair-review-campaign",
+        "canonicalWrites": false,
+        "roundId": "progress-advancement-smoke-a1",
+        "selectedGenerals": [],
+        "deltaOverallPercent": null
+      },
+      "repairTaskSummary": {
+        "priorityCounts": {},
+        "repairActionCounts": {},
+        "topFocusGenerals": {}
+      },
+      "pilotPendingReviewCountAfterRound": 4,
+      "eventReviewPendingCountAfterRound": 0,
+      "repeatedResidualCountAfterRound": 0,
+      "repeatedResidualsPreview": [],
+      "weakImprovementCount": 0,
+      "failureRate": 0.0
+    }
+  ]
+}

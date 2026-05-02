@@ -1,0 +1,248 @@
+{
+  "version": "1.0.0",
+  "roundId": "abab-live-r4-route-a1",
+  "generatedAt": "2026-05-02T04:55:26+00:00",
+  "mode": "knowledge-growth-round-batch-enrichment",
+  "canonicalWrites": false,
+  "promptOnly": false,
+  "apiUrl": "http://172.31.80.1:11435/api/chat",
+  "candidatesPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl",
+  "reviewerPreset": "agent",
+  "reviewerProvider": "agent-reviewer",
+  "model": null,
+  "timeoutMs": null,
+  "numPredict": null,
+  "stepTimeoutSeconds": 30,
+  "cohortOffset": 0,
+  "generalIds": [
+    "cao-cao",
+    "liu-bei",
+    "xiahou-dun",
+    "zhang-fei",
+    "li-dian"
+  ],
+  "cohort": [
+    {
+      "generalId": "cao-cao",
+      "genericCandidateCount": 1285
+    },
+    {
+      "generalId": "xiahou-dun",
+      "genericCandidateCount": 855
+    },
+    {
+      "generalId": "liu-bei",
+      "genericCandidateCount": 792
+    },
+    {
+      "generalId": "li-dian",
+      "genericCandidateCount": 705
+    },
+    {
+      "generalId": "zhang-fei",
+      "genericCandidateCount": 423
+    }
+  ],
+  "results": [
+    {
+      "generalId": "cao-cao",
+      "displayName": "cao-cao",
+      "status": "live-candidate",
+      "genericCandidateCount": 1285,
+      "keywordTotal": 0,
+      "paths": {
+        "choices": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/cao-cao/event-review-choices.cao-cao.md",
+        "answers": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/cao-cao/event-review-answers.cao-cao.todo.json",
+        "enrichedAnswers": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/cao-cao/event-review-answers.cao-cao.enriched.todo.json",
+        "report": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/cao-cao/event-review-context.cao-cao-report.json",
+        "raw": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/cao-cao/event-review-context.cao-cao-raw.json"
+      },
+      "originalAnswerCounts": {
+        "A": 5
+      },
+      "enrichedAnswerCounts": {
+        "A": 5
+      },
+      "reportAnswerCounts": {
+        "A": 5
+      },
+      "rawErrorCount": 0,
+      "rawParsedCount": 1,
+      "generate": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/generate_event_review_choices.py --candidates scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl --general-id cao-cao --output-root artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-cao-cao --top 5 --overwrite",
+        "returnCode": 0,
+        "stdout": "[generate_event_review_choices] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-cao-cao/event-review-choices.cao-cao.md\n[generate_event_review_choices] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-cao-cao/event-review-answers.cao-cao.todo.json\n[generate_event_review_choices] questions=5 canonicalWrites=false",
+        "stderr": "",
+        "timedOut": false
+      },
+      "enrich": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/enrich_event_review_context.py --answers artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-cao-cao/event-review-answers.cao-cao.todo.json --reviewer-preset agent --api-url http://172.31.80.1:11435/api/chat --window-before 2 --window-after 2 --fill-answers --overwrite --reviewer-provider agent-reviewer",
+        "returnCode": 0,
+        "stdout": "[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-cao-cao/event-review-context.cao-cao-bundle.json\n[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-cao-cao/event-review-context.cao-cao-report.json\n[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-cao-cao/event-review-answers.cao-cao.enriched.todo.json\n[enrich_event_review_context] proposals=5 canonicalWrites=false",
+        "stderr": "",
+        "timedOut": false
+      }
+    },
+    {
+      "generalId": "xiahou-dun",
+      "displayName": "xiahou-dun",
+      "status": "live-candidate",
+      "genericCandidateCount": 855,
+      "keywordTotal": 0,
+      "paths": {
+        "choices": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/xiahou-dun/event-review-choices.xiahou-dun.md",
+        "answers": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/xiahou-dun/event-review-answers.xiahou-dun.todo.json",
+        "enrichedAnswers": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/xiahou-dun/event-review-answers.xiahou-dun.enriched.todo.json",
+        "report": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/xiahou-dun/event-review-context.xiahou-dun-report.json",
+        "raw": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/xiahou-dun/event-review-context.xiahou-dun-raw.json"
+      },
+      "originalAnswerCounts": {
+        "A": 5
+      },
+      "enrichedAnswerCounts": {
+        "B": 5
+      },
+      "reportAnswerCounts": {
+        "B": 5
+      },
+      "rawErrorCount": 0,
+      "rawParsedCount": 1,
+      "generate": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/generate_event_review_choices.py --candidates scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl --general-id xiahou-dun --output-root artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-xiahou-dun --top 5 --overwrite",
+        "returnCode": 0,
+        "stdout": "[generate_event_review_choices] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-xiahou-dun/event-review-choices.xiahou-dun.md\n[generate_event_review_choices] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-xiahou-dun/event-review-answers.xiahou-dun.todo.json\n[generate_event_review_choices] questions=5 canonicalWrites=false",
+        "stderr": "",
+        "timedOut": false
+      },
+      "enrich": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/enrich_event_review_context.py --answers artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-xiahou-dun/event-review-answers.xiahou-dun.todo.json --reviewer-preset agent --api-url http://172.31.80.1:11435/api/chat --window-before 2 --window-after 2 --fill-answers --overwrite --reviewer-provider agent-reviewer",
+        "returnCode": 0,
+        "stdout": "[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-xiahou-dun/event-review-context.xiahou-dun-bundle.json\n[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-xiahou-dun/event-review-context.xiahou-dun-report.json\n[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-xiahou-dun/event-review-answers.xiahou-dun.enriched.todo.json\n[enrich_event_review_context] proposals=5 canonicalWrites=false",
+        "stderr": "",
+        "timedOut": false
+      }
+    },
+    {
+      "generalId": "liu-bei",
+      "displayName": "liu-bei",
+      "status": "live-candidate",
+      "genericCandidateCount": 792,
+      "keywordTotal": 0,
+      "paths": {
+        "choices": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/liu-bei/event-review-choices.liu-bei.md",
+        "answers": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/liu-bei/event-review-answers.liu-bei.todo.json",
+        "enrichedAnswers": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/liu-bei/event-review-answers.liu-bei.enriched.todo.json",
+        "report": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/liu-bei/event-review-context.liu-bei-report.json",
+        "raw": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/liu-bei/event-review-context.liu-bei-raw.json"
+      },
+      "originalAnswerCounts": {
+        "A": 5
+      },
+      "enrichedAnswerCounts": {
+        "A": 5
+      },
+      "reportAnswerCounts": {
+        "A": 5
+      },
+      "rawErrorCount": 0,
+      "rawParsedCount": 1,
+      "generate": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/generate_event_review_choices.py --candidates scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl --general-id liu-bei --output-root artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-liu-bei --top 5 --overwrite",
+        "returnCode": 0,
+        "stdout": "[generate_event_review_choices] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-liu-bei/event-review-choices.liu-bei.md\n[generate_event_review_choices] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-liu-bei/event-review-answers.liu-bei.todo.json\n[generate_event_review_choices] questions=5 canonicalWrites=false",
+        "stderr": "",
+        "timedOut": false
+      },
+      "enrich": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/enrich_event_review_context.py --answers artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-liu-bei/event-review-answers.liu-bei.todo.json --reviewer-preset agent --api-url http://172.31.80.1:11435/api/chat --window-before 2 --window-after 2 --fill-answers --overwrite --reviewer-provider agent-reviewer",
+        "returnCode": 0,
+        "stdout": "[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-liu-bei/event-review-context.liu-bei-bundle.json\n[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-liu-bei/event-review-context.liu-bei-report.json\n[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-liu-bei/event-review-answers.liu-bei.enriched.todo.json\n[enrich_event_review_context] proposals=5 canonicalWrites=false",
+        "stderr": "",
+        "timedOut": false
+      }
+    },
+    {
+      "generalId": "li-dian",
+      "displayName": "li-dian",
+      "status": "live-candidate",
+      "genericCandidateCount": 705,
+      "keywordTotal": 0,
+      "paths": {
+        "choices": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/li-dian/event-review-choices.li-dian.md",
+        "answers": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/li-dian/event-review-answers.li-dian.todo.json",
+        "enrichedAnswers": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/li-dian/event-review-answers.li-dian.enriched.todo.json",
+        "report": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/li-dian/event-review-context.li-dian-report.json",
+        "raw": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/li-dian/event-review-context.li-dian-raw.json"
+      },
+      "originalAnswerCounts": {
+        "A": 5
+      },
+      "enrichedAnswerCounts": {
+        "B": 5
+      },
+      "reportAnswerCounts": {
+        "B": 5
+      },
+      "rawErrorCount": 0,
+      "rawParsedCount": 1,
+      "generate": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/generate_event_review_choices.py --candidates scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl --general-id li-dian --output-root artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-li-dian --top 5 --overwrite",
+        "returnCode": 0,
+        "stdout": "[generate_event_review_choices] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-li-dian/event-review-choices.li-dian.md\n[generate_event_review_choices] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-li-dian/event-review-answers.li-dian.todo.json\n[generate_event_review_choices] questions=5 canonicalWrites=false",
+        "stderr": "",
+        "timedOut": false
+      },
+      "enrich": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/enrich_event_review_context.py --answers artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-li-dian/event-review-answers.li-dian.todo.json --reviewer-preset agent --api-url http://172.31.80.1:11435/api/chat --window-before 2 --window-after 2 --fill-answers --overwrite --reviewer-provider agent-reviewer",
+        "returnCode": 0,
+        "stdout": "[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-li-dian/event-review-context.li-dian-bundle.json\n[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-li-dian/event-review-context.li-dian-report.json\n[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-li-dian/event-review-answers.li-dian.enriched.todo.json\n[enrich_event_review_context] proposals=5 canonicalWrites=false",
+        "stderr": "",
+        "timedOut": false
+      }
+    },
+    {
+      "generalId": "zhang-fei",
+      "displayName": "zhang-fei",
+      "status": "live-candidate",
+      "genericCandidateCount": 423,
+      "keywordTotal": 0,
+      "paths": {
+        "choices": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/zhang-fei/event-review-choices.zhang-fei.md",
+        "answers": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/zhang-fei/event-review-answers.zhang-fei.todo.json",
+        "enrichedAnswers": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/zhang-fei/event-review-answers.zhang-fei.enriched.todo.json",
+        "report": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/zhang-fei/event-review-context.zhang-fei-report.json",
+        "raw": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/knowledge-growth-rounds/abab-live-r4-route-a1.snapshots/zhang-fei/event-review-context.zhang-fei-raw.json"
+      },
+      "originalAnswerCounts": {
+        "A": 5
+      },
+      "enrichedAnswerCounts": {
+        "A": 5
+      },
+      "reportAnswerCounts": {
+        "A": 5
+      },
+      "rawErrorCount": 0,
+      "rawParsedCount": 1,
+      "generate": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/generate_event_review_choices.py --candidates scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl --general-id zhang-fei --output-root artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-zhang-fei --top 5 --overwrite",
+        "returnCode": 0,
+        "stdout": "[generate_event_review_choices] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-zhang-fei/event-review-choices.zhang-fei.md\n[generate_event_review_choices] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-zhang-fei/event-review-answers.zhang-fei.todo.json\n[generate_event_review_choices] questions=5 canonicalWrites=false",
+        "stderr": "",
+        "timedOut": false
+      },
+      "enrich": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/enrich_event_review_context.py --answers artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-zhang-fei/event-review-answers.zhang-fei.todo.json --reviewer-preset agent --api-url http://172.31.80.1:11435/api/chat --window-before 2 --window-after 2 --fill-answers --overwrite --reviewer-provider agent-reviewer",
+        "returnCode": 0,
+        "stdout": "[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-zhang-fei/event-review-context.zhang-fei-bundle.json\n[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-zhang-fei/event-review-context.zhang-fei-report.json\n[enrich_event_review_context] wrote artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-zhang-fei/event-review-answers.zhang-fei.enriched.todo.json\n[enrich_event_review_context] proposals=5 canonicalWrites=false",
+        "stderr": "",
+        "timedOut": false
+      }
+    }
+  ],
+  "optimizationNotes": [
+    "仍有 B 題，下一輪應強化 location terms、人物 alias 與 relationship verb pattern。",
+    "已產生 A 題，可進入人工 review/apply script，而不是手改 canonical events。",
+    "Round 1 優先目標維持 relationshipEdges 與 location，先讓 battle candidates 從 B 轉 A，再擴 affect/talent/work。"
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "model": "sanguo-agent-reviewer-v1",
+  "reviewerAdapter": {
+    "provider": "agent-reviewer",
+    "preset": "agent",
+    "model": "sanguo-agent-reviewer-v1",
+    "apiUrl": null,
+    "timeoutMs": 0,
+    "numCtx": 0,
+    "numPredict": 0,
+    "temperature": 0.0,
+    "topP": 0.0,
+    "repeatPenalty": 0.0
+  },
+  "requestMode": "per-question",
+  "requests": [
+    {
+      "model": "sanguo-agent-reviewer-v1",
+      "adapter": {
+        "provider": "agent-reviewer",
+        "preset": "agent",
+        "model": "sanguo-agent-reviewer-v1",
+        "apiUrl": null,
+        "timeoutMs": 0,
+        "numCtx": 0,
+        "numPredict": 0,
+        "temperature": 0.0,
+        "topP": 0.0,
+        "repeatPenalty": 0.0
+      },
+      "parsedJson": {
+        "answers": [
+          {
+            "eventKey": "repair.abab-route-live-a1.zhang-liao.generic-battle-012-p4.1046",
+            "recommendedAnswer": "A",
+            "confidence": 0.86,
+            "edits": {
+              "eventKey": "repair.abab-route-live-a1.zhang-liao.generic-battle-012-p4.1046",
+              "summary": "陽城：卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；",
+              "location": "陽城",
+              "relationshipEdges": [
+                {
+                  "fromId": "cao-cao",
+                  "toId": "dian-wei",
+                  "type": "commands",
+                  "evidenceRefs": [
+                    "012#p5"
+                  ],
+                  "edgeConfidence": 0.82,
+                  "edgeStrength": 0.7
+                }
+              ],
+              "moodTags": [
+                "agent-reviewed"
+              ]
+            },
+            "reasons": [
+              "agent reviewer selected source-grounded location `陽城`",
+              "agent reviewer selected 1 strong relationship edge(s)",
+              "summary derived from candidate hint evidence text"
+            ],
+            "risks": []
+          },
+          {
+            "eventKey": "repair.abab-route-live-a1.zhang-liao.generic-battle-012-p4.0938",
+            "recommendedAnswer": "A",
+            "confidence": 0.86,
+            "edits": {
+              "eventKey": "repair.abab-route-live-a1.zhang-liao.generic-battle-012-p4.0938",
+              "summary": "陽城：卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；",
+              "location": "陽城",
+              "relationshipEdges": [
+                {
+                  "fromId": "cao-cao",
+                  "toId": "dian-wei",
+                  "type": "commands",
+                  "evidenceRefs": [
+                    "012#p5"
+                  ],
+                  "edgeConfidence": 0.82,
+                  "edgeStrength": 0.7
+                }
+              ],
+              "moodTags": [
+                "agent-reviewed"
+              ]
+            },
+            "reasons": [
+              "agent reviewer selected source-grounded location `陽城`",
+              "agent reviewer selected 1 strong relationship edge(s)",
+              "summary derived from candidate hint evidence text"
+            ],
+            "risks": []
+          }
+        ],
+        "pipelineNotes": [
+          "agent reviewer used candidateHints, strict location gate, and strong relationship edge gate"
+        ]
+      },
+      "skipped": "local-agent-reviewer"
+    }
+  ]
+}

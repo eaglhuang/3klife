@@ -1,0 +1,323 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:20+00:00",
+  "mode": "event-review-mcq",
+  "canonicalWrites": false,
+  "generalId": "cao-cao",
+  "inputs": {
+    "candidatesPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl",
+    "reasoningReportPath": "artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.json"
+  },
+  "questions": [
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.1046",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.1046",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p4"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "cao-hong",
+        "dian-wei",
+        "hao-meng",
+        "hou-cheng",
+        "le-jin",
+        "li-dian",
+        "romance-person-66f9-6027",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "zhang-liao"
+      ],
+      "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+      "sourceQuote": "鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.1046",
+        "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+        "location": "陽城",
+        "relationshipEdges": [
+          {
+            "fromId": "cao-cao",
+            "toId": "dian-wei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p4"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "dian-wei",
+            "toId": "cao-cao",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p4"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0938",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0938",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p4"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "cao-hong",
+        "dian-wei",
+        "hao-meng",
+        "hou-cheng",
+        "le-jin",
+        "li-dian",
+        "romance-person-66f9-6027",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "zhang-liao"
+      ],
+      "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+      "sourceQuote": "鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0938",
+        "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+        "location": "陽城",
+        "relationshipEdges": [
+          {
+            "fromId": "cao-cao",
+            "toId": "dian-wei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p4"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "dian-wei",
+            "toId": "cao-cao",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p4"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0838",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0838",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p4"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "cao-hong",
+        "dian-wei",
+        "hao-meng",
+        "hou-cheng",
+        "le-jin",
+        "li-dian",
+        "romance-person-66f9-6027",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "zhang-liao"
+      ],
+      "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+      "sourceQuote": "鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0838",
+        "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+        "location": "陽城",
+        "relationshipEdges": [
+          {
+            "fromId": "cao-cao",
+            "toId": "dian-wei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p4"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "dian-wei",
+            "toId": "cao-cao",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p4"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0741",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0741",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p4"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "cao-hong",
+        "dian-wei",
+        "hao-meng",
+        "hou-cheng",
+        "le-jin",
+        "li-dian",
+        "romance-person-66f9-6027",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "zhang-liao"
+      ],
+      "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+      "sourceQuote": "鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0741",
+        "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+        "location": "陽城",
+        "relationshipEdges": [
+          {
+            "fromId": "cao-cao",
+            "toId": "dian-wei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p4"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "dian-wei",
+            "toId": "cao-cao",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p4"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0647",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0647",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p4"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "cao-hong",
+        "dian-wei",
+        "hao-meng",
+        "hou-cheng",
+        "le-jin",
+        "li-dian",
+        "romance-person-66f9-6027",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "zhang-liao"
+      ],
+      "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+      "sourceQuote": "鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0647",
+        "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+        "location": "陽城",
+        "relationshipEdges": [
+          {
+            "fromId": "cao-cao",
+            "toId": "dian-wei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p4"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "dian-wei",
+            "toId": "cao-cao",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p4"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    }
+  ]
+}

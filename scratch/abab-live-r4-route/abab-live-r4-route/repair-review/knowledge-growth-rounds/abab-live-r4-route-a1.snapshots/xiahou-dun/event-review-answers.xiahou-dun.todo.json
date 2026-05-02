@@ -1,0 +1,396 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:21+00:00",
+  "mode": "event-review-mcq",
+  "canonicalWrites": false,
+  "generalId": "xiahou-dun",
+  "inputs": {
+    "candidatesPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl",
+    "reasoningReportPath": "artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.json"
+  },
+  "questions": [
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0640",
+      "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0640",
+      "chapterNo": 16,
+      "sourceRefs": [
+        "016#p17"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "liu-biao",
+        "xiahou-dun",
+        "xu-zhu",
+        "yu-jin",
+        "zhang-xiu"
+      ],
+      "summary": "青州：時夏侯惇所領青州之兵，乘勢下鄉劫掠民家，平虜校尉于禁即將本部軍於路剿殺，安撫鄉民。",
+      "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0640",
+        "summary": "青州：時夏侯惇所領青州之兵，乘勢下鄉劫掠民家，平虜校尉于禁即將本部軍於路剿殺，安撫鄉民。",
+        "location": "青州",
+        "relationshipEdges": [
+          {
+            "fromId": "xiahou-dun",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "xiahou-dun",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "cao-cao",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "cao-cao",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0554",
+      "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0554",
+      "chapterNo": 16,
+      "sourceRefs": [
+        "016#p17"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "liu-biao",
+        "xiahou-dun",
+        "xu-zhu",
+        "yu-jin",
+        "zhang-xiu"
+      ],
+      "summary": "青州：時夏侯惇所領青州之兵，乘勢下鄉劫掠民家，平虜校尉于禁即將本部軍於路剿殺，安撫鄉民。",
+      "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0554",
+        "summary": "青州：時夏侯惇所領青州之兵，乘勢下鄉劫掠民家，平虜校尉于禁即將本部軍於路剿殺，安撫鄉民。",
+        "location": "青州",
+        "relationshipEdges": [
+          {
+            "fromId": "xiahou-dun",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "xiahou-dun",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "cao-cao",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "cao-cao",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0488",
+      "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0488",
+      "chapterNo": 16,
+      "sourceRefs": [
+        "016#p17"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "liu-biao",
+        "xiahou-dun",
+        "xu-zhu",
+        "yu-jin",
+        "zhang-xiu"
+      ],
+      "summary": "青州：時夏侯惇所領青州之兵，乘勢下鄉劫掠民家，平虜校尉于禁即將本部軍於路剿殺，安撫鄉民。",
+      "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0488",
+        "summary": "青州：時夏侯惇所領青州之兵，乘勢下鄉劫掠民家，平虜校尉于禁即將本部軍於路剿殺，安撫鄉民。",
+        "location": "青州",
+        "relationshipEdges": [
+          {
+            "fromId": "xiahou-dun",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "xiahou-dun",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "cao-cao",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "cao-cao",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0422",
+      "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0422",
+      "chapterNo": 16,
+      "sourceRefs": [
+        "016#p17"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "liu-biao",
+        "xiahou-dun",
+        "xu-zhu",
+        "yu-jin",
+        "zhang-xiu"
+      ],
+      "summary": "青州：時夏侯惇所領青州之兵，乘勢下鄉劫掠民家，平虜校尉于禁即將本部軍於路剿殺，安撫鄉民。",
+      "sourceQuote": "禁造反，趕殺青州軍馬。操大驚。須臾，夏侯惇、許褚、李典、樂進都到。操言于禁造反",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.xu-zhu.generic-battle-016-p17.0422",
+        "summary": "青州：時夏侯惇所領青州之兵，乘勢下鄉劫掠民家，平虜校尉于禁即將本部軍於路剿殺，安撫鄉民。",
+        "location": "青州",
+        "relationshipEdges": [
+          {
+            "fromId": "xiahou-dun",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "xiahou-dun",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "cao-cao",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yu-jin",
+            "toId": "cao-cao",
+            "type": "confronts",
+            "evidenceRefs": [
+              "016#p17"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.xiahou-dun.generic-battle-012-p13.1351",
+      "eventKey": "repair.abab-live-r4-route-a1.xiahou-dun.generic-battle-012-p13.1351",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.xiahou-dun.generic-battle-012-p13.1351",
+        "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+        "location": "寨",
+        "relationshipEdges": [
+          {
+            "fromId": "dian-wei",
+            "toId": "xiahou-dun",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "dian-wei",
+            "toId": "xiahou-dun",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p11"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,408 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:22+00:00",
+  "mode": "event-review-mcq",
+  "canonicalWrites": false,
+  "generalId": "liu-bei",
+  "inputs": {
+    "candidatesPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl",
+    "reasoningReportPath": "artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.json"
+  },
+  "questions": [
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1375",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1375",
+      "chapterNo": 14,
+      "sourceRefs": [
+        "014#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-deng",
+        "liu-bei",
+        "lu-bu",
+        "sun-qian",
+        "xun-yu",
+        "yuan-shu",
+        "zhang-fei"
+      ],
+      "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+      "sourceQuote": "」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1375",
+        "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+        "location": "寨",
+        "relationshipEdges": [
+          {
+            "fromId": "lu-bu",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "lu-bu",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "liu-bei",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1264",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1264",
+      "chapterNo": 14,
+      "sourceRefs": [
+        "014#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-deng",
+        "liu-bei",
+        "lu-bu",
+        "sun-qian",
+        "xun-yu",
+        "yuan-shu",
+        "zhang-fei"
+      ],
+      "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+      "sourceQuote": "」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1264",
+        "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+        "location": "寨",
+        "relationshipEdges": [
+          {
+            "fromId": "lu-bu",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "lu-bu",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "liu-bei",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1153",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1153",
+      "chapterNo": 14,
+      "sourceRefs": [
+        "014#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-deng",
+        "liu-bei",
+        "lu-bu",
+        "sun-qian",
+        "xun-yu",
+        "yuan-shu",
+        "zhang-fei"
+      ],
+      "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+      "sourceQuote": "」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1153",
+        "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+        "location": "寨",
+        "relationshipEdges": [
+          {
+            "fromId": "lu-bu",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "lu-bu",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "liu-bei",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1043",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1043",
+      "chapterNo": 14,
+      "sourceRefs": [
+        "014#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-deng",
+        "liu-bei",
+        "lu-bu",
+        "sun-qian",
+        "xun-yu",
+        "yuan-shu",
+        "zhang-fei"
+      ],
+      "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+      "sourceQuote": "」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1043",
+        "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+        "location": "寨",
+        "relationshipEdges": [
+          {
+            "fromId": "lu-bu",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "lu-bu",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "liu-bei",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.0935",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.0935",
+      "chapterNo": 14,
+      "sourceRefs": [
+        "014#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-deng",
+        "liu-bei",
+        "lu-bu",
+        "sun-qian",
+        "xun-yu",
+        "yuan-shu",
+        "zhang-fei"
+      ],
+      "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+      "sourceQuote": "」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.0935",
+        "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+        "location": "寨",
+        "relationshipEdges": [
+          {
+            "fromId": "lu-bu",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "lu-bu",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "liu-bei",
+            "toId": "zhang-fei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "zhang-fei",
+            "toId": "liu-bei",
+            "type": "confronts",
+            "evidenceRefs": [
+              "014#p12"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    }
+  ]
+}

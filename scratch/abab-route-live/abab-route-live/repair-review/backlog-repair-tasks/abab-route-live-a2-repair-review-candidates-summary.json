@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:54:30+00:00",
+  "mode": "repair-review-candidate-feed",
+  "canonicalWrites": false,
+  "inputs": {
+    "repairTasksPath": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-reviewed-b-edit-backlog.jsonl",
+    "repairTaskFeedPath": "scratch/abab-route-live/abab-route-live/repair-review/backlog-repair-tasks/abab-route-live-a2-repair-tasks.jsonl"
+  },
+  "taskCount": 0,
+  "candidateCount": 0,
+  "priorityCounts": {},
+  "repairActionCounts": {},
+  "topFocusGenerals": {}
+}

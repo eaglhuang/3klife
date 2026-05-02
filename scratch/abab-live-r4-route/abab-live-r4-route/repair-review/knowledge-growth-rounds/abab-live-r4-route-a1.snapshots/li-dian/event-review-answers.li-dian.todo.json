@@ -1,0 +1,328 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:23+00:00",
+  "mode": "event-review-mcq",
+  "canonicalWrites": false,
+  "generalId": "li-dian",
+  "inputs": {
+    "candidatesPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl",
+    "reasoningReportPath": "artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.json"
+  },
+  "questions": [
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+        "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+        "location": "寨",
+        "relationshipEdges": [
+          {
+            "fromId": "dian-wei",
+            "toId": "li-dian",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "dian-wei",
+            "toId": "li-dian",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p11"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+        "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+        "location": "寨",
+        "relationshipEdges": [
+          {
+            "fromId": "dian-wei",
+            "toId": "li-dian",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "dian-wei",
+            "toId": "li-dian",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p11"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+        "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+        "location": "寨",
+        "relationshipEdges": [
+          {
+            "fromId": "dian-wei",
+            "toId": "li-dian",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "dian-wei",
+            "toId": "li-dian",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p11"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+        "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+        "location": "寨",
+        "relationshipEdges": [
+          {
+            "fromId": "dian-wei",
+            "toId": "li-dian",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "dian-wei",
+            "toId": "li-dian",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p11"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": null,
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+        "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+        "location": "寨",
+        "relationshipEdges": [
+          {
+            "fromId": "dian-wei",
+            "toId": "li-dian",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "dian-wei",
+            "toId": "li-dian",
+            "type": "confronts",
+            "evidenceRefs": [
+              "012#p11"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": []
+      }
+    }
+  ]
+}

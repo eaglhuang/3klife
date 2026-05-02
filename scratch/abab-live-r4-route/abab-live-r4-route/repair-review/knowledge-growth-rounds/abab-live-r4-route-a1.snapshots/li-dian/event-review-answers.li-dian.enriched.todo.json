@@ -1,0 +1,478 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:23+00:00",
+  "mode": "event-review-context-enriched",
+  "canonicalWrites": false,
+  "generalId": "li-dian",
+  "inputs": {
+    "candidatesPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl",
+    "reasoningReportPath": "artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.json"
+  },
+  "questions": [
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "B",
+      "answer": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "012#p11",
+          "isAnchor": false,
+          "text": "曹操復得兗州，程昱便請進兵取濮陽。操令許褚、典韋爲先鋒，夏侯惇、夏侯淵爲左軍，李典、樂進爲右軍，操自領中軍，于禁、呂虔爲合後。兵至濮陽，呂布欲自將出迎，陳宮諫：「不可出戰。待眾將聚會後，方可。」呂布曰：「吾怕誰來？」遂不聽宮言，引兵出陣，橫戟大罵。許褚便出。鬥二十合，不分勝負。操曰：「呂布非一人可勝。」便差典韋助戰，兩將夾攻，左邊夏侯惇、夏侯淵，右邊李典、樂進齊到，六員將共攻呂布，布遮攔不住，撥馬回城。城上田氏，見布敗回，急令人拽起吊橋。布大叫：「開門！」田氏曰：「吾已降曹將軍矣！」布大罵，引軍奔定陶而去。陳宮急開東門，保護呂布老小出城。操遂得濮陽，恕田氏舊日之罪。劉曄曰：「呂布乃猛虎也，今日困之，不可少容。」操令劉曄等守濮陽，自己引軍趕至定陶。"
+        },
+        {
+          "sourceRef": "012#p12",
+          "isAnchor": false,
+          "text": "時呂布與張邈、張超盡在城中，高順、張遼、臧霸、侯成巡海打糧未回。操軍至定陶，連日不戰，引軍退四十里下寨。正值濟郡麥熟，操即令軍割麥爲食。細作報知呂布，布引軍趕來。將近操寨，見左邊一望林木茂盛，恐有伏兵而回。操知布軍回去，乃謂諸將曰：「布疑林中有伏兵耳，可多插旌旗於林中以疑之。寨西一帶長堤，無水，可盡伏精兵。明日呂布必來燒林，堤中軍斷其後，布可擒矣。」於是止留鼓手五十人，於寨中擂鼓；將村中擄來男女在寨內吶喊。精兵多伏堤中。"
+        },
+        {
+          "sourceRef": "012#p13",
+          "isAnchor": true,
+          "text": "卻說呂布回報陳宮。宮曰：「操多詭計，不可輕敵。」布曰：「吾用火攻，可破伏兵。」乃留陳宮、高順守城。布次日引大軍來，遙見林中有旗，驅兵大進，四面放火，竟無一人。欲投寨中，卻聞鼓聲大震。正自疑惑不定，忽然寨後一彪軍出。呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。呂布料敵不過，落荒而走。從將成廉，被樂進一箭射死。布軍三停去了二停，敗卒回報陳宮。宮曰：「空城難守，不若急去。」遂與高順保著呂布老小，棄定陶而走。曹操將得勝之兵，殺入城中，勢如劈竹。張超自焚，張邈投袁術去了。山東一境，盡被曹操所得。安民修城，不在話下。"
+        },
+        {
+          "sourceRef": "012#p14",
+          "isAnchor": false,
+          "text": "卻說呂布正走，逢諸將皆回，陳宮亦已尋著。布曰：「吾軍雖少，尚可破曹操。」再引軍來。正是："
+        },
+        {
+          "sourceRef": "012#p15",
+          "isAnchor": false,
+          "text": "兵家勝敗真常事，卷甲重來未可知。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+        "recommendedAnswer": "B",
+        "confidence": 0.74,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+          "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+          "location": "寨",
+          "relationshipEdges": [],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "summary derived from candidate hint evidence text"
+        ],
+        "risks": [
+          "no specific location candidate passed gate",
+          "no strong relationship edge passed confidence gate"
+        ]
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "B",
+      "answer": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "012#p11",
+          "isAnchor": false,
+          "text": "曹操復得兗州，程昱便請進兵取濮陽。操令許褚、典韋爲先鋒，夏侯惇、夏侯淵爲左軍，李典、樂進爲右軍，操自領中軍，于禁、呂虔爲合後。兵至濮陽，呂布欲自將出迎，陳宮諫：「不可出戰。待眾將聚會後，方可。」呂布曰：「吾怕誰來？」遂不聽宮言，引兵出陣，橫戟大罵。許褚便出。鬥二十合，不分勝負。操曰：「呂布非一人可勝。」便差典韋助戰，兩將夾攻，左邊夏侯惇、夏侯淵，右邊李典、樂進齊到，六員將共攻呂布，布遮攔不住，撥馬回城。城上田氏，見布敗回，急令人拽起吊橋。布大叫：「開門！」田氏曰：「吾已降曹將軍矣！」布大罵，引軍奔定陶而去。陳宮急開東門，保護呂布老小出城。操遂得濮陽，恕田氏舊日之罪。劉曄曰：「呂布乃猛虎也，今日困之，不可少容。」操令劉曄等守濮陽，自己引軍趕至定陶。"
+        },
+        {
+          "sourceRef": "012#p12",
+          "isAnchor": false,
+          "text": "時呂布與張邈、張超盡在城中，高順、張遼、臧霸、侯成巡海打糧未回。操軍至定陶，連日不戰，引軍退四十里下寨。正值濟郡麥熟，操即令軍割麥爲食。細作報知呂布，布引軍趕來。將近操寨，見左邊一望林木茂盛，恐有伏兵而回。操知布軍回去，乃謂諸將曰：「布疑林中有伏兵耳，可多插旌旗於林中以疑之。寨西一帶長堤，無水，可盡伏精兵。明日呂布必來燒林，堤中軍斷其後，布可擒矣。」於是止留鼓手五十人，於寨中擂鼓；將村中擄來男女在寨內吶喊。精兵多伏堤中。"
+        },
+        {
+          "sourceRef": "012#p13",
+          "isAnchor": true,
+          "text": "卻說呂布回報陳宮。宮曰：「操多詭計，不可輕敵。」布曰：「吾用火攻，可破伏兵。」乃留陳宮、高順守城。布次日引大軍來，遙見林中有旗，驅兵大進，四面放火，竟無一人。欲投寨中，卻聞鼓聲大震。正自疑惑不定，忽然寨後一彪軍出。呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。呂布料敵不過，落荒而走。從將成廉，被樂進一箭射死。布軍三停去了二停，敗卒回報陳宮。宮曰：「空城難守，不若急去。」遂與高順保著呂布老小，棄定陶而走。曹操將得勝之兵，殺入城中，勢如劈竹。張超自焚，張邈投袁術去了。山東一境，盡被曹操所得。安民修城，不在話下。"
+        },
+        {
+          "sourceRef": "012#p14",
+          "isAnchor": false,
+          "text": "卻說呂布正走，逢諸將皆回，陳宮亦已尋著。布曰：「吾軍雖少，尚可破曹操。」再引軍來。正是："
+        },
+        {
+          "sourceRef": "012#p15",
+          "isAnchor": false,
+          "text": "兵家勝敗真常事，卷甲重來未可知。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+        "recommendedAnswer": "B",
+        "confidence": 0.74,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+          "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+          "location": "寨",
+          "relationshipEdges": [],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "summary derived from candidate hint evidence text"
+        ],
+        "risks": [
+          "no specific location candidate passed gate",
+          "no strong relationship edge passed confidence gate"
+        ]
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "B",
+      "answer": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "012#p11",
+          "isAnchor": false,
+          "text": "曹操復得兗州，程昱便請進兵取濮陽。操令許褚、典韋爲先鋒，夏侯惇、夏侯淵爲左軍，李典、樂進爲右軍，操自領中軍，于禁、呂虔爲合後。兵至濮陽，呂布欲自將出迎，陳宮諫：「不可出戰。待眾將聚會後，方可。」呂布曰：「吾怕誰來？」遂不聽宮言，引兵出陣，橫戟大罵。許褚便出。鬥二十合，不分勝負。操曰：「呂布非一人可勝。」便差典韋助戰，兩將夾攻，左邊夏侯惇、夏侯淵，右邊李典、樂進齊到，六員將共攻呂布，布遮攔不住，撥馬回城。城上田氏，見布敗回，急令人拽起吊橋。布大叫：「開門！」田氏曰：「吾已降曹將軍矣！」布大罵，引軍奔定陶而去。陳宮急開東門，保護呂布老小出城。操遂得濮陽，恕田氏舊日之罪。劉曄曰：「呂布乃猛虎也，今日困之，不可少容。」操令劉曄等守濮陽，自己引軍趕至定陶。"
+        },
+        {
+          "sourceRef": "012#p12",
+          "isAnchor": false,
+          "text": "時呂布與張邈、張超盡在城中，高順、張遼、臧霸、侯成巡海打糧未回。操軍至定陶，連日不戰，引軍退四十里下寨。正值濟郡麥熟，操即令軍割麥爲食。細作報知呂布，布引軍趕來。將近操寨，見左邊一望林木茂盛，恐有伏兵而回。操知布軍回去，乃謂諸將曰：「布疑林中有伏兵耳，可多插旌旗於林中以疑之。寨西一帶長堤，無水，可盡伏精兵。明日呂布必來燒林，堤中軍斷其後，布可擒矣。」於是止留鼓手五十人，於寨中擂鼓；將村中擄來男女在寨內吶喊。精兵多伏堤中。"
+        },
+        {
+          "sourceRef": "012#p13",
+          "isAnchor": true,
+          "text": "卻說呂布回報陳宮。宮曰：「操多詭計，不可輕敵。」布曰：「吾用火攻，可破伏兵。」乃留陳宮、高順守城。布次日引大軍來，遙見林中有旗，驅兵大進，四面放火，竟無一人。欲投寨中，卻聞鼓聲大震。正自疑惑不定，忽然寨後一彪軍出。呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。呂布料敵不過，落荒而走。從將成廉，被樂進一箭射死。布軍三停去了二停，敗卒回報陳宮。宮曰：「空城難守，不若急去。」遂與高順保著呂布老小，棄定陶而走。曹操將得勝之兵，殺入城中，勢如劈竹。張超自焚，張邈投袁術去了。山東一境，盡被曹操所得。安民修城，不在話下。"
+        },
+        {
+          "sourceRef": "012#p14",
+          "isAnchor": false,
+          "text": "卻說呂布正走，逢諸將皆回，陳宮亦已尋著。布曰：「吾軍雖少，尚可破曹操。」再引軍來。正是："
+        },
+        {
+          "sourceRef": "012#p15",
+          "isAnchor": false,
+          "text": "兵家勝敗真常事，卷甲重來未可知。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+        "recommendedAnswer": "B",
+        "confidence": 0.74,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+          "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+          "location": "寨",
+          "relationshipEdges": [],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "summary derived from candidate hint evidence text"
+        ],
+        "risks": [
+          "no specific location candidate passed gate",
+          "no strong relationship edge passed confidence gate"
+        ]
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "B",
+      "answer": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "012#p11",
+          "isAnchor": false,
+          "text": "曹操復得兗州，程昱便請進兵取濮陽。操令許褚、典韋爲先鋒，夏侯惇、夏侯淵爲左軍，李典、樂進爲右軍，操自領中軍，于禁、呂虔爲合後。兵至濮陽，呂布欲自將出迎，陳宮諫：「不可出戰。待眾將聚會後，方可。」呂布曰：「吾怕誰來？」遂不聽宮言，引兵出陣，橫戟大罵。許褚便出。鬥二十合，不分勝負。操曰：「呂布非一人可勝。」便差典韋助戰，兩將夾攻，左邊夏侯惇、夏侯淵，右邊李典、樂進齊到，六員將共攻呂布，布遮攔不住，撥馬回城。城上田氏，見布敗回，急令人拽起吊橋。布大叫：「開門！」田氏曰：「吾已降曹將軍矣！」布大罵，引軍奔定陶而去。陳宮急開東門，保護呂布老小出城。操遂得濮陽，恕田氏舊日之罪。劉曄曰：「呂布乃猛虎也，今日困之，不可少容。」操令劉曄等守濮陽，自己引軍趕至定陶。"
+        },
+        {
+          "sourceRef": "012#p12",
+          "isAnchor": false,
+          "text": "時呂布與張邈、張超盡在城中，高順、張遼、臧霸、侯成巡海打糧未回。操軍至定陶，連日不戰，引軍退四十里下寨。正值濟郡麥熟，操即令軍割麥爲食。細作報知呂布，布引軍趕來。將近操寨，見左邊一望林木茂盛，恐有伏兵而回。操知布軍回去，乃謂諸將曰：「布疑林中有伏兵耳，可多插旌旗於林中以疑之。寨西一帶長堤，無水，可盡伏精兵。明日呂布必來燒林，堤中軍斷其後，布可擒矣。」於是止留鼓手五十人，於寨中擂鼓；將村中擄來男女在寨內吶喊。精兵多伏堤中。"
+        },
+        {
+          "sourceRef": "012#p13",
+          "isAnchor": true,
+          "text": "卻說呂布回報陳宮。宮曰：「操多詭計，不可輕敵。」布曰：「吾用火攻，可破伏兵。」乃留陳宮、高順守城。布次日引大軍來，遙見林中有旗，驅兵大進，四面放火，竟無一人。欲投寨中，卻聞鼓聲大震。正自疑惑不定，忽然寨後一彪軍出。呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。呂布料敵不過，落荒而走。從將成廉，被樂進一箭射死。布軍三停去了二停，敗卒回報陳宮。宮曰：「空城難守，不若急去。」遂與高順保著呂布老小，棄定陶而走。曹操將得勝之兵，殺入城中，勢如劈竹。張超自焚，張邈投袁術去了。山東一境，盡被曹操所得。安民修城，不在話下。"
+        },
+        {
+          "sourceRef": "012#p14",
+          "isAnchor": false,
+          "text": "卻說呂布正走，逢諸將皆回，陳宮亦已尋著。布曰：「吾軍雖少，尚可破曹操。」再引軍來。正是："
+        },
+        {
+          "sourceRef": "012#p15",
+          "isAnchor": false,
+          "text": "兵家勝敗真常事，卷甲重來未可知。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+        "recommendedAnswer": "B",
+        "confidence": 0.74,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+          "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+          "location": "寨",
+          "relationshipEdges": [],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "summary derived from candidate hint evidence text"
+        ],
+        "risks": [
+          "no specific location candidate passed gate",
+          "no strong relationship edge passed confidence gate"
+        ]
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-gong",
+        "dian-wei",
+        "le-jin",
+        "li-dian",
+        "lu-bu",
+        "romance-person-5f35-8d85",
+        "romance-person-5f35-9088",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "xu-zhu",
+        "yuan-shu"
+      ],
+      "summary": "寨：夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。",
+      "sourceQuote": "呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "B",
+      "answer": "B",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "012#p11",
+          "isAnchor": false,
+          "text": "曹操復得兗州，程昱便請進兵取濮陽。操令許褚、典韋爲先鋒，夏侯惇、夏侯淵爲左軍，李典、樂進爲右軍，操自領中軍，于禁、呂虔爲合後。兵至濮陽，呂布欲自將出迎，陳宮諫：「不可出戰。待眾將聚會後，方可。」呂布曰：「吾怕誰來？」遂不聽宮言，引兵出陣，橫戟大罵。許褚便出。鬥二十合，不分勝負。操曰：「呂布非一人可勝。」便差典韋助戰，兩將夾攻，左邊夏侯惇、夏侯淵，右邊李典、樂進齊到，六員將共攻呂布，布遮攔不住，撥馬回城。城上田氏，見布敗回，急令人拽起吊橋。布大叫：「開門！」田氏曰：「吾已降曹將軍矣！」布大罵，引軍奔定陶而去。陳宮急開東門，保護呂布老小出城。操遂得濮陽，恕田氏舊日之罪。劉曄曰：「呂布乃猛虎也，今日困之，不可少容。」操令劉曄等守濮陽，自己引軍趕至定陶。"
+        },
+        {
+          "sourceRef": "012#p12",
+          "isAnchor": false,
+          "text": "時呂布與張邈、張超盡在城中，高順、張遼、臧霸、侯成巡海打糧未回。操軍至定陶，連日不戰，引軍退四十里下寨。正值濟郡麥熟，操即令軍割麥爲食。細作報知呂布，布引軍趕來。將近操寨，見左邊一望林木茂盛，恐有伏兵而回。操知布軍回去，乃謂諸將曰：「布疑林中有伏兵耳，可多插旌旗於林中以疑之。寨西一帶長堤，無水，可盡伏精兵。明日呂布必來燒林，堤中軍斷其後，布可擒矣。」於是止留鼓手五十人，於寨中擂鼓；將村中擄來男女在寨內吶喊。精兵多伏堤中。"
+        },
+        {
+          "sourceRef": "012#p13",
+          "isAnchor": true,
+          "text": "卻說呂布回報陳宮。宮曰：「操多詭計，不可輕敵。」布曰：「吾用火攻，可破伏兵。」乃留陳宮、高順守城。布次日引大軍來，遙見林中有旗，驅兵大進，四面放火，竟無一人。欲投寨中，卻聞鼓聲大震。正自疑惑不定，忽然寨後一彪軍出。呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟馬殺來。呂布料敵不過，落荒而走。從將成廉，被樂進一箭射死。布軍三停去了二停，敗卒回報陳宮。宮曰：「空城難守，不若急去。」遂與高順保著呂布老小，棄定陶而走。曹操將得勝之兵，殺入城中，勢如劈竹。張超自焚，張邈投袁術去了。山東一境，盡被曹操所得。安民修城，不在話下。"
+        },
+        {
+          "sourceRef": "012#p14",
+          "isAnchor": false,
+          "text": "卻說呂布正走，逢諸將皆回，陳宮亦已尋著。布曰：「吾軍雖少，尚可破曹操。」再引軍來。正是："
+        },
+        {
+          "sourceRef": "012#p15",
+          "isAnchor": false,
+          "text": "兵家勝敗真常事，卷甲重來未可知。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+        "recommendedAnswer": "B",
+        "confidence": 0.74,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+          "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+          "location": "寨",
+          "relationshipEdges": [],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "summary derived from candidate hint evidence text"
+        ],
+        "risks": [
+          "no specific location candidate passed gate",
+          "no strong relationship edge passed confidence gate"
+        ]
+      }
+    }
+  ],
+  "contextExpansion": {
+    "generatedAt": "2026-05-02T04:55:24+00:00",
+    "fillAnswers": true,
+    "note": "DeepSeek proposals are review-only and do not publish canonical events."
+  }
+}

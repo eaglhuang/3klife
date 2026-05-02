@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:54:30+00:00",
+  "mode": "review-b-backlog-repair-task-queue",
+  "canonicalWrites": false,
+  "inputs": {
+    "editBacklogPath": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-live-a1-merged-reviewed-b-edit-backlog.jsonl"
+  },
+  "taskCount": 0,
+  "candidateCount": 0,
+  "priorityCounts": {},
+  "repairActionCounts": {},
+  "topFocusGenerals": {}
+}

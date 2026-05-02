@@ -1,0 +1,144 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:24+00:00",
+  "mode": "event-review-context-enrichment",
+  "canonicalWrites": false,
+  "reviewerAdapter": {
+    "provider": "agent-reviewer",
+    "preset": "agent",
+    "model": "sanguo-agent-reviewer-v1",
+    "apiUrl": null,
+    "timeoutMs": 0,
+    "numCtx": 0,
+    "numPredict": 0,
+    "temperature": 0.0,
+    "topP": 0.0,
+    "repeatPenalty": 0.0
+  },
+  "model": "sanguo-agent-reviewer-v1",
+  "apiUrl": null,
+  "requestMode": "per-question",
+  "payloadSummary": {
+    "provider": "agent-reviewer",
+    "preset": "agent",
+    "model": "sanguo-agent-reviewer-v1",
+    "apiUrl": null,
+    "timeoutMs": 0,
+    "numCtx": 0,
+    "numPredict": 0,
+    "temperature": 0.0,
+    "topP": 0.0,
+    "repeatPenalty": 0.0
+  },
+  "reasoningTracePreview": "",
+  "answers": [
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+      "recommendedAnswer": "B",
+      "confidence": 0.74,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1316",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "summary derived from candidate hint evidence text"
+      ],
+      "risks": [
+        "no specific location candidate passed gate",
+        "no strong relationship edge passed confidence gate"
+      ]
+    },
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+      "recommendedAnswer": "B",
+      "confidence": 0.74,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1205",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "summary derived from candidate hint evidence text"
+      ],
+      "risks": [
+        "no specific location candidate passed gate",
+        "no strong relationship edge passed confidence gate"
+      ]
+    },
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+      "recommendedAnswer": "B",
+      "confidence": 0.74,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.1095",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "summary derived from candidate hint evidence text"
+      ],
+      "risks": [
+        "no specific location candidate passed gate",
+        "no strong relationship edge passed confidence gate"
+      ]
+    },
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+      "recommendedAnswer": "B",
+      "confidence": 0.74,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0985",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "summary derived from candidate hint evidence text"
+      ],
+      "risks": [
+        "no specific location candidate passed gate",
+        "no strong relationship edge passed confidence gate"
+      ]
+    },
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+      "recommendedAnswer": "B",
+      "confidence": 0.74,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.li-dian.generic-battle-012-p13.0878",
+        "summary": "寨：呂布縱馬趕來，炮響處，堤內伏兵盡出。夏侯惇、夏侯淵、許褚、典韋、李典、樂進，驟",
+        "location": "寨",
+        "relationshipEdges": [],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "summary derived from candidate hint evidence text"
+      ],
+      "risks": [
+        "no specific location candidate passed gate",
+        "no strong relationship edge passed confidence gate"
+      ]
+    }
+  ],
+  "pipelineNotes": [
+    "agent reviewer used candidateHints, strict location gate, and strong relationship edge gate"
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:26+00:00",
+  "mode": "event-review-context-enrichment",
+  "canonicalWrites": false,
+  "reviewerAdapter": {
+    "provider": "agent-reviewer",
+    "preset": "agent",
+    "model": "sanguo-agent-reviewer-v1",
+    "apiUrl": null,
+    "timeoutMs": 0,
+    "numCtx": 0,
+    "numPredict": 0,
+    "temperature": 0.0,
+    "topP": 0.0,
+    "repeatPenalty": 0.0
+  },
+  "model": "sanguo-agent-reviewer-v1",
+  "apiUrl": null,
+  "requestMode": "per-question",
+  "payloadSummary": {
+    "provider": "agent-reviewer",
+    "preset": "agent",
+    "model": "sanguo-agent-reviewer-v1",
+    "apiUrl": null,
+    "timeoutMs": 0,
+    "numCtx": 0,
+    "numPredict": 0,
+    "temperature": 0.0,
+    "topP": 0.0,
+    "repeatPenalty": 0.0
+  },
+  "reasoningTracePreview": "",
+  "answers": [
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0744",
+      "recommendedAnswer": "A",
+      "confidence": 0.86,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0744",
+        "summary": "平原：」張飛見了，更不打話，直取于禁。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "zhang-fei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "agent reviewer selected source-grounded location `平原`",
+        "agent reviewer selected 1 strong relationship edge(s)",
+        "summary derived from candidate hint evidence text",
+        "expanded context candidate hints completed required fields"
+      ],
+      "risks": []
+    },
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0650",
+      "recommendedAnswer": "A",
+      "confidence": 0.86,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0650",
+        "summary": "平原：」張飛見了，更不打話，直取于禁。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "zhang-fei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "agent reviewer selected source-grounded location `平原`",
+        "agent reviewer selected 1 strong relationship edge(s)",
+        "summary derived from candidate hint evidence text",
+        "expanded context candidate hints completed required fields"
+      ],
+      "risks": []
+    },
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0563",
+      "recommendedAnswer": "A",
+      "confidence": 0.86,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0563",
+        "summary": "平原：」張飛見了，更不打話，直取于禁。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "zhang-fei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "agent reviewer selected source-grounded location `平原`",
+        "agent reviewer selected 1 strong relationship edge(s)",
+        "summary derived from candidate hint evidence text",
+        "expanded context candidate hints completed required fields"
+      ],
+      "risks": []
+    },
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0496",
+      "recommendedAnswer": "A",
+      "confidence": 0.86,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0496",
+        "summary": "平原：」張飛見了，更不打話，直取于禁。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "zhang-fei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "agent reviewer selected source-grounded location `平原`",
+        "agent reviewer selected 1 strong relationship edge(s)",
+        "summary derived from candidate hint evidence text",
+        "expanded context candidate hints completed required fields"
+      ],
+      "risks": []
+    },
+    {
+      "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0430",
+      "recommendedAnswer": "A",
+      "confidence": 0.86,
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhao-yun.generic-battle-011-p8.0430",
+        "summary": "平原：」張飛見了，更不打話，直取于禁。",
+        "location": "平原",
+        "relationshipEdges": [
+          {
+            "fromId": "zhang-fei",
+            "toId": "yu-jin",
+            "type": "confronts",
+            "evidenceRefs": [
+              "011#p8"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "reasons": [
+        "agent reviewer selected source-grounded location `平原`",
+        "agent reviewer selected 1 strong relationship edge(s)",
+        "summary derived from candidate hint evidence text",
+        "expanded context candidate hints completed required fields"
+      ],
+      "risks": []
+    }
+  ],
+  "pipelineNotes": [
+    "agent reviewer used candidateHints, strict location gate, and strong relationship edge gate"
+  ]
+}

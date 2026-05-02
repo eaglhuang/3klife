@@ -1,0 +1,142 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:53:52+00:00",
+  "mode": "sanguo-progress-advancement-loop",
+  "canonicalWrites": false,
+  "dryRun": true,
+  "runId": "abab-route-check",
+  "runRoot": "scratch/abab-route-check/abab-route-check",
+  "initialBaselinePaths": {
+    "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-ready-events.jsonl",
+    "baseProgress": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/repair-review-r1-merged.json",
+    "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-relationship-evidence.jsonl",
+    "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-refine-r1-reviewed-b-edit-backlog.jsonl"
+  },
+  "finalBaselinePaths": {
+    "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a2-merged-staged-ready-events.jsonl",
+    "baseProgress": "scratch/abab-route-check/abab-route-check/repair-review/knowledge-growth-progress/abab-route-check-a2-merged.json",
+    "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a2-merged-staged-relationship-evidence.jsonl",
+    "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a2-merged-reviewed-b-edit-backlog.jsonl"
+  },
+  "policy": {
+    "maxRounds": 2,
+    "maxABCycles": 3,
+    "topGenerals": 5,
+    "topPerGeneral": 5,
+    "noImprovementThreshold": 0.05,
+    "noImprovementPatience": 2,
+    "pendingReviewLimit": 15,
+    "sameResidualRepeatLimit": 2,
+    "reviewBatchSize": 3,
+    "failureRateLimit": 0.2,
+    "reviewerPreset": "agent",
+    "reviewerProvider": "agent-reviewer",
+    "stepTimeoutSeconds": 30
+  },
+  "roundsExecuted": 2,
+  "abCyclesExecuted": 1,
+  "bReviewCount": 0,
+  "pilotPendingReviewCount": 4,
+  "pendingReviewCount": 4,
+  "stopReason": "max-rounds",
+  "nextRoute": "C-residual-dossier",
+  "nextRecommendedAction": "Review the generated summary; if pending items remain, handle B review before starting another outer loop run.",
+  "baselineOverallPercent": 58.22,
+  "finalOverallPercent": null,
+  "totalDeltaOverallPercent": null,
+  "reviewBatches": [],
+  "bReviews": [],
+  "residualSummary": {
+    "rootCauseCounts": {},
+    "repeatedResidualCount": 0
+  },
+  "repeatedResiduals": [],
+  "rounds": [
+    {
+      "roundIndex": 1,
+      "roundId": "abab-route-check-a1",
+      "success": true,
+      "summaryPath": "scratch/abab-route-check/abab-route-check/repair-review/knowledge-growth-progress/abab-route-check-a1-campaign-summary.json",
+      "baselineInputs": {
+        "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-ready-events.jsonl",
+        "baseProgress": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/repair-review-r1-merged.json",
+        "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-relationship-evidence.jsonl",
+        "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-refine-r1-reviewed-b-edit-backlog.jsonl"
+      },
+      "nextBaselineCandidates": {
+        "baseProgress": "scratch/abab-route-check/abab-route-check/repair-review/knowledge-growth-progress/abab-route-check-a1-merged.json",
+        "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a1-merged-staged-ready-events.jsonl",
+        "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a1-merged-staged-relationship-evidence.jsonl",
+        "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a1-merged-reviewed-b-edit-backlog.jsonl"
+      },
+      "command": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python /mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/run_repair_review_campaign.py --round-id abab-route-check-a1 --edit-backlog artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-refine-r1-reviewed-b-edit-backlog.jsonl --base-events artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-ready-events.jsonl --base-relationship-evidence artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-relationship-evidence.jsonl --base-progress artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/repair-review-r1-merged.json --repair-output-root scratch/abab-route-check/abab-route-check/repair-review/backlog-repair-tasks --rounds-root scratch/abab-route-check/abab-route-check/repair-review/knowledge-growth-rounds --event-seed-root scratch/abab-route-check/abab-route-check/repair-review/event-question-seeds --packet-root scratch/abab-route-check/abab-route-check/repair-review/source-event-packets --progress-root scratch/abab-route-check/abab-route-check/repair-review/knowledge-growth-progress --top-generals 5 --top-per-general 5 --reviewer-preset agent --reviewer-provider agent-reviewer --step-timeout-seconds 30 --overwrite",
+        "returnCode": 0,
+        "dryRun": true,
+        "stdout": "",
+        "stderr": ""
+      },
+      "campaignSummary": {
+        "mode": "repair-review-campaign",
+        "canonicalWrites": false,
+        "roundId": "abab-route-check-a1",
+        "selectedGenerals": [],
+        "deltaOverallPercent": null
+      },
+      "repairTaskSummary": {
+        "priorityCounts": {},
+        "repairActionCounts": {},
+        "topFocusGenerals": {}
+      },
+      "pilotPendingReviewCountAfterRound": 4,
+      "eventReviewPendingCountAfterRound": 0,
+      "repeatedResidualCountAfterRound": 0,
+      "repeatedResidualsPreview": [],
+      "weakImprovementCount": 0,
+      "failureRate": 0.0
+    },
+    {
+      "roundIndex": 2,
+      "roundId": "abab-route-check-a2",
+      "success": true,
+      "summaryPath": "scratch/abab-route-check/abab-route-check/repair-review/knowledge-growth-progress/abab-route-check-a2-campaign-summary.json",
+      "baselineInputs": {
+        "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a1-merged-staged-ready-events.jsonl",
+        "baseProgress": "scratch/abab-route-check/abab-route-check/repair-review/knowledge-growth-progress/abab-route-check-a1-merged.json",
+        "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a1-merged-staged-relationship-evidence.jsonl",
+        "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a1-merged-reviewed-b-edit-backlog.jsonl"
+      },
+      "nextBaselineCandidates": {
+        "baseProgress": "scratch/abab-route-check/abab-route-check/repair-review/knowledge-growth-progress/abab-route-check-a2-merged.json",
+        "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a2-merged-staged-ready-events.jsonl",
+        "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a2-merged-staged-relationship-evidence.jsonl",
+        "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a2-merged-reviewed-b-edit-backlog.jsonl"
+      },
+      "command": {
+        "command": "/home/eagl/.venv/3klife-etl/bin/python /mnt/c/Users/User/3KLife/server/npc-brain/pipelines/sanguo-rag/run_repair_review_campaign.py --round-id abab-route-check-a2 --edit-backlog artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a1-merged-reviewed-b-edit-backlog.jsonl --base-events artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a1-merged-staged-ready-events.jsonl --base-relationship-evidence artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/abab-route-check-a1-merged-staged-relationship-evidence.jsonl --base-progress scratch/abab-route-check/abab-route-check/repair-review/knowledge-growth-progress/abab-route-check-a1-merged.json --repair-output-root scratch/abab-route-check/abab-route-check/repair-review/backlog-repair-tasks --rounds-root scratch/abab-route-check/abab-route-check/repair-review/knowledge-growth-rounds --event-seed-root scratch/abab-route-check/abab-route-check/repair-review/event-question-seeds --packet-root scratch/abab-route-check/abab-route-check/repair-review/source-event-packets --progress-root scratch/abab-route-check/abab-route-check/repair-review/knowledge-growth-progress --top-generals 5 --top-per-general 5 --reviewer-preset agent --reviewer-provider agent-reviewer --step-timeout-seconds 30 --overwrite",
+        "returnCode": 0,
+        "dryRun": true,
+        "stdout": "",
+        "stderr": ""
+      },
+      "campaignSummary": {
+        "mode": "repair-review-campaign",
+        "canonicalWrites": false,
+        "roundId": "abab-route-check-a2",
+        "selectedGenerals": [],
+        "deltaOverallPercent": null
+      },
+      "repairTaskSummary": {
+        "priorityCounts": {},
+        "repairActionCounts": {},
+        "topFocusGenerals": {}
+      },
+      "pilotPendingReviewCountAfterRound": 4,
+      "eventReviewPendingCountAfterRound": 0,
+      "repeatedResidualCountAfterRound": 0,
+      "repeatedResidualsPreview": [],
+      "weakImprovementCount": 0,
+      "failureRate": 0.0
+    }
+  ]
+}

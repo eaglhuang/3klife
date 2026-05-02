@@ -1,0 +1,668 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:22+00:00",
+  "mode": "event-review-context-enriched",
+  "canonicalWrites": false,
+  "generalId": "liu-bei",
+  "inputs": {
+    "candidatesPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl",
+    "reasoningReportPath": "artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.json"
+  },
+  "questions": [
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1375",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1375",
+      "chapterNo": 14,
+      "sourceRefs": [
+        "014#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-deng",
+        "liu-bei",
+        "lu-bu",
+        "sun-qian",
+        "xun-yu",
+        "yuan-shu",
+        "zhang-fei"
+      ],
+      "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+      "sourceQuote": "」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1375",
+        "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+        "location": "徐州",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "yuan-shu",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yuan-shu",
+            "toId": "liu-bei",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "014#p11",
+          "isAnchor": false,
+          "text": "操既定大事，乃設宴後堂，聚眾謀士共議曰：「劉備屯兵徐州，自領州事；近呂布以兵敗投之，備使居於小沛。若二人同心，引兵來犯，乃心腹之患也。公等有何妙計可圖之？」許褚曰：「願借精兵五萬，斬劉備、呂布之頭，獻於丞相。」荀彧曰：「將軍勇則勇矣，不知用謀。今許都新定，未可造次用兵。彧有一計，名曰『二虎競食』之計。今劉備雖領徐州，未得詔命。明公可奏請詔命，實授備爲徐州牧，因密與一書，教殺呂布。事成，則備無猛士爲輔，亦漸可圖；事不成，則呂布必殺備矣：此乃二虎競食之計也。」操從其言，即時奏請詔命，遣使齎往徐州，封劉備爲征東將軍、宜城亭侯、領徐州牧，并附密書一封。"
+        },
+        {
+          "sourceRef": "014#p12",
+          "isAnchor": false,
+          "text": "卻說劉玄德在徐州，聞帝幸許都，正欲上表慶賀，忽報天使至。出郭迎接入郡，拜受恩命畢，設宴款待來使。使曰：「君侯得此恩命，實曹將軍於帝前保薦之力也。」玄德稱謝。使者乃取出私書，遞與玄德。玄德看罷，曰：「此事尚容計議。」席散，安歇來使於館驛。玄德連夜與眾商議此事。張飛曰：「呂布本無義之人，殺之無礙。」玄德曰：「他勢窮而來投我，我若殺之，亦是不義。」張飛曰：「好人難做。」玄德不從。次日，呂布來賀，玄德教請入見。布曰：「聞公受朝廷恩命，特來相賀。」玄德遜謝。只見張飛扯劍上廳，要殺呂布，玄德慌忙阻住。布大驚曰：「翼德何故只要殺我？」張飛叫曰：「曹操道你是無義之人，教我哥哥殺你！」玄德連聲喝退。乃引呂布同入後堂，實告前因，就將曹操所送密書與呂布看。布看畢泣曰：「此乃曹賊欲令我二人不和耳！」玄德曰：「兄勿憂，劉備誓不爲此不義之事。」呂布再三拜謝。備留布飲酒，至晚方回。關、張曰：「兄長何故不殺呂布？」玄德曰：「此曹孟德恐我與呂布同謀伐之，故用此計，使我兩人自相吞併，彼卻於中取利。奈何爲所使乎？」關公點頭道是。張飛曰：「我只要殺此賊，以絕後患！」玄德曰：「此非大丈夫之所爲也。」次日，玄德送使命回京，就拜表謝恩；并回書與曹操，只言容緩圖之。"
+        },
+        {
+          "sourceRef": "014#p13",
+          "isAnchor": true,
+          "text": "使命回見曹操，言玄德不殺呂布之事。操問荀彧曰：「此計不成，奈何？」彧曰：「又有一計，名曰『驅虎吞狼』之計。」操曰：「其計如何？」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。公乃明詔劉備討袁術。兩邊相并，呂布必生異心。此驅虎吞狼之計也。」操大喜，先發人往袁術處，次假天子詔，發人往徐州。卻說玄德在徐州，聞使命至，出郭迎接。開讀詔書，卻是要起兵討袁術。玄德領命，送使者先回。糜竺曰：「此又是曹操之計。」玄德曰：「雖是計，王命不可違也。」遂點軍馬，克日起程。孫乾曰：「可先定守城之人。」玄德曰：「二弟之中，誰人可守？」關公曰：「弟願守此城。」玄德曰：「吾早晚欲與你議事，豈可相離？」張飛曰：「小弟願守此城。」玄德曰：「你守不得此城。你一者酒後剛強，鞭撻士卒；二者作事輕易，不從人諫。吾不放心。」張飛曰：「弟自今以後不飲酒，不打軍士，諸般聽人勸諫便了。」糜竺曰：「只恐口不應心。」飛怒曰：「吾跟哥哥多年，未嘗失信，你如何輕料我！」玄德曰：「弟言雖如此，吾終不放心。還請陳元龍輔之，早晚令其少飲酒，勿致失事。」陳登應諾。玄德吩咐了當，乃統馬步軍二萬，離徐州望南陽進發。"
+        },
+        {
+          "sourceRef": "014#p14",
+          "isAnchor": false,
+          "text": "卻說袁術聞說劉備上表，欲吞其州縣，乃大怒曰：「汝乃織席編屨之夫，今輒佔據大郡，與諸侯同列。吾正欲伐汝，汝卻反欲圖我，深爲可恨！」乃使上將紀靈起兵十萬，殺奔徐州。兩軍會於盱眙。玄德兵少，依山傍水下寨。那紀靈乃山東人，使一口三尖刀，重五十斤。是日引兵出陣，大罵：「劉備村夫，安敢侵吾境界！」玄德曰：「吾奉天子詔，以討不臣。汝今敢來相拒，罪不容誅！」紀靈大怒，拍馬舞刀，直取玄德。關公大喝曰：「匹夫休得逞強！」出馬與紀靈大戰。一連三十合，不分勝負。紀靈大叫：「少歇！」關公便撥馬回陣，立於陣前候之。紀靈卻遣副將荀正出馬。關公曰：「只教紀靈來，與他決個雌雄！」荀正曰：「汝乃無名下將，非紀將軍對手！」關公大怒，直取荀正，交馬一合，砍荀正於馬下。玄德驅兵殺將過去，紀靈大敗，退守淮陰河口。不敢交戰，只教軍士來偷營劫寨，皆被徐州兵殺敗。兩軍相拒，不在話下。"
+        },
+        {
+          "sourceRef": "014#p15",
+          "isAnchor": false,
+          "text": "卻說張飛自送玄德起身後，一應雜事，俱付陳元龍管理；軍機大務，自家參酌。一日設宴，請各官赴席。眾人坐定。張飛開言曰：「我兄臨去時，吩咐我少飲酒，恐致失事。眾官今日盡此一醉，明日都各戒酒，幫我守城。今日卻都要滿飲。」言罷，起身與眾官把盞。酒至曹豹面前，豹曰：「我從天戒，不飲酒。」飛曰：「廝殺漢如何不飲酒！我要你吃一盞。」豹懼怕，只得飲了一杯。張飛把遍各官，自斟巨觥，連飲了幾十杯，不覺大醉。卻又起身，與眾官把盞。酒至曹豹，豹曰：「某實不能飲矣。」飛曰：「你恰纔吃了，如今爲何推卻？」豹再三不飲。飛醉後使酒，便發怒曰：「你違我將令，該打一百！」便喝軍士拿下。陳元龍曰：「玄德公臨去時，吩咐你甚來？」飛曰：「你文官只管文官事，休來管我。」曹豹無奈，只得告求曰：「翼德公看我女婿之面，且恕我罷！」飛曰：「你女婿是誰？」豹曰：「呂布是也。」飛大怒曰：「我本不欲打你，你把呂布來嚇我，我偏要打你。我打你便是打呂布。」諸人勸不住。將曹豹鞭至五十，眾人苦苦告饒方止。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1375",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1375",
+          "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+          "location": "徐州",
+          "relationshipEdges": [
+            {
+              "fromId": "liu-bei",
+              "toId": "yuan-shu",
+              "type": "commands",
+              "evidenceRefs": [
+                "014#p13"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            },
+            {
+              "fromId": "yuan-shu",
+              "toId": "liu-bei",
+              "type": "commands",
+              "evidenceRefs": [
+                "014#p13"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `徐州`",
+          "agent reviewer selected 2 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1264",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1264",
+      "chapterNo": 14,
+      "sourceRefs": [
+        "014#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-deng",
+        "liu-bei",
+        "lu-bu",
+        "sun-qian",
+        "xun-yu",
+        "yuan-shu",
+        "zhang-fei"
+      ],
+      "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+      "sourceQuote": "」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1264",
+        "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+        "location": "徐州",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "yuan-shu",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yuan-shu",
+            "toId": "liu-bei",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "014#p11",
+          "isAnchor": false,
+          "text": "操既定大事，乃設宴後堂，聚眾謀士共議曰：「劉備屯兵徐州，自領州事；近呂布以兵敗投之，備使居於小沛。若二人同心，引兵來犯，乃心腹之患也。公等有何妙計可圖之？」許褚曰：「願借精兵五萬，斬劉備、呂布之頭，獻於丞相。」荀彧曰：「將軍勇則勇矣，不知用謀。今許都新定，未可造次用兵。彧有一計，名曰『二虎競食』之計。今劉備雖領徐州，未得詔命。明公可奏請詔命，實授備爲徐州牧，因密與一書，教殺呂布。事成，則備無猛士爲輔，亦漸可圖；事不成，則呂布必殺備矣：此乃二虎競食之計也。」操從其言，即時奏請詔命，遣使齎往徐州，封劉備爲征東將軍、宜城亭侯、領徐州牧，并附密書一封。"
+        },
+        {
+          "sourceRef": "014#p12",
+          "isAnchor": false,
+          "text": "卻說劉玄德在徐州，聞帝幸許都，正欲上表慶賀，忽報天使至。出郭迎接入郡，拜受恩命畢，設宴款待來使。使曰：「君侯得此恩命，實曹將軍於帝前保薦之力也。」玄德稱謝。使者乃取出私書，遞與玄德。玄德看罷，曰：「此事尚容計議。」席散，安歇來使於館驛。玄德連夜與眾商議此事。張飛曰：「呂布本無義之人，殺之無礙。」玄德曰：「他勢窮而來投我，我若殺之，亦是不義。」張飛曰：「好人難做。」玄德不從。次日，呂布來賀，玄德教請入見。布曰：「聞公受朝廷恩命，特來相賀。」玄德遜謝。只見張飛扯劍上廳，要殺呂布，玄德慌忙阻住。布大驚曰：「翼德何故只要殺我？」張飛叫曰：「曹操道你是無義之人，教我哥哥殺你！」玄德連聲喝退。乃引呂布同入後堂，實告前因，就將曹操所送密書與呂布看。布看畢泣曰：「此乃曹賊欲令我二人不和耳！」玄德曰：「兄勿憂，劉備誓不爲此不義之事。」呂布再三拜謝。備留布飲酒，至晚方回。關、張曰：「兄長何故不殺呂布？」玄德曰：「此曹孟德恐我與呂布同謀伐之，故用此計，使我兩人自相吞併，彼卻於中取利。奈何爲所使乎？」關公點頭道是。張飛曰：「我只要殺此賊，以絕後患！」玄德曰：「此非大丈夫之所爲也。」次日，玄德送使命回京，就拜表謝恩；并回書與曹操，只言容緩圖之。"
+        },
+        {
+          "sourceRef": "014#p13",
+          "isAnchor": true,
+          "text": "使命回見曹操，言玄德不殺呂布之事。操問荀彧曰：「此計不成，奈何？」彧曰：「又有一計，名曰『驅虎吞狼』之計。」操曰：「其計如何？」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。公乃明詔劉備討袁術。兩邊相并，呂布必生異心。此驅虎吞狼之計也。」操大喜，先發人往袁術處，次假天子詔，發人往徐州。卻說玄德在徐州，聞使命至，出郭迎接。開讀詔書，卻是要起兵討袁術。玄德領命，送使者先回。糜竺曰：「此又是曹操之計。」玄德曰：「雖是計，王命不可違也。」遂點軍馬，克日起程。孫乾曰：「可先定守城之人。」玄德曰：「二弟之中，誰人可守？」關公曰：「弟願守此城。」玄德曰：「吾早晚欲與你議事，豈可相離？」張飛曰：「小弟願守此城。」玄德曰：「你守不得此城。你一者酒後剛強，鞭撻士卒；二者作事輕易，不從人諫。吾不放心。」張飛曰：「弟自今以後不飲酒，不打軍士，諸般聽人勸諫便了。」糜竺曰：「只恐口不應心。」飛怒曰：「吾跟哥哥多年，未嘗失信，你如何輕料我！」玄德曰：「弟言雖如此，吾終不放心。還請陳元龍輔之，早晚令其少飲酒，勿致失事。」陳登應諾。玄德吩咐了當，乃統馬步軍二萬，離徐州望南陽進發。"
+        },
+        {
+          "sourceRef": "014#p14",
+          "isAnchor": false,
+          "text": "卻說袁術聞說劉備上表，欲吞其州縣，乃大怒曰：「汝乃織席編屨之夫，今輒佔據大郡，與諸侯同列。吾正欲伐汝，汝卻反欲圖我，深爲可恨！」乃使上將紀靈起兵十萬，殺奔徐州。兩軍會於盱眙。玄德兵少，依山傍水下寨。那紀靈乃山東人，使一口三尖刀，重五十斤。是日引兵出陣，大罵：「劉備村夫，安敢侵吾境界！」玄德曰：「吾奉天子詔，以討不臣。汝今敢來相拒，罪不容誅！」紀靈大怒，拍馬舞刀，直取玄德。關公大喝曰：「匹夫休得逞強！」出馬與紀靈大戰。一連三十合，不分勝負。紀靈大叫：「少歇！」關公便撥馬回陣，立於陣前候之。紀靈卻遣副將荀正出馬。關公曰：「只教紀靈來，與他決個雌雄！」荀正曰：「汝乃無名下將，非紀將軍對手！」關公大怒，直取荀正，交馬一合，砍荀正於馬下。玄德驅兵殺將過去，紀靈大敗，退守淮陰河口。不敢交戰，只教軍士來偷營劫寨，皆被徐州兵殺敗。兩軍相拒，不在話下。"
+        },
+        {
+          "sourceRef": "014#p15",
+          "isAnchor": false,
+          "text": "卻說張飛自送玄德起身後，一應雜事，俱付陳元龍管理；軍機大務，自家參酌。一日設宴，請各官赴席。眾人坐定。張飛開言曰：「我兄臨去時，吩咐我少飲酒，恐致失事。眾官今日盡此一醉，明日都各戒酒，幫我守城。今日卻都要滿飲。」言罷，起身與眾官把盞。酒至曹豹面前，豹曰：「我從天戒，不飲酒。」飛曰：「廝殺漢如何不飲酒！我要你吃一盞。」豹懼怕，只得飲了一杯。張飛把遍各官，自斟巨觥，連飲了幾十杯，不覺大醉。卻又起身，與眾官把盞。酒至曹豹，豹曰：「某實不能飲矣。」飛曰：「你恰纔吃了，如今爲何推卻？」豹再三不飲。飛醉後使酒，便發怒曰：「你違我將令，該打一百！」便喝軍士拿下。陳元龍曰：「玄德公臨去時，吩咐你甚來？」飛曰：「你文官只管文官事，休來管我。」曹豹無奈，只得告求曰：「翼德公看我女婿之面，且恕我罷！」飛曰：「你女婿是誰？」豹曰：「呂布是也。」飛大怒曰：「我本不欲打你，你把呂布來嚇我，我偏要打你。我打你便是打呂布。」諸人勸不住。將曹豹鞭至五十，眾人苦苦告饒方止。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1264",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1264",
+          "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+          "location": "徐州",
+          "relationshipEdges": [
+            {
+              "fromId": "liu-bei",
+              "toId": "yuan-shu",
+              "type": "commands",
+              "evidenceRefs": [
+                "014#p13"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            },
+            {
+              "fromId": "yuan-shu",
+              "toId": "liu-bei",
+              "type": "commands",
+              "evidenceRefs": [
+                "014#p13"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `徐州`",
+          "agent reviewer selected 2 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1153",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1153",
+      "chapterNo": 14,
+      "sourceRefs": [
+        "014#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-deng",
+        "liu-bei",
+        "lu-bu",
+        "sun-qian",
+        "xun-yu",
+        "yuan-shu",
+        "zhang-fei"
+      ],
+      "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+      "sourceQuote": "」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1153",
+        "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+        "location": "徐州",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "yuan-shu",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yuan-shu",
+            "toId": "liu-bei",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "014#p11",
+          "isAnchor": false,
+          "text": "操既定大事，乃設宴後堂，聚眾謀士共議曰：「劉備屯兵徐州，自領州事；近呂布以兵敗投之，備使居於小沛。若二人同心，引兵來犯，乃心腹之患也。公等有何妙計可圖之？」許褚曰：「願借精兵五萬，斬劉備、呂布之頭，獻於丞相。」荀彧曰：「將軍勇則勇矣，不知用謀。今許都新定，未可造次用兵。彧有一計，名曰『二虎競食』之計。今劉備雖領徐州，未得詔命。明公可奏請詔命，實授備爲徐州牧，因密與一書，教殺呂布。事成，則備無猛士爲輔，亦漸可圖；事不成，則呂布必殺備矣：此乃二虎競食之計也。」操從其言，即時奏請詔命，遣使齎往徐州，封劉備爲征東將軍、宜城亭侯、領徐州牧，并附密書一封。"
+        },
+        {
+          "sourceRef": "014#p12",
+          "isAnchor": false,
+          "text": "卻說劉玄德在徐州，聞帝幸許都，正欲上表慶賀，忽報天使至。出郭迎接入郡，拜受恩命畢，設宴款待來使。使曰：「君侯得此恩命，實曹將軍於帝前保薦之力也。」玄德稱謝。使者乃取出私書，遞與玄德。玄德看罷，曰：「此事尚容計議。」席散，安歇來使於館驛。玄德連夜與眾商議此事。張飛曰：「呂布本無義之人，殺之無礙。」玄德曰：「他勢窮而來投我，我若殺之，亦是不義。」張飛曰：「好人難做。」玄德不從。次日，呂布來賀，玄德教請入見。布曰：「聞公受朝廷恩命，特來相賀。」玄德遜謝。只見張飛扯劍上廳，要殺呂布，玄德慌忙阻住。布大驚曰：「翼德何故只要殺我？」張飛叫曰：「曹操道你是無義之人，教我哥哥殺你！」玄德連聲喝退。乃引呂布同入後堂，實告前因，就將曹操所送密書與呂布看。布看畢泣曰：「此乃曹賊欲令我二人不和耳！」玄德曰：「兄勿憂，劉備誓不爲此不義之事。」呂布再三拜謝。備留布飲酒，至晚方回。關、張曰：「兄長何故不殺呂布？」玄德曰：「此曹孟德恐我與呂布同謀伐之，故用此計，使我兩人自相吞併，彼卻於中取利。奈何爲所使乎？」關公點頭道是。張飛曰：「我只要殺此賊，以絕後患！」玄德曰：「此非大丈夫之所爲也。」次日，玄德送使命回京，就拜表謝恩；并回書與曹操，只言容緩圖之。"
+        },
+        {
+          "sourceRef": "014#p13",
+          "isAnchor": true,
+          "text": "使命回見曹操，言玄德不殺呂布之事。操問荀彧曰：「此計不成，奈何？」彧曰：「又有一計，名曰『驅虎吞狼』之計。」操曰：「其計如何？」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。公乃明詔劉備討袁術。兩邊相并，呂布必生異心。此驅虎吞狼之計也。」操大喜，先發人往袁術處，次假天子詔，發人往徐州。卻說玄德在徐州，聞使命至，出郭迎接。開讀詔書，卻是要起兵討袁術。玄德領命，送使者先回。糜竺曰：「此又是曹操之計。」玄德曰：「雖是計，王命不可違也。」遂點軍馬，克日起程。孫乾曰：「可先定守城之人。」玄德曰：「二弟之中，誰人可守？」關公曰：「弟願守此城。」玄德曰：「吾早晚欲與你議事，豈可相離？」張飛曰：「小弟願守此城。」玄德曰：「你守不得此城。你一者酒後剛強，鞭撻士卒；二者作事輕易，不從人諫。吾不放心。」張飛曰：「弟自今以後不飲酒，不打軍士，諸般聽人勸諫便了。」糜竺曰：「只恐口不應心。」飛怒曰：「吾跟哥哥多年，未嘗失信，你如何輕料我！」玄德曰：「弟言雖如此，吾終不放心。還請陳元龍輔之，早晚令其少飲酒，勿致失事。」陳登應諾。玄德吩咐了當，乃統馬步軍二萬，離徐州望南陽進發。"
+        },
+        {
+          "sourceRef": "014#p14",
+          "isAnchor": false,
+          "text": "卻說袁術聞說劉備上表，欲吞其州縣，乃大怒曰：「汝乃織席編屨之夫，今輒佔據大郡，與諸侯同列。吾正欲伐汝，汝卻反欲圖我，深爲可恨！」乃使上將紀靈起兵十萬，殺奔徐州。兩軍會於盱眙。玄德兵少，依山傍水下寨。那紀靈乃山東人，使一口三尖刀，重五十斤。是日引兵出陣，大罵：「劉備村夫，安敢侵吾境界！」玄德曰：「吾奉天子詔，以討不臣。汝今敢來相拒，罪不容誅！」紀靈大怒，拍馬舞刀，直取玄德。關公大喝曰：「匹夫休得逞強！」出馬與紀靈大戰。一連三十合，不分勝負。紀靈大叫：「少歇！」關公便撥馬回陣，立於陣前候之。紀靈卻遣副將荀正出馬。關公曰：「只教紀靈來，與他決個雌雄！」荀正曰：「汝乃無名下將，非紀將軍對手！」關公大怒，直取荀正，交馬一合，砍荀正於馬下。玄德驅兵殺將過去，紀靈大敗，退守淮陰河口。不敢交戰，只教軍士來偷營劫寨，皆被徐州兵殺敗。兩軍相拒，不在話下。"
+        },
+        {
+          "sourceRef": "014#p15",
+          "isAnchor": false,
+          "text": "卻說張飛自送玄德起身後，一應雜事，俱付陳元龍管理；軍機大務，自家參酌。一日設宴，請各官赴席。眾人坐定。張飛開言曰：「我兄臨去時，吩咐我少飲酒，恐致失事。眾官今日盡此一醉，明日都各戒酒，幫我守城。今日卻都要滿飲。」言罷，起身與眾官把盞。酒至曹豹面前，豹曰：「我從天戒，不飲酒。」飛曰：「廝殺漢如何不飲酒！我要你吃一盞。」豹懼怕，只得飲了一杯。張飛把遍各官，自斟巨觥，連飲了幾十杯，不覺大醉。卻又起身，與眾官把盞。酒至曹豹，豹曰：「某實不能飲矣。」飛曰：「你恰纔吃了，如今爲何推卻？」豹再三不飲。飛醉後使酒，便發怒曰：「你違我將令，該打一百！」便喝軍士拿下。陳元龍曰：「玄德公臨去時，吩咐你甚來？」飛曰：「你文官只管文官事，休來管我。」曹豹無奈，只得告求曰：「翼德公看我女婿之面，且恕我罷！」飛曰：「你女婿是誰？」豹曰：「呂布是也。」飛大怒曰：「我本不欲打你，你把呂布來嚇我，我偏要打你。我打你便是打呂布。」諸人勸不住。將曹豹鞭至五十，眾人苦苦告饒方止。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1153",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1153",
+          "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+          "location": "徐州",
+          "relationshipEdges": [
+            {
+              "fromId": "liu-bei",
+              "toId": "yuan-shu",
+              "type": "commands",
+              "evidenceRefs": [
+                "014#p13"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            },
+            {
+              "fromId": "yuan-shu",
+              "toId": "liu-bei",
+              "type": "commands",
+              "evidenceRefs": [
+                "014#p13"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `徐州`",
+          "agent reviewer selected 2 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1043",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1043",
+      "chapterNo": 14,
+      "sourceRefs": [
+        "014#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-deng",
+        "liu-bei",
+        "lu-bu",
+        "sun-qian",
+        "xun-yu",
+        "yuan-shu",
+        "zhang-fei"
+      ],
+      "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+      "sourceQuote": "」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1043",
+        "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+        "location": "徐州",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "yuan-shu",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yuan-shu",
+            "toId": "liu-bei",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "014#p11",
+          "isAnchor": false,
+          "text": "操既定大事，乃設宴後堂，聚眾謀士共議曰：「劉備屯兵徐州，自領州事；近呂布以兵敗投之，備使居於小沛。若二人同心，引兵來犯，乃心腹之患也。公等有何妙計可圖之？」許褚曰：「願借精兵五萬，斬劉備、呂布之頭，獻於丞相。」荀彧曰：「將軍勇則勇矣，不知用謀。今許都新定，未可造次用兵。彧有一計，名曰『二虎競食』之計。今劉備雖領徐州，未得詔命。明公可奏請詔命，實授備爲徐州牧，因密與一書，教殺呂布。事成，則備無猛士爲輔，亦漸可圖；事不成，則呂布必殺備矣：此乃二虎競食之計也。」操從其言，即時奏請詔命，遣使齎往徐州，封劉備爲征東將軍、宜城亭侯、領徐州牧，并附密書一封。"
+        },
+        {
+          "sourceRef": "014#p12",
+          "isAnchor": false,
+          "text": "卻說劉玄德在徐州，聞帝幸許都，正欲上表慶賀，忽報天使至。出郭迎接入郡，拜受恩命畢，設宴款待來使。使曰：「君侯得此恩命，實曹將軍於帝前保薦之力也。」玄德稱謝。使者乃取出私書，遞與玄德。玄德看罷，曰：「此事尚容計議。」席散，安歇來使於館驛。玄德連夜與眾商議此事。張飛曰：「呂布本無義之人，殺之無礙。」玄德曰：「他勢窮而來投我，我若殺之，亦是不義。」張飛曰：「好人難做。」玄德不從。次日，呂布來賀，玄德教請入見。布曰：「聞公受朝廷恩命，特來相賀。」玄德遜謝。只見張飛扯劍上廳，要殺呂布，玄德慌忙阻住。布大驚曰：「翼德何故只要殺我？」張飛叫曰：「曹操道你是無義之人，教我哥哥殺你！」玄德連聲喝退。乃引呂布同入後堂，實告前因，就將曹操所送密書與呂布看。布看畢泣曰：「此乃曹賊欲令我二人不和耳！」玄德曰：「兄勿憂，劉備誓不爲此不義之事。」呂布再三拜謝。備留布飲酒，至晚方回。關、張曰：「兄長何故不殺呂布？」玄德曰：「此曹孟德恐我與呂布同謀伐之，故用此計，使我兩人自相吞併，彼卻於中取利。奈何爲所使乎？」關公點頭道是。張飛曰：「我只要殺此賊，以絕後患！」玄德曰：「此非大丈夫之所爲也。」次日，玄德送使命回京，就拜表謝恩；并回書與曹操，只言容緩圖之。"
+        },
+        {
+          "sourceRef": "014#p13",
+          "isAnchor": true,
+          "text": "使命回見曹操，言玄德不殺呂布之事。操問荀彧曰：「此計不成，奈何？」彧曰：「又有一計，名曰『驅虎吞狼』之計。」操曰：「其計如何？」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。公乃明詔劉備討袁術。兩邊相并，呂布必生異心。此驅虎吞狼之計也。」操大喜，先發人往袁術處，次假天子詔，發人往徐州。卻說玄德在徐州，聞使命至，出郭迎接。開讀詔書，卻是要起兵討袁術。玄德領命，送使者先回。糜竺曰：「此又是曹操之計。」玄德曰：「雖是計，王命不可違也。」遂點軍馬，克日起程。孫乾曰：「可先定守城之人。」玄德曰：「二弟之中，誰人可守？」關公曰：「弟願守此城。」玄德曰：「吾早晚欲與你議事，豈可相離？」張飛曰：「小弟願守此城。」玄德曰：「你守不得此城。你一者酒後剛強，鞭撻士卒；二者作事輕易，不從人諫。吾不放心。」張飛曰：「弟自今以後不飲酒，不打軍士，諸般聽人勸諫便了。」糜竺曰：「只恐口不應心。」飛怒曰：「吾跟哥哥多年，未嘗失信，你如何輕料我！」玄德曰：「弟言雖如此，吾終不放心。還請陳元龍輔之，早晚令其少飲酒，勿致失事。」陳登應諾。玄德吩咐了當，乃統馬步軍二萬，離徐州望南陽進發。"
+        },
+        {
+          "sourceRef": "014#p14",
+          "isAnchor": false,
+          "text": "卻說袁術聞說劉備上表，欲吞其州縣，乃大怒曰：「汝乃織席編屨之夫，今輒佔據大郡，與諸侯同列。吾正欲伐汝，汝卻反欲圖我，深爲可恨！」乃使上將紀靈起兵十萬，殺奔徐州。兩軍會於盱眙。玄德兵少，依山傍水下寨。那紀靈乃山東人，使一口三尖刀，重五十斤。是日引兵出陣，大罵：「劉備村夫，安敢侵吾境界！」玄德曰：「吾奉天子詔，以討不臣。汝今敢來相拒，罪不容誅！」紀靈大怒，拍馬舞刀，直取玄德。關公大喝曰：「匹夫休得逞強！」出馬與紀靈大戰。一連三十合，不分勝負。紀靈大叫：「少歇！」關公便撥馬回陣，立於陣前候之。紀靈卻遣副將荀正出馬。關公曰：「只教紀靈來，與他決個雌雄！」荀正曰：「汝乃無名下將，非紀將軍對手！」關公大怒，直取荀正，交馬一合，砍荀正於馬下。玄德驅兵殺將過去，紀靈大敗，退守淮陰河口。不敢交戰，只教軍士來偷營劫寨，皆被徐州兵殺敗。兩軍相拒，不在話下。"
+        },
+        {
+          "sourceRef": "014#p15",
+          "isAnchor": false,
+          "text": "卻說張飛自送玄德起身後，一應雜事，俱付陳元龍管理；軍機大務，自家參酌。一日設宴，請各官赴席。眾人坐定。張飛開言曰：「我兄臨去時，吩咐我少飲酒，恐致失事。眾官今日盡此一醉，明日都各戒酒，幫我守城。今日卻都要滿飲。」言罷，起身與眾官把盞。酒至曹豹面前，豹曰：「我從天戒，不飲酒。」飛曰：「廝殺漢如何不飲酒！我要你吃一盞。」豹懼怕，只得飲了一杯。張飛把遍各官，自斟巨觥，連飲了幾十杯，不覺大醉。卻又起身，與眾官把盞。酒至曹豹，豹曰：「某實不能飲矣。」飛曰：「你恰纔吃了，如今爲何推卻？」豹再三不飲。飛醉後使酒，便發怒曰：「你違我將令，該打一百！」便喝軍士拿下。陳元龍曰：「玄德公臨去時，吩咐你甚來？」飛曰：「你文官只管文官事，休來管我。」曹豹無奈，只得告求曰：「翼德公看我女婿之面，且恕我罷！」飛曰：「你女婿是誰？」豹曰：「呂布是也。」飛大怒曰：「我本不欲打你，你把呂布來嚇我，我偏要打你。我打你便是打呂布。」諸人勸不住。將曹豹鞭至五十，眾人苦苦告饒方止。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1043",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.1043",
+          "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+          "location": "徐州",
+          "relationshipEdges": [
+            {
+              "fromId": "liu-bei",
+              "toId": "yuan-shu",
+              "type": "commands",
+              "evidenceRefs": [
+                "014#p13"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            },
+            {
+              "fromId": "yuan-shu",
+              "toId": "liu-bei",
+              "type": "commands",
+              "evidenceRefs": [
+                "014#p13"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `徐州`",
+          "agent reviewer selected 2 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.0935",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.0935",
+      "chapterNo": 14,
+      "sourceRefs": [
+        "014#p13"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "chen-deng",
+        "liu-bei",
+        "lu-bu",
+        "sun-qian",
+        "xun-yu",
+        "yuan-shu",
+        "zhang-fei"
+      ],
+      "summary": "寨：張飛曰：「呂布本無義之人，殺之無礙。",
+      "sourceQuote": "」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.0935",
+        "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+        "location": "徐州",
+        "relationshipEdges": [
+          {
+            "fromId": "liu-bei",
+            "toId": "yuan-shu",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          },
+          {
+            "fromId": "yuan-shu",
+            "toId": "liu-bei",
+            "type": "commands",
+            "evidenceRefs": [
+              "014#p13"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "014#p11",
+          "isAnchor": false,
+          "text": "操既定大事，乃設宴後堂，聚眾謀士共議曰：「劉備屯兵徐州，自領州事；近呂布以兵敗投之，備使居於小沛。若二人同心，引兵來犯，乃心腹之患也。公等有何妙計可圖之？」許褚曰：「願借精兵五萬，斬劉備、呂布之頭，獻於丞相。」荀彧曰：「將軍勇則勇矣，不知用謀。今許都新定，未可造次用兵。彧有一計，名曰『二虎競食』之計。今劉備雖領徐州，未得詔命。明公可奏請詔命，實授備爲徐州牧，因密與一書，教殺呂布。事成，則備無猛士爲輔，亦漸可圖；事不成，則呂布必殺備矣：此乃二虎競食之計也。」操從其言，即時奏請詔命，遣使齎往徐州，封劉備爲征東將軍、宜城亭侯、領徐州牧，并附密書一封。"
+        },
+        {
+          "sourceRef": "014#p12",
+          "isAnchor": false,
+          "text": "卻說劉玄德在徐州，聞帝幸許都，正欲上表慶賀，忽報天使至。出郭迎接入郡，拜受恩命畢，設宴款待來使。使曰：「君侯得此恩命，實曹將軍於帝前保薦之力也。」玄德稱謝。使者乃取出私書，遞與玄德。玄德看罷，曰：「此事尚容計議。」席散，安歇來使於館驛。玄德連夜與眾商議此事。張飛曰：「呂布本無義之人，殺之無礙。」玄德曰：「他勢窮而來投我，我若殺之，亦是不義。」張飛曰：「好人難做。」玄德不從。次日，呂布來賀，玄德教請入見。布曰：「聞公受朝廷恩命，特來相賀。」玄德遜謝。只見張飛扯劍上廳，要殺呂布，玄德慌忙阻住。布大驚曰：「翼德何故只要殺我？」張飛叫曰：「曹操道你是無義之人，教我哥哥殺你！」玄德連聲喝退。乃引呂布同入後堂，實告前因，就將曹操所送密書與呂布看。布看畢泣曰：「此乃曹賊欲令我二人不和耳！」玄德曰：「兄勿憂，劉備誓不爲此不義之事。」呂布再三拜謝。備留布飲酒，至晚方回。關、張曰：「兄長何故不殺呂布？」玄德曰：「此曹孟德恐我與呂布同謀伐之，故用此計，使我兩人自相吞併，彼卻於中取利。奈何爲所使乎？」關公點頭道是。張飛曰：「我只要殺此賊，以絕後患！」玄德曰：「此非大丈夫之所爲也。」次日，玄德送使命回京，就拜表謝恩；并回書與曹操，只言容緩圖之。"
+        },
+        {
+          "sourceRef": "014#p13",
+          "isAnchor": true,
+          "text": "使命回見曹操，言玄德不殺呂布之事。操問荀彧曰：「此計不成，奈何？」彧曰：「又有一計，名曰『驅虎吞狼』之計。」操曰：「其計如何？」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。術聞之必怒而攻備。公乃明詔劉備討袁術。兩邊相并，呂布必生異心。此驅虎吞狼之計也。」操大喜，先發人往袁術處，次假天子詔，發人往徐州。卻說玄德在徐州，聞使命至，出郭迎接。開讀詔書，卻是要起兵討袁術。玄德領命，送使者先回。糜竺曰：「此又是曹操之計。」玄德曰：「雖是計，王命不可違也。」遂點軍馬，克日起程。孫乾曰：「可先定守城之人。」玄德曰：「二弟之中，誰人可守？」關公曰：「弟願守此城。」玄德曰：「吾早晚欲與你議事，豈可相離？」張飛曰：「小弟願守此城。」玄德曰：「你守不得此城。你一者酒後剛強，鞭撻士卒；二者作事輕易，不從人諫。吾不放心。」張飛曰：「弟自今以後不飲酒，不打軍士，諸般聽人勸諫便了。」糜竺曰：「只恐口不應心。」飛怒曰：「吾跟哥哥多年，未嘗失信，你如何輕料我！」玄德曰：「弟言雖如此，吾終不放心。還請陳元龍輔之，早晚令其少飲酒，勿致失事。」陳登應諾。玄德吩咐了當，乃統馬步軍二萬，離徐州望南陽進發。"
+        },
+        {
+          "sourceRef": "014#p14",
+          "isAnchor": false,
+          "text": "卻說袁術聞說劉備上表，欲吞其州縣，乃大怒曰：「汝乃織席編屨之夫，今輒佔據大郡，與諸侯同列。吾正欲伐汝，汝卻反欲圖我，深爲可恨！」乃使上將紀靈起兵十萬，殺奔徐州。兩軍會於盱眙。玄德兵少，依山傍水下寨。那紀靈乃山東人，使一口三尖刀，重五十斤。是日引兵出陣，大罵：「劉備村夫，安敢侵吾境界！」玄德曰：「吾奉天子詔，以討不臣。汝今敢來相拒，罪不容誅！」紀靈大怒，拍馬舞刀，直取玄德。關公大喝曰：「匹夫休得逞強！」出馬與紀靈大戰。一連三十合，不分勝負。紀靈大叫：「少歇！」關公便撥馬回陣，立於陣前候之。紀靈卻遣副將荀正出馬。關公曰：「只教紀靈來，與他決個雌雄！」荀正曰：「汝乃無名下將，非紀將軍對手！」關公大怒，直取荀正，交馬一合，砍荀正於馬下。玄德驅兵殺將過去，紀靈大敗，退守淮陰河口。不敢交戰，只教軍士來偷營劫寨，皆被徐州兵殺敗。兩軍相拒，不在話下。"
+        },
+        {
+          "sourceRef": "014#p15",
+          "isAnchor": false,
+          "text": "卻說張飛自送玄德起身後，一應雜事，俱付陳元龍管理；軍機大務，自家參酌。一日設宴，請各官赴席。眾人坐定。張飛開言曰：「我兄臨去時，吩咐我少飲酒，恐致失事。眾官今日盡此一醉，明日都各戒酒，幫我守城。今日卻都要滿飲。」言罷，起身與眾官把盞。酒至曹豹面前，豹曰：「我從天戒，不飲酒。」飛曰：「廝殺漢如何不飲酒！我要你吃一盞。」豹懼怕，只得飲了一杯。張飛把遍各官，自斟巨觥，連飲了幾十杯，不覺大醉。卻又起身，與眾官把盞。酒至曹豹，豹曰：「某實不能飲矣。」飛曰：「你恰纔吃了，如今爲何推卻？」豹再三不飲。飛醉後使酒，便發怒曰：「你違我將令，該打一百！」便喝軍士拿下。陳元龍曰：「玄德公臨去時，吩咐你甚來？」飛曰：「你文官只管文官事，休來管我。」曹豹無奈，只得告求曰：「翼德公看我女婿之面，且恕我罷！」飛曰：「你女婿是誰？」豹曰：「呂布是也。」飛大怒曰：「我本不欲打你，你把呂布來嚇我，我偏要打你。我打你便是打呂布。」諸人勸不住。將曹豹鞭至五十，眾人苦苦告饒方止。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.0935",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhang-fei.generic-battle-014-p13.0935",
+          "summary": "徐州：」彧曰：「可暗令人往袁術處通問，報說劉備上密表，要略南郡。",
+          "location": "徐州",
+          "relationshipEdges": [
+            {
+              "fromId": "liu-bei",
+              "toId": "yuan-shu",
+              "type": "commands",
+              "evidenceRefs": [
+                "014#p13"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            },
+            {
+              "fromId": "yuan-shu",
+              "toId": "liu-bei",
+              "type": "commands",
+              "evidenceRefs": [
+                "014#p13"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `徐州`",
+          "agent reviewer selected 2 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    }
+  ],
+  "contextExpansion": {
+    "generatedAt": "2026-05-02T04:55:23+00:00",
+    "fillAnswers": true,
+    "note": "DeepSeek proposals are review-only and do not publish canonical events."
+  }
+}

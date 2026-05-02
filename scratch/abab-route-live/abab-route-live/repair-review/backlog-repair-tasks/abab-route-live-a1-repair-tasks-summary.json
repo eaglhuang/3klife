@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:54:22+00:00",
+  "mode": "review-b-backlog-repair-task-queue",
+  "canonicalWrites": false,
+  "inputs": {
+    "editBacklogPath": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-refine-r1-reviewed-b-edit-backlog.jsonl"
+  },
+  "taskCount": 1766,
+  "candidateCount": 1766,
+  "priorityCounts": {
+    "high": 1747,
+    "low": 6,
+    "medium": 13
+  },
+  "repairActionCounts": {
+    "fill_location": 1742,
+    "manual_review_confirm_publishability": 6,
+    "narrow_event_boundary": 1588,
+    "repair_relationship_edges": 1738
+  },
+  "topFocusGenerals": {
+    "cao-cao": 357,
+    "liu-bei": 255,
+    "xiahou-dun": 170,
+    "zhang-fei": 146,
+    "li-dian": 140,
+    "lu-bu": 127,
+    "le-jin": 97,
+    "cao-ren": 84,
+    "xu-zhu": 80,
+    "xiahou-yuan": 78,
+    "guan-yu": 56,
+    "zhang-liao": 41,
+    "zhao-yun": 32,
+    "sun-quan": 17,
+    "zhou-yu": 15,
+    "sun-jian": 14,
+    "yuan-shao": 12,
+    "dong-zhuo": 9,
+    "gongsun-zan": 9,
+    "zhuge-liang": 8,
+    "wei-yan": 6,
+    "cai-shi": 5,
+    "mi-shi": 2,
+    "wu-guo-tai": 2
+  }
+}

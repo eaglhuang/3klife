@@ -1,0 +1,583 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T04:55:20+00:00",
+  "mode": "event-review-context-enriched",
+  "canonicalWrites": false,
+  "generalId": "cao-cao",
+  "inputs": {
+    "candidatesPath": "scratch/abab-live-r4-route/abab-live-r4-route/repair-review/backlog-repair-tasks/abab-live-r4-route-a1-repair-review-candidates.jsonl",
+    "reasoningReportPath": "artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.json"
+  },
+  "questions": [
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.1046",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.1046",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p4"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "cao-hong",
+        "dian-wei",
+        "hao-meng",
+        "hou-cheng",
+        "le-jin",
+        "li-dian",
+        "romance-person-66f9-6027",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "zhang-liao"
+      ],
+      "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+      "sourceQuote": "鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.1046",
+        "summary": "陽城：卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；",
+        "location": "陽城",
+        "relationshipEdges": [
+          {
+            "fromId": "cao-cao",
+            "toId": "dian-wei",
+            "type": "commands",
+            "evidenceRefs": [
+              "012#p5"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "012#p2",
+          "isAnchor": false,
+          "text": "曹操正慌走間，正南上一彪軍到，乃夏侯惇引軍來救援，截住呂布大戰。鬥到黃昏時分，大雨如注，各自引軍分散。操回寨，重賞典韋，加爲領軍都尉。"
+        },
+        {
+          "sourceRef": "012#p3",
+          "isAnchor": false,
+          "text": "卻說呂布到寨，與陳宮商議。宮曰：「濮陽城中有富戶田氏，家僮千百，爲一郡之巨室。可令彼密使人往操寨中下書，言『呂溫侯殘暴不仁，民心大怨。今欲移兵黎陽，止有高順在城內。可連夜進兵，我爲內應。』操若來，誘之入城，四門放火，外設伏兵。曹操雖有經天緯地之才，到此安能得脫也？」呂布從其計，密諭田氏，使人徑到操寨。操因新敗，正在躊躇，忽報田氏人到。呈上密書云：「呂布已往黎陽，城中空虛。萬望速來，當爲內應。城上插白旗，大書『義』字，便是暗號。」操大喜曰：「天使吾得濮陽也！」重賞來人，一面收拾起兵。劉曄曰：「布雖無謀，陳宮多計，只恐其中有詐，不可不防。明公欲去，當分三軍爲三隊：兩隊伏城外接應，一隊入城方可。」操從其言，分軍三隊，來至濮陽城下。操先往觀之，見城上遍豎旗幡；西門角上，有一「義」字白旗。心中暗喜。"
+        },
+        {
+          "sourceRef": "012#p4",
+          "isAnchor": true,
+          "text": "是日午牌，城門開處，兩員將引軍出戰：前軍侯成，後軍高順。操即使典韋出馬，直取侯成。侯成抵敵不過，回馬望城中走。韋趕到吊橋邊，高順亦攔擋不住，都退入城中去了。數內有軍人乘勢混過陣來見操，說是田氏之使，呈上密書。約云：「今夜初更時分，城上鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵、李典、樂進、典韋四將，率兵入城。李典曰：「主公且在城外，容某等先入城去。」操喝曰：「我不自往，誰肯向前！」遂當先領兵直入。時約初更，月光未上，只聽得西門上吹贏殼聲，喊聲忽起。門上火把繚亂，城門大開，吊橋放落。曹操爭先拍馬而入。直到州衙，路上不見一人。操知是計，忙撥回馬，大叫：「退兵！」州衙中一聲炮響，四門烈火轟天而起。金鼓齊鳴，喊聲如江翻海沸。東巷內轉出張遼，西巷內轉出臧霸，夾攻掩殺。操走北門。道旁轉出郝萌、曹性，又殺一陣。操急走南門，高順、侯成攔住。典韋怒目咬牙，衝殺出去。高順、侯成倒走出城。典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。門下撞著李典，典韋問：「主公何在？」典曰：「吾亦尋不見。」韋曰：「汝在城外催救軍，我入去尋主公！」李典去了。典韋殺入城中，尋覓不見，再殺出城壕邊，撞著樂進。進曰：「主公何在？」韋曰：「我往復兩遭，尋覓不見。」進曰：「同殺入去救主！」兩人到門邊，城上火炮滾下，樂進馬不能入。典韋冒煙突火，又殺入去，到處尋覓。"
+        },
+        {
+          "sourceRef": "012#p5",
+          "isAnchor": false,
+          "text": "卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；再轉北門，火光裏正撞見呂布，挺戟躍馬而來。操以手掩面，加鞭縱馬竟過。呂布從後拍馬趕來，將戟於操盔上一擊，問曰：「曹操何在？」操反指曰：「前面騎黃馬者是他。」呂布聽說，棄了曹操，縱馬向前追趕。曹操撥轉馬頭，望東門而走，正逢典韋。韋擁護曹操，殺條血路，到城門邊，火焰甚盛，城上推下柴草，遍地都是火。韋用戟撥開，飛馬冒煙突火先出，曹操隨後亦出。方到門道邊，城門上崩下一條火梁來，正打著曹操戰馬後胯，那馬撲地倒了。操用手托梁推放地上，手臂鬚髮盡被燒傷。典韋回馬來救。恰好夏侯淵亦到，兩個同救起曹操，突火而出。操乘淵馬，典韋殺條大路而走。直混戰到天明，操方回寨。"
+        },
+        {
+          "sourceRef": "012#p6",
+          "isAnchor": false,
+          "text": "眾將拜伏問安，操仰面笑曰：「誤中匹夫之計，吾必當報之！」郭嘉曰：「計可速發。」操曰：「今只將計就計，詐言我被火傷，已經身死。布必引兵來攻。我伏兵於馬陵山中，候其兵半渡而擊之，布可擒矣。」嘉曰：「真良策也！」於是令軍士掛孝發喪，詐言操死。早有人來濮陽報呂布，說曹操被火燒傷肢體，到寨身死。布隨點起軍馬，殺奔馬陵山來。將到操寨，一聲鼓響，伏兵四起。呂布死戰得脫，折了好些人馬，敗回濮陽，堅守不出。是年蝗蟲忽起，食盡禾稻。關東一境，每穀一斛直錢五十貫，人民相食。曹操因軍中糧盡，引兵回鄄城暫住。呂布亦引兵出屯山陽就食。因此二處權且罷兵。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.1046",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.1046",
+          "summary": "陽城：卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；",
+          "location": "陽城",
+          "relationshipEdges": [
+            {
+              "fromId": "cao-cao",
+              "toId": "dian-wei",
+              "type": "commands",
+              "evidenceRefs": [
+                "012#p5"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `陽城`",
+          "agent reviewer selected 1 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0938",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0938",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p4"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "cao-hong",
+        "dian-wei",
+        "hao-meng",
+        "hou-cheng",
+        "le-jin",
+        "li-dian",
+        "romance-person-66f9-6027",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "zhang-liao"
+      ],
+      "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+      "sourceQuote": "鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0938",
+        "summary": "陽城：卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；",
+        "location": "陽城",
+        "relationshipEdges": [
+          {
+            "fromId": "cao-cao",
+            "toId": "dian-wei",
+            "type": "commands",
+            "evidenceRefs": [
+              "012#p5"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "012#p2",
+          "isAnchor": false,
+          "text": "曹操正慌走間，正南上一彪軍到，乃夏侯惇引軍來救援，截住呂布大戰。鬥到黃昏時分，大雨如注，各自引軍分散。操回寨，重賞典韋，加爲領軍都尉。"
+        },
+        {
+          "sourceRef": "012#p3",
+          "isAnchor": false,
+          "text": "卻說呂布到寨，與陳宮商議。宮曰：「濮陽城中有富戶田氏，家僮千百，爲一郡之巨室。可令彼密使人往操寨中下書，言『呂溫侯殘暴不仁，民心大怨。今欲移兵黎陽，止有高順在城內。可連夜進兵，我爲內應。』操若來，誘之入城，四門放火，外設伏兵。曹操雖有經天緯地之才，到此安能得脫也？」呂布從其計，密諭田氏，使人徑到操寨。操因新敗，正在躊躇，忽報田氏人到。呈上密書云：「呂布已往黎陽，城中空虛。萬望速來，當爲內應。城上插白旗，大書『義』字，便是暗號。」操大喜曰：「天使吾得濮陽也！」重賞來人，一面收拾起兵。劉曄曰：「布雖無謀，陳宮多計，只恐其中有詐，不可不防。明公欲去，當分三軍爲三隊：兩隊伏城外接應，一隊入城方可。」操從其言，分軍三隊，來至濮陽城下。操先往觀之，見城上遍豎旗幡；西門角上，有一「義」字白旗。心中暗喜。"
+        },
+        {
+          "sourceRef": "012#p4",
+          "isAnchor": true,
+          "text": "是日午牌，城門開處，兩員將引軍出戰：前軍侯成，後軍高順。操即使典韋出馬，直取侯成。侯成抵敵不過，回馬望城中走。韋趕到吊橋邊，高順亦攔擋不住，都退入城中去了。數內有軍人乘勢混過陣來見操，說是田氏之使，呈上密書。約云：「今夜初更時分，城上鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵、李典、樂進、典韋四將，率兵入城。李典曰：「主公且在城外，容某等先入城去。」操喝曰：「我不自往，誰肯向前！」遂當先領兵直入。時約初更，月光未上，只聽得西門上吹贏殼聲，喊聲忽起。門上火把繚亂，城門大開，吊橋放落。曹操爭先拍馬而入。直到州衙，路上不見一人。操知是計，忙撥回馬，大叫：「退兵！」州衙中一聲炮響，四門烈火轟天而起。金鼓齊鳴，喊聲如江翻海沸。東巷內轉出張遼，西巷內轉出臧霸，夾攻掩殺。操走北門。道旁轉出郝萌、曹性，又殺一陣。操急走南門，高順、侯成攔住。典韋怒目咬牙，衝殺出去。高順、侯成倒走出城。典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。門下撞著李典，典韋問：「主公何在？」典曰：「吾亦尋不見。」韋曰：「汝在城外催救軍，我入去尋主公！」李典去了。典韋殺入城中，尋覓不見，再殺出城壕邊，撞著樂進。進曰：「主公何在？」韋曰：「我往復兩遭，尋覓不見。」進曰：「同殺入去救主！」兩人到門邊，城上火炮滾下，樂進馬不能入。典韋冒煙突火，又殺入去，到處尋覓。"
+        },
+        {
+          "sourceRef": "012#p5",
+          "isAnchor": false,
+          "text": "卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；再轉北門，火光裏正撞見呂布，挺戟躍馬而來。操以手掩面，加鞭縱馬竟過。呂布從後拍馬趕來，將戟於操盔上一擊，問曰：「曹操何在？」操反指曰：「前面騎黃馬者是他。」呂布聽說，棄了曹操，縱馬向前追趕。曹操撥轉馬頭，望東門而走，正逢典韋。韋擁護曹操，殺條血路，到城門邊，火焰甚盛，城上推下柴草，遍地都是火。韋用戟撥開，飛馬冒煙突火先出，曹操隨後亦出。方到門道邊，城門上崩下一條火梁來，正打著曹操戰馬後胯，那馬撲地倒了。操用手托梁推放地上，手臂鬚髮盡被燒傷。典韋回馬來救。恰好夏侯淵亦到，兩個同救起曹操，突火而出。操乘淵馬，典韋殺條大路而走。直混戰到天明，操方回寨。"
+        },
+        {
+          "sourceRef": "012#p6",
+          "isAnchor": false,
+          "text": "眾將拜伏問安，操仰面笑曰：「誤中匹夫之計，吾必當報之！」郭嘉曰：「計可速發。」操曰：「今只將計就計，詐言我被火傷，已經身死。布必引兵來攻。我伏兵於馬陵山中，候其兵半渡而擊之，布可擒矣。」嘉曰：「真良策也！」於是令軍士掛孝發喪，詐言操死。早有人來濮陽報呂布，說曹操被火燒傷肢體，到寨身死。布隨點起軍馬，殺奔馬陵山來。將到操寨，一聲鼓響，伏兵四起。呂布死戰得脫，折了好些人馬，敗回濮陽，堅守不出。是年蝗蟲忽起，食盡禾稻。關東一境，每穀一斛直錢五十貫，人民相食。曹操因軍中糧盡，引兵回鄄城暫住。呂布亦引兵出屯山陽就食。因此二處權且罷兵。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0938",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0938",
+          "summary": "陽城：卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；",
+          "location": "陽城",
+          "relationshipEdges": [
+            {
+              "fromId": "cao-cao",
+              "toId": "dian-wei",
+              "type": "commands",
+              "evidenceRefs": [
+                "012#p5"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `陽城`",
+          "agent reviewer selected 1 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0838",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0838",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p4"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "cao-hong",
+        "dian-wei",
+        "hao-meng",
+        "hou-cheng",
+        "le-jin",
+        "li-dian",
+        "romance-person-66f9-6027",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "zhang-liao"
+      ],
+      "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+      "sourceQuote": "鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0838",
+        "summary": "陽城：卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；",
+        "location": "陽城",
+        "relationshipEdges": [
+          {
+            "fromId": "cao-cao",
+            "toId": "dian-wei",
+            "type": "commands",
+            "evidenceRefs": [
+              "012#p5"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "012#p2",
+          "isAnchor": false,
+          "text": "曹操正慌走間，正南上一彪軍到，乃夏侯惇引軍來救援，截住呂布大戰。鬥到黃昏時分，大雨如注，各自引軍分散。操回寨，重賞典韋，加爲領軍都尉。"
+        },
+        {
+          "sourceRef": "012#p3",
+          "isAnchor": false,
+          "text": "卻說呂布到寨，與陳宮商議。宮曰：「濮陽城中有富戶田氏，家僮千百，爲一郡之巨室。可令彼密使人往操寨中下書，言『呂溫侯殘暴不仁，民心大怨。今欲移兵黎陽，止有高順在城內。可連夜進兵，我爲內應。』操若來，誘之入城，四門放火，外設伏兵。曹操雖有經天緯地之才，到此安能得脫也？」呂布從其計，密諭田氏，使人徑到操寨。操因新敗，正在躊躇，忽報田氏人到。呈上密書云：「呂布已往黎陽，城中空虛。萬望速來，當爲內應。城上插白旗，大書『義』字，便是暗號。」操大喜曰：「天使吾得濮陽也！」重賞來人，一面收拾起兵。劉曄曰：「布雖無謀，陳宮多計，只恐其中有詐，不可不防。明公欲去，當分三軍爲三隊：兩隊伏城外接應，一隊入城方可。」操從其言，分軍三隊，來至濮陽城下。操先往觀之，見城上遍豎旗幡；西門角上，有一「義」字白旗。心中暗喜。"
+        },
+        {
+          "sourceRef": "012#p4",
+          "isAnchor": true,
+          "text": "是日午牌，城門開處，兩員將引軍出戰：前軍侯成，後軍高順。操即使典韋出馬，直取侯成。侯成抵敵不過，回馬望城中走。韋趕到吊橋邊，高順亦攔擋不住，都退入城中去了。數內有軍人乘勢混過陣來見操，說是田氏之使，呈上密書。約云：「今夜初更時分，城上鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵、李典、樂進、典韋四將，率兵入城。李典曰：「主公且在城外，容某等先入城去。」操喝曰：「我不自往，誰肯向前！」遂當先領兵直入。時約初更，月光未上，只聽得西門上吹贏殼聲，喊聲忽起。門上火把繚亂，城門大開，吊橋放落。曹操爭先拍馬而入。直到州衙，路上不見一人。操知是計，忙撥回馬，大叫：「退兵！」州衙中一聲炮響，四門烈火轟天而起。金鼓齊鳴，喊聲如江翻海沸。東巷內轉出張遼，西巷內轉出臧霸，夾攻掩殺。操走北門。道旁轉出郝萌、曹性，又殺一陣。操急走南門，高順、侯成攔住。典韋怒目咬牙，衝殺出去。高順、侯成倒走出城。典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。門下撞著李典，典韋問：「主公何在？」典曰：「吾亦尋不見。」韋曰：「汝在城外催救軍，我入去尋主公！」李典去了。典韋殺入城中，尋覓不見，再殺出城壕邊，撞著樂進。進曰：「主公何在？」韋曰：「我往復兩遭，尋覓不見。」進曰：「同殺入去救主！」兩人到門邊，城上火炮滾下，樂進馬不能入。典韋冒煙突火，又殺入去，到處尋覓。"
+        },
+        {
+          "sourceRef": "012#p5",
+          "isAnchor": false,
+          "text": "卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；再轉北門，火光裏正撞見呂布，挺戟躍馬而來。操以手掩面，加鞭縱馬竟過。呂布從後拍馬趕來，將戟於操盔上一擊，問曰：「曹操何在？」操反指曰：「前面騎黃馬者是他。」呂布聽說，棄了曹操，縱馬向前追趕。曹操撥轉馬頭，望東門而走，正逢典韋。韋擁護曹操，殺條血路，到城門邊，火焰甚盛，城上推下柴草，遍地都是火。韋用戟撥開，飛馬冒煙突火先出，曹操隨後亦出。方到門道邊，城門上崩下一條火梁來，正打著曹操戰馬後胯，那馬撲地倒了。操用手托梁推放地上，手臂鬚髮盡被燒傷。典韋回馬來救。恰好夏侯淵亦到，兩個同救起曹操，突火而出。操乘淵馬，典韋殺條大路而走。直混戰到天明，操方回寨。"
+        },
+        {
+          "sourceRef": "012#p6",
+          "isAnchor": false,
+          "text": "眾將拜伏問安，操仰面笑曰：「誤中匹夫之計，吾必當報之！」郭嘉曰：「計可速發。」操曰：「今只將計就計，詐言我被火傷，已經身死。布必引兵來攻。我伏兵於馬陵山中，候其兵半渡而擊之，布可擒矣。」嘉曰：「真良策也！」於是令軍士掛孝發喪，詐言操死。早有人來濮陽報呂布，說曹操被火燒傷肢體，到寨身死。布隨點起軍馬，殺奔馬陵山來。將到操寨，一聲鼓響，伏兵四起。呂布死戰得脫，折了好些人馬，敗回濮陽，堅守不出。是年蝗蟲忽起，食盡禾稻。關東一境，每穀一斛直錢五十貫，人民相食。曹操因軍中糧盡，引兵回鄄城暫住。呂布亦引兵出屯山陽就食。因此二處權且罷兵。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0838",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0838",
+          "summary": "陽城：卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；",
+          "location": "陽城",
+          "relationshipEdges": [
+            {
+              "fromId": "cao-cao",
+              "toId": "dian-wei",
+              "type": "commands",
+              "evidenceRefs": [
+                "012#p5"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `陽城`",
+          "agent reviewer selected 1 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0741",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0741",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p4"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "cao-hong",
+        "dian-wei",
+        "hao-meng",
+        "hou-cheng",
+        "le-jin",
+        "li-dian",
+        "romance-person-66f9-6027",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "zhang-liao"
+      ],
+      "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+      "sourceQuote": "鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0741",
+        "summary": "陽城：卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；",
+        "location": "陽城",
+        "relationshipEdges": [
+          {
+            "fromId": "cao-cao",
+            "toId": "dian-wei",
+            "type": "commands",
+            "evidenceRefs": [
+              "012#p5"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "012#p2",
+          "isAnchor": false,
+          "text": "曹操正慌走間，正南上一彪軍到，乃夏侯惇引軍來救援，截住呂布大戰。鬥到黃昏時分，大雨如注，各自引軍分散。操回寨，重賞典韋，加爲領軍都尉。"
+        },
+        {
+          "sourceRef": "012#p3",
+          "isAnchor": false,
+          "text": "卻說呂布到寨，與陳宮商議。宮曰：「濮陽城中有富戶田氏，家僮千百，爲一郡之巨室。可令彼密使人往操寨中下書，言『呂溫侯殘暴不仁，民心大怨。今欲移兵黎陽，止有高順在城內。可連夜進兵，我爲內應。』操若來，誘之入城，四門放火，外設伏兵。曹操雖有經天緯地之才，到此安能得脫也？」呂布從其計，密諭田氏，使人徑到操寨。操因新敗，正在躊躇，忽報田氏人到。呈上密書云：「呂布已往黎陽，城中空虛。萬望速來，當爲內應。城上插白旗，大書『義』字，便是暗號。」操大喜曰：「天使吾得濮陽也！」重賞來人，一面收拾起兵。劉曄曰：「布雖無謀，陳宮多計，只恐其中有詐，不可不防。明公欲去，當分三軍爲三隊：兩隊伏城外接應，一隊入城方可。」操從其言，分軍三隊，來至濮陽城下。操先往觀之，見城上遍豎旗幡；西門角上，有一「義」字白旗。心中暗喜。"
+        },
+        {
+          "sourceRef": "012#p4",
+          "isAnchor": true,
+          "text": "是日午牌，城門開處，兩員將引軍出戰：前軍侯成，後軍高順。操即使典韋出馬，直取侯成。侯成抵敵不過，回馬望城中走。韋趕到吊橋邊，高順亦攔擋不住，都退入城中去了。數內有軍人乘勢混過陣來見操，說是田氏之使，呈上密書。約云：「今夜初更時分，城上鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵、李典、樂進、典韋四將，率兵入城。李典曰：「主公且在城外，容某等先入城去。」操喝曰：「我不自往，誰肯向前！」遂當先領兵直入。時約初更，月光未上，只聽得西門上吹贏殼聲，喊聲忽起。門上火把繚亂，城門大開，吊橋放落。曹操爭先拍馬而入。直到州衙，路上不見一人。操知是計，忙撥回馬，大叫：「退兵！」州衙中一聲炮響，四門烈火轟天而起。金鼓齊鳴，喊聲如江翻海沸。東巷內轉出張遼，西巷內轉出臧霸，夾攻掩殺。操走北門。道旁轉出郝萌、曹性，又殺一陣。操急走南門，高順、侯成攔住。典韋怒目咬牙，衝殺出去。高順、侯成倒走出城。典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。門下撞著李典，典韋問：「主公何在？」典曰：「吾亦尋不見。」韋曰：「汝在城外催救軍，我入去尋主公！」李典去了。典韋殺入城中，尋覓不見，再殺出城壕邊，撞著樂進。進曰：「主公何在？」韋曰：「我往復兩遭，尋覓不見。」進曰：「同殺入去救主！」兩人到門邊，城上火炮滾下，樂進馬不能入。典韋冒煙突火，又殺入去，到處尋覓。"
+        },
+        {
+          "sourceRef": "012#p5",
+          "isAnchor": false,
+          "text": "卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；再轉北門，火光裏正撞見呂布，挺戟躍馬而來。操以手掩面，加鞭縱馬竟過。呂布從後拍馬趕來，將戟於操盔上一擊，問曰：「曹操何在？」操反指曰：「前面騎黃馬者是他。」呂布聽說，棄了曹操，縱馬向前追趕。曹操撥轉馬頭，望東門而走，正逢典韋。韋擁護曹操，殺條血路，到城門邊，火焰甚盛，城上推下柴草，遍地都是火。韋用戟撥開，飛馬冒煙突火先出，曹操隨後亦出。方到門道邊，城門上崩下一條火梁來，正打著曹操戰馬後胯，那馬撲地倒了。操用手托梁推放地上，手臂鬚髮盡被燒傷。典韋回馬來救。恰好夏侯淵亦到，兩個同救起曹操，突火而出。操乘淵馬，典韋殺條大路而走。直混戰到天明，操方回寨。"
+        },
+        {
+          "sourceRef": "012#p6",
+          "isAnchor": false,
+          "text": "眾將拜伏問安，操仰面笑曰：「誤中匹夫之計，吾必當報之！」郭嘉曰：「計可速發。」操曰：「今只將計就計，詐言我被火傷，已經身死。布必引兵來攻。我伏兵於馬陵山中，候其兵半渡而擊之，布可擒矣。」嘉曰：「真良策也！」於是令軍士掛孝發喪，詐言操死。早有人來濮陽報呂布，說曹操被火燒傷肢體，到寨身死。布隨點起軍馬，殺奔馬陵山來。將到操寨，一聲鼓響，伏兵四起。呂布死戰得脫，折了好些人馬，敗回濮陽，堅守不出。是年蝗蟲忽起，食盡禾稻。關東一境，每穀一斛直錢五十貫，人民相食。曹操因軍中糧盡，引兵回鄄城暫住。呂布亦引兵出屯山陽就食。因此二處權且罷兵。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0741",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0741",
+          "summary": "陽城：卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；",
+          "location": "陽城",
+          "relationshipEdges": [
+            {
+              "fromId": "cao-cao",
+              "toId": "dian-wei",
+              "type": "commands",
+              "evidenceRefs": [
+                "012#p5"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `陽城`",
+          "agent reviewer selected 1 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    },
+    {
+      "candidateId": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0647",
+      "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0647",
+      "chapterNo": 12,
+      "sourceRefs": [
+        "012#p4"
+      ],
+      "generalIds": [
+        "cao-cao",
+        "cao-hong",
+        "dian-wei",
+        "hao-meng",
+        "hou-cheng",
+        "le-jin",
+        "li-dian",
+        "romance-person-66f9-6027",
+        "xiahou-dun",
+        "xiahou-yuan",
+        "zhang-liao"
+      ],
+      "summary": "陽城：典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。",
+      "sourceQuote": "鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵",
+      "confidence": 0.77,
+      "missingFields": [],
+      "deepseekHint": null,
+      "suggestedAnswer": "A",
+      "answer": "A",
+      "allowedAnswers": {
+        "A": "accept",
+        "B": "accept-with-edits",
+        "C": "reject",
+        "D": "defer"
+      },
+      "edits": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0647",
+        "summary": "陽城：卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；",
+        "location": "陽城",
+        "relationshipEdges": [
+          {
+            "fromId": "cao-cao",
+            "toId": "dian-wei",
+            "type": "commands",
+            "evidenceRefs": [
+              "012#p5"
+            ],
+            "edgeConfidence": 0.82,
+            "edgeStrength": 0.7
+          }
+        ],
+        "moodTags": [
+          "agent-reviewed"
+        ]
+      },
+      "expandedContext": [
+        {
+          "sourceRef": "012#p2",
+          "isAnchor": false,
+          "text": "曹操正慌走間，正南上一彪軍到，乃夏侯惇引軍來救援，截住呂布大戰。鬥到黃昏時分，大雨如注，各自引軍分散。操回寨，重賞典韋，加爲領軍都尉。"
+        },
+        {
+          "sourceRef": "012#p3",
+          "isAnchor": false,
+          "text": "卻說呂布到寨，與陳宮商議。宮曰：「濮陽城中有富戶田氏，家僮千百，爲一郡之巨室。可令彼密使人往操寨中下書，言『呂溫侯殘暴不仁，民心大怨。今欲移兵黎陽，止有高順在城內。可連夜進兵，我爲內應。』操若來，誘之入城，四門放火，外設伏兵。曹操雖有經天緯地之才，到此安能得脫也？」呂布從其計，密諭田氏，使人徑到操寨。操因新敗，正在躊躇，忽報田氏人到。呈上密書云：「呂布已往黎陽，城中空虛。萬望速來，當爲內應。城上插白旗，大書『義』字，便是暗號。」操大喜曰：「天使吾得濮陽也！」重賞來人，一面收拾起兵。劉曄曰：「布雖無謀，陳宮多計，只恐其中有詐，不可不防。明公欲去，當分三軍爲三隊：兩隊伏城外接應，一隊入城方可。」操從其言，分軍三隊，來至濮陽城下。操先往觀之，見城上遍豎旗幡；西門角上，有一「義」字白旗。心中暗喜。"
+        },
+        {
+          "sourceRef": "012#p4",
+          "isAnchor": true,
+          "text": "是日午牌，城門開處，兩員將引軍出戰：前軍侯成，後軍高順。操即使典韋出馬，直取侯成。侯成抵敵不過，回馬望城中走。韋趕到吊橋邊，高順亦攔擋不住，都退入城中去了。數內有軍人乘勢混過陣來見操，說是田氏之使，呈上密書。約云：「今夜初更時分，城上鳴鑼爲號，便可進兵。某當獻門。」操撥夏侯惇引軍在左，曹洪引軍在右，自己引夏侯淵、李典、樂進、典韋四將，率兵入城。李典曰：「主公且在城外，容某等先入城去。」操喝曰：「我不自往，誰肯向前！」遂當先領兵直入。時約初更，月光未上，只聽得西門上吹贏殼聲，喊聲忽起。門上火把繚亂，城門大開，吊橋放落。曹操爭先拍馬而入。直到州衙，路上不見一人。操知是計，忙撥回馬，大叫：「退兵！」州衙中一聲炮響，四門烈火轟天而起。金鼓齊鳴，喊聲如江翻海沸。東巷內轉出張遼，西巷內轉出臧霸，夾攻掩殺。操走北門。道旁轉出郝萌、曹性，又殺一陣。操急走南門，高順、侯成攔住。典韋怒目咬牙，衝殺出去。高順、侯成倒走出城。典韋殺到吊橋，回頭不見了曹操，翻身復殺入城來。門下撞著李典，典韋問：「主公何在？」典曰：「吾亦尋不見。」韋曰：「汝在城外催救軍，我入去尋主公！」李典去了。典韋殺入城中，尋覓不見，再殺出城壕邊，撞著樂進。進曰：「主公何在？」韋曰：「我往復兩遭，尋覓不見。」進曰：「同殺入去救主！」兩人到門邊，城上火炮滾下，樂進馬不能入。典韋冒煙突火，又殺入去，到處尋覓。"
+        },
+        {
+          "sourceRef": "012#p5",
+          "isAnchor": false,
+          "text": "卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；再轉北門，火光裏正撞見呂布，挺戟躍馬而來。操以手掩面，加鞭縱馬竟過。呂布從後拍馬趕來，將戟於操盔上一擊，問曰：「曹操何在？」操反指曰：「前面騎黃馬者是他。」呂布聽說，棄了曹操，縱馬向前追趕。曹操撥轉馬頭，望東門而走，正逢典韋。韋擁護曹操，殺條血路，到城門邊，火焰甚盛，城上推下柴草，遍地都是火。韋用戟撥開，飛馬冒煙突火先出，曹操隨後亦出。方到門道邊，城門上崩下一條火梁來，正打著曹操戰馬後胯，那馬撲地倒了。操用手托梁推放地上，手臂鬚髮盡被燒傷。典韋回馬來救。恰好夏侯淵亦到，兩個同救起曹操，突火而出。操乘淵馬，典韋殺條大路而走。直混戰到天明，操方回寨。"
+        },
+        {
+          "sourceRef": "012#p6",
+          "isAnchor": false,
+          "text": "眾將拜伏問安，操仰面笑曰：「誤中匹夫之計，吾必當報之！」郭嘉曰：「計可速發。」操曰：「今只將計就計，詐言我被火傷，已經身死。布必引兵來攻。我伏兵於馬陵山中，候其兵半渡而擊之，布可擒矣。」嘉曰：「真良策也！」於是令軍士掛孝發喪，詐言操死。早有人來濮陽報呂布，說曹操被火燒傷肢體，到寨身死。布隨點起軍馬，殺奔馬陵山來。將到操寨，一聲鼓響，伏兵四起。呂布死戰得脫，折了好些人馬，敗回濮陽，堅守不出。是年蝗蟲忽起，食盡禾稻。關東一境，每穀一斛直錢五十貫，人民相食。曹操因軍中糧盡，引兵回鄄城暫住。呂布亦引兵出屯山陽就食。因此二處權且罷兵。"
+        }
+      ],
+      "deepseekContextProposal": {
+        "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0647",
+        "recommendedAnswer": "A",
+        "confidence": 0.86,
+        "edits": {
+          "eventKey": "repair.abab-live-r4-route-a1.zhang-liao.generic-battle-012-p4.0647",
+          "summary": "陽城：卻說曹操見典韋殺出去了，四下裏人馬截來，不得出南門；",
+          "location": "陽城",
+          "relationshipEdges": [
+            {
+              "fromId": "cao-cao",
+              "toId": "dian-wei",
+              "type": "commands",
+              "evidenceRefs": [
+                "012#p5"
+              ],
+              "edgeConfidence": 0.82,
+              "edgeStrength": 0.7
+            }
+          ],
+          "moodTags": [
+            "agent-reviewed"
+          ]
+        },
+        "reasons": [
+          "agent reviewer selected source-grounded location `陽城`",
+          "agent reviewer selected 1 strong relationship edge(s)",
+          "summary derived from candidate hint evidence text",
+          "expanded context candidate hints completed required fields"
+        ],
+        "risks": []
+      }
+    }
+  ],
+  "contextExpansion": {
+    "generatedAt": "2026-05-02T04:55:20+00:00",
+    "fillAnswers": true,
+    "note": "DeepSeek proposals are review-only and do not publish canonical events."
+  }
+}
