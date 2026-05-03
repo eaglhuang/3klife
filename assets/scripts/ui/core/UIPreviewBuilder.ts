@@ -353,6 +353,17 @@ export class UIPreviewBuilder extends Component {
             await this._applySkinLayers(node, spec.skinLayers);
         }
 
+        const compositeSpec = spec as UILayoutNodeSpec & {
+            rendererHint?: string;
+            svgMeta?: Record<string, unknown>;
+        };
+        if (compositeSpec.rendererHint) {
+            (node as Node & { __ucufRendererHint?: string }).__ucufRendererHint = compositeSpec.rendererHint;
+        }
+        if (compositeSpec.svgMeta) {
+            (node as Node & { __ucufSvgMeta?: Record<string, unknown> }).__ucufSvgMeta = compositeSpec.svgMeta;
+        }
+
         this._applySpecOpacity(node, spec.opacity);
         this._applySpecClipPath(node, spec.clipPath);
 

@@ -295,7 +295,12 @@ export abstract class CompositePanel extends UIPreviewBuilder {
             entry.node.addChild(pooledNode);
         } else {
             // 未命中 Pool：遞迴建構 fragment 節點樹
-            await this._buildNode(fragLayout.root, entry.node, entry.parentW, entry.parentH);
+            const slotTransform = entry.node.getComponent(UITransform);
+            const currentW = slotTransform && slotTransform.width > 0 ? slotTransform.width : entry.parentW;
+            const currentH = slotTransform && slotTransform.height > 0 ? slotTransform.height : entry.parentH;
+            entry.parentW = currentW;
+            entry.parentH = currentH;
+            await this._buildNode(fragLayout.root, entry.node, currentW, currentH);
         }
 
         // Fragment 節點的 Widget 在 _buildNode 中僅設定參數、不呼叫 updateAlignment()，

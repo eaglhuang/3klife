@@ -16,6 +16,11 @@ import { GeneralDetailStatsChild } from './general-detail/GeneralDetailStatsChil
 import { GeneralDetailBloodlineChild } from './general-detail/GeneralDetailBloodlineChild';
 import { GeneralDetailSkillsChild } from './general-detail/GeneralDetailSkillsChild';
 import { GeneralDetailAptitudeChild } from './general-detail/GeneralDetailAptitudeChild';
+import { CharacterDs3StatsChild } from './character-ds3/CharacterDs3StatsChild';
+import { CharacterDs3BloodlineChild } from './character-ds3/CharacterDs3BloodlineChild';
+import { CharacterDs3TacticsChild } from './character-ds3/CharacterDs3TacticsChild';
+import { CharacterDs3EquipChild } from './character-ds3/CharacterDs3EquipChild';
+import { CharacterDs3AptitudeChild } from './character-ds3/CharacterDs3AptitudeChild';
 import { CharacterDs3OverviewChild } from './character-ds3/CharacterDs3OverviewChild';
 import { applyPortraitSoftMask, fitPortraitSpriteToLogicalFrame, getOrCreatePortraitArtworkSprite } from './portrait/PortraitSoftMask';
 import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
@@ -64,7 +69,7 @@ export class GeneralDetailComposite extends CompositePanel {
     private _currentBackgroundResource: string | null = null;
     private _currentPortraitRarityBadgeResource: string | null = null;
     private _gdBinder: UITemplateBinder | null = null;
-    private _ds3OverviewChild: CharacterDs3OverviewChild | null = null;
+    private _ds3TabChildren = new Map<TabKey, ChildPanelBase>();
 
     /**
      * 解析要載入的 screen 規格 ID。
@@ -204,7 +209,7 @@ export class GeneralDetailComposite extends CompositePanel {
             this._currentConfig = config;
             const overview = this._buildUnifiedOverviewState(config);
             if (this._isDs3Active()) {
-                this._ds3OverviewChild?.onDataUpdate(overview);
+                super.applyContentState({ config, overview });
                 return;
             }
             this._applyOverviewChrome(overview);
@@ -220,7 +225,7 @@ export class GeneralDetailComposite extends CompositePanel {
             this.unmount();
         }
         this._isMounted = false;
-        this._ds3OverviewChild = null;
+        this._ds3TabChildren.clear();
         this._gdBinder = null;
     }
 
@@ -258,23 +263,14 @@ export class GeneralDetailComposite extends CompositePanel {
 
     private async _switchToDs3Tab(tab: TabKey, overview: UnifiedOverviewContentState | null): Promise<void> {
         this._activeTab = tab;
+        this._bindDs3TabChild(tab);
         await this.switchTab(tab);
-
-        if (tab === 'Overview') {
-            try {
-                if (this._gdBinder && !this._ds3OverviewChild) {
-                    const overviewHost = this._resolveDs3ContentSlotHost() ?? this.node;
-                    this._ds3OverviewChild = new CharacterDs3OverviewChild(overviewHost, this.skinResolver, this._gdBinder);
-                    await this._ds3OverviewChild.onMount({});
-                }
-                if (this._ds3OverviewChild && overview) {
-                    this._ds3OverviewChild.onDataUpdate(overview);
-                }
-            } catch (err) {
-                UCUFLogger.warn(LogCategory.LIFECYCLE, '[GeneralDetailComposite] DS3 overview wiring failed', { err: String(err) });
-            }
+        if (this._currentConfig) {
+            super.applyContentState({
+                config: this._currentConfig,
+                overview: overview ?? this._buildUnifiedOverviewState(this._currentConfig),
+            });
         }
-
         this._syncDs3TabVisualState();
     }
 
@@ -286,6 +282,63 @@ export class GeneralDetailComposite extends CompositePanel {
             }
         }
         return null;
+    }
+
+    private _resolveDs3ContentSlotId(tab: TabKey): string | null {
+        const routeSlotId = this.tabRouting?.[tab]?.slotId;
+        if (routeSlotId) {
+            return routeSlotId;
+        }
+
+        for (const slotId of DS3_CONTENT_SLOT_CANDIDATES) {
+            if (this.getSlotNode(slotId)) {
+                return slotId;
+            }
+        }
+        return null;
+    }
+
+    private _bindDs3TabChild(tab: TabKey): void {
+        if (!this._gdBinder) {
+            return;
+        }
+
+        const slotId = this._resolveDs3ContentSlotId(tab);
+        const slotNode = slotId ? this.getSlotNode(slotId) : null;
+        if (!slotId || !slotNode) {
+            return;
+        }
+
+        const child = this._ensureDs3TabChild(tab, slotNode, this._gdBinder);
+        this.registerChildPanel(slotId, child);
+    }
+
+    private _ensureDs3TabChild(tab: TabKey, slotNode: Node, binder: UITemplateBinder): ChildPanelBase {
+        const existing = this._ds3TabChildren.get(tab);
+        if (existing) {
+            return existing;
+        }
+
+        const created = this._createDs3Child(tab, slotNode, binder);
+        this._ds3TabChildren.set(tab, created);
+        return created;
+    }
+
+    private _createDs3Child(tab: TabKey, slotNode: Node, binder: UITemplateBinder): ChildPanelBase {
+        switch (tab) {
+        case 'Overview':
+            return new CharacterDs3OverviewChild(slotNode, this.skinResolver, binder) as unknown as ChildPanelBase;
+        case 'Stats':
+            return new CharacterDs3StatsChild(slotNode, this.skinResolver, binder) as unknown as ChildPanelBase;
+        case 'Tactics':
+            return new CharacterDs3TacticsChild(slotNode, this.skinResolver, binder) as unknown as ChildPanelBase;
+        case 'Bloodline':
+            return new CharacterDs3BloodlineChild(slotNode, this.skinResolver, binder) as unknown as ChildPanelBase;
+        case 'Equip':
+            return new CharacterDs3EquipChild(slotNode, this.skinResolver, binder) as unknown as ChildPanelBase;
+        case 'Aptitude':
+            return new CharacterDs3AptitudeChild(slotNode, this.skinResolver, binder) as unknown as ChildPanelBase;
+        }
     }
 
     private _syncDs3TabVisualState(): void {

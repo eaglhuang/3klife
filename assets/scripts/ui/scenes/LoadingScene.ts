@@ -63,6 +63,7 @@ enum LoadingPreviewTarget {
 }
 
 type GeneralDetailPreviewTab = 'Overview' | 'Basics' | 'Stats' | 'Bloodline' | 'Skills' | 'Aptitude';
+const GACHA_SCREEN_ID = 'gacha-ds3';
 
 /**
  * LoadingScene - 中繼轉場場景
@@ -277,9 +278,9 @@ export class LoadingScene extends Component {
         case LoadingPreviewTarget.ShopMain:
             return 'shop-main-screen';
         case LoadingPreviewTarget.Gacha:
-            return 'gacha-main-screen';
+            return GACHA_SCREEN_ID;
         case LoadingPreviewTarget.GachaFromLobby:
-            return 'gacha-main-screen';
+            return GACHA_SCREEN_ID;
         case LoadingPreviewTarget.CharacterDs3:
             return 'character-ds3-main';
         case LoadingPreviewTarget.GeneralDetailFromLobbyGeneralsButton:
@@ -584,11 +585,11 @@ export class LoadingScene extends Component {
                 return;
             case LoadingPreviewTarget.Gacha:
                 await this._previewGacha();
-                this._setCaptureState('ready', 'gacha-main-screen');
+                this._setCaptureState('ready', GACHA_SCREEN_ID);
                 return;
             case LoadingPreviewTarget.GachaFromLobby:
                 await this._previewGachaFromLobby();
-                this._setCaptureState('ready', 'gacha-main-screen');
+                this._setCaptureState('ready', GACHA_SCREEN_ID);
                 return;
             case LoadingPreviewTarget.CharacterDs3:
                 await this._previewCharacterDs3();
@@ -729,10 +730,10 @@ export class LoadingScene extends Component {
     }
 
     private async _previewGacha(): Promise<void> {
-        UCUFLogger.info(LogCategory.LIFECYCLE, '[LoadingScene] Preview target -> gacha-main-screen');
-        await this._previewHost?.showScreen('gacha-main-screen');
+        UCUFLogger.info(LogCategory.LIFECYCLE, `[LoadingScene] Preview target -> ${GACHA_SCREEN_ID}`);
+        await this._previewHost?.showScreen(GACHA_SCREEN_ID);
         if (this._previewHost?.binder) {
-            await applyUIScreenRuntimeState(this._previewHost.binder, 'gacha-main-screen', {
+            await applyUIScreenRuntimeState(this._previewHost.binder, GACHA_SCREEN_ID, {
                 previewVariant: this.previewVariant,
                 tags: ['LoadingScenePreview'],
             });

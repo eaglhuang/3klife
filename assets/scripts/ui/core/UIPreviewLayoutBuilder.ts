@@ -1,4 +1,4 @@
-import { Node, Layout, Size, UITransform, Widget } from 'cc';
+import { Node, Layout, Size, UITransform, Widget, Button } from 'cc';
 import type { UILayoutNodeSpec } from './UISpecTypes';
 import { resolveSize } from './UISpecTypes';
 
@@ -166,6 +166,10 @@ export class UIPreviewLayoutBuilder {
         if (!layout || !layoutDef) return;
         if (layout.type !== Layout.Type.HORIZONTAL && layout.type !== Layout.Type.VERTICAL) return;
 
+        if ((root as any).__ucufLayoutFrozen === true) {
+            return;
+        }
+
         const parentTransform = root.getComponent(UITransform);
         if (!parentTransform) return;
 
@@ -180,6 +184,16 @@ export class UIPreviewLayoutBuilder {
         }
         if (layoutDef.alignItems) {
             this._applyCrossAxisAlignment(layout, layoutDef, flowChildren, bounds);
+        }
+
+        const isButtonLike = !!root.getComponent(Button);
+        const needsCustomFreeze = isButtonLike && (
+            (layoutDef.justifyContent && layoutDef.justifyContent !== 'start')
+            || (layoutDef.alignItems && layoutDef.alignItems !== 'start')
+        );
+        if (needsCustomFreeze) {
+            layout.enabled = false;
+            (root as any).__ucufLayoutFrozen = true;
         }
     }
 
@@ -198,7 +212,11 @@ export class UIPreviewLayoutBuilder {
         bounds: { left: number; right: number; top: number; bottom: number },
     ): void {
         const align = layoutDef?.alignItems;
-        if (!align || align === 'stretch') return;
+        if (!align) return;
+        if (align === 'stretch') {
+            this._applyCrossAxisStretch(layout, flowChildren, bounds);
+            return;
+        }
 
         for (const child of flowChildren) {
             const pos = child.node.position;
@@ -207,6 +225,32 @@ export class UIPreviewLayoutBuilder {
                 child.node.setPosition(pos.x, targetY, pos.z);
             } else if (layout.type === Layout.Type.VERTICAL) {
                 const targetX = this._alignedX(child.transform, bounds, align === 'baseline' ? 'start' : align);
+                child.node.setPosition(targetX, pos.y, pos.z);
+            }
+        }
+    }
+
+    private _applyCrossAxisStretch(
+        layout: Layout,
+        flowChildren: Array<{ node: Node; transform: UITransform }>,
+        bounds: { left: number; right: number; top: number; bottom: number },
+    ): void {
+        const targetWidth = Math.max(0, bounds.right - bounds.left);
+        const targetHeight = Math.max(0, bounds.top - bounds.bottom);
+
+        for (const child of flowChildren) {
+            const pos = child.node.position;
+            if (layout.type === Layout.Type.HORIZONTAL) {
+                if (child.transform.height <= 1 && targetHeight > 0) {
+                    child.transform.setContentSize(child.transform.width, targetHeight);
+                }
+                const targetY = (bounds.top + bounds.bottom) / 2 + child.transform.height * (child.transform.anchorY - 0.5);
+                child.node.setPosition(pos.x, targetY, pos.z);
+            } else if (layout.type === Layout.Type.VERTICAL) {
+                if (child.transform.width <= 1 && targetWidth > 0) {
+                    child.transform.setContentSize(targetWidth, child.transform.height);
+                }
+                const targetX = (bounds.left + bounds.right) / 2 + child.transform.width * (child.transform.anchorX - 0.5);
                 child.node.setPosition(targetX, pos.y, pos.z);
             }
         }

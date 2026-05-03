@@ -1,184 +1,198 @@
-// @spec-source → 見 docs/cross-reference-index.md  (UCUF M3)
-/**
- * CocosCompositeRenderer
- *
- * UCUF M3 — ICompositeRenderer 的 Cocos Creator 3.x 具體實作。
- * 此檔案是 Cocos runtime API（cc.Graphics / cc.Layout / cc.Sprite 等）
- * 進入 UCUF 框架的唯一入口，符合 H-04 規則。
- *
- * 實作細節：
- *   drawRadarChart  → cc.Graphics 繪製六角形格線 + 各層多邊形 fill
- *   drawGrid        → cc.Layout（type=GRID）容器；子節點由 GridPanel 填充
- *   drawProgressBar → bg Sprite（自訂色）+ fg Sprite（FILLED 模式）+ Label
- *
- * Unity 對照：UIProceduralRenderer（LineRenderer / Image.fillAmount 組合）
- */
 import {
-    Node, UITransform, Graphics, Layout, Color, Sprite, UIOpacity,
-    SpriteFrame, Label, HorizontalTextAlignment, VerticalTextAlignment,
+    Color,
+    Graphics,
+    HorizontalTextAlignment,
+    Label,
+    Layout,
+    Node,
+    Sprite,
+    UITransform,
+    VerticalTextAlignment,
 } from 'cc';
 import type { NodeHandle } from '../../core/interfaces/INodeFactory';
 import type {
-    ICompositeRenderer,
-    RadarChartConfig,
     GridConfig,
+    ICompositeRenderer,
     ProgressBarConfig,
+    RadarChartConfig,
+    RadarPoint,
+    RadarSourceLabel,
+    RadarSourceSvgGeometry,
 } from '../../core/interfaces/ICompositeRenderer';
 import { SolidBackground } from '../../components/SolidBackground';
 
-// ─── 內部工具 ─────────────────────────────────────────────────────────────────
-
-/** 從 hex（#RRGGBB 或 #RRGGBBAA）解析 cc.Color */
-function hexToColor(hex: string, defaultAlpha = 255): Color {
-    const raw = hex.replace('#', '');
-    const r   = parseInt(raw.slice(0, 2), 16);
-    const g   = parseInt(raw.slice(2, 4), 16);
-    const b   = parseInt(raw.slice(4, 6), 16);
-    const a   = raw.length >= 8 ? parseInt(raw.slice(6, 8), 16) : defaultAlpha;
-    return new Color(r, g, b, a);
+function cssToColor(input: string | undefined | null, defaultAlpha = 255): Color {
+    const raw = String(input || '').trim();
+    if (!raw) return new Color(255, 255, 255, defaultAlpha);
+    const hex = raw.replace('#', '');
+    if (/^[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/.test(hex)) {
+        const r = parseInt(hex.slice(0, 2), 16);
+        const g = parseInt(hex.slice(2, 4), 16);
+        const b = parseInt(hex.slice(4, 6), 16);
+        const a = hex.length >= 8 ? parseInt(hex.slice(6, 8), 16) : defaultAlpha;
+        return new Color(r, g, b, a);
+    }
+    const rgba = raw.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)$/i);
+    if (rgba) {
+        const alpha = rgba[4] != null ? Math.round(Math.max(0, Math.min(1, parseFloat(rgba[4]))) * 255) : defaultAlpha;
+        return new Color(
+            Math.max(0, Math.min(255, parseInt(rgba[1], 10))),
+            Math.max(0, Math.min(255, parseInt(rgba[2], 10))),
+            Math.max(0, Math.min(255, parseInt(rgba[3], 10))),
+            alpha,
+        );
+    }
+    return new Color(255, 255, 255, defaultAlpha);
 }
 
-/** 確保 Node 具有 UITransform（若已有則直接回傳） */
-function ensureUITransform(node: Node, w: number, h: number): UITransform {
-    let ut = node.getComponent(UITransform);
-    if (!ut) ut = node.addComponent(UITransform);
-    ut.setContentSize(w, h);
-    return ut;
+function ensureUITransform(node: Node, width: number, height: number): UITransform {
+    let transform = node.getComponent(UITransform);
+    if (!transform) transform = node.addComponent(UITransform);
+    transform.setContentSize(width, height);
+    return transform;
 }
 
-// ─── 主類別 ──────────────────────────────────────────────────────────────────
+type RadarLabelBox = { width: number; height: number };
+type RadarLayoutMetrics = {
+    canvasWidth: number;
+    canvasHeight: number;
+    labelBoxes: RadarLabelBox[];
+};
 
 export class CocosCompositeRenderer implements ICompositeRenderer {
-
-    // ── RadarChart ─────────────────────────────────────────────────────────
-
     async drawRadarChart(parent: NodeHandle, config: RadarChartConfig): Promise<NodeHandle> {
         const parentNode = parent as Node;
-        const size       = config.size ?? 120;
-        const axisLabelRadius = config.axisLabelRadius ?? (size + 22);
-        const canvasSize = Math.ceil(axisLabelRadius * 2 + 24); // 留邊給 label
+        const size = config.size ?? 120;
+        const metrics = this._resolveRadarLayoutMetrics(parentNode, config, size);
 
         const container = new Node('RadarChart');
         container.layer = parentNode.layer;
-        ensureUITransform(container, canvasSize, canvasSize);
+        ensureUITransform(container, metrics.canvasWidth, metrics.canvasHeight);
         parentNode.addChild(container);
 
         const gfxNode = new Node('RadarGfx');
         gfxNode.layer = parentNode.layer;
-        ensureUITransform(gfxNode, canvasSize, canvasSize);
+        ensureUITransform(gfxNode, metrics.canvasWidth, metrics.canvasHeight);
         container.addChild(gfxNode);
 
         const gfx = gfxNode.addComponent(Graphics);
         this._drawRadarInternal(gfx, config, size);
-        this._syncRadarAxisLabels(container, config, size);
+        this._syncRadarAxisLabels(container, config, size, metrics.labelBoxes);
 
         return container;
     }
 
     updateRadarChart(chartNode: NodeHandle, config: RadarChartConfig): void {
         const container = chartNode as Node;
-        const gfxNode   = container.getChildByName('RadarGfx');
+        const size = config.size ?? 120;
+        const metrics = this._resolveRadarLayoutMetrics(container.parent ?? container, config, size);
+        ensureUITransform(container, metrics.canvasWidth, metrics.canvasHeight);
+
+        const gfxNode = container.getChildByName('RadarGfx');
         if (!gfxNode) return;
+        ensureUITransform(gfxNode, metrics.canvasWidth, metrics.canvasHeight);
+
         const gfx = gfxNode.getComponent(Graphics);
         if (!gfx) return;
+
         gfx.clear();
-        const size = config.size ?? 120;
         this._drawRadarInternal(gfx, config, size);
-        this._syncRadarAxisLabels(container, config, size);
+        this._syncRadarAxisLabels(container, config, size, metrics.labelBoxes);
     }
 
-    /**
-     * 內部繪圖：先畫背景格線，再畫各 layer 的填充多邊形。
-     */
     private _drawRadarInternal(gfx: Graphics, config: RadarChartConfig, size: number): void {
-        const { axes, layers } = config;
-        const n       = axes.length;
-        const gridClr = hexToColor(config.gridColor ?? '#FFFFFF33');
-        const center  = 0;
+        const axes = config.axes ?? [];
+        const layers = config.layers ?? [];
+        const axisCount = axes.length;
+        if (axisCount <= 0) return;
+
+        const gridColor = cssToColor(config.gridColor ?? '#FFFFFF33');
         const gridRings = Math.max(1, Math.round(config.gridRings ?? 4));
         const gridLineWidth = config.gridLineWidth ?? 0.7;
         const axisLineWidth = config.axisLineWidth ?? 0.7;
         const outlineWidth = config.outlineWidth ?? 2;
         const markerRadius = config.markerRadius ?? 4;
+        const sourceSvg = this._isRadarSourceSvgGeometry(config.sourceSvg) ? config.sourceSvg : null;
+        const sourceVectors = sourceSvg ? this._resolveSourceAxisVectors(sourceSvg, axisCount) : null;
 
-        // 1. 背景格線
-        gfx.lineWidth = gridLineWidth;
-        gfx.strokeColor = gridClr;
-        for (let ring = 1; ring <= gridRings; ring++) {
-            const r = (size / gridRings) * ring;
-            gfx.moveTo(...this._radialPoint(0, r, n, center, center));
-            for (let i = 1; i <= n; i++) {
-                gfx.lineTo(...this._radialPoint(i, r, n, center, center));
+        if (sourceSvg && sourceVectors) {
+            this._drawRadarSourceGrid(gfx, config, size, sourceSvg, gridColor, gridLineWidth, axisLineWidth);
+        } else {
+            gfx.lineWidth = gridLineWidth;
+            gfx.strokeColor = gridColor;
+            for (let ring = 1; ring <= gridRings; ring += 1) {
+                const radius = (size / gridRings) * ring;
+                gfx.moveTo(...this._radialPoint(0, radius, axisCount));
+                for (let i = 1; i <= axisCount; i += 1) {
+                    gfx.lineTo(...this._radialPoint(i, radius, axisCount));
+                }
+                gfx.stroke();
             }
-            gfx.stroke();
+
+            gfx.lineWidth = axisLineWidth;
+            for (let i = 0; i < axisCount; i += 1) {
+                const [x, y] = this._radialPoint(i, size, axisCount);
+                gfx.moveTo(0, 0);
+                gfx.lineTo(x, y);
+                gfx.stroke();
+            }
         }
 
-        // 2. 軸線（從圓心到頂點）
-        gfx.lineWidth = axisLineWidth;
-        for (let i = 0; i < n; i++) {
-            const [x, y] = this._radialPoint(i, size, n, center, center);
-            gfx.moveTo(center, center);
-            gfx.lineTo(x, y);
-        }
-        gfx.stroke();
+        for (let layerIndex = layers.length - 1; layerIndex >= 0; layerIndex -= 1) {
+            const layer = layers[layerIndex];
+            const fillColor = cssToColor(layer.color ?? (layerIndex === 0 ? '#4488FF' : '#FFAA22'));
+            fillColor.a = Math.round((layer.opacity ?? 0.4) * 255);
 
-        // 3. 各 layer 填充（倒序畫，讓 index=0 在最上層）
-        for (let li = layers.length - 1; li >= 0; li--) {
-            const layer   = layers[li];
-            const fillClr = hexToColor(layer.color ?? (li === 0 ? '#4488FF' : '#FFAA22'));
-            const alpha   = Math.round((layer.opacity ?? 0.4) * 255);
-            fillClr.a     = alpha;
-
-            // 1. 填充多邊形
-            gfx.fillColor = fillClr;
-            const [x0, y0] = this._radialPoint(0, layer.values[0] * size, n, center, center);
-            gfx.moveTo(x0, y0);
-            for (let i = 1; i < n; i++) {
-                const [x, y] = this._radialPoint(i, layer.values[i] * size, n, center, center);
+            const [firstX, firstY] = this._radarValuePoint(0, layer.values[0] * size, axisCount, sourceVectors);
+            gfx.fillColor = fillColor;
+            gfx.moveTo(firstX, firstY);
+            for (let i = 1; i < axisCount; i += 1) {
+                const [x, y] = this._radarValuePoint(i, layer.values[i] * size, axisCount, sourceVectors);
                 gfx.lineTo(x, y);
             }
             gfx.close();
             gfx.fill();
 
-            // 2. 描邊輪廓（Cocos Graphics 在 fill() 後會清空路徑，需要重建路徑再 stroke）
-            // 對應 HTML reference: stroke="#8CCFC4" strokeWidth=2
-            const outlineClr = hexToColor(layer.color ?? (li === 0 ? '#4488FF' : '#FFAA22'));
-            outlineClr.a = 230;
-            gfx.strokeColor = outlineClr;
+            const outlineColor = cssToColor(layer.color ?? (layerIndex === 0 ? '#4488FF' : '#FFAA22'));
+            outlineColor.a = 230;
+            gfx.strokeColor = outlineColor;
             gfx.lineWidth = outlineWidth;
-            gfx.moveTo(x0, y0);
-            for (let i = 1; i < n; i++) {
-                const [x, y] = this._radialPoint(i, layer.values[i] * size, n, center, center);
+            gfx.moveTo(firstX, firstY);
+            for (let i = 1; i < axisCount; i += 1) {
+                const [x, y] = this._radarValuePoint(i, layer.values[i] * size, axisCount, sourceVectors);
                 gfx.lineTo(x, y);
             }
             gfx.close();
             gfx.stroke();
 
-            // Vertex markers improve readability on dark backgrounds and match the HTML radar intent.
             const markerColors = config.markerColors ?? [];
-            for (let i = 0; i < n; i++) {
-                const [vx, vy] = this._radialPoint(i, layer.values[i] * size, n, center, center);
-                const markerClr = hexToColor(markerColors[i] ?? (layer.color ?? '#8CCFC4'));
-                markerClr.a = 255;
-                gfx.fillColor = markerClr;
-                gfx.circle(vx, vy, markerRadius);
+            for (let i = 0; i < axisCount; i += 1) {
+                const [x, y] = this._radarValuePoint(i, layer.values[i] * size, axisCount, sourceVectors);
+                gfx.fillColor = cssToColor(markerColors[i] ?? layer.color ?? '#8CCFC4');
+                gfx.circle(x, y, markerRadius);
                 gfx.fill();
             }
         }
     }
 
-    private _syncRadarAxisLabels(container: Node, config: RadarChartConfig, size: number): void {
+    private _syncRadarAxisLabels(
+        container: Node,
+        config: RadarChartConfig,
+        size: number,
+        labelBoxes: RadarLabelBox[],
+    ): void {
         if (config.showAxisLabels === false) {
             const existing = container.getChildByName('RadarAxisLabels');
             if (existing) existing.destroy();
             return;
         }
 
-        const n = config.axes.length;
+        const axisCount = config.axes.length;
         const radius = config.axisLabelRadius ?? (size + 22);
         const offsetY = config.axisLabelOffsetY ?? 5;
         const fontSize = config.labelFontSize ?? 13;
         const colors = config.axisLabelColors ?? [];
+        const sourceSvg = this._isRadarSourceSvgGeometry(config.sourceSvg) ? config.sourceSvg : null;
 
         let labelRoot = container.getChildByName('RadarAxisLabels');
         if (!labelRoot) {
@@ -188,55 +202,266 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
             container.addChild(labelRoot);
         }
 
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < axisCount; i += 1) {
             const labelName = `RadarAxisLabel-${i}`;
             let labelNode = labelRoot.getChildByName(labelName);
             if (!labelNode) {
                 labelNode = new Node(labelName);
                 labelNode.layer = container.layer;
-                ensureUITransform(labelNode, 52, 20);
-                labelRoot.addChild(labelNode);
                 labelNode.addComponent(Label);
+                labelRoot.addChild(labelNode);
             }
 
-            const [x, y] = this._radialPoint(i, radius, n, 0, 0);
+            const sourceLabel = sourceSvg?.labels?.[i];
+            const box = labelBoxes[i] ?? this._resolveRadarLabelBox(config.axes[i] ?? '', fontSize, config, sourceLabel);
+            ensureUITransform(labelNode, box.width, box.height);
+
+            const [x, y] = sourceLabel
+                ? this._mapSourcePoint({ x: sourceLabel.x, y: sourceLabel.y }, sourceSvg, size)
+                : this._radialPoint(i, radius, axisCount);
             labelNode.setPosition(x, y + offsetY, 0);
+
             const label = labelNode.getComponent(Label);
             if (!label) continue;
-            label.string = config.axes[i] ?? '';
+            label.string = sourceLabel?.text || config.axes[i] || '';
             label.fontSize = fontSize;
             label.lineHeight = fontSize + 2;
-            label.color = hexToColor(colors[i] ?? '#8CCFC4');
+            label.color = cssToColor(colors[i] ?? sourceLabel?.fill ?? '#8CCFC4');
             label.isBold = true;
             label.horizontalAlign = HorizontalTextAlignment.CENTER;
             label.verticalAlign = VerticalTextAlignment.CENTER;
         }
 
-        for (let i = labelRoot.children.length - 1; i >= n; i--) {
+        for (let i = labelRoot.children.length - 1; i >= axisCount; i -= 1) {
             labelRoot.children[i].destroy();
         }
     }
 
-    /**
-     * 計算第 i 個頂點坐標（從正上方（-90°）開始，順時針）。
-     * Cocos 2D：Y 軸朝上；若沿用 SVG 的 +sin 會把雷達上下翻轉，
-     * 因此要改成 -sin 才能與 HTML 座標語意一致。
-     */
-    private _radialPoint(i: number, r: number, n: number, offsetX = 0, offsetY = 0): [number, number] {
-        const angle = (2 * Math.PI * i / n) - Math.PI / 2;
-        return [offsetX + r * Math.cos(angle), offsetY - r * Math.sin(angle)];
+    private _resolveRadarLayoutMetrics(parentNode: Node, config: RadarChartConfig, size: number): RadarLayoutMetrics {
+        const fontSize = config.labelFontSize ?? 13;
+        const labelBoxes = config.axes.map((axis, index) =>
+            this._resolveRadarLabelBox(axis ?? '', fontSize, config, config.sourceSvg?.labels?.[index]),
+        );
+
+        if ((config.canvasWidth ?? 0) > 0 && (config.canvasHeight ?? 0) > 0) {
+            return {
+                canvasWidth: Math.ceil(config.canvasWidth as number),
+                canvasHeight: Math.ceil(config.canvasHeight as number),
+                labelBoxes,
+            };
+        }
+
+        const parentTransform = parentNode.getComponent(UITransform);
+        if ((parentTransform?.width ?? 0) > 0 && (parentTransform?.height ?? 0) > 0) {
+            return {
+                canvasWidth: Math.ceil(parentTransform!.width),
+                canvasHeight: Math.ceil(parentTransform!.height),
+                labelBoxes,
+            };
+        }
+
+        const sourceSvg = this._isRadarSourceSvgGeometry(config.sourceSvg) ? config.sourceSvg : null;
+        if (sourceSvg) {
+            const sourceRadius = this._resolveSourceOuterRadius(sourceSvg);
+            const scale = sourceRadius > 0 ? size / sourceRadius : 1;
+            return {
+                canvasWidth: Math.max(1, Math.ceil(sourceSvg.viewBox.width * scale)),
+                canvasHeight: Math.max(1, Math.ceil(sourceSvg.viewBox.height * scale)),
+                labelBoxes,
+            };
+        }
+
+        const radius = config.axisLabelRadius ?? (size + 22);
+        const padding = Math.max(6, Math.ceil(fontSize * 0.55));
+        let minX = -size;
+        let maxX = size;
+        let minY = -size;
+        let maxY = size;
+        for (let i = 0; i < config.axes.length; i += 1) {
+            const [x, y] = this._radialPoint(i, radius, config.axes.length);
+            const box = labelBoxes[i];
+            const halfW = (box?.width ?? 0) / 2;
+            const halfH = (box?.height ?? 0) / 2;
+            minX = Math.min(minX, x - halfW);
+            maxX = Math.max(maxX, x + halfW);
+            minY = Math.min(minY, y - halfH);
+            maxY = Math.max(maxY, y + halfH);
+        }
+        return {
+            canvasWidth: Math.max(1, Math.ceil(maxX - minX + padding * 2)),
+            canvasHeight: Math.max(1, Math.ceil(maxY - minY + padding * 2)),
+            labelBoxes,
+        };
     }
 
-    // ── Grid ────────────────────────────────────────────────────────────────
+    private _resolveRadarLabelBox(
+        text: string,
+        fontSize: number,
+        config: RadarChartConfig,
+        sourceLabel?: RadarSourceLabel,
+    ): RadarLabelBox {
+        const sourceWidth = sourceLabel?.box?.width;
+        const sourceHeight = sourceLabel?.box?.height;
+        if ((sourceWidth ?? 0) > 0 && (sourceHeight ?? 0) > 0) {
+            return { width: Math.ceil(sourceWidth as number), height: Math.ceil(sourceHeight as number) };
+        }
+
+        const paddingX = config.labelBoxPaddingX ?? Math.max(4, Math.round(fontSize * 0.45));
+        const paddingY = config.labelBoxPaddingY ?? Math.max(3, Math.round(fontSize * 0.25));
+        const minWidth = config.labelBoxMinWidth ?? Math.max(24, Math.round(fontSize * 1.8));
+        const minHeight = config.labelBoxMinHeight ?? Math.max(18, Math.round(fontSize + paddingY * 2 + 2));
+        const rawWidth = this._estimateLabelTextWidth(text, fontSize);
+
+        return {
+            width: Math.max(minWidth, Math.ceil(rawWidth + paddingX * 2)),
+            height: Math.max(minHeight, Math.ceil(fontSize + 2 + paddingY * 2)),
+        };
+    }
+
+    private _estimateLabelTextWidth(text: string, fontSize: number): number {
+        let width = 0;
+        for (const ch of String(text || '')) {
+            if (/\s/.test(ch)) width += fontSize * 0.32;
+            else if (/[\u3400-\u9FFF\uF900-\uFAFF]/.test(ch)) width += fontSize;
+            else if (/[A-Z0-9]/.test(ch)) width += fontSize * 0.68;
+            else if (/[a-z]/.test(ch)) width += fontSize * 0.58;
+            else width += fontSize * 0.5;
+        }
+        return width;
+    }
+
+    private _drawRadarSourceGrid(
+        gfx: Graphics,
+        config: RadarChartConfig,
+        size: number,
+        sourceSvg: RadarSourceSvgGeometry,
+        fallbackGridColor: Color,
+        fallbackGridLineWidth: number,
+        fallbackAxisLineWidth: number,
+    ): void {
+        for (const polygon of sourceSvg.gridPolygons ?? []) {
+            if (!polygon.points || polygon.points.length < 3) continue;
+            gfx.lineWidth = polygon.strokeWidth ?? fallbackGridLineWidth;
+            gfx.strokeColor = polygon.stroke ? cssToColor(polygon.stroke) : fallbackGridColor;
+            const [firstX, firstY] = this._mapSourcePoint(polygon.points[0], sourceSvg, size);
+            gfx.moveTo(firstX, firstY);
+            for (let i = 1; i < polygon.points.length; i += 1) {
+                const [x, y] = this._mapSourcePoint(polygon.points[i], sourceSvg, size);
+                gfx.lineTo(x, y);
+            }
+            gfx.close();
+            gfx.stroke();
+        }
+
+        for (const line of sourceSvg.axisLines ?? []) {
+            gfx.lineWidth = line.strokeWidth ?? fallbackAxisLineWidth;
+            gfx.strokeColor = line.stroke ? cssToColor(line.stroke) : fallbackGridColor;
+            const [x1, y1] = this._mapSourcePoint({ x: line.x1, y: line.y1 }, sourceSvg, size);
+            const [x2, y2] = this._mapSourcePoint({ x: line.x2, y: line.y2 }, sourceSvg, size);
+            gfx.moveTo(x1, y1);
+            gfx.lineTo(x2, y2);
+            gfx.stroke();
+        }
+
+        if ((sourceSvg.gridPolygons?.length ?? 0) === 0 && (sourceSvg.axisLines?.length ?? 0) === 0) {
+            gfx.lineWidth = config.gridLineWidth ?? 0.7;
+            gfx.strokeColor = fallbackGridColor;
+            const axisCount = config.axes.length;
+            const gridRings = Math.max(1, Math.round(config.gridRings ?? 4));
+            for (let ring = 1; ring <= gridRings; ring += 1) {
+                const radius = (size / gridRings) * ring;
+                gfx.moveTo(...this._radialPoint(0, radius, axisCount));
+                for (let i = 1; i <= axisCount; i += 1) {
+                    gfx.lineTo(...this._radialPoint(i, radius, axisCount));
+                }
+                gfx.stroke();
+            }
+        }
+    }
+
+    private _resolveSourceAxisVectors(sourceSvg: RadarSourceSvgGeometry, axisCount: number): RadarPoint[] | null {
+        const axisLines = sourceSvg.axisLines ?? [];
+        if (axisLines.length < axisCount) return null;
+        const center = this._resolveSourceCenter(sourceSvg);
+        const vectors: RadarPoint[] = [];
+        for (let i = 0; i < axisCount; i += 1) {
+            const line = axisLines[i];
+            const dx = line.x2 - center.x;
+            const dy = center.y - line.y2;
+            const distance = Math.hypot(dx, dy);
+            if (distance <= 0) return null;
+            vectors.push({ x: dx / distance, y: dy / distance });
+        }
+        return vectors;
+    }
+
+    private _radarValuePoint(
+        index: number,
+        radius: number,
+        axisCount: number,
+        sourceVectors: RadarPoint[] | null,
+    ): [number, number] {
+        if (sourceVectors && sourceVectors[index]) {
+            const vector = sourceVectors[index];
+            return [vector.x * radius, vector.y * radius];
+        }
+        return this._radialPoint(index, radius, axisCount);
+    }
+
+    private _resolveSourceCenter(sourceSvg: RadarSourceSvgGeometry): RadarPoint {
+        return sourceSvg.center ?? {
+            x: sourceSvg.viewBox.x + sourceSvg.viewBox.width / 2,
+            y: sourceSvg.viewBox.y + sourceSvg.viewBox.height / 2,
+        };
+    }
+
+    private _resolveSourceOuterRadius(sourceSvg: RadarSourceSvgGeometry): number {
+        if ((sourceSvg.outerRadius ?? 0) > 0) return sourceSvg.outerRadius as number;
+        const center = this._resolveSourceCenter(sourceSvg);
+        let radius = 0;
+        for (const line of sourceSvg.axisLines ?? []) {
+            radius = Math.max(radius, Math.hypot(line.x2 - center.x, line.y2 - center.y));
+        }
+        for (const polygon of sourceSvg.gridPolygons ?? []) {
+            for (const point of polygon.points ?? []) {
+                radius = Math.max(radius, Math.hypot(point.x - center.x, point.y - center.y));
+            }
+        }
+        return radius;
+    }
+
+    private _mapSourcePoint(point: RadarPoint, sourceSvg: RadarSourceSvgGeometry | null, targetRadius: number): [number, number] {
+        if (!sourceSvg) return [point.x, point.y];
+        const center = this._resolveSourceCenter(sourceSvg);
+        const sourceRadius = this._resolveSourceOuterRadius(sourceSvg);
+        const scale = sourceRadius > 0 ? targetRadius / sourceRadius : 1;
+        return [
+            (point.x - center.x) * scale,
+            (center.y - point.y) * scale,
+        ];
+    }
+
+    private _radialPoint(index: number, radius: number, axisCount: number): [number, number] {
+        const angle = ((2 * Math.PI * index) / axisCount) - (Math.PI / 2);
+        return [radius * Math.cos(angle), -radius * Math.sin(angle)];
+    }
+
+    private _isRadarSourceSvgGeometry(value: RadarChartConfig['sourceSvg']): value is RadarSourceSvgGeometry {
+        return !!value
+            && value.kind === 'radar-chart'
+            && !!value.viewBox
+            && Number.isFinite(value.viewBox.width)
+            && Number.isFinite(value.viewBox.height);
+    }
 
     async drawGrid(parent: NodeHandle, config: GridConfig): Promise<NodeHandle> {
         const parentNode = parent as Node;
-        const container  = new Node('GridContainer');
-        const ut         = container.addComponent(UITransform);
-        ut.setContentSize(0, 0); // Content size 由 Layout 自動計算
+        const container = new Node('GridContainer');
+        const transform = container.addComponent(UITransform);
+        transform.setContentSize(0, 0);
 
-        const layout      = container.addComponent(Layout);
-        layout.type       = Layout.Type.GRID;
+        const layout = container.addComponent(Layout);
+        layout.type = Layout.Type.GRID;
         layout.constraint = Layout.Constraint.FIXED_COL;
         layout.constraintNum = config.columns;
         layout.resizeMode = Layout.ResizeMode.CONTAINER;
@@ -246,7 +471,7 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
             layout.spacingY = config.gap.y;
         }
         if (config.cellSize) {
-            layout.cellSize.width  = config.cellSize.w;
+            layout.cellSize.width = config.cellSize.w;
             layout.cellSize.height = config.cellSize.h;
         }
 
@@ -254,67 +479,58 @@ export class CocosCompositeRenderer implements ICompositeRenderer {
         return container;
     }
 
-    // ── ProgressBar ────────────────────────────────────────────────────────
-
     async drawProgressBar(parent: NodeHandle, config: ProgressBarConfig): Promise<NodeHandle> {
         const parentNode = parent as Node;
-        const barW = 240;
-        const barH = 24;
-        const rowH = 36;
+        const barWidth = 240;
+        const barHeight = 24;
+        const rowHeight = 36;
 
         const container = new Node('ProgressBar');
-        ensureUITransform(container, barW + 80, rowH);
+        ensureUITransform(container, barWidth + 80, rowHeight);
         parentNode.addChild(container);
 
-        // Label
         const labelNode = new Node('PBLabel');
-        ensureUITransform(labelNode, 70, rowH);
-        labelNode.setPosition(-barW / 2 - 35 + 70 / 2, 0, 0);
-        const lbl       = labelNode.addComponent(Label);
-        lbl.string      = config.label;
-        lbl.fontSize    = 18;
-        lbl.horizontalAlign = HorizontalTextAlignment.RIGHT;
-        lbl.verticalAlign   = VerticalTextAlignment.CENTER;
+        ensureUITransform(labelNode, 70, rowHeight);
+        labelNode.setPosition(-barWidth / 2 - 35 + 35, 0, 0);
+        const label = labelNode.addComponent(Label);
+        label.string = config.label;
+        label.fontSize = 18;
+        label.horizontalAlign = HorizontalTextAlignment.RIGHT;
+        label.verticalAlign = VerticalTextAlignment.CENTER;
         container.addChild(labelNode);
 
-        // BG bar
         const bgNode = new Node('PBBg');
-        ensureUITransform(bgNode, barW, barH);
+        ensureUITransform(bgNode, barWidth, barHeight);
         bgNode.setPosition(35, 0, 0);
-        const bgBg   = bgNode.addComponent(SolidBackground);
-        const bgClr  = hexToColor(config.bgColor ?? '#22222266');
-        bgBg.color   = bgClr;
+        const bg = bgNode.addComponent(SolidBackground);
+        bg.color = cssToColor(config.bgColor ?? '#22222266');
         container.addChild(bgNode);
 
-        // FG bar（固定在 bg 左側，寬度按比例）
-        const ratio  = config.max > 0 ? Math.min(1, config.current / config.max) : 0;
-        const fgW    = Math.max(0, barW * ratio);
+        const ratio = config.max > 0 ? Math.min(1, config.current / config.max) : 0;
+        const fgWidth = Math.max(0, barWidth * ratio);
         const fgNode = new Node('PBFg');
-        ensureUITransform(fgNode, fgW, barH);
-        // 左對齊：fgNode 的 pivot 預設 0.5，因此 posX = -barW/2 + fgW/2 + bgNode.posX
-        fgNode.setPosition(35 - barW / 2 + fgW / 2, 0, 0);
-        const fgBg  = fgNode.addComponent(SolidBackground);
-        const fgClr = hexToColor(config.barColor ?? '#55AAFF');
-        fgBg.color  = fgClr;
+        ensureUITransform(fgNode, fgWidth, barHeight);
+        fgNode.setPosition(35 - barWidth / 2 + fgWidth / 2, 0, 0);
+        const fg = fgNode.addComponent(SolidBackground);
+        fg.color = cssToColor(config.barColor ?? '#55AAFF');
         container.addChild(fgNode);
 
-        // 將 current / max 存在 customData 供 updateProgressBar 快速讀取
-        (container as any).__pbBarW = barW;
-        (container as any).__pbBgX  = 35;
-
+        (container as Node & { __pbBarW?: number; __pbBgX?: number }).__pbBarW = barWidth;
+        (container as Node & { __pbBarW?: number; __pbBgX?: number }).__pbBgX = 35;
         return container;
     }
 
     updateProgressBar(barNode: NodeHandle, current: number, max: number): void {
-        const container = barNode as Node;
-        const fgNode    = container.getChildByName('PBFg');
+        const container = barNode as Node & { __pbBarW?: number; __pbBgX?: number };
+        const fgNode = container.getChildByName('PBFg');
         if (!fgNode) return;
-        const barW  = (container as any).__pbBarW ?? 240;
-        const bgX   = (container as any).__pbBgX  ?? 35;
+
+        const barWidth = container.__pbBarW ?? 240;
+        const bgX = container.__pbBgX ?? 35;
         const ratio = max > 0 ? Math.min(1, current / max) : 0;
-        const fgW   = Math.max(0, barW * ratio);
-        const ut    = fgNode.getComponent(UITransform);
-        if (ut) ut.setContentSize(fgW, ut.height);
-        fgNode.setPosition(bgX - barW / 2 + fgW / 2, 0, 0);
+        const fgWidth = Math.max(0, barWidth * ratio);
+        const transform = fgNode.getComponent(UITransform);
+        if (transform) transform.setContentSize(fgWidth, transform.height);
+        fgNode.setPosition(bgX - barWidth / 2 + fgWidth / 2, 0, 0);
     }
 }

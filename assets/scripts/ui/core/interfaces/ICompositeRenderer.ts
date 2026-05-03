@@ -35,6 +35,68 @@ export interface RadarLayer {
     label?: string;
 }
 
+export interface RadarPoint {
+    x: number;
+    y: number;
+}
+
+export interface RadarSourcePolygon {
+    points: RadarPoint[];
+    stroke?: string;
+    strokeWidth?: number;
+    fill?: string;
+    opacity?: number;
+}
+
+export interface RadarSourceLine {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+    stroke?: string;
+    strokeWidth?: number;
+}
+
+export interface RadarSourceCircle {
+    cx: number;
+    cy: number;
+    r: number;
+    fill?: string;
+    stroke?: string;
+    strokeWidth?: number;
+}
+
+export interface RadarSourceLabelBox {
+    width?: number;
+    height?: number;
+}
+
+export interface RadarSourceLabel {
+    text: string;
+    x: number;
+    y: number;
+    fill?: string;
+    fontSize?: number;
+    fontWeight?: number | string;
+    fontFamily?: string;
+    textAnchor?: 'start' | 'middle' | 'end';
+    box?: RadarSourceLabelBox;
+}
+
+export interface RadarSourceSvgGeometry {
+    kind: 'radar-chart';
+    viewBox: { x: number; y: number; width: number; height: number };
+    center?: RadarPoint;
+    outerRadius?: number;
+    gridPolygons?: RadarSourcePolygon[];
+    dataPolygons?: RadarSourcePolygon[];
+    valuePolygon?: RadarSourcePolygon;
+    axisLines?: RadarSourceLine[];
+    labels?: RadarSourceLabel[];
+    textBox?: { x?: number; y?: number; width?: number; height?: number };
+    markers?: RadarSourceCircle[];
+}
+
 /**
  * 雷達圖配置。
  * M3 固定為 6 軸（str / int / lea / pol / cha / luk）。
@@ -71,6 +133,16 @@ export interface RadarChartConfig {
     markerColors?: string[];
     /** 頂點半徑（預設 4） */
     markerRadius?: number;
+    /** 可選：由呼叫端或 source SVG 指定的畫布大小。 */
+    canvasWidth?: number;
+    canvasHeight?: number;
+    /** 可選：label box 估算參數。 */
+    labelBoxMinWidth?: number;
+    labelBoxMinHeight?: number;
+    labelBoxPaddingX?: number;
+    labelBoxPaddingY?: number;
+    /** 可選：HTML 轉換器輸出的 SVG 幾何摘要。 */
+    sourceSvg?: RadarSourceSvgGeometry;
 }
 
 /** 格狀佈局配置（GridPanel 使用） */

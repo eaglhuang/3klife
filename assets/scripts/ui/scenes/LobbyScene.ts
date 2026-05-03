@@ -60,6 +60,8 @@ const CHARACTER_DS3_PREVIEW_SLOT_CANDIDATES = [
     'CharacterDs3Main_div_8',
 ] as const;
 
+const GACHA_SCREEN_ID = 'gacha-ds3';
+
 interface GeneralListOpenPayload {
     generals: GeneralConfig[];
     onSelectGeneral: (config: GeneralConfig) => void | Promise<void>;
@@ -92,6 +94,7 @@ export class LobbyScene extends Component {
     private _missionDetailDialogPanel: LobbyMissionDetailDialogComposite | null = null;
     private _characterDs3ActiveTab: GeneralDetailRuntimeTab = 'Overview';
     private _isCharacterDs3TabSwitching = false;
+    private _gachaPoolIndex = 0;
     private _characterDs3TabBindRetryCount = 0;
     private readonly _singlePlayerModeToggleHandles: Array<{ root: Node; label: Label }> = [];
     private readonly _localGachaService = new LocalGachaService();
@@ -245,13 +248,7 @@ export class LobbyScene extends Component {
             { buttonId: 'btnClose', handler: () => { void services().ui.goBack(); } },
         ]);
 
-        this._gachaHost = await this._mountPreviewScreenHost('GachaHost', 'gacha-main-screen', [
-            { buttonId: 'Pull1Btn',      handler: () => { void this._runLocalGacha(1); } },
-            { buttonId: 'Pull10Btn',     handler: () => { void this._runLocalGacha(10); } },
-            { buttonId: 'HistoryBtn',    handler: () => { void this._showGachaHistory(); } },
-            { buttonId: 'GoldSummonBtn', handler: () => { void this._runGoldSummon(); } },
-            { buttonId: 'UseTicketBtn',  handler: () => { void this._runTicketSummon(); } },
-        ]);
+        this._gachaHost = await this._mountPreviewScreenHost('GachaHost', GACHA_SCREEN_ID, []);
         attachCurrencyCheatPanel(this._localGachaService, undefined, () => { PlayerRosterService.clear(); }, () => {
             this._refreshWalletPreviewState();
         });
@@ -495,7 +492,7 @@ export class LobbyScene extends Component {
         const generalListController = this._createGeneralListController();
         const generalDetailController = this._createGeneralDetailController();
         const shopMainController = this._createPreviewScreenController(this._shopMainHost, 'shop-main-screen');
-        const gachaController = this._createPreviewScreenController(this._gachaHost, 'gacha-main-screen', () => {
+        const gachaController = this._createPreviewScreenController(this._gachaHost, GACHA_SCREEN_ID, () => {
             this._applyGachaFlowPresentation(this._gachaHost, true);
             this._refreshWalletPreviewState();
         });
@@ -630,20 +627,49 @@ export class LobbyScene extends Component {
         };
     }
 
-    private _applyGachaFlowPresentation(host: UIScreenPreviewHost | null, flowMode: boolean): void {
+    private _applyGachaFlowPresentation(host: UIScreenPreviewHost | null, _flowMode: boolean): void {
         if (!host?.binder) {
             return;
         }
+        // gacha-ds3 uses BannerSlide nodes; legacy node names (PoolTabBar etc.) no longer exist
+        this._setupGachaPoolCarousel(host);
+    }
 
-        host.binder.setActives({
-            PoolTabBar: !flowMode,
-            FeaturedBanner: true,
-            PityInfoBar: !flowMode,
-            RateInfoBtn: !flowMode,
-            CurrencyBar: !flowMode,
-            PullButtons: !flowMode,
-            DivinationTokenBar: !flowMode,
-        });
+    private _setupGachaPoolCarousel(host: UIScreenPreviewHost | null): void {
+        if (!host?.binder) {
+            return;
+        }
+        const pools = ['general', 'legendary', 'support'] as const;
+        this._gachaPoolIndex = 0;
+
+        const showPool = (idx: number): void => {
+            const actives: Record<string, boolean> = {};
+            for (let i = 0; i < pools.length; i++) {
+                actives[`BannerSlide_${pools[i]}`] = (i === idx);
+            }
+            host.binder!.setActives(actives);
+        };
+
+        showPool(this._gachaPoolIndex);
+
+        const prevBtn = host.binder.getButton('BtnPoolPrev');
+        const nextBtn = host.binder.getButton('BtnPoolNext');
+
+        if (prevBtn) {
+            prevBtn.node.off(Node.EventType.TOUCH_END, undefined, this);
+            prevBtn.node.on(Node.EventType.TOUCH_END, () => {
+                this._gachaPoolIndex = (this._gachaPoolIndex - 1 + pools.length) % pools.length;
+                showPool(this._gachaPoolIndex);
+            }, this);
+        }
+
+        if (nextBtn) {
+            nextBtn.node.off(Node.EventType.TOUCH_END, undefined, this);
+            nextBtn.node.on(Node.EventType.TOUCH_END, () => {
+                this._gachaPoolIndex = (this._gachaPoolIndex + 1) % pools.length;
+                showPool(this._gachaPoolIndex);
+            }, this);
+        }
     }
 
     private _openUIOnNextTick(uiId: UIID): void {
