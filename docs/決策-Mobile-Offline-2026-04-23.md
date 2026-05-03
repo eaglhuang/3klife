@@ -1,4 +1,5 @@
 ---
+doc_id: doc_other_0002
 title: Mobile-first Offline Support Decision
 date: 2026-04-23
 ---

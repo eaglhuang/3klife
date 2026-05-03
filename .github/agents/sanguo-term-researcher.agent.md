@@ -1,4 +1,5 @@
 ---
+doc_id: doc_other_0001
 description: "Research Sanguo / Romance of the Three Kingdoms unresolved labels on the web and classify each label as person, place/term/noise, ambiguous, or defer. Use for 三國名詞查證, unresolved RAG labels, person-vs-place triage, alias review evidence."
 name: "Sanguo Term Researcher"
 tools: [web, read, search]

@@ -1,6 +1,7 @@
+<!-- doc_id: doc_other_0006 -->
 # 文件代號 Registry (doc-id-registry)
 
-> 生成日期: 2026-04-30
+> 生成日期: 2026-05-03
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成，請勿手動編輯。
 > **唯一真相來源。** 文件移動後 doc_id 不變，Agent 可用 doc_id 搜尋定位文件。
 > 新增文件：`node tools_node/doc-id-registry.js --assign <path>`
@@ -16,10 +17,11 @@
 | 遊戲規格類 | `doc_spec` | 178 |
 | 索引類 | `doc_index` | 17 |
 | 任務卡類 | `doc_task` | 176 |
-| AI Agent 專用 | `doc_ai` | 29 |
+| AI Agent 專用 | `doc_ai` | 30 |
 | Agent Skill 專用 | `doc_agentskill` | 44 |
+| Server 文件類 | `doc_server_<subtype>` | 5 |
 | 其它類 | `doc_other` | 19 |
-| **合計** | — | **541** |
+| **合計** | — | **547** |
 
 ---
 
@@ -512,34 +514,35 @@
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
 | `doc_ai_0001` | .agents/rules/cocos-guide.md | Cocos Creator Project Guidelines |
-| `doc_ai_0002` | .agents/workflows/ucuf-develop.md | UCUF 開發 Workflow（ucuf-develop） |
-| `doc_ai_0003` | .agents/workflows/ucuf-verify.md | UCUF 驗證 Workflow（ucuf-verify） |
-| `doc_ai_0004` | .agents/workflows/ui-design-to-code.md | Context Budget Guard |
-| `doc_ai_0005` | .agents/workflows/ui-generate-brief.md | Context Budget Guard |
-| `doc_ai_0006` | .agents/workflows/ui-generate-reference.md | Context Budget Guard |
-| `doc_ai_0007` | .agents/workflows/ui-i18n-translate.md | Context Budget Guard |
-| `doc_ai_0008` | .agents/workflows/ui-scaffold.md | Context Budget Guard |
-| `doc_ai_0009` | .agents/workflows/ui-verify.md | Context Budget Guard |
-| `doc_ai_0010` | .github/copilot-instructions.md | 語言與推理規範 |
-| `doc_ai_0011` | .github/instructions/agent-collaboration.instructions.md | Agent Collaboration Protocol |
-| `doc_ai_0012` | .github/instructions/artifacts-guard.instructions.md | Artifacts 目錄安全規則 |
-| `doc_ai_0013` | .github/instructions/docs-guard.instructions.md | Docs 目錄讀取規則 |
-| `doc_ai_0014` | .github/instructions/fragment-guard.instructions.md | Fragment Guard |
-| `doc_ai_0015` | .github/instructions/image-view-guard.instructions.md | Image View Guard |
-| `doc_ai_0016` | .github/instructions/project-conventions.instructions.md | 架構原則與開發慣例 |
-| `doc_ai_0017` | .github/instructions/token-guard.instructions.md | Token Guard |
-| `doc_ai_0018` | .github/instructions/ucuf-compliance.instructions.md | UCUF CompositePanel 合規指令 |
-| `doc_ai_0019` | .github/instructions/ui-factory-routing.instructions.md | UI Factory Routing |
-| `doc_ai_0020` | .github/instructions/ui-pipeline.instructions.md | UI 開發流程指引 |
-| `doc_ai_0021` | AGENTS.md | 3KLife Agent Overrides |
-| `doc_ai_0022` | docs/agent-briefs/agent1-instructions.md | Agent1 Instructions |
-| `doc_ai_0023` | docs/agent-briefs/agent2-instructions.md | Agent2 Instructions |
-| `doc_ai_0024` | docs/agent-briefs/agent2-visual-qa-playbook.md | Agent2 Visual QA Playbook |
-| `doc_ai_0025` | docs/agent-briefs/CheckList.md | Agent Briefs CheckList |
-| `doc_ai_0026` | docs/agent-briefs/Readme.md | Agent 協作手冊 |
-| `doc_ai_0027` | docs/agent-briefs/sanguo-central-brain-rollout-handoff-2026-05-01.md | 三國中台大腦推行計畫交接書 |
-| `doc_ai_0028` | docs/agent-collaboration-protocol.md | 多 Agent 協作協議 |
-| `doc_ai_0029` | docs/agent-context-budget.md | Agent Context Budget Guideline |
+| `doc_ai_0002` | .agents/workflows/sanguo-progress-advance.md | Sanguo Progress Advance Workflow（sanguo-progress-advance） |
+| `doc_ai_0003` | .agents/workflows/ucuf-develop.md | UCUF 開發 Workflow（ucuf-develop） |
+| `doc_ai_0004` | .agents/workflows/ucuf-verify.md | UCUF 驗證 Workflow（ucuf-verify） |
+| `doc_ai_0005` | .agents/workflows/ui-design-to-code.md | Context Budget Guard |
+| `doc_ai_0006` | .agents/workflows/ui-generate-brief.md | Context Budget Guard |
+| `doc_ai_0007` | .agents/workflows/ui-generate-reference.md | Context Budget Guard |
+| `doc_ai_0008` | .agents/workflows/ui-i18n-translate.md | Context Budget Guard |
+| `doc_ai_0009` | .agents/workflows/ui-scaffold.md | Context Budget Guard |
+| `doc_ai_0010` | .agents/workflows/ui-verify.md | Context Budget Guard |
+| `doc_ai_0011` | .github/copilot-instructions.md | 語言與推理規範 |
+| `doc_ai_0012` | .github/instructions/agent-collaboration.instructions.md | Agent Collaboration Protocol |
+| `doc_ai_0013` | .github/instructions/artifacts-guard.instructions.md | Artifacts 目錄安全規則 |
+| `doc_ai_0014` | .github/instructions/docs-guard.instructions.md | Docs 目錄讀取規則 |
+| `doc_ai_0015` | .github/instructions/fragment-guard.instructions.md | Fragment Guard |
+| `doc_ai_0016` | .github/instructions/image-view-guard.instructions.md | Image View Guard |
+| `doc_ai_0017` | .github/instructions/project-conventions.instructions.md | 架構原則與開發慣例 |
+| `doc_ai_0018` | .github/instructions/token-guard.instructions.md | Token Guard |
+| `doc_ai_0019` | .github/instructions/ucuf-compliance.instructions.md | UCUF CompositePanel 合規指令 |
+| `doc_ai_0020` | .github/instructions/ui-factory-routing.instructions.md | UI Factory Routing |
+| `doc_ai_0021` | .github/instructions/ui-pipeline.instructions.md | UI 開發流程指引 |
+| `doc_ai_0022` | AGENTS.md | 3KLife Agent Overrides |
+| `doc_ai_0023` | docs/agent-briefs/agent1-instructions.md | Agent1 Instructions |
+| `doc_ai_0024` | docs/agent-briefs/agent2-instructions.md | Agent2 Instructions |
+| `doc_ai_0025` | docs/agent-briefs/agent2-visual-qa-playbook.md | Agent2 Visual QA Playbook |
+| `doc_ai_0026` | docs/agent-briefs/CheckList.md | Agent Briefs CheckList |
+| `doc_ai_0027` | docs/agent-briefs/Readme.md | Agent 協作手冊 |
+| `doc_ai_0028` | docs/agent-briefs/sanguo-central-brain-rollout-handoff-2026-05-01.md | 三國中台大腦推行計畫交接書 |
+| `doc_ai_0029` | docs/agent-collaboration-protocol.md | 多 Agent 協作協議 |
+| `doc_ai_0030` | docs/agent-context-budget.md | Agent Context Budget Guideline |
 
 ## Agent Skill 專用 (`doc_agentskill`)
 
@@ -590,6 +593,16 @@
 | `doc_agentskill_0043` | .github/skills/ui-spec-scaffold/SKILL.md | UI Spec Scaffold |
 | `doc_agentskill_0044` | .github/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline（鏡像索引） |
 
+## Server 文件類 (`doc_server_<subtype>`)
+
+| doc_id | 子類型 | 路徑 | 標題 |
+|--------|--------|------|------|
+| `doc_server_data_0001` | data | docs/RAG_ETL_管線應用分析.md | RAG ETL 管線應用分析 |
+| `doc_server_pipeline_0001` | pipeline | server/npc-brain/pipelines/sanguo-rag/人名事件解析.md | 人名事件解析 |
+| `doc_server_pipeline_0002` | pipeline | server/npc-brain/pipelines/sanguo-rag/README.md | Sanguo RAG Pipelines |
+| `doc_server_service_0001` | service | server/npc-brain/README.md | NPC Brain Service |
+| `doc_server_ops_0001` | ops | server/server_docs_reference.md | Server 文件索引總覽 |
+
 ## 其它類 (`doc_other`)
 
 | doc_id | 路徑 | 標題 |
@@ -605,7 +618,7 @@
 | `doc_other_0009` | docs/html_skill_plan3.md | HTML Skill Plan 3 |
 | `doc_other_0010` | docs/html_skill_rule-evolution.md | HTML Skill Rule Evolution |
 | `doc_other_0011` | docs/html_skill_rule-evolution2.md | HTML Skill Rule Evolution 2 |
-| `doc_other_0012` | docs/RAG_ETL_管線應用分析.md | RAG ETL 管線應用分析 |
+| `doc_other_0012` | docs/sanguo-rag-abab-progress-workflow-plan.md | Sanguo RAG ABAB…C 整體進度推進規劃書 |
 | `doc_other_0013` | docs/sanguo-rag-phase4b-phase5-execution-plan.md | Sanguo RAG Phase 4b / Phase 5 Execution Plan |
 | `doc_other_0014` | docs/UCUF-developer-guide.md | UCUF 開發者指南 |
 | `doc_other_0015` | docs/UCUF-migration-completion-2026-04-13.md | UCUF Migration Active Checklist (2026-04-13) |

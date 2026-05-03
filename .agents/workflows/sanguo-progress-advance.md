@@ -1,3 +1,4 @@
+<!-- doc_id: doc_ai_0002 -->
 # Sanguo Progress Advance Workflow（sanguo-progress-advance）
 
 此 workflow 用於在使用者要求「整體推進三國 RAG / 武將資料完成度」時，依照 ABAB…C 節奏執行 staged / sidecar 層的資料補全。

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-30",
+  "generated": "2026-05-03",
   "note": "doc_id 系統唯一真相來源。文件路徑異動後 doc_id 不變。Agent 可用 `grep -r \"doc_id: <id>\"` 或 `node tools_node/resolve-doc-id.js <id>` 定位文件。",
   "registry": {
     "doc_tech_0001": {
@@ -2253,141 +2253,146 @@
       "category": "ai"
     },
     "doc_ai_0002": {
+      "path": ".agents/workflows/sanguo-progress-advance.md",
+      "title": "Sanguo Progress Advance Workflow（sanguo-progress-advance）",
+      "category": "ai"
+    },
+    "doc_ai_0003": {
       "path": ".agents/workflows/ucuf-develop.md",
       "title": "UCUF 開發 Workflow（ucuf-develop）",
       "category": "ai"
     },
-    "doc_ai_0003": {
+    "doc_ai_0004": {
       "path": ".agents/workflows/ucuf-verify.md",
       "title": "UCUF 驗證 Workflow（ucuf-verify）",
       "category": "ai"
     },
-    "doc_ai_0004": {
+    "doc_ai_0005": {
       "path": ".agents/workflows/ui-design-to-code.md",
       "title": "Context Budget Guard",
       "category": "ai"
     },
-    "doc_ai_0005": {
+    "doc_ai_0006": {
       "path": ".agents/workflows/ui-generate-brief.md",
       "title": "Context Budget Guard",
       "category": "ai"
     },
-    "doc_ai_0006": {
+    "doc_ai_0007": {
       "path": ".agents/workflows/ui-generate-reference.md",
       "title": "Context Budget Guard",
       "category": "ai"
     },
-    "doc_ai_0007": {
+    "doc_ai_0008": {
       "path": ".agents/workflows/ui-i18n-translate.md",
       "title": "Context Budget Guard",
       "category": "ai"
     },
-    "doc_ai_0008": {
+    "doc_ai_0009": {
       "path": ".agents/workflows/ui-scaffold.md",
       "title": "Context Budget Guard",
       "category": "ai"
     },
-    "doc_ai_0009": {
+    "doc_ai_0010": {
       "path": ".agents/workflows/ui-verify.md",
       "title": "Context Budget Guard",
       "category": "ai"
     },
-    "doc_ai_0010": {
+    "doc_ai_0011": {
       "path": ".github/copilot-instructions.md",
       "title": "語言與推理規範",
       "category": "ai"
     },
-    "doc_ai_0011": {
+    "doc_ai_0012": {
       "path": ".github/instructions/agent-collaboration.instructions.md",
       "title": "Agent Collaboration Protocol",
       "category": "ai"
     },
-    "doc_ai_0012": {
+    "doc_ai_0013": {
       "path": ".github/instructions/artifacts-guard.instructions.md",
       "title": "Artifacts 目錄安全規則",
       "category": "ai"
     },
-    "doc_ai_0013": {
+    "doc_ai_0014": {
       "path": ".github/instructions/docs-guard.instructions.md",
       "title": "Docs 目錄讀取規則",
       "category": "ai"
     },
-    "doc_ai_0014": {
+    "doc_ai_0015": {
       "path": ".github/instructions/fragment-guard.instructions.md",
       "title": "Fragment Guard",
       "category": "ai"
     },
-    "doc_ai_0015": {
+    "doc_ai_0016": {
       "path": ".github/instructions/image-view-guard.instructions.md",
       "title": "Image View Guard",
       "category": "ai"
     },
-    "doc_ai_0016": {
+    "doc_ai_0017": {
       "path": ".github/instructions/project-conventions.instructions.md",
       "title": "架構原則與開發慣例",
       "category": "ai"
     },
-    "doc_ai_0017": {
+    "doc_ai_0018": {
       "path": ".github/instructions/token-guard.instructions.md",
       "title": "Token Guard",
       "category": "ai"
     },
-    "doc_ai_0018": {
+    "doc_ai_0019": {
       "path": ".github/instructions/ucuf-compliance.instructions.md",
       "title": "UCUF CompositePanel 合規指令",
       "category": "ai"
     },
-    "doc_ai_0019": {
+    "doc_ai_0020": {
       "path": ".github/instructions/ui-factory-routing.instructions.md",
       "title": "UI Factory Routing",
       "category": "ai"
     },
-    "doc_ai_0020": {
+    "doc_ai_0021": {
       "path": ".github/instructions/ui-pipeline.instructions.md",
       "title": "UI 開發流程指引",
       "category": "ai"
     },
-    "doc_ai_0021": {
+    "doc_ai_0022": {
       "path": "AGENTS.md",
       "title": "3KLife Agent Overrides",
       "category": "ai"
     },
-    "doc_ai_0022": {
+    "doc_ai_0023": {
       "path": "docs/agent-briefs/agent1-instructions.md",
       "title": "Agent1 Instructions",
       "category": "ai"
     },
-    "doc_ai_0023": {
+    "doc_ai_0024": {
       "path": "docs/agent-briefs/agent2-instructions.md",
       "title": "Agent2 Instructions",
       "category": "ai"
     },
-    "doc_ai_0024": {
+    "doc_ai_0025": {
       "path": "docs/agent-briefs/agent2-visual-qa-playbook.md",
       "title": "Agent2 Visual QA Playbook",
       "category": "ai"
     },
-    "doc_ai_0025": {
+    "doc_ai_0026": {
       "path": "docs/agent-briefs/CheckList.md",
       "title": "Agent Briefs CheckList",
       "category": "ai"
     },
-    "doc_ai_0026": {
+    "doc_ai_0027": {
       "path": "docs/agent-briefs/Readme.md",
       "title": "Agent 協作手冊",
       "category": "ai"
     },
-    "doc_ai_0027": {
+    "doc_ai_0028": {
       "path": "docs/agent-briefs/sanguo-central-brain-rollout-handoff-2026-05-01.md",
       "title": "三國中台大腦推行計畫交接書",
       "category": "ai"
     },
-    "doc_ai_0028": {
+    "doc_ai_0029": {
       "path": "docs/agent-collaboration-protocol.md",
       "title": "多 Agent 協作協議",
       "category": "ai"
     },
-    "doc_ai_0029": {
+    "doc_ai_0030": {
       "path": "docs/agent-context-budget.md",
       "title": "Agent Context Budget Guideline",
       "category": "ai"
@@ -2612,6 +2617,36 @@
       "title": "UI Vibe Pipeline（鏡像索引）",
       "category": "agentskill"
     },
+    "doc_server_data_0001": {
+      "path": "docs/RAG_ETL_管線應用分析.md",
+      "title": "RAG ETL 管線應用分析",
+      "category": "server",
+      "subtype": "data"
+    },
+    "doc_server_pipeline_0001": {
+      "path": "server/npc-brain/pipelines/sanguo-rag/人名事件解析.md",
+      "title": "人名事件解析",
+      "category": "server",
+      "subtype": "pipeline"
+    },
+    "doc_server_pipeline_0002": {
+      "path": "server/npc-brain/pipelines/sanguo-rag/README.md",
+      "title": "Sanguo RAG Pipelines",
+      "category": "server",
+      "subtype": "pipeline"
+    },
+    "doc_server_service_0001": {
+      "path": "server/npc-brain/README.md",
+      "title": "NPC Brain Service",
+      "category": "server",
+      "subtype": "service"
+    },
+    "doc_server_ops_0001": {
+      "path": "server/server_docs_reference.md",
+      "title": "Server 文件索引總覽",
+      "category": "server",
+      "subtype": "ops"
+    },
     "doc_other_0001": {
       "path": ".github/agents/sanguo-term-researcher.agent.md",
       "title": "Inputs",
@@ -2668,8 +2703,8 @@
       "category": "other"
     },
     "doc_other_0012": {
-      "path": "docs/RAG_ETL_管線應用分析.md",
-      "title": "RAG ETL 管線應用分析",
+      "path": "docs/sanguo-rag-abab-progress-workflow-plan.md",
+      "title": "Sanguo RAG ABAB…C 整體進度推進規劃書",
       "category": "other"
     },
     "doc_other_0013": {
@@ -2705,6 +2740,11 @@
     "doc_other_0019": {
       "path": "docs/ui-screen-migration-coverage.md",
       "title": "UI Screen Migration Coverage",
+      "category": "other"
+    },
+    "doc_other_0020": {
+      "path": "docs/html_skill_plan4.md",
+      "title": "HTML-to-UCUF Plan 4: 權威重整、通用化與自我驗證計畫",
       "category": "other"
     }
   }

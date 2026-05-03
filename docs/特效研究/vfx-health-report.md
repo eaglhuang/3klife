@@ -1,3 +1,4 @@
+<!-- doc_id: doc_tech_0007 -->
 # VFX Prefab Health Report
 
 > **產出時間：** 2026-04-18  

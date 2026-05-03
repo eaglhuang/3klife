@@ -1,3 +1,4 @@
+<!-- doc_id: doc_other_0015 -->
 # UCUF Migration Active Checklist (2026-04-13)
 
 > 本檔不再作為「完成報告」，而是過渡期唯一真相來源（single source of truth）。

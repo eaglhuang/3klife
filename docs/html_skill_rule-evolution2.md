@@ -2224,3 +2224,66 @@ if (!gradient || gradient.type !== 'linear') return null;
 - verification:
   - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-qa/chads3-20260502-011`
 - impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-05-02 — html-cocos-runtime-gap-74f0912e
+
+- suggestion id: `html-cocos-runtime-gap-74f0912e`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/character/index.html`
+- screenId: `character-ds3-main`
+- source hashes: `html=sha256:2d6bfca1ae9c76f2d3ddb85cdcd202f4` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:5ce59139d44bcb9e980cc8ab51204985`
+- before: `runtimeVsSource.score=0.6986603009259259`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=896,0,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=960,0,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1024,0,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1088,0,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=896,64,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-qa/chads3-20260502-018`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-05-02 — html-cocos-runtime-gap-a1f37a97
+
+- suggestion id: `html-cocos-runtime-gap-a1f37a97`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/character/index.html`
+- screenId: `character-ds3-main`
+- source hashes: `html=sha256:2d6bfca1ae9c76f2d3ddb85cdcd202f4` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:5ce59139d44bcb9e980cc8ab51204985`
+- before: `runtimeVsSource.score=0.6920047260802469`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=896,0,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=960,0,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1024,0,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1088,0,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=896,64,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/character/index.html" --screen-id character-ds3-main --editor-screenshot <png> --output artifacts/ui-qa/r100-compare-after-stretch-fix`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-05-02 — html-cocos-runtime-gap-e487873c
+
+- suggestion id: `html-cocos-runtime-gap-e487873c`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `artifacts/ui-qa/stats-fragment-source-package` / `character-ds3-main.stats.right-content.html`
+- screenId: `character-ds3-stats-fragment`
+- source hashes: `html=sha256:284594b7bac46ba1eb9a7d82e45b6c14` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:5ce59139d44bcb9e980cc8ab51204985`
+- before: `runtimeVsSource.score=0.7693156828703703`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=384,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=448,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=320,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=256,256,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=384,128,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "artifacts/ui-qa/stats-fragment-source-package" --main-html "character-ds3-main.stats.right-content.html" --screen-id character-ds3-stats-fragment --editor-screenshot <png> --output artifacts/ui-qa/r122-radar-source-geometry-compare`
+- impact: pending — 需 reviewer 接受後才可自動套用。
