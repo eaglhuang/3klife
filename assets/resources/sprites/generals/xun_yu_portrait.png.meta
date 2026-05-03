@@ -1,0 +1,50 @@
+{
+  "ver": "1.0.8",
+  "importer": "image",
+  "imported": true,
+  "uuid": "16df98b3-3d0a-4fed-81e9-eab6d14b4d57",
+  "displayName": "",
+  "id": "",
+  "name": "xun_yu_portrait",
+  "userData": {
+    "type": "sprite-frame"
+  },
+  "readonly": false,
+  "subMetas": {
+    "f9941": {
+      "ver": "2.0.3",
+      "importer": "sprite-frame",
+      "imported": true,
+      "uuid": "47620645-86bd-4c18-95bc-1284996ab11d",
+      "displayName": "",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "pixelsPerUnit": 100,
+        "extrude": 1,
+        "meshType": 0,
+        "pivot": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "originalSize": {
+          "width": 512,
+          "height": 768
+        },
+        "trimSize": {
+          "width": 512,
+          "height": 768
+        },
+        "trimOffset": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "readonly": false
+    }
+  }
+}

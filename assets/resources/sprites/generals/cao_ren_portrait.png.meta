@@ -1,0 +1,50 @@
+{
+  "ver": "1.0.8",
+  "importer": "image",
+  "imported": true,
+  "uuid": "47fe8f78-728c-438e-a796-8e608426b15c",
+  "displayName": "",
+  "id": "",
+  "name": "cao_ren_portrait",
+  "userData": {
+    "type": "sprite-frame"
+  },
+  "readonly": false,
+  "subMetas": {
+    "f9941": {
+      "ver": "2.0.3",
+      "importer": "sprite-frame",
+      "imported": true,
+      "uuid": "d36e9b0d-13a8-4a61-ab4c-5e0e3d73fcbd",
+      "displayName": "",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "pixelsPerUnit": 100,
+        "extrude": 1,
+        "meshType": 0,
+        "pivot": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "originalSize": {
+          "width": 512,
+          "height": 768
+        },
+        "trimSize": {
+          "width": 512,
+          "height": 768
+        },
+        "trimOffset": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "readonly": false
+    }
+  }
+}
