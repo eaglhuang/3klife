@@ -648,6 +648,38 @@ function validateScreenStrict(screenNode, screenFilePath, layoutJsons, skinJsons
     if (!layoutId || !layoutJsons.has(layoutId)) return;
     const layoutJson = layoutJsons.get(layoutId);
     if (!layoutJson || !layoutJson.root) return;
+    const screenSkinId = typeof screenNode.skin === 'string' ? screenNode.skin.trim() : null;
+    const isPlan4Screen = !!(screenNode.meta && screenNode.meta.htmlToUcufPlan4);
+    const screenBaseId = path.basename(screenFilePath, '.json');
+
+    // Plan 4: 正式 HTML-to-UCUF 畫面不可再回退到舊的 <screenId>-default skin。
+    if (!skipRules.has('formal-skin-path') && screenSkinId && /-default$/i.test(screenSkinId)) {
+        const message = `${rel} - screen.skin="${screenSkinId}" uses forbidden default skin fallback`;
+        if (isPlan4Screen) {
+            strictFail('formal-skin-path', `${message}. Fix: sync screen.skin to "${screenBaseId}.skin".`, failures, exceptions);
+        } else {
+            strictWarn('formal-skin-path', `${message}. Fix: migrate generated screens to <screenId>.skin.`, warnings, exceptions);
+        }
+    }
+
+    // Plan 4: runtime spec 必須指向本輪同步後的 canonical layout/skin，避免拿 raw/optimized draft 代測。
+    if (!skipRules.has('synced-runtime-path-freshness') && isPlan4Screen) {
+        if (layoutId !== screenBaseId) {
+            strictFail('synced-runtime-path-freshness',
+                `${rel} - Plan4 screen.layout="${layoutId}" should be canonical "${screenBaseId}"`,
+                failures, exceptions);
+        }
+        if (screenSkinId !== `${screenBaseId}.skin`) {
+            strictFail('synced-runtime-path-freshness',
+                `${rel} - Plan4 screen.skin="${screenSkinId || ''}" should be canonical "${screenBaseId}.skin"`,
+                failures, exceptions);
+        }
+        if (screenSkinId && !skinJsons.has(screenSkinId)) {
+            strictFail('synced-runtime-path-freshness',
+                `${rel} - Plan4 screen.skin="${screenSkinId}" has no loaded runtime skin JSON`,
+                failures, exceptions);
+        }
+    }
 
     const reqFields = screenNode.contentRequirements && Array.isArray(screenNode.contentRequirements.requiredFields)
         ? new Set(screenNode.contentRequirements.requiredFields)
@@ -713,7 +745,7 @@ function validateScreenStrict(screenNode, screenFilePath, layoutJsons, skinJsons
                 }
             }
 
-            const skinId = typeof screenNode.skin === 'string' ? screenNode.skin.trim() : null;
+            const skinId = screenSkinId;
             const skinJson = skinId && skinJsons.has(skinId) ? skinJsons.get(skinId) : null;
 
             // 收集 layout 中所有 lazySlot 節點的 name

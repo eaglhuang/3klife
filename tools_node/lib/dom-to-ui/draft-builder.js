@@ -8,6 +8,7 @@ const { extractInteraction, buildInteractionDraft } = require('./interaction-tra
 const { extractKeyframes, extractMotion, buildMotionDraft } = require('./motion-translator');
 const { parseBackgroundImage, parseShadowList } = require('./snapshot-to-slots');
 const { extractFontFaceMappings } = require('./css-capability-matrix');
+const { DRAFT_BUILDER_STAGE_RULES } = require('../html-to-ucuf/rule-guard-rules');
 
 const ANCHOR_MAP = {
   'fill': { top: 0, left: 0, right: 0, bottom: 0 },
@@ -72,6 +73,8 @@ function buildDraftFromHtml(html, opts) {
     compositeNodes: [],
     interactions: [],
     motions: [],
+    // Plan 4: draft-builder 的新規則必須掛在 stage registry 上，避免零散補丁再次混進大函式。
+    ruleRegistry: DRAFT_BUILDER_STAGE_RULES,
     tokenRegistry: loadTokenRegistry({
       sourcePath: opts.tokensSource || opts.tokensPath,
       runtimePath: opts.tokensRuntime,
@@ -139,11 +142,12 @@ function buildDraftFromHtml(html, opts) {
   return {
     layoutDraft: rootNode,
     skinDraft: {
-      id: `${ctx.opts.screenId}-default`,
+      id: ctx.opts.skinId || `${ctx.opts.screenId}.skin`,
       version: 1,
       slots: ctx.skinSlots,
       bundles: ctx.opts.bundle ? [ctx.opts.bundle] : [],
       meta: {
+        draftStageRules: ctx.ruleRegistry,
         tokenUsageReport: ctx.tokenUsage,
         tokenSources: ctx.tokenRegistry.sources,
         tokenConflictReport: ctx.tokenRegistry.conflicts || [],
@@ -320,13 +324,16 @@ function processElement(el, ctx, depth) {
 
   // M1: collect composite nodes for sidecar report
   if (nodeType === 'composite') {
+    const rendererHint = inferCompositeRendererHint(tag, el, attrs);
+    const svgMeta = inferCompositeGeometrySummary(tag, el, attrs);
     ctx.compositeNodes.push({
       name,
       tag,
       reason: tag === 'canvas' ? 'html-canvas' : tag === 'svg' ? 'svg' : 'class-hint',
       width: pickDim(style.width, attrs.width),
       height: pickDim(style.height, attrs.height),
-      hint: attrs['data-composite-hint'] || null,
+      hint: rendererHint,
+      svgMeta,
     });
     ctx.warnings.push({ code: 'composite-needs-manual-renderer', detail: name });
   }
@@ -342,6 +349,12 @@ function processElement(el, ctx, depth) {
     : pickDim(style.height, attrs.height);
   if (width != null) node.width = width;
   if (height != null) node.height = height;
+  if (nodeType === 'composite') {
+    const rendererHint = inferCompositeRendererHint(tag, el, attrs);
+    const svgMeta = inferCompositeGeometrySummary(tag, el, attrs);
+    if (rendererHint) node.rendererHint = rendererHint;
+    if (svgMeta) node.svgMeta = svgMeta;
+  }
 
   // Mark flex-grow children so the parent can compute fill widths.
   const flexVal = String(style.flex || style.flexGrow || '').trim();
@@ -430,7 +443,7 @@ function processElement(el, ctx, depth) {
   dedupeIdenticalLargeChildren(node, ctx);
   stabilizeGridLayout(node);
   normalizeSingleChildFill(node, ctx);
-  if (nodeType === 'container' && childNodes.length === 0 && !node.width && !node.height && !node.skinSlot && !node.skinLayers && !node.compositeImageLayers) {
+  if (nodeType === 'container' && childNodes.length === 0 && !node.width && !node.height && !node.skinSlot && !node.skinLayers && !node.compositeImageLayers && !node._flexFill) {
     return null;
   }
 
@@ -763,9 +776,8 @@ function inferStoryStripHints(el, tag, attrs, cls, ctx) {
   const id = String((attrs && attrs.id) || '').trim();
   const zone = String((attrs && attrs['data-visual-zone']) || '').trim().toLowerCase();
   const clsText = String(cls || '').trim();
-  const haystack = `${id} ${zone} ${clsText}`.toLowerCase();
-  const hasStoryKey = /story|chronicle|storydock|story-strip|strip-wrap/.test(haystack);
-  if (!hasStoryKey) return null;
+  const tokens = collectSemanticTokens(id, zone, clsText);
+  if (!hasExplicitStoryStripSignal(attrs, tokens) && !hasStoryStripMultiSignal(tokens)) return null;
 
   const ownerTab = inferOwnerTabFromElement(attrs, cls, el, ctx) || 'unknown';
   const screenId = String((ctx && ctx.opts && ctx.opts.screenId) || '').trim();
@@ -780,6 +792,40 @@ function inferStoryStripHints(el, tag, attrs, cls, ctx) {
     warmupHint: 'manual',
     deferredReason: `${ownerTab}-tab-owned-story-strip`,
   };
+}
+
+function collectSemanticTokens(...values) {
+  const tokens = new Set();
+  for (const value of values) {
+    const raw = String(value || '').trim().toLowerCase();
+    if (!raw) continue;
+    for (const part of raw.split(/\s+/)) {
+      if (!part) continue;
+      tokens.add(part);
+      const compact = part.replace(/[^a-z0-9\u4e00-\u9fff]+/g, '');
+      if (compact) tokens.add(compact);
+      for (const token of part.split(/[^a-z0-9\u4e00-\u9fff]+/i)) {
+        if (token) tokens.add(token.toLowerCase());
+      }
+    }
+  }
+  return tokens;
+}
+
+function hasExplicitStoryStripSignal(attrs, tokens) {
+  if (!attrs) return false;
+  if (attrs['data-ucuf-story-strip'] != null || attrs['data-story-strip'] != null) return true;
+  if (String(attrs['data-slot'] || '').trim() === 'slot.story-strip') return true;
+  if (/story-strip/i.test(String(attrs['data-default-fragment'] || ''))) return true;
+  return tokens.has('storystrip') || tokens.has('storydock') || tokens.has('chronicle') || tokens.has('chronicles');
+}
+
+function hasStoryStripMultiSignal(tokens) {
+  // Plan 4.1: 只接受 token 組合，避免 history 這類字串因含 story 而被誤判。
+  if (!tokens || tokens.has('history') || tokens.has('historical')) return false;
+  const hasStory = tokens.has('story') || tokens.has('chronicle') || tokens.has('chronicles');
+  const hasStrip = tokens.has('strip') || tokens.has('wrap') || tokens.has('toggle') || tokens.has('dock') || tokens.has('collapsed') || tokens.has('open');
+  return hasStory && hasStrip;
 }
 
 function parseFragmentList(raw) {
@@ -797,7 +843,8 @@ function shouldPruneStandaloneStoryStripLabel(text, attrs, ctx) {
   const cls = String((attrs && attrs.class) || '').toLowerCase();
   const onclick = String((attrs && attrs.onclick) || '').toLowerCase();
   const hasStoryLabel = /逸事|chronicles/.test(rawText);
-  const looksLikeStoryToggle = /strip-toggle|story|chronicle/.test(`${id} ${cls}`) || /togglestrip/.test(onclick);
+  const tokens = collectSemanticTokens(id, cls);
+  const looksLikeStoryToggle = hasExplicitStoryStripSignal(attrs, tokens) || hasStoryStripMultiSignal(tokens) || /togglestrip/.test(onclick);
   const hasInlineAction = !!(attrs && (attrs.onclick || attrs['data-ucuf-action']));
   return hasStoryLabel && looksLikeStoryToggle && hasInlineAction;
 }
@@ -1016,6 +1063,7 @@ function inferNodeType(tag, cls, style, attrs, el) {
   if (tag === 'button') return 'button';
 
   const hasBg = hasMeaningfulBackground(style);
+  if (isEmptyFlexSpacer(tag, style, attrs, el, hasBg)) return 'container';
   if (TEXT_TAGS.has(tag)) {
     if (isVisualOnlyInlinePrimitive(tag, style, attrs, el, hasBg)) return 'panel';
     return 'label';
@@ -1035,6 +1083,18 @@ function isVisualOnlyInlinePrimitive(tag, style, attrs, el, hasBg) {
   return !!hasBg || hasRenderableBorder(style);
 }
 
+function isEmptyFlexSpacer(tag, style, attrs, el, hasBg) {
+  if (!TEXT_TAGS.has(tag)) return false;
+  if (String(collectText(el) || '').trim()) return false;
+  if (hasBg || hasRenderableBorder(style)) return false;
+  const flexVal = String((style && (style.flexGrow || style.flex)) || '').trim();
+  const flexGrowNum = parseFloat(flexVal.split(/\s+/)[0]);
+  if (Number.isFinite(flexGrowNum) && flexGrowNum > 0) return true;
+  const width = pickDim(style && style.width, attrs && attrs.width);
+  const height = pickDim(style && style.height, attrs && attrs.height);
+  return width == null && height == null;
+}
+
 function hasOnlyTextContent(el) {
   if (!el || !Array.isArray(el.children)) return false;
   let hasText = false;
@@ -1043,6 +1103,260 @@ function hasOnlyTextContent(el) {
     if (child.type === 'text' && String(child.value || '').trim()) hasText = true;
   }
   return hasText;
+}
+
+function inferCompositeRendererHint(tag, el, attrs) {
+  const explicitHint = attrs && attrs['data-composite-hint'];
+  if (explicitHint) return explicitHint;
+  if (tag !== 'svg' || !el || !Array.isArray(el.children)) return null;
+  const elementChildren = el.children.filter(child => child && child.type === 'element');
+  const childTags = elementChildren.map(child => String(child.tag || '').toLowerCase());
+  const polygonCount = childTags.filter(childTag => childTag === 'polygon').length;
+  const lineCount = childTags.filter(childTag => childTag === 'line').length;
+  const circleCount = childTags.filter(childTag => childTag === 'circle').length;
+  const textCount = childTags.filter(childTag => childTag === 'text').length;
+  const groupCount = childTags.filter(childTag => childTag === 'g').length;
+  if (polygonCount >= 3 && lineCount >= 4 && (circleCount > 0 || groupCount > 0) && textCount + groupCount >= 4) {
+    return 'svg-radar-chart';
+  }
+  return null;
+}
+
+function inferCompositeGeometrySummary(tag, el, attrs) {
+  const rendererHint = inferCompositeRendererHint(tag, el, attrs);
+  if (rendererHint !== 'svg-radar-chart') return null;
+  return extractSvgRadarChartMeta(el, attrs);
+}
+
+function extractSvgRadarChartMeta(el, attrs) {
+  const viewBox = parseSvgViewBox(attrs && attrs.viewBox);
+  const fallbackWidth = parseSvgNumber(attrs && attrs.width) || 0;
+  const fallbackHeight = parseSvgNumber(attrs && attrs.height) || fallbackWidth || 0;
+  const resolvedViewBox = viewBox || { x: 0, y: 0, width: fallbackWidth, height: fallbackHeight };
+  const center = {
+    x: resolvedViewBox.x + (resolvedViewBox.width / 2),
+    y: resolvedViewBox.y + (resolvedViewBox.height / 2),
+  };
+  const shapes = {
+    polygons: [],
+    lines: [],
+    circles: [],
+    labels: [],
+  };
+  collectSvgShapes(el, {}, shapes);
+  const gridPolygons = shapes.polygons.filter(shape => isSvgNone(shape.fill));
+  const dataPolygons = shapes.polygons.filter(shape => !isSvgNone(shape.fill));
+  const valuePolygon = dataPolygons[0] || null;
+  const textBox = computeSvgTextBounds(shapes.labels);
+  return {
+    kind: 'radar-chart',
+    viewBox: resolvedViewBox,
+    center,
+    outerRadius: computeSvgOuterRadius(center, shapes.lines, gridPolygons),
+    gridPolygons,
+    dataPolygons,
+    valuePolygon,
+    axisLines: shapes.lines,
+    labels: shapes.labels,
+    textBox,
+    markers: shapes.circles,
+  };
+}
+
+function collectSvgShapes(el, inherited, out) {
+  if (!el || !Array.isArray(el.children)) return;
+  const nextInherited = Object.assign({}, inherited, normalizeSvgInheritedAttrs(el.attrs || {}));
+  for (const child of el.children) {
+    if (!child || child.type !== 'element') continue;
+    const tag = String(child.tag || '').toLowerCase();
+    const attrs = Object.assign({}, nextInherited, child.attrs || {});
+    if (tag === 'polygon') {
+      const points = parseSvgPoints(attrs.points);
+      if (points.length >= 3) {
+        out.polygons.push({
+          points,
+          stroke: normalizeSvgPaint(attrs.stroke),
+          strokeWidth: parseSvgNumber(attrs.strokeWidth || attrs['stroke-width']),
+          fill: normalizeSvgPaint(attrs.fill),
+          opacity: parseSvgOpacity(attrs.opacity || attrs.fillOpacity || attrs['fill-opacity']),
+        });
+      }
+    } else if (tag === 'line') {
+      const x1 = parseSvgNumber(attrs.x1);
+      const y1 = parseSvgNumber(attrs.y1);
+      const x2 = parseSvgNumber(attrs.x2);
+      const y2 = parseSvgNumber(attrs.y2);
+      if ([x1, y1, x2, y2].every(v => Number.isFinite(v))) {
+        out.lines.push({
+          x1,
+          y1,
+          x2,
+          y2,
+          stroke: normalizeSvgPaint(attrs.stroke),
+          strokeWidth: parseSvgNumber(attrs.strokeWidth || attrs['stroke-width']),
+        });
+      }
+    } else if (tag === 'circle') {
+      const cx = parseSvgNumber(attrs.cx);
+      const cy = parseSvgNumber(attrs.cy);
+      const r = parseSvgNumber(attrs.r);
+      if ([cx, cy, r].every(v => Number.isFinite(v))) {
+        out.circles.push({
+          cx,
+          cy,
+          r,
+          fill: normalizeSvgPaint(attrs.fill),
+          stroke: normalizeSvgPaint(attrs.stroke),
+          strokeWidth: parseSvgNumber(attrs.strokeWidth || attrs['stroke-width']),
+        });
+      }
+    } else if (tag === 'text') {
+      const text = collectText(child);
+      const x = parseSvgNumber(attrs.x);
+      const y = parseSvgNumber(attrs.y);
+      if (text && Number.isFinite(x) && Number.isFinite(y)) {
+        const fontSize = parseSvgNumber(attrs.fontSize || attrs['font-size']) || 13;
+        out.labels.push({
+          text,
+          x,
+          y,
+          fill: normalizeSvgPaint(attrs.fill),
+          fontSize,
+          fontWeight: attrs.fontWeight || attrs['font-weight'] || undefined,
+          fontFamily: attrs.fontFamily || attrs['font-family'] || undefined,
+          textAnchor: attrs.textAnchor || attrs['text-anchor'] || undefined,
+          box: estimateSvgTextBox(text, fontSize),
+        });
+      }
+    }
+    collectSvgShapes(child, attrs, out);
+  }
+}
+
+function normalizeSvgInheritedAttrs(attrs) {
+  const out = {};
+  for (const [key, value] of Object.entries(attrs || {})) {
+    if (value == null || value === '') continue;
+    if (
+      key === 'stroke'
+      || key === 'fill'
+      || key === 'stroke-width'
+      || key === 'strokeWidth'
+      || key === 'font-size'
+      || key === 'fontSize'
+      || key === 'font-family'
+      || key === 'fontFamily'
+      || key === 'font-weight'
+      || key === 'fontWeight'
+      || key === 'text-anchor'
+      || key === 'textAnchor'
+      || key === 'opacity'
+      || key === 'fill-opacity'
+      || key === 'fillOpacity'
+    ) {
+      out[key] = value;
+    }
+  }
+  return out;
+}
+
+function parseSvgViewBox(raw) {
+  const text = String(raw || '').trim();
+  if (!text) return null;
+  const parts = text.split(/[\s,]+/).map(part => parseFloat(part)).filter(Number.isFinite);
+  if (parts.length !== 4) return null;
+  return { x: parts[0], y: parts[1], width: parts[2], height: parts[3] };
+}
+
+function parseSvgPoints(raw) {
+  const text = String(raw || '').trim();
+  if (!text) return [];
+  const parts = text.split(/[\s,]+/).map(part => parseFloat(part)).filter(Number.isFinite);
+  const points = [];
+  for (let index = 0; index + 1 < parts.length; index += 2) {
+    points.push({ x: parts[index], y: parts[index + 1] });
+  }
+  return points;
+}
+
+function parseSvgNumber(raw) {
+  if (raw == null || raw === '') return null;
+  const match = String(raw).trim().match(/-?\d+(?:\.\d+)?/);
+  if (!match) return null;
+  return parseFloat(match[0]);
+}
+
+function parseSvgOpacity(raw) {
+  const value = parseSvgNumber(raw);
+  if (!Number.isFinite(value)) return null;
+  return Math.max(0, Math.min(1, value));
+}
+
+function normalizeSvgPaint(raw) {
+  const value = String(raw || '').trim();
+  return value || null;
+}
+
+function isSvgNone(value) {
+  return !value || String(value).trim().toLowerCase() === 'none';
+}
+
+function computeSvgOuterRadius(center, axisLines, gridPolygons) {
+  let radius = 0;
+  for (const line of axisLines || []) {
+    radius = Math.max(radius, Math.hypot(line.x2 - center.x, line.y2 - center.y));
+  }
+  for (const polygon of gridPolygons || []) {
+    for (const point of polygon.points || []) {
+      radius = Math.max(radius, Math.hypot(point.x - center.x, point.y - center.y));
+    }
+  }
+  return radius > 0 ? Number(radius.toFixed(4)) : null;
+}
+
+function estimateSvgTextBox(text, fontSize) {
+  const size = Number.isFinite(fontSize) && fontSize > 0 ? fontSize : 13;
+  let width = 0;
+  for (const ch of String(text || '')) {
+    if (/\s/.test(ch)) width += size * 0.32;
+    else if (/[\u3400-\u9FFF\uF900-\uFAFF]/.test(ch)) width += size;
+    else if (/[A-Z0-9]/.test(ch)) width += size * 0.68;
+    else if (/[a-z]/.test(ch)) width += size * 0.58;
+    else width += size * 0.5;
+  }
+  return {
+    width: Math.ceil(Math.max(size * 1.8, width + size * 0.8)),
+    height: Math.ceil(Math.max(size + 4, size * 1.4)),
+  };
+}
+
+function computeSvgTextBounds(labels) {
+  const items = Array.isArray(labels) ? labels.filter(label => label && label.box) : [];
+  if (items.length === 0) return null;
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const label of items) {
+    const width = Number(label.box.width) || 0;
+    const height = Number(label.box.height) || 0;
+    const x = Number(label.x) || 0;
+    const y = Number(label.y) || 0;
+    const anchor = String(label.textAnchor || '').toLowerCase();
+    const left = anchor === 'middle' ? x - width / 2 : anchor === 'end' ? x - width : x;
+    const top = y - height / 2;
+    minX = Math.min(minX, left);
+    minY = Math.min(minY, top);
+    maxX = Math.max(maxX, left + width);
+    maxY = Math.max(maxY, top + height);
+  }
+  if (![minX, minY, maxX, maxY].every(Number.isFinite)) return null;
+  return {
+    x: Number(minX.toFixed(4)),
+    y: Number(minY.toFixed(4)),
+    width: Number((maxX - minX).toFixed(4)),
+    height: Number((maxY - minY).toFixed(4)),
+  };
 }
 
 function anchorToWidget(anchor, style) {
@@ -1117,8 +1431,7 @@ function mapFlexAlignItems(value) {
   if (raw === 'flex-start' || raw === 'start') return 'start';
   if (raw === 'center') return 'center';
   if (raw === 'flex-end' || raw === 'end') return 'end';
-  // Cocos layout does not provide reliable CSS-like baseline alignment.
-  if (raw === 'baseline') return 'end';
+  if (raw === 'baseline') return 'baseline';
   if (raw === 'stretch') return 'stretch';
   return null;
 }
@@ -1729,20 +2042,19 @@ function buildGradientRectSlot(ctx, backgroundImage, slotId) {
   if (layers.length === 1 && layers[0].kind === 'gradient') {
     gradientLayer = layers[0];
   } else if (layers.length > 1) {
-    const linearLayers = layers.filter(layer => layer && layer.kind === 'gradient'
-      && layer.gradient && layer.gradient.type === 'linear');
-    if (linearLayers.length > 0) {
-      gradientLayer = linearLayers[linearLayers.length - 1];
+    const gradientLayers = layers.filter(layer => layer && layer.kind === 'gradient' && layer.gradient);
+    if (gradientLayers.length > 0) {
+      gradientLayer = gradientLayers[gradientLayers.length - 1];
       ctx.warnings.push({
         code: 'multi-layer-background-approximated',
         slotId,
-        detail: 'using last linear-gradient layer; radial/image overlays require art assetization',
+        detail: 'using last gradient layer and preserving backgroundLayers for fidelity review',
       });
     }
   }
   if (!gradientLayer) return null;
   const gradient = gradientLayer.gradient;
-  if (!gradient || gradient.type !== 'linear') return null;
+  if (!gradient || !/^(linear|radial)$/.test(String(gradient.type || ''))) return null;
   const stops = (gradient.stops || []).map((stop) => {
     const parsed = parseColor(stop.color, ctx.tokenRegistry);
     if (parsed.warning) ctx.warnings.push({ code: parsed.warning, slotId });
@@ -1753,11 +2065,27 @@ function buildGradientRectSlot(ctx, backgroundImage, slotId) {
     };
   });
   if (stops.length < 2) return null;
+  const backgroundLayers = layers.map(layer => {
+    if (!layer || layer.kind !== 'gradient' || !layer.gradient) return layer;
+    return {
+      kind: 'gradient',
+      gradient: Object.assign({}, layer.gradient, {
+        stops: (layer.gradient.stops || []).map(stop => ({
+          color: stop.color,
+          offset: typeof stop.offset === 'number' ? stop.offset : 0,
+        })),
+      }),
+    };
+  });
   return {
     kind: 'gradient-rect',
+    backgroundLayers,
     gradient: {
-      type: 'linear',
+      type: gradient.type,
       angle: typeof gradient.angle === 'number' ? gradient.angle : 180,
+      shape: gradient.shape || undefined,
+      center: gradient.center || undefined,
+      radius: gradient.radius || undefined,
       stops,
     },
   };
@@ -1885,21 +2213,66 @@ function resolveUniformCornerRadius(style) {
     style.borderTopRightRadius,
     style.borderBottomRightRadius,
     style.borderBottomLeftRadius,
-  ].map(parsePx).filter(value => value != null);
-  const shorthand = parseUniformBorderRadius(style.borderRadius);
+  ].map(value => resolveRadiusValue(value, style)).filter(value => value != null);
+  const shorthand = parseUniformBorderRadius(style.borderRadius, style);
   if (values.length === 0) return shorthand != null ? shorthand : 0;
   if (values.every(value => value === values[0])) return values[0];
   return shorthand != null ? shorthand : Math.max(...values);
 }
 
-function parseUniformBorderRadius(value) {
+function parseUniformBorderRadius(value, style) {
   if (value == null) return null;
   const raw = String(value).split('/')[0].trim();
   if (!raw) return null;
-  const values = raw.split(/\s+/).map(parsePx).filter(item => item != null);
+  const values = raw.split(/\s+/).map(item => resolveRadiusValue(item, style)).filter(item => item != null);
   if (values.length === 0) return null;
   if (values.every(item => item === values[0])) return values[0];
   return Math.max(...values);
+}
+
+function resolveRadiusValue(value, style) {
+  const px = parsePx(value);
+  if (px != null) return px;
+  if (value == null) return null;
+  const raw = String(value).trim();
+  const percentMatch = raw.match(/^(-?\d+(?:\.\d+)?)%$/);
+  if (!percentMatch) return null;
+  const basis = resolveCornerRadiusBasis(style);
+  if (!(basis > 0)) return null;
+  return Math.round(basis * (parseFloat(percentMatch[1]) / 100));
+}
+
+function resolveCornerRadiusBasis(style) {
+  if (!style || typeof style !== 'object') return null;
+  const width = resolveRadiusDimension([
+    style.width,
+    style.maxWidth,
+    style.minWidth,
+    style._computedLocalRect && style._computedLocalRect.w,
+    style._computedRect && style._computedRect.w,
+  ]);
+  const height = resolveRadiusDimension([
+    style.height,
+    style.maxHeight,
+    style.minHeight,
+    style._computedLocalRect && style._computedLocalRect.h,
+    style._computedRect && style._computedRect.h,
+  ]);
+  if (width != null && height != null) return Math.min(width, height);
+  if (width != null) return width;
+  if (height != null) return height;
+  return null;
+}
+
+function resolveRadiusDimension(candidates) {
+  for (const candidate of candidates || []) {
+    if (typeof candidate === 'number' && Number.isFinite(candidate) && candidate > 0) {
+      return Math.round(candidate);
+    }
+    const px = parsePx(candidate);
+    if (px != null && px > 0) return px;
+  }
+  return null;
 }
 
 function emitSkinLayers(ctx, name, style, attrs) {
@@ -2275,10 +2648,12 @@ function computeLetterSpacing(value, fontSize) {
   if (value == null) return 0;
   if (typeof value === 'string' && value.endsWith('em') && fontSize) {
     const n = parseFloat(value);
-    if (Number.isFinite(n)) return Math.round(n * fontSize);
+    if (Number.isFinite(n)) return Number((n * fontSize).toFixed(2));
   }
-  const px = parsePx(value);
-  return px != null ? px : 0;
+  const raw = String(value).trim();
+  const match = raw.match(/^(-?\d+(?:\.\d+)?)(px)?$/i);
+  if (match) return Number(parseFloat(match[1]).toFixed(2));
+  return 0;
 }
 
 // R-10: Generic font-family stack → project font asset resolver.

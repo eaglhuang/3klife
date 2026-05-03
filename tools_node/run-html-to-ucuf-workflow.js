@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
 const { resolveSourcePackage, writeSourcePackageManifest, writeHtmlWithSourceCss } = require('./lib/html-to-ucuf/source-package');
+const { runRuleGuard } = require('./lib/html-to-ucuf/rule-guard');
 const {
   assessReferencedFragmentGeometry,
   normalizeReferencedFragmentFiles,
@@ -147,61 +148,6 @@ function readJsonIfExists(filePath) {
 
 function writeJson(filePath, data) {
   fs.writeFileSync(path.resolve(filePath), `${JSON.stringify(data, null, 2)}\n`, 'utf8');
-}
-
-function preserveRawSidecarsWhenStrictReplayDropsInteractions(paths) {
-  const rawInteractionPath = paths.rawLayout.replace(/\.json$/i, '.interaction.json');
-  const finalInteractionPath = paths.finalLayout.replace(/\.json$/i, '.interaction.json');
-  const rawFragmentRoutesPath = paths.rawLayout.replace(/\.json$/i, '.fragment-routes.json');
-  const finalFragmentRoutesPath = paths.finalLayout.replace(/\.json$/i, '.fragment-routes.json');
-  const rawTabRoutingPath = paths.rawLayout.replace(/\.json$/i, '.tab-routing.json');
-  const finalTabRoutingPath = paths.finalLayout.replace(/\.json$/i, '.tab-routing.json');
-
-  const rawInteraction = readJsonIfExists(rawInteractionPath);
-  const finalInteraction = readJsonIfExists(finalInteractionPath);
-  const rawActions = Array.isArray(rawInteraction && rawInteraction.actions) ? rawInteraction.actions.length : 0;
-  const finalActions = Array.isArray(finalInteraction && finalInteraction.actions) ? finalInteraction.actions.length : 0;
-
-  const repaired = {
-    interaction: false,
-    fragmentRoutes: false,
-    tabRouting: false,
-    rawActions,
-    finalActionsBeforeRepair: finalActions,
-  };
-
-  if (rawActions > 0 && finalActions === 0) {
-    writeJson(finalInteractionPath, rawInteraction);
-    repaired.interaction = true;
-
-    const rawFragmentRoutes = readJsonIfExists(rawFragmentRoutesPath);
-    const finalFragmentRoutes = readJsonIfExists(finalFragmentRoutesPath);
-    const rawTabRouteCount = Array.isArray(rawFragmentRoutes && rawFragmentRoutes.tabRoutes)
-      ? rawFragmentRoutes.tabRoutes.length
-      : 0;
-    const finalTabRouteCount = Array.isArray(finalFragmentRoutes && finalFragmentRoutes.tabRoutes)
-      ? finalFragmentRoutes.tabRoutes.length
-      : 0;
-    if (rawTabRouteCount > 0 && finalTabRouteCount === 0) {
-      writeJson(finalFragmentRoutesPath, rawFragmentRoutes);
-      repaired.fragmentRoutes = true;
-    }
-
-    const rawTabRouting = readJsonIfExists(rawTabRoutingPath);
-    const finalTabRouting = readJsonIfExists(finalTabRoutingPath);
-    const rawTabs = Array.isArray(rawTabRouting && rawTabRouting.tabs)
-      ? rawTabRouting.tabs.length
-      : 0;
-    const finalTabs = Array.isArray(finalTabRouting && finalTabRouting.tabs)
-      ? finalTabRouting.tabs.length
-      : 0;
-    if (rawTabs > 0 && finalTabs === 0) {
-      writeJson(finalTabRoutingPath, rawTabRouting);
-      repaired.tabRouting = true;
-    }
-  }
-
-  return repaired;
 }
 
 function detectInputShape(html) {
@@ -376,6 +322,7 @@ function buildPaths(opts) {
     annotateReport: `${base}.annotate-report.json`,
     optimizeReport: `${base}.optimize-report.json`,
     skinFixReport: `${base}.skin-autofix.json`,
+    ruleGuardReport: `${base}.plan4-rule-guard.json`,
     summary: `${base}.workflow-summary.json`,
   };
 }
@@ -508,8 +455,7 @@ function writeUiVersionArtifacts(paths, opts, uiVersion) {
 }
 
 function readFinalTabRouting(paths) {
-  return readJsonIfExists(sidecarPath(paths.finalLayout, '.tab-routing.json'))
-    || readJsonIfExists(sidecarPath(paths.rawLayout, '.tab-routing.json'));
+  return readJsonIfExists(sidecarPath(paths.finalLayout, '.tab-routing.json'));
 }
 
 function buildRuntimeTabRoutingMap(tabRoutingSidecar, existingMap) {
@@ -534,7 +480,6 @@ function syncFinalArtifactsToRuntime(paths, opts, uiVersion) {
   const skinSource = firstExistingPath([paths.finalSkin, paths.rawSkin]);
   const screenDraftSource = firstExistingPath([
     sidecarPath(paths.finalLayout, '.screen.json'),
-    sidecarPath(paths.rawLayout, '.screen.json'),
   ]);
   const tabRoutingSidecar = readFinalTabRouting(paths);
   const existingScreen = readJsonIfExists(runtime.screenPath) || {};
@@ -553,6 +498,10 @@ function syncFinalArtifactsToRuntime(paths, opts, uiVersion) {
   screen.layout = opts.screenId;
   screen.skin = `${opts.screenId}.skin`;
   screen.bundle = opts.bundle || screen.bundle || null;
+  screen.meta = Object.assign({}, screen.meta || {}, {
+    htmlToUcufPlan4: true,
+    runtimeAuthority: 'synced-final-runtime-json',
+  });
   if (uiVersion) {
     screen.runtimeVersion = uiVersion;
     screen.runtimeVersionUpdatedAt = new Date().toISOString();
@@ -583,7 +532,8 @@ function syncFinalArtifactsToRuntime(paths, opts, uiVersion) {
   ];
   copied.sidecars = [];
   for (const [suffix, fileName] of sidecars) {
-    const sourcePath = firstExistingPath([sidecarPath(paths.finalLayout, suffix), sidecarPath(paths.rawLayout, suffix)]);
+    // Plan 4.1: formal runtime sync 只能吃 final sidecar，不能用 raw sidecar 補洞代測。
+    const sourcePath = firstExistingPath([sidecarPath(paths.finalLayout, suffix)]);
     const copiedPath = copyJsonFile(sourcePath, path.join(runtime.screensDir, fileName));
     if (copiedPath) copied.sidecars.push(copiedPath);
   }
@@ -600,7 +550,7 @@ function syncFinalArtifactsToRuntime(paths, opts, uiVersion) {
 function normalizeFragmentLayout(layout, tabId, slotWidth = null) {
   const root = layout && layout.root ? layout.root : layout;
   if (!root || typeof root !== 'object') return null;
-  root.name = `CharacterDs3Tab${toPascal(tabId)}`;
+  root.name = `Tab${toPascal(tabId)}Content`;
   root.widget = { top: 0, left: 0, right: 0, bottom: 0 };
   delete root.x;
   delete root.y;
@@ -789,10 +739,8 @@ function runPerTabReplay(paths, opts, sourcePackage, inputPath) {
       '--warn-only',
       '--no-backup',
     ];
-    const fallbackTokensPath = path.join(ROOT, 'assets', 'resources', 'ui-spec', 'ui-design-tokens.json');
-    const fallbackCssPath = path.join(ROOT, 'Design System 3', 'colors_and_type.css');
-    const tokensSourcePath = sourcePackage && sourcePackage.tokensPath ? sourcePackage.tokensPath : fallbackTokensPath;
-    const sourceCssPath = sourcePackage && sourcePackage.cssPath ? sourcePackage.cssPath : fallbackCssPath;
+    const tokensSourcePath = sourcePackage && sourcePackage.tokensPath ? sourcePackage.tokensPath : null;
+    const sourceCssPath = sourcePackage && sourcePackage.cssPath ? sourcePackage.cssPath : null;
     if (tokensSourcePath && fs.existsSync(tokensSourcePath)) {
       args.push('--tokens-source', tokensSourcePath);
     }
@@ -884,17 +832,142 @@ function bootstrapFinalDraftFromRuntime(paths, screenId) {
 }
 
 function buildSummary(args) {
+  const debugInfo = computeDebugOnly(args.opts, args.sourcePackage);
+  const visualFidelityRisk = args.visualFidelityRisk || assessVisualFidelityRisk(args.paths, args.metrics);
+  const interactionRuntime = args.interactionRuntime || assessInteractionRuntime(args.paths, args.steps, args.sourceHtml);
   return {
     input: rel(args.opts.input),
     sourcePackage: args.sourcePackage && args.sourcePackage.manifest ? args.sourcePackage.manifest : null,
     screenId: args.opts.screenId,
     bundle: args.opts.bundle,
+    debugOnly: debugInfo.debugOnly,
+    debugOnlyReasons: debugInfo.reasons,
+    runtimeAuthority: args.runtimeAuthority || buildRuntimeAuthority(args.opts, null),
+    ruleGuard: args.ruleGuard || { status: 'not-run', blockerCount: 0, warningCount: 0, violations: [] },
+    visualFidelityRisk,
+    interactionRuntime,
+    nextFixes: args.nextFixes || [],
     detected: args.detected,
     paths: Object.fromEntries(Object.entries(args.paths).map(([k, v]) => [k, rel(v)])),
     steps: args.steps,
     metrics: args.metrics,
     verdict: args.verdict,
     generatedAt: new Date().toISOString(),
+  };
+}
+
+function computeDebugOnly(opts, sourcePackage) {
+  const reasons = [];
+  if (!sourcePackage) reasons.push('input-debug-entry');
+  if (opts.skipEditorCompare) reasons.push('editor-compare-skipped');
+  if (sourcePackage && !opts.editorScreenshot) reasons.push('editor-screenshot-missing');
+  if (sourcePackage && !opts.captureProtocol) reasons.push('capture-protocol-missing');
+  if (!opts.runtimeSync) reasons.push('runtime-sync-disabled');
+  if (!opts.perTabReplay) reasons.push('per-tab-replay-disabled');
+  return { debugOnly: reasons.length > 0, reasons };
+}
+
+function buildRuntimeAuthority(opts, runtimeSync) {
+  const runtime = resolveCanonicalRuntimePaths(opts.screenId);
+  const copied = runtimeSync && runtimeSync.copied || {};
+  const synced = !!(runtimeSync && !runtimeSync.skipped && copied.layout && copied.skin && copied.screen);
+  return {
+    authority: synced ? 'synced-final-runtime-json' : 'debug-local-final-json',
+    screen: rel(runtime.screenPath),
+    layout: rel(runtime.layoutPath),
+    skin: rel(runtime.skinPath),
+    synced,
+  };
+}
+
+function topRuleGuardFixes(ruleGuard, limit = 3) {
+  return ((ruleGuard && ruleGuard.violations) || [])
+    .filter(item => item && item.severity === 'blocker')
+    .slice(0, limit)
+    .map(item => ({
+      ruleId: item.ruleId,
+      summary: item.summary,
+      fixAction: item.fixAction,
+      evidence: item.evidence,
+    }));
+}
+
+function assessVisualFidelityRisk(paths, metrics) {
+  const violations = [];
+  const skinPath = firstExistingPath([
+    paths && paths.finalSkin,
+    paths && paths.rawSkin,
+  ]);
+  const skin = readJsonIfExists(skinPath);
+  if (skin && skin.slots) {
+    for (const [slotId, slot] of Object.entries(skin.slots)) {
+      collectVisualRiskFromSlot(slot, `skin.slots.${slotId}`, violations);
+    }
+  }
+
+  const visualReview = readJsonIfExists(paths && paths.rawLayout ? paths.rawLayout.replace(/\.json$/i, '.visual-review.json') : null);
+  if (visualReview && /fail|blocker/i.test(String(visualReview.verdict || visualReview.status || ''))) {
+    violations.push({
+      ruleId: 'H2U-P4-019',
+      severity: 'blocker',
+      summary: 'visual-review reported blocker/fail',
+      evidence: JSON.stringify({ verdict: visualReview.verdict || null, status: visualReview.status || null }),
+      fixAction: 'Fix visual-review blockers before formal pass.',
+    });
+  }
+
+  const blockerCount = violations.filter(item => item.severity === 'blocker').length;
+  return {
+    status: blockerCount > 0 ? 'blocker' : 'pass',
+    blockerCount,
+    violations,
+    source: skinPath ? rel(skinPath) : null,
+    htmlCocosVerdict: metrics && metrics.htmlCocos && metrics.htmlCocos.runtimeVsSource
+      ? metrics.htmlCocos.runtimeVsSource.verdict
+      : null,
+  };
+}
+
+function collectVisualRiskFromSlot(slot, evidence, out) {
+  if (!slot || typeof slot !== 'object') return;
+  const risk = slot.unsupportedLayerRisk || slot.visualFidelityRisk;
+  if (risk) {
+    out.push({
+      ruleId: 'H2U-P4-016',
+      severity: /warn/i.test(String(risk.severity || risk.status || '')) ? 'warning' : 'blocker',
+      summary: risk.summary || 'skin slot has unsupported visual fidelity risk',
+      evidence,
+      fixAction: risk.fixAction || 'Preserve backgroundLayers or assetize the unsupported layer.',
+    });
+  }
+  if (slot.gradient && slot.gradient.type === 'radial' && (!Array.isArray(slot.gradient.stops) || slot.gradient.stops.length < 2)) {
+    out.push({
+      ruleId: 'H2U-P4-017',
+      severity: 'blocker',
+      summary: 'radial gradient is missing stop metadata',
+      evidence,
+      fixAction: 'Emit radial gradient stops and geometry before formal pass.',
+    });
+  }
+}
+
+function assessInteractionRuntime(paths, steps, sourceHtml) {
+  const interactionPath = firstExistingPath([
+    paths && paths.finalLayout ? sidecarPath(paths.finalLayout, '.interaction.json') : null,
+  ]);
+  const interaction = readJsonIfExists(interactionPath);
+  const actionCount = interaction && Array.isArray(interaction.actions) ? interaction.actions.length : 0;
+  const required = actionCount > 0 || /data-ucuf-action|tabSwitch|switchTab|pool-prev|pool-next/i.test(String(sourceHtml || ''));
+  const smokeStep = (steps || []).find(step => step && step.step === 'runtime-interaction-smoke');
+  const smokeResults = smokeStep && Array.isArray(smokeStep.smokeResults) ? smokeStep.smokeResults : [];
+  const actionsBound = Number(smokeStep && smokeStep.actionsBound || 0);
+  return {
+    required,
+    status: required ? (smokeStep && smokeStep.ok ? 'pass' : 'not-run') : 'pass',
+    actionsDeclared: actionCount,
+    actionsBound,
+    smokeResults,
+    source: interactionPath ? rel(interactionPath) : null,
   };
 }
 
@@ -1085,20 +1158,6 @@ function main() {
     issues: extractIssues((strictProc.stdout || '') + '\n' + (strictProc.stderr || '')),
   });
 
-  const sidecarRepair = preserveRawSidecarsWhenStrictReplayDropsInteractions(paths);
-  if (sidecarRepair.interaction || sidecarRepair.fragmentRoutes || sidecarRepair.tabRouting) {
-    steps.push({
-      step: 'strict-replay-sidecar-repair',
-      exitCode: 0,
-      ok: true,
-      repairedInteraction: sidecarRepair.interaction,
-      repairedFragmentRoutes: sidecarRepair.fragmentRoutes,
-      repairedTabRouting: sidecarRepair.tabRouting,
-      rawActions: sidecarRepair.rawActions,
-      finalActionsBeforeRepair: sidecarRepair.finalActionsBeforeRepair,
-    });
-  }
-
   const perTabReplay = runPerTabReplay(paths, opts, sourcePackage, inputPath);
   steps.push({
     step: 'per-tab-replay',
@@ -1220,6 +1279,12 @@ function main() {
     htmlCocos: readJsonIfExists(paths.htmlCocosVerdict),
   };
   metrics.runtimeReadiness = assessRuntimeReadiness(paths, sourceHtml, opts.screenId);
+  const runtimeAuthority = buildRuntimeAuthority(opts, runtimeSync);
+  const debugInfo = computeDebugOnly(opts, sourcePackage);
+  const visualFidelityRisk = assessVisualFidelityRisk(paths, metrics);
+  const interactionRuntime = assessInteractionRuntime(paths, steps, sourceHtml);
+  const visualFidelityRiskPass = visualFidelityRisk.status === 'pass' && visualFidelityRisk.blockerCount === 0;
+  const interactionRuntimePass = interactionRuntime.status === 'pass';
   const editorGatePass = !sourcePackage
     ? true
     : !!(metrics.htmlCocos && metrics.htmlCocos.runtimeVsSource && ['pass', 'pass-with-approved-art-delta'].includes(metrics.htmlCocos.runtimeVsSource.verdict));
@@ -1236,10 +1301,14 @@ function main() {
     editorVisualPass: runtimeFinalPass,
     fragmentGeometryPass: fragmentGeometryNormalize.ok && metrics.runtimeReadiness.fragmentGeometry.status !== 'blocker',
     runtimeReadinessPass: metrics.runtimeReadiness.ok,
+    ruleGuardPass: false,
+    visualFidelityRiskPass,
+    interactionRuntimePass,
+    debugOnly: debugInfo.debugOnly,
     converterPass,
     previewDiagnosticPass,
     runtimeFinalPass,
-    workflowPass: converterPass && previewDiagnosticPass && runtimeFinalPass,
+    workflowPass: converterPass && previewDiagnosticPass && runtimeFinalPass && visualFidelityRiskPass && interactionRuntimePass && !debugInfo.debugOnly,
     gateScopes: {
       converterPass: 'HTML source package to UCUF JSON plus structural/runtime-readiness gates',
       previewDiagnosticPass: 'browser source-vs-UCUF preview only; image-waivers are diagnostic and not final runtime score authority',
@@ -1253,12 +1322,44 @@ function main() {
       ...(sourcePackage && !opts.skipEditorCompare && !opts.editorScreenshot ? ['editor-screenshot-required'] : []),
       ...fragmentGeometryNormalize.failures.map(item => `fragment-geometry-normalize: ${item.ref} ${item.code}`),
       ...metrics.runtimeReadiness.blockers,
+      ...visualFidelityRisk.violations.filter(item => item.severity === 'blocker').map(item => `[${item.ruleId}] ${item.summary}`),
+      ...(interactionRuntime.required && interactionRuntime.status !== 'pass' ? [`interactionRuntime:${interactionRuntime.status}`] : []),
     ],
   };
 
-  const summary = buildSummary({ opts, sourcePackage, detected, paths, steps, metrics, verdict });
+  const preliminarySummary = buildSummary({ opts, sourcePackage, detected, paths, steps, metrics, verdict, runtimeAuthority, visualFidelityRisk, interactionRuntime, sourceHtml });
+  const ruleGuard = runRuleGuard({
+    repoRoot: ROOT,
+    strict: true,
+    workflowSummary: preliminarySummary,
+    sourceHtml,
+  });
+  writeJson(paths.ruleGuardReport, ruleGuard);
+  const nextFixes = topRuleGuardFixes(ruleGuard);
+  steps.push({
+    step: 'plan4-rule-guard',
+    exitCode: ruleGuard.blockerCount > 0 ? 1 : 0,
+    ok: ruleGuard.blockerCount === 0,
+    status: ruleGuard.status,
+    blockerCount: ruleGuard.blockerCount,
+    warningCount: ruleGuard.warningCount,
+    report: rel(paths.ruleGuardReport),
+  });
+  verdict.ruleGuardPass = ruleGuard.blockerCount === 0;
+  if (!verdict.ruleGuardPass) {
+    verdict.remainingIssues.push(...ruleGuard.violations
+      .filter(item => item.severity === 'blocker')
+      .map(item => `[${item.ruleId}] ${item.summary}`));
+  }
+  if (debugInfo.debugOnly) {
+    verdict.remainingIssues.push(...debugInfo.reasons.map(reason => `debugOnly:${reason}`));
+  }
+  verdict.workflowPass = converterPass && previewDiagnosticPass && runtimeFinalPass && visualFidelityRiskPass && interactionRuntimePass && verdict.ruleGuardPass && !debugInfo.debugOnly;
+
+  const summary = buildSummary({ opts, sourcePackage, detected, paths, steps, metrics, verdict, runtimeAuthority, ruleGuard, nextFixes, visualFidelityRisk, interactionRuntime, sourceHtml });
   fs.writeFileSync(paths.summary, JSON.stringify(summary, null, 2) + '\n', 'utf8');
   console.log(`[run-html-to-ucuf-workflow] summary=${rel(paths.summary)}`);
+  console.log(`[run-html-to-ucuf-workflow] plan4-rule-guard=${ruleGuard.status} blockers=${ruleGuard.blockerCount}`);
   console.log(`[run-html-to-ucuf-workflow] raw.nodeCount=${metrics.raw.nodeCount} optimized.nodeCount=${metrics.optimized.after || metrics.optimized.perf.nodeCount} final.nodeCount=${metrics.final.nodeCount}`);
   if (metrics.compare) {
     console.log(`[run-html-to-ucuf-workflow] compare.adjustedCoverage=${metrics.compare.adjustedCoverage}`);
@@ -1268,6 +1369,12 @@ function main() {
   }
   if (metrics.runtimeReadiness.blockers.length) {
     for (const blocker of metrics.runtimeReadiness.blockers) console.error(`[run-html-to-ucuf-workflow] ${blocker}`);
+  }
+  if (nextFixes.length) {
+    for (const fix of nextFixes) console.error(`[run-html-to-ucuf-workflow] nextFix ${fix.ruleId}: ${fix.fixAction}`);
+  }
+  if (debugInfo.debugOnly) {
+    console.error(`[run-html-to-ucuf-workflow] debugOnly=${debugInfo.reasons.join(',')}`);
   }
   if (!verdict.workflowPass) {
     console.error('[run-html-to-ucuf-workflow] verdict=needs-review');

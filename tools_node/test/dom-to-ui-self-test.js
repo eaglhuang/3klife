@@ -20,6 +20,7 @@ const { smartMerge } = require('../lib/dom-to-ui/smart-merge');
 const { buildSyncReport } = require('../lib/dom-to-ui/sidecar-emitters');
 const { snapshotToSlots } = require('../lib/dom-to-ui/snapshot-to-slots');
 const { resolveSourcePackage, writeHtmlWithSourceCss } = require('../lib/html-to-ucuf/source-package');
+const { runRuleGuard } = require('../lib/html-to-ucuf/rule-guard');
 const { validateArtAuthorityWaivers } = require('../lib/dom-to-ui/art-authority-waivers');
 const { buildReadinessReport } = require('../lib/dom-to-ui/readiness-gate');
 
@@ -66,8 +67,42 @@ function withTempDir(fn) {
   }
 }
 
+function getArgValue(name) {
+  const index = process.argv.indexOf(name);
+  return index >= 0 ? process.argv[index + 1] : null;
+}
+
 function main() {
+  const group = getArgValue('--group');
+  if (group === 'html-to-ucuf-active-contract') {
+    runHtmlToUcufActiveContractGroup();
+    console.log('\nALL PASS');
+    return;
+  }
+  if (group === 'html-to-ucuf-fidelity-contract') {
+    runHtmlToUcufFidelityContractGroup();
+    console.log('\nALL PASS');
+    return;
+  }
+
   if (!fs.existsSync(FIXTURE)) fail(`fixture missing: ${FIXTURE}`);
+
+  {
+    const parsed = buildDraftFromHtml(`
+      <html><body>
+        <button style="width:96px;height:96px;border-radius:50%;background:#111;border:3px solid #d4af37;">Go</button>
+      </body></html>
+    `, {
+      screenId: 'percent-radius-self-test',
+      bundle: 'ui_common',
+    });
+    const slots = parsed && parsed.skinDraft && parsed.skinDraft.slots ? parsed.skinDraft.slots : {};
+    const buttonSlot = Object.values(slots).find((slot) => slot && typeof slot.cornerRadius === 'number');
+    if (!buttonSlot || buttonSlot.cornerRadius !== 48) {
+      fail(`percent border-radius should normalize to 48, got ${JSON.stringify(buttonSlot)}`);
+    }
+    ok('50% border-radius normalizes to numeric cornerRadius');
+  }
 
   withTempDir((tmp) => {
     const layout = path.join(tmp, 'out.layout.json');
@@ -2041,6 +2076,255 @@ function runAdditionalAccuracyBaselines() {
     if (!result.visualReview || result.visualReview.metrics.screenshotZoneConfidence < 1) fail(`${name} visual review missing screenshotZoneConfidence`);
   }
   ok('accuracy harness covers lobby, general-detail, battle baselines');
+}
+
+function runHtmlToUcufActiveContractGroup() {
+  const current = runRuleGuard({ repoRoot: REPO_ROOT, scanCore: true });
+  if (current.blockerCount !== 0) {
+    fail(`Plan4 rule guard should pass current core files, got blockers=${current.blockerCount}\n${JSON.stringify(current.violations.slice(0, 5), null, 2)}`);
+  }
+  ok('Plan4 rule guard passes current core files');
+
+  withTempDir((tmp) => {
+    seedPlan4Repo(tmp, {
+      workflow: 'const screen = "gacha-ds3"; const node = "CharacterDs3Main_div_6";\n',
+      sidecar: 'const TAB_TARGET_TO_CHILD_PANEL = { overview: "CharacterDs3OverviewChild" };\n',
+      readiness: 'const skin = `${screenId}-default.json`;\n',
+      draftBuilder: 'function buildDraftFromHtml() { return {}; }\n',
+      skill: 'Plan 2 docs/html_skill_plan2.md is the formal execution spec.\n',
+    });
+    const report = runRuleGuard({ repoRoot: tmp, scanCore: true });
+    assertRule(report, 'H2U-P4-005');
+    assertRule(report, 'H2U-P4-007');
+    assertRule(report, 'H2U-P4-010');
+    assertRule(report, 'H2U-P4-012');
+    assertRule(report, 'H2U-P4-013');
+    ok('Plan4 seeded negative core residues are detected');
+  });
+
+  const formalPackage = { mainHtml: 'index.html', tokens: 'ui-design-tokens.json', css: 'colors_and_type.css' };
+  assertRule(runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    workflowSummary: {
+      debugOnly: false,
+      sourcePackage: null,
+      steps: [],
+      runtimeAuthority: { authority: 'synced-final-runtime-json' },
+    },
+  }), 'H2U-P4-001');
+
+  assertRule(runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    workflowSummary: {
+      debugOnly: false,
+      debugOnlyReasons: ['editor-compare-skipped'],
+      sourcePackage: formalPackage,
+      steps: [],
+      runtimeAuthority: { authority: 'synced-final-runtime-json' },
+    },
+  }), 'H2U-P4-002');
+
+  assertRule(runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    workflowSummary: {
+      debugOnly: false,
+      debugOnlyReasons: ['runtime-sync-disabled'],
+      sourcePackage: formalPackage,
+      steps: [],
+      runtimeAuthority: { authority: 'debug-local-final-json' },
+    },
+  }), 'H2U-P4-003');
+
+  assertRule(runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    sourceHtml: '<button role="tab" data-tab="alpha">Alpha</button><section data-ucuf-tab-content="alpha"></section>',
+    workflowSummary: {
+      debugOnly: false,
+      sourcePackage: formalPackage,
+      steps: [{ step: 'per-tab-replay', ok: true, skipped: true, fragmentCount: 0 }],
+      runtimeAuthority: { authority: 'synced-final-runtime-json' },
+    },
+  }), 'H2U-P4-004');
+
+  assertRule(runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    workflowSummary: {
+      debugOnly: false,
+      sourcePackage: formalPackage,
+      steps: [{ step: 'strict-replay-sidecar-repair', ok: true }],
+      runtimeAuthority: { authority: 'synced-final-runtime-json' },
+    },
+  }), 'H2U-P4-006');
+
+  assertRule(runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    workflowSummary: {
+      debugOnly: false,
+      sourcePackage: formalPackage,
+      steps: [],
+      runtimeAuthority: { authority: 'debug-local-final-json' },
+    },
+  }), 'H2U-P4-008');
+
+  assertRule(runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    workflowSummary: {
+      debugOnly: false,
+      sourcePackage: { mainHtml: 'index.html', tokens: null, css: null },
+      steps: [],
+      runtimeAuthority: { authority: 'synced-final-runtime-json' },
+    },
+  }), 'H2U-P4-009');
+
+  withTempDir((tmp) => {
+    const brokenRadar = path.join(tmp, 'broken-radar.layout.json');
+    fs.writeFileSync(brokenRadar, JSON.stringify({
+      root: { type: 'container', name: 'Root', children: [{ type: 'composite', name: 'Radar', rendererHint: 'svg-radar-chart', svgMeta: { viewBox: { x: 0, y: 0, width: 100, height: 100 } } }] },
+    }, null, 2), 'utf8');
+    assertRule(runRuleGuard({ repoRoot: REPO_ROOT, scanCore: false, layout: brokenRadar }), 'H2U-P4-011');
+
+    const fullRadar = path.join(tmp, 'full-radar.layout.json');
+    fs.writeFileSync(fullRadar, JSON.stringify({
+      root: {
+        type: 'container',
+        name: 'Root',
+        children: [{
+          type: 'composite',
+          name: 'Radar',
+          rendererHint: 'svg-radar-chart',
+          svgMeta: {
+            kind: 'radar-chart',
+            viewBox: { x: 0, y: 0, width: 100, height: 100 },
+            center: { x: 50, y: 50 },
+            axisLines: [{ x1: 50, y1: 50, x2: 50, y2: 0 }],
+            gridPolygons: [{ points: [{ x: 50, y: 0 }, { x: 100, y: 50 }, { x: 50, y: 100 }] }],
+            valuePolygon: { points: [{ x: 50, y: 10 }, { x: 90, y: 50 }, { x: 50, y: 90 }] },
+            labels: [{ text: 'A', x: 50, y: 0, box: { width: 20, height: 18 } }],
+            textBox: { x: 40, y: -9, width: 20, height: 18 },
+          },
+        }],
+      },
+    }, null, 2), 'utf8');
+    const radarPass = runRuleGuard({ repoRoot: REPO_ROOT, scanCore: false, layout: fullRadar });
+    if (radarPass.violations.some(v => v.ruleId === 'H2U-P4-011')) fail('full radar geometry should pass H2U-P4-011');
+    ok('Plan4 radar geometry contract detects missing payload and accepts full payload');
+  });
+
+  const envBlocked = runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    workflowSummary: {
+      debugOnly: true,
+      environmentBlocked: 'spawnSync node.exe EPERM',
+      sourcePackage: formalPackage,
+      steps: [],
+      runtimeAuthority: { authority: 'debug-local-final-json' },
+    },
+  });
+  if (!envBlocked.violations.some(v => v.severity === 'warning' && /environment-blocked/.test(v.summary))) {
+    fail('environment-blocked should be reported as a warning');
+  }
+  ok('Plan4 active contract group covers formal/debug/runtime/tab/radar/environment rules');
+}
+
+function runHtmlToUcufFidelityContractGroup() {
+  const formalPackage = { mainHtml: 'index.html', tokens: 'ui-design-tokens.json', css: 'colors_and_type.css' };
+
+  withTempDir((tmp) => {
+    seedPlan4Repo(tmp, {
+      workflow: 'const sourcePath = firstExistingPath([sidecarPath(paths.finalLayout, suffix), sidecarPath(paths.rawLayout, suffix)]);\n',
+      draftBuilder: [
+        'const DRAFT_BUILDER_STAGE_RULES = [];',
+        'const hasStoryKey = /story|chronicle|storydock|story-strip|strip-wrap/.test(haystack);',
+        'if (hasStoryKey) return { dataSlot: "slot.story-strip" };',
+        'if (!gradient || gradient.type !== "linear") return null;',
+      ].join('\n'),
+      skill: 'Plan 4 docs/html_skill_plan4.md is the current execution spec.\n',
+    });
+    const report = runRuleGuard({ repoRoot: tmp, scanCore: true });
+    assertRule(report, 'H2U-P4-014');
+    assertRule(report, 'H2U-P4-015');
+    assertRule(report, 'H2U-P4-016');
+    assertRule(report, 'H2U-P4-017');
+    assertRule(report, 'H2U-P4-020');
+    ok('Plan4 fidelity contract catches story regex, gradient downgrade, and raw sidecar fallback');
+  });
+
+  const missingVisual = runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    workflowSummary: {
+      debugOnly: false,
+      sourcePackage: formalPackage,
+      steps: [],
+      runtimeAuthority: { authority: 'synced-final-runtime-json' },
+      interactionRuntime: { required: false, status: 'pass', actionsBound: 0, smokeResults: [] },
+    },
+  });
+  assertRule(missingVisual, 'H2U-P4-019');
+
+  const missingInteractionSmoke = runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    sourceHtml: '<button data-ucuf-action="tabSwitch" data-target="next">Next</button>',
+    workflowSummary: {
+      debugOnly: false,
+      sourcePackage: formalPackage,
+      steps: [],
+      runtimeAuthority: { authority: 'synced-final-runtime-json' },
+      visualFidelityRisk: { status: 'pass', blockerCount: 0, violations: [] },
+      interactionRuntime: { required: true, status: 'not-run', actionsBound: 0, smokeResults: [] },
+    },
+  });
+  assertRule(missingInteractionSmoke, 'H2U-P4-018');
+
+  const pass = runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    sourceHtml: '<div class="history-panel">History only, not a story strip.</div>',
+    workflowSummary: {
+      debugOnly: false,
+      sourcePackage: formalPackage,
+      steps: [],
+      runtimeAuthority: { authority: 'synced-final-runtime-json' },
+      visualFidelityRisk: { status: 'pass', blockerCount: 0, violations: [] },
+      interactionRuntime: { required: false, status: 'pass', actionsBound: 0, smokeResults: [] },
+    },
+  });
+  if (pass.violations.some(v => ['H2U-P4-014', 'H2U-P4-015', 'H2U-P4-018', 'H2U-P4-019'].includes(v.ruleId))) {
+    fail(`history-only formal summary should not trip fidelity rules: ${JSON.stringify(pass.violations, null, 2)}`);
+  }
+  ok('Plan4 fidelity contract covers visual risk and runtime interaction summary gates');
+}
+
+function seedPlan4Repo(root, files) {
+  const map = {
+    'tools_node/run-html-to-ucuf-workflow.js': files.workflow || '',
+    'tools_node/render-html-tab-fragments.js': files.renderTabs || '',
+    'tools_node/lib/dom-to-ui/sidecar-emitters.js': files.sidecar || '',
+    'tools_node/lib/dom-to-ui/readiness-gate.js': files.readiness || '',
+    'tools_node/lib/dom-to-ui/draft-builder.js': files.draftBuilder || '',
+    'tools_node/validate-ui-specs.js': files.validator || '',
+    '.github/skills/html-to-ucuf/SKILL.md': files.skill || '',
+  };
+  for (const [relPath, content] of Object.entries(map)) {
+    const filePath = path.join(root, relPath);
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, content, 'utf8');
+  }
+}
+
+function assertRule(report, ruleId) {
+  if (!report || !Array.isArray(report.violations) || !report.violations.some(v => v.ruleId === ruleId)) {
+    fail(`expected ${ruleId}, got ${JSON.stringify(report && report.violations || [], null, 2)}`);
+  }
 }
 
 function findNode(root, pred) {

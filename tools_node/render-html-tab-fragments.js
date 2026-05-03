@@ -10,15 +10,6 @@ const {
   waitForPageSettle,
 } = require('./render-html-snapshot');
 
-const TAB_SEQUENCE = [
-  { id: 'Overview', key: 'overview' },
-  { id: 'Stats', key: 'stats' },
-  { id: 'Tactics', key: 'tactics' },
-  { id: 'Bloodline', key: 'bloodline' },
-  { id: 'Equip', key: 'equip' },
-  { id: 'Aptitude', key: 'aptitude' },
-];
-
 function parseArgs(argv) {
   const opts = {
     input: null,
@@ -27,7 +18,10 @@ function parseArgs(argv) {
     viewport: '1920x1080',
     settleMs: 1500,
     browser: null,
-    tabs: TAB_SEQUENCE,
+    tabs: null,
+    tabSelector: null,
+    contentSelector: null,
+    rootNamePrefix: null,
   };
   for (let i = 2; i < argv.length; i += 1) {
     const token = argv[i];
@@ -46,6 +40,9 @@ function parseArgs(argv) {
           .filter(Boolean)
           .map(value => ({ id: toRuntimeTabId(value), key: value.toLowerCase() }));
         break;
+      case '--tab-selector': opts.tabSelector = next(); break;
+      case '--content-selector': opts.contentSelector = next(); break;
+      case '--root-name-prefix': opts.rootNamePrefix = next(); break;
       case '--help':
       case '-h':
         printHelp();
@@ -69,8 +66,6 @@ function printHelp() {
 
 function toRuntimeTabId(value) {
   const key = String(value || '').trim().toLowerCase();
-  const known = TAB_SEQUENCE.find(tab => tab.key === key || tab.id.toLowerCase() === key);
-  if (known) return known.id;
   return key.replace(/(^|[-_])([a-z])/g, (_, __, c) => c.toUpperCase());
 }
 
@@ -107,6 +102,7 @@ async function main() {
   const manifest = {
     screenId: opts.screenId,
     generatedAt: new Date().toISOString(),
+    rootNamePrefix: opts.rootNamePrefix || toPascal(opts.screenId),
     tabs: [],
   };
 
@@ -116,14 +112,67 @@ async function main() {
     await page.goto(toFileUrl(preparedPath), { waitUntil: 'networkidle0', timeout: 30000 });
     await waitForPageSettle(page, opts.settleMs);
 
-    for (let index = 0; index < opts.tabs.length; index += 1) {
-      const tab = opts.tabs[index];
-      const result = await page.evaluate(async ({ tabKey, tabId, index }) => {
+    const tabs = opts.tabs || await discoverTabs(page, opts);
+    if (!tabs || tabs.length === 0) {
+      manifest.error = 'no-tabs-discovered';
+      fs.writeFileSync(path.join(outputDir, `${opts.screenId}.tab-fragments.json`), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+      console.error('[render-html-tab-fragments] no tabs discovered');
+      process.exit(1);
+    }
+
+    for (let index = 0; index < tabs.length; index += 1) {
+      const tab = tabs[index];
+      const result = await page.evaluate(async ({ tabKey, tabId, index, tabSelector, contentSelector, rootNamePrefix }) => {
         const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
         const normalize = value => String(value || '').trim().toLowerCase();
-        const scopedButtons = Array.from(document.querySelectorAll('#tab-rail button'));
-        const roleButtons = scopedButtons.length > 0 ? scopedButtons : Array.from(document.querySelectorAll('[role="tab"]'));
-        const buttons = roleButtons.length > 0 ? roleButtons : Array.from(document.querySelectorAll('button'));
+        const queryAll = selector => {
+          if (!selector) return [];
+          try { return Array.from(document.querySelectorAll(selector)); } catch { return []; }
+        };
+        const uniqueElements = elements => {
+          const seen = new Set();
+          const out = [];
+          for (const element of elements) {
+            if (!element || seen.has(element)) continue;
+            seen.add(element);
+            out.push(element);
+          }
+          return out;
+        };
+        const resolveContentHost = (button, preferredSelector, key, id) => {
+          const preferred = queryAll(preferredSelector).find(Boolean);
+          if (preferred) return preferred;
+          const controls = button && (button.getAttribute('aria-controls') || button.getAttribute('data-target'));
+          if (controls) {
+            const byId = document.getElementById(controls);
+            if (byId) return byId;
+          }
+          const normalized = normalize(key || id);
+          const candidates = uniqueElements([
+            ...queryAll(`[data-ucuf-tab-content="${normalized}"]`),
+            ...queryAll(`[data-tab-content="${normalized}"]`),
+            ...queryAll(`[data-panel="${normalized}"]`),
+            ...queryAll('[data-ucuf-tab-content]'),
+            ...queryAll('[role="tabpanel"]'),
+            ...queryAll('.right-content'),
+            ...queryAll('#right-content'),
+          ]);
+          const visible = candidates.find(element => {
+            const rect = element.getBoundingClientRect ? element.getBoundingClientRect() : null;
+            const style = window.getComputedStyle ? window.getComputedStyle(element) : null;
+            return (!style || (style.display !== 'none' && style.visibility !== 'hidden'))
+              && (!rect || (rect.width > 0 && rect.height > 0));
+          });
+          return visible || candidates[0] || null;
+        };
+        const buttons = uniqueElements([
+          ...queryAll(tabSelector),
+          ...queryAll('[role="tab"]'),
+          ...queryAll('[data-tab]'),
+          ...queryAll('[aria-controls]'),
+          ...queryAll('button[data-target]'),
+          ...queryAll('button'),
+        ]);
         const target = buttons.find(button => {
           const dataValues = [
             button.getAttribute('data-tab'),
@@ -141,21 +190,24 @@ async function main() {
         if (document.fonts && document.fonts.ready) await document.fonts.ready;
         await wait(150);
 
-        const source = document.getElementById('right-content')
-          || document.querySelector('.right-content')
-          || document.querySelector('[data-ucuf-tab-content]');
+        const source = resolveContentHost(target, contentSelector, tabKey, tabId);
         if (!source) {
           return {
             ok: false,
-            error: 'right-content-not-found',
+            error: 'tab-content-host-not-found',
             buttonCount: buttons.length,
             buttonText: buttons.map(button => button.textContent || '').slice(0, 12),
           };
         }
 
         const clone = document.createElement('div');
-        clone.setAttribute('data-name', `CharacterDs3Tab${tabId}Root`);
+        clone.setAttribute('data-name', `${rootNamePrefix}${tabId}Root`);
         const computed = window.getComputedStyle ? window.getComputedStyle(source) : null;
+        const rect = source.getBoundingClientRect ? source.getBoundingClientRect() : null;
+        const sourceWidthCss = computed && computed.getPropertyValue('width');
+        const sourceHeightCss = computed && computed.getPropertyValue('height');
+        const fallbackWidth = `${Math.max(1, Math.round((rect && rect.width) || source.clientWidth || source.offsetWidth || 0))}px`;
+        const fallbackHeight = `${Math.max(1, Math.round((rect && rect.height) || source.clientHeight || source.offsetHeight || 0))}px`;
         const copyProps = [
           'display',
           'flex-direction',
@@ -171,10 +223,8 @@ async function main() {
           const value = computed && computed.getPropertyValue(prop);
           if (value) clone.style.setProperty(prop, value);
         }
-        clone.style.setProperty('width', '720px');
-        clone.style.setProperty('min-height', '970px');
-        clone.style.setProperty('box-sizing', 'border-box');
-        clone.style.setProperty('overflow', 'hidden');
+        clone.style.setProperty('width', sourceWidthCss && sourceWidthCss.trim() ? sourceWidthCss.trim() : fallbackWidth);
+        clone.style.setProperty('min-height', sourceHeightCss && sourceHeightCss.trim() ? sourceHeightCss.trim() : fallbackHeight);
         for (const child of Array.from(source.childNodes)) {
           clone.appendChild(child.cloneNode(true));
         }
@@ -186,7 +236,14 @@ async function main() {
           childCount: clone.children ? clone.children.length : 0,
           buttonCount: buttons.length,
         };
-      }, { tabKey: tab.key, tabId: tab.id, index });
+      }, {
+        tabKey: tab.key,
+        tabId: tab.id,
+        index,
+        tabSelector: opts.tabSelector,
+        contentSelector: opts.contentSelector,
+        rootNamePrefix: opts.rootNamePrefix || toPascal(opts.screenId),
+      });
 
       const fragmentPath = path.join(outputDir, `${opts.screenId}.${tab.key}.right-content.html`);
       if (result.ok) {
@@ -228,5 +285,53 @@ if (require.main === module) {
 
 module.exports = {
   parseArgs,
-  TAB_SEQUENCE,
 };
+
+async function discoverTabs(page, opts) {
+  const discovered = await page.evaluate(({ tabSelector }) => {
+    const queryAll = selector => {
+      if (!selector) return [];
+      try { return Array.from(document.querySelectorAll(selector)); } catch { return []; }
+    };
+    const uniqueElements = elements => {
+      const seen = new Set();
+      const out = [];
+      for (const element of elements) {
+        if (!element || seen.has(element)) continue;
+        seen.add(element);
+        out.push(element);
+      }
+      return out;
+    };
+    const buttons = uniqueElements([
+      ...queryAll(tabSelector),
+      ...queryAll('[role="tab"]'),
+      ...queryAll('[data-tab]'),
+      ...queryAll('[aria-controls]'),
+      ...queryAll('button[data-target]'),
+    ]);
+    return buttons.map((button, index) => {
+      const raw = button.getAttribute('data-tab')
+        || button.getAttribute('data-target')
+        || button.getAttribute('aria-controls')
+        || button.id
+        || (button.textContent || '').trim()
+        || `tab-${index + 1}`;
+      return { raw };
+    });
+  }, { tabSelector: opts.tabSelector });
+  return discovered
+    .map(item => toTabDescriptor(item.raw))
+    .filter(tab => tab && tab.key);
+}
+
+function toTabDescriptor(value) {
+  const key = String(value || '')
+    .trim()
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/[^a-z0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase();
+  if (!key) return null;
+  return { id: toRuntimeTabId(key), key };
+}

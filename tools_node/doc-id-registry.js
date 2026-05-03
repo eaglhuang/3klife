@@ -18,6 +18,7 @@ const path = require('path');
 const ROOT             = path.resolve(__dirname, '..');
 const REGISTRY_JSON    = path.join(ROOT, 'docs', 'doc-id-registry.json');
 const REGISTRY_MD      = path.join(ROOT, 'docs', 'doc-id-registry.md');
+const SERVER_REF_MD    = path.join(ROOT, 'server', 'server_docs_reference.md');
 
 // Category prefix map (order determines section order in registry.md)
 const CATEGORIES = [
@@ -30,8 +31,11 @@ const CATEGORIES = [
   ['task',        'doc_task',        '任務卡類'],
   ['ai',          'doc_ai',          'AI Agent 專用'],
   ['agentskill',  'doc_agentskill',  'Agent Skill 專用'],
+  ['server',      'doc_server',      'Server 文件類'],
   ['other',       'doc_other',       '其它類'],
 ];
+
+const SERVER_SUBTYPES = ['service', 'pipeline', 'data', 'ops', 'other'];
 
 const CAT_PREFIX = Object.fromEntries(CATEGORIES.map(([k, p]) => [k, p]));
 const CAT_LABEL  = Object.fromEntries(CATEGORIES.map(([k, , l]) => [k, l]));
@@ -44,62 +48,92 @@ function classify(relPath) {
   const p = relPath.replace(/\\/g, '/');
   const f = path.basename(p);
 
-  // ① Agent skill — .github/skills/* or .agents/skills/*
+  // ⓪ Forced server data doc outside server/
+  if (p === 'docs/RAG_ETL_管線應用分析.md') return 'server:data';
+
+  // ① Any docs under server/ must use doc_server_<subtype>_<NNNN>
+  if (/^server\//.test(p)) {
+    return `server:${classifyServerSubtype(p)}`;
+  }
+
+  // ② Agent skill — .github/skills/* or .agents/skills/*
   if (/(^\.github\/skills\/|^\.agents\/skills\/)/.test(p)) return 'agentskill';
 
-  // ① .agents/workflows or .agents/rules → ai
+  // ③ .agents/workflows or .agents/rules → ai
   if (/^\.agents\/(workflows|rules)\//.test(p)) return 'ai';
 
-  // ② AI — .github/instructions/*, copilot-instructions.md, AGENTS.md
+  // ④ AI — .github/instructions/*, copilot-instructions.md, AGENTS.md
   if (/^\.github\/instructions\//.test(p)) return 'ai';
   if (f === 'copilot-instructions.md' || f === 'AGENTS.md') return 'ai';
 
-  // ③ Task — agent-briefs/tasks/*
+  // ⑤ Task — agent-briefs/tasks/*
   if (/agent-briefs\/tasks\//.test(p)) return 'task';
 
-  // ④ Agent-briefs root — task templates/indexes vs agent docs
+  // ⑥ Agent-briefs root — task templates/indexes vs agent docs
   if (/agent-briefs\/[^/]+$/.test(p)) {
     if (/task-card-template|tasks_index/i.test(f)) return 'task';
     return 'ai'; // agent instructions, playbooks, readme, checklist
   }
 
-  // ⑤ docs/tasks/ — all are tasks (except README which is a nav index)
+  // ⑦ docs/tasks/ — all are tasks (except README which is a nav index)
   if (/(^\/docs\/tasks\/|^docs\/tasks\/)/.test(p)) {
     if (f === 'README.md') return 'index';
     return 'task';
   }
 
-  // ⑥ Agent coordination docs
+  // ⑧ Agent coordination docs
   if (/^agent-collaboration-protocol\.md$|^agent-context-budget\.md$/.test(f)) return 'ai';
 
-  // ⑦ Index files
+  // ⑨ Index files
   if (f === 'cross-reference-index.md')                      return 'index';
   if (/(\/|^)cross-ref\//.test(p))                          return 'index';
   if (/(\/|^)keep-shards\//.test(p))                        return 'index';
   if (f === 'keep.md' || f === 'keep.summary.md')            return 'index';
   if (f === 'README.md')                                     return 'index'; // all READMEs
 
-  // ⑧ Art (non-UI)
+  // ⑩ Art (non-UI)
   if (/美術素材規劃|外部美術搬移|美術風格規格書/.test(f)) return 'art';
 
-  // ⑨ Data / Numerical
+  // ⑪ Data / Numerical
   if (/^數值系統\.md$|^AI武將強度系統\.md$/.test(f)) return 'data';
 
-  // ⑩ Discussion source directory — all spec
+  // ⑫ Discussion source directory — all spec
   if (/(\/|^)[^/]*討論來源\//.test(p)) return 'spec';
 
-  // ⑪ UI — match filename patterns
+  // ⑬ UI — match filename patterns
   if (testUi(f, p)) return 'ui';
 
-  // ⑫ Technical — match filename patterns
+  // ⑭ Technical — match filename patterns
   if (testTech(f, p)) return 'tech';
 
-  // ⑬ Game spec — catch-all for 遊戲規格文件/  (after ui/tech patterns above)
+  // ⑮ Game spec — catch-all for 遊戲規格文件/  (after ui/tech patterns above)
   if (/(\/|^)[^/]*遊戲規格文件\//.test(p))  return 'spec';
   if (f === 'demo_playbook.md')    return 'spec';
 
-  // ⑭ Default
+  // ⑯ Default
   return 'other';
+}
+
+function classifyServerSubtype(p) {
+  const file = path.basename(p);
+
+  if (/\/pipelines\//.test(p)) return 'pipeline';
+  if (p === 'docs/RAG_ETL_管線應用分析.md') return 'data';
+  if (/分析|報告|metrics|profile|dataset/i.test(file)) return 'data';
+  if (/reference|索引|index|維運|部署|runbook|playbook|ops/i.test(file)) return 'ops';
+  if (/^server\/npc-brain\/README\.md$/i.test(p) || /\/app\//.test(p)) return 'service';
+  return 'other';
+}
+
+function parseCategoryToken(token) {
+  if (token.startsWith('server:')) {
+    const subtype = token.split(':')[1] || 'other';
+    return {
+      category: 'server',
+      subtype: SERVER_SUBTYPES.includes(subtype) ? subtype : 'other',
+    };
+  }
+  return { category: token, subtype: null };
 }
 
 function testUi(f, p) {
@@ -184,6 +218,7 @@ function buildRegistry() {
     path.join(ROOT, 'docs'),
     path.join(ROOT, '.github'),
     path.join(ROOT, '.agents'),
+    path.join(ROOT, 'server'),
   ];
   // Root-level AGENTS.md
   const rootAgents = path.join(ROOT, 'AGENTS.md');
@@ -195,8 +230,8 @@ function buildRegistry() {
   const buckets = Object.fromEntries(CATEGORIES.map(([k]) => [k, []]));
   for (const fullPath of allFiles) {
     const relPath = path.relative(ROOT, fullPath).replace(/\\/g, '/');
-    const cat = classify(relPath);
-    buckets[cat].push({ fullPath, relPath });
+    const classified = parseCategoryToken(classify(relPath));
+    buckets[classified.category].push({ fullPath, relPath, subtype: classified.subtype });
   }
 
   // Sort within each category: alphabetical by relPath for stable numbering
@@ -208,11 +243,22 @@ function buildRegistry() {
   const registry = {};
   for (const [cat, , ] of CATEGORIES) {
     const prefix = CAT_PREFIX[cat];
+    const serverSubtypeCounters = Object.fromEntries(SERVER_SUBTYPES.map(s => [s, 0]));
     buckets[cat].forEach((item, idx) => {
-      const n    = String(idx + 1).padStart(4, '0');
-      const id   = `${prefix}_${n}`;
+      let id;
+      if (cat === 'server') {
+        const subtype = SERVER_SUBTYPES.includes(item.subtype) ? item.subtype : 'other';
+        serverSubtypeCounters[subtype] += 1;
+        const n = String(serverSubtypeCounters[subtype]).padStart(4, '0');
+        id = `${prefix}_${subtype}_${n}`;
+      } else {
+        const n = String(idx + 1).padStart(4, '0');
+        id = `${prefix}_${n}`;
+      }
       const title = readTitle(item.fullPath);
-      registry[id] = { path: item.relPath, title, category: cat };
+      const entry = { path: item.relPath, title, category: cat };
+      if (cat === 'server') entry.subtype = item.subtype || 'other';
+      registry[id] = entry;
     });
   }
 
@@ -276,7 +322,8 @@ function writeRegistry(registry) {
     '|------|------|-----:|',
   ];
   for (const [cat, prefix, label] of CATEGORIES) {
-    lines.push(`| ${label} | \`${prefix}\` | ${catCounts[cat] || 0} |`);
+    const prefixDisplay = cat === 'server' ? '`doc_server_<subtype>`' : `\`${prefix}\``;
+    lines.push(`| ${label} | ${prefixDisplay} | ${catCounts[cat] || 0} |`);
   }
   lines.push(`| **合計** | — | **${total}** |`);
   lines.push('', '---', '');
@@ -284,6 +331,19 @@ function writeRegistry(registry) {
   for (const [cat, prefix, label] of CATEGORIES) {
     const entries = Object.entries(registry).filter(([, v]) => v.category === cat);
     if (entries.length === 0) continue;
+    if (cat === 'server') {
+      lines.push(`## ${label} (\`doc_server_<subtype>\`)`);
+      lines.push('');
+      lines.push('| doc_id | 子類型 | 路徑 | 標題 |');
+      lines.push('|--------|--------|------|------|');
+      for (const [id, data] of entries) {
+        const safeTitle = data.title.replace(/\|/g, '&#124;');
+        lines.push(`| \`${id}\` | ${data.subtype || 'other'} | ${data.path} | ${safeTitle} |`);
+      }
+      lines.push('');
+      continue;
+    }
+
     lines.push(`## ${label} (\`${prefix}\`)`);
     lines.push('');
     lines.push('| doc_id | 路徑 | 標題 |');
@@ -297,6 +357,48 @@ function writeRegistry(registry) {
 
   fs.writeFileSync(REGISTRY_MD, lines.join('\n'), 'utf8');
   console.log(`✅ Written: docs/doc-id-registry.md`);
+}
+
+function writeServerDocsReference(registry) {
+  const serverEntries = Object.entries(registry)
+    .filter(([, data]) => data.category === 'server')
+    .sort(([a], [b]) => a.localeCompare(b));
+
+  if (serverEntries.length === 0) return;
+
+  const selfEntry = serverEntries.find(([, data]) => data.path === 'server/server_docs_reference.md');
+  const selfId = selfEntry ? selfEntry[0] : 'doc_server_ops_0001';
+
+  const lines = [
+    `<!-- doc_id: ${selfId} -->`,
+    '# Server 文件索引總覽',
+    '',
+    '> 本檔為 server 文件索引入口，doc_id 以 `doc_server_<subtype>_<NNNN>` 為主鍵。',
+    '> 子類型定義：`service` / `pipeline` / `data` / `ops` / `other`。',
+    '',
+    '## 使用方式',
+    '',
+    '1. 先看 doc_id，再跳對應路徑。',
+    '2. 若要反查文件，使用：`node tools_node/resolve-doc-id.js <doc_id>`。',
+    '3. 若要列出 server 類文件，使用：`node tools_node/resolve-doc-id.js --list server`。',
+    '4. 若要重建本檔，使用：`node tools_node/doc-id-registry.js`。',
+    '',
+    '## Server 文件索引',
+    '',
+    '| doc_id | 子類型 | 路徑 | 標題 |',
+    '|--------|--------|------|------|',
+  ];
+
+  for (const [id, data] of serverEntries) {
+    const subtype = data.subtype || 'other';
+    const safeTitle = (data.title || '').replace(/\|/g, '&#124;');
+    lines.push(`| \`${id}\` | ${subtype} | ${data.path} | ${safeTitle} |`);
+  }
+
+  lines.push('');
+  fs.mkdirSync(path.dirname(SERVER_REF_MD), { recursive: true });
+  fs.writeFileSync(SERVER_REF_MD, lines.join('\n'), 'utf8');
+  console.log('✅ Written: server/server_docs_reference.md');
 }
 
 // ──────────────────────────────────────────────
@@ -368,8 +470,12 @@ function assignFile(filePath) {
     }
   }
 
-  const cat    = classify(relPath);
-  const prefix = CAT_PREFIX[cat];
+  const classified = parseCategoryToken(classify(relPath));
+  const cat = classified.category;
+  const subtype = classified.subtype;
+  const prefix = cat === 'server'
+    ? `${CAT_PREFIX[cat]}_${subtype || 'other'}`
+    : CAT_PREFIX[cat];
   const nums   = Object.keys(registry)
     .filter(id => id.startsWith(prefix + '_'))
     .map(id => parseInt(id.split('_').pop(), 10));
@@ -377,7 +483,9 @@ function assignFile(filePath) {
   const newId  = `${prefix}_${String(nextNum).padStart(4, '0')}`;
   const title  = readTitle(absPath);
 
-  registry[newId] = { path: relPath, title, category: cat };
+  const entry = { path: relPath, title, category: cat };
+  if (cat === 'server') entry.subtype = subtype || 'other';
+  registry[newId] = entry;
   jsonData.generated = new Date().toISOString().split('T')[0];
   fs.writeFileSync(REGISTRY_JSON, JSON.stringify(jsonData, null, 2), 'utf8');
 
@@ -387,7 +495,7 @@ function assignFile(filePath) {
   console.log(`✅ Assigned: ${newId}`);
   console.log(`   Path:     ${relPath}`);
   console.log(`   Title:    ${title}`);
-  console.log(`   Category: ${CAT_LABEL[cat]}`);
+  console.log(`   Category: ${CAT_LABEL[cat]}${cat === 'server' ? ` (${entry.subtype})` : ''}`);
   console.log(`   Inject:   ${injResult}`);
   console.log(`\n   Rebuild registry.md to reflect changes:`);
   console.log(`   node tools_node/doc-id-registry.js`);
@@ -451,6 +559,7 @@ if (args[0] === '--verify') {
   console.log(`   ${'TOTAL'.padEnd(18)}: ${total}\n`);
 
   writeRegistry(registry);
+  writeServerDocsReference(registry);
   console.log('\n🎯 Next steps:');
   console.log('   1. Review docs/doc-id-registry.md — check classifications look right');
   console.log('   2. node tools_node/inject-doc-ids.js --dry-run');

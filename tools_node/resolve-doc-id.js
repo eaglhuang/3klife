@@ -15,7 +15,7 @@ const path = require('path');
 const ROOT          = path.resolve(__dirname, '..');
 const REGISTRY_JSON = path.join(ROOT, 'docs', 'doc-id-registry.json');
 
-const ID_PATTERN = /^doc_(tech|ui|art|data|spec|index|task|ai|agentskill|other)_\d{4}$/;
+const ID_PATTERN = /^(doc_(tech|ui|art|data|spec|index|task|ai|agentskill|other)_\d{4}|doc_server_(service|pipeline|data|ops|other)_\d{4})$/;
 
 function loadRegistry() {
   if (!fs.existsSync(REGISTRY_JSON)) {
@@ -36,7 +36,8 @@ function main() {
       '  node tools_node/resolve-doc-id.js <text>            # search title / path',
       '  node tools_node/resolve-doc-id.js --list <category> # list all ids in category',
       '',
-      'Categories: tech | ui | art | data | spec | index | task | ai | agentskill | other',
+      'Categories: tech | ui | art | data | spec | index | task | ai | agentskill | other | server',
+      'Server subcategory list: server:service | server:pipeline | server:data | server:ops | server:other',
     ].join('\n'));
     return;
   }
@@ -48,7 +49,13 @@ function main() {
     const cat = args[1];
     if (!cat) { console.error('Specify a category after --list'); process.exit(1); }
     const entries = Object.entries(registry)
-      .filter(([, v]) => v.category === cat)
+      .filter(([, v]) => {
+        if (cat.startsWith('server:')) {
+          const sub = cat.split(':')[1];
+          return v.category === 'server' && v.subtype === sub;
+        }
+        return v.category === cat;
+      })
       .sort(([a], [b]) => a.localeCompare(b));
     if (entries.length === 0) {
       console.log(`No entries for category: ${cat}`);

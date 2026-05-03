@@ -234,49 +234,32 @@ function buildFragmentRoutePatch(screenId, layoutDraft, interactionDraft) {
   };
 }
 
-const TAB_TARGET_TO_RUNTIME = {
-  overview: 'Overview',
-  stats: 'Stats',
-  tactics: 'Tactics',
-  bloodline: 'Bloodline',
-  equip: 'Equip',
-  aptitude: 'Aptitude',
-};
-
-const TAB_TARGET_TO_CHILD_PANEL = {
-  overview: 'CharacterDs3OverviewChild',
-  stats: 'CharacterDs3StatsChild',
-  tactics: 'CharacterDs3TacticsChild',
-  bloodline: 'CharacterDs3BloodlineChild',
-  equip: 'CharacterDs3EquipChild',
-  aptitude: 'CharacterDs3AptitudeChild',
-};
-
 function deriveFragmentPrefix(screenId) {
   return String(screenId || '').trim().replace(/-main$/i, '') || 'screen';
 }
 
-function inferPrimaryTabContentSlot(lazySlots, screenId) {
+function inferPrimaryTabContentSlot(lazySlots, screenId, tabKey) {
   const slots = Array.isArray(lazySlots) ? lazySlots : [];
   const prefix = deriveFragmentPrefix(screenId);
-  const overviewFragment = `fragments/layouts/${prefix}-overview-content`;
-  return slots.find(slot => slot && slot.defaultFragment === overviewFragment)
-    || slots.find(slot => slot && /overview-content$/i.test(String(slot.defaultFragment || '')) && !/story-strip/i.test(String(slot.defaultFragment || '')))
+  const key = toKebab(tabKey);
+  const tabFragment = key ? `fragments/layouts/${prefix}-${key}-content` : null;
+  return slots.find(slot => tabFragment && slot && slot.defaultFragment === tabFragment)
+    || slots.find(slot => key && slot && new RegExp(`(?:^|[-_/])${escapeRegExp(key)}(?:[-_/]|$)`, 'i').test(`${slot.slot || ''} ${slot.defaultFragment || ''}`))
     || slots.find(slot => slot && !/story-strip/i.test(`${slot.slot || ''} ${slot.defaultFragment || ''}`))
     || null;
 }
 
 function buildTabRoutingSidecar(screenId, layoutDraft, interactionDraft) {
   const fragmentRoutePatch = buildFragmentRoutePatch(screenId, layoutDraft, interactionDraft);
-  const primarySlot = inferPrimaryTabContentSlot(fragmentRoutePatch.lazySlots, screenId);
   const prefix = deriveFragmentPrefix(screenId);
   const seenTabs = new Set();
   const tabs = [];
   for (const route of fragmentRoutePatch.tabRoutes) {
     const key = String(route && route.target || '').trim().toLowerCase();
-    const runtimeTab = TAB_TARGET_TO_RUNTIME[key];
-    if (!runtimeTab || seenTabs.has(runtimeTab)) continue;
+    const runtimeTab = toRuntimeTabId(key);
+    if (!key || !runtimeTab || seenTabs.has(runtimeTab)) continue;
     seenTabs.add(runtimeTab);
+    const primarySlot = inferPrimaryTabContentSlot(fragmentRoutePatch.lazySlots, screenId, key);
     tabs.push({
       id: runtimeTab,
       mount: primarySlot ? primarySlot.slot : null,
@@ -284,7 +267,8 @@ function buildTabRoutingSidecar(screenId, layoutDraft, interactionDraft) {
       buttonNode: route.trigger || null,
       lifecycle: 'lazy',
       fragment: `fragments/layouts/${prefix}-${key}-content`,
-      childPanelClass: TAB_TARGET_TO_CHILD_PANEL[key] || null,
+      // Plan 4: childPanelClass 只由 screenId/tabId 命名策略推導，不再保留任何特定畫面對照表。
+      childPanelClass: deriveChildPanelClass(screenId, key),
       interactionId: route.interactionId || null,
     });
   }
@@ -295,7 +279,7 @@ function buildTabRoutingSidecar(screenId, layoutDraft, interactionDraft) {
     tabs,
     summary: {
       tabCount: tabs.length,
-      mountSlotId: primarySlot ? primarySlot.slot : null,
+      mountSlotIds: [...new Set(tabs.map(tab => tab.mount).filter(Boolean))],
       missingMountCount: tabs.filter(tab => !tab.mount).length,
       missingTriggerCount: tabs.filter(tab => !tab.buttonNode).length,
     },
@@ -312,6 +296,39 @@ function buildScreenTabRoutingMap(tabRoutingSidecar) {
     };
   }
   return map;
+}
+
+function toRuntimeTabId(value) {
+  const key = toKebab(value);
+  if (!key) return null;
+  return toPascal(key);
+}
+
+function deriveChildPanelClass(screenId, tabKey) {
+  const screen = toPascal(String(screenId || '').replace(/-main$/i, ''));
+  const tab = toPascal(tabKey);
+  return screen && tab ? `${screen}${tab}ChildPanel` : null;
+}
+
+function toKebab(value) {
+  return String(value || '')
+    .trim()
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/[^a-z0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase();
+}
+
+function toPascal(value) {
+  return toKebab(value)
+    .split('-')
+    .filter(Boolean)
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+}
+
+function escapeRegExp(value) {
+  return String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 module.exports = {

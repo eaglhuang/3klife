@@ -459,6 +459,7 @@ async function main(argv) {
     }
     const parsed = buildDraftFromHtml(htmlForDraft, {
       screenId: opts.screenId,
+      skinId: opts.skinId,
       bundle: opts.bundle,
       defaultBundle: opts.defaultBundle,
       rootName: opts.rootName,

@@ -100,7 +100,6 @@ function resolveReadinessPaths(repoRoot, screenId, explicit, screen) {
     ]),
     skin: explicit.skin || skinFromScreen || firstExisting([
       path.join(skinsDir, `${screenId}.skin.json`),
-      path.join(skinsDir, `${screenId}-default.json`),
       path.join(skinsDir, `${screenId}.json`),
     ]),
     screen: explicit.screen || firstExisting([
