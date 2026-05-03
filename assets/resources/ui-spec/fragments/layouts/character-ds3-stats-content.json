@@ -22,6 +22,7 @@
         {
           "type": "container",
           "name": "CharacterDs3TabStats_div_1",
+          "width": 520,
           "height": 775,
           "layout": {
             "type": "vertical",
@@ -32,6 +33,7 @@
             {
               "type": "container",
               "name": "CharacterDs3TabStats_div_2",
+              "width": 520,
               "height": 26,
               "layout": {
                 "type": "horizontal",
@@ -63,15 +65,12 @@
                   "text": "DUAL-LAYER ATTRIBUTES",
                   "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_2"
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "container",
               "name": "CharacterDs3TabStats_div_4",
+              "width": 520,
               "height": 422,
               "layout": {
                 "type": "horizontal",
@@ -83,6 +82,371 @@
                   "name": "CharacterDs3TabStats_svg_1",
                   "width": 220,
                   "height": 220,
+                  "rendererHint": "svg-radar-chart",
+                  "svgMeta": {
+                    "kind": "radar-chart",
+                    "viewBox": {
+                      "x": 0,
+                      "y": 0,
+                      "width": 220,
+                      "height": 220
+                    },
+                    "center": {
+                      "x": 110,
+                      "y": 110
+                    },
+                    "outerRadius": 90,
+                    "gridPolygons": [
+                      {
+                        "points": [
+                          {
+                            "x": 110,
+                            "y": 87.5
+                          },
+                          {
+                            "x": 129.48557158514987,
+                            "y": 98.75
+                          },
+                          {
+                            "x": 129.48557158514987,
+                            "y": 121.25
+                          },
+                          {
+                            "x": 110,
+                            "y": 132.5
+                          },
+                          {
+                            "x": 90.51442841485013,
+                            "y": 121.25
+                          },
+                          {
+                            "x": 90.51442841485013,
+                            "y": 98.75
+                          }
+                        ],
+                        "stroke": "#4D4635",
+                        "strokeWidth": 0.7,
+                        "fill": "none",
+                        "opacity": null
+                      },
+                      {
+                        "points": [
+                          {
+                            "x": 110,
+                            "y": 65
+                          },
+                          {
+                            "x": 148.97114317029974,
+                            "y": 87.5
+                          },
+                          {
+                            "x": 148.97114317029974,
+                            "y": 132.5
+                          },
+                          {
+                            "x": 110,
+                            "y": 155
+                          },
+                          {
+                            "x": 71.02885682970026,
+                            "y": 132.5
+                          },
+                          {
+                            "x": 71.02885682970026,
+                            "y": 87.5
+                          }
+                        ],
+                        "stroke": "#4D4635",
+                        "strokeWidth": 0.7,
+                        "fill": "none",
+                        "opacity": null
+                      },
+                      {
+                        "points": [
+                          {
+                            "x": 110,
+                            "y": 42.5
+                          },
+                          {
+                            "x": 168.4567147554496,
+                            "y": 76.25
+                          },
+                          {
+                            "x": 168.4567147554496,
+                            "y": 143.75
+                          },
+                          {
+                            "x": 110,
+                            "y": 177.5
+                          },
+                          {
+                            "x": 51.543285244550404,
+                            "y": 143.75000000000003
+                          },
+                          {
+                            "x": 51.5432852445504,
+                            "y": 76.25
+                          }
+                        ],
+                        "stroke": "#4D4635",
+                        "strokeWidth": 0.7,
+                        "fill": "none",
+                        "opacity": null
+                      },
+                      {
+                        "points": [
+                          {
+                            "x": 110,
+                            "y": 20
+                          },
+                          {
+                            "x": 187.94228634059948,
+                            "y": 65
+                          },
+                          {
+                            "x": 187.94228634059948,
+                            "y": 155
+                          },
+                          {
+                            "x": 110,
+                            "y": 200
+                          },
+                          {
+                            "x": 32.057713659400534,
+                            "y": 155.00000000000003
+                          },
+                          {
+                            "x": 32.05771365940052,
+                            "y": 65
+                          }
+                        ],
+                        "stroke": "#4D4635",
+                        "strokeWidth": 0.7,
+                        "fill": "none",
+                        "opacity": null
+                      }
+                    ],
+                    "dataPolygons": [
+                      {
+                        "points": [
+                          {
+                            "x": 110,
+                            "y": 21.799999999999997
+                          },
+                          {
+                            "x": 150.52998889711174,
+                            "y": 86.6
+                          },
+                          {
+                            "x": 178.58921197972757,
+                            "y": 149.6
+                          },
+                          {
+                            "x": 110,
+                            "y": 144.2
+                          },
+                          {
+                            "x": 52.3227081079564,
+                            "y": 143.3
+                          },
+                          {
+                            "x": 50.76386238114439,
+                            "y": 75.79999999999998
+                          }
+                        ],
+                        "stroke": "#8CCFC4",
+                        "strokeWidth": 2,
+                        "fill": "rgba(140,207,196,.18)",
+                        "opacity": null
+                      }
+                    ],
+                    "axisLines": [
+                      {
+                        "x1": 110,
+                        "y1": 110,
+                        "x2": 110,
+                        "y2": 20,
+                        "stroke": "#4D4635",
+                        "strokeWidth": 0.7
+                      },
+                      {
+                        "x1": 110,
+                        "y1": 110,
+                        "x2": 187.94228634059948,
+                        "y2": 65,
+                        "stroke": "#4D4635",
+                        "strokeWidth": 0.7
+                      },
+                      {
+                        "x1": 110,
+                        "y1": 110,
+                        "x2": 187.94228634059948,
+                        "y2": 155,
+                        "stroke": "#4D4635",
+                        "strokeWidth": 0.7
+                      },
+                      {
+                        "x1": 110,
+                        "y1": 110,
+                        "x2": 110,
+                        "y2": 200,
+                        "stroke": "#4D4635",
+                        "strokeWidth": 0.7
+                      },
+                      {
+                        "x1": 110,
+                        "y1": 110,
+                        "x2": 32.057713659400534,
+                        "y2": 155.00000000000003,
+                        "stroke": "#4D4635",
+                        "strokeWidth": 0.7
+                      },
+                      {
+                        "x1": 110,
+                        "y1": 110,
+                        "x2": 32.05771365940052,
+                        "y2": 65,
+                        "stroke": "#4D4635",
+                        "strokeWidth": 0.7
+                      }
+                    ],
+                    "labels": [
+                      {
+                        "text": "武力",
+                        "x": 110,
+                        "y": 3,
+                        "fill": "#6fa8ff",
+                        "fontSize": 13,
+                        "fontWeight": "700",
+                        "fontFamily": "var(--font-headline)",
+                        "textAnchor": "middle",
+                        "box": {
+                          "width": 37,
+                          "height": 19
+                        }
+                      },
+                      {
+                        "text": "智力",
+                        "x": 206.9948452238571,
+                        "y": 59,
+                        "fill": "#c494ff",
+                        "fontSize": 13,
+                        "fontWeight": "700",
+                        "fontFamily": "var(--font-headline)",
+                        "textAnchor": "middle",
+                        "box": {
+                          "width": 37,
+                          "height": 19
+                        }
+                      },
+                      {
+                        "text": "統率",
+                        "x": 206.99484522385714,
+                        "y": 170.99999999999997,
+                        "fill": "#86E1A5",
+                        "fontSize": 13,
+                        "fontWeight": "700",
+                        "fontFamily": "var(--font-headline)",
+                        "textAnchor": "middle",
+                        "box": {
+                          "width": 37,
+                          "height": 19
+                        }
+                      },
+                      {
+                        "text": "政治",
+                        "x": 110,
+                        "y": 227,
+                        "fill": "#E0E0E0",
+                        "fontSize": 13,
+                        "fontWeight": "700",
+                        "fontFamily": "var(--font-headline)",
+                        "textAnchor": "middle",
+                        "box": {
+                          "width": 37,
+                          "height": 19
+                        }
+                      },
+                      {
+                        "text": "魅力",
+                        "x": 13.005154776142888,
+                        "y": 171.00000000000003,
+                        "fill": "#ff9bba",
+                        "fontSize": 13,
+                        "fontWeight": "700",
+                        "fontFamily": "var(--font-headline)",
+                        "textAnchor": "middle",
+                        "box": {
+                          "width": 37,
+                          "height": 19
+                        }
+                      },
+                      {
+                        "text": "運氣",
+                        "x": 13.005154776142874,
+                        "y": 58.999999999999986,
+                        "fill": "#ff8d6e",
+                        "fontSize": 13,
+                        "fontWeight": "700",
+                        "fontFamily": "var(--font-headline)",
+                        "textAnchor": "middle",
+                        "box": {
+                          "width": 37,
+                          "height": 19
+                        }
+                      }
+                    ],
+                    "markers": [
+                      {
+                        "cx": 110,
+                        "cy": 21.799999999999997,
+                        "r": 4,
+                        "fill": "#6fa8ff",
+                        "stroke": null,
+                        "strokeWidth": null
+                      },
+                      {
+                        "cx": 150.52998889711174,
+                        "cy": 86.6,
+                        "r": 4,
+                        "fill": "#c494ff",
+                        "stroke": null,
+                        "strokeWidth": null
+                      },
+                      {
+                        "cx": 178.58921197972757,
+                        "cy": 149.6,
+                        "r": 4,
+                        "fill": "#86E1A5",
+                        "stroke": null,
+                        "strokeWidth": null
+                      },
+                      {
+                        "cx": 110,
+                        "cy": 144.2,
+                        "r": 4,
+                        "fill": "#E0E0E0",
+                        "stroke": null,
+                        "strokeWidth": null
+                      },
+                      {
+                        "cx": 52.3227081079564,
+                        "cy": 143.3,
+                        "r": 4,
+                        "fill": "#ff9bba",
+                        "stroke": null,
+                        "strokeWidth": null
+                      },
+                      {
+                        "cx": 50.76386238114439,
+                        "cy": 75.79999999999998,
+                        "r": 4,
+                        "fill": "#ff8d6e",
+                        "stroke": null,
+                        "strokeWidth": null
+                      }
+                    ]
+                  },
                   "layout": {
                     "type": "vertical"
                   }
@@ -90,7 +454,7 @@
                 {
                   "type": "container",
                   "name": "CharacterDs3TabStats_div_5",
-                  "width": 440,
+                  "width": 280,
                   "height": 422,
                   "layout": {
                     "type": "vertical",
@@ -101,7 +465,7 @@
                     {
                       "type": "panel",
                       "name": "CharacterDs3TabStats_div_6",
-                      "width": 440,
+                      "width": 280,
                       "height": 53,
                       "layout": {
                         "type": "horizontal",
@@ -126,7 +490,7 @@
                         {
                           "type": "container",
                           "name": "CharacterDs3TabStats_div_7",
-                          "width": 358,
+                          "width": 198,
                           "height": 38,
                           "layout": {
                             "type": "vertical",
@@ -137,11 +501,11 @@
                             {
                               "type": "container",
                               "name": "CharacterDs3TabStats_div_8",
-                              "width": 356,
+                              "width": 196,
                               "height": 22,
                               "layout": {
                                 "type": "horizontal",
-                                "alignItems": "end",
+                                "alignItems": "baseline",
                                 "justifyContent": "start",
                                 "spacingX": 0
                               },
@@ -155,10 +519,9 @@
                                   "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_4"
                                 },
                                 {
-                                  "type": "label",
+                                  "type": "container",
                                   "name": "CharacterDs3TabStats_span_5",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_5",
-                                  "width": 284
+                                  "width": 124
                                 },
                                 {
                                   "type": "label",
@@ -173,7 +536,7 @@
                             {
                               "type": "container",
                               "name": "CharacterDs3TabStats_div_9",
-                              "width": 356,
+                              "width": 196,
                               "height": 13,
                               "layout": {
                                 "type": "horizontal",
@@ -185,14 +548,14 @@
                                 {
                                   "type": "panel",
                                   "name": "CharacterDs3TabStats_div_10",
-                                  "width": 318,
+                                  "width": 158,
                                   "height": 5,
                                   "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_10",
                                   "children": [
                                     {
                                       "type": "panel",
                                       "name": "CharacterDs3TabStats_div_11",
-                                      "width": 289,
+                                      "width": 144,
                                       "height": 5,
                                       "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_11"
                                     }
@@ -215,7 +578,7 @@
                     {
                       "type": "panel",
                       "name": "CharacterDs3TabStats_div_12",
-                      "width": 440,
+                      "width": 280,
                       "height": 53,
                       "layout": {
                         "type": "horizontal",
@@ -240,7 +603,7 @@
                         {
                           "type": "container",
                           "name": "CharacterDs3TabStats_div_13",
-                          "width": 358,
+                          "width": 198,
                           "height": 38,
                           "layout": {
                             "type": "vertical",
@@ -251,11 +614,11 @@
                             {
                               "type": "container",
                               "name": "CharacterDs3TabStats_div_14",
-                              "width": 356,
+                              "width": 196,
                               "height": 22,
                               "layout": {
                                 "type": "horizontal",
-                                "alignItems": "end",
+                                "alignItems": "baseline",
                                 "justifyContent": "start",
                                 "spacingX": 0
                               },
@@ -269,10 +632,9 @@
                                   "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_9"
                                 },
                                 {
-                                  "type": "label",
+                                  "type": "container",
                                   "name": "CharacterDs3TabStats_span_10",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_10",
-                                  "width": 299
+                                  "width": 139
                                 },
                                 {
                                   "type": "label",
@@ -287,7 +649,7 @@
                             {
                               "type": "container",
                               "name": "CharacterDs3TabStats_div_15",
-                              "width": 356,
+                              "width": 196,
                               "height": 13,
                               "layout": {
                                 "type": "horizontal",
@@ -299,14 +661,14 @@
                                 {
                                   "type": "panel",
                                   "name": "CharacterDs3TabStats_div_16",
-                                  "width": 318,
+                                  "width": 158,
                                   "height": 5,
                                   "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_16",
                                   "children": [
                                     {
                                       "type": "panel",
                                       "name": "CharacterDs3TabStats_div_17",
-                                      "width": 142,
+                                      "width": 70,
                                       "height": 5,
                                       "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_17"
                                     }
@@ -329,7 +691,7 @@
                     {
                       "type": "panel",
                       "name": "CharacterDs3TabStats_div_18",
-                      "width": 440,
+                      "width": 280,
                       "height": 53,
                       "layout": {
                         "type": "horizontal",
@@ -354,7 +716,7 @@
                         {
                           "type": "container",
                           "name": "CharacterDs3TabStats_div_19",
-                          "width": 358,
+                          "width": 198,
                           "height": 38,
                           "layout": {
                             "type": "vertical",
@@ -365,11 +727,11 @@
                             {
                               "type": "container",
                               "name": "CharacterDs3TabStats_div_20",
-                              "width": 356,
+                              "width": 196,
                               "height": 22,
                               "layout": {
                                 "type": "horizontal",
-                                "alignItems": "end",
+                                "alignItems": "baseline",
                                 "justifyContent": "start",
                                 "spacingX": 0
                               },
@@ -383,10 +745,9 @@
                                   "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_14"
                                 },
                                 {
-                                  "type": "label",
+                                  "type": "container",
                                   "name": "CharacterDs3TabStats_span_15",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_15",
-                                  "width": 287
+                                  "width": 127
                                 },
                                 {
                                   "type": "label",
@@ -401,7 +762,7 @@
                             {
                               "type": "container",
                               "name": "CharacterDs3TabStats_div_21",
-                              "width": 356,
+                              "width": 196,
                               "height": 13,
                               "layout": {
                                 "type": "horizontal",
@@ -413,14 +774,14 @@
                                 {
                                   "type": "panel",
                                   "name": "CharacterDs3TabStats_div_22",
-                                  "width": 318,
+                                  "width": 158,
                                   "height": 5,
                                   "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_22",
                                   "children": [
                                     {
                                       "type": "panel",
                                       "name": "CharacterDs3TabStats_div_23",
-                                      "width": 245,
+                                      "width": 122,
                                       "height": 5,
                                       "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_23"
                                     }
@@ -443,7 +804,7 @@
                     {
                       "type": "panel",
                       "name": "CharacterDs3TabStats_div_24",
-                      "width": 440,
+                      "width": 280,
                       "height": 53,
                       "layout": {
                         "type": "horizontal",
@@ -468,7 +829,7 @@
                         {
                           "type": "container",
                           "name": "CharacterDs3TabStats_div_25",
-                          "width": 358,
+                          "width": 198,
                           "height": 38,
                           "layout": {
                             "type": "vertical",
@@ -479,11 +840,11 @@
                             {
                               "type": "container",
                               "name": "CharacterDs3TabStats_div_26",
-                              "width": 356,
+                              "width": 196,
                               "height": 22,
                               "layout": {
                                 "type": "horizontal",
-                                "alignItems": "end",
+                                "alignItems": "baseline",
                                 "justifyContent": "start",
                                 "spacingX": 0
                               },
@@ -497,10 +858,9 @@
                                   "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_19"
                                 },
                                 {
-                                  "type": "label",
+                                  "type": "container",
                                   "name": "CharacterDs3TabStats_span_20",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_20",
-                                  "width": 299
+                                  "width": 139
                                 },
                                 {
                                   "type": "label",
@@ -515,7 +875,7 @@
                             {
                               "type": "container",
                               "name": "CharacterDs3TabStats_div_27",
-                              "width": 356,
+                              "width": 196,
                               "height": 13,
                               "layout": {
                                 "type": "horizontal",
@@ -527,14 +887,14 @@
                                 {
                                   "type": "panel",
                                   "name": "CharacterDs3TabStats_div_28",
-                                  "width": 318,
+                                  "width": 158,
                                   "height": 5,
                                   "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_28",
                                   "children": [
                                     {
                                       "type": "panel",
                                       "name": "CharacterDs3TabStats_div_29",
-                                      "width": 102,
+                                      "width": 51,
                                       "height": 5,
                                       "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_29"
                                     }
@@ -557,7 +917,7 @@
                     {
                       "type": "panel",
                       "name": "CharacterDs3TabStats_div_30",
-                      "width": 440,
+                      "width": 280,
                       "height": 53,
                       "layout": {
                         "type": "horizontal",
@@ -582,7 +942,7 @@
                         {
                           "type": "container",
                           "name": "CharacterDs3TabStats_div_31",
-                          "width": 358,
+                          "width": 198,
                           "height": 38,
                           "layout": {
                             "type": "vertical",
@@ -593,11 +953,11 @@
                             {
                               "type": "container",
                               "name": "CharacterDs3TabStats_div_32",
-                              "width": 356,
+                              "width": 196,
                               "height": 22,
                               "layout": {
                                 "type": "horizontal",
-                                "alignItems": "end",
+                                "alignItems": "baseline",
                                 "justifyContent": "start",
                                 "spacingX": 0
                               },
@@ -611,10 +971,9 @@
                                   "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_24"
                                 },
                                 {
-                                  "type": "label",
+                                  "type": "container",
                                   "name": "CharacterDs3TabStats_span_25",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_25",
-                                  "width": 290
+                                  "width": 130
                                 },
                                 {
                                   "type": "label",
@@ -629,7 +988,7 @@
                             {
                               "type": "container",
                               "name": "CharacterDs3TabStats_div_33",
-                              "width": 356,
+                              "width": 196,
                               "height": 13,
                               "layout": {
                                 "type": "horizontal",
@@ -641,14 +1000,14 @@
                                 {
                                   "type": "panel",
                                   "name": "CharacterDs3TabStats_div_34",
-                                  "width": 318,
+                                  "width": 158,
                                   "height": 5,
                                   "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_34",
                                   "children": [
                                     {
                                       "type": "panel",
                                       "name": "CharacterDs3TabStats_div_35",
-                                      "width": 204,
+                                      "width": 101,
                                       "height": 5,
                                       "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_35"
                                     }
@@ -671,7 +1030,7 @@
                     {
                       "type": "panel",
                       "name": "CharacterDs3TabStats_div_36",
-                      "width": 440,
+                      "width": 280,
                       "height": 53,
                       "layout": {
                         "type": "horizontal",
@@ -696,7 +1055,7 @@
                         {
                           "type": "container",
                           "name": "CharacterDs3TabStats_div_37",
-                          "width": 358,
+                          "width": 198,
                           "height": 38,
                           "layout": {
                             "type": "vertical",
@@ -707,11 +1066,11 @@
                             {
                               "type": "container",
                               "name": "CharacterDs3TabStats_div_38",
-                              "width": 356,
+                              "width": 196,
                               "height": 22,
                               "layout": {
                                 "type": "horizontal",
-                                "alignItems": "end",
+                                "alignItems": "baseline",
                                 "justifyContent": "start",
                                 "spacingX": 0
                               },
@@ -725,10 +1084,9 @@
                                   "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_29"
                                 },
                                 {
-                                  "type": "label",
+                                  "type": "container",
                                   "name": "CharacterDs3TabStats_span_30",
-                                  "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_30",
-                                  "width": 296
+                                  "width": 136
                                 },
                                 {
                                   "type": "label",
@@ -743,7 +1101,7 @@
                             {
                               "type": "container",
                               "name": "CharacterDs3TabStats_div_39",
-                              "width": 356,
+                              "width": 196,
                               "height": 13,
                               "layout": {
                                 "type": "horizontal",
@@ -755,14 +1113,14 @@
                                 {
                                   "type": "panel",
                                   "name": "CharacterDs3TabStats_div_40",
-                                  "width": 318,
+                                  "width": 158,
                                   "height": 5,
                                   "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_40",
                                   "children": [
                                     {
                                       "type": "panel",
                                       "name": "CharacterDs3TabStats_div_41",
-                                      "width": 178,
+                                      "width": 88,
                                       "height": 5,
                                       "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_41"
                                     }
@@ -785,7 +1143,7 @@
                     {
                       "type": "panel",
                       "name": "CharacterDs3TabStats_div_42",
-                      "width": 440,
+                      "width": 280,
                       "height": 64,
                       "layout": {
                         "type": "horizontal",
@@ -831,15 +1189,12 @@
                     }
                   ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "container",
               "name": "CharacterDs3TabStats_div_44",
+              "width": 520,
               "height": 26,
               "layout": {
                 "type": "horizontal",
@@ -871,30 +1226,22 @@
                   "text": "VITALS",
                   "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_36"
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "container",
               "name": "CharacterDs3TabStats_div_46",
+              "width": 520,
               "height": 81,
               "layout": {
-                "type": "grid",
-                "spacingX": 10,
-                "spacingY": 10,
-                "constraint": "fixed-col",
-                "constraintNum": 3,
-                "cellWidth": 220,
-                "cellHeight": 81
+                "type": "horizontal",
+                "spacingX": 10
               },
               "children": [
                 {
                   "type": "panel",
                   "name": "CharacterDs3TabStats_div_47",
-                  "width": 220,
+                  "width": 167,
                   "height": 81,
                   "layout": {
                     "type": "vertical",
@@ -909,7 +1256,7 @@
                     {
                       "type": "container",
                       "name": "CharacterDs3TabStats_div_48",
-                      "width": 194,
+                      "width": 141,
                       "height": 24,
                       "layout": {
                         "type": "horizontal",
@@ -937,14 +1284,14 @@
                     {
                       "type": "panel",
                       "name": "CharacterDs3TabStats_div_49",
-                      "width": 194,
+                      "width": 141,
                       "height": 10,
                       "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_49",
                       "children": [
                         {
                           "type": "panel",
                           "name": "CharacterDs3TabStats_div_50",
-                          "width": 192,
+                          "width": 139,
                           "height": 8,
                           "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_50"
                         }
@@ -953,7 +1300,7 @@
                     {
                       "type": "label",
                       "name": "CharacterDs3TabStats_div_51",
-                      "width": 194,
+                      "width": 141,
                       "height": 15,
                       "text": "/ 16,800",
                       "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_51"
@@ -963,7 +1310,7 @@
                 {
                   "type": "panel",
                   "name": "CharacterDs3TabStats_div_52",
-                  "width": 220,
+                  "width": 167,
                   "height": 81,
                   "layout": {
                     "type": "vertical",
@@ -978,7 +1325,7 @@
                     {
                       "type": "container",
                       "name": "CharacterDs3TabStats_div_53",
-                      "width": 194,
+                      "width": 141,
                       "height": 24,
                       "layout": {
                         "type": "horizontal",
@@ -1006,14 +1353,14 @@
                     {
                       "type": "panel",
                       "name": "CharacterDs3TabStats_div_54",
-                      "width": 194,
+                      "width": 141,
                       "height": 10,
                       "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_54",
                       "children": [
                         {
                           "type": "panel",
                           "name": "CharacterDs3TabStats_div_55",
-                          "width": 192,
+                          "width": 139,
                           "height": 8,
                           "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_55"
                         }
@@ -1022,7 +1369,7 @@
                     {
                       "type": "label",
                       "name": "CharacterDs3TabStats_div_56",
-                      "width": 194,
+                      "width": 141,
                       "height": 15,
                       "text": "/ 120",
                       "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_56"
@@ -1032,7 +1379,7 @@
                 {
                   "type": "panel",
                   "name": "CharacterDs3TabStats_div_57",
-                  "width": 220,
+                  "width": 167,
                   "height": 81,
                   "layout": {
                     "type": "vertical",
@@ -1047,7 +1394,7 @@
                     {
                       "type": "container",
                       "name": "CharacterDs3TabStats_div_58",
-                      "width": 194,
+                      "width": 141,
                       "height": 24,
                       "layout": {
                         "type": "horizontal",
@@ -1075,14 +1422,14 @@
                     {
                       "type": "panel",
                       "name": "CharacterDs3TabStats_div_59",
-                      "width": 194,
+                      "width": 141,
                       "height": 10,
                       "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_59",
                       "children": [
                         {
                           "type": "panel",
                           "name": "CharacterDs3TabStats_div_60",
-                          "width": 163,
+                          "width": 118,
                           "height": 8,
                           "skinSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_60"
                         }
@@ -1091,22 +1438,19 @@
                     {
                       "type": "label",
                       "name": "CharacterDs3TabStats_div_61",
-                      "width": 194,
+                      "width": 141,
                       "height": 15,
                       "text": "/ 100",
                       "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_div_61"
                     }
                   ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "container",
               "name": "CharacterDs3TabStats_div_62",
+              "width": 520,
               "height": 26,
               "layout": {
                 "type": "horizontal",
@@ -1138,15 +1482,12 @@
                   "text": "PROFILE",
                   "styleSlot": "auto.character-ds3-tab-stats.characterds3tabstats_span_44"
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "container",
               "name": "CharacterDs3TabStats_div_64",
+              "width": 520,
               "height": 94,
               "layout": {
                 "type": "grid",
@@ -1154,14 +1495,14 @@
                 "spacingY": 8,
                 "constraint": "fixed-col",
                 "constraintNum": 2,
-                "cellWidth": 336,
+                "cellWidth": 256,
                 "cellHeight": 94
               },
               "children": [
                 {
                   "type": "panel",
                   "name": "CharacterDs3TabStats_div_65",
-                  "width": 336,
+                  "width": 256,
                   "height": 44,
                   "layout": {
                     "type": "horizontal",
@@ -1196,7 +1537,7 @@
                 {
                   "type": "panel",
                   "name": "CharacterDs3TabStats_div_66",
-                  "width": 336,
+                  "width": 256,
                   "height": 44,
                   "layout": {
                     "type": "horizontal",
@@ -1231,7 +1572,7 @@
                 {
                   "type": "panel",
                   "name": "CharacterDs3TabStats_div_67",
-                  "width": 336,
+                  "width": 256,
                   "height": 42,
                   "layout": {
                     "type": "horizontal",
@@ -1266,7 +1607,7 @@
                 {
                   "type": "panel",
                   "name": "CharacterDs3TabStats_div_68",
-                  "width": 336,
+                  "width": 256,
                   "height": 42,
                   "layout": {
                     "type": "horizontal",
@@ -1298,17 +1639,9 @@
                     }
                   ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             }
-          ],
-          "widget": {
-            "left": 0,
-            "right": 0
-          }
+          ]
         }
       ],
       "widget": {

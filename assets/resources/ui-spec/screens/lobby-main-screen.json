@@ -54,7 +54,7 @@
     "state": "smoke-default"
   },
   "actions": [
-    { "node": "NavBar/BtnGacha", "type": "tap", "action": "open-screen", "target": "gacha-main-screen" }
+    { "node": "NavBar/BtnGacha", "type": "tap", "action": "open-screen", "target": "gacha-ds3" }
   ],
   "validation": {
     "devices": ["phone-16-9", "phone-19_5-9", "tablet-4-3"],

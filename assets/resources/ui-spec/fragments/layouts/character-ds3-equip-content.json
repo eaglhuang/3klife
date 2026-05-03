@@ -22,7 +22,8 @@
         {
           "type": "container",
           "name": "CharacterDs3TabEquip_div_1",
-          "height": 844,
+          "width": 520,
+          "height": 737,
           "layout": {
             "type": "vertical",
             "justifyContent": "start",
@@ -32,6 +33,7 @@
             {
               "type": "container",
               "name": "CharacterDs3TabEquip_div_2",
+              "width": 520,
               "height": 26,
               "layout": {
                 "type": "horizontal",
@@ -63,24 +65,20 @@
                   "text": "EQUIPMENT",
                   "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_2"
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "container",
               "name": "CharacterDs3TabEquip_div_4",
-              "height": 450,
+              "width": 520,
+              "height": 343,
               "layout": {
                 "type": "grid",
                 "spacingX": 10,
                 "spacingY": 10,
                 "constraint": "fixed-col",
                 "constraintNum": 3,
-                "cellWidth": 220,
-                "cellHeight": 450
+                "cellHeight": 343
               },
               "children": [
                 {
@@ -92,8 +90,8 @@
                     "right": 0,
                     "bottom": 0
                   },
-                  "width": 220,
-                  "height": 220,
+                  "width": 167,
+                  "height": 167,
                   "layout": {
                     "type": "vertical",
                     "alignItems": "center",
@@ -122,8 +120,8 @@
                       "type": "label",
                       "name": "CharacterDs3TabEquip_span_5",
                       "widget": {
-                        "top": 191,
-                        "left": 191,
+                        "top": 138,
+                        "left": 138,
                         "right": 8,
                         "bottom": 6
                       },
@@ -138,8 +136,8 @@
                       "widget": {
                         "top": 6,
                         "left": 8,
-                        "right": 193,
-                        "bottom": 196
+                        "right": 140,
+                        "bottom": 143
                       },
                       "width": 15,
                       "height": 14,
@@ -157,8 +155,8 @@
                     "right": 0,
                     "bottom": 0
                   },
-                  "width": 220,
-                  "height": 220,
+                  "width": 167,
+                  "height": 167,
                   "layout": {
                     "type": "vertical",
                     "alignItems": "center",
@@ -187,8 +185,8 @@
                       "type": "label",
                       "name": "CharacterDs3TabEquip_span_9",
                       "widget": {
-                        "top": 191,
-                        "left": 191,
+                        "top": 138,
+                        "left": 138,
                         "right": 8,
                         "bottom": 6
                       },
@@ -203,8 +201,8 @@
                       "widget": {
                         "top": 6,
                         "left": 8,
-                        "right": 187,
-                        "bottom": 196
+                        "right": 134,
+                        "bottom": 143
                       },
                       "width": 21,
                       "height": 14,
@@ -222,8 +220,8 @@
                     "right": 0,
                     "bottom": 0
                   },
-                  "width": 220,
-                  "height": 220,
+                  "width": 167,
+                  "height": 167,
                   "layout": {
                     "type": "vertical",
                     "alignItems": "center",
@@ -252,8 +250,8 @@
                       "type": "label",
                       "name": "CharacterDs3TabEquip_span_13",
                       "widget": {
-                        "top": 191,
-                        "left": 192,
+                        "top": 138,
+                        "left": 138,
                         "right": 8,
                         "bottom": 6
                       },
@@ -268,8 +266,8 @@
                       "widget": {
                         "top": 6,
                         "left": 8,
-                        "right": 194,
-                        "bottom": 196
+                        "right": 141,
+                        "bottom": 143
                       },
                       "width": 14,
                       "height": 14,
@@ -287,8 +285,8 @@
                     "right": 0,
                     "bottom": 0
                   },
-                  "width": 220,
-                  "height": 220,
+                  "width": 167,
+                  "height": 167,
                   "layout": {
                     "type": "vertical",
                     "alignItems": "center",
@@ -317,8 +315,8 @@
                       "type": "label",
                       "name": "CharacterDs3TabEquip_span_17",
                       "widget": {
-                        "top": 191,
-                        "left": 192,
+                        "top": 138,
+                        "left": 139,
                         "right": 8,
                         "bottom": 6
                       },
@@ -333,8 +331,8 @@
                       "widget": {
                         "top": 6,
                         "left": 8,
-                        "right": 187,
-                        "bottom": 196
+                        "right": 134,
+                        "bottom": 143
                       },
                       "width": 21,
                       "height": 14,
@@ -352,8 +350,8 @@
                     "right": 0,
                     "bottom": 0
                   },
-                  "width": 220,
-                  "height": 220,
+                  "width": 167,
+                  "height": 167,
                   "layout": {
                     "type": "vertical",
                     "alignItems": "center",
@@ -381,8 +379,8 @@
                     "right": 0,
                     "bottom": 0
                   },
-                  "width": 220,
-                  "height": 220,
+                  "width": 167,
+                  "height": 167,
                   "layout": {
                     "type": "vertical",
                     "alignItems": "center",
@@ -401,15 +399,12 @@
                     }
                   ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "container",
               "name": "CharacterDs3TabEquip_div_11",
+              "width": 520,
               "height": 26,
               "layout": {
                 "type": "horizontal",
@@ -441,15 +436,12 @@
                   "text": "LEVEL & PROGRESS",
                   "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_22"
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "panel",
               "name": "CharacterDs3TabEquip_div_13",
+              "width": 520,
               "height": 98,
               "layout": {
                 "type": "vertical",
@@ -464,7 +456,7 @@
                 {
                   "type": "container",
                   "name": "CharacterDs3TabEquip_div_14",
-                  "width": 646,
+                  "width": 486,
                   "height": 58,
                   "layout": {
                     "type": "horizontal",
@@ -492,7 +484,7 @@
                     {
                       "type": "container",
                       "name": "CharacterDs3TabEquip_div_15",
-                      "width": 515,
+                      "width": 355,
                       "height": 35,
                       "layout": {
                         "type": "vertical",
@@ -503,7 +495,7 @@
                         {
                           "type": "container",
                           "name": "CharacterDs3TabEquip_div_16",
-                          "width": 515,
+                          "width": 355,
                           "height": 19,
                           "layout": {
                             "type": "horizontal",
@@ -531,14 +523,14 @@
                         {
                           "type": "panel",
                           "name": "CharacterDs3TabEquip_div_17",
-                          "width": 515,
+                          "width": 355,
                           "height": 12,
                           "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_div_17",
                           "children": [
                             {
                               "type": "panel",
                               "name": "CharacterDs3TabEquip_div_18",
-                              "width": 395,
+                              "width": 272,
                               "height": 10,
                               "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_div_18"
                             }
@@ -548,15 +540,12 @@
                     }
                   ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "container",
               "name": "CharacterDs3TabEquip_div_19",
+              "width": 520,
               "height": 26,
               "layout": {
                 "type": "horizontal",
@@ -588,15 +577,12 @@
                   "text": "ACTIONS",
                   "styleSlot": "auto.character-ds3-tab-equip.characterds3tabequip_span_28"
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "container",
               "name": "CharacterDs3TabEquip_div_21",
+              "width": 520,
               "height": 118,
               "layout": {
                 "type": "grid",
@@ -604,14 +590,14 @@
                 "spacingY": 10,
                 "constraint": "fixed-col",
                 "constraintNum": 2,
-                "cellWidth": 335,
+                "cellWidth": 255,
                 "cellHeight": 118
               },
               "children": [
                 {
                   "type": "button",
                   "name": "CharacterDs3TabEquip_button_1",
-                  "width": 335,
+                  "width": 255,
                   "height": 54,
                   "_motionId": "character-ds3tab-equip_button_1.transition",
                   "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_button_1"
@@ -619,7 +605,7 @@
                 {
                   "type": "button",
                   "name": "CharacterDs3TabEquip_button_2",
-                  "width": 335,
+                  "width": 255,
                   "height": 54,
                   "_motionId": "character-ds3tab-equip_button_2.transition",
                   "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_button_2"
@@ -627,7 +613,7 @@
                 {
                   "type": "button",
                   "name": "CharacterDs3TabEquip_button_3",
-                  "width": 335,
+                  "width": 255,
                   "height": 54,
                   "_motionId": "character-ds3tab-equip_button_3.transition",
                   "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_button_3"
@@ -635,22 +621,14 @@
                 {
                   "type": "button",
                   "name": "CharacterDs3TabEquip_button_4",
-                  "width": 335,
+                  "width": 255,
                   "height": 54,
                   "_motionId": "character-ds3tab-equip_button_4.transition",
                   "skinSlot": "auto.character-ds3-tab-equip.characterds3tabequip_button_4"
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             }
-          ],
-          "widget": {
-            "left": 0,
-            "right": 0
-          }
+          ]
         }
       ],
       "widget": {

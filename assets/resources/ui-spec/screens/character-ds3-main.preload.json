@@ -10,7 +10,8 @@
       "sprites/generals/zhang_fei_portrait"
     ],
     "fonts": [
-      "fonts/notosans_tc/font"
+      "fonts/newsreader/font",
+      "fonts/manrope/font"
     ],
     "fragments": []
   },

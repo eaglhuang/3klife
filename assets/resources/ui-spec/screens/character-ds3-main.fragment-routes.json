@@ -64,11 +64,47 @@
       "target": "aptitude",
       "interactionId": "character-ds3main_button_9.tab-switch",
       "status": "ready"
+    },
+    {
+      "trigger": "CharacterDs3Main_button_10",
+      "target": "overview",
+      "interactionId": "character-ds3main_button_10.tab-switch",
+      "status": "ready"
+    },
+    {
+      "trigger": "CharacterDs3Main_button_11",
+      "target": "stats",
+      "interactionId": "character-ds3main_button_11.tab-switch",
+      "status": "ready"
+    },
+    {
+      "trigger": "CharacterDs3Main_button_12",
+      "target": "tactics",
+      "interactionId": "character-ds3main_button_12.tab-switch",
+      "status": "ready"
+    },
+    {
+      "trigger": "CharacterDs3Main_button_13",
+      "target": "bloodline",
+      "interactionId": "character-ds3main_button_13.tab-switch",
+      "status": "ready"
+    },
+    {
+      "trigger": "CharacterDs3Main_button_14",
+      "target": "equip",
+      "interactionId": "character-ds3main_button_14.tab-switch",
+      "status": "ready"
+    },
+    {
+      "trigger": "CharacterDs3Main_button_15",
+      "target": "aptitude",
+      "interactionId": "character-ds3main_button_15.tab-switch",
+      "status": "ready"
     }
   ],
   "summary": {
     "lazySlotCount": 2,
-    "tabRouteCount": 8,
+    "tabRouteCount": 14,
     "missingDefaultFragmentCount": 0,
     "missingTabTargetCount": 0
   }

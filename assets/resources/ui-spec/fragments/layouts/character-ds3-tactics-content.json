@@ -22,7 +22,8 @@
         {
           "type": "container",
           "name": "CharacterDs3TabTactics_div_1",
-          "height": 664,
+          "width": 520,
+          "height": 709,
           "layout": {
             "type": "vertical",
             "justifyContent": "start",
@@ -32,6 +33,7 @@
             {
               "type": "container",
               "name": "CharacterDs3TabTactics_div_2",
+              "width": 520,
               "height": 26,
               "layout": {
                 "type": "horizontal",
@@ -63,15 +65,12 @@
                   "text": "LEARNED TACTICS",
                   "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_2"
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "panel",
               "name": "CharacterDs3TabTactics_div_4",
+              "width": 520,
               "height": 88,
               "layout": {
                 "type": "horizontal",
@@ -100,7 +99,7 @@
                 {
                   "type": "container",
                   "name": "CharacterDs3TabTactics_div_6",
-                  "width": 528,
+                  "width": 368,
                   "height": 57,
                   "layout": {
                     "type": "vertical",
@@ -110,7 +109,7 @@
                     {
                       "type": "container",
                       "name": "CharacterDs3TabTactics_div_7",
-                      "width": 527,
+                      "width": 367,
                       "height": 29,
                       "layout": {
                         "type": "horizontal",
@@ -156,7 +155,7 @@
                     {
                       "type": "label",
                       "name": "CharacterDs3TabTactics_div_8",
-                      "width": 527,
+                      "width": 367,
                       "height": 23,
                       "text": "對單體造成 280% 物理傷害，附帶震懾效果 2 回合",
                       "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_8"
@@ -193,15 +192,12 @@
                     }
                   ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "panel",
               "name": "CharacterDs3TabTactics_div_10",
+              "width": 520,
               "height": 88,
               "layout": {
                 "type": "horizontal",
@@ -230,7 +226,7 @@
                 {
                   "type": "container",
                   "name": "CharacterDs3TabTactics_div_12",
-                  "width": 528,
+                  "width": 368,
                   "height": 57,
                   "layout": {
                     "type": "vertical",
@@ -240,7 +236,7 @@
                     {
                       "type": "container",
                       "name": "CharacterDs3TabTactics_div_13",
-                      "width": 527,
+                      "width": 367,
                       "height": 29,
                       "layout": {
                         "type": "horizontal",
@@ -270,7 +266,7 @@
                     {
                       "type": "label",
                       "name": "CharacterDs3TabTactics_div_14",
-                      "width": 527,
+                      "width": 367,
                       "height": 23,
                       "text": "全體步兵攻擊 +15%，受到智力傷害 −10%",
                       "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_14"
@@ -307,16 +303,13 @@
                     }
                   ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "panel",
               "name": "CharacterDs3TabTactics_div_16",
-              "height": 88,
+              "width": 520,
+              "height": 111,
               "layout": {
                 "type": "horizontal",
                 "alignItems": "start",
@@ -344,8 +337,8 @@
                 {
                   "type": "container",
                   "name": "CharacterDs3TabTactics_div_18",
-                  "width": 531,
-                  "height": 57,
+                  "width": 371,
+                  "height": 81,
                   "layout": {
                     "type": "vertical",
                     "spacingY": 5
@@ -354,7 +347,7 @@
                     {
                       "type": "container",
                       "name": "CharacterDs3TabTactics_div_19",
-                      "width": 529,
+                      "width": 369,
                       "height": 29,
                       "layout": {
                         "type": "horizontal",
@@ -400,8 +393,8 @@
                     {
                       "type": "label",
                       "name": "CharacterDs3TabTactics_div_20",
-                      "width": 529,
-                      "height": 23,
+                      "width": 369,
+                      "height": 47,
                       "text": "對前方全體造成 520% 真實傷害，50% 機率使敵方逃跑 2 回合",
                       "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_20"
                     }
@@ -437,16 +430,13 @@
                     }
                   ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "panel",
               "name": "CharacterDs3TabTactics_div_22",
-              "height": 88,
+              "width": 520,
+              "height": 111,
               "layout": {
                 "type": "horizontal",
                 "alignItems": "start",
@@ -474,8 +464,8 @@
                 {
                   "type": "container",
                   "name": "CharacterDs3TabTactics_div_24",
-                  "width": 528,
-                  "height": 57,
+                  "width": 368,
+                  "height": 81,
                   "layout": {
                     "type": "vertical",
                     "spacingY": 5
@@ -484,7 +474,7 @@
                     {
                       "type": "container",
                       "name": "CharacterDs3TabTactics_div_25",
-                      "width": 527,
+                      "width": 367,
                       "height": 29,
                       "layout": {
                         "type": "horizontal",
@@ -530,8 +520,8 @@
                     {
                       "type": "label",
                       "name": "CharacterDs3TabTactics_div_26",
-                      "width": 527,
-                      "height": 23,
+                      "width": 367,
+                      "height": 47,
                       "text": "攻擊單體造成 180% 傷害，自身受傷 +20% 但暴擊率 +40%",
                       "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_div_26"
                     }
@@ -567,15 +557,12 @@
                     }
                   ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "container",
               "name": "CharacterDs3TabTactics_div_28",
+              "width": 520,
               "height": 26,
               "layout": {
                 "type": "horizontal",
@@ -607,16 +594,13 @@
                   "text": "LOCKED",
                   "styleSlot": "auto.character-ds3-tab-tactics.characterds3tabtactics_span_26"
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "panel",
               "name": "CharacterDs3TabTactics_div_30",
               "opacity": 0.5,
+              "width": 520,
               "height": 78,
               "layout": {
                 "type": "horizontal",
@@ -669,16 +653,13 @@
                     }
                   ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "panel",
               "name": "CharacterDs3TabTactics_div_35",
               "opacity": 0.5,
+              "width": 520,
               "height": 78,
               "layout": {
                 "type": "horizontal",
@@ -731,17 +712,9 @@
                     }
                   ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             }
-          ],
-          "widget": {
-            "left": 0,
-            "right": 0
-          }
+          ]
         }
       ],
       "widget": {

@@ -22,7 +22,8 @@
         {
           "type": "container",
           "name": "CharacterDs3TabAptitude_div_1",
-          "height": 418,
+          "width": 520,
+          "height": 489,
           "layout": {
             "type": "vertical",
             "justifyContent": "start",
@@ -32,6 +33,7 @@
             {
               "type": "container",
               "name": "CharacterDs3TabAptitude_div_2",
+              "width": 520,
               "height": 99,
               "layout": {
                 "type": "vertical",
@@ -41,6 +43,7 @@
                 {
                   "type": "container",
                   "name": "CharacterDs3TabAptitude_div_3",
+                  "width": 520,
                   "height": 26,
                   "layout": {
                     "type": "horizontal",
@@ -72,15 +75,12 @@
                       "text": "TROOP TYPE",
                       "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_2"
                     }
-                  ],
-                  "widget": {
-                    "left": 0,
-                    "right": 0
-                  }
+                  ]
                 },
                 {
                   "type": "container",
                   "name": "CharacterDs3TabAptitude_div_5",
+                  "width": 520,
                   "height": 63,
                   "layout": {
                     "type": "horizontal",
@@ -328,22 +328,15 @@
                         }
                       ]
                     }
-                  ],
-                  "widget": {
-                    "left": 0,
-                    "right": 0
-                  }
+                  ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "container",
               "name": "CharacterDs3TabAptitude_div_18",
-              "height": 99,
+              "width": 520,
+              "height": 170,
               "layout": {
                 "type": "vertical",
                 "spacingY": 10
@@ -352,6 +345,7 @@
                 {
                   "type": "container",
                   "name": "CharacterDs3TabAptitude_div_19",
+                  "width": 520,
                   "height": 26,
                   "layout": {
                     "type": "horizontal",
@@ -383,16 +377,13 @@
                       "text": "TERRAIN",
                       "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_12"
                     }
-                  ],
-                  "widget": {
-                    "left": 0,
-                    "right": 0
-                  }
+                  ]
                 },
                 {
                   "type": "container",
                   "name": "CharacterDs3TabAptitude_div_21",
-                  "height": 63,
+                  "width": 520,
+                  "height": 134,
                   "layout": {
                     "type": "horizontal",
                     "justifyContent": "start",
@@ -699,21 +690,14 @@
                         }
                       ]
                     }
-                  ],
-                  "widget": {
-                    "left": 0,
-                    "right": 0
-                  }
+                  ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             },
             {
               "type": "container",
               "name": "CharacterDs3TabAptitude_div_37",
+              "width": 520,
               "height": 170,
               "layout": {
                 "type": "vertical",
@@ -723,6 +707,7 @@
                 {
                   "type": "container",
                   "name": "CharacterDs3TabAptitude_div_38",
+                  "width": 520,
                   "height": 26,
                   "layout": {
                     "type": "horizontal",
@@ -754,15 +739,12 @@
                       "text": "WEATHER",
                       "styleSlot": "auto.character-ds3-tab-aptitude.characterds3tabaptitude_span_24"
                     }
-                  ],
-                  "widget": {
-                    "left": 0,
-                    "right": 0
-                  }
+                  ]
                 },
                 {
                   "type": "container",
                   "name": "CharacterDs3TabAptitude_div_40",
+                  "width": 520,
                   "height": 134,
                   "layout": {
                     "type": "horizontal",
@@ -1130,23 +1112,11 @@
                         }
                       ]
                     }
-                  ],
-                  "widget": {
-                    "left": 0,
-                    "right": 0
-                  }
+                  ]
                 }
-              ],
-              "widget": {
-                "left": 0,
-                "right": 0
-              }
+              ]
             }
-          ],
-          "widget": {
-            "left": 0,
-            "right": 0
-          }
+          ]
         }
       ],
       "widget": {

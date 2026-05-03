@@ -2,8 +2,8 @@
   "screenId": "character-ds3-main",
   "layout": "character-ds3-main",
   "skin": "character-ds3-main.skin",
-  "layoutRef": "artifacts/skill-test-html-to-ucuf/character-ds3-main/character-ds3-main.final.layout.json",
-  "skinRef": "artifacts/skill-test-html-to-ucuf/character-ds3-main/character-ds3-main.final.skin.json",
+  "layoutRef": "artifacts/skill-test-html-to-ucuf/r119-radar-source-geometry/character-ds3-main.final.layout.json",
+  "skinRef": "artifacts/skill-test-html-to-ucuf/r119-radar-source-geometry/character-ds3-main.final.skin.json",
   "meta": {
     "scaffoldHints": {
       "useUCUFLogger": true

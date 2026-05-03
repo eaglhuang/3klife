@@ -2,7 +2,7 @@
   "screenId": "character-ds3-main",
   "verdict": "pass",
   "metrics": {
-    "screenshotZoneConfidence": 0.3333333333333333,
+    "screenshotZoneConfidence": 0.8333333333333334,
     "motionPresenceRate": 0,
     "interactionSuccessRate": 1,
     "buttonStateLayerCoverage": 1,
@@ -11,9 +11,9 @@
   "zones": [
     {
       "node": "CharacterDs3Main_div_2",
-      "width": "62%",
-      "height": null,
-      "stableBounds": false,
+      "width": 1190,
+      "height": 1080,
+      "stableBounds": true,
       "zone": "portrait"
     },
     {
@@ -25,9 +25,9 @@
     },
     {
       "node": "CharacterDs3Main_img_1",
-      "width": null,
-      "height": "98%",
-      "stableBounds": false,
+      "width": 595,
+      "height": 1058,
+      "stableBounds": true,
       "zone": "portrait"
     },
     {
@@ -39,9 +39,9 @@
     },
     {
       "node": "CharacterDs3Main_div_3",
-      "width": null,
-      "height": null,
-      "stableBounds": false,
+      "width": 178,
+      "height": 29,
+      "stableBounds": true,
       "zone": "portrait"
     },
     {

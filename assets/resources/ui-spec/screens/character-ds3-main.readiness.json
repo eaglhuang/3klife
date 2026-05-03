@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "character-ds3-main",
-  "generatedAt": "2026-05-02T05:55:14.878Z",
+  "generatedAt": "2026-05-02T15:24:47.546Z",
   "verdict": "not-ready",
   "readinessScore": 0.917,
   "summary": {
@@ -21,7 +21,7 @@
     "performance": "assets/resources/ui-spec/screens/character-ds3-main.performance.json",
     "bakeManifest": "assets/resources/ui-spec/layouts/character-ds3-main.layout.bake-manifest.json",
     "artAuthorityWaivers": "assets/resources/ui-spec/screens/character-ds3-main.art-authority-waivers.json",
-    "finalVerdict": "artifacts/skill-test-html-to-ucuf/character-ds3-main/character-ds3-main.html-cocos-verdict.json"
+    "finalVerdict": "artifacts/skill-test-html-to-ucuf/r119-radar-source-geometry/character-ds3-main.html-cocos-verdict.json"
   },
   "gates": {
     "finalGate": {
@@ -285,10 +285,10 @@
         "deferredNodeCount": 0,
         "totalNodeCount": 36,
         "maxDepth": 6,
-        "estimatedDrawCalls": 2,
+        "estimatedDrawCalls": 3,
         "colorRectCount": 0
       },
-      "skinSlotCount": 33,
+      "skinSlotCount": 401,
       "issues": []
     }
   },
