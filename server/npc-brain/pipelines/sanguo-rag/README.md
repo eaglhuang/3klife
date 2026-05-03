@@ -1,3 +1,4 @@
+<!-- doc_id: doc_server_pipeline_0002 -->
 # Sanguo RAG Pipelines
 
 `server/npc-brain/pipelines/sanguo-rag/` 是三國大腦中台的正式 ETL / RAG pipeline 腳本位置。
@@ -239,6 +240,99 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/build_ap
 - `artifacts/data-pipeline/sanguo-rag/extracted/api-readiness/dialogue-evidence-probe.json`
 - `artifacts/data-pipeline/sanguo-rag/extracted/api-readiness/pinecone-metadata-manifest.json`
 - `artifacts/data-pipeline/sanguo-rag/extracted/api-readiness/api-readiness-report.md`
+
+若要把這些 readiness 產物真正接進向量層，可接著做：
+
+### Vector-ready export
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/export_vector_records.py \
+	--events artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl \
+	--keyword-root artifacts/data-pipeline/sanguo-rag/extracted/keyword-options \
+	--persona-root artifacts/data-pipeline/sanguo-rag/extracted/persona-cards \
+	--output-root artifacts/data-pipeline/sanguo-rag/extracted/vector-ready \
+	--overwrite
+```
+
+輸出：
+
+- `artifacts/data-pipeline/sanguo-rag/extracted/vector-ready/vector-records.facts.jsonl`
+- `artifacts/data-pipeline/sanguo-rag/extracted/vector-ready/vector-records.keywords.jsonl`
+- `artifacts/data-pipeline/sanguo-rag/extracted/vector-ready/vector-records.persona.jsonl`
+- `artifacts/data-pipeline/sanguo-rag/extracted/vector-ready/vector-records.all.jsonl`
+- `artifacts/data-pipeline/sanguo-rag/extracted/vector-ready/vector-records.index.json`
+
+### Pinecone bootstrap
+
+先做設定檢查：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/init_pinecone_index.py --dry-run
+```
+
+建立 index：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/init_pinecone_index.py
+```
+
+### Pinecone upsert
+
+如果要上傳其他資料，建議維持同一個格式：
+
+1. 先把來源整理成 `VectorRecord` JSONL（`id / namespace / text / metadata`）。
+2. `namespace` 用來區分語意域，例如 `romance_facts_v1` / `general_keywords_v1` / `general_persona_v2`。
+3. `metadata` 只能放 Pinecone 支援的 primitive 值；像 `null`、巢狀物件、空值清單都要先處理。
+4. 長文本先 chunk，再上傳 chunk-level records；不要把整本書一次塞成單筆。
+
+> 注意：`upsert_pinecone_records.py` 會在送進 Pinecone 前遞迴清掉 metadata 裡的 `None` / `null`。
+> Pinecone metadata 只接受 `string / number / boolean / list[string]`，所以像 `faction: null` 會被 drop。
+> 如果某欄位未來要拿來 filter，請在源資料先補成具體值，不要留 `null`。
+
+先用 `mock` embedding 做 smoke test（只驗證讀檔與 embedding，不真的寫入）：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/upsert_pinecone_records.py \
+	--records-root artifacts/data-pipeline/sanguo-rag/extracted/vector-ready \
+	--embedding-provider mock \
+	--dry-run
+```
+
+確認沒問題後，移除 `--dry-run` 才會真的 upsert：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/upsert_pinecone_records.py \
+	--records-root artifacts/data-pipeline/sanguo-rag/extracted/vector-ready \
+	--embedding-provider mock
+```
+
+之後若要正式用本地 embedding，再切到：
+
+```text
+NPC_EMBEDDING_PROVIDER=sentence_transformers
+NPC_EMBEDDING_MODEL=BAAI/bge-m3
+```
+
+並補裝 `sentence-transformers` 與相容的 `torch`。
+
+#### Pinecone readback / query smoke test
+
+上傳後，用同一個 embedding provider / model 對一段已知文本 query，確認能讀回 top hit：
+
+```bash
+$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/query_pinecone_records.py \
+	--namespace keywords \
+	--query-text "武將：sima-yi
+關鍵字分類：person
+關鍵字：司馬昭
+關聯人物：sima-yi、sima-zhao" \
+	--embedding-provider mock \
+	--top-k 3 \
+	--expected-id "keyword::sima-yi::sima-zhao"
+```
+
+如果你是用 `sentence_transformers` 上傳，就把 query 的 embedding provider / model 設成一樣；
+smoke test 最好拿「已上傳過的原始文本」當 query，這樣 top-1 最容易對上。
 
 ## Observed Mentions
 

@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-05-02T14:15:01Z",
+  "inputs": {
+    "eventsPath": "artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/sima-yi-expand-r1/core-person-progress/sima-yi-expand-r1-ready-eval-events.jsonl",
+    "keywordRoot": "artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/sima-yi-expand-r1/pilot-refresh/keyword-options",
+    "personaRoot": "artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/sima-yi-expand-r1/pilot-refresh/persona-cards",
+    "generalIds": [
+      "sima-yi"
+    ],
+    "includeNonready": false
+  },
+  "outputs": {
+    "factsPath": "scratch/vector-ready-sima-yi/vector-records.facts.jsonl",
+    "keywordsPath": "scratch/vector-ready-sima-yi/vector-records.keywords.jsonl",
+    "personaPath": "scratch/vector-ready-sima-yi/vector-records.persona.jsonl",
+    "allPath": "scratch/vector-ready-sima-yi/vector-records.all.jsonl"
+  },
+  "counts": {
+    "facts": 2,
+    "keywords": 10,
+    "persona": 1,
+    "all": 13,
+    "byNamespace": {
+      "romance_facts_v1": 2,
+      "general_keywords_v1": 10,
+      "general_persona_v2": 1
+    }
+  },
+  "logicalNamespaces": {
+    "facts": "romance_facts_v1",
+    "keywords": "general_keywords_v1",
+    "persona": "general_persona_v2"
+  }
+}

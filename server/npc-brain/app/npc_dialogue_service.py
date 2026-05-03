@@ -29,6 +29,7 @@ from .llm_dialogue_renderer import (
     load_local_env,
     log_debug_event,
 )
+from .vector_config import load_vector_runtime_config
 
 
 DEFAULT_ARTIFACT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/api-readiness")
@@ -211,6 +212,7 @@ class NpcDialogueService:
 
     def get_health(self) -> dict:
         provider_order = self.provider_router.provider_order
+        vector_config = load_vector_runtime_config()
         return {
             "ok": True,
             "service": "npc-brain",
@@ -244,6 +246,7 @@ class NpcDialogueService:
                     for preset, config in LLM_MODEL_PRESETS.items()
                 ],
             },
+            "vector": vector_config.as_health(),
         }
 
     def get_context_options(self, general_id: str, limit: int | None = None) -> ContextOptionsResponse:
