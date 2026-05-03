@@ -51,3 +51,35 @@ tools/**/*.meta
 .task-locks/
 
 temp_doc_id_changed.txt
+
+#//////////////////////////
+# Python
+#//////////////////////////
+**/__pycache__/
+*.pyc
+*.pyo
+
+#//////////////////////////
+# Secrets
+#//////////////////////////
+server/npc-brain/.env
+
+#//////////////////////////
+# Agent / Tool temp files
+#//////////////////////////
+.playwright-mcp/
+.tmp_agent_encoding_check.txt
+.tmp_agent_*.txt
+
+#//////////////////////////
+# Design System archives & extra copies
+#//////////////////////////
+Design System 2.zip
+Design System 3.zip
+Design System 2/
+Design System 3/
+
+#//////////////////////////
+# LangGraph runtime
+#//////////////////////////
+server/npc-brain/.langgraph_api/
