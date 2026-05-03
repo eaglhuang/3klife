@@ -1,0 +1,16 @@
+{
+  "screenId": "gacha-ds3",
+  "verdict": "pass",
+  "metrics": {
+    "screenshotZoneConfidence": 1,
+    "motionPresenceRate": 1,
+    "interactionSuccessRate": 1,
+    "buttonStateLayerCoverage": 1,
+    "compositeReviewCoverage": 1
+  },
+  "zones": [],
+  "stateLayerIssues": [],
+  "compositeReviewRequired": [],
+  "effectReview": [],
+  "blockers": []
+}

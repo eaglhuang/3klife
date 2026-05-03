@@ -1,0 +1,33 @@
+{
+  "screenId": "gacha-shop-ds3",
+  "version": 1,
+  "firstScreen": {
+    "bundles": [
+      "lobby_ui"
+    ],
+    "spriteFrames": [],
+    "fonts": [
+      "fonts/manrope/font",
+      "fonts/newsreader/font",
+      "fonts/notosans_tc/font"
+    ],
+    "fragments": []
+  },
+  "deferred": {
+    "lazySlots": [
+      {
+        "slotName": "slot.story-strip",
+        "warmupHint": "manual",
+        "fragments": [
+          "fragments/layouts/gacha-shop-ds3-story-strip-collapsed",
+          "fragments/layouts/gacha-shop-ds3-story-strip-open"
+        ]
+      }
+    ]
+  },
+  "counts": {
+    "firstScreenSpriteCount": 0,
+    "deferredSpriteCount": 0
+  },
+  "_warnings": []
+}

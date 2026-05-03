@@ -1,0 +1,144 @@
+{
+  "screenId": "gacha-ds3-general",
+  "motionTokens": {
+    "instant": {
+      "durationMs": 80,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "fast": {
+      "durationMs": 120,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "standard": {
+      "durationMs": 180,
+      "easing": "quadOut",
+      "emphasis": "medium"
+    },
+    "slow": {
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "emphasis": "medium"
+    },
+    "emphasis": {
+      "durationMs": 360,
+      "easing": "backOut",
+      "emphasis": "high"
+    }
+  },
+  "motions": [
+    {
+      "id": "gacha-ds3general_div_12.transition",
+      "target": "GachaDs3General_div_12",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "width"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3general_div_20.transition",
+      "target": "GachaDs3General_div_20",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "width"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3general_div_25.transition",
+      "target": "GachaDs3General_div_25",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "width"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3general_div_30.transition",
+      "target": "GachaDs3General_div_30",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "width"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3general_div_35.transition",
+      "target": "GachaDs3General_div_35",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "width"
+      ],
+      "source": "css-transition"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "motion-token-missing",
+      "detail": "GachaDs3General_div_12:500ms -> emphasis"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "GachaDs3General_div_12:width"
+    },
+    {
+      "code": "motion-token-missing",
+      "detail": "GachaDs3General_div_20:500ms -> emphasis"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "GachaDs3General_div_20:width"
+    },
+    {
+      "code": "motion-token-missing",
+      "detail": "GachaDs3General_div_25:500ms -> emphasis"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "GachaDs3General_div_25:width"
+    },
+    {
+      "code": "motion-token-missing",
+      "detail": "GachaDs3General_div_30:500ms -> emphasis"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "GachaDs3General_div_30:width"
+    },
+    {
+      "code": "motion-token-missing",
+      "detail": "GachaDs3General_div_35:500ms -> emphasis"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "GachaDs3General_div_35:width"
+    }
+  ],
+  "summary": {
+    "motionCount": 5,
+    "tokenCount": 5,
+    "manualRewriteCount": 10
+  }
+}

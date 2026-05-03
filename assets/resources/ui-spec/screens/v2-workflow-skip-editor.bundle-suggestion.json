@@ -1,0 +1,10 @@
+{
+  "screenId": "v2-workflow-skip-editor",
+  "currentBundle": "ui_test",
+  "distribution": [],
+  "suggestion": {
+    "primary": "ui_test",
+    "confidence": "low",
+    "reason": "no-sprite-frame-slots"
+  }
+}

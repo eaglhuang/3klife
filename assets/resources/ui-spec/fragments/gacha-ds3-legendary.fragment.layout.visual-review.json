@@ -1,0 +1,19 @@
+{
+  "screenId": "gacha-ds3-legendary",
+  "verdict": "pass",
+  "metrics": {
+    "screenshotZoneConfidence": 1,
+    "motionPresenceRate": 1,
+    "interactionSuccessRate": 1,
+    "buttonStateLayerCoverage": 1,
+    "compositeReviewCoverage": 1
+  },
+  "zones": [],
+  "stateLayerIssues": [],
+  "compositeReviewRequired": [],
+  "effectReview": [
+    "css-transform-manual-layout-risk",
+    "overflow-hidden-clipping-risk"
+  ],
+  "blockers": []
+}

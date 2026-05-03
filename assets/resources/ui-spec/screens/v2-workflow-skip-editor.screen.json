@@ -1,0 +1,12 @@
+{
+  "screenId": "v2-workflow-skip-editor",
+  "layout": "v2-workflow-skip-editor",
+  "skin": "v2-workflow-skip-editor.skin",
+  "layoutRef": "../AppData/Local/Temp/dom-to-ui-selftest-GvHiwF/v2-workflow-skip-editor/v2-workflow-skip-editor.final.layout.json",
+  "skinRef": "../AppData/Local/Temp/dom-to-ui-selftest-GvHiwF/v2-workflow-skip-editor/v2-workflow-skip-editor.final.skin.json",
+  "meta": {
+    "scaffoldHints": {
+      "useUCUFLogger": true
+    }
+  }
+}

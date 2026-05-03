@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "v2-workflow-skip-editor",
+  "generatedAt": "2026-05-02T08:59:55.187Z",
+  "verdict": "not-ready",
+  "readinessScore": 0.792,
+  "summary": {
+    "blockerUnits": 3,
+    "actionUnits": 5,
+    "bounded": true,
+    "nextCriticalAction": "capture Cocos Editor target screen and run final compare"
+  },
+  "paths": {
+    "layout": "assets/resources/ui-spec/layouts/v2-workflow-skip-editor.json",
+    "skin": "assets/resources/ui-spec/skins/v2-workflow-skip-editor.skin.json",
+    "screen": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.json",
+    "captureProtocol": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.final-capture-protocol.json",
+    "zoneOwnership": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.zone-ownership.json",
+    "tabRouting": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.tab-routing.json",
+    "preload": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.preload.json",
+    "performance": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.performance.json",
+    "bakeManifest": "assets/resources/ui-spec/layouts/v2-workflow-skip-editor.layout.bake-manifest.json",
+    "artAuthorityWaivers": "assets/resources/ui-spec/screens/v2-workflow-skip-editor.art-authority-waivers.json",
+    "finalVerdict": "../AppData/Local/Temp/dom-to-ui-selftest-GvHiwF/v2-workflow-skip-editor/v2-workflow-skip-editor.html-cocos-verdict.json"
+  },
+  "gates": {
+    "finalGate": {
+      "status": "blocker",
+      "pass": false,
+      "workUnits": 1,
+      "summary": "no measured Cocos Editor final compare verdict"
+    },
+    "capture": {
+      "status": "blocker",
+      "ok": false,
+      "workUnits": 1,
+      "summary": "missing final capture protocol"
+    },
+    "zones": {
+      "status": "blocker",
+      "workUnits": 1,
+      "summary": "missing zone ownership report"
+    },
+    "tabMounts": {
+      "status": "warn",
+      "workUnits": 1,
+      "summary": "missing tab-routing sidecar"
+    },
+    "fragmentGeometry": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0 referenced fragments follow fill-root geometry contract",
+      "checks": [],
+      "failures": []
+    },
+    "textBinding": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0/0 dynamic text candidates missing bind/i18n contract",
+      "totalTextNodes": 0,
+      "dynamicCandidateCount": 0,
+      "missingContractCount": 0,
+      "samples": []
+    },
+    "visualPolicy": {
+      "status": "warn",
+      "workUnits": 1,
+      "summary": "missing bake manifest; texture/clip review cannot be quantified"
+    },
+    "loading": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "preload/performance sidecars present and current",
+      "actualLayoutStats": {
+        "nodeCount": 1,
+        "deferredNodeCount": 0,
+        "totalNodeCount": 1,
+        "maxDepth": 1,
+        "colorRectCount": 0,
+        "lazySlotCount": 0,
+        "warmupHints": {
+          "next-frame": 0,
+          "idle": 0,
+          "tab-hover": 0,
+          "manual": 0
+        }
+      },
+      "reportedRendering": {
+        "nodeCount": 1,
+        "deferredNodeCount": 0,
+        "totalNodeCount": 1,
+        "maxDepth": 1,
+        "estimatedDrawCalls": 0,
+        "colorRectCount": 0
+      },
+      "skinSlotCount": 1,
+      "issues": []
+    }
+  },
+  "issues": [
+    {
+      "severity": "blocker",
+      "code": "final-gate",
+      "summary": "no measured Cocos Editor final compare verdict",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "capture-protocol",
+      "summary": "missing final capture protocol",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "zone-ownership-waivers",
+      "summary": "missing zone ownership report",
+      "workUnits": 1
+    },
+    {
+      "severity": "warn",
+      "code": "tab-routing-mounts",
+      "summary": "missing tab-routing sidecar",
+      "workUnits": 1
+    },
+    {
+      "severity": "warn",
+      "code": "visual-policy",
+      "summary": "missing bake manifest; texture/clip review cannot be quantified",
+      "workUnits": 1
+    }
+  ]
+}

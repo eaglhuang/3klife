@@ -1,0 +1,10 @@
+{
+  "id": "gacha-shop-ds3",
+  "version": "1.0.0",
+  "uiId": "gacha-shop-ds3",
+  "layout": "gacha-shop-ds3",
+  "skin": "gacha-shop-ds3.skin",
+  "bundle": "lobby_ui",
+  "runtimeVersion": "gacshods3-20260502-001",
+  "runtimeVersionUpdatedAt": "2026-05-02T14:05:22.912Z"
+}

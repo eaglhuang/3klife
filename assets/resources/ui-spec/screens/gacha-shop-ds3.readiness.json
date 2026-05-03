@@ -1,0 +1,255 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "gacha-shop-ds3",
+  "generatedAt": "2026-05-02T14:05:32.751Z",
+  "verdict": "not-ready",
+  "readinessScore": 0.208,
+  "summary": {
+    "blockerUnits": 6,
+    "actionUnits": 19,
+    "bounded": true,
+    "nextCriticalAction": "capture Cocos Editor target screen and run final compare"
+  },
+  "paths": {
+    "layout": "assets/resources/ui-spec/layouts/gacha-shop-ds3.json",
+    "skin": "assets/resources/ui-spec/skins/gacha-shop-ds3.skin.json",
+    "screen": "assets/resources/ui-spec/screens/gacha-shop-ds3.json",
+    "captureProtocol": "assets/resources/ui-spec/screens/gacha-shop-ds3.final-capture-protocol.json",
+    "zoneOwnership": "assets/resources/ui-spec/screens/gacha-shop-ds3.zone-ownership.json",
+    "tabRouting": "assets/resources/ui-spec/screens/gacha-shop-ds3.tab-routing.json",
+    "preload": "assets/resources/ui-spec/screens/gacha-shop-ds3.preload.json",
+    "performance": "assets/resources/ui-spec/screens/gacha-shop-ds3.performance.json",
+    "bakeManifest": "assets/resources/ui-spec/layouts/gacha-shop-ds3.layout.bake-manifest.json",
+    "artAuthorityWaivers": "assets/resources/ui-spec/screens/gacha-shop-ds3.art-authority-waivers.json",
+    "finalVerdict": "artifacts/skill-test-html-to-ucuf/gacha-shop-ds3/gacha-shop-ds3.html-cocos-verdict.json"
+  },
+  "gates": {
+    "finalGate": {
+      "status": "blocker",
+      "pass": false,
+      "workUnits": 1,
+      "summary": "no measured Cocos Editor final compare verdict"
+    },
+    "capture": {
+      "status": "blocker",
+      "ok": false,
+      "workUnits": 1,
+      "summary": "missing final capture protocol"
+    },
+    "zones": {
+      "status": "blocker",
+      "workUnits": 1,
+      "summary": "missing zone ownership report"
+    },
+    "tabMounts": {
+      "status": "warn",
+      "workUnits": 1,
+      "summary": "missing tab-routing sidecar"
+    },
+    "fragmentGeometry": {
+      "status": "blocker",
+      "workUnits": 2,
+      "summary": "2/2 referenced fragments break fill-root geometry contract",
+      "checks": [
+        {
+          "status": "blocker",
+          "ref": "fragments/layouts/gacha-shop-ds3-story-strip-collapsed",
+          "source": "layout.defaultFragment",
+          "slotId": "slot.story-strip",
+          "tabId": null,
+          "code": "missing-fragment",
+          "summary": "Referenced fragment JSON does not exist.",
+          "recommendation": "Create the fragment JSON or update the tab/defaultFragment route to a valid fragment."
+        },
+        {
+          "status": "blocker",
+          "ref": "fragments/layouts/gacha-shop-ds3-story-strip-open",
+          "source": "layout.fragments",
+          "slotId": "slot.story-strip",
+          "tabId": null,
+          "code": "missing-fragment",
+          "summary": "Referenced fragment JSON does not exist.",
+          "recommendation": "Create the fragment JSON or update the tab/defaultFragment route to a valid fragment."
+        }
+      ],
+      "failures": [
+        {
+          "status": "blocker",
+          "ref": "fragments/layouts/gacha-shop-ds3-story-strip-collapsed",
+          "source": "layout.defaultFragment",
+          "slotId": "slot.story-strip",
+          "tabId": null,
+          "code": "missing-fragment",
+          "summary": "Referenced fragment JSON does not exist.",
+          "recommendation": "Create the fragment JSON or update the tab/defaultFragment route to a valid fragment."
+        },
+        {
+          "status": "blocker",
+          "ref": "fragments/layouts/gacha-shop-ds3-story-strip-open",
+          "source": "layout.fragments",
+          "slotId": "slot.story-strip",
+          "tabId": null,
+          "code": "missing-fragment",
+          "summary": "Referenced fragment JSON does not exist.",
+          "recommendation": "Create the fragment JSON or update the tab/defaultFragment route to a valid fragment."
+        }
+      ]
+    },
+    "textBinding": {
+      "status": "warn",
+      "workUnits": 11,
+      "summary": "88/88 dynamic text candidates missing bind/i18n contract",
+      "totalTextNodes": 221,
+      "dynamicCandidateCount": 88,
+      "missingContractCount": 88,
+      "samples": [
+        {
+          "name": "GachaShopDs3_div_3",
+          "path": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_1/GachaShopDs3_div_3",
+          "text": "轉蛋 GACHA"
+        },
+        {
+          "name": "GachaShopDs3_div_4",
+          "path": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_1/GachaShopDs3_div_4",
+          "text": "彈窗 POPUP"
+        },
+        {
+          "name": "GachaShopDs3_div_11",
+          "path": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_5/GachaShopDs3_div_6/GachaShopDs3_div_11",
+          "text": "限時補給 · 每日重置"
+        },
+        {
+          "name": "GachaShopDs3_div_15",
+          "path": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_5/GachaShopDs3_div_6/GachaShopDs3_div_12/GachaShopDs3_div_13/GachaShopDs3_div_15",
+          "text": "48,200"
+        },
+        {
+          "name": "GachaShopDs3_div_19",
+          "path": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_5/GachaShopDs3_div_6/GachaShopDs3_div_12/GachaShopDs3_div_17/GachaShopDs3_div_19",
+          "text": "1,280"
+        },
+        {
+          "name": "GachaShopDs3_div_23",
+          "path": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_5/GachaShopDs3_div_6/GachaShopDs3_div_12/GachaShopDs3_div_21/GachaShopDs3_div_23",
+          "text": "340"
+        },
+        {
+          "name": "GachaShopDs3_span_2",
+          "path": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_5/GachaShopDs3_div_25/GachaShopDs3_div_34/GachaShopDs3_span_2",
+          "text": "3"
+        },
+        {
+          "name": "GachaShopDs3_div_40",
+          "path": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_5/GachaShopDs3_div_25/GachaShopDs3_div_38/GachaShopDs3_div_40",
+          "text": "17:43:22"
+        },
+        {
+          "name": "GachaShopDs3_div_42",
+          "path": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_5/GachaShopDs3_div_41/GachaShopDs3_div_42",
+          "text": "武將召喚券 · 本季推薦"
+        },
+        {
+          "name": "GachaShopDs3_div_46",
+          "path": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_5/GachaShopDs3_div_41/GachaShopDs3_div_43/GachaShopDs3_div_44/GachaShopDs3_div_45/GachaShopDs3_div_46",
+          "text": "武將立繪"
+        },
+        {
+          "name": "GachaShopDs3_div_51",
+          "path": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_5/GachaShopDs3_div_41/GachaShopDs3_div_43/GachaShopDs3_div_44/GachaShopDs3_div_50/GachaShopDs3_div_51",
+          "text": "名將召喚卷軸·限"
+        },
+        {
+          "name": "GachaShopDs3_div_54",
+          "path": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_5/GachaShopDs3_div_41/GachaShopDs3_div_43/GachaShopDs3_div_44/GachaShopDs3_div_50/GachaShopDs3_div_52/GachaShopDs3_div_54",
+          "text": "1,280"
+        }
+      ]
+    },
+    "visualPolicy": {
+      "status": "warn",
+      "workUnits": 1,
+      "summary": "missing bake manifest; texture/clip review cannot be quantified"
+    },
+    "loading": {
+      "status": "blocker",
+      "workUnits": 1,
+      "summary": "node-count-blocker: 397 (>60)",
+      "actualLayoutStats": {
+        "nodeCount": 397,
+        "deferredNodeCount": 0,
+        "totalNodeCount": 397,
+        "maxDepth": 11,
+        "colorRectCount": 0,
+        "lazySlotCount": 3,
+        "warmupHints": {
+          "next-frame": 0,
+          "idle": 0,
+          "tab-hover": 0,
+          "manual": 3
+        }
+      },
+      "reportedRendering": {
+        "nodeCount": 397,
+        "deferredNodeCount": 0,
+        "totalNodeCount": 397,
+        "maxDepth": 11,
+        "estimatedDrawCalls": 3,
+        "colorRectCount": 0
+      },
+      "skinSlotCount": 343,
+      "issues": [
+        "node-count-blocker: 397 (>60)"
+      ]
+    }
+  },
+  "issues": [
+    {
+      "severity": "blocker",
+      "code": "final-gate",
+      "summary": "no measured Cocos Editor final compare verdict",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "capture-protocol",
+      "summary": "missing final capture protocol",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "zone-ownership-waivers",
+      "summary": "missing zone ownership report",
+      "workUnits": 1
+    },
+    {
+      "severity": "warn",
+      "code": "tab-routing-mounts",
+      "summary": "missing tab-routing sidecar",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "tab-fragment-geometry-contract",
+      "summary": "2/2 referenced fragments break fill-root geometry contract",
+      "workUnits": 2
+    },
+    {
+      "severity": "warn",
+      "code": "text-binding",
+      "summary": "88/88 dynamic text candidates missing bind/i18n contract",
+      "workUnits": 11
+    },
+    {
+      "severity": "warn",
+      "code": "visual-policy",
+      "summary": "missing bake manifest; texture/clip review cannot be quantified",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "loading-performance",
+      "summary": "node-count-blocker: 397 (>60)",
+      "workUnits": 1
+    }
+  ]
+}

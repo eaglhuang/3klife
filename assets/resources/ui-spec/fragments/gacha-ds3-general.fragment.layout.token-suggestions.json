@@ -1,0 +1,212 @@
+{
+  "colorSuggestions": [
+    {
+      "value": "rgb(206, 147, 216)",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "gdv3StatInt",
+        "value": "#c494ff",
+        "distance": 40
+      },
+      "suggestedToken": null,
+      "samples": [
+        {
+          "path": "div[0]>div#rp-content.rp-content[0]>div.rp-pool-header[0]>div.rp-pool-badge[1]",
+          "prop": "color"
+        }
+      ]
+    },
+    {
+      "value": "rgb(58, 48, 48)",
+      "occurrences": 12,
+      "nearestExisting": {
+        "token": "surfaceGray",
+        "value": "#333333",
+        "distance": 8
+      },
+      "suggestedToken": null,
+      "samples": [
+        {
+          "path": "div[0]>div#rp-content.rp-content[0]>div.pity-block[1]>div.pity-scale[2]",
+          "prop": "color"
+        },
+        {
+          "path": "div[0]>div#rp-content.rp-content[0]>div.pity-block[1]>div.pity-scale[2]",
+          "prop": "border-top-color"
+        },
+        {
+          "path": "div[0]>div#rp-content.rp-content[0]>div.pity-block[1]>div.pity-scale[2]>span[0]",
+          "prop": "color"
+        }
+      ]
+    },
+    {
+      "value": "rgb(104, 104, 104)",
+      "occurrences": 5,
+      "nearestExisting": {
+        "token": "gdv3TextMetaDim",
+        "value": "#6b6456",
+        "distance": 19
+      },
+      "suggestedToken": null,
+      "samples": [
+        {
+          "path": "div[0]>div#rp-content.rp-content[0]>div.rate-block[2]>div.rate-list[1]>div.rate-item[0]>div.rate-rarity[0]",
+          "prop": "color"
+        },
+        {
+          "path": "div[0]>div#rp-content.rp-content[0]>div.rate-block[2]>div.rate-list[1]>div.rate-item[0]>div.rate-rarity[0]",
+          "prop": "border-top-color"
+        },
+        {
+          "path": "div[0]>div#rp-content.rp-content[0]>div.rate-block[2]>div.rate-list[1]>div.rate-item[0]>div.rate-track[1]>div.rate-bar[0]",
+          "prop": "background-color"
+        }
+      ]
+    },
+    {
+      "value": "rgb(200, 170, 255)",
+      "occurrences": 4,
+      "nearestExisting": {
+        "token": "gdv3StatInt",
+        "value": "#c494ff",
+        "distance": 22
+      },
+      "suggestedToken": null,
+      "samples": [
+        {
+          "path": "div[0]>div#rp-content.rp-content[0]>div.cost-card[3]>div.cost-item[0]>div.cost-val[1]",
+          "prop": "color"
+        },
+        {
+          "path": "div[0]>div#rp-content.rp-content[0]>div.cost-card[3]>div.cost-item[0]>div.cost-val[1]",
+          "prop": "border-top-color"
+        },
+        {
+          "path": "div[0]>div#rp-content.rp-content[0]>div.cost-card[3]>div.cost-item[2]>div.cost-val[1]",
+          "prop": "color"
+        }
+      ]
+    },
+    {
+      "value": "rgb(42, 42, 58)",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "surfaceInkBlue",
+        "value": "#202830",
+        "distance": 14
+      },
+      "suggestedToken": null,
+      "samples": [
+        {
+          "path": "div[0]>div#rp-content.rp-content[0]>div.rules-note[4]",
+          "prop": "color"
+        },
+        {
+          "path": "div[0]>div#rp-content.rp-content[0]>div.rules-note[4]",
+          "prop": "border-top-color"
+        }
+      ]
+    }
+  ],
+  "fontSuggestions": [
+    {
+      "value": "NotoSansTC, \"PingFang TC\", \"Microsoft JhengHei\", sans-serif",
+      "occurrences": 28
+    },
+    {
+      "value": "Newsreader, NotoSansTC, \"Songti TC\", STSong, serif",
+      "occurrences": 1
+    },
+    {
+      "value": "Manrope, NotoSansTC, system-ui, sans-serif",
+      "occurrences": 19
+    },
+    {
+      "value": "Manrope, Newsreader, serif",
+      "occurrences": 8
+    }
+  ],
+  "spacingSuggestions": [
+    {
+      "occurrences": 28,
+      "prop": "font-size",
+      "value": "16px"
+    },
+    {
+      "occurrences": 1,
+      "prop": "font-size",
+      "value": "22px"
+    },
+    {
+      "occurrences": 1,
+      "prop": "letter-spacing",
+      "value": "1.76px"
+    },
+    {
+      "occurrences": 14,
+      "prop": "font-size",
+      "value": "9px"
+    },
+    {
+      "occurrences": 2,
+      "prop": "letter-spacing",
+      "value": "1.62px"
+    },
+    {
+      "occurrences": 1,
+      "prop": "letter-spacing",
+      "value": "1.08px"
+    },
+    {
+      "occurrences": 5,
+      "prop": "font-size",
+      "value": "10px"
+    },
+    {
+      "occurrences": 1,
+      "prop": "letter-spacing",
+      "value": "0.6px"
+    },
+    {
+      "occurrences": 1,
+      "prop": "font-size",
+      "value": "13px"
+    },
+    {
+      "occurrences": 6,
+      "prop": "letter-spacing",
+      "value": "0.54px"
+    },
+    {
+      "occurrences": 1,
+      "prop": "letter-spacing",
+      "value": "1.8px"
+    },
+    {
+      "occurrences": 4,
+      "prop": "letter-spacing",
+      "value": "1px"
+    },
+    {
+      "occurrences": 4,
+      "prop": "font-size",
+      "value": "12px"
+    },
+    {
+      "occurrences": 3,
+      "prop": "letter-spacing",
+      "value": "1.26px"
+    },
+    {
+      "occurrences": 3,
+      "prop": "font-size",
+      "value": "18px"
+    },
+    {
+      "occurrences": 1,
+      "prop": "letter-spacing",
+      "value": "0.72px"
+    }
+  ]
+}

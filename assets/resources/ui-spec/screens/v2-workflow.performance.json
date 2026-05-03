@@ -1,0 +1,47 @@
+{
+  "screenId": "v2-workflow",
+  "rendering": {
+    "nodeCount": 1,
+    "deferredNodeCount": 0,
+    "totalNodeCount": 1,
+    "maxDepth": 1,
+    "estimatedDrawCalls": 0,
+    "colorRectCount": 0
+  },
+  "loading": {
+    "atlasCount": 0,
+    "atlasLimit": 4,
+    "preloadSpriteCount": 0,
+    "deferredSpriteCount": 0,
+    "estimatedTextureBytes": 0,
+    "fontCount": 0
+  },
+  "lifecycle": {
+    "lazySlotCount": 0,
+    "warmupHints": {
+      "next-frame": 0,
+      "idle": 0,
+      "tab-hover": 0,
+      "manual": 0
+    }
+  },
+  "runtimeGate": {
+    "nodeCount": {
+      "value": 1,
+      "warning": 35,
+      "blocker": 60,
+      "status": "pass"
+    },
+    "maxDepth": {
+      "value": 1,
+      "warning": 8,
+      "blocker": 12,
+      "status": "pass"
+    }
+  },
+  "verdict": {
+    "level": "ok",
+    "warnings": [],
+    "blockers": []
+  }
+}

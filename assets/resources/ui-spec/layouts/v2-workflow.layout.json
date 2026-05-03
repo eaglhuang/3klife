@@ -1,0 +1,30 @@
+{
+  "id": "v2-workflow",
+  "version": 1,
+  "specVersion": 1,
+  "canvas": {
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "V2Workflow",
+    "widget": {
+      "top": 0,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "children": [],
+    "skinLayers": [
+      {
+        "layerId": "Stage",
+        "slotId": "auto.v2-workflow.stage",
+        "zOrder": 0,
+        "expand": false,
+        "width": 64,
+        "height": 64
+      }
+    ]
+  }
+}

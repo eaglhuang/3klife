@@ -1,0 +1,52 @@
+{
+  "screenId": "gacha-shop-ds3",
+  "rendering": {
+    "nodeCount": 397,
+    "deferredNodeCount": 0,
+    "totalNodeCount": 397,
+    "maxDepth": 11,
+    "estimatedDrawCalls": 3,
+    "colorRectCount": 0
+  },
+  "loading": {
+    "atlasCount": 0,
+    "atlasLimit": 4,
+    "preloadSpriteCount": 0,
+    "deferredSpriteCount": 0,
+    "estimatedTextureBytes": 0,
+    "fontCount": 3
+  },
+  "lifecycle": {
+    "lazySlotCount": 3,
+    "warmupHints": {
+      "next-frame": 0,
+      "idle": 0,
+      "tab-hover": 0,
+      "manual": 3
+    }
+  },
+  "runtimeGate": {
+    "nodeCount": {
+      "value": 397,
+      "warning": 35,
+      "blocker": 60,
+      "status": "fail"
+    },
+    "maxDepth": {
+      "value": 11,
+      "warning": 8,
+      "blocker": 12,
+      "status": "warn"
+    }
+  },
+  "verdict": {
+    "level": "blocker",
+    "warnings": [
+      "node-count-warning: 397 (>35)",
+      "max-depth-warning: 11 (>8)"
+    ],
+    "blockers": [
+      "node-count-blocker: 397 (>60)"
+    ]
+  }
+}

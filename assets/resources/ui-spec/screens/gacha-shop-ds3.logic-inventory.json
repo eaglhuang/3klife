@@ -1,0 +1,70 @@
+{
+  "screenId": "gacha-shop-ds3",
+  "generatedBy": "dom-to-ui-logic-guard",
+  "summary": {
+    "featureCount": 7,
+    "byKind": {
+      "bind-path": 4,
+      "lazy-slot-fragment": 3
+    }
+  },
+  "features": [
+    {
+      "featureId": "bind-path:gacha-shop-ds3.banner-hero-name",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_190/GachaShopDs3_div_193/GachaShopDs3_div_195",
+      "triggerNode": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_190/GachaShopDs3_div_193/GachaShopDs3_div_195",
+      "targetNode": "GachaShopDs3_div_195",
+      "ucufId": "gacha-shop-ds3.banner-hero-name",
+      "bindPath": "general.name",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "lazy-slot-fragment:GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_247/slot.story-strip",
+      "kind": "lazy-slot-fragment",
+      "sourceFile": null,
+      "nodePath": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_247/slot.story-strip",
+      "triggerNode": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_247/slot.story-strip",
+      "targetNode": "slot.story-strip",
+      "ucufId": null,
+      "defaultFragment": "fragments/layouts/gacha-shop-ds3-story-strip-collapsed",
+      "warmupHint": "manual",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "bind-path:GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_247/slot.story-strip",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_247/slot.story-strip",
+      "triggerNode": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_247/slot.story-strip",
+      "targetNode": "slot.story-strip",
+      "ucufId": null,
+      "bindPath": "tab.owner.stats",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "lazy-slot-fragment:GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_247/GachaShopDs3_div_260/slot.story-strip",
+      "kind": "lazy-slot-fragment",
+      "sourceFile": null,
+      "nodePath": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_247/GachaShopDs3_div_260/slot.story-strip",
+      "triggerNode": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_247/GachaShopDs3_div_260/slot.story-strip",
+      "targetNode": "slot.story-strip",
+      "ucufId": null,
+      "defaultFragment": "fragments/layouts/gacha-shop-ds3-story-strip-collapsed",
+      "warmupHint": "manual",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "bind-path:GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_247/GachaShopDs3_div_260/slot.story-strip",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_247/GachaShopDs3_div_260/slot.story-strip",
+      "triggerNode": "GachaShopDs3/GachaShopDs3_body/GachaShopDs3_div_174/GachaShopDs3_div_247/GachaShopDs3_div_260/slot.story-strip",
+      "targetNode": "slot.story-strip",
+      "ucufId": null,
+      "bindPath": "tab.owner.stats",
+      "autoSmoke": true
+    }
+  ]
+}

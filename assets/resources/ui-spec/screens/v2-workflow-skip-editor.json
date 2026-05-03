@@ -1,0 +1,10 @@
+{
+  "id": "v2-workflow-skip-editor",
+  "version": "1.0.0",
+  "uiId": "v2-workflow-skip-editor",
+  "layout": "v2-workflow-skip-editor",
+  "skin": "v2-workflow-skip-editor.skin",
+  "bundle": "ui_test",
+  "runtimeVersion": "v2worskiedi-20260502-001",
+  "runtimeVersionUpdatedAt": "2026-05-02T08:59:55.131Z"
+}

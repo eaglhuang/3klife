@@ -1,0 +1,10 @@
+{
+  "screenId": "v2-workflow-skip-editor",
+  "actions": [],
+  "warnings": [],
+  "summary": {
+    "actionCount": 0,
+    "missingTargetCount": 0,
+    "manualAdapterCount": 0
+  }
+}

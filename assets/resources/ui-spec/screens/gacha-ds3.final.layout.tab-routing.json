@@ -1,0 +1,27 @@
+{
+  "screenId": "gacha-ds3.final.layout",
+  "generatedAt": "2026-05-02T14:12:27.690Z",
+  "tabs": [
+    {
+      "id": "General",
+      "mount": "TabGeneralContent",
+      "mountSource": "synthetic-default",
+      "lifecycle": "lazy",
+      "childPanelClass": "GachaDs3GeneralChild"
+    },
+    {
+      "id": "Legendary",
+      "mount": "TabLegendaryContent",
+      "mountSource": "synthetic-default",
+      "lifecycle": "lazy",
+      "childPanelClass": "GachaDs3LegendaryChild"
+    },
+    {
+      "id": "Support",
+      "mount": "TabSupportContent",
+      "mountSource": "synthetic-default",
+      "lifecycle": "lazy",
+      "childPanelClass": "GachaDs3SupportChild"
+    }
+  ]
+}

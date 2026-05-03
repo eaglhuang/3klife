@@ -1,0 +1,52 @@
+{
+  "id": "v2-workflow.skin",
+  "version": 1,
+  "slots": {
+    "auto.v2-workflow.stage": {
+      "kind": "color-rect",
+      "color": "brandPrimary",
+      "opacity": 1
+    }
+  },
+  "bundles": [
+    "ui_test"
+  ],
+  "meta": {
+    "tokenUsageReport": {
+      "colors": [
+        {
+          "token": "brandPrimary",
+          "detail": "auto.v2-workflow.stage.color"
+        }
+      ],
+      "cssVars": [],
+      "spacing": [],
+      "typography": [],
+      "artWarnings": []
+    },
+    "tokenSources": {
+      "runtimePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "sourcePath": "C:\\Users\\User\\AppData\\Local\\Temp\\dom-to-ui-selftest-GvHiwF\\v2-source-package\\ui-design-tokens.json"
+    },
+    "tokenConflictReport": [
+      {
+        "section": "colors",
+        "token": "textPrimary",
+        "previousSource": "runtime",
+        "previousPath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+        "source": "source",
+        "path": "C:\\Users\\User\\AppData\\Local\\Temp\\dom-to-ui-selftest-GvHiwF\\v2-source-package\\ui-design-tokens.json",
+        "previousValue": "#E5E2E1",
+        "value": "#f8f8f8",
+        "chosenSource": "source"
+      }
+    ],
+    "atlasUsageReport": {
+      "atlases": [],
+      "atlasCount": 0,
+      "limit": 4,
+      "_warning": null
+    }
+  }
+}

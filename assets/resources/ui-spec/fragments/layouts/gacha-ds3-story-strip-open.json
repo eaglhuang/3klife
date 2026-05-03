@@ -1,0 +1,36 @@
+{
+  "type": "container",
+  "name": "GachaDs3StoryStripOpen",
+  "widget": {
+    "top": 0,
+    "bottom": 0,
+    "left": 0,
+    "right": 0
+  },
+  "children": [
+    {
+      "type": "container",
+      "name": "GachaDs3StoryStripOpenContent",
+      "layout": {
+        "type": "vertical",
+        "spacingY": 8,
+        "paddingTop": 12,
+        "paddingRight": 12,
+        "paddingBottom": 12,
+        "paddingLeft": 12
+      },
+      "children": [
+        {
+          "type": "label",
+          "name": "GachaDs3StoryStripTitle",
+          "text": "Story"
+        },
+        {
+          "type": "label",
+          "name": "GachaDs3StoryStripBody",
+          "text": "Tap history to inspect recent summon results."
+        }
+      ]
+    }
+  ]
+}

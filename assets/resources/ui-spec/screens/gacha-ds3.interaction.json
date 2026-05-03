@@ -1,0 +1,66 @@
+{
+  "screenId": "gacha-ds3",
+  "actions": [
+    {
+      "id": "btn-pool-prev.tab-switch",
+      "trigger": "BtnPoolPrev",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "pool-prev",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "pool-prev"
+      }
+    },
+    {
+      "id": "btn-pool-next.tab-switch",
+      "trigger": "BtnPoolNext",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "pool-next",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "pool-next"
+      }
+    },
+    {
+      "id": "pool-dot_general.tab-switch",
+      "trigger": "PoolDot_general",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "pool-panel-general",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "pool-panel-general"
+      }
+    },
+    {
+      "id": "pool-dot_legendary.tab-switch",
+      "trigger": "PoolDot_legendary",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "pool-panel-legendary",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "pool-panel-legendary"
+      }
+    },
+    {
+      "id": "pool-dot_support.tab-switch",
+      "trigger": "PoolDot_support",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "pool-panel-support",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "pool-panel-support"
+      }
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "actionCount": 5,
+    "missingTargetCount": 0,
+    "manualAdapterCount": 0
+  }
+}

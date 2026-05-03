@@ -1,0 +1,179 @@
+{
+  "screenId": "gacha-ds3-support",
+  "motionTokens": {
+    "instant": {
+      "durationMs": 80,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "fast": {
+      "durationMs": 120,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "standard": {
+      "durationMs": 180,
+      "easing": "quadOut",
+      "emphasis": "medium"
+    },
+    "slow": {
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "emphasis": "medium"
+    },
+    "emphasis": {
+      "durationMs": 360,
+      "easing": "backOut",
+      "emphasis": "high"
+    }
+  },
+  "motions": [
+    {
+      "id": "gacha-ds3support_div_1.transition",
+      "target": "GachaDs3Support_div_1",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3support_div_12.transition",
+      "target": "GachaDs3Support_div_12",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "width"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3support_div_20.transition",
+      "target": "GachaDs3Support_div_20",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "width"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3support_div_25.transition",
+      "target": "GachaDs3Support_div_25",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "width"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3support_div_30.transition",
+      "target": "GachaDs3Support_div_30",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "width"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3support_div_35.transition",
+      "target": "GachaDs3Support_div_35",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "width"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3support_div_40.transition",
+      "target": "GachaDs3Support_div_40",
+      "trigger": "state-change",
+      "preset": "custom-motion",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "width"
+      ],
+      "source": "css-transition"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "motion-token-missing",
+      "detail": "GachaDs3Support_div_12:500ms -> emphasis"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "GachaDs3Support_div_12:width"
+    },
+    {
+      "code": "motion-token-missing",
+      "detail": "GachaDs3Support_div_20:500ms -> emphasis"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "GachaDs3Support_div_20:width"
+    },
+    {
+      "code": "motion-token-missing",
+      "detail": "GachaDs3Support_div_25:500ms -> emphasis"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "GachaDs3Support_div_25:width"
+    },
+    {
+      "code": "motion-token-missing",
+      "detail": "GachaDs3Support_div_30:500ms -> emphasis"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "GachaDs3Support_div_30:width"
+    },
+    {
+      "code": "motion-token-missing",
+      "detail": "GachaDs3Support_div_35:500ms -> emphasis"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "GachaDs3Support_div_35:width"
+    },
+    {
+      "code": "motion-token-missing",
+      "detail": "GachaDs3Support_div_40:500ms -> emphasis"
+    },
+    {
+      "code": "motion-property-manual-review",
+      "detail": "GachaDs3Support_div_40:width"
+    }
+  ],
+  "summary": {
+    "motionCount": 7,
+    "tokenCount": 5,
+    "manualRewriteCount": 13
+  }
+}

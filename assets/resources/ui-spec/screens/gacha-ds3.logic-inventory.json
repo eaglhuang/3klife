@@ -1,0 +1,59 @@
+{
+  "screenId": "gacha-ds3",
+  "generatedBy": "dom-to-ui-logic-guard",
+  "summary": {
+    "featureCount": 4,
+    "byKind": {
+      "lazy-slot-fragment": 2,
+      "bind-path": 2
+    }
+  },
+  "features": [
+    {
+      "featureId": "lazy-slot-fragment:gacha-ds3.btn-history",
+      "kind": "lazy-slot-fragment",
+      "sourceFile": null,
+      "nodePath": "GachaDs3/GachaDs3_body/GachaDs3_div_87/slot.story-strip",
+      "triggerNode": "GachaDs3/GachaDs3_body/GachaDs3_div_87/slot.story-strip",
+      "targetNode": "slot.story-strip",
+      "ucufId": "gacha-ds3.btn-history",
+      "defaultFragment": "fragments/layouts/gacha-ds3-story-strip-collapsed",
+      "warmupHint": "manual",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "bind-path:gacha-ds3.btn-history",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "GachaDs3/GachaDs3_body/GachaDs3_div_87/slot.story-strip",
+      "triggerNode": "GachaDs3/GachaDs3_body/GachaDs3_div_87/slot.story-strip",
+      "targetNode": "slot.story-strip",
+      "ucufId": "gacha-ds3.btn-history",
+      "bindPath": "tab.owner.overview",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "lazy-slot-fragment:GachaDs3/GachaDs3_body/slot.story-strip",
+      "kind": "lazy-slot-fragment",
+      "sourceFile": null,
+      "nodePath": "GachaDs3/GachaDs3_body/slot.story-strip",
+      "triggerNode": "GachaDs3/GachaDs3_body/slot.story-strip",
+      "targetNode": "slot.story-strip",
+      "ucufId": null,
+      "defaultFragment": "fragments/layouts/gacha-ds3-story-strip-collapsed",
+      "warmupHint": "manual",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "bind-path:GachaDs3/GachaDs3_body/slot.story-strip",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "GachaDs3/GachaDs3_body/slot.story-strip",
+      "triggerNode": "GachaDs3/GachaDs3_body/slot.story-strip",
+      "targetNode": "slot.story-strip",
+      "ucufId": null,
+      "bindPath": "tab.owner.overview",
+      "autoSmoke": true
+    }
+  ]
+}

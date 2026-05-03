@@ -1,0 +1,11 @@
+{
+  "screenId": "gacha-ds3-general",
+  "lazySlots": [],
+  "tabRoutes": [],
+  "summary": {
+    "lazySlotCount": 0,
+    "tabRouteCount": 0,
+    "missingDefaultFragmentCount": 0,
+    "missingTabTargetCount": 0
+  }
+}

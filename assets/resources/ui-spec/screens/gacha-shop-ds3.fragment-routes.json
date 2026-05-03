@@ -1,0 +1,40 @@
+{
+  "screenId": "gacha-shop-ds3",
+  "lazySlots": [
+    {
+      "slot": "slot.story-strip",
+      "ucufId": null,
+      "defaultFragment": "fragments/layouts/gacha-shop-ds3-story-strip-collapsed",
+      "warmupHint": "manual",
+      "status": "ready"
+    },
+    {
+      "slot": "slot.story-strip",
+      "ucufId": null,
+      "defaultFragment": "fragments/layouts/gacha-shop-ds3-story-strip-collapsed",
+      "warmupHint": "manual",
+      "status": "ready"
+    },
+    {
+      "slot": "slot.story-strip",
+      "ucufId": null,
+      "defaultFragment": "fragments/layouts/gacha-shop-ds3-story-strip-collapsed",
+      "warmupHint": "manual",
+      "status": "ready"
+    }
+  ],
+  "tabRoutes": [
+    {
+      "trigger": "GachaShopDs3_div_202",
+      "target": "pool.next",
+      "interactionId": "gacha-shop-ds3_div_202.tab-switch",
+      "status": "ready"
+    }
+  ],
+  "summary": {
+    "lazySlotCount": 3,
+    "tabRouteCount": 1,
+    "missingDefaultFragmentCount": 0,
+    "missingTabTargetCount": 0
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "screenId": "gacha-ds3-legendary",
+  "currentBundle": null,
+  "distribution": [],
+  "suggestion": {
+    "primary": "ui_common",
+    "confidence": "low",
+    "reason": "no-sprite-frame-slots"
+  }
+}

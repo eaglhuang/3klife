@@ -1,0 +1,12 @@
+{
+  "screenId": "v2-workflow",
+  "layout": "v2-workflow",
+  "skin": "v2-workflow.skin",
+  "layoutRef": "../AppData/Local/Temp/dom-to-ui-selftest-GvHiwF/v2-workflow/v2-workflow.final.layout.json",
+  "skinRef": "../AppData/Local/Temp/dom-to-ui-selftest-GvHiwF/v2-workflow/v2-workflow.final.skin.json",
+  "meta": {
+    "scaffoldHints": {
+      "useUCUFLogger": true
+    }
+  }
+}

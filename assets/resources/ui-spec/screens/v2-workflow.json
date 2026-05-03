@@ -1,0 +1,10 @@
+{
+  "id": "v2-workflow",
+  "version": "1.0.0",
+  "uiId": "v2-workflow",
+  "layout": "v2-workflow",
+  "skin": "v2-workflow.skin",
+  "bundle": "ui_test",
+  "runtimeVersion": "v2wor-20260502-001",
+  "runtimeVersionUpdatedAt": "2026-05-02T08:59:46.760Z"
+}

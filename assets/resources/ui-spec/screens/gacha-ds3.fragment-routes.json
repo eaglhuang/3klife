@@ -1,0 +1,57 @@
+{
+  "screenId": "gacha-ds3",
+  "lazySlots": [
+    {
+      "slot": "slot.story-strip",
+      "ucufId": "gacha-ds3.btn-history",
+      "defaultFragment": "fragments/layouts/gacha-ds3-story-strip-collapsed",
+      "warmupHint": "manual",
+      "status": "ready"
+    },
+    {
+      "slot": "slot.story-strip",
+      "ucufId": null,
+      "defaultFragment": "fragments/layouts/gacha-ds3-story-strip-collapsed",
+      "warmupHint": "manual",
+      "status": "ready"
+    }
+  ],
+  "tabRoutes": [
+    {
+      "trigger": "BtnPoolPrev",
+      "target": "pool-prev",
+      "interactionId": "btn-pool-prev.tab-switch",
+      "status": "ready"
+    },
+    {
+      "trigger": "BtnPoolNext",
+      "target": "pool-next",
+      "interactionId": "btn-pool-next.tab-switch",
+      "status": "ready"
+    },
+    {
+      "trigger": "PoolDot_general",
+      "target": "pool-panel-general",
+      "interactionId": "pool-dot_general.tab-switch",
+      "status": "ready"
+    },
+    {
+      "trigger": "PoolDot_legendary",
+      "target": "pool-panel-legendary",
+      "interactionId": "pool-dot_legendary.tab-switch",
+      "status": "ready"
+    },
+    {
+      "trigger": "PoolDot_support",
+      "target": "pool-panel-support",
+      "interactionId": "pool-dot_support.tab-switch",
+      "status": "ready"
+    }
+  ],
+  "summary": {
+    "lazySlotCount": 2,
+    "tabRouteCount": 5,
+    "missingDefaultFragmentCount": 0,
+    "missingTabTargetCount": 0
+  }
+}
