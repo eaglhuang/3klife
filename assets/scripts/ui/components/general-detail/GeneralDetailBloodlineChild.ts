@@ -16,7 +16,7 @@ import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { GeneralConfig } from '../../../core/models/GeneralUnit';
 import { mask, formatGene } from './GeneralDetailFormatters';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
-import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 
 export class GeneralDetailBloodlineChild extends ChildPanelBase {
     override dataSource = 'config';

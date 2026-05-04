@@ -1,4 +1,15 @@
 {
-  "_comment": "battle/normal-deploy fixture — 請填寫輸入資料",
-  "input": {}
+  "output": {
+    "entrySource": "lobby",
+    "encounterId": "encounter-001",
+    "playerGeneralId": "general-zhangfei",
+    "enemyGeneralId": "general-lvbu",
+    "weather": "clear",
+    "battleTactic": "normal",
+    "selectedCardIds": ["card-001", "card-002"],
+    "playerEquipment": [],
+    "enemyEquipment": [],
+    "backgroundId": "bg-plains-day",
+    "isValid": true
+  }
 }

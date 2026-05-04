@@ -20,7 +20,7 @@ import { SceneManager } from "./SceneManager";
 import { GameManager } from "./GameManager";
 import { UIManager } from "./UIManager";
 import { UISpecLoader } from "../../ui/core/UISpecLoader";
-import { UCUFLogger, LogCategory } from "../../ui/core/UCUFLogger";
+import { UCUFLogger, LogCategory } from "../utils/UCUFLogger";
 import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
 
 export class ServiceLoader {

@@ -19,7 +19,7 @@ import type { ICompositeRenderer } from './interfaces/ICompositeRenderer';
 import type { IScrollVirtualizer } from './interfaces/IScrollVirtualizer';
 import type { AssetRefType } from './AssetRegistryEntry';
 import type { I18nSystem, LocaleCode } from '../../core/systems/I18nSystem';
-import { UCUFLogger, LogCategory } from './UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 
 /**
  * 動態資源登記 callback（M6）。

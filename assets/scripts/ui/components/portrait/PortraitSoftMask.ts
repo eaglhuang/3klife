@@ -1,5 +1,5 @@
 import { EffectAsset, Material, Node, resources, Sprite, UITransform, Vec4 } from 'cc';
-import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 
 const PORTRAIT_SOFT_MASK_EFFECT_PATH = 'effects/portrait-soft-mask';
 const DEFAULT_MASK_RECT = new Vec4(-0.06, 0.00, 0.99, 1.06);

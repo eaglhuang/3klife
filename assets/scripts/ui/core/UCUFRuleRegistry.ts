@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from './UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → docs/UCUF規範文件.md §3  (UCUF M11)
 /**
  * UCUFRuleRegistry — 動態規則注冊器

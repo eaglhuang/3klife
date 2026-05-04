@@ -34,7 +34,7 @@ import { applyUIPreviewBinderState, type UIPreviewBinderState } from '../core/UI
 import { applyUIScreenRuntimeState } from '../core/UIScreenRuntimeStateRegistry';
 import { LocalGachaService } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
-import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { GachaFlowCoordinator, GACHA_SCREEN_ID, GACHA_PULL_RESULT_SCREEN_ID } from '../core/GachaFlowCoordinator';
 import { showGachaError, refreshCurrencyDisplay, attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay } from '../dev/GachaDevOverlay';
 

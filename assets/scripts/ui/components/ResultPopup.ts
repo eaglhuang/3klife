@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * ResultPopup — 戰鬥結果彈出層

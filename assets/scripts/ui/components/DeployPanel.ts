@@ -52,7 +52,7 @@ import { UI_EVENTS } from "../core/UIEvents";
 import { TallyCardData } from "../../shared/TallyCardContract";
 import type { ToastOptions } from "./ToastMessage";
 import { emitDeployDragDebug, shouldLogDeployDragMove } from "./DeployDragDebug";
-import { UCUFLogger, LogLevel } from '../core/UCUFLogger';
+import { UCUFLogger, LogLevel } from '../../core/utils/UCUFLogger';
 
 const { ccclass, property } = _decorator;
 

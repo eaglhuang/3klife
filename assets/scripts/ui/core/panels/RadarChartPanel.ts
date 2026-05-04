@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md  (UCUF M3)
 /**
  * RadarChartPanel

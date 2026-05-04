@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { Animation, Node, Vec3 } from "cc";
 import { StatusEffect, EVENT_NAMES } from "../config/Constants";

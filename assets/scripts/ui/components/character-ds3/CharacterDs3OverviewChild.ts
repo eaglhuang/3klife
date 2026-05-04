@@ -1,6 +1,6 @@
 import { Color, Node, Sprite, UITransform } from 'cc';
 import { ChildPanelBase } from '../../core/ChildPanelBase';
-import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import type { GeneralDetailOverviewContentState } from '../GeneralDetailOverviewMapper';
 
 type Ds3StatKey = 'str' | 'lea' | 'cha' | 'int' | 'pol' | 'luk';

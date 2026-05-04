@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../../../ui/core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import {
     _decorator, Component, Node, Material, Mesh, Color,

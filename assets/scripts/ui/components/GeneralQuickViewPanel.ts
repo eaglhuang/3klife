@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * GeneralQuickViewPanel — 主將屬性戰法快覽彈窗 (v3-5)

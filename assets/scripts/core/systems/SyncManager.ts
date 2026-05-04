@@ -4,7 +4,7 @@ import { NetworkService, EVENT_NETWORK_ONLINE } from './NetworkService';
 import type { ActionRecord, SyncRequest, SyncResponse } from '../../../../shared/protocols';
 import { IndexedDbAdapter } from '../storage/IndexedDbAdapter';
 import { DataStorageAdapter } from '../storage/DataStorageAdapter';
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 
 interface SyncLocalMeta {
     currentSeq: number;

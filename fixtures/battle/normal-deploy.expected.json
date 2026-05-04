@@ -1,6 +1,17 @@
 {
-  "_comment": "battle/normal-deploy 預期輸出 — 由人類或強 LLM 審核後填寫，再跑 approved-fixture-check.js 驗證",
-  "_blessed_by": "",
-  "_blessed_at": "2026-05-03T17:10:22.360Z",
-  "output": {}
+  "_blessed_by": "ClaudeCode_claude-sonnet-4-6",
+  "_blessed_at": "2026-05-04T00:00:00.000Z",
+  "output": {
+    "entrySource": "lobby",
+    "encounterId": "encounter-001",
+    "playerGeneralId": "general-zhangfei",
+    "enemyGeneralId": "general-lvbu",
+    "weather": "clear",
+    "battleTactic": "normal",
+    "selectedCardIds": ["card-001", "card-002"],
+    "playerEquipment": [],
+    "enemyEquipment": [],
+    "backgroundId": "bg-plains-day",
+    "isValid": true
+  }
 }

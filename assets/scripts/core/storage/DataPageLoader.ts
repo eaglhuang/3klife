@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 import { JsonAsset, resources } from 'cc';
 import { DataCatalog } from './DataCatalog';
 import { DataStorageAdapter, StorageQueryFilter } from './DataStorageAdapter';

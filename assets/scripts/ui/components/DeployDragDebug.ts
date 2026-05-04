@@ -9,7 +9,7 @@
  *
  * Unity 對照：Conditional("BATTLE_DRAG_DEBUG") + Debug.Log。
  */
-import { UCUFLogger, LogCategory, LogLevel } from '../core/UCUFLogger';
+import { UCUFLogger, LogCategory, LogLevel } from '../../core/utils/UCUFLogger';
 
 /**
  * 輸出拖曳 debug 訊息（DEBUG 級別 / DRAG 分類）。

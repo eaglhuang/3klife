@@ -1,6 +1,6 @@
 import { sys } from 'cc';
 import type { GeneralConfig } from '../models/GeneralUnit';
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 
 const STORAGE_KEY = 'ucuf.player-roster';
 

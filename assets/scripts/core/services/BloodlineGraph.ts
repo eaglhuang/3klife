@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 /**
  * BloodlineGraph.ts
  * 

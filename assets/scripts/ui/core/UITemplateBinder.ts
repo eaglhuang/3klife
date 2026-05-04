@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from './UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 /**
  * UITemplateBinder — 自動節點綁定器
  *

@@ -3,7 +3,7 @@ import {
     emitDeployDragDebug,
     shouldLogDeployDragMove,
 } from '../assets/scripts/ui/components/DeployDragDebug';
-import { UCUFLogger, LogLevel } from '../assets/scripts/ui/core/UCUFLogger';
+import { UCUFLogger, LogLevel } from '../assets/scripts/core/utils/UCUFLogger';
 
 /** 暫時覆蓋 console.log 並收集輸出，結束後還原。 */
 function captureConsoleLog(fn: () => void): string[] {

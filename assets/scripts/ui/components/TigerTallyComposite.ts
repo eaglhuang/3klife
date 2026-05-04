@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md (UCUF Wave 3)
 /**
  * TigerTallyComposite — 虎符卡片區（Composite 版）

@@ -1,6 +1,6 @@
 // @spec-source → 見 docs/cross-reference-index.md
 // M5：全面委託 UCUFLogger 輸出，保留原 static API 不變以維持向後相容。
-import { UCUFLogger, LogCategory } from './UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 
 /**
  * UIPreviewDiagnostics

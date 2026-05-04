@@ -1,0 +1,14 @@
+{
+  "_blessed_by": "ClaudeCode_claude-sonnet-4-6",
+  "_blessed_at": "2026-05-04T00:00:00.000Z",
+  "output": {
+    "uid": "general-001",
+    "name": "張飛",
+    "rarityTier": "rare",
+    "characterCategory": "military",
+    "epScore": 75,
+    "maxStat": 88,
+    "avg5": 72,
+    "recomputeStatus": "pass"
+  }
+}

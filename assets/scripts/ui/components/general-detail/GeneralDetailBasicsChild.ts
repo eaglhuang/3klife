@@ -12,7 +12,7 @@ import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { GeneralConfig } from '../../../core/models/GeneralUnit';
 import { mask, formatFaction, formatRole, formatStatus } from './GeneralDetailFormatters';
-import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 
 export class GeneralDetailBasicsChild extends ChildPanelBase {
     override dataSource = 'config';

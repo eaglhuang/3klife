@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { _decorator, Button, Color, ImageAsset, Label, Node, Rect, ScrollView, Sprite, SpriteFrame, Texture2D } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';

@@ -5,14 +5,15 @@ priority: P3
 phase: G
 created: 2026-05-04
 created_by_agent: compute-gate-sensor
-owner: Agent
-status: pending
+owner: ClaudeCode_claude-sonnet-4-6
+status: done
 type: system
 chain_id: HARN-CHAIN-FIXTURES
 chain_step: 1/1
 sensor_triggered_by: compute-gate approved-fixture-check
 depends:
   []
+notes: "2026-05-04 | 狀態: done | ClaudeCode_claude-sonnet-4-6: 建立 5 套 Approved Fixtures（battle/normal-deploy、battle-skill/normal-damage、general-balance/ep-recompute-basic、ui-skin/token-resolve-basic、crossref/basic-integrity），approved-fixture-check.js 全部通過（5/5）。"
 ---
 
 # [HARN-FIX-0001] 建立核心系統 Approved Fixtures

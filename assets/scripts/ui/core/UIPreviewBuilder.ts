@@ -24,7 +24,7 @@ import { UIPreviewShadowManager } from './_pending-delete/UIPreviewShadowManager
 import { UIPreviewNodeFactory } from './UIPreviewNodeFactory';
 import { UIPreviewLayoutBuilder } from './UIPreviewLayoutBuilder';
 import { UITemplateBinder } from './UITemplateBinder';
-import { UCUFLogger, LogCategory } from './UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { CssClipPathMask } from './CssClipPathMask';
 
 const { ccclass } = _decorator;

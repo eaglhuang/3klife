@@ -28,7 +28,7 @@ import { UILayoutNodeSpec, TabRoute, TransitionDef } from './UISpecTypes';
 import { services }           from '../../core/managers/ServiceLoader';
 import type { ICompositeRenderer } from './interfaces/ICompositeRenderer';
 import type { IScrollVirtualizer } from './interfaces/IScrollVirtualizer';
-import { UCUFLogger, LogCategory } from './UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import type { AssetRefType } from './AssetRegistryEntry';
 import { UINodePool } from './UINodePool';
 import { EventSystem } from '../../core/systems/EventSystem';

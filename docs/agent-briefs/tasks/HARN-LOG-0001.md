@@ -5,14 +5,15 @@ priority: P2
 phase: G
 created: 2026-05-04
 created_by_agent: compute-gate-sensor
-owner: Agent
-status: pending
+owner: ClaudeCode_claude-sonnet-4-6
+status: done
 type: system
 chain_id: HARN-CHAIN-CONSOLE-LOG
 chain_step: 1/4
 sensor_triggered_by: compute-gate check-eslint-rules RULE-01
 depends:
   []
+notes: "2026-05-04 | 狀態: done | ClaudeCode_claude-sonnet-4-6: eslint-rules 閘門驗證通過，battle 模組 RULE-01 違規已清零（由前序工作完成）。"
 ---
 
 # [HARN-LOG-0001] 遷移裸 console.log → UCUFLogger（Battle 模組）

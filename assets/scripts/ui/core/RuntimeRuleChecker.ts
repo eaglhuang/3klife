@@ -23,7 +23,7 @@
  */
 
 import type { Node } from 'cc';
-import { UCUFLogger, LogCategory, LogLevel } from './UCUFLogger';
+import { UCUFLogger, LogCategory, LogLevel } from '../../core/utils/UCUFLogger';
 import type { UCUFRuleRegistry } from './UCUFRuleRegistry';
 
 // ─── 結果型別 ──────────────────────────────────────────────────────────────────

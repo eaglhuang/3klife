@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { sys } from 'cc';
 import { EventSystem } from './EventSystem';

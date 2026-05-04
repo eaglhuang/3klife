@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { AudioClip, AudioSource, Node, tween } from "cc";
 

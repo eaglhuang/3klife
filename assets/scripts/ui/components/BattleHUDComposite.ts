@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md  (UCUF M12)
 /**
  * BattleHUDComposite — 戰鬥 HUD（CompositePanel 版）

@@ -17,7 +17,7 @@ import type { NpcDialogueKeywordSelection, NpcDialogueLocale, NpcDialogueModelPr
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
-import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 
 const { ccclass } = _decorator;
 

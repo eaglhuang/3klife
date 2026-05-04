@@ -6,7 +6,7 @@
 // Wire this into the CompositePanel's _switchToTab routing table.
 
 import { ChildPanelBase } from '../../core/ChildPanelBase';
-import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 
 export class CharacterDs3BloodlineChild extends ChildPanelBase {
     override dataSource = 'config';

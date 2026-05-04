@@ -2,7 +2,7 @@ import { Node } from 'cc';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
-import { UCUFLogger, LogCategory } from './UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { showGachaHistory, showGachaResults } from '../dev/GachaDevOverlay';
 
 const DEFAULT_GEMS_COST_PER_PULL = 100;

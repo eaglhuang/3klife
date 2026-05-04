@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md (UCUF Wave 2)
 /**
  * UnitInfoComposite — 從左側滑入的兵種詳細資訊面板（CompositePanel 版）

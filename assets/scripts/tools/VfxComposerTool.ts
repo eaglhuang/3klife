@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../ui/core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * VfxComposerTool — 特效積木組合器 (在遊戲畫面中運行的 VFX 可視化工具)

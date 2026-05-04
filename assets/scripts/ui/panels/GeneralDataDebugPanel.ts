@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → DC-7-0002 | 資料中心架構規格書.md §5 M7
 import { _decorator, Button, Component, EditBox, instantiate, JsonAsset, Label, Node, resources, ScrollView } from 'cc';
 import { DEV } from 'cc/env';

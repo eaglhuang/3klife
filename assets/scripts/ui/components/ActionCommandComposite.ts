@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md (UCUF Wave 2)
 /**
  * ActionCommandComposite — Zone 7: 奧義指令區（CompositePanel 版）

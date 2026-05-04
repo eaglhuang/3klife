@@ -12,7 +12,7 @@ import type { UISkinResolver } from '../../core/UISkinResolver';
 import type { UITemplateBinder } from '../../core/UITemplateBinder';
 import type { GeneralConfig, GeneralStatsConfig } from '../../../core/models/GeneralUnit';
 import { resolveStat } from './GeneralDetailFormatters';
-import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
 
 type StatKey = keyof GeneralStatsConfig;

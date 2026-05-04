@@ -19,7 +19,7 @@ import {
     SKILL_DISPLAY_NAME,
 } from './GeneralDetailFormatters';
 import { services } from '../../../core/managers/ServiceLoader';
-import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { buildIdMap } from '../../../shared/SkillRuntimeContract';
 import type {
     JsonListEnvelope,

@@ -4,7 +4,7 @@ import { SolidBackground } from '../../components/SolidBackground';
 import type { GeneralConfig, GeneralStatsConfig } from '../../../core/models/GeneralUnit';
 import type { RadarChartConfig } from '../../core/interfaces/ICompositeRenderer';
 import { resolveStat } from '../general-detail/GeneralDetailFormatters';
-import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 import { services } from '../../../core/managers/ServiceLoader';
 
 type StatKey = keyof GeneralStatsConfig;

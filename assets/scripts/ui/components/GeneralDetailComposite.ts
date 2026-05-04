@@ -23,7 +23,7 @@ import { CharacterDs3EquipChild } from './character-ds3/CharacterDs3EquipChild';
 import { CharacterDs3AptitudeChild } from './character-ds3/CharacterDs3AptitudeChild';
 import { CharacterDs3OverviewChild } from './character-ds3/CharacterDs3OverviewChild';
 import { applyPortraitSoftMask, fitPortraitSpriteToLogicalFrame, getOrCreatePortraitArtworkSprite } from './portrait/PortraitSoftMask';
-import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { CocosCompositeRenderer } from '../platform/cocos/CocosCompositeRenderer';
 import { UIVariantRouter } from '../core/UIVariantRouter';
 import type { SpiritFamilyOverviewOpenPayload } from '../core/SpiritFamilyOverviewRoute';

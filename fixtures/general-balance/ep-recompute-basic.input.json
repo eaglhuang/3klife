@@ -1,0 +1,12 @@
+{
+  "output": {
+    "uid": "general-001",
+    "name": "張飛",
+    "rarityTier": "rare",
+    "characterCategory": "military",
+    "epScore": 75,
+    "maxStat": 88,
+    "avg5": 72,
+    "recomputeStatus": "pass"
+  }
+}

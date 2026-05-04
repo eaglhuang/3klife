@@ -7,7 +7,7 @@
  */
 
 import { TestSuite, assert } from '../TestRunner';
-import { UCUFLogger, LogLevel, LogCategory } from '../../assets/scripts/ui/core/UCUFLogger';
+import { UCUFLogger, LogLevel, LogCategory } from '../../assets/scripts/core/utils/UCUFLogger';
 
 export function createUCUFLoggerSuite(): TestSuite {
     const suite = new TestSuite('UCUF-UCUFLogger');

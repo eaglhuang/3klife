@@ -1,0 +1,12 @@
+{
+  "output": {
+    "baseDamage": 100,
+    "modifiedDamage": 120,
+    "damageType": "physical",
+    "isCritical": false,
+    "attackerGeneralId": "general-zhangfei",
+    "targetGeneralId": "general-lvbu",
+    "remainingHp": 880,
+    "totalHp": 1000
+  }
+}

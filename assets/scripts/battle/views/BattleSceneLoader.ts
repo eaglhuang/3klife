@@ -9,7 +9,7 @@ import { assetManager, AudioClip } from "cc";
 import { services } from "../../core/managers/ServiceLoader";
 import { GeneralUnit, GeneralConfig } from "../../core/models/GeneralUnit";
 import { Faction, TroopType, TROOP_DEPLOY_COST, Weather, BattleTactic } from "../../core/config/Constants";
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 
 import { VFX_BLOCK_REGISTRY } from '../../core/config/vfx-block-registry';
 import { TerrainGrid } from "../../shared/CommonEnums";

@@ -2,7 +2,7 @@
 // 2026-04-28 (M16 階段 1)：對齊 ChildPanelBase 抽象 signature；內容待 B 路線階段 4 補完（技：戰法習得清單）。
 
 import { ChildPanelBase } from '../../core/ChildPanelBase';
-import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
 
 export class CharacterDs3TacticsChild extends ChildPanelBase {
     override dataSource = 'config';

@@ -1,0 +1,11 @@
+{
+  "_blessed_by": "ClaudeCode_claude-sonnet-4-6",
+  "_blessed_at": "2026-05-04T00:00:00.000Z",
+  "output": {
+    "token": "color.primary.bg",
+    "resolvedValue": "#1a2d4e",
+    "theme": "dark",
+    "family": "battle-hud",
+    "fallbackUsed": false
+  }
+}

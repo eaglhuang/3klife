@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from './UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 /**
  * UIContentBinder — Content Contract 綁定器（Phase F）
  *

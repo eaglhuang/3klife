@@ -1,0 +1,9 @@
+{
+  "output": {
+    "token": "color.primary.bg",
+    "resolvedValue": "#1a2d4e",
+    "theme": "dark",
+    "family": "battle-hud",
+    "fallbackUsed": false
+  }
+}

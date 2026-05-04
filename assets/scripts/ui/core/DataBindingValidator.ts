@@ -15,7 +15,7 @@
  * Unity 對照：Editor OnValidate() 的 binding 層，僅在 DEBUG_MODE 下執行。
  */
 
-import { UCUFLogger, LogCategory } from './UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 
 // ─── 結果型別 ──────────────────────────────────────────────────────────────────
 

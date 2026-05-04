@@ -1,4 +1,4 @@
-import { UCUFLogger, LogCategory } from './UCUFLogger';
+import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * UISpecLoader — 三層 JSON 契約的載入器

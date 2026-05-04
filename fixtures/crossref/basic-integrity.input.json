@@ -1,0 +1,8 @@
+{
+  "output": {
+    "totalRefs": 12,
+    "brokenRefs": 0,
+    "modules": ["battle", "ui", "core", "shared"],
+    "integrity": "pass"
+  }
+}
