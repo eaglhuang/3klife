@@ -173,28 +173,61 @@ export class UIPreviewLayoutBuilder {
         const parentTransform = root.getComponent(UITransform);
         if (!parentTransform) return;
 
+        const hasOutOfFlowChildren = root.children.some(child => this._isOutOfFlowLayoutChild(child));
         const flowChildren = root.children
-            .filter(child => child.active && child.getComponent(UITransform))
+            .filter(child => this._isFlowLayoutChild(child))
             .map(child => ({ node: child, transform: child.getComponent(UITransform)! }));
         if (flowChildren.length === 0) return;
 
         const bounds = this._contentBounds(parentTransform, layoutDef);
-        if (layoutDef.justifyContent) {
-            this._applyMainAxisDistribution(layout, layoutDef, flowChildren, bounds);
+        if (layoutDef.justifyContent || hasOutOfFlowChildren) {
+            this._applyMainAxisDistribution(layout, layoutDef, flowChildren, bounds, hasOutOfFlowChildren);
         }
         if (layoutDef.alignItems) {
             this._applyCrossAxisAlignment(layout, layoutDef, flowChildren, bounds);
         }
 
-        const isButtonLike = !!root.getComponent(Button);
-        const needsCustomFreeze = isButtonLike && (
-            (layoutDef.justifyContent && layoutDef.justifyContent !== 'start')
-            || (layoutDef.alignItems && layoutDef.alignItems !== 'start')
-        );
+        const needsCustomFreeze = this._needsCustomLayoutFreeze(root, layoutDef, hasOutOfFlowChildren);
         if (needsCustomFreeze) {
             layout.enabled = false;
             (root as any).__ucufLayoutFrozen = true;
         }
+    }
+
+    private _isFlowLayoutChild(child: Node): boolean {
+        if (!child.active || child.name.startsWith('skinLayer_')) return false;
+        if (!child.getComponent(UITransform)) return false;
+        return !this._isOutOfFlowLayoutChild(child);
+    }
+
+    private _isOutOfFlowLayoutChild(child: Node): boolean {
+        const widget = child.getComponent(Widget);
+        if (!widget) return false;
+        return !this._isSyntheticFillWidget(widget);
+    }
+
+    private _isSyntheticFillWidget(widget: Widget): boolean {
+        return widget.isAlignTop === true
+            && widget.isAlignBottom === true
+            && widget.isAlignLeft === true
+            && widget.isAlignRight === true
+            && widget.top === 0
+            && widget.bottom === 0
+            && widget.left === 0
+            && widget.right === 0
+            && widget.isAlignHorizontalCenter !== true
+            && widget.isAlignVerticalCenter !== true;
+    }
+
+    private _needsCustomLayoutFreeze(
+        root: Node,
+        layoutDef: UILayoutNodeSpec['layout'],
+        hasOutOfFlowChildren: boolean,
+    ): boolean {
+        const hasCustomMainAxis = !!layoutDef?.justifyContent && layoutDef.justifyContent !== 'start';
+        const hasCustomCrossAxis = !!layoutDef?.alignItems && layoutDef.alignItems !== 'start';
+        if (hasOutOfFlowChildren || hasCustomMainAxis) return true;
+        return !!root.getComponent(Button) && hasCustomCrossAxis;
     }
 
     private _contentBounds(transform: UITransform, layoutDef: UILayoutNodeSpec['layout']): { left: number; right: number; top: number; bottom: number; width: number; height: number } {
@@ -261,9 +294,10 @@ export class UIPreviewLayoutBuilder {
         layoutDef: UILayoutNodeSpec['layout'],
         flowChildren: Array<{ node: Node; transform: UITransform }>,
         bounds: { left: number; right: number; top: number; bottom: number; width: number; height: number },
+        force = false,
     ): void {
-        const justify = layoutDef?.justifyContent;
-        if (!justify || justify === 'start') return;
+        const justify = layoutDef?.justifyContent ?? 'start';
+        if (!force && justify === 'start') return;
         if (layout.type === Layout.Type.HORIZONTAL) {
             this._distributeHorizontal(layoutDef, flowChildren, bounds, justify);
         } else if (layout.type === Layout.Type.VERTICAL) {

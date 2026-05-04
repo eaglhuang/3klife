@@ -10,6 +10,7 @@
  *   node tools_node/capture-ui-screens.js --target Gacha --outDir artifacts/ui-qa/UI-2-0023
  *   node tools_node/capture-ui-screens.js --browser "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe"
  *   node tools_node/capture-ui-screens.js --target CharacterDs3 --viewport 1920x1128 --maxWidth 0
+ *   node tools_node/capture-ui-screens.js --formal-screen-id gacha-ds3 --viewport 1920x1080
  */
 
 const fs = require('fs');
@@ -120,6 +121,21 @@ function buildFormalTarget(screenId, explicitId) {
 
 function sha256File(filePath) {
     return 'sha256:' + crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
+}
+
+function readPngSize(filePath) {
+    try {
+        const buffer = fs.readFileSync(filePath);
+        if (buffer.length < 24) return null;
+        const signature = buffer.subarray(0, 8).toString('hex');
+        if (signature !== '89504e470d0a1a0a') return null;
+        return {
+            width: buffer.readUInt32BE(16),
+            height: buffer.readUInt32BE(20),
+        };
+    } catch {
+        return null;
+    }
 }
 
 function buildRuntimeSpecHashes(screenId) {
@@ -300,10 +316,13 @@ function summarizeBodyText(bodyText) {
 /**
  * 這是 capture 階段的安全縮圖，不等於最終 view_image 讀圖尺寸。
  * 使用 PowerShell System.Drawing，不需要額外 npm 依賴。
- * maxWidth=0 代表跳過縮圖；capture 端預設仍可用 512px，但實際讀圖時仍應回到 `125 -> 250 -> 500` 的 progressive zoom 規則。
+ * maxWidth=0 代表跳過縮圖；formal-html-to-ucuf 截圖會強制保留 full-size，避免污染 95% gate。
  */
 function resizePng(filePath, maxWidth) {
-    if (!maxWidth || maxWidth <= 0) return;
+    if (!maxWidth || maxWidth <= 0) {
+        return { attempted: false, resized: false, maxWidth: 0 };
+    }
+    const before = readPngSize(filePath);
     const fp = filePath.replace(/'/g, "''"); // escape single quotes for PS string
     const ps = [
         'Add-Type -AssemblyName System.Drawing',
@@ -323,10 +342,219 @@ function resizePng(filePath, maxWidth) {
     ].join('\n');
     try {
         execSync('powershell -NoProfile -NonInteractive -Command -', { input: ps, timeout: 15000 });
-        console.log(`[capture-ui-screens] resized to max ${maxWidth}px wide: ${path.basename(filePath)}`);
+        const after = readPngSize(filePath);
+        const resized = Boolean(before && after && (before.width !== after.width || before.height !== after.height));
+        if (resized) {
+            console.log(`[capture-ui-screens] resized to max ${maxWidth}px wide: ${path.basename(filePath)}`);
+        }
+        return { attempted: true, resized, maxWidth, before, after };
     } catch (err) {
         console.warn(`[capture-ui-screens] resize failed (non-fatal): ${err.message}`);
+        return { attempted: true, resized: false, failed: true, maxWidth, before, error: err.message };
     }
+}
+
+function isFormalCaptureTarget(target) {
+    return target && target.captureMode === 'formal-html-to-ucuf';
+}
+
+function resolveEffectiveMaxWidth(target, requestedMaxWidth) {
+    if (isFormalCaptureTarget(target)) {
+        if (requestedMaxWidth > 0) {
+            console.warn(`[capture-ui-screens] ${target.id} is formal-html-to-ucuf; ignoring --maxWidth ${requestedMaxWidth} and keeping full-size output.`);
+        }
+        return 0;
+    }
+    return requestedMaxWidth;
+}
+
+async function collectBrowserViewportDiagnostics(page) {
+    return page.evaluate(() => {
+        const rectOf = (element) => {
+            if (!element || !element.getBoundingClientRect) return null;
+            const rect = element.getBoundingClientRect();
+            return {
+                x: Math.round(rect.x * 1000) / 1000,
+                y: Math.round(rect.y * 1000) / 1000,
+                width: Math.round(rect.width * 1000) / 1000,
+                height: Math.round(rect.height * 1000) / 1000,
+                top: Math.round(rect.top * 1000) / 1000,
+                left: Math.round(rect.left * 1000) / 1000,
+                right: Math.round(rect.right * 1000) / 1000,
+                bottom: Math.round(rect.bottom * 1000) / 1000,
+            };
+        };
+        const canvasEl = document.querySelector('canvas');
+        const gameDiv = document.querySelector('#GameDiv');
+        const cocosContainer = document.querySelector('#Cocos3dGameContainer');
+        const styleOf = (element) => {
+            if (!element) return null;
+            const style = window.getComputedStyle(element);
+            return {
+                width: style.width,
+                height: style.height,
+                transform: style.transform,
+                transformOrigin: style.transformOrigin,
+                position: style.position,
+            };
+        };
+        const canvasRect = rectOf(canvasEl || gameDiv);
+        return {
+            window: {
+                innerWidth: window.innerWidth,
+                innerHeight: window.innerHeight,
+                devicePixelRatio: window.devicePixelRatio,
+            },
+            canvasRect,
+            gameDivRect: rectOf(gameDiv),
+            cocosContainerRect: rectOf(cocosContainer),
+            gameDivStyle: styleOf(gameDiv),
+            canvasStyle: styleOf(canvasEl),
+            toolbarHeight: canvasRect ? Math.max(0, Math.round(canvasRect.top)) : 30,
+        };
+    });
+}
+
+async function collectRuntimeGeometry(page) {
+    return page.evaluate(() => {
+        const cc = window.cc;
+        const scene = cc?.director?.getScene?.();
+        const watchNames = [
+            'Canvas',
+            'UIScreenPreviewHost',
+            '__safeArea',
+            'GachaDs3',
+            'GachaDs3_body',
+            'GachaDs3_div_1',
+            'RightPanel',
+            'GachaDs3_div_35',
+            'GachaDs3_div_38',
+            'GachaDs3_div_43',
+            'GachaDs3_div_48',
+        ];
+        if (!scene || !cc) {
+            return { ok: false, reason: 'scene-or-cc-unavailable', watchNames };
+        }
+
+        const round = (value) => {
+            const number = Number(value);
+            return Number.isFinite(number) ? Math.round(number * 1000) / 1000 : null;
+        };
+        const find = (name, root = scene) => {
+            if (!root) return null;
+            if (root.name === name) return root;
+            for (const child of root.children || []) {
+                const found = find(name, child);
+                if (found) return found;
+            }
+            return null;
+        };
+        const vec = (value) => value ? { x: round(value.x), y: round(value.y), z: round(value.z) } : null;
+        const size = (value) => value ? { width: round(value.width), height: round(value.height) } : null;
+        const readWidget = (node) => {
+            try {
+                const widget = node.getComponent && node.getComponent('cc.Widget');
+                if (!widget) return null;
+                return {
+                    enabled: Boolean(widget.enabled),
+                    alignMode: widget.alignMode ?? null,
+                    isAlignTop: Boolean(widget.isAlignTop),
+                    isAlignBottom: Boolean(widget.isAlignBottom),
+                    isAlignLeft: Boolean(widget.isAlignLeft),
+                    isAlignRight: Boolean(widget.isAlignRight),
+                    top: round(widget.top),
+                    bottom: round(widget.bottom),
+                    left: round(widget.left),
+                    right: round(widget.right),
+                };
+            } catch {
+                return null;
+            }
+        };
+        const readNode = (name) => {
+            const node = find(name);
+            if (!node) return { exists: false };
+            const transform = node.getComponent && node.getComponent('cc.UITransform');
+            const width = transform ? round(transform.width) : null;
+            const height = transform ? round(transform.height) : null;
+            const anchorX = transform ? round(transform.anchorX) : null;
+            const anchorY = transform ? round(transform.anchorY) : null;
+            let worldTopLeft = null;
+            let worldBottomRight = null;
+            try {
+                if (transform && typeof transform.convertToWorldSpaceAR === 'function' && cc.Vec3 && width != null && height != null) {
+                    worldTopLeft = vec(transform.convertToWorldSpaceAR(new cc.Vec3(-anchorX * width, (1 - anchorY) * height, 0)));
+                    worldBottomRight = vec(transform.convertToWorldSpaceAR(new cc.Vec3((1 - anchorX) * width, -anchorY * height, 0)));
+                }
+            } catch {
+                worldTopLeft = null;
+                worldBottomRight = null;
+            }
+            return {
+                exists: true,
+                name: node.name,
+                active: Boolean(node.active),
+                activeInHierarchy: Boolean(node.activeInHierarchy ?? node.active),
+                parent: node.parent ? node.parent.name : null,
+                position: vec(node.position),
+                worldPosition: vec(node.worldPosition),
+                size: { width, height },
+                anchor: { x: anchorX, y: anchorY },
+                widget: readWidget(node),
+                worldTopLeft,
+                worldBottomRight,
+            };
+        };
+
+        const nodes = {};
+        for (const name of watchNames) nodes[name] = readNode(name);
+        return {
+            ok: true,
+            sceneName: scene.name || null,
+            designResolution: cc.view?.getDesignResolutionSize ? size(cc.view.getDesignResolutionSize()) : null,
+            visibleSize: cc.view?.getVisibleSize ? size(cc.view.getVisibleSize()) : null,
+            frameSize: cc.view?.getFrameSize ? size(cc.view.getFrameSize()) : null,
+            viewScale: {
+                x: round(cc.view?._scaleX),
+                y: round(cc.view?._scaleY),
+            },
+            watchNames,
+            nodes,
+        };
+    });
+}
+
+function buildCaptureProtocol(target, args) {
+    const finalCompareViolations = [];
+    if (isFormalCaptureTarget(target)) {
+        if (args.effectiveMaxWidth > 0) {
+            finalCompareViolations.push(`formal capture was resized with maxWidth=${args.effectiveMaxWidth}`);
+        }
+        if (!args.finalImageSize) {
+            finalCompareViolations.push('unable to read final PNG dimensions');
+        } else if (args.finalImageSize.width !== args.viewport.width || args.finalImageSize.height !== args.viewport.height) {
+            finalCompareViolations.push(`final PNG dimensions ${args.finalImageSize.width}x${args.finalImageSize.height} do not match viewport ${args.viewport.width}x${args.viewport.height}`);
+        }
+    }
+    return {
+        captureMode: target.captureMode || 'legacy-preview-target',
+        finalCompareIntent: isFormalCaptureTarget(target) ? 'formal-html-to-ucuf' : 'debug-preview',
+        finalCompareEligible: isFormalCaptureTarget(target) ? finalCompareViolations.length === 0 : false,
+        finalCompareViolations,
+        viewport: {
+            width: args.viewport.width,
+            height: args.viewport.height,
+            deviceScaleFactor: args.viewport.deviceScaleFactor || 1,
+        },
+        requestedMaxWidth: args.requestedMaxWidth,
+        effectiveMaxWidth: args.effectiveMaxWidth,
+        resize: args.resizeResult,
+        screenshotClip: args.screenshotClip || null,
+        toolbarHeight: args.toolbarHeight,
+        imageSizeAfterScreenshot: args.imageSizeAfterScreenshot,
+        finalImageSize: args.finalImageSize,
+        browserViewport: args.browserViewport,
+    };
 }
 
 function isRetryableCaptureError(error, debugState) {
@@ -800,15 +1028,9 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
             require('fs').writeFileSync('artifacts/dump.json', JSON.stringify(dump, null, 2));
         }
 
-        // 量測 Cocos Editor 工具列高度，裁切後僅保留遊戲畫布區域
-        const toolbarHeight = await page.evaluate(() => {
-            const canvasEl = document.querySelector('canvas') || document.querySelector('#GameDiv');
-            if (canvasEl) {
-                const rect = canvasEl.getBoundingClientRect();
-                return Math.max(0, Math.round(rect.top));
-            }
-            return 30;
-        });
+        const browserViewport = await collectBrowserViewportDiagnostics(page);
+        const runtimeGeometry = await collectRuntimeGeometry(page);
+        const toolbarHeight = browserViewport?.toolbarHeight ?? 30;
         const vp = page.viewport() || { width: 1920, height: 1080 };
         const clip = toolbarHeight > 0
             ? { x: 0, y: toolbarHeight, width: vp.width, height: vp.height - toolbarHeight }
@@ -819,8 +1041,21 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
             20000,
             `${target.id} page.screenshot`,
         );
+        const imageSizeAfterScreenshot = readPngSize(filePath);
         console.log(`[capture-ui-screens] ${target.id} screenshot written`);
-        return { filePath, page, diagnostics, runtimeGuard, uiVersion: target.uiVersion || null, captureState };
+        return {
+            filePath,
+            page,
+            diagnostics,
+            runtimeGuard,
+            uiVersion: target.uiVersion || null,
+            captureState,
+            browserViewport,
+            runtimeGeometry,
+            screenshotClip: clip || null,
+            toolbarHeight,
+            imageSizeAfterScreenshot,
+        };
     } catch (error) {
         error.diagnostics = diagnostics;
         error.page = page;
@@ -937,7 +1172,25 @@ async function main() {
                 try {
                     console.log(`[capture-ui-screens] ${target.id} attempt ${attempt}/${retries + 1}`);
                     captureResult = await captureOne(browser, baseUrl, outDir, target, timeoutMs, sceneUuid);
-                    resizePng(captureResult.filePath, maxWidth);
+                    const effectiveMaxWidth = resolveEffectiveMaxWidth(target, maxWidth);
+                    const resizeResult = resizePng(captureResult.filePath, effectiveMaxWidth);
+                    const finalImageSize = readPngSize(captureResult.filePath);
+                    const vp = captureResult.browserViewport?.window || viewport;
+                    const captureProtocol = buildCaptureProtocol(target, {
+                        viewport: {
+                            width: viewport.width,
+                            height: viewport.height,
+                            deviceScaleFactor: vp.devicePixelRatio || 1,
+                        },
+                        requestedMaxWidth: maxWidth,
+                        effectiveMaxWidth,
+                        resizeResult,
+                        screenshotClip: captureResult.screenshotClip,
+                        toolbarHeight: captureResult.toolbarHeight,
+                        imageSizeAfterScreenshot: captureResult.imageSizeAfterScreenshot,
+                        finalImageSize,
+                        browserViewport: captureResult.browserViewport,
+                    });
                     const diagnosticsSummary = summarizeDiagnostics(captureResult.diagnostics);
                     const diagnosticSamples = collectDiagnosticSamples(captureResult.diagnostics);
                     const runtimeGuardFailures = Array.isArray(captureResult.runtimeGuard?.failures)
@@ -961,6 +1214,8 @@ async function main() {
                         runtimeVersion: target.uiVersion || null,
                         runtimeSpecHash: buildRuntimeSpecHashes(target.runtimeScreenId || target.screenId),
                         screenshotHash,
+                        captureProtocol,
+                        runtimeGeometry: captureResult.runtimeGeometry ?? null,
                         file: captureResult.filePath,
                         diagnosticsSummary,
                         diagnosticSamples,
@@ -976,6 +1231,7 @@ async function main() {
                         runtimeGuard: captureResult.runtimeGuard ?? null,
                         captureArtifacts: {
                             screenshotPath: relativeFile,
+                            captureProtocol,
                         },
                         factoryLearnings: status === 'pass'
                             ? ['runtime capture connected to capture-ui-screens.js']

@@ -13,6 +13,7 @@ Plan5 接在 `docs/html_skill_plan4.md` 之後，專門處理「HTML source 到 
 - Browser HTML-to-UCUF preview：`adjustedCoverage ~= 0.9799`，表示 source-to-generated-preview 的幾何與基本覆蓋已接近通過。
 - Cocos Editor final gate：baseline `adjustedScore ~= 0.5567`；`PROG-2-0005` Slice #2 後 fresh final compare 提升到 `adjustedScore ~= 0.6206`，仍低於 `0.95` threshold。
 - Capture authority：`expectedScreenId == actualScreenId == gacha-ds3`，本輪不是舊 `GachaMain` route mismatch。
+- 2026-05-04 新 implementation cut：`PROG-2-0009` 先補 formal capture/compare protocol guard。正式 capture 必須 full-size，report 必須含 PNG dimensions、viewport、Canvas/GameDiv rect、Cocos runtimeGeometry；compare 若遇到 resized 或尺寸不符截圖，必須輸出 capture-protocol blocker，不得宣稱 `adjustedScore`。
 - 現行矛盾：final gate fail 時，流程仍可能出現 `visualFidelityRisk.status=pass` 且 `nextFixes=[]`；這表示診斷契約不足，而不只是某個畫面沒調好。
 
 ## Plan4 未完成且仍必要的項目
@@ -65,11 +66,11 @@ Plan5 接在 `docs/html_skill_plan4.md` 之後，專門處理「HTML source 到 
 | `PROG-2-0002` | **done** | 舊規則與衝突流程審計 | 產出 `docs/html-to-ucuf-plan5-stale-rule-audit.md`；7 項盤點，無未分類 blocker |
 | `PROG-2-0003` | **done** | final gate 診斷契約 | low-score blocker 已落地；下一步需把 `nextFixes` 從 H2U-P5-003 自身升級為 source DOM / UCUF slot / runtime owner 對應 |
 | `PROG-2-0004` | open | CSS semantics extraction parity | selector/background/layout capability matrix；優先補 banner title-block chip wrapper、padding/border/radius 與 pseudo/dynamic DOM capability |
-| `PROG-2-0005` | **in-progress** | runtime renderer parity closure | repeating-gradient + logger blocker slice 已落地；本輪已把 gradient capability 邊界重新拆回 `linear/repeating-linear supported`、`radial blocker`，r5 workflow 已讓 `banner-bg-fill` 回到 bake-manifest 真相 |
+| `PROG-2-0005` | **in-progress** | runtime renderer parity closure | 0009 r2 已證明大框/底部按鈕 geometry 對齊；下一刀回到 `runtime-renderer background-image`，優先決定 radial background runtime parity fixture 或 manual-art-asset |
 | `PROG-2-0006` | open | generated spec authority hardening | raw/final/synced/runtime hash 與 update-mode/tab replay 防回退；formal summary 必須使用 full-size formal capture inputs，legacy product preview target 只能 diagnostic |
 | `PROG-2-0007` | open | 95% regression matrix | 至少三個 source package 的 browser + Cocos final gate summary |
 | `PROG-2-0008` | **done** | skill workflow rewrite | `rule-registry.json` 落地、registry-driven rule-guard、SKILL.md 改以 Plan5 為 current spec |
-| `PROG-2-0009` | **in-progress** | final diff owner mapper / residual taxonomy hardening | Slice #3 已把 trace matching 收緊並補 self-test；fresh `final-gate-tight` 證明 top residual 目前不是 bake-manifest-backed blur 區，下一步必須補 non-bake trace，而不是再放寬 matching |
+| `PROG-2-0009` | **in-progress** | final diff owner mapper / residual taxonomy hardening | Slice #4 已落地：formal capture guard + runtimeGeometry + source-vs-Cocos geometry report；pull-bar absolute child flex 錯位已修，r2 最大主要 rect 誤差 0.5px |
 
 ## 執行順序
 
@@ -257,6 +258,25 @@ stale-rule audit 已確認大多數舊機制不是未分類 blocker；本輪需�
 - 因此 `0005` 的下一刀不應再用「hero-name glow」或「單純提高 gradient 解析度」做盲修；現在的正式起點應改成這批已重新 blocker 化的 `banner-bg-fill` radial 背景，再決定它們要走 runtime parity fixture 還是明確 `manual-art-asset` 路徑。
 
 **結論：`PROG-2-0005` 本輪已把「誤判為 supported 的 radial gradient」重新拉回 blocker 真相。下一個有效 slice 不再是盲修 blur 或 hero-name，而是針對 `banner-bg-fill` 這批已重回 bake-manifest 的 radial 背景，決定真正的 runtime parity 或 artization 路徑。**
+
+### PROG-2-0009 Capture/Geometry Slice #4（2026-05-04）
+
+- `tools_node/capture-ui-screens.js` 現在會在 `captureMode=formal-html-to-ucuf` 時忽略縮圖 `maxWidth`，保留 full-size PNG；這避免 view hygiene 的 125px 縮圖污染正式 95% gate。
+- capture report 新增 `captureProtocol`，記錄 `finalCompareEligible`、PNG 尺寸、viewport、deviceScaleFactor、toolbar/clip、Canvas/GameDiv rect 與 resize 結果；同時輸出 Cocos `runtimeGeometry`，包含 Canvas / `UIScreenPreviewHost` / gacha 大框與底部按鈕節點的 UITransform、Widget、world position。
+- `tools_node/compare-html-to-cocos-editor.js` 新增 capture protocol gate：formal report 若缺 metadata、被標為非 final-compare eligible、PNG 尺寸與 viewport 不符，或 `--editor-screenshot` 不是同尺寸 full-size 圖，就以 `H2U-P4-024` blocker 中止，不再產生可宣稱的 score。
+- 這一刀不是視覺微調；它是把「圖一與圖二的大色塊/框體/底部按鈕差距」先放進同一座標系量測。若 fresh runtimeGeometry 顯示 Cocos rect 偏離 source DOM rect，下一刀應先修 `UIScreenPreviewHost` 的 design-space wrapper；若 rect 已對齊，才回到 `PROG-2-0005` 的 radial 背景、shadow/glow、chip wrapper 等 renderer parity。
+
+**結論：Plan5 下一輪 evidence 必須同時帶 source DOM rect、full-size formal Cocos screenshot、captureProtocol 與 runtimeGeometry；沒有這些資料的低分 compare 只能當 debug，不可當 95% formal gate 判讀。**
+
+### PROG-2-0009 Capture/Geometry Slice #4 Result（2026-05-04）
+
+- fresh r1 formal capture：`artifacts/ui-qa/gacha-ds3-formal-geometry-20260504-r1/capture-report.json`，`finalCompareEligible=true`、PNG `1920x1080`、Canvas/GameDiv/visibleSize 均為 `1920x1080`。這排除縮圖污染、route mismatch、Preview host 整體 resolution drift。
+- r1 source-vs-Cocos geometry：`banner-stage`、`right-panel`、`pull-bar`、`pool-brief` 均在 1px 內，但 `.pull-btn.pull-single` / `.pull-btn.pull-ten` 對 Cocos `GachaDs3_div_43` / `GachaDs3_div_48` 有 `dx=-371.31px`。也就是按鈕尺寸正確、位置錯，且錯在 pull-bar flow。
+- 根因：source `.pull-bar-pool` 是 `position:absolute`，不參與 flex；Cocos Layout 先前把帶 Widget 的 child 納入 horizontal Layout flow，並且 custom `justifyContent:center` 未 freeze，導致後續按鈕從 padding 起點排列。
+- runtime 修補：`assets/scripts/ui/core/UIPreviewLayoutBuilder.ts` 現在會把非 fill Widget child 視為 CSS out-of-flow，不納入 main-axis distribution；遇到 out-of-flow 或 custom main-axis alignment 時 freeze Cocos Layout，避免下一輪 layout update 覆蓋自訂 flex 對齊。
+- fresh r2 formal evidence：`artifacts/skill-test-html-to-ucuf/gacha-ds3-formal-geometry-20260504-r2/source-vs-cocos-geometry.json` 顯示主要 rect 最大誤差 `0.5px`，兩顆 pull buttons 都回到 source DOM 座標；final compare 從約 `0.6206` 升到約 `0.6467`。
+
+**結論：使用者指出的底部大按鈕差距確實不是單純美術/色塊問題，而是 CSS absolute child + flex layout participation 的轉譯缺口。這個幾何根因已修正；剩餘低分仍大，下一輪應回到 `PROG-2-0005` 的 runtime-renderer background-image / radial assetization 邊界。**
 | formal capture image size | fix | `capture-ui-screens.js` 預設 `maxWidth=125` 可保留給 view hygiene；formal compare input 必須強制 full-size（例如 `--maxWidth 0`）或標為 invalid/debug |
 | P5 advisory rules | harden | `H2U-P5-006/007/008` 在 high-browser/low-Cocos case 至少要成為 mandatory evidence section；必要時升為 blocker |
 

@@ -429,6 +429,61 @@ function validateCaptureReportAuthority(args) {
     ));
   }
 
+  const captureProtocol = capture.captureProtocol && typeof capture.captureProtocol === 'object'
+    ? capture.captureProtocol
+    : null;
+  const editorSize = readPngSize(args.editorScreenshot);
+  if (capture.captureMode === 'formal-html-to-ucuf') {
+    if (!captureProtocol) {
+      violations.push(captureViolation(
+        'H2U-P4-024',
+        'formal capture report is missing captureProtocol metadata',
+        'Recapture with the updated capture-ui-screens.js so PNG dimensions, viewport, and resize eligibility are recorded.',
+      ));
+    } else {
+      if (captureProtocol.finalCompareEligible === false) {
+        const reasons = Array.isArray(captureProtocol.finalCompareViolations)
+          ? captureProtocol.finalCompareViolations.join('; ')
+          : 'capture protocol marked screenshot invalid for final compare';
+        violations.push(captureViolation(
+          'H2U-P4-024',
+          `formal screenshot is not final-compare eligible: ${reasons}`,
+          'Use a full-size formal capture at the declared viewport; do not compare resized debug screenshots.',
+        ));
+      }
+      const expectedViewport = normalizeCaptureViewport(captureProtocol.viewport);
+      const finalSize = normalizeImageSize(captureProtocol.finalImageSize || captureProtocol.imageSizeAfterScreenshot);
+      if (!expectedViewport) {
+        violations.push(captureViolation(
+          'H2U-P4-024',
+          'formal captureProtocol is missing viewport dimensions',
+          'Recapture with capture-ui-screens.js so compare can prove the screenshot coordinate space.',
+        ));
+      }
+      if (!finalSize) {
+        violations.push(captureViolation(
+          'H2U-P4-024',
+          'formal captureProtocol is missing final PNG dimensions',
+          'Recapture with capture-ui-screens.js so compare can reject resized debug screenshots.',
+        ));
+      }
+      if (expectedViewport && finalSize && (finalSize.width !== expectedViewport.width || finalSize.height !== expectedViewport.height)) {
+        violations.push(captureViolation(
+          'H2U-P4-024',
+          `formal capture dimensions ${finalSize.width}x${finalSize.height} do not match viewport ${expectedViewport.width}x${expectedViewport.height}`,
+          'Use --maxWidth 0 or the default formal capture path, then pass that full-size screenshot to compare.',
+        ));
+      }
+      if (expectedViewport && editorSize && (editorSize.width !== expectedViewport.width || editorSize.height !== expectedViewport.height)) {
+        violations.push(captureViolation(
+          'H2U-P4-024',
+          `--editor-screenshot dimensions ${editorSize.width}x${editorSize.height} do not match formal viewport ${expectedViewport.width}x${expectedViewport.height}`,
+          'Pass the full-size PNG emitted by the matching formal capture report.',
+        ));
+      }
+    }
+  }
+
   return {
     ok: violations.length === 0,
     path: reportPath,
@@ -445,6 +500,16 @@ function validateCaptureReportAuthority(args) {
       screenshotHash: capture.screenshotHash || null,
       editorScreenshotHash: editorHash,
       runtimeSpecHash: hashes,
+      captureProtocol: captureProtocol ? {
+        finalCompareEligible: captureProtocol.finalCompareEligible,
+        finalCompareViolations: captureProtocol.finalCompareViolations || [],
+        viewport: captureProtocol.viewport || null,
+        finalImageSize: captureProtocol.finalImageSize || null,
+        imageSizeAfterScreenshot: captureProtocol.imageSizeAfterScreenshot || null,
+        requestedMaxWidth: captureProtocol.requestedMaxWidth ?? null,
+        effectiveMaxWidth: captureProtocol.effectiveMaxWidth ?? null,
+      } : null,
+      editorImageSize: editorSize,
       ok: violations.length === 0,
       violations,
     },
@@ -669,6 +734,37 @@ function normalizeTraceRect(target) {
 
 function sha256File(filePath) {
   return 'sha256:' + crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
+}
+
+function readPngSize(filePath) {
+  try {
+    const buffer = fs.readFileSync(filePath);
+    if (buffer.length < 24) return null;
+    const signature = buffer.subarray(0, 8).toString('hex');
+    if (signature !== '89504e470d0a1a0a') return null;
+    return {
+      width: buffer.readUInt32BE(16),
+      height: buffer.readUInt32BE(20),
+    };
+  } catch {
+    return null;
+  }
+}
+
+function normalizeCaptureViewport(viewport) {
+  if (!viewport || typeof viewport !== 'object') return null;
+  const width = Number(viewport.width);
+  const height = Number(viewport.height);
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) return null;
+  return { width, height };
+}
+
+function normalizeImageSize(size) {
+  if (!size || typeof size !== 'object') return null;
+  const width = Number(size.width);
+  const height = Number(size.height);
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) return null;
+  return { width, height };
 }
 
 function sameResolvedPath(left, right) {
