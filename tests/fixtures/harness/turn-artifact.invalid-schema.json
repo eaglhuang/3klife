@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "turn-artifact/v1",
+  "kind": "artifact-turn",
+  "generatedAt": "not-a-date",
+  "workflow": "harness-upgrade",
+  "task": "pilot-turn-artifact",
+  "goal": "first harness artifact slice",
+  "source": {
+    "changed": false,
+    "explicitFiles": [
+      "tools_node/generate-context-summary.js"
+    ],
+    "maxFiles": 5
+  },
+  "totals": {
+    "files": 1,
+    "textFiles": 1,
+    "imageFiles": 0,
+    "otherFiles": 0,
+    "totalBytes": 8846,
+    "estTokens": 2226
+  },
+  "files": [
+    {
+      "path": "C:/Users/User/3KLife/tools_node/generate-context-summary.js",
+      "kind": "text",
+      "bytes": 8846,
+      "estTokens": 2226,
+      "inlineSafe": false,
+      "summary": "#!/usr/bin/env node"
+    }
+  ],
+  "summaryCard": {
+    "workflow": "harness-upgrade",
+    "task": "pilot-turn-artifact",
+    "goal": "first harness artifact slice",
+    "read": [
+      "tools_node/generate-context-summary.js"
+    ],
+    "known": [
+      "tools_node/generate-context-summary.js (2226 tok) | #!/usr/bin/env node"
+    ],
+    "need": [
+      "只補本輪必要決策，不重述背景"
+    ],
+    "avoid": [
+      "不要全文貼入 tools_node/generate-context-summary.js"
+    ]
+  },
+  "riskHints": [
+    "不要全文貼入 tools_node/generate-context-summary.js"
+  ],
+  "nextActions": [
+    "只補本輪必要決策，不重述背景"
+  ]
+}
