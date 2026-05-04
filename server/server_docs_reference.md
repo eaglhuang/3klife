@@ -28,3 +28,5 @@
 | `doc_server_service_0006` | service | server/npc-brain/文件/開發啟動與煙霧測試.md | 開發啟動與煙霧測試 |
 | `doc_server_service_0007` | service | server/npc-brain/文件/資料契約與 Cocos 串接.md | 資料契約與 Cocos 串接 |
 | `doc_server_service_0008` | service | server/npc-brain/文件/武將基本資料從0到1的誕生.md | 武將基本資料從0到1的誕生 |
+| `doc_server_service_0009` | service | server/npc-brain/文件/NPC行為決策流程.md | NPC 最終行為決策流程圖 |
+| `doc_server_service_0010` | service | server/npc-brain/文件/人物資料生產線簡報圖.md | 人物資料生產線簡報圖 |
