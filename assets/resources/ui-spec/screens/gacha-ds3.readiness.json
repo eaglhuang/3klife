@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "gacha-ds3",
-  "generatedAt": "2026-05-04T02:50:15.849Z",
+  "generatedAt": "2026-05-04T03:15:02.770Z",
   "verdict": "not-ready",
   "readinessScore": 0.958,
   "summary": {
@@ -29,8 +29,8 @@
       "pass": false,
       "workUnits": 1,
       "summary": "runtimeVsSource raw=0.4836 adjusted=0.4836 verdict=fail",
-      "rawScore": 0.48357831790123457,
-      "adjustedScore": 0.48357831790123457,
+      "rawScore": 0.4836159336419753,
+      "adjustedScore": 0.4836159336419753,
       "verdict": "fail"
     },
     "capture": {

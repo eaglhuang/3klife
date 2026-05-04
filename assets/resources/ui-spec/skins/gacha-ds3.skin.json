@@ -39,6 +39,7 @@
       ],
       "gradient": {
         "type": "radial",
+        "repeating": false,
         "angle": 180,
         "shape": "120% 80% at 40% 30%",
         "center": {
@@ -95,6 +96,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 90,
         "stops": [
           {
@@ -137,6 +139,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 0,
         "stops": [
           {
@@ -187,6 +190,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": true,
         "angle": 45,
         "stops": [
           {
@@ -297,6 +301,7 @@
       ],
       "gradient": {
         "type": "radial",
+        "repeating": false,
         "angle": 180,
         "shape": "120% 80% at 40% 30%",
         "center": {
@@ -353,6 +358,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 90,
         "stops": [
           {
@@ -395,6 +401,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 0,
         "stops": [
           {
@@ -445,6 +452,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": true,
         "angle": 45,
         "stops": [
           {
@@ -555,6 +563,7 @@
       ],
       "gradient": {
         "type": "radial",
+        "repeating": false,
         "angle": 180,
         "shape": "120% 80% at 40% 30%",
         "center": {
@@ -611,6 +620,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 90,
         "stops": [
           {
@@ -653,6 +663,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 0,
         "stops": [
           {
@@ -703,6 +714,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": true,
         "angle": 45,
         "stops": [
           {
@@ -803,6 +815,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 180,
         "stops": [
           {
@@ -950,6 +963,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 180,
         "stops": [
           {
@@ -992,6 +1006,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 0,
         "stops": [
           {
@@ -1069,6 +1084,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 180,
         "stops": [
           {
@@ -1160,6 +1176,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 180,
         "stops": [
           {
@@ -1305,6 +1322,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 180,
         "stops": [
           {
@@ -1437,6 +1455,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 90,
         "stops": [
           {
@@ -1881,6 +1900,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 90,
         "stops": [
           {
@@ -2368,6 +2388,7 @@
       ],
       "gradient": {
         "type": "linear",
+        "repeating": false,
         "angle": 90,
         "stops": [
           {
@@ -3235,6 +3256,6 @@
       "limit": 4,
       "_warning": null
     },
-    "perTabReplayMergedAt": "2026-05-04T02:49:59.587Z"
+    "perTabReplayMergedAt": "2026-05-04T03:14:45.818Z"
   }
 }
