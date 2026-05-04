@@ -1,5 +1,5 @@
 ---
-doc_id: doc_task_TBD
+doc_id: doc_task_0025
 id: HARN-LOG-0004
 priority: P2
 phase: G
@@ -13,7 +13,7 @@ chain_step: 4/4
 sensor_triggered_by: compute-gate check-eslint-rules RULE-01
 depends:
   - HARN-LOG-0003
-notes: "2026-05-04 | 狀態: done | ClaudeCode_claude-sonnet-4-6: eslint-rules 閘門驗證通過，UI 模組 + UCUFLogger 白名單全部處理完畢（由前序工作完成）。compute-gate --profile quick 全部通過。"
+notes: "2026-05-04 | 狀態: done | GitHubCopilot: 已將 assets/scripts/core/utils/UCUFLogger.ts 加入 check-eslint-rules RULE-01 白名單例外，check-eslint-rules 與 compute-gate --profile quick 已通過；任務卡與程式現況已對齊。"
 ---
 
 # [HARN-LOG-0004] 遷移裸 console.log → UCUFLogger（UI 模組 + UCUFLogger 自身）
@@ -109,3 +109,9 @@ if (rule.id === 'RULE-01' && filePath.includes('UCUFLogger.ts')) continue;
 
 ---
 *由 Harness Engineering compute-gate 感測器自動偵測開立 | 2026-05-04*
+
+## 審核結果（2026-05-04）
+
+- 審核結論：達成
+- 驗證證據：compute-gate --profile standard 已於本輪審核通過 6/6。 assets/scripts/core/utils/UCUFLogger.ts 已加入 RULE-01 白名單，check-eslint-rules 通過。
+- 需修改：無；白名單不得擴大到非 logger 檔。

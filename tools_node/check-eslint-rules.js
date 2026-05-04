@@ -116,6 +116,8 @@ function scanFile(filePath, rules) {
   for (const rule of rules) {
     // scope 過濾
     if (rule.scope === 'scripts-only' && !isScriptsFile) continue;
+    // UCUFLogger 本身是底層合法輸出點，RULE-01 不應把它視為違規來源
+    if (rule.id === 'RULE-01' && relPath === 'assets/scripts/core/utils/UCUFLogger.ts') continue;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
