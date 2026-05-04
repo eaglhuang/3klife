@@ -68,7 +68,7 @@
       "priority": "P0",
       "phase": "P",
       "owner": "Agent1",
-      "status": "open",
+      "status": "done",
       "created": "2026-04-06",
       "created_by_agent": "Agent1",
       "type": "data-structure",
@@ -87,7 +87,11 @@
         "assets/scripts/core/models/SupportCardBase.ts",
         "assets/resources/data/support-cards.json"
       ],
-      "notes": "2026-04-06 | 狀態: open | 來源: 程式規格書.md §3.2 | 阻塞: 無"
+      "notes": "2026-05-04 | 狀態: done | 驗證: pass | 變更: SupportCardBase.ts 建立（id/name/category/rarity/routeType/arrivalTime/rushPrice/effectTags/previewLine/portraitKey）; support-cards.json 5 筆初始資料（大喬/小喬/甄宓/黃月英/蔡文姬）; compute-gate 6/6 | 阻塞: none",
+      "started_at": "2026-05-04T16:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "completed_at": "2026-05-04T16:30:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-sonnet-4-6"
     },
     {
       "id": "PROG-1-0003",

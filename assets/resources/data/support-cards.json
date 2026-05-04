@@ -1,0 +1,62 @@
+[
+  {
+    "id": "da-qiao",
+    "name": "大喬",
+    "category": "beauty",
+    "rarity": "epic",
+    "routeType": "carriage",
+    "arrivalTime": 4,
+    "rushPrice": 600,
+    "effectTags": ["diplomacy-boost", "morale-aura", "wu-affinity"],
+    "previewLine": "江東二喬，名動天下，豈為尋常裝飾？",
+    "portraitKey": "portraits/support/da-qiao"
+  },
+  {
+    "id": "xiao-qiao",
+    "name": "小喬",
+    "category": "beauty",
+    "rarity": "legendary",
+    "routeType": "ship",
+    "arrivalTime": 3,
+    "rushPrice": 1200,
+    "effectTags": ["morale-boost", "sp-regen", "wu-affinity", "water-bonus"],
+    "previewLine": "東風不與周郎便，銅雀春深鎖二喬。",
+    "portraitKey": "portraits/support/xiao-qiao"
+  },
+  {
+    "id": "zhen-mi",
+    "name": "甄宓",
+    "category": "beauty",
+    "rarity": "legendary",
+    "routeType": "carriage",
+    "arrivalTime": 5,
+    "rushPrice": 1500,
+    "effectTags": ["intelligence-boost", "culture-output", "wei-affinity", "poem-inspiration"],
+    "previewLine": "翩若驚鴻，婉若游龍，文采風流，洛神之姿。",
+    "portraitKey": "portraits/support/zhen-mi"
+  },
+  {
+    "id": "huang-yueying",
+    "name": "黃月英",
+    "category": "advisor",
+    "rarity": "epic",
+    "routeType": "horse",
+    "arrivalTime": 3,
+    "rushPrice": 800,
+    "effectTags": ["tech-research", "stratagem-boost", "shu-affinity", "inventor"],
+    "previewLine": "孔明之智，半出夫人；木牛流馬，皆其所授。",
+    "portraitKey": "portraits/support/huang-yueying"
+  },
+  {
+    "id": "cai-wenji",
+    "name": "蔡文姬",
+    "category": "advisor",
+    "rarity": "rare",
+    "routeType": "escort",
+    "arrivalTime": 6,
+    "rushPrice": 400,
+    "effectTags": ["culture-output", "morale-recovery", "literary-record"],
+    "previewLine": "胡笳十八拍，音音皆是離人淚。",
+    "portraitKey": "portraits/support/cai-wenji"
+  }
+]
