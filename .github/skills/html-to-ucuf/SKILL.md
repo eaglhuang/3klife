@@ -2,7 +2,7 @@
 doc_id: doc_agentskill_0036
 name: html-to-ucuf
 description: "HTML -> UCUF (Cocos Creator UI) conversion skill. Use for turning a complete HTML source package with ui-design-tokens.json and colors_and_type.css into Cocos usable layout/skin/screen JSON, then validating with Plan 4.1 regression closure: rule guard, visual fidelity risk, runtime interaction smoke, and Cocos Editor screenshot final gate."
-argument-hint: "Formal runs need --source-dir, --main-html, --screen-id, --bundle, --editor-screenshot, and --capture-protocol. --input, --skip-editor-compare, --no-runtime-sync, and --no-per-tab-replay are debug only."
+argument-hint: "Formal runs need --source-dir, --main-html, --screen-id, --bundle, --editor-screenshot, --capture-protocol, and --capture-report. --input, --skip-editor-compare, --no-runtime-sync, and --no-per-tab-replay are debug only."
 ---
 
 # HTML-to-UCUF Skill
@@ -28,7 +28,8 @@ node tools_node/run-html-to-ucuf-workflow.js \
   --screen-id <screen-id> \
   --bundle <bundle> \
   --editor-screenshot <cocos-editor-screenshot.png> \
-  --capture-protocol <final-capture-protocol.json>
+  --capture-protocol <final-capture-protocol.json> \
+  --capture-report <capture-report.json>
 ```
 
 Required source package files:
@@ -45,7 +46,7 @@ Formal flow also requires:
 - Plan 4.1 rule guard pass.
 - runtime interaction smoke when interaction sidecars exist.
 - visual fidelity risk pass for semantic, background, and composite fidelity.
-- Cocos Editor final gate pass.
+- Cocos Editor final gate pass, using a formal capture report whose `actualScreenId` matches the converted `screenId`.
 
 ## Debug Only
 
@@ -57,6 +58,7 @@ These switches always mean `debugOnly=true` and cannot produce a formal pass ver
 - `--no-per-tab-replay`
 - `--editor-screenshot` without the formal source package
 - `--capture-protocol` without the formal source package
+- missing `--capture-report` or a capture report from a legacy product preview target
 
 ## Required Flow
 
@@ -70,8 +72,9 @@ These switches always mean `debugOnly=true` and cannot produce a formal pass ver
 8. Run Plan 4.1 rule guard.
 9. Run visual fidelity risk checks for semantic, background, and composite fidelity.
 10. Run runtime interaction smoke when interaction sidecars exist.
-11. Run HTML source vs Cocos Editor screenshot final gate.
-12. Write workflow summary with `debugOnly`, `ruleGuard`, `visualFidelityRisk`, `interactionRuntime`, `runtimeAuthority`, and `nextFixes`.
+11. Capture Cocos through the formal route: `node tools_node/capture-ui-screens.js --formal-screen-id <screen-id> --uiVersion <workflow-uiVersion> --maxWidth 0`.
+12. Run HTML source vs Cocos Editor screenshot final gate with `--capture-report`.
+13. Write workflow summary with `debugOnly`, `ruleGuard`, `visualFidelityRisk`, `interactionRuntime`, `runtimeAuthority`, `finalCapture`, and `nextFixes`.
 
 ## Non-Negotiable Rules
 
@@ -95,6 +98,10 @@ These switches always mean `debugOnly=true` and cannot produce a formal pass ver
 - `H2U-P4-018`: interaction sidecars must be executed in Preview runtime, not just synced as JSON.
 - `H2U-P4-019`: visual risk in primary zones blocks formal pass even when CSS coverage is high.
 - `H2U-P4-020`: formal runtime sync cannot use raw sidecar fallback to fake final authority.
+- `H2U-P4-021`: final capture `expectedScreenId` and `actualScreenId` must match the converted screen.
+- `H2U-P4-022`: final capture must include runtime version and runtime spec hashes.
+- `H2U-P4-023`: legacy product preview targets cannot be used as formal HTML-to-UCUF gates.
+- `H2U-P4-024`: source package resolver must support shared parent token/CSS roots.
 
 ## Validation Commands
 
@@ -104,7 +111,8 @@ node --check tools_node/render-html-tab-fragments.js
 node --check tools_node/validate-html-to-ucuf-rule-guard.js
 node tools_node/test/dom-to-ui-self-test.js --group html-to-ucuf-active-contract
 node tools_node/test/dom-to-ui-self-test.js --group html-to-ucuf-fidelity-contract
-node tools_node/validate-ui-specs.js --strict --rules tab-fragment-geometry-contract,composite-panel-tab-route-integrity,formal-skin-path,synced-runtime-path-freshness
+node tools_node/validate-ui-specs.js --strict --rules tab-fragment-geometry-contract,composite-panel-tab-route-integrity,formal-skin-path,synced-runtime-path-freshness,background-layer-preservation,formal-visual-risk-path,runtime-interaction-smoke-path
+node tools_node/validate-html-to-ucuf-rule-guard.js --strict --capture-report <capture-report.json> --expected-screen-id <screen-id>
 node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/html-to-ucuf-plan4-rule-guard.json
 ```
 
@@ -113,6 +121,7 @@ node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/
 - Do not resurrect Phase B tools as the main path. `generate-tab-childpanels.js`, `runtime-screen-diff.js`, and `cutover-screen-variant.js` are not the formal Plan 4 flow.
 - DS3 may be used as a fixture, but core converter/workflow/validator code must stay screen-agnostic.
 - If the score is low, keep testing the converted JSON from the current HTML source package. Do not switch to default skins or old runtime files to make the gate easier.
+- If final gate reports a low score, inspect `captureAuthority` first. A legacy `GachaMain`/product route mismatch is a blocker, not a converter fidelity result.
 - Keep `history-not-story`, `radial-slide-background`, and `interaction-carousel` style regressions as fixtures.
 - When adding logic to `draft-builder.js`, first attach it to the Plan 4 stage registry and add a self-test tag.
 - Add short Traditional Chinese comments at classifier, background fallback, runtime binding, and formal gate boundaries to explain why old fallback paths stay blocked.

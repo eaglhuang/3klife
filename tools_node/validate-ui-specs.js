@@ -136,6 +136,36 @@ function strictWarn(ruleId, message, warnings, exceptions) {
     warnings.push(`[${ruleId}] ${message}`);
 }
 
+function readJsonIfExists(filePath) {
+    try {
+        if (!filePath || !fs.existsSync(filePath)) return null;
+        return JSON.parse(fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, ''));
+    } catch (_) {
+        return null;
+    }
+}
+
+function normalizeInteractionKey(value) {
+    return String(value || '')
+        .trim()
+        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+        .replace(/[^a-z0-9]+/gi, '-')
+        .replace(/^-+|-+$/g, '')
+        .toLowerCase();
+}
+
+function collectLayoutNodeIndex(root) {
+    const out = new Map();
+    walkLayoutNodes(root, (node) => {
+        for (const key of [node.id, node.name]) {
+            if (typeof key === 'string' && key.trim().length > 0) {
+                out.set(key.trim(), node);
+            }
+        }
+    }, 0);
+    return out;
+}
+
 function walkLayoutNodes(node, callback, depth) {
     if (!node || typeof node !== 'object') return;
     callback(node, depth);
@@ -640,6 +670,120 @@ function validateLayoutStrict(layoutJson, filePath, allSkinSlots, failures, warn
     }
 }
 
+function validateSkinVisualFidelityStrict(skinJson, filePath, failures, warnings) {
+    const exceptions = (skinJson.validation && skinJson.validation.exceptions) || null;
+    if (!skinJson.slots || typeof skinJson.slots !== 'object') return;
+    for (const [slotId, slot] of Object.entries(skinJson.slots)) {
+        if (!slot || typeof slot !== 'object') continue;
+        const loc = `${relative(filePath)} - skin slot "${slotId}"`;
+        const risk = slot.unsupportedLayerRisk || slot.visualFidelityRisk;
+        if (risk) {
+            strictFail('formal-visual-risk-path',
+                `${loc} contains unresolved visual fidelity risk: ${risk.summary || risk.code || 'unsupported layer'}. ` +
+                `Fix: preserve backgroundLayers or assetize the unsupported layer before formal pass.`,
+                failures, exceptions);
+        }
+        if (Array.isArray(slot.backgroundLayers)) {
+            const unsupported = slot.backgroundLayers.find(layer => layer && (layer.unsupported === true || layer.unsupportedLayerRisk));
+            if (unsupported) {
+                strictFail('background-layer-preservation',
+                    `${loc} backgroundLayers contains unsupported layer. Fix: keep a renderable contract or mark formal blocker upstream.`,
+                    failures, exceptions);
+            }
+        }
+        const gradient = slot.gradient;
+        if (gradient && gradient.type === 'radial') {
+            const hasStops = Array.isArray(gradient.stops) && gradient.stops.length >= 2;
+            const hasCenter = gradient.center && Number.isFinite(gradient.center.x) && Number.isFinite(gradient.center.y);
+            const hasRadius = gradient.radius && (Number.isFinite(gradient.radius.x) || Number.isFinite(gradient.radius));
+            if (!hasStops || !hasCenter || !hasRadius) {
+                strictFail('background-layer-preservation',
+                    `${loc} radial gradient is missing stops/center/radius. Fix: emit full radial geometry or block formal pass.`,
+                    failures, exceptions);
+            }
+        }
+        if (gradient && gradient.type && !Array.isArray(slot.backgroundLayers)) {
+            strictWarn('background-layer-preservation',
+                `${loc} has gradient but no backgroundLayers[] contract; future Plan4 flows should keep source CSS layer order.`,
+                warnings, exceptions);
+        }
+    }
+}
+
+function validateRuntimeInteractionSmokePath(screenNode, screenFilePath, layoutJson, failures, warnings, exceptions, isPlan4Screen, screenBaseId) {
+    if (!isPlan4Screen || skipRules.has('runtime-interaction-smoke-path')) return;
+    const interactionPath = path.join(screenDir, `${screenBaseId}.interaction.json`);
+    const interaction = readJsonIfExists(interactionPath);
+    const actions = interaction && Array.isArray(interaction.actions) ? interaction.actions : [];
+    if (actions.length === 0) return;
+
+    const tabRoutingSidecar = readJsonIfExists(path.join(screenDir, `${screenBaseId}.tab-routing.json`));
+    const routeMap = new Map();
+    const addRoute = (key, route) => {
+        if (!key || !route || !route.slotId || !route.fragment) return;
+        routeMap.set(normalizeInteractionKey(key), { slotId: route.slotId, fragment: route.fragment });
+    };
+    if (screenNode.tabRouting && typeof screenNode.tabRouting === 'object') {
+        for (const [key, route] of Object.entries(screenNode.tabRouting)) addRoute(key, route);
+    }
+    if (tabRoutingSidecar && Array.isArray(tabRoutingSidecar.tabs)) {
+        for (const tab of tabRoutingSidecar.tabs) {
+            const slotId = tab && (tab.slotId || tab.mount);
+            addRoute(tab && (tab.id || tab.key), slotId && tab.fragment ? { slotId, fragment: tab.fragment } : null);
+        }
+    }
+
+    const nodeIndex = collectLayoutNodeIndex(layoutJson.root);
+    const lazySlots = new Set([...nodeIndex.values()].filter(node => node && node.lazySlot).map(node => node.name).filter(Boolean));
+    // Relative cycle navigation targets (pool-prev, pool-next, pool.next, etc.) don't need a static route entry.
+    // They are resolved at runtime by the pool cycling logic.
+    const RELATIVE_CYCLE_TARGET = /^pool[-.](prev|next|\d+)$|^(prev|next)$/;
+    // Count only tabSwitch actions for smoke validation; others (openPanel, closeModal, etc.) pass through.
+    const tabSwitchActions = actions.filter(a => a && a.type === 'tabSwitch');
+    let boundCount = 0;
+    const blockers = [];
+    for (const action of actions) {
+        const actionId = action && action.id || `${action && action.trigger || 'unknown'}.${action && action.type || 'action'}`;
+        const trigger = action && action.trigger || '';
+        const target = action && (action.target || action.smoke && action.smoke.expectActiveTab) || '';
+        if (!action || action.type !== 'tabSwitch') {
+            // Non-tabSwitch actions (openPanel, closeModal, etc.) don't need tab routing validation.
+            continue;
+        }
+        // Relative cycle targets (pool-prev, pool-next) are resolved at runtime; skip route check.
+        if (RELATIVE_CYCLE_TARGET.test(target)) {
+            boundCount += 1;
+            continue;
+        }
+        const route = routeMap.get(normalizeInteractionKey(target));
+        if (!nodeIndex.has(trigger)) {
+            blockers.push(`${actionId}: missing trigger "${trigger}"`);
+            continue;
+        }
+        if (!route) {
+            blockers.push(`${actionId}: missing tab route for "${target}"`);
+            continue;
+        }
+        if (lazySlots.size > 0 && !lazySlots.has(route.slotId)) {
+            blockers.push(`${actionId}: missing lazySlot "${route.slotId}"`);
+            continue;
+        }
+        const fragmentPath = path.join(uiSpecRoot, `${route.fragment}.json`);
+        if (!fs.existsSync(fragmentPath)) {
+            blockers.push(`${actionId}: missing fragment "${route.fragment}"`);
+            continue;
+        }
+        boundCount += 1;
+    }
+
+    if (blockers.length > 0 || boundCount !== tabSwitchActions.length) {
+        strictFail('runtime-interaction-smoke-path',
+            `${relative(screenFilePath)} - interaction sidecar cannot bind all tabSwitch actions (${boundCount}/${tabSwitchActions.length}). ` +
+            `Fix: sync final interaction/tab-routing sidecars and ensure triggers, slots, and fragments exist. ${blockers.join('; ')}`,
+            failures, exceptions);
+    }
+}
+
 function validateScreenStrict(screenNode, screenFilePath, layoutJsons, skinJsons, failures, warnings) {
     const rel = relative(screenFilePath);
     const exceptions = (screenNode.validation && screenNode.validation.exceptions) || null;
@@ -825,6 +969,8 @@ function validateScreenStrict(screenNode, screenFilePath, layoutJsons, skinJsons
             }
         }
     }
+
+    validateRuntimeInteractionSmokePath(screenNode, screenFilePath, layoutJson, failures, warnings, exceptions, isPlan4Screen, screenBaseId);
 }
 
 function assertNonEmptyString(value, label, filePath, failures) {
@@ -1080,6 +1226,7 @@ if (strictMode) {
     for (const [skinId, skinJson] of skinJsons) {
         const skinFilePath = skins.get(skinId);
         if (!skinFilePath || !skinJson.slots || typeof skinJson.slots !== 'object') continue;
+        validateSkinVisualFidelityStrict(skinJson, skinFilePath, failures, warnings);
         const atlasDirs = new Set();
         for (const slot of Object.values(skinJson.slots)) {
             const paths = [];

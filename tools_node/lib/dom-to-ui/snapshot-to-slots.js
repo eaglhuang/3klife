@@ -121,6 +121,25 @@ function parseGradient(s) {
     stopParts = parts.slice(1);
   }
 
+  // For radial gradients, derive center and radius from the CSS shape descriptor.
+  // e.g. "120% 80% at 40% 30%" → radius={x:1.2,y:0.8}, center={x:0.4,y:0.3}
+  // Also handles "ellipse 120% 80% at 50% 30%" and plain "circle".
+  let radius = null;
+  if (type === 'radial' && shape) {
+    const atMatch = shape.match(/at\s+([\d.]+)%\s+([\d.]+)%/i);
+    if (atMatch) {
+      center = { x: parseFloat(atMatch[1]) / 100, y: parseFloat(atMatch[2]) / 100 };
+    } else if (/circle|ellipse/i.test(shape)) {
+      center = { x: 0.5, y: 0.5 }; // CSS default center
+    }
+    const sizeMatch = shape.match(/([\d.]+)%\s+([\d.]+)%/);
+    if (sizeMatch) {
+      radius = { x: parseFloat(sizeMatch[1]) / 100, y: parseFloat(sizeMatch[2]) / 100 };
+    } else if (/^circle$/i.test(shape.trim())) {
+      radius = { x: 0.5 }; // CSS default radius for plain circle
+    }
+  }
+
   const stops = stopParts.map((p, i) => {
     const colorMatch = p.match(/^(rgba?\([^)]+\)|hsla?\([^)]+\)|#[0-9a-f]{3,8}|[a-z]+)/i);
     const color = colorMatch ? colorMatch[1] : '#000';
@@ -130,7 +149,7 @@ function parseGradient(s) {
     return { color, offset };
   });
 
-  return { type, repeating, angle, shape, center, stops };
+  return { type, repeating, angle, shape, center, radius, stops };
 }
 
 /**

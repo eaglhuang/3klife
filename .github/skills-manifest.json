@@ -3,10 +3,10 @@
   "_meta": {
     "description": "Central Skills Manifest — 所有 Agent Skill 的唯一索引",
     "version": 1,
-    "generated": "2026-04-10",
-    "totalSkills": 28,
-    "portableCount": 13,
-    "categories": ["debug", "ui-production", "asset-gen", "image-gen", "data-pipeline", "agent-workflow", "doc-management"]
+    "generated": "2026-05-04",
+    "totalSkills": 29,
+    "portableCount": 14,
+    "categories": ["debug", "ui-production", "asset-gen", "image-gen", "data-pipeline", "agent-workflow", "doc-management", "harness"]
   },
   "skills": [
     {
@@ -352,6 +352,18 @@
       "depends": ["doc-shard-manager", "encoding-touched-guard"],
       "applyTo": "docs/cross-ref/**,docs/cross-reference-index.md,tools_node/rebuild-crossref.js",
       "tags": ["docs", "crossref", "progress", "cleanup"]
+    },
+    {
+      "id": "compute-gate",
+      "version": "1.0.0",
+      "category": "harness",
+      "portable": true,
+      "description": "Harness Engineering 計算型閘門 — 執行確定性驗證感測器組（TS語法/ESLint/模組邊界/UI規格/Fixture比對），產生 Agent 友善的自動修正提示。",
+      "locations": [".github/skills/compute-gate"],
+      "primaryLocation": ".github/skills/compute-gate",
+      "depends": [],
+      "applyTo": "**",
+      "tags": ["harness", "gate", "validation", "computational", "sensor"]
     }
   ],
   "mirrors": [

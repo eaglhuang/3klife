@@ -33,6 +33,7 @@ function runRuleGuard(options) {
 
   const workflowSummary = loadWorkflowSummary(opts);
   const sourceHtml = loadSourceHtml(opts, workflowSummary);
+  const captureReport = loadCaptureReport(opts, workflowSummary);
 
   if (opts.scanCore !== false) {
     scanCoreSource(repoRoot, violations);
@@ -42,6 +43,12 @@ function runRuleGuard(options) {
   if (workflowSummary) {
     validateWorkflowSummary(repoRoot, workflowSummary, sourceHtml, violations, warnings);
     validateRadarGeometryFromSummary(repoRoot, workflowSummary, violations);
+  }
+  if (captureReport) {
+    validateCaptureReportArtifact(captureReport, {
+      expectedScreenId: opts.expectedScreenId || workflowSummary && workflowSummary.screenId || '',
+      violations,
+    });
   }
   if (opts.layout) {
     validateRadarGeometryInFile(repoRoot, path.resolve(opts.layout), violations);
@@ -79,6 +86,19 @@ function loadSourceHtml(opts, workflowSummary) {
     || (workflowSummary && workflowSummary.input ? path.resolve(opts.repoRoot || process.cwd(), workflowSummary.input) : null);
   if (!sourcePath || !fs.existsSync(sourcePath)) return '';
   try { return fs.readFileSync(sourcePath, 'utf8').replace(/^\uFEFF/, ''); } catch (_) { return ''; }
+}
+
+function loadCaptureReport(opts, workflowSummary) {
+  const fromSummary = workflowSummary
+    && workflowSummary.finalCapture
+    && workflowSummary.finalCapture.captureReport;
+  const filePath = opts.captureReportPath || opts.captureReport || fromSummary;
+  if (!filePath) return null;
+  const full = path.isAbsolute(filePath)
+    ? filePath
+    : path.resolve(opts.repoRoot || process.cwd(), filePath);
+  const report = readJsonIfExists(full);
+  return report ? { filePath: full, report } : { filePath: full, report: null };
 }
 
 function scanCoreSource(repoRoot, violations) {
@@ -153,6 +173,17 @@ function scanCoreSource(repoRoot, violations) {
     addViolation(violations, 'H2U-P4-020', {
       summary: 'runtime sync still allows raw sidecar fallback',
       evidence: 'tools_node/run-html-to-ucuf-workflow.js',
+    });
+  }
+
+  const previewHostPath = path.join(repoRoot, 'assets', 'scripts', 'ui', 'components', 'UIScreenPreviewHost.ts');
+  const previewHost = readTextIfExists(previewHostPath);
+  if (previewHost && !(/loadScreenSidecar<[^>]*Interaction|loadScreenSidecar<PreviewInteractionSidecar/.test(previewHost)
+    && /loadScreenSidecar<[^>]*TabRouting|loadScreenSidecar<PreviewTabRoutingSidecar/.test(previewHost)
+    && /_bindSidecarInteractionAction|interactionRuntimeReport/.test(previewHost))) {
+    addViolation(violations, 'H2U-P4-018', {
+      summary: 'Preview runtime does not load and execute synced interaction/tab-routing sidecars',
+      evidence: 'assets/scripts/ui/components/UIScreenPreviewHost.ts',
     });
   }
 }
@@ -257,6 +288,36 @@ function validateWorkflowSummary(repoRoot, summary, sourceHtml, violations, warn
     });
   }
 
+  const finalCapture = summary.finalCapture || {};
+  const captureAuthority = finalCapture.authority || (summary.metrics && summary.metrics.htmlCocos && summary.metrics.htmlCocos.captureAuthority) || null;
+  if (summary.debugOnly !== true && !finalCapture.captureReport) {
+    addViolation(violations, 'H2U-P4-022', {
+      summary: 'formal summary is missing final capture report authority',
+      evidence: 'workflowSummary.finalCapture.captureReport=missing',
+    });
+  }
+  if (captureAuthority) {
+    if (Array.isArray(captureAuthority.violations) && captureAuthority.violations.length > 0) {
+      for (const violation of captureAuthority.violations) {
+        addViolation(violations, violation.ruleId || 'H2U-P4-021', {
+          summary: violation.summary || 'capture authority violation',
+          evidence: violation.evidence || JSON.stringify(captureAuthority),
+          fixAction: violation.fixAction,
+        });
+      }
+    }
+    if (captureAuthority.ok === false) {
+      addViolation(violations, 'H2U-P4-021', {
+        summary: 'final capture authority is not ok',
+        evidence: JSON.stringify({
+          expectedScreenId: captureAuthority.expectedScreenId || null,
+          actualScreenId: captureAuthority.actualScreenId || null,
+          captureMode: captureAuthority.captureMode || null,
+        }),
+      });
+    }
+  }
+
   if (summary.debugOnly !== true) {
     const visualFidelityRisk = summary.visualFidelityRisk || null;
     if (!visualFidelityRisk) {
@@ -293,6 +354,131 @@ function validateWorkflowSummary(repoRoot, summary, sourceHtml, violations, warn
       summary: 'environment-blocked: final/browser compare could not run in this environment',
       evidence: String(summary.environmentBlocked),
     }));
+  }
+
+  validateTokenGovernance(repoRoot, summary, violations);
+}
+
+function validateTokenGovernance(repoRoot, summary, violations) {
+  const tg = summary.tokenGovernance || null;
+
+  // H2U-P4-025: replace-all-per-run mode required on formal runs
+  if (summary.debugOnly !== true) {
+    if (!tg || tg.mode !== 'replace-all-per-run') {
+      addViolation(violations, 'H2U-P4-025', {
+        summary: `tokenGovernance.mode is not replace-all-per-run (got: ${tg ? tg.mode : 'missing'})`,
+        evidence: tg ? `tokenGovernance.mode=${tg.mode}` : 'workflowSummary.tokenGovernance=missing',
+      });
+    }
+
+    // H2U-P4-026: diff report required
+    if (!tg || !tg.diffReportPath) {
+      addViolation(violations, 'H2U-P4-026', {
+        summary: 'tokenGovernance.diffReportPath is missing',
+        evidence: tg ? 'tokenGovernance.diffReportPath=missing' : 'workflowSummary.tokenGovernance=missing',
+      });
+    } else {
+      const diffPath = path.isAbsolute(tg.diffReportPath)
+        ? tg.diffReportPath
+        : path.join(repoRoot, tg.diffReportPath);
+      const diff = readJsonIfExists(diffPath);
+      // Support both flat structure (diff.addedCount) and nested structure (diff.diff.addedCount)
+      const diffData = diff && (diff.diff || diff);
+      if (!diff || (!Number.isFinite(diffData.addedCount) && diffData.added === undefined)) {
+        addViolation(violations, 'H2U-P4-026', {
+          summary: 'token diff report is missing or malformed',
+          evidence: path.relative(repoRoot, diffPath).replace(/\\/g, '/'),
+        });
+      }
+    }
+  }
+
+  // H2U-P4-027 & H2U-P4-028: load local-tokens.json for deep checks
+  if (!tg || !tg.localTokenPath) return;
+  const localTokensAbsPath = path.isAbsolute(tg.localTokenPath)
+    ? tg.localTokenPath
+    : path.join(repoRoot, tg.localTokenPath);
+  const localTokens = readJsonIfExists(localTokensAbsPath);
+  if (!localTokens) return;
+
+  // H2U-P4-027: promotion gate — block if any token is promotion-eligible but not yet promoted
+  const tokenList = Array.isArray(localTokens.tokens) ? localTokens.tokens : [];
+  const promotionEligible = tokenList.filter(t =>
+    t && Number(t.crossScreenCount || 0) >= 2 && Number(t.consecutiveVersions || 0) >= 2
+  );
+  if (promotionEligible.length > 0) {
+    addViolation(violations, 'H2U-P4-027', {
+      summary: `${promotionEligible.length} screen-local token(s) qualify for promotion but have not been promoted`,
+      evidence: promotionEligible.slice(0, 5).map(t => t.name || t.token || '?').join(', '),
+    });
+  }
+
+  // H2U-P4-028: waiver expiry — block if any waiver has expired
+  const waivers = Array.isArray(localTokens.waivers) ? localTokens.waivers : [];
+  const currentVersion = String(summary.uiVersion || localTokens.policy && localTokens.policy.generatedAtVersion || '');
+  const expiredWaivers = waivers.filter(w => {
+    if (!w || !w.expiresAtVersion) return false;
+    return compareVersions(String(w.expiresAtVersion), currentVersion) < 0;
+  });
+  if (expiredWaivers.length > 0) {
+    addViolation(violations, 'H2U-P4-028', {
+      summary: `${expiredWaivers.length} literal-color waiver(s) have expired (currentVersion=${currentVersion || 'unknown'})`,
+      evidence: expiredWaivers.slice(0, 5).map(w => `${w.token || '?'} expired=${w.expiresAtVersion}`).join(', '),
+    });
+  }
+}
+
+// Compare two "vMAJOR.MINOR.PATCH" version strings. Returns negative if a < b, 0 if equal, positive if a > b.
+function compareVersions(a, b) {
+  const parse = s => String(s || '').replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+  const [aMaj, aMin, aPat] = parse(a);
+  const [bMaj, bMin, bPat] = parse(b);
+  if (aMaj !== bMaj) return aMaj - bMaj;
+  if (aMin !== bMin) return aMin - bMin;
+  return aPat - bPat;
+}
+
+function validateCaptureReportArtifact(payload, args) {
+  const violations = args.violations;
+  if (!payload.report) {
+    addViolation(violations, 'H2U-P4-021', {
+      summary: 'capture report path is missing or unreadable',
+      evidence: relative(process.cwd(), payload.filePath),
+    });
+    return;
+  }
+  const captures = Array.isArray(payload.report.captures) ? payload.report.captures : [];
+  if (captures.length === 0) {
+    addViolation(violations, 'H2U-P4-021', {
+      summary: 'capture report has no captures',
+      evidence: relative(process.cwd(), payload.filePath),
+    });
+    return;
+  }
+  for (const capture of captures) {
+    const expected = String(capture.expectedScreenId || '').trim();
+    const actual = String(capture.actualScreenId || capture.screenId || '').trim();
+    const required = String(args.expectedScreenId || expected || '').trim();
+    if (required && (expected !== required || actual !== required)) {
+      addViolation(violations, 'H2U-P4-021', {
+        summary: `capture target mismatch: expected=${expected || '(missing)'} actual=${actual || '(missing)'} required=${required}`,
+        evidence: `${relative(process.cwd(), payload.filePath)} target=${capture.target || '(missing)'}`,
+      });
+    }
+    if (capture.captureMode !== 'formal-html-to-ucuf') {
+      addViolation(violations, 'H2U-P4-023', {
+        summary: `capture uses legacy or missing captureMode: ${capture.captureMode || '(missing)'}`,
+        evidence: `${relative(process.cwd(), payload.filePath)} target=${capture.target || '(missing)'}`,
+      });
+    }
+    const version = String(capture.runtimeVersion || capture.uiVersion || '').trim();
+    const hash = capture.runtimeSpecHash || {};
+    if (!version || !hash.screen || !hash.layout || !hash.skin) {
+      addViolation(violations, 'H2U-P4-022', {
+        summary: 'capture report is missing runtime version or runtime spec hashes',
+        evidence: `${relative(process.cwd(), payload.filePath)} target=${capture.target || '(missing)'}`,
+      });
+    }
   }
 }
 

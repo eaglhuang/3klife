@@ -22,6 +22,7 @@ function parseArgs(argv) {
     tabSelector: null,
     contentSelector: null,
     rootNamePrefix: null,
+    allowLegacyContentFallback: false,
   };
   for (let i = 2; i < argv.length; i += 1) {
     const token = argv[i];
@@ -43,6 +44,7 @@ function parseArgs(argv) {
       case '--tab-selector': opts.tabSelector = next(); break;
       case '--content-selector': opts.contentSelector = next(); break;
       case '--root-name-prefix': opts.rootNamePrefix = next(); break;
+      case '--allow-legacy-content-fallback': opts.allowLegacyContentFallback = true; break;
       case '--help':
       case '-h':
         printHelp();
@@ -62,6 +64,8 @@ function parseArgs(argv) {
 
 function printHelp() {
   console.log('Usage: node tools_node/render-html-tab-fragments.js --input <html> --output-dir <dir> --screen-id <id> [--viewport WxH] [--tabs overview,stats,...]');
+  console.log('  Formal mode requires data-ucuf-tab-content / aria-controls / explicit --content-selector.');
+  console.log('  --allow-legacy-content-fallback permits .right-content as debug-only legacy fallback.');
 }
 
 function toRuntimeTabId(value) {
@@ -103,6 +107,7 @@ async function main() {
     screenId: opts.screenId,
     generatedAt: new Date().toISOString(),
     rootNamePrefix: opts.rootNamePrefix || toPascal(opts.screenId),
+    legacyContentFallbackAllowed: !!opts.allowLegacyContentFallback,
     tabs: [],
   };
 
@@ -122,7 +127,7 @@ async function main() {
 
     for (let index = 0; index < tabs.length; index += 1) {
       const tab = tabs[index];
-      const result = await page.evaluate(async ({ tabKey, tabId, index, tabSelector, contentSelector, rootNamePrefix }) => {
+      const result = await page.evaluate(async ({ tabKey, tabId, index, tabSelector, contentSelector, rootNamePrefix, allowLegacyContentFallback }) => {
         const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
         const normalize = value => String(value || '').trim().toLowerCase();
         const queryAll = selector => {
@@ -139,24 +144,7 @@ async function main() {
           }
           return out;
         };
-        const resolveContentHost = (button, preferredSelector, key, id) => {
-          const preferred = queryAll(preferredSelector).find(Boolean);
-          if (preferred) return preferred;
-          const controls = button && (button.getAttribute('aria-controls') || button.getAttribute('data-target'));
-          if (controls) {
-            const byId = document.getElementById(controls);
-            if (byId) return byId;
-          }
-          const normalized = normalize(key || id);
-          const candidates = uniqueElements([
-            ...queryAll(`[data-ucuf-tab-content="${normalized}"]`),
-            ...queryAll(`[data-tab-content="${normalized}"]`),
-            ...queryAll(`[data-panel="${normalized}"]`),
-            ...queryAll('[data-ucuf-tab-content]'),
-            ...queryAll('[role="tabpanel"]'),
-            ...queryAll('.right-content'),
-            ...queryAll('#right-content'),
-          ]);
+        const firstVisible = candidates => {
           const visible = candidates.find(element => {
             const rect = element.getBoundingClientRect ? element.getBoundingClientRect() : null;
             const style = window.getComputedStyle ? window.getComputedStyle(element) : null;
@@ -164,6 +152,35 @@ async function main() {
               && (!rect || (rect.width > 0 && rect.height > 0));
           });
           return visible || candidates[0] || null;
+        };
+        const resolveContentHost = (button, preferredSelector, key, id, allowLegacy) => {
+          const preferred = queryAll(preferredSelector).find(Boolean);
+          if (preferred) return { element: preferred, source: 'cli-content-selector', legacy: false };
+          const normalized = normalize(key || id);
+          const explicitCandidates = uniqueElements([
+            ...queryAll(`[data-ucuf-tab-content="${normalized}"]`),
+            ...queryAll(`[data-tab-content="${normalized}"]`),
+            ...queryAll(`[data-panel="${normalized}"]`),
+            ...queryAll('[data-ucuf-tab-content]'),
+            ...queryAll('[role="tabpanel"]'),
+          ]);
+          const explicit = firstVisible(explicitCandidates);
+          if (explicit) return { element: explicit, source: 'tab-content-contract', legacy: false };
+
+          const controls = button && (button.getAttribute('aria-controls') || button.getAttribute('data-target'));
+          if (controls) {
+            const byId = document.getElementById(controls);
+            if (byId) return { element: byId, source: 'aria-controls-or-data-target', legacy: false };
+          }
+
+          const legacyCandidates = uniqueElements([
+            ...queryAll('.right-content'),
+            ...queryAll('#right-content'),
+          ]);
+          const legacy = firstVisible(legacyCandidates);
+          if (legacy && allowLegacy) return { element: legacy, source: 'legacy-right-content', legacy: true };
+          if (legacy) return { element: null, source: 'legacy-right-content-blocked', legacy: true };
+          return { element: null, source: 'not-found', legacy: false };
         };
         const buttons = uniqueElements([
           ...queryAll(tabSelector),
@@ -190,11 +207,18 @@ async function main() {
         if (document.fonts && document.fonts.ready) await document.fonts.ready;
         await wait(150);
 
-        const source = resolveContentHost(target, contentSelector, tabKey, tabId);
+        const resolvedHost = resolveContentHost(target, contentSelector, tabKey, tabId, allowLegacyContentFallback);
+        const source = resolvedHost && resolvedHost.element;
         if (!source) {
           return {
             ok: false,
-            error: 'tab-content-host-not-found',
+            error: resolvedHost && resolvedHost.source === 'legacy-right-content-blocked'
+              ? 'legacy-content-host-fallback-blocked'
+              : 'tab-content-host-not-found',
+            hostSource: resolvedHost && resolvedHost.source || 'not-found',
+            fixAction: resolvedHost && resolvedHost.source === 'legacy-right-content-blocked'
+              ? 'Add data-ucuf-tab-content, role=tabpanel, aria-controls, or pass --allow-legacy-content-fallback for debug-only replay.'
+              : 'Add an explicit tab content contract for this source.',
             buttonCount: buttons.length,
             buttonText: buttons.map(button => button.textContent || '').slice(0, 12),
           };
@@ -202,6 +226,10 @@ async function main() {
 
         const clone = document.createElement('div');
         clone.setAttribute('data-name', `${rootNamePrefix}${tabId}Root`);
+        const hostName = source.getAttribute('data-name')
+          || source.getAttribute('id')
+          || source.getAttribute('name')
+          || null;
         const computed = window.getComputedStyle ? window.getComputedStyle(source) : null;
         const rect = source.getBoundingClientRect ? source.getBoundingClientRect() : null;
         const sourceWidthCss = computed && computed.getPropertyValue('width');
@@ -235,6 +263,9 @@ async function main() {
           textLength: (clone.textContent || '').trim().length,
           childCount: clone.children ? clone.children.length : 0,
           buttonCount: buttons.length,
+          hostSource: resolvedHost.source,
+          hostName,
+          legacyHost: !!resolvedHost.legacy,
         };
       }, {
         tabKey: tab.key,
@@ -243,6 +274,7 @@ async function main() {
         tabSelector: opts.tabSelector,
         contentSelector: opts.contentSelector,
         rootNamePrefix: opts.rootNamePrefix || toPascal(opts.screenId),
+        allowLegacyContentFallback: opts.allowLegacyContentFallback,
       });
 
       const fragmentPath = path.join(outputDir, `${opts.screenId}.${tab.key}.right-content.html`);
@@ -260,6 +292,10 @@ async function main() {
         textLength: result.textLength || 0,
         buttonCount: result.buttonCount || 0,
         buttonText: result.buttonText || undefined,
+        hostSource: result.hostSource || null,
+        hostName: result.hostName || null,
+        legacyHost: !!result.legacyHost,
+        fixAction: result.fixAction || undefined,
       });
     }
 

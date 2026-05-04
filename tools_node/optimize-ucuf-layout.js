@@ -88,6 +88,10 @@ function hasSemanticFlags(node) {
   );
 }
 
+function hasSkinLayers(node) {
+  return !!(node && Array.isArray(node.skinLayers) && node.skinLayers.length > 0);
+}
+
 function cloneWidget(widget) {
   if (!widget || typeof widget !== 'object') return null;
   return {
@@ -117,10 +121,21 @@ function getNextLayerZOrder(node) {
   return max + 1;
 }
 
+function getPrevLayerZOrder(node) {
+  const layers = Array.isArray(node && node.skinLayers) ? node.skinLayers : [];
+  let min = 0;
+  for (const layer of layers) {
+    const zOrder = getLayerZOrder(layer);
+    if (zOrder < min) min = zOrder;
+  }
+  return min - 1;
+}
+
 function isFoldable(node) {
   if (!node || node.type !== 'container') return false;
   if (!Array.isArray(node.children) || node.children.length !== 1) return false;
   if (node.skinSlot || node.styleSlot) return false;
+  if (hasSkinLayers(node)) return false;
   if (node._contract || node._bind || node._action) return false;
   if (node.contract || node.panelType || node.dataSource) return false;
   if (node.lazySlot) return false;
@@ -137,6 +152,7 @@ function canHoistSingleChildContainer(node) {
   if (!node || node.type !== 'container') return false;
   if (!Array.isArray(node.children) || node.children.length !== 1) return false;
   if (node.skinSlot || node.styleSlot) return false;
+  if (hasSkinLayers(node)) return false;
   if (hasSemanticFlags(node)) return false;
   if (node.text != null && node.text !== '') return false;
   if (node.width != null || node.height != null) return false;
@@ -158,10 +174,12 @@ function isEmptyLeaf(node) {
   if (!node || node.type !== 'container') return false;
   if (Array.isArray(node.children) && node.children.length > 0) return false;
   if (node.skinSlot || node.styleSlot) return false;
+  if (hasSkinLayers(node)) return false;
   if (node.text != null && node.text !== '') return false;
   if (node._contract || node._bind || node._action || node._ucufId) return false;
   if (node.contract || node.panelType || node.dataSource || node.lazySlot) return false;
-  if (node.width != null || node.height != null) return false;
+  // Auto-named empty containers with explicit width/height are still dead weight:
+  // UCUF spacing uses layout.gap / padding, not empty spacer divs.
   if (!node.name || !AUTO_NAME.test(node.name)) return false;
   return true;
 }
@@ -204,11 +222,106 @@ function toSkinLayer(node, zOrder) {
   return layer;
 }
 
+function normalizeLayoutAlign(value) {
+  const raw = String(value || '').trim().toLowerCase();
+  if (raw === 'flex-end' || raw === 'end') return 'end';
+  if (raw === 'center' || raw === 'middle') return 'center';
+  return 'start';
+}
+
+function resolveLayerAxisOffsets(parentSize, childSize, align) {
+  if (!Number.isFinite(parentSize) || !Number.isFinite(childSize) || parentSize <= 0 || childSize <= 0 || childSize > parentSize) {
+    return null;
+  }
+  const spare = Math.max(0, parentSize - childSize);
+  if (align === 'center') {
+    const first = Math.round(spare / 2);
+    return [first, spare - first];
+  }
+  if (align === 'end') return [spare, 0];
+  return [0, spare];
+}
+
+function deriveLayerWidgetFromParentLayout(parent, child) {
+  const layout = parent && parent.layout;
+  if (!layout || !child) return null;
+  const parentWidth = Number(parent.width);
+  const parentHeight = Number(parent.height);
+  const childWidth = Number(child.width);
+  const childHeight = Number(child.height);
+  if (!Number.isFinite(childWidth) || !Number.isFinite(childHeight)) return null;
+  const layoutType = String(layout.type || '').toLowerCase();
+  const mainAlign = normalizeLayoutAlign(layout.justifyContent);
+  const crossAlign = normalizeLayoutAlign(layout.alignItems);
+  const horizontal = layoutType !== 'vertical';
+  const xAlign = horizontal ? mainAlign : crossAlign;
+  const yAlign = horizontal ? crossAlign : mainAlign;
+  const x = resolveLayerAxisOffsets(parentWidth, childWidth, xAlign);
+  const y = resolveLayerAxisOffsets(parentHeight, childHeight, yAlign);
+  if (!x || !y) return null;
+  return {
+    left: x[0],
+    right: x[1],
+    top: y[0],
+    bottom: y[1],
+  };
+}
+
 function absorbVisualChild(parent, child, absorbedNames) {
   if (!parent || !child || !isVisualOnlySkinLeaf(child)) return false;
   if (!Array.isArray(parent.skinLayers)) parent.skinLayers = [];
-  parent.skinLayers.push(toSkinLayer(child, getNextLayerZOrder(parent)));
+  const layer = toSkinLayer(child, getNextLayerZOrder(parent));
+  if (!layer.widget) {
+    const layoutWidget = deriveLayerWidgetFromParentLayout(parent, child);
+    if (layoutWidget) layer.widget = layoutWidget;
+  }
+  parent.skinLayers.push(layer);
   absorbedNames.push(child.name);
+  return true;
+}
+
+function isVisualOnlyLayerContainer(node) {
+  if (!node || node.type !== 'container') return false;
+  if (!hasSkinLayers(node)) return false;
+  if (Array.isArray(node.children) && node.children.length > 0) return false;
+  if (node.skinSlot || node.styleSlot) return false;
+  if (hasSemanticFlags(node)) return false;
+  if (node.text != null && node.text !== '') return false;
+  return true;
+}
+
+function cloneLayer(layer, nextZOrder, ownerName) {
+  const cloned = { ...layer };
+  cloned.layerId = ownerName ? `${ownerName}_${layer.layerId || nextZOrder}` : (layer.layerId || `layer_${nextZOrder}`);
+  cloned.zOrder = nextZOrder;
+  if (layer.widget) cloned.widget = cloneWidget(layer.widget);
+  return cloned;
+}
+
+function absorbVisualLayerContainer(parent, child, absorbedNames) {
+  if (!parent || !isVisualOnlyLayerContainer(child)) return false;
+  if (!Array.isArray(parent.skinLayers)) parent.skinLayers = [];
+  for (const layer of child.skinLayers) {
+    parent.skinLayers.push(cloneLayer(layer, getNextLayerZOrder(parent), child.name));
+  }
+  absorbedNames.push(child.name);
+  return true;
+}
+
+function demoteParentSkinSlotToLayer(parent, demotedNames) {
+  if (!parent || !parent.skinSlot || !Array.isArray(parent.skinLayers) || parent.skinLayers.length === 0) return false;
+  const baseLayerId = `${parent.name || 'host'}_baseSkin`;
+  if (!parent.skinLayers.some(layer => layer && layer.layerId === baseLayerId)) {
+    parent.skinLayers.unshift({
+      layerId: baseLayerId,
+      slotId: parent.skinSlot,
+      zOrder: getPrevLayerZOrder(parent),
+      expand: true,
+    });
+  }
+  delete parent.skinSlot;
+  if (parent.type === 'panel') parent.type = 'container';
+  demotedNames.push(parent.name || baseLayerId);
   return true;
 }
 
@@ -239,12 +352,12 @@ function collapsePanelIntoLabel(node, collapsedNames) {
   return node;
 }
 
-function foldOnce(node, foldedNames, droppedNames, absorbedNames, collapsedNames) {
+function foldOnce(node, foldedNames, droppedNames, absorbedNames, collapsedNames, demotedNames) {
   if (!node) return node;
   if (Array.isArray(node.children)) {
     const nextChildren = [];
     for (let child of node.children) {
-      let folded = foldOnce(child, foldedNames, droppedNames, absorbedNames, collapsedNames);
+      let folded = foldOnce(child, foldedNames, droppedNames, absorbedNames, collapsedNames, demotedNames);
       if (!folded) continue;
       if (isBrPlaceholder(folded) || isEmptyLeaf(folded)) {
         droppedNames.push(folded.name);
@@ -261,6 +374,9 @@ function foldOnce(node, foldedNames, droppedNames, absorbedNames, collapsedNames
       if (canCollapsePanelIntoLabel(folded)) {
         folded = collapsePanelIntoLabel(folded, collapsedNames);
       }
+      if (absorbVisualLayerContainer(node, folded, absorbedNames)) {
+        continue;
+      }
       if (absorbVisualChild(node, folded, absorbedNames)) {
         continue;
       }
@@ -268,6 +384,7 @@ function foldOnce(node, foldedNames, droppedNames, absorbedNames, collapsedNames
     }
     node.children = dedupeLargeSiblingSubtrees(nextChildren, droppedNames);
   }
+  demoteParentSkinSlotToLayer(node, demotedNames);
   return node;
 }
 
@@ -314,6 +431,9 @@ function buildStructuralSignature(node) {
     contract: node._contract || '',
     lazySlot: !!node.lazySlot,
     skinSlot: node.skinSlot || '',
+    skinLayers: Array.isArray(node.skinLayers)
+      ? node.skinLayers.map(layer => ({ layerId: layer.layerId || '', slotId: layer.slotId || '', zOrder: getLayerZOrder(layer) }))
+      : [],
     styleSlot: node.styleSlot || '',
     width: Number.isFinite(node.width) ? node.width : null,
     height: Number.isFinite(node.height) ? node.height : null,
@@ -324,8 +444,31 @@ function buildStructuralSignature(node) {
   return JSON.stringify(payload);
 }
 
-function foldRoot(root, foldedNames, droppedNames, absorbedNames, collapsedNames) {
-  return foldOnce(root, foldedNames, droppedNames, absorbedNames, collapsedNames);
+function foldRoot(root, foldedNames, droppedNames, absorbedNames, collapsedNames, demotedNames) {
+  return foldOnce(root, foldedNames, droppedNames, absorbedNames, collapsedNames, demotedNames);
+}
+
+/**
+ * Mark nodes with active===false that look like modals/overlays/drawers as lazySlot.
+ * These nodes are never visible on initial load; marking them deferred keeps nodeCount
+ * within the 60-node budget. Only applies to auto-generated nodes without existing lazySlot.
+ */
+const INACTIVE_MODAL_PATTERN = /modal|overlay|drawer|popup|dialog/i;
+function markInactiveModalsAsLazy(node, markedNames) {
+  if (!node || typeof node !== 'object') return;
+  if (
+    node.active === false &&
+    !node.lazySlot &&
+    (INACTIVE_MODAL_PATTERN.test(node.id || '') || INACTIVE_MODAL_PATTERN.test(node.name || ''))
+  ) {
+    node.lazySlot = true;
+    node.warmupHint = 'manual';
+    markedNames.push(node.name || node.id || '<unnamed>');
+    return; // don't recurse into deferred subtree
+  }
+  if (Array.isArray(node.children)) {
+    for (const child of node.children) markInactiveModalsAsLazy(child, markedNames);
+  }
 }
 
 function resolveLayoutRoot(document) {
@@ -358,11 +501,16 @@ function main() {
   const droppedNames = [];
   const absorbedNames = [];
   const collapsedNames = [];
+  const demotedSkinHostNames = [];
+  const markedLazyNames = [];
+
+  // Pre-pass: mark inactive modal/overlay nodes as lazySlot before folding.
+  markInactiveModalsAsLazy(rootNode, markedLazyNames);
 
   let pass = 0;
   let prevCount = before;
   for (; pass < opts.maxPasses; pass += 1) {
-    foldRoot(rootNode, foldedNames, droppedNames, absorbedNames, collapsedNames);
+    foldRoot(rootNode, foldedNames, droppedNames, absorbedNames, collapsedNames, demotedSkinHostNames);
     const current = countNodes(rootNode);
     if (current === prevCount) break;
     prevCount = current;
@@ -379,17 +527,21 @@ function main() {
     droppedCount: droppedNames.length,
     absorbedCount: absorbedNames.length,
     collapsedCount: collapsedNames.length,
+    demotedSkinHostCount: demotedSkinHostNames.length,
+    markedLazyCount: markedLazyNames.length,
     foldedNames,
     droppedNames,
     absorbedNames,
     collapsedNames,
+    demotedSkinHostNames,
+    markedLazyNames,
   };
 
   if (opts.dryRun) {
-    console.log(`[optimize-ucuf-layout] dry-run: would fold ${foldedNames.length} + drop ${droppedNames.length} + absorb ${absorbedNames.length} + collapse ${collapsedNames.length} (${before} -> ${after})`);
+    console.log(`[optimize-ucuf-layout] dry-run: would fold ${foldedNames.length} + drop ${droppedNames.length} + absorb ${absorbedNames.length} + collapse ${collapsedNames.length} + demote-skin-host ${demotedSkinHostNames.length} (${before} -> ${after})`);
   } else {
     fs.writeFileSync(opts.output, JSON.stringify(layoutDocument, null, 2), 'utf8');
-    console.log(`[optimize-ucuf-layout] wrote ${opts.output}: folded ${foldedNames.length} + dropped ${droppedNames.length} + absorbed ${absorbedNames.length} + collapsed ${collapsedNames.length} (${before} -> ${after}) in ${pass + 1} passes`);
+    console.log(`[optimize-ucuf-layout] wrote ${opts.output}: folded ${foldedNames.length} + dropped ${droppedNames.length} + absorbed ${absorbedNames.length} + collapsed ${collapsedNames.length} + demoted-skin-host ${demotedSkinHostNames.length} + lazy-marked ${markedLazyNames.length} (${before} -> ${after}) in ${pass + 1} passes`);
   }
   if (opts.report) {
     const reportDir = path.dirname(path.resolve(opts.report));

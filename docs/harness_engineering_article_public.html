@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我如何使用 Harness Engineering 讓 3KProject 變得更穩定</title>
+  <meta name="description" content="整理我在 3KProject 裡實作 Harness Engineering 的做法，說明如何以 Guides、Sensors 與計算型閘門讓 Coding Agent 穩定交付。">
+  <style>
+    :root {
+      --paper: #f6f1e7;
+      --paper-strong: #fbf8f2;
+      --ink: #19242f;
+      --ink-soft: #465464;
+      --line: rgba(25, 36, 47, 0.12);
+      --line-strong: rgba(25, 36, 47, 0.22);
+      --accent: #0d7a73;
+      --accent-strong: #085d58;
+      --accent-warm: #cb7d2e;
+      --rose: #8f425e;
+      --shadow: 0 24px 80px rgba(26, 40, 55, 0.12);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --content-width: 1160px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Aptos", "IBM Plex Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(13, 122, 115, 0.16), transparent 28%),
+        radial-gradient(circle at 80% 12%, rgba(203, 125, 46, 0.14), transparent 26%),
+        linear-gradient(180deg, #f8f4eb 0%, #f2ecdf 48%, #ebe5d8 100%);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.16) 1px, transparent 1px);
+      background-size: 36px 36px;
+      -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.24), transparent 78%);
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.24), transparent 78%);
+      opacity: 0.35;
+    }
+
+    a {
+      color: var(--accent-strong);
+    }
+
+    .page {
+      width: min(calc(100% - 40px), var(--content-width));
+      margin: 0 auto;
+      padding: 40px 0 80px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .main-column {
+      display: grid;
+      gap: 24px;
+    }
+
+    .hero,
+    .panel,
+    .toc {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.72));
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: var(--shadow);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      border-radius: 32px;
+      padding: 36px;
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -120px;
+      top: -120px;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(13, 122, 115, 0.22), transparent 68%);
+      z-index: -1;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent-strong);
+      font-weight: 700;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Iowan Old Style", "Noto Serif TC", "Source Han Serif TC", serif;
+      letter-spacing: 0.01em;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 4vw, 4rem);
+      line-height: 1.06;
+      max-width: 11.5em;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+    }
+
+    .lede {
+      margin: 18px 0 0;
+      max-width: 760px;
+      color: var(--ink-soft);
+      font-size: 1.08rem;
+      line-height: 1.84;
+    }
+
+    .hero-grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid var(--line);
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+      color: var(--accent-strong);
+    }
+
+    .stat-card span {
+      color: var(--ink-soft);
+      line-height: 1.65;
+      display: block;
+    }
+
+    .panel {
+      border-radius: var(--radius-xl);
+      padding: 28px;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.82;
+    }
+
+    .panel p + p,
+    .panel .callout,
+    .panel .split,
+    .panel figure,
+    .panel pre,
+    .panel ul,
+    .panel ol {
+      margin-top: 18px;
+    }
+
+    .callout {
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      border: 1px solid rgba(13, 122, 115, 0.14);
+      background: linear-gradient(135deg, rgba(13, 122, 115, 0.08), rgba(203, 125, 46, 0.08));
+      color: var(--ink);
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .mini-card {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+
+    .mini-card p {
+      margin-top: 8px;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.25rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    .figure-card {
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(250, 247, 242, 0.94));
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .figure-actions {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .figure-actions button {
+      border: 0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font: inherit;
+      font-size: 0.82rem;
+      background: rgba(25, 36, 47, 0.86);
+      color: #fff;
+      cursor: pointer;
+      transition: transform 140ms ease, background 140ms ease;
+    }
+
+    .figure-actions button:hover {
+      transform: translateY(-1px);
+      background: rgba(13, 122, 115, 0.92);
+    }
+
+    .copy-status {
+      position: absolute;
+      left: 20px;
+      bottom: 18px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(25, 36, 47, 0.82);
+      color: #fff;
+      font-size: 0.76rem;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 160ms ease, transform 160ms ease;
+      pointer-events: none;
+    }
+
+    .copy-status.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    figure svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 18px;
+    }
+
+    figcaption {
+      margin-top: 12px;
+      padding-right: 188px;
+      color: var(--ink-soft);
+      font-size: 0.94rem;
+      line-height: 1.7;
+    }
+
+    pre {
+      margin: 0;
+      padding: 18px;
+      border-radius: 18px;
+      background: #16222d;
+      color: #eff7ff;
+      overflow-x: auto;
+      font-family: "Cascadia Code", "JetBrains Mono", monospace;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    code {
+      font-family: "Cascadia Code", "JetBrains Mono", monospace;
+    }
+
+    .quote {
+      border-left: 4px solid var(--accent);
+      padding: 8px 0 8px 16px;
+      color: var(--ink);
+      font-size: 1.08rem;
+    }
+
+    .toc {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      border-radius: 24px;
+      padding: 22px;
+    }
+
+    .toc h2 {
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 1.1rem;
+    }
+
+    .toc a {
+      text-decoration: none;
+      color: var(--ink-soft);
+    }
+
+    .toc a:hover {
+      color: var(--accent-strong);
+    }
+
+    .toc .note {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      padding: 10px 0 20px;
+    }
+
+    @media (max-width: 1080px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: relative;
+        top: auto;
+        order: -1;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .hero,
+      .panel,
+      .toc {
+        padding: 22px;
+        border-radius: 24px;
+      }
+
+      .hero-grid,
+      .split {
+        grid-template-columns: 1fr;
+      }
+
+      .figure-actions {
+        position: static;
+        margin-bottom: 12px;
+      }
+
+      figcaption {
+        padding-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="main-column">
+      <header class="hero">
+        <p class="eyebrow">3KProject Engineering Notes</p>
+        <h1>我如何使用 Harness Engineering 讓 3KProject 變得更穩定</h1>
+        <p class="lede">這篇文章是我整理 3KProject 內部工程做法的一份筆記。專案裡本來就有 instructions、skills、任務卡、doc-id registry、context budget guard、UI 契約驗證、runtime smoke check 這些基礎設施，但真正讓 Agent 開始穩下來的，是我把工作流從「靠模型猜」慢慢改成「靠計算驗證」。</p>
+        <div class="hero-grid">
+          <div class="stat-card">
+            <strong>Guide</strong>
+            <span>在動手前先給清楚的路徑、邊界與任務契約，降低 Agent 一開始就走歪的機率。</span>
+          </div>
+          <div class="stat-card">
+            <strong>Sensor</strong>
+            <span>在修改後立即用可執行檢查回報結果，讓錯誤在進入人工審查前先被攔住。</span>
+          </div>
+          <div class="stat-card">
+            <strong>Loop</strong>
+            <span>把失敗訊息直接回灌成下一輪修正輸入，讓小模型也能靠反覆收斂穩定交付。</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="panel" id="summary">
+        <h2>一個核心觀念</h2>
+        <p class="quote">Harness 不是模型本身，而是模型周邊所有讓它更不容易犯錯、犯錯後更容易被拉回來的機制總和。</p>
+        <p>如果把 Coding Agent 想成一台能高速產出程式碼的引擎，那 Harness 就是方向盤、煞車、儀表板與保險絲。我在 3KProject 的實際感受很直接：沒有這層工程韁繩，模型偶爾會很亮眼，但穩定度很差；有了這層韁繩之後，規格摘要、任務卡、驗證器、handoff 才會真的串成一條能重複執行的生產線。</p>
+        <div class="callout">在 3KProject 裡，我把 Harness 當成一套內部工程控制面板：`keep.summary` 負責導向，任務卡負責切片，編碼與契約檢查負責把錯誤擋在人工 review 前，runtime 檢查與 screenshot regression 則負責收尾驗證。</div>
+      </section>
+
+      <section class="panel" id="model">
+        <h2>先看兩個最重要的座標軸</h2>
+        <p>我在 3KProject 規劃這些工具時，最有幫助的一件事，就是先把控制手段拆成兩個簡單維度。第一個維度是「事前引導」對上「事後回饋」；第二個維度是「計算可判定」對上「需要語意推論」。這個拆法直接影響我該先投資哪種工具，而不是一直堆更多提示詞。</p>
+
+        <figure class="figure-card" data-figure-name="harness-control-matrix">
+          <div class="figure-actions">
+            <button type="button" data-download-svg>下載 SVG</button>
+            <button type="button" data-download-png>下載 PNG</button>
+          </div>
+          <svg viewBox="0 0 1120 720" role="img" aria-label="Harness 控制矩陣圖">
+            <style>
+              :scope .f1-bg { fill: #fffaf2; }
+              :scope .f1-title { font: 700 26px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+              :scope .f1-label { font: 700 22px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+              :scope .f1-body { font: 500 18px 'Aptos','Microsoft JhengHei',sans-serif; fill: #425161; }
+              :scope .f1-small { font: 600 16px 'Aptos','Microsoft JhengHei',sans-serif; fill: #0d7a73; }
+              :scope .f1-axis { stroke: #cfd8dc; stroke-width: 2; }
+              :scope .f1-card { stroke: #d7ddd8; stroke-width: 2; }
+              :scope .f1-strong { fill: #16222d; font: 700 18px 'Aptos','Microsoft JhengHei',sans-serif; }
+            </style>
+            <rect class="f1-bg" x="0" y="0" width="1120" height="720" rx="28" ry="28"></rect>
+            <text class="f1-title" x="60" y="70">Harness 的四象限：先導正，再驗證；能計算的先交給工具</text>
+            <text class="f1-label" x="225" y="150">Feedforward</text>
+            <text class="f1-body" x="215" y="178">Agent 動手前的引導</text>
+            <text class="f1-label" x="730" y="150">Feedback</text>
+            <text class="f1-body" x="713" y="178">Agent 動手後的回饋</text>
+            <text class="f1-label" transform="translate(70 470) rotate(-90)">Computational</text>
+            <text class="f1-body" transform="translate(98 510) rotate(-90)">確定性、高頻率</text>
+            <text class="f1-label" transform="translate(70 680) rotate(-90)">Inferential</text>
+            <text class="f1-body" transform="translate(98 702) rotate(-90)">語意判斷、選擇性啟用</text>
+            <line class="f1-axis" x1="160" y1="210" x2="1040" y2="210"></line>
+            <line class="f1-axis" x1="160" y1="470" x2="1040" y2="470"></line>
+            <line class="f1-axis" x1="600" y1="110" x2="600" y2="650"></line>
+            <rect class="f1-card" x="180" y="230" width="390" height="205" rx="24" ry="24" fill="#eaf7f4"></rect>
+            <text class="f1-small" x="210" y="275">Computational × Feedforward</text>
+            <text class="f1-strong" x="210" y="315">最值得先做的區塊</text>
+            <text class="f1-body" x="210" y="352">• 任務卡輸入/輸出契約</text>
+            <text class="f1-body" x="210" y="382">• 檔案路由規則與模組邊界</text>
+            <text class="f1-body" x="210" y="412">• 可直接執行的腳手架與模板</text>
+            <rect class="f1-card" x="630" y="230" width="390" height="205" rx="24" ry="24" fill="#eef5fb"></rect>
+            <text class="f1-small" x="660" y="275">Computational × Feedback</text>
+            <text class="f1-strong" x="660" y="315">品質穩定的主力</text>
+            <text class="f1-body" x="660" y="352">• 型別檢查、Lint、單元測試</text>
+            <text class="f1-body" x="660" y="382">• JSON/契約/快照驗證</text>
+            <text class="f1-body" x="660" y="412">• 編碼、防呆與依賴檢查</text>
+            <rect class="f1-card" x="180" y="500" width="390" height="130" rx="24" ry="24" fill="#fbf0e9"></rect>
+            <text class="f1-small" x="210" y="545">Inferential × Feedforward</text>
+            <text class="f1-body" x="210" y="580">• 架構說明、示範案例、審稿規則</text>
+            <text class="f1-body" x="210" y="608">• 讓模型知道什麼叫「好答案」</text>
+            <rect class="f1-card" x="630" y="500" width="390" height="130" rx="24" ry="24" fill="#f6edf2"></rect>
+            <text class="f1-small" x="660" y="545">Inferential × Feedback</text>
+            <text class="f1-body" x="660" y="580">• AI Code Review、語意審查</text>
+            <text class="f1-body" x="660" y="608">• 價格較高，適合留在關鍵節點</text>
+          </svg>
+          <figcaption>圖 1：最重要的實務結論不是「四種都很重要」，而是「能用計算解決的，先不要丟給模型判斷」。</figcaption>
+          <div class="copy-status" aria-live="polite"></div>
+        </figure>
+
+        <div class="split">
+          <div class="mini-card">
+            <h3>Feedforward</h3>
+            <p>在 Agent 動手前先提供規格摘要、檔案範圍、任務契約與禁止事項。這些內容不是為了增加提示詞長度，而是為了減少無效嘗試。</p>
+          </div>
+          <div class="mini-card">
+            <h3>Feedback</h3>
+            <p>在修改後立刻回傳可執行驗證結果。只要失敗訊息夠短、夠具體，小模型也有機會靠局部修正快速收斂。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="governance">
+        <h2>把韁繩分成三類，治理才不會失焦</h2>
+        <p>我在 3KProject 早期也踩過同一個坑：只要覺得重要就先加規則，結果最後變成難以維護的規則堆。後來比較穩的做法，是把它拆成三個治理面向：維護性、架構適配與行為正確性。</p>
+
+        <figure class="figure-card" data-figure-name="harness-governance-map">
+          <div class="figure-actions">
+            <button type="button" data-download-svg>下載 SVG</button>
+            <button type="button" data-download-png>下載 PNG</button>
+          </div>
+          <svg viewBox="0 0 1120 640" role="img" aria-label="Harness 治理地圖">
+            <style>
+              :scope .f2-bg { fill: #fffaf2; }
+              :scope .f2-hub { fill: #16222d; }
+              :scope .f2-hubtext { font: 700 24px 'Aptos','Microsoft JhengHei',sans-serif; fill: #ffffff; }
+              :scope .f2-node1 { fill: #eaf7f4; stroke: #9bd0ca; stroke-width: 2; }
+              :scope .f2-node2 { fill: #eef5fb; stroke: #a9c4e1; stroke-width: 2; }
+              :scope .f2-node3 { fill: #fbf0e9; stroke: #e1b98f; stroke-width: 2; }
+              :scope .f2-title { font: 700 22px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+              :scope .f2-body { font: 500 17px 'Aptos','Microsoft JhengHei',sans-serif; fill: #425161; }
+              :scope .f2-line { stroke: #8da1b3; stroke-width: 3; }
+            </style>
+            <rect class="f2-bg" x="0" y="0" width="1120" height="640" rx="28" ry="28"></rect>
+            <circle class="f2-hub" cx="560" cy="160" r="84"></circle>
+            <text class="f2-hubtext" x="483" y="150">Harness</text>
+            <text class="f2-hubtext" x="442" y="183">Engineering</text>
+            <line class="f2-line" x1="485" y1="225" x2="280" y2="312"></line>
+            <line class="f2-line" x1="560" y1="244" x2="560" y2="310"></line>
+            <line class="f2-line" x1="635" y1="225" x2="840" y2="312"></line>
+            <rect class="f2-node1" x="90" y="320" width="320" height="230" rx="24" ry="24"></rect>
+            <text class="f2-title" x="120" y="370">Maintainability</text>
+            <text class="f2-body" x="120" y="408">• 重複碼與複雜度分析</text>
+            <text class="f2-body" x="120" y="438">• 型別健康度與測試覆蓋</text>
+            <text class="f2-body" x="120" y="468">• 編碼一致性與死碼掃描</text>
+            <text class="f2-body" x="120" y="512">目的：讓系統在頻繁修改下，</text>
+            <text class="f2-body" x="120" y="538">仍然能被人和 Agent 安全維護。</text>
+            <rect class="f2-node2" x="400" y="320" width="320" height="230" rx="24" ry="24"></rect>
+            <text class="f2-title" x="430" y="370">Architecture Fitness</text>
+            <text class="f2-body" x="430" y="408">• 模組邊界與依賴限制</text>
+            <text class="f2-body" x="430" y="438">• 效能、記憶體、載入基線</text>
+            <text class="f2-body" x="430" y="468">• 可觀測性與 API 品質守衛</text>
+            <text class="f2-body" x="430" y="512">目的：把架構原則變成</text>
+            <text class="f2-body" x="430" y="538">可執行、可違規警示的規則。</text>
+            <rect class="f2-node3" x="710" y="320" width="320" height="230" rx="24" ry="24"></rect>
+            <text class="f2-title" x="740" y="370">Behaviour</text>
+            <text class="f2-body" x="740" y="408">• 功能規格驗證</text>
+            <text class="f2-body" x="740" y="438">• Approved fixtures / golden cases</text>
+            <text class="f2-body" x="740" y="468">• 回歸快照與互動 smoke checks</text>
+            <text class="f2-body" x="740" y="512">目的：驗證系統做出的事情，</text>
+            <text class="f2-body" x="740" y="538">是否真的符合產品期望。</text>
+          </svg>
+          <figcaption>圖 2：當團隊把 Harness 明確分區之後，討論就會從「要不要加檢查」變成「這是哪一類風險，該用哪種感測器攔」。</figcaption>
+          <div class="copy-status" aria-live="polite"></div>
+        </figure>
+
+        <p>這個拆法對 3KProject 很重要，因為它把「品質」從抽象概念拆回實際責任。維護性管的是日常可改性；架構適配管的是長期演化時不走樣；行為管的是輸出結果有沒有做對。三者混在一起時，規則會越堆越多，但閉環反而越來越弱。</p>
+      </section>
+
+      <section class="panel" id="diagnosis">
+        <h2>3KProject 目前的強項與缺口</h2>
+        <p>回頭看 3KProject 目前的內部流程，我覺得 Feedforward 其實做得不差：instructions、workflow skills、任務卡、共識文件、doc-id registry、context budget guard 都已經在運作。真正薄弱的地方，反而是 Computational Feedback 還沒有完全補齊。</p>
+
+        <figure class="figure-card" data-figure-name="project-capability-matrix">
+          <div class="figure-actions">
+            <button type="button" data-download-svg>下載 SVG</button>
+            <button type="button" data-download-png>下載 PNG</button>
+          </div>
+          <svg viewBox="0 0 1120 760" role="img" aria-label="3KProject 能力矩陣表">
+            <style>
+              :scope .f3-bg { fill: #fffaf2; }
+              :scope .f3-head { fill: #16222d; }
+              :scope .f3-headtext { font: 700 22px 'Aptos','Microsoft JhengHei',sans-serif; fill: #ffffff; }
+              :scope .f3-rowtitle { font: 700 18px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+              :scope .f3-body { font: 500 16px 'Aptos','Microsoft JhengHei',sans-serif; fill: #425161; }
+              :scope .f3-grid { stroke: #d8dfdf; stroke-width: 2; }
+            </style>
+            <rect class="f3-bg" x="0" y="0" width="1120" height="760" rx="28" ry="28"></rect>
+            <rect class="f3-head" x="70" y="70" width="980" height="70" rx="16" ry="16"></rect>
+            <text class="f3-headtext" x="110" y="114">3KProject 目前的 Harness 能力盤點</text>
+            <line class="f3-grid" x1="70" y1="170" x2="1050" y2="170"></line>
+            <line class="f3-grid" x1="70" y1="260" x2="1050" y2="260"></line>
+            <line class="f3-grid" x1="70" y1="350" x2="1050" y2="350"></line>
+            <line class="f3-grid" x1="70" y1="440" x2="1050" y2="440"></line>
+            <line class="f3-grid" x1="70" y1="530" x2="1050" y2="530"></line>
+            <line class="f3-grid" x1="70" y1="620" x2="1050" y2="620"></line>
+            <line class="f3-grid" x1="300" y1="140" x2="300" y2="710"></line>
+            <line class="f3-grid" x1="690" y1="140" x2="690" y2="710"></line>
+            <text class="f3-rowtitle" x="110" y="212">引導層已成熟</text>
+            <text class="f3-body" x="330" y="196">• keep.summary、Instructions、Skills、任務卡、doc-id registry 都已經在運作</text>
+            <text class="f3-body" x="330" y="224">• Agent 開始前大致知道路徑、禁區、命名與 handoff 方式</text>
+            <text class="f3-body" x="720" y="210">風險低，但容易誤以為這樣就夠了</text>
+            <text class="f3-rowtitle" x="110" y="302">結構驗證具雛形</text>
+            <text class="f3-body" x="330" y="286">• 已有編碼檢查、UI contract 驗證、runtime smoke check、screenshot regression、資料驗證</text>
+            <text class="f3-body" x="330" y="314">• 代表 3KProject 已經知道哪些地方不能只靠肉眼</text>
+            <text class="f3-body" x="720" y="300">還缺整合式 gate，把結果回灌給 Agent</text>
+            <text class="f3-rowtitle" x="110" y="392">Lint 與測試不足</text>
+            <text class="f3-body" x="330" y="376">• 缺少高頻執行的 linter、單元測試與 type-check pipeline</text>
+            <text class="f3-body" x="330" y="404">• 品質仍偏向依賴模型記憶與人工 code review</text>
+            <text class="f3-body" x="720" y="390">這是最主要的穩定性缺口</text>
+            <text class="f3-rowtitle" x="110" y="482">模組邊界未工具化</text>
+            <text class="f3-body" x="330" y="466">• 我們知道哪些依賴不應該發生，但沒有完整的自動守衛</text>
+            <text class="f3-body" x="330" y="494">• 架構原則還是有一部分停留在文件與資深成員口頭提醒</text>
+            <text class="f3-body" x="720" y="480">長期會演變成耦合擴散</text>
+            <text class="f3-rowtitle" x="110" y="572">Approved fixtures 缺位</text>
+            <text class="f3-body" x="330" y="556">• 很多內部流程有 expected output，但沒有被保存成可回歸比對的基準</text>
+            <text class="f3-body" x="330" y="584">• 每次驗證都要重新靠人判斷，成本會一直堆上去</text>
+            <text class="f3-body" x="720" y="570">行為正確性無法穩定複用</text>
+            <text class="f3-rowtitle" x="110" y="662">整體判斷</text>
+            <text class="f3-body" x="330" y="646">• 3KProject 不是沒有規則，而是 Feedback 還不夠便宜、密集與自動化</text>
+            <text class="f3-body" x="330" y="674">• 我下一步不是加更多提示詞，而是補齊計算型感測器</text>
+            <text class="f3-body" x="720" y="660">這會直接決定 Agent 能否穩定擴張</text>
+          </svg>
+          <figcaption>圖 3：很多團隊不是沒有規則，而是規則沒有變成可以頻繁執行的檢查，於是品質仍然卡在人工審查。</figcaption>
+          <div class="copy-status" aria-live="polite"></div>
+        </figure>
+
+        <div class="split">
+          <div class="mini-card">
+            <h3>3KProject 已經做對的事情</h3>
+            <p>把經驗寫成 instructions、技能流程、任務卡、摘要卡與規格索引，是我把外部韁繩落到專案裡的第一步。這些機制確實讓 Agent 第一次就做對的機率提升很多。</p>
+          </div>
+          <div class="mini-card">
+            <h3>我現在最想補的地方</h3>
+            <p>如果沒有高頻率、低成本的計算型回饋，Agent 最後還是只能靠猜。表面上像是在做工程化，實際上只是把人工審查往後挪而已。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="workflow">
+        <h2>我想在 3KProject 裡落地的小模型工作流</h2>
+        <p>這套方法對我來說最有價值的地方，是它不只服務最強的模型。3KProject 內部規格、UI、資料與工具鏈都很多，只要我把任務拆成原子步驟，並讓每一步都有明確的輸入、輸出與驗證命令，中型甚至小型模型也能穩定完成複雜功能。</p>
+
+        <figure class="figure-card" data-figure-name="small-model-delivery-loop">
+          <div class="figure-actions">
+            <button type="button" data-download-svg>下載 SVG</button>
+            <button type="button" data-download-png>下載 PNG</button>
+          </div>
+          <svg viewBox="0 0 1120 920" role="img" aria-label="小模型友善交付流程圖">
+            <style>
+              :scope .f4-bg { fill: #fffaf2; }
+              :scope .f4-box1 { fill: #16222d; }
+              :scope .f4-box2 { fill: #eaf7f4; stroke: #9bd0ca; stroke-width: 2; }
+              :scope .f4-box3 { fill: #eef5fb; stroke: #a9c4e1; stroke-width: 2; }
+              :scope .f4-box4 { fill: #fbf0e9; stroke: #e1b98f; stroke-width: 2; }
+              :scope .f4-diamond { fill: #fff7ee; stroke: #cb7d2e; stroke-width: 2; }
+              :scope .f4-line { stroke: #516477; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+              :scope .f4-title { font: 700 24px 'Aptos','Microsoft JhengHei',sans-serif; fill: #ffffff; }
+              :scope .f4-heading { font: 700 20px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+              :scope .f4-body { font: 500 16px 'Aptos','Microsoft JhengHei',sans-serif; fill: #425161; }
+              :scope .f4-yesno { font: 700 15px 'Aptos','Microsoft JhengHei',sans-serif; fill: #8f425e; }
+            </style>
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#516477"></path>
+              </marker>
+            </defs>
+            <rect class="f4-bg" x="0" y="0" width="1120" height="920" rx="28" ry="28"></rect>
+            <rect class="f4-box1" x="360" y="44" width="400" height="88" rx="26" ry="26"></rect>
+            <text class="f4-title" x="430" y="98">複雜需求與里程碑拆解</text>
+            <rect class="f4-box2" x="280" y="182" width="560" height="96" rx="24" ry="24"></rect>
+            <text class="f4-heading" x="470" y="222">原子任務卡</text>
+            <text class="f4-body" x="324" y="252">每張卡片都定義 INPUT_CONTRACT、OUTPUT_CONTRACT、VALIDATION_CMD 與 ROLLBACK_CMD</text>
+            <rect class="f4-box3" x="280" y="328" width="560" height="96" rx="24" ry="24"></rect>
+            <text class="f4-heading" x="495" y="368">Agent 修改</text>
+            <text class="f4-body" x="362" y="398">模型只專注在當前卡片的局部代碼與已知上下文，不必一次理解整個系統</text>
+            <polygon class="f4-diamond" points="560,470 730,560 560,650 390,560"></polygon>
+            <text class="f4-heading" x="487" y="548">計算型驗證</text>
+            <text class="f4-body" x="470" y="576">Type、Lint、Test、Schema</text>
+            <rect class="f4-box4" x="120" y="720" width="360" height="104" rx="24" ry="24"></rect>
+            <text class="f4-heading" x="235" y="760">失敗：自動修正</text>
+            <text class="f4-body" x="150" y="792">直接把錯誤訊息回灌給 Agent</text>
+            <rect class="f4-box2" x="640" y="720" width="360" height="104" rx="24" ry="24"></rect>
+            <text class="f4-heading" x="742" y="760">成功：輸出摘要</text>
+            <text class="f4-body" x="680" y="792">更新狀態，進入下一張任務卡</text>
+            <line class="f4-line" x1="560" y1="132" x2="560" y2="182"></line>
+            <line class="f4-line" x1="560" y1="278" x2="560" y2="328"></line>
+            <line class="f4-line" x1="560" y1="424" x2="560" y2="470"></line>
+            <path class="f4-line" d="M 390 560 C 250 560, 250 700, 300 720"></path>
+            <path class="f4-line" d="M 480 772 C 560 772, 560 680, 560 650"></path>
+            <path class="f4-line" d="M 730 560 C 870 560, 870 700, 820 720"></path>
+            <text class="f4-yesno" x="300" y="612">FAIL</text>
+            <text class="f4-yesno" x="820" y="612">PASS</text>
+          </svg>
+          <figcaption>圖 4：對小模型最友善的不是更長的提示詞，而是更短的任務切片，以及更確定的驗證訊號。</figcaption>
+          <div class="copy-status" aria-live="polite"></div>
+        </figure>
+
+        <p>把工作流設計成上圖之後，LLM 在 3KProject 裡的職責會變得非常單純：讀任務卡、修改局部、讀失敗訊息、修正局部。所有「這樣到底算不算正確」的判斷，我都盡量交給型別系統、規格驗證器、邊界檢查器與 fixtures 比對。</p>
+
+        <h3>範例 1：任務原子化拆解器</h3>
+          <pre><code>node tools/task-decomposer.js \
+        --feature "UI 契約閘門整併" \
+        --spec "docs/ui/UI技術規格書.md" \
+  --output-dir "docs/tasks/"</code></pre>
+
+        <h3>範例 2：計算型閘門設定</h3>
+        <pre><code>{
+  "gates": [
+    {
+      "name": "syntax-check",
+      "cmd": "npx tsc --noEmit --project tsconfig.json",
+      "priority": 1
+    },
+    {
+      "name": "encoding-check",
+      "cmd": "node tools_node/check-encoding-touched.js",
+      "priority": 2
+    },
+    {
+      "name": "domain-data",
+      "cmd": "node tools_node/validate-generals-data.js",
+      "priority": 3
+    },
+    {
+      "name": "ui-contract",
+      "cmd": "node tools_node/validate-ui-specs.js",
+      "priority": 4
+    },
+    {
+      "name": "runtime-registry",
+      "cmd": "node tools_node/check-ui-runtime-state-registry.js",
+      "priority": 5
+    },
+    {
+      "name": "import-boundary",
+      "cmd": "node tools_node/check-import-boundaries.js",
+      "priority": 5
+    }
+  ]
+}</code></pre>
+
+        <div class="callout">真正的關鍵不是 gate 名稱，而是失敗訊息要夠局部、夠可執行。只要 Agent 看得懂哪個檔案、哪一條規則、哪一個欄位出錯，修正成功率就會明顯上升。這也是我在 3KProject 裡一直強調「錯誤訊息本身也是 prompt」的原因。</div>
+      </section>
+
+      <section class="panel" id="tooling">
+        <h2>我接下來最想補的五個工具</h2>
+        <p>3KProject 其實不缺流程文件，缺的是能天天跑、跑完還能直接回灌給 Agent 的 Feedback 閘門。所以對我來說，最有效率的做法不是再寫更多規範，而是補齊幾個會每天被用到的工具。</p>
+        <ol>
+          <li><strong>compute-gate.js</strong>：把型別、編碼、資料驗證、契約驗證整合成單一入口。</li>
+          <li><strong>check-import-boundaries.js</strong>：用自動檢查把模組邊界從口頭約定變成工具守衛。</li>
+          <li><strong>approved-fixture-check.js</strong>：把「人類已核可的預期輸出」保存成可比對基準。</li>
+          <li><strong>task-decomposer.js</strong>：把大型需求切成可序列執行的原子任務卡。</li>
+          <li><strong>harness-health-report.js</strong>：用固定報表看目前哪些 Guide 與 Sensor 還是空洞。</li>
+        </ol>
+        <p>這五個工具的共同特徵，是它們都在把抽象知識翻譯成可重複執行的流程。對 3KProject 來說，只要規則能執行，Agent 才會真正受控；只要結果能量測，我才能跟團隊討論提升，而不是只討論感覺。</p>
+      </section>
+
+      <section class="panel" id="roadmap">
+        <h2>實施順序：先補便宜、穩定、每天都會跑的感測器</h2>
+        <p>我在 3KProject 排這個導入順序時，看的是哪一些東西最便宜、最穩定、而且每天都會跑。最有效的策略，是先做低成本高頻率檢查，再補行為與架構層的守衛，最後才處理昂貴的語意審查。</p>
+
+        <figure class="figure-card" data-figure-name="harness-roadmap-table">
+          <div class="figure-actions">
+            <button type="button" data-download-svg>下載 SVG</button>
+            <button type="button" data-download-png>下載 PNG</button>
+          </div>
+          <svg viewBox="0 0 1120 720" role="img" aria-label="Harness 實施優先順序表">
+            <style>
+              :scope .f5-bg { fill: #fffaf2; }
+              :scope .f5-head { fill: #16222d; }
+              :scope .f5-headtext { font: 700 20px 'Aptos','Microsoft JhengHei',sans-serif; fill: #ffffff; }
+              :scope .f5-prio { font: 700 18px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+              :scope .f5-body { font: 500 16px 'Aptos','Microsoft JhengHei',sans-serif; fill: #425161; }
+              :scope .f5-grid { stroke: #d8dfdf; stroke-width: 2; }
+            </style>
+            <rect class="f5-bg" x="0" y="0" width="1120" height="720" rx="28" ry="28"></rect>
+            <rect class="f5-head" x="70" y="70" width="980" height="72" rx="16" ry="16"></rect>
+            <text class="f5-headtext" x="110" y="114">導入優先順序：先穩住 Feedback 主鏈，再擴張語意層與治理層</text>
+            <line class="f5-grid" x1="70" y1="170" x2="1050" y2="170"></line>
+            <line class="f5-grid" x1="70" y1="280" x2="1050" y2="280"></line>
+            <line class="f5-grid" x1="70" y1="390" x2="1050" y2="390"></line>
+            <line class="f5-grid" x1="70" y1="500" x2="1050" y2="500"></line>
+            <line class="f5-grid" x1="70" y1="610" x2="1050" y2="610"></line>
+            <line class="f5-grid" x1="220" y1="142" x2="220" y2="660"></line>
+            <line class="f5-grid" x1="530" y1="142" x2="530" y2="660"></line>
+            <line class="f5-grid" x1="820" y1="142" x2="820" y2="660"></line>
+            <text class="f5-prio" x="120" y="233">P0</text>
+            <text class="f5-body" x="250" y="212">型別檢查整合</text>
+            <text class="f5-body" x="250" y="240">基礎 Lint 與編碼檢查</text>
+            <text class="f5-body" x="560" y="212">先消滅最常見、最便宜可攔的錯誤</text>
+            <text class="f5-body" x="850" y="226">立即提升穩定性</text>
+            <text class="f5-prio" x="120" y="343">P1</text>
+            <text class="f5-body" x="250" y="322">匯入邊界檢查</text>
+            <text class="f5-body" x="250" y="350">任務卡原子化工具</text>
+            <text class="f5-body" x="560" y="322">讓架構原則與任務切片可被機器執行</text>
+            <text class="f5-body" x="850" y="336">降低長期耦合</text>
+            <text class="f5-prio" x="120" y="453">P2</text>
+            <text class="f5-body" x="250" y="432">Approved fixtures</text>
+            <text class="f5-body" x="250" y="460">Health report</text>
+            <text class="f5-body" x="560" y="432">把行為驗證與治理覆蓋率制度化</text>
+            <text class="f5-body" x="850" y="446">建立可持續回歸</text>
+            <text class="f5-prio" x="120" y="563">P3</text>
+            <text class="f5-body" x="250" y="542">AI 語意審查</text>
+            <text class="f5-body" x="250" y="570">高成本 inferential sensors</text>
+            <text class="f5-body" x="560" y="542">留在高價值節點，而不是每次都跑</text>
+            <text class="f5-body" x="850" y="556">控制成本與延遲</text>
+          </svg>
+          <figcaption>圖 5：順序錯了，團隊很容易花很多成本做昂貴審查，卻仍然沒補上每天都會踩到的基礎錯誤。</figcaption>
+          <div class="copy-status" aria-live="polite"></div>
+        </figure>
+
+        <p>用一句話總結我在 3KProject 的優先順序：<strong>先讓機器做它擅長的確定性判定，再讓模型做它擅長的新內容生成與語意理解。</strong></p>
+      </section>
+
+      <section class="panel" id="takeaway">
+        <h2>最後的判斷準則</h2>
+        <p>回到 3KProject，我現在的判斷準則很簡單：如果某個品質判斷可以由腳本、型別系統、Schema、快照或 fixtures 決定，就不要把它留給 LLM 猜。模型最有價值的地方，是生成新東西、讀懂曖昧需求、補齊缺漏脈絡；而不是反覆充當一個昂貴又不穩定的 if/else 引擎。</p>
+        <div class="split">
+          <div class="mini-card">
+            <h3>適合交給模型</h3>
+            <p>需求拆解、程式碼撰寫、重構建議、文件整合、語意差異判讀與高階設計取捨。</p>
+          </div>
+          <div class="mini-card">
+            <h3>適合交給工具</h3>
+            <p>型別正確性、命名規則、模組邊界、資料格式、固定輸出比對與編碼完整性。</p>
+          </div>
+        </div>
+        <p class="quote">在 3KProject，我現在的原則就是：把讓 LLM 做的「判斷」盡量改成腳本，把 LLM 留給真正需要理解與創造的地方。</p>
+      </section>
+
+      <div class="footer">3KProject 技術筆記。圖卡支援下載 SVG 與下載 PNG，較適合外部平台發文。</div>
+    </main>
+
+    <aside class="toc">
+      <h2>文章目錄</h2>
+      <ol>
+        <li><a href="#summary">核心觀念</a></li>
+        <li><a href="#model">兩個座標軸</a></li>
+        <li><a href="#governance">治理分區</a></li>
+        <li><a href="#diagnosis">3KProject 強項與缺口</a></li>
+        <li><a href="#workflow">小模型工作流</a></li>
+        <li><a href="#tooling">五個優先工具</a></li>
+        <li><a href="#roadmap">實施順序</a></li>
+        <li><a href="#takeaway">判斷準則</a></li>
+      </ol>
+      <div class="note">
+        使用方式：
+        <br>1. 直接用瀏覽器打開本檔。
+        <br>2. 每張圖卡右上角可直接下載 SVG 或 PNG。
+        <br>3. LinkedIn 建議直接上傳 PNG，不建議依賴貼上剪貼簿。
+        <br>4. 這篇是 3KProject 的工程實作整理，可直接分享。
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    function showStatus(figure, message) {
+      const status = figure.querySelector('.copy-status');
+      if (!status) {
+        return;
+      }
+      status.textContent = message;
+      status.classList.add('is-visible');
+      window.clearTimeout(status._timer);
+      status._timer = window.setTimeout(() => {
+        status.classList.remove('is-visible');
+      }, 1800);
+    }
+
+    function serializeSvg(svg) {
+      const clone = svg.cloneNode(true);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+      return new XMLSerializer().serializeToString(clone);
+    }
+
+    function figureDownloadName(figure, extension) {
+      const name = figure.getAttribute('data-figure-name') || 'figure';
+      return `${name}.${extension}`;
+    }
+
+    function triggerDownload(blob, fileName) {
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = fileName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    }
+
+    async function downloadSvg(button) {
+      const figure = button.closest('figure');
+      const svg = figure.querySelector('svg');
+      try {
+        const svgMarkup = serializeSvg(svg);
+        const blob = new Blob([svgMarkup], { type: 'image/svg+xml;charset=utf-8' });
+        triggerDownload(blob, figureDownloadName(figure, 'svg'));
+        showStatus(figure, '已下載 SVG');
+      } catch (error) {
+        showStatus(figure, '下載 SVG 失敗');
+      }
+    }
+
+    function svgViewBoxSize(svg) {
+      const viewBox = svg.viewBox && svg.viewBox.baseVal;
+      if (viewBox && viewBox.width && viewBox.height) {
+        return { width: viewBox.width, height: viewBox.height };
+      }
+      return {
+        width: Number(svg.getAttribute('width')) || 1200,
+        height: Number(svg.getAttribute('height')) || 800,
+      };
+    }
+
+    async function downloadPng(button) {
+      const figure = button.closest('figure');
+      const svg = figure.querySelector('svg');
+      const svgMarkup = serializeSvg(svg);
+      const blob = new Blob([svgMarkup], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const image = new Image();
+      const { width, height } = svgViewBoxSize(svg);
+
+      try {
+        const pngBlob = await new Promise((resolve, reject) => {
+          image.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = width * 2;
+            canvas.height = height * 2;
+            const context = canvas.getContext('2d');
+            context.fillStyle = '#fffaf2';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((result) => {
+              if (result) {
+                resolve(result);
+              } else {
+                reject(new Error('png blob failed'));
+              }
+            }, 'image/png');
+          };
+          image.onerror = () => reject(new Error('svg load failed'));
+          image.src = url;
+        });
+
+        triggerDownload(pngBlob, figureDownloadName(figure, 'png'));
+        showStatus(figure, '已下載 PNG');
+      } catch (error) {
+        showStatus(figure, '下載 PNG 失敗');
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    document.querySelectorAll('[data-download-svg]').forEach((button) => {
+      button.addEventListener('click', () => downloadSvg(button));
+    });
+
+    document.querySelectorAll('[data-download-png]').forEach((button) => {
+      button.addEventListener('click', () => downloadPng(button));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+{
+  "$schema": "./compute-gate-config.schema.json",
+  "$comment": "Harness Engineering 計算型閘門設定 — 所有 gate 為確定性驗證，不依賴 LLM",
+  "version": "1.0.0",
+  "gates": [
+    {
+      "id": "ts-syntax",
+      "label": "TypeScript 語法掃描",
+      "cmd": "node",
+      "args": ["tools_node/check-ts-syntax.js"],
+      "priority": 1,
+      "failAction": "block",
+      "description": "逐檔 transpile 級別語法掃描，抓缺漏括號 / 非法 token"
+    },
+    {
+      "id": "encoding",
+      "label": "檔案編碼完整性",
+      "cmd": "node",
+      "args": ["tools_node/check-encoding-touched.js"],
+      "priority": 2,
+      "failAction": "block",
+      "description": "確保所有文字檔為 UTF-8 without BOM"
+    },
+    {
+      "id": "ui-spec-contract",
+      "label": "UI Spec 三層契約驗證",
+      "cmd": "node",
+      "args": ["tools_node/validate-ui-specs.js"],
+      "priority": 3,
+      "failAction": "block",
+      "description": "驗證 layouts / skins / screens JSON 契約一致性"
+    },
+    {
+      "id": "general-detail-ui",
+      "label": "GeneralDetail UI 契約",
+      "cmd": "node",
+      "args": ["tools_node/validate-general-detail-ui.js"],
+      "priority": 4,
+      "failAction": "block",
+      "description": "武將人物頁 UI 結構完整性"
+    },
+    {
+      "id": "general-data",
+      "label": "武將資料完整性",
+      "cmd": "node",
+      "args": ["tools_node/validate-generals-data.js"],
+      "priority": 5,
+      "failAction": "warn",
+      "description": "驗證 generals.json 資料正確性（圖片路徑、屬性值域、稀有度規則）"
+    },
+    {
+      "id": "skin-contracts",
+      "label": "Skin 契約驗證",
+      "cmd": "node",
+      "args": ["tools_node/validate-skin-contracts.js"],
+      "priority": 6,
+      "failAction": "warn",
+      "description": "驗證 skin JSON 與 Design Token 引用一致性"
+    },
+    {
+      "id": "crossref-integrity",
+      "label": "交叉索引完整性",
+      "cmd": "node",
+      "args": ["tools_node/rebuild-crossref.js", "--validate"],
+      "priority": 7,
+      "failAction": "warn",
+      "description": "確認 cross-ref shard 無孤立引用或斷鏈"
+    },
+    {
+      "id": "import-boundary",
+      "label": "模組邊界守衛",
+      "cmd": "node",
+      "args": ["tools_node/check-import-boundaries.js"],
+      "priority": 8,
+      "failAction": "warn",
+      "description": "確保 ui/battle/core/shared 之間的單向依賴規則"
+    },
+    {
+      "id": "eslint-rules",
+      "label": "ESLint 關鍵規則掃描",
+      "cmd": "node",
+      "args": ["tools_node/check-eslint-rules.js"],
+      "priority": 9,
+      "failAction": "block",
+      "description": "禁裸 console.log / no-var / no-debugger / eqeqeq 規則掃描"
+    },
+    {
+      "id": "approved-fixtures",
+      "label": "行為快照比對",
+      "cmd": "node",
+      "args": ["tools_node/approved-fixture-check.js"],
+      "priority": 10,
+      "failAction": "warn",
+      "description": "比對人類審核過的預期輸出（Approved Fixtures 模式）"
+    }
+  ],
+  "profiles": {
+    "quick": {
+      "description": "快速驗證（每次代碼修改後）",
+      "gates": ["ts-syntax", "encoding", "eslint-rules"]
+    },
+    "standard": {
+      "description": "標準驗證（任務卡完成時）",
+      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "import-boundary"]
+    },
+    "full": {
+      "description": "完整驗證（階段性交付時）",
+      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "general-data", "skin-contracts", "crossref-integrity", "import-boundary", "approved-fixtures"]
+    }
+  },
+  "selfCorrection": {
+    "maxRetries": 3,
+    "errorAsPrompt": true,
+    "description": "失敗訊息直接當作 Agent 的下一輪 prompt，實現自動修正"
+  }
+}

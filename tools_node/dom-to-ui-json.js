@@ -424,6 +424,29 @@ async function main(argv) {
     skinDraft = readJson(opts.skinInput);
     if (requestedCanvas) layoutDraft.canvas = requestedCanvas;
     inputPath = opts.layoutInput;
+    if (opts.input) {
+      const html = fs.readFileSync(path.resolve(opts.input), 'utf8');
+      inputBytes = Buffer.byteLength(html, 'utf8');
+      inputHash = sha256(html);
+      inputPath = opts.input;
+      const parsedSidecars = buildDraftFromHtml(html, {
+        screenId: opts.screenId,
+        skinId: opts.skinId,
+        bundle: opts.bundle,
+        defaultBundle: opts.defaultBundle,
+        rootName: opts.rootName,
+        tokensSource: opts.tokensSource,
+        tokensRuntime: opts.tokensRuntime,
+        tokensHandoff: opts.tokensHandoff,
+        canvas: effectiveCanvas || undefined,
+      });
+      // Plan 4.1：final replay 以 optimized layout/skin 為畫面權威，但 sidecar 必須重新由 source HTML 產生。
+      // 這不是 raw sidecar fallback；它避免 strict replay 把 interaction / tab-routing contract 洗成空白。
+      compositeNodes = parsedSidecars.compositeNodes || [];
+      interactionDraft = parsedSidecars.interactionDraft || interactionDraft;
+      motionDraft = parsedSidecars.motionDraft || motionDraft;
+      for (const w of parsedSidecars.warnings || []) warnings.push(w);
+    }
   } else if (opts.input) {
     inputPath = opts.input;
     const html = fs.readFileSync(path.resolve(opts.input), 'utf8');

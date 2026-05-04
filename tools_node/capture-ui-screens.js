@@ -17,6 +17,7 @@ const path = require('path');
 const os = require('os');
 const http = require('http');
 const https = require('https');
+const crypto = require('crypto');
 const { execSync } = require('child_process');
 const { writeRuntimeVerdictCaptureResult } = require('./lib/ui-factory-manifest-validator');
 
@@ -32,12 +33,14 @@ try {
 const targets = [
     { id: 'LobbyMain', screenId: 'lobby-main-screen', targetIndex: 1, uiSourceDir: 'lobby-main', runtimeScreenId: 'LobbyMain' },
     { id: 'ShopMain', screenId: 'shop-main-screen', targetIndex: 2, uiSourceDir: 'shop-main', runtimeScreenId: 'ShopMain' },
-    { id: 'Gacha', screenId: 'gacha-main-screen', targetIndex: 3, uiSourceDir: 'gacha-main', runtimeScreenId: 'GachaMain' },
-    { id: 'GachaFromLobby', screenId: 'gacha-main-screen', targetIndex: 17, uiSourceDir: 'gacha-main', runtimeScreenId: 'GachaMain' },
+    { id: 'GachaDs3Formal', screenId: 'gacha-ds3', targetIndex: 3, formalScreenId: 'gacha-ds3', captureMode: 'formal-html-to-ucuf', uiSourceDir: 'gacha-main', runtimeScreenId: 'gacha-ds3' },
+    { id: 'Gacha', screenId: 'gacha-ds3', targetIndex: 3, uiSourceDir: 'gacha-main', runtimeScreenId: 'GachaMain' },
+    { id: 'GachaFromLobby', screenId: 'gacha-ds3', targetIndex: 17, uiSourceDir: 'gacha-main', runtimeScreenId: 'GachaMain' },
     { id: 'CharacterDs3', screenId: 'character-ds3-main', targetIndex: 18, previewVariant: 'zhang-fei', uiSourceDir: 'character-ds3', runtimeScreenId: 'character-ds3-main' },
-    { id: 'GachaHero', screenId: 'gacha-main-screen', targetIndex: 3, previewVariant: 'hero' },
-    { id: 'GachaSupport', screenId: 'gacha-main-screen', targetIndex: 3, previewVariant: 'support' },
-    { id: 'GachaLimited', screenId: 'gacha-main-screen', targetIndex: 3, previewVariant: 'limited' },
+    { id: 'GachaHero', screenId: 'gacha-ds3', targetIndex: 3, previewVariant: 'hero' },
+    { id: 'GachaSupport', screenId: 'gacha-ds3', targetIndex: 3, previewVariant: 'support' },
+    { id: 'GachaLimited', screenId: 'gacha-ds3', targetIndex: 3, previewVariant: 'limited' },
+    { id: 'GachaPullResult', screenId: 'gacha-pull-result', targetIndex: 22, uiSourceDir: 'gacha-pull-result', runtimeScreenId: 'GachaPullResult' },
     { id: 'DuelChallenge', screenId: 'duel-challenge-screen', targetIndex: 4 },
     { id: 'BattleScene', screenId: 'battle-scene', targetIndex: 5, uiSourceDir: 'battle-hud', runtimeScreenId: 'BattleHUD' },
     { id: 'GeneralDetailOverview', screenId: 'general-detail-unified-screen', targetIndex: 6, uiVariant: 'unified', uiSourceDir: 'general-detail-overview', runtimeScreenId: 'GeneralDetailOverview' },
@@ -85,6 +88,53 @@ function parseArg(name, fallback = '') {
         return fallback;
     }
     return process.argv[index + 1];
+}
+
+function parseAnyArg(names, fallback = '') {
+    for (const name of names) {
+        const value = parseArg(name, '');
+        if (value) return value;
+    }
+    return fallback;
+}
+
+function sanitizeFileStem(value) {
+    return String(value || 'screen')
+        .trim()
+        .replace(/[^a-z0-9._-]+/gi, '-')
+        .replace(/^-+|-+$/g, '') || 'screen';
+}
+
+function buildFormalTarget(screenId, explicitId) {
+    const id = sanitizeFileStem(explicitId || screenId);
+    return {
+        id,
+        screenId,
+        runtimeScreenId: screenId,
+        targetIndex: 0,
+        formalScreenId: screenId,
+        captureMode: 'formal-html-to-ucuf',
+        uiSourceDir: '',
+    };
+}
+
+function sha256File(filePath) {
+    return 'sha256:' + crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
+}
+
+function buildRuntimeSpecHashes(screenId) {
+    const base = path.join(__dirname, '..', 'assets', 'resources', 'ui-spec');
+    const paths = {
+        screen: path.join(base, 'screens', `${screenId}.json`),
+        layout: path.join(base, 'layouts', `${screenId}.json`),
+        skin: path.join(base, 'skins', `${screenId}.skin.json`),
+        runtimeVersion: path.join(base, 'screens', `${screenId}.runtime-version.json`),
+    };
+    const hashes = {};
+    for (const [key, filePath] of Object.entries(paths)) {
+        hashes[key] = fs.existsSync(filePath) ? sha256File(filePath) : null;
+    }
+    return hashes;
 }
 
 function readJsonIfExists(filePath) {
@@ -513,9 +563,14 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
         Expires: '0',
     });
 
-    await page.evaluateOnNewDocument((targetIndex, previewVariant, debugHidePaths, uiVariant, uiVersion) => {
+    await page.evaluateOnNewDocument((targetIndex, previewVariant, debugHidePaths, uiVariant, uiVersion, formalScreenId) => {
         localStorage.setItem('PREVIEW_MODE', 'true');
         localStorage.setItem('PREVIEW_TARGET', String(targetIndex));
+        if (formalScreenId) {
+            localStorage.setItem('FORMAL_SCREEN_ID', formalScreenId);
+        } else {
+            localStorage.removeItem('FORMAL_SCREEN_ID');
+        }
         if (previewVariant) {
             localStorage.setItem('PREVIEW_VARIANT', previewVariant);
         } else {
@@ -573,11 +628,14 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
         const prev = window.__UCUF_VERSION_BADGE_TIMER__;
         if (prev) clearInterval(prev);
         window.__UCUF_VERSION_BADGE_TIMER__ = window.setInterval(ensureVersionBadge, 300);
-    }, target.targetIndex, target.previewVariant ?? '', target.debugHidePaths ?? '', target.uiVariant ?? '', target.uiVersion ?? '');
+    }, target.targetIndex, target.previewVariant ?? '', target.debugHidePaths ?? '', target.uiVariant ?? '', target.uiVersion ?? '', target.formalScreenId ?? '');
 
     const query = new URLSearchParams();
     query.set('previewMode', 'true');
     query.set('previewTarget', String(target.targetIndex));
+    if (target.formalScreenId) {
+        query.set('formalScreenId', target.formalScreenId);
+    }
     if (target.previewVariant) {
         query.set('previewVariant', target.previewVariant);
     }
@@ -609,7 +667,7 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
             `${target.id} page.goto`,
         );
         console.log(`[capture-ui-screens] ${target.id} waiting capture ready (${target.screenId})`);
-        await withTimeout(
+        const captureState = await withTimeout(
             waitForCaptureReady(page, target.screenId, effectiveTimeoutMs),
             effectiveTimeoutMs + 5000,
             `${target.id} waitForCaptureReady`,
@@ -762,7 +820,7 @@ async function captureOne(browser, baseUrl, outputDir, target, timeoutMs, sceneU
             `${target.id} page.screenshot`,
         );
         console.log(`[capture-ui-screens] ${target.id} screenshot written`);
-        return { filePath, page, diagnostics, runtimeGuard, uiVersion: target.uiVersion || null };
+        return { filePath, page, diagnostics, runtimeGuard, uiVersion: target.uiVersion || null, captureState };
     } catch (error) {
         error.diagnostics = diagnostics;
         error.page = page;
@@ -805,6 +863,8 @@ async function writeFailureArtifacts(page, outputDir, target, error, diagnostics
 
 async function main() {
     const targetId = parseArg('target', '');
+    const formalScreenId = parseAnyArg(['formal-screen-id', 'formalScreenId'], '').trim();
+    const formalTargetId = parseAnyArg(['formal-target-id', 'formalTargetId'], '').trim();
     const outDir = parseArg('outDir', path.join('artifacts', 'ui-qa', 'UI-2-0023'));
     const baseUrl = parseArg('url', 'http://localhost:7456');
     const timeoutMs = Number(parseArg('timeout', '45000'));
@@ -823,7 +883,10 @@ async function main() {
         process.exit(1);
     }
 
-    const selectedTargets = selectTargets(targetId).map((target) => {
+    const selectedTargets = (formalScreenId
+        ? [buildFormalTarget(formalScreenId, formalTargetId)]
+        : selectTargets(targetId)
+    ).map((target) => {
         const uiVersion = resolveUiVersionForTarget(target, uiVersionArg);
         return {
             ...target,
@@ -883,10 +946,21 @@ async function main() {
                     const status = buildRuntimeStatus(diagnosticsSummary, runtimeGuardFailures.length > 0);
                     const residuals = buildRuntimeResiduals(diagnosticsSummary, runtimeGuardFailures);
                     const relativeFile = path.relative(path.join(__dirname, '..'), captureResult.filePath).replace(/\\/g, '/');
+                    const expectedScreenId = target.screenId;
+                    const actualScreenId = captureResult.captureState?.screenId || null;
+                    const screenshotHash = sha256File(captureResult.filePath);
                     captured.push({
                         target: target.id,
                         screenId: target.runtimeScreenId || target.screenId,
+                        expectedScreenId,
+                        actualScreenId,
+                        runtimeScreenId: target.runtimeScreenId || null,
+                        targetScreenId: target.screenId,
+                        captureMode: target.captureMode || 'legacy-preview-target',
                         uiVersion: target.uiVersion || null,
+                        runtimeVersion: target.uiVersion || null,
+                        runtimeSpecHash: buildRuntimeSpecHashes(target.runtimeScreenId || target.screenId),
+                        screenshotHash,
                         file: captureResult.filePath,
                         diagnosticsSummary,
                         diagnosticSamples,

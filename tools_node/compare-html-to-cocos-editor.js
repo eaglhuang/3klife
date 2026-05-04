@@ -5,6 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const crypto = require('crypto');
 const { PNG } = require('pngjs');
 
 const { resolveSourcePackage, writeHtmlWithSourceCss } = require('./lib/html-to-ucuf/source-package');
@@ -42,6 +43,7 @@ function parseArgs(argv) {
     editorCrop: null,
     sourceCrop: null,
     captureProtocol: null,
+    captureReport: null,
     noCaptureProtocol: false,
     settleMs: null,
     artAuthorityWaivers: null,
@@ -67,6 +69,7 @@ function parseArgs(argv) {
       case '--editor-crop': opts.editorCrop = parseRect(next()); opts.provided.editorCrop = true; break;
       case '--source-crop': opts.sourceCrop = parseRect(next()); opts.provided.sourceCrop = true; break;
       case '--capture-protocol': opts.captureProtocol = next(); opts.provided.captureProtocol = true; break;
+      case '--capture-report': opts.captureReport = next(); break;
       case '--no-capture-protocol': opts.noCaptureProtocol = true; break;
       case '--settle-ms': opts.settleMs = parseInt(next(), 10); opts.provided.settleMs = true; break;
       case '--art-authority-waivers': opts.artAuthorityWaivers = next(); opts.provided.artAuthorityWaivers = true; break;
@@ -97,6 +100,7 @@ Options:
   --editor-crop x,y,w,h     crop Editor screenshot before resize
   --source-crop x,y,w,h     crop source screenshot before compare
   --capture-protocol <json> fixed viewport/crop/DPR/settle protocol sidecar
+  --capture-report <json>   formal capture metadata from capture-ui-screens.js
   --no-capture-protocol     disable auto-discovery of <screen>.final-capture-protocol.json
   --settle-ms <n>           HTML screenshot settle delay after fonts load
   --art-authority-waivers <json>
@@ -140,6 +144,24 @@ async function main() {
   const artAuthorityReportJson = `${base}.art-authority-report.json`;
   const zoneOwnershipJson = `${base}.zone-ownership.json`;
   const verdictJson = `${base}.html-cocos-verdict.json`;
+
+  const captureAuthority = validateCaptureReportAuthority({
+    opts,
+    editorScreenshot: path.resolve(opts.editorScreenshot),
+    screenId: opts.screenId,
+  });
+  if (!captureAuthority.ok) {
+    const verdict = buildInvalidCaptureVerdict({
+      opts,
+      sourcePackage,
+      captureAuthority,
+      verdictJson,
+    });
+    fs.writeFileSync(verdictJson, JSON.stringify(verdict, null, 2) + '\n', 'utf8');
+    console.error(`[compare-html-to-cocos-editor] final capture authority invalid: ${captureAuthority.violations.map(v => v.ruleId).join(',')}`);
+    console.log(`[compare-html-to-cocos-editor] verdict=${rel(verdictJson)}`);
+    process.exit(12);
+  }
 
   const captureProtocol = loadCaptureProtocolForCompare({
     opts,
@@ -255,6 +277,7 @@ async function main() {
     screenId: opts.screenId,
     generatedAt: new Date().toISOString(),
     sourcePackage: sourcePackage.manifest,
+    captureAuthority: captureAuthority.summary,
     runtimeVsSource: {
       score,
       adjustedScore: scoreReport.adjustedScore,
@@ -336,6 +359,126 @@ async function main() {
   console.log(`[compare-html-to-cocos-editor] runtimeVsSource.raw=${score.toFixed(4)} adjusted=${scoreReport.adjustedScore.toFixed(4)} threshold=${opts.threshold} verdict=${verdict.runtimeVsSource.verdict}`);
   console.log(`[compare-html-to-cocos-editor] verdict=${rel(verdictJson)}`);
   if (!pass) process.exit(12);
+}
+
+function validateCaptureReportAuthority(args) {
+  const opts = args.opts;
+  if (!opts.captureReport) {
+    return { ok: true, path: null, capture: null, violations: [], summary: null };
+  }
+  const reportPath = path.resolve(opts.captureReport);
+  const violations = [];
+  if (!fs.existsSync(reportPath)) {
+    violations.push(captureViolation('H2U-P4-021', `capture report not found: ${opts.captureReport}`, 'Pass --capture-report from the same formal capture run as --editor-screenshot.'));
+    return { ok: false, path: reportPath, capture: null, violations, summary: null };
+  }
+  const report = readJson(reportPath);
+  const captures = Array.isArray(report && report.captures) ? report.captures : [];
+  const editorHash = sha256File(args.editorScreenshot);
+  const capture = captures.find(entry => entry && entry.screenshotHash === editorHash)
+    || captures.find(entry => entry && sameResolvedPath(entry.file, args.editorScreenshot))
+    || (captures.length === 1 ? captures[0] : null);
+  if (!capture) {
+    violations.push(captureViolation('H2U-P4-021', 'capture report does not contain the editor screenshot being compared', `Use the screenshot emitted by ${opts.captureReport}, or pass the matching capture report.`));
+    return { ok: false, path: reportPath, capture: null, violations, summary: { path: rel(reportPath), editorScreenshotHash: editorHash } };
+  }
+
+  const expectedScreenId = String(capture.expectedScreenId || '').trim();
+  const actualScreenId = String(capture.actualScreenId || capture.screenId || '').trim();
+  if (expectedScreenId !== args.screenId || actualScreenId !== args.screenId) {
+    violations.push(captureViolation(
+      'H2U-P4-021',
+      `capture target mismatch: expected=${expectedScreenId || '(missing)'} actual=${actualScreenId || '(missing)'} compare=${args.screenId}`,
+      'Capture the formal UIScreenPreviewHost route for the converted screenId before running the final gate.',
+    ));
+  }
+  if (capture.captureMode !== 'formal-html-to-ucuf') {
+    violations.push(captureViolation(
+      'H2U-P4-023',
+      `captureMode is not formal-html-to-ucuf: ${capture.captureMode || '(missing)'}`,
+      'Use capture-ui-screens.js --formal-screen-id <screenId> instead of a legacy product preview target.',
+    ));
+  }
+  const version = String(capture.runtimeVersion || capture.uiVersion || '').trim();
+  const hashes = capture.runtimeSpecHash && typeof capture.runtimeSpecHash === 'object' ? capture.runtimeSpecHash : null;
+  if (!version || !hashes || !hashes.screen || !hashes.layout || !hashes.skin) {
+    violations.push(captureViolation(
+      'H2U-P4-022',
+      'formal capture is missing runtimeVersion/uiVersion or runtimeSpecHash',
+      'Capture after workflow runtime sync and include uiVersion plus screen/layout/skin hashes in capture-report.json.',
+    ));
+  }
+  if (capture.screenshotHash && capture.screenshotHash !== editorHash) {
+    violations.push(captureViolation(
+      'H2U-P4-021',
+      'capture report screenshotHash does not match --editor-screenshot',
+      'Pass the exact screenshot emitted by the formal capture run.',
+    ));
+  }
+
+  return {
+    ok: violations.length === 0,
+    path: reportPath,
+    capture,
+    violations,
+    summary: {
+      path: rel(reportPath),
+      captureMode: capture.captureMode || null,
+      expectedScreenId: expectedScreenId || null,
+      actualScreenId: actualScreenId || null,
+      target: capture.target || null,
+      uiVersion: capture.uiVersion || null,
+      runtimeVersion: capture.runtimeVersion || capture.uiVersion || null,
+      screenshotHash: capture.screenshotHash || null,
+      editorScreenshotHash: editorHash,
+      runtimeSpecHash: hashes,
+      ok: violations.length === 0,
+      violations,
+    },
+  };
+}
+
+function buildInvalidCaptureVerdict(args) {
+  const opts = args.opts;
+  return {
+    screenId: opts.screenId,
+    generatedAt: new Date().toISOString(),
+    sourcePackage: args.sourcePackage.manifest,
+    runtimeVsSource: {
+      score: 0,
+      adjustedScore: 0,
+      threshold: opts.threshold || 0.95,
+      verdict: 'fail',
+      passMode: 'invalid-gate-target-mismatch',
+      source: 'capture-report-authority',
+      waiverCoverageRatio: 0,
+      artDeltaScore: 0,
+      converterResidualScore: 0,
+    },
+    captureAuthority: args.captureAuthority.summary,
+    pixelDiff: null,
+    adjustedPixelDiff: null,
+    artifacts: {
+      verdictJson: rel(args.verdictJson),
+    },
+  };
+}
+
+function captureViolation(ruleId, summary, fixAction) {
+  return { ruleId, severity: 'blocker', summary, evidence: summary, fixAction };
+}
+
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, ''));
+}
+
+function sha256File(filePath) {
+  return 'sha256:' + crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
+}
+
+function sameResolvedPath(left, right) {
+  if (!left || !right) return false;
+  return path.resolve(left) === path.resolve(right);
 }
 
 function loadArtAuthorityForCompare(args) {

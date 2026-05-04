@@ -187,12 +187,13 @@ function decodeEntities(s) {
 
 /**
  * Parse a tiny subset of CSS: top-level rules of form "selector { decl; decl }".
- * Returns map: className -> declarationsObject.
- * Only handles a single ".class" or "#id" selector per rule (chained selectors merged into class hits).
+ * Returns maps for legacy single class/id lookups plus ordered simple selector
+ * rules for compound selectors such as `.button.active`.
  */
 function parseStylesheets(sheets) {
   const classRules = {};
   const idRules = {};
+  const styleRules = [];
   for (const sheet of sheets) {
     const noComments = sheet.replace(/\/\*[\s\S]*?\*\//g, '');
     const ruleRe = /([^{}]+)\{([^{}]+)\}/g;
@@ -203,19 +204,46 @@ function parseStylesheets(sheets) {
       const decl = parseDeclarations(body);
       for (const sel of selector.split(',').map(s => s.trim())) {
         if (!sel || sel.includes(':')) continue;
+        const simpleRule = parseSimpleSelectorRule(sel, decl);
+        if (simpleRule) styleRules.push(simpleRule);
         const classMatches = [...sel.matchAll(/\.([A-Za-z0-9_-]+)/g)].map(hit => hit[1]);
         const idMatches = [...sel.matchAll(/#([A-Za-z0-9_-]+)/g)].map(hit => hit[1]);
-        if (classMatches.length > 0) {
+        if (classMatches.length === 1 && idMatches.length === 0 && isSingleClassSelector(sel)) {
           const cls = classMatches[classMatches.length - 1];
           classRules[cls] = Object.assign(classRules[cls] || {}, decl);
-        } else if (idMatches.length > 0) {
+        } else if (idMatches.length === 1 && classMatches.length === 0 && isSingleIdSelector(sel)) {
           const id = idMatches[idMatches.length - 1];
           idRules[id] = Object.assign(idRules[id] || {}, decl);
         }
       }
     }
   }
-  return { classRules, idRules };
+  return { classRules, idRules, styleRules };
+}
+
+function isSingleClassSelector(selector) {
+  return /^\.[A-Za-z0-9_-]+$/.test(String(selector || '').trim());
+}
+
+function isSingleIdSelector(selector) {
+  return /^#[A-Za-z0-9_-]+$/.test(String(selector || '').trim());
+}
+
+function parseSimpleSelectorRule(selector, decl) {
+  const raw = String(selector || '').trim();
+  if (!raw || /[\s>+~]/.test(raw)) return null;
+  const classes = [...raw.matchAll(/\.([A-Za-z0-9_-]+)/g)].map(hit => hit[1]);
+  const ids = [...raw.matchAll(/#([A-Za-z0-9_-]+)/g)].map(hit => hit[1]);
+  if (classes.length === 0 && ids.length === 0) return null;
+  const withoutQualifiers = raw.replace(/#[A-Za-z0-9_-]+/g, '').replace(/\.[A-Za-z0-9_-]+/g, '');
+  const tag = withoutQualifiers && withoutQualifiers !== '*' ? withoutQualifiers.toLowerCase() : null;
+  return {
+    selector: raw,
+    classes,
+    id: ids.length > 0 ? ids[ids.length - 1] : null,
+    tag,
+    decl,
+  };
 }
 
 function parseDeclarations(body) {

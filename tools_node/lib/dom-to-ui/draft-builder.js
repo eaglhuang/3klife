@@ -94,9 +94,10 @@ function buildDraftFromHtml(html, opts) {
   const sanitizedHtml = stripNonVisualBlocksForParsing(html);
   const parsed = parseHtml(sanitizedHtml);
   for (const w of parsed.warnings) ctx.warnings.push(w);
-  const { classRules, idRules } = parseStylesheets(parsed.styleSheets || []);
+  const { classRules, idRules, styleRules } = parseStylesheets(parsed.styleSheets || []);
   ctx.classRules = classRules;
   ctx.idRules = idRules;
+  ctx.styleRules = styleRules || [];
   ctx.keyframes = extractKeyframes(parsed.styleSheets || []);
   // R-12: build a per-conversion font registry from any `@font-face` blocks
   // in the source CSS. Each entry maps the declared family (case-insensitive
@@ -319,6 +320,29 @@ function processElement(el, ctx, depth) {
     }
     const flexValIL = String(style.flex || style.flexGrow || '').trim();
     if (parseFloat(flexValIL.split(/\s+/)[0]) > 0) node._flexFill = true;
+    const computedGeometry = deriveComputedGeometry(ctx, style, nodeType);
+    if (computedGeometry && computedGeometry.widget) node.widget = computedGeometry.widget;
+    const width = computedGeometry && computedGeometry.width != null
+      ? computedGeometry.width
+      : pickDim(style.width, attrs.width);
+    const height = computedGeometry && computedGeometry.height != null
+      ? computedGeometry.height
+      : pickDim(style.height, attrs.height);
+    if (width != null) node.width = width;
+    if (height != null) node.height = height;
+    const layoutSpec = inferLayout(style, ctx, name, el);
+    if (layoutSpec) node.layout = layoutSpec;
+    collectBehavior(el, node, style, ctx);
+    if (nodeType === 'panel' && hasMeaningfulBackground(style)) {
+      const skinLayers = emitSkinLayers(ctx, name, style, attrs);
+      if (skinLayers && skinLayers.length > 1) {
+        node.skinLayers = skinLayers;
+      } else {
+        const slotId = attrs['data-skin'] || autoSlotId(ctx, name);
+        node.skinSlot = slotId;
+        ensureSpriteOrColorSlot(ctx, slotId, style, attrs, { width, height });
+      }
+    }
     return node;
   }
 
@@ -726,9 +750,14 @@ function inferTabSemanticHints(el, tag, attrs, cls, style, ctx) {
   // otherwise tab switch看起來永遠不變。
   if (tag === 'div') {
     const hasElementChildren = Array.isArray(el.children) && el.children.some((c) => c && c.type === 'element');
-    const explicitTabHost = /right-content|tab-content|tab-panel|tab-body/.test(haystack);
+    const role = String(attrs.role || '').trim().toLowerCase();
+    const hasTabContentContract = Object.prototype.hasOwnProperty.call(attrs, 'data-ucuf-tab-content')
+      || Object.prototype.hasOwnProperty.call(attrs, 'data-tab-content')
+      || role === 'tabpanel';
+    const explicitTabHost = hasTabContentContract || /right-content|tab-content|tab-panel|tab-body/.test(haystack);
     const emptyMountLike = /tab.*(mount|slot|host)/.test(haystack);
     if (explicitTabHost || (!hasElementChildren && emptyMountLike)) {
+      // Plan 4.1：tab 內容 host 必須由 HTML contract 推導成 lazySlot，不能再靠畫面專名或舊 div 編號。
       hints.inferredLazySlot = true;
       hints.dataContract = 'tab.content.host';
       hints.defaultFragment = inferDefaultTabFragment(ctx && ctx.opts && ctx.opts.screenId);
@@ -1000,6 +1029,8 @@ function normalizeObjectPosition(value) {
 
 function applyCommonNodeAttrs(node, attrs) {
   // M4: stable identifier + lock flags
+  // Plan 4.1：保留 HTML id 作為 runtime binding id，openPanel / aria-controls 才能找到原始 target。
+  if (attrs.id && !node.id) node.id = attrs.id;
   if (attrs['data-ucuf-id']) node._ucufId = attrs['data-ucuf-id'];
   if (attrs['data-ucuf-lock']) {
     const lockSpec = String(attrs['data-ucuf-lock']).trim();
@@ -1034,7 +1065,13 @@ function applyVisibilityState(node, style, ctx, name) {
 
   if (style.opacity != null) {
     const opacity = Number.parseFloat(style.opacity);
-    if (Number.isFinite(opacity)) node.opacity = opacity;
+    if (Number.isFinite(opacity)) {
+      node.opacity = opacity;
+      if (opacity <= 0) {
+        node.active = false;
+        ctx.warnings.push({ code: 'css-opacity-zero-default-inactive', detail: name });
+      }
+    }
   }
 }
 
@@ -1387,7 +1424,7 @@ function collectElementStyle(el, ctx) {
   const attrs = (el && el.attrs) || {};
   const cls = (attrs.class || '').split(/\s+/).filter(Boolean);
   const styleFromInline = parseInlineStyle(attrs.style || '');
-  const styleFromClass = mergeClassStyles(cls, ctx.classRules || {});
+  const styleFromClass = mergeClassStyles(cls, ctx.classRules || {}, ctx.styleRules || [], attrs, el && el.tag);
   const styleFromId = attrs.id ? ((ctx.idRules || {})[attrs.id] || {}) : {};
   const style = mergeComputedStyle(
     Object.assign({}, styleFromClass, styleFromId, styleFromInline),
@@ -1764,12 +1801,28 @@ function pascal(s) {
   return String(s || 'Screen').replace(/(^|[-_\s]+)(\w)/g, (_, __, c) => c.toUpperCase());
 }
 
-function mergeClassStyles(classes, classRules) {
+function mergeClassStyles(classes, classRules, styleRules = [], attrs = {}, tag = '') {
   const out = {};
-  for (const c of classes) {
-    if (classRules[c]) Object.assign(out, classRules[c]);
+  const classSet = new Set(classes);
+  if (Array.isArray(styleRules) && styleRules.length > 0) {
+    for (const rule of styleRules) {
+      if (!matchesSimpleStyleRule(rule, classSet, attrs, tag)) continue;
+      Object.assign(out, rule.decl || {});
+    }
+    return out;
+  }
+  for (const className of classes) {
+    if (classRules[className]) Object.assign(out, classRules[className]);
   }
   return out;
+}
+
+function matchesSimpleStyleRule(rule, classSet, attrs = {}, tag = '') {
+  if (!rule || !rule.decl) return false;
+  if (rule.tag && String(tag || '').toLowerCase() !== rule.tag) return false;
+  if (rule.id && String(attrs.id || '') !== rule.id) return false;
+  const classes = Array.isArray(rule.classes) ? rule.classes : [];
+  return classes.every(className => classSet.has(className));
 }
 
 function collectText(el) {

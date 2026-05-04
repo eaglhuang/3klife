@@ -23,20 +23,28 @@ function resolveSourcePackage(options) {
   const opts = options || {};
   const errors = [];
   const warnings = [];
-  const sourceDir = opts.sourceDir ? path.resolve(opts.sourceDir) : null;
+  const requestedSourceDir = opts.sourceDir ? path.resolve(opts.sourceDir) : null;
 
-  if (!sourceDir) {
+  if (!requestedSourceDir) {
     errors.push('source-dir-required');
     return buildResult({ ok: false, errors, warnings });
   }
-  if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
-    errors.push(`source-dir-not-found:${sourceDir}`);
-    return buildResult({ ok: false, errors, warnings, sourceDir });
+  if (!fs.existsSync(requestedSourceDir) || !fs.statSync(requestedSourceDir).isDirectory()) {
+    errors.push(`source-dir-not-found:${requestedSourceDir}`);
+    return buildResult({ ok: false, errors, warnings, sourceDir: requestedSourceDir });
   }
+
+  const mainHtmlPath = resolveMainHtml(requestedSourceDir, opts.mainHtml, errors);
+  const authorityRoot = resolveAuthorityRoot({
+    requestedSourceDir,
+    mainHtmlPath,
+    opts,
+    warnings,
+  });
+  const sourceDir = authorityRoot || requestedSourceDir;
 
   const tokensPath = firstExisting(sourceDir, opts.tokensPath ? [opts.tokensPath] : DEFAULT_TOKEN_CANDIDATES);
   const cssPath = firstExisting(sourceDir, opts.cssPath ? [opts.cssPath] : DEFAULT_CSS_CANDIDATES);
-  const mainHtmlPath = resolveMainHtml(sourceDir, opts.mainHtml, errors);
 
   let tokens = null;
   if (!tokensPath) {
@@ -130,6 +138,32 @@ function firstExisting(sourceDir, candidates) {
     if (isInside(sourceDir, full) && fs.existsSync(full) && fs.statSync(full).isFile()) return full;
   }
   return null;
+}
+
+function resolveAuthorityRoot(args) {
+  const requestedSourceDir = args.requestedSourceDir;
+  const mainHtmlPath = args.mainHtmlPath;
+  const opts = args.opts || {};
+  const warnings = args.warnings || [];
+  if (!mainHtmlPath || opts.tokensPath || opts.cssPath) return requestedSourceDir;
+
+  // 正式入口允許使用畫面資料夾作為 --source-dir，但 tokens/css 的權威仍可在上層 source package root。
+  let dir = requestedSourceDir;
+  const workspaceRoot = path.resolve(process.cwd());
+  while (isInside(workspaceRoot, dir)) {
+    const tokensPath = firstExisting(dir, DEFAULT_TOKEN_CANDIDATES);
+    const cssPath = firstExisting(dir, DEFAULT_CSS_CANDIDATES);
+    if (tokensPath && cssPath && isInside(dir, mainHtmlPath)) {
+      if (path.resolve(dir) !== path.resolve(requestedSourceDir)) {
+        warnings.push(`source-package-root-promoted:${relFromCwd(requestedSourceDir)}->${relFromCwd(dir)}`);
+      }
+      return dir;
+    }
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return requestedSourceDir;
 }
 
 function resolveMainHtml(sourceDir, mainHtml, errors) {

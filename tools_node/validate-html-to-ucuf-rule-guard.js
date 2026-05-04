@@ -15,6 +15,8 @@ function parseArgs(argv) {
     summary: null,
     sourceHtml: null,
     layout: null,
+    captureReport: null,
+    expectedScreenId: null,
     scanCore: true,
   };
   for (let i = 2; i < argv.length; i += 1) {
@@ -29,6 +31,8 @@ function parseArgs(argv) {
         break;
       case '--source-html': opts.sourceHtml = next(); break;
       case '--layout': opts.layout = next(); break;
+      case '--capture-report': opts.captureReport = next(); break;
+      case '--expected-screen-id': opts.expectedScreenId = next(); break;
       case '--no-scan-core': opts.scanCore = false; break;
       case '--help':
       case '-h':
@@ -57,6 +61,8 @@ function main() {
     workflowSummaryPath: opts.summary,
     sourceHtmlPath: opts.sourceHtml,
     layout: opts.layout,
+    captureReportPath: opts.captureReport,
+    expectedScreenId: opts.expectedScreenId,
     scanCore: opts.scanCore,
   });
 

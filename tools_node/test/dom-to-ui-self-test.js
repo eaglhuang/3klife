@@ -28,6 +28,7 @@ const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const FIXTURE = path.join(REPO_ROOT, 'tests', 'fixtures', 'dom-to-ui', 'gacha-banner.html');
 const INTERACTION_FIXTURE = path.join(REPO_ROOT, 'tests', 'fixtures', 'dom-to-ui', 'interaction-motion.html');
 const VISUAL_RICH_FIXTURE = path.join(REPO_ROOT, 'tests', 'fixtures', 'dom-to-ui', 'visual-rich.html');
+const HTML_TO_UCUF_FIXTURE_DIR = path.join(REPO_ROOT, 'tests', 'fixtures', 'html-to-ucuf');
 const CLI = path.join(REPO_ROOT, 'tools_node', 'dom-to-ui-json.js');
 const COMPARE_CLI = path.join(REPO_ROOT, 'tools_node', 'dom-to-ui-compare.js');
 const FEEDBACK_CLI = path.join(REPO_ROOT, 'tools_node', 'dom-to-ui-feedback.js');
@@ -451,6 +452,52 @@ function main() {
     if (gradientSlot.gradient.angle !== 90 || gradientSlot.gradient.stops.length !== 2) fail(`gradient-rect payload malformed: ${JSON.stringify(gradientSlot)}`);
     if (gradientSlot.gradient.stops[1].opacity !== 0.5) fail(`gradient rgba alpha should become stop opacity: ${JSON.stringify(gradientSlot)}`);
     ok('linear-gradient maps to reusable gradient-rect skin slot');
+
+    const compoundSelectorDraft = buildDraftFromHtml(`
+      <style>
+        .slide { width: 100px; height: 50px; }
+        .dot { width: 10px; height: 10px; }
+        .slide.active { opacity: 1; }
+        .dot.active { background: #D4AF37; }
+      </style>
+      <div data-name="CompoundStage">
+        <div data-name="Slide" class="slide active"></div>
+        <div data-name="Dot" class="dot active"></div>
+      </div>`, { screenId: 'compound-selector', bundle: 'ui_test' });
+    const compoundSlide = findNode(compoundSelectorDraft.layoutDraft, n => n.name === 'Slide');
+    const compoundDot = findNode(compoundSelectorDraft.layoutDraft, n => n.name === 'Dot');
+    if (!compoundSlide || compoundSlide.skinSlot || compoundSlide.type === 'panel') {
+      fail(`compound selector .dot.active should not leak background into .slide.active: ${JSON.stringify(compoundSlide)}`);
+    }
+    const compoundDotSlot = compoundDot && compoundDot.skinSlot && compoundSelectorDraft.skinDraft.slots[compoundDot.skinSlot];
+    if (!compoundDotSlot || compoundDotSlot.kind !== 'color-rect') {
+      fail(`compound selector .dot.active should still apply to matching element: ${JSON.stringify({ compoundDot, compoundDotSlot })}`);
+    }
+    ok('compound class selectors require all classes before applying declarations');
+
+    const opacityHiddenDraft = buildDraftFromHtml(`
+      <div data-name="OpacityStage">
+        <div data-name="InactiveOverlay" style="position:absolute;inset:0;width:100px;height:50px;opacity:0;background:#16061f"></div>
+      </div>`, { screenId: 'opacity-hidden', bundle: 'ui_test' });
+    const inactiveOverlay = findNode(opacityHiddenDraft.layoutDraft, n => n.name === 'InactiveOverlay');
+    if (!inactiveOverlay || inactiveOverlay.opacity !== 0 || inactiveOverlay.active !== false) {
+      fail(`opacity:0 node should be inactive by default while preserving opacity metadata: ${JSON.stringify(inactiveOverlay)}`);
+    }
+    if (!opacityHiddenDraft.warnings.some(w => w.code === 'css-opacity-zero-default-inactive')) {
+      fail(`opacity:0 inactive warning missing: ${JSON.stringify(opacityHiddenDraft.warnings)}`);
+    }
+    ok('opacity:0 nodes default to inactive for initial HTML parity');
+
+    const lazyHostShellDraft = buildDraftFromHtml(`
+      <div data-name="LazyShell" data-ucuf-tab-content style="width:300px;height:200px;background:linear-gradient(180deg,#16061f 0%,#0f0509 100%);border-left:1px solid rgba(156,39,176,.12)">
+        <div data-name="ActiveTabPayload">Active</div>
+      </div>`, { screenId: 'lazy-host-shell', bundle: 'ui_test' });
+    const lazyHostShell = findNode(lazyHostShellDraft.layoutDraft, n => n.name === 'LazyShell');
+    if (!lazyHostShell || lazyHostShell.lazySlot !== true) fail(`data-ucuf-tab-content should map to lazySlot: ${JSON.stringify(lazyHostShell)}`);
+    if ((lazyHostShell.children || []).length > 0) fail(`lazySlot host should defer active children to per-tab fragments: ${JSON.stringify(lazyHostShell)}`);
+    const lazyHostSlot = lazyHostShell.skinSlot && lazyHostShellDraft.skinDraft.slots[lazyHostShell.skinSlot];
+    if (!lazyHostSlot || lazyHostSlot.kind !== 'gradient-rect') fail(`lazySlot host shell should preserve gradient skin: ${JSON.stringify(lazyHostSlot)}`);
+    ok('data-ucuf-tab-content lazySlot host preserves its shell skin');
 
     const pseudoHtml = `
       <div data-name="PseudoRoot">
@@ -2236,6 +2283,103 @@ function runHtmlToUcufActiveContractGroup() {
 
 function runHtmlToUcufFidelityContractGroup() {
   const formalPackage = { mainHtml: 'index.html', tokens: 'ui-design-tokens.json', css: 'colors_and_type.css' };
+  let validatorEnvironmentBlocked = false;
+  const fixtureNames = [
+    'history-not-story.html',
+    'explicit-story-strip.html',
+    'radial-slide-background.html',
+    'multi-layer-background.html',
+    'interaction-carousel.html',
+    'non-ds3-tabbed.html',
+  ];
+  for (const name of fixtureNames) {
+    const filePath = path.join(HTML_TO_UCUF_FIXTURE_DIR, name);
+    if (!fs.existsSync(filePath)) fail(`Plan4 fixture missing: ${filePath}`);
+  }
+
+  const historyDraft = buildDraftFromHtml(
+    fs.readFileSync(path.join(HTML_TO_UCUF_FIXTURE_DIR, 'history-not-story.html'), 'utf8'),
+    { screenId: 'history-records' },
+  );
+  if (/story-strip|slot\.story-strip/.test(JSON.stringify(historyDraft.layoutDraft))) {
+    fail('history-not-story fixture must not infer story-strip layout semantics');
+  }
+
+  for (const name of ['radial-slide-background.html', 'multi-layer-background.html']) {
+    const draft = buildDraftFromHtml(
+      fs.readFileSync(path.join(HTML_TO_UCUF_FIXTURE_DIR, name), 'utf8'),
+      { screenId: name.replace(/\.html$/, '') },
+    );
+    if (!/backgroundLayers/.test(JSON.stringify(draft.skinDraft))) {
+      fail(`${name} must preserve backgroundLayers in skin contract`);
+    }
+  }
+  const compoundSelectorDraft = buildDraftFromHtml(`
+    <style>
+      .slide { width: 100px; height: 50px; }
+      .dot { width: 10px; height: 10px; }
+      .slide.active { opacity: 1; }
+      .dot.active { background: #D4AF37; }
+    </style>
+    <div data-name="CompoundStage">
+      <div data-name="Slide" class="slide active"></div>
+      <div data-name="Dot" class="dot active"></div>
+    </div>`, { screenId: 'compound-selector', bundle: 'ui_test' });
+  const compoundSlide = findNode(compoundSelectorDraft.layoutDraft, n => n.name === 'Slide');
+  const compoundDot = findNode(compoundSelectorDraft.layoutDraft, n => n.name === 'Dot');
+  if (!compoundSlide || compoundSlide.skinSlot || compoundSlide.type === 'panel') {
+    fail(`compound selector .dot.active should not leak background into .slide.active: ${JSON.stringify(compoundSlide)}`);
+  }
+  const compoundDotSlot = compoundDot && compoundDot.skinSlot && compoundSelectorDraft.skinDraft.slots[compoundDot.skinSlot];
+  if (!compoundDotSlot || compoundDotSlot.kind !== 'color-rect') {
+    fail(`compound selector .dot.active should still apply to matching element: ${JSON.stringify({ compoundDot, compoundDotSlot })}`);
+  }
+  const opacityHiddenDraft = buildDraftFromHtml(`
+    <div data-name="OpacityStage">
+      <div data-name="InactiveOverlay" style="position:absolute;inset:0;width:100px;height:50px;opacity:0;background:#16061f"></div>
+    </div>`, { screenId: 'opacity-hidden', bundle: 'ui_test' });
+  const inactiveOverlay = findNode(opacityHiddenDraft.layoutDraft, n => n.name === 'InactiveOverlay');
+  if (!inactiveOverlay || inactiveOverlay.opacity !== 0 || inactiveOverlay.active !== false) {
+    fail(`opacity:0 node should be inactive by default while preserving opacity metadata: ${JSON.stringify(inactiveOverlay)}`);
+  }
+  ok('Plan4 fidelity fixtures exist and cover history/background regression cases');
+
+  withTempDir((tmp) => {
+    const uiRoot = path.join(tmp, 'assets', 'resources', 'ui-spec');
+    seedMinimalPlan4UiSpec(uiRoot, {
+      skinSlot: {
+        kind: 'gradient-rect',
+        unsupportedLayerRisk: { summary: 'seeded unsupported layer' },
+      },
+    });
+    const p = runValidateUiSpecs(tmp, uiRoot, 'formal-visual-risk-path,background-layer-preservation');
+    if (isEnvironmentBlockedSpawn(p)) {
+      validatorEnvironmentBlocked = true;
+      ok('Plan4 validate-ui-specs visual-risk seed environment-blocked');
+      return;
+    }
+    const validatorOutput = `${p.stdout || ''}\n${p.stderr || ''}\n${p.error ? p.error.message : ''}`;
+    if (p.status === 0 || !/formal-visual-risk-path|background-layer-preservation/.test(validatorOutput)) {
+      fail(`Plan4 validator must reject unresolved visual risk\nstatus=${p.status}\nerror=${p.error ? p.error.message : ''}\nstdout=${p.stdout || ''}\nstderr=${p.stderr || ''}`);
+    }
+  });
+
+  withTempDir((tmp) => {
+    const uiRoot = path.join(tmp, 'assets', 'resources', 'ui-spec');
+    seedMinimalPlan4UiSpec(uiRoot, { withInteraction: true });
+    const p = runValidateUiSpecs(tmp, uiRoot, 'runtime-interaction-smoke-path');
+    if (isEnvironmentBlockedSpawn(p)) {
+      validatorEnvironmentBlocked = true;
+      ok('Plan4 validate-ui-specs interaction smoke seed environment-blocked');
+      return;
+    }
+    if (p.status !== 0) {
+      fail(`Plan4 runtime interaction smoke fixture should pass\nstatus=${p.status}\nerror=${p.error ? p.error.message : ''}\nstdout=${p.stdout || ''}\nstderr=${p.stderr || ''}`);
+    }
+  });
+  ok(validatorEnvironmentBlocked
+    ? 'Plan4 validate-ui-specs strict seed checks were environment-blocked'
+    : 'Plan4 validate-ui-specs strict rules cover visual risk and runtime interaction smoke');
 
   withTempDir((tmp) => {
     seedPlan4Repo(tmp, {
@@ -2318,6 +2462,89 @@ function seedPlan4Repo(root, files) {
     const filePath = path.join(root, relPath);
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
     fs.writeFileSync(filePath, content, 'utf8');
+  }
+}
+
+function runValidateUiSpecs(projectRoot, uiRoot, rules) {
+  return spawnSync(process.execPath, [
+    path.join(REPO_ROOT, 'tools_node', 'validate-ui-specs.js'),
+    '--project-root', projectRoot,
+    '--ui-spec-root', uiRoot,
+    '--strict',
+    '--rules', rules,
+  ], {
+    encoding: 'utf8',
+    env: Object.assign({}, process.env, { DOM_TO_UI_TELEMETRY: '0' }),
+  });
+}
+
+function isEnvironmentBlockedSpawn(proc) {
+  return !!(proc && proc.error && /EPERM|EACCES|spawnSync/i.test(proc.error.message || ''));
+}
+
+function seedMinimalPlan4UiSpec(uiRoot, options = {}) {
+  const dirs = ['layouts', 'skins', 'screens', 'fragments/layouts', 'contracts', 'content', 'recipes/families'];
+  for (const dir of dirs) fs.mkdirSync(path.join(uiRoot, dir), { recursive: true });
+  fs.writeFileSync(path.join(uiRoot, 'layouts', 'plan4-test.json'), JSON.stringify({
+    id: 'plan4-test',
+    version: 1,
+    canvas: { fitWidth: true, fitHeight: true, safeArea: true, designWidth: 1920, designHeight: 1080 },
+    root: {
+      type: 'container',
+      name: 'Root',
+      children: [
+        { type: 'button', id: 'TabButton', name: 'TabButton', skinSlot: 'tabButton' },
+        { type: 'container', name: 'PanelHost', lazySlot: true, defaultFragment: 'fragments/layouts/plan4-fragment' },
+      ],
+    },
+  }, null, 2), 'utf8');
+  fs.writeFileSync(path.join(uiRoot, 'fragments', 'layouts', 'plan4-fragment.json'), JSON.stringify({
+    type: 'container',
+    name: 'Plan4FragmentRoot',
+    widget: { top: 0, left: 0, right: 0, bottom: 0 },
+  }, null, 2), 'utf8');
+  fs.writeFileSync(path.join(uiRoot, 'skins', 'plan4-test.skin.json'), JSON.stringify({
+    id: 'plan4-test.skin',
+    version: 1,
+    slots: {
+      panel: options.skinSlot || { kind: 'color', color: '#000000' },
+      tabButton: { kind: 'button-skin', normal: 'sprites/test/normal', selected: 'sprites/test/selected' },
+    },
+  }, null, 2), 'utf8');
+  fs.writeFileSync(path.join(uiRoot, 'screens', 'plan4-test.json'), JSON.stringify({
+    id: 'plan4-test',
+    version: 1,
+    uiId: 'Plan4Test',
+    layer: 'Popup',
+    bundle: 'resources',
+    layout: 'plan4-test',
+    skin: 'plan4-test.skin',
+    meta: { htmlToUcufPlan4: true },
+    tabRouting: {
+      Overview: { slotId: 'PanelHost', fragment: 'fragments/layouts/plan4-fragment' },
+    },
+  }, null, 2), 'utf8');
+  if (options.withInteraction) {
+    fs.writeFileSync(path.join(uiRoot, 'screens', 'plan4-test.interaction.json'), JSON.stringify({
+      screenId: 'plan4-test',
+      actions: [{
+        id: 'tab-button.overview',
+        trigger: 'TabButton',
+        event: 'click',
+        type: 'tabSwitch',
+        target: 'overview',
+        smoke: { expectActiveTab: 'overview' },
+      }],
+    }, null, 2), 'utf8');
+    fs.writeFileSync(path.join(uiRoot, 'screens', 'plan4-test.tab-routing.json'), JSON.stringify({
+      screenId: 'plan4-test',
+      tabs: [{
+        id: 'Overview',
+        mount: 'PanelHost',
+        fragment: 'fragments/layouts/plan4-fragment',
+        buttonNode: 'TabButton',
+      }],
+    }, null, 2), 'utf8');
   }
 }
 
