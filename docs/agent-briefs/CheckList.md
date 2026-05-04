@@ -90,9 +90,9 @@
 | P0 | [HARN-ART-0002](tasks/HARN-ART-0002.md) | 建立 Turn Artifact Validator CLI | done | 100% | GitHubCopilot |
 | P1 | [HARN-ART-0003](tasks/HARN-ART-0003.md) | 建立 Turn Artifact Storage Policy | open | 0% | GitHubCopilot |
 | P1 | [HARN-ART-0004](tasks/HARN-ART-0004.md) | 讓 Finalize 使用標準 Artifact 預設路徑 | open | 0% | GitHubCopilot |
-| P0 | [HARN-HDO-0001](tasks/HARN-HDO-0001.md) | 建立 Handoff Diff Validator Core | open | 0% | GitHubCopilot |
-| P0 | [HARN-HDO-0002](tasks/HARN-HDO-0002.md) | 建立 Handoff Diff Validator Fixtures | open | 0% | GitHubCopilot |
-| P1 | [HARN-HDO-0003](tasks/HARN-HDO-0003.md) | 將 Handoff Diff Validator 接入 Finalize | open | 0% | GitHubCopilot |
+| P0 | [HARN-HDO-0001](tasks/HARN-HDO-0001.md) | 建立 Handoff Diff Validator Core | done | 100% | GitHubCopilot |
+| P0 | [HARN-HDO-0002](tasks/HARN-HDO-0002.md) | 建立 Handoff Diff Validator Fixtures | done | 100% | GitHubCopilot |
+| P1 | [HARN-HDO-0003](tasks/HARN-HDO-0003.md) | 將 Handoff Diff Validator 接入 Finalize | done | 100% | GitHubCopilot |
 | P1 | [HARN-HDO-0004](tasks/HARN-HDO-0004.md) | 將 Task Lock Scope 納入 Handoff Validator | open | 0% | GitHubCopilot |
 | P1 | [HARN-TRC-0001](tasks/HARN-TRC-0001.md) | 定義 Execution Trace Event Schema | open | 0% | GitHubCopilot |
 | P1 | [HARN-TRC-0002](tasks/HARN-TRC-0002.md) | 建立 Node Tool Trace Middleware | open | 0% | GitHubCopilot |
@@ -113,11 +113,11 @@
 
 ### HARN 審核摘要（2026-05-04）
 
-- 全 HARN 任務卡盤點：34 張；done 13 張、open 21 張、in-progress 0 張。
+- 全 HARN 任務卡盤點：34 張；done 16 張、open 18 張、in-progress 0 張。
 - 34 張 HARN 任務卡皆已回寫 `## 審核結果（2026-05-04）`，內容包含審核結論、驗證證據與需修改事項。
-- 已達成鏈：`HARN-ARCH-*`、`HARN-LOG-*`、`HARN-FIX-0001`、`HARN-UI-0001`、`HARN-GOV-0003`、`HARN-ART-0001/0002`、`HARN-DEMO-0003`。
-- 未達成主鏈：`HARN-ART-0003/0004`、`HARN-HDO-*`、`HARN-TRC-*`、`HARN-EVAL-*`、`HARN-MET-*`、`HARN-GOV-0001/0002`、`HARN-PILOT-*` 仍為 open；artifact schema 與 validator CLI 已落地，後續鏈可開始重用這條 gate。
-- 下一個應優先落地的根卡：`HARN-HDO-0001`；現在已有可重用的 artifact schema + validator，可直接建立 handoff diff validator core。Artifact 線仍待 `HARN-ART-0003/0004` 補標準路徑政策。
+- 已達成鏈：`HARN-ARCH-*`、`HARN-LOG-*`、`HARN-FIX-0001`、`HARN-UI-0001`、`HARN-GOV-0003`、`HARN-ART-0001/0002`、`HARN-DEMO-0003`、`HARN-HDO-0001/0002/0003`。
+- 未達成主鏈：`HARN-ART-0003/0004`、`HARN-HDO-0004`、`HARN-TRC-*`、`HARN-EVAL-*`、`HARN-MET-*`、`HARN-GOV-0001/0002`、`HARN-PILOT-*` 仍為 open；artifact schema 與 validator CLI 已落地，後續鏈可開始重用這條 gate。
+- 下一個應優先落地的根卡：`HARN-HDO-0004`；現在已有可重用的 artifact schema + validator + handoff diff core，可直接把 task lock scope 納入 handoff validator。Artifact 線仍待 `HARN-ART-0003/0004` 補標準路徑政策。
 
 ## 依賴維護原則
 
