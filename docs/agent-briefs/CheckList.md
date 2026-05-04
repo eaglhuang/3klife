@@ -94,7 +94,7 @@
 | P0 | [HARN-HDO-0002](tasks/HARN-HDO-0002.md) | 建立 Handoff Diff Validator Fixtures | done | 100% | GitHubCopilot |
 | P1 | [HARN-HDO-0003](tasks/HARN-HDO-0003.md) | 將 Handoff Diff Validator 接入 Finalize | done | 100% | GitHubCopilot |
 | P1 | [HARN-HDO-0004](tasks/HARN-HDO-0004.md) | 將 Task Lock Scope 納入 Handoff Validator | done | 100% | GitHubCopilot |
-| P1 | [HARN-TRC-0001](tasks/HARN-TRC-0001.md) | 定義 Execution Trace Event Schema | open | 0% | GitHubCopilot |
+| P1 | [HARN-TRC-0001](tasks/HARN-TRC-0001.md) | 定義 Execution Trace Event Schema | done | 100% | GitHubCopilot |
 | P1 | [HARN-TRC-0002](tasks/HARN-TRC-0002.md) | 建立 Node Tool Trace Middleware | open | 0% | GitHubCopilot |
 | P1 | [HARN-TRC-0003](tasks/HARN-TRC-0003.md) | 建立 Execution Trace Collector | open | 0% | GitHubCopilot |
 | P2 | [HARN-TRC-0004](tasks/HARN-TRC-0004.md) | 將 Trace Summary 掛入 Finalize 輸出 | open | 0% | GitHubCopilot |
@@ -113,11 +113,11 @@
 
 ### HARN 審核摘要（2026-05-04）
 
-- 全 HARN 任務卡盤點：34 張；done 19 張、open 15 張、in-progress 0 張。
+- 全 HARN 任務卡盤點：34 張；done 20 張、open 14 張、in-progress 0 張。
 - 34 張 HARN 任務卡皆已回寫 `## 審核結果（2026-05-04）`，內容包含審核結論、驗證證據與需修改事項。
-- 已達成鏈：`HARN-ARCH-*`、`HARN-LOG-*`、`HARN-FIX-0001`、`HARN-UI-0001`、`HARN-GOV-0003`、`HARN-ART-0001/0002/0003/0004`、`HARN-DEMO-0003`、`HARN-HDO-0001/0002/0003/0004`。
-- 未達成主鏈：`HARN-TRC-*`、`HARN-EVAL-*`、`HARN-MET-*`、`HARN-GOV-0001/0002`、`HARN-PILOT-*` 仍為 open；artifact schema、validator CLI、storage policy helper、finalize default path 與 handoff task scope check 已落地，後續鏈可開始重用這條 gate。
-- 下一個應優先落地的根卡：`HARN-TRC-0001`；HDO chain 已完成，下一步可定義 execution trace event schema。
+- 已達成鏈：`HARN-ARCH-*`、`HARN-LOG-*`、`HARN-FIX-0001`、`HARN-UI-0001`、`HARN-GOV-0003`、`HARN-ART-0001/0002/0003/0004`、`HARN-DEMO-0003`、`HARN-HDO-0001/0002/0003/0004`、`HARN-TRC-0001`。
+- 未達成主鏈：`HARN-TRC-0002/0003/0004`、`HARN-EVAL-*`、`HARN-MET-*`、`HARN-GOV-0001/0002`、`HARN-PILOT-*` 仍為 open；artifact schema、validator CLI、storage policy helper、finalize default path、handoff task scope check 與 execution trace event schema 已落地，後續鏈可開始重用這條 gate。
+- 下一個應優先落地的根卡：`HARN-TRC-0002`；event schema 已完成，下一步可建立 Node tool trace middleware。
 
 ## 依賴維護原則
 

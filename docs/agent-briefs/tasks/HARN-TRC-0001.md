@@ -6,14 +6,18 @@ phase: Phase2
 created: 2026-05-04
 created_by_agent: GitHubCopilot
 owner: GitHubCopilot
-status: open
+status: done
 type: trace-contract
 chain_id: HARN-CHAIN-TRACE
 chain_step: 1/4
 sensor_triggered_by: harness-rollout planning
 depends:
   - HARN-ART-0002
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建立 Execution Trace Event Schema 任務卡 | 阻塞: depends HARN-ART-0002"
+started_at: "2026-05-04T22:54:39+08:00"
+started_by_agent: "GitHubCopilot"
+completed_at: "2026-05-04T22:55:34+08:00"
+completed_by_agent: "GitHubCopilot"
+notes: "2026-05-04 | 狀態: done | 驗證: pass | 變更: 新增 execution-trace/v1 JSONL event schema，定義 toolName / argsHash / timing / exitCode / status / stdoutSummary / stderrSummary 與版本相容策略 | 阻塞: none"
 ---
 
 # [HARN-TRC-0001] 定義 Execution Trace Event Schema
@@ -40,11 +44,28 @@ notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建�
 
 ## OUTPUT_CONTRACT
 
-- [ ] 定義 `execution-trace/v1` event schema 或等價契約檔
-- [ ] 每筆 event 至少包含：`traceVersion`、`toolName`、`argsHash`、`startedAt`、`endedAt`、`durationMs`、`exitCode`
-- [ ] 允許 `stdoutSummary`、`stderrSummary`、`status`、`workflow`、`task` 等欄位
-- [ ] 明確區分 JSONL event 與最終聚合 trace artifact 的差異
-- [ ] 補版本升級與相容策略，避免後續 middleware 各自擴欄位
+- [x] 定義 `execution-trace/v1` event schema 或等價契約檔
+- [x] 每筆 event 至少包含：`traceVersion`、`toolName`、`argsHash`、`startedAt`、`endedAt`、`durationMs`、`exitCode`
+- [x] 允許 `stdoutSummary`、`stderrSummary`、`status`、`workflow`、`task` 等欄位
+- [x] 明確區分 JSONL event 與最終聚合 trace artifact 的差異
+- [x] 補版本升級與相容策略，避免後續 middleware 各自擴欄位
+
+## 實作結果（2026-05-04）
+
+- 已新增 `tools_node/schemas/execution-trace-event.schema.json`。
+- `traceVersion` 固定為 `execution-trace/v1`，`kind` 固定為 `execution-trace-event`。
+- 必要欄位包含 `toolName`、`argsHash`、`startedAt`、`endedAt`、`durationMs`、`exitCode`、`status`。
+- `stdoutSummary` / `stderrSummary` 採摘要物件，只允許 bytes / lines / truncated / text，不保存整段 payload。
+- schema description 與 `$comment` 明確區分 JSONL event 與後續 collector 產出的 aggregated artifact，並記錄 v1 相容策略。
+
+## 驗證結果（2026-05-04）
+
+```bash
+node -e "const fs=require('fs'); const p='tools_node/schemas/execution-trace-event.schema.json'; JSON.parse(fs.readFileSync(p,'utf8')); console.log('execution trace schema parse ok');"
+node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/HARN-TRC-0001.md tools_node/schemas/execution-trace-event.schema.json
+```
+
+結果：pass。
 
 ## VALIDATION_CMD
 
@@ -74,3 +95,9 @@ git checkout tools_node/schemas/
 - 審核結論：未達成（依賴未滿）
 - 驗證證據：ART-0002 尚未交付；未見 execution trace event schema。
 - 需修改：等 artifact validator 後定義 trace event schema 與 version contract。
+
+## 完成覆核（2026-05-04）
+
+- 覆核結論：已達成。
+- 驗證證據：schema parse pass；encoding touched pass。
+- 後續銜接：`HARN-TRC-0002` 可依本 schema 寫出 JSONL event。
