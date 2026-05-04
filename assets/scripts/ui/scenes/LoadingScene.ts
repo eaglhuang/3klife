@@ -27,7 +27,7 @@ import { EliteTroopCodexComposite } from '../components/EliteTroopCodexComposite
 import { LobbyMissionDetailDialogComposite } from '../components/LobbyMissionDetailDialogComposite';
 import { LobbyScene } from './LobbyScene';
 import { BattleTactic } from '../../core/config/Constants';
-import { DEFAULT_BATTLE_ENTRY_PARAMS, type BattleEntryParams } from '../../battle/models/BattleEntryParams';
+import { DEFAULT_BATTLE_ENTRY_PARAMS, type IBattleEntryParams } from '../../shared/BattleEntryParams';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import { getUIRarityMarkLabel } from '../core/UIRarityMark';
 import { applyUIPreviewBinderState, type UIPreviewBinderState } from '../core/UIPreviewStateApplicator';
@@ -35,7 +35,8 @@ import { applyUIScreenRuntimeState } from '../core/UIScreenRuntimeStateRegistry'
 import { LocalGachaService } from '../../core/services/LocalGachaService';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
-import { showGachaResults, showGachaHistory, showGachaError, refreshCurrencyDisplay, attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay } from '../dev/GachaDevOverlay';
+import { GachaFlowCoordinator, GACHA_SCREEN_ID, GACHA_PULL_RESULT_SCREEN_ID } from '../core/GachaFlowCoordinator';
+import { showGachaError, refreshCurrencyDisplay, attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay } from '../dev/GachaDevOverlay';
 
 const { ccclass, property } = _decorator;
 
@@ -60,10 +61,10 @@ enum LoadingPreviewTarget {
     CharacterDs3 = 18,
     GeneralDetailFromLobbyGeneralsButton = 19,
     GeneralListNpcDialogueDev = 21,
+    GachaPullResult = 22,
 }
 
 type GeneralDetailPreviewTab = 'Overview' | 'Basics' | 'Stats' | 'Bloodline' | 'Skills' | 'Aptitude';
-const GACHA_SCREEN_ID = 'gacha-ds3';
 
 /**
  * LoadingScene - 中繼轉場場景
@@ -97,7 +98,9 @@ export class LoadingScene extends Component {
     private _previewViewportFitTimer: number | null = null;
     private _previewVersionBadge: Node | null = null;
     private _previewVersionSerial = 0;
+    private _formalScreenId = '';
     private readonly _previewGachaService = new LocalGachaService();
+    private _previewGachaFlowCoordinator: GachaFlowCoordinator | null = null;
     private _previewGeneralListPanel: GeneralListComposite | null = null;
     private _generalsCatalog: GeneralConfig[] = [];
 
@@ -256,6 +259,7 @@ export class LoadingScene extends Component {
         const mode = query.get('previewMode') ?? query.get('PREVIEW_MODE');
         const target = query.get('previewTarget') ?? query.get('PREVIEW_TARGET');
         const variant = query.get('previewVariant') ?? query.get('PREVIEW_VARIANT');
+        const formalScreenId = query.get('formalScreenId') ?? query.get('FORMAL_SCREEN_ID');
 
         if (mode === 'true' || mode === '1') {
             this.previewMode = true;
@@ -268,6 +272,10 @@ export class LoadingScene extends Component {
         }
         if (variant) {
             this.previewVariant = variant.trim();
+        }
+        if (formalScreenId) {
+            this.previewMode = true;
+            this._formalScreenId = formalScreenId.trim();
         }
     }
 
@@ -299,6 +307,8 @@ export class LoadingScene extends Component {
             return 'general-detail-unified-screen';
         case LoadingPreviewTarget.GeneralDetailAptitude:
             return 'general-detail-unified-screen';
+        case LoadingPreviewTarget.GachaPullResult:
+            return GACHA_PULL_RESULT_SCREEN_ID;
         case LoadingPreviewTarget.GeneralList:
         case LoadingPreviewTarget.GeneralListNpcDialogueDev:
             return 'general-list-screen';
@@ -316,7 +326,7 @@ export class LoadingScene extends Component {
         }
     }
 
-    private _resolvePreviewBattleParams(): BattleEntryParams {
+    private _resolvePreviewBattleParams(): IBattleEntryParams {
         const query = new URLSearchParams(globalThis?.window?.location?.search ?? '');
         const battleTactic = this._parseBattleTactic(query.get('battleTactic') ?? query.get('BATTLE_TACTIC'));
 
@@ -363,6 +373,10 @@ export class LoadingScene extends Component {
             if (storedVariant) {
                 this.previewVariant = storedVariant.trim();
             }
+            const storedFormalScreenId = sys.localStorage.getItem('FORMAL_SCREEN_ID');
+            if (storedFormalScreenId) {
+                this._formalScreenId = storedFormalScreenId.trim();
+            }
 
             const storedVersion = (sys.localStorage.getItem('UI_CAPTURE_VERSION') ?? sys.localStorage.getItem('UI_VERSION') ?? '').trim();
             if (!eagerQueryVersion && storedVersion) {
@@ -382,6 +396,9 @@ export class LoadingScene extends Component {
         if (this.previewMode) {
             void this._startPreview().finally(() => {
                 if (!this.isValid) {
+                    return;
+                }
+                if (this._formalScreenId) {
                     return;
                 }
                 if (this.previewTarget === LoadingPreviewTarget.Gacha) {
@@ -570,6 +587,21 @@ export class LoadingScene extends Component {
             this._buildPreviewHost();
         }
 
+        if (this._formalScreenId) {
+            // Plan 4 formal gate 必須直掛本輪 screenId，避免走舊產品 route 造成錯畫面比對。
+            const screenId = this._formalScreenId;
+            this._setCaptureState('loading', screenId);
+            try {
+                UCUFLogger.info(LogCategory.LIFECYCLE, `[LoadingScene] Formal HTML-to-UCUF preview -> ${screenId}`);
+                await this._previewHost?.showScreen(screenId);
+                this._setCaptureState('ready', screenId);
+                return;
+            } catch (error) {
+                this._setCaptureState('error', screenId, error);
+                throw error;
+            }
+        }
+
         const fallbackScreenId = this._resolvePreviewScreenId();
         this._setCaptureState('loading', fallbackScreenId);
 
@@ -623,6 +655,10 @@ export class LoadingScene extends Component {
             case LoadingPreviewTarget.GeneralList:
                 await this._previewGeneralList();
                 this._setCaptureState('ready', 'general-list-screen');
+                return;
+            case LoadingPreviewTarget.GachaPullResult:
+                await this._previewGachaPullResult();
+                this._setCaptureState('ready', GACHA_PULL_RESULT_SCREEN_ID);
                 return;
             case LoadingPreviewTarget.GeneralListNpcDialogueDev:
                 await this._previewGeneralListNpcDialogueDev();
@@ -729,6 +765,11 @@ export class LoadingScene extends Component {
         await this._previewHost?.showScreen('shop-main-screen');
     }
 
+    private async _previewGachaPullResult(): Promise<void> {
+        UCUFLogger.info(LogCategory.LIFECYCLE, `[LoadingScene] Preview target -> ${GACHA_PULL_RESULT_SCREEN_ID}`);
+        await this._previewHost?.showScreen(GACHA_PULL_RESULT_SCREEN_ID);
+    }
+
     private async _previewGacha(): Promise<void> {
         UCUFLogger.info(LogCategory.LIFECYCLE, `[LoadingScene] Preview target -> ${GACHA_SCREEN_ID}`);
         await this._previewHost?.showScreen(GACHA_SCREEN_ID);
@@ -799,34 +840,11 @@ export class LoadingScene extends Component {
     private static readonly GACHA_POOL_ID = 'GENERAL_STANDARD_01';
 
     private async _onPreviewGachaPull(count: number): Promise<void> {
-        const cost = LoadingScene.GEMS_COST_PER_PULL * count;
-        try {
-            const results = await this._previewGachaService.performLocalGacha(
-                LoadingScene.GACHA_POOL_ID,
-                count,
-                cost,
-                this._generalsCatalog,
-                { factionFilter: 'all' },
-            );
-            PlayerRosterService.addGenerals(results.map(r => r.general));
-            this._refreshPreviewGachaWalletState();
-            refreshCurrencyDisplay();
-            showGachaResults(
-                count === 1 ? '單抽' : '十連抽',
-                results,
-                () => { void this._onPreviewGachaPull(count); },
-            );
-        } catch (err) {
-            showGachaError(this._formatGachaError(err));
-        }
+        await this._getPreviewGachaFlowCoordinator().runLocalGacha(count);
     }
 
     private _onPreviewGachaHistory(): void {
-        void this._previewGachaService.getRecentPullHistory(30).then((data) => {
-            showGachaHistory(data);
-        }).catch(() => {
-            showGachaError('讀取紀錄失敗');
-        });
+        void this._getPreviewGachaFlowCoordinator().showHistory(30);
     }
 
     private async _onPreviewGachaBack(): Promise<void> {
@@ -834,31 +852,45 @@ export class LoadingScene extends Component {
     }
 
     private async _onPreviewGoldSummon(): Promise<void> {
-        try {
-            const results = await this._previewGachaService.performGoldSummon(
-                1, this._generalsCatalog, { factionFilter: 'all' },
-            );
-            PlayerRosterService.addGenerals(results.map(r => r.general));
-            this._refreshPreviewGachaWalletState();
-            refreshCurrencyDisplay();
-            showGachaResults('金幣召喚', results, () => { void this._onPreviewGoldSummon(); });
-        } catch (err) {
-            showGachaError(this._formatGachaError(err));
-        }
+        await this._getPreviewGachaFlowCoordinator().runGoldSummon();
     }
 
     private async _onPreviewTicketSummon(): Promise<void> {
-        try {
-            const results = await this._previewGachaService.performTicketSummon(
-                1, this._generalsCatalog, { factionFilter: 'all' },
-            );
-            PlayerRosterService.addGenerals(results.map(r => r.general));
-            this._refreshPreviewGachaWalletState();
-            refreshCurrencyDisplay();
-            showGachaResults('召喚券', results, () => { void this._onPreviewTicketSummon(); });
-        } catch (err) {
-            showGachaError(this._formatGachaError(err));
+        await this._getPreviewGachaFlowCoordinator().runTicketSummon();
+    }
+
+    private _getPreviewGachaFlowCoordinator(): GachaFlowCoordinator {
+        if (this._previewGachaFlowCoordinator) {
+            return this._previewGachaFlowCoordinator;
         }
+
+        this._previewGachaFlowCoordinator = new GachaFlowCoordinator({
+            gachaService: this._previewGachaService,
+            getHost: () => this._previewHost,
+            getGenerals: () => this._generalsCatalog,
+            factionFilter: 'all',
+            poolId: LoadingScene.GACHA_POOL_ID,
+            gemsCostPerPull: LoadingScene.GEMS_COST_PER_PULL,
+            tenPullHeaderText: '本地轉蛋結果 · 十連抽（Preview）',
+            onAfterPullSuccess: (results) => {
+                PlayerRosterService.addGenerals(results.map((entry) => entry.general));
+            },
+            onWalletChanged: () => {
+                this._refreshPreviewGachaWalletState();
+                refreshCurrencyDisplay();
+            },
+            onShowError: (message) => {
+                showGachaError(message);
+            },
+            formatError: (error, fallbackMessage) => {
+                const raw = error instanceof Error ? error.message : fallbackMessage;
+                return this._formatGachaError(raw);
+            },
+            onBackToGacha: () => this._previewGacha(),
+            onRepullTen: () => this._onPreviewGachaPull(10),
+        });
+
+        return this._previewGachaFlowCoordinator;
     }
 
     private _formatGachaError(err: unknown): string {

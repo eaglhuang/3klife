@@ -1,0 +1,14 @@
+{
+  "id": "gacha-pull-result",
+  "version": "1.0.0",
+  "uiId": "gacha-pull-result",
+  "layout": "gacha-pull-result",
+  "skin": "gacha-pull-result.skin",
+  "bundle": "lobby_ui",
+  "meta": {
+    "htmlToUcufPlan4": true,
+    "runtimeAuthority": "synced-final-runtime-json"
+  },
+  "runtimeVersion": "gacpulres-20260503-007",
+  "runtimeVersionUpdatedAt": "2026-05-03T15:36:22.388Z"
+}

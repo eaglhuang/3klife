@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { _decorator, Label, Button, Sprite, SpriteFrame, Color, Texture2D, resources } from 'cc';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
@@ -123,10 +124,10 @@ export class GeneralPortraitPanel extends UIPreviewBuilder {
                 sprite.spriteFrame = spriteFrame;
                 sprite.sizeMode = Sprite.SizeMode.RAW; // 使用原始大小，不被 Layout 無腦拉伸變形
             } else {
-                console.warn(`[GeneralPortraitPanel] 無法載入立繪: ${path}，請檢查檔案是否存在於 resources 中。`);
+                UCUFLogger.warn(LogCategory.UI, `[GeneralPortraitPanel] 無法載入立繪: ${path}，請檢查檔案是否存在於 resources 中。`);
             }
         } catch (e) {
-            console.warn('[GeneralPortraitPanel] 載入立繪時發生意外:', e);
+            UCUFLogger.warn(LogCategory.UI, '[GeneralPortraitPanel] 載入立繪時發生意外:', e);
         }
     }
 

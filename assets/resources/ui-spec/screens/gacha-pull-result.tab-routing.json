@@ -1,0 +1,22 @@
+{
+  "screenId": "gacha-pull-result",
+  "generatedAt": "2026-05-03T15:36:19.991Z",
+  "tabs": [
+    {
+      "id": "PoolNext",
+      "mount": null,
+      "mountSource": "missing-lazy-slot",
+      "buttonNode": "GachaPullResult_div_202",
+      "lifecycle": "lazy",
+      "fragment": "fragments/layouts/gacha-pull-result-pool.next-content",
+      "childPanelClass": "GachaPullResultPoolNextChildPanel",
+      "interactionId": "gacha-pull-result_div_202.tab-switch"
+    }
+  ],
+  "summary": {
+    "tabCount": 1,
+    "mountSlotIds": [],
+    "missingMountCount": 1,
+    "missingTriggerCount": 0
+  }
+}

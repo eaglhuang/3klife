@@ -1,10 +1,10 @@
 {
   "screenId": "gacha-ds3",
   "rendering": {
-    "nodeCount": 103,
-    "deferredNodeCount": 0,
-    "totalNodeCount": 103,
-    "maxDepth": 8,
+    "nodeCount": 56,
+    "deferredNodeCount": 4,
+    "totalNodeCount": 60,
+    "maxDepth": 6,
     "estimatedDrawCalls": 3,
     "colorRectCount": 0
   },
@@ -22,30 +22,29 @@
       "next-frame": 0,
       "idle": 0,
       "tab-hover": 0,
-      "manual": 2
+      "manual": 1,
+      "first-frame": 1
     }
   },
   "runtimeGate": {
     "nodeCount": {
-      "value": 103,
+      "value": 56,
       "warning": 35,
       "blocker": 60,
-      "status": "fail"
+      "status": "warn"
     },
     "maxDepth": {
-      "value": 8,
+      "value": 6,
       "warning": 8,
       "blocker": 12,
       "status": "pass"
     }
   },
   "verdict": {
-    "level": "blocker",
+    "level": "warning",
     "warnings": [
-      "node-count-warning: 103 (>35)"
+      "node-count-warning: 56 (>35)"
     ],
-    "blockers": [
-      "node-count-blocker: 103 (>60)"
-    ]
+    "blockers": []
   }
 }

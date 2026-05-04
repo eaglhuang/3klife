@@ -1,0 +1,245 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "gacha-ds3",
+  "generatedAt": "2026-05-04T02:49:59.604Z",
+  "policy": {
+    "mode": "replace-all-per-run",
+    "source": "token-suggestions sidecars",
+    "note": "Always regenerate full screen-local tokens from current conversion to avoid stale residue."
+  },
+  "sourceSuggestionFiles": [
+    "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+    "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json",
+    "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
+    "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
+  ],
+  "stats": {
+    "unresolvedColorCount": 13,
+    "tokenCount": 13
+  },
+  "colors": {
+    "gacha_ds3_local_color_01": "#3A3030",
+    "gacha_ds3_local_color_02": "#686868",
+    "gacha_ds3_local_color_03": "#2A2A3A",
+    "gacha_ds3_local_color_04": "#C8AAFF",
+    "gacha_ds3_local_color_05": "#CE93D8",
+    "gacha_ds3_local_color_06": "#AA8800",
+    "gacha_ds3_local_color_07": "#1A3838",
+    "gacha_ds3_local_color_08": "#3A2550",
+    "gacha_ds3_local_color_09": "#3A3020",
+    "gacha_ds3_local_color_10": "#5A3E00",
+    "gacha_ds3_local_color_11": "#BA68C8",
+    "gacha_ds3_local_color_12": "#3A2B08",
+    "gacha_ds3_local_color_13": "#3A3328"
+  },
+  "unresolvedColors": [
+    {
+      "token": "gacha_ds3_local_color_01",
+      "value": "rgb(58, 48, 48)",
+      "normalized": "#3a3030",
+      "hex": "#3A3030",
+      "occurrences": 50,
+      "nearestExisting": {
+        "token": "surfaceGray",
+        "value": "#333333",
+        "distance": 8
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_ds3_local_color_02",
+      "value": "rgb(104, 104, 104)",
+      "normalized": "#686868",
+      "hex": "#686868",
+      "occurrences": 20,
+      "nearestExisting": {
+        "token": "gdv3TextMetaDim",
+        "value": "#6b6456",
+        "distance": 19
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_ds3_local_color_03",
+      "value": "rgb(42, 42, 58)",
+      "normalized": "#2a2a3a",
+      "hex": "#2A2A3A",
+      "occurrences": 11,
+      "nearestExisting": {
+        "token": "surfaceInkBlue",
+        "value": "#202830",
+        "distance": 14
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_ds3_local_color_04",
+      "value": "rgb(200, 170, 255)",
+      "normalized": "#c8aaff",
+      "hex": "#C8AAFF",
+      "occurrences": 10,
+      "nearestExisting": {
+        "token": "gdv3StatInt",
+        "value": "#c494ff",
+        "distance": 22
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_ds3_local_color_05",
+      "value": "rgb(206, 147, 216)",
+      "normalized": "#ce93d8",
+      "hex": "#CE93D8",
+      "occurrences": 8,
+      "nearestExisting": {
+        "token": "gdv3StatInt",
+        "value": "#c494ff",
+        "distance": 40
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_ds3_local_color_06",
+      "value": "rgb(170, 136, 0)",
+      "normalized": "#aa8800",
+      "hex": "#AA8800",
+      "occurrences": 3,
+      "nearestExisting": {
+        "token": "gdv3GoldBorder",
+        "value": "#8A6E1F",
+        "distance": 52
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_ds3_local_color_07",
+      "value": "rgb(26, 56, 56)",
+      "normalized": "#1a3838",
+      "hex": "#1A3838",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "stdLabelName",
+        "value": "#1F302B",
+        "distance": 16
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_ds3_local_color_08",
+      "value": "rgb(58, 37, 80)",
+      "normalized": "#3a2550",
+      "hex": "#3A2550",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "surfaceNavyHigh",
+        "value": "#2A2A4A",
+        "distance": 18
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_ds3_local_color_09",
+      "value": "rgb(58, 48, 32)",
+      "normalized": "#3a3020",
+      "hex": "#3A3020",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "gdv3TabBadgeText",
+        "value": "#342819",
+        "distance": 12
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_ds3_local_color_10",
+      "value": "rgb(90, 62, 0)",
+      "normalized": "#5a3e00",
+      "hex": "#5A3E00",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "gdv3OutlineDarkWarm",
+        "value": "#593714",
+        "distance": 21
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_ds3_local_color_11",
+      "value": "rgb(186, 104, 200)",
+      "normalized": "#ba68c8",
+      "hex": "#BA68C8",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "textHintBlue",
+        "value": "#A0A0B4",
+        "distance": 65
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_ds3_local_color_12",
+      "value": "rgb(58, 43, 8)",
+      "normalized": "#3a2b08",
+      "hex": "#3A2B08",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "gdv3OutlineWarm",
+        "value": "#3F2309",
+        "distance": 9
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_ds3_local_color_13",
+      "value": "rgb(58, 51, 40)",
+      "normalized": "#3a3328",
+      "hex": "#3A3328",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "surfaceGray",
+        "value": "#333333",
+        "distance": 13
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
+      ]
+    }
+  ]
+}

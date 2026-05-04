@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from './UCUFLogger';
 /**
  * UIContentBinder — Content Contract 綁定器（Phase F）
  *
@@ -13,7 +14,7 @@
  * const binder = new UIContentBinder();
  * const result = binder.validate(contractRef, data);
  * if (!result.valid) {
- *     console.warn('[Panel] 內容契約缺少必填欄位:', result.missing);
+ *     UCUFLogger.warn(LogCategory.UI, '[Panel] 內容契約缺少必填欄位:', result.missing);
  * }
  * binder.bind(templateBinder, contractRef, data);
  * ```
@@ -227,21 +228,21 @@ export class UIContentBinder {
         // 驗證並 warn 缺少必填欄位（不阻斷執行）
         const result = this.validate(contractRef, data, schema);
         if (!result.valid) {
-            console.warn(
+            UCUFLogger.warn(LogCategory.UI, 
                 `[UIContentBinder] family="${contractRef.familyId}" schema="${contractRef.schemaId}" ` +
                 `缺少必填欄位: ${result.missing.join(', ')}`,
             );
         }
 
         if (result.warnings.length > 0) {
-            console.warn(
+            UCUFLogger.warn(LogCategory.UI, 
                 `[UIContentBinder] family="${contractRef.familyId}" schema="${contractRef.schemaId}" ` +
                 `契約警告: ${result.warnings.join('; ')}`,
             );
         }
 
         if (unresolved.length > 0 && !options.suppressUnresolvedWarnings) {
-            console.warn(
+            UCUFLogger.warn(LogCategory.UI, 
                 `[UIContentBinder] family="${contractRef.familyId}" schema="${contractRef.schemaId}" ` +
                 `找不到 bindPath 對應節點: ${unresolved.join(', ')}`,
             );
@@ -261,7 +262,7 @@ export class UIContentBinder {
             this._schemaCache.set(schemaId, schema ?? null);
             return schema ?? null;
         } catch (error) {
-            console.warn(`[UIContentBinder] 載入 content schema 失敗: ${schemaId}`, error);
+            UCUFLogger.warn(LogCategory.UI, `[UIContentBinder] 載入 content schema 失敗: ${schemaId}`, error);
             this._schemaCache.set(schemaId, null);
             return null;
         }

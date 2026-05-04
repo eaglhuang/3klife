@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * GeneralQuickViewPanel — 主將屬性戰法快覽彈窗 (v3-5)
@@ -94,7 +95,7 @@ export class GeneralQuickViewPanel extends UIPreviewBuilder {
             await this.buildScreen(fullScreen.layout, fullScreen.skin, i18n);
             this._initialized = true;
         } catch (e) {
-            console.warn('[GeneralQuickViewPanel] 規格載入失敗，退回白模', e);
+            UCUFLogger.warn(LogCategory.UI, '[GeneralQuickViewPanel] 規格載入失敗，退回白模', e);
             this._initialized = true;
         }
     }
@@ -126,7 +127,7 @@ export class GeneralQuickViewPanel extends UIPreviewBuilder {
 
         if (this._root) this._root.active = false;
 
-        console.log(
+        UCUFLogger.info(LogCategory.UI, 
             `[GeneralQuickViewPanel] 綁定完成 — name:${!!this._gqName}` +
             ` hp:${!!this._gqHpRow} skill1:${!!this._gqSkill1}`
         );
@@ -188,7 +189,7 @@ export class GeneralQuickViewPanel extends UIPreviewBuilder {
         // 顯示
         if (this._root) this._root.active = true;
 
-        console.log(`[GeneralQuickViewPanel] show — ${data.name} isEnemy:${!!data.isEnemy}`);
+        UCUFLogger.info(LogCategory.UI, `[GeneralQuickViewPanel] show — ${data.name} isEnemy:${!!data.isEnemy}`);
     }
 
     /**

@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { _decorator } from 'cc';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
@@ -27,6 +28,6 @@ export class StyleCheckPanel extends UIPreviewBuilder {
     }
 
     protected onReady(_binder: UITemplateBinder): void {
-        console.log('[StyleCheck] 驗證畫面建構完成');
+        UCUFLogger.info(LogCategory.UI, '[StyleCheck] 驗證畫面建構完成');
     }
 }

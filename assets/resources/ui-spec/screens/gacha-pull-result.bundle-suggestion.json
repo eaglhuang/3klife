@@ -1,0 +1,10 @@
+{
+  "screenId": "gacha-pull-result",
+  "currentBundle": "lobby_ui",
+  "distribution": [],
+  "suggestion": {
+    "primary": "lobby_ui",
+    "confidence": "low",
+    "reason": "no-sprite-frame-slots"
+  }
+}

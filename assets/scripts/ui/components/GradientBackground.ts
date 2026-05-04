@@ -14,11 +14,23 @@ export interface GradientBackgroundShapeOptions {
     borderColor?: Color;
 }
 
+export interface GradientBackgroundRadialOptions extends GradientBackgroundShapeOptions {
+    center?: { x?: number; y?: number };
+    radius?: { x?: number; y?: number };
+}
+
+type GradientBackgroundType = 'linear' | 'radial';
+
 @ccclass('GradientBackground')
 @requireComponent(UITransform)
 @executeInEditMode
 export class GradientBackground extends Component {
+    private _gradientType: GradientBackgroundType = 'linear';
     private _angle = 180;
+    private _radialCenterX = 0.5;
+    private _radialCenterY = 0.5;
+    private _radialRadiusX = 0.5;
+    private _radialRadiusY = 0.5;
     private _stops: GradientColorStop[] = [
         { color: new Color(255, 255, 255, 255), offset: 0 },
         { color: new Color(255, 255, 255, 255), offset: 1 },
@@ -43,12 +55,30 @@ export class GradientBackground extends Component {
     }
 
     public setLinearGradient(angle: number, stops: GradientColorStop[], shape?: GradientBackgroundShapeOptions): void {
+        this._gradientType = 'linear';
         this._angle = Number.isFinite(angle) ? angle : 180;
         this._stops = this._normalizeStops(stops);
         this._cornerRadius = Math.max(0, Number(shape?.cornerRadius) || 0);
         this._borderWidth = Math.max(0, Number(shape?.borderWidth) || 0);
         this._borderColor = shape?.borderColor || new Color(255, 255, 255, 0);
         this._redraw();
+    }
+
+    public setRadialGradient(stops: GradientColorStop[], shape?: GradientBackgroundRadialOptions): void {
+        this._gradientType = 'radial';
+        this._stops = this._normalizeStops(stops);
+        this._radialCenterX = this._resolveFiniteNumber(shape?.center?.x, 0.5);
+        this._radialCenterY = this._resolveFiniteNumber(shape?.center?.y, 0.5);
+        this._radialRadiusX = Math.max(0.0001, this._resolveFiniteNumber(shape?.radius?.x, 0.5));
+        this._radialRadiusY = Math.max(0.0001, this._resolveFiniteNumber(shape?.radius?.y, 0.5));
+        this._cornerRadius = Math.max(0, Number(shape?.cornerRadius) || 0);
+        this._borderWidth = Math.max(0, Number(shape?.borderWidth) || 0);
+        this._borderColor = shape?.borderColor || new Color(255, 255, 255, 0);
+        this._redraw();
+    }
+
+    private _resolveFiniteNumber(value: unknown, fallback: number): number {
+        return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
     }
 
     private _normalizeStops(stops: GradientColorStop[]): GradientColorStop[] {
@@ -109,15 +139,19 @@ export class GradientBackground extends Component {
         }
         const range = Math.max(0.0001, maxDot - minDot);
 
-        for (let y = 0; y < textureHeight; y++) {
-            for (let x = 0; x < textureWidth; x++) {
-                const nx = textureWidth <= 1 ? 0 : x / (textureWidth - 1) - 0.5;
-                const ny = textureHeight <= 1 ? 0 : y / (textureHeight - 1) - 0.5;
-                const t = Math.max(0, Math.min(1, (nx * dirX + ny * dirY - minDot) / range));
-                const uiX = ((x + 0.5) / textureWidth) * width - width * 0.5;
-                const uiY = ((y + 0.5) / textureHeight) * height - height * 0.5;
+        for (let pixelY = 0; pixelY < textureHeight; pixelY++) {
+            for (let pixelX = 0; pixelX < textureWidth; pixelX++) {
+                const normalizedX = (pixelX + 0.5) / textureWidth;
+                const normalizedY = (pixelY + 0.5) / textureHeight;
+                const centeredX = normalizedX - 0.5;
+                const centeredY = normalizedY - 0.5;
+                const t = this._gradientType === 'radial'
+                    ? this._sampleRadialT(normalizedX, normalizedY)
+                    : Math.max(0, Math.min(1, (centeredX * dirX + centeredY * dirY - minDot) / range));
+                const uiX = normalizedX * width - width * 0.5;
+                const uiY = normalizedY * height - height * 0.5;
                 const color = this._samplePixelColor(t, uiX, uiY, width, height);
-                const index = (y * textureWidth + x) * 4;
+                const index = (pixelY * textureWidth + pixelX) * 4;
                 data[index] = color.r;
                 data[index + 1] = color.g;
                 data[index + 2] = color.b;
@@ -140,6 +174,16 @@ export class GradientBackground extends Component {
         sprite.type = Sprite.Type.SIMPLE;
         sprite.spriteFrame = frame;
         sprite.color = Color.WHITE;
+    }
+
+    private _sampleRadialT(normalizedX: number, normalizedY: number): number {
+        const deltaX = normalizedX - this._radialCenterX;
+        const deltaY = normalizedY - this._radialCenterY;
+        const normalizedDistance = Math.sqrt(
+            (deltaX * deltaX) / (this._radialRadiusX * this._radialRadiusX)
+            + (deltaY * deltaY) / (this._radialRadiusY * this._radialRadiusY),
+        );
+        return Math.max(0, Math.min(1, normalizedDistance));
     }
 
     private _samplePixelColor(t: number, uiX: number, uiY: number, width: number, height: number): Color {

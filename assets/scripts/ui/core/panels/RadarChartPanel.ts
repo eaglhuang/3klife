@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md  (UCUF M3)
 /**
  * RadarChartPanel
@@ -72,7 +73,7 @@ export class RadarChartPanel extends ChildPanelBase {
     onDataUpdate(data: unknown): void {
         const err = this.validateDataFormat(data);
         if (err) {
-            console.warn(`[RadarChartPanel] 資料格式錯誤：${err}`);
+            UCUFLogger.warn(LogCategory.UI, `[RadarChartPanel] 資料格式錯誤：${err}`);
             return;
         }
         this._lastData = data as DualLayerStatsData;
@@ -110,7 +111,7 @@ export class RadarChartPanel extends ChildPanelBase {
 
     private async _draw(data: DualLayerStatsData): Promise<void> {
         if (!this._services.renderer) {
-            console.warn('[RadarChartPanel] _services.renderer 未注入');
+            UCUFLogger.warn(LogCategory.UI, '[RadarChartPanel] _services.renderer 未注入');
             return;
         }
 

@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → DC-7-0002 | 資料中心架構規格書.md §5 M7
 import { _decorator, Button, Component, EditBox, instantiate, JsonAsset, Label, Node, resources, ScrollView } from 'cc';
 import { DEV } from 'cc/env';
@@ -194,7 +195,7 @@ export class GeneralDataDebugPanel extends Component {
         return new Promise<RuntimeGeneralRecord[]>((resolve) => {
             resources.load('data/master/generals-base', JsonAsset, (error, asset) => {
                 if (error || !asset) {
-                    console.warn('[GeneralDataDebugPanel] 載入 generals-base 失敗', error);
+                    UCUFLogger.warn(LogCategory.UI, '[GeneralDataDebugPanel] 載入 generals-base 失敗', error);
                     resolve([]);
                     return;
                 }

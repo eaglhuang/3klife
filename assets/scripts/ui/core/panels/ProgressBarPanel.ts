@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md  (UCUF M3)
 /**
  * ProgressBarPanel
@@ -67,7 +68,7 @@ export class ProgressBarPanel extends ChildPanelBase {
     onDataUpdate(data: unknown): void {
         const err = this.validateDataFormat(data);
         if (err) {
-            console.warn(`[ProgressBarPanel] 資料格式錯誤：${err}`);
+            UCUFLogger.warn(LogCategory.UI, `[ProgressBarPanel] 資料格式錯誤：${err}`);
             return;
         }
         this._lastData = data as ProgressBarEntry[];
@@ -92,7 +93,7 @@ export class ProgressBarPanel extends ChildPanelBase {
                 return `index ${i}：欄位 "max" 必須為 number`;
             }
             if ((e['current'] as number) > (e['max'] as number)) {
-                console.warn(`[ProgressBarPanel] index ${i}：current(${e['current']}) > max(${e['max']})，將 clamp 為 max`);
+                UCUFLogger.warn(LogCategory.UI, `[ProgressBarPanel] index ${i}：current(${e['current']}) > max(${e['max']})，將 clamp 為 max`);
             }
         }
         return null;
@@ -106,7 +107,7 @@ export class ProgressBarPanel extends ChildPanelBase {
 
     private async _render(entries: ProgressBarEntry[]): Promise<void> {
         if (!this._services.renderer) {
-            console.warn('[ProgressBarPanel] _services.renderer 未注入');
+            UCUFLogger.warn(LogCategory.UI, '[ProgressBarPanel] _services.renderer 未注入');
             return;
         }
 

@@ -16,12 +16,16 @@
   "deferred": {
     "lazySlots": [
       {
-        "slotName": "slot.story-strip",
-        "warmupHint": "manual",
+        "slotName": "RightPanel",
+        "warmupHint": "first-frame",
         "fragments": [
-          "fragments/layouts/gacha-ds3-story-strip-collapsed",
-          "fragments/layouts/gacha-ds3-story-strip-open"
+          "fragments/layouts/gacha-ds3-overview-content"
         ]
+      },
+      {
+        "slotName": "GachaDs3_div_57",
+        "warmupHint": "manual",
+        "fragments": []
       }
     ]
   },
@@ -29,5 +33,10 @@
     "firstScreenSpriteCount": 0,
     "deferredSpriteCount": 0
   },
-  "_warnings": []
+  "_warnings": [
+    {
+      "code": "lazy-slot-missing-default-fragment",
+      "slotName": "GachaDs3_div_57"
+    }
+  ]
 }

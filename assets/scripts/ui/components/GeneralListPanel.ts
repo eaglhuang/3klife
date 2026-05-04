@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * @deprecated
@@ -218,7 +219,7 @@ export class GeneralListPanel extends UIPreviewBuilder {
             try {
                 await this.buildScreen(layout, skin, i18n, tokens);
             } catch (e) {
-                console.error('[GeneralListPanel] buildScreen 拋出例外，list 將無法填入:', e);
+                UCUFLogger.error(LogCategory.UI, '[GeneralListPanel] buildScreen 拋出例外，list 將無法填入:', e);
                 return;
             }
             this._isBuilt = true;

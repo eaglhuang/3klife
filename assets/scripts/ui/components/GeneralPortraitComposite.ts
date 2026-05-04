@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md (UCUF Wave 2)
 /**
  * GeneralPortraitComposite — 武將立繪顯示面板（Composite 版）
@@ -69,7 +70,7 @@ export class GeneralPortraitComposite extends CompositePanel {
                 }
             }
         } catch (e) {
-            console.warn(`[GeneralPortraitComposite] Failed to load portrait: ${path}`, e);
+            UCUFLogger.warn(LogCategory.UI, `[GeneralPortraitComposite] Failed to load portrait: ${path}`, e);
         }
 
         if (this._nameLabel) {

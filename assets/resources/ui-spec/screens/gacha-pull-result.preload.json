@@ -1,0 +1,24 @@
+{
+  "screenId": "gacha-pull-result",
+  "version": 1,
+  "firstScreen": {
+    "bundles": [
+      "lobby_ui"
+    ],
+    "spriteFrames": [],
+    "fonts": [
+      "fonts/manrope/font",
+      "fonts/newsreader/font",
+      "fonts/notosans_tc/font"
+    ],
+    "fragments": []
+  },
+  "deferred": {
+    "lazySlots": []
+  },
+  "counts": {
+    "firstScreenSpriteCount": 0,
+    "deferredSpriteCount": 0
+  },
+  "_warnings": []
+}

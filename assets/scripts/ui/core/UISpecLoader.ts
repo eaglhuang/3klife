@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from './UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * UISpecLoader — 三層 JSON 契約的載入器
@@ -27,6 +28,7 @@ export class UISpecLoader {
     private _widgetCache = new Map<string, UIWidgetFragmentSpec>();
     private _recipeCache = new Map<string, FrameRecipe>();
     private _designTokens: any = null;
+    private _screenDesignTokensCache = new Map<string, any>();
 
     // ── 載入方法 ────────────────────────────────────────────────
 
@@ -38,7 +40,7 @@ export class UISpecLoader {
         if (this._layoutCache.has(layoutId)) {
             return this._layoutCache.get(layoutId)!;
         }
-        console.log(`[UISpecLoader] loadLayout: 開始載入 "${layoutId}"`);
+        UCUFLogger.info(LogCategory.UI, `[UISpecLoader] loadLayout: 開始載入 "${layoutId}"`);
         const layoutResourcePath = layoutId.startsWith('fragments/')
             ? `ui-spec/${layoutId}`
             : `ui-spec/layouts/${layoutId}`;
@@ -69,18 +71,18 @@ export class UISpecLoader {
         // ⚠️ null guard：loadJson 在資源不存在時可能回傳 null
         // 這是造成 "Cannot read properties of null (reading 'root')" 的根源
         if (!spec) {
-            console.error(`[UISpecLoader] loadLayout: 載入 "${layoutId}" 失敗 — loadJson 回傳 null/undefined，請確認 Resources/${layoutResourcePath}.json 是否存在`);
+            UCUFLogger.error(LogCategory.UI, `[UISpecLoader] loadLayout: 載入 "${layoutId}" 失敗 — loadJson 回傳 null/undefined，請確認 Resources/${layoutResourcePath}.json 是否存在`);
             throw new Error(`[UISpecLoader] layout "${layoutId}" 不存在或載入失敗`);
         }
         if (!spec.root) {
-            console.error(`[UISpecLoader] loadLayout: "${layoutId}" 的 JSON 沒有 root 欄位，spec=`, spec);
+            UCUFLogger.error(LogCategory.UI, `[UISpecLoader] loadLayout: "${layoutId}" 的 JSON 沒有 root 欄位，spec=`, spec);
             throw new Error(`[UISpecLoader] layout "${layoutId}" 缺少 root 欄位`);
         }
 
-        console.log(`[UISpecLoader] loadLayout: "${layoutId}" 載入成功，開始解析 $ref 引用`);
+        UCUFLogger.info(LogCategory.UI, `[UISpecLoader] loadLayout: "${layoutId}" 載入成功，開始解析 $ref 引用`);
         // M9: specVersion forward-compat guard
         if (typeof (spec as any).specVersion === 'number' && (spec as any).specVersion > CURRENT_SPEC_VERSION) {
-            console.warn(`[UISpecLoader] loadLayout: "${layoutId}" specVersion=${(spec as any).specVersion} 超過引擎支援上限 ${CURRENT_SPEC_VERSION}，部分功能可能無法正常運作`);
+            UCUFLogger.warn(LogCategory.UI, `[UISpecLoader] loadLayout: "${layoutId}" specVersion=${(spec as any).specVersion} 超過引擎支援上限 ${CURRENT_SPEC_VERSION}，部分功能可能無法正常運作`);
         }
         // 遞迴處理佈局碎片引用 ($ref)
         await this._resolveLayoutRefs(spec.root);
@@ -109,7 +111,7 @@ export class UISpecLoader {
                     const nodeVal = (node as any)[key];
                     const fragVal = (fragment as any)[key];
                     if (nodeVal !== undefined && fragVal !== undefined && nodeVal !== fragVal) {
-                        console.warn(
+                        UCUFLogger.warn(LogCategory.UI, 
                             `[UISpecLoader] ⚠️ $ref immutable key 衝突: ` +
                             `"${node.$ref}" 的 ${key}="${fragVal}" 被 node override 為 "${nodeVal}"。` +
                             `這通常代表使用錯誤，請確認 $ref 指向正確的 fragment。`
@@ -130,7 +132,7 @@ export class UISpecLoader {
                 node.id = originalRef; // 用碎片路徑作為節點 id 的一部分，方便除錯
                 
             } catch (e) {
-                console.warn(`[UISpecLoader] 佈局載入 $ref 失敗: ${node.$ref}`, e);
+                UCUFLogger.warn(LogCategory.UI, `[UISpecLoader] 佈局載入 $ref 失敗: ${node.$ref}`, e);
             }
         }
 
@@ -177,7 +179,7 @@ export class UISpecLoader {
                     );
                     Object.assign(manifest.slots, fragment.slots);
                 } catch (e) {
-                    console.warn(`[UISpecLoader] skin 載入碎片失敗: ${fragId}`, e);
+                    UCUFLogger.warn(LogCategory.UI, `[UISpecLoader] skin 載入碎片失敗: ${fragId}`, e);
                 }
             }
         }
@@ -217,7 +219,7 @@ export class UISpecLoader {
         const safePush = async (refId: string, layerLabel: string) => {
             if (!refId) return;
             if (visited.has(refId)) {
-                console.warn(`[UISpecLoader] themeStack 循環引用，跳過 ${layerLabel} skin: ${refId}`);
+                UCUFLogger.warn(LogCategory.UI, `[UISpecLoader] themeStack 循環引用，跳過 ${layerLabel} skin: ${refId}`);
                 return;
             }
             visited.add(refId);
@@ -281,10 +283,25 @@ export class UISpecLoader {
         }
         // M9: specVersion forward-compat guard
         if (typeof (spec as any).specVersion === 'number' && (spec as any).specVersion > CURRENT_SPEC_VERSION) {
-            console.warn(`[UISpecLoader] loadScreen: "${screenId}" specVersion=${(spec as any).specVersion} 超過引擎支援上限 ${CURRENT_SPEC_VERSION}，部分功能可能無法正常運作`);
+            UCUFLogger.warn(LogCategory.UI, `[UISpecLoader] loadScreen: "${screenId}" specVersion=${(spec as any).specVersion} 超過引擎支援上限 ${CURRENT_SPEC_VERSION}，部分功能可能無法正常運作`);
         }
         this._screenCache.set(screenId, spec);
         return spec;
+    }
+
+    /**
+     * 讀取 screen 同名 sidecar，例如 interaction / tab-routing。
+     * Plan 4：runtime 必須吃同步後的 final sidecar；缺檔回傳 null，由呼叫端決定是否阻擋正式驗收。
+     */
+    async loadScreenSidecar<T = any>(screenId: string, suffix: string): Promise<T | null> {
+        const cleanSuffix = suffix.replace(/^\.+/, '').replace(/\.json$/i, '');
+        const resourcePath = `ui-spec/screens/${screenId}.${cleanSuffix}`;
+        try {
+            return await this._rm.loadJson<T>(resourcePath, { tags: ['UISpec', 'Sidecar'] });
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.UI, `[UISpecLoader] sidecar not found: ${resourcePath}`, error);
+            return null;
+        }
     }
 
     /**
@@ -296,6 +313,66 @@ export class UISpecLoader {
             'ui-spec/ui-design-tokens', { tags: ['UISpec'] }
         );
         return this._designTokens;
+    }
+
+    /**
+     * 載入指定 screen 的 Design Tokens（全域 token + screen local token sidecar 合併）。
+     *
+     * 合併順序（後者覆寫前者）：
+     *   1. ui-design-tokens.json
+     *   2. {screenId}.local-tokens.json -> colors / typography
+     *   3. {screenId}.local-tokens.json.runtimeOverrides -> colors / typography
+     */
+    async loadDesignTokensForScreen(screenId: string): Promise<any> {
+        if (!screenId) {
+            return this.loadDesignTokens();
+        }
+        if (this._screenDesignTokensCache.has(screenId)) {
+            return this._screenDesignTokensCache.get(screenId);
+        }
+
+        const baseTokens = await this.loadDesignTokens();
+        let localTokens: any = null;
+
+        try {
+            localTokens = await this._rm.loadJson<any>(
+                `ui-spec/screens/${screenId}.local-tokens`,
+                { tags: ['UISpec', 'UIScreenLocalTokens'] },
+            );
+        } catch {
+            localTokens = null;
+        }
+
+        if (!localTokens || typeof localTokens !== 'object') {
+            this._screenDesignTokensCache.set(screenId, baseTokens);
+            return baseTokens;
+        }
+
+        const merged = {
+            ...baseTokens,
+            colors: { ...(baseTokens?.colors || {}) },
+            typography: { ...(baseTokens?.typography || {}) },
+        } as any;
+
+        if (localTokens.colors && typeof localTokens.colors === 'object') {
+            Object.assign(merged.colors, localTokens.colors);
+        }
+        if (localTokens.typography && typeof localTokens.typography === 'object') {
+            Object.assign(merged.typography, localTokens.typography);
+        }
+
+        const runtimeOverrides = localTokens.runtimeOverrides;
+        if (runtimeOverrides && typeof runtimeOverrides === 'object') {
+            if (runtimeOverrides.colors && typeof runtimeOverrides.colors === 'object') {
+                Object.assign(merged.colors, runtimeOverrides.colors);
+            }
+            if (runtimeOverrides.typography && typeof runtimeOverrides.typography === 'object') {
+                Object.assign(merged.typography, runtimeOverrides.typography);
+            }
+        }
+
+        this._screenDesignTokensCache.set(screenId, merged);
+        return merged;
     }
 
     /**

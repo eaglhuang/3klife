@@ -1,0 +1,445 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "gacha-ds3",
+  "taxonomy": [
+    "art-authority",
+    "manual-art-asset",
+    "converter-geometry",
+    "source-html-fix",
+    "runtime-bug"
+  ],
+  "summary": {
+    "totalZones": 20,
+    "byTaxonomy": {
+      "art-authority": 0,
+      "manual-art-asset": 0,
+      "converter-geometry": 20,
+      "source-html-fix": 0,
+      "runtime-bug": 0
+    },
+    "waiverEligibleCount": 0,
+    "missingRectCount": 0
+  },
+  "zones": [
+    {
+      "id": "pixel-diff:1",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-1",
+      "rect": {
+        "x": 256,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:2",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-2",
+      "rect": {
+        "x": 320,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:3",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-3",
+      "rect": {
+        "x": 384,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:4",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-4",
+      "rect": {
+        "x": 448,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:5",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-5",
+      "rect": {
+        "x": 512,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:6",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-6",
+      "rect": {
+        "x": 576,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:7",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-7",
+      "rect": {
+        "x": 640,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:8",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-8",
+      "rect": {
+        "x": 704,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:9",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-9",
+      "rect": {
+        "x": 768,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:10",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-10",
+      "rect": {
+        "x": 832,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:11",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-11",
+      "rect": {
+        "x": 896,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:12",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-12",
+      "rect": {
+        "x": 960,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:13",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-13",
+      "rect": {
+        "x": 1024,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:14",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-14",
+      "rect": {
+        "x": 1088,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:15",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-15",
+      "rect": {
+        "x": 1152,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:16",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-16",
+      "rect": {
+        "x": 1216,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:17",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-17",
+      "rect": {
+        "x": 1280,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:18",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-18",
+      "rect": {
+        "x": 0,
+        "y": 128,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:19",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-19",
+      "rect": {
+        "x": 64,
+        "y": 128,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    },
+    {
+      "id": "pixel-diff:20",
+      "taxonomy": "converter-geometry",
+      "zoneId": "pixel-diff-bucket-20",
+      "rect": {
+        "x": 128,
+        "y": 128,
+        "w": 64,
+        "h": 64
+      },
+      "rectStatus": "ready",
+      "evidence": [
+        {
+          "type": "pixel-diff",
+          "mismatchPixels": 4096,
+          "mismatchRatio": 1
+        }
+      ],
+      "waiverEligible": false,
+      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+    }
+  ]
+}

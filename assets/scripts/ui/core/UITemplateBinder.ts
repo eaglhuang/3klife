@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from './UCUFLogger';
 /**
  * UITemplateBinder — 自動節點綁定器
  *
@@ -73,7 +74,7 @@ export class UITemplateBinder {
 
             const bucket = childBuckets.get(childSpec.name);
             if (!bucket || bucket.length === 0) {
-                console.warn(`[UITemplateBinder] 路徑索引失敗：找不到 root 子節點 "${childSpec.name}"`);
+                UCUFLogger.warn(LogCategory.UI, `[UITemplateBinder] 路徑索引失敗：找不到 root 子節點 "${childSpec.name}"`);
                 continue;
             }
 
@@ -200,7 +201,7 @@ export class UITemplateBinder {
             const nodes = nameIndex.get(name);
             if (nodes && nodes.length > 0) {
                 if (nodes.length > 1) {
-                    console.warn(`[UITemplateBinder] 節點名稱 "${name}" (id="${id}") 有 ${nodes.length} 個重複，取第一個。` +
+                    UCUFLogger.warn(LogCategory.UI, `[UITemplateBinder] 節點名稱 "${name}" (id="${id}") 有 ${nodes.length} 個重複，取第一個。` +
                         `若出現綁定錯位，請確認 layout JSON 中的節點名稱唯一性。`);
                 }
                 const node = nodes[0];
@@ -256,7 +257,7 @@ export class UITemplateBinder {
             const bucket = childBuckets.get(childSpec.name);
             if (!bucket || bucket.length === 0) {
                 if (!isDeferredLazySlot) {
-                    console.warn(`[UITemplateBinder] 路徑索引失敗：找不到節點 "${childSpec.name}"，parentPath="${parentPath || '<root>'}"`);
+                    UCUFLogger.warn(LogCategory.UI, `[UITemplateBinder] 路徑索引失敗：找不到節點 "${childSpec.name}"，parentPath="${parentPath || '<root>'}"`);
                 }
                 continue;
             }

@@ -5,10 +5,28 @@
   "layout": "gacha-ds3",
   "skin": "gacha-ds3.skin",
   "bundle": "lobby_ui",
+  "meta": {
+    "htmlToUcufPlan4": true,
+    "runtimeAuthority": "synced-final-runtime-json"
+  },
   "content": {
     "source": "gacha-main-states-v1",
     "state": "bloodline-seed"
   },
-  "runtimeVersion": "gacds3-20260502-003",
-  "runtimeVersionUpdatedAt": "2026-05-02T14:10:36.802Z"
+  "runtimeVersion": "gacds3-20260504-015",
+  "runtimeVersionUpdatedAt": "2026-05-04T02:49:59.612Z",
+  "tabRouting": {
+    "General": {
+      "slotId": "RightPanel",
+      "fragment": "fragments/layouts/gacha-ds3-general-content"
+    },
+    "Legendary": {
+      "slotId": "RightPanel",
+      "fragment": "fragments/layouts/gacha-ds3-legendary-content"
+    },
+    "Support": {
+      "slotId": "RightPanel",
+      "fragment": "fragments/layouts/gacha-ds3-support-content"
+    }
+  }
 }

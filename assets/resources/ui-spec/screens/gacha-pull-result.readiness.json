@@ -1,0 +1,225 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "gacha-pull-result",
+  "generatedAt": "2026-05-03T15:36:31.515Z",
+  "verdict": "not-ready",
+  "readinessScore": 0.25,
+  "summary": {
+    "blockerUnits": 5,
+    "actionUnits": 18,
+    "bounded": true,
+    "nextCriticalAction": "capture Cocos Editor target screen and run final compare"
+  },
+  "paths": {
+    "layout": "assets/resources/ui-spec/layouts/gacha-pull-result.json",
+    "skin": "assets/resources/ui-spec/skins/gacha-pull-result.skin.json",
+    "screen": "assets/resources/ui-spec/screens/gacha-pull-result.json",
+    "captureProtocol": "assets/resources/ui-spec/screens/gacha-pull-result.final-capture-protocol.json",
+    "zoneOwnership": "assets/resources/ui-spec/screens/gacha-pull-result.zone-ownership.json",
+    "tabRouting": "assets/resources/ui-spec/screens/gacha-pull-result.tab-routing.json",
+    "preload": "assets/resources/ui-spec/screens/gacha-pull-result.preload.json",
+    "performance": "assets/resources/ui-spec/screens/gacha-pull-result.performance.json",
+    "bakeManifest": "assets/resources/ui-spec/layouts/gacha-pull-result.layout.bake-manifest.json",
+    "artAuthorityWaivers": "assets/resources/ui-spec/screens/gacha-pull-result.art-authority-waivers.json",
+    "finalVerdict": "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.html-cocos-verdict.json"
+  },
+  "gates": {
+    "finalGate": {
+      "status": "blocker",
+      "pass": false,
+      "workUnits": 1,
+      "summary": "no measured Cocos Editor final compare verdict"
+    },
+    "capture": {
+      "status": "blocker",
+      "ok": false,
+      "workUnits": 1,
+      "summary": "missing final capture protocol"
+    },
+    "zones": {
+      "status": "blocker",
+      "workUnits": 1,
+      "summary": "missing zone ownership report"
+    },
+    "tabMounts": {
+      "status": "blocker",
+      "workUnits": 1,
+      "summary": "0/1 tab mounts resolve to real layout nodes",
+      "checks": [
+        {
+          "id": "PoolNext",
+          "mount": "",
+          "exists": false,
+          "matchType": null,
+          "childPanelClass": "GachaPullResultPoolNextChildPanel"
+        }
+      ],
+      "missing": [
+        {
+          "id": "PoolNext",
+          "mount": "",
+          "exists": false,
+          "matchType": null,
+          "childPanelClass": "GachaPullResultPoolNextChildPanel"
+        }
+      ]
+    },
+    "fragmentGeometry": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0 referenced fragments follow fill-root geometry contract",
+      "checks": [],
+      "failures": []
+    },
+    "textBinding": {
+      "status": "warn",
+      "workUnits": 12,
+      "summary": "90/90 dynamic text candidates missing bind/i18n contract",
+      "totalTextNodes": 224,
+      "dynamicCandidateCount": 90,
+      "missingContractCount": 90,
+      "samples": [
+        {
+          "name": "GachaPullResult_div_3",
+          "path": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_1/GachaPullResult_div_3",
+          "text": "轉蛋 GACHA"
+        },
+        {
+          "name": "GachaPullResult_div_4",
+          "path": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_1/GachaPullResult_div_4",
+          "text": "彈窗 POPUP"
+        },
+        {
+          "name": "GachaPullResult_div_11",
+          "path": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_5/GachaPullResult_div_6/GachaPullResult_div_11",
+          "text": "限時補給 · 每日重置"
+        },
+        {
+          "name": "GachaPullResult_div_15",
+          "path": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_5/GachaPullResult_div_6/GachaPullResult_div_12/GachaPullResult_div_13/GachaPullResult_div_15",
+          "text": "48,200"
+        },
+        {
+          "name": "GachaPullResult_div_19",
+          "path": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_5/GachaPullResult_div_6/GachaPullResult_div_12/GachaPullResult_div_17/GachaPullResult_div_19",
+          "text": "1,280"
+        },
+        {
+          "name": "GachaPullResult_div_23",
+          "path": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_5/GachaPullResult_div_6/GachaPullResult_div_12/GachaPullResult_div_21/GachaPullResult_div_23",
+          "text": "340"
+        },
+        {
+          "name": "GachaPullResult_span_2",
+          "path": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_5/GachaPullResult_div_25/GachaPullResult_div_34/GachaPullResult_span_2",
+          "text": "3"
+        },
+        {
+          "name": "GachaPullResult_div_40",
+          "path": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_5/GachaPullResult_div_25/GachaPullResult_div_38/GachaPullResult_div_40",
+          "text": "17:43:22"
+        },
+        {
+          "name": "GachaPullResult_div_42",
+          "path": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_5/GachaPullResult_div_41/GachaPullResult_div_42",
+          "text": "武將召喚券 · 本季推薦"
+        },
+        {
+          "name": "GachaPullResult_div_46",
+          "path": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_5/GachaPullResult_div_41/GachaPullResult_div_43/GachaPullResult_div_44/GachaPullResult_div_45/GachaPullResult_div_46",
+          "text": "武將立繪"
+        },
+        {
+          "name": "GachaPullResult_div_51",
+          "path": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_5/GachaPullResult_div_41/GachaPullResult_div_43/GachaPullResult_div_44/GachaPullResult_div_50/GachaPullResult_div_51",
+          "text": "名將召喚卷軸·限"
+        },
+        {
+          "name": "GachaPullResult_div_54",
+          "path": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_5/GachaPullResult_div_41/GachaPullResult_div_43/GachaPullResult_div_44/GachaPullResult_div_50/GachaPullResult_div_52/GachaPullResult_div_54",
+          "text": "1,280"
+        }
+      ]
+    },
+    "visualPolicy": {
+      "status": "warn",
+      "workUnits": 1,
+      "summary": "missing bake manifest; texture/clip review cannot be quantified"
+    },
+    "loading": {
+      "status": "blocker",
+      "workUnits": 1,
+      "summary": "node-count-blocker: 397 (>60)",
+      "actualLayoutStats": {
+        "nodeCount": 397,
+        "deferredNodeCount": 0,
+        "totalNodeCount": 397,
+        "maxDepth": 11,
+        "colorRectCount": 0,
+        "lazySlotCount": 0,
+        "warmupHints": {
+          "next-frame": 0,
+          "idle": 0,
+          "tab-hover": 0,
+          "manual": 0
+        }
+      },
+      "reportedRendering": {
+        "nodeCount": 397,
+        "deferredNodeCount": 0,
+        "totalNodeCount": 397,
+        "maxDepth": 11,
+        "estimatedDrawCalls": 3,
+        "colorRectCount": 0
+      },
+      "skinSlotCount": 346,
+      "issues": [
+        "node-count-blocker: 397 (>60)"
+      ]
+    }
+  },
+  "issues": [
+    {
+      "severity": "blocker",
+      "code": "final-gate",
+      "summary": "no measured Cocos Editor final compare verdict",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "capture-protocol",
+      "summary": "missing final capture protocol",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "zone-ownership-waivers",
+      "summary": "missing zone ownership report",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "tab-routing-mounts",
+      "summary": "0/1 tab mounts resolve to real layout nodes",
+      "workUnits": 1
+    },
+    {
+      "severity": "warn",
+      "code": "text-binding",
+      "summary": "90/90 dynamic text candidates missing bind/i18n contract",
+      "workUnits": 12
+    },
+    {
+      "severity": "warn",
+      "code": "visual-policy",
+      "summary": "missing bake manifest; texture/clip review cannot be quantified",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "loading-performance",
+      "summary": "node-count-blocker: 397 (>60)",
+      "workUnits": 1
+    }
+  ]
+}

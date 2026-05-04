@@ -425,8 +425,12 @@ export interface SkinColorRectSlot {
 export interface SkinGradientRectSlot {
     kind: 'gradient-rect';
     gradient: {
-        type: 'linear';
+        type: 'linear' | 'radial';
         angle?: number;
+        shape?: string;
+        center?: { x: number; y: number };
+        radius?: { x: number; y: number };
+        repeating?: boolean;
         stops: Array<{ color: string; offset: number; opacity?: number }>;
     };
     opacity?: number;

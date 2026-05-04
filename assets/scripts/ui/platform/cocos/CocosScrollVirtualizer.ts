@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md  (UCUF M3)
 /**
  * CocosScrollVirtualizer
@@ -47,7 +48,7 @@ export class CocosScrollVirtualizer implements IScrollVirtualizer {
         const svNode = scrollNode as Node;
         this._scrollView  = svNode.getComponent(ScrollView);
         if (!this._scrollView) {
-            console.warn('[CocosScrollVirtualizer] scrollNode 上找不到 ScrollView 元件');
+            UCUFLogger.warn(LogCategory.UI, '[CocosScrollVirtualizer] scrollNode 上找不到 ScrollView 元件');
             return;
         }
 
@@ -58,7 +59,7 @@ export class CocosScrollVirtualizer implements IScrollVirtualizer {
         // Content 節點（ScrollView.content）
         this._contentNode = this._scrollView.content as Node | null;
         if (!this._contentNode) {
-            console.warn('[CocosScrollVirtualizer] ScrollView.content 為 null');
+            UCUFLogger.warn(LogCategory.UI, '[CocosScrollVirtualizer] ScrollView.content 為 null');
             return;
         }
 

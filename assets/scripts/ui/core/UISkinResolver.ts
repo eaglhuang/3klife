@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from './UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * UISkinResolver — Skin Slot 解析器
@@ -89,7 +90,7 @@ export class UISkinResolver {
             // 防禦：瀏覽器模式下 SpriteFrame 可能載入成功但內部 texture 為 null，
             // 直接賦給 Sprite 會導致 _applySpriteSize 存取 texture.width 崩潰
             if (!frame || !frame.texture) {
-                console.warn(`[UISkinResolver] SpriteFrame texture 無效: ${slotId} → ${path}`);
+                UCUFLogger.warn(LogCategory.UI, `[UISkinResolver] SpriteFrame texture 無效: ${slotId} → ${path}`);
                 this._spriteCache.set(slotId, null);
                 return null;
             }
@@ -97,9 +98,9 @@ export class UISkinResolver {
             return frame;
         } catch (e) {
             if (path.startsWith('ui-spec/placeholders/')) {
-                console.log(`[UISkinResolver] placeholder SpriteFrame 缺失，沿用呼叫端 fallback: ${slotId} → ${path}`);
+                UCUFLogger.info(LogCategory.UI, `[UISkinResolver] placeholder SpriteFrame 缺失，沿用呼叫端 fallback: ${slotId} → ${path}`);
             } else {
-                console.warn(`[UISkinResolver] 載入 SpriteFrame 失敗: ${slotId} → ${path}`, e);
+                UCUFLogger.warn(LogCategory.UI, `[UISkinResolver] 載入 SpriteFrame 失敗: ${slotId} → ${path}`, e);
             }
             this._spriteCache.set(slotId, null);
             return null;
@@ -191,7 +192,7 @@ export class UISkinResolver {
         // 確保 hex 是有效色碼
         if (!hex.startsWith('#')) {
             // token 名稱無法解析（tokens 未初始化或 key 不存在），回傳透明 fallback 而非誤解析為怪色
-            console.warn(`[UISkinResolver] resolveColor: token "${hex}" 未找到（tokens loaded: ${!!this._tokens}），使用透明 fallback`);
+            UCUFLogger.warn(LogCategory.UI, `[UISkinResolver] resolveColor: token "${hex}" 未找到（tokens loaded: ${!!this._tokens}），使用透明 fallback`);
             return new Color(0, 0, 0, 0);
         }
 

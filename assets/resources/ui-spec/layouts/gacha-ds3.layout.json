@@ -35,11 +35,12 @@
               "right": 460,
               "bottom": 200
             },
+            "id": "banner-stage",
             "width": 1460,
             "height": 880,
             "children": [
               {
-                "type": "panel",
+                "type": "container",
                 "name": "BannerSlide_general",
                 "widget": {
                   "top": 0,
@@ -48,39 +49,11 @@
                   "bottom": 0
                 },
                 "opacity": 1,
+                "id": "pool-panel-general",
                 "width": 1460,
                 "height": 880,
                 "_motionId": "banner-slide_general.transition",
-                "skinSlot": "auto.gacha-ds3.bannerslide_general",
                 "children": [
-                  {
-                    "type": "container",
-                    "name": "GachaDs3_div_5",
-                    "widget": {
-                      "top": 0,
-                      "left": 0,
-                      "right": 0,
-                      "bottom": 0
-                    },
-                    "width": 1460,
-                    "height": 880,
-                    "layout": {
-                      "type": "horizontal",
-                      "alignItems": "end",
-                      "justifyContent": "center"
-                    },
-                    "children": [],
-                    "skinLayers": [
-                      {
-                        "layerId": "GachaDs3_div_6",
-                        "slotId": "auto.gacha-ds3.gachads3_div_6",
-                        "zOrder": 0,
-                        "expand": false,
-                        "width": 480,
-                        "height": 748
-                      }
-                    ]
-                  },
                   {
                     "type": "container",
                     "name": "GachaDs3_div_7",
@@ -99,7 +72,8 @@
                         "width": 124,
                         "height": 24,
                         "text": "★ 名將系列 · 常設",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_8"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_8",
+                        "textKey": "auto.gacha-ds3.gacha-ds3-div-8"
                       },
                       {
                         "type": "label",
@@ -115,7 +89,8 @@
                         "width": 233,
                         "height": 19,
                         "text": "美髯公 · SSR 武將",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_10"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_10",
+                        "textKey": "auto.gacha-ds3.gacha-ds3-div-10"
                       },
                       {
                         "type": "label",
@@ -123,7 +98,8 @@
                         "width": 136,
                         "height": 33,
                         "text": "✦ SSR 保底 90 抽",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_11"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_11",
+                        "textKey": "auto.gacha-ds3.gacha-ds3-div-11"
                       }
                     ]
                   }
@@ -170,6 +146,20 @@
                       "right": 0,
                       "bottom": 0
                     }
+                  },
+                  {
+                    "layerId": "GachaDs3_div_5_GachaDs3_div_6",
+                    "slotId": "auto.gacha-ds3.gachads3_div_6",
+                    "zOrder": 3,
+                    "expand": false,
+                    "width": 480,
+                    "height": 748,
+                    "widget": {
+                      "top": 132,
+                      "left": 490,
+                      "right": 490,
+                      "bottom": 0
+                    }
                   }
                 ]
               },
@@ -183,38 +173,12 @@
                   "bottom": 0
                 },
                 "opacity": 0,
+                "active": false,
+                "id": "pool-panel-legendary",
                 "width": 1460,
                 "height": 880,
                 "_motionId": "banner-slide_legendary.transition",
                 "children": [
-                  {
-                    "type": "container",
-                    "name": "GachaDs3_div_15",
-                    "widget": {
-                      "top": 0,
-                      "left": 0,
-                      "right": 0,
-                      "bottom": 0
-                    },
-                    "width": 1460,
-                    "height": 880,
-                    "layout": {
-                      "type": "horizontal",
-                      "alignItems": "end",
-                      "justifyContent": "center"
-                    },
-                    "children": [],
-                    "skinLayers": [
-                      {
-                        "layerId": "GachaDs3_div_16",
-                        "slotId": "auto.gacha-ds3.gachads3_div_16",
-                        "zOrder": 0,
-                        "expand": false,
-                        "width": 480,
-                        "height": 748
-                      }
-                    ]
-                  },
                   {
                     "type": "container",
                     "name": "GachaDs3_div_17",
@@ -233,7 +197,8 @@
                         "width": 124,
                         "height": 24,
                         "text": "★ 傳奇系列 · 常設",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_18"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_18",
+                        "textKey": "auto.gacha-ds3.gacha-ds3-div-18"
                       },
                       {
                         "type": "label",
@@ -249,7 +214,8 @@
                         "width": 249,
                         "height": 19,
                         "text": "天下無雙 · UR 武將",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_20"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_20",
+                        "textKey": "auto.gacha-ds3.gacha-ds3-div-20"
                       },
                       {
                         "type": "label",
@@ -257,7 +223,8 @@
                         "width": 249,
                         "height": 33,
                         "text": "👑 UR 保底 180 抽 SSR 保底 90 抽",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_21"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_21",
+                        "textKey": "auto.gacha-ds3.gacha-ds3-div-21"
                       }
                     ]
                   }
@@ -304,6 +271,20 @@
                       "right": 0,
                       "bottom": 0
                     }
+                  },
+                  {
+                    "layerId": "GachaDs3_div_15_GachaDs3_div_16",
+                    "slotId": "auto.gacha-ds3.gachads3_div_16",
+                    "zOrder": 3,
+                    "expand": false,
+                    "width": 480,
+                    "height": 748,
+                    "widget": {
+                      "top": 132,
+                      "left": 490,
+                      "right": 490,
+                      "bottom": 0
+                    }
                   }
                 ]
               },
@@ -317,38 +298,12 @@
                   "bottom": 0
                 },
                 "opacity": 0,
+                "active": false,
+                "id": "pool-panel-support",
                 "width": 1460,
                 "height": 880,
                 "_motionId": "banner-slide_support.transition",
                 "children": [
-                  {
-                    "type": "container",
-                    "name": "GachaDs3_div_25",
-                    "widget": {
-                      "top": 0,
-                      "left": 0,
-                      "right": 0,
-                      "bottom": 0
-                    },
-                    "width": 1460,
-                    "height": 880,
-                    "layout": {
-                      "type": "horizontal",
-                      "alignItems": "end",
-                      "justifyContent": "center"
-                    },
-                    "children": [],
-                    "skinLayers": [
-                      {
-                        "layerId": "GachaDs3_div_26",
-                        "slotId": "auto.gacha-ds3.gachads3_div_26",
-                        "zOrder": 0,
-                        "expand": false,
-                        "width": 480,
-                        "height": 748
-                      }
-                    ]
-                  },
                   {
                     "type": "container",
                     "name": "GachaDs3_div_27",
@@ -367,7 +322,8 @@
                         "width": 122,
                         "height": 24,
                         "text": "教官系列 · 第二季",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_28"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_28",
+                        "textKey": "auto.gacha-ds3.gacha-ds3-div-28"
                       },
                       {
                         "type": "label",
@@ -383,7 +339,8 @@
                         "width": 233,
                         "height": 19,
                         "text": "吳宮秘書 · SSR 支援卡",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_30"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_30",
+                        "textKey": "auto.gacha-ds3.gacha-ds3-div-30"
                       },
                       {
                         "type": "label",
@@ -391,7 +348,8 @@
                         "width": 178,
                         "height": 33,
                         "text": "🎓 SSR 支援卡保底 80 抽",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_31"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_31",
+                        "textKey": "auto.gacha-ds3.gacha-ds3-div-31"
                       }
                     ]
                   }
@@ -438,6 +396,20 @@
                       "right": 0,
                       "bottom": 0
                     }
+                  },
+                  {
+                    "layerId": "GachaDs3_div_25_GachaDs3_div_26",
+                    "slotId": "auto.gacha-ds3.gachads3_div_26",
+                    "zOrder": 3,
+                    "expand": false,
+                    "width": 480,
+                    "height": 748,
+                    "widget": {
+                      "top": 132,
+                      "left": 490,
+                      "right": 490,
+                      "bottom": 0
+                    }
                   }
                 ]
               }
@@ -477,6 +449,7 @@
               {
                 "type": "label",
                 "name": "GachaDs3_div_34",
+                "id": "strip-name",
                 "width": 73,
                 "height": 24,
                 "text": "名將召喚",
@@ -537,6 +510,7 @@
               "top": 852,
               "bottom": -110
             },
+            "id": "tab-rail",
             "width": 60,
             "height": 8,
             "layout": {
@@ -548,7 +522,6 @@
               {
                 "type": "panel",
                 "name": "PoolDot_general",
-                "opacity": 1,
                 "width": 24,
                 "height": 8,
                 "_interactionId": "pool-dot_general.tab-switch",
@@ -584,6 +557,7 @@
               "right": 1715,
               "bottom": 992
             },
+            "id": "pool-brief",
             "width": 185,
             "height": 72,
             "_motionId": "gacha-ds3_div_35.transition",
@@ -592,6 +566,7 @@
               {
                 "type": "label",
                 "name": "GachaDs3_div_36",
+                "id": "brief-tag",
                 "width": 151,
                 "height": 12,
                 "text": "▸ 名將池說明",
@@ -600,6 +575,7 @@
               {
                 "type": "container",
                 "name": "GachaDs3_div_37",
+                "id": "brief-line",
                 "width": 151,
                 "height": 34,
                 "layout": {
@@ -610,7 +586,8 @@
                     "type": "label",
                     "name": "GachaDs3_strong_1",
                     "text": "Bloodline_Seed",
-                    "styleSlot": "auto.gacha-ds3.gachads3_strong_1"
+                    "styleSlot": "auto.gacha-ds3.gachads3_strong_1",
+                    "textKey": "auto.gacha-ds3.gacha-ds3-strong-1"
                   }
                 ]
               }
@@ -625,6 +602,11 @@
               "right": 0,
               "bottom": 200
             },
+            "id": "right-panel",
+            "lazySlot": true,
+            "defaultFragment": "fragments/layouts/gacha-ds3-general-content",
+            "warmupHint": "first-frame",
+            "_contract": "tab.content.host",
             "width": 460,
             "height": 880,
             "layout": {
@@ -636,531 +618,11 @@
               "paddingBottom": 28,
               "paddingLeft": 26
             },
-            "skinSlot": "auto.gacha-ds3.rightpanel",
-            "children": [
-              {
-                "type": "container",
-                "name": "GachaDs3_div_38",
-                "width": 407,
-                "height": 824,
-                "layout": {
-                  "type": "vertical",
-                  "justifyContent": "start",
-                  "spacingY": 20
-                },
-                "children": [
-                  {
-                    "type": "container",
-                    "name": "GachaDs3_div_39",
-                    "width": 407,
-                    "height": 44,
-                    "layout": {
-                      "type": "horizontal",
-                      "alignItems": "start",
-                      "justifyContent": "space-between"
-                    },
-                    "children": [
-                      {
-                        "type": "container",
-                        "name": "GachaDs3_div_40",
-                        "width": 127,
-                        "height": 44,
-                        "layout": {
-                          "type": "vertical"
-                        },
-                        "children": [
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_div_41",
-                            "width": 127,
-                            "height": 26,
-                            "text": "名將召喚",
-                            "styleSlot": "auto.gacha-ds3.gachads3_div_41"
-                          },
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_div_42",
-                            "width": 127,
-                            "height": 13,
-                            "text": "以血脈為種，召來傳世名將",
-                            "styleSlot": "auto.gacha-ds3.gachads3_div_42"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "label",
-                        "name": "GachaDs3_div_43",
-                        "width": 56,
-                        "height": 23,
-                        "text": "常設池",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_43"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "container",
-                    "name": "GachaDs3_div_44",
-                    "width": 407,
-                    "height": 69,
-                    "layout": {
-                      "type": "vertical",
-                      "spacingY": 8
-                    },
-                    "children": [
-                      {
-                        "type": "container",
-                        "name": "GachaDs3_div_45",
-                        "width": 407,
-                        "height": 14,
-                        "layout": {
-                          "type": "horizontal",
-                          "alignItems": "center",
-                          "justifyContent": "space-between"
-                        },
-                        "children": [
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_div_46",
-                            "width": 67,
-                            "height": 13,
-                            "text": "SSR 保底進度",
-                            "styleSlot": "auto.gacha-ds3.gachads3_div_46"
-                          },
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_div_47",
-                            "width": 52,
-                            "height": 14,
-                            "text": "查看機率 ›",
-                            "styleSlot": "auto.gacha-ds3.gachads3_div_47"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "panel",
-                        "name": "GachaDs3_div_48",
-                        "widget": {
-                          "top": 0,
-                          "left": 0,
-                          "right": 0,
-                          "bottom": 0
-                        },
-                        "width": 407,
-                        "height": 30,
-                        "skinSlot": "auto.gacha-ds3.gachads3_div_48",
-                        "children": [
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_div_49",
-                            "width": 279,
-                            "height": 28,
-                            "_motionId": "gacha-ds3_div_49.transition",
-                            "skinSlot": "auto.gacha-ds3.gachads3_div_49",
-                            "text": "62 / 90",
-                            "styleSlot": "auto.gacha-ds3.gachads3_span_1"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "container",
-                        "name": "GachaDs3_div_50",
-                        "width": 407,
-                        "height": 13,
-                        "layout": {
-                          "type": "horizontal",
-                          "justifyContent": "space-between"
-                        },
-                        "children": [
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_span_2",
-                            "width": 6,
-                            "height": 13,
-                            "text": "0",
-                            "styleSlot": "auto.gacha-ds3.gachads3_span_2"
-                          },
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_span_3",
-                            "width": 20,
-                            "height": 13,
-                            "text": "25%",
-                            "styleSlot": "auto.gacha-ds3.gachads3_span_3"
-                          },
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_span_4",
-                            "width": 20,
-                            "height": 13,
-                            "text": "50%",
-                            "styleSlot": "auto.gacha-ds3.gachads3_span_4"
-                          },
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_span_5",
-                            "width": 19,
-                            "height": 13,
-                            "text": "75%",
-                            "styleSlot": "auto.gacha-ds3.gachads3_span_5"
-                          },
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_span_6",
-                            "width": 19,
-                            "height": 13,
-                            "text": "保底",
-                            "styleSlot": "auto.gacha-ds3.gachads3_span_6"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "container",
-                    "name": "GachaDs3_div_51",
-                    "width": 407,
-                    "height": 154,
-                    "layout": {
-                      "type": "vertical",
-                      "spacingY": 10
-                    },
-                    "children": [
-                      {
-                        "type": "label",
-                        "name": "GachaDs3_div_52",
-                        "width": 407,
-                        "height": 13,
-                        "text": "召喚機率",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_52"
-                      },
-                      {
-                        "type": "container",
-                        "name": "GachaDs3_div_53",
-                        "width": 407,
-                        "height": 131,
-                        "layout": {
-                          "type": "vertical",
-                          "justifyContent": "start",
-                          "spacingY": 5
-                        },
-                        "children": [
-                          {
-                            "type": "panel",
-                            "name": "GachaDs3_div_54",
-                            "width": 407,
-                            "height": 29,
-                            "layout": {
-                              "type": "horizontal",
-                              "alignItems": "center",
-                              "justifyContent": "start",
-                              "spacingX": 10,
-                              "paddingTop": 6,
-                              "paddingRight": 10,
-                              "paddingBottom": 6,
-                              "paddingLeft": 10
-                            },
-                            "skinSlot": "auto.gacha-ds3.gachads3_div_54",
-                            "children": [
-                              {
-                                "type": "label",
-                                "name": "GachaDs3_div_55",
-                                "width": 36,
-                                "height": 14,
-                                "text": "N",
-                                "styleSlot": "auto.gacha-ds3.gachads3_div_55"
-                              },
-                              {
-                                "type": "label",
-                                "name": "GachaDs3_div_58",
-                                "width": 42,
-                                "height": 17,
-                                "text": "87.00%",
-                                "styleSlot": "auto.gacha-ds3.gachads3_div_58"
-                              }
-                            ],
-                            "skinLayers": [
-                              {
-                                "layerId": "GachaDs3_div_56",
-                                "slotId": "auto.gacha-ds3.gachads3_div_56",
-                                "zOrder": 0,
-                                "expand": false,
-                                "width": 289,
-                                "height": 5
-                              }
-                            ]
-                          },
-                          {
-                            "type": "panel",
-                            "name": "GachaDs3_div_59",
-                            "width": 407,
-                            "height": 29,
-                            "layout": {
-                              "type": "horizontal",
-                              "alignItems": "center",
-                              "justifyContent": "start",
-                              "spacingX": 10,
-                              "paddingTop": 6,
-                              "paddingRight": 10,
-                              "paddingBottom": 6,
-                              "paddingLeft": 10
-                            },
-                            "skinSlot": "auto.gacha-ds3.gachads3_div_59",
-                            "children": [
-                              {
-                                "type": "label",
-                                "name": "GachaDs3_div_60",
-                                "width": 36,
-                                "height": 14,
-                                "text": "R",
-                                "styleSlot": "auto.gacha-ds3.gachads3_div_60"
-                              },
-                              {
-                                "type": "label",
-                                "name": "GachaDs3_div_63",
-                                "width": 42,
-                                "height": 17,
-                                "text": "10.00%",
-                                "styleSlot": "auto.gacha-ds3.gachads3_div_63"
-                              }
-                            ],
-                            "skinLayers": [
-                              {
-                                "layerId": "GachaDs3_div_61",
-                                "slotId": "auto.gacha-ds3.gachads3_div_61",
-                                "zOrder": 0,
-                                "expand": false,
-                                "width": 289,
-                                "height": 5
-                              }
-                            ]
-                          },
-                          {
-                            "type": "panel",
-                            "name": "GachaDs3_div_64",
-                            "width": 407,
-                            "height": 29,
-                            "layout": {
-                              "type": "horizontal",
-                              "alignItems": "center",
-                              "justifyContent": "start",
-                              "spacingX": 10,
-                              "paddingTop": 6,
-                              "paddingRight": 10,
-                              "paddingBottom": 6,
-                              "paddingLeft": 10
-                            },
-                            "skinSlot": "auto.gacha-ds3.gachads3_div_64",
-                            "children": [
-                              {
-                                "type": "label",
-                                "name": "GachaDs3_div_65",
-                                "width": 36,
-                                "height": 14,
-                                "text": "SR",
-                                "styleSlot": "auto.gacha-ds3.gachads3_div_65"
-                              },
-                              {
-                                "type": "label",
-                                "name": "GachaDs3_div_68",
-                                "width": 42,
-                                "height": 17,
-                                "text": "2.00%",
-                                "styleSlot": "auto.gacha-ds3.gachads3_div_68"
-                              }
-                            ],
-                            "skinLayers": [
-                              {
-                                "layerId": "GachaDs3_div_66",
-                                "slotId": "auto.gacha-ds3.gachads3_div_66",
-                                "zOrder": 0,
-                                "expand": false,
-                                "width": 289,
-                                "height": 5
-                              }
-                            ]
-                          },
-                          {
-                            "type": "panel",
-                            "name": "GachaDs3_div_69",
-                            "width": 407,
-                            "height": 29,
-                            "layout": {
-                              "type": "horizontal",
-                              "alignItems": "center",
-                              "justifyContent": "start",
-                              "spacingX": 10,
-                              "paddingTop": 6,
-                              "paddingRight": 10,
-                              "paddingBottom": 6,
-                              "paddingLeft": 10
-                            },
-                            "skinSlot": "auto.gacha-ds3.gachads3_div_69",
-                            "children": [
-                              {
-                                "type": "label",
-                                "name": "GachaDs3_div_70",
-                                "width": 36,
-                                "height": 14,
-                                "text": "SSR",
-                                "styleSlot": "auto.gacha-ds3.gachads3_div_70"
-                              },
-                              {
-                                "type": "label",
-                                "name": "GachaDs3_div_73",
-                                "width": 42,
-                                "height": 17,
-                                "text": "1.00%",
-                                "styleSlot": "auto.gacha-ds3.gachads3_div_73"
-                              }
-                            ],
-                            "skinLayers": [
-                              {
-                                "layerId": "GachaDs3_div_71",
-                                "slotId": "auto.gacha-ds3.gachads3_div_71",
-                                "zOrder": 0,
-                                "expand": false,
-                                "width": 289,
-                                "height": 5
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "panel",
-                    "name": "GachaDs3_div_74",
-                    "width": 407,
-                    "height": 68,
-                    "layout": {
-                      "type": "horizontal",
-                      "alignItems": "center",
-                      "justifyContent": "space-around",
-                      "paddingTop": 12,
-                      "paddingRight": 16,
-                      "paddingBottom": 12,
-                      "paddingLeft": 16
-                    },
-                    "skinSlot": "auto.gacha-ds3.gachads3_div_74",
-                    "children": [
-                      {
-                        "type": "container",
-                        "name": "GachaDs3_div_75",
-                        "width": 39,
-                        "height": 42,
-                        "layout": {
-                          "type": "vertical",
-                          "spacingY": 4
-                        },
-                        "children": [
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_div_76",
-                            "width": 39,
-                            "height": 13,
-                            "text": "單抽",
-                            "styleSlot": "auto.gacha-ds3.gachads3_div_76"
-                          },
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_div_77",
-                            "width": 39,
-                            "height": 25,
-                            "text": "◈ 30",
-                            "styleSlot": "auto.gacha-ds3.gachads3_div_77"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "container",
-                        "name": "GachaDs3_div_79",
-                        "width": 49,
-                        "height": 42,
-                        "layout": {
-                          "type": "vertical",
-                          "spacingY": 4
-                        },
-                        "children": [
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_div_80",
-                            "width": 49,
-                            "height": 13,
-                            "text": "十連",
-                            "styleSlot": "auto.gacha-ds3.gachads3_div_80"
-                          },
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_div_81",
-                            "width": 49,
-                            "height": 25,
-                            "text": "◈ 280",
-                            "styleSlot": "auto.gacha-ds3.gachads3_div_81"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "container",
-                        "name": "GachaDs3_div_83",
-                        "width": 49,
-                        "height": 42,
-                        "layout": {
-                          "type": "vertical",
-                          "spacingY": 4
-                        },
-                        "children": [
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_div_84",
-                            "width": 49,
-                            "height": 13,
-                            "text": "我的餘額",
-                            "styleSlot": "auto.gacha-ds3.gachads3_div_84"
-                          },
-                          {
-                            "type": "label",
-                            "name": "GachaDs3_div_85",
-                            "width": 49,
-                            "height": 25,
-                            "text": "◈ 340",
-                            "styleSlot": "auto.gacha-ds3.gachads3_div_85"
-                          }
-                        ]
-                      }
-                    ],
-                    "skinLayers": [
-                      {
-                        "layerId": "GachaDs3_div_78",
-                        "slotId": "auto.gacha-ds3.gachads3_div_78",
-                        "zOrder": 0,
-                        "expand": false,
-                        "width": 1,
-                        "height": 36
-                      },
-                      {
-                        "layerId": "GachaDs3_div_82",
-                        "slotId": "auto.gacha-ds3.gachads3_div_82",
-                        "zOrder": 1,
-                        "expand": false,
-                        "width": 1,
-                        "height": 36
-                      }
-                    ]
-                  },
-                  {
-                    "type": "container",
-                    "name": "GachaDs3_div_86",
-                    "width": 407,
-                    "height": 31
-                  }
-                ]
-              }
-            ]
+            "skinSlot": "auto.gacha-ds3.rightpanel"
           },
           {
             "type": "panel",
-            "name": "GachaDs3_div_87",
+            "name": "GachaDs3_div_38",
             "widget": {
               "top": 880,
               "left": 0,
@@ -1179,11 +641,11 @@
               "paddingBottom": 0,
               "paddingLeft": 60
             },
-            "skinSlot": "auto.gacha-ds3.gachads3_div_87",
+            "skinSlot": "auto.gacha-ds3.gachads3_div_38",
             "children": [
               {
                 "type": "container",
-                "name": "GachaDs3_div_88",
+                "name": "GachaDs3_div_39",
                 "widget": {
                   "left": 60,
                   "right": 1782,
@@ -1195,60 +657,70 @@
                 "children": [
                   {
                     "type": "label",
-                    "name": "GachaDs3_div_89",
+                    "name": "GachaDs3_div_40",
                     "width": 78,
                     "height": 13,
                     "text": "召 喚",
-                    "styleSlot": "auto.gacha-ds3.gachads3_div_89"
+                    "styleSlot": "auto.gacha-ds3.gachads3_div_40"
                   },
                   {
                     "type": "label",
-                    "name": "GachaDs3_div_90",
+                    "name": "GachaDs3_div_41",
+                    "id": "pullbar-name",
                     "width": 78,
                     "height": 26,
                     "text": "名將召喚",
-                    "styleSlot": "auto.gacha-ds3.gachads3_div_90"
+                    "styleSlot": "auto.gacha-ds3.gachads3_div_41"
                   }
                 ]
               },
               {
-                "type": "container",
-                "name": "slot.story-strip",
-                "lazySlot": true,
-                "defaultFragment": "fragments/layouts/gacha-ds3-story-strip-collapsed",
-                "warmupHint": "manual",
-                "_contract": "tab.owner.overview",
-                "fragments": [
-                  "fragments/layouts/gacha-ds3-story-strip-open"
-                ],
-                "_deferredFragmentReason": "overview-tab-owned-story-strip",
-                "_ucufId": "gacha-ds3.btn-history"
+                "type": "label",
+                "name": "GachaDs3_div_42",
+                "_ucufId": "gacha-ds3.btn-history",
+                "width": 130,
+                "height": 56,
+                "_interactionId": "gacha-ds3_div_42.open-panel",
+                "_motionId": "gacha-ds3_div_42.transition",
+                "layout": {
+                  "type": "horizontal",
+                  "alignItems": "center",
+                  "justifyContent": "start",
+                  "spacingX": 10,
+                  "paddingTop": 0,
+                  "paddingRight": 24,
+                  "paddingBottom": 0,
+                  "paddingLeft": 24
+                },
+                "text": "📜 歷史記錄",
+                "styleSlot": "auto.gacha-ds3.gachads3_div_42"
               },
               {
                 "type": "panel",
-                "name": "GachaDs3_div_91",
+                "name": "GachaDs3_div_43",
                 "width": 220,
                 "height": 88,
-                "_motionId": "gacha-ds3_div_91.transition",
+                "_motionId": "gacha-ds3_div_43.transition",
                 "layout": {
                   "type": "vertical",
                   "alignItems": "center",
                   "justifyContent": "center",
                   "spacingY": 5
                 },
-                "skinSlot": "auto.gacha-ds3.gachads3_div_91",
+                "skinSlot": "auto.gacha-ds3.gachads3_div_43",
                 "children": [
                   {
                     "type": "label",
-                    "name": "GachaDs3_div_92",
+                    "name": "GachaDs3_div_44",
                     "width": 90,
                     "height": 27,
                     "text": "單 抽 ×1",
-                    "styleSlot": "auto.gacha-ds3.gachads3_div_92"
+                    "styleSlot": "auto.gacha-ds3.gachads3_div_44",
+                    "textKey": "auto.gacha-ds3.gacha-ds3-div-44"
                   },
                   {
                     "type": "panel",
-                    "name": "GachaDs3_div_93",
+                    "name": "GachaDs3_div_45",
                     "width": 61,
                     "height": 24,
                     "layout": {
@@ -1261,11 +733,11 @@
                       "paddingBottom": 3,
                       "paddingLeft": 12
                     },
-                    "skinSlot": "auto.gacha-ds3.gachads3_div_93",
+                    "skinSlot": "auto.gacha-ds3.gachads3_div_45",
                     "children": [
                       {
                         "type": "label",
-                        "name": "GachaDs3_div_94",
+                        "name": "GachaDs3_div_46",
                         "width": 14,
                         "height": 14,
                         "layout": {
@@ -1273,15 +745,16 @@
                           "cellHeight": 14
                         },
                         "text": "◈",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_94"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_46"
                       },
                       {
                         "type": "label",
-                        "name": "GachaDs3_div_95",
+                        "name": "GachaDs3_div_47",
                         "width": 18,
                         "height": 18,
                         "text": "30",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_95"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_47",
+                        "textKey": "auto.gacha-ds3.gacha-ds3-div-47"
                       }
                     ]
                   }
@@ -1289,38 +762,40 @@
               },
               {
                 "type": "panel",
-                "name": "GachaDs3_div_96",
+                "name": "GachaDs3_div_48",
                 "width": 290,
                 "height": 88,
-                "_motionId": "gacha-ds3_div_96.transition",
+                "_motionId": "gacha-ds3_div_48.transition",
                 "layout": {
                   "type": "vertical",
                   "alignItems": "center",
                   "justifyContent": "center",
                   "spacingY": 5
                 },
-                "skinSlot": "auto.gacha-ds3.gachads3_div_96",
+                "skinSlot": "auto.gacha-ds3.gachads3_div_48",
                 "children": [
                   {
                     "type": "label",
-                    "name": "GachaDs3_div_97",
+                    "name": "GachaDs3_div_49",
                     "width": 103,
                     "height": 27,
                     "text": "十 連 ×10",
-                    "styleSlot": "auto.gacha-ds3.gachads3_div_97"
+                    "styleSlot": "auto.gacha-ds3.gachads3_div_49",
+                    "textKey": "auto.gacha-ds3.gacha-ds3-div-49"
                   },
                   {
                     "type": "label",
-                    "name": "GachaDs3_div_98",
+                    "name": "GachaDs3_div_50",
                     "opacity": 0.75,
                     "width": 100,
                     "height": 15,
                     "text": "保證 SR 以上 1 枚",
-                    "styleSlot": "auto.gacha-ds3.gachads3_div_98"
+                    "styleSlot": "auto.gacha-ds3.gachads3_div_50",
+                    "textKey": "auto.gacha-ds3.gacha-ds3-div-50"
                   },
                   {
                     "type": "panel",
-                    "name": "GachaDs3_div_99",
+                    "name": "GachaDs3_div_51",
                     "width": 98,
                     "height": 24,
                     "layout": {
@@ -1333,11 +808,11 @@
                       "paddingBottom": 3,
                       "paddingLeft": 12
                     },
-                    "skinSlot": "auto.gacha-ds3.gachads3_div_99",
+                    "skinSlot": "auto.gacha-ds3.gachads3_div_51",
                     "children": [
                       {
                         "type": "label",
-                        "name": "GachaDs3_div_100",
+                        "name": "GachaDs3_div_52",
                         "width": 14,
                         "height": 14,
                         "layout": {
@@ -1345,23 +820,25 @@
                           "cellHeight": 14
                         },
                         "text": "◈",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_100"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_52"
                       },
                       {
                         "type": "label",
-                        "name": "GachaDs3_div_101",
+                        "name": "GachaDs3_div_53",
                         "width": 27,
                         "height": 18,
                         "text": "280",
-                        "styleSlot": "auto.gacha-ds3.gachads3_div_101"
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_53",
+                        "textKey": "auto.gacha-ds3.gacha-ds3-div-53"
                       },
                       {
                         "type": "label",
-                        "name": "GachaDs3_span_7",
+                        "name": "GachaDs3_span_1",
                         "width": 22,
                         "height": 14,
                         "text": "300",
-                        "styleSlot": "auto.gacha-ds3.gachads3_span_7"
+                        "styleSlot": "auto.gacha-ds3.gachads3_span_1",
+                        "textKey": "auto.gacha-ds3.gacha-ds3-span-1"
                       }
                     ]
                   }
@@ -1369,7 +846,7 @@
               },
               {
                 "type": "container",
-                "name": "GachaDs3_div_102",
+                "name": "GachaDs3_div_54",
                 "width": 162,
                 "height": 96,
                 "layout": {
@@ -1380,10 +857,10 @@
                 "children": [
                   {
                     "type": "label",
-                    "name": "GachaDs3_div_103",
+                    "name": "GachaDs3_div_55",
                     "width": 162,
                     "height": 44,
-                    "_motionId": "gacha-ds3_div_103.transition",
+                    "_motionId": "gacha-ds3_div_55.transition",
                     "layout": {
                       "type": "horizontal",
                       "alignItems": "center",
@@ -1395,14 +872,15 @@
                       "paddingLeft": 20
                     },
                     "text": "⚡ 用金幣召喚 (×300)",
-                    "styleSlot": "auto.gacha-ds3.gachads3_div_103"
+                    "styleSlot": "auto.gacha-ds3.gachads3_div_55",
+                    "textKey": "auto.gacha-ds3.gacha-ds3-div-55"
                   },
                   {
                     "type": "label",
-                    "name": "GachaDs3_div_104",
+                    "name": "GachaDs3_div_56",
                     "width": 162,
                     "height": 44,
-                    "_motionId": "gacha-ds3_div_104.transition",
+                    "_motionId": "gacha-ds3_div_56.transition",
                     "layout": {
                       "type": "horizontal",
                       "alignItems": "center",
@@ -1414,23 +892,76 @@
                       "paddingLeft": 20
                     },
                     "text": "🎟 使用召喚券",
-                    "styleSlot": "auto.gacha-ds3.gachads3_div_104"
+                    "styleSlot": "auto.gacha-ds3.gachads3_div_56",
+                    "textKey": "auto.gacha-ds3.gacha-ds3-div-56"
                   }
                 ]
               }
             ]
           },
           {
-            "type": "container",
-            "name": "slot.story-strip",
-            "lazySlot": true,
-            "defaultFragment": "fragments/layouts/gacha-ds3-story-strip-collapsed",
-            "warmupHint": "manual",
-            "_contract": "tab.owner.overview",
-            "fragments": [
-              "fragments/layouts/gacha-ds3-story-strip-open"
+            "type": "panel",
+            "name": "GachaDs3_div_57",
+            "active": false,
+            "opacity": 0,
+            "id": "historyModal",
+            "_motionId": "gacha-ds3_div_57.transition",
+            "skinSlot": "auto.gacha-ds3.gachads3_div_57",
+            "children": [
+              {
+                "type": "panel",
+                "name": "GachaDs3_div_58",
+                "width": "85%",
+                "height": "85%",
+                "layout": {
+                  "type": "vertical"
+                },
+                "skinSlot": "auto.gacha-ds3.gachads3_div_58",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "GachaDs3_div_59",
+                    "_ucufId": "gacha-ds3.history-header",
+                    "_visualZone": "header",
+                    "layout": {
+                      "type": "horizontal",
+                      "alignItems": "center",
+                      "justifyContent": "space-between",
+                      "paddingTop": 24,
+                      "paddingRight": 32,
+                      "paddingBottom": 24,
+                      "paddingLeft": 32
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "GachaDs3_h2_1",
+                        "text": "歷史記錄",
+                        "styleSlot": "auto.gacha-ds3.gachads3_h2_1"
+                      },
+                      {
+                        "type": "label",
+                        "name": "GachaDs3_div_60",
+                        "_ucufId": "gacha-ds3.history-close",
+                        "width": 40,
+                        "height": 40,
+                        "_interactionId": "gacha-ds3_div_60.close-modal",
+                        "_motionId": "gacha-ds3_div_60.transition",
+                        "layout": {
+                          "type": "horizontal",
+                          "alignItems": "center",
+                          "justifyContent": "center"
+                        },
+                        "text": "✕",
+                        "styleSlot": "auto.gacha-ds3.gachads3_div_60"
+                      }
+                    ]
+                  }
+                ]
+              }
             ],
-            "_deferredFragmentReason": "overview-tab-owned-story-strip"
+            "lazySlot": true,
+            "warmupHint": "manual"
           }
         ]
       }

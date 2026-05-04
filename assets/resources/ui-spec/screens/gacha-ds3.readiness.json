@@ -1,12 +1,12 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "gacha-ds3",
-  "generatedAt": "2026-05-02T14:10:47.610Z",
+  "generatedAt": "2026-05-04T02:50:15.849Z",
   "verdict": "not-ready",
-  "readinessScore": 0.5,
+  "readinessScore": 0.958,
   "summary": {
-    "blockerUnits": 6,
-    "actionUnits": 12,
+    "blockerUnits": 1,
+    "actionUnits": 1,
     "bounded": true,
     "nextCriticalAction": "capture Cocos Editor target screen and run final compare"
   },
@@ -28,227 +28,182 @@
       "status": "blocker",
       "pass": false,
       "workUnits": 1,
-      "summary": "no measured Cocos Editor final compare verdict"
+      "summary": "runtimeVsSource raw=0.4836 adjusted=0.4836 verdict=fail",
+      "rawScore": 0.48357831790123457,
+      "adjustedScore": 0.48357831790123457,
+      "verdict": "fail"
     },
     "capture": {
-      "status": "blocker",
-      "ok": false,
-      "workUnits": 1,
-      "summary": "missing final capture protocol"
+      "status": "pass",
+      "ok": true,
+      "workUnits": 0,
+      "summary": "capture protocol present",
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "settleMs": 800,
+      "warnings": [],
+      "errors": []
     },
     "zones": {
-      "status": "blocker",
-      "workUnits": 1,
-      "summary": "missing zone ownership report"
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0 waiver-eligible art zones, 0 missing rects",
+      "taxonomy": [
+        "art-authority",
+        "manual-art-asset",
+        "converter-geometry",
+        "source-html-fix",
+        "runtime-bug"
+      ],
+      "byTaxonomy": {
+        "art-authority": 0,
+        "manual-art-asset": 0,
+        "converter-geometry": 20,
+        "source-html-fix": 0,
+        "runtime-bug": 0
+      },
+      "waiverEligibleCount": 0,
+      "eligibleMissingRectCount": 0,
+      "waiverPresent": false,
+      "waiverValidation": null,
+      "samples": []
     },
     "tabMounts": {
-      "status": "warn",
-      "workUnits": 1,
-      "summary": "missing tab-routing sidecar"
-    },
-    "fragmentGeometry": {
-      "status": "blocker",
-      "workUnits": 2,
-      "summary": "2/2 referenced fragments break fill-root geometry contract",
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "3/3 tab mounts resolve to real layout nodes",
       "checks": [
         {
-          "status": "blocker",
-          "ref": "fragments/layouts/gacha-ds3-story-strip-collapsed",
-          "source": "layout.defaultFragment",
-          "slotId": "slot.story-strip",
-          "tabId": null,
-          "code": "missing-fragment",
-          "summary": "Referenced fragment JSON does not exist.",
-          "recommendation": "Create the fragment JSON or update the tab/defaultFragment route to a valid fragment."
+          "id": "General",
+          "mount": "RightPanel",
+          "exists": true,
+          "matchType": "name",
+          "childPanelClass": "GachaDs3GeneralChildPanel"
         },
         {
-          "status": "blocker",
-          "ref": "fragments/layouts/gacha-ds3-story-strip-open",
-          "source": "layout.fragments",
-          "slotId": "slot.story-strip",
-          "tabId": null,
-          "code": "missing-fragment",
-          "summary": "Referenced fragment JSON does not exist.",
-          "recommendation": "Create the fragment JSON or update the tab/defaultFragment route to a valid fragment."
+          "id": "Legendary",
+          "mount": "RightPanel",
+          "exists": true,
+          "matchType": "name",
+          "childPanelClass": "GachaDs3LegendaryChildPanel"
+        },
+        {
+          "id": "Support",
+          "mount": "RightPanel",
+          "exists": true,
+          "matchType": "name",
+          "childPanelClass": "GachaDs3SupportChildPanel"
         }
       ],
-      "failures": [
+      "missing": []
+    },
+    "fragmentGeometry": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "3 referenced fragments follow fill-root geometry contract",
+      "checks": [
         {
-          "status": "blocker",
-          "ref": "fragments/layouts/gacha-ds3-story-strip-collapsed",
+          "fragment": "fragments/layouts/gacha-ds3-general-content",
           "source": "layout.defaultFragment",
-          "slotId": "slot.story-strip",
-          "tabId": null,
-          "code": "missing-fragment",
-          "summary": "Referenced fragment JSON does not exist.",
-          "recommendation": "Create the fragment JSON or update the tab/defaultFragment route to a valid fragment."
+          "slotId": "RightPanel",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-general-content.json",
+          "path": "fragments/layouts/gacha-ds3-general-content.json"
         },
         {
-          "status": "blocker",
-          "ref": "fragments/layouts/gacha-ds3-story-strip-open",
-          "source": "layout.fragments",
-          "slotId": "slot.story-strip",
-          "tabId": null,
-          "code": "missing-fragment",
-          "summary": "Referenced fragment JSON does not exist.",
-          "recommendation": "Create the fragment JSON or update the tab/defaultFragment route to a valid fragment."
+          "fragment": "fragments/layouts/gacha-ds3-legendary-content",
+          "source": "screen.tabRouting",
+          "tabId": "Legendary",
+          "slotId": "RightPanel",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-legendary-content.json",
+          "path": "fragments/layouts/gacha-ds3-legendary-content.json"
+        },
+        {
+          "fragment": "fragments/layouts/gacha-ds3-support-content",
+          "source": "screen.tabRouting",
+          "tabId": "Support",
+          "slotId": "RightPanel",
+          "status": "pass",
+          "code": "fill-root-ok",
+          "summary": "fragment mount layers fill lazySlot",
+          "recommendation": null,
+          "findings": [],
+          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-support-content.json",
+          "path": "fragments/layouts/gacha-ds3-support-content.json"
         }
-      ]
+      ],
+      "failures": []
     },
     "textBinding": {
-      "status": "warn",
-      "workUnits": 4,
-      "summary": "32/32 dynamic text candidates missing bind/i18n contract",
-      "totalTextNodes": 56,
-      "dynamicCandidateCount": 32,
-      "missingContractCount": 32,
-      "samples": [
-        {
-          "name": "GachaDs3_div_8",
-          "path": "GachaDs3/GachaDs3_body/GachaDs3_div_1/BannerSlide_general/GachaDs3_div_7/GachaDs3_div_8",
-          "text": "★ 名將系列 · 常設"
-        },
-        {
-          "name": "GachaDs3_div_10",
-          "path": "GachaDs3/GachaDs3_body/GachaDs3_div_1/BannerSlide_general/GachaDs3_div_7/GachaDs3_div_10",
-          "text": "美髯公 · SSR 武將"
-        },
-        {
-          "name": "GachaDs3_div_11",
-          "path": "GachaDs3/GachaDs3_body/GachaDs3_div_1/BannerSlide_general/GachaDs3_div_7/GachaDs3_div_11",
-          "text": "✦ SSR 保底 90 抽"
-        },
-        {
-          "name": "GachaDs3_div_18",
-          "path": "GachaDs3/GachaDs3_body/GachaDs3_div_1/BannerSlide_legendary/GachaDs3_div_17/GachaDs3_div_18",
-          "text": "★ 傳奇系列 · 常設"
-        },
-        {
-          "name": "GachaDs3_div_20",
-          "path": "GachaDs3/GachaDs3_body/GachaDs3_div_1/BannerSlide_legendary/GachaDs3_div_17/GachaDs3_div_20",
-          "text": "天下無雙 · UR 武將"
-        },
-        {
-          "name": "GachaDs3_div_21",
-          "path": "GachaDs3/GachaDs3_body/GachaDs3_div_1/BannerSlide_legendary/GachaDs3_div_17/GachaDs3_div_21",
-          "text": "👑 UR 保底 180 抽 SSR 保底 90 抽"
-        },
-        {
-          "name": "GachaDs3_div_28",
-          "path": "GachaDs3/GachaDs3_body/GachaDs3_div_1/BannerSlide_support/GachaDs3_div_27/GachaDs3_div_28",
-          "text": "教官系列 · 第二季"
-        },
-        {
-          "name": "GachaDs3_div_30",
-          "path": "GachaDs3/GachaDs3_body/GachaDs3_div_1/BannerSlide_support/GachaDs3_div_27/GachaDs3_div_30",
-          "text": "吳宮秘書 · SSR 支援卡"
-        },
-        {
-          "name": "GachaDs3_div_31",
-          "path": "GachaDs3/GachaDs3_body/GachaDs3_div_1/BannerSlide_support/GachaDs3_div_27/GachaDs3_div_31",
-          "text": "🎓 SSR 支援卡保底 80 抽"
-        },
-        {
-          "name": "GachaDs3_strong_1",
-          "path": "GachaDs3/GachaDs3_body/GachaDs3_div_35/GachaDs3_div_37/GachaDs3_strong_1",
-          "text": "Bloodline_Seed"
-        },
-        {
-          "name": "GachaDs3_div_42",
-          "path": "GachaDs3/GachaDs3_body/RightPanel/GachaDs3_div_38/GachaDs3_div_39/GachaDs3_div_40/GachaDs3_div_42",
-          "text": "以血脈為種，召來傳世名將"
-        },
-        {
-          "name": "GachaDs3_div_46",
-          "path": "GachaDs3/GachaDs3_body/RightPanel/GachaDs3_div_38/GachaDs3_div_44/GachaDs3_div_45/GachaDs3_div_46",
-          "text": "SSR 保底進度"
-        }
-      ]
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0/18 dynamic text candidates missing bind/i18n contract",
+      "totalTextNodes": 33,
+      "dynamicCandidateCount": 18,
+      "missingContractCount": 0,
+      "samples": []
     },
     "visualPolicy": {
-      "status": "warn",
-      "workUnits": 1,
-      "summary": "missing bake manifest; texture/clip review cannot be quantified"
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0 clip/mask geometry entries, 2 small texture entries, 0 unsafe auto-bake entries",
+      "totalEntries": 11,
+      "byBakeAction": {
+        "review-only": 5,
+        "manual-art-asset": 6
+      },
+      "clipGeometryCount": 0,
+      "smallTextureCount": 2,
+      "unsafeAutoBakeCount": 0
     },
     "loading": {
-      "status": "blocker",
-      "workUnits": 1,
-      "summary": "node-count-blocker: 103 (>60)",
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "preload/performance sidecars present and current",
       "actualLayoutStats": {
-        "nodeCount": 103,
-        "deferredNodeCount": 0,
-        "totalNodeCount": 103,
-        "maxDepth": 8,
+        "nodeCount": 56,
+        "deferredNodeCount": 4,
+        "totalNodeCount": 60,
+        "maxDepth": 6,
         "colorRectCount": 0,
         "lazySlotCount": 2,
         "warmupHints": {
           "next-frame": 0,
           "idle": 0,
           "tab-hover": 0,
-          "manual": 2
+          "manual": 1,
+          "first-frame": 1
         }
       },
       "reportedRendering": {
-        "nodeCount": 103,
-        "deferredNodeCount": 0,
-        "totalNodeCount": 103,
-        "maxDepth": 8,
+        "nodeCount": 56,
+        "deferredNodeCount": 4,
+        "totalNodeCount": 60,
+        "maxDepth": 6,
         "estimatedDrawCalls": 3,
         "colorRectCount": 0
       },
-      "skinSlotCount": 97,
-      "issues": [
-        "node-count-blocker: 103 (>60)"
-      ]
+      "skinSlotCount": 197,
+      "issues": []
     }
   },
   "issues": [
     {
       "severity": "blocker",
       "code": "final-gate",
-      "summary": "no measured Cocos Editor final compare verdict",
-      "workUnits": 1
-    },
-    {
-      "severity": "blocker",
-      "code": "capture-protocol",
-      "summary": "missing final capture protocol",
-      "workUnits": 1
-    },
-    {
-      "severity": "blocker",
-      "code": "zone-ownership-waivers",
-      "summary": "missing zone ownership report",
-      "workUnits": 1
-    },
-    {
-      "severity": "warn",
-      "code": "tab-routing-mounts",
-      "summary": "missing tab-routing sidecar",
-      "workUnits": 1
-    },
-    {
-      "severity": "blocker",
-      "code": "tab-fragment-geometry-contract",
-      "summary": "2/2 referenced fragments break fill-root geometry contract",
-      "workUnits": 2
-    },
-    {
-      "severity": "warn",
-      "code": "text-binding",
-      "summary": "32/32 dynamic text candidates missing bind/i18n contract",
-      "workUnits": 4
-    },
-    {
-      "severity": "warn",
-      "code": "visual-policy",
-      "summary": "missing bake manifest; texture/clip review cannot be quantified",
-      "workUnits": 1
-    },
-    {
-      "severity": "blocker",
-      "code": "loading-performance",
-      "summary": "node-count-blocker: 103 (>60)",
+      "summary": "runtimeVsSource raw=0.4836 adjusted=0.4836 verdict=fail",
       "workUnits": 1
     }
   ]

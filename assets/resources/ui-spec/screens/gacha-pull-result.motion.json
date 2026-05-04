@@ -1,0 +1,476 @@
+{
+  "screenId": "gacha-pull-result",
+  "motionTokens": {
+    "instant": {
+      "durationMs": 80,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "fast": {
+      "durationMs": 120,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "standard": {
+      "durationMs": 180,
+      "easing": "quadOut",
+      "emphasis": "medium"
+    },
+    "slow": {
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "emphasis": "medium"
+    },
+    "emphasis": {
+      "durationMs": 360,
+      "easing": "backOut",
+      "emphasis": "high"
+    }
+  },
+  "motions": [
+    {
+      "id": "gacha-pull-result_div_2.transition",
+      "target": "GachaPullResult_div_2",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_3.transition",
+      "target": "GachaPullResult_div_3",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_4.transition",
+      "target": "GachaPullResult_div_4",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_26.transition",
+      "target": "GachaPullResult_div_26",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_28.transition",
+      "target": "GachaPullResult_div_28",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_30.transition",
+      "target": "GachaPullResult_div_30",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_32.transition",
+      "target": "GachaPullResult_div_32",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_34.transition",
+      "target": "GachaPullResult_div_34",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_36.transition",
+      "target": "GachaPullResult_div_36",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_44.transition",
+      "target": "GachaPullResult_div_44",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_57.transition",
+      "target": "GachaPullResult_div_57",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_67.transition",
+      "target": "GachaPullResult_div_67",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_77.transition",
+      "target": "GachaPullResult_div_77",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_87.transition",
+      "target": "GachaPullResult_div_87",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_97.transition",
+      "target": "GachaPullResult_div_97",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_107.transition",
+      "target": "GachaPullResult_div_107",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_119.transition",
+      "target": "GachaPullResult_div_119",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_176.transition",
+      "target": "GachaPullResult_div_176",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_178.transition",
+      "target": "GachaPullResult_div_178",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_180.transition",
+      "target": "GachaPullResult_div_180",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_249.transition",
+      "target": "GachaPullResult_div_249",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_254.transition",
+      "target": "GachaPullResult_div_254",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_347.transition",
+      "target": "GachaPullResult_div_347",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_353.transition",
+      "target": "GachaPullResult_div_353",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_359.transition",
+      "target": "GachaPullResult_div_359",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_365.transition",
+      "target": "GachaPullResult_div_365",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_371.transition",
+      "target": "GachaPullResult_div_371",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_378.transition",
+      "target": "GachaPullResult_div_378",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_383.transition",
+      "target": "GachaPullResult_div_383",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_388.transition",
+      "target": "GachaPullResult_div_388",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_393.transition",
+      "target": "GachaPullResult_div_393",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-pull-result_div_398.transition",
+      "target": "GachaPullResult_div_398",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "motionCount": 32,
+    "tokenCount": 5,
+    "manualRewriteCount": 40
+  }
+}

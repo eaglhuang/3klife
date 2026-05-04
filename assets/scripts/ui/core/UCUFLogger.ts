@@ -29,6 +29,8 @@ export const enum LogCategory {
     PERFORMANCE = 'performance',
     RULE        = 'rule',
     DRAG        = 'drag',
+    UI          = 'ui',
+    BATTLE      = 'battle',
 }
 
 // ─── 主類別 ────────────────────────────────────────────────────────────────────
@@ -103,13 +105,13 @@ export class UCUFLogger {
         switch (level) {
             case LogLevel.DEBUG:
             case LogLevel.INFO:
-                console.log(full, ...args);
+                console.log(full, ...args); // eslint-disable-line
                 break;
             case LogLevel.WARN:
-                console.warn(full, ...args);
+                console.warn(full, ...args); // eslint-disable-line
                 break;
             case LogLevel.ERROR:
-                console.error(full, ...args);
+                console.error(full, ...args); // eslint-disable-line
                 break;
         }
     }

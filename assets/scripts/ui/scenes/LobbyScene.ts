@@ -5,9 +5,7 @@ import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/G
 import { services } from '../../core/managers/ServiceLoader';
 import type { UIManagedController } from '../../core/managers/UIManager';
 import { SceneName } from '../../core/config/Constants';
-import type { BattleEntryParams } from '../../battle/models/BattleEntryParams';
-import { DEFAULT_BATTLE_ENTRY_PARAMS } from '../../battle/models/BattleEntryParams';
-import type { EncounterConfig } from '../../battle/views/BattleSceneLoader';
+import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig } from '../../shared/BattleEntryParams';
 import { BattleTactic } from '../../core/config/Constants';
 import { GeneralListComposite } from '../components/GeneralListComposite';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
@@ -22,7 +20,8 @@ import { applyUIPreviewBinderState } from '../core/UIPreviewStateApplicator';
 import { buildSpiritFamilyOverviewDisplayModel, type SpiritFamilyOverviewOpenPayload } from '../core/SpiritFamilyOverviewRoute';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
-import { showGachaHistory, showGachaResults, attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
+import { GachaFlowCoordinator, GACHA_SCREEN_ID } from '../core/GachaFlowCoordinator';
+import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay } from '../dev/GachaDevOverlay';
 
 const { ccclass } = _decorator;
 
@@ -60,8 +59,6 @@ const CHARACTER_DS3_PREVIEW_SLOT_CANDIDATES = [
     'CharacterDs3Main_div_8',
 ] as const;
 
-const GACHA_SCREEN_ID = 'gacha-ds3';
-
 interface GeneralListOpenPayload {
     generals: GeneralConfig[];
     onSelectGeneral: (config: GeneralConfig) => void | Promise<void>;
@@ -98,6 +95,7 @@ export class LobbyScene extends Component {
     private _characterDs3TabBindRetryCount = 0;
     private readonly _singlePlayerModeToggleHandles: Array<{ root: Node; label: Label }> = [];
     private readonly _localGachaService = new LocalGachaService();
+    private _gachaFlowCoordinator: GachaFlowCoordinator | null = null;
     private _ready = false;
 
     /** 等待 LobbyScene 資料初始化完成（供 headless smoke route 使用） */
@@ -1192,70 +1190,49 @@ export class LobbyScene extends Component {
     }
 
     private async _showGachaHistory(): Promise<void> {
-        try {
-            const data = await this._localGachaService.getRecentPullHistory(30);
-            showGachaHistory(data);
-        } catch (error) {
-            services().event.emit('SHOW_TOAST', {
-                message: error instanceof Error ? error.message : '讀取紀錄失敗',
-                duration: 2.0,
-            });
-        }
+        await this._getGachaFlowCoordinator().showHistory(30);
     }
 
     private async _runGoldSummon(): Promise<void> {
-        try {
-            const results = await this._localGachaService.performGoldSummon(
-                1, this._generals, { factionFilter: 'player' });
-            showGachaResults('金幣召喚', results, () => { void this._runGoldSummon(); });
-            this._refreshSinglePlayerModeToggleVisuals();
-            this._refreshWalletPreviewState();
-            refreshCurrencyDisplay();
-        } catch (error) {
-            services().event.emit('SHOW_TOAST', {
-                message: error instanceof Error ? error.message : '金幣召喚失敗',
-                duration: 2.5,
-            });
-        }
+        await this._getGachaFlowCoordinator().runGoldSummon();
     }
 
     private async _runTicketSummon(): Promise<void> {
-        try {
-            const results = await this._localGachaService.performTicketSummon(
-                1, this._generals, { factionFilter: 'player' });
-            showGachaResults('召喚券', results, () => { void this._runTicketSummon(); });
-            this._refreshSinglePlayerModeToggleVisuals();
-            this._refreshWalletPreviewState();
-            refreshCurrencyDisplay();
-        } catch (error) {
-            services().event.emit('SHOW_TOAST', {
-                message: error instanceof Error ? error.message : '召喚券失敗',
-                duration: 2.5,
-            });
-        }
+        await this._getGachaFlowCoordinator().runTicketSummon();
     }
 
     private async _runLocalGacha(drawCount: number): Promise<void> {
-        try {
-            const results = await this._localGachaService.performLocalGacha(
-                'GENERAL_STANDARD_01',
-                drawCount,
-                drawCount * 100,
-                this._generals,
-                { factionFilter: 'player' },
-            );
-            showGachaResults(
-                drawCount === 1 ? '單抽' : '十連抽',
-                results,
-                () => { void this._runLocalGacha(drawCount); },
-            );
-            this._refreshSinglePlayerModeToggleVisuals();
-            this._refreshWalletPreviewState();
-            refreshCurrencyDisplay();
-        } catch (error) {
-            const message = error instanceof Error ? error.message : '單機轉蛋失敗';
-            services().event.emit('SHOW_TOAST', { message, duration: 2.5 });
+        await this._getGachaFlowCoordinator().runLocalGacha(drawCount);
+    }
+
+    private _getGachaFlowCoordinator(): GachaFlowCoordinator {
+        if (this._gachaFlowCoordinator) {
+            return this._gachaFlowCoordinator;
         }
+
+        this._gachaFlowCoordinator = new GachaFlowCoordinator({
+            gachaService: this._localGachaService,
+            getHost: () => this._gachaHost,
+            getGenerals: () => this._generals,
+            factionFilter: 'player',
+            tenPullHeaderText: '本地轉蛋結果 · 十連抽',
+            onWalletChanged: () => {
+                this._refreshSinglePlayerModeToggleVisuals();
+                this._refreshWalletPreviewState();
+                refreshCurrencyDisplay();
+            },
+            onShowError: (message) => {
+                services().event.emit('SHOW_TOAST', { message, duration: 2.5 });
+            },
+            onBackToGacha: async () => {
+                await this._gachaHost?.showScreen(GACHA_SCREEN_ID);
+                this._applyGachaFlowPresentation(this._gachaHost, true);
+                this._refreshWalletPreviewState();
+            },
+            onRepullTen: () => this._runLocalGacha(10),
+        });
+
+        return this._gachaFlowCoordinator;
     }
 
     /** 「支援卡」按鈕 */
@@ -1476,7 +1453,7 @@ export class LobbyScene extends Component {
         services().scene.switchScene(SceneName.Battle, this._buildBattleEntryParams(BattleTactic.FloodAttack));
     }
 
-    private _buildBattleEntryParams(battleTactic?: BattleTactic): BattleEntryParams {
+    private _buildBattleEntryParams(battleTactic?: BattleTactic): IBattleEntryParams {
         const encounter = this._encounters[0];
         if (!encounter) {
             return {

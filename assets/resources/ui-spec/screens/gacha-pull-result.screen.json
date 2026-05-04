@@ -1,0 +1,12 @@
+{
+  "screenId": "gacha-pull-result",
+  "layout": "gacha-pull-result",
+  "skin": "gacha-pull-result.skin",
+  "layoutRef": "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.json",
+  "skinRef": "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.skin.json",
+  "meta": {
+    "scaffoldHints": {
+      "useUCUFLogger": true
+    }
+  }
+}

@@ -71,15 +71,15 @@ export class UIPreviewBuilder extends Component {
         // 這可讓 BattleHUD catch 區段印出詳細來源，而不是神秘的 "reading 'root'"
         if (!layout) {
             const err = new Error('[UIPreviewBuilder] buildScreen 收到 null layout，請確認 UISpecLoader 是否成功載入 JSON');
-            console.error(err.message);
+            UCUFLogger.error(LogCategory.UI, err.message);
             throw err;
         }
         if (!layout.root) {
             const err = new Error(`[UIPreviewBuilder] buildScreen layout "${layout.id ?? '?'}" 缺少 root 欄位`);
-            console.error(err.message, layout);
+            UCUFLogger.error(LogCategory.UI, err.message, layout);
             throw err;
         }
-        console.log(`[UIPreviewBuilder] buildScreen 開始 layout="${layout.id ?? '?'}" skin="${skin?.id ?? 'null'}" node="${this.node?.name ?? 'null'}"`);
+        UCUFLogger.info(LogCategory.UI, `[UIPreviewBuilder] buildScreen 開始 layout="${layout.id ?? '?'}" skin="${skin?.id ?? 'null'}" node="${this.node?.name ?? 'null'}"`);
 
         this.shadowManager.clearDetachedShadows();
 
@@ -742,7 +742,7 @@ export class UIPreviewBuilder extends Component {
      */
     private async _applySkinLayers(node: Node, skinLayers: SkinLayerDef[]): Promise<void> {
         if (skinLayers.length > 12) {
-            console.warn(`[UIPreviewBuilder] skinLayers count (${skinLayers.length}) exceeds recommended max 12`);
+            UCUFLogger.warn(LogCategory.UI, `[UIPreviewBuilder] skinLayers count (${skinLayers.length}) exceeds recommended max 12`);
         }
 
         const sorted = [...skinLayers].sort((a, b) => this._resolveSkinLayerZOrder(a) - this._resolveSkinLayerZOrder(b));
@@ -935,7 +935,7 @@ export class UIPreviewBuilder extends Component {
 
         // 溢出偵測 → 按比例縮減
         const scale = available / totalChildSize;
-        console.warn(
+        UCUFLogger.warn(LogCategory.UI, 
             `[UIPreviewBuilder] 容器 "${node.name}" 子節點溢出` +
             `（需 ${Math.round(totalChildSize)}px，可用 ${Math.round(available)}px）→ 自動縮減 ×${scale.toFixed(3)}`
         );

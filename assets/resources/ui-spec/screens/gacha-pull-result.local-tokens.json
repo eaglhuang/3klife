@@ -1,0 +1,293 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "gacha-pull-result",
+  "generatedAt": "2026-05-03T15:36:22.380Z",
+  "policy": {
+    "mode": "replace-all-per-run",
+    "source": "token-suggestions sidecars",
+    "note": "Always regenerate full screen-local tokens from current conversion to avoid stale residue."
+  },
+  "sourceSuggestionFiles": [
+    "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+  ],
+  "stats": {
+    "unresolvedColorCount": 17,
+    "tokenCount": 17
+  },
+  "colors": {
+    "gacha_pull_result_local_color_01": "#555555",
+    "gacha_pull_result_local_color_02": "#2E7C32",
+    "gacha_pull_result_local_color_03": "#3A2B08",
+    "gacha_pull_result_local_color_04": "#1565C0",
+    "gacha_pull_result_local_color_05": "#16101E",
+    "gacha_pull_result_local_color_06": "#2A1E38",
+    "gacha_pull_result_local_color_07": "#5A3E00",
+    "gacha_pull_result_local_color_08": "#3A2A1A",
+    "gacha_pull_result_local_color_09": "#64B5F6",
+    "gacha_pull_result_local_color_10": "#6A1B9A",
+    "gacha_pull_result_local_color_11": "#81C784",
+    "gacha_pull_result_local_color_12": "#9A9A9A",
+    "gacha_pull_result_local_color_13": "#C68400",
+    "gacha_pull_result_local_color_14": "#CE93D8",
+    "gacha_pull_result_local_color_15": "#181818",
+    "gacha_pull_result_local_color_16": "#4A3060",
+    "gacha_pull_result_local_color_17": "#9A1414"
+  },
+  "unresolvedColors": [
+    {
+      "token": "gacha_pull_result_local_color_01",
+      "value": "rgb(85, 85, 85)",
+      "normalized": "#555555",
+      "hex": "#555555",
+      "occurrences": 19,
+      "nearestExisting": {
+        "token": "textOnParchmentMuted",
+        "value": "#6B5E4E",
+        "distance": 25
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_02",
+      "value": "rgb(46, 124, 50)",
+      "normalized": "#2e7c32",
+      "hex": "#2E7C32",
+      "occurrences": 9,
+      "nearestExisting": {
+        "token": "textPositiveOnParchment",
+        "value": "#1B6B3A",
+        "distance": 27
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_03",
+      "value": "rgb(58, 43, 8)",
+      "normalized": "#3a2b08",
+      "hex": "#3A2B08",
+      "occurrences": 7,
+      "nearestExisting": {
+        "token": "gdv3OutlineWarm",
+        "value": "#3F2309",
+        "distance": 9
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_04",
+      "value": "rgb(21, 101, 192)",
+      "normalized": "#1565c0",
+      "hex": "#1565C0",
+      "occurrences": 4,
+      "nearestExisting": {
+        "token": "hpBarAlly",
+        "value": "#4488CC",
+        "distance": 60
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_05",
+      "value": "rgb(22, 16, 30)",
+      "normalized": "#16101e",
+      "hex": "#16101E",
+      "occurrences": 4,
+      "nearestExisting": {
+        "token": "surfaceNavyDeepHeader",
+        "value": "#121222",
+        "distance": 6
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_06",
+      "value": "rgb(42, 30, 56)",
+      "normalized": "#2a1e38",
+      "hex": "#2A1E38",
+      "occurrences": 4,
+      "nearestExisting": {
+        "token": "surfaceInkBlue",
+        "value": "#202830",
+        "distance": 16
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_07",
+      "value": "rgb(90, 62, 0)",
+      "normalized": "#5a3e00",
+      "hex": "#5A3E00",
+      "occurrences": 4,
+      "nearestExisting": {
+        "token": "gdv3OutlineDarkWarm",
+        "value": "#593714",
+        "distance": 21
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_08",
+      "value": "rgb(58, 42, 26)",
+      "normalized": "#3a2a1a",
+      "hex": "#3A2A1A",
+      "occurrences": 3,
+      "nearestExisting": {
+        "token": "gdv3TabBadgeText",
+        "value": "#342819",
+        "distance": 6
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_09",
+      "value": "rgb(100, 181, 246)",
+      "normalized": "#64b5f6",
+      "hex": "#64B5F6",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "gdv3StatStr",
+        "value": "#6fa8ff",
+        "distance": 19
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_10",
+      "value": "rgb(106, 27, 154)",
+      "normalized": "#6a1b9a",
+      "hex": "#6A1B9A",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "rarityPurple",
+        "value": "#9C27B0",
+        "distance": 56
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_11",
+      "value": "rgb(129, 199, 132)",
+      "normalized": "#81c784",
+      "hex": "#81C784",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "textHpPositive",
+        "value": "#6BCB77",
+        "distance": 26
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_12",
+      "value": "rgb(154, 154, 154)",
+      "normalized": "#9a9a9a",
+      "hex": "#9A9A9A",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "gdv3BloodlineTextMuted",
+        "value": "#94A99E",
+        "distance": 17
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_13",
+      "value": "rgb(198, 132, 0)",
+      "normalized": "#c68400",
+      "hex": "#C68400",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "gdv3GoldBorder",
+        "value": "#8A6E1F",
+        "distance": 71
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_14",
+      "value": "rgb(206, 147, 216)",
+      "normalized": "#ce93d8",
+      "hex": "#CE93D8",
+      "occurrences": 2,
+      "nearestExisting": {
+        "token": "gdv3StatInt",
+        "value": "#c494ff",
+        "distance": 40
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_15",
+      "value": "rgb(24, 24, 24)",
+      "normalized": "#181818",
+      "hex": "#181818",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "surface",
+        "value": "#1A1A1A",
+        "distance": 3
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_16",
+      "value": "rgb(74, 48, 96)",
+      "normalized": "#4a3060",
+      "hex": "#4A3060",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "surfaceBlueDeep",
+        "value": "#2A3A5A",
+        "distance": 34
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    },
+    {
+      "token": "gacha_pull_result_local_color_17",
+      "value": "rgb(154, 20, 20)",
+      "normalized": "#9a1414",
+      "hex": "#9A1414",
+      "occurrences": 1,
+      "nearestExisting": {
+        "token": "primary",
+        "value": "#B22222",
+        "distance": 31
+      },
+      "sources": [
+        "artifacts/skill-test-html-to-ucuf/gacha-pull-result/gacha-pull-result.final.layout.token-suggestions.json"
+      ]
+    }
+  ]
+}

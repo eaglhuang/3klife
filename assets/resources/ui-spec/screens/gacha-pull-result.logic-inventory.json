@@ -1,0 +1,23 @@
+{
+  "screenId": "gacha-pull-result",
+  "generatedBy": "dom-to-ui-logic-guard",
+  "summary": {
+    "featureCount": 1,
+    "byKind": {
+      "bind-path": 1
+    }
+  },
+  "features": [
+    {
+      "featureId": "bind-path:gacha-pull-result.banner-hero-name",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_174/GachaPullResult_div_190/GachaPullResult_div_193/GachaPullResult_div_195",
+      "triggerNode": "GachaPullResult/GachaPullResult_body/GachaPullResult_div_174/GachaPullResult_div_190/GachaPullResult_div_193/GachaPullResult_div_195",
+      "targetNode": "GachaPullResult_div_195",
+      "ucufId": "gacha-pull-result.banner-hero-name",
+      "bindPath": "general.name",
+      "autoSmoke": true
+    }
+  ]
+}

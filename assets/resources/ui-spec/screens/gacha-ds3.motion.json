@@ -1,11 +1,176 @@
 {
   "screenId": "gacha-ds3",
-  "motionTokens": {},
-  "motions": [],
+  "motionTokens": {
+    "instant": {
+      "durationMs": 80,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "fast": {
+      "durationMs": 120,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "standard": {
+      "durationMs": 180,
+      "easing": "quadOut",
+      "emphasis": "medium"
+    },
+    "slow": {
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "emphasis": "medium"
+    },
+    "emphasis": {
+      "durationMs": 360,
+      "easing": "backOut",
+      "emphasis": "high"
+    }
+  },
+  "motions": [
+    {
+      "id": "btn-pool-prev.transition",
+      "target": "BtnPoolPrev",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "btn-pool-next.transition",
+      "target": "BtnPoolNext",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3_div_5.transition",
+      "target": "GachaDs3_div_5",
+      "trigger": "state-change",
+      "preset": "fade",
+      "token": "slow",
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "properties": [
+        "opacity"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3_div_12.transition",
+      "target": "GachaDs3_div_12",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3_div_13.transition",
+      "target": "GachaDs3_div_13",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3_div_18.transition",
+      "target": "GachaDs3_div_18",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3_div_25.transition",
+      "target": "GachaDs3_div_25",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3_div_26.transition",
+      "target": "GachaDs3_div_26",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3_div_27.transition",
+      "target": "GachaDs3_div_27",
+      "trigger": "state-change",
+      "preset": "fade",
+      "token": "slow",
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "properties": [
+        "opacity"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "gacha-ds3_div_30.transition",
+      "target": "GachaDs3_div_30",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "fast",
+      "durationMs": 120,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    }
+  ],
   "warnings": [],
   "summary": {
-    "motionCount": 0,
-    "tokenCount": 0,
-    "manualRewriteCount": 0
+    "motionCount": 10,
+    "tokenCount": 5,
+    "manualRewriteCount": 11
   }
 }

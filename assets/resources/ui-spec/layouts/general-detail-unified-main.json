@@ -43,7 +43,7 @@
         "type": "image",
         "name": "PortraitImage",
         "widget": { "left": 0, "bottom": 0 },
-        "width": "62%",
+        "width": "46%",
         "height": "100%",
         "skinSlot": "general.portrait.placeholder"
       },
@@ -61,6 +61,7 @@
         "name": "RightTabBar",
         "widget": { "top": 150, "bottom": 20, "right": 16 },
         "width": 160,
+        "skinSlot": "detail.tabbar.bg",
         "layout": { "type": "vertical", "spacing": 20, "paddingTop": 0, "paddingBottom": 0, "paddingLeft": 10, "paddingRight": 16 },
         "children": [
           {
@@ -136,6 +137,7 @@
         "name": "RightContentArea",
         "widget": { "top": 50, "bottom": 56, "right": 176 },
         "width": 540,
+        "skinSlot": "detail.content.bg",
         "children": [
           {
             "type": "container",

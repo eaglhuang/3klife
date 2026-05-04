@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md  (UCUF M7)
 /**
  * EditableTextPanel
@@ -59,7 +60,7 @@ export class EditableTextPanel extends ChildPanelBase {
     onDataUpdate(data: unknown): void {
         const err = this.validateDataFormat(data);
         if (err) {
-            console.warn(`[EditableTextPanel] 資料格式錯誤：${err}`);
+            UCUFLogger.warn(LogCategory.UI, `[EditableTextPanel] 資料格式錯誤：${err}`);
             return;
         }
         this._lastData = data as EditableTextData;

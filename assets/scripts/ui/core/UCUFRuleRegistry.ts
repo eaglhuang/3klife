@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from './UCUFLogger';
 // @spec-source → docs/UCUF規範文件.md §3  (UCUF M11)
 /**
  * UCUFRuleRegistry — 動態規則注冊器
@@ -104,7 +105,7 @@ export class UCUFRuleRegistry {
      */
     onRuleAdded(handler: (entry?: RuleEntry) => void): () => void {
         if (!this._bus) {
-            console.warn('[UCUFRuleRegistry] onRuleAdded: 未設定 eventBus，handler 不會被呼叫');
+            UCUFLogger.warn(LogCategory.UI, '[UCUFRuleRegistry] onRuleAdded: 未設定 eventBus，handler 不會被呼叫');
             return () => { /* noop */ };
         }
         return this._bus.on<RuleEntry>('ucuf-rule-added', handler);
@@ -118,7 +119,7 @@ export class UCUFRuleRegistry {
     loadFromJson(json: { version?: string; rules: Partial<RuleEntry>[] }): void {
         for (const raw of (json.rules ?? [])) {
             if (!raw.id || !raw.name) {
-                console.warn('[UCUFRuleRegistry] loadFromJson: 略過缺少 id/name 的規則條目', raw);
+                UCUFLogger.warn(LogCategory.UI, '[UCUFRuleRegistry] loadFromJson: 略過缺少 id/name 的規則條目', raw);
                 continue;
             }
             const entry: RuleEntry = {

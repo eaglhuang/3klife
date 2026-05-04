@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md  (UCUF M3)
 /**
  * ScrollListPanel
@@ -54,7 +55,7 @@ export class ScrollListPanel extends ChildPanelBase {
         this._bufferCount = (spec['bufferCount'] as number | undefined) ?? 2;
 
         if (!this._services.virtualizer) {
-            console.warn('[ScrollListPanel] _services.virtualizer 未注入，無法啟用虛擬捲動');
+            UCUFLogger.warn(LogCategory.UI, '[ScrollListPanel] _services.virtualizer 未注入，無法啟用虛擬捲動');
             return;
         }
 
@@ -75,7 +76,7 @@ export class ScrollListPanel extends ChildPanelBase {
     onDataUpdate(data: unknown): void {
         const err = this.validateDataFormat(data);
         if (err) {
-            console.warn(`[ScrollListPanel] 資料格式錯誤：${err}`);
+            UCUFLogger.warn(LogCategory.UI, `[ScrollListPanel] 資料格式錯誤：${err}`);
             return;
         }
         this._items = data as Record<string, unknown>[];

@@ -1,0 +1,67 @@
+{
+  "screenId": "gacha-pull-result",
+  "actions": [
+    {
+      "id": "gacha-pull-result_div_202.tab-switch",
+      "trigger": "GachaPullResult_div_202",
+      "event": "click",
+      "type": "tabSwitch",
+      "target": "pool.next",
+      "requires": [],
+      "smoke": {
+        "expectActiveTab": "pool.next"
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "code": "manual-adapter-required",
+      "detail": "GachaPullResult_div_2: inline onclick is not executed; rewrite as data-ucuf-action"
+    },
+    {
+      "code": "manual-adapter-required",
+      "detail": "GachaPullResult_div_3: inline onclick is not executed; rewrite as data-ucuf-action"
+    },
+    {
+      "code": "manual-adapter-required",
+      "detail": "GachaPullResult_div_4: inline onclick is not executed; rewrite as data-ucuf-action"
+    },
+    {
+      "code": "manual-adapter-required",
+      "detail": "GachaPullResult_div_44: inline onclick is not executed; rewrite as data-ucuf-action"
+    },
+    {
+      "code": "manual-adapter-required",
+      "detail": "GachaPullResult_div_57: inline onclick is not executed; rewrite as data-ucuf-action"
+    },
+    {
+      "code": "manual-adapter-required",
+      "detail": "GachaPullResult_div_67: inline onclick is not executed; rewrite as data-ucuf-action"
+    },
+    {
+      "code": "manual-adapter-required",
+      "detail": "GachaPullResult_div_77: inline onclick is not executed; rewrite as data-ucuf-action"
+    },
+    {
+      "code": "manual-adapter-required",
+      "detail": "GachaPullResult_div_87: inline onclick is not executed; rewrite as data-ucuf-action"
+    },
+    {
+      "code": "manual-adapter-required",
+      "detail": "GachaPullResult_div_97: inline onclick is not executed; rewrite as data-ucuf-action"
+    },
+    {
+      "code": "manual-adapter-required",
+      "detail": "GachaPullResult_div_107: inline onclick is not executed; rewrite as data-ucuf-action"
+    },
+    {
+      "code": "manual-adapter-required",
+      "detail": "GachaPullResult_div_119: inline onclick is not executed; rewrite as data-ucuf-action"
+    }
+  ],
+  "summary": {
+    "actionCount": 1,
+    "missingTargetCount": 0,
+    "manualAdapterCount": 11
+  }
+}

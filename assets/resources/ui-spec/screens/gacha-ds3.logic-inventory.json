@@ -2,58 +2,47 @@
   "screenId": "gacha-ds3",
   "generatedBy": "dom-to-ui-logic-guard",
   "summary": {
-    "featureCount": 4,
+    "featureCount": 3,
     "byKind": {
       "lazy-slot-fragment": 2,
-      "bind-path": 2
+      "bind-path": 1
     }
   },
   "features": [
     {
-      "featureId": "lazy-slot-fragment:gacha-ds3.btn-history",
+      "featureId": "lazy-slot-fragment:GachaDs3/GachaDs3_body/RightPanel",
       "kind": "lazy-slot-fragment",
       "sourceFile": null,
-      "nodePath": "GachaDs3/GachaDs3_body/GachaDs3_div_87/slot.story-strip",
-      "triggerNode": "GachaDs3/GachaDs3_body/GachaDs3_div_87/slot.story-strip",
-      "targetNode": "slot.story-strip",
-      "ucufId": "gacha-ds3.btn-history",
-      "defaultFragment": "fragments/layouts/gacha-ds3-story-strip-collapsed",
-      "warmupHint": "manual",
+      "nodePath": "GachaDs3/GachaDs3_body/RightPanel",
+      "triggerNode": "GachaDs3/GachaDs3_body/RightPanel",
+      "targetNode": "RightPanel",
+      "ucufId": null,
+      "defaultFragment": "fragments/layouts/gacha-ds3-overview-content",
+      "warmupHint": "first-frame",
       "autoSmoke": true
     },
     {
-      "featureId": "bind-path:gacha-ds3.btn-history",
+      "featureId": "bind-path:GachaDs3/GachaDs3_body/RightPanel",
       "kind": "bind-path",
       "sourceFile": null,
-      "nodePath": "GachaDs3/GachaDs3_body/GachaDs3_div_87/slot.story-strip",
-      "triggerNode": "GachaDs3/GachaDs3_body/GachaDs3_div_87/slot.story-strip",
-      "targetNode": "slot.story-strip",
-      "ucufId": "gacha-ds3.btn-history",
-      "bindPath": "tab.owner.overview",
+      "nodePath": "GachaDs3/GachaDs3_body/RightPanel",
+      "triggerNode": "GachaDs3/GachaDs3_body/RightPanel",
+      "targetNode": "RightPanel",
+      "ucufId": null,
+      "bindPath": "tab.content.host",
       "autoSmoke": true
     },
     {
-      "featureId": "lazy-slot-fragment:GachaDs3/GachaDs3_body/slot.story-strip",
+      "featureId": "lazy-slot-fragment:GachaDs3/GachaDs3_body/GachaDs3_div_57",
       "kind": "lazy-slot-fragment",
       "sourceFile": null,
-      "nodePath": "GachaDs3/GachaDs3_body/slot.story-strip",
-      "triggerNode": "GachaDs3/GachaDs3_body/slot.story-strip",
-      "targetNode": "slot.story-strip",
+      "nodePath": "GachaDs3/GachaDs3_body/GachaDs3_div_57",
+      "triggerNode": "GachaDs3/GachaDs3_body/GachaDs3_div_57",
+      "targetNode": "GachaDs3_div_57",
       "ucufId": null,
-      "defaultFragment": "fragments/layouts/gacha-ds3-story-strip-collapsed",
+      "defaultFragment": null,
       "warmupHint": "manual",
-      "autoSmoke": true
-    },
-    {
-      "featureId": "bind-path:GachaDs3/GachaDs3_body/slot.story-strip",
-      "kind": "bind-path",
-      "sourceFile": null,
-      "nodePath": "GachaDs3/GachaDs3_body/slot.story-strip",
-      "triggerNode": "GachaDs3/GachaDs3_body/slot.story-strip",
-      "targetNode": "slot.story-strip",
-      "ucufId": null,
-      "bindPath": "tab.owner.overview",
-      "autoSmoke": true
+      "autoSmoke": false
     }
   ]
 }

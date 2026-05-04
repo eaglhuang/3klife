@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md  (UCUF M3)
 /**
  * GridPanel
@@ -43,7 +44,7 @@ export class GridPanel extends ChildPanelBase {
         this._cellFragRef = (spec['cellFragmentRef'] as string | undefined) ?? '';
 
         if (!this._services.renderer) {
-            console.warn('[GridPanel] _services.renderer 未注入，無法建立格狀容器');
+            UCUFLogger.warn(LogCategory.UI, '[GridPanel] _services.renderer 未注入，無法建立格狀容器');
             return;
         }
 
@@ -61,7 +62,7 @@ export class GridPanel extends ChildPanelBase {
     onDataUpdate(data: unknown): void {
         const err = this.validateDataFormat(data);
         if (err) {
-            console.warn(`[GridPanel] 資料格式錯誤：${err}`);
+            UCUFLogger.warn(LogCategory.UI, `[GridPanel] 資料格式錯誤：${err}`);
             return;
         }
         this._lastData = data as Record<string, unknown>[];

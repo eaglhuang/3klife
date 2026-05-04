@@ -95,21 +95,66 @@ export class UIPreviewStyleBuilder {
                     offset: typeof stop.offset === 'number' ? stop.offset : 0,
                 }))
                 : [];
-            const background = node.getComponent(GradientBackground) || node.addComponent(GradientBackground);
-            background.enabled = true;
             const borderWidthRaw = (slot as any).borderWidth ?? (slot as any).strokeWidth;
             const borderWidth = typeof borderWidthRaw === 'number' && !Number.isNaN(borderWidthRaw)
                 ? Math.max(0, borderWidthRaw)
                 : 0;
             const cornerRadius = this._resolveCornerRadius(slot);
             const borderColorKey = (slot as any).borderColor ?? (slot as any).strokeColor;
-            background.setLinearGradient(typeof gradient.angle === 'number' ? gradient.angle : 180, stops, {
+            const gradientShape = {
                 cornerRadius,
                 borderWidth,
                 borderColor: typeof borderColorKey === 'string'
                     ? this.skinResolver.resolveColor(borderColorKey)
                     : new Color(255, 255, 255, 0),
-            });
+            };
+            if (gradient.repeating === true) {
+                const fallbackColor = this._resolveGradientSolidFallbackColor(stops);
+                if (cornerRadius > 0 || borderWidth > 0 || typeof borderColorKey === 'string') {
+                    const sprite = node.getComponent(Sprite);
+                    if (sprite) {
+                        sprite.enabled = false;
+                    }
+                    const solid = node.getComponent(SolidBackground);
+                    if (solid) {
+                        solid.enabled = false;
+                    }
+                    const background = node.getComponent(RoundedRectBackground) || node.addComponent(RoundedRectBackground);
+                    background.enabled = true;
+                    background.fillColor = fallbackColor;
+                    background.cornerRadius = cornerRadius;
+                    background.borderWidth = borderWidth;
+                    background.borderColor = gradientShape.borderColor;
+                } else {
+                    const roundedRect = node.getComponent(RoundedRectBackground);
+                    if (roundedRect) {
+                        roundedRect.enabled = false;
+                    }
+                    const solid = node.getComponent(SolidBackground) || node.addComponent(SolidBackground);
+                    solid.enabled = true;
+                    solid.color = fallbackColor;
+                }
+                const gradientBackground = node.getComponent(GradientBackground);
+                if (gradientBackground) {
+                    gradientBackground.enabled = false;
+                }
+                const shadow = node.getComponent(ShadowBackground);
+                if (shadow) {
+                    shadow.enabled = false;
+                }
+                return true;
+            }
+            const background = node.getComponent(GradientBackground) || node.addComponent(GradientBackground);
+            background.enabled = true;
+            if (gradient.type === 'radial') {
+                background.setRadialGradient(stops, {
+                    ...gradientShape,
+                    center: this._resolveGradientPoint(gradient.center, { x: 0.5, y: 0.5 }),
+                    radius: this._resolveGradientPoint(gradient.radius, { x: 0.5, y: 0.5 }),
+                });
+            } else {
+                background.setLinearGradient(typeof gradient.angle === 'number' ? gradient.angle : 180, stops, gradientShape);
+            }
             const alpha = resolveOpacity((slot as any).alpha ?? (slot as any).opacity);
             const sprite = node.getComponent(Sprite);
             if (sprite && alpha !== null) {
@@ -255,6 +300,40 @@ export class UIPreviewStyleBuilder {
         const color = this.skinResolver.resolveColor(raw);
         color.a = Math.round(color.a * opacity);
         return color;
+    }
+
+    private _resolveGradientSolidFallbackColor(stops: GradientColorStop[]): Color {
+        if (!Array.isArray(stops) || stops.length === 0) {
+            return new Color(255, 255, 255, 255);
+        }
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        let a = 0;
+        for (const stop of stops) {
+            r += stop.color.r;
+            g += stop.color.g;
+            b += stop.color.b;
+            a += stop.color.a;
+        }
+        const count = stops.length;
+        return new Color(
+            Math.round(r / count),
+            Math.round(g / count),
+            Math.round(b / count),
+            Math.round(a / count),
+        );
+    }
+
+    private _resolveGradientPoint(rawPoint: unknown, fallback: { x: number; y: number }): { x: number; y: number } {
+        if (!rawPoint || typeof rawPoint !== 'object') {
+            return fallback;
+        }
+        const point = rawPoint as { x?: unknown; y?: unknown };
+        return {
+            x: typeof point.x === 'number' && Number.isFinite(point.x) ? point.x : fallback.x,
+            y: typeof point.y === 'number' && Number.isFinite(point.y) ? point.y : fallback.y,
+        };
     }
 
     private _resolveCornerRadius(slot: unknown): number {

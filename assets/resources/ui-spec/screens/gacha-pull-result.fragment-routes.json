@@ -1,0 +1,18 @@
+{
+  "screenId": "gacha-pull-result",
+  "lazySlots": [],
+  "tabRoutes": [
+    {
+      "trigger": "GachaPullResult_div_202",
+      "target": "pool.next",
+      "interactionId": "gacha-pull-result_div_202.tab-switch",
+      "status": "ready"
+    }
+  ],
+  "summary": {
+    "lazySlotCount": 0,
+    "tabRouteCount": 1,
+    "missingDefaultFragmentCount": 0,
+    "missingTabTargetCount": 0
+  }
+}

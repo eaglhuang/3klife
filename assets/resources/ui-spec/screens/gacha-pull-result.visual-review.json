@@ -1,0 +1,147 @@
+{
+  "screenId": "gacha-pull-result",
+  "verdict": "pass",
+  "metrics": {
+    "screenshotZoneConfidence": 0.8333333333333334,
+    "motionPresenceRate": 1,
+    "interactionSuccessRate": 1,
+    "buttonStateLayerCoverage": 1,
+    "compositeReviewCoverage": 1
+  },
+  "zones": [
+    {
+      "node": "GachaPullResult_div_6",
+      "width": 1920,
+      "height": 88,
+      "stableBounds": true,
+      "zone": "header"
+    },
+    {
+      "node": "GachaPullResult_div_130",
+      "width": 439,
+      "height": 316,
+      "stableBounds": true,
+      "zone": "header"
+    },
+    {
+      "node": "GachaPullResult_div_153",
+      "width": 439,
+      "height": 226,
+      "stableBounds": true,
+      "zone": "footer"
+    },
+    {
+      "node": "GachaPullResult_div_175",
+      "width": null,
+      "height": 80,
+      "stableBounds": false,
+      "zone": "tabBar"
+    },
+    {
+      "node": "GachaPullResult_div_200",
+      "width": null,
+      "height": null,
+      "stableBounds": false,
+      "zone": "header"
+    },
+    {
+      "node": "GachaPullResult_div_207",
+      "width": null,
+      "height": null,
+      "stableBounds": false,
+      "zone": "header"
+    },
+    {
+      "node": "GachaPullResult_div_266",
+      "width": 516,
+      "height": 69,
+      "stableBounds": true,
+      "zone": "header"
+    },
+    {
+      "node": "GachaPullResult_div_287",
+      "width": 516,
+      "height": 85,
+      "stableBounds": true,
+      "zone": "footer"
+    },
+    {
+      "node": "GachaPullResult_div_290",
+      "width": 516,
+      "height": 69,
+      "stableBounds": true,
+      "zone": "header"
+    },
+    {
+      "node": "GachaPullResult_div_298",
+      "width": 516,
+      "height": 85,
+      "stableBounds": true,
+      "zone": "footer"
+    },
+    {
+      "node": "GachaPullResult_div_302",
+      "width": 516,
+      "height": 69,
+      "stableBounds": true,
+      "zone": "header"
+    },
+    {
+      "node": "GachaPullResult_div_327",
+      "width": 516,
+      "height": 85,
+      "stableBounds": true,
+      "zone": "footer"
+    },
+    {
+      "node": "GachaPullResult_div_331",
+      "width": 436,
+      "height": 69,
+      "stableBounds": true,
+      "zone": "header"
+    },
+    {
+      "node": "GachaPullResult_div_338",
+      "width": 436,
+      "height": 85,
+      "stableBounds": true,
+      "zone": "footer"
+    },
+    {
+      "node": "GachaPullResult_div_342",
+      "width": 596,
+      "height": 69,
+      "stableBounds": true,
+      "zone": "header"
+    },
+    {
+      "node": "GachaPullResult_div_411",
+      "width": 596,
+      "height": 85,
+      "stableBounds": true,
+      "zone": "footer"
+    },
+    {
+      "node": "GachaPullResult_div_415",
+      "width": 516,
+      "height": 69,
+      "stableBounds": true,
+      "zone": "header"
+    },
+    {
+      "node": "GachaPullResult_div_422",
+      "width": 516,
+      "height": 81,
+      "stableBounds": true,
+      "zone": "footer"
+    }
+  ],
+  "stateLayerIssues": [],
+  "compositeReviewRequired": [],
+  "effectReview": [
+    "css-effect-needs-art-review",
+    "css-transform-manual-layout-risk",
+    "overflow-hidden-clipping-risk"
+  ],
+  "blockers": []
+}

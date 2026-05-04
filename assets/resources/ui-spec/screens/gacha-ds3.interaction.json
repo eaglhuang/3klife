@@ -24,42 +24,31 @@
       }
     },
     {
-      "id": "pool-dot_general.tab-switch",
-      "trigger": "PoolDot_general",
+      "id": "gacha-ds3_div_12.open-panel",
+      "trigger": "GachaDs3_div_42",
       "event": "click",
-      "type": "tabSwitch",
-      "target": "pool-panel-general",
+      "type": "openPanel",
+      "target": "historyModal",
       "requires": [],
       "smoke": {
-        "expectActiveTab": "pool-panel-general"
+        "expectPanelVisible": "historyModal"
       }
     },
     {
-      "id": "pool-dot_legendary.tab-switch",
-      "trigger": "PoolDot_legendary",
+      "id": "gacha-ds3_div_30.close-modal",
+      "trigger": "GachaDs3_div_60",
       "event": "click",
-      "type": "tabSwitch",
-      "target": "pool-panel-legendary",
+      "type": "closeModal",
+      "target": "historyModal",
       "requires": [],
       "smoke": {
-        "expectActiveTab": "pool-panel-legendary"
-      }
-    },
-    {
-      "id": "pool-dot_support.tab-switch",
-      "trigger": "PoolDot_support",
-      "event": "click",
-      "type": "tabSwitch",
-      "target": "pool-panel-support",
-      "requires": [],
-      "smoke": {
-        "expectActiveTab": "pool-panel-support"
+        "expectPanelClosed": "historyModal"
       }
     }
   ],
   "warnings": [],
   "summary": {
-    "actionCount": 5,
+    "actionCount": 4,
     "missingTargetCount": 0,
     "manualAdapterCount": 0
   }

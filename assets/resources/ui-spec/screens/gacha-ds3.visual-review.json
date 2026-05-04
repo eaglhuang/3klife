@@ -2,15 +2,27 @@
   "screenId": "gacha-ds3",
   "verdict": "pass",
   "metrics": {
-    "screenshotZoneConfidence": 1,
+    "screenshotZoneConfidence": 0,
     "motionPresenceRate": 1,
     "interactionSuccessRate": 1,
     "buttonStateLayerCoverage": 1,
     "compositeReviewCoverage": 1
   },
-  "zones": [],
+  "zones": [
+    {
+      "node": "GachaDs3_div_59",
+      "width": null,
+      "height": null,
+      "stableBounds": false,
+      "zone": "header"
+    }
+  ],
   "stateLayerIssues": [],
   "compositeReviewRequired": [],
-  "effectReview": [],
+  "effectReview": [
+    "css-effect-needs-art-review",
+    "css-transform-manual-layout-risk",
+    "overflow-hidden-clipping-risk"
+  ],
   "blockers": []
 }

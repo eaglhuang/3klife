@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 import { _decorator, Button, Color, ImageAsset, Label, Node, Rect, ScrollView, Sprite, SpriteFrame, Texture2D } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
@@ -271,7 +272,7 @@ export class EliteTroopCodexComposite extends CompositePanel {
     ): Promise<void> {
         const sprite = this._getNodeSprite(row, path);
         if (!sprite) {
-            console.warn(
+            UCUFLogger.warn(LogCategory.UI, 
                 `[EliteTroopCodexComposite] sprite node missing: row="${row.name}" path="${path}" children=[${row.children.map((child) => child.name).join(', ')}]`,
             );
             return;
@@ -280,7 +281,7 @@ export class EliteTroopCodexComposite extends CompositePanel {
         const frame = await this._loadCodexArtSpriteFrame(spritePath, preferTextureFallback);
         const finalFrame = frame ?? await this._loadSpriteFrame(fallbackPath, false);
         if (!finalFrame) {
-            console.warn(`[EliteTroopCodexComposite] row art missing: ${path} -> ${spritePath} (fallback=${fallbackPath})`);
+            UCUFLogger.warn(LogCategory.UI, `[EliteTroopCodexComposite] row art missing: ${path} -> ${spritePath} (fallback=${fallbackPath})`);
             sprite.node.active = false;
             return;
         }
@@ -298,7 +299,7 @@ export class EliteTroopCodexComposite extends CompositePanel {
         const frame = await this._loadCodexArtSpriteFrame(spritePath, preferTextureFallback);
         const finalFrame = frame ?? await this._loadSpriteFrame(fallbackPath, false);
         if (!finalFrame) {
-            console.warn(`[EliteTroopCodexComposite] selected art missing: ${path} -> ${spritePath} (fallback=${fallbackPath})`);
+            UCUFLogger.warn(LogCategory.UI, `[EliteTroopCodexComposite] selected art missing: ${path} -> ${spritePath} (fallback=${fallbackPath})`);
             targetNode.active = false;
             return;
         }

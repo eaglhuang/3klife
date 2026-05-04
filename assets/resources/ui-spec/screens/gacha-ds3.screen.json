@@ -4,6 +4,16 @@
   "skin": "gacha-ds3.skin",
   "layoutRef": "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.json",
   "skinRef": "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.skin.json",
+  "tabRouting": {
+    "PoolPrev": {
+      "slotId": "RightPanel",
+      "fragment": "fragments/layouts/gacha-ds3-pool-prev-content"
+    },
+    "PoolNext": {
+      "slotId": "RightPanel",
+      "fragment": "fragments/layouts/gacha-ds3-pool-next-content"
+    }
+  },
   "meta": {
     "scaffoldHints": {
       "useUCUFLogger": true

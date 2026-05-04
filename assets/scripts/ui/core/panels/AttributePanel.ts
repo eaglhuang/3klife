@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md  (UCUF M2)
 /**
  * AttributePanel
@@ -58,7 +59,7 @@ export class AttributePanel extends ChildPanelBase {
     onDataUpdate(data: unknown): void {
         const err = this.validateDataFormat(data);
         if (err) {
-            console.warn(`[AttributePanel] 資料格式錯誤：${err}`);
+            UCUFLogger.warn(LogCategory.UI, `[AttributePanel] 資料格式錯誤：${err}`);
             return;
         }
         this._lastData = data as AttributeEntry[];

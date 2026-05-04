@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "gacha-ds3",
+  "sourcePackageId": "Design System 3 / gacha-ds3",
+  "viewport": {
+    "width": 1920,
+    "height": 1080,
+    "dpr": 1
+  },
+  "safeArea": {
+    "x": 0,
+    "y": 0,
+    "width": 1920,
+    "height": 1080
+  },
+  "sourceCrop": {
+    "x": 0,
+    "y": 0,
+    "width": 1920,
+    "height": 1080
+  },
+  "editorCrop": {
+    "x": 0,
+    "y": 24,
+    "width": 1920,
+    "height": 1080
+  },
+  "settleMs": 800,
+  "threshold": 0.95,
+  "tolerance": 12,
+  "artAuthorityWaivers": null,
+  "notes": [
+    "Plan4 final gate protocol for gacha-ds3: fixed viewport, crop, DPR and settle time.",
+    "editorCrop uses y=24 to remove editor chrome and align runtime canvas to 1920x1080 compare frame."
+  ]
+}

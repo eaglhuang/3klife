@@ -1,0 +1,45 @@
+{
+  "screenId": "gacha-ds3",
+  "generatedAt": "2026-05-04T02:49:59.588Z",
+  "source": "per-tab-replay",
+  "tabs": [
+    {
+      "id": "General",
+      "key": "general",
+      "mount": "RightPanel",
+      "mountSource": "source-dom:tab-content-contract",
+      "lifecycle": "lazy",
+      "fragment": "fragments/layouts/gacha-ds3-general-content",
+      "childPanelClass": "GachaDs3GeneralChildPanel",
+      "replaySourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3.general.right-content.html"
+    },
+    {
+      "id": "Legendary",
+      "key": "legendary",
+      "mount": "RightPanel",
+      "mountSource": "source-dom:tab-content-contract",
+      "lifecycle": "lazy",
+      "fragment": "fragments/layouts/gacha-ds3-legendary-content",
+      "childPanelClass": "GachaDs3LegendaryChildPanel",
+      "replaySourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3.legendary.right-content.html"
+    },
+    {
+      "id": "Support",
+      "key": "support",
+      "mount": "RightPanel",
+      "mountSource": "source-dom:tab-content-contract",
+      "lifecycle": "lazy",
+      "fragment": "fragments/layouts/gacha-ds3-support-content",
+      "childPanelClass": "GachaDs3SupportChildPanel",
+      "replaySourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3/tab-replay/gacha-ds3.support.right-content.html"
+    }
+  ],
+  "summary": {
+    "tabCount": 3,
+    "mountSlotIds": [
+      "RightPanel"
+    ],
+    "missingMountCount": 0,
+    "missingTriggerCount": 3
+  }
+}

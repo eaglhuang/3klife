@@ -4372,30 +4372,6 @@
                             },
                             "children": [
                               {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_346",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
-                              {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_347",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
-                              {
                                 "type": "label",
                                 "name": "GachaShopDs3_div_348",
                                 "widget": {
@@ -4463,30 +4439,6 @@
                               "paddingLeft": 0
                             },
                             "children": [
-                              {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_352",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
-                              {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_353",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
                               {
                                 "type": "label",
                                 "name": "GachaShopDs3_div_354",
@@ -4556,30 +4508,6 @@
                             },
                             "children": [
                               {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_358",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
-                              {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_359",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
-                              {
                                 "type": "label",
                                 "name": "GachaShopDs3_div_360",
                                 "widget": {
@@ -4648,30 +4576,6 @@
                             },
                             "children": [
                               {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_364",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
-                              {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_365",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
-                              {
                                 "type": "label",
                                 "name": "GachaShopDs3_div_366",
                                 "widget": {
@@ -4739,30 +4643,6 @@
                               "paddingLeft": 0
                             },
                             "children": [
-                              {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_370",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
-                              {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_371",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
                               {
                                 "type": "label",
                                 "name": "GachaShopDs3_div_372",
@@ -4860,18 +4740,6 @@
                             },
                             "children": [
                               {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_377",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
-                              {
                                 "type": "label",
                                 "name": "GachaShopDs3_div_378",
                                 "widget": {
@@ -4939,18 +4807,6 @@
                               "paddingLeft": 0
                             },
                             "children": [
-                              {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_382",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
                               {
                                 "type": "label",
                                 "name": "GachaShopDs3_div_383",
@@ -5020,18 +4876,6 @@
                             },
                             "children": [
                               {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_387",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
-                              {
                                 "type": "label",
                                 "name": "GachaShopDs3_div_388",
                                 "widget": {
@@ -5100,18 +4944,6 @@
                             },
                             "children": [
                               {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_392",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
-                              {
                                 "type": "label",
                                 "name": "GachaShopDs3_div_393",
                                 "widget": {
@@ -5179,30 +5011,6 @@
                               "paddingLeft": 0
                             },
                             "children": [
-                              {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_397",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
-                              {
-                                "type": "container",
-                                "name": "GachaShopDs3_div_398",
-                                "widget": {
-                                  "top": 0,
-                                  "left": 0,
-                                  "right": 0,
-                                  "bottom": 0
-                                },
-                                "width": 103,
-                                "height": 159
-                              },
                               {
                                 "type": "label",
                                 "name": "GachaShopDs3_div_399",

@@ -122,7 +122,7 @@ export abstract class CompositePanel extends UIPreviewBuilder {
         services().memory?.notifyLoaded(screenId, 'resources', 'json', this._scopeId);
         const [{ screen, layout, skin }, tokens] = await Promise.all([
             services().specLoader.loadFullScreen(screenId),
-            services().specLoader.loadDesignTokens(),
+            services().specLoader.loadDesignTokensForScreen(screenId),
         ]);
         this._tabRouting = screen.tabRouting ?? null;
 
@@ -223,7 +223,7 @@ export abstract class CompositePanel extends UIPreviewBuilder {
     async switchSlot(slotId: string, fragmentId: string, transition?: TransitionDef): Promise<void> {
         const entry = this._lazySlots.get(slotId);
         if (!entry) {
-            console.warn(`[CompositePanel] switchSlot: slotId "${slotId}" 未找到，請確認 lazySlot spec.name`);
+            UCUFLogger.warn(LogCategory.UI, `[CompositePanel] switchSlot: slotId "${slotId}" 未找到，請確認 lazySlot spec.name`);
             return;
         }
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CompositePanel] switchSlot start', {
@@ -347,12 +347,12 @@ export abstract class CompositePanel extends UIPreviewBuilder {
      */
     async switchTab(tabKey: string): Promise<void> {
         if (!this._tabRouting) {
-            console.warn(`[CompositePanel] switchTab: 此 CompositePanel 尚未設定 tabRouting`);
+            UCUFLogger.warn(LogCategory.UI, `[CompositePanel] switchTab: 此 CompositePanel 尚未設定 tabRouting`);
             return;
         }
         const route = this._tabRouting[tabKey];
         if (!route) {
-            console.warn(`[CompositePanel] switchTab: tabKey "${tabKey}" 在 tabRouting 中不存在`);
+            UCUFLogger.warn(LogCategory.UI, `[CompositePanel] switchTab: tabKey "${tabKey}" 在 tabRouting 中不存在`);
             return;
         }
         UCUFLogger.info(LogCategory.LIFECYCLE, '[CompositePanel] switchTab', {

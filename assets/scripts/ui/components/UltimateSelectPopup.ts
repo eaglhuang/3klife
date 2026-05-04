@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * @deprecated
@@ -72,7 +73,7 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
             await this.buildScreen(layout, skin, i18n);
             this._isBuilt = true;
         } catch (e) {
-            console.warn('[UltimateSelectPopup] Template 載入失敗，使用白模', e);
+            UCUFLogger.warn(LogCategory.UI, '[UltimateSelectPopup] Template 載入失敗，使用白模', e);
             this._isBuilt = true;
         }
     }
@@ -110,7 +111,7 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
             this.show(skills);
         }
 
-        console.log('[UltimateSelectPopup] onReady — binder 就緒');
+        UCUFLogger.info(LogCategory.UI, '[UltimateSelectPopup] onReady — binder 就緒');
     }
 
     // ── 公開 API ─────────────────────────────────────────────
@@ -161,7 +162,7 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
     private _buildSkillButtons(skills: UltimateSkillItem[]): void {
         const contentNode = this._scrollView?.content ?? this._binder?.getNode('Content');
         if (!contentNode) {
-            console.warn('[UltimateSelectPopup] ScrollContent 節點未找到，技能按鈕無法建立');
+            UCUFLogger.warn(LogCategory.UI, '[UltimateSelectPopup] ScrollContent 節點未找到，技能按鈕無法建立');
             return;
         }
 
@@ -213,7 +214,7 @@ export class UltimateSelectPopup extends UIPreviewBuilder {
             contentTransform.setContentSize(contentTransform.width, totalHeight);
         }
 
-        console.log(`[UltimateSelectPopup] 建立 ${skills.length} 個技能按鈕`);
+        UCUFLogger.info(LogCategory.UI, `[UltimateSelectPopup] 建立 ${skills.length} 個技能按鈕`);
     }
 
     private _ensureVerticalLayout(contentNode: Node): void {
