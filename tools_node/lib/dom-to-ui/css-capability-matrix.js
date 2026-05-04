@@ -56,6 +56,14 @@ function splitTopLevelLayers(value) {
   return layers;
 }
 
+function isRenderableGradientLayer(layer) {
+  return /^(repeating-)?linear-gradient\s*\(/i.test(String(layer || '').trim());
+}
+
+function hasGradientFunction(value) {
+  return /(repeating-)?(linear|radial|conic)-gradient\s*\(/i.test(String(value || ''));
+}
+
 function classifyCssProperty(property, value) {
   let prop = String(property || '').trim().toLowerCase();
   if (prop === '-webkit-clip-path') prop = 'clip-path';
@@ -197,19 +205,14 @@ function classifyCssProperty(property, value) {
     const hasUrl = /\burl\s*\(/i.test(rawValue);
     if (hasGradient && hasUrl) return 'assetize';
     if (layers.length > 1 && (hasGradient || hasUrl)) return 'assetize';
-    // R-24 (general rule, gradient-subtype accuracy): converter
-    // `buildGradientRectSlot` (tools_node/lib/dom-to-ui/draft-builder.js
-    // L939-963) ONLY accepts `gradient.type === 'linear'` AND
-    // `layers.length === 1`. radial-gradient / conic-gradient are rejected
-    // with `null` and therefore have ZERO native render path. Classifier
-    // MUST mirror this (R-19 recursive principle: classifier capability =
-    // runtime + converter actual implementation). Without this rule every
-    // UI that uses radial spotlights or conic gradients is silently
-    // mis-reported as `supported` while runtime renders nothing,
-    // producing invisible pixel-similarity gaps.
+    // R-24/R-35 (general rule, gradient-subtype accuracy): treat ONLY
+    // single linear/repeating-linear gradients as parity-safe. Fresh gacha
+    // evidence shows large/off-center radial backgrounds still behave like
+    // blocker territory for final-fidelity even though runtime has a nominal
+    // radial path, so radial/repeating-radial/conic stay assetize until a
+    // fixture proves equivalent rendering instead of heuristic capability.
     if (hasGradient) {
-      const isSingleLinear = layers.length === 1 && /^linear-gradient\s*\(/i.test(layers[0].trim());
-      return isSingleLinear ? 'supported' : 'assetize';
+      return layers.length === 1 && isRenderableGradientLayer(layers[0]) ? 'supported' : 'assetize';
     }
     if (hasUrl) return 'supported';
     return 'supported';
@@ -266,16 +269,14 @@ function classifyCssProperty(property, value) {
     if (!rawValue || rawValue === 'none') return 'supported';
     // R-21: depth-aware top-level comma split.
     const layers = splitTopLevelLayers(rawValue);
-    const hasGradient = /(linear-gradient|radial-gradient|conic-gradient)\s*\(/i.test(rawValue);
+    const hasGradient = hasGradientFunction(rawValue);
     const hasUrl = /\burl\s*\(/i.test(rawValue);
     if (layers.length > 1 && (hasGradient || hasUrl)) return 'assetize';
-    // R-24 (general rule, gradient-subtype accuracy, longhand mirror): same
-    // converter limitation as the `background` shorthand — only single
-    // linear-gradient is realisable. radial / conic falls through to
-    // assetize for honest R-15 bake accounting.
+    // R-24/R-35 longhand mirror: single linear/radial gradients, including
+    // repeating-* variants, are runtime-supported by the gradient-rect
+    // pipeline; conic and multi-layer mixes still require bake.
     if (hasGradient) {
-      const isSingleLinear = layers.length === 1 && /^linear-gradient\s*\(/i.test(layers[0].trim());
-      return isSingleLinear ? 'supported' : 'assetize';
+      return layers.length === 1 && isRenderableGradientLayer(layers[0]) ? 'supported' : 'assetize';
     }
     if (hasUrl) return 'supported';
     return 'supported';

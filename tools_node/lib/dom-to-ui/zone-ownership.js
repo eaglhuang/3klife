@@ -181,6 +181,7 @@ function hydrateTraceability(zones, traceCatalog) {
   if (catalog.length === 0) return;
   for (const zone of zones) {
     zone.traceability = resolveZoneTraceability(zone, catalog);
+    retargetZoneFromTraceability(zone);
   }
 }
 
@@ -204,15 +205,45 @@ function resolveZoneTraceability(zone, traceCatalog) {
       selectorTracePending: true,
     });
   }
+  const matchedProperties = uniqueStrings(matches.map(match => match.property));
+  const mergedProperties = uniqueStrings([].concat(propertyHints, matchedProperties));
   const sourceDomSelectors = uniqueStrings(matches.map(match => match.selector));
   const ucufNodeSlots = uniqueSlotRefs(matches.flatMap(match => Array.isArray(match.ucufNodeSlots) ? match.ucufNodeSlots : []));
   return Object.assign({}, base, {
     sourceDomSelectors,
     ucufNodeSlots,
-    sourceProperties: propertyHints,
+    sourceProperties: mergedProperties,
     confidence: matches[0].matchConfidence || 'bake-manifest-layout',
     selectorTracePending: sourceDomSelectors.length === 0 && ucufNodeSlots.length === 0,
   });
+}
+
+function retargetZoneFromTraceability(zone) {
+  if (!zone || !zone.traceability || !/^pixel-diff:/.test(String(zone.id || ''))) return;
+  const sourceProperties = Array.isArray(zone.traceability.sourceProperties)
+    ? zone.traceability.sourceProperties.filter(Boolean)
+    : [];
+  if (sourceProperties.length === 0) return;
+  const derived = inferTaxonomyFromProperties(sourceProperties);
+  if (!derived || derived === zone.taxonomy) {
+    if (zone.traceability.runtimeOwner !== zone.ownerBucket) {
+      zone.traceability.runtimeOwner = zone.ownerBucket || ownerBucketForTaxonomy(zone.taxonomy);
+    }
+    return;
+  }
+  zone.taxonomy = derived;
+  zone.ownerBucket = ownerBucketForTaxonomy(derived);
+  zone.recommendation = recommendationForTaxonomy(derived);
+  zone.traceability.runtimeOwner = zone.ownerBucket;
+}
+
+function inferTaxonomyFromProperties(sourceProperties) {
+  const counts = {};
+  for (const property of sourceProperties) {
+    const taxonomy = classifyCssOffender({ property });
+    counts[taxonomy] = (counts[taxonomy] || 0) + 1;
+  }
+  return TAXONOMY_PRIORITY.find((key) => counts[key] > 0) || null;
 }
 
 function inferZonePropertyHints(zone) {
@@ -264,7 +295,10 @@ function scoreTraceEntry(entry, rect, propertyHints) {
     if (overlap > 0) {
       score += 100 + overlap * 100;
     } else {
-      score += Math.max(0, 40 - centerDistance(rect, entry.rect) / 32);
+      const distance = centerDistance(rect, entry.rect);
+      const distanceLimit = traceDistanceLimit(rect, entry.rect, propertyHints.length > 0);
+      if (distance > distanceLimit) return -1;
+      score += Math.max(0, 40 - distance / 8);
     }
   } else if (!rect) {
     score += 10;
@@ -272,6 +306,11 @@ function scoreTraceEntry(entry, rect, propertyHints) {
   if (entry.ucufNodeSlots && entry.ucufNodeSlots.length > 0) score += 5;
   if (entry.selector) score += 5;
   return score;
+}
+
+function traceDistanceLimit(left, right, hasPropertyHints) {
+  const localScale = Math.max(Math.min(left.w, left.h), Math.min(right.w, right.h), 1);
+  return localScale * (hasPropertyHints ? 1.5 : 1.1);
 }
 
 function rectOverlapRatio(left, right) {
