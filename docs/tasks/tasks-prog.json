@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 1,
+    "done": 2,
     "in_progress": 0,
-    "open": 22,
-    "total": 23
+    "open": 29,
+    "total": 31
   },
   "tasks": [
     {
@@ -707,6 +707,261 @@
         "docs/agent-briefs/tasks/SYS-SKILL-TAC-0006.md"
       ],
       "notes": "2026-04-20 | 狀態: open | 對應 G-5-0-1 最後未勾項；M4/M5 里程碑進行中；G-6-3 排程未開始 | 阻塞: 依賴 TAC-0001~0004 各模組骨架穩定"
+    },
+    {
+      "id": "PROG-2-0001",
+      "title": "HTML-to-UCUF Plan5 bootstrap and stale-rule audit",
+      "owner": "GitHubCopilot",
+      "priority": "P0",
+      "status": "done",
+      "type": "tooling-plan",
+      "phase": "Plan5",
+      "created": "2026-05-04",
+      "created_by_agent": "GitHubCopilot",
+      "started_at": "2026-05-04T11:51:10+08:00",
+      "started_by_agent": "GitHubCopilot",
+      "completed_at": "2026-05-04T11:58:35+08:00",
+      "completed_by_agent": "GitHubCopilot",
+      "description": "建立 HTML-to-UCUF Plan5 規劃書，盤點 Plan4 未完成項與 Cocos final gate 大失真根因，並拆出後續通用工具/runtime 任務卡；不得以 gacha-ds3 generated JSON 或 screen-specific override 當作解法。",
+      "related": [
+        "UI-2-0023"
+      ],
+      "depends": [],
+      "acceptance": [
+        "docs/html_skill_plan5.md 已建立並取得 doc_id",
+        "Plan5 checklist 列出 Plan4 未完成必要項、final gate 95% 路徑與多張後續任務卡",
+        "docs/tasks/tasks-prog.json 與 Markdown 任務卡欄位一致",
+        "encoding touched check pass"
+      ],
+      "deliverables": [
+        "docs/html_skill_plan5.md",
+        "docs/agent-briefs/tasks/PROG-2-0001.md",
+        "docs/tasks/tasks-prog.json Plan5 bootstrap 條目"
+      ],
+      "notes": "2026-05-04 | 狀態: done | 驗證: JSON parse pass / encoding touched pass / targeted doc_id check pass | 變更: 完成 Plan5 文件、8 張任務卡、tasks-prog shard、索引與 skill authority 更新 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-0002",
+      "title": "HTML-to-UCUF stale rule and conflict audit",
+      "owner": "GitHubCopilot",
+      "priority": "P0",
+      "status": "open",
+      "type": "tooling-audit",
+      "phase": "Plan5",
+      "created": "2026-05-04",
+      "created_by_agent": "GitHubCopilot",
+      "description": "盤點 html-to-ucuf skill、workflow、converter、optimizer、validator、capture/final gate 是否殘留 Plan2/Plan3 舊規則、互相衝突流程、screen-specific shortcut、default skin fallback 或 debug-only 正式化路徑。",
+      "related": [
+        "PROG-2-0001",
+        "UI-2-0023"
+      ],
+      "depends": [
+        "PROG-2-0001"
+      ],
+      "acceptance": [
+        "產出 screen-agnostic 舊規則/衝突邏輯清單",
+        "每項分類為 remove/migrate/keep/blocker 並指向對應檔案",
+        "不得提出 gacha-ds3 generated JSON 手修作為 durable 解法",
+        "Plan5 checklist 回填審計結果連結"
+      ],
+      "deliverables": [
+        "artifacts/html-to-ucuf-plan5/stale-rule-audit.md",
+        "docs/html_skill_plan5.md 審計追蹤段落更新"
+      ],
+      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0001"
+    },
+    {
+      "id": "PROG-2-0003",
+      "title": "HTML-to-UCUF final gate diagnosis contract",
+      "owner": "GitHubCopilot",
+      "priority": "P0",
+      "status": "open",
+      "type": "qa-tooling",
+      "phase": "Plan5",
+      "created": "2026-05-04",
+      "created_by_agent": "GitHubCopilot",
+      "description": "修正 final gate 低分時仍輸出 visualFidelityRisk pass 與 nextFixes 空陣列的矛盾，讓 Cocos final score 低於 0.95 時必定產出 blocker taxonomy、primary-zone 差異與下一步修補建議。",
+      "related": [
+        "PROG-2-0001",
+        "UI-2-0023"
+      ],
+      "depends": [
+        "PROG-2-0001"
+      ],
+      "acceptance": [
+        "Cocos adjustedScore < 0.95 必定 verdict fail 且 nextFixes 非空",
+        "browser coverage pass 但 Cocos fail 的案例會標示 renderer/capture/spec authority 類別",
+        "新增 regression fixture 驗證低分診斷輸出",
+        "rule guard 與 workflow summary 的 verdict 一致"
+      ],
+      "deliverables": [
+        "tools_node/compare-html-to-cocos-editor.js 或相關 final-gate 模組更新",
+        "tools_node/lib/html-to-ucuf/rule-guard.js 診斷契約更新",
+        "Plan5 final-gate diagnostic fixture"
+      ],
+      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0001"
+    },
+    {
+      "id": "PROG-2-0004",
+      "title": "HTML-to-UCUF CSS semantics extraction parity",
+      "owner": "GitHubCopilot",
+      "priority": "P0",
+      "status": "open",
+      "type": "converter-tooling",
+      "phase": "Plan5",
+      "created": "2026-05-04",
+      "created_by_agent": "GitHubCopilot",
+      "description": "補強 HTML/CSS 解析與 draft-builder 的通用 CSS 語意能力，優先處理 selector capability map、descendant/compound matching、CSS variable/token resolution、background layer/opacity/layout preservation。",
+      "related": [
+        "PROG-2-0001",
+        "UI-2-0023"
+      ],
+      "depends": [
+        "PROG-2-0002",
+        "PROG-2-0003"
+      ],
+      "acceptance": [
+        "新增 capability matrix，不支援的 CSS feature 產出 blocker 或 assetization-required",
+        "新增至少三組非 gacha fixture 覆蓋 selector/background/layout",
+        "所有新增規則附 stage/ruleId 且無 screenId 判斷",
+        "dom-to-ui fidelity contract pass"
+      ],
+      "deliverables": [
+        "tools_node/lib/dom-to-ui/html-parser.js",
+        "tools_node/lib/dom-to-ui/draft-builder.js",
+        "tools_node/test/dom-to-ui-self-test.js"
+      ],
+      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0002,PROG-2-0003"
+    },
+    {
+      "id": "PROG-2-0005",
+      "title": "UCUF runtime renderer parity closure",
+      "owner": "GitHubCopilot",
+      "priority": "P0",
+      "status": "open",
+      "type": "runtime-support",
+      "phase": "Plan5",
+      "created": "2026-05-04",
+      "created_by_agent": "GitHubCopilot",
+      "description": "補齊 Cocos runtime 對 source-derived skin 的 renderer parity，處理 gradient/radial/repeating、shadow、rounded rect、background layers 與 fallback blocker 化，避免 Cocos 端把高覆蓋 HTML 降成低相似度畫面。",
+      "related": [
+        "PROG-2-0001",
+        "UI-2-0023"
+      ],
+      "depends": [
+        "PROG-2-0003",
+        "PROG-2-0004"
+      ],
+      "acceptance": [
+        "gradient/background fidelity fixture 在 Cocos capture 中達到局部 threshold",
+        "不得用 flat color fallback 隱藏正式 pass，除非 verdict 標 blocker",
+        "runtime renderer 行為以 skin data 驅動，無 screen-specific branch",
+        "TypeScript errors 0 且 encoding guard pass"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/core/UIPreviewStyleBuilder.ts",
+        "assets/scripts/ui/components/GradientBackground.ts",
+        "runtime renderer fixture notes"
+      ],
+      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0003,PROG-2-0004"
+    },
+    {
+      "id": "PROG-2-0006",
+      "title": "HTML-to-UCUF generated spec authority hardening",
+      "owner": "GitHubCopilot",
+      "priority": "P1",
+      "status": "open",
+      "type": "workflow-tooling",
+      "phase": "Plan5",
+      "created": "2026-05-04",
+      "created_by_agent": "GitHubCopilot",
+      "description": "強化 source-derived final JSON 到 assets/resources/ui-spec 的 authority chain，避免 optimizer/update-mode/tab replay 遺失 skinLayers、local tokens、tab routes、runtime version/hash 或改回 legacy/default skin。",
+      "related": [
+        "PROG-2-0001",
+        "UI-2-0023"
+      ],
+      "depends": [
+        "PROG-2-0003",
+        "PROG-2-0004"
+      ],
+      "acceptance": [
+        "workflow summary 能追蹤 raw/final/synced/runtime spec hashes",
+        "update-mode 不會覆蓋或刪失 source-derived skinLayers/local tokens",
+        "tabbed source 的 per-tab replay 與 runtime route 一致",
+        "validate-ui-specs strict 覆蓋 authority rules"
+      ],
+      "deliverables": [
+        "tools_node/run-html-to-ucuf-workflow.js",
+        "tools_node/optimize-ucuf-layout.js",
+        "tools_node/validate-ui-specs.js",
+        "authority-chain regression artifacts"
+      ],
+      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0003,PROG-2-0004"
+    },
+    {
+      "id": "PROG-2-0007",
+      "title": "HTML-to-UCUF 95 percent regression matrix",
+      "owner": "GitHubCopilot",
+      "priority": "P1",
+      "status": "open",
+      "type": "qa-tooling",
+      "phase": "Plan5",
+      "created": "2026-05-04",
+      "created_by_agent": "GitHubCopilot",
+      "description": "建立多畫面、非單一 fixture 的 pixel fidelity regression matrix，將 browser preview、Cocos Editor final gate、zone diagnosis、artifact summary 統一成可重跑驗收，目標正式 fixture adjustedScore >= 0.95。",
+      "related": [
+        "PROG-2-0001",
+        "UI-2-0023"
+      ],
+      "depends": [
+        "PROG-2-0003",
+        "PROG-2-0005",
+        "PROG-2-0006"
+      ],
+      "acceptance": [
+        "fixture pack 至少包含 gacha-ds3 與兩個非 gacha HTML source package",
+        "每個 fixture 都輸出 browser coverage、Cocos adjustedScore、primary-zone summary",
+        "低於 0.95 會 fail 且列出 blocker taxonomy",
+        "context budget 下只輸出摘要與路徑，不 dump 大圖"
+      ],
+      "deliverables": [
+        "tools_node/run-html-to-ucuf-workflow.js regression mode 或新 harness",
+        "artifacts/html-to-ucuf-plan5/regression-summary.json",
+        "docs/html_skill_plan5.md threshold matrix 更新"
+      ],
+      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0003,PROG-2-0005,PROG-2-0006"
+    },
+    {
+      "id": "PROG-2-0008",
+      "title": "HTML-to-UCUF skill Plan5 workflow rewrite",
+      "owner": "GitHubCopilot",
+      "priority": "P1",
+      "status": "open",
+      "type": "skill-docs",
+      "phase": "Plan5",
+      "created": "2026-05-04",
+      "created_by_agent": "GitHubCopilot",
+      "description": "更新 html-to-ucuf skill 與相關 validation command，將 Plan5 設為 current execution spec，封存 Plan4 舊規則為歷史證據，並加入 95% final gate、diagnostic-nextFixes、禁止 screen-specific hardcode 的工作流守門。",
+      "related": [
+        "PROG-2-0001",
+        "UI-2-0023"
+      ],
+      "depends": [
+        "PROG-2-0001",
+        "PROG-2-0002",
+        "PROG-2-0003"
+      ],
+      "acceptance": [
+        ".github/skills/html-to-ucuf/SKILL.md authority order 指向 Plan5",
+        "Required Flow 包含 stale-rule audit、diagnostic contract、95% regression matrix",
+        "Non-Negotiable Rules 補 H2U-P5 系列",
+        "validation commands 可對應 Plan5 task gates"
+      ],
+      "deliverables": [
+        ".github/skills/html-to-ucuf/SKILL.md",
+        "docs/html_skill_plan5.md skill-governance checklist"
+      ],
+      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0001,PROG-2-0002,PROG-2-0003"
     }
   ]
 }
