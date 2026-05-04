@@ -25,6 +25,7 @@ const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp']);
 
 function parseArgs(argv) {
   const args = {
+    workflow: '',
     task: '',
     goal: '',
     files: [],
@@ -33,10 +34,16 @@ function parseArgs(argv) {
     maxKnown: 3,
     maxNeed: 3,
     json: false,
+    artifactJson: false,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
+    if (arg === '--workflow') {
+      args.workflow = argv[i + 1] || '';
+      i += 1;
+      continue;
+    }
     if (arg === '--task') {
       args.task = argv[i + 1] || '';
       i += 1;
@@ -67,6 +74,10 @@ function parseArgs(argv) {
     }
     if (arg === '--json') {
       args.json = true;
+      continue;
+    }
+    if (arg === '--artifact-json') {
+      args.artifactJson = true;
     }
   }
 
@@ -235,6 +246,7 @@ function buildCard(args, entries) {
   const ranked = rankEntries(entries);
   const read = ranked.slice(0, args.maxFiles);
   const card = {
+    workflow: args.workflow || '(unset)',
     task: args.task || '(unset)',
     goal: args.goal || '(please fill goal)',
     read: read.map((entry) => entry.path),
@@ -247,6 +259,47 @@ function buildCard(args, entries) {
     avoid: selectAvoid(entries),
   };
   return card;
+}
+
+function buildTotals(entries) {
+  return {
+    files: entries.length,
+    textFiles: entries.filter((entry) => entry.kind === 'text').length,
+    imageFiles: entries.filter((entry) => entry.kind === 'image').length,
+    otherFiles: entries.filter((entry) => entry.kind === 'binary').length,
+    totalBytes: entries.reduce((sum, entry) => sum + entry.bytes, 0),
+    estTokens: entries.reduce((sum, entry) => sum + entry.tokens, 0),
+  };
+}
+
+function buildArtifact(args, entries, card) {
+  const totals = buildTotals(entries);
+  const ranked = rankEntries(entries);
+  return {
+    schemaVersion: 'turn-artifact/v1',
+    kind: 'turn-artifact',
+    generatedAt: new Date().toISOString(),
+    workflow: args.workflow || '',
+    task: args.task || '',
+    goal: args.goal || '',
+    source: {
+      changed: args.changed,
+      explicitFiles: args.files.map(rel),
+      maxFiles: args.maxFiles,
+    },
+    totals,
+    files: ranked.map((entry) => ({
+      path: entry.path,
+      kind: entry.kind,
+      bytes: entry.bytes,
+      estTokens: entry.tokens,
+      inlineSafe: entry.inlineSafe,
+      summary: entry.summary,
+    })),
+    summaryCard: card,
+    riskHints: card.avoid,
+    nextActions: card.need,
+  };
 }
 
 function printCard(card) {
@@ -280,6 +333,10 @@ function main() {
     .filter(Boolean)
     .map((file) => buildEntry(file));
   const card = buildCard(args, entries);
+  if (args.artifactJson) {
+    console.log(JSON.stringify(buildArtifact(args, entries, card), null, 2));
+    return;
+  }
   if (args.json) {
     console.log(JSON.stringify(card, null, 2));
     return;

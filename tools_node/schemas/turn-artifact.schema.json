@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "turn-artifact.schema.json",
+  "title": "Turn Artifact v1",
+  "description": "Schema contract for turn-artifact/v1 output emitted by generate-context-summary.js and finalize-agent-turn.js.",
+  "$comment": "Versioning rules: keep schemaVersion=turn-artifact/v1 only while field names, meanings, and required structure stay unchanged. Adding, removing, or renaming top-level fields, or changing required semantics, requires a new schemaVersion. The first canonical valid baseline fixture is tests/fixtures/harness/turn-artifact.valid.json, copied from scratch/pilot-turn-artifact.json on 2026-05-04.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "generatedAt",
+    "workflow",
+    "task",
+    "goal",
+    "source",
+    "totals",
+    "files",
+    "summaryCard",
+    "riskHints",
+    "nextActions"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "turn-artifact/v1"
+    },
+    "kind": {
+      "const": "turn-artifact"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "workflow": {
+      "type": "string"
+    },
+    "task": {
+      "type": "string"
+    },
+    "goal": {
+      "type": "string"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "changed",
+        "explicitFiles",
+        "maxFiles"
+      ],
+      "properties": {
+        "changed": {
+          "type": "boolean"
+        },
+        "explicitFiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relativePath"
+          }
+        },
+        "maxFiles": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "files",
+        "textFiles",
+        "imageFiles",
+        "otherFiles",
+        "totalBytes",
+        "estTokens"
+      ],
+      "properties": {
+        "files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "textFiles": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "imageFiles": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "otherFiles": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "totalBytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "estTokens": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fileEntry"
+      }
+    },
+    "summaryCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workflow",
+        "task",
+        "goal",
+        "read",
+        "known",
+        "need",
+        "avoid"
+      ],
+      "properties": {
+        "workflow": {
+          "type": "string"
+        },
+        "task": {
+          "type": "string"
+        },
+        "goal": {
+          "type": "string"
+        },
+        "read": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relativePath"
+          }
+        },
+        "known": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stringItem"
+          }
+        },
+        "need": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stringItem"
+          }
+        },
+        "avoid": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stringItem"
+          }
+        }
+      }
+    },
+    "riskHints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/stringItem"
+      }
+    },
+    "nextActions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/stringItem"
+      }
+    }
+  },
+  "$defs": {
+    "relativePath": {
+      "type": "string",
+      "pattern": "^(?![A-Za-z]:)(?!/)(?!\\\\)(?!file:)(?!https?:)(?!db:)[^\\\\]+(?:/[^\\\\]+)*$"
+    },
+    "stringItem": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fileEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "kind",
+        "bytes",
+        "estTokens",
+        "inlineSafe",
+        "summary"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "text",
+            "image",
+            "binary"
+          ]
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "estTokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "inlineSafe": {
+          "type": "boolean"
+        },
+        "summary": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

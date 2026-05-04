@@ -33,6 +33,7 @@ function parseArgs(argv) {
   const args = {
     workflow: '',
     task: '',
+    goal: '',
     files: [],
     dirs: [],
     changed: false,
@@ -43,6 +44,8 @@ function parseArgs(argv) {
     budgetBaseline: '',
     taskScope: false,
     taskLockDir: '',
+    emitTurnArtifact: false,
+    artifactFile: '',
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -54,6 +57,11 @@ function parseArgs(argv) {
     }
     if (arg === '--task') {
       args.task = argv[i + 1] || '';
+      i += 1;
+      continue;
+    }
+    if (arg === '--goal') {
+      args.goal = argv[i + 1] || '';
       i += 1;
       continue;
     }
@@ -76,6 +84,15 @@ function parseArgs(argv) {
     }
     if (arg === '--skip-ucuf') {
       args.skipUcuf = true;
+      continue;
+    }
+    if (arg === '--emit-turn-artifact') {
+      args.emitTurnArtifact = true;
+      continue;
+    }
+    if (arg === '--artifact-file') {
+      args.artifactFile = argv[i + 1] || '';
+      i += 1;
       continue;
     }
     if (arg === '--budget-baseline') {
@@ -541,6 +558,38 @@ function main() {
     : { budget: buildEmptyBudgetReport(), usage: buildEmptyTurnUsage() };
   const budget = summary.budget;
   const usage = summary.usage;
+  let turnArtifact = null;
+
+  if (args.emitTurnArtifact) {
+    const artifactSourceFiles = baselineInfo.included.length > 0
+      ? baselineInfo.included
+      : taskScopedFiles;
+    try {
+      turnArtifact = JSON.parse(
+        guard.runContextSummary({
+          workflow: args.workflow,
+          task: args.task,
+          goal: args.goal,
+          files: artifactSourceFiles,
+          maxFiles: args.top,
+          artifactJson: true,
+        }),
+      );
+    } catch (error) {
+      turnArtifact = {
+        schemaVersion: 'turn-artifact/v1',
+        kind: 'turn-artifact-error',
+        generatedAt: new Date().toISOString(),
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+
+    if (args.artifactFile && turnArtifact) {
+      const artifactPath = path.resolve(PROJECT_ROOT, args.artifactFile);
+      fs.mkdirSync(path.dirname(artifactPath), { recursive: true });
+      fs.writeFileSync(artifactPath, `${JSON.stringify(turnArtifact, null, 2)}\n`, 'utf8');
+    }
+  }
 
   // UCUF Pre-Submit Gate（M11）
   const ucufGate = args.skipUcuf
@@ -570,6 +619,7 @@ function main() {
     },
     keepNote: budget.status === 'ok' ? '' : guard.buildKeepNoteLine(budget),
     turnUsage: usage,
+    turnArtifact,
     ucufGate,
     finalLine: `Token 量級：${usage.tier}（估算約 ${usage.totals.estTokens} tokens，非 API 精準值）`,
   };
@@ -594,6 +644,12 @@ function main() {
   guard.printTurnUsageSummary(usage, 'finalize-agent-turn');
   if (result.keepNote) {
     console.log(`[finalize-agent-turn] keep-note=${result.keepNote}`);
+  }
+  if (args.emitTurnArtifact) {
+    const artifactLabel = args.artifactFile
+      ? `written=${args.artifactFile}`
+      : 'embedded in --json output only';
+    console.log(`[finalize-agent-turn] turn-artifact=${artifactLabel}`);
   }
 
   // Print gate result

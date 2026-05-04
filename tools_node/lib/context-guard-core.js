@@ -156,11 +156,13 @@ function runDiffSummary(filePath) {
 
 function runContextSummary(options = {}) {
   const args = [];
+  if (options.workflow) args.push('--workflow', options.workflow);
   if (options.task) args.push('--task', options.task);
   if (options.goal) args.push('--goal', options.goal);
   pushArgs(args, '--files', options.files);
   if (options.changed) args.push('--changed');
   if (options.maxFiles) args.push('--max-files', String(options.maxFiles));
+  if (options.artifactJson) args.push('--artifact-json');
   return runNodeTool('generate-context-summary.js', args);
 }
 
