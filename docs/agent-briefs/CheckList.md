@@ -113,10 +113,9 @@
 
 ### HARN 審核摘要（2026-05-04）
 
-- 全 HARN 任務卡盤點：34 張；done 12 張、open 21 張、in-progress 1 張。
+- 全 HARN 任務卡盤點：34 張；done 13 張、open 21 張、in-progress 0 張。
 - 34 張 HARN 任務卡皆已回寫 `## 審核結果（2026-05-04）`，內容包含審核結論、驗證證據與需修改事項。
-- 已達成鏈：`HARN-ARCH-*`、`HARN-LOG-*`、`HARN-FIX-0001`、`HARN-UI-0001`、`HARN-GOV-0003`、`HARN-ART-0001/0002`。
-- 部分達成：`HARN-DEMO-0003` 為 opener 實寫測試卡；需清理或補實 `HARNESS_EVIDENCE` 內的 scratch artifact / trace 佔位後才能關閉。
+- 已達成鏈：`HARN-ARCH-*`、`HARN-LOG-*`、`HARN-FIX-0001`、`HARN-UI-0001`、`HARN-GOV-0003`、`HARN-ART-0001/0002`、`HARN-DEMO-0003`。
 - 未達成主鏈：`HARN-ART-0003/0004`、`HARN-HDO-*`、`HARN-TRC-*`、`HARN-EVAL-*`、`HARN-MET-*`、`HARN-GOV-0001/0002`、`HARN-PILOT-*` 仍為 open；artifact schema 與 validator CLI 已落地，後續鏈可開始重用這條 gate。
 - 下一個應優先落地的根卡：`HARN-HDO-0001`；現在已有可重用的 artifact schema + validator，可直接建立 handoff diff validator core。Artifact 線仍待 `HARN-ART-0003/0004` 補標準路徑政策。
 
