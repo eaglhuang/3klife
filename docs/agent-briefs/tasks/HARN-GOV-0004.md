@@ -6,13 +6,12 @@ phase: M0
 created: 2026-05-04
 created_by_agent: GitHubCopilot
 owner: Antigravity
-status: open
-type: implementation
-chain_id: HARN-CHAIN-GOV
-chain_step: 4/5
-sensor_triggered_by: harness-engineering-gap-audit
-depends: []
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none"
+status: done
+started_at: "2026-05-04T21:09:00Z"
+started_by_agent: Antigravity
+completed_at: "2026-05-04T21:12:00Z"
+completed_by_agent: Antigravity
+notes: "2026-05-04 | 狀態: done | 驗證: passed | 變更: compute-gate-config.json 新增 dead-code gate，整合 scan-deprecated-refs.js | 阻塞: none"
 ---
 # [HARN-GOV-0004] 整合死碼偵測至 compute-gate 自動化流程
 
@@ -32,13 +31,16 @@ notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: task-card-opener �
 
 ## OUTPUT_CONTRACT
 
-- [ ] 新增 dead-code gate
-- [ ] 整合 scan-deprecated-refs.js 掃描邏輯
-- [ ] compute-gate --gates dead-code 通過且違規數=0
+- [x] 新增 dead-code gate（已寫入 compute-gate-config.json，id: dead-code，priority: 11）
+- [x] 整合 scan-deprecated-refs.js --strict 掃描邏輯
+- [x] compute-gate --gates dead-code 通過且違規數=0
 
 ## HARNESS_EVIDENCE
 
-- handoff diff status：pending
+- compute-gate --gates dead-code：✅ 1/1 通過，0 _deprecated/ 引用
+- compute-gate --profile standard：✅ 7/7 通過（含新 dead-code gate）
+- scan-deprecated-refs.js：✅ 掃描 266 個 .ts 檔案，無任何引用
+- handoff diff status：done
 
 ## VALIDATION_CMD
 

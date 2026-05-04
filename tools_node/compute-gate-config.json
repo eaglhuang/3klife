@@ -92,6 +92,15 @@
       "priority": 10,
       "failAction": "warn",
       "description": "比對人類審核過的預期輸出（Approved Fixtures 模式）"
+    },
+    {
+      "id": "dead-code",
+      "label": "死碼偵測（廢棄模組引用）",
+      "cmd": "node",
+      "args": ["tools_node/scan-deprecated-refs.js", "--strict"],
+      "priority": 11,
+      "failAction": "warn",
+      "description": "確保所有 _deprecated/ 引用已清除；有引用即視為潛在技術債，不阻擋但發出警告"
     }
   ],
   "profiles": {
@@ -101,11 +110,11 @@
     },
     "standard": {
       "description": "標準驗證（任務卡完成時）",
-      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "import-boundary"]
+      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "import-boundary", "dead-code"]
     },
     "full": {
       "description": "完整驗證（階段性交付時）",
-      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "general-data", "skin-contracts", "crossref-integrity", "import-boundary", "approved-fixtures"]
+      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "general-data", "skin-contracts", "crossref-integrity", "import-boundary", "approved-fixtures", "dead-code"]
     }
   },
   "selfCorrection": {
