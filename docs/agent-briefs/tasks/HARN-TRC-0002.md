@@ -6,14 +6,18 @@ phase: Phase2
 created: 2026-05-04
 created_by_agent: GitHubCopilot
 owner: GitHubCopilot
-status: open
+status: done
 type: trace-middleware
 chain_id: HARN-CHAIN-TRACE
 chain_step: 2/4
 sensor_triggered_by: harness-rollout planning
 depends:
   - HARN-TRC-0001
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建立 Node Tool Trace Middleware 任務卡 | 阻塞: depends HARN-TRC-0001"
+started_at: "2026-05-04T22:58:57+08:00"
+started_by_agent: "GitHubCopilot"
+completed_at: "2026-05-04T23:00:24+08:00"
+completed_by_agent: "GitHubCopilot"
+notes: "2026-05-04 | 狀態: done | 驗證: pass | 變更: 新增 execution-trace-middleware.js，context-guard-core.runNodeTool 可透過 EXECUTION_TRACE_JSONL opt-in 寫出 JSONL event；stdout/stderr 僅保存摘要 | 阻塞: none"
 ---
 
 # [HARN-TRC-0002] 建立 Node Tool Trace Middleware
@@ -40,11 +44,31 @@ notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建�
 
 ## OUTPUT_CONTRACT
 
-- [ ] 新增 `tools_node/lib/execution-trace-middleware.js`
-- [ ] middleware 可包裝 Node tool 執行並寫出 JSONL event
-- [ ] event 需包含 `toolName`、`argsHash`、`startedAt`、`endedAt`、`durationMs`、`exitCode`
-- [ ] stdout/stderr 只保留摘要，不保留整段重 payload
-- [ ] middleware 接入 `context-guard-core.js` 的最小掛點，不破壞舊行為
+- [x] 新增 `tools_node/lib/execution-trace-middleware.js`
+- [x] middleware 可包裝 Node tool 執行並寫出 JSONL event
+- [x] event 需包含 `toolName`、`argsHash`、`startedAt`、`endedAt`、`durationMs`、`exitCode`
+- [x] stdout/stderr 只保留摘要，不保留整段重 payload
+- [x] middleware 接入 `context-guard-core.js` 的最小掛點，不破壞舊行為
+
+## 實作結果（2026-05-04）
+
+- 新增 `tools_node/lib/execution-trace-middleware.js`。
+- `context-guard-core.runNodeTool()` 會在 `EXECUTION_TRACE_JSONL` 設定時寫出 `execution-trace/v1` JSONL event；未設定時維持原行為。
+- `argsHash` 採 `sha256:` 穩定 hash，不保存 raw args。
+- `stdoutSummary` / `stderrSummary` 僅保存 bytes / lines / truncated / text 摘要，單段文字上限 1200 chars。
+- workflow / task / run id 可透過 options 或 `EXECUTION_TRACE_WORKFLOW`、`EXECUTION_TRACE_TASK`、`EXECUTION_TRACE_RUN_ID` 注入。
+
+## 驗證結果（2026-05-04）
+
+```bash
+node tools_node/generate-context-summary.js --workflow trace-smoke --task trace-smoke --goal "trace middleware smoke" --files package.json --json
+node tools_node/run-guarded-workflow.js --workflow trace-smoke --task HARN-TRC-0002 --goal "trace middleware smoke" --files package.json --summary-only --allow-warn
+node -e "... validate scratch/harn-trc-0002-smoke.jsonl with tools_node/schemas/execution-trace-event.schema.json ..."
+node tools_node/compute-gate.js --profile quick --agent-feedback --no-stop
+node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/HARN-TRC-0002.md tools_node/lib/execution-trace-middleware.js tools_node/lib/context-guard-core.js
+```
+
+結果：pass；middleware smoke 產出 2 筆 schema-valid JSONL event。
 
 ## VALIDATION_CMD
 
@@ -75,3 +99,9 @@ git checkout tools_node/lib/execution-trace-middleware.js
 - 審核結論：未達成（依賴未滿）
 - 驗證證據：TRC-0001 尚未交付；未見 node tool trace middleware。
 - 需修改：建立 middleware，並避免污染工具 stdout。
+
+## 完成覆核（2026-05-04）
+
+- 覆核結論：已達成。
+- 驗證證據：context summary CLI smoke pass；middleware JSONL schema pass；quick compute gate pass；encoding touched pass。
+- 後續銜接：`HARN-TRC-0003` 可讀取 middleware 輸出的 JSONL event 並聚合成 trace artifact。

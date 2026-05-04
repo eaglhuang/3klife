@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
+const executionTrace = require('./execution-trace-middleware');
 
 const ROOT = process.cwd();
 
@@ -106,11 +107,24 @@ function buildFileSet({ files = [], dirs = [], changed = false, staged = false }
 
 function runNodeTool(scriptName, args = [], options = {}) {
   const scriptPath = path.resolve(ROOT, 'tools_node', scriptName);
+  const startedAt = new Date();
   const result = cp.spawnSync(process.execPath, [scriptPath, ...args], {
     cwd: ROOT,
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
     shell: false,
+  });
+  const endedAt = new Date();
+
+  executionTrace.recordNodeToolEvent({
+    toolName: scriptName,
+    args,
+    startedAt,
+    endedAt,
+    result,
+    tracePath: options.tracePath,
+    workflow: options.workflow,
+    task: options.task,
   });
 
   if (result.error) {
