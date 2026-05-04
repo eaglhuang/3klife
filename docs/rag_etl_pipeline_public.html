@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我怎麼把 RAG / ETL 做成一條真的能落地的資料生產線</title>
+  <meta name="description" content="用比較口語的方式整理我在 3KProject 裡實作 RAG / ETL 管線的方法，說明這條三國知識管線怎麼從原文、抽取、審核一路走到 NPC brain 與 Cocos UI。">
+  <style>
+    :root {
+      --paper: #f6f1e7;
+      --paper-strong: #fbf8f2;
+      --ink: #19242f;
+      --ink-soft: #465464;
+      --line: rgba(25, 36, 47, 0.12);
+      --line-strong: rgba(25, 36, 47, 0.22);
+      --accent: #0d7a73;
+      --accent-strong: #085d58;
+      --accent-warm: #cb7d2e;
+      --rose: #8f425e;
+      --shadow: 0 24px 80px rgba(26, 40, 55, 0.12);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --content-width: 1160px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Aptos", "IBM Plex Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(13, 122, 115, 0.16), transparent 28%),
+        radial-gradient(circle at 80% 12%, rgba(203, 125, 46, 0.14), transparent 26%),
+        linear-gradient(180deg, #f8f4eb 0%, #f2ecdf 48%, #ebe5d8 100%);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.16) 1px, transparent 1px);
+      background-size: 36px 36px;
+      -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.24), transparent 78%);
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.24), transparent 78%);
+      opacity: 0.35;
+    }
+
+    a {
+      color: var(--accent-strong);
+    }
+
+    .page {
+      width: min(calc(100% - 40px), var(--content-width));
+      margin: 0 auto;
+      padding: 40px 0 80px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .main-column {
+      display: grid;
+      gap: 24px;
+    }
+
+    .hero,
+    .panel,
+    .toc {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.72));
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: var(--shadow);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      border-radius: 32px;
+      padding: 36px;
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -120px;
+      top: -120px;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(13, 122, 115, 0.22), transparent 68%);
+      z-index: -1;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent-strong);
+      font-weight: 700;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Iowan Old Style", "Noto Serif TC", "Source Han Serif TC", serif;
+      letter-spacing: 0.01em;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 4vw, 4rem);
+      line-height: 1.06;
+      max-width: 11.5em;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+    }
+
+    .lede {
+      margin: 18px 0 0;
+      max-width: 760px;
+      color: var(--ink-soft);
+      font-size: 1.08rem;
+      line-height: 1.84;
+    }
+
+    .hero-grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid var(--line);
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+      color: var(--accent-strong);
+    }
+
+    .stat-card span {
+      color: var(--ink-soft);
+      line-height: 1.65;
+      display: block;
+    }
+
+    .panel {
+      border-radius: var(--radius-xl);
+      padding: 28px;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.82;
+    }
+
+    .panel p + p,
+    .panel .callout,
+    .panel .split,
+    .panel figure,
+    .panel pre,
+    .panel ul,
+    .panel ol {
+      margin-top: 18px;
+    }
+
+    .callout {
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      border: 1px solid rgba(13, 122, 115, 0.14);
+      background: linear-gradient(135deg, rgba(13, 122, 115, 0.08), rgba(203, 125, 46, 0.08));
+      color: var(--ink);
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .mini-card {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+
+    .mini-card p {
+      margin-top: 8px;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.25rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    .figure-card {
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(250, 247, 242, 0.94));
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .figure-actions {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .figure-actions button {
+      border: 0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font: inherit;
+      font-size: 0.82rem;
+      background: rgba(25, 36, 47, 0.86);
+      color: #fff;
+      cursor: pointer;
+      transition: transform 140ms ease, background 140ms ease;
+    }
+
+    .figure-actions button:hover {
+      transform: translateY(-1px);
+      background: rgba(13, 122, 115, 0.92);
+    }
+
+    .copy-status {
+      position: absolute;
+      left: 20px;
+      bottom: 18px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(25, 36, 47, 0.82);
+      color: #fff;
+      font-size: 0.76rem;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 160ms ease, transform 160ms ease;
+      pointer-events: none;
+    }
+
+    .copy-status.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    figure svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 18px;
+    }
+
+    figcaption {
+      margin-top: 12px;
+      padding-right: 188px;
+      color: var(--ink-soft);
+      font-size: 0.94rem;
+      line-height: 1.7;
+    }
+
+    pre {
+      margin: 0;
+      padding: 18px;
+      border-radius: 18px;
+      background: #16222d;
+      color: #eff7ff;
+      overflow-x: auto;
+      font-family: "Cascadia Code", "JetBrains Mono", monospace;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    code {
+      font-family: "Cascadia Code", "JetBrains Mono", monospace;
+    }
+
+    .quote {
+      border-left: 4px solid var(--accent);
+      padding: 8px 0 8px 16px;
+      color: var(--ink);
+      font-size: 1.08rem;
+    }
+
+    .toc {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      border-radius: 24px;
+      padding: 22px;
+    }
+
+    .toc h2 {
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 1.1rem;
+    }
+
+    .toc a {
+      text-decoration: none;
+      color: var(--ink-soft);
+    }
+
+    .toc a:hover {
+      color: var(--accent-strong);
+    }
+
+    .toc .note {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      padding: 10px 0 20px;
+    }
+
+    @media (max-width: 1080px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: relative;
+        top: auto;
+        order: -1;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .hero,
+      .panel,
+      .toc {
+        padding: 22px;
+        border-radius: 24px;
+      }
+
+      .hero-grid,
+      .split {
+        grid-template-columns: 1fr;
+      }
+
+      .figure-actions {
+        position: static;
+        margin-bottom: 12px;
+      }
+
+      figcaption {
+        padding-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="main-column">
+      <header class="hero">
+        <p class="eyebrow">3KProject Data Pipeline Notes</p>
+        <h1>我怎麼把 RAG / ETL 做成一條真的能落地的資料生產線</h1>
+        <p class="lede">很多人一提到 RAG，腦中想到的還是「向量搜尋 + LLM 回答問題」。但我在 3KProject 裡做的事情，其實更像一條資料製造線：先從原文抽材料，再把人物、關係、事件整理成可以審核、可以重跑、最後還能直接餵給 NPC brain 與 Cocos UI 的資產。</p>
+        <div class="hero-grid">
+          <div class="stat-card">
+            <strong>Grounded</strong>
+            <span>每筆資料都盡量能回到 sourceRef、sourceQuote、chapterNo，不讓答案離開原文證據。</span>
+          </div>
+          <div class="stat-card">
+            <strong>Deterministic</strong>
+            <span>先讓腳本把結構和證據整理好，再讓 LLM 做 reviewer，而不是直接當 author。</span>
+          </div>
+          <div class="stat-card">
+            <strong>Runtime-ready</strong>
+            <span>最後不是停在文件，而是輸出成 runtime profile，供 NPC brain API 與 Cocos UI 直接消費。</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="panel" id="summary">
+        <h2>先講一句最重要的話</h2>
+        <p class="quote">這條管線的目標，不是讓模型直接講答案，而是把原始文本變成一批可追蹤、可回放、可重跑的知識工件。</p>
+        <p>如果用比較白話的方式說，這整套系統不是在做「問 AI 一個三國問題，讓它回答我」。它更像一間小工廠：原料是文言文本，製程是抽取、對齊、審核、修補，最後出貨的是可以進遊戲 runtime 的資料包。</p>
+        <div class="callout">我現在對這條管線的理解很簡單：RAG 負責把資料找對，ETL 負責把資料做穩，review loop 負責把品質補起來，runtime export 才負責把它送進遊戲。</div>
+      </section>
+
+      <section class="panel" id="overview">
+        <h2>整條流程其實長這樣</h2>
+        <p>先不要急著看腳本名稱。先把它想成六個大步驟：原文進來、人物對齊、事件整理、review 分流、修補回圈、最後輸出給遊戲。只要先抓到這條主線，後面那些工具名就不會看起來那麼嚇人。</p>
+
+        <figure class="figure-card" data-figure-name="rag-etl-overview-flow">
+          <div class="figure-actions">
+            <button type="button" data-download-svg>下載 SVG</button>
+            <button type="button" data-download-png>下載 PNG</button>
+          </div>
+          <svg viewBox="0 0 1120 760" role="img" aria-label="RAG ETL 整體流程圖">
+            <style>
+              :scope .g1-bg { fill: #fffaf2; }
+              :scope .g1-title { font: 700 28px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+              :scope .g1-box1 { fill: #16222d; }
+              :scope .g1-box2 { fill: #eaf7f4; stroke: #9bd0ca; stroke-width: 2; }
+              :scope .g1-box3 { fill: #eef5fb; stroke: #a9c4e1; stroke-width: 2; }
+              :scope .g1-box4 { fill: #fbf0e9; stroke: #e1b98f; stroke-width: 2; }
+              :scope .g1-box5 { fill: #f6edf2; stroke: #d9b4c2; stroke-width: 2; }
+              :scope .g1-box6 { fill: #eef6e8; stroke: #a8cf9a; stroke-width: 2; }
+              :scope .g1-head { font: 700 20px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+              :scope .g1-body { font: 500 16px 'Aptos','Microsoft JhengHei',sans-serif; fill: #425161; }
+              :scope .g1-dark { font: 700 22px 'Aptos','Microsoft JhengHei',sans-serif; fill: #ffffff; }
+              :scope .g1-line { stroke: #516477; stroke-width: 3; fill: none; marker-end: url(#g1-arrow); }
+            </style>
+            <defs>
+              <marker id="g1-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#516477"></path>
+              </marker>
+            </defs>
+            <rect class="g1-bg" x="0" y="0" width="1120" height="760" rx="28" ry="28"></rect>
+            <text class="g1-title" x="60" y="70">從原文到遊戲：第三篇文章想講的其實就是這條線</text>
+
+            <rect class="g1-box1" x="90" y="130" width="260" height="110" rx="24" ry="24"></rect>
+            <text class="g1-dark" x="165" y="182">原始文本</text>
+            <text class="g1-body" x="130" y="214" fill="#d8e0e8">章回切分、毛本文言、source refs</text>
+
+            <rect class="g1-box2" x="430" y="130" width="260" height="110" rx="24" ry="24"></rect>
+            <text class="g1-head" x="500" y="180">人物對齊</text>
+            <text class="g1-body" x="470" y="212">alias、mentions、resolution loop</text>
+
+            <rect class="g1-box3" x="770" y="130" width="260" height="110" rx="24" ry="24"></rect>
+            <text class="g1-head" x="840" y="180">事件抽取</text>
+            <text class="g1-body" x="809" y="212">event candidates、relationship evidence</text>
+
+            <rect class="g1-box4" x="90" y="360" width="260" height="110" rx="24" ry="24"></rect>
+            <text class="g1-head" x="145" y="410">review staging</text>
+            <text class="g1-body" x="120" y="442">review choices、context enrich、A/B 分流</text>
+
+            <rect class="g1-box5" x="430" y="360" width="260" height="110" rx="24" ry="24"></rect>
+            <text class="g1-head" x="493" y="410">repair loop</text>
+            <text class="g1-body" x="475" y="442">B backlog → repair tasks → 下一輪修補</text>
+
+            <rect class="g1-box6" x="770" y="360" width="260" height="110" rx="24" ry="24"></rect>
+            <text class="g1-head" x="825" y="410">runtime export</text>
+            <text class="g1-body" x="792" y="442">runtime profiles、NPC brain、Cocos UI</text>
+
+            <path class="g1-line" d="M 350 185 C 390 185, 390 185, 430 185"></path>
+            <path class="g1-line" d="M 690 185 C 730 185, 730 185, 770 185"></path>
+            <path class="g1-line" d="M 900 240 C 900 290, 220 290, 220 360"></path>
+            <path class="g1-line" d="M 350 415 C 390 415, 390 415, 430 415"></path>
+            <path class="g1-line" d="M 690 415 C 730 415, 730 415, 770 415"></path>
+            <path class="g1-line" d="M 560 470 C 560 560, 230 560, 230 470"></path>
+          </svg>
+          <figcaption>圖 1：如果先把這條總流程記住，後面每支腳本其實都只是這六個步驟裡的其中一個工位。</figcaption>
+          <div class="copy-status" aria-live="polite"></div>
+        </figure>
+      </section>
+
+      <section class="panel" id="grounded">
+        <h2>為什麼我一直強調 source-grounded？</h2>
+        <p>因為一旦資料不能回原文，後面的 review 幾乎都會變得很虛。你會知道「模型好像講得通」，但你不知道它到底是從哪裡來的。對遊戲來說，這種資料一旦被寫進 runtime，後面會越修越亂。</p>
+
+        <figure class="figure-card" data-figure-name="rag-etl-grounding-loop">
+          <div class="figure-actions">
+            <button type="button" data-download-svg>下載 SVG</button>
+            <button type="button" data-download-png>下載 PNG</button>
+          </div>
+          <svg viewBox="0 0 1120 700" role="img" aria-label="source grounded 流程圖">
+            <style>
+              :scope .g2-bg { fill: #fffaf2; }
+              :scope .g2-box1 { fill: #eaf7f4; stroke: #9bd0ca; stroke-width: 2; }
+              :scope .g2-box2 { fill: #eef5fb; stroke: #a9c4e1; stroke-width: 2; }
+              :scope .g2-box3 { fill: #fbf0e9; stroke: #e1b98f; stroke-width: 2; }
+              :scope .g2-box4 { fill: #f6edf2; stroke: #d9b4c2; stroke-width: 2; }
+              :scope .g2-head { font: 700 22px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+              :scope .g2-body { font: 500 16px 'Aptos','Microsoft JhengHei',sans-serif; fill: #425161; }
+              :scope .g2-line { stroke: #516477; stroke-width: 3; fill: none; marker-end: url(#g2-arrow); }
+              :scope .g2-title { font: 700 28px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+            </style>
+            <defs>
+              <marker id="g2-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#516477"></path>
+              </marker>
+            </defs>
+            <rect class="g2-bg" x="0" y="0" width="1120" height="700" rx="28" ry="28"></rect>
+            <text class="g2-title" x="60" y="70">source-grounded 的意思不是高深，而是每個結論都能回到證據</text>
+
+            <rect class="g2-box1" x="120" y="150" width="250" height="110" rx="24" ry="24"></rect>
+            <text class="g2-head" x="180" y="200">人物名稱</text>
+            <text class="g2-body" x="157" y="232">正式名、字、別稱、單字 alias</text>
+
+            <rect class="g2-box2" x="450" y="150" width="250" height="110" rx="24" ry="24"></rect>
+            <text class="g2-head" x="505" y="200">mentions index</text>
+            <text class="g2-body" x="476" y="232">找到文本裡真的提到這個人的片段</text>
+
+            <rect class="g2-box3" x="780" y="150" width="250" height="110" rx="24" ry="24"></rect>
+            <text class="g2-head" x="825" y="200">source packet</text>
+            <text class="g2-body" x="812" y="232">sourceRef、sourceQuote、chapterNo</text>
+
+            <rect class="g2-box4" x="450" y="390" width="250" height="110" rx="24" ry="24"></rect>
+            <text class="g2-head" x="503" y="440">review / enrich</text>
+            <text class="g2-body" x="485" y="472">summary、location、relationshipEdges</text>
+
+            <path class="g2-line" d="M 370 205 C 410 205, 410 205, 450 205"></path>
+            <path class="g2-line" d="M 700 205 C 740 205, 740 205, 780 205"></path>
+            <path class="g2-line" d="M 905 260 C 905 320, 575 320, 575 390"></path>
+            <path class="g2-line" d="M 450 445 C 320 445, 320 315, 245 260"></path>
+          </svg>
+          <figcaption>圖 2：資料先回原文，再進 review。這樣 reviewer 和 LLM 才不是在對空氣講話。</figcaption>
+          <div class="copy-status" aria-live="polite"></div>
+        </figure>
+
+        <div class="split">
+          <div class="mini-card">
+            <h3>這層真正解決什麼？</h3>
+            <p>它在解決「同一個人有很多名字」和「一句話到底有沒有真的提到目標人物」這兩個最容易污染後續資料的問題。</p>
+          </div>
+          <div class="mini-card">
+            <h3>為什麼值得先投資？</h3>
+            <p>因為一旦 retrieval key 沒有先標準化，後面的事件、關係、人物 context 都會一起偏掉，最後整條管線都跟著失真。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="etl">
+        <h2>真正最重的，其實是中間這段 ETL</h2>
+        <p>我覺得這份文件最有價值的地方，不是在列很多腳本，而是在提醒我：Extract 只是把材料撈起來，真正花力氣的是 Transform。因為 Transform 要決定哪些資料先進 review、哪些可以進 staging、哪些應該丟進 repair queue。</p>
+
+        <figure class="figure-card" data-figure-name="rag-etl-repair-loop">
+          <div class="figure-actions">
+            <button type="button" data-download-svg>下載 SVG</button>
+            <button type="button" data-download-png>下載 PNG</button>
+          </div>
+          <svg viewBox="0 0 1120 760" role="img" aria-label="review 與 repair loop 圖">
+            <style>
+              :scope .g3-bg { fill: #fffaf2; }
+              :scope .g3-box1 { fill: #eaf7f4; stroke: #9bd0ca; stroke-width: 2; }
+              :scope .g3-box2 { fill: #eef5fb; stroke: #a9c4e1; stroke-width: 2; }
+              :scope .g3-box3 { fill: #fbf0e9; stroke: #e1b98f; stroke-width: 2; }
+              :scope .g3-box4 { fill: #f6edf2; stroke: #d9b4c2; stroke-width: 2; }
+              :scope .g3-box5 { fill: #eef6e8; stroke: #a8cf9a; stroke-width: 2; }
+              :scope .g3-head { font: 700 21px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+              :scope .g3-body { font: 500 16px 'Aptos','Microsoft JhengHei',sans-serif; fill: #425161; }
+              :scope .g3-line { stroke: #516477; stroke-width: 3; fill: none; marker-end: url(#g3-arrow); }
+              :scope .g3-title { font: 700 28px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+            </style>
+            <defs>
+              <marker id="g3-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#516477"></path>
+              </marker>
+            </defs>
+            <rect class="g3-bg" x="0" y="0" width="1120" height="760" rx="28" ry="28"></rect>
+            <text class="g3-title" x="60" y="70">Transform 其實就是一個 review 與 repair 的分流系統</text>
+
+            <rect class="g3-box1" x="110" y="150" width="220" height="100" rx="24" ry="24"></rect>
+            <text class="g3-head" x="150" y="200">event candidates</text>
+            <text class="g3-body" x="147" y="230">先把可能有價值的事件撈出來</text>
+
+            <rect class="g3-box2" x="420" y="150" width="280" height="100" rx="24" ry="24"></rect>
+            <text class="g3-head" x="478" y="200">review choices</text>
+            <text class="g3-body" x="456" y="230">轉成可以人工 / LLM 審核的題目</text>
+
+            <rect class="g3-box3" x="790" y="150" width="220" height="100" rx="24" ry="24"></rect>
+            <text class="g3-head" x="835" y="200">context enrich</text>
+            <text class="g3-body" x="818" y="230">補 summary、location、edges</text>
+
+            <rect class="g3-box4" x="250" y="400" width="260" height="110" rx="24" ry="24"></rect>
+            <text class="g3-head" x="348" y="448">A ready</text>
+            <text class="g3-body" x="311" y="480">通過的先進 staging，準備 export</text>
+
+            <rect class="g3-box5" x="610" y="400" width="260" height="110" rx="24" ry="24"></rect>
+            <text class="g3-head" x="687" y="448">B backlog</text>
+            <text class="g3-body" x="646" y="480">沒過的轉 repair tasks，排進下一輪</text>
+
+            <path class="g3-line" d="M 330 200 C 370 200, 380 200, 420 200"></path>
+            <path class="g3-line" d="M 700 200 C 740 200, 750 200, 790 200"></path>
+            <path class="g3-line" d="M 900 250 C 900 330, 380 330, 380 400"></path>
+            <path class="g3-line" d="M 900 250 C 900 320, 740 320, 740 400"></path>
+            <path class="g3-line" d="M 740 510 C 740 610, 220 610, 220 250"></path>
+          </svg>
+          <figcaption>圖 3：A 題不是結束，B 題也不是失敗。它只是告訴你這批資料下一步該去哪裡。</figcaption>
+          <div class="copy-status" aria-live="polite"></div>
+        </figure>
+
+        <p>我很喜歡這個設計，因為它把 review 從單純的「看過就算」變成一個真正有出口的流程。A 題進 ready，B 題進 repair queue，整體就開始有閉環，而不是每次 review 完又散掉。</p>
+
+        <div class="split">
+          <div class="mini-card">
+            <h3>為什麼 LLM 只當 reviewer？</h3>
+            <p>因為這樣它的不穩定性會被限制在 proposal 和 review 層，不會直接污染 canonical runtime data。</p>
+          </div>
+          <div class="mini-card">
+            <h3>repair queue 有什麼價值？</h3>
+            <p>它把「知道哪裡不好」進一步變成「下一輪要修哪一類問題」，像 fill location、repair relationship edges 這些都能被排程。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="runtime">
+        <h2>最後一段才是把資料送進遊戲</h2>
+        <p>很多資料工程最後卡在 staging，做完看起來很漂亮，但沒有真的送到產品裡。我這條線最實際的一件事，是它最後真的會 export 成 runtime-general-profiles，再透過 NPC brain server 的 API 給 Cocos UI 用。</p>
+
+        <figure class="figure-card" data-figure-name="rag-etl-runtime-flow">
+          <div class="figure-actions">
+            <button type="button" data-download-svg>下載 SVG</button>
+            <button type="button" data-download-png>下載 PNG</button>
+          </div>
+          <svg viewBox="0 0 1120 700" role="img" aria-label="runtime 載入流程圖">
+            <style>
+              :scope .g4-bg { fill: #fffaf2; }
+              :scope .g4-box1 { fill: #eef5fb; stroke: #a9c4e1; stroke-width: 2; }
+              :scope .g4-box2 { fill: #eaf7f4; stroke: #9bd0ca; stroke-width: 2; }
+              :scope .g4-box3 { fill: #fbf0e9; stroke: #e1b98f; stroke-width: 2; }
+              :scope .g4-box4 { fill: #f6edf2; stroke: #d9b4c2; stroke-width: 2; }
+              :scope .g4-head { font: 700 22px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+              :scope .g4-body { font: 500 16px 'Aptos','Microsoft JhengHei',sans-serif; fill: #425161; }
+              :scope .g4-line { stroke: #516477; stroke-width: 3; fill: none; marker-end: url(#g4-arrow); }
+              :scope .g4-title { font: 700 28px 'Aptos','Microsoft JhengHei',sans-serif; fill: #16222d; }
+            </style>
+            <defs>
+              <marker id="g4-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#516477"></path>
+              </marker>
+            </defs>
+            <rect class="g4-bg" x="0" y="0" width="1120" height="700" rx="28" ry="28"></rect>
+            <text class="g4-title" x="60" y="70">最後不是停在 JSON，而是走到 NPC brain 與 Cocos 畫面</text>
+
+            <rect class="g4-box1" x="110" y="160" width="240" height="120" rx="24" ry="24"></rect>
+            <text class="g4-head" x="160" y="212">runtime profiles</text>
+            <text class="g4-body" x="142" y="245">persona、keywords、relationships、storyBeats</text>
+
+            <rect class="g4-box2" x="440" y="160" width="240" height="120" rx="24" ry="24"></rect>
+            <text class="g4-head" x="472" y="212">NPC brain server</text>
+            <text class="g4-body" x="476" y="245">把資料變成可查詢 API</text>
+
+            <rect class="g4-box3" x="770" y="130" width="240" height="80" rx="24" ry="24"></rect>
+            <text class="g4-body" x="816" y="178">/v1/npc/context-options</text>
+
+            <rect class="g4-box3" x="770" y="240" width="240" height="80" rx="24" ry="24"></rect>
+            <text class="g4-body" x="812" y="288">/v1/npc/keyword-options</text>
+
+            <rect class="g4-box3" x="770" y="350" width="240" height="80" rx="24" ry="24"></rect>
+            <text class="g4-body" x="858" y="398">/v1/npc/dialogue</text>
+
+            <rect class="g4-box4" x="440" y="470" width="240" height="110" rx="24" ry="24"></rect>
+            <text class="g4-head" x="484" y="520">Cocos UI</text>
+            <text class="g4-body" x="462" y="552">人物互動、關鍵字選單、對話內容</text>
+
+            <path class="g4-line" d="M 350 220 C 390 220, 400 220, 440 220"></path>
+            <path class="g4-line" d="M 680 220 C 720 220, 730 170, 770 170"></path>
+            <path class="g4-line" d="M 680 220 C 720 220, 730 280, 770 280"></path>
+            <path class="g4-line" d="M 680 220 C 720 220, 730 390, 770 390"></path>
+            <path class="g4-line" d="M 890 430 C 890 500, 680 500, 680 525"></path>
+          </svg>
+          <figcaption>圖 4：對我來說，這條線真正「成形」的標誌，就是它最後不是留在 pipeline 報表，而是真的被 UI 用起來。</figcaption>
+          <div class="copy-status" aria-live="polite"></div>
+        </figure>
+
+        <p>這一步很重要，因為它讓整條知識管線不是停在研究用途，而是變成遊戲 runtime 的 lookup layer。換句話說，它開始有產品價值，而不只是資料整理價值。</p>
+      </section>
+
+      <section class="panel" id="status">
+        <h2>現在做到哪裡？有哪些明顯收穫？</h2>
+        <p>如果只看目前數字，我會把它理解成「骨架已經站起來了，但 repair queue 還很重」。目前已有 20718 筆 resolved mentions、171 筆 ready events、1601 個 source event packets、1766 筆 repair tasks。這代表基礎產線已經跑起來，但把 backlog 消化乾淨還需要更多輪。</p>
+
+        <div class="split">
+          <div class="mini-card">
+            <h3>現在已經做對的事</h3>
+            <p>不再只是向量搜尋加 LLM。資料現在會先回 source、走 review、進 staging，再 export 成 runtime profiles。這已經是正式的知識生產線，而不是聊天機器人。</p>
+          </div>
+          <div class="mini-card">
+            <h3>接下來最該補的地方</h3>
+            <p>真正的關鍵不是再叫更多模型，而是把 repair queue 一筆一筆消化掉，讓 B backlog 真的轉成 A 或可 publish 的資料。</p>
+          </div>
+        </div>
+
+        <div class="callout">我目前對這條線的判斷是：它已經不是概念驗證，而是可以穩定推進覆蓋率的正式 pipeline。下一步重點不在「有沒有方法」，而在「修補速度能不能跟上新增速度」。</div>
+      </section>
+
+      <section class="panel" id="takeaway">
+        <h2>最後的理解方式</h2>
+        <p>如果要我用一句最不拗口的方式總結這篇文章，我會這樣說：<strong>這套系統是在把三國文本從「人看得懂的內容」轉成「遊戲 runtime 用得動的知識資產」。</strong></p>
+        <p>它不是單純的 RAG，也不是單純的 ETL。它是 RAG 負責找對資料，ETL 負責做穩資料，review loop 負責修補資料，runtime export 負責把資料送進產品。</p>
+        <p class="quote">所以這篇第三篇文章真正想傳達的，不是腳本清單，而是一個更實際的觀念：當資料最終要進遊戲時，你需要的不是一個會回答問題的模型，而是一條能穩定製造知識資產的管線。</p>
+      </section>
+
+      <div class="footer">3KProject 技術筆記。圖卡支援下載 SVG 與下載 PNG，較適合外部平台發文。</div>
+    </main>
+
+    <aside class="toc">
+      <h2>文章目錄</h2>
+      <ol>
+        <li><a href="#summary">一句話理解</a></li>
+        <li><a href="#overview">整體流程</a></li>
+        <li><a href="#grounded">source-grounded</a></li>
+        <li><a href="#etl">ETL 與 repair loop</a></li>
+        <li><a href="#runtime">runtime 載入</a></li>
+        <li><a href="#status">現況與缺口</a></li>
+        <li><a href="#takeaway">最後總結</a></li>
+      </ol>
+      <div class="note">
+        使用方式：
+        <br>1. 直接用瀏覽器打開本檔。
+        <br>2. 每張圖卡右上角可直接下載 SVG 或 PNG。
+        <br>3. 流程圖故意畫得比較直白，目的是幫忙快速抓主線。
+        <br>4. 這篇是 3KProject 的資料管線整理，可直接分享。
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    function showStatus(figure, message) {
+      const status = figure.querySelector('.copy-status');
+      if (!status) {
+        return;
+      }
+      status.textContent = message;
+      status.classList.add('is-visible');
+      window.clearTimeout(status._timer);
+      status._timer = window.setTimeout(() => {
+        status.classList.remove('is-visible');
+      }, 1800);
+    }
+
+    function serializeSvg(svg) {
+      const clone = svg.cloneNode(true);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+      return new XMLSerializer().serializeToString(clone);
+    }
+
+    function figureDownloadName(figure, extension) {
+      const name = figure.getAttribute('data-figure-name') || 'figure';
+      return `${name}.${extension}`;
+    }
+
+    function triggerDownload(blob, fileName) {
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = fileName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    }
+
+    async function downloadSvg(button) {
+      const figure = button.closest('figure');
+      const svg = figure.querySelector('svg');
+      try {
+        const svgMarkup = serializeSvg(svg);
+        const blob = new Blob([svgMarkup], { type: 'image/svg+xml;charset=utf-8' });
+        triggerDownload(blob, figureDownloadName(figure, 'svg'));
+        showStatus(figure, '已下載 SVG');
+      } catch (error) {
+        showStatus(figure, '下載 SVG 失敗');
+      }
+    }
+
+    function svgViewBoxSize(svg) {
+      const viewBox = svg.viewBox && svg.viewBox.baseVal;
+      if (viewBox && viewBox.width && viewBox.height) {
+        return { width: viewBox.width, height: viewBox.height };
+      }
+      return {
+        width: Number(svg.getAttribute('width')) || 1200,
+        height: Number(svg.getAttribute('height')) || 800,
+      };
+    }
+
+    async function downloadPng(button) {
+      const figure = button.closest('figure');
+      const svg = figure.querySelector('svg');
+      const svgMarkup = serializeSvg(svg);
+      const blob = new Blob([svgMarkup], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const image = new Image();
+      const { width, height } = svgViewBoxSize(svg);
+
+      try {
+        const pngBlob = await new Promise((resolve, reject) => {
+          image.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = width * 2;
+            canvas.height = height * 2;
+            const context = canvas.getContext('2d');
+            context.fillStyle = '#fffaf2';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((result) => {
+              if (result) {
+                resolve(result);
+              } else {
+                reject(new Error('png blob failed'));
+              }
+            }, 'image/png');
+          };
+          image.onerror = () => reject(new Error('svg load failed'));
+          image.src = url;
+        });
+
+        triggerDownload(pngBlob, figureDownloadName(figure, 'png'));
+        showStatus(figure, '已下載 PNG');
+      } catch (error) {
+        showStatus(figure, '下載 PNG 失敗');
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    document.querySelectorAll('[data-download-svg]').forEach((button) => {
+      button.addEventListener('click', () => downloadSvg(button));
+    });
+
+    document.querySelectorAll('[data-download-png]').forEach((button) => {
+      button.addEventListener('click', () => downloadPng(button));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>當我用 AI Agent 開發遊戲：我如何為自己的專案打造「韁繩系統」</title>
+  <meta name="description" content="從 3KLife 的實作經驗出發，整理我如何為 AI Agent 開發流程建立 Harness Engineering 韁繩系統，降低無聲錯誤並補齊計算型驗證。" />
+  <link rel="canonical" href="https://eaglhuang.github.io/AI-learning-notes/ai_agent_game_dev_harness_system.html" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+      font-size: 17px;
+      line-height: 1.75;
+      color: #1a1a1a;
+      max-width: 780px;
+      margin: 40px auto;
+      padding: 0 24px 80px;
+      background: #fff;
+    }
+    h1 { font-size: 2em; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
+    h2 { font-size: 1.45em; font-weight: 700; margin-top: 2.4em; border-left: 5px solid #0a66c2; padding-left: 14px; }
+    h3 { font-size: 1.15em; font-weight: 700; margin-top: 1.8em; color: #333; }
+    p  { margin: 0.9em 0; }
+    ul, ol { padding-left: 1.6em; margin: 0.8em 0; }
+    li { margin: 0.35em 0; }
+    strong { color: #0a0a0a; }
+    .subtitle {
+      color: #555;
+      font-size: 0.92em;
+      margin-bottom: 2em;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 1em;
+    }
+    blockquote {
+      border-left: 4px solid #0a66c2;
+      margin: 1.4em 0;
+      padding: 10px 18px;
+      background: #f0f6ff;
+      border-radius: 4px;
+      color: #333;
+    }
+    /* ── TABLES ── */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1.4em 0;
+      font-size: 0.93em;
+    }
+    th {
+      background: #0a66c2;
+      color: #fff;
+      padding: 9px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    td {
+      border: 1px solid #dde3ea;
+      padding: 8px 14px;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: #f5f8ff; }
+    /* ── DIAGRAM BOXES ── */
+    .diagram {
+      background: #f7f9fc;
+      border: 1px solid #ccd6e0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 1.4em 0;
+      font-size: 0.95em;
+    }
+    .diagram-title {
+      font-weight: 700;
+      font-size: 1em;
+      color: #0a66c2;
+      margin-bottom: 14px;
+      letter-spacing: 0.02em;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 1.4em 0;
+    }
+    .panel {
+      border: 1px solid #ccd6e0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .panel-header {
+      background: #0a66c2;
+      color: #fff;
+      font-weight: 700;
+      padding: 8px 14px;
+      font-size: 0.92em;
+    }
+    .panel-header.green  { background: #127c3f; }
+    .panel-header.amber  { background: #b45309; }
+    .panel-header.slate  { background: #334155; }
+    .panel-body {
+      padding: 10px 14px;
+      background: #f7f9fc;
+    }
+    .panel-body ul { margin: 0; padding-left: 1.3em; }
+    .panel-body li { margin: 0.25em 0; font-size: 0.91em; }
+    /* ── FLOW LOOP ── */
+    .flow-loop { margin: 1.4em 0; }
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 2px;
+    }
+    .flow-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 36px;
+    }
+    .flow-num {
+      width: 32px; height: 32px;
+      background: #0a66c2;
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.88em;
+      flex-shrink: 0;
+    }
+    .flow-num.red    { background: #dc2626; }
+    .flow-num.green  { background: #127c3f; }
+    .flow-num.amber  { background: #b45309; }
+    .flow-line {
+      width: 2px;
+      background: #ccd6e0;
+      flex: 1;
+      min-height: 16px;
+    }
+    .flow-content {
+      padding-top: 5px;
+      padding-bottom: 16px;
+      font-size: 0.95em;
+    }
+    .flow-content strong { display: block; margin-bottom: 2px; }
+    /* ── GATE STEP ── */
+    .gate-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      background: #f7f9fc;
+      border: 1px solid #dde3ea;
+      border-radius: 6px;
+      margin: 6px 0;
+      font-size: 0.93em;
+    }
+    .gate-badge {
+      background: #0a66c2;
+      color: #fff;
+      padding: 2px 9px;
+      border-radius: 12px;
+      font-size: 0.78em;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .gate-badge.p0 { background: #dc2626; }
+    .gate-badge.p1 { background: #b45309; }
+    .gate-badge.p2 { background: #127c3f; }
+    .gate-badge.p3 { background: #64748b; }
+    code {
+      font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+      font-size: 0.87em;
+      background: #eef2f8;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .score-bar {
+      height: 10px;
+      background: linear-gradient(90deg, #0a66c2, #5badff);
+      border-radius: 5px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .score-30 { width: 50px; }
+    .score-40 { width: 65px; }
+    .score-55 { width: 85px; }
+    .score-80 { width: 130px; }
+    .mt-8 { margin-top: 8px; }
+    .verdict {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.82em;
+      font-weight: 700;
+    }
+    .verdict.ok  { background: #d1fae5; color: #065f46; }
+    .verdict.bad { background: #fee2e2; color: #991b1b; }
+    .verdict.mid { background: #fef3c7; color: #92400e; }
+    hr { border: none; border-top: 1px solid #e5e7eb; margin: 2.5em 0; }
+    .tip-box {
+      background: #fffbe6;
+      border: 1px solid #fcd34d;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 1.4em 0;
+    }
+    .tip-box strong { color: #92400e; }
+    .credit {
+      font-size: 0.82em;
+      color: #888;
+      margin-top: 3em;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 1em;
+    }
+    .top-links {
+      font-size: 0.92em;
+      color: #4b5563;
+      margin: 0 0 1.4em;
+    }
+    .top-links a {
+      color: #0a66c2;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .top-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<h1>當我用 AI Agent 開發遊戲：我如何為自己的專案打造「韁繩系統」</h1>
+
+<p class="subtitle">
+  作者：個人獨立開發者 ｜ 專案：3KLife（三國題材策略遊戲，Cocos Creator 3.8）<br>
+  關鍵字：Harness Engineering、AI Agent、Coding Agent、自動化驗證、小模型友善設計
+</p>
+
+<p class="top-links">
+  <a href="https://eaglhuang.github.io/AI-learning-notes/articles/">返回文章列表</a>
+  ｜
+  <a href="https://eaglhuang.github.io/AI-learning-notes/ai_agent_game_dev_harness_system_en.html">English version</a>
+</p>
+
+<h2>前言：AI Agent 寫出來的程式碼，誰來負責品質？</h2>
+
+<p>
+  過去一年，我幾乎把自己的遊戲開發流程全面轉向 AI Agent 驅動。GitHub Copilot、Claude，還有各種自動化腳本，輪番上陣。效率確實大幅提升——但隨之而來的問題是：<strong>Agent 會犯錯，而且犯的錯都是無聲的。</strong>
+</p>
+<p>
+  它不會跳錯，不會報警，只會安靜地在你的 JSON 裡塞入一個結構錯的欄位，或者把一個模組的 import 悄悄指向它不該碰的地方。等你發現的時候，可能已經是三天後的 code review。
+</p>
+<p>
+  直到我讀到 Martin Fowler 的 <em>Harness Engineering for Coding Agent Users</em>，才意識到這件事有個正式的名字，而且有系統的解法。
+</p>
+<p>
+  本文是我的盤點與反思——我已經做了哪些「韁繩（Harness）」？哪些還缺？以及我打算怎麼補。
+</p>
+
+<hr>
+
+<h2>一、什麼是 Harness？用一句話說清楚</h2>
+
+<p><strong>Harness = AI Agent 中除了模型本身以外的一切。</strong></p>
+<p>分兩種：</p>
+<ul>
+  <li><strong>Inner Harness（內建韁繩）</strong>：Copilot / Claude 自己帶的系統提示詞、程式碼檢索、編排機制。你控制不了。</li>
+  <li><strong>Outer Harness（外部韁繩）</strong>：你自己為專案打造的引導規則、驗證腳本、自我修正迴圈。<strong>這是你唯一能主動設計的部分。</strong></li>
+</ul>
+<p>好的外部韁繩能做到兩件事：</p>
+<ol>
+  <li>提高 Agent <strong>第一次就做對</strong>的機率（事前引導）</li>
+  <li>讓 Agent 在人眼看到之前<strong>自我發現並修正問題</strong>（事後感測）</li>
+</ol>
+
+<hr>
+
+<h2>二、韁繩的兩個維度：時機 × 執行方式</h2>
+
+<h3>維度一：時機（何時介入）</h3>
+
+<div class="two-col">
+  <div class="panel">
+    <div class="panel-header">⬆️ Feedforward（前饋）── 行動之前</div>
+    <div class="panel-body">
+      <ul>
+        <li>系統提示詞</li>
+        <li>Instructions 規則集</li>
+        <li>任務卡契約</li>
+        <li>共識文件</li>
+        <li>Skill 路由</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header green">⬇️ Feedback（回饋）── 行動之後</div>
+    <div class="panel-body">
+      <ul>
+        <li>Linter 報錯</li>
+        <li>型別檢查失敗</li>
+        <li>資料驗證腳本</li>
+        <li>截圖回歸比對</li>
+        <li>模組邊界守衛</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tip-box">
+  <strong>⚠️ 關鍵陷阱：</strong>只有前饋沒有回饋 → Agent 永遠不知道規則有沒有生效。只有回饋沒有前饋 → Agent 不斷重蹈覆轍、浪費 tokens。<strong>兩者缺一不可。</strong>
+</div>
+
+<h3>維度二：執行方式（誰來判斷）</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>執行方式</th>
+      <th>特性</th>
+      <th>典型範例</th>
+      <th>建議使用頻率</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Computational（計算型）</strong></td>
+      <td>確定性、快速、CPU 驅動</td>
+      <td>tsc、ESLint、JSON Schema 驗證</td>
+      <td>每次變更都跑</td>
+    </tr>
+    <tr>
+      <td><strong>Inferential（推論型）</strong></td>
+      <td>非確定性、較慢、GPU/LLM</td>
+      <td>AI Code Review、語意分析</td>
+      <td>選擇性使用</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="tip-box">
+  <strong>核心原則：</strong>能用計算型解決的判斷，絕對不要讓 LLM 去做。計算型快十倍、便宜一百倍、而且結果是確定的。
+</div>
+
+<hr>
+
+<h2>三、三大治理類別</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>可維護性（Maintainability）</th>
+      <th>架構適配性（Architecture Fitness）</th>
+      <th>行為正確性（Behaviour）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>重複碼偵測</td>
+      <td>效能基線測試</td>
+      <td>功能規格驗證</td>
+    </tr>
+    <tr>
+      <td>複雜度分析</td>
+      <td>模組邊界守衛</td>
+      <td>AI 生成測試</td>
+    </tr>
+    <tr>
+      <td>覆蓋率檢查</td>
+      <td>API 品質檢查</td>
+      <td>Approved Fixtures</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>四、盤點：我的專案做了什麼？</h2>
+
+<h3>① Instructions 規則集（10 份）</h3>
+<p>
+  在 <code>.github/instructions/</code> 下維護了 10 份針對不同場景的引導規則，包含 token 預算控制、UI 框架遵守規則、圖片讀取節流等。每份都有 <code>applyTo</code> 路徑過濾，只在相關檔案被編輯時自動載入。
+</p>
+
+<h3>② Skills 定義（29 個）</h3>
+<p>把常見工作流程封裝成可調用的 Skill，例如：</p>
+<ul>
+  <li><strong>cocos-bug-triage</strong>：視覺症狀 + runtime 錯誤的完整偵錯管道</li>
+  <li><strong>context-budget-guard</strong>：自動壓縮過重的上下文</li>
+  <li><strong>ui-vibe-pipeline</strong>：從設計圖到可驗收 UI 的全自動管道</li>
+  <li><strong>encoding-touched-guard</strong>：每次檔案修改後的編碼完整性確認</li>
+</ul>
+<p>Skill 的價值在於：把「人類專家的執行記憶」形式化了，不是靠 Agent 自行推理，而是讀到 Skill 就知道標準作業流程。</p>
+
+<h3>③ 任務卡系統（142 張）</h3>
+<p>每張任務卡包含：</p>
+<ul>
+  <li><code>INPUT_CONTRACT</code>：此任務前提條件</li>
+  <li><code>OUTPUT_CONTRACT</code>：完成後產出物</li>
+  <li><code>VALIDATION_CMD</code>：完成後要跑的驗證指令</li>
+</ul>
+<p>這讓 Agent 不需要「理解整個系統」就能執行局部任務——只需讀卡片、按契約做、跑驗證、通過就完成。</p>
+
+<h3>④ 共識文件（keep.md + 分片索引）</h3>
+<p>所有設計決策都留有記錄，並拆成四個分片按需讀取，避免每次載入全文浪費 tokens。</p>
+
+<div class="diagram">
+  <div class="diagram-title">Pre-flight 標準程序</div>
+  <div class="flow-loop">
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">1</div><div class="flow-line"></div></div>
+      <div class="flow-content"><strong>讀 keep.summary.md</strong>（精簡索引，快速掌握所有已知共識）</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">2</div><div class="flow-line"></div></div>
+      <div class="flow-content"><strong>若需修改共識 → 才讀對應分片全文</strong>（按需載入，不整份讀）</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num green">3</div><div class="flow-line"></div></div>
+      <div class="flow-content"><strong>新決策 → 補回 keep → 同步交叉索引</strong>（確保共識持續更新）</div>
+    </div>
+  </div>
+</div>
+
+<h3>⑤ Context Budget 管控</h3>
+<p>維護了 <code>check-context-budget.js</code>，可在任務中途主動檢查 token 使用量，並在接近上限時觸發壓縮。這個設計很關鍵——LLM 的品質在 context 過滿時會嚴重下降，而大多數人根本不知道自己已撞上這個問題。</p>
+
+<hr>
+
+<h2>五、現有計算型感測器盤點</h2>
+
+<table>
+  <thead>
+    <tr><th>工具</th><th>守護對象</th><th>狀態</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>check-encoding-touched.js</code></td><td>UTF-8 BOM / 亂碼防災</td><td><span class="verdict ok">✅ 有</span></td></tr>
+    <tr><td><code>validate-ui-specs.js</code></td><td>UI 規格結構完整性</td><td><span class="verdict ok">✅ 有</span></td></tr>
+    <tr><td><code>validate-skin-contracts.js</code></td><td>皮膚家族資產契約</td><td><span class="verdict ok">✅ 有</span></td></tr>
+    <tr><td><code>validate-generals-data.js</code></td><td>武將資料 JSON Schema</td><td><span class="verdict ok">✅ 有</span></td></tr>
+    <tr><td><code>validate-bloodline-integrity.js</code></td><td>血脈圖資料一致性</td><td><span class="verdict ok">✅ 有</span></td></tr>
+    <tr><td><code>ucuf-screenshot-regression.js</code></td><td>截圖回歸比對</td><td><span class="verdict ok">✅ 有</span></td></tr>
+    <tr><td>ESLint / TSLint</td><td>編碼規範自動強制</td><td><span class="verdict bad">❌ 無</span></td></tr>
+    <tr><td>自動化單元測試套件</td><td>功能邏輯正確性</td><td><span class="verdict bad">❌ 無</span></td></tr>
+    <tr><td><code>check-import-boundaries.js</code></td><td>模組間交叉耦合防護</td><td><span class="verdict bad">❌ 無</span></td></tr>
+    <tr><td>Approved Fixtures 機制</td><td>行為快照自動比對</td><td><span class="verdict bad">❌ 無</span></td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>六、核心問題：我讓 LLM 做了太多「它不該做的判斷」</h2>
+
+<p>目前的品質保障幾乎完全依賴 Agent 的「推論能力」——讓它去「判斷」這段程式碼對不對。這恰恰是 Harness Engineering 最警告的反模式。</p>
+
+<table>
+  <thead>
+    <tr><th>現狀（依賴 LLM 判斷）</th><th>目標（計算型工具判斷）</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LLM 判斷「這個 import 違反架構嗎？」</td>
+      <td><code>check-import-boundaries.js</code> 用 AST 直接判定</td>
+    </tr>
+    <tr>
+      <td>LLM 判斷「JSON 格式正確嗎？」</td>
+      <td>JSON Schema 驗證腳本</td>
+    </tr>
+    <tr>
+      <td>LLM 判斷「UI 元件尺寸符合規格嗎？」</td>
+      <td><code>validate-ui-specs.js</code> 數值比對</td>
+    </tr>
+    <tr>
+      <td>LLM 判斷「型別是否正確？」</td>
+      <td><code>tsc --noEmit</code> 告訴你哪行有錯</td>
+    </tr>
+    <tr>
+      <td>LLM 判斷「這個功能輸出對嗎？」</td>
+      <td>Approved Fixtures 預設答案比對</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <strong>一句話原則：</strong>把你目前讓 LLM 做的「判斷」，能用腳本做的就用腳本做。LLM 只負責「寫新東西」和「讀懂人話」。
+</blockquote>
+
+<hr>
+
+<h2>七、改進方案：計算型閘門（Compute Gate）架構</h2>
+
+<h3>7.1 整體執行迴圈</h3>
+
+<div class="diagram">
+  <div class="diagram-title">Agent 執行迴圈（改進後）</div>
+  <div class="flow-loop">
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">1</div><div class="flow-line"></div></div>
+      <div class="flow-content">
+        <strong>人類：複雜需求 → 拆解成 Milestone → 拆成原子任務卡</strong>
+        每張卡含 INPUT_CONTRACT / OUTPUT_CONTRACT / VALIDATION_CMD
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">2</div><div class="flow-line"></div></div>
+      <div class="flow-content">
+        <strong>Agent 讀取任務卡</strong>
+        確認前置條件（INPUT_CONTRACT），明確完成定義（OUTPUT_CONTRACT）
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">3</div><div class="flow-line"></div></div>
+      <div class="flow-content">
+        <strong>Agent 執行程式碼修改</strong>
+        只做「寫新東西」，不做「判斷是否正確」
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num amber">4</div><div class="flow-line"></div></div>
+      <div class="flow-content">
+        <strong>計算型閘門（Compute Gate）自動執行</strong>
+        <ol class="mt-8">
+          <li><code>tsc --noEmit</code>：型別與語法檢查</li>
+          <li><code>check-encoding-touched.js</code>：UTF-8 完整性</li>
+          <li><code>validate-*.js</code>：資料 / UI 結構驗證</li>
+          <li><code>check-import-boundaries.js</code>：模組邊界守衛</li>
+        </ol>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num red">✗</div><div class="flow-line"></div></div>
+      <div class="flow-content">
+        <strong>若閘門失敗 → 錯誤訊息直接成為下一輪 Prompt</strong>
+        Agent 根據確定的錯誤訊息修正，最多 3 輪自動迴圈（不靠猜測）
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num green">✓</div><div class="flow-line"></div></div>
+      <div class="flow-content">
+        <strong>若閘門全部通過 → 輸出成果摘要 → 下一張任務卡</strong>
+        人類只需選擇性語意審查，不做例行性核查
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>7.2 模組邊界守衛規則</h3>
+
+<table>
+  <thead>
+    <tr><th>模組</th><th>可以 import</th><th>禁止 import</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>shared/</code></td><td>（無，不可依賴任何業務模組）</td><td>core、ui、battle</td></tr>
+    <tr><td><code>core/</code></td><td>shared/</td><td>ui/、battle/</td></tr>
+    <tr><td><code>ui/</code></td><td>shared/、core/</td><td>battle/</td></tr>
+    <tr><td><code>battle/</code></td><td>shared/、core/</td><td>ui/（單向）</td></tr>
+  </tbody>
+</table>
+
+<p>用 AST 靜態分析每個 <code>.ts</code> 檔的 import 路徑，違規直接報錯。純計算型，不需要 LLM。</p>
+
+<hr>
+
+<h2>八、為什麼這對「小模型」特別友善？</h2>
+
+<p>當計算型工具承擔了所有「判斷」工作，LLM 只需要做最簡單的迴圈：</p>
+
+<div class="diagram">
+  <div class="diagram-title">小模型也能穩定運作的迴圈</div>
+  <div class="flow-loop">
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">1</div><div class="flow-line"></div></div>
+      <div class="flow-content"><strong>讀任務卡</strong>——明確的 INPUT / OUTPUT 契約，不需理解整個系統</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">2</div><div class="flow-line"></div></div>
+      <div class="flow-content"><strong>寫程式碼</strong>——只做「寫新東西」，不做「判斷是否正確」</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">3</div><div class="flow-line"></div></div>
+      <div class="flow-content"><strong>讀錯誤訊息</strong>——計算型工具給出確定性的具體錯誤（不是模糊的推測）</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num green">4</div></div>
+      <div class="flow-content"><strong>修正</strong>——根據具體錯誤定點修正，不靠推理猜測 → 回到步驟 2</div>
+    </div>
+  </div>
+</div>
+
+<p>即使是 1.5B 的小型模型，只要給它「明確的任務卡」＋「確定性的錯誤訊息」，就能穩定完成複雜功能。這不是因為小模型變聰明了，而是因為我們把「判斷」的工作從模型身上移走了。</p>
+
+<hr>
+
+<h2>九、韁繩健康評估與補強路線圖</h2>
+
+<h3>當前狀態</h3>
+
+<table>
+  <thead>
+    <tr><th>類別</th><th>分數</th><th>說明</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Feedforward Guides</td>
+      <td><span class="score-bar score-80"></span> 80%</td>
+      <td>Instructions、Skills、任務卡、共識文件均完整</td>
+    </tr>
+    <tr>
+      <td>Computational Sensors</td>
+      <td><span class="score-bar score-30"></span> 30%</td>
+      <td>資料驗證充分，但缺 Linter、單元測試、邊界守衛</td>
+    </tr>
+    <tr>
+      <td>Behaviour Harness</td>
+      <td><span class="score-bar score-40"></span> 40%</td>
+      <td>截圖回歸配置中，Approved Fixtures 尚未建立</td>
+    </tr>
+    <tr>
+      <td><strong>整體評分</strong></td>
+      <td><span class="score-bar score-55"></span> <strong>~55 / 100</strong></td>
+      <td>前饋強，計算型回饋嚴重不足</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>補強優先順序</h3>
+
+<div class="gate-row"><span class="gate-badge p0">P0</span><strong>tsc --noEmit 整合進 compute-gate</strong>（0.5 天）── 消滅型別錯誤回溯</div>
+<div class="gate-row"><span class="gate-badge p0">P0</span><strong>ESLint 基礎設定</strong>（0.5 天）── 編碼規範從記憶改為工具強制執行</div>
+<div class="gate-row"><span class="gate-badge p1">P1</span><strong>check-import-boundaries.js</strong>（1 天）── 模組交叉耦合自動偵測</div>
+<div class="gate-row"><span class="gate-badge p1">P1</span><strong>compute-gate.js 統一閘門</strong>（1 天）── 自動修正迴圈整合</div>
+<div class="gate-row"><span class="gate-badge p2">P2</span><strong>approved-fixture-check.js</strong>（1.5 天）── 行為驗證自動化</div>
+<div class="gate-row"><span class="gate-badge p3">P3</span><strong>harness-health-report.js</strong>（1 天）── 韁繩覆蓋率可視化儀表板</div>
+
+<hr>
+
+<h2>十、給其他開發者的五條建議</h2>
+
+<ol>
+  <li>
+    <strong>從「前饋」開始，因為它最便宜。</strong><br>
+    Instructions 和 Skill 不需要任何工具，只需要你把「你的經驗」寫成文字。
+  </li>
+  <li>
+    <strong>計算型感測器 > 推論型感測器。</strong><br>
+    每次你讓 LLM 去「判斷某件事對不對」，問問自己：「我能不能寫一個腳本？」答案是肯定的，就去寫腳本。
+  </li>
+  <li>
+    <strong>錯誤訊息就是最好的 Prompt。</strong><br>
+    計算型工具的失敗訊息，直接成為 Agent 下一輪的 prompt。錯誤在哪行、什麼問題，一清二楚，不需要人工轉述。
+  </li>
+  <li>
+    <strong>共識文件是最被低估的前饋工具。</strong><br>
+    把你所有「不想讓 Agent 每次重新發現」的設計決策，全部寫進共識文件。
+  </li>
+  <li>
+    <strong>Greenfield 專案天生有優勢，現在就開始。</strong><br>
+    Legacy 程式碼最需要韁繩，但最難建構。如果你的專案是新開始的，從第一天就讓每個模組有驗證腳本。
+  </li>
+</ol>
+
+<hr>
+
+<h2>結語</h2>
+
+<p>
+  Harness Engineering 的本質，是把你身為開發者的「隱性知識」外顯化、形式化，讓 AI Agent 能夠在沒有你的情況下，也盡量按照你的意圖行事。
+</p>
+<p>
+  我的專案在前饋層已經做得很好——29 個 Skill、10 份 Instructions、142 張任務卡。但計算型回饋感測器嚴重不足，這是今後最需要補強的方向。
+</p>
+
+<blockquote>
+  <strong>一句話行動指南：</strong>把你目前讓 LLM 做的「判斷」，能用腳本做的就用腳本做。LLM 只負責「寫新東西」和「讀懂人話」。
+</blockquote>
+
+<p class="credit">
+  本文基於 Martin Fowler《Harness Engineering for Coding Agent Users》(2026-04-02) 的核心框架，結合個人 Cocos Creator 遊戲專案（3KLife）的實際工程經驗撰寫。
+</p>
+
+</body>
+</html>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building Games with AI Agents: How I Built a Harness System for My Own Project</title>
+  <meta name="description" content="A practical write-up from my 3KLife project on how I built a Harness Engineering system around AI Agents, shifting quality control from model guessing to computational validation." />
+  <link rel="canonical" href="https://eaglhuang.github.io/AI-learning-notes/ai_agent_game_dev_harness_system_en.html" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", sans-serif;
+      font-size: 17px;
+      line-height: 1.75;
+      color: #1a1a1a;
+      max-width: 780px;
+      margin: 40px auto;
+      padding: 0 24px 80px;
+      background: #fff;
+    }
+    h1 { font-size: 2em; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
+    h2 { font-size: 1.45em; font-weight: 700; margin-top: 2.4em; border-left: 5px solid #0a66c2; padding-left: 14px; }
+    h3 { font-size: 1.15em; font-weight: 700; margin-top: 1.8em; color: #333; }
+    p  { margin: 0.9em 0; }
+    ul, ol { padding-left: 1.6em; margin: 0.8em 0; }
+    li { margin: 0.35em 0; }
+    strong { color: #0a0a0a; }
+    .subtitle {
+      color: #555;
+      font-size: 0.92em;
+      margin-bottom: 2em;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 1em;
+    }
+    blockquote {
+      border-left: 4px solid #0a66c2;
+      margin: 1.4em 0;
+      padding: 10px 18px;
+      background: #f0f6ff;
+      border-radius: 4px;
+      color: #333;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1.4em 0;
+      font-size: 0.93em;
+    }
+    th {
+      background: #0a66c2;
+      color: #fff;
+      padding: 9px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    td {
+      border: 1px solid #dde3ea;
+      padding: 8px 14px;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: #f5f8ff; }
+    .diagram {
+      background: #f7f9fc;
+      border: 1px solid #ccd6e0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 1.4em 0;
+      font-size: 0.95em;
+    }
+    .diagram-title {
+      font-weight: 700;
+      font-size: 1em;
+      color: #0a66c2;
+      margin-bottom: 14px;
+      letter-spacing: 0.02em;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 1.4em 0;
+    }
+    .panel {
+      border: 1px solid #ccd6e0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .panel-header {
+      background: #0a66c2;
+      color: #fff;
+      font-weight: 700;
+      padding: 8px 14px;
+      font-size: 0.92em;
+    }
+    .panel-header.green  { background: #127c3f; }
+    .panel-header.amber  { background: #b45309; }
+    .panel-header.slate  { background: #334155; }
+    .panel-body {
+      padding: 10px 14px;
+      background: #f7f9fc;
+    }
+    .panel-body ul { margin: 0; padding-left: 1.3em; }
+    .panel-body li { margin: 0.25em 0; font-size: 0.91em; }
+    .flow-loop { margin: 1.4em 0; }
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 2px;
+    }
+    .flow-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 36px;
+    }
+    .flow-num {
+      width: 32px; height: 32px;
+      background: #0a66c2;
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.88em;
+      flex-shrink: 0;
+    }
+    .flow-num.red    { background: #dc2626; }
+    .flow-num.green  { background: #127c3f; }
+    .flow-num.amber  { background: #b45309; }
+    .flow-line {
+      width: 2px;
+      background: #ccd6e0;
+      flex: 1;
+      min-height: 16px;
+    }
+    .flow-content {
+      padding-top: 5px;
+      padding-bottom: 16px;
+      font-size: 0.95em;
+    }
+    .flow-content strong { display: block; margin-bottom: 2px; }
+    .gate-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      background: #f7f9fc;
+      border: 1px solid #dde3ea;
+      border-radius: 6px;
+      margin: 6px 0;
+      font-size: 0.93em;
+    }
+    .gate-badge {
+      background: #0a66c2;
+      color: #fff;
+      padding: 2px 9px;
+      border-radius: 12px;
+      font-size: 0.78em;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .gate-badge.p0 { background: #dc2626; }
+    .gate-badge.p1 { background: #b45309; }
+    .gate-badge.p2 { background: #127c3f; }
+    .gate-badge.p3 { background: #64748b; }
+    code {
+      font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+      font-size: 0.87em;
+      background: #eef2f8;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .score-bar {
+      height: 10px;
+      background: linear-gradient(90deg, #0a66c2, #5badff);
+      border-radius: 5px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .score-30 { width: 50px; }
+    .score-40 { width: 65px; }
+    .score-55 { width: 85px; }
+    .score-80 { width: 130px; }
+    .mt-8 { margin-top: 8px; }
+    .verdict {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.82em;
+      font-weight: 700;
+    }
+    .verdict.ok  { background: #d1fae5; color: #065f46; }
+    .verdict.bad { background: #fee2e2; color: #991b1b; }
+    .verdict.mid { background: #fef3c7; color: #92400e; }
+    hr { border: none; border-top: 1px solid #e5e7eb; margin: 2.5em 0; }
+    .tip-box {
+      background: #fffbe6;
+      border: 1px solid #fcd34d;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 1.4em 0;
+    }
+    .tip-box strong { color: #92400e; }
+    .credit {
+      font-size: 0.82em;
+      color: #888;
+      margin-top: 3em;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 1em;
+    }
+    .top-links {
+      font-size: 0.92em;
+      color: #4b5563;
+      margin: 0 0 1.4em;
+    }
+    .top-links a {
+      color: #0a66c2;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .top-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Building Games with AI Agents: How I Built a Harness System for My Own Project</h1>
+
+<p class="subtitle">
+  Author: Solo indie developer ｜ Project: 3KLife (Three Kingdoms strategy game, Cocos Creator 3.8)<br>
+  Keywords: Harness Engineering, AI Agent, Coding Agent, automated validation, small-model-friendly design
+</p>
+
+<p class="top-links">
+  <a href="https://eaglhuang.github.io/AI-learning-notes/articles/">Back to archive</a>
+  ｜
+  <a href="https://eaglhuang.github.io/AI-learning-notes/ai_agent_game_dev_harness_system.html">中文版</a>
+</p>
+
+<h2>Introduction: If AI Agents Write the Code, Who Owns Quality?</h2>
+
+<p>
+  Over the past year, I have moved almost my entire game development workflow toward AI Agent-driven execution. GitHub Copilot, Claude, and all kinds of automation scripts now sit directly inside the loop. Efficiency clearly went up, but so did a different problem: <strong>agents make mistakes, and the worst mistakes are silent ones.</strong>
+</p>
+<p>
+  They do not always crash. They do not always warn you. Sometimes they quietly insert a malformed field into JSON, or point an import toward a module it should never touch. By the time you notice, the mistake may already be buried three days deep in code review.
+</p>
+<p>
+  It was only after reading Martin Fowler’s <em>Harness Engineering for Coding Agent Users</em> that I realized this problem had a proper name and, more importantly, a systematic solution.
+</p>
+<p>
+  This article is my own audit and reflection: what harness I have already built, what is still missing, and how I plan to close the gap.
+</p>
+
+<hr>
+
+<h2>1. What Is a Harness? One Sentence Version</h2>
+
+<p><strong>Harness = everything in an AI Agent workflow except the model itself.</strong></p>
+<p>There are two parts:</p>
+<ul>
+  <li><strong>Inner Harness</strong>: the system prompt, code retrieval behavior, and orchestration built into tools like Copilot or Claude. I do not control those directly.</li>
+  <li><strong>Outer Harness</strong>: the guidance rules, validation scripts, and self-correction loops I build for my own project. <strong>This is the part I can actually design.</strong></li>
+</ul>
+<p>A good outer harness does two things:</p>
+<ol>
+  <li>Increase the chance that the agent <strong>gets it right on the first pass</strong> (feedforward guidance)</li>
+  <li>Let the agent <strong>detect and repair issues before a human sees them</strong> (feedback sensing)</li>
+</ol>
+
+<hr>
+
+<h2>2. Two Dimensions of a Harness: Timing × Execution Mode</h2>
+
+<h3>Dimension One: Timing</h3>
+
+<div class="two-col">
+  <div class="panel">
+    <div class="panel-header">⬆️ Feedforward — before action</div>
+    <div class="panel-body">
+      <ul>
+        <li>System prompts</li>
+        <li>Instruction rule sets</li>
+        <li>Task-card contracts</li>
+        <li>Consensus docs</li>
+        <li>Skill routing</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header green">⬇️ Feedback — after action</div>
+    <div class="panel-body">
+      <ul>
+        <li>Linter failures</li>
+        <li>Type-check failures</li>
+        <li>Data validation scripts</li>
+        <li>Screenshot regression comparison</li>
+        <li>Module boundary guards</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tip-box">
+  <strong>⚠️ Key trap:</strong> feedforward without feedback means the agent never learns whether the rule actually worked. Feedback without feedforward means the agent keeps repeating the same mistakes and wasting tokens. <strong>You need both.</strong>
+</div>
+
+<h3>Dimension Two: Execution Mode</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mode</th>
+      <th>Properties</th>
+      <th>Typical examples</th>
+      <th>Suggested frequency</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Computational</strong></td>
+      <td>Deterministic, fast, CPU-driven</td>
+      <td><code>tsc</code>, ESLint, JSON Schema validation</td>
+      <td>Run on every change</td>
+    </tr>
+    <tr>
+      <td><strong>Inferential</strong></td>
+      <td>Non-deterministic, slower, GPU or LLM-driven</td>
+      <td>AI code review, semantic analysis</td>
+      <td>Use selectively</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="tip-box">
+  <strong>Core rule:</strong> if a judgment can be solved computationally, do not ask the LLM to do it. Computational checks are faster, cheaper, and deterministic.
+</div>
+
+<hr>
+
+<h2>3. The Three Governance Buckets</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Maintainability</th>
+      <th>Architecture Fitness</th>
+      <th>Behaviour</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Duplicate-code detection</td>
+      <td>Performance baseline testing</td>
+      <td>Functional spec validation</td>
+    </tr>
+    <tr>
+      <td>Complexity analysis</td>
+      <td>Module boundary guards</td>
+      <td>AI-generated testing</td>
+    </tr>
+    <tr>
+      <td>Coverage checks</td>
+      <td>API quality checks</td>
+      <td>Approved fixtures</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>4. Inventory: What My Project Already Has</h2>
+
+<h3>① Instruction rule sets (10 files)</h3>
+<p>
+  Under <code>.github/instructions/</code>, I maintain ten guidance files for different situations, including token budget control, UI framework compliance, and image-reading throttling. Each one uses an <code>applyTo</code> path filter so it only loads when relevant files are being edited.
+</p>
+
+<h3>② Skills (29 workflows)</h3>
+<p>I package repeated work into callable skills, for example:</p>
+<ul>
+  <li><strong>cocos-bug-triage</strong>: a full debugging pipeline for visual symptoms plus runtime errors</li>
+  <li><strong>context-budget-guard</strong>: automatic compression when context gets too heavy</li>
+  <li><strong>ui-vibe-pipeline</strong>: an end-to-end pipeline from design reference to reviewable UI</li>
+  <li><strong>encoding-touched-guard</strong>: encoding integrity checks after every file edit</li>
+</ul>
+<p>The value of a skill is that it formalizes expert execution memory. The agent does not have to improvise the workflow. It reads the skill and knows the operating procedure.</p>
+
+<h3>③ Task-card system (142 cards)</h3>
+<p>Each task card contains:</p>
+<ul>
+  <li><code>INPUT_CONTRACT</code>: the preconditions for the task</li>
+  <li><code>OUTPUT_CONTRACT</code>: the required deliverable after completion</li>
+  <li><code>VALIDATION_CMD</code>: the command that must pass afterward</li>
+</ul>
+<p>This means the agent does not need to “understand the whole system” before it can move. It reads the card, follows the contract, runs validation, and finishes the local unit of work.</p>
+
+<h3>④ Consensus docs (<code>keep.md</code> plus shard indexes)</h3>
+<p>Every design decision is documented, then split into smaller shards that are loaded on demand so I do not waste tokens pulling in the whole thing every time.</p>
+
+<div class="diagram">
+  <div class="diagram-title">Pre-flight standard procedure</div>
+  <div class="flow-loop">
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">1</div><div class="flow-line"></div></div>
+      <div class="flow-content"><strong>Read <code>keep.summary.md</code></strong> — a compact index that captures the current shared consensus</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">2</div><div class="flow-line"></div></div>
+      <div class="flow-content"><strong>Only read full shards if a consensus change is needed</strong> — load on demand, not all at once</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num green">3</div><div class="flow-line"></div></div>
+      <div class="flow-content"><strong>New decision → write it back into keep → sync cross references</strong> so the shared knowledge stays current</div>
+    </div>
+  </div>
+</div>
+
+<h3>⑤ Context budget control</h3>
+<p>I maintain <code>check-context-budget.js</code> so the workflow can actively inspect token usage mid-task and compress when it gets close to the limit. That design is crucial. LLM quality drops hard when context is overloaded, and most people do not even realize they have hit that wall.</p>
+
+<hr>
+
+<h2>5. Current Computational Sensor Inventory</h2>
+
+<table>
+  <thead>
+    <tr><th>Tool</th><th>What it protects</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>check-encoding-touched.js</code></td><td>UTF-8 BOM and mojibake prevention</td><td><span class="verdict ok">✅ Present</span></td></tr>
+    <tr><td><code>validate-ui-specs.js</code></td><td>UI spec structural integrity</td><td><span class="verdict ok">✅ Present</span></td></tr>
+    <tr><td><code>validate-skin-contracts.js</code></td><td>Skin-family asset contracts</td><td><span class="verdict ok">✅ Present</span></td></tr>
+    <tr><td><code>validate-generals-data.js</code></td><td>General-data JSON schema</td><td><span class="verdict ok">✅ Present</span></td></tr>
+    <tr><td><code>validate-bloodline-integrity.js</code></td><td>Bloodline graph consistency</td><td><span class="verdict ok">✅ Present</span></td></tr>
+    <tr><td><code>ucuf-screenshot-regression.js</code></td><td>Screenshot regression comparison</td><td><span class="verdict ok">✅ Present</span></td></tr>
+    <tr><td>ESLint / TSLint</td><td>Automatic enforcement of coding rules</td><td><span class="verdict bad">❌ Missing</span></td></tr>
+    <tr><td>Automated unit-test suite</td><td>Functional correctness</td><td><span class="verdict bad">❌ Missing</span></td></tr>
+    <tr><td><code>check-import-boundaries.js</code></td><td>Cross-module coupling protection</td><td><span class="verdict bad">❌ Missing</span></td></tr>
+    <tr><td>Approved fixtures</td><td>Automatic behaviour snapshot comparison</td><td><span class="verdict bad">❌ Missing</span></td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>6. The Core Problem: I Let the LLM Make Too Many Judgments It Should Not Make</h2>
+
+<p>Right now, too much of my quality control still depends on the agent’s inferential ability — asking it to “decide” whether something is correct. That is exactly the anti-pattern Harness Engineering warns about.</p>
+
+<table>
+  <thead>
+    <tr><th>Current state (LLM judgment)</th><th>Target state (computational judgment)</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LLM decides whether an import violates architecture</td>
+      <td><code>check-import-boundaries.js</code> decides through AST analysis</td>
+    </tr>
+    <tr>
+      <td>LLM decides whether JSON is structurally valid</td>
+      <td>JSON Schema validation scripts</td>
+    </tr>
+    <tr>
+      <td>LLM decides whether UI component sizes match the spec</td>
+      <td><code>validate-ui-specs.js</code> performs numeric comparison</td>
+    </tr>
+    <tr>
+      <td>LLM decides whether types are correct</td>
+      <td><code>tsc --noEmit</code> points to the exact line that fails</td>
+    </tr>
+    <tr>
+      <td>LLM decides whether output is correct</td>
+      <td>Approved fixtures compare against baseline outputs</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <strong>One-sentence rule:</strong> if you are currently asking the LLM to make a judgment, and a script can make that judgment instead, write the script. Let the LLM handle new output and human-language understanding.
+</blockquote>
+
+<hr>
+
+<h2>7. Improvement Plan: A Compute Gate Architecture</h2>
+
+<h3>7.1 The full execution loop</h3>
+
+<div class="diagram">
+  <div class="diagram-title">Agent execution loop after improvement</div>
+  <div class="flow-loop">
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">1</div><div class="flow-line"></div></div>
+      <div class="flow-content">
+        <strong>Human: complex request → milestone breakdown → atomic task cards</strong>
+        Each card contains INPUT_CONTRACT, OUTPUT_CONTRACT, and VALIDATION_CMD.
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">2</div><div class="flow-line"></div></div>
+      <div class="flow-content">
+        <strong>Agent reads the task card</strong>
+        It verifies preconditions (INPUT_CONTRACT) and the completion target (OUTPUT_CONTRACT).
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">3</div><div class="flow-line"></div></div>
+      <div class="flow-content">
+        <strong>Agent edits code</strong>
+        It only does the “write new things” part, not the “decide whether this is correct” part.
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num amber">4</div><div class="flow-line"></div></div>
+      <div class="flow-content">
+        <strong>Compute Gate runs automatically</strong>
+        <ol class="mt-8">
+          <li><code>tsc --noEmit</code>: syntax and type validation</li>
+          <li><code>check-encoding-touched.js</code>: UTF-8 integrity</li>
+          <li><code>validate-*.js</code>: data and UI structural validation</li>
+          <li><code>check-import-boundaries.js</code>: module-boundary enforcement</li>
+        </ol>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num red">✗</div><div class="flow-line"></div></div>
+      <div class="flow-content">
+        <strong>If the gate fails → the failure message becomes the next prompt</strong>
+        The agent repairs against a deterministic error signal, with at most three loops and no blind guessing.
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num green">✓</div><div class="flow-line"></div></div>
+      <div class="flow-content">
+        <strong>If the gate passes → output summary → next task card</strong>
+        Humans only need selective semantic review, not repetitive routine checking.
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>7.2 Module-boundary rules</h3>
+
+<table>
+  <thead>
+    <tr><th>Module</th><th>Allowed imports</th><th>Forbidden imports</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>shared/</code></td><td>None — it should not depend on any business module</td><td>core, ui, battle</td></tr>
+    <tr><td><code>core/</code></td><td>shared/</td><td>ui/, battle/</td></tr>
+    <tr><td><code>ui/</code></td><td>shared/, core/</td><td>battle/</td></tr>
+    <tr><td><code>battle/</code></td><td>shared/, core/</td><td>ui/ (one-way forbidden)</td></tr>
+  </tbody>
+</table>
+
+<p>AST-based static analysis can inspect each <code>.ts</code> import path and fail on violations directly. It is fully computational. No LLM is needed.</p>
+
+<hr>
+
+<h2>8. Why Is This Especially Friendly to Small Models?</h2>
+
+<p>Once computational tools take over all the judgment work, the LLM only needs to run a very simple loop:</p>
+
+<div class="diagram">
+  <div class="diagram-title">A loop that even a small model can run stably</div>
+  <div class="flow-loop">
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">1</div><div class="flow-line"></div></div>
+      <div class="flow-content"><strong>Read the task card</strong> — clear INPUT and OUTPUT contracts, no need to understand the whole system</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">2</div><div class="flow-line"></div></div>
+      <div class="flow-content"><strong>Write code</strong> — only do the “create new output” step, not the “judge correctness” step</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num">3</div><div class="flow-line"></div></div>
+      <div class="flow-content"><strong>Read the error message</strong> — computational tools give deterministic, concrete failures instead of vague guesses</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-arrow"><div class="flow-num green">4</div></div>
+      <div class="flow-content"><strong>Repair</strong> — apply a local fix against a concrete error, then go back to step 2</div>
+    </div>
+  </div>
+</div>
+
+<p>Even a 1.5B small model can finish complex work reliably if I give it a clear task card and deterministic error messages. The point is not that the model became smarter. The point is that I moved the judgment burden away from the model.</p>
+
+<hr>
+
+<h2>9. Harness Health Score and Reinforcement Roadmap</h2>
+
+<h3>Current state</h3>
+
+<table>
+  <thead>
+    <tr><th>Category</th><th>Score</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Feedforward Guides</td>
+      <td><span class="score-bar score-80"></span> 80%</td>
+      <td>Instructions, skills, task cards, and consensus docs are already solid</td>
+    </tr>
+    <tr>
+      <td>Computational Sensors</td>
+      <td><span class="score-bar score-30"></span> 30%</td>
+      <td>Data validation is good, but linting, unit tests, and boundary guards are still missing</td>
+    </tr>
+    <tr>
+      <td>Behaviour Harness</td>
+      <td><span class="score-bar score-40"></span> 40%</td>
+      <td>Screenshot regression is in place, but approved fixtures are not yet built</td>
+    </tr>
+    <tr>
+      <td><strong>Overall</strong></td>
+      <td><span class="score-bar score-55"></span> <strong>~55 / 100</strong></td>
+      <td>Strong feedforward, but a serious shortage of computational feedback</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Reinforcement priority</h3>
+
+<div class="gate-row"><span class="gate-badge p0">P0</span><strong>Integrate <code>tsc --noEmit</code> into compute-gate</strong> (0.5 day) — eliminate type-error backtracking</div>
+<div class="gate-row"><span class="gate-badge p0">P0</span><strong>Basic ESLint setup</strong> (0.5 day) — turn coding rules from memory into enforced tooling</div>
+<div class="gate-row"><span class="gate-badge p1">P1</span><strong><code>check-import-boundaries.js</code></strong> (1 day) — automatic detection of cross-module coupling</div>
+<div class="gate-row"><span class="gate-badge p1">P1</span><strong><code>compute-gate.js</code> unified gate</strong> (1 day) — integrate the auto-repair loop</div>
+<div class="gate-row"><span class="gate-badge p2">P2</span><strong><code>approved-fixture-check.js</code></strong> (1.5 days) — automate behaviour validation</div>
+<div class="gate-row"><span class="gate-badge p3">P3</span><strong><code>harness-health-report.js</code></strong> (1 day) — visualize harness coverage as a dashboard</div>
+
+<hr>
+
+<h2>10. Five Suggestions for Other Developers</h2>
+
+<ol>
+  <li>
+    <strong>Start with feedforward, because it is the cheapest.</strong><br>
+    Instructions and skills do not need complicated tooling. They just need you to write down your experience.
+  </li>
+  <li>
+    <strong>Computational sensors beat inferential sensors.</strong><br>
+    Every time you ask the LLM to judge whether something is correct, ask yourself instead: can I write a script for this? If the answer is yes, write the script.
+  </li>
+  <li>
+    <strong>Error messages are the best prompts.</strong><br>
+    A computational tool’s failure output can be used directly as the agent’s next prompt. The location and nature of the failure are already explicit, so no human translation is needed.
+  </li>
+  <li>
+    <strong>Consensus docs are the most underrated feedforward tool.</strong><br>
+    Every design decision you do not want the agent to rediscover on every turn should be written into your consensus docs.
+  </li>
+  <li>
+    <strong>Greenfield projects have a natural advantage, so start now.</strong><br>
+    Legacy code needs harness the most but is the hardest place to build it. If your project is new, make validation scripts part of every module from day one.
+  </li>
+</ol>
+
+<hr>
+
+<h2>Conclusion</h2>
+
+<p>
+  The essence of Harness Engineering is turning a developer’s tacit knowledge into explicit, formalized structure, so an AI Agent can keep acting in line with your intent even when you are not directly supervising it.
+</p>
+<p>
+  My project is already strong on the feedforward side — 29 skills, 10 instruction files, and 142 task cards. But computational feedback sensors are still far too weak. That is the main direction I need to strengthen next.
+</p>
+
+<blockquote>
+  <strong>One-sentence action guide:</strong> if the LLM is currently making a judgment and a script could make that judgment instead, write the script. Let the LLM handle new output and human-language understanding.
+</blockquote>
+
+<p class="credit">
+  This article is based on the core framework from Martin Fowler’s <em>Harness Engineering for Coding Agent Users</em> (2026-04-02), combined with practical engineering lessons from my own Cocos Creator game project, 3KLife.
+</p>
+
+</body>
+</html>
