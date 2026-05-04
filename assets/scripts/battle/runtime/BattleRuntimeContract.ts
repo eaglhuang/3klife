@@ -1,4 +1,4 @@
-export type BattleResult = "player-win" | "enemy-win" | "draw" | "ongoing";
+export type { BattleResult } from '../BattleTypes';
 
 export type BattleRuntimePhaseName =
   | 'player-auto-move'

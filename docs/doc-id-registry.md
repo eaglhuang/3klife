@@ -553,6 +553,7 @@
 | `doc_task_0220` | docs/tasks/dc-datacenter-tasks.md | 資料中心實作任務 (DC 系列) |
 | `doc_task_0221` | docs/tasks/prog-opening-flow-tasks.md | 新手開場程式規格書 — 可執行任務單總覽 |
 | `doc_task_0222` | docs/tasks/simulate-data-growth-report.md | simulate-data-growth 模擬報告 |
+| `doc_task_0223` | docs/agent-briefs/tasks/PROG-1-0018.md | PROG-1-0018: BattleResult 去重 + FRONT_DEPTH 去重（PROG-1-0017 遺留修補）|
 
 ## AI Agent 專用 (`doc_ai`)
 

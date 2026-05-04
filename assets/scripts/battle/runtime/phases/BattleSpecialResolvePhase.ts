@@ -1,4 +1,5 @@
 import { EVENT_NAMES, Faction, GAME_CONFIG, TroopType } from '../../../core/config/Constants';
+import { BATTLE_FRONT_DEPTH } from '../../BattleTypes';
 import { services } from '../../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../../core/models/TroopUnit';
 import type { BattleState } from '../../models/BattleState';
@@ -10,10 +11,6 @@ const FORWARD_DIR: Record<Faction, number> = {
   [Faction.Enemy]: -1,
 };
 
-const FRONT_DEPTH: Record<Faction, number> = {
-  [Faction.Player]: GAME_CONFIG.GRID_DEPTH - 1,
-  [Faction.Enemy]: 0,
-};
 
 export interface BattleSpecialResolvePhaseContext {
   readonly state: BattleState;
@@ -86,7 +83,7 @@ function resolveMedic(medic: TroopUnit, state: BattleState, svc: ReturnType<type
 }
 
 function resolveEngineer(engineer: TroopUnit, state: BattleState, svc: ReturnType<typeof services>): void {
-  if (engineer.depth !== FRONT_DEPTH[engineer.faction]) return;
+  if (engineer.depth !== BATTLE_FRONT_DEPTH[engineer.faction]) return;
 
   const FORTRESS_DMG = 30;
   if (engineer.faction === Faction.Player) {

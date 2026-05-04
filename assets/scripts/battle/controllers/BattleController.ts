@@ -42,7 +42,6 @@ import {
   type SkillExecutionResult,
 } from '../../shared/SkillRuntimeContract';
 
-export type BattleResult = RuntimeBattleResult;
 /** [P2-N3] 部署失敗原因：food = 糧草不足（原 dp） */
 export type DeployFailReason = "food" | "occupied" | "limit" | "battle-locked";
 

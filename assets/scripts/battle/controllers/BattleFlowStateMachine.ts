@@ -1,6 +1,4 @@
-import type { BattleResult as RuntimeBattleResult } from '../runtime/BattleRuntimeContract';
-
-type BattleResult = RuntimeBattleResult;
+import type { BattleResult } from '../BattleTypes';
 
 export enum BattleFlowState {
   Idle = 'idle',

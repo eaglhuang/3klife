@@ -1099,6 +1099,38 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-1-0018",
+      "priority": "P1",
+      "phase": "P",
+      "owner": "ClaudeCode_claude-sonnet-4-6",
+      "status": "done",
+      "created": "2026-05-04",
+      "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "type": "bugfix",
+      "title": "BattleResult 去重 + FRONT_DEPTH 去重（PROG-1-0017 遺留）",
+      "description": "修補 PROG-1-0017 驗收審查發現的 2 項遺留問題：BattleResult 型別從 4 個定義收斂到 BattleTypes.ts 唯一來源；BattleSpecialResolvePhase.ts 的本地 FRONT_DEPTH 改引用 BattleTypes.ts 的 BATTLE_FRONT_DEPTH。",
+      "related": [
+        "PROG-1-0017"
+      ],
+      "depends": [],
+      "acceptance": [
+        "grep BattleResult 定義只剩 BattleTypes.ts 一行",
+        "grep FRONT_DEPTH 本地定義 0 行",
+        "compute-gate standard 6/6 pass"
+      ],
+      "deliverables": [
+        "assets/scripts/battle/runtime/BattleRuntimeContract.ts",
+        "assets/scripts/battle/controllers/BattleController.ts",
+        "assets/scripts/battle/controllers/BattleFlowStateMachine.ts",
+        "assets/scripts/battle/runtime/phases/BattleSpecialResolvePhase.ts"
+      ],
+      "notes": "2026-05-04 | 狀態: done | 驗證: pass | 變更: BattleRuntimeContract.ts 改為 re-export BattleResult from BattleTypes; BattleController.ts 移除 re-export 別名; BattleFlowStateMachine.ts 直接 import from BattleTypes; BattleSpecialResolvePhase.ts 移除本地 FRONT_DEPTH 改用 BATTLE_FRONT_DEPTH; BattleResult 定義收斂至 BattleTypes.ts 唯一來源; FRONT_DEPTH 本地定義 0 行; compute-gate 6/6 | 阻塞: none",
+      "started_at": "2026-05-04T17:30:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "completed_at": "2026-05-04T18:00:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-sonnet-4-6"
     }
   ]
 }
