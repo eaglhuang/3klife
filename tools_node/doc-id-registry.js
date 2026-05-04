@@ -466,6 +466,8 @@ function assignFile(filePath) {
   for (const [id, entry] of Object.entries(registry)) {
     if (entry.path === relPath) {
       console.log(`Already registered: ${relPath} → ${id}`);
+      const syncResult = injectDocId(absPath, id, false);
+      console.log(`   Sync:     ${syncResult}`);
       return id;
     }
   }
@@ -507,16 +509,43 @@ function assignFile(filePath) {
 // ──────────────────────────────────────────────
 function injectDocId(fullPath, docId, dryRun) {
   const content = fs.readFileSync(fullPath, 'utf8');
-  if (/<!--\s*doc_id:\s*\S/.test(content) || /\bdoc_id:\s*\S/m.test(content)) {
-    return 'skipped (already has doc_id)';
-  }
 
   const hasFm  = content.startsWith('---\n') || content.startsWith('---\r\n');
   const eol    = content.includes('\r\n') ? '\r\n' : '\n';
   let newContent;
 
-  if (hasFm) {
-    newContent = content.replace(/^---[\r\n]/, `---${eol}doc_id: ${docId}${eol}`);
+  if (/<!--\s*doc_id:\s*\S+\s*-->/.test(content)) {
+    const current = content.match(/<!--\s*doc_id:\s*(\S+)\s*-->/);
+    if (current && current[1] === docId) {
+      return 'kept (HTML comment already matches)';
+    }
+    newContent = content.replace(/<!--\s*doc_id:\s*\S+\s*-->/, `<!-- doc_id: ${docId} -->`);
+  } else if (hasFm) {
+    const lines = content.split(eol);
+    const frontmatterEndIndex = lines.findIndex((line, index) => index > 0 && line.trim() === '---');
+    let replaced = false;
+
+    for (let index = 1; index < (frontmatterEndIndex === -1 ? lines.length : frontmatterEndIndex); index += 1) {
+      if (/^doc_id:\s*/.test(lines[index])) {
+        if (lines[index].trim() === `doc_id: ${docId}`) {
+          return 'kept (YAML already matches)';
+        }
+        lines[index] = `doc_id: ${docId}`;
+        replaced = true;
+        break;
+      }
+    }
+
+    if (!replaced) {
+      lines.splice(1, 0, `doc_id: ${docId}`);
+    }
+    newContent = lines.join(eol);
+  } else if (/\bdoc_id:\s*\S/m.test(content)) {
+    const current = content.match(/\bdoc_id:\s*(\S+)/m);
+    if (current && current[1] === docId) {
+      return 'kept (doc_id already matches)';
+    }
+    newContent = content.replace(/\bdoc_id:\s*\S+/m, `doc_id: ${docId}`);
   } else {
     newContent = `<!-- doc_id: ${docId} -->\n${content}`;
   }
