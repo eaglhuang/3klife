@@ -65,11 +65,11 @@ Plan5 接在 `docs/html_skill_plan4.md` 之後，專門處理「HTML source 到 
 | `PROG-2-0002` | **done** | 舊規則與衝突流程審計 | 產出 `docs/html-to-ucuf-plan5-stale-rule-audit.md`；7 項盤點，無未分類 blocker |
 | `PROG-2-0003` | **done** | final gate 診斷契約 | low-score blocker 已落地；下一步需把 `nextFixes` 從 H2U-P5-003 自身升級為 source DOM / UCUF slot / runtime owner 對應 |
 | `PROG-2-0004` | open | CSS semantics extraction parity | selector/background/layout capability matrix；優先補 banner title-block chip wrapper、padding/border/radius 與 pseudo/dynamic DOM capability |
-| `PROG-2-0005` | **in-progress** | runtime renderer parity closure | repeating-gradient + logger blocker slice 已落地；fresh final compare `adjustedScore=0.6206` 仍 fail；下一刀聚焦 title-block chip/glow、radial/filter/shadow parity |
+| `PROG-2-0005` | **in-progress** | runtime renderer parity closure | repeating-gradient + logger blocker slice 已落地；本輪已把 gradient capability 邊界重新拆回 `linear/repeating-linear supported`、`radial blocker`，r5 workflow 已讓 `banner-bg-fill` 回到 bake-manifest 真相 |
 | `PROG-2-0006` | open | generated spec authority hardening | raw/final/synced/runtime hash 與 update-mode/tab replay 防回退；formal summary 必須使用 full-size formal capture inputs，legacy product preview target 只能 diagnostic |
 | `PROG-2-0007` | open | 95% regression matrix | 至少三個 source package 的 browser + Cocos final gate summary |
 | `PROG-2-0008` | **done** | skill workflow rewrite | `rule-registry.json` 落地、registry-driven rule-guard、SKILL.md 改以 Plan5 為 current spec |
-| `PROG-2-0009` | **in-progress** | final diff owner mapper / residual taxonomy hardening | Slice #1 已落地 `runtime-renderer` owner bucket、`nextFixes` 與 compact residual summary；selector / UCUF slot trace 仍 pending |
+| `PROG-2-0009` | **in-progress** | final diff owner mapper / residual taxonomy hardening | Slice #3 已把 trace matching 收緊並補 self-test；fresh `final-gate-tight` 證明 top residual 目前不是 bake-manifest-backed blur 區，下一步必須補 non-bake trace，而不是再放寬 matching |
 
 ## 執行順序
 
@@ -186,15 +186,15 @@ Plan5 接在 `docs/html_skill_plan4.md` 之後，專門處理「HTML source 到 
 | 差異來源 | 觀察 | 主要處理卡 |
 |---|---|---|
 | D1 generated DOM structure loss | 原 HTML 的 `banner-event-chip` / `banner-guarantee-chip` 是帶背景、border、padding、radius 的 chip wrapper；目前 generated layout 多數落成 plain label，視覺重量與邊界都消失 | `PROG-2-0004`，協作 `PROG-2-0005` |
-| D2 runtime renderer parity gap | repeating-gradient 已修，但 radial background、multi-layer text-shadow glow、box-shadow、filter、backdrop-filter 與 CSS 仍不等價 | `PROG-2-0005` |
+| D2 runtime renderer parity gap | repeating-gradient 已修，且單層 linear/radial/repeating gradient classifier 已對齊 runtime；剩餘主戰場收斂到 multi-layer text-shadow glow、box-shadow、filter、backdrop-filter 與 title-block 熱區 | `PROG-2-0005` |
 | D3 stacking / overflow semantics gap | HTML banner stage 依賴 absolute positioning、z-index、overflow hidden 與 fade edge layers；UCUF skinLayers/children 順序不等於完整 CSS stacking context | `PROG-2-0004` / `PROG-2-0005` |
-| D4 final-gate taxonomy gap | 舊版 `zone-ownership` 會把 top 20 diff zones 全歸 `converter-geometry`；Slice #1 已補 `runtime-renderer` owner bucket、`nextFixes` 與 compact residual summary，但 source DOM selector / UCUF slot trace 仍待後續接線 | `PROG-2-0009` |
+| D4 final-gate taxonomy gap | 舊版 `zone-ownership` 會把 top 20 diff zones 全歸 `converter-geometry`；Slice #1 已補 `runtime-renderer` owner bucket、`nextFixes` 與 compact residual summary，Slice #2 再把 bake-manifest + layout trace 接進 `sourceDomSelectors` / `ucufNodeSlots`，讓 nav-arrow / pool-brief / banner-bg-fill 類熱區可直接派工 | `PROG-2-0009` |
 | D5 authority / route workflow confusion | fresh final compare authority OK，但 r3 workflow summary 仍可呈現 `debugOnly=true`、`htmlCocosAdjustedScore=null`；debug summary 不得被當 formal final evidence | `PROG-2-0006` |
 | D6 assetization boundary | 若 glow、blur、complex shadow 無法以 runtime 等價呈現，Plan5 應標 `assetization-required` 或 blocker，而不是 silent downgrade / pass | `PROG-2-0005` / `PROG-2-0007` |
 
 已排除或降權的項目：手補 `GachaDs3_div_6/16/26` banner art placeholder skinLayers 後，runtime screenshot hash 有變但 score 仍約 `0.6206`，代表 banner art placeholder 已進入 runtime，但不是當前最大瓶頸。這個 patch 只能作為假設驗證證據，durable fix 仍必須落在 converter/layout generation 或 runtime renderer，而不是手修 generated JSON。
 
-下一個最小 renderer parity slice 應以 banner title-block 為主：先保住 chip wrapper 的背景、border、padding、radius，再處理 `banner-hero-name` 的 glow/text-shadow 與 radial/filter/shadow runtime parity。完成後重跑 formal workflow，要求 final verdict 的 top residual 能指回具體 source selector、UCUF node/slot 與 runtime owner。
+下一個最小 renderer parity slice 仍以 banner title-block 為主，但現在不再盲修：先用 Slice #2 trace 對照 `div.nav-arrow.prev[2]`、`div.nav-arrow.next[3]`、`div#pool-brief.pool-brief[5]`、`div.banner-bg-fill[0]` 這批 bake-manifest-backed 熱區，區分哪些是 `backdrop-filter` / runtime blur 問題、哪些已因 gradient classifier stale 被誤送進 bake-manifest。之後再處理 chip wrapper、`banner-hero-name` glow/text-shadow 與剩餘 filter/shadow parity。完成後重跑 formal workflow，要求 final verdict 的 top residual 能指回具體 source selector、UCUF node/slot 與 runtime owner。
 
 ### Skill / Tool Flow Cleanup Analysis（2026-05-04）
 
@@ -216,6 +216,47 @@ stale-rule audit 已確認大多數舊機制不是未分類 blocker；本輪需�
 - 本 slice 仍是 heuristic owner mapping：`traceability.sourceDomSelectors` / `ucufNodeSlots` 目前先留空並明確標 `selectorTracePending=true`；下一輪才補 selector / slot 的實線接點。
 
 **結論：`PROG-2-0009` 已從「只有開卡」進入「可輸出 owner bucket 與 compact residual summary」階段；下一輪應接 selector / UCUF slot trace，讓 `PROG-2-0005` 的熱區能直接派工到具體 node/slot。**
+
+### PROG-2-0009 Owner Mapping Slice #2（2026-05-04）
+
+- `tools_node/compare-html-to-cocos-editor.js` 現在會自動讀取 `assets/resources/ui-spec/layouts/<screen>.layout.bake-manifest.json` 與對應 layout JSON，建立 final-gate trace catalog。
+- `tools_node/lib/dom-to-ui/zone-ownership.js` 已支援 `traceCatalog`，會依 property + rect overlap 把 bake-manifest-backed residual 回填到 `traceability.sourceDomSelectors` 與 `traceability.ucufNodeSlots`。
+- 目前 trace 可覆蓋的範圍是 bake-manifest-backed zones；以 `gacha-ds3` 來看，至少 `div.nav-arrow.prev[2]`、`div.nav-arrow.next[3]`、`div#pool-brief.pool-brief[5]`、`div.banner-bg-fill[0]` 這類 selector 已有現成 sidecar 真相可接線。
+- compare verdict 也會帶出 trace catalog 來源路徑，方便之後追 `bake-manifest` / layout 真相，而不是只看抽象 taxonomy。
+- 仍待補的範圍：尚未進 bake-manifest 的 partial-supported renderer gap（例如 multi-layer text-shadow）不會自動拿到 selector trace，仍需後續擴充。
+
+**結論：`PROG-2-0009` 已進入「可把 bake-manifest-backed residual 指回 source selector / UCUF slot」階段；下一步是重跑 formal gacha workflow，產 fresh zone report，讓 0005 的修補從 heuristics 升級為 trace-backed 派工。**
+
+### PROG-2-0009 Owner Mapping Slice #3（2026-05-04）
+
+- `tools_node/lib/dom-to-ui/zone-ownership.js` 已收緊 `scoreTraceEntry()`：非重疊 bucket 現在必須通過更嚴格的 size-aware distance gate，避免把遠距 residual 誤貼到 `div.nav-arrow.prev[2]`、`div.nav-arrow.next[3]`、`div#pool-brief.pool-brief[5]` 這類 bake-manifest entry。
+- `tools_node/test/dom-to-ui-self-test.js` 已補 near/far regression：近距 `backdrop-filter` bucket 仍可被正確 retarget 成 `runtime-renderer`，遠距 bucket 則必須維持 unmatched / `converter-geometry`。
+- fresh compare 需看新的輸出目錄 `artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r4/final-gate-tight/`；該份 zone report 顯示 top 20 zones 全數回到 `converter-geometry`，代表先前把 top residual 派給 blur/filter 的 heuristic 已被排除。
+- 這也代表目前 bake-manifest-backed trace 只適合處理真正重疊的 blur/filter zone；對 `gacha-ds3` 這種 top residual 大多來自 non-bake 區域的 case，下一步需要新的 trace source（例如 css-coverage/source path 對 layout node 的映射），而不是再把 matching 放寬。
+
+**結論：`PROG-2-0009` 本輪已把「錯誤派工」降到可接受範圍；接下來的重點不是再多抓幾個 blur selector，而是補 non-bake residual 的 source trace，讓 converter-geometry 熱區也能被準確指回 source DOM / generated node。**
+
+### PROG-2-0005 Runtime Parity Slice #3（2026-05-04）
+
+- `tools_node/lib/dom-to-ui/css-capability-matrix.js` 已把單層 `linear-gradient`、`radial-gradient`、`repeating-linear-gradient`、`repeating-radial-gradient` 在 `background` / `background-image` 的 classifier 對齊現有 runtime + `buildGradientRectSlot` 能力。
+- 這刀的目的不是直接宣告 gacha 過關，而是先消除 classifier 舊規則造成的假 blocker：既然 `GradientBackground` 已支援 radial/repeating，而 draft builder 也能保留 `gradient.repeating` / `repeatSpan*`，single-layer radial/repeating 就不應繼續被算成 bake-only gap。
+- 受這刀影響，下一次重跑 workflow 後，像 `banner-bg-fill` 的 radial background、`banner-art-placeholder` 的 repeating-linear gradient、以及 pull cost chip icon 的 radial gradient，不應再被舊 classifier 誤送進 bake-manifest。
+- 這也讓 `PROG-2-0005` 的剩餘工作更乾淨：真正還要打的是 `backdrop-filter` / runtime blur、multi-layer glow/shadow，以及 title-block chip wrapper / text shadow 這些未等價項，而不是已經有 runtime path 的 gradient subtype。
+
+**結論：`PROG-2-0005` Slice #3 先把 gradient subtype classifier 與 runtime 真相對齊，避免 formal residual 被舊 capability 假訊號污染；下一步要重跑 gacha formal workflow，確認 residual 是否收斂到 `backdrop-filter`、glow/shadow 與 title-block wrapper。**
+
+### PROG-2-0005 Runtime Parity Slice #4（2026-05-04）
+
+- fresh formal rerun 以 `artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r4/final-gate-tight/` 為準：`adjustedScore` 仍約 `0.6206`，而 top residual 已被 `0009` 證明並不屬於 bake-manifest-backed blur/filter 區。
+- 本輪已把 `tools_node/lib/dom-to-ui/css-capability-matrix.js` 的 gradient capability 邊界重新收斂：只把單層 `linear-gradient` / `repeating-linear-gradient` 視為 parity-safe，`radial-gradient` / `repeating-radial-gradient` / `conic-gradient` 一律回到 `assetize`。
+- 這刀同時讓 `dom-to-ui-self-test.js` 的 R-24 自測重新對齊 fresh evidence；full self-test 現在只剩既有的 `v2 workflow source-dir exit=1` 噪音，gradient capability 相關 case 已回到 pass。
+- 新的 debug rerun 以 `artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/` 為準：`gacha-ds3.final.layout.bake-manifest.json` 已重新長出 `8` 個 entries，其中 `3` 個是既有 `backdrop-filter`，另外 `5` 個 `background-image` 重新把 `div#banner-stage...>div.banner-bg-fill[0]` 與 pull cost chip radial icon 標回 blocker / review-only。
+- 本輪做了兩個鄰近 probe，結果都被 fresh compare 反證並已回退：
+	- hero-name style/glow probe：`gacha-ds3.skin.json` 只調 `auto.gacha-ds3.gachads3_div_9` 後，分數降到約 `0.6199`。
+	- `GradientBackground` 取樣解析度 probe：把大面積 gradient texture cap 拉高後，分數進一步降到約 `0.5600`。
+- 因此 `0005` 的下一刀不應再用「hero-name glow」或「單純提高 gradient 解析度」做盲修；現在的正式起點應改成這批已重新 blocker 化的 `banner-bg-fill` radial 背景，再決定它們要走 runtime parity fixture 還是明確 `manual-art-asset` 路徑。
+
+**結論：`PROG-2-0005` 本輪已把「誤判為 supported 的 radial gradient」重新拉回 blocker 真相。下一個有效 slice 不再是盲修 blur 或 hero-name，而是針對 `banner-bg-fill` 這批已重回 bake-manifest 的 radial 背景，決定真正的 runtime parity 或 artization 路徑。**
 | formal capture image size | fix | `capture-ui-screens.js` 預設 `maxWidth=125` 可保留給 view hygiene；formal compare input 必須強制 full-size（例如 `--maxWidth 0`）或標為 invalid/debug |
 | P5 advisory rules | harden | `H2U-P5-006/007/008` 在 high-browser/low-Cocos case 至少要成為 mandatory evidence section；必要時升為 blocker |
 

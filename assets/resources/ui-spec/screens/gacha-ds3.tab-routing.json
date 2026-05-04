@@ -1,6 +1,6 @@
 {
   "screenId": "gacha-ds3",
-  "generatedAt": "2026-05-04T09:04:12.266Z",
+  "generatedAt": "2026-05-04T14:16:15.088Z",
   "source": "per-tab-replay",
   "tabs": [
     {
@@ -11,7 +11,7 @@
       "lifecycle": "lazy",
       "fragment": "fragments/layouts/gacha-ds3-general-content",
       "childPanelClass": "GachaDs3GeneralChildPanel",
-      "replaySourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r3/tab-replay/gacha-ds3.general.right-content.html"
+      "replaySourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3.general.right-content.html"
     },
     {
       "id": "Legendary",
@@ -21,7 +21,7 @@
       "lifecycle": "lazy",
       "fragment": "fragments/layouts/gacha-ds3-legendary-content",
       "childPanelClass": "GachaDs3LegendaryChildPanel",
-      "replaySourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r3/tab-replay/gacha-ds3.legendary.right-content.html"
+      "replaySourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3.legendary.right-content.html"
     },
     {
       "id": "Support",
@@ -31,7 +31,7 @@
       "lifecycle": "lazy",
       "fragment": "fragments/layouts/gacha-ds3-support-content",
       "childPanelClass": "GachaDs3SupportChildPanel",
-      "replaySourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r3/tab-replay/gacha-ds3.support.right-content.html"
+      "replaySourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3.support.right-content.html"
     }
   ],
   "summary": {

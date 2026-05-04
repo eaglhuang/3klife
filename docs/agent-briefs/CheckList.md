@@ -77,7 +77,7 @@
 | P0 | [PROG-2-0002](tasks/PROG-2-0002.md (doc_task_0178)) (doc_task_0178) | HTML-to-UCUF 舊規則與衝突流程審計 | done | 100% | GitHubCopilot |
 | P0 | [PROG-2-0003](tasks/PROG-2-0003.md (doc_task_0179)) (doc_task_0179) | final gate 低分診斷與 nextFixes 契約 | done | 100% | GitHubCopilot |
 | P0 | [PROG-2-0004](tasks/PROG-2-0004.md (doc_task_0180)) (doc_task_0180) | CSS semantics extraction parity | done | 100% | GitHubCopilot |
-| P0 | [PROG-2-0005](tasks/PROG-2-0005.md (doc_task_0181)) (doc_task_0181) | UCUF runtime renderer parity closure | in-progress | 20% | GitHubCopilot |
+| P0 | [PROG-2-0005](tasks/PROG-2-0005.md (doc_task_0181)) (doc_task_0181) | UCUF runtime renderer parity closure | in-progress | 40% | GitHubCopilot |
 | P1 | [PROG-2-0006](tasks/PROG-2-0006.md (doc_task_0182)) (doc_task_0182) | source-derived spec authority hardening | done | 100% | GitHubCopilot |
 | P1 | [PROG-2-0007](tasks/PROG-2-0007.md (doc_task_0183)) (doc_task_0183) | 95% pixel fidelity regression matrix | open | 0% | GitHubCopilot |
 | P1 | [PROG-2-0008](tasks/PROG-2-0008.md (doc_task_0184)) (doc_task_0184) | html-to-ucuf skill Plan5 workflow rewrite | done | 100% | GitHubCopilot |

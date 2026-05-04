@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "gacha-ds3",
-  "generatedAt": "2026-05-04T09:04:12.382Z",
+  "generatedAt": "2026-05-04T14:16:24.632Z",
   "verdict": "not-ready",
   "readinessScore": 0.958,
   "summary": {
@@ -21,7 +21,7 @@
     "performance": "assets/resources/ui-spec/screens/gacha-ds3.performance.json",
     "bakeManifest": "assets/resources/ui-spec/layouts/gacha-ds3.layout.bake-manifest.json",
     "artAuthorityWaivers": "assets/resources/ui-spec/screens/gacha-ds3.art-authority-waivers.json",
-    "finalVerdict": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r3/gacha-ds3.html-cocos-verdict.json"
+    "finalVerdict": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.html-cocos-verdict.json"
   },
   "gates": {
     "finalGate": {
@@ -156,10 +156,10 @@
       "status": "pass",
       "workUnits": 0,
       "summary": "0 clip/mask geometry entries, 2 small texture entries, 0 unsafe auto-bake entries",
-      "totalEntries": 11,
+      "totalEntries": 8,
       "byBakeAction": {
         "review-only": 5,
-        "manual-art-asset": 6
+        "manual-art-asset": 3
       },
       "clipGeometryCount": 0,
       "smallTextureCount": 2,
