@@ -27,6 +27,32 @@
 - Debug: Chrome attach to `http://localhost:7456`
 - Component scripts: TypeScript in `assets/`, decorated with `@ccclass`
 
+## ⛔ 硬規則 #0：接任務卡前必須先上鎖（不可省略）
+
+**在動手執行任何任務卡之前，以下三步是硬前置，缺一不可：**
+
+```bash
+# Step 1: 確認無衝突
+node tools_node/task-lock.js check <task-id>
+
+# Step 2: 上鎖
+node tools_node/task-lock.js lock <task-id> <agent-name>
+
+# Step 3: 更新任務卡 frontmatter（必須 commit 進去）
+# status: in-progress
+# started_at: <RFC3339 timestamp>
+# started_by_agent: <agent-name>
+```
+
+> ⚠️ **違反此規則視為無效操作**：即使工作已完成，若未先上鎖，任務卡視同未正式接手。
+> 多個 Agent 同時運作時，未上鎖會造成衝突與重工。
+> 完整規則見 `docs/agent-briefs/Readme.md (doc_ai_0023)` §鎖卡流程。
+
+收工時必須解鎖：
+```bash
+node tools_node/task-lock.js unlock <task-id> <agent-name>
+```
+
 ## 執行前置檢查 (Pre-flight Check)
 
 1. **強制讀取 `docs/keep.summary.md (doc_index_0012)` (doc_index_0012)**: 每次請求前先讀摘要；需修改共識時才讀 `docs/keep.md (doc_index_0011)` (doc_index_0011) 全文。

@@ -47,8 +47,19 @@
 - **根因優先修復（§3.3 補充）**：除非使用者明示批准，debug 不以「刪功能 / 關特效 / 降級視覺」作為預設解法；先追 lifecycle、資料流、資產契約等根因。若只能先止血，必須明確標記為暫時 workaround，並保留後續根因修復任務。
 - **Transient FX 生命週期（§3.3 補充）**：所有綁在暫態節點上的 tween / schedule / async callback，遇到 `rebuild`、換場或 `onDestroy` 前必須顯式 `stop + dispose`；若仍偵測到失效 node，只能 `Error log` 後安全中止，不可讓 Preview / runtime 直接崩潰。
 
-## §5. 任務卡協作
-- 開工先鎖卡 / handoff 用摘要卡 / 多 Agent 不同時改高風險檔
+## §5. 任務卡協作（硬規則：不可跳過）
+
+> ⛔ **拿卡即鎖卡**：接任務的第一個動作，不是寫程式，是上鎖。
+>
+> ```bash
+> node tools_node/task-lock.js check <task-id>          # 確認無衝突
+> node tools_node/task-lock.js lock <task-id> <agent>   # 上鎖
+> ```
+> 同時更新任務卡 frontmatter：`status: in-progress` / `started_at` / `started_by_agent`
+> 收工時：`node tools_node/task-lock.js unlock <task-id> <agent>`
+> 完整鎖卡流程見 `docs/agent-briefs/Readme.md (doc_ai_0023)` §鎖卡流程。
+
+- handoff 用摘要卡 / 多 Agent 不同時改高風險檔
 
 ## §7. UI 契約
 - 三層 JSON（layouts / skins / screens）/ Design Token 引用制 / 禁止 hex 硬編碼

@@ -12,13 +12,21 @@ applyTo: "**"
 
 ### 防線 1: Pre-flight Gate（開工前）
 
+> ⛔ **硬規則 #0（不可省略）**：接到任務卡後，動手之前先鎖卡：
+> ```bash
+> node tools_node/task-lock.js check <task-id>   # 確認無衝突
+> node tools_node/task-lock.js lock <task-id> <agent-name>  # 上鎖
+> ```
+> 並立即更新任務卡 frontmatter：`status: in-progress` / `started_at: <RFC3339>` / `started_by_agent: <agent-name>`
+> 違反此規則視為無效接手。完整流程見 `docs/agent-briefs/Readme.md (doc_ai_0023)` §鎖卡流程。
+
 1. 讀 `docs/keep.summary.md (doc_index_0012)` (doc_index_0012)
 2. **[新] 執行計算型健康掃描**，確認現有問題清單：
    ```bash
    node tools_node/compute-gate.js --profile quick --agent-feedback --no-stop
    ```
 3. 執行 `node tools_node/check-context-budget.js --changed`（若可用）
-4. 若要修改 task JSON → 先執行 `node tools_node/task-lock.js lock <task-id> <agent-name>`
+4. **鎖定任務卡**（見硬規則 #0）→ `node tools_node/task-lock.js lock <task-id> <agent-name>`
 5. 確認要修改的檔案列表，記錄在 session memory
 
 ### 防線 2: In-flight Guard（工作中）
