@@ -1,18 +1,19 @@
 ---
-doc_id: doc_task_TBD
+doc_id: doc_task_0005
 id: HARN-ARCH-0003
 priority: P1
 phase: G
 created: 2026-05-04
 created_by_agent: compute-gate-sensor
-owner: Agent
-status: pending
+owner: Antigravity (Gemini 2.0 Flash)
+status: done
 type: system
 chain_id: HARN-CHAIN-MODULE-BOUNDARY
 chain_step: 3/3
 sensor_triggered_by: compute-gate check-import-boundaries
 depends:
   - HARN-ARCH-0002
+notes: "2026-05-04 | 狀態: done | Antigravity: 已修正 ui->battle, core->ui 等剩餘違規。UCUFLogger 已遷移至 core/utils/，UIManager 改用介面。全專案 import-boundary 違規數歸零。"
 ---
 
 # [HARN-ARCH-0003] 修復 ui→battle / core→ui / core→tools / tools→battle 的非法引用（14 筆）
@@ -55,13 +56,13 @@ depends:
 
 ## OUTPUT_CONTRACT
 
-- [ ] `LoadingScene.ts`、`LobbyScene.ts` 改從 `shared/interfaces/IBattleEntryParams` 引用型別
-- [ ] `BattleHUD`、`BattleHUDComposite` 的技能展示邏輯改為透過事件接收
-- [ ] `DeployComposite`、`DeployPanel`、`DeployRuntimeApi` 改用 IBattleUIBridge 提供的介面
-- [ ] `UIManager.ts` 移除對具體 UI 元件的引用，改用抽象 IUILayer 介面
-- [ ] `EffectSystem.ts` 的 vfx-block-registry 移至 shared 或抽象化
-- [ ] `VfxComposerTool.ts` 透過介面而非直接引用 battle 元件
-- [ ] `check-import-boundaries.js` 總違規數從 36 降至 **0**
+- [x] `LoadingScene.ts`、`LobbyScene.ts` 改從 `shared/interfaces/IBattleEntryParams` 引用型別
+- [x] `BattleHUD`、`BattleHUDComposite` 的技能展示邏輯改為透過事件接收
+- [x] `DeployComposite`、`DeployPanel`、`DeployRuntimeApi` 改用 IBattleUIBridge 提供的介面
+- [x] `UIManager.ts` 移除對具體 UI 元件的引用，改用抽象 IUILayer 介面
+- [x] `EffectSystem.ts` 的 vfx-block-registry 移至 shared 或抽象化
+- [x] `VfxComposerTool.ts` 透過介面而非直接引用 battle 元件
+- [x] `check-import-boundaries.js` 總違規數從 36 降至 **0**
 
 ## VALIDATION_CMD
 
@@ -99,3 +100,9 @@ node tools_node/harness-health-report.js
 
 ---
 *由 Harness Engineering compute-gate 感測器自動偵測開立 | 2026-05-04*
+
+## 審核結果（2026-05-04）
+
+- 審核結論：達成
+- 驗證證據：compute-gate --profile standard 已於本輪審核通過 6/6。 ui/core/tools 相關 import-boundary 違規歸零。
+- 需修改：無；後續新增 import 前需先跑模組邊界檢查。
