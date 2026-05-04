@@ -2,6 +2,7 @@
 
 const guard = require('./lib/context-guard-core');
 const handoffDiff = require('./lib/handoff-diff-core');
+const turnArtifactStorage = require('./lib/turn-artifact-storage');
 const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -577,6 +578,41 @@ function buildHandoffErrorResult(message, artifactPath) {
   };
 }
 
+function writeTurnArtifact(args, turnArtifact) {
+  if (!turnArtifact || (!args.emitTurnArtifact && !args.artifactFile)) {
+    return null;
+  }
+
+  let absolutePath;
+  let mode;
+  let policy = '';
+  if (args.artifactFile) {
+    absolutePath = path.resolve(PROJECT_ROOT, args.artifactFile);
+    mode = 'manual';
+  } else {
+    const formalPath = turnArtifactStorage.buildFormalTurnArtifactPath({
+      workflow: args.workflow,
+      task: args.task,
+      generatedAt: turnArtifact.generatedAt || new Date(),
+    });
+    absolutePath = formalPath.absolutePath;
+    mode = 'formal-default';
+    policy = formalPath.policy;
+  }
+
+  fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
+  fs.writeFileSync(absolutePath, `${JSON.stringify(turnArtifact, null, 2)}\n`, 'utf8');
+
+  const relativePath = turnArtifactStorage.toProjectRelative(absolutePath);
+  return {
+    mode,
+    pathClass: turnArtifactStorage.classifyTurnArtifactPath(relativePath),
+    absolutePath,
+    relativePath,
+    policy,
+  };
+}
+
 function main() {
   const args = parseArgs(process.argv.slice(2));
   const scopedFiles = guard.buildFileSet({
@@ -595,6 +631,7 @@ function main() {
   const budget = summary.budget;
   const usage = summary.usage;
   let turnArtifact = null;
+  let turnArtifactOutput = null;
   let handoffDiffResult = null;
 
   if (args.emitTurnArtifact || args.validateHandoff) {
@@ -620,16 +657,17 @@ function main() {
         error: error instanceof Error ? error.message : String(error),
       };
     }
-
-    if (args.artifactFile && turnArtifact) {
-      const artifactPath = path.resolve(PROJECT_ROOT, args.artifactFile);
-      fs.mkdirSync(path.dirname(artifactPath), { recursive: true });
-      fs.writeFileSync(artifactPath, `${JSON.stringify(turnArtifact, null, 2)}\n`, 'utf8');
+    try {
+      turnArtifactOutput = writeTurnArtifact(args, turnArtifact);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`[finalize-agent-turn] turn-artifact write failed: ${message}`);
+      process.exit(1);
     }
   }
 
   if (args.validateHandoff) {
-    const artifactLabel = args.artifactFile || '(generated-in-memory-artifact)';
+    const artifactLabel = turnArtifactOutput ? turnArtifactOutput.relativePath : '(generated-in-memory-artifact)';
     if (!turnArtifact || turnArtifact.kind !== 'turn-artifact') {
       handoffDiffResult = buildHandoffErrorResult('turnArtifact 不可用，無法執行 handoff 驗證', artifactLabel);
     } else {
@@ -674,6 +712,7 @@ function main() {
     keepNote: budget.status === 'ok' ? '' : guard.buildKeepNoteLine(budget),
     turnUsage: usage,
     turnArtifact,
+    turnArtifactOutput,
     handoffDiff: handoffDiffResult,
     ucufGate,
     finalLine: `Token 量級：${usage.tier}（估算約 ${usage.totals.estTokens} tokens，非 API 精準值）`,
@@ -701,8 +740,8 @@ function main() {
     console.log(`[finalize-agent-turn] keep-note=${result.keepNote}`);
   }
   if (args.emitTurnArtifact) {
-    const artifactLabel = args.artifactFile
-      ? `written=${args.artifactFile}`
+    const artifactLabel = turnArtifactOutput
+      ? `${turnArtifactOutput.mode}=${turnArtifactOutput.relativePath}`
       : 'embedded in --json output only';
     console.log(`[finalize-agent-turn] turn-artifact=${artifactLabel}`);
   }
