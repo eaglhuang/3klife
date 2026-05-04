@@ -152,7 +152,7 @@
       "priority": "P0",
       "phase": "P",
       "owner": "Agent1",
-      "status": "open",
+      "status": "done",
       "created": "2026-04-06",
       "created_by_agent": "Agent1",
       "type": "data-structure",
@@ -175,7 +175,11 @@
         "assets/scripts/core/models/GachaConfig.ts",
         "assets/resources/data/gacha-config.json"
       ],
-      "notes": "2026-04-06 | 狀態: open | 來源: 程式規格書.md §3.5 §2.2 | 阻塞: 需先 PROG-1-0001 落地 candidateIds"
+      "notes": "2026-05-04 | 狀態: done | 驗證: pass | 變更: GachaConfig.ts 建立（poolId/poolName/poolType/resetEnabled/guaranteeRarity/guaranteeThreshold/pickCount/candidateIds/firstPickOnly/confirmRequired/currencyType/singlePullCost）; gacha-config.json 含 hero-pool（pickCount:10, resetEnabled:true, 20 candidateIds）與 support-pool（5 candidateIds）; candidateIds 全引用真實 id; compute-gate 6/6 | 阻塞: none",
+      "started_at": "2026-05-04T16:45:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "completed_at": "2026-05-04T17:00:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-sonnet-4-6"
     },
     {
       "id": "PROG-1-0006",

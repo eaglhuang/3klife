@@ -1,0 +1,57 @@
+[
+  {
+    "poolId": "hero-pool",
+    "poolName": "名將池",
+    "poolType": "hero",
+    "resetEnabled": true,
+    "guaranteeRarity": "epic",
+    "guaranteeThreshold": 10,
+    "pickCount": 10,
+    "candidateIds": [
+      "cao-cao",
+      "liu-bei",
+      "sun-quan",
+      "zhuge-liang",
+      "zhou-yu",
+      "guan-yu",
+      "zhang-fei",
+      "zhao-yun",
+      "lu-bu",
+      "sima-yi",
+      "dian-wei",
+      "xu-zhu",
+      "huang-zhong",
+      "ma-chao",
+      "lu-xun",
+      "zhang-liao",
+      "xiahou-dun",
+      "pang-tong",
+      "guo-jia",
+      "gan-ning"
+    ],
+    "firstPickOnly": true,
+    "confirmRequired": false,
+    "currencyType": "gem",
+    "singlePullCost": 1000
+  },
+  {
+    "poolId": "support-pool",
+    "poolName": "紅顏池",
+    "poolType": "support",
+    "resetEnabled": false,
+    "guaranteeRarity": "rare",
+    "guaranteeThreshold": 5,
+    "pickCount": 1,
+    "candidateIds": [
+      "da-qiao",
+      "xiao-qiao",
+      "zhen-mi",
+      "huang-yueying",
+      "cai-wenji"
+    ],
+    "firstPickOnly": false,
+    "confirmRequired": true,
+    "currencyType": "ticket",
+    "singlePullCost": 1
+  }
+]
