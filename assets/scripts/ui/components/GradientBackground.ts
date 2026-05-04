@@ -12,6 +12,9 @@ export interface GradientBackgroundShapeOptions {
     cornerRadius?: number;
     borderWidth?: number;
     borderColor?: Color;
+    repeating?: boolean;
+    repeatSpanPx?: number;
+    repeatSpanRatio?: number;
 }
 
 export interface GradientBackgroundRadialOptions extends GradientBackgroundShapeOptions {
@@ -27,6 +30,9 @@ type GradientBackgroundType = 'linear' | 'radial';
 export class GradientBackground extends Component {
     private _gradientType: GradientBackgroundType = 'linear';
     private _angle = 180;
+    private _repeating = false;
+    private _repeatSpanPx = 0;
+    private _repeatSpanRatio = 0;
     private _radialCenterX = 0.5;
     private _radialCenterY = 0.5;
     private _radialRadiusX = 0.5;
@@ -38,6 +44,7 @@ export class GradientBackground extends Component {
     private _cornerRadius = 0;
     private _borderWidth = 0;
     private _borderColor = new Color(255, 255, 255, 0);
+    private _tintColor = new Color(255, 255, 255, 255);
     private _sprite: Sprite | null = null;
 
     onLoad(): void {
@@ -57,6 +64,9 @@ export class GradientBackground extends Component {
     public setLinearGradient(angle: number, stops: GradientColorStop[], shape?: GradientBackgroundShapeOptions): void {
         this._gradientType = 'linear';
         this._angle = Number.isFinite(angle) ? angle : 180;
+        this._repeating = shape?.repeating === true;
+        this._repeatSpanPx = Math.max(0, Number(shape?.repeatSpanPx) || 0);
+        this._repeatSpanRatio = Math.max(0, Number(shape?.repeatSpanRatio) || 0);
         this._stops = this._normalizeStops(stops);
         this._cornerRadius = Math.max(0, Number(shape?.cornerRadius) || 0);
         this._borderWidth = Math.max(0, Number(shape?.borderWidth) || 0);
@@ -66,6 +76,9 @@ export class GradientBackground extends Component {
 
     public setRadialGradient(stops: GradientColorStop[], shape?: GradientBackgroundRadialOptions): void {
         this._gradientType = 'radial';
+        this._repeating = shape?.repeating === true;
+        this._repeatSpanPx = Math.max(0, Number(shape?.repeatSpanPx) || 0);
+        this._repeatSpanRatio = Math.max(0, Number(shape?.repeatSpanRatio) || 0);
         this._stops = this._normalizeStops(stops);
         this._radialCenterX = this._resolveFiniteNumber(shape?.center?.x, 0.5);
         this._radialCenterY = this._resolveFiniteNumber(shape?.center?.y, 0.5);
@@ -75,6 +88,20 @@ export class GradientBackground extends Component {
         this._borderWidth = Math.max(0, Number(shape?.borderWidth) || 0);
         this._borderColor = shape?.borderColor || new Color(255, 255, 255, 0);
         this._redraw();
+    }
+
+    public setTintColor(color?: Color | null): void {
+        this._tintColor = color
+            ? new Color(color.r, color.g, color.b, color.a)
+            : new Color(255, 255, 255, 255);
+        if (this._sprite) {
+            this._sprite.color = new Color(
+                this._tintColor.r,
+                this._tintColor.g,
+                this._tintColor.b,
+                this._tintColor.a,
+            );
+        }
     }
 
     private _resolveFiniteNumber(value: unknown, fallback: number): number {
@@ -118,7 +145,7 @@ export class GradientBackground extends Component {
         const transform = this.getComponent(UITransform);
         const width = Math.max(1, transform?.width || 1);
         const height = Math.max(1, transform?.height || 1);
-        const maxTextureSide = 64;
+        const maxTextureSide = Math.max(64, Math.min(256, Math.round(Math.max(width, height) / 6)));
         const aspect = width / height;
         const textureWidth = aspect >= 1 ? maxTextureSide : Math.max(2, Math.round(maxTextureSide * aspect));
         const textureHeight = aspect >= 1 ? Math.max(2, Math.round(maxTextureSide / aspect)) : maxTextureSide;
@@ -128,28 +155,28 @@ export class GradientBackground extends Component {
         const dirX = Math.sin(angleRad);
         const dirY = -Math.cos(angleRad);
         const corners = [
-            [-0.5, -0.5], [0.5, -0.5], [-0.5, 0.5], [0.5, 0.5],
+            [-width * 0.5, -height * 0.5],
+            [width * 0.5, -height * 0.5],
+            [-width * 0.5, height * 0.5],
+            [width * 0.5, height * 0.5],
         ];
-        let minDot = Number.POSITIVE_INFINITY;
-        let maxDot = Number.NEGATIVE_INFINITY;
+        let minProjection = Number.POSITIVE_INFINITY;
+        let maxProjection = Number.NEGATIVE_INFINITY;
         for (const corner of corners) {
-            const dot = corner[0] * dirX + corner[1] * dirY;
-            minDot = Math.min(minDot, dot);
-            maxDot = Math.max(maxDot, dot);
+            const projection = corner[0] * dirX + corner[1] * dirY;
+            minProjection = Math.min(minProjection, projection);
+            maxProjection = Math.max(maxProjection, projection);
         }
-        const range = Math.max(0.0001, maxDot - minDot);
 
         for (let pixelY = 0; pixelY < textureHeight; pixelY++) {
             for (let pixelX = 0; pixelX < textureWidth; pixelX++) {
                 const normalizedX = (pixelX + 0.5) / textureWidth;
                 const normalizedY = (pixelY + 0.5) / textureHeight;
-                const centeredX = normalizedX - 0.5;
-                const centeredY = normalizedY - 0.5;
-                const t = this._gradientType === 'radial'
-                    ? this._sampleRadialT(normalizedX, normalizedY)
-                    : Math.max(0, Math.min(1, (centeredX * dirX + centeredY * dirY - minDot) / range));
                 const uiX = normalizedX * width - width * 0.5;
                 const uiY = normalizedY * height - height * 0.5;
+                const t = this._gradientType === 'radial'
+                    ? this._sampleRadialT(normalizedX, normalizedY)
+                    : this._sampleLinearT(uiX * dirX + uiY * dirY, minProjection, maxProjection);
                 const color = this._samplePixelColor(t, uiX, uiY, width, height);
                 const index = (pixelY * textureWidth + pixelX) * 4;
                 data[index] = color.r;
@@ -173,7 +200,12 @@ export class GradientBackground extends Component {
         sprite.sizeMode = Sprite.SizeMode.CUSTOM;
         sprite.type = Sprite.Type.SIMPLE;
         sprite.spriteFrame = frame;
-        sprite.color = Color.WHITE;
+        sprite.color = new Color(
+            this._tintColor.r,
+            this._tintColor.g,
+            this._tintColor.b,
+            this._tintColor.a,
+        );
     }
 
     private _sampleRadialT(normalizedX: number, normalizedY: number): number {
@@ -184,6 +216,36 @@ export class GradientBackground extends Component {
             + (deltaY * deltaY) / (this._radialRadiusY * this._radialRadiusY),
         );
         return Math.max(0, Math.min(1, normalizedDistance));
+    }
+
+    private _sampleLinearT(projection: number, minProjection: number, maxProjection: number): number {
+        const range = Math.max(0.0001, maxProjection - minProjection);
+        if (!this._repeating) {
+            return Math.max(0, Math.min(1, (projection - minProjection) / range));
+        }
+        const repeatSpan = this._resolveRepeatSpanPx(range);
+        if (repeatSpan <= 0) {
+            return Math.max(0, Math.min(1, (projection - minProjection) / range));
+        }
+        return this._positiveModulo(projection - minProjection, repeatSpan) / repeatSpan;
+    }
+
+    private _resolveRepeatSpanPx(range: number): number {
+        if (this._repeatSpanPx > 0) {
+            return this._repeatSpanPx;
+        }
+        if (this._repeatSpanRatio > 0) {
+            return Math.max(0.0001, range * this._repeatSpanRatio);
+        }
+        return 0;
+    }
+
+    private _positiveModulo(value: number, divisor: number): number {
+        if (divisor <= 0) {
+            return 0;
+        }
+        const remainder = value % divisor;
+        return remainder < 0 ? remainder + divisor : remainder;
     }
 
     private _samplePixelColor(t: number, uiX: number, uiY: number, width: number, height: number): Color {

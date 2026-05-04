@@ -26,7 +26,7 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-1",
       "rect": {
-        "x": 256,
+        "x": 1024,
         "y": 64,
         "w": 64,
         "h": 64
@@ -47,7 +47,7 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-2",
       "rect": {
-        "x": 320,
+        "x": 1088,
         "y": 64,
         "w": 64,
         "h": 64
@@ -68,7 +68,7 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-3",
       "rect": {
-        "x": 384,
+        "x": 1152,
         "y": 64,
         "w": 64,
         "h": 64
@@ -89,7 +89,7 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-4",
       "rect": {
-        "x": 448,
+        "x": 1216,
         "y": 64,
         "w": 64,
         "h": 64
@@ -110,7 +110,7 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-5",
       "rect": {
-        "x": 512,
+        "x": 1280,
         "y": 64,
         "w": 64,
         "h": 64
@@ -131,8 +131,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-6",
       "rect": {
-        "x": 576,
-        "y": 64,
+        "x": 0,
+        "y": 128,
         "w": 64,
         "h": 64
       },
@@ -152,8 +152,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-7",
       "rect": {
-        "x": 640,
-        "y": 64,
+        "x": 1088,
+        "y": 128,
         "w": 64,
         "h": 64
       },
@@ -173,8 +173,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-8",
       "rect": {
-        "x": 704,
-        "y": 64,
+        "x": 1152,
+        "y": 128,
         "w": 64,
         "h": 64
       },
@@ -194,8 +194,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-9",
       "rect": {
-        "x": 768,
-        "y": 64,
+        "x": 1216,
+        "y": 128,
         "w": 64,
         "h": 64
       },
@@ -215,8 +215,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-10",
       "rect": {
-        "x": 832,
-        "y": 64,
+        "x": 1280,
+        "y": 128,
         "w": 64,
         "h": 64
       },
@@ -236,8 +236,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-11",
       "rect": {
-        "x": 896,
-        "y": 64,
+        "x": 1152,
+        "y": 192,
         "w": 64,
         "h": 64
       },
@@ -257,8 +257,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-12",
       "rect": {
-        "x": 960,
-        "y": 64,
+        "x": 1216,
+        "y": 192,
         "w": 64,
         "h": 64
       },
@@ -278,8 +278,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-13",
       "rect": {
-        "x": 1024,
-        "y": 64,
+        "x": 1280,
+        "y": 192,
         "w": 64,
         "h": 64
       },
@@ -299,8 +299,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-14",
       "rect": {
-        "x": 1088,
-        "y": 64,
+        "x": 1152,
+        "y": 256,
         "w": 64,
         "h": 64
       },
@@ -320,8 +320,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-15",
       "rect": {
-        "x": 1152,
-        "y": 64,
+        "x": 1216,
+        "y": 256,
         "w": 64,
         "h": 64
       },
@@ -341,8 +341,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-16",
       "rect": {
-        "x": 1216,
-        "y": 64,
+        "x": 1280,
+        "y": 256,
         "w": 64,
         "h": 64
       },
@@ -362,8 +362,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-17",
       "rect": {
-        "x": 1280,
-        "y": 64,
+        "x": 0,
+        "y": 320,
         "w": 64,
         "h": 64
       },
@@ -383,8 +383,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-18",
       "rect": {
-        "x": 0,
-        "y": 128,
+        "x": 1088,
+        "y": 320,
         "w": 64,
         "h": 64
       },
@@ -404,8 +404,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-19",
       "rect": {
-        "x": 64,
-        "y": 128,
+        "x": 1152,
+        "y": 320,
         "w": 64,
         "h": 64
       },
@@ -425,8 +425,8 @@
       "taxonomy": "converter-geometry",
       "zoneId": "pixel-diff-bucket-20",
       "rect": {
-        "x": 128,
-        "y": 128,
+        "x": 1216,
+        "y": 320,
         "w": 64,
         "h": 64
       },

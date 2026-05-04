@@ -9,12 +9,12 @@
     "htmlToUcufPlan4": true,
     "runtimeAuthority": "synced-final-runtime-json"
   },
+  "runtimeVersion": "gacds3-20260503-013",
+  "runtimeVersionUpdatedAt": "2026-05-03T15:24:21.360Z",
   "content": {
     "source": "gacha-main-states-v1",
     "state": "bloodline-seed"
   },
-  "runtimeVersion": "gacds3-20260504-016",
-  "runtimeVersionUpdatedAt": "2026-05-04T03:14:45.870Z",
   "tabRouting": {
     "General": {
       "slotId": "RightPanel",

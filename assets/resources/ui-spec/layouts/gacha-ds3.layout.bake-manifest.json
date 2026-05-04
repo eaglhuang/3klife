@@ -4,7 +4,7 @@
   "screenId": "gacha-ds3",
   "sidecarBundle": "resources",
   "sidecarRoot": "assets/resources/sidecars/gacha-ds3/",
-  "sourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.ucuf-ready.html",
+  "sourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r3/gacha-ds3.ucuf-ready.html",
   "viewport": {
     "width": 1920,
     "height": 1080

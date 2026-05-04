@@ -1,4 +1,3 @@
-import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * UISpecLoader — 三層 JSON 契約的載入器
@@ -12,6 +11,7 @@ import { _decorator } from 'cc';
 import { ResourceManager } from '../../core/systems/ResourceManager';
 import type { UILayoutSpec, UISkinManifest, UIScreenSpec, UISkinFragment, UILayoutNodeSpec, UITemplateSpec, UIWidgetFragmentSpec, FrameRecipe, SkinSlot } from './UISpecTypes';
 import { CURRENT_SPEC_VERSION } from './UISpecTypes';
+import { UCUFLogger, LogCategory } from './UCUFLogger';
 
 const { ccclass } = _decorator;
 
@@ -71,18 +71,18 @@ export class UISpecLoader {
         // ⚠️ null guard：loadJson 在資源不存在時可能回傳 null
         // 這是造成 "Cannot read properties of null (reading 'root')" 的根源
         if (!spec) {
-            UCUFLogger.error(LogCategory.UI, `[UISpecLoader] loadLayout: 載入 "${layoutId}" 失敗 — loadJson 回傳 null/undefined，請確認 Resources/${layoutResourcePath}.json 是否存在`);
+            console.error(`[UISpecLoader] loadLayout: 載入 "${layoutId}" 失敗 — loadJson 回傳 null/undefined，請確認 Resources/${layoutResourcePath}.json 是否存在`);
             throw new Error(`[UISpecLoader] layout "${layoutId}" 不存在或載入失敗`);
         }
         if (!spec.root) {
-            UCUFLogger.error(LogCategory.UI, `[UISpecLoader] loadLayout: "${layoutId}" 的 JSON 沒有 root 欄位，spec=`, spec);
+            console.error(`[UISpecLoader] loadLayout: "${layoutId}" 的 JSON 沒有 root 欄位，spec=`, spec);
             throw new Error(`[UISpecLoader] layout "${layoutId}" 缺少 root 欄位`);
         }
 
         UCUFLogger.info(LogCategory.UI, `[UISpecLoader] loadLayout: "${layoutId}" 載入成功，開始解析 $ref 引用`);
         // M9: specVersion forward-compat guard
         if (typeof (spec as any).specVersion === 'number' && (spec as any).specVersion > CURRENT_SPEC_VERSION) {
-            UCUFLogger.warn(LogCategory.UI, `[UISpecLoader] loadLayout: "${layoutId}" specVersion=${(spec as any).specVersion} 超過引擎支援上限 ${CURRENT_SPEC_VERSION}，部分功能可能無法正常運作`);
+            console.warn(`[UISpecLoader] loadLayout: "${layoutId}" specVersion=${(spec as any).specVersion} 超過引擎支援上限 ${CURRENT_SPEC_VERSION}，部分功能可能無法正常運作`);
         }
         // 遞迴處理佈局碎片引用 ($ref)
         await this._resolveLayoutRefs(spec.root);
@@ -111,7 +111,7 @@ export class UISpecLoader {
                     const nodeVal = (node as any)[key];
                     const fragVal = (fragment as any)[key];
                     if (nodeVal !== undefined && fragVal !== undefined && nodeVal !== fragVal) {
-                        UCUFLogger.warn(LogCategory.UI, 
+                        console.warn(
                             `[UISpecLoader] ⚠️ $ref immutable key 衝突: ` +
                             `"${node.$ref}" 的 ${key}="${fragVal}" 被 node override 為 "${nodeVal}"。` +
                             `這通常代表使用錯誤，請確認 $ref 指向正確的 fragment。`
@@ -132,7 +132,7 @@ export class UISpecLoader {
                 node.id = originalRef; // 用碎片路徑作為節點 id 的一部分，方便除錯
                 
             } catch (e) {
-                UCUFLogger.warn(LogCategory.UI, `[UISpecLoader] 佈局載入 $ref 失敗: ${node.$ref}`, e);
+                console.warn(`[UISpecLoader] 佈局載入 $ref 失敗: ${node.$ref}`, e);
             }
         }
 
@@ -179,7 +179,7 @@ export class UISpecLoader {
                     );
                     Object.assign(manifest.slots, fragment.slots);
                 } catch (e) {
-                    UCUFLogger.warn(LogCategory.UI, `[UISpecLoader] skin 載入碎片失敗: ${fragId}`, e);
+                    console.warn(`[UISpecLoader] skin 載入碎片失敗: ${fragId}`, e);
                 }
             }
         }
@@ -219,7 +219,7 @@ export class UISpecLoader {
         const safePush = async (refId: string, layerLabel: string) => {
             if (!refId) return;
             if (visited.has(refId)) {
-                UCUFLogger.warn(LogCategory.UI, `[UISpecLoader] themeStack 循環引用，跳過 ${layerLabel} skin: ${refId}`);
+                console.warn(`[UISpecLoader] themeStack 循環引用，跳過 ${layerLabel} skin: ${refId}`);
                 return;
             }
             visited.add(refId);
@@ -283,7 +283,7 @@ export class UISpecLoader {
         }
         // M9: specVersion forward-compat guard
         if (typeof (spec as any).specVersion === 'number' && (spec as any).specVersion > CURRENT_SPEC_VERSION) {
-            UCUFLogger.warn(LogCategory.UI, `[UISpecLoader] loadScreen: "${screenId}" specVersion=${(spec as any).specVersion} 超過引擎支援上限 ${CURRENT_SPEC_VERSION}，部分功能可能無法正常運作`);
+            console.warn(`[UISpecLoader] loadScreen: "${screenId}" specVersion=${(spec as any).specVersion} 超過引擎支援上限 ${CURRENT_SPEC_VERSION}，部分功能可能無法正常運作`);
         }
         this._screenCache.set(screenId, spec);
         return spec;
@@ -299,7 +299,7 @@ export class UISpecLoader {
         try {
             return await this._rm.loadJson<T>(resourcePath, { tags: ['UISpec', 'Sidecar'] });
         } catch (error) {
-            UCUFLogger.warn(LogCategory.UI, `[UISpecLoader] sidecar not found: ${resourcePath}`, error);
+            console.warn(`[UISpecLoader] sidecar not found: ${resourcePath}`, error);
             return null;
         }
     }

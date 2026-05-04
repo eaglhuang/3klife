@@ -65,6 +65,10 @@
                     },
                     "width": 233,
                     "height": 189,
+                    "layout": {
+                      "type": "vertical",
+                      "spacingY": 12
+                    },
                     "children": [
                       {
                         "type": "label",
@@ -190,6 +194,10 @@
                     },
                     "width": 249,
                     "height": 189,
+                    "layout": {
+                      "type": "vertical",
+                      "spacingY": 12
+                    },
                     "children": [
                       {
                         "type": "label",
@@ -315,6 +323,10 @@
                     },
                     "width": 233,
                     "height": 189,
+                    "layout": {
+                      "type": "vertical",
+                      "spacingY": 12
+                    },
                     "children": [
                       {
                         "type": "label",
@@ -561,6 +573,14 @@
             "width": 185,
             "height": 72,
             "_motionId": "gacha-ds3_div_35.transition",
+            "layout": {
+              "type": "vertical",
+              "paddingTop": 10,
+              "paddingRight": 16,
+              "paddingBottom": 10,
+              "paddingLeft": 16,
+              "spacingY": 4
+            },
             "skinSlot": "auto.gacha-ds3.gachads3_div_35",
             "children": [
               {
@@ -654,6 +674,10 @@
                 },
                 "width": 78,
                 "height": 42,
+                "layout": {
+                  "type": "vertical",
+                  "spacingY": 3
+                },
                 "children": [
                   {
                     "type": "label",

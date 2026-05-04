@@ -101,51 +101,22 @@ export class UIPreviewStyleBuilder {
                 : 0;
             const cornerRadius = this._resolveCornerRadius(slot);
             const borderColorKey = (slot as any).borderColor ?? (slot as any).strokeColor;
+            const hasRepeatingLayer = Array.isArray((slot as any).backgroundLayers)
+                && (slot as any).backgroundLayers.some((layer: any) => layer?.kind === 'gradient' && layer.gradient?.repeating === true);
             const gradientShape = {
                 cornerRadius,
                 borderWidth,
                 borderColor: typeof borderColorKey === 'string'
                     ? this.skinResolver.resolveColor(borderColorKey)
                     : new Color(255, 255, 255, 0),
+                repeating: gradient.repeating === true || hasRepeatingLayer,
+                repeatSpanPx: typeof gradient.repeatSpanPx === 'number'
+                    ? gradient.repeatSpanPx
+                    : undefined,
+                repeatSpanRatio: typeof gradient.repeatSpanRatio === 'number'
+                    ? gradient.repeatSpanRatio
+                    : undefined,
             };
-            const hasRepeatingLayer = Array.isArray((slot as any).backgroundLayers)
-                && (slot as any).backgroundLayers.some((layer: any) => layer?.kind === 'gradient' && layer.gradient?.repeating === true);
-            if (gradient.repeating === true || hasRepeatingLayer) {
-                const fallbackColor = this._resolveGradientSolidFallbackColor(stops);
-                if (cornerRadius > 0 || borderWidth > 0 || typeof borderColorKey === 'string') {
-                    const sprite = node.getComponent(Sprite);
-                    if (sprite) {
-                        sprite.enabled = false;
-                    }
-                    const solid = node.getComponent(SolidBackground);
-                    if (solid) {
-                        solid.enabled = false;
-                    }
-                    const background = node.getComponent(RoundedRectBackground) || node.addComponent(RoundedRectBackground);
-                    background.enabled = true;
-                    background.fillColor = fallbackColor;
-                    background.cornerRadius = cornerRadius;
-                    background.borderWidth = borderWidth;
-                    background.borderColor = gradientShape.borderColor;
-                } else {
-                    const roundedRect = node.getComponent(RoundedRectBackground);
-                    if (roundedRect) {
-                        roundedRect.enabled = false;
-                    }
-                    const solid = node.getComponent(SolidBackground) || node.addComponent(SolidBackground);
-                    solid.enabled = true;
-                    solid.color = fallbackColor;
-                }
-                const gradientBackground = node.getComponent(GradientBackground);
-                if (gradientBackground) {
-                    gradientBackground.enabled = false;
-                }
-                const shadow = node.getComponent(ShadowBackground);
-                if (shadow) {
-                    shadow.enabled = false;
-                }
-                return true;
-            }
             const background = node.getComponent(GradientBackground) || node.addComponent(GradientBackground);
             background.enabled = true;
             if (gradient.type === 'radial') {
@@ -158,10 +129,7 @@ export class UIPreviewStyleBuilder {
                 background.setLinearGradient(typeof gradient.angle === 'number' ? gradient.angle : 180, stops, gradientShape);
             }
             const alpha = resolveOpacity((slot as any).alpha ?? (slot as any).opacity);
-            const sprite = node.getComponent(Sprite);
-            if (sprite && alpha !== null) {
-                sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, alpha);
-            }
+            background.setTintColor(new Color(255, 255, 255, alpha ?? 255));
             return true;
         }
 
@@ -193,10 +161,7 @@ export class UIPreviewStyleBuilder {
             background.enabled = true;
             background.setShadows(shadowLayers, (slot as any).padding, this._resolveCornerRadius(slot));
             const alpha = resolveOpacity((slot as any).alpha ?? (slot as any).opacity);
-            const sprite = node.getComponent(Sprite);
-            if (sprite && alpha !== null) {
-                sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, alpha);
-            }
+            background.setTintColor(new Color(255, 255, 255, alpha ?? 255));
             return true;
         }
 
@@ -302,29 +267,6 @@ export class UIPreviewStyleBuilder {
         const color = this.skinResolver.resolveColor(raw);
         color.a = Math.round(color.a * opacity);
         return color;
-    }
-
-    private _resolveGradientSolidFallbackColor(stops: GradientColorStop[]): Color {
-        if (!Array.isArray(stops) || stops.length === 0) {
-            return new Color(255, 255, 255, 255);
-        }
-        let r = 0;
-        let g = 0;
-        let b = 0;
-        let a = 0;
-        for (const stop of stops) {
-            r += stop.color.r;
-            g += stop.color.g;
-            b += stop.color.b;
-            a += stop.color.a;
-        }
-        const count = stops.length;
-        return new Color(
-            Math.round(r / count),
-            Math.round(g / count),
-            Math.round(b / count),
-            Math.round(a / count),
-        );
     }
 
     private _resolveGradientPoint(rawPoint: unknown, fallback: { x: number; y: number }): { x: number; y: number } {

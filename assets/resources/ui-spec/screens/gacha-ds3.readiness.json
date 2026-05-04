@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "gacha-ds3",
-  "generatedAt": "2026-05-04T03:15:02.770Z",
+  "generatedAt": "2026-05-04T09:04:12.382Z",
   "verdict": "not-ready",
   "readinessScore": 0.958,
   "summary": {
@@ -21,17 +21,14 @@
     "performance": "assets/resources/ui-spec/screens/gacha-ds3.performance.json",
     "bakeManifest": "assets/resources/ui-spec/layouts/gacha-ds3.layout.bake-manifest.json",
     "artAuthorityWaivers": "assets/resources/ui-spec/screens/gacha-ds3.art-authority-waivers.json",
-    "finalVerdict": "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.html-cocos-verdict.json"
+    "finalVerdict": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r3/gacha-ds3.html-cocos-verdict.json"
   },
   "gates": {
     "finalGate": {
       "status": "blocker",
       "pass": false,
       "workUnits": 1,
-      "summary": "runtimeVsSource raw=0.4836 adjusted=0.4836 verdict=fail",
-      "rawScore": 0.4836159336419753,
-      "adjustedScore": 0.4836159336419753,
-      "verdict": "fail"
+      "summary": "no measured Cocos Editor final compare verdict"
     },
     "capture": {
       "status": "pass",
@@ -203,7 +200,7 @@
     {
       "severity": "blocker",
       "code": "final-gate",
-      "summary": "runtimeVsSource raw=0.4836 adjusted=0.4836 verdict=fail",
+      "summary": "no measured Cocos Editor final compare verdict",
       "workUnits": 1
     }
   ]

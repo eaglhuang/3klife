@@ -2,8 +2,8 @@
   "screenId": "gacha-ds3",
   "layout": "gacha-ds3",
   "skin": "gacha-ds3.skin",
-  "layoutRef": "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.layout.json",
-  "skinRef": "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.final.skin.json",
+  "layoutRef": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r3/gacha-ds3.final.layout.json",
+  "skinRef": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r3/gacha-ds3.final.skin.json",
   "tabRouting": {
     "PoolPrev": {
       "slotId": "RightPanel",

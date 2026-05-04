@@ -1,4 +1,3 @@
-import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { _decorator, Node, Button } from 'cc';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
@@ -7,6 +6,7 @@ import { services } from '../../core/managers/ServiceLoader';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { applyUIScreenRuntimeState } from '../core/UIScreenRuntimeStateRegistry';
 import type { UILayoutNodeSpec, UIScreenSpec, TabRoute } from '../core/UISpecTypes';
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 
 const { ccclass, property } = _decorator;
 
@@ -92,8 +92,8 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
     public async switchLazySlot(slotId: string, fragmentId: string): Promise<boolean> {
         const entry = this._lazySlots.get(slotId);
         if (!entry) {
-            UCUFLogger.warn(LogCategory.UI, `[UIScreenPreviewHost] switchLazySlot: 找不到 slotId=${slotId}`);
-            UCUFLogger.warn(LogCategory.UI, `[UIScreenPreviewHost] 已知 slotId 清單: ${JSON.stringify([...this._lazySlots.keys()])}`);
+            console.warn(`[UIScreenPreviewHost] switchLazySlot: 找不到 slotId=${slotId}`);
+            console.warn(`[UIScreenPreviewHost] 已知 slotId 清單: ${JSON.stringify([...this._lazySlots.keys()])}`);
             return false;
         }
 
@@ -113,48 +113,48 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
     public installTabSwitchHook(slotId: string, buttonFragmentMap: Record<string, string>): number {
         const binder = this._binder;
         if (!binder) {
-            UCUFLogger.error(LogCategory.UI, '[UIScreenPreviewHost-DIAG] installTabSwitchHook: binder 尚未就緒，請在 showScreen() 完成後呼叫');
+            console.error('[UIScreenPreviewHost-DIAG] installTabSwitchHook: binder 尚未就緒，請在 showScreen() 完成後呼叫');
             return 0;
         }
 
         const knownSlots = [...this._lazySlots.keys()];
-        UCUFLogger.info(LogCategory.UI, `[UIScreenPreviewHost-DIAG] slotId=${slotId}, 已知 lazySlots=${JSON.stringify(knownSlots)}`);
+        UCUFLogger.debug(LogCategory.UI, `[UIScreenPreviewHost-DIAG] slotId=${slotId}, 已知 lazySlots=${JSON.stringify(knownSlots)}`);
 
         let boundCount = 0;
 
         for (const [buttonName, fragmentId] of Object.entries(buttonFragmentMap)) {
             const button = binder.getButton(buttonName);
             if (!button) {
-                UCUFLogger.warn(LogCategory.UI, `[UIScreenPreviewHost-DIAG] 找不到 button: ${buttonName}（可能 binder 未包含此節點）`);
+                console.warn(`[UIScreenPreviewHost-DIAG] 找不到 button: ${buttonName}（可能 binder 未包含此節點）`);
                 continue;
             }
 
             // 診斷：確認 Button component 的 interactable 狀態
-            UCUFLogger.info(LogCategory.UI, `[UIScreenPreviewHost-DIAG] found button: ${buttonName}, interactable=${button.interactable}, node.active=${button.node.active}`);
+            UCUFLogger.debug(LogCategory.UI, `[UIScreenPreviewHost-DIAG] found button: ${buttonName}, interactable=${button.interactable}, node.active=${button.node.active}`);
 
             button.node.off('__diagHook__', undefined, this);
             button.node.on(Node.EventType.TOUCH_END, () => {
-                UCUFLogger.info(LogCategory.UI, `[UIScreenPreviewHost-DIAG] TOUCH_END → ${buttonName} → fragment=${fragmentId}`);
+                UCUFLogger.debug(LogCategory.UI, `[UIScreenPreviewHost-DIAG] TOUCH_END → ${buttonName} → fragment=${fragmentId}`);
                 void this.switchLazySlot(slotId, fragmentId).then((ok) => {
-                    UCUFLogger.info(LogCategory.UI, `[UIScreenPreviewHost-DIAG] switchLazySlot result=${ok}, slotId=${slotId}, fragment=${fragmentId}`);
+                    UCUFLogger.debug(LogCategory.UI, `[UIScreenPreviewHost-DIAG] switchLazySlot result=${ok}, slotId=${slotId}, fragment=${fragmentId}`);
                 });
             }, this);
 
             boundCount += 1;
         }
 
-        UCUFLogger.info(LogCategory.UI, `[UIScreenPreviewHost-DIAG] installTabSwitchHook 完成：boundCount=${boundCount}/${Object.keys(buttonFragmentMap).length}`);
+        UCUFLogger.debug(LogCategory.UI, `[UIScreenPreviewHost-DIAG] installTabSwitchHook 完成：boundCount=${boundCount}/${Object.keys(buttonFragmentMap).length}`);
         return boundCount;
     }
 
     public async showScreen(screenId: string): Promise<void> {
         if (!screenId) {
-            UCUFLogger.warn(LogCategory.UI, '[UIScreenPreviewHost] screenId 為空，略過載入');
+            console.warn('[UIScreenPreviewHost] screenId 為空，略過載入');
             return;
         }
 
         if (this._isLoading) {
-            UCUFLogger.warn(LogCategory.UI, `[UIScreenPreviewHost] 正在載入中，略過重複請求: ${screenId}`);
+            console.warn(`[UIScreenPreviewHost] 正在載入中，略過重複請求: ${screenId}`);
             return;
         }
 
@@ -180,7 +180,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
 
             UCUFLogger.info(LogCategory.UI, `[UIScreenPreviewHost] mounted ${screenId} -> ${screen.uiId}`);
         } catch (error) {
-            UCUFLogger.error(LogCategory.UI, `[UIScreenPreviewHost] 載入 screen 失敗: ${screenId}`, error);
+            console.error(`[UIScreenPreviewHost] 載入 screen 失敗: ${screenId}`, error);
             throw error;
         } finally {
             this._isLoading = false;
@@ -300,7 +300,7 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         const callback = () => {
             void this.switchLazySlot(route.slotId, route.fragment).then((ok) => {
                 if (!ok) {
-                    UCUFLogger.warn(LogCategory.UI, `[UIScreenPreviewHost] sidecar tabSwitch failed: ${actionId}`);
+                    console.warn(`[UIScreenPreviewHost] sidecar tabSwitch failed: ${actionId}`);
                 }
             });
         };

@@ -25,6 +25,7 @@ export class ShadowBackground extends Component {
     private _shadows: ShadowLayerDef[] = [];
     private _padding: ShadowPaddingDef = { left: 0, right: 0, top: 0, bottom: 0 };
     private _cornerRadius = 0;
+    private _tintColor = new Color(255, 255, 255, 255);
     private _sprite: Sprite | null = null;
 
     onLoad(): void {
@@ -61,6 +62,20 @@ export class ShadowBackground extends Component {
         this._redraw();
     }
 
+    public setTintColor(color?: Color | null): void {
+        this._tintColor = color
+            ? new Color(color.r, color.g, color.b, color.a)
+            : new Color(255, 255, 255, 255);
+        if (this._sprite) {
+            this._sprite.color = new Color(
+                this._tintColor.r,
+                this._tintColor.g,
+                this._tintColor.b,
+                this._tintColor.a,
+            );
+        }
+    }
+
     private _redraw(): void {
         const sprite = this._sprite || this.getComponent(Sprite) || this.addComponent(Sprite);
         this._sprite = sprite;
@@ -68,7 +83,7 @@ export class ShadowBackground extends Component {
         const transform = this.getComponent(UITransform);
         const width = Math.max(1, transform?.width || 1);
         const height = Math.max(1, transform?.height || 1);
-        const maxTextureSide = 96;
+        const maxTextureSide = Math.max(96, Math.min(256, Math.round(Math.max(width, height) / 5)));
         const aspect = width / height;
         const textureWidth = aspect >= 1 ? maxTextureSide : Math.max(2, Math.round(maxTextureSide * aspect));
         const textureHeight = aspect >= 1 ? Math.max(2, Math.round(maxTextureSide / aspect)) : maxTextureSide;
@@ -101,7 +116,12 @@ export class ShadowBackground extends Component {
         sprite.sizeMode = Sprite.SizeMode.CUSTOM;
         sprite.type = Sprite.Type.SIMPLE;
         sprite.spriteFrame = frame;
-        sprite.color = Color.WHITE;
+        sprite.color = new Color(
+            this._tintColor.r,
+            this._tintColor.g,
+            this._tintColor.b,
+            this._tintColor.a,
+        );
     }
 
     private _sampleShadowColor(uiX: number, uiY: number, width: number, height: number): Color {

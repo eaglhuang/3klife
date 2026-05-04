@@ -20,6 +20,7 @@
               "x": 1.2,
               "y": 0.8
             },
+            "repeatSpanRatio": 1,
             "stops": [
               {
                 "color": "rgb(26, 10, 46)",
@@ -41,6 +42,7 @@
         "type": "radial",
         "repeating": false,
         "angle": 180,
+        "repeatSpanRatio": 1,
         "shape": "120% 80% at 40% 30%",
         "center": {
           "x": 0.4,
@@ -167,6 +169,7 @@
             "shape": null,
             "center": null,
             "radius": null,
+            "repeatSpanPx": 12,
             "stops": [
               {
                 "color": "rgb(30, 16, 40)",
@@ -174,11 +177,11 @@
               },
               {
                 "color": "rgb(30, 16, 40)",
-                "offset": 0.3333333333333333
+                "offset": 0.5
               },
               {
                 "color": "rgb(37, 24, 51)",
-                "offset": 0.6666666666666666
+                "offset": 0.5
               },
               {
                 "color": "rgb(37, 24, 51)",
@@ -192,6 +195,7 @@
         "type": "linear",
         "repeating": true,
         "angle": 45,
+        "repeatSpanPx": 12,
         "stops": [
           {
             "color": "rgb(30, 16, 40)",
@@ -200,12 +204,12 @@
           },
           {
             "color": "rgb(30, 16, 40)",
-            "offset": 0.3333333333333333,
+            "offset": 0.5,
             "opacity": 1
           },
           {
             "color": "rgb(37, 24, 51)",
-            "offset": 0.6666666666666666,
+            "offset": 0.5,
             "opacity": 1
           },
           {
@@ -282,6 +286,7 @@
               "x": 1.2,
               "y": 0.8
             },
+            "repeatSpanRatio": 1,
             "stops": [
               {
                 "color": "rgb(42, 26, 0)",
@@ -303,6 +308,7 @@
         "type": "radial",
         "repeating": false,
         "angle": 180,
+        "repeatSpanRatio": 1,
         "shape": "120% 80% at 40% 30%",
         "center": {
           "x": 0.4,
@@ -429,6 +435,7 @@
             "shape": null,
             "center": null,
             "radius": null,
+            "repeatSpanPx": 12,
             "stops": [
               {
                 "color": "rgb(30, 24, 16)",
@@ -436,11 +443,11 @@
               },
               {
                 "color": "rgb(30, 24, 16)",
-                "offset": 0.3333333333333333
+                "offset": 0.5
               },
               {
                 "color": "rgb(37, 31, 16)",
-                "offset": 0.6666666666666666
+                "offset": 0.5
               },
               {
                 "color": "rgb(37, 31, 16)",
@@ -454,6 +461,7 @@
         "type": "linear",
         "repeating": true,
         "angle": 45,
+        "repeatSpanPx": 12,
         "stops": [
           {
             "color": "rgb(30, 24, 16)",
@@ -462,12 +470,12 @@
           },
           {
             "color": "rgb(30, 24, 16)",
-            "offset": 0.3333333333333333,
+            "offset": 0.5,
             "opacity": 1
           },
           {
             "color": "rgb(37, 31, 16)",
-            "offset": 0.6666666666666666,
+            "offset": 0.5,
             "opacity": 1
           },
           {
@@ -544,6 +552,7 @@
               "x": 1.2,
               "y": 0.8
             },
+            "repeatSpanRatio": 1,
             "stops": [
               {
                 "color": "rgb(6, 32, 32)",
@@ -565,6 +574,7 @@
         "type": "radial",
         "repeating": false,
         "angle": 180,
+        "repeatSpanRatio": 1,
         "shape": "120% 80% at 40% 30%",
         "center": {
           "x": 0.4,
@@ -691,6 +701,7 @@
             "shape": null,
             "center": null,
             "radius": null,
+            "repeatSpanPx": 12,
             "stops": [
               {
                 "color": "rgb(14, 30, 30)",
@@ -698,11 +709,11 @@
               },
               {
                 "color": "rgb(14, 30, 30)",
-                "offset": 0.3333333333333333
+                "offset": 0.5
               },
               {
                 "color": "rgb(18, 30, 30)",
-                "offset": 0.6666666666666666
+                "offset": 0.5
               },
               {
                 "color": "rgb(18, 30, 30)",
@@ -716,6 +727,7 @@
         "type": "linear",
         "repeating": true,
         "angle": 45,
+        "repeatSpanPx": 12,
         "stops": [
           {
             "color": "rgb(14, 30, 30)",
@@ -724,12 +736,12 @@
           },
           {
             "color": "rgb(14, 30, 30)",
-            "offset": 0.3333333333333333,
+            "offset": 0.5,
             "opacity": 1
           },
           {
             "color": "rgb(18, 30, 30)",
-            "offset": 0.6666666666666666,
+            "offset": 0.5,
             "opacity": 1
           },
           {
@@ -948,6 +960,7 @@
             "shape": null,
             "center": null,
             "radius": null,
+            "repeatSpanRatio": 1,
             "stops": [
               {
                 "color": "rgb(22, 6, 31)",
@@ -965,6 +978,7 @@
         "type": "linear",
         "repeating": false,
         "angle": 180,
+        "repeatSpanRatio": 1,
         "stops": [
           {
             "color": "rgb(22, 6, 31)",
@@ -991,6 +1005,7 @@
             "shape": null,
             "center": null,
             "radius": null,
+            "repeatSpanRatio": 1,
             "stops": [
               {
                 "color": "rgba(0, 0, 0, 0.97)",
@@ -1008,6 +1023,7 @@
         "type": "linear",
         "repeating": false,
         "angle": 0,
+        "repeatSpanRatio": 1,
         "stops": [
           {
             "color": "colorBlack",
@@ -1157,6 +1173,7 @@
             "shape": null,
             "center": null,
             "radius": null,
+            "repeatSpanRatio": 1,
             "stops": [
               {
                 "color": "rgb(255, 224, 136)",
@@ -1178,6 +1195,7 @@
         "type": "linear",
         "repeating": false,
         "angle": 180,
+        "repeatSpanRatio": 1,
         "stops": [
           {
             "color": "secondaryLight",
@@ -1307,6 +1325,7 @@
             "shape": null,
             "center": null,
             "radius": null,
+            "repeatSpanRatio": 1,
             "stops": [
               {
                 "color": "#1a1520",
@@ -1324,6 +1343,7 @@
         "type": "linear",
         "repeating": false,
         "angle": 180,
+        "repeatSpanRatio": 1,
         "stops": [
           {
             "color": "#1a1520",
@@ -3019,6 +3039,10 @@
       "cssVars": [],
       "spacing": [
         {
+          "token": "spacing.lg",
+          "detail": "GachaDs3_div_35.padding"
+        },
+        {
           "token": "spacing.xl",
           "detail": "GachaDs3_div_42.padding"
         },
@@ -3256,6 +3280,6 @@
       "limit": 4,
       "_warning": null
     },
-    "perTabReplayMergedAt": "2026-05-04T03:14:45.818Z"
+    "perTabReplayMergedAt": "2026-05-04T09:04:12.264Z"
   }
 }
