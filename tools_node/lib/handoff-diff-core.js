@@ -153,6 +153,149 @@ function readGitChangedEntries(repositoryRoot) {
   return entries;
 }
 
+function parseSimpleFrontmatter(content) {
+  const lines = String(content || '').split(/\r?\n/);
+  if (lines[0] !== '---') {
+    return {};
+  }
+
+  const result = {};
+  for (let index = 1; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (line === '---') {
+      break;
+    }
+    const match = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (match) {
+      result[match[1]] = match[2].replace(/^"|"$/g, '').trim();
+    }
+  }
+  return result;
+}
+
+function readTaskLockEvidence(taskId, taskLockDir) {
+  if (!taskLockDir) {
+    return { checked: false, found: false, path: '', taskId: '', agentName: '', error: '' };
+  }
+
+  const lockPath = path.join(taskLockDir, `${taskId}.lock.json`);
+  if (!fs.existsSync(lockPath)) {
+    return { checked: true, found: false, path: toPosixPath(lockPath), taskId: '', agentName: '', error: '' };
+  }
+
+  try {
+    const parsed = readJsonOrThrow(lockPath, 'task lock');
+    return {
+      checked: true,
+      found: true,
+      path: toPosixPath(lockPath),
+      taskId: String(parsed.taskId || '').trim(),
+      agentName: String(parsed.agentName || '').trim(),
+      error: '',
+    };
+  } catch (error) {
+    return {
+      checked: true,
+      found: true,
+      path: toPosixPath(lockPath),
+      taskId: '',
+      agentName: '',
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+function readTaskCardEvidence(taskId, taskCardDir) {
+  if (!taskCardDir) {
+    return { checked: false, found: false, path: '', id: '', status: '', startedByAgent: '', error: '' };
+  }
+
+  const cardPath = path.join(taskCardDir, `${taskId}.md`);
+  if (!fs.existsSync(cardPath)) {
+    return { checked: true, found: false, path: toPosixPath(cardPath), id: '', status: '', startedByAgent: '', error: '' };
+  }
+
+  try {
+    const frontmatter = parseSimpleFrontmatter(fs.readFileSync(cardPath, 'utf8'));
+    return {
+      checked: true,
+      found: true,
+      path: toPosixPath(cardPath),
+      id: String(frontmatter.id || '').trim(),
+      status: String(frontmatter.status || '').trim(),
+      startedByAgent: String(frontmatter.started_by_agent || '').trim(),
+      error: '',
+    };
+  } catch (error) {
+    return {
+      checked: true,
+      found: true,
+      path: toPosixPath(cardPath),
+      id: '',
+      status: '',
+      startedByAgent: '',
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+function buildTaskScopeResult({ artifact, repositoryRoot, taskLockDir = '', taskCardDir = '' } = {}) {
+  const artifactTask = String(artifact && artifact.task ? artifact.task : '').trim();
+  const issues = [];
+  const defaultCardDir = path.join(repositoryRoot || PROJECT_ROOT, 'docs', 'agent-briefs', 'tasks');
+  let resolvedLockDir = taskLockDir ? path.resolve(repositoryRoot || PROJECT_ROOT, taskLockDir) : '';
+  let resolvedCardDir = taskCardDir ? path.resolve(repositoryRoot || PROJECT_ROOT, taskCardDir) : defaultCardDir;
+
+  if (!artifactTask) {
+    issues.push({ layer: 'artifact', severity: 'warn', message: 'artifact.task is missing', expected: 'non-empty task id', actual: '' });
+  }
+
+  if (artifactTask && resolvedLockDir) {
+    const cardLikePath = path.join(resolvedLockDir, `${artifactTask}.md`);
+    const lockLikePath = path.join(resolvedLockDir, `${artifactTask}.lock.json`);
+    if (!fs.existsSync(lockLikePath) && fs.existsSync(cardLikePath) && !taskCardDir) {
+      resolvedCardDir = resolvedLockDir;
+      resolvedLockDir = '';
+    }
+  }
+
+  const lock = artifactTask
+    ? readTaskLockEvidence(artifactTask, resolvedLockDir)
+    : { checked: Boolean(resolvedLockDir), found: false, path: '', taskId: '', agentName: '', error: '' };
+  const frontmatter = artifactTask
+    ? readTaskCardEvidence(artifactTask, resolvedCardDir)
+    : { checked: Boolean(resolvedCardDir), found: false, path: '', id: '', status: '', startedByAgent: '', error: '' };
+
+  if (lock.error) {
+    issues.push({ layer: 'lock', severity: 'fail', message: lock.error, expected: artifactTask, actual: '' });
+  } else if (lock.found && lock.taskId !== artifactTask) {
+    issues.push({ layer: 'lock', severity: 'fail', message: 'task lock id does not match artifact.task', expected: artifactTask, actual: lock.taskId });
+  }
+
+  if (frontmatter.error) {
+    issues.push({ layer: 'frontmatter', severity: 'fail', message: frontmatter.error, expected: artifactTask, actual: '' });
+  } else if (frontmatter.found && frontmatter.id !== artifactTask) {
+    issues.push({ layer: 'frontmatter', severity: 'fail', message: 'task card frontmatter id does not match artifact.task', expected: artifactTask, actual: frontmatter.id });
+  }
+
+  if (artifactTask && !lock.found && !frontmatter.found) {
+    issues.push({ layer: 'lock', severity: 'warn', message: 'no task lock or task card frontmatter found for artifact.task', expected: artifactTask, actual: '' });
+  }
+
+  const status = issues.some((issue) => issue.severity === 'fail')
+    ? 'fail'
+    : issues.length > 0 ? 'warn' : 'pass';
+
+  return {
+    status,
+    artifactTask,
+    source: lock.found ? 'lock' : frontmatter.found ? 'frontmatter' : 'none',
+    lock,
+    frontmatter,
+    issues,
+  };
+}
+
 function sortStrings(values) {
   return [...values].sort((left, right) => left.localeCompare(right));
 }
@@ -206,13 +349,19 @@ function compareArtifactToRepo(artifact, gitEntries) {
   };
 }
 
-function buildResult({ artifactPath, repositoryRoot, comparison }) {
+function buildResult({ artifactPath, repositoryRoot, comparison, taskScope = null }) {
   const mismatchCount = comparison.missingInArtifact.length + comparison.extraInArtifact.length;
   const hasMergeConflict = comparison.mergeConflicts.length > 0;
   let status = 'pass';
   if (hasMergeConflict) {
     status = 'fail';
   } else if (mismatchCount > 0) {
+    status = 'warn';
+  }
+
+  if (taskScope && taskScope.status === 'fail') {
+    status = 'fail';
+  } else if (taskScope && taskScope.status === 'warn' && status === 'pass') {
     status = 'warn';
   }
 
@@ -228,6 +377,7 @@ function buildResult({ artifactPath, repositoryRoot, comparison }) {
       extraInArtifact: comparison.extraInArtifact.length,
       dirtyButUnreported: comparison.dirtyButUnreported.length,
       mergeConflicts: comparison.mergeConflicts.length,
+      taskScopeIssues: taskScope ? taskScope.issues.length : 0,
     },
     mismatch: {
       missingInArtifact: comparison.missingInArtifact,
@@ -235,18 +385,22 @@ function buildResult({ artifactPath, repositoryRoot, comparison }) {
       dirtyButUnreported: comparison.dirtyButUnreported,
       mergeConflicts: comparison.mergeConflicts,
     },
+    taskScope,
   };
 }
 
-function evaluateArtifactAgainstGitEntries({ artifact, artifactPath, repositoryRoot, gitEntries }) {
+function evaluateArtifactAgainstGitEntries({ artifact, artifactPath, repositoryRoot, gitEntries, taskScope: taskScopeOptions = null }) {
   const comparison = compareArtifactToRepo(artifact, gitEntries);
-  return buildResult({ artifactPath, repositoryRoot, comparison });
+  const taskScope = taskScopeOptions
+    ? buildTaskScopeResult({ artifact, repositoryRoot, ...taskScopeOptions })
+    : null;
+  return buildResult({ artifactPath, repositoryRoot, comparison, taskScope });
 }
 
-function evaluateArtifactAgainstRepository({ artifact, artifactPath, repositoryPath }) {
+function evaluateArtifactAgainstRepository({ artifact, artifactPath, repositoryPath, taskScope = null }) {
   const repositoryRoot = resolveGitRepositoryRoot(repositoryPath);
   const gitEntries = readGitChangedEntries(repositoryRoot);
-  return evaluateArtifactAgainstGitEntries({ artifact, artifactPath, repositoryRoot, gitEntries });
+  return evaluateArtifactAgainstGitEntries({ artifact, artifactPath, repositoryRoot, gitEntries, taskScope });
 }
 
 module.exports = {
@@ -257,6 +411,8 @@ module.exports = {
   readGitChangedEntries,
   resolveGitRepositoryRoot,
   compareArtifactToRepo,
+  parseSimpleFrontmatter,
+  buildTaskScopeResult,
   buildResult,
   evaluateArtifactAgainstGitEntries,
   evaluateArtifactAgainstRepository,

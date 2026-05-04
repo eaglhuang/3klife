@@ -17,6 +17,8 @@ function printHelp() {
   console.log('  --artifact <path>     Path to the turn artifact JSON file');
   console.log('  --repository <path>   Path to the git repository to compare against (default: .)');
   console.log('  --fixture <path>      Path to a handoff diff fixture JSON file');
+  console.log('  --task-lock-dir <dir> Enable task scope check using lock files from <dir>');
+  console.log('  --task-card-dir <dir> Enable task scope check using task cards from <dir>');
   console.log('  --strict              Exit with code 1 when verdict is not pass');
   console.log('  --help, -h            Show this help message');
 }
@@ -26,6 +28,8 @@ function parseArgs(argv) {
     artifact: '',
     repository: '.',
     fixture: '',
+    taskLockDir: '',
+    taskCardDir: '',
     strict: false,
     help: false,
   };
@@ -44,6 +48,16 @@ function parseArgs(argv) {
     }
     if (token === '--fixture') {
       parsed.fixture = argv[index + 1] || '';
+      index += 1;
+      continue;
+    }
+    if (token === '--task-lock-dir') {
+      parsed.taskLockDir = argv[index + 1] || '';
+      index += 1;
+      continue;
+    }
+    if (token === '--task-card-dir') {
+      parsed.taskCardDir = argv[index + 1] || '';
       index += 1;
       continue;
     }
@@ -219,11 +233,29 @@ function printMergeConflicts(entries) {
   });
 }
 
+function printTaskScope(taskScope) {
+  if (!taskScope) {
+    return;
+  }
+
+  console.log(`  taskScope=${taskScope.status} artifactTask=${taskScope.artifactTask || '(missing)'} source=${taskScope.source}`);
+  if (taskScope.lock && taskScope.lock.checked) {
+    console.log(`    lock: found=${taskScope.lock.found} taskId=${taskScope.lock.taskId || '(none)'} path=${displayPath(taskScope.lock.path)}`);
+  }
+  if (taskScope.frontmatter && taskScope.frontmatter.checked) {
+    console.log(`    frontmatter: found=${taskScope.frontmatter.found} id=${taskScope.frontmatter.id || '(none)'} status=${taskScope.frontmatter.status || '(none)'} path=${displayPath(taskScope.frontmatter.path)}`);
+  }
+  taskScope.issues.forEach((issue) => {
+    console.log(`    - ${issue.layer}: ${issue.message} expected=${issue.expected || '(none)'} actual=${issue.actual || '(none)'}`);
+  });
+}
+
 function printResult(result) {
   const icon = result.status === 'pass' ? '✔' : result.status === 'warn' ? '⚠' : '❌';
   console.log(`${icon} handoff-diff ${result.status}: artifact=${displayPath(result.artifactPath)} repo=${displayPath(result.repositoryRoot)}`);
   console.log(`  artifactFiles=${result.summary.artifactFiles} gitChangedFiles=${result.summary.gitChangedFiles} matched=${result.summary.matched}`);
   console.log(`  missingInArtifact=${result.summary.missingInArtifact} extraInArtifact=${result.summary.extraInArtifact} dirtyButUnreported=${result.summary.dirtyButUnreported} mergeConflicts=${result.summary.mergeConflicts}`);
+  printTaskScope(result.taskScope);
 
   if (result.status === 'pass') {
     console.log('  no mismatch detected between artifact files[] and git changed files');
@@ -294,6 +326,9 @@ function runArtifactMode(args) {
       artifact,
       artifactPath,
       repositoryPath,
+      taskScope: args.taskLockDir || args.taskCardDir
+        ? { taskLockDir: args.taskLockDir, taskCardDir: args.taskCardDir }
+        : null,
     });
   } catch (error) {
     console.error(`[handoff-diff] ${error.message}`);
