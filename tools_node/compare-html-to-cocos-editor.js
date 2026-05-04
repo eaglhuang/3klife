@@ -231,6 +231,9 @@ async function main() {
   if (adjustedDiff !== rawDiff) writeHeatmap(adjustedDiff.heatmap, adjustedHeatmapPng);
 
   const cssCapabilities = buildCssCapabilityReport(sourcePackage.cssText);
+  const traceCatalog = loadZoneTraceCatalogForCompare({
+    screenId: opts.screenId,
+  });
   const scoreReport = buildArtAuthorityScoreReport({
     rawDiff,
     adjustedDiff,
@@ -251,6 +254,7 @@ async function main() {
     pixelDiff: adjustedDiff,
     cssCapabilities,
     artAuthorityValidation: artAuthority.validation,
+    traceCatalog: traceCatalog.entries,
   });
   fs.writeFileSync(zoneOwnershipJson, JSON.stringify(zoneOwnership, null, 2) + '\n', 'utf8');
 
@@ -330,6 +334,11 @@ async function main() {
       summary: zoneOwnership.summary,
       nextFixes: zoneOwnership.nextFixes,
       compactResidualSummary: zoneOwnership.compactResidualSummary,
+      traceCatalog: {
+        bakeManifest: traceCatalog.bakeManifestPath ? rel(traceCatalog.bakeManifestPath) : null,
+        layout: traceCatalog.layoutPath ? rel(traceCatalog.layoutPath) : null,
+        entries: traceCatalog.entries.length,
+      },
     },
     artAuthority: {
       path: artAuthority.path ? rel(artAuthority.path) : null,
@@ -352,6 +361,8 @@ async function main() {
       adjustedHeatmapPng: adjustedDiff !== rawDiff ? rel(adjustedHeatmapPng) : null,
       topOffendersJson: rel(offendersJson),
       zoneOwnershipJson: rel(zoneOwnershipJson),
+      zoneTraceBakeManifestJson: traceCatalog.bakeManifestPath ? rel(traceCatalog.bakeManifestPath) : null,
+      zoneTraceLayoutJson: traceCatalog.layoutPath ? rel(traceCatalog.layoutPath) : null,
       artAuthorityReportJson: artAuthority.wroteReport ? rel(artAuthorityReportJson) : null,
       evolutionLog: evolution ? rel(evolution.logPath) : null,
     },
@@ -472,6 +483,188 @@ function captureViolation(ruleId, summary, fixAction) {
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, ''));
+}
+
+function firstExistingPath(candidates) {
+  for (const candidate of candidates || []) {
+    if (!candidate) continue;
+    const resolved = path.resolve(candidate);
+    if (fs.existsSync(resolved)) return resolved;
+  }
+  return null;
+}
+
+function loadZoneTraceCatalogForCompare(args) {
+  const screenId = args && args.screenId ? String(args.screenId) : null;
+  if (!screenId) return { bakeManifestPath: null, layoutPath: null, entries: [] };
+  const bakeManifestPath = firstExistingPath([
+    path.join(ROOT, 'assets', 'resources', 'ui-spec', 'layouts', `${screenId}.layout.bake-manifest.json`),
+  ]);
+  const layoutPath = firstExistingPath([
+    path.join(ROOT, 'assets', 'resources', 'ui-spec', 'layouts', `${screenId}.json`),
+  ]);
+  if (!bakeManifestPath || !layoutPath) {
+    return { bakeManifestPath, layoutPath, entries: [] };
+  }
+  try {
+    return {
+      bakeManifestPath,
+      layoutPath,
+      entries: buildTraceCatalogFromArtifacts({
+        bakeManifest: readJson(bakeManifestPath),
+        layout: readJson(layoutPath),
+      }),
+    };
+  } catch (error) {
+    console.warn(`[compare-html-to-cocos-editor] trace catalog skipped: ${error.message}`);
+    return { bakeManifestPath, layoutPath, entries: [] };
+  }
+}
+
+function buildTraceCatalogFromArtifacts(args) {
+  const bakeEntries = Array.isArray(args && args.bakeManifest && args.bakeManifest.entries)
+    ? args.bakeManifest.entries
+    : [];
+  const index = buildLayoutTraceIndex(args && args.layout ? args.layout : null);
+  return bakeEntries
+    .map((entry) => buildTraceCatalogEntry(entry, index))
+    .filter(Boolean);
+}
+
+function buildLayoutTraceIndex(layout) {
+  const index = {
+    byUcufId: new Map(),
+    byId: new Map(),
+    byNumericSuffix: new Map(),
+  };
+  const root = layout && layout.root ? layout.root : layout;
+  walkLayoutTraceNode(root, index);
+  return index;
+}
+
+function walkLayoutTraceNode(node, index) {
+  if (!node || typeof node !== 'object') return;
+  registerTraceDescriptor(index, {
+    kind: 'node',
+    nodeName: typeof node.name === 'string' ? node.name : null,
+    nodeId: typeof node.id === 'string' ? node.id : null,
+    ucufId: typeof node._ucufId === 'string' ? node._ucufId : null,
+    slotRefs: buildNodeSlotRefs(node),
+  });
+  const skinLayers = Array.isArray(node.skinLayers) ? node.skinLayers : [];
+  for (const layer of skinLayers) {
+    registerTraceDescriptor(index, {
+      kind: 'skin-layer',
+      nodeName: typeof node.name === 'string' ? node.name : null,
+      nodeId: typeof node.id === 'string' ? node.id : null,
+      ucufId: typeof node._ucufId === 'string' ? node._ucufId : null,
+      layerId: typeof layer.layerId === 'string' ? layer.layerId : null,
+      slotRefs: typeof layer.slotId === 'string' && layer.slotId ? [{ slotId: layer.slotId, kind: 'skin-layer' }] : [],
+    });
+  }
+  const children = Array.isArray(node.children) ? node.children : [];
+  for (const child of children) walkLayoutTraceNode(child, index);
+}
+
+function buildNodeSlotRefs(node) {
+  const slotRefs = [];
+  if (typeof node.skinSlot === 'string' && node.skinSlot) slotRefs.push({ slotId: node.skinSlot, kind: 'skin-slot' });
+  if (typeof node.styleSlot === 'string' && node.styleSlot) slotRefs.push({ slotId: node.styleSlot, kind: 'style-slot' });
+  return slotRefs;
+}
+
+function registerTraceDescriptor(index, descriptor) {
+  if (!descriptor) return;
+  if (descriptor.ucufId && !index.byUcufId.has(descriptor.ucufId)) {
+    index.byUcufId.set(descriptor.ucufId, descriptor);
+  }
+  if (descriptor.nodeId && !index.byId.has(descriptor.nodeId)) {
+    index.byId.set(descriptor.nodeId, descriptor);
+  }
+  const suffixes = [numericSuffix(descriptor.nodeName), numericSuffix(descriptor.layerId), numericSuffix(descriptor.nodeId)];
+  for (const suffix of suffixes) {
+    if (!suffix) continue;
+    const bucket = index.byNumericSuffix.get(suffix) || [];
+    bucket.push(descriptor);
+    index.byNumericSuffix.set(suffix, bucket);
+  }
+}
+
+function buildTraceCatalogEntry(entry, index) {
+  if (!entry || typeof entry.property !== 'string') return null;
+  const descriptor = resolveTraceDescriptor(entry, index);
+  const slotRefs = descriptor && Array.isArray(descriptor.slotRefs) ? descriptor.slotRefs : [];
+  return {
+    property: entry.property,
+    selector: typeof entry.selector === 'string' ? entry.selector : null,
+    rect: normalizeTraceRect(entry.target),
+    ucufNodeSlots: slotRefs.map((slotRef) => ({
+      ucufId: descriptor && descriptor.ucufId ? descriptor.ucufId : (typeof entry.ucufId === 'string' ? entry.ucufId : null),
+      nodeName: descriptor && descriptor.nodeName ? descriptor.nodeName : null,
+      nodeId: descriptor && descriptor.nodeId ? descriptor.nodeId : null,
+      layerId: descriptor && descriptor.layerId ? descriptor.layerId : null,
+      slotId: slotRef.slotId,
+      kind: slotRef.kind,
+    })),
+    matchConfidence: descriptor ? 'bake-manifest-layout' : 'bake-manifest-only',
+  };
+}
+
+function resolveTraceDescriptor(entry, index) {
+  if (entry && typeof entry.ucufId === 'string' && index.byUcufId.has(entry.ucufId)) {
+    return index.byUcufId.get(entry.ucufId);
+  }
+  const selectorId = selectorDomId(entry && entry.selector);
+  if (selectorId && index.byId.has(selectorId)) {
+    return index.byId.get(selectorId);
+  }
+  const numericNodeId = typeof entry.nodeId === 'number' && Number.isFinite(entry.nodeId)
+    ? String(entry.nodeId)
+    : numericSuffix(entry && entry.nodeId);
+  if (numericNodeId && index.byNumericSuffix.has(numericNodeId)) {
+    return pickBestTraceDescriptor(index.byNumericSuffix.get(numericNodeId), entry);
+  }
+  return null;
+}
+
+function pickBestTraceDescriptor(candidates, entry) {
+  const list = Array.isArray(candidates) ? candidates : [];
+  if (list.length === 0) return null;
+  const property = String((entry && entry.property) || '').toLowerCase();
+  let best = list[0];
+  let bestScore = -1;
+  for (const candidate of list) {
+    let score = 0;
+    if (candidate && Array.isArray(candidate.slotRefs) && candidate.slotRefs.length > 0) score += 5;
+    if (/^background/.test(property) && candidate.kind === 'skin-layer') score += 30;
+    if (/^(backdrop-filter|filter|box-shadow|drop-shadow|text-shadow)$/.test(property) && candidate.kind === 'node') score += 30;
+    if (candidate.kind === 'node') score += 1;
+    if (score > bestScore) {
+      best = candidate;
+      bestScore = score;
+    }
+  }
+  return best;
+}
+
+function selectorDomId(selector) {
+  const match = /#([A-Za-z0-9_-]+)/.exec(String(selector || ''));
+  return match ? match[1] : null;
+}
+
+function numericSuffix(value) {
+  const match = /(?:_|-)?(\d+)$/.exec(String(value || ''));
+  return match ? match[1] : null;
+}
+
+function normalizeTraceRect(target) {
+  if (!target || typeof target !== 'object') return null;
+  const x = Number(target.x);
+  const y = Number(target.y);
+  const width = Number(target.width);
+  const height = Number(target.height);
+  if (![x, y, width, height].every(Number.isFinite)) return null;
+  return { x, y, w: width, h: height };
 }
 
 function sha256File(filePath) {
