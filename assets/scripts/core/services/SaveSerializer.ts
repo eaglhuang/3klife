@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 /**
  * SaveSerializer.ts
  *
@@ -122,7 +123,7 @@ export class SaveSerializer {
         const hasExpand = map?.expand_to_abbr && typeof map.expand_to_abbr === 'object';
         const hasAbbr = map?.abbr_to_expand && typeof map.abbr_to_expand === 'object';
         if (!hasExpand || !hasAbbr) {
-            console.warn('[SaveSerializer] setAbbreviationMap: 傳入的 map 格式不正確，已忽略。');
+            UCUFLogger.warn(LogCategory.DATA, '[SaveSerializer] setAbbreviationMap: 傳入的 map 格式不正確，已忽略。');
             return;
         }
         SaveSerializer._abbreviationMap = map;
@@ -213,7 +214,7 @@ export class SaveSerializer {
             const restored = SaveSerializer.deserialize<unknown>(bytes);
             return JSON.stringify(data) === JSON.stringify(restored);
         } catch (e) {
-            console.error('[SaveSerializer] roundTripCheck failed:', e);
+            UCUFLogger.error(LogCategory.DATA, '[SaveSerializer] roundTripCheck failed:', e);
             return false;
         }
     }

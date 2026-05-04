@@ -1,3 +1,4 @@
+
 // @spec-source → 見 docs/cross-reference-index.md
 import { _decorator, Component, Label, Node, Vec3, geometry } from "cc";
 import {
@@ -6,16 +7,11 @@ import {
   BattleTactic,
 } from "../../core/config/Constants";
 import { services } from "../../core/managers/ServiceLoader";
-import { BattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog } from '../models/BattleEntryParams';
+import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog } from '../../shared/BattleEntryParams';
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { BattleController } from "../controllers/BattleController";
 import { TerrainGrid } from "../models/BattleState";
-import { BattleHUDComposite } from "../../ui/components/BattleHUDComposite";
-import type { DeployRuntimeApi } from "../../ui/components/DeployRuntimeApi";
-import { ResultPopupComposite } from "../../ui/components/ResultPopupComposite";
-import { BattleLogComposite } from "../../ui/components/BattleLogComposite";
-import { BattleScenePanel } from "../../ui/components/BattleScenePanel";
-import { DuelChallengePanel } from "../../ui/components/DuelChallengePanel";
+import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from "../../shared/interfaces/IBattleUIComponents";
 import { BoardRenderer } from "./BoardRenderer";
 import { UnitRenderer } from "./UnitRenderer";
 import { SceneBackground } from "./SceneBackground";
@@ -27,7 +23,6 @@ import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
 import { TurnFlowManager } from './TurnFlowManager';
 import { setupCameraForBoard, initSceneBackground, addBackgroundSwitchUI, resolveSceneBackgroundId } from './BattleSceneSetup';
 import { ensureDeployPanelRuntime, ensureHUD, ensureBattleLogPanel, ensureBattleScenePanel, ensureBoardRenderer, ensureUnitRenderer } from './BattleUIInitializer';
-import { ensureGlobalDevOverlay } from '../../ui/dev/GachaDevOverlay';
 
 const { ccclass, property } = _decorator;
 
@@ -39,7 +34,7 @@ const { ccclass, property } = _decorator;
  *   1. 初始化 ServiceLoader（DI 容器）
  *   2. 從 JSON 載入武將設定並建立 GeneralUnit
  *   3. 建立 BattleController 並啟動戰鬥
- *   4. 連結 BattleHUDComposite、Deploy runtime、ResultPopupComposite
+ *   4. 連結 IBattleHUDLike、Deploy runtime、IResultPopupLike
  *   5. 維護簡易文字化的棋盤格狀態（作為 Demo 視覺佔位）
  *
  * 使用方式：掛載於場景根節點，並在 Inspector 中綁定各 UI 元件。
@@ -47,31 +42,31 @@ const { ccclass, property } = _decorator;
 @ccclass("BattleScene")
 export class BattleScene extends Component {
   // ─── UI 元件綁定 ──────────────────────────────────────────────────────────
-  @property(BattleHUDComposite)
-  hud: BattleHUDComposite = null!;
+  @property(Node)
+  hud: IBattleHUDLike = null!;
 
   @property(Node)
   deployHost: Node = null!;
 
-  @property(ResultPopupComposite)
-  resultPopup: ResultPopupComposite = null!;
+  @property(Node)
+  resultPopup: IResultPopupLike = null!;
 
   /** 棋盤文字輸出節點（Debug 用 Label，可在 Inspector 中可選綁定） */
   @property(Label)
   gridDebugLabel: Label = null!;
 
-  @property(BattleLogComposite)
-  battleLogPanel: BattleLogComposite = null!;
+  @property(Node)
+  battleLogPanel: IBattleLogLike = null!;
 
   /** 戰場UI總調度器：統一管理 TigerTallyPanel / ActionCommandPanel / UnitInfoPanel */
-  @property(BattleScenePanel)
-  battleScenePanel: BattleScenePanel = null!;
+  @property(Node)
+  battleScenePanel: IBattleScenePanelLike = null!;
 
   @property(BoardRenderer)
   boardRenderer: BoardRenderer = null!;
 
-  @property(DuelChallengePanel)
-  duelChallengePanel: DuelChallengePanel = null!;
+  @property(Node)
+  duelChallengePanel: IDuelChallengeLike = null!;
 
   @property(UnitRenderer)
   unitRenderer: UnitRenderer = null!;
@@ -112,24 +107,24 @@ export class BattleScene extends Component {
   /** 當前遭遇戰 ID（用於重開時保持同一關卡） */
   private currentEncounterId = "encounter-001";
   /** 本次戰場入口參數（啟動後不變） */
-  private _battleParams: BattleEntryParams | null = null;
+  private _battleParams: IBattleEntryParams | null = null;
   /** 場景背景管理元件 */
   private sceneBackground: SceneBackground | null = null;
-  private deployRuntime: DeployRuntimeApi | null = null;
+  private deployRuntime: IDeployRuntimeLike | null = null;
   private skillTargetingFlow: BattleSkillTargetingFlow | null = null;
   private readonly sceneContext = createBattleSceneContext();
   private battleUIBridge: BattleUIBridge | null = null;
   private turnFlowManager: TurnFlowManager | null = null;
   private sceneFlow: BattleSceneFlow | null = null;
 
-  private get _deployPanelRuntime(): DeployRuntimeApi | null {
+  private get _deployPanelRuntime(): IDeployRuntimeLike | null {
     return this.deployRuntime;
   }
 
   // ─── 生命週期 ─────────────────────────────────────────────────────────────
 
   async start(): Promise<void> {
-    console.log("[BattleScene] start() 開始執行");
+    UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] start() 開始執行");
     const isBattleCaptureMode = this._isBattleCaptureMode();
     // [UI-2-0026] 預設隱藏 gridDebugLabel，避免場景預設 active=true 時顯示 "label" 佔位符
     if (this.gridDebugLabel && !this.showGridDebug) {
@@ -139,13 +134,13 @@ export class BattleScene extends Component {
       // 1. 初始化服務容器（必須在所有 services() 呼叫之前）
       // 傳入 this.node 作為 hostNode，讓 AudioSystem 得以掛載 AudioSource
       services().initialize(this.node);
-      ensureGlobalDevOverlay();
-      console.log("[BattleScene] ServiceLoader 初始化完成");
+      // ensureGlobalDevOverlay(); // 解耦移除
+      UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] ServiceLoader 初始化完成");
 
       // 2. 建立控制器，載入兵種表
       this.ctrl = new BattleController();
       await this.ctrl.loadData();
-      console.log("[BattleScene] BattleController 資料載入完成");
+      UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] BattleController 資料載入完成");
 
       // 2.5 載入技能定義至 ActionSystem（skills.json → action.registerSkills）
       // 並行載入 vfx-effects.json，兩者互不依賴，同時送出加速啟動
@@ -155,16 +150,16 @@ export class BattleScene extends Component {
           loadBattleSkillMetadata(),
           prewarmBattleAudioClips(),
       ]);
-      console.log("[BattleScene] ActionSystem + VFX 效果表載入完成");
+      UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] ActionSystem + VFX 效果表載入完成");
 
       // 2.6 預熱 VFX 池（依據 VFX_BLOCK_REGISTRY 中定義的 prefabPath）
       // capture mode 只做靜態 UI / HUD 驗證，不需要把整批可選特效池都預熱進來，
       // 否則不存在的可選 prefab 會把 UI residual 報表洗成假噪音。
       if (!isBattleCaptureMode) {
         await prewarmVfxPools();
-        console.log("[BattleScene] VFX 池預熱完成");
+        UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] VFX 池預熱完成");
       } else {
-        console.log("[BattleScene] capture mode 略過 VFX 池預熱");
+        UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] capture mode 略過 VFX 池預熱");
       }
 
       // 2.7 解析戰場入口參數（統一 Lobby / Preview / Replay 路徑）
@@ -198,22 +193,22 @@ export class BattleScene extends Component {
 
       // 5. 開始第一場戰鬥（含地形、天氣、戰法）
       this.ctrl.initBattle(pg, eg, terrain, battleParams.weather, battleParams.battleTactic);
-      console.log("[BattleScene] 戰鬥已初始化");
+      UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] 戰鬥已初始化");
 
       // 6. 連結 UI 元件（自動尋找，不依賴 Inspector 綁定）
       const canvas = this.getCanvasNode();
       this.deployRuntime = await ensureDeployPanelRuntime(this.deployHost);
       const hudResult    = ensureHUD(this.hud, this.resultPopup, canvas);
-      this.hud           = (hudResult.hud          ?? this.hud)         as BattleHUDComposite;
-      this.resultPopup   = (hudResult.resultPopup  ?? this.resultPopup) as ResultPopupComposite;
-      this.battleLogPanel   = (ensureBattleLogPanel(this.battleLogPanel, canvas) ?? this.battleLogPanel) as BattleLogComposite;
-      this.battleScenePanel = (ensureBattleScenePanel(this.battleScenePanel, canvas) ?? this.battleScenePanel) as BattleScenePanel;
+      this.hud           = (hudResult.hud          ?? this.hud)         as any;
+      this.resultPopup   = (hudResult.resultPopup  ?? this.resultPopup) as any;
+      this.battleLogPanel   = (ensureBattleLogPanel(this.battleLogPanel, canvas) ?? this.battleLogPanel) as any;
+      this.battleScenePanel = (ensureBattleScenePanel(this.battleScenePanel, canvas) ?? this.battleScenePanel) as any;
       this.boardRenderer    = (ensureBoardRenderer(this.boardRenderer, this.node.scene, this.boardGapRatio, this.boardTargetDepth) ?? this.boardRenderer) as BoardRenderer;
       if (this.boardRenderer) {
           services().scene.registerBoardRenderer(this.boardRenderer);
       }
 
-      // 6-1. 將已初始化的子面板注入 BattleScenePanel（補足 Inspector 未綁定的引用）
+      // 6-1. 將已初始化的子面板注入 IBattleScenePanelLike（補足 Inspector 未綁定的引用）
       this.battleScenePanel?.wirePanels({
           battleHUD:      this.hud       ?? undefined,
           battleLogPanel: this.battleLogPanel ?? undefined,
@@ -275,25 +270,25 @@ export class BattleScene extends Component {
 
       // 6-3. 印出正式入口 log（統一格式）
       const cardNames = initialCards.map(c => c.unitName);
-      console.log(formatBattleEntryLog(battleParams, {
+      UCUFLogger.info(LogCategory.BATTLE, formatBattleEntryLog(battleParams, {
         playerName: pg.name,
         enemyName: eg.name,
         encounterName: encounter?.name ?? battleParams.encounterId,
         cardNames,
       }));
       this._deployPanelRuntime?.setTroopSlotButtonsVisible(false);
-      console.log(`[BattleScene] 虎符卡片已設置：${initialCards.length} 張`);
+      UCUFLogger.info(LogCategory.BATTLE, `[BattleScene] 虎符卡片已設置：${initialCards.length} 張`);
 
       this.boardRenderer?.setDeployHintFaction(Faction.Player);
       setupCameraForBoard(this.node.scene!, this.getCanvasNode());
       this.unitRenderer = (ensureUnitRenderer(this.unitRenderer, this.node.scene, this.boardRenderer, this.getMainCamera(), canvas) ?? this.unitRenderer) as UnitRenderer;
       this.sceneContext.unitRenderer = this.unitRenderer;
       this.sceneContext.boardCamera = this.getMainCamera();
-      console.log(`[BattleScene] unitRenderer 已連結: ${!!this.unitRenderer}`);
+      UCUFLogger.info(LogCategory.BATTLE, `[BattleScene] unitRenderer 已連結: ${!!this.unitRenderer}`);
 
       this._deployPanelRuntime?.setController(this.ctrl);
       this._deployPanelRuntime?.registerDragDropCallback((screenX, screenY) => this.turnFlowManager?.doDeployRaycast(screenX, screenY));
-      console.log(`[BattleScene] deployRuntime 已連結: ${!!this._deployPanelRuntime}`);
+      UCUFLogger.info(LogCategory.BATTLE, `[BattleScene] deployRuntime 已連結: ${!!this._deployPanelRuntime}`);
 
       const snap = services().battle.getSnapshot();
       // 初始化 DP 顯示（確保 deploy runtime 顯示正確的初始 DP）
@@ -314,7 +309,7 @@ export class BattleScene extends Component {
       if (isBattleCaptureMode && this.hud) {
         const hudReady = await this.hud.waitUntilReady(5000);
         if (!hudReady) {
-          console.warn('[BattleScene] capture mode 等待 BattleHUD ready 逾時，將以目前畫面繼續截圖');
+          UCUFLogger.warn(LogCategory.BATTLE, '[BattleScene] capture mode 等待 BattleHUD ready 逾時，將以目前畫面繼續截圖');
         }
 
         const [tallyReady, actionReady, logReady] = await Promise.all([
@@ -324,7 +319,7 @@ export class BattleScene extends Component {
         ]);
 
         if (!tallyReady || !actionReady || !logReady) {
-          console.warn(
+          UCUFLogger.warn(LogCategory.BATTLE, 
             `[BattleScene] capture mode UI ready 狀態不足 tally:${tallyReady} action:${actionReady} log:${logReady}`,
           );
         }
@@ -344,7 +339,7 @@ export class BattleScene extends Component {
           eg.maxHp,
         );
       }
-      console.log(`[BattleScene] HUD 已刷新: ${!!this.hud}`);
+      UCUFLogger.info(LogCategory.BATTLE, `[BattleScene] HUD 已刷新: ${!!this.hud}`);
       this.battleLogPanel?.clear();
       this.battleLogPanel?.append(`第 ${snap.turn} 回合開始，糧草 ${snap.playerFood}`);
       this.presentSceneGambitFeedback();
@@ -368,9 +363,9 @@ export class BattleScene extends Component {
 
       await this._signalCaptureReadyIfNeeded();
 
-      console.log("[BattleScene] ✅ start() 全部完成");
+      UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] ✅ start() 全部完成");
     } catch (e) {
-      console.error("[BattleScene] ❌ start() 發生錯誤:", e);
+      UCUFLogger.error(LogCategory.BATTLE, "[BattleScene] ❌ start() 發生錯誤:", e);
       this._signalCaptureErrorIfNeeded(e);
     }
   }
@@ -420,11 +415,11 @@ export class BattleScene extends Component {
    * 優先讀 SceneManager 透傳的 data（Lobby 正式入口），
    * 若為空（Preview / capture / replay）則使用 DEFAULT_BATTLE_ENTRY_PARAMS。
    */
-  private _resolveBattleParams(): BattleEntryParams {
+  private _resolveBattleParams(): IBattleEntryParams {
     try {
       const sceneData = services().scene.getTargetScene()?.data;
       if (sceneData && typeof sceneData === 'object' && 'entrySource' in sceneData) {
-        return sceneData as BattleEntryParams;
+        return sceneData as IBattleEntryParams;
       }
     } catch {
       // SceneManager 可能尚未初始化（preview 直接 loadScene 場景時）
@@ -514,8 +509,8 @@ export class BattleScene extends Component {
 
     const cam = this.getMainCamera();
     if (!cam) {
-      console.warn('[BattleScene] _doDeployRaycast: boardCamera 為 null，請確認 setupCameraForBoard() 已執行');
-      return;
+      UCUFLogger.warn(LogCategory.BATTLE, '[BattleScene] _doDeployRaycast: boardCamera 為 null，請確認 setupCameraForBoard() 已執行');
+      return null;
     }
 
     const corrected = this.normalizeGameCanvasPoint(screenX, screenY);
@@ -656,10 +651,4 @@ export class BattleScene extends Component {
       this.gridDebugLabel.string = rows.join("\n");
     }
   }
-
-  /**
-   * 新增背景切換 Debug UI 按鈕。
-   * 點擊時會在「白天平原」與「夜晚平原」之間切換，用於測試 SceneBackground。
-   */
 }
-

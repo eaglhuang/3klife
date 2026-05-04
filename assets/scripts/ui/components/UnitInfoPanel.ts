@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * @deprecated
@@ -65,7 +66,7 @@ export class UnitInfoPanel extends UIPreviewBuilder {
             await this.buildScreen(fullScreen.layout, fullScreen.skin, i18n, tokens);
             this._initialized = true;
         } catch (e) {
-            console.warn('[UnitInfoPanel] 規格載入失敗，退回白模', e);
+            UCUFLogger.warn(LogCategory.UI, '[UnitInfoPanel] 規格載入失敗，退回白模', e);
             this._initialized = true;
         }
     }
@@ -87,7 +88,7 @@ export class UnitInfoPanel extends UIPreviewBuilder {
 
         binder.getNode('BtnClose')?.on(Button.EventType.CLICK, this.hide, this);
 
-        console.log(`[UnitInfoPanel] 綁定完成 — name:${!!this._unitName} desc:${!!this._descText}`);
+        UCUFLogger.info(LogCategory.UI, `[UnitInfoPanel] 綁定完成 — name:${!!this._unitName} desc:${!!this._descText}`);
     }
 
     // ── 公開 API ──────────────────────────────────────────────
@@ -98,7 +99,7 @@ export class UnitInfoPanel extends UIPreviewBuilder {
      */
     public show(data: TallyCardData): void {
         if (!this._initialized) {
-            console.warn('[UnitInfoPanel] 尚未初始化，無法顯示');
+            UCUFLogger.warn(LogCategory.UI, '[UnitInfoPanel] 尚未初始化，無法顯示');
             return;
         }
         this._populate(data);

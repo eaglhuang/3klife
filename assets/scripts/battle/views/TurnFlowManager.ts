@@ -1,3 +1,5 @@
+import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
+
 /**
  * TurnFlowManager.ts — 回合推進與交互流程管理器
  *
@@ -51,7 +53,7 @@ export class TurnFlowManager {
     const gen = ++this._advanceTurnGeneration;
     this.scene.scheduleOnce(() => {
       if (c.isAdvancingTurn && this._advanceTurnGeneration === gen) {
-        console.warn('[TurnFlowManager] isAdvancingTurn safety-reset（超時 20s），強制解鎖');
+        UCUFLogger.warn(LogCategory.BATTLE, '[TurnFlowManager] isAdvancingTurn safety-reset（超時 20s），強制解鎖');
         this.finalizeAdvance();
       }
     }, BATTLE_TURN_FLOW_TIMING.advanceSafetyUnlockSec);
@@ -156,10 +158,10 @@ export class TurnFlowManager {
    */
   public doDeployRaycast(screenX: number, screenY: number): void {
     const c = this.ctx;
-    console.log(`[TurnFlowManager] doDeployRaycast screen=(${screenX.toFixed(0)},${screenY.toFixed(0)}) advancing=${c.isAdvancingTurn}`);
+    UCUFLogger.info(LogCategory.BATTLE, `[TurnFlowManager] doDeployRaycast screen=(${screenX.toFixed(0)},${screenY.toFixed(0)}) advancing=${c.isAdvancingTurn}`);
 
     if (c.isAdvancingTurn) {
-      console.log('[TurnFlowManager] doDeployRaycast: 回合推進中，忽略');
+      UCUFLogger.info(LogCategory.BATTLE, '[TurnFlowManager] doDeployRaycast: 回合推進中，忽略');
       return;
     }
 
@@ -172,10 +174,10 @@ export class TurnFlowManager {
       ? c.raycastBoardCell(screenX, screenY)
       : this._legacyRaycastBoardCell(screenX, screenY);
     if (!cell) {
-      console.log('[TurnFlowManager] doDeployRaycast: 未命中任何格子');
+      UCUFLogger.info(LogCategory.BATTLE, '[TurnFlowManager] doDeployRaycast: 未命中任何格子');
       return;
     }
-    console.log(`[TurnFlowManager] 命中格子 lane=${cell.lane} depth=${cell.depth}`);
+    UCUFLogger.info(LogCategory.BATTLE, `[TurnFlowManager] 命中格子 lane=${cell.lane} depth=${cell.depth}`);
 
     if (c.ctrl?.isWaitingDuelPlacement) {
       if (cell.depth < 0 || cell.depth >= GAME_CONFIG.GRID_DEPTH) return;
@@ -192,10 +194,10 @@ export class TurnFlowManager {
     }
 
     if (cell.depth === 0) {
-      console.log(`[TurnFlowManager] 部署到 lane=${cell.lane}`);
+      UCUFLogger.info(LogCategory.BATTLE, `[TurnFlowManager] 部署到 lane=${cell.lane}`);
       c.deployRuntime?.selectLane(cell.lane);
     } else {
-      console.log(`[TurnFlowManager] depth=${cell.depth} 非部署列（需 depth=0），忽略`);
+      UCUFLogger.info(LogCategory.BATTLE, `[TurnFlowManager] depth=${cell.depth} 非部署列（需 depth=0），忽略`);
     }
   }
 
@@ -204,30 +206,30 @@ export class TurnFlowManager {
     // 避免 Cocos minifier 混淆 private 方法名稱導致靜默失敗
     const cam = this.ctx.boardCamera;
     if (!cam) {
-      console.warn('[TurnFlowManager] doDeployRaycast: boardCamera 為 null，無法射線偵測。請確認 setupCameraForBoard() 已執行');
+      UCUFLogger.warn(LogCategory.BATTLE, '[TurnFlowManager] doDeployRaycast: boardCamera 為 null，無法射線偵測。請確認 setupCameraForBoard() 已執行');
       return null;
     }
 
     const ray = new geometry.Ray();
     cam.screenPointToRay(screenX, screenY, ray);
-    console.log(`[TurnFlowManager] ray.d=(${ray.d.x.toFixed(3)},${ray.d.y.toFixed(3)},${ray.d.z.toFixed(3)})`);
+    UCUFLogger.info(LogCategory.BATTLE, `[TurnFlowManager] ray.d=(${ray.d.x.toFixed(3)},${ray.d.y.toFixed(3)},${ray.d.z.toFixed(3)})`);
 
     if (Math.abs(ray.d.y) < 0.0001) {
-      console.warn('[TurnFlowManager] doDeployRaycast: 射線平行地面，無法偵測');
+      UCUFLogger.warn(LogCategory.BATTLE, '[TurnFlowManager] doDeployRaycast: 射線平行地面，無法偵測');
       return null;
     }
     const t = -ray.o.y / ray.d.y;
     if (t < 0) {
-      console.warn(`[TurnFlowManager] doDeployRaycast: t=${t.toFixed(3)} < 0，射線打到背面`);
+      UCUFLogger.warn(LogCategory.BATTLE, `[TurnFlowManager] doDeployRaycast: t=${t.toFixed(3)} < 0，射線打到背面`);
       return null;
     }
     const hitPoint = new Vec3();
     Vec3.scaleAndAdd(hitPoint, ray.o, ray.d, t);
-    console.log(`[TurnFlowManager] hitPoint=(${hitPoint.x.toFixed(2)},${hitPoint.y.toFixed(2)},${hitPoint.z.toFixed(2)})`);
+    UCUFLogger.info(LogCategory.BATTLE, `[TurnFlowManager] hitPoint=(${hitPoint.x.toFixed(2)},${hitPoint.y.toFixed(2)},${hitPoint.z.toFixed(2)})`);
 
     const cell = this.ctx.boardRenderer?.getCellFromWorldPos(hitPoint);
     if (!cell) {
-      console.log('[TurnFlowManager] doDeployRaycast: 未命中任何格子（hitPoint 不在棋盤範圍內）');
+      UCUFLogger.info(LogCategory.BATTLE, '[TurnFlowManager] doDeployRaycast: 未命中任何格子（hitPoint 不在棋盤範圍內）');
       return null;
     }
     return cell;
@@ -271,7 +273,7 @@ export class TurnFlowManager {
       c.duelChallengePanel.node.once('duelAccepted', () => this._onPlayerDuelDecision(true), this.scene);
       c.duelChallengePanel.node.once('duelRejected', () => this._onPlayerDuelDecision(false), this.scene);
     } else {
-      console.warn('[TurnFlowManager] duelChallengePanel 未綁定，自動接受單挑');
+      UCUFLogger.warn(LogCategory.BATTLE, '[TurnFlowManager] duelChallengePanel 未綁定，自動接受單挑');
       this._onPlayerDuelDecision(true);
     }
   }

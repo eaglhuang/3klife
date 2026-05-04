@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import {
     _decorator, Component, Node, VideoPlayer,
@@ -51,7 +52,7 @@ export class VideoPlayerTest extends Component {
     private _onCompleteCallback: (() => void) | null = null;
 
     start() {
-        console.log('[VideoPlayerTest] 就緒。按空白鍵播放影片，按 ESC 跳過。');
+        UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 就緒。按空白鍵播放影片，按 ESC 跳過。');
     }
 
     onEnable() {
@@ -84,15 +85,15 @@ export class VideoPlayerTest extends Component {
      */
     public playFullScreen(onComplete?: () => void) {
         if (this._isPlaying) {
-            console.warn('[VideoPlayerTest] 影片正在播放中');
+            UCUFLogger.warn(LogCategory.DATA, '[VideoPlayerTest] 影片正在播放中');
             return;
         }
         if (!this.localClip && !this.remoteURL) {
-            console.error('[VideoPlayerTest] 請設定 localClip 或 remoteURL');
+            UCUFLogger.error(LogCategory.DATA, '[VideoPlayerTest] 請設定 localClip 或 remoteURL');
             return;
         }
 
-        console.log('[VideoPlayerTest] 開始播放...');
+        UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 開始播放...');
         this._isPlaying = true;
         this._playStartTime = Date.now() / 1000;
         this._onCompleteCallback = onComplete ?? null;
@@ -175,7 +176,7 @@ export class VideoPlayerTest extends Component {
     private _buildVideoPlayer() {
         const canvasNode = this._findCanvas();
         if (!canvasNode) {
-            console.error('[VideoPlayerTest] 找不到 Canvas 節點');
+            UCUFLogger.error(LogCategory.DATA, '[VideoPlayerTest] 找不到 Canvas 節點');
             return;
         }
 
@@ -196,11 +197,11 @@ export class VideoPlayerTest extends Component {
         if (this.localClip) {
             this._videoPlayer.resourceType = VideoPlayer.ResourceType.LOCAL;
             this._videoPlayer.clip = this.localClip;
-            console.log('[VideoPlayerTest] 使用本地影片');
+            UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 使用本地影片');
         } else {
             this._videoPlayer.resourceType = VideoPlayer.ResourceType.REMOTE;
             this._videoPlayer.remoteURL = this.remoteURL;
-            console.log('[VideoPlayerTest] 使用遠端影片: ' + this.remoteURL);
+            UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 使用遠端影片: ' + this.remoteURL);
         }
 
         this._videoPlayer.node.on(VideoPlayer.EventType.READY_TO_PLAY, this._onReadyToPlay, this);
@@ -234,7 +235,7 @@ export class VideoPlayerTest extends Component {
 
         const nativeVideo = (this._videoPlayer as any).nativeVideo as HTMLVideoElement | null;
         if (!nativeVideo) {
-            console.warn('[VideoPlayerTest] nativeVideo 不存在（非 Web 平台），跳過 CSS 修正');
+            UCUFLogger.warn(LogCategory.DATA, '[VideoPlayerTest] nativeVideo 不存在（非 Web 平台），跳過 CSS 修正');
             return;
         }
 
@@ -274,7 +275,7 @@ export class VideoPlayerTest extends Component {
             opacity: '1',
         });
 
-        console.log('[VideoPlayerTest] <video> 已搬到 body 層，應可看到畫面');
+        UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] <video> 已搬到 body 層，應可看到畫面');
     }
 
     // ─────────────────────────────────────────
@@ -282,24 +283,24 @@ export class VideoPlayerTest extends Component {
     // ─────────────────────────────────────────
 
     private _onReadyToPlay() {
-        console.log('[VideoPlayerTest] 影片就緒，時長: ' + this._videoPlayer?.duration?.toFixed(1) + 's');
+        UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 影片就緒，時長: ' + this._videoPlayer?.duration?.toFixed(1) + 's');
     }
 
     private _onPlaying() {
-        console.log('[VideoPlayerTest] 影片播放中...');
+        UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 影片播放中...');
     }
 
     private _onCompleted() {
-        console.log('[VideoPlayerTest] 影片播放完畢，autoCloseOnComplete=' + this.autoCloseOnComplete);
+        UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 影片播放完畢，autoCloseOnComplete=' + this.autoCloseOnComplete);
         if (this.autoCloseOnComplete) {
             this._closePlayer();
         } else {
-            console.warn('[VideoPlayerTest] autoCloseOnComplete=false，不會自動關閉。請按 ESC 或手動呼叫 _closePlayer()。');
+            UCUFLogger.warn(LogCategory.DATA, '[VideoPlayerTest] autoCloseOnComplete=false，不會自動關閉。請按 ESC 或手動呼叫 _closePlayer()。');
         }
     }
 
     private _onError() {
-        console.error('[VideoPlayerTest] 影片播放錯誤！請確認格式為 H.264 MP4');
+        UCUFLogger.error(LogCategory.DATA, '[VideoPlayerTest] 影片播放錯誤！請確認格式為 H.264 MP4');
         this._closePlayer();
     }
 
@@ -311,15 +312,15 @@ export class VideoPlayerTest extends Component {
         if (!this._isPlaying) return;
         const elapsed = Date.now() / 1000 - this._playStartTime;
         if (this.skipAfterSeconds > 0 && elapsed < this.skipAfterSeconds) {
-            console.log('[VideoPlayerTest] 還需 ' + (this.skipAfterSeconds - elapsed).toFixed(1) + 's 後才能跳過');
+            UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 還需 ' + (this.skipAfterSeconds - elapsed).toFixed(1) + 's 後才能跳過');
             return;
         }
-        console.log('[VideoPlayerTest] 跳過影片');
+        UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 跳過影片');
         this._closePlayer();
     }
 
     private _closePlayer() {
-        console.log('[VideoPlayerTest] _closePlayer() 開始。videoPlayer.isValid=' +
+        UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] _closePlayer() 開始。videoPlayer.isValid=' +
             this._videoPlayer?.isValid + ' cssOverlay=' + !!this._cssOverlayDiv + ' videoContainer=' + !!this._videoContainer);
         this._isPlaying = false;
 
@@ -328,29 +329,29 @@ export class VideoPlayerTest extends Component {
             const nativeVideo = (this._videoPlayer as any).nativeVideo as HTMLVideoElement | null;
             if (nativeVideo) {
                 nativeVideo.style.visibility = 'hidden';
-                console.log('[VideoPlayerTest] nativeVideo visibility=hidden 設定完成');
+                UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] nativeVideo visibility=hidden 設定完成');
             } else {
-                console.warn('[VideoPlayerTest] nativeVideo 為 null（平台不支援或尚未建立）');
+                UCUFLogger.warn(LogCategory.DATA, '[VideoPlayerTest] nativeVideo 為 null（平台不支援或尚未建立）');
             }
             // 使用已儲存的 container 參照（stop() 後 nativeVideo.parentElement 可能為 null）
             if (this._videoContainer) {
                 this._videoContainer.style.visibility = 'hidden';
-                console.log('[VideoPlayerTest] videoContainer visibility=hidden 設定完成');
+                UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] videoContainer visibility=hidden 設定完成');
             } else {
-                console.warn('[VideoPlayerTest] _videoContainer 為 null（_fixVideoCSS 未執行？）');
+                UCUFLogger.warn(LogCategory.DATA, '[VideoPlayerTest] _videoContainer 為 null（_fixVideoCSS 未執行？）');
             }
             this._videoPlayer.stop();
-            console.log('[VideoPlayerTest] videoPlayer.stop() 完成');
+            UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] videoPlayer.stop() 完成');
         } else {
-            console.warn('[VideoPlayerTest] videoPlayer 不存在或已失效，跳過 stop()');
+            UCUFLogger.warn(LogCategory.DATA, '[VideoPlayerTest] videoPlayer 不存在或已失效，跳過 stop()');
         }
 
         // CSS 遮罩淡出
         if (this._cssOverlayDiv) {
             this._cssOverlayDiv.style.opacity = '0';
-            console.log('[VideoPlayerTest] cssOverlay 淡出中...');
+            UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] cssOverlay 淡出中...');
         } else {
-            console.warn('[VideoPlayerTest] cssOverlay 不存在');
+            UCUFLogger.warn(LogCategory.DATA, '[VideoPlayerTest] cssOverlay 不存在');
         }
 
         // ─── 回呼：在 overlay 開始淡出的瞬間立即觸發 ─────────────────────
@@ -360,47 +361,47 @@ export class VideoPlayerTest extends Component {
         const cb = this._onCompleteCallback;
         this._onCompleteCallback = null;
         if (cb) {
-            console.log('[VideoPlayerTest] onComplete 回呼觸發（overlay 淡出中，場景可立即恢復）');
+            UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] onComplete 回呼觸發（overlay 淡出中，場景可立即恢復）');
             cb();
         }
         // 同時發送 node 事件，供外部元件監聽（鬆耦合）
         this.node.emit('video-completed');
 
         // 等淡出完成再清理
-        console.log('[VideoPlayerTest] 350ms 後執行 _cleanup()...');
+        UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 350ms 後執行 _cleanup()...');
         setTimeout(() => this._cleanup(), 350);
     }
 
     private _cleanup() {
-        console.log('[VideoPlayerTest] _cleanup() 開始。cssOverlay=' + !!this._cssOverlayDiv +
+        UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] _cleanup() 開始。cssOverlay=' + !!this._cssOverlayDiv +
             ' videoContainer=' + !!this._videoContainer + ' videoNode.isValid=' + this._videoNode?.isValid);
 
         // 1. 先移除 CSS 遮罩，讓遊戲畫面立即可見
         if (this._cssOverlayDiv) {
             this._cssOverlayDiv.remove();
             this._cssOverlayDiv = null;
-            console.log('[VideoPlayerTest] cssOverlay 已移除');
+            UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] cssOverlay 已移除');
         } else {
-            console.warn('[VideoPlayerTest] cssOverlay 為 null，跳過移除');
+            UCUFLogger.warn(LogCategory.DATA, '[VideoPlayerTest] cssOverlay 為 null，跳過移除');
         }
 
         // 2. 移除 <video> 容器（使用儲存的參照，不依賴 nativeVideo.parentElement）
         if (this._videoContainer) {
             // 確認確實在 DOM 中
             const inDom = document.body.contains(this._videoContainer);
-            console.log('[VideoPlayerTest] videoContainer 在 body 中: ' + inDom);
+            UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] videoContainer 在 body 中: ' + inDom);
             this._videoContainer.remove();
             this._videoContainer = null;
-            console.log('[VideoPlayerTest] videoContainer 已移除');
+            UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] videoContainer 已移除');
         } else {
-            console.warn('[VideoPlayerTest] videoContainer 為 null，跳過移除（可能 Cocos stop() 已清掉）');
+            UCUFLogger.warn(LogCategory.DATA, '[VideoPlayerTest] videoContainer 為 null，跳過移除（可能 Cocos stop() 已清掉）');
         }
 
         // 3. 銷毀 Cocos 節點（放最後，讓 Cocos 自己清理剩餘資源）
         if (this._videoNode?.isValid) {
             this._videoNode.destroy();
             this._videoNode = null;
-            console.log('[VideoPlayerTest] videoNode 已銷毀');
+            UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] videoNode 已銷毀');
         }
         this._videoPlayer = null;
 
@@ -411,10 +412,10 @@ export class VideoPlayerTest extends Component {
         this._nativeVideo = null;
         setTimeout(() => {
             if (nativeVideoRef && nativeVideoRef.parentElement) {
-                console.log('[VideoPlayerTest] 最終清掃：Cocos deferred destroy 後仍有殘留容器，強制移除');
+                UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 最終清掃：Cocos deferred destroy 後仍有殘留容器，強制移除');
                 nativeVideoRef.parentElement.remove();
             }
-            console.log('[VideoPlayerTest] 清理完成');
+            UCUFLogger.info(LogCategory.DATA, '[VideoPlayerTest] 清理完成');
         }, 200);
     }
 

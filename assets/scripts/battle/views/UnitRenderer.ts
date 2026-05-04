@@ -1,3 +1,5 @@
+import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
+
 // @spec-source → 見 docs/cross-reference-index.md
 import {
   _decorator,
@@ -834,7 +836,7 @@ export class UnitRenderer extends Component {
   public playBuffEffect(unitId: string, lane: number, depth: number, attackDelta: number, hpDelta: number): void {
     const worldPos = this.getUnitWorldPosition(lane, depth, 0.02);
     if (!worldPos) return;
-    console.log(`[UnitRenderer] playBuffEffect unit=${unitId} lane=${lane} depth=${depth} atk=${attackDelta} hp=${hpDelta}`);
+    UCUFLogger.info(LogCategory.BATTLE, `[UnitRenderer] playBuffEffect unit=${unitId} lane=${lane} depth=${depth} atk=${attackDelta} hp=${hpDelta}`);
     if (attackDelta > 0) this.atkGainPool?.play(worldPos);
     if (attackDelta < 0) this.atkLossPool?.play(worldPos);
     if (hpDelta > 0)     this.hpGainPool?.play(worldPos);
@@ -877,7 +879,7 @@ export class UnitRenderer extends Component {
       this.hpGainPool.initialize({ variant: "HpGain", prefabPath: "fx/buff/buff_gain_3d", ringTexturePath: "vfx_core:textures/rings/tex_ring_addlife", mainTexturePath: "vfx_core:textures/icons/tex_icon_addlife", arrowTexturePath: "vfx_core:textures/shapes/tex_shape_arrow_addlife", sparkTexturePath: "vfx_core:textures/rings/ex_energy_ring", arrowUp: true,  useDualArrows: true, mainRotationDeg: 90, ringColor: healBuffRing, mainColor: healBuffMain, arrowColor: healBuffArrow, label: "HpGain" }),
       this.hpLossPool.initialize({ variant: "HpLoss", prefabPath: "fx/buff/buff_debuff_3d", ringTexturePath: "vfx_core:textures/rings/tex_ring_addlife", mainTexturePath: "vfx_core:textures/icons/tex_icon_addlife", arrowTexturePath: "vfx_core:textures/shapes/tex_shape_arrow_addlife", sparkTexturePath: "vfx_core:textures/glow/ex_hit_flash", arrowUp: false, useDualArrows: true, mainRotationDeg: 90, ringColor: debuffRing, mainColor: debuffMain, arrowColor: debuffArrow, label: "HpLoss" }),
     ]);
-    console.log("[UnitRenderer] ✅ 全部特效 Pool 初始化完成 (ATK±, HP±)");
+    UCUFLogger.info(LogCategory.BATTLE, "[UnitRenderer] ✅ 全部特效 Pool 初始化完成 (ATK±, HP±)");
   }
 
   private ensureRoots(): void {
@@ -1683,7 +1685,7 @@ export class UnitRenderer extends Component {
           : entry.sceneUuid;
         assetManager.loadAny({ uuid }, (error, asset) => {
           if (error || !(asset instanceof Prefab)) {
-            console.warn(`[UnitRenderer] 載入小兵 prefab 失敗: ${entry.glbPath}`, error ?? new Error("asset is not Prefab"));
+            UCUFLogger.warn(LogCategory.BATTLE, `[UnitRenderer] 載入小兵 prefab 失敗: ${entry.glbPath}`, error ?? new Error("asset is not Prefab"));
             resolve(null);
             return;
           }
@@ -1698,7 +1700,7 @@ export class UnitRenderer extends Component {
         .then(prefab => resolve(prefab))
         .catch(() => {
           // 若子陣營特定的 Prefab 不存在 (例如還沒做藍兵)，回退到預設 Prefab (綠兵)
-          console.log(`[UnitRenderer] 找不到子陣營 Prefab: ${subFactionPath}, 回退到預設路徑`);
+          UCUFLogger.info(LogCategory.BATTLE, `[UnitRenderer] 找不到子陣營 Prefab: ${subFactionPath}, 回退到預設路徑`);
           if (entry.prefabPath && subFactionPath !== entry.prefabPath) {
             services().resource.loadPrefab(entry.prefabPath)
               .then(p => resolve(p))
@@ -1850,14 +1852,14 @@ export class UnitRenderer extends Component {
     const pending = new Promise<Prefab | null>((resolve) => {
       const resolveByUuid = (): void => {
         if (!entry.sceneUuid) {
-          console.warn(`[UnitRenderer] 載入武將 prefab 失敗: ${entry.glbPath}`);
+          UCUFLogger.warn(LogCategory.BATTLE, `[UnitRenderer] 載入武將 prefab 失敗: ${entry.glbPath}`);
           this.heroPrefabLoads.delete(heroId);
           resolve(null);
           return;
         }
         assetManager.loadAny({ uuid: entry.sceneUuid }, (error, asset) => {
           if (error || !(asset instanceof Prefab)) {
-            console.warn(`[UnitRenderer] 載入武將 prefab 失敗: ${entry.glbPath}`, error ?? new Error("asset is not Prefab"));
+            UCUFLogger.warn(LogCategory.BATTLE, `[UnitRenderer] 載入武將 prefab 失敗: ${entry.glbPath}`, error ?? new Error("asset is not Prefab"));
             this.heroPrefabLoads.delete(heroId);
             resolve(null);
             return;
@@ -1958,7 +1960,7 @@ export class UnitRenderer extends Component {
 
         resources.load(matcapPath, ImageAsset, (imageErr, imageAsset) => {
           if (imageErr || !imageAsset) {
-            console.warn('[UnitRenderer] MatCap 貼圖載入失敗', imageErr ?? err);
+            UCUFLogger.warn(LogCategory.BATTLE, '[UnitRenderer] MatCap 貼圖載入失敗', imageErr ?? err);
             resolve(null);
             return;
           }
@@ -2067,14 +2069,14 @@ export class UnitRenderer extends Component {
     return new Promise<Texture2D | null>(resolve => {
       assetManager.loadAny({ uuid: entry.rmTexUuid! }, (err, asset) => {
         if (err || !asset) {
-          console.warn('[UnitRenderer] 武將 RM 貼圖載入失敗', err);
+          UCUFLogger.warn(LogCategory.BATTLE, '[UnitRenderer] 武將 RM 貼圖載入失敗', err);
           resolve(null);
           return;
         }
         if (asset instanceof Texture2D) {
           resolve(asset);
         } else {
-          console.warn('[UnitRenderer] 武將 RM 資產非 Texture2D，type:', (asset as any)?.constructor?.name);
+          UCUFLogger.warn(LogCategory.BATTLE, '[UnitRenderer] 武將 RM 資產非 Texture2D，type:', (asset as any)?.constructor?.name);
           resolve(null);
         }
       });
@@ -2188,7 +2190,7 @@ export class UnitRenderer extends Component {
         renderer.materials = copy;
       }
     } catch (error) {
-      console.warn('[UnitRenderer] 無法套用保底材質', error);
+      UCUFLogger.warn(LogCategory.BATTLE, '[UnitRenderer] 無法套用保底材質', error);
     }
   }
 

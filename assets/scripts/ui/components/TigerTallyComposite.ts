@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md (UCUF Wave 3)
 /**
  * TigerTallyComposite — 虎符卡片區（Composite 版）
@@ -106,59 +107,7 @@ const TALLY_TIER_STYLE: Record<TallyCardData['rarity'], {
     },
 };
 
-export interface TallyTraitDetail {
-    label: string;
-    detail?: string;
-}
-
-export interface TallyAbilityDetail {
-    name: string;
-    detail?: string;
-}
-
-export interface TallySourceInfo {
-    faction?: string;
-    origin?: string;
-    sourceType?: string;
-    obtainHint?: string;
-}
-
-export interface TallyLoreInfo {
-    title?: string;
-    summary?: string;
-    body?: string;
-}
-
-export interface TallyCardData {
-    unitType: string;
-    unitName: string;
-    unitSub: string;
-    atk:  number;
-    def:  number;
-    hp:   number;
-    spd:  number;
-    cost: number;
-    rarity: 'normal' | 'rare' | 'epic' | 'legendary' | 'mythic';
-    traits: string[];
-    abilities: string[];
-    desc: string;
-    traitDetails?: TallyTraitDetail[];
-    abilityDetails?: TallyAbilityDetail[];
-    source?: TallySourceInfo;
-    lore?: TallyLoreInfo;
-    tacticId?: string;
-    battleSkillId?: string;
-    battleSkillSourceType?: SkillSourceType;
-    targetMode?: BattleSkillTargetMode;
-    timing?: BattleSkillTiming;
-    isDisabled?: boolean;
-    rarityLabel?: string;
-    stars?: string;
-    artResource?: string;
-    rarityResource?: string;
-    typeBadgeResource?: string;
-    typeIconResource?: string;
-}
+import { TallyCardData } from '../../shared/TallyCardContract';
 
 @ccclass('TigerTallyComposite')
 export class TigerTallyComposite extends CompositePanel {
@@ -182,7 +131,7 @@ export class TigerTallyComposite extends CompositePanel {
     public async mount(): Promise<void> {
         if (this._isMounted) return;
         try {
-            console.log('[TigerTallyComposite] mount() start — node:', this.node.name, 'parent:', this.node.parent?.name);
+            UCUFLogger.info(LogCategory.UI, '[TigerTallyComposite] mount() start — node:', this.node.name, 'parent:', this.node.parent?.name);
             await super.mount('tiger-tally-screen');
             this._isMounted = true;
             // 診斷：mount 完成後記錄位置資訊
@@ -191,7 +140,7 @@ export class TigerTallyComposite extends CompositePanel {
                 logBattleUIPosition('TigerTallyComposite', root);
             }
         } catch (e) {
-            console.warn('[TigerTallyComposite] mount failed', e);
+            UCUFLogger.warn(LogCategory.UI, '[TigerTallyComposite] mount failed', e);
             this._isMounted = true;
         }
     }
@@ -212,7 +161,7 @@ export class TigerTallyComposite extends CompositePanel {
             const card = binder.getNode(`TallyCard${i}`);
             if (card) this._cardNodes.push(card);
         }
-        console.log(`[TigerTallyComposite] ready - ${this._cardNodes.length} card slots`);
+        UCUFLogger.info(LogCategory.UI, `[TigerTallyComposite] ready - ${this._cardNodes.length} card slots`);
 
         // 診斷：_onAfterBuildReady 時記錄詳細位置
         const root = this.node.children[0];
@@ -484,7 +433,7 @@ export class TigerTallyComposite extends CompositePanel {
         const key = `${slotKey}|${preferredPaths.join(',')}|${fallbackPath}`;
         if (this._warnedFallbacks.has(key)) return;
         this._warnedFallbacks.add(key);
-        console.log(
+        UCUFLogger.info(LogCategory.UI, 
             `[TigerTallyComposite] ${slotKey} 缺少正式資源，改用 fallback: ${fallbackPath} | tried=${preferredPaths.join(', ')}`,
         );
     }
@@ -493,7 +442,7 @@ export class TigerTallyComposite extends CompositePanel {
         const key = `${slotKey}|missing|${preferredPaths.join(',')}|${fallbackPath}`;
         if (this._warnedFallbacks.has(key)) return;
         this._warnedFallbacks.add(key);
-        console.warn(
+        UCUFLogger.warn(LogCategory.UI, 
             `[TigerTallyComposite] ${slotKey} 載入失敗，正式資源與 fallback 皆不存在 | tried=${preferredPaths.join(', ')} | fallback=${fallbackPath}`,
         );
     }

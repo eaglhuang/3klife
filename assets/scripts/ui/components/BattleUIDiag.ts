@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 /**
  * BattleUIDiag — 戰場 UI 診斷工具
  *
@@ -30,32 +31,32 @@ export function logBattleUIPosition(tag: string, rootNode: Node): void {
     const canvasWP = canvasNode?.worldPosition;
     const canvasUT = canvasNode?.getComponent(UITransform);
 
-    console.log(
+    UCUFLogger.info(LogCategory.UI, 
         `%c[BattleUIDiag] ${tag}`,
         'color: #00bcd4; font-weight: bold',
     );
-    console.log(`  設計解析度: ${designRes.width}×${designRes.height}`);
-    console.log(`  實際可見區: ${visibleSize.width.toFixed(0)}×${visibleSize.height.toFixed(0)}`);
+    UCUFLogger.info(LogCategory.UI, `  設計解析度: ${designRes.width}×${designRes.height}`);
+    UCUFLogger.info(LogCategory.UI, `  實際可見區: ${visibleSize.width.toFixed(0)}×${visibleSize.height.toFixed(0)}`);
     if (canvasWP && canvasUT) {
-        console.log(
+        UCUFLogger.info(LogCategory.UI, 
             `  Canvas: worldPos=(${canvasWP.x.toFixed(0)},${canvasWP.y.toFixed(0)})` +
             ` size=${canvasUT.contentSize.width.toFixed(0)}×${canvasUT.contentSize.height.toFixed(0)}`
         );
     }
     if (parentUT) {
-        console.log(
+        UCUFLogger.info(LogCategory.UI, 
             `  父節點 [${parent!.name}]: size=${parentUT.contentSize.width.toFixed(0)}×${parentUT.contentSize.height.toFixed(0)}`
         );
     }
 
     const sz = ut ? `${ut.contentSize.width.toFixed(0)}×${ut.contentSize.height.toFixed(0)}` : '?';
-    console.log(
+    UCUFLogger.info(LogCategory.UI, 
         `  ${rootNode.name}: localPos=(${rootNode.position.x.toFixed(0)},${rootNode.position.y.toFixed(0)})` +
         ` worldPos=(${wp.x.toFixed(0)},${wp.y.toFixed(0)}) size=${sz}`
     );
 
     if (w) {
-        console.log(
+        UCUFLogger.info(LogCategory.UI, 
             `  Widget: enabled=${w.enabled}` +
             ` left=${w.isAlignLeft ? w.left : '-'}` +
             ` right=${w.isAlignRight ? w.right : '-'}` +
@@ -84,20 +85,20 @@ export function logBattleUIPosition(tag: string, rootNode: Node): void {
             && nodeTop > designBottom && nodeBottom < designTop;
 
         if (!inDesignArea) {
-            console.warn(
+            UCUFLogger.warn(LogCategory.UI, 
                 `  ⚠ 節點超出設計解析度範圍！` +
                 ` 節點X=[${nodeLeft.toFixed(0)},${nodeRight.toFixed(0)}]` +
                 ` 設計X=[${designLeft.toFixed(0)},${designRight.toFixed(0)}]` +
                 ` 節點Y=[${nodeBottom.toFixed(0)},${nodeTop.toFixed(0)}]` +
                 ` 設計Y=[${designBottom.toFixed(0)},${designTop.toFixed(0)}]`
             );
-            console.warn(
+            UCUFLogger.warn(LogCategory.UI, 
                 `  ⚠ 原因：Widget 對齊到擴展後的 Canvas (${visibleSize.width.toFixed(0)}px)，` +
                 `而非設計解析度 (${designRes.width}px)。` +
                 `在視窗比例不同於設計比例時，節點會被推到螢幕外。`
             );
         } else {
-            console.log(`  ✓ 節點在設計解析度範圍內`);
+            UCUFLogger.info(LogCategory.UI, `  ✓ 節點在設計解析度範圍內`);
         }
 
         // 額外：檢查 HTML Canvas 的 CSS 位置
@@ -105,13 +106,13 @@ export function logBattleUIPosition(tag: string, rootNode: Node): void {
             const gameCanvas = document.getElementById('GameCanvas');
             if (gameCanvas) {
                 const rect = gameCanvas.getBoundingClientRect();
-                console.log(
+                UCUFLogger.info(LogCategory.UI, 
                     `  HTML GameCanvas: CSS left=${rect.left.toFixed(0)} top=${rect.top.toFixed(0)}` +
                     ` width=${rect.width.toFixed(0)} height=${rect.height.toFixed(0)}` +
                     ` window=${window.innerWidth}×${window.innerHeight}`
                 );
                 if (rect.left < 0) {
-                    console.warn(
+                    UCUFLogger.warn(LogCategory.UI, 
                         `  ⚠ GameCanvas CSS left=${rect.left.toFixed(0)}px — ` +
                         `Canvas 左側 ${Math.abs(rect.left).toFixed(0)}px 被瀏覽器視窗裁切！` +
                         `左對齊的 UI 元素會被看不到。`
@@ -131,36 +132,36 @@ export function registerBattleUIDiag(): void {
 
     (window as unknown as Record<string, unknown>).__battleUIDiag = () => {
         const scene = director.getScene();
-        if (!scene) { console.log('scene not loaded'); return; }
+        if (!scene) { UCUFLogger.info(LogCategory.UI, 'scene not loaded'); return; }
         const canvas = scene.getChildByName('Canvas');
-        if (!canvas) { console.log('Canvas not found'); return; }
+        if (!canvas) { UCUFLogger.info(LogCategory.UI, 'Canvas not found'); return; }
 
-        console.log('%c=== Battle UI Diagnostic ===', 'color: #ff9800; font-weight: bold; font-size: 14px');
+        UCUFLogger.info(LogCategory.UI, '%c=== Battle UI Diagnostic ===', 'color: #ff9800; font-weight: bold; font-size: 14px');
 
         const designRes = view.getDesignResolutionSize();
         const visibleSize = view.getVisibleSize();
         const scaleX = view.getScaleX();
         const canvasUT = canvas.getComponent(UITransform)!;
 
-        console.log(`設計解析度: ${designRes.width}×${designRes.height}`);
-        console.log(`實際可見區: ${visibleSize.width.toFixed(0)}×${visibleSize.height.toFixed(0)}`);
-        console.log(`Canvas worldPos: (${canvas.worldPosition.x.toFixed(0)},${canvas.worldPosition.y.toFixed(0)})`);
-        console.log(`Canvas size: ${canvasUT.contentSize.width.toFixed(0)}×${canvasUT.contentSize.height.toFixed(0)}`);
-        console.log(`view.scaleX: ${scaleX.toFixed(4)}`);
+        UCUFLogger.info(LogCategory.UI, `設計解析度: ${designRes.width}×${designRes.height}`);
+        UCUFLogger.info(LogCategory.UI, `實際可見區: ${visibleSize.width.toFixed(0)}×${visibleSize.height.toFixed(0)}`);
+        UCUFLogger.info(LogCategory.UI, `Canvas worldPos: (${canvas.worldPosition.x.toFixed(0)},${canvas.worldPosition.y.toFixed(0)})`);
+        UCUFLogger.info(LogCategory.UI, `Canvas size: ${canvasUT.contentSize.width.toFixed(0)}×${canvasUT.contentSize.height.toFixed(0)}`);
+        UCUFLogger.info(LogCategory.UI, `view.scaleX: ${scaleX.toFixed(4)}`);
 
         // HTML viewport
         if (typeof document !== 'undefined') {
             const gc = document.getElementById('GameCanvas');
             if (gc) {
                 const rect = gc.getBoundingClientRect();
-                console.log(
+                UCUFLogger.info(LogCategory.UI, 
                     `GameCanvas CSS: left=${rect.left.toFixed(0)} width=${rect.width.toFixed(0)} ` +
                     `window=${window.innerWidth}×${window.innerHeight}`
                 );
                 const overflowLeft = Math.max(0, -rect.left);
                 const overflowRight = Math.max(0, rect.right - window.innerWidth);
                 if (overflowLeft > 0 || overflowRight > 0) {
-                    console.warn(
+                    UCUFLogger.warn(LogCategory.UI, 
                         `⚠ Canvas 超出視窗：左溢出 ${overflowLeft.toFixed(0)}px, 右溢出 ${overflowRight.toFixed(0)}px — ` +
                         `邊緣對齊的 UI 會被裁切！`
                     );
@@ -185,5 +186,5 @@ export function registerBattleUIDiag(): void {
         }
     };
 
-    console.log('[BattleUIDiag] window.__battleUIDiag() 已註冊 — 在 F12 console 呼叫即可查看診斷');
+    UCUFLogger.info(LogCategory.UI, '[BattleUIDiag] window.__battleUIDiag() 已註冊 — 在 F12 console 呼叫即可查看診斷');
 }

@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { MeshRenderer, Material } from 'cc';
 
@@ -36,9 +37,9 @@ export function setMaterialSafe(mr: MeshRenderer, mat: Material | null, index = 
             return;
         }
 
-        console.warn('[MaterialUtils] setMaterialSafe: could not apply material (unsupported renderer API)');
+        UCUFLogger.warn(LogCategory.DATA, '[MaterialUtils] setMaterialSafe: could not apply material (unsupported renderer API)');
     } catch (err) {
-        console.warn('[MaterialUtils] setMaterialSafe error', err);
+        UCUFLogger.warn(LogCategory.DATA, '[MaterialUtils] setMaterialSafe error', err);
     }
 }
 

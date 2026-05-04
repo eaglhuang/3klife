@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 export interface VfxEffectNotifyDef {
     readonly type: 'floatText';
@@ -158,7 +159,7 @@ function migrateToLatestSchema(raw: unknown): VfxEffectTable {
     const sourceVersion = detectSchemaVersion(root);
 
     if (sourceVersion > CURRENT_VFX_EFFECT_TABLE_VERSION) {
-        console.warn(
+        UCUFLogger.warn(LogCategory.DATA, 
             `[VfxEffectConfig] 偵測到較新的 schema version=${sourceVersion}，` +
             `目前客戶端只支援到 ${CURRENT_VFX_EFFECT_TABLE_VERSION}，改用內建 fallback。`,
         );

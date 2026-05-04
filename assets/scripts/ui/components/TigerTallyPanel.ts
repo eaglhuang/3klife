@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * @deprecated
@@ -113,7 +114,7 @@ export class TigerTallyPanel extends UIPreviewBuilder {
     // ── 生命週期 ─────────────────────────────────────────────
 
     async onLoad(): Promise<void> {
-        console.log('[TigerTallyPanel] onLoad — node:', this.node.name, 'layer:', this.node.layer,
+        UCUFLogger.info(LogCategory.UI, '[TigerTallyPanel] onLoad — node:', this.node.name, 'layer:', this.node.layer,
             'parent:', this.node.parent?.name,
             'parentLayer:', this.node.parent?.layer);
         services().initialize(this.node);
@@ -123,19 +124,19 @@ export class TigerTallyPanel extends UIPreviewBuilder {
     private async _initialize(): Promise<void> {
         if (this._initialized) return;
         try {
-            console.log('[TigerTallyPanel] _initialize 開始載入規格...');
+            UCUFLogger.info(LogCategory.UI, '[TigerTallyPanel] _initialize 開始載入規格...');
             const [fullScreen, i18n, tokens] = await Promise.all([
                 this._specLoader.loadFullScreen('tiger-tally-screen'),
                 this._specLoader.loadI18n(services().i18n.currentLocale),
                 this._specLoader.loadDesignTokens(),
             ]);
-            console.log('[TigerTallyPanel] 規格載入完成，開始 buildScreen...');
+            UCUFLogger.info(LogCategory.UI, '[TigerTallyPanel] 規格載入完成，開始 buildScreen...');
             await this.buildScreen(fullScreen.layout, fullScreen.skin, i18n, tokens);
             this._initialized = true;
-            console.log('[TigerTallyPanel] _initialize: buildScreen 完成，node active:', this.node.active,
+            UCUFLogger.info(LogCategory.UI, '[TigerTallyPanel] _initialize: buildScreen 完成，node active:', this.node.active,
                 'layer:', this.node.layer);
         } catch (e) {
-            console.warn('[TigerTallyPanel] 規格載入失敗，退回白模', e);
+            UCUFLogger.warn(LogCategory.UI, '[TigerTallyPanel] 規格載入失敗，退回白模', e);
             this._initialized = true;
             this._flushReadyWaiters(false);
         }
@@ -150,7 +151,7 @@ export class TigerTallyPanel extends UIPreviewBuilder {
             .map(name => binder.getNode(name))
             .filter((n): n is Node => n !== null);
 
-        console.log(`[TigerTallyPanel] onReady — cardNodes:${this._cardNodes.length}/4`);
+        UCUFLogger.info(LogCategory.UI, `[TigerTallyPanel] onReady — cardNodes:${this._cardNodes.length}/4`);
 
         this._cardNodes.forEach((cardNode, i) => {
             cardNode.on(Button.EventType.CLICK, () => this._onCardClick(i), this);
@@ -161,7 +162,7 @@ export class TigerTallyPanel extends UIPreviewBuilder {
             this.setCards(this._cards);
         }
 
-        console.log(`[TigerTallyPanel] 綁定完成 — cardNodes:${this._cardNodes.length}`);
+        UCUFLogger.info(LogCategory.UI, `[TigerTallyPanel] 綁定完成 — cardNodes:${this._cardNodes.length}`);
         this._buildCompleted = true;
         this._flushReadyWaiters(true);
     }
@@ -224,17 +225,17 @@ export class TigerTallyPanel extends UIPreviewBuilder {
         if (atkLabel) {
             atkLabel.string = `${data.atk}`;
             atkLabelNode!.active = true;
-        } else { console.warn(`[TigerTallyPanel] 找不到 AtkLabel${slot}`); }
+        } else { UCUFLogger.warn(LogCategory.UI, `[TigerTallyPanel] 找不到 AtkLabel${slot}`); }
 
         if (hpLabel) {
             hpLabel.string = `${data.hp}`;
             hpLabelNode!.active = true;
-        } else { console.warn(`[TigerTallyPanel] 找不到 HpLabel${slot}`); }
+        } else { UCUFLogger.warn(LogCategory.UI, `[TigerTallyPanel] 找不到 HpLabel${slot}`); }
 
         if (nameLabel) {
             nameLabel.string = data.unitName;
             nameLabelNode!.active = true;
-        } else { console.warn(`[TigerTallyPanel] 找不到 UnitName${slot}`); }
+        } else { UCUFLogger.warn(LogCategory.UI, `[TigerTallyPanel] 找不到 UnitName${slot}`); }
 
         if (subLabel) {
             subLabel.string = data.unitSub || data.unitType;
@@ -244,7 +245,7 @@ export class TigerTallyPanel extends UIPreviewBuilder {
         if (costLabel) {
             costLabel.string = `${data.cost}`;
             costLabelNode!.active = true;
-        } else { console.warn(`[TigerTallyPanel] 找不到 CostBadge${slot}`); }
+        } else { UCUFLogger.warn(LogCategory.UI, `[TigerTallyPanel] 找不到 CostBadge${slot}`); }
 
         const loadSeq = ++this._cardLoadSeq[slot - 1];
         void this._applyCardArt(slot, data, loadSeq);
@@ -259,7 +260,7 @@ export class TigerTallyPanel extends UIPreviewBuilder {
         const btn = cardNode.getComponent(Button);
         if (btn) btn.interactable = true;
 
-        console.log(`[TigerTallyPanel] _bindCard slot${slot}: ` +
+        UCUFLogger.info(LogCategory.UI, `[TigerTallyPanel] _bindCard slot${slot}: ` +
             `name="${data.unitName}" atk=${data.atk} hp=${data.hp} type=${data.unitType} ` +
             `nameLabel=${!!nameLabel} atkLabel=${!!atkLabel} hpLabel=${!!hpLabel}`);
     }
@@ -296,7 +297,7 @@ export class TigerTallyPanel extends UIPreviewBuilder {
         // BadgeText 節點由 Layout JSON 建立，此處直接取用並填入資料
         const textNode = badgeNode.getChildByName(`BadgeText${slot}`);
         if (!textNode) {
-            console.warn(`[TigerTallyPanel] BadgeText${slot} 未在 layout 中建立，請確認 tiger-tally-main.json`);
+            UCUFLogger.warn(LogCategory.UI, `[TigerTallyPanel] BadgeText${slot} 未在 layout 中建立，請確認 tiger-tally-main.json`);
             return;
         }
 
@@ -422,7 +423,7 @@ export class TigerTallyPanel extends UIPreviewBuilder {
         const key = `${slotKey}|${preferredPaths.join(',')}|${fallbackPath}`;
         if (this._warnedFallbacks.has(key)) return;
         this._warnedFallbacks.add(key);
-        console.log(
+        UCUFLogger.info(LogCategory.UI, 
             `[TigerTallyPanel] ${slotKey} 缺少正式資源，改用 fallback: ${fallbackPath} | tried=${preferredPaths.join(', ')}`,
         );
     }
@@ -431,7 +432,7 @@ export class TigerTallyPanel extends UIPreviewBuilder {
         const key = `${slotKey}|missing|${preferredPaths.join(',')}|${fallbackPath}`;
         if (this._warnedFallbacks.has(key)) return;
         this._warnedFallbacks.add(key);
-        console.warn(
+        UCUFLogger.warn(LogCategory.UI, 
             `[TigerTallyPanel] ${slotKey} 載入失敗，正式資源與 fallback 皆不存在 | tried=${preferredPaths.join(', ')} | fallback=${fallbackPath}`,
         );
     }

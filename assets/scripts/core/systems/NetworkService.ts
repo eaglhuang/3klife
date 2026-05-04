@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { sys } from 'cc';
 import { EventSystem } from './EventSystem';
@@ -44,14 +45,14 @@ export class NetworkService {
     private handleOnline(): void {
         if (this._isOnline) return;
         this._isOnline = true;
-        console.log('[NetworkService] Network restored. Emitting ONLINE event.');
+        UCUFLogger.info(LogCategory.DATA, '[NetworkService] Network restored. Emitting ONLINE event.');
         this.eventSystem?.emit(EVENT_NETWORK_ONLINE);
     }
 
     private handleOffline(): void {
         if (!this._isOnline) return;
         this._isOnline = false;
-        console.log('[NetworkService] Network lost. Emitting OFFLINE event.');
+        UCUFLogger.info(LogCategory.DATA, '[NetworkService] Network lost. Emitting OFFLINE event.');
         this.eventSystem?.emit(EVENT_NETWORK_OFFLINE);
     }
 }

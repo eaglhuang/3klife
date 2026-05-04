@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import {
     _decorator, Component, Node, Material, Mesh, Color,
@@ -179,7 +180,7 @@ export class BuffGainEffectPool extends Component {
 
         this.vfxEffectAsset = await this.loadEffectAsset();
         if (!this.vfxEffectAsset) {
-            console.error(`[BuffGainEffectPool:${config.label ?? "?"}] 無法載入自訂 VFX EffectAsset，特效停用`);
+            UCUFLogger.error(LogCategory.BATTLE, `[BuffGainEffectPool:${config.label ?? "?"}] 無法載入自訂 VFX EffectAsset，特效停用`);
             return;
         }
 
@@ -198,7 +199,7 @@ export class BuffGainEffectPool extends Component {
             this.loadParticleProfiles(),
         ]);
         if (!ringMat || !ringGlowMat || !mainMat || !mainGlowMat || !arrowMat || !arrowGlowMat) {
-            console.error(`[BuffGainEffectPool:${config.label ?? "?"}] 無法載入特效材質，特效停用`);
+            UCUFLogger.error(LogCategory.BATTLE, `[BuffGainEffectPool:${config.label ?? "?"}] 無法載入特效材質，特效停用`);
             return;
         }
         this.ringMaterial = ringMat;
@@ -218,7 +219,7 @@ export class BuffGainEffectPool extends Component {
             this.slots.push(this.buildSlot(i));
         }
         this.ready = true;
-        console.log(`[BuffGainEffectPool:${config.label ?? "?"}] ✅ 初始化完成，Pool size=${BuffGainEffectPool.POOL_SIZE}`);
+        UCUFLogger.info(LogCategory.BATTLE, `[BuffGainEffectPool:${config.label ?? "?"}] ✅ 初始化完成，Pool size=${BuffGainEffectPool.POOL_SIZE}`);
     }
 
     play(worldPos: Vec3): void {
@@ -689,7 +690,7 @@ export class BuffGainEffectPool extends Component {
         return new Promise(resolve => {
             resources.load(prefabPath, Prefab, (err, prefab) => {
                 if (err || !prefab) {
-                    console.warn(`[BuffGainEffectPool] prefab 載入失敗 (${prefabPath}):`, err?.message);
+                    UCUFLogger.warn(LogCategory.BATTLE, `[BuffGainEffectPool] prefab 載入失敗 (${prefabPath}):`, err?.message);
                     resolve(null);
                     return;
                 }
@@ -793,7 +794,7 @@ export class BuffGainEffectPool extends Component {
         BuffGainEffectPool.particleProfileCache = new Promise(resolve => {
             resources.load("data/buff-particle-profiles", JsonAsset, (err, asset) => {
                 if (err || !asset?.json) {
-                    console.warn("[BuffGainEffectPool] buff-particle-profiles.json 載入失敗，改用內建 fallback:", err?.message);
+                    UCUFLogger.warn(LogCategory.BATTLE, "[BuffGainEffectPool] buff-particle-profiles.json 載入失敗，改用內建 fallback:", err?.message);
                     resolve(DEFAULT_BUFF_PARTICLE_PROFILES);
                     return;
                 }
@@ -822,7 +823,7 @@ export class BuffGainEffectPool extends Component {
         return new Promise(resolve => {
             resources.load("effects/vfx-buff-quad", EffectAsset, (err, effectAsset) => {
                 if (err || !effectAsset) {
-                    console.warn("[BuffGainEffectPool] 自訂 effect 載入失敗:", err?.message);
+                    UCUFLogger.warn(LogCategory.BATTLE, "[BuffGainEffectPool] 自訂 effect 載入失敗:", err?.message);
                     resolve(null);
                     return;
                 }
@@ -865,7 +866,7 @@ export class BuffGainEffectPool extends Component {
                     if (err || !tex) {
                         bundle.load(realPath, ImageAsset, (err2, img) => {
                             if (err2 || !img) {
-                                console.warn(`[BuffGainEffectPool:${tag}] load asset failed (${texturePath}):`, err2?.message);
+                                UCUFLogger.warn(LogCategory.BATTLE, `[BuffGainEffectPool:${tag}] load asset failed (${texturePath}):`, err2?.message);
                                 resolve(null);
                                 return;
                             }
@@ -890,7 +891,7 @@ export class BuffGainEffectPool extends Component {
                 } else {
                     assetManager.loadBundle(bundleName, (err, bundle) => {
                         if (err || !bundle) {
-                            console.warn(`[BuffGainEffectPool:${tag}] Bundle 載入失敗 (${bundleName}):`, err?.message);
+                            UCUFLogger.warn(LogCategory.BATTLE, `[BuffGainEffectPool:${tag}] Bundle 載入失敗 (${bundleName}):`, err?.message);
                             resolve(null);
                             return;
                         }

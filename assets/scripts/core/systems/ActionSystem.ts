@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { Animation, Node, Vec3 } from "cc";
 import { StatusEffect, EVENT_NAMES } from "../config/Constants";
@@ -71,7 +72,7 @@ export interface ActionContext {
  *       targetUnitIds:  ['enemy-001'],
  *       targetPositions: [{ x: 3, y: 0, z: 0 }],
  *   };
- *   services().action.playSkill('zhang-fei-roar', ctx, () => console.log('done'));
+ *   services().action.playSkill('zhang-fei-roar', ctx, () => UCUFLogger.info(LogCategory.DATA, 'done'));
  */
 export class ActionSystem {
     private registry = new Map<string, SkillDef>();
@@ -110,7 +111,7 @@ export class ActionSystem {
     public playSkill(skillId: string, ctx: ActionContext, onComplete?: () => void): void {
         const def = this.registry.get(skillId);
         if (!def) {
-            console.warn(`[ActionSystem] 找不到技能定義: '${skillId}'`);
+            UCUFLogger.warn(LogCategory.DATA, `[ActionSystem] 找不到技能定義: '${skillId}'`);
             onComplete?.();
             return;
         }

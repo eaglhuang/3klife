@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * UIManager.ts — 六層式 UI 管理器（M-1 分層架構 + M-2 快取協定）
@@ -31,23 +32,14 @@
  */
 
 import { Button, Color, instantiate, Node, UIOpacity, UITransform, Widget } from "cc";
-import { SolidBackground } from "../../ui/components/SolidBackground";
-import { UILayer } from "../../ui/layers/UILayer";
+import { IUILayerLike, ICompositePanelLike, IUIManagedController } from "../../shared/interfaces/IUIInterfaces";
 import { UIBackdropConfig, UIID, UIConfig, LayerType } from "../config/UIConfig";
 import { services } from "./ServiceLoader";
-import type { CompositePanel } from "../../ui/core/CompositePanel";
-
-export interface UIManagedController {
-    readonly node: Node;
-    show(payload?: unknown): void | Promise<void>;
-    hide(): void | Promise<void>;
-    resetState?(): void;
-}
 
 // ─── 內部紀錄結構 ─────────────────────────────────────────────────────────────
 interface UIEntry {
     readonly uiId: UIID;
-    controller: UIManagedController;
+    controller: IUIManagedController;
     isOpen: boolean;
     /** 是否曾以快取模式關閉——下次 open 需先呼叫 resetState()（M-2） */
     wasCached: boolean;
@@ -81,7 +73,7 @@ export class UIManager {
      * CompositePanel 登記表（M5），供場景切換時逐一 dispose。
      * key = 任意字串標識符（對應 screenId 或場景自定義的 id）
      */
-    private readonly _compositePanels = new Map<string, CompositePanel>();
+    private readonly _compositePanels = new Map<string, ICompositePanelLike>();
 
     /**
      * 各層級的父節點容器（供 openAsync 動態實例化時掛載子節點）。
@@ -96,10 +88,10 @@ export class UIManager {
      * 將場景中的 UILayer 元件綁定到指定 UIID。
      * 必須在呼叫 open/close 之前完成（通常在 BattleScene.start() 或對應 View 的 onLoad 中執行）。
      */
-    public register(uiId: UIID, layerOrController: UILayer | UIManagedController): void {
-        const controller = layerOrController instanceof UILayer
-            ? this._createLayerController(layerOrController)
-            : layerOrController;
+    public register(uiId: UIID, layerOrController: IUILayerLike | IUIManagedController): void {
+        const controller = (layerOrController as any).show && !(layerOrController as any).node
+            ? layerOrController as IUIManagedController
+            : this._createLayerController(layerOrController as IUILayerLike);
         this.registry.set(uiId, { uiId, controller, isOpen: false, wasCached: false });
     }
 
@@ -143,7 +135,7 @@ export class UIManager {
 
         const cfg = UIConfig[uiId];
         if (!cfg.prefab) {
-            console.warn(`[UIManager] openAsync: "${uiId}" 未 register 且無 prefab 路徑，無法開啟`);
+            UCUFLogger.warn(LogCategory.DATA, `[UIManager] openAsync: "${uiId}" 未 register 且無 prefab 路徑，無法開啟`);
             return false;
         }
 
@@ -151,7 +143,7 @@ export class UIManager {
         try {
             prefab = await services().resource.loadPrefab(cfg.prefab);
         } catch (e) {
-            console.error(`[UIManager] openAsync: "${uiId}" prefab 載入失敗 (${cfg.prefab}):`, e);
+            UCUFLogger.error(LogCategory.DATA, `[UIManager] openAsync: "${uiId}" prefab 載入失敗 (${cfg.prefab}):`, e);
             return false;
         }
 
@@ -162,12 +154,12 @@ export class UIManager {
         if (container) {
             container.addChild(node);
         } else {
-            console.warn(`[UIManager] openAsync: "${uiId}" 無層級容器 (${cfg.layer})，節點未掛載場景，請確認 setupLayers() 已呼叫`);
+            UCUFLogger.warn(LogCategory.DATA, `[UIManager] openAsync: "${uiId}" 無層級容器 (${cfg.layer})，節點未掛載場景，請確認 setupLayers() 已呼叫`);
         }
 
-        const layer = node.getComponent(UILayer);
+        const layer = node.getComponent('UILayer') as any;
         if (!layer) {
-            console.error(`[UIManager] openAsync: "${uiId}" 的 Prefab 缺少 UILayer 元件，請確認根節點掛有 UILayer（或其子類）`);
+            UCUFLogger.error(LogCategory.DATA, `[UIManager] openAsync: "${uiId}" 的 Prefab 缺少 UILayer 元件，請確認根節點掛有 UILayer（或其子類）`);
             node.destroy();
             return false;
         }
@@ -184,7 +176,7 @@ export class UIManager {
     public async open(uiId: UIID, payload?: unknown): Promise<boolean> {
         const entry = this.registry.get(uiId);
         if (!entry) {
-            console.warn(`[UIManager] open: "${uiId}" not registered`);
+            UCUFLogger.warn(LogCategory.DATA, `[UIManager] open: "${uiId}" not registered`);
             return false;
         }
 
@@ -318,7 +310,7 @@ export class UIManager {
      *
      * Unity 對照：將 Component 登記到集中化的 SubsystemManager。
      */
-    public registerCompositePanel(id: string, panel: CompositePanel): void {
+    public registerCompositePanel(id: string, panel: ICompositePanelLike): void {
         this._compositePanels.set(id, panel);
     }
 
@@ -340,7 +332,7 @@ export class UIManager {
             try {
                 panel.dispose();
             } catch (e) {
-                console.warn(`[UIManager] onSceneWillChange: panel "${id}" dispose 失敗:`, e);
+                UCUFLogger.warn(LogCategory.DATA, `[UIManager] onSceneWillChange: panel "${id}" dispose 失敗:`, e);
             }
         }
         this._compositePanels.clear();
@@ -515,12 +507,12 @@ export class UIManager {
         }
     }
 
-    private _createLayerController(layer: UILayer): UIManagedController {
+    private _createLayerController(layer: IUILayerLike): IUIManagedController {
         return {
             node: layer.node,
-            show: () => layer.show(),
+            show: (payload?: any) => (layer as any).show(payload),
             hide: () => layer.hide(),
-            resetState: () => layer.resetState(),
+            resetState: () => layer.resetState?.(),
         };
     }
 
@@ -626,7 +618,7 @@ export class UIManager {
         backdropNode.setSiblingIndex(Math.max(0, hostNode.getSiblingIndex()));
         hostNode.setSiblingIndex(backdropNode.getSiblingIndex() + 1);
 
-        const backdropFill = backdropNode.getComponent(SolidBackground) ?? backdropNode.addComponent(SolidBackground);
+        const backdropFill = (backdropNode.getComponent('SolidBackground') ?? backdropNode.addComponent('SolidBackground')) as any;
         backdropFill.color = new Color(0, 0, 0, 255);
 
         const backdropOpacity = backdropNode.getComponent(UIOpacity) ?? backdropNode.addComponent(UIOpacity);
@@ -668,7 +660,7 @@ export class UIManager {
         widget.left = 0;
         widget.right = 0;
 
-        const backdropFill = backdropNode.addComponent(SolidBackground);
+        const backdropFill = backdropNode.addComponent('SolidBackground') as any;
         backdropFill.color = new Color(0, 0, 0, 255);
 
         const opacity = backdropNode.addComponent(UIOpacity);

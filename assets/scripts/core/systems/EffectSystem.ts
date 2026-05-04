@@ -1,10 +1,11 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { Animation, Camera, Color, MeshRenderer, Node, ParticleSystem, Sprite, Vec3, director, tween, v3 } from "cc";
 import { VfxBlockEntry, VfxEffectDef } from "../config/VfxEffectConfig";
 import { PoolSystem } from "./PoolSystem";
 import { services } from "../managers/ServiceLoader";
 import { ParticleOverride, applyParticleOverride } from "../utils/ParticleUtils";
-import { VFX_BLOCK_REGISTRY } from "../../tools/vfx-block-registry";
+import { VFX_BLOCK_REGISTRY } from '../config/vfx-block-registry';
 
 /**
  * 視覺特效系統
@@ -52,7 +53,7 @@ export class EffectSystem {
     public playEffect(key: string, position: Vec3, duration: number, parent?: Node): Node | null {
         const node = this.poolSystem?.acquire(key);
         if (!node) {
-            console.warn(`[EffectSystem] key 未在 PoolSystem 中註冊: ${key}`);
+            UCUFLogger.warn(LogCategory.DATA, `[EffectSystem] key 未在 PoolSystem 中註冊: ${key}`);
             return null;
         }
 
@@ -143,7 +144,7 @@ export class EffectSystem {
                 try {
                     ps.play();
                 } catch (e) {
-                    console.error(`[EffectSystem] ParticleSystem播放失敗 (${node.name}):`, e);
+                    UCUFLogger.error(LogCategory.DATA, `[EffectSystem] ParticleSystem播放失敗 (${node.name}):`, e);
                 }
             });
 
@@ -151,12 +152,12 @@ export class EffectSystem {
                 try {
                     a.play();
                 } catch (e) {
-                    console.error(`[EffectSystem] Animation播放失敗 (${node.name}):`, e);
+                    UCUFLogger.error(LogCategory.DATA, `[EffectSystem] Animation播放失敗 (${node.name}):`, e);
                 }
             });
         } catch (e) {
             // [QA/Vibe] 捕捉頂層崩潰，確保不中斷遊戲循環
-            console.error(`[EffectSystem] playGroup 發生嚴重錯誤 (${node.name}):`, e);
+            UCUFLogger.error(LogCategory.DATA, `[EffectSystem] playGroup 發生嚴重錯誤 (${node.name}):`, e);
         }
     }
 
@@ -172,7 +173,7 @@ export class EffectSystem {
         const needsLayerFix = node.layer >= UI_LAYER;
 
         if (needsLayerFix) {
-            console.warn(`[EffectSystem:Sanitize] "${node.name}" Layer=${node.layer} 在 UI 層級，強制修正為 DEFAULT`);
+            UCUFLogger.warn(LogCategory.DATA, `[EffectSystem:Sanitize] "${node.name}" Layer=${node.layer} 在 UI 層級，強制修正為 DEFAULT`);
         }
 
         // 對整棵節點樹設定 layer（即使當前正確也統一設定，防止子節點不一致）
@@ -190,7 +191,7 @@ export class EffectSystem {
                 // 除非是根節點上的「遺留」PS（通常被 disableLegacyRootParticle 明確停用）
                 const isRootPS = ps.node === node;
                 if (!isRootPS) {
-                    console.warn(`[EffectSystem:Sanitize] 重新啟用被停用的 PS: "${ps.node.name}"`);
+                    UCUFLogger.warn(LogCategory.DATA, `[EffectSystem:Sanitize] 重新啟用被停用的 PS: "${ps.node.name}"`);
                     ps.enabled = true;
                     ps.playOnAwake = true;
                 }
@@ -199,7 +200,7 @@ export class EffectSystem {
         });
 
         if (enabledCount === 0 && allPS.length > 0) {
-            console.error(`[EffectSystem:Sanitize] "${node.name}" 所有 ${allPS.length} 個 ParticleSystem 都被停用！特效將不可見。`);
+            UCUFLogger.error(LogCategory.DATA, `[EffectSystem:Sanitize] "${node.name}" 所有 ${allPS.length} 個 ParticleSystem 都被停用！特效將不可見。`);
         }
 
         // 3. 深度檢查渲染組件：防止底層內核在 updateUVs 或 render 階段崩潰
@@ -207,7 +208,7 @@ export class EffectSystem {
             // 檢查 Sprite
             const sprite = target.getComponent(Sprite);
             if (sprite && sprite.enabled && !sprite.spriteFrame) {
-                console.error(`[EffectSystem:Sanitize] 節點 "${target.name}" 缺少 SpriteFrame，已強制停用以防止 Simple.updateUVs 崩潰`);
+                UCUFLogger.error(LogCategory.DATA, `[EffectSystem:Sanitize] 節點 "${target.name}" 缺少 SpriteFrame，已強制停用以防止 Simple.updateUVs 崩潰`);
                 sprite.enabled = false;
             }
 
@@ -215,12 +216,12 @@ export class EffectSystem {
             const mr = target.getComponent(MeshRenderer);
             if (mr && mr.enabled) {
                 if (!mr.mesh) {
-                    console.error(`[EffectSystem:Sanitize] 節點 "${target.name}" 缺少 Mesh，已強制停用 MeshRenderer`);
+                    UCUFLogger.error(LogCategory.DATA, `[EffectSystem:Sanitize] 節點 "${target.name}" 缺少 Mesh，已強制停用 MeshRenderer`);
                     mr.enabled = false;
                 }
                 const mat = mr.getSharedMaterial(0);
                 if (!mat) {
-                    console.error(`[EffectSystem:Sanitize] 節點 "${target.name}" 缺少 Material，已強制停用 MeshRenderer`);
+                    UCUFLogger.error(LogCategory.DATA, `[EffectSystem:Sanitize] 節點 "${target.name}" 缺少 Material，已強制停用 MeshRenderer`);
                     mr.enabled = false;
                 }
             }
@@ -310,7 +311,7 @@ export class EffectSystem {
         // 1. 查詢 Block 定義（驗證 blockId 合法性）
         const block = VFX_BLOCK_REGISTRY.find(b => b.id === blockId);
         if (!block) {
-            console.warn(`[EffectSystem] playBlock: blockId "${blockId}" 在 VFX_BLOCK_REGISTRY 中不存在`);
+            UCUFLogger.warn(LogCategory.DATA, `[EffectSystem] playBlock: blockId "${blockId}" 在 VFX_BLOCK_REGISTRY 中不存在`);
             return null;
         }
 
@@ -320,9 +321,9 @@ export class EffectSystem {
             // 輸出 renderMode 協助診斷（例：開發者忘記為 cpu-only 的 Trail 積木建立 Prefab）
             const message = `[EffectSystem] playBlock: "${blockId}" 未在 PoolSystem 中註冊（prefab 載入失敗？）。renderMode=${block.renderMode}, prefabPath=${block.prefabPath ?? '未設定'}`;
             if (this._isPreviewMode()) {
-                console.log(`${message} [preview mode skip]`);
+                UCUFLogger.info(LogCategory.DATA, `${message} [preview mode skip]`);
             } else {
-                console.error(message);
+                UCUFLogger.error(LogCategory.DATA, message);
             }
             return null;
         }
@@ -343,28 +344,28 @@ export class EffectSystem {
 
         // 6. [TEMP-QA] 診斷日誌：確認粒子系統狀態
         const enabledPS = allPS.filter(ps => ps.enabled);
-        console.log(`[EffectSystem:playBlock] "${blockId}" PS狀態: 全部=${allPS.length}, 啟用=${enabledPS.length}, Layer=${node.layer}, Pos=${position.toString()}`);
+        UCUFLogger.info(LogCategory.DATA, `[EffectSystem:playBlock] "${blockId}" PS狀態: 全部=${allPS.length}, 啟用=${enabledPS.length}, Layer=${node.layer}, Pos=${position.toString()}`);
         enabledPS.forEach(ps => {
             const renderer = (ps as any).renderer;
             const hasTexture = renderer?._mainTexture != null;
             const hasMaterial = renderer?._cpuMaterial != null || renderer?._gpuMaterial != null;
-            console.log(`  ↳ PS "${ps.node.name}": size=${ps.startSizeX.constant.toFixed(2)}, speed=${ps.startSpeed.constant.toFixed(2)}, rate=${ps.rateOverTime.constant}, tex=${hasTexture}, mat=${hasMaterial}, loop=${ps.loop}`);
+            UCUFLogger.info(LogCategory.DATA, `  ↳ PS "${ps.node.name}": size=${ps.startSizeX.constant.toFixed(2)}, speed=${ps.startSpeed.constant.toFixed(2)}, rate=${ps.rateOverTime.constant}, tex=${hasTexture}, mat=${hasMaterial}, loop=${ps.loop}`);
         });
 
         // 7. 播放粒子群組與動畫（跳過重複 sanitize）
         try {
             allPS.filter(ps => ps.enabled).forEach(ps => {
                 try { ps.play(); } catch (e) {
-                    console.error(`[EffectSystem] PS播放失敗 "${ps.node.name}":`, e);
+                    UCUFLogger.error(LogCategory.DATA, `[EffectSystem] PS播放失敗 "${ps.node.name}":`, e);
                 }
             });
             node.getComponentsInChildren(Animation).forEach(a => {
                 try { a.play(); } catch (e) {
-                    console.error(`[EffectSystem] Animation播放失敗:`, e);
+                    UCUFLogger.error(LogCategory.DATA, `[EffectSystem] Animation播放失敗:`, e);
                 }
             });
         } catch (e) {
-            console.error(`[EffectSystem] playBlock 渲染啟動失敗 "${blockId}":`, e);
+            UCUFLogger.error(LogCategory.DATA, `[EffectSystem] playBlock 渲染啟動失敗 "${blockId}":`, e);
         }
 
         // 8. 定時回收
@@ -399,7 +400,7 @@ export class EffectSystem {
                 return color;
             }
         } catch (error) {
-            console.warn(`[EffectSystem] invalid tintHex "${hex}"`, error);
+            UCUFLogger.warn(LogCategory.DATA, `[EffectSystem] invalid tintHex "${hex}"`, error);
         }
 
         return undefined;
@@ -450,7 +451,7 @@ export class EffectSystem {
     public playFullEffect(key: string, position: Vec3, override?: ParticleOverride): void {
         const def = this.effectTable.get(key);
         if (!def) {
-            console.warn(`[EffectSystem] playFullEffect: key "${key}" 未在 effectTable 中找到（已呼叫 loadVfxEffects 嗎？）`);
+            UCUFLogger.warn(LogCategory.DATA, `[EffectSystem] playFullEffect: key "${key}" 未在 effectTable 中找到（已呼叫 loadVfxEffects 嗎？）`);
             return;
         }
 
@@ -548,7 +549,7 @@ export class EffectSystem {
         // 尋找主攝影機節點（Camera component）
         const cameraNode = scene.getComponentInChildren(Camera)?.node;
         if (!cameraNode) {
-            console.warn('[EffectSystem] playCameraShake: 找不到主 Camera 節點，跳過震動');
+            UCUFLogger.warn(LogCategory.DATA, '[EffectSystem] playCameraShake: 找不到主 Camera 節點，跳過震動');
             return;
         }
 

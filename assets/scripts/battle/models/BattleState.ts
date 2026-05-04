@@ -1,5 +1,6 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { Faction, GAME_CONFIG, TerrainType, Weather, BattleTactic } from "../../core/config/Constants";
+import { Faction, GAME_CONFIG, Weather, BattleTactic } from "../../core/config/Constants";
+import { TerrainType, TerrainGrid } from "../../shared/CommonEnums";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import { TroopUnit } from "../../core/models/TroopUnit";
 
@@ -67,8 +68,6 @@ export interface ActionResetState {
   remainingExtraActions: number;
 }
 
-/** encounters.json 中的地形配置：terrain[lane][depth] */
-export type TerrainGrid = TerrainType[][];
 
 export class BattleState {
   public readonly cells: GridCell[] = [];

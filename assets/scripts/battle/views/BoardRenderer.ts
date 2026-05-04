@@ -1,8 +1,9 @@
+import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
 // @spec-source → 見 docs/cross-reference-index.md
 import { _decorator, Component, Node, Vec3, Vec4, MeshRenderer, primitives, utils, Material, Color, Layers, gfx, tween, Tween, resources, EffectAsset, assetManager, AssetManager, Texture2D, ImageAsset } from 'cc';
 import { BattleTactic, Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { BattleState } from '../models/BattleState';
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+
 import { FLOOD_ATTACK_PUSH_DEPTH_DELTA, FLOOD_ATTACK_PUSH_LANE_DELTA } from '../shared/BattleTacticBehavior';
 import { resolveBattleSceneDisplayRule, type BattleSceneBaseStyle } from '../shared/BattleSceneMode';
 import { resolveBattleSceneMode, resolveBattleScenePulseColor, type BattleSceneMode } from '../shared/BattleSceneMode';

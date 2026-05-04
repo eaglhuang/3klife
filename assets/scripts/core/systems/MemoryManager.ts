@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * 記憶體管理器 (MemoryManager) — LRU 弱引用快取 + 場景批次釋放
@@ -52,7 +53,7 @@ export class MemoryManager {
     // ─── 帳目儲存 ────────────────────────────────────────────────────────────
     /** active 資源（refCount > 0） */
     private readonly records = new Map<string, AssetRecord>();
-    /** 軟釋放 LRU 緩衝（refCount == 0；Map 插入順序 = 最舊在前） */
+    /** 軟釋放 LRU 緩衝（refCount === 0；Map 插入順序 = 最舊在前） */
     private readonly _lruBuffer = new Map<string, AssetRecord>();
     /** scope → Set<key> 索引，供 releaseByScope 批次操作 */
     private readonly _scopeIndex = new Map<string, Set<string>>();
@@ -279,10 +280,10 @@ export class MemoryManager {
      */
     public printReport(): void {
         const items = this.getReport();
-        console.log(`[MemoryManager] active:${items.length} lruBuffer:${this._lruBuffer.size}`);
+        UCUFLogger.info(LogCategory.DATA, `[MemoryManager] active:${items.length} lruBuffer:${this._lruBuffer.size}`);
         items.forEach(r => {
             const sc = r.scopes.size > 0 ? ` scope:[${[...r.scopes].join(',')}]` : '';
-            console.log(`  [${r.bundle}] ${r.assetType} | ref:${r.refCount}${sc} | ${r.key}`);
+            UCUFLogger.info(LogCategory.DATA, `  [${r.bundle}] ${r.assetType} | ref:${r.refCount}${sc} | ${r.key}`);
         });
     }
 

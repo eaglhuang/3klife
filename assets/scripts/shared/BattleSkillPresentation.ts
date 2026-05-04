@@ -1,5 +1,5 @@
-import { Faction } from '../../core/config/Constants';
-import { SkillSourceType } from '../../shared/SkillRuntimeContract';
+import { Faction } from './CommonEnums';
+import { SkillSourceType } from './SkillRuntimeContract';
 
 export interface BattleSkillPresentation {
   name: string;

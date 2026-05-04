@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 /**
  * SqliteAdapter.ts
  * 
@@ -32,7 +33,7 @@ export class SqliteAdapter extends DataStorageAdapter {
   async init(): Promise<void> {
     // TODO: Native 平台 — 開啟 SQLite 連線
     // jsb.fileUtils.getWritablePath() + 'game.db'
-    console.warn('[SqliteAdapter] Native SQLite 尚未實作，使用 stub 模式。');
+    UCUFLogger.warn(LogCategory.DATA, '[SqliteAdapter] Native SQLite 尚未實作，使用 stub 模式。');
     this._initialized = true;
   }
 

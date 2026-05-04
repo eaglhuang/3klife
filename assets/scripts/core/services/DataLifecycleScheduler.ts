@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 /**
  * DataLifecycleScheduler.ts
  *
@@ -110,7 +111,7 @@ export class DataLifecycleScheduler {
         try {
             rollupResult = await this.rollup.rollupSeason(season, year);
         } catch (e) {
-            console.error('[DataLifecycleScheduler] rollupSeason failed:', e);
+            UCUFLogger.error(LogCategory.DATA, '[DataLifecycleScheduler] rollupSeason failed:', e);
         }
 
         try {
@@ -121,13 +122,13 @@ export class DataLifecycleScheduler {
                 sweepResult = await this.pendingDelete.sweep(season, year);
             }
         } catch (e) {
-            console.error('[DataLifecycleScheduler] sweep failed:', e);
+            UCUFLogger.error(LogCategory.DATA, '[DataLifecycleScheduler] sweep failed:', e);
         }
 
         try {
             storageCheck = await this.monitor.checkNow();
         } catch (e) {
-            console.error('[DataLifecycleScheduler] monitor.checkNow failed:', e);
+            UCUFLogger.error(LogCategory.DATA, '[DataLifecycleScheduler] monitor.checkNow failed:', e);
         }
 
         const result: SeasonEndResult = {
@@ -157,7 +158,7 @@ export class DataLifecycleScheduler {
         try {
             compaction = await this.compactor.compactAll();
         } catch (e) {
-            console.error('[DataLifecycleScheduler] compactAll failed:', e);
+            UCUFLogger.error(LogCategory.DATA, '[DataLifecycleScheduler] compactAll failed:', e);
         }
 
         const result: YearEndResult = {

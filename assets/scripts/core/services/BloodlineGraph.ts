@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 /**
  * BloodlineGraph.ts
  * 
@@ -44,7 +45,7 @@ export class BloodlineGraph {
     if (this._loaded && !force) return;
     const data = await this._loadJson<PersonRegistryData>('data/person-registry');
     if (!data) {
-      console.warn('[BloodlineGraph] person-registry.json 不存在或為空。');
+      UCUFLogger.warn(LogCategory.DATA, '[BloodlineGraph] person-registry.json 不存在或為空。');
       this._loaded = true;
       return;
     }

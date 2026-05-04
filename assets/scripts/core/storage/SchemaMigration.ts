@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 /**
  * SchemaMigration.ts
  *
@@ -53,7 +54,7 @@ const _registry: MigrationEntry[] = [];
  */
 export function register(from: number, to: number, fn: MigrationFn): void {
   if (to !== from + 1) {
-    console.error(`[SchemaMigration] 只支援漸進式遷移（from + 1 = to）。傳入 from=${from}, to=${to}`);
+    UCUFLogger.error(LogCategory.DATA, `[SchemaMigration] 只支援漸進式遷移（from + 1 = to）。傳入 from=${from}, to=${to}`);
     return;
   }
   _registry.push({ from, to, migrate: fn });
@@ -72,7 +73,7 @@ export function migrate<T extends VersionedData>(data: T): T {
   }
 
   if (currentVersion > CURRENT_SCHEMA_VERSION) {
-    console.warn(
+    UCUFLogger.warn(LogCategory.DATA, 
       `[SchemaMigration] 資料 schemaVersion(${currentVersion}) > CURRENT_SCHEMA_VERSION(${CURRENT_SCHEMA_VERSION})，` +
       `可能是來自更新版本的存檔，跳過遷移。`
     );
@@ -88,7 +89,7 @@ export function migrate<T extends VersionedData>(data: T): T {
 
   for (const step of steps) {
     if (step.from !== currentVersion) {
-      console.error(
+      UCUFLogger.error(LogCategory.DATA, 
         `[SchemaMigration] 遷移鏈斷裂：期望 from=${currentVersion}，但找到 from=${step.from}。停止遷移。`
       );
       break;
@@ -97,7 +98,7 @@ export function migrate<T extends VersionedData>(data: T): T {
       result = step.migrate(result);
       currentVersion = step.to;
     } catch (e) {
-      console.error(`[SchemaMigration] v${step.from}→v${step.to} 遷移失敗：`, e);
+      UCUFLogger.error(LogCategory.DATA, `[SchemaMigration] v${step.from}→v${step.to} 遷移失敗：`, e);
       break;
     }
   }

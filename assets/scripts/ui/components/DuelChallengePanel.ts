@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * @deprecated
@@ -53,7 +54,7 @@ export class DuelChallengePanel extends UIPreviewBuilder {
             await this.buildScreen(layout, skin, i18n);
             this._isBuilt = true;
         } catch (e) {
-            console.warn('[DuelChallengePanel] Template 載入失敗，退回白模', e);
+            UCUFLogger.warn(LogCategory.UI, '[DuelChallengePanel] Template 載入失敗，退回白模', e);
             this._isBuilt = true;
         }
     }

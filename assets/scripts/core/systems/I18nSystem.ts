@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { Font, JsonAsset, resources } from "cc";
 
@@ -136,7 +137,7 @@ export class I18nSystem {
         try {
             assets.strings = await this.loadJson<Record<string, string>>(`i18n/${locale}`);
         } catch {
-            console.warn(`[I18nSystem] 找不到語系字串 resources/i18n/${locale}.json，t(key) 將直接回傳 key`);
+            UCUFLogger.warn(LogCategory.DATA, `[I18nSystem] 找不到語系字串 resources/i18n/${locale}.json，t(key) 將直接回傳 key`);
         }
 
         // 語系字型（選配，找不到時靜默略過，使用系統字型）

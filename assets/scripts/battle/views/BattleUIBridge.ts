@@ -14,11 +14,10 @@ import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, TroopType, TurnPhase } 
 import { services } from '../../core/managers/ServiceLoader';
 import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { BattleController } from '../controllers/BattleController';
-import { BattleScenePanel } from '../../ui/components/BattleScenePanel';
-import type { DeployRuntimeLike } from '../../ui/components/DeployRuntimeApi';
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
+
 import { BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
-import { buildBattleSkillUsedMessage } from '../skills/BattleSkillPresentation';
+import { buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
 import {
   BATTLE_FLOW_FX,
@@ -48,54 +47,21 @@ interface CombatVisualTask {
   run: () => Promise<void> | void;
 }
 
-export interface BattleHUDLike {
-  node: Node;
-  setFood?: (current: number, max: number) => void;
-  setPlayerGeneralId?: (generalId: string) => void;
-  setEnemyGeneralId?: (generalId: string) => void;
-  setPlayerName?: (name: string) => void;
-  setEnemyName?: (name: string) => void;
-  refresh?: (...args: unknown[]) => void;
-  waitUntilReady?: (timeoutMs?: number) => Promise<boolean>;
-  playerSpBarNode?: Node | null;
-  enemySpBarNode?: Node | null;
-  clearPersistentStatus?: () => void;
-  clearSceneGambitBadge?: () => void;
-}
-
-export interface BattleLogLike {
-  node: Node;
-  clear?: () => void;
-  append?: (text: string) => void;
-  waitUntilReady?: (timeoutMs?: number) => Promise<boolean>;
-}
-
-export interface DuelChallengeLike {
-  node: Node;
-  show?: (challengerName: string, defenderName: string, defenderWinRate: number) => void;
-  waitUntilReady?: (timeoutMs?: number) => Promise<boolean>;
-}
-
-export interface ResultPopupLike {
-  node: Node;
-  showResult?: (result: string) => Promise<void>;
-  show?: (result: unknown) => Promise<void>;
-  hide?: () => void;
-}
+// 介面已搬移至 shared/interfaces/IBattleUIComponents.ts
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 共享可變 Context：BattleScene 建立、Bridge 與 TurnFlowManager 共同讀寫
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface BattleSceneContext {
-  hud:               BattleHUDLike | null;
-  deployRuntime:     DeployRuntimeLike | null;
-  battleLogPanel:    BattleLogLike | null;
-  battleScenePanel:  BattleScenePanel | null;
+  hud:               IBattleHUDLike | null;
+  deployRuntime:     IDeployRuntimeLike | null;
+  battleLogPanel:    IBattleLogLike | null;
+  battleScenePanel:  IBattleScenePanelLike | null;
   boardRenderer:     BoardRenderer | null;
   unitRenderer:      UnitRenderer | null;
-  resultPopup:       ResultPopupLike | null;
-  duelChallengePanel: DuelChallengeLike | null;
+  resultPopup:       IResultPopupLike | null;
+  duelChallengePanel: IDuelChallengeLike | null;
   ctrl:              BattleController | null;
   pg:                GeneralUnit | null;
   eg:                GeneralUnit | null;

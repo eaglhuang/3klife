@@ -23,13 +23,12 @@ import {
   Vec3,
 } from 'cc';
 import { GAME_CONFIG, TROOP_DEPLOY_COST, TroopType } from '../../core/config/Constants';
-import { BattleController, DeployFailReason } from '../../battle/controllers/BattleController';
+import { IDeployController, IDeployRuntimeLike } from '../../shared/interfaces/IBattleUIComponents';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { services } from '../../core/managers/ServiceLoader';
 import { UI_EVENTS } from '../core/UIEvents';
-import type { TallyCardData } from './TigerTallyComposite';
-import type { DeployRuntimeApi } from './DeployRuntimeApi';
+import { TallyCardData } from '../../shared/TallyCardContract';
 import type { ToastOptions } from './ToastMessage';
 import { emitDeployDragDebug, shouldLogDeployDragMove } from './DeployDragDebug';
 import { UCUFLogger, LogLevel } from '../core/UCUFLogger';
@@ -51,8 +50,8 @@ export enum DeployDragState {
 }
 
 @ccclass('DeployComposite')
-export class DeployComposite extends CompositePanel implements DeployRuntimeApi {
-  private ctrl: BattleController | null = null;
+export class DeployComposite extends CompositePanel implements IDeployRuntimeLike {
+  private ctrl: IDeployController | null = null;
   private selectedType: TroopType = TroopType.Infantry;
   private selectedUnitName = '';
   private selectedLane = 0;
@@ -75,7 +74,7 @@ export class DeployComposite extends CompositePanel implements DeployRuntimeApi 
     return this._dragState !== DeployDragState.Idle;
   }
 
-  public setController(ctrl: BattleController): void {
+  public setController(ctrl: IDeployController): void {
     this.ctrl = ctrl;
   }
 
@@ -359,7 +358,7 @@ export class DeployComposite extends CompositePanel implements DeployRuntimeApi 
     return map[type] ?? String(type);
   }
 
-  private getDeployFailMessage(reason?: DeployFailReason): string {
+  private getDeployFailMessage(reason?: string): string {
     if (reason === 'battle-locked') return '目前流程鎖定，暫時無法部署';
     if (reason === 'limit') return '本回合已部署，請等待下一回合';
     if (reason === 'occupied') return '目標格已有單位，請改放其他格子';

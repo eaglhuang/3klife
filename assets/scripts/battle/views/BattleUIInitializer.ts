@@ -1,3 +1,4 @@
+import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
 /**
  * BattleUIInitializer.ts — 戰鬥 UI 元件自動建立輔助函式
  *
@@ -9,16 +10,8 @@
  */
 
 import { Node, Camera } from 'cc';
-import { BattleHUDComposite } from '../../ui/components/BattleHUDComposite';
-import { DeployComposite } from '../../ui/components/DeployComposite';
-import type { DeployRuntimeApi } from '../../ui/components/DeployRuntimeApi';
-import { ResultPopupComposite } from '../../ui/components/ResultPopupComposite';
-import { BattleLogComposite } from '../../ui/components/BattleLogComposite';
-import { BattleScenePanel } from '../../ui/components/BattleScenePanel';
-import { BoardRenderer } from './BoardRenderer';
-import { UnitRenderer } from './UnitRenderer';
 import { GAME_CONFIG } from '../../core/config/Constants';
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -27,17 +20,17 @@ import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
  */
 export async function ensureDeployPanelRuntime(
   deployHost: Node | null,
-): Promise<DeployRuntimeApi> {
+): Promise<any> {
   if (!deployHost) {
     throw new Error('[BattleScene] ensureDeployPanelRuntime: BattleScene.deployHost 未綁定；必須指向掛有 DeployComposite 的 DeployPanelHost 節點');
   }
 
-  const composite = deployHost.getComponent(DeployComposite);
+  const composite = deployHost.getComponent('DeployComposite') as any;
   if (!composite) {
     throw new Error(`[BattleScene] ensureDeployPanelRuntime: ${deployHost.name} 缺少 DeployComposite；這是場景配置錯誤，不允許退回 legacy DeployPanel`);
   }
 
-  await composite.mount();
+  await (composite as any).mount();
   UCUFLogger.info(LogCategory.LIFECYCLE, '[BattleScene] ensureDeployPanelRuntime: 採用 DeployComposite');
   return composite;
 }
@@ -46,13 +39,13 @@ export async function ensureDeployPanelRuntime(
  * Inspector 未綁定時，驗證 HUD 和 ResultPopup host 是否存在且已掛好必要 composite。
  *
  * HUD / Popup 視為乾淨 host：執行期只要求容器節點存在，
- * 其底下內容由 BattleHUDComposite / ResultPopupComposite 自行建構。
+ * 其底下內容由 IBattleHUDLike / IResultPopupLike 自行建構。
  */
 export function ensureHUD(
-  existingHUD: BattleHUDComposite | null,
-  existingResultPopup: ResultPopupComposite | null,
+  existingHUD: any | null,
+  existingResultPopup: any | null,
   canvas: Node | null,
-): { hud: BattleHUDComposite | null; resultPopup: ResultPopupComposite | null } {
+): { hud: any | null; resultPopup: any | null } {
   let hud = existingHUD;
   let resultPopup = existingResultPopup;
 
@@ -64,15 +57,15 @@ export function ensureHUD(
 
     const legacyHUD = hudNode.getComponent('BattleHUD');
     if (legacyHUD) {
-      throw new Error('[BattleScene] ensureHUD: Canvas/HUD 仍掛 legacy BattleHUD；請改為 BattleHUDComposite');
+      throw new Error('[BattleScene] ensureHUD: Canvas/HUD 仍掛 legacy BattleHUD；請改為 IBattleHUDLike');
     }
 
-    hud = hudNode.getComponent(BattleHUDComposite);
+    hud = hudNode.getComponent('BattleHUDComposite') as any;
     if (!hud) {
-      throw new Error('[BattleScene] ensureHUD: Canvas/HUD 缺少 BattleHUDComposite；不允許執行期自動補件');
+      throw new Error('[BattleScene] ensureHUD: Canvas/HUD 缺少 IBattleHUDLike；不允許執行期自動補件');
     }
 
-    UCUFLogger.info(LogCategory.LIFECYCLE, '[BattleScene] ensureHUD: 採用既有 BattleHUDComposite');
+    UCUFLogger.info(LogCategory.LIFECYCLE, '[BattleScene] ensureHUD: 採用既有 IBattleHUDLike');
   }
 
   if (!resultPopup) {
@@ -83,15 +76,15 @@ export function ensureHUD(
 
     const legacyPopup = popupNode.getComponent('ResultPopup');
     if (legacyPopup) {
-      throw new Error('[BattleScene] ensureHUD: Canvas/Popup 仍掛 legacy ResultPopup；請改為 ResultPopupComposite');
+      throw new Error('[BattleScene] ensureHUD: Canvas/Popup 仍掛 legacy ResultPopup；請改為 IResultPopupLike');
     }
 
-    resultPopup = popupNode.getComponent(ResultPopupComposite);
+    resultPopup = popupNode.getComponent('ResultPopupComposite') as any;
     if (!resultPopup) {
-      throw new Error('[BattleScene] ensureHUD: Canvas/Popup 缺少 ResultPopupComposite；不允許執行期自動補件');
+      throw new Error('[BattleScene] ensureHUD: Canvas/Popup 缺少 IResultPopupLike；不允許執行期自動補件');
     }
 
-    UCUFLogger.info(LogCategory.LIFECYCLE, '[BattleScene] ensureHUD: 採用既有 ResultPopupComposite');
+    UCUFLogger.info(LogCategory.LIFECYCLE, '[BattleScene] ensureHUD: 採用既有 IResultPopupLike');
   }
 
   return { hud, resultPopup };
@@ -104,9 +97,9 @@ export function ensureHUD(
  * 避免子面板 Widget.updateAlignment() 以錯誤父尺寸計算導致節點跑出螢幕外。
  */
 export function ensureBattleLogPanel(
-  existing: BattleLogComposite | null,
+  existing: any | null,
   canvas: Node | null,
-): BattleLogComposite | null {
+): any | null {
   if (existing) return existing;
   if (!canvas) {
     throw new Error('[BattleScene] ensureBattleLogPanel: 找不到 Canvas 節點；BattleScene.scene 必須提供靜態 BattleLogPanel host');
@@ -117,38 +110,38 @@ export function ensureBattleLogPanel(
     throw new Error('[BattleScene] ensureBattleLogPanel: 找不到 Canvas/BattleLogPanel 節點；BattleScene.scene 必須提供靜態 BattleLogPanel host');
   }
 
-  const panel = node.getComponent(BattleLogComposite);
+  const panel = node.getComponent('BattleLogComposite') as any;
   if (!panel) {
-    throw new Error('[BattleScene] ensureBattleLogPanel: Canvas/BattleLogPanel 缺少 BattleLogComposite；不允許執行期自動補件');
+    throw new Error('[BattleScene] ensureBattleLogPanel: Canvas/BattleLogPanel 缺少 IBattleLogLike；不允許執行期自動補件');
   }
 
   return panel;
 }
 
 /**
- * Inspector 未綁定時，在 Canvas 根節點下尋找或新建 BattleScenePanel 節點。
- * BattleScenePanel 是新版 UI 總調度器，串聯 TigerTallyPanel、ActionCommandPanel、UnitInfoPanel。
+ * Inspector 未綁定時，在 Canvas 根節點下尋找或新建 IBattleScenePanelLike 節點。
+ * IBattleScenePanelLike 是新版 UI 總調度器，串聯 TigerTallyPanel、ActionCommandPanel、UnitInfoPanel。
  */
 export function ensureBattleScenePanel(
-  existing: BattleScenePanel | null,
+  existing: any | null,
   canvas: Node | null,
-): BattleScenePanel | null {
+): any | null {
   if (existing) return existing;
   if (!canvas) {
-    throw new Error('[BattleScene] ensureBattleScenePanel: 找不到 Canvas 節點；BattleScene.scene 必須提供靜態 BattleScenePanel host');
+    throw new Error('[BattleScene] ensureBattleScenePanel: 找不到 Canvas 節點；BattleScene.scene 必須提供靜態 IBattleScenePanelLike host');
   }
 
   const node = canvas.getChildByName('BattleScenePanel');
   if (!node) {
-    throw new Error('[BattleScene] ensureBattleScenePanel: 找不到 Canvas/BattleScenePanel 節點；BattleScene.scene 必須提供靜態 BattleScenePanel host');
+    throw new Error('[BattleScene] ensureBattleScenePanel: 找不到 Canvas/IBattleScenePanelLike 節點；BattleScene.scene 必須提供靜態 IBattleScenePanelLike host');
   }
 
-  const panel = node.getComponent(BattleScenePanel);
+  const panel = node.getComponent('BattleScenePanel') as any;
   if (!panel) {
-    throw new Error('[BattleScene] ensureBattleScenePanel: Canvas/BattleScenePanel 缺少 BattleScenePanel component；不允許執行期自動補件');
+    throw new Error('[BattleScene] ensureBattleScenePanel: Canvas/IBattleScenePanelLike 缺少 IBattleScenePanelLike component；不允許執行期自動補件');
   }
 
-  UCUFLogger.info(LogCategory.LIFECYCLE, '[BattleScene] ensureBattleScenePanel: BattleScenePanel 已就緒');
+  UCUFLogger.info(LogCategory.LIFECYCLE, '[BattleScene] ensureBattleScenePanel: IBattleScenePanelLike 已就緒');
   return panel;
 }
 

@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * @deprecated
@@ -73,7 +74,7 @@ export class BattleLogPanel extends UIPreviewBuilder {
             await this.buildScreen(fullScreen.layout, fullScreen.skin, i18n, tokens);
             this._initialized = true;
         } catch (e) {
-            console.warn('[BattleLogPanel] 規格載入失敗，退回白模', e);
+            UCUFLogger.warn(LogCategory.UI, '[BattleLogPanel] 規格載入失敗，退回白模', e);
             this._initialized = true;
             this._flushReadyWaiters(false);
         }
@@ -110,7 +111,7 @@ export class BattleLogPanel extends UIPreviewBuilder {
         // BtnCollapse：折疊 / 展開日誌
         binder.getNode('BtnCollapse')?.on(Button.EventType.CLICK, this._onCollapseClick, this);
 
-        console.log(
+        UCUFLogger.info(LogCategory.UI, 
             `[BattleLogPanel] 綁定完成 — ` +
             `scrollView:${!!this.scrollView} label:${!!this.logLabel} contentNode:${!!this._contentNode}`
         );
@@ -186,7 +187,7 @@ export class BattleLogPanel extends UIPreviewBuilder {
         const op = this._btnAuto?.getComponent('cc.UIOpacity') as any;
         if (op) op.opacity = this._isAuto ? 180 : 255;
         services().event.emit(EVENT_NAMES.AutoBattleToggled, this._isAuto);
-        console.log(`[BattleLogPanel] AutoBattle → ${this._isAuto}`);
+        UCUFLogger.info(LogCategory.UI, `[BattleLogPanel] AutoBattle → ${this._isAuto}`);
     }
 
     /** 戰鬥速度切換（x1 ↔ x2） */
@@ -195,13 +196,13 @@ export class BattleLogPanel extends UIPreviewBuilder {
         const op = this._btnSpeed?.getComponent('cc.UIOpacity') as any;
         if (op) op.opacity = this._speed === 2 ? 180 : 255;
         services().event.emit(EVENT_NAMES.BattleSpeedToggled, this._speed);
-        console.log(`[BattleLogPanel] BattleSpeed → ${this._speed}x`);
+        UCUFLogger.info(LogCategory.UI, `[BattleLogPanel] BattleSpeed → ${this._speed}x`);
     }
 
     /** 開啟設定面板 */
     private _onSettingClick(): void {
         services().event.emit(EVENT_NAMES.ShowSettingsRequested);
-        console.log('[BattleLogPanel] ShowSettings requested');
+        UCUFLogger.info(LogCategory.UI, '[BattleLogPanel] ShowSettings requested');
     }
 
     /**

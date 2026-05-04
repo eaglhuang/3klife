@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * ResultPopup — 戰鬥結果彈出層
@@ -71,7 +72,7 @@ export class ResultPopup extends UIPreviewBuilder {
             await this.buildScreen(fullScreen.layout, fullScreen.skin, i18n);
             this._initialized = true;
         } catch (e) {
-            console.warn('[ResultPopup] 規格載入失敗，退回白模模式', e);
+            UCUFLogger.warn(LogCategory.UI, '[ResultPopup] 規格載入失敗，退回白模模式', e);
             // 白模 fallback：仍然可以顯示文字
             this._initialized = true;
         }

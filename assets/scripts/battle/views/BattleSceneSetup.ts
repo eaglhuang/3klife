@@ -1,13 +1,14 @@
+import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
 // @spec-source → 見 docs/cross-reference-index.md
 // [UCUF M9] 從 BattleScene.ts 提取的場景設置函數。
 // 所有函數僅依賴傳入的 Cocos Node 參數，不持有 BattleScene 實例引用。
 // Unity 對照：BattleCameraSetup + BattleSceneInitializer 靜態工具類別
 
 import { Camera, Layers, Node, UITransform, Sprite, Button, Label, Color } from "cc";
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+
 import { BattleTactic, TroopType } from "../../core/config/Constants";
 import { SceneBackground } from "./SceneBackground";
-import type { DeployRuntimeApi } from "../../ui/components/DeployRuntimeApi";
+
 import { resolveBattleSceneBackgroundId } from "../shared/BattleSceneMode";
 
 // ─── 兵種名稱 ───────────────────────────────────────────────────────────────
@@ -143,7 +144,7 @@ export function resolveSceneBackgroundId(
 export function addBackgroundSwitchUI(
   canvas: Node | null,
   sceneBackground: SceneBackground | null,
-  deployRuntime: DeployRuntimeApi | null,
+  deployRuntime: IDeployRuntimeLike | null,
 ): void {
   if (!canvas) return;
 

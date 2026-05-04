@@ -1,3 +1,5 @@
+import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
+
 // @spec-source → 見 docs/cross-reference-index.md
 import {
     _decorator, Component, Node, Camera, Color,
@@ -182,14 +184,14 @@ export class SceneBackground extends Component {
         return new Promise(resolve => {
             resources.load("data/scene-backgrounds", JsonAsset, (err, jsonAsset) => {
                 if (err || !jsonAsset?.json) {
-                    console.warn("[SceneBackground] 無法讀取 scene-backgrounds.json:", err?.message);
+                    UCUFLogger.warn(LogCategory.BATTLE, "[SceneBackground] 無法讀取 scene-backgrounds.json:", err?.message);
                     resolve(null);
                     return;
                 }
                 const list = (jsonAsset.json as { backgrounds: BackgroundEntry[] }).backgrounds ?? [];
                 const entry = list.find(b => b.id === id) ?? null;
                 if (!entry) {
-                    console.warn(`[SceneBackground] 找不到背景設定: id="${id}"`);
+                    UCUFLogger.warn(LogCategory.BATTLE, `[SceneBackground] 找不到背景設定: id="${id}"`);
                 }
                 resolve(entry);
             });
@@ -207,14 +209,14 @@ export class SceneBackground extends Component {
         return new Promise(resolve => {
             resources.load(path, ImageAsset, (err, imageAsset) => {
                 if (err || !imageAsset) {
-                    console.warn(`[SceneBackground] 底圖載入失敗 (${path}):`, err?.message);
+                    UCUFLogger.warn(LogCategory.BATTLE, `[SceneBackground] 底圖載入失敗 (${path}):`, err?.message);
                     resolve();
                     return;
                 }
                 const tex = new Texture2D();
                 tex.image = imageAsset;
                 this.bgMaterial?.setProperty("mainTexture", tex);
-                console.log(`[SceneBackground] ✅ 背景底圖載入成功: ${label}`);
+                UCUFLogger.info(LogCategory.BATTLE, `[SceneBackground] ✅ 背景底圖載入成功: ${label}`);
                 resolve();
             });
         });

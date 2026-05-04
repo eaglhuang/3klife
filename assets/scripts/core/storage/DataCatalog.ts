@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 /**
  * DataCatalog.ts
  * 
@@ -101,7 +102,7 @@ export class DataCatalog {
     this._loaded = true;
     const elapsed = Date.now() - startMs;
     if (elapsed > 100) {
-      console.warn(`[DataCatalog] 載入耗時 ${elapsed}ms，超過 100ms 目標。`);
+      UCUFLogger.warn(LogCategory.DATA, `[DataCatalog] 載入耗時 ${elapsed}ms，超過 100ms 目標。`);
     }
   }
 
@@ -173,7 +174,7 @@ export class DataCatalog {
     return new Promise<T | null>((resolve) => {
       resources.load(path, JsonAsset, (err, asset) => {
         if (err) {
-          console.warn(`[DataCatalog] 載入失敗：${path}`, err);
+          UCUFLogger.warn(LogCategory.DATA, `[DataCatalog] 載入失敗：${path}`, err);
           resolve(null);
           return;
         }

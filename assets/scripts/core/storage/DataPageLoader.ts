@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 import { JsonAsset, resources } from 'cc';
 import { DataCatalog } from './DataCatalog';
 import { DataStorageAdapter, StorageQueryFilter } from './DataStorageAdapter';
@@ -156,7 +157,7 @@ export class DataPageLoader {
     return new Promise<T[]>((resolve) => {
       resources.load(resourcePath, JsonAsset, (err, asset) => {
         if (err || !asset) {
-          console.warn(`[DataPageLoader] load failed: ${resourcePath}`, err);
+          UCUFLogger.warn(LogCategory.DATA, `[DataPageLoader] load failed: ${resourcePath}`, err);
           resolve([]);
           return;
         }

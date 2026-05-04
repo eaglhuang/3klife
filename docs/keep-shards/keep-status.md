@@ -207,3 +207,25 @@ flowchart TD
 - **俘虜處置邏輯對齊**：明確「忠誠/信任度」UI 條與沒收虎符的代價警告。
 - **Data Schema 同步**：已在 `Data Schema文件.md` 中增加 `Personality`, `Loyalty`, `Recent_Log` 等生活感驅動欄位。
 - **交付件**：`武將人物介面規格補遺_2026-04-14.md` (正式入庫)。
+
+---
+
+## 28. Harness Engineering 架構治理 (2026-05-04)
+
+### 核心目標：徹底解除 UI 與 Battle 模組間的循環依賴與強耦合。
+
+- **介面導向解耦 (Interface-Driven Decoupling)**:
+    - **Deploy 控制器解耦**: `DeployComposite` 與 `DeployPanel` 不再直接依賴 `BattleController` 實作類，改為引用 `shared/interfaces/IBattleUIComponents.ts` 中的 `IDeployController` 介面。
+    - **VFX 工具解耦**: `VfxComposerTool` 移除對 `BattleController` 的直接引用，確保開發者工具不會導致運行時模組污染。
+- **數據與型別遷移 (Data & Type Migration)**:
+    - **戰場入口參數**: `BattleEntryParams.ts` (更名為 `IBattleEntryParams`) 已從 `battle/models/` 遷移至 `shared/`，解除 `LobbyScene` 與 `LoadingScene` 對戰鬥模型的依賴。
+    - **配置結構共享**: `EncounterConfig` 與 `TerrainGrid` 已從 `battle/` 遷移至 `shared/`，統一場景載入配置。
+    - **虎符卡片合約**: `TallyCardData` 及其子結構已從 `ui/components/TigerTallyComposite.ts` 提取至 `shared/TallyCardContract.ts`，允許 Battle 模組在不依賴 UI 的情況下存取卡片數據。
+- **自動化治理驗證 (Compute Gate)**:
+    - 正式啟用 `node tools_node/compute-gate.js --gates import-boundary` 進行模組邊界守衛檢查。
+    - **強制規則**:
+        - `ui/` 只可引用 `shared/` 與 `core/`。
+        - `battle/` 只可引用 `shared/` 與 `core/`。
+        - 跨模組交互必須透過 `shared/` 定義的介面或型別合約。
+
+---

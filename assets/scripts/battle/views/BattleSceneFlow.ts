@@ -1,3 +1,4 @@
+import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
 import { Color } from 'cc';
 import { Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
@@ -5,21 +6,21 @@ import type { BattleController } from '../controllers/BattleController';
 import { createGeneral, loadEncounter } from './BattleSceneLoader';
 import { buildSceneGambitSummary } from './BattleSceneGambitSummary';
 import { BATTLE_TURN_FLOW_TIMING } from './BattlePresentationTiming';
-import type { BattleEntryParams } from '../models/BattleEntryParams';
+import type { IBattleEntryParams } from '../../shared/BattleEntryParams';
 import type { TerrainGrid } from '../models/BattleState';
 import type { GeneralUnit } from '../../core/models/GeneralUnit';
-import type { BattleHUDComposite } from '../../ui/components/BattleHUDComposite';
-import type { BattleLogComposite } from '../../ui/components/BattleLogComposite';
-import type { DeployRuntimeApi } from '../../ui/components/DeployRuntimeApi';
+
+
+
 import type { BoardRenderer } from './BoardRenderer';
 
 export interface BattleSceneFlowContext {
   getCtrl(): BattleController | null;
-  getBattleParams(): BattleEntryParams | null;
+  getBattleParams(): IBattleEntryParams | null;
   getCurrentEncounterId(): string;
-  getDeployRuntime(): DeployRuntimeApi | null;
-  getHUD(): BattleHUDComposite | null;
-  getBattleLogPanel(): BattleLogComposite | null;
+  getDeployRuntime(): IDeployRuntimeLike | null;
+  getHUD(): IBattleHUDLike | null;
+  getBattleLogPanel(): IBattleLogLike | null;
   getBoardRenderer(): BoardRenderer | null;
   setPlayerGeneral(unit: GeneralUnit): void;
   setEnemyGeneral(unit: GeneralUnit): void;

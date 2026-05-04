@@ -6,7 +6,7 @@ import {
 import {
   buildBattleSkillAimingMessage,
   getBattleSkillPresentation,
-} from '../skills/BattleSkillPresentation';
+} from '../../shared/BattleSkillPresentation';
 import { BattleSkillTargetMode, SkillSourceType } from '../../shared/SkillRuntimeContract';
 import { Faction, GAME_CONFIG } from '../../core/config/Constants';
 

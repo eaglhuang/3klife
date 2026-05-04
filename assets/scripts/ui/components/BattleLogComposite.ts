@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md (UCUF Wave 2)
 /**
  * BattleLogComposite — 右側面板（控制列 + 戰鬥日誌）（CompositePanel 版）
@@ -79,7 +80,7 @@ export class BattleLogComposite extends CompositePanel {
             this._isMounted = true;
             this.clear();
         } catch (e) {
-            console.warn('[BattleLogComposite] mount 失敗', e);
+            UCUFLogger.warn(LogCategory.UI, '[BattleLogComposite] mount 失敗', e);
             this._isMounted = true;
             this._flushReadyWaiters(false);
         }
@@ -154,7 +155,7 @@ export class BattleLogComposite extends CompositePanel {
         // BtnCollapse：折疊 / 展開日誌
         binder.getNode('BtnCollapse')?.on(Button.EventType.CLICK, this._onCollapseClick, this);
 
-        console.log(
+        UCUFLogger.info(LogCategory.UI, 
             `[BattleLogComposite] 綁定完成 — ` +
             `scrollView:${!!this.scrollView} label:${!!this.logLabel} contentNode:${!!this._contentNode}`
         );
@@ -185,7 +186,7 @@ export class BattleLogComposite extends CompositePanel {
         const op = this._btnAuto?.getComponent('cc.UIOpacity') as any;
         if (op) op.opacity = this._isAuto ? 180 : 255;
         services().event.emit(EVENT_NAMES.AutoBattleToggled, this._isAuto);
-        console.log(`[BattleLogComposite] AutoBattle → ${this._isAuto}`);
+        UCUFLogger.info(LogCategory.UI, `[BattleLogComposite] AutoBattle → ${this._isAuto}`);
     }
 
     private _onSpeedClick(): void {
@@ -193,12 +194,12 @@ export class BattleLogComposite extends CompositePanel {
         const op = this._btnSpeed?.getComponent('cc.UIOpacity') as any;
         if (op) op.opacity = this._speed === 2 ? 180 : 255;
         services().event.emit(EVENT_NAMES.BattleSpeedToggled, this._speed);
-        console.log(`[BattleLogComposite] BattleSpeed → ${this._speed}x`);
+        UCUFLogger.info(LogCategory.UI, `[BattleLogComposite] BattleSpeed → ${this._speed}x`);
     }
 
     private _onSettingClick(): void {
         services().event.emit(EVENT_NAMES.ShowSettingsRequested);
-        console.log('[BattleLogComposite] ShowSettings requested');
+        UCUFLogger.info(LogCategory.UI, '[BattleLogComposite] ShowSettings requested');
     }
 
     private _onCollapseClick(): void {

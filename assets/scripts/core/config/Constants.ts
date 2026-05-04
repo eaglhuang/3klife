@@ -20,38 +20,10 @@ export const GAME_CONFIG = {
   GENERAL_MAX_DODGE_CHANCE: 0.40,         // 閃躲率上限 40%
 };
 
-export enum TurnPhase {
-  PlayerDeploy = "player-deploy",
-  AutoMove = "auto-move",
-  BattleResolve = "battle-resolve",
-  SpecialResolve = "special-resolve",
-  TurnEnd = "turn-end",
-}
+import { Faction, TroopType, TerrainType, Weather, BattleTactic, TurnPhase, StatusEffect, SceneName } from "../../shared/CommonEnums";
+export { Faction, TroopType, TerrainType, Weather, BattleTactic, TurnPhase, StatusEffect, SceneName };
 
-export enum Faction {
-  Player = "player",
-  Enemy = "enemy",
-}
 
-export enum TroopType {
-  Cavalry = "cavalry",
-  Infantry = "infantry",
-  Shield = "shield",
-  Archer = "archer",
-  Pikeman = "pikeman",
-  Engineer = "engineer",
-  Medic = "medic",
-  Navy = "navy",
-}
-
-export enum TerrainType {
-  Plain = "plain",
-  River = "river",
-  Mountain = "mountain",
-  Fortress = "fortress",
-  Desert = "desert",
-  Forest = "forest",
-}
 
 export const TROOP_COUNTER_MAP: Partial<Record<TroopType, TroopType>> = {
   [TroopType.Cavalry]: TroopType.Infantry,
@@ -99,13 +71,6 @@ export const SP_PER_KILL = 20;
 
 export const WEAK_ATTACK_MULTIPLIER = 0.7;
 
-/** 狀態效果類型 */
-export enum StatusEffect {
-  Stun = "stun",     // 暈眩：跳過移動與攻擊，並解除盾牆
-  Rooted = "rooted", // 定身：可攻擊但不可移動
-  Slow = "slow",     // 緩速：移動力降低 1
-  Weak = "weak",     // 虛弱：下次攻擊傷害降低
-}
 
 export const EVENT_NAMES = {
   TurnPhaseChanged:  "turn-phase-changed",
@@ -147,29 +112,5 @@ export const EVENT_NAMES = {
   ShowToast:            "show-toast",
 };
 
-/** 天氣條件（影響戰場修正；目前純定義 + log 用，後續由 BattleController 消費） */
-export enum Weather {
-  Clear     = "clear",
-  Rain      = "rain",
-  Fog       = "fog",
-  Snow      = "snow",
-  Sandstorm = "sandstorm",
-  Night     = "night",
-}
 
-/** 場景戰法（特殊戰場規則；目前純定義 + log 用，後續由 BattleController 消費） */
-export enum BattleTactic {
-  Normal       = "normal",
-  FireAttack   = "fire-attack",
-  FloodAttack  = "flood-attack",
-  RockSlide    = "rock-slide",
-  AmbushAttack = "ambush-attack",
-  NightRaid    = "night-raid",
-}
 
-export enum SceneName {
-  Login   = "LoginScene",
-  Loading = "LoadingScene",
-  Lobby   = "LobbyScene",
-  Battle = "BattleScene",
-}

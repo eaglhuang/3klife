@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md (UCUF Wave 2)
 /**
  * ActionCommandComposite — Zone 7: 奧義指令區（CompositePanel 版）
@@ -80,7 +81,7 @@ export class ActionCommandComposite extends CompositePanel {
     public async mount(): Promise<void> {
         if (this._isMounted) return;
         try {
-            console.log('[ActionCommandComposite] mount() start — node:', this.node.name, 'parent:', this.node.parent?.name);
+            UCUFLogger.info(LogCategory.UI, '[ActionCommandComposite] mount() start — node:', this.node.name, 'parent:', this.node.parent?.name);
             await super.mount('action-command-screen');
             this._isMounted = true;
             this._subscribeEvents();
@@ -90,7 +91,7 @@ export class ActionCommandComposite extends CompositePanel {
                 logBattleUIPosition('ActionCommandComposite', root);
             }
         } catch (e) {
-            console.warn('[ActionCommandComposite] mount 失敗', e);
+            UCUFLogger.warn(LogCategory.UI, '[ActionCommandComposite] mount 失敗', e);
             this._isMounted = true;
             this._flushReadyWaiters(false);
         }
@@ -149,7 +150,7 @@ export class ActionCommandComposite extends CompositePanel {
         binder.getNode('TacticsBtn')?.on(Button.EventType.CLICK, this._onTacticsClick, this);
         binder.getNode('DuelBtn')?.on(Button.EventType.CLICK, this._onDuelClick, this);
 
-        console.log(
+        UCUFLogger.info(LogCategory.UI, 
             `[ActionCommandComposite] 綁定完成 — ring:${!!this._spRingSprite}` +
             ` ultLabel:${!!this._ultLabel}`
         );

@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { _decorator, Component, Node, Canvas, UITransform, Label, Button, ProgressBar, Sprite, Color, Widget, Vec3 } from "cc";
 import { EDITOR } from "cc/env";
@@ -39,30 +40,30 @@ export class SceneAutoBuilder extends Component {
   private tryGenerate(mode: "editor" | "play"): void {
     if (!this.autoGenerate) return;
 
-    console.log(`[SceneAutoBuilder] 開始生成戰鬥場景（${mode === "editor" ? "編輯模式" : "執行模式"}）...`);
+    UCUFLogger.info(LogCategory.DATA, `[SceneAutoBuilder] 開始生成戰鬥場景（${mode === "editor" ? "編輯模式" : "執行模式"}）...`);
 
     const canvas = this.node.getComponent(Canvas) 
       ? this.node 
       : this.node.getParent()?.getComponent(Canvas)?.node;
 
     if (!canvas) {
-      console.error("[SceneAutoBuilder] 找不到 Canvas 節點！");
+      UCUFLogger.error(LogCategory.DATA, "[SceneAutoBuilder] 找不到 Canvas 節點！");
       return;
     }
 
-    console.log("[SceneAutoBuilder] Canvas 節點確認：", canvas.name);
+    UCUFLogger.info(LogCategory.DATA, "[SceneAutoBuilder] Canvas 節點確認：", canvas.name);
 
     try {
       this.generateBattleScene(canvas);
-      console.log("[SceneAutoBuilder] ✅ 場景生成完成！");
+      UCUFLogger.info(LogCategory.DATA, "[SceneAutoBuilder] ✅ 場景生成完成！");
       if (mode === "editor") {
         this.autoGenerate = false;
-        console.log("[SceneAutoBuilder] 💡 這次生成已直接寫入場景；請按 Ctrl+S 保存。autoGenerate 已自動取消勾選，避免重複生成。");
+        UCUFLogger.info(LogCategory.DATA, "[SceneAutoBuilder] 💡 這次生成已直接寫入場景；請按 Ctrl+S 保存。autoGenerate 已自動取消勾選，避免重複生成。");
       } else {
-        console.warn("[SceneAutoBuilder] 目前是在執行模式生成；停止遊戲後節點仍會回滾。若要持久保留，請在編輯模式使用本元件或 battle-scene-builder 擴展。");
+        UCUFLogger.warn(LogCategory.DATA, "[SceneAutoBuilder] 目前是在執行模式生成；停止遊戲後節點仍會回滾。若要持久保留，請在編輯模式使用本元件或 battle-scene-builder 擴展。");
       }
     } catch (error) {
-      console.error("[SceneAutoBuilder] ❌ 生成失敗：", error);
+      UCUFLogger.error(LogCategory.DATA, "[SceneAutoBuilder] ❌ 生成失敗：", error);
     }
   }
 
@@ -86,9 +87,9 @@ export class SceneAutoBuilder extends Component {
 
   private createBattleSceneNode(parent: Node): void {
     const node = this.getOrCreateNode(parent, "BattleScene");
-    console.log("  ✓ BattleScene 節點");
-    console.log("    → 請添加 BattleScene 元件");
-    console.log("    → 綁定：hud(BattleHUDComposite), deployPanel, resultPopup(ResultPopupComposite)");
+    UCUFLogger.info(LogCategory.DATA, "  ✓ BattleScene 節點");
+    UCUFLogger.info(LogCategory.DATA, "    → 請添加 BattleScene 元件");
+    UCUFLogger.info(LogCategory.DATA, "    → 綁定：hud(BattleHUDComposite), deployPanel, resultPopup(ResultPopupComposite)");
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -105,9 +106,9 @@ export class SceneAutoBuilder extends Component {
     widget.top = 10;
     widget.left = 10;
 
-    console.log("  ✓ HUD 節點");
-    console.log("    → 請添加 BattleHUDComposite 元件");
-    console.log("    → HUD 內容由 battle-hud-screen 執行期自動建構");
+    UCUFLogger.info(LogCategory.DATA, "  ✓ HUD 節點");
+    UCUFLogger.info(LogCategory.DATA, "    → 請添加 BattleHUDComposite 元件");
+    UCUFLogger.info(LogCategory.DATA, "    → HUD 內容由 battle-hud-screen 執行期自動建構");
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -140,9 +141,9 @@ export class SceneAutoBuilder extends Component {
     // 選擇標籤
     this.createLabel(panel, "SelectionLabel", "選擇兵種與路線", 18, new Color(255, 255, 255), 0, -150);
 
-    console.log("  ✓ Panel 節點");
-    console.log("    → 請添加 DeployPanel 元件");
-    console.log("    → 綁定：所有按鈕 + selectionLabel");
+    UCUFLogger.info(LogCategory.DATA, "  ✓ Panel 節點");
+    UCUFLogger.info(LogCategory.DATA, "    → 請添加 DeployPanel 元件");
+    UCUFLogger.info(LogCategory.DATA, "    → 綁定：所有按鈕 + selectionLabel");
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -157,9 +158,9 @@ export class SceneAutoBuilder extends Component {
     widget.isAlignHorizontalCenter = true;
     widget.isAlignVerticalCenter = true;
 
-    console.log("  ✓ Popup 節點");
-    console.log("    → 請添加 ResultPopupComposite 元件");
-    console.log("    → Popup 內容由 result-popup-screen 執行期自動建構");
+    UCUFLogger.info(LogCategory.DATA, "  ✓ Popup 節點");
+    UCUFLogger.info(LogCategory.DATA, "    → 請添加 ResultPopupComposite 元件");
+    UCUFLogger.info(LogCategory.DATA, "    → Popup 內容由 result-popup-screen 執行期自動建構");
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

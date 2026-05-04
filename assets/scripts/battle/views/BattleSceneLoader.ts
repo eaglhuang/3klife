@@ -1,3 +1,5 @@
+import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
+
 // @spec-source → 見 docs/cross-reference-index.md
 // [UCUF M9] 從 BattleScene.ts 提取的純載入 / 資料建構函數。
 // 本模組所有函數均無 BattleScene 實例依賴（不使用 this）。
@@ -7,10 +9,11 @@ import { assetManager, AudioClip } from "cc";
 import { services } from "../../core/managers/ServiceLoader";
 import { GeneralUnit, GeneralConfig } from "../../core/models/GeneralUnit";
 import { Faction, TroopType, TROOP_DEPLOY_COST, Weather, BattleTactic } from "../../core/config/Constants";
-import { TallyCardData } from "../../ui/components/TigerTallyComposite";
-import { UltimateSkillItem } from "../../ui/components/UltimateSelectPopup";
-import { VFX_BLOCK_REGISTRY } from "../../tools/vfx-block-registry";
-import { TerrainGrid } from "../models/BattleState";
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+
+import { VFX_BLOCK_REGISTRY } from '../../core/config/vfx-block-registry';
+import { TerrainGrid } from "../../shared/CommonEnums";
+import { EncounterConfig } from "../../shared/BattleEntryParams";
 import { buildIdMap } from "../../shared/SkillRuntimeContract";
 import type {
   JsonListEnvelope,
@@ -20,6 +23,7 @@ import type {
   CanonicalUltimateDefinition,
   SkillSourceType,
 } from "../../shared/SkillRuntimeContract";
+import { TallyCardData } from '../../shared/TallyCardContract';
 
 export interface BattleTacticSummary {
   count: number;
@@ -28,32 +32,15 @@ export interface BattleTacticSummary {
   names: string[];
 }
 
+export interface UltimateSkillItem {
+  skillId: string;
+  label: string;
+  costSp: number;
+}
+
 let tacticDefinitionMap = new Map<string, CanonicalTacticDefinition>();
 let ultimateDefinitionMap = new Map<string, CanonicalUltimateDefinition>();
 let battleSkillMetadataPromise: Promise<void> | null = null;
-
-// ─── 型別定義 ───────────────────────────────────────────────────────────────
-
-/** encounters.json 中單一遭遇戰的設定結構 */
-export interface EncounterConfig {
-  id: string;
-  name: string;
-  playerGeneralId: string;
-  enemyGeneralId: string;
-  terrain?: TerrainGrid;
-  /** 對應 scene-backgrounds.json 中的 id，決定要顯示的背景圖 */
-  backgroundId?: string;
-  /** 天氣條件（可選，預設 Clear） */
-  weather?: Weather;
-  /** 場景戰法（可選，預設 Normal） */
-  battleTactic?: BattleTactic;
-  /** 我軍裝備 ID 列表（預留） */
-  playerEquipment?: string[];
-  /** 敵軍裝備 ID 列表（預留） */
-  enemyEquipment?: string[];
-}
-
-// ─── 資源載入 ───────────────────────────────────────────────────────────────
 
 /**
  * 載入傷害數字 BMFont 並註冊至 FloatTextSystem。
@@ -77,9 +64,9 @@ export async function loadDamageFonts(): Promise<void> {
       floatText.registerFont('dmg_enemy', fontPu);
       floatText.registerFont('dmg_miss', fontMiss);
     }
-    console.log("[BattleSceneLoader] BMFonts 載入並註冊完成");
+    UCUFLogger.info(LogCategory.BATTLE, "[BattleSceneLoader] BMFonts 載入並註冊完成");
   } catch (e) {
-    console.warn("[BattleSceneLoader] BMFonts 載入失敗, 退回使用預設字型:", e);
+    UCUFLogger.warn(LogCategory.BATTLE, "[BattleSceneLoader] BMFonts 載入失敗, 退回使用預設字型:", e);
   }
 }
 

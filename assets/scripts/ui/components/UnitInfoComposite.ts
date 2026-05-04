@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md (UCUF Wave 2)
 /**
  * UnitInfoComposite — 從左側滑入的兵種詳細資訊面板（CompositePanel 版）
@@ -102,7 +103,7 @@ export class UnitInfoComposite extends CompositePanel {
 
         binder.getNode('BtnClose')?.on(Button.EventType.CLICK, this.hide, this);
 
-        console.log(`[UnitInfoComposite] 綁定完成 — name:${!!this._unitName} desc:${!!this._descText}`);
+        UCUFLogger.info(LogCategory.UI, `[UnitInfoComposite] 綁定完成 — name:${!!this._unitName} desc:${!!this._descText}`);
     }
 
     // ── 私有：資料填充 ────────────────────────────────────────

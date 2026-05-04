@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { AudioClip, AudioSource, Node, tween } from "cc";
 
@@ -96,7 +97,7 @@ export class AudioSystem {
             ? this.clipCache.get(clipOrName) ?? null
             : clipOrName;
         if (!clip) {
-            console.warn(`[AudioSystem] BGM clip 不存在: ${clipOrName}`);
+            UCUFLogger.warn(LogCategory.DATA, `[AudioSystem] BGM clip 不存在: ${clipOrName}`);
             return;
         }
         this.bgmVolume = volume;
@@ -143,7 +144,7 @@ export class AudioSystem {
             ? this.clipCache.get(clipOrName) ?? null
             : clipOrName;
         if (!clip) {
-            console.warn(`[AudioSystem] crossfadeTo clip 不存在: ${clipOrName}`);
+            UCUFLogger.warn(LogCategory.DATA, `[AudioSystem] crossfadeTo clip 不存在: ${clipOrName}`);
             return;
         }
 
@@ -185,9 +186,9 @@ to.clip = clip;
         const clip = this.clipCache.get(name);
         if (!clip) {
             if (this._isPreviewMode()) {
-                console.log(`[AudioSystem] preview mode SFX clip 缺失，略過: ${name}`);
+                UCUFLogger.info(LogCategory.DATA, `[AudioSystem] preview mode SFX clip 缺失，略過: ${name}`);
             } else {
-                console.warn(`[AudioSystem] SFX clip 不存在: ${name}`);
+                UCUFLogger.warn(LogCategory.DATA, `[AudioSystem] SFX clip 不存在: ${name}`);
             }
             return;
         }
@@ -208,9 +209,9 @@ to.clip = clip;
         const clip = this.clipCache.get(name);
         if (!clip) {
             if (this._isPreviewMode()) {
-                console.log(`[AudioSystem] preview mode SFX clip 缺失，略過: ${name}`);
+                UCUFLogger.info(LogCategory.DATA, `[AudioSystem] preview mode SFX clip 缺失，略過: ${name}`);
             } else {
-                console.warn(`[AudioSystem] SFX clip 不存在: ${name}`);
+                UCUFLogger.warn(LogCategory.DATA, `[AudioSystem] SFX clip 不存在: ${name}`);
             }
             return;
         }
@@ -238,7 +239,7 @@ to.clip = clip;
         if (!this.loopSource) return;
         const clip = this.clipCache.get(name);
         if (!clip) {
-            console.warn(`[AudioSystem] Loop clip 不存在: ${name}`);
+            UCUFLogger.warn(LogCategory.DATA, `[AudioSystem] Loop clip 不存在: ${name}`);
             return;
         }
         this.loopSource.clip = clip;

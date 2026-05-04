@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * @deprecated
@@ -17,7 +18,7 @@
  */
 import { _decorator, Button, Color, Label, Node, Sprite, UITransform, Vec3 } from 'cc';
 import { EVENT_NAMES, Faction, GAME_CONFIG } from '../../core/config/Constants';
-import { buildBattleSkillEffectMessage, buildBattleSkillUsedMessage } from '../../battle/skills/BattleSkillPresentation';
+import { buildBattleSkillEffectMessage, buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
 import { services } from '../../core/managers/ServiceLoader';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
 import { UISpecLoader } from '../core/UISpecLoader';
@@ -78,29 +79,29 @@ export class BattleHUD extends UIPreviewBuilder {
     private async _initialize(): Promise<void> {
         if (this._initialized) return;
 
-        console.log('[BattleHUD] _initialize: 開始載入 battle-hud-screen 規格');
-        console.log(`[BattleHUD] _initialize: 掛載節點 name="${this.node?.name}" parent="${this.node?.parent?.name ?? 'null'}" active=${this.node?.active}`);
+        UCUFLogger.info(LogCategory.UI, '[BattleHUD] _initialize: 開始載入 battle-hud-screen 規格');
+        UCUFLogger.info(LogCategory.UI, `[BattleHUD] _initialize: 掛載節點 name="${this.node?.name}" parent="${this.node?.parent?.name ?? 'null'}" active=${this.node?.active}`);
         try {
             const t0 = Date.now();
             const [fullScreen, i18n] = await Promise.all([
                 this._specLoader.loadFullScreen('battle-hud-screen'),
                 this._specLoader.loadI18n(services().i18n.currentLocale),
             ]);
-            console.log(`[BattleHUD] _initialize: 規格載入完成 (${Date.now() - t0}ms) layout="${fullScreen?.layout?.id ?? '?'}" skin="${fullScreen?.skin?.id ?? '?'}"`);
+            UCUFLogger.info(LogCategory.UI, `[BattleHUD] _initialize: 規格載入完成 (${Date.now() - t0}ms) layout="${fullScreen?.layout?.id ?? '?'}" skin="${fullScreen?.skin?.id ?? '?'}"`);
             if (!fullScreen?.layout) {
-                console.error('[BattleHUD] _initialize: fullScreen.layout 為 null/undefined，battle-hud-screen.json 可能缺少 layout 欄位或對應 layout JSON 不存在');
+                UCUFLogger.error(LogCategory.UI, '[BattleHUD] _initialize: fullScreen.layout 為 null/undefined，battle-hud-screen.json 可能缺少 layout 欄位或對應 layout JSON 不存在');
                 this._initialized = true;
                 return;
             }
-            console.log('[BattleHUD] _initialize: 開始 buildScreen');
+            UCUFLogger.info(LogCategory.UI, '[BattleHUD] _initialize: 開始 buildScreen');
             await this.buildScreen(fullScreen.layout, fullScreen.skin, i18n);
-            console.log('[BattleHUD] _initialize: buildScreen 完成');
+            UCUFLogger.info(LogCategory.UI, '[BattleHUD] _initialize: buildScreen 完成');
             this._initialized = true;
             this._replayPendingRefresh();
             this._flushReadyWaiters(true);
         } catch (e) {
-            console.error('[BattleHUD] _initialize: 規格載入或建構失敗，退回白模', e);
-            console.error('[BattleHUD] _initialize: 錯誤堆疊 →', (e as Error)?.stack ?? e);
+            UCUFLogger.error(LogCategory.UI, '[BattleHUD] _initialize: 規格載入或建構失敗，退回白模', e);
+            UCUFLogger.error(LogCategory.UI, '[BattleHUD] _initialize: 錯誤堆疊 →', (e as Error)?.stack ?? e);
             this._initialized = true;
             this._flushReadyWaiters(false);
         }
@@ -159,7 +160,7 @@ export class BattleHUD extends UIPreviewBuilder {
             [this._playerFortressFill, this._playerFortressTotalW] = this._ensureBarFill(findInBuilt('PlayerFortressBar'), true);
             [this._enemyFortressFill,  this._enemyFortressTotalW]  = this._ensureBarFill(findInBuilt('EnemyFortressBar'),  false);
         } catch (e) {
-            console.warn('[BattleHUD] _ensureBarFill 失敗', e);
+            UCUFLogger.warn(LogCategory.UI, '[BattleHUD] _ensureBarFill 失敗', e);
         }
 
         // 隱藏非新建子樹（避免與 legacy 節點重疊）
@@ -167,7 +168,7 @@ export class BattleHUD extends UIPreviewBuilder {
             if (child !== _rootNode) child.active = false;
         }
 
-        console.log('[BattleHUD] onBuildComplete 完成');
+        UCUFLogger.info(LogCategory.UI, '[BattleHUD] onBuildComplete 完成');
     }
 
     /**
@@ -266,7 +267,7 @@ export class BattleHUD extends UIPreviewBuilder {
             // [UI-2-0027] 初始化尚未完成（buildScreen 仍在非同步執行中），
             // 暫存參數，等 onBuildComplete 完成後由 _replayPendingRefresh() 自動重播。
             // Unity 對照：在 Awake 呼叫 Start() 期業務邏輯的 Deferred 處理
-            console.log('[BattleHUD] refresh() 在初始化完成前被呼叫 — 已暫存，初始化完成後將自動重播');
+            UCUFLogger.info(LogCategory.UI, '[BattleHUD] refresh() 在初始化完成前被呼叫 — 已暫存，初始化完成後將自動重播');
             this._pendingRefreshArgs = [turn, food, maxFood, playerGeneralHp, playerGeneralMaxHp, enemyGeneralHp, enemyGeneralMaxHp];
             return;
         }
@@ -277,7 +278,7 @@ export class BattleHUD extends UIPreviewBuilder {
         this._setGeneralHealth(Faction.Player, playerGeneralHp);
         this._setGeneralHealth(Faction.Enemy,  enemyGeneralHp);
         this._clearStatus();
-        console.log(
+        UCUFLogger.info(LogCategory.UI, 
             `[BattleHUD] refresh — 第${turn}回合 food:${food}/${maxFood}`,
             `playerHP:${playerGeneralHp}/${playerGeneralMaxHp}`,
             `enemyHP:${enemyGeneralHp}/${enemyGeneralMaxHp}`,
@@ -301,7 +302,7 @@ export class BattleHUD extends UIPreviewBuilder {
         this._setGeneralHealth(Faction.Player, phpHp);
         this._setGeneralHealth(Faction.Enemy,  ehp);
         this._clearStatus();
-        console.log(`[BattleHUD] _replayPendingRefresh 完成 — 第${turn}回合 food:${food}/${maxFood}`);
+        UCUFLogger.info(LogCategory.UI, `[BattleHUD] _replayPendingRefresh 完成 — 第${turn}回合 food:${food}/${maxFood}`);
     }
 
     public setFood(food: number, maxFood: number): void { this._setFood(food, maxFood); }
@@ -360,7 +361,7 @@ export class BattleHUD extends UIPreviewBuilder {
     private _onPortraitClick(side: 'player' | 'enemy'): void {
         const isEnemy = side === 'enemy';
         services().event.emit(EVENT_NAMES.RequestGeneralQuickView, { side, isEnemy });
-        console.log(`[BattleHUD] 頭像點擊 → ${side}`);
+        UCUFLogger.info(LogCategory.UI, `[BattleHUD] 頭像點擊 → ${side}`);
     }
 
     private _bindPortraitInteraction(node: Node | null, side: 'player' | 'enemy'): void {
@@ -399,7 +400,7 @@ export class BattleHUD extends UIPreviewBuilder {
         const portraitPath = generalId ? this._buildPortraitPath(generalId) : fallbackPath;
         const spriteFrame = await services().resource.loadSpriteFrame(portraitPath).catch(async (error) => {
             if (portraitPath !== fallbackPath) {
-                console.warn(`[BattleHUD] ${side} portrait 載入失敗，退回 placeholder: ${portraitPath}`, error);
+                UCUFLogger.warn(LogCategory.UI, `[BattleHUD] ${side} portrait 載入失敗，退回 placeholder: ${portraitPath}`, error);
             }
             return services().resource.loadSpriteFrame(fallbackPath).catch(() => null);
         });

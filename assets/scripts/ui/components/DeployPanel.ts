@@ -47,10 +47,9 @@ import {
 import { GAME_CONFIG, TroopType, TROOP_DEPLOY_COST } from "../../core/config/Constants";
 import { services } from "../../core/managers/ServiceLoader";
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
-import { BattleController, DeployFailReason } from "../../battle/controllers/BattleController";
+import { IDeployController, IDeployRuntimeLike } from "../../shared/interfaces/IBattleUIComponents";
 import { UI_EVENTS } from "../core/UIEvents";
-import type { TallyCardData } from "./TigerTallyComposite";
-import type { DeployRuntimeApi } from './DeployRuntimeApi';
+import { TallyCardData } from "../../shared/TallyCardContract";
 import type { ToastOptions } from "./ToastMessage";
 import { emitDeployDragDebug, shouldLogDeployDragMove } from "./DeployDragDebug";
 import { UCUFLogger, LogLevel } from '../core/UCUFLogger';
@@ -63,7 +62,6 @@ interface ToastMessageLike {
   hide?: (key?: string) => void;
 }
 
-export type DeployPanelBattleRuntimeApi = DeployRuntimeApi;
 
 /**
  * @deprecated [2026-05-13] Use DeployComposite instead. UCUF migration complete.
@@ -81,7 +79,7 @@ export type DeployPanelBattleRuntimeApi = DeployRuntimeApi;
  *   2. 必須是武將前方第一排（BattleScene.onTouchEnd 限制 depth === 0 才呼叫 selectLane）。
  */
 @ccclass("DeployPanel")
-export class DeployPanel extends UIPreviewBuilder implements DeployRuntimeApi {
+export class DeployPanel extends UIPreviewBuilder implements IDeployRuntimeLike {
   // ─── 兵種按鈕（5 個對應 Inspector 綁定，實際只顯示 4 個隨機槽位） ──────────
   @property(Button)
   btnCavalry: Button = null!;
@@ -125,7 +123,7 @@ export class DeployPanel extends UIPreviewBuilder implements DeployRuntimeApi {
   toast: ToastMessageLike | null = null;
 
   // ─── 運行時狀態 ───────────────────────────────────────────────────────────
-  private ctrl: BattleController | null = null;
+  private ctrl: IDeployController | null = null;
   private selectedType: TroopType = TroopType.Infantry;
   private selectedUnitName = '';
   private selectedSlotIndex = 0;
@@ -164,7 +162,7 @@ export class DeployPanel extends UIPreviewBuilder implements DeployRuntimeApi {
 
   // ─── 公開 API（供 BattleScene 呼叫） ─────────────────────────────────────
 
-  public setController(ctrl: BattleController): void {
+  public setController(ctrl: IDeployController): void {
     this.ctrl = ctrl;
   }
 
@@ -250,7 +248,7 @@ export class DeployPanel extends UIPreviewBuilder implements DeployRuntimeApi {
   // ─── 生命週期 ─────────────────────────────────────────────────────────────
 
   onLoad(): void {
-    console.log("[DeployPanel] onLoad 開始");
+    UCUFLogger.info(LogCategory.UI, "[DeployPanel] onLoad 開始");
     services().initialize(this.node);
     emitDeployDragDebug("DeployPanel", "on-load", { node: this.node.name });
     this.ensureBindings();
@@ -752,6 +750,13 @@ export class DeployPanel extends UIPreviewBuilder implements DeployRuntimeApi {
     this.showToast(this.getDeployFailMessage(outcome.reason));
   }
 
+  private getDeployFailMessage(reason?: string): string {
+    if (reason === 'battle-locked') return '目前流程鎖定，暫時無法部署';
+    if (reason === 'limit') return '本回合已部署，請等待下一回合';
+    if (reason === 'occupied') return '目標格已有單位，請改放其他格子';
+    return '糧草不足，無法部署';
+  }
+
   private refillDeploySlot(slotIndex: number): void {
     if (slotIndex < 0 || slotIndex >= this.deploySlots.length) {
       return;
@@ -968,7 +973,7 @@ export class DeployPanel extends UIPreviewBuilder implements DeployRuntimeApi {
       lbl.color = new Color(255, 255, 255);
       n.addChild(lblNode);
       this.node.addChild(n);
-      console.log(`[DeployPanel] 動態建立按鈕節點: ${name}`);
+      UCUFLogger.info(LogCategory.UI, `[DeployPanel] 動態建立按鈕節點: ${name}`);
       return btn;
     };
 
@@ -1047,11 +1052,5 @@ export class DeployPanel extends UIPreviewBuilder implements DeployRuntimeApi {
     return this.slotButtons[slotIndex];
   }
 
-  private getDeployFailMessage(reason?: DeployFailReason): string {
-    if (reason === "battle-locked") return "目前流程鎖定，暫時無法部署";
-    if (reason === "limit")    return "本回合已部署，請等待下一回合";
-    if (reason === "occupied") return "目標格已有單位，請改放其他格子";
-    return "糧草不足，無法部署";
-  }
 }
 

@@ -1,7 +1,8 @@
+import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike } from '../../shared/interfaces/IBattleUIComponents';
 // @spec-source → 見 docs/cross-reference-index.md
 import { TroopType } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
-import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
+
 
 /**
  * 戰鬥音效邏輯鍵。

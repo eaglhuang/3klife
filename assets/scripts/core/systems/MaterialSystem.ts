@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../../ui/core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 import { Color, EffectAsset, Material, MeshRenderer, Node, primitives, renderer, resources, utils, Vec4 } from "cc";
 import { setMaterialSafe } from "../utils/MaterialUtils";
@@ -176,7 +177,7 @@ export class MaterialSystem {
         try {
             mr.material = mat;
         } catch (e) {
-            console.warn(`[MaterialSystem] Shader "${entry.id}" 暖機失敗 — 材質套用錯誤:`, e);
+            UCUFLogger.warn(LogCategory.DATA, `[MaterialSystem] Shader "${entry.id}" 暖機失敗 — 材質套用錯誤:`, e);
             if (warmupNode.isValid) warmupNode.destroy();
             return;
         }
@@ -201,7 +202,7 @@ export class MaterialSystem {
                 resources.load(`effects/${effectName}`, EffectAsset, (err, effectAsset) => {
                     if (err || !effectAsset) {
                         // Fallback：嘗試從全域 registry 查（已被其他資產觸發載入的情況）
-                        console.warn(`[MaterialSystem] resources.load effect "${effectName}" 失敗，嘗試全域 registry fallback:`, err);
+                        UCUFLogger.warn(LogCategory.DATA, `[MaterialSystem] resources.load effect "${effectName}" 失敗，嘗試全域 registry fallback:`, err);
                         const mat = new Material();
                         mat.initialize({ effectName });
                         if (mat.passes.length === 0) {
@@ -247,7 +248,7 @@ export class MaterialSystem {
 
         const entry = this.registry.get(shaderKey);
         if (!entry?.base) {
-            console.warn(`[MaterialSystem] Shader "${shaderKey}" 尚未載入，請先呼叫 warmupCritical()`);
+            UCUFLogger.warn(LogCategory.DATA, `[MaterialSystem] Shader "${shaderKey}" 尚未載入，請先呼叫 warmupCritical()`);
             return null;
         }
 

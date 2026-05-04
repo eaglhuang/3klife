@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md  (UCUF M12)
 /**
  * BattleHUDComposite — 戰鬥 HUD（CompositePanel 版）
@@ -14,7 +15,7 @@
  */
 import { _decorator, Button, Color, Label, Node, Sprite, UITransform, Vec3 } from 'cc';
 import { EVENT_NAMES, Faction, GAME_CONFIG } from '../../core/config/Constants';
-import { buildBattleSkillEffectMessage, buildBattleSkillUsedMessage } from '../../battle/skills/BattleSkillPresentation';
+import { buildBattleSkillEffectMessage, buildBattleSkillUsedMessage } from '../../shared/BattleSkillPresentation';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
@@ -343,7 +344,7 @@ export class BattleHUDComposite extends CompositePanel {
     private _onPortraitClick(side: 'player' | 'enemy'): void {
         const isEnemy = side === 'enemy';
         services().event.emit(EVENT_NAMES.RequestGeneralQuickView, { side, isEnemy });
-        console.log(`[BattleHUDComposite] 頭像點擊 → ${side}`);
+        UCUFLogger.info(LogCategory.UI, `[BattleHUDComposite] 頭像點擊 → ${side}`);
     }
 
     private _bindPortraitInteraction(node: Node | null, side: 'player' | 'enemy'): void {
@@ -382,7 +383,7 @@ export class BattleHUDComposite extends CompositePanel {
             // 退回完整立繪
             if (!spriteFrame) {
                 spriteFrame = await res.loadSpriteFrame(this._buildPortraitPath(generalId)).catch(() => null);
-                if (!spriteFrame) console.warn(`[BattleHUDComposite] ${side} 立繪載入失敗：${generalId}`);
+                if (!spriteFrame) UCUFLogger.warn(LogCategory.UI, `[BattleHUDComposite] ${side} 立繪載入失敗：${generalId}`);
             }
         }
 

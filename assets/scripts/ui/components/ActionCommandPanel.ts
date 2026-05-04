@@ -1,3 +1,4 @@
+import { UCUFLogger, LogCategory } from '../core/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
 /**
  * @deprecated
@@ -67,7 +68,7 @@ export class ActionCommandPanel extends UIPreviewBuilder {
             // [Vibe-QA] 增加對 ServiceLoader 狀態的確認
             const loader = this._specLoader;
             if (!loader) {
-                console.warn('[ActionCommandPanel] specLoader 尚未就緒，延遲初始化');
+                UCUFLogger.warn(LogCategory.UI, '[ActionCommandPanel] specLoader 尚未就緒，延遲初始化');
                 return;
             }
 
@@ -82,14 +83,14 @@ export class ActionCommandPanel extends UIPreviewBuilder {
             try {
                 i18nData = await loader.loadI18n(services().i18n.currentLocale);
             } catch (err) {
-                console.warn('[ActionCommandPanel] I18n 載入失敗，使用 fallback', err);
+                UCUFLogger.warn(LogCategory.UI, '[ActionCommandPanel] I18n 載入失敗，使用 fallback', err);
             }
             
             // 3. 構建畫面
             await this.buildScreen(fullScreen.layout, fullScreen.skin, i18nData, tokens);
             this._initialized = true;
         } catch (e) {
-            console.warn('[ActionCommandPanel] 規格載入失敗，退回白模', e);
+            UCUFLogger.warn(LogCategory.UI, '[ActionCommandPanel] 規格載入失敗，退回白模', e);
             // 即便失敗也標記為已初始化，防止無限循環報錯
             this._initialized = true;
             this._flushReadyWaiters(false);
@@ -121,7 +122,7 @@ export class ActionCommandPanel extends UIPreviewBuilder {
         binder.getNode('TacticsBtn')?.on(Button.EventType.CLICK, this._onTacticsClick, this);
         binder.getNode('DuelBtn')?.on(Button.EventType.CLICK, this._onDuelClick, this);
 
-        console.log(
+        UCUFLogger.info(LogCategory.UI, 
             `[ActionCommandPanel] 綁定完成 — ring:${!!this._spRingSprite}` +
             ` ultLabel:${!!this._ultLabel}`
         );
