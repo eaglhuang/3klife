@@ -227,5 +227,10 @@ flowchart TD
         - `ui/` 只可引用 `shared/` 與 `core/`。
         - `battle/` 只可引用 `shared/` 與 `core/`。
         - 跨模組交互必須透過 `shared/` 定義的介面或型別合約。
+- **Agent 開發合約強制化 (HARN-GOV-0005, 2026-05-04)**:
+    - `agent-collaboration.instructions.md` 已更新，compute-gate 現為**強制**（⛔）執行項目。
+    - Pre-flight：開工前必須執行 `compute-gate.js --gates import-boundary` 確認既有違規狀態。
+    - Post-flight：提交前必須執行 `compute-gate.js --profile standard` 並達成 **0 違規**。
+    - 嚴禁在有 import-boundary violations 的情況下提交代碼，否則視為無效提交。
 
 ---

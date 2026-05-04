@@ -21,9 +21,11 @@ applyTo: "**"
 > 違反此規則視為無效接手。完整流程見 `docs/agent-briefs/Readme.md (doc_ai_0023)` §鎖卡流程。
 
 1. 讀 `docs/keep.summary.md (doc_index_0012)` (doc_index_0012)
-2. **[新] 執行計算型健康掃描**，確認現有問題清單：
+2. **[強制] 執行計算型健康掃描與邊界檢查**：
+   確認專案現況，若有既有違規需在修改前知悉：
    ```bash
    node tools_node/compute-gate.js --profile quick --agent-feedback --no-stop
+   node tools_node/compute-gate.js --gates import-boundary --agent-feedback
    ```
 3. 執行 `node tools_node/check-context-budget.js --changed`（若可用）
 4. **鎖定任務卡**（見硬規則 #0）→ `node tools_node/task-lock.js lock <task-id> <agent-name>`
@@ -37,14 +39,17 @@ applyTo: "**"
 - 修改 skin → 先跑 `node tools_node/validate-ui-specs.js --strict`
 - 修改 task JSON → 必須已 lock 才准改
 - token 超 18k → 強制 summarize；超 30k → hard-stop
-- **[新] 新增 import → 必須確認目標模組在允許清單內**（`check-import-boundaries.js` 規則）
+- **[強制] 新增 import → 必須確認目標模組在允許清單內**（`check-import-boundaries.js` 規則）
 
 ### 防線 3: Post-flight Checkpoint（收工前）
 
-1. **[新] 執行標準閘門，確認全部通過**：
+1. **⛔ [強制] 執行標準閘門並達成 0 違規**：
+   任何提交（Commit）前，必須執行以下指令並確認輸出為「All gates passed」且違規數歸零：
    ```bash
    node tools_node/compute-gate.js --profile standard --agent-feedback
    ```
+   **嚴禁在有邊界違規（import-boundary violations）的情況下提交代碼。**
+
 2. `node tools_node/check-encoding-touched.js <changed-files...>`
 3. `node tools_node/validate-ui-specs.js --strict --check-content-contract`
 4. 若改了 layout/fragment → 執行對應 regression check

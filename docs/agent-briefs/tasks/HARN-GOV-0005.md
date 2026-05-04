@@ -6,13 +6,17 @@ phase: M0
 created: 2026-05-04
 created_by_agent: GitHubCopilot
 owner: Antigravity
-status: open
+status: done
+started_at: "2026-05-04T20:30:00Z"
+started_by_agent: Antigravity
+completed_at: "2026-05-04T20:58:00Z"
+completed_by_agent: Antigravity
 type: implementation
 chain_id: HARN-CHAIN-GOV
 chain_step: 5/5
 sensor_triggered_by: harness-engineering-gap-audit
 depends: []
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none"
+notes: "2026-05-04 | 狀態: in-progress | 驗證: pending | 變更: 開始更新開發合約與治理記錄 | 阻塞: none"
 ---
 # [HARN-GOV-0005] 強制 Agent 開發合約：所有代碼變動必須通過 compute-gate
 
@@ -31,13 +35,16 @@ notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: task-card-opener �
 
 ## OUTPUT_CONTRACT
 
-- [ ] agent-collaboration.instructions.md 新增強制 compute-gate 條目
-- [ ] pre-flight checklist 明確要求執行 --gates import-boundary
-- [ ] 更新 keep-status.md 記錄此合約生效
+- [x] agent-collaboration.instructions.md 新增強制 compute-gate 條目（⛔ 標記）
+- [x] pre-flight checklist 明確要求執行 --gates import-boundary
+- [x] 更新 keep-status.md 記錄此合約生效（§28 Harness Engineering 章節）
 
 ## HARNESS_EVIDENCE
 
-- handoff diff status：pending
+- compute-gate --profile standard：✅ 6/6 通過，0 違規
+- grep compute-gate in agent-collaboration：✅ 已寫入強制條目
+- keep-status.md §28：✅ GOV-0005 合約生效記錄已寫入
+- handoff diff status：done
 
 ## VALIDATION_CMD
 
