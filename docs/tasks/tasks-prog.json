@@ -24,9 +24,9 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 2,
+    "done": 6,
     "in_progress": 0,
-    "open": 29,
+    "open": 25,
     "total": 31
   },
   "tasks": [
@@ -745,11 +745,15 @@
       "title": "HTML-to-UCUF stale rule and conflict audit",
       "owner": "GitHubCopilot",
       "priority": "P0",
-      "status": "open",
+      "status": "done",
       "type": "tooling-audit",
       "phase": "Plan5",
       "created": "2026-05-04",
       "created_by_agent": "GitHubCopilot",
+      "started_at": "2026-05-04T12:40:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "completed_at": "2026-05-04T12:50:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-sonnet-4-6",
       "description": "盤點 html-to-ucuf skill、workflow、converter、optimizer、validator、capture/final gate 是否殘留 Plan2/Plan3 舊規則、互相衝突流程、screen-specific shortcut、default skin fallback 或 debug-only 正式化路徑。",
       "related": [
         "PROG-2-0001",
@@ -768,18 +772,22 @@
         "artifacts/html-to-ucuf-plan5/stale-rule-audit.md",
         "docs/html_skill_plan5.md 審計追蹤段落更新"
       ],
-      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0001"
+      "notes": "2026-05-04 | 狀態: done | 驗證: stale-rule-audit.md 產出，無未分類 blocker | 變更: 7 項盤點，1 migrate（Plan2 doc_id 修復），6 keep | 阻塞: none"
     },
     {
       "id": "PROG-2-0003",
       "title": "HTML-to-UCUF final gate diagnosis contract",
       "owner": "GitHubCopilot",
       "priority": "P0",
-      "status": "open",
+      "status": "done",
       "type": "qa-tooling",
       "phase": "Plan5",
       "created": "2026-05-04",
       "created_by_agent": "GitHubCopilot",
+      "started_at": "2026-05-04T12:50:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "completed_at": "2026-05-04T13:05:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-sonnet-4-6",
       "description": "修正 final gate 低分時仍輸出 visualFidelityRisk pass 與 nextFixes 空陣列的矛盾，讓 Cocos final score 低於 0.95 時必定產出 blocker taxonomy、primary-zone 差異與下一步修補建議。",
       "related": [
         "PROG-2-0001",
@@ -799,7 +807,7 @@
         "tools_node/lib/html-to-ucuf/rule-guard.js 診斷契約更新",
         "Plan5 final-gate diagnostic fixture"
       ],
-      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0001"
+      "notes": "2026-05-04 | 狀態: done | 驗證: assessVisualFidelityRisk 加入 adjustedScore < threshold 偵測，low-cocos-score-diagnosis fixture 產出 | 變更: 修復 assessVisualFidelityRisk()，visualFidelityRisk.status 正確反映 Cocos gate 失敗 | 阻塞: none"
     },
     {
       "id": "PROG-2-0004",
@@ -936,11 +944,13 @@
       "title": "HTML-to-UCUF skill Plan5 workflow rewrite",
       "owner": "GitHubCopilot",
       "priority": "P1",
-      "status": "open",
+      "status": "done",
       "type": "skill-docs",
       "phase": "Plan5",
       "created": "2026-05-04",
       "created_by_agent": "GitHubCopilot",
+      "completed_at": "2026-05-04T12:37:42+08:00",
+      "completed_by_agent": "GitHubCopilot",
       "description": "更新 html-to-ucuf skill 與相關 validation command，將 Plan5 設為 current execution spec，封存 Plan4 舊規則為歷史證據，並加入 95% final gate、diagnostic-nextFixes、禁止 screen-specific hardcode 的工作流守門。",
       "related": [
         "PROG-2-0001",
@@ -961,7 +971,7 @@
         ".github/skills/html-to-ucuf/SKILL.md",
         "docs/html_skill_plan5.md skill-governance checklist"
       ],
-      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0001,PROG-2-0002,PROG-2-0003"
+      "notes": "2026-05-04 | 狀態: done | 驗證: active-contract/fidelity-contract/rule-guard strict/compute-gate standard 全數通過 | 變更: GitHubCopilot 完成 HTML-to-UCUF 規則治理重構，落地 rule-registry.json + rule-checkers.js + registry-driven rule-guard | 阻塞: none"
     }
   ]
 }

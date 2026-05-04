@@ -1,0 +1,35 @@
+{
+  "_blessed_by": "ClaudeCode_claude-sonnet-4-6",
+  "_blessed_at": "2026-05-04",
+  "output": {
+    "metrics": {
+      "htmlCocos": {
+        "runtimeVsSource": {
+          "adjustedScore": 0.5567,
+          "verdict": "fail",
+          "blockerTaxonomy": {
+            "primaryCause": "renderer-parity",
+            "categories": ["gradient-radial", "background-layers", "shadow"]
+          }
+        }
+      },
+      "compare": {
+        "adjustedCoverage": 0.9799
+      }
+    },
+    "visualFidelityRisk": {
+      "status": "blocker",
+      "blockerCount": 1
+    },
+    "verdict": {
+      "workflowPass": false
+    },
+    "nextFixes": [
+      {
+        "ruleId": "H2U-P5-003",
+        "summary": "Cocos final gate adjustedScore 0.557 < 0.95 (delta=0.393)",
+        "fixAction": "Investigate renderer parity gaps: radial/gradient, shadow, background-layers, rounded-rect."
+      }
+    ]
+  }
+}

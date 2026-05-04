@@ -326,7 +326,7 @@ function buildPaths(opts) {
     optimizeReport: `${base}.optimize-report.json`,
     skinFixReport: `${base}.skin-autofix.json`,
     localTokenDiffReport: `${base}.local-token-diff.json`,
-    ruleGuardReport: `${base}.plan4-rule-guard.json`,
+    ruleGuardReport: `${base}.rule-guard.json`,
     summary: `${base}.workflow-summary.json`,
     zoneOwnership: `${base}.zone-ownership.json`,
   };
@@ -1285,7 +1285,7 @@ function bootstrapFinalDraftFromRuntime(paths, screenId) {
 
 function buildSummary(args) {
   const debugInfo = computeDebugOnly(args.opts, args.sourcePackage);
-  const visualFidelityRisk = args.visualFidelityRisk || assessVisualFidelityRisk(args.paths, args.metrics);
+  const visualFidelityRisk = args.visualFidelityRisk || assessVisualFidelityRisk(args.paths, args.metrics, args.opts);
   const interactionRuntime = args.interactionRuntime || assessInteractionRuntime(args.paths, args.steps, args.sourceHtml);
   return {
     input: rel(args.opts.input),
@@ -1352,7 +1352,7 @@ function topRuleGuardFixes(ruleGuard, limit = 3) {
     }));
 }
 
-function assessVisualFidelityRisk(paths, metrics) {
+function assessVisualFidelityRisk(paths, metrics, opts) {
   const violations = [];
   const skinPath = firstExistingPath([
     paths && paths.finalSkin,
@@ -1376,15 +1376,42 @@ function assessVisualFidelityRisk(paths, metrics) {
     });
   }
 
+  const runtimeVsSource = metrics && metrics.htmlCocos && metrics.htmlCocos.runtimeVsSource
+    ? metrics.htmlCocos.runtimeVsSource
+    : null;
+  const adjustedScore = runtimeVsSource && typeof runtimeVsSource.adjustedScore === 'number'
+    ? runtimeVsSource.adjustedScore
+    : null;
+  const finalScoreThreshold = (opts && typeof opts.finalScoreThreshold === 'number') ? opts.finalScoreThreshold : 0.95;
+
+  if (adjustedScore !== null && adjustedScore < finalScoreThreshold) {
+    const delta = (finalScoreThreshold - adjustedScore).toFixed(3);
+    const taxonomy = runtimeVsSource.blockerTaxonomy || null;
+    const taxonomyStr = taxonomy
+      ? (typeof taxonomy.primaryCause === 'string' ? taxonomy.primaryCause : (Array.isArray(taxonomy.categories) ? taxonomy.categories.join(', ') : JSON.stringify(taxonomy)))
+      : 'unknown — run with capture protocol to classify';
+    violations.push({
+      ruleId: 'H2U-P5-003',
+      severity: 'blocker',
+      summary: `Cocos final gate adjustedScore ${adjustedScore.toFixed(3)} < ${finalScoreThreshold} (delta=${delta})`,
+      evidence: JSON.stringify({
+        adjustedScore,
+        threshold: finalScoreThreshold,
+        verdict: runtimeVsSource.verdict || null,
+        taxonomy: taxonomyStr,
+      }),
+      fixAction: 'Investigate renderer parity gaps: radial/gradient, shadow, background-layers, rounded-rect. Re-run after fixing CSS extraction or runtime renderer fallbacks.',
+    });
+  }
+
   const blockerCount = violations.filter(item => item.severity === 'blocker').length;
   return {
     status: blockerCount > 0 ? 'blocker' : 'pass',
     blockerCount,
     violations,
     source: skinPath ? rel(skinPath) : null,
-    htmlCocosVerdict: metrics && metrics.htmlCocos && metrics.htmlCocos.runtimeVsSource
-      ? metrics.htmlCocos.runtimeVsSource.verdict
-      : null,
+    htmlCocosVerdict: runtimeVsSource ? runtimeVsSource.verdict : null,
+    htmlCocosAdjustedScore: adjustedScore,
   };
 }
 
@@ -1911,7 +1938,7 @@ function main() {
   metrics.runtimeReadiness = assessRuntimeReadiness(paths, sourceHtml, opts.screenId);
   const runtimeAuthority = buildRuntimeAuthority(opts, runtimeSync);
   const debugInfo = computeDebugOnly(opts, sourcePackage);
-  const visualFidelityRisk = assessVisualFidelityRisk(paths, metrics);
+  const visualFidelityRisk = assessVisualFidelityRisk(paths, metrics, opts);
   const interactionRuntime = assessInteractionRuntime(paths, steps, sourceHtml);
   const visualFidelityRiskPass = visualFidelityRisk.status === 'pass' && visualFidelityRisk.blockerCount === 0;
   const interactionRuntimePass = interactionRuntime.status === 'pass';
@@ -1967,7 +1994,7 @@ function main() {
   writeJson(paths.ruleGuardReport, ruleGuard);
   const nextFixes = topRuleGuardFixes(ruleGuard);
   steps.push({
-    step: 'plan4-rule-guard',
+    step: 'rule-guard',
     exitCode: ruleGuard.blockerCount > 0 ? 1 : 0,
     ok: ruleGuard.blockerCount === 0,
     status: ruleGuard.status,
@@ -1989,7 +2016,7 @@ function main() {
   const summary = buildSummary({ opts, sourcePackage, detected, paths, steps, metrics, verdict, runtimeAuthority, ruleGuard, nextFixes, visualFidelityRisk, interactionRuntime, tokenGovernance, sourceHtml });
   fs.writeFileSync(paths.summary, JSON.stringify(summary, null, 2) + '\n', 'utf8');
   console.log(`[run-html-to-ucuf-workflow] summary=${rel(paths.summary)}`);
-  console.log(`[run-html-to-ucuf-workflow] plan4-rule-guard=${ruleGuard.status} blockers=${ruleGuard.blockerCount}`);
+  console.log(`[run-html-to-ucuf-workflow] rule-guard=${ruleGuard.status} blockers=${ruleGuard.blockerCount}`);
   console.log(`[run-html-to-ucuf-workflow] raw.nodeCount=${metrics.raw.nodeCount} optimized.nodeCount=${metrics.optimized.after || metrics.optimized.perf.nodeCount} final.nodeCount=${metrics.final.nodeCount}`);
   if (metrics.compare) {
     console.log(`[run-html-to-ucuf-workflow] compare.adjustedCoverage=${metrics.compare.adjustedCoverage}`);

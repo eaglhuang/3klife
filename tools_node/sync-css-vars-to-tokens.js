@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// doc_id: doc_other_0011 — html_skill_plan2 M11
+// doc_id: doc_other_0011 — html_skill_plan5 (CSS token sync utility, Plan5 compliant)
 // Sync CSS :root vars from a source design package's colors_and_type.css
 // into the project's ui-design-tokens.json. Adds missing color/spacing/typography
 // entries; never overwrites existing values; never touches keys not introduced
