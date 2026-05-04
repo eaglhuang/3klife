@@ -25,8 +25,8 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 8,
-    "in_progress": 1,
-    "open": 23,
+    "in_progress": 2,
+    "open": 25,
     "total": 32
   },
   "tasks": [
@@ -1043,13 +1043,13 @@
       "title": "HTML-to-UCUF final diff owner mapper and residual taxonomy hardening",
       "owner": "GitHubCopilot",
       "priority": "P1",
-      "status": "open",
-      "type": "qa-tooling",
+      "status": "in-progress",
+      "type": "tooling",
       "phase": "Plan5",
       "created": "2026-05-04",
       "created_by_agent": "GitHubCopilot",
-      "started_at": "",
-      "started_by_agent": "",
+      "started_at": "2026-05-04T20:30:00+08:00",
+      "started_by_agent": "GitHubCopilot",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -1077,7 +1077,7 @@
         "artifacts/skill-test-html-to-ucuf/* residual summary schema",
         "docs/html_skill_plan5.md checklist / diagnosis contract 更新"
       ],
-      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: 由 Plan5 差異分析正式拆出 final diff owner mapper 與 residual taxonomy hardening 工作 | 阻塞: depends PROG-2-0003,PROG-2-0005,PROG-2-0006",
+      "notes": "2026-05-04 | 狀態: in-progress | 驗證: buildZoneOwnershipReport heuristic check pass；npm run check:task-briefs clean；compare verdict 已帶 zoneOwnership.nextFixes/compactResidualSummary | 變更: Slice #1 已落地 runtime-renderer taxonomy、owner bucket、nextFixes 與 compact residual summary，正式把 top residual 從純 converter-geometry 摘要提升到可派工 owner mapping | 阻塞: source DOM selector / UCUF slot trace 尚未接線；dom-to-ui-self-test 後段仍有既有 v2 workflow source-dir exit=1",
       "brief": {
         "style": "classic",
         "label": "",

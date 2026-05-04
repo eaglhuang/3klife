@@ -14,11 +14,13 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 152
-- completed: 1
-- done: 105
-- in-progress: 21
-- open: 25
+- Total: 173
+- done: 69
+- completed: 8
+- in-progress: 25
+- in-review: 5
+- open: 65
+- not-started: 1
 
 ## Tasks
 
@@ -27,7 +29,7 @@ manifest: ../ui-quality-todo.json
 | UI-1-0001 | Agent2 | done |  |  | sprite-move | [UI-1-0001](./tasks/UI-1-0001.md (doc_task_0009)) (doc_task_0009) |
 | UI-1-0002 | Agent2 | done |  |  | sprite-move | [UI-1-0002](./tasks/UI-1-0002.md (doc_task_0010)) (doc_task_0010) |
 | UI-1-0003 | Agent2 | done |  |  | sprite-move | [UI-1-0003](./tasks/UI-1-0003.md (doc_task_0011)) (doc_task_0011) |
-| UI-1-0004 | Agent2 | done |  |  | generate-textures | [UI-1-0004](./tasks/UI-1-0004.md (doc_task_0012)) (doc_task_0012) |
+| UI-1-0004 | Agent2 | not-started |  |  | generate-textures | [UI-1-0004](./tasks/UI-1-0004.md (doc_task_0012)) (doc_task_0012) |
 | UI-2-0001 | Agent1 | done |  |  | skin-update | [UI-2-0001](./tasks/UI-2-0001.md (doc_task_0025)) (doc_task_0025) |
 | UI-2-0002 | Agent1 | done |  |  | skin-update | [UI-2-0002](./tasks/UI-2-0002.md (doc_task_0026)) (doc_task_0026) |
 | UI-2-0003 | Agent1 | done |  |  | design-token-update | [UI-2-0003](./tasks/UI-2-0003.md (doc_task_0027)) (doc_task_0027) |
@@ -55,7 +57,7 @@ manifest: ../ui-quality-todo.json
 | UI-1-0013 | Agent2 | done | P1 | A |  | [UI-1-0013](./tasks/UI-1-0013.md (doc_task_0021)) (doc_task_0021) |
 | UI-1-0014 | Agent2 | done |  |  | visual-qa | [UI-1-0014](./tasks/UI-1-0014.md (doc_task_0022)) (doc_task_0022) |
 | UI-1-0015 | Agent2 | done |  |  | visual-qa | [UI-1-0015](./tasks/UI-1-0015.md (doc_task_0023)) (doc_task_0023) |
-| UI-1-0016 | Agent2 | in-progress |  |  | visual-qa | [UI-1-0016](./tasks/UI-1-0016.md (doc_task_0024)) (doc_task_0024) |
+| UI-1-0016 | Agent2 | done |  |  | visual-qa | [UI-1-0016](./tasks/UI-1-0016.md (doc_task_0024)) (doc_task_0024) |
 | UI-2-0017 | Agent1 | done | P1 | B |  | [UI-2-0017](./tasks/UI-2-0017.md (doc_task_0041)) (doc_task_0041) |
 | UI-2-0018 | Agent1 | done | P1 | C | preview-harness | [UI-2-0018](./tasks/UI-2-0018.md (doc_task_0042)) (doc_task_0042) |
 | UI-2-0019 | Agent1 | done | P1 | B | spec-alignment | [UI-2-0019](./tasks/UI-2-0019.md (doc_task_0043)) (doc_task_0043) |
@@ -72,13 +74,13 @@ manifest: ../ui-quality-todo.json
 | UI-2-0029 | Agent2 | in-progress | P1 | D | asset-requirement | [UI-2-0029](./tasks/UI-2-0029.md (doc_task_0052)) (doc_task_0052) |
 | UI-2-0028 | Agent2 | in-progress | P1 | D | asset-requirement | [UI-2-0028](./tasks/UI-2-0028.md (doc_task_0051)) (doc_task_0051) |
 | UI-2-0024 | Agent1 | completed | P1 | C | refactor | [UI-2-0024](./tasks/UI-2-0024.md (doc_task_0048)) (doc_task_0048) |
-| UI-2-0032 | Agent2 | in-progress | P1 | D | quality-pass | [UI-2-0032](./tasks/UI-2-0032.md (doc_task_0055)) (doc_task_0055) |
+| UI-2-0032 | Agent2 | in-review | P1 | D | quality-pass | [UI-2-0032](./tasks/UI-2-0032.md (doc_task_0055)) (doc_task_0055) |
 | UI-2-0035 | Agent2 | in-progress | P1 | D | research-taxonomy | [UI-2-0035](./tasks/UI-2-0035.md (doc_task_0058)) (doc_task_0058) |
 | UI-2-0037 | Agent2 | in-progress | P1 | D | research-taxonomy | [UI-2-0037](./tasks/UI-2-0037.md (doc_task_0060)) (doc_task_0060) |
 | UI-2-0038 | Agent2 | in-progress | P1 | D | asset-direction | [UI-2-0038](./tasks/UI-2-0038.md (doc_task_0061)) (doc_task_0061) |
 | UI-2-0039 | Agent2 | in-progress | P1 | D | asset-direction | [UI-2-0039](./tasks/UI-2-0039.md (doc_task_0062)) (doc_task_0062) |
 | UI-2-0040 | Agent2 | in-progress | P1 | D | asset-direction | [UI-2-0040](./tasks/UI-2-0040.md (doc_task_0063)) (doc_task_0063) |
-| UI-2-0041 | Agent2 | done | P2 | D | asset-direction | [UI-2-0041](./tasks/UI-2-0041.md (doc_task_0064)) (doc_task_0064) |
+| UI-2-0041 | Agent2 | open | P2 | D | asset-direction | [UI-2-0041](./tasks/UI-2-0041.md (doc_task_0064)) (doc_task_0064) |
 | UI-2-0042 | Agent2 | open | P2 | D | asset-direction | [UI-2-0042](./tasks/UI-2-0042.md (doc_task_0065)) (doc_task_0065) |
 | UI-2-0036 | Agent1 | done | P1 | D | asset-generation | [UI-2-0036](./tasks/UI-2-0036.md (doc_task_0059)) (doc_task_0059) |
 | UI-2-0033 | Agent1 | done | P1 | D | runtime-support | [UI-2-0033](./tasks/UI-2-0033.md (doc_task_0056)) (doc_task_0056) |
@@ -95,31 +97,31 @@ manifest: ../ui-quality-todo.json
 | UI-2-0046 | Agent1 | in-progress | P1 | D | qa-pipeline | [UI-2-0046](./tasks/UI-2-0046.md (doc_task_0069)) (doc_task_0069) |
 | UI-2-0053 | Agent2 | in-progress | P1 | D | art-direction | [UI-2-0053](./tasks/UI-2-0053.md (doc_task_0076)) (doc_task_0076) |
 | UI-2-0054 | Agent2 | in-progress | P1 | D | art-direction | [UI-2-0054](./tasks/UI-2-0054.md (doc_task_0077)) (doc_task_0077) |
-| UI-2-0055 | Agent2 | open | P2 | D | ui-content-spec | [UI-2-0055](./tasks/UI-2-0055.md (doc_task_0078)) (doc_task_0078) |
-| UI-2-0056 | Agent2 | open | P2 | D | ui-display-rule | [UI-2-0056](./tasks/UI-2-0056.md (doc_task_0079)) (doc_task_0079) |
-| UI-2-0057 | Agent2 | open | P1 | D | art-contract | [UI-2-0057](./tasks/UI-2-0057.md (doc_task_0080)) (doc_task_0080) |
+| UI-2-0055 | Agent2 | completed | P2 | D | ui-content-spec | [UI-2-0055](./tasks/UI-2-0055.md (doc_task_0078)) (doc_task_0078) |
+| UI-2-0056 | Agent2 | completed | P2 | D | ui-display-rule | [UI-2-0056](./tasks/UI-2-0056.md (doc_task_0079)) (doc_task_0079) |
+| UI-2-0057 | Agent2 | in-progress | P1 | D | art-contract | [UI-2-0057](./tasks/UI-2-0057.md (doc_task_0080)) (doc_task_0080) |
 | UI-2-0058 | Agent2 | done | P1 | D | ui-slot-contract | [UI-2-0058](./tasks/UI-2-0058.md (doc_task_0081)) (doc_task_0081) |
 | UI-2-0059 | Agent2 | done | P1 | D | ui-spec-skeleton | [UI-2-0059](./tasks/UI-2-0059.md (doc_task_0082)) (doc_task_0082) |
 | UI-2-0060 | Agent2 | done | P1 | D | ui-spec-skeleton | [UI-2-0060](./tasks/UI-2-0060.md (doc_task_0083)) (doc_task_0083) |
 | UI-2-0061 | Agent2 | done | P1 | D | data-contract | [UI-2-0061](./tasks/UI-2-0061.md (doc_task_0084)) (doc_task_0084) |
-| UI-2-0062 | Agent2 | open | P1 | D | system-spec | [UI-2-0062](./tasks/UI-2-0062.md (doc_task_0085)) (doc_task_0085) |
-| UI-2-0063 | Agent2 | open | P2 | D | pipeline-spec | [UI-2-0063](./tasks/UI-2-0063.md (doc_task_0086)) (doc_task_0086) |
-| UI-2-0064 | Agent2 | open | P1 | D | worldbuilding-link-spec | [UI-2-0064](./tasks/UI-2-0064.md (doc_task_0087)) (doc_task_0087) |
+| UI-2-0062 | Agent2 | completed | P1 | D | system-spec | [UI-2-0062](./tasks/UI-2-0062.md (doc_task_0085)) (doc_task_0085) |
+| UI-2-0063 | Agent2 | completed | P2 | D | pipeline-spec | [UI-2-0063](./tasks/UI-2-0063.md (doc_task_0086)) (doc_task_0086) |
+| UI-2-0064 | Agent2 | completed | P1 | D | worldbuilding-link-spec | [UI-2-0064](./tasks/UI-2-0064.md (doc_task_0087)) (doc_task_0087) |
 | UI-2-0074 | Agent1 | done | P0 | E | architecture | [UI-2-0074](./tasks/UI-2-0074.md (doc_task_0097)) (doc_task_0097) |
 | UI-2-0075 | Agent1 | done | P1 | E | refactor | [UI-2-0075](./tasks/UI-2-0075.md (doc_task_0098)) (doc_task_0098) |
 | UI-2-0076 | Agent1 | done | P1 | E | refactor | [UI-2-0076](./tasks/UI-2-0076.md (doc_task_0099)) (doc_task_0099) |
-| UI-2-0077 | Agent1 | done | P1 | E | refactor | [UI-2-0077](./tasks/UI-2-0077.md (doc_task_0100)) (doc_task_0100) |
-| UI-2-0078 | Agent1 | done | P2 | E | runtime-support | [UI-2-0078](./tasks/UI-2-0078.md (doc_task_0101)) (doc_task_0101) |
-| UI-2-0079 | Agent1 | done | P3 | E | chore | [UI-2-0079](./tasks/UI-2-0079.md (doc_task_0102)) (doc_task_0102) |
+| UI-2-0077 | Agent1 | in-progress | P1 | E | refactor | [UI-2-0077](./tasks/UI-2-0077.md (doc_task_0100)) (doc_task_0100) |
+| UI-2-0078 | Agent1 | open | P2 | E | runtime-support | [UI-2-0078](./tasks/UI-2-0078.md (doc_task_0101)) (doc_task_0101) |
+| UI-2-0079 | Agent1 | open | P3 | E | chore | [UI-2-0079](./tasks/UI-2-0079.md (doc_task_0102)) (doc_task_0102) |
 | UI-2-0080 | Agent1 | done | P0 | F | architecture | [UI-2-0080](./tasks/UI-2-0080.md (doc_task_0103)) (doc_task_0103) |
-| UI-2-0081 | Agent1 | done | P0 | F | tooling | [UI-2-0081](./tasks/UI-2-0081.md (doc_task_0104)) (doc_task_0104) |
-| UI-2-0082 | Agent1 | done | P1 | F | tooling | [UI-2-0082](./tasks/UI-2-0082.md (doc_task_0105)) (doc_task_0105) |
+| UI-2-0081 | Agent1 | open | P0 | F | tooling | [UI-2-0081](./tasks/UI-2-0081.md (doc_task_0104)) (doc_task_0104) |
+| UI-2-0082 | Agent1 | open | P1 | F | tooling | [UI-2-0082](./tasks/UI-2-0082.md (doc_task_0105)) (doc_task_0105) |
 | UI-2-0083 | Agent1 | done | P1 | F | qa-tooling | [UI-2-0083](./tasks/UI-2-0083.md (doc_task_0106)) (doc_task_0106) |
-| UI-2-0084 | Agent1 | done | P0 | G | architecture | [UI-2-0084](./tasks/UI-2-0084.md (doc_task_0107)) (doc_task_0107) |
-| UI-2-0085 | Agent1 | done | P0 | G | runtime-support | [UI-2-0085](./tasks/UI-2-0085.md (doc_task_0108)) (doc_task_0108) |
-| UI-2-0086 | Agent1 | done | P1 | G | qa-tooling | [UI-2-0086](./tasks/UI-2-0086.md (doc_task_0109)) (doc_task_0109) |
+| UI-2-0084 | Agent1 | in-progress | P0 | G | architecture | [UI-2-0084](./tasks/UI-2-0084.md (doc_task_0107)) (doc_task_0107) |
+| UI-2-0085 | Agent1 | open | P0 | G | runtime-support | [UI-2-0085](./tasks/UI-2-0085.md (doc_task_0108)) (doc_task_0108) |
+| UI-2-0086 | Agent1 | open | P1 | G | qa-tooling | [UI-2-0086](./tasks/UI-2-0086.md (doc_task_0109)) (doc_task_0109) |
 | UI-2-0087 | Agent2 | in-progress | P1 | G | qa-pipeline | [UI-2-0087](./tasks/UI-2-0087.md (doc_task_0110)) (doc_task_0110) |
-| UI-2-0088 | Agent1 | done | P1 | G | pipeline-spec | [UI-2-0088](./tasks/UI-2-0088.md (doc_task_0111)) (doc_task_0111) |
+| UI-2-0088 | Agent1 | open | P1 | G | pipeline-spec | [UI-2-0088](./tasks/UI-2-0088.md (doc_task_0111)) (doc_task_0111) |
 | UI-2-0089 | Agent2 | in-progress | P1 | G | art-contract | [UI-2-0089](./tasks/UI-2-0089.md (doc_task_0112)) (doc_task_0112) |
 | UI-2-0090 | Agent1 | done | P1 | G | tooling | [UI-2-0090](./tasks/UI-2-0090.md (doc_task_0113)) (doc_task_0113) |
 | UI-2-0091 | Agent2 | open | P1 | G | asset-direction | [UI-2-0091](./tasks/UI-2-0091.md (doc_task_0114)) (doc_task_0114) |
@@ -141,6 +143,15 @@ manifest: ../ui-quality-todo.json
 | PROG-1-0014 | Agent1 | open | P2 | P | validation | [PROG-1-0014](./tasks/PROG-1-0014.md) |
 | PROG-1-0015 | Agent1 | open | P2 | P | validation | [PROG-1-0015](./tasks/PROG-1-0015.md) |
 | PROG-1-0016 | Agent1 | open | P2 | P | validation | [PROG-1-0016](./tasks/PROG-1-0016.md) |
+| PROG-2-0001 | GitHubCopilot | done | P0 | Plan5 | tooling-plan | [PROG-2-0001](./tasks/PROG-2-0001.md (doc_task_0177)) (doc_task_0177) |
+| PROG-2-0002 | GitHubCopilot | done | P0 | Plan5 | tooling-audit | [PROG-2-0002](./tasks/PROG-2-0002.md (doc_task_0178)) (doc_task_0178) |
+| PROG-2-0003 | GitHubCopilot | done | P0 | Plan5 | qa-tooling | [PROG-2-0003](./tasks/PROG-2-0003.md (doc_task_0179)) (doc_task_0179) |
+| PROG-2-0004 | GitHubCopilot | done | P0 | Plan5 | converter-tooling | [PROG-2-0004](./tasks/PROG-2-0004.md (doc_task_0180)) (doc_task_0180) |
+| PROG-2-0005 | GitHubCopilot | in-progress | P0 | Plan5 | runtime-support | [PROG-2-0005](./tasks/PROG-2-0005.md (doc_task_0181)) (doc_task_0181) |
+| PROG-2-0006 | GitHubCopilot | done | P1 | Plan5 | workflow-tooling | [PROG-2-0006](./tasks/PROG-2-0006.md (doc_task_0182)) (doc_task_0182) |
+| PROG-2-0007 | GitHubCopilot | open | P1 | Plan5 | qa-tooling | [PROG-2-0007](./tasks/PROG-2-0007.md (doc_task_0183)) (doc_task_0183) |
+| PROG-2-0008 | GitHubCopilot | done | P1 | Plan5 | skill-docs | [PROG-2-0008](./tasks/PROG-2-0008.md (doc_task_0184)) (doc_task_0184) |
+| PROG-2-0009 | GitHubCopilot | in-progress | P1 | Plan5 | tooling | [PROG-2-0009](./tasks/PROG-2-0009.md (doc_task_0219)) (doc_task_0219) |
 | DC-0-0001 | Agent1 | done | P0 | DC | data-structure | [DC-0-0001](./tasks/DC-0-0001.md) |
 | DC-0-0002 | Agent1 | done | P0 | DC | data-structure | [DC-0-0002](./tasks/DC-0-0002.md) |
 | DC-0-0003 | Agent1 | done | P0 | DC | feature | [DC-0-0003](./tasks/DC-0-0003.md) |

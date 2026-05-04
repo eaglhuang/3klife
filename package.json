@@ -23,6 +23,8 @@
     "gate:standard": "node tools_node/compute-gate.js --profile standard",
     "gate:full": "node tools_node/compute-gate.js --profile full",
     "gate:agent-feedback": "node tools_node/compute-gate.js --profile standard --agent-feedback --no-stop",
+    "check:task-briefs": "node tools_node/sync-task-briefs-from-cards.js --sync-progress",
+    "sync:task-briefs": "node tools_node/sync-task-briefs-from-cards.js --write --sync-progress",
     "harness:turn-artifact": "node tools_node/generate-context-summary.js --artifact-json",
     "harness:health": "node tools_node/harness-health-report.js",
     "harness:health:brief": "node tools_node/harness-health-report.js --brief",
