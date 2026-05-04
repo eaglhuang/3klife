@@ -1,18 +1,19 @@
 ---
-doc_id: doc_task_TBD
+doc_id: doc_task_0004
 id: HARN-ARCH-0002
 priority: P1
 phase: G
 created: 2026-05-04
 created_by_agent: compute-gate-sensor
-owner: Agent
-status: pending
+owner: Antigravity (Gemini 2.0 Flash)
+status: done
 type: system
 chain_id: HARN-CHAIN-MODULE-BOUNDARY
 chain_step: 2/3
 sensor_triggered_by: compute-gate check-import-boundaries
 depends:
   - HARN-ARCH-0001
+notes: "2026-05-04 | 狀態: done | Antigravity: 已移除 battle/views 下所有對 ui/ 的直接引用，改透過 IBattleUIBridge 或事件系統通信，import-boundary 閘門通過。"
 ---
 
 # [HARN-ARCH-0002] 修復 battle → ui 的非法引用（22 筆）
@@ -39,10 +40,10 @@ depends:
 
 ## OUTPUT_CONTRACT
 
-- [ ] 所有 7 個 battle/views 檔案移除對 `../../ui/components/` 的直接引用
-- [ ] 改用 `IBattleUIBridge` 介面（由外部注入，不在 battle 內直接 new）
-- [ ] `BattleScene.ts` 改透過事件系統或 bridge 通知 UI，而非直接持有 UI 元件引用
-- [ ] `check-import-boundaries.js` 對 battle 模組的 `→ ui` 違規從 22 降至 0
+- [x] 所有 7 個 battle/views 檔案移除對 `../../ui/components/` 的直接引用
+- [x] 改用 `IBattleUIBridge` 介面（由外部注入，不在 battle 內直接 new）
+- [x] `BattleScene.ts` 改透過事件系統或 bridge 通知 UI，而非直接持有 UI 元件引用
+- [x] `check-import-boundaries.js` 對 battle 模組的 `→ ui` 違規從 22 降至 0
 
 ## VALIDATION_CMD
 
@@ -85,3 +86,9 @@ git checkout assets/scripts/battle/views/
 
 ---
 *由 Harness Engineering compute-gate 感測器自動偵測開立 | 2026-05-04*
+
+## 審核結果（2026-05-04）
+
+- 審核結論：達成
+- 驗證證據：compute-gate --profile standard 已於本輪審核通過 6/6。 battle -> ui 邊界違規未再出現。
+- 需修改：無；後續 battle 模組不得直接引用 ui 具體元件。
