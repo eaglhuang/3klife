@@ -5,19 +5,19 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const config = require('./lib/project-config');
+const handoffDiff = require('./lib/handoff-diff-core');
 
-const PROJECT_ROOT = config.ROOT;
+const PROJECT_ROOT = handoffDiff.PROJECT_ROOT;
 const ARTIFACT_VALIDATOR_PATH = path.join(PROJECT_ROOT, 'tools_node', 'validate-turn-artifact.js');
 
 function printHelp() {
   console.log('Usage: node tools_node/validate-handoff-diff.js (--artifact <path> [--repository <path>] | --fixture <path>) [--strict]');
   console.log('');
   console.log('Options:');
-  console.log('  --artifact <path>     Path to the turn artifact JSON file (required)');
+  console.log('  --artifact <path>     Path to the turn artifact JSON file');
   console.log('  --repository <path>   Path to the git repository to compare against (default: .)');
   console.log('  --fixture <path>      Path to a handoff diff fixture JSON file');
-  console.log('  --strict              Exit with code 1 when handoff diff has mismatch');
+  console.log('  --strict              Exit with code 1 when verdict is not pass');
   console.log('  --help, -h            Show this help message');
 }
 
@@ -61,61 +61,17 @@ function parseArgs(argv) {
   return parsed;
 }
 
-function toPosixPath(filePath) {
-  return String(filePath || '').replace(/\\/g, '/');
-}
-
-function uniqueStrings(values) {
-  return [...new Set((values || []).map((entry) => String(entry)))];
-}
-
-function normalizeRawStatus(code) {
-  return String(code || '??').padEnd(2, ' ').slice(0, 2);
-}
-
 function resolveProjectPath(inputPath) {
   return path.isAbsolute(inputPath) ? inputPath : path.join(PROJECT_ROOT, inputPath);
 }
 
 function displayPath(inputPath) {
   const absolutePath = path.resolve(inputPath);
-  const relativePath = toPosixPath(path.relative(PROJECT_ROOT, absolutePath));
+  const relativePath = handoffDiff.toPosixPath(path.relative(PROJECT_ROOT, absolutePath));
   if (relativePath && !relativePath.startsWith('../') && relativePath !== '') {
     return relativePath;
   }
-  return toPosixPath(absolutePath);
-}
-
-function readJsonOrThrow(filePath, label) {
-  try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  } catch (error) {
-    throw new Error(`${label} 讀取失敗：${error.message}`);
-  }
-}
-
-function runCommandOrThrow(command, args, cwd) {
-  const result = spawnSync(command, args, {
-    cwd,
-    encoding: 'utf8',
-    shell: false,
-  });
-
-  if ((result.status ?? 1) !== 0) {
-    const stderr = (result.stderr || '').trim();
-    throw new Error(stderr || `${command} ${args.join(' ')} failed`);
-  }
-
-  return result.stdout || '';
-}
-
-function resolveGitRepositoryRoot(repositoryPath) {
-  if (!fs.existsSync(repositoryPath)) {
-    throw new Error(`找不到 repository：${displayPath(repositoryPath)}`);
-  }
-
-  const stdout = runCommandOrThrow('git', ['rev-parse', '--show-toplevel'], repositoryPath);
-  return path.resolve(stdout.trim());
+  return handoffDiff.toPosixPath(absolutePath);
 }
 
 function runArtifactValidator(artifactPath) {
@@ -138,195 +94,12 @@ function runArtifactValidator(artifactPath) {
   }
 }
 
-function buildStates(code) {
-  const normalizedCode = normalizeRawStatus(code);
-  if (normalizedCode === '??') {
-    return ['untracked', 'added'];
-  }
-
-  const states = [];
-  const indexStatus = normalizedCode[0] || ' ';
-  const worktreeStatus = normalizedCode[1] || ' ';
-
-  if (indexStatus !== ' ') {
-    states.push('staged');
-  }
-  if (worktreeStatus !== ' ') {
-    states.push('unstaged');
-  }
-  if (indexStatus === 'A' || worktreeStatus === 'A') {
-    states.push('added');
-  }
-  if (indexStatus === 'M' || worktreeStatus === 'M') {
-    states.push('modified');
-  }
-  if (indexStatus === 'D' || worktreeStatus === 'D') {
-    states.push('deleted');
-  }
-  if (indexStatus === 'R' || worktreeStatus === 'R') {
-    states.push('renamed');
-  }
-  if (indexStatus === 'C' || worktreeStatus === 'C') {
-    states.push('copied');
-  }
-  if (indexStatus === 'U' || worktreeStatus === 'U') {
-    states.push('unmerged');
-  }
-
-  return [...new Set(states)];
-}
-
-function parseGitStatusLine(line) {
-  if (!line || line.length < 3) {
-    return null;
-  }
-
-  const rawStatus = normalizeRawStatus(line.slice(0, 2));
-  if (rawStatus === '!!') {
-    return null;
-  }
-
-  const pathField = line.slice(3).trim();
-  if (!pathField) {
-    return null;
-  }
-
-  let previousPath = null;
-  let filePath = pathField;
-  if (pathField.includes(' -> ')) {
-    const segments = pathField.split(' -> ');
-    previousPath = segments[0].trim();
-    filePath = segments[segments.length - 1].trim();
-  }
-
-  return {
-    path: toPosixPath(filePath),
-    previousPath: previousPath ? toPosixPath(previousPath) : null,
-    rawStatus,
-    states: buildStates(rawStatus),
-  };
-}
-
-function normalizeMockGitEntry(entry, index) {
-  if (!entry || typeof entry !== 'object') {
-    throw new Error(`fixture.gitChangedFiles[${index}] 必須是物件`);
-  }
-  if (typeof entry.path !== 'string' || entry.path.trim().length === 0) {
-    throw new Error(`fixture.gitChangedFiles[${index}].path 必須是非空字串`);
-  }
-  const rawStatus = normalizeRawStatus(entry.rawStatus || '??');
-  return {
-    path: toPosixPath(entry.path.trim()),
-    previousPath: typeof entry.previousPath === 'string' && entry.previousPath.trim().length > 0
-      ? toPosixPath(entry.previousPath.trim())
-      : null,
-    rawStatus,
-    states: Array.isArray(entry.states) && entry.states.length > 0
-      ? uniqueStrings(entry.states)
-      : buildStates(rawStatus),
-  };
-}
-
-function readGitChangedEntries(repositoryRoot) {
-  const stdout = runCommandOrThrow('git', ['status', '--short', '--untracked-files=all'], repositoryRoot);
-  const entries = [];
-  for (const line of stdout.split(/\r?\n/)) {
-    const entry = parseGitStatusLine(line);
-    if (entry) {
-      entries.push(entry);
-    }
-  }
-  return entries;
+function computeExitCode(result, strict) {
+  return strict && result.status !== 'pass' ? 1 : 0;
 }
 
 function sortStrings(values) {
   return [...values].sort((left, right) => left.localeCompare(right));
-}
-
-function compareArtifactToRepo(artifact, gitEntries) {
-  const artifactPaths = Array.isArray(artifact.files)
-    ? artifact.files.map((entry) => entry.path).filter((entry) => typeof entry === 'string' && entry.length > 0)
-    : [];
-  const gitMap = new Map();
-  gitEntries.forEach((entry) => {
-    gitMap.set(entry.path, entry);
-  });
-  const artifactSet = new Set(artifactPaths);
-
-  const missingInArtifact = sortStrings(
-    gitEntries
-      .filter((entry) => !artifactSet.has(entry.path))
-      .map((entry) => entry.path)
-  );
-  const extraInArtifact = sortStrings(
-    artifactPaths.filter((entry) => !gitMap.has(entry))
-  );
-  const dirtyButUnreported = gitEntries
-    .filter((entry) => !artifactSet.has(entry.path))
-    .sort((left, right) => left.path.localeCompare(right.path))
-    .map((entry) => ({
-      path: entry.path,
-      rawStatus: entry.rawStatus,
-      states: entry.states,
-    }));
-  const mergeConflicts = gitEntries
-    .filter((entry) => entry.states.includes('unmerged'))
-    .sort((left, right) => left.path.localeCompare(right.path))
-    .map((entry) => ({
-      path: entry.path,
-      rawStatus: entry.rawStatus,
-      states: entry.states,
-    }));
-  const matched = sortStrings(
-    artifactPaths.filter((entry) => gitMap.has(entry))
-  );
-
-  return {
-    artifactPaths: sortStrings(artifactPaths),
-    gitEntries: [...gitEntries].sort((left, right) => left.path.localeCompare(right.path)),
-    missingInArtifact,
-    extraInArtifact,
-    dirtyButUnreported,
-    mergeConflicts,
-    matched,
-  };
-}
-
-function buildResult(args, artifactPath, repositoryRoot, comparison) {
-  const mismatchCount = comparison.missingInArtifact.length + comparison.extraInArtifact.length;
-  const hasMismatch = mismatchCount > 0;
-  const hasMergeConflict = comparison.mergeConflicts.length > 0;
-  let status = 'pass';
-  if (hasMergeConflict) {
-    status = 'fail';
-  } else if (hasMismatch) {
-    status = 'warn';
-  }
-
-  return {
-    status,
-    artifactPath,
-    repositoryRoot,
-    summary: {
-      artifactFiles: comparison.artifactPaths.length,
-      gitChangedFiles: comparison.gitEntries.length,
-      matched: comparison.matched.length,
-      missingInArtifact: comparison.missingInArtifact.length,
-      extraInArtifact: comparison.extraInArtifact.length,
-      dirtyButUnreported: comparison.dirtyButUnreported.length,
-      mergeConflicts: comparison.mergeConflicts.length,
-    },
-    mismatch: {
-      missingInArtifact: comparison.missingInArtifact,
-      extraInArtifact: comparison.extraInArtifact,
-      dirtyButUnreported: comparison.dirtyButUnreported,
-      mergeConflicts: comparison.mergeConflicts,
-    },
-  };
-}
-
-function computeExitCode(result, strict) {
-  return strict && result.status !== 'pass' ? 1 : 0;
 }
 
 function normalizeEntryList(entries) {
@@ -389,21 +162,21 @@ function assertExpectedResult(fixture, result, strict) {
 }
 
 function loadFixtureOrThrow(fixturePath) {
-  const fixture = readJsonOrThrow(fixturePath, 'fixture');
+  const fixture = handoffDiff.readJsonOrThrow(fixturePath, 'fixture');
   if (!fixture || typeof fixture !== 'object' || Array.isArray(fixture)) {
     throw new Error('fixture 內容必須是物件');
   }
 
   let artifact = fixture.artifact;
   if (!artifact && typeof fixture.artifactFile === 'string' && fixture.artifactFile.trim().length > 0) {
-    artifact = readJsonOrThrow(path.resolve(path.dirname(fixturePath), fixture.artifactFile.trim()), 'fixture.artifactFile');
+    artifact = handoffDiff.readJsonOrThrow(path.resolve(path.dirname(fixturePath), fixture.artifactFile.trim()), 'fixture.artifactFile');
   }
   if (!artifact || typeof artifact !== 'object' || Array.isArray(artifact)) {
     throw new Error('fixture 必須提供 artifact 物件或 artifactFile');
   }
 
   const gitChangedFiles = Array.isArray(fixture.gitChangedFiles)
-    ? fixture.gitChangedFiles.map((entry, index) => normalizeMockGitEntry(entry, index))
+    ? fixture.gitChangedFiles.map((entry, index) => handoffDiff.normalizeMockGitEntry(entry, index))
     : [];
 
   return {
@@ -478,8 +251,12 @@ function runFixtureMode(args) {
     process.exit(1);
   }
 
-  const comparison = compareArtifactToRepo(loaded.artifact, loaded.gitChangedFiles);
-  const result = buildResult(args, fixturePath, fixturePath, comparison);
+  const result = handoffDiff.evaluateArtifactAgainstGitEntries({
+    artifact: loaded.artifact,
+    artifactPath: fixturePath,
+    repositoryRoot: fixturePath,
+    gitEntries: loaded.gitChangedFiles,
+  });
   printResult(result);
 
   const failures = assertExpectedResult(loaded.fixture, result, args.strict);
@@ -493,6 +270,40 @@ function runFixtureMode(args) {
 
   const name = loaded.fixture.name || path.basename(fixturePath);
   console.log(`✔ handoff-diff fixture matched expectation: ${name}`);
+}
+
+function runArtifactMode(args) {
+  const artifactPath = resolveProjectPath(args.artifact);
+  const repositoryPath = resolveProjectPath(args.repository || '.');
+
+  if (!fs.existsSync(artifactPath)) {
+    console.error(`[handoff-diff] 找不到 artifact：${displayPath(artifactPath)}`);
+    process.exit(1);
+  }
+  if (!fs.existsSync(ARTIFACT_VALIDATOR_PATH)) {
+    console.error(`[handoff-diff] 找不到 turn-artifact validator：${displayPath(ARTIFACT_VALIDATOR_PATH)}`);
+    process.exit(1);
+  }
+
+  let artifact;
+  let result;
+  try {
+    runArtifactValidator(artifactPath);
+    artifact = handoffDiff.readJsonOrThrow(artifactPath, 'artifact');
+    result = handoffDiff.evaluateArtifactAgainstRepository({
+      artifact,
+      artifactPath,
+      repositoryPath,
+    });
+  } catch (error) {
+    console.error(`[handoff-diff] ${error.message}`);
+    process.exit(1);
+  }
+
+  printResult(result);
+  if (computeExitCode(result, args.strict) !== 0) {
+    process.exit(1);
+  }
 }
 
 function main() {
@@ -521,38 +332,7 @@ function main() {
     return;
   }
 
-  const artifactPath = resolveProjectPath(args.artifact);
-  const repositoryPath = resolveProjectPath(args.repository || '.');
-
-  if (!fs.existsSync(artifactPath)) {
-    console.error(`[handoff-diff] 找不到 artifact：${displayPath(artifactPath)}`);
-    process.exit(1);
-  }
-  if (!fs.existsSync(ARTIFACT_VALIDATOR_PATH)) {
-    console.error(`[handoff-diff] 找不到 turn-artifact validator：${displayPath(ARTIFACT_VALIDATOR_PATH)}`);
-    process.exit(1);
-  }
-
-  let artifact;
-  let repositoryRoot;
-  let gitEntries;
-  try {
-    runArtifactValidator(artifactPath);
-    artifact = readJsonOrThrow(artifactPath, 'artifact');
-    repositoryRoot = resolveGitRepositoryRoot(repositoryPath);
-    gitEntries = readGitChangedEntries(repositoryRoot);
-  } catch (error) {
-    console.error(`[handoff-diff] ${error.message}`);
-    process.exit(1);
-  }
-
-  const comparison = compareArtifactToRepo(artifact, gitEntries);
-  const result = buildResult(args, artifactPath, repositoryRoot, comparison);
-  printResult(result);
-
-  if (computeExitCode(result, args.strict) !== 0) {
-    process.exit(1);
-  }
+  runArtifactMode(args);
 }
 
 main();

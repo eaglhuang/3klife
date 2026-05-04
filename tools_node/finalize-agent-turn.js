@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const guard = require('./lib/context-guard-core');
+const handoffDiff = require('./lib/handoff-diff-core');
 const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -46,6 +47,8 @@ function parseArgs(argv) {
     taskLockDir: '',
     emitTurnArtifact: false,
     artifactFile: '',
+    validateHandoff: false,
+    strictHandoff: false,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -93,6 +96,15 @@ function parseArgs(argv) {
     if (arg === '--artifact-file') {
       args.artifactFile = argv[i + 1] || '';
       i += 1;
+      continue;
+    }
+    if (arg === '--validate-handoff') {
+      args.validateHandoff = true;
+      continue;
+    }
+    if (arg === '--strict-handoff') {
+      args.strictHandoff = true;
+      args.validateHandoff = true;
       continue;
     }
     if (arg === '--budget-baseline') {
@@ -541,6 +553,30 @@ function runUcufPreSubmitGate(args) {
   return { passed: errors.length === 0, errors, warnings };
 }
 
+function buildHandoffErrorResult(message, artifactPath) {
+  return {
+    status: 'fail',
+    artifactPath,
+    repositoryRoot: PROJECT_ROOT,
+    error: message,
+    summary: {
+      artifactFiles: 0,
+      gitChangedFiles: 0,
+      matched: 0,
+      missingInArtifact: 0,
+      extraInArtifact: 0,
+      dirtyButUnreported: 0,
+      mergeConflicts: 0,
+    },
+    mismatch: {
+      missingInArtifact: [],
+      extraInArtifact: [],
+      dirtyButUnreported: [],
+      mergeConflicts: [],
+    },
+  };
+}
+
 function main() {
   const args = parseArgs(process.argv.slice(2));
   const scopedFiles = guard.buildFileSet({
@@ -559,8 +595,9 @@ function main() {
   const budget = summary.budget;
   const usage = summary.usage;
   let turnArtifact = null;
+  let handoffDiffResult = null;
 
-  if (args.emitTurnArtifact) {
+  if (args.emitTurnArtifact || args.validateHandoff) {
     const artifactSourceFiles = baselineInfo.included.length > 0
       ? baselineInfo.included
       : taskScopedFiles;
@@ -588,6 +625,23 @@ function main() {
       const artifactPath = path.resolve(PROJECT_ROOT, args.artifactFile);
       fs.mkdirSync(path.dirname(artifactPath), { recursive: true });
       fs.writeFileSync(artifactPath, `${JSON.stringify(turnArtifact, null, 2)}\n`, 'utf8');
+    }
+  }
+
+  if (args.validateHandoff) {
+    const artifactLabel = args.artifactFile || '(generated-in-memory-artifact)';
+    if (!turnArtifact || turnArtifact.kind !== 'turn-artifact') {
+      handoffDiffResult = buildHandoffErrorResult('turnArtifact 不可用，無法執行 handoff 驗證', artifactLabel);
+    } else {
+      try {
+        handoffDiffResult = handoffDiff.evaluateArtifactAgainstRepository({
+          artifact: turnArtifact,
+          artifactPath: artifactLabel,
+          repositoryPath: PROJECT_ROOT,
+        });
+      } catch (error) {
+        handoffDiffResult = buildHandoffErrorResult(error instanceof Error ? error.message : String(error), artifactLabel);
+      }
     }
   }
 
@@ -620,6 +674,7 @@ function main() {
     keepNote: budget.status === 'ok' ? '' : guard.buildKeepNoteLine(budget),
     turnUsage: usage,
     turnArtifact,
+    handoffDiff: handoffDiffResult,
     ucufGate,
     finalLine: `Token 量級：${usage.tier}（估算約 ${usage.totals.estTokens} tokens，非 API 精準值）`,
   };
@@ -651,6 +706,12 @@ function main() {
       : 'embedded in --json output only';
     console.log(`[finalize-agent-turn] turn-artifact=${artifactLabel}`);
   }
+  if (handoffDiffResult) {
+    const detail = handoffDiffResult.error
+      ? `error=${handoffDiffResult.error}`
+      : `missing=${handoffDiffResult.summary.missingInArtifact} extra=${handoffDiffResult.summary.extraInArtifact} conflict=${handoffDiffResult.summary.mergeConflicts}`;
+    console.log(`[finalize-agent-turn] handoff-diff=${handoffDiffResult.status.toUpperCase()} ${detail}`);
+  }
 
   // Print gate result
   if (ucufGate.skipped) {
@@ -665,6 +726,10 @@ function main() {
   }
 
   console.log(result.finalLine);
+
+  if (args.strictHandoff && handoffDiffResult && handoffDiffResult.status === 'fail') {
+    process.exit(1);
+  }
 }
 
 main();
