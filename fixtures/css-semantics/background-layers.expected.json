@@ -1,0 +1,12 @@
+{
+  "_description": "Multi-layer background with linear gradient and solid color fallback. The skin draft must preserve backgroundLayers and expose the gradient kind.",
+  "_blessed_by": "ClaudeCode_claude-sonnet-4-6",
+  "_blessed_at": "2026-05-04",
+  "html": "<div data-name=\"BgStage\" style=\"width:300px;height:200px;\"><div data-name=\"LayeredPanel\" style=\"width:300px;height:200px;background: linear-gradient(180deg, rgba(30,16,40,0.9), rgba(10,5,20,1)), #0a0514;\"></div></div>",
+  "opts": { "screenId": "background-layers-fixture", "bundle": "ui_test" },
+  "assertions": {
+    "panelHasSkinSlot": true,
+    "skinSlotKind": "gradient-rect",
+    "backgroundLayersPresent": true
+  }
+}

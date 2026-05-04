@@ -8,7 +8,7 @@ const { extractInteraction, buildInteractionDraft } = require('./interaction-tra
 const { extractKeyframes, extractMotion, buildMotionDraft } = require('./motion-translator');
 const { parseBackgroundImage, parseShadowList } = require('./snapshot-to-slots');
 const { extractFontFaceMappings } = require('./css-capability-matrix');
-const { DRAFT_BUILDER_STAGE_RULES } = require('../html-to-ucuf/rule-guard-rules');
+const { draftBuilderStageRules: DRAFT_BUILDER_STAGE_RULES } = require('../html-to-ucuf/rule-registry.json');
 
 const ANCHOR_MAP = {
   'fill': { top: 0, left: 0, right: 0, bottom: 0 },
@@ -94,10 +94,15 @@ function buildDraftFromHtml(html, opts) {
   const sanitizedHtml = stripNonVisualBlocksForParsing(html);
   const parsed = parseHtml(sanitizedHtml);
   for (const w of parsed.warnings) ctx.warnings.push(w);
-  const { classRules, idRules, styleRules } = parseStylesheets(parsed.styleSheets || []);
+  const { classRules, idRules, styleRules, droppedSelectors } = parseStylesheets(parsed.styleSheets || []);
   ctx.classRules = classRules;
   ctx.idRules = idRules;
   ctx.styleRules = styleRules || [];
+  // R-P5-SEL-01: surface dropped complex selectors as css-selector-not-applied warnings
+  for (const dropped of (droppedSelectors || [])) {
+    ctx.warnings.push({ code: 'css-selector-not-applied', detail: dropped.selector, kind: dropped.kind });
+  }
+  ctx.droppedSelectors = droppedSelectors || [];
   ctx.keyframes = extractKeyframes(parsed.styleSheets || []);
   // R-12: build a per-conversion font registry from any `@font-face` blocks
   // in the source CSS. Each entry maps the declared family (case-insensitive
@@ -159,6 +164,10 @@ function buildDraftFromHtml(html, opts) {
     interactionDraft: buildInteractionDraft(ctx.opts.screenId, ctx.interactions, ctx.warnings),
     motionDraft: buildMotionDraft(ctx.opts.screenId, ctx.motions, ctx.warnings),
     canvas,
+    selectorCapabilitySummary: {
+      droppedCount: ctx.droppedSelectors.length,
+      dropped: ctx.droppedSelectors,
+    },
   };
 }
 
@@ -1521,8 +1530,6 @@ function inferGridLayout(style, ctx, nodeName) {
 }
 
 function inferBlockFlowLayout(style, ctx, nodeName, el) {
-  const position = String(style.position || '').trim().toLowerCase();
-  if (position && position !== 'static') return null;
   const childElements = (el.children || []).filter(c => c.type === 'element');
   const padding = resolveBoxEdges(style, 'padding', ctx && ctx.tokenRegistry);
   if (childElements.length < 2 && !padding) return null;
@@ -2123,6 +2130,8 @@ function buildGradientRectSlot(ctx, backgroundImage, slotId) {
     return {
       kind: 'gradient',
       gradient: Object.assign({}, layer.gradient, {
+        repeatSpanPx: typeof layer.gradient.repeatSpanPx === 'number' ? layer.gradient.repeatSpanPx : undefined,
+        repeatSpanRatio: typeof layer.gradient.repeatSpanRatio === 'number' ? layer.gradient.repeatSpanRatio : undefined,
         stops: (layer.gradient.stops || []).map(stop => ({
           color: stop.color,
           offset: typeof stop.offset === 'number' ? stop.offset : 0,
@@ -2137,6 +2146,8 @@ function buildGradientRectSlot(ctx, backgroundImage, slotId) {
       type: gradient.type,
       repeating: gradient.repeating === true,
       angle: typeof gradient.angle === 'number' ? gradient.angle : 180,
+      repeatSpanPx: typeof gradient.repeatSpanPx === 'number' ? gradient.repeatSpanPx : undefined,
+      repeatSpanRatio: typeof gradient.repeatSpanRatio === 'number' ? gradient.repeatSpanRatio : undefined,
       shape: gradient.shape || undefined,
       center: gradient.center || undefined,
       radius: gradient.radius || undefined,

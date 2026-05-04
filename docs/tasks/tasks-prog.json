@@ -25,8 +25,8 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 6,
-    "in_progress": 0,
-    "open": 25,
+    "in_progress": 1,
+    "open": 24,
     "total": 31
   },
   "tasks": [
@@ -567,8 +567,13 @@
       "type": "tactic-module",
       "title": "戰法傷害投射模組包（TDIR/TLINE/TFAN）",
       "description": "覆蓋單體、直線、扇形三種傷害投射形狀。已落地：無視防禦/百步穿楊/箭雨齊發/龍魂突刺。進行中：趙家槍法三段遞增。未開始：精銳突擊/長坂雄咆/無雙亂舞/威震華夏/連環計/結姻連射/火神狩獵 的 TDIR/TLINE/TFAN 段。",
-      "related": ["SYS-SKILL-CORE-0001", "SYS-SKILL-TAC-0002"],
-      "depends": ["SYS-SKILL-CORE-0001"],
+      "related": [
+        "SYS-SKILL-CORE-0001",
+        "SYS-SKILL-TAC-0002"
+      ],
+      "depends": [
+        "SYS-SKILL-CORE-0001"
+      ],
       "acceptance": [
         "unit test 驗 targetMode（單體/直線/扇形三種）",
         "畫面驗投射與命中數（target highlight + 飄字數一致）",
@@ -592,8 +597,13 @@
       "type": "tactic-module",
       "title": "戰法增益治療減益模組包（TBUFF/THEAL/TDEBUFF）",
       "description": "覆蓋 buff 疊加覆蓋、heal 上限、DOT/slow 回合 tick。已落地：長槍列陣/軍心鼓舞。進行中：G-2 六招（單騎破陣/醫療/鼓舞/緩速/八陣圖 TBUFF/空城計 TCOND）。未開始：毒箭 DOT 段/幼麒天算 TDEBUFF 段。",
-      "related": ["SYS-SKILL-CORE-0001", "SYS-SKILL-TAC-0001"],
-      "depends": ["SYS-SKILL-CORE-0001"],
+      "related": [
+        "SYS-SKILL-CORE-0001",
+        "SYS-SKILL-TAC-0001"
+      ],
+      "depends": [
+        "SYS-SKILL-CORE-0001"
+      ],
       "acceptance": [
         "unit test 驗刷新/覆蓋（新增/刷新/覆蓋/到期移除四種情境）",
         "畫面驗 icon 與浮字（buff/debuff/heal 各自可辨識）",
@@ -617,8 +627,13 @@
       "type": "tactic-module",
       "title": "戰法位移與棋盤控制模組包（TMOVE/TPUSH/TTILE）",
       "description": "覆蓋位移、推擠、地格狀態。2026-04-16 骨架完成：fire/river/rock TileState、阻擋格、進格推移、standing tile tick 已接進 BattleController。未開始：騎射合一/精銳突擊 TMOVE/七進七出/長坂雄咆 TPUSH/無雙亂舞 TPUSH/火計連環 TTILE/火神狩獵/水路伏擊 TTILE。進行中：八陣圖 TTILE/空城計。",
-      "related": ["SYS-SKILL-CORE-0001", "SYS-SKILL-TAC-0001"],
-      "depends": ["SYS-SKILL-CORE-0001"],
+      "related": [
+        "SYS-SKILL-CORE-0001",
+        "SYS-SKILL-TAC-0001"
+      ],
+      "depends": [
+        "SYS-SKILL-CORE-0001"
+      ],
       "acceptance": [
         "unit test 驗 path/blocker/tile（直線衝刺/被阻擋推擠/穿透後停點/tile 生命週期）",
         "畫面驗路徑與 overlay（移動路徑/終點/推擠方向可辨識，overlay 與生效範圍對齊）",
@@ -642,8 +657,13 @@
       "type": "tactic-module",
       "title": "戰法反應連鎖條件模組包（TLINK/TCOUNTER/TRESET/TCOND/TSTEALTH）",
       "description": "覆蓋條件觸發、反擊、再行動、連結、隱身。2026-04-16 已完成第一版：TLINK damage-link、TCOUNTER 近戰反擊+Weak、TRESET 首擊加倍+擊殺再行動、TSTEALTH AmbushAttack 前 2 回合隱匿。未完成：火計連環 TLINK+TCOND 完整版、幼麒天算 TCOUNTER 完整版、連環計 TLINK 完整版、結姻連射 TCOND、威震華夏 TRESET+TCOND、七進七出 TSTEALTH。",
-      "related": ["SYS-SKILL-CORE-0001", "SYS-SKILL-TAC-0003"],
-      "depends": ["SYS-SKILL-CORE-0001"],
+      "related": [
+        "SYS-SKILL-CORE-0001",
+        "SYS-SKILL-TAC-0003"
+      ],
+      "depends": [
+        "SYS-SKILL-CORE-0001"
+      ],
       "acceptance": [
         "unit test 驗 trigger（命中後觸發/進格觸發/擊殺後觸發三種 timing）",
         "畫面驗被動觸發提示（反應技可辨識為被動觸發，連結目標有標記）",
@@ -667,8 +687,14 @@
       "type": "tactic-module",
       "title": "戰法場景注入與障礙模組包（TSUMMON/Global Stage/SceneGambitAdapter）",
       "description": "覆蓋水淹七軍/森林埋伏/落石封路/火計佈陣。2026-04-16 骨架完成：SceneGambitAdapter/BattleHUD badge/pulse VFX/BattleEntryParams 橋接/capture 成功。剩餘：Editor 視覺 QA、VFX 資源補全（assets/fx/tactics/）、AI 場景響應驗收。",
-      "related": ["SYS-SKILL-CORE-0001", "SYS-SKILL-TAC-0003", "SYS-SKILL-TAC-0004"],
-      "depends": ["SYS-SKILL-CORE-0001"],
+      "related": [
+        "SYS-SKILL-CORE-0001",
+        "SYS-SKILL-TAC-0003",
+        "SYS-SKILL-TAC-0004"
+      ],
+      "depends": [
+        "SYS-SKILL-CORE-0001"
+      ],
       "acceptance": [
         "unit test 驗 stage injection（關卡載入注入/戰鬥中觸發/回合結束清除）",
         "畫面驗障礙與場勢（場景事件與個體戰法可辨識，障礙生效區域與 overlay 一致）",
@@ -693,8 +719,19 @@
       "type": "tactic-module",
       "title": "戰法量產驗收 Sprint 規劃（G-5 M4/M5 + G-6-3 後續排程）",
       "description": "追蹤 G-5 M4（8 條天賦戰法 Editor 實戰驗收）、M5（battle skill smoke 補強）與 G-6-3（未進入首批可玩包的虎符/血統/教官戰法 family Sprint 排入）。對應 G-5-0-1 最後一項未勾 checklist 項目。",
-      "related": ["SYS-SKILL-TAC-0001", "SYS-SKILL-TAC-0002", "SYS-SKILL-TAC-0003", "SYS-SKILL-TAC-0004", "SYS-SKILL-TAC-0005"],
-      "depends": ["SYS-SKILL-TAC-0001", "SYS-SKILL-TAC-0002", "SYS-SKILL-TAC-0003", "SYS-SKILL-TAC-0004"],
+      "related": [
+        "SYS-SKILL-TAC-0001",
+        "SYS-SKILL-TAC-0002",
+        "SYS-SKILL-TAC-0003",
+        "SYS-SKILL-TAC-0004",
+        "SYS-SKILL-TAC-0005"
+      ],
+      "depends": [
+        "SYS-SKILL-TAC-0001",
+        "SYS-SKILL-TAC-0002",
+        "SYS-SKILL-TAC-0003",
+        "SYS-SKILL-TAC-0004"
+      ],
       "acceptance": [
         "M4：8 條天賦戰法各在 Editor Preview 觸發一次，截圖存入 artifacts/ui-source/battle-scene/review/",
         "M4：AI cadence 連續 5 回合不出現「全放」或「全不放」兩種極端",
@@ -814,11 +851,15 @@
       "title": "HTML-to-UCUF CSS semantics extraction parity",
       "owner": "GitHubCopilot",
       "priority": "P0",
-      "status": "open",
+      "status": "done",
       "type": "converter-tooling",
       "phase": "Plan5",
       "created": "2026-05-04",
       "created_by_agent": "GitHubCopilot",
+      "started_at": "2026-05-04T13:10:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "completed_at": "2026-05-04T14:30:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-sonnet-4-6",
       "description": "補強 HTML/CSS 解析與 draft-builder 的通用 CSS 語意能力，優先處理 selector capability map、descendant/compound matching、CSS variable/token resolution、background layer/opacity/layout preservation。",
       "related": [
         "PROG-2-0001",
@@ -837,20 +878,25 @@
       "deliverables": [
         "tools_node/lib/dom-to-ui/html-parser.js",
         "tools_node/lib/dom-to-ui/draft-builder.js",
-        "tools_node/test/dom-to-ui-self-test.js"
+        "tools_node/test/dom-to-ui-self-test.js",
+        "fixtures/css-semantics/compound-selector.{input,expected}.json",
+        "fixtures/css-semantics/background-layers.{input,expected}.json",
+        "fixtures/css-semantics/layout-flex.{input,expected}.json"
       ],
-      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0002,PROG-2-0003"
+      "notes": "2026-05-04 | 狀態: done | 驗證: pass | 變更: html-parser.js 新增 droppedSelectors 追蹤與 classifySelectorKind; draft-builder.js 消費 droppedSelectors 推送 css-selector-not-applied warnings + selectorCapabilitySummary; 3 組 css-semantics fixtures; dom-to-ui fidelity contract ALL PASS; compute-gate standard 6/6 pass | 阻塞: none"
     },
     {
       "id": "PROG-2-0005",
       "title": "UCUF runtime renderer parity closure",
       "owner": "GitHubCopilot",
       "priority": "P0",
-      "status": "open",
-      "type": "runtime-support",
+      "status": "in-progress",
+      "type": "skin-layer-work",
       "phase": "Plan5",
       "created": "2026-05-04",
       "created_by_agent": "GitHubCopilot",
+      "started_at": "2026-05-04T16:36:51+08:00",
+      "started_by_agent": "GitHubCopilot",
       "description": "補齊 Cocos runtime 對 source-derived skin 的 renderer parity，處理 gradient/radial/repeating、shadow、rounded rect、background layers 與 fallback blocker 化，避免 Cocos 端把高覆蓋 HTML 降成低相似度畫面。",
       "related": [
         "PROG-2-0001",
@@ -871,7 +917,7 @@
         "assets/scripts/ui/components/GradientBackground.ts",
         "runtime renderer fixture notes"
       ],
-      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0003,PROG-2-0004"
+      "notes": "2026-05-04 | 狀態: in-progress | 驗證: validate-ui-specs --strict 通過（warnings only）；validate-ucuf-task-card 通過；UCUF tests 288 passed / 3 skipped；Cocos Creator compile refresh success | 變更: GitHubCopilot 已完成第 1 輪 runtime parity 修補，落地 GradientBackground/ShadowBackground tint persistence 與 adaptive texture resolution，並同步回寫 Plan5 baseline / task shard 真相 | 阻塞: repeating gradient 仍會被 flat fallback，需下一輪處理；zone-ownership taxonomy 仍需與 0004 交叉判讀"
     },
     {
       "id": "PROG-2-0006",

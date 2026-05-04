@@ -462,10 +462,41 @@ function main() {
     if (!repeatingSlot || repeatingSlot.kind !== 'gradient-rect' || repeatingSlot.gradient.repeating !== true) {
       fail(`repeating-linear-gradient should preserve top-level gradient.repeating: ${JSON.stringify(repeatingSlot)}`);
     }
+    if (repeatingSlot.gradient.repeatSpanPx !== 12) {
+      fail(`repeating-linear-gradient should preserve repeatSpanPx=12: ${JSON.stringify(repeatingSlot)}`);
+    }
+    if (repeatingSlot.gradient.stops[1]?.offset !== 0.5 || repeatingSlot.gradient.stops[2]?.offset !== 0.5) {
+      fail(`repeating-linear-gradient should normalize px stops into repeat span offsets: ${JSON.stringify(repeatingSlot)}`);
+    }
     if (!repeatingSlot.backgroundLayers || !repeatingSlot.backgroundLayers[0]?.gradient?.repeating) {
       fail(`repeating-linear-gradient should preserve backgroundLayers repeating metadata: ${JSON.stringify(repeatingSlot)}`);
     }
-    ok('repeating-linear-gradient preserves repeating metadata for runtime fallback');
+    if (repeatingSlot.backgroundLayers[0]?.gradient?.repeatSpanPx !== 12) {
+      fail(`repeating-linear-gradient should preserve backgroundLayers repeatSpanPx=12: ${JSON.stringify(repeatingSlot)}`);
+    }
+    ok('repeating-linear-gradient preserves repeat span metadata for runtime rendering');
+
+    const absoluteBlockFlowDraft = buildDraftFromHtml(`
+      <style>
+        .caption-stack { position:absolute; left:10px; bottom:20px; }
+        .chip { margin-bottom:12px; }
+        .subtitle { margin-top:10px; }
+      </style>
+      <div data-name="AbsoluteStage" style="width:300px;height:200px;position:relative">
+        <div data-name="CaptionStack" class="caption-stack">
+          <div data-name="CaptionChip" class="chip">Chip</div>
+          <div data-name="CaptionTitle">Title</div>
+          <div data-name="CaptionSubtitle" class="subtitle">Subtitle</div>
+        </div>
+      </div>`, { screenId: 'absolute-block-flow', bundle: 'ui_test' });
+    const captionStack = findNode(absoluteBlockFlowDraft.layoutDraft, n => n.name === 'CaptionStack');
+    if (!captionStack || !captionStack.layout || captionStack.layout.type !== 'vertical') {
+      fail(`position:absolute container should preserve normal-flow child vertical layout: ${JSON.stringify(captionStack)}`);
+    }
+    if (captionStack.layout.spacingY !== 12) {
+      fail(`absolute block flow should infer child margin spacing, got ${JSON.stringify(captionStack.layout)}`);
+    }
+    ok('positioned block containers preserve internal normal-flow vertical layout');
 
     const compoundSelectorDraft = buildDraftFromHtml(`
       <style>
@@ -2159,8 +2190,8 @@ function runHtmlToUcufActiveContractGroup() {
     assertRule(report, 'H2U-P4-007');
     assertRule(report, 'H2U-P4-010');
     assertRule(report, 'H2U-P4-012');
-    assertRule(report, 'H2U-P4-013');
-    ok('Plan4 seeded negative core residues are detected');
+    assertRule(report, 'H2U-P5-001');
+    ok('seeded negative core residues are detected');
   });
 
   const formalPackage = { mainHtml: 'index.html', tokens: 'ui-design-tokens.json', css: 'colors_and_type.css' };
@@ -2337,8 +2368,37 @@ function runHtmlToUcufFidelityContractGroup() {
   if (!repeatingSlot || repeatingSlot.kind !== 'gradient-rect' || repeatingSlot.gradient.repeating !== true) {
     fail(`repeating-linear-gradient should preserve top-level gradient.repeating: ${JSON.stringify(repeatingSlot)}`);
   }
+  if (repeatingSlot.gradient.repeatSpanPx !== 12) {
+    fail(`repeating-linear-gradient should preserve repeatSpanPx=12: ${JSON.stringify(repeatingSlot)}`);
+  }
+  if (repeatingSlot.gradient.stops[1]?.offset !== 0.5 || repeatingSlot.gradient.stops[2]?.offset !== 0.5) {
+    fail(`repeating-linear-gradient should normalize px stops into repeat span offsets: ${JSON.stringify(repeatingSlot)}`);
+  }
   if (!repeatingSlot.backgroundLayers || !repeatingSlot.backgroundLayers[0]?.gradient?.repeating) {
     fail(`repeating-linear-gradient should preserve backgroundLayers repeating metadata: ${JSON.stringify(repeatingSlot)}`);
+  }
+  if (repeatingSlot.backgroundLayers[0]?.gradient?.repeatSpanPx !== 12) {
+    fail(`repeating-linear-gradient should preserve backgroundLayers repeatSpanPx=12: ${JSON.stringify(repeatingSlot)}`);
+  }
+  const absoluteBlockFlowDraft = buildDraftFromHtml(`
+    <style>
+      .caption-stack { position:absolute; left:10px; bottom:20px; }
+      .chip { margin-bottom:12px; }
+      .subtitle { margin-top:10px; }
+    </style>
+    <div data-name="AbsoluteStage" style="width:300px;height:200px;position:relative">
+      <div data-name="CaptionStack" class="caption-stack">
+        <div data-name="CaptionChip" class="chip">Chip</div>
+        <div data-name="CaptionTitle">Title</div>
+        <div data-name="CaptionSubtitle" class="subtitle">Subtitle</div>
+      </div>
+    </div>`, { screenId: 'absolute-block-flow', bundle: 'ui_test' });
+  const captionStack = findNode(absoluteBlockFlowDraft.layoutDraft, n => n.name === 'CaptionStack');
+  if (!captionStack || !captionStack.layout || captionStack.layout.type !== 'vertical') {
+    fail(`position:absolute container should preserve normal-flow child vertical layout: ${JSON.stringify(captionStack)}`);
+  }
+  if (captionStack.layout.spacingY !== 12) {
+    fail(`absolute block flow should infer child margin spacing, got ${JSON.stringify(captionStack.layout)}`);
   }
   const compoundSelectorDraft = buildDraftFromHtml(`
     <style>
@@ -2369,6 +2429,75 @@ function runHtmlToUcufFidelityContractGroup() {
     fail(`opacity:0 node should be inactive by default while preserving opacity metadata: ${JSON.stringify(inactiveOverlay)}`);
   }
   ok('Plan4 fidelity fixtures exist and cover history/background regression cases');
+
+  // R-P5-SEL-01: descendant/child/sibling selectors must surface as css-selector-not-applied warnings
+  {
+    const descendantDraft = buildDraftFromHtml(`
+      <style>
+        .panel .label { color: red; }
+        .panel > .title { font-size: 18px; }
+        .btn + .btn { margin-left: 8px; }
+        .item ~ .item { border-top: 1px solid #ccc; }
+        .simple { background: #D4AF37; }
+      </style>
+      <div data-name="SelectorStage" style="width:300px;height:200px;">
+        <div data-name="SimpleEl" class="simple" style="width:100px;height:50px;"></div>
+      </div>`, { screenId: 'selector-capability', bundle: 'ui_test' });
+    const droppedWarnings = (descendantDraft.warnings || []).filter(w => w.code === 'css-selector-not-applied');
+    if (droppedWarnings.length < 4) {
+      fail(`R-P5-SEL-01: expected >=4 css-selector-not-applied warnings for descendant/child/sibling selectors, got ${droppedWarnings.length}: ${JSON.stringify(droppedWarnings)}`);
+    }
+    const kinds = droppedWarnings.map(w => w.kind);
+    if (!kinds.includes('descendant')) fail(`R-P5-SEL-01: expected descendant kind in warnings, got ${JSON.stringify(kinds)}`);
+    if (!kinds.includes('child-combinator')) fail(`R-P5-SEL-01: expected child-combinator kind in warnings, got ${JSON.stringify(kinds)}`);
+    if (!kinds.includes('adjacent-sibling')) fail(`R-P5-SEL-01: expected adjacent-sibling kind in warnings, got ${JSON.stringify(kinds)}`);
+    if (!kinds.includes('general-sibling')) fail(`R-P5-SEL-01: expected general-sibling kind in warnings, got ${JSON.stringify(kinds)}`);
+    if (!descendantDraft.selectorCapabilitySummary || descendantDraft.selectorCapabilitySummary.droppedCount < 4) {
+      fail(`R-P5-SEL-01: selectorCapabilitySummary.droppedCount should be >=4, got ${JSON.stringify(descendantDraft.selectorCapabilitySummary)}`);
+    }
+    const simpleEl = findNode(descendantDraft.layoutDraft, n => n.name === 'SimpleEl');
+    const simpleSlot = simpleEl && simpleEl.skinSlot && descendantDraft.skinDraft.slots[simpleEl.skinSlot];
+    if (!simpleSlot || simpleSlot.kind !== 'color-rect') {
+      fail(`R-P5-SEL-01: simple .simple class selector should still apply; got ${JSON.stringify(simpleSlot)}`);
+    }
+    ok('Plan5 R-P5-SEL-01: descendant/child/sibling selectors surface as css-selector-not-applied warnings');
+  }
+
+  // Plan5 fixture: background-layers (css-semantics/background-layers)
+  {
+    const bgFixture = JSON.parse(fs.readFileSync(
+      path.join(REPO_ROOT, 'fixtures', 'css-semantics', 'background-layers.input.json'), 'utf8'
+    ));
+    const bgDraft = buildDraftFromHtml(bgFixture.html, bgFixture.opts);
+    const skinJson = JSON.stringify(bgDraft.skinDraft);
+    if (!/backgroundLayers/.test(skinJson)) {
+      fail(`background-layers fixture: backgroundLayers must be preserved in skin contract, got slots: ${JSON.stringify(Object.keys(bgDraft.skinDraft.slots || {}))}`);
+    }
+    if (!/gradient-rect/.test(skinJson)) {
+      fail(`background-layers fixture: expected gradient-rect kind in skin contract, got: ${skinJson.slice(0, 200)}`);
+    }
+    ok('Plan5 fixture: background-layers preserves backgroundLayers in skin contract');
+  }
+
+  // Plan5 fixture: layout-flex (css-semantics/layout-flex)
+  {
+    const flexFixture = JSON.parse(fs.readFileSync(
+      path.join(REPO_ROOT, 'fixtures', 'css-semantics', 'layout-flex.input.json'), 'utf8'
+    ));
+    const flexDraft = buildDraftFromHtml(flexFixture.html, flexFixture.opts);
+    const flexRow = findNode(flexDraft.layoutDraft, n => n.name === 'FlexRow');
+    if (!flexRow || !flexRow.layout || flexRow.layout.type !== 'horizontal') {
+      fail(`layout-flex fixture: expected layout.type=horizontal, got ${JSON.stringify(flexRow && flexRow.layout)}`);
+    }
+    if (flexRow.layout.spacingX !== 12) {
+      fail(`layout-flex fixture: expected layout.spacingX=12, got ${JSON.stringify(flexRow.layout)}`);
+    }
+    const flexChildren = (flexRow.children || []).filter(c => c.type !== undefined);
+    if (flexChildren.length < 3) {
+      fail(`layout-flex fixture: expected 3 child nodes, got ${flexChildren.length}`);
+    }
+    ok('Plan5 fixture: layout-flex horizontal layout with gap preserved');
+  }
 
   withTempDir((tmp) => {
     const uiRoot = path.join(tmp, 'assets', 'resources', 'ui-spec');
@@ -2454,6 +2583,27 @@ function runHtmlToUcufFidelityContractGroup() {
     },
   });
   assertRule(missingInteractionSmoke, 'H2U-P4-018');
+
+  const missingPlan5Diagnosis = runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    workflowSummary: {
+      debugOnly: false,
+      sourcePackage: formalPackage,
+      steps: [],
+      runtimeAuthority: { authority: 'synced-final-runtime-json' },
+      visualFidelityRisk: { status: 'pass', blockerCount: 0, violations: [] },
+      interactionRuntime: { required: false, status: 'pass', actionsBound: 0, smokeResults: [] },
+      metrics: {
+        compare: { adjustedCoverage: 0.97 },
+        htmlCocos: { runtimeVsSource: { adjustedScore: 0.55, verdict: 'fail' } }
+      },
+      verdict: { workflowPass: true },
+      nextFixes: []
+    }
+  });
+  assertRule(missingPlan5Diagnosis, 'H2U-P5-003');
+  assertRule(missingPlan5Diagnosis, 'H2U-P5-004');
 
   const pass = runRuleGuard({
     repoRoot: REPO_ROOT,

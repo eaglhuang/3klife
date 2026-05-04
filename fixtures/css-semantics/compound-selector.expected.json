@@ -1,0 +1,13 @@
+{
+  "_description": "Compound class selectors (.a.b) must require all classes to match before applying declarations. Descendant selectors (.parent .child) must surface as css-selector-not-applied warnings.",
+  "_blessed_by": "ClaudeCode_claude-sonnet-4-6",
+  "_blessed_at": "2026-05-04",
+  "html": "<style>.dot { width:10px; height:10px; } .dot.active { background: #D4AF37; } .panel .label { color: red; } .simple { background: #333; }</style><div data-name=\"Stage\" style=\"width:300px;height:200px;\"><div data-name=\"ActiveDot\" class=\"dot active\" style=\"width:10px;height:10px;\"></div><div data-name=\"InactiveDot\" class=\"dot\" style=\"width:10px;height:10px;\"></div><div data-name=\"SimpleBox\" class=\"simple\" style=\"width:50px;height:50px;\"></div></div>",
+  "opts": { "screenId": "compound-selector-fixture", "bundle": "ui_test" },
+  "assertions": {
+    "activeDotHasSkinSlot": true,
+    "inactiveDotHasNoBackground": true,
+    "simpleBoxHasSkinSlot": true,
+    "descendantSelectorWarningCount": 1
+  }
+}

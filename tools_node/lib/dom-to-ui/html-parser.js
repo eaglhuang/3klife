@@ -194,6 +194,13 @@ function parseStylesheets(sheets) {
   const classRules = {};
   const idRules = {};
   const styleRules = [];
+  // R-P5-SEL-01 (general rule, selector capability tracking): selectors
+  // containing combinators (descendant, child >, adjacent +, sibling ~) cannot
+  // be matched at convert time without a full DOM tree traversal. They are
+  // silently dropped by parseSimpleSelectorRule. Track them as
+  // droppedSelectors so the caller can surface them as css-selector-not-applied
+  // warnings — surfacing these gaps is better than silent loss.
+  const droppedSelectors = [];
   for (const sheet of sheets) {
     const noComments = sheet.replace(/\/\*[\s\S]*?\*\//g, '');
     const ruleRe = /([^{}]+)\{([^{}]+)\}/g;
@@ -205,7 +212,11 @@ function parseStylesheets(sheets) {
       for (const sel of selector.split(',').map(s => s.trim())) {
         if (!sel || sel.includes(':')) continue;
         const simpleRule = parseSimpleSelectorRule(sel, decl);
-        if (simpleRule) styleRules.push(simpleRule);
+        if (simpleRule) {
+          styleRules.push(simpleRule);
+        } else if (/[\s>+~]/.test(sel)) {
+          droppedSelectors.push({ selector: sel, kind: classifySelectorKind(sel) });
+        }
         const classMatches = [...sel.matchAll(/\.([A-Za-z0-9_-]+)/g)].map(hit => hit[1]);
         const idMatches = [...sel.matchAll(/#([A-Za-z0-9_-]+)/g)].map(hit => hit[1]);
         if (classMatches.length === 1 && idMatches.length === 0 && isSingleClassSelector(sel)) {
@@ -218,7 +229,16 @@ function parseStylesheets(sheets) {
       }
     }
   }
-  return { classRules, idRules, styleRules };
+  return { classRules, idRules, styleRules, droppedSelectors };
+}
+
+function classifySelectorKind(sel) {
+  const raw = String(sel || '').trim();
+  if (raw.includes('>')) return 'child-combinator';
+  if (raw.includes('+')) return 'adjacent-sibling';
+  if (raw.includes('~')) return 'general-sibling';
+  if (/\s/.test(raw)) return 'descendant';
+  return 'complex';
 }
 
 function isSingleClassSelector(selector) {
@@ -271,5 +291,6 @@ module.exports = {
   parseHtml,
   parseStylesheets,
   parseInlineStyle,
+  classifySelectorKind,
   VOID_ELEMENTS,
 };

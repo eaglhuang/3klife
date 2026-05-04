@@ -1,0 +1,12 @@
+{
+  "_description": "Flex layout with row direction, gap, and justify-content. The layout node must expose type=horizontal with gap values preserved.",
+  "_blessed_by": "ClaudeCode_claude-sonnet-4-6",
+  "_blessed_at": "2026-05-04",
+  "html": "<div data-name=\"FlexRow\" style=\"width:300px;height:60px;display:flex;flex-direction:row;gap:12px;justify-content:flex-start;\"><div data-name=\"Item1\" style=\"width:80px;height:50px;\"></div><div data-name=\"Item2\" style=\"width:80px;height:50px;\"></div><div data-name=\"Item3\" style=\"width:80px;height:50px;\"></div></div>",
+  "opts": { "screenId": "layout-flex-fixture", "bundle": "ui_test" },
+  "assertions": {
+    "flexRowLayoutType": "horizontal",
+    "flexRowGapX": 12,
+    "childCount": 3
+  }
+}
