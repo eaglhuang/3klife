@@ -1,5 +1,5 @@
 ---
-doc_id: doc_task_TBD
+doc_id: doc_task_0036
 id: HARN-UI-0001
 priority: P1
 phase: G
@@ -114,3 +114,9 @@ npm run test:ucuf:governance
 
 ---
 *由 Harness Engineering compute-gate 感測器自動偵測開立 | 2026-05-04*
+
+## 審核結果（2026-05-04）
+
+- 審核結論：達成
+- 驗證證據：compute-gate --profile standard 已於本輪審核通過 6/6。 UI Spec 三層契約與 GeneralDetail UI 契約均通過。
+- 需修改：無；後續 UI 卡仍需維持 Component Sizing 與 content contract 驗證。
