@@ -21,6 +21,8 @@ created: 2026-04-12
 created_by_agent: AgentX
 owner: AgentX
 status: open                    # open / in-progress / blocked / done
+started_at: 2026-04-12T10:00:00+08:00   # status=in-progress 時必填
+started_by_agent: AgentX                 # status=in-progress 時必填
 type: composite-panel            # 見 §type 分類表
 
 related_cards:
@@ -148,6 +150,25 @@ docs_backwritten:
 | `skin_slots_added` | 只修改既有 skin，不新增 slot 時可為空陣列 |
 | `perf_budget` | type 為 `content-contract` / `tooling` 等非渲染任務時可省略 |
 | `atlas_group` | 不涉及視覺資源時可省略 |
+| `started_at`, `started_by_agent` | `status=open` 且尚未正式接手時可省略 |
+
+### Harness 相容欄位（選填）
+
+若這張卡是 tooling / architecture / migration 類型，且需要配合最新 Harness 證據鏈交接，可在本文額外附上 `HARNESS_EVIDENCE` section。
+
+建議只在有實際工件時填寫：
+
+1. artifact path
+2. validation evidence
+3. handoff diff status
+4. trace summary / path
+5. metrics summary
+
+若用 `tools_node/task-card-opener.js` 建卡：
+
+1. `HARN-*` 會在 `agent-briefs` 模式下預設切到 `harn-rich`
+2. 非 `HARN-*` 的 UCUF / UI 卡仍可維持既有模板，不必硬套 HARN body 結構
+3. 只有真的需要多 Agent handoff / evidence 時，才建議附加 `HARNESS_EVIDENCE`
 
 ---
 

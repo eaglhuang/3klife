@@ -18,6 +18,23 @@ function todayIso() {
   return new Date().toISOString().split('T')[0];
 }
 
+function nowRfc3339() {
+  const value = new Date();
+  const pad = (input) => String(input).padStart(2, '0');
+  const year = value.getFullYear();
+  const month = pad(value.getMonth() + 1);
+  const day = pad(value.getDate());
+  const hour = pad(value.getHours());
+  const minute = pad(value.getMinutes());
+  const second = pad(value.getSeconds());
+  const offsetMinutes = -value.getTimezoneOffset();
+  const sign = offsetMinutes >= 0 ? '+' : '-';
+  const absOffset = Math.abs(offsetMinutes);
+  const offsetHour = pad(Math.floor(absOffset / 60));
+  const offsetMinute = pad(absOffset % 60);
+  return `${year}-${month}-${day}T${hour}:${minute}:${second}${sign}${offsetHour}:${offsetMinute}`;
+}
+
 function normalizeStatus(status) {
   const value = String(status || 'open').trim().toLowerCase();
   if (value === 'in_progress' || value === 'in progress') {
@@ -39,6 +56,20 @@ function splitList(value) {
     .filter((item) => item.length > 0);
 }
 
+function decodeBlockText(value) {
+  return String(value || '')
+    .replace(/\\n/g, '\n')
+    .trim();
+}
+
+function renderYamlScalar(value) {
+  const normalized = value ?? '';
+  if (typeof normalized === 'string' && /^[A-Za-z0-9_./:+-]+$/.test(normalized)) {
+    return normalized;
+  }
+  return JSON.stringify(normalized);
+}
+
 function renderYamlArrayField(name, items) {
   if (!items.length) {
     return `${name}: []`;
@@ -46,12 +77,109 @@ function renderYamlArrayField(name, items) {
 
   return [
     `${name}:`,
-    ...items.map((item) => `  - ${JSON.stringify(item)}`),
+    ...items.map((item) => `  - ${renderYamlScalar(item)}`),
   ].join('\n');
 }
 
 function renderValue(value) {
   return JSON.stringify(value ?? '');
+}
+
+function renderBulletList(items, fallback) {
+  const lines = items.length > 0 ? items : [fallback];
+  return lines.map((item) => `- ${item}`).join('\n');
+}
+
+function renderChecklist(items, fallback) {
+  const lines = items.length > 0 ? items : [fallback];
+  return lines.map((item) => `- [ ] ${item}`).join('\n');
+}
+
+function renderNumberedList(items, fallback) {
+  const lines = items.length > 0 ? items : [fallback];
+  return lines.map((item, index) => `${index + 1}. ${item}`).join('\n');
+}
+
+function renderCodeBlock(content, fallback, language) {
+  const body = decodeBlockText(content) || fallback;
+  return [`\`\`\`${language || ''}`.trim(), body, '```'].join('\n');
+}
+
+function hasAnyEvidence(evidence) {
+  return Boolean(
+    (evidence.artifact_paths && evidence.artifact_paths.length > 0) ||
+    (evidence.validation_evidence && evidence.validation_evidence.length > 0) ||
+    evidence.handoff_diff_status ||
+    (evidence.trace_artifacts && evidence.trace_artifacts.length > 0) ||
+    (evidence.metrics_summary && evidence.metrics_summary.length > 0)
+  );
+}
+
+function inferBriefStyle(task, explicitStyle, mdKind) {
+  if (mdKind !== 'agent-briefs') {
+    return 'classic';
+  }
+  if (explicitStyle) {
+    return explicitStyle;
+  }
+  if (/^HARN-/i.test(task.id)) {
+    return 'harn-rich';
+  }
+  return 'classic';
+}
+
+function defaultBriefLabel(task) {
+  if (task.sensor_triggered_by && /^compute-gate/i.test(task.sensor_triggered_by)) {
+    return '韁繩感測器觸發';
+  }
+  if (/^HARN-/i.test(task.id)) {
+    return 'Harness rollout 開卡';
+  }
+  return '任務開卡';
+}
+
+function formatDependsSummary(task) {
+  if (task.brief.prereq) {
+    return task.brief.prereq;
+  }
+  if (!task.depends.length) {
+    return '無';
+  }
+  return task.depends.map((item) => `\`${item}\``).join('、');
+}
+
+function buildAgentBriefsFrontmatter(task) {
+  const lines = ['---'];
+  if (task.doc_id) {
+    lines.push(`doc_id: ${renderYamlScalar(task.doc_id)}`);
+  }
+  lines.push(`id: ${renderYamlScalar(task.id)}`);
+  lines.push(`priority: ${renderYamlScalar(task.priority)}`);
+  lines.push(`phase: ${renderYamlScalar(task.phase)}`);
+  lines.push(`created: ${renderYamlScalar(task.created)}`);
+  lines.push(`created_by_agent: ${renderYamlScalar(task.created_by_agent)}`);
+  lines.push(`owner: ${renderYamlScalar(task.owner)}`);
+  lines.push(`status: ${renderYamlScalar(task.status)}`);
+  if (task.started_at) {
+    lines.push(`started_at: ${renderYamlScalar(task.started_at)}`);
+  }
+  if (task.started_by_agent) {
+    lines.push(`started_by_agent: ${renderYamlScalar(task.started_by_agent)}`);
+  }
+  lines.push(`type: ${renderYamlScalar(task.type)}`);
+  if (task.chain_id) {
+    lines.push(`chain_id: ${renderYamlScalar(task.chain_id)}`);
+  }
+  if (task.chain_step) {
+    lines.push(`chain_step: ${renderYamlScalar(task.chain_step)}`);
+  }
+  if (task.sensor_triggered_by) {
+    lines.push(`sensor_triggered_by: ${renderYamlScalar(task.sensor_triggered_by)}`);
+  }
+  lines.push(renderYamlArrayField('depends', task.depends));
+  lines.push(`notes: ${renderValue(task.notes)}`);
+  lines.push('---', '');
+  return lines.join('\n');
 }
 
 function renderRelatedLinks(items) {
@@ -88,9 +216,16 @@ function buildTask(options) {
   const depends = options.depends.length > 0 ? options.depends : [];
   const acceptance = options.acceptance.length > 0 ? options.acceptance : [];
   const deliverables = options.deliverables.length > 0 ? options.deliverables : [];
-  const notes = options.notes || `${created} | 狀態: ${status} | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無`;
+  const startedAt = status === 'in-progress'
+    ? (options.startedAt || nowRfc3339())
+    : (options.startedAt || '');
+  const startedByAgent = status === 'in-progress'
+    ? (options.startedByAgent || options.createdByAgent || options.owner)
+    : (options.startedByAgent || '');
+  const notes = options.notes || `${created} | 狀態: ${status} | 驗證: pending | 變更: task-card-opener 產生${options.briefStyle === 'harn-rich' ? ' HARN rich brief' : '骨架'} | 阻塞: ${options.briefStyle === 'harn-rich' ? 'none' : '無'}`;
 
   return {
+    doc_id: options.docId,
     id: options.id,
     title: options.title,
     owner: options.owner,
@@ -100,17 +235,42 @@ function buildTask(options) {
     phase: options.phase,
     created,
     created_by_agent: options.createdByAgent,
+    started_at: startedAt,
+    started_by_agent: startedByAgent,
+    chain_id: options.chainId,
+    chain_step: options.chainStep,
+    sensor_triggered_by: options.sensorTriggeredBy,
     description: options.description,
     related,
     depends,
     acceptance,
     deliverables,
     notes,
+    brief: {
+      style: options.briefStyle,
+      label: options.briefLabel,
+      summary: options.briefSummary,
+      position: options.briefPosition,
+      prereq: options.briefPrereq,
+    },
+    contracts: {
+      input: options.inputContract,
+      output: options.outputContract,
+      validation_cmd: options.validationCmd,
+      rollback_hint: options.rollbackHint,
+      execution_steps: options.executionSteps,
+    },
+    harness_evidence: {
+      artifact_paths: options.artifactPaths,
+      validation_evidence: options.validationEvidence,
+      handoff_diff_status: options.handoffDiffStatus,
+      trace_artifacts: options.traceArtifacts,
+      metrics_summary: options.metricsSummary,
+    },
   };
 }
 
-function buildAgentBriefsMarkdown(task, options) {
-  const docId = options.docId ? `<!-- doc_id: ${options.docId} -->\n` : '';
+function buildAgentBriefsClassicMarkdown(task) {
   const notes = task.notes || '';
   const completion = task.status === 'done' ? '100%' : '0%';
   const relatedLinks = renderRelatedLinks(task.related);
@@ -123,21 +283,6 @@ function buildAgentBriefsMarkdown(task, options) {
   const relatedTasks = task.related.length > 0
     ? task.related.map((item) => `- [${item}](${item}.md)`).join('\n')
     : '- 無';
-
-  const frontmatterLines = [
-    '---',
-    `id: ${renderValue(task.id)}`,
-    `priority: ${renderValue(task.priority)}`,
-    `owner: ${renderValue(task.owner)}`,
-    `status: ${renderValue(task.status)}`,
-    `type: ${renderValue(task.type)}`,
-    `phase: ${renderValue(task.phase)}`,
-    `created: ${renderValue(task.created)}`,
-    renderYamlArrayField('related_cards', task.related),
-    `notes: ${renderValue(notes)}`,
-    '---',
-    '',
-  ];
 
   const bodyLines = [
     `# [${task.id}] ${task.title}`,
@@ -178,7 +323,79 @@ function buildAgentBriefsMarkdown(task, options) {
     notes ? `- ${notes}` : '- 無',
   ];
 
-  return `${docId}${frontmatterLines.join('\n')}\n${bodyLines.join('\n')}\n`;
+  return `${buildAgentBriefsFrontmatter(task)}${bodyLines.join('\n')}\n`;
+}
+
+function buildHarnessEvidenceSection(task) {
+  const evidence = task.harness_evidence || {};
+  if (!hasAnyEvidence(evidence)) {
+    return [];
+  }
+
+  const lines = ['## HARNESS_EVIDENCE', ''];
+  if (evidence.artifact_paths && evidence.artifact_paths.length > 0) {
+    lines.push(`- artifact path：${evidence.artifact_paths.map((item) => `\`${item}\``).join('、')}`);
+  }
+  if (evidence.validation_evidence && evidence.validation_evidence.length > 0) {
+    lines.push(`- validation evidence：${evidence.validation_evidence.join('、')}`);
+  }
+  if (evidence.handoff_diff_status) {
+    lines.push(`- handoff diff status：${evidence.handoff_diff_status}`);
+  }
+  if (evidence.trace_artifacts && evidence.trace_artifacts.length > 0) {
+    lines.push(`- trace summary / path：${evidence.trace_artifacts.map((item) => `\`${item}\``).join('、')}`);
+  }
+  if (evidence.metrics_summary && evidence.metrics_summary.length > 0) {
+    lines.push(`- metrics summary：${evidence.metrics_summary.join('、')}`);
+  }
+  lines.push('');
+  return lines;
+}
+
+function buildAgentBriefsHarnRichMarkdown(task) {
+  const contracts = task.contracts || {};
+  const outputItems = contracts.output.length > 0 ? contracts.output : task.deliverables;
+  const introLabel = task.brief.label || defaultBriefLabel(task);
+  const introSummary = task.brief.summary || task.title;
+  const introPosition = task.brief.position || task.phase || '待補';
+  const introPrereq = formatDependsSummary(task);
+
+  const bodyLines = [
+    `# [${task.id}] ${task.title}`,
+    '',
+    `> **${introLabel}** — ${introSummary}`,
+    `> **定位**：${introPosition}`,
+    `> **前置依賴**：${introPrereq}`,
+    '',
+    '## 問題描述',
+    '',
+    task.description || '待補：說明這張卡要修正或補齊的核心問題。',
+    '',
+    '## INPUT_CONTRACT',
+    '',
+    renderBulletList(contracts.input, '待補：列出前置條件與既有契約。'),
+    '',
+    '## OUTPUT_CONTRACT',
+    '',
+    renderChecklist(outputItems, '待補：列出交付成果與完成條件。'),
+    '',
+    ...buildHarnessEvidenceSection(task),
+    '## VALIDATION_CMD',
+    '',
+    renderCodeBlock(contracts.validation_cmd, '# TODO: 補上可直接執行的驗證命令', 'bash'),
+    '',
+    '## ROLLBACK_HINT',
+    '',
+    renderCodeBlock(contracts.rollback_hint, '# TODO: 補上最小 rollback 指令', 'bash'),
+    '',
+    '## 執行步驟',
+    '',
+    renderNumberedList(contracts.execution_steps, '待補：列出最小可執行步驟。'),
+    '',
+    `*由 ${task.created_by_agent} 透過 task-card-opener 開立 | ${task.created}*`,
+  ];
+
+  return `${buildAgentBriefsFrontmatter(task)}${bodyLines.join('\n')}\n`;
 }
 
 function buildGenericMarkdown(task) {
@@ -233,9 +450,14 @@ function buildGenericMarkdown(task) {
 }
 
 function buildMarkdown(task, mdKind) {
-  return mdKind === 'agent-briefs'
-    ? buildAgentBriefsMarkdown(task, { docId: getArg(process.argv, 'doc-id') })
-    : buildGenericMarkdown(task);
+  if (mdKind !== 'agent-briefs') {
+    return buildGenericMarkdown(task);
+  }
+
+  const briefStyle = inferBriefStyle(task, task.brief.style, mdKind);
+  return briefStyle === 'harn-rich'
+    ? buildAgentBriefsHarnRichMarkdown(task)
+    : buildAgentBriefsClassicMarkdown(task);
 }
 
 function loadJsonFileIfExists(filePath) {
@@ -322,9 +544,30 @@ function printHelp() {
     '  --acceptance      驗收條件清單',
     '  --deliverables    交付物清單',
     '  --notes           備註 / notes 欄內容',
-    '  --doc-id          agent-briefs 模式可選的 doc_id comment',
+    '  --doc-id          指定 frontmatter doc_id；通常與 --assign-doc-id 二選一',
+    '  --assign-doc-id   write 模式下於 Markdown 寫入後呼叫 doc-id-registry 自動分配 doc_id',
     '  --md-out          Markdown 輸出路徑',
     '  --md-kind         generic / agent-briefs，未指定時依路徑推斷',
+    '  --brief-style     classic / harn-rich；agent-briefs 未指定時，HARN-* 自動走 harn-rich',
+    '  --brief-label     rich brief 首行標籤，例如 Harness rollout 開卡 / 韁繩感測器觸發',
+    '  --brief-summary   rich brief 首行摘要說明',
+    '  --brief-position  rich brief 的「定位」行內容',
+    '  --brief-prereq    rich brief 的「前置依賴」行內容',
+    '  --chain-id        agent-briefs frontmatter 的 chain_id',
+    '  --chain-step      agent-briefs frontmatter 的 chain_step',
+    '  --sensor-triggered-by  agent-briefs frontmatter 的 sensor_triggered_by',
+    '  --started-at      status=in-progress 時可覆寫 started_at（預設自動填 RFC3339）',
+    '  --started-by-agent status=in-progress 時可覆寫 started_by_agent',
+    '  --input-contract  rich brief INPUT_CONTRACT 清單（逗號、|、;、換行分隔）',
+    '  --output-contract rich brief OUTPUT_CONTRACT 清單（逗號、|、;、換行分隔）',
+    '  --validation-cmd  rich brief VALIDATION_CMD 內容；支援 \\n 轉換成多行',
+    '  --rollback-hint   rich brief ROLLBACK_HINT 內容；支援 \\n 轉換成多行',
+    '  --execution-steps rich brief 執行步驟清單（逗號、|、;、換行分隔）',
+    '  --artifact-paths  HARNESS_EVIDENCE 中的 artifact path 清單',
+    '  --validation-evidence HARNESS_EVIDENCE 中的 validation evidence 清單',
+    '  --handoff-diff-status HARNESS_EVIDENCE 中的 handoff diff 狀態',
+    '  --trace-artifacts HARNESS_EVIDENCE 中的 trace artifact/path 清單',
+    '  --metrics-summary HARNESS_EVIDENCE 中的 metrics summary 清單',
     '  --json-out        JSON 輸出路徑',
     '  --json-kind       task-aggregate / ui-quality-task-shard / plain-task',
     '  --write           寫入檔案；未指定時為 dry-run',
@@ -364,34 +607,61 @@ function main() {
 
   const id = getArg(process.argv, 'id') || getArg(process.argv, 'card-id');
   const title = getArg(process.argv, 'title');
+  const docId = getArg(process.argv, 'doc-id', '');
+  const assignDocId = hasFlag(process.argv, 'assign-doc-id');
   if (!id || !title) {
     printHelp();
     process.exit(1);
   }
-
-  const task = buildTask({
-    id,
-    title,
-    owner: getArg(process.argv, 'owner', 'Copilot'),
-    priority: getArg(process.argv, 'priority', 'P1'),
-    status: getArg(process.argv, 'status', 'open'),
-    type: getArg(process.argv, 'type', 'implementation'),
-    phase: getArg(process.argv, 'phase', 'M0'),
-    created: getArg(process.argv, 'created', todayIso()),
-    createdByAgent: getArg(process.argv, 'created-by-agent', 'GitHubCopilot'),
-    description: getArg(process.argv, 'description', ''),
-    related: splitList(getArg(process.argv, 'related', '')),
-    depends: splitList(getArg(process.argv, 'depends', '')),
-    acceptance: splitList(getArg(process.argv, 'acceptance', '')),
-    deliverables: splitList(getArg(process.argv, 'deliverables', '')),
-    notes: getArg(process.argv, 'notes', ''),
-  });
+  if (docId && assignDocId) {
+    throw new Error('--doc-id 與 --assign-doc-id 不能同時使用');
+  }
 
   const dryRun = !hasFlag(process.argv, 'write');
   const mdOutArg = getArg(process.argv, 'md-out', '');
   const jsonOutArg = getArg(process.argv, 'json-out', '');
   const mdKind = getArg(process.argv, 'md-kind', inferMdKind(mdOutArg));
   const jsonKind = getArg(process.argv, 'json-kind', inferJsonKind(jsonOutArg));
+  const briefStyle = inferBriefStyle({ id }, getArg(process.argv, 'brief-style', ''), mdKind);
+
+  const task = buildTask({
+    docId,
+    id,
+    title,
+    owner: getArg(process.argv, 'owner', 'GitHubCopilot'),
+    priority: getArg(process.argv, 'priority', 'P1'),
+    status: getArg(process.argv, 'status', 'open'),
+    type: getArg(process.argv, 'type', 'implementation'),
+    phase: getArg(process.argv, 'phase', 'M0'),
+    created: getArg(process.argv, 'created', todayIso()),
+    createdByAgent: getArg(process.argv, 'created-by-agent', 'GitHubCopilot'),
+    startedAt: getArg(process.argv, 'started-at', ''),
+    startedByAgent: getArg(process.argv, 'started-by-agent', ''),
+    chainId: getArg(process.argv, 'chain-id', ''),
+    chainStep: getArg(process.argv, 'chain-step', ''),
+    sensorTriggeredBy: getArg(process.argv, 'sensor-triggered-by', ''),
+    description: getArg(process.argv, 'description', ''),
+    related: splitList(getArg(process.argv, 'related', '')),
+    depends: splitList(getArg(process.argv, 'depends', '')),
+    acceptance: splitList(getArg(process.argv, 'acceptance', '')),
+    deliverables: splitList(getArg(process.argv, 'deliverables', '')),
+    notes: getArg(process.argv, 'notes', ''),
+    briefStyle,
+    briefLabel: getArg(process.argv, 'brief-label', ''),
+    briefSummary: getArg(process.argv, 'brief-summary', ''),
+    briefPosition: getArg(process.argv, 'brief-position', ''),
+    briefPrereq: getArg(process.argv, 'brief-prereq', ''),
+    inputContract: splitList(getArg(process.argv, 'input-contract', '')),
+    outputContract: splitList(getArg(process.argv, 'output-contract', '')),
+    validationCmd: getArg(process.argv, 'validation-cmd', ''),
+    rollbackHint: getArg(process.argv, 'rollback-hint', ''),
+    executionSteps: splitList(getArg(process.argv, 'execution-steps', '')),
+    artifactPaths: splitList(getArg(process.argv, 'artifact-paths', '')),
+    validationEvidence: splitList(getArg(process.argv, 'validation-evidence', '')),
+    handoffDiffStatus: getArg(process.argv, 'handoff-diff-status', ''),
+    traceArtifacts: splitList(getArg(process.argv, 'trace-artifacts', '')),
+    metricsSummary: splitList(getArg(process.argv, 'metrics-summary', '')),
+  });
 
   if (!mdOutArg && !jsonOutArg && !dryRun) {
     throw new Error('未指定 --md-out 或 --json-out，無法在 write 模式輸出');
@@ -399,7 +669,14 @@ function main() {
 
   const mdContent = buildMarkdown(task, mdKind);
   if (mdOutArg) {
-    writeText(resolvePath(mdOutArg), mdContent, dryRun);
+    const resolvedMdPath = resolvePath(mdOutArg);
+    writeText(resolvedMdPath, mdContent, dryRun);
+    if (!dryRun && assignDocId) {
+      cp.execFileSync(process.execPath, [path.join(PROJECT_ROOT, 'tools_node', 'doc-id-registry.js'), '--assign', path.relative(PROJECT_ROOT, resolvedMdPath)], {
+        cwd: PROJECT_ROOT,
+        stdio: 'inherit',
+      });
+    }
   } else if (dryRun) {
     printDryRunArtifact('markdown', mdContent);
   } else {
@@ -427,6 +704,7 @@ function main() {
   const outputSummary = {
     id: task.id,
     mdKind,
+    briefStyle: inferBriefStyle(task, task.brief.style, mdKind),
     jsonKind,
     mdOut: mdOutArg ? path.relative(PROJECT_ROOT, resolvePath(mdOutArg)) : '',
     jsonOut: jsonOutArg ? path.relative(PROJECT_ROOT, resolvePath(jsonOutArg)) : '',

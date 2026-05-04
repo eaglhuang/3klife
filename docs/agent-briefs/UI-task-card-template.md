@@ -14,6 +14,8 @@ created: 2026-04-05
 created_by_agent: AgentX
 owner: AgentX
 status: open
+started_at: 2026-04-05T09:30:00+08:00   # status=in-progress 時必填
+started_by_agent: AgentX                # status=in-progress 時必填
 type: template-integration
 related_cards:
   - UI-2-YYYY
@@ -34,6 +36,22 @@ docs_backwritten:
 notes: "YYYY-MM-DD | 狀態: open | 驗證: pending | 變更: 待開始 | 阻塞: none"
 ---
 ```
+
+## Harness 相容補充
+
+若這張卡是透過 `tools_node/task-card-opener.js` 建立，且屬於多 Agent 證據鏈較重的任務，可額外採用 `harn-rich` 相容格式：
+
+1. `HARN-*` 會在 `agent-briefs` 模式下自動切到 `harn-rich`
+2. `status=in-progress` 時，`started_at / started_by_agent` 視為協作必填
+3. 若需要交接證據，可在本文額外補 `HARNESS_EVIDENCE`
+
+`HARNESS_EVIDENCE` 建議只在真的有證據工件時才補，典型欄位：
+
+1. artifact path
+2. validation evidence
+3. handoff diff status
+4. trace summary / path
+5. metrics summary
 
 ## 必填檢查
 
@@ -68,3 +86,4 @@ notes: "YYYY-MM-DD | 狀態: open | 驗證: pending | 變更: 待開始 | 阻塞
 - 正式規格已回寫
 - `cross-reference-index.md` (doc_index_0005) 已同步
 - 已跑過至少一條 smoke / preview / acceptance 驗證
+- 若本卡透過 `task-card-opener` 的 `harn-rich` 建立，`HARNESS_EVIDENCE` 只保留實際存在的證據欄位，不可用 placeholder 填滿

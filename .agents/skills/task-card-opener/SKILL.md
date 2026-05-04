@@ -36,14 +36,32 @@ argument-hint: '提供 task 類別、目標系統、是否需要 Markdown 卡、
 
 1. 直接模式：從參數產出 Markdown 任務卡與 JSON skeleton / aggregate
 2. recipe 相容模式：若提供 `--recipe`，就直接委派給既有的 recipe compiler
+3. 若是 `docs/agent-briefs/tasks/HARN-*.md`，`agent-briefs` 模式預設會切到 `harn-rich`，直接產生與現有 HARN 卡相同的 rich brief 結構
 
 常用範例：
 
 ```bash
-node tools_node/task-card-opener.js --id BAT-1-0001 --title "BattleController 驗證補強" --owner Copilot --priority P1 --md-out docs/agent-briefs/tasks/BAT-1-0001.md --json-out docs/tasks/tasks-prog.json --write
+node tools_node/task-card-opener.js --id BAT-1-0001 --title "BattleController 驗證補強" --owner GitHubCopilot --priority P1 --md-out docs/agent-briefs/tasks/BAT-1-0001.md --json-out docs/tasks/tasks-prog.json --write
 node tools_node/task-card-opener.js --id UI-1-0001 --title "UI quality shard" --md-out docs/agent-briefs/tasks/UI-1-0001.md --json-out docs/ui-quality-tasks/UI-1-0001.json --json-kind ui-quality-task-shard --write
+node tools_node/task-card-opener.js --id HARN-ART-9001 --title "建立 Harness 範例" --md-kind agent-briefs --brief-summary "由 rollout 規劃開立" --brief-position "Phase X / Demo" --brief-prereq "`HARN-ART-0001` 已完成" --chain-id HARN-CHAIN-DEMO --chain-step 1/1 --sensor-triggered-by harness-rollout-planning --input-contract "artifact 已存在|schema baseline 已確認" --output-contract "新增 schema|補 fixture 說明" --validation-cmd "node tools_node/demo.js" --rollback-hint "git checkout tools_node/demo.js" --execution-steps "盤點現況|實作骨架|跑驗證" --artifact-paths "artifacts/demo.json" --validation-evidence "dry-run 結構符合 HARN" --handoff-diff-status pending --md-out docs/agent-briefs/tasks/HARN-ART-9001.md --assign-doc-id --write
 node tools_node/task-card-opener.js --recipe artifacts/ui-source/example/generated/example-screen.recipe.json --write --out artifacts/ui-source/example/generated/example-task-card.md --shard-out artifacts/ui-source/example/generated/example-task-shard.json
 ```
+
+## HARN rich brief 對齊規則
+
+當任務卡符合以下任一條件時，應優先使用 `harn-rich`：
+
+1. 卡號是 `HARN-*`
+2. 使用者明確要求對齊現有 HARN rich brief
+3. 需要 frontmatter 補齊 `chain_id / chain_step / sensor_triggered_by / started_*`
+4. 需要標準段落：`問題描述 / INPUT_CONTRACT / OUTPUT_CONTRACT / VALIDATION_CMD / ROLLBACK_HINT / 執行步驟`
+
+`harn-rich` 模式下可額外補：
+
+1. `--brief-label` / `--brief-summary` / `--brief-position` / `--brief-prereq`
+2. `--input-contract` / `--output-contract` / `--validation-cmd` / `--rollback-hint` / `--execution-steps`
+3. `--artifact-paths` / `--validation-evidence` / `--handoff-diff-status` / `--trace-artifacts` / `--metrics-summary`
+4. `--assign-doc-id`，在 write 模式下直接呼叫 `doc-id-registry.js` 分配正式 `doc_id`
 
 ## 決策流程
 
@@ -87,6 +105,25 @@ node tools_node/task-card-opener.js --recipe artifacts/ui-source/example/generat
 9. `related / depends`
 10. `notes`
 
+若是 `harn-rich`，另外至少確認：
+
+1. `chain_id`
+2. `chain_step`
+3. `sensor_triggered_by`
+4. `input_contract`
+5. `output_contract`
+6. `validation_cmd`
+7. `rollback_hint`
+8. `execution_steps`
+
+若這張卡已進入 Harness rollout 後期證據鏈，建議再補：
+
+1. artifact path
+2. validation evidence
+3. handoff diff status
+4. trace artifact / summary
+5. metrics summary
+
 `notes` 建議格式固定為：
 
 ```text
@@ -99,6 +136,7 @@ YYYY-MM-DD | 狀態: open/in-progress/blocked/done | 驗證: pending/... | 變�
 2. 如果需要 Markdown 卡：
    - `docs/agent-briefs/tasks/*.md`：遵守 `doc_ai_0023` 的任務卡流程與鎖卡欄位
    - `docs/tasks/*_task.md`：作為人類可讀補充，但不得脫離 shard 真相
+   - 若是 `HARN-*` 或需要 Harness frontmatter / evidence 欄位，應顯式確認 `brief-style=harn-rich`（`HARN-*` 預設已自動套用）
 3. UI 任務若有 `docs/ui-quality-tasks/*.json` shard，也要同步更新。
 4. UI shard 更新後，執行：
 
@@ -113,6 +151,7 @@ node tools_node/build-ui-task-manifest.js
 1. 設為 `in-progress`
 2. 補 `started_at` / `started_by_agent`
 3. notes 第一筆寫明誰開始做、改什麼、驗證是否 pending
+4. 若是 `harn-rich`，同步補 `chain_id / chain_step / sensor_triggered_by`
 
 ### Step 5: 收工與交接
 
@@ -140,3 +179,4 @@ node tools_node/build-ui-task-manifest.js
 3. 若有 task JSON，已依協作規則 lock / update / unlock
 4. 若有 UI shard，已執行 `node tools_node/build-ui-task-manifest.js`
 5. touched 文字檔已跑 encoding guard
+6. 若有新 Markdown 卡且尚未拿到正式 `doc_id`，已用 `--assign-doc-id` 或後續補跑 `node tools_node/doc-id-registry.js --assign <path>`
