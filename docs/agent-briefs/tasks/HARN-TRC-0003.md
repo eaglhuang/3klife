@@ -6,14 +6,18 @@ phase: Phase2
 created: 2026-05-04
 created_by_agent: GitHubCopilot
 owner: GitHubCopilot
-status: open
+status: done
 type: trace-collector
 chain_id: HARN-CHAIN-TRACE
 chain_step: 3/4
 sensor_triggered_by: harness-rollout planning
 depends:
   - HARN-TRC-0002
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建立 Trace Collector 任務卡 | 阻塞: depends HARN-TRC-0002"
+started_at: "2026-05-04T23:03:00+08:00"
+started_by_agent: "GitHubCopilot"
+completed_at: "2026-05-04T23:05:56+08:00"
+completed_by_agent: "GitHubCopilot"
+notes: "2026-05-04 | 狀態: done | 驗證: pass | 變更: 新增 collect-execution-trace.js，可讀 JSONL event、用 schema 驗證並輸出 execution-trace/v1 artifact；補 smoke fixture 與 artifact shape assertion | 阻塞: none"
 ---
 
 # [HARN-TRC-0003] 建立 Execution Trace Collector
@@ -36,11 +40,31 @@ middleware 只會累積原始事件流。若沒有 collector，之後的 path ta
 
 ## OUTPUT_CONTRACT
 
-- [ ] 新增 `tools_node/collect-execution-trace.js`
-- [ ] 讀取 JSONL event 並輸出聚合 trace artifact
-- [ ] artifact 至少包含 `events`、`summary`、`toolCount`、`errorCount`、`totalDurationMs`
-- [ ] 提供 fail/warn 訊號：空 trace、schema mismatch、破損事件
-- [ ] 產物格式需可被後續 `HARN-EVAL-*` 與 `HARN-MET-*` 共用
+- [x] 新增 `tools_node/collect-execution-trace.js`
+- [x] 讀取 JSONL event 並輸出聚合 trace artifact
+- [x] artifact 至少包含 `events`、`summary`、`toolCount`、`errorCount`、`totalDurationMs`
+- [x] 提供 fail/warn 訊號：空 trace、schema mismatch、破損事件
+- [x] 產物格式需可被後續 `HARN-EVAL-*` 與 `HARN-MET-*` 共用
+
+## 實作結果（2026-05-04）
+
+- 新增 `tools_node/collect-execution-trace.js`。
+- 新增 `tests/fixtures/harness/execution-trace-smoke.jsonl` 作為最小 trace smoke sample。
+- collector 逐行讀取 JSONL，套用 `tools_node/schemas/execution-trace-event.schema.json` 驗證事件。
+- 輸出 `execution-trace/v1` artifact，頂層包含 `eventCount`、`toolCount`、`errorCount`、`totalDurationMs`，並保留 `summary` 與精簡後的 `events`。
+- event 內只保存 stdout/stderr 的 bytes / lines / truncated，不內嵌原始文字，避免 artifact 膨脹。
+- strict 模式會在空 trace、schema mismatch 或 broken JSONL line 時以非 0 結束。
+
+## 驗證結果（2026-05-04）
+
+```bash
+node tools_node/collect-execution-trace.js --input tests/fixtures/harness/execution-trace-smoke.jsonl --output scratch/trace-smoke.summary.json --strict
+node -e "... assert scratch/trace-smoke.summary.json eventCount/toolCount/errorCount/totalDurationMs and no stdout text ..."
+node tools_node/compute-gate.js --profile quick --agent-feedback --no-stop
+node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/HARN-TRC-0003.md tools_node/collect-execution-trace.js tests/fixtures/harness/execution-trace-smoke.jsonl
+```
+
+結果：pass。
 
 ## VALIDATION_CMD
 
@@ -71,3 +95,9 @@ git checkout scratch/trace-smoke.*
 - 審核結論：未達成（依賴未滿）
 - 驗證證據：TRC-0002 尚未交付；未見 trace collector。
 - 需修改：建立 collector 與 summary output。
+
+## 完成覆核（2026-05-04）
+
+- 覆核結論：已達成。
+- 驗證證據：collector strict smoke pass；artifact shape assertion pass；quick compute gate pass；encoding touched pass。
+- 後續銜接：`HARN-TRC-0004` 可將 collector 輸出的 summary/path 接入 finalize。
