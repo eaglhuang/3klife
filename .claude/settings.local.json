@@ -66,7 +66,9 @@
       "Bash(C:/Users/User/AppData/Local/Programs/Python/Python313/python.exe -m pip install \"rembg[gpu]\" -q)",
       "Bash(C:/Users/User/AppData/Local/Programs/Python/Python313/python.exe tools_node/portrait-gen/portrait-intake.py \"C:/Users/User/Downloads/Male_warrior_Shu_202604260105_pixian_ai.png\" liu-bei)",
       "Bash(C:/Users/User/AppData/Local/Programs/Python/Python313/python.exe tools_node/portrait-gen/portrait-intake.py \"C:/Users/User/Downloads/Sun_Quan_Wu_202604260121_pixian_ai.png\" sun-quan)",
-      "Bash(grep -v \"in comment\\\\|//\")"
+      "Bash(grep -v \"in comment\\\\|//\")",
+      "Bash(rm -f .git/index.lock)",
+      "Bash(git add *)"
     ]
   }
 }
