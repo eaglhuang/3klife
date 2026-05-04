@@ -210,7 +210,14 @@
       "VIRT_CAO_CAO_12",
       "VIRT_CAO_CAO_13",
       "VIRT_CAO_CAO_14"
-    ]
+    ],
+    "originRegion": "沛郡",
+    "coreFactorTag": "military-commander",
+    "element": "metal",
+    "initialRole": "commander",
+    "introLine": "治世之能臣，亂世之梟雄。",
+    "portraitKey": "portraits/generals/cao-cao",
+    "battleVoiceKey": "audio/voice/generals/cao-cao/battle"
   },
   {
     "id": "liu-bei",
@@ -386,7 +393,14 @@
       "VIRT_LIU_BEI_12",
       "VIRT_LIU_BEI_13",
       "VIRT_LIU_BEI_14"
-    ]
+    ],
+    "originRegion": "涿郡",
+    "coreFactorTag": "righteousness",
+    "element": "wood",
+    "initialRole": "vanguard",
+    "introLine": "仁德服人，以義立業。",
+    "portraitKey": "portraits/generals/liu-bei",
+    "battleVoiceKey": "audio/voice/generals/liu-bei/battle"
   },
   {
     "id": "sun-quan",
@@ -562,7 +576,14 @@
       "VIRT_SUN_QUAN_12",
       "VIRT_SUN_QUAN_13",
       "VIRT_SUN_QUAN_14"
-    ]
+    ],
+    "originRegion": "吳郡",
+    "coreFactorTag": "governance",
+    "element": "water",
+    "initialRole": "strategist",
+    "introLine": "坐鎮江東，以謀固本。",
+    "portraitKey": "portraits/generals/sun-quan",
+    "battleVoiceKey": "audio/voice/generals/sun-quan/battle"
   },
   {
     "id": "zhuge-liang",
@@ -738,7 +759,14 @@
       "VIRT_ZHUGE_LIANG_12",
       "VIRT_ZHUGE_LIANG_13",
       "VIRT_ZHUGE_LIANG_14"
-    ]
+    ],
+    "originRegion": "琅邪",
+    "coreFactorTag": "strategy",
+    "element": "earth",
+    "initialRole": "strategist",
+    "introLine": "鞠躬盡瘁，死而後已。",
+    "portraitKey": "portraits/generals/zhuge-liang",
+    "battleVoiceKey": "audio/voice/generals/zhuge-liang/battle"
   },
   {
     "id": "zhou-yu",
@@ -914,7 +942,14 @@
       "VIRT_ZHOU_YU_12",
       "VIRT_ZHOU_YU_13",
       "VIRT_ZHOU_YU_14"
-    ]
+    ],
+    "originRegion": "廬江",
+    "coreFactorTag": "naval-commander",
+    "element": "fire",
+    "initialRole": "commander",
+    "introLine": "英姿勃發，年少有為。",
+    "portraitKey": "portraits/generals/zhou-yu",
+    "battleVoiceKey": "audio/voice/generals/zhou-yu/battle"
   },
   {
     "id": "guan-yu",
@@ -1127,7 +1162,14 @@
       "VIRT_GUAN_YU_12",
       "VIRT_GUAN_YU_13",
       "VIRT_GUAN_YU_14"
-    ]
+    ],
+    "originRegion": "河東",
+    "coreFactorTag": "valor",
+    "element": "fire",
+    "initialRole": "vanguard",
+    "introLine": "忠義千秋，萬世仰德。",
+    "portraitKey": "portraits/generals/guan-yu",
+    "battleVoiceKey": "audio/voice/generals/guan-yu/battle"
   },
   {
     "id": "zhang-fei",

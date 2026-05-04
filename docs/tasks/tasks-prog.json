@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 7,
+    "done": 8,
     "in_progress": 1,
     "open": 23,
-    "total": 31
+    "total": 32
   },
   "tasks": [
     {
@@ -35,9 +35,13 @@
       "priority": "P0",
       "phase": "P",
       "owner": "Agent1",
-      "status": "open",
+      "status": "done",
       "created": "2026-04-06",
       "created_by_agent": "Agent1",
+      "started_at": "2026-05-04T15:45:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "completed_at": "2026-05-04T16:10:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-sonnet-4-6",
       "type": "data-structure",
       "title": "HeroBase 介面 + 6 位初始武將資料落地",
       "description": "在 GeneralUnit.ts 或新建 HeroBase.ts 定義 HeroBase 介面（id, name, title, originRegion, coreFactorTag, rarity, element, initialRole, introLine, portraitKey, battleVoiceKey）；補齊 generals.json 6 位初始武將的全部對應欄位。",
@@ -53,10 +57,11 @@
         "node tools_node/validate-generals-data.js 零 error（若腳本已存在）"
       ],
       "deliverables": [
-        "assets/scripts/core/models/HeroBase.ts（或 GeneralUnit.ts 擴充）",
+        "assets/scripts/core/models/HeroBase.ts",
+        "assets/scripts/core/models/GeneralUnit.ts（新增 originRegion/coreFactorTag/element/initialRole/introLine/portraitKey/battleVoiceKey）",
         "assets/resources/data/generals.json（6 位初始武將完整欄位）"
       ],
-      "notes": "2026-04-06 | 狀態: open | 來源: 程式規格書.md §3.1 | 阻塞: 無"
+      "notes": "2026-05-04 | 狀態: done | 驗證: validate-generals-data.js errors=0; compute-gate standard 6/6 pass | 變更: 新建 HeroBase.ts 介面; GeneralConfig 新增 7 個 HeroBase 欄位並匯入 HeroRarity/HeroElement/HeroInitialRole; generals.json 前 6 位武將補齊 originRegion/coreFactorTag/element/initialRole/introLine/portraitKey/battleVoiceKey | 阻塞: 無"
     },
     {
       "id": "PROG-1-0002",
@@ -1023,6 +1028,69 @@
         "docs/html_skill_plan5.md skill-governance checklist"
       ],
       "notes": "2026-05-04 | 狀態: done | 驗證: active-contract/fidelity-contract/rule-guard strict/compute-gate standard 全數通過 | 變更: GitHubCopilot 完成 HTML-to-UCUF 規則治理重構，落地 rule-registry.json + rule-checkers.js + registry-driven rule-guard | 阻塞: none"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-0009",
+      "title": "HTML-to-UCUF final diff owner mapper and residual taxonomy hardening",
+      "owner": "GitHubCopilot",
+      "priority": "P1",
+      "status": "open",
+      "type": "qa-tooling",
+      "phase": "Plan5",
+      "created": "2026-05-04",
+      "created_by_agent": "GitHubCopilot",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把 HTML source vs Cocos final gate 的 top residual 區塊對回 source DOM selector、UCUF node/slot 與 runtime owner，並擴充 zone ownership / nextFixes taxonomy，避免所有熱區都被歸成 converter-geometry。",
+      "related": [
+        "PROG-2-0003",
+        "PROG-2-0005",
+        "PROG-2-0006",
+        "UI-2-0023"
+      ],
+      "depends": [
+        "PROG-2-0003",
+        "PROG-2-0005",
+        "PROG-2-0006"
+      ],
+      "acceptance": [
+        "top residual zones 會輸出 source DOM selector / UCUF node/slot / runtime owner 對應",
+        "zone ownership taxonomy 不再把主要熱區一律落成 converter-geometry",
+        "nextFixes 會帶 owner bucket 與建議修補 slice",
+        "gacha-ds3 與至少一個額外 fixture 產出 compact residual summary"
+      ],
+      "deliverables": [
+        "tools_node/compare-html-to-cocos-editor.js",
+        "tools_node/lib/dom-to-ui/final-gate-diagnostics.js（若需要新檔）",
+        "artifacts/skill-test-html-to-ucuf/* residual summary schema",
+        "docs/html_skill_plan5.md checklist / diagnosis contract 更新"
+      ],
+      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: 由 Plan5 差異分析正式拆出 final diff owner mapper 與 residual taxonomy hardening 工作 | 阻塞: depends PROG-2-0003,PROG-2-0005,PROG-2-0006",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }

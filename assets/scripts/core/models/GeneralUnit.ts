@@ -41,6 +41,7 @@ export interface GeneralBloodlineProfileConfig {
 }
 // @spec-source → 見 docs/cross-reference-index.md
 import { Faction, TerrainType } from "../config/Constants";
+import type { HeroRarity, HeroElement, HeroInitialRole } from './HeroBase';
 
 /**
  * 武將資料模型 — 純資料，不依賴 Cocos 節點。
@@ -252,6 +253,20 @@ export interface GeneralConfig {
 
   templateId?: string;
   title?: string;
+  /** 出身地域（史實郡縣），對應 HeroBase.originRegion */
+  originRegion?: string;
+  /** 核心特質標籤，對應 HeroBase.coreFactorTag */
+  coreFactorTag?: string;
+  /** 五行屬性，對應 HeroBase.element */
+  element?: HeroElement;
+  /** 初始上場定位，對應 HeroBase.initialRole */
+  initialRole?: HeroInitialRole;
+  /** 角色自我介紹短句，對應 HeroBase.introLine */
+  introLine?: string;
+  /** 立繪資源路徑，對應 HeroBase.portraitKey */
+  portraitKey?: string;
+  /** 戰鬥語音資源路徑，對應 HeroBase.battleVoiceKey */
+  battleVoiceKey?: string;
   gender?: string;
   age?: number;
   vitality?: number;
@@ -275,6 +290,7 @@ export interface GeneralConfig {
   bloodlineRumor?: string;
   crestHint?: string;
   crestState?: GeneralDetailCrestState;
+  /** 稀有度，與 HeroBase.rarity / HeroRarity 對齊 */
   rarityTier?: GeneralDetailRarityTier;
   rarityLabel?: string;
   /** 角色分類：civilian 民間 / general 一般武將 / famed 名將 / mythical 神話 / titled 稱號特殊 */
