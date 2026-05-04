@@ -1,0 +1,99 @@
+{
+  "name": "fail-merge-conflict",
+  "description": "merge conflict 屬 blocking issue，應直接分類為 fail",
+  "smokeArgs": [
+    "--strict"
+  ],
+  "artifact": {
+    "schemaVersion": "turn-artifact/v1",
+    "kind": "turn-artifact",
+    "generatedAt": "2026-05-04T21:18:00+08:00",
+    "workflow": "harness-upgrade",
+    "task": "HARN-HDO-0002-fail-merge-conflict",
+    "goal": "fixture fail merge conflict",
+    "source": {
+      "changed": true,
+      "explicitFiles": [
+        "conflict.txt"
+      ],
+      "maxFiles": 1
+    },
+    "totals": {
+      "files": 1,
+      "textFiles": 1,
+      "imageFiles": 0,
+      "otherFiles": 0,
+      "totalBytes": 9,
+      "estTokens": 4
+    },
+    "files": [
+      {
+        "path": "conflict.txt",
+        "kind": "text",
+        "bytes": 9,
+        "estTokens": 4,
+        "inlineSafe": true,
+        "summary": "merge conflict"
+      }
+    ],
+    "summaryCard": {
+      "workflow": "harness-upgrade",
+      "task": "HARN-HDO-0002-fail-merge-conflict",
+      "goal": "fixture fail merge conflict",
+      "read": [
+        "conflict.txt"
+      ],
+      "known": [
+        "merge conflict"
+      ],
+      "need": [
+        "resolve conflict"
+      ],
+      "avoid": [
+        "none"
+      ]
+    },
+    "riskHints": [
+      "merge conflict blocks handoff"
+    ],
+    "nextActions": [
+      "resolve conflict"
+    ]
+  },
+  "gitChangedFiles": [
+    {
+      "path": "conflict.txt",
+      "rawStatus": "UU"
+    }
+  ],
+  "expected": {
+    "status": "fail",
+    "summary": {
+      "artifactFiles": 1,
+      "gitChangedFiles": 1,
+      "matched": 1,
+      "missingInArtifact": 0,
+      "extraInArtifact": 0,
+      "dirtyButUnreported": 0,
+      "mergeConflicts": 1
+    },
+    "mismatch": {
+      "missingInArtifact": [],
+      "extraInArtifact": [],
+      "dirtyButUnreported": [],
+      "mergeConflicts": [
+        {
+          "path": "conflict.txt",
+          "rawStatus": "UU",
+          "states": [
+            "staged",
+            "unmerged",
+            "unstaged"
+          ]
+        }
+      ]
+    },
+    "strictExitCode": 1,
+    "nonStrictExitCode": 0
+  }
+}

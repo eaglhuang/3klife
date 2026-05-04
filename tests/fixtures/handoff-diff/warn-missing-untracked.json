@@ -1,0 +1,102 @@
+{
+  "name": "warn-missing-untracked",
+  "description": "artifact 少報 untracked 檔案，應回傳 warn",
+  "smokeArgs": [],
+  "artifact": {
+    "schemaVersion": "turn-artifact/v1",
+    "kind": "turn-artifact",
+    "generatedAt": "2026-05-04T21:18:00+08:00",
+    "workflow": "harness-upgrade",
+    "task": "HARN-HDO-0002-warn-missing-untracked",
+    "goal": "fixture warn missing untracked",
+    "source": {
+      "changed": true,
+      "explicitFiles": [
+        "alpha.txt"
+      ],
+      "maxFiles": 1
+    },
+    "totals": {
+      "files": 1,
+      "textFiles": 1,
+      "imageFiles": 0,
+      "otherFiles": 0,
+      "totalBytes": 6,
+      "estTokens": 3
+    },
+    "files": [
+      {
+        "path": "alpha.txt",
+        "kind": "text",
+        "bytes": 6,
+        "estTokens": 3,
+        "inlineSafe": true,
+        "summary": "alpha modified"
+      }
+    ],
+    "summaryCard": {
+      "workflow": "harness-upgrade",
+      "task": "HARN-HDO-0002-warn-missing-untracked",
+      "goal": "fixture warn missing untracked",
+      "read": [
+        "alpha.txt"
+      ],
+      "known": [
+        "alpha modified"
+      ],
+      "need": [
+        "beta untracked"
+      ],
+      "avoid": [
+        "none"
+      ]
+    },
+    "riskHints": [
+      "none"
+    ],
+    "nextActions": [
+      "none"
+    ]
+  },
+  "gitChangedFiles": [
+    {
+      "path": "alpha.txt",
+      "rawStatus": " M"
+    },
+    {
+      "path": "beta.txt",
+      "rawStatus": "??"
+    }
+  ],
+  "expected": {
+    "status": "warn",
+    "summary": {
+      "artifactFiles": 1,
+      "gitChangedFiles": 2,
+      "matched": 1,
+      "missingInArtifact": 1,
+      "extraInArtifact": 0,
+      "dirtyButUnreported": 1,
+      "mergeConflicts": 0
+    },
+    "mismatch": {
+      "missingInArtifact": [
+        "beta.txt"
+      ],
+      "extraInArtifact": [],
+      "dirtyButUnreported": [
+        {
+          "path": "beta.txt",
+          "rawStatus": "??",
+          "states": [
+            "added",
+            "untracked"
+          ]
+        }
+      ],
+      "mergeConflicts": []
+    },
+    "strictExitCode": 1,
+    "nonStrictExitCode": 0
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "name": "warn-extra-file",
+  "description": "artifact 多報 ghost.txt，應維持 warn 而非 fail",
+  "smokeArgs": [],
+  "artifact": {
+    "schemaVersion": "turn-artifact/v1",
+    "kind": "turn-artifact",
+    "generatedAt": "2026-05-04T21:18:00+08:00",
+    "workflow": "harness-upgrade",
+    "task": "HARN-HDO-0002-warn-extra-file",
+    "goal": "fixture warn extra file",
+    "source": {
+      "changed": true,
+      "explicitFiles": [
+        "alpha.txt",
+        "ghost.txt"
+      ],
+      "maxFiles": 2
+    },
+    "totals": {
+      "files": 2,
+      "textFiles": 2,
+      "imageFiles": 0,
+      "otherFiles": 0,
+      "totalBytes": 10,
+      "estTokens": 5
+    },
+    "files": [
+      {
+        "path": "alpha.txt",
+        "kind": "text",
+        "bytes": 6,
+        "estTokens": 3,
+        "inlineSafe": true,
+        "summary": "alpha modified"
+      },
+      {
+        "path": "ghost.txt",
+        "kind": "text",
+        "bytes": 4,
+        "estTokens": 2,
+        "inlineSafe": true,
+        "summary": "ghost extra"
+      }
+    ],
+    "summaryCard": {
+      "workflow": "harness-upgrade",
+      "task": "HARN-HDO-0002-warn-extra-file",
+      "goal": "fixture warn extra file",
+      "read": [
+        "alpha.txt",
+        "ghost.txt"
+      ],
+      "known": [
+        "alpha modified"
+      ],
+      "need": [
+        "ghost extra"
+      ],
+      "avoid": [
+        "none"
+      ]
+    },
+    "riskHints": [
+      "none"
+    ],
+    "nextActions": [
+      "none"
+    ]
+  },
+  "gitChangedFiles": [
+    {
+      "path": "alpha.txt",
+      "rawStatus": " M"
+    },
+    {
+      "path": "beta.txt",
+      "rawStatus": "??"
+    }
+  ],
+  "expected": {
+    "status": "warn",
+    "summary": {
+      "artifactFiles": 2,
+      "gitChangedFiles": 2,
+      "matched": 1,
+      "missingInArtifact": 1,
+      "extraInArtifact": 1,
+      "dirtyButUnreported": 1,
+      "mergeConflicts": 0
+    },
+    "mismatch": {
+      "missingInArtifact": [
+        "beta.txt"
+      ],
+      "extraInArtifact": [
+        "ghost.txt"
+      ],
+      "dirtyButUnreported": [
+        {
+          "path": "beta.txt",
+          "rawStatus": "??",
+          "states": [
+            "added",
+            "untracked"
+          ]
+        }
+      ],
+      "mergeConflicts": []
+    },
+    "strictExitCode": 1,
+    "nonStrictExitCode": 0
+  }
+}

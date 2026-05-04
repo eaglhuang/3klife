@@ -11,11 +11,12 @@ const PROJECT_ROOT = config.ROOT;
 const ARTIFACT_VALIDATOR_PATH = path.join(PROJECT_ROOT, 'tools_node', 'validate-turn-artifact.js');
 
 function printHelp() {
-  console.log('Usage: node tools_node/validate-handoff-diff.js --artifact <path> [--repository <path>] [--strict]');
+  console.log('Usage: node tools_node/validate-handoff-diff.js (--artifact <path> [--repository <path>] | --fixture <path>) [--strict]');
   console.log('');
   console.log('Options:');
   console.log('  --artifact <path>     Path to the turn artifact JSON file (required)');
   console.log('  --repository <path>   Path to the git repository to compare against (default: .)');
+  console.log('  --fixture <path>      Path to a handoff diff fixture JSON file');
   console.log('  --strict              Exit with code 1 when handoff diff has mismatch');
   console.log('  --help, -h            Show this help message');
 }
@@ -24,6 +25,7 @@ function parseArgs(argv) {
   const parsed = {
     artifact: '',
     repository: '.',
+    fixture: '',
     strict: false,
     help: false,
   };
@@ -37,6 +39,11 @@ function parseArgs(argv) {
     }
     if (token === '--repository') {
       parsed.repository = argv[index + 1] || '.';
+      index += 1;
+      continue;
+    }
+    if (token === '--fixture') {
+      parsed.fixture = argv[index + 1] || '';
       index += 1;
       continue;
     }
@@ -56,6 +63,14 @@ function parseArgs(argv) {
 
 function toPosixPath(filePath) {
   return String(filePath || '').replace(/\\/g, '/');
+}
+
+function uniqueStrings(values) {
+  return [...new Set((values || []).map((entry) => String(entry)))];
+}
+
+function normalizeRawStatus(code) {
+  return String(code || '??').padEnd(2, ' ').slice(0, 2);
 }
 
 function resolveProjectPath(inputPath) {
@@ -124,13 +139,14 @@ function runArtifactValidator(artifactPath) {
 }
 
 function buildStates(code) {
-  if (code === '??') {
+  const normalizedCode = normalizeRawStatus(code);
+  if (normalizedCode === '??') {
     return ['untracked', 'added'];
   }
 
   const states = [];
-  const indexStatus = code[0] || ' ';
-  const worktreeStatus = code[1] || ' ';
+  const indexStatus = normalizedCode[0] || ' ';
+  const worktreeStatus = normalizedCode[1] || ' ';
 
   if (indexStatus !== ' ') {
     states.push('staged');
@@ -165,7 +181,7 @@ function parseGitStatusLine(line) {
     return null;
   }
 
-  const rawStatus = line.slice(0, 2);
+  const rawStatus = normalizeRawStatus(line.slice(0, 2));
   if (rawStatus === '!!') {
     return null;
   }
@@ -188,6 +204,26 @@ function parseGitStatusLine(line) {
     previousPath: previousPath ? toPosixPath(previousPath) : null,
     rawStatus,
     states: buildStates(rawStatus),
+  };
+}
+
+function normalizeMockGitEntry(entry, index) {
+  if (!entry || typeof entry !== 'object') {
+    throw new Error(`fixture.gitChangedFiles[${index}] 必須是物件`);
+  }
+  if (typeof entry.path !== 'string' || entry.path.trim().length === 0) {
+    throw new Error(`fixture.gitChangedFiles[${index}].path 必須是非空字串`);
+  }
+  const rawStatus = normalizeRawStatus(entry.rawStatus || '??');
+  return {
+    path: toPosixPath(entry.path.trim()),
+    previousPath: typeof entry.previousPath === 'string' && entry.previousPath.trim().length > 0
+      ? toPosixPath(entry.previousPath.trim())
+      : null,
+    rawStatus,
+    states: Array.isArray(entry.states) && entry.states.length > 0
+      ? uniqueStrings(entry.states)
+      : buildStates(rawStatus),
   };
 }
 
@@ -233,6 +269,14 @@ function compareArtifactToRepo(artifact, gitEntries) {
       rawStatus: entry.rawStatus,
       states: entry.states,
     }));
+  const mergeConflicts = gitEntries
+    .filter((entry) => entry.states.includes('unmerged'))
+    .sort((left, right) => left.path.localeCompare(right.path))
+    .map((entry) => ({
+      path: entry.path,
+      rawStatus: entry.rawStatus,
+      states: entry.states,
+    }));
   const matched = sortStrings(
     artifactPaths.filter((entry) => gitMap.has(entry))
   );
@@ -243,6 +287,7 @@ function compareArtifactToRepo(artifact, gitEntries) {
     missingInArtifact,
     extraInArtifact,
     dirtyButUnreported,
+    mergeConflicts,
     matched,
   };
 }
@@ -250,8 +295,9 @@ function compareArtifactToRepo(artifact, gitEntries) {
 function buildResult(args, artifactPath, repositoryRoot, comparison) {
   const mismatchCount = comparison.missingInArtifact.length + comparison.extraInArtifact.length;
   const hasMismatch = mismatchCount > 0;
+  const hasMergeConflict = comparison.mergeConflicts.length > 0;
   let status = 'pass';
-  if (hasMismatch && args.strict) {
+  if (hasMergeConflict) {
     status = 'fail';
   } else if (hasMismatch) {
     status = 'warn';
@@ -268,12 +314,102 @@ function buildResult(args, artifactPath, repositoryRoot, comparison) {
       missingInArtifact: comparison.missingInArtifact.length,
       extraInArtifact: comparison.extraInArtifact.length,
       dirtyButUnreported: comparison.dirtyButUnreported.length,
+      mergeConflicts: comparison.mergeConflicts.length,
     },
     mismatch: {
       missingInArtifact: comparison.missingInArtifact,
       extraInArtifact: comparison.extraInArtifact,
       dirtyButUnreported: comparison.dirtyButUnreported,
+      mergeConflicts: comparison.mergeConflicts,
     },
+  };
+}
+
+function computeExitCode(result, strict) {
+  return strict && result.status !== 'pass' ? 1 : 0;
+}
+
+function normalizeEntryList(entries) {
+  return (entries || []).map((entry) => ({
+    path: entry.path,
+    rawStatus: entry.rawStatus,
+    states: sortStrings(entry.states || []),
+  })).sort((left, right) => {
+    const pathCompare = left.path.localeCompare(right.path);
+    if (pathCompare !== 0) return pathCompare;
+    return (left.rawStatus || '').localeCompare(right.rawStatus || '');
+  });
+}
+
+function compareArrays(actual, expected) {
+  return JSON.stringify(actual) === JSON.stringify(expected);
+}
+
+function assertExpectedResult(fixture, result, strict) {
+  const failures = [];
+  const expected = fixture.expected || {};
+  if (expected.status && expected.status !== result.status) {
+    failures.push(`expected.status=${expected.status}，實際為 ${result.status}`);
+  }
+
+  const expectedSummary = expected.summary || {};
+  Object.entries(expectedSummary).forEach(([key, value]) => {
+    if (result.summary[key] !== value) {
+      failures.push(`expected.summary.${key}=${value}，實際為 ${result.summary[key]}`);
+    }
+  });
+
+  const expectedMismatch = expected.mismatch || {};
+  if (Array.isArray(expectedMismatch.missingInArtifact)
+    && !compareArrays(result.mismatch.missingInArtifact, sortStrings(expectedMismatch.missingInArtifact))) {
+    failures.push('expected.mismatch.missingInArtifact 與實際不一致');
+  }
+  if (Array.isArray(expectedMismatch.extraInArtifact)
+    && !compareArrays(result.mismatch.extraInArtifact, sortStrings(expectedMismatch.extraInArtifact))) {
+    failures.push('expected.mismatch.extraInArtifact 與實際不一致');
+  }
+  if (Array.isArray(expectedMismatch.dirtyButUnreported)
+    && !compareArrays(normalizeEntryList(result.mismatch.dirtyButUnreported), normalizeEntryList(expectedMismatch.dirtyButUnreported))) {
+    failures.push('expected.mismatch.dirtyButUnreported 與實際不一致');
+  }
+  if (Array.isArray(expectedMismatch.mergeConflicts)
+    && !compareArrays(normalizeEntryList(result.mismatch.mergeConflicts), normalizeEntryList(expectedMismatch.mergeConflicts))) {
+    failures.push('expected.mismatch.mergeConflicts 與實際不一致');
+  }
+
+  const expectedExitCode = strict ? expected.strictExitCode : expected.nonStrictExitCode;
+  if (Number.isInteger(expectedExitCode)) {
+    const actualExitCode = computeExitCode(result, strict);
+    if (expectedExitCode !== actualExitCode) {
+      failures.push(`expected.${strict ? 'strictExitCode' : 'nonStrictExitCode'}=${expectedExitCode}，實際為 ${actualExitCode}`);
+    }
+  }
+
+  return failures;
+}
+
+function loadFixtureOrThrow(fixturePath) {
+  const fixture = readJsonOrThrow(fixturePath, 'fixture');
+  if (!fixture || typeof fixture !== 'object' || Array.isArray(fixture)) {
+    throw new Error('fixture 內容必須是物件');
+  }
+
+  let artifact = fixture.artifact;
+  if (!artifact && typeof fixture.artifactFile === 'string' && fixture.artifactFile.trim().length > 0) {
+    artifact = readJsonOrThrow(path.resolve(path.dirname(fixturePath), fixture.artifactFile.trim()), 'fixture.artifactFile');
+  }
+  if (!artifact || typeof artifact !== 'object' || Array.isArray(artifact)) {
+    throw new Error('fixture 必須提供 artifact 物件或 artifactFile');
+  }
+
+  const gitChangedFiles = Array.isArray(fixture.gitChangedFiles)
+    ? fixture.gitChangedFiles.map((entry, index) => normalizeMockGitEntry(entry, index))
+    : [];
+
+  return {
+    fixture,
+    artifact,
+    gitChangedFiles,
   };
 }
 
@@ -299,11 +435,22 @@ function printDirtyList(entries) {
   });
 }
 
+function printMergeConflicts(entries) {
+  if (!entries.length) {
+    return;
+  }
+
+  console.log(`  mergeConflicts (${entries.length})`);
+  entries.forEach((entry) => {
+    console.log(`    - ${entry.path} [${entry.rawStatus.trim() || entry.rawStatus}] states=${entry.states.join(',')}`);
+  });
+}
+
 function printResult(result) {
   const icon = result.status === 'pass' ? '✔' : result.status === 'warn' ? '⚠' : '❌';
   console.log(`${icon} handoff-diff ${result.status}: artifact=${displayPath(result.artifactPath)} repo=${displayPath(result.repositoryRoot)}`);
   console.log(`  artifactFiles=${result.summary.artifactFiles} gitChangedFiles=${result.summary.gitChangedFiles} matched=${result.summary.matched}`);
-  console.log(`  missingInArtifact=${result.summary.missingInArtifact} extraInArtifact=${result.summary.extraInArtifact} dirtyButUnreported=${result.summary.dirtyButUnreported}`);
+  console.log(`  missingInArtifact=${result.summary.missingInArtifact} extraInArtifact=${result.summary.extraInArtifact} dirtyButUnreported=${result.summary.dirtyButUnreported} mergeConflicts=${result.summary.mergeConflicts}`);
 
   if (result.status === 'pass') {
     console.log('  no mismatch detected between artifact files[] and git changed files');
@@ -313,6 +460,39 @@ function printResult(result) {
   printPathList('missingInArtifact', result.mismatch.missingInArtifact);
   printPathList('extraInArtifact', result.mismatch.extraInArtifact);
   printDirtyList(result.mismatch.dirtyButUnreported);
+  printMergeConflicts(result.mismatch.mergeConflicts);
+}
+
+function runFixtureMode(args) {
+  const fixturePath = resolveProjectPath(args.fixture);
+  if (!fs.existsSync(fixturePath)) {
+    console.error(`[handoff-diff] 找不到 fixture：${displayPath(fixturePath)}`);
+    process.exit(1);
+  }
+
+  let loaded;
+  try {
+    loaded = loadFixtureOrThrow(fixturePath);
+  } catch (error) {
+    console.error(`[handoff-diff] ${error.message}`);
+    process.exit(1);
+  }
+
+  const comparison = compareArtifactToRepo(loaded.artifact, loaded.gitChangedFiles);
+  const result = buildResult(args, fixturePath, fixturePath, comparison);
+  printResult(result);
+
+  const failures = assertExpectedResult(loaded.fixture, result, args.strict);
+  if (failures.length > 0) {
+    console.error(`[handoff-diff] fixture expectation mismatch: ${displayPath(fixturePath)}`);
+    failures.forEach((message, index) => {
+      console.error(`  ${index + 1}. ${message}`);
+    });
+    process.exit(1);
+  }
+
+  const name = loaded.fixture.name || path.basename(fixturePath);
+  console.log(`✔ handoff-diff fixture matched expectation: ${name}`);
 }
 
 function main() {
@@ -330,10 +510,15 @@ function main() {
     return;
   }
 
-  if (!args.artifact) {
-    console.error('[handoff-diff] 缺少 --artifact <path>');
+  if ((args.artifact ? 1 : 0) + (args.fixture ? 1 : 0) !== 1) {
+    console.error('[handoff-diff] 必須且只能提供其中一種輸入：--artifact <path> 或 --fixture <path>');
     printHelp();
     process.exit(1);
+  }
+
+  if (args.fixture) {
+    runFixtureMode(args);
+    return;
   }
 
   const artifactPath = resolveProjectPath(args.artifact);
@@ -365,7 +550,7 @@ function main() {
   const result = buildResult(args, artifactPath, repositoryRoot, comparison);
   printResult(result);
 
-  if (result.status === 'fail') {
+  if (computeExitCode(result, args.strict) !== 0) {
     process.exit(1);
   }
 }

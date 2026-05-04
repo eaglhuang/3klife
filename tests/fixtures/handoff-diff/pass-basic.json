@@ -1,0 +1,103 @@
+{
+  "name": "pass-basic",
+  "description": "artifact 與 mock git status 完全一致，含 modified 與 untracked",
+  "smokeArgs": [
+    "--strict"
+  ],
+  "artifact": {
+    "schemaVersion": "turn-artifact/v1",
+    "kind": "turn-artifact",
+    "generatedAt": "2026-05-04T21:18:00+08:00",
+    "workflow": "harness-upgrade",
+    "task": "HARN-HDO-0002-pass-basic",
+    "goal": "fixture pass basic",
+    "source": {
+      "changed": true,
+      "explicitFiles": [
+        "alpha.txt",
+        "beta.txt"
+      ],
+      "maxFiles": 2
+    },
+    "totals": {
+      "files": 2,
+      "textFiles": 2,
+      "imageFiles": 0,
+      "otherFiles": 0,
+      "totalBytes": 10,
+      "estTokens": 5
+    },
+    "files": [
+      {
+        "path": "alpha.txt",
+        "kind": "text",
+        "bytes": 6,
+        "estTokens": 3,
+        "inlineSafe": true,
+        "summary": "alpha modified"
+      },
+      {
+        "path": "beta.txt",
+        "kind": "text",
+        "bytes": 4,
+        "estTokens": 2,
+        "inlineSafe": true,
+        "summary": "beta untracked"
+      }
+    ],
+    "summaryCard": {
+      "workflow": "harness-upgrade",
+      "task": "HARN-HDO-0002-pass-basic",
+      "goal": "fixture pass basic",
+      "read": [
+        "alpha.txt",
+        "beta.txt"
+      ],
+      "known": [
+        "alpha modified"
+      ],
+      "need": [
+        "beta untracked"
+      ],
+      "avoid": [
+        "none"
+      ]
+    },
+    "riskHints": [
+      "none"
+    ],
+    "nextActions": [
+      "none"
+    ]
+  },
+  "gitChangedFiles": [
+    {
+      "path": "alpha.txt",
+      "rawStatus": " M"
+    },
+    {
+      "path": "beta.txt",
+      "rawStatus": "??"
+    }
+  ],
+  "expected": {
+    "status": "pass",
+    "summary": {
+      "artifactFiles": 2,
+      "gitChangedFiles": 2,
+      "matched": 2,
+      "missingInArtifact": 0,
+      "extraInArtifact": 0,
+      "dirtyButUnreported": 0,
+      "mergeConflicts": 0
+    },
+    "mismatch": {
+      "missingInArtifact": [],
+      "extraInArtifact": [],
+      "dirtyButUnreported": [],
+      "mergeConflicts": []
+    },
+    "strictExitCode": 0,
+    "nonStrictExitCode": 0
+  }
+}
