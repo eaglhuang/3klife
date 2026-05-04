@@ -2605,6 +2605,65 @@ function runHtmlToUcufFidelityContractGroup() {
   assertRule(missingPlan5Diagnosis, 'H2U-P5-003');
   assertRule(missingPlan5Diagnosis, 'H2U-P5-004');
 
+  // Plan5 authority chain: spec-hash-tracking fixture must have specHashes with required keys
+  {
+    const authFixture = JSON.parse(fs.readFileSync(
+      path.join(REPO_ROOT, 'fixtures', 'authority-chain', 'spec-hash-tracking.input.json'), 'utf8'
+    ));
+    const sh = authFixture.workflowSummary && authFixture.workflowSummary.specHashes;
+    if (!sh || typeof sh !== 'object') {
+      fail('authority-chain fixture: specHashes missing from workflow summary');
+    }
+    for (const key of ['rawLayout', 'rawSkin', 'finalLayout', 'finalSkin', 'runtimeLayout', 'runtimeSkin']) {
+      if (!Object.prototype.hasOwnProperty.call(sh, key)) {
+        fail(`authority-chain fixture: specHashes missing key "${key}"`);
+      }
+    }
+    ok('Plan5 authority-chain fixture: specHashes covers raw/final/runtime keys');
+  }
+
+  // Plan5 R-P5-AUTH-01: source-authority-chain rule fires when runtimeAuthority is missing/wrong
+  withTempDir((tmp) => {
+    const uiRoot = path.join(tmp, 'assets', 'resources', 'ui-spec');
+    seedMinimalPlan4UiSpec(uiRoot);
+    // Override screen to have wrong runtimeAuthority
+    const screenPath = path.join(uiRoot, 'screens', 'plan4-test.json');
+    const screen = JSON.parse(fs.readFileSync(screenPath, 'utf8'));
+    screen.meta = { htmlToUcufPlan4: true, runtimeAuthority: 'debug-local-final-json' };
+    fs.writeFileSync(screenPath, JSON.stringify(screen, null, 2), 'utf8');
+    const p = runValidateUiSpecs(tmp, uiRoot, 'source-authority-chain');
+    if (isEnvironmentBlockedSpawn(p)) {
+      ok('Plan5 source-authority-chain rule: environment-blocked');
+      return;
+    }
+    const validatorOutput = `${p.stdout || ''}\n${p.stderr || ''}`;
+    if (!/source-authority-chain/.test(validatorOutput)) {
+      fail(`Plan5 source-authority-chain rule must fire for debug-local-final-json screens\nstdout=${p.stdout || ''}\nstderr=${p.stderr || ''}`);
+    }
+    ok('Plan5 R-P5-AUTH-01: source-authority-chain fires for debug-local screens');
+  });
+
+  // Plan5 R-P5-AUTH-02: local-tokens-present rule fires when local-tokens sidecar is missing
+  withTempDir((tmp) => {
+    const uiRoot = path.join(tmp, 'assets', 'resources', 'ui-spec');
+    seedMinimalPlan4UiSpec(uiRoot);
+    // Override screen to have synced authority but no local-tokens file
+    const screenPath = path.join(uiRoot, 'screens', 'plan4-test.json');
+    const screen = JSON.parse(fs.readFileSync(screenPath, 'utf8'));
+    screen.meta = { htmlToUcufPlan4: true, runtimeAuthority: 'synced-final-runtime-json' };
+    fs.writeFileSync(screenPath, JSON.stringify(screen, null, 2), 'utf8');
+    const p = runValidateUiSpecs(tmp, uiRoot, 'local-tokens-present');
+    if (isEnvironmentBlockedSpawn(p)) {
+      ok('Plan5 local-tokens-present rule: environment-blocked');
+      return;
+    }
+    const validatorOutput = `${p.stdout || ''}\n${p.stderr || ''}`;
+    if (!/local-tokens-present/.test(validatorOutput)) {
+      fail(`Plan5 local-tokens-present rule must fire when local-tokens sidecar is absent\nstdout=${p.stdout || ''}\nstderr=${p.stderr || ''}`);
+    }
+    ok('Plan5 R-P5-AUTH-02: local-tokens-present fires when sidecar is missing');
+  });
+
   const pass = runRuleGuard({
     repoRoot: REPO_ROOT,
     scanCore: false,

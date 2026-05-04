@@ -5,6 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
+const crypto = require('crypto');
 const { resolveSourcePackage, writeSourcePackageManifest, writeHtmlWithSourceCss } = require('./lib/html-to-ucuf/source-package');
 const { runRuleGuard } = require('./lib/html-to-ucuf/rule-guard');
 const {
@@ -151,6 +152,17 @@ function readJsonIfExists(filePath) {
 
 function writeJson(filePath, data) {
   fs.writeFileSync(path.resolve(filePath), `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+}
+
+function hashFileIfExists(filePath) {
+  if (!filePath) return null;
+  try {
+    const full = path.resolve(filePath);
+    if (!fs.existsSync(full)) return null;
+    return crypto.createHash('sha1').update(fs.readFileSync(full)).digest('hex').slice(0, 12);
+  } catch (_) {
+    return null;
+  }
 }
 
 function detectInputShape(html) {
@@ -451,6 +463,8 @@ function buildScreenLocalTokenPayload(screenId, suggestionFiles) {
     schemaVersion: '1.0.0',
     screenId,
     generatedAt: new Date().toISOString(),
+    // R-P5-AUTH-01: mark payload as source-derived so update-mode guards can detect and protect it
+    _sourceAuthority: 'html-to-ucuf',
     policy: {
       mode: 'replace-all-per-run',
       source: 'token-suggestions sidecars',
@@ -551,8 +565,17 @@ function regenerateScreenLocalTokens(paths, opts) {
   const diff = buildLocalTokenDiff(previous, payload);
   const skinTokenApply = applyScreenLocalColorTokensToSkin(paths.finalSkin, payload);
 
+  // R-P5-AUTH-02: update-mode guard — don't wipe source-derived tokens with an empty payload.
+  // If update-mode is active, the previous file had source authority, and the new payload has no
+  // tokens (e.g. suggestion sidecars missing this run), preserve the existing file.
+  const isUpdateModeWipe = opts && opts.updateMode
+    && previous && previous._sourceAuthority === 'html-to-ucuf'
+    && previous.stats && previous.stats.tokenCount > 0
+    && payload.stats.tokenCount === 0;
   ensureDir(path.dirname(runtimePaths.screenLocalTokenPath));
-  writeJson(runtimePaths.screenLocalTokenPath, payload);
+  if (!isUpdateModeWipe) {
+    writeJson(runtimePaths.screenLocalTokenPath, payload);
+  }
   writeJson(paths.localTokenDiffReport, {
     schemaVersion: '1.0.0',
     screenId: opts.screenId,
@@ -570,6 +593,7 @@ function regenerateScreenLocalTokens(paths, opts) {
     diffReportPath: rel(paths.localTokenDiffReport),
     unresolvedColorCount: payload.stats.unresolvedColorCount,
     tokenCount: payload.stats.tokenCount,
+    preservedByUpdateModeGuard: isUpdateModeWipe || false,
     skinTokenApply,
     diff,
   };
@@ -1311,6 +1335,21 @@ function buildSummary(args) {
     steps: args.steps,
     metrics: args.metrics,
     verdict: args.verdict,
+    // R-P5-AUTH-01: spec file integrity hashes for authority chain verification
+    specHashes: {
+      rawLayout: hashFileIfExists(args.paths && args.paths.rawLayout),
+      rawSkin: hashFileIfExists(args.paths && args.paths.rawSkin),
+      finalLayout: hashFileIfExists(args.paths && args.paths.finalLayout),
+      finalSkin: hashFileIfExists(args.paths && args.paths.finalSkin),
+      runtimeLayout: (function () {
+        const rp = resolveCanonicalRuntimePaths(args.opts && args.opts.screenId);
+        return rp ? hashFileIfExists(rp.layoutPath) : null;
+      }()),
+      runtimeSkin: (function () {
+        const rp = resolveCanonicalRuntimePaths(args.opts && args.opts.screenId);
+        return rp ? hashFileIfExists(rp.skinPath) : null;
+      }()),
+    },
     generatedAt: new Date().toISOString(),
   };
 }

@@ -1,0 +1,24 @@
+{
+  "_description": "Update-mode must not overwrite source-derived local-tokens when new payload is empty (R-P5-AUTH-02). The preservedByUpdateModeGuard flag must be true when previous had tokens and new payload has zero.",
+  "scenario": "update-mode-empty-wipe",
+  "previousPayload": {
+    "_sourceAuthority": "html-to-ucuf",
+    "stats": { "tokenCount": 5, "unresolvedColorCount": 5 },
+    "colors": {
+      "screen_local_color_01": "#1a0f2e",
+      "screen_local_color_02": "#d4af37",
+      "screen_local_color_03": "#2a1545",
+      "screen_local_color_04": "#0a0514",
+      "screen_local_color_05": "#3d2260"
+    }
+  },
+  "newPayload": {
+    "_sourceAuthority": "html-to-ucuf",
+    "stats": { "tokenCount": 0, "unresolvedColorCount": 0 },
+    "colors": {}
+  },
+  "opts": { "updateMode": true },
+  "assertions": {
+    "preservedByUpdateModeGuard": true
+  }
+}

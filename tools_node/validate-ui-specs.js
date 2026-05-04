@@ -825,6 +825,29 @@ function validateScreenStrict(screenNode, screenFilePath, layoutJsons, skinJsons
         }
     }
 
+    // R-P5-AUTH-01: source-authority-chain — Plan4 screens must declare synced-final-runtime-json authority
+    if (!skipRules.has('source-authority-chain') && isPlan4Screen) {
+        const runtimeAuth = screenNode.meta && screenNode.meta.runtimeAuthority;
+        if (!runtimeAuth || runtimeAuth !== 'synced-final-runtime-json') {
+            strictWarn('source-authority-chain',
+                `${rel} - Plan4 screen.meta.runtimeAuthority="${runtimeAuth || 'missing'}" should be "synced-final-runtime-json". Run the full workflow with --runtime-sync to establish authority.`,
+                warnings, exceptions);
+        }
+    }
+
+    // R-P5-AUTH-02: local-tokens-present — Plan4 synced screens must have a local-tokens sidecar
+    if (!skipRules.has('local-tokens-present') && isPlan4Screen) {
+        const runtimeAuth = screenNode.meta && screenNode.meta.runtimeAuthority;
+        if (runtimeAuth === 'synced-final-runtime-json') {
+            const localTokensPath = path.join(path.dirname(screenFilePath), `${screenBaseId}.local-tokens.json`);
+            if (!fs.existsSync(localTokensPath)) {
+                strictWarn('local-tokens-present',
+                    `${rel} - Plan4 synced screen is missing local-tokens sidecar "${screenBaseId}.local-tokens.json". Re-run the workflow to regenerate.`,
+                    warnings, exceptions);
+            }
+        }
+    }
+
     const reqFields = screenNode.contentRequirements && Array.isArray(screenNode.contentRequirements.requiredFields)
         ? new Set(screenNode.contentRequirements.requiredFields)
         : null;

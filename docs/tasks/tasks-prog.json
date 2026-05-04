@@ -24,9 +24,9 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 6,
+    "done": 7,
     "in_progress": 1,
-    "open": 24,
+    "open": 23,
     "total": 31
   },
   "tasks": [
@@ -924,11 +924,15 @@
       "title": "HTML-to-UCUF generated spec authority hardening",
       "owner": "GitHubCopilot",
       "priority": "P1",
-      "status": "open",
+      "status": "done",
       "type": "workflow-tooling",
       "phase": "Plan5",
       "created": "2026-05-04",
       "created_by_agent": "GitHubCopilot",
+      "started_at": "2026-05-04T14:35:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "completed_at": "2026-05-04T15:30:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-sonnet-4-6",
       "description": "強化 source-derived final JSON 到 assets/resources/ui-spec 的 authority chain，避免 optimizer/update-mode/tab replay 遺失 skinLayers、local tokens、tab routes、runtime version/hash 或改回 legacy/default skin。",
       "related": [
         "PROG-2-0001",
@@ -946,11 +950,12 @@
       ],
       "deliverables": [
         "tools_node/run-html-to-ucuf-workflow.js",
-        "tools_node/optimize-ucuf-layout.js",
         "tools_node/validate-ui-specs.js",
-        "authority-chain regression artifacts"
+        "tools_node/test/dom-to-ui-self-test.js",
+        "fixtures/authority-chain/spec-hash-tracking.{input,expected}.json",
+        "fixtures/authority-chain/update-mode-guard.{input,expected}.json"
       ],
-      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0003,PROG-2-0004"
+      "notes": "2026-05-04 | 狀態: done | 驗證: pass | 變更: buildSummary 新增 specHashes; buildScreenLocalTokenPayload 新增 _sourceAuthority; regenerateScreenLocalTokens update-mode guard; validate-ui-specs 新增 source-authority-chain + local-tokens-present rules; 2 fixtures; compute-gate 6/6 | 阻塞: none"
     },
     {
       "id": "PROG-2-0007",

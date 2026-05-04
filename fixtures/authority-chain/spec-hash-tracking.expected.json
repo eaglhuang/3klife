@@ -1,0 +1,22 @@
+{
+  "_description": "Workflow summary must include specHashes with raw/final/synced/runtime file integrity hashes (R-P5-AUTH-01).",
+  "_blessed_by": "ClaudeCode_claude-sonnet-4-6",
+  "_blessed_at": "2026-05-04",
+  "workflowSummary": {
+    "screenId": "test-auth-chain",
+    "runtimeAuthority": { "authority": "synced-final-runtime-json", "synced": true },
+    "specHashes": {
+      "rawLayout": "abc123000000",
+      "rawSkin": "def456000000",
+      "finalLayout": "ghi789000000",
+      "finalSkin": "jkl012000000",
+      "runtimeLayout": "ghi789000000",
+      "runtimeSkin": "jkl012000000"
+    },
+    "verdict": { "workflowPass": true }
+  },
+  "assertions": {
+    "specHashesPresent": true,
+    "finalMatchesRuntime": true
+  }
+}
