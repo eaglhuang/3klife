@@ -50,6 +50,7 @@ function parseArgs(argv) {
     artifactFile: '',
     validateHandoff: false,
     strictHandoff: false,
+    traceArtifact: '',
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -101,6 +102,11 @@ function parseArgs(argv) {
     }
     if (arg === '--validate-handoff') {
       args.validateHandoff = true;
+      continue;
+    }
+    if (arg === '--trace-artifact' || arg === '--trace-summary') {
+      args.traceArtifact = argv[i + 1] || '';
+      i += 1;
       continue;
     }
     if (arg === '--strict-handoff') {
@@ -613,6 +619,76 @@ function writeTurnArtifact(args, turnArtifact) {
   };
 }
 
+function buildTraceSummaryAttachment(args) {
+  if (!args.traceArtifact) {
+    return {
+      status: 'disabled',
+      artifactPath: '',
+      summary: null,
+      warnings: [],
+      errors: [],
+    };
+  }
+
+  const absolutePath = path.resolve(PROJECT_ROOT, args.traceArtifact);
+  const artifactPath = path.relative(PROJECT_ROOT, absolutePath).replace(/\\/g, '/');
+  if (!fs.existsSync(absolutePath)) {
+    return {
+      status: 'missing',
+      artifactPath,
+      summary: null,
+      warnings: [],
+      errors: [`trace artifact not found: ${artifactPath}`],
+    };
+  }
+
+  let artifact;
+  try {
+    artifact = JSON.parse(fs.readFileSync(absolutePath, 'utf8'));
+  } catch (error) {
+    return {
+      status: 'malformed',
+      artifactPath,
+      summary: null,
+      warnings: [],
+      errors: [error instanceof Error ? error.message : String(error)],
+    };
+  }
+
+  if (!artifact || artifact.schemaVersion !== 'execution-trace/v1' || artifact.kind !== 'execution-trace') {
+    return {
+      status: 'malformed',
+      artifactPath,
+      summary: null,
+      warnings: [],
+      errors: ['trace artifact must be execution-trace/v1 kind=execution-trace'],
+    };
+  }
+
+  const summary = artifact.summary && typeof artifact.summary === 'object' ? artifact.summary : {};
+  return {
+    status: artifact.status || 'attached',
+    artifactPath,
+    summary: {
+      eventCount: artifact.eventCount ?? summary.eventCount ?? 0,
+      rawEventCount: summary.rawEventCount ?? artifact.eventCount ?? 0,
+      invalidEventCount: summary.invalidEventCount ?? 0,
+      toolCount: artifact.toolCount ?? summary.toolCount ?? 0,
+      errorCount: artifact.errorCount ?? summary.errorCount ?? 0,
+      retryCount: summary.retryCount ?? 0,
+      totalDurationMs: artifact.totalDurationMs ?? summary.totalDurationMs ?? 0,
+      firstStartedAt: summary.firstStartedAt || null,
+      lastEndedAt: summary.lastEndedAt || null,
+      tools: Array.isArray(summary.tools) ? summary.tools : [],
+      statusCounts: summary.statusCounts || {},
+      workflowCounts: summary.workflowCounts || {},
+      taskCounts: summary.taskCounts || {},
+    },
+    warnings: Array.isArray(artifact.warnings) ? artifact.warnings : [],
+    errors: Array.isArray(artifact.errors) ? artifact.errors : [],
+  };
+}
+
 function main() {
   const args = parseArgs(process.argv.slice(2));
   const scopedFiles = guard.buildFileSet({
@@ -633,6 +709,7 @@ function main() {
   let turnArtifact = null;
   let turnArtifactOutput = null;
   let handoffDiffResult = null;
+  const traceSummary = buildTraceSummaryAttachment(args);
 
   if (args.emitTurnArtifact || args.validateHandoff) {
     const artifactSourceFiles = baselineInfo.included.length > 0
@@ -714,6 +791,7 @@ function main() {
     turnArtifact,
     turnArtifactOutput,
     handoffDiff: handoffDiffResult,
+    traceSummary,
     ucufGate,
     finalLine: `Token 量級：${usage.tier}（估算約 ${usage.totals.estTokens} tokens，非 API 精準值）`,
   };
@@ -750,6 +828,12 @@ function main() {
       ? `error=${handoffDiffResult.error}`
       : `missing=${handoffDiffResult.summary.missingInArtifact} extra=${handoffDiffResult.summary.extraInArtifact} conflict=${handoffDiffResult.summary.mergeConflicts}`;
     console.log(`[finalize-agent-turn] handoff-diff=${handoffDiffResult.status.toUpperCase()} ${detail}`);
+  }
+  if (traceSummary.status !== 'disabled') {
+    const summaryText = traceSummary.summary
+      ? `events=${traceSummary.summary.eventCount} tools=${traceSummary.summary.toolCount} errors=${traceSummary.summary.errorCount}`
+      : `errors=${traceSummary.errors.length}`;
+    console.log(`[finalize-agent-turn] trace-summary=${traceSummary.status.toUpperCase()} path=${traceSummary.artifactPath} ${summaryText}`);
   }
 
   // Print gate result

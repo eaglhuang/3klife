@@ -97,7 +97,7 @@
 | P1 | [HARN-TRC-0001](tasks/HARN-TRC-0001.md) | 定義 Execution Trace Event Schema | done | 100% | GitHubCopilot |
 | P1 | [HARN-TRC-0002](tasks/HARN-TRC-0002.md) | 建立 Node Tool Trace Middleware | done | 100% | GitHubCopilot |
 | P1 | [HARN-TRC-0003](tasks/HARN-TRC-0003.md) | 建立 Execution Trace Collector | done | 100% | GitHubCopilot |
-| P2 | [HARN-TRC-0004](tasks/HARN-TRC-0004.md) | 將 Trace Summary 掛入 Finalize 輸出 | open | 0% | GitHubCopilot |
+| P2 | [HARN-TRC-0004](tasks/HARN-TRC-0004.md) | 將 Trace Summary 掛入 Finalize 輸出 | done | 100% | GitHubCopilot |
 | P1 | [HARN-EVAL-0001](tasks/HARN-EVAL-0001.md) | 建立 Workflow Path Taxonomy | open | 0% | GitHubCopilot |
 | P2 | [HARN-EVAL-0002](tasks/HARN-EVAL-0002.md) | 建立 Workflow Baseline Fixture Pack | open | 0% | GitHubCopilot |
 | P2 | [HARN-EVAL-0003](tasks/HARN-EVAL-0003.md) | 建立 Path Drift Comparator | open | 0% | GitHubCopilot |
@@ -113,11 +113,11 @@
 
 ### HARN 審核摘要（2026-05-04）
 
-- 全 HARN 任務卡盤點：34 張；done 22 張、open 12 張、in-progress 0 張。
+- 全 HARN 任務卡盤點：34 張；done 23 張、open 11 張、in-progress 0 張。
 - 34 張 HARN 任務卡皆已回寫 `## 審核結果（2026-05-04）`，內容包含審核結論、驗證證據與需修改事項。
-- 已達成鏈：`HARN-ARCH-*`、`HARN-LOG-*`、`HARN-FIX-0001`、`HARN-UI-0001`、`HARN-GOV-0003`、`HARN-ART-0001/0002/0003/0004`、`HARN-DEMO-0003`、`HARN-HDO-0001/0002/0003/0004`、`HARN-TRC-0001/0002/0003`。
-- 未達成主鏈：`HARN-TRC-0004`、`HARN-EVAL-*`、`HARN-MET-*`、`HARN-GOV-0001/0002`、`HARN-PILOT-*` 仍為 open；artifact schema、validator CLI、storage policy helper、finalize default path、handoff task scope check、execution trace schema/middleware/collector 已落地，後續鏈可開始重用這條 gate。
-- 下一個應優先落地的根卡：`HARN-TRC-0004`；collector 已可輸出 aggregated trace artifact，下一步可掛入 finalize。
+- 已達成鏈：`HARN-ARCH-*`、`HARN-LOG-*`、`HARN-FIX-0001`、`HARN-UI-0001`、`HARN-GOV-0003`、`HARN-ART-0001/0002/0003/0004`、`HARN-DEMO-0003`、`HARN-HDO-0001/0002/0003/0004`、`HARN-TRC-0001/0002/0003/0004`。
+- 未達成主鏈：`HARN-EVAL-*`、`HARN-MET-*`、`HARN-GOV-0001/0002`、`HARN-PILOT-*` 仍為 open；artifact schema、validator CLI、storage policy helper、finalize default path、handoff task scope check、execution trace schema/middleware/collector/finalize attachment 已落地，後續鏈可開始重用這條 gate。
+- 下一個應優先落地的根卡：`HARN-EVAL-0001`；TRC chain 已完成，下一步可建立 workflow path taxonomy。
 
 ## 依賴維護原則
 
