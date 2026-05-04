@@ -108,7 +108,9 @@ export class UIPreviewStyleBuilder {
                     ? this.skinResolver.resolveColor(borderColorKey)
                     : new Color(255, 255, 255, 0),
             };
-            if (gradient.repeating === true) {
+            const hasRepeatingLayer = Array.isArray((slot as any).backgroundLayers)
+                && (slot as any).backgroundLayers.some((layer: any) => layer?.kind === 'gradient' && layer.gradient?.repeating === true);
+            if (gradient.repeating === true || hasRepeatingLayer) {
                 const fallbackColor = this._resolveGradientSolidFallbackColor(stops);
                 if (cornerRadius > 0 || borderWidth > 0 || typeof borderColorKey === 'string') {
                     const sprite = node.getComponent(Sprite);

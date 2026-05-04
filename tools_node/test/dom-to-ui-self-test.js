@@ -453,6 +453,20 @@ function main() {
     if (gradientSlot.gradient.stops[1].opacity !== 0.5) fail(`gradient rgba alpha should become stop opacity: ${JSON.stringify(gradientSlot)}`);
     ok('linear-gradient maps to reusable gradient-rect skin slot');
 
+    const repeatingGradientDraft = buildDraftFromHtml(`
+      <div data-name="RepeatingStage">
+        <div data-name="RepeatingPanel" style="width:100px;height:50px;background-image:repeating-linear-gradient(45deg, rgb(30, 16, 40), rgb(30, 16, 40) 6px, rgb(37, 24, 51) 6px, rgb(37, 24, 51) 12px)"></div>
+      </div>`, { screenId: 'repeating-gradient-rect', bundle: 'ui_test' });
+    const repeatingPanel = findNode(repeatingGradientDraft.layoutDraft, n => n.name === 'RepeatingPanel');
+    const repeatingSlot = repeatingPanel && repeatingPanel.skinSlot && repeatingGradientDraft.skinDraft.slots[repeatingPanel.skinSlot];
+    if (!repeatingSlot || repeatingSlot.kind !== 'gradient-rect' || repeatingSlot.gradient.repeating !== true) {
+      fail(`repeating-linear-gradient should preserve top-level gradient.repeating: ${JSON.stringify(repeatingSlot)}`);
+    }
+    if (!repeatingSlot.backgroundLayers || !repeatingSlot.backgroundLayers[0]?.gradient?.repeating) {
+      fail(`repeating-linear-gradient should preserve backgroundLayers repeating metadata: ${JSON.stringify(repeatingSlot)}`);
+    }
+    ok('repeating-linear-gradient preserves repeating metadata for runtime fallback');
+
     const compoundSelectorDraft = buildDraftFromHtml(`
       <style>
         .slide { width: 100px; height: 50px; }
@@ -2313,6 +2327,18 @@ function runHtmlToUcufFidelityContractGroup() {
     if (!/backgroundLayers/.test(JSON.stringify(draft.skinDraft))) {
       fail(`${name} must preserve backgroundLayers in skin contract`);
     }
+  }
+  const repeatingGradientDraft = buildDraftFromHtml(`
+    <div data-name="RepeatingStage">
+      <div data-name="RepeatingPanel" style="width:100px;height:50px;background-image:repeating-linear-gradient(45deg, rgb(30, 16, 40), rgb(30, 16, 40) 6px, rgb(37, 24, 51) 6px, rgb(37, 24, 51) 12px)"></div>
+    </div>`, { screenId: 'repeating-gradient-rect', bundle: 'ui_test' });
+  const repeatingPanel = findNode(repeatingGradientDraft.layoutDraft, n => n.name === 'RepeatingPanel');
+  const repeatingSlot = repeatingPanel && repeatingPanel.skinSlot && repeatingGradientDraft.skinDraft.slots[repeatingPanel.skinSlot];
+  if (!repeatingSlot || repeatingSlot.kind !== 'gradient-rect' || repeatingSlot.gradient.repeating !== true) {
+    fail(`repeating-linear-gradient should preserve top-level gradient.repeating: ${JSON.stringify(repeatingSlot)}`);
+  }
+  if (!repeatingSlot.backgroundLayers || !repeatingSlot.backgroundLayers[0]?.gradient?.repeating) {
+    fail(`repeating-linear-gradient should preserve backgroundLayers repeating metadata: ${JSON.stringify(repeatingSlot)}`);
   }
   const compoundSelectorDraft = buildDraftFromHtml(`
     <style>

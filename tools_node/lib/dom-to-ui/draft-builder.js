@@ -2135,6 +2135,7 @@ function buildGradientRectSlot(ctx, backgroundImage, slotId) {
     backgroundLayers,
     gradient: {
       type: gradient.type,
+      repeating: gradient.repeating === true,
       angle: typeof gradient.angle === 'number' ? gradient.angle : 180,
       shape: gradient.shape || undefined,
       center: gradient.center || undefined,
