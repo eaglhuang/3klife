@@ -6,14 +6,16 @@ phase: Phase1
 created: 2026-05-04
 created_by_agent: GitHubCopilot
 owner: GitHubCopilot
-status: open
+status: done
+started_at: 2026-05-04T22:13:27.1217061+08:00
+started_by_agent: GitHubCopilot
 type: policy
 chain_id: HARN-CHAIN-ARTIFACT
 chain_step: 3/4
 sensor_triggered_by: harness-rollout planning
 depends:
   - HARN-ART-0002
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 依 Harness 落地藍圖建立 Artifact Storage Policy 任務卡 | 阻塞: depends HARN-ART-0002"
+notes: "2026-05-04 | 狀態: done | 驗證: turn-artifact-storage helper smoke pass；encoding touched pass | 變更: 新增 tools_node/lib/turn-artifact-storage.js，定義 formal path、scratch 邊界、保留策略與可重用 buildFormalTurnArtifactPath/classifyTurnArtifactPath helper | 阻塞: none"
 ---
 
 # [HARN-ART-0003] 建立 Turn Artifact Storage Policy
@@ -40,11 +42,11 @@ notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 依 
 
 ## OUTPUT_CONTRACT
 
-- [ ] 定義正式路徑：`artifacts/turn-artifacts/<YYYY-MM-DD>/<workflow>/<task>.json`
-- [ ] 定義 `scratch/` 與 `artifacts/turn-artifacts/` 的用途邊界
-- [ ] 文件化保留策略：哪些 artifact 應永久保留、哪些可清理
-- [ ] 補 helper 或共用函式，避免各工具自行拼路徑
-- [ ] policy 必須能被後續 `HARN-MET-0001` 歷史查詢工具直接消費
+- [x] 定義正式路徑：`artifacts/turn-artifacts/<YYYY-MM-DD>/<workflow>/<task>.json`
+- [x] 定義 `scratch/` 與 `artifacts/turn-artifacts/` 的用途邊界
+- [x] 文件化保留策略：哪些 artifact 應永久保留、哪些可清理
+- [x] 補 helper 或共用函式，避免各工具自行拼路徑
+- [x] policy 必須能被後續 `HARN-MET-0001` 歷史查詢工具直接消費
 
 ## VALIDATION_CMD
 
@@ -68,11 +70,19 @@ git checkout artifacts/turn-artifacts/
 4. 補一份最小 storage policy 說明，讓後續 Governance 卡可直接引用。
 5. 確保歷史查詢工具之後只需讀正式 policy path，不必再猜哪裡是正式工件。
 
+## 交付記錄（2026-05-04）
+
+- 新增 `tools_node/lib/turn-artifact-storage.js` 作為 storage policy 與 path helper 的單一來源。
+- 正式工件路徑固定為 `artifacts/turn-artifacts/<YYYY-MM-DD>/<workflow>/<task>.json`。
+- `scratch/` 僅保留給 smoke、debug、一次性 fixture，不列入後續正式 history query 預設來源。
+- 永久保留對象：任務卡 done commit、release/milestone/pilot adoption、metrics baseline 或 regression fixture 對應 artifact。
+- 可清理對象：scratch 一次性輸出、被同 task 更新版取代的 debug artifact、無 task/commit/baseline 對應的 local probe。
+
 ---
 *由 Harness rollout planning 開立 | 2026-05-04*
 
 ## 審核結果（2026-05-04）
 
-- 審核結論：未達成（依賴未滿）
-- 驗證證據：artifact validator 尚未交付；正式 artifacts/turn-artifacts storage policy 未定。
-- 需修改：等 ART-0002 完成後定義 formal path、scratch 邊界與保留策略。
+- 審核結論：已達成
+- 驗證證據：`node -e "const s=require('./tools_node/lib/turn-artifact-storage'); ..."` 已確認 helper 產生 formal path 並正確分類 formal/scratch；encoding touched pass。
+- 需修改：none。
