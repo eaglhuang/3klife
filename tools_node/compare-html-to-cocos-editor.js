@@ -328,6 +328,8 @@ async function main() {
     zoneOwnership: {
       report: rel(zoneOwnershipJson),
       summary: zoneOwnership.summary,
+      nextFixes: zoneOwnership.nextFixes,
+      compactResidualSummary: zoneOwnership.compactResidualSummary,
     },
     artAuthority: {
       path: artAuthority.path ? rel(artAuthority.path) : null,

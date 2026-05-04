@@ -2917,3 +2917,150 @@ if (!gradient || gradient.type !== 'linear') return null;
 - verification:
   - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/gacha/index.html" --screen-id gacha-ds3 --editor-screenshot <png> --output artifacts/skill-test-html-to-ucuf/gacha-ds3`
 - impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-05-04 — html-cocos-runtime-gap-fbc9b758
+
+- suggestion id: `html-cocos-runtime-gap-fbc9b758`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/gacha/index.html`
+- screenId: `gacha-ds3`
+- source hashes: `html=sha256:da0cd6c53b14fc5e164c893a0f53d2c7` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:5ce59139d44bcb9e980cc8ab51204985`
+- before: `runtimeVsSource.score=0.5562827932098765`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1024,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1088,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1152,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1216,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1280,64,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/gacha/index.html" --screen-id gacha-ds3 --editor-screenshot <png> --output artifacts/skill-test-html-to-ucuf/gacha-ds3`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-05-04 — html-cocos-runtime-gap-ff7cd1eb
+
+- suggestion id: `html-cocos-runtime-gap-ff7cd1eb`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/gacha/index.html`
+- screenId: `gacha-ds3`
+- source hashes: `html=sha256:da0cd6c53b14fc5e164c893a0f53d2c7` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:5ce59139d44bcb9e980cc8ab51204985`
+- before: `runtimeVsSource.score=0.5562827932098765`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1024,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1088,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1152,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1216,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1280,64,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/gacha/index.html" --screen-id gacha-ds3 --editor-screenshot <png> --output artifacts/skill-test-html-to-ucuf/gacha-ds3`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-05-04 — html-cocos-runtime-gap-4415b33e
+
+- suggestion id: `html-cocos-runtime-gap-4415b33e`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/gacha/index.html`
+- screenId: `gacha-ds3`
+- source hashes: `html=sha256:da0cd6c53b14fc5e164c893a0f53d2c7` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:5ce59139d44bcb9e980cc8ab51204985`
+- before: `runtimeVsSource.score=0.5566618441358024`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1024,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1088,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1152,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1216,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1280,64,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/gacha/index.html" --screen-id gacha-ds3 --editor-screenshot <png> --output artifacts/skill-test-html-to-ucuf/gacha-ds3`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-05-04 — html-cocos-runtime-gap-2b5ab4ff
+
+- suggestion id: `html-cocos-runtime-gap-2b5ab4ff`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/gacha/index.html`
+- screenId: `gacha-ds3`
+- source hashes: `html=sha256:da0cd6c53b14fc5e164c893a0f53d2c7` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:5ce59139d44bcb9e980cc8ab51204985`
+- before: `runtimeVsSource.score=0.5567134452160494`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1024,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1088,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1152,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1216,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1280,64,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/gacha/index.html" --screen-id gacha-ds3 --editor-screenshot <png> --output artifacts/skill-test-html-to-ucuf/gacha-ds3`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-05-04 — html-cocos-runtime-gap-1890c826
+
+- suggestion id: `html-cocos-runtime-gap-1890c826`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/gacha/index.html`
+- screenId: `gacha-ds3`
+- source hashes: `html=sha256:da0cd6c53b14fc5e164c893a0f53d2c7` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:5ce59139d44bcb9e980cc8ab51204985`
+- before: `runtimeVsSource.score=0.5567235725308642`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1024,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1088,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1152,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1216,64,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=1280,64,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/gacha/index.html" --screen-id gacha-ds3 --editor-screenshot <png> --output artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504/final-gate`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-05-04 — html-cocos-runtime-gap-a242d342
+
+- suggestion id: `html-cocos-runtime-gap-a242d342`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/gacha/index.html`
+- screenId: `gacha-ds3`
+- source hashes: `html=sha256:da0cd6c53b14fc5e164c893a0f53d2c7` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:5ce59139d44bcb9e980cc8ab51204985`
+- before: `runtimeVsSource.score=0.6206462191358024`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=0,128,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=320,384,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=384,384,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=128,448,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=192,448,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/gacha/index.html" --screen-id gacha-ds3 --editor-screenshot <png> --output artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r3/final-gate`
+- impact: pending — 需 reviewer 接受後才可自動套用。
+
+## Entry 2026-05-04 — html-cocos-runtime-gap-2c4b0489
+
+- suggestion id: `html-cocos-runtime-gap-2c4b0489`
+- status: `candidate`
+- safety: `reviewer-required`
+- reviewer: `(pending)`
+- source package: `Design System 3` / `ui_kits/gacha/index.html`
+- screenId: `gacha-ds3`
+- source hashes: `html=sha256:da0cd6c53b14fc5e164c893a0f53d2c7` / `css=sha256:40af62e125634c89c2f9b13262178782` / `tokens=sha256:5ce59139d44bcb9e980cc8ab51204985`
+- before: `runtimeVsSource.score=0.6205878665123457`，threshold=`0.95`
+- top offenders:
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=0,128,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=320,384,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=384,384,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=128,448,64,64`
+  - `pixel-diff` — `unwaived-diff-bucket` — `rect=192,448,64,64`
+- proposed rule: 依 top offenders 補齊 CSS mapper、assetize 或 runtime skin layer 後重跑 HTML vs Cocos Editor visual gate。
+- verification:
+  - `node tools_node/compare-html-to-cocos-editor.js --source-dir "Design System 3" --main-html "ui_kits/gacha/index.html" --screen-id gacha-ds3 --editor-screenshot <png> --output artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r3/final-gate`
+- impact: pending — 需 reviewer 接受後才可自動套用。

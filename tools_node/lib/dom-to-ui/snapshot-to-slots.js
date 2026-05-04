@@ -140,16 +140,54 @@ function parseGradient(s) {
     }
   }
 
-  const stops = stopParts.map((p, i) => {
+  const rawStops = stopParts.map((p, i) => {
     const colorMatch = p.match(/^(rgba?\([^)]+\)|hsla?\([^)]+\)|#[0-9a-f]{3,8}|[a-z]+)/i);
     const color = colorMatch ? colorMatch[1] : '#000';
     const rest = colorMatch ? p.replace(colorMatch[1], '').trim() : p;
-    const pctMatch = rest.match(/(-?\d+(?:\.\d+)?)%/);
-    const offset = pctMatch ? parseFloat(pctMatch[1]) / 100 : (i / Math.max(1, stopParts.length - 1));
-    return { color, offset };
+    const pctMatches = [...rest.matchAll(/(-?\d+(?:\.\d+)?)%/g)].map(m => parseFloat(m[1]));
+    const pxMatches = [...rest.matchAll(/(-?\d+(?:\.\d+)?)px/g)].map(m => parseFloat(m[1]));
+    const positionPct = pctMatches.length > 0 ? pctMatches[pctMatches.length - 1] / 100 : null;
+    const positionPx = pxMatches.length > 0 ? pxMatches[pxMatches.length - 1] : null;
+    return { color, positionPct, positionPx, index: i };
   });
 
-  return { type, repeating, angle, shape, center, radius, stops };
+  const repeatSpanPx = rawStops.reduce((max, stop) => (
+    typeof stop.positionPx === 'number' && Number.isFinite(stop.positionPx)
+      ? Math.max(max, stop.positionPx)
+      : max
+  ), 0);
+  const repeatSpanRatio = rawStops.reduce((max, stop) => (
+    typeof stop.positionPct === 'number' && Number.isFinite(stop.positionPct)
+      ? Math.max(max, stop.positionPct)
+      : max
+  ), 0);
+
+  const stops = rawStops.map((stop, i) => {
+    let offset;
+    if (typeof stop.positionPct === 'number') {
+      offset = stop.positionPct;
+    } else if (typeof stop.positionPx === 'number' && repeatSpanPx > 0) {
+      offset = stop.positionPx / repeatSpanPx;
+    } else {
+      offset = i / Math.max(1, stopParts.length - 1);
+    }
+    return {
+      color: stop.color,
+      offset: Math.max(0, Math.min(1, offset)),
+    };
+  });
+
+  return {
+    type,
+    repeating,
+    angle,
+    shape,
+    center,
+    radius,
+    repeatSpanPx: repeatSpanPx > 0 ? repeatSpanPx : undefined,
+    repeatSpanRatio: repeatSpanRatio > 0 ? repeatSpanRatio : undefined,
+    stops,
+  };
 }
 
 /**

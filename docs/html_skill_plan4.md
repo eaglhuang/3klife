@@ -85,44 +85,25 @@ node tools_node/run-html-to-ucuf-workflow.js \
 - 缺 `--capture-report`
 - `capture-report` 來自 legacy product preview target，而不是 formal `UIScreenPreviewHost` route
 
-## Non-Negotiable Rules
+## Plan4 Rule Delta
 
-- `H2U-P4-001 formal-entry-source-package-only`: 正式流程必須用 `--source-dir --main-html --screen-id --bundle`；`--input` 只能 debug。
-- `H2U-P4-002 editor-final-gate-required`: `--skip-editor-compare`、缺 editor screenshot 或缺 capture protocol 時，一律 debugOnly。
-- `H2U-P4-003 runtime-sync-required`: `--no-runtime-sync` 一律 debugOnly。
-- `H2U-P4-004 per-tab-replay-required-for-tabbed-source`: tabbed source 必須完成 per-tab replay 並產生本輪 fragment JSON。
-- `H2U-P4-005 no-screen-specific-core-logic`: core workflow / converter / validator 不得硬寫 `character-ds3`、`CharacterDs3`、`gacha-ds3`、`div_6`、`div_8`、`button_4~9` 或 DS3 CSS fallback。
-- `H2U-P4-006 no-raw-sidecar-repair`: strict replay 後不得把 raw interaction / fragment-routes / tab-routing 複製回 final。
-- `H2U-P4-007 no-default-skin-formal-fallback`: readiness / formal validator 不得接受 `<screenId>-default` skin fallback。
-- `H2U-P4-008 synced-final-runtime-authority-only`: final gate 與 readiness 只能讀 synced final runtime JSON。
-- `H2U-P4-009 source-css-token-authority-required`: 正式流程缺 source CSS/tokens 必須 fail。
-- `H2U-P4-010 data-driven-tab-routing`: tab id、fragment、mount、childPanelClass 只能由 HTML attributes、contract、screen package 或 naming policy 推導。
-- `H2U-P4-011 svg-radar-chart-full-geometry`: `svg-radar-chart` 必須包含 `viewBox / center / axisLines / gridPolygons / valuePolygon / labels / textBox`。
-- `H2U-P4-012 draft-builder-rule-registry-required`: 新增 draft-builder 規則前必須登記 stage、status、ruleId 與 test tag。
-- `H2U-P4-013 skill-doc-current-entry`: skill 文件必須指向 Plan 4 作為目前執行規格。
+從這個版本開始，Plan 文件不再是正式規則真相；正式規則請讀 `tools_node/lib/html-to-ucuf/rule-registry.json`。本節只記錄 Plan4 引入了哪些規則群與它們的裁決方向。
 
-- `H2U-P4-014 no-substring-semantic-classifier`: classifier scope 不可使用無邊界 substring regex；`history` 不能命中 `story`，要改成 token-aware 或 attribute-aware 判斷。
-- `H2U-P4-015 story-strip-explicit-or-multi-signal`: `story-strip` 必須來自明確 attribute / contract，或至少兩個獨立訊號，不可只靠單一名稱相似度。
-- `H2U-P4-016 no-gradient-to-color-downgrade`: gradient / image background 不可靜默降級成純色；若無法等價渲染，要保留風險或直接 blocker。
-- `H2U-P4-017 radial-background-preserved-or-blocked`: radial gradient 必須保留幾何摘要與色標；若 runtime 不支援，要明示 blocker 或 assetization-required。
-- `H2U-P4-018 runtime-interaction-sidecar-executed`: 只要有 interaction sidecar，formal flow 就必須在 Preview runtime 綁定並 smoke，不可只同步 JSON。
-- `H2U-P4-019 visual-risk-blocks-formal-pass`: 主視覺區有 unmapped / fallback / downgrade 風險時，不可因為 CSS coverage 高就宣稱正式通過。
-- `H2U-P4-020 formal-sidecar-authority-no-raw-fallback`: formal runtime sync 不得從 raw sidecar fallback 代測 final；缺資料要 fail，不能補洞洗過。
-- `H2U-P4-021 final-capture-target-must-match-screen-id`: formal final gate 的 capture target 必須符合本輪轉換的 screenId；`expectedScreenId` 或 `actualScreenId` 不一致時直接 blocker。
-- `H2U-P4-022 final-capture-runtime-version-required`: formal capture 必須帶 `uiVersion / runtimeVersion` 與 screen / layout / skin runtime spec hash。
-- `H2U-P4-023 no-legacy-preview-target-as-formal-gate`: legacy product preview target 只能做 regression / product smoke，不可當 HTML-to-UCUF formal gate 截圖來源。
-- `H2U-P4-024 shared-source-package-root-resolution`: `--source-dir` 指到畫面資料夾時，resolver 必須能往上找到共用 token / CSS root，並在 manifest 記錄 root promotion。
-- `H2U-P4-025 screen-local-token-regenerate-required`: 每次 workflow 都必須先清空舊的 screen-local token（replace-all-per-run），再由本輪 `*.token-suggestions.json` 全量重建，不可增量累加。
-- `H2U-P4-026 screen-local-token-diff-required`: 每次 workflow 都必須輸出 screen-local token diff report，至少包含 `added / removed / persisted` 與計數，供治理追蹤。
-- `H2U-P4-027 token-promotion-gate`: screen-local token 只有在「跨畫面出現次數 >= 2 且連續版本存活 >= 2」時才可升格到全域 token；否則維持 local。
-- `H2U-P4-028 token-waiver-expiry-required`: literal color waiver 必須附 `owner / reason / expiresAtVersion`；過期後未處理不得宣稱治理通過。
+- `H2U-P4-001` 到 `H2U-P4-004`：建立 formal entry、Editor final gate、runtime sync、per-tab replay 的硬性門檻。
+- `H2U-P4-005` 到 `H2U-P4-012`：建立 screen-agnostic core、default skin fallback 禁止、source CSS/token authority、data-driven tab routing、SVG geometry、draft-builder stage registry。
+- `H2U-P4-013`：曾經要求 skill 指向 Plan4 作為 current spec；這條在 Plan5 已被 `H2U-P5-001` 取代，現在只保留歷史意義。
+- `H2U-P4-014` 到 `H2U-P4-020`：補齊 semantic classifier、story strip、gradient/radial fidelity、runtime interaction smoke、visual risk、raw sidecar fallback 禁止。
+- `H2U-P4-021` 到 `H2U-P4-024`：建立 final capture authority 與 shared source package root resolution。
+- `H2U-P4-025` 到 `H2U-P4-028`：建立 screen-local token regenerate、diff report、promotion gate、waiver expiry 治理規則。
+
+如果要看每條規則的 `message / fixAction / owner / checkerId / status`，一律以 `rule-registry.json` 為準；Plan4 只保留這些規則是在什麼背景下被引入。
 
 ## Validation Mechanism
 
 新增守門器：
 
 ```bash
-node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/html-to-ucuf-plan4-rule-guard.json
+node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/html-to-ucuf-rule-guard.json
 node tools_node/validate-html-to-ucuf-rule-guard.js --strict --capture-report <capture-report.json> --expected-screen-id <screen-id>
 ```
 
@@ -218,7 +199,7 @@ node --check tools_node/validate-html-to-ucuf-rule-guard.js
 node tools_node/test/dom-to-ui-self-test.js --group html-to-ucuf-active-contract
 node tools_node/validate-ui-specs.js --strict --rules tab-fragment-geometry-contract,composite-panel-tab-route-integrity,formal-skin-path,synced-runtime-path-freshness,background-layer-preservation,formal-visual-risk-path,runtime-interaction-smoke-path
 node tools_node/validate-html-to-ucuf-rule-guard.js --strict --capture-report <capture-report.json> --expected-screen-id <screen-id>
-node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/html-to-ucuf-plan4-rule-guard.json
+node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/html-to-ucuf-rule-guard.json
 node tools_node/run-html-to-ucuf-workflow.js --source-dir <source-package-dir> --main-html <relative-html> --screen-id <screen-id> --bundle <bundle> --skip-editor-compare --skip-compare
 # 檢查 screen-local token 與 diff 是否存在
 # assets/resources/ui-spec/screens/<screen-id>.local-tokens.json
@@ -249,7 +230,7 @@ node tools_node/compare-html-to-cocos-editor.js --source-dir <source-package-dir
 node tools_node/test/dom-to-ui-self-test.js --group html-to-ucuf-active-contract
 node tools_node/test/dom-to-ui-self-test.js --group html-to-ucuf-fidelity-contract
 node tools_node/validate-ui-specs.js --strict --rules tab-fragment-geometry-contract,composite-panel-tab-route-integrity,formal-skin-path,synced-runtime-path-freshness,background-layer-preservation,formal-visual-risk-path,runtime-interaction-smoke-path
-node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/html-to-ucuf-plan4-rule-guard.json
+node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/html-to-ucuf-rule-guard.json
 ```
 
 若環境阻擋 nested spawn 或 browser compare，測試報告要明確標 `environment-blocked`，不能把它算成 pass 或 fail。
@@ -260,7 +241,7 @@ node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/
 
 ### Audit Findings
 
-- `rule-guard-rules.js` 目前只登記到 `H2U-P4-013`；Plan 4.1 已要求 `H2U-P4-014` 到 `H2U-P4-020`，registry / rule guard / self-test 還沒有同步。
+- 當時的舊 JS rule registry 只登記到 `H2U-P4-013`；Plan 4.1 已要求 `H2U-P4-014` 到 `H2U-P4-020`，但 registry / rule guard / self-test 那時還沒有同步。
 - `rule-guard.js` 目前主要掃 screen-specific、default skin、raw repair、tab routing、radar geometry；尚未掃 `story` 裸 substring、gradient-to-color downgrade、radial geometry preservation、runtime interaction sidecar execution、visual risk gate。
 - `run-html-to-ucuf-workflow.js` 的 `workflowPass` 仍只看 converter / preview diagnostic / editor final / rule guard / debugOnly；尚未把 `visualFidelityRisk` 與 `interactionRuntime` 納入正式 pass 條件。
 - `run-html-to-ucuf-workflow.js` 的 runtime sync 仍有 `finalLayout sidecar -> rawLayout sidecar` 的 fallback；這和 `H2U-P4-020 formal-sidecar-authority-no-raw-fallback` 衝突，正式流程應缺 final sidecar 就 fail。
@@ -275,7 +256,7 @@ node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/
 
 - [x] `docs/html_skill_plan4.md` 已建立 Plan 4.1 regression closure：semantic classifier、background fidelity、runtime interaction、formal gate。
 - [x] `.github/skills/html-to-ucuf/SKILL.md` 已改成精簡 Plan 4.1 入口，移除舊 Phase B 長流程作為主入口。
-- [x] 在 `rule-guard-rules.js` 登記 `H2U-P4-014` 到 `H2U-P4-020`，每條包含 `id / severity / scope / message / fixAction / owner / status`。
+- [x] 在當時的 rule registry 補齊 `H2U-P4-014` 到 `H2U-P4-020`，每條包含 `id / severity / scope / message / fixAction / owner / status`。
 - [x] 在 `rule-guard.js` 補靜態掃描：裸 `story` regex、raw sidecar fallback、gradient-to-color downgrade、未執行 interaction sidecar、missing visual risk fields。
 - [x] 在 `run-html-to-ucuf-workflow.js` 寫入 `visualFidelityRisk` 與 `interactionRuntime` summary contract，並把兩者納入 `workflowPass`。
 - [x] 在 formal runtime sync 移除 raw sidecar fallback；final sidecar 缺失時直接 blocker，不能用 raw 代測。
@@ -297,7 +278,7 @@ node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/
 
 以下進度以本節為最新狀態；上方稽核清單保留原始盤點脈絡。
 
-- [x] `rule-guard-rules.js` 已登記 `H2U-P4-014` 到 `H2U-P4-020`，包含 severity、scope、message、fixAction、owner、active status。
+- [x] 當時的 rule registry 已補齊 `H2U-P4-014` 到 `H2U-P4-020`，包含 severity、scope、message、fixAction、owner、active status。
 - [x] `rule-guard.js` 已新增第一批 Plan 4.1 靜態掃描：無邊界 story regex、story-strip 非明確來源、gradient 降級、radial 未保留、raw sidecar fallback、visual risk summary、interaction runtime summary。
 - [x] `run-html-to-ucuf-workflow.js` 已把 `visualFidelityRisk` 與 `interactionRuntime` 寫進 workflow summary，並納入 formal `workflowPass` 條件。
 - [x] formal runtime sync 已移除 raw sidecar fallback；final sidecar 缺漏不再用 raw 產物補洞。
@@ -334,7 +315,7 @@ node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/
 
 - 已執行：`node tools_node/run-html-to-ucuf-workflow.js --source-dir "Design System 3" --main-html "ui_kits/gacha/index.html" --screen-id gacha-ds3 --bundle lobby_ui --skip-editor-compare`
 - 產出：`artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.workflow-summary.json`
-- 核心結果：`ruleGuard.status=pass`、`plan4-rule-guard blockers=0`、`compare.adjustedCoverage=0.9798779899691358`
+- 核心結果：`ruleGuard.status=pass`、`rule-guard blockers=0`、`compare.adjustedCoverage=0.9798779899691358`
 - 目前狀態：`debugOnly=true`（`editor-compare-skipped`、`editor-screenshot-missing`、`capture-protocol-missing`、`capture-report-missing`）
 - readiness：`assets/resources/ui-spec/screens/gacha-ds3.readiness.json` 顯示 `readinessScore=0.708`、`verdict=not-ready`，主 blocker 為 final gate / zone ownership / node-count。
 
@@ -362,7 +343,7 @@ node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/
 - `--use-computed-style active: injected 123 computed snapshots`
 - `raw.nodeCount=76`（前一輪 debug mode 為 38），`optimized.nodeCount=63`，`final.nodeCount=63`
 - `BannerSlide_legendary`、`BannerSlide_support` JS-generated 節點已被正確捕捉
-- `plan4-rule-guard=pass blockers=0`（從之前有 blocker 改善到 pass）
+- `rule-guard=pass blockers=0`（從之前有 blocker 改善到 pass）
 - `pixel-diff raw=98.0% adj=98.0%`（仍維持，說明 radial gradient 已進入 UCUF 但 preview renderer 的近似仍有 2% 差距）
 - `readinessScore=0.792` verdict=not-ready，剩餘 blockers 均為 Cocos Editor final gate 流程
 - `tabMounts 3/3 pass`（General / Legendary / Support tab fragments 均正常）

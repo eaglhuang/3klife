@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Plan 4 self-validation CLI for the HTML-to-UCUF toolchain.
+// Rule-registry validation CLI for the HTML-to-UCUF toolchain.
 'use strict';
 
 const fs = require('fs');
@@ -50,7 +50,7 @@ function parseArgs(argv) {
 function printHelp() {
   console.log(`Usage: node tools_node/validate-html-to-ucuf-rule-guard.js [--strict] [--report <json>] [--summary <workflow-summary.json>]
 
-Checks Plan 4 non-negotiable rules for workflow/converter/skill/runtime authority.`);
+Checks active HTML-to-UCUF rules from tools_node/lib/html-to-ucuf/rule-registry.json.`);
 }
 
 function main() {

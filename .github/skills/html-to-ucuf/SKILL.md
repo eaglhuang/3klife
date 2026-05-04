@@ -1,19 +1,26 @@
 ---
 doc_id: doc_agentskill_0036
 name: html-to-ucuf
-description: "HTML -> UCUF (Cocos Creator UI) conversion skill. Use for turning a complete HTML source package with ui-design-tokens.json and colors_and_type.css into Cocos usable layout/skin/screen JSON, then validating with Plan 4.1 regression closure: rule guard, visual fidelity risk, runtime interaction smoke, and Cocos Editor screenshot final gate."
+description: "HTML -> UCUF (Cocos Creator UI) conversion skill. Use for turning a complete HTML source package with ui-design-tokens.json and colors_and_type.css into Cocos usable layout/skin/screen JSON, then validating with Plan5 final fidelity gates: stale-rule audit, rule guard, visual fidelity risk, runtime interaction smoke, Cocos Editor final gate, and 95% regression matrix."
 argument-hint: "Formal runs need --source-dir, --main-html, --screen-id, --bundle, --editor-screenshot, --capture-protocol, and --capture-report. --input, --skip-editor-compare, --no-runtime-sync, and --no-per-tab-replay are debug only."
 ---
 
 # HTML-to-UCUF Skill
 
-This skill converts HTML into UCUF JSON for Cocos Creator UI. The current execution spec is `docs/html_skill_plan4.md`.
+This skill converts HTML into UCUF JSON for Cocos Creator UI. The current execution spec is `docs/html_skill_plan5.md`.
 
 Authority order:
 
 - Plan 2 (`docs/html_skill_plan2.md`): historical evidence only.
-- Plan 3 (`docs/html_skill_plan3.md`): latest rule source.
-- Plan 4 (`docs/html_skill_plan4.md`): current execution spec and regression closure.
+- Plan 3 (`docs/html_skill_plan3.md`): historical transition source.
+- Plan 4 (`docs/html_skill_plan4.md`): prior execution evidence and Plan 4.1 regression closure.
+- Plan 5 (`docs/html_skill_plan5.md`): current execution spec for final fidelity, stale-rule cleanup, and 95% Cocos final gate closure.
+
+## Rule Source
+
+- `tools_node/lib/html-to-ucuf/rule-registry.json` is the single machine-readable rule source of truth.
+- `tools_node/lib/html-to-ucuf/rule-checkers.js` contains rule checker implementations.
+- `docs/html_skill_plan4.md` and `docs/html_skill_plan5.md` are version deltas and decision records, not the formal rule registry.
 
 Unity 對照：這條流程相當於 UI Toolkit importer + Prefab/Scene sync + Play Mode interaction smoke + Game View final compare；不要把 debug 輸出當成正式通過。
 
@@ -43,10 +50,12 @@ Formal flow also requires:
 - final replay from source-derived output.
 - per-tab replay fragments for tabbed sources.
 - runtime sync into `assets/resources/ui-spec`.
+- Plan5 stale-rule and final-fidelity requirements.
 - Plan 4.1 rule guard pass.
 - runtime interaction smoke when interaction sidecars exist.
 - visual fidelity risk pass for semantic, background, and composite fidelity.
-- Cocos Editor final gate pass, using a formal capture report whose `actualScreenId` matches the converted `screenId`.
+- Cocos Editor final gate pass, using a formal capture report whose `actualScreenId` matches the converted `screenId` and whose adjusted score is at least `0.95`.
+- If Cocos final gate fails, workflow summary must include blocker taxonomy and non-empty `nextFixes`.
 
 ## Debug Only
 
@@ -70,38 +79,21 @@ These switches always mean `debugOnly=true` and cannot produce a formal pass ver
 6. Replay each tab and write fragment JSON for tabbed sources.
 7. Sync final layout/skin/screen into `assets/resources/ui-spec`.
 8. Run Plan 4.1 rule guard.
-9. Run visual fidelity risk checks for semantic, background, and composite fidelity.
-10. Run runtime interaction smoke when interaction sidecars exist.
-11. Capture Cocos through the formal route: `node tools_node/capture-ui-screens.js --formal-screen-id <screen-id> --uiVersion <workflow-uiVersion> --maxWidth 0`.
-12. Run HTML source vs Cocos Editor screenshot final gate with `--capture-report`.
-13. Write workflow summary with `debugOnly`, `ruleGuard`, `visualFidelityRisk`, `interactionRuntime`, `runtimeAuthority`, `finalCapture`, and `nextFixes`.
+9. Run Plan5 stale-rule checks when touching workflow/converter/runtime/final-gate logic.
+10. Run visual fidelity risk checks for semantic, background, and composite fidelity.
+11. Run runtime interaction smoke when interaction sidecars exist.
+12. Capture Cocos through the formal route: `node tools_node/capture-ui-screens.js --formal-screen-id <screen-id> --uiVersion <workflow-uiVersion> --maxWidth 0`.
+13. Run HTML source vs Cocos Editor screenshot final gate with `--capture-report` and `0.95` threshold.
+14. If the final gate score is below `0.95`, classify the failure as CSS extraction, runtime renderer, capture authority, spec authority, or assetization-required, and emit non-empty `nextFixes`.
+15. Write workflow summary with `debugOnly`, `ruleGuard`, `visualFidelityRisk`, `interactionRuntime`, `runtimeAuthority`, `finalCapture`, `finalFidelity`, `blockerTaxonomy`, and `nextFixes`.
 
-## Non-Negotiable Rules
+## Governance Summary
 
-- `H2U-P4-001`: formal entry must use source package.
-- `H2U-P4-002`: formal pass requires Cocos Editor final gate.
-- `H2U-P4-003`: formal pass requires runtime sync.
-- `H2U-P4-004`: tabbed source requires per-tab replay fragments.
-- `H2U-P4-005`: core logic cannot hardcode one screen fixture.
-- `H2U-P4-006`: strict replay cannot repair by copying raw sidecars into final.
-- `H2U-P4-007`: formal readiness cannot use `<screenId>-default` skin fallback.
-- `H2U-P4-008`: final gates must read synced final runtime JSON.
-- `H2U-P4-009`: formal flow requires source CSS/tokens.
-- `H2U-P4-010`: tab routing must be data-driven.
-- `H2U-P4-011`: `svg-radar-chart` needs full source SVG geometry.
-- `H2U-P4-012`: draft-builder rules must be registered by stage/ruleId.
-- `H2U-P4-013`: this skill must keep Plan 4 as current execution spec.
-- `H2U-P4-014`: semantic classifier must be token-aware; no bare substring regex for `story`.
-- `H2U-P4-015`: `story-strip` must come from explicit attribute, contract, or multi-signal evidence.
-- `H2U-P4-016`: gradient and image backgrounds cannot silently downgrade to flat color.
-- `H2U-P4-017`: radial gradients must preserve geometry or become blocker/assetization-required.
-- `H2U-P4-018`: interaction sidecars must be executed in Preview runtime, not just synced as JSON.
-- `H2U-P4-019`: visual risk in primary zones blocks formal pass even when CSS coverage is high.
-- `H2U-P4-020`: formal runtime sync cannot use raw sidecar fallback to fake final authority.
-- `H2U-P4-021`: final capture `expectedScreenId` and `actualScreenId` must match the converted screen.
-- `H2U-P4-022`: final capture must include runtime version and runtime spec hashes.
-- `H2U-P4-023`: legacy product preview targets cannot be used as formal HTML-to-UCUF gates.
-- `H2U-P4-024`: source package resolver must support shared parent token/CSS roots.
+- Formal runs still require source package entry, runtime sync, strict rule guard, interaction smoke when needed, and Cocos Editor final gate.
+- Core converter/runtime/validator logic must stay screen-agnostic; fixture-specific behavior belongs in tests, not in production flow.
+- When Cocos final gate is below `0.95`, the workflow must fail and emit actionable `nextFixes`; high browser coverage plus low Cocos score must also emit blocker taxonomy.
+- Unsupported CSS, degraded visual fallback, capture authority drift, and runtime authority drift must surface as blockers or tracked advisories from the rule registry, not as silent pass paths.
+- Read the exact rule metadata from `tools_node/lib/html-to-ucuf/rule-registry.json`; do not duplicate the full rule body in this skill document.
 
 ## Validation Commands
 
@@ -113,15 +105,18 @@ node tools_node/test/dom-to-ui-self-test.js --group html-to-ucuf-active-contract
 node tools_node/test/dom-to-ui-self-test.js --group html-to-ucuf-fidelity-contract
 node tools_node/validate-ui-specs.js --strict --rules tab-fragment-geometry-contract,composite-panel-tab-route-integrity,formal-skin-path,synced-runtime-path-freshness,background-layer-preservation,formal-visual-risk-path,runtime-interaction-smoke-path
 node tools_node/validate-html-to-ucuf-rule-guard.js --strict --capture-report <capture-report.json> --expected-screen-id <screen-id>
-node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/html-to-ucuf-plan4-rule-guard.json
+node tools_node/validate-html-to-ucuf-rule-guard.js --strict --report artifacts/html-to-ucuf-rule-guard.json
+node tools_node/compare-html-to-cocos-editor.js --help
+node tools_node/check-context-budget.js --changed --emit-keep-note
 ```
 
 ## Notes For Agents
 
-- Do not resurrect Phase B tools as the main path. `generate-tab-childpanels.js`, `runtime-screen-diff.js`, and `cutover-screen-variant.js` are not the formal Plan 4 flow.
+- Do not resurrect Phase B tools as the main path. `generate-tab-childpanels.js`, `runtime-screen-diff.js`, and `cutover-screen-variant.js` are not the formal Plan5 flow.
 - DS3 may be used as a fixture, but core converter/workflow/validator code must stay screen-agnostic.
 - If the score is low, keep testing the converted JSON from the current HTML source package. Do not switch to default skins or old runtime files to make the gate easier.
+- If browser coverage is high but Cocos final gate is low, treat the run as a Plan5 diagnostic failure until `blockerTaxonomy` and `nextFixes` identify the next tool/runtime fix.
 - If final gate reports a low score, inspect `captureAuthority` first. A legacy `GachaMain`/product route mismatch is a blocker, not a converter fidelity result.
 - Keep `history-not-story`, `radial-slide-background`, and `interaction-carousel` style regressions as fixtures.
-- When adding logic to `draft-builder.js`, first attach it to the Plan 4 stage registry and add a self-test tag.
+- When adding logic to `draft-builder.js`, first attach it to the registry-backed `draftBuilderStageRules` mapping and add a self-test tag.
 - Add short Traditional Chinese comments at classifier, background fallback, runtime binding, and formal gate boundaries to explain why old fallback paths stay blocked.
