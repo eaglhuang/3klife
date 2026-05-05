@@ -1,14 +1,14 @@
 // doc_id: doc_other_0009 - CSS capability to skin-kind contract checks.
 'use strict';
 
-const { classifyCssProperty } = require('./css-capability-matrix');
+const { classifyCssProperty, isRenderableGradientLayer } = require('./css-capability-matrix');
 
 function runtimeSkinKindForCssProperty(property, value) {
   const prop = String(property || '').toLowerCase();
   const raw = String(value || '').toLowerCase();
   if (prop === 'background-color') return 'color-rect';
   if (prop === 'background' || prop === 'background-image') {
-    if (/linear-gradient\s*\(/.test(raw)) return 'gradient-rect';
+    if (isRenderableGradientLayer(raw)) return 'gradient-rect';
     if (/url\s*\(/.test(raw)) return 'sprite-frame';
     return 'color-rect';
   }

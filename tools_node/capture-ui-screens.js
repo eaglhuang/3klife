@@ -426,6 +426,20 @@ async function collectRuntimeGeometry(page) {
             'GachaDs3',
             'GachaDs3_body',
             'GachaDs3_div_1',
+            'BannerSlide_general',
+            'BannerSlide_legendary',
+            'BannerSlide_support',
+            'skinLayer_GachaDs3_div_2',
+            'skinLayer_GachaDs3_div_3',
+            'skinLayer_GachaDs3_div_4',
+            'skinLayer_GachaDs3_div_6',
+            'skinLayer_GachaDs3_div_5_GachaDs3_div_6',
+            'skinLayer_GachaDs3_div_12',
+            'skinLayer_GachaDs3_div_16',
+            'skinLayer_GachaDs3_div_15_GachaDs3_div_16',
+            'skinLayer_GachaDs3_div_22',
+            'skinLayer_GachaDs3_div_26',
+            'skinLayer_GachaDs3_div_25_GachaDs3_div_26',
             'RightPanel',
             'GachaDs3_div_35',
             'GachaDs3_div_38',
@@ -471,6 +485,51 @@ async function collectRuntimeGeometry(page) {
                 return null;
             }
         };
+        const readOpacity = (node) => {
+            try {
+                const opacity = node.getComponent && node.getComponent('cc.UIOpacity');
+                if (!opacity) return null;
+                return {
+                    enabled: Boolean(opacity.enabled),
+                    opacity: round(opacity.opacity),
+                };
+            } catch {
+                return null;
+            }
+        };
+        const readSprite = (node) => {
+            try {
+                const sprite = node.getComponent && node.getComponent('cc.Sprite');
+                if (!sprite) return null;
+                const color = sprite.color || null;
+                return {
+                    enabled: Boolean(sprite.enabled),
+                    type: sprite.type ?? null,
+                    sizeMode: sprite.sizeMode ?? null,
+                    color: color ? { r: round(color.r), g: round(color.g), b: round(color.b), a: round(color.a) } : null,
+                    hasSpriteFrame: Boolean(sprite.spriteFrame),
+                };
+            } catch {
+                return null;
+            }
+        };
+        const readGradient = (node) => {
+            try {
+                const gradient = node.getComponent && node.getComponent('GradientBackground');
+                if (!gradient) return null;
+                return {
+                    enabled: Boolean(gradient.enabled),
+                    type: gradient._gradientType || null,
+                    repeating: Boolean(gradient._repeating),
+                    center: { x: round(gradient._radialCenterX), y: round(gradient._radialCenterY) },
+                    radius: { x: round(gradient._radialRadiusX), y: round(gradient._radialRadiusY) },
+                    repeatSpanPx: round(gradient._repeatSpanPx),
+                    repeatSpanRatio: round(gradient._repeatSpanRatio),
+                };
+            } catch {
+                return null;
+            }
+        };
         const readNode = (name) => {
             const node = find(name);
             if (!node) return { exists: false };
@@ -496,11 +555,15 @@ async function collectRuntimeGeometry(page) {
                 active: Boolean(node.active),
                 activeInHierarchy: Boolean(node.activeInHierarchy ?? node.active),
                 parent: node.parent ? node.parent.name : null,
+                childNames: (node.children || []).slice(0, 24).map(child => child && child.name ? child.name : null).filter(Boolean),
                 position: vec(node.position),
                 worldPosition: vec(node.worldPosition),
                 size: { width, height },
                 anchor: { x: anchorX, y: anchorY },
                 widget: readWidget(node),
+                opacity: readOpacity(node),
+                sprite: readSprite(node),
+                gradient: readGradient(node),
                 worldTopLeft,
                 worldBottomRight,
             };

@@ -1161,6 +1161,17 @@ function runPerTabReplay(paths, opts, sourcePackage, inputPath) {
 
   const manifestPath = path.join(paths.tabReplayDir, `${opts.screenId}.tab-fragments.json`);
   const manifest = readJsonIfExists(manifestPath);
+  const renderOutput = `${renderProc.stdout || ''}\n${renderProc.stderr || ''}`;
+  if (renderProc.status !== 0 && /no tabs discovered/i.test(renderOutput)) {
+    return {
+      skipped: true,
+      reason: 'no-tabs-discovered',
+      renderExitCode: renderProc.status ?? 1,
+      manifest: rel(manifestPath),
+      fragments: [],
+      mergedSkinSlots: 0,
+    };
+  }
   const result = {
     skipped: false,
     renderExitCode: renderProc.status ?? 1,

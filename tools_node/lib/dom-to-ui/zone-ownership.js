@@ -213,6 +213,10 @@ function resolveZoneTraceability(zone, traceCatalog) {
     sourceDomSelectors,
     ucufNodeSlots,
     sourceProperties: mergedProperties,
+    bakeActions: uniqueStrings(matches.map(match => match.bakeAction)),
+    bakeStatuses: uniqueStrings(matches.map(match => match.bakeStatus)),
+    runtimeAssetPaths: uniqueStrings(matches.map(match => match.runtimeAssetPath)),
+    skinSlotKinds: uniqueStrings(matches.map(match => match.skinSlotKind)),
     confidence: matches[0].matchConfidence || 'bake-manifest-layout',
     selectorTracePending: sourceDomSelectors.length === 0 && ucufNodeSlots.length === 0,
   });
@@ -220,6 +224,14 @@ function resolveZoneTraceability(zone, traceCatalog) {
 
 function retargetZoneFromTraceability(zone) {
   if (!zone || !zone.traceability || !/^pixel-diff:/.test(String(zone.id || ''))) return;
+  const traceDerived = inferTaxonomyFromTraceability(zone.traceability);
+  if (traceDerived && traceDerived !== zone.taxonomy) {
+    zone.taxonomy = traceDerived;
+    zone.ownerBucket = ownerBucketForTaxonomy(traceDerived);
+    zone.recommendation = recommendationForTaxonomy(traceDerived);
+    zone.traceability.runtimeOwner = zone.ownerBucket;
+    return;
+  }
   const sourceProperties = Array.isArray(zone.traceability.sourceProperties)
     ? zone.traceability.sourceProperties.filter(Boolean)
     : [];
@@ -235,6 +247,15 @@ function retargetZoneFromTraceability(zone) {
   zone.ownerBucket = ownerBucketForTaxonomy(derived);
   zone.recommendation = recommendationForTaxonomy(derived);
   zone.traceability.runtimeOwner = zone.ownerBucket;
+}
+
+function inferTaxonomyFromTraceability(traceability) {
+  const bakeActions = Array.isArray(traceability && traceability.bakeActions)
+    ? traceability.bakeActions.filter(Boolean)
+    : [];
+  if (bakeActions.includes('manual-art-asset')) return 'manual-art-asset';
+  if (bakeActions.includes('converter-geometry')) return 'converter-geometry';
+  return null;
 }
 
 function inferTaxonomyFromProperties(sourceProperties) {

@@ -13,6 +13,7 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const crypto = require('crypto');
 const { spawnSync } = require('child_process');
 const { PNG } = require('pngjs');
 const { buildDraftFromHtml } = require('../lib/dom-to-ui/draft-builder');
@@ -46,6 +47,10 @@ function ok(msg) {
   console.log(`[ok] ${msg}`);
 }
 
+function sha256File(filePath) {
+  return 'sha256:' + crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
+}
+
 function run(args, env) {
   const hasFidelityIntent = args.some(a => [
     '--no-css-coverage', '--strict-coverage', '--coverage-baseline',
@@ -65,6 +70,53 @@ function withTempDir(fn) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dom-to-ui-selftest-'));
   try { return fn(dir); } finally {
     try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) { /* ignore */ }
+  }
+}
+
+function collectRuntimeSpecArtifacts(screenId) {
+  const base = path.join(REPO_ROOT, 'assets', 'resources', 'ui-spec');
+  const screensDir = path.join(base, 'screens');
+  return [
+    path.join(base, 'layouts', `${screenId}.json`),
+    path.join(base, 'layouts', `${screenId}.layout.json`),
+    path.join(base, 'skins', `${screenId}.skin.json`),
+    path.join(screensDir, `${screenId}.json`),
+    path.join(screensDir, `${screenId}.screen.json`),
+    path.join(screensDir, `${screenId}.preload.json`),
+    path.join(screensDir, `${screenId}.performance.json`),
+    path.join(screensDir, `${screenId}.composite.json`),
+    path.join(screensDir, `${screenId}.bundle-suggestion.json`),
+    path.join(screensDir, `${screenId}.interaction.json`),
+    path.join(screensDir, `${screenId}.motion.json`),
+    path.join(screensDir, `${screenId}.fragment-routes.json`),
+    path.join(screensDir, `${screenId}.tab-routing.json`),
+    path.join(screensDir, `${screenId}.logic-inventory.json`),
+    path.join(screensDir, `${screenId}.logic-guard.json`),
+    path.join(screensDir, `${screenId}.r-guard.json`),
+    path.join(screensDir, `${screenId}.visual-review.json`),
+    path.join(screensDir, `${screenId}.readiness.json`),
+    path.join(screensDir, `${screenId}.runtime-version.json`),
+  ];
+}
+
+function backupFiles(filePaths) {
+  return filePaths.map((filePath) => ({
+    filePath,
+    existed: fs.existsSync(filePath),
+    content: fs.existsSync(filePath) ? fs.readFileSync(filePath) : null,
+  }));
+}
+
+function restoreFiles(backups) {
+  for (const entry of backups || []) {
+    if (!entry || !entry.filePath) continue;
+    if (entry.existed) {
+      fs.writeFileSync(entry.filePath, entry.content);
+      continue;
+    }
+    if (fs.existsSync(entry.filePath)) {
+      fs.rmSync(entry.filePath, { force: true });
+    }
   }
 }
 
@@ -1280,14 +1332,13 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
   // R-19: classifier capability must equal runtime + converter + sidecar
   // capability sum (recursive principle from R-16 evolution2). The runtime
   // already renders `linear-gradient(...)` / `radial-gradient(...)` /
-  // `conic-gradient(...)` via `GradientBackground` component routed through
-  // `gradient-rect` skin slot, and renders `url(...)` via sprite-frame slot.
-  // Therefore single-layer gradients / url() must be `supported`, NOT
-  // `assetize`. Same for `background-image` / `background-position` /
-  // `background-size` / `background-repeat` longhand which are slot CONFIG.
-  // Only mixed multi-layer (`linear-gradient(...) , url(...)`) genuinely
-  // need sidecar bake. Generic for every UI: gradient/url backgrounds are
-  // pervasive and were being falsely flagged as render gaps.
+  // the parity-safe subset of `radial-gradient(...)` via `GradientBackground`
+  // routed through `gradient-rect`, and renders `url(...)` via sprite-frame
+  // slot. Therefore single-layer linear, simple centered radial, and url()
+  // backgrounds must be `supported`, NOT `assetize`. Same for
+  // `background-image` / `background-position` / `background-size` /
+  // `background-repeat` longhand which are slot CONFIG. Only mixed multi-layer
+  // or complex/off-center radial values genuinely need sidecar bake.
   {
     const { classifyCssProperty, buildCssCapabilityReport } =
       require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
@@ -1296,10 +1347,10 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     //     layer become supported (runtime renders them); multi-layer mixes
     //     remain assetize.
     if (classifyCssProperty('background', 'linear-gradient(red, blue)') !== 'supported') fail('R-19 background linear-gradient must be supported (runtime: GradientBackground)');
-    // R-24 supersedes the old R-19 expectations: converter `buildGradientRectSlot`
-    // only accepts single linear-gradient; radial / conic are rejected and have
-    // ZERO native render. Now correctly classified `assetize`.
-    if (classifyCssProperty('background', 'radial-gradient(circle, red, blue)') !== 'assetize') fail('R-19+R-24 background radial-gradient must be assetize');
+    if (classifyCssProperty('background', 'radial-gradient(circle, red, blue)') !== 'supported') fail('R-19 background simple radial-gradient must be supported');
+    if (classifyCssProperty('background', 'radial-gradient(circle at 50% 50%, red, blue)') !== 'supported') fail('R-19 background centered radial-gradient must be supported');
+    if (classifyCssProperty('background', 'radial-gradient(circle at 40% 30%, red, blue)') !== 'assetize') fail('R-19+R-24 off-center radial-gradient must be assetize');
+    if (classifyCssProperty('background', 'radial-gradient(ellipse 120% 80% at 40% 30%, red, blue)') !== 'assetize') fail('R-19+R-24 explicit-size radial-gradient must be assetize');
     if (classifyCssProperty('background', 'conic-gradient(red, blue)') !== 'assetize') fail('R-19+R-24 background conic-gradient must be assetize');
     if (classifyCssProperty('background', 'url(./bg.png)') !== 'supported') fail('R-19 background url() must be supported (runtime: sprite-frame)');
     if (classifyCssProperty('background', 'url(./bg.png) center / cover no-repeat') !== 'supported') fail('R-19 single-layer url with config must be supported');
@@ -1308,7 +1359,9 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     if (classifyCssProperty('background', '#0F0F0F') !== 'supported') fail('R-19 regression: solid color must remain supported');
 
     // (b) `background-image` longhand: same rule as `background`.
-    if (classifyCssProperty('background-image', 'linear-gradient(red, blue)') !== 'supported') fail('R-19 background-image gradient must be supported');
+    if (classifyCssProperty('background-image', 'linear-gradient(red, blue)') !== 'supported') fail('R-19 background-image linear-gradient must be supported');
+    if (classifyCssProperty('background-image', 'radial-gradient(circle, red, blue)') !== 'supported') fail('R-19 background-image simple radial-gradient must be supported');
+    if (classifyCssProperty('background-image', 'radial-gradient(ellipse 120% 80% at 40% 30%, red, blue)') !== 'assetize') fail('R-19+R-24 background-image explicit-size radial-gradient must be assetize');
     if (classifyCssProperty('background-image', 'url(./x.png)') !== 'supported') fail('R-19 background-image url() must be supported');
     if (classifyCssProperty('background-image', 'none') !== 'supported') fail('R-19 background-image: none must be supported');
     if (classifyCssProperty('background-image', 'linear-gradient(red, blue), url(./x.png)') !== 'assetize') fail('R-19 background-image mixed must remain assetize');
@@ -1322,12 +1375,12 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     // (d) Summary impact: a CSS that uses only single-layer gradient/url
     //     backgrounds must produce zero assetize entries.
     const r = buildCssCapabilityReport(
-      '.x { background: linear-gradient(red, blue); } .y { background: url(./bg.png); } .z { background-image: linear-gradient(black, white); background-size: cover; background-position: center; }'
+      '.x { background: linear-gradient(red, blue); } .y { background: radial-gradient(circle, red, blue); } .z { background-image: linear-gradient(black, white); background-size: cover; background-position: center; }'
     );
     if (r.summary.assetize !== 0) fail(`R-19 single-layer gradient/url CSS must yield 0 assetize, got ${r.summary.assetize}`);
     if (r.summary.unsupported !== 0) fail(`R-19 single-layer gradient/url CSS must yield 0 unsupported, got ${r.summary.unsupported}`);
 
-    ok('R-19 classifier aligned with runtime: single-layer gradient/url backgrounds + background-image/position/size/repeat all supported; only mixed multi-layer remains assetize');
+    ok('R-19 classifier aligned with runtime: single-layer linear/simple-radial/url backgrounds + background-image/position/size/repeat all supported; only complex radial or multi-layer mixes remain assetize');
   }
 
   // R-20: declaration-boundary anchoring + digit-aware property names.
@@ -1387,12 +1440,9 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     if (classifyCssProperty('background', v1) !== 'supported') fail(`R-21 single linear-gradient with rgba stops must be supported, got ${classifyCssProperty('background', v1)}`);
     if (classifyCssProperty('background-image', v1) !== 'supported') fail('R-21 background-image single linear-gradient must be supported');
 
-    // (b) Single radial-gradient with multiple rgba stops: R-21 originally
-    //     classified as supported (paren-aware split worked). R-24 supersedes:
-    //     converter rejects radial-gradient (only linear-gradient is realised),
-    //     so single radial is now `assetize` — but the R-21 paren-aware split
-    //     still works (single layer detected), this test now verifies the
-    //     subtype routing works correctly.
+    // (b) Single complex radial-gradient with multiple rgba stops: the
+    //     paren-aware split still identifies it as a single layer, but the
+    //     off-center / explicit-size geometry keeps it in `assetize`.
     const v2 = 'radial-gradient(ellipse at 30% 40%, rgba(139,98,42,.3), rgba(44,58,66,.25), transparent 60%)';
     if (classifyCssProperty('background', v2) !== 'assetize') fail(`R-21+R-24 single radial-gradient with rgba stops must be assetize, got ${classifyCssProperty('background', v2)}`);
 
@@ -1481,11 +1531,9 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
   }
 
   // R-24: gradient-subtype accuracy fix on background / background-image.
-  // Converter `buildGradientRectSlot` only accepts single linear-gradient;
-  // radial-gradient and conic-gradient are rejected and therefore have
-  // ZERO native render. Classifier must mirror this (R-19 recursive
-  // principle) instead of blanket-saying `supported` for any gradient.
-  // Generic for any UI using radial spotlights / conic ring effects.
+  // Runtime parity is narrower than "all gradients": single linear and only
+  // simple centered radial are considered safe. Off-center / explicit-size /
+  // repeating-radial / conic still require assetization or further evidence.
   {
     const { classifyCssProperty } =
       require(path.resolve(__dirname, '..', 'lib', 'dom-to-ui', 'css-capability-matrix.js'));
@@ -1500,9 +1548,14 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     if (classifyCssProperty('background', 'linear-gradient(180deg, #000, #fff)') !== 'supported') fail('R-24 single linear-gradient background must be supported');
     if (classifyCssProperty('background-image', 'linear-gradient(90deg, transparent 45%, rgba(10,10,10,.7) 100%)') !== 'supported') fail('R-24 single linear-gradient background-image must be supported');
 
-    // Single radial-gradient = assetize (converter rejects, was false-positive supported).
-    if (classifyCssProperty('background', 'radial-gradient(ellipse at 50% 50%, #000, transparent 70%)') !== 'assetize') fail('R-24 single radial-gradient background MUST be assetize, not supported');
-    if (classifyCssProperty('background-image', 'radial-gradient(circle, red, blue)') !== 'assetize') fail('R-24 single radial-gradient background-image MUST be assetize');
+    // Simple centered radial = supported; complex radial = assetize.
+    if (classifyCssProperty('background', 'radial-gradient(circle, #000, transparent 70%)') !== 'supported') fail('R-24 simple centered radial-gradient background must be supported');
+    if (classifyCssProperty('background-image', 'radial-gradient(circle, red, blue)') !== 'supported') fail('R-24 simple centered radial-gradient background-image must be supported');
+    if (classifyCssProperty('background', 'radial-gradient(ellipse 120% 80% at 40% 30%, #000, transparent 70%)') !== 'assetize') fail('R-24 explicit-size off-center radial-gradient background MUST be assetize');
+    if (classifyCssProperty('background-image', 'radial-gradient(circle at 40% 30%, red, blue)') !== 'assetize') fail('R-24 off-center radial-gradient background-image MUST be assetize');
+
+    // Repeating radial remains assetize until dedicated parity evidence exists.
+    if (classifyCssProperty('background', 'repeating-radial-gradient(circle, red 0 4px, blue 4px 8px)') !== 'assetize') fail('R-24 repeating-radial background MUST be assetize');
 
     // Single conic-gradient = assetize.
     if (classifyCssProperty('background', 'conic-gradient(from 0deg, red, yellow, green)') !== 'assetize') fail('R-24 single conic-gradient background MUST be assetize');
@@ -1512,7 +1565,7 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     if (classifyCssProperty('background', 'linear-gradient(180deg,#000,#fff), url(a.png)') !== 'assetize') fail('R-24 multi-layer linear+url must remain assetize');
     if (classifyCssProperty('background', 'radial-gradient(red,blue), linear-gradient(0deg,green,yellow)') !== 'assetize') fail('R-24 multi-layer radial+linear must remain assetize');
 
-    ok('R-24 gradient-subtype accuracy: single radial / conic gradient correctly routed to assetize (was false-positive supported); single linear remains supported; multi-layer mix unchanged');
+    ok('R-24 gradient-subtype accuracy: single linear and simple centered radial stay supported; complex radial, repeating-radial, conic, and multi-layer mixes remain assetize');
   }
 
   // R-25/R-27: deterministic bake-manifest builder. Pure function over
@@ -1537,9 +1590,9 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
         background: 'linear-gradient(180deg,#000,#fff)',
         _rect: { x: 0, y: 0, w: 100, h: 100 },
       }, pseudo: null },
-      // (c) assetize + explicit fragment: small radial background -> auto-bake.
+      // (c) assetize + explicit fragment: small complex radial background -> auto-bake.
       { id: 8, tag: 'div', path: 'body > div.small-fragment', bakeMode: 'fragment', styles: {
-        background: 'radial-gradient(red,blue)',
+        background: 'radial-gradient(ellipse 120% 80% at 40% 30%, red, blue)',
         _rect: { x: 10.25, y: 20.5, w: 48, h: 48 },
       }, pseudo: null },
       // (d) assetize: clip-path 5-point polygon -> converter geometry, not screenshot.
@@ -1622,7 +1675,8 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
 
     const contract = buildCssSkinKindContractReport([
       { property: 'background', value: 'linear-gradient(180deg,#000,#fff)', expectedCapability: 'supported', expectedSkinKind: 'gradient-rect' },
-      { property: 'background', value: 'radial-gradient(red,blue)', expectedCapability: 'assetize', expectedSkinKind: 'background-set' },
+      { property: 'background', value: 'radial-gradient(circle, red, blue)', expectedCapability: 'supported', expectedSkinKind: 'gradient-rect' },
+      { property: 'background', value: 'radial-gradient(ellipse 120% 80% at 40% 30%, red, blue)', expectedCapability: 'assetize', expectedSkinKind: 'background-set' },
       { property: 'background-image', value: 'url("panel.png")', expectedCapability: 'supported', expectedSkinKind: 'sprite-frame' },
       { property: 'box-shadow', value: '0 6px 20px #000', expectedCapability: 'supported', expectedSkinKind: 'shadow-set' },
       { property: 'box-shadow', value: 'inset 0 0 16px #fff', expectedCapability: 'assetize', expectedSkinKind: 'shadow-set' },
@@ -1747,6 +1801,42 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
   ok('HTML source vs Cocos Editor screenshot gate passes, fails, emits evolution2 candidate, applies capture protocol, classifies zone ownership, and supports approved art delta');
 
   const workflowOut = path.join(tmp, 'v2-workflow');
+  const workflowProtocol = path.join(tmp, 'v2-workflow.final-capture-protocol.json');
+  const workflowCaptureProtocol = {
+    schemaVersion: '1.0.0',
+    screenId: 'v2-workflow',
+    viewport: { width: 64, height: 64, dpr: 1 },
+    safeArea: { x: 0, y: 0, width: 64, height: 64 },
+    settleMs: 0,
+    threshold: 0.95,
+    tolerance: 12,
+    finalCompareEligible: true,
+    finalCompareViolations: [],
+    finalImageSize: { width: 64, height: 64 },
+    imageSizeAfterScreenshot: { width: 64, height: 64 },
+    requestedMaxWidth: 0,
+    effectiveMaxWidth: 0,
+  };
+  fs.writeFileSync(workflowProtocol, JSON.stringify(workflowCaptureProtocol, null, 2), 'utf8');
+  const workflowCaptureReport = path.join(tmp, 'v2-workflow.capture-report.json');
+  fs.writeFileSync(workflowCaptureReport, JSON.stringify({
+    schemaVersion: '1.0.0',
+    captures: [
+      {
+        file: editorBlue,
+        screenshotHash: sha256File(editorBlue),
+        screenId: 'v2-workflow',
+        expectedScreenId: 'v2-workflow',
+        actualScreenId: 'v2-workflow',
+        captureMode: 'formal-html-to-ucuf',
+        uiVersion: 'selftest-v2-workflow',
+        runtimeVersion: 'selftest-v2-workflow',
+        runtimeSpecHash: { screen: 'selftest-screen', layout: 'selftest-layout', skin: 'selftest-skin' },
+        captureProtocol: workflowCaptureProtocol,
+      },
+    ],
+  }, null, 2), 'utf8');
+  const workflowRuntimeBackup = backupFiles(collectRuntimeSpecArtifacts('v2-workflow'));
   p = spawnSync(process.execPath, [HTML_TO_UCUF_WORKFLOW_CLI,
     '--source-dir', sourceDir,
     '--main-html', 'index.html',
@@ -1757,14 +1847,18 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     '--viewport', '64x64',
     '--skip-compare',
     '--no-validate',
+    '--capture-protocol', workflowProtocol,
+    '--capture-report', workflowCaptureReport,
     '--evolution-log', evolutionLog,
   ], { encoding: 'utf8', env: Object.assign({}, process.env, { DOM_TO_UI_TELEMETRY: '0' }) });
+  restoreFiles(workflowRuntimeBackup);
   if (p.status !== 0) fail(`v2 workflow source-dir exit=${p.status}\nstdout=${p.stdout}\nstderr=${p.stderr}`);
   const summary = JSON.parse(fs.readFileSync(path.join(workflowOut, 'v2-workflow.workflow-summary.json'), 'utf8'));
   if (!summary.sourcePackage || !summary.verdict.editorVisualPass || !summary.verdict.workflowPass) fail('v2 workflow summary missing sourcePackage/editorVisualPass/workflowPass');
   ok('run-html-to-ucuf-workflow --source-dir wires source package and Editor visual gate');
 
   const workflowSkipOut = path.join(tmp, 'v2-workflow-skip-editor');
+  const workflowSkipRuntimeBackup = backupFiles(collectRuntimeSpecArtifacts('v2-workflow-skip-editor'));
   p = spawnSync(process.execPath, [HTML_TO_UCUF_WORKFLOW_CLI,
     '--source-dir', sourceDir,
     '--main-html', 'index.html',
@@ -1773,8 +1867,10 @@ html, body { margin: 0; width: 64px; height: 64px; overflow: hidden; background:
     '--out-dir', workflowSkipOut,
     '--skip-compare',
     '--skip-editor-compare',
+    '--no-per-tab-replay',
     '--no-validate',
   ], { encoding: 'utf8', env: Object.assign({}, process.env, { DOM_TO_UI_TELEMETRY: '0' }) });
+  restoreFiles(workflowSkipRuntimeBackup);
   if (p.status === 0) fail('v2 workflow must not pass when --skip-editor-compare is used');
   const skipSummary = JSON.parse(fs.readFileSync(path.join(workflowSkipOut, 'v2-workflow-skip-editor.workflow-summary.json'), 'utf8'));
   if (skipSummary.verdict.workflowPass || !skipSummary.verdict.remainingIssues.includes('editor-compare-skipped')) {

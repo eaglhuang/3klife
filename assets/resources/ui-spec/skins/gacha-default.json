@@ -1119,24 +1119,24 @@
     },
     "gacha.banner.bg_fill": {
       "kind": "sprite-frame",
-      "path": "sprites/ui_families/gacha/generated/gacha_banner_bg_general",
+      "path": "sprites/ui_families/gacha/generated/gacha_banner_bg_general_formal_1460x880",
       "spriteType": "simple",
       "allowAutoAtlas": false,
-      "note": "M47: proper radial gradient sprite (ellipse 120% 80% at 40% 30%, #1a0a2e 0%, #16061f 40%, #0a0612 100%). Replaces M46 flat color-rect."
+      "note": "PROG-2-0005: formal JPG runtime asset for 1460x880 off-center radial banner background. Replaces 512px alpha PNG family draft."
     },
     "gacha.banner.bg_fill.gold": {
       "kind": "sprite-frame",
-      "path": "sprites/ui_families/gacha/generated/gacha_banner_bg_gold",
+      "path": "sprites/ui_families/gacha/generated/gacha_banner_bg_gold_formal_1460x880",
       "spriteType": "simple",
       "allowAutoAtlas": false,
-      "note": "M47: proper radial gradient sprite (ellipse 120% 80% at 40% 30%, #2a1a00 0%, #1a0f00 40%, #0a0612 100%)."
+      "note": "PROG-2-0005: formal JPG runtime asset for 1460x880 off-center radial banner background."
     },
     "gacha.banner.bg_fill.teal": {
       "kind": "sprite-frame",
-      "path": "sprites/ui_families/gacha/generated/gacha_banner_bg_teal",
+      "path": "sprites/ui_families/gacha/generated/gacha_banner_bg_teal_formal_1460x880",
       "spriteType": "simple",
       "allowAutoAtlas": false,
-      "note": "M47: proper radial gradient sprite (ellipse 120% 80% at 40% 30%, #062020 0%, #041414 40%, #030a0a 100%)."
+      "note": "PROG-2-0005: formal JPG runtime asset for 1460x880 off-center radial banner background."
     },
     "gacha.banner.glow_center": {
       "kind": "color-rect",

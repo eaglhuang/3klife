@@ -5,7 +5,11 @@
     "bundles": [
       "lobby_ui"
     ],
-    "spriteFrames": [],
+    "spriteFrames": [
+      "sprites/ui_families/gacha/generated/gacha_banner_bg_general_formal_1460x880",
+      "sprites/ui_families/gacha/generated/gacha_banner_bg_gold_formal_1460x880",
+      "sprites/ui_families/gacha/generated/gacha_banner_bg_teal_formal_1460x880"
+    ],
     "fonts": [
       "fonts/manrope/font",
       "fonts/newsreader/font",
@@ -30,7 +34,7 @@
     ]
   },
   "counts": {
-    "firstScreenSpriteCount": 0,
+    "firstScreenSpriteCount": 3,
     "deferredSpriteCount": 0
   },
   "_warnings": [

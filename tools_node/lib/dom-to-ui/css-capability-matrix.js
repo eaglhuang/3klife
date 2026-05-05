@@ -56,8 +56,29 @@ function splitTopLevelLayers(value) {
   return layers;
 }
 
+function isSimpleCenteredRadialGradientLayer(layer) {
+  const match = String(layer || '').trim().match(/^radial-gradient\s*\((.*)\)$/i);
+  if (!match) return false;
+  const parts = splitTopLevelLayers(match[1]);
+  if (parts.length === 0) return false;
+  const first = parts[0].trim().toLowerCase();
+  if (!first) return true;
+  if (!/^(circle|ellipse|at\b|closest-|farthest-|\d)/.test(first)) return true;
+  const normalized = first.replace(/\s+/g, ' ');
+  return normalized === 'circle'
+    || normalized === 'ellipse'
+    || normalized === 'at center'
+    || normalized === 'at 50% 50%'
+    || normalized === 'circle at center'
+    || normalized === 'circle at 50% 50%'
+    || normalized === 'ellipse at center'
+    || normalized === 'ellipse at 50% 50%';
+}
+
 function isRenderableGradientLayer(layer) {
-  return /^(repeating-)?linear-gradient\s*\(/i.test(String(layer || '').trim());
+  const raw = String(layer || '').trim();
+  if (/^(repeating-)?linear-gradient\s*\(/i.test(raw)) return true;
+  return isSimpleCenteredRadialGradientLayer(raw);
 }
 
 function hasGradientFunction(value) {
@@ -177,25 +198,24 @@ function classifyCssProperty(property, value) {
   // R-8 (general rule): `background` shorthand must be classified by VALUE,
   // not by name. A plain solid color (`#0F0F0F`, `rgb(...)`, `var(--token)`
   // that resolves to a color) is fully renderable as a `color-rect` skin slot
-  // and must be `supported`. Only `linear-gradient(...)`, `radial-gradient(...)`,
-  // `url(...)` or multi-layer values genuinely need an asset / runtime layer.
+  // and must be `supported`. Only value forms that the runtime has parity for
+  // should be `supported`; the rest still need asset / review routing.
   // Without this rule every design-system UI that uses `background: var(--bg)`
   // gets a noisy `assetize` flag for what is in reality a solid color fill.
   //
   // R-19 (general rule extension, runtime-capability alignment): the runtime
-  // ALREADY renders `linear-gradient(...)` / `radial-gradient(...)` /
-  // `conic-gradient(...)` via the `GradientBackground` component routed through
+  // ALREADY renders `linear-gradient(...)` and the parity-safe subset of
+  // `radial-gradient(...)` via the `GradientBackground` component routed through
   // the `gradient-rect` skin slot kind (see
   // `assets/scripts/ui/components/GradientBackground.ts` +
   // `assets/scripts/ui/core/UIPreviewStyleBuilder.ts`), and renders
   // `url(...)` via the sprite-frame slot kind (see `buildGradientRectSlot`
-  // sibling path in `draft-builder.js`). Therefore single-layer gradient or
-  // url values are NOT assetize work — they are `supported`. Only mixed /
-  // multi-layer values (`linear-gradient(...) , url(...)`) genuinely need
-  // sidecar bake. **General principle (recursive): classifier capability
-  // must equal what runtime + converter + sidecar actually implement; any
-  // time a property's value form has runtime support, classifier MUST say
-  // `supported`, not `assetize`.**
+  // sibling path in `draft-builder.js`). Therefore single-layer linear,
+  // single-layer url, and simple centered radial values are NOT assetize
+  // work — they are `supported`. Off-center / explicit-size radial,
+  // repeating-radial, conic, and mixed multi-layer values still need review
+  // or bake. **General principle (recursive): classifier capability must
+  // equal what runtime + converter + sidecar actually implement.**
   if (prop === 'background') {
     if (!rawValue || rawValue === 'none' || rawValue === 'transparent') return 'supported';
     // R-21: depth-aware top-level comma split; inner rgba()/hsla()/var()
@@ -205,12 +225,12 @@ function classifyCssProperty(property, value) {
     const hasUrl = /\burl\s*\(/i.test(rawValue);
     if (hasGradient && hasUrl) return 'assetize';
     if (layers.length > 1 && (hasGradient || hasUrl)) return 'assetize';
-    // R-24/R-35 (general rule, gradient-subtype accuracy): treat ONLY
-    // single linear/repeating-linear gradients as parity-safe. Fresh gacha
+    // R-24/R-35 (general rule, gradient-subtype accuracy): treat linear and
+    // ONLY simple centered radial gradients as parity-safe. Fresh gacha
     // evidence shows large/off-center radial backgrounds still behave like
-    // blocker territory for final-fidelity even though runtime has a nominal
-    // radial path, so radial/repeating-radial/conic stay assetize until a
-    // fixture proves equivalent rendering instead of heuristic capability.
+    // blocker territory for final-fidelity, so explicit-size / off-center /
+    // repeating-radial / conic stay assetize until a fixture proves
+    // equivalent rendering instead of heuristic capability.
     if (hasGradient) {
       return layers.length === 1 && isRenderableGradientLayer(layers[0]) ? 'supported' : 'assetize';
     }
@@ -272,9 +292,10 @@ function classifyCssProperty(property, value) {
     const hasGradient = hasGradientFunction(rawValue);
     const hasUrl = /\burl\s*\(/i.test(rawValue);
     if (layers.length > 1 && (hasGradient || hasUrl)) return 'assetize';
-    // R-24/R-35 longhand mirror: single linear/radial gradients, including
-    // repeating-* variants, are runtime-supported by the gradient-rect
-    // pipeline; conic and multi-layer mixes still require bake.
+    // R-24/R-35 longhand mirror: single linear and simple centered radial
+    // gradients are runtime-supported by the gradient-rect pipeline; complex
+    // radial, repeating-radial, conic, and multi-layer mixes still require
+    // bake.
     if (hasGradient) {
       return layers.length === 1 && isRenderableGradientLayer(layers[0]) ? 'supported' : 'assetize';
     }
@@ -535,4 +556,10 @@ function extractDeclarationBlocks(cssText) {
   return out.join(';');
 }
 
-module.exports = { classifyCssProperty, buildCssCapabilityReport, extractFontFaceMappings, extractDeclarationBlocks };
+module.exports = {
+  classifyCssProperty,
+  buildCssCapabilityReport,
+  extractFontFaceMappings,
+  extractDeclarationBlocks,
+  isRenderableGradientLayer,
+};

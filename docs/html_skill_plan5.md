@@ -66,7 +66,7 @@ Plan5 接在 `docs/html_skill_plan4.md` 之後，專門處理「HTML source 到 
 | `PROG-2-0002` | **done** | 舊規則與衝突流程審計 | 產出 `docs/html-to-ucuf-plan5-stale-rule-audit.md`；7 項盤點，無未分類 blocker |
 | `PROG-2-0003` | **done** | final gate 診斷契約 | low-score blocker 已落地；下一步需把 `nextFixes` 從 H2U-P5-003 自身升級為 source DOM / UCUF slot / runtime owner 對應 |
 | `PROG-2-0004` | open | CSS semantics extraction parity | selector/background/layout capability matrix；優先補 banner title-block chip wrapper、padding/border/radius 與 pseudo/dynamic DOM capability |
-| `PROG-2-0005` | **in-progress** | runtime renderer parity closure | 0009 r2 已證明大框/底部按鈕 geometry 對齊；下一刀回到 `runtime-renderer background-image`，優先決定 radial background runtime parity fixture 或 manual-art-asset |
+| `PROG-2-0005` | **in-progress** | runtime renderer parity closure | 2026-05-05 已把 radial 規則收斂為「simple centered radial = supported；`banner-bg-fill` 這類 off-center / explicit-size radial = `manual-art-asset`」；下一刀應走 formal runtime assetization / family layer，不再盲修 gradient shader |
 | `PROG-2-0006` | open | generated spec authority hardening | raw/final/synced/runtime hash 與 update-mode/tab replay 防回退；formal summary 必須使用 full-size formal capture inputs，legacy product preview target 只能 diagnostic |
 | `PROG-2-0007` | open | 95% regression matrix | 至少三個 source package 的 browser + Cocos final gate summary |
 | `PROG-2-0008` | **done** | skill workflow rewrite | `rule-registry.json` 落地、registry-driven rule-guard、SKILL.md 改以 Plan5 為 current spec |
@@ -277,6 +277,23 @@ stale-rule audit 已確認大多數舊機制不是未分類 blocker；本輪需�
 - fresh r2 formal evidence：`artifacts/skill-test-html-to-ucuf/gacha-ds3-formal-geometry-20260504-r2/source-vs-cocos-geometry.json` 顯示主要 rect 最大誤差 `0.5px`，兩顆 pull buttons 都回到 source DOM 座標；final compare 從約 `0.6206` 升到約 `0.6467`。
 
 **結論：使用者指出的底部大按鈕差距確實不是單純美術/色塊問題，而是 CSS absolute child + flex layout participation 的轉譯缺口。這個幾何根因已修正；剩餘低分仍大，下一輪應回到 `PROG-2-0005` 的 runtime-renderer background-image / radial assetization 邊界。**
+
+### PROG-2-0005 Renderer/Assetization Boundary Slice（2026-05-05）
+
+- fresh diagnostic capture：`artifacts/ui-qa/gacha-ds3-formal-renderer-20260505-r3/capture-report.json`。新增 runtimeGeometry watch 節點覆蓋 `BannerSlide_*` 與 banner `skinLayer_*`，確認 active slide / inactive slide 狀態正確，主要 skinLayer rect 仍在設計座標內。
+- pixel sampling 顯示 Cocos banner procedural gradient 不是完全缺失，而是在 dark radial 區域比 source 亮約 `10-15` RGB；pull cost icon 區域則約 `1-2` RGB 內，暫不構成 top residual 主因。
+- `tools_node/compare-html-to-cocos-editor.js` 現在把 bake manifest 的 `bakeAction/status/skinSlotKind` 帶進 trace catalog；`tools_node/lib/dom-to-ui/zone-ownership.js` 會在 pixel bucket 命中 `bakeAction=manual-art-asset` 時，把 taxonomy/owner 改掛到 `manual-art-asset` / `assetization-owner`。
+- fresh r3 final compare：`artifacts/skill-test-html-to-ucuf/gacha-ds3-renderer-20260505-r3/final-gate/gacha-ds3.html-cocos-verdict.json`，`adjustedScore≈0.6467`；分數未被 taxonomy 修補拉升，但 top 20 residual 已全部從 `runtime-renderer` 改成 `manual-art-asset`，`nextFixes[0].suggestedSlice=formal-runtime-assetization`。
+
+**結論：`banner-bg-fill` 這批 `1460x880` 大型 off-center radial 背景已正式判定為 assetization boundary，而不是下一個 runtime renderer parity slice。若要繼續追 95%，下一刀應產出 / 導入正式 banner background family layer 或 JPG runtime asset，並保留現有 procedural radial 作為 debug fallback。**
+
+### PROG-2-0005 Radial Boundary Refinement（2026-05-05）
+
+- `tools_node/lib/dom-to-ui/css-capability-matrix.js` 現在不再把所有 radial 一刀切成同一個 bucket：simple centered `radial-gradient(...)` 在 `background` / `background-image` 會列為 `supported`，讓 runtime 已能等價的 case 不再被假 blocker 污染。
+- explicit-size / off-center radial、`repeating-radial-gradient(...)` 與 `conic-gradient(...)` 仍維持 `assetize`；這條線直接對應 gacha `banner-bg-fill` 的 `ellipse 120% 80% at 40% 30%`，所以它仍是 formal runtime assetization，而不是下一個 shader parity slice。
+- `tools_node/lib/dom-to-ui/css-skin-kind-contract.js` 已改為共用同一個 gradient renderability helper；`dom-to-ui-self-test.js` 也新增 simple radial supported / complex radial assetize 的 contract case，避免 classifier、bake-manifest 與 skin-kind mapping 再次分叉。
+
+**結論：`PROG-2-0005` 的 radial 決策已正式收斂成「保留 simple radial runtime path，但把 `banner-bg-fill` 這類 complex radial 固定為 formal assetization boundary」。接下來的有效工作是補 banner background family layer / JPG runtime asset，而不是繼續擴張 generic radial shader 規則。**
 | formal capture image size | fix | `capture-ui-screens.js` 預設 `maxWidth=125` 可保留給 view hygiene；formal compare input 必須強制 full-size（例如 `--maxWidth 0`）或標為 invalid/debug |
 | P5 advisory rules | harden | `H2U-P5-006/007/008` 在 high-browser/low-Cocos case 至少要成為 mandatory evidence section；必要時升為 blocker |
 

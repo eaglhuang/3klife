@@ -54,6 +54,7 @@
         "dpr": 2
       },
       "outputPath": null,
+      "runtimeAssetPath": "sprites/ui_families/gacha/generated/gacha_banner_bg_general_formal_1460x880",
       "bundleHint": "resources",
       "skinSlotKind": "shadow-set",
       "autoBake": false,
@@ -193,8 +194,8 @@
       "skinSlotKind": "background-set",
       "autoBake": false,
       "bakeAction": "manual-art-asset",
-      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
-      "status": "needs-art-asset"
+      "artGuidance": "Resolved by PROG-2-0005 formal JPG runtime asset / family layer; keep source CSS entry as manual-art-asset trace evidence.",
+      "status": "runtime-asset-bound"
     },
     {
       "bakeId": "gacha-ds3__div_14__background-image",
@@ -216,12 +217,13 @@
         "dpr": 2
       },
       "outputPath": null,
+      "runtimeAssetPath": "sprites/ui_families/gacha/generated/gacha_banner_bg_gold_formal_1460x880",
       "bundleHint": "resources",
       "skinSlotKind": "background-set",
       "autoBake": false,
       "bakeAction": "manual-art-asset",
-      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
-      "status": "needs-art-asset"
+      "artGuidance": "Resolved by PROG-2-0005 formal JPG runtime asset / family layer; keep source CSS entry as manual-art-asset trace evidence.",
+      "status": "runtime-asset-bound"
     },
     {
       "bakeId": "gacha-ds3__div_25__background-image",
@@ -243,12 +245,13 @@
         "dpr": 2
       },
       "outputPath": null,
+      "runtimeAssetPath": "sprites/ui_families/gacha/generated/gacha_banner_bg_teal_formal_1460x880",
       "bundleHint": "resources",
       "skinSlotKind": "background-set",
       "autoBake": false,
       "bakeAction": "manual-art-asset",
-      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
-      "status": "needs-art-asset"
+      "artGuidance": "Resolved by PROG-2-0005 formal JPG runtime asset / family layer; keep source CSS entry as manual-art-asset trace evidence.",
+      "status": "runtime-asset-bound"
     }
   ]
 }

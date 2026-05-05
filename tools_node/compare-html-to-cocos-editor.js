@@ -663,6 +663,11 @@ function buildTraceCatalogEntry(entry, index) {
     property: entry.property,
     selector: typeof entry.selector === 'string' ? entry.selector : null,
     rect: normalizeTraceRect(entry.target),
+    bakeAction: typeof entry.bakeAction === 'string' ? entry.bakeAction : null,
+    bakeStatus: typeof entry.status === 'string' ? entry.status : null,
+    runtimeAssetPath: typeof entry.runtimeAssetPath === 'string' ? entry.runtimeAssetPath : null,
+    autoBake: typeof entry.autoBake === 'boolean' ? entry.autoBake : null,
+    skinSlotKind: typeof entry.skinSlotKind === 'string' ? entry.skinSlotKind : null,
     ucufNodeSlots: slotRefs.map((slotRef) => ({
       ucufId: descriptor && descriptor.ucufId ? descriptor.ucufId : (typeof entry.ucufId === 'string' ? entry.ucufId : null),
       nodeName: descriptor && descriptor.nodeName ? descriptor.nodeName : null,
