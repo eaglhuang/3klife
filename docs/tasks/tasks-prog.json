@@ -303,12 +303,12 @@
       "priority": "P1",
       "phase": "P",
       "owner": "Agent1",
-      "status": "open",
-      "created": "2026-04-06",
+      "status": "in-progress",
       "created_by_agent": "Agent1",
       "type": "ui-component",
       "title": "BloodlineTreePanel 元件實作（祖先矩陣 + 子嗣預測）",
-      "description": "建立 assets/scripts/ui/components/BloodlineTreePanel.ts。顯示祖先矩陣（至少 3 代 14 人）；因子繼承視覺化（連線/色塊）；子嗣預測欄位顯示；對接 BloodlineGenerator.ts 計算結果。注意：規格書稱 UI_BloodlineTree，建議命名為 BloodlineTreePanel 與現有元件一致。",
+      "started_at": "2026-05-04T20:30:00+08:00",
+      "started_by_agent": "GitHubCopilot",
       "related": [
         "PROG-1-0003",
         "PROG-1-0014"
