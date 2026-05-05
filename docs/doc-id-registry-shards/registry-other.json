@@ -154,5 +154,41 @@
     "path": "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
     "title": "AI Atomic Framework 優化藍圖 v0.2",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0032",
+    "path": "docs/ai_atomic_framework/3klife-coexistence-plan.md",
+    "title": "3KLife × ATM 並行開發協議（Coexistence Plan）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0033",
+    "path": "docs/ai_atomic_framework/3klife-consumption-roadmap.md",
+    "title": "3KLife 長期消費 ATM 路線圖（Consumption Roadmap）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0034",
+    "path": "docs/ai_atomic_framework/multi-agent-compatibility-matrix.md",
+    "title": "Multi-AI Agent 兼容性測試矩陣",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0035",
+    "path": "docs/ai_atomic_framework/upstream-versioning-policy.md",
+    "title": "Upstream Versioning & Lifecycle Policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0036",
+    "path": "docs/ai_atomic_framework/3klife-tooling-fate.md",
+    "title": "3KLife 既有治理工具命運表（Tooling Fate）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0037",
+    "path": "docs/ai_atomic_framework/ATM_cross_reference.md",
+    "title": "ATM 知識路由索引（ATM Cross-Reference）",
+    "category": "other"
   }
 ]

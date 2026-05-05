@@ -362,6 +362,74 @@ docs/ai_atomic_framework/
 
 ---
 
+## v0.2.1 補強：開源獨立自舉路徑（B0–B3 sub-phasing 與新增任務卡）
+
+對應 `open-source-extraction-plan.md` §3.0「Phase B 預備」。本補強解決原 ATM-1 / ATM-2 的「Bootstrap Paradox」問題（AI 寫第一行 code 時無治理可遵循），將上游 repo skeleton 拆為四個 sub-phase。
+
+### Sub-phase 與任務卡映射
+
+| Sub-phase | 名稱 | 對應任務卡群 | LOC 上限 | Gate |
+|---|---|---|---|---|
+| **B0** | Hand-written Seed | 原 ATM-1-0001~0007 中的 spec/CLI/HashLock 種子部分 | 300 | seed self-test pass |
+| **B1** | Seed Dogfoods Itself | 新增 ATM-1.5-0001~0003 | +200 | `atm verify --self` 通過 |
+| **B2** | Default Governance Bundle | 原 ATM-2-0001~0011 + 新增 ATM-2-0012 | +5000 | hello-world example pass |
+| **B3** | Self-Hosting Alpha Gate | 新增 ATM-2.5-0001~0003 | (validation only) | `atm self-host-alpha --verify` 全綠 |
+
+### 新增任務卡
+
+#### ATM-1.5：Seed Dogfoods Itself（3 卡，新增）
+
+| 範圍 | 任務 | 目的 |
+|---|---|---|
+| ATM-1.5-0001 | seed-as-spec | 用 seed 自己的 spec 格式描述自己（`atom-seed-spec.json`），驗證契約自包含 |
+| ATM-1.5-0002 | self-validation | seed 跑自己的 self-validation；產出第一份 `atomic-registry.json` |
+| ATM-1.5-0003 | ATM-CORE-0001 註冊 | 第一個受治理的 atom：seed 本身。`atm verify --self` 通過 |
+
+#### ATM-2-0012：neutralityScanner atom + CI（新增 1 卡）
+
+| 範圍 | 任務 | 目的 |
+|---|---|---|
+| ATM-2-0012 | neutralityScanner atom + CI | 在 `packages/plugin-rule-guard/neutrality-scanner.{ts,js}` 與 `.github/workflows/neutrality.yml` 落地 §1.1.5 的中立性自動 CI；ATM-CORE-0003 |
+
+對應 `open-source-extraction-plan.md` §1.1.5.1。
+
+#### ATM-2.5：Self-Hosting Alpha Gate（3 卡，新增）
+
+| 範圍 | 任務 | 目的 |
+|---|---|---|
+| ATM-2.5-0001 | self-host-alpha verify CLI | 落地 4 條 boolean criteria 的機器驗證命令 `atm self-host-alpha --verify --json` |
+| ATM-2.5-0002 | sandbox repo fixture | 在空白 sandbox repo 跑完整 alpha gate 流程；fixture 進 `tests/fixtures/sandbox/` |
+| ATM-2.5-0003 | multi-agent compatibility verification | 對應 [`multi-agent-compatibility-matrix.md`](multi-agent-compatibility-matrix.md)；至少 5 中 3 過 |
+
+#### ATM-3 補強：既有治理工具 adapter 化（新增 8 卡）
+
+對應 [`3klife-tooling-fate.md`](3klife-tooling-fate.md)。每個 adapter 卡的驗收：既有 CLI 入口行為等價（regression test）、內部走 ATM core、compute-gate atm profile 全綠。
+
+| 範圍 | 任務 | 對象 |
+|---|---|---|
+| ATM-3-0006 | task-lock adapter 化 | `tools_node/task-lock.js` |
+| ATM-3-0007 | compute-gate adapter 化 | `tools_node/compute-gate.js` |
+| ATM-3-0008 | doc-id-registry adapter 化 | `tools_node/doc-id-registry.js` |
+| ATM-3-0009 | shard-manager adapter 化 | `tools_node/shard-manager.js` |
+| ATM-3-0010 | task-card-opener adapter 化 | `tools_node/task-card-opener.js` |
+| ATM-3-0011 | encoding adapter 化（兩工具） | `tools_node/check-encoding-touched.js` + `check-encoding-integrity.js` |
+| ATM-3-0012 | task-scope / import-boundary 規則包遷移 | `rule-pack.json` + RuleGuard adapter；同時標 `check-task-scope.js` / `check-import-boundaries.js` 為 `@deprecated` |
+| ATM-3-0013 | finalize-agent-turn wrapper 接 run envelope | `tools_node/finalize-agent-turn.js` |
+
+### 並行開發協議
+
+`H2U-REFACTOR-* / PROG-2-*` 任務在 ATM 上游開發期間如何路由、freeze list 與仲裁順序，詳見 [`3klife-coexistence-plan.md`](3klife-coexistence-plan.md)。
+
+### 依賴與消費路線圖
+
+3KLife 從 ATM Phase B 上游開發到 ATM 1.0 stable 的 4-stage 演進（git submodule → npm link → npm dep → npm pin minor），詳見 [`3klife-consumption-roadmap.md`](3klife-consumption-roadmap.md)。
+
+### Versioning Policy
+
+完整 SemVer + Tier + Deprecation cycle + Cross-language roadmap 詳見 [`upstream-versioning-policy.md`](upstream-versioning-policy.md)。
+
+---
+
 ## 執行 Checklist（每張 ATM 卡通用）
 
 ### 開工序列
@@ -416,6 +484,17 @@ node tools_node/task-lock.js unlock ATM-X-NNNN <agent-name>
 6. **shard 註冊**：`docs/tasks/.shardrc.json` 新增 `{"name":"tasks-atm","title":"ATM Tasks","pattern":"^ATM-"}`；`docs/tasks/tasks-atm.json` 空檔（ATM-0-0001 處理）。
 
 7. **rollback 安全**：`inject-plan.js` 與 `rollback-plan.js` 必須對稱輸出兩份 patch JSON；regression-matrix 在 hash 變更時要求 owner 簽名（`atm-cli lock --sign --by <agent>`）才能更新 baseline，避免「跑紅就改 baseline」。
+
+### §6.1 Schema versioning policy（v0.2.1 補強）
+
+第一個 breaking schema change 觸發時若無遷移策略，全 ecosystem 的 atom 集體失效。為防止此問題：
+
+1. **`atmSchemaVersion` 為必填欄位**：所有 atom spec 必含 `"atmSchemaVersion": "v1"`（或 `v2.0` 格式），由 `schemas/atomic-spec.schema.json` 強制。
+2. **Schema major bump（v1 → v2）**：必須提供 `atm migrate --schema v1-to-v2` 自動轉換腳本；舊 schema 至少保留 1 個 minor 版本，給 adopter 遷移窗口。
+3. **Schema minor bump**：純 additive（加新 optional 欄位），不破壞既有 atom；CI 不擋舊 schema atom。
+4. **每次 schema 變動 PR 必伴隨**：migration guide + 自動轉換腳本 + ≥10 個既有 atom 的轉換驗證測試。
+
+完整 versioning lifecycle 與 cross-language roadmap 詳見 [`upstream-versioning-policy.md`](upstream-versioning-policy.md)。
 
 ---
 

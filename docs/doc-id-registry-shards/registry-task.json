@@ -1732,5 +1732,101 @@
     "path": "docs/agent-briefs/tasks/ATM-2-0011.md",
     "title": "[ATM-2-0011] Context budget guard",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0298",
+    "path": "docs/agent-briefs/tasks/ATM-0-0012.md",
+    "title": "[ATM-0-0012] task-lock cross-shard 重複鎖定檢查",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0299",
+    "path": "docs/agent-briefs/tasks/ATM-1.5-0001.md",
+    "title": "[ATM-1.5-0001] Seed-as-Spec：種子以自身格式自我描述",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0300",
+    "path": "docs/agent-briefs/tasks/ATM-1.5-0002.md",
+    "title": "[ATM-1.5-0002] Seed 自我驗證：產生第一份 atomic-registry.json",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0301",
+    "path": "docs/agent-briefs/tasks/ATM-1.5-0003.md",
+    "title": "[ATM-1.5-0003] ATM-CORE-0001 正式收編：舊 seed 標 @deprecated",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0302",
+    "path": "docs/agent-briefs/tasks/ATM-2-0012.md",
+    "title": "[ATM-2-0012] neutralityScanner atom + CI（ATM-CORE-0003）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0303",
+    "path": "docs/agent-briefs/tasks/ATM-2.5-0001.md",
+    "title": "[ATM-2.5-0001] Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0304",
+    "path": "docs/agent-briefs/tasks/ATM-2.5-0002.md",
+    "title": "[ATM-2.5-0002] Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0305",
+    "path": "docs/agent-briefs/tasks/ATM-2.5-0003.md",
+    "title": "[ATM-2.5-0003] Multi-Agent 兼容性驗證：5 種 AI Agent Alpha Gate 測試",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0306",
+    "path": "docs/agent-briefs/tasks/ATM-3-0006.md",
+    "title": "[ATM-3-0006] task-lock.js adapter 化：接入 ATM LockAdapter",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0307",
+    "path": "docs/agent-briefs/tasks/ATM-3-0007.md",
+    "title": "[ATM-3-0007] compute-gate.js adapter 化：接入 ATM GateAdapter",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0308",
+    "path": "docs/agent-briefs/tasks/ATM-3-0008.md",
+    "title": "[ATM-3-0008] doc-id-registry.js adapter 化：接入 ATM DocumentIndexAdapter",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0309",
+    "path": "docs/agent-briefs/tasks/ATM-3-0009.md",
+    "title": "[ATM-3-0009] shard-manager.js adapter 化：接入 ATM ShardAdapter",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0310",
+    "path": "docs/agent-briefs/tasks/ATM-3-0010.md",
+    "title": "[ATM-3-0010] task-card-opener.js adapter 化：接入 ATM TaskAdapter",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0311",
+    "path": "docs/agent-briefs/tasks/ATM-3-0011.md",
+    "title": "[ATM-3-0011] encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0312",
+    "path": "docs/agent-briefs/tasks/ATM-3-0012.md",
+    "title": "[ATM-3-0012] task-scope / import-boundary 規則包遷移 + @deprecated 標記",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0313",
+    "path": "docs/agent-briefs/tasks/ATM-3-0013.md",
+    "title": "[ATM-3-0013] finalize-agent-turn.js wrapper 接入 ATM run envelope",
+    "category": "task"
   }
 ]

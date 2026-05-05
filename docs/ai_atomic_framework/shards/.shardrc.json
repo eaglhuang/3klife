@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "source": "../AI_Atomic_Framework_Roadmap.md",
+  "indexTitle": "AI Atomic Framework Roadmap",
+  "indexPath": "../AI_Atomic_Framework_Roadmap.md",
+  "type": "markdown-h2",
+  "keepSourceIntact": true,
+  "preambleShard": "atm-roadmap-intro",
+  "defaultShard": "atm-roadmap-milestones",
+  "shards": [
+    {
+      "name": "atm-roadmap-intro",
+      "title": "核心結論・問題背景（§0–§1）",
+      "pattern": "^0|^1\\.\\s"
+    },
+    {
+      "name": "atm-roadmap-theory",
+      "title": "願景・設計原則（§2–§3）",
+      "pattern": "^[23]\\.\\s"
+    },
+    {
+      "name": "atm-roadmap-foundations",
+      "title": "名詞定義・分層・自舉・Genesis（§4–§7）",
+      "pattern": "^[4-7]\\.\\s"
+    },
+    {
+      "name": "atm-roadmap-milestones",
+      "title": "里程碑 Phase 0-7 詳細規格（§8+）",
+      "pattern": "."
+    }
+  ]
+}

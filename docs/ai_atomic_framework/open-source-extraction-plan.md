@@ -90,6 +90,27 @@ ATM 的開源交付目標是「root-drop 可啟動」：使用者把 ATM 放在�
 - optional semantic audit：用來標記隱性耦合敘事、stale example、類 dead-doc；它只產生 `warn` / `needs-review`，不單獨充當 hard fail 裁決。
 - source dead code 仍以靜態分析器與 import graph 為主；LLM 只補語意與文件漂移檢查，不取代確定性檢查。
 
+### 1.1.5.1 Neutrality Scanner 落地細節
+
+§1.1.5 的 neutrality / boundary guard 必須具現為 **可機器執行的工具**，作為上游第一個正式 atom（規劃為 `ATM-CORE-0003 = neutralityScanner`）。落地形式：
+
+1. **`packages/plugin-rule-guard/neutrality-scanner.{ts,js}`**
+   - 黑名單詞（必擋）：`3KLife`, `Cocos`, `cocos-creator`, `html-to-ucuf`, `gacha`, `UCUF`, `draft-builder`, `eaglhuang/3KLife`
+   - 黑名單路徑（必擋）：`tools_node/`, `assets/scripts/`, `docs/agent-briefs/`, 任何中文檔名
+   - 掃描範圍：`packages/core/`, `packages/cli/`, `packages/plugin-*/`, `schemas/`, `templates/`, `examples/`, `docs/`
+   - 輸出：JSON report，列出每個違規檔案 + line + matched term
+
+2. **`.github/workflows/neutrality.yml`**
+   - 觸發：每次 PR 與 push to main
+   - 行為：跑 neutrality-scanner，失敗即 block merge
+   - PR comment 自動標出違規行
+
+3. **與 §1.1.5 的關係**
+   - §1.1.5 的「optional semantic audit」（LLM 補檢）為 `warn` / `needs-review`，不阻擋 PR
+   - 本工具的「deterministic 黑名單」是 `block`，必須通過
+
+對應任務：上游 `ATM-2-0012 neutralityScanner atom + CI`（將在 `AI原子框架開發計畫書.md` 補入）。
+
 ### 1.1.6 Context Budget Guard
 
 `context budget` 應被提升為 upstream governance primitive，而不是只存在於某個宿主專案的 keep 或 prompt 習慣。
@@ -167,6 +188,41 @@ AI-Atomic-Framework/
 
 第一版可用 TypeScript / Node CLI 實作，但 spec、adapter protocol 與 registry schema 必須保持語言無關。
 
+### 2.1 Monorepo Toolchain：pnpm + Turborepo（alpha 預設）
+
+§2 列出 16 個 packages 一定要 monorepo workspace。經比較選定 **pnpm + Turborepo** 為 alpha 預設工具鏈：
+
+| 工具 | Pros | Cons | 對 ATM 適配度 |
+|---|---|---|---|
+| **pnpm + Turborepo** ✅ | 強符號連結、incremental build、cache 跨 CI、原生 monorepo | 需學習 Turbo config | **alpha 採用** |
+| npm workspaces | 零工具依賴 | 無 build cache、跨 package script orchestration 弱 | 太陽春 |
+| Yarn 4 + Nx | 強 task graph | 工具鏈龐大、學習曲線陡 | 過度工程 |
+| Lerna + npm | 老牌穩定 | Lerna 已邊緣化 | 不推薦 |
+
+**鎖定文件**：上游 repo `ATM-1-0001` 任務必須建立 `pnpm-workspace.yaml` + `turbo.json` 為 Phase B0 初始化前置。
+
+```yaml
+# pnpm-workspace.yaml
+packages:
+  - 'packages/*'
+  - 'examples/*'
+```
+
+```jsonc
+// turbo.json
+{
+  "tasks": {
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
+    "test":  { "dependsOn": ["build"] },
+    "atm:police":     { "cache": false },
+    "atm:hash-lock":  { "cache": false },
+    "atm:neutrality": { "cache": false }
+  }
+}
+```
+
+**升級策略**：beta 階段（v0.5+）若需更強 task graph，可考慮升 Nx；但不在 alpha 範圍。
+
 ---
 
 ## 3. 拆出階段
@@ -180,6 +236,25 @@ AI-Atomic-Framework/
 5. 新增 self-hosting alpha、docs neutrality audit、neutrality/boundary guard 與 context budget guard 後續任務。
 
 驗收：Roadmap 核心章節不再把 3KLife / Cocos / html-to-ucf 當作 core 前提；tracking docs 與未來 upstream docs 的邊界清楚分離。
+
+### Phase B 預備：B0 / B1 / B2 / B3 Sub-phasing
+
+Phase B 不能一次完成「core + cli + plugin-sdk + 11 plugins + Agent Operating Layer + Default Governance Bundle」— 因為 AI 寫第一行 code 時沒有 spec / hash-lock / police 可治理它（dogfooding bootstrap paradox）。Phase B 依此拆為四個 sub-phase：
+
+| Sub-phase | 名稱 | 內容 | LOC 上限 | Gate |
+|---|---|---|---|---|
+| **B0** | Hand-written Seed | 純手寫 `packages/core/seed.{ts,js}`：minimum spec parser + hash-lock util + 1 個 fixture runner。**不受 ATM 治理**，明確標 `// ATM-SEED: hand-written, ungoverned, ~300 LOC max`。 | 300 | seed self-test pass |
+| **B1** | Seed Dogfoods Itself | seed 用自己的 spec 格式描述自己（`atom-seed-spec.json`），跑 self-validation；產出第一份 `atomic-registry.json`，內含 `ATM-CORE-0001 = seed itself`。 | +200 | `atm verify --self` 通過 |
+| **B2** | Default Governance Bundle | 11 個 reference plugin、CLI `init/status/validate`、Agent Operating Layer 全部上線；seed 被「ATM-CORE-0002 = treated as governed atom」收編，舊 seed code 標 `@deprecated`。 | +5000 | hello-world example pass |
+| **B3** | Self-Hosting Alpha Gate | 在空白 sandbox repo 跑 4 條 alpha gate criteria，全部出 boolean PASS。 | (validation only) | `atm self-host-alpha --verify` 全綠 |
+
+**Gate 是序列性的**：B1 不過不能進 B2；B2 不過不能進 B3；B3 不過不能進 Phase C。
+
+對應 ATM 任務卡（在 `AI原子框架開發計畫書.md` 中拆 ATM-1 / ATM-2 為四個階段）：
+- ATM-1（B0）：seed parser / seed hash-lock / seed self-test（3 卡）
+- ATM-1.5（B1）：seed-as-spec / self-validation / ATM-CORE-0001 註冊（3 卡）
+- ATM-2（B2）：原 ATM-2 全部 + neutralityScanner（11 卡）
+- ATM-2.5（B3）：sandbox alpha gate fixture / self-host-alpha verify CLI / multi-agent compatibility（3 卡）
 
 ### Phase B：上游 repo skeleton
 
@@ -223,9 +298,41 @@ AI-Atomic-Framework/
 - `CONTRIBUTING.md`：禁止 domain-specific logic 進 core。
 - `docs/ADAPTER_GUIDE.md`：如何實作 ProjectAdapter / LanguageAdapter。
 - `docs/PLUGIN_SDK.md`：Police / Capability / Injector plugin API。
-- `docs/LIFECYCLE.md`：spec versioning、deprecation、semver。
+- `docs/LIFECYCLE.md`：spec versioning、deprecation、semver（詳見 [`upstream-versioning-policy.md`](upstream-versioning-policy.md)）。
 - `examples/hello-world`：最小 compute atom。
 - `examples/legacy-strangler-minimal`：不含 3KLife 私有路徑的最小 legacy 接管例。
+
+### 4.1 Examples 驗收矩陣
+
+每個 example 必滿足明確的驗收標準（不只「能 run」），CI 跑 `verify.sh` + `expected-output.json` diff = 0 才綠：
+
+| Example | LOC 上限 | 跑完秒數 | 必涵蓋 case | AI 完成步驟（無人工介入） |
+|---|---|---|---|---|
+| hello-world | 100 | < 5s | 1 atom + 5 fixtures + 2 negative + hashLock sign | 讀 README → `atm init` → `atm test` → green |
+| governance-standalone | 300 | < 10s | task-lock + scope-check + encoding + context-budget all green | 讀 AGENTS.md → 開 1 task → lock → finalize |
+| agent-bootstrap | 200 | < 8s | AI 只讀 `.atm/profile` 完成 init/adopt | 不需 README，profile-only |
+| molecule-pipeline | 400 | < 15s | 3 atoms 串成 molecule，DAG 執行 | 讀 ARCHITECTURE → run pipeline |
+| legacy-strangler-minimal | 500（含 mock legacy 50 LOC）| < 20s | 1 atom 替換 1 legacy call site，rollback 來回 | 讀 MIGRATION → inject → verify → rollback |
+
+每個 example 必含 `verify.sh`（跑驗收命令）與 `expected-output.json`（diff = 0 條件）。
+
+### 4.2 Open-source Operations 完整清單
+
+§4 列的是基本 docs，但完整 OSS 治理還需以下檔案（由 ATM-5 任務卡建立）：
+
+- `SECURITY.md`：CVE 通報 email、24/72/168h 回應 SLA、PGP key
+- `CODE_OF_CONDUCT.md`：採 [Contributor Covenant 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)
+- `.github/ISSUE_TEMPLATE/`：`bug-report.yml` / `feature-request.yml` / `spec-question.yml`
+- `.github/PULL_REQUEST_TEMPLATE.md`：含 atom spec 變動 / breaking change / regression-matrix update checkbox
+- `.github/workflows/ci.yml`：test + lint + neutrality + encoding
+- `.github/workflows/release.yml`：changesets 自動 npm publish
+- `.github/workflows/docs.yml`：auto-deploy docs 到 GitHub Pages
+- `CHANGELOG.md`：採 [changesets](https://github.com/changesets/changesets) 自動聚合
+- `.github/dependabot.yml`：每月 dep update PR
+- GitHub Discussions：開 categories（Q&A / Show & Tell / Spec proposals / Adapter ecosystem）
+- `MAINTAINERS.md`：列出 maintainer 與聯絡方式
+
+License 定論：**MIT**（最寬鬆，適合 governance framework 廣泛採用）。
 
 ---
 
@@ -235,3 +342,47 @@ AI-Atomic-Framework/
 2. 上游 core 的 breaking change 必須先更新 adapter compatibility matrix。
 3. 3KLife case study 的改善若具通用性，回提 upstream PR；若帶 domain 假設，只留在 3KLife adapter。
 4. 每次升級 upstream package 後，必須跑 3KLife adapter gate 與 html-to-ucuf smoke regression。
+
+---
+
+## 6. 3KLife Consumption Roadmap（4-stage 演進）
+
+§5 只描述「回同步」的高層原則，但 3KLife 從 ATM Phase B 上游開發開始到 ATM 1.0 stable 後的依賴模式有 **4 個演進階段**，每階段消費形式 / 升級節奏 / 回退策略不同。詳見：
+
+[`3klife-consumption-roadmap.md`](3klife-consumption-roadmap.md)
+
+摘要：
+
+| Stage | ATM 版本 | 消費形式 | 升級節奏 |
+|---|---|---|---|
+| S1 dev | 0.0.x（pre-alpha） | git submodule | 每次 commit pull |
+| S2 alpha | 0.1 – 0.4.x | npm link / git+ssh dep | 每週 sync |
+| S3 beta | 0.5 – 0.9.x | npm i ^0.5 | 每兩週 patch、每月 minor |
+| S4 stable | ≥1.0.0 | npm i ~1.2 pin minor | 每季 minor、每年 major |
+
+並行期保護：[`3klife-coexistence-plan.md`](3klife-coexistence-plan.md) 定義 freeze list / 路由協議 / cross-shard task-lock。
+既有工具命運：[`3klife-tooling-fate.md`](3klife-tooling-fate.md) 定義 9 個治理工具的 Adapter / Wrapper / Replaced / Permanent 命運。
+
+---
+
+## 7. 多 AI Agent 兼容性
+
+ATM upstream 必須通過多 AI agent alpha gate 測試矩陣才允許釋出 0.1.0 alpha。詳見：
+
+[`multi-agent-compatibility-matrix.md`](multi-agent-compatibility-matrix.md)
+
+最低釋出條件：Claude Code 必過 + 至少 5 中 3 過。
+
+---
+
+## 8. Versioning & Lifecycle Policy
+
+完整 SemVer + Tier + Deprecation cycle + Cross-language roadmap 詳見：
+
+[`upstream-versioning-policy.md`](upstream-versioning-policy.md)
+
+要點：
+- alpha (0.0–0.1) / beta (0.2–0.9) / stable (≥1.0) / lts (規劃中)
+- Deprecation 跨 2 個 minor 才移除
+- 每次 minor 升級維護 `compatibility-matrix.json`
+- alpha 期 README 不得宣稱 multi-language；beta 開放 LanguageAdapter SPI；1.0 官方支援 JS/TS + Python POC
