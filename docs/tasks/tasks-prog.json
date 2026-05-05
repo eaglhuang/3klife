@@ -903,13 +903,15 @@
       "title": "UCUF runtime renderer parity closure",
       "owner": "GitHubCopilot",
       "priority": "P0",
-      "status": "in-progress",
+      "status": "done",
       "type": "skin-layer-work",
       "phase": "Plan5",
       "created": "2026-05-04",
       "created_by_agent": "GitHubCopilot",
       "started_at": "2026-05-04T16:36:51+08:00",
       "started_by_agent": "GitHubCopilot",
+      "completed_at": "2026-05-05T09:12:12+08:00",
+      "completed_by_agent": "GitHubCopilot",
       "description": "補齊 Cocos runtime 對 source-derived skin 的 renderer parity，處理 gradient/radial/repeating、shadow、rounded rect、background layers 與 fallback blocker 化，避免 Cocos 端把高覆蓋 HTML 降成低相似度畫面。",
       "related": [
         "PROG-2-0001",
@@ -923,14 +925,18 @@
         "gradient/background fidelity fixture 在 Cocos capture 中達到局部 threshold",
         "不得用 flat color fallback 隱藏正式 pass，除非 verdict 標 blocker",
         "runtime renderer 行為以 skin data 驅動，無 screen-specific branch",
-        "TypeScript errors 0 且 encoding guard pass"
+        "TypeScript errors 0 且 encoding guard pass",
+        "下一個 low-score 修補必須能把 top residual 指回 source DOM selector / UCUF slot / runtime owner"
       ],
       "deliverables": [
         "assets/scripts/ui/core/UIPreviewStyleBuilder.ts",
         "assets/scripts/ui/components/GradientBackground.ts",
-        "runtime renderer fixture notes"
+        "runtime renderer fixture notes",
+        "assets/resources/sprites/ui_families/gacha/generated/gacha_banner_bg_general_formal_1460x880.jpg",
+        "assets/resources/sprites/ui_families/gacha/generated/gacha_banner_bg_gold_formal_1460x880.jpg",
+        "assets/resources/sprites/ui_families/gacha/generated/gacha_banner_bg_teal_formal_1460x880.jpg"
       ],
-      "notes": "2026-05-04 | 狀態: in-progress | 驗證: validate-ui-specs --strict 通過（warnings only）；validate-ucuf-task-card 通過；UCUF tests 288 passed / 3 skipped；Cocos Creator compile refresh success | 變更: GitHubCopilot 已完成第 1 輪 runtime parity 修補，落地 GradientBackground/ShadowBackground tint persistence 與 adaptive texture resolution，並同步回寫 Plan5 baseline / task shard 真相 | 阻塞: repeating gradient 仍會被 flat fallback，需下一輪處理；zone-ownership taxonomy 仍需與 0004 交叉判讀"
+      "notes": "2026-05-05T09:12:12+08:00 | 狀態: done | 來源: PROG-2-0005.md frontmatter；ClaudeCode 同步 | 結論: 0005 不再是 shader parity blocker；runtime renderer 能處理的 gradient 與必須資產化的大型背景已切清；final gate 仍未達 0.95，後續以 art/content parity slice 追"
     },
     {
       "id": "PROG-2-0006",
@@ -972,7 +978,7 @@
     },
     {
       "id": "PROG-2-0007",
-      "title": "HTML-to-UCUF 95 percent regression matrix",
+      "title": "HTML-to-UCUF gacha-ds3 + 2 非 gacha fixture 95% final gate closure",
       "owner": "GitHubCopilot",
       "priority": "P1",
       "status": "open",
@@ -983,17 +989,18 @@
       "description": "建立多畫面、非單一 fixture 的 pixel fidelity regression matrix，將 browser preview、Cocos Editor final gate、zone diagnosis、artifact summary 統一成可重跑驗收，目標正式 fixture adjustedScore >= 0.95。",
       "related": [
         "PROG-2-0001",
-        "UI-2-0023"
+        "UI-2-0023",
+        "PROG-2-0010",
+        "H2U-REFACTOR-0006"
       ],
       "depends": [
-        "PROG-2-0003",
-        "PROG-2-0005",
-        "PROG-2-0006"
+        "PROG-2-0010"
       ],
       "acceptance": [
-        "fixture pack 至少包含 gacha-ds3 與兩個非 gacha HTML source package",
-        "每個 fixture 都輸出 browser coverage、Cocos adjustedScore、primary-zone summary",
-        "低於 0.95 會 fail 且列出 blocker taxonomy",
+        "3 個 fixture 各產出正式 workflow-summary.json（debugOnly=false，formal capture protocol）",
+        "gacha-ds3 adjustedScore ≥ 0.95；未達時 nextFixes 必指向具體 source selector / UCUF node / runtime owner",
+        "2 個非 gacha fixture adjustedScore ≥ 0.95 或標可接受 blocker taxonomy（每個 blocker 必須在 rule-registry.json knownGaps 有對應 entry）",
+        "artifacts/html-to-ucuf-plan5/regression-summary.json 完整：含三個 fixture 的 browserCoverage、cocosFinalGate、zoneOwnership compact summary、nextFixes",
         "context budget 下只輸出摘要與路徑，不 dump 大圖"
       ],
       "deliverables": [
@@ -1001,7 +1008,7 @@
         "artifacts/html-to-ucuf-plan5/regression-summary.json",
         "docs/html_skill_plan5.md threshold matrix 更新"
       ],
-      "notes": "2026-05-04 | 狀態: open | 驗證: pending | 變更: Plan5 bootstrap 開立後續工作 | 阻塞: depends PROG-2-0003,PROG-2-0005,PROG-2-0006"
+      "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: ClaudeCode 依 postmortem (doc_other_0026) 量化 acceptance、改 depends 為 PROG-2-0010 | 阻塞: PROG-2-0010 multi-fixture baseline"
     },
     {
       "id": "PROG-2-0008",
@@ -1131,6 +1138,230 @@
       "started_by_agent": "ClaudeCode_claude-sonnet-4-6",
       "completed_at": "2026-05-04T18:00:00+08:00",
       "completed_by_agent": "ClaudeCode_claude-sonnet-4-6"
+    },
+    {
+      "id": "H2U-REFACTOR-0001",
+      "priority": "P2",
+      "phase": "G",
+      "owner": "Unassigned",
+      "status": "open",
+      "created": "2026-05-05",
+      "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "type": "refactoring",
+      "title": "draft-builder.js 拆 5 模組",
+      "description": "把 3091 行 draft-builder.js 拆成 traverser/typography/backgrounds/interactions/motion 5 個 ≤600 行模組 + thin index.js orchestrator",
+      "related": [
+        "H2U-REFACTOR-0002",
+        "PROG-2-0004",
+        "PROG-2-0005"
+      ],
+      "depends": [],
+      "acceptance": [
+        "每模組 ≤ 600 行",
+        "self-test 全綠",
+        "workflow CLI 行為與重構前一致"
+      ],
+      "deliverables": [
+        "tools_node/lib/dom-to-ui/draft-builder/{traverser,typography,backgrounds,interactions,motion,index}.js"
+      ],
+      "notes": "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) | 阻塞: 無"
+    },
+    {
+      "id": "H2U-REFACTOR-0002",
+      "priority": "P2",
+      "phase": "G",
+      "owner": "Unassigned",
+      "status": "open",
+      "created": "2026-05-05",
+      "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "type": "refactoring",
+      "title": "rule-checkers.js 拆目錄",
+      "description": "把 626 行 rule-checkers.js 拆成 base/formal-entry/source-package/draft-builder/workflow-summary 子模組",
+      "related": [
+        "H2U-REFACTOR-0006"
+      ],
+      "depends": [],
+      "acceptance": [
+        "rule-guard.js import API 不變",
+        "validate-rule-guard pass",
+        "27 個 checker 全部歸位"
+      ],
+      "deliverables": [
+        "tools_node/lib/html-to-ucuf/rule-checkers/{base,formal-entry,source-package,draft-builder,workflow-summary,index}.js"
+      ],
+      "notes": "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) | 阻塞: 無"
+    },
+    {
+      "id": "H2U-REFACTOR-0003",
+      "priority": "P2",
+      "phase": "G",
+      "owner": "Unassigned",
+      "status": "open",
+      "created": "2026-05-05",
+      "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "type": "refactoring",
+      "title": "抽 browser-capture-core",
+      "description": "把 compare-html-to-cocos-editor 與 capture-ui-screens 共用的 puppeteer 啟動/截圖邏輯抽到 lib/browser-capture-core.js",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "兩 CLI 行為不變",
+        "puppeteer init 邏輯只剩一份"
+      ],
+      "deliverables": [
+        "tools_node/lib/browser-capture-core.js",
+        "tools_node/compare-html-to-cocos-editor.js",
+        "tools_node/capture-ui-screens.js"
+      ],
+      "notes": "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) | 阻塞: 無"
+    },
+    {
+      "id": "H2U-REFACTOR-0004",
+      "priority": "P2",
+      "phase": "G",
+      "owner": "Unassigned",
+      "status": "open",
+      "created": "2026-05-05",
+      "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "type": "refactoring",
+      "title": "隔離 Phase B 工具與修補死引用",
+      "description": "移 cutover-screen-variant.js / generate-tab-childpanels.js / runtime-screen-diff.js 到 .deprecated/；修補 run-vfx-browser-qa.js 的 vfx-block-registry 死引用",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "3 支工具搬到 .deprecated/",
+        "grep 0 active import",
+        "vfx-block-registry 死引用清理",
+        "compute-gate 6/6 pass"
+      ],
+      "deliverables": [
+        "tools_node/.deprecated/{cutover-screen-variant,generate-tab-childpanels,runtime-screen-diff}.js",
+        "tools_node/.deprecated/README.md",
+        "tools_node/run-vfx-browser-qa.js"
+      ],
+      "notes": "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) | 阻塞: 無"
+    },
+    {
+      "id": "H2U-REFACTOR-0005",
+      "priority": "P2",
+      "phase": "G",
+      "owner": "Unassigned",
+      "status": "open",
+      "created": "2026-05-05",
+      "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "type": "documentation",
+      "title": "整併 5 份 plan 文件",
+      "description": "plan/plan2/plan3/plan4 加 [HISTORICAL] frontmatter；plan5 加 [ACTIVE]；SKILL.md 加 prominent disclaimer",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "前 4 份 plan 含 HISTORICAL 標記",
+        "plan5 含 ACTIVE 標記",
+        "SKILL.md 開頭有 disclaimer",
+        "broken link check pass",
+        "encoding gate pass"
+      ],
+      "deliverables": [
+        "docs/html_skill_plan{,2,3,4,5}.md",
+        ".github/skills/html-to-ucuf/SKILL.md",
+        "docs/keep.summary.md"
+      ],
+      "notes": "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) | 阻塞: 無"
+    },
+    {
+      "id": "H2U-REFACTOR-0006",
+      "priority": "P2",
+      "phase": "G",
+      "owner": "Unassigned",
+      "status": "open",
+      "created": "2026-05-05",
+      "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "type": "rule-governance",
+      "title": "rule-registry 補 fidelityThresholds + knownGaps + draftBuilderStageRules 自動驗證",
+      "description": "rule-registry.json 加三段；rule-checkers 加 validateDraftBuilderStageRules；validate-rule-guard 強制檢查；history-not-story / radial-slide-background / interaction-carousel 三 gap 不再被誤判失敗",
+      "related": [
+        "H2U-REFACTOR-0002",
+        "PROG-2-0007"
+      ],
+      "depends": [],
+      "acceptance": [
+        "rule-registry 三段 schema 通過",
+        "validate-rule-guard pass",
+        "self-test 補 fixture 驗證 stage rule",
+        "三個 known gap 不再誤判失敗"
+      ],
+      "deliverables": [
+        "tools_node/lib/html-to-ucuf/rule-registry.json",
+        "tools_node/lib/html-to-ucuf/rule-checkers.js 或 rule-checkers/draft-builder.js",
+        "tools_node/validate-html-to-ucuf-rule-guard.js",
+        "tools_node/test/dom-to-ui-self-test.js"
+      ],
+      "notes": "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) | 阻塞: 無"
+    },
+    {
+      "id": "PROG-2-0010",
+      "priority": "P0",
+      "phase": "Plan5",
+      "owner": "Unassigned",
+      "status": "open",
+      "created": "2026-05-05",
+      "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "type": "regression-baseline",
+      "title": "gacha-ds3 formal rerun + 2 個非 gacha fixture（多畫面 baseline）",
+      "description": "建立 multi-fixture baseline 作為 PROG-2-0007 95% closure 前置；fixtures/html-to-ucuf-plan5/ 下加 2 個非 gacha source package；以 formal capture protocol 重跑 gacha-ds3；產 artifacts/html-to-ucuf-plan5/regression-summary.json",
+      "related": [
+        "PROG-2-0007",
+        "PROG-2-0005",
+        "PROG-2-0009"
+      ],
+      "depends": [
+        "PROG-2-0005",
+        "PROG-2-0009"
+      ],
+      "acceptance": [
+        "fixtures/html-to-ucuf-plan5/ 下 3 個 fixture",
+        "3 個 workflow-summary.json debugOnly=false",
+        "regression-summary.json 含三畫面 browser/Cocos coverage 與 zone ownership",
+        "至少 1 個 fixture adjustedScore ≥ 0.95",
+        "未達者 nextFixes 指向具體 selector/node/owner"
+      ],
+      "deliverables": [
+        "fixtures/html-to-ucuf-plan5/<2 個非 gacha>/",
+        "artifacts/html-to-ucuf-plan5/<3 fixture>/workflow-summary.json",
+        "artifacts/html-to-ucuf-plan5/regression-summary.json"
+      ],
+      "notes": "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) | 阻塞: depends PROG-2-0005,PROG-2-0009"
+    },
+    {
+      "id": "PROG-2-0011",
+      "priority": "P1",
+      "phase": "Plan5",
+      "owner": "Unassigned",
+      "status": "open",
+      "created": "2026-05-05",
+      "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "type": "diagnostic-tooling",
+      "title": "CSS coverage → UCUF slot trace（封閉 selectorTracePending）",
+      "description": "新建 css-coverage-trace.js；compare-html-to-cocos-editor 整合；rule-registry 加 H2U-P5-011 強制 selectorTracePending=false",
+      "related": [
+        "PROG-2-0009"
+      ],
+      "depends": [
+        "PROG-2-0009"
+      ],
+      "acceptance": [
+        "top 20 residual zones 都有非空 sourceDomSelectors",
+        "selectorTracePending=0 in formal report",
+        "rule-registry H2U-P5-011 上線",
+        "rule-guard validator pass"
+      ],
+      "deliverables": [
+        "tools_node/lib/dom-to-ui/css-coverage-trace.js",
+        "tools_node/compare-html-to-cocos-editor.js",
+        "tools_node/lib/html-to-ucuf/rule-registry.json",
+        "tools_node/lib/html-to-ucuf/rule-checkers.js"
+      ],
+      "notes": "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) | 阻塞: depends PROG-2-0009"
     }
   ]
 }

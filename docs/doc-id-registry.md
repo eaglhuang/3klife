@@ -554,6 +554,14 @@
 | `doc_task_0221` | docs/tasks/prog-opening-flow-tasks.md | 新手開場程式規格書 — 可執行任務單總覽 |
 | `doc_task_0222` | docs/tasks/simulate-data-growth-report.md | simulate-data-growth 模擬報告 |
 | `doc_task_0223` | docs/agent-briefs/tasks/PROG-1-0018.md | PROG-1-0018: BattleResult 去重 + FRONT_DEPTH 去重（PROG-1-0017 遺留修補）|
+| `doc_task_0224` | docs/agent-briefs/tasks/H2U-REFACTOR-0001.md | H2U-REFACTOR-0001: draft-builder.js 拆 5 模組 |
+| `doc_task_0225` | docs/agent-briefs/tasks/H2U-REFACTOR-0002.md | H2U-REFACTOR-0002: rule-checkers.js 拆目錄 |
+| `doc_task_0226` | docs/agent-briefs/tasks/H2U-REFACTOR-0003.md | H2U-REFACTOR-0003: 抽 browser-capture-core |
+| `doc_task_0227` | docs/agent-briefs/tasks/H2U-REFACTOR-0004.md | H2U-REFACTOR-0004: 隔離 Phase B 工具與修補死引用 |
+| `doc_task_0228` | docs/agent-briefs/tasks/H2U-REFACTOR-0005.md | H2U-REFACTOR-0005: 整併 5 份 plan 文件 |
+| `doc_task_0229` | docs/agent-briefs/tasks/H2U-REFACTOR-0006.md | H2U-REFACTOR-0006: rule-registry 補 fidelityThresholds + knownGaps + draftBuilderStageRules 自動驗證 |
+| `doc_task_0230` | docs/agent-briefs/tasks/PROG-2-0010.md | PROG-2-0010: gacha-ds3 formal rerun + 2 個非 gacha fixture（多畫面 baseline）|
+| `doc_task_0231` | docs/agent-briefs/tasks/PROG-2-0011.md | PROG-2-0011: CSS coverage → UCUF slot trace（封閉 selectorTracePending）|
 
 ## AI Agent 專用 (`doc_ai`)
 
@@ -689,3 +697,4 @@
 | `doc_other_0023` | docs/UCUF規劃書.md | Universal Composite UI Framework (UCUF) — 規劃書 |
 | `doc_other_0024` | docs/UI_PANELS_COMPLETE_INVENTORY.md | 3KLife UI Panels & Components — Complete Inventory |
 | `doc_other_0025` | docs/ui-screen-migration-coverage.md | UI Screen Migration Coverage |
+| `doc_other_0026` | docs/html_skill_postmortem.md | HTML-to-UCUF Skill 五次大改 Postmortem 與架構審查 |
