@@ -68,7 +68,13 @@
       "Bash(C:/Users/User/AppData/Local/Programs/Python/Python313/python.exe tools_node/portrait-gen/portrait-intake.py \"C:/Users/User/Downloads/Sun_Quan_Wu_202604260121_pixian_ai.png\" sun-quan)",
       "Bash(grep -v \"in comment\\\\|//\")",
       "Bash(rm -f .git/index.lock)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(node -e \"const d=require\\('./docs/tasks/tasks-prog.json'\\); console.log\\('current total:', d.tasks.length\\); ['PROG-2-0005','PROG-2-0007'].forEach\\(id=>{const t=d.tasks.find\\(x=>x.id===id\\); console.log\\('---',id,t.status\\); console.log\\('  title:',t.title\\); console.log\\('  acceptance:',JSON.stringify\\(t.acceptance,null,2\\)\\); console.log\\('  depends:',JSON.stringify\\(t.depends\\)\\)}\\)\")",
+      "Bash(awk -F_ '{print $2\"_\"$3}')",
+      "Bash(sort -t_ -k1,1 -k2,2n)",
+      "Bash(node tools_node/compute-gate.js --profile standard --agent-feedback)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }
