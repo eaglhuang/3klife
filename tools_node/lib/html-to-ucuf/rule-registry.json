@@ -461,6 +461,224 @@
       "message": "Compare boards and screenshots should be summarized by path and notes, not dumped as large payloads.",
       "fixAction": "Keep heavy compare artifacts out of handoff text and emit only short summaries plus file paths.",
       "owner": "context-budget"
+    },
+    {
+      "id": "H2U-P5-F001",
+      "slug": "four-dimension-fidelity-gate-required",
+      "phase": "Plan5",
+      "severity": "blocker",
+      "status": "advisory",
+      "checkerId": "four-dimension-fidelity-gate-required",
+      "scope": ["workflow-summary", "final-gate"],
+      "message": "Formal pass must evaluate all four fidelity dimensions (structural/colorFill/layoutGeometry/interactionSmoke) independently; composite adjustedScore alone is insufficient.",
+      "fixAction": "Emit fidelityDimensions object in workflow-summary with per-dimension pass/fail; all four must be true before workflowPass=true.",
+      "owner": "html-to-ucuf-workflow",
+      "ref": "fidelityThresholds"
+    },
+    {
+      "id": "H2U-P5-F002",
+      "slug": "exempt-zone-must-have-registry-entry",
+      "phase": "Plan5",
+      "severity": "blocker",
+      "status": "advisory",
+      "checkerId": "exempt-zone-must-have-registry-entry",
+      "scope": ["workflow-summary", "final-gate", "zone-ownership"],
+      "message": "Any zone excluded from scoring must reference an exemptCategories entry (EC-*) or a knownGaps entry (KG-*); silent exemption is forbidden.",
+      "fixAction": "Add exemptCategoryRef or knownGapRef to the zone in zone-ownership report, or add a new KG-* entry to rule-registry.json knownGaps.",
+      "owner": "html-to-ucuf-workflow",
+      "ref": "exemptCategories, knownGaps"
+    }
+  ],
+  "fidelityThresholds": {
+    "_schema": "v2-four-dimension",
+    "_rationale": "Single adjustedScore mixes converter responsibility with platform limits. Split into 4 independent gates to assign blame correctly.",
+    "dimensions": {
+      "structural": {
+        "metric": "zone_presence_rate",
+        "formula": "presentRequiredZones / totalRequiredZones",
+        "gate": "== 1.0",
+        "tolerance": "±3px bbox match counts as present",
+        "scope": "all required zones in layout-json",
+        "note": "Hard gate — any missing required node = fail, regardless of other scores"
+      },
+      "colorFill": {
+        "metric": "delta_e_pass_rate",
+        "formula": "count(zones where mean_deltaE_CIE76 <= 5) / scorableZoneCount",
+        "gate": ">= 0.92",
+        "colorspace": "CIE76 delta-E",
+        "thresholdPerZone": 5,
+        "scope": "scorable zones only (excludes exemptCategories)",
+        "interim": 0.85
+      },
+      "layoutGeometry": {
+        "metric": "bbox_tolerance_pass_rate",
+        "formula": "count(nodes where max(|Δw|,|Δh|,|Δx|,|Δy|) <= 3) / scorableNodeCount",
+        "gate": ">= 0.90",
+        "tolerancePx": 3,
+        "scope": "scorable nodes only (excludes exemptCategories)",
+        "interim": 0.80
+      },
+      "interactionSmoke": {
+        "metric": "boolean",
+        "formula": "all registered smoke routes return exit code 0",
+        "gate": "== true",
+        "scope": "interaction sidecar smoke routes listed in source package"
+      }
+    },
+    "compositeScore": {
+      "_note": "Kept for backward-compat reporting; does NOT alone determine pass/fail",
+      "formula": "Σ(zone.colorPassBit * zone.areaWeight) / Σ(zone.areaWeight) over scorable zones",
+      "weights": "proportional to zone pixel area in formal capture screenshot",
+      "reportedAs": "cocosFinalGate.adjustedScore",
+      "legacyTarget": 0.95,
+      "legacyInterim": 0.85
+    },
+    "scorableAreaFormula": "totalViewportArea - Σ(exemptCategoryZone.area)",
+    "interimNote": "interim thresholds apply while PROG-2-0010 multi-fixture matrix is incomplete"
+  },
+  "exemptCategories": [
+    {
+      "id": "EC-001",
+      "name": "backdrop-filter",
+      "cssProperties": ["backdrop-filter", "-webkit-backdrop-filter"],
+      "reason": "No native compositor pass in Cocos runtime",
+      "treatment": "exclude-from-score",
+      "designGuidance": "Replace with opaque background layer or pre-baked asset"
+    },
+    {
+      "id": "EC-002",
+      "name": "box-shadow-inset-blur",
+      "cssProperties": ["box-shadow"],
+      "cssCondition": "inset === true AND blurRadius > 0",
+      "reason": "Stencil/SDF rendering path unavailable in Cocos",
+      "treatment": "exclude-from-score",
+      "designGuidance": "Bake shadow into sprite or use solid border (mark as knownGap)"
+    },
+    {
+      "id": "EC-003",
+      "name": "text-shadow-multilayer",
+      "cssProperties": ["text-shadow"],
+      "cssCondition": "layerCount > 1",
+      "reason": "Cocos Label supports single outline only",
+      "treatment": "exclude-from-score",
+      "designGuidance": "Use pre-rendered bitmapFont with glow effect"
+    },
+    {
+      "id": "EC-004",
+      "name": "non-linear-gradient",
+      "cssProperties": ["background-image", "background"],
+      "cssCondition": "gradientType IN [radial-gradient, conic-gradient]",
+      "reason": "No non-uniform gradient shader in Cocos runtime",
+      "treatment": "assetize-then-pass",
+      "note": "Once assetization-required marker present AND runtimeAssetPath bound → counts as PASS, not exempt",
+      "designGuidance": "Assetize to JPG/PNG at design resolution; bind via runtimeAssetPath"
+    },
+    {
+      "id": "EC-005",
+      "name": "pseudo-elements",
+      "cssSelectors": ["::before", "::after"],
+      "reason": "No Cocos node equivalent",
+      "treatment": "mark-blocker-in-draft-builder",
+      "designGuidance": "Convert to explicit child node or omit if purely decorative"
+    },
+    {
+      "id": "EC-006",
+      "name": "interactive-states",
+      "cssSelectors": [":hover", ":focus", ":active", ":focus-visible"],
+      "reason": "Static screenshot cannot capture interaction states",
+      "treatment": "exclude-from-score",
+      "designGuidance": "Verify via interaction smoke test dimension instead"
+    },
+    {
+      "id": "EC-007",
+      "name": "font-subpixel-antialiasing",
+      "scope": "text rendering differences between browser FreeType/CoreText and Cocos FreeType",
+      "reason": "Sub-pixel rendering is engine-specific, not controllable by converter",
+      "treatment": "relaxed-threshold",
+      "localDeltaETolerance": 10,
+      "note": "Text zones use deltaE <= 10 (instead of default 5) in colorFill calculation"
+    },
+    {
+      "id": "EC-008",
+      "name": "clip-path-complex",
+      "cssProperties": ["clip-path"],
+      "cssCondition": "shape NOT IN [inset(), circle()]",
+      "reason": "Cocos mask supports rectangle and circle only",
+      "treatment": "exclude-from-score",
+      "designGuidance": "Redesign to use rect/circle mask, or pre-clip in sprite asset"
+    },
+    {
+      "id": "EC-009",
+      "name": "css-animation-transition",
+      "cssProperties": ["animation", "transition"],
+      "cssAtRules": ["@keyframes"],
+      "reason": "Static screenshot captures frame-0 only; full animation out of scope",
+      "treatment": "exclude-from-score",
+      "designGuidance": "Validate animated states via Cocos animation preview separately"
+    },
+    {
+      "id": "EC-010",
+      "name": "overflow-scroll-off-viewport",
+      "cssProperties": ["overflow"],
+      "cssCondition": "overflow IN [hidden, scroll] AND contentHeight > viewportHeight",
+      "reason": "Only first-screen (non-scrolled) content captured in formal screenshot",
+      "treatment": "exclude-from-score",
+      "scope": "zones outside viewport rect only"
+    },
+    {
+      "id": "EC-011",
+      "name": "webfont-glyphs",
+      "scope": "emoji, Noto edge cases, CJK extension characters",
+      "reason": "Browser and Cocos font library differ in glyph coverage for uncommon characters",
+      "treatment": "relaxed-threshold",
+      "fallback": "compare font-size, line-height, color only; skip per-glyph pixel comparison"
+    }
+  ],
+  "knownGaps": [
+    {
+      "id": "KG-001",
+      "slug": "history-not-story",
+      "category": "semantic-classifier",
+      "screenIds": ["*"],
+      "status": "acceptable-regression",
+      "exemptCategoryRef": null,
+      "description": "history container 容易被 /story/ regex 誤分類；P4 已修但仍有 edge case",
+      "scoreImpact": "structural — 最多 1 個 zone 誤分類",
+      "maxAllowedOccurrences": 1,
+      "resolution": "H2U-P4-014/015 active; further edge cases filed as new bugs"
+    },
+    {
+      "id": "KG-002",
+      "slug": "radial-slide-background",
+      "category": "runtime-renderer",
+      "screenIds": ["gacha-ds3"],
+      "status": "blocker-pending-asset",
+      "exemptCategoryRef": "EC-004",
+      "description": "banner-bg-fill 1460x880 off-center radial gradient — assetization boundary confirmed",
+      "scoreImpact": "colorFill + layoutGeometry 排除，不計分也不視為失敗",
+      "resolution": "assetize 為 formal JPG; bind via runtimeAssetPath; 排除後 score 重算為 pass"
+    },
+    {
+      "id": "KG-003",
+      "slug": "interaction-carousel",
+      "category": "runtime-interaction",
+      "screenIds": ["*"],
+      "status": "smoke-only",
+      "exemptCategoryRef": "EC-009",
+      "description": "carousel 互動目前僅 smoke test 驗，formal 不要求 100% 像素對標",
+      "scoreImpact": "interactionSmoke dimension only; colorFill / layoutGeometry 排除",
+      "resolution": "by design — carousel frame-0 snapshot accepted; full animation out of scope"
+    },
+    {
+      "id": "KG-004",
+      "slug": "rarity-glow-multilayer",
+      "category": "runtime-renderer",
+      "screenIds": ["gacha-ds3"],
+      "status": "acceptable-regression",
+      "exemptCategoryRef": "EC-003",
+      "description": "卡片稀有度光暈用 multi-layer text-shadow 實作；Cocos 降為 single outline",
+      "scoreImpact": "colorFill — affected zones excluded from scoring",
+      "resolution": "art-budget-constraint: single outline accepted; upgrade path is bitmapFont or pre-baked glow sprite"
     }
   ],
   "draftBuilderStageRules": [
