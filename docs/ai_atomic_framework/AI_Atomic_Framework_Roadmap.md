@@ -1,14 +1,15 @@
 <!-- doc_id: doc_other_0029 -->
-# AI Atomic Framework：用 AI 自舉建立、再用它拯救失控 Legacy Vibe Coding 專案的完整規劃書
+# AI Atomic Framework：可獨立開源的 AI Vibe Coding 原子化治理框架 Roadmap
 
-> 版本：v0.1  
-> 目的：建立一套專為大型 AI Vibe Coding 專案設計的「原子化治理框架」，讓 AI 產出的程式碼可以被拆解、約束、驗證、索引、重用、接入 Legacy 系統，避免大型工程在多輪 AI 修改後發生方向漂移、規則失控、品質退轉與重做循環。
+> 版本：v0.2 integration  
+> 目的：建立一套可獨立發布到 `https://github.com/eaglhuang/AI-Atomic-Framework` 的「原子化治理框架」，讓任何技術棧中的 AI 產出都可以被拆解、約束、驗證、索引、重用、接入既有系統，避免大型工程在多輪 AI 修改後發生方向漂移、規則失控、品質退轉與重做循環。
+> 定位：本文件是上游開源框架藍圖；任何專案特定工具、遊戲引擎、任務卡系統或 legacy 案例，都只能透過 Adapter / Plugin / Example 接入，不得成為 core 的隱性前提。
 
 ---
 
 ## 0. 本文件的核心結論
 
-你目前面對的問題不是單純「某段程式碼寫不好」，而是典型的 **AI Vibe Coding 大工程失控問題**：
+AI Vibe Coding 失控時，真正的問題通常不是單純「某段程式碼寫不好」，而是大型工程缺少可攜、可驗證、可回滾的治理框架：
 
 - AI 一次吃進太大的上下文，容易誤解歷史規則。
 - 舊 plan、新 plan、老工具、新工具並存，造成規則漂移。
@@ -16,25 +17,46 @@
 - 缺乏可量化驗收與多場景回歸矩陣，造成過度擬合單一案例。
 - 每一輪修改都看似合理，但沒有穩定的契約與防退轉機制，最終導致「五次大改仍然不穩」。
 
-因此，真正要解的不是「再叫 AI 修第六次」，而是建立一套能約束 AI 的工程框架：
+因此，真正要解的不是「再叫 AI 修一次」，而是建立一套能約束 AI、並可搬到任何專案中的工程框架：
 
-> **先讓 AI 在嚴格契約中建立 AI Atomic Framework，再用 AI Atomic Framework 去逐步接管、原子化、驗證、修復既有 Legacy 系統。**
+> **先讓 AI 在嚴格契約中建立 AI Atomic Framework，再讓任何 host project 透過 Adapter 使用它，逐步接管、原子化、驗證、修復既有系統。**
 
 這套框架的關鍵不是讓 AI 更自由，而是讓 AI 更像「受控的純函數加工機」。
 
 ---
 
+## 0.1 v0.2 務實化補充
+
+`AI_Atomic_Framework_Optimized_Roadmap_v0.2.md` 已被採納為 companion analysis，而不是取代本 Roadmap 的新真相。v0.2 的價值在於降低 MVP 門檻，避免框架在救援 legacy 前先變成另一個大型系統。
+
+本 Roadmap 因此新增以下硬原則：
+
+- **Core 極簡**：v0.1 alpha 只要求 Atomic Spec、Manager 最小指令、JSON Registry、HashLock、basic Police 與 Plugin SDK。其他能力一律先進 optional plugin 或 adapter。
+- **Default Governance Bundle**：ATM 不能只剩 atom runner。v0.1 alpha 需提供可替換的預設治理套件，涵蓋 task cards、scope lock、doc index、shard、rule guard、encoding、context budget 與 evidence；但 `packages/core` 只能依賴 governance contracts，不得 import default plugin 實作。
+- **Agent Operating Layer**：v0.1 alpha 需提供 model-neutral README / AGENTS template / project probe / default profile，讓使用者把 ATM 放入任意 repo 根目錄後，AI agent 讀文件即可自動開卡、鎖 scope、保存 artifacts/logs/evidence 並跑 default guards。
+- **Self-Hosting Alpha Gate**：v0.1 alpha 必須先在 standalone upstream repo 內證明 AI agent 只讀 README / AGENTS / `.atm/profile` 就能完成 first task、scope lock、artifact/log/evidence 與 first atom smoke；在此之前不得拿 3KLife 當成功前提。
+- **Docs Neutrality / Boundary Guard**：上游 protected surfaces（README / AGENTS / docs / examples / templates）不得夾帶 3KLife、Cocos、html-to-ucuf 或本地治理工具前提，且需由 deterministic guard 持續掃描，必要時再用 semantic audit 補抓隱性耦合。
+- **Agent Governance Bundle**：`encoding guard`、`context budget guard` 與 `docs neutrality / boundary guard` 應被視為同一組 model-neutral agent governance bundle；3KLife 既有 keep/token 規則只能透過 adapter 映射，不得回寫成 upstream 私有前提。
+- **無硬依賴**：Core 不得硬依賴 GitHub Spec Kit、Atomic Agents、LangGraph、PR-Agent、PostgreSQL、pgvector、OpenTelemetry、Prometheus、Deno sandbox 或任何單一 LLM vendor。這些只能透過 `packages/adapter-*` 或 `packages/plugin-*` 啟用。
+- **PEV Loop 標準化**：所有原子工作都遵守 Plan（spec/task card）→ Execute（AI 只改 allowed files）→ Verify（test/police/regression/hash）→ Converge（registry/living spec/版本紀錄）。
+- **6 週 MVP 節奏**：前 6 週以可注入第一個 low-risk atom 為目標；Performance Police、Capability Sandbox、Vector Index、完整 Observability 與多 agent workflow 均不阻塞 v0.1 alpha。
+- **Living Spec 先輕後重**：MVP 只要求 spec 與 code 變更有差異提示；自動同步器列為後續 optional feature，不得成為早期核心 gate。
+
+v0.2 建議的 TypeScript、Zod、Vitest、Commander、ts-morph 等工具，是 first implementation recommendation，不是框架哲學。Atomic Spec、Adapter API 與 CLI report schema 必須保持語言與工具無關。
+
+---
+
 ## 1. 問題背景：為什麼原本的 Vibe Coding 會失控
 
-根據前面的 `html-to-ucuf` 審查案例，系統已經出現以下症狀：
+以下症狀可以發生在網頁、遊戲、資料管線、後端服務、AI agent workflow 或任何長期由 AI 協作維護的專案中。`html-to-ucuf` / 3KLife 只是壓力測試案例，不是本框架的核心假設。
 
 ### 1.1 巨大檔案造成 AI 上下文污染
 
-例如：
+例如，一個 host project 可能出現：
 
-- `draft-builder.js` 約 3000 行，混雜 HTML 遍歷、型別推理、字體解析、背景解析、互動解析、motion 解析。
-- `rule-checkers.js` 同時處理 27 個 rule checker、source scanning、workflow summary、geometry validation。
-- 多個 CLI 各自處理 preload、telemetry、backup、puppeteer 初始化與截圖。
+- 單一 legacy script 約數千行，混雜 parser、型別推理、格式轉換、資產處理、互動解析。
+- 單一 rule checker 同時處理掃描、驗證、摘要、telemetry、修補建議。
+- 多個 CLI 各自處理 preload、telemetry、backup、browser / engine 初始化與截圖。
 
 這會讓 AI 很難只改一個點。
 
@@ -70,7 +92,7 @@ AI 會問：
 - 是 component coverage？
 - 是 layout accuracy？
 - 是 structure match？
-- Cocos 做不到的 multi-layer glow 算不算扣分？
+- target runtime 做不到的效果算不算扣分？
 - 已知 gap 是否要排除？
 - assetization-required 是否算成功？
 
@@ -80,7 +102,7 @@ AI 會問：
 
 ### 1.4 單畫面驗證造成過度擬合
 
-如果只用 `gacha-ds3` 或單一畫面當驗證目標，AI 很容易：
+如果只用單一 flagship fixture 或單一畫面當驗證目標，AI 很容易：
 
 - 修一個 tab-rail，破壞其他 layout。
 - 修一個 button，破壞 text layout。
@@ -95,11 +117,11 @@ AI 會問：
 
 ### 2.1 一句話定義
 
-**AI Atomic Framework 是一套專為 AI Vibe Coding 設計的原子化工程治理框架。**
+**AI Atomic Framework 是一套專為 AI Vibe Coding 設計、可獨立開源並移植到任何專案的原子化工程治理框架。**
 
 它的目標是：
 
-> 把一個巨大、混亂、會漂移的大工程，拆成許多有契約、有測試、有索引、有依賴邊界、有健康檢查的小原子功能，讓 AI 可以逐一生成、驗證、替換、接入 Legacy 系統，最後組裝成穩定的大功能。
+> 把一個巨大、混亂、會漂移的大工程，拆成許多有契約、有測試、有索引、有依賴邊界、有健康檢查的小原子功能，讓 AI 可以逐一生成、驗證、替換、接入既有系統，最後組裝成穩定的大功能。
 
 ---
 
@@ -112,11 +134,57 @@ AI 會問：
 3. AI 只能根據 Spec 生成該原子的實作。
 4. 每個原子都能自己跑測試，自己證明健康。
 5. 原子之間只能透過 Atomic Map 與明確契約合作。
-6. Atomic Manager 負責生成、插入、替換、註冊、驗證、索引、打包。
-7. 舊系統不需要一次重寫，而是逐步呼叫原子 API。
+6. Atomic Manager 負責生成、替換、註冊、驗證、索引、打包，實際寫入方式由 Adapter 決定。
+7. 舊系統不需要一次重寫，而是透過 host adapter 逐步呼叫原子 API。
 8. 等舊功能逐步被原子取代後，再替換整個舊腳本。
 9. 所有進展都有 regression matrix 與 hash lock，避免品質退轉。
 10. AI 可以開發框架本身，框架再用來治理 AI 寫出的老系統。
+
+---
+
+### 2.3 獨立開源與宿主系統適配策略
+
+AI Atomic Framework 的 core 必須保持超然於任何單一專案。框架本體不應知道 3KLife、Cocos、Unity、React、Python、GitHub Actions、任務卡系統或企業內部工具的存在。
+
+正式分工如下：
+
+| 層級 | 職責 | 可否包含專案邏輯 |
+|---|---|---|
+| Core Framework | Atomic Spec、Registry、Manager、Police、HashLock、Regression Matrix schema、Plugin SDK、CLI protocol | 不可 |
+| Project Adapter | 任務鎖、品質 gate、文件 ID、編碼規則、VCS、CI/CD、組織治理流程 | 可以，但只在 adapter package |
+| Language / Runtime Adapter | JS/TS/Python/C#/Cocos/Unity 等語言或 runtime 的測試、build、import 掃描、注入策略 | 可以，但只在 adapter package |
+| Host Project | 實際 atoms、fixtures、legacy integration、domain-specific police、case study | 可以 |
+
+因此，3KLife 是第一個 reference adopter，不是核心設計中心。html-to-ucuf 可以成為高壓案例，但它的 fidelity formula、Cocos 限制、畫面 fixture、legacy path 都不得進入 core framework。
+
+---
+
+### 2.4 預期開源 Repo 形態
+
+上游 repo：`https://github.com/eaglhuang/AI-Atomic-Framework`
+
+建議骨架：
+
+```text
+AI-Atomic-Framework/
+  packages/
+    core/                 Atomic Spec、Registry、HashLock、Manager core
+    cli/                  init / status / scaffold / validate / test / register
+    plugin-sdk/           ProjectAdapter / LanguageAdapter / Police / Capability API
+    plugin-encoding/      UTF-8 / BOM / replacement char guard
+    plugin-context-budget/ Context budget / summarize / hard-stop guard
+    adapter-local-git/    無專案治理系統時的預設 Git/FileSystem adapter
+    language-js/          JavaScript / TypeScript reference language adapter
+  schemas/                JSON Schema / contract fixtures
+  templates/              atom spec / test / plugin templates
+  examples/               hello-world、molecule、legacy-strangler minimal example
+  docs/                   quick start、architecture、adapter guide、migration guide
+  LICENSE
+  CONTRIBUTING.md
+  CHANGELOG.md
+```
+
+任何 host project 若需要特殊流程，應建立自己的 adapter package，例如 `@3klife/atomic-adapter`，而不是 fork core framework。
 
 ---
 
@@ -194,7 +262,7 @@ AI 應該只做：
 
 這是正確方向。
 
-建議採用雙層策略：
+建議採用「core 只產生可驗證 plan，adapter 負責實際落地」的雙層策略：
 
 #### 開發期：虛擬原子化
 
@@ -213,7 +281,7 @@ atomic_workbench/
 
 #### 執行期：Legacy 注入式整合
 
-通過驗證後，Atomic Manager 把原子函數注入到既有專案中：
+通過驗證後，Atomic Manager 只產生 injection plan / rollback plan；是否直接寫檔、送 PR、產生 patch、或交給人工審核，由 host adapter 決定：
 
 ```text
 src/legacy/SomeExistingScript.ts
@@ -238,14 +306,60 @@ export function parseHtmlToDom_atomic_000001(input: ParseHtmlInput): ParseHtmlOu
     "scriptPath": "src/legacy/_atomic_registry.ts",
     "publicInterface": "AtomicInterface.parseHtmlToDom",
     "usedBy": [
-      "src/legacy/draft-builder.js",
-      "tools_node/dom-to-ui-json.js"
+      "src/legacy/legacy-entry.ts",
+      "host-project/path/to/legacy-entry.ts"
     ]
   }
 }
 ```
 
 這樣既能維持 AI 開發時的原子化，又能讓舊系統逐步接入，不需要一次重構。
+
+---
+
+### 3.5 Core 禁止耦合清單
+
+上游 core framework 不得直接依賴或硬編碼：
+
+- 任一 host project 的目錄結構或任務卡命名規則。
+- 任一遊戲引擎、UI framework、後端框架或 CI/CD 產品。
+- 任一專案內部工具，例如 task lock、doc-id、custom compute gate。
+- 任一 domain-specific fidelity formula、fixture 名稱、known-gap taxonomy。
+- 任一 LLM vendor API；core 只定義 Capability interface。
+
+若需要這些能力，必須透過 Project Adapter、Language Adapter、Capability Plugin 或 Example package 接入。
+
+### 3.5.1 Neutrality / Boundary Guard
+
+「禁止耦合」不能只停留在文件口號，必須落成可持續執行的 guard。
+
+建議分成兩層：
+
+1. deterministic guard：掃 `source / docs / examples / templates / prompt assets` 的 import、shell command、路徑常數、package name、banned terms 與 protected surfaces，作為 hard fail 的主要來源。
+2. optional semantic audit：由 LLM 協助標記隱性耦合敘事、stale example、類 dead-doc 與 adopter-specific wording；這一層只應產出 `warn` / `needs-review`，不單獨決定 hard fail。
+
+真正的 source dead code、unreachable branch、unused export 與跨層依賴，仍應交給靜態分析器、import graph 與確定性 police；LLM 在這裡只補語意，不取代計算型裁決。
+
+### 3.5.2 Upstream 文件中立性
+
+ATM 作為獨立開源框架時，上游 repo 的 README / AGENTS / docs / examples / templates 都必須保持 adopter-neutral。
+
+- `3KLife`、`Cocos`、`html-to-ucuf` 與本地治理工具可以存在於 downstream adapter 文件、case study 或外部 tracking docs。
+- 它們不應出現在 upstream protected surfaces 中，尤其不能被寫成 core 前提、bootstrap 前提或 hello-world 的必需背景。
+- 若需要展示 adopter 整合，應透過 example package、adapter guide 或獨立 case study repo 呈現，而不是污染 core docs。
+
+### 3.5.3 Context Budget Guard
+
+`context budget` 不應只是某個 host project 的 prompt 習慣，而必須成為 ATM upstream 可獨立治理的 primitive。
+
+最低需求如下：
+
+1. 對重量文件、批次圖片、長篇 log、compare board 與大型 artifact 定義 budget policy，而不是讓 agent 自行猜測。
+2. 對超額情境提供至少三種結果：`pass`、`summarize-before-continue`、`hard-stop`。
+3. 產出可回放的報告與摘要，例如 `.atm/reports/context-budget/*.json` 與 `.atm/state/context-summary/*.md`。
+4. 可由 host adapter 覆寫閾值與策略，但不得把 3KLife 的 token guard 數字與 keep 規則寫死成 upstream 唯一真相。
+
+這個 primitive 與 `encoding guard`、`neutrality / boundary guard` 共同構成 Agent Governance Bundle：前者防止上下文暴增與重型 artifact 污染，後兩者分別防止檔案寫壞與 adopter 私有資訊回流。
 
 ---
 
@@ -431,7 +545,7 @@ Atomic Map 定義多個原子如何串成一個較大的功能。
     }
   ],
   "integrationTests": [
-    "fixtures/html-to-ucuf/minimal-card/input.html"
+    "fixtures/reference-case/minimal-input.json"
   ]
 }
 ```
@@ -498,7 +612,7 @@ Registry 可以先用 JSON：
       "scriptPath": "src/legacy/_atomic_registry.ts",
       "functionName": "parseHtmlToDom_atomic_000001",
       "publicInterface": "AtomicInterface.parseHtmlToDom",
-      "usedBy": ["tools_node/dom-to-ui-json.js"]
+      "usedBy": ["host-project/src/legacy-entry.ts"]
     }
   ]
 }
@@ -639,10 +753,10 @@ AI Atomic Framework 可以借鑑 UI Atomic Design 的五層模型，但不要照
 
 例子：
 
-- HtmlToUcufConverter
-- CocosRuntimeRenderer
-- FidelityComparator
-- LegacyDraftBuilderAdapter
+- LegacyConverter
+- RuntimeRendererAdapter
+- RegressionComparator
+- LegacySystemAdapter
 
 ---
 
@@ -1149,7 +1263,7 @@ export function extractTypography_atomic_000002(input: Readonly<ExtractTypograph
     "interfacePath": "src/legacy/AtomicInterface.ts",
     "interfaceName": "AtomicInterface.parseHtmlToDom",
     "usedBy": [
-      "tools_node/lib/dom-to-ui/draft-builder.js"
+      "host-project/src/legacy-entry.ts"
     ]
   }
 }
@@ -1271,7 +1385,7 @@ function calcPatch(input: Readonly<GameStateView>): GameStatePatch {
 - input 用 Readonly。
 - output 回傳 patch / command / result。
 - 不複製整個 legacy state。
-- 不傳 Cocos Node / Unity GameObject 這類大型 mutable instance 給 compute atom。
+- 不傳大型 mutable runtime instance 給 compute atom；例如遊戲引擎 node、scene object 或 web framework instance。
 
 ---
 
@@ -1506,13 +1620,13 @@ if similarity > 0.90
 
 ## 4.7 Known Gap 警察
 
-用於像 html-to-ucuf 這種引擎能力限制。
+用於任何 target runtime、資產管線或 legacy wrapper 的已知能力限制。
 
 區分：
 
 ```json
 {
-  "knownGapType": "cocos-limitation | assetization-required | temporary-tool-gap | accepted-design-drift",
+  "knownGapType": "runtime-limitation | assetization-required | temporary-tool-gap | accepted-design-drift",
   "scoreImpactPolicy": "ignore | cap | count | requireApproval",
   "mustHaveTaskId": true,
   "expiresAt": "2026-12-31"
@@ -1536,24 +1650,22 @@ if similarity > 0.90
 
 ---
 
-# Phase 5：Fidelity / Regression Framework
+# Phase 5：通用 Regression Framework 與 Domain Scoring Plugin
 
 ## 目標
 
-專門解救前面 `html-to-ucuf` 老系統。
+建立可被不同專案套用的 regression matrix 與 scoring plugin protocol。Core 只定義 fixture、result、delta、known gap 與退轉阻擋格式；實際分數公式由 domain scoring plugin 提供。
 
-你原本的問題是 0.62 到 0.95 無法穩定收斂。
-
-這一階段要先建立可量化的成功標準。
+例如視覺轉換專案可以定義 pixel / structure / text score；後端 API 可以定義 contract compatibility / latency / error budget；資料管線可以定義 schema drift / row coverage / deterministic output。
 
 ---
 
 ## 5.1 Fidelity Score Spec
 
-建立：
+Core 定義 scoring plugin contract；domain adapter 可建立自己的 scoring spec，例如：
 
 ```text
-docs/html_to_ucuf_fidelity_spec.md
+docs/domain-scoring-spec.md
 ```
 
 定義：
@@ -1592,7 +1704,7 @@ converter-layout
 converter-style
 runtime-renderer
 assetization-required
-cocos-limitation
+runtime-limitation
 known-gap
 capture-environment
 manual-design-drift
@@ -1607,9 +1719,9 @@ legacy-wrapper-gap
 
 | Fixture | 用途 | 初期門檻 | 最終門檻 |
 |---|---|---:|---:|
-| button-family | 基礎組件 | 0.95 | 0.95 |
-| text-layout | 排版壓力測試 | 0.90 | 0.95 |
-| gacha-ds3 | 複雜商業 UI | 0.80~0.85 | 0.95 或 blocker taxonomy |
+| minimal-contract | 基礎契約 | 1.00 | 1.00 |
+| edge-case-set | 邊界案例 | 0.90 | 0.98 |
+| legacy-strangler | 舊系統相容 | 0.80~0.90 | 0.95 或 blocker taxonomy |
 
 重點：
 
@@ -1657,16 +1769,20 @@ legacy-wrapper-gap
 - 每個 residual top 20 都有 selector trace。
 - 每個 residual 都有 owner bucket。
 - known gap 結構化，不是文字備註。
-- gacha-ds3 不再作為唯一成功標準。
+- 單一 flagship fixture 不再作為唯一成功標準。
 - 改一個 fixture 不可讓其他 fixture 無聲退轉。
 
 ---
 
-# Phase 6：用 Atomic Framework 接管 html-to-ucuf Legacy
+# Phase 6：Reference Case Study：用 Atomic Framework 接管一個 Legacy 系統
 
 ## 目標
 
-不是一次重寫 `draft-builder.js`。
+提供一個完整但可替換的 reference case study，展示如何用 AI Atomic Framework 逐步接管一個高風險 legacy 系統。
+
+本文件可用 html-to-ucuf 作為第一個案例，但案例不能反向污染 core framework。
+
+不是一次重寫整個 legacy script。
 
 而是將它逐步包裝、抽離、替換。
 
@@ -1681,7 +1797,7 @@ legacy-wrapper-gap
   "atomicId": "010001",
   "name": "legacyDraftBuilderAdapter",
   "kind": "adapter",
-  "description": "Wrap existing draft-builder behavior behind atomic interface.",
+  "description": "Wrap existing legacy behavior behind atomic interface.",
   "sideEffects": {
     "allowed": true,
     "reason": "Legacy compatibility boundary."
@@ -1692,7 +1808,7 @@ legacy-wrapper-gap
 作用：
 
 - 對外提供穩定 input/output。
-- 內部仍然 call 舊 `draft-builder.js`。
+- 內部仍然 call 舊 legacy implementation。
 - 先不改其內部行為。
 - 建立 baseline test。
 
@@ -1702,7 +1818,7 @@ legacy-wrapper-gap
 
 目標：
 
-- 不碰整個 draft-builder。
+- 不碰整個 legacy script。
 - 只抽 `typography` 一小塊。
 
 流程：
@@ -1768,7 +1884,7 @@ run regression matrix
 
 ## Phase 6 Acceptance
 
-- `draft-builder.js` 不再一次被大改。
+- 目標 legacy script 不再一次被大改。
 - 每次只替換一個內部功能區塊。
 - 舊系統能繼續運作。
 - 原子數逐步增加。
@@ -2134,65 +2250,55 @@ atomic_000001@2.0.0 breaking
 # 14. 檔案結構建議
 
 ```text
-ai_atomic_framework/
+AI-Atomic-Framework/
+  packages/
+    core/
+      src/
+        spec/
+        registry/
+        hash-lock/
+        manager/
+        regression/
+    cli/
+      src/commands/
+    plugin-sdk/
+      src/adapters/
+      src/capabilities/
+      src/police/
+    adapter-local-git/
+    language-js/
+  schemas/
+    atomic-spec.schema.json
+    registry.schema.json
+    regression-matrix.schema.json
+  templates/
+    atom.spec.template.json
+    atom.test.template.ts
+    adapter.template.ts
+  examples/
+    hello-world/
+    molecule-pipeline/
+    legacy-strangler-minimal/
   docs/
-    active_spec.md
-    architecture.md
-    fidelity_spec.md
-    legacy_migration_plan.md
-  atomic_specs/
-    atomic_000001.json
-    atomic_000002.json
-  atomic_maps/
-    blueprint_000_genesis.json
-    html_to_ucuf_typography_map.json
-  atomic_workbench/
-    atoms/
-      atomic_000001/
-        spec.json
-        index.ts
-        types.ts
-        test.ts
-  atomic_registry/
-    registry.json
-    location_index.json
-    dependency_index.json
-    performance_index.json
-  manager/
-    cli.ts
-    capabilities/
-    validators/
-    injectors/
-    police/
-  legacy_integration/
-    injection_plans/
-    generated_interfaces/
-  regression/
-    suites/
-    summaries/
+    QUICK_START.md
+    ARCHITECTURE.md
+    SPEC_GUIDE.md
+    ADAPTER_GUIDE.md
+    PLUGIN_SDK.md
+    MIGRATION.md
+    LIFECYCLE.md
+  LICENSE
+  CONTRIBUTING.md
+  CHANGELOG.md
 ```
 
-在你的原專案中：
-
-```text
-src_or_tools_node/
-  _atomic_registry.ts
-  AtomicInterface.ts
-  existing_legacy_scripts...
-```
-
-或 JS 專案：
-
-```text
-tools_node/
-  _atomic_registry.js
-  atomic-interface.js
-  lib/dom-to-ui/draft-builder.js
-```
+Host project 應只保留 adapter、workbench、local registry 與實際 runtime integration。這些檔案不是 core framework 的一部分。
 
 ---
 
-# 15. 對 html-to-ucuf 的具體救援策略
+# 15. Reference Case Study：對 html-to-ucuf 的具體救援策略
+
+本章是 3KLife / html-to-ucuf reference case study。它可用來證明框架能救援一個真實的 AI vibe coding legacy 系統，但不屬於 core framework。
 
 ---
 
@@ -2536,14 +2642,14 @@ Regression
 
 ---
 
-## Week 6：開始救 html-to-ucuf
+## Week 6：開始 reference case study
 
 產出：
 
-- typography extraction atom
-- background classification atom
-- known gap atom
-- owner bucket atom
+- 第一批低風險 compute atom
+- domain scoring plugin
+- known gap plugin
+- owner bucket plugin
 - multi-fixture report
 
 ---
@@ -2563,7 +2669,7 @@ Regression
 7. 出問題能 rollback。
 8. 已穩定的原子不會被下一個 AI 誤改。
 9. 相似功能不會重複造輪子。
-10. 最終 `html-to-ucuf` 從「巨大不穩腳本」變成「可治理原子系統」。
+10. 任一 host project 都能從「巨大不穩的 legacy 系統」逐步變成「可治理原子系統」。
 
 ---
 
@@ -2625,35 +2731,40 @@ Regression
 ## 23. 附錄：第一批檔案清單
 
 ```text
-docs/ai_atomic_framework/architecture.md
-docs/ai_atomic_framework/active_spec.md
-docs/ai_atomic_framework/task_template.md
+README.md
+docs/QUICK_START.md
+docs/ARCHITECTURE.md
+docs/SPEC_GUIDE.md
+docs/ADAPTER_GUIDE.md
+docs/PLUGIN_SDK.md
+docs/MIGRATION.md
+docs/LIFECYCLE.md
 
-atomic_specs/framework/atomic_000001_parse_spec.json
-atomic_specs/framework/atomic_000002_generate_scaffold.json
-atomic_specs/framework/atomic_000003_build_agent_prompt.json
-atomic_specs/framework/atomic_000004_execute_agent_task.json
-atomic_specs/framework/atomic_000005_run_atomic_test.json
-atomic_specs/framework/atomic_000006_validate_atomic_output.json
-atomic_specs/framework/atomic_000007_compute_atomic_hash.json
-atomic_specs/framework/atomic_000008_update_registry.json
+packages/core/src/spec/parse-spec.ts
+packages/core/src/registry/registry.ts
+packages/core/src/hash-lock/hash-lock.ts
+packages/core/src/manager/scaffold.ts
+packages/core/src/manager/test-runner.ts
+packages/core/src/manager/validate.ts
 
-atomic_maps/blueprint_000_genesis.json
+packages/cli/src/commands/init.ts
+packages/cli/src/commands/status.ts
+packages/cli/src/commands/scaffold.ts
+packages/cli/src/commands/validate.ts
 
-manager/cli.ts
-manager/schema.ts
-manager/registry.ts
-manager/validators.ts
-manager/workbench.ts
-manager/capabilities/llm.ts
-manager/capabilities/file_system.ts
+packages/plugin-sdk/src/project-adapter.ts
+packages/plugin-sdk/src/language-adapter.ts
+packages/plugin-sdk/src/capability.ts
+packages/plugin-sdk/src/police.ts
 
-atomic_registry/registry.json
-atomic_registry/location_index.json
-atomic_registry/dependency_index.json
+schemas/atomic-spec.schema.json
+schemas/registry.schema.json
+schemas/regression-matrix.schema.json
 
-regression/baseline.json
-regression/suites/html_to_ucuf_minimal.json
+templates/atom.spec.template.json
+templates/atom.test.template.ts
+examples/hello-world/
+examples/legacy-strangler-minimal/
 ```
 
 ---

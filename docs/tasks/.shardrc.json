@@ -29,6 +29,11 @@
       "name": "tasks-data",
       "title": "Data Tasks（DATA-*）",
       "pattern": "^DATA-"
+    },
+    {
+      "name": "tasks-atm",
+      "title": "ATM Tasks（ATM-*）",
+      "pattern": "^ATM-"
     }
   ]
 }

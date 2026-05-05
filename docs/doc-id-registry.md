@@ -18,12 +18,12 @@
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 178 |
 | 索引類 | `doc_index` | 17 |
-| 任務卡類 | `doc_task` | 236 |
+| 任務卡類 | `doc_task` | 283 |
 | AI Agent 專用 | `doc_ai` | 30 |
 | Agent Skill 專用 | `doc_agentskill` | 45 |
 | Server 文件類 | `doc_server_<subtype>` | 15 |
-| 其它類 | `doc_other` | 24 |
-| **合計** | — | **627** |
+| 其它類 | `doc_other` | 26 |
+| **合計** | — | **676** |
 
 ---
 
@@ -340,6 +340,53 @@
 |--------|------|------|
 | `doc_task_0001` | docs/agent-briefs/tasks_index_worldbuilding_2026-04-02.md | 世界觀後續任務索引 |
 | `doc_task_0002` | docs/agent-briefs/tasks_index.md | Tasks Index / UI Quality |
+| `doc_task_0245` | docs/agent-briefs/tasks/ATM-0-0001.md | [ATM-0-0001] ATM 任務 shard 與 bootstrap 卡 |
+| `doc_task_0246` | docs/agent-briefs/tasks/ATM-0-0002.md | [ATM-0-0002] 名詞定義新增 ATM 任務代號 |
+| `doc_task_0247` | docs/agent-briefs/tasks/ATM-0-0003.md | [ATM-0-0003] Roadmap 上游開源化改版 |
+| `doc_task_0248` | docs/agent-briefs/tasks/ATM-0-0004.md | [ATM-0-0004] 3KLife adopter 計畫書改版 |
+| `doc_task_0249` | docs/agent-briefs/tasks/ATM-0-0005.md | [ATM-0-0005] 開源拆出 checklist 文件 |
+| `doc_task_0250` | docs/agent-briefs/tasks/ATM-0-0006.md | [ATM-0-0006] ATM 任務卡模板與開卡規則 |
+| `doc_task_0281` | docs/agent-briefs/tasks/ATM-0-0007.md | [ATM-0-0007] 上游 roadmap v0.2 技術選型整合 |
+| `doc_task_0282` | docs/agent-briefs/tasks/ATM-0-0008.md | [ATM-0-0008] 3KLife adapter 技術棧校正矩陣 |
+| `doc_task_0287` | docs/agent-briefs/tasks/ATM-0-0009.md | [ATM-0-0009] Default Governance Bundle 切分重規劃 |
+| `doc_task_0251` | docs/agent-briefs/tasks/ATM-1-0001.md | [ATM-1-0001] 上游 repo product charter 與 README |
+| `doc_task_0252` | docs/agent-briefs/tasks/ATM-1-0002.md | [ATM-1-0002] 上游 monorepo package skeleton |
+| `doc_task_0253` | docs/agent-briefs/tasks/ATM-1-0003.md | [ATM-1-0003] Atomic Spec schema v0.1 |
+| `doc_task_0254` | docs/agent-briefs/tasks/ATM-1-0004.md | [ATM-1-0004] CLI init/status/validate MVP |
+| `doc_task_0255` | docs/agent-briefs/tasks/ATM-1-0005.md | [ATM-1-0005] LocalGitAdapter reference implementation |
+| `doc_task_0256` | docs/agent-briefs/tasks/ATM-1-0006.md | [ATM-1-0006] JS/TS LanguageAdapter reference |
+| `doc_task_0257` | docs/agent-briefs/tasks/ATM-1-0007.md | [ATM-1-0007] Hello-world 與 legacy-strangler 範例 |
+| `doc_task_0290` | docs/agent-briefs/tasks/ATM-1-0008.md | [ATM-1-0008] Zero-install Agent Bootstrap Pack |
+| `doc_task_0258` | docs/agent-briefs/tasks/ATM-2-0001.md | [ATM-2-0001] Core Spec loader/parser |
+| `doc_task_0259` | docs/agent-briefs/tasks/ATM-2-0002.md | [ATM-2-0002] Scaffold Builder MVP |
+| `doc_task_0260` | docs/agent-briefs/tasks/ATM-2-0003.md | [ATM-2-0003] Test Runner 與 report schema |
+| `doc_task_0261` | docs/agent-briefs/tasks/ATM-2-0004.md | [ATM-2-0004] Registry 與 HashLock MVP |
+| `doc_task_0262` | docs/agent-briefs/tasks/ATM-2-0005.md | [ATM-2-0005] Police plugin API 與內建檢查器 |
+| `doc_task_0263` | docs/agent-briefs/tasks/ATM-2-0006.md | [ATM-2-0006] Adapter API 與 Plugin SDK 定稿 |
+| `doc_task_0289` | docs/agent-briefs/tasks/ATM-2-0007.md | [ATM-2-0007] Default Governance Bundle schema |
+| `doc_task_0288` | docs/agent-briefs/tasks/ATM-2-0008.md | [ATM-2-0008] Local governance reference plugins |
+| `doc_task_0291` | docs/agent-briefs/tasks/ATM-2-0009.md | [ATM-2-0009] Artifact Log Evidence Store contracts |
+| `doc_task_0264` | docs/agent-briefs/tasks/ATM-3-0001.md | [ATM-3-0001] 3KLife ProjectAdapter wrapper |
+| `doc_task_0265` | docs/agent-briefs/tasks/ATM-3-0002.md | [ATM-3-0002] 3KLife ATM config 與 bootstrap wrapper |
+| `doc_task_0266` | docs/agent-briefs/tasks/ATM-3-0003.md | [ATM-3-0003] compute-gate ATM profile adapter integration |
+| `doc_task_0267` | docs/agent-briefs/tasks/ATM-3-0004.md | [ATM-3-0004] doc-id 與 encoding adapter integration |
+| `doc_task_0268` | docs/agent-briefs/tasks/ATM-3-0005.md | [ATM-3-0005] Cocos runtime adapter policy |
+| `doc_task_0269` | docs/agent-briefs/tasks/ATM-4-0001.md | [ATM-4-0001] html-to-ucuf reference case study plan |
+| `doc_task_0270` | docs/agent-briefs/tasks/ATM-4-0002.md | [ATM-4-0002] H2U legacy baseline 與 regression matrix |
+| `doc_task_0279` | docs/agent-briefs/tasks/ATM-4-0003.md | [ATM-4-0003] normalizeCssColor 首個 case atom |
+| `doc_task_0271` | docs/agent-briefs/tasks/ATM-4-0004.md | [ATM-4-0004] parseCssLength 與 parseFragmentList case atoms |
+| `doc_task_0280` | docs/agent-briefs/tasks/ATM-4-0005.md | [ATM-4-0005] Injection plan 與 rollback dry-run |
+| `doc_task_0283` | docs/agent-briefs/tasks/ATM-4-0006.md | [ATM-4-0006] H2U case study 與 Cocos runtime 邊界 |
+| `doc_task_0272` | docs/agent-briefs/tasks/ATM-5-0001.md | [ATM-5-0001] Quick Start 與 API 文件 |
+| `doc_task_0273` | docs/agent-briefs/tasks/ATM-5-0002.md | [ATM-5-0002] Adapter Guide 與 Plugin SDK 文件 |
+| `doc_task_0274` | docs/agent-briefs/tasks/ATM-5-0003.md | [ATM-5-0003] Semver Lifecycle 與 Governance |
+| `doc_task_0275` | docs/agent-briefs/tasks/ATM-5-0004.md | [ATM-5-0004] v0.1 alpha release checklist |
+| `doc_task_0284` | docs/agent-briefs/tasks/ATM-5-0005.md | [ATM-5-0005] Living Spec 同步器與 PEV Loop |
+| `doc_task_0276` | docs/agent-briefs/tasks/ATM-6-0001.md | [ATM-6-0001] 跨專案 Registry / DB / Vector 決策 |
+| `doc_task_0277` | docs/agent-briefs/tasks/ATM-6-0002.md | [ATM-6-0002] Community RFC 與貢獻流程 |
+| `doc_task_0278` | docs/agent-briefs/tasks/ATM-6-0003.md | [ATM-6-0003] 多語言 Adapter 擴張計畫 |
+| `doc_task_0285` | docs/agent-briefs/tasks/ATM-6-0004.md | [ATM-6-0004] Performance Budget Police 與成本控制 |
+| `doc_task_0286` | docs/agent-briefs/tasks/ATM-6-0005.md | [ATM-6-0005] Capability Sandbox 與審計日誌 |
 | `doc_task_0224` | docs/agent-briefs/tasks/H2U-REFACTOR-0001.md | [H2U-REFACTOR-0001] draft-builder.js 拆 5 模組 |
 | `doc_task_0225` | docs/agent-briefs/tasks/H2U-REFACTOR-0002.md | [H2U-REFACTOR-0002] rule-checkers.js 拆目錄 |
 | `doc_task_0226` | docs/agent-briefs/tasks/H2U-REFACTOR-0003.md | [H2U-REFACTOR-0003] 抽 browser-capture-core |
@@ -688,8 +735,10 @@
 | `doc_other_0002` | docs/決策-Mobile-Offline-2026-04-23.md | 決策：Mobile-first Offline Support（2026-04-23） |
 | `doc_other_0027` | docs/學習文件/harness_engineering_analysis.md | Harness Engineering 深度分析與 3KLife 專案對照 |
 | `doc_other_0023` | docs/學習文件/HarnessEngineering.md | Harness Engineering 中文學習版與 3KProject 參考手冊 |
-| `doc_other_0029` | docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md | AI Atomic Framework：用 AI 自舉建立、再用它拯救失控 Legacy Vibe Coding 專案的完整規劃書 |
+| `doc_other_0031` | docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md | AI Atomic Framework 優化藍圖 v0.2 |
+| `doc_other_0029` | docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md | AI Atomic Framework：可獨立開源的 AI Vibe Coding 原子化治理框架 Roadmap |
 | `doc_other_0028` | docs/ai_atomic_framework/AI原子框架開發計畫書.md | AI 原子框架（ATM）開發計畫書 |
+| `doc_other_0030` | docs/ai_atomic_framework/open-source-extraction-plan.md | AI Atomic Framework 開源拆出計畫 |
 | `doc_other_0005` | docs/battle-entry-unification-checklist.md | 戰場入口統一 — Checklist |
 | `doc_other_0006` | docs/doc-id-registry.md | 文件代號 Registry (doc-id-registry) |
 | `doc_other_0009` | docs/html_skill_plan.md | HTML Skill Plan |
