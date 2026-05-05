@@ -74,7 +74,16 @@
       "Bash(sort -t_ -k1,1 -k2,2n)",
       "Bash(node tools_node/compute-gate.js --profile standard --agent-feedback)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(node tools_node/doc-id-registry.js --assign \"docs/ai_atomic_framework/AI原子框架開發計畫書.md\")",
+      "Bash(node tools_node/check-encoding-touched.js)",
+      "Bash(node tools_node/check-encoding-integrity.js \"docs/ai_atomic_framework/AI原子框架開發計畫書.md\")",
+      "Bash(git status *)",
+      "Bash(node tools_node/task-lock.js list)",
+      "Bash(git -C . check-ignore -v --no-index \"docs/ai_atomic_framework/\")",
+      "Bash(echo \"rc=$?\")",
+      "Bash(git -C . check-ignore -v --no-index \"docs/ai_atomic_framework/AI原子框架開發計畫書.md\")",
+      "Bash(git update-index *)"
     ]
   }
 }
