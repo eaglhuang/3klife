@@ -16,10 +16,10 @@
 
 const fs = require('fs');
 const path = require('path');
+const registryStore = require('./lib/doc-id-registry-loader');
 
 const ROOT = process.cwd();
 const MANIFEST_PATH = path.join(ROOT, 'docs/遊戲規格文件/consolidation-manifest.json');
-const REGISTRY_PATH = path.join(ROOT, 'docs/doc-id-registry.json');
 const DOUBT_PATH = path.join(ROOT, 'docs/遊戲規格文件/整併疑問書.md');
 
 const strictMode = process.argv.includes('--strict');
@@ -36,8 +36,12 @@ function readJson(filePath) {
 
 function main() {
   const manifest = readJson(MANIFEST_PATH);
-  const registryRaw = readJson(REGISTRY_PATH);
-  const registry = registryRaw.registry || registryRaw;
+  let registry;
+  try {
+    registry = registryStore.loadDocIdRegistryMap();
+  } catch (error) {
+    fail(error.message);
+  }
 
   if (!Array.isArray(manifest.files)) {
     fail('Invalid manifest format: files must be an array');

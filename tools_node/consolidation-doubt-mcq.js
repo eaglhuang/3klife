@@ -38,6 +38,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const registryStore = require('./lib/doc-id-registry-loader');
 
 const ROOT = process.cwd();
 const DOUBT_FILE = path.join(ROOT, 'docs/遊戲規格文件/整併疑問書.md');
@@ -545,10 +546,12 @@ function cmdRewrite() {
 
 // ── Helper: 從 doc-id-registry.json 解析 doc_id → 絕對路徑 ─────────────────
 function resolveDocPath(docId) {
-  const registryPath = path.join(ROOT, 'docs/doc-id-registry.json');
-  if (!fs.existsSync(registryPath)) return null;
-  const reg = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
-  const registry = reg.registry || reg;
+  let registry;
+  try {
+    registry = registryStore.loadDocIdRegistryMap();
+  } catch (_) {
+    return null;
+  }
   const entry = registry[docId];
   if (!entry || !entry.path) return null;
   return path.join(ROOT, entry.path);

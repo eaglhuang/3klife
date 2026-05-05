@@ -183,7 +183,7 @@ function shardJsonArray(cfg) {
 function rebuildJsonIndex(cfg, bufs) {
   const shardRelDir = relDir(cfg._dir);
   const index = {
-    _note:    `索引 stub。完整任務資料見 ${shardRelDir}/ 目錄。`,
+    _note:    `索引 stub。完整資料見 ${shardRelDir}/ 目錄。`,
     _usage:   `讀取特定分片：直接讀 ${shardRelDir}/<shard>.json`,
     _rebuild: `node tools_node/shard-manager.js rebuild-index ${shardRelDir}`,
     shards: cfg.shards.map(s => ({
@@ -259,13 +259,18 @@ function validate(shardDir) {
     const p = path.join(cfg._dir, s.name + ext);
     if (!fs.existsSync(p)) continue;
     const kb = fs.statSync(p).size / 1024;
+    const subDir = path.join(cfg._dir, s.name);
+    const hasAutoParts = fs.existsSync(path.join(subDir, '.shardrc.json'));
     if (kb > OVERSIZE_KB) {
-      console.warn(`[shard-manager] WARN: ${s.name}${ext} is ${kb.toFixed(1)} KB > ${OVERSIZE_KB} KB.`);
-      console.warn(`       Consider: node tools_node/shard-manager.js auto-split ${relDir(cfg._dir)}`);
+      if (!hasAutoParts) {
+        console.warn(`[shard-manager] WARN: ${s.name}${ext} is ${kb.toFixed(1)} KB > ${OVERSIZE_KB} KB.`);
+        console.warn(`       Consider: node tools_node/shard-manager.js auto-split ${relDir(cfg._dir)}`);
+      } else {
+        info(`  • ${s.name}${ext} has auto-parts coverage in ${relDir(subDir)}/`);
+      }
     }
     // Check for an auto-parts sub-dir for this shard
-    const subDir = path.join(cfg._dir, s.name);
-    if (fs.existsSync(path.join(subDir, '.shardrc.json'))) {
+    if (hasAutoParts) {
       validateAutoPartsDir(subDir);
     }
   }

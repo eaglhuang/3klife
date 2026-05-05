@@ -20,6 +20,7 @@
 
 const fs   = require('fs');
 const path = require('path');
+const registryStore = require('./lib/doc-id-registry-loader');
 
 const ROOT = path.join(__dirname, '..');
 
@@ -38,14 +39,13 @@ function flagVal2(f) {
 
 // ── Registry loader ──────────────────────────────────────────────────────────
 function loadRegistry() {
-  const regPath = path.join(ROOT, 'docs', 'doc-id-registry.json');
-  if (!fs.existsSync(regPath)) {
-    console.error('[ERROR] doc-id-registry.json not found at', regPath);
+  let entries;
+  try {
+    entries = registryStore.loadDocIdRegistryMap();
+  } catch (error) {
+    console.error('[ERROR]', error.message);
     process.exit(1);
   }
-  const raw = JSON.parse(fs.readFileSync(regPath, 'utf8'));
-  // Support both flat and nested (raw.registry) formats
-  const entries = raw.registry || raw;
   const byDocId = {};
   const byBasename = {};
   for (const [docId, info] of Object.entries(entries)) {

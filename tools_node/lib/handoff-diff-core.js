@@ -12,6 +12,33 @@ function toPosixPath(filePath) {
   return String(filePath || '').replace(/\\/g, '/');
 }
 
+function normalizeScopeFiles(files) {
+  return uniqueStrings(
+    (Array.isArray(files) ? files : [])
+      .map((entry) => toPosixPath(String(entry || '').trim()))
+      .filter((entry) => entry.length > 0)
+  ).sort((left, right) => left.localeCompare(right));
+}
+
+function buildEntryScopeCandidates(entry) {
+  return uniqueStrings([
+    entry && entry.path ? toPosixPath(entry.path) : '',
+    entry && entry.previousPath ? toPosixPath(entry.previousPath) : '',
+  ].filter((value) => value.length > 0));
+}
+
+function diffFilesAgainstScope(actualFiles, scopeFiles) {
+  const scopeSet = new Set(normalizeScopeFiles(scopeFiles));
+  return uniqueStrings((actualFiles || []).map((entry) => toPosixPath(entry)))
+    .filter((entry) => !scopeSet.has(entry))
+    .sort((left, right) => left.localeCompare(right));
+}
+
+function entryCoveredByScope(entry, scopeFiles) {
+  const scopeSet = new Set(normalizeScopeFiles(scopeFiles));
+  return buildEntryScopeCandidates(entry).some((candidate) => scopeSet.has(candidate));
+}
+
 function uniqueStrings(values) {
   return [...new Set((values || []).map((entry) => String(entry)))];
 }
@@ -175,12 +202,12 @@ function parseSimpleFrontmatter(content) {
 
 function readTaskLockEvidence(taskId, taskLockDir) {
   if (!taskLockDir) {
-    return { checked: false, found: false, path: '', taskId: '', agentName: '', error: '' };
+    return { checked: false, found: false, path: '', taskId: '', agentName: '', files: [], error: '' };
   }
 
   const lockPath = path.join(taskLockDir, `${taskId}.lock.json`);
   if (!fs.existsSync(lockPath)) {
-    return { checked: true, found: false, path: toPosixPath(lockPath), taskId: '', agentName: '', error: '' };
+    return { checked: true, found: false, path: toPosixPath(lockPath), taskId: '', agentName: '', files: [], error: '' };
   }
 
   try {
@@ -191,6 +218,7 @@ function readTaskLockEvidence(taskId, taskLockDir) {
       path: toPosixPath(lockPath),
       taskId: String(parsed.taskId || '').trim(),
       agentName: String(parsed.agentName || '').trim(),
+      files: normalizeScopeFiles(parsed.files),
       error: '',
     };
   } catch (error) {
@@ -200,9 +228,89 @@ function readTaskLockEvidence(taskId, taskLockDir) {
       path: toPosixPath(lockPath),
       taskId: '',
       agentName: '',
+      files: [],
       error: error instanceof Error ? error.message : String(error),
     };
   }
+}
+
+function readAllTaskLocks(taskLockDir) {
+  if (!taskLockDir) {
+    return { checked: false, lockDir: '', locks: [], issues: [] };
+  }
+
+  if (!fs.existsSync(taskLockDir)) {
+    return {
+      checked: true,
+      lockDir: toPosixPath(taskLockDir),
+      locks: [],
+      issues: [
+        {
+          layer: 'lock-dir',
+          severity: 'warn',
+          message: 'task lock directory does not exist',
+          expected: 'existing .task-locks directory',
+          actual: toPosixPath(taskLockDir),
+        },
+      ],
+    };
+  }
+
+  const locks = [];
+  const issues = [];
+  const entries = fs.readdirSync(taskLockDir, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.lock.json'))
+    .sort((left, right) => left.name.localeCompare(right.name));
+
+  for (const entry of entries) {
+    const lockPath = path.join(taskLockDir, entry.name);
+    try {
+      const parsed = readJsonOrThrow(lockPath, 'task lock');
+      const taskId = String(parsed.taskId || '').trim();
+      const files = normalizeScopeFiles(parsed.files);
+      const lock = {
+        path: toPosixPath(lockPath),
+        taskId,
+        agentName: String(parsed.agentName || '').trim(),
+        lockedAt: String(parsed.lockedAt || '').trim(),
+        files,
+      };
+      locks.push(lock);
+
+      if (!taskId) {
+        issues.push({
+          layer: 'lock',
+          severity: 'fail',
+          message: 'task lock missing taskId',
+          expected: 'non-empty task id',
+          actual: lock.path,
+        });
+      } else if (files.length === 0) {
+        issues.push({
+          layer: 'lock',
+          severity: 'warn',
+          message: 'task lock files[] is empty; scope enforcement degrades to advisory only',
+          expected: 'non-empty files[]',
+          actual: taskId,
+        });
+      }
+    } catch (error) {
+      issues.push({
+        layer: 'lock',
+        severity: 'fail',
+        message: error instanceof Error ? error.message : String(error),
+        expected: 'valid task lock json',
+        actual: toPosixPath(lockPath),
+      });
+    }
+  }
+
+  return {
+    checked: true,
+    lockDir: toPosixPath(taskLockDir),
+    locks,
+    issues,
+  };
 }
 
 function readTaskCardEvidence(taskId, taskCardDir) {
@@ -245,6 +353,9 @@ function buildTaskScopeResult({ artifact, repositoryRoot, taskLockDir = '', task
   const defaultCardDir = path.join(repositoryRoot || PROJECT_ROOT, 'docs', 'agent-briefs', 'tasks');
   let resolvedLockDir = taskLockDir ? path.resolve(repositoryRoot || PROJECT_ROOT, taskLockDir) : '';
   let resolvedCardDir = taskCardDir ? path.resolve(repositoryRoot || PROJECT_ROOT, taskCardDir) : defaultCardDir;
+  const artifactFiles = Array.isArray(artifact && artifact.files)
+    ? normalizeScopeFiles(artifact.files.map((entry) => entry && entry.path ? entry.path : ''))
+    : [];
 
   if (!artifactTask) {
     issues.push({ layer: 'artifact', severity: 'warn', message: 'artifact.task is missing', expected: 'non-empty task id', actual: '' });
@@ -261,7 +372,7 @@ function buildTaskScopeResult({ artifact, repositoryRoot, taskLockDir = '', task
 
   const lock = artifactTask
     ? readTaskLockEvidence(artifactTask, resolvedLockDir)
-    : { checked: Boolean(resolvedLockDir), found: false, path: '', taskId: '', agentName: '', error: '' };
+    : { checked: Boolean(resolvedLockDir), found: false, path: '', taskId: '', agentName: '', files: [], error: '' };
   const frontmatter = artifactTask
     ? readTaskCardEvidence(artifactTask, resolvedCardDir)
     : { checked: Boolean(resolvedCardDir), found: false, path: '', id: '', status: '', startedByAgent: '', error: '' };
@@ -278,6 +389,30 @@ function buildTaskScopeResult({ artifact, repositoryRoot, taskLockDir = '', task
     issues.push({ layer: 'frontmatter', severity: 'fail', message: 'task card frontmatter id does not match artifact.task', expected: artifactTask, actual: frontmatter.id });
   }
 
+  const outOfScopeFiles = lock.found
+    ? diffFilesAgainstScope(artifactFiles, lock.files)
+    : [];
+
+  if (lock.found && lock.files.length === 0 && artifactFiles.length > 0) {
+    issues.push({
+      layer: 'scope',
+      severity: 'warn',
+      message: 'task lock exists but files[] is empty; cannot prove artifact files stay within task scope',
+      expected: 'non-empty files[]',
+      actual: artifactTask,
+    });
+  }
+
+  if (outOfScopeFiles.length > 0) {
+    issues.push({
+      layer: 'scope',
+      severity: 'fail',
+      message: 'artifact files exceed task lock scope',
+      expected: lock.files.join(', '),
+      actual: outOfScopeFiles.join(', '),
+    });
+  }
+
   if (artifactTask && !lock.found && !frontmatter.found) {
     issues.push({ layer: 'lock', severity: 'warn', message: 'no task lock or task card frontmatter found for artifact.task', expected: artifactTask, actual: '' });
   }
@@ -292,6 +427,133 @@ function buildTaskScopeResult({ artifact, repositoryRoot, taskLockDir = '', task
     source: lock.found ? 'lock' : frontmatter.found ? 'frontmatter' : 'none',
     lock,
     frontmatter,
+    scopeFiles: lock.files,
+    artifactFiles,
+    outOfScopeFiles,
+    issues,
+  };
+}
+
+function buildGitTaskScopeCoverage({ repositoryRoot, gitEntries, taskLockDir = '', taskCardDir = '', taskId = '' } = {}) {
+  const root = repositoryRoot || PROJECT_ROOT;
+  const resolvedLockDir = taskLockDir ? path.resolve(root, taskLockDir) : path.join(root, '.task-locks');
+  const resolvedCardDir = taskCardDir ? path.resolve(root, taskCardDir) : path.join(root, 'docs', 'agent-briefs', 'tasks');
+  const lockInventory = readAllTaskLocks(resolvedLockDir);
+  const issues = [...lockInventory.issues];
+  const locksWithScope = lockInventory.locks.filter((lock) => lock.files.length > 0);
+
+  const currentTaskLock = taskId
+    ? readTaskLockEvidence(taskId, resolvedLockDir)
+    : { checked: Boolean(resolvedLockDir), found: false, path: '', taskId: '', agentName: '', files: [], error: '' };
+  const currentTaskCard = taskId
+    ? readTaskCardEvidence(taskId, resolvedCardDir)
+    : { checked: Boolean(resolvedCardDir), found: false, path: '', id: '', status: '', startedByAgent: '', error: '' };
+
+  if (taskId) {
+    if (currentTaskLock.error) {
+      issues.push({ layer: 'lock', severity: 'fail', message: currentTaskLock.error, expected: taskId, actual: '' });
+    } else if (!currentTaskLock.found) {
+      issues.push({ layer: 'lock', severity: 'fail', message: 'task lock not found for requested task', expected: taskId, actual: '' });
+    } else if (currentTaskLock.taskId !== taskId) {
+      issues.push({ layer: 'lock', severity: 'fail', message: 'task lock id does not match requested task', expected: taskId, actual: currentTaskLock.taskId });
+    } else if (currentTaskLock.files.length === 0) {
+      issues.push({ layer: 'scope', severity: 'fail', message: 'requested task lock has empty files[] and cannot enforce scope', expected: 'non-empty files[]', actual: taskId });
+    }
+
+    if (currentTaskCard.error) {
+      issues.push({ layer: 'frontmatter', severity: 'fail', message: currentTaskCard.error, expected: taskId, actual: '' });
+    } else if (!currentTaskCard.found) {
+      issues.push({ layer: 'frontmatter', severity: 'warn', message: 'task card not found for requested task', expected: taskId, actual: '' });
+    } else if (currentTaskCard.id !== taskId) {
+      issues.push({ layer: 'frontmatter', severity: 'fail', message: 'task card id does not match requested task', expected: taskId, actual: currentTaskCard.id });
+    }
+  }
+
+  const coverage = (gitEntries || []).map((entry) => {
+    const matchedLocks = locksWithScope
+      .filter((lock) => entryCoveredByScope(entry, lock.files))
+      .map((lock) => ({
+        taskId: lock.taskId,
+        agentName: lock.agentName,
+        matchedBy: buildEntryScopeCandidates(entry).filter((candidate) => lock.files.includes(candidate)),
+      }));
+    return {
+      path: entry.path,
+      previousPath: entry.previousPath,
+      rawStatus: entry.rawStatus,
+      states: entry.states,
+      matchedLocks,
+    };
+  });
+
+  const uncoveredFiles = coverage
+    .filter((entry) => entry.matchedLocks.length === 0)
+    .map((entry) => entry.path)
+    .sort((left, right) => left.localeCompare(right));
+
+  const overlappingFiles = coverage
+    .filter((entry) => entry.matchedLocks.length > 1)
+    .map((entry) => ({
+      path: entry.path,
+      taskIds: entry.matchedLocks.map((lock) => lock.taskId).sort((left, right) => left.localeCompare(right)),
+    }))
+    .sort((left, right) => left.path.localeCompare(right.path));
+
+  const foreignScopedFiles = taskId
+    ? coverage
+      .filter((entry) => entry.matchedLocks.length > 0 && !entry.matchedLocks.some((lock) => lock.taskId === taskId))
+      .map((entry) => ({
+        path: entry.path,
+        taskIds: entry.matchedLocks.map((lock) => lock.taskId).sort((left, right) => left.localeCompare(right)),
+      }))
+      .sort((left, right) => left.path.localeCompare(right.path))
+    : [];
+
+  const currentTaskFiles = taskId
+    ? coverage
+      .filter((entry) => entry.matchedLocks.some((lock) => lock.taskId === taskId))
+      .map((entry) => entry.path)
+      .sort((left, right) => left.localeCompare(right))
+    : [];
+
+  if (uncoveredFiles.length > 0) {
+    issues.push({
+      layer: 'coverage',
+      severity: 'fail',
+      message: 'git changed files are not covered by any active task scope',
+      expected: 'each changed file must appear in exactly one active task lock files[]',
+      actual: uncoveredFiles.join(', '),
+    });
+  }
+
+  if (overlappingFiles.length > 0) {
+    issues.push({
+      layer: 'coverage',
+      severity: 'fail',
+      message: 'git changed files are covered by multiple task scopes',
+      expected: 'each changed file should be claimed by one task scope only',
+      actual: overlappingFiles.map((entry) => `${entry.path} => ${entry.taskIds.join('|')}`).join(', '),
+    });
+  }
+
+  const status = issues.some((issue) => issue.severity === 'fail')
+    ? 'fail'
+    : issues.length > 0 ? 'warn' : 'pass';
+
+  return {
+    status,
+    repositoryRoot: toPosixPath(root),
+    taskId,
+    lockDir: toPosixPath(resolvedLockDir),
+    cardDir: toPosixPath(resolvedCardDir),
+    currentTaskLock,
+    currentTaskCard,
+    locks: lockInventory.locks,
+    coverage,
+    uncoveredFiles,
+    overlappingFiles,
+    foreignScopedFiles,
+    currentTaskFiles,
     issues,
   };
 }
@@ -406,13 +668,18 @@ function evaluateArtifactAgainstRepository({ artifact, artifactPath, repositoryP
 module.exports = {
   PROJECT_ROOT,
   toPosixPath,
+  normalizeScopeFiles,
   readJsonOrThrow,
   normalizeMockGitEntry,
   readGitChangedEntries,
   resolveGitRepositoryRoot,
   compareArtifactToRepo,
   parseSimpleFrontmatter,
+  readTaskLockEvidence,
+  readTaskCardEvidence,
+  readAllTaskLocks,
   buildTaskScopeResult,
+  buildGitTaskScopeCoverage,
   buildResult,
   evaluateArtifactAgainstGitEntries,
   evaluateArtifactAgainstRepository,

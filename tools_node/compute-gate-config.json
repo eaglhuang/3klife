@@ -67,11 +67,20 @@
       "description": "確認 cross-ref shard 無孤立引用或斷鏈"
     },
     {
+      "id": "task-scope",
+      "label": "任務範圍守衛",
+      "cmd": "node",
+      "args": ["tools_node/check-task-scope.js"],
+      "priority": 8,
+      "failAction": "block",
+      "description": "確認 git dirty files 皆由 active task lock files[] 覆蓋且無重疊宣告"
+    },
+    {
       "id": "import-boundary",
       "label": "模組邊界守衛",
       "cmd": "node",
       "args": ["tools_node/check-import-boundaries.js"],
-      "priority": 8,
+      "priority": 9,
       "failAction": "warn",
       "description": "確保 ui/battle/core/shared 之間的單向依賴規則"
     },
@@ -80,7 +89,7 @@
       "label": "ESLint 關鍵規則掃描",
       "cmd": "node",
       "args": ["tools_node/check-eslint-rules.js"],
-      "priority": 9,
+      "priority": 10,
       "failAction": "block",
       "description": "禁裸 console.log / no-var / no-debugger / eqeqeq 規則掃描"
     },
@@ -89,7 +98,7 @@
       "label": "行為快照比對",
       "cmd": "node",
       "args": ["tools_node/approved-fixture-check.js"],
-      "priority": 10,
+      "priority": 11,
       "failAction": "warn",
       "description": "比對人類審核過的預期輸出（Approved Fixtures 模式）"
     },
@@ -98,7 +107,7 @@
       "label": "死碼偵測（廢棄模組引用）",
       "cmd": "node",
       "args": ["tools_node/scan-deprecated-refs.js", "--strict"],
-      "priority": 11,
+      "priority": 12,
       "failAction": "warn",
       "description": "確保所有 _deprecated/ 引用已清除；有引用即視為潛在技術債，不阻擋但發出警告"
     }
@@ -110,11 +119,11 @@
     },
     "standard": {
       "description": "標準驗證（任務卡完成時）",
-      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "import-boundary", "dead-code"]
+      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "task-scope", "import-boundary", "dead-code"]
     },
     "full": {
       "description": "完整驗證（階段性交付時）",
-      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "general-data", "skin-contracts", "crossref-integrity", "import-boundary", "approved-fixtures", "dead-code"]
+      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "general-data", "skin-contracts", "crossref-integrity", "task-scope", "import-boundary", "approved-fixtures", "dead-code"]
     }
   },
   "selfCorrection": {

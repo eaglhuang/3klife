@@ -11,18 +11,19 @@
 
 const fs   = require('fs');
 const path = require('path');
+const registryStore = require('./lib/doc-id-registry-loader');
 
 const ROOT          = path.resolve(__dirname, '..');
-const REGISTRY_JSON = path.join(ROOT, 'docs', 'doc-id-registry.json');
 
 const ID_PATTERN = /^(doc_(tech|ui|art|data|spec|index|task|ai|agentskill|other)_\d{4}|doc_server_(service|pipeline|data|ops|other)_\d{4})$/;
 
 function loadRegistry() {
-  if (!fs.existsSync(REGISTRY_JSON)) {
-    console.error('Registry not found.\nRun: node tools_node/doc-id-registry.js');
+  try {
+    return { registry: registryStore.loadDocIdRegistryMap() };
+  } catch (error) {
+    console.error(`${error.message}\nRun: node tools_node/doc-id-registry.js --reshard-current`);
     process.exit(1);
   }
-  return JSON.parse(fs.readFileSync(REGISTRY_JSON, 'utf8'));
 }
 
 function main() {

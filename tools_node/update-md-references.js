@@ -11,20 +11,21 @@
 
 const fs   = require('fs');
 const path = require('path');
+const registryStore = require('./lib/doc-id-registry-loader');
 
 const ROOT     = path.resolve(__dirname, '..');
-const REG_PATH = path.join(ROOT, 'docs', 'doc-id-registry.json');
 
 // ──────────────────────────────────────────────
 // Load registry — build maps for lookup
 // ──────────────────────────────────────────────
 function loadRegistry() {
-  if (!fs.existsSync(REG_PATH)) {
-    console.error('Registry not found. Run: node tools_node/doc-id-registry.js first.');
+  let entries;
+  try {
+    entries = registryStore.loadDocIdRegistryMap();
+  } catch (error) {
+    console.error(`${error.message}\nRun: node tools_node/doc-id-registry.js --reshard-current`);
     process.exit(1);
   }
-  const raw     = JSON.parse(fs.readFileSync(REG_PATH, 'utf8'));
-  const entries = raw.registry || raw;
   const byBasename = {};
   const byRelPath  = {};
   const spaceFiles = []; // filenames that contain ASCII spaces
