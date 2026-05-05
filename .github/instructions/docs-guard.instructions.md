@@ -9,6 +9,8 @@ applyTo: "docs/**"
 
 - `docs/keep.md (doc_index_0011)` (doc_index_0011) → **先讀 `docs/keep.summary.md (doc_index_0012)` (doc_index_0012)**，只有需要修改共識時才讀全文
 - `docs/ui-quality-todo.json` → **先讀對應 shard** `docs/ui-quality-tasks/*.json`，不整份讀入 aggregate manifest
+- `docs/doc-id-registry.json` → **只當 stub**；先讀 `docs/doc-id-registry-shards/registry-*.json`，不要把 stub 當完整 registry
+- `docs/doc-id-registry-shards/registry-spec.json` / `registry-task.json` → 若已有 auto-parts，**優先讀** `docs/doc-id-registry-shards/registry-spec/registry-spec-part-*.json` 與 `docs/doc-id-registry-shards/registry-task/registry-task-part-*.json`
 
 ## 大檔防護
 
@@ -25,4 +27,5 @@ applyTo: "docs/**"
 - 新增 `.md` 文件後，必須呼叫 `node tools_node/doc-id-registry.js --assign <path>` 分配 doc_id
 - 禁止手動填寫 doc_id 或複製他人 doc_id — 代號必須透過工具取得
 - 搜尋文件：`node tools_node/resolve-doc-id.js <doc_id>` 或 `node tools_node/resolve-doc-id.js <搜尋關鍵詞>`
-- Registry 位置：`docs/doc-id-registry.json`（機器可讀）/ `docs/doc-id-registry.md (doc_other_0001)` (doc_other_0001)（完整列表）
+- Registry 位置：`docs/doc-id-registry.json`（index stub）/ `docs/doc-id-registry-shards/registry-*.json`（機器可讀分片）/ `docs/doc-id-registry.md (doc_other_0001)` (doc_other_0001)（完整列表）
+- 大 shard 讀取規則：`registry-spec.json`、`registry-task.json` 有 auto-parts 時，先讀 part 檔，不先讀整份母 shard

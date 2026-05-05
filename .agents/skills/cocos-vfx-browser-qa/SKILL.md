@@ -1,5 +1,5 @@
 ---
-doc_id: doc_agentskill_0009
+doc_id: doc_agentskill_0006
 name: cocos-vfx-browser-qa
 description: 'BROWSER VFX ACCEPTANCE SKILL — Use built-in browser/headless browser to automatically verify Cocos VFX block effects and composed VFX recipes in BattleScene preview (`http://localhost:7456`, `previewMode=true`, `previewTarget=5`). USE FOR: VFX health audit, per-block smoke validation, combo recipe regression checks before merging `vfx-block-registry.ts` / `vfx-effects.json`. DO NOT USE FOR: Cocos Editor window screenshot capture, compile-error debugging, or pure log-only diagnosis without browser preview.'
 argument-hint: 'Provide scope and run id. Example: "scope=blocks runId=VFX-QA-2026-04-16" or "scope=combos source=assets/resources/data/vfx-effects.json runId=VFX-QA-2026-04-16".'

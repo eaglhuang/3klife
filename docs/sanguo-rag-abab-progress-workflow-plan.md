@@ -1,4 +1,4 @@
-<!-- doc_id: doc_other_0012 -->
+<!-- doc_id: doc_other_0018 -->
 # Sanguo RAG ABAB…C 整體進度推進規劃書
 
 > 本文件規劃三國 RAG / 武將資料補全的「A 自動輪巡、B review gate、C 殘留問題彙整」節奏。它是執行規劃與 workflow 說明，不取代母規格或 schema 定義。

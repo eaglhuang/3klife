@@ -1,4 +1,4 @@
-<!-- doc_id: doc_task_0015 -->
+<!-- doc_id: doc_other_0005 -->
 # 戰場入口統一 — Checklist
 
 > 追蹤「Lobby → Battle 與 Preview Target 5 統一化」工作的所有步驟與進度。

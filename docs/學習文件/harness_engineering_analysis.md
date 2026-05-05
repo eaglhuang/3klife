@@ -1,3 +1,4 @@
+<!-- doc_id: doc_other_0027 -->
 # Harness Engineering 深度分析與 3KLife 專案對照
 
 > 來源：[Martin Fowler - Harness Engineering for Coding Agent Users](https://martinfowler.com/articles/harness-engineering.html) (2026-04-02)

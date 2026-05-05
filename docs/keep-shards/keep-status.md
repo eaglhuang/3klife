@@ -1,4 +1,4 @@
-<!-- doc_id: doc_index_0007 -->
+<!-- doc_id: doc_index_0009 -->
 # Keep Consensus — Current Status（§14–§18 · §24 · MCP）
 
 > 這是 `keep.md` (doc_index_0011) 的「Current Status（§14–§18 · §24 · MCP）」分片。完整索引見 `docs/keep.md (doc_index_0011)` (doc_index_0011)。

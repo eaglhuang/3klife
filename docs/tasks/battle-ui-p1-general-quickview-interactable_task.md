@@ -1,4 +1,4 @@
-<!-- doc_id: doc_task_0144 -->
+<!-- doc_id: doc_task_0204 -->
 # 任務卡 — battle-ui-p1-general-quickview-interactable
 
 ## frontmatter

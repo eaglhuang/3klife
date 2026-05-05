@@ -28,18 +28,24 @@ applyTo: "**"
    node tools_node/compute-gate.js --gates import-boundary --agent-feedback
    ```
 3. 執行 `node tools_node/check-context-budget.js --changed`（若可用）
-4. **鎖定任務卡**（見硬規則 #0）→ `node tools_node/task-lock.js lock <task-id> <agent-name>`
-5. 確認要修改的檔案列表，記錄在 session memory
+4. **鎖定任務卡**（見硬規則 #0）→ `node tools_node/task-lock.js lock <task-id> <agent-name> --files <file...>`
+5. **[強制] 驗證 task scope 已生效**：
+  ```bash
+  node tools_node/check-task-scope.js --task <task-id> --verbose
+  ```
+6. 確認要修改的檔案列表，記錄在 session memory
 
 ### 防線 2: In-flight Guard（工作中）
 
 - 修改 `.ts` 檔 → 每次儲存後執行 `node tools_node/compute-gate.js --gates ts-syntax eslint-rules`
+- **[強制] 修改 task scope 內檔案後，先執行 `node tools_node/check-task-scope.js --task <task-id>`**
 - 修改 fragment → 先跑 `node tools_node/build-fragment-usage-map.js --query <ref>` 確認影響範圍
 - 修改 layout → 先跑對應的 regression check（若存在）
 - 修改 skin → 先跑 `node tools_node/validate-ui-specs.js --strict`
 - 修改 task JSON → 必須已 lock 才准改
 - token 超 18k → 強制 summarize；超 30k → hard-stop
 - **[強制] 新增 import → 必須確認目標模組在允許清單內**（`check-import-boundaries.js` 規則）
+- `check-task-scope.js` 的責任是驗證 dirty files 是否仍被某張 active task lock 的 `files[]` 覆蓋；`import-boundary` 則只管模組引用方向，兩者不可互相取代
 
 ### 防線 3: Post-flight Checkpoint（收工前）
 
@@ -48,7 +54,7 @@ applyTo: "**"
    ```bash
    node tools_node/compute-gate.js --profile standard --agent-feedback
    ```
-   **嚴禁在有邊界違規（import-boundary violations）的情況下提交代碼。**
+  **嚴禁在有 task-scope 或 import-boundary 違規的情況下提交代碼。**
 
 2. `node tools_node/check-encoding-touched.js <changed-files...>`
 3. `node tools_node/validate-ui-specs.js --strict --check-content-contract`
@@ -69,6 +75,9 @@ node tools_node/compute-gate.js --profile full --agent-feedback --no-stop
 
 # 模組邊界違規清單
 node tools_node/check-import-boundaries.js --fix-hint
+
+# 任務範圍違規清單
+node tools_node/check-task-scope.js --task <task-id> --verbose
 
 # ESLint 問題清單
 node tools_node/check-eslint-rules.js --fix-hint

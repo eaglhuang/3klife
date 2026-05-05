@@ -19,10 +19,19 @@
 - `docs/keep.md (doc_index_0011)` (doc_index_0011)
 - `docs/ui-quality-todo.json`
 - `docs/cross-reference-index.md (doc_index_0005)` (doc_index_0005)
+- `docs/doc-id-registry.json`（stub）與大型 `docs/doc-id-registry-shards/registry-*.json`
 - 大型 workflow / skill 說明
 
 這類文件的問題不是「不能讀」，而是「很容易整份重複讀」。
 規則：先用搜尋或 shard，只取需要的小段落，不要整份貼進 handoff。
+
+doc-id registry 額外規則：
+
+- `docs/doc-id-registry.json` 只當 stub 看，不把它當完整 registry 展開
+- 若要人工讀取 doc-id registry，先看 `docs/doc-id-registry-shards/registry-*.json`
+- 遇到大型 shard 時，優先讀 auto-parts，不先開母 shard：
+	- `docs/doc-id-registry-shards/registry-spec/registry-spec-part-*.json`
+	- `docs/doc-id-registry-shards/registry-task/registry-task-part-*.json`
 
 ### 2. QA 圖片與美術資產
 
@@ -105,6 +114,7 @@ artifacts/ui-qa/UI-2-0032/unitinfo_type_icon_spear_v2b_dalle3_1024.png
 - `keep.md` (doc_index_0011) 只保留最高層共識與 P0 警戒，不放長篇分析
 - 長分析搬到獨立文件，`keep.md` (doc_index_0011) 只留一句索引
 - `ui-quality-todo.json` 只讀單卡，不讀整份
+- `doc-id-registry` 只讀對應 shard；`registry-spec.json` / `registry-task.json` 有 auto-parts 時優先讀 parts，不讀整份母 shard
 - workflow / skill 只取與本輪任務直接相關的段落
 
 ### D. 搜尋節流

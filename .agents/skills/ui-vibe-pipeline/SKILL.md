@@ -1,5 +1,5 @@
 ---
-doc_id: doc_agentskill_0008
+doc_id: doc_agentskill_0064
 name: ui-vibe-pipeline
 description: 'UI 自動化生產總控 SKILL — 從 UI 示意圖、參考圖、Figma snapshot 或既有頁面經驗啟動，串接 proof draft、family-map、MCQ、normalized recipe、task shard、ui-spec 與 CompositePanel / ChildPanel scaffold、靜態驗證、Browser QA 自動調整，直到交付人類驗收。USE FOR: 想把一張新 UI 從「給圖」一路推進到可驗證的 screen package 與 QA 閉環。DO NOT USE FOR: 單純修一個 runtime bug、單一 prefab 微調、純美術資產委託。'
 argument-hint: '提供 proofSource、screenId 或 proof.json 路徑，說明目標風格、參考頁面、是否要自動產 family-map / MCQ / normalized recipe / task shard / scaffold / Browser QA。'

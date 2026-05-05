@@ -1,4 +1,4 @@
-<!-- doc_id: doc_task_0137 -->
+<!-- doc_id: doc_task_0197 -->
 # 任務：battle-ui-p0-badge-label-placeholder
 
 ## frontmatter

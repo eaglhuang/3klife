@@ -1,0 +1,332 @@
+[
+  {
+    "id": "doc_ui_0001",
+    "path": "docs/主戰場UI規格書.md",
+    "title": "主戰場 UI 規格書 (Main Battlefield UI Specification)",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0002",
+    "path": "docs/主戰場UI規格補充_v2.md",
+    "title": "主戰場 UI 規格補充 v2（線框圖修訂依據）",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0003",
+    "path": "docs/主戰場UI規格補充_v3.md",
+    "title": "主戰場 UI 規格補充 v3（線框圖修訂依據）",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0004",
+    "path": "docs/遊戲規格文件/系統規格書/未持有武將標記規則補遺_2026-04-04.md",
+    "title": "未持有武將標記規則補遺 2026-04-04",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0005",
+    "path": "docs/遊戲規格文件/系統規格書/血脈命鏡過場載入規格書.md",
+    "title": "血脈命鏡過場載入規格書",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0006",
+    "path": "docs/遊戲規格文件/系統規格書/血脈命鏡過場載入規格補遺_2026-04-02_v3.md",
+    "title": "血脈命鏡過場載入規格補遺 2026-04-02 v3",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0007",
+    "path": "docs/遊戲規格文件/系統規格書/血脈命鏡LoadingTips補遺_2026-04-04.md",
+    "title": "血脈命鏡LoadingTips補遺 2026-04-04",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0008",
+    "path": "docs/遊戲規格文件/系統規格書/血脈視覺契約補遺_2026-04-02.md",
+    "title": "血脈視覺契約補遺 2026-04-02",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0009",
+    "path": "docs/遊戲規格文件/系統規格書/血統樹14人UI規格書.md",
+    "title": "血統樹14人UI規格書",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0010",
+    "path": "docs/遊戲規格文件/系統規格書/角色血脈符號插槽規格補遺_2026-04-02.md",
+    "title": "角色血脈符號插槽規格補遺 2026-04-02",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0011",
+    "path": "docs/遊戲規格文件/系統規格書/武將人物介面美術接線清單.md",
+    "title": "武將人物介面美術接線清單",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0012",
+    "path": "docs/遊戲規格文件/系統規格書/武將人物介面規格書.md",
+    "title": "武將人物介面規格書 2.0",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0013",
+    "path": "docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-02.md",
+    "title": "武將人物介面規格補遺 2026-04-02",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0014",
+    "path": "docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-14.md",
+    "title": "武將人物介面規格補遺_2026-04-14：人性化與生活感擴充",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0015",
+    "path": "docs/遊戲規格文件/系統規格書/Figma+Cocos+Playwright量產流程補遺_2026-04-04.md",
+    "title": "Figma + Cocos MCP + Playwright 量產流程補遺",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0016",
+    "path": "docs/遊戲規格文件/系統規格書/Figma母板與MCP smoke test補遺_2026-04-04.md",
+    "title": "Figma 母板與 MCP Smoke Test 補遺",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0017",
+    "path": "docs/遊戲規格文件/系統規格書/UI Proof資料夾模板補遺_2026-04-04.md",
+    "title": "UI Proof資料夾模板補遺 2026-04-04",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0018",
+    "path": "docs/遊戲規格文件/系統規格書/UI空白線稿PNG規格補遺_2026-04-04.md",
+    "title": "UI空白線稿PNG規格補遺 2026-04-04",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0019",
+    "path": "docs/遊戲規格文件/系統規格書/UI骨架補遺_2026-04-02_人物頁與命鏡.md",
+    "title": "UI骨架補遺 2026-04-02 人物頁與命鏡",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0020",
+    "path": "docs/遊戲規格文件/系統規格書/UI線稿對照與AI產碼補遺_2026-04-04.md",
+    "title": "UI線稿對照與AI產碼補遺 2026-04-04",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0021",
+    "path": "docs/annotations/圖1_武將詳情_標註說明.md",
+    "title": "圖1 — 武將詳情 標註說明",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0022",
+    "path": "docs/annotations/圖2_裝備介面_標註說明.md",
+    "title": "圖2 — 裝備介面 標註說明",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0023",
+    "path": "docs/annotations/圖3_戰令商城_標註說明.md",
+    "title": "圖3 — 戰令商城 標註說明",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0024",
+    "path": "docs/annotations/圖4_信件系統_標註說明.md",
+    "title": "圖4 — 信件系統 標註說明",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0025",
+    "path": "docs/UCUF里程碑文件.md",
+    "title": "UCUF 里程碑文件 — 可執行計畫與驗收規則",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0026",
+    "path": "docs/UCUF規範文件.md",
+    "title": "UCUF 規範文件 — 協作規則、禁止事項與標準流程",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0027",
+    "path": "docs/UI 規格書.md",
+    "title": "UI 規格書",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0028",
+    "path": "docs/UI 規格補遺_2026-04-02_日常人物頁v3.md",
+    "title": "UI 規格補遺 2026-04-02 日常人物頁 v3",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0029",
+    "path": "docs/UI 規格補遺_2026-04-02_血脈命鏡v3.md",
+    "title": "UI 規格補遺 2026-04-02 血脈命鏡 v3",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0030",
+    "path": "docs/UI 規格補遺_2026-04-11_大廳晨報與人物日誌pending.md",
+    "title": "UI 規格補遺 2026-04-11 大廳晨報與人物日誌 pending",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0031",
+    "path": "docs/UI 規格補遺_2026-04-11_培育戰場轉蛋pending.md",
+    "title": "UI 規格補遺 2026-04-11 培育戰場轉蛋 pending",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0032",
+    "path": "docs/UI-factory-agent-entry.md",
+    "title": "UI Factory Agent Entry",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0033",
+    "path": "docs/UI-icon-factory-workflow.md",
+    "title": "UI Icon Factory Workflow",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0034",
+    "path": "docs/UI-icon-family-registry.md",
+    "title": "UI Icon Family Registry",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0035",
+    "path": "docs/ui-quality-todo.md",
+    "title": "UI 品質落地 To-Do 追蹤計畫",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0036",
+    "path": "docs/UI-reference-source-workflow.md",
+    "title": "UI Reference Source Workflow",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0037",
+    "path": "docs/ui/ComfyUI-Cocos-partial-asset-minimal-flow.md",
+    "title": "ComfyUI x Cocos Partial Asset Minimal Flow",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0038",
+    "path": "docs/ui/component-sizing-contract.md",
+    "title": "UI 元件尺寸契約 (Component Sizing Contract)",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0039",
+    "path": "docs/ui/content-contract-framework.md",
+    "title": "Content Contract Framework — Phase F 架構草案",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0040",
+    "path": "docs/ui/fragment-composition-guide.md",
+    "title": "Fragment 組合指南",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0041",
+    "path": "docs/ui/general-detail-nurture-mapper-contract-draft.md",
+    "title": "GeneralDetail × NurtureSession Mapper / Contract 草稿",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0042",
+    "path": "docs/ui/general-detail-overview-refactor-plan.md",
+    "title": "GeneralDetailOverview 畫面重構計畫",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0043",
+    "path": "docs/ui/general-detail-v3-final-alias-policy.md",
+    "title": "GeneralDetail V3 Final Alias Policy",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0044",
+    "path": "docs/ui/layout-quality-rules.md",
+    "title": "Layout Quality Rules（嚴格模式規則說明）",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0045",
+    "path": "docs/ui/UI-asset-slice-pipeline-quickstart.md",
+    "title": "UI Asset Slice Pipeline Quickstart",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0046",
+    "path": "docs/ui/UCUF-UI-template-blueprint.md",
+    "title": "UCUF UI 模板化藍圖",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0047",
+    "path": "docs/ui/UI-factory-baseline-and-gates.md",
+    "title": "UI Factory Baseline And Gates",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0048",
+    "path": "docs/ui/UI-factory-agent-entry.md",
+    "title": "UI Factory Agent Entry (Moved)",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0049",
+    "path": "docs/UI技術規格書.md",
+    "title": "UI 技術規格書 (UI Technical Specification)",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0050",
+    "path": "docs/ui/UI-vibe-pipeline.md",
+    "title": "UI Vibe Coding 自動化生產藍圖",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0051",
+    "path": "docs/UI參考圖品質分析.md",
+    "title": "UI 參考圖品質分析 — 九宮格框體與視覺層次拆解",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0052",
+    "path": "docs/UCUF規劃書.md",
+    "title": "Universal Composite UI Framework (UCUF) — 規劃書",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0089",
+    "path": "docs/UI_PANELS_COMPLETE_INVENTORY.md",
+    "title": "3KLife UI Panels & Components — Complete Inventory",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0090",
+    "path": "docs/遊戲規格文件/系統規格書/英靈虎符與特種軍隊視覺契約補遺_2026-04-04.md",
+    "title": "英靈虎符與特種軍隊視覺契約補遺 2026-04-04",
+    "category": "ui"
+  },
+  {
+    "id": "doc_ui_0091",
+    "path": "docs/UI品質檢核表.md",
+    "title": "UI 品質檢核表（v0）",
+    "category": "ui"
+  }
+]

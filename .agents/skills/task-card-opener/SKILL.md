@@ -1,5 +1,5 @@
 ---
-doc_id: doc_agentskill_0009
+doc_id: doc_agentskill_0063
 name: task-card-opener
 description: '通用任務開單器 SKILL — 統一建立或回寫 Markdown task card、docs/tasks/tasks-*.json 分片、UI quality shard，並強制遵守 docs/agent-briefs/Readme.md (doc_ai_0023) 與 docs/遊戲規格文件/系統規格書/名詞定義文件.md (doc_spec_0008) 的硬規則。USE FOR: 開任務卡、開單、task card、task shard、tasks-ui.json、tasks-prog.json、tasks-dc.json、tasks-data.json、agent-briefs/tasks、docs/tasks/*_task.md、UI pipeline 開卡。DO NOT USE FOR: 純 runtime 除錯、單純修改既有功能碼但不需要新卡、只做極小 typo 修補。'
 argument-hint: '提供 task 類別、目標系統、是否需要 Markdown 卡、對應 task id 前綴、owner/priority/status，以及是否屬於 UI 任務。'

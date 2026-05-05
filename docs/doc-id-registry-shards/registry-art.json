@@ -1,0 +1,20 @@
+[
+  {
+    "id": "doc_art_0001",
+    "path": "docs/外部美術搬移規劃與使用說明.md",
+    "title": "外部美術搬移規劃與使用說明（搬移補充 — 非主命名規範）",
+    "category": "art"
+  },
+  {
+    "id": "doc_art_0002",
+    "path": "docs/美術風格規格書.md",
+    "title": "美術風格規格書",
+    "category": "art"
+  },
+  {
+    "id": "doc_art_0003",
+    "path": "docs/美術素材規劃與使用說明.md",
+    "title": "美術素材規劃與使用說明",
+    "category": "art"
+  }
+]

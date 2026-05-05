@@ -1,0 +1,536 @@
+[
+  {
+    "id": "doc_spec_0001",
+    "path": "docs/遊戲規格文件/正式規格矛盾審查.md",
+    "title": "正式規格矛盾審查",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0002",
+    "path": "docs/遊戲規格文件/系統規格書/三國大腦中台規格書.md",
+    "title": "三國大腦中台規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0003",
+    "path": "docs/遊戲規格文件/系統規格書/大廳系統.md",
+    "title": "大廳系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0004",
+    "path": "docs/遊戲規格文件/系統規格書/可結緣女性來源系統.md",
+    "title": "可結緣女性來源系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0005",
+    "path": "docs/遊戲規格文件/系統規格書/正式版劇本文案.md",
+    "title": "正式版劇本文案",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0006",
+    "path": "docs/遊戲規格文件/系統規格書/同名武將系統.md",
+    "title": "同名武將系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0007",
+    "path": "docs/遊戲規格文件/系統規格書/名士預言系統.md",
+    "title": "名士預言系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0008",
+    "path": "docs/遊戲規格文件/系統規格書/名將挑戰賽系統.md",
+    "title": "名將挑戰賽系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0009",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
+    "title": "名詞定義文件（全系統匯總）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0010",
+    "path": "docs/遊戲規格文件/系統規格書/因子解鎖系統.md",
+    "title": "因子解鎖系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0011",
+    "path": "docs/遊戲規格文件/系統規格書/因子爆發系統.md",
+    "title": "因子爆發系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0012",
+    "path": "docs/遊戲規格文件/系統規格書/血統理論系統.md",
+    "title": "血統理論系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0013",
+    "path": "docs/遊戲規格文件/系統規格書/兵種（虎符）系統.md",
+    "title": "兵種（虎符）系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0014",
+    "path": "docs/遊戲規格文件/系統規格書/角色雙故事層補遺_2026-04-04.md",
+    "title": "角色雙故事層補遺 2026-04-04",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0015",
+    "path": "docs/遊戲規格文件/系統規格書/官職系統.md",
+    "title": "官職系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0016",
+    "path": "docs/遊戲規格文件/系統規格書/武將日誌與離線互動系統.md",
+    "title": "武將日誌與離線互動系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0017",
+    "path": "docs/遊戲規格文件/系統規格書/武將系統.md",
+    "title": "武將系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0018",
+    "path": "docs/遊戲規格文件/系統規格書/武將背包（倉庫）系統.md",
+    "title": "武將背包（倉庫）系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0019",
+    "path": "docs/遊戲規格文件/系統規格書/武將個性卡規格.md",
+    "title": "武將個性卡規格",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0020",
+    "path": "docs/遊戲規格文件/系統規格書/武將裝備道具系統_實作任務清單.md",
+    "title": "武將裝備道具系統實作任務清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0021",
+    "path": "docs/遊戲規格文件/系統規格書/武將裝備道具系統.md",
+    "title": "武將裝備道具系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0022",
+    "path": "docs/遊戲規格文件/系統規格書/武將壽命系統.md",
+    "title": "武將壽命系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0023",
+    "path": "docs/遊戲規格文件/系統規格書/武將戰績系統.md",
+    "title": "武將戰績系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0024",
+    "path": "docs/遊戲規格文件/系統規格書/治理模式他國AI系統.md",
+    "title": "治理模式他國 AI 系統（Governance Mode Rival AI System）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0025",
+    "path": "docs/遊戲規格文件/系統規格書/俘虜處理系統.md",
+    "title": "俘虜處理系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0026",
+    "path": "docs/遊戲規格文件/系統規格書/英靈世家系統.md",
+    "title": "英靈世家系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0027",
+    "path": "docs/遊戲規格文件/系統規格書/重複卡分流與血脈灌注補遺_2026-04-04.md",
+    "title": "重複卡分流與血脈灌注補遺 2026-04-04",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0028",
+    "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md",
+    "title": "家族關係（史實相性）系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0029",
+    "path": "docs/遊戲規格文件/系統規格書/留存系統.md",
+    "title": "留存系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0030",
+    "path": "docs/遊戲規格文件/系統規格書/培育系統.md",
+    "title": "培育系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0031",
+    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）.md",
+    "title": "教官系統（支援卡）規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0032",
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統（配種）.md",
+    "title": "結緣系統（配種）規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0033",
+    "path": "docs/遊戲規格文件/系統規格書/傭兵系統（試用）.md",
+    "title": "傭兵系統（試用）規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0034",
+    "path": "docs/遊戲規格文件/系統規格書/奧義系統.md",
+    "title": "奧義系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0035",
+    "path": "docs/遊戲規格文件/系統規格書/新手開場規格書.md",
+    "title": "新手開場規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0036",
+    "path": "docs/遊戲規格文件/系統規格書/經濟系統.md",
+    "title": "經濟系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0037",
+    "path": "docs/遊戲規格文件/系統規格書/資源循環系統.md",
+    "title": "資源循環系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0038",
+    "path": "docs/遊戲規格文件/系統規格書/遊戲時間系統.md",
+    "title": "遊戲時間系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0039",
+    "path": "docs/遊戲規格文件/系統規格書/運氣系統.md",
+    "title": "運氣系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0040",
+    "path": "docs/遊戲規格文件/系統規格書/道具系統（付費免費道具）.md",
+    "title": "道具系統（付費免費道具）規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0041",
+    "path": "docs/遊戲規格文件/系統規格書/領地治理系統.md",
+    "title": "領地治理系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0042",
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統.md",
+    "title": "戰法系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0043",
+    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書.md",
+    "title": "戰法場景規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0044",
+    "path": "docs/遊戲規格文件/系統規格書/戰場格子系統.md",
+    "title": "戰場格子系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0045",
+    "path": "docs/遊戲規格文件/系統規格書/戰場部署系統.md",
+    "title": "戰場部署系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0046",
+    "path": "docs/遊戲規格文件/系統規格書/戰場適性系統.md",
+    "title": "戰場適性系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0047",
+    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統.md",
+    "title": "轉蛋系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0048",
+    "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統.md",
+    "title": "轉職與宿命系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0049",
+    "path": "docs/遊戲規格文件/系統規格書/關卡設計系統.md",
+    "title": "關卡設計系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0050",
+    "path": "docs/遊戲規格文件/系統規格書/MVP遊戲驗證規格書.md",
+    "title": "MVP 遊戲驗證規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0051",
+    "path": "docs/遊戲規格文件/系統規格書/NPC人性化規格書.md",
+    "title": "NPC 人性化規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0052",
+    "path": "docs/遊戲規格文件/討論來源/20260410/三國傳承 雙層數值規格書.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0053",
+    "path": "docs/遊戲規格文件/討論來源/20260410/子嗣成長系統：隱藏屬性設計.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0054",
+    "path": "docs/遊戲規格文件/討論來源/20260410/英靈卡與家族血脈規則.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0055",
+    "path": "docs/遊戲規格文件/討論來源/20260410/英靈祭奠與世家系統規則.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0056",
+    "path": "docs/遊戲規格文件/討論來源/20260410/家族積分制：世家英靈成長規則.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0057",
+    "path": "docs/遊戲規格文件/討論來源/20260412/培育系統規格書討論.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0058",
+    "path": "docs/遊戲規格文件/討論來源/20260412/傳承：血脈保底機制規格書.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0059",
+    "path": "docs/遊戲規格文件/討論來源/20260412/賽馬娘三國傳承系統解析.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0060",
+    "path": "docs/遊戲規格文件/討論來源/20260415/推薦使用 ChromaDB（地端極輕量向量庫）+ llama.cpp（支援超低顯存運行）。 ==_....md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0061",
+    "path": "docs/遊戲規格文件/討論來源/20260415/智慧 NPC 技術架構與風險.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0062",
+    "path": "docs/遊戲規格文件/討論來源/20260415/想問以目前地端AI 的開源模型 是否可以達到做一個有自己思維判斷的, 遊戲中NPC 行為決策模式呢....md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0063",
+    "path": "docs/遊戲規格文件/討論來源/20260415/NPC 行為決策系統優化.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0064",
+    "path": "docs/遊戲規格文件/討論來源/20260415/NPC 遞增演化架構設計.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0065",
+    "path": "docs/遊戲規格文件/討論來源/三國遊戲模式串接與循環.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0066",
+    "path": "docs/遊戲規格文件/討論來源/子嗣系統規格書：三國傳承.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0067",
+    "path": "docs/遊戲規格文件/討論來源/五色因子與爆發力公式設計.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0068",
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/名將傳承的心理門檻與解決方案.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0069",
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/名將轉身與子嗣盲盒雙軌制.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0070",
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/策略養成遊戲平衡機制探討.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0071",
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/遊戲系統設計：運氣、刷寶、轉蛋優化.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0072",
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/遊戲時間與壽命機制改良.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0073",
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/遊戲經濟循環與女性角色設計.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0074",
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/遊戲機制推演與玩家歷程.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0075",
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/遊戲機制優化與策略建議.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0076",
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/養成循環與營收節奏探討.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0077",
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/賽馬娘機制轉化三國戰場.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0078",
+    "path": "docs/遊戲規格文件/討論來源/比較舊的/關卡設計與美術挑戰建議.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0079",
+    "path": "docs/遊戲規格文件/討論來源/名士預言：血統模擬器新玩法.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0080",
+    "path": "docs/遊戲規格文件/討論來源/名將血統模擬與祖輩推演.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0081",
+    "path": "docs/遊戲規格文件/討論來源/名將時空保值制：玩家導向設計.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0082",
+    "path": "docs/遊戲規格文件/討論來源/名將虛擬祖先生成器規格.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0083",
+    "path": "docs/遊戲規格文件/討論來源/因子血統論系統規格書.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0084",
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/三國傳承 UI 布局說明書.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0085",
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/三國傳承：軍師演武模式提案.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0086",
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/三國傳承：賽馬娘養成融合提案.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0087",
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/我的想法是這樣的挑戰關卡必須是連環破 _ 例如要擊敗曹操 就必須先過 典韋 許褚 兩關, 第三關才....md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0088",
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/夜襲戰場視覺規格提案.md",
+    "title": "---",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_0089",
+    "path": "docs/遊戲規格文件/討論來源/更舊的討論/馬娘養成機制三國化設計.md",
+    "title": "---",
+    "category": "spec"
+  }
+]

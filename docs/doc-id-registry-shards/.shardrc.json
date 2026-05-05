@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "source": "../doc-id-registry.json",
+  "indexTitle": "Doc ID Registry",
+  "indexPath": "docs/doc-id-registry.json",
+  "type": "json-array",
+  "arrayPath": "entries",
+  "splitField": "category",
+  "defaultShard": "registry-other",
+  "shards": [
+    {
+      "name": "registry-tech",
+      "title": "技術類（tech）",
+      "pattern": "^tech$"
+    },
+    {
+      "name": "registry-ui",
+      "title": "畫面UI類（ui）",
+      "pattern": "^ui$"
+    },
+    {
+      "name": "registry-art",
+      "title": "美術非UI類（art）",
+      "pattern": "^art$"
+    },
+    {
+      "name": "registry-data",
+      "title": "數值類（data）",
+      "pattern": "^data$"
+    },
+    {
+      "name": "registry-spec",
+      "title": "遊戲規格類（spec）",
+      "pattern": "^spec$"
+    },
+    {
+      "name": "registry-index",
+      "title": "索引類（index）",
+      "pattern": "^index$"
+    },
+    {
+      "name": "registry-task",
+      "title": "任務卡類（task）",
+      "pattern": "^task$"
+    },
+    {
+      "name": "registry-ai",
+      "title": "AI Agent 專用（ai）",
+      "pattern": "^ai$"
+    },
+    {
+      "name": "registry-agentskill",
+      "title": "Agent Skill 專用（agentskill）",
+      "pattern": "^agentskill$"
+    },
+    {
+      "name": "registry-server",
+      "title": "Server 文件類（server）",
+      "pattern": "^server$"
+    },
+    {
+      "name": "registry-other",
+      "title": "其它類（other）",
+      "pattern": "^other$"
+    }
+  ]
+}

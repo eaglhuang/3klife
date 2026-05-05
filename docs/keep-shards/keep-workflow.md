@@ -1,4 +1,4 @@
-<!-- doc_id: doc_index_0009 -->
+<!-- doc_id: doc_index_0011 -->
 # Keep Consensus — Workflow（§3–§6 · §13）
 
 > 這是 `keep.md` (doc_index_0011) 的「Workflow（§3–§6 · §13）」分片。完整索引見 `docs/keep.md (doc_index_0011)` (doc_index_0011)。

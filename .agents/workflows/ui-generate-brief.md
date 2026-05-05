@@ -1,5 +1,5 @@
 ---
-doc_id: doc_ai_0003
+doc_id: doc_ai_0006
 description: 根據系統規格書自動產生 UI 設計簡報（design-brief.md），供後續截圖產生或 AI 佈局分析使用
 ---
 

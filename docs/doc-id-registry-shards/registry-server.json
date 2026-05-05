@@ -1,0 +1,107 @@
+[
+  {
+    "id": "doc_server_data_0001",
+    "path": "docs/RAG_ETL_管線應用分析.md",
+    "title": "RAG ETL 管線應用分析",
+    "category": "server",
+    "subtype": "data"
+  },
+  {
+    "id": "doc_server_ops_0002",
+    "path": "server/npc-brain/說明文件拆分規劃.md",
+    "title": "NPC Brain README 拆分規劃",
+    "category": "server",
+    "subtype": "ops"
+  },
+  {
+    "id": "doc_server_ops_0003",
+    "path": "server/server_docs_reference.md",
+    "title": "Server 文件索引總覽",
+    "category": "server",
+    "subtype": "ops"
+  },
+  {
+    "id": "doc_server_other_0001",
+    "path": "server/npc-brain/文件/人物資料生產線簡報圖.md",
+    "title": "人物資料生產線簡報圖",
+    "category": "server",
+    "subtype": "other"
+  },
+  {
+    "id": "doc_server_other_0008",
+    "path": "server/npc-brain/文件/NPC行為決策流程.md",
+    "title": "NPC 最終行為決策流程圖",
+    "category": "server",
+    "subtype": "other"
+  },
+  {
+    "id": "doc_server_pipeline_0001",
+    "path": "server/npc-brain/pipelines/sanguo-rag/人名事件解析.md",
+    "title": "人名事件解析",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0002",
+    "path": "server/npc-brain/pipelines/sanguo-rag/README.md",
+    "title": "Sanguo RAG Pipelines",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_service_0001",
+    "path": "server/npc-brain/README.md",
+    "title": "NPC Brain Service",
+    "category": "server",
+    "subtype": "service"
+  },
+  {
+    "id": "doc_server_service_0002",
+    "path": "server/npc-brain/文件/三國人物資料推進流程.md",
+    "title": "三國人物資料推進流程",
+    "category": "server",
+    "subtype": "service"
+  },
+  {
+    "id": "doc_server_service_0003",
+    "path": "server/npc-brain/文件/對話服務與模型回退.md",
+    "title": "對話服務與模型回退",
+    "category": "server",
+    "subtype": "service"
+  },
+  {
+    "id": "doc_server_service_0004",
+    "path": "server/npc-brain/文件/向量檢索與資料入庫.md",
+    "title": "向量檢索與資料入庫",
+    "category": "server",
+    "subtype": "service"
+  },
+  {
+    "id": "doc_server_service_0005",
+    "path": "server/npc-brain/文件/LangGraph Studio 與部署.md",
+    "title": "LangGraph Studio 與部署",
+    "category": "server",
+    "subtype": "service"
+  },
+  {
+    "id": "doc_server_service_0006",
+    "path": "server/npc-brain/文件/開發啟動與煙霧測試.md",
+    "title": "開發啟動與煙霧測試",
+    "category": "server",
+    "subtype": "service"
+  },
+  {
+    "id": "doc_server_service_0007",
+    "path": "server/npc-brain/文件/資料契約與 Cocos 串接.md",
+    "title": "資料契約與 Cocos 串接",
+    "category": "server",
+    "subtype": "service"
+  },
+  {
+    "id": "doc_server_service_0008",
+    "path": "server/npc-brain/文件/武將基本資料從0到1的誕生.md",
+    "title": "武將基本資料從0到1的誕生",
+    "category": "server",
+    "subtype": "service"
+  }
+]

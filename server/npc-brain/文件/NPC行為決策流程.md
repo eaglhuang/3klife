@@ -1,3 +1,4 @@
+<!-- doc_id: doc_server_other_0008 -->
 # NPC 最終行為決策流程圖
 
 **doc_id**: doc_server_service_0009  

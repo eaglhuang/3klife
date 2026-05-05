@@ -1,0 +1,134 @@
+[
+  {
+    "id": "doc_other_0001",
+    "path": ".github/agents/sanguo-term-researcher.agent.md",
+    "title": "Inputs",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0002",
+    "path": "docs/決策-Mobile-Offline-2026-04-23.md",
+    "title": "決策：Mobile-first Offline Support（2026-04-23）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0005",
+    "path": "docs/battle-entry-unification-checklist.md",
+    "title": "戰場入口統一 — Checklist",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0006",
+    "path": "docs/doc-id-registry.md",
+    "title": "文件代號 Registry (doc-id-registry)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0008",
+    "path": "docs/html_skill_plan2.md",
+    "title": "HTML Skill Plan 2",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0009",
+    "path": "docs/html_skill_plan.md",
+    "title": "HTML Skill Plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0010",
+    "path": "docs/html_skill_rule-evolution.md",
+    "title": "HTML Skill Rule Evolution",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0011",
+    "path": "docs/html_skill_plan3.md",
+    "title": "HTML Skill Plan 3",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0012",
+    "path": "docs/html_skill_rule-evolution2.md",
+    "title": "HTML Skill Rule Evolution 2",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0013",
+    "path": "docs/sanguo-rag-phase4b-phase5-execution-plan.md",
+    "title": "Sanguo RAG Phase 4b / Phase 5 Execution Plan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0014",
+    "path": "docs/UCUF-developer-guide.md",
+    "title": "UCUF 開發者指南",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0015",
+    "path": "docs/UCUF-migration-completion-2026-04-13.md",
+    "title": "UCUF Migration Active Checklist (2026-04-13)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0016",
+    "path": "docs/html-to-ucuf-plan5-stale-rule-audit.md",
+    "title": "HTML-to-UCUF Stale Rule Audit (Plan5)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0018",
+    "path": "docs/sanguo-rag-abab-progress-workflow-plan.md",
+    "title": "Sanguo RAG ABAB…C 整體進度推進規劃書",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0019",
+    "path": "docs/ui-screen-migration-coverage.md",
+    "title": "UI Screen Migration Coverage",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0020",
+    "path": "docs/html_skill_plan4.md",
+    "title": "HTML-to-UCUF Plan 4: 權威重整、通用化與自我驗證計畫",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0021",
+    "path": "docs/html_skill_plan5.md",
+    "title": "HTML-to-UCUF Plan5: Final Fidelity and Rule Decay Closure",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0022",
+    "path": "docs/UCUF已驗收功能.md",
+    "title": "UCUF 已驗收功能索引",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0023",
+    "path": "docs/學習文件/HarnessEngineering.md",
+    "title": "Harness Engineering 中文學習版與 3KProject 參考手冊",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0025",
+    "path": "docs/inside-openai-agent-collaboration-study-notes.md",
+    "title": "Inside OpenAI's AI Agent Collaboration System 學習筆記",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0026",
+    "path": "docs/html_skill_postmortem.md",
+    "title": "HTML-to-UCUF Skill 五次大改 Postmortem 與架構審查",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0027",
+    "path": "docs/學習文件/harness_engineering_analysis.md",
+    "title": "Harness Engineering 深度分析與 3KLife 專案對照",
+    "category": "other"
+  }
+]

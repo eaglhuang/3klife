@@ -1,4 +1,4 @@
-<!-- doc_id: doc_task_plan_0001 -->
+<!-- doc_id: doc_task_0210 -->
 # 戰場 UI 與邏輯架構優化規劃書
 
 > **版本**：v1.0

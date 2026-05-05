@@ -1,5 +1,5 @@
 ---
-doc_id: doc_ai_0006
+doc_id: doc_ai_0032
 description: 從 UILayoutConfig JSON 自動產生 Cocos 3.8 UI 組件代碼
 ---
 

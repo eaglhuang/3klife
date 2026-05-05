@@ -1,5 +1,5 @@
 ---
-doc_id: doc_ai_0004
+doc_id: doc_ai_0007
 description: 根據系統規格描述和風格參考圖，自動產生 UI 遊戲截圖作為佈局參考
 ---
 

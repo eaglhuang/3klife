@@ -1,5 +1,5 @@
 ---
-doc_id: doc_ai_0005
+doc_id: doc_ai_0031
 description: 利用 AI 將 i18n 字串翻譯為多國語系版本，考慮字型寬度與 UI 空間限制
 ---
 

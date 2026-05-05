@@ -1,4 +1,4 @@
-<!-- doc_id: doc_ui_0046 -->
+<!-- doc_id: doc_ui_0048 -->
 # UI Factory Agent Entry (Moved)
 
 正式入口已移到：`docs/UI-factory-agent-entry.md` (doc_ui_0032)

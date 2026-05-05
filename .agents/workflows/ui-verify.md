@@ -1,5 +1,5 @@
 ---
-doc_id: doc_ai_0007
+doc_id: doc_ai_0033
 description: 自動啟動 Cocos 預覽、截圖、檢查 Console 並驗證 UI 佈局
 ---
 

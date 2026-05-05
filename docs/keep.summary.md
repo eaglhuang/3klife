@@ -10,11 +10,13 @@
 
 ## P0. Agent Context Budget
 - 最高優先級：防止 Agent 上下文暴增。警戒線 6k/18k/30k tokens。
-- 禁止整份讀入 keep.md (doc_index_0011) / ui-quality-todo.json / cross-reference-index.md (doc_index_0005) / 大型 notes / 批次圖片。
+- 禁止整份讀入 keep.md (doc_index_0011) / ui-quality-todo.json / cross-reference-index.md (doc_index_0005) / doc-id-registry.json / 大型 notes / 批次圖片。
 - 三大重量文件已拆成分片目錄，按需讀對應分片：
   - `docs/keep-shards/keep-core.md (doc_index_0006)` (doc_index_0006) / `keep-workflow.md` (doc_index_0009) / `keep-ui-arch.md` (doc_index_0008) / `keep-status.md` (doc_index_0007)
   - `docs/tasks/tasks-ui.json` / `tasks-prog.json` / `tasks-dc.json`
   - `docs/cross-ref/cross-ref-specs.md (doc_index_0002)` (doc_index_0002) / `cross-ref-code.md` (doc_index_0001) / `cross-ref-ui-spec.md` (doc_index_0003)
+  - `docs/doc-id-registry.json` → `docs/doc-id-registry-shards/registry-*.json`
+- `doc-id-registry` 人工讀取規則：`docs/doc-id-registry.json` 只當 stub；大 shard 優先讀 auto-parts：`docs/doc-id-registry-shards/registry-spec/registry-spec-part-*.json`、`docs/doc-id-registry-shards/registry-task/registry-task-part-*.json`
 - 維護分片工具：`node tools_node/shard-manager.js rebuild-index <shardDir>`
 - 詳見 → `docs/agent-context-budget.md (doc_ai_0025)` (doc_ai_0025)
 
@@ -95,5 +97,7 @@
 - 10 大類別：`tech / ui / art / data / spec / index / task / ai / agentskill / other`
 - 注入位置：無 YAML frontmatter → 首行 `<!-- doc_id: doc_spec_0001 -->`；有 frontmatter → YAML 第一個 key
 - 搜尋：`grep -r "doc_id: doc_spec_0001" docs/ .github/` 或 `node tools_node/resolve-doc-id.js doc_spec_0001`
-- Registry：`docs/doc-id-registry.json`（機器可讀）/ `docs/doc-id-registry.md (doc_other_0001)` (doc_other_0001)（人可讀表格）
+- Registry：`docs/doc-id-registry.json`（machine-readable index stub）/ `docs/doc-id-registry-shards/registry-*.json`（實際分片）/ `docs/doc-id-registry.md (doc_other_0001)` (doc_other_0001)（人可讀表格）
+- 大 shard：`registry-spec.json` / `registry-task.json` 若已有 auto-parts，人工閱讀時優先讀 part 檔，不直接讀母 shard
 - 新增文件：`node tools_node/doc-id-registry.js --assign <path>`（自動分類、分配代號、注入）
+- 只想重建分片，不想重掃整個 repo：`node tools_node/doc-id-registry.js --reshard-current`

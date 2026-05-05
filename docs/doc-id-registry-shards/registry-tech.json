@@ -1,0 +1,134 @@
+[
+  {
+    "id": "doc_tech_0001",
+    "path": "docs/架構評估報告_2026-04-05_Agent1.md",
+    "title": "架構評估報告 — Agent1",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0002",
+    "path": "docs/特效研究/可優化說明書.md",
+    "title": "三國 Demo — 可優化說明書",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0003",
+    "path": "docs/特效研究/可優化說明書2.md",
+    "title": "可優化說明書 2 — Cyberpunk 參考專案",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0004",
+    "path": "docs/特效研究/AI Agent Cocos 粒子特效自動生成.md",
+    "title": "**評估 TopologyAI 粒子模擬器作為 AI Agent 自動化生產 Cocos Creator 3D 特效之技術可行性與工作流構建報告**",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0005",
+    "path": "docs/特效研究/claude規劃的3d粒子計畫.md",
+    "title": "3KLife VFX ?撖???啾????殷???",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0006",
+    "path": "docs/參考官方範例短中長優化方案.md",
+    "title": "參考官方範例短中長優化方案",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0007",
+    "path": "docs/場景搭建指南.md",
+    "title": "🚀 戰鬥場景快速搭建指南",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0008",
+    "path": "docs/開場程式規格書.md",
+    "title": "程式規格書",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0009",
+    "path": "docs/資料中心架構規格書.md",
+    "title": "3KLife 資料管理中心 — 架構規格書",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0010",
+    "path": "docs/遊戲規格文件/系統規格書/同步API規格書.md",
+    "title": "同步 API 規格書",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0011",
+    "path": "docs/遊戲規格文件/系統規格書/武將資料管線規格書.md",
+    "title": "武將資料管線規格書",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0012",
+    "path": "docs/遊戲規格文件/系統規格書/熱更新與版本控制規格書.md",
+    "title": "熱更新與版本控制規格書",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0013",
+    "path": "docs/遊戲規格文件/系統規格書/Data Schema文件（本機端與Server端）.md",
+    "title": "Data Schema 文件（事件溯源與 NoSQL 離線同步架構）",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0014",
+    "path": "docs/精簡tokens說明書.md",
+    "title": "精簡tokens說明書",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0015",
+    "path": "docs/demo_技術架構.md",
+    "title": "Demo 技術架構",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0016",
+    "path": "docs/encoding-integrity-playbook.md",
+    "title": "編碼防災 Playbook",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0017",
+    "path": "docs/UCUF技術文件.md",
+    "title": "UCUF 技術文件 — Universal Composite UI Framework 架構與原理",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0018",
+    "path": "docs/ui/ui-system-architecture.md",
+    "title": "UI 系統技術架構",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0019",
+    "path": "docs/uipreviewbuilder-split-blueprint.md",
+    "title": "`UIPreviewBuilder.ts` 拆分藍圖",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0020",
+    "path": "docs/battle-entry-path-comparison.md",
+    "title": "戰場入口路徑對照與統一架構",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0021",
+    "path": "docs/特效研究/Cocos 3D 粒子生成器 Agent Skill.md",
+    "title": "**Cocos Creator 3D 粒子特效 AI 代理技能之市場現狀與技術實作深度報告**",
+    "category": "tech"
+  },
+  {
+    "id": "doc_tech_0022",
+    "path": "docs/特效研究/vfx-health-report.md",
+    "title": "VFX Prefab Health Report",
+    "category": "tech"
+  }
+]

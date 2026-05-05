@@ -1,0 +1,182 @@
+[
+  {
+    "id": "doc_ai_0001",
+    "path": ".agents/rules/cocos-guide.md",
+    "title": "Cocos Creator Project Guidelines",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0002",
+    "path": ".agents/workflows/sanguo-progress-advance.md",
+    "title": "Sanguo Progress Advance Workflow（sanguo-progress-advance）",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0003",
+    "path": ".agents/workflows/ucuf-develop.md",
+    "title": "UCUF 開發 Workflow（ucuf-develop）",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0004",
+    "path": ".agents/workflows/ucuf-verify.md",
+    "title": "UCUF 驗證 Workflow（ucuf-verify）",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0005",
+    "path": ".agents/workflows/ui-design-to-code.md",
+    "title": "Context Budget Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0006",
+    "path": ".agents/workflows/ui-generate-brief.md",
+    "title": "Context Budget Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0007",
+    "path": ".agents/workflows/ui-generate-reference.md",
+    "title": "Context Budget Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0008",
+    "path": ".github/copilot-instructions.md",
+    "title": "語言與推理規範",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0009",
+    "path": ".github/instructions/agent-collaboration.instructions.md",
+    "title": "Agent Collaboration Protocol",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0010",
+    "path": ".github/instructions/artifacts-guard.instructions.md",
+    "title": "Artifacts 目錄安全規則",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0011",
+    "path": ".github/instructions/docs-guard.instructions.md",
+    "title": "Docs 目錄讀取規則",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0012",
+    "path": ".github/instructions/fragment-guard.instructions.md",
+    "title": "Fragment Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0013",
+    "path": ".github/instructions/image-view-guard.instructions.md",
+    "title": "Image View Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0014",
+    "path": ".github/instructions/project-conventions.instructions.md",
+    "title": "架構原則與開發慣例",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0015",
+    "path": ".github/instructions/token-guard.instructions.md",
+    "title": "Token Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0016",
+    "path": ".github/instructions/ui-factory-routing.instructions.md",
+    "title": "UI Factory Routing",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0017",
+    "path": ".github/instructions/ui-pipeline.instructions.md",
+    "title": "UI 開發流程指引",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0018",
+    "path": "AGENTS.md",
+    "title": "3KLife Agent Overrides",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0019",
+    "path": "docs/agent-briefs/agent1-instructions.md",
+    "title": "Agent1 Instructions",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0020",
+    "path": "docs/agent-briefs/agent2-instructions.md",
+    "title": "Agent2 Instructions",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0021",
+    "path": "docs/agent-briefs/agent2-visual-qa-playbook.md",
+    "title": "Agent2 Visual QA Playbook",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0022",
+    "path": "docs/agent-briefs/CheckList.md",
+    "title": "Agent Briefs CheckList",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0023",
+    "path": "docs/agent-briefs/Readme.md",
+    "title": "Agent 協作手冊",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0024",
+    "path": "docs/agent-collaboration-protocol.md",
+    "title": "多 Agent 協作協議",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0025",
+    "path": "docs/agent-context-budget.md",
+    "title": "Agent Context Budget Guideline",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0027",
+    "path": "docs/agent-briefs/sanguo-central-brain-rollout-handoff-2026-05-01.md",
+    "title": "三國中台大腦推行計畫交接書",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0031",
+    "path": ".agents/workflows/ui-i18n-translate.md",
+    "title": "Context Budget Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0032",
+    "path": ".agents/workflows/ui-scaffold.md",
+    "title": "Context Budget Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0033",
+    "path": ".agents/workflows/ui-verify.md",
+    "title": "Context Budget Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0034",
+    "path": ".github/instructions/ucuf-compliance.instructions.md",
+    "title": "UCUF CompositePanel 合規指令",
+    "category": "ai"
+  }
+]

@@ -15,6 +15,8 @@ applyTo: "**"
 
 - Prefer `git status --short` and targeted reads over loading large files blindly.
 - Read `docs/keep.summary.md (doc_index_0012)` (doc_index_0012) before reaching for larger consensus docs.
+- Treat `docs/doc-id-registry.json` as a stub only; read `docs/doc-id-registry-shards/registry-*.json` or use the shared loader instead of loading the full registry in conversation.
+- If the target shard is large, prefer auto-parts before the parent shard: `docs/doc-id-registry-shards/registry-spec/registry-spec-part-*.json` and `docs/doc-id-registry-shards/registry-task/registry-task-part-*.json`.
 - Avoid dumping large notes, compare boards, or many screenshots into the conversation.
 - For image artifacts, prefer at most `1` main image and `1` comparison image per turn.
 

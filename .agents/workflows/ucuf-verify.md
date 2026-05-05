@@ -1,5 +1,5 @@
 ---
-doc_id: doc_ai_0021
+doc_id: doc_ai_0004
 description: UCUF CompositePanel 驗證流程（三步快速驗收）
 ---
 

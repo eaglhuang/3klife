@@ -1,0 +1,272 @@
+[
+  {
+    "id": "doc_agentskill_0001",
+    "path": ".agents/skills/best-mode/SKILL.md",
+    "title": "Best Mode",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0002",
+    "path": ".agents/skills/cocos-bug-triage/SKILL.md",
+    "title": "Cocos Bug Triage（完整 Bug 調查工作流）",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0003",
+    "path": ".agents/skills/cocos-log-reader/SKILL.md",
+    "title": "Cocos Log Reader（運行期日誌分析）",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0004",
+    "path": ".agents/skills/cocos-preview-qa/SKILL.md",
+    "title": "Cocos Preview QA（Browser Review 自動截圖 + 比對）",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0005",
+    "path": ".agents/skills/cocos-screenshot/SKILL.md",
+    "title": "Cocos Screenshot（Editor Preview / Editor 視窗截圖）",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0006",
+    "path": ".agents/skills/cocos-vfx-browser-qa/SKILL.md",
+    "title": "Cocos VFX Browser QA",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0007",
+    "path": ".agents/skills/context-budget-guard/SKILL.md",
+    "title": "Context Budget Guard",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0008",
+    "path": ".agents/skills/encoding-touched-guard/SKILL.md",
+    "title": "Encoding Touched Guard",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0009",
+    "path": ".github/skills/cocos-bug-triage/SKILL.md",
+    "title": "Cocos Bug Triage（鏡像索引）",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0010",
+    "path": ".github/skills/cocos-log-reader/SKILL.md",
+    "title": "Cocos Log Reader（鏡像索引）",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0011",
+    "path": ".github/skills/cocos-preview-qa/SKILL.md",
+    "title": "Cocos Preview QA（Browser Review 自動截圖 + 比對）",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0012",
+    "path": ".github/skills/cocos-screenshot/SKILL.md",
+    "title": "Cocos Screenshot（Editor Preview / Editor 視窗截圖）",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0013",
+    "path": ".github/skills/comfyui-sdxl-partial-asset-gen/SKILL.md",
+    "title": "ComfyUI SDXL Partial Asset Gen",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0014",
+    "path": ".github/skills/dalle3-image-gen/SKILL.md",
+    "title": "DALL-E 3 Image Generation",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0015",
+    "path": ".github/skills/doc-shard-manager/SKILL.md",
+    "title": "Doc Shard Manager SKILL",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0016",
+    "path": ".github/skills/encoding-touched-guard/SKILL.md",
+    "title": "Encoding Touched Guard",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0017",
+    "path": ".github/skills/general-balance-tuner/SKILL.md",
+    "title": "General Balance Tuner",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0018",
+    "path": ".github/skills/general-data-pipeline/SKILL.md",
+    "title": "General Data Pipeline",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0019",
+    "path": ".github/skills/general-story-writer/SKILL.md",
+    "title": "General Story Writer",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0020",
+    "path": ".github/skills/nano-banana-gen/SKILL.md",
+    "title": "Nano Banana 圖像生成",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0021",
+    "path": ".github/skills/ui-asset-gen-director/SKILL.md",
+    "title": "UI Asset Gen Director",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0022",
+    "path": ".github/skills/ui-asset-qc/SKILL.md",
+    "title": "UI Asset QC",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0023",
+    "path": ".github/skills/ui-asset-slice-pipeline/SKILL.md",
+    "title": "UI Asset Slice Pipeline",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0024",
+    "path": ".github/skills/ui-brief-generator/SKILL.md",
+    "title": "UI Brief Generator",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0025",
+    "path": ".github/skills/ui-family-architect/SKILL.md",
+    "title": "UI Family Architect",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0026",
+    "path": ".github/skills/task-card-opener/SKILL.md",
+    "title": "Task Card Opener（鏡像索引）",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0027",
+    "path": ".github/skills/ui-preview-judge/SKILL.md",
+    "title": "UI Preview Judge",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0028",
+    "path": ".github/skills/ui-reference-decompose/SKILL.md",
+    "title": "UI Reference Decompose",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0029",
+    "path": ".github/skills/ui-runtime-verify/SKILL.md",
+    "title": "UI Runtime Verify",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0030",
+    "path": ".github/skills/ui-spec-scaffold/SKILL.md",
+    "title": "UI Spec Scaffold",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0031",
+    "path": ".github/skills/ui-vibe-pipeline/SKILL.md",
+    "title": "UI Vibe Pipeline（鏡像索引）",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0032",
+    "path": ".github/skills/crossref-progress-scanner/SKILL.md",
+    "title": "crossref-progress-scanner Skill",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0034",
+    "path": ".github/skills/doc-consolidation-flow/SKILL.md",
+    "title": "Doc Consolidation Flow",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0035",
+    "path": ".github/skills/cocos-vfx-browser-qa/SKILL.md",
+    "title": "Cocos VFX Browser QA",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0036",
+    "path": ".github/skills/html-to-ucuf/SKILL.md",
+    "title": "HTML-to-UCUF Skill",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0038",
+    "path": ".agents/skills/sanguo-rag-resolution-loop/SKILL.md",
+    "title": "Sanguo RAG Resolution Loop",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0040",
+    "path": ".github/skills/ui-i18n-localize/SKILL.md",
+    "title": "UI I18N Localize",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0042",
+    "path": ".agents/skills/sanguo-event-review-loop/SKILL.md",
+    "title": "Sanguo Event Review Loop",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0043",
+    "path": ".agents/skills/sanguo-knowledge-growth-loop/SKILL.md",
+    "title": "Sanguo Knowledge Growth Loop",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0044",
+    "path": ".github/skills/gpt-image-2-gen/SKILL.md",
+    "title": "GPT Image 2 Image Generation",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0060",
+    "path": ".github/skills/compute-gate/SKILL.md",
+    "title": "Compute Gate Skill",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0061",
+    "path": ".agents/skills/general-avatar-crop/SKILL.md",
+    "title": "Skill: general-avatar-crop",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0062",
+    "path": ".agents/skills/handoff-text-spacing-extractor/SKILL.md",
+    "title": "Handoff Text Spacing Extractor",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0063",
+    "path": ".agents/skills/task-card-opener/SKILL.md",
+    "title": "Task Card Opener",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0064",
+    "path": ".agents/skills/ui-vibe-pipeline/SKILL.md",
+    "title": "UI Vibe Pipeline",
+    "category": "agentskill"
+  }
+]

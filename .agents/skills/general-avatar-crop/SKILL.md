@@ -1,4 +1,4 @@
-<!-- doc_id: doc_agentskill_0009 -->
+<!-- doc_id: doc_agentskill_0061 -->
 # Skill: general-avatar-crop
 
 武將頭像裁切工作流程。從立繪 PNG 裁切 256×256 頭+脖子頭像，並自動套用到戰場 HUD 左上角（主將）與右上角（敵將）。

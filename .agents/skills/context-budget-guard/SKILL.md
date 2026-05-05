@@ -1,5 +1,5 @@
 ---
-doc_id: doc_agentskill_0006
+doc_id: doc_agentskill_0007
 name: context-budget-guard
 description: Agent context budget guard and artifact compression workflow. USE FOR: image-heavy QA, compare board review, screenshot batches, large keep/todo/task manifests, long notes handoff, and md/json diff summarization. Trigger this before reading or forwarding heavy artifacts when token growth is a risk.
 ---

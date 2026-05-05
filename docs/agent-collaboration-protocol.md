@@ -22,6 +22,8 @@
   └─ 確認 skill 順序
 
 防線 2: In-flight Guard（工作中）
+  ├─ 鎖卡一律帶 --files，作為本輪 canonical task scope
+  ├─ 修改後先跑 check-task-scope.js --task <task-id>
   ├─ 修改 fragment → build-fragment-usage-map.js --query
   ├─ 修改 layout → regression check
   ├─ 修改 skin → validate-ui-specs.js --strict
@@ -30,6 +32,7 @@
 
 防線 3: Post-flight Checkpoint（收工前）
   ├─ check-encoding-touched.js
+  ├─ compute-gate task-scope（確保 dirty files 仍在 task scope 內）
   ├─ validate-ui-specs.js --strict --check-content-contract
   ├─ regression check（if layout/fragment changed）
   ├─ task-lock.js unlock
@@ -60,6 +63,9 @@ node tools_node/task-lock.js list
 # 開工前：先鎖任務與檔案範圍
 node tools_node/task-lock.js lock <task-id> <agent-id> --files <file...>
 
+# 修改後：先驗證 git dirty files 沒有超出任何 active task scope
+node tools_node/check-task-scope.js --task <task-id>
+
 # 收工前：用 task 檔案集跑 finalize，而不是整個 dirty worktree
 node tools_node/finalize-agent-turn.js --workflow ucuf --task <task-id> --task-scope --json
 
@@ -71,6 +77,12 @@ node tools_node/task-lock.js unlock <task-id> <agent-id>
 - 降低多 Agent 同時修改高風險檔案的碰撞機率
 - 讓 context budget / turn usage 依 task 檔案集計算，而不是被整個工作樹污染
 - 讓 handoff 的 changedFiles 與 task scope 一致
+
+補充：
+- `task-lock.js lock --files <file...>` 的 `files[]` 是 **canonical executable scope**；任務卡負責宣告 task id / 驗證合約，真正拿來對 dirty files 做機器驗證的是 lock 檔中的 `files[]`
+- `check-task-scope.js` 會以 `git status --short` 對照所有 active task lock 的 `files[]`，找出未被任何任務 scope 覆蓋、或被多張卡重複宣告的檔案
+- `validate-handoff-diff.js` / `finalize-agent-turn --task-scope` 會再用 turn artifact 的 `files[]` 對照當前 task lock，做更精準的 per-task 收工驗證
+- 過渡期舊 lock 若 `files[]` 為空，`check-task-scope.js` 只會提出 advisory warning；新任務不得再省略 `--files`
 
 ## 4. Handoff Contract
 

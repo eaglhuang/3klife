@@ -1,5 +1,5 @@
 ---
-doc_id: doc_ai_0020
+doc_id: doc_ai_0003
 description: UCUF CompositePanel 新畫面標準開發流程（M10 scaffold v2）
 ---
 

@@ -1,0 +1,104 @@
+[
+  {
+    "id": "doc_index_0001",
+    "path": "docs/cross-ref/cross-ref-code.md",
+    "title": "Cross-Reference: 代碼索引（代碼 ↔ 規格書 雙向映射）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0002",
+    "path": "docs/cross-ref/cross-ref-specs.md",
+    "title": "Cross-Reference: 規格書索引（文件 → 相關文件）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0003",
+    "path": "docs/cross-ref/cross-ref-ui-spec.md",
+    "title": "Cross-Reference: UI Spec JSON 鞈蝝Ｗ?",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0004",
+    "path": "docs/cross-ref/README.md",
+    "title": "cross-ref/",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0006",
+    "path": "docs/keep-shards/keep-core.md",
+    "title": "Keep Consensus — Core（P0 · §0–§2c）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0007",
+    "path": "docs/cross-reference-index.md",
+    "title": "交叉索引表 (Cross-Reference Index)",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0008",
+    "path": "docs/keep-shards/keep-ui-arch.md",
+    "title": "Keep Consensus — UI Architecture（§7–§12 · §19–§23）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0009",
+    "path": "docs/keep-shards/keep-status.md",
+    "title": "Keep Consensus — Current Status（§14–§18 · §24 · MCP）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0010",
+    "path": "docs/keep-shards/README.md",
+    "title": "keep-shards/",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0011",
+    "path": "docs/keep-shards/keep-workflow.md",
+    "title": "Keep Consensus — Workflow（§3–§6 · §13）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0012",
+    "path": "docs/keep.summary.md",
+    "title": "Keep Consensus 摘要",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0013",
+    "path": "docs/keep.md",
+    "title": "Keep Consensus",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0014",
+    "path": "docs/ui-quality-tasks/README.md",
+    "title": "UI Quality Task Shards",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0015",
+    "path": "docs/tasks/README.md",
+    "title": "tasks/",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0016",
+    "path": "docs/UI品質參考圖/UI-2-0060_血脈命鏡過場/README.md",
+    "title": "UI-2-0060 血脈命鏡過場 Canonical Reference",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0017",
+    "path": "docs/cross-ref/cross-ref-進度.md",
+    "title": "Cross-Reference: 實作進度（規格書 × 代碼 × 測試）",
+    "category": "index"
+  },
+  {
+    "id": "doc_index_0018",
+    "path": "docs/cross-ref/cross-ref-M6後同步檢查清單.md",
+    "title": "Cross-Ref M6 後同步檢查清單",
+    "category": "index"
+  }
+]

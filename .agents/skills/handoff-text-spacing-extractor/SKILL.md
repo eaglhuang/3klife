@@ -1,5 +1,5 @@
 ---
-doc_id: doc_agentskill_0030
+doc_id: doc_agentskill_0062
 name: handoff-text-spacing-extractor
 description: 'Handoff text-spacing extractor SKILL — 從 canonical HTML/JSX/TSX inline style 盡量抽出字間距與空間細節（letterSpacing, gap, padding, margin, fontSize, lineHeight 等），並回補到 Design System/design_handoff/source/ui-design-tokens.json 的 handoffTextSpacingExtracted 區段。USE FOR: UI 對齊前先把參考圖 / handoff source 的 spacing recipe 轉成可重用 token；DO NOT USE FOR: 只有 runtime 截圖、沒有 source 設定，或純 CSS module / computed style 無法直接讀取的場景。'
 argument-hint: '提供 source file / folder、tokens 路徑（可選）、以及要回補的 section 名稱；若是整個 handoff 目錄，直接傳資料夾路徑。'

@@ -1,4 +1,4 @@
-<!-- doc_id: doc_task_0145 -->
+<!-- doc_id: doc_task_0205 -->
 # 任務：battle-ui-p1-hp-bar-visual
 
 ## frontmatter

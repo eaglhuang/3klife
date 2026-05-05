@@ -1,5 +1,5 @@
 ---
-doc_id: doc_ai_0002
+doc_id: doc_ai_0005
 description: 端到端 UI 生產管線：Stitch 設計 → AI 貼圖 → 代碼產出 → 瀏覽器驗證
 ---
 

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "doc_data_0001",
+    "path": "docs/遊戲規格文件/系統規格書/數值系統.md",
+    "title": "數值系統（Game Numerical System）",
+    "category": "data"
+  },
+  {
+    "id": "doc_data_0002",
+    "path": "docs/遊戲規格文件/系統規格書/AI武將強度系統.md",
+    "title": "AI 武將強度系統（AI General Strength System）",
+    "category": "data"
+  }
+]
