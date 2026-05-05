@@ -22,8 +22,8 @@
 | AI Agent 專用 | `doc_ai` | 30 |
 | Agent Skill 專用 | `doc_agentskill` | 45 |
 | Server 文件類 | `doc_server_<subtype>` | 15 |
-| 其它類 | `doc_other` | 22 |
-| **合計** | — | **625** |
+| 其它類 | `doc_other` | 24 |
+| **合計** | — | **627** |
 
 ---
 
@@ -688,6 +688,8 @@
 | `doc_other_0002` | docs/決策-Mobile-Offline-2026-04-23.md | 決策：Mobile-first Offline Support（2026-04-23） |
 | `doc_other_0027` | docs/學習文件/harness_engineering_analysis.md | Harness Engineering 深度分析與 3KLife 專案對照 |
 | `doc_other_0023` | docs/學習文件/HarnessEngineering.md | Harness Engineering 中文學習版與 3KProject 參考手冊 |
+| `doc_other_0029` | docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md | AI Atomic Framework：用 AI 自舉建立、再用它拯救失控 Legacy Vibe Coding 專案的完整規劃書 |
+| `doc_other_0028` | docs/ai_atomic_framework/AI原子框架開發計畫書.md | AI 原子框架（ATM）開發計畫書 |
 | `doc_other_0005` | docs/battle-entry-unification-checklist.md | 戰場入口統一 — Checklist |
 | `doc_other_0006` | docs/doc-id-registry.md | 文件代號 Registry (doc-id-registry) |
 | `doc_other_0009` | docs/html_skill_plan.md | HTML Skill Plan |

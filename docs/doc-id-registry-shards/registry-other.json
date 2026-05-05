@@ -136,5 +136,11 @@
     "path": "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
     "title": "AI 原子框架（ATM）開發計畫書",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0029",
+    "path": "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+    "title": "AI Atomic Framework：用 AI 自舉建立、再用它拯救失控 Legacy Vibe Coding 專案的完整規劃書",
+    "category": "other"
   }
 ]
