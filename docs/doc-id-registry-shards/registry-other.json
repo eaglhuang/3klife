@@ -130,5 +130,11 @@
     "path": "docs/學習文件/harness_engineering_analysis.md",
     "title": "Harness Engineering 深度分析與 3KLife 專案對照",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0028",
+    "path": "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+    "title": "AI 原子框架（ATM）開發計畫書",
+    "category": "other"
   }
 ]
