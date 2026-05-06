@@ -1,5 +1,136 @@
 [
   {
+    "doc_id": "doc_task_0256",
+    "id": "ATM-1-0006",
+    "title": "JS/TS LanguageAdapter reference",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
+    "status": "open",
+    "type": "adapter",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 JavaScript/TypeScript reference language adapter，負責 import scan、test command 與 entrypoint 規則。",
+    "related": [],
+    "depends": [
+      "ATM-1-0004"
+    ],
+    "acceptance": [
+      "JS compute atom 可被 validate",
+      "forbidden import fixture 失敗",
+      "LanguageAdapter API 可讓未來 Python/C# 實作"
+    ],
+    "deliverables": [
+      "packages/language-js",
+      "JS/TS import policy fixture",
+      "test command runner contract"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 上游核心開卡",
+      "summary": "建立 JavaScript/TypeScript reference language adapter，負責 import scan、test command 與 entrypoint 規則。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0004"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+      ],
+      "output": [
+        "packages/language-js",
+        "JS/TS import policy fixture",
+        "test command runner contract"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "execution_steps": [
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0257",
+    "id": "ATM-1-0007",
+    "title": "Hello-world 與 legacy-strangler 範例",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
+    "status": "open",
+    "type": "example",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立最小 compute atom 與最小 legacy strangler example，讓新使用者可從零跑通。",
+    "related": [],
+    "depends": [
+      "ATM-1-0004",
+      "ATM-1-0005"
+    ],
+    "acceptance": [
+      "hello-world 可在 standalone mode validate",
+      "legacy-strangler-minimal 不含 3KLife 私有路徑",
+      "Quick Start 30 分鐘可跑完"
+    ],
+    "deliverables": [
+      "examples/hello-world",
+      "examples/legacy-strangler-minimal",
+      "docs/QUICK_START.md 範例命令"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 上游核心開卡",
+      "summary": "建立最小 compute atom 與最小 legacy strangler example，讓新使用者可從零跑通。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0004、ATM-1-0005"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+      ],
+      "output": [
+        "examples/hello-world",
+        "examples/legacy-strangler-minimal",
+        "docs/QUICK_START.md 範例命令"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "execution_steps": [
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0290",
     "id": "ATM-1-0008",
     "title": "Zero-install Agent Bootstrap Pack",
@@ -113,137 +244,6 @@
         "packages/core/src/spec/parse-spec.*",
         "unit tests",
         "error-as-prompt report format"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0259",
-    "id": "ATM-2-0002",
-    "title": "Scaffold Builder MVP",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "manager",
-    "phase": "ATM-2",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
-    "related": [],
-    "depends": [
-      "ATM-2-0001"
-    ],
-    "acceptance": [
-      "首次 scaffold 建立檔案",
-      "第二次 scaffold 不覆寫人工實作",
-      "可由 adapter 決定 workbenchPath"
-    ],
-    "deliverables": [
-      "packages/core/src/manager/scaffold.*",
-      "templates/atom.spec.template.json",
-      "templates/atom.test.template.ts"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0001"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "packages/core/src/manager/scaffold.*",
-        "templates/atom.spec.template.json",
-        "templates/atom.test.template.ts"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0260",
-    "id": "ATM-2-0003",
-    "title": "Test Runner 與 report schema",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "manager",
-    "phase": "ATM-2",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立 atomic test runner contract 與 JSON report schema。",
-    "related": [],
-    "depends": [
-      "ATM-2-0002",
-      "ATM-1-0006"
-    ],
-    "acceptance": [
-      "故意失敗 fixture exit code 非零",
-      "report 可被 registry/hash/police 消費",
-      "runner 不 hard-code Vitest"
-    ],
-    "deliverables": [
-      "packages/core/src/manager/test-runner.*",
-      "schemas/test-report.schema.json",
-      "pass/fail fixtures"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立 atomic test runner contract 與 JSON report schema。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0002、ATM-1-0006"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "packages/core/src/manager/test-runner.*",
-        "schemas/test-report.schema.json",
-        "pass/fail fixtures"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
       "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",

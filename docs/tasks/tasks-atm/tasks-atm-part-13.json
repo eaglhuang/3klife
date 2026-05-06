@@ -1,5 +1,75 @@
 [
   {
+    "doc_id": "doc_task_0274",
+    "id": "ATM-5-0003",
+    "title": "Semver Lifecycle 與 Governance",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
+    "status": "open",
+    "type": "governance",
+    "phase": "ATM-5",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立開源專案版本治理、deprecated policy、breaking change RFC 與 release flow。",
+    "related": [],
+    "depends": [
+      "ATM-5-0001"
+    ],
+    "acceptance": [
+      "MAJOR/MINOR/PATCH 對應 Spec/Adapter/CLI 變更",
+      "adapter compatibility matrix 有格式",
+      "breaking change 需 RFC",
+      "release owner / maintainer duty matrix 已定義",
+      "package naming policy 覆蓋 core / cli / plugin-* / adapter-*",
+      "provenance 與 deprecation / migration policy 已定義"
+    ],
+    "deliverables": [
+      "docs/LIFECYCLE.md",
+      "docs/GOVERNANCE.md",
+      "CHANGELOG.md policy",
+      "release checklist"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 release owner、package naming、provenance 與 deprecation 實務要求 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "建立開源專案版本治理、deprecated policy、breaking change RFC 與 release flow。",
+      "position": "ATM-5",
+      "prereq": "ATM-5-0001"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "docs/LIFECYCLE.md",
+        "docs/GOVERNANCE.md",
+        "CHANGELOG.md policy",
+        "release checklist"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0275",
     "id": "ATM-5-0004",
     "title": "v0.1 alpha release checklist",
@@ -182,73 +252,6 @@
       "output": [
         "docs/ecosystem/registry-db-vector-decision.md",
         "plugin boundary proposal"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0277",
-    "id": "ATM-6-0002",
-    "title": "Community RFC 與貢獻流程",
-    "owner": "GitHubCopilot",
-    "priority": "P2",
-    "status": "open",
-    "type": "ecosystem",
-    "phase": "ATM-6",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
-    "related": [],
-    "depends": [
-      "ATM-5-0003"
-    ],
-    "acceptance": [
-      "core vs adapter PR 分流",
-      "domain logic PR 有明確拒絕/轉 plugin 流程",
-      "maintainer decision process 清楚",
-      "release owner 與 maintainer quorum 規則已定義",
-      "security / provenance / package naming 類 RFC escalation path 已定義"
-    ],
-    "deliverables": [
-      "docs/RFC_PROCESS.md",
-      "GitHub issue templates",
-      "PR template"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補社群流程需指定 release owner / maintainer quorum / escalation path | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
-      "position": "ATM-6",
-      "prereq": "ATM-5-0003"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "docs/RFC_PROCESS.md",
-        "GitHub issue templates",
-        "PR template"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",

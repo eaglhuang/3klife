@@ -34,89 +34,89 @@
     },
     {
       "name": "tasks-atm-part-4",
-      "title": "Part 4 (items 10-12)",
+      "title": "Part 4 (items 10-11)",
       "range": [
         9,
-        11
+        10
       ]
     },
     {
       "name": "tasks-atm-part-5",
-      "title": "Part 5 (items 13-16)",
+      "title": "Part 5 (items 12-14)",
       "range": [
-        12,
-        15
+        11,
+        13
       ]
     },
     {
       "name": "tasks-atm-part-6",
-      "title": "Part 6 (items 17-20)",
+      "title": "Part 6 (items 15-18)",
       "range": [
-        16,
-        19
+        14,
+        17
       ]
     },
     {
       "name": "tasks-atm-part-7",
-      "title": "Part 7 (items 21-23)",
+      "title": "Part 7 (items 19-22)",
       "range": [
-        20,
-        22
+        18,
+        21
       ]
     },
     {
       "name": "tasks-atm-part-8",
-      "title": "Part 8 (items 24-26)",
+      "title": "Part 8 (items 23-25)",
       "range": [
-        23,
-        25
+        22,
+        24
       ]
     },
     {
       "name": "tasks-atm-part-9",
-      "title": "Part 9 (items 27-29)",
+      "title": "Part 9 (items 26-28)",
       "range": [
-        26,
-        28
+        25,
+        27
       ]
     },
     {
       "name": "tasks-atm-part-10",
-      "title": "Part 10 (items 30-33)",
+      "title": "Part 10 (items 29-32)",
       "range": [
-        29,
-        32
+        28,
+        31
       ]
     },
     {
       "name": "tasks-atm-part-11",
-      "title": "Part 11 (items 34-37)",
+      "title": "Part 11 (items 33-36)",
       "range": [
-        33,
-        36
+        32,
+        35
       ]
     },
     {
       "name": "tasks-atm-part-12",
-      "title": "Part 12 (items 38-40)",
+      "title": "Part 12 (items 37-39)",
       "range": [
-        37,
-        39
+        36,
+        38
       ]
     },
     {
       "name": "tasks-atm-part-13",
-      "title": "Part 13 (items 41-44)",
+      "title": "Part 13 (items 40-43)",
       "range": [
-        40,
-        43
+        39,
+        42
       ]
     },
     {
       "name": "tasks-atm-part-14",
-      "title": "Part 14 (items 45-47)",
+      "title": "Part 14 (items 44-47)",
       "range": [
-        44,
+        43,
         46
       ]
     },
