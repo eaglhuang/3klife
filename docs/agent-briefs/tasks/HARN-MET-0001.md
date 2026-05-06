@@ -5,15 +5,19 @@ priority: P1
 phase: Phase3
 created: 2026-05-04
 created_by_agent: GitHubCopilot
-owner: GitHubCopilot
-status: open
+owner: vs-insiders-gpt-5.4
+status: done
 type: metrics-query
 chain_id: HARN-CHAIN-METRICS
 chain_step: 1/3
 sensor_triggered_by: harness-rollout planning
 depends:
   - HARN-ART-0003
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建立 Turn Artifact History Query 任務卡 | 阻塞: depends HARN-ART-0003"
+started_at: "2026-05-06T17:20:59.1405674+08:00"
+started_by_agent: "vs-insiders-gpt-5.4"
+completed_at: "2026-05-06T17:23:25.9618717+08:00"
+completed_by_agent: "vs-insiders-gpt-5.4"
+notes: "2026-05-06 | 狀態: done | 驗證: query-turn-artifact-history workflow filter pass；workflow+task+date+status filter pass；get_errors pass | 變更: 新增 tools_node/query-turn-artifact-history.js，支援 formal artifact root 掃描、workflow/task/date/status 篩選、JSON/CLI summary、skipped malformed/schema mismatch 統計，供後續 metrics accumulator 直接重用 | 阻塞: none"
 ---
 
 # [HARN-MET-0001] 建立 Turn Artifact History Query
