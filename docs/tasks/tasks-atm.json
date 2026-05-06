@@ -9,9 +9,9 @@
     "maxPartLines": 300
   },
   "summary": {
-    "done": 14,
+    "done": 15,
     "in_progress": 0,
-    "open": 57,
+    "open": 56,
     "total": 71
   },
   "shards": [
@@ -56,8 +56,8 @@
       "title": "Part 4 (items 10-12)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-4.json",
       "count": 3,
-      "bytes": 9096,
-      "lines": 234,
+      "bytes": 10210,
+      "lines": 254,
       "range": [
         9,
         11

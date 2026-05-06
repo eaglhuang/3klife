@@ -80,7 +80,7 @@
         "npm run typecheck",
         "npm run lint"
       ],
-      "handoff_diff_status": "upstream committed; tracking pending commit",
+      "handoff_diff_status": "upstream committed; tracking diff verified",
       "trace_artifacts": [],
       "metrics_summary": [
         "upstream commit d165def",
@@ -95,7 +95,7 @@
     "title": "上游 monorepo package skeleton",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "in-progress",
+    "status": "done",
     "type": "open-source-core",
     "phase": "ATM-1",
     "created": "2026-05-05",
@@ -123,7 +123,7 @@
       "packages/language-js",
       "workspace package config"
     ],
-    "notes": "2026-05-06 | 狀態: in-progress | 驗證: pending | 變更: vs-code-github-copilot 開始處理 AI-Atomic-Framework monorepo package skeleton | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install --package-lock=false / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 28b368a 建立 packages/core、cli、plugin-sdk、adapter-local-git、language-js、workspace package config、package list 與 skeleton validation fixture | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
@@ -153,12 +153,32 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/core",
+        "AI-Atomic-Framework/packages/cli",
+        "AI-Atomic-Framework/packages/plugin-sdk",
+        "AI-Atomic-Framework/packages/adapter-local-git",
+        "AI-Atomic-Framework/packages/language-js",
+        "AI-Atomic-Framework/scripts/validate-package-skeleton.mjs",
+        "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 28b368a",
+        "npm install --package-lock=false",
+        "npm run packages:list",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking pending commit",
       "trace_artifacts": [],
-      "metrics_summary": []
-    }
+      "metrics_summary": [
+        "upstream commit 28b368a",
+        "5 workspace packages created",
+        "package skeleton validation fixture dependency-free"
+      ]
+    },
+    "completed_at": "2026-05-06T13:38:00+08:00"
   },
   {
     "doc_id": "doc_task_0253",
