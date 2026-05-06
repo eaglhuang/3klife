@@ -9,9 +9,9 @@
     "maxPartLines": 300
   },
   "summary": {
-    "done": 32,
+    "done": 33,
     "in_progress": 0,
-    "open": 55,
+    "open": 54,
     "total": 87
   },
   "shards": [
@@ -125,157 +125,157 @@
     },
     {
       "name": "tasks-atm-part-10",
-      "title": "Part 10 (items 22-24)",
+      "title": "Part 10 (items 22-23)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-10.json",
-      "count": 3,
-      "bytes": 9714,
-      "lines": 226,
+      "count": 2,
+      "bytes": 8451,
+      "lines": 179,
       "range": [
         21,
-        23
+        22
       ]
     },
     {
       "name": "tasks-atm-part-11",
-      "title": "Part 11 (items 25-26)",
+      "title": "Part 11 (items 24-25)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-11.json",
       "count": 2,
-      "bytes": 7213,
-      "lines": 164,
+      "bytes": 6713,
+      "lines": 154,
       "range": [
-        24,
-        25
+        23,
+        24
       ]
     },
     {
       "name": "tasks-atm-part-12",
-      "title": "Part 12 (items 27-29)",
+      "title": "Part 12 (items 26-28)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-12.json",
       "count": 3,
-      "bytes": 8033,
-      "lines": 209,
+      "bytes": 9753,
+      "lines": 229,
       "range": [
-        26,
-        28
+        25,
+        27
       ]
     },
     {
       "name": "tasks-atm-part-13",
-      "title": "Part 13 (items 30-33)",
+      "title": "Part 13 (items 29-32)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-13.json",
       "count": 4,
-      "bytes": 9356,
+      "bytes": 9328,
       "lines": 264,
       "range": [
-        29,
-        32
+        28,
+        31
       ]
     },
     {
       "name": "tasks-atm-part-14",
-      "title": "Part 14 (items 34-37)",
+      "title": "Part 14 (items 33-36)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-14.json",
       "count": 4,
-      "bytes": 9788,
-      "lines": 276,
+      "bytes": 9253,
+      "lines": 274,
       "range": [
-        33,
-        36
+        32,
+        35
       ]
     },
     {
       "name": "tasks-atm-part-15",
-      "title": "Part 15 (items 38-40)",
+      "title": "Part 15 (items 37-39)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-15.json",
       "count": 3,
-      "bytes": 8463,
-      "lines": 221,
+      "bytes": 8235,
+      "lines": 212,
       "range": [
-        37,
-        39
+        36,
+        38
       ]
     },
     {
       "name": "tasks-atm-part-16",
-      "title": "Part 16 (items 41-44)",
+      "title": "Part 16 (items 40-42)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-16.json",
-      "count": 4,
-      "bytes": 9790,
-      "lines": 276,
+      "count": 3,
+      "bytes": 8469,
+      "lines": 222,
       "range": [
-        40,
-        43
+        39,
+        41
       ]
     },
     {
       "name": "tasks-atm-part-17",
-      "title": "Part 17 (items 45-47)",
+      "title": "Part 17 (items 43-46)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-17.json",
-      "count": 3,
-      "bytes": 7295,
-      "lines": 199,
+      "count": 4,
+      "bytes": 8889,
+      "lines": 261,
       "range": [
-        44,
-        46
+        42,
+        45
       ]
     },
     {
       "name": "tasks-atm-part-18",
-      "title": "Part 18 (items 48-49)",
+      "title": "Part 18 (items 47-48)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-18.json",
       "count": 2,
-      "bytes": 8109,
-      "lines": 173,
+      "bytes": 5826,
+      "lines": 141,
       "range": [
-        47,
-        48
+        46,
+        47
       ]
     },
     {
       "name": "tasks-atm-part-19",
-      "title": "Part 19 (items 50-51)",
+      "title": "Part 19 (items 49-50)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-19.json",
       "count": 2,
-      "bytes": 7124,
-      "lines": 168,
+      "bytes": 9160,
+      "lines": 193,
       "range": [
-        49,
-        50
+        48,
+        49
       ]
     },
     {
       "name": "tasks-atm-part-20",
-      "title": "Part 20 (items 52-55)",
+      "title": "Part 20 (items 51-54)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-20.json",
       "count": 4,
-      "bytes": 8618,
-      "lines": 210,
+      "bytes": 9279,
+      "lines": 238,
       "range": [
-        51,
-        54
+        50,
+        53
       ]
     },
     {
       "name": "tasks-atm-part-21",
-      "title": "Part 21 (items 56-66)",
+      "title": "Part 21 (items 55-60)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-21.json",
-      "count": 11,
-      "bytes": 10224,
-      "lines": 255,
+      "count": 6,
+      "bytes": 9232,
+      "lines": 203,
       "range": [
-        55,
-        65
+        54,
+        59
       ]
     },
     {
       "name": "tasks-atm-part-22",
-      "title": "Part 22 (items 67-71)",
+      "title": "Part 22 (items 61-71)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-22.json",
-      "count": 5,
-      "bytes": 5889,
-      "lines": 172,
+      "count": 11,
+      "bytes": 9237,
+      "lines": 271,
       "range": [
-        66,
+        60,
         70
       ]
     },

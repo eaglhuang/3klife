@@ -1,5 +1,80 @@
 [
   {
+    "doc_id": "doc_task_0289",
+    "id": "ATM-2-0007",
+    "title": "Default Governance Bundle schema",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "open-source-core",
+    "phase": "ATM-2",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "定義 WorkItem、TaskStore、ScopeLock、DocumentIndex、ShardStore、ArtifactStore、LogStore、RunReportStore、RuleGuard、Evidence/Handoff 等 governance primitives 的 upstream schema 與 interface。",
+    "related": [],
+    "depends": [
+      "ATM-2-0006"
+    ],
+    "acceptance": [
+      "governance primitives 不引用 3KLife 專用路徑",
+      "schema 可支援 local .atm layout 與外部 Jira/GitHub Issues adapter",
+      "TaskStore/LockStore/DocumentIndex/ShardStore/ArtifactStore/LogStore/RuleGuard/EvidenceStore interface 完整",
+      "TaskStore/LockStore/DocumentIndex/ShardStore/ArtifactStore/LogStore/RuleGuard/EvidenceStore interface 完整",
+      "schemas/governance/work-item.schema.json 可驗證 alpha0 first task",
+      "schemas/governance/scope-lock.schema.json 可驗證最小 lock evidence",
+      "alpha0 minimal task/lock/evidence fixture 不依賴完整 reference plugins",
+      "alpha0 governance schema 僅含 WorkItem / ScopeLock / 最小 Evidence；upgrade-proposal / review-queue schema 標記為 alpha1 並獨立檔案"
+    ],
+    "deliverables": [
+      "packages/plugin-sdk/governance interfaces 規格",
+      "schemas/governance/*.schema.json 規格",
+      "docs/ADAPTER_GUIDE.md governance interface 草案",
+      "ArtifactStore / LogStore / RunReportStore / MarkdownJsonStateStore contract 入口，詳細 schema 可由 ATM-2-0009 落地",
+      "schemas/governance/work-item.schema.json",
+      "schemas/governance/scope-lock.schema.json",
+      "alpha0 minimal governance fixture"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 schema-first 範圍：WorkItem / ScopeLock 為 alpha0 最小治理，完整 Default Governance Bundle 移到 alpha1 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM governance split 開卡",
+      "summary": "定義 Default Governance Bundle 所需的通用治理 primitives schema 與 adapter interface。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0006"
+    },
+    "contracts": {
+      "input": [
+        "ATM Plugin SDK 已規劃 ProjectAdapter/LanguageAdapter",
+        "Default Governance Bundle 已決議納入 upstream 完整性"
+      ],
+      "output": [
+        "governance primitives schema",
+        "governance adapter interface",
+        "default .atm layout contract"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退 upstream governance schema/interface 草案；不得引入 3KLife 私有路徑。",
+      "execution_steps": [
+        "盤點 governance primitives",
+        "定義 schema 與 interface",
+        "補 positive/negative fixtures",
+        "更新 ADAPTER_GUIDE"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0288",
     "id": "ATM-2-0008",
     "title": "Local governance reference plugins",
@@ -66,91 +141,6 @@
         "實作 task/lock/index/shard/rule/evidence plugins",
         "補 CLI smoke test",
         "補 standalone example"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0291",
-    "id": "ATM-2-0009",
-    "title": "Artifact Log Evidence Store contracts",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "open-source-core",
-    "phase": "ATM-2",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "定義 ATM 通用 ArtifactStore、LogStore、Markdown/JSON state store、RunReportStore、ContextSummary 與 EvidenceStore contract，讓 AI 常用 artifacts、md/json 文件與系統 log 都能被治理與回放。",
-    "related": [],
-    "depends": [
-      "ATM-2-0007"
-    ],
-    "acceptance": [
-      "ArtifactStore/LogStore/RunReportStore schema 不引用 3KLife 路徑",
-      "default .atm layout 可保存 artifacts、logs、reports、context summaries",
-      "3KLife adapter 可映射 artifacts/、docs/*.md、docs/*.json、project logs 到同一 interface",
-      "Markdown/JSON state files 可被 validate、index、summarize 並映射到 host repo",
-      "schemas/governance/artifact.schema.json 可描述 generated output",
-      "schemas/governance/evidence.schema.json 可描述 validation evidence",
-      "schemas/governance/context-summary.schema.json 可描述 handoff/context budget 摘要",
-      "schemas/governance/adapter-report.schema.json 可描述 3KLife shadow/parity report",
-      "evidence schema 增 evidenceType: usage-feedback / quality-baseline / quality-comparison / rollback-proof 四種",
-      "所有 evidence 需可被 atm replay 重新驗證（schema 內含 reproducibility 欄位）"
-    ],
-    "deliverables": [
-      "schemas/governance/artifact-store.schema.json",
-      "schemas/governance/log-store.schema.json",
-      "schemas/governance/run-report.schema.json",
-      "packages/plugin-artifacts 或 plugin-evidence",
-      "docs/ADAPTER_GUIDE.md artifact/log mapping 草案",
-      "packages/plugin-state-files",
-      "schemas/governance/state-file-store.schema.json",
-      "schemas/governance/artifact.schema.json",
-      "schemas/governance/evidence.schema.json",
-      "schemas/governance/context-summary.schema.json",
-      "schemas/governance/adapter-report.schema.json",
-      "schemas/governance/evidence/usage-feedback.schema.json",
-      "schemas/governance/evidence/quality-baseline.schema.json",
-      "schemas/governance/evidence/quality-comparison.schema.json",
-      "schemas/governance/evidence/rollback-proof.schema.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 Artifact/Evidence、ContextSummary、AdapterReport schema-first 要求 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM governance split 開卡",
-      "summary": "把 AI 常用 artifacts、md/json 狀態檔與系統 log 納入 ATM 通用治理 contract。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0007"
-    },
-    "contracts": {
-      "input": [
-        "Default Governance Bundle schema 已規劃",
-        "AI agent 需要可回放 artifacts/logs/evidence"
-      ],
-      "output": [
-        "ArtifactStore/LogStore/RunReportStore schema",
-        "default .atm artifact/log layout",
-        "3KLife mapping guidance"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退 artifact/log/evidence schema 與 reference plugin；不得引入 3KLife 私有路徑。",
-      "execution_steps": [
-        "盤點 artifacts/log/md/json 類型",
-        "定義 store schema",
-        "補 default layout",
-        "補 adapter mapping 指南"
       ]
     },
     "harness_evidence": {

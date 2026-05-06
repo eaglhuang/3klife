@@ -1,5 +1,104 @@
 [
   {
+    "id": "ATM-2.5-0003",
+    "title": "Multi-Agent 兼容性驗證：confidence gate",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-2.5",
+    "type": "confidence-gate",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0305",
+    "depends": [],
+    "description": "依 multi-agent-compatibility-matrix.md 執行 5 種 AI agent 的 confidence 測試；此卡不再阻塞 alpha0，alpha0 release blocker 僅保留 deterministic profile check。",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 將 multi-agent alpha gate 降級為 confidence gate；alpha0 release blocker 僅保留 deterministic profile check | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
+    "acceptance": [
+      "5 個 agent confidence report 皆有結果檔；不要求 3/5 全 true 才能釋出 alpha0",
+      "失敗 agent 有 issue link 與修復計畫，並標記是否阻塞 alpha1",
+      "upgrade --propose dry-run confidence 為 advisory，不得作為 alpha0 release blocker"
+    ],
+    "deliverables": [
+      "Claude Code：atm self-host-alpha --agent claude-code 產生 confidence report",
+      "Cursor：manual run 產生 confidence report",
+      "Aider：aider --message AGENTS.md 跑 confidence workflow",
+      "GitHub Copilot Agent：gh copilot agent run 產生 confidence report",
+      "OpenAI Assistants API：node tests/agents/openai-assistant.test.js 產生 confidence report",
+      "tests/agents/results/<agent>-<timestamp>.json 結果記錄",
+      "docs/multi-agent-results.md 公開結果摘要"
+    ]
+  },
+  {
+    "id": "ATM-3-0006",
+    "title": "task-lock.js adapter 化：接入 ATM LockAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0306",
+    "depends": [
+      "ATM-2.5-0002",
+      "ATM-3-0001"
+    ]
+  },
+  {
+    "id": "ATM-3-0007",
+    "title": "compute-gate.js adapter 化：接入 ATM GateAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0307",
+    "depends": [
+      "ATM-3-0006"
+    ]
+  },
+  {
+    "id": "ATM-3-0008",
+    "title": "doc-id-registry.js adapter 化：接入 ATM DocumentIndexAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0308",
+    "depends": [
+      "ATM-3-0006"
+    ]
+  },
+  {
+    "id": "ATM-3-0009",
+    "title": "shard-manager.js adapter 化：接入 ATM ShardAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0309",
+    "depends": [
+      "ATM-3-0006"
+    ]
+  },
+  {
+    "id": "ATM-3-0010",
+    "title": "task-card-opener.js adapter 化：接入 ATM TaskAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0310",
+    "depends": [
+      "ATM-3-0006"
+    ]
+  },
+  {
     "id": "ATM-3-0011",
     "title": "encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter",
     "status": "open",

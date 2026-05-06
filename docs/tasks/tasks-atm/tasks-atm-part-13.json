@@ -1,5 +1,70 @@
 [
   {
+    "doc_id": "doc_task_0266",
+    "id": "ATM-3-0003",
+    "title": "compute-gate ATM profile adapter integration",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "adapter",
+    "phase": "ATM-3",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "把 upstream ATM validate/police/hash-lock 接入 3KLife compute-gate profile。",
+    "related": [],
+    "depends": [
+      "ATM-3-0002"
+    ],
+    "acceptance": [
+      "standard gate 不受影響",
+      "atm profile 只在 upstream CLI 可用後啟用",
+      "失敗訊息可指出 atom/spec/adapter 問題"
+    ],
+    "deliverables": [
+      "tools_node/compute-gate-config.json 新增 atm profile",
+      "atm-police/atm-hash-lock gate wrapper",
+      "failure-as-prompt 輸出"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "把 upstream ATM validate/police/hash-lock 接入 3KLife compute-gate profile。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0002"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "tools_node/compute-gate-config.json 新增 atm profile",
+        "atm-police/atm-hash-lock gate wrapper",
+        "failure-as-prompt 輸出"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0267",
     "id": "ATM-3-0004",
     "title": "doc-id 與 encoding adapter integration",
@@ -178,71 +243,6 @@
         "docs/ai_atomic_framework/html-to-ucuf-case-study.md",
         "case study scope/non-goals",
         "domain plugin list"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0270",
-    "id": "ATM-4-0002",
-    "title": "H2U legacy baseline 與 regression matrix",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "case-study",
-    "phase": "ATM-4",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "凍結 H2U baseline，建立 regression matrix 與 known gap plugin 輸入格式。",
-    "related": [],
-    "depends": [
-      "ATM-4-0001"
-    ],
-    "acceptance": [
-      "active-contract/fidelity-contract baseline 可重現",
-      "known gap 不作為永久白名單",
-      "變更前後可比較 score delta"
-    ],
-    "deliverables": [
-      "tools_node/atomic-framework/fixtures/legacy-baseline",
-      "docs/ai_atomic_framework/h2u-regression-matrix.md",
-      "baseline summary artifact"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "凍結 H2U baseline，建立 regression matrix 與 known gap plugin 輸入格式。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0001"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "tools_node/atomic-framework/fixtures/legacy-baseline",
-        "docs/ai_atomic_framework/h2u-regression-matrix.md",
-        "baseline summary artifact"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
