@@ -1,6 +1,8 @@
 <!-- doc_id: doc_other_0029 -->
 # AI Atomic Framework：可獨立開源的 AI Vibe Coding 原子化治理框架 Roadmap
 
+> ⚠️ **historical document** — 本文件為理論藍圖，**不得直接作為開工準則**。任務代號、路徑、Week plan 僅保留概念參考。實作以 `AI原子框架開發計畫書.md`（active）為準。
+>
 > 版本：v0.2 integration  
 > 目的：建立一套可獨立發布到 `https://github.com/eaglhuang/AI-Atomic-Framework` 的「原子化治理框架」，讓任何技術棧中的 AI 產出都可以被拆解、約束、驗證、索引、重用、接入既有系統，避免大型工程在多輪 AI 修改後發生方向漂移、規則失控、品質退轉與重做循環。
 > 定位：本文件是上游開源框架藍圖；任何專案特定工具、遊戲引擎、任務卡系統或 legacy 案例，都只能透過 Adapter / Plugin / Example 接入，不得成為 core 的隱性前提。

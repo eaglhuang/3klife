@@ -21,19 +21,23 @@ ATM upstream 開發期間（Phase B0–B3，約 6 週），3KLife 既有 `H2U-RE
 
 ## 1. Freeze List（ATM 預定動區）
 
-> 在 ATM-3 / ATM-6 任務卡開卡 **之後**、ATM-6 全部完成 **之前**，下列檔案中的特定區塊進入「ATM 預定動區」。3KLife 端在此期間 **只能 bug fix，不能 refactor**。
+> 在對應 **ATM-4 case study 任務** 開卡 **之後**、該任務完成 **之前**，下列檔案中的特定區塊進入「ATM 預定動區」。3KLife 端在此期間 **只能 bug fix，不能 refactor**。
+>
+> ⚠️ **alpha0 gate 前僅 reserved（warning only）**：self-hosting alpha0 deterministic gate（ATM-2.5-0002）未全綠前，所有 freeze 條目僅為 warning 提醒，不得阻擋已核准的 H2U / PROG 任務。具體 ATM-4 任務進入 `in-progress` 且 task-lock 帶 `--files` 後，才升級為 hard block。
+
+> ℹ️ **任務代號說明**：helper atom 抽取屬 ATM-4（H2U case study 階段），而非 ATM-3（3KLife adapter）或 ATM-6（ecosystem）。具體 ATM-4-* 卡號於 ATM-4 開卡時補入；目前以函式名稱識別。
 
 ### 1.1 全檔級凍結
 | 檔案 | 凍結原因 | 凍結期間 |
 |---|---|---|
-| `tools_node/lib/dom-to-ui/html-parser.js` | ATM-3-0004 預定整檔包成 adapter atom | ATM-3-0004 開卡 → ATM-6-0004 完成 |
+| `tools_node/lib/dom-to-ui/html-parser.js` | ATM-4 case study 任務預定整檔包成 adapter atom | 對應 ATM-4 任務開卡 → 任務完成 |
 
 ### 1.2 函式級凍結（draft-builder.js 內）
-| 函式 / 區塊 | 對應 ATM 卡 | 凍結期間 |
+| 函式 / 區塊 | 對應 ATM 階段 | 凍結期間 |
 |---|---|---|
-| `normalizeCssColor` 與其鄰近色彩 helper | ATM-3-0001 / ATM-6-0001 | ATM-3-0001 開卡 → ATM-6-0001 完成 |
-| `parsePx` (~L1716) / `parseSvgNumber` (~L1328) / `resolveLength` (~L1733) | ATM-3-0002 / ATM-6-0002 | ATM-3-0002 開卡 → ATM-6-0002 完成 |
-| `parseFragmentList` (~L869) | ATM-3-0003 / ATM-6-0003 | ATM-3-0003 開卡 → ATM-6-0003 完成 |
+| `normalizeCssColor` 與其鄰近色彩 helper | ATM-4 case study（具體 ID 開卡後補入） | 對應 ATM-4 任務開卡 → 任務完成 |
+| `parsePx` (~L1716) / `parseSvgNumber` (~L1328) / `resolveLength` (~L1733) | ATM-4 case study（具體 ID 開卡後補入） | 對應 ATM-4 任務開卡 → 任務完成 |
+| `parseFragmentList` (~L869) | ATM-4 case study（具體 ID 開卡後補入） | 對應 ATM-4 任務開卡 → 任務完成 |
 
 ### 1.3 凍結期間允許的動作
 - ✅ Bug fix（如 NPE / wrong-type 修正）— 必須在任務卡 notes 註明「coexistence-bug-fix」
@@ -82,14 +86,14 @@ ATM upstream 開發期間（Phase B0–B3，約 6 週），3KLife 既有 `H2U-RE
 
 ### 3.1 結構性原則
 - **Cocos runtime / UCUF schema 改動 → PROG-2-* > 任何 ATM-***
-- **draft-builder.js 主幹拆檔 → H2U-REFACTOR-0001/0002 > ATM-3/6**
-- **純 helper 抽取 → ATM-3/6 > 任何 H2U-***
+- **draft-builder.js 主幹拆檔 → H2U-REFACTOR-0001/0002 > ATM-4 case study**
+- **純 helper 抽取 → ATM-4 case study > 任何 H2U-***
 
 ### 3.2 具體仲裁案例
 | 情境 | 仲裁結果 | 理由 |
 |---|---|---|
-| H2U-REFACTOR-0001（拆 draft-builder）vs ATM-6-0001（替換 normalizeCssColor 呼叫點） | H2U-REFACTOR-0001 優先 | ATM 等 H2U 拆完後 call site 位置才穩定 |
-| H2U-REFACTOR-0002（規則治理拆檔）vs ATM-3-0001（normalizeCssColor 抽 atom） | 同檔案不同區塊可並行；不同區塊 cross-shard 通過 | 兩者改動範圍不重疊 |
+| H2U-REFACTOR-0001（拆 draft-builder）vs ATM-4 case study（替換 normalizeCssColor 呼叫點） | H2U-REFACTOR-0001 優先 | ATM 等 H2U 拆完後 call site 位置才穩定 |
+| H2U-REFACTOR-0002（規則治理拆檔）vs ATM-4 case study（normalizeCssColor 抽 atom） | 同檔案不同區塊可並行；不同區塊 cross-shard 通過 | 兩者改動範圍不重疊 |
 | PROG-2-0010（補 fixture）vs ATM-4-0002（用同 fixture 做 regression） | PROG-2-0010 優先 | ATM-4 需要 fixture 已存在才能跑 regression |
 | H2U-REFACTOR-0006（rule-registry 補 fidelity）vs ATM-3 任何 atom | H2U-REFACTOR-0006 優先 | rule-registry 是規則真相，atom 必須遵循 |
 
@@ -130,7 +134,7 @@ node tools_node/task-lock.js check-cross-shard <task-id> --files <files>
 | Freeze list 變更 | 本文件維護者 | 修改本文件 §1 並 commit |
 
 ### 5.2 衝突早期警報
-- ATM-3 / ATM-6 任務卡開卡時，同步在 `tasks-atm.json` 標 `coexistence: { freezes: [...files...] }`
+- ATM-4 case study 任務卡開卡時，同步在 `tasks-atm.json` 標 `coexistence: { freezes: [...files...] }`
 - 3KLife 工程師在改 helper 前，先 `node tools_node/task-lock.js list --shard atm` 看是否撞 freeze list
 
 ---
@@ -139,8 +143,8 @@ node tools_node/task-lock.js check-cross-shard <task-id> --files <files>
 
 當下列條件全部滿足時，本協議自動失效：
 
-- [ ] ATM-6-0001 / 0002 / 0003 / 0004 全部 status=done
-- [ ] 第一批 atom（normalizeCssColor / parseCssLength / parseFragmentList / html-parser adapter）正式由 AtomicInterface 提供
+- [ ] 對應 ATM-4 case study 任務（normalizeCssColor / parseCssLength / parseFragmentList / html-parser adapter）全部 status=done
+- [ ] 第一批 atom 正式由 AtomicInterface 提供
 - [ ] `draft-builder.js` 與 `html-parser.js` 完全經過 ATM rule guard 一次驗證
 - [ ] 3KLife 端進入 S3/S4 consumption stage（既有治理工具 adapter 化）
 
@@ -151,7 +155,7 @@ node tools_node/task-lock.js check-cross-shard <task-id> --files <files>
 ## 7. 落地檢查表
 
 - [ ] 本文件落地並分配 doc_id
-- [ ] `tasks-atm.json` 中 ATM-3-0001~0004、ATM-6-0001~0004 標 `coexistence` 區塊
+- [ ] `tasks-atm.json` 中 ATM-4 case study 對應任務卡（開卡後補具體 ID）標 `coexistence` 區塊
 - [ ] `tools_node/task-lock.js` 加 cross-shard 檢查（屬 3KLife 端，可開 ATM-0-0012 補強卡）
 - [ ] H2U-REFACTOR-0001 / 0002 任務卡 notes 補 `coexistence: ATM-3 預定切 normalizeCssColor / parseCssLength / parseFragmentList`
 - [ ] 每週 ATM upstream 進度同步點建立
