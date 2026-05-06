@@ -93,13 +93,13 @@
     "title": "Zero-install Agent Bootstrap Pack",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "open-source-core",
     "phase": "ATM-1",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T15:40:29+08:00",
+    "started_by_agent": "vs-code-github-copilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -119,7 +119,7 @@
       "examples/agent-bootstrap/",
       "atm init --adopt default profile 說明"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 由 ATM-0-0009 開出 zero-install agent bootstrap 補強卡 | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm run validate:bootstrap / npm test / npm run typecheck / npm run lint pass；獨立 sandbox clone AI-learning-notes 後 init/status/validate pass，正確辨識 static-site | 變更: AI-Atomic-Framework upstream commit 1702bfd 新增 init --adopt default、bootstrap templates、agent-bootstrap example、one-line kickoff 與 bootstrap validator | 阻塞: 3KLife compute-gate standard 仍受既有 docs/rag_etl_pipeline_public*.html 刪檔影響",
     "brief": {
       "style": "harn-rich",
       "label": "ATM governance split 開卡",
@@ -147,76 +147,39 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/cli/src/commands/init.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/bootstrap.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
+        "AI-Atomic-Framework/templates/root-drop/AGENTS.md",
+        "AI-Atomic-Framework/templates/root-drop/.atm/profile/default.md",
+        "AI-Atomic-Framework/examples/agent-bootstrap/README.md",
+        "AI-Atomic-Framework/scripts/validate-bootstrap.mjs",
+        "AI-Atomic-Framework/README.md",
+        "C:/Users/User/atm-bootstrap-sandbox/AI-learning-notes/.atm/config.json",
+        "C:/Users/User/atm-bootstrap-sandbox/AI-learning-notes/AGENTS.md"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 1702bfd",
+        "npm run validate:bootstrap",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint",
+        "sandbox clone https://github.com/eaglhuang/AI-learning-notes",
+        "node packages/cli/src/atm.mjs init --cwd <sandbox-host> --adopt default --task \"Bootstrap ATM in AI learning notes\"",
+        "node packages/cli/src/atm.mjs status --cwd <sandbox-host>",
+        "node packages/cli/src/atm.mjs validate --cwd <sandbox-host>"
+      ],
+      "handoff_diff_status": "upstream committed; sandbox verified; tracking diff pending commit",
       "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0258",
-    "id": "ATM-2-0001",
-    "title": "Core Spec loader/parser",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "manager",
-    "phase": "ATM-2",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "實作 core spec loader/parser，讀取 spec、套 schema、產 normalized model。",
-    "related": [],
-    "depends": [
-      "ATM-1-0003"
-    ],
-    "acceptance": [
-      "valid/invalid fixtures 全覆蓋",
-      "錯誤訊息指出缺欄位與路徑",
-      "不讀 host-specific config"
-    ],
-    "deliverables": [
-      "packages/core/src/spec/parse-spec.*",
-      "unit tests",
-      "error-as-prompt report format"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "實作 core spec loader/parser，讀取 spec、套 schema、產 normalized model。",
-      "position": "ATM-2",
-      "prereq": "ATM-1-0003"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "packages/core/src/spec/parse-spec.*",
-        "unit tests",
-        "error-as-prompt report format"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
+      "metrics_summary": [
+        "init --adopt default seeds AGENTS/profile/task/lock/guard/evidence bundle",
+        "bootstrap validator passes in validate/test/typecheck/lint modes",
+        "real static-site host repo is classified as static-site, packageManager=none, hostWorkflow=file-publish",
+        "one-line AI kickoff prompt is emitted in README, AGENTS, and project probe",
+        "host repo does not need to become a Node.js project before ATM bootstrap"
       ]
     },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
+    "completed_at": "2026-05-06T15:48:51+08:00"
   }
 ]

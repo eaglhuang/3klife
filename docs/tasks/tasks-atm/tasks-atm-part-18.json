@@ -1,5 +1,150 @@
 [
   {
+    "doc_id": "doc_task_0297",
+    "id": "ATM-2-0011",
+    "title": "Context budget guard",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "open-source-core",
+    "phase": "ATM-2",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 upstream context budget guard，使 ATM 能獨立治理 token/context 預算、重量文件讀取策略、摘要替代與超額 hard-stop / summarize 流程。",
+    "related": [
+      "ATM-0-0011",
+      "ATM-2-0010"
+    ],
+    "depends": [
+      "ATM-2-0007",
+      "ATM-2-0008",
+      "ATM-2-0010"
+    ],
+    "acceptance": [
+      "定義 ContextBudgetGuard 或等效 governance primitive",
+      "提供 protected surface 與重量資產的 budget policy",
+      "定義 summarize/hard-stop/report schema",
+      "可與 encoding 與 neutrality/boundary guard 收斂成 Agent Governance Bundle"
+    ],
+    "deliverables": [
+      "context budget guard spec",
+      "budget policy schema",
+      "summary/report layout",
+      "standalone smoke / CI guidance"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 context budget guard 任務 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM governance bundle 開卡",
+      "summary": "建立 upstream context budget guard，讓 ATM 可獨立治理 token/context 預算與摘要節流。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0007、ATM-2-0008、ATM-2-0010"
+    },
+    "contracts": {
+      "input": [
+        "governance schema 與 local reference plugins 已定義",
+        "neutrality/boundary guard 已規劃 code/docs surfaces"
+      ],
+      "output": [
+        "context budget primitive",
+        "budget policy schema",
+        "summary/hard-stop/report contract"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退 context budget guard 規格；不得把 3KLife 的 keep/token guard 規則直接寫死成 upstream 私有前提。",
+      "execution_steps": [
+        "定義 context budget primitive",
+        "定義 budget policy 與 report schema",
+        "定義 summarize/hard-stop 流程",
+        "補 standalone smoke guidance"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "id": "ATM-0-0012",
+    "title": "task-lock cross-shard 重複鎖定檢查",
+    "status": "done",
+    "priority": "P0",
+    "phase": "ATM-0",
+    "type": "governance",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0298",
+    "depends": [
+      "ATM-0-0001"
+    ]
+  },
+  {
+    "id": "ATM-1.5-0001",
+    "title": "Seed-as-Spec：種子以自身格式自我描述",
+    "status": "open",
+    "priority": "P0",
+    "phase": "ATM-1.5",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0299",
+    "depends": [
+      "ATM-1-0006",
+      "ATM-1-0007"
+    ]
+  },
+  {
+    "id": "ATM-1.5-0002",
+    "title": "Seed 自我驗證：產生第一份 atomic-registry.json",
+    "status": "open",
+    "priority": "P0",
+    "phase": "ATM-1.5",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0300",
+    "depends": [
+      "ATM-1.5-0001"
+    ]
+  },
+  {
+    "id": "ATM-1.5-0003",
+    "title": "ATM-CORE-0001 正式收編：舊 seed 標 @deprecated",
+    "status": "open",
+    "priority": "P0",
+    "phase": "ATM-1.5",
+    "type": "governance",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0301",
+    "depends": [
+      "ATM-1.5-0002"
+    ]
+  },
+  {
+    "id": "ATM-2-0012",
+    "title": "neutralityScanner atom + CI（ATM-CORE-0003）",
+    "status": "open",
+    "priority": "P0",
+    "phase": "ATM-2",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0302",
+    "depends": [
+      "ATM-2-0001",
+      "ATM-1.5-0003"
+    ]
+  },
+  {
     "id": "ATM-2.5-0001",
     "title": "Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI",
     "status": "open",
@@ -140,161 +285,5 @@
     "depends": [
       "ATM-3-0006"
     ]
-  },
-  {
-    "id": "ATM-3-0012",
-    "title": "task-scope / import-boundary 規則包遷移 + @deprecated 標記",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0312",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0013",
-    "title": "finalize-agent-turn.js wrapper 接入 ATM run envelope",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0313",
-    "depends": [
-      "ATM-3-0006",
-      "ATM-3-0007"
-    ]
-  },
-  {
-    "doc_id": "doc_task_0314",
-    "id": "ATM-0-0013",
-    "title": "tasks-atm.json thin index 與細分片",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "governance",
-    "phase": "ATM-0",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T01:03:22.4082504+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 docs/tasks/tasks-atm.json 從單一大型 aggregate 改為 thin index stub，完整 ATM 任務改存於 docs/tasks/tasks-atm/ 之下的 part 檔，並把每個分片收斂到不超過 300 行、約 10 KB。",
-    "related": [
-      "ATM-3-0009"
-    ],
-    "depends": [
-      "ATM-0-0001"
-    ],
-    "acceptance": [
-      "docs/tasks/tasks-atm.json 不再保存完整 tasks array，而是 thin index stub",
-      "docs/tasks/tasks-atm/tasks-atm-part-*.json 每檔不超過 300 行、約 10 KB",
-      "task-card-opener 在 json-out=docs/tasks/tasks-atm.json 時仍可正確 upsert 任務並重建 thin index",
-      "docs/tasks/README.md 補上 thin index 與 rebuild 指令"
-    ],
-    "deliverables": [
-      "docs/tasks/tasks-atm.json thin index stub",
-      "docs/tasks/tasks-atm/.shardrc.json",
-      "docs/tasks/tasks-atm/tasks-atm-part-*.json",
-      "docs/tasks/README.md 的 thin index / rebuild 說明",
-      "tools_node/lib/tasks-atm-shard-store.js",
-      "tools_node/rebuild-tasks-atm-auto-parts.js thin-index 寫入鏈"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: thin-index rebuild pass；task-card-opener thin-index upsert pass；16 個 part 皆 <=300 行 / <=10 KB；encoding-touched pass；quick gate 3/3 pass；standard gate 僅被既有 unrelated dirty task-scope 擋住 | 變更: 將 tasks-atm.json 改為 thin index，接上 shard store 寫入鏈，並把分片門檻收緊到 300 行 / 10 KB | 阻塞: none",
-    "brief": {
-      "style": "classic",
-      "label": "",
-      "summary": "",
-      "position": "",
-      "prereq": ""
-    },
-    "contracts": {
-      "input": [],
-      "output": [],
-      "validation_cmd": "",
-      "rollback_hint": "",
-      "execution_steps": []
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0315",
-    "id": "ATM-0-0014",
-    "title": "ATM 瘦身再開工與規劃真相收斂",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "governance",
-    "phase": "ATM-0",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T07:57:58+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 ATM 規劃從完整治理生態先瘦身為 alpha0/alpha1，補上文件真相收斂、核心 schema、confidence gate、3KLife shadow adapter、OSS 實務文件與 H2U dry-run 閘門。",
-    "related": [
-      "ATM-1-0003",
-      "ATM-2-0007",
-      "ATM-2-0008",
-      "ATM-2-0009",
-      "ATM-3-0001",
-      "ATM-4-0005",
-      "ATM-5-0004",
-      "ATM-6-0005"
-    ],
-    "depends": [
-      "ATM-0-0013"
-    ],
-    "acceptance": [
-      "主計畫標出 active/companion/historical 收斂原則與任務數修正",
-      "alpha0/alpha1 成功標準寫入主規劃與 open-source extraction plan",
-      "既有 schema、adapter、release、security、H2U 任務卡補上缺口",
-      "tasks-atm source 與 auto-parts 可重建且通過 encoding/standard gate"
-    ],
-    "deliverables": [
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md 補強",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md 補強",
-      "docs/agent-briefs/tasks/ATM-0-0014.md",
-      "相關既有 ATM 任務卡補充",
-      "tasks-atm source 與 auto-parts 同步"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: tasks-atm source=71/auto-parts=5；crossref rebuild pass；encoding-touched pass；compute-gate standard 8/8 pass | 變更: 補 ATM 瘦身再開工規劃、alpha0/alpha1、truth convergence、confidence gate、shadow adapter、OSS/H2U 任務缺口 | 阻塞: none",
-    "brief": {
-      "style": "classic",
-      "label": "",
-      "summary": "",
-      "position": "",
-      "prereq": ""
-    },
-    "contracts": {
-      "input": [],
-      "output": [],
-      "validation_cmd": "",
-      "rollback_hint": "",
-      "execution_steps": []
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    },
-    "completed_at": "2026-05-06T08:08:07+08:00"
   }
 ]

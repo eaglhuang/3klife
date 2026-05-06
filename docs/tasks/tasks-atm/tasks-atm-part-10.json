@@ -1,5 +1,80 @@
 [
   {
+    "doc_id": "doc_task_0288",
+    "id": "ATM-2-0008",
+    "title": "Local governance reference plugins",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "open-source-core",
+    "phase": "ATM-2",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "實作 upstream 預設治理套件，讓空白 repo 不依賴 3KLife 也能使用 task、lock、doc index、shard、artifact、log、rule guard 與 evidence workflow。",
+    "related": [],
+    "depends": [
+      "ATM-2-0007"
+    ],
+    "acceptance": [
+      "空白 repo 可用 atm init 建立 .atm governance layout",
+      "可用 CLI 建 task、lock scope、建立 doc index、切 shard、跑 rule guard、產 evidence",
+      "reference plugins 不被 packages/core 直接 import",
+      "可用 CLI 建 task、lock scope、建立 doc index、切 shard、保存 artifact/log/evidence、跑 rule guard",
+      "reference plugins 標記為 alpha1 gate，不阻塞 alpha0",
+      "alpha0 只使用最小 task/lock/evidence smoke"
+    ],
+    "deliverables": [
+      "packages/plugin-task-cards",
+      "packages/plugin-doc-index",
+      "packages/plugin-doc-shard",
+      "packages/plugin-rule-guard",
+      "packages/adapter-local-fs-git",
+      "examples/governance-standalone",
+      "packages/plugin-artifacts",
+      "packages/plugin-logs",
+      ".atm/artifacts、.atm/logs、.atm/reports default store 與 smoke fixture"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 將完整 reference plugins 移到 alpha1；alpha0 只要求最小 task/lock/evidence smoke | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM governance split 開卡",
+      "summary": "建立 upstream Default Governance Bundle 的 local reference plugins，讓 ATM 在空白 repo 能完整運作。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0007"
+    },
+    "contracts": {
+      "input": [
+        "governance primitives schema 已定義",
+        "Core 不得硬依賴 reference plugins"
+      ],
+      "output": [
+        "local governance reference plugins",
+        "standalone governance example",
+        "CLI governance commands smoke test"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退 reference plugin package；packages/core 不可 import plugin 實作。",
+      "execution_steps": [
+        "建立 local .atm layout",
+        "實作 task/lock/index/shard/rule/evidence plugins",
+        "補 CLI smoke test",
+        "補 standalone example"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0291",
     "id": "ATM-2-0009",
     "title": "Artifact Log Evidence Store contracts",
@@ -144,72 +219,6 @@
         "跑 adapter/case 驗證",
         "回寫 tracking notes",
         "驗證 3KLife 不搬動既有治理工具，只以 adapter 消費 upstream interface"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0265",
-    "id": "ATM-3-0002",
-    "title": "3KLife ATM config 與 bootstrap wrapper",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "adapter",
-    "phase": "ATM-3",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
-    "related": [],
-    "depends": [
-      "ATM-3-0001"
-    ],
-    "acceptance": [
-      "node tools_node/atomic-framework/atm-cli.js status 可呼叫 upstream",
-      "workbench/registry path 指向本 repo local 區",
-      "不 fork core source",
-      "shadow wrapper 預設 dry-run / report-only，不替換現有 tools_node CLI"
-    ],
-    "deliverables": [
-      "tools_node/atomic-framework/bootstrap.js",
-      "atm.config.*",
-      "local workbench path 設定"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 bootstrap wrapper 只能 shadow upstream CLI，不得直接覆蓋 3KLife 現有入口 | 阻塞: ATM-3-0001 shadow report 未完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
-      "position": "ATM-3",
-      "prereq": "ATM-3-0001"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "tools_node/atomic-framework/bootstrap.js",
-        "atm.config.*",
-        "local workbench path 設定"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {
