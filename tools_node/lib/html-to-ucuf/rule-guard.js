@@ -13,6 +13,8 @@ const {
   scanCoreSource,
   scanSkillDoc,
   scanDraftBuilderRegistry,
+  validateDraftBuilderStageRules,
+  validatePlan5RegistryContracts,
   validateWorkflowSummary,
   validateCaptureReportArtifact,
   validateRadarGeometryFromSummary,
@@ -34,6 +36,8 @@ function runRuleGuard(options) {
     scanCoreSource(repoRoot, violations);
     scanSkillDoc(repoRoot, violations);
     scanDraftBuilderRegistry(repoRoot, violations);
+    validateDraftBuilderStageRules(repoRoot, violations);
+    validatePlan5RegistryContracts(violations);
   }
   if (workflowSummary) {
     validateWorkflowSummary(repoRoot, workflowSummary, sourceHtml, violations, warnings);

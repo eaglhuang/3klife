@@ -2,10 +2,12 @@
 doc_id: doc_task_0229
 id: "H2U-REFACTOR-0006"
 priority: "P2"
-owner: "Unassigned"
-status: "in-progress"
+owner: "vs-insiders-gpt-5.4-mini"
+status: "done"
 started_at: "2026-05-05T12:00:00+08:00"
 started_by_agent: "ClaudeCode_claude-sonnet-4-6"
+completed_at: "2026-05-06T14:46:11.0367124+08:00"
+completed_by_agent: "vs-insiders-gpt-5.4-mini"
 type: "rule-governance"
 phase: "G"
 created: "2026-05-05"
@@ -14,7 +16,7 @@ related_cards:
   - "H2U-REFACTOR-0002"
   - "PROG-2-0007"
 depends: []
-notes: "2026-05-05 | 狀態: in-progress | 來源: html_skill_postmortem (doc_other_0026) §B2 / §E1 / §E2 | 變更: ClaudeCode 已補入四維度量化公式、11 個 exemptCategories、4 個 knownGaps，並寫入 rule-registry.json | 阻塞: 無（rule-guard validator 與 self-test fixture 仍待後續 impl）"
+notes: "2026-05-06 | 狀態: done | 延續: ClaudeCode 先前已補入 fidelityThresholds / exemptCategories / knownGaps / draftBuilderStageRules registry data；本次補完 rule-guard enforcement、四維度 gate 與 zone-ownership known-gap 檢查、CLI help、self-test coverage | 驗證: node tools_node/test/dom-to-ui-self-test.js --group html-to-ucuf-fidelity-contract；node tools_node/test/dom-to-ui-self-test.js --group html-to-ucuf-active-contract（ALL PASS） | 阻塞: 無"
 ---
 
 # [H2U-REFACTOR-0006] rule-registry 補 fidelityThresholds + knownGaps + draftBuilderStageRules 自動驗證

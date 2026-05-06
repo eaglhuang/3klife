@@ -2424,6 +2424,12 @@ function runHtmlToUcufActiveContractGroup() {
 
 function runHtmlToUcufFidelityContractGroup() {
   const formalPackage = { mainHtml: 'index.html', tokens: 'ui-design-tokens.json', css: 'colors_and_type.css' };
+  const passedFidelityDimensions = {
+    structural: { pass: true },
+    colorFill: { pass: true },
+    layoutGeometry: { pass: true },
+    interactionSmoke: { pass: true },
+  };
   let validatorEnvironmentBlocked = false;
   const fixtureNames = [
     'history-not-story.html',
@@ -2444,6 +2450,13 @@ function runHtmlToUcufFidelityContractGroup() {
   );
   if (/story-strip|slot\.story-strip/.test(JSON.stringify(historyDraft.layoutDraft))) {
     fail('history-not-story fixture must not infer story-strip layout semantics');
+  }
+  const draftStageRules = historyDraft.skinDraft && historyDraft.skinDraft.meta && historyDraft.skinDraft.meta.draftStageRules;
+  const semanticStage = Array.isArray(draftStageRules)
+    ? draftStageRules.find((entry) => entry && entry.stage === 'semantic-extraction')
+    : null;
+  if (!semanticStage || !Array.isArray(semanticStage.ruleIds) || !semanticStage.ruleIds.includes('H2U-P4-014') || !semanticStage.testTags.includes('history-not-story')) {
+    fail(`history-not-story fixture must carry semantic draftStageRules metadata: ${JSON.stringify(draftStageRules)}`);
   }
 
   for (const name of ['radial-slide-background.html', 'multi-layer-background.html']) {
@@ -2700,6 +2713,95 @@ function runHtmlToUcufFidelityContractGroup() {
   });
   assertRule(missingPlan5Diagnosis, 'H2U-P5-003');
   assertRule(missingPlan5Diagnosis, 'H2U-P5-004');
+
+  const missingFourDimensionGate = runRuleGuard({
+    repoRoot: REPO_ROOT,
+    scanCore: false,
+    workflowSummary: {
+      debugOnly: false,
+      sourcePackage: formalPackage,
+      steps: [],
+      runtimeAuthority: { authority: 'synced-final-runtime-json' },
+      visualFidelityRisk: { status: 'pass', blockerCount: 0, violations: [] },
+      interactionRuntime: { required: false, status: 'pass', actionsBound: 0, smokeResults: [] },
+      metrics: {
+        compare: { adjustedCoverage: 0.97 },
+        htmlCocos: { runtimeVsSource: { adjustedScore: 0.96, verdict: 'pass' } }
+      },
+      verdict: { workflowPass: true },
+      nextFixes: ['emit per-dimension fidelity verdicts']
+    }
+  });
+  assertRule(missingFourDimensionGate, 'H2U-P5-F001');
+
+  withTempDir((tmp) => {
+    const missingZoneOwnershipPath = path.join(tmp, 'missing.zone-ownership.json');
+    fs.writeFileSync(missingZoneOwnershipPath, JSON.stringify({
+      screenId: 'gacha-ds3',
+      zones: [
+        { id: 'zone-1', zoneId: 'banner-bg-fill', excludedFromScore: true }
+      ]
+    }, null, 2), 'utf8');
+
+    const missingRegistryRef = runRuleGuard({
+      repoRoot: REPO_ROOT,
+      scanCore: false,
+      workflowSummary: {
+        debugOnly: false,
+        sourcePackage: formalPackage,
+        steps: [],
+        runtimeAuthority: { authority: 'synced-final-runtime-json' },
+        visualFidelityRisk: { status: 'pass', blockerCount: 0, violations: [] },
+        interactionRuntime: { required: false, status: 'pass', actionsBound: 0, smokeResults: [] },
+        fidelityDimensions: passedFidelityDimensions,
+        metrics: {
+          compare: { adjustedCoverage: 0.97 },
+          htmlCocos: { runtimeVsSource: { adjustedScore: 0.96, verdict: 'pass' } }
+        },
+        verdict: { workflowPass: true },
+        nextFixes: [],
+        paths: { zoneOwnership: missingZoneOwnershipPath }
+      }
+    });
+    assertRule(missingRegistryRef, 'H2U-P5-F002');
+  });
+
+  withTempDir((tmp) => {
+    const knownGapZoneOwnershipPath = path.join(tmp, 'known-gap.zone-ownership.json');
+    fs.writeFileSync(knownGapZoneOwnershipPath, JSON.stringify({
+      screenId: 'gacha-ds3',
+      zones: [
+        { id: 'zone-1', zoneId: 'history-records', knownGapRef: 'KG-001' },
+        { id: 'zone-2', zoneId: 'banner-bg-fill', excludedFromScore: true, knownGapRef: 'KG-002' },
+        { id: 'zone-3', zoneId: 'interaction-carousel', excludedFromScore: true, knownGapRef: 'KG-003' }
+      ]
+    }, null, 2), 'utf8');
+
+    const knownGapPass = runRuleGuard({
+      repoRoot: REPO_ROOT,
+      scanCore: false,
+      workflowSummary: {
+        debugOnly: false,
+        sourcePackage: formalPackage,
+        steps: [],
+        runtimeAuthority: { authority: 'synced-final-runtime-json' },
+        visualFidelityRisk: { status: 'pass', blockerCount: 0, violations: [] },
+        interactionRuntime: { required: false, status: 'pass', actionsBound: 0, smokeResults: [] },
+        fidelityDimensions: passedFidelityDimensions,
+        metrics: {
+          compare: { adjustedCoverage: 0.97 },
+          htmlCocos: { runtimeVsSource: { adjustedScore: 0.96, verdict: 'pass' } }
+        },
+        verdict: { workflowPass: true },
+        nextFixes: [],
+        paths: { zoneOwnership: knownGapZoneOwnershipPath }
+      }
+    });
+    if (knownGapPass.violations.some((violation) => violation.ruleId === 'H2U-P5-F002')) {
+      fail(`known gaps with registry refs must not trip H2U-P5-F002: ${JSON.stringify(knownGapPass.violations, null, 2)}`);
+    }
+  });
+  ok('Plan5 fidelity contract enforces four-dimension gates and registry-backed known gaps');
 
   // Plan5 authority chain: spec-hash-tracking fixture must have specHashes with required keys
   {

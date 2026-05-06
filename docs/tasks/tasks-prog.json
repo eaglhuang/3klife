@@ -1280,10 +1280,14 @@
       "id": "H2U-REFACTOR-0006",
       "priority": "P2",
       "phase": "G",
-      "owner": "Unassigned",
-      "status": "open",
+      "owner": "vs-insiders-gpt-5.4-mini",
+      "status": "done",
       "created": "2026-05-05",
       "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "started_at": "2026-05-05T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "completed_at": "2026-05-06T14:46:11.0367124+08:00",
+      "completed_by_agent": "vs-insiders-gpt-5.4-mini",
       "type": "rule-governance",
       "title": "rule-registry 補 fidelityThresholds + knownGaps + draftBuilderStageRules 自動驗證",
       "description": "rule-registry.json 加三段；rule-checkers 加 validateDraftBuilderStageRules；validate-rule-guard 強制檢查；history-not-story / radial-slide-background / interaction-carousel 三 gap 不再被誤判失敗",
@@ -1304,7 +1308,7 @@
         "tools_node/validate-html-to-ucuf-rule-guard.js",
         "tools_node/test/dom-to-ui-self-test.js"
       ],
-      "notes": "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) | 阻塞: 無"
+      "notes": "2026-05-06 | 狀態: done | 延續: ClaudeCode 先前已補入 registry data；本次補完 draftBuilderStageRules / four-dimension fidelity / zone-ownership known-gap enforcement 與 self-test coverage | 驗證: html-to-ucuf-fidelity-contract、html-to-ucuf-active-contract ALL PASS | 阻塞: none"
     },
     {
       "id": "PROG-2-0010",

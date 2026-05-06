@@ -35,6 +35,20 @@ function getDraftBuilderStageRules() {
   return Array.isArray(RULE_REGISTRY.draftBuilderStageRules) ? RULE_REGISTRY.draftBuilderStageRules : [];
 }
 
+function getFidelityThresholds() {
+  return RULE_REGISTRY && RULE_REGISTRY.fidelityThresholds && typeof RULE_REGISTRY.fidelityThresholds === 'object'
+    ? RULE_REGISTRY.fidelityThresholds
+    : null;
+}
+
+function getExemptCategories() {
+  return Array.isArray(RULE_REGISTRY.exemptCategories) ? RULE_REGISTRY.exemptCategories : [];
+}
+
+function getKnownGaps() {
+  return Array.isArray(RULE_REGISTRY.knownGaps) ? RULE_REGISTRY.knownGaps : [];
+}
+
 function buildViolation(ruleId, detail) {
   const rule = getRule(ruleId) || {};
   return {
@@ -201,6 +215,184 @@ function scanDraftBuilderRegistry(repoRoot, violations) {
   }
 }
 
+function validateDraftBuilderStageRules(repoRoot, violations) {
+  const draftBuilderPath = path.join(repoRoot, 'tools_node', 'lib', 'dom-to-ui', 'draft-builder.js');
+  const text = readTextIfExists(draftBuilderPath);
+  const stageRules = getDraftBuilderStageRules();
+  const requiredStages = [
+    'css-capture',
+    'layout-extraction',
+    'skin-extraction',
+    'semantic-extraction',
+    'composite-svg-extraction',
+    'asset-mapping',
+    'token-governance'
+  ];
+  const knownRuleIds = new Set(listRules().map((rule) => rule.id));
+  const seenStages = new Set();
+  const issues = [];
+
+  if (!/draftBuilderStageRules\s*:\s*DRAFT_BUILDER_STAGE_RULES/.test(text)) {
+    issues.push('draft-builder does not import registry-backed DRAFT_BUILDER_STAGE_RULES');
+  }
+  if (!/ruleRegistry\s*:\s*DRAFT_BUILDER_STAGE_RULES/.test(text)) {
+    issues.push('draft-builder does not bind DRAFT_BUILDER_STAGE_RULES into build context');
+  }
+  if (!/draftStageRules\s*:\s*ctx\.ruleRegistry/.test(text)) {
+    issues.push('draft-builder does not emit skinDraft.meta.draftStageRules');
+  }
+  if (stageRules.length === 0) {
+    issues.push('rule-registry draftBuilderStageRules is empty');
+  }
+
+  stageRules.forEach((entry, index) => {
+    const stage = typeof entry && entry && typeof entry.stage === 'string' ? entry.stage.trim() : '';
+    if (!stage) {
+      issues.push(`draftBuilderStageRules[${index}] missing stage`);
+      return;
+    }
+    if (seenStages.has(stage)) {
+      issues.push(`draftBuilderStageRules contains duplicate stage "${stage}"`);
+    }
+    seenStages.add(stage);
+
+    const ruleIds = Array.isArray(entry.ruleIds)
+      ? entry.ruleIds.map((ruleId) => String(ruleId || '').trim()).filter(Boolean)
+      : [];
+    const testTags = Array.isArray(entry.testTags)
+      ? entry.testTags.map((tag) => String(tag || '').trim()).filter(Boolean)
+      : [];
+
+    if (ruleIds.length === 0) {
+      issues.push(`${stage} missing ruleIds`);
+    }
+    if (testTags.length === 0) {
+      issues.push(`${stage} missing testTags`);
+    }
+
+    const unknownRuleIds = ruleIds.filter((ruleId) => !knownRuleIds.has(ruleId));
+    if (unknownRuleIds.length > 0) {
+      issues.push(`${stage} references unknown ruleIds: ${unknownRuleIds.join(', ')}`);
+    }
+  });
+
+  const missingStages = requiredStages.filter((stage) => !seenStages.has(stage));
+  if (missingStages.length > 0) {
+    issues.push(`missing required draft-builder stages: ${missingStages.join(', ')}`);
+  }
+
+  if (issues.length > 0) {
+    addViolation(violations, 'H2U-P4-012', {
+      summary: 'draftBuilderStageRules registry contract is incomplete or not emitted by draft-builder',
+      evidence: issues.slice(0, 6).join('; '),
+      fixAction: 'Sync rule-registry draftBuilderStageRules with draft-builder import/context/meta emission, and ensure every stage references real rule IDs.'
+    });
+  }
+}
+
+function validatePlan5RegistryContracts(violations) {
+  validateFidelityThresholdRegistry(violations);
+  validateKnownGapRegistry(violations);
+}
+
+function validateFidelityThresholdRegistry(violations) {
+  const thresholds = getFidelityThresholds();
+  const requiredDimensions = ['structural', 'colorFill', 'layoutGeometry', 'interactionSmoke'];
+
+  if (!thresholds) {
+    addViolation(violations, 'H2U-P5-F001', {
+      summary: 'rule-registry is missing fidelityThresholds',
+      evidence: 'RULE_REGISTRY.fidelityThresholds=missing'
+    });
+    return;
+  }
+
+  const dimensions = thresholds.dimensions && typeof thresholds.dimensions === 'object'
+    ? thresholds.dimensions
+    : {};
+  const missingDimensions = requiredDimensions.filter((name) => !dimensions[name] || typeof dimensions[name] !== 'object');
+  const malformedDimensions = requiredDimensions.filter((name) => {
+    const dimension = dimensions[name];
+    if (!dimension || typeof dimension !== 'object') return false;
+    return typeof dimension.metric !== 'string'
+      || typeof dimension.formula !== 'string'
+      || typeof dimension.gate !== 'string';
+  });
+  const topLevelIssues = [];
+  if (typeof thresholds._schema !== 'string' || !thresholds._schema.trim()) topLevelIssues.push('_schema');
+  if (typeof thresholds.scorableAreaFormula !== 'string' || !thresholds.scorableAreaFormula.trim()) topLevelIssues.push('scorableAreaFormula');
+  if (!thresholds.compositeScore || typeof thresholds.compositeScore.formula !== 'string' || typeof thresholds.compositeScore.reportedAs !== 'string') {
+    topLevelIssues.push('compositeScore.formula/reportedAs');
+  }
+
+  if (missingDimensions.length > 0 || malformedDimensions.length > 0 || topLevelIssues.length > 0) {
+    const parts = [];
+    if (missingDimensions.length > 0) parts.push(`missing dimensions: ${missingDimensions.join(', ')}`);
+    if (malformedDimensions.length > 0) parts.push(`malformed dimensions: ${malformedDimensions.join(', ')}`);
+    if (topLevelIssues.length > 0) parts.push(`missing fields: ${topLevelIssues.join(', ')}`);
+    addViolation(violations, 'H2U-P5-F001', {
+      summary: 'fidelityThresholds registry contract is incomplete',
+      evidence: parts.join('; ')
+    });
+  }
+}
+
+function validateKnownGapRegistry(violations) {
+  const exemptCategories = getExemptCategories();
+  const knownGaps = getKnownGaps();
+  const exemptIds = new Set();
+  const gapIds = new Set();
+  const issues = [];
+
+  if (exemptCategories.length === 0) issues.push('exemptCategories is empty');
+  if (knownGaps.length === 0) issues.push('knownGaps is empty');
+
+  exemptCategories.forEach((entry, index) => {
+    const id = typeof entry && entry && typeof entry.id === 'string' ? entry.id.trim() : '';
+    if (!id) {
+      issues.push(`exemptCategories[${index}] missing id`);
+      return;
+    }
+    if (exemptIds.has(id)) issues.push(`duplicate exemptCategories id ${id}`);
+    exemptIds.add(id);
+    if (!entry.name || !entry.treatment) {
+      issues.push(`${id} missing name or treatment`);
+    }
+  });
+
+  knownGaps.forEach((entry, index) => {
+    const id = typeof entry && entry && typeof entry.id === 'string' ? entry.id.trim() : '';
+    const slug = typeof entry && entry && typeof entry.slug === 'string' ? entry.slug.trim() : '';
+    const status = typeof entry && entry && typeof entry.status === 'string' ? entry.status.trim() : '';
+    const resolution = typeof entry && entry && typeof entry.resolution === 'string' ? entry.resolution.trim() : '';
+    const exemptCategoryRef = typeof entry && entry && typeof entry.exemptCategoryRef === 'string'
+      ? entry.exemptCategoryRef.trim()
+      : '';
+
+    if (!id) {
+      issues.push(`knownGaps[${index}] missing id`);
+      return;
+    }
+    if (gapIds.has(id)) issues.push(`duplicate knownGaps id ${id}`);
+    gapIds.add(id);
+    if (!slug || !status) issues.push(`${id} missing slug or status`);
+    if (!resolution) issues.push(`${id} missing resolution`);
+    if (!exemptCategoryRef && status !== 'acceptable-regression') {
+      issues.push(`${id} must set exemptCategoryRef or use status=acceptable-regression`);
+    }
+    if (exemptCategoryRef && !exemptIds.has(exemptCategoryRef)) {
+      issues.push(`${id} references unknown exemptCategoryRef ${exemptCategoryRef}`);
+    }
+  });
+
+  if (issues.length > 0) {
+    addViolation(violations, 'H2U-P5-F002', {
+      summary: 'knownGaps/exemptCategories registry contract is incomplete',
+      evidence: issues.slice(0, 6).join('; ')
+    });
+  }
+}
+
 function validateWorkflowSummary(repoRoot, summary, sourceHtml, violations, warnings) {
   const debugOnly = summary.debugOnly === true;
   const reasons = Array.isArray(summary.debugOnlyReasons) ? summary.debugOnlyReasons : [];
@@ -340,10 +532,13 @@ function validateWorkflowSummary(repoRoot, summary, sourceHtml, violations, warn
   }
 
   validateTokenGovernance(repoRoot, summary, violations);
-  validatePlan5Summary(summary, violations);
+  validatePlan5Summary(repoRoot, summary, violations);
 }
 
-function validatePlan5Summary(summary, violations) {
+function validatePlan5Summary(repoRoot, summary, violations) {
+  validateFourDimensionFidelityGate(summary, violations);
+  validateZoneOwnershipRegistryRefs(repoRoot, summary, violations);
+
   const browserCoverage = readNumber(summary && summary.metrics && summary.metrics.compare && summary.metrics.compare.adjustedCoverage);
   const runtimeVsSource = summary && summary.metrics && summary.metrics.htmlCocos && summary.metrics.htmlCocos.runtimeVsSource
     ? summary.metrics.htmlCocos.runtimeVsSource
@@ -384,6 +579,146 @@ function validatePlan5Summary(summary, violations) {
       }
     }
   }
+}
+
+function validateFourDimensionFidelityGate(summary, violations) {
+  if (!summary || summary.debugOnly === true) return;
+
+  const thresholds = getFidelityThresholds();
+  const requiredDimensions = Object.keys(thresholds && thresholds.dimensions || {});
+  if (requiredDimensions.length === 0) return;
+
+  const runtimeVsSource = summary && summary.metrics && summary.metrics.htmlCocos && summary.metrics.htmlCocos.runtimeVsSource
+    ? summary.metrics.htmlCocos.runtimeVsSource
+    : null;
+  const adjustedScore = readNumber(runtimeVsSource && runtimeVsSource.adjustedScore);
+  const verdict = summary && summary.verdict || {};
+  const fidelityDimensions = summary && summary.fidelityDimensions
+    || summary && summary.finalGate && summary.finalGate.fidelityDimensions
+    || summary && summary.metrics && summary.metrics.fidelityDimensions
+    || null;
+  const shouldValidate = !!fidelityDimensions || Number.isFinite(adjustedScore) || verdict.workflowPass === true;
+
+  if (!shouldValidate) return;
+
+  if (!fidelityDimensions || typeof fidelityDimensions !== 'object') {
+    addViolation(violations, 'H2U-P5-F001', {
+      summary: 'formal summary is missing fidelityDimensions for the four-dimension gate',
+      evidence: JSON.stringify({
+        adjustedScore: Number.isFinite(adjustedScore) ? adjustedScore : null,
+        workflowPass: !!verdict.workflowPass
+      })
+    });
+    return;
+  }
+
+  const missingDimensions = requiredDimensions.filter((name) => fidelityDimensions[name] === undefined || fidelityDimensions[name] === null);
+  if (missingDimensions.length > 0) {
+    addViolation(violations, 'H2U-P5-F001', {
+      summary: 'formal summary is missing one or more fidelity dimension verdicts',
+      evidence: `missing=${missingDimensions.join(', ')}`
+    });
+    return;
+  }
+
+  const failedDimensions = requiredDimensions.filter((name) => !dimensionPassed(fidelityDimensions[name]));
+  if (verdict.workflowPass === true && failedDimensions.length > 0) {
+    addViolation(violations, 'H2U-P5-F001', {
+      summary: 'workflowPass=true but not all fidelity dimensions passed',
+      evidence: `failed=${failedDimensions.join(', ')}`
+    });
+  }
+}
+
+function validateZoneOwnershipRegistryRefs(repoRoot, summary, violations) {
+  if (!summary || summary.debugOnly === true) return;
+
+  const zoneOwnership = resolveZoneOwnershipReport(repoRoot, summary);
+  if (!zoneOwnership || !Array.isArray(zoneOwnership.zones) || zoneOwnership.zones.length === 0) return;
+
+  const exemptIds = new Set(getExemptCategories().map((entry) => String(entry && entry.id || '').trim()).filter(Boolean));
+  const knownGapMap = new Map(getKnownGaps().map((entry) => [String(entry && entry.id || '').trim(), entry]));
+  const issues = [];
+
+  zoneOwnership.zones.forEach((zone, index) => {
+    const zoneId = firstNonEmpty(zone && zone.zoneId, zone && zone.id, `zone[${index}]`);
+    const knownGapRef = firstNonEmpty(zone && zone.knownGapRef, zone && zone.knownGapId, zone && zone.gapRef);
+    const directExemptRef = firstNonEmpty(zone && zone.exemptCategoryRef, zone && zone.exemptRef);
+    const knownGap = knownGapRef ? knownGapMap.get(knownGapRef) || null : null;
+    const effectiveExemptRef = directExemptRef || firstNonEmpty(knownGap && knownGap.exemptCategoryRef);
+    const excludedFromScore = isZoneExcludedFromScore(zone);
+    const assetizedPass = !!(zone && zone.assetizationRequired === true && zone.runtimeAssetPath);
+
+    if (knownGapRef && !knownGap) {
+      issues.push(`${zoneId} references unknown knownGapRef ${knownGapRef}`);
+    }
+    if (directExemptRef && !exemptIds.has(directExemptRef)) {
+      issues.push(`${zoneId} references unknown exemptCategoryRef ${directExemptRef}`);
+    }
+    if (effectiveExemptRef && !exemptIds.has(effectiveExemptRef)) {
+      issues.push(`${zoneId} resolves to unknown exemptCategoryRef ${effectiveExemptRef}`);
+    }
+    if (excludedFromScore && !assetizedPass && !knownGapRef && !effectiveExemptRef) {
+      issues.push(`${zoneId} is excluded from score without knownGapRef or exemptCategoryRef`);
+    }
+  });
+
+  if (issues.length > 0) {
+    addViolation(violations, 'H2U-P5-F002', {
+      summary: 'zone-ownership contains silent or unresolved scoring exemptions',
+      evidence: issues.slice(0, 6).join('; ')
+    });
+  }
+}
+
+function resolveZoneOwnershipReport(repoRoot, summary) {
+  if (summary && summary.zoneOwnership && Array.isArray(summary.zoneOwnership.zones)) return summary.zoneOwnership;
+
+  const candidates = [
+    summary && summary.zoneOwnership && summary.zoneOwnership.report,
+    summary && summary.zoneOwnership && summary.zoneOwnership.path,
+    summary && summary.paths && summary.paths.zoneOwnership,
+    summary && summary.zoneOwnershipJson,
+    summary && summary.finalCapture && summary.finalCapture.zoneOwnership
+  ].filter(Boolean);
+
+  for (const candidate of candidates) {
+    if (typeof candidate !== 'string') continue;
+    const filePath = path.isAbsolute(candidate) ? candidate : path.join(repoRoot, candidate);
+    const json = readJsonIfExists(filePath);
+    if (json && Array.isArray(json.zones)) return json;
+  }
+  return null;
+}
+
+function isZoneExcludedFromScore(zone) {
+  if (!zone || typeof zone !== 'object') return false;
+  const scoring = zone.scoring && typeof zone.scoring === 'object' ? zone.scoring : {};
+  const treatments = [zone.treatment, zone.scoreTreatment, scoring.treatment]
+    .map((value) => String(value || '').trim())
+    .filter(Boolean);
+  return zone.excludedFromScore === true
+    || zone.scoreExcluded === true
+    || zone.exempted === true
+    || scoring.excluded === true
+    || scoring.skip === true
+    || treatments.includes('exclude-from-score')
+    || treatments.includes('assetize-then-pass')
+    || treatments.includes('excluded');
+}
+
+function dimensionPassed(entry) {
+  if (entry === true) return true;
+  if (!entry || typeof entry !== 'object') return false;
+  return entry.pass === true || entry.status === 'pass';
+}
+
+function firstNonEmpty() {
+  for (const value of arguments) {
+    const text = String(value || '').trim();
+    if (text) return text;
+  }
+  return '';
 }
 
 function validateTokenGovernance(repoRoot, summary, violations) {
@@ -608,6 +943,9 @@ module.exports = {
   listRules,
   getRule,
   getDraftBuilderStageRules,
+  getFidelityThresholds,
+  getExemptCategories,
+  getKnownGaps,
   buildViolation,
   addViolation,
   loadWorkflowSummary,
@@ -616,6 +954,8 @@ module.exports = {
   scanCoreSource,
   scanSkillDoc,
   scanDraftBuilderRegistry,
+  validateDraftBuilderStageRules,
+  validatePlan5RegistryContracts,
   validateWorkflowSummary,
   validateCaptureReportArtifact,
   validateRadarGeometryFromSummary,

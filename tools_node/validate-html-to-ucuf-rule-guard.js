@@ -50,7 +50,8 @@ function parseArgs(argv) {
 function printHelp() {
   console.log(`Usage: node tools_node/validate-html-to-ucuf-rule-guard.js [--strict] [--report <json>] [--summary <workflow-summary.json>]
 
-Checks active HTML-to-UCUF rules from tools_node/lib/html-to-ucuf/rule-registry.json.`);
+Checks active HTML-to-UCUF rules from tools_node/lib/html-to-ucuf/rule-registry.json,
+including draftBuilderStageRules, fidelityThresholds, and knownGaps/exemptCategories contracts.`);
 }
 
 function main() {
