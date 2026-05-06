@@ -1,0 +1,74 @@
+[
+  {
+    "doc_id": "",
+    "id": "ATM-2-0013",
+    "title": "Per-atom folder 以 Atomic ID 命名收斂",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "workspace-layout",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "GitHubCopilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將同一個 atom 空間收斂到以 Atomic ID 為名稱的 canonical folder，避免 spec、code、fixture、report、registry proof 分散。",
+    "related": [
+      "ATM-2-0012",
+      "ATM-2.5-0001"
+    ],
+    "depends": [
+      "ATM-2-0004"
+    ],
+    "acceptance": [
+      "每個 atom 有 canonical folder，資料夾名稱必須等於 Atomic ID",
+      "scaffold/test-runner/registry/workbench 路徑規則對齊 canonical Atomic ID folder",
+      "新增 atom 不可再先散放檔案後回收；neutralityScanner 等後續 atom 直接落在 canonical folder",
+      "既有 atom 至少有 migration policy 與相容路徑策略"
+    ],
+    "deliverables": [
+      "canonical per-atom folder layout contract",
+      "Atomic ID naming rule",
+      "scaffold/workbench/report path normalization plan",
+      "migration notes for existing scattered atoms"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 新增 atom 空間 folder 化收斂卡，要求 canonical 目錄名稱直接使用 Atomic ID，並提前插在更多 atom 擴張之前 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 上游核心插單",
+      "summary": "將同一個 atom 空間收斂到以 Atomic ID 命名的 canonical folder，提早建立 per-atom layout 規則，避免後續 spec/code/test/report/registry proof 繼續零散擴張。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0004 已完成，後續新 atom 產線尚未全面擴張"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-2-0004 已完成 registry/hash-lock 基礎",
+        "目前 per-atom report 已有 atomic_workbench/atoms/<atomId>/ 方向，但 spec/code/fixture/registry proof 尚未完全收斂到同一空間"
+      ],
+      "output": [
+        "canonical per-atom folder layout contract",
+        "Atomic ID 直接作為 folder 名稱的命名規則",
+        "scaffold/test-runner/registry/workbench 對齊計畫或實作",
+        "既有散落 atom 配件的 migration policy"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡 touched files；若上游已開始做 path migration，優先回退 folder contract 與 path normalization，不留下半套 alias 規則。",
+      "execution_steps": [
+        "定義 canonical per-atom folder layout 與 Atomic ID naming rule",
+        "盤點 scaffold/test-runner/registry/workbench 現況路徑",
+        "實作或至少定稿 path normalization strategy",
+        "補 fixture 或 migration guidance，避免後續 atom 再散落"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  }
+]

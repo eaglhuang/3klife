@@ -11,8 +11,8 @@
   "summary": {
     "done": 30,
     "in_progress": 0,
-    "open": 41,
-    "total": 71
+    "open": 42,
+    "total": 72
   },
   "shards": [
     {
@@ -265,6 +265,18 @@
       "range": [
         62,
         70
+      ]
+    },
+    {
+      "name": "tasks-atm-part-22",
+      "title": "Part 22 (items 72-72)",
+      "path": "docs/tasks/tasks-atm/tasks-atm-part-22.json",
+      "count": 1,
+      "bytes": 3285,
+      "lines": 74,
+      "range": [
+        71,
+        71
       ]
     }
   ]
