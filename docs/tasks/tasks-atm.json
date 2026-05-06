@@ -10,8 +10,8 @@
   },
   "summary": {
     "done": 33,
-    "in_progress": 0,
-    "open": 54,
+    "in_progress": 1,
+    "open": 53,
     "total": 87
   },
   "shards": [
@@ -260,8 +260,8 @@
       "title": "Part 21 (items 55-60)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-21.json",
       "count": 6,
-      "bytes": 9232,
-      "lines": 203,
+      "bytes": 9905,
+      "lines": 205,
       "range": [
         54,
         59
