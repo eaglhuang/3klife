@@ -1,0 +1,198 @@
+{
+  "schemaVersion": "atm.neutrality-map-integration-report.v0",
+  "mapId": "ATM-MAP-NEUTRALITY-0001",
+  "cases": [
+    {
+      "name": "clean",
+      "status": "pass",
+      "exitCode": 0,
+      "totals": {
+        "targets": 1,
+        "termViolations": 0,
+        "pathViolations": 0,
+        "violations": 0
+      },
+      "memberResults": [
+        {
+          "atomId": "ATM-CORE-0003-A",
+          "status": "pass",
+          "targetCount": 1
+        },
+        {
+          "atomId": "ATM-CORE-0003-B",
+          "status": "pass",
+          "ruleCount": 11
+        },
+        {
+          "atomId": "ATM-CORE-0003-C",
+          "status": "pass",
+          "violationCount": 0
+        },
+        {
+          "atomId": "ATM-CORE-0003-D",
+          "status": "pass",
+          "violationCount": 0
+        },
+        {
+          "atomId": "ATM-CORE-0003-E",
+          "status": "pass",
+          "violationCount": 0
+        }
+      ],
+      "violations": []
+    },
+    {
+      "name": "term-violation",
+      "status": "fail",
+      "exitCode": 1,
+      "totals": {
+        "targets": 1,
+        "termViolations": 2,
+        "pathViolations": 0,
+        "violations": 2
+      },
+      "memberResults": [
+        {
+          "atomId": "ATM-CORE-0003-A",
+          "status": "pass",
+          "targetCount": 1
+        },
+        {
+          "atomId": "ATM-CORE-0003-B",
+          "status": "pass",
+          "ruleCount": 11
+        },
+        {
+          "atomId": "ATM-CORE-0003-C",
+          "status": "fail",
+          "violationCount": 2
+        },
+        {
+          "atomId": "ATM-CORE-0003-D",
+          "status": "pass",
+          "violationCount": 0
+        },
+        {
+          "atomId": "ATM-CORE-0003-E",
+          "status": "fail",
+          "violationCount": 2
+        }
+      ],
+      "violations": [
+        {
+          "sourceAtom": "ATM-CORE-0003-C",
+          "type": "term",
+          "file": "src/host-leak.js",
+          "matchedRule": "html-to-ucuf",
+          "line": 3
+        },
+        {
+          "sourceAtom": "ATM-CORE-0003-C",
+          "type": "term",
+          "file": "src/host-leak.js",
+          "matchedRule": "UCUF",
+          "line": 3
+        }
+      ]
+    },
+    {
+      "name": "path-violation",
+      "status": "fail",
+      "exitCode": 1,
+      "totals": {
+        "targets": 1,
+        "termViolations": 0,
+        "pathViolations": 1,
+        "violations": 1
+      },
+      "memberResults": [
+        {
+          "atomId": "ATM-CORE-0003-A",
+          "status": "pass",
+          "targetCount": 1
+        },
+        {
+          "atomId": "ATM-CORE-0003-B",
+          "status": "pass",
+          "ruleCount": 11
+        },
+        {
+          "atomId": "ATM-CORE-0003-C",
+          "status": "pass",
+          "violationCount": 0
+        },
+        {
+          "atomId": "ATM-CORE-0003-D",
+          "status": "fail",
+          "violationCount": 1
+        },
+        {
+          "atomId": "ATM-CORE-0003-E",
+          "status": "fail",
+          "violationCount": 1
+        }
+      ],
+      "violations": [
+        {
+          "sourceAtom": "ATM-CORE-0003-D",
+          "type": "path",
+          "file": "tools_node/helper.js",
+          "matchedRule": "tools_node/"
+        }
+      ]
+    },
+    {
+      "name": "mixed-violation",
+      "status": "fail",
+      "exitCode": 1,
+      "totals": {
+        "targets": 1,
+        "termViolations": 1,
+        "pathViolations": 1,
+        "violations": 2
+      },
+      "memberResults": [
+        {
+          "atomId": "ATM-CORE-0003-A",
+          "status": "pass",
+          "targetCount": 1
+        },
+        {
+          "atomId": "ATM-CORE-0003-B",
+          "status": "pass",
+          "ruleCount": 11
+        },
+        {
+          "atomId": "ATM-CORE-0003-C",
+          "status": "fail",
+          "violationCount": 1
+        },
+        {
+          "atomId": "ATM-CORE-0003-D",
+          "status": "fail",
+          "violationCount": 1
+        },
+        {
+          "atomId": "ATM-CORE-0003-E",
+          "status": "fail",
+          "violationCount": 2
+        }
+      ],
+      "violations": [
+        {
+          "sourceAtom": "ATM-CORE-0003-D",
+          "type": "path",
+          "file": "assets/scripts/leak.js",
+          "matchedRule": "assets/scripts/"
+        },
+        {
+          "sourceAtom": "ATM-CORE-0003-C",
+          "type": "term",
+          "file": "assets/scripts/leak.js",
+          "matchedRule": "Cocos",
+          "line": 3
+        }
+      ]
+    }
+  ]
+}

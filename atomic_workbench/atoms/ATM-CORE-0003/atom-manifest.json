@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "atm.atom-manifest.v0",
+  "atomId": "ATM-CORE-0003",
+  "name": "neutralityScanner",
+  "workspacePath": "atomic_workbench/atoms/ATM-CORE-0003",
+  "scope": "local-tracking-fixture",
+  "boundary": {
+    "globalMapRegistry": "ATM-2-0023",
+    "globalMapRunner": "ATM-2-0025",
+    "note": "This workbench proves ATM-CORE-0003 member atoms and a local map smoke only."
+  },
+  "memberAtoms": [
+    {
+      "id": "ATM-CORE-0003-A",
+      "name": "ScanTargetEnumerator",
+      "input": ["rootDir", "includeGlobs", "excludeGlobs"],
+      "output": ["targets[]"]
+    },
+    {
+      "id": "ATM-CORE-0003-B",
+      "name": "NeutralityLexiconLoader",
+      "input": ["forbiddenTerms", "forbiddenPathPatterns"],
+      "output": ["lexicon"]
+    },
+    {
+      "id": "ATM-CORE-0003-C",
+      "name": "TextTermScanner",
+      "input": ["targets[]", "lexicon"],
+      "output": ["termViolations[]"]
+    },
+    {
+      "id": "ATM-CORE-0003-D",
+      "name": "PathPatternScanner",
+      "input": ["targets[]", "lexicon"],
+      "output": ["pathViolations[]"]
+    },
+    {
+      "id": "ATM-CORE-0003-E",
+      "name": "NeutralityReportAggregator",
+      "input": ["termViolations[]", "pathViolations[]", "memberResults[]"],
+      "output": ["neutrality-report.json", "exitCode"]
+    }
+  ],
+  "localMap": "map/neutrality-map.json",
+  "validationCommands": [
+    "node atomic_workbench/atoms/ATM-CORE-0003/tests/atom-tests.js",
+    "node atomic_workbench/atoms/ATM-CORE-0003/tests/map-integration-tests.js"
+  ]
+}
