@@ -104,13 +104,14 @@
     "title": "Adapter API 與 Plugin SDK 定稿",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "plugin-sdk",
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T18:37:03Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T18:46:31Z",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -136,11 +137,11 @@
       "packages/plugin-sdk/src/governance/* 或等價 governance adapter interface",
       "TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 生命週期定稿",
       "packages/plugin-sdk/src/lifecycle.ts — AtomLifecycleMode enum",
-      "packages/plugin-sdk/src/version-resolver.ts — VersionResolver interface",
-      "packages/plugin-sdk/src/quality-metrics-comparator.ts — QualityMetricsComparator interface",
-      "packages/plugin-sdk/src/upgrade-proposal-adapter.ts — UpgradeProposalAdapter interface"
+      "packages/plugin-sdk/src/lifecycle.ts — VersionResolver interface",
+      "packages/plugin-sdk/src/lifecycle.ts — QualityMetricsComparator interface",
+      "packages/plugin-sdk/src/lifecycle.ts — UpgradeProposalAdapter interface"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter interface 範圍 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter interface 範圍 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-06 | 狀態: done | 驗證: npm test / typecheck / lint 通過 | 變更: 上游 e4c2f88 定稿 Plugin SDK Adapter API、adapter 對齊、governance stores、LIFECYCLE policy 與 compatibility.lifecycleMode | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
@@ -169,11 +170,30 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
+      "artifact_paths": [
+        "packages/plugin-sdk/src/project-adapter.ts",
+        "packages/plugin-sdk/src/language-adapter.ts",
+        "packages/plugin-sdk/src/capability.ts",
+        "packages/plugin-sdk/src/governance/stores.ts",
+        "packages/plugin-sdk/src/lifecycle.ts",
+        "docs/ADAPTER_GUIDE.md",
+        "docs/LIFECYCLE.md"
+      ],
+      "validation_evidence": [
+        "cmd /c npm run validate:plugin-sdk",
+        "cmd /c npm run validate:adapter-local-git",
+        "cmd /c npm run validate:language-js",
+        "cmd /c npm test",
+        "cmd /c npm run typecheck",
+        "cmd /c npm run lint",
+        "AI-Atomic-Framework encoding scan ok"
+      ],
       "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": []
+      "metrics_summary": [
+        "Plugin SDK contract validator: adapter/language/capability/lifecycle/governance ok",
+        "AI-Atomic-Framework commit: e4c2f88"
+      ]
     }
   }
 ]
