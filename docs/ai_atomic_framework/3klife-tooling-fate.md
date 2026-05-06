@@ -31,7 +31,7 @@
 
 | 工具 | 角色 | Fate | 轉折點 | 棄用時程 |
 |---|---|---|---|---|
-| `task-lock.js` | scope lock | **A. Adapter** | ATM-3 完成（D2 stage 結束） | 永久保留 |
+| `task-lock.js` | scope lock | **A. Adapter** | ATM-3 shadow adapter 完成（S2 consumption stage 結束） | 永久保留 |
 | `compute-gate.js` | gate runner | **A. Adapter** | ATM-3 完成 | 永久保留 |
 | `doc-id-registry.js` | doc index | **A. Adapter** | ATM-3 完成 | 永久保留 |
 | `shard-manager.js` | large file shard | **A. Adapter** | ATM-3 完成 | 永久保留 |
@@ -238,7 +238,7 @@ if (cmd === 'lock')  return adapter.lock(taskId, agent, files);
 | check-task-scope.js | 標 @deprecated | stderr warning | wrapper 化 | 移除（已遷移到 ATM RuleGuard） |
 | check-import-boundaries.js | 標 @deprecated | stderr warning | wrapper 化 | 移除（已遷移到 ATM RuleGuard） |
 
-T+0 = ATM-3 完成（D2 stage 結束）
+T+0 = ATM-3 shadow adapter 完成（S2 consumption stage 結束）。`D2` / `D3` 僅保留給 `ATM_cross_reference.md` 的文件路由 Domain，不再用作 3KLife 消費 stage 名稱。
 
 ---
 

@@ -190,5 +190,35 @@
     "path": "docs/ai_atomic_framework/ATM_cross_reference.md",
     "title": "ATM 知識路由索引（ATM Cross-Reference）",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0038",
+    "path": "docs/agent-identity-map.md",
+    "title": "Agent Identity Map",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0039",
+    "path": "docs/ai_atomic_framework/shards/atm-roadmap-foundations.md",
+    "title": "AI Atomic Framework Roadmap — 名詞定義・分層・自舉・Genesis（§4–§7）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0040",
+    "path": "docs/ai_atomic_framework/shards/atm-roadmap-intro.md",
+    "title": "AI Atomic Framework Roadmap — 核心結論・問題背景（§0–§1）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0041",
+    "path": "docs/ai_atomic_framework/shards/atm-roadmap-milestones.md",
+    "title": "AI Atomic Framework Roadmap — 里程碑 Phase 0-7 詳細規格（§8+）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0042",
+    "path": "docs/ai_atomic_framework/shards/atm-roadmap-theory.md",
+    "title": "AI Atomic Framework Roadmap — 願景・設計原則（§2–§3）",
+    "category": "other"
   }
 ]

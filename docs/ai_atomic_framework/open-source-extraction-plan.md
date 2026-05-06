@@ -30,10 +30,13 @@ Core 只定義契約、流程與 plugin interface。ATM upstream 另外提供 Ag
 
 開源拆出採納 v0.2 的務實化方向：先交付能在空白 repo 跑通的最小 core，再逐步接 adapter 與 case study。
 
-- v0.1 alpha 必備：Atomic Spec schema、CLI `init/status/validate`、JSON Registry、HashLock、basic Police、Plugin SDK、Agent Operating Layer、Default Governance Bundle、LocalGitAdapter、JS/TS LanguageAdapter、hello-world example。
-- v0.1 alpha 不必備：LangGraph / Atomic Agents / PR-Agent / pgvector / OpenTelemetry / Prometheus / Deno sandbox / full Living Spec sync。
+- alpha0 必備：Atomic Spec schema、Registry schema、HashLock、CLI `init/status/validate`、hello-world atom、最小 WorkItem / ScopeLock / Artifact / Evidence / ContextSummary schema、basic deterministic Police、LocalGitAdapter、JS/TS LanguageAdapter、最小 task/lock/evidence smoke。
+- alpha0 不必備：完整 Default Governance Bundle、完整 Agent Operating Layer、LangGraph / Atomic Agents / PR-Agent / pgvector / OpenTelemetry / Prometheus / Deno sandbox / full Living Spec sync、multi-agent hard gate、H2U case study。
+- alpha1 補齊：Default Governance Bundle reference plugins、Agent Operating Layer 完整 root-drop workflow、context budget / encoding / rule / evidence plugins、AdapterReport schema、multi-agent confidence report、release checklist。
 - optional plugin 必須獨立成 package，命名以 `adapter-*` 或 `plugin-*` 表示，不可被 `packages/core` import。
 - 所有 first implementation 工具選型，例如 TypeScript、Zod、Vitest、Commander、ts-morph，都只能寫成推薦，不得寫成 Atomic Spec 的語義前提。
+
+alpha0 的唯一北極星是：空白 repo 可跑通 hello-world atom，並留下最小 task / lock / artifact / evidence / context summary；3KLife 只能在 alpha0 全綠後以 shadow adapter 驗證一顆低風險 helper atom，不直接替換既有 CLI 行為。
 
 ### 1.1.2 Default Governance Bundle 邊界
 
@@ -73,14 +76,14 @@ ATM 的開源交付目標是「root-drop 可啟動」：使用者把 ATM 放在�
 | auto first task | `atm task create --from-agent-goal` 或 README 工作流 | 讓 AI 在開始寫功能前自動開卡 |
 | run envelope | `atm run --task <id>` 或 agent prompt recipe | 包住 Plan → Execute → Verify → Converge 的固定節奏 |
 
-### 1.1.4 Self-Hosting Alpha Gate
+### 1.1.4 Self-Hosting Alpha0 Gate
 
-在進入任何 downstream adapter 或 case study 之前，上游必須先通過 standalone self-hosting alpha gate。最低驗收如下：
+在進入任何 downstream adapter 或 case study 之前，上游必須先通過 standalone self-hosting alpha0 deterministic gate。最低驗收如下：
 
 1. 在空白 repo 或 sandbox repo 中，AI agent 只讀 README / AGENTS / `.atm/profile` 即可完成 `atm init --adopt` 或等效 bootstrap。
 2. 可建立第一張 task、鎖定 scope、寫入 state、保存 artifact / log / evidence。
 3. 可在不依賴 3KLife 工具、Cocos 或 html-to-ucuf 的前提下，完成第一顆 atom 的 smoke validation。
-4. alpha gate 未通過前，不得開始 3KLife ProjectAdapter、Cocos runtime adapter 或 html-to-ucuf case study。
+4. alpha0 deterministic gate 未通過前，不得開始 3KLife ProjectAdapter shadow mode、Cocos runtime adapter 或 html-to-ucuf dry-run case study。
 
 ### 1.1.5 Docs Neutrality / Boundary Guard
 
@@ -232,7 +235,7 @@ packages:
 1. 將 `AI_Atomic_Framework_Roadmap.md` 改成上游開源 Roadmap。
 2. 將 `AI原子框架開發計畫書.md` 改成 3KLife adopter plan。
 3. 新增本文件作為 extraction checklist。
-4. 開立 ATM 任務卡與 `tasks-atm.json` shard。
+4. 開立 ATM 任務卡與 `tasks-atm.json` thin index / `tasks-atm-part-*.json` 分片。
 5. 新增 self-hosting alpha、docs neutrality audit、neutrality/boundary guard 與 context budget guard 後續任務。
 
 驗收：Roadmap 核心章節不再把 3KLife / Cocos / html-to-ucf 當作 core 前提；tracking docs 與未來 upstream docs 的邊界清楚分離。
@@ -245,16 +248,16 @@ Phase B 不能一次完成「core + cli + plugin-sdk + 11 plugins + Agent Operat
 |---|---|---|---|---|
 | **B0** | Hand-written Seed | 純手寫 `packages/core/seed.{ts,js}`：minimum spec parser + hash-lock util + 1 個 fixture runner。**不受 ATM 治理**，明確標 `// ATM-SEED: hand-written, ungoverned, ~300 LOC max`。 | 300 | seed self-test pass |
 | **B1** | Seed Dogfoods Itself | seed 用自己的 spec 格式描述自己（`atom-seed-spec.json`），跑 self-validation；產出第一份 `atomic-registry.json`，內含 `ATM-CORE-0001 = seed itself`。 | +200 | `atm verify --self` 通過 |
-| **B2** | Default Governance Bundle | 11 個 reference plugin、CLI `init/status/validate`、Agent Operating Layer 全部上線；seed 被「ATM-CORE-0002 = treated as governed atom」收編，舊 seed code 標 `@deprecated`。 | +5000 | hello-world example pass |
-| **B3** | Self-Hosting Alpha Gate | 在空白 sandbox repo 跑 4 條 alpha gate criteria，全部出 boolean PASS。 | (validation only) | `atm self-host-alpha --verify` 全綠 |
+| **B2** | Alpha0 Minimal Core | CLI `init/status/validate`、AtomicSpec / Registry / HashLock、hello-world atom、最小 WorkItem / ScopeLock / Artifact / Evidence / ContextSummary、deterministic profile check；seed 被「ATM-CORE-0002 = treated as governed atom」收編，舊 seed code 標 `@deprecated`。 | +1500 | hello-world example + minimal evidence pass |
+| **B3** | Self-Hosting Alpha0 Gate | 在空白 sandbox repo 跑 alpha0 deterministic criteria，全部出 boolean PASS；multi-agent 只產 confidence report，不作 alpha0 hard fail。 | (validation only) | `atm self-host-alpha --verify --deterministic` 全綠 |
 
-**Gate 是序列性的**：B1 不過不能進 B2；B2 不過不能進 B3；B3 不過不能進 Phase C。
+**Gate 是序列性的**：B1 不過不能進 B2；B2 不過不能進 B3；B3 不過不能進 Phase C。完整 Default Governance Bundle 其他 plugins 移到 alpha1，不再阻塞 alpha0。
 
 對應 ATM 任務卡（在 `AI原子框架開發計畫書.md` 中拆 ATM-1 / ATM-2 為四個階段）：
 - ATM-1（B0）：seed parser / seed hash-lock / seed self-test（3 卡）
 - ATM-1.5（B1）：seed-as-spec / self-validation / ATM-CORE-0001 註冊（3 卡）
-- ATM-2（B2）：原 ATM-2 全部 + neutralityScanner（11 卡）
-- ATM-2.5（B3）：sandbox alpha gate fixture / self-host-alpha verify CLI / multi-agent compatibility（3 卡）
+- ATM-2（B2 alpha0）：ATM-2-0001~0006 + ATM-2-0012 neutralityScanner；ATM-2-0007~0009/0011 先完成 schema-first 草案，但 reference plugins 進 alpha1
+- ATM-2.5（B3 alpha0 gate）：sandbox alpha gate fixture / self-host-alpha deterministic verify CLI；multi-agent compatibility 降為 confidence report
 
 ### Phase B：上游 repo skeleton
 
@@ -262,16 +265,16 @@ Phase B 不能一次完成「core + cli + plugin-sdk + 11 plugins + Agent Operat
 2. 建立 `packages/core`、`packages/cli`、`packages/plugin-sdk`。
 3. 建立 `schemas/atomic-spec.schema.json` 與 positive / negative fixtures。
 4. 建立 CLI：`init`、`status`、`validate`。
-5. 建立 Agent Operating Layer：README / AGENTS template、project probe、default profile、auto first task workflow。
-6. 建立 Default Governance Bundle：task cards、scope lock、doc index、shard、Markdown/JSON state file、artifact/log store、rule guard、encoding、context budget、evidence reference plugins。
+5. alpha0 只建立 Agent Operating Layer 的最小入口：README / AGENTS template、project probe、default profile 與 hello-world first task recipe。
+6. alpha1 才建立完整 Default Governance Bundle：task cards、scope lock、doc index、shard、Markdown/JSON state file、artifact/log store、rule guard、encoding、context budget、evidence reference plugins。
 7. 建立 `adapter-local-fs-git` / `adapter-local-git` 作為無宿主治理系統時的 fallback adapter。
-8. 執行 self-hosting alpha proof、upstream docs neutrality audit、neutrality/boundary guard smoke 與 context budget smoke。
+8. 執行 self-hosting alpha0 proof、upstream docs neutrality audit、neutrality/boundary guard smoke 與 context budget smoke。
 
 驗收：空白 repo 可以初始化 ATM，建立 `.atm/` governance layout，AI agent 依 README/AGENTS 開一張 task、鎖定 scope、建立 doc index、保存 artifact/log/evidence、跑 rule guard，並 validate hello-world atom；README / AGENTS / docs / examples / templates 不再夾帶 adopter 私有資訊，且 context budget guard 可對超額情境輸出 summarize 或 hard-stop。
 
 ### Phase C：3KLife adapter
 
-只有在 Phase B self-hosting alpha gate、docs neutrality audit 與 neutrality/boundary guard 全綠後，才允許開始 Phase C。
+只有在 Phase B self-hosting alpha0 deterministic gate、docs neutrality audit 與 neutrality/boundary guard 全綠後，才允許開始 Phase C。
 
 1. 在 3KLife 建立 `tools_node/adapters/atm-3klife/`。
 2. 實作 3KLife governance adapter：task-card-opener、task-lock、compute-gate、doc-id、shard-manager、task-scope、import-boundary、encoding、context-budget。
@@ -367,11 +370,11 @@ License 定論：**MIT**（最寬鬆，適合 governance framework 廣泛採用�
 
 ## 7. 多 AI Agent 兼容性
 
-ATM upstream 必須通過多 AI agent alpha gate 測試矩陣才允許釋出 0.1.0 alpha。詳見：
+ATM upstream 必須產出多 AI agent confidence gate 測試矩陣，作為 0.1.0 alpha 的信心報告；它不再阻塞 alpha0。詳見：
 
 [`multi-agent-compatibility-matrix.md`](multi-agent-compatibility-matrix.md)
 
-最低釋出條件：Claude Code 必過 + 至少 5 中 3 過。
+最低 alpha0 釋出條件：deterministic profile check、schema validation、hash-lock、hello-world atom smoke 與最小 task/lock/evidence 全綠；5-agent 結果必須有報告與 issue link，但不要求 3/5 全 true。
 
 ---
 

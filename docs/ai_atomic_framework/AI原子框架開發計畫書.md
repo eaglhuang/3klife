@@ -1,7 +1,7 @@
 <!-- doc_id: doc_other_0028 -->
 # AI 原子框架（ATM）開發計畫書
 
-> 版本：v0.2 · 3KLife downstream adopter plan（對齊 upstream `https://github.com/eaglhuang/AI-Atomic-Framework`）
+> 版本：v0.3 · 瘦身再開工 / 3KLife downstream adopter plan（對齊 upstream `https://github.com/eaglhuang/AI-Atomic-Framework`）
 > 文件位置：`docs/ai_atomic_framework/AI原子框架開發計畫書.md`
 > 上游理論藍圖：使用者提供的 `AI_Atomic_Framework_Roadmap.md`（外部來源）
 > 上游開源 repo：`https://github.com/eaglhuang/AI-Atomic-Framework`
@@ -27,16 +27,73 @@ H2U-REFACTOR-0001~0006 已開出處理「拆檔 / 規則治理」，PROG-2-0010/
 
 ## 上游先自舉、downstream 後驗證
 
-本計畫正式採用 `upstream self-hosting first`。在上游 `AI-Atomic-Framework` 先完成 standalone 自舉、通過 self-hosting alpha gate 以前，3KLife 只能扮演 tracking repo 與 downstream adopter 規劃場，不得充當上游開發前提。
+本計畫正式採用 `upstream self-hosting first`。在上游 `AI-Atomic-Framework` 先完成 standalone 自舉、通過 self-hosting alpha0 gate 以前，3KLife 只能扮演 tracking repo 與 downstream adopter 規劃場，不得充當上游開發前提。
 
 硬規則如下：
 
 1. 上游 repo 開發時不得使用 3KLife 內部工具腳本，例如 `task-lock`、`compute-gate`、`doc-id-registry`、`shard-manager`。
 2. 上游 `packages/core`、reference plugins 與 protected surfaces（README / AGENTS / docs / examples / templates）不得帶入 3KLife、Cocos、html-to-ucuf 或其他 adopter 私有資訊。
 3. 第一輪 smoke 必須在 standalone upstream repo 完成；AI agent 只讀 README / AGENTS / `.atm/profile` 即可完成 first task、scope lock、artifact/log/evidence 與 first atom 驗證。
-4. 只有通過 self-hosting alpha gate，才允許進入 3KLife ProjectAdapter、Cocos runtime adapter 與 html-to-ucuf case study。
+4. 只有通過 self-hosting alpha0 gate，才允許進入 3KLife ProjectAdapter shadow mode、Cocos runtime adapter 與 html-to-ucuf dry-run case study。
 
 因此，ATM-1 與 ATM-2 的首要責任是上游自舉、文件中立性與 boundary guard；ATM-3 與 ATM-4 則一律視為 downstream-only phase。
+
+---
+
+## 2026-05-06 瘦身再開工補強決策
+
+ATM 規劃不放棄完整治理生態，但第一個成功標準必須瘦身：先證明空白 repo 可跑通一顆 hello-world atom，再讓 3KLife 以 adapter shadow mode 驗證一顆低風險 helper atom 不退轉。完整 Default Governance Bundle、multi-agent confidence、H2U case study 與 OSS 生態文件都不能反過來阻塞 alpha0。
+
+### 文件真相收斂
+
+先建立 active / companion / historical 三態，不再讓多份 plan 並列漂移：
+
+| 狀態 | 文件 | 規則 |
+|---|---|---|
+| active | 本文件、`open-source-extraction-plan.md`、`upstream-versioning-policy.md`、`3klife-consumption-roadmap.md`、`3klife-coexistence-plan.md`、`3klife-tooling-fate.md`、`multi-agent-compatibility-matrix.md`、`ATM_cross_reference.md` | 只從這些文件讀取當前執行規則；若新增決策，先補 active 文件。 |
+| companion | `AI_Atomic_Framework_Optimized_Roadmap_v0.2.md` | 保留為務實化分析來源；只透過本文件採納矩陣轉成 active 規則。 |
+| historical | `AI_Atomic_Framework_Roadmap.md` 與未被 active 採納的早期 plan2/3/4/5 敘事 | 只能當背景與理論來源，不得直接作為開工準則。 |
+
+任務數以可機器驗證的現況為準：ATM Markdown 任務卡目前為 71 張（ATM-0 14 / ATM-1 10 / ATM-1.5 3 / ATM-2 12 / ATM-2.5 3 / ATM-3 13 / ATM-4 6 / ATM-5 5 / ATM-6 5），`docs/tasks/tasks-atm.json` 已於 ATM-0-0013 收斂為 thin index，完整內容移至 `docs/tasks/tasks-atm/tasks-atm-part-*.json`；後續只以 thin index summary + part shards 作為規劃真相。舊文中的 47 / 53 / 69 都視為歷史快照，不再作為規劃真相。
+
+名詞修正：`D2 / D3` 是 `ATM_cross_reference.md` 的文件路由 Domain，不是開發 phase；`ATM-7` 僅代表 DB/vector/advanced orchestrator 類的未開卡後置討論，不屬於本輪 alpha0/alpha1 任務 shard。
+
+### alpha0 / alpha1 拆分
+
+| Gate | 目標 | 必備內容 | 明確排除 |
+|---|---|---|---|
+| alpha0 | 空白 repo 跑通 hello-world atom，並留下最小治理證據 | AtomicSpec schema、Registry schema、HashLock、CLI `init/status/validate`、hello-world atom、最小 WorkItem / ScopeLock / Artifact / Evidence / ContextSummary、deterministic profile check | 完整 Default Governance Bundle、全部 reference plugins、multi-agent hard gate、H2U legacy injection、observability/security optional plugins |
+| alpha1 | 在 alpha0 成功後補齊官方預設治理體驗 | Default Governance Bundle reference plugins、Agent Operating Layer 完整化、context budget/encoding/rule/evidence plugins、adapter report、release checklist、multi-agent confidence report | 仍不得直接替換 3KLife 既有 CLI 或改 H2U legacy 主幹 |
+
+核心 JSON schema 必須先補齊：AtomicSpec、Registry、WorkItem、ScopeLock、Artifact/Evidence、ContextSummary、AdapterReport。schema 未定稿前不得先實作大型 plugin。
+
+### gate 與 adapter 降風險規則
+
+- Multi-agent 驗證在 alpha0 只做 confidence gate，不作 release 阻擋；alpha0 阻擋條件只保留 deterministic profile check、schema validation、hash-lock、hello-world atom smoke 與最小 task/lock/evidence。
+- 3KLife adapter 全部走 shadow / parity test；第一輪只讀既有 `task-lock`、`compute-gate`、`doc-id-registry`、shard 與 evidence 結果，不直接替換 CLI 行為。
+- OSS 實務文件補齊但不阻塞 alpha0：provenance、secrets scan、release owner、package naming、threat model、cost budget、observability event taxonomy。
+- H2U case study 僅在 self-hosting alpha0 全綠後啟動；第一輪只允許 dry-run injection + rollback plan，不 apply patch、不替換 legacy runtime。
+
+### Current Gate & Alpha0 Critical Path
+
+當前狀態：ATM-0（governance bootstrap）11/14 done → **下一階段 ATM-1（upstream skeleton）**。
+
+Alpha0 exit 需通過的最長依賴鏈（~10 關鍵卡）：
+
+1. `ATM-1-0001` Product charter & README
+2. `ATM-1-0002` Monorepo skeleton
+3. `ATM-1-0003` AtomicSpec / Registry schema v0.1
+4. `ATM-1-0006` CLI `init/status/validate` 空殼
+5. `ATM-1-0007` hello-world atom fixture + hash-lock
+6. `ATM-1.5-0001` Seed-as-Spec（seed 以自身格式描述自己）
+7. `ATM-1.5-0002` Seed 自我驗證（第一份 atomic-registry.json）
+8. `ATM-2-0001` Spec loader/parser（供 Manager/Registry/Police 用）
+9. `ATM-2.5-0001` Self-hosting alpha gate CLI（`atm self-host-alpha --verify`）
+10. `ATM-2.5-0002` Sandbox repo fixture：空白 repo 跑完整 alpha gate
+
+並行支線（亦為 ATM-2.5-0001 前置）：`ATM-2-0004`（Registry Manager）、`ATM-2-0005`（Police / Regression）、`ATM-2-0012`（neutralityScanner）。
+
+**被 alpha0 阻塞的所有下游**：ATM-3（3KLife adapter）、ATM-4（H2U case study）、ATM-5（OSS docs/release）、ATM-6（ecosystem）一律等 ATM-2.5-0002 pass 後才可開工。
 
 ---
 
@@ -64,8 +121,8 @@ H2U-REFACTOR-0001~0006 已開出處理「拆檔 / 規則治理」，PROG-2-0010/
 |---|---|---|
 | Core 極簡、無硬依賴 | 直接採納；上游 core 不得硬依賴 3KLife、Cocos、LangGraph、pgvector 或 Deno sandbox | ATM-0-0007、ATM-1-0001 |
 | Zero-install Agent Bootstrap | 採納；ATM 應可放入任意 repo 根目錄，AI agent 讀 README/AGENTS 後自動完成 project probe、開第一張 task、套 default guards | ATM-1-0008 |
-| Default Governance Bundle | 採納；ATM 不能只剩 atom runner，需有通用 task/index/shard/artifact/log/rule/evidence 預設套件，但不得進 core hard dependency | ATM-0-0009、ATM-2-0007、ATM-2-0008、ATM-2-0009 |
-| Self-hosting alpha / docs neutrality / boundary guard | 採納；先在 standalone upstream repo 通過 alpha gate，再以 docs neutrality audit 與 rule guard 持續防止 adopter 私有資訊回流 | ATM-1-0009、ATM-1-0010、ATM-2-0010 |
+| Default Governance Bundle | 採納但移到 alpha1；ATM 不能只剩 atom runner，需有通用 task/index/shard/artifact/log/rule/evidence 預設套件，但不得阻塞 alpha0 hello-world proof，也不得進 core hard dependency | ATM-0-0009、ATM-2-0007、ATM-2-0008、ATM-2-0009 |
+| Self-hosting alpha0 / docs neutrality / boundary guard | 採納；先在 standalone upstream repo 通過 alpha0 deterministic gate，再以 docs neutrality audit 與 rule guard 持續防止 adopter 私有資訊回流 | ATM-1-0009、ATM-1-0010、ATM-2-0010 |
 | Agent Governance Bundle（encoding / context budget / neutrality） | 採納；將編碼防災、context budget 節流與 docs neutrality 收斂成 upstream 可替換的 agent governance bundle，而非 3KLife 私有守則 | ATM-0-0011、ATM-2-0011 |
 | 6 週 MVP | 採納為節奏參考；對齊 ATM-0~ATM-5，並以補強卡擴充既有任務 | ATM-0-0007、ATM-5-0001 |
 | PEV Loop | 採納為所有 ATM 卡的標準工作語彙 | ATM-5-0005 |
@@ -114,7 +171,7 @@ H2U-REFACTOR-0001~0006 已開出處理「拆檔 / 規則治理」，PROG-2-0010/
 
 1. **上游可開源**：ATM core、Agent Operating Layer 與 Default Governance Bundle 可以從本 repo 拆出並獨立發布；使用者理論上只要把 ATM 放在專案根目錄，讓任意 AI agent 讀 README/AGENTS，就能在空白 repo `init / adopt / status / validate / task / lock / guard / artifact / log / evidence`。
 2. **Adapter-first 導入**：3KLife 只透過 adapter 使用 upstream，不把 `task-lock / compute-gate / doc-id-registry / shard-manager` 寫進 core。
-3. **可量化北極星**（3-4 週內達成）：上游 repo 有最小 CLI + schema + LocalGitAdapter + hello-world atom；3KLife adapter 能套用同一份 spec 驗證至少 1 個 html-to-ucuf 低風險 atom，並且 H2U self-test 不退轉。
+3. **可量化北極星**（先 alpha0，再 alpha1）：alpha0 證明空白 repo 可用最小 CLI + schema + Registry + HashLock + hello-world atom + 最小 task/lock/evidence 跑通；alpha1 再補 Default Governance Bundle。3KLife 只以 adapter shadow mode 驗證至少 1 個 html-to-ucuf 低風險 helper atom，並且 H2U self-test 不退轉。
 4. **長期目標**：讓 ATM core 成為可被任何 AI vibe coding 專案安裝的開源框架；3KLife 則成為展示 legacy strangler 的高壓案例。
 5. **明確排除**：本計畫不在 core v0.1 內追 0.95 pixel parity、不重寫 draft-builder 主幹、不把 Cocos / Puppeteer / pgvector / LangGraph 內建進 core。
 
@@ -288,9 +345,9 @@ docs/ai_atomic_framework/
 
 ## 里程碑（ATM-0 ~ ATM-6）+ 已開任務卡清單
 
-本輪已建立 **53 張** ATM 任務卡，索引在 `docs/tasks/tasks-atm.json`，Markdown 卡位於 `docs/agent-briefs/tasks/ATM-*.md`。其中 36 張是原始開源化骨架，6 張是 v0.2 companion 補強卡，5 張是 Default Governance Bundle / Agent Operating Layer 補強卡，另外 4 張用於 self-hosting alpha、docs neutrality 與 neutrality/boundary guard，2 張用於 context budget 與 Agent Governance Bundle 補強。後續新增卡仍必須透過 `task-card-opener` 與 `doc-id-registry`，不得手動複製 `doc_id`。
+目前已建立 **71 張** ATM Markdown 任務卡，`docs/tasks/tasks-atm.json` 現為 thin index 入口，內容分散於 `docs/tasks/tasks-atm/tasks-atm-part-*.json`，Markdown 卡位於 `docs/agent-briefs/tasks/ATM-*.md`。分布為 ATM-0 14、ATM-1 10、ATM-1.5 3、ATM-2 12、ATM-2.5 3、ATM-3 13、ATM-4 6、ATM-5 5、ATM-6 5。後續新增卡仍必須透過 `task-card-opener` 與 `doc-id-registry`，並重建 `docs/tasks/tasks-atm/tasks-atm-part-*.json`；不得手動複製 `doc_id`。舊文中的 47 / 53 / 69 只保留為歷史快照，不再作為規劃真相。
 
-### ATM-0：3KLife governance bootstrap（11 卡）
+### ATM-0：3KLife governance bootstrap（14 卡）
 
 | 範圍 | 任務 | 目的 |
 |---|---|---|
@@ -301,8 +358,9 @@ docs/ai_atomic_framework/
 | ATM-0-0009 | Default Governance Bundle 切分重規劃 | 將 ATM 補強為具備通用 task/index/shard/artifact/log/rule/evidence 的完整治理框架，同時保留 3KLife 工具以 adapter 接入。 |
 | ATM-0-0010 | Self-hosting first 邊界與中立性 guard 落地 | 將 upstream self-hosting first、docs neutrality 與 neutrality/boundary guard 正式寫入主文件與任務分工。 |
 | ATM-0-0011 | Context budget 治理補強與文件回寫 | 將 context budget 提升為 upstream governance primitive，並與 encoding / neutrality 收斂成 Agent Governance Bundle。 |
+| ATM-0-0012~0014 | cross-shard lock / tasks-atm auto-parts / 瘦身再開工收斂 | 補 task-lock cross-shard 檢查、tasks-atm auto-parts 讀取層，並將 active/companion/historical、alpha0/alpha1、OSS 實務缺口與 H2U dry-run gate 寫回規劃。 |
 
-### ATM-1：上游 repo skeleton 與 self-hosting alpha gate（10 卡）
+### ATM-1：上游 repo skeleton 與 self-hosting alpha0 gate（10 卡）
 
 | 範圍 | 任務 | 目的 |
 |---|---|---|
@@ -313,7 +371,7 @@ docs/ai_atomic_framework/
 | ATM-1-0009 | Self-hosting alpha proof | 在 standalone upstream repo 證明 first task、scope lock、artifact/log/evidence 與 first atom smoke 都可不靠 3KLife 完成。 |
 | ATM-1-0010 | Upstream docs neutrality audit | 全盤掃描 README/AGENTS/docs/examples/templates，確保上游文件不夾帶 adopter 私有資訊。 |
 
-### ATM-2：Core Manager、Registry、HashLock、Police、Governance Bundle（11 卡）
+### ATM-2：Core Manager、Registry、HashLock、Police、Governance Bundle（12 卡）
 
 | 範圍 | 任務 | 目的 |
 |---|---|---|
@@ -326,7 +384,7 @@ docs/ai_atomic_framework/
 | ATM-2-0010 | Neutrality boundary rule guard | 建立 deterministic + optional semantic 的中立性/邊界守衛，持續攔截 adopter 私有假設回流 upstream。 |
 | ATM-2-0011 | Context budget guard | 建立 context budget primitive、budget policy、summary/hard-stop/report contract，讓 ATM 可獨立治理 token/context 預算與摘要節流。 |
 
-### ATM-3：3KLife adapter 導入（downstream-only，需待 self-hosting alpha gate）（5 卡）
+### ATM-3：3KLife adapter 導入（downstream-only，需待 self-hosting alpha0 gate）（13 卡）
 
 | 範圍 | 任務 | 目的 |
 |---|---|---|
@@ -372,8 +430,10 @@ docs/ai_atomic_framework/
 |---|---|---|---|---|
 | **B0** | Hand-written Seed | 原 ATM-1-0001~0007 中的 spec/CLI/HashLock 種子部分 | 300 | seed self-test pass |
 | **B1** | Seed Dogfoods Itself | 新增 ATM-1.5-0001~0003 | +200 | `atm verify --self` 通過 |
-| **B2** | Default Governance Bundle | 原 ATM-2-0001~0011 + 新增 ATM-2-0012 | +5000 | hello-world example pass |
-| **B3** | Self-Hosting Alpha Gate | 新增 ATM-2.5-0001~0003 | (validation only) | `atm self-host-alpha --verify` 全綠 |
+| **B2** | Alpha0 Minimal Core | 原 ATM-2-0001~0006 + ATM-2-0012 的 deterministic neutrality scanner；只保留 schema / registry / hash-lock / CLI / hello-world atom / 最小 task-lock-evidence | +1500 | hello-world example + minimal evidence pass |
+| **B3** | Self-Hosting Alpha0 Gate | 新增 ATM-2.5-0001~0002；ATM-2.5-0003 降級為 confidence report | (validation only) | `atm self-host-alpha --verify --deterministic` 全綠 |
+
+Default Governance Bundle 的其他 reference plugins（完整 task cards、doc index、shard、artifact/log store、rule guard、encoding、context budget、evidence workflow）移到 alpha1，由 ATM-2-0007~0009 與 ATM-2-0011 按 schema-first 順序落地，不再阻塞 alpha0。
 
 ### 新增任務卡
 
@@ -393,13 +453,13 @@ docs/ai_atomic_framework/
 
 對應 `open-source-extraction-plan.md` §1.1.5.1。
 
-#### ATM-2.5：Self-Hosting Alpha Gate（3 卡，新增）
+#### ATM-2.5：Self-Hosting Alpha0 Gate（3 卡，新增）
 
 | 範圍 | 任務 | 目的 |
 |---|---|---|
 | ATM-2.5-0001 | self-host-alpha verify CLI | 落地 4 條 boolean criteria 的機器驗證命令 `atm self-host-alpha --verify --json` |
-| ATM-2.5-0002 | sandbox repo fixture | 在空白 sandbox repo 跑完整 alpha gate 流程；fixture 進 `tests/fixtures/sandbox/` |
-| ATM-2.5-0003 | multi-agent compatibility verification | 對應 [`multi-agent-compatibility-matrix.md`](multi-agent-compatibility-matrix.md)；至少 5 中 3 過 |
+| ATM-2.5-0002 | sandbox repo fixture | 在空白 sandbox repo 跑完整 alpha0 deterministic gate 流程；fixture 進 `tests/fixtures/sandbox/` |
+| ATM-2.5-0003 | multi-agent compatibility confidence report | 對應 [`multi-agent-compatibility-matrix.md`](multi-agent-compatibility-matrix.md)；產出 5-agent confidence report，不阻塞 alpha0 |
 
 #### ATM-3 補強：既有治理工具 adapter 化（新增 8 卡）
 
@@ -481,7 +541,7 @@ node tools_node/task-lock.js unlock ATM-X-NNNN <agent-name>
 
 5. **import-boundary**：`tools_node/check-import-boundaries.js` 加白名單，允許 `tools_node/lib/**` 與 `tools_node/_atomic_registry/**` 雙向 import；其他模組僅可 import `_atomic_registry/AtomicInterface.js`。
 
-6. **shard 註冊**：`docs/tasks/.shardrc.json` 新增 `{"name":"tasks-atm","title":"ATM Tasks","pattern":"^ATM-"}`；`docs/tasks/tasks-atm.json` 空檔（ATM-0-0001 處理）。
+6. **shard 註冊**：`docs/tasks/.shardrc.json` 新增 `{"name":"tasks-atm","title":"ATM Tasks","pattern":"^ATM-"}`；`docs/tasks/tasks-atm.json` 後續由 ATM-0-0013 收斂為 thin index 與 `tasks-atm-part-*.json`。
 
 7. **rollback 安全**：`inject-plan.js` 與 `rollback-plan.js` 必須對稱輸出兩份 patch JSON；regression-matrix 在 hash 變更時要求 owner 簽名（`atm-cli lock --sign --by <agent>`）才能更新 baseline，避免「跑紅就改 baseline」。
 
@@ -544,9 +604,9 @@ node tools_node/atomic-framework/atm-cli.js police --task ATM-4-0003
 
 | 檔案 | 角色 | 動作 |
 |---|---|---|
-| `docs/agent-briefs/tasks/ATM-{0..6}-NNNN.md` | 47 張任務卡 | 已由 task-card-opener 建立，含 v0.2、Default Governance Bundle 與 Agent Operating Layer 補強卡 |
+| `docs/agent-briefs/tasks/ATM-{0..6}-NNNN.md` | 71 張任務卡 | 已由 task-card-opener 建立，含 v0.2、alpha0/alpha1、Default Governance Bundle 與 Agent Operating Layer 補強卡 |
 | `docs/tasks/.shardrc.json` | shard 路由 | 修改（加 tasks-atm）— ATM-0-0001 |
-| `docs/tasks/tasks-atm.json` | ATM 任務索引 | 新建 — ATM-0-0001 |
+| `docs/tasks/tasks-atm.json` | ATM 任務 thin index 入口 | 已收斂 — ATM-0-0013 |
 | `docs/遊戲規格文件/系統規格書/名詞定義文件.md` | 系統代號真相 | 修改（加 ATM 條目）— ATM-0-0002 |
 | `docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md` | 上游開源 roadmap | 修改 — ATM-0-0003 |
 | `docs/ai_atomic_framework/AI原子框架開發計畫書.md` | 3KLife downstream adopter plan | 修改 — ATM-0-0004 |
@@ -565,7 +625,7 @@ node tools_node/atomic-framework/atm-cli.js police --task ATM-4-0003
 
 - 本計畫的第一張卡 **ATM-0-0001**（shard 路由註冊）必須先做完，否則任何 ATM-* 任務卡都無法被 task-card-opener 識別。
 - ATM-0-0002（名詞定義新增 ATM prefix）也是啟動條件，缺它 doc-id-registry 會報衝突。
-- 47 張卡建議 4 週時間盒：W1=ATM-0+1，W2=ATM-2+3，W3=ATM-4+5，W4=ATM-6 與 v0.1 alpha / optional plugin 決策。
+- 任務數不再使用 47 / 53 / 69 舊快照；以 `docs/tasks/tasks-atm.json` thin index summary、`tasks-atm-part-*.json` 內容分片與本文件的 71 張任務卡分布為準。時間盒改為：W1=ATM-0+1+alpha0 schema seed，W2=ATM-2 alpha0 gate，W3=ATM-3 shadow adapter + alpha1 schema，W4=ATM-4 dry-run case + ATM-5/6 OSS 補件。
 - 每張卡開工前依 CLAUDE.md 硬規則 #0：**check → lock → 改 frontmatter**，不可省略。
 - 不允許把 ATM-4 的 case atom 抽取與 H2U-REFACTOR-0001/0002 的 draft-builder 拆檔同時做，避免時序衝突；case study 只能透過 dry-run inject plan 推進。
 

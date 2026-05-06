@@ -1778,7 +1778,7 @@
   {
     "id": "doc_task_0305",
     "path": "docs/agent-briefs/tasks/ATM-2.5-0003.md",
-    "title": "[ATM-2.5-0003] Multi-Agent 兼容性驗證：5 種 AI Agent Alpha Gate 測試",
+    "title": "[ATM-2.5-0003] Multi-Agent 兼容性驗證：confidence gate",
     "category": "task"
   },
   {
@@ -1827,6 +1827,18 @@
     "id": "doc_task_0313",
     "path": "docs/agent-briefs/tasks/ATM-3-0013.md",
     "title": "[ATM-3-0013] finalize-agent-turn.js wrapper 接入 ATM run envelope",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0314",
+    "path": "docs/agent-briefs/tasks/ATM-0-0013.md",
+    "title": "[ATM-0-0013] tasks-atm.json thin index 與細分片",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0315",
+    "path": "docs/agent-briefs/tasks/ATM-0-0014.md",
+    "title": "[ATM-0-0014] ATM 瘦身再開工與規劃真相收斂",
     "category": "task"
   }
 ]

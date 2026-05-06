@@ -11,7 +11,7 @@
 
 ATM 開源框架的核心承諾之一是「**model-neutral / agent-neutral**」 — README、AGENTS.md、`.atm/profile` 不應綁定任何特定 AI agent。但「設計上 generic」與「實際上 generic」是兩件事；AGENTS.md 容易夾帶 Claude Code 特定的 slash command 假設、Cursor 特定的編輯器 hook、Copilot 特定的 PR 行為。
 
-本矩陣定義 **5 個 AI agent 的 alpha gate 兼容性測試**，作為上游 ATM upstream 的 **acceptance condition** — 任一 agent 不通過 alpha gate，AGENTS.md / `.atm/profile` 必須修到通過後才釋出 ATM 0.1.0 alpha。
+本矩陣定義 **5 個 AI agent 的 confidence gate 兼容性測試**，作為上游 ATM upstream 的 **信心報告**。它不再阻塞 alpha0；alpha0 release blocker 僅保留 deterministic profile check、schema validation、hash-lock、hello-world atom smoke 與最小 task/lock/evidence。任一 agent 不通過時，必須留下 issue link、修復計畫與是否阻塞 alpha1 的判定。
 
 ---
 
@@ -19,20 +19,20 @@ ATM 開源框架的核心承諾之一是「**model-neutral / agent-neutral**」 
 
 | Agent | 模型 / 工具 | Test cmd | Pass criteria | Owner | 釋出阻塞？ |
 |---|---|---|---|---|---|
-| **Claude Code** | Sonnet 4.6 / Opus 4.7 | `atm self-host-alpha --agent claude-code --json` | 4 條 alpha gate 全 boolean true | upstream maintainer | ✅ 必過 |
-| **Cursor** | GPT-4o / Claude Sonnet | manual run with prompt recipe | 同上 | community contributor | ⚠️ 至少 3/5 過 |
-| **Aider** | GPT-4o / GPT-4-turbo | `aider --message "$(cat .atm/AGENTS.md)" --yes-always` | 同上 | community | ⚠️ 至少 3/5 過 |
-| **GitHub Copilot Agent** | GPT-4 | `gh copilot agent run` | 同上 | community | ⚠️ 至少 3/5 過 |
-| **OpenAI Assistants API** | GPT-4o / o1 | `node tests/agents/openai-assistant.test.js` | 同上 | upstream | ⚠️ 至少 3/5 過 |
+| **Claude Code** | Sonnet 4.6 / Opus 4.7 | `atm self-host-alpha --agent claude-code --json` | 產出 deterministic criteria + confidence report | upstream maintainer | 否，除非 deterministic alpha0 criteria 失敗 |
+| **Cursor** | GPT-4o / Claude Sonnet | manual run with prompt recipe | 產出 confidence report | community contributor | 否 |
+| **Aider** | GPT-4o / GPT-4-turbo | `aider --message "$(cat .atm/AGENTS.md)" --yes-always` | 產出 confidence report | community | 否 |
+| **GitHub Copilot Agent** | GPT-4 | `gh copilot agent run` | 產出 confidence report | community | 否 |
+| **OpenAI Assistants API** | GPT-4o / o1 | `node tests/agents/openai-assistant.test.js` | 產出 confidence report | upstream | 否 |
 
-**釋出條件**：
-- Claude Code 必過（上游主開發環境）
-- 至少 5 個中的 3 個過 alpha gate
-- 任一 agent 過不了 → 必須查清原因；AGENTS.md 改 generic 化後 retest
+**alpha0 釋出條件**：
+- deterministic alpha0 criteria 全綠
+- 5 個 agent 皆有結果檔與摘要；不要求 3/5 全 true 才能釋出 alpha0
+- 任一 agent 過不了 → 必須查清原因，留下 issue link、修復計畫與 alpha1 阻塞判定
 
 ---
 
-## Alpha Gate 4 條判定（與 `open-source-extraction-plan.md` §1.1.4 一致）
+## Alpha0 deterministic 4 條判定（與 `open-source-extraction-plan.md` §1.1.4 一致）
 
 | # | Criteria | Cmd | Pass condition |
 |---|---|---|---|
@@ -56,7 +56,7 @@ git init
 npm i -g atm-cli@latest
 
 # 啟動 Claude Code，給予一行指令
-claude --message "Read README.md and AGENTS.md, then run alpha gate test"
+claude --message "Read README.md and AGENTS.md, then run alpha0 deterministic test"
 
 # 預期 Claude Code 自動執行：
 # 1. atm init --adopt --dry-run --json
@@ -77,7 +77,7 @@ atm self-host-alpha --verify --json
 
 **測試流程**（手動）：
 1. 開 Cursor 在 sandbox repo
-2. Chat panel 輸入：`Read AGENTS.md and complete the alpha gate setup`
+2. Chat panel 輸入：`Read AGENTS.md and complete the alpha0 deterministic setup`
 3. 觀察 Cursor 是否會自動執行 `atm init` / `atm task create` / `atm test`
 4. 跑 `atm self-host-alpha --verify` 驗證
 
@@ -110,7 +110,7 @@ atm self-host-alpha --verify --json
 ```bash
 cd /tmp/atm-sandbox-copilot
 git init
-gh copilot agent run --task "Read AGENTS.md and complete alpha gate"
+gh copilot agent run --task "Read AGENTS.md and complete alpha0 deterministic check"
 # 驗證
 atm self-host-alpha --verify --json
 ```
@@ -128,7 +128,7 @@ node tests/agents/openai-assistant.test.js
 # 此測試會：
 # 1. 建立 OpenAI assistant，instructions = AGENTS.md 內容
 # 2. 給 assistant 工具：file_search + code_interpreter + custom function (atm CLI wrapper)
-# 3. 觸發 alpha gate 流程
+# 3. 觸發 alpha0 deterministic + confidence 流程
 # 4. assert 4 條 criteria 全綠
 ```
 
@@ -154,8 +154,8 @@ atm verify --agents-md
 
 | 事件 | 動作 |
 |---|---|
-| AGENTS.md 改動 | 必跑全 5 agent 測試 |
-| ATM minor 升級 | 必跑全 5 agent 測試（成為 release acceptance）|
+| AGENTS.md 改動 | 必跑 deterministic profile check；5 agent confidence 可批次補跑 |
+| ATM minor 升級 | 必跑全 5 agent confidence 測試；是否阻塞 release 由 release owner 判定 |
 | 新 AI agent 加入主流（如 GLM、Gemini Code）| 評估加入矩陣；社群可主動貢獻 owner |
 | 任一 agent EOL（如 Aider 停更）| 從矩陣移除；不阻塞釋出 |
 
@@ -176,7 +176,7 @@ atm verify --agents-md
 
 ## 退場機制
 
-若某 agent 連續 3 個 minor 都不過 alpha gate，且：
+若某 agent 連續 3 個 minor 都不過 confidence gate，且：
 - 該 agent 用戶量 < 5%（依 ecosystem stats）
 - 該 agent 的修復成本 > 維持 ATM neutrality 的成本
 

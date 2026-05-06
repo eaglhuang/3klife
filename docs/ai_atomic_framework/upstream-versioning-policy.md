@@ -27,7 +27,8 @@
 
 | Tier | 版本範圍 | API 穩定承諾 | 推薦使用場景 |
 |---|---|---|---|
-| **alpha** | 0.0.x – 0.1.x | API 隨意 break，無 deprecation | 內部嘗鮮、PoC、tracking 真相 |
+| **alpha0** | 0.0.x | API 隨意 break，僅證明 schema / registry / hash-lock / CLI / hello-world atom / minimal evidence | 內部自舉、空白 repo proof |
+| **alpha1** | 0.1.x | API 可 break，但 Default Governance Bundle 與 AdapterReport 開始收斂；仍無正式 deprecation 承諾 | 預設治理套件、shadow adapter、confidence report |
 | **beta** | 0.2.x – 0.9.x | minor 之間 stable，major 可 break，需 migration guide | 早期生產、有 fallback plan |
 | **stable** | ≥1.0.0 | 完整 SemVer 2.0；breaking 必走 deprecation cycle | 正式生產 |
 | **lts** | ≥2.0.0（規劃）| 長期維護版本，每年標一個 minor 為 LTS | 保守生產環境 |
@@ -36,8 +37,9 @@
 
 | 切換 | 條件 |
 |---|---|
-| alpha → beta | Self-Hosting Alpha Gate 全綠 + ≥10 atoms 自舉 + ≥3 個 reference adapter（含 3KLife）+ docs neutrality CI 全綠 |
-| beta → stable | ≥30 atoms 自舉 + ≥3 個 production adopter（含 3KLife html-to-ucuf case）+ regression matrix 連續 4 週無退轉 + 多 AI agent 兼容矩陣 ≥4/5 過 |
+| alpha0 → alpha1 | Self-hosting alpha0 deterministic gate 全綠 + hello-world atom + minimal task/lock/evidence + docs neutrality CI 全綠 |
+| alpha1 → beta | Default Governance Bundle reference plugins 完成 + ≥10 atoms 自舉 + ≥1 個 shadow adapter（3KLife 低風險 helper atom）+ multi-agent confidence report 已產出 |
+| beta → stable | ≥30 atoms 自舉 + ≥3 個 production adopter（含 3KLife html-to-ucuf case）+ regression matrix 連續 4 週無退轉 + 多 AI agent 兼容矩陣作為 confidence report，release owner 判定是否阻塞 |
 | stable → lts | 規劃中（v2.0+ 議題）|
 
 ---

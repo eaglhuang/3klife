@@ -142,7 +142,7 @@ node tools_node/task-lock.js check-cross-shard <task-id> --files <files>
 - [ ] ATM-6-0001 / 0002 / 0003 / 0004 全部 status=done
 - [ ] 第一批 atom（normalizeCssColor / parseCssLength / parseFragmentList / html-parser adapter）正式由 AtomicInterface 提供
 - [ ] `draft-builder.js` 與 `html-parser.js` 完全經過 ATM rule guard 一次驗證
-- [ ] 3KLife 端進入 D3 stage（既有治理工具 adapter 化）
+- [ ] 3KLife 端進入 S3/S4 consumption stage（既有治理工具 adapter 化）
 
 並行期結束後，所有新 helper 一律走 ATM-* 路徑（不再開 H2U-REFACTOR-* 純 helper 卡），詳見 [`3klife-consumption-roadmap.md`](3klife-consumption-roadmap.md) §S3。
 

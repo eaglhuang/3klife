@@ -108,7 +108,7 @@ npm i                                          # 重新安裝
 ### 適用條件
 - ATM 0.5.0 ~ 0.9.x 已釋出
 - minor 之間 API stable，major 可 break（但有 deprecation cycle）
-- 3KLife 已注入第一批 atom（D2 stage 完成）
+- 3KLife 已以 shadow/parity mode 驗證第一批 atom（S2 consumption stage 完成）
 
 ### 消費形式
 ```jsonc
@@ -156,7 +156,7 @@ npm i
 ### 適用條件
 - ATM ≥1.0.0
 - 完整 SemVer 2.0
-- 3KLife 已完成 D3 stage（既有治理工具 adapter 化）
+- 3KLife 已完成 S3/S4 交接條件（既有治理工具 adapter 化）
 
 ### 消費形式
 ```jsonc
@@ -244,9 +244,9 @@ node tools_node/compute-gate.js --profile atm
 | Stage | 進入條件（必須全部滿足） |
 |---|---|
 | S1 | ATM upstream repo 已建立；不需 ATM 釋出 |
-| S2 | ATM 0.1.0 alpha 釋出 + Self-Hosting Alpha Gate 全綠 |
-| S3 | ATM 0.5.0 beta 釋出 + 3KLife adapter 全部就位（13 adapter）+ 第一批 atom 注入完成 |
-| S4 | ATM 1.0.0 stable 釋出 + 3KLife 既有治理工具 adapter 化完成（D3 stage 結束）|
+| S2 | ATM alpha0 釋出 + Self-hosting alpha0 deterministic gate 全綠 |
+| S3 | ATM alpha1 / beta 前置版釋出 + 3KLife shadow adapter 全部就位（13 adapter）+ 第一批 helper atom parity test 完成 |
+| S4 | ATM 1.0.0 stable 釋出 + 3KLife 既有治理工具 adapter 化完成（S3 consumption stage 結束）|
 
 ---
 

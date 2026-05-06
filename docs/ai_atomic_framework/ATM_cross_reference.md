@@ -17,6 +17,8 @@
 **如需讀大型文件（AI_Atomic_Framework_Roadmap.md，2808 行）**：
 → 優先讀 `docs/ai_atomic_framework/shards/` 下對應分片（H2 level 分割）
 
+名詞定位：`D1~D11` 是本索引的文件路由 Domain，不是開發 phase；`D2` 表示 ATM 版本政策、`D3` 表示 3KLife 消費策略。`ATM-7` 目前只保留為 DB/vector/advanced orchestrator 類後置討論名稱，不屬於 alpha0/alpha1 任務 shard。
+
 ---
 
 ## 快查路由表
@@ -33,7 +35,7 @@
 | **D8 自舉進程** | B0/B1/B2/B3 sub-phase, seed, bootstrap paradox, self-host-alpha, 框架自舉, 第一批atom | `doc_other_0028` §v0.2.1補強 §Sub-phase與任務卡映射; `doc_other_0030` §Phase B預備 |
 | **D9 Schema 演化** | atmSchemaVersion, spec migration, v1→v2, schema major bump, schema PR | `doc_other_0035` §7 |
 | **D10 Cross-language** | Python adapter, LanguageAdapter SPI, 多語言, C#, Go | `doc_other_0035` §6 |
-| **D11 里程碑 / 任務卡** | ATM-0~7 卡號, 任務清單, 北極星, 驗收命令, milestone, 任務總覽 | `doc_other_0028` §里程碑（ATM-0~ATM-6）; `doc_other_0030` §Phase A/B/C/D |
+| **D11 里程碑 / 任務卡** | ATM-0~6 卡號, ATM-7 deferred optional, 任務清單, 北極星, 驗收命令, milestone, 任務總覽 | `doc_other_0028` §里程碑（ATM-0~ATM-6）; `doc_other_0030` §Phase A/B/C/D |
 
 **大理論 / 背景知識（無需精確段落定位）**：
 - Vibe Coding 失控原理 → `doc_other_0029` §1（AI_Atomic_Framework_Roadmap.md L49）
@@ -47,53 +49,57 @@
 ## Section Inventory
 
 > 由 `node tools_node/rebuild-atm-crossref.js` 自動維護，請勿手工修改本區塊內容。
-> 上次更新：2026-05-05
+> 上次更新：2026-05-06
 
-### doc_other_0028 — AI原子框架開發計畫書.md（607 行）⚠️ 超大，優先讀 shards/
+### doc_other_0028 — AI原子框架開發計畫書.md（646 行）⚠️ 超大，優先讀 shards/
 
 | 行號 | 標題層級 | 標題 |
 |---|---|---|
 | 12 | H2 | Context |
 | 28 | H2 | 上游先自舉、downstream 後驗證 |
-| 43 | H2 | 獨立 Repo 與 3KLife 分工 |
-| 59 | H2 | v0.2 companion 採納矩陣 |
-| 79 | H3 | 3KLife adapter 技術棧校正矩陣（細版） |
-| 113 | H2 | 目標 |
-| 121 | H2 | ATM 獨立可啟動的最小通用層 |
-| 143 | H2 | 解決問題的原理 |
-| 159 | H2 | 與本專案的相容性分析（Roadmap 必須校正的 8 點） |
-| 176 | H2 | 目錄結構規劃（四區） |
-| 204 | H3 | 區 1：框架工作區（AI 沙盒，CLI/Manager 入口） |
-| 244 | H3 | 區 2：共用純邏輯（atm-cli 與 hook 共用） |
-| 256 | H3 | 區 3：Runtime 原子產物（與 Legacy 共處的「正式」代碼） |
-| 272 | H3 | 區 4：ATM 文件區 |
-| 289 | H2 | 里程碑（ATM-0 ~ ATM-6）+ 已開任務卡清單 |
-| 293 | H3 | ATM-0：3KLife governance bootstrap（11 卡） |
-| 305 | H3 | ATM-1：上游 repo skeleton 與 self-hosting alpha gate（10 卡） |
-| 316 | H3 | ATM-2：Core Manager、Registry、HashLock、Police、Governance Bundle（11 卡） |
-| 329 | H3 | ATM-3：3KLife adapter 導入（downstream-only，需待 self-hosting alpha gate）（5 卡） |
-| 337 | H3 | ATM-4：html-to-ucuf reference case study（downstream-only）（6 卡） |
-| 346 | H3 | ATM-5：開源文件、Plugin SDK、alpha release（5 卡） |
-| 354 | H3 | ATM-6：生態擴張與後置決策（5 卡） |
-| 365 | H2 | v0.2.1 補強：開源獨立自舉路徑（B0–B3 sub-phasing 與新增任務卡） |
-| 369 | H3 | Sub-phase 與任務卡映射 |
-| 378 | H3 | 新增任務卡 |
-| 419 | H3 | 並行開發協議 |
-| 423 | H3 | 依賴與消費路線圖 |
-| 427 | H3 | Versioning Policy |
-| 433 | H2 | 執行 Checklist（每張 ATM 卡通用） |
-| 435 | H3 | 開工序列 |
-| 443 | H3 | 進行中（每次儲存後） |
-| 450 | H3 | 收工序列 |
-| 466 | H2 | 不退轉機制（hash lock + regression matrix 落地） |
-| 468 | H3 | 要動的具體檔案 |
-| 488 | H3 | §6.1 Schema versioning policy（v0.2.1 補強） |
-| 501 | H2 | 風險與防範 |
-| 514 | H2 | 驗證命令（階段性北極星） |
-| 543 | H2 | Critical Files |
-| 564 | H2 | 執行流程提醒 |
-| 574 | H2 | 附錄 A：與 Roadmap 對應表 |
-| 600 | H2 | 附錄 B：未在本計畫範圍內的事項（明確排除） |
+| 43 | H2 | 2026-05-06 瘦身再開工補強決策 |
+| 47 | H3 | 文件真相收斂 |
+| 61 | H3 | alpha0 / alpha1 拆分 |
+| 70 | H3 | gate 與 adapter 降風險規則 |
+| 79 | H2 | 獨立 Repo 與 3KLife 分工 |
+| 95 | H2 | v0.2 companion 採納矩陣 |
+| 115 | H3 | 3KLife adapter 技術棧校正矩陣（細版） |
+| 149 | H2 | 目標 |
+| 157 | H2 | ATM 獨立可啟動的最小通用層 |
+| 179 | H2 | 解決問題的原理 |
+| 195 | H2 | 與本專案的相容性分析（Roadmap 必須校正的 8 點） |
+| 212 | H2 | 目錄結構規劃（四區） |
+| 240 | H3 | 區 1：框架工作區（AI 沙盒，CLI/Manager 入口） |
+| 280 | H3 | 區 2：共用純邏輯（atm-cli 與 hook 共用） |
+| 292 | H3 | 區 3：Runtime 原子產物（與 Legacy 共處的「正式」代碼） |
+| 308 | H3 | 區 4：ATM 文件區 |
+| 325 | H2 | 里程碑（ATM-0 ~ ATM-6）+ 已開任務卡清單 |
+| 329 | H3 | ATM-0：3KLife governance bootstrap（14 卡） |
+| 342 | H3 | ATM-1：上游 repo skeleton 與 self-hosting alpha0 gate（10 卡） |
+| 353 | H3 | ATM-2：Core Manager、Registry、HashLock、Police、Governance Bundle（12 卡） |
+| 366 | H3 | ATM-3：3KLife adapter 導入（downstream-only，需待 self-hosting alpha0 gate）（13 卡） |
+| 374 | H3 | ATM-4：html-to-ucuf reference case study（downstream-only）（6 卡） |
+| 383 | H3 | ATM-5：開源文件、Plugin SDK、alpha release（5 卡） |
+| 391 | H3 | ATM-6：生態擴張與後置決策（5 卡） |
+| 402 | H2 | v0.2.1 補強：開源獨立自舉路徑（B0–B3 sub-phasing 與新增任務卡） |
+| 406 | H3 | Sub-phase 與任務卡映射 |
+| 417 | H3 | 新增任務卡 |
+| 458 | H3 | 並行開發協議 |
+| 462 | H3 | 依賴與消費路線圖 |
+| 466 | H3 | Versioning Policy |
+| 472 | H2 | 執行 Checklist（每張 ATM 卡通用） |
+| 474 | H3 | 開工序列 |
+| 482 | H3 | 進行中（每次儲存後） |
+| 489 | H3 | 收工序列 |
+| 505 | H2 | 不退轉機制（hash lock + regression matrix 落地） |
+| 507 | H3 | 要動的具體檔案 |
+| 527 | H3 | §6.1 Schema versioning policy（v0.2.1 補強） |
+| 540 | H2 | 風險與防範 |
+| 553 | H2 | 驗證命令（階段性北極星） |
+| 582 | H2 | Critical Files |
+| 603 | H2 | 執行流程提醒 |
+| 613 | H2 | 附錄 A：與 Roadmap 對應表 |
+| 639 | H2 | 附錄 B：未在本計畫範圍內的事項（明確排除） |
 
 ### doc_other_0029 — AI_Atomic_Framework_Roadmap.md（2809 行）⚠️ 超大，優先讀 shards/
 
@@ -234,35 +240,35 @@
 | 2707 | H2 | 22. 附錄：第一個 Prompt 建議 |
 | 2731 | H2 | 23. 附錄：第一批檔案清單 |
 
-### doc_other_0030 — open-source-extraction-plan.md（389 行）
+### doc_other_0030 — open-source-extraction-plan.md（392 行）
 
 | 行號 | 標題層級 | 標題 |
 |---|---|---|
 | 9 | H2 | 1. 拆分原則 |
 | 11 | H3 | 1.1 Core 必須保持獨立 |
 | 29 | H3 | 1.1.1 v0.2 MVP 邊界 |
-| 38 | H3 | 1.1.2 Default Governance Bundle 邊界 |
-| 64 | H3 | 1.1.3 Agent Operating Layer |
-| 76 | H3 | 1.1.4 Self-Hosting Alpha Gate |
-| 85 | H3 | 1.1.5 Docs Neutrality / Boundary Guard |
-| 93 | H3 | 1.1.5.1 Neutrality Scanner 落地細節 |
-| 114 | H3 | 1.1.6 Context Budget Guard |
-| 125 | H3 | 1.2 Adapter 承接所有宿主差異 |
-| 147 | H2 | 2. 新 repo 建議結構 |
-| 191 | H3 | 2.1 Monorepo Toolchain：pnpm + Turborepo（alpha 預設） |
-| 228 | H2 | 3. 拆出階段 |
-| 230 | H3 | Phase A：文件解耦 |
-| 240 | H3 | Phase B 預備：B0 / B1 / B2 / B3 Sub-phasing |
-| 259 | H3 | Phase B：上游 repo skeleton |
-| 272 | H3 | Phase C：3KLife adapter |
-| 283 | H3 | Phase D：Reference case study |
-| 294 | H2 | 4. 開源發布清單 |
-| 305 | H3 | 4.1 Examples 驗收矩陣 |
-| 319 | H3 | 4.2 Open-source Operations 完整清單 |
-| 339 | H2 | 5. 3KLife 回同步策略 |
-| 348 | H2 | 6. 3KLife Consumption Roadmap（4-stage 演進） |
-| 368 | H2 | 7. 多 AI Agent 兼容性 |
-| 378 | H2 | 8. Versioning & Lifecycle Policy |
+| 41 | H3 | 1.1.2 Default Governance Bundle 邊界 |
+| 67 | H3 | 1.1.3 Agent Operating Layer |
+| 79 | H3 | 1.1.4 Self-Hosting Alpha0 Gate |
+| 88 | H3 | 1.1.5 Docs Neutrality / Boundary Guard |
+| 96 | H3 | 1.1.5.1 Neutrality Scanner 落地細節 |
+| 117 | H3 | 1.1.6 Context Budget Guard |
+| 128 | H3 | 1.2 Adapter 承接所有宿主差異 |
+| 150 | H2 | 2. 新 repo 建議結構 |
+| 194 | H3 | 2.1 Monorepo Toolchain：pnpm + Turborepo（alpha 預設） |
+| 231 | H2 | 3. 拆出階段 |
+| 233 | H3 | Phase A：文件解耦 |
+| 243 | H3 | Phase B 預備：B0 / B1 / B2 / B3 Sub-phasing |
+| 262 | H3 | Phase B：上游 repo skeleton |
+| 275 | H3 | Phase C：3KLife adapter |
+| 286 | H3 | Phase D：Reference case study |
+| 297 | H2 | 4. 開源發布清單 |
+| 308 | H3 | 4.1 Examples 驗收矩陣 |
+| 322 | H3 | 4.2 Open-source Operations 完整清單 |
+| 342 | H2 | 5. 3KLife 回同步策略 |
+| 351 | H2 | 6. 3KLife Consumption Roadmap（4-stage 演進） |
+| 371 | H2 | 7. 多 AI Agent 兼容性 |
+| 381 | H2 | 8. Versioning & Lifecycle Policy |
 
 ### doc_other_0031 — AI_Atomic_Framework_Optimized_Roadmap_v0.2.md（428 行）
 
@@ -381,7 +387,7 @@
 |---|---|---|
 | 10 | H2 | 為什麼需要本矩陣 |
 | 18 | H2 | 測試矩陣 |
-| 35 | H2 | Alpha Gate 4 條判定（與 `open-source-extraction-plan.md` §1.1.4 一致） |
+| 35 | H2 | Alpha0 deterministic 4 條判定（與 `open-source-extraction-plan.md` §1.1.4 一致） |
 | 46 | H2 | 各 Agent 測試流程 |
 | 48 | H3 | Claude Code |
 | 74 | H3 | Cursor |
@@ -394,46 +400,46 @@
 | 177 | H2 | 退場機制 |
 | 187 | H2 | 未來擴展（v1.0+） |
 
-### doc_other_0035 — upstream-versioning-policy.md（293 行）
+### doc_other_0035 — upstream-versioning-policy.md（295 行）
 
 | 行號 | 標題層級 | 標題 |
 |---|---|---|
 | 11 | H2 | 為什麼需要本政策 |
 | 26 | H2 | 1. Tier 定義 |
-| 35 | H3 | Tier 切換條件 |
-| 45 | H2 | 2. SemVer 2.0 對 ATM 的具體解讀 |
-| 47 | H3 | 2.1 Major bump（X.y.z → X+1.0.0） |
-| 61 | H3 | 2.2 Minor bump（X.Y.z → X.Y+1.0） |
-| 66 | H3 | 2.3 Patch bump（X.Y.Z → X.Y.Z+1） |
-| 73 | H2 | 3. Deprecation Cycle |
-| 75 | H3 | 3.1 標準流程 |
-| 85 | H3 | 3.2 例外 |
-| 89 | H3 | 3.3 Deprecation 標記範例 |
-| 101 | H2 | 4. Compatibility Matrix |
-| 103 | H3 | 4.1 維護位置 |
-| 128 | H3 | 4.2 升級檢查 |
-| 138 | H3 | 4.3 維護節奏 |
-| 145 | H2 | 5. Breaking Change PR Template |
-| 150 | H2 | Type |
-| 153 | H2 | Affected APIs |
-| 157 | H2 | Reason |
-| 160 | H2 | Migration Path |
-| 167 | H2 | Compatibility Matrix Update |
-| 178 | H2 | 6. Cross-language Roadmap |
-| 180 | H3 | 6.1 Stage 對應 |
-| 189 | H3 | 6.2 LanguageAdapter SPI（v0.2 開放） |
-| 207 | H3 | 6.3 README 措辭規範 |
-| 225 | H2 | 7. Atomic Spec Schema 演化 |
-| 227 | H3 | 7.1 schemaVersion 必填 |
-| 238 | H3 | 7.2 Schema major bump |
-| 243 | H3 | 7.3 Schema minor bump |
-| 248 | H3 | 7.4 Schema PR 必含 |
-| 255 | H2 | 8. 釋出節奏與通告 |
-| 257 | H3 | 8.1 釋出頻率 |
-| 265 | H3 | 8.2 釋出通告渠道 |
-| 273 | H3 | 8.3 LTS 政策（v2.0+ 規劃） |
-| 280 | H2 | 9. 政策審查節奏 |
-| 288 | H2 | 10. 引用與相依政策 |
+| 36 | H3 | Tier 切換條件 |
+| 47 | H2 | 2. SemVer 2.0 對 ATM 的具體解讀 |
+| 49 | H3 | 2.1 Major bump（X.y.z → X+1.0.0） |
+| 63 | H3 | 2.2 Minor bump（X.Y.z → X.Y+1.0） |
+| 68 | H3 | 2.3 Patch bump（X.Y.Z → X.Y.Z+1） |
+| 75 | H2 | 3. Deprecation Cycle |
+| 77 | H3 | 3.1 標準流程 |
+| 87 | H3 | 3.2 例外 |
+| 91 | H3 | 3.3 Deprecation 標記範例 |
+| 103 | H2 | 4. Compatibility Matrix |
+| 105 | H3 | 4.1 維護位置 |
+| 130 | H3 | 4.2 升級檢查 |
+| 140 | H3 | 4.3 維護節奏 |
+| 147 | H2 | 5. Breaking Change PR Template |
+| 152 | H2 | Type |
+| 155 | H2 | Affected APIs |
+| 159 | H2 | Reason |
+| 162 | H2 | Migration Path |
+| 169 | H2 | Compatibility Matrix Update |
+| 180 | H2 | 6. Cross-language Roadmap |
+| 182 | H3 | 6.1 Stage 對應 |
+| 191 | H3 | 6.2 LanguageAdapter SPI（v0.2 開放） |
+| 209 | H3 | 6.3 README 措辭規範 |
+| 227 | H2 | 7. Atomic Spec Schema 演化 |
+| 229 | H3 | 7.1 schemaVersion 必填 |
+| 240 | H3 | 7.2 Schema major bump |
+| 245 | H3 | 7.3 Schema minor bump |
+| 250 | H3 | 7.4 Schema PR 必含 |
+| 257 | H2 | 8. 釋出節奏與通告 |
+| 259 | H3 | 8.1 釋出頻率 |
+| 267 | H3 | 8.2 釋出通告渠道 |
+| 275 | H3 | 8.3 LTS 政策（v2.0+ 規劃） |
+| 282 | H2 | 9. 政策審查節奏 |
+| 290 | H2 | 10. 引用與相依政策 |
 
 ### doc_other_0036 — 3klife-tooling-fate.md（294 行）
 
