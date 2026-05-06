@@ -1,0 +1,244 @@
+{
+  "schemaVersion": "workflow-path-fixture/v1",
+  "kind": "workflow-path-fixture",
+  "fixtureId": "multi-agent-handoff-pass",
+  "pathClass": "multi-agent-handoff",
+  "variant": "canonical-pass",
+  "taxonomyVersion": "workflow-path-taxonomy/v1",
+  "baseline": {
+    "role": "canonical-pass",
+    "replayable": true,
+    "replacePolicy": "replace-in-place-when-handoff-contract-evolves"
+  },
+  "source": {
+    "kind": "mock-canonical",
+    "provenance": "HARN-EVAL-0002",
+    "notes": "Synthetic handoff baseline combining task-card context and a formal turn artifact path."
+  },
+  "validation": {
+    "status": "pass",
+    "expectedClass": "multi-agent-handoff",
+    "expectedTraceStatus": "pass",
+    "lastValidatedAt": "2026-05-06T07:35:00.000Z"
+  },
+  "turnArtifact": {
+    "schemaVersion": "turn-artifact/v1",
+    "kind": "turn-artifact",
+    "generatedAt": "2026-05-06T07:35:00.000Z",
+    "workflow": "multi-agent-handoff",
+    "task": "eval-pack-sync",
+    "goal": "emit a canonical handoff path with summary generation and finalize output",
+    "source": {
+      "changed": false,
+      "explicitFiles": [
+        "docs/agent-briefs/tasks/HARN-EVAL-0002.md",
+        "artifacts/turn-artifacts/2026-05-06/multi-agent-handoff/eval-pack-sync.json"
+      ],
+      "maxFiles": 3
+    },
+    "totals": {
+      "files": 2,
+      "textFiles": 2,
+      "imageFiles": 0,
+      "otherFiles": 0,
+      "totalBytes": 12500,
+      "estTokens": 3125
+    },
+    "files": [
+      {
+        "path": "docs/agent-briefs/tasks/HARN-EVAL-0002.md",
+        "kind": "text",
+        "bytes": 5400,
+        "estTokens": 1350,
+        "inlineSafe": false,
+        "summary": "Task card context used to drive the handoff summary and artifact labeling."
+      },
+      {
+        "path": "artifacts/turn-artifacts/2026-05-06/multi-agent-handoff/eval-pack-sync.json",
+        "kind": "text",
+        "bytes": 7100,
+        "estTokens": 1775,
+        "inlineSafe": false,
+        "summary": "Formal turn artifact emitted for downstream agent handoff and metrics consumers."
+      }
+    ],
+    "summaryCard": {
+      "workflow": "multi-agent-handoff",
+      "task": "eval-pack-sync",
+      "goal": "emit a canonical handoff path with summary generation and finalize output",
+      "read": [
+        "docs/agent-briefs/tasks/HARN-EVAL-0002.md",
+        "artifacts/turn-artifacts/2026-05-06/multi-agent-handoff/eval-pack-sync.json"
+      ],
+      "known": [
+        "docs/agent-briefs/tasks/HARN-EVAL-0002.md (1350 tok) | handoff source task card",
+        "artifacts/turn-artifacts/2026-05-06/multi-agent-handoff/eval-pack-sync.json (1775 tok) | formal turn artifact output"
+      ],
+      "need": [
+        "keep both task-card and turn-artifact evidence in the handoff baseline",
+        "preserve summary generation before finalize-agent-turn output",
+        "model a pass path with no missing artifact errors"
+      ],
+      "avoid": [
+        "do not strip docs/agent-briefs evidence from multi-agent-handoff fixtures",
+        "do not replace finalize-agent-turn with a generic file write event"
+      ]
+    },
+    "riskHints": [
+      "do not strip docs/agent-briefs evidence from multi-agent-handoff fixtures",
+      "do not replace finalize-agent-turn with a generic file write event"
+    ],
+    "nextActions": [
+      "keep both task-card and turn-artifact evidence in the handoff baseline",
+      "preserve summary generation before finalize-agent-turn output",
+      "model a pass path with no missing artifact errors"
+    ]
+  },
+  "traceArtifact": {
+    "schemaVersion": "execution-trace/v1",
+    "kind": "execution-trace",
+    "generatedAt": "2026-05-06T07:35:05.000Z",
+    "status": "pass",
+    "eventCount": 3,
+    "toolCount": 3,
+    "errorCount": 0,
+    "totalDurationMs": 640,
+    "source": {
+      "input": "tests/fixtures/harness/execution-trace-smoke.jsonl",
+      "eventSchema": "tools_node/schemas/execution-trace-event.schema.json"
+    },
+    "summary": {
+      "eventCount": 3,
+      "rawEventCount": 3,
+      "invalidEventCount": 0,
+      "toolCount": 3,
+      "tools": [
+        "finalize-agent-turn.js",
+        "generate-context-summary.js",
+        "report-turn-usage.js"
+      ],
+      "errorCount": 0,
+      "retryCount": 0,
+      "totalDurationMs": 640,
+      "firstStartedAt": "2026-05-06T07:35:05.000Z",
+      "lastEndedAt": "2026-05-06T07:35:05.640Z",
+      "statusCounts": {
+        "success": 3
+      },
+      "workflowCounts": {
+        "multi-agent-handoff": 3
+      },
+      "taskCounts": {
+        "eval-pack-sync": 3
+      }
+    },
+    "events": [
+      {
+        "index": 0,
+        "sequence": 0,
+        "toolName": "generate-context-summary.js",
+        "argsHash": "sha256:handoff000000000000000000000000000000000000000000000000000000000001",
+        "startedAt": "2026-05-06T07:35:05.000Z",
+        "endedAt": "2026-05-06T07:35:05.180Z",
+        "durationMs": 180,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "multi-agent-handoff",
+        "task": "eval-pack-sync",
+        "traceRunId": "multi-agent-handoff-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 120,
+          "lines": 3,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      },
+      {
+        "index": 1,
+        "sequence": 1,
+        "toolName": "finalize-agent-turn.js",
+        "argsHash": "sha256:handoff000000000000000000000000000000000000000000000000000000000002",
+        "startedAt": "2026-05-06T07:35:05.220Z",
+        "endedAt": "2026-05-06T07:35:05.520Z",
+        "durationMs": 300,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "multi-agent-handoff",
+        "task": "eval-pack-sync",
+        "traceRunId": "multi-agent-handoff-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 166,
+          "lines": 5,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      },
+      {
+        "index": 2,
+        "sequence": 2,
+        "toolName": "report-turn-usage.js",
+        "argsHash": "sha256:handoff000000000000000000000000000000000000000000000000000000000003",
+        "startedAt": "2026-05-06T07:35:05.560Z",
+        "endedAt": "2026-05-06T07:35:05.640Z",
+        "durationMs": 80,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "multi-agent-handoff",
+        "task": "eval-pack-sync",
+        "traceRunId": "multi-agent-handoff-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 94,
+          "lines": 1,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      }
+    ],
+    "warnings": [],
+    "errors": []
+  },
+  "traceSummary": {
+    "eventCount": 3,
+    "rawEventCount": 3,
+    "invalidEventCount": 0,
+    "toolCount": 3,
+    "tools": [
+      "finalize-agent-turn.js",
+      "generate-context-summary.js",
+      "report-turn-usage.js"
+    ],
+    "errorCount": 0,
+    "retryCount": 0,
+    "totalDurationMs": 640,
+    "firstStartedAt": "2026-05-06T07:35:05.000Z",
+    "lastEndedAt": "2026-05-06T07:35:05.640Z",
+    "statusCounts": {
+      "success": 3
+    },
+    "workflowCounts": {
+      "multi-agent-handoff": 3
+    },
+    "taskCounts": {
+      "eval-pack-sync": 3
+    }
+  },
+  "notes": [
+    "Canonical pass fixture for the multi-agent-handoff path class.",
+    "Baseline keeps generate-context-summary before finalize-agent-turn so later drift checks can flag order changes."
+  ]
+}

@@ -1,0 +1,244 @@
+{
+  "schemaVersion": "workflow-path-fixture/v1",
+  "kind": "workflow-path-fixture",
+  "fixtureId": "doc-only-pass",
+  "pathClass": "doc-only",
+  "variant": "canonical-pass",
+  "taxonomyVersion": "workflow-path-taxonomy/v1",
+  "baseline": {
+    "role": "canonical-pass",
+    "replayable": true,
+    "replacePolicy": "replace-in-place-when-doc-only-contract-evolves"
+  },
+  "source": {
+    "kind": "mock-canonical",
+    "provenance": "HARN-EVAL-0002",
+    "notes": "Synthetic doc-only baseline built from keep/demo style documentation work."
+  },
+  "validation": {
+    "status": "pass",
+    "expectedClass": "doc-only",
+    "expectedTraceStatus": "pass",
+    "lastValidatedAt": "2026-05-06T07:31:00.000Z"
+  },
+  "turnArtifact": {
+    "schemaVersion": "turn-artifact/v1",
+    "kind": "turn-artifact",
+    "generatedAt": "2026-05-06T07:31:00.000Z",
+    "workflow": "docs-maintenance",
+    "task": "spec-clarity-pass",
+    "goal": "refresh documentation references without touching tooling or runtime code",
+    "source": {
+      "changed": false,
+      "explicitFiles": [
+        "docs/keep.summary.md",
+        "docs/demo_playbook.md"
+      ],
+      "maxFiles": 3
+    },
+    "totals": {
+      "files": 2,
+      "textFiles": 2,
+      "imageFiles": 0,
+      "otherFiles": 0,
+      "totalBytes": 8400,
+      "estTokens": 2100
+    },
+    "files": [
+      {
+        "path": "docs/keep.summary.md",
+        "kind": "text",
+        "bytes": 4800,
+        "estTokens": 1200,
+        "inlineSafe": false,
+        "summary": "Consensus summary update for agent pre-flight and guardrail references."
+      },
+      {
+        "path": "docs/demo_playbook.md",
+        "kind": "text",
+        "bytes": 3600,
+        "estTokens": 900,
+        "inlineSafe": false,
+        "summary": "Narrative demo playbook adjustments and cross-reference cleanup."
+      }
+    ],
+    "summaryCard": {
+      "workflow": "docs-maintenance",
+      "task": "spec-clarity-pass",
+      "goal": "refresh documentation references without touching tooling or runtime code",
+      "read": [
+        "docs/keep.summary.md",
+        "docs/demo_playbook.md"
+      ],
+      "known": [
+        "docs/keep.summary.md (1200 tok) | consensus summary and pre-flight anchor",
+        "docs/demo_playbook.md (900 tok) | demo walkthrough narrative"
+      ],
+      "need": [
+        "keep edits scoped to the cited documentation paths",
+        "avoid mixing tooling files into the doc-only baseline",
+        "record only the documentation-facing remediation steps"
+      ],
+      "avoid": [
+        "do not include tools_node paths in this fixture",
+        "do not rely on runtime debug evidence for doc-only classification"
+      ]
+    },
+    "riskHints": [
+      "do not include tools_node paths in this fixture",
+      "do not rely on runtime debug evidence for doc-only classification"
+    ],
+    "nextActions": [
+      "keep edits scoped to the cited documentation paths",
+      "avoid mixing tooling files into the doc-only baseline",
+      "record only the documentation-facing remediation steps"
+    ]
+  },
+  "traceArtifact": {
+    "schemaVersion": "execution-trace/v1",
+    "kind": "execution-trace",
+    "generatedAt": "2026-05-06T07:31:05.000Z",
+    "status": "pass",
+    "eventCount": 3,
+    "toolCount": 3,
+    "errorCount": 0,
+    "totalDurationMs": 320,
+    "source": {
+      "input": "tests/fixtures/harness/execution-trace-smoke.jsonl",
+      "eventSchema": "tools_node/schemas/execution-trace-event.schema.json"
+    },
+    "summary": {
+      "eventCount": 3,
+      "rawEventCount": 3,
+      "invalidEventCount": 0,
+      "toolCount": 3,
+      "tools": [
+        "check-encoding-touched.js",
+        "doc-id-registry.js",
+        "resolve-doc-id.js"
+      ],
+      "errorCount": 0,
+      "retryCount": 0,
+      "totalDurationMs": 320,
+      "firstStartedAt": "2026-05-06T07:31:05.000Z",
+      "lastEndedAt": "2026-05-06T07:31:05.320Z",
+      "statusCounts": {
+        "success": 3
+      },
+      "workflowCounts": {
+        "docs-maintenance": 3
+      },
+      "taskCounts": {
+        "spec-clarity-pass": 3
+      }
+    },
+    "events": [
+      {
+        "index": 0,
+        "sequence": 0,
+        "toolName": "resolve-doc-id.js",
+        "argsHash": "sha256:doconly000000000000000000000000000000000000000000000000000000000001",
+        "startedAt": "2026-05-06T07:31:05.000Z",
+        "endedAt": "2026-05-06T07:31:05.080Z",
+        "durationMs": 80,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "docs-maintenance",
+        "task": "spec-clarity-pass",
+        "traceRunId": "doc-only-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 96,
+          "lines": 2,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      },
+      {
+        "index": 1,
+        "sequence": 1,
+        "toolName": "check-encoding-touched.js",
+        "argsHash": "sha256:doconly000000000000000000000000000000000000000000000000000000000002",
+        "startedAt": "2026-05-06T07:31:05.090Z",
+        "endedAt": "2026-05-06T07:31:05.190Z",
+        "durationMs": 100,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "docs-maintenance",
+        "task": "spec-clarity-pass",
+        "traceRunId": "doc-only-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 128,
+          "lines": 4,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      },
+      {
+        "index": 2,
+        "sequence": 2,
+        "toolName": "doc-id-registry.js",
+        "argsHash": "sha256:doconly000000000000000000000000000000000000000000000000000000000003",
+        "startedAt": "2026-05-06T07:31:05.210Z",
+        "endedAt": "2026-05-06T07:31:05.320Z",
+        "durationMs": 110,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "docs-maintenance",
+        "task": "spec-clarity-pass",
+        "traceRunId": "doc-only-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 144,
+          "lines": 3,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      }
+    ],
+    "warnings": [],
+    "errors": []
+  },
+  "traceSummary": {
+    "eventCount": 3,
+    "rawEventCount": 3,
+    "invalidEventCount": 0,
+    "toolCount": 3,
+    "tools": [
+      "check-encoding-touched.js",
+      "doc-id-registry.js",
+      "resolve-doc-id.js"
+    ],
+    "errorCount": 0,
+    "retryCount": 0,
+    "totalDurationMs": 320,
+    "firstStartedAt": "2026-05-06T07:31:05.000Z",
+    "lastEndedAt": "2026-05-06T07:31:05.320Z",
+    "statusCounts": {
+      "success": 3
+    },
+    "workflowCounts": {
+      "docs-maintenance": 3
+    },
+    "taskCounts": {
+      "spec-clarity-pass": 3
+    }
+  },
+  "notes": [
+    "Canonical pass fixture for the doc-only path class.",
+    "Tool sequence avoids tooling-code and multi-agent-handoff predicates on purpose."
+  ]
+}

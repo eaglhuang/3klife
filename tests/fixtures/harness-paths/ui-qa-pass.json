@@ -1,0 +1,253 @@
+{
+  "schemaVersion": "workflow-path-fixture/v1",
+  "kind": "workflow-path-fixture",
+  "fixtureId": "ui-qa-pass",
+  "pathClass": "UI-QA",
+  "variant": "canonical-pass",
+  "taxonomyVersion": "workflow-path-taxonomy/v1",
+  "baseline": {
+    "role": "canonical-pass",
+    "replayable": true,
+    "replacePolicy": "replace-in-place-when-ui-qa-contract-evolves"
+  },
+  "source": {
+    "kind": "mock-canonical",
+    "provenance": "HARN-EVAL-0002",
+    "notes": "Synthetic UI QA baseline mixing a preview host script, QA report, and screenshot evidence."
+  },
+  "validation": {
+    "status": "pass",
+    "expectedClass": "UI-QA",
+    "expectedTraceStatus": "pass",
+    "lastValidatedAt": "2026-05-06T07:33:00.000Z"
+  },
+  "turnArtifact": {
+    "schemaVersion": "turn-artifact/v1",
+    "kind": "turn-artifact",
+    "generatedAt": "2026-05-06T07:33:00.000Z",
+    "workflow": "ui-preview-qa",
+    "task": "lobby-preview-smoke",
+    "goal": "capture a canonical UI QA path with validation, capture, and visual compare evidence",
+    "source": {
+      "changed": false,
+      "explicitFiles": [
+        "assets/scripts/ui/components/UIScreenPreviewHost.ts",
+        "artifacts/ui-qa/lobby-preview.report.json",
+        "artifacts/screenshots/lobby-preview.png"
+      ],
+      "maxFiles": 4
+    },
+    "totals": {
+      "files": 3,
+      "textFiles": 2,
+      "imageFiles": 1,
+      "otherFiles": 0,
+      "totalBytes": 22200,
+      "estTokens": 4550
+    },
+    "files": [
+      {
+        "path": "assets/scripts/ui/components/UIScreenPreviewHost.ts",
+        "kind": "text",
+        "bytes": 9800,
+        "estTokens": 2450,
+        "inlineSafe": false,
+        "summary": "Preview host wiring for runtime UI sidecars and smoke execution."
+      },
+      {
+        "path": "artifacts/ui-qa/lobby-preview.report.json",
+        "kind": "text",
+        "bytes": 4800,
+        "estTokens": 1200,
+        "inlineSafe": false,
+        "summary": "Structured QA verdict with visual notes and smoke route output."
+      },
+      {
+        "path": "artifacts/screenshots/lobby-preview.png",
+        "kind": "image",
+        "bytes": 7600,
+        "estTokens": 900,
+        "inlineSafe": false,
+        "summary": "Canonical screenshot evidence for the lobby preview smoke run."
+      }
+    ],
+    "summaryCard": {
+      "workflow": "ui-preview-qa",
+      "task": "lobby-preview-smoke",
+      "goal": "capture a canonical UI QA path with validation, capture, and visual compare evidence",
+      "read": [
+        "assets/scripts/ui/components/UIScreenPreviewHost.ts",
+        "artifacts/ui-qa/lobby-preview.report.json"
+      ],
+      "known": [
+        "assets/scripts/ui/components/UIScreenPreviewHost.ts (2450 tok) | preview runtime host",
+        "artifacts/ui-qa/lobby-preview.report.json (1200 tok) | QA verdict and smoke report"
+      ],
+      "need": [
+        "preserve both QA artifact text and screenshot evidence",
+        "keep compare and capture tools in deterministic order",
+        "model a pass path with no runtime retry noise"
+      ],
+      "avoid": [
+        "do not remove screenshot evidence from UI-QA fixtures",
+        "do not mix runtime-debug error signals into the canonical UI-QA baseline"
+      ]
+    },
+    "riskHints": [
+      "do not remove screenshot evidence from UI-QA fixtures",
+      "do not mix runtime-debug error signals into the canonical UI-QA baseline"
+    ],
+    "nextActions": [
+      "preserve both QA artifact text and screenshot evidence",
+      "keep compare and capture tools in deterministic order",
+      "model a pass path with no runtime retry noise"
+    ]
+  },
+  "traceArtifact": {
+    "schemaVersion": "execution-trace/v1",
+    "kind": "execution-trace",
+    "generatedAt": "2026-05-06T07:33:04.000Z",
+    "status": "pass",
+    "eventCount": 3,
+    "toolCount": 3,
+    "errorCount": 0,
+    "totalDurationMs": 1480,
+    "source": {
+      "input": "tests/fixtures/harness/execution-trace-smoke.jsonl",
+      "eventSchema": "tools_node/schemas/execution-trace-event.schema.json"
+    },
+    "summary": {
+      "eventCount": 3,
+      "rawEventCount": 3,
+      "invalidEventCount": 0,
+      "toolCount": 3,
+      "tools": [
+        "capture-ui-screens.js",
+        "compare-html-to-cocos-editor.js",
+        "validate-ui-specs.js"
+      ],
+      "errorCount": 0,
+      "retryCount": 0,
+      "totalDurationMs": 1480,
+      "firstStartedAt": "2026-05-06T07:33:04.000Z",
+      "lastEndedAt": "2026-05-06T07:33:05.480Z",
+      "statusCounts": {
+        "success": 3
+      },
+      "workflowCounts": {
+        "ui-preview-qa": 3
+      },
+      "taskCounts": {
+        "lobby-preview-smoke": 3
+      }
+    },
+    "events": [
+      {
+        "index": 0,
+        "sequence": 0,
+        "toolName": "validate-ui-specs.js",
+        "argsHash": "sha256:uiqa000000000000000000000000000000000000000000000000000000000001",
+        "startedAt": "2026-05-06T07:33:04.000Z",
+        "endedAt": "2026-05-06T07:33:04.350Z",
+        "durationMs": 350,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "ui-preview-qa",
+        "task": "lobby-preview-smoke",
+        "traceRunId": "ui-qa-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 156,
+          "lines": 5,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      },
+      {
+        "index": 1,
+        "sequence": 1,
+        "toolName": "capture-ui-screens.js",
+        "argsHash": "sha256:uiqa000000000000000000000000000000000000000000000000000000000002",
+        "startedAt": "2026-05-06T07:33:04.390Z",
+        "endedAt": "2026-05-06T07:33:04.930Z",
+        "durationMs": 540,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "ui-preview-qa",
+        "task": "lobby-preview-smoke",
+        "traceRunId": "ui-qa-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 164,
+          "lines": 4,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      },
+      {
+        "index": 2,
+        "sequence": 2,
+        "toolName": "compare-html-to-cocos-editor.js",
+        "argsHash": "sha256:uiqa000000000000000000000000000000000000000000000000000000000003",
+        "startedAt": "2026-05-06T07:33:04.980Z",
+        "endedAt": "2026-05-06T07:33:05.480Z",
+        "durationMs": 500,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "ui-preview-qa",
+        "task": "lobby-preview-smoke",
+        "traceRunId": "ui-qa-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 180,
+          "lines": 6,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      }
+    ],
+    "warnings": [],
+    "errors": []
+  },
+  "traceSummary": {
+    "eventCount": 3,
+    "rawEventCount": 3,
+    "invalidEventCount": 0,
+    "toolCount": 3,
+    "tools": [
+      "capture-ui-screens.js",
+      "compare-html-to-cocos-editor.js",
+      "validate-ui-specs.js"
+    ],
+    "errorCount": 0,
+    "retryCount": 0,
+    "totalDurationMs": 1480,
+    "firstStartedAt": "2026-05-06T07:33:04.000Z",
+    "lastEndedAt": "2026-05-06T07:33:05.480Z",
+    "statusCounts": {
+      "success": 3
+    },
+    "workflowCounts": {
+      "ui-preview-qa": 3
+    },
+    "taskCounts": {
+      "lobby-preview-smoke": 3
+    }
+  },
+  "notes": [
+    "Canonical pass fixture for the UI-QA path class.",
+    "Trace preserves validate -> capture -> compare ordering for future drift checks."
+  ]
+}

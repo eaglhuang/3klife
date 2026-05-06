@@ -1,0 +1,282 @@
+{
+  "schemaVersion": "workflow-path-fixture/v1",
+  "kind": "workflow-path-fixture",
+  "fixtureId": "tooling-code-pass",
+  "pathClass": "tooling-code",
+  "variant": "canonical-pass",
+  "taxonomyVersion": "workflow-path-taxonomy/v1",
+  "baseline": {
+    "role": "canonical-pass",
+    "replayable": true,
+    "replacePolicy": "replace-in-place-when-tooling-path-contract-evolves"
+  },
+  "source": {
+    "kind": "mock-canonical",
+    "provenance": "HARN-EVAL-0002",
+    "notes": "Synthetic tooling baseline built around harness CLI and validator work."
+  },
+  "validation": {
+    "status": "pass",
+    "expectedClass": "tooling-code",
+    "expectedTraceStatus": "pass",
+    "lastValidatedAt": "2026-05-06T07:32:00.000Z"
+  },
+  "turnArtifact": {
+    "schemaVersion": "turn-artifact/v1",
+    "kind": "turn-artifact",
+    "generatedAt": "2026-05-06T07:32:00.000Z",
+    "workflow": "harness-rollout",
+    "task": "HARN-EVAL-0002-fixture-pack",
+    "goal": "ship comparator-ready baseline fixtures for taxonomy-aware tooling work",
+    "source": {
+      "changed": false,
+      "explicitFiles": [
+        "tools_node/lib/harness/workflow-path-taxonomy.js",
+        "tools_node/collect-execution-trace.js",
+        "tests/fixtures/harness/turn-artifact.valid.json"
+      ],
+      "maxFiles": 4
+    },
+    "totals": {
+      "files": 3,
+      "textFiles": 3,
+      "imageFiles": 0,
+      "otherFiles": 0,
+      "totalBytes": 27100,
+      "estTokens": 6775
+    },
+    "files": [
+      {
+        "path": "tools_node/lib/harness/workflow-path-taxonomy.js",
+        "kind": "text",
+        "bytes": 9800,
+        "estTokens": 2450,
+        "inlineSafe": false,
+        "summary": "Reusable workflow path classifier helper for harness tooling."
+      },
+      {
+        "path": "tools_node/collect-execution-trace.js",
+        "kind": "text",
+        "bytes": 10900,
+        "estTokens": 2725,
+        "inlineSafe": false,
+        "summary": "Execution trace collector producing execution-trace/v1 artifacts."
+      },
+      {
+        "path": "tests/fixtures/harness/turn-artifact.valid.json",
+        "kind": "text",
+        "bytes": 6400,
+        "estTokens": 1600,
+        "inlineSafe": false,
+        "summary": "Canonical valid turn-artifact fixture used for schema alignment."
+      }
+    ],
+    "summaryCard": {
+      "workflow": "harness-rollout",
+      "task": "HARN-EVAL-0002-fixture-pack",
+      "goal": "ship comparator-ready baseline fixtures for taxonomy-aware tooling work",
+      "read": [
+        "tools_node/lib/harness/workflow-path-taxonomy.js",
+        "tools_node/collect-execution-trace.js",
+        "tests/fixtures/harness/turn-artifact.valid.json"
+      ],
+      "known": [
+        "tools_node/lib/harness/workflow-path-taxonomy.js (2450 tok) | deterministic classifier helper",
+        "tools_node/collect-execution-trace.js (2725 tok) | execution trace artifact builder",
+        "tests/fixtures/harness/turn-artifact.valid.json (1600 tok) | turn-artifact schema reference"
+      ],
+      "need": [
+        "keep fixture schema aligned with turn-artifact and execution-trace contracts",
+        "preserve deterministic tool ordering for future path drift checks",
+        "store canonical pass baselines under tests/fixtures/harness-paths"
+      ],
+      "avoid": [
+        "do not collapse tooling fixtures into doc-only metadata",
+        "do not drop trace events when comparator still needs tool sequence"
+      ]
+    },
+    "riskHints": [
+      "do not collapse tooling fixtures into doc-only metadata",
+      "do not drop trace events when comparator still needs tool sequence"
+    ],
+    "nextActions": [
+      "keep fixture schema aligned with turn-artifact and execution-trace contracts",
+      "preserve deterministic tool ordering for future path drift checks",
+      "store canonical pass baselines under tests/fixtures/harness-paths"
+    ]
+  },
+  "traceArtifact": {
+    "schemaVersion": "execution-trace/v1",
+    "kind": "execution-trace",
+    "generatedAt": "2026-05-06T07:32:06.000Z",
+    "status": "pass",
+    "eventCount": 4,
+    "toolCount": 4,
+    "errorCount": 0,
+    "totalDurationMs": 1010,
+    "source": {
+      "input": "tests/fixtures/harness/execution-trace-smoke.jsonl",
+      "eventSchema": "tools_node/schemas/execution-trace-event.schema.json"
+    },
+    "summary": {
+      "eventCount": 4,
+      "rawEventCount": 4,
+      "invalidEventCount": 0,
+      "toolCount": 4,
+      "tools": [
+        "check-task-scope.js",
+        "collect-execution-trace.js",
+        "compute-gate.js",
+        "validate-turn-artifact.js"
+      ],
+      "errorCount": 0,
+      "retryCount": 0,
+      "totalDurationMs": 1010,
+      "firstStartedAt": "2026-05-06T07:32:06.000Z",
+      "lastEndedAt": "2026-05-06T07:32:07.010Z",
+      "statusCounts": {
+        "success": 4
+      },
+      "workflowCounts": {
+        "harness-rollout": 4
+      },
+      "taskCounts": {
+        "HARN-EVAL-0002-fixture-pack": 4
+      }
+    },
+    "events": [
+      {
+        "index": 0,
+        "sequence": 0,
+        "toolName": "check-task-scope.js",
+        "argsHash": "sha256:tooling000000000000000000000000000000000000000000000000000000000001",
+        "startedAt": "2026-05-06T07:32:06.000Z",
+        "endedAt": "2026-05-06T07:32:06.140Z",
+        "durationMs": 140,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "harness-rollout",
+        "task": "HARN-EVAL-0002-fixture-pack",
+        "traceRunId": "tooling-code-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 120,
+          "lines": 4,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      },
+      {
+        "index": 1,
+        "sequence": 1,
+        "toolName": "compute-gate.js",
+        "argsHash": "sha256:tooling000000000000000000000000000000000000000000000000000000000002",
+        "startedAt": "2026-05-06T07:32:06.160Z",
+        "endedAt": "2026-05-06T07:32:06.520Z",
+        "durationMs": 360,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "harness-rollout",
+        "task": "HARN-EVAL-0002-fixture-pack",
+        "traceRunId": "tooling-code-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 160,
+          "lines": 6,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      },
+      {
+        "index": 2,
+        "sequence": 2,
+        "toolName": "collect-execution-trace.js",
+        "argsHash": "sha256:tooling000000000000000000000000000000000000000000000000000000000003",
+        "startedAt": "2026-05-06T07:32:06.560Z",
+        "endedAt": "2026-05-06T07:32:06.790Z",
+        "durationMs": 230,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "harness-rollout",
+        "task": "HARN-EVAL-0002-fixture-pack",
+        "traceRunId": "tooling-code-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 132,
+          "lines": 3,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      },
+      {
+        "index": 3,
+        "sequence": 3,
+        "toolName": "validate-turn-artifact.js",
+        "argsHash": "sha256:tooling000000000000000000000000000000000000000000000000000000000004",
+        "startedAt": "2026-05-06T07:32:06.850Z",
+        "endedAt": "2026-05-06T07:32:07.010Z",
+        "durationMs": 160,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "harness-rollout",
+        "task": "HARN-EVAL-0002-fixture-pack",
+        "traceRunId": "tooling-code-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 118,
+          "lines": 4,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      }
+    ],
+    "warnings": [],
+    "errors": []
+  },
+  "traceSummary": {
+    "eventCount": 4,
+    "rawEventCount": 4,
+    "invalidEventCount": 0,
+    "toolCount": 4,
+    "tools": [
+      "check-task-scope.js",
+      "collect-execution-trace.js",
+      "compute-gate.js",
+      "validate-turn-artifact.js"
+    ],
+    "errorCount": 0,
+    "retryCount": 0,
+    "totalDurationMs": 1010,
+    "firstStartedAt": "2026-05-06T07:32:06.000Z",
+    "lastEndedAt": "2026-05-06T07:32:07.010Z",
+    "statusCounts": {
+      "success": 4
+    },
+    "workflowCounts": {
+      "harness-rollout": 4
+    },
+    "taskCounts": {
+      "HARN-EVAL-0002-fixture-pack": 4
+    }
+  },
+  "notes": [
+    "Canonical pass fixture for the tooling-code path class.",
+    "Trace keeps deterministic CLI order and includes the validator pair used by later comparator work."
+  ]
+}

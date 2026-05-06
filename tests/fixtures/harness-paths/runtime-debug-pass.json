@@ -1,0 +1,244 @@
+{
+  "schemaVersion": "workflow-path-fixture/v1",
+  "kind": "workflow-path-fixture",
+  "fixtureId": "runtime-debug-pass",
+  "pathClass": "runtime-debug",
+  "variant": "canonical-pass",
+  "taxonomyVersion": "workflow-path-taxonomy/v1",
+  "baseline": {
+    "role": "canonical-pass",
+    "replayable": true,
+    "replacePolicy": "replace-in-place-when-runtime-debug-contract-evolves"
+  },
+  "source": {
+    "kind": "mock-canonical",
+    "provenance": "HARN-EVAL-0002",
+    "notes": "Synthetic runtime-debug baseline with one failure followed by a successful retry."
+  },
+  "validation": {
+    "status": "pass",
+    "expectedClass": "runtime-debug",
+    "expectedTraceStatus": "pass",
+    "lastValidatedAt": "2026-05-06T07:34:00.000Z"
+  },
+  "turnArtifact": {
+    "schemaVersion": "turn-artifact/v1",
+    "kind": "turn-artifact",
+    "generatedAt": "2026-05-06T07:34:00.000Z",
+    "workflow": "runtime-debug",
+    "task": "battle-entry-null-guard",
+    "goal": "capture a runtime debug path with one failing probe and one successful retry",
+    "source": {
+      "changed": false,
+      "explicitFiles": [
+        "assets/scripts/core/systems/ResourceManager.ts",
+        "artifacts/runtime-diff/resource-manager-crash.json"
+      ],
+      "maxFiles": 3
+    },
+    "totals": {
+      "files": 2,
+      "textFiles": 2,
+      "imageFiles": 0,
+      "otherFiles": 0,
+      "totalBytes": 15000,
+      "estTokens": 3750
+    },
+    "files": [
+      {
+        "path": "assets/scripts/core/systems/ResourceManager.ts",
+        "kind": "text",
+        "bytes": 9800,
+        "estTokens": 2450,
+        "inlineSafe": false,
+        "summary": "Runtime resource lifecycle script touched while isolating a null-guard failure."
+      },
+      {
+        "path": "artifacts/runtime-diff/resource-manager-crash.json",
+        "kind": "text",
+        "bytes": 5200,
+        "estTokens": 1300,
+        "inlineSafe": false,
+        "summary": "Crash snapshot and remediation notes for the runtime diff bucket."
+      }
+    ],
+    "summaryCard": {
+      "workflow": "runtime-debug",
+      "task": "battle-entry-null-guard",
+      "goal": "capture a runtime debug path with one failing probe and one successful retry",
+      "read": [
+        "assets/scripts/core/systems/ResourceManager.ts",
+        "artifacts/runtime-diff/resource-manager-crash.json"
+      ],
+      "known": [
+        "assets/scripts/core/systems/ResourceManager.ts (2450 tok) | runtime lifecycle script",
+        "artifacts/runtime-diff/resource-manager-crash.json (1300 tok) | crash diff summary"
+      ],
+      "need": [
+        "preserve the failed-then-pass retry shape in trace data",
+        "keep runtime artifacts separate from UI QA evidence",
+        "record the failing probe rather than flattening it into a pure pass"
+      ],
+      "avoid": [
+        "do not remove errorCount from runtime-debug baseline traces",
+        "do not hide retryCount when the path includes a real retry"
+      ]
+    },
+    "riskHints": [
+      "do not remove errorCount from runtime-debug baseline traces",
+      "do not hide retryCount when the path includes a real retry"
+    ],
+    "nextActions": [
+      "preserve the failed-then-pass retry shape in trace data",
+      "keep runtime artifacts separate from UI QA evidence",
+      "record the failing probe rather than flattening it into a pure pass"
+    ]
+  },
+  "traceArtifact": {
+    "schemaVersion": "execution-trace/v1",
+    "kind": "execution-trace",
+    "generatedAt": "2026-05-06T07:34:06.000Z",
+    "status": "pass",
+    "eventCount": 3,
+    "toolCount": 2,
+    "errorCount": 1,
+    "totalDurationMs": 2120,
+    "source": {
+      "input": "tests/fixtures/harness/execution-trace-smoke.jsonl",
+      "eventSchema": "tools_node/schemas/execution-trace-event.schema.json"
+    },
+    "summary": {
+      "eventCount": 3,
+      "rawEventCount": 3,
+      "invalidEventCount": 0,
+      "toolCount": 2,
+      "tools": [
+        "cocos-log-reader",
+        "compute-gate.js"
+      ],
+      "errorCount": 1,
+      "retryCount": 1,
+      "totalDurationMs": 2120,
+      "firstStartedAt": "2026-05-06T07:34:06.000Z",
+      "lastEndedAt": "2026-05-06T07:34:08.120Z",
+      "statusCounts": {
+        "failed": 1,
+        "success": 2
+      },
+      "workflowCounts": {
+        "runtime-debug": 3
+      },
+      "taskCounts": {
+        "battle-entry-null-guard": 3
+      }
+    },
+    "events": [
+      {
+        "index": 0,
+        "sequence": 0,
+        "toolName": "cocos-log-reader",
+        "argsHash": "sha256:runtimedebug0000000000000000000000000000000000000000000000000000001",
+        "startedAt": "2026-05-06T07:34:06.000Z",
+        "endedAt": "2026-05-06T07:34:06.520Z",
+        "durationMs": 520,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "runtime-debug",
+        "task": "battle-entry-null-guard",
+        "traceRunId": "runtime-debug-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 170,
+          "lines": 6,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      },
+      {
+        "index": 1,
+        "sequence": 1,
+        "toolName": "compute-gate.js",
+        "argsHash": "sha256:runtimedebug0000000000000000000000000000000000000000000000000000002",
+        "startedAt": "2026-05-06T07:34:06.600Z",
+        "endedAt": "2026-05-06T07:34:07.250Z",
+        "durationMs": 650,
+        "exitCode": 1,
+        "status": "failed",
+        "workflow": "runtime-debug",
+        "task": "battle-entry-null-guard",
+        "traceRunId": "runtime-debug-pass-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 142,
+          "lines": 5,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 84,
+          "lines": 2,
+          "truncated": false
+        }
+      },
+      {
+        "index": 2,
+        "sequence": 2,
+        "toolName": "compute-gate.js",
+        "argsHash": "sha256:runtimedebug0000000000000000000000000000000000000000000000000000002",
+        "startedAt": "2026-05-06T07:34:07.420Z",
+        "endedAt": "2026-05-06T07:34:08.120Z",
+        "durationMs": 700,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "runtime-debug",
+        "task": "battle-entry-null-guard",
+        "traceRunId": "runtime-debug-pass-run-001",
+        "attempt": 2,
+        "stdoutSummary": {
+          "bytes": 156,
+          "lines": 6,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      }
+    ],
+    "warnings": [],
+    "errors": []
+  },
+  "traceSummary": {
+    "eventCount": 3,
+    "rawEventCount": 3,
+    "invalidEventCount": 0,
+    "toolCount": 2,
+    "tools": [
+      "cocos-log-reader",
+      "compute-gate.js"
+    ],
+    "errorCount": 1,
+    "retryCount": 1,
+    "totalDurationMs": 2120,
+    "firstStartedAt": "2026-05-06T07:34:06.000Z",
+    "lastEndedAt": "2026-05-06T07:34:08.120Z",
+    "statusCounts": {
+      "failed": 1,
+      "success": 2
+    },
+    "workflowCounts": {
+      "runtime-debug": 3
+    },
+    "taskCounts": {
+      "battle-entry-null-guard": 3
+    }
+  },
+  "notes": [
+    "Canonical pass fixture for the runtime-debug path class.",
+    "Baseline intentionally preserves one failed probe plus one successful retry so drift checks can reason about retryCount."
+  ]
+}

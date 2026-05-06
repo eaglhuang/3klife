@@ -5,15 +5,19 @@ priority: P2
 phase: Phase2
 created: 2026-05-04
 created_by_agent: GitHubCopilot
-owner: GitHubCopilot
-status: open
+owner: vs-insiders-gpt-5.4-mini
+status: done
 type: baseline-fixture
 chain_id: HARN-CHAIN-EVAL
 chain_step: 2/3
 sensor_triggered_by: harness-rollout planning
 depends:
   - HARN-EVAL-0001
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建立 Baseline Fixture Pack 任務卡 | 阻塞: depends HARN-EVAL-0001"
+started_at: "2026-05-06T15:28:22.7244378+08:00"
+started_by_agent: "vs-insiders-gpt-5.4-mini"
+completed_at: "2026-05-06T15:35:46.9910026+08:00"
+completed_by_agent: "vs-insiders-gpt-5.4-mini"
+notes: "2026-05-06 | 狀態: done | 驗證: baseline fixtures: 5；fixture schema/classification pass: 5；check:encoding:touched pass | 變更: 新增 tests/fixtures/harness-paths/index.json 與 5 份 canonical pass fixture，內含 turnArtifact + execution-trace + traceSummary 對照，供後續 comparator 直接引用 | 阻塞: none"
 ---
 
 # [HARN-EVAL-0002] 建立 Workflow Baseline Fixture Pack

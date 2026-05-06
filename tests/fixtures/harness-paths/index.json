@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "workflow-path-fixture-index/v1",
+  "kind": "workflow-path-fixture-index",
+  "generatedAt": "2026-05-06T07:31:00.000Z",
+  "generatedByTask": "HARN-EVAL-0002",
+  "taxonomyVersion": "workflow-path-taxonomy/v1",
+  "fixtureRoot": "tests/fixtures/harness-paths",
+  "fixtureCount": 5,
+  "coverage": {
+    "doc-only": 1,
+    "tooling-code": 1,
+    "UI-QA": 1,
+    "runtime-debug": 1,
+    "multi-agent-handoff": 1
+  },
+  "usageNotes": [
+    "Each fixture is a canonical pass baseline for one primary path class.",
+    "Fixture files embed a valid turnArtifact plus execution-trace artifact and duplicated traceSummary for direct comparator consumption.",
+    "Replace fixtures in place when taxonomy semantics or comparator contracts change; do not append one-off snapshots without updating this index."
+  ],
+  "fixtures": [
+    {
+      "id": "doc-only-pass",
+      "file": "tests/fixtures/harness-paths/doc-only-pass.json",
+      "pathClass": "doc-only",
+      "variant": "canonical-pass",
+      "validationStatus": "pass",
+      "sourceKind": "mock-canonical",
+      "expectedClass": "doc-only",
+      "traceStatus": "pass",
+      "replayable": true,
+      "replacePolicy": "replace-in-place-when-doc-only-contract-evolves"
+    },
+    {
+      "id": "tooling-code-pass",
+      "file": "tests/fixtures/harness-paths/tooling-code-pass.json",
+      "pathClass": "tooling-code",
+      "variant": "canonical-pass",
+      "validationStatus": "pass",
+      "sourceKind": "mock-canonical",
+      "expectedClass": "tooling-code",
+      "traceStatus": "pass",
+      "replayable": true,
+      "replacePolicy": "replace-in-place-when-tooling-path-contract-evolves"
+    },
+    {
+      "id": "ui-qa-pass",
+      "file": "tests/fixtures/harness-paths/ui-qa-pass.json",
+      "pathClass": "UI-QA",
+      "variant": "canonical-pass",
+      "validationStatus": "pass",
+      "sourceKind": "mock-canonical",
+      "expectedClass": "UI-QA",
+      "traceStatus": "pass",
+      "replayable": true,
+      "replacePolicy": "replace-in-place-when-ui-qa-contract-evolves"
+    },
+    {
+      "id": "runtime-debug-pass",
+      "file": "tests/fixtures/harness-paths/runtime-debug-pass.json",
+      "pathClass": "runtime-debug",
+      "variant": "canonical-pass",
+      "validationStatus": "pass",
+      "sourceKind": "mock-canonical",
+      "expectedClass": "runtime-debug",
+      "traceStatus": "pass",
+      "replayable": true,
+      "replacePolicy": "replace-in-place-when-runtime-debug-contract-evolves"
+    },
+    {
+      "id": "multi-agent-handoff-pass",
+      "file": "tests/fixtures/harness-paths/multi-agent-handoff-pass.json",
+      "pathClass": "multi-agent-handoff",
+      "variant": "canonical-pass",
+      "validationStatus": "pass",
+      "sourceKind": "mock-canonical",
+      "expectedClass": "multi-agent-handoff",
+      "traceStatus": "pass",
+      "replayable": true,
+      "replacePolicy": "replace-in-place-when-handoff-contract-evolves"
+    }
+  ]
+}
