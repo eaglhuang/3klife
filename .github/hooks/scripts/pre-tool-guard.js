@@ -55,6 +55,19 @@ process.stdin.on('end', () => {
       };
       process.stdout.write(JSON.stringify(output) + '\n');
       return;
+
+    const normalizedPath = filePath.replace(/\\/g, '/');
+    if (normalizedPath === 'docs/tasks/tasks-atm.json') {
+      const output = {
+        hookSpecificOutput: {
+          hookEventName: 'PreToolUse',
+          additionalContext:
+            '⚠️ shard note：tasks-atm.json 是 thin index，不是完整 aggregate。請先讀索引，再按需讀單一 tasks-atm-part-*.json；不要把所有 part 一次整份載入。若懷疑分片健康異常，可先跑 node tools_node/check-tasks-atm-shard-health.js。',
+        },
+      };
+      process.stdout.write(JSON.stringify(output) + '\n');
+      return;
+    }
     }
   }
 

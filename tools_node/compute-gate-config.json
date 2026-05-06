@@ -76,6 +76,15 @@
       "description": "確認 git dirty files 皆由 active task lock files[] 覆蓋且無重疊宣告"
     },
     {
+      "id": "doc-shard-health",
+      "label": "文件分片健康檢查",
+      "cmd": "node",
+      "args": ["tools_node/check-doc-shard-health.js"],
+      "priority": 8.5,
+      "failAction": "block",
+      "description": "確認 docs 內已變更的 md/json 是否為 shard-covered，並檢查受影響 shard group 的 part thresholds 與 thin-index summary"
+    },
+    {
       "id": "import-boundary",
       "label": "模組邊界守衛",
       "cmd": "node",
@@ -119,11 +128,11 @@
     },
     "standard": {
       "description": "標準驗證（任務卡完成時）",
-      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "task-scope", "import-boundary", "dead-code"]
+      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "task-scope", "doc-shard-health", "import-boundary", "dead-code"]
     },
     "full": {
       "description": "完整驗證（階段性交付時）",
-      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "general-data", "skin-contracts", "crossref-integrity", "task-scope", "import-boundary", "approved-fixtures", "dead-code"]
+      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "general-data", "skin-contracts", "crossref-integrity", "task-scope", "doc-shard-health", "import-boundary", "approved-fixtures", "dead-code"]
     }
   },
   "selfCorrection": {

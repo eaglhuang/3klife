@@ -83,7 +83,11 @@
       "Bash(git -C . check-ignore -v --no-index \"docs/ai_atomic_framework/\")",
       "Bash(echo \"rc=$?\")",
       "Bash(git -C . check-ignore -v --no-index \"docs/ai_atomic_framework/AI原子框架開發計畫書.md\")",
-      "Bash(git update-index *)"
+      "Bash(git update-index *)",
+      "Bash(node tools_node/doc-id-registry.js --assign \"docs/ai_atomic_framework/ATM_cross_reference.md\")",
+      "Bash(node tools_node/rebuild-atm-crossref.js --dry-run)",
+      "Bash(node tools_node/rebuild-atm-crossref.js)",
+      "Bash(node tools_node/shard-manager.js --help)"
     ]
   }
 }

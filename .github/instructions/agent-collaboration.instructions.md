@@ -5,6 +5,12 @@ applyTo: "**"
 
 # Agent Collaboration Protocol
 
+## 身份啟動（最高優先）
+
+- 進入本 repo 的第一步，是先讀 [docs/agent-identity-map.md](docs/agent-identity-map.md)。
+- 依本文件設定 `AGENT_IDENTITY` 與 repo-local `git user.name` / `git user.email`。
+- 未完成身份設定前，不得進入 lock、task card、commit。
+
 ## 三道防線
 
 > **Harness Engineering 原則**：所有品質驗證優先使用「計算型感測器」（CPU 確定性驗算），而非依賴 LLM 推論。

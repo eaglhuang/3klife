@@ -55,6 +55,7 @@
 
 ## 起手式
 
+0. 先讀 [docs/agent-identity-map.md](docs/agent-identity-map.md)，設定自己的身份（正式變數為 `AGENT_IDENTITY`）。
 1. 先讀 [keep.md](C:\Users\User\3KLife\docs\keep.md (doc_index_0011)) (doc_index_0011)。
 2. 讀自己的 `agentX-instructions.md`。
 3. 查 [ui-quality-todo.json](C:\Users\User\3KLife\docs\ui-quality-todo.json) 與 [CheckList.md](C:\Users\User\3KLife\docs\agent-briefs\CheckList.md (doc_ai_0022)) (doc_ai_0022)，確認目前卡片狀態、依賴與 owner。

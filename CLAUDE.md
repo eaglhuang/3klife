@@ -1,6 +1,10 @@
 <!-- doc_id: doc_ai_0030 -->
 # 3KLife — Claude Code Project Config
 
+## 必經入口
+
+先讀 [docs/agent-identity-map.md](docs/agent-identity-map.md)，用其中規則設定 `AGENT_IDENTITY` 與 git 身份，再執行後續 Pre-flight。
+
 ## ⛔ 硬規則 #0：接任務卡前必須先上鎖（不可省略）
 
 **在動手執行任何任務卡之前，以下三步是硬前置，缺一不可：**
