@@ -1,5 +1,89 @@
 [
   {
+    "id": "ATM-3-0007",
+    "title": "compute-gate.js adapter 化：接入 ATM GateAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0307",
+    "depends": [
+      "ATM-3-0006"
+    ]
+  },
+  {
+    "id": "ATM-3-0008",
+    "title": "doc-id-registry.js adapter 化：接入 ATM DocumentIndexAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0308",
+    "depends": [
+      "ATM-3-0006"
+    ]
+  },
+  {
+    "id": "ATM-3-0009",
+    "title": "shard-manager.js adapter 化：接入 ATM ShardAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0309",
+    "depends": [
+      "ATM-3-0006"
+    ]
+  },
+  {
+    "id": "ATM-3-0010",
+    "title": "task-card-opener.js adapter 化：接入 ATM TaskAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0310",
+    "depends": [
+      "ATM-3-0006"
+    ]
+  },
+  {
+    "id": "ATM-3-0011",
+    "title": "encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0311",
+    "depends": [
+      "ATM-3-0006"
+    ]
+  },
+  {
+    "id": "ATM-3-0012",
+    "title": "task-scope / import-boundary 規則包遷移 + @deprecated 標記",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0312",
+    "depends": [
+      "ATM-3-0006"
+    ]
+  },
+  {
     "id": "ATM-3-0013",
     "title": "finalize-agent-turn.js wrapper 接入 ATM run envelope",
     "status": "open",

@@ -96,13 +96,47 @@
   {
     "id": "ATM-1.5-0003",
     "title": "ATM-CORE-0001 正式收編：舊 seed 標 @deprecated",
-    "status": "open",
+    "status": "done",
     "priority": "P0",
     "phase": "ATM-1.5",
     "type": "governance",
     "created": "2026-05-05",
     "owner": "GitHubCopilot",
     "doc_id": "doc_task_0301",
+    "started_at": "2026-05-06T17:31:00.000Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T18:13:27.1736893+08:00",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d90c2f6 將 seed hand-written source 標為 @deprecated、atomic-registry seed entry 升為 governed、CHANGELOG 新增 Phase B1 complete、atm status 在 framework repo root 顯示 B1-complete 與 governedBy ATM-CORE-0002 | 阻塞: none",
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/CHANGELOG.md",
+        "AI-Atomic-Framework/atomic-registry.json",
+        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
+        "AI-Atomic-Framework/packages/core/seed.js",
+        "AI-Atomic-Framework/schemas/registry.schema.json",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/scripts/validate-seed-registry.mjs"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit d90c2f6",
+        "node packages/cli/src/atm.mjs status",
+        "npm run validate:seed-registry",
+        "npm run validate:cli",
+        "npm run validate:schemas",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "seed hand-written source is retained but explicitly marked deprecated under ATM-CORE-0002 governance",
+        "atomic-registry seed entry status is now governed and still passes self-verification with committed hash values",
+        "atm status no longer requires .atm/config in the framework repository root to report Phase B1 complete",
+        "CHANGELOG records the Phase B1 milestone and the handoff from ATM-CORE-0001 metadata to ATM-CORE-0002 governance"
+      ]
+    },
     "depends": [
       "ATM-1.5-0002"
     ]
@@ -192,90 +226,6 @@
     "depends": [
       "ATM-2.5-0002",
       "ATM-3-0001"
-    ]
-  },
-  {
-    "id": "ATM-3-0007",
-    "title": "compute-gate.js adapter 化：接入 ATM GateAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0307",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0008",
-    "title": "doc-id-registry.js adapter 化：接入 ATM DocumentIndexAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0308",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0009",
-    "title": "shard-manager.js adapter 化：接入 ATM ShardAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0309",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0010",
-    "title": "task-card-opener.js adapter 化：接入 ATM TaskAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0310",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0011",
-    "title": "encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0311",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0012",
-    "title": "task-scope / import-boundary 規則包遷移 + @deprecated 標記",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0312",
-    "depends": [
-      "ATM-3-0006"
     ]
   }
 ]
