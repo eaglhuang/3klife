@@ -5,8 +5,8 @@ priority: P2
 phase: Phase3
 created: 2026-05-04
 created_by_agent: GitHubCopilot
-owner: GitHubCopilot
-status: open
+owner: vs-insiders-gpt-5.4
+status: done
 type: metrics-aggregation
 chain_id: HARN-CHAIN-METRICS
 chain_step: 2/3
@@ -14,7 +14,11 @@ sensor_triggered_by: harness-rollout planning
 depends:
   - HARN-MET-0001
   - HARN-TRC-0003
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建立 Metrics Accumulator 任務卡 | 阻塞: depends HARN-MET-0001,HARN-TRC-0003"
+started_at: "2026-05-06T17:56:57.8876283+08:00"
+started_by_agent: "vs-insiders-gpt-5.4"
+completed_at: "2026-05-06T18:06:46.3411578+08:00"
+completed_by_agent: "vs-insiders-gpt-5.4"
+notes: "2026-05-06 | 狀態: done | 驗證: accumulate-harness-metrics baseline command pass；joined-trace smoke 得到 traceJoinedCount=1 / traceRetryCount=1 / gateFailRate=1；get_errors pass | 變更: 新增 tools_node/accumulate-harness-metrics.js，重用 history query 掃 formal artifact、讀 execution-trace/v1 artifact、以 date+workflow+task join，輸出 avgContextTokens / handoffMismatchRate / traceRetryCount / artifactCoverage 與 missing-data 分類，供後續 health report 直接接用 | 阻塞: none"
 ---
 
 # [HARN-MET-0002] 建立 Harness Metrics Accumulator
