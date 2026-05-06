@@ -9,9 +9,9 @@
     "maxPartLines": 300
   },
   "summary": {
-    "done": 23,
+    "done": 24,
     "in_progress": 0,
-    "open": 48,
+    "open": 47,
     "total": 71
   },
   "shards": [
@@ -221,25 +221,37 @@
     },
     {
       "name": "tasks-atm-part-18",
-      "title": "Part 18 (items 51-58)",
+      "title": "Part 18 (items 51-54)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-18.json",
-      "count": 8,
-      "bytes": 10065,
-      "lines": 293,
+      "count": 4,
+      "bytes": 8696,
+      "lines": 235,
       "range": [
         50,
-        57
+        53
       ]
     },
     {
       "name": "tasks-atm-part-19",
-      "title": "Part 19 (items 59-71)",
+      "title": "Part 19 (items 55-69)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-19.json",
-      "count": 13,
-      "bytes": 9761,
-      "lines": 300,
+      "count": 15,
+      "bytes": 8322,
+      "lines": 263,
       "range": [
-        58,
+        54,
+        68
+      ]
+    },
+    {
+      "name": "tasks-atm-part-20",
+      "title": "Part 20 (items 70-71)",
+      "path": "docs/tasks/tasks-atm/tasks-atm-part-20.json",
+      "count": 2,
+      "bytes": 4817,
+      "lines": 129,
+      "range": [
+        69,
         70
       ]
     }

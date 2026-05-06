@@ -6,12 +6,15 @@ phase: ATM-1.5
 created: 2026-05-05
 created_by_agent: GitHubCopilot
 owner: GitHubCopilot
-status: open
+status: done
+started_at: "2026-05-06T16:48:41+08:00"
+started_by_agent: vs-code-github-copilot
+completed_at: "2026-05-06T17:03:32.1926363+08:00"
 type: implementation
 depends:
   - ATM-1-0006
   - ATM-1-0007
-notes: "屬 upstream AI-Atomic-Framework repo，不改動 3KLife 任何檔案"
+notes: "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-spec / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit ad5f091 新增 packages/core/seed.js、specs/atom-seed-spec.json、CLI `spec --validate` 與 AJV schema validator；legacy planning ID ATM-CORE-0001 以 seed metadata 映射保留，現行 spec id 採 `atom.core-seed` 以符合既有 atomic-spec schema | 阻塞: none"
 ---
 # [ATM-1.5-0001] Seed-as-Spec：種子以自身格式自我描述
 

@@ -146,17 +146,25 @@
     },
     {
       "name": "tasks-atm-part-18",
-      "title": "Part 18 (items 51-58)",
+      "title": "Part 18 (items 51-54)",
       "range": [
         50,
-        57
+        53
       ]
     },
     {
       "name": "tasks-atm-part-19",
-      "title": "Part 19 (items 59-71)",
+      "title": "Part 19 (items 55-69)",
       "range": [
-        58,
+        54,
+        68
+      ]
+    },
+    {
+      "name": "tasks-atm-part-20",
+      "title": "Part 20 (items 70-71)",
+      "range": [
+        69,
         70
       ]
     }
