@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "source": "../doc-id-registry.md",
+  "indexTitle": "Doc ID Registry Markdown Index",
+  "indexPath": "docs/doc-id-registry.md",
+  "type": "markdown-h2",
+  "keepSourceIntact": true,
+  "preambleShard": "doc-id-registry-stats",
+  "defaultShard": "doc-id-registry-other",
+  "shards": [
+    {
+      "name": "doc-id-registry-stats",
+      "title": "分類統計",
+      "pattern": "^分類統計"
+    },
+    {
+      "name": "doc-id-registry-tech-ui-art",
+      "title": "Tech / UI / Art / Data",
+      "pattern": "^(技術類|畫面UI類|美術非UI類|數值類)"
+    },
+    {
+      "name": "doc-id-registry-spec-index-task",
+      "title": "Spec / Index / Task",
+      "pattern": "^(遊戲規格類|索引類|任務卡類)"
+    },
+    {
+      "name": "doc-id-registry-agent-server",
+      "title": "AI / AgentSkill / Server",
+      "pattern": "^(AI Agent|Agent Skill|Server)"
+    },
+    {
+      "name": "doc-id-registry-other",
+      "title": "其它類",
+      "pattern": "."
+    }
+  ]
+}
