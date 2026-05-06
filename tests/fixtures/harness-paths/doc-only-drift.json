@@ -1,0 +1,244 @@
+{
+  "schemaVersion": "workflow-path-fixture/v1",
+  "kind": "workflow-path-fixture",
+  "fixtureId": "doc-only-drift",
+  "pathClass": "doc-only",
+  "variant": "missing-validation-extra-step",
+  "taxonomyVersion": "workflow-path-taxonomy/v1",
+  "baseline": {
+    "role": "drift-candidate",
+    "replayable": true,
+    "replacePolicy": "replace-in-place-when-doc-only-drift-contract-evolves"
+  },
+  "source": {
+    "kind": "mock-drift",
+    "provenance": "HARN-EVAL-0003",
+    "notes": "Synthetic doc-only candidate that stays in the same class but skips encoding validation and inserts an unnecessary extra step."
+  },
+  "validation": {
+    "status": "pass",
+    "expectedClass": "doc-only",
+    "expectedTraceStatus": "pass",
+    "lastValidatedAt": "2026-05-06T07:45:00.000Z"
+  },
+  "turnArtifact": {
+    "schemaVersion": "turn-artifact/v1",
+    "kind": "turn-artifact",
+    "generatedAt": "2026-05-06T07:45:00.000Z",
+    "workflow": "docs-maintenance",
+    "task": "spec-clarity-drift",
+    "goal": "simulate a documentation workflow that still passes but drifts by skipping a validation step",
+    "source": {
+      "changed": false,
+      "explicitFiles": [
+        "docs/keep.summary.md",
+        "docs/demo_playbook.md"
+      ],
+      "maxFiles": 3
+    },
+    "totals": {
+      "files": 2,
+      "textFiles": 2,
+      "imageFiles": 0,
+      "otherFiles": 0,
+      "totalBytes": 8400,
+      "estTokens": 2100
+    },
+    "files": [
+      {
+        "path": "docs/keep.summary.md",
+        "kind": "text",
+        "bytes": 4800,
+        "estTokens": 1200,
+        "inlineSafe": false,
+        "summary": "Consensus summary update for agent pre-flight and guardrail references."
+      },
+      {
+        "path": "docs/demo_playbook.md",
+        "kind": "text",
+        "bytes": 3600,
+        "estTokens": 900,
+        "inlineSafe": false,
+        "summary": "Narrative demo playbook adjustments and cross-reference cleanup."
+      }
+    ],
+    "summaryCard": {
+      "workflow": "docs-maintenance",
+      "task": "spec-clarity-drift",
+      "goal": "simulate a documentation workflow that still passes but drifts by skipping a validation step",
+      "read": [
+        "docs/keep.summary.md",
+        "docs/demo_playbook.md"
+      ],
+      "known": [
+        "docs/keep.summary.md (1200 tok) | consensus summary and pre-flight anchor",
+        "docs/demo_playbook.md (900 tok) | demo walkthrough narrative"
+      ],
+      "need": [
+        "keep the candidate within the doc-only taxonomy class",
+        "surface the missing validation step instead of hiding it behind a final pass",
+        "make the extra step explicit enough for comparator remediation output"
+      ],
+      "avoid": [
+        "do not let the drift candidate trigger multi-agent-handoff classification",
+        "do not introduce runtime-debug evidence into the doc-only drift path"
+      ]
+    },
+    "riskHints": [
+      "do not let the drift candidate trigger multi-agent-handoff classification",
+      "do not introduce runtime-debug evidence into the doc-only drift path"
+    ],
+    "nextActions": [
+      "keep the candidate within the doc-only taxonomy class",
+      "surface the missing validation step instead of hiding it behind a final pass",
+      "make the extra step explicit enough for comparator remediation output"
+    ]
+  },
+  "traceArtifact": {
+    "schemaVersion": "execution-trace/v1",
+    "kind": "execution-trace",
+    "generatedAt": "2026-05-06T07:45:05.000Z",
+    "status": "pass",
+    "eventCount": 3,
+    "toolCount": 3,
+    "errorCount": 0,
+    "totalDurationMs": 390,
+    "source": {
+      "input": "tests/fixtures/harness/execution-trace-smoke.jsonl",
+      "eventSchema": "tools_node/schemas/execution-trace-event.schema.json"
+    },
+    "summary": {
+      "eventCount": 3,
+      "rawEventCount": 3,
+      "invalidEventCount": 0,
+      "toolCount": 3,
+      "tools": [
+        "doc-id-registry.js",
+        "generate-context-summary.js",
+        "resolve-doc-id.js"
+      ],
+      "errorCount": 0,
+      "retryCount": 0,
+      "totalDurationMs": 390,
+      "firstStartedAt": "2026-05-06T07:45:05.000Z",
+      "lastEndedAt": "2026-05-06T07:45:05.390Z",
+      "statusCounts": {
+        "success": 3
+      },
+      "workflowCounts": {
+        "docs-maintenance": 3
+      },
+      "taskCounts": {
+        "spec-clarity-drift": 3
+      }
+    },
+    "events": [
+      {
+        "index": 0,
+        "sequence": 0,
+        "toolName": "resolve-doc-id.js",
+        "argsHash": "sha256:doconlydrift00000000000000000000000000000000000000000000000000000001",
+        "startedAt": "2026-05-06T07:45:05.000Z",
+        "endedAt": "2026-05-06T07:45:05.090Z",
+        "durationMs": 90,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "docs-maintenance",
+        "task": "spec-clarity-drift",
+        "traceRunId": "doc-only-drift-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 96,
+          "lines": 2,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      },
+      {
+        "index": 1,
+        "sequence": 1,
+        "toolName": "generate-context-summary.js",
+        "argsHash": "sha256:doconlydrift00000000000000000000000000000000000000000000000000000002",
+        "startedAt": "2026-05-06T07:45:05.120Z",
+        "endedAt": "2026-05-06T07:45:05.260Z",
+        "durationMs": 140,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "docs-maintenance",
+        "task": "spec-clarity-drift",
+        "traceRunId": "doc-only-drift-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 152,
+          "lines": 3,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      },
+      {
+        "index": 2,
+        "sequence": 2,
+        "toolName": "doc-id-registry.js",
+        "argsHash": "sha256:doconlydrift00000000000000000000000000000000000000000000000000000003",
+        "startedAt": "2026-05-06T07:45:05.280Z",
+        "endedAt": "2026-05-06T07:45:05.390Z",
+        "durationMs": 110,
+        "exitCode": 0,
+        "status": "success",
+        "workflow": "docs-maintenance",
+        "task": "spec-clarity-drift",
+        "traceRunId": "doc-only-drift-run-001",
+        "attempt": 1,
+        "stdoutSummary": {
+          "bytes": 144,
+          "lines": 3,
+          "truncated": false
+        },
+        "stderrSummary": {
+          "bytes": 0,
+          "lines": 0,
+          "truncated": false
+        }
+      }
+    ],
+    "warnings": [],
+    "errors": []
+  },
+  "traceSummary": {
+    "eventCount": 3,
+    "rawEventCount": 3,
+    "invalidEventCount": 0,
+    "toolCount": 3,
+    "tools": [
+      "doc-id-registry.js",
+      "generate-context-summary.js",
+      "resolve-doc-id.js"
+    ],
+    "errorCount": 0,
+    "retryCount": 0,
+    "totalDurationMs": 390,
+    "firstStartedAt": "2026-05-06T07:45:05.000Z",
+    "lastEndedAt": "2026-05-06T07:45:05.390Z",
+    "statusCounts": {
+      "success": 3
+    },
+    "workflowCounts": {
+      "docs-maintenance": 3
+    },
+    "taskCounts": {
+      "spec-clarity-drift": 3
+    }
+  },
+  "notes": [
+    "Drift candidate stays in the doc-only class but intentionally omits check-encoding-touched.js.",
+    "generate-context-summary.js is inserted as an unnecessary extra step so the comparator can explain both fail and warn signals."
+  ]
+}

@@ -5,15 +5,19 @@ priority: P2
 phase: Phase2
 created: 2026-05-04
 created_by_agent: GitHubCopilot
-owner: GitHubCopilot
-status: open
+owner: vs-insiders-gpt-5.4
+status: done
 type: eval-tooling
 chain_id: HARN-CHAIN-EVAL
 chain_step: 3/3
 sensor_triggered_by: harness-rollout planning
 depends:
   - HARN-EVAL-0002
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建立 Path Drift Comparator 任務卡 | 阻塞: depends HARN-EVAL-0002"
+started_at: "2026-05-06T15:44:45.5439347+08:00"
+started_by_agent: "vs-insiders-gpt-5.4"
+completed_at: "2026-05-06T15:51:09.9948826+08:00"
+completed_by_agent: "vs-insiders-gpt-5.4"
+notes: "2026-05-06 | 狀態: done | 驗證: compare-execution-path self-compare strict pass x5 path classes；doc-only drift fixture verdict=fail with missing-validation + extra-step；get_errors pass | 變更: 新增 tools_node/compare-execution-path.js 與 tests/fixtures/harness-paths/doc-only-drift.json，實作 path class drift、tool sequence、gate fail、retry、missing validation 的 pass/warn/fail comparator | 阻塞: none"
 ---
 
 # [HARN-EVAL-0003] 建立 Path Drift Comparator
