@@ -1,4 +1,10 @@
-<!-- doc_id: doc_other_0008 -->
+---
+doc_id: doc_other_0008
+status: HISTORICAL
+superseded_by: docs/html_skill_plan5.md
+onboarding_doc: docs/html_skill_postmortem.md
+---
+
 # HTML Skill Plan 2
 
 > 2026-04-29 狀態：本檔已轉為 HTML-to-UCUF v2 歷史實作紀錄。後續 95% 推進與未完成項請先讀 `docs/html_skill_plan3.md`；只有需要 R-1~R-30 證據時才用 grep 定位本檔局部段落，避免 context budget hard-stop。

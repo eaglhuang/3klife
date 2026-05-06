@@ -1,4 +1,10 @@
-<!-- doc_id: doc_other_0011 -->
+---
+doc_id: doc_other_0011
+status: HISTORICAL
+superseded_by: docs/html_skill_plan5.md
+onboarding_doc: docs/html_skill_postmortem.md
+---
+
 # HTML Skill Plan 3
 
 > 2026-04-29 起，本檔是 HTML-to-UCUF 95% 推進的主工作入口，承接 `docs/html_skill_plan2.md`。Plan 2 已轉為歷史實作紀錄；一般 Agent 應先讀本檔，只在需要 R-1~R-30 證據時用 grep 查 Plan 2 局部段落。

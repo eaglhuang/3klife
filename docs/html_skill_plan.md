@@ -1,4 +1,10 @@
-<!-- doc_id: doc_other_0009 -->
+---
+doc_id: doc_other_0009
+status: HISTORICAL
+superseded_by: docs/html_skill_plan5.md
+onboarding_doc: docs/html_skill_postmortem.md
+---
+
 # HTML Skill Plan
 
 ## 1. 文件目的

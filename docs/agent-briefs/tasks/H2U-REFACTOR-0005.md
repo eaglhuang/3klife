@@ -2,15 +2,18 @@
 doc_id: doc_task_0228
 id: "H2U-REFACTOR-0005"
 priority: "P2"
-owner: "Unassigned"
-status: "open"
+owner: "vs-insiders-gpt-5.4-mini"
+status: "done"
 type: "documentation"
 phase: "G"
 created: "2026-05-05"
 created_by_agent: "ClaudeCode_claude-sonnet-4-6"
+started_at: "2026-05-06T13:39:27.5799745+08:00"
+started_by_agent: "vs-insiders-gpt-5.4-mini"
+completed_at: "2026-05-06T14:09:16.7982375+08:00"
 related_cards: []
 depends: []
-notes: "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) §C3 | 阻塞: 無"
+notes: "2026-05-06 | 狀態: done | 驗證: encoding gate passed；plan frontmatter / skill disclaimer 已就位 | 變更: 加入 plan frontmatter 與 skill disclaimer | 阻塞: none"
 ---
 
 # [H2U-REFACTOR-0005] 整併 5 份 plan 文件
@@ -28,12 +31,12 @@ notes: "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_002
 
 ## OUTPUT_CONTRACT
 
-- [ ] 在 `plan.md` / `plan2.md` / `plan3.md` / `plan4.md` 的 frontmatter 加 `[HISTORICAL]` 標記與導向 plan5.md 的指引
-- [ ] `plan5.md` 加 `[ACTIVE]` 標記
-- [ ] `.github/skills/html-to-ucuf/SKILL.md` 開頭加 prominent disclaimer：「Active spec is plan5.md. Older plans are HISTORICAL — do not follow without consulting postmortem.md.」
-- [ ] `docs/keep.summary.md` 同步更新（若有提及 plan 文件）
-- [ ] 驗證舊 plan 中的 deep-link 不被破壞（已有引用 plan2~4 的文件需更新或保留）
-- [ ] 不刪除 plan2~4 的內容，只加 frontmatter 與 disclaimer
+- [x] 在 `plan.md` / `plan2.md` / `plan3.md` / `plan4.md` 的 frontmatter 加 `[HISTORICAL]` 標記與導向 plan5.md 的指引
+- [x] `plan5.md` 加 `[ACTIVE]` 標記
+- [x] `.github/skills/html-to-ucuf/SKILL.md` 開頭加 prominent disclaimer：「Active spec is plan5.md. Older plans are HISTORICAL — do not follow without consulting postmortem.md.」
+- [x] `docs/keep.summary.md` 同步更新（若有提及 plan 文件）
+- [x] 驗證舊 plan 中的 deep-link 不被破壞（已有引用 plan2~4 的文件需更新或保留）
+- [x] 不刪除 plan2~4 的內容，只加 frontmatter 與 disclaimer
 
 ## VALIDATION_CMD
 

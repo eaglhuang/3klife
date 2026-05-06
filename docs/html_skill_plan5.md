@@ -1,4 +1,8 @@
-<!-- doc_id: doc_other_0021 -->
+---
+doc_id: doc_other_0021
+status: ACTIVE
+---
+
 # HTML-to-UCUF Plan5: Final Fidelity and Rule Decay Closure
 
 ## 目的

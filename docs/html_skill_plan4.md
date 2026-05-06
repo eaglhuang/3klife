@@ -1,4 +1,10 @@
-<!-- doc_id: doc_other_0020 -->
+---
+doc_id: doc_other_0020
+status: HISTORICAL
+superseded_by: docs/html_skill_plan5.md
+onboarding_doc: docs/html_skill_postmortem.md
+---
+
 # HTML-to-UCUF Plan 4: 權威重整、通用化與自我驗證計畫
 
 ## Summary

@@ -24,6 +24,9 @@ Authority order:
 
 Unity 對照：這條流程相當於 UI Toolkit importer + Prefab/Scene sync + Play Mode interaction smoke + Game View final compare；不要把 debug 輸出當成正式通過。
 
+> **⚠️ Spec Authority**: `docs/html_skill_plan5.md` is the only active execution spec.
+> `docs/html_skill_plan.md` ~ `docs/html_skill_plan4.md` are HISTORICAL; do not follow them without consulting `docs/html_skill_postmortem.md`.
+
 ## Formal Entry
 
 Formal runs must start from a source package.

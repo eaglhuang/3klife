@@ -1249,10 +1249,14 @@
       "id": "H2U-REFACTOR-0005",
       "priority": "P2",
       "phase": "G",
-      "owner": "Unassigned",
-      "status": "open",
+      "owner": "vs-insiders-gpt-5.4-mini",
+      "status": "done",
       "created": "2026-05-05",
       "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "started_at": "2026-05-06T13:39:27.5799745+08:00",
+      "started_by_agent": "vs-insiders-gpt-5.4-mini",
+      "completed_at": "2026-05-06T14:09:16.7982375+08:00",
+      "completed_by_agent": "vs-insiders-gpt-5.4-mini",
       "type": "documentation",
       "title": "整併 5 份 plan 文件",
       "description": "plan/plan2/plan3/plan4 加 [HISTORICAL] frontmatter；plan5 加 [ACTIVE]；SKILL.md 加 prominent disclaimer",
@@ -1270,7 +1274,7 @@
         ".github/skills/html-to-ucuf/SKILL.md",
         "docs/keep.summary.md"
       ],
-      "notes": "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) | 阻塞: 無"
+      "notes": "2026-05-06 | 狀態: done | 驗證: encoding gate passed；plan frontmatter / skill disclaimer 已就位 | 變更: 加入 plan frontmatter 與 skill disclaimer | 阻塞: none"
     },
     {
       "id": "H2U-REFACTOR-0006",
