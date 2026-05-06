@@ -1,0 +1,317 @@
+{
+  "schemaVersion": "workflow-path-taxonomy/v1",
+  "kind": "workflow-path-taxonomy",
+  "decisionModel": {
+    "strategy": "priority-first-match",
+    "defaultClass": "unclassified",
+    "tieBreaker": [
+      "higher-priority",
+      "more-matched-predicates",
+      "declaration-order"
+    ],
+    "primarySelectionRule": "同一輪只能產生一個 primary class；若多類別同時命中，先看 priority，再看 matched predicate 數量。"
+  },
+  "artifactContracts": {
+    "turnArtifact": "turn-artifact/v1",
+    "traceArtifact": "execution-trace/v1",
+    "traceSummaryAttachment": "finalize-agent-turn traceSummary"
+  },
+  "evidenceFields": [
+    {
+      "id": "turnArtifact.workflow",
+      "source": "turnArtifact",
+      "path": "workflow",
+      "type": "string",
+      "description": "這輪工作流名稱；通常是最高訊號的人類意圖欄位。"
+    },
+    {
+      "id": "turnArtifact.task",
+      "source": "turnArtifact",
+      "path": "task",
+      "type": "string",
+      "description": "任務卡或 workflow task 名稱。"
+    },
+    {
+      "id": "turnArtifact.files[].path",
+      "source": "turnArtifact",
+      "path": "files[].path",
+      "type": "string[]",
+      "description": "context summary ranking 後的 repo-relative file list，用來判斷工作面的主要變更區。"
+    },
+    {
+      "id": "turnArtifact.source.explicitFiles",
+      "source": "turnArtifact",
+      "path": "source.explicitFiles",
+      "type": "string[]",
+      "description": "呼叫 generate-context-summary 時明確輸入的檔案清單。"
+    },
+    {
+      "id": "trace.summary.tools",
+      "source": "traceSummary",
+      "path": "tools",
+      "type": "string[]",
+      "description": "聚合 trace 後的唯一工具名稱列表。"
+    },
+    {
+      "id": "trace.summary.errorCount",
+      "source": "traceSummary",
+      "path": "errorCount",
+      "type": "number",
+      "description": "此輪 trace 中失敗或非 0 exit 的總數。"
+    },
+    {
+      "id": "trace.summary.retryCount",
+      "source": "traceSummary",
+      "path": "retryCount",
+      "type": "number",
+      "description": "相同 argsHash 重跑次數；可作為 debug / unstable workflow 的輔助訊號。"
+    },
+    {
+      "id": "trace.summary.totalDurationMs",
+      "source": "traceSummary",
+      "path": "totalDurationMs",
+      "type": "number",
+      "description": "整輪 trace duration 聚合值，用來補充 workflow intensity。"
+    }
+  ],
+  "classes": [
+    {
+      "id": "multi-agent-handoff",
+      "label": "Multi-Agent Handoff",
+      "priority": 500,
+      "description": "以交接、摘要驗證、或多 Agent 協作為 primary intent 的工作路徑。",
+      "match": {
+        "all": [
+          {
+            "field": "trace.summary.tools",
+            "op": "arrayIncludesAny",
+            "value": [
+              "generate-context-summary.js",
+              "finalize-agent-turn.js"
+            ]
+          }
+        ],
+        "any": [
+          {
+            "field": "turnArtifact.workflow",
+            "op": "regex",
+            "value": "handoff|multi-agent|collab|collaboration|agent-turn"
+          },
+          {
+            "field": "turnArtifact.task",
+            "op": "regex",
+            "value": "handoff|multi-agent|collab|collaboration"
+          },
+          {
+            "field": "turnArtifact.files[].path",
+            "op": "arrayAnyStartsWith",
+            "value": [
+              "docs/agent-briefs/",
+              "artifacts/turn-artifacts/"
+            ]
+          }
+        ]
+      },
+      "primaryEvidence": [
+        "workflow / task 含 handoff 或 collaboration 字樣",
+        "trace tools 同時出現 generate-context-summary.js 與 finalize-agent-turn.js",
+        "主要讀寫檔集中在 task card 或 turn artifact 路徑"
+      ],
+      "risks": [
+        "只做摘要整理卻未驗證 repository state，可能產生錯誤 handoff",
+        "多 Agent 交接若缺 task scope 或 artifact path，後續 drift 比較會失真"
+      ]
+    },
+    {
+      "id": "runtime-debug",
+      "label": "Runtime Debug",
+      "priority": 400,
+      "description": "以崩潰、TypeError、runtime log、或重試修補為主的工作路徑。",
+      "match": {
+        "all": [
+          {
+            "field": "trace.summary.errorCount",
+            "op": "gte",
+            "value": 1
+          }
+        ],
+        "any": [
+          {
+            "field": "turnArtifact.workflow",
+            "op": "regex",
+            "value": "debug|runtime|triage|bug|crash|error"
+          },
+          {
+            "field": "turnArtifact.task",
+            "op": "regex",
+            "value": "debug|runtime|triage|bug|crash|error"
+          },
+          {
+            "field": "turnArtifact.files[].path",
+            "op": "arrayAnyStartsWith",
+            "value": [
+              "assets/scripts/",
+              "artifacts/runtime-diff/",
+              "artifacts/recovery/",
+              "artifacts/vfx-qa/"
+            ]
+          }
+        ]
+      },
+      "primaryEvidence": [
+        "trace 有實際錯誤事件",
+        "workflow / task 明示 debug / runtime / triage",
+        "主要 touched files 落在 runtime 腳本或 runtime artifact 路徑"
+      ],
+      "risks": [
+        "為了止血而加入 fallback，可能掩蓋根因並污染 baseline",
+        "高 retry / errorCount 但最終 pass，之後容易被 drift comparator 忽略"
+      ]
+    },
+    {
+      "id": "UI-QA",
+      "label": "UI QA",
+      "priority": 300,
+      "description": "以 UI 視覺驗收、preview、screenshot、compare artifact 為主的工作路徑。",
+      "match": {
+        "any": [
+          {
+            "field": "turnArtifact.workflow",
+            "op": "regex",
+            "value": "ui|qa|preview|screenshot|visual|vfx"
+          },
+          {
+            "field": "turnArtifact.task",
+            "op": "regex",
+            "value": "ui|qa|preview|screenshot|visual|vfx"
+          },
+          {
+            "field": "turnArtifact.files[].path",
+            "op": "arrayAnyStartsWith",
+            "value": [
+              "artifacts/ui-qa/",
+              "artifacts/screenshots/",
+              "artifacts/cocos-editor-final-gate/",
+              "artifacts/vfx-qa/",
+              "assets/prefabs/",
+              "assets/scripts/ui/"
+            ]
+          },
+          {
+            "field": "trace.summary.tools",
+            "op": "arrayIncludesAny",
+            "value": [
+              "validate-ui-specs.js",
+              "compare-html-to-cocos-editor.js",
+              "run-vfx-browser-qa.js",
+              "capture-ui-screens.js"
+            ]
+          }
+        ]
+      },
+      "primaryEvidence": [
+        "workflow / task 提到 QA、preview、screenshot、visual 或 vfx",
+        "證據檔主要位於 UI QA artifact 路徑或 UI 腳本/Prefab",
+        "trace tools 包含 UI compare / snapshot / validation 類工具"
+      ],
+      "risks": [
+        "只看 screenshot pass/fail，未記錄區域 ownership 或 smoke route",
+        "compare artifact 太重，若沒有 summary 會拖垮 context 與 metrics"
+      ]
+    },
+    {
+      "id": "tooling-code",
+      "label": "Tooling Code",
+      "priority": 200,
+      "description": "以 Node tooling、validator、automation、或 harness/CLI 實作為主的工作路徑。",
+      "match": {
+        "any": [
+          {
+            "field": "turnArtifact.files[].path",
+            "op": "arrayAnyStartsWith",
+            "value": [
+              "tools_node/",
+              "tools/",
+              "tests/fixtures/harness/",
+              "tests/"
+            ]
+          },
+          {
+            "field": "turnArtifact.task",
+            "op": "regex",
+            "value": "tool|validator|automation|harn|trace|metrics|gate|compare"
+          },
+          {
+            "field": "trace.summary.tools",
+            "op": "arrayIncludesAny",
+            "value": [
+              "compute-gate.js",
+              "collect-execution-trace.js",
+              "check-task-scope.js",
+              "validate-turn-artifact.js"
+            ]
+          }
+        ]
+      },
+      "primaryEvidence": [
+        "主要 touched files 落在 tools_node/ 或 tests/fixtures/harness/",
+        "task 明示 tooling / validator / harness / trace / compare",
+        "trace tools 集中在 deterministic CLI 與 gate 驗證"
+      ],
+      "risks": [
+        "只補 JSON 或 docs，卻沒有 helper/consumer 入口，後續工具仍無法引用",
+        "tooling regression 容易在 repo-wide dirty 狀態下被 unrelated failure 淹沒"
+      ]
+    },
+    {
+      "id": "doc-only",
+      "label": "Doc Only",
+      "priority": 100,
+      "description": "主要只動文件與規範，不涉及 runtime / tooling code 變更的工作路徑。",
+      "match": {
+        "all": [
+          {
+            "field": "turnArtifact.files[].path",
+            "op": "arrayAllStartsWith",
+            "value": [
+              "docs/",
+              ".github/",
+              "AGENTS.md",
+              "CLAUDE.md"
+            ]
+          }
+        ],
+        "none": [
+          {
+            "field": "turnArtifact.files[].path",
+            "op": "arrayAnyStartsWith",
+            "value": [
+              "tools_node/",
+              "assets/scripts/",
+              "assets/prefabs/"
+            ]
+          }
+        ]
+      },
+      "primaryEvidence": [
+        "所有 touched files 都落在 docs/.github/AGENTS/CLAUDE 範圍",
+        "沒有 tooling 或 runtime 檔案進入 artifact"
+      ],
+      "risks": [
+        "若只改 task card / brief 而未同步正式規格或 shard，文件真相容易分裂",
+        "doc-only baseline 若混入 tooling file，會誤導 path drift comparator"
+      ]
+    }
+  ],
+  "extensionPolicy": {
+    "addNewClassWhen": [
+      "新 workflow 在至少 3 輪真實案例中，無法被現有 class 穩定歸類且 remediation 差異明顯",
+      "新 class 需要獨立 baseline fixture 或 drift comparator 規則，而不是僅多一個 alias"
+    ],
+    "extendExistingClassWhen": [
+      "只是多一種 evidence field、tool alias、或新 artifact path，但 remediation 與風險仍屬同一路徑",
+      "原 class 的 deterministic 規則仍能解釋 primary intent，只是需要補 coverage"
+    ],
+    "changeControl": "先更新 JSON taxonomy，再同步 helper 與 fixture；禁止只在 comparator 內私自擴充分類邏輯。"
+  }
+}

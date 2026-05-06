@@ -5,15 +5,19 @@ priority: P1
 phase: Phase2
 created: 2026-05-04
 created_by_agent: GitHubCopilot
-owner: GitHubCopilot
-status: open
+owner: vs-insiders-gpt-5.4-mini
+status: done
 type: eval-taxonomy
 chain_id: HARN-CHAIN-EVAL
 chain_step: 1/3
 sensor_triggered_by: harness-rollout planning
 depends:
   - HARN-TRC-0003
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建立 Workflow Path Taxonomy 任務卡 | 阻塞: depends HARN-TRC-0003"
+started_at: "2026-05-06T15:05:32.233+08:00"
+started_by_agent: "vs-insiders-gpt-5.4-mini"
+completed_at: "2026-05-06T15:12:06.2771510+08:00"
+completed_by_agent: "vs-insiders-gpt-5.4-mini"
+notes: "2026-05-06 | 狀態: done | 驗證: workflow path taxonomy parse ok；5-class smoke classification pass；check:encoding:touched pass | 變更: 新增 tools_node/lib/harness/workflow-path-taxonomy.json 與 workflow-path-taxonomy.js，定義 5 類 workflow path class、primary selection/tie-break 規則、evidence fields、extension policy，並提供後續 comparator / metrics 可直接 require 的 classifier helper | 阻塞: none"
 ---
 
 # [HARN-EVAL-0001] 建立 Workflow Path Taxonomy
