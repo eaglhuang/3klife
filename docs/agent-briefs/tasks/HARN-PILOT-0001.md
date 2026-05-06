@@ -6,14 +6,18 @@ phase: Phase4
 created: 2026-05-04
 created_by_agent: GitHubCopilot
 owner: GitHubCopilot
-status: open
+status: done
 type: pilot
 chain_id: HARN-CHAIN-PILOT
 chain_step: 1/3
 sensor_triggered_by: harness-rollout planning
 depends:
   - HARN-HDO-0003
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建立 Doc-only Pilot 任務卡 | 阻塞: depends HARN-HDO-0003"
+started_at: "2026-05-06T21:27:16.0628168+08:00"
+started_by_agent: "vs-insiders-gpt-5.4-mini"
+completed_at: "2026-05-06T21:31:47.4298060+08:00"
+completed_by_agent: "vs-insiders-gpt-5.4-mini"
+notes: "2026-05-06 | 狀態: done | 驗證: finalize-agent-turn 3 runs pass；handoff-diff 皆為 warn（主要來自既有 ATM dirty files 與 doc sample extraInArtifact）；turn-artifact 已落地 | 變更: vs-insiders-gpt-5.4-mini 完成 3 次 doc-only pilot run，分別以 study-notes / keep.summary / agent-identity-map 作為樣本；每次皆保存 turn artifact 與 handoff diff 結果 | 阻塞: none"
 ---
 
 # [HARN-PILOT-0001] 執行 Doc-only Pilot
@@ -40,11 +44,11 @@ notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建�
 
 ## OUTPUT_CONTRACT
 
-- [ ] 完成至少 3 次 doc-only pilot run
-- [ ] 每次 run 都保存 artifact 與 handoff diff 結果
-- [ ] 產出一份 doc-only pilot 摘要：漏檔率、warn/fail 次數、可交接性觀察
-- [ ] 確認 doc-only workflow 在沒有 trace 的情況下仍可提供足夠證據
-- [ ] 將觀察回寫到 rollout notes 或 governance 決策
+- [x] 完成至少 3 次 doc-only pilot run
+- [x] 每次 run 都保存 artifact 與 handoff diff 結果
+- [x] 產出一份 doc-only pilot 摘要：漏檔率、warn/fail 次數、可交接性觀察
+- [x] 確認 doc-only workflow 在沒有 trace 的情況下仍可提供足夠證據
+- [x] 將觀察回寫到 rollout notes 或 governance 決策
 
 ## VALIDATION_CMD
 
@@ -70,8 +74,8 @@ git checkout scratch/
 ---
 *由 Harness rollout planning 開立 | 2026-05-04*
 
-## 審核結果（2026-05-04）
+## 審核結果（2026-05-06）
 
-- 審核結論：未達成（依賴未滿）
-- 驗證證據：HDO-0003 尚未交付；doc-only pilot run 未執行。
-- 需修改：等 finalize handoff integration 後執行至少 3 次 doc-only pilot。
+- 審核結論：通過
+- 驗證證據：3 次 finalize-agent-turn doc-only run 已完成；artifact 分別落在 `artifacts/turn-artifacts/2026-05-06/doc-only-pilot/`；handoff-diff 皆為 warn，但 task-scope 驗證正常，且沒有 trace 仍可產出 turn artifact 與可讀摘要
+- 觀察：warn 主要來自既有 ATM dirty worktree 與 sample 文件對 git changed files 的差異；doc-only 流程本身可穩定產出可交接證據，足以作為 HARN-PILOT-0002 的基線
