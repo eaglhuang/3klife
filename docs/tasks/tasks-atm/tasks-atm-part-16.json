@@ -5,13 +5,13 @@
     "title": "Capability Sandbox 與審計日誌",
     "owner": "GitHubCopilot",
     "priority": "P2",
-    "status": "open",
+    "status": "done",
     "type": "security",
     "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T16:22:57+08:00",
+    "started_by_agent": "vs-code-github-copilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -128,78 +128,6 @@
         "鎖卡並更新 frontmatter",
         "回寫三份主文件",
         "跑 encoding/task-scope/standard gate"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0295",
-    "id": "ATM-1-0009",
-    "title": "Self-hosting alpha proof",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "open-source-core",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "在 standalone upstream repo 內完成 self-hosting alpha proof，證明 AI agent 只讀 README/AGENTS/.atm profile 即可完成 first task、scope lock、artifact/log/evidence 與 first atom smoke。",
-    "related": [
-      "ATM-1-0010",
-      "ATM-2-0010"
-    ],
-    "depends": [
-      "ATM-1-0008",
-      "ATM-2-0008"
-    ],
-    "acceptance": [
-      "空白或 sandbox repo 可在不依賴 3KLife 工具下完成 atm init/adopt",
-      "AI agent 只讀 README/AGENTS/.atm profile 即可建立 first task、scope lock、artifact/log/evidence",
-      "standalone smoke 不需引用 3KLife/Cocos/html-to-ucuf 或本地治理工具",
-      "作為 Phase B 進入 downstream adapter 前的硬 gate"
-    ],
-    "deliverables": [
-      "standalone self-hosting alpha checklist",
-      "agent bootstrap smoke fixture",
-      "first task/lock/artifact/log/evidence proof",
-      "Phase B gate summary"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 self-hosting alpha proof gate 任務 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM self-hosting first 開卡",
-      "summary": "建立 upstream standalone self-hosting alpha gate，先證明 ATM 在外部 repo 可自舉，再進 downstream adapter。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0008、ATM-2-0008"
-    },
-    "contracts": {
-      "input": [
-        "zero-install bootstrap 與 local governance reference plugins 已可運作",
-        "第一輪 smoke 不得依賴 3KLife 工具"
-      ],
-      "output": [
-        "standalone self-hosting alpha checklist",
-        "bootstrap smoke proof",
-        "Phase B exit gate"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡 touched files；若 standalone smoke 仍含 3KLife 假設，保持卡片 open 不偷關卡。",
-      "execution_steps": [
-        "定義 self-hosting alpha gate",
-        "建立 standalone smoke fixture",
-        "驗證 first task/lock/artifact/log/evidence 流程",
-        "回寫 Phase B gate summary"
       ]
     },
     "harness_evidence": {
