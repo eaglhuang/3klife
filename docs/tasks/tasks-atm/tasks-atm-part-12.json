@@ -1,5 +1,71 @@
 [
   {
+    "doc_id": "doc_task_0265",
+    "id": "ATM-3-0002",
+    "title": "3KLife ATM config 與 bootstrap wrapper",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "adapter",
+    "phase": "ATM-3",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+    "related": [],
+    "depends": [
+      "ATM-3-0001"
+    ],
+    "acceptance": [
+      "node tools_node/atomic-framework/atm-cli.js status 可呼叫 upstream",
+      "workbench/registry path 指向本 repo local 區",
+      "不 fork core source",
+      "shadow wrapper 預設 dry-run / report-only，不替換現有 tools_node CLI"
+    ],
+    "deliverables": [
+      "tools_node/atomic-framework/bootstrap.js",
+      "atm.config.*",
+      "local workbench path 設定"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 bootstrap wrapper 只能 shadow upstream CLI，不得直接覆蓋 3KLife 現有入口 | 阻塞: ATM-3-0001 shadow report 未完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "tools_node/atomic-framework/bootstrap.js",
+        "atm.config.*",
+        "local workbench path 設定"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0266",
     "id": "ATM-3-0003",
     "title": "compute-gate ATM profile adapter integration",
@@ -178,71 +244,6 @@
         "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md",
         "assets/scripts shared/core adapter 建議",
         "禁止 import cc 的 atom 規則"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0269",
-    "id": "ATM-4-0001",
-    "title": "html-to-ucuf reference case study plan",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "case-study",
-    "phase": "ATM-4",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 html-to-ucuf 定義為 reference case study package，不讓 domain 規則進入 core。",
-    "related": [],
-    "depends": [
-      "ATM-3-0002"
-    ],
-    "acceptance": [
-      "fidelity formula/known gap/fixture 都在 case study",
-      "Roadmap 核心章節不依賴 H2U",
-      "case study 可獨立被關閉而不影響 core"
-    ],
-    "deliverables": [
-      "docs/ai_atomic_framework/html-to-ucuf-case-study.md",
-      "case study scope/non-goals",
-      "domain plugin list"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "將 html-to-ucuf 定義為 reference case study package，不讓 domain 規則進入 core。",
-      "position": "ATM-4",
-      "prereq": "ATM-3-0002"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "docs/ai_atomic_framework/html-to-ucuf-case-study.md",
-        "case study scope/non-goals",
-        "domain plugin list"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",

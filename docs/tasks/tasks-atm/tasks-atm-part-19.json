@@ -1,5 +1,151 @@
 [
   {
+    "doc_id": "doc_task_0294",
+    "id": "ATM-2-0010",
+    "title": "Neutrality boundary rule guard",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "open-source-core",
+    "phase": "ATM-2",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 upstream neutral/boundary rule guard，先以 deterministic 掃描檢查寫死 host 假設，再以 optional semantic audit 補抓隱性耦合與 stale docs。",
+    "related": [
+      "ATM-1-0008",
+      "ATM-1-0009",
+      "ATM-1-0010"
+    ],
+    "depends": [
+      "ATM-2-0007",
+      "ATM-2-0008"
+    ],
+    "acceptance": [
+      "guard 可掃 source/docs/examples/templates/prompt assets",
+      "deterministic 規則可攔截 3KLife/Cocos/html-to-ucuf/task-lock/compute-gate/doc-id 等 protected terms",
+      "semantic audit 只作 warn/needs-review，不單獨決定 hard fail",
+      "guard 區分 code dead-code 與 doc dead-doc，不把 LLM 當唯一裁決"
+    ],
+    "deliverables": [
+      "neutrality/boundary guard spec",
+      "protected-surface 與 banned-term config",
+      "semantic review report schema",
+      "standalone smoke fixture"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 neutrality/boundary rule guard 任務 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM self-hosting first 開卡",
+      "summary": "建立可自動驗證的 neutrality/boundary guard，避免 upstream 再被 adopter 私有假設污染。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0007、ATM-2-0008"
+    },
+    "contracts": {
+      "input": [
+        "governance schema 與 local reference plugins 已定義",
+        "guard 需同時涵蓋 code 與 docs surfaces"
+      ],
+      "output": [
+        "deterministic neutrality scan",
+        "optional semantic audit",
+        "protected surface policy 與 CI smoke"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退 guard 規格或 reference implementation；不得把 3KLife 私有路徑寫回 upstream protected surfaces。",
+      "execution_steps": [
+        "定義 protected surfaces",
+        "定義 banned terms 與 deterministic rules",
+        "補 semantic review report schema",
+        "建立 smoke fixture"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0296",
+    "id": "ATM-0-0011",
+    "title": "Context budget 治理補強與文件回寫",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "docs-governance",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-05T23:05:36.3800604+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-05T23:13:04.1935079+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "把 context budget 正式提升為 ATM upstream 可獨立治理的 primitive，並回寫相關 roadmap、extraction plan、adopter plan 與 v0.2 companion 文件。",
+    "related": [
+      "ATM-2-0011"
+    ],
+    "depends": [
+      "ATM-0-0010"
+    ],
+    "acceptance": [
+      "四份 ATM 規劃文件補上 context budget upstream primitive",
+      "明確定義 plugin-context-budget 或等效 guard/adapter 位置",
+      "把 encoding/context budget/neutrality 收斂成 Agent Governance Bundle",
+      "新增對應 ATM 任務卡與 tasks-atm 條目"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md",
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
+      "docs/agent-briefs/tasks/ATM-2-0011.md"
+    ],
+    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 將 context budget、plugin-context-budget 與 Agent Governance Bundle 正式回寫到四份 ATM 規劃文件，並同步修正 ATM-0-0011/ATM-2-0011 任務真相 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM governance bundle 開卡",
+      "summary": "把 context budget 提升成 upstream 可獨立治理能力，並同步回寫相關 md 文件。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0010"
+    },
+    "contracts": {
+      "input": [
+        "encoding 已進入 upstream governance 規劃",
+        "context budget 尚未成為對等 primitive"
+      ],
+      "output": [
+        "context budget primitive 定義",
+        "Agent Governance Bundle 收斂",
+        "新增對應任務卡"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0011 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若 tasks-atm 或 doc_id 不一致，使用既有工具重建。",
+      "execution_steps": [
+        "建立新任務卡",
+        "建立 ATM-2-0011 後續卡",
+        "鎖卡並更新 frontmatter",
+        "回寫四份主文件",
+        "跑 encoding/task-scope/standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0297",
     "id": "ATM-2-0011",
     "title": "Context budget guard",
@@ -84,148 +230,6 @@
     "doc_id": "doc_task_0298",
     "depends": [
       "ATM-0-0001"
-    ]
-  },
-  {
-    "id": "ATM-1.5-0001",
-    "title": "Seed-as-Spec：種子以自身格式自我描述",
-    "status": "done",
-    "priority": "P0",
-    "phase": "ATM-1.5",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0299",
-    "started_at": "2026-05-06T16:48:41+08:00",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T17:03:32.1926363+08:00",
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-spec / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit ad5f091 新增 packages/core/seed.js、specs/atom-seed-spec.json、CLI `spec --validate` 與 AJV schema validator；legacy planning ID ATM-CORE-0001 以 seed metadata 映射保留，現行 spec id 採 `atom.core-seed` 以符合既有 atomic-spec schema | 阻塞: none",
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/packages/core/seed.js",
-        "AI-Atomic-Framework/specs/atom-seed-spec.json",
-        "AI-Atomic-Framework/packages/cli/src/commands/spec.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/spec-shared.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
-        "AI-Atomic-Framework/scripts/validate-seed-spec.mjs",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit ad5f091",
-        "npm run validate:seed-spec",
-        "npm run validate:cli",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "seed self-description now lives in packages/core/seed.js and specs/atom-seed-spec.json",
-        "atm spec --validate validates atomic specs through AJV without breaking zero-install self-hosting flows",
-        "legacy planning ID ATM-CORE-0001 is preserved as seed metadata while the current schema id remains atom.core-seed",
-        "validate --spec stays zero-install compatible for self-hosting alpha and bootstrap smoke"
-      ]
-    },
-    "depends": [
-      "ATM-1-0006",
-      "ATM-1-0007"
-    ]
-  },
-  {
-    "id": "ATM-1.5-0002",
-    "title": "Seed 自我驗證：產生第一份 atomic-registry.json",
-    "status": "done",
-    "priority": "P0",
-    "phase": "ATM-1.5",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0300",
-    "started_at": "2026-05-06T09:15:48.254Z",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T17:24:55.4854274+08:00",
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d3ac9cf 新增 atomic-registry.json、CLI `verify --self`、registry selfVerification schema 與 drift 檢查；legacy planning ID ATM-CORE-0001 仍以 registry selfVerification metadata 保留，現行 atomId 維持 `atom.core-seed` | 阻塞: none",
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/atomic-registry.json",
-        "AI-Atomic-Framework/packages/cli/src/commands/verify.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
-        "AI-Atomic-Framework/schemas/registry.schema.json",
-        "AI-Atomic-Framework/scripts/validate-seed-registry.mjs",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-registry.json",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit d3ac9cf",
-        "npm run validate:seed-registry",
-        "npm run validate:cli",
-        "npm run validate:schemas",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "first committed atomic-registry.json now contains the seed entry with committed specHash/codeHash/testHash",
-        "atm verify --self validates registry schema first, then checks committed hash values against live seed files",
-        "editing seed.js changes computed codeHash and is detected as drift by the deterministic validator",
-        "legacy planning ID ATM-CORE-0001 is preserved in selfVerification metadata while current atomId stays atom.core-seed"
-      ]
-    },
-    "depends": [
-      "ATM-1.5-0001"
-    ]
-  },
-  {
-    "id": "ATM-1.5-0003",
-    "title": "ATM-CORE-0001 正式收編：舊 seed 標 @deprecated",
-    "status": "done",
-    "priority": "P0",
-    "phase": "ATM-1.5",
-    "type": "governance",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0301",
-    "started_at": "2026-05-06T17:31:00.000Z",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T18:13:27.1736893+08:00",
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d90c2f6 將 seed hand-written source 標為 @deprecated、atomic-registry seed entry 升為 governed、CHANGELOG 新增 Phase B1 complete、atm status 在 framework repo root 顯示 B1-complete 與 governedBy ATM-CORE-0002 | 阻塞: none",
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/CHANGELOG.md",
-        "AI-Atomic-Framework/atomic-registry.json",
-        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
-        "AI-Atomic-Framework/packages/core/seed.js",
-        "AI-Atomic-Framework/schemas/registry.schema.json",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/scripts/validate-seed-registry.mjs"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit d90c2f6",
-        "node packages/cli/src/atm.mjs status",
-        "npm run validate:seed-registry",
-        "npm run validate:cli",
-        "npm run validate:schemas",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "seed hand-written source is retained but explicitly marked deprecated under ATM-CORE-0002 governance",
-        "atomic-registry seed entry status is now governed and still passes self-verification with committed hash values",
-        "atm status no longer requires .atm/config in the framework repository root to report Phase B1 complete",
-        "CHANGELOG records the Phase B1 milestone and the handoff from ATM-CORE-0001 metadata to ATM-CORE-0002 governance"
-      ]
-    },
-    "depends": [
-      "ATM-1.5-0002"
     ]
   }
 ]

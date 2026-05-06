@@ -1,5 +1,68 @@
 [
   {
+    "doc_id": "doc_task_0276",
+    "id": "ATM-6-0001",
+    "title": "跨專案 Registry / DB / Vector 決策",
+    "owner": "GitHubCopilot",
+    "priority": "P2",
+    "status": "open",
+    "type": "ecosystem",
+    "phase": "ATM-6",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
+    "related": [],
+    "depends": [
+      "ATM-5-0004"
+    ],
+    "acceptance": [
+      "JSON-first 仍是真相",
+      "DB/vector 只作 optional plugin",
+      "不增加 core v0.1 必備依賴"
+    ],
+    "deliverables": [
+      "docs/ecosystem/registry-db-vector-decision.md",
+      "plugin boundary proposal"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
+      "position": "ATM-6",
+      "prereq": "ATM-5-0004"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "docs/ecosystem/registry-db-vector-decision.md",
+        "plugin boundary proposal"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0277",
     "id": "ATM-6-0002",
     "title": "Community RFC 與貢獻流程",
@@ -177,74 +240,6 @@
         "docs/ecosystem/performance-budget-police.md",
         "plugin boundary proposal",
         "cost control policy"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0286",
-    "id": "ATM-6-0005",
-    "title": "Capability Sandbox 與審計日誌",
-    "owner": "GitHubCopilot",
-    "priority": "P2",
-    "status": "done",
-    "type": "security",
-    "phase": "ATM-6",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T16:22:57+08:00",
-    "started_by_agent": "vs-code-github-copilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "規劃 Capability Sandbox、權限控管、審計日誌、prompt injection guardrail 與 observability 的 optional plugin 邊界。",
-    "related": [],
-    "depends": [
-      "ATM-6-0004"
-    ],
-    "acceptance": [
-      "Deno sandbox/OpenTelemetry/Prometheus 不成為 core 必備依賴",
-      "Capability 宣告與審計格式可由 plugin 實作",
-      "安全插件缺席時 core 仍能 standalone 運作",
-      "threat model / provenance / secrets scan policy 已定義",
-      "cost budget policy 與 budget report schema 已對齊",
-      "observability event taxonomy 覆蓋 agent.run、task.lock、schema.validate、atom.verify、evidence.write、adapter.shadow"
-    ],
-    "deliverables": [
-      "docs/ecosystem/capability-sandbox-audit.md",
-      "security plugin interface proposal",
-      "observability adapter boundary"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 threat model、cost budget、secrets scan 與 observability event taxonomy | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "規劃 Capability Sandbox、權限控管、審計日誌、prompt injection guardrail 與 observability 的 optional plugin 邊界。",
-      "position": "ATM-6",
-      "prereq": "ATM-6-0004"
-    },
-    "contracts": {
-      "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
-      ],
-      "output": [
-        "docs/ecosystem/capability-sandbox-audit.md",
-        "security plugin interface proposal",
-        "observability adapter boundary"
       ],
       "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",

@@ -1,5 +1,73 @@
 [
   {
+    "doc_id": "doc_task_0286",
+    "id": "ATM-6-0005",
+    "title": "Capability Sandbox 與審計日誌",
+    "owner": "GitHubCopilot",
+    "priority": "P2",
+    "status": "done",
+    "type": "security",
+    "phase": "ATM-6",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T16:22:57+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "規劃 Capability Sandbox、權限控管、審計日誌、prompt injection guardrail 與 observability 的 optional plugin 邊界。",
+    "related": [],
+    "depends": [
+      "ATM-6-0004"
+    ],
+    "acceptance": [
+      "Deno sandbox/OpenTelemetry/Prometheus 不成為 core 必備依賴",
+      "Capability 宣告與審計格式可由 plugin 實作",
+      "安全插件缺席時 core 仍能 standalone 運作",
+      "threat model / provenance / secrets scan policy 已定義",
+      "cost budget policy 與 budget report schema 已對齊",
+      "observability event taxonomy 覆蓋 agent.run、task.lock、schema.validate、atom.verify、evidence.write、adapter.shadow"
+    ],
+    "deliverables": [
+      "docs/ecosystem/capability-sandbox-audit.md",
+      "security plugin interface proposal",
+      "observability adapter boundary"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 threat model、cost budget、secrets scan 與 observability event taxonomy | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM v0.2 整合開卡",
+      "summary": "規劃 Capability Sandbox、權限控管、審計日誌、prompt injection guardrail 與 observability 的 optional plugin 邊界。",
+      "position": "ATM-6",
+      "prereq": "ATM-6-0004"
+    },
+    "contracts": {
+      "input": [
+        "v0.2 companion analysis 已確認可作務實化補充"
+      ],
+      "output": [
+        "docs/ecosystem/capability-sandbox-audit.md",
+        "security plugin interface proposal",
+        "observability adapter boundary"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0292",
     "id": "ATM-0-0010",
     "title": "Self-hosting first 邊界與中立性 guard 落地",
@@ -69,105 +137,5 @@
       "trace_artifacts": [],
       "metrics_summary": []
     }
-  },
-  {
-    "doc_id": "doc_task_0295",
-    "id": "ATM-1-0009",
-    "title": "Self-hosting alpha proof",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "open-source-core",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "在 standalone upstream repo 內完成 self-hosting alpha proof，並把正式使用者體驗收斂為『1 句官方 prompt 作為單一入口』；使用者只需把 prompt 交給 AI，必要時由 AI 自動執行官方 bootstrap 命令，不需手動拷貝 AGENTS/profile/task/lock，也不需先把 host repo 改造成 Node 專案。",
-    "related": [
-      "ATM-1-0010",
-      "ATM-2-0010"
-    ],
-    "depends": [
-      "ATM-1-0008",
-      "ATM-2-0008"
-    ],
-    "acceptance": [
-      "使用者只需 1 句官方 prompt 即可啟動 first task；必要時由 AI 自動執行官方 bootstrap 命令",
-      "空白或 sandbox repo 可在不依賴 3KLife 工具下完成 standalone bootstrap smoke",
-      "AI agent 只讀 host README 與生成的 AGENTS/.atm profile/task，即可建立 first task、scope lock、artifact/log/evidence 與 first atom smoke",
-      "standalone smoke 不需引用 3KLife/Cocos/html-to-ucuf 或本地治理工具，且作為 Phase B 進入 downstream adapter 前的硬 gate"
-    ],
-    "deliverables": [
-      "standalone self-hosting alpha checklist",
-      "official single-entry bootstrap contract",
-      "agent bootstrap smoke fixture",
-      "Phase B gate summary"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm run validate:self-hosting-alpha / npm run validate:cli / npm run validate:bootstrap / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 75dfca9 新增 bootstrap CLI 入口、single-entry self-hosting alpha prompt、SELF_HOSTING_ALPHA checklist 與 deterministic first-smoke proof gate | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM self-hosting first 開卡",
-      "summary": "建立 upstream standalone self-hosting alpha gate，並把官方體驗明確收斂為『1 句 prompt 作為單一入口』後，再進 downstream adapter。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0008、ATM-2-0008"
-    },
-    "contracts": {
-      "input": [
-        "zero-install bootstrap 與 local governance reference plugins 已可運作",
-        "第一輪 smoke 不得依賴 3KLife 工具"
-      ],
-      "output": [
-        "standalone self-hosting alpha checklist",
-        "official single-entry bootstrap contract",
-        "bootstrap smoke proof",
-        "Phase B exit gate"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡 touched files；若 standalone smoke 仍含 3KLife 假設，保持卡片 open 不偷關卡。",
-      "execution_steps": [
-        "定義『1 句官方 prompt 作為單一入口；必要時 AI 自動執行 1 個官方 bootstrap 命令』產品目標",
-        "定義 self-hosting alpha gate",
-        "建立 standalone smoke fixture",
-        "驗證 first task/lock/artifact/log/evidence 與 first atom smoke",
-        "回寫 Phase B gate summary"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/packages/cli/src/atm.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/bootstrap-entry.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/bootstrap.mjs",
-        "AI-Atomic-Framework/scripts/validate-self-hosting-alpha.mjs",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/scripts/validate-bootstrap.mjs",
-        "AI-Atomic-Framework/docs/SELF_HOSTING_ALPHA.md",
-        "AI-Atomic-Framework/examples/agent-bootstrap/README.md",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json",
-        "AI-Atomic-Framework/README.md"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 75dfca9",
-        "npm run validate:self-hosting-alpha",
-        "npm run validate:cli",
-        "npm run validate:bootstrap",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "official single-entry prompt checks .atm/config.json and triggers bootstrap when needed",
-        "bootstrap command is an official standalone CLI entry alongside init/status/validate",
-        "self-hosting alpha validator bootstraps a clean upstream repo copy and completes first smoke against hello-world atom",
-        "proof writes task/lock/evidence transitions plus artifact/log/context summary and Phase B exit gate report",
-        "full upstream validation chain remains green after adding the proof gate"
-      ]
-    },
-    "completed_at": "2026-05-06T16:34:31+08:00"
   }
 ]

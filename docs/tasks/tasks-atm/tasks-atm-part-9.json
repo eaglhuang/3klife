@@ -101,13 +101,14 @@
     "title": "Registry 與 HashLock MVP",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "registry",
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T21:25:59.6877719+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T21:52:25.4910643+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -126,7 +127,7 @@
       "packages/core/src/hash-lock/hash-lock.*",
       "registry fixtures"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:registry-core / node scripts/validate-seed-registry.mjs --mode validate / npm run validate:schemas / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 7da6730 新增 core hash-lock 與 JSON-first registry primitive、registry builder/validator/drift checker、registry fixtures，讓 registry 可記錄 atom version/status/location/sharding metadata，seed registry 改為共用 core hash-lock/registry helper，避免 CLI 維護第二套 createHash 與 AJV 邏輯 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
@@ -153,77 +154,39 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/package.json",
+        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
+        "AI-Atomic-Framework/packages/core/src/index.ts",
+        "AI-Atomic-Framework/packages/core/src/hash-lock/hash-lock.mjs",
+        "AI-Atomic-Framework/packages/core/src/registry/registry.mjs",
+        "AI-Atomic-Framework/schemas/registry.schema.json",
+        "AI-Atomic-Framework/scripts/validate-registry-core.mjs",
+        "AI-Atomic-Framework/tests/registry.fixture.json",
+        "AI-Atomic-Framework/tests/registry-fixtures/registry.atom.json",
+        "AI-Atomic-Framework/tests/registry-fixtures/compute-atom.js",
+        "AI-Atomic-Framework/tests/registry-fixtures/registry-test.mjs",
+        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-registry.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 7da6730",
+        "npm run validate:registry-core",
+        "node scripts/validate-seed-registry.mjs --mode validate",
+        "npm run validate:schemas",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking committed",
       "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0262",
-    "id": "ATM-2-0005",
-    "title": "Police plugin API 與內建檢查器",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "police",
-    "phase": "ATM-2",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立 Police plugin API，並先提供 schema、forbidden import、side effect、registry consistency 檢查。",
-    "related": [],
-    "depends": [
-      "ATM-2-0004",
-      "ATM-1-0006"
-    ],
-    "acceptance": [
-      "domain-specific police 不在 core",
-      "內建 police 可產 JSON report",
-      "違規 atom 不可 register stable"
-    ],
-    "deliverables": [
-      "packages/plugin-sdk/src/police.*",
-      "packages/core/src/police/*",
-      "positive/negative fixtures"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立 Police plugin API，並先提供 schema、forbidden import、side effect、registry consistency 檢查。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0004、ATM-1-0006"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "packages/plugin-sdk/src/police.*",
-        "packages/core/src/police/*",
-        "positive/negative fixtures"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
+      "metrics_summary": [
+        "core hash-lock primitive 現在可計算 spec/code/test 的 sha256 snapshot，並保留 normalized source paths 供 registry self-verification 使用",
+        "core registry builder/validator/drift checker 現在可生成 JSON-first registry document，記錄 atom id/version/status/location 與 future sharding metadata",
+        "registry-core focused fixture 會先跑 per-atom delegated test runner，再驗證 registry schema 與 spec/code/test drift detection",
+        "CLI seed registry 目前改為共用 core hash-lock 與 registry validator/drift helper，不再維護另一套 createHash 與 AJV 實作",
+        "schema positive fixture 現在覆蓋 sharding、location、pluginApiVersion、languageAdapter 與 sourcePaths.code array 形狀"
       ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
     }
   }
 ]

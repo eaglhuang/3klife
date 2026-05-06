@@ -1,5 +1,147 @@
 [
   {
+    "id": "ATM-1.5-0001",
+    "title": "Seed-as-Spec：種子以自身格式自我描述",
+    "status": "done",
+    "priority": "P0",
+    "phase": "ATM-1.5",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0299",
+    "started_at": "2026-05-06T16:48:41+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T17:03:32.1926363+08:00",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-spec / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit ad5f091 新增 packages/core/seed.js、specs/atom-seed-spec.json、CLI `spec --validate` 與 AJV schema validator；legacy planning ID ATM-CORE-0001 以 seed metadata 映射保留，現行 spec id 採 `atom.core-seed` 以符合既有 atomic-spec schema | 阻塞: none",
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/core/seed.js",
+        "AI-Atomic-Framework/specs/atom-seed-spec.json",
+        "AI-Atomic-Framework/packages/cli/src/commands/spec.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/spec-shared.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
+        "AI-Atomic-Framework/scripts/validate-seed-spec.mjs",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit ad5f091",
+        "npm run validate:seed-spec",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "seed self-description now lives in packages/core/seed.js and specs/atom-seed-spec.json",
+        "atm spec --validate validates atomic specs through AJV without breaking zero-install self-hosting flows",
+        "legacy planning ID ATM-CORE-0001 is preserved as seed metadata while the current schema id remains atom.core-seed",
+        "validate --spec stays zero-install compatible for self-hosting alpha and bootstrap smoke"
+      ]
+    },
+    "depends": [
+      "ATM-1-0006",
+      "ATM-1-0007"
+    ]
+  },
+  {
+    "id": "ATM-1.5-0002",
+    "title": "Seed 自我驗證：產生第一份 atomic-registry.json",
+    "status": "done",
+    "priority": "P0",
+    "phase": "ATM-1.5",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0300",
+    "started_at": "2026-05-06T09:15:48.254Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T17:24:55.4854274+08:00",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d3ac9cf 新增 atomic-registry.json、CLI `verify --self`、registry selfVerification schema 與 drift 檢查；legacy planning ID ATM-CORE-0001 仍以 registry selfVerification metadata 保留，現行 atomId 維持 `atom.core-seed` | 阻塞: none",
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/atomic-registry.json",
+        "AI-Atomic-Framework/packages/cli/src/commands/verify.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
+        "AI-Atomic-Framework/schemas/registry.schema.json",
+        "AI-Atomic-Framework/scripts/validate-seed-registry.mjs",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-registry.json",
+        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit d3ac9cf",
+        "npm run validate:seed-registry",
+        "npm run validate:cli",
+        "npm run validate:schemas",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "first committed atomic-registry.json now contains the seed entry with committed specHash/codeHash/testHash",
+        "atm verify --self validates registry schema first, then checks committed hash values against live seed files",
+        "editing seed.js changes computed codeHash and is detected as drift by the deterministic validator",
+        "legacy planning ID ATM-CORE-0001 is preserved in selfVerification metadata while current atomId stays atom.core-seed"
+      ]
+    },
+    "depends": [
+      "ATM-1.5-0001"
+    ]
+  },
+  {
+    "id": "ATM-1.5-0003",
+    "title": "ATM-CORE-0001 正式收編：舊 seed 標 @deprecated",
+    "status": "done",
+    "priority": "P0",
+    "phase": "ATM-1.5",
+    "type": "governance",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0301",
+    "started_at": "2026-05-06T17:31:00.000Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T18:13:27.1736893+08:00",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d90c2f6 將 seed hand-written source 標為 @deprecated、atomic-registry seed entry 升為 governed、CHANGELOG 新增 Phase B1 complete、atm status 在 framework repo root 顯示 B1-complete 與 governedBy ATM-CORE-0002 | 阻塞: none",
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/CHANGELOG.md",
+        "AI-Atomic-Framework/atomic-registry.json",
+        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
+        "AI-Atomic-Framework/packages/core/seed.js",
+        "AI-Atomic-Framework/schemas/registry.schema.json",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/scripts/validate-seed-registry.mjs"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit d90c2f6",
+        "node packages/cli/src/atm.mjs status",
+        "npm run validate:seed-registry",
+        "npm run validate:cli",
+        "npm run validate:schemas",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "seed hand-written source is retained but explicitly marked deprecated under ATM-CORE-0002 governance",
+        "atomic-registry seed entry status is now governed and still passes self-verification with committed hash values",
+        "atm status no longer requires .atm/config in the framework repository root to report Phase B1 complete",
+        "CHANGELOG records the Phase B1 milestone and the handoff from ATM-CORE-0001 metadata to ATM-CORE-0002 governance"
+      ]
+    },
+    "depends": [
+      "ATM-1.5-0002"
+    ]
+  },
+  {
     "id": "ATM-2-0012",
     "title": "neutralityScanner atom + CI（ATM-CORE-0003）",
     "status": "open",
@@ -85,164 +227,5 @@
       "ATM-2.5-0002",
       "ATM-3-0001"
     ]
-  },
-  {
-    "id": "ATM-3-0007",
-    "title": "compute-gate.js adapter 化：接入 ATM GateAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0307",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0008",
-    "title": "doc-id-registry.js adapter 化：接入 ATM DocumentIndexAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0308",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0009",
-    "title": "shard-manager.js adapter 化：接入 ATM ShardAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0309",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0010",
-    "title": "task-card-opener.js adapter 化：接入 ATM TaskAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0310",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0011",
-    "title": "encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0311",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0012",
-    "title": "task-scope / import-boundary 規則包遷移 + @deprecated 標記",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0312",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0013",
-    "title": "finalize-agent-turn.js wrapper 接入 ATM run envelope",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0313",
-    "depends": [
-      "ATM-3-0006",
-      "ATM-3-0007"
-    ]
-  },
-  {
-    "doc_id": "doc_task_0314",
-    "id": "ATM-0-0013",
-    "title": "tasks-atm.json thin index 與細分片",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "governance",
-    "phase": "ATM-0",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T01:03:22.4082504+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 docs/tasks/tasks-atm.json 從單一大型 aggregate 改為 thin index stub，完整 ATM 任務改存於 docs/tasks/tasks-atm/ 之下的 part 檔，並把每個分片收斂到不超過 300 行、約 10 KB。",
-    "related": [
-      "ATM-3-0009"
-    ],
-    "depends": [
-      "ATM-0-0001"
-    ],
-    "acceptance": [
-      "docs/tasks/tasks-atm.json 不再保存完整 tasks array，而是 thin index stub",
-      "docs/tasks/tasks-atm/tasks-atm-part-*.json 每檔不超過 300 行、約 10 KB",
-      "task-card-opener 在 json-out=docs/tasks/tasks-atm.json 時仍可正確 upsert 任務並重建 thin index",
-      "docs/tasks/README.md 補上 thin index 與 rebuild 指令"
-    ],
-    "deliverables": [
-      "docs/tasks/tasks-atm.json thin index stub",
-      "docs/tasks/tasks-atm/.shardrc.json",
-      "docs/tasks/tasks-atm/tasks-atm-part-*.json",
-      "docs/tasks/README.md 的 thin index / rebuild 說明",
-      "tools_node/lib/tasks-atm-shard-store.js",
-      "tools_node/rebuild-tasks-atm-auto-parts.js thin-index 寫入鏈"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: thin-index rebuild pass；task-card-opener thin-index upsert pass；16 個 part 皆 <=300 行 / <=10 KB；encoding-touched pass；quick gate 3/3 pass；standard gate 僅被既有 unrelated dirty task-scope 擋住 | 變更: 將 tasks-atm.json 改為 thin index，接上 shard store 寫入鏈，並把分片門檻收緊到 300 行 / 10 KB | 阻塞: none",
-    "brief": {
-      "style": "classic",
-      "label": "",
-      "summary": "",
-      "position": "",
-      "prereq": ""
-    },
-    "contracts": {
-      "input": [],
-      "output": [],
-      "validation_cmd": "",
-      "rollback_hint": "",
-      "execution_steps": []
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
   }
 ]
