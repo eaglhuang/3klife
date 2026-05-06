@@ -101,7 +101,7 @@
     "title": "CLI init/status/validate MVP",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "in-progress",
+    "status": "done",
     "type": "cli",
     "phase": "ATM-1",
     "created": "2026-05-05",
@@ -127,7 +127,7 @@
       "packages/cli/src/commands/validate.*",
       "CLI integration fixture"
     ],
-    "notes": "2026-05-06 | 狀態: in-progress | 驗證: pending | 變更: vs-code-github-copilot 開始處理 CLI init/status/validate MVP 與 integration fixture | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 0176686 建立可執行 ATM CLI init/status/validate MVP、standalone config、agent-readable JSON output 與 integration fixture | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
@@ -155,12 +155,35 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/cli/src/atm.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/init.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/shared.mjs",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 0176686",
+        "npm install",
+        "npm run packages:list",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff verified",
       "trace_artifacts": [],
-      "metrics_summary": []
-    }
+      "metrics_summary": [
+        "upstream commit 0176686",
+        "3 CLI commands implemented: init/status/validate",
+        "blank repo fixture runs commands from empty working directory",
+        "standalone mode works before adapter implementation",
+        "errors emit machine-readable JSON with code/message/evidence"
+      ]
+    },
+    "completed_at": "2026-05-06T14:12:54+08:00"
   },
   {
     "doc_id": "doc_task_0255",
