@@ -5,13 +5,14 @@
     "title": "Core Spec loader/parser",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "manager",
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T18:18:00.000Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T19:24:57.2838869+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -30,7 +31,7 @@
       "unit tests",
       "error-as-prompt report format"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:core-spec-parser / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 87c689c 新增 packages/core/src/spec/parse-spec.mjs、fixture-driven parser validator、host-agnostic parse proof，並讓 CLI spec --validate 走 core parser 產出 normalized model 與 error-as-prompt report format | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
@@ -57,11 +58,30 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/package.json",
+        "AI-Atomic-Framework/packages/cli/src/commands/spec-shared.mjs",
+        "AI-Atomic-Framework/packages/core/src/spec/parse-spec.mjs",
+        "AI-Atomic-Framework/scripts/validate-core-spec-parser.mjs",
+        "AI-Atomic-Framework/tests/core-spec-parser.fixture.json",
+        "AI-Atomic-Framework/tests/core-spec-parser-fixtures/minimal-valid.atom.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 87c689c",
+        "npm run validate:core-spec-parser",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
       "trace_artifacts": [],
-      "metrics_summary": []
+      "metrics_summary": [
+        "core parser now reads atomic spec files, validates against the shared schema, and emits a normalized model",
+        "invalid spec cases return prompt-ready issue records with code, path, text, and direct fix hints",
+        "parser validation covers valid fixture, invalid fixture, missing-file failure, and host-agnostic temp-repo parsing",
+        "CLI spec --validate now reuses the core parser instead of carrying a separate validation path"
+      ]
     }
   },
   {

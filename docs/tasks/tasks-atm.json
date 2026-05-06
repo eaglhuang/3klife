@@ -9,9 +9,9 @@
     "maxPartLines": 300
   },
   "summary": {
-    "done": 26,
+    "done": 27,
     "in_progress": 0,
-    "open": 45,
+    "open": 44,
     "total": 71
   },
   "shards": [
@@ -104,8 +104,8 @@
       "title": "Part 8 (items 18-21)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-8.json",
       "count": 4,
-      "bytes": 8548,
-      "lines": 263,
+      "bytes": 10093,
+      "lines": 283,
       "range": [
         17,
         20
