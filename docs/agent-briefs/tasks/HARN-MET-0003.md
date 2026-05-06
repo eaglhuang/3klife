@@ -5,8 +5,8 @@ priority: P2
 phase: Phase3
 created: 2026-05-04
 created_by_agent: GitHubCopilot
-owner: GitHubCopilot
-status: open
+owner: vs-insiders-gpt-5.4
+status: done
 type: health-integration
 chain_id: HARN-CHAIN-METRICS
 chain_step: 3/3
@@ -14,7 +14,11 @@ sensor_triggered_by: harness-rollout planning
 depends:
   - HARN-MET-0002
   - HARN-EVAL-0003
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建立 Harness Health Report Integration 任務卡 | 阻塞: depends HARN-MET-0002,HARN-EVAL-0003"
+started_at: "2026-05-06T19:13:03.2109339+08:00"
+started_by_agent: "vs-insiders-gpt-5.4"
+completed_at: "2026-05-06T19:24:13.7084948+08:00"
+completed_by_agent: "vs-insiders-gpt-5.4"
+notes: "2026-05-06 | 狀態: done | 驗證: harness-health-report --json pass；缺資料欄位維持 null/unknown；get_errors pass；human default/brief output pass | 變更: 擴充 tools_node/harness-health-report.js，附加 live harness-metrics-summary/v1、artifact coverage / handoff integrity / path drift scores、daily trend snapshots 與 path drift sample 掃描；維持既有 overallScore + dimensions 結構相容 | 阻塞: none"
 ---
 
 # [HARN-MET-0003] 擴充 Harness Health Report
