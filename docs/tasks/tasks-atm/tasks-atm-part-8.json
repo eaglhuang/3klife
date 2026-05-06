@@ -90,13 +90,14 @@
     "title": "Scaffold Builder MVP",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "manager",
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T19:28:00.000Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T20:18:23.9552929+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -115,7 +116,7 @@
       "templates/atom.spec.template.json",
       "templates/atom.test.template.ts"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:scaffold-builder / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit b8a3270 新增 core scaffold builder、templates/atom.spec.template.json、templates/atom.test.template.ts，預設產出 atomic_workbench/atoms/<atomId>/atom.spec.json + atom.test.ts，並支援 adapter 指定 workbenchPath 與 idempotent rerun | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
@@ -142,11 +143,30 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/package.json",
+        "AI-Atomic-Framework/packages/core/src/manager/scaffold.mjs",
+        "AI-Atomic-Framework/scripts/validate-scaffold-builder.mjs",
+        "AI-Atomic-Framework/templates/atom.spec.template.json",
+        "AI-Atomic-Framework/templates/atom.test.template.ts",
+        "AI-Atomic-Framework/tests/scaffold-builder.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit b8a3270",
+        "npm run validate:scaffold-builder",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
       "trace_artifacts": [],
-      "metrics_summary": []
+      "metrics_summary": [
+        "scaffold builder writes a per-atom workbench by default under atomic_workbench/atoms/<atomId>",
+        "each scaffolded atom currently includes atom.spec.json and atom.test.ts rendered from shared templates",
+        "rerunning scaffold skips existing files so manual edits are preserved by default",
+        "adapter or caller can decide workbenchPath explicitly instead of using the default folder policy"
+      ]
     }
   },
   {
@@ -197,71 +217,6 @@
         "packages/core/src/manager/test-runner.*",
         "schemas/test-report.schema.json",
         "pass/fail fixtures"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0261",
-    "id": "ATM-2-0004",
-    "title": "Registry 與 HashLock MVP",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "registry",
-    "phase": "ATM-2",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "實作 JSON-first registry 與 spec/code/test hash lock。",
-    "related": [],
-    "depends": [
-      "ATM-2-0003"
-    ],
-    "acceptance": [
-      "修改 spec/code/test 任一檔會偵測 drift",
-      "registry 可記錄 atom version/status/location",
-      "支援未來 shard"
-    ],
-    "deliverables": [
-      "packages/core/src/registry/registry.*",
-      "packages/core/src/hash-lock/hash-lock.*",
-      "registry fixtures"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "實作 JSON-first registry 與 spec/code/test hash lock。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0003"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "packages/core/src/registry/registry.*",
-        "packages/core/src/hash-lock/hash-lock.*",
-        "registry fixtures"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
       "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",

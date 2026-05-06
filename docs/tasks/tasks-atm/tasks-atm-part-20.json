@@ -1,5 +1,92 @@
 [
   {
+    "id": "ATM-2-0012",
+    "title": "neutralityScanner atom + CI（ATM-CORE-0003）",
+    "status": "open",
+    "priority": "P0",
+    "phase": "ATM-2",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0302",
+    "depends": [
+      "ATM-2-0001",
+      "ATM-1.5-0003"
+    ]
+  },
+  {
+    "id": "ATM-2.5-0001",
+    "title": "Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI",
+    "status": "open",
+    "priority": "P0",
+    "phase": "ATM-2.5",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0303",
+    "depends": [
+      "ATM-2-0012",
+      "ATM-2-0004",
+      "ATM-2-0005"
+    ]
+  },
+  {
+    "id": "ATM-2.5-0002",
+    "title": "Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate",
+    "status": "open",
+    "priority": "P0",
+    "phase": "ATM-2.5",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0304",
+    "depends": [
+      "ATM-2.5-0001"
+    ]
+  },
+  {
+    "id": "ATM-2.5-0003",
+    "title": "Multi-Agent 兼容性驗證：confidence gate",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-2.5",
+    "type": "confidence-gate",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0305",
+    "depends": [],
+    "description": "依 multi-agent-compatibility-matrix.md 執行 5 種 AI agent 的 confidence 測試；此卡不再阻塞 alpha0，alpha0 release blocker 僅保留 deterministic profile check。",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 將 multi-agent alpha gate 降級為 confidence gate；alpha0 release blocker 僅保留 deterministic profile check | 阻塞: none",
+    "acceptance": [
+      "5 個 agent confidence report 皆有結果檔；不要求 3/5 全 true 才能釋出 alpha0",
+      "失敗 agent 有 issue link 與修復計畫，並標記是否阻塞 alpha1"
+    ],
+    "deliverables": [
+      "Claude Code：atm self-host-alpha --agent claude-code 產生 confidence report",
+      "Cursor：manual run 產生 confidence report",
+      "Aider：aider --message AGENTS.md 跑 confidence workflow",
+      "GitHub Copilot Agent：gh copilot agent run 產生 confidence report",
+      "OpenAI Assistants API：node tests/agents/openai-assistant.test.js 產生 confidence report",
+      "tests/agents/results/<agent>-<timestamp>.json 結果記錄",
+      "docs/multi-agent-results.md 公開結果摘要"
+    ]
+  },
+  {
+    "id": "ATM-3-0006",
+    "title": "task-lock.js adapter 化：接入 ATM LockAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0306",
+    "depends": [
+      "ATM-2.5-0002",
+      "ATM-3-0001"
+    ]
+  },
+  {
     "id": "ATM-3-0007",
     "title": "compute-gate.js adapter 化：接入 ATM GateAdapter",
     "status": "open",
@@ -157,72 +244,5 @@
       "trace_artifacts": [],
       "metrics_summary": []
     }
-  },
-  {
-    "doc_id": "doc_task_0315",
-    "id": "ATM-0-0014",
-    "title": "ATM 瘦身再開工與規劃真相收斂",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "governance",
-    "phase": "ATM-0",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T07:57:58+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 ATM 規劃從完整治理生態先瘦身為 alpha0/alpha1，補上文件真相收斂、核心 schema、confidence gate、3KLife shadow adapter、OSS 實務文件與 H2U dry-run 閘門。",
-    "related": [
-      "ATM-1-0003",
-      "ATM-2-0007",
-      "ATM-2-0008",
-      "ATM-2-0009",
-      "ATM-3-0001",
-      "ATM-4-0005",
-      "ATM-5-0004",
-      "ATM-6-0005"
-    ],
-    "depends": [
-      "ATM-0-0013"
-    ],
-    "acceptance": [
-      "主計畫標出 active/companion/historical 收斂原則與任務數修正",
-      "alpha0/alpha1 成功標準寫入主規劃與 open-source extraction plan",
-      "既有 schema、adapter、release、security、H2U 任務卡補上缺口",
-      "tasks-atm source 與 auto-parts 可重建且通過 encoding/standard gate"
-    ],
-    "deliverables": [
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md 補強",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md 補強",
-      "docs/agent-briefs/tasks/ATM-0-0014.md",
-      "相關既有 ATM 任務卡補充",
-      "tasks-atm source 與 auto-parts 同步"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: tasks-atm source=71/auto-parts=5；crossref rebuild pass；encoding-touched pass；compute-gate standard 8/8 pass | 變更: 補 ATM 瘦身再開工規劃、alpha0/alpha1、truth convergence、confidence gate、shadow adapter、OSS/H2U 任務缺口 | 阻塞: none",
-    "brief": {
-      "style": "classic",
-      "label": "",
-      "summary": "",
-      "position": "",
-      "prereq": ""
-    },
-    "contracts": {
-      "input": [],
-      "output": [],
-      "validation_cmd": "",
-      "rollback_hint": "",
-      "execution_steps": []
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    },
-    "completed_at": "2026-05-06T08:08:07+08:00"
   }
 ]
