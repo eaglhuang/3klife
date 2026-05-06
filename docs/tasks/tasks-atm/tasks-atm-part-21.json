@@ -166,13 +166,16 @@
   {
     "id": "ATM-2.5-0001",
     "title": "Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI",
-    "status": "open",
+    "status": "done",
     "priority": "P0",
     "phase": "ATM-2.5",
     "type": "implementation",
     "created": "2026-05-05",
     "owner": "GitHubCopilot",
     "doc_id": "doc_task_0303",
+    "started_at": "2026-05-06T16:42:17Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T17:06:00Z",
     "depends": [
       "ATM-2-0013",
       "ATM-2-0012",
@@ -182,7 +185,7 @@
     "acceptance": [
       "alpha0 gate 僅驗 deterministic 4 條 criteria；version history / rollback / evolution metrics 僅作 readiness warning，不阻塞 alpha0 release"
     ],
-    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）"
+    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | done | upstream 64ec0bc | gate criteria1-4 true；validate:neutrality/cli/self-hosting-alpha + npm test/typecheck/lint pass | blocker: none"
   },
   {
     "id": "ATM-2.5-0002",
