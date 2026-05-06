@@ -1,5 +1,101 @@
 [
   {
+    "doc_id": "doc_task_0260",
+    "id": "ATM-2-0003",
+    "title": "Test Runner 與 report schema",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "manager",
+    "phase": "ATM-2",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T20:28:12.7677476+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T20:40:58.2375737+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 atomic test runner contract 與 JSON report schema。",
+    "related": [],
+    "depends": [
+      "ATM-2-0002",
+      "ATM-1-0006"
+    ],
+    "acceptance": [
+      "故意失敗 fixture exit code 非零",
+      "report 可被 registry/hash/police 消費",
+      "runner 不 hard-code Vitest"
+    ],
+    "deliverables": [
+      "packages/core/src/manager/test-runner.*",
+      "schemas/test-report.schema.json",
+      "pass/fail fixtures"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:test-runner / npm run validate:schemas / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 391b462 新增 core delegated test runner、schemas/test-report.schema.json、pass/fail runner fixtures 與 schema fixtures，預設把 atom.test.report.json 寫進 atomic_workbench/atoms/<atomId>/，保留專案自有 validation.commands、支援自訂 reportPath，並在失敗時保留 non-zero exit code | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 上游核心開卡",
+      "summary": "建立 atomic test runner contract 與 JSON report schema。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0002、ATM-1-0006"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+      ],
+      "output": [
+        "packages/core/src/manager/test-runner.*",
+        "schemas/test-report.schema.json",
+        "pass/fail fixtures"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "execution_steps": [
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/package.json",
+        "AI-Atomic-Framework/packages/core/src/index.ts",
+        "AI-Atomic-Framework/packages/core/src/manager/test-runner.mjs",
+        "AI-Atomic-Framework/schemas/test-report.schema.json",
+        "AI-Atomic-Framework/scripts/validate-schemas.mjs",
+        "AI-Atomic-Framework/scripts/validate-test-runner.mjs",
+        "AI-Atomic-Framework/tests/test-runner.fixture.json",
+        "AI-Atomic-Framework/tests/test-runner-fixtures/pass.atom.json",
+        "AI-Atomic-Framework/tests/test-runner-fixtures/fail.atom.json",
+        "AI-Atomic-Framework/tests/test-runner-fixtures/pass-command.mjs",
+        "AI-Atomic-Framework/tests/test-runner-fixtures/fail-command.mjs",
+        "AI-Atomic-Framework/tests/schema-fixtures/manifest.json",
+        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-test-report.json",
+        "AI-Atomic-Framework/tests/schema-fixtures/negative/missing-runner-contract.test-report.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 391b462",
+        "npm run validate:test-runner",
+        "npm run validate:schemas",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "core test runner delegates to project-owned validation.commands instead of hard-coding a specific third-party framework",
+        "runner emits a schema-validated atm.testReport document with artifacts/evidence for downstream registry or police consumers",
+        "default report path now follows the per-atom workbench folder atomic_workbench/atoms/<atomId>/atom.test.report.json",
+        "caller or adapter can still override reportPath when a host-specific layout is needed",
+        "fail fixture preserves a non-zero exit code while still writing a machine-readable report"
+      ]
+    }
+  },
+  {
     "doc_id": "doc_task_0261",
     "id": "ATM-2-0004",
     "title": "Registry 與 HashLock MVP",
@@ -120,78 +216,6 @@
         "補 unit/integration fixture",
         "跑 package 驗證",
         "回寫 3KLife tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0263",
-    "id": "ATM-2-0006",
-    "title": "Adapter API 與 Plugin SDK 定稿",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "plugin-sdk",
-    "phase": "ATM-2",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "定稿 ProjectAdapter、LanguageAdapter、Capability、InjectorPlugin 介面與生命週期 hook。",
-    "related": [],
-    "depends": [
-      "ATM-1-0005",
-      "ATM-2-0005"
-    ],
-    "acceptance": [
-      "LocalGitAdapter 與 JS LanguageAdapter 使用同一 SDK",
-      "3KLife adapter 可依此實作",
-      "breaking-change policy 寫入 docs/LIFECYCLE.md",
-      "governance primitives 明確停留在 interface/schema 層，不引入 3KLife 實作"
-    ],
-    "deliverables": [
-      "packages/plugin-sdk/src/project-adapter.*",
-      "packages/plugin-sdk/src/language-adapter.*",
-      "packages/plugin-sdk/src/capability.*",
-      "docs/ADAPTER_GUIDE.md 初稿",
-      "packages/plugin-sdk/src/governance/* 或等價 governance adapter interface",
-      "TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 生命週期定稿"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter interface 範圍 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "定稿 ProjectAdapter、LanguageAdapter、Capability、InjectorPlugin 介面與生命週期 hook。",
-      "position": "ATM-2",
-      "prereq": "ATM-1-0005、ATM-2-0005"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "packages/plugin-sdk/src/project-adapter.*",
-        "packages/plugin-sdk/src/language-adapter.*",
-        "packages/plugin-sdk/src/capability.*",
-        "docs/ADAPTER_GUIDE.md 初稿"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes",
-        "將 governance primitives 明確留在 interface 層，不引入 3KLife 實作"
       ]
     },
     "harness_evidence": {
