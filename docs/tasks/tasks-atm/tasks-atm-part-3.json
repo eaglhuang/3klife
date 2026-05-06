@@ -1,5 +1,75 @@
 [
   {
+    "doc_id": "doc_task_0281",
+    "id": "ATM-0-0007",
+    "title": "上游 roadmap v0.2 技術選型整合",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "docs",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-05T20:58:01+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-05T21:02:01+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
+    "related": [],
+    "depends": [
+      "ATM-0-0003"
+    ],
+    "acceptance": [
+      "Roadmap 清楚標示 v0.2 是 companion analysis",
+      "core 不硬依賴 LangGraph/pgvector/Deno/OpenTelemetry 等外部工具",
+      "TypeScript/Zod/Vitest 等只被描述為 first implementation recommendation"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
+    ],
+    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 整合 v0.2 companion 到 Roadmap、3KLife plan、extraction plan，並新增 6 張補強卡 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM v0.2 整合開卡",
+      "summary": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0003"
+    },
+    "contracts": {
+      "input": [
+        "v0.2 companion analysis 已確認可作務實化補充"
+      ],
+      "output": [
+        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
+        "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
+        "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "node tools_node/check-encoding-touched.js",
+        "node tools_node/check-task-scope.js --task ATM-0-0007 --verbose",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0282",
     "id": "ATM-0-0008",
     "title": "3KLife adapter 技術棧校正矩陣",
@@ -141,79 +211,5 @@
       "metrics_summary": []
     },
     "completed_at": "2026-05-05T22:21:53+08:00"
-  },
-  {
-    "doc_id": "doc_task_0251",
-    "id": "ATM-1-0001",
-    "title": "上游 repo product charter 與 README",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "in-progress",
-    "type": "open-source-core",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T13:13:43+08:00",
-    "started_by_agent": "vs-code-github-copilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "在 AI-Atomic-Framework repo 建立產品定位、README、LICENSE、CONTRIBUTING 與非目標清單。",
-    "related": [],
-    "depends": [
-      "ATM-0-0003"
-    ],
-    "acceptance": [
-      "README 可說明 core/adapter/host 邊界",
-      "核心文件不引用 3KLife 私有路徑",
-      "License 策略明確",
-      "README 清楚列出工具選型策略：first implementation recommendation 不是 core contract",
-      "README 明確定義 Agent Operating Layer 與 root-drop 使用者旅程"
-    ],
-    "deliverables": [
-      "AI-Atomic-Framework/README.md",
-      "AI-Atomic-Framework/LICENSE",
-      "AI-Atomic-Framework/CONTRIBUTING.md",
-      "AI-Atomic-Framework/docs/ARCHITECTURE.md 初稿",
-      "README 或 docs/ECOSYSTEM_POSITIONING.md 說明 Core vs Adapter vs Plugin 與 Atomic Agents / SDD / Harness Engineering / LangGraph 的定位差異",
-      "README 明確宣告 ATM 是 governance framework，不只是 atom runner",
-      "README 說明 Default Governance Bundle 是官方預設體驗，但不是 packages/core hard dependency",
-      "README 說明 root-drop / zero-install agent bootstrap：使用者放入 ATM 後，任意 AI agent 讀 README/AGENTS 即可開卡、鎖 scope、跑 guard、保存 artifacts/logs/evidence"
-    ],
-    "notes": "2026-05-06 | 狀態: in-progress | 驗證: pending | 變更: vs-code-github-copilot 開始處理 upstream product charter、README、MIT LICENSE、CONTRIBUTING 與 architecture/positioning 文件 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "在 AI-Atomic-Framework repo 建立產品定位、README、LICENSE、CONTRIBUTING 與非目標清單。",
-      "position": "ATM-1",
-      "prereq": "ATM-0-0003"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "AI-Atomic-Framework/README.md",
-        "AI-Atomic-Framework/LICENSE",
-        "AI-Atomic-Framework/CONTRIBUTING.md",
-        "AI-Atomic-Framework/docs/ARCHITECTURE.md 初稿"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes",
-        "確認 product charter 同時涵蓋 Core contracts、Agent Operating Layer、Default Governance Bundle、ProjectAdapter 四層"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
   }
 ]

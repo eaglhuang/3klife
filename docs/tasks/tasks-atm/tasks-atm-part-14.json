@@ -1,65 +1,58 @@
 [
   {
-    "doc_id": "doc_task_0292",
-    "id": "ATM-0-0010",
-    "title": "Self-hosting first 邊界與中立性 guard 落地",
+    "doc_id": "doc_task_0278",
+    "id": "ATM-6-0003",
+    "title": "多語言 Adapter 擴張計畫",
     "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "docs-governance",
-    "phase": "ATM-0",
+    "priority": "P2",
+    "status": "open",
+    "type": "ecosystem",
+    "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T22:47:03.1427368+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-05T22:58:39.0168805+08:00",
+    "started_at": "",
+    "started_by_agent": "",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "將 ATM 規劃正式收斂為 upstream self-hosting first，回寫主文件並新增 docs neutrality 與 boundary guard 後續任務。",
+    "description": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
     "related": [],
     "depends": [
-      "ATM-0-0009"
+      "ATM-2-0006",
+      "ATM-1-0006"
     ],
     "acceptance": [
-      "A/B/Roadmap 同步寫入 upstream self-hosting first 與 hard gates",
-      "Roadmap 補 neutrality/boundary guard 設計",
-      "新增 ATM-1-0010 與 ATM-2-0010 任務卡",
-      "ATM-3/ATM-4 明確標成 downstream-only phase"
+      "每個 language adapter 有 test/build/import scan contract",
+      "不要求 core 重寫",
+      "Cocos/Unity 引擎物件不進 compute atom"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md",
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
-      "docs/agent-briefs/tasks/ATM-1-0010.md",
-      "docs/agent-briefs/tasks/ATM-2-0010.md"
+      "docs/ecosystem/language-adapter-roadmap.md",
+      "adapter acceptance matrix"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 回寫 self-hosting first、self-hosting alpha gate、docs neutrality 與 neutrality/boundary guard 到三份主文件，並新增 ATM-1-0009/0010、ATM-2-0010 任務 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM self-hosting first 開卡",
-      "summary": "把 upstream self-hosting first、文件中立性與 boundary guard 正式回寫到 ATM 主規劃。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0009"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
+      "position": "ATM-6",
+      "prereq": "ATM-2-0006、ATM-1-0006"
     },
     "contracts": {
       "input": [
-        "已確認 upstream 不得依賴 3KLife 工具",
-        "需同步 A/B/Roadmap 與 tasks-atm"
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "更新 self-hosting first 文件真相",
-        "新增 docs neutrality audit 任務",
-        "新增 neutrality/boundary rule guard 任務"
+        "docs/ecosystem/language-adapter-roadmap.md",
+        "adapter acceptance matrix"
       ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0010 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若 doc_id/manifest 異常，使用既有工具重建，不手動複製代號。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
-        "建立新任務卡",
-        "同步 tasks-atm",
-        "鎖卡並更新 frontmatter",
-        "回寫三份主文件",
-        "跑 encoding/task-scope/standard gate"
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {
@@ -71,14 +64,14 @@
     }
   },
   {
-    "doc_id": "doc_task_0295",
-    "id": "ATM-1-0009",
-    "title": "Self-hosting alpha proof",
+    "doc_id": "doc_task_0285",
+    "id": "ATM-6-0004",
+    "title": "Performance Budget Police 與成本控制",
     "owner": "GitHubCopilot",
-    "priority": "P0",
+    "priority": "P2",
     "status": "open",
-    "type": "open-source-core",
-    "phase": "ATM-1",
+    "type": "optional-police",
+    "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -86,52 +79,45 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "在 standalone upstream repo 內完成 self-hosting alpha proof，證明 AI agent 只讀 README/AGENTS/.atm profile 即可完成 first task、scope lock、artifact/log/evidence 與 first atom smoke。",
-    "related": [
-      "ATM-1-0010",
-      "ATM-2-0010"
-    ],
+    "description": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
+    "related": [],
     "depends": [
-      "ATM-1-0008",
-      "ATM-2-0008"
+      "ATM-5-0005"
     ],
     "acceptance": [
-      "空白或 sandbox repo 可在不依賴 3KLife 工具下完成 atm init/adopt",
-      "AI agent 只讀 README/AGENTS/.atm profile 即可建立 first task、scope lock、artifact/log/evidence",
-      "standalone smoke 不需引用 3KLife/Cocos/html-to-ucuf 或本地治理工具",
-      "作為 Phase B 進入 downstream adapter 前的硬 gate"
+      "Performance Budget 不進 v0.1 core hard gate",
+      "hot path atom 有 p95/maxRuntimeMs/allocatedBytes 建議",
+      "LLM caching 與 budget 只透過 plugin 啟用"
     ],
     "deliverables": [
-      "standalone self-hosting alpha checklist",
-      "agent bootstrap smoke fixture",
-      "first task/lock/artifact/log/evidence proof",
-      "Phase B gate summary"
+      "docs/ecosystem/performance-budget-police.md",
+      "plugin boundary proposal",
+      "cost control policy"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 self-hosting alpha proof gate 任務 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM self-hosting first 開卡",
-      "summary": "建立 upstream standalone self-hosting alpha gate，先證明 ATM 在外部 repo 可自舉，再進 downstream adapter。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0008、ATM-2-0008"
+      "label": "ATM v0.2 整合開卡",
+      "summary": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
+      "position": "ATM-6",
+      "prereq": "ATM-5-0005"
     },
     "contracts": {
       "input": [
-        "zero-install bootstrap 與 local governance reference plugins 已可運作",
-        "第一輪 smoke 不得依賴 3KLife 工具"
+        "v0.2 companion analysis 已確認可作務實化補充"
       ],
       "output": [
-        "standalone self-hosting alpha checklist",
-        "bootstrap smoke proof",
-        "Phase B exit gate"
+        "docs/ecosystem/performance-budget-police.md",
+        "plugin boundary proposal",
+        "cost control policy"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡 touched files；若 standalone smoke 仍含 3KLife 假設，保持卡片 open 不偷關卡。",
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
       "execution_steps": [
-        "定義 self-hosting alpha gate",
-        "建立 standalone smoke fixture",
-        "驗證 first task/lock/artifact/log/evidence 流程",
-        "回寫 Phase B gate summary"
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
       ]
     },
     "harness_evidence": {
@@ -143,14 +129,14 @@
     }
   },
   {
-    "doc_id": "doc_task_0293",
-    "id": "ATM-1-0010",
-    "title": "Upstream docs neutrality audit",
+    "doc_id": "doc_task_0286",
+    "id": "ATM-6-0005",
+    "title": "Capability Sandbox 與審計日誌",
     "owner": "GitHubCopilot",
-    "priority": "P0",
+    "priority": "P2",
     "status": "open",
-    "type": "open-source-core",
-    "phase": "ATM-1",
+    "type": "security",
+    "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -158,52 +144,48 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "全盤掃描 upstream README、AGENTS、docs、examples、templates 與 prompt assets，確認不含 3KLife、Cocos、html-to-ucuf 或本地工具前提。",
-    "related": [
-      "ATM-1-0009",
-      "ATM-2-0010"
-    ],
+    "description": "規劃 Capability Sandbox、權限控管、審計日誌、prompt injection guardrail 與 observability 的 optional plugin 邊界。",
+    "related": [],
     "depends": [
-      "ATM-1-0001",
-      "ATM-1-0008"
+      "ATM-6-0004"
     ],
     "acceptance": [
-      "upstream README/AGENTS/docs/examples/templates 不再含 adopter 私有資訊",
-      "產出 banned-term 與 adopter-only reference 清單",
-      "文件敘事不再暗示 3KLife/task-lock/compute-gate/doc-id 是 upstream 前提",
-      "可作為 self-hosting alpha gate 的一部分"
+      "Deno sandbox/OpenTelemetry/Prometheus 不成為 core 必備依賴",
+      "Capability 宣告與審計格式可由 plugin 實作",
+      "安全插件缺席時 core 仍能 standalone 運作",
+      "threat model / provenance / secrets scan policy 已定義",
+      "cost budget policy 與 budget report schema 已對齊",
+      "observability event taxonomy 覆蓋 agent.run、task.lock、schema.validate、atom.verify、evidence.write、adapter.shadow"
     ],
     "deliverables": [
-      "AI-Atomic-Framework/README.md neutrality checklist",
-      "AI-Atomic-Framework/docs/** audit scope",
-      "AI-Atomic-Framework/examples/** audit scope",
-      "AI-Atomic-Framework/templates/** audit scope"
+      "docs/ecosystem/capability-sandbox-audit.md",
+      "security plugin interface proposal",
+      "observability adapter boundary"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 upstream docs neutrality audit 任務 | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 threat model、cost budget、secrets scan 與 observability event taxonomy | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM self-hosting first 開卡",
-      "summary": "建立 upstream 文件去污染與中立性稽核，避免 README/docs 再帶入 3KLife 私有資訊。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0001、ATM-1-0008"
+      "label": "ATM v0.2 整合開卡",
+      "summary": "規劃 Capability Sandbox、權限控管、審計日誌、prompt injection guardrail 與 observability 的 optional plugin 邊界。",
+      "position": "ATM-6",
+      "prereq": "ATM-6-0004"
     },
     "contracts": {
       "input": [
-        "upstream product charter 與 zero-install bootstrap 已定義",
-        "upstream docs 不得綁定 adopter 私有資訊"
+        "v0.2 companion analysis 已確認可作務實化補充"
       ],
       "output": [
-        "upstream docs neutrality audit checklist",
-        "banned-term scan scope",
-        "adopter-only reference migration list"
+        "docs/ecosystem/capability-sandbox-audit.md",
+        "security plugin interface proposal",
+        "observability adapter boundary"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡 touched files；upstream docs 若仍含 adopter 私有敘事，保持卡片 open 不偷關卡。",
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
       "execution_steps": [
-        "盤點 upstream docs surfaces",
-        "定義 banned terms 與 protected surfaces",
-        "補 audit checklist",
-        "對齊 self-hosting alpha gate"
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
       ]
     },
     "harness_evidence": {

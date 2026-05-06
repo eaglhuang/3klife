@@ -1,5 +1,136 @@
 [
   {
+    "doc_id": "doc_task_0254",
+    "id": "ATM-1-0004",
+    "title": "CLI init/status/validate MVP",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "cli",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
+    "related": [],
+    "depends": [
+      "ATM-1-0003"
+    ],
+    "acceptance": [
+      "空白 repo 可執行 init/status/validate",
+      "未實作 adapter 時可進入 standalone mode",
+      "錯誤輸出可被 Agent 讀懂"
+    ],
+    "deliverables": [
+      "packages/cli/src/commands/init.*",
+      "packages/cli/src/commands/status.*",
+      "packages/cli/src/commands/validate.*",
+      "CLI integration fixture"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 上游核心開卡",
+      "summary": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0003"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+      ],
+      "output": [
+        "packages/cli/src/commands/init.*",
+        "packages/cli/src/commands/status.*",
+        "packages/cli/src/commands/validate.*",
+        "CLI integration fixture"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "execution_steps": [
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0255",
+    "id": "ATM-1-0005",
+    "title": "LocalGitAdapter reference implementation",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "adapter",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立不依賴任何 host governance 的 LocalGitAdapter，作為 open-source core 預設 adapter。",
+    "related": [],
+    "depends": [
+      "ATM-1-0004"
+    ],
+    "acceptance": [
+      "無 task-lock 系統時仍可 scaffold/test/validate",
+      "adapter 行為明確標示 dry-run/no-op 能力"
+    ],
+    "deliverables": [
+      "packages/adapter-local-git",
+      "ProjectAdapter no-op lock/gate/doc implementation",
+      "file system registry path support"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 上游核心開卡",
+      "summary": "建立不依賴任何 host governance 的 LocalGitAdapter，作為 open-source core 預設 adapter。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0004"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+      ],
+      "output": [
+        "packages/adapter-local-git",
+        "ProjectAdapter no-op lock/gate/doc implementation",
+        "file system registry path support"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "execution_steps": [
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0256",
     "id": "ATM-1-0006",
     "title": "JS/TS LanguageAdapter reference",
@@ -112,138 +243,6 @@
         "examples/hello-world",
         "examples/legacy-strangler-minimal",
         "docs/QUICK_START.md 範例命令"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0290",
-    "id": "ATM-1-0008",
-    "title": "Zero-install Agent Bootstrap Pack",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "open-source-core",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立讓 AI agent 在任意 host repo 只讀 README/AGENTS 指引即可啟動 ATM 的零安裝 bootstrap pack，包含 project probe、default profile、auto task creation 與 model-neutral operating instructions。",
-    "related": [],
-    "depends": [
-      "ATM-1-0001"
-    ],
-    "acceptance": [
-      "任意 repo 根目錄放入 ATM 後，AI agent 可依 README/AGENTS 完成 atm init/adopt",
-      "bootstrap pack 不綁特定模型或 IDE",
-      "流程會自動建立 first task、scope lock、artifact/log/evidence 目錄與 default guards"
-    ],
-    "deliverables": [
-      "AI-Atomic-Framework/README.md zero-install quick start",
-      "AI-Atomic-Framework/AGENTS.md 或 .atm/AGENTS.md template",
-      "examples/agent-bootstrap/",
-      "atm init --adopt default profile 說明"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 由 ATM-0-0009 開出 zero-install agent bootstrap 補強卡 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM governance split 開卡",
-      "summary": "讓 ATM 放到任意專案根目錄後，AI agent 讀 README/AGENTS 就能啟動自動開卡與治理流程。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0001"
-    },
-    "contracts": {
-      "input": [
-        "Default Governance Bundle 已納入 upstream 完整性",
-        "需支援任意 AI agent 與任意 host repo"
-      ],
-      "output": [
-        "zero-install README/AGENTS bootstrap",
-        "project probe default profile",
-        "auto task/open-lock/guard/evidence startup flow"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退 bootstrap docs/templates；不得綁特定模型、IDE 或 3KLife 路徑。",
-      "execution_steps": [
-        "定義 root-drop 使用者旅程",
-        "撰寫 model-neutral README/AGENTS",
-        "設計 atm init --adopt profile",
-        "補 bootstrap example"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0258",
-    "id": "ATM-2-0001",
-    "title": "Core Spec loader/parser",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "manager",
-    "phase": "ATM-2",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "實作 core spec loader/parser，讀取 spec、套 schema、產 normalized model。",
-    "related": [],
-    "depends": [
-      "ATM-1-0003"
-    ],
-    "acceptance": [
-      "valid/invalid fixtures 全覆蓋",
-      "錯誤訊息指出缺欄位與路徑",
-      "不讀 host-specific config"
-    ],
-    "deliverables": [
-      "packages/core/src/spec/parse-spec.*",
-      "unit tests",
-      "error-as-prompt report format"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "實作 core spec loader/parser，讀取 spec、套 schema、產 normalized model。",
-      "position": "ATM-2",
-      "prereq": "ATM-1-0003"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "packages/core/src/spec/parse-spec.*",
-        "unit tests",
-        "error-as-prompt report format"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
       "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",

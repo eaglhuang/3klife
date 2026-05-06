@@ -1,5 +1,95 @@
 [
   {
+    "doc_id": "doc_task_0251",
+    "id": "ATM-1-0001",
+    "title": "上游 repo product charter 與 README",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "open-source-core",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T13:13:43+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "在 AI-Atomic-Framework repo 建立產品定位、README、LICENSE、CONTRIBUTING 與非目標清單。",
+    "related": [],
+    "depends": [
+      "ATM-0-0003"
+    ],
+    "acceptance": [
+      "README 可說明 core/adapter/host 邊界",
+      "核心文件不引用 3KLife 私有路徑",
+      "License 策略明確",
+      "README 清楚列出工具選型策略：first implementation recommendation 不是 core contract",
+      "README 明確定義 Agent Operating Layer 與 root-drop 使用者旅程"
+    ],
+    "deliverables": [
+      "AI-Atomic-Framework/README.md",
+      "AI-Atomic-Framework/LICENSE",
+      "AI-Atomic-Framework/CONTRIBUTING.md",
+      "AI-Atomic-Framework/docs/ARCHITECTURE.md 初稿",
+      "README 或 docs/ECOSYSTEM_POSITIONING.md 說明 Core vs Adapter vs Plugin 與 Atomic Agents / SDD / Harness Engineering / LangGraph 的定位差異",
+      "README 明確宣告 ATM 是 governance framework，不只是 atom runner",
+      "README 說明 Default Governance Bundle 是官方預設體驗，但不是 packages/core hard dependency",
+      "README 說明 root-drop / zero-install agent bootstrap：使用者放入 ATM 後，任意 AI agent 讀 README/AGENTS 即可開卡、鎖 scope、跑 guard、保存 artifacts/logs/evidence"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d165def 完成 README、MIT LICENSE 保留、CONTRIBUTING、ARCHITECTURE、ECOSYSTEM_POSITIONING 與 product-charter validation scaffold | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 上游核心開卡",
+      "summary": "在 AI-Atomic-Framework repo 建立產品定位、README、LICENSE、CONTRIBUTING 與非目標清單。",
+      "position": "ATM-1",
+      "prereq": "ATM-0-0003"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+      ],
+      "output": [
+        "AI-Atomic-Framework/README.md",
+        "AI-Atomic-Framework/LICENSE",
+        "AI-Atomic-Framework/CONTRIBUTING.md",
+        "AI-Atomic-Framework/docs/ARCHITECTURE.md 初稿"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "execution_steps": [
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes",
+        "確認 product charter 同時涵蓋 Core contracts、Agent Operating Layer、Default Governance Bundle、ProjectAdapter 四層"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/README.md",
+        "AI-Atomic-Framework/LICENSE",
+        "AI-Atomic-Framework/CONTRIBUTING.md",
+        "AI-Atomic-Framework/docs/ARCHITECTURE.md",
+        "AI-Atomic-Framework/docs/ECOSYSTEM_POSITIONING.md",
+        "AI-Atomic-Framework/scripts/validate-product-charter.mjs"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit d165def",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "upstream commit d165def",
+        "product charter validation scaffold dependency-free"
+      ]
+    },
+    "completed_at": "2026-05-06T13:16:32+08:00"
+  },
+  {
     "doc_id": "doc_task_0252",
     "id": "ATM-1-0002",
     "title": "上游 monorepo package skeleton",
@@ -123,137 +213,6 @@
         "schemas/registry.schema.json",
         "schemas/regression-matrix.schema.json",
         "positive/negative schema fixtures"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0254",
-    "id": "ATM-1-0004",
-    "title": "CLI init/status/validate MVP",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "cli",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
-    "related": [],
-    "depends": [
-      "ATM-1-0003"
-    ],
-    "acceptance": [
-      "空白 repo 可執行 init/status/validate",
-      "未實作 adapter 時可進入 standalone mode",
-      "錯誤輸出可被 Agent 讀懂"
-    ],
-    "deliverables": [
-      "packages/cli/src/commands/init.*",
-      "packages/cli/src/commands/status.*",
-      "packages/cli/src/commands/validate.*",
-      "CLI integration fixture"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0003"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "packages/cli/src/commands/init.*",
-        "packages/cli/src/commands/status.*",
-        "packages/cli/src/commands/validate.*",
-        "CLI integration fixture"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0255",
-    "id": "ATM-1-0005",
-    "title": "LocalGitAdapter reference implementation",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "adapter",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立不依賴任何 host governance 的 LocalGitAdapter，作為 open-source core 預設 adapter。",
-    "related": [],
-    "depends": [
-      "ATM-1-0004"
-    ],
-    "acceptance": [
-      "無 task-lock 系統時仍可 scaffold/test/validate",
-      "adapter 行為明確標示 dry-run/no-op 能力"
-    ],
-    "deliverables": [
-      "packages/adapter-local-git",
-      "ProjectAdapter no-op lock/gate/doc implementation",
-      "file system registry path support"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立不依賴任何 host governance 的 LocalGitAdapter，作為 open-source core 預設 adapter。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0004"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "packages/adapter-local-git",
-        "ProjectAdapter no-op lock/gate/doc implementation",
-        "file system registry path support"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
       "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
