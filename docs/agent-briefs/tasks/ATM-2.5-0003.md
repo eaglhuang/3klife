@@ -63,5 +63,11 @@ notes: "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 將 mul
 - tests/agents/results/<agent>-<timestamp>.json 結果記錄
 - docs/multi-agent-results.md 公開結果摘要
 
+## 2026-05-06 v2 規劃書補丁（追加 acceptance）
+
+- [ ] upgrade --propose dry-run confidence 為 advisory。
+- [ ] advisory confidence 不得作為 alpha0 release blocker。
+> 2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）
+
 ## 備註
 - 2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 將 multi-agent alpha gate 降級為 confidence gate；alpha0 release blocker 僅保留 deterministic profile check | 阻塞: none

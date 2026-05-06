@@ -24,14 +24,19 @@
     "acceptance": [
       "domain-specific police 不在 core",
       "內建 police 可產 JSON report",
-      "違規 atom 不可 register stable"
+      "違規 atom 不可 register stable",
+      "Police 報告必須含 lifecycleMode 欄位（birth | evolution）",
+      "evolution 模式違規（nonRegression / qualityComparison / registryCandidate 任一不通過）時不得 promote 新版本"
     ],
     "deliverables": [
       "packages/plugin-sdk/src/police.*",
       "packages/core/src/police/*",
-      "positive/negative fixtures"
+      "positive/negative fixtures",
+      "schemas/police/non-regression-report.schema.json",
+      "schemas/police/quality-comparison-report.schema.json",
+      "schemas/police/registry-candidate-report.schema.json"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
@@ -91,7 +96,9 @@
       "LocalGitAdapter 與 JS LanguageAdapter 使用同一 SDK",
       "3KLife adapter 可依此實作",
       "breaking-change policy 寫入 docs/LIFECYCLE.md",
-      "governance primitives 明確停留在 interface/schema 層，不引入 3KLife 實作"
+      "governance primitives 明確停留在 interface/schema 層，不引入 3KLife 實作",
+      "AtomLifecycleMode enum（birth | evolution）落於 packages/plugin-sdk/src/lifecycle.ts",
+      "lifecycleMode 同步映射到 schemas/atomic-spec.schema.json 既有 compatibility 區塊（不另開新 schema）"
     ],
     "deliverables": [
       "packages/plugin-sdk/src/project-adapter.*",
@@ -99,9 +106,13 @@
       "packages/plugin-sdk/src/capability.*",
       "docs/ADAPTER_GUIDE.md 初稿",
       "packages/plugin-sdk/src/governance/* 或等價 governance adapter interface",
-      "TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 生命週期定稿"
+      "TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 生命週期定稿",
+      "packages/plugin-sdk/src/lifecycle.ts — AtomLifecycleMode enum",
+      "packages/plugin-sdk/src/version-resolver.ts — VersionResolver interface",
+      "packages/plugin-sdk/src/quality-metrics-comparator.ts — QualityMetricsComparator interface",
+      "packages/plugin-sdk/src/upgrade-proposal-adapter.ts — UpgradeProposalAdapter interface"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter interface 範圍 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter interface 範圍 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
@@ -165,7 +176,8 @@
       "TaskStore/LockStore/DocumentIndex/ShardStore/ArtifactStore/LogStore/RuleGuard/EvidenceStore interface 完整",
       "schemas/governance/work-item.schema.json 可驗證 alpha0 first task",
       "schemas/governance/scope-lock.schema.json 可驗證最小 lock evidence",
-      "alpha0 minimal task/lock/evidence fixture 不依賴完整 reference plugins"
+      "alpha0 minimal task/lock/evidence fixture 不依賴完整 reference plugins",
+      "alpha0 governance schema 僅含 WorkItem / ScopeLock / 最小 Evidence；upgrade-proposal / review-queue schema 標記為 alpha1 並獨立檔案"
     ],
     "deliverables": [
       "packages/plugin-sdk/governance interfaces 規格",
@@ -176,7 +188,7 @@
       "schemas/governance/scope-lock.schema.json",
       "alpha0 minimal governance fixture"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 schema-first 範圍：WorkItem / ScopeLock 為 alpha0 最小治理，完整 Default Governance Bundle 移到 alpha1 | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 schema-first 範圍：WorkItem / ScopeLock 為 alpha0 最小治理，完整 Default Governance Bundle 移到 alpha1 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
     "brief": {
       "style": "harn-rich",
       "label": "ATM governance split 開卡",

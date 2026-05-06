@@ -56,5 +56,11 @@ notes: "此 fixture 用於 multi-agent 兼容測試（ATM-2.5-0003）；Claude C
 - sandbox 跑完時間 < 60s
 - CI workflow 中有 sandbox gate job
 
+## 2026-05-06 v2 規劃書補丁（追加 acceptance）
+
+- [ ] sandbox fixture 僅涵蓋 birth pipeline（hello-world atom）。
+- [ ] evolution sandbox fixture 由 alpha1 新卡承接，不污染 alpha0 fixture。
+> 2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）
+
 ## 備註
 - 此 fixture 用於 multi-agent 兼容測試（ATM-2.5-0003）；Claude Code 是主要測試 agent

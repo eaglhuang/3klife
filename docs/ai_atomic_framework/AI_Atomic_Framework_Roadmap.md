@@ -882,7 +882,7 @@ AI Atomic Framework 可以借鑑 UI Atomic Design 的五層模型，但不要照
 
 ```json
 {
-  "workspacePath": "atomic_workbench/atoms/atomic_000123",
+  "workspacePath": "atomic_workbench/atoms/<Atomic ID>",
   "filesCreated": [
     "index.ts",
     "test.ts",
@@ -890,6 +890,8 @@ AI Atomic Framework 可以借鑑 UI Atomic Design 的五層模型，但不要照
   ]
 }
 ```
+
+自 ATM-2-0013 收斂後，這裡的 `workspacePath` 應解讀為 canonical atom home：`atomic_workbench/atoms/<Atomic ID>/`，資料夾名稱直接等於 Atomic ID，不再另外產生 `atomic_000123` 這類 alias folder。
 
 ---
 
@@ -2013,7 +2015,9 @@ deprecate or wrap original atom
 # Atomic Task: <name>
 
 ## Atomic ID
-000123
+ATM-CORE-0123
+
+預設家目錄：`atomic_workbench/atoms/<Atomic ID>/`，而且資料夾名稱必須與 Atomic ID 完全相同。
 
 ## Goal
 一句話描述此原子要完成什麼。
@@ -2028,8 +2032,8 @@ deprecate or wrap original atom
 貼上 output schema。
 
 ## Allowed Files
-- atomic_workbench/atoms/atomic_000123/index.ts
-- atomic_workbench/atoms/atomic_000123/test.ts
+- atomic_workbench/atoms/ATM-CORE-0123/index.ts
+- atomic_workbench/atoms/ATM-CORE-0123/test.ts
 
 ## Forbidden Files
 - src/legacy/**

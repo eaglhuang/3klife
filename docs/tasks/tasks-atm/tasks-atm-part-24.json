@@ -1,0 +1,224 @@
+[
+  {
+    "doc_id": "doc_task_0320",
+    "id": "ATM-2-0017",
+    "title": "Regression Matrix Compare Gate",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "police",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "4/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "在 Police plugin 之上提供 vOld fixtures 對 vNew code 的不退轉檢查 + quality metrics 比較；輸出 quality-comparison-report。",
+    "related": [],
+    "depends": [
+      "ATM-2-0005",
+      "ATM-2-0016"
+    ],
+    "acceptance": [
+      "vOld 全部 fixture 對 vNew code 必須全綠（不退轉）",
+      "metrics 比較：errorRate(new) <= errorRate(old)、coverage(new) >= coverage(old)、latency(new) 不退化超過容忍值",
+      "違規時 promote 動作必須 hard fail，並輸出 quality-comparison-report.json 列出退步指標",
+      "quality-comparison-report 必須含 mapImpactScope（被影響的 mapIds[]）與 propagationStatus（per-map 整合測試結果）",
+      "若任一被影響的 map 整合測試 fail，promote 動作必須 hard fail"
+    ],
+    "deliverables": [
+      "packages/core/src/police/regression-compare.ts",
+      "schemas/police/quality-comparison-report.schema.json",
+      "fixtures/regression/v1.0-pass.json",
+      "fixtures/regression/v1.1-pass-improved.json",
+      "fixtures/regression/v1.1-fail-error-rate.json",
+      "schemas/police/quality-comparison-report.schema.json — 含 mapImpactScope / propagationStatus"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "建立演化管線的不退轉 + 品質進步雙重閘門。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0005 / ATM-2-0016"
+    }
+  },
+  {
+    "doc_id": "doc_task_0321",
+    "id": "ATM-2-0018",
+    "title": "BuildAgentPrompt bootstrap atom（000003）",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "bootstrap-atom",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "5/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "從 atomic spec 產出受控 AI prompt，內含 forbidden rules、allowed files、evidence contract；屬於 birth pipeline 的 000003 工序。",
+    "related": [],
+    "depends": [
+      "ATM-2-0001",
+      "ATM-2-0002",
+      "ATM-2-0005"
+    ],
+    "acceptance": [
+      "atom build-agent-prompt 可從 normalized spec 產出 prompt.md，含 frontmatter 列出 forbidden rules / allowed files / evidence contract",
+      "prompt 結構通過 schemas/agent-prompt.schema.json 驗證",
+      "birth fixture：minimal spec → prompt 對 snapshot；spec 變更時 prompt 必須跟著變化"
+    ],
+    "deliverables": [
+      "packages/core/src/agent-prompt/build-agent-prompt.ts",
+      "schemas/agent-prompt.schema.json",
+      "fixtures/agent-prompt/minimal.input.json",
+      "fixtures/agent-prompt/minimal.expected.md"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "補上 Roadmap §7.1 的 000003 缺口，使 birth pipeline 能正式委託 AI。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0001 / ATM-2-0002 / ATM-2-0005"
+    }
+  },
+  {
+    "doc_id": "doc_task_0322",
+    "id": "ATM-2-0019",
+    "title": "ExecuteAgentTask effect node dry-run（000004）",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "bootstrap-atom",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "6/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "effect node 形式呼叫 AI agent 執行 prompt，預設 dry-run 只 capture artifact/log，不直接 apply patch；alpha0+ 補洞。",
+    "related": [],
+    "depends": [
+      "ATM-2-0018",
+      "ATM-2-0006"
+    ],
+    "acceptance": [
+      "execute-agent-task --dry-run 必須是預設行為，僅產出 artifacts/logs，不 mutate host project",
+      "effect node 簽章與 packages/plugin-sdk effect-node.ts 對齊；compute atoms 不可呼叫",
+      "fixture：dry-run 產出 artifact 路徑 + log 摘要 + execution-evidence.json",
+      "apply 模式必須由獨立 CLI flag 開啟，且仍寫 evidence record"
+    ],
+    "deliverables": [
+      "packages/core/src/agent-execute/execute-agent-task.ts",
+      "schemas/agent-execute/execution-evidence.schema.json",
+      "fixtures/agent-execute/dry-run.snapshot.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "補上 Roadmap §7.1 的 000004 缺口，並守住「只 dry-run / 不直接改檔」的安全邊界。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0018 / ATM-2-0006"
+    }
+  },
+  {
+    "doc_id": "doc_task_0323",
+    "id": "ATM-2-0020",
+    "title": "ProposeAtomicUpgrade（000012）",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "orchestration-atom",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "7/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "串接 hash-diff / metrics / regression-compare 結果，產出 upgrade-proposal.json，並提供 atm upgrade --propose --dry-run CLI。",
+    "related": [],
+    "depends": [
+      "ATM-2-0015",
+      "ATM-2-0016",
+      "ATM-2-0017"
+    ],
+    "acceptance": [
+      "upgrade-proposal.schema.json 含 atomId / fromVersion / toVersion / automatedGates / humanReview pending",
+      "CLI atm upgrade --propose --atom <id> --to <ver> --dry-run --json 輸出符合 schema 的 proposal",
+      "automatedGates 任一 fail 時 proposal 必須標記 status=blocked，不允許進入 review queue",
+      "upgrade-proposal.schema.json 增加 decompositionDecision（enum: atom-bump | atom-extract | map-bump）與 mapImpactScope 欄位",
+      "CLI 增加 --target atom|map 旗標；--target map 時必須附 mapId",
+      "decompositionDecision 為 atom-extract 時，proposal 需同時列出新 atomId 與 fork 來源"
+    ],
+    "deliverables": [
+      "schemas/upgrade/upgrade-proposal.schema.json",
+      "packages/core/src/upgrade/propose.ts",
+      "packages/cli/commands/upgrade-propose.ts",
+      "fixtures/upgrade/proposal-pass.json",
+      "fixtures/upgrade/proposal-blocked.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "evolution 管線首個 orchestration atom：把 birth-pipeline 工具組合成 upgrade 提案。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0015 / ATM-2-0016 / ATM-2-0017"
+    }
+  },
+  {
+    "doc_id": "doc_task_0324",
+    "id": "ATM-2-0021",
+    "title": "HumanReviewGate as reference plugin（000013）",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "reference-plugin",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "8/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "以 reference plugin + effect node 形式提供 human review queue；core 僅依賴 schema 不依賴實作。",
+    "related": [],
+    "depends": [
+      "ATM-2-0020",
+      "ATM-2-0008"
+    ],
+    "acceptance": [
+      "實作位於 packages/plugin-human-review/*；packages/core 不可 import 此 package",
+      ".atm/reports/upgrade-proposals.json 為審核佇列；支援 approve / reject + reason 兩種 decision",
+      "decision log 寫入 evidence store（evidenceType=human-review-decision）",
+      "layer-boundary scanner 必須擋下 core → plugin-human-review 的任何 import"
+    ],
+    "deliverables": [
+      "packages/plugin-human-review/src/queue.ts",
+      "packages/plugin-human-review/src/decision-log.ts",
+      "schemas/human-review/decision.schema.json",
+      "fixtures/human-review/approve.snapshot.json",
+      "fixtures/human-review/reject.snapshot.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "人類審核閘門以 reference plugin 形式落地，避免污染 core hard dependency。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0020 / ATM-2-0008"
+    }
+  }
+]

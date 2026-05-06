@@ -1,0 +1,223 @@
+[
+  {
+    "doc_id": "doc_task_0325",
+    "id": "ATM-2-0022",
+    "title": "Rollback Registry Pointer & 三段 hash Proof",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "9/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "提供 atm rollback CLI 與 rollback-proof：將 currentVersion 指回歷史版本，並驗證 spec/code/test 三段 hash 與目標 entry 完全一致。",
+    "related": [],
+    "depends": [
+      "ATM-2-0014",
+      "ATM-2-0021"
+    ],
+    "acceptance": [
+      "CLI atm rollback --atom <id> --to <ver> --plan 先輸出 dry-run plan；--apply 才真正寫 registry",
+      "rollback 後 atm verify --self 必須顯示 spec/code/test 三段 hash 與目標版本完全一致；任一不符即 hard fail，產出 rollback-proof.failure.json",
+      "rollback-proof.schema.json 含 atomId / fromVersion / toVersion / hashesVerified / verifiedAt / proofId",
+      "evidence store 寫入 evidenceType=rollback-proof",
+      "CLI atm rollback 支援 --target map；map rollback 必須同時驗證所有成員 atom 的 hash 與目標 mapVersion entry 一致",
+      "rollback-proof 對 map 模式輸出 memberAtomProofs[]，逐一列三段 hash 驗證結果"
+    ],
+    "deliverables": [
+      "packages/core/src/registry/rollback.ts",
+      "packages/cli/commands/rollback.ts",
+      "schemas/registry/rollback-proof.schema.json",
+      "fixtures/rollback/proof-pass.json",
+      "fixtures/rollback/proof-fail-hash-mismatch.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "evolution 管線的最終安全網：失敗時可確定性回退，並留下可驗證 proof。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0014 / ATM-2-0021"
+    }
+  },
+  {
+    "doc_id": "doc_task_0326",
+    "id": "ATM-3-0014",
+    "title": "3KLife UsageEvidence shadow adapter",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "adapter",
+    "phase": "ATM-3",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "10/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "只讀 3KLife 的 artifacts / compute-gate report / logs，產出 usage-feedback evidence；不修改任何既有 CLI / 工具。",
+    "related": [],
+    "depends": [
+      "ATM-3-0001",
+      "ATM-2-0009",
+      "ATM-2-0016"
+    ],
+    "acceptance": [
+      "adapter 僅讀，不寫；任何 file mutation 視為違規",
+      "輸出 evidence 必須通過 ATM-2-0009 的 usage-feedback schema",
+      "3KLife 既有 CLI / compute-gate / 工具行為完全不變（shadow / parity）",
+      "neutrality scanner 對輸出 evidence payload 跑 dry-run，不得帶入 adopter 私有 token"
+    ],
+    "deliverables": [
+      "tools_node/atm-adapter/usage-evidence-shadow.js",
+      "fixtures/adapter/3klife-usage-evidence.snapshot.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "alpha1 期間第一個 evolution-evidence 來源；以最小侵入方式餵養 evolution 管線。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001 / ATM-2-0009 / ATM-2-0016"
+    }
+  },
+  {
+    "doc_id": "doc_task_0327",
+    "id": "ATM-4-0007",
+    "title": "H2U normalizeCssColor v1.0→v1.1 evolution pilot",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "case-study",
+    "phase": "ATM-4",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "11/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "以 normalizeCssColor case atom 跑第一次完整 evolution 閉環：proposal → automatedGates → human review → registry update or rollback。",
+    "related": [],
+    "depends": [
+      "ATM-4-0003",
+      "ATM-2-0020",
+      "ATM-2-0021"
+    ],
+    "acceptance": [
+      "normalizeCssColor v1.0 進 registry；v1.1 透過 atm upgrade --propose 產 proposal.json",
+      "automatedGates（nonRegression / qualityImprovement / newCapability）全綠才進 review queue",
+      "human review approve 後 registry currentVersion 指向 v1.1；reject 後保持 v1.0 並寫 decision log",
+      "完整 evidence 鏈可由 atm replay 重新跑 + neutrality scanner 全綠"
+    ],
+    "deliverables": [
+      "docs/case-studies/h2u-normalize-css-color-evolution-pilot.md",
+      "fixtures/case-studies/normalize-css-color/v1.0.json",
+      "fixtures/case-studies/normalize-css-color/v1.1.json",
+      "fixtures/case-studies/normalize-css-color/proposal.json",
+      "fixtures/case-studies/normalize-css-color/decision-approve.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "把 alpha1 evolution pipeline 在 H2U case 上做端到端落地，作為 alpha1 acceptance 證據。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0003 / ATM-2-0020 / ATM-2-0021"
+    }
+  },
+  {
+    "doc_id": "doc_task_0328",
+    "id": "ATM-2-0023",
+    "title": "Atomic Map Schema & Registry",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-MAP-EVOLUTION-V2",
+    "chain_step": "1/4",
+    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
+    "description": "為「原子地圖」建立 schema 與 registry：mapId / mapVersion / members[] / edges[] / entrypoints / qualityTargets / mapHash；可獨立於單一 atom 升版。",
+    "related": [],
+    "depends": [
+      "ATM-2-0014"
+    ],
+    "acceptance": [
+      "atomic-map.schema.json 定義 mapId / mapVersion / members[](atomId@version) / edges[] / entrypoints / qualityTargets / mapHash",
+      "mapHash = hash(sorted(members) + edges + entrypoints)；成員任一 atom 升版必須引發 mapHash 變更",
+      "registry 同時支援 atom entry 與 map entry；舊 atom-only registry fixture 仍綠",
+      "fixtures：minimal-map / multi-edge-map / quality-targets-missing 三種"
+    ],
+    "deliverables": [
+      "schemas/registry/atomic-map.schema.json",
+      "packages/core/src/registry/map-registry.ts",
+      "packages/core/src/registry/map-hash.ts",
+      "fixtures/registry/map/minimal.json",
+      "fixtures/registry/map/multi-edge.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 附錄 B 開卡",
+      "summary": "把 Atomic Map 升格為 registry 一等公民，為 map-level 演化建立可機讀基礎。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0014"
+    }
+  },
+  {
+    "doc_id": "doc_task_0329",
+    "id": "ATM-2-0024",
+    "title": "Map-Level Upgrade & Extract-vs-Bump Decision",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "orchestration-atom",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-MAP-EVOLUTION-V2",
+    "chain_step": "2/4",
+    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
+    "description": "在 upgrade pipeline 加入 decomposition decision：判斷某次改動應走 atom-bump / atom-extract / map-bump，並落地對應 proposal 與 review path。",
+    "related": [],
+    "depends": [
+      "ATM-2-0020",
+      "ATM-2-0023"
+    ],
+    "acceptance": [
+      "CLI atm upgrade --target map --map <id> --to <ver> 可產出 map-level proposal",
+      "decompositionDecision 規則明文：API 不變→atom-bump；行為斷裂→atom-extract；跨原子改動→map-bump",
+      "atom-extract 模式下 proposal 必須同時列舊 atom 保留資訊與新 atom spec stub",
+      "map-bump 模式下 proposal members[] 必須含舊→新 atomId@version 對照",
+      "review queue 視 decompositionDecision 路由至對應 reviewer template"
+    ],
+    "deliverables": [
+      "packages/core/src/upgrade/decomposition-decision.ts",
+      "packages/core/src/upgrade/map-propose.ts",
+      "packages/cli/commands/upgrade-map-propose.ts",
+      "fixtures/upgrade/map-bump-proposal.json",
+      "fixtures/upgrade/atom-extract-proposal.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 附錄 B 開卡",
+      "summary": "把「升版 vs. 拆原子」這個關鍵架構決策正式機讀化，避免演化階段隱性破壞 consumer。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0020 / ATM-2-0023"
+    }
+  }
+]

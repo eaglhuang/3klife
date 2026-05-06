@@ -1840,5 +1840,101 @@
     "path": "docs/agent-briefs/tasks/ATM-0-0014.md",
     "title": "[ATM-0-0014] ATM 瘦身再開工與規劃真相收斂",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0316",
+    "path": "docs/agent-briefs/tasks/ATM-2-0013.md",
+    "title": "[ATM-2-0013] Per-atom folder 以 Atomic ID 命名收斂",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0317",
+    "path": "docs/agent-briefs/tasks/ATM-2-0014.md",
+    "title": "[ATM-2-0014] Registry Version History v0.1（schema-additive only）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0318",
+    "path": "docs/agent-briefs/tasks/ATM-2-0015.md",
+    "title": "[ATM-2-0015] Hash Drift / Version Diff Report",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0319",
+    "path": "docs/agent-briefs/tasks/ATM-2-0016.md",
+    "title": "[ATM-2-0016] Test Report Quality Metrics Extension",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0320",
+    "path": "docs/agent-briefs/tasks/ATM-2-0017.md",
+    "title": "[ATM-2-0017] Regression Matrix Compare Gate",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0321",
+    "path": "docs/agent-briefs/tasks/ATM-2-0018.md",
+    "title": "[ATM-2-0018] BuildAgentPrompt bootstrap atom（000003）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0322",
+    "path": "docs/agent-briefs/tasks/ATM-2-0019.md",
+    "title": "[ATM-2-0019] ExecuteAgentTask effect node dry-run（000004）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0323",
+    "path": "docs/agent-briefs/tasks/ATM-2-0020.md",
+    "title": "[ATM-2-0020] ProposeAtomicUpgrade（000012）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0324",
+    "path": "docs/agent-briefs/tasks/ATM-2-0021.md",
+    "title": "[ATM-2-0021] HumanReviewGate as reference plugin（000013）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0325",
+    "path": "docs/agent-briefs/tasks/ATM-2-0022.md",
+    "title": "[ATM-2-0022] Rollback Registry Pointer & 三段 hash Proof",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0326",
+    "path": "docs/agent-briefs/tasks/ATM-3-0014.md",
+    "title": "[ATM-3-0014] 3KLife UsageEvidence shadow adapter",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0327",
+    "path": "docs/agent-briefs/tasks/ATM-4-0007.md",
+    "title": "[ATM-4-0007] H2U normalizeCssColor v1.0→v1.1 evolution pilot",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0328",
+    "path": "docs/agent-briefs/tasks/ATM-2-0023.md",
+    "title": "[ATM-2-0023] Atomic Map Schema & Registry",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0329",
+    "path": "docs/agent-briefs/tasks/ATM-2-0024.md",
+    "title": "[ATM-2-0024] Map-Level Upgrade & Extract-vs-Bump Decision",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0330",
+    "path": "docs/agent-briefs/tasks/ATM-2-0025.md",
+    "title": "[ATM-2-0025] Cross-Atom Integration Test Runner",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0331",
+    "path": "docs/agent-briefs/tasks/ATM-4-0008.md",
+    "title": "[ATM-4-0008] H2U Map Evolution Pilot",
+    "category": "task"
   }
 ]

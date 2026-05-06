@@ -72,13 +72,13 @@
     "title": "名詞定義新增 ATM 任務代號",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "governance",
     "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T12:39:11+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4-mini",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -94,7 +94,7 @@
     "deliverables": [
       "docs/遊戲規格文件/系統規格書/名詞定義文件.md 新增 ATM 子系統表列"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 | 狀態: done | 驗證: 名詞定義文件已含 ATM 子系統表列 | 變更: JSON shard 同步 MD frontmatter 真相",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 開源化開卡",
@@ -124,7 +124,8 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-06T12:39:11+08:00"
   },
   {
     "doc_id": "doc_task_0247",

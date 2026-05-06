@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "source": "../AI原子框架開發計畫書.md",
+  "indexTitle": "AI 原子框架開發計畫書",
+  "indexPath": "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+  "type": "markdown-h2",
+  "keepSourceIntact": true,
+  "preambleShard": "dev-plan-context",
+  "defaultShard": "dev-plan-appendices",
+  "shards": [
+    {
+      "name": "dev-plan-context",
+      "title": "Context 與分工決策",
+      "pattern": "^(Context|上游|2026-05-06|獨立 Repo|v0\\.2 companion)"
+    },
+    {
+      "name": "dev-plan-foundation",
+      "title": "目標、原理、結構",
+      "pattern": "^(目標|ATM 獨立|解決問題|與本專案|目錄結構)"
+    },
+    {
+      "name": "dev-plan-milestones",
+      "title": "里程碑與補強路線",
+      "pattern": "^(里程碑|v0\\.2\\.1)"
+    },
+    {
+      "name": "dev-plan-execution",
+      "title": "Checklist、風險與驗證",
+      "pattern": "^(執行 Checklist|不退轉|風險|驗證命令|Critical Files|執行流程)"
+    },
+    {
+      "name": "dev-plan-appendices",
+      "title": "附錄",
+      "pattern": "."
+    }
+  ]
+}

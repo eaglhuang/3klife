@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "source": "../ATM_cross_reference.md",
+  "indexTitle": "ATM Cross Reference",
+  "indexPath": "docs/ai_atomic_framework/ATM_cross_reference.md",
+  "type": "markdown-h2",
+  "keepSourceIntact": true,
+  "preambleShard": "atm-crossref-usage",
+  "defaultShard": "atm-crossref-maintenance",
+  "shards": [
+    {
+      "name": "atm-crossref-usage",
+      "title": "使用說明",
+      "pattern": "^使用說明"
+    },
+    {
+      "name": "atm-crossref-routing",
+      "title": "快查路由表",
+      "pattern": "^快查路由表"
+    },
+    {
+      "name": "atm-crossref-inventory",
+      "title": "Section Inventory",
+      "pattern": "^Section Inventory"
+    },
+    {
+      "name": "atm-crossref-doc-refs",
+      "title": "doc_refs 欄位規範",
+      "pattern": "^doc_refs"
+    },
+    {
+      "name": "atm-crossref-maintenance",
+      "title": "維護說明",
+      "pattern": "."
+    }
+  ]
+}

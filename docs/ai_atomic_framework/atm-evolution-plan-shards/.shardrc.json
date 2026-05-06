@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "source": "../ATM框架演進執行規劃書.md",
+  "indexTitle": "ATM 框架演進執行規劃書",
+  "indexPath": "docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
+  "type": "markdown-h2",
+  "keepSourceIntact": true,
+  "preambleShard": "atm-evolution-plan-diagnosis",
+  "defaultShard": "atm-evolution-plan-appendices",
+  "shards": [
+    {
+      "name": "atm-evolution-plan-diagnosis",
+      "title": "機讀真相與提案診斷（§1–§3）",
+      "pattern": "^[1-3]\\."
+    },
+    {
+      "name": "atm-evolution-plan-roadmap",
+      "title": "新增任務與依賴重排（§4–§5）",
+      "pattern": "^[4-5]\\."
+    },
+    {
+      "name": "atm-evolution-plan-risk",
+      "title": "風險、排除與結論（§6–§8）",
+      "pattern": "^[6-8]\\."
+    },
+    {
+      "name": "atm-evolution-plan-appendices",
+      "title": "附錄 A/B",
+      "pattern": "."
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "source": "../AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
+  "indexTitle": "AI Atomic Framework Optimized Roadmap v0.2",
+  "indexPath": "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
+  "type": "markdown-h2",
+  "keepSourceIntact": true,
+  "preambleShard": "optimized-roadmap-summary",
+  "defaultShard": "optimized-roadmap-future",
+  "shards": [
+    {
+      "name": "optimized-roadmap-summary",
+      "title": "摘要與問題（§0–§1）",
+      "pattern": "^(0|1)\\."
+    },
+    {
+      "name": "optimized-roadmap-plan",
+      "title": "MVP 路線與原則（§2–§4）",
+      "pattern": "^[2-4]\\."
+    },
+    {
+      "name": "optimized-roadmap-ecosystem",
+      "title": "生態、風險、結構（§5–§7）",
+      "pattern": "^[5-7](\\.|$)"
+    },
+    {
+      "name": "optimized-roadmap-future",
+      "title": "下一步與未來演進（§8+）",
+      "pattern": "."
+    }
+  ]
+}

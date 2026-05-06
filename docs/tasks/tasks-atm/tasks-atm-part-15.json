@@ -1,5 +1,75 @@
 [
   {
+    "doc_id": "doc_task_0272",
+    "id": "ATM-5-0001",
+    "title": "Quick Start 與 API 文件",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "docs",
+    "phase": "ATM-5",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
+    "related": [],
+    "depends": [
+      "ATM-1-0007",
+      "ATM-2-0006"
+    ],
+    "acceptance": [
+      "30 分鐘內可跑 hello-world",
+      "文件不需要 3KLife 背景知識",
+      "所有命令可複製執行",
+      "Quick Start 不要求安裝 LangGraph、pgvector、Deno sandbox 或 observability stack 才能跑通 hello-world"
+    ],
+    "deliverables": [
+      "docs/QUICK_START.md",
+      "docs/API.md",
+      "docs/SPEC_GUIDE.md",
+      "README quick start section",
+      "Quick Start 對齊 v0.2 六週 MVP，明確區分 v0.1 alpha 必備能力與 optional plugin"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 v0.2 companion 對應交付/驗收條件 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
+      "position": "ATM-5",
+      "prereq": "ATM-1-0007、ATM-2-0006"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "docs/QUICK_START.md",
+        "docs/API.md",
+        "docs/SPEC_GUIDE.md",
+        "README quick start section"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0273",
     "id": "ATM-5-0002",
     "title": "Adapter Guide 與 Plugin SDK 文件",
@@ -99,15 +169,21 @@
       "breaking change 需 RFC",
       "release owner / maintainer duty matrix 已定義",
       "package naming policy 覆蓋 core / cli / plugin-* / adapter-*",
-      "provenance 與 deprecation / migration policy 已定義"
+      "provenance 與 deprecation / migration policy 已定義",
+      "docs/LIFECYCLE.md 必須定義 framework semver 與 release channel 規則",
+      "docs/ATOM_COMPATIBILITY.md 定義 atom compatibility matrix（framework version ↔ atom schema version ↔ plugin SDK version）",
+      "docs/GOVERNANCE.md 與 release checklist 必須說明 PEV / upgrade proposal 公開審核規則",
+      "deprecated / migration policy 必須列出 breaking change RFC 與回滾窗口"
     ],
     "deliverables": [
       "docs/LIFECYCLE.md",
       "docs/GOVERNANCE.md",
       "CHANGELOG.md policy",
-      "release checklist"
+      "release checklist",
+      "docs/ATOM_COMPATIBILITY.md",
+      "docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 release owner、package naming、provenance 與 deprecation 實務要求 | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 release owner、package naming、provenance 與 deprecation 實務要求 | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
@@ -132,144 +208,6 @@
         "實作 adapter 或 case study artifact",
         "跑 adapter/case 驗證",
         "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0275",
-    "id": "ATM-5-0004",
-    "title": "v0.1 alpha release checklist",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "release",
-    "phase": "ATM-5",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "整理 AI-Atomic-Framework v0.1 alpha 發布前檢查表。",
-    "related": [],
-    "depends": [
-      "ATM-5-0001",
-      "ATM-5-0002",
-      "ATM-5-0003"
-    ],
-    "acceptance": [
-      "npm pack/dry-run 成功",
-      "README/examples/schema tests 全綠",
-      "release notes 說明 alpha 限制",
-      "alpha0 checklist 與 alpha1 checklist 分離",
-      "secrets scan / provenance / npm publish dry-run / package naming 檢查項已列入",
-      "release owner sign-off 欄位已列入"
-    ],
-    "deliverables": [
-      "docs/RELEASE_CHECKLIST.md",
-      "GitHub release draft",
-      "npm publish dry-run plan"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 alpha0/alpha1 release checklist：secrets scan、provenance、package naming、release owner | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "整理 AI-Atomic-Framework v0.1 alpha 發布前檢查表。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001、ATM-5-0002、ATM-5-0003"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "docs/RELEASE_CHECKLIST.md",
-        "GitHub release draft",
-        "npm publish dry-run plan"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0284",
-    "id": "ATM-5-0005",
-    "title": "Living Spec 同步器與 PEV Loop",
-    "owner": "GitHubCopilot",
-    "priority": "P1",
-    "status": "open",
-    "type": "optional-feature",
-    "phase": "ATM-5",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
-    "related": [],
-    "depends": [
-      "ATM-5-0001",
-      "ATM-2-0006"
-    ],
-    "acceptance": [
-      "PEV Loop 成為標準流程語彙",
-      "MVP 只要求 drift prompt，不要求自動雙向同步",
-      "Living Spec 不阻塞 v0.1 alpha release"
-    ],
-    "deliverables": [
-      "docs/PEV_LOOP.md",
-      "docs/LIVING_SPEC.md",
-      "Spec drift prompt schema",
-      "README workflow summary"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001、ATM-2-0006"
-    },
-    "contracts": {
-      "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
-      ],
-      "output": [
-        "docs/PEV_LOOP.md",
-        "docs/LIVING_SPEC.md",
-        "Spec drift prompt schema",
-        "README workflow summary"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
       ]
     },
     "harness_evidence": {

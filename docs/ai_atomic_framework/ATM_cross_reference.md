@@ -31,7 +31,7 @@
 | **D4 既有工具命運** | adapter化, wrapper, replaced, permanent, task-lock, compute-gate, doc-id-registry, shard-manager, finalize-agent-turn, 工具命運 | `doc_other_0036` §命運總表 §詳細命運說明 |
 | **D5 Multi-Agent 兼容** | alpha gate, agent-neutral, AGENTS.md 中立性, 5 agent 測試, Claude Code/Cursor/Aider, 兼容矩陣 | `doc_other_0034` §測試矩陣 §Alpha Gate 4條判定 |
 | **D6 開源抽取策略** | extraction, neutrality, 中立性, Phase A/B/C/D, B0/B1/B2/B3, monorepo, pnpm, Turborepo, 開源 | `doc_other_0030` §1 §2 §3 §3.0（Phase B預備）|
-| **D7 ATM 核心架構** | 四區, atom spec, manager, police, registry, _workbench, AtomicInterface, 四層架構, 目錄結構 | `doc_other_0028` §目錄結構規劃 §解決問題的原理 |
+| **D7 ATM 核心架構** | 四區, atom spec, manager, police, registry, _workbench, AtomicInterface, 四層架構, 目錄結構, canonical folder, atom-space, 家目錄, Atomic ID folder | `doc_other_0028` §與本專案的相容性分析 §目錄結構規劃 §解決問題的原理; `doc_other_0043` §1 §3 §5 |
 | **D8 自舉進程** | B0/B1/B2/B3 sub-phase, seed, bootstrap paradox, self-host-alpha, 框架自舉, 第一批atom | `doc_other_0028` §v0.2.1補強 §Sub-phase與任務卡映射; `doc_other_0030` §Phase B預備 |
 | **D9 Schema 演化** | atmSchemaVersion, spec migration, v1→v2, schema major bump, schema PR | `doc_other_0035` §7 |
 | **D10 Cross-language** | Python adapter, LanguageAdapter SPI, 多語言, C#, Go | `doc_other_0035` §6 |
@@ -42,6 +42,7 @@
 - ATM 願景全貌 → `doc_other_0029` §2（L116）
 - 五層原子結構 → `doc_other_0029` §5（L795）
 - 優化路線圖摘要 → `doc_other_0031` §0（AI_Atomic_Framework_Optimized_Roadmap_v0.2.md）
+- canonical atom 家目錄規則 → `doc_other_0028` §與本專案的相容性分析 §目錄結構規劃；`doc_other_0043` §1 §3 §5
 
 ---
 
@@ -51,7 +52,7 @@
 > 由 `node tools_node/rebuild-atm-crossref.js` 自動維護，請勿手工修改本區塊內容。
 > 上次更新：2026-05-06
 
-### doc_other_0028 — AI原子框架開發計畫書.md（646 行）⚠️ 超大，優先讀 shards/
+### doc_other_0028 — AI原子框架開發計畫書.md（672 行）⚠️ 超大，優先讀 shards/
 
 | 行號 | 標題層級 | 標題 |
 |---|---|---|
@@ -61,184 +62,185 @@
 | 47 | H3 | 文件真相收斂 |
 | 61 | H3 | alpha0 / alpha1 拆分 |
 | 70 | H3 | gate 與 adapter 降風險規則 |
-| 79 | H2 | 獨立 Repo 與 3KLife 分工 |
-| 95 | H2 | v0.2 companion 採納矩陣 |
-| 115 | H3 | 3KLife adapter 技術棧校正矩陣（細版） |
-| 149 | H2 | 目標 |
-| 157 | H2 | ATM 獨立可啟動的最小通用層 |
-| 179 | H2 | 解決問題的原理 |
-| 195 | H2 | 與本專案的相容性分析（Roadmap 必須校正的 8 點） |
-| 212 | H2 | 目錄結構規劃（四區） |
-| 240 | H3 | 區 1：框架工作區（AI 沙盒，CLI/Manager 入口） |
-| 280 | H3 | 區 2：共用純邏輯（atm-cli 與 hook 共用） |
-| 292 | H3 | 區 3：Runtime 原子產物（與 Legacy 共處的「正式」代碼） |
-| 308 | H3 | 區 4：ATM 文件區 |
-| 325 | H2 | 里程碑（ATM-0 ~ ATM-6）+ 已開任務卡清單 |
-| 329 | H3 | ATM-0：3KLife governance bootstrap（14 卡） |
-| 342 | H3 | ATM-1：上游 repo skeleton 與 self-hosting alpha0 gate（10 卡） |
-| 353 | H3 | ATM-2：Core Manager、Registry、HashLock、Police、Governance Bundle（12 卡） |
-| 366 | H3 | ATM-3：3KLife adapter 導入（downstream-only，需待 self-hosting alpha0 gate）（13 卡） |
-| 374 | H3 | ATM-4：html-to-ucuf reference case study（downstream-only）（6 卡） |
-| 383 | H3 | ATM-5：開源文件、Plugin SDK、alpha release（5 卡） |
-| 391 | H3 | ATM-6：生態擴張與後置決策（5 卡） |
-| 402 | H2 | v0.2.1 補強：開源獨立自舉路徑（B0–B3 sub-phasing 與新增任務卡） |
-| 406 | H3 | Sub-phase 與任務卡映射 |
-| 417 | H3 | 新增任務卡 |
-| 458 | H3 | 並行開發協議 |
-| 462 | H3 | 依賴與消費路線圖 |
-| 466 | H3 | Versioning Policy |
-| 472 | H2 | 執行 Checklist（每張 ATM 卡通用） |
-| 474 | H3 | 開工序列 |
-| 482 | H3 | 進行中（每次儲存後） |
-| 489 | H3 | 收工序列 |
-| 505 | H2 | 不退轉機制（hash lock + regression matrix 落地） |
-| 507 | H3 | 要動的具體檔案 |
-| 527 | H3 | §6.1 Schema versioning policy（v0.2.1 補強） |
-| 540 | H2 | 風險與防範 |
-| 553 | H2 | 驗證命令（階段性北極星） |
-| 582 | H2 | Critical Files |
-| 603 | H2 | 執行流程提醒 |
-| 613 | H2 | 附錄 A：與 Roadmap 對應表 |
-| 639 | H2 | 附錄 B：未在本計畫範圍內的事項（明確排除） |
+| 77 | H3 | Current Gate & Alpha0 Critical Path |
+| 100 | H2 | 獨立 Repo 與 3KLife 分工 |
+| 116 | H2 | v0.2 companion 採納矩陣 |
+| 136 | H3 | 3KLife adapter 技術棧校正矩陣（細版） |
+| 170 | H2 | 目標 |
+| 178 | H2 | ATM 獨立可啟動的最小通用層 |
+| 200 | H2 | 解決問題的原理 |
+| 216 | H2 | 與本專案的相容性分析（Roadmap 必須校正的 8 點） |
+| 237 | H2 | 目錄結構規劃（四區） |
+| 265 | H3 | 區 1：框架工作區（AI 沙盒，CLI/Manager 入口） |
+| 306 | H3 | 區 2：共用純邏輯（atm-cli 與 hook 共用） |
+| 318 | H3 | 區 3：Runtime 原子產物（與 Legacy 共處的「正式」代碼） |
+| 334 | H3 | 區 4：ATM 文件區 |
+| 351 | H2 | 里程碑（ATM-0 ~ ATM-6）+ 已開任務卡清單 |
+| 355 | H3 | ATM-0：3KLife governance bootstrap（14 卡） |
+| 368 | H3 | ATM-1：上游 repo skeleton 與 self-hosting alpha0 gate（10 卡） |
+| 379 | H3 | ATM-2：Core Manager、Registry、HashLock、Police、Governance Bundle（12 卡） |
+| 392 | H3 | ATM-3：3KLife adapter 導入（downstream-only，需待 self-hosting alpha0 gate）（13 卡） |
+| 400 | H3 | ATM-4：html-to-ucuf reference case study（downstream-only）（6 卡） |
+| 409 | H3 | ATM-5：開源文件、Plugin SDK、alpha release（5 卡） |
+| 417 | H3 | ATM-6：生態擴張與後置決策（5 卡） |
+| 428 | H2 | v0.2.1 補強：開源獨立自舉路徑（B0–B3 sub-phasing 與新增任務卡） |
+| 432 | H3 | Sub-phase 與任務卡映射 |
+| 443 | H3 | 新增任務卡 |
+| 484 | H3 | 並行開發協議 |
+| 488 | H3 | 依賴與消費路線圖 |
+| 492 | H3 | Versioning Policy |
+| 498 | H2 | 執行 Checklist（每張 ATM 卡通用） |
+| 500 | H3 | 開工序列 |
+| 508 | H3 | 進行中（每次儲存後） |
+| 515 | H3 | 收工序列 |
+| 531 | H2 | 不退轉機制（hash lock + regression matrix 落地） |
+| 533 | H3 | 要動的具體檔案 |
+| 553 | H3 | §6.1 Schema versioning policy（v0.2.1 補強） |
+| 566 | H2 | 風險與防範 |
+| 579 | H2 | 驗證命令（階段性北極星） |
+| 608 | H2 | Critical Files |
+| 629 | H2 | 執行流程提醒 |
+| 639 | H2 | 附錄 A：與 Roadmap 對應表 |
+| 665 | H2 | 附錄 B：未在本計畫範圍內的事項（明確排除） |
 
-### doc_other_0029 — AI_Atomic_Framework_Roadmap.md（2809 行）⚠️ 超大，優先讀 shards/
+### doc_other_0029 — AI_Atomic_Framework_Roadmap.md（2815 行）⚠️ 超大，優先讀 shards/
 
 | 行號 | 標題層級 | 標題 |
 |---|---|---|
-| 10 | H2 | 0. 本文件的核心結論 |
-| 28 | H2 | 0.1 v0.2 務實化補充 |
-| 49 | H2 | 1. 問題背景：為什麼原本的 Vibe Coding 會失控 |
-| 53 | H3 | 1.1 巨大檔案造成 AI 上下文污染 |
-| 67 | H3 | 1.2 規則漂移造成方向不穩 |
-| 84 | H3 | 1.3 驗收模糊造成過度擬合 |
-| 103 | H3 | 1.4 單畫面驗證造成過度擬合 |
-| 116 | H2 | 2. AI Atomic Framework 的願景 |
-| 118 | H3 | 2.1 一句話定義 |
-| 128 | H3 | 2.2 你要達成的終局效果 |
-| 145 | H3 | 2.3 獨立開源與宿主系統適配策略 |
-| 162 | H3 | 2.4 預期開源 Repo 形態 |
-| 191 | H2 | 3. 核心設計原則 |
-| 193 | H3 | 3.1 AI 不是自由工程師，而是受控加工機 |
-| 214 | H3 | 3.2 契約優先，程式碼其次 |
-| 239 | H3 | 3.3 Git 是真相來源，資料庫是索引層 |
-| 257 | H3 | 3.4 開發期虛擬隔離，執行期貼近 Legacy |
-| 320 | H3 | 3.5 Core 禁止耦合清單 |
-| 332 | H3 | 3.5.1 Neutrality / Boundary Guard |
-| 343 | H3 | 3.5.2 Upstream 文件中立性 |
-| 351 | H3 | 3.5.3 Context Budget Guard |
-| 366 | H2 | 4. 核心名詞定義 |
-| 370 | H3 | 4.1 Atomic Spec |
-| 445 | H3 | 4.2 Atomic Code |
-| 472 | H3 | 4.3 Atomic Test |
-| 498 | H3 | 4.4 Atomic Map |
-| 555 | H3 | 4.5 Atomic Manager |
-| 581 | H3 | 4.6 Atomic Registry |
-| 625 | H3 | 4.7 Atomic Capability |
-| 670 | H3 | 4.8 Atomic Police |
-| 691 | H2 | 5. 原子分層：借鑑 Atomic Design 的五層結構 |
-| 699 | H3 | 5.1 Atom：純函數原子 |
-| 723 | H3 | 5.2 Molecule：小型流程 |
-| 743 | H3 | 5.3 Organism：領域模組 |
-| 763 | H3 | 5.4 Template：抽象骨架 |
-| 783 | H3 | 5.5 Page：具體執行入口 |
-| 795 | H2 | 6. 框架自舉：用原子方法建立原子框架 |
-| 811 | H2 | 7. Blueprint #000：Genesis Framework Bootstrap |
-| 831 | H3 | 7.1 Bootstrap 原子清單 |
-| 990 | H3 | 7.2 Genesis Map |
-| 1021 | H2 | 8. 里程碑總覽 |
-| 1029 | H2 | 目標 |
-| 1037 | H2 | Deliverables |
-| 1039 | H3 | 0.1 Active Spec Freeze |
-| 1058 | H3 | 0.2 Legacy Snapshot |
-| 1076 | H3 | 0.3 Regression Matrix 初版 |
-| 1095 | H2 | Acceptance |
-| 1107 | H2 | 目標 |
-| 1122 | H2 | 1.1 Atomic Spec Schema |
-| 1147 | H2 | 1.2 Atomic Manager CLI |
-| 1161 | H2 | 1.3 工作區結構 |
-| 1182 | H2 | 1.4 產出規則 |
-| 1197 | H2 | Phase 1 Acceptance |
-| 1211 | H2 | 目標 |
-| 1219 | H2 | 2.1 Atomic Interface |
-| 1235 | H2 | 2.2 Atomic Registry Script |
-| 1253 | H2 | 2.3 Atomic Location Index |
-| 1274 | H2 | 2.4 Legacy Adapter Node |
-| 1296 | H2 | 2.5 Strangler Migration Flow |
-| 1320 | H2 | Phase 2 Acceptance |
-| 1333 | H2 | 目標 |
-| 1339 | H2 | 3.1 顆粒度規則 |
-| 1364 | H2 | 3.2 禁止 Deep Copy 大物件 |
-| 1392 | H2 | 3.3 Async Policy |
-| 1419 | H2 | 3.4 靜態綁定，避免字串 Dispatcher |
-| 1443 | H2 | 3.5 Performance Budget |
-| 1470 | H2 | Phase 3 Acceptance |
-| 1483 | H2 | 目標 |
-| 1489 | H2 | 4.1 瘦身警察 |
-| 1515 | H2 | 4.2 關係警察 |
-| 1535 | H2 | 4.3 去重警察 |
-| 1573 | H2 | 4.4 索引警察 |
-| 1592 | H2 | 4.5 規格漂移警察 |
-| 1606 | H2 | 4.6 測試完整性警察 |
-| 1621 | H2 | 4.7 Known Gap 警察 |
-| 1642 | H2 | Phase 4 Acceptance |
-| 1655 | H2 | 目標 |
-| 1663 | H2 | 5.1 Fidelity Score Spec |
-| 1698 | H2 | 5.2 Owner Bucket |
-| 1716 | H2 | 5.3 Multi-Fixture Matrix |
-| 1734 | H2 | 5.4 Selector Trace |
-| 1765 | H2 | Phase 5 Acceptance |
-| 1779 | H2 | 目標 |
-| 1791 | H2 | 6.1 第一個 Legacy Adapter |
-| 1817 | H2 | 6.2 抽離第一個純 Atom：Typography |
-| 1844 | H2 | 6.3 抽離順序建議 |
-| 1865 | H2 | 6.4 每次抽離的驗收 |
-| 1885 | H2 | Phase 6 Acceptance |
-| 1899 | H2 | 目標 |
-| 1905 | H2 | 7.1 PostgreSQL / pgvector |
-| 1932 | H2 | 7.2 Semantic Reuse Flow |
-| 1950 | H2 | 7.3 Atomic Merge |
-| 1965 | H2 | 7.4 Atomic Split |
-| 2013 | H2 | Atomic ID |
-| 2016 | H2 | Goal |
-| 2019 | H2 | Non-Goals |
-| 2022 | H2 | Input Contract |
-| 2025 | H2 | Output Contract |
-| 2028 | H2 | Allowed Files |
-| 2032 | H2 | Forbidden Files |
-| 2037 | H2 | Allowed Dependencies |
-| 2041 | H2 | Forbidden Dependencies |
-| 2048 | H2 | Performance Budget |
-| 2054 | H2 | Test Fixtures |
-| 2059 | H2 | Validation Commands |
-| 2066 | H2 | Acceptance Criteria |
-| 2175 | H2 | 13.1 Hash Lock |
-| 2193 | H2 | 13.2 Versioning |
-| 2207 | H2 | 13.3 Rollback |
-| 2222 | H2 | 13.4 Regression Summary |
-| 2305 | H2 | 15.1 先不要做的事 |
-| 2321 | H2 | 15.2 先做的事 |
-| 2336 | H2 | 15.3 第一批救援原子 |
-| 2357 | H2 | 15.4 第一個成功標準 |
-| 2377 | H2 | 16.1 MVP 階段 |
-| 2405 | H2 | 16.2 中期 |
-| 2420 | H2 | 16.3 後期 |
-| 2440 | H2 | 17.1 架構裁判 |
-| 2452 | H2 | 17.2 任務發包者 |
-| 2466 | H2 | 17.3 驗收者 |
-| 2479 | H2 | 17.4 每次 AI 工作的最小循環 |
-| 2509 | H2 | 18.1 過度工程化 |
-| 2527 | H2 | 18.2 原子太碎造成性能差 |
-| 2541 | H2 | 18.3 原子太多造成管理成本高 |
-| 2554 | H2 | 18.4 AI 修改超出範圍 |
-| 2567 | H2 | 18.5 Legacy 行為被破壞 |
-| 2586 | H2 | Week 1：建立凍結與 baseline |
-| 2598 | H2 | Week 2：建立 Atomic Manager MVP |
-| 2611 | H2 | Week 3：讓 AI 生成第一個非框架原子 |
-| 2622 | H2 | Week 4：接入 Legacy 第一個小功能 |
-| 2634 | H2 | Week 5：建立 Police v0 |
-| 2645 | H2 | Week 6：開始 reference case study |
-| 2707 | H2 | 22. 附錄：第一個 Prompt 建議 |
-| 2731 | H2 | 23. 附錄：第一批檔案清單 |
+| 12 | H2 | 0. 本文件的核心結論 |
+| 30 | H2 | 0.1 v0.2 務實化補充 |
+| 51 | H2 | 1. 問題背景：為什麼原本的 Vibe Coding 會失控 |
+| 55 | H3 | 1.1 巨大檔案造成 AI 上下文污染 |
+| 69 | H3 | 1.2 規則漂移造成方向不穩 |
+| 86 | H3 | 1.3 驗收模糊造成過度擬合 |
+| 105 | H3 | 1.4 單畫面驗證造成過度擬合 |
+| 118 | H2 | 2. AI Atomic Framework 的願景 |
+| 120 | H3 | 2.1 一句話定義 |
+| 130 | H3 | 2.2 你要達成的終局效果 |
+| 147 | H3 | 2.3 獨立開源與宿主系統適配策略 |
+| 164 | H3 | 2.4 預期開源 Repo 形態 |
+| 193 | H2 | 3. 核心設計原則 |
+| 195 | H3 | 3.1 AI 不是自由工程師，而是受控加工機 |
+| 216 | H3 | 3.2 契約優先，程式碼其次 |
+| 241 | H3 | 3.3 Git 是真相來源，資料庫是索引層 |
+| 259 | H3 | 3.4 開發期虛擬隔離，執行期貼近 Legacy |
+| 322 | H3 | 3.5 Core 禁止耦合清單 |
+| 334 | H3 | 3.5.1 Neutrality / Boundary Guard |
+| 345 | H3 | 3.5.2 Upstream 文件中立性 |
+| 353 | H3 | 3.5.3 Context Budget Guard |
+| 368 | H2 | 4. 核心名詞定義 |
+| 372 | H3 | 4.1 Atomic Spec |
+| 447 | H3 | 4.2 Atomic Code |
+| 474 | H3 | 4.3 Atomic Test |
+| 500 | H3 | 4.4 Atomic Map |
+| 557 | H3 | 4.5 Atomic Manager |
+| 583 | H3 | 4.6 Atomic Registry |
+| 627 | H3 | 4.7 Atomic Capability |
+| 672 | H3 | 4.8 Atomic Police |
+| 693 | H2 | 5. 原子分層：借鑑 Atomic Design 的五層結構 |
+| 701 | H3 | 5.1 Atom：純函數原子 |
+| 725 | H3 | 5.2 Molecule：小型流程 |
+| 745 | H3 | 5.3 Organism：領域模組 |
+| 765 | H3 | 5.4 Template：抽象骨架 |
+| 785 | H3 | 5.5 Page：具體執行入口 |
+| 797 | H2 | 6. 框架自舉：用原子方法建立原子框架 |
+| 813 | H2 | 7. Blueprint #000：Genesis Framework Bootstrap |
+| 833 | H3 | 7.1 Bootstrap 原子清單 |
+| 994 | H3 | 7.2 Genesis Map |
+| 1025 | H2 | 8. 里程碑總覽 |
+| 1033 | H2 | 目標 |
+| 1041 | H2 | Deliverables |
+| 1043 | H3 | 0.1 Active Spec Freeze |
+| 1062 | H3 | 0.2 Legacy Snapshot |
+| 1080 | H3 | 0.3 Regression Matrix 初版 |
+| 1099 | H2 | Acceptance |
+| 1111 | H2 | 目標 |
+| 1126 | H2 | 1.1 Atomic Spec Schema |
+| 1151 | H2 | 1.2 Atomic Manager CLI |
+| 1165 | H2 | 1.3 工作區結構 |
+| 1186 | H2 | 1.4 產出規則 |
+| 1201 | H2 | Phase 1 Acceptance |
+| 1215 | H2 | 目標 |
+| 1223 | H2 | 2.1 Atomic Interface |
+| 1239 | H2 | 2.2 Atomic Registry Script |
+| 1257 | H2 | 2.3 Atomic Location Index |
+| 1278 | H2 | 2.4 Legacy Adapter Node |
+| 1300 | H2 | 2.5 Strangler Migration Flow |
+| 1324 | H2 | Phase 2 Acceptance |
+| 1337 | H2 | 目標 |
+| 1343 | H2 | 3.1 顆粒度規則 |
+| 1368 | H2 | 3.2 禁止 Deep Copy 大物件 |
+| 1396 | H2 | 3.3 Async Policy |
+| 1423 | H2 | 3.4 靜態綁定，避免字串 Dispatcher |
+| 1447 | H2 | 3.5 Performance Budget |
+| 1474 | H2 | Phase 3 Acceptance |
+| 1487 | H2 | 目標 |
+| 1493 | H2 | 4.1 瘦身警察 |
+| 1519 | H2 | 4.2 關係警察 |
+| 1539 | H2 | 4.3 去重警察 |
+| 1577 | H2 | 4.4 索引警察 |
+| 1596 | H2 | 4.5 規格漂移警察 |
+| 1610 | H2 | 4.6 測試完整性警察 |
+| 1625 | H2 | 4.7 Known Gap 警察 |
+| 1646 | H2 | Phase 4 Acceptance |
+| 1659 | H2 | 目標 |
+| 1667 | H2 | 5.1 Fidelity Score Spec |
+| 1702 | H2 | 5.2 Owner Bucket |
+| 1720 | H2 | 5.3 Multi-Fixture Matrix |
+| 1738 | H2 | 5.4 Selector Trace |
+| 1769 | H2 | Phase 5 Acceptance |
+| 1783 | H2 | 目標 |
+| 1795 | H2 | 6.1 第一個 Legacy Adapter |
+| 1821 | H2 | 6.2 抽離第一個純 Atom：Typography |
+| 1848 | H2 | 6.3 抽離順序建議 |
+| 1869 | H2 | 6.4 每次抽離的驗收 |
+| 1889 | H2 | Phase 6 Acceptance |
+| 1903 | H2 | 目標 |
+| 1909 | H2 | 7.1 PostgreSQL / pgvector |
+| 1936 | H2 | 7.2 Semantic Reuse Flow |
+| 1954 | H2 | 7.3 Atomic Merge |
+| 1969 | H2 | 7.4 Atomic Split |
+| 2017 | H2 | Atomic ID |
+| 2022 | H2 | Goal |
+| 2025 | H2 | Non-Goals |
+| 2028 | H2 | Input Contract |
+| 2031 | H2 | Output Contract |
+| 2034 | H2 | Allowed Files |
+| 2038 | H2 | Forbidden Files |
+| 2043 | H2 | Allowed Dependencies |
+| 2047 | H2 | Forbidden Dependencies |
+| 2054 | H2 | Performance Budget |
+| 2060 | H2 | Test Fixtures |
+| 2065 | H2 | Validation Commands |
+| 2072 | H2 | Acceptance Criteria |
+| 2181 | H2 | 13.1 Hash Lock |
+| 2199 | H2 | 13.2 Versioning |
+| 2213 | H2 | 13.3 Rollback |
+| 2228 | H2 | 13.4 Regression Summary |
+| 2311 | H2 | 15.1 先不要做的事 |
+| 2327 | H2 | 15.2 先做的事 |
+| 2342 | H2 | 15.3 第一批救援原子 |
+| 2363 | H2 | 15.4 第一個成功標準 |
+| 2383 | H2 | 16.1 MVP 階段 |
+| 2411 | H2 | 16.2 中期 |
+| 2426 | H2 | 16.3 後期 |
+| 2446 | H2 | 17.1 架構裁判 |
+| 2458 | H2 | 17.2 任務發包者 |
+| 2472 | H2 | 17.3 驗收者 |
+| 2485 | H2 | 17.4 每次 AI 工作的最小循環 |
+| 2515 | H2 | 18.1 過度工程化 |
+| 2533 | H2 | 18.2 原子太碎造成性能差 |
+| 2547 | H2 | 18.3 原子太多造成管理成本高 |
+| 2560 | H2 | 18.4 AI 修改超出範圍 |
+| 2573 | H2 | 18.5 Legacy 行為被破壞 |
+| 2592 | H2 | Week 1：建立凍結與 baseline |
+| 2604 | H2 | Week 2：建立 Atomic Manager MVP |
+| 2617 | H2 | Week 3：讓 AI 生成第一個非框架原子 |
+| 2628 | H2 | Week 4：接入 Legacy 第一個小功能 |
+| 2640 | H2 | Week 5：建立 Police v0 |
+| 2651 | H2 | Week 6：開始 reference case study |
+| 2713 | H2 | 22. 附錄：第一個 Prompt 建議 |
+| 2737 | H2 | 23. 附錄：第一批檔案清單 |
 
 ### doc_other_0030 — open-source-extraction-plan.md（392 行）
 
@@ -312,34 +314,34 @@
 | 374 | H3 | 9.3 設計原則（任何演進都必須遵守） |
 | 383 | H2 | 結語 |
 
-### doc_other_0032 — 3klife-coexistence-plan.md（171 行）
+### doc_other_0032 — 3klife-coexistence-plan.md（175 行）
 
 | 行號 | 標題層級 | 標題 |
 |---|---|---|
 | 10 | H2 | 為什麼需要本協議 |
 | 22 | H2 | 1. Freeze List（ATM 預定動區） |
-| 26 | H3 | 1.1 全檔級凍結 |
-| 31 | H3 | 1.2 函式級凍結（draft-builder.js 內） |
-| 38 | H3 | 1.3 凍結期間允許的動作 |
-| 48 | H2 | 2. 路由協議（哪種工作開哪種任務卡） |
-| 50 | H3 | 2.1 開 `ATM-*` 卡的條件 |
-| 58 | H3 | 2.2 開 `H2U-REFACTOR-*` 卡的條件 |
-| 63 | H3 | 2.3 開 `PROG-2-*` 卡的條件 |
-| 68 | H3 | 2.4 邊界決策樹 |
-| 81 | H2 | 3. 仲裁順序（衝突時誰優先） |
-| 83 | H3 | 3.1 結構性原則 |
-| 88 | H3 | 3.2 具體仲裁案例 |
-| 96 | H3 | 3.3 衝突時的處理流程 |
-| 103 | H2 | 4. Cross-shard Task-lock 強化 |
-| 105 | H3 | 4.1 現行 task-lock 行為 |
-| 109 | H3 | 4.2 強化內容（屬 3KLife 端，由 ATM-0 補強卡實作） |
-| 114 | H3 | 4.3 Cross-shard 偵測命令 |
-| 123 | H2 | 5. 並行期間的同步機制 |
-| 125 | H3 | 5.1 每週同步點 |
-| 132 | H3 | 5.2 衝突早期警報 |
-| 138 | H2 | 6. 並行期結束條件 |
-| 151 | H2 | 7. 落地檢查表 |
-| 161 | H2 | 8. 例外狀況的緊急處理 |
+| 30 | H3 | 1.1 全檔級凍結 |
+| 35 | H3 | 1.2 函式級凍結（draft-builder.js 內） |
+| 42 | H3 | 1.3 凍結期間允許的動作 |
+| 52 | H2 | 2. 路由協議（哪種工作開哪種任務卡） |
+| 54 | H3 | 2.1 開 `ATM-*` 卡的條件 |
+| 62 | H3 | 2.2 開 `H2U-REFACTOR-*` 卡的條件 |
+| 67 | H3 | 2.3 開 `PROG-2-*` 卡的條件 |
+| 72 | H3 | 2.4 邊界決策樹 |
+| 85 | H2 | 3. 仲裁順序（衝突時誰優先） |
+| 87 | H3 | 3.1 結構性原則 |
+| 92 | H3 | 3.2 具體仲裁案例 |
+| 100 | H3 | 3.3 衝突時的處理流程 |
+| 107 | H2 | 4. Cross-shard Task-lock 強化 |
+| 109 | H3 | 4.1 現行 task-lock 行為 |
+| 113 | H3 | 4.2 強化內容（屬 3KLife 端，由 ATM-0 補強卡實作） |
+| 118 | H3 | 4.3 Cross-shard 偵測命令 |
+| 127 | H2 | 5. 並行期間的同步機制 |
+| 129 | H3 | 5.1 每週同步點 |
+| 136 | H3 | 5.2 衝突早期警報 |
+| 142 | H2 | 6. 並行期結束條件 |
+| 155 | H2 | 7. 落地檢查表 |
+| 165 | H2 | 8. 例外狀況的緊急處理 |
 
 ### doc_other_0033 — 3klife-consumption-roadmap.md（262 行）
 
@@ -464,6 +466,42 @@
 | 245 | H2 | Adapter 化的具體任務 |
 | 267 | H2 | 行為等價驗證 |
 | 285 | H2 | 維護者責任 |
+
+### doc_other_0043 — ATM框架演進執行規劃書.md（268 行）
+
+| 行號 | 標題層級 | 標題 |
+|---|---|---|
+| 10 | H2 | 1. 當前機讀真相與文件不一致 |
+| 23 | H2 | 2. 需修正的提案不合理處 |
+| 25 | H3 | 2.1 「演化管線不需新工具」表述過度簡化 |
+| 36 | H3 | 2.2 把 versions[] / rollback 塞回 ATM-2-0004 已不合法 |
+| 42 | H3 | 2.3 alpha0 / alpha1 邊界被演化需求稀釋 |
+| 48 | H3 | 2.4 000003 / 000004 未開卡，卻被列入核心 000001-000010 流程 |
+| 56 | H2 | 3. 現有 open 任務校正建議 |
+| 80 | H2 | 4. 新增任務規劃 |
+| 100 | H2 | 5. 依賴關係與階段重排 |
+| 102 | H3 | 5.1 alpha0 最短可驗證路徑 |
+| 112 | H3 | 5.2 alpha0 後、Adapter 前的核心原子補洞 |
+| 129 | H3 | 5.3 alpha1 演化閉環 |
+| 139 | H2 | 6. 開發風險清單 |
+| 153 | H2 | 7. 已完成項排除清單 |
+| 166 | H2 | 8. 結論 |
+| 172 | H2 | 附錄 A：v2 校正補丁（2026-05-06） |
+| 176 | H3 | A.1 真相同步 |
+| 182 | H3 | A.2 9 項硬約束（落地為任務卡 acceptance） |
+| 194 | H3 | A.3 替代方案備註 |
+| 199 | H3 | A.4 實作順序覆寫 §5 |
+| 215 | H2 | 附錄 B：原子地圖（Atomic Map）演化（2026-05-06） |
+| 219 | H3 | B.1 核心定義 |
+| 225 | H3 | B.2 演化決策：版本升級 vs. 拆出新原子 |
+| 237 | H3 | B.3 整合測試硬規則 |
+| 247 | H3 | B.4 任務卡延伸（追加於 §B 章節 acceptance） |
+| 257 | H3 | B.5 新增任務卡（map 層級） |
+
+### doc_other_0044 — 關於進化版的原子提案.md（700 行）⚠️ 超大，優先讀 shards/
+
+| 行號 | 標題層級 | 標題 |
+|---|---|---|
 
 <!-- END:SECTION_INVENTORY -->
 

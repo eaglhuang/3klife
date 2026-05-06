@@ -1,5 +1,137 @@
 [
   {
+    "doc_id": "doc_task_0267",
+    "id": "ATM-3-0004",
+    "title": "doc-id 與 encoding adapter integration",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
+    "status": "open",
+    "type": "adapter",
+    "phase": "ATM-3",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "把 3KLife doc-id-registry 與 encoding guard 封裝成 ATM adapter hook。",
+    "related": [],
+    "depends": [
+      "ATM-3-0001"
+    ],
+    "acceptance": [
+      "新增 ATM 相關 Markdown 仍由 doc-id-registry 分配",
+      "encoding 檢查可針對 touched files 執行",
+      "core 不直接 require 3KLife 工具"
+    ],
+    "deliverables": [
+      "tools_node/adapters/atm-3klife/document-adapter.js",
+      "tools_node/adapters/atm-3klife/encoding-adapter.js",
+      "hook tests"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "把 3KLife doc-id-registry 與 encoding guard 封裝成 ATM adapter hook。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "tools_node/adapters/atm-3klife/document-adapter.js",
+        "tools_node/adapters/atm-3klife/encoding-adapter.js",
+        "hook tests"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0268",
+    "id": "ATM-3-0005",
+    "title": "Cocos runtime adapter policy",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
+    "status": "open",
+    "type": "adapter-policy",
+    "phase": "ATM-3",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "定義 Cocos runtime 可 atom 化與不可 atom 化邊界，避免將 cc/Node/Prefab 放入 compute atom。",
+    "related": [],
+    "depends": [
+      "ATM-3-0001"
+    ],
+    "acceptance": [
+      "Cocos Component 被定義為 wrapper/adapter",
+      "純公式與 contract 可作 atom",
+      "Cocos asset refresh/TS syntax 驗證列入 pilot gate",
+      "Cocos runtime object boundary 明確對照 Unity GameObject/Component 類型，不污染 compute atom"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md",
+      "assets/scripts shared/core adapter 建議",
+      "禁止 import cc 的 atom 規則",
+      "明確列出 Cocos Component、Node、Prefab、Scene、AssetRef 僅能由 adapter/wrapper 持有，不可進 compute atom"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 v0.2 companion 對應交付/驗收條件 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "定義 Cocos runtime 可 atom 化與不可 atom 化邊界，避免將 cc/Node/Prefab 放入 compute atom。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md",
+        "assets/scripts shared/core adapter 建議",
+        "禁止 import cc 的 atom 規則"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0269",
     "id": "ATM-4-0001",
     "title": "html-to-ucuf reference case study plan",
@@ -111,143 +243,6 @@
         "tools_node/atomic-framework/fixtures/legacy-baseline",
         "docs/ai_atomic_framework/h2u-regression-matrix.md",
         "baseline summary artifact"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0279",
-    "id": "ATM-4-0003",
-    "title": "normalizeCssColor 首個 case atom",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "atom-case",
-    "phase": "ATM-4",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
-    "related": [],
-    "depends": [
-      "ATM-4-0002",
-      "ATM-2-0004"
-    ],
-    "acceptance": [
-      "atom test pass",
-      "forbidden import/side-effect police pass",
-      "H2U baseline 不退轉"
-    ],
-    "deliverables": [
-      "H2U normalizeCssColor atomic spec",
-      "5 positive fixtures",
-      "2 negative fixtures",
-      "1 legacy fixture",
-      "registry/hash entry"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0002、ATM-2-0004"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "H2U normalizeCssColor atomic spec",
-        "5 positive fixtures",
-        "2 negative fixtures",
-        "1 legacy fixture",
-        "registry/hash entry"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0271",
-    "id": "ATM-4-0004",
-    "title": "parseCssLength 與 parseFragmentList case atoms",
-    "owner": "GitHubCopilot",
-    "priority": "P1",
-    "status": "open",
-    "type": "atom-case",
-    "phase": "ATM-4",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom。",
-    "related": [],
-    "depends": [
-      "ATM-4-0003"
-    ],
-    "acceptance": [
-      "px/em/%/svg 與 fragment legacy fixtures 覆蓋",
-      "self-test 不退轉",
-      "可 rollback"
-    ],
-    "deliverables": [
-      "parseCssLength atom",
-      "parseFragmentList atom",
-      "fixtures",
-      "registry/hash entries"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0003"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "parseCssLength atom",
-        "parseFragmentList atom",
-        "fixtures",
-        "registry/hash entries"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",

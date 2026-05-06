@@ -1,5 +1,96 @@
 [
   {
+    "doc_id": "doc_task_0293",
+    "id": "ATM-1-0010",
+    "title": "Upstream docs neutrality audit",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "open-source-core",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T16:41:32.7788261+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "全盤掃描 upstream README、AGENTS、docs、examples、templates 與 prompt assets，確認不含 3KLife、Cocos、html-to-ucuf 或本地工具前提。",
+    "related": [
+      "ATM-1-0009",
+      "ATM-2-0010"
+    ],
+    "depends": [
+      "ATM-1-0001",
+      "ATM-1-0008"
+    ],
+    "acceptance": [
+      "upstream README/AGENTS/docs/examples/templates 不再含 adopter 私有資訊",
+      "產出 banned-term 與 adopter-only reference 清單",
+      "文件敘事不再暗示 3KLife/task-lock/compute-gate/doc-id 是 upstream 前提",
+      "可作為 self-hosting alpha gate 的一部分"
+    ],
+    "deliverables": [
+      "AI-Atomic-Framework/README.md neutrality checklist",
+      "AI-Atomic-Framework/docs/** audit scope",
+      "AI-Atomic-Framework/examples/** audit scope",
+      "AI-Atomic-Framework/templates/** audit scope"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: node scripts/validate-product-charter.mjs --mode validate / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 6460be7 新增 docs neutrality audit doc、machine-readable scan policy，並讓 validate-product-charter 掃描 README/CONTRIBUTING/docs/examples/templates protected surfaces | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM self-hosting first 開卡",
+      "summary": "建立 upstream 文件去污染與中立性稽核，避免 README/docs 再帶入 3KLife 私有資訊。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0001、ATM-1-0008"
+    },
+    "contracts": {
+      "input": [
+        "upstream product charter 與 zero-install bootstrap 已定義",
+        "upstream docs 不得綁定 adopter 私有資訊"
+      ],
+      "output": [
+        "upstream docs neutrality audit checklist",
+        "banned-term scan scope",
+        "adopter-only reference migration list"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡 touched files；upstream docs 若仍含 adopter 私有敘事，保持卡片 open 不偷關卡。",
+      "execution_steps": [
+        "盤點 upstream docs surfaces",
+        "定義 banned terms 與 protected surfaces",
+        "補 audit checklist",
+        "對齊 self-hosting alpha gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/docs/governance/DOCS_NEUTRALITY_AUDIT.md",
+        "AI-Atomic-Framework/docs/governance/docs-neutrality-policy.json",
+        "AI-Atomic-Framework/scripts/validate-product-charter.mjs",
+        "AI-Atomic-Framework/README.md",
+        "AI-Atomic-Framework/CONTRIBUTING.md",
+        "AI-Atomic-Framework/docs/SELF_HOSTING_ALPHA.md"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 6460be7",
+        "node scripts/validate-product-charter.mjs --mode validate",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "protected-surface scan scope moved from hardcoded validator logic into a versioned machine-readable policy",
+        "neutrality audit checklist and adopter-only migration guidance are documented in upstream governance docs",
+        "product-charter validation now covers README, CONTRIBUTING, docs, examples, and templates protected surfaces",
+        "self-hosting alpha gate now requires docs neutrality to pass before the gate is green"
+      ]
+    },
+    "completed_at": "2026-05-06T16:46:25.4089375+08:00"
+  },
+  {
     "doc_id": "doc_task_0294",
     "id": "ATM-2-0010",
     "title": "Neutrality boundary rule guard",
@@ -29,7 +120,9 @@
       "guard 可掃 source/docs/examples/templates/prompt assets",
       "deterministic 規則可攔截 3KLife/Cocos/html-to-ucuf/task-lock/compute-gate/doc-id 等 protected terms",
       "semantic audit 只作 warn/needs-review，不單獨決定 hard fail",
-      "guard 區分 code dead-code 與 doc dead-doc，不把 LLM 當唯一裁決"
+      "guard 區分 code dead-code 與 doc dead-doc，不把 LLM 當唯一裁決",
+      "deterministic / semantic 掃描必須同時涵蓋 .atm/reports/upgrade-proposals/* 與 evidence-store payload",
+      "adopter 私有資訊（3KLife / Cocos / UCUF / html-to-ucuf）出現在 upgrade-proposal 或 evidence 內容時 hard fail"
     ],
     "deliverables": [
       "neutrality/boundary guard spec",
@@ -37,7 +130,7 @@
       "semantic review report schema",
       "standalone smoke fixture"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 neutrality/boundary rule guard 任務 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 neutrality/boundary rule guard 任務 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
     "brief": {
       "style": "harn-rich",
       "label": "ATM self-hosting first 開卡",
@@ -71,165 +164,5 @@
       "trace_artifacts": [],
       "metrics_summary": []
     }
-  },
-  {
-    "doc_id": "doc_task_0296",
-    "id": "ATM-0-0011",
-    "title": "Context budget 治理補強與文件回寫",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "docs-governance",
-    "phase": "ATM-0",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T23:05:36.3800604+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-05T23:13:04.1935079+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "把 context budget 正式提升為 ATM upstream 可獨立治理的 primitive，並回寫相關 roadmap、extraction plan、adopter plan 與 v0.2 companion 文件。",
-    "related": [
-      "ATM-2-0011"
-    ],
-    "depends": [
-      "ATM-0-0010"
-    ],
-    "acceptance": [
-      "四份 ATM 規劃文件補上 context budget upstream primitive",
-      "明確定義 plugin-context-budget 或等效 guard/adapter 位置",
-      "把 encoding/context budget/neutrality 收斂成 Agent Governance Bundle",
-      "新增對應 ATM 任務卡與 tasks-atm 條目"
-    ],
-    "deliverables": [
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md",
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
-      "docs/agent-briefs/tasks/ATM-2-0011.md"
-    ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 將 context budget、plugin-context-budget 與 Agent Governance Bundle 正式回寫到四份 ATM 規劃文件，並同步修正 ATM-0-0011/ATM-2-0011 任務真相 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM governance bundle 開卡",
-      "summary": "把 context budget 提升成 upstream 可獨立治理能力，並同步回寫相關 md 文件。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0010"
-    },
-    "contracts": {
-      "input": [
-        "encoding 已進入 upstream governance 規劃",
-        "context budget 尚未成為對等 primitive"
-      ],
-      "output": [
-        "context budget primitive 定義",
-        "Agent Governance Bundle 收斂",
-        "新增對應任務卡"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0011 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若 tasks-atm 或 doc_id 不一致，使用既有工具重建。",
-      "execution_steps": [
-        "建立新任務卡",
-        "建立 ATM-2-0011 後續卡",
-        "鎖卡並更新 frontmatter",
-        "回寫四份主文件",
-        "跑 encoding/task-scope/standard gate"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0297",
-    "id": "ATM-2-0011",
-    "title": "Context budget guard",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "open-source-core",
-    "phase": "ATM-2",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立 upstream context budget guard，使 ATM 能獨立治理 token/context 預算、重量文件讀取策略、摘要替代與超額 hard-stop / summarize 流程。",
-    "related": [
-      "ATM-0-0011",
-      "ATM-2-0010"
-    ],
-    "depends": [
-      "ATM-2-0007",
-      "ATM-2-0008",
-      "ATM-2-0010"
-    ],
-    "acceptance": [
-      "定義 ContextBudgetGuard 或等效 governance primitive",
-      "提供 protected surface 與重量資產的 budget policy",
-      "定義 summarize/hard-stop/report schema",
-      "可與 encoding 與 neutrality/boundary guard 收斂成 Agent Governance Bundle"
-    ],
-    "deliverables": [
-      "context budget guard spec",
-      "budget policy schema",
-      "summary/report layout",
-      "standalone smoke / CI guidance"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 context budget guard 任務 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM governance bundle 開卡",
-      "summary": "建立 upstream context budget guard，讓 ATM 可獨立治理 token/context 預算與摘要節流。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0007、ATM-2-0008、ATM-2-0010"
-    },
-    "contracts": {
-      "input": [
-        "governance schema 與 local reference plugins 已定義",
-        "neutrality/boundary guard 已規劃 code/docs surfaces"
-      ],
-      "output": [
-        "context budget primitive",
-        "budget policy schema",
-        "summary/hard-stop/report contract"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退 context budget guard 規格；不得把 3KLife 的 keep/token guard 規則直接寫死成 upstream 私有前提。",
-      "execution_steps": [
-        "定義 context budget primitive",
-        "定義 budget policy 與 report schema",
-        "定義 summarize/hard-stop 流程",
-        "補 standalone smoke guidance"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "id": "ATM-0-0012",
-    "title": "task-lock cross-shard 重複鎖定檢查",
-    "status": "done",
-    "priority": "P0",
-    "phase": "ATM-0",
-    "type": "governance",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0298",
-    "depends": [
-      "ATM-0-0001"
-    ]
   }
 ]

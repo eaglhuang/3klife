@@ -90,98 +90,130 @@
     },
     {
       "name": "tasks-atm-part-11",
-      "title": "Part 11 (items 25-27)",
+      "title": "Part 11 (items 25-26)",
       "range": [
         24,
-        26
+        25
       ]
     },
     {
       "name": "tasks-atm-part-12",
-      "title": "Part 12 (items 28-31)",
+      "title": "Part 12 (items 27-29)",
       "range": [
-        27,
-        30
+        26,
+        28
       ]
     },
     {
       "name": "tasks-atm-part-13",
-      "title": "Part 13 (items 32-35)",
+      "title": "Part 13 (items 30-33)",
       "range": [
-        31,
-        34
+        29,
+        32
       ]
     },
     {
       "name": "tasks-atm-part-14",
-      "title": "Part 14 (items 36-38)",
+      "title": "Part 14 (items 34-37)",
       "range": [
-        35,
-        37
+        33,
+        36
       ]
     },
     {
       "name": "tasks-atm-part-15",
-      "title": "Part 15 (items 39-42)",
+      "title": "Part 15 (items 38-40)",
       "range": [
-        38,
-        41
+        37,
+        39
       ]
     },
     {
       "name": "tasks-atm-part-16",
-      "title": "Part 16 (items 43-46)",
+      "title": "Part 16 (items 41-44)",
       "range": [
-        42,
-        45
+        40,
+        43
       ]
     },
     {
       "name": "tasks-atm-part-17",
-      "title": "Part 17 (items 47-48)",
+      "title": "Part 17 (items 45-47)",
       "range": [
-        46,
-        47
+        44,
+        46
       ]
     },
     {
       "name": "tasks-atm-part-18",
-      "title": "Part 18 (items 49-50)",
+      "title": "Part 18 (items 48-49)",
       "range": [
-        48,
-        49
+        47,
+        48
       ]
     },
     {
       "name": "tasks-atm-part-19",
-      "title": "Part 19 (items 51-54)",
+      "title": "Part 19 (items 50-51)",
       "range": [
-        50,
-        53
+        49,
+        50
       ]
     },
     {
       "name": "tasks-atm-part-20",
-      "title": "Part 20 (items 55-62)",
+      "title": "Part 20 (items 52-55)",
       "range": [
-        54,
-        61
+        51,
+        54
       ]
     },
     {
       "name": "tasks-atm-part-21",
-      "title": "Part 21 (items 63-71)",
+      "title": "Part 21 (items 56-66)",
       "range": [
-        62,
-        70
+        55,
+        65
       ]
     },
     {
       "name": "tasks-atm-part-22",
-      "title": "Part 22 (items 72-72)",
+      "title": "Part 22 (items 67-71)",
+      "range": [
+        66,
+        70
+      ]
+    },
+    {
+      "name": "tasks-atm-part-23",
+      "title": "Part 23 (items 72-75)",
       "range": [
         71,
-        71
+        74
+      ]
+    },
+    {
+      "name": "tasks-atm-part-24",
+      "title": "Part 24 (items 76-80)",
+      "range": [
+        75,
+        79
+      ]
+    },
+    {
+      "name": "tasks-atm-part-25",
+      "title": "Part 25 (items 81-85)",
+      "range": [
+        80,
+        84
+      ]
+    },
+    {
+      "name": "tasks-atm-part-26",
+      "title": "Part 26 (items 86-87)",
+      "range": [
+        85,
+        86
       ]
     }
   ]

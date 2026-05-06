@@ -220,5 +220,17 @@
     "path": "docs/ai_atomic_framework/shards/atm-roadmap-theory.md",
     "title": "AI Atomic Framework Roadmap — 願景・設計原則（§2–§3）",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0043",
+    "path": "docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
+    "title": "ATM 框架演進執行規劃書",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0044",
+    "path": "docs/ai_atomic_framework/關於進化版的原子提案.md",
+    "title": "ATM 框架穩定性保護分析 + ATM-1 全卡檢核報告",
+    "category": "other"
   }
 ]

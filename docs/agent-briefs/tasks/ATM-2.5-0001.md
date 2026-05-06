@@ -66,5 +66,11 @@ Phase B3 核心：實作 atm self-host-alpha --verify --json 命令，機器可�
 - criteria3: atm test --atom hello-world 5/5 PASS
 - criteria4: atm verify --neutrality exit 0
 
+## 2026-05-06 v2 規劃書補丁（追加 acceptance）
+
+- [ ] alpha0 gate 僅驗 deterministic 4 條 criteria。
+- [ ] version history / rollback / evolution metrics 僅作 readiness warning，不阻塞 alpha0 release。
+> 2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）
+
 ## 備註
 - 此命令是 Phase B3 唯一 acceptance gate；3KLife → Phase C（adapter）的前置解鎖條件

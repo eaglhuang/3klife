@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "source": "../關於進化版的原子提案.md",
+  "indexTitle": "關於進化版的原子提案",
+  "indexPath": "docs/ai_atomic_framework/關於進化版的原子提案.md",
+  "type": "markdown-h2",
+  "keepSourceIntact": true,
+  "preambleShard": "evolution-proposal-context",
+  "defaultShard": "evolution-proposal-validation",
+  "shards": [
+    {
+      "name": "evolution-proposal-context",
+      "title": "Context、現況與治理問題",
+      "pattern": "^(Context|2026-05-06|全卡|發現|更新後)"
+    },
+    {
+      "name": "evolution-proposal-thesis",
+      "title": "命題與防護模型",
+      "pattern": "^(命題$|關鍵發現|三層防護|為什麼|結論)"
+    },
+    {
+      "name": "evolution-proposal-evolution",
+      "title": "版號、框架版本與回饋迴圈",
+      "pattern": "^(最新進度|命題 1|命題 2|命題 3|總結)"
+    },
+    {
+      "name": "evolution-proposal-blueprint",
+      "title": "Roadmap 藍圖與融合分析",
+      "pattern": "^(使用者提供|三向|原始管線|需要新增|融合)"
+    },
+    {
+      "name": "evolution-proposal-validation",
+      "title": "驗證來源",
+      "pattern": "."
+    }
+  ]
+}

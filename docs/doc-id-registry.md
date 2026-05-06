@@ -18,12 +18,12 @@
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 178 |
 | 索引類 | `doc_index` | 17 |
-| 任務卡類 | `doc_task` | 307 |
-| AI Agent 專用 | `doc_ai` | 30 |
+| 任務卡類 | `doc_task` | 323 |
+| AI Agent 專用 | `doc_ai` | 31 |
 | Agent Skill 專用 | `doc_agentskill` | 45 |
 | Server 文件類 | `doc_server_<subtype>` | 15 |
-| 其它類 | `doc_other` | 37 |
-| **合計** | — | **711** |
+| 其它類 | `doc_other` | 39 |
+| **合計** | — | **730** |
 
 ---
 
@@ -379,6 +379,19 @@
 | `doc_task_0294` | docs/agent-briefs/tasks/ATM-2-0010.md | [ATM-2-0010] Neutrality boundary rule guard |
 | `doc_task_0297` | docs/agent-briefs/tasks/ATM-2-0011.md | [ATM-2-0011] Context budget guard |
 | `doc_task_0302` | docs/agent-briefs/tasks/ATM-2-0012.md | [ATM-2-0012] neutralityScanner atom + CI（ATM-CORE-0003） |
+| `doc_task_0316` | docs/agent-briefs/tasks/ATM-2-0013.md | [ATM-2-0013] Per-atom folder 以 Atomic ID 命名收斂 |
+| `doc_task_0317` | docs/agent-briefs/tasks/ATM-2-0014.md | [ATM-2-0014] Registry Version History v0.1（schema-additive only） |
+| `doc_task_0318` | docs/agent-briefs/tasks/ATM-2-0015.md | [ATM-2-0015] Hash Drift / Version Diff Report |
+| `doc_task_0319` | docs/agent-briefs/tasks/ATM-2-0016.md | [ATM-2-0016] Test Report Quality Metrics Extension |
+| `doc_task_0320` | docs/agent-briefs/tasks/ATM-2-0017.md | [ATM-2-0017] Regression Matrix Compare Gate |
+| `doc_task_0321` | docs/agent-briefs/tasks/ATM-2-0018.md | [ATM-2-0018] BuildAgentPrompt bootstrap atom（000003） |
+| `doc_task_0322` | docs/agent-briefs/tasks/ATM-2-0019.md | [ATM-2-0019] ExecuteAgentTask effect node dry-run（000004） |
+| `doc_task_0323` | docs/agent-briefs/tasks/ATM-2-0020.md | [ATM-2-0020] ProposeAtomicUpgrade（000012） |
+| `doc_task_0324` | docs/agent-briefs/tasks/ATM-2-0021.md | [ATM-2-0021] HumanReviewGate as reference plugin（000013） |
+| `doc_task_0325` | docs/agent-briefs/tasks/ATM-2-0022.md | [ATM-2-0022] Rollback Registry Pointer & 三段 hash Proof |
+| `doc_task_0328` | docs/agent-briefs/tasks/ATM-2-0023.md | [ATM-2-0023] Atomic Map Schema & Registry |
+| `doc_task_0329` | docs/agent-briefs/tasks/ATM-2-0024.md | [ATM-2-0024] Map-Level Upgrade & Extract-vs-Bump Decision |
+| `doc_task_0330` | docs/agent-briefs/tasks/ATM-2-0025.md | [ATM-2-0025] Cross-Atom Integration Test Runner |
 | `doc_task_0303` | docs/agent-briefs/tasks/ATM-2.5-0001.md | [ATM-2.5-0001] Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI |
 | `doc_task_0304` | docs/agent-briefs/tasks/ATM-2.5-0002.md | [ATM-2.5-0002] Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate |
 | `doc_task_0305` | docs/agent-briefs/tasks/ATM-2.5-0003.md | [ATM-2.5-0003] Multi-Agent 兼容性驗證：confidence gate |
@@ -395,12 +408,15 @@
 | `doc_task_0311` | docs/agent-briefs/tasks/ATM-3-0011.md | [ATM-3-0011] encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter |
 | `doc_task_0312` | docs/agent-briefs/tasks/ATM-3-0012.md | [ATM-3-0012] task-scope / import-boundary 規則包遷移 + @deprecated 標記 |
 | `doc_task_0313` | docs/agent-briefs/tasks/ATM-3-0013.md | [ATM-3-0013] finalize-agent-turn.js wrapper 接入 ATM run envelope |
+| `doc_task_0326` | docs/agent-briefs/tasks/ATM-3-0014.md | [ATM-3-0014] 3KLife UsageEvidence shadow adapter |
 | `doc_task_0269` | docs/agent-briefs/tasks/ATM-4-0001.md | [ATM-4-0001] html-to-ucuf reference case study plan |
 | `doc_task_0270` | docs/agent-briefs/tasks/ATM-4-0002.md | [ATM-4-0002] H2U legacy baseline 與 regression matrix |
 | `doc_task_0279` | docs/agent-briefs/tasks/ATM-4-0003.md | [ATM-4-0003] normalizeCssColor 首個 case atom |
 | `doc_task_0271` | docs/agent-briefs/tasks/ATM-4-0004.md | [ATM-4-0004] parseCssLength 與 parseFragmentList case atoms |
 | `doc_task_0280` | docs/agent-briefs/tasks/ATM-4-0005.md | [ATM-4-0005] Injection plan 與 rollback dry-run |
 | `doc_task_0283` | docs/agent-briefs/tasks/ATM-4-0006.md | [ATM-4-0006] H2U case study 與 Cocos runtime 邊界 |
+| `doc_task_0327` | docs/agent-briefs/tasks/ATM-4-0007.md | [ATM-4-0007] H2U normalizeCssColor v1.0→v1.1 evolution pilot |
+| `doc_task_0331` | docs/agent-briefs/tasks/ATM-4-0008.md | [ATM-4-0008] H2U Map Evolution Pilot |
 | `doc_task_0272` | docs/agent-briefs/tasks/ATM-5-0001.md | [ATM-5-0001] Quick Start 與 API 文件 |
 | `doc_task_0273` | docs/agent-briefs/tasks/ATM-5-0002.md | [ATM-5-0002] Adapter Guide 與 Plugin SDK 文件 |
 | `doc_task_0274` | docs/agent-briefs/tasks/ATM-5-0003.md | [ATM-5-0003] Semver Lifecycle 與 Governance |
@@ -675,6 +691,7 @@
 | `doc_ai_0019` | docs/agent-briefs/agent1-instructions.md | Agent1 Instructions |
 | `doc_ai_0020` | docs/agent-briefs/agent2-instructions.md | Agent2 Instructions |
 | `doc_ai_0021` | docs/agent-briefs/agent2-visual-qa-playbook.md | Agent2 Visual QA Playbook |
+| `doc_ai_0035` | docs/agent-briefs/atm-task-template.md | ATM 任務卡模板 |
 | `doc_ai_0022` | docs/agent-briefs/CheckList.md | Agent Briefs CheckList |
 | `doc_ai_0023` | docs/agent-briefs/Readme.md | Agent 協作手冊 |
 | `doc_ai_0027` | docs/agent-briefs/sanguo-central-brain-rollout-handoff-2026-05-01.md | 三國中台大腦推行計畫交接書 |
@@ -763,10 +780,12 @@
 | `doc_other_0032` | docs/ai_atomic_framework/3klife-coexistence-plan.md | 3KLife × ATM 並行開發協議（Coexistence Plan） |
 | `doc_other_0033` | docs/ai_atomic_framework/3klife-consumption-roadmap.md | 3KLife 長期消費 ATM 路線圖（Consumption Roadmap） |
 | `doc_other_0036` | docs/ai_atomic_framework/3klife-tooling-fate.md | 3KLife 既有治理工具命運表（Tooling Fate） |
+| `doc_other_0044` | docs/ai_atomic_framework/關於進化版的原子提案.md | ATM 框架穩定性保護分析 + ATM-1 全卡檢核報告 |
 | `doc_other_0031` | docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md | AI Atomic Framework 優化藍圖 v0.2 |
 | `doc_other_0029` | docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md | AI Atomic Framework：可獨立開源的 AI Vibe Coding 原子化治理框架 Roadmap |
 | `doc_other_0028` | docs/ai_atomic_framework/AI原子框架開發計畫書.md | AI 原子框架（ATM）開發計畫書 |
 | `doc_other_0037` | docs/ai_atomic_framework/ATM_cross_reference.md | ATM 知識路由索引（ATM Cross-Reference） |
+| `doc_other_0043` | docs/ai_atomic_framework/ATM框架演進執行規劃書.md | ATM 框架演進執行規劃書 |
 | `doc_other_0034` | docs/ai_atomic_framework/multi-agent-compatibility-matrix.md | Multi-AI Agent 兼容性測試矩陣 |
 | `doc_other_0030` | docs/ai_atomic_framework/open-source-extraction-plan.md | AI Atomic Framework 開源拆出計畫 |
 | `doc_other_0039` | docs/ai_atomic_framework/shards/atm-roadmap-foundations.md | AI Atomic Framework Roadmap — 名詞定義・分層・自舉・Genesis（§4–§7） |

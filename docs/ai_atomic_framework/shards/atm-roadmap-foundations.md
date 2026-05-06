@@ -519,7 +519,7 @@ AI Atomic Framework 可以借鑑 UI Atomic Design 的五層模型，但不要照
 
 ```json
 {
-  "workspacePath": "atomic_workbench/atoms/atomic_000123",
+  "workspacePath": "atomic_workbench/atoms/<Atomic ID>",
   "filesCreated": [
     "index.ts",
     "test.ts",
@@ -527,6 +527,8 @@ AI Atomic Framework 可以借鑑 UI Atomic Design 的五層模型，但不要照
   ]
 }
 ```
+
+自 ATM-2-0013 收斂後，這裡的 `workspacePath` 應解讀為 canonical atom home：`atomic_workbench/atoms/<Atomic ID>/`，資料夾名稱直接等於 Atomic ID，不再另外產生 `atomic_000123` 這類 alias folder。
 
 ---
 
