@@ -48,7 +48,7 @@ const FALLBACK_CATEGORIES = [
     'shaderfx',
 ];
 
-// Procedural shader blocks currently live in VfxComposerTool (not vfx-block-registry),
+// Procedural shader blocks currently live in VfxComposerTool; the browser QA loader reads the canonical core registry.
 // so Browser QA keeps a minimal fallback list to include them in smoke runs.
 const PROCEDURAL_BLOCK_FALLBACKS = [
     {
@@ -191,7 +191,7 @@ function ensureTsRuntime() {
 function loadVfxBlockDefs() {
     ensureTsRuntime();
     // eslint-disable-next-line global-require, import/no-dynamic-require
-    const mod = require(path.join(ROOT, 'assets/scripts/tools/vfx-block-registry'));
+    const mod = require(path.join(ROOT, 'assets/scripts/core/config/vfx-block-registry'));
     const list = Array.isArray(mod?.VFX_BLOCK_REGISTRY) ? mod.VFX_BLOCK_REGISTRY : [];
     const mapped = list.map((item) => ({
         id: String(item.id),

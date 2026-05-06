@@ -2,15 +2,18 @@
 doc_id: doc_task_0227
 id: "H2U-REFACTOR-0004"
 priority: "P2"
-owner: "Unassigned"
-status: "open"
+owner: "vs-insiders-gpt-5.4-mini"
+status: "done"
 type: "refactoring"
 phase: "G"
 created: "2026-05-05"
 created_by_agent: "ClaudeCode_claude-sonnet-4-6"
+started_at: "2026-05-06T13:39:27.5799745+08:00"
+started_by_agent: "vs-insiders-gpt-5.4-mini"
+completed_at: "2026-05-06T13:39:27.5799745+08:00"
 related_cards: []
 depends: []
-notes: "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) §C1 / §C2 / §D5 | 阻塞: 無"
+notes: "2026-05-06 | 狀態: done | 驗證: node --check tools_node/run-vfx-browser-qa.js；compute-gate standard 9/9 pass | 變更: 3 支 Phase B 工具移至 .deprecated，run-vfx-browser-qa.js 改接 core registry | 阻塞: none"
 ---
 
 # [H2U-REFACTOR-0004] 隔離 Phase B 工具與修補死引用
@@ -34,14 +37,14 @@ notes: "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_002
 
 ## OUTPUT_CONTRACT
 
-- [ ] 移 3 支 Phase B 工具到 `tools_node/.deprecated/`：
+- [x] 移 3 支 Phase B 工具到 `tools_node/.deprecated/`：
   - `cutover-screen-variant.js`
   - `generate-tab-childpanels.js`
   - `runtime-screen-diff.js`
-- [ ] 在 `.deprecated/` 加 `README.md` 說明：來源、棄用原因、復活路徑
-- [ ] 修補 `run-vfx-browser-qa.js`：移除 vfx-block-registry require，或刪除整個檔案（視該工具是否還活著）
-- [ ] grep 全 repo 確認 3 支被搬走的工具 0 個 active import
-- [ ] compute-gate standard 6/6 pass
+- [x] 在 `.deprecated/` 加 `README.md` 說明：來源、棄用原因、復活路徑
+- [x] 修補 `run-vfx-browser-qa.js`：移除 vfx-block-registry require，或刪除整個檔案（視該工具是否還活著）
+- [x] grep 全 repo 確認 3 支被搬走的工具 0 個 active import
+- [x] compute-gate standard 6/6 pass
 
 ## VALIDATION_CMD
 

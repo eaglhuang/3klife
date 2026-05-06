@@ -1219,10 +1219,14 @@
       "id": "H2U-REFACTOR-0004",
       "priority": "P2",
       "phase": "G",
-      "owner": "Unassigned",
-      "status": "open",
+      "owner": "vs-insiders-gpt-5.4-mini",
+      "status": "done",
       "created": "2026-05-05",
       "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "started_at": "2026-05-06T13:39:27.5799745+08:00",
+      "started_by_agent": "vs-insiders-gpt-5.4-mini",
+      "completed_at": "2026-05-06T13:39:27.5799745+08:00",
+      "completed_by_agent": "vs-insiders-gpt-5.4-mini",
       "type": "refactoring",
       "title": "隔離 Phase B 工具與修補死引用",
       "description": "移 cutover-screen-variant.js / generate-tab-childpanels.js / runtime-screen-diff.js 到 .deprecated/；修補 run-vfx-browser-qa.js 的 vfx-block-registry 死引用",
@@ -1239,7 +1243,7 @@
         "tools_node/.deprecated/README.md",
         "tools_node/run-vfx-browser-qa.js"
       ],
-      "notes": "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) | 阻塞: 無"
+      "notes": "2026-05-06 | 狀態: done | 驗證: node --check tools_node/run-vfx-browser-qa.js；compute-gate standard 9/9 pass | 變更: 3 支 Phase B 工具移至 .deprecated，run-vfx-browser-qa.js 改接 core registry | 阻塞: none"
     },
     {
       "id": "H2U-REFACTOR-0005",
