@@ -73,6 +73,32 @@ function sanitizePathSegment(value, label) {
   return segment;
 }
 
+function isFormalTurnArtifactPath(filePath) {
+  const absolutePath = path.resolve(PROJECT_ROOT, filePath || '');
+  const relativePath = toProjectRelative(absolutePath);
+  const formalRelative = toProjectRelative(FORMAL_ROOT);
+  return relativePath === formalRelative || relativePath.startsWith(`${formalRelative}/`);
+}
+
+function isScratchTurnArtifactPath(filePath) {
+  const absolutePath = path.resolve(PROJECT_ROOT, filePath || '');
+  const relativePath = toProjectRelative(absolutePath);
+  const scratchRelative = toProjectRelative(SCRATCH_ROOT);
+  return relativePath === scratchRelative || relativePath.startsWith(`${scratchRelative}/`);
+}
+
+function describeTurnArtifactStorage() {
+  return {
+    schemaVersion: TURN_ARTIFACT_STORAGE_POLICY.schemaVersion,
+    formalPattern: TURN_ARTIFACT_STORAGE_POLICY.formalPattern,
+    formalRoot: toProjectRelative(FORMAL_ROOT),
+    scratchRoot: toProjectRelative(SCRATCH_ROOT),
+    formalUsage: TURN_ARTIFACT_STORAGE_POLICY.formalUsage,
+    scratchUsage: TURN_ARTIFACT_STORAGE_POLICY.scratchUsage,
+    retention: TURN_ARTIFACT_STORAGE_POLICY.retention,
+  };
+}
+
 function buildFormalTurnArtifactPath({ workflow, task, generatedAt = new Date() } = {}) {
   const datePart = normalizeDatePart(generatedAt);
   const workflowSegment = sanitizePathSegment(workflow, 'workflow');
@@ -90,15 +116,10 @@ function buildFormalTurnArtifactPath({ workflow, task, generatedAt = new Date() 
 }
 
 function classifyTurnArtifactPath(filePath) {
-  const absolutePath = path.resolve(PROJECT_ROOT, filePath || '');
-  const relativePath = toProjectRelative(absolutePath);
-  const formalRelative = toProjectRelative(FORMAL_ROOT);
-  const scratchRelative = toProjectRelative(SCRATCH_ROOT);
-
-  if (relativePath === formalRelative || relativePath.startsWith(`${formalRelative}/`)) {
+  if (isFormalTurnArtifactPath(filePath)) {
     return 'formal';
   }
-  if (relativePath === scratchRelative || relativePath.startsWith(`${scratchRelative}/`)) {
+  if (isScratchTurnArtifactPath(filePath)) {
     return 'scratch';
   }
   return 'custom';
@@ -113,6 +134,9 @@ module.exports = {
   toProjectRelative,
   normalizeDatePart,
   sanitizePathSegment,
+  isFormalTurnArtifactPath,
+  isScratchTurnArtifactPath,
+  describeTurnArtifactStorage,
   buildFormalTurnArtifactPath,
   classifyTurnArtifactPath,
 };

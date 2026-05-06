@@ -176,6 +176,8 @@ function runContextSummary(options = {}) {
   pushArgs(args, '--files', options.files);
   if (options.changed) args.push('--changed');
   if (options.maxFiles) args.push('--max-files', String(options.maxFiles));
+  if (options.maxKnown) args.push('--max-known', String(options.maxKnown));
+  if (options.maxNeed) args.push('--max-need', String(options.maxNeed));
   if (options.artifactJson) args.push('--artifact-json');
   return runNodeTool('generate-context-summary.js', args);
 }

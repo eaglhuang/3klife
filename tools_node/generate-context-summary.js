@@ -72,6 +72,16 @@ function parseArgs(argv) {
       i += 1;
       continue;
     }
+    if (arg === '--max-known') {
+      args.maxKnown = Number(argv[i + 1] || args.maxKnown);
+      i += 1;
+      continue;
+    }
+    if (arg === '--max-need') {
+      args.maxNeed = Number(argv[i + 1] || args.maxNeed);
+      i += 1;
+      continue;
+    }
     if (arg === '--json') {
       args.json = true;
       continue;
@@ -79,6 +89,16 @@ function parseArgs(argv) {
     if (arg === '--artifact-json') {
       args.artifactJson = true;
     }
+  }
+
+  if (!Number.isInteger(args.maxFiles) || args.maxFiles <= 0) {
+    throw new Error(`--max-files 必須是正整數，目前收到：${args.maxFiles}`);
+  }
+  if (!Number.isInteger(args.maxKnown) || args.maxKnown <= 0) {
+    throw new Error(`--max-known 必須是正整數，目前收到：${args.maxKnown}`);
+  }
+  if (!Number.isInteger(args.maxNeed) || args.maxNeed <= 0) {
+    throw new Error(`--max-need 必須是正整數，目前收到：${args.maxNeed}`);
   }
 
   return args;

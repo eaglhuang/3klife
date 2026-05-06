@@ -107,16 +107,16 @@
 | P1 | [HARN-GOV-0001](tasks/HARN-GOV-0001.md) | 建立 Harness Capability Boundary Matrix | open | 0% | GitHubCopilot |
 | P1 | [HARN-GOV-0002](tasks/HARN-GOV-0002.md) | 更新 Agent Collaboration 強制規則入口 | open | 0% | GitHubCopilot |
 | P2 | [HARN-GOV-0003](tasks/HARN-GOV-0003.md) | 更新 Task Card Template 的 Harness 欄位 | done | 100% | GitHubCopilot |
-| P0 | [HARN-PILOT-0001](tasks/HARN-PILOT-0001.md) | 執行 Doc-only Pilot | open | 0% | GitHubCopilot |
-| P1 | [HARN-PILOT-0002](tasks/HARN-PILOT-0002.md) | 執行 Tooling-code Pilot | open | 0% | GitHubCopilot |
+| P0 | [HARN-PILOT-0001](tasks/HARN-PILOT-0001.md) | 執行 Doc-only Pilot | done | 100% | GitHubCopilot |
+| P1 | [HARN-PILOT-0002](tasks/HARN-PILOT-0002.md) | 執行 Tooling-code Pilot | done | 100% | GitHubCopilot |
 | P2 | [HARN-PILOT-0003](tasks/HARN-PILOT-0003.md) | 執行 UI-QA Pilot | open | 0% | GitHubCopilot |
 
 ### HARN 審核摘要（2026-05-04）
 
-- 全 HARN 任務卡盤點：34 張；done 23 張、open 11 張、in-progress 0 張。
+- 全 HARN 任務卡盤點：34 張；done 25 張、open 9 張、in-progress 0 張。
 - 34 張 HARN 任務卡皆已回寫 `## 審核結果（2026-05-04）`，內容包含審核結論、驗證證據與需修改事項。
 - 已達成鏈：`HARN-ARCH-*`、`HARN-LOG-*`、`HARN-FIX-0001`、`HARN-UI-0001`、`HARN-GOV-0003`、`HARN-ART-0001/0002/0003/0004`、`HARN-DEMO-0003`、`HARN-HDO-0001/0002/0003/0004`、`HARN-TRC-0001/0002/0003/0004`。
-- 未達成主鏈：`HARN-EVAL-*`、`HARN-MET-*`、`HARN-GOV-0001/0002`、`HARN-PILOT-*` 仍為 open；artifact schema、validator CLI、storage policy helper、finalize default path、handoff task scope check、execution trace schema/middleware/collector/finalize attachment 已落地，後續鏈可開始重用這條 gate。
+- 未達成主鏈：`HARN-EVAL-*`、`HARN-MET-*`、`HARN-GOV-0001/0002`、`HARN-PILOT-0003` 仍為 open；artifact schema、validator CLI、storage policy helper、finalize default path、handoff task scope check、execution trace schema/middleware/collector/finalize attachment 已落地，後續鏈可開始重用這條 gate。
 - 下一個應優先落地的根卡：`HARN-EVAL-0001`；TRC chain 已完成，下一步可建立 workflow path taxonomy。
 
 ## 依賴維護原則

@@ -6,14 +6,18 @@ phase: Phase4
 created: 2026-05-04
 created_by_agent: GitHubCopilot
 owner: GitHubCopilot
-status: open
+status: done
 type: pilot
 chain_id: HARN-CHAIN-PILOT
 chain_step: 2/3
 sensor_triggered_by: harness-rollout planning
 depends:
   - HARN-TRC-0004
-notes: "2026-05-04 | 狀態: open | 驗證: pending | 變更: GitHubCopilot 建立 Tooling-code Pilot 任務卡 | 阻塞: depends HARN-TRC-0004"
+started_at: "2026-05-06T21:47:50.1031177+08:00"
+started_by_agent: "vs-insiders-gpt-5.4-mini"
+completed_at: "2026-05-06T21:58:54.6000309+08:00"
+completed_by_agent: "vs-insiders-gpt-5.4-mini"
+notes: "2026-05-06 | 狀態: done | 驗證: 3 次 tooling-code pilot run pass；trace summary pass；handoff-diff 皆為 warn（主因為既有 ATM dirty worktree），最常見 drift 為 dirty-but-unreported 與 sample 對應外部雜訊 | 變更: vs-insiders-gpt-5.4-mini 完成 3 次 tooling-code pilot，分別驗證 generate-context-summary、context-guard-core、turn-artifact-storage 的小型改動；每次皆保存 artifact、handoff diff、trace summary | 阻塞: none"
 ---
 
 # [HARN-PILOT-0002] 執行 Tooling-code Pilot
@@ -40,11 +44,11 @@ tooling-code workflow 是最能驗證 trace 價值的第二類樣本，因為：
 
 ## OUTPUT_CONTRACT
 
-- [ ] 完成至少 3 次 tooling-code pilot run
-- [ ] 每次 run 都保留 artifact、handoff diff、trace summary
-- [ ] 觀察 trace 是否足以區分正常路徑與多餘重試
-- [ ] 產出一份 tooling-code pilot 摘要，記錄最常見 drift 類型
-- [ ] 將結果提供給 metrics / health report 校準
+- [x] 完成至少 3 次 tooling-code pilot run
+- [x] 每次 run 都保留 artifact、handoff diff、trace summary
+- [x] 觀察 trace 是否足以區分正常路徑與多餘重試
+- [x] 產出一份 tooling-code pilot 摘要，記錄最常見 drift 類型
+- [x] 將結果提供給 metrics / health report 校準
 
 ## VALIDATION_CMD
 
@@ -71,8 +75,8 @@ git checkout scratch/
 ---
 *由 Harness rollout planning 開立 | 2026-05-04*
 
-## 審核結果（2026-05-04）
+## 審核結果（2026-05-06）
 
-- 審核結論：未達成（依賴未滿）
-- 驗證證據：TRC-0004 尚未交付；tooling-code pilot run 未執行。
-- 需修改：等 trace summary 接入 finalize 後執行至少 3 次 tooling-code pilot。
+- 審核結論：通過
+- 驗證證據：3 次 tooling-code pilot 已完成；`generate-context-summary.js`、`context-guard-core.js`、`turn-artifact-storage.js` 皆有對應 artifact 與 trace summary；trace summary 皆為 pass
+- 觀察：handoff-diff 一致呈現 warn，主要不是工具本身壞掉，而是 repo 內既有 ATM dirty worktree 讓 dirty-but-unreported 成為最常見 drift 類型；這些結果可直接回餵 metrics / health report
