@@ -92,7 +92,7 @@
     "title": "JS/TS LanguageAdapter reference",
     "owner": "GitHubCopilot",
     "priority": "P1",
-    "status": "in-progress",
+    "status": "done",
     "type": "adapter",
     "phase": "ATM-1",
     "created": "2026-05-05",
@@ -117,7 +117,7 @@
       "JS/TS import policy fixture",
       "test command runner contract"
     ],
-    "notes": "2026-05-06 | 狀態: in-progress | 驗證: pending | 變更: vs-code-github-copilot 開始處理 JS/TS LanguageAdapter reference | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:language-js / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 6f4bcaa 建立 JS/TS LanguageAdapter reference、import scan、forbidden import fixture、entrypoint rule 與 delegated test command runner contract | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
@@ -144,12 +144,35 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/language-js/package.json",
+        "AI-Atomic-Framework/packages/language-js/src/index.ts",
+        "AI-Atomic-Framework/packages/language-js/src/language-js-adapter.mjs",
+        "AI-Atomic-Framework/packages/language-js/README.md",
+        "AI-Atomic-Framework/scripts/validate-language-js.mjs",
+        "AI-Atomic-Framework/tests/language-js-fixtures/import-policy.fixture.json",
+        "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 6f4bcaa",
+        "npm install",
+        "npm run packages:list",
+        "npm run validate:language-js",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff verified",
       "trace_artifacts": [],
-      "metrics_summary": []
-    }
+      "metrics_summary": [
+        "upstream commit 6f4bcaa",
+        "valid JS/TS compute atom passes language adapter validation",
+        "forbidden import fixture fails with ATM_JS_FORBIDDEN_IMPORT",
+        "missing entrypoint export fails with ATM_JS_ENTRYPOINT_EXPORT_MISSING",
+        "test/typecheck/lint commands are delegated to project package scripts"
+      ]
+    },
+    "completed_at": "2026-05-06T14:51:24+08:00"
   },
   {
     "doc_id": "doc_task_0257",
