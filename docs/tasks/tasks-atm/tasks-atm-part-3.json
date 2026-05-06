@@ -148,13 +148,13 @@
     "title": "上游 repo product charter 與 README",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "in-progress",
     "type": "open-source-core",
     "phase": "ATM-1",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T13:13:43+08:00",
+    "started_by_agent": "vs-code-github-copilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -180,7 +180,7 @@
       "README 說明 Default Governance Bundle 是官方預設體驗，但不是 packages/core hard dependency",
       "README 說明 root-drop / zero-install agent bootstrap：使用者放入 ATM 後，任意 AI agent 讀 README/AGENTS 即可開卡、鎖 scope、跑 guard、保存 artifacts/logs/evidence"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 Default Governance Bundle 與 Agent Operating Layer product charter 要求 | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: in-progress | 驗證: pending | 變更: vs-code-github-copilot 開始處理 upstream product charter、README、MIT LICENSE、CONTRIBUTING 與 architecture/positioning 文件 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
@@ -205,7 +205,7 @@
         "補 unit/integration fixture",
         "跑 package 驗證",
         "回寫 3KLife tracking notes",
-        "確認 product charter 同時涵蓋 Core contracts、Default Governance Bundle、ProjectAdapter 三層"
+        "確認 product charter 同時涵蓋 Core contracts、Agent Operating Layer、Default Governance Bundle、ProjectAdapter 四層"
       ]
     },
     "harness_evidence": {
