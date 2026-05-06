@@ -6,11 +6,14 @@ phase: ATM-1.5
 created: 2026-05-05
 created_by_agent: GitHubCopilot
 owner: GitHubCopilot
-status: open
+status: done
+started_at: "2026-05-06T09:15:48.254Z"
+started_by_agent: vs-code-github-copilot
+completed_at: "2026-05-06T17:24:55.4854274+08:00"
 type: implementation
 depends:
   - ATM-1.5-0001
-notes: "屬 upstream AI-Atomic-Framework repo"
+notes: "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d3ac9cf 新增 atomic-registry.json、CLI `verify --self`、registry selfVerification schema 與 drift 檢查；legacy planning ID ATM-CORE-0001 仍以 registry selfVerification metadata 保留，現行 atomId 維持 `atom.core-seed` | 阻塞: none"
 ---
 # [ATM-1.5-0002] Seed 自我驗證：產生第一份 atomic-registry.json
 

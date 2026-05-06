@@ -1,5 +1,20 @@
 [
   {
+    "id": "ATM-3-0013",
+    "title": "finalize-agent-turn.js wrapper 接入 ATM run envelope",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0313",
+    "depends": [
+      "ATM-3-0006",
+      "ATM-3-0007"
+    ]
+  },
+  {
     "doc_id": "doc_task_0314",
     "id": "ATM-0-0013",
     "title": "tasks-atm.json thin index 與細分片",
