@@ -1,5 +1,72 @@
 [
   {
+    "doc_id": "doc_task_0283",
+    "id": "ATM-4-0006",
+    "title": "H2U case study 與 Cocos runtime 邊界",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
+    "status": "open",
+    "type": "case-study-policy",
+    "phase": "ATM-4",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+    "related": [],
+    "depends": [
+      "ATM-4-0002",
+      "ATM-3-0005",
+      "ATM-2.5-0002"
+    ],
+    "acceptance": [
+      "Cocos Component/Node/Prefab 明確禁止進 compute atom",
+      "H2U fidelity/domain scoring 僅屬 case study plugin",
+      "case study 可關閉而不影響 core",
+      "case study 啟動條件：self-hosting alpha0 deterministic gate 全綠",
+      "第一輪只允許 dry-run injection + rollback plan，不替換 draft-builder 主幹"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
+      "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 後置條件：alpha0 全綠後只以 dry-run/rollback 進入 | 阻塞: alpha0 gate 未全綠",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM v0.2 整合開卡",
+      "summary": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0002、ATM-3-0005"
+    },
+    "contracts": {
+      "input": [
+        "v0.2 companion analysis 已確認可作務實化補充"
+      ],
+      "output": [
+        "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
+        "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0272",
     "id": "ATM-5-0001",
     "title": "Quick Start 與 API 文件",
@@ -132,76 +199,6 @@
         "跑 adapter/case 驗證",
         "回寫 tracking notes",
         "補充 TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 的 host 實作指南"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0274",
-    "id": "ATM-5-0003",
-    "title": "Semver Lifecycle 與 Governance",
-    "owner": "GitHubCopilot",
-    "priority": "P1",
-    "status": "open",
-    "type": "governance",
-    "phase": "ATM-5",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立開源專案版本治理、deprecated policy、breaking change RFC 與 release flow。",
-    "related": [],
-    "depends": [
-      "ATM-5-0001"
-    ],
-    "acceptance": [
-      "MAJOR/MINOR/PATCH 對應 Spec/Adapter/CLI 變更",
-      "adapter compatibility matrix 有格式",
-      "breaking change 需 RFC",
-      "release owner / maintainer duty matrix 已定義",
-      "package naming policy 覆蓋 core / cli / plugin-* / adapter-*",
-      "provenance 與 deprecation / migration policy 已定義"
-    ],
-    "deliverables": [
-      "docs/LIFECYCLE.md",
-      "docs/GOVERNANCE.md",
-      "CHANGELOG.md policy",
-      "release checklist"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 release owner、package naming、provenance 與 deprecation 實務要求 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "建立開源專案版本治理、deprecated policy、breaking change RFC 與 release flow。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "docs/LIFECYCLE.md",
-        "docs/GOVERNANCE.md",
-        "CHANGELOG.md policy",
-        "release checklist"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {
