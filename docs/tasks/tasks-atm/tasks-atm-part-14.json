@@ -1,0 +1,217 @@
+[
+  {
+    "doc_id": "doc_task_0292",
+    "id": "ATM-0-0010",
+    "title": "Self-hosting first 邊界與中立性 guard 落地",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "docs-governance",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-05T22:47:03.1427368+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-05T22:58:39.0168805+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 ATM 規劃正式收斂為 upstream self-hosting first，回寫主文件並新增 docs neutrality 與 boundary guard 後續任務。",
+    "related": [],
+    "depends": [
+      "ATM-0-0009"
+    ],
+    "acceptance": [
+      "A/B/Roadmap 同步寫入 upstream self-hosting first 與 hard gates",
+      "Roadmap 補 neutrality/boundary guard 設計",
+      "新增 ATM-1-0010 與 ATM-2-0010 任務卡",
+      "ATM-3/ATM-4 明確標成 downstream-only phase"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+      "docs/agent-briefs/tasks/ATM-1-0010.md",
+      "docs/agent-briefs/tasks/ATM-2-0010.md"
+    ],
+    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 回寫 self-hosting first、self-hosting alpha gate、docs neutrality 與 neutrality/boundary guard 到三份主文件，並新增 ATM-1-0009/0010、ATM-2-0010 任務 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM self-hosting first 開卡",
+      "summary": "把 upstream self-hosting first、文件中立性與 boundary guard 正式回寫到 ATM 主規劃。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0009"
+    },
+    "contracts": {
+      "input": [
+        "已確認 upstream 不得依賴 3KLife 工具",
+        "需同步 A/B/Roadmap 與 tasks-atm"
+      ],
+      "output": [
+        "更新 self-hosting first 文件真相",
+        "新增 docs neutrality audit 任務",
+        "新增 neutrality/boundary rule guard 任務"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0010 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若 doc_id/manifest 異常，使用既有工具重建，不手動複製代號。",
+      "execution_steps": [
+        "建立新任務卡",
+        "同步 tasks-atm",
+        "鎖卡並更新 frontmatter",
+        "回寫三份主文件",
+        "跑 encoding/task-scope/standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0295",
+    "id": "ATM-1-0009",
+    "title": "Self-hosting alpha proof",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "open-source-core",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "在 standalone upstream repo 內完成 self-hosting alpha proof，證明 AI agent 只讀 README/AGENTS/.atm profile 即可完成 first task、scope lock、artifact/log/evidence 與 first atom smoke。",
+    "related": [
+      "ATM-1-0010",
+      "ATM-2-0010"
+    ],
+    "depends": [
+      "ATM-1-0008",
+      "ATM-2-0008"
+    ],
+    "acceptance": [
+      "空白或 sandbox repo 可在不依賴 3KLife 工具下完成 atm init/adopt",
+      "AI agent 只讀 README/AGENTS/.atm profile 即可建立 first task、scope lock、artifact/log/evidence",
+      "standalone smoke 不需引用 3KLife/Cocos/html-to-ucuf 或本地治理工具",
+      "作為 Phase B 進入 downstream adapter 前的硬 gate"
+    ],
+    "deliverables": [
+      "standalone self-hosting alpha checklist",
+      "agent bootstrap smoke fixture",
+      "first task/lock/artifact/log/evidence proof",
+      "Phase B gate summary"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 self-hosting alpha proof gate 任務 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM self-hosting first 開卡",
+      "summary": "建立 upstream standalone self-hosting alpha gate，先證明 ATM 在外部 repo 可自舉，再進 downstream adapter。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0008、ATM-2-0008"
+    },
+    "contracts": {
+      "input": [
+        "zero-install bootstrap 與 local governance reference plugins 已可運作",
+        "第一輪 smoke 不得依賴 3KLife 工具"
+      ],
+      "output": [
+        "standalone self-hosting alpha checklist",
+        "bootstrap smoke proof",
+        "Phase B exit gate"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡 touched files；若 standalone smoke 仍含 3KLife 假設，保持卡片 open 不偷關卡。",
+      "execution_steps": [
+        "定義 self-hosting alpha gate",
+        "建立 standalone smoke fixture",
+        "驗證 first task/lock/artifact/log/evidence 流程",
+        "回寫 Phase B gate summary"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0293",
+    "id": "ATM-1-0010",
+    "title": "Upstream docs neutrality audit",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "open-source-core",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "全盤掃描 upstream README、AGENTS、docs、examples、templates 與 prompt assets，確認不含 3KLife、Cocos、html-to-ucuf 或本地工具前提。",
+    "related": [
+      "ATM-1-0009",
+      "ATM-2-0010"
+    ],
+    "depends": [
+      "ATM-1-0001",
+      "ATM-1-0008"
+    ],
+    "acceptance": [
+      "upstream README/AGENTS/docs/examples/templates 不再含 adopter 私有資訊",
+      "產出 banned-term 與 adopter-only reference 清單",
+      "文件敘事不再暗示 3KLife/task-lock/compute-gate/doc-id 是 upstream 前提",
+      "可作為 self-hosting alpha gate 的一部分"
+    ],
+    "deliverables": [
+      "AI-Atomic-Framework/README.md neutrality checklist",
+      "AI-Atomic-Framework/docs/** audit scope",
+      "AI-Atomic-Framework/examples/** audit scope",
+      "AI-Atomic-Framework/templates/** audit scope"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 upstream docs neutrality audit 任務 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM self-hosting first 開卡",
+      "summary": "建立 upstream 文件去污染與中立性稽核，避免 README/docs 再帶入 3KLife 私有資訊。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0001、ATM-1-0008"
+    },
+    "contracts": {
+      "input": [
+        "upstream product charter 與 zero-install bootstrap 已定義",
+        "upstream docs 不得綁定 adopter 私有資訊"
+      ],
+      "output": [
+        "upstream docs neutrality audit checklist",
+        "banned-term scan scope",
+        "adopter-only reference migration list"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡 touched files；upstream docs 若仍含 adopter 私有敘事，保持卡片 open 不偷關卡。",
+      "execution_steps": [
+        "盤點 upstream docs surfaces",
+        "定義 banned terms 與 protected surfaces",
+        "補 audit checklist",
+        "對齊 self-hosting alpha gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  }
+]
