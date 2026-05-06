@@ -178,5 +178,11 @@
     "path": ".github/instructions/ucuf-compliance.instructions.md",
     "title": "UCUF CompositePanel 合規指令",
     "category": "ai"
+  },
+  {
+    "id": "doc_ai_0035",
+    "path": "docs/agent-briefs/atm-task-template.md",
+    "title": "ATM 任務卡模板",
+    "category": "ai"
   }
 ]

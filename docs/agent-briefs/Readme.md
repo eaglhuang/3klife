@@ -60,6 +60,7 @@
 2. 讀自己的 `agentX-instructions.md`。
 3. 查 [ui-quality-todo.json](C:\Users\User\3KLife\docs\ui-quality-todo.json) 與 [CheckList.md](C:\Users\User\3KLife\docs\agent-briefs\CheckList.md (doc_ai_0022)) (doc_ai_0022)，確認目前卡片狀態、依賴與 owner。
 4. 若要做的是新範圍，先開卡再開始。
+- ATM 系列 open 卡請先套用 [atm-task-template.md](atm-task-template.md)，並優先回填 `hostKind`、`targetRepo`、`alphaGate`、`allowed_files`、`forbidden_files`、`non_goals`、`executionMode`。
 5. 若決定開始做，先鎖卡：`status=in-progress`、補 `started_at` / `started_by_agent`、更新 `notes`。
 6. 若只是 bug 修復，可先做最小修補，但 commit 仍要遵守 bug 格式並記錄方法。
 

@@ -128,15 +128,16 @@
     "doc_id": "doc_task_0250",
     "id": "ATM-0-0006",
     "title": "ATM 任務卡模板與開卡規則",
-    "owner": "GitHubCopilot",
+    "owner": "vs-insiders-gpt-5.4-mini",
     "priority": "P1",
-    "status": "open",
+    "status": "done",
     "type": "docs",
     "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T12:50:58.8606404+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "completed_at": "2026-05-06T12:52:45.2848800+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -147,14 +148,14 @@
       "ATM-0-0003"
     ],
     "acceptance": [
-      "模板包含 hostKind/packageScope/adapterScope/validation_cmd/rollback_hint",
+      "模板包含 hostKind/targetRepo/alphaGate/packageScope/adapterScope/allowed_files/forbidden_files/non_goals/executionMode/validation_cmd/rollback_hint",
       "新 ATM 卡可由 task-card-opener 一致生成"
     ],
     "deliverables": [
       "docs/agent-briefs/atm-task-template.md",
       "task-card-opener 使用說明補充"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: encoding passed；standard gate 受既有 dirty files 阻擋 | 變更: 建立 ATM 任務卡模板並補充開卡欄位規則 | 阻塞: 既有 task-scope 雜訊",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 開源化開卡",
