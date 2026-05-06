@@ -13,9 +13,17 @@ const {
   writeJson,
   writeText,
 } = require('./lib/ucuf-recipe-utils');
+const {
+  isTasksAtmIndexPath,
+  upsertTaskInTasksAtmStore,
+} = require('./lib/tasks-atm-shard-store');
 
 function todayIso() {
   return new Date().toISOString().split('T')[0];
+}
+
+function getDefaultAgentName() {
+  return String(process.env.AGENT_IDENTITY || 'GitHubCopilot').trim();
 }
 
 function nowRfc3339() {
@@ -532,13 +540,13 @@ function printHelp() {
     '',
     '常用選項：',
     '  --description     任務摘要 / 說明',
-    '  --owner           預設 Copilot',
+    '  --owner           預設 AGENT_IDENTITY；未設定時回落 GitHubCopilot',
     '  --priority        預設 P1',
     '  --status          預設 open',
     '  --type            預設 implementation',
     '  --phase           預設 M0',
     '  --created         預設今日 YYYY-MM-DD',
-    '  --created-by-agent 預設 GitHubCopilot',
+    '  --created-by-agent 預設 AGENT_IDENTITY；未設定時回落 GitHubCopilot',
     '  --related         以逗號、|、; 或換行分隔的相關卡號',
     '  --depends         以逗號、|、; 或換行分隔的依賴卡號',
     '  --acceptance      驗收條件清單',
@@ -628,15 +636,15 @@ function main() {
     docId,
     id,
     title,
-    owner: getArg(process.argv, 'owner', 'GitHubCopilot'),
+    owner: getArg(process.argv, 'owner', getDefaultAgentName()),
     priority: getArg(process.argv, 'priority', 'P1'),
     status: getArg(process.argv, 'status', 'open'),
     type: getArg(process.argv, 'type', 'implementation'),
     phase: getArg(process.argv, 'phase', 'M0'),
     created: getArg(process.argv, 'created', todayIso()),
-    createdByAgent: getArg(process.argv, 'created-by-agent', 'GitHubCopilot'),
+    createdByAgent: getArg(process.argv, 'created-by-agent', getDefaultAgentName()),
     startedAt: getArg(process.argv, 'started-at', ''),
-    startedByAgent: getArg(process.argv, 'started-by-agent', ''),
+    startedByAgent: getArg(process.argv, 'started-by-agent', getDefaultAgentName()),
     chainId: getArg(process.argv, 'chain-id', ''),
     chainStep: getArg(process.argv, 'chain-step', ''),
     sensorTriggeredBy: getArg(process.argv, 'sensor-triggered-by', ''),
@@ -685,18 +693,26 @@ function main() {
 
   if (jsonOutArg) {
     const jsonPath = resolvePath(jsonOutArg);
-    const existing = loadJsonFileIfExists(jsonPath);
     let outputJson;
 
-    if (jsonKind === 'ui-quality-task-shard') {
+    if (jsonKind === 'task-aggregate' && isTasksAtmIndexPath(PROJECT_ROOT, jsonPath)) {
+      const result = upsertTaskInTasksAtmStore(PROJECT_ROOT, task, { dryRun });
+      outputJson = result.indexStub;
+      if (dryRun) {
+        printDryRunArtifact('json', `${JSON.stringify(outputJson, null, 2)}\n`);
+      }
+    } else if (jsonKind === 'ui-quality-task-shard') {
+      const existing = loadJsonFileIfExists(jsonPath);
       outputJson = upsertTaskInUiShard(existing, task);
+      writeJson(jsonPath, outputJson, dryRun);
     } else if (jsonKind === 'task-aggregate') {
+      const existing = loadJsonFileIfExists(jsonPath);
       outputJson = upsertTaskInAggregate(existing, task);
+      writeJson(jsonPath, outputJson, dryRun);
     } else {
       outputJson = task;
+      writeJson(jsonPath, outputJson, dryRun);
     }
-
-    writeJson(jsonPath, outputJson, dryRun);
   } else if (dryRun) {
     printDryRunArtifact('json', `${JSON.stringify(task, null, 2)}\n`);
   }
