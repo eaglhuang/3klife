@@ -1,101 +1,154 @@
 [
   {
-    "doc_id": "doc_task_0341",
-    "id": "ATM-1-0011",
-    "title": "統一 Atomic ID canonical 命名並清除雙軌識別",
-    "owner": "vs-code-gpt-5.4",
+    "doc_id": "doc_task_0338",
+    "id": "ATM-2-0032",
+    "title": "Polymorphic Atom Template",
+    "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "done",
-    "type": "open-source-core",
-    "phase": "ATM-1",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
     "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4",
-    "started_at": "2026-05-07T12:07:31+08:00",
-    "started_by_agent": "vs-code-gpt-5.4",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "現行 ATM 規劃把 task card ID、planning `ATM-CORE-*` 與 upstream spec/registry 的 dot-notation（如 `atom.core-seed`、`atom.plugin-rule-guard.neutrality-scanner`）混成多層識別，導致 Agent 合法地把 dot-notation 當 canonical atomic id。此卡要求把 Atomic ID 收斂為唯一主鍵 `ATM-{bucket}-{NNNN}`（4 位流水號），dot-notation 只能退回 `name/logicalName`；並同步修正 roadmap、active plan、evolution docs、schema、registry、fixtures、validators 與 workbench path，避免再出現第二種 atom id。",
-    "related": [
-      "ATM-1.5-0001",
-      "ATM-1.5-0002",
-      "ATM-2-0012"
-    ],
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "7/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "為「多形原子」建立規範：一個 polymorphic template + 多個 param-spec 各自一份，實例化結果 lazy 產生不寫進 registry。template 自身是 active；具體實例為 validated。與 behavior.evolve 整合：升版時 template 升 → 所有實例自動繼承新版邏輯。",
+    "related": [],
     "depends": [
-      "ATM-0-0002",
-      "ATM-1-0003"
+      "ATM-2-0026",
+      "ATM-2-0029"
     ],
     "acceptance": [
-      "upstream schema 與 validators 對 canonical Atomic ID 有 hard-fail pattern，`id` / `atomId` 不再接受 dot-notation",
-      "seed 與 neutrality scanner 等既有 atom 全面改用 `ATM-CORE-*` canonical id，且不再把 `legacyPlanningId` 當第二識別主鍵",
-      "名詞定義文件與 ATM 規劃文件明確區分 `task card id`、`atomicId`、`mapId`、`logicalName`，不再把 `atom.*` / `map.*` 當主 id",
-      "roadmap、active plan、evolution proposal 與相關 shards 的示例全部統一為 `ATM-CORE-0001` 類格式；語意名稱移到非 id 欄位",
-      "fixtures / tests / validation script 新增 fail-fast 防線，未來若再把 dot-notation 塞回 canonical id 會直接紅燈"
+      "polymorphic-template.schema.json 定義 template 結構：parametricInputs / parametricOutputs / paramConstraint",
+      "param-spec.schema.json 定義 param 實例 spec：templateRef / paramValues",
+      "實例化合約：runtime 產生 instance；不寫進 registry hot path",
+      "behavior.polymorphize 行為：active atom + param-spec 集合 → polymorphic template + N 個 validated 實例",
+      "behavior.evolve 對 template 升版時，所有實例自動繼承（透過 templateRef@version）",
+      "fixtures：1 個 template + 3 種 param 變體 + 升版 propagation 測試"
     ],
     "deliverables": [
-      "AI-Atomic-Framework/schemas/atomic-spec.schema.json",
-      "AI-Atomic-Framework/schemas/registry.schema.json",
-      "AI-Atomic-Framework/atomic-registry.json",
-      "AI-Atomic-Framework/specs/atom-seed-spec.json",
-      "AI-Atomic-Framework/specs/neutrality-scanner.atom.json",
-      "AI-Atomic-Framework/packages/core/seed.js",
-      "AI-Atomic-Framework/scripts/validate-neutrality-scanner.mjs 與相關 fixtures/tests",
-      "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-      "docs/ai_atomic_framework/關於進化版的原子提案.md 與對應 shards/active planning docs"
+      "schemas/atomic-spec/polymorphic-template.schema.json",
+      "schemas/atomic-spec/param-spec.schema.json",
+      "packages/core/src/spec/polymorphic-instance.ts",
+      "fixtures/polymorphic/template-with-3-variants.json"
     ],
-    "notes": "2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4 開始執行 ATM-1-0011，先收斂 upstream canonical Atomic ID 契約與 downstream 規劃文件示例 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: AI-Atomic-Framework npm test/typecheck/lint 與 validate scripts 全綠；3KLife encoding checks 與 task-lock cross-shard test 通過 | 變更: upstream commit 9c1205f + downstream commits 72a3301/ddbdcb6/a3e2798 | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 7/8）| 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游契約修正開卡",
-      "summary": "收斂 Atomic ID 為唯一 canonical 主鍵，並清除 planning / schema / registry / fixture 的雙軌識別。",
-      "position": "ATM-1",
-      "prereq": "ATM-0-0002、ATM-1-0003 已完成；ATM-1.5-0001/0002 與 ATM-2-0012 為受影響實作/追蹤卡"
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "多形原子規範：template + param-spec lazy 實例化，升版時所有變體自動繼承。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0026 / ATM-2-0029"
+    }
+  },
+  {
+    "doc_id": "doc_task_0339",
+    "id": "ATM-2-0033",
+    "title": "Atomization & Infection Adapter Contract",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "adapter",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "8/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "在 ProjectAdapter 邊界定義 behavior.atomize 與 behavior.infect 的合約：legacy URI 解析（legacy://）、neutrality scan 整合（避免新 atom 帶入 host 私有資訊）、dry-run patch contract（不直接動 host project）。",
+    "related": [],
+    "depends": [
+      "ATM-2-0029",
+      "ATM-2-0010"
+    ],
+    "acceptance": [
+      "ProjectAdapter 介面新增 resolveLegacyUri(uri) → 解析 legacy://<host>/<path>#L<start>-<end>",
+      "atomize-adapter.schema.json 定義 atomize 在 adapter 邊界的合約：legacy 區段選取 / sf 計算 / 新 atom proposal",
+      "infect-adapter.schema.json 定義 infect 合約：目標 atom / legacy 注入點 / dry-run patch",
+      "atomize 產出的新 atom spec 必須通過 ATM-2-0010 neutrality scanner（不得含 host 私有 token / path / 領域名詞）",
+      "infect 產出的 patch 是 dry-run only；apply 模式須由 host adapter 額外 capability 開啟",
+      "fixtures：1 個 atomize 例子（含 legacy:// URI）+ 1 個 infect 例子（含 dry-run patch）"
+    ],
+    "deliverables": [
+      "schemas/adapter/atomize-adapter.schema.json",
+      "schemas/adapter/infect-adapter.schema.json",
+      "packages/plugin-sdk/src/adapter/legacy-uri.ts",
+      "fixtures/adapter/atomize-example.json",
+      "fixtures/adapter/infect-example.json"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 8/8）| 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "Legacy strangler 在 ProjectAdapter 邊界的合約：atomize/infect 的 URI 解析、neutrality 整合、dry-run patch。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0029 / ATM-2-0010"
+    }
+  },
+  {
+    "doc_id": "doc_task_0340",
+    "id": "ATM-2-0034",
+    "title": "Registry Catalog Markdown Projection Atom",
+    "owner": "vs-insiders-gpt-5.4-mini",
+    "priority": "P1",
+    "status": "done",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-insiders-gpt-5.4-mini",
+    "started_at": "2026-05-07T03:27:00Z",
+    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "completed_at": "2026-05-07T04:12:21.9270570Z",
+    "chain_id": "ATM-REGISTRY-CATALOG-V1",
+    "chain_step": "1/1",
+    "sensor_triggered_by": "atm-registry-catalog-gap",
+    "description": "在 atom register/upsert 完成後，依 atomic-registry.json 與對應 spec 的 title/description/tags 自動生成或更新人類可讀 Markdown 原子庫清單；Markdown 只是 registry projection，不可成為新的 source of truth。",
+    "related": [
+      "ATM-2.5-0001",
+      "ATM-2.5-0002"
+    ],
+    "depends": [
+      "ATM-2-0004",
+      "ATM-2-0013"
+    ],
+    "acceptance": [
+      "register/upsert 流程可在同一輪輸出或更新人類可讀 registry catalog；catalog 至少列出 atomId、功能摘要、類別推導、status、specPath；輸出 path 可配置，並以 atomic_workbench/原子庫列表.md 作為 UTF-8 中文路徑 proving fixture；同一份 registry 重跑時輸出穩定排序且無額外 diff；Markdown 明確標示 projection only，真正 source of truth 仍是 atomic-registry.json"
+    ],
+    "deliverables": [
+      "packages/core/src/registry/registry-catalog.mjs；packages/core/src/registry/catalog-category-deriver.mjs；packages/core/src/registry/registry.mjs 或等價 register/upsert writer hook；scripts/validate-registry-catalog.mjs；scripts/sync-registry-artifacts.mjs；tests/registry-catalog.fixture.json；tests/registry-catalog.snapshot.md；atomic_workbench/registry-catalog.md example output；atomic_workbench/原子庫列表.md UTF-8 proving fixture"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 新增 registry human-readable catalog projection atom；排程歸於 ATM-2 alpha0+ / DX follow-up，不列入 ATM-2.5 alpha gate blocker | 阻塞: 等 ATM-2-0004 / ATM-2-0013 完成\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: 開始實作 registry catalog renderer、writer hook、sync script 與 validator；補齊 UTF-8 中文路徑 proving fixture，避免把中文檔名硬寫成唯一預設 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-catalog pass；npm.cmd run sync:registry-artifacts pass；npm.cmd run validate:registry-core pass；npm.cmd run validate:seed-registry pass；npm.cmd test/typecheck/lint pass | 變更: upstream AI-Atomic-Framework commit c66a4ee 新增 registry catalog renderer、category deriver、writeRegistryArtifacts hook、sync script、snapshot/fixture validator 與 atomic_workbench/registry-catalog.md example output；UTF-8 中文路徑 proving fixture 由 validator 覆蓋 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM registry DX 開卡",
+      "summary": "把 atomic-registry.json 投影成 agent/human 都能直接讀的原子庫清單，減少每次人工翻 JSON。",
+      "position": "ATM-2（alpha0+ / DX follow-up）",
+      "prereq": "ATM-2-0004 / ATM-2-0013 已完成"
     },
     "contracts": {
       "input": [
-        "名詞定義文件目前只規範任務卡 ID，尚未把 Atomic ID 寫成正式條目",
-        "ATM-1-0003 已交付 Atomic Spec / Registry schema v0.1，但 `id` / `atomId` 尚未強制 `ATM-{bucket}-{NNNN}` pattern",
-        "ATM-1.5-0001/0002 已把 `ATM-CORE-0001` 降成 `legacyPlanningId`，現行 spec/registry 改用 `atom.core-seed`",
-        "upstream `atomic-registry.json`、`specs/atom-seed-spec.json`、`specs/neutrality-scanner.atom.json`、`packages/core/seed.js` 與 validate scripts / fixtures 已實際接受 dot-notation 作 id",
-        "3KLife 規劃文件（historical roadmap、AI原子框架開發計畫書、關於進化版的原子提案、open-source-extraction-plan、dev-plan/evolution shards）已混用 `ATM-CORE-*` 與 `atom.*` 範例"
+        "atomic-registry.json 已可作為單一來源；per-atom spec path 可從 registry 追到；不得把中文檔名硬寫成唯一 core default"
       ],
       "output": [
-        "upstream `schemas/atomic-spec.schema.json`、`schemas/registry.schema.json` 對 canonical Atomic ID 加上 hard pattern，`id` / `atomId` 不再接受 `atom.*` 或 `map.*` dot-notation",
-        "upstream `atomic-registry.json`、`specs/atom-seed-spec.json`、`specs/neutrality-scanner.atom.json`、`packages/core/seed.js`、相關 validate scripts / fixtures / workbench path 全面改用 `ATM-CORE-0001`、`ATM-CORE-0003` 等 canonical id",
-        "dot-notation 僅保留在 `name` / `logicalName` / `semanticName` 類欄位，不得再作第二種 Atomic ID；`legacyPlanningId` 不得再承擔主識別語意",
-        "`docs/遊戲規格文件/系統規格書/名詞定義文件.md` 明確新增 Atomic ID 條目，正式區分 `task card id`、`atomicId`、`mapId`、`logicalName` 的角色",
-        "`docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md` 與所有相關 planning shards / 提案文件中的錯誤示例全面改成 `ATM-CORE-0001` 風格；若需保留語意名稱，一律改到非 id 欄位",
-        "新增 fail-fast 驗證：未來任何 spec / registry / fixture / validator 若再把 dot-notation 寫進 canonical id，CI 或 local validation 直接 fail"
+        "新增 catalog renderer atom / helper；register 流程可選擇輸出 Markdown catalog；預設 example output 為 atomic_workbench/registry-catalog.md，UTF-8 中文路徑 proving fixture 可用 atomic_workbench/原子庫列表.md；encoding 為 UTF-8 without BOM；catalog 僅投影重要欄位，不複製完整 registry"
       ],
-      "validation_cmd": "cd ../AI-Atomic-Framework\\nnpm run validate:schemas\\nnpm run validate:cli\\nnode scripts/validate-neutrality-scanner.mjs\\nnpm test\\nnpm run typecheck\\nnpm run lint\\ncd ../3KLife\\nnpm run check:encoding:touched -- --files docs/遊戲規格文件/系統規格書/名詞定義文件.md docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/關於進化版的原子提案.md",
-      "rollback_hint": "回退本卡 touched files；若 upstream 已開始批次 rename Atomic ID，需連同 schema / registry / fixtures / validators 一起回退，禁止只回退其中一層造成雙軌識別半套狀態。",
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退 catalog renderer / register hook / fixture；保留 atomic-registry.json 為唯一真相來源",
       "execution_steps": [
-        "正式把 canonical Atomic ID 規則寫回名詞定義文件與 active ATM planning docs",
-        "收緊 upstream schema、registry helper 與 validator，讓 dot-notation 不能再佔用 `id` / `atomId`",
-        "將 seed、neutrality scanner 與相關 fixtures/tests/workbench path 改為 `ATM-CORE-*` canonical id，語意名稱搬到非 id 欄位",
-        "全面掃描並回寫 roadmap、進化提案、open-source extraction plan、dev-plan / evolution / roadmap shards 的錯誤示例",
-        "補上 migration / validation 說明並跑完整 upstream validation + downstream encoding/doc 檢查"
+        "建立 catalog renderer，從 registry + spec 組表；實作 category derivation 規則與 fallback；把 register/upsert 流程接上可配置的 Markdown projection hook；補 snapshot / encoding / idempotent 驗證"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/schemas/atomic-spec.schema.json",
-        "AI-Atomic-Framework/atomic-registry.json",
-        "AI-Atomic-Framework/specs/atom-seed-spec.json",
-        "AI-Atomic-Framework/specs/neutrality-scanner.atom.json",
-        "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
-        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
-        "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-        "docs/ai_atomic_framework/關於進化版的原子提案.md"
-      ],
+      "artifact_paths": [],
       "validation_evidence": [],
-      "handoff_diff_status": "pending",
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "受影響面至少涵蓋 upstream schema/registry/specs/validators 與 downstream roadmap/active plans"
-      ]
+      "metrics_summary": []
     }
   }
 ]

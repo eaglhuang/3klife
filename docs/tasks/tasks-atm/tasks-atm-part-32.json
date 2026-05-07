@@ -1,62 +1,56 @@
 [
   {
-    "doc_id": "doc_task_0345",
-    "id": "ATM-2-0038",
-    "title": "Unified Atom Generator and ID Allocation Service",
+    "doc_id": "doc_task_0343",
+    "id": "ATM-2-0036",
+    "title": "Stale Atom Workspace Alias Directory Cleanup",
     "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P0",
+    "priority": "P1",
     "status": "done",
-    "type": "manager",
+    "type": "migration",
     "phase": "ATM-2",
     "created": "2026-05-07",
     "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T14:53:07.2487735+08:00",
+    "started_at": "2026-05-07T14:07:14.7347467+08:00",
     "started_by_agent": "vs-code-gpt-5.4-mini",
-    "completed_at": "2026-05-07T15:05:04.3290914+08:00",
-    "chain_id": "ATM-ATOM-PROVISIONING-V1",
-    "chain_step": "1/1",
-    "sensor_triggered_by": "atm-atom-provisioning-gap",
-    "description": "補上 ATM 缺失的 atom provisioning layer：提供單一入口去分配 canonical atomId、套用 bucket/流水號規則、收斂共用預設，並委派既有 scaffold/registry/catalog primitive，避免 Atom 建立流程與規格散落在多個入口。原子產生器本身不得只是散落在 host 端的一支裸工具；它必須以單一 atom 或多個 atom 組成的 atom map 形式落地，CLI create/generate 只作 façade。",
+    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
+    "chain_step": "1/2",
+    "sensor_triggered_by": "atm-workbench-alias-drift",
+    "description": "追查並清除 AI-Atomic-Framework/atomic_workbench/atoms 下歷史遺留的 logicalName alias 空目錄，確認 canonical atom workbench 只接受 ATM-* 目錄名。",
     "related": [],
     "depends": [
-      "ATM-2-0002",
-      "ATM-2-0004",
+      "ATM-1-0011",
       "ATM-2-0013",
-      "ATM-2-0037"
+      "ATM-2-0034"
     ],
     "acceptance": [],
     "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief；2026-05-07 ClaudeCode_sonnet-4-6 補強完整設計規格 | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始實作 Atom Generator / ID allocator / CLI create 與 dogfood self-host 驗證 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node tests/core/id-allocator.test.mjs / node tests/core/atom-generator.test.mjs / node tests/cli/create.test.mjs / npm.cmd run validate:cli / npm.cmd run validate:registry-core / npm.cmd run validate:registry-catalog / npm.cmd test / cmd /c npm run typecheck / npm.cmd run lint pass | 變更: 完成 AtomGenerator façade、集中 ID allocator、atm create、atm test --spec、ATM-CORE-0004 self atom、ATM-FIXTURE-0001 dogfood atom，並開 ATM-2-0039~0041 追蹤全框架 generator provenance 回填 | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias cleanup 與 migration note | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:scaffold-builder / npm.cmd run validate:test-runner pass | 變更: 清除 AI-Atomic-Framework/atomic_workbench/atoms 下的 stale alias 空目錄，並在 docs/ATOM_SPACE_LAYOUT.md 明定 atom.* 空目錄視為遷移殘留 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 原子產生器開卡",
-      "summary": "建立單一 Atom Generator / ID Allocation Service，讓新 Atom 的 ID 配發、模板預設、workbench/scaffold/registry 串接走同一入口。",
-      "position": "ATM-2（provisioning architecture / single entrypoint）",
-      "prereq": "ATM-2-0002 / ATM-2-0004 / ATM-2-0013 / ATM-2-0037"
+      "label": "ATM workbench alias 清理開卡",
+      "summary": "清除歷史遺留的 logicalName alias 空目錄，收斂 atomic_workbench/atoms 到 canonical atomId 目錄。",
+      "position": "ATM-2（migration hygiene / workbench cleanup）",
+      "prereq": "ATM-1-0011 / ATM-2-0013 / ATM-2-0034"
     },
     "contracts": {
       "input": [
-        "現行 CLI 僅有 bootstrap/init/spec/status/test/validate/verify，沒有 create/generate atom 正式入口",
-        "現行 Scaffold Builder 假設 caller 已帶入 atomId 與 normalized spec，不負責 ID 配發",
-        "Registry/Atom Space 已定義 canonical atomId/workbench 規則，但沒有單一 provisioning service 收編這些規格",
-        "若新增 Atom Generator，該能力本身也必須被 atomize：不是 host 專屬一次性 script，而是可被 registry / evidence / test runner 管理的 atom 或 atom map"
+        "AI-Atomic-Framework/atomic_workbench/atoms 目前只應保留 canonical atomId workbench 目錄",
+        "atom.plugin-rule-guard.neutrality-scanner 與 atom.registry-fixture 已確認為空 alias 目錄",
+        "current core scaffold/registry/test-runner 已以 atomId 當 canonical folder name"
       ],
       "output": [
-        "新增統一 Atom Generator / Provisioning Service，成為建立新 Atom 的唯一正式入口",
-        "ID 配發必須集中在單一 allocator/service，依 bucket 規則產生 ATM-{SUBSYSTEM}-{NNNN}，不得再由各腳本各自硬編",
-        "generator 必須委派既有 scaffold/registry/catalog primitive，而不是複製第二套實作",
-        "Atom Generator / Provisioning Service 本身必須是單一 atom 或多個 atom 組成的 atom map；CLI create/generate 只能是呼叫它的 host façade，不得另維護第二套核心邏輯",
-        "CLI 補正式 create/generate atom 指令，至少能收 title/logicalName/subsystem/bucket/description/language template 並回傳 atomId 與輸出路徑",
-        "補 ID reservation / sequence policy 與 deterministic fixture，避免多人或多次 rerun 時重複領號",
-        "文件與 roadmap 必須補上 provisioning layer，明確說明它位於 spec parser / scaffold builder / registry 之上"
+        "確認 alias 目錄為非 source-of-truth 的歷史殘留，列出來源與影響範圍",
+        "清除 AI-Atomic-Framework/atomic_workbench/atoms 下已知空 alias 目錄，保留 ATM-* canonical 目錄",
+        "補 migration 或 cleanup 說明，明定 logicalName 目錄不再受支援",
+        "驗證 registry/scaffold/test-runner 現況仍只寫入 atomId workbench path"
       ],
-      "validation_cmd": "npm run validate:cli\\nnpm run validate:scaffold-builder\\nnpm run validate:registry-core\\nnpm test\\nnpm run typecheck\\nnpm run lint",
-      "rollback_hint": "若新的 generator 入口未完成，先保留既有 scaffold primitive 與 registry primitive，不把半成品 create command 暴露為正式入口；已分配的號碼需有 reservation/rollback policy，不能直接靜默回收。",
+      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:scaffold-builder\\nnpm run validate:test-runner",
+      "rollback_hint": "若 cleanup 影響任何仍在使用的本機流程，先還原刪除的空目錄並補明確 evidence；不得回退 canonical atomId 規則。",
       "execution_steps": [
-        "盤點現有 create-new-atom 所需的共享能力與散落入口",
-        "定義 atom provisioning domain：ID allocator、bucket policy、template preset、scaffold/registry orchestration，以及它本身要如何 atomize 成單一 atom 或 atom map",
-        "落地 CLI create/generate atom 命令與 deterministic fixture，並讓 CLI 僅作 façade",
-        "補 roadmap / architecture doc，說明 provisioning layer 與既有 primitive 的關係"
+        "盤點 atomic_workbench/atoms 現況與 git tracked state",
+        "確認空 alias 目錄不屬於 registry source-of-truth",
+        "清除空 alias 目錄並驗證不影響現有 validator",
+        "回寫 migration 或 cleanup 說明與 notes"
       ]
     },
     "harness_evidence": {
@@ -68,56 +62,57 @@
     }
   },
   {
-    "doc_id": "doc_task_0346",
-    "id": "ATM-2-0039",
-    "title": "Generated Atom Source Template and Code Path Policy",
+    "doc_id": "doc_task_0344",
+    "id": "ATM-2-0037",
+    "title": "Workbench Alias Drift Guard and Projection Alignment",
     "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P0",
+    "priority": "P1",
     "status": "done",
-    "type": "architecture",
+    "type": "guardrail",
     "phase": "ATM-2",
     "created": "2026-05-07",
     "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T15:14:35.1752897+08:00",
+    "started_at": "2026-05-07T14:09:16.5225687+08:00",
     "started_by_agent": "vs-code-gpt-5.4-mini",
-    "completed_at": "2026-05-07T15:27:59.2938458+08:00",
-    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
-    "chain_step": "1/3",
-    "sensor_triggered_by": "atm-generator-source-gap",
-    "description": "讓 Atom Generator 產出的新原子具備正式 source file template，不再以 spec-only 或 spec-as-code 方式暫代 registry codePaths。",
+    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
+    "chain_step": "2/2",
+    "sensor_triggered_by": "atm-workbench-alias-drift",
+    "description": "補上自動驗證與展示層收斂，避免 logicalName 再被誤當成 atomId 或 workbench 目錄名，並在 human-readable projection 明確分開 atomId 與 logicalName。",
     "related": [],
     "depends": [
-      "ATM-2-0038"
+      "ATM-2-0013",
+      "ATM-2-0034",
+      "ATM-2-0036"
     ],
     "acceptance": [],
     "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始補 source template/codePaths policy | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node tests/core/atom-generator.test.mjs / node tests/cli/create.test.mjs / npm run validate:registry-core / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: AtomGenerator 產物補 atom.source.mjs，預設 validation command 改跑 source self-check，registry codePaths 不再用 specPath 暫代 | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias drift guard 與 projection alignment | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:registry-catalog / npm.cmd test / npm.cmd run lint pass | 變更: 補上 workbench stray directory guard、registry catalog atomId/logicalName 分欄，並修正 validate-registry-catalog 改在 temp root 跑 fixture test runner 以避免重建 ATM-FIXTURE-0004 汙染 root workbench | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM generator source template 開卡",
-      "summary": "補齊 generator 的 source file template 與 codePaths policy，讓新原子真正有 spec/code/test/report 四件套。",
-      "position": "ATM-2（generator provenance / source template）",
-      "prereq": "ATM-2-0038"
+      "label": "ATM workbench alias guard 開卡",
+      "summary": "建立非 canonical alias 目錄的 drift guard，並統一 projection 對 atomId / logicalName 的呈現。",
+      "position": "ATM-2（guardrail / projection alignment）",
+      "prereq": "ATM-2-0013 / ATM-2-0034 / ATM-2-0036"
     },
     "contracts": {
       "input": [
-        "ATM-2-0038 alpha0 已能產生 spec/test/report 並登錄 registry",
-        "目前 dogfood fixture 以 spec path 暫作 codePaths，這只是 alpha0 過渡",
-        "Registry selfVerification 需要穩定 codePaths"
+        "canonical workbench layout 已定義為 atomic_workbench/atoms/<atomId>/",
+        "logicalName 仍可保留於 registry/spec，但不得再當成 workbench folder name",
+        "至少存在一份 human-readable projection 曾把 logicalName 當成 id 呈現"
       ],
       "output": [
-        "新增 generator source template policy",
-        "AtomGenerator 產物包含正式 source file",
-        "Registry codePaths 不再用 specPath 暫代",
-        "補 fixture 覆蓋 source/code/test/report 四件套"
+        "新增或擴充 deterministic validator，檢出 atomic_workbench/atoms 下非 canonical alias 目錄 drift",
+        "驗證規則需容許合法 canonical ATM-* workbench 與明確 adapter override，不可誤殺正式 sourcePaths",
+        "registry catalog 與其他 human-readable projection 若呈現 atom 身分，必須明確區分 atomId 與 logicalName",
+        "補 fixture 或 snapshot，覆蓋 stray alias dir 與 projection 欄位對齊情境"
       ],
-      "validation_cmd": "node tests/core/atom-generator.test.mjs\\nnode tests/cli/create.test.mjs\\nnpm run validate:registry-core",
-      "rollback_hint": "回退 source template 與 codePaths policy；保留 ATM-2-0038 birth facade，不回退 allocator/create command。",
+      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:registry-catalog\\nnpm test\\nnpm run lint",
+      "rollback_hint": "若新 guard 對既有 host override 造成誤報，先縮小到 atomic_workbench/atoms default layout 範圍，不得放寬回 logicalName 可當 canonical folder 的舊行為。",
       "execution_steps": [
-        "盤點目前 generated atom 檔案組成",
-        "設計 source template 與預設 validation command",
-        "更新 generator 與 tests",
-        "回寫 registry/codePaths policy"
+        "盤點目前 validator 與 projection 輸出缺口",
+        "設計 alias drift 判斷規則與允許例外",
+        "補 deterministic test 或 snapshot 覆蓋 stray alias dir 與 projection 欄位",
+        "回寫 catalog 或相關 human-readable projection，確保 atomId / logicalName 分欄或明確標示"
       ]
     },
     "harness_evidence": {

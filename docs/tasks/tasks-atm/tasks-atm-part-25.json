@@ -1,5 +1,49 @@
 [
   {
+    "doc_id": "doc_task_0322",
+    "id": "ATM-2-0019",
+    "title": "ExecuteAgentTask effect node dry-run（000004）",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "bootstrap-atom",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "6/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "effect node 形式呼叫 AI agent 執行 prompt，預設 dry-run 只 capture artifact/log，不直接 apply patch；alpha0+ 補洞。",
+    "related": [],
+    "depends": [
+      "ATM-2-0018",
+      "ATM-2-0006"
+    ],
+    "acceptance": [
+      "execute-agent-task --dry-run 必須是預設行為，僅產出 artifacts/logs，不 mutate host project",
+      "effect node 簽章與 packages/plugin-sdk effect-node.ts 對齊；compute atoms 不可呼叫",
+      "fixture：dry-run 產出 artifact 路徑 + log 摘要 + execution-evidence.json",
+      "apply 模式必須由獨立 CLI flag 開啟，且仍寫 evidence record",
+      "lifecycleMode=evolution 時，dry-run 必須以兩次獨立 TestRunner 呼叫完成：baseline fixtures × new code 與 new fixtures × new code，並分別寫入 evidence",
+      "effect node 不可直接呼叫 ATM-2-0020 ProposeAtomicUpgrade；本卡只負責寫 execution evidence，proposal 由 orchestration atom 後續讀取"
+    ],
+    "deliverables": [
+      "packages/core/src/agent-execute/execute-agent-task.ts",
+      "schemas/agent-execute/execution-evidence.schema.json",
+      "fixtures/agent-execute/dry-run.snapshot.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 lifecycleMode=evolution 雙重 TestRunner 閉環與 effect/orchestration 邊界約束",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "補上 Roadmap §7.1 的 000004 缺口，並守住「只 dry-run / 不直接改檔」的安全邊界。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0018 / ATM-2-0006"
+    }
+  },
+  {
     "doc_id": "doc_task_0323",
     "id": "ATM-2-0020",
     "title": "ProposeAtomicUpgrade（000012）",
@@ -28,7 +72,8 @@
       "automatedGates 任一 fail 時 proposal 必須標記 status=blocked，不允許進入 review queue",
       "upgrade-proposal.schema.json 增加 decompositionDecision（enum: atom-bump | atom-extract | map-bump）與 mapImpactScope 欄位",
       "CLI 增加 --target atom|map 旗標；--target map 時必須附 mapId",
-      "decompositionDecision 為 atom-extract 時，proposal 需同時列出新 atomId 與 fork 來源"
+      "decompositionDecision 為 atom-extract 時，proposal 需同時列出新 atomId 與 fork 來源",
+      "upgrade-proposal.schema.json 追加必填欄位 behaviorId（預設 behavior.evolve）；其他合法值由 ATM-2-0029 reference behavior pack 註冊"
     ],
     "deliverables": [
       "schemas/upgrade/upgrade-proposal.schema.json",
@@ -37,7 +82,7 @@
       "fixtures/upgrade/proposal-pass.json",
       "fixtures/upgrade/proposal-blocked.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— upgrade-proposal 追加 behaviorId 欄位（必填，預設 behavior.evolve）\n2026-05-07 附錄 C 治理補丁：升版 proposal 保持為唯一編排 choke point；effect node 僅能寫 evidence，不得直接 promote",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 開卡",
@@ -72,7 +117,10 @@
       "實作位於 packages/plugin-human-review/*；packages/core 不可 import 此 package",
       ".atm/reports/upgrade-proposals.json 為審核佇列；支援 approve / reject + reason 兩種 decision",
       "decision log 寫入 evidence store（evidenceType=human-review-decision）",
-      "layer-boundary scanner 必須擋下 core → plugin-human-review 的任何 import"
+      "layer-boundary scanner 必須擋下 core → plugin-human-review 的任何 import",
+      "CLI 補 atm review list / show <proposalId> / approve <proposalId> --reason / reject <proposalId> --reason 四個子命令",
+      "approve / reject 必須同時落 evidence 與 decision-snapshot.hash，鎖定當下 upgrade-proposal.json 內容雜湊",
+      "upgrade-proposals.md 僅可作 audit projection，不得成為 source of truth；欄位固定為 proposalId / atomId / fromVersion → toVersion / decompositionDecision / automatedGates / status"
     ],
     "deliverables": [
       "packages/plugin-human-review/src/queue.ts",
@@ -81,146 +129,13 @@
       "fixtures/human-review/approve.snapshot.json",
       "fixtures/human-review/reject.snapshot.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 review CLI / decision-snapshot.hash / Markdown audit projection，避免人工審核流程不可追溯",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 開卡",
       "summary": "人類審核閘門以 reference plugin 形式落地，避免污染 core hard dependency。",
       "position": "ATM-2",
       "prereq": "ATM-2-0020 / ATM-2-0008"
-    }
-  },
-  {
-    "doc_id": "doc_task_0325",
-    "id": "ATM-2-0022",
-    "title": "Rollback Registry Pointer & 三段 hash Proof",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "registry",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "9/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "提供 atm rollback CLI 與 rollback-proof：將 currentVersion 指回歷史版本，並驗證 spec/code/test 三段 hash 與目標 entry 完全一致。",
-    "related": [],
-    "depends": [
-      "ATM-2-0014",
-      "ATM-2-0021"
-    ],
-    "acceptance": [
-      "CLI atm rollback --atom <id> --to <ver> --plan 先輸出 dry-run plan；--apply 才真正寫 registry",
-      "rollback 後 atm verify --self 必須顯示 spec/code/test 三段 hash 與目標版本完全一致；任一不符即 hard fail，產出 rollback-proof.failure.json",
-      "rollback-proof.schema.json 含 atomId / fromVersion / toVersion / hashesVerified / verifiedAt / proofId",
-      "evidence store 寫入 evidenceType=rollback-proof",
-      "CLI atm rollback 支援 --target map；map rollback 必須同時驗證所有成員 atom 的 hash 與目標 mapVersion entry 一致",
-      "rollback-proof 對 map 模式輸出 memberAtomProofs[]，逐一列三段 hash 驗證結果"
-    ],
-    "deliverables": [
-      "packages/core/src/registry/rollback.ts",
-      "packages/cli/commands/rollback.ts",
-      "schemas/registry/rollback-proof.schema.json",
-      "fixtures/rollback/proof-pass.json",
-      "fixtures/rollback/proof-fail-hash-mismatch.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "evolution 管線的最終安全網：失敗時可確定性回退，並留下可驗證 proof。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0014 / ATM-2-0021"
-    }
-  },
-  {
-    "doc_id": "doc_task_0326",
-    "id": "ATM-3-0014",
-    "title": "3KLife UsageEvidence shadow adapter",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "adapter",
-    "phase": "ATM-3",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "10/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "只讀 3KLife 的 artifacts / compute-gate report / logs，產出 usage-feedback evidence；不修改任何既有 CLI / 工具。",
-    "related": [],
-    "depends": [
-      "ATM-3-0001",
-      "ATM-2-0009",
-      "ATM-2-0016"
-    ],
-    "acceptance": [
-      "adapter 僅讀，不寫；任何 file mutation 視為違規",
-      "輸出 evidence 必須通過 ATM-2-0009 的 usage-feedback schema",
-      "3KLife 既有 CLI / compute-gate / 工具行為完全不變（shadow / parity）",
-      "neutrality scanner 對輸出 evidence payload 跑 dry-run，不得帶入 adopter 私有 token"
-    ],
-    "deliverables": [
-      "tools_node/atm-adapter/usage-evidence-shadow.js",
-      "fixtures/adapter/3klife-usage-evidence.snapshot.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "alpha1 期間第一個 evolution-evidence 來源；以最小侵入方式餵養 evolution 管線。",
-      "position": "ATM-3",
-      "prereq": "ATM-3-0001 / ATM-2-0009 / ATM-2-0016"
-    }
-  },
-  {
-    "doc_id": "doc_task_0327",
-    "id": "ATM-4-0007",
-    "title": "H2U normalizeCssColor v1.0→v1.1 evolution pilot",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "case-study",
-    "phase": "ATM-4",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "11/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "以 normalizeCssColor case atom 跑第一次完整 evolution 閉環：proposal → automatedGates → human review → registry update or rollback。",
-    "related": [],
-    "depends": [
-      "ATM-4-0003",
-      "ATM-2-0020",
-      "ATM-2-0021"
-    ],
-    "acceptance": [
-      "normalizeCssColor v1.0 進 registry；v1.1 透過 atm upgrade --propose 產 proposal.json",
-      "automatedGates（nonRegression / qualityImprovement / newCapability）全綠才進 review queue",
-      "human review approve 後 registry currentVersion 指向 v1.1；reject 後保持 v1.0 並寫 decision log",
-      "完整 evidence 鏈可由 atm replay 重新跑 + neutrality scanner 全綠"
-    ],
-    "deliverables": [
-      "docs/case-studies/h2u-normalize-css-color-evolution-pilot.md",
-      "fixtures/case-studies/normalize-css-color/v1.0.json",
-      "fixtures/case-studies/normalize-css-color/v1.1.json",
-      "fixtures/case-studies/normalize-css-color/proposal.json",
-      "fixtures/case-studies/normalize-css-color/decision-approve.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "把 alpha1 evolution pipeline 在 H2U case 上做端到端落地，作為 alpha1 acceptance 證據。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0003 / ATM-2-0020 / ATM-2-0021"
     }
   }
 ]
