@@ -662,7 +662,7 @@ node tools_node/atomic-framework/atm-cli.js police --task ATM-4-0003
 | `AI-Atomic-Framework/README.md`、`packages/*`、`schemas/*` | 上游 repo core/package/schema | 由 ATM-1/ATM-2 在新 repo 實作 |
 | `tools_node/adapters/atm-3klife/*`、`atm.config.*` | 3KLife ProjectAdapter / local config | 由 ATM-3 實作 |
 | `docs/ai_atomic_framework/cocos-runtime-adapter-policy.md` | Cocos runtime adapter 邊界 | 新建 — ATM-3-0005 |
-| `docs/ai_atomic_framework/html-to-ucuf-case-study.md` | H2U reference case study | 新建 — ATM-4-0001 |
+| `docs/ai_atomic_framework/html-to-ucuf-case-study.md` | H2U reference case study | 已建 — ATM-4-0001 |
 | `docs/ai_atomic_framework/h2u-regression-matrix.md` | H2U baseline / regression matrix | 新建 — ATM-4-0002 |
 | `docs/QUICK_START.md`、`docs/API.md`、`docs/ADAPTER_GUIDE.md` | 上游開源文件 | 由 ATM-5 在新 repo 實作 |
 | `docs/ecosystem/*`、`docs/RFC_PROCESS.md` | 生態擴張與 RFC 文件 | 由 ATM-6 在新 repo 實作 |

@@ -448,5 +448,11 @@
     "path": "docs/windows-wsl-cli-routing.md",
     "title": "Windows / WSL CLI Routing Rules",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0081",
+    "path": "docs/ai_atomic_framework/html-to-ucuf-case-study.md",
+    "title": "html-to-ucuf Reference Case Study",
+    "category": "other"
   }
 ]
