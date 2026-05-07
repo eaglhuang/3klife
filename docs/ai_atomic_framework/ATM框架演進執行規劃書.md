@@ -398,3 +398,12 @@ ATM-2-0022 rollback proof（失敗回退）
 1. 把 §C.3、§C.4、§C.5、§C.6、§C.7 列出的純 acceptance additive 補丁，逐張寫進對應 open 卡 frontmatter（不需要新開卡）。
 2. 然後依 §A.4 的順序執行 `ATM-2-0014 → 0015 → 0016 → 0017 → 0019 → 0020 → 0021 → 0022 → 3-0014 → 4-0007`，並在 `ATM-2-0028 / 0029` 落地時順便驗證 §C.7 的繞道防線。
 
+### C.10 本輪 task-card 硬化規則
+
+本輪對 `ATM-2-0020 ~ ATM-2-0029` 的調整收斂出一條正式規則：任務卡改動不得改卡目的，只能補 deterministic local validator、exemplar set 與 validator-first `VALIDATION_CMD`，讓失敗先在本卡 seam 爆出，而不是等整包測試才判讀。
+
+- 共用 `docs/tasks/tasks-atm/tasks-atm-part-*.json` shard part 時，僅一張卡可持有 shard part lock；其餘 sibling 卡只鎖各自 Markdown。
+- `task-lock.js lock` 一律需帶 `--files`，把本輪 canonical scope 寫進 lock 檔；`check-task-scope` 只能拿這份 `files[]` 當機器真相。
+- 舊 lock 若仍出現空 `files[]`，只可視為過渡期 advisory，不可再作為新卡範本。
+- thin-index shard 必須維持摘要層；若 part 逼近門檻，先壓縮 notes / acceptance，再繼續加卡或補規則。
+

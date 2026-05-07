@@ -182,7 +182,7 @@ ATM 若要達到「下載後放在任意專案根目錄，AI agent 讀 README �
 | 通用層 | 上游預設能力 | 3KLife 對應 adapter |
 |---|---|---|
 | Agent bootstrap | README / AGENTS template、`.atm/profile.json`、`atm init --adopt`、project probe、auto first task recipe | `.github/instructions`、AGENTS.md、CLAUDE.md、keep.summary 與 task-lock 開工規則 |
-| Task / scope governance | `.atm/tasks/*.md`、`.atm/tasks/tasks.json`、`.atm/locks/*.json`、task lifecycle、scope lock | `task-card-opener.js`、`task-lock.js`、`check-task-scope.js` |
+| Task / scope governance | `.atm/tasks/*.md`、`.atm/tasks/tasks.json`、`.atm/locks/*.json`、task lifecycle、scope lock | `task-card-opener.js`、`task-lock.js`、`check-task-scope.js`；鎖卡一律帶 `--files`，shared shard part 只能由單一任務持有，兄弟卡只鎖各自 Markdown |
 | Markdown / JSON state | `.atm/state/*.md|*.json`、schema validation、state diff summary、large-state sharding policy | `docs/*.md`、`docs/tasks/*.json`、doc-id registry、task shards |
 | Document index / shard | `.atm/index/*.json`、`.atm/shards/*`、resolve / rebuild / validate | `doc-id-registry.js`、`shard-manager.js`、cross-reference index |
 | Artifacts / generated files | `.atm/artifacts/files/*`、artifact manifest、preview summary、cleanup / retention policy | `artifacts/`、turn artifacts、UI QA compare boards、generated reports |
@@ -204,6 +204,7 @@ ATM 若要達到「下載後放在任意專案根目錄，AI agent 讀 README �
 |---|---|---|
 | **契約優先 (spec > code)** | AI 重寫 code 時不知道規則 | Atomic Spec JSON Schema + AJV validate；改 code 必動 specHash |
 | **AI 受控加工機** | AI 自由改檔造成全局副作用 | task-lock + 任務卡 frontmatter 限定 `allowed_files` + Police 拒絕 forbidden import |
+| **validator-first 任務卡** | 任務卡只寫目的，驗證漂移到整包才爆 | 每張卡都要有 deterministic local validator、最少 exemplar、validator-first VALIDATION_CMD；共用 shard part 由單一 lock 持有，sibling 卡只鎖 Markdown |
 | **Git 真相 + JSON registry** | DB 同步成本高、信任成本高 | 真相在 Git 檔案；registry.json 為索引層；DB 後置 |
 | **開發期沙盒 + 執行期注入** | 過度資料夾化讓 Legacy 無法漸進整合 | `_workbench/` 是 AI 沙盒；`_atomic_registry/` 是 runtime 產物；Legacy 透過 AtomicInterface.js 接入 |
 | **不退轉：hash lock + regression matrix** | AI 修一處退三處 | sha256(spec/code/test) 三段鎖；compute-gate 加 `atm-hash-lock` gate |
