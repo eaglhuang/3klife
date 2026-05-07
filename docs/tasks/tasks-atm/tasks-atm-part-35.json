@@ -91,5 +91,95 @@
     "acceptance": [],
     "deliverables": [],
     "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 完成"
+  },
+  {
+    "doc_id": "doc_task_0354",
+    "id": "ATM-2-0047",
+    "title": "URN Resolver and RegistryIndex Facade",
+    "owner": "vs-code-copilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-08",
+    "created_by_agent": "vs-code-copilot",
+    "started_at": "2026-05-08T00:50:34+08:00",
+    "started_by_agent": "vs-code-copilot",
+    "completed_at": "2026-05-08T00:58:23.9061276+08:00",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V2",
+    "chain_step": "1/1",
+    "sensor_triggered_by": "atm-urn-registry-index-implementation",
+    "description": "建立 canonical ATM ID 的派生 URN resolver 與 RegistryIndex 查詢 façade，讓 atom/map/police 可用同一個 nodeRef 查詢，同時保留 ATM-CORE/ATM-MAP 作唯一 source of truth。",
+    "related": [
+      "ATM-2-0030",
+      "ATM-2-0031",
+      "ATM-2-0005",
+      "ATM-2-0027"
+    ],
+    "depends": [
+      "ATM-1-0011",
+      "ATM-2-0026",
+      "ATM-2-0042"
+    ],
+    "acceptance": [
+      "URN 只可由 canonical atomId/mapId 派生，禁止成為第二套可寫主鍵",
+      "支援 urn:atm:atom:<ATM-ID>@<semver> 與 urn:atm:map:<ATM-MAP-ID>@<semver> parse/format/normalize",
+      "RegistryIndex 建立 atomId/mapId/logicalName/semanticFingerprint/version 四類 index，對單筆 lookup 提供 O(1) façade",
+      "舊 registry entries[] 格式保持相容，index 可由現有 registry document lazy build",
+      "dedup police 可重用 fingerprint-index，不再自建不相容 hash bucket",
+      "validation fixture 覆蓋 atom/map/legacy-no-sf/invalid-urn/duplicate-key"
+    ],
+    "deliverables": [
+      "AI-Atomic-Framework/packages/core/src/registry/urn.mjs",
+      "AI-Atomic-Framework/packages/core/src/registry/registry-index.mjs",
+      "AI-Atomic-Framework/scripts/validate-registry-index.mjs",
+      "AI-Atomic-Framework/fixtures/registry/index/*.json",
+      "docs/ai_atomic_framework/關於進化版的原子提案.md",
+      "docs/ai_atomic_framework/ATM框架演進執行規劃書.md"
+    ],
+    "notes": "2026-05-08 | 狀態: done | 驗證: validate:registry-index / validate:schemas / validate:registry-core / npm test / typecheck / lint pass；3KLife encoding touched pass | 變更: 建立派生 URN resolver、RegistryIndex façade、validator、fixture，並回寫 Part V 與演進規劃書 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [
+        "ATM-1-0011 已收斂 canonical Atomic ID",
+        "ATM-2-0042 已完成 canonical ATM-MAP generator",
+        "現有 registry.schema.json 仍以 entries[] 為相容資料源"
+      ],
+      "output": [
+        "派生 URN resolver 不改 canonical ID 真相",
+        "RegistryIndex façade 可包住現有 entries[]",
+        "文件明確禁止占用既有 ATM-3-0010~0013 卡號"
+      ],
+      "validation_cmd": "cd ../AI-Atomic-Framework\\npnpm run validate:registry-index\\npnpm run validate:schemas\\npnpm run validate:registry-core\\npnpm test\\npnpm run typecheck\\npnpm run lint\\ncd ../3KLife\\nnpm run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM-2-0047.md docs/tasks/tasks-atm.json docs/tasks/tasks-atm/.shardrc.json docs/tasks/tasks-atm/tasks-atm-part-35.json docs/tasks/tasks-atm/tasks-atm-part-36.json docs/ai_atomic_framework/關於進化版的原子提案.md docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
+      "rollback_hint": "回退 ATM-2-0047 touched files；若 doc-id registry 已分配新 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
+      "execution_steps": [
+        "建立任務卡與鎖卡",
+        "補文件中的 URN 派生規則與任務映射",
+        "實作 URN resolver 與 RegistryIndex façade",
+        "補 validator 與 fixtures",
+        "跑 upstream validation 與 downstream encoding check"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "node scripts/validate-registry-index.mjs --mode validate pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run validate:schemas pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run validate:registry-core pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework test pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run typecheck pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run lint pass",
+        "cmd /c npm run check:encoding:touched -- --files ... pass"
+      ],
+      "handoff_diff_status": "clean-validation",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

@@ -202,6 +202,8 @@ alpha1 的第一條完整演化鏈建議為：
 
 α1-prep（演化基礎）：`ATM-2-0014` → `ATM-2-0015` → `ATM-2-0016` → `ATM-2-0017`，並補強 `ATM-2-0006/0007/0008/0009/0010/0011` acceptance。
 
+α1-prep 補強（識別 / 查詢層）：`ATM-2-0047` 承接 canonical ID 的派生 URN resolver 與 `RegistryIndex` façade。它只包住既有 `entries[]` registry document，不回頭改 `ATM-2-0004` scope，也不占用已存在的 `ATM-3-0010 ~ ATM-3-0013` adapter 任務卡號。
+
 α1 演化閉環首次完整驗證：`ATM-2-0020` → `ATM-2-0021` → `ATM-2-0022` → `ATM-3-0014` → `ATM-4-0007`。
 
 ---
@@ -390,13 +392,15 @@ ATM-2-0022 rollback proof（失敗回退）
 | SG-09 | 3KLife log 格式漂移即時阻斷演化管線 | `ATM-3-0014` 無 fallback | §C.6 補丁 | 中 |
 | SG-10 | reject 後 atom 狀態未定義，registry 進入未定義態 | `ATM-2-0027` 缺 transition 對應 | §C.7 補丁 | 中高 |
 | SG-11 | Map generator chain（`ATM-2-0042~0046`）獨立演進，與 atom 演化鏈未交會 | 兩鏈 acceptance 未互相引用 | 建議在 `ATM-2-0042` acceptance 補：「map generator 產出的 spec/code/test 必須通過 `ATM-2-0017` regression compare gate（map-level）」 | 中 |
+| SG-12 | URN 被誤當第二套 canonical ID，導致 registry / police / adapter 查詢漂移 | 外部 exchange 直接寫入 `urn:atm:*`，或各工具自建 index | `ATM-2-0047` 補派生 URN resolver + RegistryIndex façade；URN 只由 `atomId/mapId + version` 格式化，不作可寫主鍵 | 高 |
 
 ### C.9 結語
 
-本附錄不重啟 §3 / §4 / §5 既有結論，而是把「演化基礎尚未啟動、但已多出兩條治理鏈」這個現實補進去。若以「最小阻塞 alpha1 演化閉環首次驗證」為目標，建議的下一步只有兩件事：
+本附錄不重啟 §3 / §4 / §5 既有結論，而是把「演化基礎尚未啟動、但已多出兩條治理鏈」這個現實補進去。若以「最小阻塞 alpha1 演化閉環首次驗證」為目標，建議的下一步只有三件事：
 
 1. 把 §C.3、§C.4、§C.5、§C.6、§C.7 列出的純 acceptance additive 補丁，逐張寫進對應 open 卡 frontmatter（不需要新開卡）。
-2. 然後依 §A.4 的順序執行 `ATM-2-0014 → 0015 → 0016 → 0017 → 0019 → 0020 → 0021 → 0022 → 3-0014 → 4-0007`，並在 `ATM-2-0028 / 0029` 落地時順便驗證 §C.7 的繞道防線。
+2. 落地 `ATM-2-0047` 的 URN resolver 與 RegistryIndex façade，讓後續 `ATM-2-0030` dedup police、`ATM-2-0031` lifecycle police 與 map generator 共用同一套 O(1) 查詢入口。
+3. 然後依 §A.4 的順序執行 `ATM-2-0014 → 0015 → 0016 → 0017 → 0019 → 0020 → 0021 → 0022 → 3-0014 → 4-0007`，並在 `ATM-2-0028 / 0029` 落地時順便驗證 §C.7 的繞道防線。
 
 ### C.10 本輪 task-card 硬化規則
 

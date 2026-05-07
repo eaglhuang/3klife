@@ -2068,5 +2068,11 @@
     "path": "docs/agent-briefs/tasks/ATM-2-0046.md",
     "title": "[ATM-2-0046] Registry Catalog Map Section Rendering",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0354",
+    "path": "docs/agent-briefs/tasks/ATM-2-0047.md",
+    "title": "[ATM-2-0047] URN Resolver and RegistryIndex Facade",
+    "category": "task"
   }
 ]
