@@ -1,175 +1,46 @@
 [
   {
-    "doc_id": "doc_task_0248",
-    "id": "ATM-0-0004",
-    "title": "3KLife adopter 計畫書改版",
+    "doc_id": "doc_task_0246",
+    "id": "ATM-0-0002",
+    "title": "名詞定義新增 ATM 任務代號",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "docs",
+    "type": "governance",
     "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T21:28:29+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-06T08:08:07+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 AI原子框架開發計畫書改成 3KLife downstream adopter / adapter plan。",
-    "related": [],
-    "depends": [
-      "ATM-0-0003"
-    ],
-    "acceptance": [
-      "文件不再宣稱 ATM core 長在 tools_node",
-      "html-to-ucuf 為 case study 而非 core assumption"
-    ],
-    "deliverables": [
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md 標示 upstream/downstream 分工",
-      "task-lock/compute-gate/doc-id/encoding 被描述為 adapter 能力"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0008（技術棧校正矩陣）、ATM-0-0009（governance split）、ATM-0-0011（context budget）、ATM-0-0014（瘦身再開工）代為完成 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 開源化開卡",
-      "summary": "將 AI原子框架開發計畫書改成 3KLife downstream adopter / adapter plan。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0003"
-    },
-    "contracts": {
-      "input": [
-        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
-      ],
-      "output": [
-        "docs/ai_atomic_framework/AI原子框架開發計畫書.md 標示 upstream/downstream 分工",
-        "task-lock/compute-gate/doc-id/encoding 被描述為 adapter 能力"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
-      "execution_steps": [
-        "確認依賴與 scope",
-        "修改或建立對應文件",
-        "跑 encoding 與 standard gate",
-        "回寫 notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0249",
-    "id": "ATM-0-0005",
-    "title": "開源拆出 checklist 文件",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "docs",
-    "phase": "ATM-0",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T20:58:01+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-06T08:08:07+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立從 3KLife 拆出 AI-Atomic-Framework 到新 GitHub repo 的階段式 checklist。",
-    "related": [],
-    "depends": [
-      "ATM-0-0003"
-    ],
-    "acceptance": [
-      "列出 core 禁止耦合清單",
-      "列出上游 repo skeleton",
-      "列出 3KLife adapter 導入與回同步策略"
-    ],
-    "deliverables": [
-      "docs/ai_atomic_framework/open-source-extraction-plan.md"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0007（MVP邊界）與 ATM-0-0009（governance bundle 分層）代為完成；open-source-extraction-plan.md 已含完整內容 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 開源化開卡",
-      "summary": "建立從 3KLife 拆出 AI-Atomic-Framework 到新 GitHub repo 的階段式 checklist。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0003"
-    },
-    "contracts": {
-      "input": [
-        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
-      ],
-      "output": [
-        "docs/ai_atomic_framework/open-source-extraction-plan.md"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
-      "execution_steps": [
-        "確認依賴與 scope",
-        "修改或建立對應文件",
-        "跑 encoding 與 standard gate",
-        "回寫 notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0250",
-    "id": "ATM-0-0006",
-    "title": "ATM 任務卡模板與開卡規則",
-    "owner": "vs-insiders-gpt-5.4-mini",
-    "priority": "P1",
-    "status": "done",
-    "type": "docs",
-    "phase": "ATM-0",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T12:50:58.8606404+08:00",
+    "started_at": "2026-05-06T12:39:11+08:00",
     "started_by_agent": "vs-insiders-gpt-5.4-mini",
-    "completed_at": "2026-05-06T12:52:45.2848800+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立 ATM 任務卡模板，統一 upstream core、adapter、case study 任務欄位。",
+    "description": "在名詞定義文件登錄 ATM 系統代號與 ATM-0~6 子系統，讓任務卡 ID 有唯一命名來源。",
     "related": [],
     "depends": [
-      "ATM-0-0001",
-      "ATM-0-0003"
+      "ATM-0-0001"
     ],
     "acceptance": [
-      "模板包含 hostKind/targetRepo/alphaGate/packageScope/adapterScope/allowed_files/forbidden_files/non_goals/executionMode/validation_cmd/rollback_hint",
-      "新 ATM 卡可由 task-card-opener 一致生成"
+      "ATM-0~ATM-6 子系統皆可對回本次開源化工作",
+      "任務卡 ID 格式不在其他文件另行定義"
     ],
     "deliverables": [
-      "docs/agent-briefs/atm-task-template.md",
-      "task-card-opener 使用說明補充"
+      "docs/遊戲規格文件/系統規格書/名詞定義文件.md 新增 ATM 子系統表列"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: encoding passed；standard gate 受既有 dirty files 阻擋 | 變更: 建立 ATM 任務卡模板並補充開卡欄位規則 | 阻塞: 既有 task-scope 雜訊",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 | 狀態: done | 驗證: 名詞定義文件已含 ATM 子系統表列 | 變更: JSON shard 同步 MD frontmatter 真相",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 開源化開卡",
-      "summary": "建立 ATM 任務卡模板，統一 upstream core、adapter、case study 任務欄位。",
+      "summary": "在名詞定義文件登錄 ATM 系統代號與 ATM-0~6 子系統，讓任務卡 ID 有唯一命名來源。",
       "position": "ATM-0",
-      "prereq": "ATM-0-0001、ATM-0-0003"
+      "prereq": "ATM-0-0001"
     },
     "contracts": {
       "input": [
         "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
       ],
       "output": [
-        "docs/agent-briefs/atm-task-template.md",
-        "task-card-opener 使用說明補充"
+        "docs/遊戲規格文件/系統規格書/名詞定義文件.md 新增 ATM 子系統表列"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
@@ -178,6 +49,125 @@
         "修改或建立對應文件",
         "跑 encoding 與 standard gate",
         "回寫 notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "completed_at": "2026-05-06T12:39:11+08:00"
+  },
+  {
+    "doc_id": "doc_task_0324",
+    "id": "ATM-2-0021",
+    "title": "HumanReviewGate as reference plugin（000013）",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "reference-plugin",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "8/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "以 reference plugin + effect node 形式提供 human review queue；core 僅依賴 schema 不依賴實作。",
+    "related": [],
+    "depends": [
+      "ATM-2-0020",
+      "ATM-2-0008"
+    ],
+    "acceptance": [
+      "實作位於 packages/plugin-human-review/*；packages/core 不可 import 此 package",
+      ".atm/reports/upgrade-proposals.json 為審核佇列；支援 approve / reject + reason 兩種 decision",
+      "decision log 寫入 evidence store（evidenceType=human-review-decision）",
+      "layer-boundary scanner 必須擋下 core → plugin-human-review 的任何 import",
+      "CLI 補 atm review list / show <proposalId> / approve <proposalId> --reason / reject <proposalId> --reason 四個子命令",
+      "approve / reject 必須同時落 evidence 與 decision-snapshot.hash，鎖定當下 upgrade-proposal.json 內容雜湊",
+      "upgrade-proposals.md 僅可作 audit projection，不得成為 source of truth；欄位固定為 proposalId / atomId / fromVersion → toVersion / decompositionDecision / automatedGates / status",
+      "node scripts/validate-human-review.mjs 必須可獨立驗證 review queue record、decision-snapshot.hash 與 evidence linkage，不依賴 full suite",
+      "exemplar 至少保留 approve / reject / snapshot-hash-mismatch 三組，可直接重放 CLI 輸出到 validator"
+    ],
+    "deliverables": [
+      "packages/plugin-human-review/src/queue.ts",
+      "packages/plugin-human-review/src/decision-log.ts",
+      "scripts/validate-human-review.mjs",
+      "schemas/human-review/decision.schema.json",
+      "fixtures/human-review/approve.snapshot.json",
+      "fixtures/human-review/reject.snapshot.json",
+      "fixtures/human-review/hash-mismatch.snapshot.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 review CLI / decision-snapshot.hash / Markdown audit projection，避免人工審核流程不可追溯\n2026-05-07 測試穩定性補丁：維持 human review gate 目的不變；補 queue/decision validator 與 decision exemplar triad，避免 review 流程只剩 CLI 手工煙霧測試",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "人類審核閘門以 reference plugin 形式落地，避免污染 core hard dependency。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0020 / ATM-2-0008"
+    }
+  },
+  {
+    "doc_id": "doc_task_0283",
+    "id": "ATM-4-0006",
+    "title": "H2U case study 與 Cocos runtime 邊界",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
+    "status": "open",
+    "type": "case-study-policy",
+    "phase": "ATM-4",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+    "related": [],
+    "depends": [
+      "ATM-4-0002",
+      "ATM-3-0005",
+      "ATM-2.5-0002"
+    ],
+    "acceptance": [
+      "Cocos Component/Node/Prefab 明確禁止進 compute atom",
+      "H2U fidelity/domain scoring 僅屬 case study plugin",
+      "case study 可關閉而不影響 core",
+      "case study 啟動條件：self-hosting alpha0 deterministic gate 全綠",
+      "第一輪只允許 dry-run injection + rollback plan，不替換 draft-builder 主幹"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
+      "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 後置條件：alpha0 全綠後只以 dry-run/rollback 進入 | 阻塞: alpha0 gate 未全綠",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM v0.2 整合開卡",
+      "summary": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0002、ATM-3-0005"
+    },
+    "contracts": {
+      "input": [
+        "v0.2 companion analysis 已確認可作務實化補充"
+      ],
+      "output": [
+        "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
+        "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
       ]
     },
     "harness_evidence": {

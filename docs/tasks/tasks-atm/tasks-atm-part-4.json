@@ -1,183 +1,154 @@
 [
   {
-    "doc_id": "doc_task_0251",
-    "id": "ATM-1-0001",
-    "title": "上游 repo product charter 與 README",
+    "doc_id": "doc_task_0248",
+    "id": "ATM-0-0004",
+    "title": "3KLife adopter 計畫書改版",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "open-source-core",
-    "phase": "ATM-1",
+    "type": "docs",
+    "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T13:13:43+08:00",
-    "started_by_agent": "vs-code-github-copilot",
+    "started_at": "2026-05-05T21:28:29+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-06T08:08:07+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "在 AI-Atomic-Framework repo 建立產品定位、README、LICENSE、CONTRIBUTING 與非目標清單。",
+    "description": "將 AI原子框架開發計畫書改成 3KLife downstream adopter / adapter plan。",
     "related": [],
     "depends": [
       "ATM-0-0003"
     ],
     "acceptance": [
-      "README 可說明 core/adapter/host 邊界",
-      "核心文件不引用 3KLife 私有路徑",
-      "License 策略明確",
-      "README 清楚列出工具選型策略：first implementation recommendation 不是 core contract",
-      "README 明確定義 Agent Operating Layer 與 root-drop 使用者旅程"
+      "文件不再宣稱 ATM core 長在 tools_node",
+      "html-to-ucuf 為 case study 而非 core assumption"
     ],
     "deliverables": [
-      "AI-Atomic-Framework/README.md",
-      "AI-Atomic-Framework/LICENSE",
-      "AI-Atomic-Framework/CONTRIBUTING.md",
-      "AI-Atomic-Framework/docs/ARCHITECTURE.md 初稿",
-      "README 或 docs/ECOSYSTEM_POSITIONING.md 說明 Core vs Adapter vs Plugin 與 Atomic Agents / SDD / Harness Engineering / LangGraph 的定位差異",
-      "README 明確宣告 ATM 是 governance framework，不只是 atom runner",
-      "README 說明 Default Governance Bundle 是官方預設體驗，但不是 packages/core hard dependency",
-      "README 說明 root-drop / zero-install agent bootstrap：使用者放入 ATM 後，任意 AI agent 讀 README/AGENTS 即可開卡、鎖 scope、跑 guard、保存 artifacts/logs/evidence"
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md 標示 upstream/downstream 分工",
+      "task-lock/compute-gate/doc-id/encoding 被描述為 adapter 能力"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d165def 完成 README、MIT LICENSE 保留、CONTRIBUTING、ARCHITECTURE、ECOSYSTEM_POSITIONING 與 product-charter validation scaffold | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0008（技術棧校正矩陣）、ATM-0-0009（governance split）、ATM-0-0011（context budget）、ATM-0-0014（瘦身再開工）代為完成 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "在 AI-Atomic-Framework repo 建立產品定位、README、LICENSE、CONTRIBUTING 與非目標清單。",
-      "position": "ATM-1",
+      "label": "ATM 開源化開卡",
+      "summary": "將 AI原子框架開發計畫書改成 3KLife downstream adopter / adapter plan。",
+      "position": "ATM-0",
       "prereq": "ATM-0-0003"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
       ],
       "output": [
-        "AI-Atomic-Framework/README.md",
-        "AI-Atomic-Framework/LICENSE",
-        "AI-Atomic-Framework/CONTRIBUTING.md",
-        "AI-Atomic-Framework/docs/ARCHITECTURE.md 初稿"
+        "docs/ai_atomic_framework/AI原子框架開發計畫書.md 標示 upstream/downstream 分工",
+        "task-lock/compute-gate/doc-id/encoding 被描述為 adapter 能力"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
       "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes",
-        "確認 product charter 同時涵蓋 Core contracts、Agent Operating Layer、Default Governance Bundle、ProjectAdapter 四層"
+        "確認依賴與 scope",
+        "修改或建立對應文件",
+        "跑 encoding 與 standard gate",
+        "回寫 notes"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/README.md",
-        "AI-Atomic-Framework/LICENSE",
-        "AI-Atomic-Framework/CONTRIBUTING.md",
-        "AI-Atomic-Framework/docs/ARCHITECTURE.md",
-        "AI-Atomic-Framework/docs/ECOSYSTEM_POSITIONING.md",
-        "AI-Atomic-Framework/scripts/validate-product-charter.mjs"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit d165def",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff verified",
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit d165def",
-        "product charter validation scaffold dependency-free"
-      ]
-    },
-    "completed_at": "2026-05-06T13:16:32+08:00"
+      "metrics_summary": []
+    }
   },
   {
-    "doc_id": "doc_task_0252",
-    "id": "ATM-1-0002",
-    "title": "上游 monorepo package skeleton",
+    "doc_id": "doc_task_0328",
+    "id": "ATM-2-0023",
+    "title": "Atomic Map Schema & Registry",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "done",
-    "type": "open-source-core",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T13:35:05+08:00",
-    "started_by_agent": "vs-code-github-copilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立 AI-Atomic-Framework packages/core、cli、plugin-sdk、adapter-local-git、language-js 的基本 package 結構。",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-MAP-EVOLUTION-V2",
+    "chain_step": "1/4",
+    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
+    "description": "為「原子地圖」建立 schema 與 registry：mapId / mapVersion / members[] / edges[] / entrypoints / qualityTargets / mapHash；可獨立於單一 atom 升版。",
     "related": [],
     "depends": [
-      "ATM-1-0001"
+      "ATM-2-0014"
     ],
     "acceptance": [
-      "npm install 成功",
-      "workspace scripts 可列出 package",
-      "不依賴 3KLife 檔案"
+      "atomic-map.schema.json 定義 mapId / mapVersion / members[](atomId@version) / edges[] / entrypoints / qualityTargets / mapHash",
+      "mapHash = hash(sorted(members) + edges + entrypoints)；成員任一 atom 升版必須引發 mapHash 變更",
+      "registry 同時支援 atom entry 與 map entry；舊 atom-only registry fixture 仍綠",
+      "fixtures：minimal-map / multi-edge-map / quality-targets-missing 三種"
     ],
     "deliverables": [
-      "packages/core",
-      "packages/cli",
-      "packages/plugin-sdk",
-      "packages/adapter-local-git",
-      "packages/language-js",
-      "workspace package config"
+      "schemas/registry/atomic-map.schema.json",
+      "packages/core/src/registry/map-registry.ts",
+      "packages/core/src/registry/map-hash.ts",
+      "fixtures/registry/map/minimal.json",
+      "fixtures/registry/map/multi-edge.json"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install --package-lock=false / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 28b368a 建立 packages/core、cli、plugin-sdk、adapter-local-git、language-js、workspace package config、package list 與 skeleton validation fixture | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立 AI-Atomic-Framework packages/core、cli、plugin-sdk、adapter-local-git、language-js 的基本 package 結構。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0001"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "packages/core",
-        "packages/cli",
-        "packages/plugin-sdk",
-        "packages/adapter-local-git",
-        "packages/language-js",
-        "workspace package config"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/packages/core",
-        "AI-Atomic-Framework/packages/cli",
-        "AI-Atomic-Framework/packages/plugin-sdk",
-        "AI-Atomic-Framework/packages/adapter-local-git",
-        "AI-Atomic-Framework/packages/language-js",
-        "AI-Atomic-Framework/scripts/validate-package-skeleton.mjs",
-        "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 28b368a",
-        "npm install --package-lock=false",
-        "npm run packages:list",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit 28b368a",
-        "5 workspace packages created",
-        "package skeleton validation fixture dependency-free"
-      ]
-    },
-    "completed_at": "2026-05-06T13:38:00+08:00"
+      "label": "ATM 演進規劃 v2 附錄 B 開卡",
+      "summary": "把 Atomic Map 升格為 registry 一等公民，為 map-level 演化建立可機讀基礎。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0014"
+    }
+  },
+  {
+    "doc_id": "doc_task_0331",
+    "id": "ATM-4-0008",
+    "title": "H2U Map Evolution Pilot",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "case-study",
+    "phase": "ATM-4",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-MAP-EVOLUTION-V2",
+    "chain_step": "4/4",
+    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
+    "description": "在 H2U case 之上組一張 atomic map（normalizeCssColor + parseCssLength + parseFragmentList），跑首次完整 map-level evolution：包含 atom-bump、atom-extract、map-bump 三種路徑各一次 dry-run。",
+    "related": [],
+    "depends": [
+      "ATM-4-0007",
+      "ATM-2-0024",
+      "ATM-2-0025"
+    ],
+    "acceptance": [
+      "h2u-map v1.0 寫入 registry，含 qualityTargets",
+      "路徑 1：normalizeCssColor v1.0→v1.1 觸發 map propagation 測試，全綠後 atom-bump 落地",
+      "路徑 2：對 parseFragmentList 做 atom-extract，產生新 atom + map members 替換 + review queue 通過",
+      "路徑 3：跨 atom 行為改動，走 map-bump h2u-map v1.0→v1.1，含完整 propagation report",
+      "三條路徑皆通過 neutrality scanner，並留下 evidence + decision log"
+    ],
+    "deliverables": [
+      "docs/case-studies/h2u-map-evolution-pilot.md",
+      "fixtures/case-studies/h2u-map/v1.0.json",
+      "fixtures/case-studies/h2u-map/atom-bump.proposal.json",
+      "fixtures/case-studies/h2u-map/atom-extract.proposal.json",
+      "fixtures/case-studies/h2u-map/map-bump.proposal.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 附錄 B 開卡",
+      "summary": "以 H2U map 端到端驗證三種演化路徑與整合測試傳遞，作為 alpha1 map-level acceptance 證據。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0007 / ATM-2-0024 / ATM-2-0025"
+    }
   }
 ]

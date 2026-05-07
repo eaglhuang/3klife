@@ -1,235 +1,139 @@
 [
   {
-    "id": "ATM-2.5-0002",
-    "title": "Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate",
+    "doc_id": "doc_task_0257",
+    "id": "ATM-1-0007",
+    "title": "Hello-world 與 legacy-strangler 範例",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
     "status": "done",
-    "priority": "P0",
-    "phase": "ATM-2.5",
-    "type": "implementation",
+    "type": "example",
+    "phase": "ATM-1",
     "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0304",
-    "started_at": "2026-05-07T16:09:42.7411577+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "completed_at": "2026-05-07T16:14:13.1446300+08:00",
-    "depends": [
-      "ATM-2.5-0001",
-      "ATM-2-0012"
-    ],
-    "acceptance": [
-      "sandbox fixture 僅涵蓋 birth pipeline（hello-world atom）；evolution sandbox fixture 由 alpha1 新卡承接，不污染 alpha0 fixture"
-    ],
-    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | 狀態: done | 驗證: tests/sandbox/setup.sh + tests/sandbox/verify.sh + sandbox-fixture.mjs pass；self-host-alpha --verify --json 在空 sandbox 回傳全 true | 變更: 新增 sandbox repo fixture、expected baseline 與 CI sandbox gate job | 阻塞: none"
-  },
-  {
-    "id": "ATM-2.5-0003",
-    "title": "Multi-Agent 兼容性驗證：confidence gate",
-    "status": "done",
-    "priority": "P1",
-    "phase": "ATM-2.5",
-    "type": "confidence-gate",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0305",
-    "started_at": "2026-05-07T16:05:00Z",
-    "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-07T16:45:00Z",
-    "depends": [
-      "ATM-2.5-0001",
-      "ATM-2.5-0002"
-    ],
-    "description": "依 multi-agent-compatibility-matrix.md 執行 5 種 AI agent 的 confidence 測試；此卡不再阻塞 alpha0，alpha0 release blocker 僅保留 deterministic profile check。",
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 將 multi-agent alpha gate 降級為 confidence gate；alpha0 release blocker 僅保留 deterministic profile check | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: 開始補齊 self-host-alpha --agent、verify --agents-md 與 multi-agent confidence reports/summary | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:cli pass；npm.cmd run validate:self-hosting-alpha pass；npm.cmd run validate:multi-agent-confidence pass；npm.cmd test/typecheck/lint pass | 變更: upstream commit aa1fcdd 完成 profile-based advisory confidence workflow 與 5 份 report artifacts | 阻塞: none",
-    "acceptance": [
-      "5 個 agent confidence report 皆有結果檔；不要求 3/5 全 true 才能釋出 alpha0",
-      "失敗 agent 有 issue link 與修復計畫，並標記是否阻塞 alpha1",
-      "upgrade --propose dry-run confidence 為 advisory，不得作為 alpha0 release blocker"
-    ],
-    "deliverables": [
-      "Claude Code：atm self-host-alpha --agent claude-code 產生 confidence report",
-      "Cursor：manual run 產生 confidence report",
-      "Aider：aider --message AGENTS.md 跑 confidence workflow",
-      "GitHub Copilot Agent：gh copilot agent run 產生 confidence report",
-      "OpenAI Assistants API：node tests/agents/openai-assistant.test.js 產生 confidence report",
-      "tests/agents/results/<agent>-<timestamp>.json 結果記錄",
-      "docs/multi-agent-results.md 公開結果摘要"
-    ]
-  },
-  {
-    "id": "ATM-3-0006",
-    "title": "task-lock.js adapter 化：接入 ATM LockAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0306",
-    "depends": [
-      "ATM-2.5-0002",
-      "ATM-3-0001"
-    ]
-  },
-  {
-    "id": "ATM-3-0007",
-    "title": "compute-gate.js adapter 化：接入 ATM GateAdapter",
-    "status": "done",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0307",
-    "started_at": "2026-05-08T05:52:40.634350+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-08T05:56:41.421780+08:00",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0008",
-    "title": "doc-id-registry.js adapter 化：接入 ATM DocumentIndexAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0308",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0009",
-    "title": "shard-manager.js adapter 化：接入 ATM ShardAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0309",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0010",
-    "title": "task-card-opener.js adapter 化：接入 ATM TaskAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0310",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0011",
-    "title": "encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0311",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0012",
-    "title": "task-scope / import-boundary 規則包遷移 + @deprecated 標記",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0312",
-    "depends": [
-      "ATM-3-0006"
-    ]
-  },
-  {
-    "id": "ATM-3-0013",
-    "title": "finalize-agent-turn.js wrapper 接入 ATM run envelope",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0313",
-    "depends": [
-      "ATM-3-0006",
-      "ATM-3-0007"
-    ]
-  },
-  {
-    "doc_id": "doc_task_0314",
-    "id": "ATM-0-0013",
-    "title": "tasks-atm.json thin index 與細分片",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "governance",
-    "phase": "ATM-0",
-    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T01:03:22.4082504+08:00",
-    "started_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T15:03:13+08:00",
+    "started_by_agent": "vs-code-github-copilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "將 docs/tasks/tasks-atm.json 從單一大型 aggregate 改為 thin index stub，完整 ATM 任務改存於 docs/tasks/tasks-atm/ 之下的 part 檔，並把每個分片收斂到不超過 300 行、約 10 KB。",
-    "related": [
-      "ATM-3-0009"
-    ],
+    "description": "建立最小 compute atom 與最小 legacy strangler example，讓新使用者可從零跑通。",
+    "related": [],
     "depends": [
-      "ATM-0-0001"
+      "ATM-1-0004",
+      "ATM-1-0005"
     ],
     "acceptance": [
-      "docs/tasks/tasks-atm.json 不再保存完整 tasks array，而是 thin index stub",
-      "docs/tasks/tasks-atm/tasks-atm-part-*.json 每檔不超過 300 行、約 10 KB",
-      "task-card-opener 在 json-out=docs/tasks/tasks-atm.json 時仍可正確 upsert 任務並重建 thin index",
-      "docs/tasks/README.md 補上 thin index 與 rebuild 指令"
+      "hello-world 可在 standalone mode validate",
+      "legacy-strangler-minimal 不含 3KLife 私有路徑",
+      "Quick Start 30 分鐘可跑完"
     ],
     "deliverables": [
-      "docs/tasks/tasks-atm.json thin index stub",
-      "docs/tasks/tasks-atm/.shardrc.json",
-      "docs/tasks/tasks-atm/tasks-atm-part-*.json",
-      "docs/tasks/README.md 的 thin index / rebuild 說明",
-      "tools_node/lib/tasks-atm-shard-store.js",
-      "tools_node/rebuild-tasks-atm-auto-parts.js thin-index 寫入鏈"
+      "examples/hello-world",
+      "examples/legacy-strangler-minimal",
+      "docs/QUICK_START.md 範例命令"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: thin-index rebuild pass；task-card-opener thin-index upsert pass；16 個 part 皆 <=300 行 / <=10 KB；encoding-touched pass；quick gate 3/3 pass；standard gate 僅被既有 unrelated dirty task-scope 擋住 | 變更: 將 tasks-atm.json 改為 thin index，接上 shard store 寫入鏈，並把分片門檻收緊到 300 行 / 10 KB | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:examples / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 2d7e21f 建立 hello-world、legacy-strangler-minimal、docs/QUICK_START.md 與 examples validation gate | 阻塞: none",
     "brief": {
-      "style": "classic",
-      "label": "",
-      "summary": "",
-      "position": "",
-      "prereq": ""
+      "style": "harn-rich",
+      "label": "ATM 上游核心開卡",
+      "summary": "建立最小 compute atom 與最小 legacy strangler example，讓新使用者可從零跑通。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0004、ATM-1-0005"
     },
     "contracts": {
-      "input": [],
-      "output": [],
-      "validation_cmd": "",
-      "rollback_hint": "",
-      "execution_steps": []
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+      ],
+      "output": [
+        "examples/hello-world",
+        "examples/legacy-strangler-minimal",
+        "docs/QUICK_START.md 範例命令"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "execution_steps": [
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
+      ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/examples/hello-world",
+        "AI-Atomic-Framework/examples/legacy-strangler-minimal",
+        "AI-Atomic-Framework/docs/QUICK_START.md",
+        "AI-Atomic-Framework/scripts/validate-examples.mjs",
+        "AI-Atomic-Framework/package.json",
+        "AI-Atomic-Framework/package-lock.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 2d7e21f",
+        "npm install",
+        "npm run packages:list",
+        "npm run validate:examples",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff verified",
       "trace_artifacts": [],
-      "metrics_summary": []
+      "metrics_summary": [
+        "upstream commit 2d7e21f",
+        "hello-world compute atom validates in standalone flow",
+        "legacy-strangler-minimal wraps existing code without downstream private paths",
+        "Quick Start includes install, package list, example tests, spec validation, and full gate commands",
+        "validate:examples verifies 2 examples and Quick Start commands"
+      ]
+    },
+    "completed_at": "2026-05-06T15:07:10+08:00"
+  },
+  {
+    "doc_id": "doc_task_0349",
+    "id": "ATM-2-0042",
+    "title": "Unified Atomic Map Generator — Provisioning Facade & Map ID Policy",
+    "owner": "vs-code-gpt-5.4",
+    "priority": "P0",
+    "status": "done",
+    "type": "manager",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4",
+    "started_at": "2026-05-07T18:56:24.0520935+08:00",
+    "started_by_agent": "vs-code-gpt-5.4",
+    "completed_at": "2026-05-07T19:12:29.7750424+08:00",
+    "chain_id": "ATM-MAP-PROVISIONING-V1",
+    "chain_step": "1/1",
+    "sensor_triggered_by": "atm-map-provisioning-gap",
+    "description": "建立 AtomicMapGenerator 作為新 map 誕生的唯一正式入口，收編 mapId policy、scaffold、mapHash/semanticFingerprint、registry 登錄與測試骨架。",
+    "related": [],
+    "depends": [
+      "ATM-2-0023",
+      "ATM-2-0038"
+    ],
+    "acceptance": [
+      "定義單一 canonical map identity policy：mapId 改為 ATM-MAP-{NNNN}；map.* 只允許留在 fixture 名稱或非 canonical 描述，不得再進 registry 主識別",
+      "收緊 schemas/registry/atomic-map.schema.json、schemas/registry.schema.json 與對應 registry schema mirror，讓 canonical mapId 與 entrypoint ATM-* 規則一致",
+      "新增 generateAtomicMap() façade 與對應 CLI atm create-map / --dry-run 入口，輸出 allocation、workbenchPath、registry preview 與 idempotent 結果",
+      "generator 自動填入 mapId、mapVersion、members、edges、entrypoints、qualityTargets、mapHash、semanticFingerprint，避免 caller 手工串接 hash / registry primitive",
+      "建立 canonical map home atomic_workbench/maps/<mapId>/，至少落地 map.spec.json、map.integration.test.mjs、map.test.report.json 三件套",
+      "generated map 可正式寫入 atomic-registry.json 並同步 atomic_workbench/registry-catalog.md / provenance evidence，不得只落 workbench 不登錄",
+      "補一個 committed dogfood map entry 與 tests/core/map-id-allocator.test.mjs、tests/core/map-generator.test.mjs、tests/cli/create-map.test.mjs 三層驗證"
+    ],
+    "deliverables": [
+      "packages/core/src/manager/map-generator.mjs",
+      "packages/core/src/manager/map-id-allocator.mjs",
+      "packages/cli/src/commands/create-map.mjs",
+      "schemas/registry/atomic-map.schema.json",
+      "atomic_workbench/maps/",
+      "tests/core/map-generator.test.mjs"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4 先收斂 canonical mapId / schema scope / workbench home，再落地 map generator 與 CLI create-map 第一版 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: map-id allocator / map-generator / create-map / schema / police / registry / provenance / npm test / typecheck / lint 全通過 | 變更: 完成 canonical ATM-MAP schema、generateAtomicMap、create-map CLI、map-aware catalog/provenance 與 dogfood map ATM-MAP-0001 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 原子 map 產生器開卡",
+      "summary": "建立 AtomicMapGenerator 作為新 map 誕生的唯一正式入口，收編 mapId policy、scaffold、mapHash/semanticFingerprint、registry 登錄與測試骨架。",
+      "position": "ATM-2（map provisioning / naming convergence / birth facade）",
+      "prereq": "ATM-2-0023 / ATM-2-0038"
     }
   }
 ]

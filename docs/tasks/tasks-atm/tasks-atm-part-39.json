@@ -1,0 +1,91 @@
+[
+  {
+    "doc_id": "doc_task_0294",
+    "id": "ATM-2-0010",
+    "title": "Neutrality boundary rule guard",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "open-source-core",
+    "phase": "ATM-2",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 upstream neutral/boundary rule guard，先以 deterministic 掃描檢查寫死 host 假設，再以 optional semantic audit 補抓隱性耦合與 stale docs。",
+    "related": [
+      "ATM-1-0008",
+      "ATM-1-0009",
+      "ATM-1-0010"
+    ],
+    "depends": [
+      "ATM-2-0007",
+      "ATM-2-0008"
+    ],
+    "acceptance": [
+      "guard 可掃 source/docs/examples/templates/prompt assets",
+      "deterministic 規則可攔截 3KLife/Cocos/html-to-ucuf/task-lock/compute-gate/doc-id 等 protected terms",
+      "semantic audit 只作 warn/needs-review，不單獨決定 hard fail",
+      "guard 區分 code dead-code 與 doc dead-doc，不把 LLM 當唯一裁決",
+      "deterministic / semantic 掃描必須同時涵蓋 .atm/reports/upgrade-proposals/* 與 evidence-store payload",
+      "adopter 私有資訊（3KLife / Cocos / UCUF / html-to-ucuf）出現在 upgrade-proposal 或 evidence 內容時 hard fail"
+    ],
+    "deliverables": [
+      "neutrality/boundary guard spec",
+      "protected-surface 與 banned-term config",
+      "semantic review report schema",
+      "standalone smoke fixture"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 neutrality/boundary rule guard 任務 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM self-hosting first 開卡",
+      "summary": "建立可自動驗證的 neutrality/boundary guard，避免 upstream 再被 adopter 私有假設污染。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0007、ATM-2-0008"
+    },
+    "contracts": {
+      "input": [
+        "governance schema 與 local reference plugins 已定義",
+        "guard 需同時涵蓋 code 與 docs surfaces"
+      ],
+      "output": [
+        "deterministic neutrality scan",
+        "optional semantic audit",
+        "protected surface policy 與 CI smoke"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退 guard 規格或 reference implementation；不得把 3KLife 私有路徑寫回 upstream protected surfaces。",
+      "execution_steps": [
+        "定義 protected surfaces",
+        "定義 banned terms 與 deterministic rules",
+        "補 semantic review report schema",
+        "建立 smoke fixture"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "id": "ATM-3-0009",
+    "title": "shard-manager.js adapter 化：接入 ATM ShardAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0309",
+    "depends": [
+      "ATM-3-0006"
+    ]
+  }
+]

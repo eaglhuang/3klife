@@ -1,0 +1,109 @@
+[
+  {
+    "doc_id": "doc_task_0319",
+    "id": "ATM-2-0016",
+    "title": "Test Report Quality Metrics Extension",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "test-runner",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "3/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "在 test-report.schema.json 上 additive 擴充 quality metrics（latency / errorRate / coverage / edgeCaseCount），並提供最小共同欄位的 baseline fixture。",
+    "related": [],
+    "depends": [
+      "ATM-2-0003",
+      "ATM-2-0009"
+    ],
+    "acceptance": [
+      "test-report.schema.json 增加 metrics 區塊；舊 report 不含 metrics 仍可驗證通過",
+      "至少提供 latency / errorRate / coverage / edgeCaseCount 四項標準欄位",
+      "fixtures：metrics-full / metrics-partial / metrics-absent 三種；舊 fixture 全綠"
+    ],
+    "deliverables": [
+      "schemas/test-report/metrics.schema.json",
+      "packages/core/src/test-runner/metrics-collector.ts",
+      "fixtures/test-report/metrics-full.json",
+      "fixtures/test-report/metrics-absent.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "為 evolution mode 收集可比較的品質指標；alpha1 quality gate 的資料來源。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0003 / ATM-2-0009"
+    }
+  },
+  {
+    "doc_id": "doc_task_0269",
+    "id": "ATM-4-0001",
+    "title": "html-to-ucuf reference case study plan",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "case-study",
+    "phase": "ATM-4",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 html-to-ucuf 定義為 reference case study package，不讓 domain 規則進入 core。",
+    "related": [],
+    "depends": [
+      "ATM-3-0002"
+    ],
+    "acceptance": [
+      "fidelity formula/known gap/fixture 都在 case study",
+      "Roadmap 核心章節不依賴 H2U",
+      "case study 可獨立被關閉而不影響 core"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/html-to-ucuf-case-study.md",
+      "case study scope/non-goals",
+      "domain plugin list"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "將 html-to-ucuf 定義為 reference case study package，不讓 domain 規則進入 core。",
+      "position": "ATM-4",
+      "prereq": "ATM-3-0002"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "docs/ai_atomic_framework/html-to-ucuf-case-study.md",
+        "case study scope/non-goals",
+        "domain plugin list"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  }
+]

@@ -1,8 +1,8 @@
 [
   {
-    "doc_id": "doc_task_0281",
-    "id": "ATM-0-0007",
-    "title": "上游 roadmap v0.2 技術選型整合",
+    "doc_id": "doc_task_0247",
+    "id": "ATM-0-0003",
+    "title": "Roadmap 上游開源化改版",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
@@ -12,204 +12,159 @@
     "created_by_agent": "GitHubCopilot",
     "started_at": "2026-05-05T20:58:01+08:00",
     "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-05T21:02:01+08:00",
+    "completed_at": "2026-05-06T08:08:07+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
+    "description": "將 AI_Atomic_Framework_Roadmap.md 改成 AI-Atomic-Framework 上游開源框架藍圖，核心章節不得再綁 3KLife。",
     "related": [],
     "depends": [
-      "ATM-0-0003"
+      "ATM-0-0001"
     ],
     "acceptance": [
-      "Roadmap 清楚標示 v0.2 是 companion analysis",
-      "core 不硬依賴 LangGraph/pgvector/Deno/OpenTelemetry 等外部工具",
-      "TypeScript/Zod/Vitest 等只被描述為 first implementation recommendation"
+      "核心章節不把 3KLife/Cocos/html-to-ucuf/tools_node 當作前提",
+      "明確記載 GitHub repo https://github.com/eaglhuang/AI-Atomic-Framework",
+      "Roadmap 完成後確認 core 不硬依賴外部大型框架，外部工具皆以 adapter/plugin 表示"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md 轉為 upstream roadmap",
+      "新增 core adapter host project 分層",
+      "html-to-ucuf 降級為 reference case study",
+      "v0.2 companion 的 Core 極簡、無硬依賴與 optional plugin 原則已寫入 upstream Roadmap"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 整合 v0.2 companion 到 Roadmap、3KLife plan、extraction plan，並新增 6 張補強卡 | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0007（v0.2整合+Roadmap upstream改版）與 ATM-0-0010（self-hosting first回寫）代為完成 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
+      "label": "ATM 開源化開卡",
+      "summary": "將 AI_Atomic_Framework_Roadmap.md 改成 AI-Atomic-Framework 上游開源框架藍圖，核心章節不得再綁 3KLife。",
       "position": "ATM-0",
-      "prereq": "ATM-0-0003"
+      "prereq": "ATM-0-0001"
     },
     "contracts": {
       "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
+        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
       ],
       "output": [
-        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
-        "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
-        "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
+        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md 轉為 upstream roadmap",
+        "新增 core adapter host project 分層",
+        "html-to-ucuf 降級為 reference case study"
       ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
+        "確認依賴與 scope",
+        "修改或建立對應文件",
+        "跑 encoding 與 standard gate",
+        "回寫 notes"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [
-        "node tools_node/check-encoding-touched.js",
-        "node tools_node/check-task-scope.js --task ATM-0-0007 --verbose",
-        "node tools_node/compute-gate.js --profile standard --agent-feedback"
-      ],
+      "validation_evidence": [],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
     }
   },
   {
-    "doc_id": "doc_task_0282",
-    "id": "ATM-0-0008",
-    "title": "3KLife adapter 技術棧校正矩陣",
-    "owner": "GitHubCopilot",
-    "priority": "P1",
-    "status": "done",
-    "type": "adapter-docs",
-    "phase": "ATM-0",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T21:28:29+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-05T21:32:18+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 v0.2 的工具選型與 3KLife 現況校正成 downstream adopter 採納矩陣，避免把 local workbench 誤當 upstream core。",
-    "related": [],
-    "depends": [
-      "ATM-0-0004"
-    ],
-    "acceptance": [
-      "task-lock/compute-gate/doc-id/encoding 都被描述為 ProjectAdapter 能力",
-      "tools_node/atomic-framework 僅是 local wrapper/workbench",
-      "不把 H2U/Cocos 規則反推回 core"
-    ],
-    "deliverables": [
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md v0.2 採納/降級/延後矩陣",
-      "3KLife adapter 技術棧校正摘要"
-    ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 補齊 3KLife adapter 技術棧校正細版矩陣，明確區分 upstream core、ProjectAdapter、optional adapter 與延後項 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "將 v0.2 的工具選型與 3KLife 現況校正成 downstream adopter 採納矩陣，避免把 local workbench 誤當 upstream core。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0004"
-    },
-    "contracts": {
-      "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
-      ],
-      "output": [
-        "docs/ai_atomic_framework/AI原子框架開發計畫書.md v0.2 採納/降級/延後矩陣",
-        "3KLife adapter 技術棧校正摘要"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [
-        "node tools_node/check-task-scope.js --task ATM-0-0008 --verbose",
-        "node tools_node/check-encoding-touched.js",
-        "node tools_node/compute-gate.js --profile standard --agent-feedback"
-      ],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0287",
-    "id": "ATM-0-0009",
-    "title": "Default Governance Bundle 切分重規劃",
+    "doc_id": "doc_task_0325",
+    "id": "ATM-2-0022",
+    "title": "Rollback Registry Pointer & 三段 hash Proof",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "done",
-    "type": "docs-governance",
-    "phase": "ATM-0",
-    "created": "2026-05-05",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T22:07:57+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 ATM 從 atom runner 補強為完整 governance framework，正式切分 Upstream Core、Agent Operating Layer、Default Governance Bundle 與 3KLife ProjectAdapter。",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "9/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "提供 atm rollback CLI 與 rollback-proof：將 currentVersion 指回歷史版本，並驗證 spec/code/test 三段 hash 與目標 entry 完全一致。",
     "related": [],
     "depends": [
-      "ATM-0-0008"
+      "ATM-2-0014",
+      "ATM-2-0021"
     ],
     "acceptance": [
-      "計畫書新增 Default Governance Bundle 分層",
-      "open-source extraction plan 納入 governance bundle 為 v0.1 alpha 必備",
-      "新增後續 governance bundle schema/reference plugin 任務卡",
-      "不把 3KLife task-lock/compute-gate/doc-id/shard-manager 反推成 core hard dependency"
+      "CLI atm rollback --atom <id> --to <ver> --plan 先輸出 dry-run plan；--apply 才真正寫 registry",
+      "rollback 後 atm verify --self 必須顯示 spec/code/test 三段 hash 與目標版本完全一致；任一不符即 hard fail，產出 rollback-proof.failure.json",
+      "rollback-proof.schema.json 含 atomId / fromVersion / toVersion / hashesVerified / verifiedAt / proofId",
+      "evidence store 寫入 evidenceType=rollback-proof",
+      "CLI atm rollback 支援 --target map；map rollback 必須同時驗證所有成員 atom 的 hash 與目標 mapVersion entry 一致",
+      "rollback-proof 對 map 模式輸出 memberAtomProofs[]，逐一列三段 hash 驗證結果",
+      "rollback-proof.schema.json 必須含發起的 behaviorId（哪個 behavior 的 rollback；例如 behavior.evolve / behavior.merge）",
+      "rollback contract 對稱性：每個 behavior 的 forward action 必須有對應的 reverse action；rollback 引擎可從 behaviorId 查 reverse 規則",
+      "Map rollback workbench 路徑解析須支援雙路徑：canonical atomic_workbench/maps/<mapId>/ 優先，fallback legacy atoms/<owner>/map/",
+      "rollback-proof.schema.json map mode 須含 mapGeneratorProvenance 欄位，標示 map 是否 generator-born",
+      "rollback-proof 必須含 statusReverted 與 semanticFingerprintReverted 兩個布林欄位；任一為 false 即 hard fail，不得宣稱 rollback 成功",
+      "node scripts/validate-rollback-proof.mjs 必須可獨立驗證三段 hash proof、statusReverted / semanticFingerprintReverted、map rollback 雙路徑解析與 behaviorId 對稱性",
+      "exemplar 至少保留 proof-pass / proof-fail-hash-mismatch / proof-fail-status-not-reverted / proof-fail-semantic-fingerprint-not-reverted 四組，供 validator 直接重放"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md governance split 章節",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md governance bundle 分層",
-      "docs/agent-briefs/tasks/ATM-2-0007.md",
-      "docs/agent-briefs/tasks/ATM-2-0008.md"
+      "packages/core/src/registry/rollback.ts",
+      "packages/cli/commands/rollback.ts",
+      "schemas/registry/rollback-proof.schema.json",
+      "scripts/validate-rollback-proof.mjs",
+      "fixtures/rollback/proof-pass.json",
+      "fixtures/rollback/proof-fail-hash-mismatch.json",
+      "fixtures/rollback/proof-fail-status-not-reverted.json",
+      "fixtures/rollback/proof-fail-semantic-fingerprint-not-reverted.json"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope uncovered=0；compute-gate standard 8/8 pass | 變更: 落地 Default Governance Bundle 與 Agent Operating Layer 切分，新增 ATM-1-0008/ATM-2-0009，將 artifacts/logs/md-json state/evidence 納入通用層 | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— rollback proof 必須含 behaviorId 與對稱 rollback contract\n2026-05-07 ATM-2-0042 連鎖影響：追加 AC 9~10（map rollback 雙路徑解析、mapGeneratorProvenance 欄位）\n2026-05-07 附錄 C 治理補丁：rollback proof 追加 status / semanticFingerprint 對稱回退驗證，避免只回 hash 不回治理狀態\n2026-05-07 測試穩定性補丁：維持 rollback safety-net 目的不變；補 proof validator 與 failure matrix exemplar，讓 rollback 失敗能先在 proof seam 定位",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM governance split 開卡",
-      "summary": "將 ATM 補強為包含通用治理 primitives 的完整開源框架，同時維持 3KLife 既有工具以 adapter 接入。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0008"
-    },
-    "contracts": {
-      "input": [
-        "已確認 ATM 不能只剩 atom runner",
-        "3KLife 既有治理工具需最小改動保留"
-      ],
-      "output": [
-        "更新 downstream plan 分工模型",
-        "更新 extraction plan v0.1 alpha 必備",
-        "新增 governance bundle 後續任務"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
-      "execution_steps": [
-        "鎖定 ATM-0-0009",
-        "建立 governance bundle 任務卡",
-        "更新正式計畫文件",
-        "同步 tasks-atm shard",
-        "跑 encoding 與 standard gate"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [
-        "node tools_node/doc-id-registry.js",
-        "node tools_node/check-encoding-touched.js",
-        "node tools_node/check-task-scope.js --task ATM-0-0009 --verbose",
-        "node tools_node/compute-gate.js --profile standard --agent-feedback"
-      ],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    },
-    "completed_at": "2026-05-05T22:21:53+08:00"
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "evolution 管線的最終安全網：失敗時可確定性回退，並留下可驗證 proof。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0014 / ATM-2-0021"
+    }
+  },
+  {
+    "doc_id": "doc_task_0327",
+    "id": "ATM-4-0007",
+    "title": "H2U normalizeCssColor v1.0→v1.1 evolution pilot",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "case-study",
+    "phase": "ATM-4",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "11/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "以 normalizeCssColor case atom 跑第一次完整 evolution 閉環：proposal → automatedGates → human review → registry update or rollback。",
+    "related": [],
+    "depends": [
+      "ATM-4-0003",
+      "ATM-2-0020",
+      "ATM-2-0021"
+    ],
+    "acceptance": [
+      "normalizeCssColor v1.0 進 registry；v1.1 透過 atm upgrade --propose 產 proposal.json",
+      "automatedGates（nonRegression / qualityImprovement / newCapability）全綠才進 review queue",
+      "human review approve 後 registry currentVersion 指向 v1.1；reject 後保持 v1.0 並寫 decision log",
+      "完整 evidence 鏈可由 atm replay 重新跑 + neutrality scanner 全綠"
+    ],
+    "deliverables": [
+      "docs/case-studies/h2u-normalize-css-color-evolution-pilot.md",
+      "fixtures/case-studies/normalize-css-color/v1.0.json",
+      "fixtures/case-studies/normalize-css-color/v1.1.json",
+      "fixtures/case-studies/normalize-css-color/proposal.json",
+      "fixtures/case-studies/normalize-css-color/decision-approve.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "把 alpha1 evolution pipeline 在 H2U case 上做端到端落地，作為 alpha1 acceptance 證據。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0003 / ATM-2-0020 / ATM-2-0021"
+    }
   }
 ]

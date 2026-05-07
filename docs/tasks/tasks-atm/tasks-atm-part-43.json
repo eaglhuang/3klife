@@ -1,0 +1,61 @@
+[
+  {
+    "doc_id": "doc_task_0317",
+    "id": "ATM-2-0014",
+    "title": "Registry Version History v0.1（schema-additive only）",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-07T16:08:50.7949141+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "completed_at": "2026-05-07T16:31:21.2911795+08:00",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "1/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "為 atomic-registry 增加 currentVersion 與 versions[] 欄位，採 schema-additive 升級；既有 registry fixture 必須維持全綠。",
+    "related": [],
+    "depends": [
+      "ATM-2-0004",
+      "ATM-2-0013"
+    ],
+    "acceptance": [
+      "registry entry 可選擇性帶 currentVersion 與 versions[] 陣列；versions[] 元素含 specHash/codeHash/testHash/timestamp",
+      "舊 registry fixture（不含 versions[]）validate 必須維持全綠",
+      "新增 schema 驗證 fixture：v1.0 entry、v1.0+v1.1 multi-version entry、缺欄位 negative case",
+      "CHANGELOG / migration note 標記 schema 升版且 backwards compatible"
+    ],
+    "deliverables": [
+      "packages/core/src/registry/registry-v1.schema.json — 新增 currentVersion / versions[]",
+      "packages/core/src/registry/registry-migration.ts — 舊→新 in-memory upcast",
+      "fixtures/registry/v1-with-versions.json",
+      "fixtures/registry/legacy-no-versions.json"
+    ],
+    "notes": "2026-05-07 | 狀態: done | 驗證: npm.cmd test, node --input-type=module import(index.ts), git commit 604753e | 變更: upstream 已完成 Registry Version History v0.1 起始骨架，包含 currentVersion / versions[] schema、in-memory upcast helper、legacy + versioned fixtures 與 changelog note | 阻塞: none\n2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— registryEntry 追加 optional `semanticFingerprint`、`lineageLogRef`、`ttl`、`governance.tier`；hot entry 欄位數 ≤ 10\n2026-05-07 ATM-2-0042 連鎖影響（notes 追加，不重啟驗收）：versions[] schema 須同時適用 atom 與 map registry entry；map version entry 含 mapHash 與 memberSnapshot",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "Registry 增加版本歷史欄位（schema-additive），為 alpha1 演化管線鋪路。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0004 / ATM-2-0013"
+    }
+  },
+  {
+    "id": "ATM-3-0013",
+    "title": "finalize-agent-turn.js wrapper 接入 ATM run envelope",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0313",
+    "depends": [
+      "ATM-3-0006",
+      "ATM-3-0007"
+    ]
+  }
+]

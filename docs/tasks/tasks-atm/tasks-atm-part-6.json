@@ -1,177 +1,189 @@
 [
   {
-    "doc_id": "doc_task_0255",
-    "id": "ATM-1-0005",
-    "title": "LocalGitAdapter reference implementation",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "adapter",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T14:34:27+08:00",
-    "started_by_agent": "vs-code-github-copilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立不依賴任何 host governance 的 LocalGitAdapter，作為 open-source core 預設 adapter。",
-    "related": [],
-    "depends": [
-      "ATM-1-0004"
-    ],
-    "acceptance": [
-      "無 task-lock 系統時仍可 scaffold/test/validate",
-      "adapter 行為明確標示 dry-run/no-op 能力"
-    ],
-    "deliverables": [
-      "packages/adapter-local-git",
-      "ProjectAdapter no-op lock/gate/doc implementation",
-      "file system registry path support"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:adapter-local-git / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 8164a89 建立 LocalGitAdapter reference implementation、no-op lock/gate/doc、filesystem registry path support 與 integration fixture | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立不依賴任何 host governance 的 LocalGitAdapter，作為 open-source core 預設 adapter。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0004"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "packages/adapter-local-git",
-        "ProjectAdapter no-op lock/gate/doc implementation",
-        "file system registry path support"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/packages/adapter-local-git/package.json",
-        "AI-Atomic-Framework/packages/adapter-local-git/src/index.ts",
-        "AI-Atomic-Framework/packages/adapter-local-git/src/local-git-adapter.mjs",
-        "AI-Atomic-Framework/packages/adapter-local-git/README.md",
-        "AI-Atomic-Framework/scripts/validate-local-git-adapter.mjs",
-        "AI-Atomic-Framework/tests/adapter-local-git.fixture.json",
-        "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 8164a89",
-        "npm install",
-        "npm run packages:list",
-        "npm run validate:adapter-local-git",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff verified",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit 8164a89",
-        "LocalGitAdapter scaffold creates .atm/registry and .atm/reports",
-        "lock/gate/doc return explicit no-op evidence without host governance",
-        "filesystem registry path writes and reads entries",
-        "dry-run scaffold does not write files"
-      ]
-    },
-    "completed_at": "2026-05-06T14:39:45+08:00"
-  },
-  {
-    "doc_id": "doc_task_0256",
-    "id": "ATM-1-0006",
-    "title": "JS/TS LanguageAdapter reference",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0250",
+    "id": "ATM-0-0006",
+    "title": "ATM 任務卡模板與開卡規則",
+    "owner": "vs-insiders-gpt-5.4-mini",
     "priority": "P1",
     "status": "done",
-    "type": "adapter",
-    "phase": "ATM-1",
+    "type": "docs",
+    "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T14:48:06+08:00",
-    "started_by_agent": "vs-code-github-copilot",
+    "started_at": "2026-05-06T12:50:58.8606404+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "completed_at": "2026-05-06T12:52:45.2848800+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立 JavaScript/TypeScript reference language adapter，負責 import scan、test command 與 entrypoint 規則。",
+    "description": "建立 ATM 任務卡模板，統一 upstream core、adapter、case study 任務欄位。",
     "related": [],
     "depends": [
-      "ATM-1-0004"
+      "ATM-0-0001",
+      "ATM-0-0003"
     ],
     "acceptance": [
-      "JS compute atom 可被 validate",
-      "forbidden import fixture 失敗",
-      "LanguageAdapter API 可讓未來 Python/C# 實作"
+      "模板包含 hostKind/targetRepo/alphaGate/packageScope/adapterScope/allowed_files/forbidden_files/non_goals/executionMode/validation_cmd/rollback_hint",
+      "新 ATM 卡可由 task-card-opener 一致生成"
     ],
     "deliverables": [
-      "packages/language-js",
-      "JS/TS import policy fixture",
-      "test command runner contract"
+      "docs/agent-briefs/atm-task-template.md",
+      "task-card-opener 使用說明補充"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:language-js / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 6f4bcaa 建立 JS/TS LanguageAdapter reference、import scan、forbidden import fixture、entrypoint rule 與 delegated test command runner contract | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: encoding passed；standard gate 受既有 dirty files 阻擋 | 變更: 建立 ATM 任務卡模板並補充開卡欄位規則 | 阻塞: 既有 task-scope 雜訊",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立 JavaScript/TypeScript reference language adapter，負責 import scan、test command 與 entrypoint 規則。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0004"
+      "label": "ATM 開源化開卡",
+      "summary": "建立 ATM 任務卡模板，統一 upstream core、adapter、case study 任務欄位。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0001、ATM-0-0003"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
       ],
       "output": [
-        "packages/language-js",
-        "JS/TS import policy fixture",
-        "test command runner contract"
+        "docs/agent-briefs/atm-task-template.md",
+        "task-card-opener 使用說明補充"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
       "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
+        "確認依賴與 scope",
+        "修改或建立對應文件",
+        "跑 encoding 與 standard gate",
+        "回寫 notes"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/packages/language-js/package.json",
-        "AI-Atomic-Framework/packages/language-js/src/index.ts",
-        "AI-Atomic-Framework/packages/language-js/src/language-js-adapter.mjs",
-        "AI-Atomic-Framework/packages/language-js/README.md",
-        "AI-Atomic-Framework/scripts/validate-language-js.mjs",
-        "AI-Atomic-Framework/tests/language-js-fixtures/import-policy.fixture.json",
-        "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 6f4bcaa",
-        "npm install",
-        "npm run packages:list",
-        "npm run validate:language-js",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff verified",
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit 6f4bcaa",
-        "valid JS/TS compute atom passes language adapter validation",
-        "forbidden import fixture fails with ATM_JS_FORBIDDEN_IMPORT",
-        "missing entrypoint export fails with ATM_JS_ENTRYPOINT_EXPORT_MISSING",
-        "test/typecheck/lint commands are delegated to project package scripts"
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0330",
+    "id": "ATM-2-0025",
+    "title": "Cross-Atom Integration Test Runner",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "test-runner",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-MAP-EVOLUTION-V2",
+    "chain_step": "3/4",
+    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
+    "description": "提供 map-level integration test runner：當任一成員 atom 升版時，自動跑該 atom 所屬全部 map 的整合測試與 application-level smoke tests。",
+    "related": [],
+    "depends": [
+      "ATM-2-0003",
+      "ATM-2-0023"
+    ],
+    "acceptance": [
+      "CLI atm test --map <mapId> 跑 map-level integration tests 並輸出符合 metrics schema 的 report",
+      "CLI atm test --propagate <atomId> 自動找出所有引用該 atom 的 maps 並跑 integration tests",
+      "integration test report 含 perMapStatus[] / propagationDuration / failedDownstream[]",
+      "birth-mode atom test 與 map-level test 共用同一 metrics schema（ATM-2-0016）",
+      "fixtures：propagation-pass / propagation-fail-on-downstream-map 兩種"
+    ],
+    "deliverables": [
+      "packages/core/src/test-runner/map-integration.ts",
+      "packages/core/src/test-runner/propagation.ts",
+      "packages/cli/commands/test-map.ts",
+      "fixtures/test-runner/map-propagation-pass.json",
+      "fixtures/test-runner/map-propagation-fail.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 附錄 B 開卡",
+      "summary": "硬規則：任一 atom 升版必須跑所有引用 map 的整合測試；本卡是這條規則的執行器。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0003 / ATM-2-0023"
+    }
+  },
+  {
+    "doc_id": "doc_task_0273",
+    "id": "ATM-5-0002",
+    "title": "Adapter Guide 與 Plugin SDK 文件",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "docs",
+    "phase": "ATM-5",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "撰寫 ProjectAdapter、LanguageAdapter、Capability、Police、Injector plugin 的開發指南。",
+    "related": [],
+    "depends": [
+      "ATM-2-0006",
+      "ATM-3-0001"
+    ],
+    "acceptance": [
+      "第三方專案可依文件實作 adapter",
+      "3KLife adapter 可作 reference",
+      "core 禁止 domain logic 規則明確",
+      "第三方專案可依文件接入 artifacts/logs/reports 與 Markdown/JSON state files",
+      "CAR 對照章節說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
+      "HarnessCard-lite 指南說明報告只落在 run report / typed evidence，不替代 core contracts"
+    ],
+    "deliverables": [
+      "docs/ADAPTER_GUIDE.md",
+      "docs/PLUGIN_SDK.md",
+      "examples/hosted-adapter-impl",
+      "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
+      "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
+      "standalone Default Governance Bundle 與 3KLife adapter 的 artifacts/logs/reports mapping 對照",
+      "CAR / HarnessCard-lite adapter reporting guidance"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter migration guide 要求 | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 CAR/HarnessCard docs acceptance；已 done 卡不回改 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "撰寫 ProjectAdapter、LanguageAdapter、Capability、Police、Injector plugin 的開發指南。",
+      "position": "ATM-5",
+      "prereq": "ATM-2-0006、ATM-3-0001"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "docs/ADAPTER_GUIDE.md",
+        "docs/PLUGIN_SDK.md",
+        "examples/hosted-adapter-impl",
+        "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
+        "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
+        "CAR 對照章節：說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
+        "HarnessCard-lite 指南：adapter 文件需說明報告只落在 run report / typed evidence，不替代 core contracts"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes",
+        "補充 TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 的 host 實作指南"
       ]
     },
-    "completed_at": "2026-05-06T14:51:24+08:00"
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

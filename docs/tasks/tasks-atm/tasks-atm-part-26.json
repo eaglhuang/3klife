@@ -1,150 +1,123 @@
 [
   {
-    "doc_id": "doc_task_0325",
-    "id": "ATM-2-0022",
-    "title": "Rollback Registry Pointer & 三段 hash Proof",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0341",
+    "id": "ATM-1-0011",
+    "title": "統一 Atomic ID canonical 命名並清除雙軌識別",
+    "owner": "vs-code-gpt-5.4",
     "priority": "P0",
+    "status": "done",
+    "type": "open-source-core",
+    "phase": "ATM-1",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4",
+    "started_at": "2026-05-07T12:07:31+08:00",
+    "started_by_agent": "vs-code-gpt-5.4",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "現行 ATM 規劃把 task card ID、planning `ATM-CORE-*` 與 upstream spec/registry 的 dot-notation（如 `atom.core-seed`、`atom.plugin-rule-guard.neutrality-scanner`）混成多層識別，導致 Agent 合法地把 dot-notation 當 canonical atomic id。此卡要求把 Atomic ID 收斂為唯一主鍵 `ATM-{bucket}-{NNNN}`（4 位流水號），dot-notation 只能退回 `name/logicalName`；並同步修正 roadmap、active plan、evolution docs、schema、registry、fixtures、validators 與 workbench path，避免再出現第二種 atom id。",
+    "related": [
+      "ATM-1.5-0001",
+      "ATM-1.5-0002",
+      "ATM-2-0012"
+    ],
+    "depends": [
+      "ATM-0-0002",
+      "ATM-1-0003"
+    ],
+    "acceptance": [
+      "upstream schema 與 validators 對 canonical Atomic ID 有 hard-fail pattern，`id` / `atomId` 不再接受 dot-notation",
+      "seed 與 neutrality scanner 等既有 atom 全面改用 `ATM-CORE-*` canonical id，且不再把 `legacyPlanningId` 當第二識別主鍵",
+      "名詞定義文件與 ATM 規劃文件明確區分 `task card id`、`atomicId`、`mapId`、`logicalName`，不再把 `atom.*` / `map.*` 當主 id",
+      "roadmap、active plan、evolution proposal 與相關 shards 的示例全部統一為 `ATM-CORE-0001` 類格式；語意名稱移到非 id 欄位",
+      "fixtures / tests / validation script 新增 fail-fast 防線，未來若再把 dot-notation 塞回 canonical id 會直接紅燈"
+    ],
+    "deliverables": [
+      "AI-Atomic-Framework/schemas/atomic-spec.schema.json",
+      "AI-Atomic-Framework/schemas/registry.schema.json",
+      "AI-Atomic-Framework/atomic-registry.json",
+      "AI-Atomic-Framework/specs/atom-seed-spec.json",
+      "AI-Atomic-Framework/specs/neutrality-scanner.atom.json",
+      "AI-Atomic-Framework/packages/core/seed.js",
+      "AI-Atomic-Framework/scripts/validate-neutrality-scanner.mjs 與相關 fixtures/tests",
+      "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/關於進化版的原子提案.md 與對應 shards/active planning docs"
+    ],
+    "notes": "2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4 開始執行 ATM-1-0011，先收斂 upstream canonical Atomic ID 契約與 downstream 規劃文件示例 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: AI-Atomic-Framework npm test/typecheck/lint 與 validate scripts 全綠；3KLife encoding checks 與 task-lock cross-shard test 通過 | 變更: upstream commit 9c1205f + downstream commits 72a3301/ddbdcb6/a3e2798 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 上游契約修正開卡",
+      "summary": "收斂 Atomic ID 為唯一 canonical 主鍵，並清除 planning / schema / registry / fixture 的雙軌識別。",
+      "position": "ATM-1",
+      "prereq": "ATM-0-0002、ATM-1-0003 已完成；ATM-1.5-0001/0002 與 ATM-2-0012 為受影響實作/追蹤卡"
+    },
+    "contracts": {
+      "input": [
+        "名詞定義文件目前只規範任務卡 ID，尚未把 Atomic ID 寫成正式條目",
+        "ATM-1-0003 已交付 Atomic Spec / Registry schema v0.1，但 `id` / `atomId` 尚未強制 `ATM-{bucket}-{NNNN}` pattern",
+        "ATM-1.5-0001/0002 已把 `ATM-CORE-0001` 降成 `legacyPlanningId`，現行 spec/registry 改用 `atom.core-seed`",
+        "upstream `atomic-registry.json`、`specs/atom-seed-spec.json`、`specs/neutrality-scanner.atom.json`、`packages/core/seed.js` 與 validate scripts / fixtures 已實際接受 dot-notation 作 id",
+        "3KLife 規劃文件（historical roadmap、AI原子框架開發計畫書、關於進化版的原子提案、open-source-extraction-plan、dev-plan/evolution shards）已混用 `ATM-CORE-*` 與 `atom.*` 範例"
+      ],
+      "output": [
+        "upstream `schemas/atomic-spec.schema.json`、`schemas/registry.schema.json` 對 canonical Atomic ID 加上 hard pattern，`id` / `atomId` 不再接受 `atom.*` 或 `map.*` dot-notation",
+        "upstream `atomic-registry.json`、`specs/atom-seed-spec.json`、`specs/neutrality-scanner.atom.json`、`packages/core/seed.js`、相關 validate scripts / fixtures / workbench path 全面改用 `ATM-CORE-0001`、`ATM-CORE-0003` 等 canonical id",
+        "dot-notation 僅保留在 `name` / `logicalName` / `semanticName` 類欄位，不得再作第二種 Atomic ID；`legacyPlanningId` 不得再承擔主識別語意",
+        "`docs/遊戲規格文件/系統規格書/名詞定義文件.md` 明確新增 Atomic ID 條目，正式區分 `task card id`、`atomicId`、`mapId`、`logicalName` 的角色",
+        "`docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md` 與所有相關 planning shards / 提案文件中的錯誤示例全面改成 `ATM-CORE-0001` 風格；若需保留語意名稱，一律改到非 id 欄位",
+        "新增 fail-fast 驗證：未來任何 spec / registry / fixture / validator 若再把 dot-notation 寫進 canonical id，CI 或 local validation 直接 fail"
+      ],
+      "validation_cmd": "cd ../AI-Atomic-Framework\\nnpm run validate:schemas\\nnpm run validate:cli\\nnode scripts/validate-neutrality-scanner.mjs\\nnpm test\\nnpm run typecheck\\nnpm run lint\\ncd ../3KLife\\nnpm run check:encoding:touched -- --files docs/遊戲規格文件/系統規格書/名詞定義文件.md docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/關於進化版的原子提案.md",
+      "rollback_hint": "回退本卡 touched files；若 upstream 已開始批次 rename Atomic ID，需連同 schema / registry / fixtures / validators 一起回退，禁止只回退其中一層造成雙軌識別半套狀態。",
+      "execution_steps": [
+        "正式把 canonical Atomic ID 規則寫回名詞定義文件與 active ATM planning docs",
+        "收緊 upstream schema、registry helper 與 validator，讓 dot-notation 不能再佔用 `id` / `atomId`",
+        "將 seed、neutrality scanner 與相關 fixtures/tests/workbench path 改為 `ATM-CORE-*` canonical id，語意名稱搬到非 id 欄位",
+        "全面掃描並回寫 roadmap、進化提案、open-source extraction plan、dev-plan / evolution / roadmap shards 的錯誤示例",
+        "補上 migration / validation 說明並跑完整 upstream validation + downstream encoding/doc 檢查"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/schemas/atomic-spec.schema.json",
+        "AI-Atomic-Framework/atomic-registry.json",
+        "AI-Atomic-Framework/specs/atom-seed-spec.json",
+        "AI-Atomic-Framework/specs/neutrality-scanner.atom.json",
+        "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
+        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+        "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+        "docs/ai_atomic_framework/關於進化版的原子提案.md"
+      ],
+      "validation_evidence": [],
+      "handoff_diff_status": "pending",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "受影響面至少涵蓋 upstream schema/registry/specs/validators 與 downstream roadmap/active plans"
+      ]
+    }
+  },
+  {
+    "doc_id": "doc_task_0353",
+    "id": "ATM-2-0046",
+    "title": "Registry Catalog Map Section Rendering",
+    "owner": "ClaudeCode_sonnet-4-6",
+    "priority": "P1",
     "status": "open",
     "type": "registry",
     "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "9/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "提供 atm rollback CLI 與 rollback-proof：將 currentVersion 指回歷史版本，並驗證 spec/code/test 三段 hash 與目標 entry 完全一致。",
+    "created": "2026-05-07",
+    "created_by_agent": "ClaudeCode_sonnet-4-6",
+    "sensor_triggered_by": "atm-2-0042-map-generator-ripple",
+    "description": "ATM-2-0034 catalog renderer 追加 map 段落，顯示 mapId / member count / status / workbench path。",
     "related": [],
     "depends": [
-      "ATM-2-0014",
-      "ATM-2-0021"
+      "ATM-2-0034",
+      "ATM-2-0042"
     ],
-    "acceptance": [
-      "CLI atm rollback --atom <id> --to <ver> --plan 先輸出 dry-run plan；--apply 才真正寫 registry",
-      "rollback 後 atm verify --self 必須顯示 spec/code/test 三段 hash 與目標版本完全一致；任一不符即 hard fail，產出 rollback-proof.failure.json",
-      "rollback-proof.schema.json 含 atomId / fromVersion / toVersion / hashesVerified / verifiedAt / proofId",
-      "evidence store 寫入 evidenceType=rollback-proof",
-      "CLI atm rollback 支援 --target map；map rollback 必須同時驗證所有成員 atom 的 hash 與目標 mapVersion entry 一致",
-      "rollback-proof 對 map 模式輸出 memberAtomProofs[]，逐一列三段 hash 驗證結果",
-      "rollback-proof.schema.json 必須含發起的 behaviorId（哪個 behavior 的 rollback；例如 behavior.evolve / behavior.merge）",
-      "rollback contract 對稱性：每個 behavior 的 forward action 必須有對應的 reverse action；rollback 引擎可從 behaviorId 查 reverse 規則",
-      "Map rollback workbench 路徑解析須支援雙路徑：canonical atomic_workbench/maps/<mapId>/ 優先，fallback legacy atoms/<owner>/map/",
-      "rollback-proof.schema.json map mode 須含 mapGeneratorProvenance 欄位，標示 map 是否 generator-born",
-      "rollback-proof 必須含 statusReverted 與 semanticFingerprintReverted 兩個布林欄位；任一為 false 即 hard fail，不得宣稱 rollback 成功",
-      "node scripts/validate-rollback-proof.mjs 必須可獨立驗證三段 hash proof、statusReverted / semanticFingerprintReverted、map rollback 雙路徑解析與 behaviorId 對稱性",
-      "exemplar 至少保留 proof-pass / proof-fail-hash-mismatch / proof-fail-status-not-reverted / proof-fail-semantic-fingerprint-not-reverted 四組，供 validator 直接重放"
-    ],
-    "deliverables": [
-      "packages/core/src/registry/rollback.ts",
-      "packages/cli/commands/rollback.ts",
-      "schemas/registry/rollback-proof.schema.json",
-      "scripts/validate-rollback-proof.mjs",
-      "fixtures/rollback/proof-pass.json",
-      "fixtures/rollback/proof-fail-hash-mismatch.json",
-      "fixtures/rollback/proof-fail-status-not-reverted.json",
-      "fixtures/rollback/proof-fail-semantic-fingerprint-not-reverted.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— rollback proof 必須含 behaviorId 與對稱 rollback contract\n2026-05-07 ATM-2-0042 連鎖影響：追加 AC 9~10（map rollback 雙路徑解析、mapGeneratorProvenance 欄位）\n2026-05-07 附錄 C 治理補丁：rollback proof 追加 status / semanticFingerprint 對稱回退驗證，避免只回 hash 不回治理狀態\n2026-05-07 測試穩定性補丁：維持 rollback safety-net 目的不變；補 proof validator 與 failure matrix exemplar，讓 rollback 失敗能先在 proof seam 定位",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "evolution 管線的最終安全網：失敗時可確定性回退，並留下可驗證 proof。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0014 / ATM-2-0021"
-    }
-  },
-  {
-    "doc_id": "doc_task_0326",
-    "id": "ATM-3-0014",
-    "title": "3KLife UsageEvidence shadow adapter",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "adapter",
-    "phase": "ATM-3",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "10/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "只讀 3KLife 的 artifacts / compute-gate report / logs，產出 usage-feedback evidence；不修改任何既有 CLI / 工具。",
-    "related": [],
-    "depends": [
-      "ATM-3-0001",
-      "ATM-2-0009",
-      "ATM-2-0016"
-    ],
-    "acceptance": [
-      "adapter 僅讀，不寫；任何 file mutation 視為違規",
-      "輸出 evidence 必須通過 ATM-2-0009 的 usage-feedback schema",
-      "3KLife 既有 CLI / compute-gate / 工具行為完全不變（shadow / parity）",
-      "neutrality scanner 對輸出 evidence payload 跑 dry-run，不得帶入 adopter 私有 token",
-      "usage-feedback evidence 中加入 callerCount（該 atom 在 host 端被呼叫的次數），作為 ATM-2-0031 lifecycle police sweep 判斷的輸入（zero-caller 才建議 sweep）",
-      "usage tracking 需記錄 sub-function（export symbol）粒度，不只是 atomId 粒度——供 Demand Police 判斷是否觸發 split",
-      "定義 mapping-table.json：來源欄位 → upstream usage-feedback 欄位必須固定映射；host-only 欄位一律落 extras.adopterPrivate{}，不得出現在 payload 主體",
-      "實作 --strict 與 --lenient；來源格式漂移時，--lenient 必須降級為 evidenceType=usage-feedback-skipped 並寫 skipReason",
-      "補一個 compute-gate report 缺欄位 negative fixture，驗證 --strict hard fail 與 --lenient fallback 差異"
-    ],
-    "deliverables": [
-      "tools_node/atm-adapter/usage-evidence-shadow.js",
-      "fixtures/adapter/3klife-usage-evidence.snapshot.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— 將「呼叫次數」回填為 atom caller-count（給 lifecycle police 的 sweep 用）\n2026-05-07 ATM-2-0042 連鎖影響（notes）：map evidence artifacts 存在 canonical atomic_workbench/maps/ 路徑，adapter 須同時掃描 maps/ 和 atoms/ 目錄\n2026-05-07 附錄 C 治理補丁：追加 mapping-table / strict-vs-lenient / format-drift fallback，避免 host 私有欄位污染 upstream evidence schema",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "alpha1 期間第一個 evolution-evidence 來源；以最小侵入方式餵養 evolution 管線。",
-      "position": "ATM-3",
-      "prereq": "ATM-3-0001 / ATM-2-0009 / ATM-2-0016"
-    }
-  },
-  {
-    "doc_id": "doc_task_0327",
-    "id": "ATM-4-0007",
-    "title": "H2U normalizeCssColor v1.0→v1.1 evolution pilot",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "case-study",
-    "phase": "ATM-4",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "11/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "以 normalizeCssColor case atom 跑第一次完整 evolution 閉環：proposal → automatedGates → human review → registry update or rollback。",
-    "related": [],
-    "depends": [
-      "ATM-4-0003",
-      "ATM-2-0020",
-      "ATM-2-0021"
-    ],
-    "acceptance": [
-      "normalizeCssColor v1.0 進 registry；v1.1 透過 atm upgrade --propose 產 proposal.json",
-      "automatedGates（nonRegression / qualityImprovement / newCapability）全綠才進 review queue",
-      "human review approve 後 registry currentVersion 指向 v1.1；reject 後保持 v1.0 並寫 decision log",
-      "完整 evidence 鏈可由 atm replay 重新跑 + neutrality scanner 全綠"
-    ],
-    "deliverables": [
-      "docs/case-studies/h2u-normalize-css-color-evolution-pilot.md",
-      "fixtures/case-studies/normalize-css-color/v1.0.json",
-      "fixtures/case-studies/normalize-css-color/v1.1.json",
-      "fixtures/case-studies/normalize-css-color/proposal.json",
-      "fixtures/case-studies/normalize-css-color/decision-approve.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "把 alpha1 evolution pipeline 在 H2U case 上做端到端落地，作為 alpha1 acceptance 證據。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0003 / ATM-2-0020 / ATM-2-0021"
-    }
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 完成"
   }
 ]

@@ -1,191 +1,153 @@
 [
   {
-    "id": "ATM-1.5-0001",
-    "title": "Seed-as-Spec：種子以自身格式自我描述",
-    "status": "done",
-    "priority": "P0",
-    "phase": "ATM-1.5",
-    "type": "implementation",
-    "created": "2026-05-05",
+    "doc_id": "doc_task_0256",
+    "id": "ATM-1-0006",
+    "title": "JS/TS LanguageAdapter reference",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0299",
-    "started_at": "2026-05-06T16:48:41+08:00",
+    "priority": "P1",
+    "status": "done",
+    "type": "adapter",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T14:48:06+08:00",
     "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T17:03:32.1926363+08:00",
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-spec / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit ad5f091 新增 packages/core/seed.js、specs/atom-seed-spec.json、CLI `spec --validate` 與 AJV schema validator；legacy planning ID ATM-CORE-0001 以 seed metadata 映射保留，現行 spec id 採 `atom.core-seed` 以符合既有 atomic-spec schema | 阻塞: none",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 JavaScript/TypeScript reference language adapter，負責 import scan、test command 與 entrypoint 規則。",
+    "related": [],
+    "depends": [
+      "ATM-1-0004"
+    ],
+    "acceptance": [
+      "JS compute atom 可被 validate",
+      "forbidden import fixture 失敗",
+      "LanguageAdapter API 可讓未來 Python/C# 實作"
+    ],
+    "deliverables": [
+      "packages/language-js",
+      "JS/TS import policy fixture",
+      "test command runner contract"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:language-js / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 6f4bcaa 建立 JS/TS LanguageAdapter reference、import scan、forbidden import fixture、entrypoint rule 與 delegated test command runner contract | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 上游核心開卡",
+      "summary": "建立 JavaScript/TypeScript reference language adapter，負責 import scan、test command 與 entrypoint 規則。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0004"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+      ],
+      "output": [
+        "packages/language-js",
+        "JS/TS import policy fixture",
+        "test command runner contract"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "execution_steps": [
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
+      ]
+    },
     "harness_evidence": {
       "artifact_paths": [
-        "AI-Atomic-Framework/packages/core/seed.js",
-        "AI-Atomic-Framework/specs/atom-seed-spec.json",
-        "AI-Atomic-Framework/packages/cli/src/commands/spec.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/spec-shared.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
-        "AI-Atomic-Framework/scripts/validate-seed-spec.mjs",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
+        "AI-Atomic-Framework/packages/language-js/package.json",
+        "AI-Atomic-Framework/packages/language-js/src/index.ts",
+        "AI-Atomic-Framework/packages/language-js/src/language-js-adapter.mjs",
+        "AI-Atomic-Framework/packages/language-js/README.md",
+        "AI-Atomic-Framework/scripts/validate-language-js.mjs",
+        "AI-Atomic-Framework/tests/language-js-fixtures/import-policy.fixture.json",
+        "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
       ],
       "validation_evidence": [
-        "AI-Atomic-Framework commit ad5f091",
-        "npm run validate:seed-spec",
-        "npm run validate:cli",
+        "AI-Atomic-Framework commit 6f4bcaa",
+        "npm install",
+        "npm run packages:list",
+        "npm run validate:language-js",
         "npm test",
         "npm run typecheck",
         "npm run lint"
       ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "handoff_diff_status": "upstream committed; tracking diff verified",
       "trace_artifacts": [],
       "metrics_summary": [
-        "seed self-description now lives in packages/core/seed.js and specs/atom-seed-spec.json",
-        "atm spec --validate validates atomic specs through AJV without breaking zero-install self-hosting flows",
-        "legacy planning ID ATM-CORE-0001 is preserved as seed metadata while the current schema id remains atom.core-seed",
-        "validate --spec stays zero-install compatible for self-hosting alpha and bootstrap smoke"
+        "upstream commit 6f4bcaa",
+        "valid JS/TS compute atom passes language adapter validation",
+        "forbidden import fixture fails with ATM_JS_FORBIDDEN_IMPORT",
+        "missing entrypoint export fails with ATM_JS_ENTRYPOINT_EXPORT_MISSING",
+        "test/typecheck/lint commands are delegated to project package scripts"
       ]
     },
-    "depends": [
-      "ATM-1-0006",
-      "ATM-1-0007"
-    ]
+    "completed_at": "2026-05-06T14:51:24+08:00"
   },
   {
-    "id": "ATM-1.5-0002",
-    "title": "Seed 自我驗證：產生第一份 atomic-registry.json",
+    "doc_id": "doc_task_0348",
+    "id": "ATM-2-0041",
+    "title": "Framework-Wide Generator Provenance Audit",
+    "owner": "vs-code-gpt-5.4-mini",
+    "priority": "P1",
     "status": "done",
-    "priority": "P0",
-    "phase": "ATM-1.5",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0300",
-    "started_at": "2026-05-06T09:15:48.254Z",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T17:24:55.4854274+08:00",
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d3ac9cf 新增 atomic-registry.json、CLI `verify --self`、registry selfVerification schema 與 drift 檢查；legacy planning ID ATM-CORE-0001 仍以 registry selfVerification metadata 保留，現行 atomId 維持 `atom.core-seed` | 阻塞: none",
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/atomic-registry.json",
-        "AI-Atomic-Framework/packages/cli/src/commands/verify.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
-        "AI-Atomic-Framework/schemas/registry.schema.json",
-        "AI-Atomic-Framework/scripts/validate-seed-registry.mjs",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-registry.json",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit d3ac9cf",
-        "npm run validate:seed-registry",
-        "npm run validate:cli",
-        "npm run validate:schemas",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "first committed atomic-registry.json now contains the seed entry with committed specHash/codeHash/testHash",
-        "atm verify --self validates registry schema first, then checks committed hash values against live seed files",
-        "editing seed.js changes computed codeHash and is detected as drift by the deterministic validator",
-        "legacy planning ID ATM-CORE-0001 is preserved in selfVerification metadata while current atomId stays atom.core-seed"
-      ]
-    },
-    "depends": [
-      "ATM-1.5-0001"
-    ]
-  },
-  {
-    "id": "ATM-1.5-0003",
-    "title": "ATM-CORE-0001 正式收編：舊 seed 標 @deprecated",
-    "status": "done",
-    "priority": "P0",
-    "phase": "ATM-1.5",
-    "type": "governance",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0301",
-    "started_at": "2026-05-06T17:31:00.000Z",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T18:13:27.1736893+08:00",
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d90c2f6 將 seed hand-written source 標為 @deprecated、atomic-registry seed entry 升為 governed、CHANGELOG 新增 Phase B1 complete、atm status 在 framework repo root 顯示 B1-complete 與 governedBy ATM-CORE-0002 | 阻塞: none",
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/CHANGELOG.md",
-        "AI-Atomic-Framework/atomic-registry.json",
-        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
-        "AI-Atomic-Framework/packages/core/seed.js",
-        "AI-Atomic-Framework/schemas/registry.schema.json",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/scripts/validate-seed-registry.mjs"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit d90c2f6",
-        "node packages/cli/src/atm.mjs status",
-        "npm run validate:seed-registry",
-        "npm run validate:cli",
-        "npm run validate:schemas",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "seed hand-written source is retained but explicitly marked deprecated under ATM-CORE-0002 governance",
-        "atomic-registry seed entry status is now governed and still passes self-verification with committed hash values",
-        "atm status no longer requires .atm/config in the framework repository root to report Phase B1 complete",
-        "CHANGELOG records the Phase B1 milestone and the handoff from ATM-CORE-0001 metadata to ATM-CORE-0002 governance"
-      ]
-    },
-    "depends": [
-      "ATM-1.5-0002"
-    ]
-  },
-  {
-    "id": "ATM-2-0012",
-    "title": "neutralityScanner atom + CI（ATM-CORE-0003）",
-    "status": "done",
-    "priority": "P0",
+    "type": "audit",
     "phase": "ATM-2",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0302",
-    "started_at": "2026-05-07T00:20:35.8356720+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4-mini",
-    "completed_at": "2026-05-07T17:05:00Z",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T15:14:35.1752897+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "completed_at": "2026-05-07T15:27:59.2938458+08:00",
+    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
+    "chain_step": "3/3",
+    "sensor_triggered_by": "atm-framework-generator-provenance-audit",
+    "description": "掃描整個 AI-Atomic-Framework，標出哪些 atom/spec/workbench/registry entry 已由 generator 產生，哪些仍是 pre-generator 手工殘留，並為殘留項開後續卡。",
+    "related": [],
     "depends": [
-      "ATM-2-0001",
-      "ATM-1.5-0003",
-      "ATM-2-0013"
+      "ATM-2-0038",
+      "ATM-2-0040"
     ],
-    "acceptance": [
-      "scanner atom 直接落於 ATM-2-0013 canonical per-atom folder（atomic_workbench/atoms/ATM-CORE-0003/）；不得散放 spec/code/test/report"
-    ],
-    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | 狀態: in-progress | 驗證: node atomic_workbench/atoms/ATM-CORE-0003/tests/atom-tests.js / node atomic_workbench/atoms/ATM-CORE-0003/tests/map-integration-tests.js / npm.cmd run check:encoding:touched / node tools_node/compute-gate.js --profile standard --agent-feedback pass | 變更: 已把 ATM-CORE-0003 拆成 5 個 member atoms、建立 ATM-MAP-NEUTRALITY-0001 local map 與 integration report，並同步 tasks-atm thin-index 追蹤狀態 | 阻塞: 上游 GitHub Actions / registry 收編尚未在外部 AI-Atomic-Framework repo 落地\n2026-05-07 | 狀態: done | 驗證: upstream head aa1fcdd 上 validate:neutrality / validate:cli / validate:self-hosting-alpha / test / typecheck / lint 全通過；3KLife compute-gate standard pass | 變更: 本地 tracking 收尾完成，ATM-2-0012 正式標記 done | 阻塞: none"
-  },
-  {
-    "id": "ATM-2.5-0001",
-    "title": "Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI",
-    "status": "done",
-    "priority": "P0",
-    "phase": "ATM-2.5",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0303",
-    "started_at": "2026-05-06T16:42:17Z",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T17:06:00Z",
-    "depends": [
-      "ATM-2-0013",
-      "ATM-2-0012",
-      "ATM-2-0004",
-      "ATM-2-0005"
-    ],
-    "acceptance": [
-      "alpha0 gate 僅驗 deterministic 4 條 criteria；version history / rollback / evolution metrics 僅作 readiness warning，不阻塞 alpha0 release"
-    ],
-    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | done | upstream 64ec0bc | gate criteria1-4 true；validate:neutrality/cli/self-hosting-alpha + npm test/typecheck/lint pass | blocker: none"
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始建立 generator provenance audit | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node scripts/validate-generator-provenance.mjs --write / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: 新增 generator provenance audit report 與 deterministic validator，package test/typecheck/lint 已接入 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM generator provenance audit 開卡",
+      "summary": "建立全框架 generator provenance audit，確保後續內容不再繞過 AtomGenerator。",
+      "position": "ATM-2（audit / provenance guardrail）",
+      "prereq": "ATM-2-0038 / ATM-2-0040"
+    },
+    "contracts": {
+      "input": [
+        "ATM-2-0038 後新原子應走 AtomGenerator",
+        "歷史內容可能仍無 generator provenance",
+        "doc/catalog/registry 投影必須能看出殘留風險"
+      ],
+      "output": [
+        "新增 generator provenance audit 報告",
+        "列出全部 registry entries 的 generatedBy/generatorEvidence 狀態",
+        "為未通過項開卡或補 migration plan",
+        "把 audit 納入 deterministic validation 或 nightly check"
+      ],
+      "validation_cmd": "npm run validate:registry-core\\nnode scripts/validate-generator-provenance.mjs",
+      "rollback_hint": "若 provenance audit 誤報，先降為 advisory 報告，不移除 ATM-2-0038 generator 或已完成 registry entry。",
+      "execution_steps": [
+        "定義 provenance 欄位或 evidence 判讀規則",
+        "掃描 atomic-registry/workbench/catalog",
+        "產出殘留清單",
+        "為殘留項開任務卡",
+        "接入 deterministic 驗證"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

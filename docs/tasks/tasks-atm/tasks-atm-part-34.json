@@ -1,177 +1,166 @@
 [
   {
-    "doc_id": "doc_task_0347",
-    "id": "ATM-2-0040",
-    "title": "Backfill Existing Core Atoms Through Atom Generator",
-    "owner": "vs-code-gpt-5.4-mini",
+    "doc_id": "doc_task_0262",
+    "id": "ATM-2-0005",
+    "title": "Police plugin API 與內建檢查器",
+    "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "migration",
+    "type": "police",
     "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T15:14:35.1752897+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "completed_at": "2026-05-07T15:27:59.2938458+08:00",
-    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
-    "chain_step": "2/3",
-    "sensor_triggered_by": "atm-pre-generator-atom-backfill",
-    "description": "讓既有核心原子 ATM-CORE-0001 與 ATM-CORE-0003 重新走 generator provenance，不直接手改 registry/workbench，並保留既有 atomId 與 hash-lock 可追溯性。",
-    "related": [],
-    "depends": [
-      "ATM-2-0038",
-      "ATM-2-0039"
-    ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始回填 pre-generator core atoms provenance | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node scripts/backfill-generator-provenance.mjs / npm run validate:registry-catalog / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: ATM-CORE-0001/0003 補 canonical workbench witness、test report、generator-provenance:backfilled，catalog 顯示 provenance | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM pre-generator atom backfill 開卡",
-      "summary": "用 generator 重新產生或遷移前期核心原子，補齊 generator provenance 與 workbench 四件套。",
-      "position": "ATM-2（migration / generator backfill）",
-      "prereq": "ATM-2-0038 / ATM-2-0039"
-    },
-    "contracts": {
-      "input": [
-        "ATM-CORE-0001 與 ATM-CORE-0003 是 generator 之前手動建立的核心原子",
-        "既有 atomId 不可變",
-        "既有 registry hash-lock 不可靜默失效"
-      ],
-      "output": [
-        "定義 pre-generator atom backfill 流程",
-        "用 generator 或 generator-backed migration 重建 ATM-CORE-0001/0003 workbench",
-        "保留或重算 registry selfVerification 並留下 migration evidence",
-        "catalog 顯示 generator provenance"
-      ],
-      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:registry-catalog\\nnpm test\\nnpm run lint",
-      "rollback_hint": "若 backfill 造成 hash drift，回退該 atom 的 regenerated workbench/registry entry，保留 ATM-2-0038 generator 本體。",
-      "execution_steps": [
-        "盤點 ATM-CORE-0001/0003 既有 sourcePaths",
-        "定義保留 atomId 的 generator-backed backfill 模式",
-        "逐顆重建 workbench/spec/test/report",
-        "重算 registry 與 catalog",
-        "跑完整 registry drift 驗證"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0348",
-    "id": "ATM-2-0041",
-    "title": "Framework-Wide Generator Provenance Audit",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P1",
-    "status": "done",
-    "type": "audit",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T15:14:35.1752897+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "completed_at": "2026-05-07T15:27:59.2938458+08:00",
-    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
-    "chain_step": "3/3",
-    "sensor_triggered_by": "atm-framework-generator-provenance-audit",
-    "description": "掃描整個 AI-Atomic-Framework，標出哪些 atom/spec/workbench/registry entry 已由 generator 產生，哪些仍是 pre-generator 手工殘留，並為殘留項開後續卡。",
-    "related": [],
-    "depends": [
-      "ATM-2-0038",
-      "ATM-2-0040"
-    ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始建立 generator provenance audit | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node scripts/validate-generator-provenance.mjs --write / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: 新增 generator provenance audit report 與 deterministic validator，package test/typecheck/lint 已接入 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM generator provenance audit 開卡",
-      "summary": "建立全框架 generator provenance audit，確保後續內容不再繞過 AtomGenerator。",
-      "position": "ATM-2（audit / provenance guardrail）",
-      "prereq": "ATM-2-0038 / ATM-2-0040"
-    },
-    "contracts": {
-      "input": [
-        "ATM-2-0038 後新原子應走 AtomGenerator",
-        "歷史內容可能仍無 generator provenance",
-        "doc/catalog/registry 投影必須能看出殘留風險"
-      ],
-      "output": [
-        "新增 generator provenance audit 報告",
-        "列出全部 registry entries 的 generatedBy/generatorEvidence 狀態",
-        "為未通過項開卡或補 migration plan",
-        "把 audit 納入 deterministic validation 或 nightly check"
-      ],
-      "validation_cmd": "npm run validate:registry-core\\nnode scripts/validate-generator-provenance.mjs",
-      "rollback_hint": "若 provenance audit 誤報，先降為 advisory 報告，不移除 ATM-2-0038 generator 或已完成 registry entry。",
-      "execution_steps": [
-        "定義 provenance 欄位或 evidence 判讀規則",
-        "掃描 atomic-registry/workbench/catalog",
-        "產出殘留清單",
-        "為殘留項開任務卡",
-        "接入 deterministic 驗證"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0349",
-    "id": "ATM-2-0042",
-    "title": "Unified Atomic Map Generator — Provisioning Facade & Map ID Policy",
-    "owner": "vs-code-gpt-5.4",
-    "priority": "P0",
-    "status": "done",
-    "type": "manager",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4",
-    "started_at": "2026-05-07T18:56:24.0520935+08:00",
-    "started_by_agent": "vs-code-gpt-5.4",
-    "completed_at": "2026-05-07T19:12:29.7750424+08:00",
-    "chain_id": "ATM-MAP-PROVISIONING-V1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T16:14:52Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-07T00:24:47.3471437+08:00",
+    "chain_id": "ATM-POLICE-MAP-0005",
     "chain_step": "1/1",
-    "sensor_triggered_by": "atm-map-provisioning-gap",
-    "description": "建立 AtomicMapGenerator 作為新 map 誕生的唯一正式入口，收編 mapId policy、scaffold、mapHash/semanticFingerprint、registry 登錄與測試骨架。",
+    "sensor_triggered_by": "",
+    "description": "建立 Police plugin API，並先提供 schema、forbidden import、side effect、registry consistency 檢查。",
     "related": [],
     "depends": [
-      "ATM-2-0023",
-      "ATM-2-0038"
+      "ATM-2-0004",
+      "ATM-1-0006"
     ],
     "acceptance": [
-      "定義單一 canonical map identity policy：mapId 改為 ATM-MAP-{NNNN}；map.* 只允許留在 fixture 名稱或非 canonical 描述，不得再進 registry 主識別",
-      "收緊 schemas/registry/atomic-map.schema.json、schemas/registry.schema.json 與對應 registry schema mirror，讓 canonical mapId 與 entrypoint ATM-* 規則一致",
-      "新增 generateAtomicMap() façade 與對應 CLI atm create-map / --dry-run 入口，輸出 allocation、workbenchPath、registry preview 與 idempotent 結果",
-      "generator 自動填入 mapId、mapVersion、members、edges、entrypoints、qualityTargets、mapHash、semanticFingerprint，避免 caller 手工串接 hash / registry primitive",
-      "建立 canonical map home atomic_workbench/maps/<mapId>/，至少落地 map.spec.json、map.integration.test.mjs、map.test.report.json 三件套",
-      "generated map 可正式寫入 atomic-registry.json 並同步 atomic_workbench/registry-catalog.md / provenance evidence，不得只落 workbench 不登錄",
-      "補一個 committed dogfood map entry 與 tests/core/map-id-allocator.test.mjs、tests/core/map-generator.test.mjs、tests/cli/create-map.test.mjs 三層驗證"
+      "domain-specific police 不在 core",
+      "內建 police 可產 JSON report",
+      "違規 atom 不可 register stable",
+      "Police 報告必須含 lifecycleMode 欄位（birth | evolution）",
+      "evolution 模式違規（nonRegression / qualityComparison / registryCandidate 任一不通過）時不得 promote 新版本",
+      "Police 能拆成 SDK contract / schema / dependency graph / layer boundary / forbidden import / registry consistency / runner 子原子並各自測試",
+      "tests/police-fixtures/police-atomic-map.fixture.json 能把 Police 子原子組成 Atomic Map 並通過整合測試"
     ],
     "deliverables": [
-      "packages/core/src/manager/map-generator.mjs",
-      "packages/core/src/manager/map-id-allocator.mjs",
-      "packages/cli/src/commands/create-map.mjs",
-      "schemas/registry/atomic-map.schema.json",
-      "atomic_workbench/maps/",
-      "tests/core/map-generator.test.mjs"
+      "packages/plugin-sdk/src/police.*",
+      "packages/core/src/police/*",
+      "positive/negative fixtures",
+      "scripts/validate-police.mjs",
+      "tests/police.fixture.json",
+      "tests/police-fixtures/police-atomic-map.fixture.json",
+      "schemas/layer-policy.schema.json",
+      "schemas/police/non-regression-report.schema.json",
+      "schemas/police/quality-comparison-report.schema.json",
+      "schemas/police/registry-candidate-report.schema.json"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4 先收斂 canonical mapId / schema scope / workbench home，再落地 map generator 與 CLI create-map 第一版 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: map-id allocator / map-generator / create-map / schema / police / registry / provenance / npm test / typecheck / lint 全通過 | 變更: 完成 canonical ATM-MAP schema、generateAtomicMap、create-map CLI、map-aware catalog/provenance 與 dogfood map ATM-MAP-0001 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | 狀態: in-progress | 驗證: validate:police 初步通過 | 變更: 拆分 Police 子原子並新增 Atomic Map fixture 流程 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: validate:police / test / typecheck / lint 通過 | 變更: 完成 Police 子原子、Atomic Map fixture 與 task tracking 回寫；上游 commit 250c8b9 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 原子 map 產生器開卡",
-      "summary": "建立 AtomicMapGenerator 作為新 map 誕生的唯一正式入口，收編 mapId policy、scaffold、mapHash/semanticFingerprint、registry 登錄與測試骨架。",
-      "position": "ATM-2（map provisioning / naming convergence / birth facade）",
-      "prereq": "ATM-2-0023 / ATM-2-0038"
+      "label": "ATM 上游核心開卡",
+      "summary": "建立 Police plugin API，並先提供 schema、forbidden import、side effect、registry consistency 檢查。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0004、ATM-1-0006"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+      ],
+      "output": [
+        "packages/plugin-sdk/src/police.*",
+        "packages/core/src/police/*",
+        "positive/negative fixtures",
+        "scripts/validate-police.mjs",
+        "tests/police.fixture.json",
+        "tests/police-fixtures/police-atomic-map.fixture.json",
+        "schemas/layer-policy.schema.json",
+        "schemas/police/non-regression-report.schema.json",
+        "schemas/police/quality-comparison-report.schema.json",
+        "schemas/police/registry-candidate-report.schema.json"
+      ],
+      "validation_cmd": "npm run validate:police; npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "execution_steps": [
+        "在上游 repo 建立 Police SDK contract、schemas 與 core police 子原子",
+        "替 schema / dependency graph / layer boundary / forbidden import / registry consistency 補 positive/negative fixtures",
+        "以 tests/police-fixtures/police-atomic-map.fixture.json 組成 Police Atomic Map 並跑整合測試",
+        "跑 npm run validate:police、npm test、npm run typecheck、npm run lint",
+        "回寫 3KLife tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "tests/police.fixture.json",
+        "tests/police-fixtures/police-atomic-map.fixture.json"
+      ],
+      "validation_evidence": [
+        "cmd /c npm run validate:police",
+        "cmd /c npm test",
+        "cmd /c npm run typecheck",
+        "cmd /c npm run lint",
+        "node tools_node/rebuild-tasks-atm-auto-parts.js",
+        "node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM-2-0005.md docs/tasks/tasks-atm/tasks-atm-part-10.json docs/tasks/tasks-atm.json"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "Police fixture acceptance: 7 checks",
+        "AI-Atomic-Framework commit: 250c8b9"
+      ]
+    }
+  },
+  {
+    "doc_id": "doc_task_0267",
+    "id": "ATM-3-0004",
+    "title": "doc-id 與 encoding adapter integration",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
+    "status": "open",
+    "type": "adapter",
+    "phase": "ATM-3",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "把 3KLife doc-id-registry 與 encoding guard 封裝成 ATM adapter hook。",
+    "related": [],
+    "depends": [
+      "ATM-3-0001"
+    ],
+    "acceptance": [
+      "新增 ATM 相關 Markdown 仍由 doc-id-registry 分配",
+      "encoding 檢查可針對 touched files 執行",
+      "core 不直接 require 3KLife 工具"
+    ],
+    "deliverables": [
+      "tools_node/adapters/atm-3klife/document-adapter.js",
+      "tools_node/adapters/atm-3klife/encoding-adapter.js",
+      "hook tests"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "把 3KLife doc-id-registry 與 encoding guard 封裝成 ATM adapter hook。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "tools_node/adapters/atm-3klife/document-adapter.js",
+        "tools_node/adapters/atm-3klife/encoding-adapter.js",
+        "hook tests"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
     }
   }
 ]

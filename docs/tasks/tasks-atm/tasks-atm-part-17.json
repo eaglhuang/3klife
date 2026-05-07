@@ -1,253 +1,147 @@
 [
   {
-    "doc_id": "doc_task_0276",
-    "id": "ATM-6-0001",
-    "title": "跨專案 Registry / DB / Vector 決策",
+    "doc_id": "doc_task_0252",
+    "id": "ATM-1-0002",
+    "title": "上游 monorepo package skeleton",
     "owner": "GitHubCopilot",
-    "priority": "P2",
-    "status": "open",
-    "type": "ecosystem",
-    "phase": "ATM-6",
+    "priority": "P0",
+    "status": "done",
+    "type": "open-source-core",
+    "phase": "ATM-1",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T13:35:05+08:00",
+    "started_by_agent": "vs-code-github-copilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
+    "description": "建立 AI-Atomic-Framework packages/core、cli、plugin-sdk、adapter-local-git、language-js 的基本 package 結構。",
     "related": [],
     "depends": [
-      "ATM-5-0004"
+      "ATM-1-0001"
     ],
     "acceptance": [
-      "JSON-first 仍是真相",
-      "DB/vector 只作 optional plugin",
-      "不增加 core v0.1 必備依賴"
+      "npm install 成功",
+      "workspace scripts 可列出 package",
+      "不依賴 3KLife 檔案"
     ],
     "deliverables": [
-      "docs/ecosystem/registry-db-vector-decision.md",
-      "plugin boundary proposal"
+      "packages/core",
+      "packages/cli",
+      "packages/plugin-sdk",
+      "packages/adapter-local-git",
+      "packages/language-js",
+      "workspace package config"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install --package-lock=false / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 28b368a 建立 packages/core、cli、plugin-sdk、adapter-local-git、language-js、workspace package config、package list 與 skeleton validation fixture | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
-      "position": "ATM-6",
-      "prereq": "ATM-5-0004"
+      "label": "ATM 上游核心開卡",
+      "summary": "建立 AI-Atomic-Framework packages/core、cli、plugin-sdk、adapter-local-git、language-js 的基本 package 結構。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0001"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "docs/ecosystem/registry-db-vector-decision.md",
-        "plugin boundary proposal"
+        "packages/core",
+        "packages/cli",
+        "packages/plugin-sdk",
+        "packages/adapter-local-git",
+        "packages/language-js",
+        "workspace package config"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/core",
+        "AI-Atomic-Framework/packages/cli",
+        "AI-Atomic-Framework/packages/plugin-sdk",
+        "AI-Atomic-Framework/packages/adapter-local-git",
+        "AI-Atomic-Framework/packages/language-js",
+        "AI-Atomic-Framework/scripts/validate-package-skeleton.mjs",
+        "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 28b368a",
+        "npm install --package-lock=false",
+        "npm run packages:list",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking pending commit",
       "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0277",
-    "id": "ATM-6-0002",
-    "title": "Community RFC 與貢獻流程",
-    "owner": "GitHubCopilot",
-    "priority": "P2",
-    "status": "open",
-    "type": "ecosystem",
-    "phase": "ATM-6",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
-    "related": [],
-    "depends": [
-      "ATM-5-0003"
-    ],
-    "acceptance": [
-      "core vs adapter PR 分流",
-      "domain logic PR 有明確拒絕/轉 plugin 流程",
-      "maintainer decision process 清楚",
-      "release owner 與 maintainer quorum 規則已定義",
-      "security / provenance / package naming 類 RFC escalation path 已定義"
-    ],
-    "deliverables": [
-      "docs/RFC_PROCESS.md",
-      "GitHub issue templates",
-      "PR template"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補社群流程需指定 release owner / maintainer quorum / escalation path | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
-      "position": "ATM-6",
-      "prereq": "ATM-5-0003"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "docs/RFC_PROCESS.md",
-        "GitHub issue templates",
-        "PR template"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
+      "metrics_summary": [
+        "upstream commit 28b368a",
+        "5 workspace packages created",
+        "package skeleton validation fixture dependency-free"
       ]
     },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
+    "completed_at": "2026-05-06T13:38:00+08:00"
   },
   {
-    "doc_id": "doc_task_0278",
-    "id": "ATM-6-0003",
-    "title": "多語言 Adapter 擴張計畫",
-    "owner": "GitHubCopilot",
-    "priority": "P2",
-    "status": "open",
-    "type": "ecosystem",
-    "phase": "ATM-6",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
+    "doc_id": "doc_task_0344",
+    "id": "ATM-2-0037",
+    "title": "Workbench Alias Drift Guard and Projection Alignment",
+    "owner": "vs-code-gpt-5.4-mini",
+    "priority": "P1",
+    "status": "done",
+    "type": "guardrail",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T14:09:16.5225687+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
+    "chain_step": "2/2",
+    "sensor_triggered_by": "atm-workbench-alias-drift",
+    "description": "補上自動驗證與展示層收斂，避免 logicalName 再被誤當成 atomId 或 workbench 目錄名，並在 human-readable projection 明確分開 atomId 與 logicalName。",
     "related": [],
     "depends": [
-      "ATM-2-0006",
-      "ATM-1-0006"
+      "ATM-2-0013",
+      "ATM-2-0034",
+      "ATM-2-0036"
     ],
-    "acceptance": [
-      "每個 language adapter 有 test/build/import scan contract",
-      "不要求 core 重寫",
-      "Cocos/Unity 引擎物件不進 compute atom"
-    ],
-    "deliverables": [
-      "docs/ecosystem/language-adapter-roadmap.md",
-      "adapter acceptance matrix"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias drift guard 與 projection alignment | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:registry-catalog / npm.cmd test / npm.cmd run lint pass | 變更: 補上 workbench stray directory guard、registry catalog atomId/logicalName 分欄，並修正 validate-registry-catalog 改在 temp root 跑 fixture test runner 以避免重建 ATM-FIXTURE-0004 汙染 root workbench | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
-      "position": "ATM-6",
-      "prereq": "ATM-2-0006、ATM-1-0006"
+      "label": "ATM workbench alias guard 開卡",
+      "summary": "建立非 canonical alias 目錄的 drift guard，並統一 projection 對 atomId / logicalName 的呈現。",
+      "position": "ATM-2（guardrail / projection alignment）",
+      "prereq": "ATM-2-0013 / ATM-2-0034 / ATM-2-0036"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "canonical workbench layout 已定義為 atomic_workbench/atoms/<atomId>/",
+        "logicalName 仍可保留於 registry/spec，但不得再當成 workbench folder name",
+        "至少存在一份 human-readable projection 曾把 logicalName 當成 id 呈現"
       ],
       "output": [
-        "docs/ecosystem/language-adapter-roadmap.md",
-        "adapter acceptance matrix"
+        "新增或擴充 deterministic validator，檢出 atomic_workbench/atoms 下非 canonical alias 目錄 drift",
+        "驗證規則需容許合法 canonical ATM-* workbench 與明確 adapter override，不可誤殺正式 sourcePaths",
+        "registry catalog 與其他 human-readable projection 若呈現 atom 身分，必須明確區分 atomId 與 logicalName",
+        "補 fixture 或 snapshot，覆蓋 stray alias dir 與 projection 欄位對齊情境"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:registry-catalog\\nnpm test\\nnpm run lint",
+      "rollback_hint": "若新 guard 對既有 host override 造成誤報，先縮小到 atomic_workbench/atoms default layout 範圍，不得放寬回 logicalName 可當 canonical folder 的舊行為。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0285",
-    "id": "ATM-6-0004",
-    "title": "Performance Budget Police 與成本控制",
-    "owner": "GitHubCopilot",
-    "priority": "P2",
-    "status": "open",
-    "type": "optional-police",
-    "phase": "ATM-6",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
-    "related": [],
-    "depends": [
-      "ATM-5-0005"
-    ],
-    "acceptance": [
-      "Performance Budget 不進 v0.1 core hard gate",
-      "hot path atom 有 p95/maxRuntimeMs/allocatedBytes 建議",
-      "LLM caching 與 budget 只透過 plugin 啟用"
-    ],
-    "deliverables": [
-      "docs/ecosystem/performance-budget-police.md",
-      "plugin boundary proposal",
-      "cost control policy"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
-      "position": "ATM-6",
-      "prereq": "ATM-5-0005"
-    },
-    "contracts": {
-      "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
-      ],
-      "output": [
-        "docs/ecosystem/performance-budget-police.md",
-        "plugin boundary proposal",
-        "cost control policy"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
+        "盤點目前 validator 與 projection 輸出缺口",
+        "設計 alias drift 判斷規則與允許例外",
+        "補 deterministic test 或 snapshot 覆蓋 stray alias dir 與 projection 欄位",
+        "回寫 catalog 或相關 human-readable projection，確保 atomId / logicalName 分欄或明確標示"
       ]
     },
     "harness_evidence": {

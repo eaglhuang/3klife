@@ -1,209 +1,139 @@
 [
   {
-    "doc_id": "doc_task_0283",
-    "id": "ATM-4-0006",
-    "title": "H2U case study 與 Cocos runtime 邊界",
-    "owner": "GitHubCopilot",
-    "priority": "P1",
-    "status": "open",
-    "type": "case-study-policy",
-    "phase": "ATM-4",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "doc_id": "doc_task_0355",
+    "id": "ATM-0-0015",
+    "title": "Harness Engineering CAR/HarnessCard 規劃回寫",
+    "owner": "vs-insiders-gpt-5.4",
+    "priority": "P0",
+    "status": "done",
+    "type": "docs-governance",
+    "phase": "ATM-0",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-insiders-gpt-5.4",
+    "started_at": "2026-05-08T01:26:52+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T01:48:26+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
-    "related": [],
+    "description": "將 Harness Engineering 預印本的 CAR 與 HarnessCard 結論回寫 ATM active planning、AAF upstream positioning docs，並把後續 schema/adapter/report 工作排入未完成任務卡；不修改已 done 卡。",
+    "related": [
+      "ATM-5-0002",
+      "ATM-6-0005"
+    ],
     "depends": [
-      "ATM-4-0002",
-      "ATM-3-0005",
+      "ATM-0-0014"
+    ],
+    "acceptance": [
+      "active planning doc 明確定位 ATM 為 CAR-aligned governance harness",
+      "AAF upstream docs 說明 CAR/HarnessCard 只作報告層不替代 WorkItem/ScopeLock/Evidence",
+      "未完成任務卡補上 HarnessCard/CAR 後續 acceptance；已 done 卡不修改",
+      "3KLife 學習文件不混入本次 commit"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
+      "AI-Atomic-Framework/docs/ECOSYSTEM_POSITIONING.md",
+      "AI-Atomic-Framework/docs/ARCHITECTURE.md",
+      "AI-Atomic-Framework/docs/governance/governance-bundle-schema.md",
+      "docs/agent-briefs/tasks/ATM-5-0002.md",
+      "docs/agent-briefs/tasks/ATM-6-0005.md",
+      "docs/tasks/tasks-atm/tasks-atm-part-15.json",
+      "docs/tasks/tasks-atm/tasks-atm-part-18.json"
+    ],
+    "notes": "2026-05-08 | 狀態: done | 驗證: encoding touched pass；JSON parse pass；task-scope pass；compute-gate standard 9/9 pass；AAF neutrality validate pass | 變更: 回寫 CAR/HarnessCard 採納決策、AAF upstream positioning docs、ATM-5-0002/ATM-6-0005 後續 acceptance；已 done 卡未修改；學習正文維持本機 exclude 不提交 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM research integration 開卡",
+      "summary": "把 Harness Engineering 預印本的 CAR/HarnessCard 評估回寫 active plan、upstream docs 與未完成 ATM 任務卡。",
+      "position": "ATM-0 tracking-docs / upstream-planning",
+      "prereq": "ATM-0-0014"
+    },
+    "contracts": {
+      "input": [
+        "使用者已提供 Harness Engineering Markdown 正文與 ATM 反思文章分析",
+        "HARN-MET-0003 等已 done 任務卡不得修改",
+        "ATM active planning 以本 repo docs/ai_atomic_framework 為真相"
+      ],
+      "output": [
+        "active planning doc 明確定位 ATM 為 CAR-aligned governance harness",
+        "AAF upstream docs 說明 CAR/HarnessCard 只作報告層，不替代 WorkItem/ScopeLock/Evidence",
+        "未完成任務卡補上 HarnessCard/CAR 後續 acceptance；已 done 卡不修改"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js\nnode tools_node/check-task-scope.js --task ATM-0-0015 --verbose\nnode tools_node/compute-gate.js --profile standard --agent-feedback\nnode scripts/validate-neutrality-scanner.mjs --mode validate # in AI-Atomic-Framework",
+      "rollback_hint": "回退本卡 touched files；不修改已 done 任務卡；若 tasks-atm 分片漂移，使用 task-card-opener 或 shard store 重建。",
+      "execution_steps": [
+        "建立並鎖定 ATM-0-0015",
+        "更新 active/companion 規劃文件與 AAF upstream docs",
+        "只補 open 任務卡 ATM-5-0002/ATM-6-0005 的 acceptance 與 shards",
+        "跑 encoding/task-scope/gates，提交 git"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "node tools_node/check-encoding-touched.js --files ... pass",
+        "JSON parse pass",
+        "node tools_node/check-task-scope.js --task ATM-0-0015 --verbose pass",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback pass 9/9",
+        "AI-Atomic-Framework node scripts/validate-neutrality-scanner.mjs --mode validate pass"
+      ],
+      "handoff_diff_status": "clean-validation",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0340",
+    "id": "ATM-2-0034",
+    "title": "Registry Catalog Markdown Projection Atom",
+    "owner": "vs-insiders-gpt-5.4-mini",
+    "priority": "P1",
+    "status": "done",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-insiders-gpt-5.4-mini",
+    "started_at": "2026-05-07T03:27:00Z",
+    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "completed_at": "2026-05-07T04:12:21.9270570Z",
+    "chain_id": "ATM-REGISTRY-CATALOG-V1",
+    "chain_step": "1/1",
+    "sensor_triggered_by": "atm-registry-catalog-gap",
+    "description": "在 atom register/upsert 完成後，依 atomic-registry.json 與對應 spec 的 title/description/tags 自動生成或更新人類可讀 Markdown 原子庫清單；Markdown 只是 registry projection，不可成為新的 source of truth。",
+    "related": [
+      "ATM-2.5-0001",
       "ATM-2.5-0002"
     ],
-    "acceptance": [
-      "Cocos Component/Node/Prefab 明確禁止進 compute atom",
-      "H2U fidelity/domain scoring 僅屬 case study plugin",
-      "case study 可關閉而不影響 core",
-      "case study 啟動條件：self-hosting alpha0 deterministic gate 全綠",
-      "第一輪只允許 dry-run injection + rollback plan，不替換 draft-builder 主幹"
-    ],
-    "deliverables": [
-      "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
-      "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 後置條件：alpha0 全綠後只以 dry-run/rollback 進入 | 阻塞: alpha0 gate 未全綠",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0002、ATM-3-0005"
-    },
-    "contracts": {
-      "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
-      ],
-      "output": [
-        "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
-        "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0272",
-    "id": "ATM-5-0001",
-    "title": "Quick Start 與 API 文件",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "docs",
-    "phase": "ATM-5",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
-    "related": [],
     "depends": [
-      "ATM-1-0007",
-      "ATM-2-0006"
+      "ATM-2-0004",
+      "ATM-2-0013"
     ],
     "acceptance": [
-      "30 分鐘內可跑 hello-world",
-      "文件不需要 3KLife 背景知識",
-      "所有命令可複製執行",
-      "Quick Start 不要求安裝 LangGraph、pgvector、Deno sandbox 或 observability stack 才能跑通 hello-world"
+      "register/upsert 流程可在同一輪輸出或更新人類可讀 registry catalog；catalog 至少列出 atomId、功能摘要、類別推導、status、specPath；輸出 path 可配置，並以 atomic_workbench/原子庫列表.md 作為 UTF-8 中文路徑 proving fixture；同一份 registry 重跑時輸出穩定排序且無額外 diff；Markdown 明確標示 projection only，真正 source of truth 仍是 atomic-registry.json"
     ],
     "deliverables": [
-      "docs/QUICK_START.md",
-      "docs/API.md",
-      "docs/SPEC_GUIDE.md",
-      "README quick start section",
-      "Quick Start 對齊 v0.2 六週 MVP，明確區分 v0.1 alpha 必備能力與 optional plugin"
+      "packages/core/src/registry/registry-catalog.mjs；packages/core/src/registry/catalog-category-deriver.mjs；packages/core/src/registry/registry.mjs 或等價 register/upsert writer hook；scripts/validate-registry-catalog.mjs；scripts/sync-registry-artifacts.mjs；tests/registry-catalog.fixture.json；tests/registry-catalog.snapshot.md；atomic_workbench/registry-catalog.md example output；atomic_workbench/原子庫列表.md UTF-8 proving fixture"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 v0.2 companion 對應交付/驗收條件 | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 新增 registry human-readable catalog projection atom；排程歸於 ATM-2 alpha0+ / DX follow-up，不列入 ATM-2.5 alpha gate blocker | 阻塞: 等 ATM-2-0004 / ATM-2-0013 完成\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: 開始實作 registry catalog renderer、writer hook、sync script 與 validator；補齊 UTF-8 中文路徑 proving fixture，避免把中文檔名硬寫成唯一預設 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-catalog pass；npm.cmd run sync:registry-artifacts pass；npm.cmd run validate:registry-core pass；npm.cmd run validate:seed-registry pass；npm.cmd test/typecheck/lint pass | 變更: upstream AI-Atomic-Framework commit c66a4ee 新增 registry catalog renderer、category deriver、writeRegistryArtifacts hook、sync script、snapshot/fixture validator 與 atomic_workbench/registry-catalog.md example output；UTF-8 中文路徑 proving fixture 由 validator 覆蓋 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
-      "position": "ATM-5",
-      "prereq": "ATM-1-0007、ATM-2-0006"
+      "label": "ATM registry DX 開卡",
+      "summary": "把 atomic-registry.json 投影成 agent/human 都能直接讀的原子庫清單，減少每次人工翻 JSON。",
+      "position": "ATM-2（alpha0+ / DX follow-up）",
+      "prereq": "ATM-2-0004 / ATM-2-0013 已完成"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "atomic-registry.json 已可作為單一來源；per-atom spec path 可從 registry 追到；不得把中文檔名硬寫成唯一 core default"
       ],
       "output": [
-        "docs/QUICK_START.md",
-        "docs/API.md",
-        "docs/SPEC_GUIDE.md",
-        "README quick start section"
+        "新增 catalog renderer atom / helper；register 流程可選擇輸出 Markdown catalog；預設 example output 為 atomic_workbench/registry-catalog.md，UTF-8 中文路徑 proving fixture 可用 atomic_workbench/原子庫列表.md；encoding 為 UTF-8 without BOM；catalog 僅投影重要欄位，不複製完整 registry"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退 catalog renderer / register hook / fixture；保留 atomic-registry.json 為唯一真相來源",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0273",
-    "id": "ATM-5-0002",
-    "title": "Adapter Guide 與 Plugin SDK 文件",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "docs",
-    "phase": "ATM-5",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "撰寫 ProjectAdapter、LanguageAdapter、Capability、Police、Injector plugin 的開發指南。",
-    "related": [],
-    "depends": [
-      "ATM-2-0006",
-      "ATM-3-0001"
-    ],
-    "acceptance": [
-      "第三方專案可依文件實作 adapter",
-      "3KLife adapter 可作 reference",
-      "core 禁止 domain logic 規則明確",
-      "第三方專案可依文件接入 artifacts/logs/reports 與 Markdown/JSON state files",
-      "CAR 對照章節說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
-      "HarnessCard-lite 指南說明報告只落在 run report / typed evidence，不替代 core contracts"
-    ],
-    "deliverables": [
-      "docs/ADAPTER_GUIDE.md",
-      "docs/PLUGIN_SDK.md",
-      "examples/hosted-adapter-impl",
-      "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
-      "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
-      "standalone Default Governance Bundle 與 3KLife adapter 的 artifacts/logs/reports mapping 對照",
-      "CAR / HarnessCard-lite adapter reporting guidance"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter migration guide 要求 | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 CAR/HarnessCard docs acceptance；已 done 卡不回改 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "撰寫 ProjectAdapter、LanguageAdapter、Capability、Police、Injector plugin 的開發指南。",
-      "position": "ATM-5",
-      "prereq": "ATM-2-0006、ATM-3-0001"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "docs/ADAPTER_GUIDE.md",
-        "docs/PLUGIN_SDK.md",
-        "examples/hosted-adapter-impl",
-        "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
-        "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
-        "CAR 對照章節：說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
-        "HarnessCard-lite 指南：adapter 文件需說明報告只落在 run report / typed evidence，不替代 core contracts"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes",
-        "補充 TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 的 host 實作指南"
+        "建立 catalog renderer，從 registry + spec 組表；實作 category derivation 規則與 fallback；把 register/upsert 流程接上可配置的 Markdown projection hook；補 snapshot / encoding / idempotent 驗證"
       ]
     },
     "harness_evidence": {

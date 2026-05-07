@@ -1,101 +1,169 @@
 [
   {
-    "doc_id": "doc_task_0341",
-    "id": "ATM-1-0011",
-    "title": "統一 Atomic ID canonical 命名並清除雙軌識別",
-    "owner": "vs-code-gpt-5.4",
+    "doc_id": "doc_task_0259",
+    "id": "ATM-2-0002",
+    "title": "Scaffold Builder MVP",
+    "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "open-source-core",
-    "phase": "ATM-1",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4",
-    "started_at": "2026-05-07T12:07:31+08:00",
-    "started_by_agent": "vs-code-gpt-5.4",
+    "type": "manager",
+    "phase": "ATM-2",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T19:28:00.000Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T20:18:23.9552929+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "現行 ATM 規劃把 task card ID、planning `ATM-CORE-*` 與 upstream spec/registry 的 dot-notation（如 `atom.core-seed`、`atom.plugin-rule-guard.neutrality-scanner`）混成多層識別，導致 Agent 合法地把 dot-notation 當 canonical atomic id。此卡要求把 Atomic ID 收斂為唯一主鍵 `ATM-{bucket}-{NNNN}`（4 位流水號），dot-notation 只能退回 `name/logicalName`；並同步修正 roadmap、active plan、evolution docs、schema、registry、fixtures、validators 與 workbench path，避免再出現第二種 atom id。",
-    "related": [
-      "ATM-1.5-0001",
-      "ATM-1.5-0002",
-      "ATM-2-0012"
-    ],
+    "description": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
+    "related": [],
     "depends": [
-      "ATM-0-0002",
-      "ATM-1-0003"
+      "ATM-2-0001"
     ],
     "acceptance": [
-      "upstream schema 與 validators 對 canonical Atomic ID 有 hard-fail pattern，`id` / `atomId` 不再接受 dot-notation",
-      "seed 與 neutrality scanner 等既有 atom 全面改用 `ATM-CORE-*` canonical id，且不再把 `legacyPlanningId` 當第二識別主鍵",
-      "名詞定義文件與 ATM 規劃文件明確區分 `task card id`、`atomicId`、`mapId`、`logicalName`，不再把 `atom.*` / `map.*` 當主 id",
-      "roadmap、active plan、evolution proposal 與相關 shards 的示例全部統一為 `ATM-CORE-0001` 類格式；語意名稱移到非 id 欄位",
-      "fixtures / tests / validation script 新增 fail-fast 防線，未來若再把 dot-notation 塞回 canonical id 會直接紅燈"
+      "首次 scaffold 建立檔案",
+      "第二次 scaffold 不覆寫人工實作",
+      "可由 adapter 決定 workbenchPath"
     ],
     "deliverables": [
-      "AI-Atomic-Framework/schemas/atomic-spec.schema.json",
-      "AI-Atomic-Framework/schemas/registry.schema.json",
-      "AI-Atomic-Framework/atomic-registry.json",
-      "AI-Atomic-Framework/specs/atom-seed-spec.json",
-      "AI-Atomic-Framework/specs/neutrality-scanner.atom.json",
-      "AI-Atomic-Framework/packages/core/seed.js",
-      "AI-Atomic-Framework/scripts/validate-neutrality-scanner.mjs 與相關 fixtures/tests",
-      "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-      "docs/ai_atomic_framework/關於進化版的原子提案.md 與對應 shards/active planning docs"
+      "packages/core/src/manager/scaffold.*",
+      "templates/atom.spec.template.json",
+      "templates/atom.test.template.ts"
     ],
-    "notes": "2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4 開始執行 ATM-1-0011，先收斂 upstream canonical Atomic ID 契約與 downstream 規劃文件示例 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: AI-Atomic-Framework npm test/typecheck/lint 與 validate scripts 全綠；3KLife encoding checks 與 task-lock cross-shard test 通過 | 變更: upstream commit 9c1205f + downstream commits 72a3301/ddbdcb6/a3e2798 | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:scaffold-builder / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit b8a3270 新增 core scaffold builder、templates/atom.spec.template.json、templates/atom.test.template.ts，預設產出 atomic_workbench/atoms/<atomId>/atom.spec.json + atom.test.ts，並支援 adapter 指定 workbenchPath 與 idempotent rerun | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游契約修正開卡",
-      "summary": "收斂 Atomic ID 為唯一 canonical 主鍵，並清除 planning / schema / registry / fixture 的雙軌識別。",
-      "position": "ATM-1",
-      "prereq": "ATM-0-0002、ATM-1-0003 已完成；ATM-1.5-0001/0002 與 ATM-2-0012 為受影響實作/追蹤卡"
+      "label": "ATM 上游核心開卡",
+      "summary": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0001"
     },
     "contracts": {
       "input": [
-        "名詞定義文件目前只規範任務卡 ID，尚未把 Atomic ID 寫成正式條目",
-        "ATM-1-0003 已交付 Atomic Spec / Registry schema v0.1，但 `id` / `atomId` 尚未強制 `ATM-{bucket}-{NNNN}` pattern",
-        "ATM-1.5-0001/0002 已把 `ATM-CORE-0001` 降成 `legacyPlanningId`，現行 spec/registry 改用 `atom.core-seed`",
-        "upstream `atomic-registry.json`、`specs/atom-seed-spec.json`、`specs/neutrality-scanner.atom.json`、`packages/core/seed.js` 與 validate scripts / fixtures 已實際接受 dot-notation 作 id",
-        "3KLife 規劃文件（historical roadmap、AI原子框架開發計畫書、關於進化版的原子提案、open-source-extraction-plan、dev-plan/evolution shards）已混用 `ATM-CORE-*` 與 `atom.*` 範例"
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "upstream `schemas/atomic-spec.schema.json`、`schemas/registry.schema.json` 對 canonical Atomic ID 加上 hard pattern，`id` / `atomId` 不再接受 `atom.*` 或 `map.*` dot-notation",
-        "upstream `atomic-registry.json`、`specs/atom-seed-spec.json`、`specs/neutrality-scanner.atom.json`、`packages/core/seed.js`、相關 validate scripts / fixtures / workbench path 全面改用 `ATM-CORE-0001`、`ATM-CORE-0003` 等 canonical id",
-        "dot-notation 僅保留在 `name` / `logicalName` / `semanticName` 類欄位，不得再作第二種 Atomic ID；`legacyPlanningId` 不得再承擔主識別語意",
-        "`docs/遊戲規格文件/系統規格書/名詞定義文件.md` 明確新增 Atomic ID 條目，正式區分 `task card id`、`atomicId`、`mapId`、`logicalName` 的角色",
-        "`docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md` 與所有相關 planning shards / 提案文件中的錯誤示例全面改成 `ATM-CORE-0001` 風格；若需保留語意名稱，一律改到非 id 欄位",
-        "新增 fail-fast 驗證：未來任何 spec / registry / fixture / validator 若再把 dot-notation 寫進 canonical id，CI 或 local validation 直接 fail"
+        "packages/core/src/manager/scaffold.*",
+        "templates/atom.spec.template.json",
+        "templates/atom.test.template.ts"
       ],
-      "validation_cmd": "cd ../AI-Atomic-Framework\\nnpm run validate:schemas\\nnpm run validate:cli\\nnode scripts/validate-neutrality-scanner.mjs\\nnpm test\\nnpm run typecheck\\nnpm run lint\\ncd ../3KLife\\nnpm run check:encoding:touched -- --files docs/遊戲規格文件/系統規格書/名詞定義文件.md docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/關於進化版的原子提案.md",
-      "rollback_hint": "回退本卡 touched files；若 upstream 已開始批次 rename Atomic ID，需連同 schema / registry / fixtures / validators 一起回退，禁止只回退其中一層造成雙軌識別半套狀態。",
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
       "execution_steps": [
-        "正式把 canonical Atomic ID 規則寫回名詞定義文件與 active ATM planning docs",
-        "收緊 upstream schema、registry helper 與 validator，讓 dot-notation 不能再佔用 `id` / `atomId`",
-        "將 seed、neutrality scanner 與相關 fixtures/tests/workbench path 改為 `ATM-CORE-*` canonical id，語意名稱搬到非 id 欄位",
-        "全面掃描並回寫 roadmap、進化提案、open-source extraction plan、dev-plan / evolution / roadmap shards 的錯誤示例",
-        "補上 migration / validation 說明並跑完整 upstream validation + downstream encoding/doc 檢查"
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [
-        "AI-Atomic-Framework/schemas/atomic-spec.schema.json",
-        "AI-Atomic-Framework/atomic-registry.json",
-        "AI-Atomic-Framework/specs/atom-seed-spec.json",
-        "AI-Atomic-Framework/specs/neutrality-scanner.atom.json",
-        "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
-        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
-        "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-        "docs/ai_atomic_framework/關於進化版的原子提案.md"
+        "AI-Atomic-Framework/package.json",
+        "AI-Atomic-Framework/packages/core/src/manager/scaffold.mjs",
+        "AI-Atomic-Framework/scripts/validate-scaffold-builder.mjs",
+        "AI-Atomic-Framework/templates/atom.spec.template.json",
+        "AI-Atomic-Framework/templates/atom.test.template.ts",
+        "AI-Atomic-Framework/tests/scaffold-builder.fixture.json"
       ],
-      "validation_evidence": [],
-      "handoff_diff_status": "pending",
+      "validation_evidence": [
+        "AI-Atomic-Framework commit b8a3270",
+        "npm run validate:scaffold-builder",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
       "trace_artifacts": [],
       "metrics_summary": [
-        "受影響面至少涵蓋 upstream schema/registry/specs/validators 與 downstream roadmap/active plans"
+        "scaffold builder writes a per-atom workbench by default under atomic_workbench/atoms/<atomId>",
+        "each scaffolded atom currently includes atom.spec.json and atom.test.ts rendered from shared templates",
+        "rerunning scaffold skips existing files so manual edits are preserved by default",
+        "adapter or caller can decide workbenchPath explicitly instead of using the default folder policy"
       ]
+    }
+  },
+  {
+    "doc_id": "doc_task_0264",
+    "id": "ATM-3-0001",
+    "title": "3KLife ProjectAdapter wrapper",
+    "owner": "vs-code-gpt-5.4",
+    "priority": "P0",
+    "status": "done",
+    "type": "adapter",
+    "phase": "ATM-3",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-07T09:08:11Z",
+    "started_by_agent": "vs-code-gpt-5.4",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "在 3KLife 建立 ProjectAdapter wrapper，把 task-card-opener、task-lock、compute-gate、doc-id-registry、shard-manager、artifacts/logs、scope/import/encoding guard 接到 upstream SDK。",
+    "related": [],
+    "depends": [
+      "ATM-2-0006",
+      "ATM-2.5-0002"
+    ],
+    "acceptance": [
+      "ProjectAdapter 不複製 upstream core",
+      "lock/gate/doc/encoding 均由既有工具 delegate",
+      "無工具時有明確 fail/dry-run 行為",
+      "3KLife 不搬動既有治理工具，只以 adapter 消費 upstream governance interface",
+      "3KLife artifacts/logs/reports 能映射到 ArtifactStore / LogStore / StateFileAdapter",
+      "shadow-mode report：只讀既有治理 CLI，不改入口行為",
+      "parity test：低風險 helper 路徑不退轉",
+      "Phase 2：每個 GovernanceStore 規劃對應 ATM-GOV-* atom spec",
+      "matrix：標註 Phase 1 adapter 化 / Phase 2 原子化"
+    ],
+    "deliverables": [
+      "tools_node/adapters/atm-3klife/project-adapter.js",
+      "adapter integration tests",
+      "adapter capability matrix",
+      "tools_node/adapters/atm-3klife/governance-adapter.js",
+      "3KLife task/doc/shard/artifact/log/rule/evidence mapping matrix",
+      "artifacts/、turn artifacts、Cocos/editor/browser logs、Markdown/JSON 狀態檔 mapping"
+    ],
+    "notes": "2026-05-07 | 狀態: done | 驗證: integration/parity tests + encoding + standard gate pass | 變更: 完成 Phase 1 shadow adapter；matrix/report 內建 Phase 2 atomization path | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "在 3KLife 建立 ProjectAdapter wrapper，把 task-lock、compute-gate、doc-id-registry、encoding 接到 upstream SDK。",
+      "position": "ATM-3",
+      "prereq": "ATM-2-0006"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "tools_node/adapters/atm-3klife/project-adapter.js",
+        "adapter integration tests",
+        "adapter capability matrix",
+        "tools_node/adapters/atm-3klife/governance-adapter.js",
+        "3KLife task/doc/shard/artifact/log/rule/evidence mapping matrix",
+        "Phase 2 atomization path doc",
+        "Phase 1/Phase 2 annotated matrix"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes",
+        "驗證 3KLife 只以 adapter 消費既有 governance interface",
+        "對應 artifacts/logs/state 到 store 介面",
+        "跑 shadow/parity test，不替換既有 CLI 行為"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
     }
   }
 ]

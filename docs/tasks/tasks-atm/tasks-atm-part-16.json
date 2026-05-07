@@ -1,214 +1,146 @@
 [
   {
-    "doc_id": "doc_task_0274",
-    "id": "ATM-5-0003",
-    "title": "Semver Lifecycle 與 Governance",
-    "owner": "GitHubCopilot",
-    "priority": "P1",
-    "status": "open",
-    "type": "governance",
-    "phase": "ATM-5",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立開源專案版本治理、deprecated policy、breaking change RFC 與 release flow。",
-    "related": [],
-    "depends": [
-      "ATM-5-0001"
-    ],
-    "acceptance": [
-      "MAJOR/MINOR/PATCH 對應 Spec/Adapter/CLI 變更",
-      "adapter compatibility matrix 有格式",
-      "breaking change 需 RFC",
-      "release owner / maintainer duty matrix 已定義",
-      "package naming policy 覆蓋 core / cli / plugin-* / adapter-*",
-      "provenance 與 deprecation / migration policy 已定義",
-      "docs/LIFECYCLE.md 必須定義 framework semver 與 release channel 規則",
-      "docs/ATOM_COMPATIBILITY.md 定義 atom compatibility matrix（framework version ↔ atom schema version ↔ plugin SDK version）",
-      "docs/GOVERNANCE.md 與 release checklist 必須說明 PEV / upgrade proposal 公開審核規則",
-      "deprecated / migration policy 必須列出 breaking change RFC 與回滾窗口"
-    ],
-    "deliverables": [
-      "docs/LIFECYCLE.md",
-      "docs/GOVERNANCE.md",
-      "CHANGELOG.md policy",
-      "release checklist",
-      "docs/ATOM_COMPATIBILITY.md",
-      "docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 release owner、package naming、provenance 與 deprecation 實務要求 | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "建立開源專案版本治理、deprecated policy、breaking change RFC 與 release flow。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "docs/LIFECYCLE.md",
-        "docs/GOVERNANCE.md",
-        "CHANGELOG.md policy",
-        "release checklist"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0275",
-    "id": "ATM-5-0004",
-    "title": "v0.1 alpha release checklist",
+    "doc_id": "doc_task_0251",
+    "id": "ATM-1-0001",
+    "title": "上游 repo product charter 與 README",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
-    "type": "release",
-    "phase": "ATM-5",
+    "status": "done",
+    "type": "open-source-core",
+    "phase": "ATM-1",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T13:13:43+08:00",
+    "started_by_agent": "vs-code-github-copilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "整理 AI-Atomic-Framework v0.1 alpha 發布前檢查表。",
+    "description": "在 AI-Atomic-Framework repo 建立產品定位、README、LICENSE、CONTRIBUTING 與非目標清單。",
     "related": [],
     "depends": [
-      "ATM-5-0001",
-      "ATM-5-0002",
-      "ATM-5-0003"
+      "ATM-0-0003"
     ],
     "acceptance": [
-      "npm pack/dry-run 成功",
-      "README/examples/schema tests 全綠",
-      "release notes 說明 alpha 限制",
-      "alpha0 checklist 與 alpha1 checklist 分離",
-      "secrets scan / provenance / npm publish dry-run / package naming 檢查項已列入",
-      "release owner sign-off 欄位已列入"
+      "README 可說明 core/adapter/host 邊界",
+      "核心文件不引用 3KLife 私有路徑",
+      "License 策略明確",
+      "README 清楚列出工具選型策略：first implementation recommendation 不是 core contract",
+      "README 明確定義 Agent Operating Layer 與 root-drop 使用者旅程"
     ],
     "deliverables": [
-      "docs/RELEASE_CHECKLIST.md",
-      "GitHub release draft",
-      "npm publish dry-run plan"
+      "AI-Atomic-Framework/README.md",
+      "AI-Atomic-Framework/LICENSE",
+      "AI-Atomic-Framework/CONTRIBUTING.md",
+      "AI-Atomic-Framework/docs/ARCHITECTURE.md 初稿",
+      "README 或 docs/ECOSYSTEM_POSITIONING.md 說明 Core vs Adapter vs Plugin 與 Atomic Agents / SDD / Harness Engineering / LangGraph 的定位差異",
+      "README 明確宣告 ATM 是 governance framework，不只是 atom runner",
+      "README 說明 Default Governance Bundle 是官方預設體驗，但不是 packages/core hard dependency",
+      "README 說明 root-drop / zero-install agent bootstrap：使用者放入 ATM 後，任意 AI agent 讀 README/AGENTS 即可開卡、鎖 scope、跑 guard、保存 artifacts/logs/evidence"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 alpha0/alpha1 release checklist：secrets scan、provenance、package naming、release owner | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d165def 完成 README、MIT LICENSE 保留、CONTRIBUTING、ARCHITECTURE、ECOSYSTEM_POSITIONING 與 product-charter validation scaffold | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "整理 AI-Atomic-Framework v0.1 alpha 發布前檢查表。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001、ATM-5-0002、ATM-5-0003"
+      "label": "ATM 上游核心開卡",
+      "summary": "在 AI-Atomic-Framework repo 建立產品定位、README、LICENSE、CONTRIBUTING 與非目標清單。",
+      "position": "ATM-1",
+      "prereq": "ATM-0-0003"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "docs/RELEASE_CHECKLIST.md",
-        "GitHub release draft",
-        "npm publish dry-run plan"
+        "AI-Atomic-Framework/README.md",
+        "AI-Atomic-Framework/LICENSE",
+        "AI-Atomic-Framework/CONTRIBUTING.md",
+        "AI-Atomic-Framework/docs/ARCHITECTURE.md 初稿"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes",
+        "確認 product charter 同時涵蓋 Core contracts、Agent Operating Layer、Default Governance Bundle、ProjectAdapter 四層"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/README.md",
+        "AI-Atomic-Framework/LICENSE",
+        "AI-Atomic-Framework/CONTRIBUTING.md",
+        "AI-Atomic-Framework/docs/ARCHITECTURE.md",
+        "AI-Atomic-Framework/docs/ECOSYSTEM_POSITIONING.md",
+        "AI-Atomic-Framework/scripts/validate-product-charter.mjs"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit d165def",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff verified",
       "trace_artifacts": [],
-      "metrics_summary": []
-    }
+      "metrics_summary": [
+        "upstream commit d165def",
+        "product charter validation scaffold dependency-free"
+      ]
+    },
+    "completed_at": "2026-05-06T13:16:32+08:00"
   },
   {
-    "doc_id": "doc_task_0284",
-    "id": "ATM-5-0005",
-    "title": "Living Spec 同步器與 PEV Loop",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0343",
+    "id": "ATM-2-0036",
+    "title": "Stale Atom Workspace Alias Directory Cleanup",
+    "owner": "vs-code-gpt-5.4-mini",
     "priority": "P1",
-    "status": "open",
-    "type": "optional-feature",
-    "phase": "ATM-5",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
+    "status": "done",
+    "type": "migration",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T14:07:14.7347467+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
+    "chain_step": "1/2",
+    "sensor_triggered_by": "atm-workbench-alias-drift",
+    "description": "追查並清除 AI-Atomic-Framework/atomic_workbench/atoms 下歷史遺留的 logicalName alias 空目錄，確認 canonical atom workbench 只接受 ATM-* 目錄名。",
     "related": [],
     "depends": [
-      "ATM-5-0001",
-      "ATM-2-0006"
+      "ATM-1-0011",
+      "ATM-2-0013",
+      "ATM-2-0034"
     ],
-    "acceptance": [
-      "PEV Loop 成為標準流程語彙",
-      "MVP 只要求 drift prompt，不要求自動雙向同步",
-      "Living Spec 不阻塞 v0.1 alpha release",
-      "docs/PEV_LOOP.md 必須定義 Plan-Execute-Verify-Converge 如何產生 PEV upgrade proposal",
-      "docs/LIVING_SPEC.md 必須說明 Living Spec sync 不得自動 promote；只能產生 reviewable proposal",
-      "Spec drift prompt schema 必須輸出 atom compatibility impact 與 semver recommendation",
-      "README workflow summary 必須連回 framework semver / atom compatibility / PEV proposal 文件"
-    ],
-    "deliverables": [
-      "docs/PEV_LOOP.md",
-      "docs/LIVING_SPEC.md",
-      "Spec drift prompt schema",
-      "README workflow summary",
-      "schemas/pev/upgrade-proposal-public.schema.json",
-      "schemas/pev/spec-drift-prompt.schema.json"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias cleanup 與 migration note | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:scaffold-builder / npm.cmd run validate:test-runner pass | 變更: 清除 AI-Atomic-Framework/atomic_workbench/atoms 下的 stale alias 空目錄，並在 docs/ATOM_SPACE_LAYOUT.md 明定 atom.* 空目錄視為遷移殘留 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001、ATM-2-0006"
+      "label": "ATM workbench alias 清理開卡",
+      "summary": "清除歷史遺留的 logicalName alias 空目錄，收斂 atomic_workbench/atoms 到 canonical atomId 目錄。",
+      "position": "ATM-2（migration hygiene / workbench cleanup）",
+      "prereq": "ATM-1-0011 / ATM-2-0013 / ATM-2-0034"
     },
     "contracts": {
       "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
+        "AI-Atomic-Framework/atomic_workbench/atoms 目前只應保留 canonical atomId workbench 目錄",
+        "atom.plugin-rule-guard.neutrality-scanner 與 atom.registry-fixture 已確認為空 alias 目錄",
+        "current core scaffold/registry/test-runner 已以 atomId 當 canonical folder name"
       ],
       "output": [
-        "docs/PEV_LOOP.md",
-        "docs/LIVING_SPEC.md",
-        "Spec drift prompt schema",
-        "README workflow summary"
+        "確認 alias 目錄為非 source-of-truth 的歷史殘留，列出來源與影響範圍",
+        "清除 AI-Atomic-Framework/atomic_workbench/atoms 下已知空 alias 目錄，保留 ATM-* canonical 目錄",
+        "補 migration 或 cleanup 說明，明定 logicalName 目錄不再受支援",
+        "驗證 registry/scaffold/test-runner 現況仍只寫入 atomId workbench path"
       ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:scaffold-builder\\nnpm run validate:test-runner",
+      "rollback_hint": "若 cleanup 影響任何仍在使用的本機流程，先還原刪除的空目錄並補明確 evidence；不得回退 canonical atomId 規則。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
+        "盤點 atomic_workbench/atoms 現況與 git tracked state",
+        "確認空 alias 目錄不屬於 registry source-of-truth",
+        "清除空 alias 目錄並驗證不影響現有 validator",
+        "回寫 migration 或 cleanup 說明與 notes"
       ]
     },
     "harness_evidence": {

@@ -67,123 +67,117 @@
     }
   },
   {
-    "doc_id": "doc_task_0246",
-    "id": "ATM-0-0002",
-    "title": "名詞定義新增 ATM 任務代號",
+    "doc_id": "doc_task_0323",
+    "id": "ATM-2-0020",
+    "title": "ProposeAtomicUpgrade（000012）",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "governance",
-    "phase": "ATM-0",
-    "created": "2026-05-05",
+    "type": "orchestration-atom",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T12:39:11+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4-mini",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "在名詞定義文件登錄 ATM 系統代號與 ATM-0~6 子系統，讓任務卡 ID 有唯一命名來源。",
+    "started_at": "2026-05-08T00:30:00.2262013+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T00:30:00.2262013+08:00",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "7/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "串接 hash-diff / metrics / regression-compare 結果，產出 upgrade-proposal.json，並提供 atm upgrade --propose --dry-run CLI。",
     "related": [],
     "depends": [
-      "ATM-0-0001"
+      "ATM-2-0015",
+      "ATM-2-0016",
+      "ATM-2-0017"
     ],
     "acceptance": [
-      "ATM-0~ATM-6 子系統皆可對回本次開源化工作",
-      "任務卡 ID 格式不在其他文件另行定義"
+      "upgrade-proposal.schema.json 含 atomId / fromVersion / toVersion / automatedGates / humanReview pending",
+      "CLI atm upgrade --propose --atom <id> --to <ver> --dry-run --json 輸出符合 schema 的 proposal",
+      "automatedGates 任一 fail 時 proposal 必須標記 status=blocked，不允許進入 review queue",
+      "upgrade-proposal.schema.json 增加 decompositionDecision（enum: atom-bump | atom-extract | map-bump）與 mapImpactScope 欄位",
+      "CLI 增加 --target atom|map 旗標；--target map 時必須附 mapId",
+      "decompositionDecision 為 atom-extract 時，proposal 需同時列出新 atomId 與 fork 來源",
+      "upgrade-proposal.schema.json 追加必填欄位 behaviorId（預設 behavior.evolve）；其他合法值由 ATM-2-0029 reference behavior pack 註冊",
+      "node scripts/validate-upgrade-proposal.mjs 必須可在不跑整包 test 的情況下，獨立驗證 schema、status=blocked 邏輯、decompositionDecision / behaviorId invariant",
+      "exemplar 至少保留 proposal-pass.json 與 proposal-blocked.json 兩組，可直接重放 CLI --dry-run --json 輸出到 validator"
     ],
     "deliverables": [
-      "docs/遊戲規格文件/系統規格書/名詞定義文件.md 新增 ATM 子系統表列"
+      "schemas/upgrade/upgrade-proposal.schema.json",
+      "packages/core/src/upgrade/propose.mjs",
+      "packages/cli/src/commands/upgrade.mjs",
+      "scripts/validate-upgrade-proposal.mjs",
+      "fixtures/upgrade/proposal-pass.json",
+      "fixtures/upgrade/proposal-blocked.json"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 | 狀態: done | 驗證: 名詞定義文件已含 ATM 子系統表列 | 變更: JSON shard 同步 MD frontmatter 真相",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— upgrade-proposal 追加 behaviorId 欄位（必填，預設 behavior.evolve）\n2026-05-07 附錄 C 治理補丁：升版 proposal 保持為唯一編排 choke point；effect node 僅能寫 evidence，不得直接 promote\n2026-05-07 測試穩定性補丁：維持 orchestration atom 目的不變；補 deterministic validator 與 exemplar pair，讓 proposal contract 失敗可先在本卡 seam 定位\n2026-05-08 | 狀態: done | 驗證: node scripts/validate-upgrade-proposal.mjs --mode validate / node scripts/validate-schemas.mjs --mode test / node scripts/validate-cli.mjs --mode test / npm test / npm run typecheck / npm run lint | 變更: AI-Atomic-Framework commit bd48800 補 ProposeAtomicUpgrade schema/core/CLI/fixtures/validator；CLI 採既有 flat command atm upgrade --propose，proposal 僅彙整既有 evidence/report，不 mutate host、不進 review queue | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 開源化開卡",
-      "summary": "在名詞定義文件登錄 ATM 系統代號與 ATM-0~6 子系統，讓任務卡 ID 有唯一命名來源。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0001"
-    },
-    "contracts": {
-      "input": [
-        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
-      ],
-      "output": [
-        "docs/遊戲規格文件/系統規格書/名詞定義文件.md 新增 ATM 子系統表列"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
-      "execution_steps": [
-        "確認依賴與 scope",
-        "修改或建立對應文件",
-        "跑 encoding 與 standard gate",
-        "回寫 notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    },
-    "completed_at": "2026-05-06T12:39:11+08:00"
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "evolution 管線首個 orchestration atom：把 birth-pipeline 工具組合成 upgrade 提案。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0015 / ATM-2-0016 / ATM-2-0017"
+    }
   },
   {
-    "doc_id": "doc_task_0247",
-    "id": "ATM-0-0003",
-    "title": "Roadmap 上游開源化改版",
+    "doc_id": "doc_task_0280",
+    "id": "ATM-4-0005",
+    "title": "Injection plan 與 rollback dry-run",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "done",
-    "type": "docs",
-    "phase": "ATM-0",
+    "status": "open",
+    "type": "case-study",
+    "phase": "ATM-4",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T20:58:01+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-06T08:08:07+08:00",
+    "started_at": "",
+    "started_by_agent": "",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "將 AI_Atomic_Framework_Roadmap.md 改成 AI-Atomic-Framework 上游開源框架藍圖，核心章節不得再綁 3KLife。",
+    "description": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
     "related": [],
     "depends": [
-      "ATM-0-0001"
+      "ATM-4-0003",
+      "ATM-3-0002",
+      "ATM-2.5-0001",
+      "ATM-2.5-0002"
     ],
     "acceptance": [
-      "核心章節不把 3KLife/Cocos/html-to-ucuf/tools_node 當作前提",
-      "明確記載 GitHub repo https://github.com/eaglhuang/AI-Atomic-Framework",
-      "Roadmap 完成後確認 core 不硬依賴外部大型框架，外部工具皆以 adapter/plugin 表示"
+      "dry-run 可 review",
+      "rollback plan 對稱",
+      "來回套用 diff 可回到原狀",
+      "第一輪只產 dry-run patch plan 與 rollback plan，不 apply patch、不改 legacy runtime",
+      "alpha0 gate evidence link：schema / registry / hash-lock / CLI / hello-world / minimal evidence 全綠"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md 轉為 upstream roadmap",
-      "新增 core adapter host project 分層",
-      "html-to-ucuf 降級為 reference case study",
-      "v0.2 companion 的 Core 極簡、無硬依賴與 optional plugin 原則已寫入 upstream Roadmap"
+      "inject-plan JSON schema",
+      "rollback-plan JSON schema",
+      "H2U normalizeCssColor dry-run plan"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0007（v0.2整合+Roadmap upstream改版）與 ATM-0-0010（self-hosting first回寫）代為完成 | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 啟動條件：self-hosting alpha0 全綠後才可 dry-run injection + rollback plan | 阻塞: alpha0 gate 未全綠",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 開源化開卡",
-      "summary": "將 AI_Atomic_Framework_Roadmap.md 改成 AI-Atomic-Framework 上游開源框架藍圖，核心章節不得再綁 3KLife。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0001"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0003、ATM-3-0002"
     },
     "contracts": {
       "input": [
-        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md 轉為 upstream roadmap",
-        "新增 core adapter host project 分層",
-        "html-to-ucuf 降級為 reference case study"
+        "inject-plan JSON schema",
+        "rollback-plan JSON schema",
+        "H2U normalizeCssColor dry-run plan"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
-        "確認依賴與 scope",
-        "修改或建立對應文件",
-        "跑 encoding 與 standard gate",
-        "回寫 notes"
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {

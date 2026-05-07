@@ -1,150 +1,117 @@
 [
   {
-    "doc_id": "doc_task_0322",
-    "id": "ATM-2-0019",
-    "title": "ExecuteAgentTask effect node dry-run（000004）",
+    "doc_id": "doc_task_0293",
+    "id": "ATM-1-0010",
+    "title": "Upstream docs neutrality audit",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "bootstrap-atom",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
+    "type": "open-source-core",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-07T23:28:13.9062315+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-07T23:28:13.9062315+08:00",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "6/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "effect node 形式呼叫 AI agent 執行 prompt，預設 dry-run 只 capture artifact/log，不直接 apply patch；alpha0+ 補洞。",
-    "related": [],
+    "started_at": "2026-05-06T16:41:32.7788261+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "全盤掃描 upstream README、AGENTS、docs、examples、templates 與 prompt assets，確認不含 3KLife、Cocos、html-to-ucuf 或本地工具前提。",
+    "related": [
+      "ATM-1-0009",
+      "ATM-2-0010"
+    ],
     "depends": [
-      "ATM-2-0018",
-      "ATM-2-0006"
+      "ATM-1-0001",
+      "ATM-1-0008"
     ],
     "acceptance": [
-      "execute-agent-task --dry-run 必須是預設行為，僅產出 artifacts/logs，不 mutate host project",
-      "effect node 簽章與 packages/plugin-sdk effect-node.ts 對齊；compute atoms 不可呼叫",
-      "fixture：dry-run 產出 artifact 路徑 + log 摘要 + execution-evidence.json",
-      "apply 模式必須由獨立 CLI flag 開啟，且仍寫 evidence record",
-      "lifecycleMode=evolution 時，dry-run 必須以兩次獨立 TestRunner 呼叫完成：baseline fixtures × new code 與 new fixtures × new code，並分別寫入 evidence",
-      "effect node 不可直接呼叫 ATM-2-0020 ProposeAtomicUpgrade；本卡只負責寫 execution evidence，proposal 由 orchestration atom 後續讀取"
+      "upstream README/AGENTS/docs/examples/templates 不再含 adopter 私有資訊",
+      "產出 banned-term 與 adopter-only reference 清單",
+      "文件敘事不再暗示 3KLife/task-lock/compute-gate/doc-id 是 upstream 前提",
+      "可作為 self-hosting alpha gate 的一部分"
     ],
     "deliverables": [
-      "packages/core/src/agent-execute/execute-agent-task.ts",
-      "schemas/agent-execute/execution-evidence.schema.json",
-      "fixtures/agent-execute/dry-run.snapshot.json"
+      "AI-Atomic-Framework/README.md neutrality checklist",
+      "AI-Atomic-Framework/docs/** audit scope",
+      "AI-Atomic-Framework/examples/** audit scope",
+      "AI-Atomic-Framework/templates/** audit scope"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 lifecycleMode=evolution 雙重 TestRunner 閉環與 effect/orchestration 邊界約束\n2026-05-07 | 狀態: done | 驗證: npm test / npm run typecheck / npm run lint | 變更: AI-Atomic-Framework 補 ExecuteAgentTask effect orchestrator、execution-evidence schema、dry-run snapshot、plugin-sdk effect-node contract 與 validate-agent-execute gate | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: node scripts/validate-product-charter.mjs --mode validate / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 6460be7 新增 docs neutrality audit doc、machine-readable scan policy，並讓 validate-product-charter 掃描 README/CONTRIBUTING/docs/examples/templates protected surfaces | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "補上 Roadmap §7.1 的 000004 缺口，並守住「只 dry-run / 不直接改檔」的安全邊界。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0018 / ATM-2-0006"
-    }
+      "label": "ATM self-hosting first 開卡",
+      "summary": "建立 upstream 文件去污染與中立性稽核，避免 README/docs 再帶入 3KLife 私有資訊。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0001、ATM-1-0008"
+    },
+    "contracts": {
+      "input": [
+        "upstream product charter 與 zero-install bootstrap 已定義",
+        "upstream docs 不得綁定 adopter 私有資訊"
+      ],
+      "output": [
+        "upstream docs neutrality audit checklist",
+        "banned-term scan scope",
+        "adopter-only reference migration list"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡 touched files；upstream docs 若仍含 adopter 私有敘事，保持卡片 open 不偷關卡。",
+      "execution_steps": [
+        "盤點 upstream docs surfaces",
+        "定義 banned terms 與 protected surfaces",
+        "補 audit checklist",
+        "對齊 self-hosting alpha gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/docs/governance/DOCS_NEUTRALITY_AUDIT.md",
+        "AI-Atomic-Framework/docs/governance/docs-neutrality-policy.json",
+        "AI-Atomic-Framework/scripts/validate-product-charter.mjs",
+        "AI-Atomic-Framework/README.md",
+        "AI-Atomic-Framework/CONTRIBUTING.md",
+        "AI-Atomic-Framework/docs/SELF_HOSTING_ALPHA.md"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 6460be7",
+        "node scripts/validate-product-charter.mjs --mode validate",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "protected-surface scan scope moved from hardcoded validator logic into a versioned machine-readable policy",
+        "neutrality audit checklist and adopter-only migration guidance are documented in upstream governance docs",
+        "product-charter validation now covers README, CONTRIBUTING, docs, examples, and templates protected surfaces",
+        "self-hosting alpha gate now requires docs neutrality to pass before the gate is green"
+      ]
+    },
+    "completed_at": "2026-05-06T16:46:25.4089375+08:00"
   },
   {
-    "doc_id": "doc_task_0323",
-    "id": "ATM-2-0020",
-    "title": "ProposeAtomicUpgrade（000012）",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "orchestration-atom",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T00:30:00.2262013+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-08T00:30:00.2262013+08:00",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "7/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "串接 hash-diff / metrics / regression-compare 結果，產出 upgrade-proposal.json，並提供 atm upgrade --propose --dry-run CLI。",
-    "related": [],
-    "depends": [
-      "ATM-2-0015",
-      "ATM-2-0016",
-      "ATM-2-0017"
-    ],
-    "acceptance": [
-      "upgrade-proposal.schema.json 含 atomId / fromVersion / toVersion / automatedGates / humanReview pending",
-      "CLI atm upgrade --propose --atom <id> --to <ver> --dry-run --json 輸出符合 schema 的 proposal",
-      "automatedGates 任一 fail 時 proposal 必須標記 status=blocked，不允許進入 review queue",
-      "upgrade-proposal.schema.json 增加 decompositionDecision（enum: atom-bump | atom-extract | map-bump）與 mapImpactScope 欄位",
-      "CLI 增加 --target atom|map 旗標；--target map 時必須附 mapId",
-      "decompositionDecision 為 atom-extract 時，proposal 需同時列出新 atomId 與 fork 來源",
-      "upgrade-proposal.schema.json 追加必填欄位 behaviorId（預設 behavior.evolve）；其他合法值由 ATM-2-0029 reference behavior pack 註冊",
-      "node scripts/validate-upgrade-proposal.mjs 必須可在不跑整包 test 的情況下，獨立驗證 schema、status=blocked 邏輯、decompositionDecision / behaviorId invariant",
-      "exemplar 至少保留 proposal-pass.json 與 proposal-blocked.json 兩組，可直接重放 CLI --dry-run --json 輸出到 validator"
-    ],
-    "deliverables": [
-      "schemas/upgrade/upgrade-proposal.schema.json",
-      "packages/core/src/upgrade/propose.mjs",
-      "packages/cli/src/commands/upgrade.mjs",
-      "scripts/validate-upgrade-proposal.mjs",
-      "fixtures/upgrade/proposal-pass.json",
-      "fixtures/upgrade/proposal-blocked.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— upgrade-proposal 追加 behaviorId 欄位（必填，預設 behavior.evolve）\n2026-05-07 附錄 C 治理補丁：升版 proposal 保持為唯一編排 choke point；effect node 僅能寫 evidence，不得直接 promote\n2026-05-07 測試穩定性補丁：維持 orchestration atom 目的不變；補 deterministic validator 與 exemplar pair，讓 proposal contract 失敗可先在本卡 seam 定位\n2026-05-08 | 狀態: done | 驗證: node scripts/validate-upgrade-proposal.mjs --mode validate / node scripts/validate-schemas.mjs --mode test / node scripts/validate-cli.mjs --mode test / npm test / npm run typecheck / npm run lint | 變更: AI-Atomic-Framework commit bd48800 補 ProposeAtomicUpgrade schema/core/CLI/fixtures/validator；CLI 採既有 flat command atm upgrade --propose，proposal 僅彙整既有 evidence/report，不 mutate host、不進 review queue | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "evolution 管線首個 orchestration atom：把 birth-pipeline 工具組合成 upgrade 提案。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0015 / ATM-2-0016 / ATM-2-0017"
-    }
-  },
-  {
-    "doc_id": "doc_task_0324",
-    "id": "ATM-2-0021",
-    "title": "HumanReviewGate as reference plugin（000013）",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
+    "doc_id": "doc_task_0352",
+    "id": "ATM-2-0045",
+    "title": "Map Generator Provenance Audit",
+    "owner": "ClaudeCode_sonnet-4-6",
+    "priority": "P1",
     "status": "open",
-    "type": "reference-plugin",
+    "type": "audit",
     "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "8/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "以 reference plugin + effect node 形式提供 human review queue；core 僅依賴 schema 不依賴實作。",
+    "created": "2026-05-07",
+    "created_by_agent": "ClaudeCode_sonnet-4-6",
+    "chain_id": "ATM-MAP-GENERATOR-PROVENANCE-V1",
+    "chain_step": "3/3",
+    "sensor_triggered_by": "atm-2-0042-map-generator-ripple",
+    "description": "等同 ATM-2-0041 的 map 版。掃描 registry 確保所有 map entry 有 generator provenance。",
     "related": [],
     "depends": [
-      "ATM-2-0020",
-      "ATM-2-0008"
+      "ATM-2-0042",
+      "ATM-2-0044"
     ],
-    "acceptance": [
-      "實作位於 packages/plugin-human-review/*；packages/core 不可 import 此 package",
-      ".atm/reports/upgrade-proposals.json 為審核佇列；支援 approve / reject + reason 兩種 decision",
-      "decision log 寫入 evidence store（evidenceType=human-review-decision）",
-      "layer-boundary scanner 必須擋下 core → plugin-human-review 的任何 import",
-      "CLI 補 atm review list / show <proposalId> / approve <proposalId> --reason / reject <proposalId> --reason 四個子命令",
-      "approve / reject 必須同時落 evidence 與 decision-snapshot.hash，鎖定當下 upgrade-proposal.json 內容雜湊",
-      "upgrade-proposals.md 僅可作 audit projection，不得成為 source of truth；欄位固定為 proposalId / atomId / fromVersion → toVersion / decompositionDecision / automatedGates / status",
-      "node scripts/validate-human-review.mjs 必須可獨立驗證 review queue record、decision-snapshot.hash 與 evidence linkage，不依賴 full suite",
-      "exemplar 至少保留 approve / reject / snapshot-hash-mismatch 三組，可直接重放 CLI 輸出到 validator"
-    ],
-    "deliverables": [
-      "packages/plugin-human-review/src/queue.ts",
-      "packages/plugin-human-review/src/decision-log.ts",
-      "scripts/validate-human-review.mjs",
-      "schemas/human-review/decision.schema.json",
-      "fixtures/human-review/approve.snapshot.json",
-      "fixtures/human-review/reject.snapshot.json",
-      "fixtures/human-review/hash-mismatch.snapshot.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 review CLI / decision-snapshot.hash / Markdown audit projection，避免人工審核流程不可追溯\n2026-05-07 測試穩定性補丁：維持 human review gate 目的不變；補 queue/decision validator 與 decision exemplar triad，避免 review 流程只剩 CLI 手工煙霧測試",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "人類審核閘門以 reference plugin 形式落地，避免污染 core hard dependency。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0020 / ATM-2-0008"
-    }
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 + ATM-2-0044 完成"
   }
 ]

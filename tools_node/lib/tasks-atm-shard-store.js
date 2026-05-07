@@ -87,6 +87,121 @@ function calcPartMetrics(tasks) {
   };
 }
 
+function compareTaskIds(left, right) {
+  const leftId = String(left && left.id ? left.id : '');
+  const rightId = String(right && right.id ? right.id : '');
+  return leftId.localeCompare(rightId, 'en', { numeric: true, sensitivity: 'base' });
+}
+
+function sortTasksByTaskId(tasks) {
+  return [...(Array.isArray(tasks) ? tasks : [])].sort(compareTaskIds);
+}
+
+function createPartRecord({ name, title, range, layout, stride, offset, indices, tasks, metrics }) {
+  return {
+    name,
+    title,
+    range,
+    layout,
+    stride,
+    offset,
+    indices,
+    tasks,
+    metrics,
+  };
+}
+
+function buildContiguousParts(tasks, maxPartBytes, maxPartLines) {
+  const parts = [];
+
+  let batch = [];
+  let batchStart = 0;
+
+  const flushBatch = (endExclusive) => {
+    if (batch.length === 0) {
+      return;
+    }
+
+    const metrics = calcPartMetrics(batch);
+    if (metrics.bytes > maxPartBytes || metrics.lines > maxPartLines) {
+      const taskId = batch[0] && batch[0].id ? batch[0].id : '<unknown>';
+      throw new Error(`ATM shard part starting at ${taskId} exceeds thresholds (${metrics.bytes} bytes, ${metrics.lines} lines)`);
+    }
+
+    const indices = batch.map((_, offset) => batchStart + offset);
+    parts.push(createPartRecord({
+      name: `tasks-atm-part-${parts.length + 1}`,
+      title: `Part ${parts.length + 1} (contiguous, ${batch.length} items)`,
+      range: [batchStart, endExclusive - 1],
+      layout: 'contiguous',
+      stride: 1,
+      offset: 0,
+      indices,
+      tasks: batch,
+      metrics,
+    }));
+
+    batch = [];
+    batchStart = endExclusive;
+  };
+
+  for (let index = 0; index < tasks.length; index += 1) {
+    const candidate = batch.concat(tasks[index]);
+    const metrics = calcPartMetrics(candidate);
+    if (batch.length > 0 && (metrics.bytes > maxPartBytes || metrics.lines > maxPartLines)) {
+      flushBatch(index);
+    }
+    batch.push(tasks[index]);
+  }
+
+  flushBatch(tasks.length);
+  return parts;
+}
+
+function buildStripedParts(tasks, partCount, maxPartBytes, maxPartLines) {
+  if (partCount <= 1) {
+    return null;
+  }
+
+  const buckets = Array.from({ length: partCount }, () => ({ tasks: [], indices: [] }));
+
+  tasks.forEach((task, index) => {
+    const bucketIndex = index % partCount;
+    buckets[bucketIndex].tasks.push(task);
+    buckets[bucketIndex].indices.push(index);
+  });
+
+  const parts = [];
+
+  for (let bucketIndex = 0; bucketIndex < buckets.length; bucketIndex += 1) {
+    const bucket = buckets[bucketIndex];
+    if (bucket.tasks.length === 0) {
+      continue;
+    }
+
+    const metrics = calcPartMetrics(bucket.tasks);
+    if (metrics.bytes > maxPartBytes || metrics.lines > maxPartLines) {
+      return null;
+    }
+
+    const firstIndex = bucket.indices[0];
+    const lastIndex = bucket.indices[bucket.indices.length - 1];
+    parts.push(createPartRecord({
+      name: `tasks-atm-part-${parts.length + 1}`,
+      title: `Part ${parts.length + 1} (striped, ${bucket.tasks.length} items)`,
+      range: [firstIndex, lastIndex],
+      layout: 'striped',
+      stride: partCount,
+      offset: bucketIndex,
+      indices: bucket.indices,
+      tasks: bucket.tasks,
+      metrics,
+    }));
+  }
+
+  return parts;
+}
+
 function readTasksAtmStore(projectRoot) {
   const paths = getStorePaths(projectRoot);
   if (!fs.existsSync(paths.indexPath)) {
@@ -96,7 +211,7 @@ function readTasksAtmStore(projectRoot) {
   const indexData = readJson(paths.indexPath);
   if (Array.isArray(indexData.tasks)) {
     return {
-      tasks: indexData.tasks,
+      tasks: sortTasksByTaskId(indexData.tasks),
       summary: indexData.summary || recalcSummary(indexData.tasks),
       mode: 'aggregate',
     };
@@ -122,7 +237,7 @@ function readTasksAtmStore(projectRoot) {
   }
 
   return {
-    tasks,
+    tasks: sortTasksByTaskId(tasks),
     summary: indexData.summary || recalcSummary(tasks),
     mode: 'thin-index',
   };
@@ -131,42 +246,21 @@ function readTasksAtmStore(projectRoot) {
 function splitTasksIntoParts(tasks, options = {}) {
   const maxPartBytes = options.maxPartBytes || DEFAULT_MAX_PART_BYTES;
   const maxPartLines = options.maxPartLines || DEFAULT_MAX_PART_LINES;
-  const parts = [];
+  const sortedTasks = sortTasksByTaskId(tasks);
+  const contiguousParts = buildContiguousParts(sortedTasks, maxPartBytes, maxPartLines);
 
-  let batch = [];
-  let batchStart = 0;
-
-  const flushBatch = (endExclusive) => {
-    if (batch.length === 0) {
-      return;
-    }
-    const metrics = calcPartMetrics(batch);
-    if (metrics.bytes > maxPartBytes || metrics.lines > maxPartLines) {
-      const taskId = batch[0] && batch[0].id ? batch[0].id : '<unknown>';
-      throw new Error(`ATM shard part starting at ${taskId} exceeds thresholds (${metrics.bytes} bytes, ${metrics.lines} lines)`);
-    }
-    parts.push({
-      name: `tasks-atm-part-${parts.length + 1}`,
-      title: `Part ${parts.length + 1} (items ${batchStart + 1}-${endExclusive})`,
-      range: [batchStart, endExclusive - 1],
-      tasks: batch,
-      metrics,
-    });
-    batch = [];
-    batchStart = endExclusive;
-  };
-
-  for (let index = 0; index < tasks.length; index += 1) {
-    const candidate = batch.concat(tasks[index]);
-    const metrics = calcPartMetrics(candidate);
-    if (batch.length > 0 && (metrics.bytes > maxPartBytes || metrics.lines > maxPartLines)) {
-      flushBatch(index);
-    }
-    batch.push(tasks[index]);
+  if (contiguousParts.length <= 1) {
+    return contiguousParts;
   }
 
-  flushBatch(tasks.length);
-  return parts;
+  for (let candidatePartCount = contiguousParts.length; candidatePartCount <= sortedTasks.length; candidatePartCount += 1) {
+    const stripedParts = buildStripedParts(sortedTasks, candidatePartCount, maxPartBytes, maxPartLines);
+    if (stripedParts) {
+      return stripedParts;
+    }
+  }
+
+  return contiguousParts;
 }
 
 function buildIndexStub(projectRoot, parts, summary, options = {}) {
@@ -191,6 +285,10 @@ function buildIndexStub(projectRoot, parts, summary, options = {}) {
       bytes: part.metrics.bytes,
       lines: part.metrics.lines,
       range: part.range,
+      layout: part.layout,
+      stride: part.stride,
+      offset: part.offset,
+      indices: part.indices,
     })),
   };
 }
@@ -216,6 +314,10 @@ function writeTasksAtmStore(projectRoot, tasks, options = {}) {
       name: part.name,
       title: part.title,
       range: part.range,
+      layout: part.layout,
+      stride: part.stride,
+      offset: part.offset,
+      indices: part.indices,
     })),
   };
 

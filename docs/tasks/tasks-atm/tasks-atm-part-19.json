@@ -1,193 +1,153 @@
 [
   {
-    "doc_id": "doc_task_0295",
-    "id": "ATM-1-0009",
-    "title": "Self-hosting alpha proof",
+    "doc_id": "doc_task_0254",
+    "id": "ATM-1-0004",
+    "title": "CLI init/status/validate MVP",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "open-source-core",
+    "type": "cli",
     "phase": "ATM-1",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T14:06:20+08:00",
+    "started_by_agent": "vs-code-github-copilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "在 standalone upstream repo 內完成 self-hosting alpha proof，並把正式使用者體驗收斂為『1 句官方 prompt 作為單一入口』；使用者只需把 prompt 交給 AI，必要時由 AI 自動執行官方 bootstrap 命令，不需手動拷貝 AGENTS/profile/task/lock，也不需先把 host repo 改造成 Node 專案。",
-    "related": [
-      "ATM-1-0010",
-      "ATM-2-0010"
-    ],
+    "description": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
+    "related": [],
     "depends": [
-      "ATM-1-0008",
-      "ATM-2-0008"
+      "ATM-1-0003"
     ],
     "acceptance": [
-      "使用者只需 1 句官方 prompt 即可啟動 first task；必要時由 AI 自動執行官方 bootstrap 命令",
-      "空白或 sandbox repo 可在不依賴 3KLife 工具下完成 standalone bootstrap smoke",
-      "AI agent 只讀 host README 與生成的 AGENTS/.atm profile/task，即可建立 first task、scope lock、artifact/log/evidence 與 first atom smoke",
-      "standalone smoke 不需引用 3KLife/Cocos/html-to-ucuf 或本地治理工具，且作為 Phase B 進入 downstream adapter 前的硬 gate"
+      "空白 repo 可執行 init/status/validate",
+      "未實作 adapter 時可進入 standalone mode",
+      "錯誤輸出可被 Agent 讀懂"
     ],
     "deliverables": [
-      "standalone self-hosting alpha checklist",
-      "official single-entry bootstrap contract",
-      "agent bootstrap smoke fixture",
-      "Phase B gate summary"
+      "packages/cli/src/commands/init.*",
+      "packages/cli/src/commands/status.*",
+      "packages/cli/src/commands/validate.*",
+      "CLI integration fixture"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm run validate:self-hosting-alpha / npm run validate:cli / npm run validate:bootstrap / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 75dfca9 新增 bootstrap CLI 入口、single-entry self-hosting alpha prompt、SELF_HOSTING_ALPHA checklist 與 deterministic first-smoke proof gate | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 0176686 建立可執行 ATM CLI init/status/validate MVP、standalone config、agent-readable JSON output 與 integration fixture | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM self-hosting first 開卡",
-      "summary": "建立 upstream standalone self-hosting alpha gate，並把官方體驗明確收斂為『1 句 prompt 作為單一入口』後，再進 downstream adapter。",
+      "label": "ATM 上游核心開卡",
+      "summary": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
       "position": "ATM-1",
-      "prereq": "ATM-1-0008、ATM-2-0008"
+      "prereq": "ATM-1-0003"
     },
     "contracts": {
       "input": [
-        "zero-install bootstrap 與 local governance reference plugins 已可運作",
-        "第一輪 smoke 不得依賴 3KLife 工具"
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "standalone self-hosting alpha checklist",
-        "official single-entry bootstrap contract",
-        "bootstrap smoke proof",
-        "Phase B exit gate"
+        "packages/cli/src/commands/init.*",
+        "packages/cli/src/commands/status.*",
+        "packages/cli/src/commands/validate.*",
+        "CLI integration fixture"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡 touched files；若 standalone smoke 仍含 3KLife 假設，保持卡片 open 不偷關卡。",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
       "execution_steps": [
-        "定義『1 句官方 prompt 作為單一入口；必要時 AI 自動執行 1 個官方 bootstrap 命令』產品目標",
-        "定義 self-hosting alpha gate",
-        "建立 standalone smoke fixture",
-        "驗證 first task/lock/artifact/log/evidence 與 first atom smoke",
-        "回寫 Phase B gate summary"
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [
         "AI-Atomic-Framework/packages/cli/src/atm.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/bootstrap-entry.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/bootstrap.mjs",
-        "AI-Atomic-Framework/scripts/validate-self-hosting-alpha.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/init.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/shared.mjs",
         "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/scripts/validate-bootstrap.mjs",
-        "AI-Atomic-Framework/docs/SELF_HOSTING_ALPHA.md",
-        "AI-Atomic-Framework/examples/agent-bootstrap/README.md",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json",
-        "AI-Atomic-Framework/README.md"
+        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
       ],
       "validation_evidence": [
-        "AI-Atomic-Framework commit 75dfca9",
-        "npm run validate:self-hosting-alpha",
+        "AI-Atomic-Framework commit 0176686",
+        "npm install",
+        "npm run packages:list",
         "npm run validate:cli",
-        "npm run validate:bootstrap",
         "npm test",
         "npm run typecheck",
         "npm run lint"
       ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "handoff_diff_status": "upstream committed; tracking diff verified",
       "trace_artifacts": [],
       "metrics_summary": [
-        "official single-entry prompt checks .atm/config.json and triggers bootstrap when needed",
-        "bootstrap command is an official standalone CLI entry alongside init/status/validate",
-        "self-hosting alpha validator bootstraps a clean upstream repo copy and completes first smoke against hello-world atom",
-        "proof writes task/lock/evidence transitions plus artifact/log/context summary and Phase B exit gate report",
-        "full upstream validation chain remains green after adding the proof gate"
+        "upstream commit 0176686",
+        "3 CLI commands implemented: init/status/validate",
+        "blank repo fixture runs commands from empty working directory",
+        "standalone mode works before adapter implementation",
+        "errors emit machine-readable JSON with code/message/evidence"
       ]
     },
-    "completed_at": "2026-05-06T16:34:31+08:00"
+    "completed_at": "2026-05-06T14:12:54+08:00"
   },
   {
-    "doc_id": "doc_task_0293",
-    "id": "ATM-1-0010",
-    "title": "Upstream docs neutrality audit",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0346",
+    "id": "ATM-2-0039",
+    "title": "Generated Atom Source Template and Code Path Policy",
+    "owner": "vs-code-gpt-5.4-mini",
     "priority": "P0",
     "status": "done",
-    "type": "open-source-core",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T16:41:32.7788261+08:00",
-    "started_by_agent": "vs-code-github-copilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "全盤掃描 upstream README、AGENTS、docs、examples、templates 與 prompt assets，確認不含 3KLife、Cocos、html-to-ucuf 或本地工具前提。",
-    "related": [
-      "ATM-1-0009",
-      "ATM-2-0010"
-    ],
+    "type": "architecture",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T15:14:35.1752897+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "completed_at": "2026-05-07T15:27:59.2938458+08:00",
+    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
+    "chain_step": "1/3",
+    "sensor_triggered_by": "atm-generator-source-gap",
+    "description": "讓 Atom Generator 產出的新原子具備正式 source file template，不再以 spec-only 或 spec-as-code 方式暫代 registry codePaths。",
+    "related": [],
     "depends": [
-      "ATM-1-0001",
-      "ATM-1-0008"
+      "ATM-2-0038"
     ],
-    "acceptance": [
-      "upstream README/AGENTS/docs/examples/templates 不再含 adopter 私有資訊",
-      "產出 banned-term 與 adopter-only reference 清單",
-      "文件敘事不再暗示 3KLife/task-lock/compute-gate/doc-id 是 upstream 前提",
-      "可作為 self-hosting alpha gate 的一部分"
-    ],
-    "deliverables": [
-      "AI-Atomic-Framework/README.md neutrality checklist",
-      "AI-Atomic-Framework/docs/** audit scope",
-      "AI-Atomic-Framework/examples/** audit scope",
-      "AI-Atomic-Framework/templates/** audit scope"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: node scripts/validate-product-charter.mjs --mode validate / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 6460be7 新增 docs neutrality audit doc、machine-readable scan policy，並讓 validate-product-charter 掃描 README/CONTRIBUTING/docs/examples/templates protected surfaces | 阻塞: none",
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始補 source template/codePaths policy | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node tests/core/atom-generator.test.mjs / node tests/cli/create.test.mjs / npm run validate:registry-core / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: AtomGenerator 產物補 atom.source.mjs，預設 validation command 改跑 source self-check，registry codePaths 不再用 specPath 暫代 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM self-hosting first 開卡",
-      "summary": "建立 upstream 文件去污染與中立性稽核，避免 README/docs 再帶入 3KLife 私有資訊。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0001、ATM-1-0008"
+      "label": "ATM generator source template 開卡",
+      "summary": "補齊 generator 的 source file template 與 codePaths policy，讓新原子真正有 spec/code/test/report 四件套。",
+      "position": "ATM-2（generator provenance / source template）",
+      "prereq": "ATM-2-0038"
     },
     "contracts": {
       "input": [
-        "upstream product charter 與 zero-install bootstrap 已定義",
-        "upstream docs 不得綁定 adopter 私有資訊"
+        "ATM-2-0038 alpha0 已能產生 spec/test/report 並登錄 registry",
+        "目前 dogfood fixture 以 spec path 暫作 codePaths，這只是 alpha0 過渡",
+        "Registry selfVerification 需要穩定 codePaths"
       ],
       "output": [
-        "upstream docs neutrality audit checklist",
-        "banned-term scan scope",
-        "adopter-only reference migration list"
+        "新增 generator source template policy",
+        "AtomGenerator 產物包含正式 source file",
+        "Registry codePaths 不再用 specPath 暫代",
+        "補 fixture 覆蓋 source/code/test/report 四件套"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡 touched files；upstream docs 若仍含 adopter 私有敘事，保持卡片 open 不偷關卡。",
+      "validation_cmd": "node tests/core/atom-generator.test.mjs\\nnode tests/cli/create.test.mjs\\nnpm run validate:registry-core",
+      "rollback_hint": "回退 source template 與 codePaths policy；保留 ATM-2-0038 birth facade，不回退 allocator/create command。",
       "execution_steps": [
-        "盤點 upstream docs surfaces",
-        "定義 banned terms 與 protected surfaces",
-        "補 audit checklist",
-        "對齊 self-hosting alpha gate"
+        "盤點目前 generated atom 檔案組成",
+        "設計 source template 與預設 validation command",
+        "更新 generator 與 tests",
+        "回寫 registry/codePaths policy"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/docs/governance/DOCS_NEUTRALITY_AUDIT.md",
-        "AI-Atomic-Framework/docs/governance/docs-neutrality-policy.json",
-        "AI-Atomic-Framework/scripts/validate-product-charter.mjs",
-        "AI-Atomic-Framework/README.md",
-        "AI-Atomic-Framework/CONTRIBUTING.md",
-        "AI-Atomic-Framework/docs/SELF_HOSTING_ALPHA.md"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 6460be7",
-        "node scripts/validate-product-charter.mjs --mode validate",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "protected-surface scan scope moved from hardcoded validator logic into a versioned machine-readable policy",
-        "neutrality audit checklist and adopter-only migration guidance are documented in upstream governance docs",
-        "product-charter validation now covers README, CONTRIBUTING, docs, examples, and templates protected surfaces",
-        "self-hosting alpha gate now requires docs neutrality to pass before the gate is green"
-      ]
-    },
-    "completed_at": "2026-05-06T16:46:25.4089375+08:00"
+      "metrics_summary": []
+    }
   }
 ]

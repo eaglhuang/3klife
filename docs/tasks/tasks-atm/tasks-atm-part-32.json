@@ -1,118 +1,158 @@
 [
   {
-    "doc_id": "doc_task_0343",
-    "id": "ATM-2-0036",
-    "title": "Stale Atom Workspace Alias Directory Cleanup",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P1",
+    "doc_id": "doc_task_0260",
+    "id": "ATM-2-0003",
+    "title": "Test Runner 與 report schema",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
     "status": "done",
-    "type": "migration",
+    "type": "manager",
     "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T14:07:14.7347467+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
-    "chain_step": "1/2",
-    "sensor_triggered_by": "atm-workbench-alias-drift",
-    "description": "追查並清除 AI-Atomic-Framework/atomic_workbench/atoms 下歷史遺留的 logicalName alias 空目錄，確認 canonical atom workbench 只接受 ATM-* 目錄名。",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T20:28:12.7677476+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T20:40:58.2375737+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 atomic test runner contract 與 JSON report schema。",
     "related": [],
     "depends": [
-      "ATM-1-0011",
-      "ATM-2-0013",
-      "ATM-2-0034"
+      "ATM-2-0002",
+      "ATM-1-0006"
     ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias cleanup 與 migration note | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:scaffold-builder / npm.cmd run validate:test-runner pass | 變更: 清除 AI-Atomic-Framework/atomic_workbench/atoms 下的 stale alias 空目錄，並在 docs/ATOM_SPACE_LAYOUT.md 明定 atom.* 空目錄視為遷移殘留 | 阻塞: none",
+    "acceptance": [
+      "故意失敗 fixture exit code 非零",
+      "report 可被 registry/hash/police 消費",
+      "runner 不 hard-code Vitest"
+    ],
+    "deliverables": [
+      "packages/core/src/manager/test-runner.*",
+      "schemas/test-report.schema.json",
+      "pass/fail fixtures"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:test-runner / npm run validate:schemas / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 391b462 新增 core delegated test runner、schemas/test-report.schema.json、pass/fail runner fixtures 與 schema fixtures，預設把 atom.test.report.json 寫進 atomic_workbench/atoms/<atomId>/，保留專案自有 validation.commands、支援自訂 reportPath，並在失敗時保留 non-zero exit code | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM workbench alias 清理開卡",
-      "summary": "清除歷史遺留的 logicalName alias 空目錄，收斂 atomic_workbench/atoms 到 canonical atomId 目錄。",
-      "position": "ATM-2（migration hygiene / workbench cleanup）",
-      "prereq": "ATM-1-0011 / ATM-2-0013 / ATM-2-0034"
+      "label": "ATM 上游核心開卡",
+      "summary": "建立 atomic test runner contract 與 JSON report schema。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0002、ATM-1-0006"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework/atomic_workbench/atoms 目前只應保留 canonical atomId workbench 目錄",
-        "atom.plugin-rule-guard.neutrality-scanner 與 atom.registry-fixture 已確認為空 alias 目錄",
-        "current core scaffold/registry/test-runner 已以 atomId 當 canonical folder name"
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "確認 alias 目錄為非 source-of-truth 的歷史殘留，列出來源與影響範圍",
-        "清除 AI-Atomic-Framework/atomic_workbench/atoms 下已知空 alias 目錄，保留 ATM-* canonical 目錄",
-        "補 migration 或 cleanup 說明，明定 logicalName 目錄不再受支援",
-        "驗證 registry/scaffold/test-runner 現況仍只寫入 atomId workbench path"
+        "packages/core/src/manager/test-runner.*",
+        "schemas/test-report.schema.json",
+        "pass/fail fixtures"
       ],
-      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:scaffold-builder\\nnpm run validate:test-runner",
-      "rollback_hint": "若 cleanup 影響任何仍在使用的本機流程，先還原刪除的空目錄並補明確 evidence；不得回退 canonical atomId 規則。",
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
       "execution_steps": [
-        "盤點 atomic_workbench/atoms 現況與 git tracked state",
-        "確認空 alias 目錄不屬於 registry source-of-truth",
-        "清除空 alias 目錄並驗證不影響現有 validator",
-        "回寫 migration 或 cleanup 說明與 notes"
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/package.json",
+        "AI-Atomic-Framework/packages/core/src/index.ts",
+        "AI-Atomic-Framework/packages/core/src/manager/test-runner.mjs",
+        "AI-Atomic-Framework/schemas/test-report.schema.json",
+        "AI-Atomic-Framework/scripts/validate-schemas.mjs",
+        "AI-Atomic-Framework/scripts/validate-test-runner.mjs",
+        "AI-Atomic-Framework/tests/test-runner.fixture.json",
+        "AI-Atomic-Framework/tests/test-runner-fixtures/pass.atom.json",
+        "AI-Atomic-Framework/tests/test-runner-fixtures/fail.atom.json",
+        "AI-Atomic-Framework/tests/test-runner-fixtures/pass-command.mjs",
+        "AI-Atomic-Framework/tests/test-runner-fixtures/fail-command.mjs",
+        "AI-Atomic-Framework/tests/schema-fixtures/manifest.json",
+        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-test-report.json",
+        "AI-Atomic-Framework/tests/schema-fixtures/negative/missing-runner-contract.test-report.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 391b462",
+        "npm run validate:test-runner",
+        "npm run validate:schemas",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
       "trace_artifacts": [],
-      "metrics_summary": []
+      "metrics_summary": [
+        "core test runner delegates to project-owned validation.commands instead of hard-coding a specific third-party framework",
+        "runner emits a schema-validated atm.testReport document with artifacts/evidence for downstream registry or police consumers",
+        "default report path now follows the per-atom workbench folder atomic_workbench/atoms/<atomId>/atom.test.report.json",
+        "caller or adapter can still override reportPath when a host-specific layout is needed",
+        "fail fixture preserves a non-zero exit code while still writing a machine-readable report"
+      ]
     }
   },
   {
-    "doc_id": "doc_task_0344",
-    "id": "ATM-2-0037",
-    "title": "Workbench Alias Drift Guard and Projection Alignment",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P1",
+    "doc_id": "doc_task_0265",
+    "id": "ATM-3-0002",
+    "title": "3KLife ATM config 與 bootstrap wrapper",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
     "status": "done",
-    "type": "guardrail",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T14:09:16.5225687+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
-    "chain_step": "2/2",
-    "sensor_triggered_by": "atm-workbench-alias-drift",
-    "description": "補上自動驗證與展示層收斂，避免 logicalName 再被誤當成 atomId 或 workbench 目錄名，並在 human-readable projection 明確分開 atomId 與 logicalName。",
+    "type": "adapter",
+    "phase": "ATM-3",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-08T05:36:17+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T05:40:47+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
     "related": [],
     "depends": [
-      "ATM-2-0013",
-      "ATM-2-0034",
-      "ATM-2-0036"
+      "ATM-3-0001"
     ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias drift guard 與 projection alignment | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:registry-catalog / npm.cmd test / npm.cmd run lint pass | 變更: 補上 workbench stray directory guard、registry catalog atomId/logicalName 分欄，並修正 validate-registry-catalog 改在 temp root 跑 fixture test runner 以避免重建 ATM-FIXTURE-0004 汙染 root workbench | 阻塞: none",
+    "acceptance": [
+      "node tools_node/atomic-framework/atm-cli.js status 可呼叫 upstream",
+      "workbench/registry path 指向本 repo local 區",
+      "不 fork core source",
+      "shadow wrapper 預設 dry-run / report-only，不替換現有 tools_node CLI"
+    ],
+    "deliverables": [
+      "tools_node/atomic-framework/bootstrap.js",
+      "tools_node/atomic-framework/atm-cli.js",
+      "atm.config.*",
+      "local workbench path 設定"
+    ],
+    "notes": "2026-05-08 | 狀態: done | 驗證: encoding/cross-shard/bootstrap smoke/standard gate pass | 變更: 完成 3KLife ATM config、bootstrap wrapper、atm-cli alias，並收尾 shard trim | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM workbench alias guard 開卡",
-      "summary": "建立非 canonical alias 目錄的 drift guard，並統一 projection 對 atomId / logicalName 的呈現。",
-      "position": "ATM-2（guardrail / projection alignment）",
-      "prereq": "ATM-2-0013 / ATM-2-0034 / ATM-2-0036"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001"
     },
     "contracts": {
       "input": [
-        "canonical workbench layout 已定義為 atomic_workbench/atoms/<atomId>/",
-        "logicalName 仍可保留於 registry/spec，但不得再當成 workbench folder name",
-        "至少存在一份 human-readable projection 曾把 logicalName 當成 id 呈現"
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "新增或擴充 deterministic validator，檢出 atomic_workbench/atoms 下非 canonical alias 目錄 drift",
-        "驗證規則需容許合法 canonical ATM-* workbench 與明確 adapter override，不可誤殺正式 sourcePaths",
-        "registry catalog 與其他 human-readable projection 若呈現 atom 身分，必須明確區分 atomId 與 logicalName",
-        "補 fixture 或 snapshot，覆蓋 stray alias dir 與 projection 欄位對齊情境"
+        "tools_node/atomic-framework/bootstrap.js",
+        "atm.config.*",
+        "local workbench path 設定"
       ],
-      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:registry-catalog\\nnpm test\\nnpm run lint",
-      "rollback_hint": "若新 guard 對既有 host override 造成誤報，先縮小到 atomic_workbench/atoms default layout 範圍，不得放寬回 logicalName 可當 canonical folder 的舊行為。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
-        "盤點目前 validator 與 projection 輸出缺口",
-        "設計 alias drift 判斷規則與允許例外",
-        "補 deterministic test 或 snapshot 覆蓋 stray alias dir 與 projection 欄位",
-        "回寫 catalog 或相關 human-readable projection，確保 atomId / logicalName 分欄或明確標示"
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {

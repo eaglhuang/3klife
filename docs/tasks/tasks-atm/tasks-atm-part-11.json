@@ -1,69 +1,67 @@
 [
   {
-    "doc_id": "doc_task_0289",
-    "id": "ATM-2-0007",
-    "title": "Default Governance Bundle schema",
-    "owner": "vs-code-gpt-5.4",
+    "doc_id": "doc_task_0296",
+    "id": "ATM-0-0011",
+    "title": "Context budget 治理補強與文件回寫",
+    "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "in-progress",
-    "type": "open-source-core",
-    "phase": "ATM-2",
+    "status": "done",
+    "type": "docs-governance",
+    "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-07T14:34:13.9575398+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-05T23:05:36.3800604+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-05T23:13:04.1935079+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "定義 WorkItem、TaskStore、ScopeLock、DocumentIndex、ShardStore、ArtifactStore、LogStore、RunReportStore、RuleGuard、Evidence/Handoff 等 governance primitives 的 upstream schema 與 interface。",
-    "related": [],
+    "description": "把 context budget 正式提升為 ATM upstream 可獨立治理的 primitive，並回寫相關 roadmap、extraction plan、adopter plan 與 v0.2 companion 文件。",
+    "related": [
+      "ATM-2-0011"
+    ],
     "depends": [
-      "ATM-2-0006"
+      "ATM-0-0010"
     ],
     "acceptance": [
-      "governance primitives 不引用 3KLife 專用路徑",
-      "schema 可支援 local .atm layout 與外部 Jira/GitHub Issues adapter",
-      "TaskStore/LockStore/DocumentIndex/ShardStore/ArtifactStore/LogStore/RuleGuard/EvidenceStore interface 完整",
-      "TaskStore/LockStore/DocumentIndex/ShardStore/ArtifactStore/LogStore/RuleGuard/EvidenceStore interface 完整",
-      "schemas/governance/work-item.schema.json 可驗證 alpha0 first task",
-      "schemas/governance/scope-lock.schema.json 可驗證最小 lock evidence",
-      "alpha0 minimal task/lock/evidence fixture 不依賴完整 reference plugins",
-      "alpha0 governance schema 僅含 WorkItem / ScopeLock / 最小 Evidence；upgrade-proposal / review-queue schema 標記為 alpha1 並獨立檔案"
+      "四份 ATM 規劃文件補上 context budget upstream primitive",
+      "明確定義 plugin-context-budget 或等效 guard/adapter 位置",
+      "把 encoding/context budget/neutrality 收斂成 Agent Governance Bundle",
+      "新增對應 ATM 任務卡與 tasks-atm 條目"
     ],
     "deliverables": [
-      "packages/plugin-sdk/governance interfaces 規格",
-      "schemas/governance/*.schema.json 規格",
-      "docs/ADAPTER_GUIDE.md governance interface 草案",
-      "ArtifactStore / LogStore / RunReportStore / MarkdownJsonStateStore contract 入口，詳細 schema 可由 ATM-2-0009 落地",
-      "schemas/governance/work-item.schema.json",
-      "schemas/governance/scope-lock.schema.json",
-      "alpha0 minimal governance fixture"
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md",
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
+      "docs/agent-briefs/tasks/ATM-2-0011.md"
     ],
-    "notes": "2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 接手 alpha0 Default Governance Bundle schema 與 layout contract | 阻塞: none\n2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 schema-first 範圍：WorkItem / ScopeLock 為 alpha0 最小治理，完整 Default Governance Bundle 移到 alpha1 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
+    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 將 context budget、plugin-context-budget 與 Agent Governance Bundle 正式回寫到四份 ATM 規劃文件，並同步修正 ATM-0-0011/ATM-2-0011 任務真相 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM governance split 開卡",
-      "summary": "定義 Default Governance Bundle 所需的通用治理 primitives schema 與 adapter interface。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0006"
+      "label": "ATM governance bundle 開卡",
+      "summary": "把 context budget 提升成 upstream 可獨立治理能力，並同步回寫相關 md 文件。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0010"
     },
     "contracts": {
       "input": [
-        "ATM Plugin SDK 已規劃 ProjectAdapter/LanguageAdapter",
-        "Default Governance Bundle 已決議納入 upstream 完整性"
+        "encoding 已進入 upstream governance 規劃",
+        "context budget 尚未成為對等 primitive"
       ],
       "output": [
-        "governance primitives schema",
-        "governance adapter interface",
-        "default .atm layout contract"
+        "context budget primitive 定義",
+        "Agent Governance Bundle 收斂",
+        "新增對應任務卡"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退 upstream governance schema/interface 草案；不得引入 3KLife 私有路徑。",
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0011 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若 tasks-atm 或 doc_id 不一致，使用既有工具重建。",
       "execution_steps": [
-        "盤點 governance primitives",
-        "定義 schema 與 interface",
-        "補 positive/negative fixtures",
-        "更新 ADAPTER_GUIDE"
+        "建立新任務卡",
+        "建立 ATM-2-0011 後續卡",
+        "鎖卡並更新 frontmatter",
+        "回寫四份主文件",
+        "跑 encoding/task-scope/standard gate"
       ]
     },
     "harness_evidence": {
@@ -75,68 +73,110 @@
     }
   },
   {
-    "doc_id": "doc_task_0288",
-    "id": "ATM-2-0008",
-    "title": "Local governance reference plugins",
+    "doc_id": "doc_task_0336",
+    "id": "ATM-2-0030",
+    "title": "Dedup Police Plugin",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "done",
-    "type": "open-source-core",
+    "status": "open",
+    "type": "police",
     "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "5/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "提供去重警察：用 semanticFingerprint 比對找出重複候選，呼叫 LLM similarity skill 算 90%+ 行為相似度，依 8 種去重情境裁決，產出 dedup-report。維護 fingerprint-index 做 O(1) prefix lookup，跨 100K atoms 全掃在數百毫秒內完成。",
+    "related": [],
+    "depends": [
+      "ATM-2-0026",
+      "ATM-2-0029",
+      "ATM-2-0005"
+    ],
+    "acceptance": [
+      "packages/plugin-police-dedup/ 落地 dedup police plugin",
+      "fingerprint-index.json 使用 sf 16-char prefix 做 hash bucket；100K atoms 全掃 ≤ 500ms（含 budget 測試）",
+      "實作 8 種去重情境（自由原子 100% 同 / 自由原子 90%+ 同 / map 成員 vs 自由原子 / 同 map 內成員同 / 跨 map 成員同 / 整個 map 同 / 零 caller / TTL 過期）",
+      "每種情境輸出對應建議 behavior（dedup-merge / sweep / extract-shared / map-merge / expire / infect）",
+      "dedup-report.schema.json 含 candidates[] / suggestedBehavior / confidenceScore",
+      "LLM similarity skill 為 plugin 接口，dry-run 時可 stub"
+    ],
+    "deliverables": [
+      "packages/plugin-police-dedup/",
+      "packages/plugin-police-dedup/src/fingerprint-index.ts",
+      "packages/plugin-police-dedup/src/similarity-skill.ts",
+      "schemas/police/dedup-report.schema.json",
+      "fixtures/dedup/*8-scenarios.json",
+      "tests/dedup/100k-budget.test.ts"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 5/8）| 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "去重警察：sf+LLM similarity 找重複候選，O(1) prefix lookup 支援大規模原子庫。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0026 / ATM-2-0029 / ATM-2-0005"
+    }
+  },
+  {
+    "doc_id": "doc_task_0277",
+    "id": "ATM-6-0002",
+    "title": "Community RFC 與貢獻流程",
+    "owner": "GitHubCopilot",
+    "priority": "P2",
+    "status": "open",
+    "type": "ecosystem",
+    "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-07T16:36:00+08:00",
-    "started_by_agent": "vs-code-gpt-5.4",
+    "started_at": "",
+    "started_by_agent": "",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "實作 upstream 預設治理套件，讓空白 repo 不依賴 3KLife 也能使用 task、lock、doc index、shard、artifact、log、rule guard 與 evidence workflow。",
+    "description": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
     "related": [],
     "depends": [
-      "ATM-2-0007"
+      "ATM-5-0003"
     ],
     "acceptance": [
-      "空白 repo 可用 atm init / atm bootstrap 建立 canonical .atm governance layout",
-      "@ai-atomic-framework/plugin-governance-local 提供 task/lock/document-index/shard/artifact/log/run-report/state/rule/evidence/context-summary stores",
-      "bootstrap / self-hosting alpha smoke 維持綠燈",
-      "local governance smoke fixture 驗證 .atm/artifacts、.atm/logs、.atm/reports 與其他 canonical stores",
-      "reference plugins 不被 packages/core 直接 import",
-      "reference plugins 標記為 alpha1 gate，不阻塞 alpha0",
-      "version-history / human-review reference plugins 標記為 alpha1，不阻塞 alpha0 release"
+      "core vs adapter PR 分流",
+      "domain logic PR 有明確拒絕/轉 plugin 流程",
+      "maintainer decision process 清楚",
+      "release owner 與 maintainer quorum 規則已定義",
+      "security / provenance / package naming 類 RFC escalation path 已定義"
     ],
     "deliverables": [
-      "packages/plugin-governance-local",
-      "packages/cli/src/commands/bootstrap.mjs",
-      "scripts/validate-governance-local.mjs",
-      "tests/governance-local.fixture.json",
-      "examples/agent-bootstrap/README.md",
-      ".atm/artifacts、.atm/logs、.atm/reports default store 與 smoke fixture"
+      "docs/RFC_PROCESS.md",
+      "GitHub issue templates",
+      "PR template"
     ],
-    "notes": "2026-05-07 | 狀態: done | 驗證: node scripts/validate-bootstrap.mjs --mode test、node scripts/validate-governance-local.mjs --mode test、node scripts/validate-self-hosting-alpha.mjs --mode test、npm test、npm run typecheck、npm run lint 全綠 | 變更: 新增 plugin-governance-local package 與 standalone governance smoke；CLI bootstrap 改接新 bundle；順手修正 validate-core-spec-parser 的 Windows path compare | 阻塞: none\n2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 將完整 reference plugins 移到 alpha1；alpha0 只要求最小 task/lock/evidence smoke | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補社群流程需指定 release owner / maintainer quorum / escalation path | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM governance split 開卡",
-      "summary": "建立 upstream Default Governance Bundle 的 local reference plugins，讓 ATM 在空白 repo 能完整運作。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0007"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
+      "position": "ATM-6",
+      "prereq": "ATM-5-0003"
     },
     "contracts": {
       "input": [
-        "governance primitives schema 已定義",
-        "Core 不得硬依賴 reference plugins"
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "local governance reference plugins",
-        "standalone governance example",
-        "CLI governance commands smoke test"
+        "docs/RFC_PROCESS.md",
+        "GitHub issue templates",
+        "PR template"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退 reference plugin package；packages/core 不可 import plugin 實作。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
-        "建立 local .atm layout",
-        "實作 task/lock/index/shard/rule/evidence plugins",
-        "補 CLI smoke test",
-        "補 standalone example"
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {

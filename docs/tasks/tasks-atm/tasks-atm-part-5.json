@@ -1,188 +1,179 @@
 [
   {
-    "doc_id": "doc_task_0253",
-    "id": "ATM-1-0003",
-    "title": "Atomic Spec schema v0.1",
+    "doc_id": "doc_task_0249",
+    "id": "ATM-0-0005",
+    "title": "開源拆出 checklist 文件",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "schema",
-    "phase": "ATM-1",
+    "type": "docs",
+    "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T13:47:06+08:00",
-    "started_by_agent": "vs-code-github-copilot",
+    "started_at": "2026-05-05T20:58:01+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-06T08:08:07+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "定義語言無關 Atomic Spec JSON Schema，支援 language/runtime/adapterRequirements/compatibility/hashLock。",
+    "description": "建立從 3KLife 拆出 AI-Atomic-Framework 到新 GitHub repo 的階段式 checklist。",
     "related": [],
     "depends": [
-      "ATM-1-0002"
+      "ATM-0-0003"
     ],
     "acceptance": [
-      "valid spec fixture 通過",
-      "缺必要欄位與違規 dependencyPolicy fixture 失敗",
-      "schema 不含 3KLife/Cocos 假設",
-      "alpha0 schema fixture：hello-world atom + minimal registry + hash-lock 全部可 AJV 驗證",
-      "schema id / version / migration 欄位固定，供 ATM-2 governance schemas 引用"
+      "列出 core 禁止耦合清單",
+      "列出上游 repo skeleton",
+      "列出 3KLife adapter 導入與回同步策略"
     ],
     "deliverables": [
-      "schemas/atomic-spec.schema.json",
-      "schemas/registry.schema.json",
-      "schemas/regression-matrix.schema.json",
-      "positive/negative schema fixtures",
-      "alpha0 hello-world schema fixture",
-      "schema id / version / migration policy"
+      "docs/ai_atomic_framework/open-source-extraction-plan.md"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 5267326 建立 Atomic Spec、Registry、Regression Matrix schema v0.1、schema policy、AJV validator、positive/negative fixtures 與 package-lock | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0007（MVP邊界）與 ATM-0-0009（governance bundle 分層）代為完成；open-source-extraction-plan.md 已含完整內容 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "定義語言無關 Atomic Spec JSON Schema，支援 language/runtime/adapterRequirements/compatibility/hashLock。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0002"
+      "label": "ATM 開源化開卡",
+      "summary": "建立從 3KLife 拆出 AI-Atomic-Framework 到新 GitHub repo 的階段式 checklist。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0003"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
       ],
       "output": [
-        "schemas/atomic-spec.schema.json",
-        "schemas/registry.schema.json",
-        "schemas/regression-matrix.schema.json",
-        "positive/negative schema fixtures"
+        "docs/ai_atomic_framework/open-source-extraction-plan.md"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
       "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
+        "確認依賴與 scope",
+        "修改或建立對應文件",
+        "跑 encoding 與 standard gate",
+        "回寫 notes"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/schemas/atomic-spec.schema.json",
-        "AI-Atomic-Framework/schemas/registry.schema.json",
-        "AI-Atomic-Framework/schemas/regression-matrix.schema.json",
-        "AI-Atomic-Framework/schemas/README.md",
-        "AI-Atomic-Framework/scripts/validate-schemas.mjs",
-        "AI-Atomic-Framework/tests/schema-fixtures/manifest.json",
-        "AI-Atomic-Framework/tests/schema-fixtures/positive/hello-world.atom.json",
-        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-registry.json",
-        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-regression-matrix.json",
-        "AI-Atomic-Framework/tests/schema-fixtures/negative"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 5267326",
-        "npm install",
-        "npm run packages:list",
-        "npm run validate:schemas",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff verified",
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit 5267326",
-        "3 schemas created",
-        "3 positive fixtures and 4 negative fixtures AJV-verified",
-        "performanceBudget optional shape reserved"
-      ]
-    },
-    "completed_at": "2026-05-06T13:50:31+08:00"
+      "metrics_summary": []
+    }
   },
   {
-    "doc_id": "doc_task_0254",
-    "id": "ATM-1-0004",
-    "title": "CLI init/status/validate MVP",
+    "doc_id": "doc_task_0329",
+    "id": "ATM-2-0024",
+    "title": "Map-Level Upgrade & Extract-vs-Bump Decision",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "done",
-    "type": "cli",
-    "phase": "ATM-1",
+    "status": "open",
+    "type": "orchestration-atom",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-MAP-EVOLUTION-V2",
+    "chain_step": "2/4",
+    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
+    "description": "在 upgrade pipeline 加入 decomposition decision：判斷某次改動應走 atom-bump / atom-extract / map-bump，並落地對應 proposal 與 review path。",
+    "related": [],
+    "depends": [
+      "ATM-2-0020",
+      "ATM-2-0023"
+    ],
+    "acceptance": [
+      "CLI atm upgrade --target map --map <id> --to <ver> 可產出 map-level proposal",
+      "decompositionDecision 規則明文：API 不變→atom-bump；行為斷裂→atom-extract；跨原子改動→map-bump",
+      "atom-extract 模式下 proposal 必須同時列舊 atom 保留資訊與新 atom spec stub",
+      "map-bump 模式下 proposal members[] 必須含舊→新 atomId@version 對照",
+      "review queue 視 decompositionDecision 路由至對應 reviewer template"
+    ],
+    "deliverables": [
+      "packages/core/src/upgrade/decomposition-decision.ts",
+      "packages/core/src/upgrade/map-propose.ts",
+      "packages/cli/commands/upgrade-map-propose.ts",
+      "fixtures/upgrade/map-bump-proposal.json",
+      "fixtures/upgrade/atom-extract-proposal.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 附錄 B 開卡",
+      "summary": "把「升版 vs. 拆原子」這個關鍵架構決策正式機讀化，避免演化階段隱性破壞 consumer。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0020 / ATM-2-0023"
+    }
+  },
+  {
+    "doc_id": "doc_task_0272",
+    "id": "ATM-5-0001",
+    "title": "Quick Start 與 API 文件",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "docs",
+    "phase": "ATM-5",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T14:06:20+08:00",
-    "started_by_agent": "vs-code-github-copilot",
+    "started_at": "",
+    "started_by_agent": "",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
+    "description": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
     "related": [],
     "depends": [
-      "ATM-1-0003"
+      "ATM-1-0007",
+      "ATM-2-0006"
     ],
     "acceptance": [
-      "空白 repo 可執行 init/status/validate",
-      "未實作 adapter 時可進入 standalone mode",
-      "錯誤輸出可被 Agent 讀懂"
+      "30 分鐘內可跑 hello-world",
+      "文件不需要 3KLife 背景知識",
+      "所有命令可複製執行",
+      "Quick Start 不要求安裝 LangGraph、pgvector、Deno sandbox 或 observability stack 才能跑通 hello-world"
     ],
     "deliverables": [
-      "packages/cli/src/commands/init.*",
-      "packages/cli/src/commands/status.*",
-      "packages/cli/src/commands/validate.*",
-      "CLI integration fixture"
+      "docs/QUICK_START.md",
+      "docs/API.md",
+      "docs/SPEC_GUIDE.md",
+      "README quick start section",
+      "Quick Start 對齊 v0.2 六週 MVP，明確區分 v0.1 alpha 必備能力與 optional plugin"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 0176686 建立可執行 ATM CLI init/status/validate MVP、standalone config、agent-readable JSON output 與 integration fixture | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 v0.2 companion 對應交付/驗收條件 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0003"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
+      "position": "ATM-5",
+      "prereq": "ATM-1-0007、ATM-2-0006"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "packages/cli/src/commands/init.*",
-        "packages/cli/src/commands/status.*",
-        "packages/cli/src/commands/validate.*",
-        "CLI integration fixture"
+        "docs/QUICK_START.md",
+        "docs/API.md",
+        "docs/SPEC_GUIDE.md",
+        "README quick start section"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/packages/cli/src/atm.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/init.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/shared.mjs",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 0176686",
-        "npm install",
-        "npm run packages:list",
-        "npm run validate:cli",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff verified",
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit 0176686",
-        "3 CLI commands implemented: init/status/validate",
-        "blank repo fixture runs commands from empty working directory",
-        "standalone mode works before adapter implementation",
-        "errors emit machine-readable JSON with code/message/evidence"
-      ]
-    },
-    "completed_at": "2026-05-06T14:12:54+08:00"
+      "metrics_summary": []
+    }
   }
 ]

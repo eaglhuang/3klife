@@ -1,0 +1,116 @@
+[
+  {
+    "doc_id": "doc_task_0320",
+    "id": "ATM-2-0017",
+    "title": "Regression Matrix Compare Gate",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "police",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "4/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "在 Police plugin 之上提供 vOld fixtures 對 vNew code 的不退轉檢查 + quality metrics 比較；輸出 quality-comparison-report。",
+    "related": [],
+    "depends": [
+      "ATM-2-0005",
+      "ATM-2-0016"
+    ],
+    "acceptance": [
+      "vOld 全部 fixture 對 vNew code 必須全綠（不退轉）",
+      "metrics 比較：errorRate(new) <= errorRate(old)、coverage(new) >= coverage(old)、latency(new) 不退化超過容忍值",
+      "違規時 promote 動作必須 hard fail，並輸出 quality-comparison-report.json 列出退步指標",
+      "quality-comparison-report 必須含 mapImpactScope（被影響的 mapIds[]）與 propagationStatus（per-map 整合測試結果）",
+      "若任一被影響的 map 整合測試 fail，promote 動作必須 hard fail",
+      "regression compare 報告追加 dedupCandidates[] 區塊（advisory only，不阻塞 promote）：列出 sf 相同或高相似的其他原子；輸入由 ATM-2-0030 dedup police 提供",
+      "CLI 補 atm registry quality-report --atom <id> --from <v> --to <v> --json --md；必須同步輸出 .atm/reports/quality/<atomId>-<from>-<to>.json 與同名 .md",
+      "--md 輸出必須採固定 Markdown 模板：標題 / 指標表格 / mapImpactScope 區段 / 結論；避免 quality-comparison-report 只剩機讀 JSON"
+    ],
+    "deliverables": [
+      "packages/core/src/police/regression-compare.ts",
+      "schemas/police/quality-comparison-report.schema.json",
+      "fixtures/regression/v1.0-pass.json",
+      "fixtures/regression/v1.1-pass-improved.json",
+      "fixtures/regression/v1.1-fail-error-rate.json",
+      "schemas/police/quality-comparison-report.schema.json — 含 mapImpactScope / propagationStatus"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— regression compare 報告追加 dedupCandidates[] 區塊（advisory）\n2026-05-07 附錄 C 治理補丁：追加 quality-report CLI / Markdown 模板 / decision-readable output，避免品質報告淪為 JSON 黑盒",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "建立演化管線的不退轉 + 品質進步雙重閘門。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0005 / ATM-2-0016"
+    }
+  },
+  {
+    "doc_id": "doc_task_0270",
+    "id": "ATM-4-0002",
+    "title": "H2U legacy baseline 與 regression matrix",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "case-study",
+    "phase": "ATM-4",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "凍結 H2U baseline，建立 regression matrix 與 known gap plugin 輸入格式。",
+    "related": [],
+    "depends": [
+      "ATM-4-0001"
+    ],
+    "acceptance": [
+      "active-contract/fidelity-contract baseline 可重現",
+      "known gap 不作為永久白名單",
+      "變更前後可比較 score delta"
+    ],
+    "deliverables": [
+      "tools_node/atomic-framework/fixtures/legacy-baseline",
+      "docs/ai_atomic_framework/h2u-regression-matrix.md",
+      "baseline summary artifact"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "凍結 H2U baseline，建立 regression matrix 與 known gap plugin 輸入格式。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0001"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "tools_node/atomic-framework/fixtures/legacy-baseline",
+        "docs/ai_atomic_framework/h2u-regression-matrix.md",
+        "baseline summary artifact"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  }
+]

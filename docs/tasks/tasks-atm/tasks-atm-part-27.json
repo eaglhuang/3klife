@@ -1,181 +1,139 @@
 [
   {
-    "doc_id": "doc_task_0328",
-    "id": "ATM-2-0023",
-    "title": "Atomic Map Schema & Registry",
-    "owner": "GitHubCopilot",
+    "id": "ATM-1.5-0001",
+    "title": "Seed-as-Spec：種子以自身格式自我描述",
+    "status": "done",
     "priority": "P0",
-    "status": "open",
+    "phase": "ATM-1.5",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0299",
+    "started_at": "2026-05-06T16:48:41+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T17:03:32.1926363+08:00",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-spec / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit ad5f091 新增 packages/core/seed.js、specs/atom-seed-spec.json、CLI `spec --validate` 與 AJV schema validator；legacy planning ID ATM-CORE-0001 以 seed metadata 映射保留，現行 spec id 採 `atom.core-seed` 以符合既有 atomic-spec schema | 阻塞: none",
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/core/seed.js",
+        "AI-Atomic-Framework/specs/atom-seed-spec.json",
+        "AI-Atomic-Framework/packages/cli/src/commands/spec.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/spec-shared.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
+        "AI-Atomic-Framework/scripts/validate-seed-spec.mjs",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit ad5f091",
+        "npm run validate:seed-spec",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "seed self-description now lives in packages/core/seed.js and specs/atom-seed-spec.json",
+        "atm spec --validate validates atomic specs through AJV without breaking zero-install self-hosting flows",
+        "legacy planning ID ATM-CORE-0001 is preserved as seed metadata while the current schema id remains atom.core-seed",
+        "validate --spec stays zero-install compatible for self-hosting alpha and bootstrap smoke"
+      ]
+    },
+    "depends": [
+      "ATM-1-0006",
+      "ATM-1-0007"
+    ]
+  },
+  {
+    "doc_id": "doc_task_0354",
+    "id": "ATM-2-0047",
+    "title": "URN Resolver and RegistryIndex Facade",
+    "owner": "vs-code-copilot",
+    "priority": "P0",
+    "status": "done",
     "type": "registry",
     "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-MAP-EVOLUTION-V2",
-    "chain_step": "1/4",
-    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
-    "description": "為「原子地圖」建立 schema 與 registry：mapId / mapVersion / members[] / edges[] / entrypoints / qualityTargets / mapHash；可獨立於單一 atom 升版。",
-    "related": [],
+    "created": "2026-05-08",
+    "created_by_agent": "vs-code-copilot",
+    "started_at": "2026-05-08T00:50:34+08:00",
+    "started_by_agent": "vs-code-copilot",
+    "completed_at": "2026-05-08T00:58:23.9061276+08:00",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V2",
+    "chain_step": "1/1",
+    "sensor_triggered_by": "atm-urn-registry-index-implementation",
+    "description": "建立 canonical ATM ID 的派生 URN resolver 與 RegistryIndex 查詢 façade，讓 atom/map/police 可用同一個 nodeRef 查詢，同時保留 ATM-CORE/ATM-MAP 作唯一 source of truth。",
+    "related": [
+      "ATM-2-0030",
+      "ATM-2-0031",
+      "ATM-2-0005",
+      "ATM-2-0027"
+    ],
     "depends": [
-      "ATM-2-0014"
+      "ATM-1-0011",
+      "ATM-2-0026",
+      "ATM-2-0042"
     ],
     "acceptance": [
-      "atomic-map.schema.json 定義 mapId / mapVersion / members[](atomId@version) / edges[] / entrypoints / qualityTargets / mapHash",
-      "mapHash = hash(sorted(members) + edges + entrypoints)；成員任一 atom 升版必須引發 mapHash 變更",
-      "registry 同時支援 atom entry 與 map entry；舊 atom-only registry fixture 仍綠",
-      "fixtures：minimal-map / multi-edge-map / quality-targets-missing 三種"
+      "URN 只可由 canonical atomId/mapId 派生，禁止成為第二套可寫主鍵",
+      "支援 urn:atm:atom:<ATM-ID>@<semver> 與 urn:atm:map:<ATM-MAP-ID>@<semver> parse/format/normalize",
+      "RegistryIndex 建立 atomId/mapId/logicalName/semanticFingerprint/version 四類 index，對單筆 lookup 提供 O(1) façade",
+      "舊 registry entries[] 格式保持相容，index 可由現有 registry document lazy build",
+      "dedup police 可重用 fingerprint-index，不再自建不相容 hash bucket",
+      "validation fixture 覆蓋 atom/map/legacy-no-sf/invalid-urn/duplicate-key"
     ],
     "deliverables": [
-      "schemas/registry/atomic-map.schema.json",
-      "packages/core/src/registry/map-registry.ts",
-      "packages/core/src/registry/map-hash.ts",
-      "fixtures/registry/map/minimal.json",
-      "fixtures/registry/map/multi-edge.json"
+      "AI-Atomic-Framework/packages/core/src/registry/urn.mjs",
+      "AI-Atomic-Framework/packages/core/src/registry/registry-index.mjs",
+      "AI-Atomic-Framework/scripts/validate-registry-index.mjs",
+      "AI-Atomic-Framework/fixtures/registry/index/*.json",
+      "docs/ai_atomic_framework/關於進化版的原子提案.md",
+      "docs/ai_atomic_framework/ATM框架演進執行規劃書.md"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "notes": "2026-05-08 | 狀態: done | 驗證: validate:registry-index / validate:schemas / validate:registry-core / npm test / typecheck / lint pass；3KLife encoding touched pass | 變更: 建立派生 URN resolver、RegistryIndex façade、validator、fixture，並回寫 Part V 與演進規劃書 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 附錄 B 開卡",
-      "summary": "把 Atomic Map 升格為 registry 一等公民，為 map-level 演化建立可機讀基礎。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0014"
-    }
-  },
-  {
-    "doc_id": "doc_task_0329",
-    "id": "ATM-2-0024",
-    "title": "Map-Level Upgrade & Extract-vs-Bump Decision",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "orchestration-atom",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-MAP-EVOLUTION-V2",
-    "chain_step": "2/4",
-    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
-    "description": "在 upgrade pipeline 加入 decomposition decision：判斷某次改動應走 atom-bump / atom-extract / map-bump，並落地對應 proposal 與 review path。",
-    "related": [],
-    "depends": [
-      "ATM-2-0020",
-      "ATM-2-0023"
-    ],
-    "acceptance": [
-      "CLI atm upgrade --target map --map <id> --to <ver> 可產出 map-level proposal",
-      "decompositionDecision 規則明文：API 不變→atom-bump；行為斷裂→atom-extract；跨原子改動→map-bump",
-      "atom-extract 模式下 proposal 必須同時列舊 atom 保留資訊與新 atom spec stub",
-      "map-bump 模式下 proposal members[] 必須含舊→新 atomId@version 對照",
-      "review queue 視 decompositionDecision 路由至對應 reviewer template"
-    ],
-    "deliverables": [
-      "packages/core/src/upgrade/decomposition-decision.ts",
-      "packages/core/src/upgrade/map-propose.ts",
-      "packages/cli/commands/upgrade-map-propose.ts",
-      "fixtures/upgrade/map-bump-proposal.json",
-      "fixtures/upgrade/atom-extract-proposal.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 附錄 B 開卡",
-      "summary": "把「升版 vs. 拆原子」這個關鍵架構決策正式機讀化，避免演化階段隱性破壞 consumer。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0020 / ATM-2-0023"
-    }
-  },
-  {
-    "doc_id": "doc_task_0330",
-    "id": "ATM-2-0025",
-    "title": "Cross-Atom Integration Test Runner",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "test-runner",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-MAP-EVOLUTION-V2",
-    "chain_step": "3/4",
-    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
-    "description": "提供 map-level integration test runner：當任一成員 atom 升版時，自動跑該 atom 所屬全部 map 的整合測試與 application-level smoke tests。",
-    "related": [],
-    "depends": [
-      "ATM-2-0003",
-      "ATM-2-0023"
-    ],
-    "acceptance": [
-      "CLI atm test --map <mapId> 跑 map-level integration tests 並輸出符合 metrics schema 的 report",
-      "CLI atm test --propagate <atomId> 自動找出所有引用該 atom 的 maps 並跑 integration tests",
-      "integration test report 含 perMapStatus[] / propagationDuration / failedDownstream[]",
-      "birth-mode atom test 與 map-level test 共用同一 metrics schema（ATM-2-0016）",
-      "fixtures：propagation-pass / propagation-fail-on-downstream-map 兩種"
-    ],
-    "deliverables": [
-      "packages/core/src/test-runner/map-integration.ts",
-      "packages/core/src/test-runner/propagation.ts",
-      "packages/cli/commands/test-map.ts",
-      "fixtures/test-runner/map-propagation-pass.json",
-      "fixtures/test-runner/map-propagation-fail.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 附錄 B 開卡",
-      "summary": "硬規則：任一 atom 升版必須跑所有引用 map 的整合測試；本卡是這條規則的執行器。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0003 / ATM-2-0023"
-    }
-  },
-  {
-    "doc_id": "doc_task_0331",
-    "id": "ATM-4-0008",
-    "title": "H2U Map Evolution Pilot",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "case-study",
-    "phase": "ATM-4",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-MAP-EVOLUTION-V2",
-    "chain_step": "4/4",
-    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
-    "description": "在 H2U case 之上組一張 atomic map（normalizeCssColor + parseCssLength + parseFragmentList），跑首次完整 map-level evolution：包含 atom-bump、atom-extract、map-bump 三種路徑各一次 dry-run。",
-    "related": [],
-    "depends": [
-      "ATM-4-0007",
-      "ATM-2-0024",
-      "ATM-2-0025"
-    ],
-    "acceptance": [
-      "h2u-map v1.0 寫入 registry，含 qualityTargets",
-      "路徑 1：normalizeCssColor v1.0→v1.1 觸發 map propagation 測試，全綠後 atom-bump 落地",
-      "路徑 2：對 parseFragmentList 做 atom-extract，產生新 atom + map members 替換 + review queue 通過",
-      "路徑 3：跨 atom 行為改動，走 map-bump h2u-map v1.0→v1.1，含完整 propagation report",
-      "三條路徑皆通過 neutrality scanner，並留下 evidence + decision log"
-    ],
-    "deliverables": [
-      "docs/case-studies/h2u-map-evolution-pilot.md",
-      "fixtures/case-studies/h2u-map/v1.0.json",
-      "fixtures/case-studies/h2u-map/atom-bump.proposal.json",
-      "fixtures/case-studies/h2u-map/atom-extract.proposal.json",
-      "fixtures/case-studies/h2u-map/map-bump.proposal.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 附錄 B 開卡",
-      "summary": "以 H2U map 端到端驗證三種演化路徑與整合測試傳遞，作為 alpha1 map-level acceptance 證據。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0007 / ATM-2-0024 / ATM-2-0025"
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [
+        "ATM-1-0011 已收斂 canonical Atomic ID",
+        "ATM-2-0042 已完成 canonical ATM-MAP generator",
+        "現有 registry.schema.json 仍以 entries[] 為相容資料源"
+      ],
+      "output": [
+        "派生 URN resolver 不改 canonical ID 真相",
+        "RegistryIndex façade 可包住現有 entries[]",
+        "文件明確禁止占用既有 ATM-3-0010~0013 卡號"
+      ],
+      "validation_cmd": "cd ../AI-Atomic-Framework\\npnpm run validate:registry-index\\npnpm run validate:schemas\\npnpm run validate:registry-core\\npnpm test\\npnpm run typecheck\\npnpm run lint\\ncd ../3KLife\\nnpm run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM-2-0047.md docs/tasks/tasks-atm.json docs/tasks/tasks-atm/.shardrc.json docs/tasks/tasks-atm/tasks-atm-part-35.json docs/tasks/tasks-atm/tasks-atm-part-36.json docs/ai_atomic_framework/關於進化版的原子提案.md docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
+      "rollback_hint": "回退 ATM-2-0047 touched files；若 doc-id registry 已分配新 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
+      "execution_steps": [
+        "建立任務卡與鎖卡",
+        "補文件中的 URN 派生規則與任務映射",
+        "實作 URN resolver 與 RegistryIndex façade",
+        "補 validator 與 fixtures",
+        "跑 upstream validation 與 downstream encoding check"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "node scripts/validate-registry-index.mjs --mode validate pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run validate:schemas pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run validate:registry-core pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework test pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run typecheck pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run lint pass",
+        "cmd /c npm run check:encoding:touched -- --files ... pass"
+      ],
+      "handoff_diff_status": "clean-validation",
+      "trace_artifacts": [],
+      "metrics_summary": []
     }
   }
 ]
