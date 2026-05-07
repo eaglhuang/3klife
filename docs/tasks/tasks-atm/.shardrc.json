@@ -258,17 +258,17 @@
     },
     {
       "name": "tasks-atm-part-32",
-      "title": "Part 32 (items 100-102)",
+      "title": "Part 32 (items 100-101)",
       "range": [
         99,
-        101
+        100
       ]
     },
     {
       "name": "tasks-atm-part-33",
-      "title": "Part 33 (items 103-103)",
+      "title": "Part 33 (items 102-103)",
       "range": [
-        102,
+        101,
         102
       ]
     }

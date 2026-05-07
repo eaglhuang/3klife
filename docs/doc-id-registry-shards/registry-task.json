@@ -2038,5 +2038,11 @@
     "path": "docs/agent-briefs/tasks/ATM-2-0041.md",
     "title": "[ATM-2-0041] Framework-Wide Generator Provenance Audit",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0349",
+    "path": "docs/agent-briefs/tasks/ATM-2-0042.md",
+    "title": "[ATM-2-0042] Unified Atomic Map Generator — Provisioning Facade & Map ID Policy",
+    "category": "task"
   }
 ]
