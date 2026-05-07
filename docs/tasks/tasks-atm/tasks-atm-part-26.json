@@ -32,16 +32,21 @@
       "rollback contract 對稱性：每個 behavior 的 forward action 必須有對應的 reverse action；rollback 引擎可從 behaviorId 查 reverse 規則",
       "Map rollback workbench 路徑解析須支援雙路徑：canonical atomic_workbench/maps/<mapId>/ 優先，fallback legacy atoms/<owner>/map/",
       "rollback-proof.schema.json map mode 須含 mapGeneratorProvenance 欄位，標示 map 是否 generator-born",
-      "rollback-proof 必須含 statusReverted 與 semanticFingerprintReverted 兩個布林欄位；任一為 false 即 hard fail，不得宣稱 rollback 成功"
+      "rollback-proof 必須含 statusReverted 與 semanticFingerprintReverted 兩個布林欄位；任一為 false 即 hard fail，不得宣稱 rollback 成功",
+      "node scripts/validate-rollback-proof.mjs 必須可獨立驗證三段 hash proof、statusReverted / semanticFingerprintReverted、map rollback 雙路徑解析與 behaviorId 對稱性",
+      "exemplar 至少保留 proof-pass / proof-fail-hash-mismatch / proof-fail-status-not-reverted / proof-fail-semantic-fingerprint-not-reverted 四組，供 validator 直接重放"
     ],
     "deliverables": [
       "packages/core/src/registry/rollback.ts",
       "packages/cli/commands/rollback.ts",
       "schemas/registry/rollback-proof.schema.json",
+      "scripts/validate-rollback-proof.mjs",
       "fixtures/rollback/proof-pass.json",
-      "fixtures/rollback/proof-fail-hash-mismatch.json"
+      "fixtures/rollback/proof-fail-hash-mismatch.json",
+      "fixtures/rollback/proof-fail-status-not-reverted.json",
+      "fixtures/rollback/proof-fail-semantic-fingerprint-not-reverted.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— rollback proof 必須含 behaviorId 與對稱 rollback contract\n2026-05-07 ATM-2-0042 連鎖影響：追加 AC 9~10（map rollback 雙路徑解析、mapGeneratorProvenance 欄位）\n2026-05-07 附錄 C 治理補丁：rollback proof 追加 status / semanticFingerprint 對稱回退驗證，避免只回 hash 不回治理狀態",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— rollback proof 必須含 behaviorId 與對稱 rollback contract\n2026-05-07 ATM-2-0042 連鎖影響：追加 AC 9~10（map rollback 雙路徑解析、mapGeneratorProvenance 欄位）\n2026-05-07 附錄 C 治理補丁：rollback proof 追加 status / semanticFingerprint 對稱回退驗證，避免只回 hash 不回治理狀態\n2026-05-07 測試穩定性補丁：維持 rollback safety-net 目的不變；補 proof validator 與 failure matrix exemplar，讓 rollback 失敗能先在 proof seam 定位",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 開卡",

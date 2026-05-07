@@ -74,16 +74,19 @@
       "upgrade-proposal.schema.json 增加 decompositionDecision（enum: atom-bump | atom-extract | map-bump）與 mapImpactScope 欄位",
       "CLI 增加 --target atom|map 旗標；--target map 時必須附 mapId",
       "decompositionDecision 為 atom-extract 時，proposal 需同時列出新 atomId 與 fork 來源",
-      "upgrade-proposal.schema.json 追加必填欄位 behaviorId（預設 behavior.evolve）；其他合法值由 ATM-2-0029 reference behavior pack 註冊"
+      "upgrade-proposal.schema.json 追加必填欄位 behaviorId（預設 behavior.evolve）；其他合法值由 ATM-2-0029 reference behavior pack 註冊",
+      "node scripts/validate-upgrade-proposal.mjs 必須可在不跑整包 test 的情況下，獨立驗證 schema、status=blocked 邏輯、decompositionDecision / behaviorId invariant",
+      "exemplar 至少保留 proposal-pass.json 與 proposal-blocked.json 兩組，可直接重放 CLI --dry-run --json 輸出到 validator"
     ],
     "deliverables": [
       "schemas/upgrade/upgrade-proposal.schema.json",
       "packages/core/src/upgrade/propose.ts",
       "packages/cli/commands/upgrade-propose.ts",
+      "scripts/validate-upgrade-proposal.mjs",
       "fixtures/upgrade/proposal-pass.json",
       "fixtures/upgrade/proposal-blocked.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— upgrade-proposal 追加 behaviorId 欄位（必填，預設 behavior.evolve）\n2026-05-07 附錄 C 治理補丁：升版 proposal 保持為唯一編排 choke point；effect node 僅能寫 evidence，不得直接 promote",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— upgrade-proposal 追加 behaviorId 欄位（必填，預設 behavior.evolve）\n2026-05-07 附錄 C 治理補丁：升版 proposal 保持為唯一編排 choke point；effect node 僅能寫 evidence，不得直接 promote\n2026-05-07 測試穩定性補丁：維持 orchestration atom 目的不變；補 deterministic validator 與 exemplar pair，讓 proposal contract 失敗可先在本卡 seam 定位",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 開卡",
@@ -121,16 +124,20 @@
       "layer-boundary scanner 必須擋下 core → plugin-human-review 的任何 import",
       "CLI 補 atm review list / show <proposalId> / approve <proposalId> --reason / reject <proposalId> --reason 四個子命令",
       "approve / reject 必須同時落 evidence 與 decision-snapshot.hash，鎖定當下 upgrade-proposal.json 內容雜湊",
-      "upgrade-proposals.md 僅可作 audit projection，不得成為 source of truth；欄位固定為 proposalId / atomId / fromVersion → toVersion / decompositionDecision / automatedGates / status"
+      "upgrade-proposals.md 僅可作 audit projection，不得成為 source of truth；欄位固定為 proposalId / atomId / fromVersion → toVersion / decompositionDecision / automatedGates / status",
+      "node scripts/validate-human-review.mjs 必須可獨立驗證 review queue record、decision-snapshot.hash 與 evidence linkage，不依賴 full suite",
+      "exemplar 至少保留 approve / reject / snapshot-hash-mismatch 三組，可直接重放 CLI 輸出到 validator"
     ],
     "deliverables": [
       "packages/plugin-human-review/src/queue.ts",
       "packages/plugin-human-review/src/decision-log.ts",
+      "scripts/validate-human-review.mjs",
       "schemas/human-review/decision.schema.json",
       "fixtures/human-review/approve.snapshot.json",
-      "fixtures/human-review/reject.snapshot.json"
+      "fixtures/human-review/reject.snapshot.json",
+      "fixtures/human-review/hash-mismatch.snapshot.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 review CLI / decision-snapshot.hash / Markdown audit projection，避免人工審核流程不可追溯",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 review CLI / decision-snapshot.hash / Markdown audit projection，避免人工審核流程不可追溯\n2026-05-07 測試穩定性補丁：維持 human review gate 目的不變；補 queue/decision validator 與 decision exemplar triad，避免 review 流程只剩 CLI 手工煙霧測試",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 開卡",

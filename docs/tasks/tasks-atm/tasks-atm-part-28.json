@@ -27,17 +27,21 @@
       "registry hot entry 欄位數 ≤ 10；lineage 與 evidence detail 走 lineageLogRef / evidenceIndexRef URI，不放主 entry",
       "提供 sf 計算合約：atom 用 sortByName(inputs)+sortByName(outputs)+language.primary+validation.evidenceRequired+performanceBudget；map 用 sortByName(entrypoints)+qualityTargets",
       "fixtures：atom-with-sf / map-with-sf / legacy-no-sf 三種，舊 fixture 全綠",
-      "semanticFingerprint 必須採 per-version 規則：hot registry entry 只保留 currentVersion 的 semanticFingerprint，歷史版本值寫入 versions[*].semanticFingerprint"
+      "semanticFingerprint 必須採 per-version 規則：hot registry entry 只保留 currentVersion 的 semanticFingerprint，歷史版本值寫入 versions[*].semanticFingerprint",
+      "validate-semantic-fingerprint.mjs 必須獨立驗證 atom/map/legacy/pending exemplar 與 hot/cold、per-version 規則",
+      "exemplar：atom-with-sf / map-with-sf / legacy-no-sf / pending-sf-calculation"
     ],
     "deliverables": [
-      "schemas/atomic-spec.schema.json (additive)",
-      "schemas/registry/atomic-map.schema.json (additive)",
+      "schemas/atomic-spec.schema.json",
+      "schemas/registry/atomic-map.schema.json",
       "packages/core/src/registry/semantic-fingerprint.ts",
+      "scripts/validate-semantic-fingerprint.mjs",
       "fixtures/registry/atom-with-sf.json",
       "fixtures/registry/map-with-sf.json",
-      "fixtures/registry/legacy-no-sf.json"
+      "fixtures/registry/legacy-no-sf.json",
+      "fixtures/registry/pending-sf-calculation.json"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 1/8 anchor）；schema-additive only、hot/cold 分離、性能上限 ≤10 hot 欄位 | 阻塞: 等 ATM-2-0014 / ATM-2-0023 完成\n2026-05-07 chain layout 已落地：8 張新卡（0026~0033）+ 12 張既有卡 acceptance 追加 + 文件 Part V/D12/開發計畫書同步；schema 實作仍 pending\n2026-05-07 備註修正批次：+deployScope/mutabilityPolicy 欄位 +version-index 三層比對 +行為參考手冊+SVG 狀態機圖\n2026-05-07 ATM-2-0042 連鎖影響：追加 AC（generator SF alignment + dogfood map 回歸驗證）\n2026-05-07 附錄 C 治理補丁：semanticFingerprint 改為 per-version 規則，hot entry 僅保留 currentVersion 指標",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: ATM 識別/行為/狀態機提案開卡；schema-additive、hot/cold 分離、hot 欄位 ≤10 | 阻塞: 等 ATM-2-0014 / ATM-2-0023 完成\n2026-05-07 ATM-2-0042：generator 與 dogfood map 須共用 SF 規則\n2026-05-07 附錄 C：semanticFingerprint 改為 per-version\n2026-05-07 測試穩定性補丁：追加 validator + exemplar quartet",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 識別/行為/狀態機提案開卡",
@@ -79,17 +83,21 @@
       "Migration map 須包含 legacy map entry（如 ATM-MAP-NEUTRALITY-0001，目前無 status 欄位）",
       "status-machine.ts 須接受 atomId 和 mapId 兩種 entry type；legal transition 檢查不可假設 entry 只是 atom",
       "migration fixtures 必須覆蓋 versions[] 已存在 + 舊 status 值 seed/governed 的 entry，確保與 ATM-2-0014 的跨卡升級路徑可通過",
-      "human review reject 後的狀態處置必須定義：approve → active；non-fatal reject → 維持原 status；fatal reject → 寫 pendingQuarantineRequest，再由 lifecycle police 異步決定是否轉 quarantined"
+      "human review reject 狀態處置：approve→active；non-fatal reject 維持原狀；fatal reject 寫 pendingQuarantineRequest 待 lifecycle police 決定",
+      "validate-status-machine.mjs 必須獨立驗證 atom/map legal transition、legacy migration、review reject disposition",
+      "exemplar：legal-transition / illegal-transition / legacy-map-migration / review-reject-pending-quarantine"
     ],
     "deliverables": [
-      "schemas/registry.schema.json (status enum 收斂)",
-      "schemas/registry.schema.json (governance.tier 新增)",
-      "packages/core/src/registry/status-machine.ts (legal transition 表)",
-      "packages/core/src/registry/status-migration.ts (舊值轉新值)",
-      "fixtures/registry/status/* (各狀態 fixture)",
-      "fixtures/registry/governance-tier/*"
+      "schemas/registry.schema.json",
+      "packages/core/src/registry/status-machine.ts",
+      "packages/core/src/registry/status-migration.ts",
+      "scripts/validate-status-machine.mjs",
+      "fixtures/registry/status/legal-transition.json",
+      "fixtures/registry/status/illegal-transition.json",
+      "fixtures/registry/status/legacy-map-migration.json",
+      "fixtures/registry/status/review-reject-pending-quarantine.json"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 2/8）| 阻塞: 等 ATM-2-0026 schema 擴充\n2026-05-07 ATM-2-0042 連鎖影響：追加 AC（status machine 覆蓋 map entry、map birth 初始 status、legacy map migration map）\n2026-05-07 附錄 C 治理補丁：追加 versions[] × legacy status 跨卡 migration fixture 與 reject/quarantine 狀態處置",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: ATM 識別/行為/狀態機提案開卡 | 阻塞: 等 ATM-2-0026 schema 擴充\n2026-05-07 ATM-2-0042：status machine 需覆蓋 map entry / map birth / legacy map migration\n2026-05-07 附錄 C：補 versions[] × legacy status fixture 與 reject/quarantine 處置\n2026-05-07 測試穩定性補丁：追加 validator + exemplar quartet",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 識別/行為/狀態機提案開卡",
@@ -127,15 +135,20 @@
       "BehaviorRegistry 提供 register / resolve / listByCategory",
       "core 不可 import 任何具體 behavior plugin（layer-boundary 守護）",
       "fixtures：5 個 mock behavior 註冊 / resolve / listByCategory",
-      "behavior.evolve 只可委派至 ATM-2-0020 ProposeAtomicUpgrade 產生 proposal；不得直接升版、改 registry 或繞過 ATM-2-0021 HumanReviewGate"
+      "behavior.evolve 只可委派至 ATM-2-0020 ProposeAtomicUpgrade 產生 proposal；不得直接升版、改 registry 或繞過 ATM-2-0021 HumanReviewGate",
+      "validate-behavior-sdk.mjs 必須獨立驗證 AtomBehavior / BehaviorRegistry contract、category routing、behavior.evolve delegation guard",
+      "exemplar：registry-contract-pass / resolve-missing-behavior / evolve-delegation-blocked"
     ],
     "deliverables": [
       "packages/plugin-sdk/src/behavior.ts",
       "packages/plugin-sdk/src/behavior-registry.ts",
       "schemas/behavior/behavior-proposal.schema.json",
-      "fixtures/behavior/mock-behaviors.json"
+      "scripts/validate-behavior-sdk.mjs",
+      "fixtures/behavior/mock-behaviors.json",
+      "fixtures/behavior/resolve-missing-behavior.json",
+      "fixtures/behavior/evolve-delegation-blocked.json"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 3/8）| 阻塞: 等 ATM-2-0006 / 0026 / 0027 完成\n2026-05-07 附錄 C 治理補丁：behavior.evolve 必須委派 ATM-2-0020 proposal flow，不得繞過 automated gates / human review",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: ATM 識別/行為/狀態機提案開卡 | 阻塞: 等 ATM-2-0006 / 0026 / 0027 完成\n2026-05-07 附錄 C：behavior.evolve 必須委派 ATM-2-0020 proposal flow\n2026-05-07 測試穩定性補丁：追加 validator + delegation exemplar",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 識別/行為/狀態機提案開卡",
