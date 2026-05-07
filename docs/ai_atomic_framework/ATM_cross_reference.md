@@ -36,6 +36,7 @@
 | **D9 Schema 演化** | atmSchemaVersion, spec migration, v1→v2, schema major bump, schema PR | `doc_other_0035` §7 |
 | **D10 Cross-language** | Python adapter, LanguageAdapter SPI, 多語言, C#, Go | `doc_other_0035` §6 |
 | **D11 里程碑 / 任務卡** | ATM-0~6 卡號, ATM-7 deferred optional, 任務清單, 北極星, 驗收命令, milestone, 任務總覽 | `doc_other_0028` §里程碑（ATM-0~ATM-6）; `doc_other_0030` §Phase A/B/C/D |
+| **D12 識別 / 行為 / 狀態機** | atom id, map id, semanticFingerprint, lineage, behavior, dedup, split, merge, polymorphize, infect, atomize, ttl, sweep, status state machine, governance tier, hot/cold registry, fingerprint-index, version-index, deployScope, mutabilityPolicy, demand police, ATM-POLY-001 | `doc_other_0044` §Part V (§1~§10); `doc_other_0045` 原子行為參考手冊; `atom-lifecycle-state-machine.svg`; `atom-map-relationship.svg` |
 
 **大理論 / 背景知識（無需精確段落定位）**：
 - Vibe Coding 失控原理 → `doc_other_0029` §1（AI_Atomic_Framework_Roadmap.md L49）

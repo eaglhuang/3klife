@@ -1,0 +1,186 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" font-family="monospace, sans-serif" font-size="12">
+
+  <!-- Background -->
+  <rect width="900" height="620" fill="#f8f9fa" rx="8"/>
+
+  <!-- Title -->
+  <text x="450" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a2e">原子 × 原子地圖 關係圖（Atom ↔ Atomic Map）</text>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 1: MAP STRUCTURE (top-left)
+  ═══════════════════════════════════════════════ -->
+  <rect x="20" y="52" width="260" height="230" fill="#e8f4f8" stroke="#2196F3" stroke-width="2" rx="8"/>
+  <rect x="20" y="52" width="260" height="28" fill="#2196F3" rx="8"/>
+  <rect x="20" y="72" width="260" height="8" fill="#2196F3"/>
+  <text x="150" y="71" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Atomic Map</text>
+
+  <text x="32" y="100" fill="#0d47a1" font-weight="bold">ID 識別</text>
+  <text x="32" y="117" fill="#333">mapId:   ATM-MAP-0087</text>
+  <text x="32" y="134" fill="#333">version: 2.1.0</text>
+  <text x="32" y="151" fill="#888" font-size="11">mapHash: sha256:a3f9…（成員+邊 hash）</text>
+  <text x="32" y="167" fill="#888" font-size="11">mapSF:   sf:sha256:b7e2…（行為指紋）</text>
+
+  <line x1="32" y1="175" x2="268" y2="175" stroke="#90caf9" stroke-dasharray="4,3"/>
+
+  <text x="32" y="192" fill="#0d47a1" font-weight="bold">結構</text>
+  <text x="32" y="209" fill="#333">members: [ATM-H2U-0012@1.2,</text>
+  <text x="96" y="224" fill="#333">ATM-H2U-0013@2.0, ATM-H2U-0014@1.0]</text>
+  <text x="32" y="240" fill="#333">edges:   A→B, B→C</text>
+  <text x="32" y="257" fill="#333">entrypoints: [ATM-H2U-0012]</text>
+  <text x="32" y="273" fill="#333">qualityTargets: {p99: 50ms}</text>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 2: ATOMS (top-center)
+  ═══════════════════════════════════════════════ -->
+
+  <!-- Atom A -->
+  <rect x="340" y="52" width="195" height="120" fill="#e8f5e9" stroke="#4CAF50" stroke-width="2" rx="8"/>
+  <rect x="340" y="52" width="195" height="28" fill="#4CAF50" rx="8"/>
+  <rect x="340" y="72" width="195" height="8" fill="#4CAF50"/>
+  <text x="437" y="71" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Atom A（入口）</text>
+  <text x="352" y="99" fill="#333">atomId:  ATM-H2U-0012</text>
+  <text x="352" y="115" fill="#333">FQID:    ATM-H2U-0012@1.2.0</text>
+  <text x="352" y="131" fill="#555" font-size="11">sf: sf:sha256:d4c1…</text>
+  <text x="352" y="147" fill="#555" font-size="11">status: active  tier: standard</text>
+  <text x="352" y="162" fill="#1976d2" font-size="11">deployScope: all-env</text>
+
+  <!-- Atom B -->
+  <rect x="340" y="192" width="195" height="105" fill="#e8f5e9" stroke="#4CAF50" stroke-width="2" rx="8"/>
+  <rect x="340" y="192" width="195" height="28" fill="#4CAF50" rx="8"/>
+  <rect x="340" y="212" width="195" height="8" fill="#4CAF50"/>
+  <text x="437" y="211" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Atom B</text>
+  <text x="352" y="238" fill="#333">atomId:  ATM-H2U-0013</text>
+  <text x="352" y="254" fill="#333">FQID:    ATM-H2U-0013@2.0.0</text>
+  <text x="352" y="270" fill="#555" font-size="11">sf: sf:sha256:9f3a…</text>
+  <text x="352" y="285" fill="#555" font-size="11">status: active  tier: standard</text>
+
+  <!-- Atom C -->
+  <rect x="340" y="317" width="195" height="105" fill="#e8f5e9" stroke="#4CAF50" stroke-width="2" rx="8"/>
+  <rect x="340" y="317" width="195" height="28" fill="#4CAF50" rx="8"/>
+  <rect x="340" y="337" width="195" height="8" fill="#4CAF50"/>
+  <text x="437" y="336" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Atom C</text>
+  <text x="352" y="362" fill="#333">atomId:  ATM-H2U-0014</text>
+  <text x="352" y="378" fill="#333">FQID:    ATM-H2U-0014@1.0.0</text>
+  <text x="352" y="394" fill="#555" font-size="11">sf: sf:sha256:7b2e…</text>
+  <text x="352" y="409" fill="#555" font-size="11">status: active  tier: standard</text>
+
+  <!-- Arrows: Map → Atoms (members) -->
+  <line x1="280" y1="150" x2="338" y2="110" stroke="#2196F3" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+  <line x1="280" y1="200" x2="338" y2="245" stroke="#2196F3" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+  <line x1="280" y1="230" x2="338" y2="365" stroke="#2196F3" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-blue)"/>
+  <text x="285" y="148" fill="#1565c0" font-size="10">members</text>
+
+  <!-- Edges A→B, B→C -->
+  <line x1="535" y1="112" x2="535" y2="190" stroke="#388e3c" stroke-width="2" marker-end="url(#arr-green)"/>
+  <text x="540" y="158" fill="#388e3c" font-size="10">edge</text>
+  <line x1="535" y1="297" x2="535" y2="315" stroke="#388e3c" stroke-width="2" marker-end="url(#arr-green)"/>
+  <text x="540" y="310" fill="#388e3c" font-size="10">edge</text>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 3: INTEGRATION TEST FLOW (right)
+  ═══════════════════════════════════════════════ -->
+  <rect x="580" y="52" width="300" height="260" fill="#fff8e1" stroke="#FF9800" stroke-width="2" rx="8"/>
+  <rect x="580" y="52" width="300" height="28" fill="#FF9800" rx="8"/>
+  <rect x="580" y="72" width="300" height="8" fill="#FF9800"/>
+  <text x="730" y="71" text-anchor="middle" font-size="13" font-weight="bold" fill="white">整合測試流程（Map Integration）</text>
+
+  <!-- Step boxes -->
+  <rect x="596" y="90" width="268" height="30" fill="#fff3e0" stroke="#ffb74d" rx="4"/>
+  <text x="730" y="110" text-anchor="middle" fill="#e65100" font-size="11">① Atom B 升版 normalize-css@2.0.0 → @2.1.0</text>
+
+  <line x1="730" y1="120" x2="730" y2="135" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arr-orange)"/>
+
+  <rect x="596" y="135" width="268" height="30" fill="#fff3e0" stroke="#ffb74d" rx="4"/>
+  <text x="730" y="155" text-anchor="middle" fill="#e65100" font-size="11">② Map Integration Police 偵測 members 變動</text>
+
+  <line x1="730" y1="165" x2="730" y2="180" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arr-orange)"/>
+
+  <rect x="596" y="180" width="268" height="30" fill="#fff3e0" stroke="#ffb74d" rx="4"/>
+  <text x="730" y="200" text-anchor="middle" fill="#e65100" font-size="11">③ 鎖定 map（status: transitioning）</text>
+
+  <line x1="730" y1="210" x2="730" y2="225" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arr-orange)"/>
+
+  <rect x="596" y="225" width="268" height="30" fill="#fff3e0" stroke="#ffb74d" rx="4"/>
+  <text x="730" y="245" text-anchor="middle" fill="#e65100" font-size="11">④ 跑 map-level propagation test（全成員）</text>
+
+  <line x1="730" y1="255" x2="730" y2="270" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arr-orange)"/>
+
+  <!-- Pass/Fail fork -->
+  <line x1="730" y1="270" x2="660" y2="285" stroke="#4caf50" stroke-width="1.5"/>
+  <line x1="730" y1="270" x2="800" y2="285" stroke="#f44336" stroke-width="1.5"/>
+
+  <rect x="608" y="285" width="100" height="26" fill="#e8f5e9" stroke="#4caf50" rx="4"/>
+  <text x="658" y="302" text-anchor="middle" fill="#2e7d32" font-size="11">✓ PASS</text>
+  <text x="658" y="315" text-anchor="middle" fill="#2e7d32" font-size="10">map 升版，解鎖</text>
+
+  <rect x="753" y="285" width="110" height="26" fill="#ffebee" stroke="#f44336" rx="4"/>
+  <text x="808" y="302" text-anchor="middle" fill="#c62828" font-size="11">✗ FAIL</text>
+  <text x="808" y="315" text-anchor="middle" fill="#c62828" font-size="10">quarantine / rollback</text>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 4: VERSION UPGRADE FLOW (bottom)
+  ═══════════════════════════════════════════════ -->
+  <rect x="20" y="445" width="860" height="155" fill="#f3e5f5" stroke="#9C27B0" stroke-width="2" rx="8"/>
+  <rect x="20" y="445" width="860" height="28" fill="#9C27B0" rx="8"/>
+  <rect x="20" y="465" width="860" height="8" fill="#9C27B0"/>
+  <text x="450" y="464" text-anchor="middle" font-size="13" font-weight="bold" fill="white">版本升級路徑（3 條）</text>
+
+  <!-- Path 1: Atom bump -->
+  <rect x="35" y="482" width="250" height="103" fill="#ede7f6" stroke="#7b1fa2" rx="6"/>
+  <text x="160" y="499" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a148c">路徑 A：Atom 內部升版</text>
+  <text x="48" y="516" fill="#333" font-size="11">behavior.evolve</text>
+  <text x="48" y="531" fill="#555" font-size="11">ATM-H2U-0013@1.0.0 → @1.1.0</text>
+  <text x="48" y="546" fill="#555" font-size="11">• spec hash 改變 → hashLock 更新</text>
+  <text x="48" y="561" fill="#555" font-size="11">• sf 不變 → map SF 不受影響</text>
+  <text x="48" y="576" fill="#555" font-size="11">• map members[] 引用改為新版</text>
+
+  <!-- Path 2: Atom extract -->
+  <rect x="325" y="482" width="250" height="103" fill="#ede7f6" stroke="#7b1fa2" rx="6"/>
+  <text x="450" y="499" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a148c">路徑 B：Atom 分裂後加入 Map</text>
+  <text x="338" y="516" fill="#333" font-size="11">behavior.split → behavior.compose</text>
+  <text x="338" y="531" fill="#555" font-size="11">ATM-H2U-0012 → ATM-H2U-0012-a/b</text>
+  <text x="338" y="546" fill="#555" font-size="11">• map members[] 擴充</text>
+  <text x="338" y="561" fill="#555" font-size="11">• mapHash 改變（新成員）</text>
+  <text x="338" y="576" fill="#555" font-size="11">• mapVersion bump（需人工確認）</text>
+
+  <!-- Path 3: Map bump -->
+  <rect x="615" y="482" width="250" height="103" fill="#ede7f6" stroke="#7b1fa2" rx="6"/>
+  <text x="740" y="499" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a148c">路徑 C：Map 重組</text>
+  <text x="628" y="516" fill="#333" font-size="11">behavior.compose / merge</text>
+  <text x="628" y="531" fill="#555" font-size="11">新增/移除 map 成員 ATM-MAP-0087</text>
+  <text x="628" y="546" fill="#555" font-size="11">• edges[] 重新定義</text>
+  <text x="628" y="561" fill="#555" font-size="11">• mapSF 可能改變（entrypoints 變）</text>
+  <text x="628" y="576" fill="#555" font-size="11">• dedup police 掃描孤立成員</text>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 5: ID LEGEND (between map and atoms)
+  ═══════════════════════════════════════════════ -->
+  <rect x="20" y="300" width="260" height="130" fill="#fce4ec" stroke="#E91E63" stroke-width="1.5" rx="8"/>
+  <rect x="20" y="300" width="260" height="24" fill="#E91E63" rx="8"/>
+  <rect x="20" y="316" width="260" height="8" fill="#E91E63"/>
+  <text x="150" y="316" text-anchor="middle" font-size="12" font-weight="bold" fill="white">ID 層次（識別五層）</text>
+  <text x="32" y="340" fill="#333" font-size="11"><tspan font-weight="bold">L1</tspan> Logical ID   ATM-H2U-0013</text>
+  <text x="32" y="356" fill="#333" font-size="11"><tspan font-weight="bold">L2</tspan> FQID         ATM-H2U-0013@2.0.0</text>
+  <text x="32" y="372" fill="#333" font-size="11"><tspan font-weight="bold">L3</tspan> hashLock     sha256:… (spec內容)</text>
+  <text x="32" y="388" fill="#880e4f" font-size="11"><tspan font-weight="bold">L4</tspan> sf           sf:sha256:… (行為指紋)</text>
+  <text x="32" y="404" fill="#880e4f" font-size="11"><tspan font-weight="bold">L5</tspan> lineage      bornBy / parentRefs</text>
+  <text x="32" y="420" fill="#555" font-size="10">L4 = dedup 比對主鍵；L5 = 審計追蹤</text>
+
+  <!-- ═══════════════════════════════════════════════
+       ARROWS / MARKERS
+  ═══════════════════════════════════════════════ -->
+  <defs>
+    <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#2196F3"/>
+    </marker>
+    <marker id="arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#388e3c"/>
+    </marker>
+    <marker id="arr-orange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#ff9800"/>
+    </marker>
+  </defs>
+
+  <!-- Footer note -->
+  <text x="450" y="613" text-anchor="middle" fill="#999" font-size="10">參考任務卡：ATM-2-0023（map schema）/ ATM-2-0025（整合測試）/ ATM-2-0026（SF+lineage）/ ATM-2-0030（dedup police）</text>
+</svg>
