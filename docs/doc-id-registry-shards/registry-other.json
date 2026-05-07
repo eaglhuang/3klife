@@ -238,5 +238,203 @@
     "path": "docs/ai_atomic_framework/原子行為參考手冊.md",
     "title": "原子行為參考手冊（Atom Behavior Reference）",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0046",
+    "path": "docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-doc-refs.md",
+    "title": "ATM Cross Reference — doc_refs 欄位規範",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0047",
+    "path": "docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-inventory.md",
+    "title": "ATM Cross Reference — Section Inventory",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0048",
+    "path": "docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-maintenance.md",
+    "title": "ATM Cross Reference — 維護說明",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0049",
+    "path": "docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-routing.md",
+    "title": "ATM Cross Reference — 快查路由表",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0050",
+    "path": "docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-usage.md",
+    "title": "ATM Cross Reference — 使用說明",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0051",
+    "path": "docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-appendices.md",
+    "title": "ATM 框架演進執行規劃書 — 附錄 A/B",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0052",
+    "path": "docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-diagnosis.md",
+    "title": "ATM 框架演進執行規劃書 — 機讀真相與提案診斷（§1–§3）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0053",
+    "path": "docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-risk.md",
+    "title": "ATM 框架演進執行規劃書 — 風險、排除與結論（§6–§8）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0054",
+    "path": "docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-roadmap.md",
+    "title": "ATM 框架演進執行規劃書 — 新增任務與依賴重排（§4–§5）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0055",
+    "path": "docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-details.md",
+    "title": "原子行為參考手冊 — 各行為詳細說明",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0056",
+    "path": "docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-extension.md",
+    "title": "原子行為參考手冊 — 擴充指南與狀態機參考",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0057",
+    "path": "docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-overview.md",
+    "title": "原子行為參考手冊 — 概覽與行為總表",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0058",
+    "path": "docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-police.md",
+    "title": "原子行為參考手冊 — 行為×警察使用關係表",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0059",
+    "path": "docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-poly.md",
+    "title": "原子行為參考手冊 — 廣義多形化原則",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0060",
+    "path": "docs/ai_atomic_framework/dev-plan-shards/dev-plan-appendices.md",
+    "title": "AI 原子框架開發計畫書 — 附錄",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0061",
+    "path": "docs/ai_atomic_framework/dev-plan-shards/dev-plan-context.md",
+    "title": "AI 原子框架開發計畫書 — Context 與分工決策",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0062",
+    "path": "docs/ai_atomic_framework/dev-plan-shards/dev-plan-execution.md",
+    "title": "AI 原子框架開發計畫書 — Checklist、風險與驗證",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0063",
+    "path": "docs/ai_atomic_framework/dev-plan-shards/dev-plan-foundation.md",
+    "title": "AI 原子框架開發計畫書 — 目標、原理、結構",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0064",
+    "path": "docs/ai_atomic_framework/dev-plan-shards/dev-plan-milestones.md",
+    "title": "AI 原子框架開發計畫書 — 里程碑與補強路線",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0065",
+    "path": "docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-blueprint.md",
+    "title": "關於進化版的原子提案 — Roadmap 藍圖與融合分析",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0066",
+    "path": "docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-context.md",
+    "title": "關於進化版的原子提案 — Context、現況與治理問題",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0067",
+    "path": "docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-evolution.md",
+    "title": "關於進化版的原子提案 — 版號、框架版本與回饋迴圈",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0068",
+    "path": "docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-thesis.md",
+    "title": "關於進化版的原子提案 — 命題與防護模型",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0069",
+    "path": "docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-validation.md",
+    "title": "關於進化版的原子提案 — 驗證來源",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0070",
+    "path": "docs/ai_atomic_framework/optimized-roadmap-v02-shards/optimized-roadmap-ecosystem.md",
+    "title": "AI Atomic Framework Optimized Roadmap v0.2 — 生態、風險、結構（§5–§7）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0071",
+    "path": "docs/ai_atomic_framework/optimized-roadmap-v02-shards/optimized-roadmap-future.md",
+    "title": "AI Atomic Framework Optimized Roadmap v0.2 — 下一步與未來演進（§8+）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0072",
+    "path": "docs/ai_atomic_framework/optimized-roadmap-v02-shards/optimized-roadmap-plan.md",
+    "title": "AI Atomic Framework Optimized Roadmap v0.2 — MVP 路線與原則（§2–§4）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0073",
+    "path": "docs/ai_atomic_framework/optimized-roadmap-v02-shards/optimized-roadmap-summary.md",
+    "title": "AI Atomic Framework Optimized Roadmap v0.2 — 摘要與問題（§0–§1）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0074",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-agent-server.md",
+    "title": "Doc ID Registry Markdown Index — AI / AgentSkill / Server",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0075",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-other.md",
+    "title": "Doc ID Registry Markdown Index — 其它類",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0076",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md",
+    "title": "Doc ID Registry Markdown Index — Spec / Index / Task",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0077",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-stats.md",
+    "title": "Doc ID Registry Markdown Index — 分類統計",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0078",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-tech-ui-art.md",
+    "title": "Doc ID Registry Markdown Index — Tech / UI / Art / Data",
+    "category": "other"
   }
 ]

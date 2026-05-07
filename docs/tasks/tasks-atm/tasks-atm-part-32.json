@@ -1,0 +1,192 @@
+[
+  {
+    "doc_id": "doc_task_0345",
+    "id": "ATM-2-0038",
+    "title": "Unified Atom Generator and ID Allocation Service",
+    "owner": "vs-code-gpt-5.4-mini",
+    "priority": "P0",
+    "status": "done",
+    "type": "manager",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T14:53:07.2487735+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "completed_at": "2026-05-07T15:05:04.3290914+08:00",
+    "chain_id": "ATM-ATOM-PROVISIONING-V1",
+    "chain_step": "1/1",
+    "sensor_triggered_by": "atm-atom-provisioning-gap",
+    "description": "補上 ATM 缺失的 atom provisioning layer：提供單一入口去分配 canonical atomId、套用 bucket/流水號規則、收斂共用預設，並委派既有 scaffold/registry/catalog primitive，避免 Atom 建立流程與規格散落在多個入口。原子產生器本身不得只是散落在 host 端的一支裸工具；它必須以單一 atom 或多個 atom 組成的 atom map 形式落地，CLI create/generate 只作 façade。",
+    "related": [],
+    "depends": [
+      "ATM-2-0002",
+      "ATM-2-0004",
+      "ATM-2-0013",
+      "ATM-2-0037"
+    ],
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief；2026-05-07 ClaudeCode_sonnet-4-6 補強完整設計規格 | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始實作 Atom Generator / ID allocator / CLI create 與 dogfood self-host 驗證 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node tests/core/id-allocator.test.mjs / node tests/core/atom-generator.test.mjs / node tests/cli/create.test.mjs / npm.cmd run validate:cli / npm.cmd run validate:registry-core / npm.cmd run validate:registry-catalog / npm.cmd test / cmd /c npm run typecheck / npm.cmd run lint pass | 變更: 完成 AtomGenerator façade、集中 ID allocator、atm create、atm test --spec、ATM-CORE-0004 self atom、ATM-FIXTURE-0001 dogfood atom，並開 ATM-2-0039~0041 追蹤全框架 generator provenance 回填 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 原子產生器開卡",
+      "summary": "建立單一 Atom Generator / ID Allocation Service，讓新 Atom 的 ID 配發、模板預設、workbench/scaffold/registry 串接走同一入口。",
+      "position": "ATM-2（provisioning architecture / single entrypoint）",
+      "prereq": "ATM-2-0002 / ATM-2-0004 / ATM-2-0013 / ATM-2-0037"
+    },
+    "contracts": {
+      "input": [
+        "現行 CLI 僅有 bootstrap/init/spec/status/test/validate/verify，沒有 create/generate atom 正式入口",
+        "現行 Scaffold Builder 假設 caller 已帶入 atomId 與 normalized spec，不負責 ID 配發",
+        "Registry/Atom Space 已定義 canonical atomId/workbench 規則，但沒有單一 provisioning service 收編這些規格",
+        "若新增 Atom Generator，該能力本身也必須被 atomize：不是 host 專屬一次性 script，而是可被 registry / evidence / test runner 管理的 atom 或 atom map"
+      ],
+      "output": [
+        "新增統一 Atom Generator / Provisioning Service，成為建立新 Atom 的唯一正式入口",
+        "ID 配發必須集中在單一 allocator/service，依 bucket 規則產生 ATM-{SUBSYSTEM}-{NNNN}，不得再由各腳本各自硬編",
+        "generator 必須委派既有 scaffold/registry/catalog primitive，而不是複製第二套實作",
+        "Atom Generator / Provisioning Service 本身必須是單一 atom 或多個 atom 組成的 atom map；CLI create/generate 只能是呼叫它的 host façade，不得另維護第二套核心邏輯",
+        "CLI 補正式 create/generate atom 指令，至少能收 title/logicalName/subsystem/bucket/description/language template 並回傳 atomId 與輸出路徑",
+        "補 ID reservation / sequence policy 與 deterministic fixture，避免多人或多次 rerun 時重複領號",
+        "文件與 roadmap 必須補上 provisioning layer，明確說明它位於 spec parser / scaffold builder / registry 之上"
+      ],
+      "validation_cmd": "npm run validate:cli\\nnpm run validate:scaffold-builder\\nnpm run validate:registry-core\\nnpm test\\nnpm run typecheck\\nnpm run lint",
+      "rollback_hint": "若新的 generator 入口未完成，先保留既有 scaffold primitive 與 registry primitive，不把半成品 create command 暴露為正式入口；已分配的號碼需有 reservation/rollback policy，不能直接靜默回收。",
+      "execution_steps": [
+        "盤點現有 create-new-atom 所需的共享能力與散落入口",
+        "定義 atom provisioning domain：ID allocator、bucket policy、template preset、scaffold/registry orchestration，以及它本身要如何 atomize 成單一 atom 或 atom map",
+        "落地 CLI create/generate atom 命令與 deterministic fixture，並讓 CLI 僅作 façade",
+        "補 roadmap / architecture doc，說明 provisioning layer 與既有 primitive 的關係"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0346",
+    "id": "ATM-2-0039",
+    "title": "Generated Atom Source Template and Code Path Policy",
+    "owner": "vs-code-gpt-5.4-mini",
+    "priority": "P0",
+    "status": "open",
+    "type": "architecture",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
+    "chain_step": "1/3",
+    "sensor_triggered_by": "atm-generator-source-gap",
+    "description": "讓 Atom Generator 產出的新原子具備正式 source file template，不再以 spec-only 或 spec-as-code 方式暫代 registry codePaths。",
+    "related": [],
+    "depends": [
+      "ATM-2-0038"
+    ],
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM generator source template 開卡",
+      "summary": "補齊 generator 的 source file template 與 codePaths policy，讓新原子真正有 spec/code/test/report 四件套。",
+      "position": "ATM-2（generator provenance / source template）",
+      "prereq": "ATM-2-0038"
+    },
+    "contracts": {
+      "input": [
+        "ATM-2-0038 alpha0 已能產生 spec/test/report 並登錄 registry",
+        "目前 dogfood fixture 以 spec path 暫作 codePaths，這只是 alpha0 過渡",
+        "Registry selfVerification 需要穩定 codePaths"
+      ],
+      "output": [
+        "新增 generator source template policy",
+        "AtomGenerator 產物包含正式 source file",
+        "Registry codePaths 不再用 specPath 暫代",
+        "補 fixture 覆蓋 source/code/test/report 四件套"
+      ],
+      "validation_cmd": "node tests/core/atom-generator.test.mjs\\nnode tests/cli/create.test.mjs\\nnpm run validate:registry-core",
+      "rollback_hint": "回退 source template 與 codePaths policy；保留 ATM-2-0038 birth facade，不回退 allocator/create command。",
+      "execution_steps": [
+        "盤點目前 generated atom 檔案組成",
+        "設計 source template 與預設 validation command",
+        "更新 generator 與 tests",
+        "回寫 registry/codePaths policy"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0347",
+    "id": "ATM-2-0040",
+    "title": "Backfill Existing Core Atoms Through Atom Generator",
+    "owner": "vs-code-gpt-5.4-mini",
+    "priority": "P0",
+    "status": "open",
+    "type": "migration",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
+    "chain_step": "2/3",
+    "sensor_triggered_by": "atm-pre-generator-atom-backfill",
+    "description": "讓既有核心原子 ATM-CORE-0001 與 ATM-CORE-0003 重新走 generator provenance，不直接手改 registry/workbench，並保留既有 atomId 與 hash-lock 可追溯性。",
+    "related": [],
+    "depends": [
+      "ATM-2-0038",
+      "ATM-2-0039"
+    ],
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM pre-generator atom backfill 開卡",
+      "summary": "用 generator 重新產生或遷移前期核心原子，補齊 generator provenance 與 workbench 四件套。",
+      "position": "ATM-2（migration / generator backfill）",
+      "prereq": "ATM-2-0038 / ATM-2-0039"
+    },
+    "contracts": {
+      "input": [
+        "ATM-CORE-0001 與 ATM-CORE-0003 是 generator 之前手動建立的核心原子",
+        "既有 atomId 不可變",
+        "既有 registry hash-lock 不可靜默失效"
+      ],
+      "output": [
+        "定義 pre-generator atom backfill 流程",
+        "用 generator 或 generator-backed migration 重建 ATM-CORE-0001/0003 workbench",
+        "保留或重算 registry selfVerification 並留下 migration evidence",
+        "catalog 顯示 generator provenance"
+      ],
+      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:registry-catalog\\nnpm test\\nnpm run lint",
+      "rollback_hint": "若 backfill 造成 hash drift，回退該 atom 的 regenerated workbench/registry entry，保留 ATM-2-0038 generator 本體。",
+      "execution_steps": [
+        "盤點 ATM-CORE-0001/0003 既有 sourcePaths",
+        "定義保留 atomId 的 generator-backed backfill 模式",
+        "逐顆重建 workbench/spec/test/report",
+        "重算 registry 與 catalog",
+        "跑完整 registry drift 驗證"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  }
+]

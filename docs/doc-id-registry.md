@@ -1,6 +1,6 @@
 # 文件代號 Registry (doc-id-registry)
 
-> 生成日期: 2026-05-06
+> 生成日期: 2026-05-07
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成，請勿手動編輯。
 > **唯一真相來源。** 文件移動後 doc_id 不變，Agent 可用 doc_id 搜尋定位文件。
 > `docs/doc-id-registry.json` 現在是 index stub；實際 machine-readable 內容位於 `docs/doc-id-registry-shards/registry-*.json`。
@@ -18,12 +18,12 @@
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 178 |
 | 索引類 | `doc_index` | 17 |
-| 任務卡類 | `doc_task` | 323 |
+| 任務卡類 | `doc_task` | 340 |
 | AI Agent 專用 | `doc_ai` | 31 |
 | Agent Skill 專用 | `doc_agentskill` | 45 |
 | Server 文件類 | `doc_server_<subtype>` | 15 |
-| 其它類 | `doc_other` | 39 |
-| **合計** | — | **730** |
+| 其它類 | `doc_other` | 73 |
+| **合計** | — | **781** |
 
 ---
 
@@ -364,6 +364,7 @@
 | `doc_task_0290` | docs/agent-briefs/tasks/ATM-1-0008.md | [ATM-1-0008] Zero-install Agent Bootstrap Pack |
 | `doc_task_0295` | docs/agent-briefs/tasks/ATM-1-0009.md | [ATM-1-0009] Self-hosting alpha proof |
 | `doc_task_0293` | docs/agent-briefs/tasks/ATM-1-0010.md | [ATM-1-0010] Upstream docs neutrality audit |
+| `doc_task_0341` | docs/agent-briefs/tasks/ATM-1-0011.md | [ATM-1-0011] 統一 Atomic ID canonical 命名並清除雙軌識別 |
 | `doc_task_0299` | docs/agent-briefs/tasks/ATM-1.5-0001.md | [ATM-1.5-0001] Seed-as-Spec：種子以自身格式自我描述 |
 | `doc_task_0300` | docs/agent-briefs/tasks/ATM-1.5-0002.md | [ATM-1.5-0002] Seed 自我驗證：產生第一份 atomic-registry.json |
 | `doc_task_0301` | docs/agent-briefs/tasks/ATM-1.5-0003.md | [ATM-1.5-0003] ATM-CORE-0001 正式收編：舊 seed 標 @deprecated |
@@ -392,6 +393,22 @@
 | `doc_task_0328` | docs/agent-briefs/tasks/ATM-2-0023.md | [ATM-2-0023] Atomic Map Schema & Registry |
 | `doc_task_0329` | docs/agent-briefs/tasks/ATM-2-0024.md | [ATM-2-0024] Map-Level Upgrade & Extract-vs-Bump Decision |
 | `doc_task_0330` | docs/agent-briefs/tasks/ATM-2-0025.md | [ATM-2-0025] Cross-Atom Integration Test Runner |
+| `doc_task_0332` | docs/agent-briefs/tasks/ATM-2-0026.md | [ATM-2-0026] Semantic Fingerprint + Lineage + TTL Schema Extension |
+| `doc_task_0333` | docs/agent-briefs/tasks/ATM-2-0027.md | [ATM-2-0027] Atom Status State Machine |
+| `doc_task_0334` | docs/agent-briefs/tasks/ATM-2-0028.md | [ATM-2-0028] AtomBehavior Plugin SDK |
+| `doc_task_0335` | docs/agent-briefs/tasks/ATM-2-0029.md | [ATM-2-0029] Reference Behavior Pack（10 內建行為） |
+| `doc_task_0336` | docs/agent-briefs/tasks/ATM-2-0030.md | [ATM-2-0030] Dedup Police Plugin |
+| `doc_task_0337` | docs/agent-briefs/tasks/ATM-2-0031.md | [ATM-2-0031] Lifecycle Police（TTL + Sweep + 狀態機警察） |
+| `doc_task_0338` | docs/agent-briefs/tasks/ATM-2-0032.md | [ATM-2-0032] Polymorphic Atom Template |
+| `doc_task_0339` | docs/agent-briefs/tasks/ATM-2-0033.md | [ATM-2-0033] Atomization & Infection Adapter Contract |
+| `doc_task_0340` | docs/agent-briefs/tasks/ATM-2-0034.md | [ATM-2-0034] Registry Catalog Markdown Projection Atom |
+| `doc_task_0342` | docs/agent-briefs/tasks/ATM-2-0035.md | [ATM-2-0035] Official Review Advisory Provider (AI Code Reviewer, non-blocking) |
+| `doc_task_0343` | docs/agent-briefs/tasks/ATM-2-0036.md | [ATM-2-0036] Stale Atom Workspace Alias Directory Cleanup |
+| `doc_task_0344` | docs/agent-briefs/tasks/ATM-2-0037.md | [ATM-2-0037] Workbench Alias Drift Guard and Projection Alignment |
+| `doc_task_0345` | docs/agent-briefs/tasks/ATM-2-0038.md | [ATM-2-0038] Unified Atom Generator — Provisioning Facade & ID Allocator |
+| `doc_task_0346` | docs/agent-briefs/tasks/ATM-2-0039.md | [ATM-2-0039] Generated Atom Source Template and Code Path Policy |
+| `doc_task_0347` | docs/agent-briefs/tasks/ATM-2-0040.md | [ATM-2-0040] Backfill Existing Core Atoms Through Atom Generator |
+| `doc_task_0348` | docs/agent-briefs/tasks/ATM-2-0041.md | [ATM-2-0041] Framework-Wide Generator Provenance Audit |
 | `doc_task_0303` | docs/agent-briefs/tasks/ATM-2.5-0001.md | [ATM-2.5-0001] Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI |
 | `doc_task_0304` | docs/agent-briefs/tasks/ATM-2.5-0002.md | [ATM-2.5-0002] Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate |
 | `doc_task_0305` | docs/agent-briefs/tasks/ATM-2.5-0003.md | [ATM-2.5-0003] Multi-Agent 兼容性驗證：confidence gate |
@@ -780,20 +797,54 @@
 | `doc_other_0032` | docs/ai_atomic_framework/3klife-coexistence-plan.md | 3KLife × ATM 並行開發協議（Coexistence Plan） |
 | `doc_other_0033` | docs/ai_atomic_framework/3klife-consumption-roadmap.md | 3KLife 長期消費 ATM 路線圖（Consumption Roadmap） |
 | `doc_other_0036` | docs/ai_atomic_framework/3klife-tooling-fate.md | 3KLife 既有治理工具命運表（Tooling Fate） |
+| `doc_other_0045` | docs/ai_atomic_framework/原子行為參考手冊.md | 原子行為參考手冊（Atom Behavior Reference） |
 | `doc_other_0044` | docs/ai_atomic_framework/關於進化版的原子提案.md | ATM 框架穩定性保護分析 + ATM-1 全卡檢核報告 |
 | `doc_other_0031` | docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md | AI Atomic Framework 優化藍圖 v0.2 |
 | `doc_other_0029` | docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md | AI Atomic Framework：可獨立開源的 AI Vibe Coding 原子化治理框架 Roadmap |
 | `doc_other_0028` | docs/ai_atomic_framework/AI原子框架開發計畫書.md | AI 原子框架（ATM）開發計畫書 |
 | `doc_other_0037` | docs/ai_atomic_framework/ATM_cross_reference.md | ATM 知識路由索引（ATM Cross-Reference） |
+| `doc_other_0046` | docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-doc-refs.md | ATM Cross Reference — doc_refs 欄位規範 |
+| `doc_other_0047` | docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-inventory.md | ATM Cross Reference — Section Inventory |
+| `doc_other_0048` | docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-maintenance.md | ATM Cross Reference — 維護說明 |
+| `doc_other_0049` | docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-routing.md | ATM Cross Reference — 快查路由表 |
+| `doc_other_0050` | docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-usage.md | ATM Cross Reference — 使用說明 |
+| `doc_other_0051` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-appendices.md | ATM 框架演進執行規劃書 — 附錄 A/B |
+| `doc_other_0052` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-diagnosis.md | ATM 框架演進執行規劃書 — 機讀真相與提案診斷（§1–§3） |
+| `doc_other_0053` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-risk.md | ATM 框架演進執行規劃書 — 風險、排除與結論（§6–§8） |
+| `doc_other_0054` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-roadmap.md | ATM 框架演進執行規劃書 — 新增任務與依賴重排（§4–§5） |
 | `doc_other_0043` | docs/ai_atomic_framework/ATM框架演進執行規劃書.md | ATM 框架演進執行規劃書 |
+| `doc_other_0055` | docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-details.md | 原子行為參考手冊 — 各行為詳細說明 |
+| `doc_other_0056` | docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-extension.md | 原子行為參考手冊 — 擴充指南與狀態機參考 |
+| `doc_other_0057` | docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-overview.md | 原子行為參考手冊 — 概覽與行為總表 |
+| `doc_other_0058` | docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-police.md | 原子行為參考手冊 — 行為×警察使用關係表 |
+| `doc_other_0059` | docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-poly.md | 原子行為參考手冊 — 廣義多形化原則 |
+| `doc_other_0060` | docs/ai_atomic_framework/dev-plan-shards/dev-plan-appendices.md | AI 原子框架開發計畫書 — 附錄 |
+| `doc_other_0061` | docs/ai_atomic_framework/dev-plan-shards/dev-plan-context.md | AI 原子框架開發計畫書 — Context 與分工決策 |
+| `doc_other_0062` | docs/ai_atomic_framework/dev-plan-shards/dev-plan-execution.md | AI 原子框架開發計畫書 — Checklist、風險與驗證 |
+| `doc_other_0063` | docs/ai_atomic_framework/dev-plan-shards/dev-plan-foundation.md | AI 原子框架開發計畫書 — 目標、原理、結構 |
+| `doc_other_0064` | docs/ai_atomic_framework/dev-plan-shards/dev-plan-milestones.md | AI 原子框架開發計畫書 — 里程碑與補強路線 |
+| `doc_other_0065` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-blueprint.md | 關於進化版的原子提案 — Roadmap 藍圖與融合分析 |
+| `doc_other_0066` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-context.md | 關於進化版的原子提案 — Context、現況與治理問題 |
+| `doc_other_0067` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-evolution.md | 關於進化版的原子提案 — 版號、框架版本與回饋迴圈 |
+| `doc_other_0068` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-thesis.md | 關於進化版的原子提案 — 命題與防護模型 |
+| `doc_other_0069` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-validation.md | 關於進化版的原子提案 — 驗證來源 |
 | `doc_other_0034` | docs/ai_atomic_framework/multi-agent-compatibility-matrix.md | Multi-AI Agent 兼容性測試矩陣 |
 | `doc_other_0030` | docs/ai_atomic_framework/open-source-extraction-plan.md | AI Atomic Framework 開源拆出計畫 |
+| `doc_other_0070` | docs/ai_atomic_framework/optimized-roadmap-v02-shards/optimized-roadmap-ecosystem.md | AI Atomic Framework Optimized Roadmap v0.2 — 生態、風險、結構（§5–§7） |
+| `doc_other_0071` | docs/ai_atomic_framework/optimized-roadmap-v02-shards/optimized-roadmap-future.md | AI Atomic Framework Optimized Roadmap v0.2 — 下一步與未來演進（§8+） |
+| `doc_other_0072` | docs/ai_atomic_framework/optimized-roadmap-v02-shards/optimized-roadmap-plan.md | AI Atomic Framework Optimized Roadmap v0.2 — MVP 路線與原則（§2–§4） |
+| `doc_other_0073` | docs/ai_atomic_framework/optimized-roadmap-v02-shards/optimized-roadmap-summary.md | AI Atomic Framework Optimized Roadmap v0.2 — 摘要與問題（§0–§1） |
 | `doc_other_0039` | docs/ai_atomic_framework/shards/atm-roadmap-foundations.md | AI Atomic Framework Roadmap — 名詞定義・分層・自舉・Genesis（§4–§7） |
 | `doc_other_0040` | docs/ai_atomic_framework/shards/atm-roadmap-intro.md | AI Atomic Framework Roadmap — 核心結論・問題背景（§0–§1） |
 | `doc_other_0041` | docs/ai_atomic_framework/shards/atm-roadmap-milestones.md | AI Atomic Framework Roadmap — 里程碑 Phase 0-7 詳細規格（§8+） |
 | `doc_other_0042` | docs/ai_atomic_framework/shards/atm-roadmap-theory.md | AI Atomic Framework Roadmap — 願景・設計原則（§2–§3） |
 | `doc_other_0035` | docs/ai_atomic_framework/upstream-versioning-policy.md | Upstream Versioning & Lifecycle Policy |
 | `doc_other_0005` | docs/battle-entry-unification-checklist.md | 戰場入口統一 — Checklist |
+| `doc_other_0074` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
+| `doc_other_0075` | docs/doc-id-registry-md-shards/doc-id-registry-other.md | Doc ID Registry Markdown Index — 其它類 |
+| `doc_other_0076` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_0077` | docs/doc-id-registry-md-shards/doc-id-registry-stats.md | Doc ID Registry Markdown Index — 分類統計 |
+| `doc_other_0078` | docs/doc-id-registry-md-shards/doc-id-registry-tech-ui-art.md | Doc ID Registry Markdown Index — Tech / UI / Art / Data |
 | `doc_other_0006` | docs/doc-id-registry.md | 文件代號 Registry (doc-id-registry) |
 | `doc_other_0009` | docs/html_skill_plan.md | HTML Skill Plan |
 | `doc_other_0008` | docs/html_skill_plan2.md | HTML Skill Plan 2 |

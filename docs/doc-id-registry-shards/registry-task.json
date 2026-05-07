@@ -2002,5 +2002,41 @@
     "path": "docs/agent-briefs/tasks/ATM-2-0035.md",
     "title": "[ATM-2-0035] Official Review Advisory Provider (AI Code Reviewer, non-blocking)",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0343",
+    "path": "docs/agent-briefs/tasks/ATM-2-0036.md",
+    "title": "[ATM-2-0036] Stale Atom Workspace Alias Directory Cleanup",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0344",
+    "path": "docs/agent-briefs/tasks/ATM-2-0037.md",
+    "title": "[ATM-2-0037] Workbench Alias Drift Guard and Projection Alignment",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0345",
+    "path": "docs/agent-briefs/tasks/ATM-2-0038.md",
+    "title": "[ATM-2-0038] Unified Atom Generator — Provisioning Facade & ID Allocator",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0346",
+    "path": "docs/agent-briefs/tasks/ATM-2-0039.md",
+    "title": "[ATM-2-0039] Generated Atom Source Template and Code Path Policy",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0347",
+    "path": "docs/agent-briefs/tasks/ATM-2-0040.md",
+    "title": "[ATM-2-0040] Backfill Existing Core Atoms Through Atom Generator",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0348",
+    "path": "docs/agent-briefs/tasks/ATM-2-0041.md",
+    "title": "[ATM-2-0041] Framework-Wide Generator Provenance Audit",
+    "category": "task"
   }
 ]
