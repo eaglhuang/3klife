@@ -5,20 +5,21 @@
     "title": "compute-gate ATM profile adapter integration",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "adapter",
     "phase": "ATM-3",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-08T05:59:35.560323+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T06:02:56.478299+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
     "description": "把 upstream ATM validate/police/hash-lock 接入 3KLife compute-gate profile。",
     "related": [],
     "depends": [
-      "ATM-3-0002"
+      "ATM-3-0007"
     ],
     "acceptance": [
       "standard gate 不受影響",
@@ -30,7 +31,7 @@
       "atm-police/atm-hash-lock gate wrapper",
       "failure-as-prompt 輸出"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-08 | 狀態: done | 驗證: atm profile pass / police & hash-lock wrappers pass | 變更: compute-gate 新增 atm-police / atm-hash-lock gates，atm-cli 支援 police --all 與 verify --all | 阻塞: none\n2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",

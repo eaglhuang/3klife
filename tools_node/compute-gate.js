@@ -13,6 +13,7 @@
  * 用法：
  *   node tools_node/compute-gate.js                    # 執行 standard profile
  *   node tools_node/compute-gate.js --profile quick    # 快速檢查
+ *   node tools_node/compute-gate.js --profile atm      # 委派到 ATM profile
  *   node tools_node/compute-gate.js --profile full     # 完整檢查
  *   node tools_node/compute-gate.js --gates ts-syntax encoding  # 指定特定 gate
  *   node tools_node/compute-gate.js --json             # JSON 格式輸出（供 Agent 解析）
@@ -24,6 +25,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const gateAdapter = require('./adapters/atm-3klife/gate-adapter');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 const CONFIG_PATH = path.join(__dirname, 'compute-gate-config.json');
@@ -109,6 +111,14 @@ function resolveGates(config, args) {
   if (!profile) {
     console.warn(`[compute-gate] 警告：profile "${args.profile}" 不存在，使用全部 gate`);
     return [...allGates].sort((a, b) => a.priority - b.priority);
+  }
+
+  if (gateAdapter.isDelegatedProfile(profile)) {
+    const delegatedGates = gateAdapter.expandDelegatedProfile(profile, args.profile);
+    if (delegatedGates.length === 0) {
+      console.warn(`[compute-gate] 警告：profile "${args.profile}" 已標記為 delegated，但沒有可執行的 commands`);
+    }
+    return delegatedGates;
   }
 
   const gateIds = new Set(profile.gates || []);

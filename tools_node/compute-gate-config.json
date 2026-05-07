@@ -119,6 +119,24 @@
       "priority": 12,
       "failAction": "warn",
       "description": "確保所有 _deprecated/ 引用已清除；有引用即視為潛在技術債，不阻擋但發出警告"
+    },
+    {
+      "id": "atm-police",
+      "label": "ATM Police Gate",
+      "cmd": "node",
+      "args": ["tools_node/atomic-framework/atm-cli.js", "police", "--all"],
+      "priority": 13,
+      "failAction": "block",
+      "description": "透過本地 atm-cli 跑 police 全量驗證，守住 protected surface 與 registry 規則"
+    },
+    {
+      "id": "atm-hash-lock",
+      "label": "ATM Hash-Lock Gate",
+      "cmd": "node",
+      "args": ["tools_node/atomic-framework/atm-cli.js", "verify", "--all"],
+      "priority": 14,
+      "failAction": "block",
+      "description": "透過本地 atm-cli 跑 hash-lock / registry 核心一致性驗證"
     }
   ],
   "profiles": {
@@ -129,6 +147,10 @@
     "standard": {
       "description": "標準驗證（任務卡完成時）",
       "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "task-scope", "doc-shard-health", "import-boundary", "dead-code"]
+    },
+    "atm": {
+      "description": "ATM 不退轉驗證（police + hash-lock）",
+      "gates": ["encoding", "ts-syntax", "task-scope", "import-boundary", "atm-police", "atm-hash-lock"]
     },
     "full": {
       "description": "完整驗證（階段性交付時）",

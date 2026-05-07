@@ -32,7 +32,7 @@
     "owner": "GitHubCopilot",
     "doc_id": "doc_task_0305",
     "started_at": "2026-05-07T16:05:00Z",
-    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "started_by_agent": "vs-insiders-gpt-5.4",
     "completed_at": "2026-05-07T16:45:00Z",
     "depends": [
       "ATM-2.5-0001",
@@ -73,13 +73,16 @@
   {
     "id": "ATM-3-0007",
     "title": "compute-gate.js adapter 化：接入 ATM GateAdapter",
-    "status": "open",
+    "status": "done",
     "priority": "P1",
     "phase": "ATM-3",
     "type": "implementation",
     "created": "2026-05-05",
     "owner": "GitHubCopilot",
     "doc_id": "doc_task_0307",
+    "started_at": "2026-05-08T05:52:40.634350+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T05:56:41.421780+08:00",
     "depends": [
       "ATM-3-0006"
     ]

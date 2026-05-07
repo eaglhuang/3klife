@@ -133,6 +133,49 @@ function runUpstreamCommand(commandName, commandArgs = [], overrides = {}) {
   return typeof result.status === 'number' ? result.status : 1;
 }
 
+function runUpstreamScript(scriptRelativePath, commandArgs = [], overrides = {}) {
+  const config = resolveConfig(overrides);
+  const scriptPath = path.resolve(config.upstreamRepoRoot, scriptRelativePath);
+
+  if (!fs.existsSync(scriptPath)) {
+    process.stderr.write(`[atm wrapper] Missing upstream script: ${scriptPath}\n`);
+    return 1;
+  }
+
+  const result = spawnSync(process.execPath, [scriptPath, ...commandArgs], {
+    cwd: config.upstreamRepoRoot,
+    env: {
+      ...process.env,
+      ATM_UPSTREAM_REPO_ROOT: config.upstreamRepoRoot,
+      ATM_UPSTREAM_CLI_ENTRYPOINT: config.upstreamCliEntrypoint,
+      ATM_LOCAL_WORKBENCH_ROOT: config.localWorkbenchRoot,
+    },
+    encoding: 'utf8',
+  });
+
+  if (result.stdout) {
+    process.stdout.write(result.stdout);
+  }
+  if (result.stderr) {
+    process.stderr.write(result.stderr);
+  }
+  if (result.error) {
+    process.stderr.write(`[atm wrapper] ${result.error.message}\n`);
+  }
+
+  return typeof result.status === 'number' ? result.status : 1;
+}
+
+function runPoliceAll(argv = process.argv.slice(2), overrides = {}) {
+  const parsed = parseWrapperArgs(argv);
+  return runUpstreamScript('scripts/validate-police.mjs', ['--mode', 'validate', ...parsed.args], overrides);
+}
+
+function runVerifyAll(argv = process.argv.slice(2), overrides = {}) {
+  const parsed = parseWrapperArgs(argv);
+  return runUpstreamScript('scripts/validate-registry-core.mjs', ['--mode', 'validate', ...parsed.args], overrides);
+}
+
 function runBootstrap(argv = process.argv.slice(2), overrides = {}) {
   const parsed = parseWrapperArgs(argv);
   const config = resolveConfig({
@@ -151,6 +194,14 @@ function runAtmCli(argv = process.argv.slice(2), overrides = {}) {
     ...overrides,
   });
 
+  if (commandName === 'police') {
+    return runPoliceAll(argv, config);
+  }
+
+  if (commandName === 'verify' && parsed.args.includes('--all')) {
+    return runVerifyAll(argv, config);
+  }
+
   return runUpstreamCommand(commandName, parsed.command ? parsed.args : parsed.args, config);
 }
 
@@ -165,6 +216,9 @@ module.exports = {
   ensureWorkbenchRoot,
   buildCommandArgs,
   runUpstreamCommand,
+  runUpstreamScript,
   runBootstrap,
   runAtmCli,
+  runPoliceAll,
+  runVerifyAll,
 };
