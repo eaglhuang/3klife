@@ -86,6 +86,35 @@ function main() {
         assert(conflict.conflicts.length === 1, 'locked file should report one conflict');
         assert(conflict.conflicts[0].taskId === 'ATM-TEST-A', 'conflict should identify existing task');
 
+        const wrongUnlock = runTaskLock([
+            'unlock',
+            'ATM-TEST-A',
+            'ATM-TEST-B-agent'
+        ], 1);
+        assert(/解鎖失敗/.test(wrongUnlock.stderr), 'non-owner agent unlock should still fail');
+
+        runTaskLock([
+            'unlock',
+            'ATM-TEST-A',
+            'wenyihuang'
+        ]);
+
+        const unlockedByHuman = parseJson(runTaskLock([
+            'check-cross-shard',
+            'ATM-TEST-B',
+            '--files',
+            'temp/cross-shard-conflict.txt'
+        ]).stdout);
+        assert(unlockedByHuman.ok === true, 'human override unlock should release the conflicting file');
+
+        runTaskLock([
+            'lock',
+            'ATM-TEST-A',
+            'ATM-TEST-A-agent',
+            '--files',
+            'temp/cross-shard-conflict.txt'
+        ]);
+
         runTaskLock([
             'lock',
             'ATM-TEST-B',

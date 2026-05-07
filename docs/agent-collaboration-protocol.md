@@ -51,7 +51,7 @@ node tools_node/task-lock.js list
 
 ### 規則
 - 鎖定先到先贏；同一 task 同時只允許一個 Agent 鎖定
-- 鎖定者才能解鎖
+- 預設由鎖定者解鎖；若是人類操作者，可用自己的名稱作 manual override 解鎖，用於回收卡死或已人工確認交接的鎖
 - 修改 task JSON 前必須先 lock
 - 鎖定檔存放 `.task-locks/`（gitignored）
 - `lock --files <file...>` 應記錄本輪預計修改檔案，供 `finalize-agent-turn --task-scope` 與 handoff 對齊

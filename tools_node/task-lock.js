@@ -37,6 +37,40 @@ function getDefaultAgentName() {
     return String(process.env.AGENT_IDENTITY || '').trim();
 }
 
+const knownAgentNamePatterns = Object.freeze([
+    /^vs-insiders-/i,
+    /^vs-code-/i,
+    /^claude-code-/i,
+    /^claudecode[_-]/i,
+    /^codex-/i,
+    /^agent-/i,
+    /^githubcopilot$/i,
+    /^github-copilot/i,
+    /^copilot/i,
+    /^cursor$/i,
+    /^aider$/i,
+    /^openai(?:[-_ ].*)?$/i,
+    /^gpt(?:[-_ ].*)?$/i,
+    /^bot(?:[-_ ].*)?$/i
+]);
+
+function isHumanOverrideAgentName(agentName) {
+    const normalized = String(agentName || '').trim();
+    if (!normalized) {
+        return false;
+    }
+    if (normalized.includes('/') || normalized.includes('\\')) {
+        return false;
+    }
+    if (knownAgentNamePatterns.some((pattern) => pattern.test(normalized))) {
+        return false;
+    }
+    if (/(^|[-_. ])(agent|assistant|copilot|claude|cursor|aider|gpt|bot)(?:$|[-_. ])/i.test(normalized)) {
+        return false;
+    }
+    return /^[\p{L}\p{N}._ -]+$/u.test(normalized);
+}
+
 function ensureLockDir() {
     if (!fs.existsSync(lockDir)) {
         fs.mkdirSync(lockDir, { recursive: true });
@@ -312,11 +346,16 @@ function unlock(taskId, agentName) {
         return;
     }
     const existing = readJson(lp);
-    if (existing.agentName !== agentName) {
+    const humanOverride = existing.agentName !== agentName && isHumanOverrideAgentName(agentName);
+    if (existing.agentName !== agentName && !humanOverride) {
         console.error(`❌ 解鎖失敗: "${taskId}" 由 "${existing.agentName}" 鎖定，你是 "${agentName}"`);
         process.exit(1);
     }
     fs.unlinkSync(lp);
+    if (humanOverride) {
+        console.log(`🔓 已由人類 "${agentName}" 覆寫解鎖 "${taskId}"（原鎖定者: "${existing.agentName}"）`);
+        return;
+    }
     console.log(`🔓 已解鎖 "${taskId}"`);
 }
 
@@ -364,7 +403,7 @@ switch (command) {
         lock(taskId, agentName, files);
         break;
     case 'unlock':
-        if (!taskId || !agentName) { console.error('用法: task-lock.js unlock <task-id> <agent-name>（或先設 AGENT_IDENTITY）'); process.exit(1); }
+        if (!taskId || !agentName) { console.error('用法: task-lock.js unlock <task-id> <agent-name>（或先設 AGENT_IDENTITY；若提供人類名稱可覆寫解鎖）'); process.exit(1); }
         unlock(taskId, agentName);
         break;
     case 'check':
@@ -382,6 +421,6 @@ switch (command) {
         listLocks();
         break;
     default:
-        console.log('用法: task-lock.js <lock|unlock|check|check-cross-shard|list> [task-id] [agent-name]（lock/unlock 可改用 AGENT_IDENTITY）');
+        console.log('用法: task-lock.js <lock|unlock|check|check-cross-shard|list> [task-id] [agent-name]（lock/unlock 可改用 AGENT_IDENTITY；unlock 也接受人類名稱 override）');
         process.exit(1);
 }

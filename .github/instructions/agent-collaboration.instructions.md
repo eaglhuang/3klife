@@ -95,7 +95,7 @@ node tools_node/harness-health-report.js
 ## Task Locking 規則
 
 - **鎖定先到先贏**：同一 task 同時只允許一個 Agent 鎖定
-- **鎖定者才能解鎖**：unlock 必須由 lock 時同一 agent-name 執行
+- **鎖定者才能解鎖**：預設仍由 lock 時同一 agent-name 執行；例外是人類操作者可用自己的名稱作 manual override 解鎖，用於回收卡死或已人工確認交接的鎖
 - **查詢不需鎖定**：`task-lock.js check` 和 `task-lock.js list` 可隨時執行
 - **忘記解鎖**：`finalize-agent-turn.js` 會自動嘗試 unlock
 
