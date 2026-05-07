@@ -2074,5 +2074,11 @@
     "path": "docs/agent-briefs/tasks/ATM-2-0047.md",
     "title": "[ATM-2-0047] URN Resolver and RegistryIndex Facade",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0355",
+    "path": "docs/agent-briefs/tasks/ATM-0-0015.md",
+    "title": "[ATM-0-0015] Harness Engineering CAR/HarnessCard 規劃回寫",
+    "category": "task"
   }
 ]

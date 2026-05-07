@@ -1,0 +1,86 @@
+[
+  {
+    "doc_id": "doc_task_0355",
+    "id": "ATM-0-0015",
+    "title": "Harness Engineering CAR/HarnessCard 規劃回寫",
+    "owner": "vs-insiders-gpt-5.4",
+    "priority": "P0",
+    "status": "done",
+    "type": "docs-governance",
+    "phase": "ATM-0",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-insiders-gpt-5.4",
+    "started_at": "2026-05-08T01:26:52+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T01:48:26+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 Harness Engineering 預印本的 CAR 與 HarnessCard 結論回寫 ATM active planning、AAF upstream positioning docs，並把後續 schema/adapter/report 工作排入未完成任務卡；不修改已 done 卡。",
+    "related": [
+      "ATM-5-0002",
+      "ATM-6-0005"
+    ],
+    "depends": [
+      "ATM-0-0014"
+    ],
+    "acceptance": [
+      "active planning doc 明確定位 ATM 為 CAR-aligned governance harness",
+      "AAF upstream docs 說明 CAR/HarnessCard 只作報告層不替代 WorkItem/ScopeLock/Evidence",
+      "未完成任務卡補上 HarnessCard/CAR 後續 acceptance；已 done 卡不修改",
+      "3KLife 學習文件不混入本次 commit"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
+      "AI-Atomic-Framework/docs/ECOSYSTEM_POSITIONING.md",
+      "AI-Atomic-Framework/docs/ARCHITECTURE.md",
+      "AI-Atomic-Framework/docs/governance/governance-bundle-schema.md",
+      "docs/agent-briefs/tasks/ATM-5-0002.md",
+      "docs/agent-briefs/tasks/ATM-6-0005.md",
+      "docs/tasks/tasks-atm/tasks-atm-part-15.json",
+      "docs/tasks/tasks-atm/tasks-atm-part-18.json"
+    ],
+    "notes": "2026-05-08 | 狀態: done | 驗證: encoding touched pass；JSON parse pass；task-scope pass；compute-gate standard 9/9 pass；AAF neutrality validate pass | 變更: 回寫 CAR/HarnessCard 採納決策、AAF upstream positioning docs、ATM-5-0002/ATM-6-0005 後續 acceptance；已 done 卡未修改；學習正文維持本機 exclude 不提交 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM research integration 開卡",
+      "summary": "把 Harness Engineering 預印本的 CAR/HarnessCard 評估回寫 active plan、upstream docs 與未完成 ATM 任務卡。",
+      "position": "ATM-0 tracking-docs / upstream-planning",
+      "prereq": "ATM-0-0014"
+    },
+    "contracts": {
+      "input": [
+        "使用者已提供 Harness Engineering Markdown 正文與 ATM 反思文章分析",
+        "HARN-MET-0003 等已 done 任務卡不得修改",
+        "ATM active planning 以本 repo docs/ai_atomic_framework 為真相"
+      ],
+      "output": [
+        "active planning doc 明確定位 ATM 為 CAR-aligned governance harness",
+        "AAF upstream docs 說明 CAR/HarnessCard 只作報告層，不替代 WorkItem/ScopeLock/Evidence",
+        "未完成任務卡補上 HarnessCard/CAR 後續 acceptance；已 done 卡不修改"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js\nnode tools_node/check-task-scope.js --task ATM-0-0015 --verbose\nnode tools_node/compute-gate.js --profile standard --agent-feedback\nnode scripts/validate-neutrality-scanner.mjs --mode validate # in AI-Atomic-Framework",
+      "rollback_hint": "回退本卡 touched files；不修改已 done 任務卡；若 tasks-atm 分片漂移，使用 task-card-opener 或 shard store 重建。",
+      "execution_steps": [
+        "建立並鎖定 ATM-0-0015",
+        "更新 active/companion 規劃文件與 AAF upstream docs",
+        "只補 open 任務卡 ATM-5-0002/ATM-6-0005 的 acceptance 與 shards",
+        "跑 encoding/task-scope/gates，提交 git"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "node tools_node/check-encoding-touched.js --files ... pass",
+        "JSON parse pass",
+        "node tools_node/check-task-scope.js --task ATM-0-0015 --verbose pass",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback pass 9/9",
+        "AI-Atomic-Framework node scripts/validate-neutrality-scanner.mjs --mode validate pass"
+      ],
+      "handoff_diff_status": "clean-validation",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  }
+]

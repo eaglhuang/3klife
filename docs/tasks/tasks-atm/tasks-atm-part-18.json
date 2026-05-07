@@ -10,8 +10,8 @@
     "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T16:22:57+08:00",
-    "started_by_agent": "vs-code-github-copilot",
+    "started_at": "",
+    "started_by_agent": "",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -26,14 +26,18 @@
       "安全插件缺席時 core 仍能 standalone 運作",
       "threat model / provenance / secrets scan policy 已定義",
       "cost budget policy 與 budget report schema 已對齊",
-      "observability event taxonomy 覆蓋 agent.run、task.lock、schema.validate、atom.verify、evidence.write、adapter.shadow"
+      "observability event taxonomy 覆蓋 agent.run、task.lock、schema.validate、atom.verify、evidence.write、adapter.shadow",
+      "HarnessCard-lite report profile 列出 base model/profile、control artifacts、runtime policy、action substrate、execution topology、feedback stack、observability/evaluation 與 known risks",
+      "CAR runtime/audit 對照能標示 Control / Agency / Runtime 來源，不新增 core 必填 schema"
     ],
     "deliverables": [
       "docs/ecosystem/capability-sandbox-audit.md",
       "security plugin interface proposal",
-      "observability adapter boundary"
+      "observability adapter boundary",
+      "HarnessCard-lite report profile",
+      "CAR observability event taxonomy"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 threat model、cost budget、secrets scan 與 observability event taxonomy | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 threat model、cost budget、secrets scan 與 observability event taxonomy | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 HarnessCard-lite / CAR observability acceptance；不阻塞 alpha0 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM v0.2 整合開卡",
@@ -48,7 +52,9 @@
       "output": [
         "docs/ecosystem/capability-sandbox-audit.md",
         "security plugin interface proposal",
-        "observability adapter boundary"
+        "observability adapter boundary",
+        "HarnessCard-lite report profile：列出 base model/profile、control artifacts、runtime policy、action substrate、execution topology、feedback stack、observability/evaluation、known risks",
+        "CAR runtime/audit 對照：審計事件需能標示 Control / Agency / Runtime 來源，不新增 core 必填 schema"
       ],
       "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",

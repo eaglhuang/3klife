@@ -74,6 +74,20 @@ ATM 規劃不放棄完整治理生態，但第一個成功標準必須瘦身：�
 - OSS 實務文件補齊但不阻塞 alpha0：provenance、secrets scan、release owner、package naming、threat model、cost budget、observability event taxonomy。
 - H2U case study 僅在 self-hosting alpha0 全綠後啟動；第一輪只允許 dry-run injection + rollback plan，不 apply patch、不替換 legacy runtime。
 
+### 2026-05-08 Harness Engineering CAR / HarnessCard 採納決策
+
+讀完 `Harness Engineering for Language Agents` 正文後，本計畫採納 CAR（Control / Agency / Runtime）作為 ATM 對外說明與報告 lens，但不把 CAR 改成新的 core layer。ATM 既有核心仍維持 `AtomicSpec / WorkItem / ScopeLock / Evidence / ContextSummary / AdapterReport / Governance Bundle`，CAR 只用來幫使用者看懂這些契約在 agent 工作包絡中的位置：
+
+| CAR 面向 | ATM 對應 | 採納方式 |
+|---|---|---|
+| Control | AtomicSpec、rule guard、scope lock、allowed/forbidden files、validation gates | 作為「控制面」說明與文件導覽，避免新使用者把 ATM 誤解成單純 atom runner。 |
+| Agency | Plugin SDK、ProjectAdapter、LanguageAdapter、CapabilityAdapter、tool/action policy | 作為 adapter/plugin 設計邊界，說明 agent 能做什麼、由誰翻譯 host reality。 |
+| Runtime | ContextSummary、Artifact / Log / RunReport / Evidence stores、budget policy、replay/handoff | 作為可觀測與可回放層，不把 runtime trace 硬塞進 core hot path。 |
+
+HarnessCard 採納為 **optional report artifact**，不列入 alpha0 gate，也不取代 `WorkItem / ScopeLock / Evidence`。後續實作時應先產生 `HarnessCard-lite` 或 `AgentRunProfile` 報告，掛在 `.atm/reports/` 或 typed evidence，而不是替 governance bundle 新增必填欄位。最低欄位只收 base model/profile、control artifacts、runtime policy、action substrate、execution topology、feedback stack、observability/evaluation、known risks。這能提高可比較性與 release 說服力，但不能成為早期自舉阻塞。
+
+任務落點：`ATM-5-0002` 補 Adapter Guide / Plugin SDK 的 CAR 對照；`ATM-6-0005` 補 HarnessCard-lite report profile、observability event taxonomy 與 audit 欄位。`ATM-2-0009`、`HARN-MET-0003` 等已 done 卡只作歷史依據，不回改。
+
 ### Current Gate & Alpha0 Critical Path
 
 當前狀態：ATM-0（governance bootstrap）11/14 done → **下一階段 ATM-1（upstream skeleton）**。
@@ -124,6 +138,7 @@ Alpha0 exit 需通過的最長依賴鏈（~10 關鍵卡）：
 | Default Governance Bundle | 採納但移到 alpha1；ATM 不能只剩 atom runner，需有通用 task/index/shard/artifact/log/rule/evidence 預設套件，但不得阻塞 alpha0 hello-world proof，也不得進 core hard dependency | ATM-0-0009、ATM-2-0007、ATM-2-0008、ATM-2-0009 |
 | Self-hosting alpha0 / docs neutrality / boundary guard | 採納；先在 standalone upstream repo 通過 alpha0 deterministic gate，再以 docs neutrality audit 與 rule guard 持續防止 adopter 私有資訊回流 | ATM-1-0009、ATM-1-0010、ATM-2-0010 |
 | Agent Governance Bundle（encoding / context budget / neutrality） | 採納；將編碼防災、context budget 節流與 docs neutrality 收斂成 upstream 可替換的 agent governance bundle，而非 3KLife 私有守則 | ATM-0-0011、ATM-2-0011 |
+| Harness Engineering CAR / HarnessCard reporting | 採納為說明與報告層；CAR 對齊 Control / Agency / Runtime，HarnessCard 先作 optional report/evidence artifact，不替代 core contracts、不阻塞 alpha0 | ATM-5-0002、ATM-6-0005 |
 | 6 週 MVP | 採納為節奏參考；對齊 ATM-0~ATM-5，並以補強卡擴充既有任務 | ATM-0-0007、ATM-5-0001 |
 | PEV Loop | 採納為所有 ATM 卡的標準工作語彙 | ATM-5-0005 |
 | Living Spec | 先列 optional feature；MVP 只要求變更提示，不要求自動雙向同步 | ATM-5-0005 |

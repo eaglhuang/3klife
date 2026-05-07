@@ -178,6 +178,18 @@ Converge（更新 registry + living spec + commit）
 
 這三者都屬於 Harness 的「Constraint」層，但它們服務的對象是 agent 的工作包絡本身，而不是單一原子函式，所以應以可替換 plugin / adapter 存在，而不是被塞進 core 純計算語義。
 
+### 3.6 CAR / HarnessCard 精煉（2026-05-08）
+
+預印本的 CAR（Control / Agency / Runtime）比本文件原先的 Context / Constraint / Convergence 更適合拿來對外說明 ATM 的 agent harness 角色。後續文件應把兩者分工清楚：Context / Constraint / Convergence 可保留為工程收斂習慣，CAR 則作為架構報告與 release 溝通語彙。
+
+ATM 對 CAR 的採納方式如下：
+
+- **Control**：Atomic Spec、scope lock、rule guard、validation gate、allowed/forbidden files。
+- **Agency**：Plugin SDK、ProjectAdapter、LanguageAdapter、CapabilityAdapter、tool/action policy。
+- **Runtime**：ContextSummary、Artifact / Log / RunReport / Evidence stores、budget policy、handoff/replay。
+
+HarnessCard 不應被做成 alpha0 必填 schema；較務實的路徑是先產生 `HarnessCard-lite` 或 `AgentRunProfile` 報告，收進 `.atm/reports/` 或 typed evidence。這份報告只描述一輪 agent work envelope 的 base model/profile、control artifacts、runtime policy、action substrate、execution topology、feedback stack、observability/evaluation 與 known risks。如此可提高跨 repo、跨 adapter、跨模型比較性，同時避免早期 core 被 reporting schema 綁死。
+
 ---
 
 ## 4. 技術選型建議（強調鬆耦合與獨立性）

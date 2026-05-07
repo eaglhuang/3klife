@@ -162,7 +162,9 @@
       "第三方專案可依文件實作 adapter",
       "3KLife adapter 可作 reference",
       "core 禁止 domain logic 規則明確",
-      "第三方專案可依文件接入 artifacts/logs/reports 與 Markdown/JSON state files"
+      "第三方專案可依文件接入 artifacts/logs/reports 與 Markdown/JSON state files",
+      "CAR 對照章節說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
+      "HarnessCard-lite 指南說明報告只落在 run report / typed evidence，不替代 core contracts"
     ],
     "deliverables": [
       "docs/ADAPTER_GUIDE.md",
@@ -170,9 +172,10 @@
       "examples/hosted-adapter-impl",
       "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
       "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
-      "standalone Default Governance Bundle 與 3KLife adapter 的 artifacts/logs/reports mapping 對照"
+      "standalone Default Governance Bundle 與 3KLife adapter 的 artifacts/logs/reports mapping 對照",
+      "CAR / HarnessCard-lite adapter reporting guidance"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter migration guide 要求 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter migration guide 要求 | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 CAR/HarnessCard docs acceptance；已 done 卡不回改 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
@@ -189,7 +192,9 @@
         "docs/PLUGIN_SDK.md",
         "examples/hosted-adapter-impl",
         "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
-        "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照"
+        "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
+        "CAR 對照章節：說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
+        "HarnessCard-lite 指南：adapter 文件需說明報告只落在 run report / typed evidence，不替代 core contracts"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
