@@ -9,9 +9,9 @@
     "maxPartLines": 300
   },
   "summary": {
-    "done": 37,
+    "done": 38,
     "in_progress": 0,
-    "open": 50,
+    "open": 49,
     "total": 87
   },
   "shards": [
@@ -296,8 +296,8 @@
       "title": "Part 24 (items 74-78)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-24.json",
       "count": 5,
-      "bytes": 9017,
-      "lines": 215,
+      "bytes": 9361,
+      "lines": 216,
       "range": [
         73,
         77
