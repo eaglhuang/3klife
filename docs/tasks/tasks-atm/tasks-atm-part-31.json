@@ -1,0 +1,97 @@
+[
+  {
+    "doc_id": "doc_task_0342",
+    "id": "ATM-2-0035",
+    "title": "Official Review Advisory Provider (AI Code Reviewer, non-blocking)",
+    "owner": "vs-insiders-gpt-5.4-mini",
+    "priority": "P1",
+    "status": "open",
+    "type": "reference-plugin",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-insiders-gpt-5.4-mini",
+    "started_at": "",
+    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "chain_id": "ATM-REVIEW-ADVISORY-V1",
+    "chain_step": "1/1",
+    "sensor_triggered_by": "atm-semantic-review-gap",
+    "description": "補上 deterministic validate 之外的語意式 code review advisory layer，但只作建議，不直接決定 pass/fail。",
+    "related": [],
+    "depends": [
+      "ATM-2-0008",
+      "ATM-2-0009",
+      "ATM-2-0010",
+      "ATM-2-0011",
+      "ATM-2-0021",
+      "ATM-2.5-0003"
+    ],
+    "acceptance": [
+      "packages/plugin-review-advisory/* 落地，packages/core 不可 import 此 package",
+      "schemas/review-advisory/review-advisory-report.schema.json 至少定義 scope、findings[]、summary、providerKind、modelProfile、advisoryOnly",
+      "provider contract 使用中立詞，例如 ReviewAdvisorProvider / AgentReviewBridge，不把 skill 寫成 core vocabulary",
+      "provider mode 至少支援 stub、agent-bridge、external-cli 三種",
+      "agent-bridge 可由 host 端映射到 editor agent skill，但 upstream protected docs 不可硬寫特定 vendor slash command",
+      "provider 缺席或失敗時，CLI 產出 advisory-unavailable 或 needs-review，不得讓 npm test、npm run typecheck、npm run lint、atm self-host-alpha --verify --deterministic 失敗",
+      "advisory report 可附掛到 human review queue，但不能直接取代 approve / reject decision",
+      "3KLife 第一版直接消費這套官方 reviewer，不另建第二套 reviewer 邏輯",
+      "fixtures 至少覆蓋 stub-pass、stub-warn、malformed-provider-response、no-provider-dry-run 四種情境"
+    ],
+    "deliverables": [
+      "packages/plugin-review-advisory/src/provider-interface.*",
+      "packages/plugin-review-advisory/src/review-advisory-runner.*",
+      "packages/plugin-review-advisory/src/report-writer.*",
+      "packages/plugin-review-advisory/src/recent-changes-scope.*",
+      "packages/plugin-review-advisory/src/upgrade-proposal-scope.*",
+      "schemas/review-advisory/review-advisory-report.schema.json",
+      "scripts/validate-review-advisory.mjs",
+      "tests/review-advisory/*",
+      "packages/cli/src/commands/review-advisory.*",
+      "fixtures/review-advisory/*"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 補 ATM 官方 review advisory layer；定位為 ATM-2 alpha1 companion，不阻塞 alpha0 deterministic gate | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM advisory review 開卡",
+      "summary": "補上 deterministic validate 之外的語意式 code review advisory layer，但只作建議，不直接決定 pass/fail。",
+      "position": "ATM-2（alpha1 companion / advisory review layer）",
+      "prereq": "ATM-2-0008 / ATM-2-0009 / ATM-2-0010 / ATM-2-0021 / ATM-2.5-0003"
+    },
+    "contracts": {
+      "input": [
+        "review scope 可來自 changed file list、git diff、upgrade proposal、registry diff 或指定 atom/map 範圍",
+        "provider 可以是 stub、agent-bridge、external-cli，core 不直接依賴 vendor SDK",
+        "report / evidence 必須能映射到 .atm/reports/* 與 EvidenceStore contract",
+        "deterministic validate chain 仍維持單獨可跑，不依賴 advisory provider 可用性",
+        "host 端可以用 agent skill / subagent / editor tool 去接入，但那只是 adapter 實作，不是 framework semantic requirement"
+      ],
+      "output": [
+        "落地 packages/plugin-review-advisory/*，packages/core 不可 import 此 package",
+        "新增 schemas/review-advisory/review-advisory-report.schema.json，至少定義 scope、findings[]、summary、providerKind、modelProfile、advisoryOnly",
+        "官方 provider contract 使用中立詞，例如 ReviewAdvisorProvider / AgentReviewBridge，不把 skill 寫成 core vocabulary",
+        "provider mode 至少支援 stub、agent-bridge、external-cli 三種",
+        "agent-bridge 可由 host 端映射到 editor agent skill，但 upstream protected docs 不可硬寫特定 vendor slash command",
+        "provider 缺席或失敗時，CLI 產出 advisory-unavailable 或 needs-review，不得讓 npm test、npm run typecheck、npm run lint、atm self-host-alpha --verify --deterministic 失敗",
+        "advisory report 可附掛到 human review queue，但不能直接取代 approve / reject decision",
+        "3KLife 第一版直接消費這套官方 reviewer，不另建第二套 reviewer 邏輯",
+        "fixtures 至少覆蓋 stub-pass、stub-warn、malformed-provider-response、no-provider-dry-run 四種情境"
+      ],
+      "validation_cmd": "npm run validate:review-advisory\nnpm test\nnpm run typecheck\nnpm run lint",
+      "rollback_hint": "回退 review-advisory plugin / schema / fixture / CLI wiring；保持 advisory-only 定位，core 不可直接依賴 provider package，deterministic gate 不得受影響。",
+      "execution_steps": [
+        "定義 advisory report schema 與 provider interface",
+        "先用 stub provider 落地 deterministic fixtures，不先綁 vendor SDK",
+        "補 recent-changes 與 upgrade-proposal 兩種 scope runner",
+        "把 advisory report 接到 human review queue 的 supplemental context",
+        "補 validate script 與 fixtures，確認 provider 缺席時仍可 deterministic 驗證",
+        "回寫 tracking notes，明確標註 advisory only / non-blocking"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  }
+]

@@ -11,8 +11,8 @@
   "summary": {
     "done": 39,
     "in_progress": 1,
-    "open": 57,
-    "total": 97
+    "open": 58,
+    "total": 98
   },
   "shards": [
     {
@@ -373,6 +373,18 @@
       "range": [
         96,
         96
+      ]
+    },
+    {
+      "name": "tasks-atm-part-31",
+      "title": "Part 31 (items 98-98)",
+      "path": "docs/tasks/tasks-atm/tasks-atm-part-31.json",
+      "count": 1,
+      "bytes": 5986,
+      "lines": 97,
+      "range": [
+        97,
+        97
       ]
     }
   ]

@@ -1936,5 +1936,71 @@
     "path": "docs/agent-briefs/tasks/ATM-4-0008.md",
     "title": "[ATM-4-0008] H2U Map Evolution Pilot",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0332",
+    "path": "docs/agent-briefs/tasks/ATM-2-0026.md",
+    "title": "[ATM-2-0026] Semantic Fingerprint + Lineage + TTL Schema Extension",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0333",
+    "path": "docs/agent-briefs/tasks/ATM-2-0027.md",
+    "title": "[ATM-2-0027] Atom Status State Machine",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0334",
+    "path": "docs/agent-briefs/tasks/ATM-2-0028.md",
+    "title": "[ATM-2-0028] AtomBehavior Plugin SDK",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0335",
+    "path": "docs/agent-briefs/tasks/ATM-2-0029.md",
+    "title": "[ATM-2-0029] Reference Behavior Pack（10 內建行為）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0336",
+    "path": "docs/agent-briefs/tasks/ATM-2-0030.md",
+    "title": "[ATM-2-0030] Dedup Police Plugin",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0337",
+    "path": "docs/agent-briefs/tasks/ATM-2-0031.md",
+    "title": "[ATM-2-0031] Lifecycle Police（TTL + Sweep + 狀態機警察）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0338",
+    "path": "docs/agent-briefs/tasks/ATM-2-0032.md",
+    "title": "[ATM-2-0032] Polymorphic Atom Template",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0339",
+    "path": "docs/agent-briefs/tasks/ATM-2-0033.md",
+    "title": "[ATM-2-0033] Atomization & Infection Adapter Contract",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0340",
+    "path": "docs/agent-briefs/tasks/ATM-2-0034.md",
+    "title": "[ATM-2-0034] Registry Catalog Markdown Projection Atom",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0341",
+    "path": "docs/agent-briefs/tasks/ATM-1-0011.md",
+    "title": "[ATM-1-0011] 統一 Atomic ID canonical 命名並清除雙軌識別",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0342",
+    "path": "docs/agent-briefs/tasks/ATM-2-0035.md",
+    "title": "[ATM-2-0035] Official Review Advisory Provider (AI Code Reviewer, non-blocking)",
+    "category": "task"
   }
 ]

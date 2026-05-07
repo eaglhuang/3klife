@@ -1,0 +1,191 @@
+[
+  {
+    "doc_id": "doc_task_0332",
+    "id": "ATM-2-0026",
+    "title": "Semantic Fingerprint + Lineage + TTL Schema Extension",
+    "owner": "ClaudeCode_opus-4-7",
+    "priority": "P0",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "ClaudeCode_opus-4-7",
+    "started_at": "2026-05-07T00:00:00+08:00",
+    "started_by_agent": "ClaudeCode_opus-4-7",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "1/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "為 atom 與 atomic-map 加入 semanticFingerprint / lineage / ttl optional 欄位（schema-additive）；採 hot/cold 分離設計：hot registry entry 只放 sf 字串與 lineageLogRef / evidenceIndexRef URI，cold artifact 放完整 history。為去重警察與生命週期警察提供識別基礎。",
+    "related": [],
+    "depends": [
+      "ATM-2-0014",
+      "ATM-2-0023"
+    ],
+    "acceptance": [
+      "atomic-spec.schema.json 與 atomic-map.schema.json 皆 additive 加 optional semanticFingerprint / lineage / ttl 欄位，舊資料相容",
+      "semanticFingerprint 為 64-char hex string（無 nested），可直接做 hash table key",
+      "registry hot entry 欄位數 ≤ 10；lineage 與 evidence detail 走 lineageLogRef / evidenceIndexRef URI，不放主 entry",
+      "提供 sf 計算合約：atom 用 sortByName(inputs)+sortByName(outputs)+language.primary+validation.evidenceRequired+performanceBudget；map 用 sortByName(entrypoints)+qualityTargets",
+      "fixtures：atom-with-sf / map-with-sf / legacy-no-sf 三種，舊 fixture 全綠"
+    ],
+    "deliverables": [
+      "schemas/atomic-spec.schema.json (additive)",
+      "schemas/registry/atomic-map.schema.json (additive)",
+      "packages/core/src/registry/semantic-fingerprint.ts",
+      "fixtures/registry/atom-with-sf.json",
+      "fixtures/registry/map-with-sf.json",
+      "fixtures/registry/legacy-no-sf.json"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: chain ATM-IDENTITY-BEHAVIOR-V1 1/8 anchor；本批次完成 chain layout + 文件落地（Part V / D12 / 開發計畫書），schema 實作仍 pending；schema-additive only、hot/cold 分離、性能上限 ≤10 hot 欄位 | 阻塞: 等 ATM-2-0014 / ATM-2-0023 完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "為原子與原子地圖加入 semanticFingerprint / lineage / ttl，並維持 hot/cold 分離以支援大規模原子庫。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0014 / ATM-2-0023"
+    }
+  },
+  {
+    "doc_id": "doc_task_0333",
+    "id": "ATM-2-0027",
+    "title": "Atom Status State Machine",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "2/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "收斂 status enum 為 draft/validated/active/transitioning/deprecated/expired/quarantined；把 governed 改為獨立的 governance.tier 屬性；定義合法 status transition 矩陣與 police hard-fail 規則。舊值（seed/active/experimental/deprecated/governed）有 migration map 對應。",
+    "related": [],
+    "depends": [
+      "ATM-2-0026",
+      "ATM-2-0014"
+    ],
+    "acceptance": [
+      "registry.schema.json status enum 收斂為 draft/validated/active/transitioning/deprecated/expired/quarantined",
+      "新增 governance.tier 屬性 enum: constitutional/governed/standard/experimental",
+      "舊值 migration map 落地：seed→active+constitutional / governed→active+governed / experimental→validated",
+      "定義合法 status transition 矩陣（10 種 behavior 對應的起點/終點）",
+      "police hard-fail：違反 transition 矩陣 / quarantined 由非警察寫入 / TTL 過期但仍 active",
+      "fixtures：所有 7 種 status 各 1 個 + 4 種 governance.tier 各 1 個 + 5 種非法 transition 反例"
+    ],
+    "deliverables": [
+      "schemas/registry.schema.json (status enum 收斂)",
+      "schemas/registry.schema.json (governance.tier 新增)",
+      "packages/core/src/registry/status-machine.ts (legal transition 表)",
+      "packages/core/src/registry/status-migration.ts (舊值轉新值)",
+      "fixtures/registry/status/* (各狀態 fixture)",
+      "fixtures/registry/governance-tier/*"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 2/8）| 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "為原子建立無模糊地帶的狀態機，使每個原子任何時刻恰處一個 status，由特定 behavior 觸發轉換。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0026 / ATM-2-0014"
+    }
+  },
+  {
+    "doc_id": "doc_task_0334",
+    "id": "ATM-2-0028",
+    "title": "AtomBehavior Plugin SDK",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "plugin-sdk",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "3/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "在 packages/plugin-sdk 加入 AtomBehavior interface、AtomBehaviorContext / Input / Output / RegistryTransition / RollbackPlan 等型別、BehaviorRegistry 註冊機制；core 只依賴 interface，具體 behavior 由 plugin 實作。",
+    "related": [],
+    "depends": [
+      "ATM-2-0006",
+      "ATM-2-0026",
+      "ATM-2-0027"
+    ],
+    "acceptance": [
+      "packages/plugin-sdk/src/behavior.ts 落地 AtomBehavior + Input + Output + Context interface",
+      "category enum: topology/quality/sanitation/integration",
+      "BehaviorRegistry 提供 register / resolve / listByCategory",
+      "core 不可 import 任何具體 behavior plugin（layer-boundary 守護）",
+      "fixtures：5 個 mock behavior 註冊 / resolve / listByCategory"
+    ],
+    "deliverables": [
+      "packages/plugin-sdk/src/behavior.ts",
+      "packages/plugin-sdk/src/behavior-registry.ts",
+      "schemas/behavior/behavior-proposal.schema.json",
+      "fixtures/behavior/mock-behaviors.json"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 3/8）| 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "為原子行為建立 plugin SDK，讓專案可註冊自己的 AtomBehavior，core 只依賴 interface。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0006 / ATM-2-0026 / ATM-2-0027"
+    }
+  },
+  {
+    "doc_id": "doc_task_0335",
+    "id": "ATM-2-0029",
+    "title": "Reference Behavior Pack（10 內建行為）",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "reference-plugin",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "4/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "提供 10 個內建 behavior reference plugin：split / merge / compose / dedup-merge / sweep / evolve / expire / polymorphize / infect / atomize。infect 與 atomize 是 Legacy strangler 的核心動作。每個 plugin 含 spec / code / dry-run snapshot。",
+    "related": [],
+    "depends": [
+      "ATM-2-0028"
+    ],
+    "acceptance": [
+      "10 個 behavior plugin 各自落地於 packages/plugin-behavior-<id>/，獨立可載入",
+      "每個 plugin 通過自己的 dry-run fixture（split-plan / merge-plan / atomize-proposal / infect-plan 等各 1 份）",
+      "behavior.infect 與 behavior.atomize 必須只產 dry-run patch，不直接 apply 到 host project",
+      "behavior.compose 產出 atomic-map entry，符合 ATM-2-0023 schema",
+      "behavior.atomize 產出的新 atom 必須含 lineage.bornBy=atomize 與 parentRefs（legacy:// URI）",
+      "core 不 import 任何 behavior plugin（layer-boundary 守護）"
+    ],
+    "deliverables": [
+      "packages/plugin-behavior-split/",
+      "packages/plugin-behavior-merge/",
+      "packages/plugin-behavior-compose/",
+      "packages/plugin-behavior-dedup-merge/",
+      "packages/plugin-behavior-sweep/",
+      "packages/plugin-behavior-evolve/",
+      "packages/plugin-behavior-expire/",
+      "packages/plugin-behavior-polymorphize/",
+      "packages/plugin-behavior-infect/",
+      "packages/plugin-behavior-atomize/",
+      "fixtures/behaviors/*-dry-run.json"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 4/8）| 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "10 個內建 behavior 的 reference plugin pack，含 Legacy 整合的 infect 與 atomize。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0028"
+    }
+  }
+]

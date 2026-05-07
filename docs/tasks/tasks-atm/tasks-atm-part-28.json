@@ -1,0 +1,190 @@
+[
+  {
+    "doc_id": "doc_task_0336",
+    "id": "ATM-2-0030",
+    "title": "Dedup Police Plugin",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "police",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "5/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "提供去重警察：用 semanticFingerprint 比對找出重複候選，呼叫 LLM similarity skill 算 90%+ 行為相似度，依 8 種去重情境裁決，產出 dedup-report。維護 fingerprint-index 做 O(1) prefix lookup，跨 100K atoms 全掃在數百毫秒內完成。",
+    "related": [],
+    "depends": [
+      "ATM-2-0026",
+      "ATM-2-0029",
+      "ATM-2-0005"
+    ],
+    "acceptance": [
+      "packages/plugin-police-dedup/ 落地 dedup police plugin",
+      "fingerprint-index.json 使用 sf 16-char prefix 做 hash bucket；100K atoms 全掃 ≤ 500ms（含 budget 測試）",
+      "實作 8 種去重情境（自由原子 100% 同 / 自由原子 90%+ 同 / map 成員 vs 自由原子 / 同 map 內成員同 / 跨 map 成員同 / 整個 map 同 / 零 caller / TTL 過期）",
+      "每種情境輸出對應建議 behavior（dedup-merge / sweep / extract-shared / map-merge / expire / infect）",
+      "dedup-report.schema.json 含 candidates[] / suggestedBehavior / confidenceScore",
+      "LLM similarity skill 為 plugin 接口，dry-run 時可 stub"
+    ],
+    "deliverables": [
+      "packages/plugin-police-dedup/",
+      "packages/plugin-police-dedup/src/fingerprint-index.ts",
+      "packages/plugin-police-dedup/src/similarity-skill.ts",
+      "schemas/police/dedup-report.schema.json",
+      "fixtures/dedup/*8-scenarios.json",
+      "tests/dedup/100k-budget.test.ts"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 5/8）| 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "去重警察：sf+LLM similarity 找重複候選，O(1) prefix lookup 支援大規模原子庫。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0026 / ATM-2-0029 / ATM-2-0005"
+    }
+  },
+  {
+    "doc_id": "doc_task_0337",
+    "id": "ATM-2-0031",
+    "title": "Lifecycle Police（TTL + Sweep + 狀態機警察）",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "police",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "6/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "提供生命週期警察：(1) scheduled scan 發現 TTL 已到的 atom，建議 expire；(2) zero-caller scan 發現無 caller 的 atom，建議 sweep；(3) 偵測非法 status transition（違反 ATM-2-0027 矩陣），quarantine 該 atom；(4) 通知 callers 進行遷移。",
+    "related": [],
+    "depends": [
+      "ATM-2-0026",
+      "ATM-2-0027",
+      "ATM-2-0029"
+    ],
+    "acceptance": [
+      "packages/plugin-police-lifecycle/ 落地 lifecycle police",
+      "scheduled scan 報告 TTL 已到 / zero-caller / 非法 transition 三類 finding",
+      "TTL 過期 atom 建議 behavior.expire；zero-caller atom 建議 behavior.sweep",
+      "偵測到非法 transition 時將該 atom 標記 quarantined（唯一可寫此狀態的角色）",
+      "caller migration 通知 contract：lifecycle-notice.schema.json",
+      "fixtures：3 類 finding 各 1 份 + 1 份 quarantine 行為 + 1 份 caller-notice"
+    ],
+    "deliverables": [
+      "packages/plugin-police-lifecycle/",
+      "packages/plugin-police-lifecycle/src/ttl-scanner.ts",
+      "packages/plugin-police-lifecycle/src/zero-caller-scanner.ts",
+      "packages/plugin-police-lifecycle/src/transition-checker.ts",
+      "schemas/police/lifecycle-finding.schema.json",
+      "schemas/police/lifecycle-notice.schema.json",
+      "fixtures/lifecycle-police/*"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 6/8）| 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "生命週期警察：TTL + zero-caller + 狀態機合規檢查；唯一可寫 quarantined 狀態的角色。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0026 / ATM-2-0027 / ATM-2-0029"
+    }
+  },
+  {
+    "doc_id": "doc_task_0338",
+    "id": "ATM-2-0032",
+    "title": "Polymorphic Atom Template",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "7/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "為「多形原子」建立規範：一個 polymorphic template + 多個 param-spec 各自一份，實例化結果 lazy 產生不寫進 registry。template 自身是 active；具體實例為 validated。與 behavior.evolve 整合：升版時 template 升 → 所有實例自動繼承新版邏輯。",
+    "related": [],
+    "depends": [
+      "ATM-2-0026",
+      "ATM-2-0029"
+    ],
+    "acceptance": [
+      "polymorphic-template.schema.json 定義 template 結構：parametricInputs / parametricOutputs / paramConstraint",
+      "param-spec.schema.json 定義 param 實例 spec：templateRef / paramValues",
+      "實例化合約：runtime 產生 instance；不寫進 registry hot path",
+      "behavior.polymorphize 行為：active atom + param-spec 集合 → polymorphic template + N 個 validated 實例",
+      "behavior.evolve 對 template 升版時，所有實例自動繼承（透過 templateRef@version）",
+      "fixtures：1 個 template + 3 種 param 變體 + 升版 propagation 測試"
+    ],
+    "deliverables": [
+      "schemas/atomic-spec/polymorphic-template.schema.json",
+      "schemas/atomic-spec/param-spec.schema.json",
+      "packages/core/src/spec/polymorphic-instance.ts",
+      "fixtures/polymorphic/template-with-3-variants.json"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 7/8）| 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "多形原子規範：template + param-spec lazy 實例化，升版時所有變體自動繼承。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0026 / ATM-2-0029"
+    }
+  },
+  {
+    "doc_id": "doc_task_0339",
+    "id": "ATM-2-0033",
+    "title": "Atomization & Infection Adapter Contract",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "adapter",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "8/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "在 ProjectAdapter 邊界定義 behavior.atomize 與 behavior.infect 的合約：legacy URI 解析（legacy://）、neutrality scan 整合（避免新 atom 帶入 host 私有資訊）、dry-run patch contract（不直接動 host project）。",
+    "related": [],
+    "depends": [
+      "ATM-2-0029",
+      "ATM-2-0010"
+    ],
+    "acceptance": [
+      "ProjectAdapter 介面新增 resolveLegacyUri(uri) → 解析 legacy://<host>/<path>#L<start>-<end>",
+      "atomize-adapter.schema.json 定義 atomize 在 adapter 邊界的合約：legacy 區段選取 / sf 計算 / 新 atom proposal",
+      "infect-adapter.schema.json 定義 infect 合約：目標 atom / legacy 注入點 / dry-run patch",
+      "atomize 產出的新 atom spec 必須通過 ATM-2-0010 neutrality scanner（不得含 host 私有 token / path / 領域名詞）",
+      "infect 產出的 patch 是 dry-run only；apply 模式須由 host adapter 額外 capability 開啟",
+      "fixtures：1 個 atomize 例子（含 legacy:// URI）+ 1 個 infect 例子（含 dry-run patch）"
+    ],
+    "deliverables": [
+      "schemas/adapter/atomize-adapter.schema.json",
+      "schemas/adapter/infect-adapter.schema.json",
+      "packages/plugin-sdk/src/adapter/legacy-uri.ts",
+      "fixtures/adapter/atomize-example.json",
+      "fixtures/adapter/infect-example.json"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 8/8）| 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "Legacy strangler 在 ProjectAdapter 邊界的合約：atomize/infect 的 URI 解析、neutrality 整合、dry-run patch。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0029 / ATM-2-0010"
+    }
+  }
+]

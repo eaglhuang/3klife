@@ -215,6 +215,38 @@
         83,
         86
       ]
+    },
+    {
+      "name": "tasks-atm-part-27",
+      "title": "Part 27 (items 88-91)",
+      "range": [
+        87,
+        90
+      ]
+    },
+    {
+      "name": "tasks-atm-part-28",
+      "title": "Part 28 (items 92-95)",
+      "range": [
+        91,
+        94
+      ]
+    },
+    {
+      "name": "tasks-atm-part-29",
+      "title": "Part 29 (items 96-96)",
+      "range": [
+        95,
+        95
+      ]
+    },
+    {
+      "name": "tasks-atm-part-30",
+      "title": "Part 30 (items 97-97)",
+      "range": [
+        96,
+        96
+      ]
     }
   ]
 }

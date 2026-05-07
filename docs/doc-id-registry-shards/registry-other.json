@@ -232,5 +232,11 @@
     "path": "docs/ai_atomic_framework/關於進化版的原子提案.md",
     "title": "ATM 框架穩定性保護分析 + ATM-1 全卡檢核報告",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0045",
+    "path": "docs/ai_atomic_framework/原子行為參考手冊.md",
+    "title": "原子行為參考手冊（Atom Behavior Reference）",
+    "category": "other"
   }
 ]
