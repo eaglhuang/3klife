@@ -1,89 +1,118 @@
 [
   {
-    "doc_id": "doc_task_0342",
-    "id": "ATM-2-0035",
-    "title": "Official Review Advisory Provider (AI Code Reviewer, non-blocking)",
-    "owner": "vs-insiders-gpt-5.4-mini",
+    "doc_id": "doc_task_0343",
+    "id": "ATM-2-0036",
+    "title": "Stale Atom Workspace Alias Directory Cleanup",
+    "owner": "vs-code-gpt-5.4-mini",
     "priority": "P1",
-    "status": "open",
-    "type": "reference-plugin",
+    "status": "done",
+    "type": "migration",
     "phase": "ATM-2",
     "created": "2026-05-07",
-    "created_by_agent": "vs-insiders-gpt-5.4-mini",
-    "started_at": "",
-    "started_by_agent": "vs-insiders-gpt-5.4-mini",
-    "chain_id": "ATM-REVIEW-ADVISORY-V1",
-    "chain_step": "1/1",
-    "sensor_triggered_by": "atm-semantic-review-gap",
-    "description": "補上 deterministic validate 之外的語意式 code review advisory layer，但只作建議，不直接決定 pass/fail。",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T14:07:14.7347467+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
+    "chain_step": "1/2",
+    "sensor_triggered_by": "atm-workbench-alias-drift",
+    "description": "追查並清除 AI-Atomic-Framework/atomic_workbench/atoms 下歷史遺留的 logicalName alias 空目錄，確認 canonical atom workbench 只接受 ATM-* 目錄名。",
     "related": [],
     "depends": [
-      "ATM-2-0008",
-      "ATM-2-0009",
-      "ATM-2-0010",
-      "ATM-2-0011",
-      "ATM-2-0021",
-      "ATM-2.5-0003"
+      "ATM-1-0011",
+      "ATM-2-0013",
+      "ATM-2-0034"
     ],
-    "acceptance": [
-      "packages/plugin-review-advisory/* 落地，packages/core 不可 import 此 package",
-      "schemas/review-advisory/review-advisory-report.schema.json 至少定義 scope、findings[]、summary、providerKind、modelProfile、advisoryOnly",
-      "provider contract 使用中立詞，例如 ReviewAdvisorProvider / AgentReviewBridge，不把 skill 寫成 core vocabulary",
-      "provider mode 至少支援 stub、agent-bridge、external-cli 三種",
-      "agent-bridge 可由 host 端映射到 editor agent skill，但 upstream protected docs 不可硬寫特定 vendor slash command",
-      "provider 缺席或失敗時，CLI 產出 advisory-unavailable 或 needs-review，不得讓 npm test、npm run typecheck、npm run lint、atm self-host-alpha --verify --deterministic 失敗",
-      "advisory report 可附掛到 human review queue，但不能直接取代 approve / reject decision",
-      "3KLife 第一版直接消費這套官方 reviewer，不另建第二套 reviewer 邏輯",
-      "fixtures 至少覆蓋 stub-pass、stub-warn、malformed-provider-response、no-provider-dry-run 四種情境"
-    ],
-    "deliverables": [
-      "packages/plugin-review-advisory/src/provider-interface.*",
-      "packages/plugin-review-advisory/src/review-advisory-runner.*",
-      "packages/plugin-review-advisory/src/report-writer.*",
-      "packages/plugin-review-advisory/src/recent-changes-scope.*",
-      "packages/plugin-review-advisory/src/upgrade-proposal-scope.*",
-      "schemas/review-advisory/review-advisory-report.schema.json",
-      "scripts/validate-review-advisory.mjs",
-      "tests/review-advisory/*",
-      "packages/cli/src/commands/review-advisory.*",
-      "fixtures/review-advisory/*"
-    ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 補 ATM 官方 review advisory layer；定位為 ATM-2 alpha1 companion，不阻塞 alpha0 deterministic gate | 阻塞: none",
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias cleanup 與 migration note | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:scaffold-builder / npm.cmd run validate:test-runner pass | 變更: 清除 AI-Atomic-Framework/atomic_workbench/atoms 下的 stale alias 空目錄，並在 docs/ATOM_SPACE_LAYOUT.md 明定 atom.* 空目錄視為遷移殘留 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM advisory review 開卡",
-      "summary": "補上 deterministic validate 之外的語意式 code review advisory layer，但只作建議，不直接決定 pass/fail。",
-      "position": "ATM-2（alpha1 companion / advisory review layer）",
-      "prereq": "ATM-2-0008 / ATM-2-0009 / ATM-2-0010 / ATM-2-0021 / ATM-2.5-0003"
+      "label": "ATM workbench alias 清理開卡",
+      "summary": "清除歷史遺留的 logicalName alias 空目錄，收斂 atomic_workbench/atoms 到 canonical atomId 目錄。",
+      "position": "ATM-2（migration hygiene / workbench cleanup）",
+      "prereq": "ATM-1-0011 / ATM-2-0013 / ATM-2-0034"
     },
     "contracts": {
       "input": [
-        "review scope 可來自 changed file list、git diff、upgrade proposal、registry diff 或指定 atom/map 範圍",
-        "provider 可以是 stub、agent-bridge、external-cli，core 不直接依賴 vendor SDK",
-        "report / evidence 必須能映射到 .atm/reports/* 與 EvidenceStore contract",
-        "deterministic validate chain 仍維持單獨可跑，不依賴 advisory provider 可用性",
-        "host 端可以用 agent skill / subagent / editor tool 去接入，但那只是 adapter 實作，不是 framework semantic requirement"
+        "AI-Atomic-Framework/atomic_workbench/atoms 目前只應保留 canonical atomId workbench 目錄",
+        "atom.plugin-rule-guard.neutrality-scanner 與 atom.registry-fixture 已確認為空 alias 目錄",
+        "current core scaffold/registry/test-runner 已以 atomId 當 canonical folder name"
       ],
       "output": [
-        "落地 packages/plugin-review-advisory/*，packages/core 不可 import 此 package",
-        "新增 schemas/review-advisory/review-advisory-report.schema.json，至少定義 scope、findings[]、summary、providerKind、modelProfile、advisoryOnly",
-        "官方 provider contract 使用中立詞，例如 ReviewAdvisorProvider / AgentReviewBridge，不把 skill 寫成 core vocabulary",
-        "provider mode 至少支援 stub、agent-bridge、external-cli 三種",
-        "agent-bridge 可由 host 端映射到 editor agent skill，但 upstream protected docs 不可硬寫特定 vendor slash command",
-        "provider 缺席或失敗時，CLI 產出 advisory-unavailable 或 needs-review，不得讓 npm test、npm run typecheck、npm run lint、atm self-host-alpha --verify --deterministic 失敗",
-        "advisory report 可附掛到 human review queue，但不能直接取代 approve / reject decision",
-        "3KLife 第一版直接消費這套官方 reviewer，不另建第二套 reviewer 邏輯",
-        "fixtures 至少覆蓋 stub-pass、stub-warn、malformed-provider-response、no-provider-dry-run 四種情境"
+        "確認 alias 目錄為非 source-of-truth 的歷史殘留，列出來源與影響範圍",
+        "清除 AI-Atomic-Framework/atomic_workbench/atoms 下已知空 alias 目錄，保留 ATM-* canonical 目錄",
+        "補 migration 或 cleanup 說明，明定 logicalName 目錄不再受支援",
+        "驗證 registry/scaffold/test-runner 現況仍只寫入 atomId workbench path"
       ],
-      "validation_cmd": "npm run validate:review-advisory\nnpm test\nnpm run typecheck\nnpm run lint",
-      "rollback_hint": "回退 review-advisory plugin / schema / fixture / CLI wiring；保持 advisory-only 定位，core 不可直接依賴 provider package，deterministic gate 不得受影響。",
+      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:scaffold-builder\\nnpm run validate:test-runner",
+      "rollback_hint": "若 cleanup 影響任何仍在使用的本機流程，先還原刪除的空目錄並補明確 evidence；不得回退 canonical atomId 規則。",
       "execution_steps": [
-        "定義 advisory report schema 與 provider interface",
-        "先用 stub provider 落地 deterministic fixtures，不先綁 vendor SDK",
-        "補 recent-changes 與 upgrade-proposal 兩種 scope runner",
-        "把 advisory report 接到 human review queue 的 supplemental context",
-        "補 validate script 與 fixtures，確認 provider 缺席時仍可 deterministic 驗證",
-        "回寫 tracking notes，明確標註 advisory only / non-blocking"
+        "盤點 atomic_workbench/atoms 現況與 git tracked state",
+        "確認空 alias 目錄不屬於 registry source-of-truth",
+        "清除空 alias 目錄並驗證不影響現有 validator",
+        "回寫 migration 或 cleanup 說明與 notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0344",
+    "id": "ATM-2-0037",
+    "title": "Workbench Alias Drift Guard and Projection Alignment",
+    "owner": "vs-code-gpt-5.4-mini",
+    "priority": "P1",
+    "status": "done",
+    "type": "guardrail",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T14:09:16.5225687+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
+    "chain_step": "2/2",
+    "sensor_triggered_by": "atm-workbench-alias-drift",
+    "description": "補上自動驗證與展示層收斂，避免 logicalName 再被誤當成 atomId 或 workbench 目錄名，並在 human-readable projection 明確分開 atomId 與 logicalName。",
+    "related": [],
+    "depends": [
+      "ATM-2-0013",
+      "ATM-2-0034",
+      "ATM-2-0036"
+    ],
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias drift guard 與 projection alignment | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:registry-catalog / npm.cmd test / npm.cmd run lint pass | 變更: 補上 workbench stray directory guard、registry catalog atomId/logicalName 分欄，並修正 validate-registry-catalog 改在 temp root 跑 fixture test runner 以避免重建 ATM-FIXTURE-0004 汙染 root workbench | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM workbench alias guard 開卡",
+      "summary": "建立非 canonical alias 目錄的 drift guard，並統一 projection 對 atomId / logicalName 的呈現。",
+      "position": "ATM-2（guardrail / projection alignment）",
+      "prereq": "ATM-2-0013 / ATM-2-0034 / ATM-2-0036"
+    },
+    "contracts": {
+      "input": [
+        "canonical workbench layout 已定義為 atomic_workbench/atoms/<atomId>/",
+        "logicalName 仍可保留於 registry/spec，但不得再當成 workbench folder name",
+        "至少存在一份 human-readable projection 曾把 logicalName 當成 id 呈現"
+      ],
+      "output": [
+        "新增或擴充 deterministic validator，檢出 atomic_workbench/atoms 下非 canonical alias 目錄 drift",
+        "驗證規則需容許合法 canonical ATM-* workbench 與明確 adapter override，不可誤殺正式 sourcePaths",
+        "registry catalog 與其他 human-readable projection 若呈現 atom 身分，必須明確區分 atomId 與 logicalName",
+        "補 fixture 或 snapshot，覆蓋 stray alias dir 與 projection 欄位對齊情境"
+      ],
+      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:registry-catalog\\nnpm test\\nnpm run lint",
+      "rollback_hint": "若新 guard 對既有 host override 造成誤報，先縮小到 atomic_workbench/atoms default layout 範圍，不得放寬回 logicalName 可當 canonical folder 的舊行為。",
+      "execution_steps": [
+        "盤點目前 validator 與 projection 輸出缺口",
+        "設計 alias drift 判斷規則與允許例外",
+        "補 deterministic test 或 snapshot 覆蓋 stray alias dir 與 projection 欄位",
+        "回寫 catalog 或相關 human-readable projection，確保 atomId / logicalName 分欄或明確標示"
       ]
     },
     "harness_evidence": {
