@@ -17,7 +17,7 @@
 
 ATM-2-0013 完成後，atom 的「家目錄規則」已收成單一真相，後續計畫文件若提到預設工作區或 workbench 路徑，都應以這條規則為準：
 
-- 預設 per-atom home 一律是 `atomic_workbench/atoms/<Atomic ID>/`
+- 預設 per-atom home 一律是 `atomic_workbench/atoms/ATM-CORE-0123/` 這種格式（Atomic ID 固定為 `ATM-{bucket}-{NNNN}`）
 - 資料夾名稱直接等於 Atomic ID 本身，不再允許 sanitize / alias folder
 - scaffold / test-runner / registry / workbench 的預設路徑都必須指向同一個 canonical folder
 - 只有 adapter 明確指定 override 時，才能暫時使用其他 `workbenchPath` / `reportPath`；這是例外，不是新的預設
@@ -77,4 +77,4 @@ ATM-2-0013 完成後，atom 的「家目錄規則」已收成單一真相，後�
 ---
 
 # Part II：框架穩定後的保護策略分析
-
+

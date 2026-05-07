@@ -27,7 +27,7 @@
 ### 5.1 alpha0 最短可驗證路徑
 
 1. `ATM-2-0005`：Police + ValidateAtomicOutput + 最小 Regression check。
-2. `ATM-2-0012`：neutralityScanner atom，使用 `atomic_workbench/atoms/<Atomic ID>/` canonical folder。
+2. `ATM-2-0012`：neutralityScanner atom，使用 `atomic_workbench/atoms/ATM-CORE-0123/` 這種 canonical folder 格式。
 3. `ATM-2.5-0001`：self-host-alpha verify CLI。
 4. `ATM-2.5-0002`：空白 sandbox repo 跑完整 alpha0 deterministic gate。
 

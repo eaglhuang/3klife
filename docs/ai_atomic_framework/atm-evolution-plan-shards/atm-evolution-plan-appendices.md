@@ -34,7 +34,7 @@
 由於 ATM-0-0002 已 done，alpha0 critical path 改為：
 
 1. 補強並落地 `ATM-2-0005`（含 lifecycleMode 報告欄位）。
-2. 落地 `ATM-2-0012` neutralityScanner（落於 `atomic_workbench/atoms/<Atomic ID>/`，資料夾名稱直接等於 Atomic ID）。
+2. 落地 `ATM-2-0012` neutralityScanner（落於 `atomic_workbench/atoms/ATM-CORE-0123/` 這種格式，資料夾名稱直接等於 Atomic ID）。
 3. 通過 `ATM-2.5-0001` / `ATM-2.5-0002` deterministic gate。
 
 α0+ 補洞：`ATM-2-0018` → `ATM-2-0019`。

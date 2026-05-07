@@ -997,7 +997,9 @@ deprecate or wrap original atom
 ## Atomic ID
 ATM-CORE-0123
 
-預設家目錄：`atomic_workbench/atoms/<Atomic ID>/`，而且資料夾名稱必須與 Atomic ID 完全相同。
+預設家目錄示例：`atomic_workbench/atoms/ATM-CORE-0123/`，而且資料夾名稱必須與 Atomic ID 完全相同。
+
+若需要保留語意命名空間，請另外記錄 `logicalName`，例如 `atom.core-seed`；主 Atomic ID 不可再回退到 dot-notation。
 
 ## Goal
 一句話描述此原子要完成什麼。

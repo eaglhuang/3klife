@@ -58,14 +58,14 @@ Roadmap 是通用理論藍圖，與本專案落地實況有 8 點需校正：
 | 2 | `src/legacy/AtomicInterface.ts` | 沒有 `src/legacy/` 目錄 | 改放 `tools_node/_atomic_registry/AtomicInterface.js`，由 inject-plan.js 生成 |
 | 3 | AI 直接改 Legacy | 有 task-lock + check-task-scope + import-boundary | Manager **只產 patch plan**，由人/特定 ATM 卡 apply |
 | 4 | 用 `tsc / eslint / vitest` 當 gate | 用 compute-gate.js 統管所有 gate | Police 改寫成 `atm-police` gate，掛上 finalize-agent-turn |
-| 5 | atom ID 用 `atomic_000001` | 名詞定義文件強制 `{prefix}-{子系統}-{流水號4位}` | atom 用 `ATM-{bucket}-{NNNN}`；函數名可保留語意前綴，但家目錄名稱必須直接等於 Atomic ID |
-| 6 | `atomic_workbench/` 在 repo root | upstream 已由 ATM-2-0013 收斂 canonical atom home | 預設一律保留 `atomic_workbench/atoms/<Atomic ID>/`；3KLife 若要 local mirror 只能透過 adapter 明確 override，不可改寫 core default |
+| 5 | atom ID 用 `atomic_000001` | 名詞定義文件強制 `{prefix}-{子系統}-{流水號4位}` | atom 用 `ATM-{bucket}-{NNNN}`（例如 `ATM-CORE-0001`）；dot-notation 只保留在 `logicalName`，例如 `atom.core-seed`；函數名可保留語意前綴，但家目錄名稱必須直接等於 Atomic ID |
+| 6 | `atomic_workbench/` 在 repo root | upstream 已由 ATM-2-0013 收斂 canonical atom home | 預設一律保留 `atomic_workbench/atoms/ATM-CORE-0123/` 這種格式；3KLife 若要 local mirror 只能透過 adapter 明確 override，不可改寫 core default |
 | 7 | DB-first 索引 | 無 DB 基建 | ATM-7 才討論，前期僅 JSON registry |
 | 8 | 沒提 encoding | 本專案有 encoding-integrity 嚴格規則 | scaffold-atom 產出檔案必須走 UTF-8 without BOM；compute-gate 必跑 encoding-touched |
 
 ---
 
-ATM-2-0013 之後，家目錄規則應視為 active plan 的固定契約：預設 per-atom home 一律是 `atomic_workbench/atoms/<Atomic ID>/`，而且資料夾名稱必須與 Atomic ID 完全相同。`tools_node/atomic-framework/` 這類路徑只代表控制面與 adapter 工具所在位置，不再代表 atom 本身的預設 home。
+ATM-2-0013 之後，家目錄規則應視為 active plan 的固定契約：預設 per-atom home 一律是 `atomic_workbench/atoms/ATM-CORE-0123/` 這種格式，而且資料夾名稱必須與 Atomic ID 完全相同。`tools_node/atomic-framework/` 這類路徑只代表控制面與 adapter 工具所在位置，不再代表 atom 本身的預設 home。
 
 ---
 
@@ -105,7 +105,7 @@ tools_node/atomic-framework/
   atm-cli.js                         主 CLI（手寫 argv parser；仿 compute-gate.js）
   manager/
     parse-spec.js                    讀 spec、AJV 驗證、回 normalized model
-    scaffold-atom.js                 從 spec 產 atom 骨架到 atomic_workbench/atoms/<Atomic ID>/
+    scaffold-atom.js                 從 spec 產 atom 骨架到 atomic_workbench/atoms/ATM-CORE-0123/
     run-atom-tests.js                跑單一 atom fixture matrix
     validate-atom.js                 hash + schema + forbidden import 整合
     inject-plan.js                   產生 Legacy 注入 patch plan（不直接改檔）
@@ -130,7 +130,7 @@ tools_node/atomic-framework/
 
 atomic_workbench/                    canonical per-atom home（default sandbox root）
   atoms/
-    <Atomic ID>/
+    ATM-CORE-0123/
       atom.spec.json
       impl.js
       test.js

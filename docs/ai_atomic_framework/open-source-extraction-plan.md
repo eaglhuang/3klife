@@ -95,7 +95,7 @@ ATM 的開源交付目標是「root-drop 可啟動」：使用者把 ATM 放在�
 
 ### 1.1.5.1 Neutrality Scanner 落地細節
 
-§1.1.5 的 neutrality / boundary guard 必須具現為 **可機器執行的工具**，作為上游第一個正式 atom（規劃為 `ATM-CORE-0003 = neutralityScanner`）。落地形式：
+§1.1.5 的 neutrality / boundary guard 必須具現為 **可機器執行的工具**，作為上游第一個正式 atom（規劃為 `ATM-CORE-0003`，`logicalName: atom.plugin-rule-guard.neutrality-scanner`）。落地形式：
 
 1. **`packages/plugin-rule-guard/neutrality-scanner.{ts,js}`**
    - 黑名單詞（必擋）：`3KLife`, `Cocos`, `cocos-creator`, `html-to-ucuf`, `gacha`, `UCUF`, `draft-builder`, `eaglhuang/3KLife`
@@ -247,7 +247,7 @@ Phase B 不能一次完成「core + cli + plugin-sdk + 11 plugins + Agent Operat
 | Sub-phase | 名稱 | 內容 | LOC 上限 | Gate |
 |---|---|---|---|---|
 | **B0** | Hand-written Seed | 純手寫 `packages/core/seed.{ts,js}`：minimum spec parser + hash-lock util + 1 個 fixture runner。**不受 ATM 治理**，明確標 `// ATM-SEED: hand-written, ungoverned, ~300 LOC max`。 | 300 | seed self-test pass |
-| **B1** | Seed Dogfoods Itself | seed 用自己的 spec 格式描述自己（`atom-seed-spec.json`），跑 self-validation；產出第一份 `atomic-registry.json`，內含 `ATM-CORE-0001 = seed itself`。 | +200 | `atm verify --self` 通過 |
+| **B1** | Seed Dogfoods Itself | seed 用自己的 spec 格式描述自己（`atom-seed-spec.json`），跑 self-validation；產出第一份 `atomic-registry.json`，內含 `ATM-CORE-0001`（`logicalName: atom.core-seed`）。 | +200 | `atm verify --self` 通過 |
 | **B2** | Alpha0 Minimal Core | CLI `init/status/validate`、AtomicSpec / Registry / HashLock、hello-world atom、最小 WorkItem / ScopeLock / Artifact / Evidence / ContextSummary、deterministic profile check；seed 被「ATM-CORE-0002 = treated as governed atom」收編，舊 seed code 標 `@deprecated`。 | +1500 | hello-world example + minimal evidence pass |
 | **B3** | Self-Hosting Alpha0 Gate | 在空白 sandbox repo 跑 alpha0 deterministic criteria，全部出 boolean PASS；multi-agent 只產 confidence report，不作 alpha0 hard fail。 | (validation only) | `atm self-host-alpha --verify --deterministic` 全綠 |
 
@@ -255,7 +255,7 @@ Phase B 不能一次完成「core + cli + plugin-sdk + 11 plugins + Agent Operat
 
 對應 ATM 任務卡（在 `AI原子框架開發計畫書.md` 中拆 ATM-1 / ATM-2 為四個階段）：
 - ATM-1（B0）：seed parser / seed hash-lock / seed self-test（3 卡）
-- ATM-1.5（B1）：seed-as-spec / self-validation / ATM-CORE-0001 註冊（3 卡）
+- ATM-1.5（B1）：seed-as-spec / self-validation / `ATM-CORE-0001` 註冊（`logicalName: atom.core-seed`，3 卡）
 - ATM-2（B2 alpha0）：ATM-2-0001~0006 + ATM-2-0012 neutralityScanner；ATM-2-0007~0009/0011 先完成 schema-first 草案，但 reference plugins 進 alpha1
 - ATM-2.5（B3 alpha0 gate）：sandbox alpha gate fixture / self-host-alpha deterministic verify CLI；multi-agent compatibility 降為 confidence report
 

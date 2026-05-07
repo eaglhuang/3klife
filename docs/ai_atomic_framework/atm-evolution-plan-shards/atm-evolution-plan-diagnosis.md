@@ -19,7 +19,7 @@
 |---|---|---|---|
 | 任務總數 | 71 張 / v1 機讀 72 張 | 87 張 | 後續文件應改以 thin index summary 為準；本輪新增 15 張 open 卡。 |
 | ATM-2-0004 | in-progress，可自然延伸 versions[] / rollback | `done`，commit `7da6730` | 不可改卡；版本歷史與 rollback 改開 follow-up。 |
-| ATM-2-0013 | 未被提案納入核心排序 | `done` | 視為 canonical per-atom folder 基礎：預設 home = `atomic_workbench/atoms/<Atomic ID>/`，資料夾名稱必須等於 Atomic ID，本輪後續文件一律沿用此規則。 |
+| ATM-2-0013 | 未被提案納入核心排序 | `done` | 視為 canonical per-atom folder 基礎：預設 home = `atomic_workbench/atoms/ATM-CORE-0123/` 這種格式，資料夾名稱必須等於 Atomic ID，本輪後續文件一律沿用此規則。 |
 | in-progress 任務 | 提案列 1 張 | 0 張 | 本輪規劃只校正 `open` 任務與新增卡。 |
 
 ---
@@ -71,7 +71,7 @@ ATM-2-0004 已完成，且交付範圍是 JSON-first registry + spec/code/test h
 | ATM-2-0009 | Artifact / Log / Evidence Store | evidence schema 加 `usage-feedback`、`quality-baseline`、`quality-comparison`、`rollback-proof` 四類；所有 evidence 需可回放。 | 收集演化品質指標。 |
 | ATM-2-0010 | Neutrality boundary guard | 增加 upgrade proposal / evidence report 的 adopter 私有資訊掃描。 | 防止演化報告污染 upstream。 |
 | ATM-2-0011 | Context budget guard | 增加大型 quality report 的摘要 / hard-stop contract。 | 防止演化報告拖垮 Agent context。 |
-| ATM-2-0012 | neutralityScanner atom + CI | 直接使用 ATM-2-0013 的 canonical atom folder：`atomic_workbench/atoms/<Atomic ID>/`；不要散放 spec/code/test/report，也不要另建 alias folder。 | 支撐後續自我治理原子。 |
+| ATM-2-0012 | neutralityScanner atom + CI | 直接使用 ATM-2-0013 的 canonical atom folder：`atomic_workbench/atoms/ATM-CORE-0123/` 這種格式；不要散放 spec/code/test/report，也不要另建 alias folder。 | 支撐後續自我治理原子。 |
 | ATM-2.5-0001 | self-host-alpha verify CLI | alpha0 只驗最小 gate；version history / rollback 僅輸出 readiness warning，不作 blocker。 | 保持 alpha0 可落地。 |
 | ATM-2.5-0002 | Sandbox Repo Fixture | fixture 應固定 hello-world birth pipeline；演化 fixture 延後到 alpha1 sandbox。 | 分離誕生與演化驗證。 |
 | ATM-2.5-0003 | confidence gate | 可新增 upgrade dry-run confidence，但不得阻塞 alpha0。 | 收集跨 agent 兼容風險。 |

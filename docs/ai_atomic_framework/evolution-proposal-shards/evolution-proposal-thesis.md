@@ -43,8 +43,8 @@ Hash-lock 和原子化各有適用場景。最穩健的方案是分層防護：
 
 | 組件 | Atom ID | 狀態 | Hash-lock | 原子化治理 |
 |---|---|---|---|---|
-| Seed (core bootstrap) | ATM-CORE-0001/0002 | ✅ governed | ✅ 三段 hash | ✅ `atm verify --self` |
-| neutralityScanner | ATM-CORE-0003 | ⏳ 計畫中 | 計畫中 | 計畫中 |
+| Seed (core bootstrap) | ATM-CORE-0001/0002（`logicalName: atom.core-seed`） | ✅ governed | ✅ 三段 hash | ✅ `atm verify --self` |
+| neutralityScanner | ATM-CORE-0003（`logicalName: atom.plugin-rule-guard.neutrality-scanner`） | ⏳ 計畫中 | 計畫中 | 計畫中 |
 | Police plugin rules | 計畫中 (ATM-2-0005) | ⏳ | 計畫中 | 計畫中 |
 | Registry manager | 計畫中 (ATM-2-0004) | ⏳ | 計畫中 | 計畫中 |
 | CLI commands | 已建立 (ATM-1-0004) | 待收編 | 待補 | 待補 |
@@ -118,4 +118,4 @@ ATM-1.5 用一個巧妙的方式部分解決了這個悖論：seed 用自己的 
 > 1. 利用原子版號保證功能不退轉 + rollback 機制
 > 2. 整個 ATM 也需要版本管理
 > 3. 原子使用過程中的回饋 → 新版本 → 品質警察驗證 → 人類審核 → 自我進步迴圈
-
+

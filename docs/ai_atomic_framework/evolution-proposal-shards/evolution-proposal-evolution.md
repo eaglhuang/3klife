@@ -51,11 +51,12 @@ ATM-2-0004 Registry + HashLock MVP  ← 正在實作中
 
 ```jsonc
 // 現在的 registry entry
-{ "atomId": "atom.core-seed", "specHash": "abc123", "codeHash": "def456" }
+{ "atomId": "ATM-CORE-0001", "logicalName": "atom.core-seed", "specHash": "abc123", "codeHash": "def456" }
 
 // 需要的結構
 {
-  "atomId": "atom.core-seed",
+  "atomId": "ATM-CORE-0001",
+  "logicalName": "atom.core-seed",
   "currentVersion": "1.1.0",
   "versions": [
     { "version": "1.0.0", "specHash": "abc123", "codeHash": "def456", "testHash": "ghi789", "timestamp": "..." },
@@ -182,7 +183,8 @@ Atom v1.0 ──→ 生產環境使用 ──→ 收集回饋/品質證據
 ```jsonc
 {
   "$schema": "evidence.schema.json",
-  "atomId": "atom.core-seed",
+  "atomId": "ATM-CORE-0001",
+  "logicalName": "atom.core-seed",
   "version": "1.0.0",
   "evidenceType": "usage-feedback",
   "metrics": {
@@ -219,7 +221,8 @@ atm upgrade <atom-id> --propose v1.1
 {
   "proposals": [
     {
-      "atomId": "atom.core-seed",
+      "atomId": "ATM-CORE-0001",
+      "logicalName": "atom.core-seed",
       "from": "1.0.0",
       "to": "1.1.0",
       "proposedBy": "ClaudeCode",
@@ -320,4 +323,4 @@ atm upgrade <atom-id> --propose v1.1
 ---
 
 # Part IV：Roadmap §7.1 Bootstrap Atoms vs 當前實作 vs 反饋迴圈
-
+

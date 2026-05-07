@@ -102,13 +102,13 @@ Default Governance Bundle 的其他 reference plugins（完整 task cards、doc 
 |---|---|---|
 | ATM-1.5-0001 | seed-as-spec | 用 seed 自己的 spec 格式描述自己（`atom-seed-spec.json`），驗證契約自包含 |
 | ATM-1.5-0002 | self-validation | seed 跑自己的 self-validation；產出第一份 `atomic-registry.json` |
-| ATM-1.5-0003 | ATM-CORE-0001 註冊 | 第一個受治理的 atom：seed 本身。`atm verify --self` 通過 |
+| ATM-1.5-0003 | ATM-CORE-0001 註冊 | 第一個受治理的 Atomic ID：seed 本身（`logicalName: atom.core-seed`）。`atm verify --self` 通過 |
 
 #### ATM-2-0012：neutralityScanner atom + CI（新增 1 卡）
 
 | 範圍 | 任務 | 目的 |
 |---|---|---|
-| ATM-2-0012 | neutralityScanner atom + CI | 在 `packages/plugin-rule-guard/neutrality-scanner.{ts,js}` 與 `.github/workflows/neutrality.yml` 落地 §1.1.5 的中立性自動 CI；ATM-CORE-0003 |
+| ATM-2-0012 | neutralityScanner atom + CI | 在 `packages/plugin-rule-guard/neutrality-scanner.{ts,js}` 與 `.github/workflows/neutrality.yml` 落地 §1.1.5 的中立性自動 CI；`ATM-CORE-0003`（`logicalName: atom.plugin-rule-guard.neutrality-scanner`） |
 
 對應 `open-source-extraction-plan.md` §1.1.5.1。
 

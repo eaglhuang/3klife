@@ -19,7 +19,7 @@
 |---|---|---|
 | doc_data_0001 |doc_spec_0012、doc_spec_0016、doc_data_0002、doc_spec_0041、doc_spec_0040、doc_spec_0043|—|
 | doc_spec_0016 |doc_spec_0043、doc_spec_0029、doc_spec_0018、doc_spec_0017、doc_spec_0021、doc_ui_0012、doc_spec_0038、doc_spec_0030、doc_spec_0174|doc_data_0001、doc_spec_0034、doc_spec_0008、doc_spec_0038、doc_spec_0030、doc_spec_0174|
-| doc_spec_0008 |全系統（UID/Bloodline_ID/Gene/Status 統一定義）|—|
+| doc_spec_0008 |全系統（UID/Bloodline_ID/Gene/Status/ATM Atomic ID 統一定義）|—|
 
 ### 血統 + 因子系統族群
 

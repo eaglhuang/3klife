@@ -26,7 +26,7 @@ atomic-manager register --id 000001          # 通過後更新 JSON Registry + G
 ```
 **技術**：
 - TypeScript + Zod + Vitest
-- 工作區：`atomic_workbench/atoms/<Atomic ID>/`（ATM-2-0013 後 canonical home；資料夾名稱直接等於 Atomic ID）
+- 工作區：`atomic_workbench/atoms/ATM-CORE-0123/`（ATM-2-0013 後 canonical home；資料夾名稱直接等於 Atomic ID）
 - 基本 Police：forbidden import（dependency-cruiser）、schema 驗證、test pass 檢查
 
 **驗收**：能用 AI 產生並註冊第一個 compute atom（例如 `normalizeCssColor`）。
@@ -85,7 +85,7 @@ atomic-manager register --id 000001          # 通過後更新 JSON Registry + G
 - 原子數 >80 後：引入 PostgreSQL + pgvector（用於語意去重與相似 atom 推薦）
 
 ### 3.3 開發期虛擬隔離，執行期 Legacy 注入（保留並強化）
-- 工作區：`atomic_workbench/atoms/<Atomic ID>/`
+- 工作區：`atomic_workbench/atoms/ATM-CORE-0123/`
 - 注入後：函數進入 `_atomic_registry.ts`，透過 `AtomicInterface` 暴露
 - 新增：**Injection Plan** 必須包含 rollback patch 與 affected maps 清單
 
