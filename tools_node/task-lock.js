@@ -14,6 +14,81 @@
  */
 'use strict';
 
+const { LockAdapter } = require('./adapters/atm-3klife/lock-adapter');
+const { createLockAdapterConfig } = require('./adapters/atm-3klife/lock-adapter-config');
+
+const lockAdapter = new LockAdapter(createLockAdapterConfig());
+
+function parseFiles(rawArgs) {
+    const filesFlagIndex = rawArgs.indexOf('--files');
+    if (filesFlagIndex < 0) {
+        return [];
+    }
+    return rawArgs.slice(filesFlagIndex + 1).filter((arg) => !arg.startsWith('--'));
+}
+
+function main(argv = process.argv.slice(2)) {
+    const rawArgs = Array.isArray(argv) ? argv : [];
+    const command = rawArgs[0];
+    const taskId = rawArgs[1];
+    const explicitAgentName = rawArgs[2] && !String(rawArgs[2]).startsWith('--') ? rawArgs[2] : '';
+    const agentName = explicitAgentName || lockAdapter.getDefaultAgentName();
+    const files = parseFiles(rawArgs);
+
+    switch (command) {
+        case 'lock':
+            if (!taskId || !agentName) { console.error('用法: task-lock.js lock <task-id> <agent-name>（或先設 AGENT_IDENTITY）'); return 1; }
+            try {
+                lockAdapter.lock(taskId, agentName, files);
+                return 0;
+            } catch (error) {
+                if (error && error.result) {
+                    console.error(`❌ cross-shard 檔案鎖定衝突: "${taskId}"`);
+                    console.error(JSON.stringify(error.result, null, 2));
+                } else {
+                    console.error(error instanceof Error ? error.message : String(error));
+                }
+                return 1;
+            }
+        case 'unlock':
+            if (!taskId || !agentName) { console.error('用法: task-lock.js unlock <task-id> <agent-name>（或先設 AGENT_IDENTITY；若提供人類名稱可覆寫解鎖）'); return 1; }
+            lockAdapter.unlock(taskId, agentName);
+            return Number(process.exitCode || 0);
+        case 'check':
+            if (!taskId) { console.error('用法: task-lock.js check <task-id>'); return 1; }
+            lockAdapter.check(taskId);
+            return 0;
+        case 'check-cross-shard':
+        case 'validateScope':
+        case 'validate-scope': {
+            if (!taskId) { console.error('用法: task-lock.js check-cross-shard <task-id> --files <file...>'); return 1; }
+            const result = lockAdapter.validateScope(taskId, files);
+            lockAdapter.appendTrace({
+                command,
+                outcome: result.ok ? 'success' : 'fail',
+                taskId,
+                agentName,
+                files,
+                conflicts: result.conflicts,
+                errors: result.errors,
+            });
+            console.log(JSON.stringify(result, null, 2));
+            return result.ok ? 0 : 1;
+        }
+        case 'list':
+            lockAdapter.list();
+            return 0;
+        default:
+            console.log('用法: task-lock.js <lock|unlock|check|check-cross-shard|validateScope|list> [task-id] [agent-name]（lock/unlock 可改用 AGENT_IDENTITY；unlock 也接受人類名稱 override）');
+            return 1;
+    }
+}
+
+if (require.main === module) {
+    const exitCode = main();
+    process.exit(exitCode);
+}
+
 const fs = require('fs');
 const path = require('path');
 const config = require('./lib/project-config');
