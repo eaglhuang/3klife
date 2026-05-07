@@ -1,5 +1,6 @@
 'use strict';
 
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
@@ -41,6 +42,101 @@ function entryCoveredByScope(entry, scopeFiles) {
 
 function uniqueStrings(values) {
   return [...new Set((values || []).map((entry) => String(entry)))];
+}
+
+function stableJson(value) {
+  if (Array.isArray(value)) {
+    return `[${value.map(stableJson).join(',')}]`;
+  }
+  if (value && typeof value === 'object') {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`).join(',')}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function hashStableJson(value) {
+  return `sha256:${crypto.createHash('sha256').update(stableJson(value)).digest('hex')}`;
+}
+
+function hashBuffer(buffer) {
+  return `sha256:${crypto.createHash('sha256').update(buffer).digest('hex')}`;
+}
+
+function resolveTaskLockTracePath(repositoryRoot, taskLockDir = '', tracePath = '') {
+  const root = path.resolve(repositoryRoot || PROJECT_ROOT);
+  const configuredTracePath = String(tracePath || process.env.TASK_LOCK_TRACE_JSONL || '').trim();
+  const defaultTracePath = path.join(taskLockDir ? path.resolve(root, taskLockDir) : path.join(root, '.task-locks'), 'task-lock-trace.jsonl');
+  const candidatePath = configuredTracePath || defaultTracePath;
+  return path.isAbsolute(candidatePath) ? candidatePath : path.resolve(root, candidatePath);
+}
+
+function readFileSnapshot(repositoryRoot, filePath) {
+  const root = path.resolve(repositoryRoot || PROJECT_ROOT);
+  const absolutePath = path.resolve(root, filePath);
+  const relativePath = toPosixPath(path.relative(root, absolutePath));
+  if (!fs.existsSync(absolutePath)) {
+    return {
+      path: relativePath,
+      exists: false,
+    };
+  }
+
+  const stats = fs.statSync(absolutePath);
+  const content = fs.readFileSync(absolutePath);
+  return {
+    path: relativePath,
+    exists: true,
+    size: stats.size,
+    mtimeMs: Math.trunc(stats.mtimeMs),
+    contentHash: hashBuffer(content),
+  };
+}
+
+function buildScopeFingerprint(repositoryRoot, files = []) {
+  const root = path.resolve(repositoryRoot || PROJECT_ROOT);
+  const normalizedFiles = normalizeScopeFiles(files);
+  const entries = normalizedFiles.map((filePath) => readFileSnapshot(root, filePath));
+  const fingerprint = hashStableJson({
+    version: 'scope-fingerprint/v1',
+    entries,
+  });
+
+  return {
+    version: 'scope-fingerprint/v1',
+    fingerprint,
+    fileCount: normalizedFiles.length,
+    missingCount: entries.filter((entry) => !entry.exists).length,
+    entries,
+  };
+}
+
+function appendTaskLockTrace(event, options = {}) {
+  const repositoryRoot = path.resolve(options.repositoryRoot || PROJECT_ROOT);
+  const tracePath = resolveTaskLockTracePath(repositoryRoot, options.taskLockDir || '', options.tracePath || '');
+  const record = {
+    traceVersion: 'task-lock-trace/v1',
+    kind: 'task-lock-event',
+    timestamp: new Date().toISOString(),
+    repositoryRoot: toPosixPath(repositoryRoot),
+    ...event,
+  };
+
+  try {
+    fs.mkdirSync(path.dirname(tracePath), { recursive: true });
+    fs.appendFileSync(tracePath, `${JSON.stringify(record)}\n`, 'utf8');
+    return {
+      enabled: true,
+      path: toPosixPath(tracePath),
+      record,
+    };
+  } catch (error) {
+    return {
+      enabled: true,
+      path: toPosixPath(tracePath),
+      record,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
 }
 
 function normalizeRawStatus(code) {
@@ -202,12 +298,12 @@ function parseSimpleFrontmatter(content) {
 
 function readTaskLockEvidence(taskId, taskLockDir) {
   if (!taskLockDir) {
-    return { checked: false, found: false, path: '', taskId: '', agentName: '', files: [], error: '' };
+    return { checked: false, found: false, path: '', taskId: '', agentName: '', files: [], scopeFingerprint: '', scopeFingerprintVersion: '', error: '' };
   }
 
   const lockPath = path.join(taskLockDir, `${taskId}.lock.json`);
   if (!fs.existsSync(lockPath)) {
-    return { checked: true, found: false, path: toPosixPath(lockPath), taskId: '', agentName: '', files: [], error: '' };
+    return { checked: true, found: false, path: toPosixPath(lockPath), taskId: '', agentName: '', files: [], scopeFingerprint: '', scopeFingerprintVersion: '', error: '' };
   }
 
   try {
@@ -219,6 +315,8 @@ function readTaskLockEvidence(taskId, taskLockDir) {
       taskId: String(parsed.taskId || '').trim(),
       agentName: String(parsed.agentName || '').trim(),
       files: normalizeScopeFiles(parsed.files),
+      scopeFingerprint: String(parsed.scopeFingerprint || '').trim(),
+      scopeFingerprintVersion: String(parsed.scopeFingerprintVersion || '').trim(),
       error: '',
     };
   } catch (error) {
@@ -229,6 +327,8 @@ function readTaskLockEvidence(taskId, taskLockDir) {
       taskId: '',
       agentName: '',
       files: [],
+      scopeFingerprint: '',
+      scopeFingerprintVersion: '',
       error: error instanceof Error ? error.message : String(error),
     };
   }
@@ -274,6 +374,8 @@ function readAllTaskLocks(taskLockDir) {
         agentName: String(parsed.agentName || '').trim(),
         lockedAt: String(parsed.lockedAt || '').trim(),
         files,
+        scopeFingerprint: String(parsed.scopeFingerprint || '').trim(),
+        scopeFingerprintVersion: String(parsed.scopeFingerprintVersion || '').trim(),
       };
       locks.push(lock);
 
@@ -403,6 +505,19 @@ function buildTaskScopeResult({ artifact, repositoryRoot, taskLockDir = '', task
     });
   }
 
+  if (lock.found && lock.files.length > 0 && lock.scopeFingerprint) {
+    const currentFingerprint = buildScopeFingerprint(repositoryRoot || PROJECT_ROOT, lock.files);
+    if (currentFingerprint.fingerprint !== lock.scopeFingerprint) {
+      issues.push({
+        layer: 'scope-fingerprint',
+        severity: 'fail',
+        message: 'task lock scope fingerprint mismatch; scoped files changed after lock acquisition',
+        expected: lock.scopeFingerprint,
+        actual: currentFingerprint.fingerprint,
+      });
+    }
+  }
+
   if (outOfScopeFiles.length > 0) {
     issues.push({
       layer: 'scope',
@@ -515,6 +630,22 @@ function buildGitTaskScopeCoverage({ repositoryRoot, gitEntries, taskLockDir = '
       .map((entry) => entry.path)
       .sort((left, right) => left.localeCompare(right))
     : [];
+
+  for (const lock of locksWithScope) {
+    if (!lock.scopeFingerprint) {
+      continue;
+    }
+    const currentFingerprint = buildScopeFingerprint(root, lock.files);
+    if (currentFingerprint.fingerprint !== lock.scopeFingerprint) {
+      issues.push({
+        layer: 'scope-fingerprint',
+        severity: 'fail',
+        message: `task lock scope fingerprint mismatch for ${lock.taskId}; scoped files changed after lock acquisition`,
+        expected: lock.scopeFingerprint,
+        actual: currentFingerprint.fingerprint,
+      });
+    }
+  }
 
   if (uncoveredFiles.length > 0) {
     issues.push({
@@ -678,6 +809,8 @@ module.exports = {
   readTaskLockEvidence,
   readTaskCardEvidence,
   readAllTaskLocks,
+  buildScopeFingerprint,
+  appendTaskLockTrace,
   buildTaskScopeResult,
   buildGitTaskScopeCoverage,
   buildResult,

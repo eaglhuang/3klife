@@ -17,6 +17,7 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('./lib/project-config');
+const handoffDiff = require('./lib/handoff-diff-core');
 
 const projectRoot = config.ROOT;
 const lockDir = config.paths.taskLocksDir;
@@ -31,6 +32,66 @@ try {
 
 function normalizeRel(filePath) {
     return path.relative(projectRoot, path.resolve(projectRoot, filePath)).replace(/\\/g, '/');
+}
+
+function appendTrace(event) {
+    return handoffDiff.appendTaskLockTrace(event, {
+        repositoryRoot: projectRoot,
+        taskLockDir: lockDir,
+        tracePath: process.env.TASK_LOCK_TRACE_JSONL || '',
+    });
+}
+
+function lockFencePath() {
+    return path.join(lockDir, '.task-lock-acquire.json');
+}
+
+function acquireLockFence(taskId, agentName, files = []) {
+    ensureLockDir();
+    const fencePath = lockFencePath();
+    const fenceData = {
+        taskId,
+        agentName,
+        files: Array.from(new Set((files || []).map(normalizeRel).filter(Boolean))),
+        acquiredAt: new Date().toISOString(),
+        pid: process.pid,
+    };
+
+    try {
+        fs.writeFileSync(fencePath, `${JSON.stringify(fenceData, null, 2)}\n`, { encoding: 'utf8', flag: 'wx' });
+        return fenceData;
+    } catch (error) {
+        if (error && error.code === 'EEXIST') {
+            let existing = null;
+            try {
+                existing = readJson(fencePath);
+            } catch {
+                existing = null;
+            }
+            const busyError = new Error(existing
+                ? `task-lock acquisition busy: ${existing.taskId || 'unknown'} / ${existing.agentName || 'unknown'} 正在變更 task scope`
+                : 'task-lock acquisition busy: 另一個 agent 正在變更 task scope');
+            busyError.code = 'TASK_LOCK_BUSY';
+            busyError.fence = existing;
+            throw busyError;
+        }
+        throw error;
+    }
+}
+
+function releaseLockFence() {
+    const fencePath = lockFencePath();
+    try {
+        if (fs.existsSync(fencePath)) {
+            fs.unlinkSync(fencePath);
+        }
+    } catch {
+        // best-effort cleanup only
+    }
+}
+
+function buildScopeFingerprint(files) {
+    return handoffDiff.buildScopeFingerprint(projectRoot, files);
 }
 
 function getDefaultAgentName() {
@@ -105,6 +166,8 @@ function readAllLocks() {
                 taskId: String(parsed.taskId || '').trim(),
                 agentName: String(parsed.agentName || '').trim(),
                 lockedAt: String(parsed.lockedAt || '').trim(),
+                scopeFingerprint: String(parsed.scopeFingerprint || '').trim(),
+                scopeFingerprintVersion: String(parsed.scopeFingerprintVersion || '').trim(),
                 files: Array.from(new Set((Array.isArray(parsed.files) ? parsed.files : []).map(normalizeRel).filter(Boolean))),
                 path: filePath
             };
@@ -299,42 +362,101 @@ function checkCrossShard(taskId, files = []) {
 function assertNoCrossShardConflicts(taskId, files) {
     const result = checkCrossShard(taskId, files);
     if (result.ok) {
-        return;
+        return result;
     }
-    console.error(`❌ cross-shard 檔案鎖定衝突: "${taskId}"`);
-    console.error(JSON.stringify(result, null, 2));
-    process.exit(1);
+    const error = new Error(`cross-shard 檔案鎖定衝突: "${taskId}"`);
+    error.result = result;
+    throw error;
 }
 
 function lock(taskId, agentName, files = []) {
     ensureLockDir();
     const lp = lockPath(taskId);
     const normalizedFiles = Array.from(new Set((files || []).map(normalizeRel).filter(Boolean)));
-    assertNoCrossShardConflicts(taskId, normalizedFiles);
-    if (fs.existsSync(lp)) {
-        const existing = readJson(lp);
-        if (existing.agentName === agentName) {
-            console.log(`🔒 "${taskId}" 已由你 (${agentName}) 鎖定，更新時間戳`);
-            existing.lockedAt = new Date().toISOString();
-            if (normalizedFiles.length > 0) {
-                existing.files = normalizedFiles;
+    const fence = acquireLockFence(taskId, agentName, normalizedFiles);
+    try {
+        const conflictResult = assertNoCrossShardConflicts(taskId, normalizedFiles);
+        if (fs.existsSync(lp)) {
+            const existing = readJson(lp);
+            if (existing.agentName === agentName) {
+                const nextFiles = normalizedFiles.length > 0 ? normalizedFiles : Array.from(new Set((Array.isArray(existing.files) ? existing.files : []).map(normalizeRel).filter(Boolean)));
+                const currentFingerprint = buildScopeFingerprint(nextFiles);
+                const updated = {
+                    ...existing,
+                    lockedAt: new Date().toISOString(),
+                    files: nextFiles,
+                    scopeFingerprint: currentFingerprint.fingerprint,
+                    scopeFingerprintVersion: currentFingerprint.version,
+                    scopeSnapshotAt: new Date().toISOString(),
+                };
+                fs.writeFileSync(lp, `${JSON.stringify(updated, null, 2)}\n`, 'utf8');
+                appendTrace({
+                    command: 'lock',
+                    outcome: 'success',
+                    taskId,
+                    agentName,
+                    lockPath: normalizeRel(lp),
+                    files: updated.files,
+                    scopeFingerprint: updated.scopeFingerprint,
+                    scopeFingerprintVersion: updated.scopeFingerprintVersion,
+                    conflictCount: conflictResult.conflicts.length,
+                });
+                console.log(`🔒 "${taskId}" 已由你 (${agentName}) 鎖定，更新時間戳`);
+                return;
             }
-            fs.writeFileSync(lp, JSON.stringify(existing, null, 2), 'utf8');
-            return;
+            const lockError = new Error(`鎖定失敗: "${taskId}" 已被 "${existing.agentName}" 於 ${existing.lockedAt} 鎖定`);
+            lockError.result = {
+                ok: false,
+                taskId,
+                files: normalizedFiles,
+                conflicts: [{ taskId: existing.taskId, agentName: existing.agentName, lockedAt: existing.lockedAt }],
+                errors: [],
+            };
+            throw lockError;
         }
-        console.error(`❌ 鎖定失敗: "${taskId}" 已被 "${existing.agentName}" 於 ${existing.lockedAt} 鎖定`);
-        process.exit(1);
-    }
-    const lockData = {
-        taskId,
-        agentName,
-        lockedAt: new Date().toISOString(),
-        files: normalizedFiles
-    };
-    fs.writeFileSync(lp, JSON.stringify(lockData, null, 2), 'utf8');
-    console.log(`🔒 已鎖定 "${taskId}" → ${agentName}`);
-    if (normalizedFiles.length > 0) {
-        console.log(`   files: ${normalizedFiles.join(', ')}`);
+        const currentFingerprint = buildScopeFingerprint(normalizedFiles);
+        const lockData = {
+            taskId,
+            agentName,
+            lockedAt: new Date().toISOString(),
+            files: normalizedFiles,
+            scopeFingerprint: currentFingerprint.fingerprint,
+            scopeFingerprintVersion: currentFingerprint.version,
+            scopeSnapshotAt: new Date().toISOString(),
+        };
+        fs.writeFileSync(lp, `${JSON.stringify(lockData, null, 2)}\n`, 'utf8');
+        appendTrace({
+            command: 'lock',
+            outcome: 'success',
+            taskId,
+            agentName,
+            lockPath: normalizeRel(lp),
+            files: normalizedFiles,
+            scopeFingerprint: lockData.scopeFingerprint,
+            scopeFingerprintVersion: lockData.scopeFingerprintVersion,
+            conflictCount: conflictResult.conflicts.length,
+        });
+        console.log(`🔒 已鎖定 "${taskId}" → ${agentName}`);
+        if (normalizedFiles.length > 0) {
+            console.log(`   files: ${normalizedFiles.join(', ')}`);
+        }
+        if (lockData.scopeFingerprint) {
+            console.log(`   scopeFingerprint: ${lockData.scopeFingerprint}`);
+        }
+    } catch (error) {
+        appendTrace({
+            command: 'lock',
+            outcome: 'fail',
+            taskId,
+            agentName,
+            lockPath: normalizeRel(lp),
+            files: normalizedFiles,
+            error: error instanceof Error ? error.message : String(error),
+            conflicts: error && error.result && Array.isArray(error.result.conflicts) ? error.result.conflicts : [],
+        });
+        throw error;
+    } finally {
+        releaseLockFence(fence);
     }
 }
 
@@ -352,6 +474,16 @@ function unlock(taskId, agentName) {
         process.exit(1);
     }
     fs.unlinkSync(lp);
+    appendTrace({
+        command: 'unlock',
+        outcome: 'success',
+        taskId,
+        agentName,
+        lockPath: normalizeRel(lp),
+        files: Array.isArray(existing.files) ? existing.files : [],
+        scopeFingerprint: String(existing.scopeFingerprint || '').trim(),
+        humanOverride,
+    });
     if (humanOverride) {
         console.log(`🔓 已由人類 "${agentName}" 覆寫解鎖 "${taskId}"（原鎖定者: "${existing.agentName}"）`);
         return;
@@ -371,6 +503,37 @@ function check(taskId) {
     console.log(`   鎖定時間: ${existing.lockedAt}`);
     if (existing.files && existing.files.length > 0) {
         console.log(`   修改檔案: ${existing.files.join(', ')}`);
+    }
+    if (existing.scopeFingerprint) {
+        const currentFingerprint = buildScopeFingerprint(existing.files || []);
+        const fingerprintMatch = currentFingerprint.fingerprint === existing.scopeFingerprint;
+        console.log(`   scopeFingerprint: ${existing.scopeFingerprint}${fingerprintMatch ? '' : ' (stale)'}`);
+        if (!fingerprintMatch) {
+            console.log(`   currentFingerprint: ${currentFingerprint.fingerprint}`);
+        }
+        appendTrace({
+            command: 'check',
+            outcome: fingerprintMatch ? 'success' : 'fail',
+            taskId,
+            agentName: existing.agentName,
+            lockPath: normalizeRel(lp),
+            files: Array.isArray(existing.files) ? existing.files : [],
+            scopeFingerprint: String(existing.scopeFingerprint || '').trim(),
+            currentFingerprint: currentFingerprint.fingerprint,
+            fingerprintMatch,
+        });
+    } else {
+        appendTrace({
+            command: 'check',
+            outcome: 'success',
+            taskId,
+            agentName: existing.agentName,
+            lockPath: normalizeRel(lp),
+            files: Array.isArray(existing.files) ? existing.files : [],
+            scopeFingerprint: '',
+            currentFingerprint: '',
+            fingerprintMatch: null,
+        });
     }
 }
 
@@ -400,7 +563,17 @@ const files = filesFlagIndex >= 0 ? rawArgs.slice(filesFlagIndex + 1).filter((ar
 switch (command) {
     case 'lock':
         if (!taskId || !agentName) { console.error('用法: task-lock.js lock <task-id> <agent-name>（或先設 AGENT_IDENTITY）'); process.exit(1); }
-        lock(taskId, agentName, files);
+        try {
+            lock(taskId, agentName, files);
+        } catch (error) {
+            if (error && error.result) {
+                console.error(`❌ cross-shard 檔案鎖定衝突: "${taskId}"`);
+                console.error(JSON.stringify(error.result, null, 2));
+            } else {
+                console.error(error instanceof Error ? error.message : String(error));
+            }
+            process.exit(1);
+        }
         break;
     case 'unlock':
         if (!taskId || !agentName) { console.error('用法: task-lock.js unlock <task-id> <agent-name>（或先設 AGENT_IDENTITY；若提供人類名稱可覆寫解鎖）'); process.exit(1); }
@@ -413,6 +586,15 @@ switch (command) {
     case 'check-cross-shard': {
         if (!taskId) { console.error('用法: task-lock.js check-cross-shard <task-id> --files <file...>'); process.exit(1); }
         const result = checkCrossShard(taskId, files);
+        appendTrace({
+            command: 'check-cross-shard',
+            outcome: result.ok ? 'success' : 'fail',
+            taskId,
+            agentName,
+            files,
+            conflicts: result.conflicts,
+            errors: result.errors,
+        });
         console.log(JSON.stringify(result, null, 2));
         process.exit(result.ok ? 0 : 1);
         break;

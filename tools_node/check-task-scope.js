@@ -217,6 +217,25 @@ function main() {
     process.exit(1);
   }
 
+  const fingerprintIssues = result.issues.filter((issue) => issue.layer === 'scope-fingerprint');
+  handoffDiff.appendTaskLockTrace({
+    command: 'check-task-scope',
+    outcome: result.status,
+    repositoryRoot: result.repositoryRoot,
+    taskId: result.taskId,
+    changedFiles: result.coverage.length,
+    uncoveredFiles: result.uncoveredFiles,
+    overlappingFiles: result.overlappingFiles,
+    foreignScopedFiles: result.foreignScopedFiles,
+    currentTaskFiles: result.currentTaskFiles,
+    issueCount: result.issues.length,
+    fingerprintIssueCount: fingerprintIssues.length,
+  }, {
+    repositoryRoot,
+    taskLockDir: args.taskLockDir,
+    tracePath: process.env.TASK_LOCK_TRACE_JSONL || '',
+  });
+
   if (args.json) {
     console.log(JSON.stringify({ summary: buildSummary(result), result }, null, 2));
     process.exit(computeExitCode(result, args.strict));

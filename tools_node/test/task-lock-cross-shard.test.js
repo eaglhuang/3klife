@@ -7,19 +7,47 @@ const { spawnSync } = require('child_process');
 
 const projectRoot = path.resolve(__dirname, '..', '..');
 const taskLockCli = path.join(projectRoot, 'tools_node', 'task-lock.js');
+const taskScopeCli = path.join(projectRoot, 'tools_node', 'check-task-scope.js');
 const taskCardDir = path.join(projectRoot, 'docs', 'agent-briefs', 'tasks');
+const tracePath = path.join(projectRoot, 'temp', 'task-lock-trace.test.jsonl');
 
-const testTasks = ['ATM-TEST-A', 'ATM-TEST-B'];
+const testTasks = ['ATM-TEST-A', 'ATM-TEST-B', 'ATM-TEST-FP'];
 
-function runTaskLock(args, expectedStatus = 0) {
+function buildEnv(extraEnv = {}) {
+    return {
+        ...process.env,
+        TASK_LOCK_TRACE_JSONL: tracePath,
+        ...extraEnv,
+    };
+}
+
+function runTaskLock(args, expectedStatus = 0, extraEnv = {}) {
     const result = spawnSync(process.execPath, [taskLockCli, ...args], {
         cwd: projectRoot,
         encoding: 'utf8',
-        shell: false
+        shell: false,
+        env: buildEnv(extraEnv),
     });
     if (result.status !== expectedStatus) {
         throw new Error([
             `task-lock ${args.join(' ')} exited ${result.status}, expected ${expectedStatus}`,
+            result.stdout.trim(),
+            result.stderr.trim()
+        ].filter(Boolean).join('\n'));
+    }
+    return result;
+}
+
+function runTaskScope(args, expectedStatus = 0, extraEnv = {}) {
+    const result = spawnSync(process.execPath, [taskScopeCli, ...args], {
+        cwd: projectRoot,
+        encoding: 'utf8',
+        shell: false,
+        env: buildEnv(extraEnv),
+    });
+    if (result.status !== expectedStatus) {
+        throw new Error([
+            `check-task-scope ${args.join(' ')} exited ${result.status}, expected ${expectedStatus}`,
             result.stdout.trim(),
             result.stderr.trim()
         ].filter(Boolean).join('\n'));
@@ -36,17 +64,36 @@ function cleanup() {
         spawnSync(process.execPath, [taskLockCli, 'unlock', taskId, `${taskId}-agent`], {
             cwd: projectRoot,
             encoding: 'utf8',
-            shell: false
+            shell: false,
+            env: buildEnv(),
         });
         const cardPath = path.join(taskCardDir, `${taskId}.md`);
         if (fs.existsSync(cardPath)) {
             fs.unlinkSync(cardPath);
         }
     }
+    const fingerprintPath = path.join(projectRoot, 'temp', 'task-lock-fingerprint.txt');
+    if (fs.existsSync(fingerprintPath)) {
+        fs.unlinkSync(fingerprintPath);
+    }
+    if (fs.existsSync(tracePath)) {
+        fs.unlinkSync(tracePath);
+    }
 }
 
 function parseJson(stdout) {
     return JSON.parse(stdout);
+}
+
+function readTraceEvents() {
+    if (!fs.existsSync(tracePath)) {
+        return [];
+    }
+    return fs.readFileSync(tracePath, 'utf8')
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .map((line) => JSON.parse(line));
 }
 
 function assert(condition, message) {
@@ -164,6 +211,38 @@ function main() {
             '--files',
             'temp/cross-shard-parallel.txt'
         ]);
+
+        const fingerprintTaskId = 'ATM-TEST-FP';
+        const fingerprintCardPath = path.join(taskCardDir, `${fingerprintTaskId}.md`);
+        const fingerprintFilePath = path.join(projectRoot, 'temp', 'task-lock-fingerprint.txt');
+        fs.writeFileSync(fingerprintCardPath, [
+            '---',
+            `id: ${fingerprintTaskId}`,
+            'status: in-progress',
+            '---',
+            `# ${fingerprintTaskId}`
+        ].join('\n'), 'utf8');
+        fs.writeFileSync(fingerprintFilePath, 'alpha\n', 'utf8');
+        runTaskLock([
+            'lock',
+            fingerprintTaskId,
+            `${fingerprintTaskId}-agent`,
+            '--files',
+            'temp/task-lock-fingerprint.txt'
+        ]);
+        const traceAfterLock = readTraceEvents();
+        assert(traceAfterLock.some((event) => event.command === 'lock' && event.taskId === fingerprintTaskId && String(event.scopeFingerprint || '').startsWith('sha256:')), 'lock trace should record scope fingerprint');
+
+        fs.writeFileSync(fingerprintFilePath, 'beta\n', 'utf8');
+        const scopeResult = runTaskScope([
+            '--task',
+            fingerprintTaskId,
+            '--json'
+        ], 1);
+        const scopeJson = parseJson(scopeResult.stdout);
+        assert(scopeJson.result.issues.some((issue) => issue.layer === 'scope-fingerprint' && issue.severity === 'fail'), 'task scope should fail when fingerprint drifts');
+        const traceAfterScope = readTraceEvents();
+        assert(traceAfterScope.some((event) => event.command === 'check-task-scope' && event.taskId === fingerprintTaskId && event.fingerprintIssueCount >= 1 && event.outcome === 'fail'), 'scope trace should record the fingerprint failure');
 
         console.log('task-lock cross-shard tests passed');
     } finally {
