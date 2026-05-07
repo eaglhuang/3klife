@@ -6,12 +6,15 @@ phase: ATM-2.5
 created: 2026-05-05
 created_by_agent: GitHubCopilot
 owner: GitHubCopilot
-status: open
+status: done
+started_at: 2026-05-07T16:09:42.7411577+08:00
+started_by_agent: vs-code-gpt-5.4-mini
+completed_at: 2026-05-07T16:14:13.1446300+08:00
 type: implementation
 depends:
   - ATM-2.5-0001
   - ATM-2-0012
-notes: "此 fixture 用於 multi-agent 兼容測試（ATM-2.5-0003）；Claude Code 是主要測試 agent；若 verify.sh 要跑 neutrality check，需先依賴 ATM-2-0012"
+notes: "此 fixture 用於 multi-agent 兼容測試（ATM-2.5-0003）；Claude Code 是主要測試 agent；若 verify.sh 要跑 neutrality check，需先依賴 ATM-2-0012\n2026-05-07 | 狀態: done | 驗證: tests/sandbox/setup.sh + tests/sandbox/verify.sh + sandbox-fixture.mjs pass；self-host-alpha --verify --json 在空 sandbox 回傳全 true | 變更: 新增 sandbox repo fixture、expected baseline 與 CI sandbox gate job | 阻塞: none"
 ---
 # [ATM-2.5-0002] Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate
 
@@ -22,9 +25,9 @@ notes: "此 fixture 用於 multi-agent 兼容測試（ATM-2.5-0003）；Claude C
 | 優先級 | P0 |
 | 開單時間 | 2026-05-05 |
 | 負責 Agent | GitHubCopilot |
-| 狀態 | open |
-| 完成度 | 0% |
-| 完成時間 | — |
+| 狀態 | done |
+| 完成度 | 100% |
+| 完成時間 | 2026-05-07T16:14:13.1446300+08:00 |
 | 關聯卡號 | [ATM-2.5-0001](ATM-2.5-0001.md)、[ATM-2.5-0003](ATM-2.5-0003.md) |
 
 ## 開單原因
@@ -59,7 +62,7 @@ notes: "此 fixture 用於 multi-agent 兼容測試（ATM-2.5-0003）；Claude C
 
 ## 2026-05-06 v2 規劃書補丁（追加 acceptance）
 
-- [ ] sandbox fixture 僅涵蓋 birth pipeline（hello-world atom）。
+- [x] sandbox fixture 僅涵蓋 birth pipeline（hello-world atom）。
 - [ ] evolution sandbox fixture 由 alpha1 新卡承接，不污染 alpha0 fixture。
 > 2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）
 
