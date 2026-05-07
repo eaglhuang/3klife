@@ -1,0 +1,13 @@
+{
+  "source": "../npc-brain-武將互動記憶系統.md",
+  "indexTitle": "NPC Brain Memory System",
+  "indexPath": "docs/tech/npc-brain-武將互動記憶系統.md",
+  "type": "markdown-h2",
+  "preambleShard": "overview",
+  "shards": [
+    { "name": "overview",    "title": "Overview（§1-§3）",       "pattern": "^(1|2|3)\\." },
+    { "name": "data-model",  "title": "Data Model（§4-§5）",    "pattern": "^(4|5)\\." },
+    { "name": "api-contract","title": "API & Contract（§6-§8）", "pattern": "^(6|7|8)\\." },
+    { "name": "ops",         "title": "Ops & Milestones（§9-§12）","pattern": "^(9|10|11|12)\\." }
+  ]
+}
