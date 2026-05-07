@@ -170,49 +170,49 @@
     },
     {
       "name": "tasks-atm-part-21",
-      "title": "Part 21 (items 55-60)",
+      "title": "Part 21 (items 55-59)",
       "range": [
         54,
-        59
+        58
       ]
     },
     {
       "name": "tasks-atm-part-22",
-      "title": "Part 22 (items 61-71)",
+      "title": "Part 22 (items 60-70)",
       "range": [
-        60,
-        70
+        59,
+        69
       ]
     },
     {
       "name": "tasks-atm-part-23",
-      "title": "Part 23 (items 72-75)",
+      "title": "Part 23 (items 71-73)",
       "range": [
-        71,
-        74
+        70,
+        72
       ]
     },
     {
       "name": "tasks-atm-part-24",
-      "title": "Part 24 (items 76-80)",
+      "title": "Part 24 (items 74-78)",
       "range": [
-        75,
-        79
+        73,
+        77
       ]
     },
     {
       "name": "tasks-atm-part-25",
-      "title": "Part 25 (items 81-85)",
+      "title": "Part 25 (items 79-83)",
       "range": [
-        80,
-        84
+        78,
+        82
       ]
     },
     {
       "name": "tasks-atm-part-26",
-      "title": "Part 26 (items 86-87)",
+      "title": "Part 26 (items 84-87)",
       "range": [
-        85,
+        83,
         86
       ]
     }

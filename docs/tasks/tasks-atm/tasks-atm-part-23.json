@@ -1,5 +1,72 @@
 [
   {
+    "doc_id": "doc_task_0315",
+    "id": "ATM-0-0014",
+    "title": "ATM 瘦身再開工與規劃真相收斂",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "governance",
+    "phase": "ATM-0",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T07:57:58+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 ATM 規劃從完整治理生態先瘦身為 alpha0/alpha1，補上文件真相收斂、核心 schema、confidence gate、3KLife shadow adapter、OSS 實務文件與 H2U dry-run 閘門。",
+    "related": [
+      "ATM-1-0003",
+      "ATM-2-0007",
+      "ATM-2-0008",
+      "ATM-2-0009",
+      "ATM-3-0001",
+      "ATM-4-0005",
+      "ATM-5-0004",
+      "ATM-6-0005"
+    ],
+    "depends": [
+      "ATM-0-0013"
+    ],
+    "acceptance": [
+      "主計畫標出 active/companion/historical 收斂原則與任務數修正",
+      "alpha0/alpha1 成功標準寫入主規劃與 open-source extraction plan",
+      "既有 schema、adapter、release、security、H2U 任務卡補上缺口",
+      "tasks-atm source 與 auto-parts 可重建且通過 encoding/standard gate"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md 補強",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md 補強",
+      "docs/agent-briefs/tasks/ATM-0-0014.md",
+      "相關既有 ATM 任務卡補充",
+      "tasks-atm source 與 auto-parts 同步"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: tasks-atm source=71/auto-parts=5；crossref rebuild pass；encoding-touched pass；compute-gate standard 8/8 pass | 變更: 補 ATM 瘦身再開工規劃、alpha0/alpha1、truth convergence、confidence gate、shadow adapter、OSS/H2U 任務缺口 | 阻塞: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "completed_at": "2026-05-06T08:08:07+08:00"
+  },
+  {
     "doc_id": "doc_task_0316",
     "id": "ATM-2-0013",
     "title": "Per-atom folder 以 Atomic ID 命名收斂",
@@ -122,88 +189,6 @@
       "summary": "Registry 增加版本歷史欄位（schema-additive），為 alpha1 演化管線鋪路。",
       "position": "ATM-2",
       "prereq": "ATM-2-0004 / ATM-2-0013"
-    }
-  },
-  {
-    "doc_id": "doc_task_0318",
-    "id": "ATM-2-0015",
-    "title": "Hash Drift / Version Diff Report",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "registry",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "2/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "產出機器可讀的 hash-diff-report，比對任兩個 atom version 的 spec/code/test hash 差異與 drift reason。",
-    "related": [],
-    "depends": [
-      "ATM-2-0014"
-    ],
-    "acceptance": [
-      "hash-diff-report.schema.json 定義 fromVersion / toVersion / specHashDelta / codeHashDelta / testHashDelta / driftReason",
-      "CLI atm registry diff <atomId> --from <v1> --to <v2> --json 輸出符合 schema 的報告",
-      "fixtures：identical hash（empty delta）/ all-three-changed / driftReason missing 三種"
-    ],
-    "deliverables": [
-      "schemas/registry/hash-diff-report.schema.json",
-      "packages/core/src/registry/diff.ts",
-      "packages/cli/commands/registry-diff.ts"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "提供 atom 版本間 hash 差異報告，作為 upgrade proposal 與 rollback proof 的基礎輸入。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0014"
-    }
-  },
-  {
-    "doc_id": "doc_task_0319",
-    "id": "ATM-2-0016",
-    "title": "Test Report Quality Metrics Extension",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "test-runner",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "3/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "在 test-report.schema.json 上 additive 擴充 quality metrics（latency / errorRate / coverage / edgeCaseCount），並提供最小共同欄位的 baseline fixture。",
-    "related": [],
-    "depends": [
-      "ATM-2-0003",
-      "ATM-2-0009"
-    ],
-    "acceptance": [
-      "test-report.schema.json 增加 metrics 區塊；舊 report 不含 metrics 仍可驗證通過",
-      "至少提供 latency / errorRate / coverage / edgeCaseCount 四項標準欄位",
-      "fixtures：metrics-full / metrics-partial / metrics-absent 三種；舊 fixture 全綠"
-    ],
-    "deliverables": [
-      "schemas/test-report/metrics.schema.json",
-      "packages/core/src/test-runner/metrics-collector.ts",
-      "fixtures/test-report/metrics-full.json",
-      "fixtures/test-report/metrics-absent.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "為 evolution mode 收集可比較的品質指標；alpha1 quality gate 的資料來源。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0003 / ATM-2-0009"
     }
   }
 ]
