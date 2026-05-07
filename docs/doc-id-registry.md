@@ -22,8 +22,8 @@
 | AI Agent 專用 | `doc_ai` | 31 |
 | Agent Skill 專用 | `doc_agentskill` | 45 |
 | Server 文件類 | `doc_server_<subtype>` | 15 |
-| 其它類 | `doc_other` | 73 |
-| **合計** | — | **781** |
+| 其它類 | `doc_other` | 74 |
+| **合計** | — | **782** |
 
 ---
 
@@ -862,3 +862,4 @@
 | `doc_other_0015` | docs/UCUF-migration-completion-2026-04-13.md | UCUF Migration Active Checklist (2026-04-13) |
 | `doc_other_0022` | docs/UCUF已驗收功能.md | UCUF 已驗收功能索引 |
 | `doc_other_0019` | docs/ui-screen-migration-coverage.md | UI Screen Migration Coverage |
+| `doc_other_0082` | docs/ai_atomic_framework/h2u-regression-matrix.md | H2U Regression Matrix |

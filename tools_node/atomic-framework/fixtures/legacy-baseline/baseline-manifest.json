@@ -1,0 +1,87 @@
+{
+  "baselineId": "h2u-legacy-baseline",
+  "taskId": "ATM-4-0002",
+  "frozenAt": "2026-05-07",
+  "caseStudyDoc": "docs/ai_atomic_framework/html-to-ucuf-case-study.md",
+  "matrixDoc": "docs/ai_atomic_framework/h2u-regression-matrix.md",
+  "summaryArtifact": "artifacts/atm-4-0002/baseline-summary.md",
+  "contracts": {
+    "activeContract": "freeze current legacy evidence and compare deltas against it",
+    "fidelityContract": "browser / Cocos / runtime evidence stays reproducible",
+    "knownGapContract": "known gaps stay structured, expiring, and task-scoped"
+  },
+  "fixtures": [
+    {
+      "fixtureId": "gacha-ds3",
+      "sourcePackage": "Design System 3/ui_kits/gacha/index.html",
+      "baselineEvidence": "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.html-cocos-verdict.json",
+      "supportingEvidence": [
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.workflow-summary.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-ds3/gacha-ds3.compare-meta.json"
+      ],
+      "currentState": {
+        "verdict": "fail",
+        "adjustedScore": 0.5567134452160494,
+        "threshold": 0.95
+      },
+      "knownGapRefs": [
+        "KG-002",
+        "KG-004"
+      ],
+      "ownerBucket": "runtime-renderer"
+    },
+    {
+      "fixtureId": "character-ds3-main",
+      "sourcePackage": "Design System 3/ui_kits/character/index.html",
+      "baselineEvidence": "artifacts/cocos-editor-final-gate/character-ds3-main-current/character-ds3-main.html-cocos-verdict.json",
+      "supportingEvidence": [
+        "artifacts/skill-test-html-to-ucuf/character-ds3-main/character-ds3-main.workflow-summary.json",
+        "artifacts/skill-test-html-to-ucuf/character-ds3-main/character-ds3-main.compare-meta.json"
+      ],
+      "currentState": {
+        "verdict": "fail",
+        "adjustedScore": 0.23423032407407407,
+        "threshold": 0.95
+      },
+      "knownGapRefs": [
+        "KG-001",
+        "KG-003"
+      ],
+      "ownerBucket": "converter-layout"
+    },
+    {
+      "fixtureId": "gacha-banner",
+      "sourcePackage": "tests/fixtures/dom-to-ui/gacha-banner.html",
+      "baselineEvidence": [
+        "artifacts/skill-test-html-to-ucuf/gacha-banner.visual-review.json",
+        "artifacts/skill-test-html-to-ucuf/gacha-banner.accuracy.json"
+      ],
+      "currentState": {
+        "verdict": "manual-required",
+        "browserPass": true
+      },
+      "knownGapRefs": [
+        "KG-AT4-001"
+      ],
+      "ownerBucket": "runtime-interaction"
+    }
+  ],
+  "knownGapPluginInput": [
+    {
+      "id": "KG-AT4-001",
+      "fixtureId": "gacha-banner",
+      "knownGapType": "temporary-tool-gap",
+      "scoreImpactPolicy": "requireApproval",
+      "mustHaveTaskId": true,
+      "expiresAt": "2026-06-30",
+      "ownerBucket": "runtime-interaction",
+      "evidencePath": "artifacts/skill-test-html-to-ucuf/gacha-banner.visual-review.json",
+      "description": "button-state-layer review still needed before formal pass"
+    }
+  ],
+  "notes": [
+    "Known gaps are task-scoped and must expire.",
+    "Permanent rules belong in tools_node/lib/html-to-ucuf/rule-registry.json.",
+    "Do not rewrite the frozen scores in-place; append a new baseline row instead."
+  ]
+}
