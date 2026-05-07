@@ -151,15 +151,15 @@
     "doc_id": "doc_task_0297",
     "id": "ATM-2-0011",
     "title": "Context budget guard",
-    "owner": "GitHubCopilot",
+    "owner": "vs-code-gpt-5.4",
     "priority": "P0",
-    "status": "open",
+    "status": "in-progress",
     "type": "open-source-core",
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-08T01:50:19.1010973+08:00",
+    "started_by_agent": "vs-code-gpt-5.4",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -186,7 +186,7 @@
       "summary/report layout",
       "standalone smoke / CI guidance"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 context budget guard 任務 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
+    "notes": "2026-05-08 | 狀態: in-progress | 驗證: upstream npm test/typecheck/lint 全綠；3KLife scope+encoding pass | 變更: commit 16ec208 已落地 ContextBudgetGuard contract、default policy seed、report/summary contract；待補 quality-comparison / upgrade-proposal hard-stop 串接 | 阻塞: none\n2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 context budget guard 任務 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
     "brief": {
       "style": "harn-rich",
       "label": "ATM governance bundle 開卡",
@@ -215,7 +215,12 @@
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [],
+      "validation_evidence": [
+        "AI-Atomic-Framework: npm test",
+        "AI-Atomic-Framework: npm run typecheck",
+        "AI-Atomic-Framework: npm run lint",
+        "3KLife: task-scope + encoding pass"
+      ],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
