@@ -442,5 +442,11 @@
     "path": "docs/tech/參考用npc-dialogue-narrative-runtime-plan.md",
     "title": "3KLife 人物對話與劇情 Runtime 技術規劃",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0080",
+    "path": "docs/windows-wsl-cli-routing.md",
+    "title": "Windows / WSL CLI Routing Rules",
+    "category": "other"
   }
 ]

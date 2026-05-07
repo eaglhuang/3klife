@@ -1,5 +1,33 @@
 {
   "files.encoding": "utf8",
   "files.autoGuessEncoding": false,
-  "files.eol": "\n"
+  "files.eol": "\n",
+  "terminal.integrated.useWslProfiles": false,
+  "terminal.integrated.profiles.windows": {
+    "PowerShell 5.1 NoProfile": {
+      "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "args": ["-NoLogo", "-NoProfile"],
+      "overrideName": true
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell 5.1 NoProfile",
+  "terminal.integrated.automationProfile.windows": {
+    "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "args": ["-NoLogo", "-NoProfile"]
+  },
+  "terminal.integrated.profiles.linux": {
+    "bash (WSL)": {
+      "path": "/bin/bash",
+      "args": ["--noprofile", "--norc"],
+      "overrideName": true
+    },
+    "sh (WSL automation)": {
+      "path": "/bin/sh",
+      "overrideName": true
+    }
+  },
+  "terminal.integrated.defaultProfile.linux": "bash (WSL)",
+  "terminal.integrated.automationProfile.linux": {
+    "path": "/bin/sh"
+  }
 }
