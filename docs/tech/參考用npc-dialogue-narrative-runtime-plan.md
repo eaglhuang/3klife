@@ -462,3 +462,77 @@ python -m app.cocos_flow_smoke_test
 3. `playerId / saveId / seasonId` 的正式來源目前是否已在資料層存在？若尚未存在，第一期需以 optional 欄位保留。
 4. Interaction writeback 第一版要 JSONL 還是直接 SQLite？以目前 `sqlite_vec` stub 狀態，建議先 JSONL。
 5. Battle 場景第一版是否完全禁用主動插話，只寫 log？建議是。
+
+## 12. Session Memory 參考快照
+
+> 以下內容摘錄自 `/memories/session/plan.md`，保留會話中快速形成的 planning note，方便未來比對正式規劃與當時的思路。
+
+## Plan: 3KLife 人物對話與劇情 Runtime
+
+本規劃建議建立一層「DialogueRuntime / NarrativeRuntime」，吸收 LingChat 的 append-only 原子台詞與角色視角記憶概念，但不搬它的 Python/Vue 產品殼。3KLife 目前已有 Cocos UI orchestration、npc-brain 對話 API、RAG/ETL artifact 與 dev toolbar，下一步應補上跨場景武將主動發話、互動事件日誌、劇情事件排程與回寫真相層。
+
+**Current Findings**
+1. Cocos 端已存在 `assets/scripts/core/services/NpcDialogueService.ts`，集中包裝 `GET /v1/npc/keyword-options` 與 `POST /v1/npc/dialogue`，並由 `ServiceLoader.npcDialogue` 對外提供。
+2. server 端 `server/npc-brain/app/npc_dialogue_service.py` 已有 persona / keywords / context / provider fallback / history cache，能從 ETL artifacts 產生 grounded 台詞。
+3. `server/npc-brain/README.md` 與 `server/npc-brain/文件/資料契約與 Cocos 串接.md` 已明確要求前端只負責選擇、不負責推理，互動結果未來要回寫 server-side truth。
+4. `GeneralListComposite` 已有 NPC dialogue dev toolbar，可點武將、選 keyword、speechContext、model preset，再呼叫 `services().npcDialogue.requestDialogue()`，但它仍是列表畫面的測試功能，不是全場景對話 runtime。
+5. UI 層已有 `UIManager` 六層分層、`GeneralQuickViewComposite`、`GeneralPortraitComposite`、`ToastMessage`；可支撐「任何場景浮出武將發話」，但需要新增專用 `GeneralTalkOverlayComposite` 或 `GeneralDialogueToastComposite`，不能把邏輯塞進 Toast 或 GeneralList。
+6. 戰鬥事件流已有 `EventSystem` 與 `BattleUIBridge`，符合 keep 的 Interface-first Bridge 共識。未來 NarrativeRuntime 應走 shared interface / event envelope，不讓 battle 直接 import ui concrete class。
+7. SQLite-vec 目前在 npc-brain 是 stub，本地 SQLite 真相層/互動記憶 store 還未落地；因此第一期應使用 append-only JSONL 或 Cocos 本地 service 做開發，第二期才接 server-side SQLite/PostgreSQL/JSONB。
+
+**Recommended Architecture**
+1. `DialogueEventLog`：append-only 原子事件日誌。記錄 player action、world event、battle event、npc utterance、system narration。每筆事件帶 eventId、createdAt、scope、actorIds、speakerId、addresseeIds、sourceRefs、visibility、payload、projectionHints。
+2. `DialogueRuntimeState`：Cocos 端 runtime 容器，持有 currentSceneScope、activeSpeaker、presentGenerals、recentEvents、pendingQueue、lastNpcBrainTrace。它是 service，不是 UI component。
+3. `ActorContextBuilder`：從事件日誌與 npc-brain 回傳資料投影成角色視角。對照 LingChat 的 MemoryBuilder，但 3KLife 要更強調 sourceRefs 與三國大腦的 canonical truth。
+4. `NarrativeEventEngine`：宣告式事件 runtime，採 chapter / node / handler 概念，但實作為 TypeScript events。支援 trigger conditions、cooldown、priority、blocking policy、scene scope、requiredGeneralIds。
+5. `GeneralTalkOverlayComposite`：跨場景對話 UI。只接收 `GeneralTalkOverlayState`，內容包含 portrait、speakerName、lineText、evidence badge/debug trace、interaction buttons。它不直接查 RAG、不自行決策。
+6. `NpcBrainRuntimeAdapter`：包裝現有 `NpcDialogueService`，支援 `requestLineForEvent(eventContext)`，把場景事件、selected keywords、speechContextMode 轉成 server API request。
+7. `DialogueWritebackAdapter`：把玩家-武將互動結果回寫 server-side truth layer。第一期可記本地 JSONL；第二期接 npc-brain `/v1/npc/interaction-events` 或 SQLite/PostgreSQL。
+
+**LingChat Comparison**
+1. 可照抄概念：append-only line/event log、角色視角投影、在場角色感知列表、chapter/event handler、LLM context 不直接由 UI 組 prompt。
+2. 要優化：LingChat 的 `user_id=1`、未完成永久記憶接線、TODO 多、history cache 偏開發期。3KLife 應 schema-first，事件 log 從一開始就保留 sourceRefs、scope、visibility、writeback status。
+3. 不建議搬：LingChat 的 FastAPI+Vue+pywebview 殼、桌面視覺感知、桌寵主動系統、直接從前端組設定頁。3KLife 應保留 Cocos + npc-brain 分工。
+
+**Steps**
+1. Phase 0 — 文件與任務切分。新增技術規劃文件，建議路徑 `docs/tech/npc-dialogue-narrative-runtime-plan.md` 或 `docs/遊戲規格文件/系統規格書/武將日誌與對話Runtime.md`。若進入實作需先依任務卡規則開卡/鎖卡。
+2. Phase 1 — Cocos 型別與本地 runtime。新增 `assets/scripts/core/dialogue/DialogueEventTypes.ts`、`DialogueEventLog.ts`、`DialogueRuntimeState.ts`、`ActorContextBuilder.ts`。先用記憶體 + debug dump，不碰 server DB。
+3. Phase 2 — 跨場景 UI overlay。新增 `assets/scripts/ui/components/GeneralTalkOverlayComposite.ts`、screen/layout/skin JSON、UIID `GeneralTalkOverlay`，Layer 建議 `Notify` 或新的非阻塞 `PopUp` policy。支援 queue、dismiss、auto-hide、場景切換 dispose。
+4. Phase 3 — npc-brain adapter。擴充 `NpcDialogueService.ts` 或新增 `NpcBrainRuntimeAdapter.ts`，把 `NarrativeEventContext` 轉成現有 `/v1/npc/dialogue` request。保留 `providerTrace`、`qualityWarnings`、`repairUsed`。
+5. Phase 4 — 主動觸發規則。新增 `NarrativeTriggerService`，從 `services().event` 訂閱 battle/lobby/world events，依 priority/cooldown 決定是否 enqueue talk event。戰鬥場景透過 shared interface 或 Bridge 發事件，不直接控制 UI。
+6. Phase 5 — server writeback。npc-brain 增加互動事件 ingest API 或先導入本地 JSONL/SQLite store；資料分類對齊 `player-memory`、`interaction-memory`、`world-events` namespace。
+7. Phase 6 — 劇情事件引擎。定義 chapter/story node schema 與 handler registry，支援對話、旁白、選擇、武將出場、戰鬥事件、任務結果。第一版只接 Cocos local JSON，第二版接 npc-brain decision engine。
+8. Phase 7 — QA 與 smoke。加純 TS unit tests、server HTTP smoke、LoadingScene preview target、Cocos Editor Preview flow，驗證無 server 時 deterministic/fallback 不阻塞 UI。
+
+**Relevant Files**
+- `assets/scripts/core/services/NpcDialogueService.ts` — 現有 Cocos NPC brain facade，可擴成 runtime adapter。
+- `assets/scripts/core/managers/ServiceLoader.ts` — 服務注入入口，新增 DialogueRuntime / NarrativeTriggerService 的位置。
+- `assets/scripts/core/systems/EventSystem.ts` — 現有事件匯流排，可承接 narrative trigger，但需要 typed event wrapper。
+- `assets/scripts/core/config/UIConfig.ts` — 加入跨場景 talk overlay UIID 與 layer policy。
+- `assets/scripts/ui/components/GeneralListComposite.ts` — dev toolbar 參考，不應成為正式 runtime。
+- `assets/scripts/ui/components/GeneralQuickViewComposite.ts`、`GeneralPortraitComposite.ts`、`ToastMessage.ts` — 可重用 UI pattern，但需新 overlay。
+- `assets/scripts/battle/views/BattleUIBridge.ts`、`assets/scripts/shared/interfaces/IBattleUIBridge.ts` — 跨模組 Bridge 參考。
+- `server/npc-brain/app/npc_dialogue_service.py` — server 端現有對話服務。
+- `server/npc-brain/app/main.py` — 現有 HTTP routes，未來加入 interaction ingest。
+- `server/npc-brain/文件/資料契約與 Cocos 串接.md` — Cocos 接線契約。
+- `server/npc-brain/文件/向量檢索與資料入庫.md` — player-memory / interaction-memory namespace 與 truth/vector 分工。
+
+**Verification**
+1. Cocos TypeScript compile / asset-db refresh：`curl.exe http://localhost:7456/asset-db/refresh`。
+2. Core unit tests：新增 DialogueEventLog append/query/projection tests，沿用現有 `tests/EventSystem.test.ts` pattern。
+3. npc-brain HTTP smoke：`cd server/npc-brain` 後執行 `python -m app.http_smoke_test` 與 `python -m app.cocos_flow_smoke_test`。
+4. UI spec validation：新增 overlay screen/layout/skin 後執行 `node tools_node/validate-ui-specs.js` 或既有 acceptance runner。
+5. Runtime preview：新增 LoadingScene target 或 Lobby route，測「無 server」「server deterministic」「server LLM fallback」「戰鬥事件觸發」四種情境。
+6. Log / debug：確認 assets/scripts 內不使用裸 `console.log`，統一走 `UCUFLogger`。
+
+**Decisions**
+- 先做 Cocos runtime + server adapter，不先做完整 server DB。
+- 對話 UI 走新 overlay，不復用 Toast 作正式人物對話。
+- 事件日誌是 canonical interaction trail，prompt/context 是投影，不反過來存 prompt 當真相。
+- npc-brain 仍是生成/檢索/決策端，Cocos 端只做 trigger、呈現、互動結果回報。
+- 不直接搬 LingChat 原始碼，避免授權與架構耦合。
+
+**Further Considerations**
+1. 第一個正式場景建議選 Lobby，而不是 Battle。Lobby 較少時序競爭，適合驗證主動發話與回寫。
+2. Battle 場景第一版只允許非阻塞短句，例如回合開始、主將受傷、技能施放後評語；不要讓對話阻塞戰鬥流程。
+3. 若使用者未來要求語音，先把 `DialogueEvent` 的 `audioCue` / `voiceAssetRef` 保留為 optional 欄位即可，不要現在接 TTS。
