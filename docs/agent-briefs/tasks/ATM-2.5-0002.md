@@ -10,7 +10,8 @@ status: open
 type: implementation
 depends:
   - ATM-2.5-0001
-notes: "此 fixture 用於 multi-agent 兼容測試（ATM-2.5-0003）；Claude Code 是主要測試 agent"
+  - ATM-2-0012
+notes: "此 fixture 用於 multi-agent 兼容測試（ATM-2.5-0003）；Claude Code 是主要測試 agent；若 verify.sh 要跑 neutrality check，需先依賴 ATM-2-0012"
 ---
 # [ATM-2.5-0002] Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate
 

@@ -7,15 +7,15 @@
 
 1. 先讀本文件。
 2. 選定自己的 slug。
-3. 設定 `AGENT_IDENTITY=<slug>`。
+3. 由目前使用的模型名稱動態組出 slug，再設定 `AGENT_IDENTITY=<slug>`。
 4. 以 repo-local `git config` 設定 `user.name` 與 `user.email`。
 5. 再進入 lock、task card、commit 流程。
 
 ## 身份規則
 
-- 新身份一律使用可辨識 slug，格式建議為 `vs-insiders-<model-name>`、`vs-code-<model-name>`、`claude-code-<model-name>`、`codex-<model-name>` 這種帶編輯器前綴的名稱。
+- 新身份一律使用可辨識 slug，格式建議為 `vs-insiders-<model-name>`、`vs-code-<model-name>`、`claude-code-<model-name>`、`codex-<model-name>` 這種帶編輯器前綴的名稱；`GitHubCopilot` 不是模型名，不能拿來當新身份。
 - `lock`、task card 的 `owner` / `created_by_agent` / `started_by_agent`，以及 commit author，都應該使用同一個 slug。
-- `GitHubCopilot` 只保留給舊資料與回溯相容，不建議作為新身份。
+- `GitHubCopilot` 只保留給舊資料與回溯相容，不建議作為新身份，也不應被當成模型名稱。
 - 如果你是新入口文件或新工作流，請先讓它指向本文件，再開始做自己的規則。
 
 ## 對照表
@@ -30,15 +30,15 @@
 
 ## 實作方法
 
-- VS Code / VS Code Insiders：在該編輯器自己的使用者設定或啟動環境，注入 `AGENT_IDENTITY`。
+- VS Code / VS Code Insiders：在該編輯器自己的使用者設定或啟動環境，注入 `AGENT_IDENTITY`；例如目前模型若是 GPT-5.4 mini，就用 `vs-code-gpt-5.4-mini` 或 `vs-insiders-gpt-5.4-mini`。
 - git：在目前 repo 內執行 `git config user.name "<slug>"` 與 `git config user.email "<slug>@3klife.local"`。
 - 同一台機器上若有多個 Agent，不要共用同一個 slug。
-- 如果你已經有舊的 `GitHubCopilot` 記錄，新的工作仍應切換成新的 slug，不要延用舊身份。
+- 如果你已經有舊的 `GitHubCopilot` 記錄，新的工作仍應切換成動態 slug，不要延用舊身份。
 
 ## 範例
 
 ```bash
-export AGENT_IDENTITY=vs-insiders-gpt-5.4-mini
+export AGENT_IDENTITY=vs-code-gpt-5.4-mini
 git config user.name "$AGENT_IDENTITY"
 git config user.email "$AGENT_IDENTITY@3klife.local"
 ```
