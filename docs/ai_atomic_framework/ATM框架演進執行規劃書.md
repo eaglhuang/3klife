@@ -1,8 +1,8 @@
 <!-- doc_id: doc_other_0043 -->
 # ATM 框架演進執行規劃書
 
-> 產出日期：2026-05-06  
-> 對照來源：`關於進化版的原子提案.md`、`AI原子框架開發計畫書.md`、`docs/tasks/tasks-atm.json` thin index 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json`。  
+> 產出日期：2026-05-06
+> 對照來源：`關於進化版的原子提案.md`、`AI原子框架開發計畫書.md`、`docs/tasks/tasks-atm.json` thin index 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json`。
 > 原則：已標記 `done` 的任務卡不得重開或改寫，只能作為下游基礎；新增能力一律以 open 任務補充或新卡承接。
 
 ---
@@ -258,4 +258,143 @@ decision 必須記錄在 `upgrade-proposal.json` 的 `decompositionDecision` 欄
 | ATM-4-0008 | H2U Map Evolution Pilot | α1 | ATM-4-0007, ATM-2-0024, ATM-2-0025 |
 
 詳細 acceptance / deliverables 見對應任務卡。
+
+
+---
+
+## 附錄 C：第三輪批判性審核（2026-05-07）
+
+> 本附錄不重啟既有驗收，僅針對附錄 A / B 落地後再次漂移的機讀真相與新開鏈條做缺口分析。所有建議一律以 **既有 open 卡 acceptance 補丁** 或 **新 follow-up open 卡** 形式承接，不回頭改動 done 卡。
+
+### C.1 機讀真相再次漂移
+
+`docs/tasks/tasks-atm.json` 目前 summary 為 `done=48 / in_progress=1 / open=58 / total=107`，相對附錄 A 當時的 `done=32 / total=87` 已增加 16 張 done 與 20 張新卡。本規劃書 §1、§4、§A.1 列出的「87 張」與「11 + 4 張新卡」皆需視為歷史快照；後續任何二次引用一律以 thin index summary 為單一真相。
+
+| 區段 | 規劃書記載 | 機讀真相（2026-05-07） | 處置 |
+|---|---|---|---|
+| total | 87 | 107 | thin index 為準，不再人工列舉。 |
+| done | 32 | 48 | 多出 16 張：見 §C.2。 |
+| in_progress | 0 | 1（`ATM-2-0026`） | 已被 ClaudeCode_opus-4-7 上鎖，本附錄不可改其 acceptance。 |
+| 新增鏈 | 演化 11 + Map 4 | 再追加 `ATM-IDENTITY-BEHAVIOR-V1`（8 卡）與 `ATM-MAP-GENERATOR-PROVENANCE-V1`（5 卡） | 見 §C.7。 |
+
+### C.2 Done 卡實作完整性對照
+
+下列 16 張附錄 A 之後新落地為 done 的卡，均檢查其 notes 欄位內 `驗證:` 段是否引用實際 validator / npm script，未發現「名義完成但缺實作」斷層；但仍有兩條依賴鏈尚未閉合，需在後續 open 卡承接：
+
+| done 卡 | 已驗證實作 | 仍未閉合的下游 |
+|---|---|---|
+| ATM-1-0011 (Atomic ID canonical) | upstream `9c1205f` + downstream `72a3301/ddbdcb6/a3e2798`；`validate:schemas / validate:cli / neutrality-scanner / test / typecheck / lint` 全綠。 | 規劃書 §5.1 / §A.4 仍以 `atomic_workbench/atoms/ATM-CORE-0123/` 範例說明，與本卡定稿後的 4 位流水號規則一致，無需改動。 |
+| ATM-2-0018 (BuildAgentPrompt) | 上游 `7791d51`，含 `agent-prompt.schema.json` 與 snapshot fixture。 | `ATM-2-0019` 仍 open，閉環未通；見 §C.5。 |
+| ATM-2-0034 (Registry Catalog Markdown) | upstream `c66a4ee`；`validate:registry-catalog / sync:registry-artifacts` pass。 | `ATM-2-0046`（catalog map section）open，map 投影尚未補上。 |
+| ATM-2-0036 / 0037 (Workbench alias drift cleanup + guard) | `validate:registry-core / validate:scaffold-builder / validate:test-runner / validate:registry-catalog` pass。 | 與本規劃書 canonical folder 規則一致。 |
+| ATM-2-0038 / 0039 / 0040 / 0041 (Atom Generator chain) | 上游 generator façade、source template、core atoms backfill、provenance audit 均落地；`validate:generator-provenance` 已接 npm test。 | Map 版同類能力 `ATM-2-0042~0046` 全 open；本規劃書 §4 / §5 完全未提及 Atom Generator，需在 §C.7 補入治理。 |
+| ATM-2.5-0002 / 0003 | sandbox fixture 與 multi-agent confidence 報告均產出。 | 對 alpha0 critical path 無影響。 |
+
+結論：所有 done 卡皆有可追溯 commit 與驗證；無「依賴項未滿足」斷層。但 §4 列出的 11 張演化卡 + §B.5 列出的 4 張 map 卡，至 2026-05-07 仍全數 open 或 in-progress，附錄 A.4 預期的「α1-prep 演化基礎」尚未啟動。
+
+### C.3 Alpha0 → Alpha1 Registry 三軸遷移斷層
+
+`ATM-2-0014`（`versions[]`）、`ATM-2-0026`（`semanticFingerprint / lineage / ttl`）、`ATM-2-0027`（status enum 收斂）三張卡皆宣稱 schema-additive，但 `ATM-2-0027` 實際上把 status enum 從舊集合（seed/active/experimental/deprecated/governed）**收斂** 為 7 值新集合，並非單純 additive。三軸同時落地時可能產生以下斷層：
+
+1. **versions[] × status migration 順序未定義**：若 `ATM-2-0014` 先落地、`ATM-2-0027` 後落地，舊 entry 已升至 versions[1.0]，再做 status migration 時必須對 `versions[*].status`（若 schema 允許）一併重寫；目前兩卡 acceptance 都沒有列「跨卡 migration」測試。
+2. **semanticFingerprint × versions[] 一致性未驗證**：`sf` 由 `inputs/outputs/language/evidenceRequired/performanceBudget` 計算，這些欄位在版本升級時可能變動，但 `ATM-2-0026` 沒寫「`sf` 是否每版本各自一份、或固定取 currentVersion」。
+3. **rollback × status × sf 互動未涵蓋**：`ATM-2-0022` 只驗 spec/code/test 三段 hash，未驗 rollback 後 status 是否回到舊狀態（例如 `active → transitioning → active`）、`sf` 是否回算。
+
+**建議補丁**（不開新卡，併入現有 open 卡 acceptance）：
+
+- `ATM-2-0014` acceptance 追加：「fixture 必須包含一筆同時帶 `versions[]` 與舊 status 值（`seed/governed`）的 entry，並通過 ATM-2-0027 migration 後仍綠。」
+- `ATM-2-0026` acceptance 追加：「`sf` 計算明定 per-version；`registry hot entry` 只放 currentVersion 的 `sf`，歷史 `sf` 落於 `versions[*].semanticFingerprint`。」
+- `ATM-2-0022` acceptance 追加：「rollback proof 需包含 `statusReverted` 與 `semanticFingerprintReverted` 兩個布林欄位；任一為 false 即 hard fail。」
+
+### C.4 演化管線 CLI / Markdown UI 具體化遺漏
+
+`ATM-2-0017`、`ATM-2-0021` 目前僅定義 schema 與 `.atm/reports/*.json`，但 §1 提案明確要求「品質比較報告」與「人類審核佇列」要可被人讀；現有 acceptance 缺以下三項：
+
+| 缺口 | 補丁建議 | 落點 |
+|---|---|---|
+| 缺 `atm registry quality-report` CLI | acceptance 追加：「`atm registry quality-report --atom <id> --from <v> --to <v> --json --md` 同步輸出 `.atm/reports/quality/<atomId>-<from>-<to>.json` 與同名 `.md`；`--md` 內容為固定 Markdown 模板（標題 / 指標表格 / mapImpactScope 區段 / 結論）。」 | `ATM-2-0017` |
+| 缺 `atm review` CLI | acceptance 追加：「`atm review list / show <proposalId> / approve <proposalId> --reason / reject <proposalId> --reason` 四個子命令；approve / reject 必須落 evidence + `decision-snapshot.hash`（鎖定當下 `upgrade-proposal.json` 內容雜湊）。」 | `ATM-2-0021` |
+| 缺 Markdown 呈現規範 | acceptance 追加：「`upgrade-proposals.md` 為 audit projection（非 source of truth）；欄位固定為 `proposalId / atomId / fromVersion → toVersion / decompositionDecision / automatedGates / status`；rebuild 由 `sync:registry-artifacts` 處理。」 | `ATM-2-0021` |
+
+以上三項為純 acceptance additive，不需要新增卡。
+
+### C.5 BuildAgentPrompt × ExecuteAgentTask × TestRunner 閉環
+
+`ATM-2-0018` 已 done、`ATM-2-0019` 仍 open、`ATM-2-0003 RunAtomicTest` 已 done且不可動。閉環設計必須符合「不修改 TestRunner」原則：
+
+```
+ATM-2-0018 build-agent-prompt
+  → emit prompt.md (含 lifecycleMode=birth|evolution、baselineSpec、baselineFixtures、forbiddenRegressions)
+ATM-2-0019 execute-agent-task --dry-run
+  → 取得 candidate spec/code/test
+  → 呼叫 (既有) TestRunner 跑「new fixtures × new code」 → metrics(new)
+  → 呼叫 (既有) TestRunner 跑「old fixtures × new code」 → 不退轉檢查
+  → 寫 execution-evidence.json（不 mutate registry / host project）
+ATM-2-0017 regression-compare gate
+  → 讀 execution-evidence + baseline metrics → quality-comparison-report
+ATM-2-0020 propose-atomic-upgrade
+  → 串接以上 evidence → upgrade-proposal.json
+ATM-2-0021 human-review-gate (reference plugin)
+ATM-2-0022 rollback proof（失敗回退）
+```
+
+關鍵約束：`lifecycleMode` 由 `ATM-2-0018` prompt frontmatter 攜帶、由 `ATM-2-0019` 注入到 `execute-agent-task` 的 effect node context；TestRunner 完全不需要知道 `lifecycleMode`，只負責「指定 fixtures × 指定 code」的單次跑驗證。
+
+**建議補丁**：
+
+- `ATM-2-0019` acceptance 追加：「`lifecycleMode=evolution` 時，dry-run 必須以 **兩次獨立 TestRunner 呼叫** 完成（baseline fixtures × new code、new fixtures × new code），分別寫入 evidence；TestRunner 本身不變更。」
+- `ATM-2-0019` acceptance 追加：「effect node 不可直接呼叫 `propose-atomic-upgrade`；evolution evidence 寫入後由 `ATM-2-0020` orchestration atom 自行讀取，避免 effect node 與 compute atom 邊界混線。」
+
+### C.6 ATM-3-0014 Adapter 邊界風險再評估
+
+現有 acceptance 僅規定 `read-only` 與「neutrality scanner 跑 dry-run」，但未指定來源 → upstream `usage-feedback` schema 的欄位映射規則，仍有以下殘留風險：
+
+1. 3KLife `compute-gate` JSON 內含 `profile / agent-feedback / ucuf-category` 等專案私有欄位，若直接序列化進 evidence payload，會破壞 upstream schema 中立性。
+2. 3KLife `UCUFLogger` 類別 enum 與 `LogCategory` 列舉是 host-private 概念；evidence 若引用 `category` 字串會讓 upstream Evidence Store 隱式綁定 host 列舉。
+3. 若 3KLife 改 log 格式，shadow adapter 無 fallback 會直接報錯，違背 §A.2 #9「alpha0 邊界守則」。
+
+**建議補丁**（追加進 `ATM-3-0014` acceptance，仍是 additive）：
+
+- 「定義 `mapping-table.json`：列出來源欄位 → upstream `usage-feedback` 欄位的固定對照；source-only 欄位一律歸到 `extras.adopterPrivate{}`，並由 neutrality scanner hard-fail 若該物件出現在 payload 主體。」
+- 「實作 `--strict` 與 `--lenient` 兩種模式；`--lenient` 在來源格式漂移時降級為 `evidenceType=usage-feedback-skipped`，並寫一筆 `skip-reason`，避免 alpha0 / alpha1 critical path 因為 host 工具升版而紅燈。」
+- 「fixture：至少含一筆 `compute-gate report 缺欄位` 的 negative case，驗證 `--lenient` 行為與 `--strict` 行為差異。」
+
+### C.7 Behavior SDK × Evolution Pipeline 治理衝突
+
+`ATM-IDENTITY-BEHAVIOR-V1` 鏈（`ATM-2-0026~0033`）引入 `AtomBehavior` plugin SDK 與 10 種內建 behavior，本規劃書 §3 / §4 完全未提到此維度。最關鍵的衝突在於：
+
+- `behavior.evolve` 與 `ATM-2-0020 ProposeAtomicUpgrade` **語意重疊**：兩者都負責「升版」這件事。
+- `behavior.atomize / behavior.infect` 可在 host project 上產生新 atom 與 dry-run patch，**繞過** `ATM-2-0021 HumanReviewGate`。
+- `lifecycle police`（`ATM-2-0031`）是唯一可寫 `quarantined` status 的角色，但 `ATM-2-0021` reject 後 atom 應落到何種 status，現有兩條鏈都沒寫。
+
+**建議補丁**（不開新卡，併入既有 open 卡）：
+
+- `ATM-2-0028` acceptance 追加：「`behavior.evolve` 必須委派到 `ATM-2-0020 ProposeAtomicUpgrade`，不得繞過 automated gates 與 human review。」
+- `ATM-2-0029` acceptance 追加：「`behavior.atomize / infect` 產生的 dry-run patch 必須以 `ATM-2-0020` proposal 形式包裝，`decompositionDecision` 預設 `atom-extract`；review 通過前不得 apply。」
+- `ATM-2-0027` acceptance 追加：「定義 reject 後狀態：approved → `active`；rejected (non-fatal) → 維持原 status；rejected (fatal) → `quarantined`，且 `quarantined` 仍只能由 lifecycle police 寫入，proposal flow 改寫 `pendingQuarantineRequest` 欄位由 lifecycle police 異步處理。」
+
+### C.8 自我治理失效風險清單
+
+下列風險聚焦在 **演化過程框架自己治理失敗** 的場景；每條已對應到上述 §C.3–§C.7 的具體補丁建議，落實後可關閉風險。
+
+| 風險編號 | 失效場景 | 觸發條件 | 對應補丁 | 嚴重度 |
+|---|---|---|---|---|
+| SG-01 | Registry 三軸 schema 不可同時存在 | versions[] / status enum / sf 三卡分開落地未交叉測試 | §C.3 補丁 | 高 |
+| SG-02 | rollback 只回 hash 不回 status / sf | `ATM-2-0022` acceptance 缺欄位 | §C.3 補丁 | 高 |
+| SG-03 | 品質報告無人讀界面，淪為 JSON 黑盒 | `ATM-2-0017` 缺 CLI / Markdown | §C.4 補丁 | 中高 |
+| SG-04 | review 決策可被未鎖定 proposal 篡改 | `ATM-2-0021` 缺 decision-snapshot.hash | §C.4 補丁 | 高 |
+| SG-05 | TestRunner 被改成感知 lifecycleMode（破壞已完成卡） | `ATM-2-0019` 描述含混 | §C.5 補丁 | 高 |
+| SG-06 | `behavior.evolve` 繞過 review，自動升版 | `ATM-2-0028 / 0029` 未限制 | §C.7 補丁 | 高 |
+| SG-07 | `behavior.atomize / infect` 直接 apply 到 host | reference plugin 未強制走 proposal | §C.7 補丁 | 高 |
+| SG-08 | 上游 Evidence Store 被 3KLife 私有欄位污染 | `ATM-3-0014` 未明定 mapping 與 strict/lenient | §C.6 補丁 | 中高 |
+| SG-09 | 3KLife log 格式漂移即時阻斷演化管線 | `ATM-3-0014` 無 fallback | §C.6 補丁 | 中 |
+| SG-10 | reject 後 atom 狀態未定義，registry 進入未定義態 | `ATM-2-0027` 缺 transition 對應 | §C.7 補丁 | 中高 |
+| SG-11 | Map generator chain（`ATM-2-0042~0046`）獨立演進，與 atom 演化鏈未交會 | 兩鏈 acceptance 未互相引用 | 建議在 `ATM-2-0042` acceptance 補：「map generator 產出的 spec/code/test 必須通過 `ATM-2-0017` regression compare gate（map-level）」 | 中 |
+
+### C.9 結語
+
+本附錄不重啟 §3 / §4 / §5 既有結論，而是把「演化基礎尚未啟動、但已多出兩條治理鏈」這個現實補進去。若以「最小阻塞 alpha1 演化閉環首次驗證」為目標，建議的下一步只有兩件事：
+
+1. 把 §C.3、§C.4、§C.5、§C.6、§C.7 列出的純 acceptance additive 補丁，逐張寫進對應 open 卡 frontmatter（不需要新開卡）。
+2. 然後依 §A.4 的順序執行 `ATM-2-0014 → 0015 → 0016 → 0017 → 0019 → 0020 → 0021 → 0022 → 3-0014 → 4-0007`，並在 `ATM-2-0028 / 0029` 落地時順便驗證 §C.7 的繞道防線。
 
