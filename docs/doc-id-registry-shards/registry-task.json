@@ -2044,5 +2044,29 @@
     "path": "docs/agent-briefs/tasks/ATM-2-0042.md",
     "title": "[ATM-2-0042] Unified Atomic Map Generator — Provisioning Facade & Map ID Policy",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0350",
+    "path": "docs/agent-briefs/tasks/ATM-2-0043.md",
+    "title": "[ATM-2-0043] Map Source Template & Workbench Policy",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0351",
+    "path": "docs/agent-briefs/tasks/ATM-2-0044.md",
+    "title": "[ATM-2-0044] Backfill Existing Maps Through Map Generator",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0352",
+    "path": "docs/agent-briefs/tasks/ATM-2-0045.md",
+    "title": "[ATM-2-0045] Map Generator Provenance Audit",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0353",
+    "path": "docs/agent-briefs/tasks/ATM-2-0046.md",
+    "title": "[ATM-2-0046] Registry Catalog Map Section Rendering",
+    "category": "task"
   }
 ]
