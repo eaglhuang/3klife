@@ -191,6 +191,7 @@ ATM 若要達到「下載後放在任意專案根目錄，AI agent 讀 README �
 | Context budget / summarization | `.atm/reports/context-budget/*.json`、`.atm/state/context-summary/*.md`、重量文件/圖片 budget policy、summarize/hard-stop workflow | `check-context-budget.js`、`generate-context-summary.js`、`report-turn-usage.js` |
 | Rule / gate runner | default rule guard、encoding guard、context budget guard、import/scope guard、command capability policy | `compute-gate.js`、encoding checks、import-boundary、UI/H2U rule guards、context budget guard |
 | Adapter discovery | Local FS/Git fallback adapter、host capability registry、language/runtime adapter probe | 3KLife ProjectAdapter、Node/Cocos adapter、html-to-ucuf case adapter |
+| 識別與行為治理（α1） | semanticFingerprint / lineage / TTL schema、原子狀態機（draft/validated/active/transitioning/deprecated/expired/quarantined）、AtomBehavior plugin SDK + 10 內建行為 (split/merge/compose/dedup-merge/sweep/evolve/expire/polymorphize/infect/atomize)、dedup police（含 fingerprint-index O(1) lookup）、lifecycle police（TTL + sweep + 狀態機檢查）、atomization police | 3KLife adapter 可選擇是否實作；usage-feedback 回填 caller-count；H2U case study 用 atomize/infect 完成 legacy strangler |
 
 因此，ATM 的「可獨立跑起來」定義不是只要 `npm install` 後能執行一個 atom，而是要能讓 AI agent 在任何 repo 內自動形成固定工作包絡：Project Probe → Create Task → Lock Scope → Plan → Edit → Capture Artifacts/Logs → Run Guards → Write Evidence → Unlock/Close Task。Core 只定義契約與 lifecycle；Default Governance Bundle 提供 `.atm/` reference implementation；各專案再用 adapter 映射到自己的任務、文件、log 與 artifact 系統。
 其中 `plugin-rule-guard`、`plugin-encoding`、`plugin-context-budget` 應被視為同一組 Agent Governance Bundle：前者負責 policy/boundary，第二個負責文字完整性，第三個負責上下文預算、摘要節流與超額 hard-stop。
@@ -223,14 +224,14 @@ Roadmap 是通用理論藍圖，與本專案落地實況有 8 點需校正：
 | 2 | `src/legacy/AtomicInterface.ts` | 沒有 `src/legacy/` 目錄 | 改放 `tools_node/_atomic_registry/AtomicInterface.js`，由 inject-plan.js 生成 |
 | 3 | AI 直接改 Legacy | 有 task-lock + check-task-scope + import-boundary | Manager **只產 patch plan**，由人/特定 ATM 卡 apply |
 | 4 | 用 `tsc / eslint / vitest` 當 gate | 用 compute-gate.js 統管所有 gate | Police 改寫成 `atm-police` gate，掛上 finalize-agent-turn |
-| 5 | atom ID 用 `atomic_000001` | 名詞定義文件強制 `{prefix}-{子系統}-{流水號4位}` | atom 用 `ATM-{bucket}-{NNNN}`；函數名可保留語意前綴，但家目錄名稱必須直接等於 Atomic ID |
-| 6 | `atomic_workbench/` 在 repo root | upstream 已由 ATM-2-0013 收斂 canonical atom home | 預設一律保留 `atomic_workbench/atoms/<Atomic ID>/`；3KLife 若要 local mirror 只能透過 adapter 明確 override，不可改寫 core default |
+| 5 | atom ID 用 `atomic_000001` | 名詞定義文件強制 `{prefix}-{子系統}-{流水號4位}` | atom 用 `ATM-{bucket}-{NNNN}`（例如 `ATM-CORE-0001`）；dot-notation 只保留在 `logicalName`，例如 `atom.core-seed`；函數名可保留語意前綴，但家目錄名稱必須直接等於 Atomic ID |
+| 6 | `atomic_workbench/` 在 repo root | upstream 已由 ATM-2-0013 收斂 canonical atom home | 預設一律保留 `atomic_workbench/atoms/ATM-CORE-0123/` 這種格式；3KLife 若要 local mirror 只能透過 adapter 明確 override，不可改寫 core default |
 | 7 | DB-first 索引 | 無 DB 基建 | ATM-7 才討論，前期僅 JSON registry |
 | 8 | 沒提 encoding | 本專案有 encoding-integrity 嚴格規則 | scaffold-atom 產出檔案必須走 UTF-8 without BOM；compute-gate 必跑 encoding-touched |
 
 ---
 
-ATM-2-0013 之後，家目錄規則應視為 active plan 的固定契約：預設 per-atom home 一律是 `atomic_workbench/atoms/<Atomic ID>/`，而且資料夾名稱必須與 Atomic ID 完全相同。`tools_node/atomic-framework/` 這類路徑只代表控制面與 adapter 工具所在位置，不再代表 atom 本身的預設 home。
+ATM-2-0013 之後，家目錄規則應視為 active plan 的固定契約：預設 per-atom home 一律是 `atomic_workbench/atoms/ATM-CORE-0123/` 這種格式，而且資料夾名稱必須與 Atomic ID 完全相同。`tools_node/atomic-framework/` 這類路徑只代表控制面與 adapter 工具所在位置，不再代表 atom 本身的預設 home。
 
 ---
 
@@ -270,7 +271,7 @@ tools_node/atomic-framework/
   atm-cli.js                         主 CLI（手寫 argv parser；仿 compute-gate.js）
   manager/
     parse-spec.js                    讀 spec、AJV 驗證、回 normalized model
-    scaffold-atom.js                 從 spec 產 atom 骨架到 atomic_workbench/atoms/<Atomic ID>/
+    scaffold-atom.js                 從 spec 產 atom 骨架到 atomic_workbench/atoms/ATM-CORE-0123/
     run-atom-tests.js                跑單一 atom fixture matrix
     validate-atom.js                 hash + schema + forbidden import 整合
     inject-plan.js                   產生 Legacy 注入 patch plan（不直接改檔）
@@ -295,7 +296,7 @@ tools_node/atomic-framework/
 
 atomic_workbench/                    canonical per-atom home（default sandbox root）
   atoms/
-    <Atomic ID>/
+    ATM-CORE-0123/
       atom.spec.json
       impl.js
       test.js
@@ -448,13 +449,13 @@ Default Governance Bundle 的其他 reference plugins（完整 task cards、doc 
 |---|---|---|
 | ATM-1.5-0001 | seed-as-spec | 用 seed 自己的 spec 格式描述自己（`atom-seed-spec.json`），驗證契約自包含 |
 | ATM-1.5-0002 | self-validation | seed 跑自己的 self-validation；產出第一份 `atomic-registry.json` |
-| ATM-1.5-0003 | ATM-CORE-0001 註冊 | 第一個受治理的 atom：seed 本身。`atm verify --self` 通過 |
+| ATM-1.5-0003 | ATM-CORE-0001 註冊 | 第一個受治理的 Atomic ID：seed 本身（`logicalName: atom.core-seed`）。`atm verify --self` 通過 |
 
 #### ATM-2-0012：neutralityScanner atom + CI（新增 1 卡）
 
 | 範圍 | 任務 | 目的 |
 |---|---|---|
-| ATM-2-0012 | neutralityScanner atom + CI | 在 `packages/plugin-rule-guard/neutrality-scanner.{ts,js}` 與 `.github/workflows/neutrality.yml` 落地 §1.1.5 的中立性自動 CI；ATM-CORE-0003 |
+| ATM-2-0012 | neutralityScanner atom + CI | 在 `packages/plugin-rule-guard/neutrality-scanner.{ts,js}` 與 `.github/workflows/neutrality.yml` 落地 §1.1.5 的中立性自動 CI；`ATM-CORE-0003`（`logicalName: atom.plugin-rule-guard.neutrality-scanner`） |
 
 對應 `open-source-extraction-plan.md` §1.1.5.1。
 
@@ -480,6 +481,32 @@ Default Governance Bundle 的其他 reference plugins（完整 task cards、doc 
 | ATM-3-0011 | encoding adapter 化（兩工具） | `tools_node/check-encoding-touched.js` + `check-encoding-integrity.js` |
 | ATM-3-0012 | task-scope / import-boundary 規則包遷移 | `rule-pack.json` + RuleGuard adapter；同時標 `check-task-scope.js` / `check-import-boundaries.js` 為 `@deprecated` |
 | ATM-3-0013 | finalize-agent-turn wrapper 接 run envelope | `tools_node/finalize-agent-turn.js` |
+
+#### ATM-2 演進補強：識別、行為、狀態機（新增 8 卡，alpha1 範圍，chain `ATM-IDENTITY-BEHAVIOR-V1`）
+
+對應 `關於進化版的原子提案.md` Part V。本批次不阻塞 alpha0 critical path（ATM-2-0012 + ATM-2.5-0002），全部標 alpha1；同時為既有 ATM-2-0014 / 0015 / 0017 / 0020 / 0022 / 0023 / 0024 / 0025、ATM-3-0014、ATM-4-0003 / 0005 / 0007 追加 acceptance（schema-additive，不重啟驗收）。
+
+| 範圍 | 任務 | 目的 |
+|---|---|---|
+| ATM-2-0026 | semanticFingerprint + lineage + TTL schema 擴充 | hot/cold 分離；sf/lineage/ttl + deployScope/mutabilityPolicy + version-index 跨系統比對 |
+| ATM-2-0027 | atom status 狀態機 | 收斂 status enum 為 draft/validated/active/transitioning/deprecated/expired/quarantined；把 governed 改為 governance.tier 屬性；合法 transition 矩陣 |
+| ATM-2-0028 | AtomBehavior plugin SDK | plugin-sdk 加入 behavior interface 與 BehaviorRegistry，支援第三方擴充行為 |
+| ATM-2-0029 | reference behavior pack（10 內建） | split / merge / compose / dedup-merge / sweep / evolve / expire / polymorphize / infect / atomize；infect+atomize 為 Legacy strangler 主力 |
+| ATM-2-0030 | dedup police plugin | sf 比對 + LLM similarity skill + 8 種去重情境裁決 + fingerprint-index O(1) lookup（hot path） |
+| ATM-2-0031 | lifecycle police（TTL + sweep + 狀態機警察） | scheduled scan、expire、unused detection、非法 status transition 偵測 |
+| ATM-2-0032 | polymorphic atom 模板規範 | **廣義多形**（multi-dimension：參數/類型/語言/品質/輸出形狀/行為變體）；含 dimension-detector 工具 |
+| ATM-2-0033 | atomization & infection adapter 合約 | legacy URI 解析、neutrality scan 整合、dry-run patch（不直接動 host） |
+
+性能與記憶體守則：
+
+- registry hot entry 欄位 ≤ 10；lineage / evidence / TTL history 走外部 ref（cold artifact）
+- semanticFingerprint 直接是 64-char hex string，可作 hash table key
+- dedup police 用 sf 16-char prefix index 做 sublinear lookup，跨 100K atoms 全掃在數百毫秒內完成
+- 跨系統比對走三層 fast-path（atomId → version → sf），避免無差別 O(n²) sf 計算
+
+參考文件：
+- [原子行為參考手冊](原子行為參考手冊.md)：10 行為定義 + 警察使用關係 + 廣義多形化原則
+- [atom-lifecycle-state-machine.svg](atom-lifecycle-state-machine.svg)：狀態機視覺圖
 
 ### 並行開發協議
 

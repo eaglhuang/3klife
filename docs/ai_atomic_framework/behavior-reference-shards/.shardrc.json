@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "source": "../原子行為參考手冊.md",
+  "indexTitle": "原子行為參考手冊",
+  "indexPath": "docs/ai_atomic_framework/原子行為參考手冊.md",
+  "type": "markdown-h2",
+  "keepSourceIntact": true,
+  "_thresholdKB": 10,
+  "_thresholdLines": 300,
+  "preambleShard": "behavior-ref-overview",
+  "defaultShard": "behavior-ref-extension",
+  "shards": [
+    {
+      "name": "behavior-ref-overview",
+      "title": "概覽與行為總表",
+      "pattern": "^1\\.|^2\\."
+    },
+    {
+      "name": "behavior-ref-details",
+      "title": "各行為詳細說明",
+      "pattern": "^3\\."
+    },
+    {
+      "name": "behavior-ref-poly",
+      "title": "廣義多形化原則",
+      "pattern": "^4\\."
+    },
+    {
+      "name": "behavior-ref-police",
+      "title": "行為×警察使用關係表",
+      "pattern": "^5\\."
+    },
+    {
+      "name": "behavior-ref-extension",
+      "title": "擴充指南與狀態機參考",
+      "pattern": "."
+    }
+  ]
+}

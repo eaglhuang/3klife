@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 620" font-family="sans-serif" font-size="12">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#e67e22"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#c0392b"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">Atom Lifecycle State Machine</text>
+  <text x="400" y="50" text-anchor="middle" font-size="11" fill="#7f8c8d">ATM-2-0027 | 7 states, behavior-triggered transitions</text>
+
+  <!-- Legend -->
+  <rect x="600" y="70" width="180" height="110" rx="5" fill="#f8f9fa" stroke="#dee2e6"/>
+  <text x="610" y="88" font-size="11" font-weight="bold" fill="#2c3e50">Legend</text>
+  <line x1="610" y1="102" x2="660" y2="102" stroke="#27ae60" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="668" y="106" font-size="10" fill="#333">Normal flow</text>
+  <line x1="610" y1="122" x2="660" y2="122" stroke="#e67e22" stroke-width="2" marker-end="url(#arrow-orange)"/>
+  <text x="668" y="126" font-size="10" fill="#333">Retirement path</text>
+  <line x1="610" y1="142" x2="660" y2="142" stroke="#c0392b" stroke-width="2" marker-end="url(#arrow-red)"/>
+  <text x="668" y="146" font-size="10" fill="#333">Police action</text>
+  <rect x="610" y="154" width="50" height="18" rx="4" fill="#eaf2f8" stroke="#2980b9"/>
+  <text x="668" y="167" font-size="10" fill="#333">Pre-active</text>
+
+  <!-- draft node -->
+  <rect x="320" y="80" width="120" height="40" rx="8" fill="#eaf2f8" stroke="#2980b9" stroke-width="2"/>
+  <text x="380" y="105" text-anchor="middle" font-weight="bold" fill="#2980b9">draft</text>
+
+  <!-- validated node -->
+  <rect x="320" y="170" width="120" height="40" rx="8" fill="#eaf2f8" stroke="#2980b9" stroke-width="2"/>
+  <text x="380" y="195" text-anchor="middle" font-weight="bold" fill="#2980b9">validated</text>
+
+  <!-- active node (main) -->
+  <rect x="310" y="270" width="140" height="44" rx="8" fill="#d5f5e3" stroke="#27ae60" stroke-width="3"/>
+  <text x="380" y="297" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e8449">active</text>
+
+  <!-- transitioning node -->
+  <rect x="305" y="370" width="150" height="40" rx="8" fill="#fef9e7" stroke="#f39c12" stroke-width="2"/>
+  <text x="380" y="395" text-anchor="middle" font-weight="bold" fill="#e67e22">transitioning</text>
+
+  <!-- deprecated node -->
+  <rect x="520" y="370" width="130" height="40" rx="8" fill="#fdebd0" stroke="#e67e22" stroke-width="2"/>
+  <text x="585" y="395" text-anchor="middle" font-weight="bold" fill="#e67e22">deprecated</text>
+
+  <!-- expired node (terminal) -->
+  <rect x="520" y="490" width="130" height="40" rx="8" fill="#f9ebea" stroke="#c0392b" stroke-width="2"/>
+  <text x="585" y="515" text-anchor="middle" font-weight="bold" fill="#c0392b">expired</text>
+  <text x="585" y="545" text-anchor="middle" font-size="10" fill="#c0392b">(terminal)</text>
+
+  <!-- quarantined node -->
+  <rect x="80" y="370" width="140" height="40" rx="8" fill="#fdedec" stroke="#c0392b" stroke-width="2"/>
+  <text x="150" y="395" text-anchor="middle" font-weight="bold" fill="#c0392b">quarantined</text>
+
+  <!-- Arrows: draft → validated -->
+  <line x1="380" y1="120" x2="380" y2="168" stroke="#27ae60" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="388" y="148" font-size="10" fill="#27ae60">propose pass</text>
+
+  <!-- Arrows: validated → active -->
+  <line x1="380" y1="210" x2="380" y2="268" stroke="#27ae60" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="388" y="244" font-size="10" fill="#27ae60">promote</text>
+
+  <!-- Arrows: active → transitioning -->
+  <line x1="380" y1="314" x2="380" y2="368" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="388" y="345" font-size="10" fill="#333">behavior.&lt;X&gt; start</text>
+
+  <!-- Arrows: transitioning → active (loop back) -->
+  <path d="M 455 380 Q 490 340 450 290" fill="none" stroke="#27ae60" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="470" y="330" font-size="10" fill="#27ae60">complete</text>
+
+  <!-- Arrows: active → deprecated -->
+  <path d="M 450 295 Q 550 295 560 368" fill="none" stroke="#e67e22" stroke-width="2" marker-end="url(#arrow-orange)"/>
+  <text x="490" y="280" font-size="10" fill="#e67e22">sweep / merge</text>
+
+  <!-- Arrows: deprecated → expired -->
+  <line x1="585" y1="410" x2="585" y2="488" stroke="#e67e22" stroke-width="2" marker-end="url(#arrow-orange)"/>
+  <text x="593" y="454" font-size="10" fill="#e67e22">TTL / 0-caller N days</text>
+
+  <!-- Arrows: active/validated → quarantined (police) -->
+  <path d="M 310 292 Q 200 292 160 368" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+  <text x="180" y="310" font-size="10" fill="#c0392b">police hard fail</text>
+
+  <!-- Arrows: quarantined → active (clear) -->
+  <path d="M 150 370 Q 150 290 310 290" fill="none" stroke="#27ae60" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <text x="155" y="280" font-size="10" fill="#27ae60">clear (review pass)</text>
+
+  <!-- Status attributes annotations -->
+  <rect x="40" y="480" width="380" height="120" rx="5" fill="#f8f9fa" stroke="#dee2e6"/>
+  <text x="50" y="498" font-size="11" font-weight="bold" fill="#2c3e50">Attributes (independent of status)</text>
+  <text x="50" y="516" font-size="10" fill="#555">governanceTier: constitutional | governed | standard | experimental</text>
+  <text x="50" y="534" font-size="10" fill="#555">deployScope: all-env | dev-only | staging-only | test-only</text>
+  <text x="50" y="552" font-size="10" fill="#555">mutabilityPolicy: mutable | frozen-after-release | immutable</text>
+  <text x="50" y="570" font-size="10" fill="#555">semanticFingerprint: sf:sha256:&lt;64hex&gt;</text>
+  <text x="50" y="588" font-size="10" fill="#555">lineage: { bornBy, parentRefs, bornAt }</text>
+
+  <!-- Behavior trigger annotations on transitioning -->
+  <text x="250" y="430" font-size="9" fill="#7f8c8d">Behaviors that cause transitioning:</text>
+  <text x="250" y="444" font-size="9" fill="#7f8c8d">split / merge / evolve / polymorphize / atomize / infect</text>
+</svg>
