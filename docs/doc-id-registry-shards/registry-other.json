@@ -436,5 +436,11 @@
     "path": "docs/doc-id-registry-md-shards/doc-id-registry-tech-ui-art.md",
     "title": "Doc ID Registry Markdown Index — Tech / UI / Art / Data",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0079",
+    "path": "docs/tech/npc-dialogue-narrative-runtime-plan.md",
+    "title": "3KLife 人物對話與劇情 Runtime 技術規劃",
+    "category": "other"
   }
 ]
