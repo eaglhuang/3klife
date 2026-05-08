@@ -71,65 +71,89 @@
     }
   },
   {
-    "doc_id": "doc_task_0343",
-    "id": "ATM-2-0036",
-    "title": "Stale Atom Workspace Alias Directory Cleanup",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P1",
+    "doc_id": "doc_task_0358",
+    "id": "ATM-2-0048",
+    "title": "ATM task-router / onboarding contract",
+    "owner": "vs-insiders-gpt-5.4",
+    "priority": "P0",
     "status": "done",
-    "type": "migration",
+    "type": "implementation",
     "phase": "ATM-2",
-    "created": "2026-05-07",
+    "created": "2026-05-08",
     "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T14:07:14.7347467+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
-    "chain_step": "1/2",
-    "sensor_triggered_by": "atm-workbench-alias-drift",
-    "description": "追查並清除 AI-Atomic-Framework/atomic_workbench/atoms 下歷史遺留的 logicalName alias 空目錄，確認 canonical atom workbench 只接受 ATM-* 目錄名。",
-    "related": [],
-    "depends": [
-      "ATM-1-0011",
-      "ATM-2-0013",
-      "ATM-2-0034"
+    "started_at": "2026-05-08T15:32:00+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "讓第一次進到 ATM 環境的 Agent 不必自己拼裝資訊。不管它是從 task card、臨時口頭需求、legacy code extraction，還是直接在 ATM framework repo 內工作進來，都必須有看得到的入口，把它導到 `ATM-CORE-0004`、`atm create` 與對應驗證步驟。",
+    "related": [
+      "ATM-4-0003"
     ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias cleanup 與 migration note | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:scaffold-builder / npm.cmd run validate:test-runner pass | 變更: 清除 AI-Atomic-Framework/atomic_workbench/atoms 下的 stale alias 空目錄，並在 docs/ATOM_SPACE_LAYOUT.md 明定 atom.* 空目錄視為遷移殘留 | 阻塞: none",
+    "depends": [
+      "ATM-2-0038",
+      "ATM-3-0002",
+      "ATM-3-0010"
+    ],
+    "acceptance": [
+      "task-router script 能讀 task card 與 tasks store，並輸出 routeKind / taskStatus / readFirst / validationHints",
+      "atom-generation 任務可穩定回傳 ATM-CORE-0004 與 atm create command template",
+      "ATM-4-0003 sample route 可指出 html-to-ucuf 與 normalizeCssColor",
+      "docs / task shard / script smoke test 同步回寫"
+    ],
+    "deliverables": [
+      "tools_node/atomic-framework/task-router.js",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0048.md",
+      "docs/tasks/tasks-atm/tasks-atm-part-25.json"
+    ],
+    "notes": "2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: task-router onboarding contract in progress | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM workbench alias 清理開卡",
-      "summary": "清除歷史遺留的 logicalName alias 空目錄，收斂 atomic_workbench/atoms 到 canonical atomId 目錄。",
-      "position": "ATM-2（migration hygiene / workbench cleanup）",
-      "prereq": "ATM-1-0011 / ATM-2-0013 / ATM-2-0034"
+      "label": "ATM onboarding router 開卡",
+      "summary": "把陌生 Agent 的第一入口收斂成可執行的 task-router，先把 atom-generation 任務穩定路由到 ATM-CORE-0004。",
+      "position": "ATM-2 / onboarding contract",
+      "prereq": "ATM-2-0038、ATM-3-0002、ATM-3-0010"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework/atomic_workbench/atoms 目前只應保留 canonical atomId workbench 目錄",
-        "atom.plugin-rule-guard.neutrality-scanner 與 atom.registry-fixture 已確認為空 alias 目錄",
-        "current core scaffold/registry/test-runner 已以 atomId 當 canonical folder name"
+        "docs/agent-briefs/tasks/<prefix>/<task-id>.md",
+        "docs/tasks/tasks-atm.json",
+        "docs/tasks/tasks-atm/tasks-atm-part-*.json",
+        "docs/ATOM_GENERATOR.md",
+        "docs/SELF_HOSTING_ALPHA.md",
+        "AI-Atomic-Framework/packages/cli/src/atm.mjs"
       ],
       "output": [
-        "確認 alias 目錄為非 source-of-truth 的歷史殘留，列出來源與影響範圍",
-        "清除 AI-Atomic-Framework/atomic_workbench/atoms 下已知空 alias 目錄，保留 ATM-* canonical 目錄",
-        "補 migration 或 cleanup 說明，明定 logicalName 目錄不再受支援",
-        "驗證 registry/scaffold/test-runner 現況仍只寫入 atomId workbench path"
+        "tools_node/atomic-framework/task-router.js",
+        "route report 含 routeKind / taskStatus / readFirst / primaryAtom / validationHints",
+        "atom-generation 任務可穩定回傳 ATM-CORE-0004 與 atm create command template",
+        "ATM-4-0003 sample route 可指出 html-to-ucuf 與 normalizeCssColor",
+        "docs / task shard / script smoke test 同步回寫"
       ],
-      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:scaffold-builder\\nnpm run validate:test-runner",
-      "rollback_hint": "若 cleanup 影響任何仍在使用的本機流程，先還原刪除的空目錄並補明確 evidence；不得回退 canonical atomId 規則。",
+      "validation_cmd": "node tools_node/atomic-framework/task-router.js --task ATM-4-0003 --format markdown\nnode tools_node/atomic-framework/task-router.js --task ATM-2-0048 --format markdown\nnode tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-2-0048.md docs/tasks/tasks-atm/tasks-atm-part-25.json tools_node/atomic-framework/task-router.js",
+      "rollback_hint": "回退本卡 touched files；router 只做 onboarding readout，不改 upstream core。",
       "execution_steps": [
-        "盤點 atomic_workbench/atoms 現況與 git tracked state",
-        "確認空 alias 目錄不屬於 registry source-of-truth",
-        "清除空 alias 目錄並驗證不影響現有 validator",
-        "回寫 migration 或 cleanup 說明與 notes"
+        "讀 task store 與 task card",
+        "判斷 atom-generation / docs-first 路由",
+        "組出 factory atom / command template / validation hints",
+        "跑 ATM-4-0003 sample smoke",
+        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "tools_node/atomic-framework/task-router.js",
+        "docs/agent-briefs/tasks/ATM/ATM-2-0048.md"
+      ],
+      "validation_evidence": [
+        "node tools_node/atomic-framework/task-router.js --task ATM-4-0003 --format markdown",
+        "node tools_node/atomic-framework/task-router.js --task ATM-2-0048 --format markdown",
+        "node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-2-0048.md docs/tasks/tasks-atm/tasks-atm-part-25.json tools_node/atomic-framework/task-router.js"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-08T16:13:10+08:00"
   }
 ]

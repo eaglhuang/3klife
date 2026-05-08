@@ -96,67 +96,72 @@
     }
   },
   {
-    "doc_id": "doc_task_0266",
-    "id": "ATM-3-0003",
-    "title": "compute-gate ATM profile adapter integration",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0357",
+    "id": "ATM-3-0015",
+    "title": "Task card system atomic map planning",
+    "owner": "vs-code-gpt-5.4-mini",
     "priority": "P0",
-    "status": "done",
-    "type": "adapter",
+    "status": "in-progress",
+    "type": "architecture",
     "phase": "ATM-3",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T05:59:35.560323+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-08T06:02:56.478299+08:00",
+    "created": "2026-05-08",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-08T18:18:03+08:00",
+    "started_by_agent": "codex-gpt-5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "把 upstream ATM validate/police/hash-lock 接入 3KLife compute-gate profile。",
+    "description": "?? task card system ????????????? allocateTaskId ? reserveTaskId ? openTaskCard ? lockTaskScope ? writeTaskShard ? validateTaskShard ? syncDocRegistry ? finalizeTaskLifecycle ???????????",
     "related": [],
     "depends": [
-      "ATM-3-0007"
+      "ATM-3-0006",
+      "ATM-3-0008",
+      "ATM-3-0009",
+      "ATM-3-0010",
+      "ATM-3-0012"
     ],
     "acceptance": [
-      "standard gate 不受影響",
-      "atm profile 只在 upstream CLI 可用後啟用",
-      "失敗訊息可指出 atom/spec/adapter 問題"
+      "?? task card system atomic map ???? member atom ??",
+      "???? allocateTaskId / reserveTaskId / openTaskCard / lockTaskScope / writeTaskShard / validateTaskShard / syncDocRegistry / finalizeTaskLifecycle ???",
+      "????????? ATM-3 ????",
+      "TaskAdapter / LockAdapter / ShardAdapter / RuleGuardAdapter ??? orchestrator ?????"
     ],
-    "deliverables": [
-      "tools_node/compute-gate-config.json 新增 atm profile",
-      "atm-police/atm-hash-lock gate wrapper",
-      "failure-as-prompt 輸出"
-    ],
-    "notes": "2026-05-08 | 狀態: done | 驗證: atm profile pass / police & hash-lock wrappers pass | 變更: compute-gate 新增 atm-police / atm-hash-lock gates，atm-cli 支援 police --all 與 verify --all | 阻塞: none\n2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "deliverables": [],
+    "notes": "2026-05-08 | ??: in-progress | ??: tasks-atm thin index / shard repair in flight | ??: ??? ATM-3-0015 ??? tasks-atm store???? part-25 ?? invalid JSON | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "把 upstream ATM validate/police/hash-lock 接入 3KLife compute-gate profile。",
+      "label": "ATM governance tooling ?????",
+      "summary": "? task card system ????????? atomic map?",
       "position": "ATM-3",
-      "prereq": "ATM-3-0002"
+      "prereq": "ATM-3-0006 / ATM-3-0008 / ATM-3-0009 / ATM-3-0010 / ATM-3-0012"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "ATM-3-0006 LockAdapter thin wrapper ???",
+        "ATM-3-0009 ShardAdapter thin wrapper ?????",
+        "ATM-3-0010 TaskAdapter thin wrapper ?????",
+        "ATM-3-0012 task-scope / import-boundary rule-pack ?????",
+        "??????????.md ?11 ????????? dogfood ???"
       ],
       "output": [
-        "tools_node/compute-gate-config.json 新增 atm profile",
-        "atm-police/atm-hash-lock gate wrapper",
-        "failure-as-prompt 輸出"
+        "?? task card system atomic map ???? member atom ??",
+        "???? allocateTaskId / reserveTaskId / openTaskCard / lockTaskScope / writeTaskShard / validateTaskShard / syncDocRegistry / finalizeTaskLifecycle ???",
+        "????????? ATM-3 ????",
+        "TaskAdapter / LockAdapter / ShardAdapter / RuleGuardAdapter ??? orchestrator ?????"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "validation_cmd": "node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-3-0015.md docs/tasks/tasks-atm/tasks-atm-part-25.json",
+      "rollback_hint": "?? touched files????? task card ?????",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
+        "?? task-lock / task-card-opener / shard-manager / task-scope ????????",
+        "?? ATM-3 ??? member atoms",
+        "?? task card system atomic map ????? shard ??",
+        "?? thin index ? task card ??"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [],
       "validation_evidence": [],
-      "handoff_diff_status": "",
+      "handoff_diff_status": "pending",
       "trace_artifacts": [],
       "metrics_summary": []
     }
