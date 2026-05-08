@@ -67,66 +67,50 @@
     }
   },
   {
-    "doc_id": "doc_task_0248",
-    "id": "ATM-0-0004",
-    "title": "3KLife adopter 計畫書改版",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
+    "id": "ATM-1.5-0002",
+    "title": "Seed 自我驗證：產生第一份 atomic-registry.json",
     "status": "done",
-    "type": "docs",
-    "phase": "ATM-0",
+    "priority": "P0",
+    "phase": "ATM-1.5",
+    "type": "implementation",
     "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T21:28:29+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-06T08:08:07+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 AI原子框架開發計畫書改成 3KLife downstream adopter / adapter plan。",
-    "related": [],
-    "depends": [
-      "ATM-0-0003"
-    ],
-    "acceptance": [
-      "文件不再宣稱 ATM core 長在 tools_node",
-      "html-to-ucuf 為 case study 而非 core assumption"
-    ],
-    "deliverables": [
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md 標示 upstream/downstream 分工",
-      "task-lock/compute-gate/doc-id/encoding 被描述為 adapter 能力"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0008（技術棧校正矩陣）、ATM-0-0009（governance split）、ATM-0-0011（context budget）、ATM-0-0014（瘦身再開工）代為完成 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 開源化開卡",
-      "summary": "將 AI原子框架開發計畫書改成 3KLife downstream adopter / adapter plan。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0003"
-    },
-    "contracts": {
-      "input": [
-        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0300",
+    "started_at": "2026-05-06T09:15:48.254Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T17:24:55.4854274+08:00",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d3ac9cf 新增 atomic-registry.json、CLI `verify --self`、registry selfVerification schema 與 drift 檢查；legacy planning ID ATM-CORE-0001 仍以 registry selfVerification metadata 保留，現行 atomId 維持 `atom.core-seed` | 阻塞: none",
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/atomic-registry.json",
+        "AI-Atomic-Framework/packages/cli/src/commands/verify.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
+        "AI-Atomic-Framework/schemas/registry.schema.json",
+        "AI-Atomic-Framework/scripts/validate-seed-registry.mjs",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-registry.json",
+        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
       ],
-      "output": [
-        "docs/ai_atomic_framework/AI原子框架開發計畫書.md 標示 upstream/downstream 分工",
-        "task-lock/compute-gate/doc-id/encoding 被描述為 adapter 能力"
+      "validation_evidence": [
+        "AI-Atomic-Framework commit d3ac9cf",
+        "npm run validate:seed-registry",
+        "npm run validate:cli",
+        "npm run validate:schemas",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
-      "execution_steps": [
-        "確認依賴與 scope",
-        "修改或建立對應文件",
-        "跑 encoding 與 standard gate",
-        "回寫 notes"
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "first committed atomic-registry.json now contains the seed entry with committed specHash/codeHash/testHash",
+        "atm verify --self validates registry schema first, then checks committed hash values against live seed files",
+        "editing seed.js changes computed codeHash and is detected as drift by the deterministic validator",
+        "legacy planning ID ATM-CORE-0001 is preserved in selfVerification metadata while current atomId stays atom.core-seed"
       ]
     },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
+    "depends": [
+      "ATM-1.5-0001"
+    ]
   }
 ]

@@ -1,64 +1,90 @@
 [
   {
-    "doc_id": "doc_task_0324",
-    "id": "ATM-2-0021",
-    "title": "HumanReviewGate as reference plugin（000013）",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P0",
-    "status": "done",
-    "type": "reference-plugin",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T17:11:40.8119351+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "8/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "以 reference plugin + effect node 形式提供 human review queue；core 僅依賴 schema 不依賴實作。",
-    "related": [],
+    "doc_id": "doc_task_0359",
+    "id": "ATM-2.5-0004",
+    "title": "Alpha1 evolution sandbox fixture",
+    "owner": "codex-gpt-5",
+    "priority": "P1",
+    "status": "open",
+    "type": "implementation",
+    "phase": "ATM-2.5",
+    "created": "2026-05-08",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "`ATM-2.5-0002` 已完成 alpha0 sandbox birth pipeline，且不能再被重寫；本卡承接 v2 補丁中 alpha1 evolution sandbox fixture 的未完成 acceptance。",
+    "related": [
+      "ATM-2-0026",
+      "ATM-2-0027",
+      "ATM-2-0029"
+    ],
     "depends": [
+      "ATM-2.5-0001",
+      "ATM-2.5-0002",
+      "ATM-2.5-0003",
       "ATM-2-0020",
-      "ATM-2-0008"
+      "ATM-2-0021",
+      "ATM-2-0022"
     ],
-    "acceptance": [
-      "實作位於 packages/plugin-human-review/*；packages/core 不可 import 此 package",
-      ".atm/reports/upgrade-proposals.json 為審核佇列；支援 approve / reject + reason 兩種 decision",
-      "decision log 寫入 evidence store（evidenceType=human-review-decision）",
-      "layer-boundary scanner 必須擋下 core → plugin-human-review 的任何 import",
-      "CLI 補 atm review list / show <proposalId> / approve <proposalId> --reason / reject <proposalId> --reason 四個子命令",
-      "approve / reject 必須同時落 evidence 與 decision-snapshot.hash，鎖定當下 upgrade-proposal.json 內容雜湊",
-      "upgrade-proposals.md 僅可作 audit projection，不得成為 source of truth；欄位固定為 proposalId / atomId / fromVersion → toVersion / decompositionDecision / automatedGates / status",
-      "node scripts/validate-human-review.mjs 必須可獨立驗證 review queue record、decision-snapshot.hash 與 evidence linkage，不依賴 full suite",
-      "exemplar 至少保留 approve / reject / snapshot-hash-mismatch 三組，可直接重放 CLI 輸出到 validator"
-    ],
+    "acceptance": [],
     "deliverables": [
-      "packages/plugin-human-review/src/queue.ts",
-      "packages/plugin-human-review/src/decision-log.ts",
-      "scripts/validate-human-review.mjs",
-      "schemas/human-review/decision.schema.json",
-      "fixtures/human-review/approve.snapshot.json",
-      "fixtures/human-review/reject.snapshot.json",
-      "fixtures/human-review/hash-mismatch.snapshot.json"
+      "alpha1 evolution sandbox fixture",
+      "upgrade --propose dry-run script",
+      "expected proposal / review / rollback outputs",
+      "alpha0 fixture isolation note",
+      "validation report"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 review CLI / decision-snapshot.hash / Markdown audit projection，避免人工審核流程不可追溯\n2026-05-07 測試穩定性補丁：維持 human review gate 目的不變；補 queue/decision validator 與 decision exemplar triad，避免 review 流程只剩 CLI 手工煙霧測試\n2026-05-08 | 狀態: done | 驗證: validate-human-review ✅ / validate-cli ✅ / validate-package-skeleton ✅ / validate-police ✅ | 變更: plugin-human-review + atm review 子命令 + human-review schema/fixtures + validator 串接；修正 guide 範例字詞以通過 neutrality/self-host criteria4；AAF commit=5362e3b | 阻塞: 無",
+    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 依任務卡必要調整與去重規則，承接 done 卡 ATM-2.5-0002 未完成的 evolution sandbox acceptance；已確認沒有既有同功能 open 卡 | 阻塞: 等 ATM-2-0020/0021/0022 完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "人類審核閘門以 reference plugin 形式落地，避免污染 core hard dependency。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0020 / ATM-2-0008"
+      "label": "",
+      "summary": "承接 ATM-2.5-0002 的 v2 追加 acceptance，建立 alpha1 evolution sandbox fixture，不污染 alpha0 birth fixture",
+      "position": "ATM-2.5 / alpha1 evolution sandbox",
+      "prereq": "ATM-2.5-0001, ATM-2.5-0002, ATM-2.5-0003 已完成；ATM-2-0020 / ATM-2-0021 / ATM-2-0022 提供 evolution proposal 與 rollback contract"
+    },
+    "contracts": {
+      "input": [
+        "ATM-2.5-0002 source card is done and must not be rewritten",
+        "alpha0 sandbox fixture remains birth-pipeline only",
+        "evolution flow uses alpha1 proposal / review / rollback contracts",
+        "no 3KLife/Cocos/html-to-ucuf private assumptions in upstream fixture"
+      ],
+      "output": [
+        "新增獨立 alpha1 evolution sandbox，不修改 ATM-2.5-0002 的 alpha0 fixture",
+        "sandbox 覆蓋 upgrade --propose dry-run、human review decision 與 rollback proof",
+        "alpha0 deterministic 4 criteria 仍是 release blocker；evolution sandbox 只解鎖 alpha1 readiness",
+        "fixture / expected output / report 都有 deterministic validation"
+      ],
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2.5-0004.md\\nnpm run validate:self-hosting-alpha\\nnpm run validate:evolution-sandbox\\nnpm test\\nnpm run typecheck\\nnpm run lint",
+      "rollback_hint": "刪除 alpha1 evolution sandbox fixture、expected outputs 與 validation wiring；不得改寫 ATM-2.5-0001/0002/0003 的 done card 或 alpha0 fixture。",
+      "execution_steps": [
+        "確認 alpha0 sandbox 現況與 v2 補丁語意",
+        "設計獨立 alpha1 evolution sandbox 目錄與 expected outputs",
+        "串接 upgrade proposal / review / rollback dry-run",
+        "補 deterministic validator 與 report",
+        "跑 validation 並同步 task shard"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
     }
   },
   {
-    "doc_id": "doc_task_0277",
-    "id": "ATM-6-0002",
-    "title": "Community RFC 與貢獻流程",
+    "doc_id": "doc_task_0267",
+    "id": "ATM-3-0004",
+    "title": "doc-id 與 encoding adapter integration",
     "owner": "GitHubCopilot",
-    "priority": "P2",
+    "priority": "P1",
     "status": "open",
-    "type": "ecosystem",
-    "phase": "ATM-6",
+    "type": "adapter",
+    "phase": "ATM-3",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -66,39 +92,37 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
+    "description": "把 3KLife doc-id-registry 與 encoding guard 封裝成 ATM adapter hook。",
     "related": [],
     "depends": [
-      "ATM-5-0003"
+      "ATM-3-0001"
     ],
     "acceptance": [
-      "core vs adapter PR 分流",
-      "domain logic PR 有明確拒絕/轉 plugin 流程",
-      "maintainer decision process 清楚",
-      "release owner 與 maintainer quorum 規則已定義",
-      "security / provenance / package naming 類 RFC escalation path 已定義"
+      "新增 ATM 相關 Markdown 仍由 doc-id-registry 分配",
+      "encoding 檢查可針對 touched files 執行",
+      "core 不直接 require 3KLife 工具"
     ],
     "deliverables": [
-      "docs/RFC_PROCESS.md",
-      "GitHub issue templates",
-      "PR template"
+      "tools_node/adapters/atm-3klife/document-adapter.js",
+      "tools_node/adapters/atm-3klife/encoding-adapter.js",
+      "hook tests"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補社群流程需指定 release owner / maintainer quorum / escalation path | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
-      "position": "ATM-6",
-      "prereq": "ATM-5-0003"
+      "summary": "把 3KLife doc-id-registry 與 encoding guard 封裝成 ATM adapter hook。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001"
     },
     "contracts": {
       "input": [
         "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "docs/RFC_PROCESS.md",
-        "GitHub issue templates",
-        "PR template"
+        "tools_node/adapters/atm-3klife/document-adapter.js",
+        "tools_node/adapters/atm-3klife/encoding-adapter.js",
+        "hook tests"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",

@@ -1,66 +1,61 @@
 [
   {
-    "doc_id": "doc_task_0292",
-    "id": "ATM-0-0010",
-    "title": "Self-hosting first 邊界與中立性 guard 落地",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0315",
+    "id": "ATM-0-0014",
+    "title": "ATM 瘦身再開工與規劃真相收斂",
+    "owner": "vs-code-gpt-5.4-mini",
     "priority": "P0",
     "status": "done",
-    "type": "docs-governance",
+    "type": "governance",
     "phase": "ATM-0",
-    "created": "2026-05-05",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T22:47:03.1427368+08:00",
+    "started_at": "2026-05-06T07:57:58+08:00",
     "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-08T17:35:00+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "將 ATM 規劃正式收斂為 upstream self-hosting first，回寫主文件並新增 docs neutrality 與 boundary guard 後續任務。",
-    "related": [],
+    "description": "將 ATM 規劃從完整治理生態先瘦身為 alpha0/alpha1，補上文件真相收斂、核心 schema、confidence gate、3KLife shadow adapter、OSS 實務文件與 H2U dry-run 閘門。",
+    "related": [
+      "ATM-1-0003",
+      "ATM-2-0007",
+      "ATM-2-0008",
+      "ATM-2-0009",
+      "ATM-3-0001",
+      "ATM-4-0005",
+      "ATM-5-0004",
+      "ATM-6-0005"
+    ],
     "depends": [
-      "ATM-0-0009"
+      "ATM-0-0013"
     ],
     "acceptance": [
-      "A/B/Roadmap 同步寫入 upstream self-hosting first 與 hard gates",
-      "Roadmap 補 neutrality/boundary guard 設計",
-      "新增 ATM-1-0010 與 ATM-2-0010 任務卡",
-      "ATM-3/ATM-4 明確標成 downstream-only phase"
+      "主計畫標出 active/companion/historical 收斂原則與任務數修正",
+      "alpha0/alpha1 成功標準寫入主規劃與 open-source extraction plan",
+      "既有 schema、adapter、release、security、H2U 任務卡補上缺口",
+      "tasks-atm source 與 auto-parts 可重建且通過 encoding/standard gate"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md",
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
-      "docs/agent-briefs/tasks/ATM/ATM-1-0010.md",
-      "docs/agent-briefs/tasks/ATM/ATM-2-0010.md"
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md 補強",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md 補強",
+      "docs/agent-briefs/tasks/ATM/ATM-0-0014.md",
+      "相關既有 ATM 任務卡補充",
+      "tasks-atm source 與 auto-parts 同步"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 回寫 self-hosting first、self-hosting alpha gate、docs neutrality 與 neutrality/boundary guard 到三份主文件，並新增 ATM-1-0009/0010、ATM-2-0010 任務 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?self-hosting / neutrality guard ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: self-hosting first ??????OUTPUT_CONTRACT ? task shard ??? | ??: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: tasks-atm source=71/auto-parts=5；crossref rebuild pass；encoding-touched pass；compute-gate standard 8/8 pass | 變更: 補 ATM 瘦身再開工規劃、alpha0/alpha1、truth convergence、confidence gate、shadow adapter、OSS/H2U 任務缺口 | 阻塞: none",
     "brief": {
-      "style": "harn-rich",
-      "label": "ATM self-hosting first 開卡",
-      "summary": "把 upstream self-hosting first、文件中立性與 boundary guard 正式回寫到 ATM 主規劃。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0009"
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
     },
     "contracts": {
-      "input": [
-        "已確認 upstream 不得依賴 3KLife 工具",
-        "需同步 A/B/Roadmap 與 tasks-atm"
-      ],
-      "output": [
-        "更新 self-hosting first 文件真相",
-        "新增 docs neutrality audit 任務",
-        "新增 neutrality/boundary rule guard 任務"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0010 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若 doc_id/manifest 異常，使用既有工具重建，不手動複製代號。",
-      "execution_steps": [
-        "建立新任務卡",
-        "同步 tasks-atm",
-        "鎖卡並更新 frontmatter",
-        "回寫三份主文件",
-        "跑 encoding/task-scope/standard gate"
-      ]
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
     },
     "harness_evidence": {
       "artifact_paths": [],
@@ -68,53 +63,60 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-06T08:08:07+08:00"
   },
   {
-    "id": "ATM-1.5-0001",
-    "title": "Seed-as-Spec：種子以自身格式自我描述",
-    "status": "done",
+    "doc_id": "doc_task_0332",
+    "id": "ATM-2-0026",
+    "title": "Semantic Fingerprint + Lineage + TTL Schema Extension",
+    "owner": "codex-gpt-5.5",
     "priority": "P0",
-    "phase": "ATM-1.5",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0299",
-    "started_at": "2026-05-06T16:48:41+08:00",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T17:03:32.1926363+08:00",
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-spec / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit ad5f091 新增 packages/core/seed.js、specs/atom-seed-spec.json、CLI `spec --validate` 與 AJV schema validator；legacy planning ID ATM-CORE-0001 以 seed metadata 映射保留，現行 spec id 採 `atom.core-seed` 以符合既有 atomic-spec schema | 阻塞: none",
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/packages/core/seed.js",
-        "AI-Atomic-Framework/specs/atom-seed-spec.json",
-        "AI-Atomic-Framework/packages/cli/src/commands/spec.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/spec-shared.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
-        "AI-Atomic-Framework/scripts/validate-seed-spec.mjs",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit ad5f091",
-        "npm run validate:seed-spec",
-        "npm run validate:cli",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "seed self-description now lives in packages/core/seed.js and specs/atom-seed-spec.json",
-        "atm spec --validate validates atomic specs through AJV without breaking zero-install self-hosting flows",
-        "legacy planning ID ATM-CORE-0001 is preserved as seed metadata while the current schema id remains atom.core-seed",
-        "validate --spec stays zero-install compatible for self-hosting alpha and bootstrap smoke"
-      ]
-    },
+    "status": "done",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "ClaudeCode_opus-4-7",
+    "started_at": "2026-05-08T18:11:42+08:00",
+    "started_by_agent": "codex-gpt-5.5",
+    "completed_at": "2026-05-08T18:33:36.7913263+08:00",
+    "completed_by_agent": "codex-gpt-5.5",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "1/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "為 atom 與 atomic-map 加入 semanticFingerprint / lineage / ttl optional 欄位（schema-additive）；採 hot/cold 分離設計：hot registry entry 只放 sf 字串與 lineageLogRef / evidenceIndexRef URI，cold artifact 放完整 history。為去重警察與生命週期警察提供識別基礎。",
+    "related": [],
     "depends": [
-      "ATM-1-0006",
-      "ATM-1-0007"
-    ]
+      "ATM-2-0014",
+      "ATM-2-0023"
+    ],
+    "acceptance": [
+      "atomic-spec.schema.json 與 atomic-map.schema.json 皆 additive 加 optional semanticFingerprint / lineage / ttl 欄位，舊資料相容",
+      "semanticFingerprint 為 64-char hex string（無 nested），可直接做 hash table key",
+      "registry hot entry 欄位數 ≤ 10；lineage 與 evidence detail 走 lineageLogRef / evidenceIndexRef URI，不放主 entry",
+      "提供 sf 計算合約：atom 用 sortByName(inputs)+sortByName(outputs)+language.primary+validation.evidenceRequired+performanceBudget；map 用 sortByName(entrypoints)+qualityTargets",
+      "fixtures：atom-with-sf / map-with-sf / legacy-no-sf 三種，舊 fixture 全綠",
+      "semanticFingerprint 必須採 per-version 規則：hot registry entry 只保留 currentVersion 的 semanticFingerprint，歷史版本值寫入 versions[*].semanticFingerprint",
+      "validate-semantic-fingerprint.mjs 必須獨立驗證 atom/map/legacy/pending exemplar 與 hot/cold、per-version 規則",
+      "exemplar：atom-with-sf / map-with-sf / legacy-no-sf / pending-sf-calculation"
+    ],
+    "deliverables": [
+      "schemas/atomic-spec.schema.json",
+      "schemas/registry/atomic-map.schema.json",
+      "packages/core/src/registry/semantic-fingerprint.ts",
+      "scripts/validate-semantic-fingerprint.mjs",
+      "fixtures/registry/atom-with-sf.json",
+      "fixtures/registry/map-with-sf.json",
+      "fixtures/registry/legacy-no-sf.json",
+      "fixtures/registry/pending-sf-calculation.json"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: ATM 識別/行為/狀態機提案開卡；schema-additive、hot/cold 分離、hot 欄位 ≤10 | 阻塞: 等 ATM-2-0014 / ATM-2-0023 完成\n2026-05-07 ATM-2-0042：generator 與 dogfood map 須共用 SF 規則\n2026-05-07 附錄 C：semanticFingerprint 改為 per-version\n2026-05-07 測試穩定性補丁：追加 validator + exemplar quartet",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "為原子與原子地圖加入 semanticFingerprint / lineage / ttl，並維持 hot/cold 分離以支援大規模原子庫。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0014 / ATM-2-0023"
+    }
   }
 ]

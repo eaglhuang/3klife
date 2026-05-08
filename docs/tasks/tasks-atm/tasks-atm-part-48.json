@@ -1,137 +1,104 @@
 [
   {
-    "doc_id": "doc_task_0271",
-    "id": "ATM-4-0004",
-    "title": "parseCssLength 與 parseFragmentList case atoms",
+    "doc_id": "doc_task_0337",
+    "id": "ATM-2-0031",
+    "title": "Lifecycle Police（TTL + Sweep + 狀態機警察）",
     "owner": "GitHubCopilot",
-    "priority": "P1",
+    "priority": "P0",
     "status": "open",
-    "type": "atom-case",
-    "phase": "ATM-4",
-    "created": "2026-05-05",
+    "type": "police",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
     "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom；承接 ATM-4-0003 的 behavior.atomize lineage 規則，不重複開 H2U atomize 卡。",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "6/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "提供生命週期警察：(1) scheduled scan 發現 TTL 已到的 atom，建議 expire；(2) zero-caller scan 發現無 caller 的 atom，建議 sweep；(3) 偵測非法 status transition（違反 ATM-2-0027 矩陣），quarantine 該 atom；(4) 通知 callers 進行遷移。",
     "related": [],
     "depends": [
-      "ATM-4-0003"
+      "ATM-2-0026",
+      "ATM-2-0027",
+      "ATM-2-0029"
     ],
     "acceptance": [
-      "px/em/%/svg 與 fragment legacy fixtures 覆蓋",
-      "self-test 不退轉",
-      "可 rollback",
-      "兩個新 atom 均使用 behavior.atomize，並包含 lineage.bornBy=atomize",
-      "兩個新 atom 均帶 legacy:// parentRefs 與可追溯 lineage log",
-      "neutrality scan 不得讓 adopter-private 假設流入 upstream core schema"
+      "packages/plugin-police-lifecycle/ 落地 lifecycle police",
+      "scheduled scan 報告 TTL 已到 / zero-caller / 非法 transition 三類 finding",
+      "TTL 過期 atom 建議 behavior.expire；zero-caller atom 建議 behavior.sweep",
+      "偵測到非法 transition 時將該 atom 標記 quarantined（唯一可寫此狀態的角色）",
+      "caller migration 通知 contract：lifecycle-notice.schema.json",
+      "fixtures：3 類 finding 各 1 份 + 1 份 quarantine 行為 + 1 份 caller-notice"
     ],
     "deliverables": [
-      "parseCssLength atom",
-      "parseFragmentList atom",
-      "fixtures",
-      "registry/hash entries",
-      "lineage logs and parentRefs for both extracted atoms",
-      "validation report"
+      "packages/plugin-police-lifecycle/",
+      "packages/plugin-police-lifecycle/src/ttl-scanner.ts",
+      "packages/plugin-police-lifecycle/src/zero-caller-scanner.ts",
+      "packages/plugin-police-lifecycle/src/transition-checker.ts",
+      "schemas/police/lifecycle-finding.schema.json",
+      "schemas/police/lifecycle-notice.schema.json",
+      "fixtures/lifecycle-police/*"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 6/8）| 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0003"
-    },
-    "contracts": {
-      "input": [
-        "ATM-4-0003 已提供 normalizeCssColor case atom、legacy fixture、lineage log 與 registry/hash entry",
-        "ATM-2-0033 已定義 ProjectAdapter legacy:// URI 與 atomize / infect adapter contract",
-        "本卡只能新增 parseCssLength / parseFragmentList case atoms，不得重寫 normalizeCssColor done card"
-      ],
-      "output": [
-        "parseCssLength atom",
-        "parseFragmentList atom",
-        "fixtures",
-        "registry/hash entries",
-        "兩個新 atom 均使用 behavior.atomize，並包含 lineage.bornBy=atomize",
-        "兩個新 atom 均帶 legacy:// parentRefs 與可追溯 lineage log",
-        "neutrality scan 不得讓 adopter-private 假設流入 upstream core schema"
-      ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-4-0004.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "讀取 legacy source range，為 parseCssLength / parseFragmentList 建立 legacy:// parentRefs",
-        "以 behavior.atomize 產生兩個 case atom spec、fixtures、registry/hash entry 與 lineage log",
-        "跑 adapter/case validation 與 neutrality scan",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "生命週期警察：TTL + zero-caller + 狀態機合規檢查；唯一可寫 quarantined 狀態的角色。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0026 / ATM-2-0027 / ATM-2-0029"
     }
   },
   {
-    "doc_id": "doc_task_0285",
-    "id": "ATM-6-0004",
-    "title": "Performance Budget Police 與成本控制",
-    "owner": "GitHubCopilot",
-    "priority": "P2",
-    "status": "open",
-    "type": "optional-police",
-    "phase": "ATM-6",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
+    "doc_id": "doc_task_0346",
+    "id": "ATM-2-0039",
+    "title": "Generated Atom Source Template and Code Path Policy",
+    "owner": "vs-code-gpt-5.4-mini",
+    "priority": "P0",
+    "status": "done",
+    "type": "architecture",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T15:14:35.1752897+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
+    "chain_step": "1/3",
+    "sensor_triggered_by": "atm-generator-source-gap",
+    "description": "讓 Atom Generator 產出的新原子具備正式 source file template，不再以 spec-only 或 spec-as-code 方式暫代 registry codePaths。",
     "related": [],
     "depends": [
-      "ATM-5-0005"
+      "ATM-2-0038"
     ],
-    "acceptance": [
-      "Performance Budget 不進 v0.1 core hard gate",
-      "hot path atom 有 p95/maxRuntimeMs/allocatedBytes 建議",
-      "LLM caching 與 budget 只透過 plugin 啟用"
-    ],
-    "deliverables": [
-      "docs/ecosystem/performance-budget-police.md",
-      "plugin boundary proposal",
-      "cost control policy"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始補 source template/codePaths policy | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node tests/core/atom-generator.test.mjs / node tests/cli/create.test.mjs / npm run validate:registry-core / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: AtomGenerator 產物補 atom.source.mjs，預設 validation command 改跑 source self-check，registry codePaths 不再用 specPath 暫代 | 阻塞: none\n2026-05-08 | ??: done | ??: node tests/core/atom-generator.test.mjs pass?npm.cmd run validate:generator-provenance pass | ??: AtomGenerator source template / codePaths policy ? provenance ?????????task shard ??? | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
-      "position": "ATM-6",
-      "prereq": "ATM-5-0005"
+      "label": "ATM generator source template 開卡",
+      "summary": "補齊 generator 的 source file template 與 codePaths policy，讓新原子真正有 spec/code/test/report 四件套。",
+      "position": "ATM-2（generator provenance / source template）",
+      "prereq": "ATM-2-0038"
     },
     "contracts": {
       "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
+        "ATM-2-0038 alpha0 已能產生 spec/test/report 並登錄 registry",
+        "目前 dogfood fixture 以 spec path 暫作 codePaths，這只是 alpha0 過渡",
+        "Registry selfVerification 需要穩定 codePaths"
       ],
       "output": [
-        "docs/ecosystem/performance-budget-police.md",
-        "plugin boundary proposal",
-        "cost control policy"
+        "新增 generator source template policy",
+        "AtomGenerator 產物包含正式 source file",
+        "Registry codePaths 不再用 specPath 暫代",
+        "補 fixture 覆蓋 source/code/test/report 四件套"
       ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "validation_cmd": "node tests/core/atom-generator.test.mjs\\nnode tests/cli/create.test.mjs\\nnpm run validate:registry-core",
+      "rollback_hint": "回退 source template 與 codePaths policy；保留 ATM-2-0038 birth facade，不回退 allocator/create command。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
+        "盤點目前 generated atom 檔案組成",
+        "設計 source template 與預設 validation command",
+        "更新 generator 與 tests",
+        "回寫 registry/codePaths policy"
       ]
     },
     "harness_evidence": {

@@ -1,50 +1,50 @@
 [
   {
-    "doc_id": "doc_task_0245",
-    "id": "ATM-0-0001",
-    "title": "ATM 任務 shard 與 bootstrap 卡",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
+    "doc_id": "doc_task_0250",
+    "id": "ATM-0-0006",
+    "title": "ATM 任務卡模板與開卡規則",
+    "owner": "vs-insiders-gpt-5.4-mini",
+    "priority": "P1",
     "status": "done",
-    "type": "governance",
+    "type": "docs",
     "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T18:06:44+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-08T17:35:00+08:00",
+    "started_at": "2026-05-06T12:50:58.8606404+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "completed_at": "2026-05-06T12:52:45.2848800+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "註冊 ATM-* 任務 shard，建立 tasks-atm.json，並開立 bootstrap 任務卡以解除 ATM 卡號自舉悖論。",
+    "description": "建立 ATM 任務卡模板，統一 upstream core、adapter、case study 任務欄位。",
     "related": [],
-    "depends": [],
+    "depends": [
+      "ATM-0-0001",
+      "ATM-0-0003"
+    ],
     "acceptance": [
-      "task-lock ATM-0-0001 已鎖定且 files[] 非空",
-      "check-task-scope --task ATM-0-0001 不再缺卡",
-      "tasks-atm.json 可被後續任務 upsert"
+      "模板包含 hostKind/targetRepo/alphaGate/packageScope/adapterScope/allowed_files/forbidden_files/non_goals/executionMode/validation_cmd/rollback_hint",
+      "新 ATM 卡可由 task-card-opener 一致生成"
     ],
     "deliverables": [
-      "docs/tasks/.shardrc.json 加入 tasks-atm",
-      "docs/tasks/tasks-atm.json 建立並收錄 ATM 任務",
-      "docs/agent-briefs/tasks/ATM/ATM-0-0001.md 具備 doc_id 與 in-progress frontmatter"
+      "docs/agent-briefs/atm-task-template.md",
+      "task-card-opener 使用說明補充"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: check-task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 完成 ATM shard、任務卡批次建立、doc_id 回填與 Roadmap/Plan 解耦 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?tasks-atm shard/card truth resynced?npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: ? ATM shard/bootstrap ???????OUTPUT_CONTRACT ? task shard ????? | ??: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: encoding passed；standard gate 受既有 dirty files 阻擋 | 變更: 建立 ATM 任務卡模板並補充開卡欄位規則 | 阻塞: 既有 task-scope 雜訊",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 開源化開卡",
-      "summary": "註冊 ATM-* 任務 shard，建立 tasks-atm.json，並開立 bootstrap 任務卡以解除 ATM 卡號自舉悖論。",
+      "summary": "建立 ATM 任務卡模板，統一 upstream core、adapter、case study 任務欄位。",
       "position": "ATM-0",
-      "prereq": "無"
+      "prereq": "ATM-0-0001、ATM-0-0003"
     },
     "contracts": {
       "input": [
         "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
       ],
       "output": [
-        "docs/tasks/.shardrc.json 加入 tasks-atm",
-        "docs/tasks/tasks-atm.json 建立並收錄 ATM 任務",
-        "docs/agent-briefs/tasks/ATM/ATM-0-0001.md 具備 doc_id 與 in-progress frontmatter"
+        "docs/agent-briefs/atm-task-template.md",
+        "task-card-opener 使用說明補充"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
@@ -57,73 +57,55 @@
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [
-        "node tools_node/check-task-scope.js --task ATM-0-0001 --verbose",
-        "node tools_node/compute-gate.js --profile standard --agent-feedback"
-      ],
+      "validation_evidence": [],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
     }
   },
   {
-    "doc_id": "doc_task_0314",
-    "id": "ATM-0-0013",
-    "title": "tasks-atm.json thin index 與細分片",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
+    "id": "ATM-3-0012",
+    "title": "task-scope / import-boundary 規則包遷移 + @deprecated 標記",
     "status": "done",
-    "type": "governance",
-    "phase": "ATM-0",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T01:03:22.4082504+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 docs/tasks/tasks-atm.json 從單一大型 aggregate 改為 thin index stub，完整 ATM 任務改存於 docs/tasks/tasks-atm/ 之下的 part 檔，並把每個分片收斂到不超過 300 行、約 10 KB。",
-    "related": [
-      "ATM-3-0009"
-    ],
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "vs-insiders-gpt-5.3-codex",
+    "started_at": "2026-05-08T18:30:32.413+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.3-codex",
+    "completed_at": "2026-05-08T18:42:15.966+08:00",
+    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
+    "doc_id": "doc_task_0312",
     "depends": [
-      "ATM-0-0001"
+      "ATM-3-0006"
     ],
+    "description": "Move task-scope / import-boundary rules into ATM RuleGuardAdapter rule-pack, and make the rule pack carry proactive police findings instead of only deprecated wrapper warnings.",
     "acceptance": [
-      "docs/tasks/tasks-atm.json 不再保存完整 tasks array，而是 thin index stub",
-      "docs/tasks/tasks-atm/tasks-atm-part-*.json 每檔不超過 300 行、約 10 KB",
-      "task-card-opener 在 json-out=docs/tasks/tasks-atm.json 時仍可正確 upsert 任務並重建 thin index",
-      "docs/tasks/README.md 補上 thin index 與 rebuild 指令"
+      "rule-pack.json encodes trigger / scope / severity / action plus routeHint for proactive police outputs",
+      "deprecated wrappers emit machine-readable findings instead of only stderr warnings",
+      "compute-gate atm profile routes fast / slow police outputs through ATM RuleGuardAdapter"
     ],
-    "deliverables": [
-      "docs/tasks/tasks-atm.json thin index stub",
-      "docs/tasks/tasks-atm/.shardrc.json",
-      "docs/tasks/tasks-atm/tasks-atm-part-*.json",
-      "docs/tasks/README.md 的 thin index / rebuild 說明",
-      "tools_node/lib/tasks-atm-shard-store.js",
-      "tools_node/rebuild-tasks-atm-auto-parts.js thin-index 寫入鏈"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: thin-index rebuild pass；task-card-opener thin-index upsert pass；16 個 part 皆 <=300 行 / <=10 KB；encoding-touched pass；quick gate 3/3 pass；standard gate 僅被既有 unrelated dirty task-scope 擋住 | 變更: 將 tasks-atm.json 改為 thin index，接上 shard store 寫入鏈，並把分片門檻收緊到 300 行 / 10 KB | 阻塞: none",
-    "brief": {
-      "style": "classic",
-      "label": "",
-      "summary": "",
-      "position": "",
-      "prereq": ""
-    },
     "contracts": {
-      "input": [],
-      "output": [],
-      "validation_cmd": "",
-      "rollback_hint": "",
-      "execution_steps": []
+      "input": [
+        "tools_node/adapters/atm-3klife/rule-pack.json as the shared rule source",
+        "ATM-3-0006 task-lock adapter and ATM-3-0011 / ATM-3-0013 dependency chain"
+      ],
+      "output": [
+        "tools_node/adapters/atm-3klife/rule-pack.json",
+        "ATM RuleGuardAdapter consuming rule-pack.json",
+        "machine-readable findings with trigger / scope / severity / action",
+        "deprecated wrappers that warn and route findings"
+      ],
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-3-0012.md docs/tasks/tasks-atm/tasks-atm-part-40.json",
+      "rollback_hint": "Revert touched files and restore the previous deprecated-wrapper-only rule-pack behavior.",
+      "execution_steps": [
+        "Normalize the rule-pack schema and routeHint fields",
+        "Wire the adapter to emit findings for task-scope and import-boundary cases",
+        "Keep deprecated wrappers warning-only at the surface",
+        "Validate encoding and sync the task shard"
+      ]
     },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
+    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: rule-pack 升級為主動警察 finding 契約，補 trigger/scope/severity/action 與 routeHint | 阻塞: none\n2026-05-08 | 狀態: done | 驗證: wrapper [DEPRECATED] warning ✅ / run-rule-guard findings JSON ✅ / compute-gate ts-syntax+eslint ✅ | 變更: 新增 rule-pack.json + rule-guard-adapter.js + run-rule-guard.js，check-task-scope/check-import-boundaries 標 deprecated，compute-gate atm profile 改走 rule-guard-atm | 阻塞: atm profile 仍受既有 dirty scope 影響\n2026-05-08 | 狀態: done | 驗證: BattleController fs/path 違規移除後 run-rule-guard 不再出現 cocos-no-fs finding；framework-function-atomization-manifest 對應列已改 covered-existing | 變更: 補修 BattleController fallback 與 manifest 狀態對齊 | 阻塞: task-scope uncovered files 為 repo 既有狀態"
   }
 ]

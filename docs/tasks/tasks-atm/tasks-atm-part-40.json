@@ -1,134 +1,123 @@
 [
   {
-    "doc_id": "doc_task_0257",
-    "id": "ATM-1-0007",
-    "title": "Hello-world 與 legacy-strangler 範例",
-    "owner": "GitHubCopilot",
-    "priority": "P1",
-    "status": "done",
-    "type": "example",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T15:03:13+08:00",
-    "started_by_agent": "vs-code-github-copilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立最小 compute atom 與最小 legacy strangler example，讓新使用者可從零跑通。",
-    "related": [],
-    "depends": [
-      "ATM-1-0004",
-      "ATM-1-0005"
-    ],
-    "acceptance": [
-      "hello-world 可在 standalone mode validate",
-      "legacy-strangler-minimal 不含 3KLife 私有路徑",
-      "Quick Start 30 分鐘可跑完"
-    ],
-    "deliverables": [
-      "examples/hello-world",
-      "examples/legacy-strangler-minimal",
-      "docs/QUICK_START.md 範例命令"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:examples / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 2d7e21f 建立 hello-world、legacy-strangler-minimal、docs/QUICK_START.md 與 examples validation gate | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立最小 compute atom 與最小 legacy strangler example，讓新使用者可從零跑通。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0004、ATM-1-0005"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "examples/hello-world",
-        "examples/legacy-strangler-minimal",
-        "docs/QUICK_START.md 範例命令"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/examples/hello-world",
-        "AI-Atomic-Framework/examples/legacy-strangler-minimal",
-        "AI-Atomic-Framework/docs/QUICK_START.md",
-        "AI-Atomic-Framework/scripts/validate-examples.mjs",
-        "AI-Atomic-Framework/package.json",
-        "AI-Atomic-Framework/package-lock.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 2d7e21f",
-        "npm install",
-        "npm run packages:list",
-        "npm run validate:examples",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff verified",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit 2d7e21f",
-        "hello-world compute atom validates in standalone flow",
-        "legacy-strangler-minimal wraps existing code without downstream private paths",
-        "Quick Start includes install, package list, example tests, spec validation, and full gate commands",
-        "validate:examples verifies 2 examples and Quick Start commands"
-      ]
-    },
-    "completed_at": "2026-05-06T15:07:10+08:00"
-  },
-  {
-    "doc_id": "doc_task_0321",
-    "id": "ATM-2-0018",
-    "title": "BuildAgentPrompt bootstrap atom（000003）",
+    "doc_id": "doc_task_0287",
+    "id": "ATM-0-0009",
+    "title": "Default Governance Bundle 切分重規劃",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "bootstrap-atom",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
+    "type": "docs-governance",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-07T03:03:48Z",
-    "started_by_agent": "vs-code-gpt-5.4",
-    "completed_at": "2026-05-07T03:11:35Z",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "5/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "從 atomic spec 產出受控 AI prompt，內含 forbidden rules、allowed files、evidence contract；屬於 birth pipeline 的 000003 工序。",
+    "started_at": "2026-05-05T22:07:57+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 ATM 從 atom runner 補強為完整 governance framework，正式切分 Upstream Core、Agent Operating Layer、Default Governance Bundle 與 3KLife ProjectAdapter。",
     "related": [],
     "depends": [
-      "ATM-2-0001",
-      "ATM-2-0002",
-      "ATM-2-0005"
+      "ATM-0-0008"
     ],
     "acceptance": [
-      "atom build-agent-prompt 可從 normalized spec 產出 prompt.md，含 frontmatter 列出 forbidden rules / allowed files / evidence contract",
-      "prompt 結構通過 schemas/agent-prompt.schema.json 驗證",
-      "birth fixture：minimal spec → prompt 對 snapshot；spec 變更時 prompt 必須跟著變化"
+      "計畫書新增 Default Governance Bundle 分層",
+      "open-source extraction plan 納入 governance bundle 為 v0.1 alpha 必備",
+      "新增後續 governance bundle schema/reference plugin 任務卡",
+      "不把 3KLife task-lock/compute-gate/doc-id/shard-manager 反推成 core hard dependency"
     ],
     "deliverables": [
-      "packages/core/src/agent-prompt/build-agent-prompt.ts",
-      "schemas/agent-prompt.schema.json",
-      "fixtures/agent-prompt/minimal.input.json",
-      "fixtures/agent-prompt/minimal.expected.md"
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md governance split 章節",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md governance bundle 分層",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0007.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0008.md"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 | 狀態: done | 驗證: validate:agent-prompt / validate:schemas / npm test / npm run typecheck / npm run lint 通過 | 變更: 上游 7791d51 新增 build-agent-prompt、agent-prompt schema、snapshot fixture 與 root validation wiring | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope uncovered=0；compute-gate standard 8/8 pass | 變更: 落地 Default Governance Bundle 與 Agent Operating Layer 切分，新增 ATM-1-0008/ATM-2-0009，將 artifacts/logs/md-json state/evidence 納入通用層 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?governance bundle / state store ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: governance bundle ????????? task shard ????? | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "補上 Roadmap §7.1 的 000003 缺口，使 birth pipeline 能正式委託 AI。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0001 / ATM-2-0002 / ATM-2-0005"
+      "label": "ATM governance split 開卡",
+      "summary": "將 ATM 補強為包含通用治理 primitives 的完整開源框架，同時維持 3KLife 既有工具以 adapter 接入。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0008"
+    },
+    "contracts": {
+      "input": [
+        "已確認 ATM 不能只剩 atom runner",
+        "3KLife 既有治理工具需最小改動保留"
+      ],
+      "output": [
+        "更新 downstream plan 分工模型",
+        "更新 extraction plan v0.1 alpha 必備",
+        "新增 governance bundle 後續任務"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "execution_steps": [
+        "鎖定 ATM-0-0009",
+        "建立 governance bundle 任務卡",
+        "更新正式計畫文件",
+        "同步 tasks-atm shard",
+        "跑 encoding 與 standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "node tools_node/doc-id-registry.js",
+        "node tools_node/check-encoding-touched.js",
+        "node tools_node/check-task-scope.js --task ATM-0-0009 --verbose",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "completed_at": "2026-05-08T17:35:00+08:00"
+  },
+  {
+    "doc_id": "doc_task_0331",
+    "id": "ATM-4-0008",
+    "title": "H2U Map Evolution Pilot",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "case-study",
+    "phase": "ATM-4",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-MAP-EVOLUTION-V2",
+    "chain_step": "4/4",
+    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
+    "description": "在 H2U case 之上組一張 atomic map（normalizeCssColor + parseCssLength + parseFragmentList），跑首次完整 map-level evolution：包含 atom-bump、atom-extract、map-bump 三種路徑各一次 dry-run。",
+    "related": [],
+    "depends": [
+      "ATM-4-0007",
+      "ATM-2-0024",
+      "ATM-2-0025"
+    ],
+    "acceptance": [
+      "h2u-map v1.0 寫入 registry，含 qualityTargets",
+      "路徑 1：normalizeCssColor v1.0→v1.1 觸發 map propagation 測試，全綠後 atom-bump 落地",
+      "路徑 2：對 parseFragmentList 做 atom-extract，產生新 atom + map members 替換 + review queue 通過",
+      "路徑 3：跨 atom 行為改動，走 map-bump h2u-map v1.0→v1.1，含完整 propagation report",
+      "三條路徑皆通過 neutrality scanner，並留下 evidence + decision log"
+    ],
+    "deliverables": [
+      "docs/case-studies/h2u-map-evolution-pilot.md",
+      "fixtures/case-studies/h2u-map/v1.0.json",
+      "fixtures/case-studies/h2u-map/atom-bump.proposal.json",
+      "fixtures/case-studies/h2u-map/atom-extract.proposal.json",
+      "fixtures/case-studies/h2u-map/map-bump.proposal.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 附錄 B 開卡",
+      "summary": "以 H2U map 端到端驗證三種演化路徑與整合測試傳遞，作為 alpha1 map-level acceptance 證據。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0007 / ATM-2-0024 / ATM-2-0025"
     }
   }
 ]

@@ -1,98 +1,52 @@
 [
   {
-    "id": "ATM-2.5-0003",
-    "title": "Multi-Agent 兼容性驗證：confidence gate",
+    "doc_id": "doc_task_0282",
+    "id": "ATM-0-0008",
+    "title": "3KLife adapter 技術棧校正矩陣",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
     "status": "done",
-    "priority": "P1",
-    "phase": "ATM-2.5",
-    "type": "confidence-gate",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0305",
-    "started_at": "2026-05-07T16:05:00Z",
-    "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-07T16:45:00Z",
-    "depends": [
-      "ATM-2.5-0001",
-      "ATM-2.5-0002"
-    ],
-    "description": "依 multi-agent-compatibility-matrix.md 執行 5 種 AI agent 的 confidence 測試；此卡不再阻塞 alpha0，alpha0 release blocker 僅保留 deterministic profile check。",
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 將 multi-agent alpha gate 降級為 confidence gate；alpha0 release blocker 僅保留 deterministic profile check | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: 開始補齊 self-host-alpha --agent、verify --agents-md 與 multi-agent confidence reports/summary | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:cli pass；npm.cmd run validate:self-hosting-alpha pass；npm.cmd run validate:multi-agent-confidence pass；npm.cmd test/typecheck/lint pass | 變更: upstream commit aa1fcdd 完成 profile-based advisory confidence workflow 與 5 份 report artifacts | 阻塞: none",
-    "acceptance": [
-      "5 個 agent confidence report 皆有結果檔；不要求 3/5 全 true 才能釋出 alpha0",
-      "失敗 agent 有 issue link 與修復計畫，並標記是否阻塞 alpha1",
-      "upgrade --propose dry-run confidence 為 advisory，不得作為 alpha0 release blocker"
-    ],
-    "deliverables": [
-      "Claude Code：atm self-host-alpha --agent claude-code 產生 confidence report",
-      "Cursor：manual run 產生 confidence report",
-      "Aider：aider --message AGENTS.md 跑 confidence workflow",
-      "GitHub Copilot Agent：gh copilot agent run 產生 confidence report",
-      "OpenAI Assistants API：node tests/agents/openai-assistant.test.js 產生 confidence report",
-      "tests/agents/results/<agent>-<timestamp>.json 結果記錄",
-      "docs/multi-agent-results.md 公開結果摘要"
-    ]
-  },
-  {
-    "doc_id": "doc_task_0284",
-    "id": "ATM-5-0005",
-    "title": "Living Spec 同步器與 PEV Loop",
-    "owner": "GitHubCopilot",
-    "priority": "P1",
-    "status": "open",
-    "type": "optional-feature",
-    "phase": "ATM-5",
+    "type": "adapter-docs",
+    "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-05T21:28:29+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-08T17:35:00+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
+    "description": "將 v0.2 的工具選型與 3KLife 現況校正成 downstream adopter 採納矩陣，避免把 local workbench 誤當 upstream core。",
     "related": [],
     "depends": [
-      "ATM-5-0001",
-      "ATM-2-0006"
+      "ATM-0-0004"
     ],
     "acceptance": [
-      "PEV Loop 成為標準流程語彙",
-      "MVP 只要求 drift prompt，不要求自動雙向同步",
-      "Living Spec 不阻塞 v0.1 alpha release",
-      "docs/PEV_LOOP.md 必須定義 Plan-Execute-Verify-Converge 如何產生 PEV upgrade proposal",
-      "docs/LIVING_SPEC.md 必須說明 Living Spec sync 不得自動 promote；只能產生 reviewable proposal",
-      "Spec drift prompt schema 必須輸出 atom compatibility impact 與 semver recommendation",
-      "README workflow summary 必須連回 framework semver / atom compatibility / PEV proposal 文件"
+      "task-lock/compute-gate/doc-id/encoding 都被描述為 ProjectAdapter 能力",
+      "tools_node/atomic-framework 僅是 local wrapper/workbench",
+      "不把 H2U/Cocos 規則反推回 core"
     ],
     "deliverables": [
-      "docs/PEV_LOOP.md",
-      "docs/LIVING_SPEC.md",
-      "Spec drift prompt schema",
-      "README workflow summary",
-      "schemas/pev/upgrade-proposal-public.schema.json",
-      "schemas/pev/spec-drift-prompt.schema.json",
-      "PEV upgrade proposal 範例"
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md v0.2 採納/降級/延後矩陣",
+      "3KLife adapter 技術棧校正摘要"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
+    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 補齊 3KLife adapter 技術棧校正細版矩陣，明確區分 upstream core、ProjectAdapter、optional adapter 與延後項 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?adapter matrix / upstream boundary truth rechecked?npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: adapter ??????????OUTPUT_CONTRACT ? task shard ??? | ??: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM v0.2 整合開卡",
-      "summary": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001、ATM-2-0006"
+      "summary": "將 v0.2 的工具選型與 3KLife 現況校正成 downstream adopter 採納矩陣，避免把 local workbench 誤當 upstream core。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0004"
     },
     "contracts": {
       "input": [
         "v0.2 companion analysis 已確認可作務實化補充"
       ],
       "output": [
-        "docs/PEV_LOOP.md",
-        "docs/LIVING_SPEC.md",
-        "Spec drift prompt schema",
-        "README workflow summary",
-        "PEV upgrade proposal 範例，含 atom compatibility impact 與 semver recommendation"
+        "docs/ai_atomic_framework/AI原子框架開發計畫書.md v0.2 採納/降級/延後矩陣",
+        "3KLife adapter 技術棧校正摘要"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-5-0005.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
       "execution_steps": [
         "確認 upstream/downstream 邊界",
@@ -103,10 +57,62 @@
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [],
+      "validation_evidence": [
+        "node tools_node/check-task-scope.js --task ATM-0-0008 --verbose",
+        "node tools_node/check-encoding-touched.js",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback"
+      ],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0336",
+    "id": "ATM-2-0030",
+    "title": "Dedup Police Plugin",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "police",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "5/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "提供去重警察：用 semanticFingerprint 比對找出重複候選，呼叫 LLM similarity skill 算 90%+ 行為相似度，依 8 種去重情境裁決，產出 dedup-report。維護 fingerprint-index 做 O(1) prefix lookup，跨 100K atoms 全掃在數百毫秒內完成。",
+    "related": [],
+    "depends": [
+      "ATM-2-0026",
+      "ATM-2-0029",
+      "ATM-2-0005"
+    ],
+    "acceptance": [
+      "packages/plugin-police-dedup/ 落地 dedup police plugin",
+      "fingerprint-index.json 使用 sf 16-char prefix 做 hash bucket；100K atoms 全掃 ≤ 500ms（含 budget 測試）",
+      "實作 8 種去重情境（自由原子 100% 同 / 自由原子 90%+ 同 / map 成員 vs 自由原子 / 同 map 內成員同 / 跨 map 成員同 / 整個 map 同 / 零 caller / TTL 過期）",
+      "每種情境輸出對應建議 behavior（dedup-merge / sweep / extract-shared / map-merge / expire / infect）",
+      "dedup-report.schema.json 含 candidates[] / suggestedBehavior / confidenceScore",
+      "LLM similarity skill 為 plugin 接口，dry-run 時可 stub"
+    ],
+    "deliverables": [
+      "packages/plugin-police-dedup/",
+      "packages/plugin-police-dedup/src/fingerprint-index.ts",
+      "packages/plugin-police-dedup/src/similarity-skill.ts",
+      "schemas/police/dedup-report.schema.json",
+      "fixtures/dedup/*8-scenarios.json",
+      "tests/dedup/100k-budget.test.ts"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 5/8）| 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "去重警察：sf+LLM similarity 找重複候選，O(1) prefix lookup 支援大規模原子庫。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0026 / ATM-2-0029 / ATM-2-0005"
     }
   }
 ]

@@ -1,109 +1,119 @@
 [
   {
-    "doc_id": "doc_task_0339",
-    "id": "ATM-2-0033",
-    "title": "Atomization & Infection Adapter Contract",
+    "doc_id": "doc_task_0281",
+    "id": "ATM-0-0007",
+    "title": "上游 roadmap v0.2 技術選型整合",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
-    "type": "adapter",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
+    "status": "done",
+    "type": "docs",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
-    "chain_step": "8/8",
-    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
-    "description": "在 ProjectAdapter 邊界定義 behavior.atomize 與 behavior.infect 的合約：legacy URI 解析（legacy://）、neutrality scan 整合（避免新 atom 帶入 host 私有資訊）、dry-run patch contract（不直接動 host project）。",
+    "started_at": "2026-05-05T20:58:01+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
     "related": [],
     "depends": [
-      "ATM-2-0029",
-      "ATM-2-0010"
+      "ATM-0-0003"
     ],
     "acceptance": [
-      "ProjectAdapter 介面新增 resolveLegacyUri(uri) → 解析 legacy://<host>/<path>#L<start>-<end>",
-      "atomize-adapter.schema.json 定義 atomize 在 adapter 邊界的合約：legacy 區段選取 / sf 計算 / 新 atom proposal",
-      "infect-adapter.schema.json 定義 infect 合約：目標 atom / legacy 注入點 / dry-run patch",
-      "atomize 產出的新 atom spec 必須通過 ATM-2-0010 neutrality scanner（不得含 host 私有 token / path / 領域名詞）",
-      "infect 產出的 patch 是 dry-run only；apply 模式須由 host adapter 額外 capability 開啟",
-      "fixtures：1 個 atomize 例子（含 legacy:// URI）+ 1 個 infect 例子（含 dry-run patch）"
+      "Roadmap 清楚標示 v0.2 是 companion analysis",
+      "core 不硬依賴 LangGraph/pgvector/Deno/OpenTelemetry 等外部工具",
+      "TypeScript/Zod/Vitest 等只被描述為 first implementation recommendation"
     ],
     "deliverables": [
-      "schemas/adapter/atomize-adapter.schema.json",
-      "schemas/adapter/infect-adapter.schema.json",
-      "packages/plugin-sdk/src/adapter/legacy-uri.ts",
-      "fixtures/adapter/atomize-example.json",
-      "fixtures/adapter/infect-example.json"
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 8/8）| 阻塞: 等依賴卡完成",
+    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 整合 v0.2 companion 到 Roadmap、3KLife plan、extraction plan，並新增 6 張補強卡 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?Roadmap/companion ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: companion ??????????? task shard ????? | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 識別/行為/狀態機提案開卡",
-      "summary": "Legacy strangler 在 ProjectAdapter 邊界的合約：atomize/infect 的 URI 解析、neutrality 整合、dry-run patch。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0029 / ATM-2-0010"
-    }
-  },
-  {
-    "doc_id": "doc_task_0346",
-    "id": "ATM-2-0039",
-    "title": "Generated Atom Source Template and Code Path Policy",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P0",
-    "status": "done",
-    "type": "architecture",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T15:14:35.1752897+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "completed_at": "2026-05-08T17:35:00+08:00",
-    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
-    "chain_step": "1/3",
-    "sensor_triggered_by": "atm-generator-source-gap",
-    "description": "讓 Atom Generator 產出的新原子具備正式 source file template，不再以 spec-only 或 spec-as-code 方式暫代 registry codePaths。",
-    "related": [],
-    "depends": [
-      "ATM-2-0038"
-    ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始補 source template/codePaths policy | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node tests/core/atom-generator.test.mjs / node tests/cli/create.test.mjs / npm run validate:registry-core / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: AtomGenerator 產物補 atom.source.mjs，預設 validation command 改跑 source self-check，registry codePaths 不再用 specPath 暫代 | 阻塞: none\n2026-05-08 | ??: done | ??: node tests/core/atom-generator.test.mjs pass?npm.cmd run validate:generator-provenance pass | ??: AtomGenerator source template / codePaths policy ? provenance ?????????task shard ??? | ??: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM generator source template 開卡",
-      "summary": "補齊 generator 的 source file template 與 codePaths policy，讓新原子真正有 spec/code/test/report 四件套。",
-      "position": "ATM-2（generator provenance / source template）",
-      "prereq": "ATM-2-0038"
+      "label": "ATM v0.2 整合開卡",
+      "summary": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0003"
     },
     "contracts": {
       "input": [
-        "ATM-2-0038 alpha0 已能產生 spec/test/report 並登錄 registry",
-        "目前 dogfood fixture 以 spec path 暫作 codePaths，這只是 alpha0 過渡",
-        "Registry selfVerification 需要穩定 codePaths"
+        "v0.2 companion analysis 已確認可作務實化補充"
       ],
       "output": [
-        "新增 generator source template policy",
-        "AtomGenerator 產物包含正式 source file",
-        "Registry codePaths 不再用 specPath 暫代",
-        "補 fixture 覆蓋 source/code/test/report 四件套"
+        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
+        "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
+        "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
       ],
-      "validation_cmd": "node tests/core/atom-generator.test.mjs\\nnode tests/cli/create.test.mjs\\nnpm run validate:registry-core",
-      "rollback_hint": "回退 source template 與 codePaths policy；保留 ATM-2-0038 birth facade，不回退 allocator/create command。",
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
       "execution_steps": [
-        "盤點目前 generated atom 檔案組成",
-        "設計 source template 與預設 validation command",
-        "更新 generator 與 tests",
-        "回寫 registry/codePaths policy"
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [],
+      "validation_evidence": [
+        "node tools_node/check-encoding-touched.js",
+        "node tools_node/check-task-scope.js --task ATM-0-0007 --verbose",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback"
+      ],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
     }
+  },
+  {
+    "id": "ATM-1.5-0001",
+    "title": "Seed-as-Spec：種子以自身格式自我描述",
+    "status": "done",
+    "priority": "P0",
+    "phase": "ATM-1.5",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0299",
+    "started_at": "2026-05-06T16:48:41+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T17:03:32.1926363+08:00",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-spec / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit ad5f091 新增 packages/core/seed.js、specs/atom-seed-spec.json、CLI `spec --validate` 與 AJV schema validator；legacy planning ID ATM-CORE-0001 以 seed metadata 映射保留，現行 spec id 採 `atom.core-seed` 以符合既有 atomic-spec schema | 阻塞: none",
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/core/seed.js",
+        "AI-Atomic-Framework/specs/atom-seed-spec.json",
+        "AI-Atomic-Framework/packages/cli/src/commands/spec.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/spec-shared.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
+        "AI-Atomic-Framework/scripts/validate-seed-spec.mjs",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit ad5f091",
+        "npm run validate:seed-spec",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "seed self-description now lives in packages/core/seed.js and specs/atom-seed-spec.json",
+        "atm spec --validate validates atomic specs through AJV without breaking zero-install self-hosting flows",
+        "legacy planning ID ATM-CORE-0001 is preserved as seed metadata while the current schema id remains atom.core-seed",
+        "validate --spec stays zero-install compatible for self-hosting alpha and bootstrap smoke"
+      ]
+    },
+    "depends": [
+      "ATM-1-0006",
+      "ATM-1-0007"
+    ]
   }
 ]

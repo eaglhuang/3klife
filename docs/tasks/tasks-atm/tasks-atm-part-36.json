@@ -1,50 +1,5 @@
 [
   {
-    "doc_id": "doc_task_0329",
-    "id": "ATM-2-0024",
-    "title": "Map-Level Upgrade & Extract-vs-Bump Decision",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "orchestration-atom",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-MAP-EVOLUTION-V2",
-    "chain_step": "2/4",
-    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
-    "description": "在 upgrade pipeline 加入 decomposition decision：判斷某次改動應走 atom-bump / atom-extract / map-bump，並落地對應 proposal 與 review path。",
-    "related": [],
-    "depends": [
-      "ATM-2-0020",
-      "ATM-2-0023"
-    ],
-    "acceptance": [
-      "CLI atm upgrade --target map --map <id> --to <ver> 可產出 map-level proposal",
-      "decompositionDecision 規則明文：API 不變→atom-bump；行為斷裂→atom-extract；跨原子改動→map-bump",
-      "atom-extract 模式下 proposal 必須同時列舊 atom 保留資訊與新 atom spec stub",
-      "map-bump 模式下 proposal members[] 必須含舊→新 atomId@version 對照",
-      "review queue 視 decompositionDecision 路由至對應 reviewer template"
-    ],
-    "deliverables": [
-      "packages/core/src/upgrade/decomposition-decision.ts",
-      "packages/core/src/upgrade/map-propose.ts",
-      "packages/cli/commands/upgrade-map-propose.ts",
-      "fixtures/upgrade/map-bump-proposal.json",
-      "fixtures/upgrade/atom-extract-proposal.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 附錄 B 開卡",
-      "summary": "把「升版 vs. 拆原子」這個關鍵架構決策正式機讀化，避免演化階段隱性破壞 consumer。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0020 / ATM-2-0023"
-    }
-  },
-  {
     "doc_id": "doc_task_0264",
     "id": "ATM-3-0001",
     "title": "3KLife ProjectAdapter wrapper",
@@ -116,6 +71,69 @@
         "驗證 3KLife 只以 adapter 消費既有 governance interface",
         "對應 artifacts/logs/state 到 store 介面",
         "跑 shadow/parity test，不替換既有 CLI 行為"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0276",
+    "id": "ATM-6-0001",
+    "title": "跨專案 Registry / DB / Vector 決策",
+    "owner": "GitHubCopilot",
+    "priority": "P2",
+    "status": "open",
+    "type": "ecosystem",
+    "phase": "ATM-6",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
+    "related": [],
+    "depends": [
+      "ATM-5-0004"
+    ],
+    "acceptance": [
+      "JSON-first 仍是真相",
+      "DB/vector 只作 optional plugin",
+      "不增加 core v0.1 必備依賴"
+    ],
+    "deliverables": [
+      "docs/ecosystem/registry-db-vector-decision.md",
+      "plugin boundary proposal"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
+      "position": "ATM-6",
+      "prereq": "ATM-5-0004"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "docs/ecosystem/registry-db-vector-decision.md",
+        "plugin boundary proposal"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {

@@ -85,46 +85,48 @@
     }
   },
   {
-    "doc_id": "doc_task_0328",
-    "id": "ATM-2-0023",
-    "title": "Atomic Map Schema & Registry",
+    "doc_id": "doc_task_0330",
+    "id": "ATM-2-0025",
+    "title": "Cross-Atom Integration Test Runner",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "registry",
+    "type": "test-runner",
     "phase": "ATM-2",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
     "started_by_agent": "",
     "chain_id": "ATM-MAP-EVOLUTION-V2",
-    "chain_step": "1/4",
+    "chain_step": "3/4",
     "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
-    "description": "為「原子地圖」建立 schema 與 registry：mapId / mapVersion / members[] / edges[] / entrypoints / qualityTargets / mapHash；可獨立於單一 atom 升版。",
+    "description": "提供 map-level integration test runner：當任一成員 atom 升版時，自動跑該 atom 所屬全部 map 的整合測試與 application-level smoke tests。",
     "related": [],
     "depends": [
-      "ATM-2-0014"
+      "ATM-2-0003",
+      "ATM-2-0023"
     ],
     "acceptance": [
-      "atomic-map.schema.json 定義 mapId / mapVersion / members[](atomId@version) / edges[] / entrypoints / qualityTargets / mapHash",
-      "mapHash = hash(sorted(members) + edges + entrypoints)；成員任一 atom 升版必須引發 mapHash 變更",
-      "registry 同時支援 atom entry 與 map entry；舊 atom-only registry fixture 仍綠",
-      "fixtures：minimal-map / multi-edge-map / quality-targets-missing 三種"
+      "CLI atm test --map <mapId> 跑 map-level integration tests 並輸出符合 metrics schema 的 report",
+      "CLI atm test --propagate <atomId> 自動找出所有引用該 atom 的 maps 並跑 integration tests",
+      "integration test report 含 perMapStatus[] / propagationDuration / failedDownstream[]",
+      "birth-mode atom test 與 map-level test 共用同一 metrics schema（ATM-2-0016）",
+      "fixtures：propagation-pass / propagation-fail-on-downstream-map 兩種"
     ],
     "deliverables": [
-      "schemas/registry/atomic-map.schema.json",
-      "packages/core/src/registry/map-registry.ts",
-      "packages/core/src/registry/map-hash.ts",
-      "fixtures/registry/map/minimal.json",
-      "fixtures/registry/map/multi-edge.json"
+      "packages/core/src/test-runner/map-integration.ts",
+      "packages/core/src/test-runner/propagation.ts",
+      "packages/cli/commands/test-map.ts",
+      "fixtures/test-runner/map-propagation-pass.json",
+      "fixtures/test-runner/map-propagation-fail.json"
     ],
     "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 附錄 B 開卡",
-      "summary": "把 Atomic Map 升格為 registry 一等公民，為 map-level 演化建立可機讀基礎。",
+      "summary": "硬規則：任一 atom 升版必須跑所有引用 map 的整合測試；本卡是這條規則的執行器。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0014"
+      "prereq": "ATM-2-0003 / ATM-2-0023"
     }
   }
 ]

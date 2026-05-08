@@ -75,73 +75,45 @@
     }
   },
   {
-    "doc_id": "doc_task_0272",
-    "id": "ATM-5-0001",
-    "title": "Quick Start 與 API 文件",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0318",
+    "id": "ATM-2-0015",
+    "title": "Hash Drift / Version Diff Report",
+    "owner": "antigravity",
     "priority": "P0",
-    "status": "open",
-    "type": "docs",
-    "phase": "ATM-5",
-    "created": "2026-05-05",
+    "status": "done",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
+    "started_at": "2026-05-07T23:33:00+08:00",
+    "started_by_agent": "antigravity",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "2/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "產出機器可讀的 hash-diff-report，比對任兩個 atom version 的 spec/code/test hash 差異與 drift reason。",
     "related": [],
     "depends": [
-      "ATM-1-0007",
-      "ATM-2-0006"
+      "ATM-2-0014"
     ],
     "acceptance": [
-      "30 分鐘內可跑 hello-world",
-      "文件不需要 3KLife 背景知識",
-      "所有命令可複製執行",
-      "Quick Start 不要求安裝 LangGraph、pgvector、Deno sandbox 或 observability stack 才能跑通 hello-world"
+      "hash-diff-report.schema.json 定義 fromVersion / toVersion / specHashDelta / codeHashDelta / testHashDelta / driftReason",
+      "CLI atm registry diff <atomId> --from <v1> --to <v2> --json 輸出符合 schema 的報告",
+      "fixtures：identical hash（empty delta）/ all-three-changed / driftReason missing 三種",
+      "hash-diff-report 追加 `semanticFingerprintDelta` 與 `lineageContinuity` 欄位，分別描述語意差異與 lineage 是否連續"
     ],
     "deliverables": [
-      "docs/QUICK_START.md",
-      "docs/API.md",
-      "docs/SPEC_GUIDE.md",
-      "README quick start section",
-      "Quick Start 對齊 v0.2 六週 MVP，明確區分 v0.1 alpha 必備能力與 optional plugin"
+      "schemas/registry/hash-diff-report.schema.json",
+      "packages/core/src/registry/diff.ts",
+      "packages/cli/commands/registry-diff.ts"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 v0.2 companion 對應交付/驗收條件 | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: done | 驗證: node scripts/validate-registry-diff.mjs --mode test (3 positive, 2 negative, schema validated)；validate-schemas ok (21 schemas)；validate-cli ok | 變更: upstream commit 9f32e11 新增 hash-diff-report.schema.json + core diff.mjs + CLI registry-diff 指令 + fixtures + validate 腳本，並完成 package.json test/typecheck/lint 串接 | 阻塞: none\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— hash-diff-report 追加 `semanticFingerprintDelta` 與 `lineageContinuity` 欄位\n2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
-      "position": "ATM-5",
-      "prereq": "ATM-1-0007、ATM-2-0006"
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "提供 atom 版本間 hash 差異報告，作為 upgrade proposal 與 rollback proof 的基礎輸入。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0014"
     },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "docs/QUICK_START.md",
-        "docs/API.md",
-        "docs/SPEC_GUIDE.md",
-        "README quick start section"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
+    "completed_at": "2026-05-07T23:37:41+08:00"
   }
 ]

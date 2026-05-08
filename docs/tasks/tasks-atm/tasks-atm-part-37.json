@@ -90,48 +90,48 @@
     "completed_at": "2026-05-06T14:12:54+08:00"
   },
   {
-    "doc_id": "doc_task_0327",
-    "id": "ATM-4-0007",
-    "title": "H2U normalizeCssColor v1.0→v1.1 evolution pilot",
+    "doc_id": "doc_task_0329",
+    "id": "ATM-2-0024",
+    "title": "Map-Level Upgrade & Extract-vs-Bump Decision",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "case-study",
-    "phase": "ATM-4",
+    "type": "orchestration-atom",
+    "phase": "ATM-2",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
     "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "11/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "以 normalizeCssColor case atom 跑第一次完整 evolution 閉環：proposal → automatedGates → human review → registry update or rollback。",
+    "chain_id": "ATM-MAP-EVOLUTION-V2",
+    "chain_step": "2/4",
+    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
+    "description": "在 upgrade pipeline 加入 decomposition decision：判斷某次改動應走 atom-bump / atom-extract / map-bump，並落地對應 proposal 與 review path。",
     "related": [],
     "depends": [
-      "ATM-4-0003",
       "ATM-2-0020",
-      "ATM-2-0021"
+      "ATM-2-0023"
     ],
     "acceptance": [
-      "normalizeCssColor v1.0 進 registry；v1.1 透過 atm upgrade --propose 產 proposal.json",
-      "automatedGates（nonRegression / qualityImprovement / newCapability）全綠才進 review queue",
-      "human review approve 後 registry currentVersion 指向 v1.1；reject 後保持 v1.0 並寫 decision log",
-      "完整 evidence 鏈可由 atm replay 重新跑 + neutrality scanner 全綠"
+      "CLI atm upgrade --target map --map <id> --to <ver> 可產出 map-level proposal",
+      "decompositionDecision 規則明文：API 不變→atom-bump；行為斷裂→atom-extract；跨原子改動→map-bump",
+      "atom-extract 模式下 proposal 必須同時列舊 atom 保留資訊與新 atom spec stub",
+      "map-bump 模式下 proposal members[] 必須含舊→新 atomId@version 對照",
+      "review queue 視 decompositionDecision 路由至對應 reviewer template"
     ],
     "deliverables": [
-      "docs/case-studies/h2u-normalize-css-color-evolution-pilot.md",
-      "fixtures/case-studies/normalize-css-color/v1.0.json",
-      "fixtures/case-studies/normalize-css-color/v1.1.json",
-      "fixtures/case-studies/normalize-css-color/proposal.json",
-      "fixtures/case-studies/normalize-css-color/decision-approve.json"
+      "packages/core/src/upgrade/decomposition-decision.ts",
+      "packages/core/src/upgrade/map-propose.ts",
+      "packages/cli/commands/upgrade-map-propose.ts",
+      "fixtures/upgrade/map-bump-proposal.json",
+      "fixtures/upgrade/atom-extract-proposal.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "把 alpha1 evolution pipeline 在 H2U case 上做端到端落地，作為 alpha1 acceptance 證據。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0003 / ATM-2-0020 / ATM-2-0021"
+      "label": "ATM 演進規劃 v2 附錄 B 開卡",
+      "summary": "把「升版 vs. 拆原子」這個關鍵架構決策正式機讀化，避免演化階段隱性破壞 consumer。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0020 / ATM-2-0023"
     }
   }
 ]

@@ -44,57 +44,55 @@
     }
   },
   {
-    "doc_id": "doc_task_0280",
-    "id": "ATM-4-0005",
-    "title": "Injection plan 與 rollback dry-run",
+    "doc_id": "doc_task_0265",
+    "id": "ATM-3-0002",
+    "title": "3KLife ATM config 與 bootstrap wrapper",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
-    "type": "case-study",
-    "phase": "ATM-4",
+    "status": "done",
+    "type": "adapter",
+    "phase": "ATM-3",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-08T05:36:17+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T05:40:47+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
+    "description": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
     "related": [],
     "depends": [
-      "ATM-4-0003",
-      "ATM-3-0002",
-      "ATM-2.5-0001",
-      "ATM-2.5-0002"
+      "ATM-3-0001"
     ],
     "acceptance": [
-      "dry-run 可 review",
-      "rollback plan 對稱",
-      "來回套用 diff 可回到原狀",
-      "第一輪只產 dry-run patch plan 與 rollback plan，不 apply patch、不改 legacy runtime",
-      "alpha0 gate evidence link：schema / registry / hash-lock / CLI / hello-world / minimal evidence 全綠"
+      "node tools_node/atomic-framework/atm-cli.js status 可呼叫 upstream",
+      "workbench/registry path 指向本 repo local 區",
+      "不 fork core source",
+      "shadow wrapper 預設 dry-run / report-only，不替換現有 tools_node CLI"
     ],
     "deliverables": [
-      "inject-plan JSON schema",
-      "rollback-plan JSON schema",
-      "H2U normalizeCssColor dry-run plan"
+      "tools_node/atomic-framework/bootstrap.js",
+      "tools_node/atomic-framework/atm-cli.js",
+      "atm.config.*",
+      "local workbench path 設定"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 啟動條件：self-hosting alpha0 全綠後才可 dry-run injection + rollback plan | 阻塞: alpha0 gate 未全綠",
+    "notes": "2026-05-08 | 狀態: done | 驗證: encoding/cross-shard/bootstrap smoke/standard gate pass | 變更: 完成 3KLife ATM config、bootstrap wrapper、atm-cli alias，並收尾 shard trim | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0003、ATM-3-0002"
+      "summary": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001"
     },
     "contracts": {
       "input": [
         "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "inject-plan JSON schema",
-        "rollback-plan JSON schema",
-        "H2U normalizeCssColor dry-run plan"
+        "tools_node/atomic-framework/bootstrap.js",
+        "atm.config.*",
+        "local workbench path 設定"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",

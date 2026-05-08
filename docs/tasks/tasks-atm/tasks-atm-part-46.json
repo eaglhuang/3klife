@@ -1,56 +1,67 @@
 [
   {
-    "doc_id": "doc_task_0249",
-    "id": "ATM-0-0005",
-    "title": "開源拆出 checklist 文件",
+    "doc_id": "doc_task_0296",
+    "id": "ATM-0-0011",
+    "title": "Context budget 治理補強與文件回寫",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "docs",
+    "type": "docs-governance",
     "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T20:58:01+08:00",
+    "started_at": "2026-05-05T23:05:36.3800604+08:00",
     "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-06T08:08:07+08:00",
+    "completed_at": "2026-05-08T17:35:00+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立從 3KLife 拆出 AI-Atomic-Framework 到新 GitHub repo 的階段式 checklist。",
-    "related": [],
+    "description": "把 context budget 正式提升為 ATM upstream 可獨立治理的 primitive，並回寫相關 roadmap、extraction plan、adopter plan 與 v0.2 companion 文件。",
+    "related": [
+      "ATM-2-0011"
+    ],
     "depends": [
-      "ATM-0-0003"
+      "ATM-0-0010"
     ],
     "acceptance": [
-      "列出 core 禁止耦合清單",
-      "列出上游 repo skeleton",
-      "列出 3KLife adapter 導入與回同步策略"
+      "四份 ATM 規劃文件補上 context budget upstream primitive",
+      "明確定義 plugin-context-budget 或等效 guard/adapter 位置",
+      "把 encoding/context budget/neutrality 收斂成 Agent Governance Bundle",
+      "新增對應 ATM 任務卡與 tasks-atm 條目"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/open-source-extraction-plan.md"
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md",
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0011.md"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0007（MVP邊界）與 ATM-0-0009（governance bundle 分層）代為完成；open-source-extraction-plan.md 已含完整內容 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 將 context budget、plugin-context-budget 與 Agent Governance Bundle 正式回寫到四份 ATM 規劃文件，並同步修正 ATM-0-0011/ATM-2-0011 任務真相 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?context budget / governance bundle ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: context budget governance ????????? task shard ????? | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 開源化開卡",
-      "summary": "建立從 3KLife 拆出 AI-Atomic-Framework 到新 GitHub repo 的階段式 checklist。",
+      "label": "ATM governance bundle 開卡",
+      "summary": "把 context budget 提升成 upstream 可獨立治理能力，並同步回寫相關 md 文件。",
       "position": "ATM-0",
-      "prereq": "ATM-0-0003"
+      "prereq": "ATM-0-0010"
     },
     "contracts": {
       "input": [
-        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
+        "encoding 已進入 upstream governance 規劃",
+        "context budget 尚未成為對等 primitive"
       ],
       "output": [
-        "docs/ai_atomic_framework/open-source-extraction-plan.md"
+        "context budget primitive 定義",
+        "Agent Governance Bundle 收斂",
+        "新增對應任務卡"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0011 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若 tasks-atm 或 doc_id 不一致，使用既有工具重建。",
       "execution_steps": [
-        "確認依賴與 scope",
-        "修改或建立對應文件",
-        "跑 encoding 與 standard gate",
-        "回寫 notes"
+        "建立新任務卡",
+        "建立 ATM-2-0011 後續卡",
+        "鎖卡並更新 frontmatter",
+        "回寫四份主文件",
+        "跑 encoding/task-scope/standard gate"
       ]
     },
     "harness_evidence": {
@@ -62,53 +73,52 @@
     }
   },
   {
-    "doc_id": "doc_task_0281",
-    "id": "ATM-0-0007",
-    "title": "上游 roadmap v0.2 技術選型整合",
+    "doc_id": "doc_task_0285",
+    "id": "ATM-6-0004",
+    "title": "Performance Budget Police 與成本控制",
     "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "docs",
-    "phase": "ATM-0",
+    "priority": "P2",
+    "status": "open",
+    "type": "optional-police",
+    "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T20:58:01+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-08T17:35:00+08:00",
+    "started_at": "",
+    "started_by_agent": "",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
+    "description": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
     "related": [],
     "depends": [
-      "ATM-0-0003"
+      "ATM-5-0005"
     ],
     "acceptance": [
-      "Roadmap 清楚標示 v0.2 是 companion analysis",
-      "core 不硬依賴 LangGraph/pgvector/Deno/OpenTelemetry 等外部工具",
-      "TypeScript/Zod/Vitest 等只被描述為 first implementation recommendation"
+      "Performance Budget 不進 v0.1 core hard gate",
+      "hot path atom 有 p95/maxRuntimeMs/allocatedBytes 建議",
+      "LLM caching 與 budget 只透過 plugin 啟用"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
+      "docs/ecosystem/performance-budget-police.md",
+      "plugin boundary proposal",
+      "cost control policy"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 整合 v0.2 companion 到 Roadmap、3KLife plan、extraction plan，並新增 6 張補強卡 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?Roadmap/companion ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: companion ??????????? task shard ????? | ??: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM v0.2 整合開卡",
-      "summary": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0003"
+      "summary": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
+      "position": "ATM-6",
+      "prereq": "ATM-5-0005"
     },
     "contracts": {
       "input": [
         "v0.2 companion analysis 已確認可作務實化補充"
       ],
       "output": [
-        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
-        "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
-        "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
+        "docs/ecosystem/performance-budget-police.md",
+        "plugin boundary proposal",
+        "cost control policy"
       ],
       "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
@@ -121,11 +131,7 @@
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [
-        "node tools_node/check-encoding-touched.js",
-        "node tools_node/check-task-scope.js --task ATM-0-0007 --verbose",
-        "node tools_node/compute-gate.js --profile standard --agent-feedback"
-      ],
+      "validation_evidence": [],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []

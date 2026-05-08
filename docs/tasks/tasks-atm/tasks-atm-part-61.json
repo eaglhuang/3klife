@@ -1,50 +1,73 @@
 [
   {
-    "id": "ATM-1.5-0002",
-    "title": "Seed 自我驗證：產生第一份 atomic-registry.json",
-    "status": "done",
-    "priority": "P0",
-    "phase": "ATM-1.5",
-    "type": "implementation",
-    "created": "2026-05-05",
+    "doc_id": "doc_task_0280",
+    "id": "ATM-4-0005",
+    "title": "Injection plan 與 rollback dry-run",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0300",
-    "started_at": "2026-05-06T09:15:48.254Z",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T17:24:55.4854274+08:00",
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d3ac9cf 新增 atomic-registry.json、CLI `verify --self`、registry selfVerification schema 與 drift 檢查；legacy planning ID ATM-CORE-0001 仍以 registry selfVerification metadata 保留，現行 atomId 維持 `atom.core-seed` | 阻塞: none",
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/atomic-registry.json",
-        "AI-Atomic-Framework/packages/cli/src/commands/verify.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
-        "AI-Atomic-Framework/schemas/registry.schema.json",
-        "AI-Atomic-Framework/scripts/validate-seed-registry.mjs",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-registry.json",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
+    "priority": "P0",
+    "status": "open",
+    "type": "case-study",
+    "phase": "ATM-4",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
+    "related": [],
+    "depends": [
+      "ATM-4-0003",
+      "ATM-3-0002",
+      "ATM-2.5-0001",
+      "ATM-2.5-0002"
+    ],
+    "acceptance": [
+      "dry-run 可 review",
+      "rollback plan 對稱",
+      "來回套用 diff 可回到原狀",
+      "第一輪只產 dry-run patch plan 與 rollback plan，不 apply patch、不改 legacy runtime",
+      "alpha0 gate evidence link：schema / registry / hash-lock / CLI / hello-world / minimal evidence 全綠"
+    ],
+    "deliverables": [
+      "inject-plan JSON schema",
+      "rollback-plan JSON schema",
+      "H2U normalizeCssColor dry-run plan"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 啟動條件：self-hosting alpha0 全綠後才可 dry-run injection + rollback plan | 阻塞: alpha0 gate 未全綠",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0003、ATM-3-0002"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit d3ac9cf",
-        "npm run validate:seed-registry",
-        "npm run validate:cli",
-        "npm run validate:schemas",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
+      "output": [
+        "inject-plan JSON schema",
+        "rollback-plan JSON schema",
+        "H2U normalizeCssColor dry-run plan"
       ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "first committed atomic-registry.json now contains the seed entry with committed specHash/codeHash/testHash",
-        "atm verify --self validates registry schema first, then checks committed hash values against live seed files",
-        "editing seed.js changes computed codeHash and is detected as drift by the deterministic validator",
-        "legacy planning ID ATM-CORE-0001 is preserved in selfVerification metadata while current atomId stays atom.core-seed"
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
       ]
     },
-    "depends": [
-      "ATM-1.5-0001"
-    ]
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   },
   {
     "doc_id": "doc_task_0283",

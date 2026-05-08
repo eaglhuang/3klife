@@ -1,83 +1,58 @@
 [
   {
-    "doc_id": "doc_task_0287",
-    "id": "ATM-0-0009",
-    "title": "Default Governance Bundle 切分重規劃",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0320",
+    "id": "ATM-2-0017",
+    "title": "Regression Matrix Compare Gate",
+    "owner": "antigravity",
     "priority": "P0",
     "status": "done",
-    "type": "docs-governance",
-    "phase": "ATM-0",
-    "created": "2026-05-05",
+    "type": "police",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T22:07:57+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 ATM 從 atom runner 補強為完整 governance framework，正式切分 Upstream Core、Agent Operating Layer、Default Governance Bundle 與 3KLife ProjectAdapter。",
+    "started_at": "2026-05-07T23:45:00+08:00",
+    "started_by_agent": "antigravity",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "4/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "在 Police plugin 之上提供 vOld fixtures 對 vNew code 的不退轉檢查 + quality metrics 比較；輸出 quality-comparison-report。",
     "related": [],
     "depends": [
-      "ATM-0-0008"
+      "ATM-2-0005",
+      "ATM-2-0016"
     ],
     "acceptance": [
-      "計畫書新增 Default Governance Bundle 分層",
-      "open-source extraction plan 納入 governance bundle 為 v0.1 alpha 必備",
-      "新增後續 governance bundle schema/reference plugin 任務卡",
-      "不把 3KLife task-lock/compute-gate/doc-id/shard-manager 反推成 core hard dependency"
+      "vOld 全部 fixture 對 vNew code 必須全綠（不退轉）",
+      "metrics 比較：errorRate(new) <= errorRate(old)、coverage(new) >= coverage(old)、latency(new) 不退化超過容忍值",
+      "違規時 promote 動作必須 hard fail，並輸出 quality-comparison-report.json 列出退步指標",
+      "quality-comparison-report 必須含 mapImpactScope（被影響的 mapIds[]）與 propagationStatus（per-map 整合測試結果）",
+      "若任一被影響的 map 整合測試 fail，promote 動作必須 hard fail",
+      "regression compare 報告追加 dedupCandidates[] 區塊（advisory only，不阻塞 promote）：列出 sf 相同或高相似的其他原子；輸入由 ATM-2-0030 dedup police 提供",
+      "CLI 補 atm registry quality-report --atom <id> --from <v> --to <v> --json --md；必須同步輸出 .atm/reports/quality/<atomId>-<from>-<to>.json 與同名 .md",
+      "--md 輸出必須採固定 Markdown 模板：標題 / 指標表格 / mapImpactScope 區段 / 結論；避免 quality-comparison-report 只剩機讀 JSON"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md governance split 章節",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md governance bundle 分層",
-      "docs/agent-briefs/tasks/ATM/ATM-2-0007.md",
-      "docs/agent-briefs/tasks/ATM/ATM-2-0008.md"
+      "packages/core/src/police/regression-compare.ts",
+      "schemas/police/quality-comparison-report.schema.json",
+      "fixtures/regression/v1.0-pass.json",
+      "fixtures/regression/v1.1-pass-improved.json",
+      "fixtures/regression/v1.1-fail-error-rate.json",
+      "schemas/police/quality-comparison-report.schema.json — 含 mapImpactScope / propagationStatus"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope uncovered=0；compute-gate standard 8/8 pass | 變更: 落地 Default Governance Bundle 與 Agent Operating Layer 切分，新增 ATM-1-0008/ATM-2-0009，將 artifacts/logs/md-json state/evidence 納入通用層 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?governance bundle / state store ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: governance bundle ????????? task shard ????? | ??: none",
+    "notes": "2026-05-07 | 狀態: done | 驗證: validate-regression-compare (3 positive, 2 negative, markdown verified, schema validated)；validate-police ok (7 acceptance checks)；validate-schemas ok (21 schemas) | 變更: upstream commit 7741758 新增 quality-comparison-report.schema.json，定義 atomId/fromVersion/toVersion/mapImpactScope/dedupCandidates/regressedMetrics/tolerance；並補 regression-compare.mjs 行為矩陣、固定 Markdown 模板、fixtures + validate 腳本，確保 positive fixture 與所有 required 欄位齊備 | 阻塞: none\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— regression compare 報告追加 dedupCandidates[] 區塊（advisory）\n2026-05-07 附錄 C 治理補丁：追加 quality-report CLI / Markdown 模板 / decision-readable output，避免品質報告淪為 JSON 黑盒\n2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM governance split 開卡",
-      "summary": "將 ATM 補強為包含通用治理 primitives 的完整開源框架，同時維持 3KLife 既有工具以 adapter 接入。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0008"
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "建立演化管線的不退轉 + 品質進步雙重閘門。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0005 / ATM-2-0016"
     },
-    "contracts": {
-      "input": [
-        "已確認 ATM 不能只剩 atom runner",
-        "3KLife 既有治理工具需最小改動保留"
-      ],
-      "output": [
-        "更新 downstream plan 分工模型",
-        "更新 extraction plan v0.1 alpha 必備",
-        "新增 governance bundle 後續任務"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
-      "execution_steps": [
-        "鎖定 ATM-0-0009",
-        "建立 governance bundle 任務卡",
-        "更新正式計畫文件",
-        "同步 tasks-atm shard",
-        "跑 encoding 與 standard gate"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [
-        "node tools_node/doc-id-registry.js",
-        "node tools_node/check-encoding-touched.js",
-        "node tools_node/check-task-scope.js --task ATM-0-0009 --verbose",
-        "node tools_node/compute-gate.js --profile standard --agent-feedback"
-      ],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    },
-    "completed_at": "2026-05-08T17:35:00+08:00"
+    "completed_at": "2026-05-07T23:49:29+08:00"
   },
   {
-    "doc_id": "doc_task_0276",
-    "id": "ATM-6-0001",
-    "title": "跨專案 Registry / DB / Vector 決策",
+    "doc_id": "doc_task_0278",
+    "id": "ATM-6-0003",
+    "title": "多語言 Adapter 擴張計畫",
     "owner": "GitHubCopilot",
     "priority": "P2",
     "status": "open",
@@ -90,35 +65,36 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
+    "description": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
     "related": [],
     "depends": [
-      "ATM-5-0004"
+      "ATM-2-0006",
+      "ATM-1-0006"
     ],
     "acceptance": [
-      "JSON-first 仍是真相",
-      "DB/vector 只作 optional plugin",
-      "不增加 core v0.1 必備依賴"
+      "每個 language adapter 有 test/build/import scan contract",
+      "不要求 core 重寫",
+      "Cocos/Unity 引擎物件不進 compute atom"
     ],
     "deliverables": [
-      "docs/ecosystem/registry-db-vector-decision.md",
-      "plugin boundary proposal"
+      "docs/ecosystem/language-adapter-roadmap.md",
+      "adapter acceptance matrix"
     ],
     "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
+      "summary": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
       "position": "ATM-6",
-      "prereq": "ATM-5-0004"
+      "prereq": "ATM-2-0006、ATM-1-0006"
     },
     "contracts": {
       "input": [
         "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "docs/ecosystem/registry-db-vector-decision.md",
-        "plugin boundary proposal"
+        "docs/ecosystem/language-adapter-roadmap.md",
+        "adapter acceptance matrix"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",

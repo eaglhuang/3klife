@@ -1,54 +1,130 @@
 [
   {
-    "doc_id": "doc_task_0246",
-    "id": "ATM-0-0002",
-    "title": "名詞定義新增 ATM 任務代號",
+    "doc_id": "doc_task_0314",
+    "id": "ATM-0-0013",
+    "title": "tasks-atm.json thin index 與細分片",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
     "type": "governance",
     "phase": "ATM-0",
-    "created": "2026-05-05",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T12:39:11+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "started_at": "2026-05-06T01:03:22.4082504+08:00",
+    "started_by_agent": "GitHubCopilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "在名詞定義文件登錄 ATM 系統代號與 ATM-0~6 子系統，讓任務卡 ID 有唯一命名來源。",
-    "related": [],
+    "description": "將 docs/tasks/tasks-atm.json 從單一大型 aggregate 改為 thin index stub，完整 ATM 任務改存於 docs/tasks/tasks-atm/ 之下的 part 檔，並把每個分片收斂到不超過 300 行、約 10 KB。",
+    "related": [
+      "ATM-3-0009"
+    ],
     "depends": [
       "ATM-0-0001"
     ],
     "acceptance": [
-      "ATM-0~ATM-6 子系統皆可對回本次開源化工作",
-      "任務卡 ID 格式不在其他文件另行定義"
+      "docs/tasks/tasks-atm.json 不再保存完整 tasks array，而是 thin index stub",
+      "docs/tasks/tasks-atm/tasks-atm-part-*.json 每檔不超過 300 行、約 10 KB",
+      "task-card-opener 在 json-out=docs/tasks/tasks-atm.json 時仍可正確 upsert 任務並重建 thin index",
+      "docs/tasks/README.md 補上 thin index 與 rebuild 指令"
     ],
     "deliverables": [
-      "docs/遊戲規格文件/系統規格書/名詞定義文件.md 新增 ATM 子系統表列"
+      "docs/tasks/tasks-atm.json thin index stub",
+      "docs/tasks/tasks-atm/.shardrc.json",
+      "docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "docs/tasks/README.md 的 thin index / rebuild 說明",
+      "tools_node/lib/tasks-atm-shard-store.js",
+      "tools_node/rebuild-tasks-atm-auto-parts.js thin-index 寫入鏈"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 | 狀態: done | 驗證: 名詞定義文件已含 ATM 子系統表列 | 變更: JSON shard 同步 MD frontmatter 真相",
+    "notes": "2026-05-06 | 狀態: done | 驗證: thin-index rebuild pass；task-card-opener thin-index upsert pass；16 個 part 皆 <=300 行 / <=10 KB；encoding-touched pass；quick gate 3/3 pass；standard gate 僅被既有 unrelated dirty task-scope 擋住 | 變更: 將 tasks-atm.json 改為 thin index，接上 shard store 寫入鏈，並把分片門檻收緊到 300 行 / 10 KB | 阻塞: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0284",
+    "id": "ATM-5-0005",
+    "title": "Living Spec 同步器與 PEV Loop",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
+    "status": "open",
+    "type": "optional-feature",
+    "phase": "ATM-5",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
+    "related": [],
+    "depends": [
+      "ATM-5-0001",
+      "ATM-2-0006"
+    ],
+    "acceptance": [
+      "PEV Loop 成為標準流程語彙",
+      "MVP 只要求 drift prompt，不要求自動雙向同步",
+      "Living Spec 不阻塞 v0.1 alpha release",
+      "docs/PEV_LOOP.md 必須定義 Plan-Execute-Verify-Converge 如何產生 PEV upgrade proposal",
+      "docs/LIVING_SPEC.md 必須說明 Living Spec sync 不得自動 promote；只能產生 reviewable proposal",
+      "Spec drift prompt schema 必須輸出 atom compatibility impact 與 semver recommendation",
+      "README workflow summary 必須連回 framework semver / atom compatibility / PEV proposal 文件"
+    ],
+    "deliverables": [
+      "docs/PEV_LOOP.md",
+      "docs/LIVING_SPEC.md",
+      "Spec drift prompt schema",
+      "README workflow summary",
+      "schemas/pev/upgrade-proposal-public.schema.json",
+      "schemas/pev/spec-drift-prompt.schema.json",
+      "PEV upgrade proposal 範例"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 開源化開卡",
-      "summary": "在名詞定義文件登錄 ATM 系統代號與 ATM-0~6 子系統，讓任務卡 ID 有唯一命名來源。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0001"
+      "label": "ATM v0.2 整合開卡",
+      "summary": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
+      "position": "ATM-5",
+      "prereq": "ATM-5-0001、ATM-2-0006"
     },
     "contracts": {
       "input": [
-        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
+        "v0.2 companion analysis 已確認可作務實化補充"
       ],
       "output": [
-        "docs/遊戲規格文件/系統規格書/名詞定義文件.md 新增 ATM 子系統表列"
+        "docs/PEV_LOOP.md",
+        "docs/LIVING_SPEC.md",
+        "Spec drift prompt schema",
+        "README workflow summary",
+        "PEV upgrade proposal 範例，含 atom compatibility impact 與 semver recommendation"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-5-0005.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
       "execution_steps": [
-        "確認依賴與 scope",
-        "修改或建立對應文件",
-        "跑 encoding 與 standard gate",
-        "回寫 notes"
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
       ]
     },
     "harness_evidence": {
@@ -57,90 +133,6 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    },
-    "completed_at": "2026-05-06T12:39:11+08:00"
-  },
-  {
-    "doc_id": "doc_task_0279",
-    "id": "ATM-4-0003",
-    "title": "normalizeCssColor 首個 case atom",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "atom-case",
-    "phase": "ATM-4",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T10:00:40+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4-mini",
-    "completed_at": "2026-05-08T17:35:00+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
-    "related": [],
-    "depends": [
-      "ATM-4-0002",
-      "ATM-2-0004"
-    ],
-    "acceptance": [
-      "atom test pass",
-      "forbidden import/side-effect police pass",
-      "H2U baseline 不退轉"
-    ],
-    "deliverables": [
-      "H2U normalizeCssColor atomic spec",
-      "5 positive fixtures",
-      "2 negative fixtures",
-      "1 legacy fixture",
-      "registry/hash entry"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-08 | ??: done | ??: task-router ATM-4-0003 sample route pass?ATM-CORE-0004 / atom-generator acceptance revalidation pass | ??: normalizeCssColor ?? case atom ????????? task shard ????? | ??: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0002、ATM-2-0004"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "H2U normalizeCssColor atomic spec",
-        "5 positive fixtures",
-        "2 negative fixtures",
-        "1 legacy fixture",
-        "registry/hash entry"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [
-        "atomic_workbench/atoms/ATM-CORE-0005/atom.test.report.json",
-        "atomic_workbench/atoms/ATM-CORE-0005/lineage-log.json",
-        "specs/normalize-css-color.atom.json"
-      ],
-      "validation_evidence": [
-        "node atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs",
-        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-core",
-        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-catalog",
-        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-index"
-      ],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "8/8 fixture cases passing",
-        "upstream registry and catalog synchronized"
-      ]
     }
   }
 ]

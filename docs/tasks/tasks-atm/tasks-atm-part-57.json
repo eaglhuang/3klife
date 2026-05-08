@@ -1,5 +1,72 @@
 [
   {
+    "doc_id": "doc_task_0245",
+    "id": "ATM-0-0001",
+    "title": "ATM 任務 shard 與 bootstrap 卡",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "governance",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-05T18:06:44+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "註冊 ATM-* 任務 shard，建立 tasks-atm.json，並開立 bootstrap 任務卡以解除 ATM 卡號自舉悖論。",
+    "related": [],
+    "depends": [],
+    "acceptance": [
+      "task-lock ATM-0-0001 已鎖定且 files[] 非空",
+      "check-task-scope --task ATM-0-0001 不再缺卡",
+      "tasks-atm.json 可被後續任務 upsert"
+    ],
+    "deliverables": [
+      "docs/tasks/.shardrc.json 加入 tasks-atm",
+      "docs/tasks/tasks-atm.json 建立並收錄 ATM 任務",
+      "docs/agent-briefs/tasks/ATM/ATM-0-0001.md 具備 doc_id 與 in-progress frontmatter"
+    ],
+    "notes": "2026-05-05 | 狀態: done | 驗證: check-task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 完成 ATM shard、任務卡批次建立、doc_id 回填與 Roadmap/Plan 解耦 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?tasks-atm shard/card truth resynced?npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: ? ATM shard/bootstrap ???????OUTPUT_CONTRACT ? task shard ????? | ??: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 開源化開卡",
+      "summary": "註冊 ATM-* 任務 shard，建立 tasks-atm.json，並開立 bootstrap 任務卡以解除 ATM 卡號自舉悖論。",
+      "position": "ATM-0",
+      "prereq": "無"
+    },
+    "contracts": {
+      "input": [
+        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
+      ],
+      "output": [
+        "docs/tasks/.shardrc.json 加入 tasks-atm",
+        "docs/tasks/tasks-atm.json 建立並收錄 ATM 任務",
+        "docs/agent-briefs/tasks/ATM/ATM-0-0001.md 具備 doc_id 與 in-progress frontmatter"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
+      "execution_steps": [
+        "確認依賴與 scope",
+        "修改或建立對應文件",
+        "跑 encoding 與 standard gate",
+        "回寫 notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "node tools_node/check-task-scope.js --task ATM-0-0001 --verbose",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "id": "ATM-1.5-0003",
     "title": "ATM-CORE-0001 正式收編：舊 seed 標 @deprecated",
     "status": "done",
@@ -46,54 +113,5 @@
     "depends": [
       "ATM-1.5-0002"
     ]
-  },
-  {
-    "doc_id": "doc_task_0320",
-    "id": "ATM-2-0017",
-    "title": "Regression Matrix Compare Gate",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "police",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "4/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "在 Police plugin 之上提供 vOld fixtures 對 vNew code 的不退轉檢查 + quality metrics 比較；輸出 quality-comparison-report。",
-    "related": [],
-    "depends": [
-      "ATM-2-0005",
-      "ATM-2-0016"
-    ],
-    "acceptance": [
-      "vOld 全部 fixture 對 vNew code 必須全綠（不退轉）",
-      "metrics 比較：errorRate(new) <= errorRate(old)、coverage(new) >= coverage(old)、latency(new) 不退化超過容忍值",
-      "違規時 promote 動作必須 hard fail，並輸出 quality-comparison-report.json 列出退步指標",
-      "quality-comparison-report 必須含 mapImpactScope（被影響的 mapIds[]）與 propagationStatus（per-map 整合測試結果）",
-      "若任一被影響的 map 整合測試 fail，promote 動作必須 hard fail",
-      "regression compare 報告追加 dedupCandidates[] 區塊（advisory only，不阻塞 promote）：列出 sf 相同或高相似的其他原子；輸入由 ATM-2-0030 dedup police 提供",
-      "CLI 補 atm registry quality-report --atom <id> --from <v> --to <v> --json --md；必須同步輸出 .atm/reports/quality/<atomId>-<from>-<to>.json 與同名 .md",
-      "--md 輸出必須採固定 Markdown 模板：標題 / 指標表格 / mapImpactScope 區段 / 結論；避免 quality-comparison-report 只剩機讀 JSON"
-    ],
-    "deliverables": [
-      "packages/core/src/police/regression-compare.ts",
-      "schemas/police/quality-comparison-report.schema.json",
-      "fixtures/regression/v1.0-pass.json",
-      "fixtures/regression/v1.1-pass-improved.json",
-      "fixtures/regression/v1.1-fail-error-rate.json",
-      "schemas/police/quality-comparison-report.schema.json — 含 mapImpactScope / propagationStatus"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— regression compare 報告追加 dedupCandidates[] 區塊（advisory）\n2026-05-07 附錄 C 治理補丁：追加 quality-report CLI / Markdown 模板 / decision-readable output，避免品質報告淪為 JSON 黑盒",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "建立演化管線的不退轉 + 品質進步雙重閘門。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0005 / ATM-2-0016"
-    }
   }
 ]
