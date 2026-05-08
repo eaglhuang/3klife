@@ -445,6 +445,8 @@ AI Atomic Framework 可以借鑑 UI Atomic Design 的五層模型，但不要照
 - 之後框架能用自己的 Police 檢查自己。
 - 這是最強的 dogfooding。
 
+2026-05-08 補強：這條 dogfooding 原則不能只停在敘述層。`ATM-2-0050` 正式建立 Framework Function Atomization Coverage Gate，要求以 `framework-function-atomization-manifest.md` 逐項盤點 CLI、Registry、Spec / Scaffold、Test / Report、Evidence、Police、Adapter、Task lifecycle、Map、PEV / Lifecycle docs 等 Layer 2 framework functions；每一項都必須對應 atom、atomic map、adapter facade，或被標為 Layer 1 / Layer 3 正式例外。
+
 ---
 
 ## 7. Blueprint #000：Genesis Framework Bootstrap

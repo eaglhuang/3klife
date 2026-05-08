@@ -808,6 +808,8 @@ AI Atomic Framework 可以借鑑 UI Atomic Design 的五層模型，但不要照
 - 之後框架能用自己的 Police 檢查自己。
 - 這是最強的 dogfooding。
 
+2026-05-08 補強：這條 dogfooding 原則不能只停在敘述層。`ATM-2-0050` 正式建立 Framework Function Atomization Coverage Gate，要求以 `framework-function-atomization-manifest.md` 逐項盤點 CLI、Registry、Spec / Scaffold、Test / Report、Evidence、Police、Adapter、Task lifecycle、Map、PEV / Lifecycle docs 等 Layer 2 framework functions；每一項都必須對應 atom、atomic map、adapter facade，或被標為 Layer 1 / Layer 3 正式例外。
+
 ---
 
 ## 7. Blueprint #000：Genesis Framework Bootstrap
@@ -2529,6 +2531,7 @@ Regression
 - 多 Agent 平台後置。
 - Police 分批做。
 - 每個框架功能也必須原子化。
+- 全框架原子化必須有 coverage manifest + validator；`ATM-3-0015` 只覆蓋 task card lifecycle，`ATM-2-0050` 才是 framework-wide coverage gate。
 
 ---
 
@@ -2727,8 +2730,9 @@ Regression
 5. 只建立 spec schema、atomic manager CLI、workbench、test runner、registry JSON。
 6. 所有功能都必須以 Atomic Spec 定義。
 7. 每個 manager 功能也要拆成 atomic。
-8. 不允許手寫 code 假設，所有實作都要有 test。
-9. 完成後輸出 validation report。
+8. 任何 Layer 2 framework function 都必須列入 `framework-function-atomization-manifest.md`，並由 coverage validator 檢查不得 orphan。
+9. 不允許手寫 code 假設，所有實作都要有 test。
+10. 完成後輸出 validation report。
 
 第一個目標：
 用這個 framework 產生並驗證一個 normalizeCssColor atomic。

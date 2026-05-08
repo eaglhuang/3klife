@@ -417,3 +417,8 @@ ATM-2-0022 rollback proof（失敗回退）
 
 因此新增 `ATM-3-0015` 作為正式規劃缺口補卡，專門定義：`allocateTaskId → reserveTaskId → openTaskCard → lockTaskScope → writeTaskShard → validateTaskShard → syncDocRegistry → finalizeTaskLifecycle` 這條 governed flow 的原子邊界與 orchestration 責任。後續 `ATM-3` 的 dogfooding 驗收，不只看單一 helper 是否 adapter 化，也必須看這條 end-to-end task card system atomic map 是否存在且可被獨立驗證。
 
+### C.12 Framework Function Atomization Coverage Gate（新增）
+
+進一步盤點後，`ATM-3-0015` 仍只覆蓋 task card system。ATM 的全框架 dogfooding 還缺一個總控層，能證明 CLI commands、Atomic Spec / Scaffold、Registry / HashLock / Index / Catalog、Test / Report / Evidence、Police / Rule Guards、Adapter interfaces、Task lifecycle、Atomic Map、PEV / Lifecycle docs 等 Layer 2 framework functions 都有 atom / atomic map / adapter facade 對應。
+
+因此新增 `ATM-2-0050`：建立 `docs/ai_atomic_framework/framework-function-atomization-manifest.md` 與 coverage validator。之後任何 framework function 若未被列入 manifest，或 Layer 2 項目沒有對應 atom / map / adapter facade / open task，validation 應 fail。Layer 1 constitutional schema 只做 hash-lock / migration gate；Layer 3 mutable host config 只做 git / adapter config 管理，不列入「必須原子化」範圍。

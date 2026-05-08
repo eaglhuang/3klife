@@ -74,7 +74,7 @@ node tools_node/task-lock.js unlock ATM-X-NNNN <agent-name>
 
 | 風險 | 防範 |
 |---|---|
-| **過度工程化**：框架還沒救到 Legacy 就先變成另一個巨大老系統 | 先 ATM-0~3 做 core + adapter MVP；DB / molecule bundler / 向量索引一律後置到 ATM-6 的 optional plugin 決策；每個框架功能也要原子化（dogfooding） |
+| **過度工程化**：框架還沒救到 Legacy 就先變成另一個巨大老系統 | 先 ATM-0~3 做 core + adapter MVP；DB / molecule bundler / 向量索引一律後置到 ATM-6 的 optional plugin 決策；每個框架功能也要原子化（dogfooding），並由 `ATM-2-0050` 的 coverage manifest + validator 防止只停留在文件承諾 |
 | **原子太碎造成性能差** | spec.performanceBudget 限 maxRuntimeMs / allocatedBytes；hot path atom 必跑 p95 measurement；compute atom 禁 async / deep clone |
 | **AI 修改超出範圍** | 任務卡 frontmatter 寫死 `allowed_files`；task-lock + check-task-scope 禁止越界；hash-lock 偵測 stable atom 被誤改 |
 | **Legacy 行為被破壞** | inject-plan dry-run；regression matrix 防止退轉；location-index 記錄每次注入位置；rollback-plan 對稱輸出 |

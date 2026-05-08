@@ -12,3 +12,4 @@
 - `docs/agent-briefs/tasks/ATM-2-0005.md` — ValidateOutput + RunRegression（open）
 - `docs/agent-briefs/tasks/ATM-2-0009.md` — Evidence Store foundation（open）
 - `docs/agent-briefs/tasks/ATM-1.5-0001~0003.md` — Seed self-governance proof
+- `docs/agent-briefs/tasks/ATM-2-0050.md` — Framework Function Atomization Coverage Gate（open）

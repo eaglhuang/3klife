@@ -106,6 +106,8 @@ ATM-1.5 用一個巧妙的方式部分解決了這個悖論：seed 用自己的 
 2. **alpha1 中**：CLI、adapters、police rules 收編為原子（Layer 2 擴展）
 3. **alpha1 後**：框架演化完全透過 ATM 標準流程管理（Layer 2 全覆蓋）
 
+2026-05-08 補強：Layer 2 全覆蓋必須由 `ATM-2-0050` 的 framework function atomization manifest 驗證，不再只靠文件承諾。
+
 不需要新增任何機制——現有的 hash-lock + atom spec + registry + `atm verify --self` 已經構成完整的三層防護基礎。缺的只是把更多組件收編進 registry（ATM-2 phase 的自然工作）。
 
 ---

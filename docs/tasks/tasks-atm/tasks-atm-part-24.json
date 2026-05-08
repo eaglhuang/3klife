@@ -100,7 +100,7 @@
     "completed_at": "2026-05-06T16:34:31+08:00"
   },
   {
-    "doc_id": "",
+    "doc_id": "doc_task_0360",
     "id": "ATM-2-0050",
     "title": "Framework Function Atomization Coverage Gate",
     "owner": "codex-gpt-5",
@@ -111,11 +111,11 @@
     "created": "2026-05-08",
     "created_by_agent": "codex-gpt-5",
     "started_at": "",
-    "started_by_agent": "GitHubCopilot",
+    "started_by_agent": "",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "",
+    "description": "建立 framework-wide coverage manifest 與 deterministic gate，逐項證明 ATM framework Layer 2 功能都有 atom / map / adapter facade 或正式例外；不重複既有 generator、task-card system、gate-map 功能卡。",
     "related": [
       "ATM-1.5-0003",
       "ATM-2-0012",
@@ -141,7 +141,13 @@
       "ATM-2-0049",
       "ATM-3-0015"
     ],
-    "acceptance": [],
+    "acceptance": [
+      "framework-function-atomization-manifest.md 逐項列出 Layer 1 / Layer 2 / Layer 3 功能與 coverage status",
+      "每個 Layer 2 framework function 至少對應 atom / atomic map / adapter facade / open task",
+      "ATM-3-0015 僅標為 task card lifecycle coverage，不得誤判為全框架 coverage",
+      "validator 能在缺 manifest entry、例外 layer 不符、Layer 2 無 coverage 時 fail",
+      "規劃文件已回寫 Roadmap、開發計畫書、演進規劃書與進化版原子提案"
+    ],
     "deliverables": [
       "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
       "machine-readable coverage manifest fixture",
@@ -149,39 +155,40 @@
       "planning docs backwrite",
       "gap-to-task-card mapping"
     ],
-    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 分析發現全功能原子化已有原則與局部卡，但缺 framework-wide coverage manifest/gate；本卡補總控，不重複既有 generator 或 task card system 功能 | 阻塞: 等 ATM-2-0048/0049 與 ATM-3-0015 完成",
+    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 補齊 ATM framework-wide 原子化 coverage manifest / gate；不重複 generator、map generator、task card system atomic map 既有功能卡 | 阻塞: 等 ATM-2-0048 / ATM-2-0049 / ATM-3-0015 收斂",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM dogfooding coverage 開卡",
-      "summary": "建立 Framework Function Atomization Manifest 與 coverage gate，證明所有 ATM framework Layer 2 功能都被 atom/map 覆蓋。",
+      "label": "ATM dogfooding coverage gate",
+      "summary": "建立 Framework Function Atomization Manifest 與 coverage gate，證明 ATM framework Layer 2 功能都有 atom / map / adapter facade 或正式例外。",
       "position": "ATM-2 / framework-wide dogfooding coverage",
-      "prereq": "ATM-2-0038/0041/0042 已建立 generator/provenance 基礎；ATM-3-0015 只覆蓋 task card system atomic map"
+      "prereq": "ATM-2-0038 / ATM-2-0041 / ATM-2-0042 已承接 AtomGenerator / MapGenerator / provenance；ATM-3-0015 只覆蓋 task card system atomic map"
     },
     "contracts": {
       "input": [
-        "Layer 1 constitutional schema 只做 hash-lock，不要求自我原子化",
-        "Layer 2 governed framework functions must have atom or map coverage",
-        "Existing cards must be reused",
-        "do not duplicate generator/task-card/gate-map work",
-        "ATM-3-0015 covers only task card lifecycle",
-        "not the whole framework"
+        "Layer 1 constitutional schema 只要求 hash-lock / migration gate，不要求自我 atom",
+        "Layer 2 governed framework functions must have atom / atomic map / governed adapter facade coverage",
+        "Layer 3 mutable host config 只要求 git / adapter config 管理，不列入必須原子化",
+        "Existing cards must be reused; do not duplicate generator / task-card / gate-map work",
+        "ATM-3-0015 covers only task card lifecycle, not the whole framework",
+        "不清楚的功能邊界需回查 docs/ai_atomic_framework/ 規劃書，不以任務卡 notes 片段自行推斷完成"
       ],
       "output": [
-        "盤點 CLI commands、spec/scaffold、registry/hash/index/catalog、test/report/evidence、police/rule guards、adapter interfaces、task lifecycle、map/generator、PEV/lifecycle docs 等 framework functions",
-        "每個 Layer 2 function 必須映射到 one of atom / map / adapter facade / constitutional exception",
-        "缺口必須連到既有 open 卡或新 follow-up 卡；不得留下 orphan function",
-        "新增 validator 可 fail when framework function lacks atom/map coverage",
-        "更新主要規劃書，明確把 all framework functions atomized 轉成可驗證 coverage gate"
+        "盤點 CLI / spec / scaffold / registry / test / evidence / police / adapter / task lifecycle / map / PEV 等 framework functions",
+        "每個 Layer 2 function 至少對應 atom / atomic map / adapter facade / open task",
+        "Layer 1 只能標 constitutional-exception；Layer 3 只能標 mutable-exception",
+        "已由既有卡承接的功能必須引用原卡，不重複開功能卡",
+        "新增 validator，當 framework function 缺 atom / map / adapter coverage 或例外類型錯誤時 fail",
+        "回寫規劃文件，讓 all framework functions atomized 有 coverage gate"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM-2-0050.md docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/關於進化版的原子提案.md\\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md\\nnode tools_node/doc-id-registry.js",
-      "rollback_hint": "刪除本卡、coverage manifest、validator 與規劃書 backwrite；不得回退既有 ATM-2-0038/0041/0042 或 ATM-3-0015 功能卡。",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM-2-0050.md docs/tasks/tasks-atm/tasks-atm-part-24.json docs/ai_atomic_framework/framework-function-atomization-manifest.md docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/關於進化版的原子提案.md\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md\nnode tools_node/doc-id-registry.js",
+      "rollback_hint": "移除 coverage manifest、validator、planning docs backwrite，並保留既有 ATM-2-0038 / ATM-2-0041 / ATM-2-0042 / ATM-3-0015 的功能範圍不變。",
       "execution_steps": [
-        "盤點所有 ATM framework task cards 與 planning docs",
-        "定義 Layer 1/2/3 原子化邊界與 coverage statuses",
+        "盤點所有 ATM framework task cards 與 planning docs，先歸併到既有功能卡",
+        "定義 Layer 1 / Layer 2 / Layer 3 邊界與 coverage statuses",
         "建立 framework function coverage manifest",
-        "把缺口映射到既有卡或新 follow-up",
+        "將缺口連到既有 open 卡或 follow-up，不重複開已存在功能",
         "新增 deterministic coverage validator",
-        "回寫 Roadmap/開發計畫/演進規劃/進化提案與 task shard"
+        "回寫 Roadmap / 開發計畫書 / 演進規劃書 / 進化版原子提案 / task shard"
       ]
     },
     "harness_evidence": {

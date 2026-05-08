@@ -18,12 +18,12 @@
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 178 |
 | 索引類 | `doc_index` | 17 |
-| 任務卡類 | `doc_task` | 351 |
+| 任務卡類 | `doc_task` | 352 |
 | AI Agent 專用 | `doc_ai` | 31 |
 | Agent Skill 專用 | `doc_agentskill` | 46 |
 | Server 文件類 | `doc_server_<subtype>` | 15 |
-| 其它類 | `doc_other` | 83 |
-| **合計** | — | **804** |
+| 其它類 | `doc_other` | 84 |
+| **合計** | — | **806** |
 
 ---
 
@@ -419,6 +419,7 @@
 | `doc_task_0354` | docs/agent-briefs/tasks/ATM-2-0047.md | [ATM-2-0047] URN Resolver and RegistryIndex Facade |
 | `doc_task_0358` | docs/agent-briefs/tasks/ATM-2-0048.md | [ATM-2-0048] ATM task-router / onboarding contract |
 | `doc_task_0356` | docs/agent-briefs/tasks/ATM-2-0049.md | [ATM-2-0049] Governance shard strategy parameterization |
+| `doc_task_0360` | docs/agent-briefs/tasks/ATM-2-0050.md | [ATM-2-0050] Framework Function Atomization Coverage Gate |
 | `doc_task_0303` | docs/agent-briefs/tasks/ATM-2.5-0001.md | [ATM-2.5-0001] Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI |
 | `doc_task_0304` | docs/agent-briefs/tasks/ATM-2.5-0002.md | [ATM-2.5-0002] Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate |
 | `doc_task_0305` | docs/agent-briefs/tasks/ATM-2.5-0003.md | [ATM-2.5-0003] Multi-Agent 兼容性驗證：confidence gate |
@@ -823,7 +824,7 @@
 | `doc_other_0048` | docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-maintenance.md | ATM Cross Reference — 維護說明 |
 | `doc_other_0049` | docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-routing.md | ATM Cross Reference — 快查路由表 |
 | `doc_other_0050` | docs/ai_atomic_framework/atm-cross-reference-shards/atm-crossref-usage.md | ATM Cross Reference — 使用說明 |
-| `doc_other_0051` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-appendices.md | ATM 框架演進執行規劃書 — 附錄 A/B |
+| `doc_other_0051` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-appendices.md | ATM 框架演進執行規劃書 — 附錄 A/B/C |
 | `doc_other_0052` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-diagnosis.md | ATM 框架演進執行規劃書 — 機讀真相與提案診斷（§1–§3） |
 | `doc_other_0053` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-risk.md | ATM 框架演進執行規劃書 — 風險、排除與結論（§6–§8） |
 | `doc_other_0054` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-roadmap.md | ATM 框架演進執行規劃書 — 新增任務與依賴重排（§4–§5） |
@@ -843,6 +844,7 @@
 | `doc_other_0067` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-evolution.md | 關於進化版的原子提案 — 版號、框架版本與回饋迴圈 |
 | `doc_other_0068` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-thesis.md | 關於進化版的原子提案 — 命題與防護模型 |
 | `doc_other_0069` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-validation.md | 關於進化版的原子提案 — 驗證來源 |
+| `doc_other_0089` | docs/ai_atomic_framework/framework-function-atomization-manifest.md | Framework Function Atomization Manifest |
 | `doc_other_0082` | docs/ai_atomic_framework/h2u-regression-matrix.md | H2U Regression Matrix |
 | `doc_other_0081` | docs/ai_atomic_framework/html-to-ucuf-case-study.md | html-to-ucuf Reference Case Study |
 | `doc_other_0034` | docs/ai_atomic_framework/multi-agent-compatibility-matrix.md | Multi-AI Agent 兼容性測試矩陣 |

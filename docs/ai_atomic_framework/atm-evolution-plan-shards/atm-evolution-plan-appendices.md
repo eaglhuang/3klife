@@ -1,6 +1,6 @@
-# ATM 框架演進執行規劃書 — 附錄 A/B
+# ATM 框架演進執行規劃書 — 附錄 A/B/C
 
-> 這是 `ATM框架演進執行規劃書.md` 的「附錄 A/B」分片。完整索引見 `docs/ai_atomic_framework/ATM框架演進執行規劃書.md`。
+> 這是 `ATM框架演進執行規劃書.md` 的「附錄 A/B/C」分片。完整索引見 `docs/ai_atomic_framework/ATM框架演進執行規劃書.md`。
 
 ## 附錄 A：v2 校正補丁（2026-05-06）
 
@@ -98,3 +98,10 @@ decision 必須記錄在 `upgrade-proposal.json` 的 `decompositionDecision` 欄
 
 詳細 acceptance / deliverables 見對應任務卡。
 
+## 附錄 C 補充：第三輪批判性審核新增原子化 coverage
+
+### C.12 Framework Function Atomization Coverage Gate（新增）
+
+進一步盤點後，`ATM-3-0015` 仍只覆蓋 task card system。ATM 的全框架 dogfooding 還缺一個總控層，能證明 CLI commands、Atomic Spec / Scaffold、Registry / HashLock / Index / Catalog、Test / Report / Evidence、Police / Rule Guards、Adapter interfaces、Task lifecycle、Atomic Map、PEV / Lifecycle docs 等 Layer 2 framework functions 都有 atom / atomic map / adapter facade 對應。
+
+因此新增 `ATM-2-0050`：建立 `docs/ai_atomic_framework/framework-function-atomization-manifest.md` 與 coverage validator。之後任何 framework function 若未被列入 manifest，或 Layer 2 項目沒有對應 atom / map / adapter facade / open task，validation 應 fail。Layer 1 constitutional schema 只做 hash-lock / migration gate；Layer 3 mutable host config 只做 git / adapter config 管理，不列入「必須原子化」範圍。

@@ -204,6 +204,9 @@ ATM 若要達到「下載後放在任意專案根目錄，AI agent 讀 README �
 | Logs / run snapshots | `.atm/logs/snapshots/*`、log query / summarize / redact、run stdout/stderr capture | Cocos project logs、browser/editor logs、terminal output 摘要 |
 
 補充原則：上述 `Task / scope governance` 不能只停在 adapter-first 接線。ATM 自己的 task card system 也必須 dogfood 原子化，因此除 `ATM-3-0006 / 0009 / 0010 / 0012` 的單工具卡外，另補 `ATM-3-0015` 收斂 end-to-end task card atomic map（allocate/reserve/open/lock/write-shard/validate/sync/finalize）。
+
+2026-05-08 補強：`ATM-3-0015` 只解決 task card lifecycle；全 ATM framework 還需要一個總控 coverage gate。`ATM-2-0050` 以 `docs/ai_atomic_framework/framework-function-atomization-manifest.md` 盤點所有 Layer 2 framework functions，要求每項都映射到 atom / atomic map / adapter facade / 正式例外，並用 validator 防止新功能繞過原子化。
+
 | Reports / evidence / handoff | `.atm/reports/*.json`、`.atm/evidence/*.json`、validation evidence、context summary、handoff bundle | `compute-gate` reports、validation_evidence、handoff/context summary tools |
 | Context budget / summarization | `.atm/reports/context-budget/*.json`、`.atm/state/context-summary/*.md`、重量文件/圖片 budget policy、summarize/hard-stop workflow | `check-context-budget.js`、`generate-context-summary.js`、`report-turn-usage.js` |
 | Rule / gate runner | default rule guard、encoding guard、context budget guard、import/scope guard、command capability policy | `compute-gate.js`、encoding checks、import-boundary、UI/H2U rule guards、context budget guard |
@@ -500,6 +503,7 @@ Default Governance Bundle 的其他 reference plugins（完整 task cards、doc 
 | ATM-3-0012 | task-scope / import-boundary 規則包遷移 | `rule-pack.json` + RuleGuard adapter；同時標 `check-task-scope.js` / `check-import-boundaries.js` 為 `@deprecated` |
 | ATM-3-0013 | finalize-agent-turn wrapper 接 run envelope | `tools_node/finalize-agent-turn.js` |
 | ATM-3-0015 | task card system 原子 map 規劃 | `task-card-opener.js` + `task-lock.js` + task shard + `check-task-scope.js` + doc-id sync 的 end-to-end governed flow |
+| ATM-2-0050 | framework function 原子化 coverage gate | 全框架 Layer 2 功能 manifest + validator；確認 CLI / registry / spec / test / evidence / police / adapter / task lifecycle / map / PEV 都有 atom / map 覆蓋 |
 
 #### ATM-2 演進補強：識別、行為、狀態機（新增 8 卡，alpha1 範圍，chain `ATM-IDENTITY-BEHAVIOR-V1`）
 
@@ -613,7 +617,7 @@ node tools_node/task-lock.js unlock ATM-X-NNNN <agent-name>
 
 | 風險 | 防範 |
 |---|---|
-| **過度工程化**：框架還沒救到 Legacy 就先變成另一個巨大老系統 | 先 ATM-0~3 做 core + adapter MVP；DB / molecule bundler / 向量索引一律後置到 ATM-6 的 optional plugin 決策；每個框架功能也要原子化（dogfooding） |
+| **過度工程化**：框架還沒救到 Legacy 就先變成另一個巨大老系統 | 先 ATM-0~3 做 core + adapter MVP；DB / molecule bundler / 向量索引一律後置到 ATM-6 的 optional plugin 決策；每個框架功能也要原子化（dogfooding），並由 `ATM-2-0050` 的 coverage manifest + validator 防止只停留在文件承諾 |
 | **原子太碎造成性能差** | spec.performanceBudget 限 maxRuntimeMs / allocatedBytes；hot path atom 必跑 p95 measurement；compute atom 禁 async / deep clone |
 | **AI 修改超出範圍** | 任務卡 frontmatter 寫死 `allowed_files`；task-lock + check-task-scope 禁止越界；hash-lock 偵測 stable atom 被誤改 |
 | **Legacy 行為被破壞** | inject-plan dry-run；regression matrix 防止退轉；location-index 記錄每次注入位置；rollback-plan 對稱輸出 |

@@ -272,7 +272,7 @@
   {
     "id": "doc_other_0051",
     "path": "docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-appendices.md",
-    "title": "ATM 框架演進執行規劃書 — 附錄 A/B",
+    "title": "ATM 框架演進執行規劃書 — 附錄 A/B/C",
     "category": "other"
   },
   {
@@ -495,6 +495,12 @@
     "id": "doc_other_0088",
     "path": "docs/tech/npc-brain-memory/ops.md",
     "title": "NPC Brain Memory System — Ops & Milestones（§9-§12）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0089",
+    "path": "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
+    "title": "Framework Function Atomization Manifest",
     "category": "other"
   }
 ]
