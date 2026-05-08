@@ -54,5 +54,85 @@
       "position": "ATM-2",
       "prereq": "ATM-2-0014 / ATM-2-0021"
     }
+  },
+  {
+    "doc_id": "doc_task_0362",
+    "id": "ATM-2-0052",
+    "title": "Framework Done-Card Acknowledgement Backwrite",
+    "owner": "codex-gpt-5",
+    "priority": "P0",
+    "status": "done",
+    "type": "governance",
+    "phase": "ATM-2",
+    "created": "2026-05-09",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "2026-05-09T00:17:49+08:00",
+    "started_by_agent": "codex-gpt-5",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "把已完成 ATM-2 底座卡的交付結果補寫到框架 canonical 文件、coverage manifest 與 machine-readable fixture，讓上層框架承認這些 done card 的成果而不重開已完成卡。",
+    "related": [],
+    "depends": [
+      "ATM-2-0006",
+      "ATM-2-0009",
+      "ATM-2-0014",
+      "ATM-2-0020",
+      "ATM-2-0021",
+      "ATM-2-0022"
+    ],
+    "acceptance": [
+      "AI 原子框架開發計畫書補上已完成底座切片",
+      "ATM 框架演進執行規劃書追加 2026-05-09 done-card acknowledgement 附錄",
+      "framework-function-atomization-manifest 與 shards 補入 done-card acknowledgement 語言",
+      "manifest machine-readable inventory 與 fixture 保持 validate-framework-atomization-coverage 全綠",
+      "不將 family row 提前改成 covered-existing"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
+      "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
+      "docs/ai_atomic_framework/framework-function-atomization-manifest-shards/*",
+      "tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json"
+    ],
+    "notes": "2026-05-09 | 狀態: in-progress | 驗證: pending | 變更: codex-gpt-5 開始補寫 ATM done 卡框架承認文字與索引 | 阻塞: none\n2026-05-09 | 狀態: done | 驗證: validate-framework-atomization-coverage --strict pass；encoding touched pass；context budget ok；git diff --check pass | 變更: 完成 ATM done 卡框架承認補寫、manifest table / JSON / shard / fixture 對齊 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM framework backwrite",
+      "summary": "把 ATM-2 done 卡成果補進框架語言、manifest 與 fixture",
+      "position": "ATM-2 / framework acknowledgement follow-up",
+      "prereq": "ATM-2-0006 / 0009 / 0014 / 0020 / 0021 / 0022 已 done"
+    },
+    "contracts": {
+      "input": [
+        "六張 source done task card 已存在",
+        "不重開 done 卡",
+        "family coverage row 可維持 open-card"
+      ],
+      "output": [
+        "三份 canonical 文件承認完成切片",
+        "manifest table / JSON block / shard / fixture 對齊",
+        "本批驗證與 commit 可回溯到 ATM-2-0052"
+      ],
+      "validation_cmd": "node tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict\\nnpm.cmd run check:encoding:touched -- --files <本輪 touched files>\\nnode tools_node/check-context-budget.js --changed --emit-keep-note\\ngit diff --check",
+      "rollback_hint": "回退 ATM-2-0052 任務卡、tasks-atm shard、三份框架文件、manifest shards 與 coverage fixture；不得改動 source done cards 的完成歷史。",
+      "execution_steps": [
+        "建立並鎖定 ATM-2-0052",
+        "補寫 AI 原子框架開發計畫書",
+        "補寫 ATM 框架演進執行規劃書",
+        "補寫 manifest table / JSON / shards / fixture",
+        "跑 encoding / coverage / context / diff 驗證",
+        "提交本批相關檔案"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "completed_at": "2026-05-09T00:22:30+08:00",
+    "completed_by_agent": "codex-gpt-5"
   }
 ]

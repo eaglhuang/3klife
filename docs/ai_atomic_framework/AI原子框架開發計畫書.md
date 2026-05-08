@@ -413,6 +413,19 @@ docs/ai_atomic_framework/
 | ATM-2-0010 | Neutrality boundary rule guard | 建立 deterministic + optional semantic 的中立性/邊界守衛，持續攔截 adopter 私有假設回流 upstream。 |
 | ATM-2-0011 | Context budget guard | 建立 context budget primitive、budget policy、summary/hard-stop/report contract，讓 ATM 可獨立治理 token/context 預算與摘要節流。 |
 
+#### 2026-05-09 已完成底座切片回寫
+
+下列 `ATM-2` done cards 已不再只是任務卡層級的完成紀錄，而是框架語言可直接引用的底座切片。這些切片不代表整個 family 已 closed；family row 可維持 `open-card`，由後續卡收斂整合、shadow adapter 與案例驗證。
+
+| 卡號 | 框架承認的完成語意 | 後續路由 |
+|---|---|---|
+| `ATM-2-0006` | Adapter SDK 已具備生命週期語意：`AtomLifecycleMode` 區分 `birth / evolution`，`VersionResolver`、`QualityMetricsComparator`、`UpgradeProposalAdapter` 讓 adapter 不只是 facade，而能承接版本解析、品質比較與升版提案。 | Adapter family 仍由 `ATM-3-0001`、`ATM-3-0006~0011` 收斂 3KLife adapter 接入。 |
+| `ATM-2-0009` | Artifact / Log / Evidence Store 已提供 replayable evidence contract，含 `usage-feedback`、`quality-baseline`、`quality-comparison`、`rollback-proof` 四種 typed evidence、`.atm` 預設布局與 3KLife mapping 原則。 | `ATM-3-0014` 只做 3KLife usage-feedback shadow adapter，不再重定義 evidence store。 |
+| `ATM-2-0014` | Registry version history 已成為版本歷史正本：`currentVersion` / `versions[]`、migration fixture 與 legacy registry 相容規則已落地。 | `ATM-2-0023 / 0047` 等後續卡只擴充 map / resolver / index，不回頭改 `ATM-2-0014` 的完成歷史。 |
+| `ATM-2-0020` | `upgrade-proposal.schema.json` 已承認升版提案是唯一 orchestration choke point，並把 `decompositionDecision`、`mapImpactScope`、`behaviorId` 寫入 proposal contract。 | Map-level 與 behavior reference pack 後續必須委派到本 proposal flow。 |
+| `ATM-2-0021` | HumanReviewGate 已以 reference plugin 形式落地，包含 `atm review` CLI、`decision-snapshot.hash` 與 `upgrade-proposals.md` audit projection；core 不依賴 plugin 實作。 | 後續 PEV / semver docs 可引用此審核面，不另建 core hard dependency。 |
+| `ATM-2-0022` | Rollback proof 已從「移 registry pointer」升級為可驗證安全網，包含三段 hash proof、`statusReverted`、`semanticFingerprintReverted`、map target、member proofs 與 behavior reverse contract。 | `ATM-2.5-0004`、`ATM-3-0014`、`ATM-4-0007` 只負責把演化閉環跑完整，不重做 rollback proof contract。 |
+
 ### ATM-3：3KLife adapter 導入（downstream-only，需待 self-hosting alpha0 gate）（13 卡）
 
 | 範圍 | 任務 | 目的 |

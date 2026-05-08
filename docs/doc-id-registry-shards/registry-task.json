@@ -2116,5 +2116,11 @@
     "path": "docs/agent-briefs/tasks/ATM/ATM-2-0051.md",
     "title": "[ATM-2-0051] Coverage Gate Promotion & Self-Coverage Follow-up",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0362",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-2-0052.md",
+    "title": "[ATM-2-0052] Framework Done-Card Acknowledgement Backwrite",
+    "category": "task"
   }
 ]

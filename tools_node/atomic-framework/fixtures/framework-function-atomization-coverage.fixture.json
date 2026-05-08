@@ -86,9 +86,10 @@
       "ATM-2-0047"
     ],
     "artifactRefs": [
-      "docs/agent-briefs/tasks/ATM/ATM-2-0004.md"
+      "docs/agent-briefs/tasks/ATM/ATM-2-0004.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0014.md"
     ],
-    "nextCheck": "recheck when registry entry, hash-lock, or URN routing changes",
+    "nextCheck": "ATM-2-0014 completed currentVersion / versions[] version history slice; recheck when registry entry, hash-lock, or URN routing changes",
     "routeHint": null,
     "findingContract": null
   },
@@ -145,8 +146,8 @@
     "artifactRefs": [
       "docs/agent-briefs/tasks/ATM/ATM-2-0006.md"
     ],
-    "nextCheck": "wait for adapter-phase cards to close; facade must not become a monolith",
-    "routeHint": "ATM-2-0006 -> ATM-3-0001 -> ATM-3-0006~ATM-3-0011",
+    "nextCheck": "ATM-2-0006 completed lifecycle-aware SDK slice; wait for adapter-phase cards to close and keep the facade from becoming a monolith",
+    "routeHint": "ATM-2-0006 done -> ATM-3-0001 -> ATM-3-0006~ATM-3-0011",
     "findingContract": null
   },
   {
@@ -163,8 +164,8 @@
     "artifactRefs": [
       "docs/agent-briefs/tasks/ATM/ATM-2-0009.md"
     ],
-    "nextCheck": "keep evidence schema aligned with caller-count and validation evidence",
-    "routeHint": "ATM-2-0009 + ATM-3-0014 follow-up",
+    "nextCheck": "ATM-2-0009 completed replayable store contract; keep usage-feedback aligned with caller-count and validation evidence",
+    "routeHint": "ATM-2-0009 done -> ATM-3-0014 usage-feedback shadow adapter",
     "findingContract": null
   },
   {
@@ -200,10 +201,14 @@
       "ATM-2.5-0004"
     ],
     "artifactRefs": [
-      "docs/agent-briefs/tasks/ATM/ATM-2-0015.md"
+      "docs/agent-briefs/tasks/ATM/ATM-2-0015.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0017.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0020.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0021.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0022.md"
     ],
-    "nextCheck": "keep proposal / review / rollback docs aligned with compatibility matrix",
-    "routeHint": "ATM-2-0015 / ATM-2-0017 / ATM-2-0020 / ATM-2-0021 / ATM-2-0022 / ATM-2.5-0004",
+    "nextCheck": "ATM-2-0020 / 0021 / 0022 completed proposal / review / rollback core slice; keep PEV and semver docs aligned with compatibility matrix",
+    "routeHint": "ATM-2-0015 / ATM-2-0017 / ATM-2-0020 done / ATM-2-0021 done / ATM-2-0022 done / ATM-2.5-0004",
     "findingContract": null
   },
   {

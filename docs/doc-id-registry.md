@@ -18,12 +18,12 @@
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 178 |
 | 索引類 | `doc_index` | 17 |
-| 任務卡類 | `doc_task` | 353 |
+| 任務卡類 | `doc_task` | 354 |
 | AI Agent 專用 | `doc_ai` | 31 |
 | Agent Skill 專用 | `doc_agentskill` | 46 |
 | Server 文件類 | `doc_server_<subtype>` | 15 |
-| 其它類 | `doc_other` | 86 |
-| **合計** | — | **808** |
+| 其它類 | `doc_other` | 89 |
+| **合計** | — | **812** |
 
 ---
 
@@ -420,6 +420,7 @@
 | `doc_task_0356` | docs/agent-briefs/tasks/ATM/ATM-2-0049.md | [ATM-2-0049] Task id reservation and lock race hardening |
 | `doc_task_0360` | docs/agent-briefs/tasks/ATM/ATM-2-0050.md | [ATM-2-0050] Framework Function Atomization Coverage Gate |
 | `doc_task_0361` | docs/agent-briefs/tasks/ATM/ATM-2-0051.md | [ATM-2-0051] Coverage Gate Promotion & Self-Coverage Follow-up |
+| `doc_task_0362` | docs/agent-briefs/tasks/ATM/ATM-2-0052.md | [ATM-2-0052] Framework Done-Card Acknowledgement Backwrite |
 | `doc_task_0303` | docs/agent-briefs/tasks/ATM/ATM-2.5-0001.md | [ATM-2.5-0001] Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI |
 | `doc_task_0304` | docs/agent-briefs/tasks/ATM/ATM-2.5-0002.md | [ATM-2.5-0002] Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate |
 | `doc_task_0305` | docs/agent-briefs/tasks/ATM/ATM-2.5-0003.md | [ATM-2.5-0003] Multi-Agent 兼容性驗證：confidence gate |
@@ -847,6 +848,9 @@
 | `doc_other_0067` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-evolution.md | 關於進化版的原子提案 — 版號、框架版本與回饋迴圈 |
 | `doc_other_0068` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-thesis.md | 關於進化版的原子提案 — 命題與防護模型 |
 | `doc_other_0069` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-validation.md | 關於進化版的原子提案 — 驗證來源 |
+| `doc_other_0094` | docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-inventory.md | Framework Function Atomization Manifest — Function Inventory 與 Gate |
+| `doc_other_0095` | docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-machine-readable.md | Framework Function Atomization Manifest — Machine-Readable Inventory |
+| `doc_other_0096` | docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-summary.md | Framework Function Atomization Manifest — 判定結論與邊界 |
 | `doc_other_0089` | docs/ai_atomic_framework/framework-function-atomization-manifest.md | Framework Function Atomization Manifest |
 | `doc_other_0082` | docs/ai_atomic_framework/h2u-regression-matrix.md | H2U Regression Matrix |
 | `doc_other_0081` | docs/ai_atomic_framework/html-to-ucuf-case-study.md | html-to-ucuf Reference Case Study |

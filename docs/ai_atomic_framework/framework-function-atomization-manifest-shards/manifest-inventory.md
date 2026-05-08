@@ -10,12 +10,12 @@
 | Spec loader / parser | Layer 2 | covered-existing | `ATM-2-0001` | manifest 需列出 atom home / registry entry 或明確標為 pre-generator backfill |
 | Scaffold builder | Layer 2 | covered-existing | `ATM-2-0002`、`ATM-2-0038`、`ATM-2-0039` | 必須經 AtomGenerator / source template provenance |
 | Test runner / report schema | Layer 2 | open-card | `ATM-2-0003`?`ATM-2-0016`?`ATM-2-0025` | report ?????? atom / map validation evidence |
-| Registry / HashLock / version history | Layer 2 | covered-existing | `ATM-2-0004`、`ATM-2-0014`、`ATM-2-0034`、`ATM-2-0047` | registry entry 必須有 generator provenance 或 backfilled witness |
+| Registry / HashLock / version history | Layer 2 | covered-existing | `ATM-2-0004`、`ATM-2-0014`、`ATM-2-0034`、`ATM-2-0047` | `ATM-2-0014` 已完成 `currentVersion` / `versions[]` version history slice；後續只重查 registry entry、hash-lock、URN routing |
 | Police plugin API / rule guards | Layer 2 | open-card | `ATM-2-0005`?`ATM-2-0010`?`ATM-2-0030`?`ATM-2-0031`?`ATM-2-0035`?`ATM-3-0012` | ?? rule guard ???? independent governed atom ? map member???? `trigger / scope / severity / action` ? machine-readable findings |
-| Adapter API / Plugin SDK | Layer 2 | open-card | `ATM-2-0006`、`ATM-3-0001`、`ATM-3-0006`~`ATM-3-0011` | adapter facade 不可成為 monolith；背後能力需拆 ATM-GOV atoms |
-| Evidence / artifact log store | Layer 2 | open-card | `ATM-2-0009`、`ATM-3-0014` | evidence schema / usage-feedback 必須列入 atom caller-count 與 validation evidence |
+| Adapter API / Plugin SDK | Layer 2 | open-card | `ATM-2-0006`、`ATM-3-0001`、`ATM-3-0006`~`ATM-3-0011` | `ATM-2-0006` 已完成 lifecycle-aware SDK slice；adapter facade 後續仍不可成為 monolith |
+| Evidence / artifact log store | Layer 2 | open-card | `ATM-2-0009`、`ATM-3-0014` | `ATM-2-0009` 已完成 replayable store contract；`ATM-3-0014` 只承接 usage-feedback shadow adapter |
 | Context budget / summarization | Layer 2 | covered-existing | `ATM-2-0011` | context budget guard 應列入 governance bundle map |
-| Evolution proposal / review / rollback | Layer 2 | open-card | `ATM-2-0015`、`ATM-2-0017`、`ATM-2-0020`、`ATM-2-0021`、`ATM-2-0022`、`ATM-2.5-0004` | PEV / semver docs 必須連到 atom compatibility matrix |
+| Evolution proposal / review / rollback | Layer 2 | open-card | `ATM-2-0015`、`ATM-2-0017`、`ATM-2-0020`、`ATM-2-0021`、`ATM-2-0022`、`ATM-2.5-0004` | `ATM-2-0020 / 0021 / 0022` 已完成 proposal / review / rollback core slice；後續收 family integration |
 | Atom identity / behavior / state machine | Layer 2 | open-card | `ATM-2-0026`、`ATM-2-0027`、`ATM-2-0028`、`ATM-2-0029` | behavior pack manifest 必須覆蓋 10 behaviors |
 | Atomization / infection adapter contract | Layer 2 | open-card | `ATM-2-0033`、`ATM-4-0004`、`ATM-4-0005` | atomize / infect 不得跳過 neutrality scan / dry-run proposal |
 | AtomGenerator / provenance audit | Layer 2 | covered-existing | `ATM-2-0038`、`ATM-2-0039`、`ATM-2-0040`、`ATM-2-0041` | 新 atom 不得繞過 generator；pre-generator atom 必須有 backfilled witness |

@@ -16,10 +16,10 @@
     "maxPartLines": 300
   },
   "summary": {
-    "done": 76,
+    "done": 77,
     "in_progress": 1,
     "open": 38,
-    "total": 115
+    "total": 116
   },
   "shards": [
     {
@@ -96,11 +96,11 @@
     },
     {
       "name": "tasks-atm-part-9",
-      "title": "Part 9 (sticky-least-pool, 1 items)",
+      "title": "Part 9 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-9.json",
-      "count": 1,
-      "bytes": 4742,
-      "lines": 58,
+      "count": 2,
+      "bytes": 8817,
+      "lines": 138,
       "layout": "sticky-least-pool"
     },
     {

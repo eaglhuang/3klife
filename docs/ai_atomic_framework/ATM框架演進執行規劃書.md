@@ -456,3 +456,18 @@ ATM-2-0022 rollback proof（失敗回退）
 - advisory report 必須能接收 police findings，並將 fast / slow police 的路由資訊保留給 human review queue 與 task-router。
 - 任一新卡若宣稱處理「全框架原子化」，必須在 acceptance 或 notes 中標註自己屬於 `0048`、`3-0015`、`0050` 哪一段路線，避免把局部治理誤判為全局完成。
 - `ATM-2-0050` 同時承接文件治理收斂：新增 `documentation-governance-policy.md` 與 `documentation-role-map.md`，並以 `validate-atm-doc-governance` 鎖定 `Agent Boot Order` 與 `docs/ai_atomic_framework/` 的 `canonical / reference / adopter / history / index / shard / asset` 角色；在角色治理穩定前，不進行大規模實體搬移。
+
+### C.13 Done-card acknowledgement backwrite（2026-05-09）
+
+本節保留前文所有歷史 snapshot，不回頭改 §A / §B / §C.1 的時間點判讀。`ATM-2-0006 / 0009 / 0014 / 0020 / 0021 / 0022` 已完成的部分，現在正式補入框架語言與 manifest 索引；這不是重啟驗收，也不是把 family row 提前關閉。
+
+| done 卡 | 已由框架承認的 acceptance | 仍未閉合的 family route |
+|---|---|---|
+| `ATM-2-0006` | `AtomLifecycleMode`、`VersionResolver`、`QualityMetricsComparator`、`UpgradeProposalAdapter` 已讓 Adapter SDK 可表達 birth/evolution 差異、版本解析與升版品質比較。 | `ATM-3-0001`、`ATM-3-0006~0011` 繼續收 3KLife adapter facade，不回頭重定義 SDK lifecycle。 |
+| `ATM-2-0009` | Evidence / artifact / log store 已完成 replayability contract，typed evidence 包含 `usage-feedback`、`quality-baseline`、`quality-comparison`、`rollback-proof`，並保留 `.atm` layout 與 3KLife mapping guidance。 | `ATM-3-0014` 只做 usage-feedback shadow adapter 與 strict/lenient mapping。 |
+| `ATM-2-0014` | `currentVersion` / `versions[]`、legacy fixture、versioned fixture 與 schema-additive migration 規則已是 registry version history 正本。 | `ATM-2-0023`、`ATM-2-0047` 只擴充 map registry 與 resolver/index。 |
+| `ATM-2-0020` | `upgrade-proposal.schema.json` 已吃掉 proposal decomposition acceptance：`decompositionDecision`、`mapImpactScope`、`behaviorId`，且 `atm upgrade --propose` 只彙整 evidence/report，不 mutate host、不直接進 review queue。 | `ATM-2-0024` 與 behavior pack 需委派 proposal flow，不可繞過。 |
+| `ATM-2-0021` | Human review 缺口已由 reference plugin 承接：`atm review list/show/approve/reject`、evidence decision log、`decision-snapshot.hash`、`upgrade-proposals.md` audit projection。 | Public PEV / semver 文件可引用此審核面；core 仍只依賴 schema。 |
+| `ATM-2-0022` | Rollback proof 已吃掉安全網 acceptance：spec/code/test 三段 hash、`statusReverted`、`semanticFingerprintReverted`、`behaviorId` reverse contract、map target、`memberAtomProofs[]` 與 `mapGeneratorProvenance`。 | `ATM-2.5-0004`、`ATM-3-0014`、`ATM-4-0007` 負責把 proposal/review/rollback 串成首次 end-to-end 演化閉環。 |
+
+因此 `framework-function-atomization-manifest.md` 中 `Adapter API / Plugin SDK`、`Evidence / artifact log store`、`Evolution proposal / review / rollback` 維持 `open-card` 是正確狀態：`open-card` 代表 family 尚有後續路由，不代表上述 done cards 未被框架承認。`Registry / HashLock / version history` 則繼續維持 `covered-existing`，並以 `ATM-2-0014` 作為 version history slice 的完成來源。

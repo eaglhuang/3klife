@@ -13,6 +13,7 @@
 - CLI protocol / commands 已進入 covered-existing，並由 task-router / adapter route / rule-guard contract 承接。
 - manifest 自己也有一條 self-coverage meta-surface，避免 coverage gate 只管別人、不管自己。
 - machine-readable inventory 與 fixture 必須持續對齊；validator 會把 drift 當成失敗。
+- 2026-05-09 補入 done-card acknowledgement：`ATM-2-0006 / 0009 / 0014 / 0020 / 0021 / 0022` 的完成成果已成為 framework 可引用語言；family row 若仍有後續卡，仍維持 `open-card`。
 
 ## Layer Boundary
 

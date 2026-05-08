@@ -514,5 +514,23 @@
     "path": "docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md",
     "title": "ATM 框架穩定化與演化閉環里程碑",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0094",
+    "path": "docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-inventory.md",
+    "title": "Framework Function Atomization Manifest — Function Inventory 與 Gate",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0095",
+    "path": "docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-machine-readable.md",
+    "title": "Framework Function Atomization Manifest — Machine-Readable Inventory",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0096",
+    "path": "docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-summary.md",
+    "title": "Framework Function Atomization Manifest — 判定結論與邊界",
+    "category": "other"
   }
 ]
