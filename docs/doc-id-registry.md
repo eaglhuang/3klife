@@ -22,8 +22,8 @@
 | AI Agent 專用 | `doc_ai` | 31 |
 | Agent Skill 專用 | `doc_agentskill` | 46 |
 | Server 文件類 | `doc_server_<subtype>` | 15 |
-| 其它類 | `doc_other` | 85 |
-| **合計** | — | **806** |
+| 其它類 | `doc_other` | 86 |
+| **合計** | — | **807** |
 
 ---
 
@@ -827,6 +827,7 @@
 | `doc_other_0052` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-diagnosis.md | ATM 框架演進執行規劃書 — 機讀真相與提案診斷（§1–§3） |
 | `doc_other_0053` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-risk.md | ATM 框架演進執行規劃書 — 風險、排除與結論（§6–§8） |
 | `doc_other_0054` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-roadmap.md | ATM 框架演進執行規劃書 — 新增任務與依賴重排（§4–§5） |
+| `doc_other_0093` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md | ATM 框架穩定化與演化閉環里程碑 |
 | `doc_other_0043` | docs/ai_atomic_framework/ATM框架演進執行規劃書.md | ATM 框架演進執行規劃書 |
 | `doc_other_0055` | docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-details.md | 原子行為參考手冊 — 各行為詳細說明 |
 | `doc_other_0056` | docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-extension.md | 原子行為參考手冊 — 擴充指南與狀態機參考 |

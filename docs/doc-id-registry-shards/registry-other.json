@@ -508,5 +508,11 @@
     "path": "docs/學習文件/Harness Engineering for Language Agents.md",
     "title": "Harness Engineering for Language Agents",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0093",
+    "path": "docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md",
+    "title": "ATM 框架穩定化與演化閉環里程碑",
+    "category": "other"
   }
 ]
