@@ -6,6 +6,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const config = require('./project-config');
+const { findTaskCardPath, getTaskCardRelativePath } = require('./task-card-paths');
 
 const PROJECT_ROOT = config.ROOT;
 
@@ -415,14 +416,15 @@ function readAllTaskLocks(taskLockDir) {
   };
 }
 
-function readTaskCardEvidence(taskId, taskCardDir) {
+function readTaskCardEvidence(taskId, taskCardDir, repositoryRoot = PROJECT_ROOT) {
   if (!taskCardDir) {
     return { checked: false, found: false, path: '', id: '', status: '', startedByAgent: '', error: '' };
   }
 
-  const cardPath = path.join(taskCardDir, `${taskId}.md`);
+  const taskCardRelDir = path.relative(repositoryRoot, taskCardDir);
+  const cardPath = findTaskCardPath(repositoryRoot, taskId, taskCardRelDir);
   if (!fs.existsSync(cardPath)) {
-    return { checked: true, found: false, path: toPosixPath(cardPath), id: '', status: '', startedByAgent: '', error: '' };
+    return { checked: true, found: false, path: toPosixPath(path.join(repositoryRoot, getTaskCardRelativePath(taskId, taskCardRelDir))), id: '', status: '', startedByAgent: '', error: '' };
   }
 
   try {
@@ -476,7 +478,7 @@ function buildTaskScopeResult({ artifact, repositoryRoot, taskLockDir = '', task
     ? readTaskLockEvidence(artifactTask, resolvedLockDir)
     : { checked: Boolean(resolvedLockDir), found: false, path: '', taskId: '', agentName: '', files: [], error: '' };
   const frontmatter = artifactTask
-    ? readTaskCardEvidence(artifactTask, resolvedCardDir)
+    ? readTaskCardEvidence(artifactTask, resolvedCardDir, repositoryRoot || PROJECT_ROOT)
     : { checked: Boolean(resolvedCardDir), found: false, path: '', id: '', status: '', startedByAgent: '', error: '' };
 
   if (lock.error) {
@@ -561,7 +563,7 @@ function buildGitTaskScopeCoverage({ repositoryRoot, gitEntries, taskLockDir = '
     ? readTaskLockEvidence(taskId, resolvedLockDir)
     : { checked: Boolean(resolvedLockDir), found: false, path: '', taskId: '', agentName: '', files: [], error: '' };
   const currentTaskCard = taskId
-    ? readTaskCardEvidence(taskId, resolvedCardDir)
+    ? readTaskCardEvidence(taskId, resolvedCardDir, root)
     : { checked: Boolean(resolvedCardDir), found: false, path: '', id: '', status: '', startedByAgent: '', error: '' };
 
   if (taskId) {

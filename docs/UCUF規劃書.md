@@ -2316,7 +2316,7 @@ node tools_node/validate-ui-specs.js --strict --check-content-contract --rules R
 
 ```bash
 # 驗證任務卡的 Frontmatter 完整性
-node tools_node/validate-ucuf-task-card.js --card docs/agent-briefs/tasks/UCUF-XXXX.md
+node tools_node/validate-ucuf-task-card.js --card docs/agent-briefs/tasks/UCUF/UCUF-XXXX.md
 # 輸出：
 #   ✅ Section A: 完整
 #   ❌ Section B: data_sources_owned 為空 — 違反 R-TC-04

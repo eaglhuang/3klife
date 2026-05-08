@@ -106,14 +106,14 @@ Agent 結束回合時，handoff 摘要必須涵蓋：
 ### 當前決策（2026-04-13）
 
 - **暫不**由 `finalize-agent-turn.js` 強制驗證 handoff 檔格式。
-- 正式 handoff 落點統一為 `docs/agent-briefs/tasks/*.md` 既有任務卡或對應 brief。
+- 正式 handoff 落點統一為 `docs/agent-briefs/tasks/**/*.md` 既有任務卡或對應 brief。
 - Agent 收工時仍必須在回覆中提供：`changedFiles / decisions / blockers / nextAction` 四要素；若 task card 已存在，優先直接回寫該卡的 notes / status。
 - 等 task card 模板與 workflow 完全穩定後，再評估是否補 `--check-handoff` 自動驗證，而不是現在先把臨時格式鎖死。
 
 ### Mini-handoff 產生策略
 
 - **暫不**自動產生新的 mini-handoff 檔。
-- 原因：本 repo 已有 `docs/agent-briefs/tasks/*.md` 與任務卡體系，若再由工具自動吐另一份摘要，容易造成雙重真相來源。
+- 原因：本 repo 已有 `docs/agent-briefs/tasks/**/*.md` 與任務卡體系，若再由工具自動吐另一份摘要，容易造成雙重真相來源。
 - 現階段規則：
   - 有既有 task card：直接回寫該卡
   - 沒既有 task card：在工作回覆中給出結構化 handoff，必要時再人工建立正式 brief
@@ -163,3 +163,11 @@ git config --get core.hooksPath
 - `git config --get core.hooksPath` 應回傳 `.githooks`
 
 若這一步沒做，`.githooks/pre-commit` 即使存在，也不會真的被 Git 執行。
+
+## 2026-05-08 Task ID Reservation Race Addendum
+
+- New task ids, including explicit ids and next-id allocation, must reserve through `tools_node/lib/task-id-guard.js` and its shared reservation fence.
+- A lock file with `reservationOnly: true` means the task id is reserved only; it is not an executable scope lock.
+- After `task-card-opener.js --write` successfully writes Markdown / JSON, it must call `LockAdapter.lock()` to promote the reservation and record `files[]` plus a scope fingerprint.
+- If `task-card-opener.js --write` fails after creating a reservation, it must release only the reservation created by that run.
+- `task-lock.js` must stay a thin wrapper; reserve / lock / unlock / validateScope implementation lives in `tools_node/adapters/atm-3klife/lock-adapter.js` and `task-id-guard.js`.

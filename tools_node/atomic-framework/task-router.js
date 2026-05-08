@@ -8,9 +8,14 @@ const projectConfig = require('../lib/project-config');
 const { readTasksAtmStore } = require('../lib/tasks-atm-shard-store');
 const { LockAdapter } = require('../adapters/atm-3klife/lock-adapter');
 const { createLockAdapterConfig } = require('../adapters/atm-3klife/lock-adapter-config');
+const {
+  findTaskCardPath,
+  getTaskCardRelativePath,
+} = require('../lib/task-card-paths');
 
 const projectRoot = projectConfig.ROOT;
 const taskCardDir = path.join(projectRoot, 'docs', 'agent-briefs', 'tasks');
+const taskCardDirRel = path.relative(projectRoot, taskCardDir);
 const taskStorePath = path.join(projectRoot, 'docs', 'tasks', 'tasks-atm.json');
 const upstreamRepoRoot = path.resolve(projectRoot, '..', 'AI-Atomic-Framework');
 const upstreamCliPath = path.join(upstreamRepoRoot, 'packages', 'cli', 'src', 'atm.mjs');
@@ -34,7 +39,7 @@ function toKebabCase(value) {
 }
 
 function readTaskCardTitle(taskId) {
-  const filePath = path.join(taskCardDir, `${taskId}.md`);
+  const filePath = findTaskCardPath(projectRoot, taskId, taskCardDirRel);
   if (!fs.existsSync(filePath)) {
     return '';
   }
@@ -350,8 +355,13 @@ function buildIntentRoute(intent, args = {}) {
 function buildTaskRoute(taskId) {
   const task = mergeTaskRecord(taskId);
   if (!task.title) {
-    throw new Error(`Task card not found: ${toRelative(path.join(taskCardDir, `${taskId}.md`))}`);
+    throw new Error(`Task card not found: ${toRelative(path.join(projectRoot, getTaskCardRelativePath(taskId)))}`);
   }
+
+  const taskCardPath = findTaskCardPath(projectRoot, taskId, taskCardDirRel);
+  const taskCardRelativePath = taskCardPath
+    ? toRelative(taskCardPath)
+    : getTaskCardRelativePath(taskId);
 
   const lock = lockAdapter.readAllLocks().find((entry) => entry.taskId === taskId) || null;
   const route = classifyRoute(task);
@@ -360,7 +370,7 @@ function buildTaskRoute(taskId) {
 
   const readFirst = [
     'docs/keep.summary.md',
-    'docs/agent-briefs/tasks/' + taskId + '.md',
+    taskCardRelativePath,
   ];
 
   if (route.kind === 'atom-generation') {
@@ -422,7 +432,7 @@ function buildTaskRoute(taskId) {
     },
     validationHints,
     inputs: {
-      taskCard: toRelative(path.join(taskCardDir, `${taskId}.md`)),
+      taskCard: taskCardRelativePath,
       taskStore: toRelative(taskStorePath),
     },
     summary: route.kind === 'atom-generation'

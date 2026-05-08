@@ -6,7 +6,7 @@
  * 對比 ui-quality-todo.json 中含問號殘段的條目，批量補回正確中文內容。
  *
  * 策略：
- *   1. 讀取所有 docs/agent-briefs/tasks/*.md
+ *   1. 讀取所有 docs/agent-briefs/tasks/**/*.md
  *   2. 解析 YAML frontmatter（自行實作，不依賴外部套件）
  *   3. 對每個有問題的 JSON 條目，用任務卡的 title / notes 覆寫
  *   4. 保留原有的 status / phase / priority / created 等（以 JSON 為主，除非卡也有更新版本）
@@ -19,9 +19,11 @@
 
 const fs   = require('fs');
 const path = require('path');
+const { listTaskCardFiles } = require('./lib/task-card-paths');
 
 const DRY_RUN    = process.argv.includes('--dry-run');
 const TASKS_DIR  = path.resolve(__dirname, '..', 'docs', 'agent-briefs', 'tasks');
+const TASKS_REL_DIR = path.relative(path.resolve(__dirname, '..'), TASKS_DIR);
 const TODO_FILE  = path.resolve(__dirname, '..', 'docs', 'ui-quality-todo.json');
 
 // ---------------------------------------------------------------------------
@@ -106,9 +108,8 @@ function taskHasGarbage(task) {
 // ---------------------------------------------------------------------------
 function main() {
     // 1. 讀取所有任務卡
-    const cardFiles = fs.readdirSync(TASKS_DIR)
-        .filter(f => f.endsWith('.md'))
-        .map(f => path.join(TASKS_DIR, f));
+    const cardFiles = listTaskCardFiles(path.resolve(__dirname, '..'), TASKS_REL_DIR)
+        .sort();
 
     const cardMap = new Map(); // id → frontmatter object
     for (const cf of cardFiles) {

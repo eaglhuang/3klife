@@ -102,7 +102,7 @@
 - [x] live `.task-locks` 流程已驗證可用。
 - [x] `.task-locks/` 已由 `.gitignore` 排除，並在正式文件中定義為不提交的本地協作檔。
 - [x] `task-lock` 使用規範已寫回正式文件，包含 lock、unlock、task-scope finalize 的最小工作流。
-- [x] 已決定 handoff 暫不由工具強制驗證；正式落點統一使用 `docs/agent-briefs/tasks/*.md` 與既有 task card。
+- [x] 已決定 handoff 暫不由工具強制驗證；正式落點統一使用 `docs/agent-briefs/tasks/**/*.md` 與既有 task card。
 - [x] 已決定暫不自動產生 mini-handoff；避免與既有 `docs/agent-briefs/` 任務卡形成雙重真相來源。
 
 ### P2. UCUF 架構承諾補完或降級
@@ -174,7 +174,7 @@
 - [x] `ResultPopupComposite.showResult()` 已可正常顯示 `Popup`（`popup.active=True`）；目前採 legacy node fallback，並記錄 `result-popup-screen` 在 `resources.load` 解析失敗的待追查 debt
 - [x] Browser preview 已確認 `DeployComposite` fallback 生效：`artifacts/ui-qa/verify-deploy-fallback/BattleScene.png` 可見左側兵種／虎符卡區重新出現；目前仍屬 visual/runtime smoke，尚未完成完整 deploy flow 驗收
 - [ ] GitHub Actions workflow 已落地，但尚未在遠端 runner 上完成首輪驗證
-- [x] AI 協作 handoff 決策已收斂：暫不強制 `--check-handoff`，暫不自動生成 mini-handoff，正式落點統一回寫 `docs/agent-briefs/tasks/*.md`
+- [x] AI 協作 handoff 決策已收斂：暫不強制 `--check-handoff`，暫不自動生成 mini-handoff，正式落點統一回寫 `docs/agent-briefs/tasks/**/*.md`
 - [x] spec debt 盤點完成：0 failures，已知 warnings 分類記錄，`general-detail-unified` tabRouting fragment 遺漏已修復
 ## 下一輪建議起手式
 

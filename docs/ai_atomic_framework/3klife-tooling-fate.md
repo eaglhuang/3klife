@@ -291,3 +291,10 @@ diff baseline.json after.json
 | C. Replaced | 3KLife maintainer（過渡期）→ 上游接手 | 移除前持續 wrapper |
 | D. Merged | 上游接手 | 3KLife 端零維護 |
 | E. Permanent | 3KLife maintainer | 與 ATM 無關 |
+
+## 2026-05-08 Task Card System Race Backwrite
+
+- `task-id-guard.js` is the only local 3KLife path for task id allocation and reservation; explicit ids and next-id allocation share the same fence.
+- `task-card-opener.js` remains the TaskAdapter-facing writer, but successful writes must promote reservations through `LockAdapter.lock()`.
+- `task-lock.js` has no legacy CLI implementation; it only parses commands and delegates to `tools_node/adapters/atm-3klife/lock-adapter.js`.
+- Future ATM-3 / ATM-3-0015 atomization should treat allocateTaskId / reserveTaskId / openTaskCard / lockTaskScope as one orchestration chain, not parallel allocators.

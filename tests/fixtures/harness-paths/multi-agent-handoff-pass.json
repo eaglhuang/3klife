@@ -31,7 +31,7 @@
     "source": {
       "changed": false,
       "explicitFiles": [
-        "docs/agent-briefs/tasks/HARN-EVAL-0002.md",
+        "docs/agent-briefs/tasks/HARN/HARN-EVAL-0002.md",
         "artifacts/turn-artifacts/2026-05-06/multi-agent-handoff/eval-pack-sync.json"
       ],
       "maxFiles": 3
@@ -46,7 +46,7 @@
     },
     "files": [
       {
-        "path": "docs/agent-briefs/tasks/HARN-EVAL-0002.md",
+        "path": "docs/agent-briefs/tasks/HARN/HARN-EVAL-0002.md",
         "kind": "text",
         "bytes": 5400,
         "estTokens": 1350,
@@ -67,11 +67,11 @@
       "task": "eval-pack-sync",
       "goal": "emit a canonical handoff path with summary generation and finalize output",
       "read": [
-        "docs/agent-briefs/tasks/HARN-EVAL-0002.md",
+        "docs/agent-briefs/tasks/HARN/HARN-EVAL-0002.md",
         "artifacts/turn-artifacts/2026-05-06/multi-agent-handoff/eval-pack-sync.json"
       ],
       "known": [
-        "docs/agent-briefs/tasks/HARN-EVAL-0002.md (1350 tok) | handoff source task card",
+        "docs/agent-briefs/tasks/HARN/HARN-EVAL-0002.md (1350 tok) | handoff source task card",
         "artifacts/turn-artifacts/2026-05-06/multi-agent-handoff/eval-pack-sync.json (1775 tok) | formal turn artifact output"
       ],
       "need": [

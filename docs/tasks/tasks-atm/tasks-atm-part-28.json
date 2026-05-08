@@ -106,7 +106,7 @@
         "alpha0 deterministic 4 criteria 仍是 release blocker；evolution sandbox 只解鎖 alpha1 readiness",
         "fixture / expected output / report 都有 deterministic validation"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM-2.5-0004.md\\nnpm run validate:self-hosting-alpha\\nnpm run validate:evolution-sandbox\\nnpm test\\nnpm run typecheck\\nnpm run lint",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2.5-0004.md\\nnpm run validate:self-hosting-alpha\\nnpm run validate:evolution-sandbox\\nnpm test\\nnpm run typecheck\\nnpm run lint",
       "rollback_hint": "刪除 alpha1 evolution sandbox fixture、expected outputs 與 validation wiring；不得改寫 ATM-2.5-0001/0002/0003 的 done card 或 alpha0 fixture。",
       "execution_steps": [
         "確認 alpha0 sandbox 現況與 v2 補丁語意",

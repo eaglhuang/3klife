@@ -38,7 +38,7 @@
     "deliverables": [
       "docs/ai_atomic_framework/AI原子框架開發計畫書.md 補強",
       "docs/ai_atomic_framework/open-source-extraction-plan.md 補強",
-      "docs/agent-briefs/tasks/ATM-0-0014.md",
+      "docs/agent-briefs/tasks/ATM/ATM-0-0014.md",
       "相關既有 ATM 任務卡補充",
       "tasks-atm source 與 auto-parts 同步"
     ],

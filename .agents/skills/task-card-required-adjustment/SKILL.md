@@ -12,7 +12,7 @@ Use this skill when an ATM task card has important requirements trapped in `note
 
 Target files are usually:
 
-- `docs/agent-briefs/tasks/ATM-*.md`
+- `docs/agent-briefs/tasks/ATM/ATM-*.md`
 
 Trigger examples:
 

@@ -29,8 +29,8 @@
     "deliverables": [
       "docs/ai_atomic_framework/AI原子框架開發計畫書.md governance split 章節",
       "docs/ai_atomic_framework/open-source-extraction-plan.md governance bundle 分層",
-      "docs/agent-briefs/tasks/ATM-2-0007.md",
-      "docs/agent-briefs/tasks/ATM-2-0008.md"
+      "docs/agent-briefs/tasks/ATM/ATM-2-0007.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0008.md"
     ],
     "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope uncovered=0；compute-gate standard 8/8 pass | 變更: 落地 Default Governance Bundle 與 Agent Operating Layer 切分，新增 ATM-1-0008/ATM-2-0009，將 artifacts/logs/md-json state/evidence 納入通用層 | 阻塞: none",
     "brief": {

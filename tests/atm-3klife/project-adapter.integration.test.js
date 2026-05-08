@@ -45,7 +45,7 @@ function main() {
   assert.strictEqual(task.workItemId, 'ATM-3-0001');
 
   const docPath = adapter.stores.documentIndex.resolveDocumentId('doc_task_0264');
-  assert.strictEqual(docPath, 'docs/agent-briefs/tasks/ATM-3-0001.md');
+  assert.strictEqual(docPath, 'docs/agent-briefs/tasks/ATM/ATM-3-0001.md');
 
   const shard = adapter.stores.shardStore.readShard('docs/tasks/tasks-atm/tasks-atm-part-12.json');
   assert.ok(Array.isArray(shard), 'ATM shard should load as an array');
@@ -59,7 +59,7 @@ function main() {
   assert.strictEqual(adapter.stores.lockStore.getLock('ATM-3-0001-SHADOW'), null);
 
   const encodingGuard = adapter.stores.ruleGuard.runGuard('encoding', {
-    files: ['docs/agent-briefs/tasks/ATM-3-0001.md'],
+    files: ['docs/agent-briefs/tasks/ATM/ATM-3-0001.md'],
   });
   assert.strictEqual(encodingGuard.ok, true);
 

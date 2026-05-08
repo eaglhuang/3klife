@@ -28,6 +28,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { accumulateHarnessMetrics } = require('./accumulate-harness-metrics');
+const { listTaskCardFiles } = require('./lib/task-card-paths');
 const { queryTurnArtifactHistory } = require('./query-turn-artifact-history');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
@@ -176,6 +177,12 @@ function countDirFiles(relPath, ext = '') {
     .filter((entry) => entry.isFile() && (!ext || entry.name.endsWith(ext))).length;
 }
 
+function countFilesRecursive(relPath, ext = '') {
+  return listTaskCardFiles(PROJECT_ROOT, relPath)
+    .filter((filePath) => !ext || filePath.endsWith(ext))
+    .length;
+}
+
 function divide(numerator, denominator) {
   if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || denominator <= 0) {
     return null;
@@ -248,9 +255,9 @@ function assessFeedforward() {
     status: skillCount >= 20 ? 'good' : skillCount >= 10 ? 'warn' : 'poor',
   });
 
-  const taskCardCount = countDirFiles('docs/agent-briefs/tasks', '.md');
+  const taskCardCount = countFilesRecursive('docs/agent-briefs/tasks', '.md');
   items.push({
-    name: 'Task Cards (docs/agent-briefs/tasks/)',
+    name: 'Task Cards (docs/agent-briefs/tasks/**)',
     count: taskCardCount,
     max: null,
     score: taskCardCount > 50 ? 100 : taskCardCount > 20 ? 80 : 60,

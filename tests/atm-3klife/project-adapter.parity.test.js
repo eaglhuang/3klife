@@ -29,20 +29,20 @@ function main() {
 
   const directResolve = runNodeScript('tools_node/resolve-doc-id.js', ['doc_task_0264']);
   const adapterResolve = adapter.stores.documentIndex.resolveDocumentId('doc_task_0264');
-  assert.ok(directResolve.includes('docs/agent-briefs/tasks/ATM-3-0001.md'));
-  assert.strictEqual(adapterResolve, 'docs/agent-briefs/tasks/ATM-3-0001.md');
+  assert.ok(directResolve.includes('docs/agent-briefs/tasks/ATM/ATM-3-0001.md'));
+  assert.strictEqual(adapterResolve, 'docs/agent-briefs/tasks/ATM/ATM-3-0001.md');
 
   const directEncoding = spawnSync(process.execPath, [
     path.join(projectRoot, 'tools_node', 'check-encoding-touched.js'),
     '--files',
-    'docs/agent-briefs/tasks/ATM-3-0001.md',
+    'docs/agent-briefs/tasks/ATM/ATM-3-0001.md',
   ], {
     cwd: projectRoot,
     encoding: 'utf8',
     shell: false,
   });
   const adapterEncoding = adapter.stores.ruleGuard.runGuard('encoding', {
-    files: ['docs/agent-briefs/tasks/ATM-3-0001.md'],
+    files: ['docs/agent-briefs/tasks/ATM/ATM-3-0001.md'],
   });
   assert.strictEqual(directEncoding.status, 0);
   assert.strictEqual(adapterEncoding.ok, true);

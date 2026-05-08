@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const handoffDiff = require('../../lib/handoff-diff-core');
+const { findTaskCardPath } = require('../../lib/task-card-paths');
 const {
     formatTaskIdInspection,
     inspectTaskId,
@@ -146,6 +147,8 @@ class LockAdapter {
                     lockedAt: String(parsed.lockedAt || '').trim(),
                     scopeFingerprint: String(parsed.scopeFingerprint || '').trim(),
                     scopeFingerprintVersion: String(parsed.scopeFingerprintVersion || '').trim(),
+                    reservationOnly: Boolean(parsed.reservationOnly),
+                    reservationPrefix: String(parsed.reservationPrefix || '').trim(),
                     files: Array.from(new Set((Array.isArray(parsed.files) ? parsed.files : []).map((filePath) => this.normalizeRel(filePath)).filter(Boolean))),
                     path: filePath,
                 };
@@ -180,7 +183,8 @@ class LockAdapter {
     }
 
     readTaskFrontmatter(taskId) {
-        const filePath = path.join(this.taskCardDir, `${taskId}.md`);
+        const taskCardDirRel = path.relative(this.projectRoot, this.taskCardDir).replace(/\\/g, '/');
+        const filePath = findTaskCardPath(this.projectRoot, taskId, taskCardDirRel);
         if (!fs.existsSync(filePath)) {
             return {};
         }
@@ -363,8 +367,11 @@ class LockAdapter {
                 if (existing.agentName === agentName) {
                     const nextFiles = normalizedFiles.length > 0 ? normalizedFiles : Array.from(new Set((Array.isArray(existing.files) ? existing.files : []).map((filePath) => this.normalizeRel(filePath)).filter(Boolean)));
                     const currentFingerprint = this.buildScopeFingerprint(nextFiles);
+                    const promotedReservation = Boolean(existing.reservationOnly);
                     const updated = {
                         ...existing,
+                        reservationOnly: undefined,
+                        reservationPrefix: undefined,
                         lockedAt: new Date().toISOString(),
                         files: nextFiles,
                         scopeFingerprint: currentFingerprint.fingerprint,
@@ -382,8 +389,11 @@ class LockAdapter {
                         scopeFingerprint: updated.scopeFingerprint,
                         scopeFingerprintVersion: updated.scopeFingerprintVersion,
                         conflictCount: conflictResult.conflicts.length,
+                        promotedReservation,
                     });
-                    console.log(`🔒 "${taskId}" 已由你 (${agentName}) 鎖定，更新時間戳`);
+                    console.log(promotedReservation
+                        ? `🔒 "${taskId}" 已由你 (${agentName}) 將預留號升級為正式鎖`
+                        : `🔒 "${taskId}" 已由你 (${agentName}) 鎖定，更新時間戳`);
                     return;
                 }
                 const lockError = new Error(`鎖定失敗: "${taskId}" 已被 "${existing.agentName}" 於 ${existing.lockedAt} 鎖定`);
@@ -488,7 +498,8 @@ class LockAdapter {
             return;
         }
         const existing = this.readJson(lp);
-        console.log(`🔒 "${taskId}" 已被 "${existing.agentName}" 鎖定`);
+        const reservationLabel = existing.reservationOnly ? '（reservation-only）' : '';
+        console.log(`🔒 "${taskId}" 已被 "${existing.agentName}" 鎖定${reservationLabel}`);
         console.log(`   鎖定時間: ${existing.lockedAt}`);
         if (existing.files && existing.files.length > 0) {
             console.log(`   修改檔案: ${existing.files.join(', ')}`);
@@ -535,7 +546,8 @@ class LockAdapter {
         }
         console.log(`🔒 ${locks.length} 個任務被鎖定:\n`);
         for (const lock of locks) {
-            console.log(`  ${lock.taskId} → ${lock.agentName} (${lock.lockedAt})`);
+            const reservationLabel = lock.reservationOnly ? ' reservation-only' : '';
+            console.log(`  ${lock.taskId} → ${lock.agentName} (${lock.lockedAt})${reservationLabel}`);
         }
         return locks;
     }

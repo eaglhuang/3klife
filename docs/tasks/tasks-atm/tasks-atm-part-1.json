@@ -27,7 +27,7 @@
     "deliverables": [
       "docs/tasks/.shardrc.json 加入 tasks-atm",
       "docs/tasks/tasks-atm.json 建立並收錄 ATM 任務",
-      "docs/agent-briefs/tasks/ATM-0-0001.md 具備 doc_id 與 in-progress frontmatter"
+      "docs/agent-briefs/tasks/ATM/ATM-0-0001.md 具備 doc_id 與 in-progress frontmatter"
     ],
     "notes": "2026-05-05 | 狀態: done | 驗證: check-task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 完成 ATM shard、任務卡批次建立、doc_id 回填與 Roadmap/Plan 解耦 | 阻塞: none",
     "brief": {
@@ -44,7 +44,7 @@
       "output": [
         "docs/tasks/.shardrc.json 加入 tasks-atm",
         "docs/tasks/tasks-atm.json 建立並收錄 ATM 任務",
-        "docs/agent-briefs/tasks/ATM-0-0001.md 具備 doc_id 與 in-progress frontmatter"
+        "docs/agent-briefs/tasks/ATM/ATM-0-0001.md 具備 doc_id 與 in-progress frontmatter"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",

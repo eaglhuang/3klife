@@ -67,7 +67,7 @@
 ## 開新任務卡流程
 
 1. 先走 `task-card-opener` skill，決定主資料面與是否需要 Markdown 卡，並以名詞定義文件決定任務卡 ID / 子系統編號。
-2. 若流程判定要建立 Markdown 卡，再在 `docs/agent-briefs/tasks/` 新增任務卡。
+2. 若流程判定要建立 Markdown 卡，再在 `docs/agent-briefs/tasks/<系統前綴>/` 新增任務卡；系統前綴以 task id 的第一段為準。
 3. 指派唯一 ID、owner、priority、status、related、depends。
 4. 在卡片寫清楚：開單原因、完整描述、驗證方式、是否需要測試。
 5. 同步更新對應 shard / manifest；若屬於 UI task shard，更新後執行 `node tools_node/build-ui-task-manifest.js`。

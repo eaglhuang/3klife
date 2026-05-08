@@ -103,7 +103,7 @@
         "兩個新 atom 均帶 legacy:// parentRefs 與可追溯 lineage log",
         "neutrality scan 不得讓 adopter-private 假設流入 upstream core schema"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM-4-0004.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-4-0004.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
         "確認 upstream/downstream 邊界",

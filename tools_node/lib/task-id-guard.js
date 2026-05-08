@@ -5,6 +5,10 @@ const path = require('path');
 
 const projectConfig = require('./project-config');
 const { readTasksAtmStore } = require('./tasks-atm-shard-store');
+const {
+  findTaskCardPath,
+  listTaskCardFiles,
+} = require('./task-card-paths');
 
 const TASK_CARD_DIR_REL = 'docs/agent-briefs/tasks';
 const LOCK_DIR_REL = '.task-locks';
@@ -36,14 +40,8 @@ function ensureLockDir(projectRoot) {
 }
 
 function listTaskCardIds(projectRoot = projectConfig.ROOT) {
-  const taskCardDir = path.join(projectRoot, TASK_CARD_DIR_REL);
-  if (!fs.existsSync(taskCardDir)) {
-    return [];
-  }
-
-  return fs.readdirSync(taskCardDir)
-    .filter((entryName) => entryName.endsWith('.md'))
-    .map((entryName) => path.basename(entryName, '.md'))
+  return listTaskCardFiles(projectRoot, TASK_CARD_DIR_REL)
+    .map((filePath) => path.basename(filePath, '.md'))
     .map(normalizeTaskId)
     .filter(Boolean);
 }
@@ -90,6 +88,7 @@ function listTaskLocks(projectRoot = projectConfig.ROOT) {
         agentName: String(data.agentName || '').trim(),
         lockedAt: String(data.lockedAt || '').trim(),
         reservationOnly: Boolean(data.reservationOnly),
+        reservationPrefix: normalizeTaskId(data.reservationPrefix),
         path: relPath(projectRoot, filePath),
       };
     })
@@ -106,8 +105,8 @@ function collectOccupiedTaskIds(projectRoot = projectConfig.ROOT) {
 
 function inspectTaskId(projectRoot = projectConfig.ROOT, taskId) {
   const normalizedTaskId = normalizeTaskId(taskId);
-  const taskCardPath = path.join(projectRoot, TASK_CARD_DIR_REL, `${normalizedTaskId}.md`);
-  const taskCards = fs.existsSync(taskCardPath)
+  const taskCardPath = findTaskCardPath(projectRoot, normalizedTaskId, TASK_CARD_DIR_REL);
+  const taskCards = taskCardPath
     ? [relPath(projectRoot, taskCardPath)]
     : [];
   const taskStoreCount = listTasksAtmIds(projectRoot).filter((id) => id === normalizedTaskId).length;
@@ -131,7 +130,10 @@ function formatTaskIdInspection(inspection) {
     parts.push(`tasks-atm entries: ${inspection.taskStoreCount}`);
   }
   if (inspection.locks.length > 0) {
-    parts.push(`locks: ${inspection.locks.map((entry) => `${entry.agentName || 'unknown'}@${entry.lockedAt || 'unknown'}`).join(', ')}`);
+    parts.push(`locks: ${inspection.locks.map((entry) => {
+      const suffix = entry.reservationOnly ? ' (reservation)' : '';
+      return `${entry.agentName || 'unknown'}@${entry.lockedAt || 'unknown'}${suffix}`;
+    }).join(', ')}`);
   }
   return parts.join(' | ');
 }
@@ -200,6 +202,107 @@ function releaseTaskIdFence(fencePath) {
   }
 }
 
+function taskLockPath(projectRoot, taskId) {
+  return path.join(ensureLockDir(projectRoot), `${normalizeTaskId(taskId)}.lock.json`);
+}
+
+function writeJsonFile(filePath, data, options = {}) {
+  fs.writeFileSync(filePath, `${JSON.stringify(data, null, 2)}\n`, {
+    encoding: 'utf8',
+    flag: options.flag || 'w',
+  });
+}
+
+function hasOnlyOwnReservation(inspection, agentName) {
+  const normalizedAgentName = String(agentName || '').trim();
+  return inspection.taskCards.length === 0
+    && inspection.taskStoreCount === 0
+    && inspection.locks.length > 0
+    && inspection.locks.every((entry) => entry.agentName === normalizedAgentName && entry.reservationOnly);
+}
+
+function reserveTaskIdWithActiveFence(projectRoot, taskId, agentName, options = {}) {
+  const normalizedTaskId = normalizeTaskId(taskId);
+  const normalizedAgentName = String(agentName || '').trim();
+  const inspection = inspectTaskId(projectRoot, normalizedTaskId);
+  if (hasOnlyOwnReservation(inspection, normalizedAgentName)) {
+    return {
+      taskId: normalizedTaskId,
+      prefix: normalizeTaskId(options.prefix),
+      agentName: normalizedAgentName,
+      dryRun: Boolean(options.dryRun),
+      reused: true,
+    };
+  }
+  if (inspection.occupied) {
+    throw new Error(`task id reservation collision for "${normalizedTaskId}": ${formatTaskIdInspection(inspection)}`);
+  }
+
+  if (!options.dryRun) {
+    const now = new Date().toISOString();
+    const lockData = {
+      taskId: normalizedTaskId,
+      agentName: normalizedAgentName,
+      lockedAt: now,
+      files: [],
+      scopeFingerprint: '',
+      scopeFingerprintVersion: 'scope-fingerprint/v1',
+      scopeSnapshotAt: now,
+      reservationOnly: true,
+      reservationPrefix: normalizeTaskId(options.prefix),
+    };
+    writeJsonFile(taskLockPath(projectRoot, normalizedTaskId), lockData, { flag: 'wx' });
+  }
+
+  return {
+    taskId: normalizedTaskId,
+    prefix: normalizeTaskId(options.prefix),
+    agentName: normalizedAgentName,
+    dryRun: Boolean(options.dryRun),
+    reused: false,
+  };
+}
+
+function reserveTaskId(projectRoot = projectConfig.ROOT, taskId, agentName, options = {}) {
+  const normalizedTaskId = normalizeTaskId(taskId);
+  const normalizedAgentName = String(agentName || '').trim();
+  if (!normalizedTaskId) {
+    throw new Error('task id is required');
+  }
+  if (!normalizedAgentName) {
+    throw new Error('agent name is required to reserve task id');
+  }
+
+  const prefix = normalizeTaskId(options.prefix || normalizedTaskId.replace(/-\d+$/, ''));
+  const fencePath = acquireTaskIdFence(projectRoot, prefix || normalizedTaskId, normalizedAgentName);
+  try {
+    return reserveTaskIdWithActiveFence(projectRoot, normalizedTaskId, normalizedAgentName, {
+      ...options,
+      prefix,
+    });
+  } finally {
+    releaseTaskIdFence(fencePath);
+  }
+}
+
+function releaseReservedTaskId(projectRoot = projectConfig.ROOT, taskId, agentName) {
+  const normalizedTaskId = normalizeTaskId(taskId);
+  const normalizedAgentName = String(agentName || '').trim();
+  if (!normalizedTaskId || !normalizedAgentName) {
+    return false;
+  }
+  const lockPath = taskLockPath(projectRoot, normalizedTaskId);
+  if (!fs.existsSync(lockPath)) {
+    return false;
+  }
+  const data = readJson(lockPath);
+  if (normalizeTaskId(data.taskId) !== normalizedTaskId || String(data.agentName || '').trim() !== normalizedAgentName || !data.reservationOnly) {
+    return false;
+  }
+  fs.unlinkSync(lockPath);
+  return true;
+}
+
 function reserveNextTaskId(projectRoot = projectConfig.ROOT, prefix, agentName, options = {}) {
   const normalizedPrefix = normalizeTaskId(prefix);
   const normalizedAgentName = String(agentName || '').trim();
@@ -213,35 +316,10 @@ function reserveNextTaskId(projectRoot = projectConfig.ROOT, prefix, agentName, 
   const fencePath = acquireTaskIdFence(projectRoot, normalizedPrefix, normalizedAgentName);
   try {
     const taskId = previewNextTaskId(projectRoot, normalizedPrefix);
-    const inspection = inspectTaskId(projectRoot, taskId);
-    if (inspection.occupied) {
-      throw new Error(`task id reservation collision for "${taskId}": ${formatTaskIdInspection(inspection)}`);
-    }
-
-    if (!options.dryRun) {
-      const lockDir = ensureLockDir(projectRoot);
-      const lockPath = path.join(lockDir, `${taskId}.lock.json`);
-      const now = new Date().toISOString();
-      const lockData = {
-        taskId,
-        agentName: normalizedAgentName,
-        lockedAt: now,
-        files: [],
-        scopeFingerprint: '',
-        scopeFingerprintVersion: 'scope-fingerprint/v1',
-        scopeSnapshotAt: now,
-        reservationOnly: true,
-        reservationPrefix: normalizedPrefix,
-      };
-      fs.writeFileSync(lockPath, `${JSON.stringify(lockData, null, 2)}\n`, 'utf8');
-    }
-
-    return {
-      taskId,
+    return reserveTaskIdWithActiveFence(projectRoot, taskId, normalizedAgentName, {
+      ...options,
       prefix: normalizedPrefix,
-      agentName: normalizedAgentName,
-      dryRun: Boolean(options.dryRun),
-    };
+    });
   } finally {
     releaseTaskIdFence(fencePath);
   }
@@ -257,5 +335,7 @@ module.exports = {
   listTaskLocks,
   listTasksAtmIds,
   previewNextTaskId,
+  releaseReservedTaskId,
   reserveNextTaskId,
+  reserveTaskId,
 };

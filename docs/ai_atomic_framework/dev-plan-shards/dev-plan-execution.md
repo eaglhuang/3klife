@@ -8,7 +8,7 @@
 ```bash
 node tools_node/task-lock.js check  ATM-X-NNNN
 node tools_node/task-lock.js lock   ATM-X-NNNN <agent-name> --files <擬動清單>
-node tools_node/doc-id-registry.js --assign docs/agent-briefs/tasks/ATM-X-NNNN.md
+node tools_node/doc-id-registry.js --assign docs/agent-briefs/tasks/ATM/ATM-X-NNNN.md
 # 更新任務卡 frontmatter: status=in-progress / started_at / started_by_agent
 ```
 
@@ -116,7 +116,7 @@ node tools_node/atomic-framework/atm-cli.js police --task ATM-4-0003
 
 | 檔案 | 角色 | 動作 |
 |---|---|---|
-| `docs/agent-briefs/tasks/ATM-{0..6}-NNNN.md` | 71 張任務卡 | 已由 task-card-opener 建立，含 v0.2、alpha0/alpha1、Default Governance Bundle 與 Agent Operating Layer 補強卡 |
+| `docs/agent-briefs/tasks/ATM/ATM-{0..6}-NNNN.md` | 71 張任務卡 | 已由 task-card-opener 建立，含 v0.2、alpha0/alpha1、Default Governance Bundle 與 Agent Operating Layer 補強卡 |
 | `docs/tasks/.shardrc.json` | shard 路由 | 修改（加 tasks-atm）— ATM-0-0001 |
 | `docs/tasks/tasks-atm.json` | ATM 任務 thin index 入口 | 已收斂 — ATM-0-0013 |
 | `docs/遊戲規格文件/系統規格書/名詞定義文件.md` | 系統代號真相 | 修改（加 ATM 條目）— ATM-0-0002 |

@@ -216,4 +216,4 @@ Title（標題）元件必須明確區分兩種類型，不可混用：
 
 ---
 
-*參考*: `docs/UI技術規格書.md (doc_ui_0049)` (doc_ui_0049) / `docs/UI品質檢核表.md (doc_ui_0050)` (doc_ui_0050) / `docs/ui/UI-factory-baseline-and-gates.md (doc_ui_0047)` (doc_ui_0047) / `docs/keep-shards/keep-ui-arch.md (doc_index_0008)` (doc_index_0008) / `docs/agent-briefs/tasks/UI-2-0096.md (doc_task_0119)` (doc_task_0119)
+*參考*: `docs/UI技術規格書.md (doc_ui_0049)` (doc_ui_0049) / `docs/UI品質檢核表.md (doc_ui_0050)` (doc_ui_0050) / `docs/ui/UI-factory-baseline-and-gates.md (doc_ui_0047)` (doc_ui_0047) / `docs/keep-shards/keep-ui-arch.md (doc_index_0008)` (doc_index_0008) / `docs/agent-briefs/tasks/UI/UI-2-0096.md (doc_task_0119)` (doc_task_0119)

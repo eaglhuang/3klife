@@ -88,7 +88,7 @@
         "cmd /c npm run typecheck",
         "cmd /c npm run lint",
         "node tools_node/rebuild-tasks-atm-auto-parts.js",
-        "node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM-2-0005.md docs/tasks/tasks-atm/tasks-atm-part-10.json docs/tasks/tasks-atm.json"
+        "node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-2-0005.md docs/tasks/tasks-atm/tasks-atm-part-10.json docs/tasks/tasks-atm.json"
       ],
       "handoff_diff_status": "",
       "trace_artifacts": [],

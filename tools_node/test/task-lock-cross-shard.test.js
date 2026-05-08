@@ -8,7 +8,7 @@ const { spawnSync } = require('child_process');
 const projectRoot = path.resolve(__dirname, '..', '..');
 const taskLockCli = path.join(projectRoot, 'tools_node', 'task-lock.js');
 const taskScopeCli = path.join(projectRoot, 'tools_node', 'check-task-scope.js');
-const taskCardDir = path.join(projectRoot, 'docs', 'agent-briefs', 'tasks');
+const { getTaskCardRelativePath } = require('../lib/task-card-paths');
 const tracePath = path.join(projectRoot, 'temp', 'task-lock-trace.test.jsonl');
 
 const testTasks = ['ATM-TEST-A', 'ATM-TEST-B', 'ATM-TEST-FP'];
@@ -31,8 +31,9 @@ function runTaskLock(args, expectedStatus = 0, extraEnv = {}) {
     if (result.status !== expectedStatus) {
         throw new Error([
             `task-lock ${args.join(' ')} exited ${result.status}, expected ${expectedStatus}`,
-            result.stdout.trim(),
-            result.stderr.trim()
+            String(result.stdout || '').trim(),
+            String(result.stderr || '').trim(),
+            result.error ? result.error.message : ''
         ].filter(Boolean).join('\n'));
     }
     return result;
@@ -48,15 +49,18 @@ function runTaskScope(args, expectedStatus = 0, extraEnv = {}) {
     if (result.status !== expectedStatus) {
         throw new Error([
             `check-task-scope ${args.join(' ')} exited ${result.status}, expected ${expectedStatus}`,
-            result.stdout.trim(),
-            result.stderr.trim()
+            String(result.stdout || '').trim(),
+            String(result.stderr || '').trim(),
+            result.error ? result.error.message : ''
         ].filter(Boolean).join('\n'));
     }
     return result;
 }
 
 function writeTaskCard(taskId, body) {
-    fs.writeFileSync(path.join(taskCardDir, `${taskId}.md`), body, 'utf8');
+    const cardPath = path.join(projectRoot, getTaskCardRelativePath(taskId));
+    fs.mkdirSync(path.dirname(cardPath), { recursive: true });
+    fs.writeFileSync(cardPath, body, 'utf8');
 }
 
 function cleanup() {
@@ -67,7 +71,7 @@ function cleanup() {
             shell: false,
             env: buildEnv(),
         });
-        const cardPath = path.join(taskCardDir, `${taskId}.md`);
+        const cardPath = path.join(projectRoot, getTaskCardRelativePath(taskId));
         if (fs.existsSync(cardPath)) {
             fs.unlinkSync(cardPath);
         }
@@ -213,8 +217,9 @@ function main() {
         ]);
 
         const fingerprintTaskId = 'ATM-TEST-FP';
-        const fingerprintCardPath = path.join(taskCardDir, `${fingerprintTaskId}.md`);
+        const fingerprintCardPath = path.join(projectRoot, getTaskCardRelativePath(fingerprintTaskId));
         const fingerprintFilePath = path.join(projectRoot, 'temp', 'task-lock-fingerprint.txt');
+        fs.mkdirSync(path.dirname(fingerprintCardPath), { recursive: true });
         fs.writeFileSync(fingerprintCardPath, [
             '---',
             `id: ${fingerprintTaskId}`,

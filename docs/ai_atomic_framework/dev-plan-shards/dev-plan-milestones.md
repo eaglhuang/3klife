@@ -4,7 +4,7 @@
 
 ## 里程碑（ATM-0 ~ ATM-6）+ 已開任務卡清單
 
-目前已建立 **71 張** ATM Markdown 任務卡，`docs/tasks/tasks-atm.json` 現為 thin index 入口，內容分散於 `docs/tasks/tasks-atm/tasks-atm-part-*.json`，Markdown 卡位於 `docs/agent-briefs/tasks/ATM-*.md`。分布為 ATM-0 14、ATM-1 10、ATM-1.5 3、ATM-2 12、ATM-2.5 3、ATM-3 13、ATM-4 6、ATM-5 5、ATM-6 5。後續新增卡仍必須透過 `task-card-opener` 與 `doc-id-registry`，並重建 `docs/tasks/tasks-atm/tasks-atm-part-*.json`；不得手動複製 `doc_id`。舊文中的 47 / 53 / 69 只保留為歷史快照，不再作為規劃真相。
+目前已建立 **71 張** ATM Markdown 任務卡，`docs/tasks/tasks-atm.json` 現為 thin index 入口，內容分散於 `docs/tasks/tasks-atm/tasks-atm-part-*.json`，Markdown 卡位於 `docs/agent-briefs/tasks/ATM/ATM-*.md`。分布為 ATM-0 14、ATM-1 10、ATM-1.5 3、ATM-2 12、ATM-2.5 3、ATM-3 13、ATM-4 6、ATM-5 5、ATM-6 5。後續新增卡仍必須透過 `task-card-opener` 與 `doc-id-registry`，並重建 `docs/tasks/tasks-atm/tasks-atm-part-*.json`；不得手動複製 `doc_id`。舊文中的 47 / 53 / 69 只保留為歷史快照，不再作為規劃真相。
 
 ### ATM-0：3KLife governance bootstrap（14 卡）
 

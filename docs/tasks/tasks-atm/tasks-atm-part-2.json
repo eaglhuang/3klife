@@ -175,7 +175,7 @@
         "README workflow summary",
         "PEV upgrade proposal 範例，含 atom compatibility impact 與 semver recommendation"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM-5-0005.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-5-0005.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
       "execution_steps": [
         "確認 upstream/downstream 邊界",

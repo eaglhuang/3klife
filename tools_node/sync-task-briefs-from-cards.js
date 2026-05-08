@@ -3,9 +3,11 @@ const path = require('path');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 const TASKS_DIR = path.join(PROJECT_ROOT, 'docs', 'agent-briefs', 'tasks');
+const TASKS_REL_DIR = path.relative(PROJECT_ROOT, TASKS_DIR);
 const TASKS_INDEX_PATH = path.join(PROJECT_ROOT, 'docs', 'agent-briefs', 'tasks_index.md');
 const CHECKLIST_PATH = path.join(PROJECT_ROOT, 'docs', 'agent-briefs', 'CheckList.md');
 const STATUS_ORDER = ['done', 'completed', 'in-progress', 'in-review', 'open', 'not-started'];
+const { listTaskCardFiles } = require('./lib/task-card-paths');
 
 function parseArgs(argv) {
   const options = {
@@ -101,9 +103,8 @@ function parseTaskCard(filePath) {
 
 function loadTaskCards() {
   const cards = new Map();
-  for (const fileName of fs.readdirSync(TASKS_DIR).sort()) {
-    if (!fileName.endsWith('.md')) continue;
-    const card = parseTaskCard(path.join(TASKS_DIR, fileName));
+  for (const filePath of listTaskCardFiles(PROJECT_ROOT, TASKS_REL_DIR).sort()) {
+    const card = parseTaskCard(filePath);
     if (!card.id || !card.status) continue;
     cards.set(card.id, card);
   }

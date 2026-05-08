@@ -120,7 +120,7 @@
     ],
     "deliverables": [
       "tools_node/atomic-framework/task-router.js",
-      "docs/agent-briefs/tasks/ATM-2-0048.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0048.md",
       "docs/tasks/tasks-atm/tasks-atm-part-25.json"
     ],
     "notes": "2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: task-router onboarding contract in progress | 阻塞: none",
@@ -133,7 +133,7 @@
     },
     "contracts": {
       "input": [
-        "docs/agent-briefs/tasks/<task-id>.md",
+        "docs/agent-briefs/tasks/<prefix>/<task-id>.md",
         "docs/tasks/tasks-atm.json",
         "docs/tasks/tasks-atm/tasks-atm-part-*.json",
         "docs/ATOM_GENERATOR.md",
@@ -147,7 +147,7 @@
         "ATM-4-0003 sample route 可指出 html-to-ucuf 與 normalizeCssColor",
         "docs / task shard / script smoke test 同步回寫"
       ],
-      "validation_cmd": "node tools_node/atomic-framework/task-router.js --task ATM-4-0003 --format markdown\nnode tools_node/atomic-framework/task-router.js --task ATM-2-0048 --format markdown\nnode tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM-2-0048.md docs/tasks/tasks-atm/tasks-atm-part-25.json tools_node/atomic-framework/task-router.js",
+      "validation_cmd": "node tools_node/atomic-framework/task-router.js --task ATM-4-0003 --format markdown\nnode tools_node/atomic-framework/task-router.js --task ATM-2-0048 --format markdown\nnode tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-2-0048.md docs/tasks/tasks-atm/tasks-atm-part-25.json tools_node/atomic-framework/task-router.js",
       "rollback_hint": "回退本卡 touched files；router 只做 onboarding readout，不改 upstream core。",
       "execution_steps": [
         "讀 task store 與 task card",
@@ -160,12 +160,12 @@
     "harness_evidence": {
       "artifact_paths": [
         "tools_node/atomic-framework/task-router.js",
-        "docs/agent-briefs/tasks/ATM-2-0048.md"
+        "docs/agent-briefs/tasks/ATM/ATM-2-0048.md"
       ],
       "validation_evidence": [
         "node tools_node/atomic-framework/task-router.js --task ATM-4-0003 --format markdown",
         "node tools_node/atomic-framework/task-router.js --task ATM-2-0048 --format markdown",
-        "node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM-2-0048.md docs/tasks/tasks-atm/tasks-atm-part-25.json tools_node/atomic-framework/task-router.js"
+        "node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-2-0048.md docs/tasks/tasks-atm/tasks-atm-part-25.json tools_node/atomic-framework/task-router.js"
       ],
       "handoff_diff_status": "upstream committed; tracking diff pending commit",
       "trace_artifacts": [],

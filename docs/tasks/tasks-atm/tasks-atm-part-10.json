@@ -31,8 +31,8 @@
       "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
       "docs/ai_atomic_framework/open-source-extraction-plan.md",
       "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
-      "docs/agent-briefs/tasks/ATM-1-0010.md",
-      "docs/agent-briefs/tasks/ATM-2-0010.md"
+      "docs/agent-briefs/tasks/ATM/ATM-1-0010.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0010.md"
     ],
     "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 回寫 self-hosting first、self-hosting alpha gate、docs neutrality 與 neutrality/boundary guard 到三份主文件，並新增 ATM-1-0009/0010、ATM-2-0010 任務 | 阻塞: none",
     "brief": {

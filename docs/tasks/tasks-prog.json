@@ -595,7 +595,7 @@
       ],
       "deliverables": [
         "assets/scripts/battle/ DirectDamageResolver / LineAreaResolver 補強",
-        "docs/agent-briefs/tasks/SYS-SKILL-TAC-0001.md"
+        "docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0001.md"
       ],
       "notes": "2026-04-20 | 狀態: open | 無視防禦/百步穿楊/箭雨齊發/龍魂突刺已落地；趙家槍法進行中；其餘 G-1 TDIR/TLINE/TFAN 段未開始 | 阻塞: 無"
     },
@@ -625,7 +625,7 @@
       ],
       "deliverables": [
         "assets/scripts/battle/ BuffDebuffResolver / HealResolver 補強",
-        "docs/agent-briefs/tasks/SYS-SKILL-TAC-0002.md"
+        "docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0002.md"
       ],
       "notes": "2026-04-20 | 狀態: open | 長槍列陣/軍心鼓舞已落地；G-2 六招進行中；毒箭 DOT/幼麒天算 debuff 段未開始 | 阻塞: 無"
     },
@@ -655,7 +655,7 @@
       ],
       "deliverables": [
         "assets/scripts/battle/ MovementResolver / ForcedMoveResolver / TileStateResolver 補強",
-        "docs/agent-briefs/tasks/SYS-SKILL-TAC-0003.md"
+        "docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0003.md"
       ],
       "notes": "2026-04-20 | 狀態: open | 2026-04-16 fire/river/rock tile 骨架已接；火計佈陣已落地；G-1 虎符位移/推擠戰法 12 條未開始 | 阻塞: 無"
     },
@@ -685,7 +685,7 @@
       ],
       "deliverables": [
         "assets/scripts/battle/ ConditionalTriggerResolver / LinkShareResolver / CounterReactionResolver 補強",
-        "docs/agent-briefs/tasks/SYS-SKILL-TAC-0004.md"
+        "docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0004.md"
       ],
       "notes": "2026-04-20 | 狀態: open | TLINK/TCOUNTER/TRESET/TSTEALTH 第一版已完成；G-1 虎符 reaction 戰法完整版（火計連環/幼麒天算/連環計/結姻連射/威震華夏/七進七出）待補 Editor/smoke 驗收 | 阻塞: 無"
     },
@@ -717,7 +717,7 @@
       "deliverables": [
         "assets/scripts/battle/ SceneGambitAdapter / ObstacleSpawnResolver 補強",
         "assets/fx/tactics/ 場景戰法 VFX 資源補全",
-        "docs/agent-briefs/tasks/SYS-SKILL-TAC-0005.md"
+        "docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0005.md"
       ],
       "notes": "2026-04-20 | 狀態: open | SceneGambitAdapter 骨架/HUD badge/pulse VFX 已完成；Editor 視覺 QA 與 VFX 資源補全為主要剩餘工作 | 阻塞: 無"
     },
@@ -754,7 +754,7 @@
       "deliverables": [
         "artifacts/ui-source/battle-scene/review/ 8 條戰法截圖",
         "docs/遊戲規格文件/系統規格書/戰法系統.md G-5-0-0 里程碑表更新",
-        "docs/agent-briefs/tasks/SYS-SKILL-TAC-0006.md"
+        "docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0006.md"
       ],
       "notes": "2026-04-20 | 狀態: open | 對應 G-5-0-1 最後未勾項；M4/M5 里程碑進行中；G-6-3 排程未開始 | 阻塞: 依賴 TAC-0001~0004 各模組骨架穩定"
     },
@@ -785,7 +785,7 @@
       ],
       "deliverables": [
         "docs/html_skill_plan5.md",
-        "docs/agent-briefs/tasks/PROG-2-0001.md",
+        "docs/agent-briefs/tasks/PROG/PROG-2-0001.md",
         "docs/tasks/tasks-prog.json Plan5 bootstrap 條目"
       ],
       "notes": "2026-05-04 | 狀態: done | 驗證: JSON parse pass / encoding touched pass / targeted doc_id check pass | 變更: 完成 Plan5 文件、8 張任務卡、tasks-prog shard、索引與 skill authority 更新 | 阻塞: none"

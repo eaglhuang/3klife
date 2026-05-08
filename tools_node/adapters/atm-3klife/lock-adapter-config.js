@@ -34,16 +34,23 @@ function isRecognizedAgentName(agentName) {
         return false;
     }
     if (knownAgentNamePatterns.some((pattern) => pattern.test(normalized))) {
-        return false;
+        return true;
     }
     if (/(^|[-_. ])(agent|assistant|copilot|claude|cursor|aider|gpt|bot)(?:$|[-_. ])/i.test(normalized)) {
-        return false;
+        return true;
     }
-    return /^[\p{L}\p{N}._ -]+$/u.test(normalized);
+    return false;
 }
 
 function isHumanOverrideAgentName(agentName) {
-    return isRecognizedAgentName(agentName) === false && String(agentName || '').trim().length > 0;
+    const normalized = String(agentName || '').trim();
+    if (!normalized) {
+        return false;
+    }
+    if (normalized.includes('/') || normalized.includes('\\')) {
+        return false;
+    }
+    return !isRecognizedAgentName(normalized) && /^[\p{L}\p{N}._ -]+$/u.test(normalized);
 }
 
 function createLockAdapterConfig(overrides = {}) {

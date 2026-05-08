@@ -77,7 +77,7 @@
 | P0 | [PROG-2-0002](tasks/PROG-2-0002.md (doc_task_0178)) (doc_task_0178) | HTML-to-UCUF 舊規則與衝突流程審計 | done | 100% | GitHubCopilot |
 | P0 | [PROG-2-0003](tasks/PROG-2-0003.md (doc_task_0179)) (doc_task_0179) | final gate 低分診斷與 nextFixes 契約 | done | 100% | GitHubCopilot |
 | P0 | [PROG-2-0004](tasks/PROG-2-0004.md (doc_task_0180)) (doc_task_0180) | CSS semantics extraction parity | done | 100% | GitHubCopilot |
-| P0 | [PROG-2-0005](tasks/PROG-2-0005.md (doc_task_0181)) (doc_task_0181) | UCUF runtime renderer parity closure | in-progress | 40% | GitHubCopilot |
+| P0 | [PROG-2-0005](tasks/PROG-2-0005.md (doc_task_0181)) (doc_task_0181) | UCUF runtime renderer parity closure | done | 40% | GitHubCopilot |
 | P1 | [PROG-2-0006](tasks/PROG-2-0006.md (doc_task_0182)) (doc_task_0182) | source-derived spec authority hardening | done | 100% | GitHubCopilot |
 | P1 | [PROG-2-0007](tasks/PROG-2-0007.md (doc_task_0183)) (doc_task_0183) | 95% pixel fidelity regression matrix | open | 0% | GitHubCopilot |
 | P1 | [PROG-2-0008](tasks/PROG-2-0008.md (doc_task_0184)) (doc_task_0184) | html-to-ucuf skill Plan5 workflow rewrite | done | 100% | GitHubCopilot |
@@ -86,30 +86,30 @@
 
 | 優先級 | 卡號 | 簡單描述 | 狀態 | 完成度% | 負責 Agent |
 |---|---|---|---|---|---|
-| P0 | [HARN-ART-0001](tasks/HARN-ART-0001.md) | 建立 Turn Artifact Schema 與版本契約 | done | 100% | GitHubCopilot |
-| P0 | [HARN-ART-0002](tasks/HARN-ART-0002.md) | 建立 Turn Artifact Validator CLI | done | 100% | GitHubCopilot |
-| P1 | [HARN-ART-0003](tasks/HARN-ART-0003.md) | 建立 Turn Artifact Storage Policy | done | 100% | GitHubCopilot |
-| P1 | [HARN-ART-0004](tasks/HARN-ART-0004.md) | 讓 Finalize 使用標準 Artifact 預設路徑 | done | 100% | GitHubCopilot |
-| P0 | [HARN-HDO-0001](tasks/HARN-HDO-0001.md) | 建立 Handoff Diff Validator Core | done | 100% | GitHubCopilot |
-| P0 | [HARN-HDO-0002](tasks/HARN-HDO-0002.md) | 建立 Handoff Diff Validator Fixtures | done | 100% | GitHubCopilot |
-| P1 | [HARN-HDO-0003](tasks/HARN-HDO-0003.md) | 將 Handoff Diff Validator 接入 Finalize | done | 100% | GitHubCopilot |
-| P1 | [HARN-HDO-0004](tasks/HARN-HDO-0004.md) | 將 Task Lock Scope 納入 Handoff Validator | done | 100% | GitHubCopilot |
-| P1 | [HARN-TRC-0001](tasks/HARN-TRC-0001.md) | 定義 Execution Trace Event Schema | done | 100% | GitHubCopilot |
-| P1 | [HARN-TRC-0002](tasks/HARN-TRC-0002.md) | 建立 Node Tool Trace Middleware | done | 100% | GitHubCopilot |
-| P1 | [HARN-TRC-0003](tasks/HARN-TRC-0003.md) | 建立 Execution Trace Collector | done | 100% | GitHubCopilot |
-| P2 | [HARN-TRC-0004](tasks/HARN-TRC-0004.md) | 將 Trace Summary 掛入 Finalize 輸出 | done | 100% | GitHubCopilot |
-| P1 | [HARN-EVAL-0001](tasks/HARN-EVAL-0001.md) | 建立 Workflow Path Taxonomy | open | 0% | GitHubCopilot |
-| P2 | [HARN-EVAL-0002](tasks/HARN-EVAL-0002.md) | 建立 Workflow Baseline Fixture Pack | open | 0% | GitHubCopilot |
-| P2 | [HARN-EVAL-0003](tasks/HARN-EVAL-0003.md) | 建立 Path Drift Comparator | open | 0% | GitHubCopilot |
-| P1 | [HARN-MET-0001](tasks/HARN-MET-0001.md) | 建立 Turn Artifact History Query | open | 0% | GitHubCopilot |
-| P2 | [HARN-MET-0002](tasks/HARN-MET-0002.md) | 建立 Harness Metrics Accumulator | open | 0% | GitHubCopilot |
-| P2 | [HARN-MET-0003](tasks/HARN-MET-0003.md) | 擴充 Harness Health Report | open | 0% | GitHubCopilot |
-| P1 | [HARN-GOV-0001](tasks/HARN-GOV-0001.md) | 建立 Harness Capability Boundary Matrix | open | 0% | GitHubCopilot |
-| P1 | [HARN-GOV-0002](tasks/HARN-GOV-0002.md) | 更新 Agent Collaboration 強制規則入口 | open | 0% | GitHubCopilot |
-| P2 | [HARN-GOV-0003](tasks/HARN-GOV-0003.md) | 更新 Task Card Template 的 Harness 欄位 | done | 100% | GitHubCopilot |
-| P0 | [HARN-PILOT-0001](tasks/HARN-PILOT-0001.md) | 執行 Doc-only Pilot | done | 100% | GitHubCopilot |
-| P1 | [HARN-PILOT-0002](tasks/HARN-PILOT-0002.md) | 執行 Tooling-code Pilot | done | 100% | GitHubCopilot |
-| P2 | [HARN-PILOT-0003](tasks/HARN-PILOT-0003.md) | 執行 UI-QA Pilot | open | 0% | GitHubCopilot |
+| P0 | [HARN-ART-0001](tasks/HARN/HARN-ART-0001.md) | 建立 Turn Artifact Schema 與版本契約 | done | 100% | GitHubCopilot |
+| P0 | [HARN-ART-0002](tasks/HARN/HARN-ART-0002.md) | 建立 Turn Artifact Validator CLI | done | 100% | GitHubCopilot |
+| P1 | [HARN-ART-0003](tasks/HARN/HARN-ART-0003.md) | 建立 Turn Artifact Storage Policy | done | 100% | GitHubCopilot |
+| P1 | [HARN-ART-0004](tasks/HARN/HARN-ART-0004.md) | 讓 Finalize 使用標準 Artifact 預設路徑 | done | 100% | GitHubCopilot |
+| P0 | [HARN-HDO-0001](tasks/HARN/HARN-HDO-0001.md) | 建立 Handoff Diff Validator Core | done | 100% | GitHubCopilot |
+| P0 | [HARN-HDO-0002](tasks/HARN/HARN-HDO-0002.md) | 建立 Handoff Diff Validator Fixtures | done | 100% | GitHubCopilot |
+| P1 | [HARN-HDO-0003](tasks/HARN/HARN-HDO-0003.md) | 將 Handoff Diff Validator 接入 Finalize | done | 100% | GitHubCopilot |
+| P1 | [HARN-HDO-0004](tasks/HARN/HARN-HDO-0004.md) | 將 Task Lock Scope 納入 Handoff Validator | done | 100% | GitHubCopilot |
+| P1 | [HARN-TRC-0001](tasks/HARN/HARN-TRC-0001.md) | 定義 Execution Trace Event Schema | done | 100% | GitHubCopilot |
+| P1 | [HARN-TRC-0002](tasks/HARN/HARN-TRC-0002.md) | 建立 Node Tool Trace Middleware | done | 100% | GitHubCopilot |
+| P1 | [HARN-TRC-0003](tasks/HARN/HARN-TRC-0003.md) | 建立 Execution Trace Collector | done | 100% | GitHubCopilot |
+| P2 | [HARN-TRC-0004](tasks/HARN/HARN-TRC-0004.md) | 將 Trace Summary 掛入 Finalize 輸出 | done | 100% | GitHubCopilot |
+| P1 | [HARN-EVAL-0001](tasks/HARN/HARN-EVAL-0001.md) | 建立 Workflow Path Taxonomy | open | 0% | GitHubCopilot |
+| P2 | [HARN-EVAL-0002](tasks/HARN/HARN-EVAL-0002.md) | 建立 Workflow Baseline Fixture Pack | open | 0% | GitHubCopilot |
+| P2 | [HARN-EVAL-0003](tasks/HARN/HARN-EVAL-0003.md) | 建立 Path Drift Comparator | open | 0% | GitHubCopilot |
+| P1 | [HARN-MET-0001](tasks/HARN/HARN-MET-0001.md) | 建立 Turn Artifact History Query | open | 0% | GitHubCopilot |
+| P2 | [HARN-MET-0002](tasks/HARN/HARN-MET-0002.md) | 建立 Harness Metrics Accumulator | open | 0% | GitHubCopilot |
+| P2 | [HARN-MET-0003](tasks/HARN/HARN-MET-0003.md) | 擴充 Harness Health Report | open | 0% | GitHubCopilot |
+| P1 | [HARN-GOV-0001](tasks/HARN/HARN-GOV-0001.md) | 建立 Harness Capability Boundary Matrix | open | 0% | GitHubCopilot |
+| P1 | [HARN-GOV-0002](tasks/HARN/HARN-GOV-0002.md) | 更新 Agent Collaboration 強制規則入口 | open | 0% | GitHubCopilot |
+| P2 | [HARN-GOV-0003](tasks/HARN/HARN-GOV-0003.md) | 更新 Task Card Template 的 Harness 欄位 | done | 100% | GitHubCopilot |
+| P0 | [HARN-PILOT-0001](tasks/HARN/HARN-PILOT-0001.md) | 執行 Doc-only Pilot | done | 100% | GitHubCopilot |
+| P1 | [HARN-PILOT-0002](tasks/HARN/HARN-PILOT-0002.md) | 執行 Tooling-code Pilot | done | 100% | GitHubCopilot |
+| P2 | [HARN-PILOT-0003](tasks/HARN/HARN-PILOT-0003.md) | 執行 UI-QA Pilot | open | 0% | GitHubCopilot |
 
 ### HARN 審核摘要（2026-05-04）
 

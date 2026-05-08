@@ -29,7 +29,7 @@ argument-hint: '提供 task 類別、目標系統、是否需要 Markdown 卡、
 
 ```bash
 node tools_node/task-card-opener.js --id BAT-1-0001 --title "BattleController 驗證補強" --owner GitHubCopilot --priority P1 --md-out docs/agent-briefs/tasks/BAT-1-0001.md --json-out docs/tasks/tasks-prog.json --write
-node tools_node/task-card-opener.js --id UI-1-0001 --title "UI quality shard" --md-out docs/agent-briefs/tasks/UI-1-0001.md --json-out docs/ui-quality-tasks/UI-1-0001.json --json-kind ui-quality-task-shard --write
+node tools_node/task-card-opener.js --id UI-1-0001 --title "UI quality shard" --md-out docs/agent-briefs/tasks/UI/UI-1-0001.md --json-out docs/ui-quality-tasks/UI-1-0001.json --json-kind ui-quality-task-shard --write
 node tools_node/task-card-opener.js --id HARN-ART-9001 --title "建立 Harness 範例" --md-kind agent-briefs --brief-summary "由 rollout 規劃開立" --brief-position "Phase X / Demo" --chain-id HARN-CHAIN-DEMO --chain-step 1/1 --sensor-triggered-by harness-rollout-planning --input-contract "artifact 已存在|schema baseline 已確認" --output-contract "新增 schema|補 fixture 說明" --validation-cmd "node tools_node/demo.js" --rollback-hint "git checkout tools_node/demo.js" --execution-steps "盤點現況|實作骨架|跑驗證" --artifact-paths "artifacts/demo.json" --validation-evidence "dry-run 結構符合 HARN" --handoff-diff-status pending --md-out docs/agent-briefs/tasks/HARN-ART-9001.md --assign-doc-id --write
 node tools_node/task-card-opener.js --recipe artifacts/ui-source/example/generated/example-screen.recipe.json --write --out artifacts/ui-source/example/generated/example-task-card.md --shard-out artifacts/ui-source/example/generated/example-task-shard.json
 ```

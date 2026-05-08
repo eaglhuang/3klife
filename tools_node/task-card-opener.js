@@ -21,8 +21,12 @@ const {
   formatTaskIdInspection,
   inspectTaskId,
   previewNextTaskId,
+  releaseReservedTaskId,
   reserveNextTaskId,
+  reserveTaskId,
 } = require('./lib/task-id-guard');
+const { createLockAdapter } = require('./adapters/atm-3klife/lock-adapter');
+const { createLockAdapterConfig } = require('./adapters/atm-3klife/lock-adapter-config');
 
 function todayIso() {
   return new Date().toISOString().split('T')[0];
@@ -632,6 +636,45 @@ function runRecipeMode() {
   });
 }
 
+let pendingTaskIdReservation = null;
+
+function rememberTaskIdReservation(reservation) {
+  pendingTaskIdReservation = reservation && !reservation.dryRun
+    ? {
+      taskId: reservation.taskId,
+      agentName: reservation.agentName,
+      cleanupOnError: !reservation.reused,
+    }
+    : null;
+}
+
+function clearTaskIdReservation() {
+  pendingTaskIdReservation = null;
+}
+
+function cleanupPendingTaskIdReservation() {
+  if (!pendingTaskIdReservation) {
+    return;
+  }
+  if (pendingTaskIdReservation.cleanupOnError) {
+    releaseReservedTaskId(PROJECT_ROOT, pendingTaskIdReservation.taskId, pendingTaskIdReservation.agentName);
+  }
+  clearTaskIdReservation();
+}
+
+function relativeOutputFile(filePath) {
+  if (!filePath) {
+    return '';
+  }
+  return path.relative(PROJECT_ROOT, resolvePath(filePath)).replace(/\\/g, '/');
+}
+
+function promoteReservationToLock(taskId, agentName, files) {
+  const lockAdapter = createLockAdapter(createLockAdapterConfig());
+  lockAdapter.lock(taskId, agentName, files.filter(Boolean));
+  clearTaskIdReservation();
+}
+
 function main() {
   if (hasFlag(process.argv, 'help')) {
     printHelp();
@@ -672,9 +715,23 @@ function main() {
   const mdPath = mdOutArg ? resolvePath(mdOutArg) : '';
 
   if (nextIdPrefix) {
-    id = dryRun
-      ? previewNextTaskId(PROJECT_ROOT, nextIdPrefix)
-      : reserveNextTaskId(PROJECT_ROOT, nextIdPrefix, owner).taskId;
+    if (dryRun) {
+      id = previewNextTaskId(PROJECT_ROOT, nextIdPrefix);
+    } else {
+      const reservation = reserveNextTaskId(PROJECT_ROOT, nextIdPrefix, owner);
+      rememberTaskIdReservation(reservation);
+      id = reservation.taskId;
+    }
+  } else if (!dryRun && !allowExistingId) {
+    const preReservationInspection = inspectTaskId(PROJECT_ROOT, id);
+    const hasOnlyOwnReservation = preReservationInspection.taskCards.length === 0
+      && preReservationInspection.taskStoreCount === 0
+      && preReservationInspection.locks.length > 0
+      && preReservationInspection.locks.every((entry) => entry.agentName === owner && entry.reservationOnly);
+    if (!preReservationInspection.occupied || hasOnlyOwnReservation) {
+      const reservation = reserveTaskId(PROJECT_ROOT, id, owner);
+      rememberTaskIdReservation(reservation);
+    }
   }
 
   const inspection = inspectTaskId(PROJECT_ROOT, id);
@@ -769,6 +826,17 @@ function main() {
     printDryRunArtifact('json', `${JSON.stringify(task, null, 2)}\n`);
   }
 
+  if (pendingTaskIdReservation && !dryRun) {
+    const lockFiles = [
+      relativeOutputFile(mdOutArg),
+      relativeOutputFile(jsonOutArg),
+    ];
+    if (assignDocId && mdKind === 'agent-briefs') {
+      lockFiles.push('docs/doc-id-registry-shards/registry-task.json');
+    }
+    promoteReservationToLock(task.id, owner, lockFiles);
+  }
+
   const outputSummary = {
     id: task.id,
     mdKind,
@@ -785,6 +853,7 @@ function main() {
 try {
   main();
 } catch (error) {
+  cleanupPendingTaskIdReservation();
   console.error(`[task-card-opener] ${error.message}`);
   process.exit(1);
 }

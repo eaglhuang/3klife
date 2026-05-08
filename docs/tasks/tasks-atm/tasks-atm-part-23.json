@@ -97,76 +97,83 @@
   {
     "doc_id": "doc_task_0356",
     "id": "ATM-2-0049",
-    "title": "Governance shard strategy parameterization",
-    "owner": "vs-code-gpt-5.4-mini",
+    "title": "Task id reservation and lock race hardening",
+    "owner": "codex-gpt-5",
     "priority": "P0",
-    "status": "in-progress",
-    "type": "architecture",
+    "status": "done",
+    "type": "tooling",
     "phase": "ATM-2",
     "created": "2026-05-08",
     "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-08T10:29:54+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-08T14:40:00+08:00",
+    "started_by_agent": "codex-gpt-5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "確認 AI-Atomic-Framework 的 shard strategy 不應下沉到 ShardStore，而是改由 GovernanceLayout / Adapter / ShardPlanner 提供 contiguous、striped、custom 等策略，讓多 Agent 協作時能顯式選擇分片方式。",
+    "description": "Harden the single task id reservation, opener write, and lock promotion path to avoid duplicate IDs and stale reservation-only locks.",
     "related": [],
     "depends": [
-      "ATM-2-0047",
-      "ATM-3-0007"
+      "ATM-3-0006",
+      "ATM-3-0010",
+      "ATM-3-0015"
     ],
     "acceptance": [
-      "GovernanceLayout 增加 ShardStrategy / ShardPolicy 欄位或等價擴充",
-      "ShardPlan / ShardPlanner 可產生 contiguous、striped、custom 三種切法",
-      "ShardStore 只保留 read/write/rebuildIndex，不直接接 strategy 參數",
-      "local adapter 可決定預設 strategy 並可覆寫",
-      "plugin-sdk / plugin-governance-local / registry.schema.json / docs 同步回寫",
-      "至少一組 unit / smoke test 證明 strategy selection 正常"
+      "Explicit-id and next-id allocation share the task-id-guard fence and reservation lock path",
+      "task-card-opener promotes successful writes through LockAdapter.lock() and releases current reservations on failure",
+      "task-lock.js is a thin CLI wrapper with no legacy duplicate implementation",
+      "Human override, task-card-path lookup, and reservation promotion have regression coverage"
     ],
-    "deliverables": [],
-    "notes": "2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "deliverables": [
+      "task-id-guard / task-card-opener / task-lock race hardening",
+      "LockAdapter promotion and human override fix",
+      "task-id guard flow regression test",
+      "ATM-2-0049 docs and registry backwrite"
+    ],
+    "notes": "2026-05-08 | status: done | validation: node --check core task-id/lock/opener files; task-id guard flow regression pass; task-lock cross-shard regression pass; encoding touched pass | change: harden task id reserve / allocate / opener / lock race and promote reservation-only locks to formal scope locks | blocker: none",
     "brief": {
       "style": "harn-rich",
-      "label": "Shard strategy parameterization 開卡",
-      "summary": "把 upstream shard 切法參數從 storage 層上移到 adapter/layout/planner 層",
-      "position": "ATM-2 / governance contract",
-      "prereq": "ATM-2-0047、ATM-3-0007"
+      "label": "Task card system race hardening",
+      "summary": "Unify task id reserve / opener / lock flow",
+      "position": "ATM-2 / 3KLife governance tooling",
+      "prereq": "ATM-3-0006, ATM-3-0010, ATM-3-0015"
     },
     "contracts": {
       "input": [
-        "packages/plugin-sdk/src/governance/layout.ts",
-        "packages/plugin-sdk/src/governance/stores.ts",
-        "packages/plugin-governance-local/src/index.ts",
-        "docs/ADAPTER_GUIDE.md",
-        "docs/governance/governance-bundle-schema.md",
-        "docs/governance/3klife-governance-mapping.md",
-        "schemas/registry.schema.json"
+        "tools_node/lib/task-id-guard.js",
+        "tools_node/lib/task-card-paths.js",
+        "tools_node/task-card-opener.js",
+        "tools_node/task-lock.js",
+        "tools_node/adapters/atm-3klife/lock-adapter*.js",
+        "tools_node/test/task-*-*.test.js"
       ],
       "output": [
-        "GovernanceLayout 增加 ShardStrategy / ShardPolicy 欄位或等價擴充",
-        "ShardPlan / ShardPlanner 可產生 contiguous、striped、custom 三種切法",
-        "ShardStore 只保留 read/write/rebuildIndex，不直接接 strategy 參數",
-        "local adapter 可決定預設 strategy 並可覆寫",
-        "plugin-sdk / plugin-governance-local / registry.schema.json / docs 同步回寫",
-        "至少一組 unit / smoke test 證明 strategy selection 正常"
+        "Explicit-id and next-id allocation share the task-id-guard fence and reservation lock path",
+        "task-card-opener promotes successful writes through LockAdapter.lock() and releases current reservations on failure",
+        "task-lock.js is a thin CLI wrapper with no legacy duplicate implementation",
+        "Human override, task-card-path lookup, and reservation promotion have regression coverage"
       ],
-      "validation_cmd": "cd ../AI-Atomic-Framework\npnpm run validate:schemas\npnpm run typecheck\npnpm test\ncd ../3KLife\nnode tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM-2-0049.md docs/tasks/tasks-atm.json docs/tasks/tasks-atm/.shardrc.json",
-      "rollback_hint": "回退 plugin-sdk / adapter / schema 變更與 docs backwrite；若 doc_id 已分配錯誤，用 doc-id-registry 修正，不手改 frontmatter。",
+      "validation_cmd": "node --check tools_node/lib/task-id-guard.js\nnode --check tools_node/lib/task-card-paths.js\nnode --check tools_node/task-card-opener.js\nnode --check tools_node/task-lock.js\nnode --check tools_node/adapters/atm-3klife/lock-adapter.js\nnode tools_node/test/task-id-guard-flow.test.js\nnode tools_node/test/task-lock-cross-shard.test.js\nnode tools_node/check-encoding-touched.js --files tools_node/lib/task-card-paths.js tools_node/lib/task-id-guard.js tools_node/task-card-opener.js tools_node/task-lock.js tools_node/adapters/atm-3klife/lock-adapter.js tools_node/adapters/atm-3klife/lock-adapter-config.js tools_node/test/task-lock-cross-shard.test.js tools_node/test/task-id-guard-flow.test.js docs/agent-briefs/tasks/ATM/ATM-2-0049.md docs/tasks/tasks-atm/tasks-atm-part-23.json docs/tasks/tasks-atm.json docs/doc-id-registry-shards/registry-task.json docs/doc-id-registry.md docs/agent-collaboration-protocol.md docs/ai_atomic_framework/3klife-tooling-fate.md",
+      "rollback_hint": "git checkout -- tools_node/lib/task-card-paths.js tools_node/lib/task-id-guard.js tools_node/task-card-opener.js tools_node/task-lock.js tools_node/adapters/atm-3klife/lock-adapter.js tools_node/adapters/atm-3klife/lock-adapter-config.js tools_node/test/task-lock-cross-shard.test.js tools_node/test/task-id-guard-flow.test.js docs/agent-briefs/tasks/ATM/ATM-2-0049.md docs/tasks/tasks-atm/tasks-atm-part-23.json docs/tasks/tasks-atm.json docs/doc-id-registry-shards/registry-task.json docs/doc-id-registry.md docs/agent-collaboration-protocol.md docs/ai_atomic_framework/3klife-tooling-fate.md",
       "execution_steps": [
-        "盤點現有 layout / store / adapter contract",
-        "新增 ShardStrategy / ShardPolicy / ShardPlan / ShardPlanner",
-        "更新 local adapter 預設策略",
-        "回寫 docs / schema / exports",
-        "跑驗證與 encoding check"
+        "Audit reserve / opener / lock responsibility drift",
+        "Unify reservation and promotion flow",
+        "Remove task-lock legacy dead implementation",
+        "Add regression coverage and update task/doc registry records"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "validation_evidence": [
+        "node tools_node/test/task-id-guard-flow.test.js pass",
+        "node tools_node/test/task-lock-cross-shard.test.js pass"
+      ],
+      "handoff_diff_status": "task card, ATM shard, protocol, tooling fate, and doc registry backwrite aligned",
       "trace_artifacts": [],
-      "metrics_summary": []
-    }
+      "metrics_summary": [
+        "reservation-only lock promoted through LockAdapter.lock()",
+        "task-lock.js has a single CLI implementation"
+      ]
+    },
+    "completed_at": "2026-05-08T15:05:00+08:00"
   }
 ]

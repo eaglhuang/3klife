@@ -106,7 +106,7 @@ Plan5 接在 `docs/html_skill_plan4.md` 之後，專門處理「HTML source 到 
 - `tools_node/compare-html-to-cocos-editor.js`: 低分診斷輸出需足夠產生 `nextFixes`。
 - `tools_node/lib/dom-to-ui/*`: CSS capability matrix 與 stage/ruleId registry。
 - `assets/scripts/ui/core/UIPreviewStyleBuilder.ts`、`assets/scripts/ui/components/GradientBackground.ts`: renderer parity 與 blocker-safe fallback。
-- `docs/tasks/tasks-prog.json`、`docs/agent-briefs/tasks/PROG-2-0001.md` 到 `PROG-2-0009.md`: Plan5 工作拆分真相。
+- `docs/tasks/tasks-prog.json`、`docs/agent-briefs/tasks/PROG/PROG-2-0001.md` 到 `PROG-2-0009.md`: Plan5 工作拆分真相。
 
 ## 審計追蹤
 

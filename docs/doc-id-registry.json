@@ -13,7 +13,7 @@
       "name": "registry-ui",
       "title": "畫面UI類（ui）",
       "path": "docs/doc-id-registry-shards/registry-ui.json",
-      "count": 55
+      "count": 54
     },
     {
       "name": "registry-art",
@@ -67,7 +67,7 @@
       "name": "registry-other",
       "title": "其它類（other）",
       "path": "docs/doc-id-registry-shards/registry-other.json",
-      "count": 84
+      "count": 83
     }
   ]
 }

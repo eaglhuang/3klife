@@ -8,6 +8,7 @@ const yaml = require('yaml');
 const projectConfig = require('../../lib/project-config');
 const docIdRegistryLoader = require('../../lib/doc-id-registry-loader');
 const tasksAtmStore = require('../../lib/tasks-atm-shard-store');
+const { findTaskCardPath } = require('../../lib/task-card-paths');
 
 const ROOT = projectConfig.ROOT;
 const LIFECYCLE_MODES = Object.freeze(['birth', 'evolution']);
@@ -36,7 +37,7 @@ const threeKLifeGovernancePhaseMatrix = Object.freeze([
     required: true,
     phase1: {
       mode: 'shadow-adapter',
-      delegates: ['tools_node/task-card-opener.js', 'docs/agent-briefs/tasks/*.md', 'docs/tasks/tasks-atm/*.json'],
+      delegates: ['tools_node/task-card-opener.js', 'docs/agent-briefs/tasks/**/*.md', 'docs/tasks/tasks-atm/*.json'],
       behavior: 'Read existing task cards/shards directly; create/update mutations are mirrored into shadow plans only.'
     },
     phase2: {
@@ -402,6 +403,10 @@ function parseFrontmatter(markdown) {
 }
 
 function buildTaskCardPath(config, workItemId) {
+  const foundPath = findTaskCardPath(config.repositoryRoot, workItemId, config.taskCardDir);
+  if (foundPath) {
+    return foundPath;
+  }
   return resolveRelative(config.repositoryRoot, path.join(config.taskCardDir, `${workItemId}.md`));
 }
 

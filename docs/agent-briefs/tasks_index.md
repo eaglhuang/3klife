@@ -14,12 +14,12 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 173
-- done: 75
+- Total: 302
+- done: 168
 - completed: 8
-- in-progress: 26
+- in-progress: 25
 - in-review: 5
-- open: 58
+- open: 95
 - not-started: 1
 
 ## Tasks
@@ -147,7 +147,7 @@ manifest: ../ui-quality-todo.json
 | PROG-2-0002 | GitHubCopilot | done | P0 | Plan5 | tooling-audit | [PROG-2-0002](./tasks/PROG-2-0002.md (doc_task_0178)) (doc_task_0178) |
 | PROG-2-0003 | GitHubCopilot | done | P0 | Plan5 | qa-tooling | [PROG-2-0003](./tasks/PROG-2-0003.md (doc_task_0179)) (doc_task_0179) |
 | PROG-2-0004 | GitHubCopilot | done | P0 | Plan5 | converter-tooling | [PROG-2-0004](./tasks/PROG-2-0004.md (doc_task_0180)) (doc_task_0180) |
-| PROG-2-0005 | GitHubCopilot | in-progress | P0 | Plan5 | runtime-support | [PROG-2-0005](./tasks/PROG-2-0005.md (doc_task_0181)) (doc_task_0181) |
+| PROG-2-0005 | GitHubCopilot | done | P0 | Plan5 | runtime-support | [PROG-2-0005](./tasks/PROG-2-0005.md (doc_task_0181)) (doc_task_0181) |
 | PROG-2-0006 | GitHubCopilot | done | P1 | Plan5 | workflow-tooling | [PROG-2-0006](./tasks/PROG-2-0006.md (doc_task_0182)) (doc_task_0182) |
 | PROG-2-0007 | GitHubCopilot | open | P1 | Plan5 | qa-tooling | [PROG-2-0007](./tasks/PROG-2-0007.md (doc_task_0183)) (doc_task_0183) |
 | PROG-2-0008 | GitHubCopilot | done | P1 | Plan5 | skill-docs | [PROG-2-0008](./tasks/PROG-2-0008.md (doc_task_0184)) (doc_task_0184) |

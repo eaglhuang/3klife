@@ -195,7 +195,7 @@
 > 5. 戰鬥層只吃 `BattleSkillRequest`，不回頭讀 UI 狀態
 > 6. replay / battle log 只記錄 request 與 result，不記錄整份 master 定義副本
 > 7. shared contract 草案路徑：`shared/skill-runtime.ts`、`shared/skill-runtime.schema.json`
-> 8. 讀模型統一前置卡：`docs/agent-briefs/tasks/SYS-SKILL-CORE-0001.md`
+> 8. 讀模型統一前置卡：`docs/agent-briefs/tasks/SYS/SYS-SKILL-CORE-0001.md`
 
 #### 共用技能任務卡索引（2026-04-15）
 

@@ -151,7 +151,7 @@
         "RegistryIndex façade 可包住現有 entries[]",
         "文件明確禁止占用既有 ATM-3-0010~0013 卡號"
       ],
-      "validation_cmd": "cd ../AI-Atomic-Framework\\npnpm run validate:registry-index\\npnpm run validate:schemas\\npnpm run validate:registry-core\\npnpm test\\npnpm run typecheck\\npnpm run lint\\ncd ../3KLife\\nnpm run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM-2-0047.md docs/tasks/tasks-atm.json docs/tasks/tasks-atm/.shardrc.json docs/tasks/tasks-atm/tasks-atm-part-35.json docs/tasks/tasks-atm/tasks-atm-part-36.json docs/ai_atomic_framework/關於進化版的原子提案.md docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
+      "validation_cmd": "cd ../AI-Atomic-Framework\\npnpm run validate:registry-index\\npnpm run validate:schemas\\npnpm run validate:registry-core\\npnpm test\\npnpm run typecheck\\npnpm run lint\\ncd ../3KLife\\nnpm run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0047.md docs/tasks/tasks-atm.json docs/tasks/tasks-atm/.shardrc.json docs/tasks/tasks-atm/tasks-atm-part-35.json docs/tasks/tasks-atm/tasks-atm-part-36.json docs/ai_atomic_framework/關於進化版的原子提案.md docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
       "rollback_hint": "回退 ATM-2-0047 touched files；若 doc-id registry 已分配新 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
       "execution_steps": [
         "建立任務卡與鎖卡",

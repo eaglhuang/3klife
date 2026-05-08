@@ -13,661 +13,661 @@
   },
   {
     "id": "doc_task_0003",
-    "path": "docs/agent-briefs/tasks/HARN-ARCH-0001.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-ARCH-0001.md",
     "title": "[HARN-ARCH-0001] 建立 UI Bridge 介面層（模組邊界修復前置）",
     "category": "task"
   },
   {
     "id": "doc_task_0004",
-    "path": "docs/agent-briefs/tasks/HARN-ARCH-0002.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-ARCH-0002.md",
     "title": "[HARN-ARCH-0002] 修復 battle → ui 的非法引用（22 筆）",
     "category": "task"
   },
   {
     "id": "doc_task_0005",
-    "path": "docs/agent-briefs/tasks/HARN-ARCH-0003.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-ARCH-0003.md",
     "title": "[HARN-ARCH-0003] 修復 ui→battle / core→ui / core→tools / tools→battle 的非法引用（14 筆）",
     "category": "task"
   },
   {
     "id": "doc_task_0006",
-    "path": "docs/agent-briefs/tasks/HARN-ART-0001.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-ART-0001.md",
     "title": "[HARN-ART-0001] 建立 Turn Artifact Schema 與版本契約",
     "category": "task"
   },
   {
     "id": "doc_task_0007",
-    "path": "docs/agent-briefs/tasks/HARN-ART-0002.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-ART-0002.md",
     "title": "[HARN-ART-0002] 建立 Turn Artifact Validator CLI",
     "category": "task"
   },
   {
     "id": "doc_task_0008",
-    "path": "docs/agent-briefs/tasks/HARN-ART-0003.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-ART-0003.md",
     "title": "[HARN-ART-0003] 建立 Turn Artifact Storage Policy",
     "category": "task"
   },
   {
     "id": "doc_task_0009",
-    "path": "docs/agent-briefs/tasks/HARN-ART-0004.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-ART-0004.md",
     "title": "[HARN-ART-0004] 讓 Finalize 使用標準 Artifact 預設路徑",
     "category": "task"
   },
   {
     "id": "doc_task_0010",
-    "path": "docs/agent-briefs/tasks/HARN-DEMO-0003.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-DEMO-0003.md",
     "title": "[HARN-DEMO-0003] Harness opener 實寫驗證",
     "category": "task"
   },
   {
     "id": "doc_task_0011",
-    "path": "docs/agent-briefs/tasks/HARN-EVAL-0001.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-EVAL-0001.md",
     "title": "[HARN-EVAL-0001] 建立 Workflow Path Taxonomy",
     "category": "task"
   },
   {
     "id": "doc_task_0012",
-    "path": "docs/agent-briefs/tasks/HARN-EVAL-0002.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-EVAL-0002.md",
     "title": "[HARN-EVAL-0002] 建立 Workflow Baseline Fixture Pack",
     "category": "task"
   },
   {
     "id": "doc_task_0013",
-    "path": "docs/agent-briefs/tasks/HARN-EVAL-0003.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-EVAL-0003.md",
     "title": "[HARN-EVAL-0003] 建立 Path Drift Comparator",
     "category": "task"
   },
   {
     "id": "doc_task_0014",
-    "path": "docs/agent-briefs/tasks/HARN-FIX-0001.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-FIX-0001.md",
     "title": "[HARN-FIX-0001] 建立核心系統 Approved Fixtures",
     "category": "task"
   },
   {
     "id": "doc_task_0015",
-    "path": "docs/agent-briefs/tasks/HARN-GOV-0001.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-GOV-0001.md",
     "title": "[HARN-GOV-0001] 建立 Harness Capability Boundary Matrix",
     "category": "task"
   },
   {
     "id": "doc_task_0016",
-    "path": "docs/agent-briefs/tasks/HARN-GOV-0002.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-GOV-0002.md",
     "title": "[HARN-GOV-0002] 更新 Agent Collaboration 強制規則入口",
     "category": "task"
   },
   {
     "id": "doc_task_0017",
-    "path": "docs/agent-briefs/tasks/HARN-GOV-0003.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-GOV-0003.md",
     "title": "[HARN-GOV-0003] 更新 Task Card Template 的 Harness 欄位",
     "category": "task"
   },
   {
     "id": "doc_task_0018",
-    "path": "docs/agent-briefs/tasks/HARN-GOV-0004.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-GOV-0004.md",
     "title": "[HARN-GOV-0004] 整合死碼偵測至 compute-gate 自動化流程",
     "category": "task"
   },
   {
     "id": "doc_task_0019",
-    "path": "docs/agent-briefs/tasks/HARN-GOV-0005.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-GOV-0005.md",
     "title": "[HARN-GOV-0005] 強制 Agent 開發合約：所有代碼變動必須通過 compute-gate",
     "category": "task"
   },
   {
     "id": "doc_task_0020",
-    "path": "docs/agent-briefs/tasks/HARN-HDO-0001.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-HDO-0001.md",
     "title": "[HARN-HDO-0001] 建立 Handoff Diff Validator Core",
     "category": "task"
   },
   {
     "id": "doc_task_0021",
-    "path": "docs/agent-briefs/tasks/HARN-HDO-0002.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-HDO-0002.md",
     "title": "[HARN-HDO-0002] 建立 Handoff Diff Validator Fixtures",
     "category": "task"
   },
   {
     "id": "doc_task_0022",
-    "path": "docs/agent-briefs/tasks/HARN-HDO-0003.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-HDO-0003.md",
     "title": "[HARN-HDO-0003] 將 Handoff Diff Validator 接入 Finalize",
     "category": "task"
   },
   {
     "id": "doc_task_0023",
-    "path": "docs/agent-briefs/tasks/HARN-HDO-0004.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-HDO-0004.md",
     "title": "[HARN-HDO-0004] 將 Task Lock Scope 納入 Handoff Validator",
     "category": "task"
   },
   {
     "id": "doc_task_0024",
-    "path": "docs/agent-briefs/tasks/HARN-LOG-0001.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-LOG-0001.md",
     "title": "[HARN-LOG-0001] 遷移裸 console.log → UCUFLogger（Battle 模組）",
     "category": "task"
   },
   {
     "id": "doc_task_0025",
-    "path": "docs/agent-briefs/tasks/HARN-LOG-0002.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-LOG-0002.md",
     "title": "[HARN-LOG-0002] 遷移裸 console.log → UCUFLogger（Core 模組）",
     "category": "task"
   },
   {
     "id": "doc_task_0026",
-    "path": "docs/agent-briefs/tasks/HARN-LOG-0003.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-LOG-0003.md",
     "title": "[HARN-LOG-0003] 遷移裸 console.log → UCUFLogger（Tools 模組）",
     "category": "task"
   },
   {
     "id": "doc_task_0027",
-    "path": "docs/agent-briefs/tasks/HARN-LOG-0004.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-LOG-0004.md",
     "title": "[HARN-LOG-0004] 遷移裸 console.log → UCUFLogger（UI 模組 + UCUFLogger 自身）",
     "category": "task"
   },
   {
     "id": "doc_task_0028",
-    "path": "docs/agent-briefs/tasks/HARN-MET-0001.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-MET-0001.md",
     "title": "[HARN-MET-0001] 建立 Turn Artifact History Query",
     "category": "task"
   },
   {
     "id": "doc_task_0029",
-    "path": "docs/agent-briefs/tasks/HARN-MET-0002.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-MET-0002.md",
     "title": "[HARN-MET-0002] 建立 Harness Metrics Accumulator",
     "category": "task"
   },
   {
     "id": "doc_task_0030",
-    "path": "docs/agent-briefs/tasks/HARN-MET-0003.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-MET-0003.md",
     "title": "[HARN-MET-0003] 擴充 Harness Health Report",
     "category": "task"
   },
   {
     "id": "doc_task_0031",
-    "path": "docs/agent-briefs/tasks/HARN-PERF-0001.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-PERF-0001.md",
     "title": "[HARN-PERF-0001] 建立自動化效能基準線偵測閘門",
     "category": "task"
   },
   {
     "id": "doc_task_0032",
-    "path": "docs/agent-briefs/tasks/HARN-PILOT-0001.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-PILOT-0001.md",
     "title": "[HARN-PILOT-0001] 執行 Doc-only Pilot",
     "category": "task"
   },
   {
     "id": "doc_task_0033",
-    "path": "docs/agent-briefs/tasks/HARN-PILOT-0002.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-PILOT-0002.md",
     "title": "[HARN-PILOT-0002] 執行 Tooling-code Pilot",
     "category": "task"
   },
   {
     "id": "doc_task_0034",
-    "path": "docs/agent-briefs/tasks/HARN-PILOT-0003.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-PILOT-0003.md",
     "title": "[HARN-PILOT-0003] 執行 UI-QA Pilot",
     "category": "task"
   },
   {
     "id": "doc_task_0035",
-    "path": "docs/agent-briefs/tasks/HARN-TRC-0001.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-TRC-0001.md",
     "title": "[HARN-TRC-0001] 定義 Execution Trace Event Schema",
     "category": "task"
   },
   {
     "id": "doc_task_0036",
-    "path": "docs/agent-briefs/tasks/HARN-TRC-0002.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-TRC-0002.md",
     "title": "[HARN-TRC-0002] 建立 Node Tool Trace Middleware",
     "category": "task"
   },
   {
     "id": "doc_task_0037",
-    "path": "docs/agent-briefs/tasks/HARN-TRC-0003.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-TRC-0003.md",
     "title": "[HARN-TRC-0003] 建立 Execution Trace Collector",
     "category": "task"
   },
   {
     "id": "doc_task_0038",
-    "path": "docs/agent-briefs/tasks/HARN-TRC-0004.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-TRC-0004.md",
     "title": "[HARN-TRC-0004] 將 Trace Summary 掛入 Finalize 輸出",
     "category": "task"
   },
   {
     "id": "doc_task_0039",
-    "path": "docs/agent-briefs/tasks/HARN-UI-0001.md",
+    "path": "docs/agent-briefs/tasks/HARN/HARN-UI-0001.md",
     "title": "[HARN-UI-0001] 修復 GeneralDetail UI 契約 4 個結構問題",
     "category": "task"
   },
   {
     "id": "doc_task_0040",
-    "path": "docs/agent-briefs/tasks/PROG-2-0001.md",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0001.md",
     "title": "[PROG-2-0001] HTML-to-UCUF Plan5 bootstrap and stale-rule audit",
     "category": "task"
   },
   {
     "id": "doc_task_0041",
-    "path": "docs/agent-briefs/tasks/PROG-2-0002.md",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0002.md",
     "title": "[PROG-2-0002] HTML-to-UCUF stale rule and conflict audit",
     "category": "task"
   },
   {
     "id": "doc_task_0042",
-    "path": "docs/agent-briefs/tasks/PROG-2-0003.md",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0003.md",
     "title": "[PROG-2-0003] HTML-to-UCUF final gate diagnosis contract",
     "category": "task"
   },
   {
     "id": "doc_task_0043",
-    "path": "docs/agent-briefs/tasks/PROG-2-0004.md",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0004.md",
     "title": "[PROG-2-0004] HTML-to-UCUF CSS semantics extraction parity",
     "category": "task"
   },
   {
     "id": "doc_task_0044",
-    "path": "docs/agent-briefs/tasks/PROG-2-0005.md",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0005.md",
     "title": "[PROG-2-0005] UCUF runtime renderer parity closure",
     "category": "task"
   },
   {
     "id": "doc_task_0045",
-    "path": "docs/agent-briefs/tasks/PROG-2-0006.md",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0006.md",
     "title": "[PROG-2-0006] HTML-to-UCUF generated spec authority hardening",
     "category": "task"
   },
   {
     "id": "doc_task_0046",
-    "path": "docs/agent-briefs/tasks/PROG-2-0007.md",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0007.md",
     "title": "[PROG-2-0007] HTML-to-UCUF 95 percent regression matrix",
     "category": "task"
   },
   {
     "id": "doc_task_0047",
-    "path": "docs/agent-briefs/tasks/PROG-2-0008.md",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0008.md",
     "title": "[PROG-2-0008] HTML-to-UCUF skill Plan5 workflow rewrite",
     "category": "task"
   },
   {
     "id": "doc_task_0048",
-    "path": "docs/agent-briefs/tasks/PROG-2-0009.md",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-0009.md",
     "title": "[PROG-2-0009] HTML-to-UCUF final diff owner mapper and residual taxonomy hardening",
     "category": "task"
   },
   {
     "id": "doc_task_0049",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-CORE-0001.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-CORE-0001.md",
     "title": "[SYS-SKILL-CORE-0001] Shared Skill Runtime 讀模型統一",
     "category": "task"
   },
   {
     "id": "doc_task_0050",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-TAC-0001.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0001.md",
     "title": "[SYS-SKILL-TAC-0001] 戰法傷害投射模組包",
     "category": "task"
   },
   {
     "id": "doc_task_0051",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-TAC-0002.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0002.md",
     "title": "[SYS-SKILL-TAC-0002] 戰法增益治療減益模組包",
     "category": "task"
   },
   {
     "id": "doc_task_0052",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-TAC-0003.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0003.md",
     "title": "[SYS-SKILL-TAC-0003] 戰法位移與棋盤控制模組包",
     "category": "task"
   },
   {
     "id": "doc_task_0053",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-TAC-0004.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0004.md",
     "title": "[SYS-SKILL-TAC-0004] 戰法反應連鎖條件模組包",
     "category": "task"
   },
   {
     "id": "doc_task_0054",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-TAC-0005.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0005.md",
     "title": "[SYS-SKILL-TAC-0005] 戰法場景注入與障礙模組包",
     "category": "task"
   },
   {
     "id": "doc_task_0055",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-TAC-0006.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-TAC-0006.md",
     "title": "[SYS-SKILL-TAC-0006] 戰法量產驗收 Sprint 規劃（M4/M5 + G-6-3 後續排程）",
     "category": "task"
   },
   {
     "id": "doc_task_0056",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-ULT-0001.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0001.md",
     "title": "[SYS-SKILL-ULT-0001] 奧義自身爆發家族",
     "category": "task"
   },
   {
     "id": "doc_task_0057",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-ULT-0002.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0002.md",
     "title": "[SYS-SKILL-ULT-0002] 奧義全隊增益家族",
     "category": "task"
   },
   {
     "id": "doc_task_0058",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-ULT-0003.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0003.md",
     "title": "[SYS-SKILL-ULT-0003] 奧義團隊回復家族",
     "category": "task"
   },
   {
     "id": "doc_task_0059",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-ULT-0004.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0004.md",
     "title": "[SYS-SKILL-ULT-0004] 奧義敵方全體減益家族",
     "category": "task"
   },
   {
     "id": "doc_task_0060",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-ULT-0005.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0005.md",
     "title": "[SYS-SKILL-ULT-0005] 奧義敵將定點傷害家族",
     "category": "task"
   },
   {
     "id": "doc_task_0061",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-ULT-0006.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0006.md",
     "title": "[SYS-SKILL-ULT-0006] 奧義範圍爆發家族",
     "category": "task"
   },
   {
     "id": "doc_task_0062",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-ULT-0007.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0007.md",
     "title": "[SYS-SKILL-ULT-0007] 奧義強控與奪取家族",
     "category": "task"
   },
   {
     "id": "doc_task_0063",
-    "path": "docs/agent-briefs/tasks/SYS-SKILL-ULT-0008.md",
+    "path": "docs/agent-briefs/tasks/SYS/SYS-SKILL-ULT-0008.md",
     "title": "[SYS-SKILL-ULT-0008] 奧義特殊規則家族",
     "category": "task"
   },
   {
     "id": "doc_task_0064",
-    "path": "docs/agent-briefs/tasks/UI-1-0001.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0001.md",
     "title": "[UI-1-0001] 搬遷 `nav_ink` 按鈕 Family 視覺資產",
     "category": "task"
   },
   {
     "id": "doc_task_0065",
-    "path": "docs/agent-briefs/tasks/UI-1-0002.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0002.md",
     "title": "[UI-1-0002] 搬遷 `paper_utility` 按鈕 Family 視覺資產",
     "category": "task"
   },
   {
     "id": "doc_task_0066",
-    "path": "docs/agent-briefs/tasks/UI-1-0003.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0003.md",
     "title": "[UI-1-0003] 搬遷 `warning` 按鈕 Family 視覺資產",
     "category": "task"
   },
   {
     "id": "doc_task_0067",
-    "path": "docs/agent-briefs/tasks/UI-1-0004.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0004.md",
     "title": "[UI-1-0004] 產生共用 Shadow / Noise 紋理",
     "category": "task"
   },
   {
     "id": "doc_task_0068",
-    "path": "docs/agent-briefs/tasks/UI-1-0005.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0005.md",
     "title": "[UI-1-0005] 水平 Tab 框體 sprites（§2.6 Tab 框體家族）",
     "category": "task"
   },
   {
     "id": "doc_task_0069",
-    "path": "docs/agent-briefs/tasks/UI-1-0006.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0006.md",
     "title": "[UI-1-0006] Bleed Overlay Sprites（§4.2 三層融合 bleed 層）",
     "category": "task"
   },
   {
     "id": "doc_task_0070",
-    "path": "docs/agent-briefs/tasks/UI-1-0007.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0007.md",
     "title": "[UI-1-0007] 深色金屬框體 sprites（§2.1 Dark Metal Frame）",
     "category": "task"
   },
   {
     "id": "doc_task_0071",
-    "path": "docs/agent-briefs/tasks/UI-1-0008.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0008.md",
     "title": "[UI-1-0008] 圓形 Icon 按鈕 sprites（§6.1/6.2/6.4 通用圓形按鈕）",
     "category": "task"
   },
   {
     "id": "doc_task_0072",
-    "path": "docs/agent-briefs/tasks/UI-1-0009.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0009.md",
     "title": "[UI-1-0009] 垂直菱形 Tab sprites（§2.6 Diamond Tab）",
     "category": "task"
   },
   {
     "id": "doc_task_0073",
-    "path": "docs/agent-briefs/tasks/UI-1-0010.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0010.md",
     "title": "UI-1-0010 — Badge/角標 Sprite 套件",
     "category": "task"
   },
   {
     "id": "doc_task_0074",
-    "path": "docs/agent-briefs/tasks/UI-1-0011.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0011.md",
     "title": "UI-1-0011 — Gold CTA 框體 Sprite (frame/fill/bg)",
     "category": "task"
   },
   {
     "id": "doc_task_0075",
-    "path": "docs/agent-briefs/tasks/UI-1-0012.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0012.md",
     "title": "UI-1-0012 — §9.6 Skin 契約自動驗證腳本",
     "category": "task"
   },
   {
     "id": "doc_task_0076",
-    "path": "docs/agent-briefs/tasks/UI-1-0013.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0013.md",
     "title": "UI-1-0013 — §3.3 Frame Sprite 金色邊框像素掃描腳本",
     "category": "task"
   },
   {
     "id": "doc_task_0077",
-    "path": "docs/agent-briefs/tasks/UI-1-0014.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0014.md",
     "title": "[UI-1-0014] Lobby Main nav.ink + shadow 正式 QA",
     "category": "task"
   },
   {
     "id": "doc_task_0078",
-    "path": "docs/agent-briefs/tasks/UI-1-0015.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0015.md",
     "title": "[UI-1-0015] Shop Main + Gacha Light-Surface QA",
     "category": "task"
   },
   {
     "id": "doc_task_0079",
-    "path": "docs/agent-briefs/tasks/UI-1-0016.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-1-0016.md",
     "title": "UI-1-0016｜Duel Challenge mixed-family 視覺驗收",
     "category": "task"
   },
   {
     "id": "doc_task_0080",
-    "path": "docs/agent-briefs/tasks/UI-2-0001.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0001.md",
     "title": "[UI-2-0001] 更新 `lobby-main-default` Skin 指向 `nav_ink`",
     "category": "task"
   },
   {
     "id": "doc_task_0081",
-    "path": "docs/agent-briefs/tasks/UI-2-0002.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0002.md",
     "title": "[UI-2-0002] 更新 `duel-challenge-default` Skin 指向 `paper_utility`",
     "category": "task"
   },
   {
     "id": "doc_task_0082",
-    "path": "docs/agent-briefs/tasks/UI-2-0003.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0003.md",
     "title": "[UI-2-0003] 新增 parchment 系列 design token",
     "category": "task"
   },
   {
     "id": "doc_task_0083",
-    "path": "docs/agent-briefs/tasks/UI-2-0004.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0004.md",
     "title": "[UI-2-0004] 新增淺底專用 label-style 變體",
     "category": "task"
   },
   {
     "id": "doc_task_0084",
-    "path": "docs/agent-briefs/tasks/UI-2-0005.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0005.md",
     "title": "[UI-2-0005] 為 button-skin 新增 selected 第四態",
     "category": "task"
   },
   {
     "id": "doc_task_0085",
-    "path": "docs/agent-briefs/tasks/UI-2-0006.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0006.md",
     "title": "[UI-2-0006] 驗證 shared button family 的 border 20px 規範",
     "category": "task"
   },
   {
     "id": "doc_task_0086",
-    "path": "docs/agent-briefs/tasks/UI-2-0007.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0007.md",
     "title": "[UI-2-0007] 為多個 skin 補上 shadow slot 定義",
     "category": "task"
   },
   {
     "id": "doc_task_0087",
-    "path": "docs/agent-briefs/tasks/UI-2-0008.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0008.md",
     "title": "[UI-2-0008] 建立 item-cell 標準 skin fragment",
     "category": "task"
   },
   {
     "id": "doc_task_0088",
-    "path": "docs/agent-briefs/tasks/UI-2-0009.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0009.md",
     "title": "[UI-2-0009] 建立 common-parchment skin fragment",
     "category": "task"
   },
   {
     "id": "doc_task_0089",
-    "path": "docs/agent-briefs/tasks/UI-2-0010.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0010.md",
     "title": "[UI-2-0010] 為 `UIPreviewBuilder` 加入 shadow layer 渲染",
     "category": "task"
   },
   {
     "id": "doc_task_0090",
-    "path": "docs/agent-briefs/tasks/UI-2-0011.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0011.md",
     "title": "[UI-2-0011] 為 `UIPreviewBuilder` 加入 noise overlay 混合",
     "category": "task"
   },
   {
     "id": "doc_task_0091",
-    "path": "docs/agent-briefs/tasks/UI-2-0012.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0012.md",
     "title": "[UI-2-0012] 更新 `duel.btn.accept` 指向 `ui-common-metal.equipment.primary`",
     "category": "task"
   },
   {
     "id": "doc_task_0092",
-    "path": "docs/agent-briefs/tasks/UI-2-0013.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0013.md",
     "title": "[UI-2-0013] 為 lobby / popup / duel 首批 skin 補上 shadow slot",
     "category": "task"
   },
   {
     "id": "doc_task_0093",
-    "path": "docs/agent-briefs/tasks/UI-2-0014.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0014.md",
     "title": "[UI-2-0014] 為 general / support / shop / gacha 群組補上 shadow slot",
     "category": "task"
   },
   {
     "id": "doc_task_0094",
-    "path": "docs/agent-briefs/tasks/UI-2-0015.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0015.md",
     "title": "[UI-2-0015] 為 battle / system 群組補上 shadow slot",
     "category": "task"
   },
   {
     "id": "doc_task_0095",
-    "path": "docs/agent-briefs/tasks/UI-2-0016.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0016.md",
     "title": "[UI-2-0016] 補齊 `UIPreviewBuilder` 的 popup / Layout / legacy shadow 覆蓋",
     "category": "task"
   },
   {
     "id": "doc_task_0096",
-    "path": "docs/agent-briefs/tasks/UI-2-0017.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0017.md",
     "title": "[UI-2-0017] 修補 `general-detail-default` 缺失的 5 個 bleed slot",
     "category": "task"
   },
   {
     "id": "doc_task_0097",
-    "path": "docs/agent-briefs/tasks/UI-2-0018.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0018.md",
     "title": "[UI-2-0018] 補齊 D 階段 screen-driven preview harness",
     "category": "task"
   },
   {
     "id": "doc_task_0098",
-    "path": "docs/agent-briefs/tasks/UI-2-0019.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0019.md",
     "title": "[UI-2-0019] 對齊 D-2 的家族目標（paper.utility vs common-parchment）",
     "category": "task"
   },
   {
     "id": "doc_task_0099",
-    "path": "docs/agent-briefs/tasks/UI-2-0020.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0020.md",
     "title": "[UI-2-0020] 將 shop-main / gacha 接上可驗的 light-surface carrier",
     "category": "task"
   },
   {
     "id": "doc_task_0100",
-    "path": "docs/agent-briefs/tasks/UI-2-0021.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0021.md",
     "title": "[UI-2-0021] 修復 PreviewInEditor 的 SpriteFrame 資源索引斷鏈",
     "category": "task"
   },
   {
     "id": "doc_task_0101",
-    "path": "docs/agent-briefs/tasks/UI-2-0022.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0022.md",
     "title": "[UI-2-0022] 將 general-list 從 placeholder 表格升級為正式九宮格框體",
     "category": "task"
   },
   {
     "id": "doc_task_0102",
-    "path": "docs/agent-briefs/tasks/UI-2-0023.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0023.md",
     "title": "[UI-2-0023] Provide Reproducible Headless Preview Capture For D-Stage QA",
     "category": "task"
   },
   {
     "id": "doc_task_0103",
-    "path": "docs/agent-briefs/tasks/UI-2-0024.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0024.md",
     "title": "[UI-2-0024] 拆分 UIPreviewBuilder 以降低編碼與 merge 風險",
     "category": "task"
   },
   {
     "id": "doc_task_0104",
-    "path": "docs/agent-briefs/tasks/UI-2-0025.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0025.md",
     "title": "[UI-2-0025] Align Gacha Preview Contract With `loadFullScreen()`",
     "category": "task"
   },
   {
     "id": "doc_task_0105",
-    "path": "docs/agent-briefs/tasks/UI-2-0027.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0027.md",
     "title": "[UI-2-0027] 戰場 UI 圖像資產需求總表",
     "category": "task"
   },
   {
     "id": "doc_task_0106",
-    "path": "docs/agent-briefs/tasks/UI-2-0028.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0028.md",
     "title": "[UI-2-0028] 戰場 UI Icon 資產清單",
     "category": "task"
   },
   {
     "id": "doc_task_0107",
-    "path": "docs/agent-briefs/tasks/UI-2-0029.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0029.md",
     "title": "[UI-2-0029] 戰場 UI Portrait 資產清單",
     "category": "task"
   },
   {
     "id": "doc_task_0108",
-    "path": "docs/agent-briefs/tasks/UI-2-0030.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0030.md",
     "title": "[UI-2-0030] 戰場 UI Card Art / Badge 資產清單",
     "category": "task"
   },
   {
     "id": "doc_task_0109",
-    "path": "docs/agent-briefs/tasks/UI-2-0031.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0031.md",
     "title": "[UI-2-0031] 建立戰場 UI Fallback 規範",
     "category": "task"
   },
   {
     "id": "doc_task_0110",
-    "path": "docs/agent-briefs/tasks/UI-2-0032.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0032.md",
     "title": "[UI-2-0032] 修正 BattleScene Icon 品質差異（v2）",
     "category": "task"
   },
   {
     "id": "doc_task_0111",
-    "path": "docs/agent-briefs/tasks/UI-2-0033.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0033.md",
     "title": "[UI-2-0033] BattleHUD portrait 改為動態載入 generals 資產",
     "category": "task"
   },
   {
     "id": "doc_task_0112",
-    "path": "docs/agent-briefs/tasks/UI-2-0034.md",
+    "path": "docs/agent-briefs/tasks/UI/UI-2-0034.md",
     "title": "[UI-2-0034] TigerTallyPanel 綁定 card art / rarity / type badge",
     "category": "task"
   }

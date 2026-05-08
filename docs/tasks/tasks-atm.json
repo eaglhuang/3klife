@@ -9,8 +9,8 @@
     "maxPartLines": 300
   },
   "summary": {
-    "done": 59,
-    "in_progress": 3,
+    "done": 60,
+    "in_progress": 2,
     "open": 51,
     "total": 113
   },
@@ -445,8 +445,8 @@
       "title": "Part 23 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-23.json",
       "count": 2,
-      "bytes": 8398,
-      "lines": 172,
+      "bytes": 10179,
+      "lines": 179,
       "range": [
         22,
         75

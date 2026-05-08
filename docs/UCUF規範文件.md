@@ -599,7 +599,7 @@ UCUFRuleRegistry.register()
 ### 10.3 任務卡驗證工具
 
 ```bash
-node tools_node/validate-ucuf-task-card.js --card docs/agent-briefs/tasks/UCUF-XXXX.md
+node tools_node/validate-ucuf-task-card.js --card docs/agent-briefs/tasks/UCUF/UCUF-XXXX.md
 # 輸出：
 #   ✅ Section A: 完整
 #   ❌ Section B: data_sources_owned 為空 — 違反 R-TC-04

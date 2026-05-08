@@ -244,5 +244,5 @@ protected async onReady(binder: UITemplateBinder): Promise<void> {
 - [assets/scripts/ui/core/UISpecTypes.ts](../../assets/scripts/ui/core/UISpecTypes.ts) — ContentContractRef 介面
 - [assets/scripts/ui/core/UIContentBinder.ts](../../assets/scripts/ui/core/UIContentBinder.ts) — ContentBinder 實作
 - [assets/resources/ui-spec/contracts/](../../assets/resources/ui-spec/contracts/) — Schema 定義
-- [docs/agent-briefs/tasks/UI-2-0080.md (doc_task_0103)](../agent-briefs/tasks/UI-2-0080.md (doc_task_0103)) (doc_task_0103) — 實作任務
-- [docs/agent-briefs/tasks/UI-2-0081.md (doc_task_0104)](../agent-briefs/tasks/UI-2-0081.md (doc_task_0104)) (doc_task_0104) — Scaffold 任務
+- [docs/agent-briefs/tasks/UI/UI-2-0080.md (doc_task_0103)](../agent-briefs/tasks/UI-2-0080.md (doc_task_0103)) (doc_task_0103) — 實作任務
+- [docs/agent-briefs/tasks/UI/UI-2-0081.md (doc_task_0104)](../agent-briefs/tasks/UI-2-0081.md (doc_task_0104)) (doc_task_0104) — Scaffold 任務

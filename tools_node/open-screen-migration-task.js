@@ -19,7 +19,7 @@
 //     --html "Design System 3/ui_kits/character/index.html" \
 //     --from-variant unified \
 //     --to-variant ds3 \
-//     --md-out docs/agent-briefs/tasks/UI-2-9001.md \
+//     --md-out docs/agent-briefs/tasks/UI/UI-2-9001.md \
 //     --shard-out docs/ui-quality-tasks/UI-2-9001.json \
 //     --write
 

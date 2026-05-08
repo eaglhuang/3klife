@@ -111,7 +111,7 @@
         "package naming policy（core / cli / plugin-* / adapter-*）",
         "provenance 與 deprecation / migration policy"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM-5-0003.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-5-0003.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
         "盤點現有 lifecycle / governance / changelog 文件缺口",
