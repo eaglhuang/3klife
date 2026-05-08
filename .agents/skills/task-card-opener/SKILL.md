@@ -36,14 +36,14 @@ argument-hint: '提供 task 類別、目標系統、是否需要 Markdown 卡、
 
 1. 直接模式：從參數產出 Markdown 任務卡與 JSON skeleton / aggregate
 2. recipe 相容模式：若提供 `--recipe`，就直接委派給既有的 recipe compiler
-3. 若是 `docs/agent-briefs/tasks/HARN-*.md`，`agent-briefs` 模式預設會切到 `harn-rich`，直接產生與現有 HARN 卡相同的 rich brief 結構
+3. 若是 `docs/agent-briefs/tasks/HARN/HARN-*.md`，`agent-briefs` 模式預設會切到 `harn-rich`，直接產生與現有 HARN 卡相同的 rich brief 結構
 
 常用範例：
 
 ```bash
-node tools_node/task-card-opener.js --id BAT-1-0001 --title "BattleController 驗證補強" --owner GitHubCopilot --priority P1 --md-out docs/agent-briefs/tasks/BAT-1-0001.md --json-out docs/tasks/tasks-prog.json --write
+node tools_node/task-card-opener.js --id BAT-1-0001 --title "BattleController 驗證補強" --owner GitHubCopilot --priority P1 --md-out docs/agent-briefs/tasks/BAT/BAT-1-0001.md --json-out docs/tasks/tasks-prog.json --write
 node tools_node/task-card-opener.js --id UI-1-0001 --title "UI quality shard" --md-out docs/agent-briefs/tasks/UI/UI-1-0001.md --json-out docs/ui-quality-tasks/UI-1-0001.json --json-kind ui-quality-task-shard --write
-node tools_node/task-card-opener.js --id HARN-ART-9001 --title "建立 Harness 範例" --md-kind agent-briefs --brief-summary "由 rollout 規劃開立" --brief-position "Phase X / Demo" --brief-prereq "`HARN-ART-0001` 已完成" --chain-id HARN-CHAIN-DEMO --chain-step 1/1 --sensor-triggered-by harness-rollout-planning --input-contract "artifact 已存在|schema baseline 已確認" --output-contract "新增 schema|補 fixture 說明" --validation-cmd "node tools_node/demo.js" --rollback-hint "git checkout tools_node/demo.js" --execution-steps "盤點現況|實作骨架|跑驗證" --artifact-paths "artifacts/demo.json" --validation-evidence "dry-run 結構符合 HARN" --handoff-diff-status pending --md-out docs/agent-briefs/tasks/HARN-ART-9001.md --assign-doc-id --write
+node tools_node/task-card-opener.js --id HARN-ART-9001 --title "建立 Harness 範例" --md-kind agent-briefs --brief-summary "由 rollout 規劃開立" --brief-position "Phase X / Demo" --brief-prereq "`HARN-ART-0001` 已完成" --chain-id HARN-CHAIN-DEMO --chain-step 1/1 --sensor-triggered-by harness-rollout-planning --input-contract "artifact 已存在|schema baseline 已確認" --output-contract "新增 schema|補 fixture 說明" --validation-cmd "node tools_node/demo.js" --rollback-hint "git checkout tools_node/demo.js" --execution-steps "盤點現況|實作骨架|跑驗證" --artifact-paths "artifacts/demo.json" --validation-evidence "dry-run 結構符合 HARN" --handoff-diff-status pending --md-out docs/agent-briefs/tasks/HARN/HARN-ART-9001.md --assign-doc-id --write
 node tools_node/task-card-opener.js --recipe artifacts/ui-source/example/generated/example-screen.recipe.json --write --out artifacts/ui-source/example/generated/example-task-card.md --shard-out artifacts/ui-source/example/generated/example-task-shard.json
 ```
 
@@ -80,14 +80,14 @@ node tools_node/task-card-opener.js --recipe artifacts/ui-source/example/generat
 | 情境 | 主資料面 | 補充輸出 |
 |---|---|---|
 | 一般程式/系統/Data Center/資料契約任務 | `docs/tasks/tasks-*.json` 對應分片 | 視需求補 human-readable Markdown |
-| UI 品質 / UI 生產流程任務 | `docs/ui-quality-tasks/*.json` shard | 視流程補 `docs/tasks/*_task.md` 或 `docs/agent-briefs/tasks/*.md` |
-| 多 Agent 明確分工 / handoff / 需要 frontmatter 任務卡 | `docs/agent-briefs/tasks/*.md` | 同步對應 shard / manifest |
+| UI 品質 / UI 生產流程任務 | `docs/ui-quality-tasks/*.json` shard | 視流程補 `docs/tasks/*_task.md` 或 `docs/agent-briefs/tasks/<GROUP>/*.md` |
+| 多 Agent 明確分工 / handoff / 需要 frontmatter 任務卡 | `docs/agent-briefs/tasks/<GROUP>/*.md` | 同步對應 shard / manifest |
 | 使用者明確要求獨立 md 任務卡 | 對應 md 卡路徑 | 同步對應 shard / manifest，不可只建 md |
 
 原則：
 
 1. `docs/tasks/tasks-ui.json`、`tasks-prog.json`、`tasks-dc.json`、`tasks-data.json` 是分類分片真相。
-2. `docs/agent-briefs/tasks/*.md` 是人類可讀協作卡，不是用來取代 shard。
+2. `docs/agent-briefs/tasks/<GROUP>/*.md` 是人類可讀協作卡，不是用來取代 shard。
 3. 若同一任務同時需要 md 卡與 shard，兩邊都要建立，但欄位語意要一致。
 
 ### Step 2: 建卡前最低欄位
@@ -134,7 +134,7 @@ YYYY-MM-DD | 狀態: open/in-progress/blocked/done | 驗證: pending/... | 變�
 
 1. 如果主資料面是 `docs/tasks/tasks-*.json`，直接新增或更新對應分片條目。
 2. 如果需要 Markdown 卡：
-   - `docs/agent-briefs/tasks/*.md`：遵守 `doc_ai_0023` 的任務卡流程與鎖卡欄位
+   - `docs/agent-briefs/tasks/<GROUP>/*.md`：遵守 `doc_ai_0023` 的任務卡流程與鎖卡欄位
    - `docs/tasks/*_task.md`：作為人類可讀補充，但不得脫離 shard 真相
    - 若是 `HARN-*` 或需要 Harness frontmatter / evidence 欄位，應顯式確認 `brief-style=harn-rich`（`HARN-*` 預設已自動套用）
 3. UI 任務若有 `docs/ui-quality-tasks/*.json` shard，也要同步更新。

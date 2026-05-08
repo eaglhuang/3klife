@@ -291,6 +291,12 @@ function buildIntentRoute(intent, args = {}) {
     'docs/ATOM_GENERATOR.md',
     'docs/SELF_HOSTING_ALPHA.md',
   ];
+  const primaryAtom = {
+    atomId: 'ATM-CORE-0004',
+    logicalName: 'atom.core-atom-generator',
+    upstreamCli: upstreamCliPath.replace(/\\/g, '/'),
+    createCommand: buildCreateCommand(task, hints),
+  };
 
   return {
     ok: true,
@@ -324,12 +330,7 @@ function buildIntentRoute(intent, args = {}) {
         'docs/SELF_HOSTING_ALPHA.md',
       ],
       discoveryChannels: buildDiscoveryChannels(),
-      primaryAtom: {
-        atomId: 'ATM-CORE-0004',
-        logicalName: 'atom.core-atom-generator',
-        upstreamCli: upstreamCliPath.replace(/\\/g, '/'),
-        createCommand: buildCreateCommand(task, hints),
-      },
+      primaryAtom,
       guardrails: [
         '不要手工配 ATM-* ID。',
         '不要先寫 registry entry 再回頭補 generator。',
@@ -348,6 +349,10 @@ function buildIntentRoute(intent, args = {}) {
       taskCard: '',
       taskStore: '',
     },
+    routeKind: route.kind,
+    taskStatus: task.status,
+    readFirst,
+    primaryAtom,
     summary: '沒有 task card 時，先走 create-atom intent route，再交由 ATM-CORE-0004 / atm create 負責正式 birth。',
   };
 }
@@ -367,6 +372,14 @@ function buildTaskRoute(taskId) {
   const route = classifyRoute(task);
   const hints = inferHints(task, route.kind);
   const validationHints = parseCommandLines(task.contracts?.validation_cmd || task.validation_cmd || '');
+  const primaryAtom = route.kind === 'atom-generation'
+    ? {
+        atomId: 'ATM-CORE-0004',
+        logicalName: 'atom.core-atom-generator',
+        upstreamCli: upstreamCliPath.replace(/\\/g, '/'),
+        createCommand: buildCreateCommand(task, hints),
+      }
+    : null;
 
   const readFirst = [
     'docs/keep.summary.md',
@@ -421,7 +434,7 @@ function buildTaskRoute(taskId) {
             logicalName: 'atom.core-atom-generator',
             upstreamCli: upstreamCliPath.replace(/\\/g, '/'),
             createCommand: buildCreateCommand(task, hints),
-          },
+          }
         : null,
     },
     hints: {
@@ -435,6 +448,10 @@ function buildTaskRoute(taskId) {
       taskCard: taskCardRelativePath,
       taskStore: toRelative(taskStorePath),
     },
+    routeKind: route.kind,
+    taskStatus: task.status,
+    readFirst,
+    primaryAtom,
     summary: route.kind === 'atom-generation'
       ? '先走 ATM-CORE-0004 / atm create，再用 task card 的 validation hints 驗證。'
       : '先讀 task card 與 keep.summary，這張卡不需要先進 atom factory。',
@@ -449,9 +466,9 @@ function renderMarkdown(report) {
     '# ATM Task Router',
     '',
     `- Task: ${taskLabel}`,
-    `- Status: ${report.task.status || 'unknown'}`,
+    `- taskStatus: ${report.taskStatus || report.task.status || 'unknown'}`,
     `- Type: ${report.task.type || 'unknown'}`,
-    `- Route: ${report.route.kind}`,
+    `- routeKind: ${report.routeKind || report.route.kind}`,
     `- Summary: ${report.summary}`,
   ];
 
