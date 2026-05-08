@@ -58,6 +58,17 @@
 
 新文件若沒有明確理由，不應直接進 root；優先判斷是否應 backwrite 既有 canonical，或放入 `references/`、`adopters/`、`history/`、`assets/` 等子目錄。
 
+## Agent Boot Order
+
+新進 Agent 若要開始處理 ATM 文件治理，固定先讀以下順序：
+
+1. `docs/ai_atomic_framework/documentation-governance-policy.md`
+2. `docs/ai_atomic_framework/documentation-role-map.md`
+3. `docs/ai_atomic_framework/ATM_cross_reference.md`
+4. 該主題在 role map 中對應的 canonical owner
+
+如果 Agent 是從 `ATM_cross_reference.md` 進來，仍然必須回頭先讀本政策，再讀 role map，最後才進入對應主題的 canonical 文件。
+
 ## Canonical Owner Rule
 
 目前建議的 canonical owner 如下：
@@ -76,6 +87,10 @@
   - upstream 版本、相容性與生命周期政策。
 - `原子行為參考手冊.md`
   - 行為層參考手冊。
+- `documentation-governance-policy.md`
+  - ATM 文件治理規則與 Agent Boot Order。
+- `documentation-role-map.md`
+  - 現況文件角色盤點與 validator 讀取來源。
 
 ## New Document Intake Workflow
 
@@ -135,12 +150,17 @@
 
 ## Future Automation Suggestion
 
-後續可新增 `validate-atm-doc-governance`，至少檢查：
+已新增 `validate-atm-doc-governance`，目前至少檢查：
 
 - root 文件是否都已有 role
 - 是否出現重複 canonical owner
 - `history` 文件是否仍被當主入口引用
 - shard 與 parent 的映射是否完整
+
+後續可再擴充：
+
+- role map 是否與 doc-id registry 同步
+- 新增 canonical 時是否同時更新 boot order / cross reference
 
 ## Current Governance Position
 

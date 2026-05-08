@@ -9,6 +9,7 @@
 2. 哪些文件應該轉成 reference / adopter / history / asset。
 
 這份 role map 是**現況治理地圖**，重點在先完成邏輯分類，不是立刻搬檔。
+如果是新進 Agent，請先讀 [documentation-governance-policy.md](documentation-governance-policy.md)，再回來看本表與 [ATM_cross_reference.md](ATM_cross_reference.md)。
 
 ## Current Snapshot
 
@@ -27,6 +28,8 @@
 | `AI原子框架開發計畫書.md` | `canonical` | 保留 root | 當前可執行主計畫 |
 | `ATM框架演進執行規劃書.md` | `canonical` | 保留 root | 演進修正、治理補丁、delta ledger |
 | `ATM_cross_reference.md` | `index` | 保留 root | 唯一路由入口索引 |
+| `documentation-governance-policy.md` | `canonical` | 保留 root | 文件治理政策與 Agent Boot Order |
+| `documentation-role-map.md` | `index` | 保留 root | 現況角色盤點與 validator 讀取來源 |
 | `framework-function-atomization-manifest.md` | `canonical` | 保留 root | 全框架功能原子化 coverage manifest |
 | `upstream-versioning-policy.md` | `canonical` | 保留 root | upstream 版本與生命周期政策 |
 | `原子行為參考手冊.md` | `canonical` | 保留 root | 行為層參考手冊 |
