@@ -1,0 +1,115 @@
+[
+  {
+    "doc_id": "doc_task_0328",
+    "id": "ATM-2-0023",
+    "title": "Atomic Map Schema & Registry",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-MAP-EVOLUTION-V2",
+    "chain_step": "1/4",
+    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
+    "description": "為「原子地圖」建立 schema 與 registry：mapId / mapVersion / members[] / edges[] / entrypoints / qualityTargets / mapHash；可獨立於單一 atom 升版。",
+    "related": [],
+    "depends": [
+      "ATM-2-0014"
+    ],
+    "acceptance": [
+      "atomic-map.schema.json 定義 mapId / mapVersion / members[](atomId@version) / edges[] / entrypoints / qualityTargets / mapHash",
+      "mapHash = hash(sorted(members) + edges + entrypoints)；成員任一 atom 升版必須引發 mapHash 變更",
+      "registry 同時支援 atom entry 與 map entry；舊 atom-only registry fixture 仍綠",
+      "fixtures：minimal-map / multi-edge-map / quality-targets-missing 三種"
+    ],
+    "deliverables": [
+      "schemas/registry/atomic-map.schema.json",
+      "packages/core/src/registry/map-registry.ts",
+      "packages/core/src/registry/map-hash.ts",
+      "fixtures/registry/map/minimal.json",
+      "fixtures/registry/map/multi-edge.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 附錄 B 開卡",
+      "summary": "把 Atomic Map 升格為 registry 一等公民，為 map-level 演化建立可機讀基礎。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0014"
+    }
+  },
+  {
+    "doc_id": "doc_task_0272",
+    "id": "ATM-5-0001",
+    "title": "Quick Start 與 API 文件",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "docs",
+    "phase": "ATM-5",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
+    "related": [],
+    "depends": [
+      "ATM-1-0007",
+      "ATM-2-0006"
+    ],
+    "acceptance": [
+      "30 分鐘內可跑 hello-world",
+      "文件不需要 3KLife 背景知識",
+      "所有命令可複製執行",
+      "Quick Start 不要求安裝 LangGraph、pgvector、Deno sandbox 或 observability stack 才能跑通 hello-world"
+    ],
+    "deliverables": [
+      "docs/QUICK_START.md",
+      "docs/API.md",
+      "docs/SPEC_GUIDE.md",
+      "README quick start section",
+      "Quick Start 對齊 v0.2 六週 MVP，明確區分 v0.1 alpha 必備能力與 optional plugin"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 v0.2 companion 對應交付/驗收條件 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
+      "position": "ATM-5",
+      "prereq": "ATM-1-0007、ATM-2-0006"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "docs/QUICK_START.md",
+        "docs/API.md",
+        "docs/SPEC_GUIDE.md",
+        "README quick start section"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  }
+]

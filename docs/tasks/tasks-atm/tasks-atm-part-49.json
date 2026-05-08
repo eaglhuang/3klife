@@ -1,0 +1,98 @@
+[
+  {
+    "doc_id": "doc_task_0324",
+    "id": "ATM-2-0021",
+    "title": "HumanReviewGate as reference plugin（000013）",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "reference-plugin",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "8/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "以 reference plugin + effect node 形式提供 human review queue；core 僅依賴 schema 不依賴實作。",
+    "related": [],
+    "depends": [
+      "ATM-2-0020",
+      "ATM-2-0008"
+    ],
+    "acceptance": [
+      "實作位於 packages/plugin-human-review/*；packages/core 不可 import 此 package",
+      ".atm/reports/upgrade-proposals.json 為審核佇列；支援 approve / reject + reason 兩種 decision",
+      "decision log 寫入 evidence store（evidenceType=human-review-decision）",
+      "layer-boundary scanner 必須擋下 core → plugin-human-review 的任何 import",
+      "CLI 補 atm review list / show <proposalId> / approve <proposalId> --reason / reject <proposalId> --reason 四個子命令",
+      "approve / reject 必須同時落 evidence 與 decision-snapshot.hash，鎖定當下 upgrade-proposal.json 內容雜湊",
+      "upgrade-proposals.md 僅可作 audit projection，不得成為 source of truth；欄位固定為 proposalId / atomId / fromVersion → toVersion / decompositionDecision / automatedGates / status",
+      "node scripts/validate-human-review.mjs 必須可獨立驗證 review queue record、decision-snapshot.hash 與 evidence linkage，不依賴 full suite",
+      "exemplar 至少保留 approve / reject / snapshot-hash-mismatch 三組，可直接重放 CLI 輸出到 validator"
+    ],
+    "deliverables": [
+      "packages/plugin-human-review/src/queue.ts",
+      "packages/plugin-human-review/src/decision-log.ts",
+      "scripts/validate-human-review.mjs",
+      "schemas/human-review/decision.schema.json",
+      "fixtures/human-review/approve.snapshot.json",
+      "fixtures/human-review/reject.snapshot.json",
+      "fixtures/human-review/hash-mismatch.snapshot.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 review CLI / decision-snapshot.hash / Markdown audit projection，避免人工審核流程不可追溯\n2026-05-07 測試穩定性補丁：維持 human review gate 目的不變；補 queue/decision validator 與 decision exemplar triad，避免 review 流程只剩 CLI 手工煙霧測試",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "人類審核閘門以 reference plugin 形式落地，避免污染 core hard dependency。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0020 / ATM-2-0008"
+    }
+  },
+  {
+    "doc_id": "doc_task_0327",
+    "id": "ATM-4-0007",
+    "title": "H2U normalizeCssColor v1.0→v1.1 evolution pilot",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "case-study",
+    "phase": "ATM-4",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "11/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "以 normalizeCssColor case atom 跑第一次完整 evolution 閉環：proposal → automatedGates → human review → registry update or rollback。",
+    "related": [],
+    "depends": [
+      "ATM-4-0003",
+      "ATM-2-0020",
+      "ATM-2-0021"
+    ],
+    "acceptance": [
+      "normalizeCssColor v1.0 進 registry；v1.1 透過 atm upgrade --propose 產 proposal.json",
+      "automatedGates（nonRegression / qualityImprovement / newCapability）全綠才進 review queue",
+      "human review approve 後 registry currentVersion 指向 v1.1；reject 後保持 v1.0 並寫 decision log",
+      "完整 evidence 鏈可由 atm replay 重新跑 + neutrality scanner 全綠"
+    ],
+    "deliverables": [
+      "docs/case-studies/h2u-normalize-css-color-evolution-pilot.md",
+      "fixtures/case-studies/normalize-css-color/v1.0.json",
+      "fixtures/case-studies/normalize-css-color/v1.1.json",
+      "fixtures/case-studies/normalize-css-color/proposal.json",
+      "fixtures/case-studies/normalize-css-color/decision-approve.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "把 alpha1 evolution pipeline 在 H2U case 上做端到端落地，作為 alpha1 acceptance 證據。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0003 / ATM-2-0020 / ATM-2-0021"
+    }
+  }
+]

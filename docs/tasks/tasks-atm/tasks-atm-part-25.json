@@ -1,117 +1,125 @@
 [
   {
-    "doc_id": "doc_task_0293",
-    "id": "ATM-1-0010",
-    "title": "Upstream docs neutrality audit",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0341",
+    "id": "ATM-1-0011",
+    "title": "統一 Atomic ID canonical 命名並清除雙軌識別",
+    "owner": "vs-code-gpt-5.4",
     "priority": "P0",
     "status": "done",
     "type": "open-source-core",
     "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T16:41:32.7788261+08:00",
-    "started_by_agent": "vs-code-github-copilot",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4",
+    "started_at": "2026-05-07T12:07:31+08:00",
+    "started_by_agent": "vs-code-gpt-5.4",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "全盤掃描 upstream README、AGENTS、docs、examples、templates 與 prompt assets，確認不含 3KLife、Cocos、html-to-ucuf 或本地工具前提。",
+    "description": "現行 ATM 規劃把 task card ID、planning `ATM-CORE-*` 與 upstream spec/registry 的 dot-notation（如 `atom.core-seed`、`atom.plugin-rule-guard.neutrality-scanner`）混成多層識別，導致 Agent 合法地把 dot-notation 當 canonical atomic id。此卡要求把 Atomic ID 收斂為唯一主鍵 `ATM-{bucket}-{NNNN}`（4 位流水號），dot-notation 只能退回 `name/logicalName`；並同步修正 roadmap、active plan、evolution docs、schema、registry、fixtures、validators 與 workbench path，避免再出現第二種 atom id。",
     "related": [
-      "ATM-1-0009",
-      "ATM-2-0010"
+      "ATM-1.5-0001",
+      "ATM-1.5-0002",
+      "ATM-2-0012"
     ],
     "depends": [
-      "ATM-1-0001",
-      "ATM-1-0008"
+      "ATM-0-0002",
+      "ATM-1-0003"
     ],
     "acceptance": [
-      "upstream README/AGENTS/docs/examples/templates 不再含 adopter 私有資訊",
-      "產出 banned-term 與 adopter-only reference 清單",
-      "文件敘事不再暗示 3KLife/task-lock/compute-gate/doc-id 是 upstream 前提",
-      "可作為 self-hosting alpha gate 的一部分"
+      "upstream schema 與 validators 對 canonical Atomic ID 有 hard-fail pattern，`id` / `atomId` 不再接受 dot-notation",
+      "seed 與 neutrality scanner 等既有 atom 全面改用 `ATM-CORE-*` canonical id，且不再把 `legacyPlanningId` 當第二識別主鍵",
+      "名詞定義文件與 ATM 規劃文件明確區分 `task card id`、`atomicId`、`mapId`、`logicalName`，不再把 `atom.*` / `map.*` 當主 id",
+      "roadmap、active plan、evolution proposal 與相關 shards 的示例全部統一為 `ATM-CORE-0001` 類格式；語意名稱移到非 id 欄位",
+      "fixtures / tests / validation script 新增 fail-fast 防線，未來若再把 dot-notation 塞回 canonical id 會直接紅燈"
     ],
     "deliverables": [
-      "AI-Atomic-Framework/README.md neutrality checklist",
-      "AI-Atomic-Framework/docs/** audit scope",
-      "AI-Atomic-Framework/examples/** audit scope",
-      "AI-Atomic-Framework/templates/** audit scope"
+      "AI-Atomic-Framework/schemas/atomic-spec.schema.json",
+      "AI-Atomic-Framework/schemas/registry.schema.json",
+      "AI-Atomic-Framework/atomic-registry.json",
+      "AI-Atomic-Framework/specs/atom-seed-spec.json",
+      "AI-Atomic-Framework/specs/neutrality-scanner.atom.json",
+      "AI-Atomic-Framework/packages/core/seed.js",
+      "AI-Atomic-Framework/scripts/validate-neutrality-scanner.mjs 與相關 fixtures/tests",
+      "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/關於進化版的原子提案.md 與對應 shards/active planning docs"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: node scripts/validate-product-charter.mjs --mode validate / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 6460be7 新增 docs neutrality audit doc、machine-readable scan policy，並讓 validate-product-charter 掃描 README/CONTRIBUTING/docs/examples/templates protected surfaces | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4 開始執行 ATM-1-0011，先收斂 upstream canonical Atomic ID 契約與 downstream 規劃文件示例 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: AI-Atomic-Framework npm test/typecheck/lint 與 validate scripts 全綠；3KLife encoding checks 與 task-lock cross-shard test 通過 | 變更: upstream commit 9c1205f + downstream commits 72a3301/ddbdcb6/a3e2798 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM self-hosting first 開卡",
-      "summary": "建立 upstream 文件去污染與中立性稽核，避免 README/docs 再帶入 3KLife 私有資訊。",
+      "label": "ATM 上游契約修正開卡",
+      "summary": "收斂 Atomic ID 為唯一 canonical 主鍵，並清除 planning / schema / registry / fixture 的雙軌識別。",
       "position": "ATM-1",
-      "prereq": "ATM-1-0001、ATM-1-0008"
+      "prereq": "ATM-0-0002、ATM-1-0003 已完成；ATM-1.5-0001/0002 與 ATM-2-0012 為受影響實作/追蹤卡"
     },
     "contracts": {
       "input": [
-        "upstream product charter 與 zero-install bootstrap 已定義",
-        "upstream docs 不得綁定 adopter 私有資訊"
+        "名詞定義文件目前只規範任務卡 ID，尚未把 Atomic ID 寫成正式條目",
+        "ATM-1-0003 已交付 Atomic Spec / Registry schema v0.1，但 `id` / `atomId` 尚未強制 `ATM-{bucket}-{NNNN}` pattern",
+        "ATM-1.5-0001/0002 已把 `ATM-CORE-0001` 降成 `legacyPlanningId`，現行 spec/registry 改用 `atom.core-seed`",
+        "upstream `atomic-registry.json`、`specs/atom-seed-spec.json`、`specs/neutrality-scanner.atom.json`、`packages/core/seed.js` 與 validate scripts / fixtures 已實際接受 dot-notation 作 id",
+        "3KLife 規劃文件（historical roadmap、AI原子框架開發計畫書、關於進化版的原子提案、open-source-extraction-plan、dev-plan/evolution shards）已混用 `ATM-CORE-*` 與 `atom.*` 範例"
       ],
       "output": [
-        "upstream docs neutrality audit checklist",
-        "banned-term scan scope",
-        "adopter-only reference migration list"
+        "upstream `schemas/atomic-spec.schema.json`、`schemas/registry.schema.json` 對 canonical Atomic ID 加上 hard pattern，`id` / `atomId` 不再接受 `atom.*` 或 `map.*` dot-notation",
+        "upstream `atomic-registry.json`、`specs/atom-seed-spec.json`、`specs/neutrality-scanner.atom.json`、`packages/core/seed.js`、相關 validate scripts / fixtures / workbench path 全面改用 `ATM-CORE-0001`、`ATM-CORE-0003` 等 canonical id",
+        "dot-notation 僅保留在 `name` / `logicalName` / `semanticName` 類欄位，不得再作第二種 Atomic ID；`legacyPlanningId` 不得再承擔主識別語意",
+        "`docs/遊戲規格文件/系統規格書/名詞定義文件.md` 明確新增 Atomic ID 條目，正式區分 `task card id`、`atomicId`、`mapId`、`logicalName` 的角色",
+        "`docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md` 與所有相關 planning shards / 提案文件中的錯誤示例全面改成 `ATM-CORE-0001` 風格；若需保留語意名稱，一律改到非 id 欄位",
+        "新增 fail-fast 驗證：未來任何 spec / registry / fixture / validator 若再把 dot-notation 寫進 canonical id，CI 或 local validation 直接 fail"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡 touched files；upstream docs 若仍含 adopter 私有敘事，保持卡片 open 不偷關卡。",
+      "validation_cmd": "cd ../AI-Atomic-Framework\\nnpm run validate:schemas\\nnpm run validate:cli\\nnode scripts/validate-neutrality-scanner.mjs\\nnpm test\\nnpm run typecheck\\nnpm run lint\\ncd ../3KLife\\nnpm run check:encoding:touched -- --files docs/遊戲規格文件/系統規格書/名詞定義文件.md docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/關於進化版的原子提案.md",
+      "rollback_hint": "回退本卡 touched files；若 upstream 已開始批次 rename Atomic ID，需連同 schema / registry / fixtures / validators 一起回退，禁止只回退其中一層造成雙軌識別半套狀態。",
       "execution_steps": [
-        "盤點 upstream docs surfaces",
-        "定義 banned terms 與 protected surfaces",
-        "補 audit checklist",
-        "對齊 self-hosting alpha gate"
+        "正式把 canonical Atomic ID 規則寫回名詞定義文件與 active ATM planning docs",
+        "收緊 upstream schema、registry helper 與 validator，讓 dot-notation 不能再佔用 `id` / `atomId`",
+        "將 seed、neutrality scanner 與相關 fixtures/tests/workbench path 改為 `ATM-CORE-*` canonical id，語意名稱搬到非 id 欄位",
+        "全面掃描並回寫 roadmap、進化提案、open-source extraction plan、dev-plan / evolution / roadmap shards 的錯誤示例",
+        "補上 migration / validation 說明並跑完整 upstream validation + downstream encoding/doc 檢查"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [
-        "AI-Atomic-Framework/docs/governance/DOCS_NEUTRALITY_AUDIT.md",
-        "AI-Atomic-Framework/docs/governance/docs-neutrality-policy.json",
-        "AI-Atomic-Framework/scripts/validate-product-charter.mjs",
-        "AI-Atomic-Framework/README.md",
-        "AI-Atomic-Framework/CONTRIBUTING.md",
-        "AI-Atomic-Framework/docs/SELF_HOSTING_ALPHA.md"
+        "AI-Atomic-Framework/schemas/atomic-spec.schema.json",
+        "AI-Atomic-Framework/atomic-registry.json",
+        "AI-Atomic-Framework/specs/atom-seed-spec.json",
+        "AI-Atomic-Framework/specs/neutrality-scanner.atom.json",
+        "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
+        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+        "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+        "docs/ai_atomic_framework/關於進化版的原子提案.md"
       ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 6460be7",
-        "node scripts/validate-product-charter.mjs --mode validate",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "validation_evidence": [],
+      "handoff_diff_status": "pending",
       "trace_artifacts": [],
       "metrics_summary": [
-        "protected-surface scan scope moved from hardcoded validator logic into a versioned machine-readable policy",
-        "neutrality audit checklist and adopter-only migration guidance are documented in upstream governance docs",
-        "product-charter validation now covers README, CONTRIBUTING, docs, examples, and templates protected surfaces",
-        "self-hosting alpha gate now requires docs neutrality to pass before the gate is green"
+        "受影響面至少涵蓋 upstream schema/registry/specs/validators 與 downstream roadmap/active plans"
       ]
-    },
-    "completed_at": "2026-05-06T16:46:25.4089375+08:00"
+    }
   },
   {
-    "doc_id": "doc_task_0352",
-    "id": "ATM-2-0045",
-    "title": "Map Generator Provenance Audit",
-    "owner": "ClaudeCode_sonnet-4-6",
-    "priority": "P1",
-    "status": "open",
-    "type": "audit",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "ClaudeCode_sonnet-4-6",
-    "chain_id": "ATM-MAP-GENERATOR-PROVENANCE-V1",
-    "chain_step": "3/3",
-    "sensor_triggered_by": "atm-2-0042-map-generator-ripple",
-    "description": "等同 ATM-2-0041 的 map 版。掃描 registry 確保所有 map entry 有 generator provenance。",
-    "related": [],
+    "id": "ATM-2.5-0001",
+    "title": "Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI",
+    "status": "done",
+    "priority": "P0",
+    "phase": "ATM-2.5",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0303",
+    "started_at": "2026-05-06T16:42:17Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T17:06:00Z",
     "depends": [
-      "ATM-2-0042",
-      "ATM-2-0044"
+      "ATM-2-0013",
+      "ATM-2-0012",
+      "ATM-2-0004",
+      "ATM-2-0005"
     ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 + ATM-2-0044 完成"
+    "acceptance": [
+      "alpha0 gate 僅驗 deterministic 4 條 criteria；version history / rollback / evolution metrics 僅作 readiness warning，不阻塞 alpha0 release"
+    ],
+    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | done | upstream 64ec0bc | gate criteria1-4 true；validate:neutrality/cli/self-hosting-alpha + npm test/typecheck/lint pass | blocker: none"
   }
 ]

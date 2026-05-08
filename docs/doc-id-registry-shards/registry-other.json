@@ -460,5 +460,41 @@
     "path": "docs/ai_atomic_framework/h2u-regression-matrix.md",
     "title": "H2U Regression Matrix",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0083",
+    "path": "docs/學習文件/preprints202603.1756.md",
+    "title": "preprints202603.1756",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0084",
+    "path": "docs/學習文件/The Anatomy of an Agent Harness.md",
+    "title": "Key Takeaways",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0085",
+    "path": "docs/tech/npc-brain-武將互動記憶系統.md",
+    "title": "NPC Brain Memory System",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0086",
+    "path": "docs/tech/npc-brain-memory/api-contract.md",
+    "title": "NPC Brain Memory System — API & Contract（§6-§8）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0087",
+    "path": "docs/tech/npc-brain-memory/data-model.md",
+    "title": "NPC Brain Memory System — Data Model（§4-§5）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0088",
+    "path": "docs/tech/npc-brain-memory/ops.md",
+    "title": "NPC Brain Memory System — Ops & Milestones（§9-§12）",
+    "category": "other"
   }
 ]

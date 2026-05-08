@@ -10,9 +10,9 @@
   },
   "summary": {
     "done": 59,
-    "in_progress": 1,
-    "open": 50,
-    "total": 110
+    "in_progress": 3,
+    "open": 51,
+    "total": 113
   },
   "shards": [
     {
@@ -20,19 +20,19 @@
       "title": "Part 1 (striped, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-1.json",
       "count": 3,
-      "bytes": 9164,
-      "lines": 191,
+      "bytes": 8389,
+      "lines": 190,
       "range": [
         0,
-        96
+        106
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 0,
       "indices": [
         0,
-        48,
-        96
+        53,
+        106
       ]
     },
     {
@@ -40,19 +40,19 @@
       "title": "Part 2 (striped, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-2.json",
       "count": 3,
-      "bytes": 8226,
-      "lines": 181,
+      "bytes": 9329,
+      "lines": 195,
       "range": [
         1,
-        97
+        107
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 1,
       "indices": [
         1,
-        49,
-        97
+        54,
+        107
       ]
     },
     {
@@ -60,19 +60,19 @@
       "title": "Part 3 (striped, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-3.json",
       "count": 3,
-      "bytes": 8953,
-      "lines": 170,
+      "bytes": 7617,
+      "lines": 183,
       "range": [
         2,
-        98
+        108
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 2,
       "indices": [
         2,
-        50,
-        98
+        55,
+        108
       ]
     },
     {
@@ -80,19 +80,19 @@
       "title": "Part 4 (striped, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-4.json",
       "count": 3,
-      "bytes": 6467,
-      "lines": 154,
+      "bytes": 8629,
+      "lines": 192,
       "range": [
         3,
-        99
+        109
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 3,
       "indices": [
         3,
-        51,
-        99
+        56,
+        109
       ]
     },
     {
@@ -100,19 +100,19 @@
       "title": "Part 5 (striped, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-5.json",
       "count": 3,
-      "bytes": 6729,
-      "lines": 179,
+      "bytes": 6815,
+      "lines": 176,
       "range": [
         4,
-        100
+        110
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 4,
       "indices": [
         4,
-        52,
-        100
+        57,
+        110
       ]
     },
     {
@@ -120,19 +120,19 @@
       "title": "Part 6 (striped, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-6.json",
       "count": 3,
-      "bytes": 8264,
-      "lines": 189,
+      "bytes": 7201,
+      "lines": 180,
       "range": [
         5,
-        101
+        111
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 5,
       "indices": [
         5,
-        53,
-        101
+        58,
+        111
       ]
     },
     {
@@ -140,159 +140,152 @@
       "title": "Part 7 (striped, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-7.json",
       "count": 3,
-      "bytes": 9411,
-      "lines": 199,
+      "bytes": 9003,
+      "lines": 191,
       "range": [
         6,
-        102
+        112
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 6,
       "indices": [
         6,
-        54,
-        102
+        59,
+        112
       ]
     },
     {
       "name": "tasks-atm-part-8",
-      "title": "Part 8 (striped, 3 items)",
+      "title": "Part 8 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-8.json",
-      "count": 3,
-      "bytes": 9034,
-      "lines": 196,
+      "count": 2,
+      "bytes": 5263,
+      "lines": 116,
       "range": [
         7,
-        103
+        60
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 7,
       "indices": [
         7,
-        55,
-        103
+        60
       ]
     },
     {
       "name": "tasks-atm-part-9",
-      "title": "Part 9 (striped, 3 items)",
+      "title": "Part 9 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-9.json",
-      "count": 3,
-      "bytes": 9024,
-      "lines": 202,
+      "count": 2,
+      "bytes": 7853,
+      "lines": 138,
       "range": [
         8,
-        104
+        61
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 8,
       "indices": [
         8,
-        56,
-        104
+        61
       ]
     },
     {
       "name": "tasks-atm-part-10",
-      "title": "Part 10 (striped, 3 items)",
+      "title": "Part 10 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-10.json",
-      "count": 3,
-      "bytes": 9030,
-      "lines": 196,
+      "count": 2,
+      "bytes": 6472,
+      "lines": 135,
       "range": [
         9,
-        105
+        62
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 9,
       "indices": [
         9,
-        57,
-        105
+        62
       ]
     },
     {
       "name": "tasks-atm-part-11",
-      "title": "Part 11 (striped, 3 items)",
+      "title": "Part 11 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-11.json",
-      "count": 3,
-      "bytes": 7790,
-      "lines": 190,
+      "count": 2,
+      "bytes": 6769,
+      "lines": 137,
       "range": [
         10,
-        106
+        63
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 10,
       "indices": [
         10,
-        58,
-        106
+        63
       ]
     },
     {
       "name": "tasks-atm-part-12",
-      "title": "Part 12 (striped, 3 items)",
+      "title": "Part 12 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-12.json",
-      "count": 3,
-      "bytes": 4835,
-      "lines": 129,
+      "count": 2,
+      "bytes": 5621,
+      "lines": 84,
       "range": [
         11,
-        107
+        64
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 11,
       "indices": [
         11,
-        59,
-        107
+        64
       ]
     },
     {
       "name": "tasks-atm-part-13",
-      "title": "Part 13 (striped, 3 items)",
+      "title": "Part 13 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-13.json",
-      "count": 3,
-      "bytes": 7026,
-      "lines": 172,
+      "count": 2,
+      "bytes": 5549,
+      "lines": 123,
       "range": [
         12,
-        108
+        65
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 12,
       "indices": [
         12,
-        60,
-        108
+        65
       ]
     },
     {
       "name": "tasks-atm-part-14",
-      "title": "Part 14 (striped, 3 items)",
+      "title": "Part 14 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-14.json",
-      "count": 3,
-      "bytes": 8375,
-      "lines": 189,
+      "count": 2,
+      "bytes": 5633,
+      "lines": 132,
       "range": [
         13,
-        109
+        66
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 13,
       "indices": [
         13,
-        61,
-        109
+        66
       ]
     },
     {
@@ -300,18 +293,18 @@
       "title": "Part 15 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-15.json",
       "count": 2,
-      "bytes": 8956,
-      "lines": 147,
+      "bytes": 7474,
+      "lines": 149,
       "range": [
         14,
-        62
+        67
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 14,
       "indices": [
         14,
-        62
+        67
       ]
     },
     {
@@ -319,18 +312,18 @@
       "title": "Part 16 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-16.json",
       "count": 2,
-      "bytes": 7494,
-      "lines": 154,
+      "bytes": 7566,
+      "lines": 141,
       "range": [
         15,
-        63
+        68
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 15,
       "indices": [
         15,
-        63
+        68
       ]
     },
     {
@@ -338,18 +331,18 @@
       "title": "Part 17 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-17.json",
       "count": 2,
-      "bytes": 7084,
-      "lines": 155,
+      "bytes": 4304,
+      "lines": 116,
       "range": [
         16,
-        64
+        69
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 16,
       "indices": [
         16,
-        64
+        69
       ]
     },
     {
@@ -357,18 +350,18 @@
       "title": "Part 18 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-18.json",
       "count": 2,
-      "bytes": 9423,
-      "lines": 166,
+      "bytes": 5022,
+      "lines": 122,
       "range": [
         17,
-        65
+        70
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 17,
       "indices": [
         17,
-        65
+        70
       ]
     },
     {
@@ -376,18 +369,18 @@
       "title": "Part 19 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-19.json",
       "count": 2,
-      "bytes": 6782,
-      "lines": 153,
+      "bytes": 4500,
+      "lines": 116,
       "range": [
         18,
-        66
+        71
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 18,
       "indices": [
         18,
-        66
+        71
       ]
     },
     {
@@ -395,18 +388,18 @@
       "title": "Part 20 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-20.json",
       "count": 2,
-      "bytes": 6887,
-      "lines": 152,
+      "bytes": 4452,
+      "lines": 111,
       "range": [
         19,
-        67
+        72
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 19,
       "indices": [
         19,
-        67
+        72
       ]
     },
     {
@@ -414,18 +407,18 @@
       "title": "Part 21 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-21.json",
       "count": 2,
-      "bytes": 6736,
-      "lines": 153,
+      "bytes": 8431,
+      "lines": 180,
       "range": [
         20,
-        68
+        73
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 20,
       "indices": [
         20,
-        68
+        73
       ]
     },
     {
@@ -433,18 +426,18 @@
       "title": "Part 22 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-22.json",
       "count": 2,
-      "bytes": 7014,
-      "lines": 139,
+      "bytes": 7726,
+      "lines": 175,
       "range": [
         21,
-        69
+        74
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 21,
       "indices": [
         21,
-        69
+        74
       ]
     },
     {
@@ -452,18 +445,18 @@
       "title": "Part 23 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-23.json",
       "count": 2,
-      "bytes": 5602,
-      "lines": 120,
+      "bytes": 8398,
+      "lines": 172,
       "range": [
         22,
-        70
+        75
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 22,
       "indices": [
         22,
-        70
+        75
       ]
     },
     {
@@ -471,18 +464,18 @@
       "title": "Part 24 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-24.json",
       "count": 2,
-      "bytes": 5959,
-      "lines": 126,
+      "bytes": 9359,
+      "lines": 195,
       "range": [
         23,
-        71
+        76
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 23,
       "indices": [
         23,
-        71
+        76
       ]
     },
     {
@@ -490,18 +483,18 @@
       "title": "Part 25 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-25.json",
       "count": 2,
-      "bytes": 4962,
-      "lines": 117,
+      "bytes": 8856,
+      "lines": 125,
       "range": [
         24,
-        72
+        77
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 24,
       "indices": [
         24,
-        72
+        77
       ]
     },
     {
@@ -509,18 +502,18 @@
       "title": "Part 26 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-26.json",
       "count": 2,
-      "bytes": 8652,
-      "lines": 123,
+      "bytes": 3442,
+      "lines": 71,
       "range": [
         25,
-        73
+        78
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 25,
       "indices": [
         25,
-        73
+        78
       ]
     },
     {
@@ -528,18 +521,18 @@
       "title": "Part 27 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-27.json",
       "count": 2,
-      "bytes": 7116,
-      "lines": 139,
+      "bytes": 4809,
+      "lines": 83,
       "range": [
         26,
-        74
+        79
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 26,
       "indices": [
         26,
-        74
+        79
       ]
     },
     {
@@ -547,18 +540,18 @@
       "title": "Part 28 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-28.json",
       "count": 2,
-      "bytes": 3450,
-      "lines": 73,
+      "bytes": 5901,
+      "lines": 127,
       "range": [
         27,
-        75
+        80
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 27,
       "indices": [
         27,
-        75
+        80
       ]
     },
     {
@@ -566,18 +559,18 @@
       "title": "Part 29 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-29.json",
       "count": 2,
-      "bytes": 3516,
-      "lines": 72,
+      "bytes": 7297,
+      "lines": 169,
       "range": [
         28,
-        76
+        81
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 28,
       "indices": [
         28,
-        76
+        81
       ]
     },
     {
@@ -585,18 +578,18 @@
       "title": "Part 30 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-30.json",
       "count": 2,
-      "bytes": 6011,
-      "lines": 121,
+      "bytes": 6225,
+      "lines": 155,
       "range": [
         29,
-        77
+        82
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 29,
       "indices": [
         29,
-        77
+        82
       ]
     },
     {
@@ -604,18 +597,18 @@
       "title": "Part 31 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-31.json",
       "count": 2,
-      "bytes": 7295,
-      "lines": 169,
+      "bytes": 7123,
+      "lines": 164,
       "range": [
         30,
-        78
+        83
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 30,
       "indices": [
         30,
-        78
+        83
       ]
     },
     {
@@ -623,18 +616,18 @@
       "title": "Part 32 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-32.json",
       "count": 2,
-      "bytes": 7112,
-      "lines": 166,
+      "bytes": 6904,
+      "lines": 161,
       "range": [
         31,
-        79
+        84
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 31,
       "indices": [
         31,
-        79
+        84
       ]
     },
     {
@@ -642,18 +635,18 @@
       "title": "Part 33 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-33.json",
       "count": 2,
-      "bytes": 7232,
-      "lines": 162,
+      "bytes": 7530,
+      "lines": 168,
       "range": [
         32,
-        80
+        85
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 32,
       "indices": [
         32,
-        80
+        85
       ]
     },
     {
@@ -661,18 +654,18 @@
       "title": "Part 34 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-34.json",
       "count": 2,
-      "bytes": 7192,
-      "lines": 166,
+      "bytes": 4904,
+      "lines": 115,
       "range": [
         33,
-        81
+        86
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 33,
       "indices": [
         33,
-        81
+        86
       ]
     },
     {
@@ -680,18 +673,18 @@
       "title": "Part 35 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-35.json",
       "count": 2,
-      "bytes": 7138,
-      "lines": 167,
+      "bytes": 4189,
+      "lines": 94,
       "range": [
         34,
-        82
+        87
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 34,
       "indices": [
         34,
-        82
+        87
       ]
     },
     {
@@ -699,18 +692,18 @@
       "title": "Part 36 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-36.json",
       "count": 2,
-      "bytes": 4051,
-      "lines": 92,
+      "bytes": 3981,
+      "lines": 89,
       "range": [
         35,
-        83
+        88
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 35,
       "indices": [
         35,
-        83
+        88
       ]
     },
     {
@@ -718,18 +711,18 @@
       "title": "Part 37 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-37.json",
       "count": 2,
-      "bytes": 4126,
-      "lines": 92,
+      "bytes": 4307,
+      "lines": 101,
       "range": [
         36,
-        84
+        89
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 36,
       "indices": [
         36,
-        84
+        89
       ]
     },
     {
@@ -737,18 +730,18 @@
       "title": "Part 38 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-38.json",
       "count": 2,
-      "bytes": 4317,
-      "lines": 101,
+      "bytes": 3354,
+      "lines": 91,
       "range": [
         37,
-        85
+        90
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 37,
       "indices": [
         37,
-        85
+        90
       ]
     },
     {
@@ -756,18 +749,18 @@
       "title": "Part 39 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-39.json",
       "count": 2,
-      "bytes": 3352,
-      "lines": 91,
+      "bytes": 4095,
+      "lines": 96,
       "range": [
         38,
-        86
+        91
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 38,
       "indices": [
         38,
-        86
+        91
       ]
     },
     {
@@ -775,18 +768,18 @@
       "title": "Part 40 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-40.json",
       "count": 2,
-      "bytes": 4052,
-      "lines": 96,
+      "bytes": 1998,
+      "lines": 39,
       "range": [
         39,
-        87
+        92
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 39,
       "indices": [
         39,
-        87
+        92
       ]
     },
     {
@@ -794,18 +787,18 @@
       "title": "Part 41 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-41.json",
       "count": 2,
-      "bytes": 2032,
-      "lines": 39,
+      "bytes": 4841,
+      "lines": 99,
       "range": [
         40,
-        88
+        93
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 40,
       "indices": [
         40,
-        88
+        93
       ]
     },
     {
@@ -813,18 +806,18 @@
       "title": "Part 42 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-42.json",
       "count": 2,
-      "bytes": 4832,
-      "lines": 98,
+      "bytes": 5736,
+      "lines": 93,
       "range": [
         41,
-        89
+        94
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 41,
       "indices": [
         41,
-        89
+        94
       ]
     },
     {
@@ -832,18 +825,18 @@
       "title": "Part 43 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-43.json",
       "count": 2,
-      "bytes": 3101,
-      "lines": 61,
+      "bytes": 3866,
+      "lines": 107,
       "range": [
         42,
-        90
+        95
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 42,
       "indices": [
         42,
-        90
+        95
       ]
     },
     {
@@ -851,18 +844,18 @@
       "title": "Part 44 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-44.json",
       "count": 2,
-      "bytes": 4608,
-      "lines": 89,
+      "bytes": 3994,
+      "lines": 109,
       "range": [
         43,
-        91
+        96
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 43,
       "indices": [
         43,
-        91
+        96
       ]
     },
     {
@@ -870,18 +863,18 @@
       "title": "Part 45 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-45.json",
       "count": 2,
-      "bytes": 3959,
-      "lines": 109,
+      "bytes": 5983,
+      "lines": 134,
       "range": [
         44,
-        92
+        97
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 44,
       "indices": [
         44,
-        92
+        97
       ]
     },
     {
@@ -889,18 +882,18 @@
       "title": "Part 46 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-46.json",
       "count": 2,
-      "bytes": 5286,
-      "lines": 116,
+      "bytes": 5471,
+      "lines": 124,
       "range": [
         45,
-        93
+        98
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 45,
       "indices": [
         45,
-        93
+        98
       ]
     },
     {
@@ -908,18 +901,18 @@
       "title": "Part 47 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-47.json",
       "count": 2,
-      "bytes": 4353,
-      "lines": 116,
+      "bytes": 5179,
+      "lines": 117,
       "range": [
         46,
-        94
+        99
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 46,
       "indices": [
         46,
-        94
+        99
       ]
     },
     {
@@ -927,18 +920,113 @@
       "title": "Part 48 (striped, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-48.json",
       "count": 2,
-      "bytes": 4811,
-      "lines": 114,
+      "bytes": 6669,
+      "lines": 121,
       "range": [
         47,
-        95
+        100
       ],
       "layout": "striped",
-      "stride": 48,
+      "stride": 53,
       "offset": 47,
       "indices": [
         47,
-        95
+        100
+      ]
+    },
+    {
+      "name": "tasks-atm-part-49",
+      "title": "Part 49 (striped, 2 items)",
+      "path": "docs/tasks/tasks-atm/tasks-atm-part-49.json",
+      "count": 2,
+      "bytes": 4989,
+      "lines": 98,
+      "range": [
+        48,
+        101
+      ],
+      "layout": "striped",
+      "stride": 53,
+      "offset": 48,
+      "indices": [
+        48,
+        101
+      ]
+    },
+    {
+      "name": "tasks-atm-part-50",
+      "title": "Part 50 (striped, 2 items)",
+      "path": "docs/tasks/tasks-atm/tasks-atm-part-50.json",
+      "count": 2,
+      "bytes": 6252,
+      "lines": 104,
+      "range": [
+        49,
+        102
+      ],
+      "layout": "striped",
+      "stride": 53,
+      "offset": 49,
+      "indices": [
+        49,
+        102
+      ]
+    },
+    {
+      "name": "tasks-atm-part-51",
+      "title": "Part 51 (striped, 2 items)",
+      "path": "docs/tasks/tasks-atm/tasks-atm-part-51.json",
+      "count": 2,
+      "bytes": 4305,
+      "lines": 115,
+      "range": [
+        50,
+        103
+      ],
+      "layout": "striped",
+      "stride": 53,
+      "offset": 50,
+      "indices": [
+        50,
+        103
+      ]
+    },
+    {
+      "name": "tasks-atm-part-52",
+      "title": "Part 52 (striped, 2 items)",
+      "path": "docs/tasks/tasks-atm/tasks-atm-part-52.json",
+      "count": 2,
+      "bytes": 5814,
+      "lines": 125,
+      "range": [
+        51,
+        104
+      ],
+      "layout": "striped",
+      "stride": 53,
+      "offset": 51,
+      "indices": [
+        51,
+        104
+      ]
+    },
+    {
+      "name": "tasks-atm-part-53",
+      "title": "Part 53 (striped, 2 items)",
+      "path": "docs/tasks/tasks-atm/tasks-atm-part-53.json",
+      "count": 2,
+      "bytes": 5865,
+      "lines": 132,
+      "range": [
+        52,
+        105
+      ],
+      "layout": "striped",
+      "stride": 53,
+      "offset": 52,
+      "indices": [
+        52,
+        105
       ]
     }
   ]

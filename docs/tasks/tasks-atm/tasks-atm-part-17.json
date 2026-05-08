@@ -91,65 +91,26 @@
     "completed_at": "2026-05-06T13:38:00+08:00"
   },
   {
-    "doc_id": "doc_task_0344",
-    "id": "ATM-2-0037",
-    "title": "Workbench Alias Drift Guard and Projection Alignment",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P1",
-    "status": "done",
-    "type": "guardrail",
+    "doc_id": "doc_task_0350",
+    "id": "ATM-2-0043",
+    "title": "Map Source Template & Workbench Policy",
+    "owner": "ClaudeCode_sonnet-4-6",
+    "priority": "P0",
+    "status": "open",
+    "type": "architecture",
     "phase": "ATM-2",
     "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T14:09:16.5225687+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
-    "chain_step": "2/2",
-    "sensor_triggered_by": "atm-workbench-alias-drift",
-    "description": "補上自動驗證與展示層收斂，避免 logicalName 再被誤當成 atomId 或 workbench 目錄名，並在 human-readable projection 明確分開 atomId 與 logicalName。",
+    "created_by_agent": "ClaudeCode_sonnet-4-6",
+    "chain_id": "ATM-MAP-GENERATOR-PROVENANCE-V1",
+    "chain_step": "1/3",
+    "sensor_triggered_by": "atm-2-0042-map-generator-ripple",
+    "description": "正式化 map 三件套模板結構與 workbench 檔案命名規則，對標 atom 四件套（ATM-2-0039）。",
     "related": [],
     "depends": [
-      "ATM-2-0013",
-      "ATM-2-0034",
-      "ATM-2-0036"
+      "ATM-2-0042"
     ],
     "acceptance": [],
     "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias drift guard 與 projection alignment | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:registry-catalog / npm.cmd test / npm.cmd run lint pass | 變更: 補上 workbench stray directory guard、registry catalog atomId/logicalName 分欄，並修正 validate-registry-catalog 改在 temp root 跑 fixture test runner 以避免重建 ATM-FIXTURE-0004 汙染 root workbench | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM workbench alias guard 開卡",
-      "summary": "建立非 canonical alias 目錄的 drift guard，並統一 projection 對 atomId / logicalName 的呈現。",
-      "position": "ATM-2（guardrail / projection alignment）",
-      "prereq": "ATM-2-0013 / ATM-2-0034 / ATM-2-0036"
-    },
-    "contracts": {
-      "input": [
-        "canonical workbench layout 已定義為 atomic_workbench/atoms/<atomId>/",
-        "logicalName 仍可保留於 registry/spec，但不得再當成 workbench folder name",
-        "至少存在一份 human-readable projection 曾把 logicalName 當成 id 呈現"
-      ],
-      "output": [
-        "新增或擴充 deterministic validator，檢出 atomic_workbench/atoms 下非 canonical alias 目錄 drift",
-        "驗證規則需容許合法 canonical ATM-* workbench 與明確 adapter override，不可誤殺正式 sourcePaths",
-        "registry catalog 與其他 human-readable projection 若呈現 atom 身分，必須明確區分 atomId 與 logicalName",
-        "補 fixture 或 snapshot，覆蓋 stray alias dir 與 projection 欄位對齊情境"
-      ],
-      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:registry-catalog\\nnpm test\\nnpm run lint",
-      "rollback_hint": "若新 guard 對既有 host override 造成誤報，先縮小到 atomic_workbench/atoms default layout 範圍，不得放寬回 logicalName 可當 canonical folder 的舊行為。",
-      "execution_steps": [
-        "盤點目前 validator 與 projection 輸出缺口",
-        "設計 alias drift 判斷規則與允許例外",
-        "補 deterministic test 或 snapshot 覆蓋 stray alias dir 與 projection 欄位",
-        "回寫 catalog 或相關 human-readable projection，確保 atomId / logicalName 分欄或明確標示"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 完成"
   }
 ]

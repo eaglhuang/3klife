@@ -1,159 +1,69 @@
 [
   {
-    "doc_id": "doc_task_0263",
-    "id": "ATM-2-0006",
-    "title": "Adapter API 與 Plugin SDK 定稿",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0289",
+    "id": "ATM-2-0007",
+    "title": "Default Governance Bundle schema",
+    "owner": "vs-code-gpt-5.4",
     "priority": "P0",
-    "status": "done",
-    "type": "plugin-sdk",
+    "status": "in-progress",
+    "type": "open-source-core",
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T18:37:03Z",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T18:46:31Z",
+    "started_at": "2026-05-07T14:34:13.9575398+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "定稿 ProjectAdapter、LanguageAdapter、Capability、InjectorPlugin 介面與生命週期 hook。",
+    "description": "定義 WorkItem、TaskStore、ScopeLock、DocumentIndex、ShardStore、ArtifactStore、LogStore、RunReportStore、RuleGuard、Evidence/Handoff 等 governance primitives 的 upstream schema 與 interface。",
     "related": [],
     "depends": [
-      "ATM-1-0005",
-      "ATM-2-0005"
+      "ATM-2-0006"
     ],
     "acceptance": [
-      "LocalGitAdapter 與 JS LanguageAdapter 使用同一 SDK",
-      "3KLife adapter 可依此實作",
-      "breaking-change policy 寫入 docs/LIFECYCLE.md",
-      "governance primitives 明確停留在 interface/schema 層，不引入 3KLife 實作",
-      "AtomLifecycleMode enum（birth | evolution）落於 packages/plugin-sdk/src/lifecycle.ts",
-      "lifecycleMode 同步映射到 schemas/atomic-spec.schema.json 既有 compatibility 區塊（不另開新 schema）"
+      "governance primitives 不引用 3KLife 專用路徑",
+      "schema 可支援 local .atm layout 與外部 Jira/GitHub Issues adapter",
+      "TaskStore/LockStore/DocumentIndex/ShardStore/ArtifactStore/LogStore/RuleGuard/EvidenceStore interface 完整",
+      "TaskStore/LockStore/DocumentIndex/ShardStore/ArtifactStore/LogStore/RuleGuard/EvidenceStore interface 完整",
+      "schemas/governance/work-item.schema.json 可驗證 alpha0 first task",
+      "schemas/governance/scope-lock.schema.json 可驗證最小 lock evidence",
+      "alpha0 minimal task/lock/evidence fixture 不依賴完整 reference plugins",
+      "alpha0 governance schema 僅含 WorkItem / ScopeLock / 最小 Evidence；upgrade-proposal / review-queue schema 標記為 alpha1 並獨立檔案"
     ],
     "deliverables": [
-      "packages/plugin-sdk/src/project-adapter.*",
-      "packages/plugin-sdk/src/language-adapter.*",
-      "packages/plugin-sdk/src/capability.*",
-      "docs/ADAPTER_GUIDE.md 初稿",
-      "packages/plugin-sdk/src/governance/* 或等價 governance adapter interface",
-      "TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 生命週期定稿",
-      "packages/plugin-sdk/src/lifecycle.ts — AtomLifecycleMode enum",
-      "packages/plugin-sdk/src/lifecycle.ts — VersionResolver interface",
-      "packages/plugin-sdk/src/lifecycle.ts — QualityMetricsComparator interface",
-      "packages/plugin-sdk/src/lifecycle.ts — UpgradeProposalAdapter interface"
+      "packages/plugin-sdk/governance interfaces 規格",
+      "schemas/governance/*.schema.json 規格",
+      "docs/ADAPTER_GUIDE.md governance interface 草案",
+      "ArtifactStore / LogStore / RunReportStore / MarkdownJsonStateStore contract 入口，詳細 schema 可由 ATM-2-0009 落地",
+      "schemas/governance/work-item.schema.json",
+      "schemas/governance/scope-lock.schema.json",
+      "alpha0 minimal governance fixture"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter interface 範圍 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-06 | 狀態: done | 驗證: npm test / typecheck / lint 通過 | 變更: 上游 e4c2f88 定稿 Plugin SDK Adapter API、adapter 對齊、governance stores、LIFECYCLE policy 與 compatibility.lifecycleMode | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 接手 alpha0 Default Governance Bundle schema 與 layout contract | 阻塞: none\n2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 schema-first 範圍：WorkItem / ScopeLock 為 alpha0 最小治理，完整 Default Governance Bundle 移到 alpha1 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "定稿 ProjectAdapter、LanguageAdapter、Capability、InjectorPlugin 介面與生命週期 hook。",
+      "label": "ATM governance split 開卡",
+      "summary": "定義 Default Governance Bundle 所需的通用治理 primitives schema 與 adapter interface。",
       "position": "ATM-2",
-      "prereq": "ATM-1-0005、ATM-2-0005"
+      "prereq": "ATM-2-0006"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+        "ATM Plugin SDK 已規劃 ProjectAdapter/LanguageAdapter",
+        "Default Governance Bundle 已決議納入 upstream 完整性"
       ],
       "output": [
-        "packages/plugin-sdk/src/project-adapter.*",
-        "packages/plugin-sdk/src/language-adapter.*",
-        "packages/plugin-sdk/src/capability.*",
-        "docs/ADAPTER_GUIDE.md 初稿"
+        "governance primitives schema",
+        "governance adapter interface",
+        "default .atm layout contract"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "rollback_hint": "回退 upstream governance schema/interface 草案；不得引入 3KLife 私有路徑。",
       "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes",
-        "將 governance primitives 明確留在 interface 層，不引入 3KLife 實作"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [
-        "packages/plugin-sdk/src/project-adapter.ts",
-        "packages/plugin-sdk/src/language-adapter.ts",
-        "packages/plugin-sdk/src/capability.ts",
-        "packages/plugin-sdk/src/governance/stores.ts",
-        "packages/plugin-sdk/src/lifecycle.ts",
-        "docs/ADAPTER_GUIDE.md",
-        "docs/LIFECYCLE.md"
-      ],
-      "validation_evidence": [
-        "cmd /c npm run validate:plugin-sdk",
-        "cmd /c npm run validate:adapter-local-git",
-        "cmd /c npm run validate:language-js",
-        "cmd /c npm test",
-        "cmd /c npm run typecheck",
-        "cmd /c npm run lint",
-        "AI-Atomic-Framework encoding scan ok"
-      ],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "Plugin SDK contract validator: adapter/language/capability/lifecycle/governance ok",
-        "AI-Atomic-Framework commit: e4c2f88"
-      ]
-    }
-  },
-  {
-    "doc_id": "doc_task_0268",
-    "id": "ATM-3-0005",
-    "title": "Cocos runtime adapter policy",
-    "owner": "GitHubCopilot",
-    "priority": "P1",
-    "status": "open",
-    "type": "adapter-policy",
-    "phase": "ATM-3",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "定義 Cocos runtime 可 atom 化與不可 atom 化邊界，避免將 cc/Node/Prefab 放入 compute atom。",
-    "related": [],
-    "depends": [
-      "ATM-3-0001"
-    ],
-    "acceptance": [
-      "Cocos Component 被定義為 wrapper/adapter",
-      "純公式與 contract 可作 atom",
-      "Cocos asset refresh/TS syntax 驗證列入 pilot gate",
-      "Cocos runtime object boundary 明確對照 Unity GameObject/Component 類型，不污染 compute atom"
-    ],
-    "deliverables": [
-      "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md",
-      "assets/scripts shared/core adapter 建議",
-      "禁止 import cc 的 atom 規則",
-      "明確列出 Cocos Component、Node、Prefab、Scene、AssetRef 僅能由 adapter/wrapper 持有，不可進 compute atom"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 v0.2 companion 對應交付/驗收條件 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "定義 Cocos runtime 可 atom 化與不可 atom 化邊界，避免將 cc/Node/Prefab 放入 compute atom。",
-      "position": "ATM-3",
-      "prereq": "ATM-3-0001"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md",
-        "assets/scripts shared/core adapter 建議",
-        "禁止 import cc 的 atom 規則"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
+        "盤點 governance primitives",
+        "定義 schema 與 interface",
+        "補 positive/negative fixtures",
+        "更新 ADAPTER_GUIDE"
       ]
     },
     "harness_evidence": {
@@ -163,5 +73,22 @@
       "trace_artifacts": [],
       "metrics_summary": []
     }
+  },
+  {
+    "id": "ATM-3-0007",
+    "title": "compute-gate.js adapter 化：接入 ATM GateAdapter",
+    "status": "done",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0307",
+    "started_at": "2026-05-08T05:52:40.634350+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T05:56:41.421780+08:00",
+    "depends": [
+      "ATM-3-0006"
+    ]
   }
 ]

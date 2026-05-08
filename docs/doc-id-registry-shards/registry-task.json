@@ -2080,5 +2080,35 @@
     "path": "docs/agent-briefs/tasks/ATM-0-0015.md",
     "title": "[ATM-0-0015] Harness Engineering CAR/HarnessCard 規劃回寫",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0356",
+    "path": "docs/agent-briefs/tasks/ATM-2-0049.md",
+    "title": "[ATM-2-0049] Governance shard strategy parameterization",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0357",
+    "path": "docs/agent-briefs/tasks/ATM-3-0015.md",
+    "title": "[ATM-3-0015] Task card system atomic map planning",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0358",
+    "path": "docs/agent-briefs/tasks/ATM-2-0048.md",
+    "title": "[ATM-2-0048] ATM task-router / onboarding contract",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0359",
+    "path": "docs/agent-briefs/tasks/ATM-2.5-0004.md",
+    "title": "[ATM-2.5-0004] Alpha1 evolution sandbox fixture",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0360",
+    "path": "docs/agent-briefs/tasks/ATM-2-0050.md",
+    "title": "[ATM-2-0050] Framework Function Atomization Coverage Gate",
+    "category": "task"
   }
 ]

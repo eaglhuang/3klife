@@ -62,59 +62,62 @@
     }
   },
   {
-    "doc_id": "doc_task_0329",
-    "id": "ATM-2-0024",
-    "title": "Map-Level Upgrade & Extract-vs-Bump Decision",
+    "doc_id": "doc_task_0336",
+    "id": "ATM-2-0030",
+    "title": "Dedup Police Plugin",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "orchestration-atom",
+    "type": "police",
     "phase": "ATM-2",
-    "created": "2026-05-06",
+    "created": "2026-05-07",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
     "started_by_agent": "",
-    "chain_id": "ATM-MAP-EVOLUTION-V2",
-    "chain_step": "2/4",
-    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
-    "description": "在 upgrade pipeline 加入 decomposition decision：判斷某次改動應走 atom-bump / atom-extract / map-bump，並落地對應 proposal 與 review path。",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "5/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "提供去重警察：用 semanticFingerprint 比對找出重複候選，呼叫 LLM similarity skill 算 90%+ 行為相似度，依 8 種去重情境裁決，產出 dedup-report。維護 fingerprint-index 做 O(1) prefix lookup，跨 100K atoms 全掃在數百毫秒內完成。",
     "related": [],
     "depends": [
-      "ATM-2-0020",
-      "ATM-2-0023"
+      "ATM-2-0026",
+      "ATM-2-0029",
+      "ATM-2-0005"
     ],
     "acceptance": [
-      "CLI atm upgrade --target map --map <id> --to <ver> 可產出 map-level proposal",
-      "decompositionDecision 規則明文：API 不變→atom-bump；行為斷裂→atom-extract；跨原子改動→map-bump",
-      "atom-extract 模式下 proposal 必須同時列舊 atom 保留資訊與新 atom spec stub",
-      "map-bump 模式下 proposal members[] 必須含舊→新 atomId@version 對照",
-      "review queue 視 decompositionDecision 路由至對應 reviewer template"
+      "packages/plugin-police-dedup/ 落地 dedup police plugin",
+      "fingerprint-index.json 使用 sf 16-char prefix 做 hash bucket；100K atoms 全掃 ≤ 500ms（含 budget 測試）",
+      "實作 8 種去重情境（自由原子 100% 同 / 自由原子 90%+ 同 / map 成員 vs 自由原子 / 同 map 內成員同 / 跨 map 成員同 / 整個 map 同 / 零 caller / TTL 過期）",
+      "每種情境輸出對應建議 behavior（dedup-merge / sweep / extract-shared / map-merge / expire / infect）",
+      "dedup-report.schema.json 含 candidates[] / suggestedBehavior / confidenceScore",
+      "LLM similarity skill 為 plugin 接口，dry-run 時可 stub"
     ],
     "deliverables": [
-      "packages/core/src/upgrade/decomposition-decision.ts",
-      "packages/core/src/upgrade/map-propose.ts",
-      "packages/cli/commands/upgrade-map-propose.ts",
-      "fixtures/upgrade/map-bump-proposal.json",
-      "fixtures/upgrade/atom-extract-proposal.json"
+      "packages/plugin-police-dedup/",
+      "packages/plugin-police-dedup/src/fingerprint-index.ts",
+      "packages/plugin-police-dedup/src/similarity-skill.ts",
+      "schemas/police/dedup-report.schema.json",
+      "fixtures/dedup/*8-scenarios.json",
+      "tests/dedup/100k-budget.test.ts"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 5/8）| 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 附錄 B 開卡",
-      "summary": "把「升版 vs. 拆原子」這個關鍵架構決策正式機讀化，避免演化階段隱性破壞 consumer。",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "去重警察：sf+LLM similarity 找重複候選，O(1) prefix lookup 支援大規模原子庫。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0020 / ATM-2-0023"
+      "prereq": "ATM-2-0026 / ATM-2-0029 / ATM-2-0005"
     }
   },
   {
-    "doc_id": "doc_task_0272",
-    "id": "ATM-5-0001",
-    "title": "Quick Start 與 API 文件",
+    "doc_id": "doc_task_0278",
+    "id": "ATM-6-0003",
+    "title": "多語言 Adapter 擴張計畫",
     "owner": "GitHubCopilot",
-    "priority": "P0",
+    "priority": "P2",
     "status": "open",
-    "type": "docs",
-    "phase": "ATM-5",
+    "type": "ecosystem",
+    "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -122,42 +125,36 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
+    "description": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
     "related": [],
     "depends": [
-      "ATM-1-0007",
-      "ATM-2-0006"
+      "ATM-2-0006",
+      "ATM-1-0006"
     ],
     "acceptance": [
-      "30 分鐘內可跑 hello-world",
-      "文件不需要 3KLife 背景知識",
-      "所有命令可複製執行",
-      "Quick Start 不要求安裝 LangGraph、pgvector、Deno sandbox 或 observability stack 才能跑通 hello-world"
+      "每個 language adapter 有 test/build/import scan contract",
+      "不要求 core 重寫",
+      "Cocos/Unity 引擎物件不進 compute atom"
     ],
     "deliverables": [
-      "docs/QUICK_START.md",
-      "docs/API.md",
-      "docs/SPEC_GUIDE.md",
-      "README quick start section",
-      "Quick Start 對齊 v0.2 六週 MVP，明確區分 v0.1 alpha 必備能力與 optional plugin"
+      "docs/ecosystem/language-adapter-roadmap.md",
+      "adapter acceptance matrix"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 v0.2 companion 對應交付/驗收條件 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
-      "position": "ATM-5",
-      "prereq": "ATM-1-0007、ATM-2-0006"
+      "summary": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
+      "position": "ATM-6",
+      "prereq": "ATM-2-0006、ATM-1-0006"
     },
     "contracts": {
       "input": [
         "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "docs/QUICK_START.md",
-        "docs/API.md",
-        "docs/SPEC_GUIDE.md",
-        "README quick start section"
+        "docs/ecosystem/language-adapter-roadmap.md",
+        "adapter acceptance matrix"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",

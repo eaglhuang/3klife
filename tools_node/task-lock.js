@@ -50,6 +50,16 @@ function main(argv = process.argv.slice(2)) {
                 }
                 return 1;
             }
+        case 'reserve':
+            if (!taskId || !agentName) { console.error('用法: task-lock.js reserve <task-prefix> <agent-name>（或先設 AGENT_IDENTITY）'); return 1; }
+            try {
+                const reservation = lockAdapter.reserve(taskId, agentName);
+                console.log(JSON.stringify(reservation, null, 2));
+                return 0;
+            } catch (error) {
+                console.error(error instanceof Error ? error.message : String(error));
+                return 1;
+            }
         case 'unlock':
             if (!taskId || !agentName) { console.error('用法: task-lock.js unlock <task-id> <agent-name>（或先設 AGENT_IDENTITY；若提供人類名稱可覆寫解鎖）'); return 1; }
             lockAdapter.unlock(taskId, agentName);
@@ -79,7 +89,7 @@ function main(argv = process.argv.slice(2)) {
             lockAdapter.list();
             return 0;
         default:
-            console.log('用法: task-lock.js <lock|unlock|check|check-cross-shard|validateScope|list> [task-id] [agent-name]（lock/unlock 可改用 AGENT_IDENTITY；unlock 也接受人類名稱 override）');
+            console.log('用法: task-lock.js <lock|reserve|unlock|check|check-cross-shard|validateScope|list> [task-id|task-prefix] [agent-name]（lock/reserve/unlock 可改用 AGENT_IDENTITY；unlock 也接受人類名稱 override）');
             return 1;
     }
 }

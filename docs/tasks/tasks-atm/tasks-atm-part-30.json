@@ -1,8 +1,8 @@
 [
   {
-    "doc_id": "doc_task_0258",
-    "id": "ATM-2-0001",
-    "title": "Core Spec loader/parser",
+    "doc_id": "doc_task_0259",
+    "id": "ATM-2-0002",
+    "title": "Scaffold Builder MVP",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
@@ -10,43 +10,43 @@
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T18:18:00.000Z",
+    "started_at": "2026-05-06T19:28:00.000Z",
     "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T19:24:57.2838869+08:00",
+    "completed_at": "2026-05-06T20:18:23.9552929+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "實作 core spec loader/parser，讀取 spec、套 schema、產 normalized model。",
+    "description": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
     "related": [],
     "depends": [
-      "ATM-1-0003"
+      "ATM-2-0001"
     ],
     "acceptance": [
-      "valid/invalid fixtures 全覆蓋",
-      "錯誤訊息指出缺欄位與路徑",
-      "不讀 host-specific config"
+      "首次 scaffold 建立檔案",
+      "第二次 scaffold 不覆寫人工實作",
+      "可由 adapter 決定 workbenchPath"
     ],
     "deliverables": [
-      "packages/core/src/spec/parse-spec.*",
-      "unit tests",
-      "error-as-prompt report format"
+      "packages/core/src/manager/scaffold.*",
+      "templates/atom.spec.template.json",
+      "templates/atom.test.template.ts"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:core-spec-parser / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 87c689c 新增 packages/core/src/spec/parse-spec.mjs、fixture-driven parser validator、host-agnostic parse proof，並讓 CLI spec --validate 走 core parser 產出 normalized model 與 error-as-prompt report format | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:scaffold-builder / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit b8a3270 新增 core scaffold builder、templates/atom.spec.template.json、templates/atom.test.template.ts，預設產出 atomic_workbench/atoms/<atomId>/atom.spec.json + atom.test.ts，並支援 adapter 指定 workbenchPath 與 idempotent rerun | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
-      "summary": "實作 core spec loader/parser，讀取 spec、套 schema、產 normalized model。",
+      "summary": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
       "position": "ATM-2",
-      "prereq": "ATM-1-0003"
+      "prereq": "ATM-2-0001"
     },
     "contracts": {
       "input": [
         "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "packages/core/src/spec/parse-spec.*",
-        "unit tests",
-        "error-as-prompt report format"
+        "packages/core/src/manager/scaffold.*",
+        "templates/atom.spec.template.json",
+        "templates/atom.test.template.ts"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
       "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
@@ -60,15 +60,15 @@
     "harness_evidence": {
       "artifact_paths": [
         "AI-Atomic-Framework/package.json",
-        "AI-Atomic-Framework/packages/cli/src/commands/spec-shared.mjs",
-        "AI-Atomic-Framework/packages/core/src/spec/parse-spec.mjs",
-        "AI-Atomic-Framework/scripts/validate-core-spec-parser.mjs",
-        "AI-Atomic-Framework/tests/core-spec-parser.fixture.json",
-        "AI-Atomic-Framework/tests/core-spec-parser-fixtures/minimal-valid.atom.json"
+        "AI-Atomic-Framework/packages/core/src/manager/scaffold.mjs",
+        "AI-Atomic-Framework/scripts/validate-scaffold-builder.mjs",
+        "AI-Atomic-Framework/templates/atom.spec.template.json",
+        "AI-Atomic-Framework/templates/atom.test.template.ts",
+        "AI-Atomic-Framework/tests/scaffold-builder.fixture.json"
       ],
       "validation_evidence": [
-        "AI-Atomic-Framework commit 87c689c",
-        "npm run validate:core-spec-parser",
+        "AI-Atomic-Framework commit b8a3270",
+        "npm run validate:scaffold-builder",
         "npm run validate:cli",
         "npm test",
         "npm run typecheck",
@@ -77,45 +77,79 @@
       "handoff_diff_status": "upstream committed; tracking diff pending commit",
       "trace_artifacts": [],
       "metrics_summary": [
-        "core parser now reads atomic spec files, validates against the shared schema, and emits a normalized model",
-        "invalid spec cases return prompt-ready issue records with code, path, text, and direct fix hints",
-        "parser validation covers valid fixture, invalid fixture, missing-file failure, and host-agnostic temp-repo parsing",
-        "CLI spec --validate now reuses the core parser instead of carrying a separate validation path"
+        "scaffold builder writes a per-atom workbench by default under atomic_workbench/atoms/<atomId>",
+        "each scaffolded atom currently includes atom.spec.json and atom.test.ts rendered from shared templates",
+        "rerunning scaffold skips existing files so manual edits are preserved by default",
+        "adapter or caller can decide workbenchPath explicitly instead of using the default folder policy"
       ]
     }
   },
   {
-    "id": "ATM-2.5-0003",
-    "title": "Multi-Agent 兼容性驗證：confidence gate",
-    "status": "done",
-    "priority": "P1",
-    "phase": "ATM-2.5",
-    "type": "confidence-gate",
-    "created": "2026-05-05",
+    "doc_id": "doc_task_0265",
+    "id": "ATM-3-0002",
+    "title": "3KLife ATM config 與 bootstrap wrapper",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0305",
-    "started_at": "2026-05-07T16:05:00Z",
+    "priority": "P0",
+    "status": "done",
+    "type": "adapter",
+    "phase": "ATM-3",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-08T05:36:17+08:00",
     "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-07T16:45:00Z",
+    "completed_at": "2026-05-08T05:40:47+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+    "related": [],
     "depends": [
-      "ATM-2.5-0001",
-      "ATM-2.5-0002"
+      "ATM-3-0001"
     ],
-    "description": "依 multi-agent-compatibility-matrix.md 執行 5 種 AI agent 的 confidence 測試；此卡不再阻塞 alpha0，alpha0 release blocker 僅保留 deterministic profile check。",
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 將 multi-agent alpha gate 降級為 confidence gate；alpha0 release blocker 僅保留 deterministic profile check | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: 開始補齊 self-host-alpha --agent、verify --agents-md 與 multi-agent confidence reports/summary | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:cli pass；npm.cmd run validate:self-hosting-alpha pass；npm.cmd run validate:multi-agent-confidence pass；npm.cmd test/typecheck/lint pass | 變更: upstream commit aa1fcdd 完成 profile-based advisory confidence workflow 與 5 份 report artifacts | 阻塞: none",
     "acceptance": [
-      "5 個 agent confidence report 皆有結果檔；不要求 3/5 全 true 才能釋出 alpha0",
-      "失敗 agent 有 issue link 與修復計畫，並標記是否阻塞 alpha1",
-      "upgrade --propose dry-run confidence 為 advisory，不得作為 alpha0 release blocker"
+      "node tools_node/atomic-framework/atm-cli.js status 可呼叫 upstream",
+      "workbench/registry path 指向本 repo local 區",
+      "不 fork core source",
+      "shadow wrapper 預設 dry-run / report-only，不替換現有 tools_node CLI"
     ],
     "deliverables": [
-      "Claude Code：atm self-host-alpha --agent claude-code 產生 confidence report",
-      "Cursor：manual run 產生 confidence report",
-      "Aider：aider --message AGENTS.md 跑 confidence workflow",
-      "GitHub Copilot Agent：gh copilot agent run 產生 confidence report",
-      "OpenAI Assistants API：node tests/agents/openai-assistant.test.js 產生 confidence report",
-      "tests/agents/results/<agent>-<timestamp>.json 結果記錄",
-      "docs/multi-agent-results.md 公開結果摘要"
-    ]
+      "tools_node/atomic-framework/bootstrap.js",
+      "tools_node/atomic-framework/atm-cli.js",
+      "atm.config.*",
+      "local workbench path 設定"
+    ],
+    "notes": "2026-05-08 | 狀態: done | 驗證: encoding/cross-shard/bootstrap smoke/standard gate pass | 變更: 完成 3KLife ATM config、bootstrap wrapper、atm-cli alias，並收尾 shard trim | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "tools_node/atomic-framework/bootstrap.js",
+        "atm.config.*",
+        "local workbench path 設定"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

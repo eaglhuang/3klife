@@ -202,6 +202,8 @@ ATM 若要達到「下載後放在任意專案根目錄，AI agent 讀 README �
 | Document index / shard | `.atm/index/*.json`、`.atm/shards/*`、resolve / rebuild / validate | `doc-id-registry.js`、`shard-manager.js`、cross-reference index |
 | Artifacts / generated files | `.atm/artifacts/files/*`、artifact manifest、preview summary、cleanup / retention policy | `artifacts/`、turn artifacts、UI QA compare boards、generated reports |
 | Logs / run snapshots | `.atm/logs/snapshots/*`、log query / summarize / redact、run stdout/stderr capture | Cocos project logs、browser/editor logs、terminal output 摘要 |
+
+補充原則：上述 `Task / scope governance` 不能只停在 adapter-first 接線。ATM 自己的 task card system 也必須 dogfood 原子化，因此除 `ATM-3-0006 / 0009 / 0010 / 0012` 的單工具卡外，另補 `ATM-3-0015` 收斂 end-to-end task card atomic map（allocate/reserve/open/lock/write-shard/validate/sync/finalize）。
 | Reports / evidence / handoff | `.atm/reports/*.json`、`.atm/evidence/*.json`、validation evidence、context summary、handoff bundle | `compute-gate` reports、validation_evidence、handoff/context summary tools |
 | Context budget / summarization | `.atm/reports/context-budget/*.json`、`.atm/state/context-summary/*.md`、重量文件/圖片 budget policy、summarize/hard-stop workflow | `check-context-budget.js`、`generate-context-summary.js`、`report-turn-usage.js` |
 | Rule / gate runner | default rule guard、encoding guard、context budget guard、import/scope guard、command capability policy | `compute-gate.js`、encoding checks、import-boundary、UI/H2U rule guards、context budget guard |
@@ -497,6 +499,7 @@ Default Governance Bundle 的其他 reference plugins（完整 task cards、doc 
 | ATM-3-0011 | encoding adapter 化（兩工具） | `tools_node/check-encoding-touched.js` + `check-encoding-integrity.js` |
 | ATM-3-0012 | task-scope / import-boundary 規則包遷移 | `rule-pack.json` + RuleGuard adapter；同時標 `check-task-scope.js` / `check-import-boundaries.js` 為 `@deprecated` |
 | ATM-3-0013 | finalize-agent-turn wrapper 接 run envelope | `tools_node/finalize-agent-turn.js` |
+| ATM-3-0015 | task card system 原子 map 規劃 | `task-card-opener.js` + `task-lock.js` + task shard + `check-task-scope.js` + doc-id sync 的 end-to-end governed flow |
 
 #### ATM-2 演進補強：識別、行為、狀態機（新增 8 卡，alpha1 範圍，chain `ATM-IDENTITY-BEHAVIOR-V1`）
 

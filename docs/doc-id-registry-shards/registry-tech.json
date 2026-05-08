@@ -130,5 +130,11 @@
     "path": "docs/特效研究/vfx-health-report.md",
     "title": "VFX Prefab Health Report",
     "category": "tech"
+  },
+  {
+    "id": "doc_tech_0080",
+    "path": "docs/tech/npc-brain-memory/overview.md",
+    "title": "NPC Brain Memory System — Overview（§1-§3）",
+    "category": "tech"
   }
 ]

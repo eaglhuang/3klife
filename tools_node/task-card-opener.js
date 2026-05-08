@@ -17,6 +17,12 @@ const {
   isTasksAtmIndexPath,
   upsertTaskInTasksAtmStore,
 } = require('./lib/tasks-atm-shard-store');
+const {
+  formatTaskIdInspection,
+  inspectTaskId,
+  previewNextTaskId,
+  reserveNextTaskId,
+} = require('./lib/task-id-guard');
 
 function todayIso() {
   return new Date().toISOString().split('T')[0];
@@ -215,6 +221,28 @@ function inferJsonKind(jsonOutArg) {
     return 'task-aggregate';
   }
   return 'plain-task';
+}
+
+function inferTaskIdPrefix(taskId) {
+  const match = String(taskId || '').trim().match(/^(.*)-\d+$/);
+  return match ? match[1] : '';
+}
+
+function canReuseExistingTaskId(inspection, currentAgentName, mdPath) {
+  const normalizedAgentName = String(currentAgentName || '').trim();
+  const hasTaskCard = inspection.taskCards.length > 0;
+  const hasStoreEntry = inspection.taskStoreCount > 0;
+  const hasForeignLock = inspection.locks.some((entry) => entry.agentName && entry.agentName !== normalizedAgentName);
+  const ownsReservationOnly = inspection.locks.length > 0 && inspection.locks.every((entry) => entry.agentName === normalizedAgentName && entry.reservationOnly);
+  const mdPathMatchesExistingTaskCard = Boolean(mdPath) && fs.existsSync(mdPath) && path.basename(mdPath, '.md') === inspection.taskId;
+
+  if (hasForeignLock) {
+    return false;
+  }
+  if (ownsReservationOnly && !hasTaskCard && !hasStoreEntry) {
+    return true;
+  }
+  return mdPathMatchesExistingTaskCard;
 }
 
 function buildTask(options) {
@@ -536,6 +564,7 @@ function printHelp() {
     '',
     '必要參數（直接模式）：',
     '  --id              任務卡 ID（依名詞定義文件）',
+    '  --next-id-prefix  以 {系統代號}-{子系統} 原子保留下一個可用卡號，例如 ATM-2',
     '  --title           任務標題',
     '',
     '常用選項：',
@@ -552,6 +581,7 @@ function printHelp() {
     '  --acceptance      驗收條件清單',
     '  --deliverables    交付物清單',
     '  --notes           備註 / notes 欄內容',
+    '  --allow-existing-id  允許覆寫 / 更新既有 task id（預設遇到已佔用 id 會直接失敗）',
     '  --doc-id          指定 frontmatter doc_id；通常與 --assign-doc-id 二選一',
     '  --assign-doc-id   write 模式下於 Markdown 寫入後呼叫 doc-id-registry 自動分配 doc_id',
     '  --md-out          Markdown 輸出路徑',
@@ -613,11 +643,18 @@ function main() {
     return;
   }
 
-  const id = getArg(process.argv, 'id') || getArg(process.argv, 'card-id');
+  const explicitId = getArg(process.argv, 'id') || getArg(process.argv, 'card-id');
+  const nextIdPrefix = getArg(process.argv, 'next-id-prefix', '');
+  const allowExistingId = hasFlag(process.argv, 'allow-existing-id');
+  let id = explicitId;
   const title = getArg(process.argv, 'title');
   const docId = getArg(process.argv, 'doc-id', '');
   const assignDocId = hasFlag(process.argv, 'assign-doc-id');
-  if (!id || !title) {
+  if ((explicitId && nextIdPrefix) || (!explicitId && !nextIdPrefix)) {
+    printHelp();
+    process.exit(1);
+  }
+  if (!title) {
     printHelp();
     process.exit(1);
   }
@@ -631,12 +668,27 @@ function main() {
   const mdKind = getArg(process.argv, 'md-kind', inferMdKind(mdOutArg));
   const jsonKind = getArg(process.argv, 'json-kind', inferJsonKind(jsonOutArg));
   const briefStyle = inferBriefStyle({ id }, getArg(process.argv, 'brief-style', ''), mdKind);
+  const owner = getArg(process.argv, 'owner', getDefaultAgentName());
+  const mdPath = mdOutArg ? resolvePath(mdOutArg) : '';
+
+  if (nextIdPrefix) {
+    id = dryRun
+      ? previewNextTaskId(PROJECT_ROOT, nextIdPrefix)
+      : reserveNextTaskId(PROJECT_ROOT, nextIdPrefix, owner).taskId;
+  }
+
+  const inspection = inspectTaskId(PROJECT_ROOT, id);
+  if (inspection.occupied && !allowExistingId && !canReuseExistingTaskId(inspection, owner, mdPath)) {
+    const prefixHint = inferTaskIdPrefix(id) || nextIdPrefix;
+    const suggestion = prefixHint ? ` 改用 --next-id-prefix ${prefixHint} 可原子保留下一個空號。` : '';
+    throw new Error(`task id "${id}" 已被佔用：${formatTaskIdInspection(inspection)}。${suggestion}`.trim());
+  }
 
   const task = buildTask({
     docId,
     id,
     title,
-    owner: getArg(process.argv, 'owner', getDefaultAgentName()),
+    owner,
     priority: getArg(process.argv, 'priority', 'P1'),
     status: getArg(process.argv, 'status', 'open'),
     type: getArg(process.argv, 'type', 'implementation'),

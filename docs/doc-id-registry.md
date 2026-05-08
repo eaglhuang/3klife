@@ -1,6 +1,6 @@
 # 文件代號 Registry (doc-id-registry)
 
-> 生成日期: 2026-05-07
+> 生成日期: 2026-05-08
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成，請勿手動編輯。
 > **唯一真相來源。** 文件移動後 doc_id 不變，Agent 可用 doc_id 搜尋定位文件。
 > `docs/doc-id-registry.json` 現在是 index stub；實際 machine-readable 內容位於 `docs/doc-id-registry-shards/registry-*.json`。
@@ -12,18 +12,18 @@
 
 | 類別 | 前綴 | 數量 |
 |------|------|-----:|
-| 技術類 | `doc_tech` | 22 |
+| 技術類 | `doc_tech` | 23 |
 | 畫面UI類 | `doc_ui` | 55 |
 | 美術非UI類 | `doc_art` | 3 |
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 178 |
 | 索引類 | `doc_index` | 17 |
-| 任務卡類 | `doc_task` | 340 |
+| 任務卡類 | `doc_task` | 351 |
 | AI Agent 專用 | `doc_ai` | 31 |
-| Agent Skill 專用 | `doc_agentskill` | 45 |
+| Agent Skill 專用 | `doc_agentskill` | 46 |
 | Server 文件類 | `doc_server_<subtype>` | 15 |
-| 其它類 | `doc_other` | 74 |
-| **合計** | — | **782** |
+| 其它類 | `doc_other` | 83 |
+| **合計** | — | **804** |
 
 ---
 
@@ -50,6 +50,7 @@
 | `doc_tech_0020` | docs/battle-entry-path-comparison.md | 戰場入口路徑對照與統一架構 |
 | `doc_tech_0015` | docs/demo_技術架構.md | Demo 技術架構 |
 | `doc_tech_0016` | docs/encoding-integrity-playbook.md | 編碼防災 Playbook |
+| `doc_tech_0080` | docs/tech/npc-brain-memory/overview.md | NPC Brain Memory System — Overview（§1-§3） |
 | `doc_tech_0017` | docs/UCUF技術文件.md | UCUF 技術文件 — Universal Composite UI Framework 架構與原理 |
 | `doc_tech_0018` | docs/ui/ui-system-architecture.md | UI 系統技術架構 |
 | `doc_tech_0019` | docs/uipreviewbuilder-split-blueprint.md | `UIPreviewBuilder.ts` 拆分藍圖 |
@@ -354,6 +355,7 @@
 | `doc_task_0298` | docs/agent-briefs/tasks/ATM-0-0012.md | [ATM-0-0012] task-lock cross-shard 重複鎖定檢查 |
 | `doc_task_0314` | docs/agent-briefs/tasks/ATM-0-0013.md | [ATM-0-0013] tasks-atm.json thin index 與細分片 |
 | `doc_task_0315` | docs/agent-briefs/tasks/ATM-0-0014.md | [ATM-0-0014] ATM 瘦身再開工與規劃真相收斂 |
+| `doc_task_0355` | docs/agent-briefs/tasks/ATM-0-0015.md | [ATM-0-0015] Harness Engineering CAR/HarnessCard 規劃回寫 |
 | `doc_task_0251` | docs/agent-briefs/tasks/ATM-1-0001.md | [ATM-1-0001] 上游 repo product charter 與 README |
 | `doc_task_0252` | docs/agent-briefs/tasks/ATM-1-0002.md | [ATM-1-0002] 上游 monorepo package skeleton |
 | `doc_task_0253` | docs/agent-briefs/tasks/ATM-1-0003.md | [ATM-1-0003] Atomic Spec schema v0.1 |
@@ -409,9 +411,18 @@
 | `doc_task_0346` | docs/agent-briefs/tasks/ATM-2-0039.md | [ATM-2-0039] Generated Atom Source Template and Code Path Policy |
 | `doc_task_0347` | docs/agent-briefs/tasks/ATM-2-0040.md | [ATM-2-0040] Backfill Existing Core Atoms Through Atom Generator |
 | `doc_task_0348` | docs/agent-briefs/tasks/ATM-2-0041.md | [ATM-2-0041] Framework-Wide Generator Provenance Audit |
+| `doc_task_0349` | docs/agent-briefs/tasks/ATM-2-0042.md | [ATM-2-0042] Unified Atomic Map Generator — Provisioning Facade & Map ID Policy |
+| `doc_task_0350` | docs/agent-briefs/tasks/ATM-2-0043.md | [ATM-2-0043] Map Source Template & Workbench Policy |
+| `doc_task_0351` | docs/agent-briefs/tasks/ATM-2-0044.md | [ATM-2-0044] Backfill Existing Maps Through Map Generator |
+| `doc_task_0352` | docs/agent-briefs/tasks/ATM-2-0045.md | [ATM-2-0045] Map Generator Provenance Audit |
+| `doc_task_0353` | docs/agent-briefs/tasks/ATM-2-0046.md | [ATM-2-0046] Registry Catalog Map Section Rendering |
+| `doc_task_0354` | docs/agent-briefs/tasks/ATM-2-0047.md | [ATM-2-0047] URN Resolver and RegistryIndex Facade |
+| `doc_task_0358` | docs/agent-briefs/tasks/ATM-2-0048.md | [ATM-2-0048] ATM task-router / onboarding contract |
+| `doc_task_0356` | docs/agent-briefs/tasks/ATM-2-0049.md | [ATM-2-0049] Governance shard strategy parameterization |
 | `doc_task_0303` | docs/agent-briefs/tasks/ATM-2.5-0001.md | [ATM-2.5-0001] Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI |
 | `doc_task_0304` | docs/agent-briefs/tasks/ATM-2.5-0002.md | [ATM-2.5-0002] Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate |
 | `doc_task_0305` | docs/agent-briefs/tasks/ATM-2.5-0003.md | [ATM-2.5-0003] Multi-Agent 兼容性驗證：confidence gate |
+| `doc_task_0359` | docs/agent-briefs/tasks/ATM-2.5-0004.md | [ATM-2.5-0004] Alpha1 evolution sandbox fixture |
 | `doc_task_0264` | docs/agent-briefs/tasks/ATM-3-0001.md | [ATM-3-0001] 3KLife ProjectAdapter wrapper |
 | `doc_task_0265` | docs/agent-briefs/tasks/ATM-3-0002.md | [ATM-3-0002] 3KLife ATM config 與 bootstrap wrapper |
 | `doc_task_0266` | docs/agent-briefs/tasks/ATM-3-0003.md | [ATM-3-0003] compute-gate ATM profile adapter integration |
@@ -426,6 +437,7 @@
 | `doc_task_0312` | docs/agent-briefs/tasks/ATM-3-0012.md | [ATM-3-0012] task-scope / import-boundary 規則包遷移 + @deprecated 標記 |
 | `doc_task_0313` | docs/agent-briefs/tasks/ATM-3-0013.md | [ATM-3-0013] finalize-agent-turn.js wrapper 接入 ATM run envelope |
 | `doc_task_0326` | docs/agent-briefs/tasks/ATM-3-0014.md | [ATM-3-0014] 3KLife UsageEvidence shadow adapter |
+| `doc_task_0357` | docs/agent-briefs/tasks/ATM-3-0015.md | [ATM-3-0015] Task card system atomic map planning |
 | `doc_task_0269` | docs/agent-briefs/tasks/ATM-4-0001.md | [ATM-4-0001] html-to-ucuf reference case study plan |
 | `doc_task_0270` | docs/agent-briefs/tasks/ATM-4-0002.md | [ATM-4-0002] H2U legacy baseline 與 regression matrix |
 | `doc_task_0279` | docs/agent-briefs/tasks/ATM-4-0003.md | [ATM-4-0003] normalizeCssColor 首個 case atom |
@@ -733,6 +745,7 @@
 | `doc_agentskill_0043` | .agents/skills/sanguo-knowledge-growth-loop/SKILL.md | Sanguo Knowledge Growth Loop |
 | `doc_agentskill_0038` | .agents/skills/sanguo-rag-resolution-loop/SKILL.md | Sanguo RAG Resolution Loop |
 | `doc_agentskill_0063` | .agents/skills/task-card-opener/SKILL.md | Task Card Opener |
+| `doc_agentskill_0065` | .agents/skills/task-card-required-adjustment/SKILL.md | 任務卡的必要調整 |
 | `doc_agentskill_0064` | .agents/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline |
 | `doc_agentskill_0009` | .github/skills/cocos-bug-triage/SKILL.md | Cocos Bug Triage（鏡像索引） |
 | `doc_agentskill_0010` | .github/skills/cocos-log-reader/SKILL.md | Cocos Log Reader（鏡像索引） |
@@ -793,6 +806,8 @@
 | `doc_other_0002` | docs/決策-Mobile-Offline-2026-04-23.md | 決策：Mobile-first Offline Support（2026-04-23） |
 | `doc_other_0027` | docs/學習文件/harness_engineering_analysis.md | Harness Engineering 深度分析與 3KLife 專案對照 |
 | `doc_other_0023` | docs/學習文件/HarnessEngineering.md | Harness Engineering 中文學習版與 3KProject 參考手冊 |
+| `doc_other_0083` | docs/學習文件/preprints202603.1756.md | preprints202603.1756 |
+| `doc_other_0084` | docs/學習文件/The Anatomy of an Agent Harness.md | Key Takeaways |
 | `doc_other_0038` | docs/agent-identity-map.md | Agent Identity Map |
 | `doc_other_0032` | docs/ai_atomic_framework/3klife-coexistence-plan.md | 3KLife × ATM 並行開發協議（Coexistence Plan） |
 | `doc_other_0033` | docs/ai_atomic_framework/3klife-consumption-roadmap.md | 3KLife 長期消費 ATM 路線圖（Consumption Roadmap） |
@@ -828,6 +843,8 @@
 | `doc_other_0067` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-evolution.md | 關於進化版的原子提案 — 版號、框架版本與回饋迴圈 |
 | `doc_other_0068` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-thesis.md | 關於進化版的原子提案 — 命題與防護模型 |
 | `doc_other_0069` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-validation.md | 關於進化版的原子提案 — 驗證來源 |
+| `doc_other_0082` | docs/ai_atomic_framework/h2u-regression-matrix.md | H2U Regression Matrix |
+| `doc_other_0081` | docs/ai_atomic_framework/html-to-ucuf-case-study.md | html-to-ucuf Reference Case Study |
 | `doc_other_0034` | docs/ai_atomic_framework/multi-agent-compatibility-matrix.md | Multi-AI Agent 兼容性測試矩陣 |
 | `doc_other_0030` | docs/ai_atomic_framework/open-source-extraction-plan.md | AI Atomic Framework 開源拆出計畫 |
 | `doc_other_0070` | docs/ai_atomic_framework/optimized-roadmap-v02-shards/optimized-roadmap-ecosystem.md | AI Atomic Framework Optimized Roadmap v0.2 — 生態、風險、結構（§5–§7） |
@@ -858,8 +875,13 @@
 | `doc_other_0025` | docs/inside-openai-agent-collaboration-study-notes.md | Inside OpenAI's AI Agent Collaboration System 學習筆記 |
 | `doc_other_0018` | docs/sanguo-rag-abab-progress-workflow-plan.md | Sanguo RAG ABAB…C 整體進度推進規劃書 |
 | `doc_other_0013` | docs/sanguo-rag-phase4b-phase5-execution-plan.md | Sanguo RAG Phase 4b / Phase 5 Execution Plan |
+| `doc_other_0079` | docs/tech/參考用npc-dialogue-narrative-runtime-plan.md | 3KLife 人物對話與劇情 Runtime 技術規劃 |
+| `doc_other_0085` | docs/tech/npc-brain-武將互動記憶系統.md | NPC Brain Memory System |
+| `doc_other_0086` | docs/tech/npc-brain-memory/api-contract.md | NPC Brain Memory System — API & Contract（§6-§8） |
+| `doc_other_0087` | docs/tech/npc-brain-memory/data-model.md | NPC Brain Memory System — Data Model（§4-§5） |
+| `doc_other_0088` | docs/tech/npc-brain-memory/ops.md | NPC Brain Memory System — Ops & Milestones（§9-§12） |
 | `doc_other_0014` | docs/UCUF-developer-guide.md | UCUF 開發者指南 |
 | `doc_other_0015` | docs/UCUF-migration-completion-2026-04-13.md | UCUF Migration Active Checklist (2026-04-13) |
 | `doc_other_0022` | docs/UCUF已驗收功能.md | UCUF 已驗收功能索引 |
 | `doc_other_0019` | docs/ui-screen-migration-coverage.md | UI Screen Migration Coverage |
-| `doc_other_0082` | docs/ai_atomic_framework/h2u-regression-matrix.md | H2U Regression Matrix |
+| `doc_other_0080` | docs/windows-wsl-cli-routing.md | Windows / WSL CLI Routing Rules |

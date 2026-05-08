@@ -14,108 +14,63 @@
     ]
   },
   {
-    "doc_id": "doc_task_0337",
-    "id": "ATM-2-0031",
-    "title": "Lifecycle Police（TTL + Sweep + 狀態機警察）",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0345",
+    "id": "ATM-2-0038",
+    "title": "Unified Atom Generator and ID Allocation Service",
+    "owner": "vs-code-gpt-5.4-mini",
     "priority": "P0",
-    "status": "open",
-    "type": "police",
+    "status": "done",
+    "type": "manager",
     "phase": "ATM-2",
     "created": "2026-05-07",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
-    "chain_step": "6/8",
-    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
-    "description": "提供生命週期警察：(1) scheduled scan 發現 TTL 已到的 atom，建議 expire；(2) zero-caller scan 發現無 caller 的 atom，建議 sweep；(3) 偵測非法 status transition（違反 ATM-2-0027 矩陣），quarantine 該 atom；(4) 通知 callers 進行遷移。",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T14:53:07.2487735+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "completed_at": "2026-05-07T15:05:04.3290914+08:00",
+    "chain_id": "ATM-ATOM-PROVISIONING-V1",
+    "chain_step": "1/1",
+    "sensor_triggered_by": "atm-atom-provisioning-gap",
+    "description": "補上 ATM 缺失的 atom provisioning layer：提供單一入口去分配 canonical atomId、套用 bucket/流水號規則、收斂共用預設，並委派既有 scaffold/registry/catalog primitive，避免 Atom 建立流程與規格散落在多個入口。原子產生器本身不得只是散落在 host 端的一支裸工具；它必須以單一 atom 或多個 atom 組成的 atom map 形式落地，CLI create/generate 只作 façade。",
     "related": [],
     "depends": [
-      "ATM-2-0026",
-      "ATM-2-0027",
-      "ATM-2-0029"
+      "ATM-2-0002",
+      "ATM-2-0004",
+      "ATM-2-0013",
+      "ATM-2-0037"
     ],
-    "acceptance": [
-      "packages/plugin-police-lifecycle/ 落地 lifecycle police",
-      "scheduled scan 報告 TTL 已到 / zero-caller / 非法 transition 三類 finding",
-      "TTL 過期 atom 建議 behavior.expire；zero-caller atom 建議 behavior.sweep",
-      "偵測到非法 transition 時將該 atom 標記 quarantined（唯一可寫此狀態的角色）",
-      "caller migration 通知 contract：lifecycle-notice.schema.json",
-      "fixtures：3 類 finding 各 1 份 + 1 份 quarantine 行為 + 1 份 caller-notice"
-    ],
-    "deliverables": [
-      "packages/plugin-police-lifecycle/",
-      "packages/plugin-police-lifecycle/src/ttl-scanner.ts",
-      "packages/plugin-police-lifecycle/src/zero-caller-scanner.ts",
-      "packages/plugin-police-lifecycle/src/transition-checker.ts",
-      "schemas/police/lifecycle-finding.schema.json",
-      "schemas/police/lifecycle-notice.schema.json",
-      "fixtures/lifecycle-police/*"
-    ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 6/8）| 阻塞: 等依賴卡完成",
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief；2026-05-07 ClaudeCode_sonnet-4-6 補強完整設計規格 | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始實作 Atom Generator / ID allocator / CLI create 與 dogfood self-host 驗證 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node tests/core/id-allocator.test.mjs / node tests/core/atom-generator.test.mjs / node tests/cli/create.test.mjs / npm.cmd run validate:cli / npm.cmd run validate:registry-core / npm.cmd run validate:registry-catalog / npm.cmd test / cmd /c npm run typecheck / npm.cmd run lint pass | 變更: 完成 AtomGenerator façade、集中 ID allocator、atm create、atm test --spec、ATM-CORE-0004 self atom、ATM-FIXTURE-0001 dogfood atom，並開 ATM-2-0039~0041 追蹤全框架 generator provenance 回填 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 識別/行為/狀態機提案開卡",
-      "summary": "生命週期警察：TTL + zero-caller + 狀態機合規檢查；唯一可寫 quarantined 狀態的角色。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0026 / ATM-2-0027 / ATM-2-0029"
-    }
-  },
-  {
-    "doc_id": "doc_task_0278",
-    "id": "ATM-6-0003",
-    "title": "多語言 Adapter 擴張計畫",
-    "owner": "GitHubCopilot",
-    "priority": "P2",
-    "status": "open",
-    "type": "ecosystem",
-    "phase": "ATM-6",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
-    "related": [],
-    "depends": [
-      "ATM-2-0006",
-      "ATM-1-0006"
-    ],
-    "acceptance": [
-      "每個 language adapter 有 test/build/import scan contract",
-      "不要求 core 重寫",
-      "Cocos/Unity 引擎物件不進 compute atom"
-    ],
-    "deliverables": [
-      "docs/ecosystem/language-adapter-roadmap.md",
-      "adapter acceptance matrix"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
-      "position": "ATM-6",
-      "prereq": "ATM-2-0006、ATM-1-0006"
+      "label": "ATM 原子產生器開卡",
+      "summary": "建立單一 Atom Generator / ID Allocation Service，讓新 Atom 的 ID 配發、模板預設、workbench/scaffold/registry 串接走同一入口。",
+      "position": "ATM-2（provisioning architecture / single entrypoint）",
+      "prereq": "ATM-2-0002 / ATM-2-0004 / ATM-2-0013 / ATM-2-0037"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "現行 CLI 僅有 bootstrap/init/spec/status/test/validate/verify，沒有 create/generate atom 正式入口",
+        "現行 Scaffold Builder 假設 caller 已帶入 atomId 與 normalized spec，不負責 ID 配發",
+        "Registry/Atom Space 已定義 canonical atomId/workbench 規則，但沒有單一 provisioning service 收編這些規格",
+        "若新增 Atom Generator，該能力本身也必須被 atomize：不是 host 專屬一次性 script，而是可被 registry / evidence / test runner 管理的 atom 或 atom map"
       ],
       "output": [
-        "docs/ecosystem/language-adapter-roadmap.md",
-        "adapter acceptance matrix"
+        "新增統一 Atom Generator / Provisioning Service，成為建立新 Atom 的唯一正式入口",
+        "ID 配發必須集中在單一 allocator/service，依 bucket 規則產生 ATM-{SUBSYSTEM}-{NNNN}，不得再由各腳本各自硬編",
+        "generator 必須委派既有 scaffold/registry/catalog primitive，而不是複製第二套實作",
+        "Atom Generator / Provisioning Service 本身必須是單一 atom 或多個 atom 組成的 atom map；CLI create/generate 只能是呼叫它的 host façade，不得另維護第二套核心邏輯",
+        "CLI 補正式 create/generate atom 指令，至少能收 title/logicalName/subsystem/bucket/description/language template 並回傳 atomId 與輸出路徑",
+        "補 ID reservation / sequence policy 與 deterministic fixture，避免多人或多次 rerun 時重複領號",
+        "文件與 roadmap 必須補上 provisioning layer，明確說明它位於 spec parser / scaffold builder / registry 之上"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "validation_cmd": "npm run validate:cli\\nnpm run validate:scaffold-builder\\nnpm run validate:registry-core\\nnpm test\\nnpm run typecheck\\nnpm run lint",
+      "rollback_hint": "若新的 generator 入口未完成，先保留既有 scaffold primitive 與 registry primitive，不把半成品 create command 暴露為正式入口；已分配的號碼需有 reservation/rollback policy，不能直接靜默回收。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
+        "盤點現有 create-new-atom 所需的共享能力與散落入口",
+        "定義 atom provisioning domain：ID allocator、bucket policy、template preset、scaffold/registry orchestration，以及它本身要如何 atomize 成單一 atom 或 atom map",
+        "落地 CLI create/generate atom 命令與 deterministic fixture，並讓 CLI 僅作 façade",
+        "補 roadmap / architecture doc，說明 provisioning layer 與既有 primitive 的關係"
       ]
     },
     "harness_evidence": {

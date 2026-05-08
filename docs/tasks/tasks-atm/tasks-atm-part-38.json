@@ -1,8 +1,8 @@
 [
   {
-    "doc_id": "doc_task_0291",
-    "id": "ATM-2-0009",
-    "title": "Artifact Log Evidence Store contracts",
+    "doc_id": "doc_task_0294",
+    "id": "ATM-2-0010",
+    "title": "Neutrality boundary rule guard",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
@@ -15,65 +15,55 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "定義 ATM 通用 ArtifactStore、LogStore、Markdown/JSON state store、RunReportStore、ContextSummary 與 EvidenceStore contract，讓 AI 常用 artifacts、md/json 文件與系統 log 都能被治理與回放。",
-    "related": [],
+    "description": "建立 upstream neutral/boundary rule guard，先以 deterministic 掃描檢查寫死 host 假設，再以 optional semantic audit 補抓隱性耦合與 stale docs。",
+    "related": [
+      "ATM-1-0008",
+      "ATM-1-0009",
+      "ATM-1-0010"
+    ],
     "depends": [
-      "ATM-2-0007"
+      "ATM-2-0007",
+      "ATM-2-0008"
     ],
     "acceptance": [
-      "ArtifactStore/LogStore/RunReportStore schema 不引用 3KLife 路徑",
-      "default .atm layout 可保存 artifacts、logs、reports、context summaries",
-      "3KLife adapter 可映射 artifacts/、docs/*.md、docs/*.json、project logs 到同一 interface",
-      "Markdown/JSON state files 可被 validate、index、summarize 並映射到 host repo",
-      "schemas/governance/artifact.schema.json 可描述 generated output",
-      "schemas/governance/evidence.schema.json 可描述 validation evidence",
-      "schemas/governance/context-summary.schema.json 可描述 handoff/context budget 摘要",
-      "schemas/governance/adapter-report.schema.json 可描述 3KLife shadow/parity report",
-      "evidence schema 增 evidenceType: usage-feedback / quality-baseline / quality-comparison / rollback-proof 四種",
-      "所有 evidence 需可被 atm replay 重新驗證（schema 內含 reproducibility 欄位）"
+      "guard 可掃 source/docs/examples/templates/prompt assets",
+      "deterministic 規則可攔截 3KLife/Cocos/html-to-ucuf/task-lock/compute-gate/doc-id 等 protected terms",
+      "semantic audit 只作 warn/needs-review，不單獨決定 hard fail",
+      "guard 區分 code dead-code 與 doc dead-doc，不把 LLM 當唯一裁決",
+      "deterministic / semantic 掃描必須同時涵蓋 .atm/reports/upgrade-proposals/* 與 evidence-store payload",
+      "adopter 私有資訊（3KLife / Cocos / UCUF / html-to-ucuf）出現在 upgrade-proposal 或 evidence 內容時 hard fail"
     ],
     "deliverables": [
-      "schemas/governance/artifact-store.schema.json",
-      "schemas/governance/log-store.schema.json",
-      "schemas/governance/run-report.schema.json",
-      "packages/plugin-artifacts 或 plugin-evidence",
-      "docs/ADAPTER_GUIDE.md artifact/log mapping 草案",
-      "packages/plugin-state-files",
-      "schemas/governance/state-file-store.schema.json",
-      "schemas/governance/artifact.schema.json",
-      "schemas/governance/evidence.schema.json",
-      "schemas/governance/context-summary.schema.json",
-      "schemas/governance/adapter-report.schema.json",
-      "schemas/governance/evidence/usage-feedback.schema.json",
-      "schemas/governance/evidence/quality-baseline.schema.json",
-      "schemas/governance/evidence/quality-comparison.schema.json",
-      "schemas/governance/evidence/rollback-proof.schema.json"
+      "neutrality/boundary guard spec",
+      "protected-surface 與 banned-term config",
+      "semantic review report schema",
+      "standalone smoke fixture"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 Artifact/Evidence、ContextSummary、AdapterReport schema-first 要求 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 neutrality/boundary rule guard 任務 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM governance split 開卡",
-      "summary": "把 AI 常用 artifacts、md/json 狀態檔與系統 log 納入 ATM 通用治理 contract。",
+      "label": "ATM self-hosting first 開卡",
+      "summary": "建立可自動驗證的 neutrality/boundary guard，避免 upstream 再被 adopter 私有假設污染。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0007"
+      "prereq": "ATM-2-0007、ATM-2-0008"
     },
     "contracts": {
       "input": [
-        "Default Governance Bundle schema 已規劃",
-        "AI agent 需要可回放 artifacts/logs/evidence"
+        "governance schema 與 local reference plugins 已定義",
+        "guard 需同時涵蓋 code 與 docs surfaces"
       ],
       "output": [
-        "ArtifactStore/LogStore/RunReportStore schema",
-        "default .atm artifact/log layout",
-        "3KLife mapping guidance"
+        "deterministic neutrality scan",
+        "optional semantic audit",
+        "protected surface policy 與 CI smoke"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退 artifact/log/evidence schema 與 reference plugin；不得引入 3KLife 私有路徑。",
+      "rollback_hint": "回退 guard 規格或 reference implementation；不得把 3KLife 私有路徑寫回 upstream protected surfaces。",
       "execution_steps": [
-        "盤點 artifacts/log/md/json 類型",
-        "定義 store schema",
-        "補 default layout",
-        "補 adapter mapping 指南"
+        "定義 protected surfaces",
+        "定義 banned terms 與 deterministic rules",
+        "補 semantic review report schema",
+        "建立 smoke fixture"
       ]
     },
     "harness_evidence": {
@@ -85,15 +75,15 @@
     }
   },
   {
-    "id": "ATM-3-0008",
-    "title": "doc-id-registry.js adapter 化：接入 ATM DocumentIndexAdapter",
+    "id": "ATM-3-0010",
+    "title": "task-card-opener.js adapter 化：接入 ATM TaskAdapter",
     "status": "open",
     "priority": "P1",
     "phase": "ATM-3",
     "type": "implementation",
     "created": "2026-05-05",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0308",
+    "doc_id": "doc_task_0310",
     "depends": [
       "ATM-3-0006"
     ]

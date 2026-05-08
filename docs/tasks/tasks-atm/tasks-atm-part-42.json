@@ -1,98 +1,93 @@
 [
   {
-    "doc_id": "doc_task_0316",
-    "id": "ATM-2-0013",
-    "title": "Per-atom folder 以 Atomic ID 命名收斂",
-    "owner": "vs-code-gpt-5.4-mini",
+    "doc_id": "doc_task_0317",
+    "id": "ATM-2-0014",
+    "title": "Registry Version History v0.1（schema-additive only）",
+    "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "workspace-layout",
+    "type": "registry",
     "phase": "ATM-2",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T22:33:29.1762135+08:00",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T22:43:17.2332444+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將同一個 atom 空間收斂到以 Atomic ID 為名稱的 canonical folder，避免 spec、code、fixture、report、registry proof 分散。",
-    "related": [
-      "ATM-2-0012",
-      "ATM-2.5-0001"
-    ],
+    "started_at": "2026-05-07T16:08:50.7949141+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "completed_at": "2026-05-07T16:31:21.2911795+08:00",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "1/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "為 atomic-registry 增加 currentVersion 與 versions[] 欄位，採 schema-additive 升級；既有 registry fixture 必須維持全綠。",
+    "related": [],
     "depends": [
-      "ATM-2-0004"
+      "ATM-2-0004",
+      "ATM-2-0013"
     ],
     "acceptance": [
-      "每個 atom 有 canonical folder，資料夾名稱必須等於 Atomic ID",
-      "scaffold/test-runner/registry/workbench 路徑規則對齊 canonical Atomic ID folder",
-      "新增 atom 不可再先散放檔案後回收；neutralityScanner 等後續 atom 直接落在 canonical folder",
-      "既有 atom 至少有 migration policy 與相容路徑策略"
+      "registry entry 可選擇性帶 currentVersion 與 versions[] 陣列；versions[] 元素含 specHash/codeHash/testHash/timestamp",
+      "舊 registry fixture（不含 versions[]）validate 必須維持全綠",
+      "新增 schema 驗證 fixture：v1.0 entry、v1.0+v1.1 multi-version entry、缺欄位 negative case",
+      "CHANGELOG / migration note 標記 schema 升版且 backwards compatible"
     ],
     "deliverables": [
-      "canonical per-atom folder layout contract",
-      "Atomic ID naming rule",
-      "scaffold/workbench/report path normalization plan",
-      "migration notes for existing scattered atoms"
+      "packages/core/src/registry/registry-v1.schema.json — 新增 currentVersion / versions[]",
+      "packages/core/src/registry/registry-migration.ts — 舊→新 in-memory upcast",
+      "fixtures/registry/v1-with-versions.json",
+      "fixtures/registry/legacy-no-versions.json"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: node scripts/validate-scaffold-builder.mjs --mode validate / node scripts/validate-test-runner.mjs --mode validate / node scripts/validate-registry-core.mjs --mode validate / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 299be5e 新增 packages/core/src/manager/atom-space.mjs 作為 canonical atom-space single source of truth，讓 scaffold/test-runner/registry 預設路徑統一收斂到 atomic_workbench/atoms/<Atomic ID>/，資料夾名稱直接使用 Atomic ID，不再維護 sanitized alias folder；同步補 docs/ATOM_SPACE_LAYOUT.md contract 與 staged migration policy；並已回寫 docs/ai_atomic_framework/* 計畫文件與 ATM_cross_reference / doc-id 索引，使 canonical 家目錄規則成為文件層單一真相；ATM-2-0012 與 ATM-2.5-0001 也已正式 depends on 本卡 | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: done | 驗證: npm.cmd test, node --input-type=module import(index.ts), git commit 604753e | 變更: upstream 已完成 Registry Version History v0.1 起始骨架，包含 currentVersion / versions[] schema、in-memory upcast helper、legacy + versioned fixtures 與 changelog note | 阻塞: none\n2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— registryEntry 追加 optional `semanticFingerprint`、`lineageLogRef`、`ttl`、`governance.tier`；hot entry 欄位數 ≤ 10\n2026-05-07 ATM-2-0042 連鎖影響（notes 追加，不重啟驗收）：versions[] schema 須同時適用 atom 與 map registry entry；map version entry 含 mapHash 與 memberSnapshot",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心插單",
-      "summary": "將同一個 atom 空間收斂到以 Atomic ID 命名的 canonical folder，提早建立 per-atom layout 規則，避免後續 spec/code/test/report/registry proof 繼續零散擴張。",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "Registry 增加版本歷史欄位（schema-additive），為 alpha1 演化管線鋪路。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0004 已完成，後續新 atom 產線尚未全面擴張"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-2-0004 已完成 registry/hash-lock 基礎",
-        "目前 per-atom report 已有 atomic_workbench/atoms/<Atomic ID>/ 方向，但 spec/code/fixture/registry proof 尚未完全收斂到同一空間"
-      ],
-      "output": [
-        "canonical per-atom folder layout contract",
-        "Atomic ID 直接作為 folder 名稱的命名規則",
-        "scaffold/test-runner/registry/workbench 對齊計畫或實作",
-        "既有散落 atom 配件的 migration policy"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡 touched files；若上游已開始做 path migration，優先回退 folder contract 與 path normalization，不留下半套 alias 規則。",
-      "execution_steps": [
-        "定義 canonical per-atom folder layout 與 Atomic ID naming rule",
-        "盤點 scaffold/test-runner/registry/workbench 現況路徑",
-        "實作或至少定稿 path normalization strategy",
-        "補 fixture 或 migration guidance，避免後續 atom 再散落"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [
-        "AI-Atomic-Framework upstream commit 299be5e",
-        "node scripts/validate-scaffold-builder.mjs --mode validate",
-        "node scripts/validate-test-runner.mjs --mode validate",
-        "node scripts/validate-registry-core.mjs --mode validate",
-        "npm run validate:cli",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
+      "prereq": "ATM-2-0004 / ATM-2-0013"
     }
   },
   {
-    "id": "ATM-3-0012",
-    "title": "task-scope / import-boundary 規則包遷移 + @deprecated 標記",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
+    "doc_id": "doc_task_0326",
+    "id": "ATM-3-0014",
+    "title": "3KLife UsageEvidence shadow adapter",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0312",
+    "priority": "P0",
+    "status": "open",
+    "type": "adapter",
+    "phase": "ATM-3",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "10/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "只讀 3KLife 的 artifacts / compute-gate report / logs，產出 usage-feedback evidence；不修改任何既有 CLI / 工具。",
+    "related": [],
     "depends": [
-      "ATM-3-0006"
-    ]
+      "ATM-3-0001",
+      "ATM-2-0009",
+      "ATM-2-0016"
+    ],
+    "acceptance": [
+      "adapter 僅讀，不寫；任何 file mutation 視為違規",
+      "輸出 evidence 必須通過 ATM-2-0009 的 usage-feedback schema",
+      "3KLife 既有 CLI / compute-gate / 工具行為完全不變（shadow / parity）",
+      "neutrality scanner 對輸出 evidence payload 跑 dry-run，不得帶入 adopter 私有 token",
+      "usage-feedback evidence 中加入 callerCount（該 atom 在 host 端被呼叫的次數），作為 ATM-2-0031 lifecycle police sweep 判斷的輸入（zero-caller 才建議 sweep）",
+      "usage tracking 需記錄 sub-function（export symbol）粒度，不只是 atomId 粒度——供 Demand Police 判斷是否觸發 split",
+      "定義 mapping-table.json：來源欄位 → upstream usage-feedback 欄位必須固定映射；host-only 欄位一律落 extras.adopterPrivate{}，不得出現在 payload 主體",
+      "實作 --strict 與 --lenient；來源格式漂移時，--lenient 必須降級為 evidenceType=usage-feedback-skipped 並寫 skipReason",
+      "補一個 compute-gate report 缺欄位 negative fixture，驗證 --strict hard fail 與 --lenient fallback 差異"
+    ],
+    "deliverables": [
+      "tools_node/atm-adapter/usage-evidence-shadow.js",
+      "fixtures/adapter/3klife-usage-evidence.snapshot.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— 將「呼叫次數」回填為 atom caller-count（給 lifecycle police 的 sweep 用）\n2026-05-07 ATM-2-0042 連鎖影響（notes）：map evidence artifacts 存在 canonical atomic_workbench/maps/ 路徑，adapter 須同時掃描 maps/ 和 atoms/ 目錄\n2026-05-07 附錄 C 治理補丁：追加 mapping-table / strict-vs-lenient / format-drift fallback，避免 host 私有欄位污染 upstream evidence schema",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "alpha1 期間第一個 evolution-evidence 來源；以最小侵入方式餵養 evolution 管線。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001 / ATM-2-0009 / ATM-2-0016"
+    }
   }
 ]

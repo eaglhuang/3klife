@@ -1,89 +1,109 @@
 [
   {
-    "doc_id": "doc_task_0318",
-    "id": "ATM-2-0015",
-    "title": "Hash Drift / Version Diff Report",
+    "doc_id": "doc_task_0319",
+    "id": "ATM-2-0016",
+    "title": "Test Report Quality Metrics Extension",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "registry",
+    "type": "test-runner",
     "phase": "ATM-2",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
     "started_by_agent": "",
     "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "2/11",
+    "chain_step": "3/11",
     "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "產出機器可讀的 hash-diff-report，比對任兩個 atom version 的 spec/code/test hash 差異與 drift reason。",
+    "description": "在 test-report.schema.json 上 additive 擴充 quality metrics（latency / errorRate / coverage / edgeCaseCount），並提供最小共同欄位的 baseline fixture。",
     "related": [],
     "depends": [
-      "ATM-2-0014"
+      "ATM-2-0003",
+      "ATM-2-0009"
     ],
     "acceptance": [
-      "hash-diff-report.schema.json 定義 fromVersion / toVersion / specHashDelta / codeHashDelta / testHashDelta / driftReason",
-      "CLI atm registry diff <atomId> --from <v1> --to <v2> --json 輸出符合 schema 的報告",
-      "fixtures：identical hash（empty delta）/ all-three-changed / driftReason missing 三種"
+      "test-report.schema.json 增加 metrics 區塊；舊 report 不含 metrics 仍可驗證通過",
+      "至少提供 latency / errorRate / coverage / edgeCaseCount 四項標準欄位",
+      "fixtures：metrics-full / metrics-partial / metrics-absent 三種；舊 fixture 全綠"
     ],
     "deliverables": [
-      "schemas/registry/hash-diff-report.schema.json",
-      "packages/core/src/registry/diff.ts",
-      "packages/cli/commands/registry-diff.ts"
+      "schemas/test-report/metrics.schema.json",
+      "packages/core/src/test-runner/metrics-collector.ts",
+      "fixtures/test-report/metrics-full.json",
+      "fixtures/test-report/metrics-absent.json"
     ],
     "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 開卡",
-      "summary": "提供 atom 版本間 hash 差異報告，作為 upgrade proposal 與 rollback proof 的基礎輸入。",
+      "summary": "為 evolution mode 收集可比較的品質指標；alpha1 quality gate 的資料來源。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0014"
+      "prereq": "ATM-2-0003 / ATM-2-0009"
     }
   },
   {
-    "doc_id": "doc_task_0326",
-    "id": "ATM-3-0014",
-    "title": "3KLife UsageEvidence shadow adapter",
+    "doc_id": "doc_task_0270",
+    "id": "ATM-4-0002",
+    "title": "H2U legacy baseline 與 regression matrix",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "adapter",
-    "phase": "ATM-3",
-    "created": "2026-05-06",
+    "type": "case-study",
+    "phase": "ATM-4",
+    "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
     "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "10/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "只讀 3KLife 的 artifacts / compute-gate report / logs，產出 usage-feedback evidence；不修改任何既有 CLI / 工具。",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "凍結 H2U baseline，建立 regression matrix 與 known gap plugin 輸入格式。",
     "related": [],
     "depends": [
-      "ATM-3-0001",
-      "ATM-2-0009",
-      "ATM-2-0016"
+      "ATM-4-0001"
     ],
     "acceptance": [
-      "adapter 僅讀，不寫；任何 file mutation 視為違規",
-      "輸出 evidence 必須通過 ATM-2-0009 的 usage-feedback schema",
-      "3KLife 既有 CLI / compute-gate / 工具行為完全不變（shadow / parity）",
-      "neutrality scanner 對輸出 evidence payload 跑 dry-run，不得帶入 adopter 私有 token",
-      "usage-feedback evidence 中加入 callerCount（該 atom 在 host 端被呼叫的次數），作為 ATM-2-0031 lifecycle police sweep 判斷的輸入（zero-caller 才建議 sweep）",
-      "usage tracking 需記錄 sub-function（export symbol）粒度，不只是 atomId 粒度——供 Demand Police 判斷是否觸發 split",
-      "定義 mapping-table.json：來源欄位 → upstream usage-feedback 欄位必須固定映射；host-only 欄位一律落 extras.adopterPrivate{}，不得出現在 payload 主體",
-      "實作 --strict 與 --lenient；來源格式漂移時，--lenient 必須降級為 evidenceType=usage-feedback-skipped 並寫 skipReason",
-      "補一個 compute-gate report 缺欄位 negative fixture，驗證 --strict hard fail 與 --lenient fallback 差異"
+      "active-contract/fidelity-contract baseline 可重現",
+      "known gap 不作為永久白名單",
+      "變更前後可比較 score delta"
     ],
     "deliverables": [
-      "tools_node/atm-adapter/usage-evidence-shadow.js",
-      "fixtures/adapter/3klife-usage-evidence.snapshot.json"
+      "tools_node/atomic-framework/fixtures/legacy-baseline",
+      "docs/ai_atomic_framework/h2u-regression-matrix.md",
+      "baseline summary artifact"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— 將「呼叫次數」回填為 atom caller-count（給 lifecycle police 的 sweep 用）\n2026-05-07 ATM-2-0042 連鎖影響（notes）：map evidence artifacts 存在 canonical atomic_workbench/maps/ 路徑，adapter 須同時掃描 maps/ 和 atoms/ 目錄\n2026-05-07 附錄 C 治理補丁：追加 mapping-table / strict-vs-lenient / format-drift fallback，避免 host 私有欄位污染 upstream evidence schema",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "alpha1 期間第一個 evolution-evidence 來源；以最小侵入方式餵養 evolution 管線。",
-      "position": "ATM-3",
-      "prereq": "ATM-3-0001 / ATM-2-0009 / ATM-2-0016"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "凍結 H2U baseline，建立 regression matrix 與 known gap plugin 輸入格式。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0001"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "tools_node/atomic-framework/fixtures/legacy-baseline",
+        "docs/ai_atomic_framework/h2u-regression-matrix.md",
+        "baseline summary artifact"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
     }
   }
 ]

@@ -1,57 +1,64 @@
 [
   {
-    "doc_id": "doc_task_0322",
-    "id": "ATM-2-0019",
-    "title": "ExecuteAgentTask effect node dry-run（000004）",
+    "doc_id": "doc_task_0323",
+    "id": "ATM-2-0020",
+    "title": "ProposeAtomicUpgrade（000012）",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "bootstrap-atom",
+    "type": "orchestration-atom",
     "phase": "ATM-2",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-07T23:28:13.9062315+08:00",
+    "started_at": "2026-05-08T00:30:00.2262013+08:00",
     "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-07T23:28:13.9062315+08:00",
+    "completed_at": "2026-05-08T00:30:00.2262013+08:00",
     "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "6/11",
+    "chain_step": "7/11",
     "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "effect node 形式呼叫 AI agent 執行 prompt，預設 dry-run 只 capture artifact/log，不直接 apply patch；alpha0+ 補洞。",
+    "description": "串接 hash-diff / metrics / regression-compare 結果，產出 upgrade-proposal.json，並提供 atm upgrade --propose --dry-run CLI。",
     "related": [],
     "depends": [
-      "ATM-2-0018",
-      "ATM-2-0006"
+      "ATM-2-0015",
+      "ATM-2-0016",
+      "ATM-2-0017"
     ],
     "acceptance": [
-      "execute-agent-task --dry-run 必須是預設行為，僅產出 artifacts/logs，不 mutate host project",
-      "effect node 簽章與 packages/plugin-sdk effect-node.ts 對齊；compute atoms 不可呼叫",
-      "fixture：dry-run 產出 artifact 路徑 + log 摘要 + execution-evidence.json",
-      "apply 模式必須由獨立 CLI flag 開啟，且仍寫 evidence record",
-      "lifecycleMode=evolution 時，dry-run 必須以兩次獨立 TestRunner 呼叫完成：baseline fixtures × new code 與 new fixtures × new code，並分別寫入 evidence",
-      "effect node 不可直接呼叫 ATM-2-0020 ProposeAtomicUpgrade；本卡只負責寫 execution evidence，proposal 由 orchestration atom 後續讀取"
+      "upgrade-proposal.schema.json 含 atomId / fromVersion / toVersion / automatedGates / humanReview pending",
+      "CLI atm upgrade --propose --atom <id> --to <ver> --dry-run --json 輸出符合 schema 的 proposal",
+      "automatedGates 任一 fail 時 proposal 必須標記 status=blocked，不允許進入 review queue",
+      "upgrade-proposal.schema.json 增加 decompositionDecision（enum: atom-bump | atom-extract | map-bump）與 mapImpactScope 欄位",
+      "CLI 增加 --target atom|map 旗標；--target map 時必須附 mapId",
+      "decompositionDecision 為 atom-extract 時，proposal 需同時列出新 atomId 與 fork 來源",
+      "upgrade-proposal.schema.json 追加必填欄位 behaviorId（預設 behavior.evolve）；其他合法值由 ATM-2-0029 reference behavior pack 註冊",
+      "node scripts/validate-upgrade-proposal.mjs 必須可在不跑整包 test 的情況下，獨立驗證 schema、status=blocked 邏輯、decompositionDecision / behaviorId invariant",
+      "exemplar 至少保留 proposal-pass.json 與 proposal-blocked.json 兩組，可直接重放 CLI --dry-run --json 輸出到 validator"
     ],
     "deliverables": [
-      "packages/core/src/agent-execute/execute-agent-task.ts",
-      "schemas/agent-execute/execution-evidence.schema.json",
-      "fixtures/agent-execute/dry-run.snapshot.json"
+      "schemas/upgrade/upgrade-proposal.schema.json",
+      "packages/core/src/upgrade/propose.mjs",
+      "packages/cli/src/commands/upgrade.mjs",
+      "scripts/validate-upgrade-proposal.mjs",
+      "fixtures/upgrade/proposal-pass.json",
+      "fixtures/upgrade/proposal-blocked.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 lifecycleMode=evolution 雙重 TestRunner 閉環與 effect/orchestration 邊界約束\n2026-05-07 | 狀態: done | 驗證: npm test / npm run typecheck / npm run lint | 變更: AI-Atomic-Framework 補 ExecuteAgentTask effect orchestrator、execution-evidence schema、dry-run snapshot、plugin-sdk effect-node contract 與 validate-agent-execute gate | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— upgrade-proposal 追加 behaviorId 欄位（必填，預設 behavior.evolve）\n2026-05-07 附錄 C 治理補丁：升版 proposal 保持為唯一編排 choke point；effect node 僅能寫 evidence，不得直接 promote\n2026-05-07 測試穩定性補丁：維持 orchestration atom 目的不變；補 deterministic validator 與 exemplar pair，讓 proposal contract 失敗可先在本卡 seam 定位\n2026-05-08 | 狀態: done | 驗證: node scripts/validate-upgrade-proposal.mjs --mode validate / node scripts/validate-schemas.mjs --mode test / node scripts/validate-cli.mjs --mode test / npm test / npm run typecheck / npm run lint | 變更: AI-Atomic-Framework commit bd48800 補 ProposeAtomicUpgrade schema/core/CLI/fixtures/validator；CLI 採既有 flat command atm upgrade --propose，proposal 僅彙整既有 evidence/report，不 mutate host、不進 review queue | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 開卡",
-      "summary": "補上 Roadmap §7.1 的 000004 缺口，並守住「只 dry-run / 不直接改檔」的安全邊界。",
+      "summary": "evolution 管線首個 orchestration atom：把 birth-pipeline 工具組合成 upgrade 提案。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0018 / ATM-2-0006"
+      "prereq": "ATM-2-0015 / ATM-2-0016 / ATM-2-0017"
     }
   },
   {
-    "doc_id": "doc_task_0271",
-    "id": "ATM-4-0004",
-    "title": "parseCssLength 與 parseFragmentList case atoms",
+    "doc_id": "doc_task_0283",
+    "id": "ATM-4-0006",
+    "title": "H2U case study 與 Cocos runtime 邊界",
     "owner": "GitHubCopilot",
     "priority": "P1",
     "status": "open",
-    "type": "atom-case",
+    "type": "case-study-policy",
     "phase": "ATM-4",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
@@ -60,47 +67,47 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom。",
+    "description": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
     "related": [],
     "depends": [
-      "ATM-4-0003"
+      "ATM-4-0002",
+      "ATM-3-0005",
+      "ATM-2.5-0002"
     ],
     "acceptance": [
-      "px/em/%/svg 與 fragment legacy fixtures 覆蓋",
-      "self-test 不退轉",
-      "可 rollback"
+      "Cocos Component/Node/Prefab 明確禁止進 compute atom",
+      "H2U fidelity/domain scoring 僅屬 case study plugin",
+      "case study 可關閉而不影響 core",
+      "case study 啟動條件：self-hosting alpha0 deterministic gate 全綠",
+      "第一輪只允許 dry-run injection + rollback plan，不替換 draft-builder 主幹"
     ],
     "deliverables": [
-      "parseCssLength atom",
-      "parseFragmentList atom",
-      "fixtures",
-      "registry/hash entries"
+      "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
+      "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 後置條件：alpha0 全綠後只以 dry-run/rollback 進入 | 阻塞: alpha0 gate 未全綠",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom。",
+      "label": "ATM v0.2 整合開卡",
+      "summary": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
       "position": "ATM-4",
-      "prereq": "ATM-4-0003"
+      "prereq": "ATM-4-0002、ATM-3-0005"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "v0.2 companion analysis 已確認可作務實化補充"
       ],
       "output": [
-        "parseCssLength atom",
-        "parseFragmentList atom",
-        "fixtures",
-        "registry/hash entries"
+        "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
+        "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
       "execution_steps": [
         "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
       ]
     },
     "harness_evidence": {

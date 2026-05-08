@@ -1,8 +1,8 @@
 [
   {
-    "doc_id": "doc_task_0321",
-    "id": "ATM-2-0018",
-    "title": "BuildAgentPrompt bootstrap atom（000003）",
+    "doc_id": "doc_task_0322",
+    "id": "ATM-2-0019",
+    "title": "ExecuteAgentTask effect node dry-run（000004）",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
@@ -10,47 +10,48 @@
     "phase": "ATM-2",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-07T03:03:48Z",
-    "started_by_agent": "vs-code-gpt-5.4",
-    "completed_at": "2026-05-07T03:11:35Z",
+    "started_at": "2026-05-07T23:28:13.9062315+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-07T23:28:13.9062315+08:00",
     "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "5/11",
+    "chain_step": "6/11",
     "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "從 atomic spec 產出受控 AI prompt，內含 forbidden rules、allowed files、evidence contract；屬於 birth pipeline 的 000003 工序。",
+    "description": "effect node 形式呼叫 AI agent 執行 prompt，預設 dry-run 只 capture artifact/log，不直接 apply patch；alpha0+ 補洞。",
     "related": [],
     "depends": [
-      "ATM-2-0001",
-      "ATM-2-0002",
-      "ATM-2-0005"
+      "ATM-2-0018",
+      "ATM-2-0006"
     ],
     "acceptance": [
-      "atom build-agent-prompt 可從 normalized spec 產出 prompt.md，含 frontmatter 列出 forbidden rules / allowed files / evidence contract",
-      "prompt 結構通過 schemas/agent-prompt.schema.json 驗證",
-      "birth fixture：minimal spec → prompt 對 snapshot；spec 變更時 prompt 必須跟著變化"
+      "execute-agent-task --dry-run 必須是預設行為，僅產出 artifacts/logs，不 mutate host project",
+      "effect node 簽章與 packages/plugin-sdk effect-node.ts 對齊；compute atoms 不可呼叫",
+      "fixture：dry-run 產出 artifact 路徑 + log 摘要 + execution-evidence.json",
+      "apply 模式必須由獨立 CLI flag 開啟，且仍寫 evidence record",
+      "lifecycleMode=evolution 時，dry-run 必須以兩次獨立 TestRunner 呼叫完成：baseline fixtures × new code 與 new fixtures × new code，並分別寫入 evidence",
+      "effect node 不可直接呼叫 ATM-2-0020 ProposeAtomicUpgrade；本卡只負責寫 execution evidence，proposal 由 orchestration atom 後續讀取"
     ],
     "deliverables": [
-      "packages/core/src/agent-prompt/build-agent-prompt.ts",
-      "schemas/agent-prompt.schema.json",
-      "fixtures/agent-prompt/minimal.input.json",
-      "fixtures/agent-prompt/minimal.expected.md"
+      "packages/core/src/agent-execute/execute-agent-task.ts",
+      "schemas/agent-execute/execution-evidence.schema.json",
+      "fixtures/agent-execute/dry-run.snapshot.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 | 狀態: done | 驗證: validate:agent-prompt / validate:schemas / npm test / npm run typecheck / npm run lint 通過 | 變更: 上游 7791d51 新增 build-agent-prompt、agent-prompt schema、snapshot fixture 與 root validation wiring | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 lifecycleMode=evolution 雙重 TestRunner 閉環與 effect/orchestration 邊界約束\n2026-05-07 | 狀態: done | 驗證: npm test / npm run typecheck / npm run lint | 變更: AI-Atomic-Framework 補 ExecuteAgentTask effect orchestrator、execution-evidence schema、dry-run snapshot、plugin-sdk effect-node contract 與 validate-agent-execute gate | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 開卡",
-      "summary": "補上 Roadmap §7.1 的 000003 缺口，使 birth pipeline 能正式委託 AI。",
+      "summary": "補上 Roadmap §7.1 的 000004 缺口，並守住「只 dry-run / 不直接改檔」的安全邊界。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0001 / ATM-2-0002 / ATM-2-0005"
+      "prereq": "ATM-2-0018 / ATM-2-0006"
     }
   },
   {
-    "doc_id": "doc_task_0279",
-    "id": "ATM-4-0003",
-    "title": "normalizeCssColor 首個 case atom",
+    "doc_id": "doc_task_0280",
+    "id": "ATM-4-0005",
+    "title": "Injection plan 與 rollback dry-run",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "atom-case",
+    "type": "case-study",
     "phase": "ATM-4",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
@@ -59,42 +60,42 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
+    "description": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
     "related": [],
     "depends": [
-      "ATM-4-0002",
-      "ATM-2-0004"
+      "ATM-4-0003",
+      "ATM-3-0002",
+      "ATM-2.5-0001",
+      "ATM-2.5-0002"
     ],
     "acceptance": [
-      "atom test pass",
-      "forbidden import/side-effect police pass",
-      "H2U baseline 不退轉"
+      "dry-run 可 review",
+      "rollback plan 對稱",
+      "來回套用 diff 可回到原狀",
+      "第一輪只產 dry-run patch plan 與 rollback plan，不 apply patch、不改 legacy runtime",
+      "alpha0 gate evidence link：schema / registry / hash-lock / CLI / hello-world / minimal evidence 全綠"
     ],
     "deliverables": [
-      "H2U normalizeCssColor atomic spec",
-      "5 positive fixtures",
-      "2 negative fixtures",
-      "1 legacy fixture",
-      "registry/hash entry"
+      "inject-plan JSON schema",
+      "rollback-plan JSON schema",
+      "H2U normalizeCssColor dry-run plan"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 啟動條件：self-hosting alpha0 全綠後才可 dry-run injection + rollback plan | 阻塞: alpha0 gate 未全綠",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
+      "summary": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
       "position": "ATM-4",
-      "prereq": "ATM-4-0002、ATM-2-0004"
+      "prereq": "ATM-4-0003、ATM-3-0002"
     },
     "contracts": {
       "input": [
         "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "H2U normalizeCssColor atomic spec",
-        "5 positive fixtures",
-        "2 negative fixtures",
-        "1 legacy fixture",
-        "registry/hash entry"
+        "inject-plan JSON schema",
+        "rollback-plan JSON schema",
+        "H2U normalizeCssColor dry-run plan"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",

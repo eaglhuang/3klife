@@ -1,61 +1,56 @@
 [
   {
-    "doc_id": "doc_task_0320",
-    "id": "ATM-2-0017",
-    "title": "Regression Matrix Compare Gate",
+    "doc_id": "doc_task_0321",
+    "id": "ATM-2-0018",
+    "title": "BuildAgentPrompt bootstrap atom（000003）",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
-    "type": "police",
+    "status": "done",
+    "type": "bootstrap-atom",
     "phase": "ATM-2",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-07T03:03:48Z",
+    "started_by_agent": "vs-code-gpt-5.4",
+    "completed_at": "2026-05-07T03:11:35Z",
     "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "4/11",
+    "chain_step": "5/11",
     "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "在 Police plugin 之上提供 vOld fixtures 對 vNew code 的不退轉檢查 + quality metrics 比較；輸出 quality-comparison-report。",
+    "description": "從 atomic spec 產出受控 AI prompt，內含 forbidden rules、allowed files、evidence contract；屬於 birth pipeline 的 000003 工序。",
     "related": [],
     "depends": [
-      "ATM-2-0005",
-      "ATM-2-0016"
+      "ATM-2-0001",
+      "ATM-2-0002",
+      "ATM-2-0005"
     ],
     "acceptance": [
-      "vOld 全部 fixture 對 vNew code 必須全綠（不退轉）",
-      "metrics 比較：errorRate(new) <= errorRate(old)、coverage(new) >= coverage(old)、latency(new) 不退化超過容忍值",
-      "違規時 promote 動作必須 hard fail，並輸出 quality-comparison-report.json 列出退步指標",
-      "quality-comparison-report 必須含 mapImpactScope（被影響的 mapIds[]）與 propagationStatus（per-map 整合測試結果）",
-      "若任一被影響的 map 整合測試 fail，promote 動作必須 hard fail",
-      "regression compare 報告追加 dedupCandidates[] 區塊（advisory only，不阻塞 promote）：列出 sf 相同或高相似的其他原子；輸入由 ATM-2-0030 dedup police 提供",
-      "CLI 補 atm registry quality-report --atom <id> --from <v> --to <v> --json --md；必須同步輸出 .atm/reports/quality/<atomId>-<from>-<to>.json 與同名 .md",
-      "--md 輸出必須採固定 Markdown 模板：標題 / 指標表格 / mapImpactScope 區段 / 結論；避免 quality-comparison-report 只剩機讀 JSON"
+      "atom build-agent-prompt 可從 normalized spec 產出 prompt.md，含 frontmatter 列出 forbidden rules / allowed files / evidence contract",
+      "prompt 結構通過 schemas/agent-prompt.schema.json 驗證",
+      "birth fixture：minimal spec → prompt 對 snapshot；spec 變更時 prompt 必須跟著變化"
     ],
     "deliverables": [
-      "packages/core/src/police/regression-compare.ts",
-      "schemas/police/quality-comparison-report.schema.json",
-      "fixtures/regression/v1.0-pass.json",
-      "fixtures/regression/v1.1-pass-improved.json",
-      "fixtures/regression/v1.1-fail-error-rate.json",
-      "schemas/police/quality-comparison-report.schema.json — 含 mapImpactScope / propagationStatus"
+      "packages/core/src/agent-prompt/build-agent-prompt.ts",
+      "schemas/agent-prompt.schema.json",
+      "fixtures/agent-prompt/minimal.input.json",
+      "fixtures/agent-prompt/minimal.expected.md"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— regression compare 報告追加 dedupCandidates[] 區塊（advisory）\n2026-05-07 附錄 C 治理補丁：追加 quality-report CLI / Markdown 模板 / decision-readable output，避免品質報告淪為 JSON 黑盒",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 | 狀態: done | 驗證: validate:agent-prompt / validate:schemas / npm test / npm run typecheck / npm run lint 通過 | 變更: 上游 7791d51 新增 build-agent-prompt、agent-prompt schema、snapshot fixture 與 root validation wiring | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 開卡",
-      "summary": "建立演化管線的不退轉 + 品質進步雙重閘門。",
+      "summary": "補上 Roadmap §7.1 的 000003 缺口，使 birth pipeline 能正式委託 AI。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0005 / ATM-2-0016"
+      "prereq": "ATM-2-0001 / ATM-2-0002 / ATM-2-0005"
     }
   },
   {
-    "doc_id": "doc_task_0270",
-    "id": "ATM-4-0002",
-    "title": "H2U legacy baseline 與 regression matrix",
+    "doc_id": "doc_task_0271",
+    "id": "ATM-4-0004",
+    "title": "parseCssLength 與 parseFragmentList case atoms",
     "owner": "GitHubCopilot",
-    "priority": "P0",
+    "priority": "P1",
     "status": "open",
-    "type": "case-study",
+    "type": "atom-case",
     "phase": "ATM-4",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
@@ -64,44 +59,57 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "凍結 H2U baseline，建立 regression matrix 與 known gap plugin 輸入格式。",
+    "description": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom；承接 ATM-4-0003 的 behavior.atomize lineage 規則，不重複開 H2U atomize 卡。",
     "related": [],
     "depends": [
-      "ATM-4-0001"
+      "ATM-4-0003"
     ],
     "acceptance": [
-      "active-contract/fidelity-contract baseline 可重現",
-      "known gap 不作為永久白名單",
-      "變更前後可比較 score delta"
+      "px/em/%/svg 與 fragment legacy fixtures 覆蓋",
+      "self-test 不退轉",
+      "可 rollback",
+      "兩個新 atom 均使用 behavior.atomize，並包含 lineage.bornBy=atomize",
+      "兩個新 atom 均帶 legacy:// parentRefs 與可追溯 lineage log",
+      "neutrality scan 不得讓 adopter-private 假設流入 upstream core schema"
     ],
     "deliverables": [
-      "tools_node/atomic-framework/fixtures/legacy-baseline",
-      "docs/ai_atomic_framework/h2u-regression-matrix.md",
-      "baseline summary artifact"
+      "parseCssLength atom",
+      "parseFragmentList atom",
+      "fixtures",
+      "registry/hash entries",
+      "lineage logs and parentRefs for both extracted atoms",
+      "validation report"
     ],
     "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "凍結 H2U baseline，建立 regression matrix 與 known gap plugin 輸入格式。",
+      "summary": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom。",
       "position": "ATM-4",
-      "prereq": "ATM-4-0001"
+      "prereq": "ATM-4-0003"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "ATM-4-0003 已提供 normalizeCssColor case atom、legacy fixture、lineage log 與 registry/hash entry",
+        "ATM-2-0033 已定義 ProjectAdapter legacy:// URI 與 atomize / infect adapter contract",
+        "本卡只能新增 parseCssLength / parseFragmentList case atoms，不得重寫 normalizeCssColor done card"
       ],
       "output": [
-        "tools_node/atomic-framework/fixtures/legacy-baseline",
-        "docs/ai_atomic_framework/h2u-regression-matrix.md",
-        "baseline summary artifact"
+        "parseCssLength atom",
+        "parseFragmentList atom",
+        "fixtures",
+        "registry/hash entries",
+        "兩個新 atom 均使用 behavior.atomize，並包含 lineage.bornBy=atomize",
+        "兩個新 atom 均帶 legacy:// parentRefs 與可追溯 lineage log",
+        "neutrality scan 不得讓 adopter-private 假設流入 upstream core schema"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM-4-0004.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
         "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
+        "讀取 legacy source range，為 parseCssLength / parseFragmentList 建立 legacy:// parentRefs",
+        "以 behavior.atomize 產生兩個 case atom spec、fixtures、registry/hash entry 與 lineage log",
+        "跑 adapter/case validation 與 neutrality scan",
         "回寫 tracking notes"
       ]
     },

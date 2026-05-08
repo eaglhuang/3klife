@@ -7,7 +7,7 @@
       "name": "registry-tech",
       "title": "技術類（tech）",
       "path": "docs/doc-id-registry-shards/registry-tech.json",
-      "count": 22
+      "count": 23
     },
     {
       "name": "registry-ui",
@@ -43,7 +43,7 @@
       "name": "registry-task",
       "title": "任務卡類（task）",
       "path": "docs/doc-id-registry-shards/registry-task.json",
-      "count": 347
+      "count": 352
     },
     {
       "name": "registry-ai",
@@ -55,7 +55,7 @@
       "name": "registry-agentskill",
       "title": "Agent Skill 專用（agentskill）",
       "path": "docs/doc-id-registry-shards/registry-agentskill.json",
-      "count": 45
+      "count": 46
     },
     {
       "name": "registry-server",
@@ -67,7 +67,7 @@
       "name": "registry-other",
       "title": "其它類（other）",
       "path": "docs/doc-id-registry-shards/registry-other.json",
-      "count": 77
+      "count": 83
     }
   ]
 }

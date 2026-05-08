@@ -1,39 +1,99 @@
 [
   {
-    "id": "ATM-2-0012",
-    "title": "neutralityScanner atom + CI（ATM-CORE-0003）",
-    "status": "done",
+    "doc_id": "doc_task_0316",
+    "id": "ATM-2-0013",
+    "title": "Per-atom folder 以 Atomic ID 命名收斂",
+    "owner": "vs-code-gpt-5.4-mini",
     "priority": "P0",
+    "status": "done",
+    "type": "workspace-layout",
     "phase": "ATM-2",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0302",
-    "started_at": "2026-05-07T00:20:35.8356720+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4-mini",
-    "completed_at": "2026-05-07T17:05:00Z",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T22:33:29.1762135+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T22:43:17.2332444+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將同一個 atom 空間收斂到以 Atomic ID 為名稱的 canonical folder，避免 spec、code、fixture、report、registry proof 分散。",
+    "related": [
+      "ATM-2-0012",
+      "ATM-2.5-0001"
+    ],
     "depends": [
-      "ATM-2-0001",
-      "ATM-1.5-0003",
-      "ATM-2-0013"
+      "ATM-2-0004"
     ],
     "acceptance": [
-      "scanner atom 直接落於 ATM-2-0013 canonical per-atom folder（atomic_workbench/atoms/ATM-CORE-0003/）；不得散放 spec/code/test/report"
+      "每個 atom 有 canonical folder，資料夾名稱必須等於 Atomic ID",
+      "scaffold/test-runner/registry/workbench 路徑規則對齊 canonical Atomic ID folder",
+      "新增 atom 不可再先散放檔案後回收；neutralityScanner 等後續 atom 直接落在 canonical folder",
+      "既有 atom 至少有 migration policy 與相容路徑策略"
     ],
-    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | 狀態: in-progress | 驗證: node atomic_workbench/atoms/ATM-CORE-0003/tests/atom-tests.js / node atomic_workbench/atoms/ATM-CORE-0003/tests/map-integration-tests.js / npm.cmd run check:encoding:touched / node tools_node/compute-gate.js --profile standard --agent-feedback pass | 變更: 已把 ATM-CORE-0003 拆成 5 個 member atoms、建立 ATM-MAP-NEUTRALITY-0001 local map 與 integration report，並同步 tasks-atm thin-index 追蹤狀態 | 阻塞: 上游 GitHub Actions / registry 收編尚未在外部 AI-Atomic-Framework repo 落地\n2026-05-07 | 狀態: done | 驗證: upstream head aa1fcdd 上 validate:neutrality / validate:cli / validate:self-hosting-alpha / test / typecheck / lint 全通過；3KLife compute-gate standard pass | 變更: 本地 tracking 收尾完成，ATM-2-0012 正式標記 done | 阻塞: none"
+    "deliverables": [
+      "canonical per-atom folder layout contract",
+      "Atomic ID naming rule",
+      "scaffold/workbench/report path normalization plan",
+      "migration notes for existing scattered atoms"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: node scripts/validate-scaffold-builder.mjs --mode validate / node scripts/validate-test-runner.mjs --mode validate / node scripts/validate-registry-core.mjs --mode validate / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 299be5e 新增 packages/core/src/manager/atom-space.mjs 作為 canonical atom-space single source of truth，讓 scaffold/test-runner/registry 預設路徑統一收斂到 atomic_workbench/atoms/<Atomic ID>/，資料夾名稱直接使用 Atomic ID，不再維護 sanitized alias folder；同步補 docs/ATOM_SPACE_LAYOUT.md contract 與 staged migration policy；並已回寫 docs/ai_atomic_framework/* 計畫文件與 ATM_cross_reference / doc-id 索引，使 canonical 家目錄規則成為文件層單一真相；ATM-2-0012 與 ATM-2.5-0001 也已正式 depends on 本卡 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 上游核心插單",
+      "summary": "將同一個 atom 空間收斂到以 Atomic ID 命名的 canonical folder，提早建立 per-atom layout 規則，避免後續 spec/code/test/report/registry proof 繼續零散擴張。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0004 已完成，後續新 atom 產線尚未全面擴張"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-2-0004 已完成 registry/hash-lock 基礎",
+        "目前 per-atom report 已有 atomic_workbench/atoms/<Atomic ID>/ 方向，但 spec/code/fixture/registry proof 尚未完全收斂到同一空間"
+      ],
+      "output": [
+        "canonical per-atom folder layout contract",
+        "Atomic ID 直接作為 folder 名稱的命名規則",
+        "scaffold/test-runner/registry/workbench 對齊計畫或實作",
+        "既有散落 atom 配件的 migration policy"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡 touched files；若上游已開始做 path migration，優先回退 folder contract 與 path normalization，不留下半套 alias 規則。",
+      "execution_steps": [
+        "定義 canonical per-atom folder layout 與 Atomic ID naming rule",
+        "盤點 scaffold/test-runner/registry/workbench 現況路徑",
+        "實作或至少定稿 path normalization strategy",
+        "補 fixture 或 migration guidance，避免後續 atom 再散落"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "AI-Atomic-Framework upstream commit 299be5e",
+        "node scripts/validate-scaffold-builder.mjs --mode validate",
+        "node scripts/validate-test-runner.mjs --mode validate",
+        "node scripts/validate-registry-core.mjs --mode validate",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   },
   {
-    "id": "ATM-3-0011",
-    "title": "encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter",
+    "id": "ATM-3-0013",
+    "title": "finalize-agent-turn.js wrapper 接入 ATM run envelope",
     "status": "open",
     "priority": "P1",
     "phase": "ATM-3",
     "type": "implementation",
     "created": "2026-05-05",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0311",
+    "doc_id": "doc_task_0313",
     "depends": [
-      "ATM-3-0006"
+      "ATM-3-0006",
+      "ATM-3-0007"
     ]
   }
 ]

@@ -268,5 +268,11 @@
     "path": ".agents/skills/ui-vibe-pipeline/SKILL.md",
     "title": "UI Vibe Pipeline",
     "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0065",
+    "path": ".agents/skills/task-card-required-adjustment/SKILL.md",
+    "title": "任務卡的必要調整",
+    "category": "agentskill"
   }
 ]

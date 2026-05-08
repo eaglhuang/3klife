@@ -68,129 +68,49 @@
     }
   },
   {
-    "doc_id": "doc_task_0333",
-    "id": "ATM-2-0027",
-    "title": "Atom Status State Machine",
+    "doc_id": "doc_task_0339",
+    "id": "ATM-2-0033",
+    "title": "Atomization & Infection Adapter Contract",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "registry",
+    "type": "adapter",
     "phase": "ATM-2",
     "created": "2026-05-07",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
-    "started_by_agent": "GitHubCopilot",
+    "started_by_agent": "",
     "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
-    "chain_step": "2/8",
+    "chain_step": "8/8",
     "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
-    "description": "收斂 status enum 為 draft/validated/active/transitioning/deprecated/expired/quarantined；把 governed 改為獨立的 governance.tier 屬性；定義合法 status transition 矩陣與 police hard-fail 規則。舊值（seed/active/experimental/deprecated/governed）有 migration map 對應。",
+    "description": "在 ProjectAdapter 邊界定義 behavior.atomize 與 behavior.infect 的合約：legacy URI 解析（legacy://）、neutrality scan 整合（避免新 atom 帶入 host 私有資訊）、dry-run patch contract（不直接動 host project）。",
     "related": [],
     "depends": [
-      "ATM-2-0026",
-      "ATM-2-0014"
+      "ATM-2-0029",
+      "ATM-2-0010"
     ],
     "acceptance": [
-      "registry.schema.json status enum 收斂為 draft/validated/active/transitioning/deprecated/expired/quarantined",
-      "新增 governance.tier 屬性 enum: constitutional/governed/standard/experimental",
-      "舊值 migration map 落地：seed→active+constitutional / governed→active+governed / experimental→validated",
-      "定義合法 status transition 矩陣（10 種 behavior 對應的起點/終點）",
-      "police hard-fail：違反 transition 矩陣 / quarantined 由非警察寫入 / TTL 過期但仍 active",
-      "fixtures：所有 7 種 status 各 1 個 + 4 種 governance.tier 各 1 個 + 5 種非法 transition 反例",
-      "Status enum 與 transition matrix 須同時覆蓋 atom 與 map registry entry；map 經 generator 誕生時 initial status = draft",
-      "Migration map 須包含 legacy map entry（如 ATM-MAP-NEUTRALITY-0001，目前無 status 欄位）",
-      "status-machine.ts 須接受 atomId 和 mapId 兩種 entry type；legal transition 檢查不可假設 entry 只是 atom",
-      "migration fixtures 必須覆蓋 versions[] 已存在 + 舊 status 值 seed/governed 的 entry，確保與 ATM-2-0014 的跨卡升級路徑可通過",
-      "human review reject 狀態處置：approve→active；non-fatal reject 維持原狀；fatal reject 寫 pendingQuarantineRequest 待 lifecycle police 決定",
-      "validate-status-machine.mjs 必須獨立驗證 atom/map legal transition、legacy migration、review reject disposition",
-      "exemplar：legal-transition / illegal-transition / legacy-map-migration / review-reject-pending-quarantine"
+      "ProjectAdapter 介面新增 resolveLegacyUri(uri) → 解析 legacy://<host>/<path>#L<start>-<end>",
+      "atomize-adapter.schema.json 定義 atomize 在 adapter 邊界的合約：legacy 區段選取 / sf 計算 / 新 atom proposal",
+      "infect-adapter.schema.json 定義 infect 合約：目標 atom / legacy 注入點 / dry-run patch",
+      "atomize 產出的新 atom spec 必須通過 ATM-2-0010 neutrality scanner（不得含 host 私有 token / path / 領域名詞）",
+      "infect 產出的 patch 是 dry-run only；apply 模式須由 host adapter 額外 capability 開啟",
+      "fixtures：1 個 atomize 例子（含 legacy:// URI）+ 1 個 infect 例子（含 dry-run patch）"
     ],
     "deliverables": [
-      "schemas/registry.schema.json",
-      "packages/core/src/registry/status-machine.ts",
-      "packages/core/src/registry/status-migration.ts",
-      "scripts/validate-status-machine.mjs",
-      "fixtures/registry/status/legal-transition.json",
-      "fixtures/registry/status/illegal-transition.json",
-      "fixtures/registry/status/legacy-map-migration.json",
-      "fixtures/registry/status/review-reject-pending-quarantine.json"
+      "schemas/adapter/atomize-adapter.schema.json",
+      "schemas/adapter/infect-adapter.schema.json",
+      "packages/plugin-sdk/src/adapter/legacy-uri.ts",
+      "fixtures/adapter/atomize-example.json",
+      "fixtures/adapter/infect-example.json"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: ATM 識別/行為/狀態機提案開卡 | 阻塞: 等 ATM-2-0026 schema 擴充\n2026-05-07 ATM-2-0042：status machine 需覆蓋 map entry / map birth / legacy map migration\n2026-05-07 附錄 C：補 versions[] × legacy status fixture 與 reject/quarantine 處置\n2026-05-07 測試穩定性補丁：追加 validator + exemplar quartet",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 8/8）| 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 識別/行為/狀態機提案開卡",
-      "summary": "為原子建立無模糊地帶的狀態機，使每個原子任何時刻恰處一個 status，由特定 behavior 觸發轉換。",
+      "summary": "Legacy strangler 在 ProjectAdapter 邊界的合約：atomize/infect 的 URI 解析、neutrality 整合、dry-run patch。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0026 / ATM-2-0014"
-    }
-  },
-  {
-    "doc_id": "doc_task_0275",
-    "id": "ATM-5-0004",
-    "title": "v0.1 alpha release checklist",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "release",
-    "phase": "ATM-5",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "整理 AI-Atomic-Framework v0.1 alpha 發布前檢查表。",
-    "related": [],
-    "depends": [
-      "ATM-5-0001",
-      "ATM-5-0002",
-      "ATM-5-0003"
-    ],
-    "acceptance": [
-      "npm pack/dry-run 成功",
-      "README/examples/schema tests 全綠",
-      "release notes 說明 alpha 限制",
-      "alpha0 checklist 與 alpha1 checklist 分離",
-      "secrets scan / provenance / npm publish dry-run / package naming 檢查項已列入",
-      "release owner sign-off 欄位已列入"
-    ],
-    "deliverables": [
-      "docs/RELEASE_CHECKLIST.md",
-      "GitHub release draft",
-      "npm publish dry-run plan"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 alpha0/alpha1 release checklist：secrets scan、provenance、package naming、release owner | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "整理 AI-Atomic-Framework v0.1 alpha 發布前檢查表。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001、ATM-5-0002、ATM-5-0003"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "docs/RELEASE_CHECKLIST.md",
-        "GitHub release draft",
-        "npm publish dry-run plan"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
+      "prereq": "ATM-2-0029 / ATM-2-0010"
     }
   }
 ]

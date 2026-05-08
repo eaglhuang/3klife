@@ -411,3 +411,9 @@ ATM-2-0022 rollback proof（失敗回退）
 - 舊 lock 若仍出現空 `files[]`，只可視為過渡期 advisory，不可再作為新卡範本。
 - thin-index shard 必須維持摘要層；若 part 逼近門檻，先壓縮 notes / acceptance，再繼續加卡或補規則。
 
+### C.11 Task Card System 原子化缺口（新增）
+
+目前 `ATM-3-0006`（task-lock）、`ATM-3-0009`（shard-manager）、`ATM-3-0010`（task-card-opener）、`ATM-3-0012`（task-scope/rule-pack）都已各自標註「Phase 1 = adapter 化 / Phase 2 = 原子化」，但這仍然只是零散工具層。若沒有一張卡把整套 task card lifecycle 收斂成 atomic map，ATM 仍無法證明「框架自己的任務卡系統也被框架治理」。
+
+因此新增 `ATM-3-0015` 作為正式規劃缺口補卡，專門定義：`allocateTaskId → reserveTaskId → openTaskCard → lockTaskScope → writeTaskShard → validateTaskShard → syncDocRegistry → finalizeTaskLifecycle` 這條 governed flow 的原子邊界與 orchestration 責任。後續 `ATM-3` 的 dogfooding 驗收，不只看單一 helper 是否 adapter 化，也必須看這條 end-to-end task card system atomic map 是否存在且可被獨立驗證。
+

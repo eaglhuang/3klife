@@ -67,104 +67,117 @@
     }
   },
   {
-    "doc_id": "doc_task_0325",
-    "id": "ATM-2-0022",
-    "title": "Rollback Registry Pointer & 三段 hash Proof",
+    "doc_id": "doc_task_0334",
+    "id": "ATM-2-0028",
+    "title": "AtomBehavior Plugin SDK",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "registry",
+    "type": "plugin-sdk",
     "phase": "ATM-2",
-    "created": "2026-05-06",
+    "created": "2026-05-07",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "9/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "提供 atm rollback CLI 與 rollback-proof：將 currentVersion 指回歷史版本，並驗證 spec/code/test 三段 hash 與目標 entry 完全一致。",
+    "started_by_agent": "GitHubCopilot",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "3/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "在 packages/plugin-sdk 加入 AtomBehavior interface、AtomBehaviorContext / Input / Output / RegistryTransition / RollbackPlan 等型別、BehaviorRegistry 註冊機制；core 只依賴 interface，具體 behavior 由 plugin 實作。",
     "related": [],
     "depends": [
-      "ATM-2-0014",
-      "ATM-2-0021"
+      "ATM-2-0006",
+      "ATM-2-0026",
+      "ATM-2-0027"
     ],
     "acceptance": [
-      "CLI atm rollback --atom <id> --to <ver> --plan 先輸出 dry-run plan；--apply 才真正寫 registry",
-      "rollback 後 atm verify --self 必須顯示 spec/code/test 三段 hash 與目標版本完全一致；任一不符即 hard fail，產出 rollback-proof.failure.json",
-      "rollback-proof.schema.json 含 atomId / fromVersion / toVersion / hashesVerified / verifiedAt / proofId",
-      "evidence store 寫入 evidenceType=rollback-proof",
-      "CLI atm rollback 支援 --target map；map rollback 必須同時驗證所有成員 atom 的 hash 與目標 mapVersion entry 一致",
-      "rollback-proof 對 map 模式輸出 memberAtomProofs[]，逐一列三段 hash 驗證結果",
-      "rollback-proof.schema.json 必須含發起的 behaviorId（哪個 behavior 的 rollback；例如 behavior.evolve / behavior.merge）",
-      "rollback contract 對稱性：每個 behavior 的 forward action 必須有對應的 reverse action；rollback 引擎可從 behaviorId 查 reverse 規則",
-      "Map rollback workbench 路徑解析須支援雙路徑：canonical atomic_workbench/maps/<mapId>/ 優先，fallback legacy atoms/<owner>/map/",
-      "rollback-proof.schema.json map mode 須含 mapGeneratorProvenance 欄位，標示 map 是否 generator-born",
-      "rollback-proof 必須含 statusReverted 與 semanticFingerprintReverted 兩個布林欄位；任一為 false 即 hard fail，不得宣稱 rollback 成功",
-      "node scripts/validate-rollback-proof.mjs 必須可獨立驗證三段 hash proof、statusReverted / semanticFingerprintReverted、map rollback 雙路徑解析與 behaviorId 對稱性",
-      "exemplar 至少保留 proof-pass / proof-fail-hash-mismatch / proof-fail-status-not-reverted / proof-fail-semantic-fingerprint-not-reverted 四組，供 validator 直接重放"
+      "packages/plugin-sdk/src/behavior.ts 落地 AtomBehavior + Input + Output + Context interface",
+      "category enum: topology/quality/sanitation/integration",
+      "BehaviorRegistry 提供 register / resolve / listByCategory",
+      "core 不可 import 任何具體 behavior plugin（layer-boundary 守護）",
+      "fixtures：5 個 mock behavior 註冊 / resolve / listByCategory",
+      "behavior.evolve 只可委派至 ATM-2-0020 ProposeAtomicUpgrade 產生 proposal；不得直接升版、改 registry 或繞過 ATM-2-0021 HumanReviewGate",
+      "validate-behavior-sdk.mjs 必須獨立驗證 AtomBehavior / BehaviorRegistry contract、category routing、behavior.evolve delegation guard",
+      "exemplar：registry-contract-pass / resolve-missing-behavior / evolve-delegation-blocked"
     ],
     "deliverables": [
-      "packages/core/src/registry/rollback.ts",
-      "packages/cli/commands/rollback.ts",
-      "schemas/registry/rollback-proof.schema.json",
-      "scripts/validate-rollback-proof.mjs",
-      "fixtures/rollback/proof-pass.json",
-      "fixtures/rollback/proof-fail-hash-mismatch.json",
-      "fixtures/rollback/proof-fail-status-not-reverted.json",
-      "fixtures/rollback/proof-fail-semantic-fingerprint-not-reverted.json"
+      "packages/plugin-sdk/src/behavior.ts",
+      "packages/plugin-sdk/src/behavior-registry.ts",
+      "schemas/behavior/behavior-proposal.schema.json",
+      "scripts/validate-behavior-sdk.mjs",
+      "fixtures/behavior/mock-behaviors.json",
+      "fixtures/behavior/resolve-missing-behavior.json",
+      "fixtures/behavior/evolve-delegation-blocked.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— rollback proof 必須含 behaviorId 與對稱 rollback contract\n2026-05-07 ATM-2-0042 連鎖影響：追加 AC 9~10（map rollback 雙路徑解析、mapGeneratorProvenance 欄位）\n2026-05-07 附錄 C 治理補丁：rollback proof 追加 status / semanticFingerprint 對稱回退驗證，避免只回 hash 不回治理狀態\n2026-05-07 測試穩定性補丁：維持 rollback safety-net 目的不變；補 proof validator 與 failure matrix exemplar，讓 rollback 失敗能先在 proof seam 定位",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: ATM 識別/行為/狀態機提案開卡 | 阻塞: 等 ATM-2-0006 / 0026 / 0027 完成\n2026-05-07 附錄 C：behavior.evolve 必須委派 ATM-2-0020 proposal flow\n2026-05-07 測試穩定性補丁：追加 validator + delegation exemplar",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "evolution 管線的最終安全網：失敗時可確定性回退，並留下可驗證 proof。",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "為原子行為建立 plugin SDK，讓專案可註冊自己的 AtomBehavior，core 只依賴 interface。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0014 / ATM-2-0021"
+      "prereq": "ATM-2-0006 / ATM-2-0026 / ATM-2-0027"
     }
   },
   {
-    "doc_id": "doc_task_0327",
-    "id": "ATM-4-0007",
-    "title": "H2U normalizeCssColor v1.0→v1.1 evolution pilot",
+    "doc_id": "doc_task_0276",
+    "id": "ATM-6-0001",
+    "title": "跨專案 Registry / DB / Vector 決策",
     "owner": "GitHubCopilot",
-    "priority": "P0",
+    "priority": "P2",
     "status": "open",
-    "type": "case-study",
-    "phase": "ATM-4",
-    "created": "2026-05-06",
+    "type": "ecosystem",
+    "phase": "ATM-6",
+    "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
     "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "11/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "以 normalizeCssColor case atom 跑第一次完整 evolution 閉環：proposal → automatedGates → human review → registry update or rollback。",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
     "related": [],
     "depends": [
-      "ATM-4-0003",
-      "ATM-2-0020",
-      "ATM-2-0021"
+      "ATM-5-0004"
     ],
     "acceptance": [
-      "normalizeCssColor v1.0 進 registry；v1.1 透過 atm upgrade --propose 產 proposal.json",
-      "automatedGates（nonRegression / qualityImprovement / newCapability）全綠才進 review queue",
-      "human review approve 後 registry currentVersion 指向 v1.1；reject 後保持 v1.0 並寫 decision log",
-      "完整 evidence 鏈可由 atm replay 重新跑 + neutrality scanner 全綠"
+      "JSON-first 仍是真相",
+      "DB/vector 只作 optional plugin",
+      "不增加 core v0.1 必備依賴"
     ],
     "deliverables": [
-      "docs/case-studies/h2u-normalize-css-color-evolution-pilot.md",
-      "fixtures/case-studies/normalize-css-color/v1.0.json",
-      "fixtures/case-studies/normalize-css-color/v1.1.json",
-      "fixtures/case-studies/normalize-css-color/proposal.json",
-      "fixtures/case-studies/normalize-css-color/decision-approve.json"
+      "docs/ecosystem/registry-db-vector-decision.md",
+      "plugin boundary proposal"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "把 alpha1 evolution pipeline 在 H2U case 上做端到端落地，作為 alpha1 acceptance 證據。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0003 / ATM-2-0020 / ATM-2-0021"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
+      "position": "ATM-6",
+      "prereq": "ATM-5-0004"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "docs/ecosystem/registry-db-vector-decision.md",
+        "plugin boundary proposal"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
     }
   }
 ]

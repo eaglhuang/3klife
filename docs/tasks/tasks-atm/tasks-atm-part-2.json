@@ -61,65 +61,70 @@
     "completed_at": "2026-05-06T12:39:11+08:00"
   },
   {
-    "doc_id": "doc_task_0324",
-    "id": "ATM-2-0021",
-    "title": "HumanReviewGate as reference plugin（000013）",
+    "doc_id": "doc_task_0333",
+    "id": "ATM-2-0027",
+    "title": "Atom Status State Machine",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "reference-plugin",
+    "type": "registry",
     "phase": "ATM-2",
-    "created": "2026-05-06",
+    "created": "2026-05-07",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "8/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "以 reference plugin + effect node 形式提供 human review queue；core 僅依賴 schema 不依賴實作。",
+    "started_by_agent": "GitHubCopilot",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "2/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "收斂 status enum 為 draft/validated/active/transitioning/deprecated/expired/quarantined；把 governed 改為獨立的 governance.tier 屬性；定義合法 status transition 矩陣與 police hard-fail 規則。舊值（seed/active/experimental/deprecated/governed）有 migration map 對應。",
     "related": [],
     "depends": [
-      "ATM-2-0020",
-      "ATM-2-0008"
+      "ATM-2-0026",
+      "ATM-2-0014"
     ],
     "acceptance": [
-      "實作位於 packages/plugin-human-review/*；packages/core 不可 import 此 package",
-      ".atm/reports/upgrade-proposals.json 為審核佇列；支援 approve / reject + reason 兩種 decision",
-      "decision log 寫入 evidence store（evidenceType=human-review-decision）",
-      "layer-boundary scanner 必須擋下 core → plugin-human-review 的任何 import",
-      "CLI 補 atm review list / show <proposalId> / approve <proposalId> --reason / reject <proposalId> --reason 四個子命令",
-      "approve / reject 必須同時落 evidence 與 decision-snapshot.hash，鎖定當下 upgrade-proposal.json 內容雜湊",
-      "upgrade-proposals.md 僅可作 audit projection，不得成為 source of truth；欄位固定為 proposalId / atomId / fromVersion → toVersion / decompositionDecision / automatedGates / status",
-      "node scripts/validate-human-review.mjs 必須可獨立驗證 review queue record、decision-snapshot.hash 與 evidence linkage，不依賴 full suite",
-      "exemplar 至少保留 approve / reject / snapshot-hash-mismatch 三組，可直接重放 CLI 輸出到 validator"
+      "registry.schema.json status enum 收斂為 draft/validated/active/transitioning/deprecated/expired/quarantined",
+      "新增 governance.tier 屬性 enum: constitutional/governed/standard/experimental",
+      "舊值 migration map 落地：seed→active+constitutional / governed→active+governed / experimental→validated",
+      "定義合法 status transition 矩陣（10 種 behavior 對應的起點/終點）",
+      "police hard-fail：違反 transition 矩陣 / quarantined 由非警察寫入 / TTL 過期但仍 active",
+      "fixtures：所有 7 種 status 各 1 個 + 4 種 governance.tier 各 1 個 + 5 種非法 transition 反例",
+      "Status enum 與 transition matrix 須同時覆蓋 atom 與 map registry entry；map 經 generator 誕生時 initial status = draft",
+      "Migration map 須包含 legacy map entry（如 ATM-MAP-NEUTRALITY-0001，目前無 status 欄位）",
+      "status-machine.ts 須接受 atomId 和 mapId 兩種 entry type；legal transition 檢查不可假設 entry 只是 atom",
+      "migration fixtures 必須覆蓋 versions[] 已存在 + 舊 status 值 seed/governed 的 entry，確保與 ATM-2-0014 的跨卡升級路徑可通過",
+      "human review reject 狀態處置：approve→active；non-fatal reject 維持原狀；fatal reject 寫 pendingQuarantineRequest 待 lifecycle police 決定",
+      "validate-status-machine.mjs 必須獨立驗證 atom/map legal transition、legacy migration、review reject disposition",
+      "exemplar：legal-transition / illegal-transition / legacy-map-migration / review-reject-pending-quarantine"
     ],
     "deliverables": [
-      "packages/plugin-human-review/src/queue.ts",
-      "packages/plugin-human-review/src/decision-log.ts",
-      "scripts/validate-human-review.mjs",
-      "schemas/human-review/decision.schema.json",
-      "fixtures/human-review/approve.snapshot.json",
-      "fixtures/human-review/reject.snapshot.json",
-      "fixtures/human-review/hash-mismatch.snapshot.json"
+      "schemas/registry.schema.json",
+      "packages/core/src/registry/status-machine.ts",
+      "packages/core/src/registry/status-migration.ts",
+      "scripts/validate-status-machine.mjs",
+      "fixtures/registry/status/legal-transition.json",
+      "fixtures/registry/status/illegal-transition.json",
+      "fixtures/registry/status/legacy-map-migration.json",
+      "fixtures/registry/status/review-reject-pending-quarantine.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 review CLI / decision-snapshot.hash / Markdown audit projection，避免人工審核流程不可追溯\n2026-05-07 測試穩定性補丁：維持 human review gate 目的不變；補 queue/decision validator 與 decision exemplar triad，避免 review 流程只剩 CLI 手工煙霧測試",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: ATM 識別/行為/狀態機提案開卡 | 阻塞: 等 ATM-2-0026 schema 擴充\n2026-05-07 ATM-2-0042：status machine 需覆蓋 map entry / map birth / legacy map migration\n2026-05-07 附錄 C：補 versions[] × legacy status fixture 與 reject/quarantine 處置\n2026-05-07 測試穩定性補丁：追加 validator + exemplar quartet",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "人類審核閘門以 reference plugin 形式落地，避免污染 core hard dependency。",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "為原子建立無模糊地帶的狀態機，使每個原子任何時刻恰處一個 status，由特定 behavior 觸發轉換。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0020 / ATM-2-0008"
+      "prereq": "ATM-2-0026 / ATM-2-0014"
     }
   },
   {
-    "doc_id": "doc_task_0283",
-    "id": "ATM-4-0006",
-    "title": "H2U case study 與 Cocos runtime 邊界",
+    "doc_id": "doc_task_0284",
+    "id": "ATM-5-0005",
+    "title": "Living Spec 同步器與 PEV Loop",
     "owner": "GitHubCopilot",
     "priority": "P1",
     "status": "open",
-    "type": "case-study-policy",
-    "phase": "ATM-4",
+    "type": "optional-feature",
+    "phase": "ATM-5",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -127,41 +132,50 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+    "description": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
     "related": [],
     "depends": [
-      "ATM-4-0002",
-      "ATM-3-0005",
-      "ATM-2.5-0002"
+      "ATM-5-0001",
+      "ATM-2-0006"
     ],
     "acceptance": [
-      "Cocos Component/Node/Prefab 明確禁止進 compute atom",
-      "H2U fidelity/domain scoring 僅屬 case study plugin",
-      "case study 可關閉而不影響 core",
-      "case study 啟動條件：self-hosting alpha0 deterministic gate 全綠",
-      "第一輪只允許 dry-run injection + rollback plan，不替換 draft-builder 主幹"
+      "PEV Loop 成為標準流程語彙",
+      "MVP 只要求 drift prompt，不要求自動雙向同步",
+      "Living Spec 不阻塞 v0.1 alpha release",
+      "docs/PEV_LOOP.md 必須定義 Plan-Execute-Verify-Converge 如何產生 PEV upgrade proposal",
+      "docs/LIVING_SPEC.md 必須說明 Living Spec sync 不得自動 promote；只能產生 reviewable proposal",
+      "Spec drift prompt schema 必須輸出 atom compatibility impact 與 semver recommendation",
+      "README workflow summary 必須連回 framework semver / atom compatibility / PEV proposal 文件"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
-      "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+      "docs/PEV_LOOP.md",
+      "docs/LIVING_SPEC.md",
+      "Spec drift prompt schema",
+      "README workflow summary",
+      "schemas/pev/upgrade-proposal-public.schema.json",
+      "schemas/pev/spec-drift-prompt.schema.json",
+      "PEV upgrade proposal 範例"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 後置條件：alpha0 全綠後只以 dry-run/rollback 進入 | 阻塞: alpha0 gate 未全綠",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
     "brief": {
       "style": "harn-rich",
       "label": "ATM v0.2 整合開卡",
-      "summary": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0002、ATM-3-0005"
+      "summary": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
+      "position": "ATM-5",
+      "prereq": "ATM-5-0001、ATM-2-0006"
     },
     "contracts": {
       "input": [
         "v0.2 companion analysis 已確認可作務實化補充"
       ],
       "output": [
-        "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
-        "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+        "docs/PEV_LOOP.md",
+        "docs/LIVING_SPEC.md",
+        "Spec drift prompt schema",
+        "README workflow summary",
+        "PEV upgrade proposal 範例，含 atom compatibility impact 與 semver recommendation"
       ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM-5-0005.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
       "execution_steps": [
         "確認 upstream/downstream 邊界",

@@ -3,6 +3,11 @@
 const fs = require('fs');
 const path = require('path');
 const handoffDiff = require('../../lib/handoff-diff-core');
+const {
+    formatTaskIdInspection,
+    inspectTaskId,
+    reserveNextTaskId,
+} = require('../../lib/task-id-guard');
 const { createLockAdapterConfig } = require('./lock-adapter-config');
 
 let yamlParser = null;
@@ -103,6 +108,24 @@ class LockAdapter {
 
     lockPath(taskId) {
         return path.join(this.lockDir, `${taskId}.lock.json`);
+    }
+
+    reserve(prefix, agentName) {
+        const reservation = reserveNextTaskId(this.projectRoot, prefix, agentName);
+        const lockPath = this.lockPath(reservation.taskId);
+        this.appendTrace({
+            command: 'reserve',
+            outcome: 'success',
+            taskId: reservation.taskId,
+            agentName,
+            lockPath: this.normalizeRel(lockPath),
+            files: [],
+            scopeFingerprint: '',
+            scopeFingerprintVersion: 'scope-fingerprint/v1',
+            conflictCount: 0,
+        });
+        console.log(`🆔 已保留新卡號 "${reservation.taskId}" → ${agentName}`);
+        return reservation;
     }
 
     readJson(filePath) {
@@ -455,7 +478,13 @@ class LockAdapter {
         this.ensureLockDir();
         const lp = this.lockPath(taskId);
         if (!fs.existsSync(lp)) {
-            console.log(`✅ "${taskId}" 未被鎖定，可安全操作`);
+            const inspection = inspectTaskId(this.projectRoot, taskId);
+            if (!inspection.occupied) {
+                console.log(`✅ "${taskId}" 未被鎖定，且尚未被任務卡 / task store 佔用，可作為新卡號`);
+                return;
+            }
+            console.log(`⚠️  "${taskId}" 未被鎖定，但已被佔用`);
+            console.log(`   ${formatTaskIdInspection(inspection)}`);
             return;
         }
         const existing = this.readJson(lp);

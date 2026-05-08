@@ -88,52 +88,88 @@
     "completed_at": "2026-05-06T15:07:10+08:00"
   },
   {
-    "doc_id": "doc_task_0349",
-    "id": "ATM-2-0042",
-    "title": "Unified Atomic Map Generator — Provisioning Facade & Map ID Policy",
-    "owner": "vs-code-gpt-5.4",
+    "doc_id": "doc_task_0358",
+    "id": "ATM-2-0048",
+    "title": "ATM task-router / onboarding contract",
+    "owner": "vs-insiders-gpt-5.4",
     "priority": "P0",
-    "status": "done",
-    "type": "manager",
+    "status": "in-progress",
+    "type": "implementation",
     "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4",
-    "started_at": "2026-05-07T18:56:24.0520935+08:00",
-    "started_by_agent": "vs-code-gpt-5.4",
-    "completed_at": "2026-05-07T19:12:29.7750424+08:00",
-    "chain_id": "ATM-MAP-PROVISIONING-V1",
-    "chain_step": "1/1",
-    "sensor_triggered_by": "atm-map-provisioning-gap",
-    "description": "建立 AtomicMapGenerator 作為新 map 誕生的唯一正式入口，收編 mapId policy、scaffold、mapHash/semanticFingerprint、registry 登錄與測試骨架。",
-    "related": [],
+    "created": "2026-05-08",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-08T15:32:00+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "讓第一次進到 ATM 環境的 Agent 不必自己拼裝資訊。不管它是從 task card、臨時口頭需求、legacy code extraction，還是直接在 ATM framework repo 內工作進來，都必須有看得到的入口，把它導到 `ATM-CORE-0004`、`atm create` 與對應驗證步驟。",
+    "related": [
+      "ATM-4-0003"
+    ],
     "depends": [
-      "ATM-2-0023",
-      "ATM-2-0038"
+      "ATM-2-0038",
+      "ATM-3-0002",
+      "ATM-3-0010"
     ],
     "acceptance": [
-      "定義單一 canonical map identity policy：mapId 改為 ATM-MAP-{NNNN}；map.* 只允許留在 fixture 名稱或非 canonical 描述，不得再進 registry 主識別",
-      "收緊 schemas/registry/atomic-map.schema.json、schemas/registry.schema.json 與對應 registry schema mirror，讓 canonical mapId 與 entrypoint ATM-* 規則一致",
-      "新增 generateAtomicMap() façade 與對應 CLI atm create-map / --dry-run 入口，輸出 allocation、workbenchPath、registry preview 與 idempotent 結果",
-      "generator 自動填入 mapId、mapVersion、members、edges、entrypoints、qualityTargets、mapHash、semanticFingerprint，避免 caller 手工串接 hash / registry primitive",
-      "建立 canonical map home atomic_workbench/maps/<mapId>/，至少落地 map.spec.json、map.integration.test.mjs、map.test.report.json 三件套",
-      "generated map 可正式寫入 atomic-registry.json 並同步 atomic_workbench/registry-catalog.md / provenance evidence，不得只落 workbench 不登錄",
-      "補一個 committed dogfood map entry 與 tests/core/map-id-allocator.test.mjs、tests/core/map-generator.test.mjs、tests/cli/create-map.test.mjs 三層驗證"
+      "task-router script 能讀 task card 與 tasks store，並輸出 routeKind / taskStatus / readFirst / validationHints",
+      "atom-generation 任務可穩定回傳 ATM-CORE-0004 與 atm create command template",
+      "ATM-4-0003 sample route 可指出 html-to-ucuf 與 normalizeCssColor",
+      "docs / task shard / script smoke test 同步回寫"
     ],
     "deliverables": [
-      "packages/core/src/manager/map-generator.mjs",
-      "packages/core/src/manager/map-id-allocator.mjs",
-      "packages/cli/src/commands/create-map.mjs",
-      "schemas/registry/atomic-map.schema.json",
-      "atomic_workbench/maps/",
-      "tests/core/map-generator.test.mjs"
+      "tools_node/atomic-framework/task-router.js",
+      "docs/agent-briefs/tasks/ATM-2-0048.md",
+      "docs/tasks/tasks-atm/tasks-atm-part-25.json"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4 先收斂 canonical mapId / schema scope / workbench home，再落地 map generator 與 CLI create-map 第一版 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: map-id allocator / map-generator / create-map / schema / police / registry / provenance / npm test / typecheck / lint 全通過 | 變更: 完成 canonical ATM-MAP schema、generateAtomicMap、create-map CLI、map-aware catalog/provenance 與 dogfood map ATM-MAP-0001 | 阻塞: none",
+    "notes": "2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: task-router onboarding contract in progress | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 原子 map 產生器開卡",
-      "summary": "建立 AtomicMapGenerator 作為新 map 誕生的唯一正式入口，收編 mapId policy、scaffold、mapHash/semanticFingerprint、registry 登錄與測試骨架。",
-      "position": "ATM-2（map provisioning / naming convergence / birth facade）",
-      "prereq": "ATM-2-0023 / ATM-2-0038"
+      "label": "ATM onboarding router 開卡",
+      "summary": "把陌生 Agent 的第一入口收斂成可執行的 task-router，先把 atom-generation 任務穩定路由到 ATM-CORE-0004。",
+      "position": "ATM-2 / onboarding contract",
+      "prereq": "ATM-2-0038、ATM-3-0002、ATM-3-0010"
+    },
+    "contracts": {
+      "input": [
+        "docs/agent-briefs/tasks/<task-id>.md",
+        "docs/tasks/tasks-atm.json",
+        "docs/tasks/tasks-atm/tasks-atm-part-*.json",
+        "docs/ATOM_GENERATOR.md",
+        "docs/SELF_HOSTING_ALPHA.md",
+        "AI-Atomic-Framework/packages/cli/src/atm.mjs"
+      ],
+      "output": [
+        "tools_node/atomic-framework/task-router.js",
+        "route report 含 routeKind / taskStatus / readFirst / primaryAtom / validationHints",
+        "atom-generation 任務可穩定回傳 ATM-CORE-0004 與 atm create command template",
+        "ATM-4-0003 sample route 可指出 html-to-ucuf 與 normalizeCssColor",
+        "docs / task shard / script smoke test 同步回寫"
+      ],
+      "validation_cmd": "node tools_node/atomic-framework/task-router.js --task ATM-4-0003 --format markdown\nnode tools_node/atomic-framework/task-router.js --task ATM-2-0048 --format markdown\nnode tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM-2-0048.md docs/tasks/tasks-atm/tasks-atm-part-25.json tools_node/atomic-framework/task-router.js",
+      "rollback_hint": "回退本卡 touched files；router 只做 onboarding readout，不改 upstream core。",
+      "execution_steps": [
+        "讀 task store 與 task card",
+        "判斷 atom-generation / docs-first 路由",
+        "組出 factory atom / command template / validation hints",
+        "跑 ATM-4-0003 sample smoke",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "tools_node/atomic-framework/task-router.js",
+        "docs/agent-briefs/tasks/ATM-2-0048.md"
+      ],
+      "validation_evidence": [
+        "node tools_node/atomic-framework/task-router.js --task ATM-4-0003 --format markdown",
+        "node tools_node/atomic-framework/task-router.js --task ATM-2-0048 --format markdown",
+        "node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM-2-0048.md docs/tasks/tasks-atm/tasks-atm-part-25.json tools_node/atomic-framework/task-router.js"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": []
     }
   }
 ]
