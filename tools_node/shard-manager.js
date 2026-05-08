@@ -31,6 +31,11 @@
 'use strict';
 const fs   = require('fs');
 const path = require('path');
+const { createShardAdapter } = require('./adapters/atm-3klife/shard-adapter');
+
+const shardAdapter = createShardAdapter({
+  profilePath: path.join(__dirname, 'adapters', 'atm-3klife', 'shard-profile.json'),
+});
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 function die(msg)  { console.error('[shard-manager] ERROR:', msg); process.exit(1); }
@@ -253,17 +258,19 @@ function validate(shardDir) {
     info(`  ✓ ${cfg.source}  (index stub, ${kb} KB)`);
   }
 
-  // Check for oversized shards and auto-parts sub-dirs
-  const OVERSIZE_KB = 40; // warn if any shard exceeds this
+  // Check for oversized shards and auto-parts sub-dirs.
+  // Threshold comes from adapter profile to keep host rules out of core logic.
+  const OVERSIZE_LINES = shardAdapter.getOversizeLineThreshold();
   for (const s of cfg.shards) {
     const p = path.join(cfg._dir, s.name + ext);
     if (!fs.existsSync(p)) continue;
     const kb = fs.statSync(p).size / 1024;
+    const lineCount = fs.readFileSync(p, 'utf8').split('\n').length;
     const subDir = path.join(cfg._dir, s.name);
     const hasAutoParts = fs.existsSync(path.join(subDir, '.shardrc.json'));
-    if (kb > OVERSIZE_KB) {
+    if (lineCount > OVERSIZE_LINES) {
       if (!hasAutoParts) {
-        console.warn(`[shard-manager] WARN: ${s.name}${ext} is ${kb.toFixed(1)} KB > ${OVERSIZE_KB} KB.`);
+        console.warn(`[shard-manager] WARN: ${s.name}${ext} is ${lineCount} lines > ${OVERSIZE_LINES} lines (size ${kb.toFixed(1)} KB).`);
         console.warn(`       Consider: node tools_node/shard-manager.js auto-split ${relDir(cfg._dir)}`);
       } else {
         info(`  • ${s.name}${ext} has auto-parts coverage in ${relDir(subDir)}/`);
@@ -313,7 +320,7 @@ function statusCmd(shardDir) {
  * collect all .shardrc.json source paths as "managed", then report
  * unmanaged large files as candidates for a new shard group.
  */
-function scanCmd(scanDir, thresholdKB = 6) {
+function scanCmd(scanDir, thresholdKB = shardAdapter.getScanThresholdKB()) {
   const absBase = path.resolve(scanDir);
   if (!fs.existsSync(absBase)) die(`Scan directory not found: ${absBase}`);
 
@@ -420,7 +427,7 @@ function scanCmd(scanDir, thresholdKB = 6) {
  * Re-running auto-split regenerates the parts from the current shard content.
  * keepSourceIntact is always true for auto-parts sub-dirs (source = parent shard).
  */
-function autoSplitCmd(shardDir, thresholdKB = 30) {
+function autoSplitCmd(shardDir, thresholdKB = shardAdapter.getAutoSplitThresholdKB()) {
   const cfg  = readCfg(shardDir);
   const ext  = cfg.type === 'json-array' ? '.json' : '.md';
   let   didSplit = false;
@@ -477,7 +484,7 @@ function splitJsonShardIntoParts(cfg, shard, shardPath, thresholdKB) {
   for (let start = 0; start < items.length; start += batchSize) {
     const end      = Math.min(start + batchSize, items.length);
     const batch    = items.slice(start, end);
-    const partName = `${shard.name}-part-${partIdx}`;
+    const partName = shardAdapter.buildPartName(shard.name, partIdx);
     const outPath  = path.join(subDir, partName + '.json');
     fs.writeFileSync(outPath, JSON.stringify(batch, null, 2), 'utf8');
     const kb = (fs.statSync(outPath).size / 1024).toFixed(1);
@@ -507,7 +514,7 @@ function splitMarkdownShardIntoParts(cfg, shard, shardPath, thresholdKB) {
   let partIdx = 1;
   for (let start = 0; start < lines.length; start += linesPerPart) {
     const end      = Math.min(start + linesPerPart, lines.length);
-    const partName = `${shard.name}-part-${partIdx}`;
+    const partName = shardAdapter.buildPartName(shard.name, partIdx);
     const outPath  = path.join(subDir, partName + '.md');
     fs.writeFileSync(outPath, lines.slice(start, end).join('\n'), 'utf8');
     const kb = (fs.statSync(outPath).size / 1024).toFixed(1);
@@ -633,7 +640,7 @@ switch (cmd) {
   }
   case 'auto-split': {
     if (!args[1]) die('auto-split requires a shardDir argument');
-    let threshold = 30;
+    let threshold = shardAdapter.getAutoSplitThresholdKB();
     for (let i = 2; i < args.length; i++) {
       if (args[i] === '--threshold' && args[i + 1]) { threshold = parseFloat(args[++i]); }
     }
@@ -643,7 +650,7 @@ switch (cmd) {
   case 'scan': {
     // scan [directory] [--threshold <KB>]
     let scanDir   = 'docs';
-    let threshold = 6;
+    let threshold = shardAdapter.getScanThresholdKB();
     const rest = args.slice(1);
     for (let i = 0; i < rest.length; i++) {
       if (rest[i] === '--threshold' && rest[i + 1]) { threshold = parseFloat(rest[++i]); }

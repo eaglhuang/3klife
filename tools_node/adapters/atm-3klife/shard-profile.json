@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "oversizeLineThreshold": 600,
+  "autoSplitThresholdKB": 30,
+  "scanThresholdKB": 6,
+  "partNaming": {
+    "separator": "-part-",
+    "startAt": 1,
+    "zeroPad": 0
+  }
+}

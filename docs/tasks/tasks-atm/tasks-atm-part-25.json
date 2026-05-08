@@ -99,27 +99,22 @@
     }
   },
   {
-    "id": "ATM-2.5-0001",
-    "title": "Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI",
+    "id": "ATM-3-0009",
+    "title": "shard-manager.js adapter 化：接入 ATM ShardAdapter",
     "status": "done",
-    "priority": "P0",
-    "phase": "ATM-2.5",
+    "priority": "P1",
+    "phase": "ATM-3",
     "type": "implementation",
     "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0303",
-    "started_at": "2026-05-06T16:42:17Z",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T17:06:00Z",
+    "owner": "vs-insiders-gpt-5.3-codex",
+    "started_at": "2026-05-08T18:22:28.8789592+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.3-codex",
+    "completed_at": "2026-05-08T18:22:28.8789592+08:00",
+    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
+    "doc_id": "doc_task_0309",
     "depends": [
-      "ATM-2-0013",
-      "ATM-2-0012",
-      "ATM-2-0004",
-      "ATM-2-0005"
+      "ATM-3-0006"
     ],
-    "acceptance": [
-      "alpha0 gate 僅驗 deterministic 4 條 criteria；version history / rollback / evolution metrics 僅作 readiness warning，不阻塞 alpha0 release"
-    ],
-    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | done | upstream 64ec0bc | gate criteria1-4 true；validate:neutrality/cli/self-hosting-alpha + npm test/typecheck/lint pass | blocker: none"
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無\n2026-05-07 架構釐清：本卡為 Phase 1（thin adapter 化），Phase 2 ShardAdapter 原子化為 ATM-GOV-* governed atom\n2026-05-08 | 狀態: done | 驗證: shard-manager validate docs/tasks ✅ / scan docs --threshold 6 ✅ / compute-gate(ts-syntax+eslint-rules) ✅ | 變更: shard-manager 改由 ShardAdapter + shard-profile 驅動；600 行門檻與 part 命名改由 profile 設定 | 阻塞: 無"
   }
 ]
