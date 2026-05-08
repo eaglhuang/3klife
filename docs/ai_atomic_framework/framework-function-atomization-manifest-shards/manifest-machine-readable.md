@@ -283,8 +283,8 @@
     "label": "Atomic Map schema / generator / provenance",
     "layer": "layer2",
     "surfaceKind": "atomic-map",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atomic-map",
     "taskRefs": [
       "ATM-2-0023",
       "ATM-2-0042",
@@ -294,10 +294,15 @@
       "ATM-2-0046"
     ],
     "artifactRefs": [
-      "docs/agent-briefs/tasks/ATM/ATM-2-0042.md"
+      "docs/agent-briefs/tasks/ATM/ATM-2-0023.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0042.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0043.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0044.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0045.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0046.md"
     ],
-    "nextCheck": "keep map generator canonical and do not bypass provenance",
-    "routeHint": "ATM-2-0023 / ATM-2-0042~ATM-2-0046",
+    "nextCheck": "recheck when map-level evolution, compare/report, or consumer integration changes the canonical map contract",
+    "routeHint": "ATM-2-0024 / ATM-2-0025 / ATM-4-0008",
     "findingContract": null
   },
   {

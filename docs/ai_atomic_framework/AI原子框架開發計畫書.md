@@ -426,6 +426,21 @@ docs/ai_atomic_framework/
 | `ATM-2-0021` | HumanReviewGate 已以 reference plugin 形式落地，包含 `atm review` CLI、`decision-snapshot.hash` 與 `upgrade-proposals.md` audit projection；core 不依賴 plugin 實作。 | 後續 PEV / semver docs 可引用此審核面，不另建 core hard dependency。 |
 | `ATM-2-0022` | Rollback proof 已從「移 registry pointer」升級為可驗證安全網，包含三段 hash proof、`statusReverted`、`semanticFingerprintReverted`、map target、member proofs 與 behavior reverse contract。 | `ATM-2.5-0004`、`ATM-3-0014`、`ATM-4-0007` 只負責把演化閉環跑完整，不重做 rollback proof contract。 |
 
+#### 2026-05-09 Atomic Map / provenance family closure 回寫
+
+`ATM-2-0023 / ATM-2-0042 / ATM-2-0043 / ATM-2-0044 / ATM-2-0045 / ATM-2-0046` 這條 Atomic Map / provenance family 現在已可被上層文件直接承認為 alpha1 foundation，而不是只留在 task card 與 upstream commit 歷史。由於六張卡都已 done，這次回寫會把 manifest row 正式升成 `covered-existing`；後續卡只承接 map-level evolution、consumer integration 與案例驗證。
+
+| 卡號 | 框架承認的完成語意 | 後續路由 |
+|---|---|---|
+| `ATM-2-0023` | Atomic Map schema / registry slice 已定義 `mapId`、`mapVersion`、`members`、`qualityTargets` 與 map-level registry contract，成為後續 map generator 與 provenance audit 的結構底座。 | `ATM-2-0024 / ATM-2-0025` 只在此 schema 上補 map-level compare / report，不回頭改 base contract。 |
+| `ATM-2-0042` | `generateAtomicMap()` 與 `atm create-map` 已把 map 生成正式納入 CLI / manager surface，證明 Atomic Map 不再只是附錄概念，而是可被 dogfood 的 governed artifact。 | 後續只重查 CLI / manager compatibility，不再重做 create-map birth slice。 |
+| `ATM-2-0043` | map workbench 與 generator template policy 已定稿：`atomic_workbench/maps/<mapId>/` 成為 atom sibling，canonical trio 固定為 `map.spec.json`、`map.integration.test.mjs`、`map.test.report.json`，並由 `validate:map-template` 鎖定 idempotent rerun contract。 | 新的 map template / scaffold 變更都必須先守住這組 canonical trio 與 validator contract。 |
+| `ATM-2-0044` | legacy `ATM-MAP-NEUTRALITY-0001` 已 backfill 成 allocator-issued canonical map `ATM-MAP-0002`；舊 map 只保留為 archived witness，lineage / migration evidence 可回放。 | 後續 map-level evolution 只沿 canonical mapId 前進；舊 witness 不再作 active registry target。 |
+| `ATM-2-0045` | map generator provenance audit 已正式落地，固定區分 `generator-born`、`backfilled-legacy`、`missing-provenance` 三類，讓每張 map 都能回答「怎麼來」。 | 後續若有手工 map 或外部匯入 case，必須先補 provenance 或產 follow-up finding。 |
+| `ATM-2-0046` | registry catalog 已具備 Maps section，固定投影 `mapId`、`memberCount`、`status`、`workbenchPath`，並能附註 provenance / backfill lineage。這讓 map family 也有正式索引面回答「怎麼連、怎麼驗」。 | `ATM-4-0008` 與後續 consumer integration 只擴充 map-level adoption，不回頭定義 catalog 基底。 |
+
+因此，Atomic Map family 的框架承認狀態已和 `AtomGenerator / provenance audit` 看齊：前者回答「map 怎麼來、怎麼連、怎麼驗」，後者回答「atom 怎麼來、怎麼驗」。後續再新增的 map 行為，只能以 follow-up 卡接在這個 foundation 上，而不是回頭改寫 done family。
+
 ### ATM-3：3KLife adapter 導入（downstream-only，需待 self-hosting alpha0 gate）（13 卡）
 
 | 範圍 | 任務 | 目的 |

@@ -78,15 +78,15 @@
     "doc_id": "doc_task_0328",
     "id": "ATM-2-0023",
     "title": "Atomic Map Schema & Registry",
-    "owner": "GitHubCopilot",
+    "owner": "vs-code-gpt-5.4",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "registry",
     "phase": "ATM-2",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-07T17:10:20.6103007+08:00",
+    "started_by_agent": "vs-code-gpt-5.4",
     "chain_id": "ATM-MAP-EVOLUTION-V2",
     "chain_step": "1/4",
     "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
@@ -108,13 +108,15 @@
       "fixtures/registry/map/minimal.json",
       "fixtures/registry/map/multi-edge.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "notes": "2026-05-07 | ??: done | ??: node scripts/validate-schemas.mjs --mode test?node scripts/validate-registry-core.mjs --mode test?npm.cmd test?npm.cmd run typecheck?npm.cmd run lint | ??: upstream ??? atomic map schema?mapHash helper?map registry entry helper?registry atom/map union ? map fixtures??? b4587f6 | ??: none\n2026-05-06 | ??: open | ??: pending | ??: ? ATM ????? v2 ?? B ?? | ??: ??????\n2026-05-07 ??/??/???????? acceptance?schema-additive???????? atomic-map.schema.json ?? optional semanticFingerprint?lineageLogRef?ttl?hot map entry ??? ? 10",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 附錄 B 開卡",
       "summary": "把 Atomic Map 升格為 registry 一等公民，為 map-level 演化建立可機讀基礎。",
       "position": "ATM-2",
       "prereq": "ATM-2-0014"
-    }
+    },
+    "completed_at": "2026-05-07T17:24:37.0274809+08:00",
+    "completed_by_agent": "vs-code-gpt-5.4"
   }
 ]

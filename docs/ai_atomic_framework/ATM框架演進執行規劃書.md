@@ -471,3 +471,18 @@ ATM-2-0022 rollback proof（失敗回退）
 | `ATM-2-0022` | Rollback proof 已吃掉安全網 acceptance：spec/code/test 三段 hash、`statusReverted`、`semanticFingerprintReverted`、`behaviorId` reverse contract、map target、`memberAtomProofs[]` 與 `mapGeneratorProvenance`。 | `ATM-2.5-0004`、`ATM-3-0014`、`ATM-4-0007` 負責把 proposal/review/rollback 串成首次 end-to-end 演化閉環。 |
 
 因此 `framework-function-atomization-manifest.md` 中 `Adapter API / Plugin SDK`、`Evidence / artifact log store`、`Evolution proposal / review / rollback` 維持 `open-card` 是正確狀態：`open-card` 代表 family 尚有後續路由，不代表上述 done cards 未被框架承認。`Registry / HashLock / version history` 則繼續維持 `covered-existing`，並以 `ATM-2-0014` 作為 version history slice 的完成來源。
+
+### C.14 Atomic Map / provenance family acknowledgement（2026-05-09）
+
+`ATM-2-0053` 承接的不是新功能，而是把 `ATM-2-0023 / ATM-2-0042 / ATM-2-0043 / ATM-2-0044 / ATM-2-0045 / ATM-2-0046` 這條 Atomic Map / provenance family 的 done 事實，正式回寫成框架可引用的語言與索引。這批卡和上一節不同的地方在於：六張卡現在都已 done，所以 `framework-function-atomization-manifest.md` 的 `Atomic Map schema / generator / provenance` row 可以從 `open-card` 升成 `covered-existing`。
+
+| done 卡 | 已由框架承認的 acceptance | 轉成 covered-existing 後的後續 route |
+|---|---|---|
+| `ATM-2-0023` | Atomic Map schema / registry slice 已確立 `mapId`、`mapVersion`、`members`、`qualityTargets` 與 map registry 基底。 | `ATM-2-0024 / ATM-2-0025` 僅補 map-level compare、report 與 evolution orchestration。 |
+| `ATM-2-0042` | `generateAtomicMap()` / `atm create-map` 已把 map birth surface 正式收進 manager 與 CLI。 | 未來只重查 CLI / manager compatibility，不再重做 create-map 核心。 |
+| `ATM-2-0043` | map template policy、canonical trio、`atomic_workbench/maps/<mapId>/` sibling layout、`validate:map-template` 都已落地。 | 新 map template 只能在這個 canonical trio 與 validator 契約上演進。 |
+| `ATM-2-0044` | legacy `ATM-MAP-NEUTRALITY-0001` 已 backfill 為 canonical `ATM-MAP-0002`，並保留 archived witness、lineage log、migration evidence。 | 後續 map evolution / integration 一律以 canonical mapId 前進。 |
+| `ATM-2-0045` | provenance audit 已能把 map 分成 `generator-born`、`backfilled-legacy`、`missing-provenance`，缺 provenance 直接產生 finding。 | 新外部 map 或手工 map 必須先補 provenance，再談升版或收錄。 |
+| `ATM-2-0046` | registry catalog Maps section 已成為正式索引面，能投影 `mapId / memberCount / status / workbenchPath`，並附註 provenance / backfill lineage。 | `ATM-4-0008` 與其他 consumer integration 只消費這個索引，不回頭重做 catalog surface。 |
+
+這次 promotion 的重點不是宣稱 map family 從此沒有後續，而是把「family closure」與「下一條演進路由」分開：coverage row 現在已被 existing artifacts 覆蓋，所以升成 `covered-existing`；新的 routeHint 則改指向 `ATM-2-0024 / ATM-2-0025 / ATM-4-0008` 這些未來的 map-level work，而不是再把已完成 family 假裝成 open-card。

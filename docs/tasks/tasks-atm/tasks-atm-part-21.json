@@ -88,9 +88,9 @@
     "doc_id": "doc_task_0353",
     "id": "ATM-2-0046",
     "title": "Registry Catalog Map Section Rendering",
-    "owner": "ClaudeCode_sonnet-4-6",
+    "owner": "codex-gpt-5",
     "priority": "P1",
-    "status": "open",
+    "status": "done",
     "type": "registry",
     "phase": "ATM-2",
     "created": "2026-05-07",
@@ -104,6 +104,10 @@
     ],
     "acceptance": [],
     "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 完成"
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 完成\n2026-05-09 | ??: in-progress | ??: pending | ??: codex-gpt-5 ???? registry catalog map section???? Maps projection ? snapshot/fixture | ??: none\n2026-05-09 | ??: done | ??: upstream `node scripts/validate-registry-catalog.mjs --mode test`?`npm.cmd test`?`npm.cmd run typecheck`?`npm.cmd run lint` ??? | ??: registry catalog ?? Atoms / Maps ?????Maps section ???? `mapId / memberCount / status / workbenchPath`??? provenance / lineage note?snapshot / fixture ???? | ??: none",
+    "started_at": "2026-05-09T00:40:17.1187218+08:00",
+    "started_by_agent": "codex-gpt-5",
+    "completed_at": "2026-05-09T01:21:00+08:00",
+    "completed_by_agent": "codex-gpt-5"
   }
 ]

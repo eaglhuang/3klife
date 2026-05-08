@@ -42,6 +42,12 @@
     }
   ],
   "localMap": "map/neutrality-map.json",
+  "canonicalMap": {
+    "mapId": "ATM-MAP-0002",
+    "specPath": "AI-Atomic-Framework/atomic_workbench/maps/ATM-MAP-0002/map.spec.json",
+    "lineageLogRef": "AI-Atomic-Framework/atomic_workbench/maps/ATM-MAP-0002/lineage-log.json",
+    "note": "ATM-MAP-NEUTRALITY-0001 remains an archived local witness after the upstream generator backfill."
+  },
   "validationCommands": [
     "node atomic_workbench/atoms/ATM-CORE-0003/tests/atom-tests.js",
     "node atomic_workbench/atoms/ATM-CORE-0003/tests/map-integration-tests.js"

@@ -66,9 +66,9 @@
     "doc_id": "doc_task_0351",
     "id": "ATM-2-0044",
     "title": "Backfill Existing Maps Through Map Generator",
-    "owner": "ClaudeCode_sonnet-4-6",
+    "owner": "codex-gpt-5",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "migration",
     "phase": "ATM-2",
     "created": "2026-05-07",
@@ -84,6 +84,10 @@
     ],
     "acceptance": [],
     "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 + ATM-2-0043 完成"
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 + ATM-2-0043 完成\n2026-05-09 | ??: in-progress | ??: pending | ??: codex-gpt-5 ???? legacy map backfill???? ATM-MAP-NEUTRALITY-0001 ??? canonical map workbench | ??: none\n2026-05-09 | ??: done | ??: upstream `node scripts/backfill-map-generator-provenance.mjs --source ATM-MAP-NEUTRALITY-0001 --dry-run` / `--write`?`npm.cmd test`?`npm.cmd run typecheck`?`npm.cmd run lint` ??? | ??: ? legacy `ATM-MAP-NEUTRALITY-0001` ??? canonical `ATM-MAP-0002`??? archived legacy source / report / lineage log???? ATM-CORE-0003 local witness ?? canonical map | ??: none",
+    "started_at": "2026-05-09T00:40:17.1187218+08:00",
+    "started_by_agent": "codex-gpt-5",
+    "completed_at": "2026-05-09T01:21:00+08:00",
+    "completed_by_agent": "codex-gpt-5"
   }
 ]

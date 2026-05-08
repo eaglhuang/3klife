@@ -25,6 +25,7 @@ function aggregateNeutralityReport(options) {
     sourceAtom: 'ATM-CORE-0003-E',
     atomId: 'ATM-CORE-0003',
     mapId: options.mapId || 'ATM-MAP-NEUTRALITY-0001',
+    canonicalMapId: options.canonicalMapId || 'ATM-MAP-0002',
     rootDir: options.rootDir || '',
     status,
     exitCode: status === 'pass' ? 0 : 1,

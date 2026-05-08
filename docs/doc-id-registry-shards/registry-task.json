@@ -2122,5 +2122,11 @@
     "path": "docs/agent-briefs/tasks/ATM/ATM-2-0052.md",
     "title": "[ATM-2-0052] Framework Done-Card Acknowledgement Backwrite",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0363",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-2-0053.md",
+    "title": "[ATM-2-0053] Atomic Map / Provenance Family Acknowledgement Backwrite",
+    "category": "task"
   }
 ]

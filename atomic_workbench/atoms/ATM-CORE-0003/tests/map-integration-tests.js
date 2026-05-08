@@ -8,6 +8,8 @@ const { runNeutralityMap } = require('../src/run-neutrality-map');
 
 const atomRoot = path.resolve(__dirname, '..');
 const reportPath = path.join(atomRoot, 'reports', 'neutrality-map-report.json');
+const legacyMapId = 'ATM-MAP-NEUTRALITY-0001';
+const canonicalMapId = 'ATM-MAP-0002';
 
 function fixtureRoot(name) {
   return path.join(atomRoot, 'fixtures', name);
@@ -32,7 +34,8 @@ function run() {
   ];
   const output = {
     schemaVersion: 'atm.neutrality-map-integration-report.v0',
-    mapId: 'ATM-MAP-NEUTRALITY-0001',
+    mapId: legacyMapId,
+    canonicalMapId,
     cases: cases.map((entry) => ({
       name: entry.name,
       status: entry.report.status,
@@ -44,7 +47,7 @@ function run() {
   };
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });
   fs.writeFileSync(reportPath, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
-  process.stdout.write(`[ATM-MAP-NEUTRALITY-0001] integration tests passed -> ${reportPath}\n`);
+  process.stdout.write(`[${legacyMapId} -> ${canonicalMapId}] integration tests passed -> ${reportPath}\n`);
 }
 
 run();

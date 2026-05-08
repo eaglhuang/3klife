@@ -110,6 +110,74 @@
     "completed_at": "2026-05-06T13:50:31+08:00"
   },
   {
+    "doc_id": "doc_task_0363",
+    "id": "ATM-2-0053",
+    "title": "Atomic Map / Provenance Family Acknowledgement Backwrite",
+    "owner": "codex-gpt-5",
+    "priority": "P0",
+    "status": "done",
+    "type": "governance",
+    "phase": "ATM-2",
+    "created": "2026-05-09",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "2026-05-09T01:14:19+08:00",
+    "started_by_agent": "codex-gpt-5",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "把 ATM-2-0023 / 0042 / 0043 / 0044 / 0045 / 0046 的 Atomic Map / provenance family done 成果補進 framework canonical 文件、manifest、fixture 與 task tracking，正式把 map provenance family 從 open-card 升成 covered-existing。",
+    "related": [],
+    "depends": [
+      "ATM-2-0023",
+      "ATM-2-0042",
+      "ATM-2-0043",
+      "ATM-2-0044",
+      "ATM-2-0045",
+      "ATM-2-0046"
+    ],
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-09 | ??: done | ??: validate-framework-atomization-coverage --write-fixture --strict?manifest shard rebuild/validate?encoding touched?context budget?git diff --check | ??: ?? ATM-2-0023 / 0042 / 0043 / 0044 / 0045 / 0046 family ?????? Atomic Map schema / generator / provenance row ?? covered-existing | ??: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM map/provenance backwrite",
+      "summary": "承認 Atomic Map schema / generator / provenance family 已完成，並把 family closure 回寫到框架索引。",
+      "position": "ATM-2 / framework acknowledgement follow-up",
+      "prereq": "ATM-2-0023 / ATM-2-0042 / ATM-2-0043 / ATM-2-0044 / ATM-2-0045 / ATM-2-0046 done"
+    },
+    "contracts": {
+      "input": [
+        "source done task cards",
+        "upstream AI-Atomic-Framework generator/catalog/provenance evidence",
+        "framework manifest row currently open-card"
+      ],
+      "output": [
+        "canonical 文件補齊 map provenance 完成語意",
+        "manifest table / machine-readable inventory / shard / fixture 升成 covered-existing",
+        "task tracking 與 doc-id registry 同步"
+      ],
+      "validation_cmd": "node tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --write-fixture\\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict\\nnpm.cmd run check:encoding:touched -- --files <touched files>\\nnode tools_node/check-context-budget.js --changed --emit-keep-note\\ngit diff --check",
+      "rollback_hint": "回退 ATM-2-0053 任務卡、tasks-atm shard / aggregate、三份框架文件、manifest shards 與 coverage fixture；不得改寫 source done cards 與 upstream AI-Atomic-Framework 完成歷史。",
+      "execution_steps": [
+        "建立並鎖定 ATM-2-0053",
+        "核對 ATM-2-0023 / 0042 / 0043 / 0044 / 0045 / 0046 done 證據與 route",
+        "補寫 AI原子框架開發計畫書 / ATM框架演進執行規劃書",
+        "更新 framework-function-atomization-manifest table / machine-readable inventory / shards / fixture",
+        "同步 tasks-atm tracking 與 doc-id registry",
+        "執行 coverage / encoding / context / diff 驗證"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "completed_at": "2026-05-09T02:05:00+08:00",
+    "completed_by_agent": "codex-gpt-5"
+  },
+  {
     "id": "ATM-3-0011",
     "title": "encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter",
     "status": "open",

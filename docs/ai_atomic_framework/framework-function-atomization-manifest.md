@@ -10,6 +10,7 @@
 - manifest 自己也有一條 self-coverage meta-surface，避免 coverage gate 只管別人、不管自己。
 - machine-readable inventory 與 fixture 必須持續對齊；validator 會把 drift 當成失敗。
 - 2026-05-09 補入 done-card acknowledgement：`ATM-2-0006 / 0009 / 0014 / 0020 / 0021 / 0022` 的完成成果已成為 framework 可引用語言；family row 若仍有後續卡，仍維持 `open-card`。
+- 2026-05-09 補入 `ATM-2-0053` family closure backwrite：`ATM-2-0023 / ATM-2-0042 / ATM-2-0043 / ATM-2-0044 / ATM-2-0045 / ATM-2-0046` 已把 Atomic Map schema / generator / provenance 補成完整 foundation，因此該 row 正式升成 `covered-existing`。
 
 ## Layer Boundary
 
@@ -46,7 +47,7 @@
 | Atom identity / behavior / state machine | Layer 2 | open-card | `ATM-2-0026`、`ATM-2-0027`、`ATM-2-0028`、`ATM-2-0029` | behavior pack manifest 必須覆蓋 10 behaviors |
 | Atomization / infection adapter contract | Layer 2 | open-card | `ATM-2-0033`、`ATM-4-0004`、`ATM-4-0005` | atomize / infect 不得跳過 neutrality scan / dry-run proposal |
 | AtomGenerator / provenance audit | Layer 2 | covered-existing | `ATM-2-0038`、`ATM-2-0039`、`ATM-2-0040`、`ATM-2-0041` | 新 atom 不得繞過 generator；pre-generator atom 必須有 backfilled witness |
-| Atomic Map schema / generator / provenance | Layer 2 | open-card | `ATM-2-0023`、`ATM-2-0042`、`ATM-2-0043`、`ATM-2-0044`、`ATM-2-0045`、`ATM-2-0046` | new map 不得繞過 map generator |
+| Atomic Map schema / generator / provenance | Layer 2 | covered-existing | `ATM-2-0023`、`ATM-2-0042`、`ATM-2-0043`、`ATM-2-0044`、`ATM-2-0045`、`ATM-2-0046` | recheck only when `ATM-2-0024`、`ATM-2-0025`、`ATM-4-0008` changes map-level evolution / integration contracts |
 | Task router / onboarding | Layer 2 | covered-existing | `ATM-2-0048` | onboarding / router ???????? router contract ????? |
 | Governance shard strategy | Layer 2 | covered-existing | `ATM-2-0049` | shard strategy ??? coverage validator ????? shard ??????? |
 | Task card lifecycle atomic map | Layer 2 | covered-existing | `ATM-3-0015` | task lifecycle member atoms 與 orchestration 邊界已定義；不得誤當全框架 coverage |
@@ -356,8 +357,8 @@
     "label": "Atomic Map schema / generator / provenance",
     "layer": "layer2",
     "surfaceKind": "atomic-map",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atomic-map",
     "taskRefs": [
       "ATM-2-0023",
       "ATM-2-0042",
@@ -367,10 +368,15 @@
       "ATM-2-0046"
     ],
     "artifactRefs": [
-      "docs/agent-briefs/tasks/ATM/ATM-2-0042.md"
+      "docs/agent-briefs/tasks/ATM/ATM-2-0023.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0042.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0043.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0044.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0045.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0046.md"
     ],
-    "nextCheck": "keep map generator canonical and do not bypass provenance",
-    "routeHint": "ATM-2-0023 / ATM-2-0042~ATM-2-0046",
+    "nextCheck": "recheck when map-level evolution, compare/report, or consumer integration changes the canonical map contract",
+    "routeHint": "ATM-2-0024 / ATM-2-0025 / ATM-4-0008",
     "findingContract": null
   },
   {

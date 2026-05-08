@@ -1,9 +1,12 @@
 {
   "schemaVersion": "atm.local-atomic-map.v0",
   "mapId": "ATM-MAP-NEUTRALITY-0001",
+  "canonicalMapId": "ATM-MAP-0002",
   "mapVersion": "0.1.0-local",
   "ownerAtom": "ATM-CORE-0003",
   "scope": "ATM-2-0012 local map smoke",
+  "archived": true,
+  "lineageLogRef": "AI-Atomic-Framework/atomic_workbench/maps/ATM-MAP-0002/lineage-log.json",
   "mapHashAlgorithm": "sha256(sorted members + edges + entrypoints)",
   "mapHashInput": {
     "members": [

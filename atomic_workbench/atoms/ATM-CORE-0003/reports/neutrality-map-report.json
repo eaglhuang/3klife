@@ -1,6 +1,7 @@
 {
   "schemaVersion": "atm.neutrality-map-integration-report.v0",
   "mapId": "ATM-MAP-NEUTRALITY-0001",
+  "canonicalMapId": "ATM-MAP-0002",
   "cases": [
     {
       "name": "clean",

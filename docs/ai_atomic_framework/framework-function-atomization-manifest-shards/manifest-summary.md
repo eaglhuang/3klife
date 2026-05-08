@@ -14,6 +14,7 @@
 - manifest 自己也有一條 self-coverage meta-surface，避免 coverage gate 只管別人、不管自己。
 - machine-readable inventory 與 fixture 必須持續對齊；validator 會把 drift 當成失敗。
 - 2026-05-09 補入 done-card acknowledgement：`ATM-2-0006 / 0009 / 0014 / 0020 / 0021 / 0022` 的完成成果已成為 framework 可引用語言；family row 若仍有後續卡，仍維持 `open-card`。
+- 2026-05-09 補入 `ATM-2-0053` family closure backwrite：`ATM-2-0023 / ATM-2-0042 / ATM-2-0043 / ATM-2-0044 / ATM-2-0045 / ATM-2-0046` 已把 Atomic Map schema / generator / provenance 補成完整 foundation，因此該 row 正式升成 `covered-existing`。
 
 ## Layer Boundary
 
