@@ -422,3 +422,15 @@ ATM-2-0022 rollback proof（失敗回退）
 進一步盤點後，`ATM-3-0015` 仍只覆蓋 task card system。ATM 的全框架 dogfooding 還缺一個總控層，能證明 CLI commands、Atomic Spec / Scaffold、Registry / HashLock / Index / Catalog、Test / Report / Evidence、Police / Rule Guards、Adapter interfaces、Task lifecycle、Atomic Map、PEV / Lifecycle docs 等 Layer 2 framework functions 都有 atom / atomic map / adapter facade 對應。
 
 因此新增 `ATM-2-0050`：建立 `docs/ai_atomic_framework/framework-function-atomization-manifest.md` 與 coverage validator。之後任何 framework function 若未被列入 manifest，或 Layer 2 項目沒有對應 atom / map / adapter facade / open task，validation 應 fail。Layer 1 constitutional schema 只做 hash-lock / migration gate；Layer 3 mutable host config 只做 git / adapter config 管理，不列入「必須原子化」範圍。
+
+固定開工路線正式定義如下：
+
+1. 先完成 `ATM-2-0048`，把 task-router / onboarding contract 收斂成唯一 canonical entry，避免後續 framework atomization 工作從 task card、legacy extraction、ad-hoc guide 三條入口分裂。
+2. 再完成 `ATM-3-0015`，把 task card lifecycle 收斂成 end-to-end governed atomic map，明確定義 `allocateTaskId -> reserveTaskId -> openTaskCard -> lockTaskScope -> writeTaskShard -> validateTaskShard -> syncDocRegistry -> finalizeTaskLifecycle`。
+3. 最後才由 `ATM-2-0050` 啟用 framework-wide coverage validator，把全框架 Layer 2 functions 納入 block gate。
+
+補充約束：
+
+- `ATM-2-0049` 已完成 task id reservation / lock race hardening，視為上述路線的已落地前置，不另占節點。
+- 在 `ATM-2-0048` 與 `ATM-3-0015` 未完成前，`ATM-2-0050` 僅可進行 manifest backwrite、gap mapping、advisory report；不得將 coverage validator 作為 blocker。
+- 任一新卡若宣稱處理「全框架原子化」，必須在 acceptance 或 notes 中標註自己屬於 `0048`、`3-0015`、`0050` 哪一段路線，避免把局部治理誤判為全局完成。
