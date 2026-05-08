@@ -1,0 +1,24 @@
+{
+  "version": "1.0.0",
+  "categoryPrefixes": {
+    "tech": "doc_tech",
+    "ui": "doc_ui",
+    "art": "doc_art",
+    "data": "doc_data",
+    "spec": "doc_spec",
+    "index": "doc_index",
+    "task": "doc_task",
+    "ai": "doc_ai",
+    "agentskill": "doc_agentskill",
+    "server": "doc_server",
+    "other": "doc_other"
+  },
+  "serverSubtypePrefixes": {
+    "service": "doc_server_service",
+    "pipeline": "doc_server_pipeline",
+    "data": "doc_server_data",
+    "ops": "doc_server_ops",
+    "other": "doc_server_other"
+  },
+  "serverSubtypeFallback": "other"
+}

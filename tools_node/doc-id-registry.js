@@ -20,6 +20,7 @@ const cp = require('child_process');
 
 const registryStore = require('./lib/doc-id-registry-loader');
 const registryQueue = require('./lib/doc-id-registry-queue');
+const { createDocumentIndexAdapter } = require('./adapters/atm-3klife/document-index-adapter');
 
 const ROOT = path.resolve(__dirname, '..');
 const REGISTRY_JSON = registryStore.REGISTRY_JSON;
@@ -48,6 +49,9 @@ const SERVER_SUBTYPES = ['service', 'pipeline', 'data', 'ops', 'other'];
 
 const CAT_PREFIX = Object.fromEntries(CATEGORIES.map(([category, prefix]) => [category, prefix]));
 const CAT_LABEL = Object.fromEntries(CATEGORIES.map(([category, , label]) => [category, label]));
+const documentIndexAdapter = createDocumentIndexAdapter({
+  profilePath: path.join(ROOT, 'tools_node', 'adapters', 'atm-3klife', 'doc-index-profile.json'),
+});
 
 function classify(relPath) {
   const normalizedPath = relPath.replace(/\\/g, '/');
@@ -686,23 +690,18 @@ async function assignFile(filePath) {
     const current = registryStore.loadDocIdRegistryRaw();
     const registry = { ...current.registry };
 
-    for (const [id, entry] of Object.entries(registry)) {
-      if (entry.path === relPath) {
-        console.log(`Already registered: ${relPath} → ${id}`);
-        const syncResult = injectDocId(absPath, id, false);
-        console.log(`   Sync:     ${syncResult}`);
-        if (optimistic.id && optimistic.id !== id) {
-          console.log(`   Queue:    predicted ${optimistic.id}, observed ${id} after waiting for earlier writes`);
-        }
-        return id;
+    const assignment = documentIndexAdapter.assignId(relPath, classified, registry);
+    if (assignment.reason === 'already-registered') {
+      console.log(`Already registered: ${relPath} → ${assignment.id}`);
+      const syncResult = injectDocId(absPath, assignment.id, false);
+      console.log(`   Sync:     ${syncResult}`);
+      if (optimistic.id && optimistic.id !== assignment.id) {
+        console.log(`   Queue:    predicted ${optimistic.id}, observed ${assignment.id} after waiting for earlier writes`);
       }
+      return assignment.id;
     }
 
-    const newId = allocateNextDocId(
-      initializeNextNumbers(registry, new Set()),
-      classified.category,
-      classified.subtype
-    );
+    const newId = assignment.id;
     const title = readTitle(absPath);
     const entry = {
       path: relPath,
