@@ -56,26 +56,26 @@
       "ATM-3-0015"
     ],
     "acceptance": [
-      "framework-function-atomization-manifest.md 逐項列出 Layer 1 / Layer 2 / Layer 3 功能與 coverage status",
-      "每個 Layer 2 framework function 至少對應 atom / atomic map / adapter facade / open task",
-      "ATM-3-0015 僅標為 task card lifecycle coverage，不得誤判為全框架 coverage",
-      "validator 能在缺 manifest entry、例外 layer 不符、Layer 2 無 coverage 時 fail",
-      "規劃文件已回寫 Roadmap、開發計畫書、演進規劃書與進化版原子提案",
-      "固定路線正式化：ATM-2-0048 → ATM-3-0015 → ATM-2-0050，不得跳步",
-      "ATM-2-0049 視為已落地前置，不另占固定路線節點",
-      "ATM-2-0048 / ATM-3-0015 未完成前，ATM-2-0050 只能做 manifest backwrite / gap mapping / advisory report，不得把 coverage validator 升級成 blocker",
-      "documentation-governance-policy.md 與 documentation-role-map.md 完成，root docs 皆有建議角色與建議處置",
-      "validate-atm-doc-governance 固定 Agent Boot Order 與 root / shard 盤點，避免新文件平行長出第二份主真相"
+      "framework-function-atomization-manifest.md ?? Machine-Readable Inventory ??????? fixture ??",
+      "?? Layer 2 framework function ???? atom / atomic map / adapter facade / open task",
+      "ATM-3-0015 ??? task card lifecycle coverage????????? coverage",
+      "validator ??? manifest entry??? layer ???Layer 2 ? coverage?fixture drift ? fail",
+      "?????? validator / fixture ???????",
+      "????????ATM-2-0048 ? ATM-3-0015 ? ATM-2-0050?????",
+      "ATM-2-0049 ?????????????????",
+      "ATM-2-0048?ATM-2-0049?ATM-3-0015 ???????????????",
+      "validate-atm-doc-governance ?? Agent Boot Order ? root / shard ??????????????????",
+      "manifest JSON block ? fixture ??????? coverage gate ? deterministic validator ????"
     ],
     "deliverables": [
       "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
-      "machine-readable coverage manifest fixture",
-      "validate-framework-atomization-coverage command",
-      "planning docs backwrite",
-      "gap-to-task-card mapping",
-      "docs/ai_atomic_framework/documentation-governance-policy.md",
-      "docs/ai_atomic_framework/documentation-role-map.md",
-      "tools_node/validate-atm-doc-governance.js"
+      "tools_node/validate-framework-atomization-coverage.js",
+      "tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json",
+      "docs/tasks/tasks-atm/tasks-atm-part-12.json",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0050.md",
+      "planning docs backwrite if validator paths change",
+      "tools_node/validate-atm-doc-governance.js",
+      "tools_node/doc-id-registry.js"
     ],
     "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 補齊 ATM framework-wide 原子化 coverage manifest / gate；不重複 generator、map generator、task card system atomic map 既有功能卡 | 阻塞: 等 ATM-2-0048 / ATM-2-0049 / ATM-3-0015 收斂\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 補入固定開工路線條文；正式規定 framework-wide atomization follow-up 必須先經 ATM-2-0048 → ATM-3-0015 → ATM-2-0050 | 阻塞: ATM-2-0048 尚未完成，ATM-3-0015 尚未落地 atomic map validator\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 新增文件治理政策與現況角色盤點，先完成邏輯收斂，再規劃後續實體搬移 | 阻塞: none\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: police 主動化 model 收斂為 trigger/scope/severity/action、authoring-time / transition-time / sweep-time、fast/slow 與 machine-readable findings | 阻塞: none",
     "brief": {
@@ -125,6 +125,15 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0050.md docs/tasks/tasks-atm/tasks-atm-part-12.json docs/ai_atomic_framework/framework-function-atomization-manifest.md tools_node/validate-framework-atomization-coverage.js tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict\nnode tools_node/validate-atm-doc-governance.js --root docs/ai_atomic_framework --strict\nnode tools_node/doc-id-registry.js",
+    "rollback_hint": "?? machine-readable inventory block?fixture?validator?planning docs backwrite ????????????? ATM-2-0038 / ATM-2-0041 / ATM-2-0042 / ATM-2-0048 / ATM-2-0049 / ATM-3-0015 ????????",
+    "execution_steps": [
+      "Sync the manifest JSON block and fixture from the current inventory table.",
+      "Build the validator so manifest, fixture, and task store must agree.",
+      "Backwrite task card and shard command paths to the new fixture / validator.",
+      "Run encoding, governance, and doc-id checks.",
+      "Only then mark the card complete and commit."
+    ]
   }
 ]
