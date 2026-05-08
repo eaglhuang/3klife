@@ -418,6 +418,25 @@ ATM-2-0022 rollback proof（失敗回退）
 
 因此新增 `ATM-3-0015` 作為正式規劃缺口補卡，專門定義：`allocateTaskId → reserveTaskId → openTaskCard → lockTaskScope → writeTaskShard → validateTaskShard → syncDocRegistry → finalizeTaskLifecycle` 這條 governed flow 的原子邊界與 orchestration 責任。後續 `ATM-3` 的 dogfooding 驗收，不只看單一 helper 是否 adapter 化，也必須看這條 end-to-end task card system atomic map 是否存在且可被獨立驗證。
 
+#### Task Card Atomic Map（member atoms）
+
+| 原子節點 | 主要責任 | 3KLife 對應 |
+| --- | --- | --- |
+| `allocateTaskId` / `reserveTaskId` | 推導下一個合法卡號，並在併發下原子保留卡號 | `ATM-3-0010` / `ATM-3-0006` |
+| `openTaskCard` | 產出 Markdown task card 與 frontmatter | `ATM-3-0010` |
+| `lockTaskScope` | 寫入 canonical `files[]`、scope fingerprint 與 lock metadata | `ATM-3-0006` |
+| `writeTaskShard` | 更新 task aggregate / shard 真相 | `ATM-3-0009` |
+| `validateTaskShard` | 驗證 part JSON、門檻、摘要與路由 | `ATM-3-0009` |
+| `syncDocRegistry` | 將新卡回寫 doc_id registry / index | `ATM-3-0008` |
+| `finalizeTaskLifecycle` | open / in-progress / done 轉換、unlock、evidence 封口 | `ATM-3-0010` + `ATM-3-0006` |
+| `rule guard preflight` | 只輸出 findings，不參與 lifecycle mutation | `ATM-3-0012` |
+
+- `ATM-3-0015` 是這張 map 的 orchestration 卡，不是新 helper；它只定義邊界與順序，不把整條流程塞進單一函式。
+- `TaskAdapter` 只負責 lifecycle orchestration。
+- `LockAdapter` 只負責 reservation / lock / unlock 與 `files[]` 真相。
+- `ShardAdapter` 只負責 shard write / validate / part naming。
+- `RuleGuardAdapter` 只負責 findings 與 advisory，不碰 task card 狀態。
+
 ### C.12 Framework Function Atomization Coverage Gate（新增）
 
 進一步盤點後，`ATM-3-0015` 仍只覆蓋 task card system。ATM 的全框架 dogfooding 還缺一個總控層，能證明 CLI commands、Atomic Spec / Scaffold、Registry / HashLock / Index / Catalog、Test / Report / Evidence、Police / Rule Guards、Adapter interfaces、Task lifecycle、Atomic Map、PEV / Lifecycle docs 等 Layer 2 framework functions 都有 atom / atomic map / adapter facade 對應。

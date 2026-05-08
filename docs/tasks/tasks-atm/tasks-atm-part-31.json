@@ -99,19 +99,21 @@
     "doc_id": "doc_task_0357",
     "id": "ATM-3-0015",
     "title": "Task card system atomic map planning",
-    "owner": "vs-code-gpt-5.4-mini",
+    "owner": "codex-gpt-5.5",
     "priority": "P0",
-    "status": "in-progress",
+    "status": "done",
     "type": "architecture",
     "phase": "ATM-3",
     "created": "2026-05-08",
     "created_by_agent": "vs-code-gpt-5.4-mini",
     "started_at": "2026-05-08T18:18:03+08:00",
     "started_by_agent": "codex-gpt-5",
+    "completed_at": "2026-05-08T18:57:52.7741562+08:00",
+    "completed_by_agent": "codex-gpt-5.5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "?? task card system ????????????? allocateTaskId ? reserveTaskId ? openTaskCard ? lockTaskScope ? writeTaskShard ? validateTaskShard ? syncDocRegistry ? finalizeTaskLifecycle ???????????",
+    "description": "把 ATM-3-0006、ATM-3-0008、ATM-3-0009、ATM-3-0010、ATM-3-0012 組成一條可治理的 task card atomic map，明確拆出 allocateTaskId、reserveTaskId、openTaskCard、lockTaskScope、writeTaskShard、validateTaskShard、syncDocRegistry、finalizeTaskLifecycle 的邊界與 orchestrator 責任。",
     "related": [],
     "depends": [
       "ATM-3-0006",
@@ -121,49 +123,74 @@
       "ATM-3-0012"
     ],
     "acceptance": [
-      "?? task card system atomic map ???? member atom ??",
-      "???? allocateTaskId / reserveTaskId / openTaskCard / lockTaskScope / writeTaskShard / validateTaskShard / syncDocRegistry / finalizeTaskLifecycle ???",
-      "????????? ATM-3 ????",
-      "TaskAdapter / LockAdapter / ShardAdapter / RuleGuardAdapter ??? orchestrator ?????"
+      "task card system atomic map 要有清楚的 member atom 清單",
+      "allocateTaskId / reserveTaskId / openTaskCard / lockTaskScope / writeTaskShard / validateTaskShard / syncDocRegistry / finalizeTaskLifecycle 的邊界要能對照",
+      "規劃文件要補上 ATM-3 卡號映射",
+      "TaskAdapter / LockAdapter / ShardAdapter / RuleGuardAdapter 的 orchestrator 責任要明確",
+      "後續 implementation 不能再用單體 helper 直接串完整流程"
     ],
-    "deliverables": [],
-    "notes": "2026-05-08 | ??: in-progress | ??: tasks-atm thin index / shard repair in flight | ??: ??? ATM-3-0015 ??? tasks-atm store???? part-25 ?? invalid JSON | ??: none",
+    "deliverables": [
+      "docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
+      "docs/agent-briefs/tasks/ATM/ATM-3-0015.md",
+      "docs/tasks/tasks-atm/tasks-atm-part-31.json",
+      "docs/tasks/tasks-atm.json"
+    ],
+    "notes": "2026-05-08 | 狀態: done | 驗證: node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-3-0015.md docs/tasks/tasks-atm/tasks-atm-part-31.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/framework-function-atomization-manifest.md ✅；node tools_node/task-lock.js check ATM-3-0015 ✅；node tools_node/task-lock.js lock ATM-3-0015 codex-gpt-5.5 --files docs/agent-briefs/tasks/ATM/ATM-3-0015.md docs/tasks/tasks-atm/tasks-atm-part-31.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/framework-function-atomization-manifest.md ✅ | 變更: 補上 task card atomic map 路線圖、member atoms 與 orchestrator 邊界，並同步 tasks-atm store 與 manifest | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM governance tooling ?????",
-      "summary": "? task card system ????????? atomic map?",
+      "label": "ATM task card atomic map",
+      "summary": "把 task card system 收斂成可治理的 atomic map",
       "position": "ATM-3",
       "prereq": "ATM-3-0006 / ATM-3-0008 / ATM-3-0009 / ATM-3-0010 / ATM-3-0012"
     },
     "contracts": {
       "input": [
-        "ATM-3-0006 LockAdapter thin wrapper ???",
-        "ATM-3-0009 ShardAdapter thin wrapper ?????",
-        "ATM-3-0010 TaskAdapter thin wrapper ?????",
-        "ATM-3-0012 task-scope / import-boundary rule-pack ?????",
-        "??????????.md ?11 ????????? dogfood ???"
+        "ATM-3-0006 LockAdapter thin wrapper",
+        "ATM-3-0008 DocumentIndexAdapter thin wrapper",
+        "ATM-3-0009 ShardAdapter thin wrapper",
+        "ATM-3-0010 TaskAdapter thin wrapper",
+        "ATM-3-0012 RuleGuardAdapter / rule-pack 規劃",
+        "docs/ai_atomic_framework/關於進化版的原子提案.md §11"
       ],
       "output": [
-        "?? task card system atomic map ???? member atom ??",
-        "???? allocateTaskId / reserveTaskId / openTaskCard / lockTaskScope / writeTaskShard / validateTaskShard / syncDocRegistry / finalizeTaskLifecycle ???",
-        "????????? ATM-3 ????",
-        "TaskAdapter / LockAdapter / ShardAdapter / RuleGuardAdapter ??? orchestrator ?????"
+        "task card system atomic map 路線圖與 member atom 清單",
+        "allocateTaskId / reserveTaskId / openTaskCard / lockTaskScope / writeTaskShard / validateTaskShard / syncDocRegistry / finalizeTaskLifecycle 的邊界定義",
+        "規劃文件補上 ATM-3 卡號映射",
+        "TaskAdapter / LockAdapter / ShardAdapter / RuleGuardAdapter 的 orchestrator 責任明確化",
+        "不得再用單體 helper 直接串完整流程"
       ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-3-0015.md docs/tasks/tasks-atm/tasks-atm-part-25.json",
-      "rollback_hint": "?? touched files????? task card ?????",
+      "validation_cmd": "node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-3-0015.md docs/tasks/tasks-atm/tasks-atm-part-31.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/framework-function-atomization-manifest.md",
+      "rollback_hint": "回退本卡與規劃文件 backwrite；若 tasks-atm store 需要修復，另開專卡，不在本卡直接手修 unrelated task content。",
       "execution_steps": [
-        "?? task-lock / task-card-opener / shard-manager / task-scope ????????",
-        "?? ATM-3 ??? member atoms",
-        "?? task card system atomic map ????? shard ??",
-        "?? thin index ? task card ??"
+        "盤點 task-card-opener / task-lock / shard-manager / task-scope 現有 ATM-3 卡",
+        "定義 end-to-end task card atomic map 與 member atoms",
+        "把映射補進規劃文件與 manifest",
+        "同步 tasks-atm store 與 summary"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "pending",
+      "artifact_paths": [
+        "docs/agent-briefs/tasks/ATM/ATM-3-0015.md",
+        "docs/tasks/tasks-atm/tasks-atm-part-31.json",
+        "docs/tasks/tasks-atm.json",
+        "docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
+        "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+        "docs/ai_atomic_framework/framework-function-atomization-manifest.md"
+      ],
+      "validation_evidence": [
+        "node tools_node/check-context-budget.js --changed --emit-keep-note",
+        "node tools_node/task-lock.js check ATM-3-0015",
+        "node tools_node/task-lock.js lock ATM-3-0015 codex-gpt-5.5 --files docs/agent-briefs/tasks/ATM/ATM-3-0015.md docs/tasks/tasks-atm/tasks-atm-part-31.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/framework-function-atomization-manifest.md"
+      ],
+      "handoff_diff_status": "completed; pending commit",
       "trace_artifacts": [],
-      "metrics_summary": []
+      "metrics_summary": [
+        "task card atomic map has explicit member atoms and orchestration boundaries",
+        "tasks-atm store can now reflect a done ATM-3-0015 entry",
+        "framework-function-atomization-manifest entry can move from open-card to covered-existing"
+      ]
     }
   }
 ]

@@ -205,6 +205,8 @@ ATM 若要達到「下載後放在任意專案根目錄，AI agent 讀 README �
 
 補充原則：上述 `Task / scope governance` 不能只停在 adapter-first 接線。ATM 自己的 task card system 也必須 dogfood 原子化，因此除 `ATM-3-0006 / 0009 / 0010 / 0012` 的單工具卡外，另補 `ATM-3-0015` 收斂 end-to-end task card atomic map（allocate/reserve/open/lock/write-shard/validate/sync/finalize）。
 
+對應的 member atom 與責任分界已由 `ATM-3-0015` 寫入 `ATM框架演進執行規劃書.md` 的 flow table：`TaskAdapter` 只管排程與 finalize，`LockAdapter` 只管 reserve / lock，`ShardAdapter` 只管 shard write / validate，`RuleGuardAdapter` 只管 findings。這讓 task card system 的原子化不再只是口號，而是可以對照卡號的流程圖。
+
 2026-05-08 補強：`ATM-3-0015` 只解決 task card lifecycle；全 ATM framework 還需要一個總控 coverage gate。`ATM-2-0050` 以 `docs/ai_atomic_framework/framework-function-atomization-manifest.md` 盤點所有 Layer 2 framework functions，要求每項都映射到 atom / atomic map / adapter facade / 正式例外，並用 validator 防止新功能繞過原子化。
 
 | Reports / evidence / handoff | `.atm/reports/*.json`、`.atm/evidence/*.json`、validation evidence、context summary、handoff bundle | `compute-gate` reports、validation_evidence、handoff/context summary tools |

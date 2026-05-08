@@ -49,7 +49,7 @@
 | Atomic Map schema / generator / provenance | Layer 2 | open-card | `ATM-2-0023`、`ATM-2-0042`、`ATM-2-0043`、`ATM-2-0044`、`ATM-2-0045`、`ATM-2-0046` | new map 不得繞過 map generator |
 | Task router / onboarding | Layer 2 | open-card | `ATM-2-0048` | 所有入口導回 AtomGenerator / MapGenerator canonical path |
 | Governance shard strategy | Layer 2 | open-card | `ATM-2-0049` | shard strategy 本身要產出可被 coverage validator 讀取的 manifest |
-| Task card lifecycle atomic map | Layer 2 | open-card | `ATM-3-0015` | 僅覆蓋 task lifecycle；不得誤當全框架 coverage |
+| Task card lifecycle atomic map | Layer 2 | covered-existing | `ATM-3-0015` | task lifecycle member atoms 與 orchestration 邊界已定義；不得誤當全框架 coverage |
 | CLI protocol / commands | Layer 2 | planned-gap | `ATM-1-0004`、`ATM-2.5-0001`、`ATM-2-0038`、`ATM-2-0042`、`ATM-2-0048`、`ATM-2-0050` | `ATM-2-0050` 必須列出每個 CLI command 對應 atom / map / adapter facade |
 | Public lifecycle / semver / PEV docs | Layer 2 | open-card | `ATM-5-0003`、`ATM-5-0005` | 文件規則要連回 coverage manifest 與 compatibility matrix |
 | Host profile / adapter config | Layer 3 | mutable-exception | `ATM-0-0010`、`ATM-3-0002` | 只允許 config / adapter mapping，不要求 atom |
