@@ -76,6 +76,15 @@
       "description": "確認 git dirty files 皆由 active task lock files[] 覆蓋且無重疊宣告"
     },
     {
+      "id": "rule-guard-atm",
+      "label": "ATM RuleGuardAdapter",
+      "cmd": "node",
+      "args": ["tools_node/run-rule-guard.js", "--profile", "atm"],
+      "priority": 8.8,
+      "failAction": "block",
+      "description": "從 rule-pack.json 載入 ATM 規則並輸出 machine-readable findings"
+    },
+    {
       "id": "doc-shard-health",
       "label": "文件分片健康檢查",
       "cmd": "node",
@@ -150,7 +159,7 @@
     },
     "atm": {
       "description": "ATM 不退轉驗證（police + hash-lock）",
-      "gates": ["encoding", "ts-syntax", "task-scope", "import-boundary", "atm-police", "atm-hash-lock"]
+      "gates": ["encoding", "ts-syntax", "rule-guard-atm", "atm-police", "atm-hash-lock"]
     },
     "full": {
       "description": "完整驗證（階段性交付時）",

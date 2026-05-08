@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 'use strict';
 
+process.stderr.write('[DEPRECATED] tools_node/check-task-scope.js 已進入 wrapper 維護模式，請改用 node tools_node/run-rule-guard.js --profile atm\n');
+
 const path = require('path');
 
 const handoffDiff = require('./lib/handoff-diff-core');

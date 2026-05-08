@@ -48,80 +48,48 @@
     ]
   },
   {
-    "doc_id": "doc_task_0359",
-    "id": "ATM-2.5-0004",
-    "title": "Alpha1 evolution sandbox fixture",
-    "owner": "codex-gpt-5",
+    "id": "ATM-3-0012",
+    "title": "task-scope / import-boundary 規則包遷移 + @deprecated 標記",
+    "status": "done",
     "priority": "P1",
-    "status": "open",
+    "phase": "ATM-3",
     "type": "implementation",
-    "phase": "ATM-2.5",
-    "created": "2026-05-08",
-    "created_by_agent": "codex-gpt-5",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "`ATM-2.5-0002` 已完成 alpha0 sandbox birth pipeline，且不能再被重寫；本卡承接 v2 補丁中 alpha1 evolution sandbox fixture 的未完成 acceptance。",
-    "related": [
-      "ATM-2-0026",
-      "ATM-2-0027",
-      "ATM-2-0029"
-    ],
+    "created": "2026-05-05",
+    "owner": "vs-insiders-gpt-5.3-codex",
+    "started_at": "2026-05-08T18:30:32.413+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.3-codex",
+    "completed_at": "2026-05-08T18:42:15.966+08:00",
+    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
+    "doc_id": "doc_task_0312",
     "depends": [
-      "ATM-2.5-0001",
-      "ATM-2.5-0002",
-      "ATM-2.5-0003",
-      "ATM-2-0020",
-      "ATM-2-0021",
-      "ATM-2-0022"
+      "ATM-3-0006"
     ],
-    "acceptance": [],
-    "deliverables": [
-      "alpha1 evolution sandbox fixture",
-      "upgrade --propose dry-run script",
-      "expected proposal / review / rollback outputs",
-      "alpha0 fixture isolation note",
-      "validation report"
+    "description": "Move task-scope / import-boundary rules into ATM RuleGuardAdapter rule-pack, and make the rule pack carry proactive police findings instead of only deprecated wrapper warnings.",
+    "acceptance": [
+      "rule-pack.json encodes trigger / scope / severity / action plus routeHint for proactive police outputs",
+      "deprecated wrappers emit machine-readable findings instead of only stderr warnings",
+      "compute-gate atm profile routes fast / slow police outputs through ATM RuleGuardAdapter"
     ],
-    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 依任務卡必要調整與去重規則，承接 done 卡 ATM-2.5-0002 未完成的 evolution sandbox acceptance；已確認沒有既有同功能 open 卡 | 阻塞: 等 ATM-2-0020/0021/0022 完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "",
-      "summary": "承接 ATM-2.5-0002 的 v2 追加 acceptance，建立 alpha1 evolution sandbox fixture，不污染 alpha0 birth fixture",
-      "position": "ATM-2.5 / alpha1 evolution sandbox",
-      "prereq": "ATM-2.5-0001, ATM-2.5-0002, ATM-2.5-0003 已完成；ATM-2-0020 / ATM-2-0021 / ATM-2-0022 提供 evolution proposal 與 rollback contract"
-    },
     "contracts": {
       "input": [
-        "ATM-2.5-0002 source card is done and must not be rewritten",
-        "alpha0 sandbox fixture remains birth-pipeline only",
-        "evolution flow uses alpha1 proposal / review / rollback contracts",
-        "no 3KLife/Cocos/html-to-ucuf private assumptions in upstream fixture"
+        "tools_node/adapters/atm-3klife/rule-pack.json as the shared rule source",
+        "ATM-3-0006 task-lock adapter and ATM-3-0011 / ATM-3-0013 dependency chain"
       ],
       "output": [
-        "新增獨立 alpha1 evolution sandbox，不修改 ATM-2.5-0002 的 alpha0 fixture",
-        "sandbox 覆蓋 upgrade --propose dry-run、human review decision 與 rollback proof",
-        "alpha0 deterministic 4 criteria 仍是 release blocker；evolution sandbox 只解鎖 alpha1 readiness",
-        "fixture / expected output / report 都有 deterministic validation"
+        "tools_node/adapters/atm-3klife/rule-pack.json",
+        "ATM RuleGuardAdapter consuming rule-pack.json",
+        "machine-readable findings with trigger / scope / severity / action",
+        "deprecated wrappers that warn and route findings"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2.5-0004.md\\nnpm run validate:self-hosting-alpha\\nnpm run validate:evolution-sandbox\\nnpm test\\nnpm run typecheck\\nnpm run lint",
-      "rollback_hint": "刪除 alpha1 evolution sandbox fixture、expected outputs 與 validation wiring；不得改寫 ATM-2.5-0001/0002/0003 的 done card 或 alpha0 fixture。",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-3-0012.md docs/tasks/tasks-atm/tasks-atm-part-40.json",
+      "rollback_hint": "Revert touched files and restore the previous deprecated-wrapper-only rule-pack behavior.",
       "execution_steps": [
-        "確認 alpha0 sandbox 現況與 v2 補丁語意",
-        "設計獨立 alpha1 evolution sandbox 目錄與 expected outputs",
-        "串接 upgrade proposal / review / rollback dry-run",
-        "補 deterministic validator 與 report",
-        "跑 validation 並同步 task shard"
+        "Normalize the rule-pack schema and routeHint fields",
+        "Wire the adapter to emit findings for task-scope and import-boundary cases",
+        "Keep deprecated wrappers warning-only at the surface",
+        "Validate encoding and sync the task shard"
       ]
     },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
+    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: rule-pack 升級為主動警察 finding 契約，補 trigger/scope/severity/action 與 routeHint | 阻塞: none\n2026-05-08 | 狀態: done | 驗證: wrapper [DEPRECATED] warning ✅ / run-rule-guard findings JSON ✅ / compute-gate ts-syntax+eslint ✅ | 變更: 新增 rule-pack.json + rule-guard-adapter.js + run-rule-guard.js，check-task-scope/check-import-boundaries 標 deprecated，compute-gate atm profile 改走 rule-guard-atm | 阻塞: atm profile 仍受既有 dirty scope 與 cocos-no-fs 舊違規影響"
   }
 ]

@@ -19,6 +19,8 @@
  *   node tools_node/check-import-boundaries.js --fix-hint
  */
 
+process.stderr.write('[DEPRECATED] tools_node/check-import-boundaries.js 已進入 wrapper 維護模式，請改用 node tools_node/run-rule-guard.js --profile atm\n');
+
 const fs = require('fs');
 const path = require('path');
 

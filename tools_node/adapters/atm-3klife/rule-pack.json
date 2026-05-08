@@ -1,0 +1,54 @@
+{
+  "version": "1.0.0",
+  "profiles": {
+    "atm": [
+      "task-scope-coverage",
+      "task-scope-fingerprint",
+      "import-boundary-assets-scripts",
+      "h2u-skill-only",
+      "cocos-no-fs"
+    ]
+  },
+  "rules": [
+    {
+      "id": "task-scope-coverage",
+      "trigger": "git.changed-files.out-of-lock-scope",
+      "scope": "repository.changed-files",
+      "severity": "block",
+      "action": "fail",
+      "routeHint": "更新對應 task lock files[] 或拆分子任務後重鎖。"
+    },
+    {
+      "id": "task-scope-fingerprint",
+      "trigger": "task-lock.scope-fingerprint-mismatch",
+      "scope": "task-lock.scope-fingerprint",
+      "severity": "block",
+      "action": "fail",
+      "routeHint": "重新執行 task-lock.js lock <task-id> <agent> --files <...> 以刷新 fingerprint。"
+    },
+    {
+      "id": "import-boundary-assets-scripts",
+      "trigger": "assets-scripts.cross-module-import",
+      "scope": "assets/scripts/{shared,core,ui,battle,tools}",
+      "severity": "warn",
+      "action": "warn",
+      "routeHint": "將共用邏輯移到 shared/core 後由雙方引用。"
+    },
+    {
+      "id": "h2u-skill-only",
+      "trigger": "h2u.runtime-import-outside-allowlist",
+      "scope": "tools_node/lib/html-to-ucuf/**",
+      "severity": "block",
+      "action": "fail",
+      "routeHint": "僅允許 h2u skill/adapter 路徑；避免直接耦合 runtime 遊戲模組。"
+    },
+    {
+      "id": "cocos-no-fs",
+      "trigger": "cocos-runtime-node-fs-import",
+      "scope": "assets/scripts/**",
+      "severity": "block",
+      "action": "fail",
+      "routeHint": "Cocos runtime 腳本禁止 node fs/path/child_process；改走 adapter 或資料注入。"
+    }
+  ]
+}
