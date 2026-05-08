@@ -53,6 +53,7 @@ function printSummary(result) {
       const filePart = finding.file ? ` file=${finding.file}${finding.line ? `:${finding.line}` : ''}` : '';
       console.log(`  - [${finding.ruleId}] ${finding.message}${filePart}`);
       console.log(`    trigger=${finding.trigger} scope=${finding.scope} severity=${finding.severity} action=${finding.action}`);
+      console.log(`    routeClass=${finding.routeClass || 'advisory'}`);
       console.log(`    routeHint=${finding.routeHint}`);
     }
     if (result.findings.length > 20) {

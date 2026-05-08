@@ -37,6 +37,16 @@ const ALLOWED_COVERAGE_KINDS = new Set([
 ]);
 const ALLOWED_POLICE_CLASSES = new Set(['fast', 'slow', 'mixed']);
 const ALLOWED_TIMINGS = new Set(['authoring-time', 'transition-time', 'sweep-time']);
+const SELF_COVERAGE_FUNCTION_ID = 'framework-function-atomization-manifest-self-coverage';
+const SELF_COVERAGE_REQUIRED_ARTIFACTS = new Set([
+  'docs/ai_atomic_framework/framework-function-atomization-manifest.md',
+  'docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-summary.md',
+  'docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-inventory.md',
+  'docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-machine-readable.md',
+  'tools_node/validate-framework-atomization-coverage.js',
+  'tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json',
+  'tools_node/schemas/police/coverage-finding.schema.json',
+]);
 
 function parseArgs(argv) {
   const args = {
@@ -376,6 +386,41 @@ function validateRecords(records, taskIndex, errors) {
   return normalizedRecords;
 }
 
+function validateManifestSelfCoverage(records, errors) {
+  const record = records.find((entry) => entry.functionId === SELF_COVERAGE_FUNCTION_ID);
+  if (!record) {
+    errors.push('manifest self-coverage row is missing: framework-function-atomization-manifest-self-coverage');
+    return;
+  }
+
+  if (record.layer !== 'layer2') {
+    errors.push(`${SELF_COVERAGE_FUNCTION_ID}: layer must be layer2`);
+  }
+  if (record.surfaceKind !== 'validator') {
+    errors.push(`${SELF_COVERAGE_FUNCTION_ID}: surfaceKind must be validator`);
+  }
+  if (record.coverageStatus !== 'covered-existing') {
+    errors.push(`${SELF_COVERAGE_FUNCTION_ID}: coverageStatus must be covered-existing`);
+  }
+  if (record.coverageKind !== 'atom') {
+    errors.push(`${SELF_COVERAGE_FUNCTION_ID}: coverageKind must be atom`);
+  }
+  if (!Array.isArray(record.taskRefs) || !record.taskRefs.includes('ATM-2-0051')) {
+    errors.push(`${SELF_COVERAGE_FUNCTION_ID}: taskRefs must include ATM-2-0051`);
+  }
+  for (const requiredArtifact of SELF_COVERAGE_REQUIRED_ARTIFACTS) {
+    if (!Array.isArray(record.artifactRefs) || !record.artifactRefs.includes(requiredArtifact)) {
+      errors.push(`${SELF_COVERAGE_FUNCTION_ID}: artifactRefs missing ${requiredArtifact}`);
+    }
+  }
+  if (record.routeHint !== null) {
+    errors.push(`${SELF_COVERAGE_FUNCTION_ID}: routeHint must be null`);
+  }
+  if (record.findingContract !== null) {
+    errors.push(`${SELF_COVERAGE_FUNCTION_ID}: findingContract must be null`);
+  }
+}
+
 function ensureFixtureDir(filePath) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
 }
@@ -393,6 +438,7 @@ function main() {
 
   const taskIndex = buildTaskIndex(errors);
   const normalizedManifestRecords = validateRecords(manifestRecords, taskIndex, errors);
+  validateManifestSelfCoverage(normalizedManifestRecords, errors);
 
   let fixtureRecords = [];
   if (fs.existsSync(args.fixture)) {

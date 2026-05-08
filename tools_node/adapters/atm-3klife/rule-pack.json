@@ -16,6 +16,7 @@
       "scope": "repository.changed-files",
       "severity": "block",
       "action": "fail",
+      "routeClass": "blocker",
       "routeHint": "更新對應 task lock files[] 或拆分子任務後重鎖。"
     },
     {
@@ -24,6 +25,7 @@
       "scope": "task-lock.scope-fingerprint",
       "severity": "block",
       "action": "fail",
+      "routeClass": "blocker",
       "routeHint": "重新執行 task-lock.js lock <task-id> <agent> --files <...> 以刷新 fingerprint。"
     },
     {
@@ -32,6 +34,7 @@
       "scope": "assets/scripts/{shared,core,ui,battle,tools}",
       "severity": "warn",
       "action": "warn",
+      "routeClass": "follow-up",
       "routeHint": "將共用邏輯移到 shared/core 後由雙方引用。"
     },
     {
@@ -40,6 +43,7 @@
       "scope": "tools_node/lib/html-to-ucuf/**",
       "severity": "block",
       "action": "fail",
+      "routeClass": "blocker",
       "routeHint": "僅允許 h2u skill/adapter 路徑；避免直接耦合 runtime 遊戲模組。"
     },
     {
@@ -48,6 +52,7 @@
       "scope": "assets/scripts/**",
       "severity": "block",
       "action": "fail",
+      "routeClass": "blocker",
       "routeHint": "Cocos runtime 腳本禁止 node fs/path/child_process；改走 adapter 或資料注入。"
     }
   ]

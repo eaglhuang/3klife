@@ -343,8 +343,8 @@
     "label": "CLI protocol / commands",
     "layer": "layer2",
     "surfaceKind": "cli-command",
-    "coverageStatus": "planned-gap",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "adapter-facade",
     "taskRefs": [
       "ATM-1-0004",
       "ATM-2.5-0001",
@@ -355,10 +355,37 @@
       "ATM-2-0051"
     ],
     "artifactRefs": [
-      "docs/agent-briefs/tasks/ATM/ATM-2-0051.md"
+      "docs/agent-briefs/tasks/ATM/ATM-2-0051.md",
+      "tools_node/atomic-framework/task-router.js",
+      "tools_node/adapters/atm-3klife/rule-guard-adapter.js",
+      "tools_node/adapters/atm-3klife/rule-pack.json",
+      "tools_node/run-rule-guard.js"
     ],
-    "nextCheck": "break CLI protocol into command-level surfaces once the coverage gate stabilizes",
-    "routeHint": "ATM-2-0051 should promote CLI protocol coverage into command-level atom / map / adapter routes",
+    "nextCheck": "recheck when CLI command surfaces, task-router, or adapter routes change",
+    "routeHint": null,
+    "findingContract": null
+  },
+  {
+    "functionId": "framework-function-atomization-manifest-self-coverage",
+    "label": "Framework Function Atomization Manifest / self-coverage",
+    "layer": "layer2",
+    "surfaceKind": "validator",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
+    "taskRefs": [
+      "ATM-2-0051"
+    ],
+    "artifactRefs": [
+      "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
+      "docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-summary.md",
+      "docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-inventory.md",
+      "docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-machine-readable.md",
+      "tools_node/validate-framework-atomization-coverage.js",
+      "tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json",
+      "tools_node/schemas/police/coverage-finding.schema.json"
+    ],
+    "nextCheck": "revalidate when manifest, shard, fixture, or validator contract changes",
+    "routeHint": null,
     "findingContract": null
   },
   {

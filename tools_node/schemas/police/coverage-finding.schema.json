@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "coverage-finding.schema.json",
+  "title": "Coverage Finding v1",
+  "description": "Machine-readable coverage finding emitted by ATM police, coverage gates, and follow-up routing. The schema keeps trigger / scope / severity / action / routeClass / routeHint stable so human review, follow-up generation, and blocker escalation can consume the same record.",
+  "$comment": "Versioning rules: keep findingVersion=coverage-finding/v1 while field names, meanings, and required structure remain compatible. Additive optional fields may stay on v1 only when older consumers can ignore them. Renaming required fields or changing routing semantics requires a new findingVersion.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "findingVersion",
+    "kind",
+    "ruleId",
+    "trigger",
+    "scope",
+    "severity",
+    "action",
+    "routeClass",
+    "routeHint",
+    "message"
+  ],
+  "properties": {
+    "findingVersion": {
+      "const": "coverage-finding/v1"
+    },
+    "kind": {
+      "const": "coverage-finding"
+    },
+    "ruleId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trigger": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "severity": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action": {
+      "type": "string",
+      "minLength": 1
+    },
+    "routeClass": {
+      "type": "string",
+      "enum": [
+        "advisory",
+        "needs-review",
+        "follow-up",
+        "blocker"
+      ]
+    },
+    "routeHint": {
+      "type": "string",
+      "minLength": 1
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1
+    },
+    "file": {
+      "type": "string",
+      "minLength": 1
+    },
+    "line": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "details": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Extra machine-readable evidence attached to the finding."
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "timing": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "authoring-time",
+          "transition-time",
+          "sweep-time"
+        ]
+      },
+      "minItems": 1
+    },
+    "policeClass": {
+      "type": "string",
+      "enum": [
+        "fast",
+        "slow",
+        "mixed"
+      ]
+    }
+  }
+}

@@ -23,20 +23,22 @@
 | Task router / onboarding | Layer 2 | covered-existing | `ATM-2-0048` | onboarding / router ???????? router contract ????? |
 | Governance shard strategy | Layer 2 | covered-existing | `ATM-2-0049` | shard strategy ??? coverage validator ????? shard ??????? |
 | Task card lifecycle atomic map | Layer 2 | covered-existing | `ATM-3-0015` | task lifecycle member atoms 與 orchestration 邊界已定義；不得誤當全框架 coverage |
-| CLI protocol / commands | Layer 2 | planned-gap | `ATM-1-0004`、`ATM-2.5-0001`、`ATM-2-0038`、`ATM-2-0042`、`ATM-2-0048`、`ATM-2-0050`、`ATM-2-0051` | `ATM-2-0051` 承接每個 CLI command 到 atom / map / adapter facade 的 blocker promotion / self-coverage / finding route |
+| CLI protocol / commands | Layer 2 | covered-existing | `ATM-1-0004`、`ATM-2.5-0001`、`ATM-2-0038`、`ATM-2-0042`、`ATM-2-0048`、`ATM-2-0050`、`ATM-2-0051` | CLI command surfaces now route through atom / map / adapter coverage |
+| Framework Function Atomization Manifest / self-coverage | Layer 2 | covered-existing | `ATM-2-0051` | validator / manifest / fixture / schema contract must stay aligned |
 | Public lifecycle / semver / PEV docs | Layer 2 | open-card | `ATM-5-0003`、`ATM-5-0005` | 文件規則要連回 coverage manifest 與 compatibility matrix |
 | Host profile / adapter config | Layer 3 | mutable-exception | `ATM-0-0010`、`ATM-3-0002` | 只允許 config / adapter mapping，不要求 atom |
 
 ## Required Gate
 
-`ATM-2-0050` ??? deterministic validator??????
+`ATM-2-0050` / `ATM-2-0051` 會把 coverage gate 變成 deterministic validator + self-coverage gate。
 
-1. `## Machine-Readable Inventory` ? JSON block ???????? fixture ?????
-2. ?? Layer 2 function ????? source task / atom / map / adapter facade?
-3. `constitutional-exception` ???? Layer 1?
-4. `mutable-exception` ???? Layer 3?
-5. `planned-gap` ??? open task id ? routeHint?
-6. ?? new framework function ??? manifest entry?validation fail?
+1. `## Machine-Readable Inventory` 必須對齊 JSON block 與 fixture。
+2. 每個 Layer 2 function 都必須有 source task / atom / map / adapter facade 對應。
+3. `constitutional-exception` 只能留在 Layer 1。
+4. `mutable-exception` 只能留在 Layer 3。
+5. `planned-gap` 必須指向 open task id 與 routeHint。
+6. 新增 framework function 時，未在 manifest / fixture 出現要直接 fail。
+7. `framework-function-atomization-manifest-self-coverage` 必須保留為 covered-existing meta-surface，避免 manifest 自己漏網。
 ## Planning Backwrite
 
 本 manifest 必須被下列文件引用：

@@ -41,18 +41,42 @@ function runNodeScript(args) {
 }
 
 function toFinding(rule, overrides = {}) {
+  const routeClass = normalizeRouteClass(rule.routeClass, rule.severity, rule.action, rule.routeHint);
   return {
+    findingVersion: 'coverage-finding/v1',
+    kind: 'coverage-finding',
     ruleId: rule.id,
     trigger: rule.trigger,
     scope: rule.scope,
     severity: rule.severity,
     action: rule.action,
+    routeClass,
     routeHint: rule.routeHint,
     message: overrides.message || '',
     file: overrides.file || '',
     line: Number.isFinite(overrides.line) ? overrides.line : 0,
     details: overrides.details || {},
   };
+}
+
+function normalizeRouteClass(routeClass, severity, action, routeHint) {
+  const allowed = new Set(['advisory', 'needs-review', 'follow-up', 'blocker']);
+  if (allowed.has(routeClass)) {
+    return routeClass;
+  }
+
+  if (severity === 'block' || action === 'fail') {
+    return 'blocker';
+  }
+
+  const hint = String(routeHint || '').toLowerCase();
+  if (hint.includes('follow-up') || hint.includes('follow up')) {
+    return 'follow-up';
+  }
+  if (hint.includes('review')) {
+    return 'needs-review';
+  }
+  return 'advisory';
 }
 
 function collectTaskScopeFindings(ruleMap) {

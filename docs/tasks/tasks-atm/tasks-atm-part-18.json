@@ -5,13 +5,14 @@
     "title": "Coverage Gate Promotion & Self-Coverage Follow-up",
     "owner": "codex-gpt-5.5",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "governance",
     "phase": "ATM-2",
     "created": "2026-05-08",
     "created_by_agent": "codex-gpt-5.5",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-08T23:48:53.5961247+08:00",
+    "started_by_agent": "codex-gpt-5.5",
+    "completed_at": "2026-05-08T23:55:19.4009933+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -30,7 +31,7 @@
     "acceptance": [
       "coverage gate blocker promotion 條件被正式寫入 validator contract與規劃文件",
       "framework-function-atomization-manifest.md 與 validator / fixture surfaces 被納入 self-coverage 或明確 meta-surface 規則並可被 validator 驗證",
-      "coverage findings 至少輸出 trigger / scope / severity / action / routeHint，並能區分 advisory / needs-review / follow-up / blocker",
+      "coverage findings 至少輸出 trigger / scope / severity / action / routeHint / routeClass，並能區分 advisory / needs-review / follow-up / blocker",
       "coverage finding route 明確重用 ATM-2-0048 task-router 與 ATM-3-0012 RuleGuard routeHint 約定，不重做既有 police router",
       "ATM-2-0050 主卡在 follow-up 開出後可收斂為 done，且里程碑文件同步引用新卡"
     ],
@@ -38,10 +39,13 @@
       "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
       "tools_node/validate-framework-atomization-coverage.js",
       "tools_node/atomic-framework/task-router.js",
-      "schemas/police/coverage-finding.schema.json",
+      "tools_node/adapters/atm-3klife/rule-guard-adapter.js",
+      "tools_node/adapters/atm-3klife/rule-pack.json",
+      "tools_node/run-rule-guard.js",
+      "tools_node/schemas/police/coverage-finding.schema.json",
       "docs/agent-briefs/tasks/ATM/ATM-2-0051.md"
     ],
-    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0050 follow-up extraction 開立，承接 blocker promotion / self-coverage / finding route 三項剩餘治理缺口 | 阻塞: 等 ATM-2-0050 主卡完成抽離與 ATM-2-0048 / ATM-3-0012 現況確認\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-2-0050 已完成主卡收斂；本卡正式接手 blocker promotion / manifest self-coverage / finding route | 阻塞: none",
+    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0050 follow-up extraction 開立，承接 blocker promotion / self-coverage / finding route 三項剩餘治理缺口 | 阻塞: 等 ATM-2-0050 主卡完成抽離與 ATM-2-0048 / ATM-3-0012 現況確認\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-2-0050 已完成主卡收斂；本卡正式接手 blocker promotion / manifest self-coverage / finding route | 阻塞: none\n2026-05-08 | 狀態: done | 驗證: node tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict；node tools_node/run-rule-guard.js --profile atm --json；node tools_node/check-doc-shard-health.js | 變更: 完成 coverage finding schema、routeClass contract、manifest self-coverage 與 CLI protocol 覆蓋收斂 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM coverage gate follow-up",
@@ -57,13 +61,13 @@
         "既有 dedup / lifecycle / advisory cards 只能重用，不重複開單"
       ],
       "output": [
-        "coverage gate 升 blocker 的 deterministic 條件",
-        "manifest self-coverage 規則與 validator 檢查",
-        "coverage finding schema 與 routeHint contract",
-        "task-router / advisory / follow-up 的路由對齊",
-        "ATM-2-0050 收斂完成"
-      ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0051.md\\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict\\nnode tools_node/check-doc-shard-health.js",
+      "coverage gate 升 blocker 的 deterministic 條件",
+      "manifest self-coverage 規則與 validator 檢查",
+      "coverage finding schema 與 routeHint / routeClass contract",
+      "task-router / advisory / follow-up 的路由對齊",
+      "ATM-2-0050 收斂完成"
+    ],
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0051.md\\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict\\nnode tools_node/run-rule-guard.js --profile atm --json\\nnode tools_node/check-doc-shard-health.js",
       "rollback_hint": "回退 coverage gate follow-up touched files；不得把 ATM-2-0050 重新膨脹成主卡，也不得重複開 task-router / rule-guard / dedup / lifecycle 既有功能卡。",
       "execution_steps": [
         "定義 blocker promotion 規則",

@@ -5,11 +5,10 @@
 
 ## 判定結論
 
-?? ATM ????????????????????????????????? machine-readable inventory ? deterministic coverage gate ??????????? inventory ? task store ??????????????
-
-- 已涵蓋：seed self-governance、neutrality scanner atom、AtomGenerator、MapGenerator、generator provenance、task card system atomic map、adapter Phase 2 原子化路線。
-- ???`ATM-2-0050` ? manifest JSON block + fixture + validator ????? coverage gate???????????????????
-- ????????? framework surface?????? inventory???? fixture ? validator output?
+- coverage gate 主體由 `ATM-2-0050` 完成，且 `ATM-2-0051` 已接手 self-coverage / finding route / blocker promotion follow-up。
+- CLI protocol / commands 已進入 covered-existing，並由 task-router / adapter route / rule-guard contract 承接。
+- manifest 自己也有一條 self-coverage meta-surface，避免 coverage gate 只管別人、不管自己。
+- machine-readable inventory 與 fixture 必須持續對齊；validator 會把 drift 當成失敗。
 
 ## Layer Boundary
 
@@ -50,20 +49,22 @@
 | Task router / onboarding | Layer 2 | covered-existing | `ATM-2-0048` | onboarding / router ???????? router contract ????? |
 | Governance shard strategy | Layer 2 | covered-existing | `ATM-2-0049` | shard strategy ??? coverage validator ????? shard ??????? |
 | Task card lifecycle atomic map | Layer 2 | covered-existing | `ATM-3-0015` | task lifecycle member atoms 與 orchestration 邊界已定義；不得誤當全框架 coverage |
-| CLI protocol / commands | Layer 2 | planned-gap | `ATM-1-0004`、`ATM-2.5-0001`、`ATM-2-0038`、`ATM-2-0042`、`ATM-2-0048`、`ATM-2-0050`、`ATM-2-0051` | `ATM-2-0051` 承接每個 CLI command 到 atom / map / adapter facade 的 blocker promotion / self-coverage / finding route |
+| CLI protocol / commands | Layer 2 | covered-existing | `ATM-1-0004`、`ATM-2.5-0001`、`ATM-2-0038`、`ATM-2-0042`、`ATM-2-0048`、`ATM-2-0050`、`ATM-2-0051` | CLI command surfaces now route through atom / map / adapter coverage |
+| Framework Function Atomization Manifest / self-coverage | Layer 2 | covered-existing | `ATM-2-0051` | validator / manifest / fixture / schema contract must stay aligned |
 | Public lifecycle / semver / PEV docs | Layer 2 | open-card | `ATM-5-0003`、`ATM-5-0005` | 文件規則要連回 coverage manifest 與 compatibility matrix |
 | Host profile / adapter config | Layer 3 | mutable-exception | `ATM-0-0010`、`ATM-3-0002` | 只允許 config / adapter mapping，不要求 atom |
 
 ## Required Gate
 
-`ATM-2-0050` ??? deterministic validator??????
+`ATM-2-0050` / `ATM-2-0051` 會把 coverage gate 變成 deterministic validator + self-coverage gate。
 
-1. `## Machine-Readable Inventory` ? JSON block ???????? fixture ?????
-2. ?? Layer 2 function ????? source task / atom / map / adapter facade?
-3. `constitutional-exception` ???? Layer 1?
-4. `mutable-exception` ???? Layer 3?
-5. `planned-gap` ??? open task id ? routeHint?
-6. ?? new framework function ??? manifest entry?validation fail?
+1. `## Machine-Readable Inventory` 必須對齊 JSON block 與 fixture。
+2. 每個 Layer 2 function 都必須有 source task / atom / map / adapter facade 對應。
+3. `constitutional-exception` 只能留在 Layer 1。
+4. `mutable-exception` 只能留在 Layer 3。
+5. `planned-gap` 必須指向 open task id 與 routeHint。
+6. 新增 framework function 時，未在 manifest / fixture 出現要直接 fail。
+7. `framework-function-atomization-manifest-self-coverage` 必須保留為 covered-existing meta-surface，避免 manifest 自己漏網。
 ## Planning Backwrite
 
 本 manifest 必須被下列文件引用：
@@ -422,8 +423,8 @@
     "label": "CLI protocol / commands",
     "layer": "layer2",
     "surfaceKind": "cli-command",
-    "coverageStatus": "planned-gap",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "adapter-facade",
     "taskRefs": [
       "ATM-1-0004",
       "ATM-2.5-0001",
@@ -434,10 +435,37 @@
       "ATM-2-0051"
     ],
     "artifactRefs": [
-      "docs/agent-briefs/tasks/ATM/ATM-2-0051.md"
+      "docs/agent-briefs/tasks/ATM/ATM-2-0051.md",
+      "tools_node/atomic-framework/task-router.js",
+      "tools_node/adapters/atm-3klife/rule-guard-adapter.js",
+      "tools_node/adapters/atm-3klife/rule-pack.json",
+      "tools_node/run-rule-guard.js"
     ],
-    "nextCheck": "break CLI protocol into command-level surfaces once the coverage gate stabilizes",
-    "routeHint": "ATM-2-0051 should promote CLI protocol coverage into command-level atom / map / adapter routes",
+    "nextCheck": "recheck when CLI command surfaces, task-router, or adapter routes change",
+    "routeHint": null,
+    "findingContract": null
+  },
+  {
+    "functionId": "framework-function-atomization-manifest-self-coverage",
+    "label": "Framework Function Atomization Manifest / self-coverage",
+    "layer": "layer2",
+    "surfaceKind": "validator",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
+    "taskRefs": [
+      "ATM-2-0051"
+    ],
+    "artifactRefs": [
+      "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
+      "docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-summary.md",
+      "docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-inventory.md",
+      "docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-machine-readable.md",
+      "tools_node/validate-framework-atomization-coverage.js",
+      "tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json",
+      "tools_node/schemas/police/coverage-finding.schema.json"
+    ],
+    "nextCheck": "revalidate when manifest, shard, fixture, or validator contract changes",
+    "routeHint": null,
     "findingContract": null
   },
   {
