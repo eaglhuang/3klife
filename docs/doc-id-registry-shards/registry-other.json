@@ -456,12 +456,6 @@
     "category": "other"
   },
   {
-    "id": "doc_other_0083",
-    "path": "docs/學習文件/preprints202603.1756.md",
-    "title": "preprints202603.1756",
-    "category": "other"
-  },
-  {
     "id": "doc_other_0084",
     "path": "docs/學習文件/The Anatomy of an Agent Harness.md",
     "title": "Key Takeaways",
@@ -495,6 +489,24 @@
     "id": "doc_other_0089",
     "path": "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
     "title": "Framework Function Atomization Manifest",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0090",
+    "path": "docs/ai_atomic_framework/documentation-governance-policy.md",
+    "title": "ATM Documentation Governance Policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0091",
+    "path": "docs/ai_atomic_framework/documentation-role-map.md",
+    "title": "ATM Documentation Role Map",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0092",
+    "path": "docs/學習文件/Harness Engineering for Language Agents.md",
+    "title": "Harness Engineering for Language Agents",
     "category": "other"
   }
 ]

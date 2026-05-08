@@ -434,3 +434,4 @@ ATM-2-0022 rollback proof（失敗回退）
 - `ATM-2-0049` 已完成 task id reservation / lock race hardening，視為上述路線的已落地前置，不另占節點。
 - 在 `ATM-2-0048` 與 `ATM-3-0015` 未完成前，`ATM-2-0050` 僅可進行 manifest backwrite、gap mapping、advisory report；不得將 coverage validator 作為 blocker。
 - 任一新卡若宣稱處理「全框架原子化」，必須在 acceptance 或 notes 中標註自己屬於 `0048`、`3-0015`、`0050` 哪一段路線，避免把局部治理誤判為全局完成。
+- `ATM-2-0050` 同時承接文件治理收斂：新增 `documentation-governance-policy.md` 與 `documentation-role-map.md`，先把 `docs/ai_atomic_framework/` 的 `canonical / reference / adopter / history / index / shard / asset` 角色明確化；在角色治理穩定前，不進行大規模實體搬移。

@@ -149,16 +149,19 @@
       "規劃文件已回寫 Roadmap、開發計畫書、演進規劃書與進化版原子提案",
       "固定路線正式化：ATM-2-0048 → ATM-3-0015 → ATM-2-0050，不得跳步",
       "ATM-2-0049 視為已落地前置，不另占固定路線節點",
-      "ATM-2-0048 / ATM-3-0015 未完成前，ATM-2-0050 只能做 manifest backwrite / gap mapping / advisory report，不得把 coverage validator 升級成 blocker"
+      "ATM-2-0048 / ATM-3-0015 未完成前，ATM-2-0050 只能做 manifest backwrite / gap mapping / advisory report，不得把 coverage validator 升級成 blocker",
+      "documentation-governance-policy.md 與 documentation-role-map.md 完成，root docs 皆有建議角色與建議處置"
     ],
     "deliverables": [
       "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
       "machine-readable coverage manifest fixture",
       "validate-framework-atomization-coverage command",
       "planning docs backwrite",
-      "gap-to-task-card mapping"
+      "gap-to-task-card mapping",
+      "docs/ai_atomic_framework/documentation-governance-policy.md",
+      "docs/ai_atomic_framework/documentation-role-map.md"
     ],
-    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 補齊 ATM framework-wide 原子化 coverage manifest / gate；不重複 generator、map generator、task card system atomic map 既有功能卡 | 阻塞: 等 ATM-2-0048 / ATM-2-0049 / ATM-3-0015 收斂\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 補入固定開工路線條文；正式規定 framework-wide atomization follow-up 必須先經 ATM-2-0048 → ATM-3-0015 → ATM-2-0050 | 阻塞: ATM-2-0048 尚未完成，ATM-3-0015 尚未落地 atomic map validator",
+    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 補齊 ATM framework-wide 原子化 coverage manifest / gate；不重複 generator、map generator、task card system atomic map 既有功能卡 | 阻塞: 等 ATM-2-0048 / ATM-2-0049 / ATM-3-0015 收斂\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 補入固定開工路線條文；正式規定 framework-wide atomization follow-up 必須先經 ATM-2-0048 → ATM-3-0015 → ATM-2-0050 | 阻塞: ATM-2-0048 尚未完成，ATM-3-0015 尚未落地 atomic map validator\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 新增文件治理政策與現況角色盤點，先完成邏輯收斂，再規劃後續實體搬移 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM dogfooding coverage gate",
@@ -182,9 +185,10 @@
         "已由既有卡承接的功能必須引用原卡，不重複開功能卡",
         "新增 validator，當 framework function 缺 atom / map / adapter coverage 或例外類型錯誤時 fail",
         "回寫規劃文件，讓 all framework functions atomized 有 coverage gate",
-        "把 ATM-2-0048 -> ATM-3-0015 -> ATM-2-0050 固定路線寫成正式 gate 條文，供後續開卡引用"
+        "把 ATM-2-0048 -> ATM-3-0015 -> ATM-2-0050 固定路線寫成正式 gate 條文，供後續開卡引用",
+        "文件治理政策與現況角色盤點完成，明確標示 canonical / reference / adopter / history / index / shard / asset"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0050.md docs/tasks/tasks-atm/tasks-atm-part-24.json docs/ai_atomic_framework/framework-function-atomization-manifest.md docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/關於進化版的原子提案.md\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md\nnode tools_node/doc-id-registry.js",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0050.md docs/tasks/tasks-atm/tasks-atm-part-24.json docs/ai_atomic_framework/framework-function-atomization-manifest.md docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/關於進化版的原子提案.md docs/ai_atomic_framework/documentation-governance-policy.md docs/ai_atomic_framework/documentation-role-map.md\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md\nnode tools_node/doc-id-registry.js",
       "rollback_hint": "移除 coverage manifest、validator、planning docs backwrite，並保留既有 ATM-2-0038 / ATM-2-0041 / ATM-2-0042 / ATM-3-0015 的功能範圍不變。",
       "execution_steps": [
         "盤點所有 ATM framework task cards 與 planning docs，先歸併到既有功能卡",
@@ -193,7 +197,8 @@
         "建立 framework function coverage manifest",
         "將缺口連到既有 open 卡或 follow-up，不重複開已存在功能",
         "新增 deterministic coverage validator",
-        "回寫 Roadmap / 開發計畫書 / 演進規劃書 / 進化版原子提案 / task shard"
+        "回寫 Roadmap / 開發計畫書 / 演進規劃書 / 進化版原子提案 / task shard",
+        "建立文件治理政策與現況角色盤點，先完成邏輯收斂，再安排後續 physical reorganization"
       ]
     },
     "harness_evidence": {

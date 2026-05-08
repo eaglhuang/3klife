@@ -22,8 +22,8 @@
 | AI Agent 專用 | `doc_ai` | 31 |
 | Agent Skill 專用 | `doc_agentskill` | 46 |
 | Server 文件類 | `doc_server_<subtype>` | 15 |
-| 其它類 | `doc_other` | 83 |
-| **合計** | — | **804** |
+| 其它類 | `doc_other` | 85 |
+| **合計** | — | **806** |
 
 ---
 
@@ -804,9 +804,9 @@
 |--------|------|------|
 | `doc_other_0001` | .github/agents/sanguo-term-researcher.agent.md | Inputs |
 | `doc_other_0002` | docs/決策-Mobile-Offline-2026-04-23.md | 決策：Mobile-first Offline Support（2026-04-23） |
+| `doc_other_0092` | docs/學習文件/Harness Engineering for Language Agents.md | Harness Engineering for Language Agents |
 | `doc_other_0027` | docs/學習文件/harness_engineering_analysis.md | Harness Engineering 深度分析與 3KLife 專案對照 |
 | `doc_other_0023` | docs/學習文件/HarnessEngineering.md | Harness Engineering 中文學習版與 3KProject 參考手冊 |
-| `doc_other_0083` | docs/學習文件/preprints202603.1756.md | preprints202603.1756 |
 | `doc_other_0084` | docs/學習文件/The Anatomy of an Agent Harness.md | Key Takeaways |
 | `doc_other_0038` | docs/agent-identity-map.md | Agent Identity Map |
 | `doc_other_0032` | docs/ai_atomic_framework/3klife-coexistence-plan.md | 3KLife × ATM 並行開發協議（Coexistence Plan） |
@@ -838,6 +838,8 @@
 | `doc_other_0062` | docs/ai_atomic_framework/dev-plan-shards/dev-plan-execution.md | AI 原子框架開發計畫書 — Checklist、風險與驗證 |
 | `doc_other_0063` | docs/ai_atomic_framework/dev-plan-shards/dev-plan-foundation.md | AI 原子框架開發計畫書 — 目標、原理、結構 |
 | `doc_other_0064` | docs/ai_atomic_framework/dev-plan-shards/dev-plan-milestones.md | AI 原子框架開發計畫書 — 里程碑與補強路線 |
+| `doc_other_0090` | docs/ai_atomic_framework/documentation-governance-policy.md | ATM Documentation Governance Policy |
+| `doc_other_0091` | docs/ai_atomic_framework/documentation-role-map.md | ATM Documentation Role Map |
 | `doc_other_0065` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-blueprint.md | 關於進化版的原子提案 — Roadmap 藍圖與融合分析 |
 | `doc_other_0066` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-context.md | 關於進化版的原子提案 — Context、現況與治理問題 |
 | `doc_other_0067` | docs/ai_atomic_framework/evolution-proposal-shards/evolution-proposal-evolution.md | 關於進化版的原子提案 — 版號、框架版本與回饋迴圈 |
