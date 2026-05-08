@@ -30,7 +30,7 @@ ATM 若要達到「下載後放在任意專案根目錄，AI agent 讀 README �
 因此，ATM 的「可獨立跑起來」定義不是只要 `npm install` 後能執行一個 atom，而是要能讓 AI agent 在任何 repo 內自動形成固定工作包絡：Project Probe → Create Task → Lock Scope → Plan → Edit → Capture Artifacts/Logs → Run Guards → Write Evidence → Unlock/Close Task。Core 只定義契約與 lifecycle；Default Governance Bundle 提供 `.atm/` reference implementation；各專案再用 adapter 映射到自己的任務、文件、log 與 artifact 系統。
 其中 `plugin-rule-guard`、`plugin-encoding`、`plugin-context-budget` 應被視為同一組 Agent Governance Bundle：前者負責 policy/boundary，第二個負責文字完整性，第三個負責上下文預算、摘要節流與超額 hard-stop。
 
-2026-05-08 補強：`ATM-3-0015` 只解決 task card lifecycle；全 ATM framework 還需要一個總控 coverage gate。`ATM-2-0050` 以 `docs/ai_atomic_framework/framework-function-atomization-manifest.md` 盤點所有 Layer 2 framework functions，要求每項都映射到 atom / atomic map / adapter facade / 正式例外，並用 validator 防止新功能繞過原子化。
+2026-05-08 補強：`ATM-3-0015` 只解決 task card lifecycle；全 ATM framework 還需要一個總控 coverage gate。`ATM-2-0050` 以 `docs/ai_atomic_framework/framework-function-atomization-manifest.md` 盤點所有 Layer 2 framework functions，要求每項都映射到 atom / atomic map / adapter facade / 正式例外，並用 validator 防止新功能繞過原子化；其中 police / governance gates 必須是 active routed surfaces，輸出 `trigger / scope / severity / action` 的 machine-readable findings。
 
 ---
 

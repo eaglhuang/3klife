@@ -1,180 +1,202 @@
 [
-  {
-    "doc_id": "doc_task_0250",
-    "id": "ATM-0-0006",
-    "title": "ATM 任務卡模板與開卡規則",
-    "owner": "vs-insiders-gpt-5.4-mini",
-    "priority": "P1",
-    "status": "done",
-    "type": "docs",
-    "phase": "ATM-0",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T12:50:58.8606404+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4-mini",
-    "completed_at": "2026-05-06T12:52:45.2848800+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立 ATM 任務卡模板，統一 upstream core、adapter、case study 任務欄位。",
-    "related": [],
-    "depends": [
-      "ATM-0-0001",
-      "ATM-0-0003"
-    ],
-    "acceptance": [
-      "模板包含 hostKind/targetRepo/alphaGate/packageScope/adapterScope/allowed_files/forbidden_files/non_goals/executionMode/validation_cmd/rollback_hint",
-      "新 ATM 卡可由 task-card-opener 一致生成"
-    ],
-    "deliverables": [
-      "docs/agent-briefs/atm-task-template.md",
-      "task-card-opener 使用說明補充"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: encoding passed；standard gate 受既有 dirty files 阻擋 | 變更: 建立 ATM 任務卡模板並補充開卡欄位規則 | 阻塞: 既有 task-scope 雜訊",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 開源化開卡",
-      "summary": "建立 ATM 任務卡模板，統一 upstream core、adapter、case study 任務欄位。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0001、ATM-0-0003"
+    {
+        "doc_id":  "doc_task_0250",
+        "id":  "ATM-0-0006",
+        "title":  "ATM 任務卡模板與開卡規則",
+        "owner":  "vs-insiders-gpt-5.4-mini",
+        "priority":  "P1",
+        "status":  "done",
+        "type":  "docs",
+        "phase":  "ATM-0",
+        "created":  "2026-05-05",
+        "created_by_agent":  "GitHubCopilot",
+        "started_at":  "2026-05-06T12:50:58.8606404+08:00",
+        "started_by_agent":  "vs-insiders-gpt-5.4-mini",
+        "completed_at":  "2026-05-06T12:52:45.2848800+08:00",
+        "chain_id":  "",
+        "chain_step":  "",
+        "sensor_triggered_by":  "",
+        "description":  "建立 ATM 任務卡模板，統一 upstream core、adapter、case study 任務欄位。",
+        "related":  [
+
+                    ],
+        "depends":  [
+                        "ATM-0-0001",
+                        "ATM-0-0003"
+                    ],
+        "acceptance":  [
+                           "模板包含 hostKind/targetRepo/alphaGate/packageScope/adapterScope/allowed_files/forbidden_files/non_goals/executionMode/validation_cmd/rollback_hint",
+                           "新 ATM 卡可由 task-card-opener 一致生成"
+                       ],
+        "deliverables":  [
+                             "docs/agent-briefs/atm-task-template.md",
+                             "task-card-opener 使用說明補充"
+                         ],
+        "notes":  "2026-05-06 | 狀態: done | 驗證: encoding passed；standard gate 受既有 dirty files 阻擋 | 變更: 建立 ATM 任務卡模板並補充開卡欄位規則 | 阻塞: 既有 task-scope 雜訊",
+        "brief":  {
+                      "style":  "harn-rich",
+                      "label":  "ATM 開源化開卡",
+                      "summary":  "建立 ATM 任務卡模板，統一 upstream core、adapter、case study 任務欄位。",
+                      "position":  "ATM-0",
+                      "prereq":  "ATM-0-0001、ATM-0-0003"
+                  },
+        "contracts":  {
+                          "input":  [
+                                        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
+                                    ],
+                          "output":  [
+                                         "docs/agent-briefs/atm-task-template.md",
+                                         "task-card-opener 使用說明補充"
+                                     ],
+                          "validation_cmd":  "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+                          "rollback_hint":  "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
+                          "execution_steps":  [
+                                                  "確認依賴與 scope",
+                                                  "修改或建立對應文件",
+                                                  "跑 encoding 與 standard gate",
+                                                  "回寫 notes"
+                                              ]
+                      },
+        "harness_evidence":  {
+                                 "artifact_paths":  [
+
+                                                    ],
+                                 "validation_evidence":  [
+
+                                                         ],
+                                 "handoff_diff_status":  "",
+                                 "trace_artifacts":  [
+
+                                                     ],
+                                 "metrics_summary":  [
+
+                                                     ]
+                             }
     },
-    "contracts": {
-      "input": [
-        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
-      ],
-      "output": [
-        "docs/agent-briefs/atm-task-template.md",
-        "task-card-opener 使用說明補充"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
-      "execution_steps": [
-        "確認依賴與 scope",
-        "修改或建立對應文件",
-        "跑 encoding 與 standard gate",
-        "回寫 notes"
-      ]
+    {
+        "doc_id":  "doc_task_0337",
+        "id":  "ATM-2-0031",
+        "title":  "Lifecycle Police（TTL + Sweep + 狀態機警察）",
+        "owner":  "GitHubCopilot",
+        "priority":  "P0",
+        "status":  "open",
+        "type":  "police",
+        "phase":  "ATM-2",
+        "created":  "2026-05-07",
+        "created_by_agent":  "GitHubCopilot",
+        "started_at":  "",
+        "started_by_agent":  "",
+        "chain_id":  "ATM-IDENTITY-BEHAVIOR-V1",
+        "chain_step":  "6/8",
+        "sensor_triggered_by":  "atm-evolution-plan-identity-behavior",
+        "description":  "提供生命週期警察：(1) scheduled scan 發現 TTL 已到的 atom，建議 expire；(2) zero-caller scan 發現無 caller 的 atom，建議 sweep；(3) 偵測非法 status transition（違反 ATM-2-0027 矩陣），quarantine 該 atom；(4) 通知 callers 進行遷移。",
+        "related":  [
+
+                    ],
+        "depends":  [
+                        "ATM-2-0026",
+                        "ATM-2-0027",
+                        "ATM-2-0029"
+                    ],
+        "acceptance":  [
+                           "packages/plugin-police-lifecycle/ 落地 lifecycle police",
+                           "scheduled scan 報告 TTL 已到 / zero-caller / 非法 transition 三類 finding",
+                           "TTL 過期 atom 建議 behavior.expire；zero-caller atom 建議 behavior.sweep",
+                           "偵測到非法 transition 時將該 atom 標記 quarantined（唯一可寫此狀態的角色）",
+                           "caller migration 通知 contract：lifecycle-notice.schema.json",
+                           "fixtures：3 類 finding 各 1 份 + 1 份 quarantine 行為 + 1 份 caller-notice"
+                       ],
+        "deliverables":  [
+                             "packages/plugin-police-lifecycle/",
+                             "packages/plugin-police-lifecycle/src/ttl-scanner.ts",
+                             "packages/plugin-police-lifecycle/src/zero-caller-scanner.ts",
+                             "packages/plugin-police-lifecycle/src/transition-checker.ts",
+                             "schemas/police/lifecycle-finding.schema.json",
+                             "schemas/police/lifecycle-notice.schema.json",
+                             "fixtures/lifecycle-police/*"
+                         ],
+        "notes":  "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 6/8）| 阻塞: 等依賴卡完成",
+        "brief":  {
+                      "style":  "harn-rich",
+                      "label":  "ATM 識別/行為/狀態機提案開卡",
+                      "summary":  "生命週期警察：TTL + zero-caller + 狀態機合規檢查；唯一可寫 quarantined 狀態的角色。",
+                      "position":  "ATM-2",
+                      "prereq":  "ATM-2-0026 / ATM-2-0027 / ATM-2-0029"
+                  }
     },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
+    {
+        "doc_id":  "doc_task_0285",
+        "id":  "ATM-6-0004",
+        "title":  "Performance Budget Police 與成本控制",
+        "owner":  "GitHubCopilot",
+        "priority":  "P2",
+        "status":  "open",
+        "type":  "optional-police",
+        "phase":  "ATM-6",
+        "created":  "2026-05-05",
+        "created_by_agent":  "GitHubCopilot",
+        "started_at":  "",
+        "started_by_agent":  "",
+        "chain_id":  "",
+        "chain_step":  "",
+        "sensor_triggered_by":  "",
+        "description":  "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
+        "related":  [
+
+                    ],
+        "depends":  [
+                        "ATM-5-0005"
+                    ],
+        "acceptance":  [
+                           "Performance Budget 不進 v0.1 core hard gate",
+                           "hot path atom 有 p95/maxRuntimeMs/allocatedBytes 建議",
+                           "LLM caching 與 budget 只透過 plugin 啟用"
+                       ],
+        "deliverables":  [
+                             "docs/ecosystem/performance-budget-police.md",
+                             "plugin boundary proposal",
+                             "cost control policy"
+                         ],
+        "notes":  "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+        "brief":  {
+                      "style":  "harn-rich",
+                      "label":  "ATM v0.2 整合開卡",
+                      "summary":  "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
+                      "position":  "ATM-6",
+                      "prereq":  "ATM-5-0005"
+                  },
+        "contracts":  {
+                          "input":  [
+                                        "v0.2 companion analysis 已確認可作務實化補充"
+                                    ],
+                          "output":  [
+                                         "docs/ecosystem/performance-budget-police.md",
+                                         "plugin boundary proposal",
+                                         "cost control policy"
+                                     ],
+                          "validation_cmd":  "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+                          "rollback_hint":  "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+                          "execution_steps":  [
+                                                  "確認 upstream/downstream 邊界",
+                                                  "更新正式文件或 optional plugin 規格",
+                                                  "同步 task shard/doc_id",
+                                                  "跑 encoding 與 standard gate"
+                                              ]
+                      },
+        "harness_evidence":  {
+                                 "artifact_paths":  [
+
+                                                    ],
+                                 "validation_evidence":  [
+
+                                                         ],
+                                 "handoff_diff_status":  "",
+                                 "trace_artifacts":  [
+
+                                                     ],
+                                 "metrics_summary":  [
+
+                                                     ]
+                             }
     }
-  },
-  {
-    "doc_id": "doc_task_0337",
-    "id": "ATM-2-0031",
-    "title": "Lifecycle Police（TTL + Sweep + 狀態機警察）",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "police",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
-    "chain_step": "6/8",
-    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
-    "description": "提供生命週期警察：(1) scheduled scan 發現 TTL 已到的 atom，建議 expire；(2) zero-caller scan 發現無 caller 的 atom，建議 sweep；(3) 偵測非法 status transition（違反 ATM-2-0027 矩陣），quarantine 該 atom；(4) 通知 callers 進行遷移。",
-    "related": [],
-    "depends": [
-      "ATM-2-0026",
-      "ATM-2-0027",
-      "ATM-2-0029"
-    ],
-    "acceptance": [
-      "packages/plugin-police-lifecycle/ 落地 lifecycle police",
-      "scheduled scan 報告 TTL 已到 / zero-caller / 非法 transition 三類 finding",
-      "TTL 過期 atom 建議 behavior.expire；zero-caller atom 建議 behavior.sweep",
-      "偵測到非法 transition 時將該 atom 標記 quarantined（唯一可寫此狀態的角色）",
-      "caller migration 通知 contract：lifecycle-notice.schema.json",
-      "fixtures：3 類 finding 各 1 份 + 1 份 quarantine 行為 + 1 份 caller-notice"
-    ],
-    "deliverables": [
-      "packages/plugin-police-lifecycle/",
-      "packages/plugin-police-lifecycle/src/ttl-scanner.ts",
-      "packages/plugin-police-lifecycle/src/zero-caller-scanner.ts",
-      "packages/plugin-police-lifecycle/src/transition-checker.ts",
-      "schemas/police/lifecycle-finding.schema.json",
-      "schemas/police/lifecycle-notice.schema.json",
-      "fixtures/lifecycle-police/*"
-    ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 6/8）| 阻塞: 等依賴卡完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 識別/行為/狀態機提案開卡",
-      "summary": "生命週期警察：TTL + zero-caller + 狀態機合規檢查；唯一可寫 quarantined 狀態的角色。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0026 / ATM-2-0027 / ATM-2-0029"
-    }
-  },
-  {
-    "doc_id": "doc_task_0285",
-    "id": "ATM-6-0004",
-    "title": "Performance Budget Police 與成本控制",
-    "owner": "GitHubCopilot",
-    "priority": "P2",
-    "status": "open",
-    "type": "optional-police",
-    "phase": "ATM-6",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
-    "related": [],
-    "depends": [
-      "ATM-5-0005"
-    ],
-    "acceptance": [
-      "Performance Budget 不進 v0.1 core hard gate",
-      "hot path atom 有 p95/maxRuntimeMs/allocatedBytes 建議",
-      "LLM caching 與 budget 只透過 plugin 啟用"
-    ],
-    "deliverables": [
-      "docs/ecosystem/performance-budget-police.md",
-      "plugin boundary proposal",
-      "cost control policy"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
-      "position": "ATM-6",
-      "prereq": "ATM-5-0005"
-    },
-    "contracts": {
-      "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
-      ],
-      "output": [
-        "docs/ecosystem/performance-budget-police.md",
-        "plugin boundary proposal",
-        "cost control policy"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  }
 ]

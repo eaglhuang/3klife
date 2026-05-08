@@ -211,7 +211,7 @@ ATM 若要達到「下載後放在任意專案根目錄，AI agent 讀 README �
 | Context budget / summarization | `.atm/reports/context-budget/*.json`、`.atm/state/context-summary/*.md`、重量文件/圖片 budget policy、summarize/hard-stop workflow | `check-context-budget.js`、`generate-context-summary.js`、`report-turn-usage.js` |
 | Rule / gate runner | default rule guard、encoding guard、context budget guard、import/scope guard、command capability policy | `compute-gate.js`、encoding checks、import-boundary、UI/H2U rule guards、context budget guard |
 | Adapter discovery | Local FS/Git fallback adapter、host capability registry、language/runtime adapter probe | 3KLife ProjectAdapter、Node/Cocos adapter、html-to-ucuf case adapter |
-| 識別與行為治理（α1） | semanticFingerprint / lineage / TTL schema、原子狀態機（draft/validated/active/transitioning/deprecated/expired/quarantined）、AtomBehavior plugin SDK + 10 內建行為 (split/merge/compose/dedup-merge/sweep/evolve/expire/polymorphize/infect/atomize)、dedup police（含 fingerprint-index O(1) lookup）、lifecycle police（TTL + sweep + 狀態機檢查）、atomization police | 3KLife adapter 可選擇是否實作；usage-feedback 回填 caller-count；H2U case study 用 atomize/infect 完成 legacy strangler |
+| 識別與行為治理（α1） | semanticFingerprint / lineage / TTL schema、原子狀態機（draft/validated/active/transitioning/deprecated/expired/quarantined）、AtomBehavior plugin SDK + 10 內建行為 (split/merge/compose/dedup-merge/sweep/evolve/expire/polymorphize/infect/atomize)、dedup police（含 fingerprint-index O(1) lookup）、lifecycle police（TTL + sweep + 狀態機檢查）、atomization police（trigger / scope / severity / action；authoring-time / transition-time / sweep-time；fast / slow；machine-readable findings；read-model / metrics） | 3KLife adapter 可選擇是否實作；usage-feedback 回填 caller-count；H2U case study 用 atomize/infect 完成 legacy strangler |
 
 因此，ATM 的「可獨立跑起來」定義不是只要 `npm install` 後能執行一個 atom，而是要能讓 AI agent 在任何 repo 內自動形成固定工作包絡：Project Probe → Create Task → Lock Scope → Plan → Edit → Capture Artifacts/Logs → Run Guards → Write Evidence → Unlock/Close Task。Core 只定義契約與 lifecycle；Default Governance Bundle 提供 `.atm/` reference implementation；各專案再用 adapter 映射到自己的任務、文件、log 與 artifact 系統。
 其中 `plugin-rule-guard`、`plugin-encoding`、`plugin-context-budget` 應被視為同一組 Agent Governance Bundle：前者負責 policy/boundary，第二個負責文字完整性，第三個負責上下文預算、摘要節流與超額 hard-stop。
@@ -515,8 +515,8 @@ Default Governance Bundle 的其他 reference plugins（完整 task cards、doc 
 | ATM-2-0027 | atom status 狀態機 | 收斂 status enum 為 draft/validated/active/transitioning/deprecated/expired/quarantined；把 governed 改為 governance.tier 屬性；合法 transition 矩陣 |
 | ATM-2-0028 | AtomBehavior plugin SDK | plugin-sdk 加入 behavior interface 與 BehaviorRegistry，支援第三方擴充行為 |
 | ATM-2-0029 | reference behavior pack（10 內建） | split / merge / compose / dedup-merge / sweep / evolve / expire / polymorphize / infect / atomize；infect+atomize 為 Legacy strangler 主力 |
-| ATM-2-0030 | dedup police plugin | sf 比對 + LLM similarity skill + 8 種去重情境裁決 + fingerprint-index O(1) lookup（hot path） |
-| ATM-2-0031 | lifecycle police（TTL + sweep + 狀態機警察） | scheduled scan、expire、unused detection、非法 status transition 偵測 |
+| ATM-2-0030 | dedup police plugin | sf 比對 + LLM similarity skill + 8 種去重情境裁決 + fingerprint-index O(1) lookup（hot path）；輸出 machine-readable findings 與 advisory / follow-up 路由 |
+| ATM-2-0031 | lifecycle police（TTL + sweep + 狀態機警察） | scheduled scan、expire、unused detection、非法 status transition 偵測；輸出 machine-readable lifecycle findings 與 quarantine / review / follow-up 路由 |
 | ATM-2-0032 | polymorphic atom 模板規範 | **廣義多形**（multi-dimension：參數/類型/語言/品質/輸出形狀/行為變體）；含 dimension-detector 工具 |
 | ATM-2-0033 | atomization & infection adapter 合約 | legacy URI 解析、neutrality scan 整合、dry-run patch（不直接動 host） |
 

@@ -135,7 +135,7 @@ Default Governance Bundle 的其他 reference plugins（完整 task cards、doc 
 | ATM-3-0012 | task-scope / import-boundary 規則包遷移 | `rule-pack.json` + RuleGuard adapter；同時標 `check-task-scope.js` / `check-import-boundaries.js` 為 `@deprecated` |
 | ATM-3-0013 | finalize-agent-turn wrapper 接 run envelope | `tools_node/finalize-agent-turn.js` |
 | ATM-3-0015 | task card system 原子 map 規劃 | `task-card-opener.js` + `task-lock.js` + task shard + `check-task-scope.js` + doc-id sync 的 end-to-end governed flow |
-| ATM-2-0050 | framework function 原子化 coverage gate | 全框架 Layer 2 功能 manifest + validator；確認 CLI / registry / spec / test / evidence / police / adapter / task lifecycle / map / PEV 都有 atom / map 覆蓋 |
+| ATM-2-0050 | framework function 原子化 coverage gate | 全框架 Layer 2 功能 manifest + validator；確認 CLI / registry / spec / test / evidence / police / adapter / task lifecycle / map / PEV 都有 atom / map 覆蓋，且 police surfaces 需輸出 `trigger / scope / severity / action` 的 machine-readable findings |
 
 ### 並行開發協議
 

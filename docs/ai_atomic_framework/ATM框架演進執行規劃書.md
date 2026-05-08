@@ -400,6 +400,7 @@ ATM-2-0022 rollback proof（失敗回退）
 
 1. 把 §C.3、§C.4、§C.5、§C.6、§C.7 列出的純 acceptance additive 補丁，逐張寫進對應 open 卡 frontmatter（不需要新開卡）。
 2. 落地 `ATM-2-0047` 的 URN resolver 與 RegistryIndex façade，讓後續 `ATM-2-0030` dedup police、`ATM-2-0031` lifecycle police 與 map generator 共用同一套 O(1) 查詢入口。
+3. 所有 police surface 都必須輸出 machine-readable findings，並明確標出 `trigger / scope / severity / action`；低風險先走 advisory / needs-review，高風險再走 follow-up task card / quarantine / hard fail。
 3. 然後依 §A.4 的順序執行 `ATM-2-0014 → 0015 → 0016 → 0017 → 0019 → 0020 → 0021 → 0022 → 3-0014 → 4-0007`，並在 `ATM-2-0028 / 0029` 落地時順便驗證 §C.7 的繞道防線。
 
 ### C.10 本輪 task-card 硬化規則
@@ -421,7 +422,7 @@ ATM-2-0022 rollback proof（失敗回退）
 
 進一步盤點後，`ATM-3-0015` 仍只覆蓋 task card system。ATM 的全框架 dogfooding 還缺一個總控層，能證明 CLI commands、Atomic Spec / Scaffold、Registry / HashLock / Index / Catalog、Test / Report / Evidence、Police / Rule Guards、Adapter interfaces、Task lifecycle、Atomic Map、PEV / Lifecycle docs 等 Layer 2 framework functions 都有 atom / atomic map / adapter facade 對應。
 
-因此新增 `ATM-2-0050`：建立 `docs/ai_atomic_framework/framework-function-atomization-manifest.md` 與 coverage validator。之後任何 framework function 若未被列入 manifest，或 Layer 2 項目沒有對應 atom / map / adapter facade / open task，validation 應 fail。Layer 1 constitutional schema 只做 hash-lock / migration gate；Layer 3 mutable host config 只做 git / adapter config 管理，不列入「必須原子化」範圍。
+因此新增 `ATM-2-0050`：建立 `docs/ai_atomic_framework/framework-function-atomization-manifest.md` 與 coverage validator。之後任何 framework function 若未被列入 manifest，或 Layer 2 項目沒有對應 atom / map / adapter facade / open task / finding route，validation 應 fail。Layer 1 constitutional schema 只做 hash-lock / migration gate；Layer 3 mutable host config 只做 git / adapter config 管理，不列入「必須原子化」範圍。
 
 固定開工路線正式定義如下：
 
@@ -433,5 +434,6 @@ ATM-2-0022 rollback proof（失敗回退）
 
 - `ATM-2-0049` 已完成 task id reservation / lock race hardening，視為上述路線的已落地前置，不另占節點。
 - 在 `ATM-2-0048` 與 `ATM-3-0015` 未完成前，`ATM-2-0050` 僅可進行 manifest backwrite、gap mapping、advisory report；不得將 coverage validator 作為 blocker。
+- advisory report 必須能接收 police findings，並將 fast / slow police 的路由資訊保留給 human review queue 與 task-router。
 - 任一新卡若宣稱處理「全框架原子化」，必須在 acceptance 或 notes 中標註自己屬於 `0048`、`3-0015`、`0050` 哪一段路線，避免把局部治理誤判為全局完成。
 - `ATM-2-0050` 同時承接文件治理收斂：新增 `documentation-governance-policy.md` 與 `documentation-role-map.md`，並以 `validate-atm-doc-governance` 鎖定 `Agent Boot Order` 與 `docs/ai_atomic_framework/` 的 `canonical / reference / adopter / history / index / shard / asset` 角色；在角色治理穩定前，不進行大規模實體搬移。
