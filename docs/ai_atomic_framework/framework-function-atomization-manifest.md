@@ -11,6 +11,7 @@
 - machine-readable inventory 與 fixture 必須持續對齊；validator 會把 drift 當成失敗。
 - 2026-05-09 補入 done-card acknowledgement：`ATM-2-0006 / 0009 / 0014 / 0020 / 0021 / 0022` 的完成成果已成為 framework 可引用語言；family row 若仍有後續卡，仍維持 `open-card`。
 - 2026-05-09 補入 `ATM-2-0053` family closure backwrite：`ATM-2-0023 / ATM-2-0042 / ATM-2-0043 / ATM-2-0044 / ATM-2-0045 / ATM-2-0046` 已把 Atomic Map schema / generator / provenance 補成完整 foundation，因此該 row 正式升成 `covered-existing`。
+- 2026-05-09 補入 `ATM-2-0054` task intake / lock stability backwrite：`ATM-2-0048 / ATM-2-0049` 已把 task-router / onboarding / lock 的交通層收斂為 canonical stable path，0054 只補 validator、doc-id 與索引語言，不改 status。
 
 ## Layer Boundary
 
@@ -48,8 +49,8 @@
 | Atomization / infection adapter contract | Layer 2 | open-card | `ATM-2-0033`、`ATM-4-0004`、`ATM-4-0005` | atomize / infect 不得跳過 neutrality scan / dry-run proposal |
 | AtomGenerator / provenance audit | Layer 2 | covered-existing | `ATM-2-0038`、`ATM-2-0039`、`ATM-2-0040`、`ATM-2-0041` | 新 atom 不得繞過 generator；pre-generator atom 必須有 backfilled witness |
 | Atomic Map schema / generator / provenance | Layer 2 | covered-existing | `ATM-2-0023`、`ATM-2-0042`、`ATM-2-0043`、`ATM-2-0044`、`ATM-2-0045`、`ATM-2-0046` | recheck only when `ATM-2-0024`、`ATM-2-0025`、`ATM-4-0008` changes map-level evolution / integration contracts |
-| Task router / onboarding | Layer 2 | covered-existing | `ATM-2-0048` | onboarding / router ???????? router contract ????? |
-| Governance shard strategy | Layer 2 | covered-existing | `ATM-2-0049` | shard strategy ??? coverage validator ????? shard ??????? |
+| Task router / onboarding | Layer 2 | covered-existing | `ATM-2-0048`、`ATM-2-0054` | onboarding / router contract 已被 0048 收斂；0054 只補 task-intake stability validator 與 canonical route smoke |
+| Governance shard strategy | Layer 2 | covered-existing | `ATM-2-0049`、`ATM-2-0054` | shard strategy / lock guard 已被 0049 收斂；0054 只補 shard / doc-id / manifest 回寫語言 |
 | Task card lifecycle atomic map | Layer 2 | covered-existing | `ATM-3-0015` | task lifecycle member atoms 與 orchestration 邊界已定義；不得誤當全框架 coverage |
 | CLI protocol / commands | Layer 2 | covered-existing | `ATM-1-0004`、`ATM-2.5-0001`、`ATM-2-0038`、`ATM-2-0042`、`ATM-2-0048`、`ATM-2-0050`、`ATM-2-0051` | CLI command surfaces now route through atom / map / adapter coverage |
 | Framework Function Atomization Manifest / self-coverage | Layer 2 | covered-existing | `ATM-2-0051` | validator / manifest / fixture / schema contract must stay aligned |
@@ -387,12 +388,14 @@
     "coverageStatus": "covered-existing",
     "coverageKind": "atom",
     "taskRefs": [
-      "ATM-2-0048"
+      "ATM-2-0048",
+      "ATM-2-0054"
     ],
     "artifactRefs": [
-      "docs/agent-briefs/tasks/ATM/ATM-2-0048.md"
+      "docs/agent-briefs/tasks/ATM/ATM-2-0048.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0054.md"
     ],
-    "nextCheck": "recheck only if router or onboarding contract changes",
+    "nextCheck": "recheck only if router, onboarding, or task-intake stability contract changes",
     "routeHint": null,
     "findingContract": null
   },
@@ -404,12 +407,14 @@
     "coverageStatus": "covered-existing",
     "coverageKind": "atom",
     "taskRefs": [
-      "ATM-2-0049"
+      "ATM-2-0049",
+      "ATM-2-0054"
     ],
     "artifactRefs": [
-      "docs/agent-briefs/tasks/ATM/ATM-2-0049.md"
+      "docs/agent-briefs/tasks/ATM/ATM-2-0049.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0054.md"
     ],
-    "nextCheck": "recheck only if shard strategy or manifest routing changes",
+    "nextCheck": "recheck only if shard strategy, lock routing, or manifest routing changes",
     "routeHint": null,
     "findingContract": null
   },

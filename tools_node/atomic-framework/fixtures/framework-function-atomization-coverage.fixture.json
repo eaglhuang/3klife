@@ -305,12 +305,14 @@
     "coverageStatus": "covered-existing",
     "coverageKind": "atom",
     "taskRefs": [
-      "ATM-2-0048"
+      "ATM-2-0048",
+      "ATM-2-0054"
     ],
     "artifactRefs": [
-      "docs/agent-briefs/tasks/ATM/ATM-2-0048.md"
+      "docs/agent-briefs/tasks/ATM/ATM-2-0048.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0054.md"
     ],
-    "nextCheck": "recheck only if router or onboarding contract changes",
+    "nextCheck": "recheck only if router, onboarding, or task-intake stability contract changes",
     "routeHint": null,
     "findingContract": null
   },
@@ -322,12 +324,14 @@
     "coverageStatus": "covered-existing",
     "coverageKind": "atom",
     "taskRefs": [
-      "ATM-2-0049"
+      "ATM-2-0049",
+      "ATM-2-0054"
     ],
     "artifactRefs": [
-      "docs/agent-briefs/tasks/ATM/ATM-2-0049.md"
+      "docs/agent-briefs/tasks/ATM/ATM-2-0049.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0054.md"
     ],
-    "nextCheck": "recheck only if shard strategy or manifest routing changes",
+    "nextCheck": "recheck only if shard strategy, lock routing, or manifest routing changes",
     "routeHint": null,
     "findingContract": null
   },

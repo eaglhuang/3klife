@@ -92,5 +92,84 @@
         "schema positive fixture 現在覆蓋 sharding、location、pluginApiVersion、languageAdapter 與 sourcePaths.code array 形狀"
       ]
     }
+  },
+  {
+    "doc_id": "",
+    "id": "ATM-2-0054",
+    "title": "Task Intake & Lock Stability Acknowledgement Backwrite",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "governance",
+    "phase": "ATM-2",
+    "created": "2026-05-09",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-09T07:49:48+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "把新 host、新流程、新卡進入 ATM 時的交通層補成可引用、可驗證、可回歸的框架語言。task-router 負責入口號誌，task-id-guard + LockAdapter 負責路口護欄，並把這層承認回寫到框架文件、manifest、shard 與 validator。",
+    "related": [],
+    "depends": [
+      "ATM-2-0048",
+      "ATM-2-0049"
+    ],
+    "acceptance": [
+      "task-router smoke routes remain compatible",
+      "task-id-guard-flow and task-lock-cross-shard tests pass",
+      "framework docs and manifest acknowledge the stability layer",
+      "task tracking",
+      "doc-id registry",
+      "and tasks-atm shard are updated"
+    ],
+    "deliverables": [
+      "docs/agent-briefs/tasks/ATM/ATM-2-0054.md",
+      "tools_node/validate-atm-task-intake-stability.js",
+      "tools_node/test/task-id-guard-flow.test.js",
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
+      "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
+      "docs/tasks/tasks-atm.json",
+      "docs/tasks/tasks-atm/tasks-atm-part-*.json",
+      "docs/doc-id-registry-shards/registry-task.json"
+    ],
+    "notes": "2026-05-09 | 狀態: done | 驗證: validate-atm-task-intake-stability / coverage / encoding / context / diff pass | 變更: 已補 task-intake stability validator、task-id guard test hardening、框架承認回寫與 shards/fixture 回收 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM task intake / lock stability",
+      "summary": "把 task-router / onboarding / lock 的交通層承認進框架語言。",
+      "position": "ATM-2 / framework acknowledgement follow-up",
+      "prereq": "ATM-2-0048 done / ATM-2-0049 done"
+    },
+    "contracts": {
+      "input": [
+        "task-router smoke outputs",
+        "task-id guard / lock regression outputs",
+        "current framework docs and manifest"
+      ],
+      "output": [
+        "ATM-2-0054 task card",
+        "validate-atm-task-intake-stability.js",
+        "framework docs / manifest / shards / fixture backwrite"
+      ],
+      "validation_cmd": "node tools_node/validate-atm-task-intake-stability.js\\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --write-fixture\\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict\\nnpm.cmd run check:encoding:touched -- --files <touched md/json/js>\\nnode tools_node/check-context-budget.js --changed --emit-keep-note\\ngit diff --check",
+      "rollback_hint": "回退 ATM-2-0054 任務卡、validator、task-id-guard test hardening、framework docs、manifest shards 與 coverage fixture；保留 ATM-2-0048 / ATM-2-0049 的已完成事實，不重做入口與鎖的實作。",
+      "execution_steps": [
+        "建立並鎖定 ATM-2-0054",
+        "驗證 task-router / onboarding / guide smoke 與 lock regression",
+        "鋆?task-id guard 測試的 stderr/stdout 韌性",
+        "回寫三份框架文件與 manifest 索引",
+        "更新 tasks-atm shard、coverage fixture 與 doc-id registry",
+        "完成 encoding / context / diff / validation 收尾"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

@@ -18,12 +18,6 @@
     "category": "ui"
   },
   {
-    "id": "doc_ui_0004",
-    "path": "docs/遊戲規格文件/系統規格書/未持有武將標記規則補遺_2026-04-04.md",
-    "title": "未持有武將標記規則補遺 2026-04-04",
-    "category": "ui"
-  },
-  {
     "id": "doc_ui_0005",
     "path": "docs/遊戲規格文件/系統規格書/血脈命鏡過場載入規格書.md",
     "title": "血脈命鏡過場載入規格書",
@@ -81,42 +75,6 @@
     "id": "doc_ui_0014",
     "path": "docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-14.md",
     "title": "武將人物介面規格補遺_2026-04-14：人性化與生活感擴充",
-    "category": "ui"
-  },
-  {
-    "id": "doc_ui_0015",
-    "path": "docs/遊戲規格文件/系統規格書/Figma+Cocos+Playwright量產流程補遺_2026-04-04.md",
-    "title": "Figma + Cocos MCP + Playwright 量產流程補遺",
-    "category": "ui"
-  },
-  {
-    "id": "doc_ui_0016",
-    "path": "docs/遊戲規格文件/系統規格書/Figma母板與MCP smoke test補遺_2026-04-04.md",
-    "title": "Figma 母板與 MCP Smoke Test 補遺",
-    "category": "ui"
-  },
-  {
-    "id": "doc_ui_0017",
-    "path": "docs/遊戲規格文件/系統規格書/UI Proof資料夾模板補遺_2026-04-04.md",
-    "title": "UI Proof資料夾模板補遺 2026-04-04",
-    "category": "ui"
-  },
-  {
-    "id": "doc_ui_0018",
-    "path": "docs/遊戲規格文件/系統規格書/UI空白線稿PNG規格補遺_2026-04-04.md",
-    "title": "UI空白線稿PNG規格補遺 2026-04-04",
-    "category": "ui"
-  },
-  {
-    "id": "doc_ui_0019",
-    "path": "docs/遊戲規格文件/系統規格書/UI骨架補遺_2026-04-02_人物頁與命鏡.md",
-    "title": "UI骨架補遺 2026-04-02 人物頁與命鏡",
-    "category": "ui"
-  },
-  {
-    "id": "doc_ui_0020",
-    "path": "docs/遊戲規格文件/系統規格書/UI線稿對照與AI產碼補遺_2026-04-04.md",
-    "title": "UI線稿對照與AI產碼補遺 2026-04-04",
     "category": "ui"
   },
   {

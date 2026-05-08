@@ -13,17 +13,17 @@
 | 類別 | 前綴 | 數量 |
 |------|------|-----:|
 | 技術類 | `doc_tech` | 23 |
-| 畫面UI類 | `doc_ui` | 54 |
+| 畫面UI類 | `doc_ui` | 47 |
 | 美術非UI類 | `doc_art` | 3 |
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 178 |
 | 索引類 | `doc_index` | 17 |
-| 任務卡類 | `doc_task` | 354 |
+| 任務卡類 | `doc_task` | 356 |
 | AI Agent 專用 | `doc_ai` | 31 |
-| Agent Skill 專用 | `doc_agentskill` | 46 |
+| Agent Skill 專用 | `doc_agentskill` | 47 |
 | Server 文件類 | `doc_server_<subtype>` | 15 |
 | 其它類 | `doc_other` | 89 |
-| **合計** | — | **812** |
+| **合計** | — | **808** |
 
 ---
 
@@ -62,7 +62,6 @@
 | `doc_ui_0001` | docs/主戰場UI規格書.md | 主戰場 UI 規格書 (Main Battlefield UI Specification) |
 | `doc_ui_0002` | docs/主戰場UI規格補充_v2.md | 主戰場 UI 規格補充 v2（線框圖修訂依據） |
 | `doc_ui_0003` | docs/主戰場UI規格補充_v3.md | 主戰場 UI 規格補充 v3（線框圖修訂依據） |
-| `doc_ui_0004` | docs/遊戲規格文件/系統規格書/未持有武將標記規則補遺_2026-04-04.md | 未持有武將標記規則補遺 2026-04-04 |
 | `doc_ui_0005` | docs/遊戲規格文件/系統規格書/血脈命鏡過場載入規格書.md | 血脈命鏡過場載入規格書 |
 | `doc_ui_0006` | docs/遊戲規格文件/系統規格書/血脈命鏡過場載入規格補遺_2026-04-02_v3.md | 血脈命鏡過場載入規格補遺 2026-04-02 v3 |
 | `doc_ui_0007` | docs/遊戲規格文件/系統規格書/血脈命鏡LoadingTips補遺_2026-04-04.md | 血脈命鏡LoadingTips補遺 2026-04-04 |
@@ -74,12 +73,6 @@
 | `doc_ui_0013` | docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-02.md | 武將人物介面規格補遺 2026-04-02 |
 | `doc_ui_0014` | docs/遊戲規格文件/系統規格書/武將人物介面規格補遺_2026-04-14.md | 武將人物介面規格補遺_2026-04-14：人性化與生活感擴充 |
 | `doc_ui_0090` | docs/遊戲規格文件/系統規格書/英靈虎符與特種軍隊視覺契約補遺_2026-04-04.md | 英靈虎符與特種軍隊視覺契約補遺 2026-04-04 |
-| `doc_ui_0015` | docs/遊戲規格文件/系統規格書/Figma+Cocos+Playwright量產流程補遺_2026-04-04.md | Figma + Cocos MCP + Playwright 量產流程補遺 |
-| `doc_ui_0016` | docs/遊戲規格文件/系統規格書/Figma母板與MCP smoke test補遺_2026-04-04.md | Figma 母板與 MCP Smoke Test 補遺 |
-| `doc_ui_0017` | docs/遊戲規格文件/系統規格書/UI Proof資料夾模板補遺_2026-04-04.md | UI Proof資料夾模板補遺 2026-04-04 |
-| `doc_ui_0018` | docs/遊戲規格文件/系統規格書/UI空白線稿PNG規格補遺_2026-04-04.md | UI空白線稿PNG規格補遺 2026-04-04 |
-| `doc_ui_0019` | docs/遊戲規格文件/系統規格書/UI骨架補遺_2026-04-02_人物頁與命鏡.md | UI骨架補遺 2026-04-02 人物頁與命鏡 |
-| `doc_ui_0020` | docs/遊戲規格文件/系統規格書/UI線稿對照與AI產碼補遺_2026-04-04.md | UI線稿對照與AI產碼補遺 2026-04-04 |
 | `doc_ui_0021` | docs/annotations/圖1_武將詳情_標註說明.md | 圖1 — 武將詳情 標註說明 |
 | `doc_ui_0022` | docs/annotations/圖2_裝備介面_標註說明.md | 圖2 — 裝備介面 標註說明 |
 | `doc_ui_0023` | docs/annotations/圖3_戰令商城_標註說明.md | 圖3 — 戰令商城 標註說明 |
@@ -421,6 +414,8 @@
 | `doc_task_0360` | docs/agent-briefs/tasks/ATM/ATM-2-0050.md | [ATM-2-0050] Framework Function Atomization Coverage Gate |
 | `doc_task_0361` | docs/agent-briefs/tasks/ATM/ATM-2-0051.md | [ATM-2-0051] Coverage Gate Promotion & Self-Coverage Follow-up |
 | `doc_task_0362` | docs/agent-briefs/tasks/ATM/ATM-2-0052.md | [ATM-2-0052] Framework Done-Card Acknowledgement Backwrite |
+| `doc_task_0363` | docs/agent-briefs/tasks/ATM/ATM-2-0053.md | [ATM-2-0053] Atomic Map / Provenance Family Acknowledgement Backwrite |
+| `doc_task_0364` | docs/agent-briefs/tasks/ATM/ATM-2-0054.md | [ATM-2-0054] Task Intake & Lock Stability Acknowledgement Backwrite |
 | `doc_task_0303` | docs/agent-briefs/tasks/ATM/ATM-2.5-0001.md | [ATM-2.5-0001] Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI |
 | `doc_task_0304` | docs/agent-briefs/tasks/ATM/ATM-2.5-0002.md | [ATM-2.5-0002] Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate |
 | `doc_task_0305` | docs/agent-briefs/tasks/ATM/ATM-2.5-0003.md | [ATM-2.5-0003] Multi-Agent 兼容性驗證：confidence gate |
@@ -743,6 +738,7 @@
 | `doc_agentskill_0008` | .agents/skills/encoding-touched-guard/SKILL.md | Encoding Touched Guard |
 | `doc_agentskill_0061` | .agents/skills/general-avatar-crop/SKILL.md | Skill: general-avatar-crop |
 | `doc_agentskill_0062` | .agents/skills/handoff-text-spacing-extractor/SKILL.md | Handoff Text Spacing Extractor |
+| `doc_agentskill_0066` | .agents/skills/notes-label-repair/SKILL.md | SKILL: notes-label-repair |
 | `doc_agentskill_0042` | .agents/skills/sanguo-event-review-loop/SKILL.md | Sanguo Event Review Loop |
 | `doc_agentskill_0043` | .agents/skills/sanguo-knowledge-growth-loop/SKILL.md | Sanguo Knowledge Growth Loop |
 | `doc_agentskill_0038` | .agents/skills/sanguo-rag-resolution-loop/SKILL.md | Sanguo RAG Resolution Loop |

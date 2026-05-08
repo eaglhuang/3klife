@@ -443,6 +443,8 @@ docs/ai_atomic_framework/
 
 ### ATM-3：3KLife adapter 導入（downstream-only，需待 self-hosting alpha0 gate）（13 卡）
 
+`ATM-2-0048 / ATM-2-0049 / ATM-2-0054` 這一層是 ATM 的 task intake / lock 交通護欄：`ATM-2-0048` 讓 task-router / onboarding 成為 canonical entry，`ATM-2-0049` 讓 task-id-guard / LockAdapter 成為 reservation 與 cross-shard 的路口護欄，而 `ATM-2-0054` 只是把這層穩定性回寫進框架文件、manifest、shard 與 validator。它承認入口要穩，但不把這件事誤寫成新的公開 API surface。
+
 | 範圍 | 任務 | 目的 |
 |---|---|---|
 | ATM-3-0001~0002 | ProjectAdapter wrapper / local config | 把 task-lock、compute-gate、doc-id-registry、encoding 包成 3KLife adapter。 |

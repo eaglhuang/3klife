@@ -474,6 +474,8 @@ ATM-2-0022 rollback proof（失敗回退）
 
 ### C.14 Atomic Map / provenance family acknowledgement（2026-05-09）
 
+`ATM-2-0054` 不是新 surface，而是把 `ATM-2-0048 / ATM-2-0049` 這條 task intake / lock 交通層正式回寫成框架語言；它只補 validator、文件與索引語言，不重做 router / lock 的公開介面，也不改 family closure 的 status。
+
 `ATM-2-0053` 承接的不是新功能，而是把 `ATM-2-0023 / ATM-2-0042 / ATM-2-0043 / ATM-2-0044 / ATM-2-0045 / ATM-2-0046` 這條 Atomic Map / provenance family 的 done 事實，正式回寫成框架可引用的語言與索引。這批卡和上一節不同的地方在於：六張卡現在都已 done，所以 `framework-function-atomization-manifest.md` 的 `Atomic Map schema / generator / provenance` row 可以從 `open-card` 升成 `covered-existing`。
 
 | done 卡 | 已由框架承認的 acceptance | 轉成 covered-existing 後的後續 route |

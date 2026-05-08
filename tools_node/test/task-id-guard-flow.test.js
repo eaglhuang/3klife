@@ -61,8 +61,9 @@ function runNode(args, expectedStatus = 0) {
   if (result.status !== expectedStatus) {
     throw new Error([
       `node ${args.join(' ')} exited ${result.status}, expected ${expectedStatus}`,
-      result.stdout.trim(),
-      result.stderr.trim(),
+      String(result.stdout || '').trim(),
+      String(result.stderr || '').trim(),
+      result.error ? result.error.message : '',
     ].filter(Boolean).join('\n'));
   }
   return result;

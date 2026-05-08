@@ -274,5 +274,11 @@
     "path": ".agents/skills/task-card-required-adjustment/SKILL.md",
     "title": "任務卡的必要調整",
     "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0066",
+    "path": ".agents/skills/notes-label-repair/SKILL.md",
+    "title": "SKILL: notes-label-repair",
+    "category": "agentskill"
   }
 ]
