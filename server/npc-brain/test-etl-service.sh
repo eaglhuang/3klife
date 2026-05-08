@@ -6,6 +6,7 @@ BASE_URL="${LANGGRAPH_BASE_URL:-http://127.0.0.1:2025}"
 GRAPH_ID="${GRAPH_ID:-sanguo_etl_graph}"
 OUT_DIR="${ROOT_DIR}/local"
 RAW_INPUT="${1:-lu-bu}"
+PYTHON_BIN="${PYTHON_BIN:-$HOME/.venv/3klife-etl/bin/python}"
 
 if [[ ! -f "${ROOT_DIR}/.env" ]]; then
   echo "Missing ${ROOT_DIR}/.env" >&2
@@ -17,15 +18,15 @@ if ! command -v curl >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! command -v python3 >/dev/null 2>&1; then
-  echo "python3 is required." >&2
+if [[ ! -x "${PYTHON_BIN}" ]]; then
+  echo "Python venv is required: ${PYTHON_BIN}" >&2
   exit 1
 fi
 
 if [[ "${RAW_INPUT}" == \{* || "${RAW_INPUT}" == \[* ]]; then
   INPUT_JSON="${RAW_INPUT}"
 else
-  INPUT_JSON="$(python3 - "${RAW_INPUT}" <<'PY'
+  INPUT_JSON="$("${PYTHON_BIN}" - "${RAW_INPUT}" <<'PY'
 import json
 import sys
 print(json.dumps({"focusGeneralId": sys.argv[1]}, ensure_ascii=False))
@@ -61,7 +62,7 @@ curl --silent --show-error --fail \
   "${BASE_URL}/assistants/search" \
   -d '{}' >"${assistants_path}"
 
-ASSISTANT_ID="$(python3 - "${assistants_path}" "${GRAPH_ID}" <<'PY'
+ASSISTANT_ID="$("${PYTHON_BIN}" - "${assistants_path}" "${GRAPH_ID}" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -98,7 +99,7 @@ curl --silent --show-error --fail \
   "${BASE_URL}/threads" \
   -d '{}' >"${thread_path}"
 
-THREAD_ID="$(python3 - "${thread_path}" <<'PY'
+THREAD_ID="$("${PYTHON_BIN}" - "${thread_path}" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -112,7 +113,7 @@ if [[ -z "${THREAD_ID}" ]]; then
   exit 1
 fi
 
-python3 - "${ASSISTANT_ID}" "${INPUT_JSON}" "${payload_path}" <<'PY'
+"${PYTHON_BIN}" - "${ASSISTANT_ID}" "${INPUT_JSON}" "${payload_path}" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -133,7 +134,7 @@ curl --silent --show-error --fail \
   --data @"${payload_path}" >"${result_path}"
 
 echo "[5/5] Summarize result"
-python3 - "${result_path}" "${THREAD_ID}" "${ASSISTANT_ID}" "${GRAPH_ID}" "${BASE_URL}" <<'PY'
+"${PYTHON_BIN}" - "${result_path}" "${THREAD_ID}" "${ASSISTANT_ID}" "${GRAPH_ID}" "${BASE_URL}" <<'PY'
 import json
 import sys
 from pathlib import Path

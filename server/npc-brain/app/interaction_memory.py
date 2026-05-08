@@ -90,8 +90,8 @@ class InteractionEvent(BaseModel):
 
 
 class GeneralMemoryData(BaseModel):
-    saveId: str
-    generalId: str
+    saveId: str = ""
+    generalId: str = ""
     schemaVersion: int = CURRENT_MEMORY_SCHEMA_VERSION
     shortTerm: str = ""
     longTerm: str = ""

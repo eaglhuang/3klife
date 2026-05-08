@@ -69,7 +69,7 @@ NPC_MEMORY_COMPRESS_MODEL=gemini_flash # 壓縮專用 LLM provider
 
 **驗收**：
 ```bash
-curl http://127.0.0.1:8765/healthz | python3 -m json.tool | grep -A 8 '"memory"'
+curl http://127.0.0.1:8765/healthz | "$HOME/.venv/3klife-etl/bin/python" -m json.tool | grep -A 8 '"memory"'
 curl -X POST http://127.0.0.1:8765/v1/npc/interaction-events \
   -H "Content-Type: application/json" \
   -d '{"saveId":"dev","generalId":"zhang-fei","eventType":"dialogue","summary":"test"}' 
@@ -126,7 +126,7 @@ NPC_LLM_DEBUG=1 curl -X POST http://127.0.0.1:8765/v1/npc/dialogue \
 # POST /v1/npc/memory/compress?force=true
 # 確認 lastCompressedIdx = 60
 curl "http://127.0.0.1:8765/v1/npc/general-memory?saveId=dev&generalId=zhang-fei" \
-  | python3 -c "import sys,json; m=json.load(sys.stdin); print('idx:', m['lastCompressedIdx'], 'count:', m['uncompressedCount'])"
+  | "$HOME/.venv/3klife-etl/bin/python" -c "import sys,json; m=json.load(sys.stdin); print('idx:', m['lastCompressedIdx'], 'count:', m['uncompressedCount'])"
 
 # 失敗模擬：monkeypatch 一個 section 拋出 Exception，確認 idx 不變
 ```
@@ -176,7 +176,7 @@ NPC_LLM_PROVIDER_ORDER=deterministic python -m app.memory_smoke_test
 
 ```bash
 # 1. 確認 healthz memory 段
-curl http://127.0.0.1:8765/healthz | python3 -m json.tool | grep -A 8 memory
+curl http://127.0.0.1:8765/healthz | "$HOME/.venv/3klife-etl/bin/python" -m json.tool | grep -A 8 memory
 
 # 2. 寫入一筆互動事件
 curl -s -X POST http://127.0.0.1:8765/v1/npc/interaction-events \
@@ -186,16 +186,16 @@ curl -s -X POST http://127.0.0.1:8765/v1/npc/interaction-events \
 
 # 3. 讀取當前記憶（此時四段仍為空，但 uncompressedCount=1）
 curl "http://127.0.0.1:8765/v1/npc/general-memory?saveId=dev-save&generalId=zhang-fei" \
-  | python3 -m json.tool
+  | "$HOME/.venv/3klife-etl/bin/python" -m json.tool
 
 # 4. 強制觸發壓縮（需 GOOGLE_API_KEY）
 curl -s -X POST http://127.0.0.1:8765/v1/npc/memory/compress \
   -H "Content-Type: application/json" \
-  -d '{"saveId":"dev-save","generalId":"zhang-fei","force":true}' | python3 -m json.tool
+  -d '{"saveId":"dev-save","generalId":"zhang-fei","force":true}' | "$HOME/.venv/3klife-etl/bin/python" -m json.tool
 
 # 5. 確認指針推進
 curl "http://127.0.0.1:8765/v1/npc/general-memory?saveId=dev-save&generalId=zhang-fei" \
-  | python3 -c "import sys,json; m=json.load(sys.stdin); print('idx:', m['lastCompressedIdx'], '/ count:', m['uncompressedCount'])"
+  | "$HOME/.venv/3klife-etl/bin/python" -c "import sys,json; m=json.load(sys.stdin); print('idx:', m['lastCompressedIdx'], '/ count:', m['uncompressedCount'])"
 
 # 6. 帶記憶呼叫 dialogue（NPC_LLM_DEBUG=1 顯示 prompt）
 NPC_LLM_DEBUG=1 curl -s -X POST http://127.0.0.1:8765/v1/npc/dialogue \
