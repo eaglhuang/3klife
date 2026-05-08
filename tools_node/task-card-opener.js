@@ -17,16 +17,12 @@ const {
   isTasksAtmIndexPath,
   upsertTaskInTasksAtmStore,
 } = require('./lib/tasks-atm-shard-store');
-const {
-  formatTaskIdInspection,
-  inspectTaskId,
-  previewNextTaskId,
-  releaseReservedTaskId,
-  reserveNextTaskId,
-  reserveTaskId,
-} = require('./lib/task-id-guard');
-const { createLockAdapter } = require('./adapters/atm-3klife/lock-adapter');
-const { createLockAdapterConfig } = require('./adapters/atm-3klife/lock-adapter-config');
+const { createTaskAdapter } = require('./adapters/atm-3klife/task-adapter');
+
+const taskAdapter = createTaskAdapter({
+  projectRoot: PROJECT_ROOT,
+  profilePath: path.join(PROJECT_ROOT, 'tools_node', 'adapters', 'atm-3klife', 'task-profile.json'),
+});
 
 function todayIso() {
   return new Date().toISOString().split('T')[0];
@@ -657,7 +653,7 @@ function cleanupPendingTaskIdReservation() {
     return;
   }
   if (pendingTaskIdReservation.cleanupOnError) {
-    releaseReservedTaskId(PROJECT_ROOT, pendingTaskIdReservation.taskId, pendingTaskIdReservation.agentName);
+    taskAdapter.releaseReservedTaskId(pendingTaskIdReservation.taskId, pendingTaskIdReservation.agentName);
   }
   clearTaskIdReservation();
 }
@@ -666,12 +662,11 @@ function relativeOutputFile(filePath) {
   if (!filePath) {
     return '';
   }
-  return path.relative(PROJECT_ROOT, resolvePath(filePath)).replace(/\\/g, '/');
+  return taskAdapter.relativeOutputFile(resolvePath(filePath));
 }
 
 function promoteReservationToLock(taskId, agentName, files) {
-  const lockAdapter = createLockAdapter(createLockAdapterConfig());
-  lockAdapter.lock(taskId, agentName, files.filter(Boolean));
+  taskAdapter.promoteReservationToLock(taskId, agentName, files.filter(Boolean));
   clearTaskIdReservation();
 }
 
@@ -716,29 +711,29 @@ function main() {
 
   if (nextIdPrefix) {
     if (dryRun) {
-      id = previewNextTaskId(PROJECT_ROOT, nextIdPrefix);
+      id = taskAdapter.previewNextTaskId(nextIdPrefix);
     } else {
-      const reservation = reserveNextTaskId(PROJECT_ROOT, nextIdPrefix, owner);
+      const reservation = taskAdapter.reserveNextTaskId(nextIdPrefix, owner);
       rememberTaskIdReservation(reservation);
       id = reservation.taskId;
     }
   } else if (!dryRun && !allowExistingId) {
-    const preReservationInspection = inspectTaskId(PROJECT_ROOT, id);
+    const preReservationInspection = taskAdapter.inspectTaskId(id);
     const hasOnlyOwnReservation = preReservationInspection.taskCards.length === 0
       && preReservationInspection.taskStoreCount === 0
       && preReservationInspection.locks.length > 0
       && preReservationInspection.locks.every((entry) => entry.agentName === owner && entry.reservationOnly);
     if (!preReservationInspection.occupied || hasOnlyOwnReservation) {
-      const reservation = reserveTaskId(PROJECT_ROOT, id, owner);
+      const reservation = taskAdapter.reserveTaskId(id, owner);
       rememberTaskIdReservation(reservation);
     }
   }
 
-  const inspection = inspectTaskId(PROJECT_ROOT, id);
+  const inspection = taskAdapter.inspectTaskId(id);
   if (inspection.occupied && !allowExistingId && !canReuseExistingTaskId(inspection, owner, mdPath)) {
     const prefixHint = inferTaskIdPrefix(id) || nextIdPrefix;
     const suggestion = prefixHint ? ` 改用 --next-id-prefix ${prefixHint} 可原子保留下一個空號。` : '';
-    throw new Error(`task id "${id}" 已被佔用：${formatTaskIdInspection(inspection)}。${suggestion}`.trim());
+    throw new Error(`task id "${id}" 已被佔用：${taskAdapter.formatTaskIdInspection(inspection)}。${suggestion}`.trim());
   }
 
   const task = buildTask({
@@ -789,10 +784,7 @@ function main() {
     const resolvedMdPath = resolvePath(mdOutArg);
     writeText(resolvedMdPath, mdContent, dryRun);
     if (!dryRun && assignDocId) {
-      cp.execFileSync(process.execPath, [path.join(PROJECT_ROOT, 'tools_node', 'doc-id-registry.js'), '--assign', path.relative(PROJECT_ROOT, resolvedMdPath)], {
-        cwd: PROJECT_ROOT,
-        stdio: 'inherit',
-      });
+      taskAdapter.assignDocId(resolvedMdPath);
     }
   } else if (dryRun) {
     printDryRunArtifact('markdown', mdContent);

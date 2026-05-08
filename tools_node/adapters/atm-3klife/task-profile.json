@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "taskIdPrefixes": [
+    "ATM-",
+    "H2U-",
+    "PROG-2-"
+  ],
+  "template": {
+    "defaultTaskTemplate": "docs/agent-briefs/atm-task-template.md"
+  },
+  "notes": "3KLife private profile for TaskAdapter thin-wrapper phase."
+}
