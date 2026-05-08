@@ -1,53 +1,51 @@
 [
   {
-    "doc_id": "doc_task_0260",
-    "id": "ATM-2-0003",
-    "title": "Test Runner 與 report schema",
+    "doc_id": "doc_task_0256",
+    "id": "ATM-1-0006",
+    "title": "JS/TS LanguageAdapter reference",
     "owner": "GitHubCopilot",
-    "priority": "P0",
+    "priority": "P1",
     "status": "done",
-    "type": "manager",
-    "phase": "ATM-2",
+    "type": "adapter",
+    "phase": "ATM-1",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T20:28:12.7677476+08:00",
+    "started_at": "2026-05-06T14:48:06+08:00",
     "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T20:40:58.2375737+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立 atomic test runner contract 與 JSON report schema。",
+    "description": "建立 JavaScript/TypeScript reference language adapter，負責 import scan、test command 與 entrypoint 規則。",
     "related": [],
     "depends": [
-      "ATM-2-0002",
-      "ATM-1-0006"
+      "ATM-1-0004"
     ],
     "acceptance": [
-      "故意失敗 fixture exit code 非零",
-      "report 可被 registry/hash/police 消費",
-      "runner 不 hard-code Vitest"
+      "JS compute atom 可被 validate",
+      "forbidden import fixture 失敗",
+      "LanguageAdapter API 可讓未來 Python/C# 實作"
     ],
     "deliverables": [
-      "packages/core/src/manager/test-runner.*",
-      "schemas/test-report.schema.json",
-      "pass/fail fixtures"
+      "packages/language-js",
+      "JS/TS import policy fixture",
+      "test command runner contract"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:test-runner / npm run validate:schemas / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 391b462 新增 core delegated test runner、schemas/test-report.schema.json、pass/fail runner fixtures 與 schema fixtures，預設把 atom.test.report.json 寫進 atomic_workbench/atoms/<atomId>/，保留專案自有 validation.commands、支援自訂 reportPath，並在失敗時保留 non-zero exit code | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:language-js / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 6f4bcaa 建立 JS/TS LanguageAdapter reference、import scan、forbidden import fixture、entrypoint rule 與 delegated test command runner contract | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
-      "summary": "建立 atomic test runner contract 與 JSON report schema。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0002、ATM-1-0006"
+      "summary": "建立 JavaScript/TypeScript reference language adapter，負責 import scan、test command 與 entrypoint 規則。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0004"
     },
     "contracts": {
       "input": [
         "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "packages/core/src/manager/test-runner.*",
-        "schemas/test-report.schema.json",
-        "pass/fail fixtures"
+        "packages/language-js",
+        "JS/TS import policy fixture",
+        "test command runner contract"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
       "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
@@ -60,137 +58,73 @@
     },
     "harness_evidence": {
       "artifact_paths": [
-        "AI-Atomic-Framework/package.json",
-        "AI-Atomic-Framework/packages/core/src/index.ts",
-        "AI-Atomic-Framework/packages/core/src/manager/test-runner.mjs",
-        "AI-Atomic-Framework/schemas/test-report.schema.json",
-        "AI-Atomic-Framework/scripts/validate-schemas.mjs",
-        "AI-Atomic-Framework/scripts/validate-test-runner.mjs",
-        "AI-Atomic-Framework/tests/test-runner.fixture.json",
-        "AI-Atomic-Framework/tests/test-runner-fixtures/pass.atom.json",
-        "AI-Atomic-Framework/tests/test-runner-fixtures/fail.atom.json",
-        "AI-Atomic-Framework/tests/test-runner-fixtures/pass-command.mjs",
-        "AI-Atomic-Framework/tests/test-runner-fixtures/fail-command.mjs",
-        "AI-Atomic-Framework/tests/schema-fixtures/manifest.json",
-        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-test-report.json",
-        "AI-Atomic-Framework/tests/schema-fixtures/negative/missing-runner-contract.test-report.json"
+        "AI-Atomic-Framework/packages/language-js/package.json",
+        "AI-Atomic-Framework/packages/language-js/src/index.ts",
+        "AI-Atomic-Framework/packages/language-js/src/language-js-adapter.mjs",
+        "AI-Atomic-Framework/packages/language-js/README.md",
+        "AI-Atomic-Framework/scripts/validate-language-js.mjs",
+        "AI-Atomic-Framework/tests/language-js-fixtures/import-policy.fixture.json",
+        "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
       ],
       "validation_evidence": [
-        "AI-Atomic-Framework commit 391b462",
-        "npm run validate:test-runner",
-        "npm run validate:schemas",
-        "npm run validate:cli",
+        "AI-Atomic-Framework commit 6f4bcaa",
+        "npm install",
+        "npm run packages:list",
+        "npm run validate:language-js",
         "npm test",
         "npm run typecheck",
         "npm run lint"
       ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "handoff_diff_status": "upstream committed; tracking diff verified",
       "trace_artifacts": [],
       "metrics_summary": [
-        "core test runner delegates to project-owned validation.commands instead of hard-coding a specific third-party framework",
-        "runner emits a schema-validated atm.testReport document with artifacts/evidence for downstream registry or police consumers",
-        "default report path now follows the per-atom workbench folder atomic_workbench/atoms/<atomId>/atom.test.report.json",
-        "caller or adapter can still override reportPath when a host-specific layout is needed",
-        "fail fixture preserves a non-zero exit code while still writing a machine-readable report"
+        "upstream commit 6f4bcaa",
+        "valid JS/TS compute atom passes language adapter validation",
+        "forbidden import fixture fails with ATM_JS_FORBIDDEN_IMPORT",
+        "missing entrypoint export fails with ATM_JS_ENTRYPOINT_EXPORT_MISSING",
+        "test/typecheck/lint commands are delegated to project package scripts"
       ]
-    }
+    },
+    "completed_at": "2026-05-06T14:51:24+08:00"
   },
   {
-    "doc_id": "doc_task_0357",
-    "id": "ATM-3-0015",
-    "title": "Task card system atomic map planning",
-    "owner": "codex-gpt-5.5",
+    "doc_id": "doc_task_0318",
+    "id": "ATM-2-0015",
+    "title": "Hash Drift / Version Diff Report",
+    "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "done",
-    "type": "architecture",
-    "phase": "ATM-3",
-    "created": "2026-05-08",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-08T18:18:03+08:00",
-    "started_by_agent": "codex-gpt-5",
-    "completed_at": "2026-05-08T18:57:52.7741562+08:00",
-    "completed_by_agent": "codex-gpt-5.5",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "把 ATM-3-0006、ATM-3-0008、ATM-3-0009、ATM-3-0010、ATM-3-0012 組成一條可治理的 task card atomic map，明確拆出 allocateTaskId、reserveTaskId、openTaskCard、lockTaskScope、writeTaskShard、validateTaskShard、syncDocRegistry、finalizeTaskLifecycle 的邊界與 orchestrator 責任。",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "2/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "產出機器可讀的 hash-diff-report，比對任兩個 atom version 的 spec/code/test hash 差異與 drift reason。",
     "related": [],
     "depends": [
-      "ATM-3-0006",
-      "ATM-3-0008",
-      "ATM-3-0009",
-      "ATM-3-0010",
-      "ATM-3-0012"
+      "ATM-2-0014"
     ],
     "acceptance": [
-      "task card system atomic map 要有清楚的 member atom 清單",
-      "allocateTaskId / reserveTaskId / openTaskCard / lockTaskScope / writeTaskShard / validateTaskShard / syncDocRegistry / finalizeTaskLifecycle 的邊界要能對照",
-      "規劃文件要補上 ATM-3 卡號映射",
-      "TaskAdapter / LockAdapter / ShardAdapter / RuleGuardAdapter 的 orchestrator 責任要明確",
-      "後續 implementation 不能再用單體 helper 直接串完整流程"
+      "hash-diff-report.schema.json 定義 fromVersion / toVersion / specHashDelta / codeHashDelta / testHashDelta / driftReason",
+      "CLI atm registry diff <atomId> --from <v1> --to <v2> --json 輸出符合 schema 的報告",
+      "fixtures：identical hash（empty delta）/ all-three-changed / driftReason missing 三種"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-      "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
-      "docs/agent-briefs/tasks/ATM/ATM-3-0015.md",
-      "docs/tasks/tasks-atm/tasks-atm-part-31.json",
-      "docs/tasks/tasks-atm.json"
+      "schemas/registry/hash-diff-report.schema.json",
+      "packages/core/src/registry/diff.ts",
+      "packages/cli/commands/registry-diff.ts"
     ],
-    "notes": "2026-05-08 | 狀態: done | 驗證: node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-3-0015.md docs/tasks/tasks-atm/tasks-atm-part-31.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/framework-function-atomization-manifest.md ✅；node tools_node/task-lock.js check ATM-3-0015 ✅；node tools_node/task-lock.js lock ATM-3-0015 codex-gpt-5.5 --files docs/agent-briefs/tasks/ATM/ATM-3-0015.md docs/tasks/tasks-atm/tasks-atm-part-31.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/framework-function-atomization-manifest.md ✅ | 變更: 補上 task card atomic map 路線圖、member atoms 與 orchestrator 邊界，並同步 tasks-atm store 與 manifest | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM task card atomic map",
-      "summary": "把 task card system 收斂成可治理的 atomic map",
-      "position": "ATM-3",
-      "prereq": "ATM-3-0006 / ATM-3-0008 / ATM-3-0009 / ATM-3-0010 / ATM-3-0012"
-    },
-    "contracts": {
-      "input": [
-        "ATM-3-0006 LockAdapter thin wrapper",
-        "ATM-3-0008 DocumentIndexAdapter thin wrapper",
-        "ATM-3-0009 ShardAdapter thin wrapper",
-        "ATM-3-0010 TaskAdapter thin wrapper",
-        "ATM-3-0012 RuleGuardAdapter / rule-pack 規劃",
-        "docs/ai_atomic_framework/關於進化版的原子提案.md §11"
-      ],
-      "output": [
-        "task card system atomic map 路線圖與 member atom 清單",
-        "allocateTaskId / reserveTaskId / openTaskCard / lockTaskScope / writeTaskShard / validateTaskShard / syncDocRegistry / finalizeTaskLifecycle 的邊界定義",
-        "規劃文件補上 ATM-3 卡號映射",
-        "TaskAdapter / LockAdapter / ShardAdapter / RuleGuardAdapter 的 orchestrator 責任明確化",
-        "不得再用單體 helper 直接串完整流程"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-3-0015.md docs/tasks/tasks-atm/tasks-atm-part-31.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/framework-function-atomization-manifest.md",
-      "rollback_hint": "回退本卡與規劃文件 backwrite；若 tasks-atm store 需要修復，另開專卡，不在本卡直接手修 unrelated task content。",
-      "execution_steps": [
-        "盤點 task-card-opener / task-lock / shard-manager / task-scope 現有 ATM-3 卡",
-        "定義 end-to-end task card atomic map 與 member atoms",
-        "把映射補進規劃文件與 manifest",
-        "同步 tasks-atm store 與 summary"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [
-        "docs/agent-briefs/tasks/ATM/ATM-3-0015.md",
-        "docs/tasks/tasks-atm/tasks-atm-part-31.json",
-        "docs/tasks/tasks-atm.json",
-        "docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
-        "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-        "docs/ai_atomic_framework/framework-function-atomization-manifest.md"
-      ],
-      "validation_evidence": [
-        "node tools_node/check-context-budget.js --changed --emit-keep-note",
-        "node tools_node/task-lock.js check ATM-3-0015",
-        "node tools_node/task-lock.js lock ATM-3-0015 codex-gpt-5.5 --files docs/agent-briefs/tasks/ATM/ATM-3-0015.md docs/tasks/tasks-atm/tasks-atm-part-31.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/framework-function-atomization-manifest.md"
-      ],
-      "handoff_diff_status": "completed; pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "task card atomic map has explicit member atoms and orchestration boundaries",
-        "tasks-atm store can now reflect a done ATM-3-0015 entry",
-        "framework-function-atomization-manifest entry can move from open-card to covered-existing"
-      ]
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "提供 atom 版本間 hash 差異報告，作為 upgrade proposal 與 rollback proof 的基礎輸入。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0014"
     }
   }
 ]

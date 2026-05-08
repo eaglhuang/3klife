@@ -1,105 +1,78 @@
 [
   {
-    "doc_id": "doc_task_0257",
-    "id": "ATM-1-0007",
-    "title": "Hello-world 與 legacy-strangler 範例",
+    "doc_id": "doc_task_0323",
+    "id": "ATM-2-0020",
+    "title": "ProposeAtomicUpgrade（000012）",
     "owner": "GitHubCopilot",
-    "priority": "P1",
+    "priority": "P0",
     "status": "done",
-    "type": "example",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
+    "type": "orchestration-atom",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T15:03:13+08:00",
-    "started_by_agent": "vs-code-github-copilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立最小 compute atom 與最小 legacy strangler example，讓新使用者可從零跑通。",
+    "started_at": "2026-05-08T00:30:00.2262013+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T00:30:00.2262013+08:00",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "7/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "串接 hash-diff / metrics / regression-compare 結果，產出 upgrade-proposal.json，並提供 atm upgrade --propose --dry-run CLI。",
     "related": [],
     "depends": [
-      "ATM-1-0004",
-      "ATM-1-0005"
+      "ATM-2-0015",
+      "ATM-2-0016",
+      "ATM-2-0017"
     ],
     "acceptance": [
-      "hello-world 可在 standalone mode validate",
-      "legacy-strangler-minimal 不含 3KLife 私有路徑",
-      "Quick Start 30 分鐘可跑完"
+      "upgrade-proposal.schema.json 含 atomId / fromVersion / toVersion / automatedGates / humanReview pending",
+      "CLI atm upgrade --propose --atom <id> --to <ver> --dry-run --json 輸出符合 schema 的 proposal",
+      "automatedGates 任一 fail 時 proposal 必須標記 status=blocked，不允許進入 review queue",
+      "upgrade-proposal.schema.json 增加 decompositionDecision（enum: atom-bump | atom-extract | map-bump）與 mapImpactScope 欄位",
+      "CLI 增加 --target atom|map 旗標；--target map 時必須附 mapId",
+      "decompositionDecision 為 atom-extract 時，proposal 需同時列出新 atomId 與 fork 來源",
+      "upgrade-proposal.schema.json 追加必填欄位 behaviorId（預設 behavior.evolve）；其他合法值由 ATM-2-0029 reference behavior pack 註冊",
+      "node scripts/validate-upgrade-proposal.mjs 必須可在不跑整包 test 的情況下，獨立驗證 schema、status=blocked 邏輯、decompositionDecision / behaviorId invariant",
+      "exemplar 至少保留 proposal-pass.json 與 proposal-blocked.json 兩組，可直接重放 CLI --dry-run --json 輸出到 validator"
     ],
     "deliverables": [
-      "examples/hello-world",
-      "examples/legacy-strangler-minimal",
-      "docs/QUICK_START.md 範例命令"
+      "schemas/upgrade/upgrade-proposal.schema.json",
+      "packages/core/src/upgrade/propose.mjs",
+      "packages/cli/src/commands/upgrade.mjs",
+      "scripts/validate-upgrade-proposal.mjs",
+      "fixtures/upgrade/proposal-pass.json",
+      "fixtures/upgrade/proposal-blocked.json"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:examples / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 2d7e21f 建立 hello-world、legacy-strangler-minimal、docs/QUICK_START.md 與 examples validation gate | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— upgrade-proposal 追加 behaviorId 欄位（必填，預設 behavior.evolve）\n2026-05-07 附錄 C 治理補丁：升版 proposal 保持為唯一編排 choke point；effect node 僅能寫 evidence，不得直接 promote\n2026-05-07 測試穩定性補丁：維持 orchestration atom 目的不變；補 deterministic validator 與 exemplar pair，讓 proposal contract 失敗可先在本卡 seam 定位\n2026-05-08 | 狀態: done | 驗證: node scripts/validate-upgrade-proposal.mjs --mode validate / node scripts/validate-schemas.mjs --mode test / node scripts/validate-cli.mjs --mode test / npm test / npm run typecheck / npm run lint | 變更: AI-Atomic-Framework commit bd48800 補 ProposeAtomicUpgrade schema/core/CLI/fixtures/validator；CLI 採既有 flat command atm upgrade --propose，proposal 僅彙整既有 evidence/report，不 mutate host、不進 review queue | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立最小 compute atom 與最小 legacy strangler example，讓新使用者可從零跑通。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0004、ATM-1-0005"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "examples/hello-world",
-        "examples/legacy-strangler-minimal",
-        "docs/QUICK_START.md 範例命令"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/examples/hello-world",
-        "AI-Atomic-Framework/examples/legacy-strangler-minimal",
-        "AI-Atomic-Framework/docs/QUICK_START.md",
-        "AI-Atomic-Framework/scripts/validate-examples.mjs",
-        "AI-Atomic-Framework/package.json",
-        "AI-Atomic-Framework/package-lock.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 2d7e21f",
-        "npm install",
-        "npm run packages:list",
-        "npm run validate:examples",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff verified",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit 2d7e21f",
-        "hello-world compute atom validates in standalone flow",
-        "legacy-strangler-minimal wraps existing code without downstream private paths",
-        "Quick Start includes install, package list, example tests, spec validation, and full gate commands",
-        "validate:examples verifies 2 examples and Quick Start commands"
-      ]
-    },
-    "completed_at": "2026-05-06T15:07:10+08:00"
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "evolution 管線首個 orchestration atom：把 birth-pipeline 工具組合成 upgrade 提案。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0015 / ATM-2-0016 / ATM-2-0017"
+    }
   },
   {
-    "id": "ATM-3-0006",
-    "title": "task-lock.js adapter 化：接入 ATM LockAdapter",
-    "status": "open",
+    "doc_id": "doc_task_0352",
+    "id": "ATM-2-0045",
+    "title": "Map Generator Provenance Audit",
+    "owner": "ClaudeCode_sonnet-4-6",
     "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0306",
+    "status": "open",
+    "type": "audit",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "ClaudeCode_sonnet-4-6",
+    "chain_id": "ATM-MAP-GENERATOR-PROVENANCE-V1",
+    "chain_step": "3/3",
+    "sensor_triggered_by": "atm-2-0042-map-generator-ripple",
+    "description": "等同 ATM-2-0041 的 map 版。掃描 registry 確保所有 map entry 有 generator provenance。",
+    "related": [],
     "depends": [
-      "ATM-2.5-0002",
-      "ATM-3-0001"
-    ]
+      "ATM-2-0042",
+      "ATM-2-0044"
+    ],
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 + ATM-2-0044 完成"
   }
 ]

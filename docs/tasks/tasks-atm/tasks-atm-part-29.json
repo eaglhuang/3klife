@@ -1,102 +1,104 @@
 [
   {
-    "doc_id": "doc_task_0258",
-    "id": "ATM-2-0001",
-    "title": "Core Spec loader/parser",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0297",
+    "id": "ATM-2-0011",
+    "title": "Context budget guard",
+    "owner": "vs-code-gpt-5.4",
     "priority": "P0",
     "status": "done",
-    "type": "manager",
+    "type": "open-source-core",
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T18:18:00.000Z",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T19:24:57.2838869+08:00",
+    "started_at": "2026-05-08T01:50:19.1010973+08:00",
+    "started_by_agent": "vs-code-gpt-5.4",
+    "completed_at": "2026-05-08T05:36:11.5268898+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "實作 core spec loader/parser，讀取 spec、套 schema、產 normalized model。",
-    "related": [],
+    "description": "建立 upstream context budget guard，使 ATM 能獨立治理 token/context 預算、重量文件讀取策略、摘要替代與超額 hard-stop / summarize 流程。",
+    "related": [
+      "ATM-0-0011",
+      "ATM-2-0010"
+    ],
     "depends": [
-      "ATM-1-0003"
+      "ATM-2-0007",
+      "ATM-2-0008",
+      "ATM-2-0010"
     ],
     "acceptance": [
-      "valid/invalid fixtures 全覆蓋",
-      "錯誤訊息指出缺欄位與路徑",
-      "不讀 host-specific config"
+      "定義 ContextBudgetGuard 或等效 governance primitive",
+      "提供 protected surface 與重量資產的 budget policy",
+      "定義 summarize/hard-stop/report schema",
+      "可與 encoding 與 neutrality/boundary guard 收斂成 Agent Governance Bundle",
+      "大型 quality-comparison / upgrade-proposal report 在超過 budget 時必須輸出 summary 並 hard-stop，不可繼續展開"
     ],
     "deliverables": [
-      "packages/core/src/spec/parse-spec.*",
-      "unit tests",
-      "error-as-prompt report format"
+      "context budget guard spec",
+      "budget policy schema",
+      "summary/report layout",
+      "standalone smoke / CI guidance"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:core-spec-parser / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 87c689c 新增 packages/core/src/spec/parse-spec.mjs、fixture-driven parser validator、host-agnostic parse proof，並讓 CLI spec --validate 走 core parser 產出 normalized model 與 error-as-prompt report format | 阻塞: none",
+    "notes": "2026-05-08 | 狀態: done | 驗證: upstream bootstrap/self-hosting-alpha/governance-local/upgrade + npm test/typecheck/lint 全綠；3KLife standard gate pass | 變更: commit 5b35935 完成 bootstrap/self-host-alpha/upgrade 串接、continuation contract、quality-comparison hard-stop | 阻塞: none\n2026-05-08 | 狀態: in-progress | 驗證: upstream npm test/typecheck/lint 全綠；3KLife scope+encoding pass | 變更: commit 16ec208 落地 ContextBudgetGuard primitive、policy seed、report/summary contract | 阻塞: none\n2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 context budget guard 任務 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "實作 core spec loader/parser，讀取 spec、套 schema、產 normalized model。",
+      "label": "ATM governance bundle 開卡",
+      "summary": "建立 upstream context budget guard，讓 ATM 可獨立治理 token/context 預算與摘要節流。",
       "position": "ATM-2",
-      "prereq": "ATM-1-0003"
+      "prereq": "ATM-2-0007、ATM-2-0008、ATM-2-0010"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+        "governance schema 與 local reference plugins 已定義",
+        "neutrality/boundary guard 已規劃 code/docs surfaces"
       ],
       "output": [
-        "packages/core/src/spec/parse-spec.*",
-        "unit tests",
-        "error-as-prompt report format"
+        "context budget primitive",
+        "budget policy schema",
+        "summary/hard-stop/report contract"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "rollback_hint": "回退 context budget guard 規格；不得把 3KLife 的 keep/token guard 規則直接寫死成 upstream 私有前提。",
       "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
+        "定義 context budget primitive",
+        "定義 budget policy 與 report schema",
+        "定義 summarize/hard-stop 流程",
+        "補 standalone smoke guidance"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/package.json",
-        "AI-Atomic-Framework/packages/cli/src/commands/spec-shared.mjs",
-        "AI-Atomic-Framework/packages/core/src/spec/parse-spec.mjs",
-        "AI-Atomic-Framework/scripts/validate-core-spec-parser.mjs",
-        "AI-Atomic-Framework/tests/core-spec-parser.fixture.json",
-        "AI-Atomic-Framework/tests/core-spec-parser-fixtures/minimal-valid.atom.json"
-      ],
+      "artifact_paths": [],
       "validation_evidence": [
-        "AI-Atomic-Framework commit 87c689c",
-        "npm run validate:core-spec-parser",
-        "npm run validate:cli",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
+        "AI-Atomic-Framework: validate-bootstrap/self-hosting-alpha/governance-local/upgrade",
+        "AI-Atomic-Framework: npm test/typecheck/lint",
+        "3KLife: compute-gate --profile standard --agent-feedback",
+        "3KLife: check-encoding-touched"
       ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "core parser now reads atomic spec files, validates against the shared schema, and emits a normalized model",
-        "invalid spec cases return prompt-ready issue records with code, path, text, and direct fix hints",
-        "parser validation covers valid fixture, invalid fixture, missing-file failure, and host-agnostic temp-repo parsing",
-        "CLI spec --validate now reuses the core parser instead of carrying a separate validation path"
-      ]
+      "metrics_summary": []
     }
   },
   {
-    "id": "ATM-3-0013",
-    "title": "finalize-agent-turn.js wrapper 接入 ATM run envelope",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
+    "id": "ATM-2.5-0002",
+    "title": "Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate",
+    "status": "done",
+    "priority": "P0",
+    "phase": "ATM-2.5",
     "type": "implementation",
     "created": "2026-05-05",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0313",
+    "doc_id": "doc_task_0304",
+    "started_at": "2026-05-07T16:09:42.7411577+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "completed_at": "2026-05-07T16:14:13.1446300+08:00",
     "depends": [
-      "ATM-3-0006",
-      "ATM-3-0007"
-    ]
+      "ATM-2.5-0001",
+      "ATM-2-0012"
+    ],
+    "acceptance": [
+      "sandbox fixture 僅涵蓋 birth pipeline（hello-world atom）；evolution sandbox fixture 由 alpha1 新卡承接，不污染 alpha0 fixture"
+    ],
+    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | 狀態: done | 驗證: tests/sandbox/setup.sh + tests/sandbox/verify.sh + sandbox-fixture.mjs pass；self-host-alpha --verify --json 在空 sandbox 回傳全 true | 變更: 新增 sandbox repo fixture、expected baseline 與 CI sandbox gate job | 阻塞: none"
   }
 ]

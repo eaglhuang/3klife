@@ -1,56 +1,113 @@
 [
   {
-    "doc_id": "doc_task_0343",
-    "id": "ATM-2-0036",
-    "title": "Stale Atom Workspace Alias Directory Cleanup",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P1",
-    "status": "done",
-    "type": "migration",
+    "doc_id": "doc_task_0334",
+    "id": "ATM-2-0028",
+    "title": "AtomBehavior Plugin SDK",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "plugin-sdk",
     "phase": "ATM-2",
     "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T14:07:14.7347467+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
-    "chain_step": "1/2",
-    "sensor_triggered_by": "atm-workbench-alias-drift",
-    "description": "追查並清除 AI-Atomic-Framework/atomic_workbench/atoms 下歷史遺留的 logicalName alias 空目錄，確認 canonical atom workbench 只接受 ATM-* 目錄名。",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "GitHubCopilot",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "3/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "在 packages/plugin-sdk 加入 AtomBehavior interface、AtomBehaviorContext / Input / Output / RegistryTransition / RollbackPlan 等型別、BehaviorRegistry 註冊機制；core 只依賴 interface，具體 behavior 由 plugin 實作。",
     "related": [],
     "depends": [
-      "ATM-1-0011",
-      "ATM-2-0013",
-      "ATM-2-0034"
+      "ATM-2-0006",
+      "ATM-2-0026",
+      "ATM-2-0027"
     ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias cleanup 與 migration note | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:scaffold-builder / npm.cmd run validate:test-runner pass | 變更: 清除 AI-Atomic-Framework/atomic_workbench/atoms 下的 stale alias 空目錄，並在 docs/ATOM_SPACE_LAYOUT.md 明定 atom.* 空目錄視為遷移殘留 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?alias cleanup / workbench path ?????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: alias cleanup ??????OUTPUT_CONTRACT ? task shard ??? | ??: none",
+    "acceptance": [
+      "packages/plugin-sdk/src/behavior.ts 落地 AtomBehavior + Input + Output + Context interface",
+      "category enum: topology/quality/sanitation/integration",
+      "BehaviorRegistry 提供 register / resolve / listByCategory",
+      "core 不可 import 任何具體 behavior plugin（layer-boundary 守護）",
+      "fixtures：5 個 mock behavior 註冊 / resolve / listByCategory",
+      "behavior.evolve 只可委派至 ATM-2-0020 ProposeAtomicUpgrade 產生 proposal；不得直接升版、改 registry 或繞過 ATM-2-0021 HumanReviewGate",
+      "validate-behavior-sdk.mjs 必須獨立驗證 AtomBehavior / BehaviorRegistry contract、category routing、behavior.evolve delegation guard",
+      "exemplar：registry-contract-pass / resolve-missing-behavior / evolve-delegation-blocked"
+    ],
+    "deliverables": [
+      "packages/plugin-sdk/src/behavior.ts",
+      "packages/plugin-sdk/src/behavior-registry.ts",
+      "schemas/behavior/behavior-proposal.schema.json",
+      "scripts/validate-behavior-sdk.mjs",
+      "fixtures/behavior/mock-behaviors.json",
+      "fixtures/behavior/resolve-missing-behavior.json",
+      "fixtures/behavior/evolve-delegation-blocked.json"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: ATM 識別/行為/狀態機提案開卡 | 阻塞: 等 ATM-2-0006 / 0026 / 0027 完成\n2026-05-07 附錄 C：behavior.evolve 必須委派 ATM-2-0020 proposal flow\n2026-05-07 測試穩定性補丁：追加 validator + delegation exemplar",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM workbench alias 清理開卡",
-      "summary": "清除歷史遺留的 logicalName alias 空目錄，收斂 atomic_workbench/atoms 到 canonical atomId 目錄。",
-      "position": "ATM-2（migration hygiene / workbench cleanup）",
-      "prereq": "ATM-1-0011 / ATM-2-0013 / ATM-2-0034"
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "為原子行為建立 plugin SDK，讓專案可註冊自己的 AtomBehavior，core 只依賴 interface。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0006 / ATM-2-0026 / ATM-2-0027"
+    }
+  },
+  {
+    "doc_id": "doc_task_0265",
+    "id": "ATM-3-0002",
+    "title": "3KLife ATM config 與 bootstrap wrapper",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "adapter",
+    "phase": "ATM-3",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-08T05:36:17+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T05:40:47+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+    "related": [],
+    "depends": [
+      "ATM-3-0001"
+    ],
+    "acceptance": [
+      "node tools_node/atomic-framework/atm-cli.js status 可呼叫 upstream",
+      "workbench/registry path 指向本 repo local 區",
+      "不 fork core source",
+      "shadow wrapper 預設 dry-run / report-only，不替換現有 tools_node CLI"
+    ],
+    "deliverables": [
+      "tools_node/atomic-framework/bootstrap.js",
+      "tools_node/atomic-framework/atm-cli.js",
+      "atm.config.*",
+      "local workbench path 設定"
+    ],
+    "notes": "2026-05-08 | 狀態: done | 驗證: encoding/cross-shard/bootstrap smoke/standard gate pass | 變更: 完成 3KLife ATM config、bootstrap wrapper、atm-cli alias，並收尾 shard trim | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework/atomic_workbench/atoms 目前只應保留 canonical atomId workbench 目錄",
-        "atom.plugin-rule-guard.neutrality-scanner 與 atom.registry-fixture 已確認為空 alias 目錄",
-        "current core scaffold/registry/test-runner 已以 atomId 當 canonical folder name"
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "確認 alias 目錄為非 source-of-truth 的歷史殘留，列出來源與影響範圍",
-        "清除 AI-Atomic-Framework/atomic_workbench/atoms 下已知空 alias 目錄，保留 ATM-* canonical 目錄",
-        "補 migration 或 cleanup 說明，明定 logicalName 目錄不再受支援",
-        "驗證 registry/scaffold/test-runner 現況仍只寫入 atomId workbench path"
+        "tools_node/atomic-framework/bootstrap.js",
+        "atm.config.*",
+        "local workbench path 設定"
       ],
-      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:scaffold-builder\\nnpm run validate:test-runner",
-      "rollback_hint": "若 cleanup 影響任何仍在使用的本機流程，先還原刪除的空目錄並補明確 evidence；不得回退 canonical atomId 規則。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
-        "盤點 atomic_workbench/atoms 現況與 git tracked state",
-        "確認空 alias 目錄不屬於 registry source-of-truth",
-        "清除空 alias 目錄並驗證不影響現有 validator",
-        "回寫 migration 或 cleanup 說明與 notes"
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {
@@ -59,7 +116,6 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    },
-    "completed_at": "2026-05-08T17:35:00+08:00"
+    }
   }
 ]

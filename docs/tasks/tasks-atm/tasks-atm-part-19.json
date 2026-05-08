@@ -1,53 +1,59 @@
 [
   {
-    "doc_id": "doc_task_0254",
-    "id": "ATM-1-0004",
-    "title": "CLI init/status/validate MVP",
+    "doc_id": "doc_task_0251",
+    "id": "ATM-1-0001",
+    "title": "上游 repo product charter 與 README",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "cli",
+    "type": "open-source-core",
     "phase": "ATM-1",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T14:06:20+08:00",
+    "started_at": "2026-05-06T13:13:43+08:00",
     "started_by_agent": "vs-code-github-copilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
+    "description": "在 AI-Atomic-Framework repo 建立產品定位、README、LICENSE、CONTRIBUTING 與非目標清單。",
     "related": [],
     "depends": [
-      "ATM-1-0003"
+      "ATM-0-0003"
     ],
     "acceptance": [
-      "空白 repo 可執行 init/status/validate",
-      "未實作 adapter 時可進入 standalone mode",
-      "錯誤輸出可被 Agent 讀懂"
+      "README 可說明 core/adapter/host 邊界",
+      "核心文件不引用 3KLife 私有路徑",
+      "License 策略明確",
+      "README 清楚列出工具選型策略：first implementation recommendation 不是 core contract",
+      "README 明確定義 Agent Operating Layer 與 root-drop 使用者旅程"
     ],
     "deliverables": [
-      "packages/cli/src/commands/init.*",
-      "packages/cli/src/commands/status.*",
-      "packages/cli/src/commands/validate.*",
-      "CLI integration fixture"
+      "AI-Atomic-Framework/README.md",
+      "AI-Atomic-Framework/LICENSE",
+      "AI-Atomic-Framework/CONTRIBUTING.md",
+      "AI-Atomic-Framework/docs/ARCHITECTURE.md 初稿",
+      "README 或 docs/ECOSYSTEM_POSITIONING.md 說明 Core vs Adapter vs Plugin 與 Atomic Agents / SDD / Harness Engineering / LangGraph 的定位差異",
+      "README 明確宣告 ATM 是 governance framework，不只是 atom runner",
+      "README 說明 Default Governance Bundle 是官方預設體驗，但不是 packages/core hard dependency",
+      "README 說明 root-drop / zero-install agent bootstrap：使用者放入 ATM 後，任意 AI agent 讀 README/AGENTS 即可開卡、鎖 scope、跑 guard、保存 artifacts/logs/evidence"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 0176686 建立可執行 ATM CLI init/status/validate MVP、standalone config、agent-readable JSON output 與 integration fixture | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d165def 完成 README、MIT LICENSE 保留、CONTRIBUTING、ARCHITECTURE、ECOSYSTEM_POSITIONING 與 product-charter validation scaffold | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
-      "summary": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
+      "summary": "在 AI-Atomic-Framework repo 建立產品定位、README、LICENSE、CONTRIBUTING 與非目標清單。",
       "position": "ATM-1",
-      "prereq": "ATM-1-0003"
+      "prereq": "ATM-0-0003"
     },
     "contracts": {
       "input": [
         "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "packages/cli/src/commands/init.*",
-        "packages/cli/src/commands/status.*",
-        "packages/cli/src/commands/validate.*",
-        "CLI integration fixture"
+        "AI-Atomic-Framework/README.md",
+        "AI-Atomic-Framework/LICENSE",
+        "AI-Atomic-Framework/CONTRIBUTING.md",
+        "AI-Atomic-Framework/docs/ARCHITECTURE.md 初稿"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
       "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
@@ -55,24 +61,21 @@
         "在上游 repo 建立或修改對應 package",
         "補 unit/integration fixture",
         "跑 package 驗證",
-        "回寫 3KLife tracking notes"
+        "回寫 3KLife tracking notes",
+        "確認 product charter 同時涵蓋 Core contracts、Agent Operating Layer、Default Governance Bundle、ProjectAdapter 四層"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [
-        "AI-Atomic-Framework/packages/cli/src/atm.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/init.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/shared.mjs",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
+        "AI-Atomic-Framework/README.md",
+        "AI-Atomic-Framework/LICENSE",
+        "AI-Atomic-Framework/CONTRIBUTING.md",
+        "AI-Atomic-Framework/docs/ARCHITECTURE.md",
+        "AI-Atomic-Framework/docs/ECOSYSTEM_POSITIONING.md",
+        "AI-Atomic-Framework/scripts/validate-product-charter.mjs"
       ],
       "validation_evidence": [
-        "AI-Atomic-Framework commit 0176686",
-        "npm install",
-        "npm run packages:list",
-        "npm run validate:cli",
+        "AI-Atomic-Framework commit d165def",
         "npm test",
         "npm run typecheck",
         "npm run lint"
@@ -80,79 +83,25 @@
       "handoff_diff_status": "upstream committed; tracking diff verified",
       "trace_artifacts": [],
       "metrics_summary": [
-        "upstream commit 0176686",
-        "3 CLI commands implemented: init/status/validate",
-        "blank repo fixture runs commands from empty working directory",
-        "standalone mode works before adapter implementation",
-        "errors emit machine-readable JSON with code/message/evidence"
+        "upstream commit d165def",
+        "product charter validation scaffold dependency-free"
       ]
     },
-    "completed_at": "2026-05-06T14:12:54+08:00"
+    "completed_at": "2026-05-06T13:16:32+08:00"
   },
   {
-    "doc_id": "doc_task_0266",
-    "id": "ATM-3-0003",
-    "title": "compute-gate ATM profile adapter integration",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "adapter",
+    "id": "ATM-3-0013",
+    "title": "finalize-agent-turn.js wrapper 接入 ATM run envelope",
+    "status": "open",
+    "priority": "P1",
     "phase": "ATM-3",
+    "type": "implementation",
     "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T05:59:35.560323+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-08T06:02:56.478299+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "把 upstream ATM validate/police/hash-lock 接入 3KLife compute-gate profile。",
-    "related": [],
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0313",
     "depends": [
+      "ATM-3-0006",
       "ATM-3-0007"
-    ],
-    "acceptance": [
-      "standard gate 不受影響",
-      "atm profile 只在 upstream CLI 可用後啟用",
-      "失敗訊息可指出 atom/spec/adapter 問題"
-    ],
-    "deliverables": [
-      "tools_node/compute-gate-config.json 新增 atm profile",
-      "atm-police/atm-hash-lock gate wrapper",
-      "failure-as-prompt 輸出"
-    ],
-    "notes": "2026-05-08 | 狀態: done | 驗證: atm profile pass / police & hash-lock wrappers pass | 變更: compute-gate 新增 atm-police / atm-hash-lock gates，atm-cli 支援 police --all 與 verify --all | 阻塞: none\n2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "把 upstream ATM validate/police/hash-lock 接入 3KLife compute-gate profile。",
-      "position": "ATM-3",
-      "prereq": "ATM-3-0002"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "tools_node/compute-gate-config.json 新增 atm profile",
-        "atm-police/atm-hash-lock gate wrapper",
-        "failure-as-prompt 輸出"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
+    ]
   }
 ]

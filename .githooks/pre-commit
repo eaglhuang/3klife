@@ -38,4 +38,19 @@ if [ -n "$STAGED_GOVERNANCE" ]; then
   fi
 fi
 
+STAGED_TASKS_ATM=$(git diff --cached --name-only --diff-filter=ACMR | grep -E \
+  '^docs/tasks/tasks-atm(\.json|/\.shardrc\.json|/tasks-atm-part-[0-9]+\.json)$')
+
+if [ -n "$STAGED_TASKS_ATM" ]; then
+  echo "[pre-commit] tasks-atm shard changes detected; running doc shard health check"
+  node tools_node/check-doc-shard-health.js
+  RESULT=$?
+
+  if [ $RESULT -ne 0 ]; then
+    echo "pre-commit blocked: doc shard health check failed."
+    echo "  Fix: run node tools_node/rebuild-tasks-atm-auto-parts.js and re-stage the refreshed index/parts."
+    exit $RESULT
+  fi
+fi
+
 exit 0

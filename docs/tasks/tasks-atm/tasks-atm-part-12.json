@@ -1,139 +1,86 @@
 [
   {
-    "id": "ATM-0-0012",
-    "title": "task-lock cross-shard 重複鎖定檢查",
+    "doc_id": "doc_task_0355",
+    "id": "ATM-0-0015",
+    "title": "Harness Engineering CAR/HarnessCard 規劃回寫",
+    "owner": "vs-insiders-gpt-5.4",
+    "priority": "P0",
     "status": "done",
-    "priority": "P0",
+    "type": "docs-governance",
     "phase": "ATM-0",
-    "type": "governance",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0298",
-    "depends": [
-      "ATM-0-0001"
-    ]
-  },
-  {
-    "doc_id": "doc_task_0360",
-    "id": "ATM-2-0050",
-    "title": "Framework Function Atomization Coverage Gate",
-    "owner": "codex-gpt-5",
-    "priority": "P0",
-    "status": "in-progress",
-    "type": "governance",
-    "phase": "ATM-2",
-    "created": "2026-05-08",
-    "created_by_agent": "codex-gpt-5",
-    "started_at": "2026-05-08T17:40:00+08:00",
-    "started_by_agent": "codex-gpt-5",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-insiders-gpt-5.4",
+    "started_at": "2026-05-08T01:26:52+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T17:35:00+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立 framework-wide coverage manifest 與 deterministic gate，逐項證明 ATM framework Layer 2 功能都有 atom / map / adapter facade 或正式例外；不重複既有 generator、task-card system、gate-map 功能卡。",
+    "description": "將 Harness Engineering 預印本的 CAR 與 HarnessCard 結論回寫 ATM active planning、AAF upstream positioning docs，並把後續 schema/adapter/report 工作排入未完成任務卡；不修改已 done 卡。",
     "related": [
-      "ATM-1.5-0003",
-      "ATM-2-0012",
-      "ATM-2-0023",
-      "ATM-2-0028",
-      "ATM-2-0029",
-      "ATM-3-0001",
-      "ATM-3-0006",
-      "ATM-3-0007",
-      "ATM-3-0008",
-      "ATM-3-0009",
-      "ATM-3-0010",
-      "ATM-3-0011",
-      "ATM-3-0012",
-      "ATM-5-0003",
-      "ATM-5-0005"
+      "ATM-5-0002",
+      "ATM-6-0005"
     ],
     "depends": [
-      "ATM-2-0038",
-      "ATM-2-0041",
-      "ATM-2-0042",
-      "ATM-2-0048",
-      "ATM-2-0049",
-      "ATM-3-0015"
+      "ATM-0-0014"
     ],
     "acceptance": [
-      "framework-function-atomization-manifest.md ?? Machine-Readable Inventory ??????? fixture ??",
-      "?? Layer 2 framework function ???? atom / atomic map / adapter facade / open task",
-      "ATM-3-0015 ??? task card lifecycle coverage????????? coverage",
-      "validator ??? manifest entry??? layer ???Layer 2 ? coverage?fixture drift ? fail",
-      "?????? validator / fixture ???????",
-      "????????ATM-2-0048 ? ATM-3-0015 ? ATM-2-0050?????",
-      "ATM-2-0049 ?????????????????",
-      "ATM-2-0048?ATM-2-0049?ATM-3-0015 ???????????????",
-      "validate-atm-doc-governance ?? Agent Boot Order ? root / shard ??????????????????",
-      "manifest JSON block ? fixture ??????? coverage gate ? deterministic validator ????"
+      "active planning doc 明確定位 ATM 為 CAR-aligned governance harness",
+      "AAF upstream docs 說明 CAR/HarnessCard 只作報告層不替代 WorkItem/ScopeLock/Evidence",
+      "未完成任務卡補上 HarnessCard/CAR 後續 acceptance；已 done 卡不修改",
+      "3KLife 學習文件不混入本次 commit"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
-      "tools_node/validate-framework-atomization-coverage.js",
-      "tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json",
-      "docs/tasks/tasks-atm/tasks-atm-part-12.json",
-      "docs/agent-briefs/tasks/ATM/ATM-2-0050.md",
-      "planning docs backwrite if validator paths change",
-      "tools_node/validate-atm-doc-governance.js",
-      "tools_node/doc-id-registry.js"
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
+      "AI-Atomic-Framework/docs/ECOSYSTEM_POSITIONING.md",
+      "AI-Atomic-Framework/docs/ARCHITECTURE.md",
+      "AI-Atomic-Framework/docs/governance/governance-bundle-schema.md",
+      "docs/agent-briefs/tasks/ATM/ATM-5-0002.md",
+      "docs/agent-briefs/tasks/ATM/ATM-6-0005.md",
+      "docs/tasks/tasks-atm/tasks-atm-part-15.json",
+      "docs/tasks/tasks-atm/tasks-atm-part-18.json"
     ],
-    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 補齊 ATM framework-wide 原子化 coverage manifest / gate；不重複 generator、map generator、task card system atomic map 既有功能卡 | 阻塞: 等 ATM-2-0048 / ATM-2-0049 / ATM-3-0015 收斂\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 補入固定開工路線條文；正式規定 framework-wide atomization follow-up 必須先經 ATM-2-0048 → ATM-3-0015 → ATM-2-0050 | 阻塞: ATM-2-0048 尚未完成，ATM-3-0015 尚未落地 atomic map validator\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 新增文件治理政策與現況角色盤點，先完成邏輯收斂，再規劃後續實體搬移 | 阻塞: none\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: police 主動化 model 收斂為 trigger/scope/severity/action、authoring-time / transition-time / sweep-time、fast/slow 與 machine-readable findings | 阻塞: none",
+    "notes": "2026-05-08 | 狀態: done | 驗證: encoding touched pass；JSON parse pass；task-scope pass；compute-gate standard 9/9 pass；AAF neutrality validate pass | 變更: 回寫 CAR/HarnessCard 採納決策、AAF upstream positioning docs、ATM-5-0002/ATM-6-0005 後續 acceptance；已 done 卡未修改；學習正文維持本機 exclude 不提交 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?CAR / HarnessCard / AAF positioning ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: CAR/HarnessCard ????????OUTPUT_CONTRACT ? task shard ??? | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM dogfooding coverage gate",
-      "summary": "建立 Framework Function Atomization Manifest 與 coverage gate，證明 ATM framework Layer 2 功能都有 atom / map / adapter facade 或正式例外。",
-      "position": "ATM-2 / framework-wide dogfooding coverage",
-      "prereq": "ATM-2-0038 / ATM-2-0041 / ATM-2-0042 已承接 AtomGenerator / MapGenerator / provenance；ATM-3-0015 只覆蓋 task card system atomic map"
+      "label": "ATM research integration 開卡",
+      "summary": "把 Harness Engineering 預印本的 CAR/HarnessCard 評估回寫 active plan、upstream docs 與未完成 ATM 任務卡。",
+      "position": "ATM-0 tracking-docs / upstream-planning",
+      "prereq": "ATM-0-0014"
     },
     "contracts": {
       "input": [
-        "Layer 1 constitutional schema 只要求 hash-lock / migration gate，不要求自我 atom",
-        "Layer 2 governed framework functions must have atom / atomic map / governed adapter facade coverage",
-        "Layer 3 mutable host config 只要求 git / adapter config 管理，不列入必須原子化",
-        "Existing cards must be reused; do not duplicate generator / task-card / gate-map work",
-        "ATM-3-0015 covers only task card lifecycle, not the whole framework",
-        "不清楚的功能邊界需回查 docs/ai_atomic_framework/ 規劃書，不以任務卡 notes 片段自行推斷完成"
+        "使用者已提供 Harness Engineering Markdown 正文與 ATM 反思文章分析",
+        "HARN-MET-0003 等已 done 任務卡不得修改",
+        "ATM active planning 以本 repo docs/ai_atomic_framework 為真相"
       ],
       "output": [
-        "盤點 CLI / spec / scaffold / registry / test / evidence / police / adapter / task lifecycle / map / PEV 等 framework functions",
-        "每個 Layer 2 function 至少對應 atom / atomic map / adapter facade / open task",
-        "Layer 1 只能標 constitutional-exception；Layer 3 只能標 mutable-exception",
-        "已由既有卡承接的功能必須引用原卡，不重複開功能卡",
-        "新增 validator，當 framework function 缺 atom / map / adapter coverage 或例外類型錯誤時 fail",
-        "回寫規劃文件，讓 all framework functions atomized 有 coverage gate",
-        "把 ATM-2-0048 -> ATM-3-0015 -> ATM-2-0050 固定路線寫成正式 gate 條文，供後續開卡引用",
-        "文件治理政策與現況角色盤點完成，明確標示 canonical / reference / adopter / history / index / shard / asset",
-        "validate-atm-doc-governance 能檢查 root files / shard dirs / Agent Boot Order，防止新增文件平行長出第二份主真相"
+        "active planning doc 明確定位 ATM 為 CAR-aligned governance harness",
+        "AAF upstream docs 說明 CAR/HarnessCard 只作報告層，不替代 WorkItem/ScopeLock/Evidence",
+        "未完成任務卡補上 HarnessCard/CAR 後續 acceptance；已 done 卡不修改"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0050.md docs/tasks/tasks-atm/tasks-atm-part-24.json docs/ai_atomic_framework/framework-function-atomization-manifest.md docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/關於進化版的原子提案.md docs/ai_atomic_framework/documentation-governance-policy.md docs/ai_atomic_framework/documentation-role-map.md\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md\nnode tools_node/validate-atm-doc-governance.js --root docs/ai_atomic_framework --strict\nnode tools_node/doc-id-registry.js",
-      "rollback_hint": "移除 coverage manifest、validator、planning docs backwrite，並保留既有 ATM-2-0038 / ATM-2-0041 / ATM-2-0042 / ATM-3-0015 的功能範圍不變。",
+      "validation_cmd": "node tools_node/check-encoding-touched.js\nnode tools_node/check-task-scope.js --task ATM-0-0015 --verbose\nnode tools_node/compute-gate.js --profile standard --agent-feedback\nnode scripts/validate-neutrality-scanner.mjs --mode validate # in AI-Atomic-Framework",
+      "rollback_hint": "回退本卡 touched files；不修改已 done 任務卡；若 tasks-atm 分片漂移，使用 task-card-opener 或 shard store 重建。",
       "execution_steps": [
-        "盤點所有 ATM framework task cards 與 planning docs，先歸併到既有功能卡",
-        "定義 Layer 1 / Layer 2 / Layer 3 邊界與 coverage statuses",
-        "先確認 ATM-2-0048 與 ATM-3-0015 的固定路線是否已滿足前置條件",
-        "建立 framework function coverage manifest",
-        "將缺口連到既有 open 卡或 follow-up，不重複開已存在功能",
-        "新增 deterministic coverage validator",
-        "回寫 Roadmap / 開發計畫書 / 演進規劃書 / 進化版原子提案 / task shard",
-        "建立文件治理政策與現況角色盤點，先完成邏輯收斂，再安排後續 physical reorganization",
-        "Agent Boot Order 固定為 documentation-governance-policy -> documentation-role-map -> ATM_cross_reference -> canonical owner"
+        "建立並鎖定 ATM-0-0015",
+        "更新 active/companion 規劃文件與 AAF upstream docs",
+        "只補 open 任務卡 ATM-5-0002/ATM-6-0005 的 acceptance 與 shards",
+        "跑 encoding/task-scope/gates，提交 git"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "validation_evidence": [
+        "node tools_node/check-encoding-touched.js --files ... pass",
+        "JSON parse pass",
+        "node tools_node/check-task-scope.js --task ATM-0-0015 --verbose pass",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback pass 9/9",
+        "AI-Atomic-Framework node scripts/validate-neutrality-scanner.mjs --mode validate pass"
+      ],
+      "handoff_diff_status": "clean-validation",
       "trace_artifacts": [],
       "metrics_summary": []
-    },
-    "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0050.md docs/tasks/tasks-atm/tasks-atm-part-12.json docs/ai_atomic_framework/framework-function-atomization-manifest.md tools_node/validate-framework-atomization-coverage.js tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict\nnode tools_node/validate-atm-doc-governance.js --root docs/ai_atomic_framework --strict\nnode tools_node/doc-id-registry.js",
-    "rollback_hint": "?? machine-readable inventory block?fixture?validator?planning docs backwrite ????????????? ATM-2-0038 / ATM-2-0041 / ATM-2-0042 / ATM-2-0048 / ATM-2-0049 / ATM-3-0015 ????????",
-    "execution_steps": [
-      "Sync the manifest JSON block and fixture from the current inventory table.",
-      "Build the validator so manifest, fixture, and task store must agree.",
-      "Backwrite task card and shard command paths to the new fixture / validator.",
-      "Run encoding, governance, and doc-id checks.",
-      "Only then mark the card complete and commit."
-    ]
+    }
   }
 ]

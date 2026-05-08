@@ -1,68 +1,89 @@
 [
   {
-    "id": "ATM-1.5-0001",
-    "title": "Seed-as-Spec：種子以自身格式自我描述",
+    "doc_id": "doc_task_0343",
+    "id": "ATM-2-0036",
+    "title": "Stale Atom Workspace Alias Directory Cleanup",
+    "owner": "vs-code-gpt-5.4-mini",
+    "priority": "P1",
+    "status": "done",
+    "type": "migration",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T14:07:14.7347467+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
+    "chain_step": "1/2",
+    "sensor_triggered_by": "atm-workbench-alias-drift",
+    "description": "追查並清除 AI-Atomic-Framework/atomic_workbench/atoms 下歷史遺留的 logicalName alias 空目錄，確認 canonical atom workbench 只接受 ATM-* 目錄名。",
+    "related": [],
+    "depends": [
+      "ATM-1-0011",
+      "ATM-2-0013",
+      "ATM-2-0034"
+    ],
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias cleanup 與 migration note | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:scaffold-builder / npm.cmd run validate:test-runner pass | 變更: 清除 AI-Atomic-Framework/atomic_workbench/atoms 下的 stale alias 空目錄，並在 docs/ATOM_SPACE_LAYOUT.md 明定 atom.* 空目錄視為遷移殘留 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?alias cleanup / workbench path ?????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: alias cleanup ??????OUTPUT_CONTRACT ? task shard ??? | ??: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM workbench alias 清理開卡",
+      "summary": "清除歷史遺留的 logicalName alias 空目錄，收斂 atomic_workbench/atoms 到 canonical atomId 目錄。",
+      "position": "ATM-2（migration hygiene / workbench cleanup）",
+      "prereq": "ATM-1-0011 / ATM-2-0013 / ATM-2-0034"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework/atomic_workbench/atoms 目前只應保留 canonical atomId workbench 目錄",
+        "atom.plugin-rule-guard.neutrality-scanner 與 atom.registry-fixture 已確認為空 alias 目錄",
+        "current core scaffold/registry/test-runner 已以 atomId 當 canonical folder name"
+      ],
+      "output": [
+        "確認 alias 目錄為非 source-of-truth 的歷史殘留，列出來源與影響範圍",
+        "清除 AI-Atomic-Framework/atomic_workbench/atoms 下已知空 alias 目錄，保留 ATM-* canonical 目錄",
+        "補 migration 或 cleanup 說明，明定 logicalName 目錄不再受支援",
+        "驗證 registry/scaffold/test-runner 現況仍只寫入 atomId workbench path"
+      ],
+      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:scaffold-builder\\nnpm run validate:test-runner",
+      "rollback_hint": "若 cleanup 影響任何仍在使用的本機流程，先還原刪除的空目錄並補明確 evidence；不得回退 canonical atomId 規則。",
+      "execution_steps": [
+        "盤點 atomic_workbench/atoms 現況與 git tracked state",
+        "確認空 alias 目錄不屬於 registry source-of-truth",
+        "清除空 alias 目錄並驗證不影響現有 validator",
+        "回寫 migration 或 cleanup 說明與 notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "completed_at": "2026-05-08T17:35:00+08:00"
+  },
+  {
+    "id": "ATM-2.5-0001",
+    "title": "Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI",
     "status": "done",
     "priority": "P0",
-    "phase": "ATM-1.5",
+    "phase": "ATM-2.5",
     "type": "implementation",
     "created": "2026-05-05",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0299",
-    "started_at": "2026-05-06T16:48:41+08:00",
+    "doc_id": "doc_task_0303",
+    "started_at": "2026-05-06T16:42:17Z",
     "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T17:03:32.1926363+08:00",
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-spec / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit ad5f091 新增 packages/core/seed.js、specs/atom-seed-spec.json、CLI `spec --validate` 與 AJV schema validator；legacy planning ID ATM-CORE-0001 以 seed metadata 映射保留，現行 spec id 採 `atom.core-seed` 以符合既有 atomic-spec schema | 阻塞: none",
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/packages/core/seed.js",
-        "AI-Atomic-Framework/specs/atom-seed-spec.json",
-        "AI-Atomic-Framework/packages/cli/src/commands/spec.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/spec-shared.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
-        "AI-Atomic-Framework/scripts/validate-seed-spec.mjs",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit ad5f091",
-        "npm run validate:seed-spec",
-        "npm run validate:cli",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "seed self-description now lives in packages/core/seed.js and specs/atom-seed-spec.json",
-        "atm spec --validate validates atomic specs through AJV without breaking zero-install self-hosting flows",
-        "legacy planning ID ATM-CORE-0001 is preserved as seed metadata while the current schema id remains atom.core-seed",
-        "validate --spec stays zero-install compatible for self-hosting alpha and bootstrap smoke"
-      ]
-    },
+    "completed_at": "2026-05-06T17:06:00Z",
     "depends": [
-      "ATM-1-0006",
-      "ATM-1-0007"
-    ]
-  },
-  {
-    "id": "ATM-3-0010",
-    "title": "task-card-opener.js adapter 化：接入 ATM TaskAdapter",
-    "status": "done",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "vs-insiders-gpt-5.3-codex",
-    "started_at": "2026-05-08T18:22:00.874+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.3-codex",
-    "completed_at": "2026-05-08T18:24:24.855+08:00",
-    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
-    "doc_id": "doc_task_0310",
-    "depends": [
-      "ATM-3-0006"
+      "ATM-2-0013",
+      "ATM-2-0012",
+      "ATM-2-0004",
+      "ATM-2-0005"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無\n2026-05-07 架構釐清：本卡為 Phase 1（thin adapter 化），Phase 2 TaskAdapter 原子化為 ATM-GOV-* governed atom\n2026-05-08 | 狀態: done | 驗證: task-card-opener write smoke ✅；compute-gate ts-syntax/eslint-rules ✅ | 變更: 新增 TaskAdapter + task-profile，task-card-opener 改由 adapter 處理 task id lifecycle、assign-doc-id 與 lock promotion | 阻塞: none"
+    "acceptance": [
+      "alpha0 gate 僅驗 deterministic 4 條 criteria；version history / rollback / evolution metrics 僅作 readiness warning，不阻塞 alpha0 release"
+    ],
+    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | done | upstream 64ec0bc | gate criteria1-4 true；validate:neutrality/cli/self-hosting-alpha + npm test/typecheck/lint pass | blocker: none"
   }
 ]

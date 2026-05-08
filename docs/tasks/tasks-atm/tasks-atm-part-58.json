@@ -1,50 +1,113 @@
 [
   {
-    "doc_id": "doc_task_0336",
-    "id": "ATM-2-0030",
-    "title": "Dedup Police Plugin",
+    "doc_id": "doc_task_0250",
+    "id": "ATM-0-0006",
+    "title": "ATM 任務卡模板與開卡規則",
+    "owner": "vs-insiders-gpt-5.4-mini",
+    "priority": "P1",
+    "status": "done",
+    "type": "docs",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T12:50:58.8606404+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "completed_at": "2026-05-06T12:52:45.2848800+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 ATM 任務卡模板，統一 upstream core、adapter、case study 任務欄位。",
+    "related": [],
+    "depends": [
+      "ATM-0-0001",
+      "ATM-0-0003"
+    ],
+    "acceptance": [
+      "模板包含 hostKind/targetRepo/alphaGate/packageScope/adapterScope/allowed_files/forbidden_files/non_goals/executionMode/validation_cmd/rollback_hint",
+      "新 ATM 卡可由 task-card-opener 一致生成"
+    ],
+    "deliverables": [
+      "docs/agent-briefs/atm-task-template.md",
+      "task-card-opener 使用說明補充"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: encoding passed；standard gate 受既有 dirty files 阻擋 | 變更: 建立 ATM 任務卡模板並補充開卡欄位規則 | 阻塞: 既有 task-scope 雜訊",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 開源化開卡",
+      "summary": "建立 ATM 任務卡模板，統一 upstream core、adapter、case study 任務欄位。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0001、ATM-0-0003"
+    },
+    "contracts": {
+      "input": [
+        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
+      ],
+      "output": [
+        "docs/agent-briefs/atm-task-template.md",
+        "task-card-opener 使用說明補充"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
+      "execution_steps": [
+        "確認依賴與 scope",
+        "修改或建立對應文件",
+        "跑 encoding 與 standard gate",
+        "回寫 notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0326",
+    "id": "ATM-3-0014",
+    "title": "3KLife UsageEvidence shadow adapter",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "police",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
+    "type": "adapter",
+    "phase": "ATM-3",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
     "started_by_agent": "",
-    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
-    "chain_step": "5/8",
-    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
-    "description": "提供去重警察：用 semanticFingerprint 比對找出重複候選，呼叫 LLM similarity skill 算 90%+ 行為相似度，依 8 種去重情境裁決，產出 dedup-report。維護 fingerprint-index 做 O(1) prefix lookup，跨 100K atoms 全掃在數百毫秒內完成。",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "10/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "只讀 3KLife 的 artifacts / compute-gate report / logs，產出 usage-feedback evidence；不修改任何既有 CLI / 工具。",
     "related": [],
     "depends": [
-      "ATM-2-0026",
-      "ATM-2-0029",
-      "ATM-2-0005"
+      "ATM-3-0001",
+      "ATM-2-0009",
+      "ATM-2-0016"
     ],
     "acceptance": [
-      "packages/plugin-police-dedup/ 落地 dedup police plugin",
-      "fingerprint-index.json 使用 sf 16-char prefix 做 hash bucket；100K atoms 全掃 ≤ 500ms（含 budget 測試）",
-      "實作 8 種去重情境（自由原子 100% 同 / 自由原子 90%+ 同 / map 成員 vs 自由原子 / 同 map 內成員同 / 跨 map 成員同 / 整個 map 同 / 零 caller / TTL 過期）",
-      "每種情境輸出對應建議 behavior（dedup-merge / sweep / extract-shared / map-merge / expire / infect）",
-      "dedup-report.schema.json 含 candidates[] / suggestedBehavior / confidenceScore",
-      "LLM similarity skill 為 plugin 接口，dry-run 時可 stub"
+      "adapter 僅讀，不寫；任何 file mutation 視為違規",
+      "輸出 evidence 必須通過 ATM-2-0009 的 usage-feedback schema",
+      "3KLife 既有 CLI / compute-gate / 工具行為完全不變（shadow / parity）",
+      "neutrality scanner 對輸出 evidence payload 跑 dry-run，不得帶入 adopter 私有 token",
+      "usage-feedback evidence 中加入 callerCount（該 atom 在 host 端被呼叫的次數），作為 ATM-2-0031 lifecycle police sweep 判斷的輸入（zero-caller 才建議 sweep）",
+      "usage tracking 需記錄 sub-function（export symbol）粒度，不只是 atomId 粒度——供 Demand Police 判斷是否觸發 split",
+      "定義 mapping-table.json：來源欄位 → upstream usage-feedback 欄位必須固定映射；host-only 欄位一律落 extras.adopterPrivate{}，不得出現在 payload 主體",
+      "實作 --strict 與 --lenient；來源格式漂移時，--lenient 必須降級為 evidenceType=usage-feedback-skipped 並寫 skipReason",
+      "補一個 compute-gate report 缺欄位 negative fixture，驗證 --strict hard fail 與 --lenient fallback 差異"
     ],
     "deliverables": [
-      "packages/plugin-police-dedup/",
-      "packages/plugin-police-dedup/src/fingerprint-index.ts",
-      "packages/plugin-police-dedup/src/similarity-skill.ts",
-      "schemas/police/dedup-report.schema.json",
-      "fixtures/dedup/*8-scenarios.json",
-      "tests/dedup/100k-budget.test.ts"
+      "tools_node/atm-adapter/usage-evidence-shadow.js",
+      "fixtures/adapter/3klife-usage-evidence.snapshot.json"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 5/8）| 阻塞: 等依賴卡完成",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— 將「呼叫次數」回填為 atom caller-count（給 lifecycle police 的 sweep 用）\n2026-05-07 ATM-2-0042 連鎖影響（notes）：map evidence artifacts 存在 canonical atomic_workbench/maps/ 路徑，adapter 須同時掃描 maps/ 和 atoms/ 目錄\n2026-05-07 附錄 C 治理補丁：追加 mapping-table / strict-vs-lenient / format-drift fallback，避免 host 私有欄位污染 upstream evidence schema",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 識別/行為/狀態機提案開卡",
-      "summary": "去重警察：sf+LLM similarity 找重複候選，O(1) prefix lookup 支援大規模原子庫。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0026 / ATM-2-0029 / ATM-2-0005"
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "alpha1 期間第一個 evolution-evidence 來源；以最小侵入方式餵養 evolution 管線。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001 / ATM-2-0009 / ATM-2-0016"
     }
   }
 ]

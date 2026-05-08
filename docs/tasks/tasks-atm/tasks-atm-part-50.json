@@ -1,58 +1,120 @@
 [
   {
-    "doc_id": "doc_task_0325",
-    "id": "ATM-2-0022",
-    "title": "Rollback Registry Pointer & 三段 hash Proof",
-    "owner": "vs-code-gpt-5.4-mini",
+    "doc_id": "doc_task_0292",
+    "id": "ATM-0-0010",
+    "title": "Self-hosting first 邊界與中立性 guard 落地",
+    "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "registry",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
+    "type": "docs-governance",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T17:43:43.6770374+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "9/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "提供 atm rollback CLI 與 rollback-proof：將 currentVersion 指回歷史版本，並驗證 spec/code/test 三段 hash 與目標 entry 完全一致。",
+    "started_at": "2026-05-05T22:47:03.1427368+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 ATM 規劃正式收斂為 upstream self-hosting first，回寫主文件並新增 docs neutrality 與 boundary guard 後續任務。",
     "related": [],
     "depends": [
-      "ATM-2-0014",
-      "ATM-2-0021"
+      "ATM-0-0009"
     ],
     "acceptance": [
-      "CLI atm rollback --atom <id> --to <ver> --plan 先輸出 dry-run plan；--apply 才真正寫 registry",
-      "rollback 後 atm verify --self 必須顯示 spec/code/test 三段 hash 與目標版本完全一致；任一不符即 hard fail，產出 rollback-proof.failure.json",
-      "rollback-proof.schema.json 含 atomId / fromVersion / toVersion / hashesVerified / verifiedAt / proofId",
-      "evidence store 寫入 evidenceType=rollback-proof",
-      "CLI atm rollback 支援 --target map；map rollback 必須同時驗證所有成員 atom 的 hash 與目標 mapVersion entry 一致",
-      "rollback-proof 對 map 模式輸出 memberAtomProofs[]，逐一列三段 hash 驗證結果",
-      "rollback-proof.schema.json 必須含發起的 behaviorId（哪個 behavior 的 rollback；例如 behavior.evolve / behavior.merge）",
-      "rollback contract 對稱性：每個 behavior 的 forward action 必須有對應的 reverse action；rollback 引擎可從 behaviorId 查 reverse 規則",
-      "Map rollback workbench 路徑解析須支援雙路徑：canonical atomic_workbench/maps/<mapId>/ 優先，fallback legacy atoms/<owner>/map/",
-      "rollback-proof.schema.json map mode 須含 mapGeneratorProvenance 欄位，標示 map 是否 generator-born",
-      "rollback-proof 必須含 statusReverted 與 semanticFingerprintReverted 兩個布林欄位；任一為 false 即 hard fail，不得宣稱 rollback 成功",
-      "node scripts/validate-rollback-proof.mjs 必須可獨立驗證三段 hash proof、statusReverted / semanticFingerprintReverted、map rollback 雙路徑解析與 behaviorId 對稱性",
-      "exemplar 至少保留 proof-pass / proof-fail-hash-mismatch / proof-fail-status-not-reverted / proof-fail-semantic-fingerprint-not-reverted 四組，供 validator 直接重放"
+      "A/B/Roadmap 同步寫入 upstream self-hosting first 與 hard gates",
+      "Roadmap 補 neutrality/boundary guard 設計",
+      "新增 ATM-1-0010 與 ATM-2-0010 任務卡",
+      "ATM-3/ATM-4 明確標成 downstream-only phase"
     ],
     "deliverables": [
-      "packages/core/src/registry/rollback.ts",
-      "packages/cli/commands/rollback.ts",
-      "schemas/registry/rollback-proof.schema.json",
-      "scripts/validate-rollback-proof.mjs",
-      "fixtures/rollback/proof-pass.json",
-      "fixtures/rollback/proof-fail-hash-mismatch.json",
-      "fixtures/rollback/proof-fail-status-not-reverted.json",
-      "fixtures/rollback/proof-fail-semantic-fingerprint-not-reverted.json"
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+      "docs/agent-briefs/tasks/ATM/ATM-1-0010.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0010.md"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— rollback proof 必須含 behaviorId 與對稱 rollback contract\n2026-05-07 ATM-2-0042 連鎖影響：追加 AC 9~10（map rollback 雙路徑解析、mapGeneratorProvenance 欄位）\n2026-05-07 附錄 C 治理補丁：rollback proof 追加 status / semanticFingerprint 對稱回退驗證，避免只回 hash 不回治理狀態\n2026-05-07 測試穩定性補丁：維持 rollback safety-net 目的不變；補 proof validator 與 failure matrix exemplar，讓 rollback 失敗能先在 proof seam 定位\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 鎖卡後接手 ATM-2-0022，開始實作 rollback CLI / proof schema / validator / fixtures | 阻塞: none\n2026-05-08 | 狀態: done | 驗證: validate-rollback-proof ✅ / validate-schemas ✅ / validate-cli ✅ / npm.cmd test ✅ | 變更: rollback core engine + atm rollback CLI + rollback-proof schema + 4 組 proof fixtures + validator + CLI/schema wiring | 阻塞: compute-gate task-scope 仍回報 lock files[] 空陣列（task-lock.js 目前不支援 --files）",
+    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 回寫 self-hosting first、self-hosting alpha gate、docs neutrality 與 neutrality/boundary guard 到三份主文件，並新增 ATM-1-0009/0010、ATM-2-0010 任務 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?self-hosting / neutrality guard ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: self-hosting first ??????OUTPUT_CONTRACT ? task shard ??? | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "evolution 管線的最終安全網：失敗時可確定性回退，並留下可驗證 proof。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0014 / ATM-2-0021"
+      "label": "ATM self-hosting first 開卡",
+      "summary": "把 upstream self-hosting first、文件中立性與 boundary guard 正式回寫到 ATM 主規劃。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0009"
+    },
+    "contracts": {
+      "input": [
+        "已確認 upstream 不得依賴 3KLife 工具",
+        "需同步 A/B/Roadmap 與 tasks-atm"
+      ],
+      "output": [
+        "更新 self-hosting first 文件真相",
+        "新增 docs neutrality audit 任務",
+        "新增 neutrality/boundary rule guard 任務"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0010 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若 doc_id/manifest 異常，使用既有工具重建，不手動複製代號。",
+      "execution_steps": [
+        "建立新任務卡",
+        "同步 tasks-atm",
+        "鎖卡並更新 frontmatter",
+        "回寫三份主文件",
+        "跑 encoding/task-scope/standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
     }
+  },
+  {
+    "id": "ATM-1.5-0001",
+    "title": "Seed-as-Spec：種子以自身格式自我描述",
+    "status": "done",
+    "priority": "P0",
+    "phase": "ATM-1.5",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0299",
+    "started_at": "2026-05-06T16:48:41+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T17:03:32.1926363+08:00",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-spec / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit ad5f091 新增 packages/core/seed.js、specs/atom-seed-spec.json、CLI `spec --validate` 與 AJV schema validator；legacy planning ID ATM-CORE-0001 以 seed metadata 映射保留，現行 spec id 採 `atom.core-seed` 以符合既有 atomic-spec schema | 阻塞: none",
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/core/seed.js",
+        "AI-Atomic-Framework/specs/atom-seed-spec.json",
+        "AI-Atomic-Framework/packages/cli/src/commands/spec.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/spec-shared.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
+        "AI-Atomic-Framework/scripts/validate-seed-spec.mjs",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit ad5f091",
+        "npm run validate:seed-spec",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "seed self-description now lives in packages/core/seed.js and specs/atom-seed-spec.json",
+        "atm spec --validate validates atomic specs through AJV without breaking zero-install self-hosting flows",
+        "legacy planning ID ATM-CORE-0001 is preserved as seed metadata while the current schema id remains atom.core-seed",
+        "validate --spec stays zero-install compatible for self-hosting alpha and bootstrap smoke"
+      ]
+    },
+    "depends": [
+      "ATM-1-0006",
+      "ATM-1-0007"
+    ]
   }
 ]

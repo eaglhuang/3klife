@@ -1,64 +1,52 @@
 [
   {
-    "doc_id": "doc_task_0263",
-    "id": "ATM-2-0006",
-    "title": "Adapter API 與 Plugin SDK 定稿",
+    "doc_id": "doc_task_0259",
+    "id": "ATM-2-0002",
+    "title": "Scaffold Builder MVP",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "plugin-sdk",
+    "type": "manager",
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T18:37:03Z",
+    "started_at": "2026-05-06T19:28:00.000Z",
     "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T18:46:31Z",
+    "completed_at": "2026-05-06T20:18:23.9552929+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "定稿 ProjectAdapter、LanguageAdapter、Capability、InjectorPlugin 介面與生命週期 hook。",
+    "description": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
     "related": [],
     "depends": [
-      "ATM-1-0005",
-      "ATM-2-0005"
+      "ATM-2-0001"
     ],
     "acceptance": [
-      "LocalGitAdapter 與 JS LanguageAdapter 使用同一 SDK",
-      "3KLife adapter 可依此實作",
-      "breaking-change policy 寫入 docs/LIFECYCLE.md",
-      "governance primitives 明確停留在 interface/schema 層，不引入 3KLife 實作",
-      "AtomLifecycleMode enum（birth | evolution）落於 packages/plugin-sdk/src/lifecycle.ts",
-      "lifecycleMode 同步映射到 schemas/atomic-spec.schema.json 既有 compatibility 區塊（不另開新 schema）"
+      "首次 scaffold 建立檔案",
+      "第二次 scaffold 不覆寫人工實作",
+      "可由 adapter 決定 workbenchPath"
     ],
     "deliverables": [
-      "packages/plugin-sdk/src/project-adapter.*",
-      "packages/plugin-sdk/src/language-adapter.*",
-      "packages/plugin-sdk/src/capability.*",
-      "docs/ADAPTER_GUIDE.md 初稿",
-      "packages/plugin-sdk/src/governance/* 或等價 governance adapter interface",
-      "TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 生命週期定稿",
-      "packages/plugin-sdk/src/lifecycle.ts — AtomLifecycleMode enum",
-      "packages/plugin-sdk/src/lifecycle.ts — VersionResolver interface",
-      "packages/plugin-sdk/src/lifecycle.ts — QualityMetricsComparator interface",
-      "packages/plugin-sdk/src/lifecycle.ts — UpgradeProposalAdapter interface"
+      "packages/core/src/manager/scaffold.*",
+      "templates/atom.spec.template.json",
+      "templates/atom.test.template.ts"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter interface 範圍 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-06 | 狀態: done | 驗證: npm test / typecheck / lint 通過 | 變更: 上游 e4c2f88 定稿 Plugin SDK Adapter API、adapter 對齊、governance stores、LIFECYCLE policy 與 compatibility.lifecycleMode | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:scaffold-builder / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit b8a3270 新增 core scaffold builder、templates/atom.spec.template.json、templates/atom.test.template.ts，預設產出 atomic_workbench/atoms/<atomId>/atom.spec.json + atom.test.ts，並支援 adapter 指定 workbenchPath 與 idempotent rerun | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
-      "summary": "定稿 ProjectAdapter、LanguageAdapter、Capability、InjectorPlugin 介面與生命週期 hook。",
+      "summary": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
       "position": "ATM-2",
-      "prereq": "ATM-1-0005、ATM-2-0005"
+      "prereq": "ATM-2-0001"
     },
     "contracts": {
       "input": [
         "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "packages/plugin-sdk/src/project-adapter.*",
-        "packages/plugin-sdk/src/language-adapter.*",
-        "packages/plugin-sdk/src/capability.*",
-        "docs/ADAPTER_GUIDE.md 初稿"
+        "packages/core/src/manager/scaffold.*",
+        "templates/atom.spec.template.json",
+        "templates/atom.test.template.ts"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
       "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
@@ -66,118 +54,77 @@
         "在上游 repo 建立或修改對應 package",
         "補 unit/integration fixture",
         "跑 package 驗證",
-        "回寫 3KLife tracking notes",
-        "將 governance primitives 明確留在 interface 層，不引入 3KLife 實作"
+        "回寫 3KLife tracking notes"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [
-        "packages/plugin-sdk/src/project-adapter.ts",
-        "packages/plugin-sdk/src/language-adapter.ts",
-        "packages/plugin-sdk/src/capability.ts",
-        "packages/plugin-sdk/src/governance/stores.ts",
-        "packages/plugin-sdk/src/lifecycle.ts",
-        "docs/ADAPTER_GUIDE.md",
-        "docs/LIFECYCLE.md"
+        "AI-Atomic-Framework/package.json",
+        "AI-Atomic-Framework/packages/core/src/manager/scaffold.mjs",
+        "AI-Atomic-Framework/scripts/validate-scaffold-builder.mjs",
+        "AI-Atomic-Framework/templates/atom.spec.template.json",
+        "AI-Atomic-Framework/templates/atom.test.template.ts",
+        "AI-Atomic-Framework/tests/scaffold-builder.fixture.json"
       ],
       "validation_evidence": [
-        "cmd /c npm run validate:plugin-sdk",
-        "cmd /c npm run validate:adapter-local-git",
-        "cmd /c npm run validate:language-js",
-        "cmd /c npm test",
-        "cmd /c npm run typecheck",
-        "cmd /c npm run lint",
-        "AI-Atomic-Framework encoding scan ok"
+        "AI-Atomic-Framework commit b8a3270",
+        "npm run validate:scaffold-builder",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
       ],
-      "handoff_diff_status": "",
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
       "trace_artifacts": [],
       "metrics_summary": [
-        "Plugin SDK contract validator: adapter/language/capability/lifecycle/governance ok",
-        "AI-Atomic-Framework commit: e4c2f88"
+        "scaffold builder writes a per-atom workbench by default under atomic_workbench/atoms/<atomId>",
+        "each scaffolded atom currently includes atom.spec.json and atom.test.ts rendered from shared templates",
+        "rerunning scaffold skips existing files so manual edits are preserved by default",
+        "adapter or caller can decide workbenchPath explicitly instead of using the default folder policy"
       ]
     }
   },
   {
-    "doc_id": "doc_task_0279",
-    "id": "ATM-4-0003",
-    "title": "normalizeCssColor 首個 case atom",
+    "doc_id": "doc_task_0328",
+    "id": "ATM-2-0023",
+    "title": "Atomic Map Schema & Registry",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "done",
-    "type": "atom-case",
-    "phase": "ATM-4",
-    "created": "2026-05-05",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T10:00:40+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4-mini",
-    "completed_at": "2026-05-08T17:35:00+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-MAP-EVOLUTION-V2",
+    "chain_step": "1/4",
+    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
+    "description": "為「原子地圖」建立 schema 與 registry：mapId / mapVersion / members[] / edges[] / entrypoints / qualityTargets / mapHash；可獨立於單一 atom 升版。",
     "related": [],
     "depends": [
-      "ATM-4-0002",
-      "ATM-2-0004"
+      "ATM-2-0014"
     ],
     "acceptance": [
-      "atom test pass",
-      "forbidden import/side-effect police pass",
-      "H2U baseline 不退轉"
+      "atomic-map.schema.json 定義 mapId / mapVersion / members[](atomId@version) / edges[] / entrypoints / qualityTargets / mapHash",
+      "mapHash = hash(sorted(members) + edges + entrypoints)；成員任一 atom 升版必須引發 mapHash 變更",
+      "registry 同時支援 atom entry 與 map entry；舊 atom-only registry fixture 仍綠",
+      "fixtures：minimal-map / multi-edge-map / quality-targets-missing 三種"
     ],
     "deliverables": [
-      "H2U normalizeCssColor atomic spec",
-      "5 positive fixtures",
-      "2 negative fixtures",
-      "1 legacy fixture",
-      "registry/hash entry"
+      "schemas/registry/atomic-map.schema.json",
+      "packages/core/src/registry/map-registry.ts",
+      "packages/core/src/registry/map-hash.ts",
+      "fixtures/registry/map/minimal.json",
+      "fixtures/registry/map/multi-edge.json"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-08 | ??: done | ??: task-router ATM-4-0003 sample route pass?ATM-CORE-0004 / atom-generator acceptance revalidation pass | ??: normalizeCssColor ?? case atom ????????? task shard ????? | ??: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0002、ATM-2-0004"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "H2U normalizeCssColor atomic spec",
-        "5 positive fixtures",
-        "2 negative fixtures",
-        "1 legacy fixture",
-        "registry/hash entry"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [
-        "atomic_workbench/atoms/ATM-CORE-0005/atom.test.report.json",
-        "atomic_workbench/atoms/ATM-CORE-0005/lineage-log.json",
-        "specs/normalize-css-color.atom.json"
-      ],
-      "validation_evidence": [
-        "node atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs",
-        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-core",
-        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-catalog",
-        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-index"
-      ],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "8/8 fixture cases passing",
-        "upstream registry and catalog synchronized"
-      ]
+      "label": "ATM 演進規劃 v2 附錄 B 開卡",
+      "summary": "把 Atomic Map 升格為 registry 一等公民，為 map-level 演化建立可機讀基礎。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0014"
     }
   }
 ]

@@ -1,55 +1,146 @@
 [
   {
-    "doc_id": "doc_task_0332",
-    "id": "ATM-2-0026",
-    "title": "Semantic Fingerprint + Lineage + TTL Schema Extension",
-    "owner": "codex-gpt-5.5",
+    "doc_id": "doc_task_0246",
+    "id": "ATM-0-0002",
+    "title": "名詞定義新增 ATM 任務代號",
+    "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "registry",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "ClaudeCode_opus-4-7",
-    "started_at": "2026-05-08T18:11:42+08:00",
-    "started_by_agent": "codex-gpt-5.5",
-    "completed_at": "2026-05-08T18:33:36.7913263+08:00",
-    "completed_by_agent": "codex-gpt-5.5",
-    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
-    "chain_step": "1/8",
-    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
-    "description": "為 atom 與 atomic-map 加入 semanticFingerprint / lineage / ttl optional 欄位（schema-additive）；採 hot/cold 分離設計：hot registry entry 只放 sf 字串與 lineageLogRef / evidenceIndexRef URI，cold artifact 放完整 history。為去重警察與生命週期警察提供識別基礎。",
+    "type": "governance",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T12:39:11+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "在名詞定義文件登錄 ATM 系統代號與 ATM-0~6 子系統，讓任務卡 ID 有唯一命名來源。",
     "related": [],
     "depends": [
-      "ATM-2-0014",
-      "ATM-2-0023"
+      "ATM-0-0001"
     ],
     "acceptance": [
-      "atomic-spec.schema.json 與 atomic-map.schema.json 皆 additive 加 optional semanticFingerprint / lineage / ttl 欄位，舊資料相容",
-      "semanticFingerprint 為 64-char hex string（無 nested），可直接做 hash table key",
-      "registry hot entry 欄位數 ≤ 10；lineage 與 evidence detail 走 lineageLogRef / evidenceIndexRef URI，不放主 entry",
-      "提供 sf 計算合約：atom 用 sortByName(inputs)+sortByName(outputs)+language.primary+validation.evidenceRequired+performanceBudget；map 用 sortByName(entrypoints)+qualityTargets",
-      "fixtures：atom-with-sf / map-with-sf / legacy-no-sf 三種，舊 fixture 全綠",
-      "semanticFingerprint 必須採 per-version 規則：hot registry entry 只保留 currentVersion 的 semanticFingerprint，歷史版本值寫入 versions[*].semanticFingerprint",
-      "validate-semantic-fingerprint.mjs 必須獨立驗證 atom/map/legacy/pending exemplar 與 hot/cold、per-version 規則",
-      "exemplar：atom-with-sf / map-with-sf / legacy-no-sf / pending-sf-calculation"
+      "ATM-0~ATM-6 子系統皆可對回本次開源化工作",
+      "任務卡 ID 格式不在其他文件另行定義"
     ],
     "deliverables": [
-      "schemas/atomic-spec.schema.json",
-      "schemas/registry/atomic-map.schema.json",
-      "packages/core/src/registry/semantic-fingerprint.ts",
-      "scripts/validate-semantic-fingerprint.mjs",
-      "fixtures/registry/atom-with-sf.json",
-      "fixtures/registry/map-with-sf.json",
-      "fixtures/registry/legacy-no-sf.json",
-      "fixtures/registry/pending-sf-calculation.json"
+      "docs/遊戲規格文件/系統規格書/名詞定義文件.md 新增 ATM 子系統表列"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: ATM 識別/行為/狀態機提案開卡；schema-additive、hot/cold 分離、hot 欄位 ≤10 | 阻塞: 等 ATM-2-0014 / ATM-2-0023 完成\n2026-05-07 ATM-2-0042：generator 與 dogfood map 須共用 SF 規則\n2026-05-07 附錄 C：semanticFingerprint 改為 per-version\n2026-05-07 測試穩定性補丁：追加 validator + exemplar quartet",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 | 狀態: done | 驗證: 名詞定義文件已含 ATM 子系統表列 | 變更: JSON shard 同步 MD frontmatter 真相",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 識別/行為/狀態機提案開卡",
-      "summary": "為原子與原子地圖加入 semanticFingerprint / lineage / ttl，並維持 hot/cold 分離以支援大規模原子庫。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0014 / ATM-2-0023"
+      "label": "ATM 開源化開卡",
+      "summary": "在名詞定義文件登錄 ATM 系統代號與 ATM-0~6 子系統，讓任務卡 ID 有唯一命名來源。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0001"
+    },
+    "contracts": {
+      "input": [
+        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
+      ],
+      "output": [
+        "docs/遊戲規格文件/系統規格書/名詞定義文件.md 新增 ATM 子系統表列"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
+      "execution_steps": [
+        "確認依賴與 scope",
+        "修改或建立對應文件",
+        "跑 encoding 與 standard gate",
+        "回寫 notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "completed_at": "2026-05-06T12:39:11+08:00"
+  },
+  {
+    "doc_id": "doc_task_0279",
+    "id": "ATM-4-0003",
+    "title": "normalizeCssColor 首個 case atom",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "atom-case",
+    "phase": "ATM-4",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-08T10:00:40+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
+    "related": [],
+    "depends": [
+      "ATM-4-0002",
+      "ATM-2-0004"
+    ],
+    "acceptance": [
+      "atom test pass",
+      "forbidden import/side-effect police pass",
+      "H2U baseline 不退轉"
+    ],
+    "deliverables": [
+      "H2U normalizeCssColor atomic spec",
+      "5 positive fixtures",
+      "2 negative fixtures",
+      "1 legacy fixture",
+      "registry/hash entry"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-08 | ??: done | ??: task-router ATM-4-0003 sample route pass?ATM-CORE-0004 / atom-generator acceptance revalidation pass | ??: normalizeCssColor ?? case atom ????????? task shard ????? | ??: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0002、ATM-2-0004"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "H2U normalizeCssColor atomic spec",
+        "5 positive fixtures",
+        "2 negative fixtures",
+        "1 legacy fixture",
+        "registry/hash entry"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "atomic_workbench/atoms/ATM-CORE-0005/atom.test.report.json",
+        "atomic_workbench/atoms/ATM-CORE-0005/lineage-log.json",
+        "specs/normalize-css-color.atom.json"
+      ],
+      "validation_evidence": [
+        "node atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs",
+        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-core",
+        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-catalog",
+        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-index"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "8/8 fixture cases passing",
+        "upstream registry and catalog synchronized"
+      ]
     }
   }
 ]

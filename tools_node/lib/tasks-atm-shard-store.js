@@ -202,6 +202,111 @@ function buildStripedParts(tasks, partCount, maxPartBytes, maxPartLines) {
   return parts;
 }
 
+function buildBalancedParts(tasks, partCount, maxPartBytes, maxPartLines) {
+  if (partCount <= 1) {
+    return null;
+  }
+
+  const entries = tasks.map((task, index) => {
+    const serialized = `${JSON.stringify(task, null, 2)}\n`;
+    return {
+      task,
+      index,
+      bytes: Buffer.byteLength(serialized, 'utf8'),
+      lines: calcTextLineCount(serialized),
+    };
+  }).sort((left, right) => {
+    if (right.bytes !== left.bytes) {
+      return right.bytes - left.bytes;
+    }
+    if (right.lines !== left.lines) {
+      return right.lines - left.lines;
+    }
+    return compareTaskIds(left.task, right.task) || left.index - right.index;
+  });
+
+  const buckets = Array.from({ length: partCount }, () => ({ entries: [] }));
+
+  for (const entry of entries) {
+    let chosenBucketIndex = -1;
+    let chosenScore = Infinity;
+    let chosenBytes = Infinity;
+    let chosenLines = Infinity;
+
+    for (let bucketIndex = 0; bucketIndex < buckets.length; bucketIndex += 1) {
+      const bucket = buckets[bucketIndex];
+      const candidateTasks = bucket.entries.map((item) => item.task).concat(entry.task);
+      const metrics = calcPartMetrics(candidateTasks);
+      if (metrics.bytes > maxPartBytes || metrics.lines > maxPartLines) {
+        continue;
+      }
+
+      const score = Math.max(metrics.bytes / maxPartBytes, metrics.lines / maxPartLines);
+      if (
+        score < chosenScore
+        || (
+          score === chosenScore
+          && (
+            metrics.bytes < chosenBytes
+            || (
+              metrics.bytes === chosenBytes
+              && (
+                metrics.lines < chosenLines
+                || (
+                  metrics.lines === chosenLines
+                  && bucketIndex < chosenBucketIndex
+                )
+              )
+            )
+          )
+        )
+      ) {
+        chosenBucketIndex = bucketIndex;
+        chosenScore = score;
+        chosenBytes = metrics.bytes;
+        chosenLines = metrics.lines;
+      }
+    }
+
+    if (chosenBucketIndex < 0) {
+      return null;
+    }
+
+    buckets[chosenBucketIndex].entries.push(entry);
+  }
+
+  const parts = [];
+
+  for (let bucketIndex = 0; bucketIndex < buckets.length; bucketIndex += 1) {
+    const bucket = buckets[bucketIndex];
+    if (bucket.entries.length === 0) {
+      continue;
+    }
+
+    const orderedEntries = bucket.entries.slice().sort((left, right) => left.index - right.index);
+    const tasksForPart = orderedEntries.map((entry) => entry.task);
+    const indices = orderedEntries.map((entry) => entry.index);
+    const metrics = calcPartMetrics(tasksForPart);
+    if (metrics.bytes > maxPartBytes || metrics.lines > maxPartLines) {
+      return null;
+    }
+
+    parts.push(createPartRecord({
+      name: `tasks-atm-part-${parts.length + 1}`,
+      title: `Part ${parts.length + 1} (striped, ${tasksForPart.length} items)`,
+      range: [indices[0], indices[indices.length - 1]],
+      layout: 'striped',
+      stride: partCount,
+      offset: bucketIndex,
+      indices,
+      tasks: tasksForPart,
+      metrics,
+    }));
+  }
+
+  return parts;
+}
+
 function readTasksAtmStore(projectRoot) {
   const paths = getStorePaths(projectRoot);
   if (!fs.existsSync(paths.indexPath)) {
@@ -212,7 +317,7 @@ function readTasksAtmStore(projectRoot) {
   if (Array.isArray(indexData.tasks)) {
     return {
       tasks: sortTasksByTaskId(indexData.tasks),
-      summary: indexData.summary || recalcSummary(indexData.tasks),
+      summary: recalcSummary(indexData.tasks),
       mode: 'aggregate',
     };
   }
@@ -238,7 +343,7 @@ function readTasksAtmStore(projectRoot) {
 
   return {
     tasks: sortTasksByTaskId(tasks),
-    summary: indexData.summary || recalcSummary(tasks),
+    summary: recalcSummary(tasks),
     mode: 'thin-index',
   };
 }
@@ -246,7 +351,16 @@ function readTasksAtmStore(projectRoot) {
 function splitTasksIntoParts(tasks, options = {}) {
   const maxPartBytes = options.maxPartBytes || DEFAULT_MAX_PART_BYTES;
   const maxPartLines = options.maxPartLines || DEFAULT_MAX_PART_LINES;
+  const preferredPartCount = Number.isInteger(options.preferredPartCount) ? options.preferredPartCount : null;
   const sortedTasks = sortTasksByTaskId(tasks);
+
+  if (preferredPartCount && preferredPartCount > 1) {
+    const preferredBalancedParts = buildBalancedParts(sortedTasks, preferredPartCount, maxPartBytes, maxPartLines);
+    if (preferredBalancedParts) {
+      return preferredBalancedParts;
+    }
+  }
+
   const contiguousParts = buildContiguousParts(sortedTasks, maxPartBytes, maxPartLines);
 
   if (contiguousParts.length <= 1) {
@@ -298,7 +412,19 @@ function writeTasksAtmStore(projectRoot, tasks, options = {}) {
   const maxPartBytes = options.maxPartBytes || DEFAULT_MAX_PART_BYTES;
   const maxPartLines = options.maxPartLines || DEFAULT_MAX_PART_LINES;
   const dryRun = Boolean(options.dryRun);
-  const parts = splitTasksIntoParts(tasks, { maxPartBytes, maxPartLines });
+  let preferredPartCount = null;
+  if (fs.existsSync(paths.shardRcPath)) {
+    try {
+      const shardRc = readJson(paths.shardRcPath);
+      if (Array.isArray(shardRc.shards) && shardRc.shards.length > 1) {
+        preferredPartCount = Math.min(shardRc.shards.length, 65);
+      }
+    } catch {
+      preferredPartCount = null;
+    }
+  }
+
+  const parts = splitTasksIntoParts(tasks, { maxPartBytes, maxPartLines, preferredPartCount });
   const summary = recalcSummary(tasks);
   const indexStub = buildIndexStub(projectRoot, parts, summary, { maxPartBytes, maxPartLines });
   const shardRc = {

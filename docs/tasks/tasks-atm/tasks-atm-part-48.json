@@ -1,54 +1,80 @@
 [
   {
-    "doc_id": "doc_task_0323",
-    "id": "ATM-2-0020",
-    "title": "ProposeAtomicUpgrade（000012）",
+    "doc_id": "doc_task_0271",
+    "id": "ATM-4-0004",
+    "title": "parseCssLength 與 parseFragmentList case atoms",
     "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "orchestration-atom",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
+    "priority": "P1",
+    "status": "open",
+    "type": "atom-case",
+    "phase": "ATM-4",
+    "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T00:30:00.2262013+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-08T00:30:00.2262013+08:00",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "7/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "串接 hash-diff / metrics / regression-compare 結果，產出 upgrade-proposal.json，並提供 atm upgrade --propose --dry-run CLI。",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom；承接 ATM-4-0003 的 behavior.atomize lineage 規則，不重複開 H2U atomize 卡。",
     "related": [],
     "depends": [
-      "ATM-2-0015",
-      "ATM-2-0016",
-      "ATM-2-0017"
+      "ATM-4-0003"
     ],
     "acceptance": [
-      "upgrade-proposal.schema.json 含 atomId / fromVersion / toVersion / automatedGates / humanReview pending",
-      "CLI atm upgrade --propose --atom <id> --to <ver> --dry-run --json 輸出符合 schema 的 proposal",
-      "automatedGates 任一 fail 時 proposal 必須標記 status=blocked，不允許進入 review queue",
-      "upgrade-proposal.schema.json 增加 decompositionDecision（enum: atom-bump | atom-extract | map-bump）與 mapImpactScope 欄位",
-      "CLI 增加 --target atom|map 旗標；--target map 時必須附 mapId",
-      "decompositionDecision 為 atom-extract 時，proposal 需同時列出新 atomId 與 fork 來源",
-      "upgrade-proposal.schema.json 追加必填欄位 behaviorId（預設 behavior.evolve）；其他合法值由 ATM-2-0029 reference behavior pack 註冊",
-      "node scripts/validate-upgrade-proposal.mjs 必須可在不跑整包 test 的情況下，獨立驗證 schema、status=blocked 邏輯、decompositionDecision / behaviorId invariant",
-      "exemplar 至少保留 proposal-pass.json 與 proposal-blocked.json 兩組，可直接重放 CLI --dry-run --json 輸出到 validator"
+      "px/em/%/svg 與 fragment legacy fixtures 覆蓋",
+      "self-test 不退轉",
+      "可 rollback",
+      "兩個新 atom 均使用 behavior.atomize，並包含 lineage.bornBy=atomize",
+      "兩個新 atom 均帶 legacy:// parentRefs 與可追溯 lineage log",
+      "neutrality scan 不得讓 adopter-private 假設流入 upstream core schema"
     ],
     "deliverables": [
-      "schemas/upgrade/upgrade-proposal.schema.json",
-      "packages/core/src/upgrade/propose.mjs",
-      "packages/cli/src/commands/upgrade.mjs",
-      "scripts/validate-upgrade-proposal.mjs",
-      "fixtures/upgrade/proposal-pass.json",
-      "fixtures/upgrade/proposal-blocked.json"
+      "parseCssLength atom",
+      "parseFragmentList atom",
+      "fixtures",
+      "registry/hash entries",
+      "lineage logs and parentRefs for both extracted atoms",
+      "validation report"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— upgrade-proposal 追加 behaviorId 欄位（必填，預設 behavior.evolve）\n2026-05-07 附錄 C 治理補丁：升版 proposal 保持為唯一編排 choke point；effect node 僅能寫 evidence，不得直接 promote\n2026-05-07 測試穩定性補丁：維持 orchestration atom 目的不變；補 deterministic validator 與 exemplar pair，讓 proposal contract 失敗可先在本卡 seam 定位\n2026-05-08 | 狀態: done | 驗證: node scripts/validate-upgrade-proposal.mjs --mode validate / node scripts/validate-schemas.mjs --mode test / node scripts/validate-cli.mjs --mode test / npm test / npm run typecheck / npm run lint | 變更: AI-Atomic-Framework commit bd48800 補 ProposeAtomicUpgrade schema/core/CLI/fixtures/validator；CLI 採既有 flat command atm upgrade --propose，proposal 僅彙整既有 evidence/report，不 mutate host、不進 review queue | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "evolution 管線首個 orchestration atom：把 birth-pipeline 工具組合成 upgrade 提案。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0015 / ATM-2-0016 / ATM-2-0017"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0003"
+    },
+    "contracts": {
+      "input": [
+        "ATM-4-0003 已提供 normalizeCssColor case atom、legacy fixture、lineage log 與 registry/hash entry",
+        "ATM-2-0033 已定義 ProjectAdapter legacy:// URI 與 atomize / infect adapter contract",
+        "本卡只能新增 parseCssLength / parseFragmentList case atoms，不得重寫 normalizeCssColor done card"
+      ],
+      "output": [
+        "parseCssLength atom",
+        "parseFragmentList atom",
+        "fixtures",
+        "registry/hash entries",
+        "兩個新 atom 均使用 behavior.atomize，並包含 lineage.bornBy=atomize",
+        "兩個新 atom 均帶 legacy:// parentRefs 與可追溯 lineage log",
+        "neutrality scan 不得讓 adopter-private 假設流入 upstream core schema"
+      ],
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-4-0004.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "讀取 legacy source range，為 parseCssLength / parseFragmentList 建立 legacy:// parentRefs",
+        "以 behavior.atomize 產生兩個 case atom spec、fixtures、registry/hash entry 與 lineage log",
+        "跑 adapter/case validation 與 neutrality scan",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
     }
   },
   {

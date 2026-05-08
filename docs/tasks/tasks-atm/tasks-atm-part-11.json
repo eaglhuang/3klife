@@ -1,157 +1,97 @@
 [
   {
-    "doc_id": "doc_task_0296",
-    "id": "ATM-0-0011",
-    "title": "Context budget 治理補強與文件回寫",
+    "doc_id": "doc_task_0290",
+    "id": "ATM-1-0008",
+    "title": "Zero-install Agent Bootstrap Pack",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "docs-governance",
-    "phase": "ATM-0",
+    "type": "open-source-core",
+    "phase": "ATM-1",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T23:05:36.3800604+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-08T17:35:00+08:00",
+    "started_at": "2026-05-06T15:40:29+08:00",
+    "started_by_agent": "vs-code-github-copilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "把 context budget 正式提升為 ATM upstream 可獨立治理的 primitive，並回寫相關 roadmap、extraction plan、adopter plan 與 v0.2 companion 文件。",
-    "related": [
-      "ATM-2-0011"
-    ],
-    "depends": [
-      "ATM-0-0010"
-    ],
-    "acceptance": [
-      "四份 ATM 規劃文件補上 context budget upstream primitive",
-      "明確定義 plugin-context-budget 或等效 guard/adapter 位置",
-      "把 encoding/context budget/neutrality 收斂成 Agent Governance Bundle",
-      "新增對應 ATM 任務卡與 tasks-atm 條目"
-    ],
-    "deliverables": [
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md",
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
-      "docs/agent-briefs/tasks/ATM/ATM-2-0011.md"
-    ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 將 context budget、plugin-context-budget 與 Agent Governance Bundle 正式回寫到四份 ATM 規劃文件，並同步修正 ATM-0-0011/ATM-2-0011 任務真相 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?context budget / governance bundle ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: context budget governance ????????? task shard ????? | ??: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM governance bundle 開卡",
-      "summary": "把 context budget 提升成 upstream 可獨立治理能力，並同步回寫相關 md 文件。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0010"
-    },
-    "contracts": {
-      "input": [
-        "encoding 已進入 upstream governance 規劃",
-        "context budget 尚未成為對等 primitive"
-      ],
-      "output": [
-        "context budget primitive 定義",
-        "Agent Governance Bundle 收斂",
-        "新增對應任務卡"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0011 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若 tasks-atm 或 doc_id 不一致，使用既有工具重建。",
-      "execution_steps": [
-        "建立新任務卡",
-        "建立 ATM-2-0011 後續卡",
-        "鎖卡並更新 frontmatter",
-        "回寫四份主文件",
-        "跑 encoding/task-scope/standard gate"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0356",
-    "id": "ATM-2-0049",
-    "title": "Task id reservation and lock race hardening",
-    "owner": "codex-gpt-5",
-    "priority": "P0",
-    "status": "done",
-    "type": "tooling",
-    "phase": "ATM-2",
-    "created": "2026-05-08",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-08T14:40:00+08:00",
-    "started_by_agent": "codex-gpt-5",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "Harden the single task id reservation, opener write, and lock promotion path to avoid duplicate IDs and stale reservation-only locks.",
+    "description": "建立讓 AI agent 在任意 host repo 只讀 README/AGENTS 指引即可啟動 ATM 的零安裝 bootstrap pack，包含 project probe、default profile、auto task creation 與 model-neutral operating instructions。",
     "related": [],
     "depends": [
-      "ATM-3-0006",
-      "ATM-3-0010",
-      "ATM-3-0015"
+      "ATM-1-0001"
     ],
     "acceptance": [
-      "Explicit-id and next-id allocation share the task-id-guard fence and reservation lock path",
-      "task-card-opener promotes successful writes through LockAdapter.lock() and releases current reservations on failure",
-      "task-lock.js is a thin CLI wrapper with no legacy duplicate implementation",
-      "Human override, task-card-path lookup, and reservation promotion have regression coverage"
+      "任意 repo 根目錄放入 ATM 後，AI agent 可依 README/AGENTS 完成 atm init/adopt",
+      "bootstrap pack 不綁特定模型或 IDE",
+      "流程會自動建立 first task、scope lock、artifact/log/evidence 目錄與 default guards"
     ],
     "deliverables": [
-      "task-id-guard / task-card-opener / task-lock race hardening",
-      "LockAdapter promotion and human override fix",
-      "task-id guard flow regression test",
-      "ATM-2-0049 docs and registry backwrite"
+      "AI-Atomic-Framework/README.md zero-install quick start",
+      "AI-Atomic-Framework/AGENTS.md 或 .atm/AGENTS.md template",
+      "examples/agent-bootstrap/",
+      "atm init --adopt default profile 說明"
     ],
-    "notes": "2026-05-08 | status: done | validation: node --check core task-id/lock/opener files; task-id guard flow regression pass; task-lock cross-shard regression pass; encoding touched pass | change: harden task id reserve / allocate / opener / lock race and promote reservation-only locks to formal scope locks | blocker: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm run validate:bootstrap / npm test / npm run typecheck / npm run lint pass；獨立 sandbox clone AI-learning-notes 後 init/status/validate pass，正確辨識 static-site | 變更: AI-Atomic-Framework upstream commit 1702bfd 新增 init --adopt default、bootstrap templates、agent-bootstrap example、one-line kickoff 與 bootstrap validator | 阻塞: 3KLife compute-gate standard 仍受既有 docs/rag_etl_pipeline_public*.html 刪檔影響",
     "brief": {
       "style": "harn-rich",
-      "label": "Task card system race hardening",
-      "summary": "Unify task id reserve / opener / lock flow",
-      "position": "ATM-2 / 3KLife governance tooling",
-      "prereq": "ATM-3-0006, ATM-3-0010, ATM-3-0015"
+      "label": "ATM governance split 開卡",
+      "summary": "讓 ATM 放到任意專案根目錄後，AI agent 讀 README/AGENTS 就能啟動自動開卡與治理流程。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0001"
     },
     "contracts": {
       "input": [
-        "tools_node/lib/task-id-guard.js",
-        "tools_node/lib/task-card-paths.js",
-        "tools_node/task-card-opener.js",
-        "tools_node/task-lock.js",
-        "tools_node/adapters/atm-3klife/lock-adapter*.js",
-        "tools_node/test/task-*-*.test.js"
+        "Default Governance Bundle 已納入 upstream 完整性",
+        "需支援任意 AI agent 與任意 host repo"
       ],
       "output": [
-        "Explicit-id and next-id allocation share the task-id-guard fence and reservation lock path",
-        "task-card-opener promotes successful writes through LockAdapter.lock() and releases current reservations on failure",
-        "task-lock.js is a thin CLI wrapper with no legacy duplicate implementation",
-        "Human override, task-card-path lookup, and reservation promotion have regression coverage"
+        "zero-install README/AGENTS bootstrap",
+        "project probe default profile",
+        "auto task/open-lock/guard/evidence startup flow"
       ],
-      "validation_cmd": "node --check tools_node/lib/task-id-guard.js\nnode --check tools_node/lib/task-card-paths.js\nnode --check tools_node/task-card-opener.js\nnode --check tools_node/task-lock.js\nnode --check tools_node/adapters/atm-3klife/lock-adapter.js\nnode tools_node/test/task-id-guard-flow.test.js\nnode tools_node/test/task-lock-cross-shard.test.js\nnode tools_node/check-encoding-touched.js --files tools_node/lib/task-card-paths.js tools_node/lib/task-id-guard.js tools_node/task-card-opener.js tools_node/task-lock.js tools_node/adapters/atm-3klife/lock-adapter.js tools_node/adapters/atm-3klife/lock-adapter-config.js tools_node/test/task-lock-cross-shard.test.js tools_node/test/task-id-guard-flow.test.js docs/agent-briefs/tasks/ATM/ATM-2-0049.md docs/tasks/tasks-atm/tasks-atm-part-23.json docs/tasks/tasks-atm.json docs/doc-id-registry-shards/registry-task.json docs/doc-id-registry.md docs/agent-collaboration-protocol.md docs/ai_atomic_framework/3klife-tooling-fate.md",
-      "rollback_hint": "git checkout -- tools_node/lib/task-card-paths.js tools_node/lib/task-id-guard.js tools_node/task-card-opener.js tools_node/task-lock.js tools_node/adapters/atm-3klife/lock-adapter.js tools_node/adapters/atm-3klife/lock-adapter-config.js tools_node/test/task-lock-cross-shard.test.js tools_node/test/task-id-guard-flow.test.js docs/agent-briefs/tasks/ATM/ATM-2-0049.md docs/tasks/tasks-atm/tasks-atm-part-23.json docs/tasks/tasks-atm.json docs/doc-id-registry-shards/registry-task.json docs/doc-id-registry.md docs/agent-collaboration-protocol.md docs/ai_atomic_framework/3klife-tooling-fate.md",
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退 bootstrap docs/templates；不得綁特定模型、IDE 或 3KLife 路徑。",
       "execution_steps": [
-        "Audit reserve / opener / lock responsibility drift",
-        "Unify reservation and promotion flow",
-        "Remove task-lock legacy dead implementation",
-        "Add regression coverage and update task/doc registry records"
+        "定義 root-drop 使用者旅程",
+        "撰寫 model-neutral README/AGENTS",
+        "設計 atm init --adopt profile",
+        "補 bootstrap example"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [
-        "node tools_node/test/task-id-guard-flow.test.js pass",
-        "node tools_node/test/task-lock-cross-shard.test.js pass"
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/cli/src/commands/init.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/bootstrap.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
+        "AI-Atomic-Framework/templates/root-drop/AGENTS.md",
+        "AI-Atomic-Framework/templates/root-drop/.atm/profile/default.md",
+        "AI-Atomic-Framework/examples/agent-bootstrap/README.md",
+        "AI-Atomic-Framework/scripts/validate-bootstrap.mjs",
+        "AI-Atomic-Framework/README.md",
+        "C:/Users/User/atm-bootstrap-sandbox/AI-learning-notes/.atm/config.json",
+        "C:/Users/User/atm-bootstrap-sandbox/AI-learning-notes/AGENTS.md"
       ],
-      "handoff_diff_status": "task card, ATM shard, protocol, tooling fate, and doc registry backwrite aligned",
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 1702bfd",
+        "npm run validate:bootstrap",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint",
+        "sandbox clone https://github.com/eaglhuang/AI-learning-notes",
+        "node packages/cli/src/atm.mjs init --cwd <sandbox-host> --adopt default --task \"Bootstrap ATM in AI learning notes\"",
+        "node packages/cli/src/atm.mjs status --cwd <sandbox-host>",
+        "node packages/cli/src/atm.mjs validate --cwd <sandbox-host>"
+      ],
+      "handoff_diff_status": "upstream committed; sandbox verified; tracking diff pending commit",
       "trace_artifacts": [],
       "metrics_summary": [
-        "reservation-only lock promoted through LockAdapter.lock()",
-        "task-lock.js has a single CLI implementation"
+        "init --adopt default seeds AGENTS/profile/task/lock/guard/evidence bundle",
+        "bootstrap validator passes in validate/test/typecheck/lint modes",
+        "real static-site host repo is classified as static-site, packageManager=none, hostWorkflow=file-publish",
+        "one-line AI kickoff prompt is emitted in README, AGENTS, and project probe",
+        "host repo does not need to become a Node.js project before ATM bootstrap"
       ]
     },
-    "completed_at": "2026-05-08T15:05:00+08:00"
+    "completed_at": "2026-05-06T15:48:51+08:00"
   }
 ]

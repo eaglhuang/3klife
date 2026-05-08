@@ -1,13 +1,35 @@
 [
   {
-    "doc_id": "doc_task_0295",
-    "id": "ATM-1-0009",
-    "title": "Self-hosting alpha proof",
+    "doc_id": "doc_task_0353",
+    "id": "ATM-2-0046",
+    "title": "Registry Catalog Map Section Rendering",
+    "owner": "ClaudeCode_sonnet-4-6",
+    "priority": "P1",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "ClaudeCode_sonnet-4-6",
+    "sensor_triggered_by": "atm-2-0042-map-generator-ripple",
+    "description": "ATM-2-0034 catalog renderer 追加 map 段落，顯示 mapId / member count / status / workbench path。",
+    "related": [],
+    "depends": [
+      "ATM-2-0034",
+      "ATM-2-0042"
+    ],
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 完成"
+  },
+  {
+    "doc_id": "doc_task_0274",
+    "id": "ATM-5-0003",
+    "title": "Semver Lifecycle 與 Governance",
     "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "open-source-core",
-    "phase": "ATM-1",
+    "priority": "P1",
+    "status": "open",
+    "type": "governance",
+    "phase": "ATM-5",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -15,107 +37,73 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "在 standalone upstream repo 內完成 self-hosting alpha proof，並把正式使用者體驗收斂為『1 句官方 prompt 作為單一入口』；使用者只需把 prompt 交給 AI，必要時由 AI 自動執行官方 bootstrap 命令，不需手動拷貝 AGENTS/profile/task/lock，也不需先把 host repo 改造成 Node 專案。",
-    "related": [
-      "ATM-1-0010",
-      "ATM-2-0010"
-    ],
+    "description": "建立開源專案版本治理、deprecated policy、breaking change RFC 與 release flow。",
+    "related": [],
     "depends": [
-      "ATM-1-0008",
-      "ATM-2-0008"
+      "ATM-5-0001"
     ],
     "acceptance": [
-      "使用者只需 1 句官方 prompt 即可啟動 first task；必要時由 AI 自動執行官方 bootstrap 命令",
-      "空白或 sandbox repo 可在不依賴 3KLife 工具下完成 standalone bootstrap smoke",
-      "AI agent 只讀 host README 與生成的 AGENTS/.atm profile/task，即可建立 first task、scope lock、artifact/log/evidence 與 first atom smoke",
-      "standalone smoke 不需引用 3KLife/Cocos/html-to-ucuf 或本地治理工具，且作為 Phase B 進入 downstream adapter 前的硬 gate"
+      "MAJOR/MINOR/PATCH 對應 Spec/Adapter/CLI 變更",
+      "adapter compatibility matrix 有格式",
+      "breaking change 需 RFC",
+      "release owner / maintainer duty matrix 已定義",
+      "package naming policy 覆蓋 core / cli / plugin-* / adapter-*",
+      "provenance 與 deprecation / migration policy 已定義",
+      "docs/LIFECYCLE.md 必須定義 framework semver 與 release channel 規則",
+      "docs/ATOM_COMPATIBILITY.md 定義 atom compatibility matrix（framework version ↔ atom schema version ↔ plugin SDK version）",
+      "docs/GOVERNANCE.md 與 release checklist 必須說明 PEV / upgrade proposal 公開審核規則",
+      "deprecated / migration policy 必須列出 breaking change RFC 與回滾窗口"
     ],
     "deliverables": [
-      "standalone self-hosting alpha checklist",
-      "official single-entry bootstrap contract",
-      "agent bootstrap smoke fixture",
-      "Phase B gate summary"
+      "docs/LIFECYCLE.md",
+      "docs/GOVERNANCE.md",
+      "CHANGELOG.md policy",
+      "release checklist",
+      "docs/ATOM_COMPATIBILITY.md",
+      "docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md",
+      "release owner / maintainer duty matrix",
+      "package naming / provenance / deprecation policy"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm run validate:self-hosting-alpha / npm run validate:cli / npm run validate:bootstrap / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 75dfca9 新增 bootstrap CLI 入口、single-entry self-hosting alpha prompt、SELF_HOSTING_ALPHA checklist 與 deterministic first-smoke proof gate | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 release owner、package naming、provenance 與 deprecation 實務要求 | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM self-hosting first 開卡",
-      "summary": "建立 upstream standalone self-hosting alpha gate，並把官方體驗明確收斂為『1 句 prompt 作為單一入口』後，再進 downstream adapter。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0008、ATM-2-0008"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "建立開源專案版本治理、deprecated policy、breaking change RFC 與 release flow。",
+      "position": "ATM-5",
+      "prereq": "ATM-5-0001"
     },
     "contracts": {
       "input": [
-        "zero-install bootstrap 與 local governance reference plugins 已可運作",
-        "第一輪 smoke 不得依賴 3KLife 工具"
+        "ATM-5-0001 quick start / API docs 已開立",
+        "ATM-2-0020 / ATM-2-0021 定義 PEV upgrade proposal 與 human review gate",
+        "ATM-2-0026 / ATM-2-0027 / ATM-2-0029 定義 atom compatibility 與 behavior/state-machine 基礎"
       ],
       "output": [
-        "standalone self-hosting alpha checklist",
-        "official single-entry bootstrap contract",
-        "bootstrap smoke proof",
-        "Phase B exit gate"
+        "docs/LIFECYCLE.md",
+        "docs/GOVERNANCE.md",
+        "CHANGELOG.md policy",
+        "release checklist",
+        "docs/ATOM_COMPATIBILITY.md",
+        "release owner / maintainer duty matrix",
+        "package naming policy（core / cli / plugin-* / adapter-*）",
+        "provenance 與 deprecation / migration policy"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡 touched files；若 standalone smoke 仍含 3KLife 假設，保持卡片 open 不偷關卡。",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-5-0003.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
-        "定義『1 句官方 prompt 作為單一入口；必要時 AI 自動執行 1 個官方 bootstrap 命令』產品目標",
-        "定義 self-hosting alpha gate",
-        "建立 standalone smoke fixture",
-        "驗證 first task/lock/artifact/log/evidence 與 first atom smoke",
-        "回寫 Phase B gate summary"
+        "盤點現有 lifecycle / governance / changelog 文件缺口",
+        "定義 semver、release channel、compatibility matrix 與 package naming policy",
+        "補 PEV / upgrade proposal 公開審核與 breaking change RFC 規則",
+        "補 release checklist、owner duty matrix、provenance 與 deprecation / migration policy",
+        "跑 encoding 與 standard gate，回寫 tracking notes"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/packages/cli/src/atm.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/bootstrap-entry.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/bootstrap.mjs",
-        "AI-Atomic-Framework/scripts/validate-self-hosting-alpha.mjs",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/scripts/validate-bootstrap.mjs",
-        "AI-Atomic-Framework/docs/SELF_HOSTING_ALPHA.md",
-        "AI-Atomic-Framework/examples/agent-bootstrap/README.md",
-        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json",
-        "AI-Atomic-Framework/README.md"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 75dfca9",
-        "npm run validate:self-hosting-alpha",
-        "npm run validate:cli",
-        "npm run validate:bootstrap",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "official single-entry prompt checks .atm/config.json and triggers bootstrap when needed",
-        "bootstrap command is an official standalone CLI entry alongside init/status/validate",
-        "self-hosting alpha validator bootstraps a clean upstream repo copy and completes first smoke against hello-world atom",
-        "proof writes task/lock/evidence transitions plus artifact/log/context summary and Phase B exit gate report",
-        "full upstream validation chain remains green after adding the proof gate"
-      ]
-    },
-    "completed_at": "2026-05-06T16:34:31+08:00"
-  },
-  {
-    "id": "ATM-3-0008",
-    "title": "doc-id-registry.js adapter 化：接入 ATM DocumentIndexAdapter",
-    "status": "done",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "vs-insiders-gpt-5.3-codex",
-    "started_at": "2026-05-08T18:07:16.711+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.3-codex",
-    "completed_at": "2026-05-08T18:13:48.915+08:00",
-    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
-    "doc_id": "doc_task_0308",
-    "depends": [
-      "ATM-3-0006"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無\n2026-05-07 架構釐清：本卡為 Phase 1（thin adapter 化），Phase 2 DocumentIndexAdapter 原子化為 ATM-GOV-* governed atom\n2026-05-08 | 狀態: done | 驗證: node tools_node/doc-id-registry.js --assign docs/agent-briefs/tasks/ATM/ATM-3-0008.md ✅；node tools_node/compute-gate.js --gates ts-syntax eslint-rules --agent-feedback ✅；node -e adapter prefix probe ✅ | 變更: 新增 document-index-adapter 與 doc-index-profile，doc-id-registry --assign 改由 adapter 分配 doc_id | 阻塞: check-task-scope 受既有跨卡 dirty files 影響"
+      "metrics_summary": []
+    }
   }
 ]

@@ -1,159 +1,92 @@
 [
   {
-    "doc_id": "doc_task_0292",
-    "id": "ATM-0-0010",
-    "title": "Self-hosting first 邊界與中立性 guard 落地",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0354",
+    "id": "ATM-2-0047",
+    "title": "URN Resolver and RegistryIndex Facade",
+    "owner": "vs-code-copilot",
     "priority": "P0",
     "status": "done",
-    "type": "docs-governance",
-    "phase": "ATM-0",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T22:47:03.1427368+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-08T17:35:00+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 ATM 規劃正式收斂為 upstream self-hosting first，回寫主文件並新增 docs neutrality 與 boundary guard 後續任務。",
-    "related": [],
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-08",
+    "created_by_agent": "vs-code-copilot",
+    "started_at": "2026-05-08T00:50:34+08:00",
+    "started_by_agent": "vs-code-copilot",
+    "completed_at": "2026-05-08T00:58:23.9061276+08:00",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V2",
+    "chain_step": "1/1",
+    "sensor_triggered_by": "atm-urn-registry-index-implementation",
+    "description": "建立 canonical ATM ID 的派生 URN resolver 與 RegistryIndex 查詢 façade，讓 atom/map/police 可用同一個 nodeRef 查詢，同時保留 ATM-CORE/ATM-MAP 作唯一 source of truth。",
+    "related": [
+      "ATM-2-0030",
+      "ATM-2-0031",
+      "ATM-2-0005",
+      "ATM-2-0027"
+    ],
     "depends": [
-      "ATM-0-0009"
+      "ATM-1-0011",
+      "ATM-2-0026",
+      "ATM-2-0042"
     ],
     "acceptance": [
-      "A/B/Roadmap 同步寫入 upstream self-hosting first 與 hard gates",
-      "Roadmap 補 neutrality/boundary guard 設計",
-      "新增 ATM-1-0010 與 ATM-2-0010 任務卡",
-      "ATM-3/ATM-4 明確標成 downstream-only phase"
+      "URN 只可由 canonical atomId/mapId 派生，禁止成為第二套可寫主鍵",
+      "支援 urn:atm:atom:<ATM-ID>@<semver> 與 urn:atm:map:<ATM-MAP-ID>@<semver> parse/format/normalize",
+      "RegistryIndex 建立 atomId/mapId/logicalName/semanticFingerprint/version 四類 index，對單筆 lookup 提供 O(1) façade",
+      "舊 registry entries[] 格式保持相容，index 可由現有 registry document lazy build",
+      "dedup police 可重用 fingerprint-index，不再自建不相容 hash bucket",
+      "validation fixture 覆蓋 atom/map/legacy-no-sf/invalid-urn/duplicate-key"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md",
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
-      "docs/agent-briefs/tasks/ATM/ATM-1-0010.md",
-      "docs/agent-briefs/tasks/ATM/ATM-2-0010.md"
+      "AI-Atomic-Framework/packages/core/src/registry/urn.mjs",
+      "AI-Atomic-Framework/packages/core/src/registry/registry-index.mjs",
+      "AI-Atomic-Framework/scripts/validate-registry-index.mjs",
+      "AI-Atomic-Framework/fixtures/registry/index/*.json",
+      "docs/ai_atomic_framework/關於進化版的原子提案.md",
+      "docs/ai_atomic_framework/ATM框架演進執行規劃書.md"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 回寫 self-hosting first、self-hosting alpha gate、docs neutrality 與 neutrality/boundary guard 到三份主文件，並新增 ATM-1-0009/0010、ATM-2-0010 任務 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?self-hosting / neutrality guard ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: self-hosting first ??????OUTPUT_CONTRACT ? task shard ??? | ??: none",
+    "notes": "2026-05-08 | 狀態: done | 驗證: validate:registry-index / validate:schemas / validate:registry-core / npm test / typecheck / lint pass；3KLife encoding touched pass | 變更: 建立派生 URN resolver、RegistryIndex façade、validator、fixture，並回寫 Part V 與演進規劃書 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM self-hosting first 開卡",
-      "summary": "把 upstream self-hosting first、文件中立性與 boundary guard 正式回寫到 ATM 主規劃。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0009"
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
     },
     "contracts": {
       "input": [
-        "已確認 upstream 不得依賴 3KLife 工具",
-        "需同步 A/B/Roadmap 與 tasks-atm"
+        "ATM-1-0011 已收斂 canonical Atomic ID",
+        "ATM-2-0042 已完成 canonical ATM-MAP generator",
+        "現有 registry.schema.json 仍以 entries[] 為相容資料源"
       ],
       "output": [
-        "更新 self-hosting first 文件真相",
-        "新增 docs neutrality audit 任務",
-        "新增 neutrality/boundary rule guard 任務"
+        "派生 URN resolver 不改 canonical ID 真相",
+        "RegistryIndex façade 可包住現有 entries[]",
+        "文件明確禁止占用既有 ATM-3-0010~0013 卡號"
       ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0010 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若 doc_id/manifest 異常，使用既有工具重建，不手動複製代號。",
+      "validation_cmd": "cd ../AI-Atomic-Framework\\npnpm run validate:registry-index\\npnpm run validate:schemas\\npnpm run validate:registry-core\\npnpm test\\npnpm run typecheck\\npnpm run lint\\ncd ../3KLife\\nnpm run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0047.md docs/tasks/tasks-atm.json docs/tasks/tasks-atm/.shardrc.json docs/tasks/tasks-atm/tasks-atm-part-35.json docs/tasks/tasks-atm/tasks-atm-part-36.json docs/ai_atomic_framework/關於進化版的原子提案.md docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
+      "rollback_hint": "回退 ATM-2-0047 touched files；若 doc-id registry 已分配新 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
       "execution_steps": [
-        "建立新任務卡",
-        "同步 tasks-atm",
-        "鎖卡並更新 frontmatter",
-        "回寫三份主文件",
-        "跑 encoding/task-scope/standard gate"
+        "建立任務卡與鎖卡",
+        "補文件中的 URN 派生規則與任務映射",
+        "實作 URN resolver 與 RegistryIndex façade",
+        "補 validator 與 fixtures",
+        "跑 upstream validation 與 downstream encoding check"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "validation_evidence": [
+        "node scripts/validate-registry-index.mjs --mode validate pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run validate:schemas pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run validate:registry-core pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework test pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run typecheck pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run lint pass",
+        "cmd /c npm run check:encoding:touched -- --files ... pass"
+      ],
+      "handoff_diff_status": "clean-validation",
       "trace_artifacts": [],
       "metrics_summary": []
     }
-  },
-  {
-    "doc_id": "doc_task_0358",
-    "id": "ATM-2-0048",
-    "title": "ATM task-router / onboarding contract",
-    "owner": "vs-insiders-gpt-5.4",
-    "priority": "P0",
-    "status": "done",
-    "type": "implementation",
-    "phase": "ATM-2",
-    "created": "2026-05-08",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-08T15:32:00+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "讓第一次進到 ATM 環境的 Agent 不必自己拼裝資訊。不管它是從 task card、臨時口頭需求、legacy code extraction，還是直接在 ATM framework repo 內工作進來，都必須有看得到的入口，把它導到 `ATM-CORE-0004`、`atm create` 與對應驗證步驟。",
-    "related": [
-      "ATM-4-0003"
-    ],
-    "depends": [
-      "ATM-2-0038",
-      "ATM-3-0002",
-      "ATM-3-0010"
-    ],
-    "acceptance": [
-      "task-router script 能讀 task card 與 tasks store，並輸出 routeKind / taskStatus / readFirst / validationHints",
-      "atom-generation 任務可穩定回傳 ATM-CORE-0004 與 atm create command template",
-      "ATM-4-0003 sample route 可指出 html-to-ucuf 與 normalizeCssColor",
-      "docs / task shard / script smoke test 同步回寫"
-    ],
-    "deliverables": [
-      "tools_node/atomic-framework/task-router.js",
-      "docs/agent-briefs/tasks/ATM/ATM-2-0048.md",
-      "docs/tasks/tasks-atm/tasks-atm-part-25.json"
-    ],
-    "notes": "2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: task-router onboarding contract in progress | 阻塞: none\n2026-05-08 | ??: done | ??: node tools_node/atomic-framework/task-router.js --task ATM-4-0003 --format markdown pass?upstream atom generator revalidation pass | ??: task-router / onboarding contract ?????????? shard ????????? task shard | ??: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM onboarding router 開卡",
-      "summary": "把陌生 Agent 的第一入口收斂成可執行的 task-router，先把 atom-generation 任務穩定路由到 ATM-CORE-0004。",
-      "position": "ATM-2 / onboarding contract",
-      "prereq": "ATM-2-0038、ATM-3-0002、ATM-3-0010"
-    },
-    "contracts": {
-      "input": [
-        "docs/agent-briefs/tasks/<prefix>/<task-id>.md",
-        "docs/tasks/tasks-atm.json",
-        "docs/tasks/tasks-atm/tasks-atm-part-*.json",
-        "docs/ATOM_GENERATOR.md",
-        "docs/SELF_HOSTING_ALPHA.md",
-        "AI-Atomic-Framework/packages/cli/src/atm.mjs"
-      ],
-      "output": [
-        "tools_node/atomic-framework/task-router.js",
-        "route report 含 routeKind / taskStatus / readFirst / primaryAtom / validationHints",
-        "atom-generation 任務可穩定回傳 ATM-CORE-0004 與 atm create command template",
-        "ATM-4-0003 sample route 可指出 html-to-ucuf 與 normalizeCssColor",
-        "docs / task shard / script smoke test 同步回寫"
-      ],
-      "validation_cmd": "node tools_node/atomic-framework/task-router.js --task ATM-4-0003 --format markdown\nnode tools_node/atomic-framework/task-router.js --task ATM-2-0048 --format markdown\nnode tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-2-0048.md docs/tasks/tasks-atm/tasks-atm-part-25.json tools_node/atomic-framework/task-router.js",
-      "rollback_hint": "回退本卡 touched files；router 只做 onboarding readout，不改 upstream core。",
-      "execution_steps": [
-        "讀 task store 與 task card",
-        "判斷 atom-generation / docs-first 路由",
-        "組出 factory atom / command template / validation hints",
-        "跑 ATM-4-0003 sample smoke",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [
-        "tools_node/atomic-framework/task-router.js",
-        "docs/agent-briefs/tasks/ATM/ATM-2-0048.md"
-      ],
-      "validation_evidence": [
-        "node tools_node/atomic-framework/task-router.js --task ATM-4-0003 --format markdown",
-        "node tools_node/atomic-framework/task-router.js --task ATM-2-0048 --format markdown",
-        "node tools_node/check-encoding-touched.js --files docs/agent-briefs/tasks/ATM/ATM-2-0048.md docs/tasks/tasks-atm/tasks-atm-part-25.json tools_node/atomic-framework/task-router.js"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    },
-    "completed_at": "2026-05-08T17:35:00+08:00"
   }
 ]

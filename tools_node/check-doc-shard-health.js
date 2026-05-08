@@ -8,6 +8,7 @@ const cp = require('child_process');
 const {
   DEFAULT_MAX_PART_BYTES,
   DEFAULT_MAX_PART_LINES,
+  recalcSummary,
   readTasksAtmStore,
 } = require('./lib/tasks-atm-shard-store');
 
@@ -166,7 +167,7 @@ function buildShardGroups() {
     groups.push(group);
     groupByRcPath.set(rcPath, group);
 
-    const filesInGroup = [sourceAbs];
+    const filesInGroup = [rcPath, sourceAbs];
     if (Array.isArray(cfg.shards)) {
       for (const shard of cfg.shards) {
         filesInGroup.push(path.join(rcDir, `${shard.name}${partExt}`));
@@ -324,7 +325,8 @@ function validateTasksAtmThinIndexIfPresent(group) {
     if (state.mode !== 'thin-index') {
       issues.push(`tasks-atm store is not thin-index (mode=${state.mode})`);
     }
-    if (JSON.stringify(state.summary) !== JSON.stringify(indexData.summary)) {
+    const freshSummary = recalcSummary(state.tasks);
+    if (JSON.stringify(freshSummary) !== JSON.stringify(indexData.summary)) {
       issues.push(`summary mismatch between ${relativePath(indexPath)} and part files`);
     }
   } catch (error) {

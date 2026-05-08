@@ -1,134 +1,96 @@
 [
   {
-    "doc_id": "doc_task_0259",
-    "id": "ATM-2-0002",
-    "title": "Scaffold Builder MVP",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0289",
+    "id": "ATM-2-0007",
+    "title": "Default Governance Bundle schema",
+    "owner": "vs-code-gpt-5.4",
     "priority": "P0",
-    "status": "done",
-    "type": "manager",
+    "status": "in-progress",
+    "type": "open-source-core",
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T19:28:00.000Z",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T20:18:23.9552929+08:00",
+    "started_at": "2026-05-07T14:34:13.9575398+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
+    "description": "定義 WorkItem、TaskStore、ScopeLock、DocumentIndex、ShardStore、ArtifactStore、LogStore、RunReportStore、RuleGuard、Evidence/Handoff 等 governance primitives 的 upstream schema 與 interface。",
     "related": [],
     "depends": [
-      "ATM-2-0001"
+      "ATM-2-0006"
     ],
     "acceptance": [
-      "首次 scaffold 建立檔案",
-      "第二次 scaffold 不覆寫人工實作",
-      "可由 adapter 決定 workbenchPath"
+      "governance primitives 不引用 3KLife 專用路徑",
+      "schema 可支援 local .atm layout 與外部 Jira/GitHub Issues adapter",
+      "TaskStore/LockStore/DocumentIndex/ShardStore/ArtifactStore/LogStore/RuleGuard/EvidenceStore interface 完整",
+      "TaskStore/LockStore/DocumentIndex/ShardStore/ArtifactStore/LogStore/RuleGuard/EvidenceStore interface 完整",
+      "schemas/governance/work-item.schema.json 可驗證 alpha0 first task",
+      "schemas/governance/scope-lock.schema.json 可驗證最小 lock evidence",
+      "alpha0 minimal task/lock/evidence fixture 不依賴完整 reference plugins",
+      "alpha0 governance schema 僅含 WorkItem / ScopeLock / 最小 Evidence；upgrade-proposal / review-queue schema 標記為 alpha1 並獨立檔案"
     ],
     "deliverables": [
-      "packages/core/src/manager/scaffold.*",
-      "templates/atom.spec.template.json",
-      "templates/atom.test.template.ts"
+      "packages/plugin-sdk/governance interfaces 規格",
+      "schemas/governance/*.schema.json 規格",
+      "docs/ADAPTER_GUIDE.md governance interface 草案",
+      "ArtifactStore / LogStore / RunReportStore / MarkdownJsonStateStore contract 入口，詳細 schema 可由 ATM-2-0009 落地",
+      "schemas/governance/work-item.schema.json",
+      "schemas/governance/scope-lock.schema.json",
+      "alpha0 minimal governance fixture"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:scaffold-builder / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit b8a3270 新增 core scaffold builder、templates/atom.spec.template.json、templates/atom.test.template.ts，預設產出 atomic_workbench/atoms/<atomId>/atom.spec.json + atom.test.ts，並支援 adapter 指定 workbenchPath 與 idempotent rerun | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 接手 alpha0 Default Governance Bundle schema 與 layout contract | 阻塞: none\n2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 schema-first 範圍：WorkItem / ScopeLock 為 alpha0 最小治理，完整 Default Governance Bundle 移到 alpha1 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
+      "label": "ATM governance split 開卡",
+      "summary": "定義 Default Governance Bundle 所需的通用治理 primitives schema 與 adapter interface。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0001"
+      "prereq": "ATM-2-0006"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+        "ATM Plugin SDK 已規劃 ProjectAdapter/LanguageAdapter",
+        "Default Governance Bundle 已決議納入 upstream 完整性"
       ],
       "output": [
-        "packages/core/src/manager/scaffold.*",
-        "templates/atom.spec.template.json",
-        "templates/atom.test.template.ts"
+        "governance primitives schema",
+        "governance adapter interface",
+        "default .atm layout contract"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "rollback_hint": "回退 upstream governance schema/interface 草案；不得引入 3KLife 私有路徑。",
       "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
+        "盤點 governance primitives",
+        "定義 schema 與 interface",
+        "補 positive/negative fixtures",
+        "更新 ADAPTER_GUIDE"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/package.json",
-        "AI-Atomic-Framework/packages/core/src/manager/scaffold.mjs",
-        "AI-Atomic-Framework/scripts/validate-scaffold-builder.mjs",
-        "AI-Atomic-Framework/templates/atom.spec.template.json",
-        "AI-Atomic-Framework/templates/atom.test.template.ts",
-        "AI-Atomic-Framework/tests/scaffold-builder.fixture.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit b8a3270",
-        "npm run validate:scaffold-builder",
-        "npm run validate:cli",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "scaffold builder writes a per-atom workbench by default under atomic_workbench/atoms/<atomId>",
-        "each scaffolded atom currently includes atom.spec.json and atom.test.ts rendered from shared templates",
-        "rerunning scaffold skips existing files so manual edits are preserved by default",
-        "adapter or caller can decide workbenchPath explicitly instead of using the default folder policy"
-      ]
+      "metrics_summary": []
     }
   },
   {
-    "doc_id": "doc_task_0326",
-    "id": "ATM-3-0014",
-    "title": "3KLife UsageEvidence shadow adapter",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "adapter",
+    "id": "ATM-3-0008",
+    "title": "doc-id-registry.js adapter 化：接入 ATM DocumentIndexAdapter",
+    "status": "done",
+    "priority": "P1",
     "phase": "ATM-3",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "10/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "只讀 3KLife 的 artifacts / compute-gate report / logs，產出 usage-feedback evidence；不修改任何既有 CLI / 工具。",
-    "related": [],
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "vs-insiders-gpt-5.3-codex",
+    "started_at": "2026-05-08T18:07:16.711+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.3-codex",
+    "completed_at": "2026-05-08T18:13:48.915+08:00",
+    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
+    "doc_id": "doc_task_0308",
     "depends": [
-      "ATM-3-0001",
-      "ATM-2-0009",
-      "ATM-2-0016"
+      "ATM-3-0006"
     ],
-    "acceptance": [
-      "adapter 僅讀，不寫；任何 file mutation 視為違規",
-      "輸出 evidence 必須通過 ATM-2-0009 的 usage-feedback schema",
-      "3KLife 既有 CLI / compute-gate / 工具行為完全不變（shadow / parity）",
-      "neutrality scanner 對輸出 evidence payload 跑 dry-run，不得帶入 adopter 私有 token",
-      "usage-feedback evidence 中加入 callerCount（該 atom 在 host 端被呼叫的次數），作為 ATM-2-0031 lifecycle police sweep 判斷的輸入（zero-caller 才建議 sweep）",
-      "usage tracking 需記錄 sub-function（export symbol）粒度，不只是 atomId 粒度——供 Demand Police 判斷是否觸發 split",
-      "定義 mapping-table.json：來源欄位 → upstream usage-feedback 欄位必須固定映射；host-only 欄位一律落 extras.adopterPrivate{}，不得出現在 payload 主體",
-      "實作 --strict 與 --lenient；來源格式漂移時，--lenient 必須降級為 evidenceType=usage-feedback-skipped 並寫 skipReason",
-      "補一個 compute-gate report 缺欄位 negative fixture，驗證 --strict hard fail 與 --lenient fallback 差異"
-    ],
-    "deliverables": [
-      "tools_node/atm-adapter/usage-evidence-shadow.js",
-      "fixtures/adapter/3klife-usage-evidence.snapshot.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— 將「呼叫次數」回填為 atom caller-count（給 lifecycle police 的 sweep 用）\n2026-05-07 ATM-2-0042 連鎖影響（notes）：map evidence artifacts 存在 canonical atomic_workbench/maps/ 路徑，adapter 須同時掃描 maps/ 和 atoms/ 目錄\n2026-05-07 附錄 C 治理補丁：追加 mapping-table / strict-vs-lenient / format-drift fallback，避免 host 私有欄位污染 upstream evidence schema",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "alpha1 期間第一個 evolution-evidence 來源；以最小侵入方式餵養 evolution 管線。",
-      "position": "ATM-3",
-      "prereq": "ATM-3-0001 / ATM-2-0009 / ATM-2-0016"
-    }
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無\n2026-05-07 架構釐清：本卡為 Phase 1（thin adapter 化），Phase 2 DocumentIndexAdapter 原子化為 ATM-GOV-* governed atom\n2026-05-08 | 狀態: done | 驗證: node tools_node/doc-id-registry.js --assign docs/agent-briefs/tasks/ATM/ATM-3-0008.md ✅；node tools_node/compute-gate.js --gates ts-syntax eslint-rules --agent-feedback ✅；node -e adapter prefix probe ✅ | 變更: 新增 document-index-adapter 與 doc-index-profile，doc-id-registry --assign 改由 adapter 分配 doc_id | 阻塞: check-task-scope 受既有跨卡 dirty files 影響"
   }
 ]

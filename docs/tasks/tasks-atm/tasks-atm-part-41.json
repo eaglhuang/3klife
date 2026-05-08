@@ -1,95 +1,76 @@
 [
   {
-    "doc_id": "doc_task_0316",
-    "id": "ATM-2-0013",
-    "title": "Per-atom folder 以 Atomic ID 命名收斂",
+    "doc_id": "doc_task_0347",
+    "id": "ATM-2-0040",
+    "title": "Backfill Existing Core Atoms Through Atom Generator",
     "owner": "vs-code-gpt-5.4-mini",
     "priority": "P0",
     "status": "done",
-    "type": "workspace-layout",
+    "type": "migration",
     "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T22:33:29.1762135+08:00",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T22:43:17.2332444+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將同一個 atom 空間收斂到以 Atomic ID 為名稱的 canonical folder，避免 spec、code、fixture、report、registry proof 分散。",
-    "related": [
-      "ATM-2-0012",
-      "ATM-2.5-0001"
-    ],
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T15:14:35.1752897+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
+    "chain_step": "2/3",
+    "sensor_triggered_by": "atm-pre-generator-atom-backfill",
+    "description": "讓既有核心原子 ATM-CORE-0001 與 ATM-CORE-0003 重新走 generator provenance，不直接手改 registry/workbench，並保留既有 atomId 與 hash-lock 可追溯性。",
+    "related": [],
     "depends": [
-      "ATM-2-0004"
+      "ATM-2-0038",
+      "ATM-2-0039"
     ],
-    "acceptance": [
-      "每個 atom 有 canonical folder，資料夾名稱必須等於 Atomic ID",
-      "scaffold/test-runner/registry/workbench 路徑規則對齊 canonical Atomic ID folder",
-      "新增 atom 不可再先散放檔案後回收；neutralityScanner 等後續 atom 直接落在 canonical folder",
-      "既有 atom 至少有 migration policy 與相容路徑策略"
-    ],
-    "deliverables": [
-      "canonical per-atom folder layout contract",
-      "Atomic ID naming rule",
-      "scaffold/workbench/report path normalization plan",
-      "migration notes for existing scattered atoms"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: node scripts/validate-scaffold-builder.mjs --mode validate / node scripts/validate-test-runner.mjs --mode validate / node scripts/validate-registry-core.mjs --mode validate / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 299be5e 新增 packages/core/src/manager/atom-space.mjs 作為 canonical atom-space single source of truth，讓 scaffold/test-runner/registry 預設路徑統一收斂到 atomic_workbench/atoms/<Atomic ID>/，資料夾名稱直接使用 Atomic ID，不再維護 sanitized alias folder；同步補 docs/ATOM_SPACE_LAYOUT.md contract 與 staged migration policy；並已回寫 docs/ai_atomic_framework/* 計畫文件與 ATM_cross_reference / doc-id 索引，使 canonical 家目錄規則成為文件層單一真相；ATM-2-0012 與 ATM-2.5-0001 也已正式 depends on 本卡 | 阻塞: none",
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始回填 pre-generator core atoms provenance | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node scripts/backfill-generator-provenance.mjs / npm run validate:registry-catalog / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: ATM-CORE-0001/0003 補 canonical workbench witness、test report、generator-provenance:backfilled，catalog 顯示 provenance | 阻塞: none\n2026-05-08 | ??: done | ??: node scripts/backfill-generator-provenance.mjs pass?npm.cmd run validate:generator-provenance pass | ??: pre-generator core atoms provenance backfill ??? report/selfVerification???? task shard ??? | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心插單",
-      "summary": "將同一個 atom 空間收斂到以 Atomic ID 命名的 canonical folder，提早建立 per-atom layout 規則，避免後續 spec/code/test/report/registry proof 繼續零散擴張。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0004 已完成，後續新 atom 產線尚未全面擴張"
+      "label": "ATM pre-generator atom backfill 開卡",
+      "summary": "用 generator 重新產生或遷移前期核心原子，補齊 generator provenance 與 workbench 四件套。",
+      "position": "ATM-2（migration / generator backfill）",
+      "prereq": "ATM-2-0038 / ATM-2-0039"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-2-0004 已完成 registry/hash-lock 基礎",
-        "目前 per-atom report 已有 atomic_workbench/atoms/<Atomic ID>/ 方向，但 spec/code/fixture/registry proof 尚未完全收斂到同一空間"
+        "ATM-CORE-0001 與 ATM-CORE-0003 是 generator 之前手動建立的核心原子",
+        "既有 atomId 不可變",
+        "既有 registry hash-lock 不可靜默失效"
       ],
       "output": [
-        "canonical per-atom folder layout contract",
-        "Atomic ID 直接作為 folder 名稱的命名規則",
-        "scaffold/test-runner/registry/workbench 對齊計畫或實作",
-        "既有散落 atom 配件的 migration policy"
+        "定義 pre-generator atom backfill 流程",
+        "用 generator 或 generator-backed migration 重建 ATM-CORE-0001/0003 workbench",
+        "保留或重算 registry selfVerification 並留下 migration evidence",
+        "catalog 顯示 generator provenance"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡 touched files；若上游已開始做 path migration，優先回退 folder contract 與 path normalization，不留下半套 alias 規則。",
+      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:registry-catalog\\nnpm test\\nnpm run lint",
+      "rollback_hint": "若 backfill 造成 hash drift，回退該 atom 的 regenerated workbench/registry entry，保留 ATM-2-0038 generator 本體。",
       "execution_steps": [
-        "定義 canonical per-atom folder layout 與 Atomic ID naming rule",
-        "盤點 scaffold/test-runner/registry/workbench 現況路徑",
-        "實作或至少定稿 path normalization strategy",
-        "補 fixture 或 migration guidance，避免後續 atom 再散落"
+        "盤點 ATM-CORE-0001/0003 既有 sourcePaths",
+        "定義保留 atomId 的 generator-backed backfill 模式",
+        "逐顆重建 workbench/spec/test/report",
+        "重算 registry 與 catalog",
+        "跑完整 registry drift 驗證"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [
-        "AI-Atomic-Framework upstream commit 299be5e",
-        "node scripts/validate-scaffold-builder.mjs --mode validate",
-        "node scripts/validate-test-runner.mjs --mode validate",
-        "node scripts/validate-registry-core.mjs --mode validate",
-        "npm run validate:cli",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
+      "validation_evidence": [],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
     }
   },
   {
-    "doc_id": "doc_task_0273",
-    "id": "ATM-5-0002",
-    "title": "Adapter Guide 與 Plugin SDK 文件",
+    "doc_id": "doc_task_0269",
+    "id": "ATM-4-0001",
+    "title": "html-to-ucuf reference case study plan",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "docs",
-    "phase": "ATM-5",
+    "type": "case-study",
+    "phase": "ATM-4",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -97,49 +78,37 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "撰寫 ProjectAdapter、LanguageAdapter、Capability、Police、Injector plugin 的開發指南。",
+    "description": "將 html-to-ucuf 定義為 reference case study package，不讓 domain 規則進入 core。",
     "related": [],
     "depends": [
-      "ATM-2-0006",
-      "ATM-3-0001"
+      "ATM-3-0002"
     ],
     "acceptance": [
-      "第三方專案可依文件實作 adapter",
-      "3KLife adapter 可作 reference",
-      "core 禁止 domain logic 規則明確",
-      "第三方專案可依文件接入 artifacts/logs/reports 與 Markdown/JSON state files",
-      "CAR 對照章節說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
-      "HarnessCard-lite 指南說明報告只落在 run report / typed evidence，不替代 core contracts"
+      "fidelity formula/known gap/fixture 都在 case study",
+      "Roadmap 核心章節不依賴 H2U",
+      "case study 可獨立被關閉而不影響 core"
     ],
     "deliverables": [
-      "docs/ADAPTER_GUIDE.md",
-      "docs/PLUGIN_SDK.md",
-      "examples/hosted-adapter-impl",
-      "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
-      "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
-      "standalone Default Governance Bundle 與 3KLife adapter 的 artifacts/logs/reports mapping 對照",
-      "CAR / HarnessCard-lite adapter reporting guidance"
+      "docs/ai_atomic_framework/html-to-ucuf-case-study.md",
+      "case study scope/non-goals",
+      "domain plugin list"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter migration guide 要求 | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 CAR/HarnessCard docs acceptance；已 done 卡不回改 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "撰寫 ProjectAdapter、LanguageAdapter、Capability、Police、Injector plugin 的開發指南。",
-      "position": "ATM-5",
-      "prereq": "ATM-2-0006、ATM-3-0001"
+      "summary": "將 html-to-ucuf 定義為 reference case study package，不讓 domain 規則進入 core。",
+      "position": "ATM-4",
+      "prereq": "ATM-3-0002"
     },
     "contracts": {
       "input": [
         "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "docs/ADAPTER_GUIDE.md",
-        "docs/PLUGIN_SDK.md",
-        "examples/hosted-adapter-impl",
-        "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
-        "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
-        "CAR 對照章節：說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
-        "HarnessCard-lite 指南：adapter 文件需說明報告只落在 run report / typed evidence，不替代 core contracts"
+        "docs/ai_atomic_framework/html-to-ucuf-case-study.md",
+        "case study scope/non-goals",
+        "domain plugin list"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
@@ -147,8 +116,7 @@
         "確認 upstream/downstream 邊界",
         "實作 adapter 或 case study artifact",
         "跑 adapter/case 驗證",
-        "回寫 tracking notes",
-        "補充 TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 的 host 實作指南"
+        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {

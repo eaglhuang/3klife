@@ -1,103 +1,101 @@
 [
   {
-    "doc_id": "doc_task_0322",
-    "id": "ATM-2-0019",
-    "title": "ExecuteAgentTask effect node dry-run（000004）",
+    "doc_id": "doc_task_0339",
+    "id": "ATM-2-0033",
+    "title": "Atomization & Infection Adapter Contract",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "done",
-    "type": "bootstrap-atom",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-07T23:28:13.9062315+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-07T23:28:13.9062315+08:00",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "6/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "effect node 形式呼叫 AI agent 執行 prompt，預設 dry-run 只 capture artifact/log，不直接 apply patch；alpha0+ 補洞。",
-    "related": [],
-    "depends": [
-      "ATM-2-0018",
-      "ATM-2-0006"
-    ],
-    "acceptance": [
-      "execute-agent-task --dry-run 必須是預設行為，僅產出 artifacts/logs，不 mutate host project",
-      "effect node 簽章與 packages/plugin-sdk effect-node.ts 對齊；compute atoms 不可呼叫",
-      "fixture：dry-run 產出 artifact 路徑 + log 摘要 + execution-evidence.json",
-      "apply 模式必須由獨立 CLI flag 開啟，且仍寫 evidence record",
-      "lifecycleMode=evolution 時，dry-run 必須以兩次獨立 TestRunner 呼叫完成：baseline fixtures × new code 與 new fixtures × new code，並分別寫入 evidence",
-      "effect node 不可直接呼叫 ATM-2-0020 ProposeAtomicUpgrade；本卡只負責寫 execution evidence，proposal 由 orchestration atom 後續讀取"
-    ],
-    "deliverables": [
-      "packages/core/src/agent-execute/execute-agent-task.ts",
-      "schemas/agent-execute/execution-evidence.schema.json",
-      "fixtures/agent-execute/dry-run.snapshot.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 lifecycleMode=evolution 雙重 TestRunner 閉環與 effect/orchestration 邊界約束\n2026-05-07 | 狀態: done | 驗證: npm test / npm run typecheck / npm run lint | 變更: AI-Atomic-Framework 補 ExecuteAgentTask effect orchestrator、execution-evidence schema、dry-run snapshot、plugin-sdk effect-node contract 與 validate-agent-execute gate | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "補上 Roadmap §7.1 的 000004 缺口，並守住「只 dry-run / 不直接改檔」的安全邊界。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0018 / ATM-2-0006"
-    }
-  },
-  {
-    "doc_id": "doc_task_0278",
-    "id": "ATM-6-0003",
-    "title": "多語言 Adapter 擴張計畫",
-    "owner": "GitHubCopilot",
-    "priority": "P2",
     "status": "open",
-    "type": "ecosystem",
-    "phase": "ATM-6",
-    "created": "2026-05-05",
+    "type": "adapter",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
     "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "8/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "在 ProjectAdapter 邊界定義 behavior.atomize 與 behavior.infect 的合約：legacy URI 解析（legacy://）、neutrality scan 整合（避免新 atom 帶入 host 私有資訊）、dry-run patch contract（不直接動 host project）。",
     "related": [],
     "depends": [
-      "ATM-2-0006",
-      "ATM-1-0006"
+      "ATM-2-0029",
+      "ATM-2-0010"
     ],
     "acceptance": [
-      "每個 language adapter 有 test/build/import scan contract",
-      "不要求 core 重寫",
-      "Cocos/Unity 引擎物件不進 compute atom"
+      "ProjectAdapter 介面新增 resolveLegacyUri(uri) → 解析 legacy://<host>/<path>#L<start>-<end>",
+      "atomize-adapter.schema.json 定義 atomize 在 adapter 邊界的合約：legacy 區段選取 / sf 計算 / 新 atom proposal",
+      "infect-adapter.schema.json 定義 infect 合約：目標 atom / legacy 注入點 / dry-run patch",
+      "atomize 產出的新 atom spec 必須通過 ATM-2-0010 neutrality scanner（不得含 host 私有 token / path / 領域名詞）",
+      "infect 產出的 patch 是 dry-run only；apply 模式須由 host adapter 額外 capability 開啟",
+      "fixtures：1 個 atomize 例子（含 legacy:// URI）+ 1 個 infect 例子（含 dry-run patch）"
     ],
     "deliverables": [
-      "docs/ecosystem/language-adapter-roadmap.md",
-      "adapter acceptance matrix"
+      "schemas/adapter/atomize-adapter.schema.json",
+      "schemas/adapter/infect-adapter.schema.json",
+      "packages/plugin-sdk/src/adapter/legacy-uri.ts",
+      "fixtures/adapter/atomize-example.json",
+      "fixtures/adapter/infect-example.json"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 8/8）| 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
-      "position": "ATM-6",
-      "prereq": "ATM-2-0006、ATM-1-0006"
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "Legacy strangler 在 ProjectAdapter 邊界的合約：atomize/infect 的 URI 解析、neutrality 整合、dry-run patch。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0029 / ATM-2-0010"
+    }
+  },
+  {
+    "doc_id": "doc_task_0346",
+    "id": "ATM-2-0039",
+    "title": "Generated Atom Source Template and Code Path Policy",
+    "owner": "vs-code-gpt-5.4-mini",
+    "priority": "P0",
+    "status": "done",
+    "type": "architecture",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T15:14:35.1752897+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
+    "chain_step": "1/3",
+    "sensor_triggered_by": "atm-generator-source-gap",
+    "description": "讓 Atom Generator 產出的新原子具備正式 source file template，不再以 spec-only 或 spec-as-code 方式暫代 registry codePaths。",
+    "related": [],
+    "depends": [
+      "ATM-2-0038"
+    ],
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始補 source template/codePaths policy | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node tests/core/atom-generator.test.mjs / node tests/cli/create.test.mjs / npm run validate:registry-core / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: AtomGenerator 產物補 atom.source.mjs，預設 validation command 改跑 source self-check，registry codePaths 不再用 specPath 暫代 | 阻塞: none\n2026-05-08 | ??: done | ??: node tests/core/atom-generator.test.mjs pass?npm.cmd run validate:generator-provenance pass | ??: AtomGenerator source template / codePaths policy ? provenance ?????????task shard ??? | ??: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM generator source template 開卡",
+      "summary": "補齊 generator 的 source file template 與 codePaths policy，讓新原子真正有 spec/code/test/report 四件套。",
+      "position": "ATM-2（generator provenance / source template）",
+      "prereq": "ATM-2-0038"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "ATM-2-0038 alpha0 已能產生 spec/test/report 並登錄 registry",
+        "目前 dogfood fixture 以 spec path 暫作 codePaths，這只是 alpha0 過渡",
+        "Registry selfVerification 需要穩定 codePaths"
       ],
       "output": [
-        "docs/ecosystem/language-adapter-roadmap.md",
-        "adapter acceptance matrix"
+        "新增 generator source template policy",
+        "AtomGenerator 產物包含正式 source file",
+        "Registry codePaths 不再用 specPath 暫代",
+        "補 fixture 覆蓋 source/code/test/report 四件套"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "validation_cmd": "node tests/core/atom-generator.test.mjs\\nnode tests/cli/create.test.mjs\\nnpm run validate:registry-core",
+      "rollback_hint": "回退 source template 與 codePaths policy；保留 ATM-2-0038 birth facade，不回退 allocator/create command。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
+        "盤點目前 generated atom 檔案組成",
+        "設計 source template 與預設 validation command",
+        "更新 generator 與 tests",
+        "回寫 registry/codePaths policy"
       ]
     },
     "harness_evidence": {

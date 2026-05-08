@@ -1,47 +1,137 @@
 [
   {
-    "doc_id": "doc_task_0329",
-    "id": "ATM-2-0024",
-    "title": "Map-Level Upgrade & Extract-vs-Bump Decision",
+    "doc_id": "doc_task_0282",
+    "id": "ATM-0-0008",
+    "title": "3KLife adapter 技術棧校正矩陣",
     "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "orchestration-atom",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
+    "priority": "P1",
+    "status": "done",
+    "type": "adapter-docs",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-MAP-EVOLUTION-V2",
-    "chain_step": "2/4",
-    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
-    "description": "在 upgrade pipeline 加入 decomposition decision：判斷某次改動應走 atom-bump / atom-extract / map-bump，並落地對應 proposal 與 review path。",
+    "started_at": "2026-05-05T21:28:29+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 v0.2 的工具選型與 3KLife 現況校正成 downstream adopter 採納矩陣，避免把 local workbench 誤當 upstream core。",
     "related": [],
     "depends": [
-      "ATM-2-0020",
-      "ATM-2-0023"
+      "ATM-0-0004"
     ],
     "acceptance": [
-      "CLI atm upgrade --target map --map <id> --to <ver> 可產出 map-level proposal",
-      "decompositionDecision 規則明文：API 不變→atom-bump；行為斷裂→atom-extract；跨原子改動→map-bump",
-      "atom-extract 模式下 proposal 必須同時列舊 atom 保留資訊與新 atom spec stub",
-      "map-bump 模式下 proposal members[] 必須含舊→新 atomId@version 對照",
-      "review queue 視 decompositionDecision 路由至對應 reviewer template"
+      "task-lock/compute-gate/doc-id/encoding 都被描述為 ProjectAdapter 能力",
+      "tools_node/atomic-framework 僅是 local wrapper/workbench",
+      "不把 H2U/Cocos 規則反推回 core"
     ],
     "deliverables": [
-      "packages/core/src/upgrade/decomposition-decision.ts",
-      "packages/core/src/upgrade/map-propose.ts",
-      "packages/cli/commands/upgrade-map-propose.ts",
-      "fixtures/upgrade/map-bump-proposal.json",
-      "fixtures/upgrade/atom-extract-proposal.json"
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md v0.2 採納/降級/延後矩陣",
+      "3KLife adapter 技術棧校正摘要"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 補齊 3KLife adapter 技術棧校正細版矩陣，明確區分 upstream core、ProjectAdapter、optional adapter 與延後項 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?adapter matrix / upstream boundary truth rechecked?npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: adapter ??????????OUTPUT_CONTRACT ? task shard ??? | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 附錄 B 開卡",
-      "summary": "把「升版 vs. 拆原子」這個關鍵架構決策正式機讀化，避免演化階段隱性破壞 consumer。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0020 / ATM-2-0023"
+      "label": "ATM v0.2 整合開卡",
+      "summary": "將 v0.2 的工具選型與 3KLife 現況校正成 downstream adopter 採納矩陣，避免把 local workbench 誤當 upstream core。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0004"
+    },
+    "contracts": {
+      "input": [
+        "v0.2 companion analysis 已確認可作務實化補充"
+      ],
+      "output": [
+        "docs/ai_atomic_framework/AI原子框架開發計畫書.md v0.2 採納/降級/延後矩陣",
+        "3KLife adapter 技術棧校正摘要"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "node tools_node/check-task-scope.js --task ATM-0-0008 --verbose",
+        "node tools_node/check-encoding-touched.js",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
     }
+  },
+  {
+    "doc_id": "doc_task_0315",
+    "id": "ATM-0-0014",
+    "title": "ATM 瘦身再開工與規劃真相收斂",
+    "owner": "vs-code-gpt-5.4-mini",
+    "priority": "P0",
+    "status": "done",
+    "type": "governance",
+    "phase": "ATM-0",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T07:57:58+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 ATM 規劃從完整治理生態先瘦身為 alpha0/alpha1，補上文件真相收斂、核心 schema、confidence gate、3KLife shadow adapter、OSS 實務文件與 H2U dry-run 閘門。",
+    "related": [
+      "ATM-1-0003",
+      "ATM-2-0007",
+      "ATM-2-0008",
+      "ATM-2-0009",
+      "ATM-3-0001",
+      "ATM-4-0005",
+      "ATM-5-0004",
+      "ATM-6-0005"
+    ],
+    "depends": [
+      "ATM-0-0013"
+    ],
+    "acceptance": [
+      "主計畫標出 active/companion/historical 收斂原則與任務數修正",
+      "alpha0/alpha1 成功標準寫入主規劃與 open-source extraction plan",
+      "既有 schema、adapter、release、security、H2U 任務卡補上缺口",
+      "tasks-atm source 與 auto-parts 可重建且通過 encoding/standard gate"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md 補強",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md 補強",
+      "docs/agent-briefs/tasks/ATM/ATM-0-0014.md",
+      "相關既有 ATM 任務卡補充",
+      "tasks-atm source 與 auto-parts 同步"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: tasks-atm source=71/auto-parts=5；crossref rebuild pass；encoding-touched pass；compute-gate standard 8/8 pass | 變更: 補 ATM 瘦身再開工規劃、alpha0/alpha1、truth convergence、confidence gate、shadow adapter、OSS/H2U 任務缺口 | 阻塞: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "completed_at": "2026-05-06T08:08:07+08:00"
   }
 ]

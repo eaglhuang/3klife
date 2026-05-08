@@ -1,62 +1,86 @@
 [
   {
-    "doc_id": "doc_task_0320",
-    "id": "ATM-2-0017",
-    "title": "Regression Matrix Compare Gate",
+    "doc_id": "doc_task_0296",
+    "id": "ATM-0-0011",
+    "title": "Context budget 治理補強與文件回寫",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
-    "type": "police",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
+    "status": "done",
+    "type": "docs-governance",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "4/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "在 Police plugin 之上提供 vOld fixtures 對 vNew code 的不退轉檢查 + quality metrics 比較；輸出 quality-comparison-report。",
-    "related": [],
+    "started_at": "2026-05-05T23:05:36.3800604+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "把 context budget 正式提升為 ATM upstream 可獨立治理的 primitive，並回寫相關 roadmap、extraction plan、adopter plan 與 v0.2 companion 文件。",
+    "related": [
+      "ATM-2-0011"
+    ],
     "depends": [
-      "ATM-2-0005",
-      "ATM-2-0016"
+      "ATM-0-0010"
     ],
     "acceptance": [
-      "vOld 全部 fixture 對 vNew code 必須全綠（不退轉）",
-      "metrics 比較：errorRate(new) <= errorRate(old)、coverage(new) >= coverage(old)、latency(new) 不退化超過容忍值",
-      "違規時 promote 動作必須 hard fail，並輸出 quality-comparison-report.json 列出退步指標",
-      "quality-comparison-report 必須含 mapImpactScope（被影響的 mapIds[]）與 propagationStatus（per-map 整合測試結果）",
-      "若任一被影響的 map 整合測試 fail，promote 動作必須 hard fail",
-      "regression compare 報告追加 dedupCandidates[] 區塊（advisory only，不阻塞 promote）：列出 sf 相同或高相似的其他原子；輸入由 ATM-2-0030 dedup police 提供",
-      "CLI 補 atm registry quality-report --atom <id> --from <v> --to <v> --json --md；必須同步輸出 .atm/reports/quality/<atomId>-<from>-<to>.json 與同名 .md",
-      "--md 輸出必須採固定 Markdown 模板：標題 / 指標表格 / mapImpactScope 區段 / 結論；避免 quality-comparison-report 只剩機讀 JSON"
+      "四份 ATM 規劃文件補上 context budget upstream primitive",
+      "明確定義 plugin-context-budget 或等效 guard/adapter 位置",
+      "把 encoding/context budget/neutrality 收斂成 Agent Governance Bundle",
+      "新增對應 ATM 任務卡與 tasks-atm 條目"
     ],
     "deliverables": [
-      "packages/core/src/police/regression-compare.ts",
-      "schemas/police/quality-comparison-report.schema.json",
-      "fixtures/regression/v1.0-pass.json",
-      "fixtures/regression/v1.1-pass-improved.json",
-      "fixtures/regression/v1.1-fail-error-rate.json",
-      "schemas/police/quality-comparison-report.schema.json — 含 mapImpactScope / propagationStatus"
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md",
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0011.md"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— regression compare 報告追加 dedupCandidates[] 區塊（advisory）\n2026-05-07 附錄 C 治理補丁：追加 quality-report CLI / Markdown 模板 / decision-readable output，避免品質報告淪為 JSON 黑盒",
+    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 將 context budget、plugin-context-budget 與 Agent Governance Bundle 正式回寫到四份 ATM 規劃文件，並同步修正 ATM-0-0011/ATM-2-0011 任務真相 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?context budget / governance bundle ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: context budget governance ????????? task shard ????? | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "建立演化管線的不退轉 + 品質進步雙重閘門。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0005 / ATM-2-0016"
+      "label": "ATM governance bundle 開卡",
+      "summary": "把 context budget 提升成 upstream 可獨立治理能力，並同步回寫相關 md 文件。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0010"
+    },
+    "contracts": {
+      "input": [
+        "encoding 已進入 upstream governance 規劃",
+        "context budget 尚未成為對等 primitive"
+      ],
+      "output": [
+        "context budget primitive 定義",
+        "Agent Governance Bundle 收斂",
+        "新增對應任務卡"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0011 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若 tasks-atm 或 doc_id 不一致，使用既有工具重建。",
+      "execution_steps": [
+        "建立新任務卡",
+        "建立 ATM-2-0011 後續卡",
+        "鎖卡並更新 frontmatter",
+        "回寫四份主文件",
+        "跑 encoding/task-scope/standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
     }
   },
   {
-    "doc_id": "doc_task_0276",
-    "id": "ATM-6-0001",
-    "title": "跨專案 Registry / DB / Vector 決策",
+    "doc_id": "doc_task_0267",
+    "id": "ATM-3-0004",
+    "title": "doc-id 與 encoding adapter integration",
     "owner": "GitHubCopilot",
-    "priority": "P2",
+    "priority": "P1",
     "status": "open",
-    "type": "ecosystem",
-    "phase": "ATM-6",
+    "type": "adapter",
+    "phase": "ATM-3",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -64,35 +88,37 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
+    "description": "把 3KLife doc-id-registry 與 encoding guard 封裝成 ATM adapter hook。",
     "related": [],
     "depends": [
-      "ATM-5-0004"
+      "ATM-3-0001"
     ],
     "acceptance": [
-      "JSON-first 仍是真相",
-      "DB/vector 只作 optional plugin",
-      "不增加 core v0.1 必備依賴"
+      "新增 ATM 相關 Markdown 仍由 doc-id-registry 分配",
+      "encoding 檢查可針對 touched files 執行",
+      "core 不直接 require 3KLife 工具"
     ],
     "deliverables": [
-      "docs/ecosystem/registry-db-vector-decision.md",
-      "plugin boundary proposal"
+      "tools_node/adapters/atm-3klife/document-adapter.js",
+      "tools_node/adapters/atm-3klife/encoding-adapter.js",
+      "hook tests"
     ],
     "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
-      "position": "ATM-6",
-      "prereq": "ATM-5-0004"
+      "summary": "把 3KLife doc-id-registry 與 encoding guard 封裝成 ATM adapter hook。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001"
     },
     "contracts": {
       "input": [
         "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "docs/ecosystem/registry-db-vector-decision.md",
-        "plugin boundary proposal"
+        "tools_node/adapters/atm-3klife/document-adapter.js",
+        "tools_node/adapters/atm-3klife/encoding-adapter.js",
+        "hook tests"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",

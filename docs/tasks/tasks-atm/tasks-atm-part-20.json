@@ -1,100 +1,27 @@
 [
   {
-    "doc_id": "doc_task_0255",
-    "id": "ATM-1-0005",
-    "title": "LocalGitAdapter reference implementation",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
+    "id": "ATM-0-0012",
+    "title": "task-lock cross-shard 重複鎖定檢查",
     "status": "done",
-    "type": "adapter",
-    "phase": "ATM-1",
+    "priority": "P0",
+    "phase": "ATM-0",
+    "type": "governance",
     "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T14:34:27+08:00",
-    "started_by_agent": "vs-code-github-copilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立不依賴任何 host governance 的 LocalGitAdapter，作為 open-source core 預設 adapter。",
-    "related": [],
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0298",
     "depends": [
-      "ATM-1-0004"
-    ],
-    "acceptance": [
-      "無 task-lock 系統時仍可 scaffold/test/validate",
-      "adapter 行為明確標示 dry-run/no-op 能力"
-    ],
-    "deliverables": [
-      "packages/adapter-local-git",
-      "ProjectAdapter no-op lock/gate/doc implementation",
-      "file system registry path support"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:adapter-local-git / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 8164a89 建立 LocalGitAdapter reference implementation、no-op lock/gate/doc、filesystem registry path support 與 integration fixture | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "建立不依賴任何 host governance 的 LocalGitAdapter，作為 open-source core 預設 adapter。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0004"
-    },
-    "contracts": {
-      "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
-      ],
-      "output": [
-        "packages/adapter-local-git",
-        "ProjectAdapter no-op lock/gate/doc implementation",
-        "file system registry path support"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
-      "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/packages/adapter-local-git/package.json",
-        "AI-Atomic-Framework/packages/adapter-local-git/src/index.ts",
-        "AI-Atomic-Framework/packages/adapter-local-git/src/local-git-adapter.mjs",
-        "AI-Atomic-Framework/packages/adapter-local-git/README.md",
-        "AI-Atomic-Framework/scripts/validate-local-git-adapter.mjs",
-        "AI-Atomic-Framework/tests/adapter-local-git.fixture.json",
-        "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 8164a89",
-        "npm install",
-        "npm run packages:list",
-        "npm run validate:adapter-local-git",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff verified",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit 8164a89",
-        "LocalGitAdapter scaffold creates .atm/registry and .atm/reports",
-        "lock/gate/doc return explicit no-op evidence without host governance",
-        "filesystem registry path writes and reads entries",
-        "dry-run scaffold does not write files"
-      ]
-    },
-    "completed_at": "2026-05-06T14:39:45+08:00"
+      "ATM-0-0001"
+    ]
   },
   {
-    "doc_id": "doc_task_0267",
-    "id": "ATM-3-0004",
-    "title": "doc-id 與 encoding adapter integration",
+    "doc_id": "doc_task_0291",
+    "id": "ATM-2-0009",
+    "title": "Artifact Log Evidence Store contracts",
     "owner": "GitHubCopilot",
-    "priority": "P1",
+    "priority": "P0",
     "status": "open",
-    "type": "adapter",
-    "phase": "ATM-3",
+    "type": "open-source-core",
+    "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -102,45 +29,65 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "把 3KLife doc-id-registry 與 encoding guard 封裝成 ATM adapter hook。",
+    "description": "定義 ATM 通用 ArtifactStore、LogStore、Markdown/JSON state store、RunReportStore、ContextSummary 與 EvidenceStore contract，讓 AI 常用 artifacts、md/json 文件與系統 log 都能被治理與回放。",
     "related": [],
     "depends": [
-      "ATM-3-0001"
+      "ATM-2-0007"
     ],
     "acceptance": [
-      "新增 ATM 相關 Markdown 仍由 doc-id-registry 分配",
-      "encoding 檢查可針對 touched files 執行",
-      "core 不直接 require 3KLife 工具"
+      "ArtifactStore/LogStore/RunReportStore schema 不引用 3KLife 路徑",
+      "default .atm layout 可保存 artifacts、logs、reports、context summaries",
+      "3KLife adapter 可映射 artifacts/、docs/*.md、docs/*.json、project logs 到同一 interface",
+      "Markdown/JSON state files 可被 validate、index、summarize 並映射到 host repo",
+      "schemas/governance/artifact.schema.json 可描述 generated output",
+      "schemas/governance/evidence.schema.json 可描述 validation evidence",
+      "schemas/governance/context-summary.schema.json 可描述 handoff/context budget 摘要",
+      "schemas/governance/adapter-report.schema.json 可描述 3KLife shadow/parity report",
+      "evidence schema 增 evidenceType: usage-feedback / quality-baseline / quality-comparison / rollback-proof 四種",
+      "所有 evidence 需可被 atm replay 重新驗證（schema 內含 reproducibility 欄位）"
     ],
     "deliverables": [
-      "tools_node/adapters/atm-3klife/document-adapter.js",
-      "tools_node/adapters/atm-3klife/encoding-adapter.js",
-      "hook tests"
+      "schemas/governance/artifact-store.schema.json",
+      "schemas/governance/log-store.schema.json",
+      "schemas/governance/run-report.schema.json",
+      "packages/plugin-artifacts 或 plugin-evidence",
+      "docs/ADAPTER_GUIDE.md artifact/log mapping 草案",
+      "packages/plugin-state-files",
+      "schemas/governance/state-file-store.schema.json",
+      "schemas/governance/artifact.schema.json",
+      "schemas/governance/evidence.schema.json",
+      "schemas/governance/context-summary.schema.json",
+      "schemas/governance/adapter-report.schema.json",
+      "schemas/governance/evidence/usage-feedback.schema.json",
+      "schemas/governance/evidence/quality-baseline.schema.json",
+      "schemas/governance/evidence/quality-comparison.schema.json",
+      "schemas/governance/evidence/rollback-proof.schema.json"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 Artifact/Evidence、ContextSummary、AdapterReport schema-first 要求 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "把 3KLife doc-id-registry 與 encoding guard 封裝成 ATM adapter hook。",
-      "position": "ATM-3",
-      "prereq": "ATM-3-0001"
+      "label": "ATM governance split 開卡",
+      "summary": "把 AI 常用 artifacts、md/json 狀態檔與系統 log 納入 ATM 通用治理 contract。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0007"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "Default Governance Bundle schema 已規劃",
+        "AI agent 需要可回放 artifacts/logs/evidence"
       ],
       "output": [
-        "tools_node/adapters/atm-3klife/document-adapter.js",
-        "tools_node/adapters/atm-3klife/encoding-adapter.js",
-        "hook tests"
+        "ArtifactStore/LogStore/RunReportStore schema",
+        "default .atm artifact/log layout",
+        "3KLife mapping guidance"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退 artifact/log/evidence schema 與 reference plugin；不得引入 3KLife 私有路徑。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
+        "盤點 artifacts/log/md/json 類型",
+        "定義 store schema",
+        "補 default layout",
+        "補 adapter mapping 指南"
       ]
     },
     "harness_evidence": {
@@ -150,5 +97,19 @@
       "trace_artifacts": [],
       "metrics_summary": []
     }
+  },
+  {
+    "id": "ATM-3-0011",
+    "title": "encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0311",
+    "depends": [
+      "ATM-3-0006"
+    ]
   }
 ]

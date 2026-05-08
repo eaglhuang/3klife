@@ -1,55 +1,104 @@
 [
   {
-    "doc_id": "doc_task_0319",
-    "id": "ATM-2-0016",
-    "title": "Test Report Quality Metrics Extension",
+    "doc_id": "doc_task_0252",
+    "id": "ATM-1-0002",
+    "title": "上游 monorepo package skeleton",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
-    "type": "test-runner",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
+    "status": "done",
+    "type": "open-source-core",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "3/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "在 test-report.schema.json 上 additive 擴充 quality metrics（latency / errorRate / coverage / edgeCaseCount），並提供最小共同欄位的 baseline fixture。",
+    "started_at": "2026-05-06T13:35:05+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 AI-Atomic-Framework packages/core、cli、plugin-sdk、adapter-local-git、language-js 的基本 package 結構。",
     "related": [],
     "depends": [
-      "ATM-2-0003",
-      "ATM-2-0009"
+      "ATM-1-0001"
     ],
     "acceptance": [
-      "test-report.schema.json 增加 metrics 區塊；舊 report 不含 metrics 仍可驗證通過",
-      "至少提供 latency / errorRate / coverage / edgeCaseCount 四項標準欄位",
-      "fixtures：metrics-full / metrics-partial / metrics-absent 三種；舊 fixture 全綠"
+      "npm install 成功",
+      "workspace scripts 可列出 package",
+      "不依賴 3KLife 檔案"
     ],
     "deliverables": [
-      "schemas/test-report/metrics.schema.json",
-      "packages/core/src/test-runner/metrics-collector.ts",
-      "fixtures/test-report/metrics-full.json",
-      "fixtures/test-report/metrics-absent.json"
+      "packages/core",
+      "packages/cli",
+      "packages/plugin-sdk",
+      "packages/adapter-local-git",
+      "packages/language-js",
+      "workspace package config"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install --package-lock=false / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 28b368a 建立 packages/core、cli、plugin-sdk、adapter-local-git、language-js、workspace package config、package list 與 skeleton validation fixture | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "為 evolution mode 收集可比較的品質指標；alpha1 quality gate 的資料來源。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0003 / ATM-2-0009"
-    }
+      "label": "ATM 上游核心開卡",
+      "summary": "建立 AI-Atomic-Framework packages/core、cli、plugin-sdk、adapter-local-git、language-js 的基本 package 結構。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0001"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+      ],
+      "output": [
+        "packages/core",
+        "packages/cli",
+        "packages/plugin-sdk",
+        "packages/adapter-local-git",
+        "packages/language-js",
+        "workspace package config"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "execution_steps": [
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/core",
+        "AI-Atomic-Framework/packages/cli",
+        "AI-Atomic-Framework/packages/plugin-sdk",
+        "AI-Atomic-Framework/packages/adapter-local-git",
+        "AI-Atomic-Framework/packages/language-js",
+        "AI-Atomic-Framework/scripts/validate-package-skeleton.mjs",
+        "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 28b368a",
+        "npm install --package-lock=false",
+        "npm run packages:list",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "upstream commit 28b368a",
+        "5 workspace packages created",
+        "package skeleton validation fixture dependency-free"
+      ]
+    },
+    "completed_at": "2026-05-06T13:38:00+08:00"
   },
   {
-    "doc_id": "doc_task_0284",
-    "id": "ATM-5-0005",
-    "title": "Living Spec 同步器與 PEV Loop",
+    "doc_id": "doc_task_0278",
+    "id": "ATM-6-0003",
+    "title": "多語言 Adapter 擴張計畫",
     "owner": "GitHubCopilot",
-    "priority": "P1",
+    "priority": "P2",
     "status": "open",
-    "type": "optional-feature",
-    "phase": "ATM-5",
+    "type": "ecosystem",
+    "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -57,56 +106,44 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
+    "description": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
     "related": [],
     "depends": [
-      "ATM-5-0001",
-      "ATM-2-0006"
+      "ATM-2-0006",
+      "ATM-1-0006"
     ],
     "acceptance": [
-      "PEV Loop 成為標準流程語彙",
-      "MVP 只要求 drift prompt，不要求自動雙向同步",
-      "Living Spec 不阻塞 v0.1 alpha release",
-      "docs/PEV_LOOP.md 必須定義 Plan-Execute-Verify-Converge 如何產生 PEV upgrade proposal",
-      "docs/LIVING_SPEC.md 必須說明 Living Spec sync 不得自動 promote；只能產生 reviewable proposal",
-      "Spec drift prompt schema 必須輸出 atom compatibility impact 與 semver recommendation",
-      "README workflow summary 必須連回 framework semver / atom compatibility / PEV proposal 文件"
+      "每個 language adapter 有 test/build/import scan contract",
+      "不要求 core 重寫",
+      "Cocos/Unity 引擎物件不進 compute atom"
     ],
     "deliverables": [
-      "docs/PEV_LOOP.md",
-      "docs/LIVING_SPEC.md",
-      "Spec drift prompt schema",
-      "README workflow summary",
-      "schemas/pev/upgrade-proposal-public.schema.json",
-      "schemas/pev/spec-drift-prompt.schema.json",
-      "PEV upgrade proposal 範例"
+      "docs/ecosystem/language-adapter-roadmap.md",
+      "adapter acceptance matrix"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001、ATM-2-0006"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
+      "position": "ATM-6",
+      "prereq": "ATM-2-0006、ATM-1-0006"
     },
     "contracts": {
       "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "docs/PEV_LOOP.md",
-        "docs/LIVING_SPEC.md",
-        "Spec drift prompt schema",
-        "README workflow summary",
-        "PEV upgrade proposal 範例，含 atom compatibility impact 與 semver recommendation"
+        "docs/ecosystem/language-adapter-roadmap.md",
+        "adapter acceptance matrix"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-5-0005.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
         "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {

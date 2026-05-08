@@ -10,257 +10,240 @@
   "shards": [
     {
       "name": "tasks-atm-part-1",
-      "title": "Part 1 (striped, 2 items)",
+      "title": "Part 1 (striped, 1 items)",
       "range": [
-        0,
-        65
+        76,
+        76
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 0,
       "indices": [
-        0,
-        65
+        76
       ]
     },
     {
       "name": "tasks-atm-part-2",
-      "title": "Part 2 (striped, 2 items)",
+      "title": "Part 2 (striped, 1 items)",
       "range": [
-        1,
-        66
+        24,
+        24
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 1,
       "indices": [
-        1,
-        66
+        24
       ]
     },
     {
       "name": "tasks-atm-part-3",
-      "title": "Part 3 (striped, 2 items)",
+      "title": "Part 3 (striped, 1 items)",
       "range": [
-        2,
-        67
+        95,
+        95
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 2,
       "indices": [
-        2,
-        67
+        95
       ]
     },
     {
       "name": "tasks-atm-part-4",
-      "title": "Part 4 (striped, 2 items)",
+      "title": "Part 4 (striped, 1 items)",
       "range": [
-        3,
-        68
+        64,
+        64
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 3,
       "indices": [
-        3,
-        68
+        64
       ]
     },
     {
       "name": "tasks-atm-part-5",
-      "title": "Part 5 (striped, 2 items)",
+      "title": "Part 5 (striped, 1 items)",
       "range": [
-        4,
-        69
+        75,
+        75
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 4,
       "indices": [
-        4,
-        69
+        75
       ]
     },
     {
       "name": "tasks-atm-part-6",
-      "title": "Part 6 (striped, 2 items)",
+      "title": "Part 6 (striped, 1 items)",
       "range": [
-        5,
-        70
+        23,
+        23
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 5,
       "indices": [
-        5,
-        70
+        23
       ]
     },
     {
       "name": "tasks-atm-part-7",
-      "title": "Part 7 (striped, 2 items)",
+      "title": "Part 7 (striped, 1 items)",
       "range": [
-        6,
-        71
+        32,
+        32
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 6,
       "indices": [
-        6,
-        71
+        32
       ]
     },
     {
       "name": "tasks-atm-part-8",
-      "title": "Part 8 (striped, 2 items)",
+      "title": "Part 8 (striped, 1 items)",
       "range": [
-        7,
-        72
+        31,
+        31
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 7,
       "indices": [
-        7,
-        72
+        31
       ]
     },
     {
       "name": "tasks-atm-part-9",
-      "title": "Part 9 (striped, 2 items)",
+      "title": "Part 9 (striped, 1 items)",
       "range": [
-        8,
-        73
+        49,
+        49
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 8,
       "indices": [
-        8,
-        73
+        49
       ]
     },
     {
       "name": "tasks-atm-part-10",
-      "title": "Part 10 (striped, 2 items)",
+      "title": "Part 10 (striped, 1 items)",
       "range": [
-        9,
-        74
+        73,
+        73
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 9,
       "indices": [
-        9,
-        74
+        73
       ]
     },
     {
       "name": "tasks-atm-part-11",
-      "title": "Part 11 (striped, 2 items)",
+      "title": "Part 11 (striped, 1 items)",
       "range": [
-        10,
-        75
+        22,
+        22
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 10,
       "indices": [
-        10,
-        75
+        22
       ]
     },
     {
       "name": "tasks-atm-part-12",
-      "title": "Part 12 (striped, 2 items)",
+      "title": "Part 12 (striped, 1 items)",
       "range": [
-        11,
-        76
+        14,
+        14
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 11,
       "indices": [
-        11,
-        76
+        14
       ]
     },
     {
       "name": "tasks-atm-part-13",
-      "title": "Part 13 (striped, 2 items)",
+      "title": "Part 13 (striped, 1 items)",
       "range": [
-        12,
-        77
+        60,
+        60
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 12,
       "indices": [
-        12,
-        77
+        60
       ]
     },
     {
       "name": "tasks-atm-part-14",
-      "title": "Part 14 (striped, 2 items)",
+      "title": "Part 14 (striped, 1 items)",
       "range": [
-        13,
-        78
+        33,
+        33
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 13,
       "indices": [
-        13,
-        78
+        33
       ]
     },
     {
       "name": "tasks-atm-part-15",
-      "title": "Part 15 (striped, 2 items)",
+      "title": "Part 15 (striped, 1 items)",
       "range": [
-        14,
-        79
+        30,
+        30
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 14,
       "indices": [
-        14,
-        79
+        30
       ]
     },
     {
       "name": "tasks-atm-part-16",
-      "title": "Part 16 (striped, 2 items)",
+      "title": "Part 16 (striped, 1 items)",
       "range": [
-        15,
-        80
+        74,
+        74
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 15,
       "indices": [
-        15,
-        80
+        74
       ]
     },
     {
       "name": "tasks-atm-part-17",
-      "title": "Part 17 (striped, 2 items)",
+      "title": "Part 17 (striped, 1 items)",
       "range": [
-        16,
-        81
+        40,
+        40
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 16,
       "indices": [
-        16,
-        81
+        40
       ]
     },
     {
@@ -268,463 +251,464 @@
       "title": "Part 18 (striped, 2 items)",
       "range": [
         17,
-        82
+        86
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 17,
       "indices": [
         17,
-        82
+        86
       ]
     },
     {
       "name": "tasks-atm-part-19",
       "title": "Part 19 (striped, 2 items)",
       "range": [
-        18,
-        83
+        15,
+        93
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 18,
       "indices": [
-        18,
-        83
+        15,
+        93
       ]
     },
     {
       "name": "tasks-atm-part-20",
-      "title": "Part 20 (striped, 2 items)",
+      "title": "Part 20 (striped, 3 items)",
       "range": [
-        19,
-        84
+        11,
+        91
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 19,
       "indices": [
-        19,
-        84
+        11,
+        36,
+        91
       ]
     },
     {
       "name": "tasks-atm-part-21",
       "title": "Part 21 (striped, 2 items)",
       "range": [
-        20,
-        85
+        56,
+        87
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 20,
       "indices": [
-        20,
-        85
+        56,
+        87
       ]
     },
     {
       "name": "tasks-atm-part-22",
       "title": "Part 22 (striped, 2 items)",
       "range": [
-        21,
-        86
+        47,
+        71
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 21,
       "indices": [
-        21,
-        86
+        47,
+        71
       ]
     },
     {
       "name": "tasks-atm-part-23",
       "title": "Part 23 (striped, 2 items)",
       "range": [
-        22,
-        87
+        63,
+        69
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 22,
       "indices": [
-        22,
-        87
+        63,
+        69
       ]
     },
     {
       "name": "tasks-atm-part-24",
       "title": "Part 24 (striped, 2 items)",
       "range": [
-        23,
-        88
+        72,
+        106
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 23,
       "indices": [
-        23,
-        88
+        72,
+        106
       ]
     },
     {
       "name": "tasks-atm-part-25",
       "title": "Part 25 (striped, 2 items)",
       "range": [
-        24,
-        89
+        70,
+        105
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 24,
       "indices": [
-        24,
-        89
+        70,
+        105
       ]
     },
     {
       "name": "tasks-atm-part-26",
       "title": "Part 26 (striped, 2 items)",
       "range": [
-        25,
-        90
+        62,
+        77
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 25,
       "indices": [
-        25,
-        90
+        62,
+        77
       ]
     },
     {
       "name": "tasks-atm-part-27",
       "title": "Part 27 (striped, 2 items)",
       "range": [
-        26,
-        91
+        54,
+        90
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 26,
       "indices": [
-        26,
-        91
+        54,
+        90
       ]
     },
     {
       "name": "tasks-atm-part-28",
       "title": "Part 28 (striped, 2 items)",
       "range": [
-        27,
-        92
+        68,
+        89
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 27,
       "indices": [
-        27,
-        92
+        68,
+        89
       ]
     },
     {
       "name": "tasks-atm-part-29",
       "title": "Part 29 (striped, 2 items)",
       "range": [
-        28,
-        93
+        38,
+        78
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 28,
       "indices": [
-        28,
-        93
+        38,
+        78
       ]
     },
     {
       "name": "tasks-atm-part-30",
       "title": "Part 30 (striped, 2 items)",
       "range": [
-        29,
-        94
+        34,
+        88
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 29,
       "indices": [
-        29,
-        94
+        34,
+        88
       ]
     },
     {
       "name": "tasks-atm-part-31",
       "title": "Part 31 (striped, 2 items)",
       "range": [
-        30,
-        95
+        20,
+        42
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 30,
       "indices": [
-        30,
-        95
+        20,
+        42
       ]
     },
     {
       "name": "tasks-atm-part-32",
       "title": "Part 32 (striped, 2 items)",
       "range": [
-        31,
-        96
+        19,
+        39
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 31,
       "indices": [
-        31,
-        96
+        19,
+        39
       ]
     },
     {
       "name": "tasks-atm-part-33",
       "title": "Part 33 (striped, 2 items)",
       "range": [
-        32,
-        97
+        28,
+        43
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 32,
       "indices": [
-        32,
-        97
+        28,
+        43
       ]
     },
     {
       "name": "tasks-atm-part-34",
       "title": "Part 34 (striped, 2 items)",
       "range": [
-        33,
-        98
+        29,
+        50
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 33,
       "indices": [
-        33,
-        98
+        29,
+        50
       ]
     },
     {
       "name": "tasks-atm-part-35",
       "title": "Part 35 (striped, 2 items)",
       "range": [
-        34,
-        99
+        35,
+        52
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 34,
       "indices": [
-        34,
-        99
+        35,
+        52
       ]
     },
     {
       "name": "tasks-atm-part-36",
       "title": "Part 36 (striped, 2 items)",
       "range": [
-        35,
-        100
+        51,
+        81
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 35,
       "indices": [
-        35,
-        100
+        51,
+        81
       ]
     },
     {
       "name": "tasks-atm-part-37",
       "title": "Part 37 (striped, 2 items)",
       "range": [
-        36,
-        101
+        18,
+        102
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 36,
       "indices": [
-        36,
-        101
+        18,
+        102
       ]
     },
     {
       "name": "tasks-atm-part-38",
       "title": "Part 38 (striped, 2 items)",
       "range": [
-        37,
-        102
+        61,
+        113
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 37,
       "indices": [
-        37,
-        102
+        61,
+        113
       ]
     },
     {
       "name": "tasks-atm-part-39",
       "title": "Part 39 (striped, 2 items)",
       "range": [
-        38,
-        103
+        8,
+        109
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 38,
       "indices": [
-        38,
-        103
+        8,
+        109
       ]
     },
     {
       "name": "tasks-atm-part-40",
       "title": "Part 40 (striped, 2 items)",
       "range": [
-        39,
-        104
+        21,
+        45
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 39,
       "indices": [
-        39,
-        104
+        21,
+        45
       ]
     },
     {
       "name": "tasks-atm-part-41",
       "title": "Part 41 (striped, 2 items)",
       "range": [
-        40,
-        105
+        66,
+        96
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 40,
       "indices": [
-        40,
-        105
+        66,
+        96
       ]
     },
     {
       "name": "tasks-atm-part-42",
       "title": "Part 42 (striped, 2 items)",
       "range": [
-        41,
-        106
+        80,
+        103
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 41,
       "indices": [
-        41,
-        106
+        80,
+        103
       ]
     },
     {
       "name": "tasks-atm-part-43",
       "title": "Part 43 (striped, 2 items)",
       "range": [
-        42,
-        107
+        48,
+        110
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 42,
       "indices": [
-        42,
-        107
+        48,
+        110
       ]
     },
     {
       "name": "tasks-atm-part-44",
       "title": "Part 44 (striped, 2 items)",
       "range": [
-        43,
-        108
+        16,
+        111
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 43,
       "indices": [
-        43,
-        108
+        16,
+        111
       ]
     },
     {
       "name": "tasks-atm-part-45",
       "title": "Part 45 (striped, 2 items)",
       "range": [
-        44,
-        109
+        10,
+        84
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 44,
       "indices": [
-        44,
-        109
+        10,
+        84
       ]
     },
     {
       "name": "tasks-atm-part-46",
       "title": "Part 46 (striped, 2 items)",
       "range": [
-        45,
-        110
+        4,
+        6
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 45,
       "indices": [
-        45,
-        110
+        4,
+        6
       ]
     },
     {
       "name": "tasks-atm-part-47",
       "title": "Part 47 (striped, 2 items)",
       "range": [
-        46,
-        111
+        59,
+        65
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 46,
       "indices": [
-        46,
-        111
+        59,
+        65
       ]
     },
     {
       "name": "tasks-atm-part-48",
       "title": "Part 48 (striped, 2 items)",
       "range": [
-        47,
+        99,
         112
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 47,
       "indices": [
-        47,
+        99,
         112
       ]
     },
@@ -732,239 +716,255 @@
       "name": "tasks-atm-part-49",
       "title": "Part 49 (striped, 2 items)",
       "range": [
-        48,
-        113
+        53,
+        107
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 48,
       "indices": [
-        48,
-        113
+        53,
+        107
       ]
     },
     {
       "name": "tasks-atm-part-50",
-      "title": "Part 50 (striped, 1 items)",
+      "title": "Part 50 (striped, 2 items)",
       "range": [
-        49,
-        49
+        9,
+        25
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 49,
       "indices": [
-        49
+        9,
+        25
       ]
     },
     {
       "name": "tasks-atm-part-51",
-      "title": "Part 51 (striped, 1 items)",
+      "title": "Part 51 (striped, 2 items)",
       "range": [
-        50,
-        50
+        58,
+        67
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 50,
       "indices": [
-        50
+        58,
+        67
       ]
     },
     {
       "name": "tasks-atm-part-52",
-      "title": "Part 52 (striped, 1 items)",
+      "title": "Part 52 (striped, 2 items)",
       "range": [
-        51,
-        51
+        7,
+        13
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 51,
       "indices": [
-        51
+        7,
+        13
       ]
     },
     {
       "name": "tasks-atm-part-53",
-      "title": "Part 53 (striped, 1 items)",
+      "title": "Part 53 (striped, 2 items)",
       "range": [
-        52,
-        52
+        79,
+        108
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 52,
       "indices": [
-        52
+        79,
+        108
       ]
     },
     {
       "name": "tasks-atm-part-54",
-      "title": "Part 54 (striped, 1 items)",
+      "title": "Part 54 (striped, 2 items)",
       "range": [
-        53,
-        53
+        1,
+        98
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 53,
       "indices": [
-        53
+        1,
+        98
       ]
     },
     {
       "name": "tasks-atm-part-55",
-      "title": "Part 55 (striped, 1 items)",
+      "title": "Part 55 (striped, 2 items)",
       "range": [
-        54,
-        54
+        57,
+        92
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 54,
       "indices": [
-        54
+        57,
+        92
       ]
     },
     {
       "name": "tasks-atm-part-56",
-      "title": "Part 56 (striped, 1 items)",
+      "title": "Part 56 (striped, 2 items)",
       "range": [
-        55,
-        55
+        0,
+        12
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 55,
       "indices": [
-        55
+        0,
+        12
       ]
     },
     {
       "name": "tasks-atm-part-57",
-      "title": "Part 57 (striped, 1 items)",
+      "title": "Part 57 (striped, 2 items)",
       "range": [
-        56,
-        56
+        27,
+        44
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 56,
       "indices": [
-        56
+        27,
+        44
       ]
     },
     {
       "name": "tasks-atm-part-58",
-      "title": "Part 58 (striped, 1 items)",
+      "title": "Part 58 (striped, 2 items)",
       "range": [
-        57,
-        57
+        5,
+        94
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 57,
       "indices": [
-        57
+        5,
+        94
       ]
     },
     {
       "name": "tasks-atm-part-59",
-      "title": "Part 59 (striped, 1 items)",
+      "title": "Part 59 (striped, 2 items)",
       "range": [
-        58,
-        58
+        37,
+        104
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 58,
       "indices": [
-        58
+        37,
+        104
       ]
     },
     {
       "name": "tasks-atm-part-60",
-      "title": "Part 60 (striped, 1 items)",
+      "title": "Part 60 (striped, 2 items)",
       "range": [
-        59,
-        59
+        2,
+        3
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 59,
       "indices": [
-        59
+        2,
+        3
       ]
     },
     {
       "name": "tasks-atm-part-61",
-      "title": "Part 61 (striped, 1 items)",
+      "title": "Part 61 (striped, 2 items)",
       "range": [
-        60,
-        60
+        26,
+        101
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 60,
       "indices": [
-        60
+        26,
+        101
       ]
     },
     {
       "name": "tasks-atm-part-62",
-      "title": "Part 62 (striped, 1 items)",
+      "title": "Part 62 (striped, 2 items)",
       "range": [
-        61,
-        61
+        41,
+        100
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 61,
       "indices": [
-        61
+        41,
+        100
       ]
     },
     {
       "name": "tasks-atm-part-63",
-      "title": "Part 63 (striped, 1 items)",
+      "title": "Part 63 (striped, 2 items)",
       "range": [
-        62,
-        62
+        55,
+        82
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 62,
       "indices": [
-        62
+        55,
+        82
       ]
     },
     {
       "name": "tasks-atm-part-64",
-      "title": "Part 64 (striped, 1 items)",
+      "title": "Part 64 (striped, 2 items)",
       "range": [
-        63,
-        63
+        46,
+        83
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 63,
       "indices": [
-        63
+        46,
+        83
       ]
     },
     {
       "name": "tasks-atm-part-65",
-      "title": "Part 65 (striped, 1 items)",
+      "title": "Part 65 (striped, 2 items)",
       "range": [
-        64,
-        64
+        85,
+        97
       ],
       "layout": "striped",
       "stride": 65,
       "offset": 64,
       "indices": [
-        64
+        85,
+        97
       ]
     }
   ]

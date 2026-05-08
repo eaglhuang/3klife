@@ -1,154 +1,137 @@
 [
   {
-    "doc_id": "doc_task_0291",
-    "id": "ATM-2-0009",
-    "title": "Artifact Log Evidence Store contracts",
+    "doc_id": "doc_task_0254",
+    "id": "ATM-1-0004",
+    "title": "CLI init/status/validate MVP",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "cli",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T14:06:20+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
+    "related": [],
+    "depends": [
+      "ATM-1-0003"
+    ],
+    "acceptance": [
+      "空白 repo 可執行 init/status/validate",
+      "未實作 adapter 時可進入 standalone mode",
+      "錯誤輸出可被 Agent 讀懂"
+    ],
+    "deliverables": [
+      "packages/cli/src/commands/init.*",
+      "packages/cli/src/commands/status.*",
+      "packages/cli/src/commands/validate.*",
+      "CLI integration fixture"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 0176686 建立可執行 ATM CLI init/status/validate MVP、standalone config、agent-readable JSON output 與 integration fixture | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 上游核心開卡",
+      "summary": "建立最小 CLI，支援在空白 repo 初始化 ATM config、檢查狀態、驗證 spec。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0003"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+      ],
+      "output": [
+        "packages/cli/src/commands/init.*",
+        "packages/cli/src/commands/status.*",
+        "packages/cli/src/commands/validate.*",
+        "CLI integration fixture"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "execution_steps": [
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/cli/src/atm.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/init.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/validate.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/shared.mjs",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 0176686",
+        "npm install",
+        "npm run packages:list",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff verified",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "upstream commit 0176686",
+        "3 CLI commands implemented: init/status/validate",
+        "blank repo fixture runs commands from empty working directory",
+        "standalone mode works before adapter implementation",
+        "errors emit machine-readable JSON with code/message/evidence"
+      ]
+    },
+    "completed_at": "2026-05-06T14:12:54+08:00"
+  },
+  {
+    "doc_id": "doc_task_0327",
+    "id": "ATM-4-0007",
+    "title": "H2U normalizeCssColor v1.0→v1.1 evolution pilot",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "open-source-core",
-    "phase": "ATM-2",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "定義 ATM 通用 ArtifactStore、LogStore、Markdown/JSON state store、RunReportStore、ContextSummary 與 EvidenceStore contract，讓 AI 常用 artifacts、md/json 文件與系統 log 都能被治理與回放。",
-    "related": [],
-    "depends": [
-      "ATM-2-0007"
-    ],
-    "acceptance": [
-      "ArtifactStore/LogStore/RunReportStore schema 不引用 3KLife 路徑",
-      "default .atm layout 可保存 artifacts、logs、reports、context summaries",
-      "3KLife adapter 可映射 artifacts/、docs/*.md、docs/*.json、project logs 到同一 interface",
-      "Markdown/JSON state files 可被 validate、index、summarize 並映射到 host repo",
-      "schemas/governance/artifact.schema.json 可描述 generated output",
-      "schemas/governance/evidence.schema.json 可描述 validation evidence",
-      "schemas/governance/context-summary.schema.json 可描述 handoff/context budget 摘要",
-      "schemas/governance/adapter-report.schema.json 可描述 3KLife shadow/parity report",
-      "evidence schema 增 evidenceType: usage-feedback / quality-baseline / quality-comparison / rollback-proof 四種",
-      "所有 evidence 需可被 atm replay 重新驗證（schema 內含 reproducibility 欄位）"
-    ],
-    "deliverables": [
-      "schemas/governance/artifact-store.schema.json",
-      "schemas/governance/log-store.schema.json",
-      "schemas/governance/run-report.schema.json",
-      "packages/plugin-artifacts 或 plugin-evidence",
-      "docs/ADAPTER_GUIDE.md artifact/log mapping 草案",
-      "packages/plugin-state-files",
-      "schemas/governance/state-file-store.schema.json",
-      "schemas/governance/artifact.schema.json",
-      "schemas/governance/evidence.schema.json",
-      "schemas/governance/context-summary.schema.json",
-      "schemas/governance/adapter-report.schema.json",
-      "schemas/governance/evidence/usage-feedback.schema.json",
-      "schemas/governance/evidence/quality-baseline.schema.json",
-      "schemas/governance/evidence/quality-comparison.schema.json",
-      "schemas/governance/evidence/rollback-proof.schema.json"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 Artifact/Evidence、ContextSummary、AdapterReport schema-first 要求 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM governance split 開卡",
-      "summary": "把 AI 常用 artifacts、md/json 狀態檔與系統 log 納入 ATM 通用治理 contract。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0007"
-    },
-    "contracts": {
-      "input": [
-        "Default Governance Bundle schema 已規劃",
-        "AI agent 需要可回放 artifacts/logs/evidence"
-      ],
-      "output": [
-        "ArtifactStore/LogStore/RunReportStore schema",
-        "default .atm artifact/log layout",
-        "3KLife mapping guidance"
-      ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退 artifact/log/evidence schema 與 reference plugin；不得引入 3KLife 私有路徑。",
-      "execution_steps": [
-        "盤點 artifacts/log/md/json 類型",
-        "定義 store schema",
-        "補 default layout",
-        "補 adapter mapping 指南"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0283",
-    "id": "ATM-4-0006",
-    "title": "H2U case study 與 Cocos runtime 邊界",
-    "owner": "GitHubCopilot",
-    "priority": "P1",
-    "status": "open",
-    "type": "case-study-policy",
+    "type": "case-study",
     "phase": "ATM-4",
-    "created": "2026-05-05",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
     "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "11/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "以 normalizeCssColor case atom 跑第一次完整 evolution 閉環：proposal → automatedGates → human review → registry update or rollback。",
     "related": [],
     "depends": [
-      "ATM-4-0002",
-      "ATM-3-0005",
-      "ATM-2.5-0002"
+      "ATM-4-0003",
+      "ATM-2-0020",
+      "ATM-2-0021"
     ],
     "acceptance": [
-      "Cocos Component/Node/Prefab 明確禁止進 compute atom",
-      "H2U fidelity/domain scoring 僅屬 case study plugin",
-      "case study 可關閉而不影響 core",
-      "case study 啟動條件：self-hosting alpha0 deterministic gate 全綠",
-      "第一輪只允許 dry-run injection + rollback plan，不替換 draft-builder 主幹"
+      "normalizeCssColor v1.0 進 registry；v1.1 透過 atm upgrade --propose 產 proposal.json",
+      "automatedGates（nonRegression / qualityImprovement / newCapability）全綠才進 review queue",
+      "human review approve 後 registry currentVersion 指向 v1.1；reject 後保持 v1.0 並寫 decision log",
+      "完整 evidence 鏈可由 atm replay 重新跑 + neutrality scanner 全綠"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
-      "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+      "docs/case-studies/h2u-normalize-css-color-evolution-pilot.md",
+      "fixtures/case-studies/normalize-css-color/v1.0.json",
+      "fixtures/case-studies/normalize-css-color/v1.1.json",
+      "fixtures/case-studies/normalize-css-color/proposal.json",
+      "fixtures/case-studies/normalize-css-color/decision-approve.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 後置條件：alpha0 全綠後只以 dry-run/rollback 進入 | 阻塞: alpha0 gate 未全綠",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "把 alpha1 evolution pipeline 在 H2U case 上做端到端落地，作為 alpha1 acceptance 證據。",
       "position": "ATM-4",
-      "prereq": "ATM-4-0002、ATM-3-0005"
-    },
-    "contracts": {
-      "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
-      ],
-      "output": [
-        "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
-        "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
+      "prereq": "ATM-4-0003 / ATM-2-0020 / ATM-2-0021"
     }
   }
 ]

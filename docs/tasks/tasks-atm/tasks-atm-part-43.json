@@ -1,53 +1,64 @@
 [
   {
-    "doc_id": "doc_task_0318",
-    "id": "ATM-2-0015",
-    "title": "Hash Drift / Version Diff Report",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0324",
+    "id": "ATM-2-0021",
+    "title": "HumanReviewGate as reference plugin（000013）",
+    "owner": "vs-code-gpt-5.4-mini",
     "priority": "P0",
-    "status": "open",
-    "type": "registry",
+    "status": "done",
+    "type": "reference-plugin",
     "phase": "ATM-2",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-08T17:11:40.8119351+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
     "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "2/11",
+    "chain_step": "8/11",
     "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "產出機器可讀的 hash-diff-report，比對任兩個 atom version 的 spec/code/test hash 差異與 drift reason。",
+    "description": "以 reference plugin + effect node 形式提供 human review queue；core 僅依賴 schema 不依賴實作。",
     "related": [],
     "depends": [
-      "ATM-2-0014"
+      "ATM-2-0020",
+      "ATM-2-0008"
     ],
     "acceptance": [
-      "hash-diff-report.schema.json 定義 fromVersion / toVersion / specHashDelta / codeHashDelta / testHashDelta / driftReason",
-      "CLI atm registry diff <atomId> --from <v1> --to <v2> --json 輸出符合 schema 的報告",
-      "fixtures：identical hash（empty delta）/ all-three-changed / driftReason missing 三種"
+      "實作位於 packages/plugin-human-review/*；packages/core 不可 import 此 package",
+      ".atm/reports/upgrade-proposals.json 為審核佇列；支援 approve / reject + reason 兩種 decision",
+      "decision log 寫入 evidence store（evidenceType=human-review-decision）",
+      "layer-boundary scanner 必須擋下 core → plugin-human-review 的任何 import",
+      "CLI 補 atm review list / show <proposalId> / approve <proposalId> --reason / reject <proposalId> --reason 四個子命令",
+      "approve / reject 必須同時落 evidence 與 decision-snapshot.hash，鎖定當下 upgrade-proposal.json 內容雜湊",
+      "upgrade-proposals.md 僅可作 audit projection，不得成為 source of truth；欄位固定為 proposalId / atomId / fromVersion → toVersion / decompositionDecision / automatedGates / status",
+      "node scripts/validate-human-review.mjs 必須可獨立驗證 review queue record、decision-snapshot.hash 與 evidence linkage，不依賴 full suite",
+      "exemplar 至少保留 approve / reject / snapshot-hash-mismatch 三組，可直接重放 CLI 輸出到 validator"
     ],
     "deliverables": [
-      "schemas/registry/hash-diff-report.schema.json",
-      "packages/core/src/registry/diff.ts",
-      "packages/cli/commands/registry-diff.ts"
+      "packages/plugin-human-review/src/queue.ts",
+      "packages/plugin-human-review/src/decision-log.ts",
+      "scripts/validate-human-review.mjs",
+      "schemas/human-review/decision.schema.json",
+      "fixtures/human-review/approve.snapshot.json",
+      "fixtures/human-review/reject.snapshot.json",
+      "fixtures/human-review/hash-mismatch.snapshot.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 review CLI / decision-snapshot.hash / Markdown audit projection，避免人工審核流程不可追溯\n2026-05-07 測試穩定性補丁：維持 human review gate 目的不變；補 queue/decision validator 與 decision exemplar triad，避免 review 流程只剩 CLI 手工煙霧測試\n2026-05-08 | 狀態: done | 驗證: validate-human-review ✅ / validate-cli ✅ / validate-package-skeleton ✅ / validate-police ✅ | 變更: plugin-human-review + atm review 子命令 + human-review schema/fixtures + validator 串接；修正 guide 範例字詞以通過 neutrality/self-host criteria4；AAF commit=5362e3b | 阻塞: 無",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 開卡",
-      "summary": "提供 atom 版本間 hash 差異報告，作為 upgrade proposal 與 rollback proof 的基礎輸入。",
+      "summary": "人類審核閘門以 reference plugin 形式落地，避免污染 core hard dependency。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0014"
+      "prereq": "ATM-2-0020 / ATM-2-0008"
     }
   },
   {
-    "doc_id": "doc_task_0275",
-    "id": "ATM-5-0004",
-    "title": "v0.1 alpha release checklist",
+    "doc_id": "doc_task_0277",
+    "id": "ATM-6-0002",
+    "title": "Community RFC 與貢獻流程",
     "owner": "GitHubCopilot",
-    "priority": "P0",
+    "priority": "P2",
     "status": "open",
-    "type": "release",
-    "phase": "ATM-5",
+    "type": "ecosystem",
+    "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -55,42 +66,39 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "整理 AI-Atomic-Framework v0.1 alpha 發布前檢查表。",
+    "description": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
     "related": [],
     "depends": [
-      "ATM-5-0001",
-      "ATM-5-0002",
       "ATM-5-0003"
     ],
     "acceptance": [
-      "npm pack/dry-run 成功",
-      "README/examples/schema tests 全綠",
-      "release notes 說明 alpha 限制",
-      "alpha0 checklist 與 alpha1 checklist 分離",
-      "secrets scan / provenance / npm publish dry-run / package naming 檢查項已列入",
-      "release owner sign-off 欄位已列入"
+      "core vs adapter PR 分流",
+      "domain logic PR 有明確拒絕/轉 plugin 流程",
+      "maintainer decision process 清楚",
+      "release owner 與 maintainer quorum 規則已定義",
+      "security / provenance / package naming 類 RFC escalation path 已定義"
     ],
     "deliverables": [
-      "docs/RELEASE_CHECKLIST.md",
-      "GitHub release draft",
-      "npm publish dry-run plan"
+      "docs/RFC_PROCESS.md",
+      "GitHub issue templates",
+      "PR template"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 alpha0/alpha1 release checklist：secrets scan、provenance、package naming、release owner | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補社群流程需指定 release owner / maintainer quorum / escalation path | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "整理 AI-Atomic-Framework v0.1 alpha 發布前檢查表。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001、ATM-5-0002、ATM-5-0003"
+      "summary": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
+      "position": "ATM-6",
+      "prereq": "ATM-5-0003"
     },
     "contracts": {
       "input": [
         "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "docs/RELEASE_CHECKLIST.md",
-        "GitHub release draft",
-        "npm publish dry-run plan"
+        "docs/RFC_PROCESS.md",
+        "GitHub issue templates",
+        "PR template"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",

@@ -1,64 +1,66 @@
 [
   {
-    "doc_id": "doc_task_0324",
-    "id": "ATM-2-0021",
-    "title": "HumanReviewGate as reference plugin（000013）",
-    "owner": "vs-code-gpt-5.4-mini",
+    "doc_id": "doc_task_0332",
+    "id": "ATM-2-0026",
+    "title": "Semantic Fingerprint + Lineage + TTL Schema Extension",
+    "owner": "codex-gpt-5.5",
     "priority": "P0",
     "status": "done",
-    "type": "reference-plugin",
+    "type": "registry",
     "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T17:11:40.8119351+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "8/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "以 reference plugin + effect node 形式提供 human review queue；core 僅依賴 schema 不依賴實作。",
+    "created": "2026-05-07",
+    "created_by_agent": "ClaudeCode_opus-4-7",
+    "started_at": "2026-05-08T18:11:42+08:00",
+    "started_by_agent": "codex-gpt-5.5",
+    "completed_at": "2026-05-08T18:33:36.7913263+08:00",
+    "completed_by_agent": "codex-gpt-5.5",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "1/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "為 atom 與 atomic-map 加入 semanticFingerprint / lineage / ttl optional 欄位（schema-additive）；採 hot/cold 分離設計：hot registry entry 只放 sf 字串與 lineageLogRef / evidenceIndexRef URI，cold artifact 放完整 history。為去重警察與生命週期警察提供識別基礎。",
     "related": [],
     "depends": [
-      "ATM-2-0020",
-      "ATM-2-0008"
+      "ATM-2-0014",
+      "ATM-2-0023"
     ],
     "acceptance": [
-      "實作位於 packages/plugin-human-review/*；packages/core 不可 import 此 package",
-      ".atm/reports/upgrade-proposals.json 為審核佇列；支援 approve / reject + reason 兩種 decision",
-      "decision log 寫入 evidence store（evidenceType=human-review-decision）",
-      "layer-boundary scanner 必須擋下 core → plugin-human-review 的任何 import",
-      "CLI 補 atm review list / show <proposalId> / approve <proposalId> --reason / reject <proposalId> --reason 四個子命令",
-      "approve / reject 必須同時落 evidence 與 decision-snapshot.hash，鎖定當下 upgrade-proposal.json 內容雜湊",
-      "upgrade-proposals.md 僅可作 audit projection，不得成為 source of truth；欄位固定為 proposalId / atomId / fromVersion → toVersion / decompositionDecision / automatedGates / status",
-      "node scripts/validate-human-review.mjs 必須可獨立驗證 review queue record、decision-snapshot.hash 與 evidence linkage，不依賴 full suite",
-      "exemplar 至少保留 approve / reject / snapshot-hash-mismatch 三組，可直接重放 CLI 輸出到 validator"
+      "atomic-spec.schema.json 與 atomic-map.schema.json 皆 additive 加 optional semanticFingerprint / lineage / ttl 欄位，舊資料相容",
+      "semanticFingerprint 為 64-char hex string（無 nested），可直接做 hash table key",
+      "registry hot entry 欄位數 ≤ 10；lineage 與 evidence detail 走 lineageLogRef / evidenceIndexRef URI，不放主 entry",
+      "提供 sf 計算合約：atom 用 sortByName(inputs)+sortByName(outputs)+language.primary+validation.evidenceRequired+performanceBudget；map 用 sortByName(entrypoints)+qualityTargets",
+      "fixtures：atom-with-sf / map-with-sf / legacy-no-sf 三種，舊 fixture 全綠",
+      "semanticFingerprint 必須採 per-version 規則：hot registry entry 只保留 currentVersion 的 semanticFingerprint，歷史版本值寫入 versions[*].semanticFingerprint",
+      "validate-semantic-fingerprint.mjs 必須獨立驗證 atom/map/legacy/pending exemplar 與 hot/cold、per-version 規則",
+      "exemplar：atom-with-sf / map-with-sf / legacy-no-sf / pending-sf-calculation"
     ],
     "deliverables": [
-      "packages/plugin-human-review/src/queue.ts",
-      "packages/plugin-human-review/src/decision-log.ts",
-      "scripts/validate-human-review.mjs",
-      "schemas/human-review/decision.schema.json",
-      "fixtures/human-review/approve.snapshot.json",
-      "fixtures/human-review/reject.snapshot.json",
-      "fixtures/human-review/hash-mismatch.snapshot.json"
+      "schemas/atomic-spec.schema.json",
+      "schemas/registry/atomic-map.schema.json",
+      "packages/core/src/registry/semantic-fingerprint.ts",
+      "scripts/validate-semantic-fingerprint.mjs",
+      "fixtures/registry/atom-with-sf.json",
+      "fixtures/registry/map-with-sf.json",
+      "fixtures/registry/legacy-no-sf.json",
+      "fixtures/registry/pending-sf-calculation.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 附錄 C 治理補丁：追加 review CLI / decision-snapshot.hash / Markdown audit projection，避免人工審核流程不可追溯\n2026-05-07 測試穩定性補丁：維持 human review gate 目的不變；補 queue/decision validator 與 decision exemplar triad，避免 review 流程只剩 CLI 手工煙霧測試\n2026-05-08 | 狀態: done | 驗證: validate-human-review ✅ / validate-cli ✅ / validate-package-skeleton ✅ / validate-police ✅ | 變更: plugin-human-review + atm review 子命令 + human-review schema/fixtures + validator 串接；修正 guide 範例字詞以通過 neutrality/self-host criteria4；AAF commit=5362e3b | 阻塞: 無",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: ATM 識別/行為/狀態機提案開卡；schema-additive、hot/cold 分離、hot 欄位 ≤10 | 阻塞: 等 ATM-2-0014 / ATM-2-0023 完成\n2026-05-07 ATM-2-0042：generator 與 dogfood map 須共用 SF 規則\n2026-05-07 附錄 C：semanticFingerprint 改為 per-version\n2026-05-07 測試穩定性補丁：追加 validator + exemplar quartet",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "人類審核閘門以 reference plugin 形式落地，避免污染 core hard dependency。",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "為原子與原子地圖加入 semanticFingerprint / lineage / ttl，並維持 hot/cold 分離以支援大規模原子庫。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0020 / ATM-2-0008"
+      "prereq": "ATM-2-0014 / ATM-2-0023"
     }
   },
   {
-    "doc_id": "doc_task_0286",
-    "id": "ATM-6-0005",
-    "title": "Capability Sandbox 與審計日誌",
+    "doc_id": "doc_task_0275",
+    "id": "ATM-5-0004",
+    "title": "v0.1 alpha release checklist",
     "owner": "GitHubCopilot",
-    "priority": "P2",
+    "priority": "P0",
     "status": "open",
-    "type": "security",
-    "phase": "ATM-6",
+    "type": "release",
+    "phase": "ATM-5",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -66,54 +68,50 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "規劃 Capability Sandbox、權限控管、審計日誌、prompt injection guardrail 與 observability 的 optional plugin 邊界。",
+    "description": "整理 AI-Atomic-Framework v0.1 alpha 發布前檢查表。",
     "related": [],
     "depends": [
-      "ATM-6-0004"
+      "ATM-5-0001",
+      "ATM-5-0002",
+      "ATM-5-0003"
     ],
     "acceptance": [
-      "Deno sandbox/OpenTelemetry/Prometheus 不成為 core 必備依賴",
-      "Capability 宣告與審計格式可由 plugin 實作",
-      "安全插件缺席時 core 仍能 standalone 運作",
-      "threat model / provenance / secrets scan policy 已定義",
-      "cost budget policy 與 budget report schema 已對齊",
-      "observability event taxonomy 覆蓋 agent.run、task.lock、schema.validate、atom.verify、evidence.write、adapter.shadow",
-      "HarnessCard-lite report profile 列出 base model/profile、control artifacts、runtime policy、action substrate、execution topology、feedback stack、observability/evaluation 與 known risks",
-      "CAR runtime/audit 對照能標示 Control / Agency / Runtime 來源，不新增 core 必填 schema"
+      "npm pack/dry-run 成功",
+      "README/examples/schema tests 全綠",
+      "release notes 說明 alpha 限制",
+      "alpha0 checklist 與 alpha1 checklist 分離",
+      "secrets scan / provenance / npm publish dry-run / package naming 檢查項已列入",
+      "release owner sign-off 欄位已列入"
     ],
     "deliverables": [
-      "docs/ecosystem/capability-sandbox-audit.md",
-      "security plugin interface proposal",
-      "observability adapter boundary",
-      "HarnessCard-lite report profile",
-      "CAR observability event taxonomy"
+      "docs/RELEASE_CHECKLIST.md",
+      "GitHub release draft",
+      "npm publish dry-run plan"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 threat model、cost budget、secrets scan 與 observability event taxonomy | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 HarnessCard-lite / CAR observability acceptance；不阻塞 alpha0 | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 alpha0/alpha1 release checklist：secrets scan、provenance、package naming、release owner | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "規劃 Capability Sandbox、權限控管、審計日誌、prompt injection guardrail 與 observability 的 optional plugin 邊界。",
-      "position": "ATM-6",
-      "prereq": "ATM-6-0004"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "整理 AI-Atomic-Framework v0.1 alpha 發布前檢查表。",
+      "position": "ATM-5",
+      "prereq": "ATM-5-0001、ATM-5-0002、ATM-5-0003"
     },
     "contracts": {
       "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "docs/ecosystem/capability-sandbox-audit.md",
-        "security plugin interface proposal",
-        "observability adapter boundary",
-        "HarnessCard-lite report profile：列出 base model/profile、control artifacts、runtime policy、action substrate、execution topology、feedback stack、observability/evaluation、known risks",
-        "CAR runtime/audit 對照：審計事件需能標示 Control / Agency / Runtime 來源，不新增 core 必填 schema"
+        "docs/RELEASE_CHECKLIST.md",
+        "GitHub release draft",
+        "npm publish dry-run plan"
       ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
         "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {

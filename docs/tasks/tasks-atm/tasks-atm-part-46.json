@@ -1,110 +1,131 @@
 [
   {
-    "doc_id": "doc_task_0321",
-    "id": "ATM-2-0018",
-    "title": "BuildAgentPrompt bootstrap atom（000003）",
+    "doc_id": "doc_task_0249",
+    "id": "ATM-0-0005",
+    "title": "開源拆出 checklist 文件",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "bootstrap-atom",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-07T03:03:48Z",
-    "started_by_agent": "vs-code-gpt-5.4",
-    "completed_at": "2026-05-07T03:11:35Z",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "5/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "從 atomic spec 產出受控 AI prompt，內含 forbidden rules、allowed files、evidence contract；屬於 birth pipeline 的 000003 工序。",
-    "related": [],
-    "depends": [
-      "ATM-2-0001",
-      "ATM-2-0002",
-      "ATM-2-0005"
-    ],
-    "acceptance": [
-      "atom build-agent-prompt 可從 normalized spec 產出 prompt.md，含 frontmatter 列出 forbidden rules / allowed files / evidence contract",
-      "prompt 結構通過 schemas/agent-prompt.schema.json 驗證",
-      "birth fixture：minimal spec → prompt 對 snapshot；spec 變更時 prompt 必須跟著變化"
-    ],
-    "deliverables": [
-      "packages/core/src/agent-prompt/build-agent-prompt.ts",
-      "schemas/agent-prompt.schema.json",
-      "fixtures/agent-prompt/minimal.input.json",
-      "fixtures/agent-prompt/minimal.expected.md"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 | 狀態: done | 驗證: validate:agent-prompt / validate:schemas / npm test / npm run typecheck / npm run lint 通過 | 變更: 上游 7791d51 新增 build-agent-prompt、agent-prompt schema、snapshot fixture 與 root validation wiring | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "補上 Roadmap §7.1 的 000003 缺口，使 birth pipeline 能正式委託 AI。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0001 / ATM-2-0002 / ATM-2-0005"
-    }
-  },
-  {
-    "doc_id": "doc_task_0277",
-    "id": "ATM-6-0002",
-    "title": "Community RFC 與貢獻流程",
-    "owner": "GitHubCopilot",
-    "priority": "P2",
-    "status": "open",
-    "type": "ecosystem",
-    "phase": "ATM-6",
+    "type": "docs",
+    "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-05T20:58:01+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-06T08:08:07+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
+    "description": "建立從 3KLife 拆出 AI-Atomic-Framework 到新 GitHub repo 的階段式 checklist。",
     "related": [],
     "depends": [
-      "ATM-5-0003"
+      "ATM-0-0003"
     ],
     "acceptance": [
-      "core vs adapter PR 分流",
-      "domain logic PR 有明確拒絕/轉 plugin 流程",
-      "maintainer decision process 清楚",
-      "release owner 與 maintainer quorum 規則已定義",
-      "security / provenance / package naming 類 RFC escalation path 已定義"
+      "列出 core 禁止耦合清單",
+      "列出上游 repo skeleton",
+      "列出 3KLife adapter 導入與回同步策略"
     ],
     "deliverables": [
-      "docs/RFC_PROCESS.md",
-      "GitHub issue templates",
-      "PR template"
+      "docs/ai_atomic_framework/open-source-extraction-plan.md"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補社群流程需指定 release owner / maintainer quorum / escalation path | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0007（MVP邊界）與 ATM-0-0009（governance bundle 分層）代為完成；open-source-extraction-plan.md 已含完整內容 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
-      "position": "ATM-6",
-      "prereq": "ATM-5-0003"
+      "label": "ATM 開源化開卡",
+      "summary": "建立從 3KLife 拆出 AI-Atomic-Framework 到新 GitHub repo 的階段式 checklist。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0003"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
       ],
       "output": [
-        "docs/RFC_PROCESS.md",
-        "GitHub issue templates",
-        "PR template"
+        "docs/ai_atomic_framework/open-source-extraction-plan.md"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
+        "確認依賴與 scope",
+        "修改或建立對應文件",
+        "跑 encoding 與 standard gate",
+        "回寫 notes"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [],
       "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0281",
+    "id": "ATM-0-0007",
+    "title": "上游 roadmap v0.2 技術選型整合",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "docs",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-05T20:58:01+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
+    "related": [],
+    "depends": [
+      "ATM-0-0003"
+    ],
+    "acceptance": [
+      "Roadmap 清楚標示 v0.2 是 companion analysis",
+      "core 不硬依賴 LangGraph/pgvector/Deno/OpenTelemetry 等外部工具",
+      "TypeScript/Zod/Vitest 等只被描述為 first implementation recommendation"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
+    ],
+    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 整合 v0.2 companion 到 Roadmap、3KLife plan、extraction plan，並新增 6 張補強卡 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?Roadmap/companion ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: companion ??????????? task shard ????? | ??: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM v0.2 整合開卡",
+      "summary": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0003"
+    },
+    "contracts": {
+      "input": [
+        "v0.2 companion analysis 已確認可作務實化補充"
+      ],
+      "output": [
+        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
+        "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
+        "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "node tools_node/check-encoding-touched.js",
+        "node tools_node/check-task-scope.js --task ATM-0-0007 --verbose",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback"
+      ],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []

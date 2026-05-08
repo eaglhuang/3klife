@@ -1,87 +1,84 @@
 [
   {
-    "doc_id": "doc_task_0249",
-    "id": "ATM-0-0005",
-    "title": "開源拆出 checklist 文件",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0356",
+    "id": "ATM-2-0049",
+    "title": "Task id reservation and lock race hardening",
+    "owner": "codex-gpt-5",
     "priority": "P0",
     "status": "done",
-    "type": "docs",
-    "phase": "ATM-0",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T20:58:01+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-06T08:08:07+08:00",
+    "type": "tooling",
+    "phase": "ATM-2",
+    "created": "2026-05-08",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-08T14:40:00+08:00",
+    "started_by_agent": "codex-gpt-5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立從 3KLife 拆出 AI-Atomic-Framework 到新 GitHub repo 的階段式 checklist。",
+    "description": "Harden the single task id reservation, opener write, and lock promotion path to avoid duplicate IDs and stale reservation-only locks.",
     "related": [],
     "depends": [
-      "ATM-0-0003"
+      "ATM-3-0006",
+      "ATM-3-0010",
+      "ATM-3-0015"
     ],
     "acceptance": [
-      "列出 core 禁止耦合清單",
-      "列出上游 repo skeleton",
-      "列出 3KLife adapter 導入與回同步策略"
+      "Explicit-id and next-id allocation share the task-id-guard fence and reservation lock path",
+      "task-card-opener promotes successful writes through LockAdapter.lock() and releases current reservations on failure",
+      "task-lock.js is a thin CLI wrapper with no legacy duplicate implementation",
+      "Human override, task-card-path lookup, and reservation promotion have regression coverage"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/open-source-extraction-plan.md"
+      "task-id-guard / task-card-opener / task-lock race hardening",
+      "LockAdapter promotion and human override fix",
+      "task-id guard flow regression test",
+      "ATM-2-0049 docs and registry backwrite"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0007（MVP邊界）與 ATM-0-0009（governance bundle 分層）代為完成；open-source-extraction-plan.md 已含完整內容 | 阻塞: none",
+    "notes": "2026-05-08 | status: done | validation: node --check core task-id/lock/opener files; task-id guard flow regression pass; task-lock cross-shard regression pass; encoding touched pass | change: harden task id reserve / allocate / opener / lock race and promote reservation-only locks to formal scope locks | blocker: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 開源化開卡",
-      "summary": "建立從 3KLife 拆出 AI-Atomic-Framework 到新 GitHub repo 的階段式 checklist。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0003"
+      "label": "Task card system race hardening",
+      "summary": "Unify task id reserve / opener / lock flow",
+      "position": "ATM-2 / 3KLife governance tooling",
+      "prereq": "ATM-3-0006, ATM-3-0010, ATM-3-0015"
     },
     "contracts": {
       "input": [
-        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
+        "tools_node/lib/task-id-guard.js",
+        "tools_node/lib/task-card-paths.js",
+        "tools_node/task-card-opener.js",
+        "tools_node/task-lock.js",
+        "tools_node/adapters/atm-3klife/lock-adapter*.js",
+        "tools_node/test/task-*-*.test.js"
       ],
       "output": [
-        "docs/ai_atomic_framework/open-source-extraction-plan.md"
+        "Explicit-id and next-id allocation share the task-id-guard fence and reservation lock path",
+        "task-card-opener promotes successful writes through LockAdapter.lock() and releases current reservations on failure",
+        "task-lock.js is a thin CLI wrapper with no legacy duplicate implementation",
+        "Human override, task-card-path lookup, and reservation promotion have regression coverage"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
+      "validation_cmd": "node --check tools_node/lib/task-id-guard.js\nnode --check tools_node/lib/task-card-paths.js\nnode --check tools_node/task-card-opener.js\nnode --check tools_node/task-lock.js\nnode --check tools_node/adapters/atm-3klife/lock-adapter.js\nnode tools_node/test/task-id-guard-flow.test.js\nnode tools_node/test/task-lock-cross-shard.test.js\nnode tools_node/check-encoding-touched.js --files tools_node/lib/task-card-paths.js tools_node/lib/task-id-guard.js tools_node/task-card-opener.js tools_node/task-lock.js tools_node/adapters/atm-3klife/lock-adapter.js tools_node/adapters/atm-3klife/lock-adapter-config.js tools_node/test/task-lock-cross-shard.test.js tools_node/test/task-id-guard-flow.test.js docs/agent-briefs/tasks/ATM/ATM-2-0049.md docs/tasks/tasks-atm/tasks-atm-part-23.json docs/tasks/tasks-atm.json docs/doc-id-registry-shards/registry-task.json docs/doc-id-registry.md docs/agent-collaboration-protocol.md docs/ai_atomic_framework/3klife-tooling-fate.md",
+      "rollback_hint": "git checkout -- tools_node/lib/task-card-paths.js tools_node/lib/task-id-guard.js tools_node/task-card-opener.js tools_node/task-lock.js tools_node/adapters/atm-3klife/lock-adapter.js tools_node/adapters/atm-3klife/lock-adapter-config.js tools_node/test/task-lock-cross-shard.test.js tools_node/test/task-id-guard-flow.test.js docs/agent-briefs/tasks/ATM/ATM-2-0049.md docs/tasks/tasks-atm/tasks-atm-part-23.json docs/tasks/tasks-atm.json docs/doc-id-registry-shards/registry-task.json docs/doc-id-registry.md docs/agent-collaboration-protocol.md docs/ai_atomic_framework/3klife-tooling-fate.md",
       "execution_steps": [
-        "確認依賴與 scope",
-        "修改或建立對應文件",
-        "跑 encoding 與 standard gate",
-        "回寫 notes"
+        "Audit reserve / opener / lock responsibility drift",
+        "Unify reservation and promotion flow",
+        "Remove task-lock legacy dead implementation",
+        "Add regression coverage and update task/doc registry records"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "validation_evidence": [
+        "node tools_node/test/task-id-guard-flow.test.js pass",
+        "node tools_node/test/task-lock-cross-shard.test.js pass"
+      ],
+      "handoff_diff_status": "task card, ATM shard, protocol, tooling fate, and doc registry backwrite aligned",
       "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0350",
-    "id": "ATM-2-0043",
-    "title": "Map Source Template & Workbench Policy",
-    "owner": "ClaudeCode_sonnet-4-6",
-    "priority": "P0",
-    "status": "open",
-    "type": "architecture",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "ClaudeCode_sonnet-4-6",
-    "chain_id": "ATM-MAP-GENERATOR-PROVENANCE-V1",
-    "chain_step": "1/3",
-    "sensor_triggered_by": "atm-2-0042-map-generator-ripple",
-    "description": "正式化 map 三件套模板結構與 workbench 檔案命名規則，對標 atom 四件套（ATM-2-0039）。",
-    "related": [],
-    "depends": [
-      "ATM-2-0042"
-    ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 完成"
+      "metrics_summary": [
+        "reservation-only lock promoted through LockAdapter.lock()",
+        "task-lock.js has a single CLI implementation"
+      ]
+    },
+    "completed_at": "2026-05-08T15:05:00+08:00"
   }
 ]

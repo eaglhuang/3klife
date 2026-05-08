@@ -1,62 +1,99 @@
 [
   {
-    "doc_id": "doc_task_0335",
-    "id": "ATM-2-0029",
-    "title": "Reference Behavior Pack（10 內建行為）",
+    "id": "ATM-1.5-0003",
+    "title": "ATM-CORE-0001 正式收編：舊 seed 標 @deprecated",
+    "status": "done",
+    "priority": "P0",
+    "phase": "ATM-1.5",
+    "type": "governance",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0301",
+    "started_at": "2026-05-06T17:31:00.000Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T18:13:27.1736893+08:00",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d90c2f6 將 seed hand-written source 標為 @deprecated、atomic-registry seed entry 升為 governed、CHANGELOG 新增 Phase B1 complete、atm status 在 framework repo root 顯示 B1-complete 與 governedBy ATM-CORE-0002 | 阻塞: none",
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/CHANGELOG.md",
+        "AI-Atomic-Framework/atomic-registry.json",
+        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
+        "AI-Atomic-Framework/packages/core/seed.js",
+        "AI-Atomic-Framework/schemas/registry.schema.json",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/scripts/validate-seed-registry.mjs"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit d90c2f6",
+        "node packages/cli/src/atm.mjs status",
+        "npm run validate:seed-registry",
+        "npm run validate:cli",
+        "npm run validate:schemas",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "seed hand-written source is retained but explicitly marked deprecated under ATM-CORE-0002 governance",
+        "atomic-registry seed entry status is now governed and still passes self-verification with committed hash values",
+        "atm status no longer requires .atm/config in the framework repository root to report Phase B1 complete",
+        "CHANGELOG records the Phase B1 milestone and the handoff from ATM-CORE-0001 metadata to ATM-CORE-0002 governance"
+      ]
+    },
+    "depends": [
+      "ATM-1.5-0002"
+    ]
+  },
+  {
+    "doc_id": "doc_task_0320",
+    "id": "ATM-2-0017",
+    "title": "Regression Matrix Compare Gate",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "reference-plugin",
+    "type": "police",
     "phase": "ATM-2",
-    "created": "2026-05-07",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
-    "started_by_agent": "GitHubCopilot",
-    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
-    "chain_step": "4/8",
-    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
-    "description": "提供 10 個內建 behavior reference plugin：split / merge / compose / dedup-merge / sweep / evolve / expire / polymorphize / infect / atomize。infect 與 atomize 是 Legacy strangler 的核心動作。每個 plugin 含 spec / code / dry-run snapshot。",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "4/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "在 Police plugin 之上提供 vOld fixtures 對 vNew code 的不退轉檢查 + quality metrics 比較；輸出 quality-comparison-report。",
     "related": [],
     "depends": [
-      "ATM-2-0028",
-      "ATM-2-0042"
+      "ATM-2-0005",
+      "ATM-2-0016"
     ],
     "acceptance": [
-      "10 個 behavior plugin 各自落地於 packages/plugin-behavior-<id>/，獨立可載入",
-      "每個 plugin 通過自己的 dry-run fixture（split-plan / merge-plan / atomize-proposal / infect-plan 等各 1 份）",
-      "behavior.infect 與 behavior.atomize 必須只產 dry-run patch，不直接 apply 到 host project",
-      "behavior.compose 產出 atomic-map entry，符合 ATM-2-0023 schema",
-      "behavior.atomize 產出的新 atom 必須含 lineage.bornBy=atomize 與 parentRefs（legacy:// URI）",
-      "core 不 import 任何 behavior plugin（layer-boundary 守護）",
-      "behavior.compose 須委託 generateAtomicMap()（ATM-2-0042）做 map entry 建立；compose 只提供 member list + edges，generator 負責 ID allocation / scaffold / registry write-back",
-      "behavior.split 若產出 map（atom 分裂為 sub-atoms map），也須使用 map generator",
-      "behavior.atomize 建立新 atom 後若成為 map 成員，須用 canonical ATM-MAP-{NNNN} 格式記錄 membership",
-      "behavior.infect 與 behavior.atomize 產生的 dry-run patch，必須包裝為 ATM-2-0020 proposal；decompositionDecision 預設 atom-extract，經 ATM-2-0021 通過前不得 apply 到 host project",
-      "validate-behavior-pack.mjs 必須獨立驗證 10 個 plugin 目錄、registry registration、layer-boundary、infect/atomize proposal wrapping",
-      "exemplar 以 behavior-pack.manifest.json 列出 10 個 behavior 的 canonical dry-run fixture 與 expected outcome，供 validator 重放"
+      "vOld 全部 fixture 對 vNew code 必須全綠（不退轉）",
+      "metrics 比較：errorRate(new) <= errorRate(old)、coverage(new) >= coverage(old)、latency(new) 不退化超過容忍值",
+      "違規時 promote 動作必須 hard fail，並輸出 quality-comparison-report.json 列出退步指標",
+      "quality-comparison-report 必須含 mapImpactScope（被影響的 mapIds[]）與 propagationStatus（per-map 整合測試結果）",
+      "若任一被影響的 map 整合測試 fail，promote 動作必須 hard fail",
+      "regression compare 報告追加 dedupCandidates[] 區塊（advisory only，不阻塞 promote）：列出 sf 相同或高相似的其他原子；輸入由 ATM-2-0030 dedup police 提供",
+      "CLI 補 atm registry quality-report --atom <id> --from <v> --to <v> --json --md；必須同步輸出 .atm/reports/quality/<atomId>-<from>-<to>.json 與同名 .md",
+      "--md 輸出必須採固定 Markdown 模板：標題 / 指標表格 / mapImpactScope 區段 / 結論；避免 quality-comparison-report 只剩機讀 JSON"
     ],
     "deliverables": [
-      "packages/plugin-behavior-split/",
-      "packages/plugin-behavior-merge/",
-      "packages/plugin-behavior-compose/",
-      "packages/plugin-behavior-dedup-merge/",
-      "packages/plugin-behavior-sweep/",
-      "packages/plugin-behavior-evolve/",
-      "packages/plugin-behavior-expire/",
-      "packages/plugin-behavior-polymorphize/",
-      "packages/plugin-behavior-infect/",
-      "packages/plugin-behavior-atomize/",
-      "scripts/validate-behavior-pack.mjs",
-      "fixtures/behaviors/behavior-pack.manifest.json",
-      "fixtures/behaviors/*-dry-run.json"
+      "packages/core/src/police/regression-compare.ts",
+      "schemas/police/quality-comparison-report.schema.json",
+      "fixtures/regression/v1.0-pass.json",
+      "fixtures/regression/v1.1-pass-improved.json",
+      "fixtures/regression/v1.1-fail-error-rate.json",
+      "schemas/police/quality-comparison-report.schema.json — 含 mapImpactScope / propagationStatus"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 4/8）| 阻塞: 等 ATM-2-0028 SDK 落地\n2026-05-07 ATM-2-0042：compose/split 委託 map generator、atomize 用 canonical mapId 記錄 membership\n2026-05-07 附錄 C：infect / atomize 的 dry-run patch 必須先包成 proposal，review 通過前不得 apply\n2026-05-07 測試穩定性補丁：追加 pack-level validator 與 behavior matrix manifest，讓單一 behavior 漂移可在本卡 seam 先定位",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— regression compare 報告追加 dedupCandidates[] 區塊（advisory）\n2026-05-07 附錄 C 治理補丁：追加 quality-report CLI / Markdown 模板 / decision-readable output，避免品質報告淪為 JSON 黑盒",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 識別/行為/狀態機提案開卡",
-      "summary": "10 個內建 behavior 的 reference plugin pack，含 Legacy 整合的 infect 與 atomize。",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "建立演化管線的不退轉 + 品質進步雙重閘門。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0028"
+      "prereq": "ATM-2-0005 / ATM-2-0016"
     }
   }
 ]
