@@ -38,7 +38,7 @@
 | Scaffold builder | Layer 2 | covered-existing | `ATM-2-0002`、`ATM-2-0038`、`ATM-2-0039` | 必須經 AtomGenerator / source template provenance |
 | Test runner / report schema | Layer 2 | covered-existing | `ATM-2-0003`、`ATM-2-0016`、`ATM-2-0025` | report 必須可映射到 atom / map validation evidence |
 | Registry / HashLock / version history | Layer 2 | covered-existing | `ATM-2-0004`、`ATM-2-0014`、`ATM-2-0034`、`ATM-2-0047` | registry entry 必須有 generator provenance 或 backfilled witness |
-| Police plugin API / rule guards | Layer 2 | open-card | `ATM-2-0005`、`ATM-2-0010`、`ATM-2-0030`、`ATM-2-0031`、`ATM-2-0035`、`ATM-3-0012` | 每個 rule guard 要能成為 independent governed atom 或 map member，並輸出 `trigger / scope / severity / action` 的 machine-readable findings |
+| Police plugin API / rule guards | Layer 2 | covered-existing | `ATM-2-0005`、`ATM-2-0010`、`ATM-2-0030`、`ATM-2-0031`、`ATM-2-0035`、`ATM-3-0012` | 每個 rule guard 要能成為 independent governed atom 或 map member，並輸出 `trigger / scope / severity / action` 的 machine-readable findings |
 | Adapter API / Plugin SDK | Layer 2 | open-card | `ATM-2-0006`、`ATM-3-0001`、`ATM-3-0006`~`ATM-3-0011` | adapter facade 不可成為 monolith；背後能力需拆 ATM-GOV atoms |
 | Evidence / artifact log store | Layer 2 | open-card | `ATM-2-0009`、`ATM-3-0014` | evidence schema / usage-feedback 必須列入 atom caller-count 與 validation evidence |
 | Context budget / summarization | Layer 2 | covered-existing | `ATM-2-0011` | context budget guard 應列入 governance bundle map |

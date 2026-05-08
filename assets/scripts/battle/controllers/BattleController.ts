@@ -55,18 +55,11 @@ export type { GeneralSkillCastOptions };
 
 
 
-async function loadJsonWithFileFallback<T>(resourcePath: string, relativeFilePath: string): Promise<T | null> {
+async function loadJsonWithFileFallback<T>(resourcePath: string, _relativeFilePath: string): Promise<T | null> {
   try {
     return await services().resource.loadJson<T>(resourcePath);
   } catch {
-    try {
-      const fs = require('fs');
-      const path = require('path');
-      const absolutePath = path.resolve(__dirname, '../../../../', relativeFilePath);
-      return JSON.parse(fs.readFileSync(absolutePath, 'utf8')) as T;
-    } catch {
-      return null;
-    }
+    return null;
   }
 }
 

@@ -90,6 +90,6 @@
         "Validate encoding and sync the task shard"
       ]
     },
-    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: rule-pack 升級為主動警察 finding 契約，補 trigger/scope/severity/action 與 routeHint | 阻塞: none\n2026-05-08 | 狀態: done | 驗證: wrapper [DEPRECATED] warning ✅ / run-rule-guard findings JSON ✅ / compute-gate ts-syntax+eslint ✅ | 變更: 新增 rule-pack.json + rule-guard-adapter.js + run-rule-guard.js，check-task-scope/check-import-boundaries 標 deprecated，compute-gate atm profile 改走 rule-guard-atm | 阻塞: atm profile 仍受既有 dirty scope 與 cocos-no-fs 舊違規影響"
+    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: rule-pack 升級為主動警察 finding 契約，補 trigger/scope/severity/action 與 routeHint | 阻塞: none\n2026-05-08 | 狀態: done | 驗證: wrapper [DEPRECATED] warning ✅ / run-rule-guard findings JSON ✅ / compute-gate ts-syntax+eslint ✅ | 變更: 新增 rule-pack.json + rule-guard-adapter.js + run-rule-guard.js，check-task-scope/check-import-boundaries 標 deprecated，compute-gate atm profile 改走 rule-guard-atm | 阻塞: atm profile 仍受既有 dirty scope 影響\n2026-05-08 | 狀態: done | 驗證: BattleController fs/path 違規移除後 run-rule-guard 不再出現 cocos-no-fs finding；framework-function-atomization-manifest 對應列已改 covered-existing | 變更: 補修 BattleController fallback 與 manifest 狀態對齊 | 阻塞: task-scope uncovered files 為 repo 既有狀態"
   }
 ]
