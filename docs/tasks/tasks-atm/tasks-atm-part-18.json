@@ -1,113 +1,99 @@
 [
   {
-    "doc_id": "doc_task_0253",
-    "id": "ATM-1-0003",
-    "title": "Atomic Spec schema v0.1",
-    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0361",
+    "id": "ATM-2-0051",
+    "title": "Coverage Gate Promotion & Self-Coverage Follow-up",
+    "owner": "codex-gpt-5.5",
     "priority": "P0",
-    "status": "done",
-    "type": "schema",
-    "phase": "ATM-1",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T13:47:06+08:00",
-    "started_by_agent": "vs-code-github-copilot",
+    "status": "open",
+    "type": "governance",
+    "phase": "ATM-2",
+    "created": "2026-05-08",
+    "created_by_agent": "codex-gpt-5.5",
+    "started_at": "",
+    "started_by_agent": "",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "定義語言無關 Atomic Spec JSON Schema，支援 language/runtime/adapterRequirements/compatibility/hashLock。",
-    "related": [],
+    "description": "將 ATM-2-0050 剩餘治理缺口正式拆出：定義 coverage gate 升格 blocker 條件、補 manifest 自指 self-coverage，並把 coverage finding 對齊到 task-router / advisory / follow-up route contract。",
+    "related": [
+      "ATM-2-0030",
+      "ATM-2-0031",
+      "ATM-2-0035",
+      "ATM-3-0012"
+    ],
     "depends": [
-      "ATM-1-0002"
+      "ATM-2-0050",
+      "ATM-2-0048",
+      "ATM-3-0012"
     ],
     "acceptance": [
-      "valid spec fixture 通過",
-      "缺必要欄位與違規 dependencyPolicy fixture 失敗",
-      "schema 不含 3KLife/Cocos 假設",
-      "alpha0 schema fixture：hello-world atom + minimal registry + hash-lock 全部可 AJV 驗證",
-      "schema id / version / migration 欄位固定，供 ATM-2 governance schemas 引用"
+      "coverage gate blocker promotion 條件被正式寫入 validator contract與規劃文件",
+      "framework-function-atomization-manifest.md 與 validator / fixture surfaces 被納入 self-coverage 或明確 meta-surface 規則並可被 validator 驗證",
+      "coverage findings 至少輸出 trigger / scope / severity / action / routeHint，並能區分 advisory / needs-review / follow-up / blocker",
+      "coverage finding route 明確重用 ATM-2-0048 task-router 與 ATM-3-0012 RuleGuard routeHint 約定，不重做既有 police router",
+      "ATM-2-0050 主卡在 follow-up 開出後可收斂為 done，且里程碑文件同步引用新卡"
     ],
     "deliverables": [
-      "schemas/atomic-spec.schema.json",
-      "schemas/registry.schema.json",
-      "schemas/regression-matrix.schema.json",
-      "positive/negative schema fixtures",
-      "alpha0 hello-world schema fixture",
-      "schema id / version / migration policy"
+      "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
+      "tools_node/validate-framework-atomization-coverage.js",
+      "tools_node/atomic-framework/task-router.js",
+      "schemas/police/coverage-finding.schema.json",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0051.md"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 5267326 建立 Atomic Spec、Registry、Regression Matrix schema v0.1、schema policy、AJV validator、positive/negative fixtures 與 package-lock | 阻塞: none",
+    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0050 follow-up extraction 開立，承接 blocker promotion / self-coverage / finding route 三項剩餘治理缺口 | 阻塞: 等 ATM-2-0050 主卡完成抽離與 ATM-2-0048 / ATM-3-0012 現況確認\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-2-0050 已完成主卡收斂；本卡正式接手 blocker promotion / manifest self-coverage / finding route | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 上游核心開卡",
-      "summary": "定義語言無關 Atomic Spec JSON Schema，支援 language/runtime/adapterRequirements/compatibility/hashLock。",
-      "position": "ATM-1",
-      "prereq": "ATM-1-0002"
+      "label": "ATM coverage gate follow-up",
+      "summary": "收斂 ATM-2-0050 剩餘治理缺口，不重做 coverage gate 主體。",
+      "position": "ATM-2 / coverage gate follow-up",
+      "prereq": "ATM-2-0050 / ATM-2-0048 / ATM-3-0012"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
+        "ATM-2-0050 已交付 manifest / fixture / validator 主體",
+        "ATM-2-0048 已提供 task-router / onboarding contract",
+        "ATM-3-0012 已提供 RuleGuardAdapter findings 的 routeHint 契約",
+        "既有 dedup / lifecycle / advisory cards 只能重用，不重複開單"
       ],
       "output": [
-        "schemas/atomic-spec.schema.json",
-        "schemas/registry.schema.json",
-        "schemas/regression-matrix.schema.json",
-        "positive/negative schema fixtures"
+        "coverage gate 升 blocker 的 deterministic 條件",
+        "manifest self-coverage 規則與 validator 檢查",
+        "coverage finding schema 與 routeHint contract",
+        "task-router / advisory / follow-up 的路由對齊",
+        "ATM-2-0050 收斂完成"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0051.md\\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict\\nnode tools_node/check-doc-shard-health.js",
+      "rollback_hint": "回退 coverage gate follow-up touched files；不得把 ATM-2-0050 重新膨脹成主卡，也不得重複開 task-router / rule-guard / dedup / lifecycle 既有功能卡。",
       "execution_steps": [
-        "在上游 repo 建立或修改對應 package",
-        "補 unit/integration fixture",
-        "跑 package 驗證",
-        "回寫 3KLife tracking notes"
+        "定義 blocker promotion 規則",
+        "補 manifest self-coverage 與 validator 檢查",
+        "把 coverage finding 對齊 routeHint / task-router / advisory 契約",
+        "回寫 ATM-2-0050 與里程碑文件",
+        "跑驗證後提交"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/schemas/atomic-spec.schema.json",
-        "AI-Atomic-Framework/schemas/registry.schema.json",
-        "AI-Atomic-Framework/schemas/regression-matrix.schema.json",
-        "AI-Atomic-Framework/schemas/README.md",
-        "AI-Atomic-Framework/scripts/validate-schemas.mjs",
-        "AI-Atomic-Framework/tests/schema-fixtures/manifest.json",
-        "AI-Atomic-Framework/tests/schema-fixtures/positive/hello-world.atom.json",
-        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-registry.json",
-        "AI-Atomic-Framework/tests/schema-fixtures/positive/minimal-regression-matrix.json",
-        "AI-Atomic-Framework/tests/schema-fixtures/negative"
-      ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit 5267326",
-        "npm install",
-        "npm run packages:list",
-        "npm run validate:schemas",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
-      ],
-      "handoff_diff_status": "upstream committed; tracking diff verified",
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "upstream commit 5267326",
-        "3 schemas created",
-        "3 positive fixtures and 4 negative fixtures AJV-verified",
-        "performanceBudget optional shape reserved"
-      ]
-    },
-    "completed_at": "2026-05-06T13:50:31+08:00"
+      "metrics_summary": []
+    }
   },
   {
-    "id": "ATM-3-0006",
-    "title": "task-lock.js adapter 化：接入 ATM LockAdapter",
+    "id": "ATM-3-0013",
+    "title": "finalize-agent-turn.js wrapper 接入 ATM run envelope",
     "status": "open",
     "priority": "P1",
     "phase": "ATM-3",
     "type": "implementation",
     "created": "2026-05-05",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0306",
+    "doc_id": "doc_task_0313",
     "depends": [
-      "ATM-2.5-0002",
-      "ATM-3-0001"
+      "ATM-3-0006",
+      "ATM-3-0007"
     ]
   }
 ]

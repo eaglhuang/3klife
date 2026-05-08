@@ -1,50 +1,49 @@
 [
   {
-    "doc_id": "doc_task_0245",
-    "id": "ATM-0-0001",
-    "title": "ATM 任務 shard 與 bootstrap 卡",
+    "doc_id": "doc_task_0248",
+    "id": "ATM-0-0004",
+    "title": "3KLife adopter 計畫書改版",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "governance",
+    "type": "docs",
     "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T18:06:44+08:00",
+    "started_at": "2026-05-05T21:28:29+08:00",
     "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-08T17:35:00+08:00",
+    "completed_at": "2026-05-06T08:08:07+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "註冊 ATM-* 任務 shard，建立 tasks-atm.json，並開立 bootstrap 任務卡以解除 ATM 卡號自舉悖論。",
+    "description": "將 AI原子框架開發計畫書改成 3KLife downstream adopter / adapter plan。",
     "related": [],
-    "depends": [],
+    "depends": [
+      "ATM-0-0003"
+    ],
     "acceptance": [
-      "task-lock ATM-0-0001 已鎖定且 files[] 非空",
-      "check-task-scope --task ATM-0-0001 不再缺卡",
-      "tasks-atm.json 可被後續任務 upsert"
+      "文件不再宣稱 ATM core 長在 tools_node",
+      "html-to-ucuf 為 case study 而非 core assumption"
     ],
     "deliverables": [
-      "docs/tasks/.shardrc.json 加入 tasks-atm",
-      "docs/tasks/tasks-atm.json 建立並收錄 ATM 任務",
-      "docs/agent-briefs/tasks/ATM/ATM-0-0001.md 具備 doc_id 與 in-progress frontmatter"
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md 標示 upstream/downstream 分工",
+      "task-lock/compute-gate/doc-id/encoding 被描述為 adapter 能力"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: check-task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 完成 ATM shard、任務卡批次建立、doc_id 回填與 Roadmap/Plan 解耦 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?tasks-atm shard/card truth resynced?npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: ? ATM shard/bootstrap ???????OUTPUT_CONTRACT ? task shard ????? | ??: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0008（技術棧校正矩陣）、ATM-0-0009（governance split）、ATM-0-0011（context budget）、ATM-0-0014（瘦身再開工）代為完成 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 開源化開卡",
-      "summary": "註冊 ATM-* 任務 shard，建立 tasks-atm.json，並開立 bootstrap 任務卡以解除 ATM 卡號自舉悖論。",
+      "summary": "將 AI原子框架開發計畫書改成 3KLife downstream adopter / adapter plan。",
       "position": "ATM-0",
-      "prereq": "無"
+      "prereq": "ATM-0-0003"
     },
     "contracts": {
       "input": [
         "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
       ],
       "output": [
-        "docs/tasks/.shardrc.json 加入 tasks-atm",
-        "docs/tasks/tasks-atm.json 建立並收錄 ATM 任務",
-        "docs/agent-briefs/tasks/ATM/ATM-0-0001.md 具備 doc_id 與 in-progress frontmatter"
+        "docs/ai_atomic_framework/AI原子框架開發計畫書.md 標示 upstream/downstream 分工",
+        "task-lock/compute-gate/doc-id/encoding 被描述為 adapter 能力"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
@@ -57,61 +56,55 @@
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [
-        "node tools_node/check-task-scope.js --task ATM-0-0001 --verbose",
-        "node tools_node/compute-gate.js --profile standard --agent-feedback"
-      ],
+      "validation_evidence": [],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
     }
   },
   {
-    "id": "ATM-1.5-0003",
-    "title": "ATM-CORE-0001 正式收編：舊 seed 標 @deprecated",
+    "id": "ATM-3-0012",
+    "title": "task-scope / import-boundary 規則包遷移 + @deprecated 標記",
     "status": "done",
-    "priority": "P0",
-    "phase": "ATM-1.5",
-    "type": "governance",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
     "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0301",
-    "started_at": "2026-05-06T17:31:00.000Z",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T18:13:27.1736893+08:00",
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d90c2f6 將 seed hand-written source 標為 @deprecated、atomic-registry seed entry 升為 governed、CHANGELOG 新增 Phase B1 complete、atm status 在 framework repo root 顯示 B1-complete 與 governedBy ATM-CORE-0002 | 阻塞: none",
-    "harness_evidence": {
-      "artifact_paths": [
-        "AI-Atomic-Framework/CHANGELOG.md",
-        "AI-Atomic-Framework/atomic-registry.json",
-        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
-        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
-        "AI-Atomic-Framework/packages/core/seed.js",
-        "AI-Atomic-Framework/schemas/registry.schema.json",
-        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-        "AI-Atomic-Framework/scripts/validate-seed-registry.mjs"
+    "owner": "vs-insiders-gpt-5.3-codex",
+    "started_at": "2026-05-08T18:30:32.413+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.3-codex",
+    "completed_at": "2026-05-08T18:42:15.966+08:00",
+    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
+    "doc_id": "doc_task_0312",
+    "depends": [
+      "ATM-3-0006"
+    ],
+    "description": "Move task-scope / import-boundary rules into ATM RuleGuardAdapter rule-pack, and make the rule pack carry proactive police findings instead of only deprecated wrapper warnings.",
+    "acceptance": [
+      "rule-pack.json encodes trigger / scope / severity / action plus routeHint for proactive police outputs",
+      "deprecated wrappers emit machine-readable findings instead of only stderr warnings",
+      "compute-gate atm profile routes fast / slow police outputs through ATM RuleGuardAdapter"
+    ],
+    "contracts": {
+      "input": [
+        "tools_node/adapters/atm-3klife/rule-pack.json as the shared rule source",
+        "ATM-3-0006 task-lock adapter and ATM-3-0011 / ATM-3-0013 dependency chain"
       ],
-      "validation_evidence": [
-        "AI-Atomic-Framework commit d90c2f6",
-        "node packages/cli/src/atm.mjs status",
-        "npm run validate:seed-registry",
-        "npm run validate:cli",
-        "npm run validate:schemas",
-        "npm test",
-        "npm run typecheck",
-        "npm run lint"
+      "output": [
+        "tools_node/adapters/atm-3klife/rule-pack.json",
+        "ATM RuleGuardAdapter consuming rule-pack.json",
+        "machine-readable findings with trigger / scope / severity / action",
+        "deprecated wrappers that warn and route findings"
       ],
-      "handoff_diff_status": "upstream committed; tracking diff pending commit",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "seed hand-written source is retained but explicitly marked deprecated under ATM-CORE-0002 governance",
-        "atomic-registry seed entry status is now governed and still passes self-verification with committed hash values",
-        "atm status no longer requires .atm/config in the framework repository root to report Phase B1 complete",
-        "CHANGELOG records the Phase B1 milestone and the handoff from ATM-CORE-0001 metadata to ATM-CORE-0002 governance"
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-3-0012.md docs/tasks/tasks-atm/tasks-atm-part-40.json",
+      "rollback_hint": "Revert touched files and restore the previous deprecated-wrapper-only rule-pack behavior.",
+      "execution_steps": [
+        "Normalize the rule-pack schema and routeHint fields",
+        "Wire the adapter to emit findings for task-scope and import-boundary cases",
+        "Keep deprecated wrappers warning-only at the surface",
+        "Validate encoding and sync the task shard"
       ]
     },
-    "depends": [
-      "ATM-1.5-0002"
-    ]
+    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: rule-pack 升級為主動警察 finding 契約，補 trigger/scope/severity/action 與 routeHint | 阻塞: none\n2026-05-08 | 狀態: done | 驗證: wrapper [DEPRECATED] warning ✅ / run-rule-guard findings JSON ✅ / compute-gate ts-syntax+eslint ✅ | 變更: 新增 rule-pack.json + rule-guard-adapter.js + run-rule-guard.js，check-task-scope/check-import-boundaries 標 deprecated，compute-gate atm profile 改走 rule-guard-atm | 阻塞: atm profile 仍受既有 dirty scope 影響\n2026-05-08 | 狀態: done | 驗證: BattleController fs/path 違規移除後 run-rule-guard 不再出現 cocos-no-fs finding；framework-function-atomization-manifest 對應列已改 covered-existing | 變更: 補修 BattleController fallback 與 manifest 狀態對齊 | 阻塞: task-scope uncovered files 為 repo 既有狀態"
   }
 ]

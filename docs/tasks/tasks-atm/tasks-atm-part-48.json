@@ -1,5 +1,75 @@
 [
   {
+    "doc_id": "doc_task_0281",
+    "id": "ATM-0-0007",
+    "title": "上游 roadmap v0.2 技術選型整合",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "docs",
+    "phase": "ATM-0",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-05T20:58:01+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
+    "related": [],
+    "depends": [
+      "ATM-0-0003"
+    ],
+    "acceptance": [
+      "Roadmap 清楚標示 v0.2 是 companion analysis",
+      "core 不硬依賴 LangGraph/pgvector/Deno/OpenTelemetry 等外部工具",
+      "TypeScript/Zod/Vitest 等只被描述為 first implementation recommendation"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
+    ],
+    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 整合 v0.2 companion 到 Roadmap、3KLife plan、extraction plan，並新增 6 張補強卡 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?Roadmap/companion ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: companion ??????????? task shard ????? | ??: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM v0.2 整合開卡",
+      "summary": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0003"
+    },
+    "contracts": {
+      "input": [
+        "v0.2 companion analysis 已確認可作務實化補充"
+      ],
+      "output": [
+        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
+        "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
+        "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "node tools_node/check-encoding-touched.js",
+        "node tools_node/check-task-scope.js --task ATM-0-0007 --verbose",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
     "doc_id": "doc_task_0337",
     "id": "ATM-2-0031",
     "title": "Lifecycle Police（TTL + Sweep + 狀態機警察）",
@@ -46,67 +116,6 @@
       "summary": "生命週期警察：TTL + zero-caller + 狀態機合規檢查；唯一可寫 quarantined 狀態的角色。",
       "position": "ATM-2",
       "prereq": "ATM-2-0026 / ATM-2-0027 / ATM-2-0029"
-    }
-  },
-  {
-    "doc_id": "doc_task_0346",
-    "id": "ATM-2-0039",
-    "title": "Generated Atom Source Template and Code Path Policy",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P0",
-    "status": "done",
-    "type": "architecture",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T15:14:35.1752897+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "completed_at": "2026-05-08T17:35:00+08:00",
-    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
-    "chain_step": "1/3",
-    "sensor_triggered_by": "atm-generator-source-gap",
-    "description": "讓 Atom Generator 產出的新原子具備正式 source file template，不再以 spec-only 或 spec-as-code 方式暫代 registry codePaths。",
-    "related": [],
-    "depends": [
-      "ATM-2-0038"
-    ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始補 source template/codePaths policy | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node tests/core/atom-generator.test.mjs / node tests/cli/create.test.mjs / npm run validate:registry-core / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: AtomGenerator 產物補 atom.source.mjs，預設 validation command 改跑 source self-check，registry codePaths 不再用 specPath 暫代 | 阻塞: none\n2026-05-08 | ??: done | ??: node tests/core/atom-generator.test.mjs pass?npm.cmd run validate:generator-provenance pass | ??: AtomGenerator source template / codePaths policy ? provenance ?????????task shard ??? | ??: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM generator source template 開卡",
-      "summary": "補齊 generator 的 source file template 與 codePaths policy，讓新原子真正有 spec/code/test/report 四件套。",
-      "position": "ATM-2（generator provenance / source template）",
-      "prereq": "ATM-2-0038"
-    },
-    "contracts": {
-      "input": [
-        "ATM-2-0038 alpha0 已能產生 spec/test/report 並登錄 registry",
-        "目前 dogfood fixture 以 spec path 暫作 codePaths，這只是 alpha0 過渡",
-        "Registry selfVerification 需要穩定 codePaths"
-      ],
-      "output": [
-        "新增 generator source template policy",
-        "AtomGenerator 產物包含正式 source file",
-        "Registry codePaths 不再用 specPath 暫代",
-        "補 fixture 覆蓋 source/code/test/report 四件套"
-      ],
-      "validation_cmd": "node tests/core/atom-generator.test.mjs\\nnode tests/cli/create.test.mjs\\nnpm run validate:registry-core",
-      "rollback_hint": "回退 source template 與 codePaths policy；保留 ATM-2-0038 birth facade，不回退 allocator/create command。",
-      "execution_steps": [
-        "盤點目前 generated atom 檔案組成",
-        "設計 source template 與預設 validation command",
-        "更新 generator 與 tests",
-        "回寫 registry/codePaths policy"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
     }
   }
 ]

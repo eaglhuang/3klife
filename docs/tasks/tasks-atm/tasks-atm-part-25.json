@@ -1,36 +1,36 @@
 [
   {
-    "doc_id": "doc_task_0351",
-    "id": "ATM-2-0044",
-    "title": "Backfill Existing Maps Through Map Generator",
+    "doc_id": "doc_task_0352",
+    "id": "ATM-2-0045",
+    "title": "Map Generator Provenance Audit",
     "owner": "ClaudeCode_sonnet-4-6",
-    "priority": "P0",
+    "priority": "P1",
     "status": "open",
-    "type": "migration",
+    "type": "audit",
     "phase": "ATM-2",
     "created": "2026-05-07",
     "created_by_agent": "ClaudeCode_sonnet-4-6",
     "chain_id": "ATM-MAP-GENERATOR-PROVENANCE-V1",
-    "chain_step": "2/3",
+    "chain_step": "3/3",
     "sensor_triggered_by": "atm-2-0042-map-generator-ripple",
-    "description": "遷移 ATM-MAP-NEUTRALITY-0001 從舊格式到 generator canonical 格式（ATM-MAP-{NNNN}、atomic_workbench/maps/ 路徑）。",
+    "description": "等同 ATM-2-0041 的 map 版。掃描 registry 確保所有 map entry 有 generator provenance。",
     "related": [],
     "depends": [
       "ATM-2-0042",
-      "ATM-2-0043"
+      "ATM-2-0044"
     ],
     "acceptance": [],
     "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 + ATM-2-0043 完成"
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 + ATM-2-0044 完成"
   },
   {
-    "doc_id": "doc_task_0273",
-    "id": "ATM-5-0002",
-    "title": "Adapter Guide 與 Plugin SDK 文件",
+    "doc_id": "doc_task_0274",
+    "id": "ATM-5-0003",
+    "title": "Semver Lifecycle 與 Governance",
     "owner": "GitHubCopilot",
-    "priority": "P0",
+    "priority": "P1",
     "status": "open",
-    "type": "docs",
+    "type": "governance",
     "phase": "ATM-5",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
@@ -39,58 +39,65 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "撰寫 ProjectAdapter、LanguageAdapter、Capability、Police、Injector plugin 的開發指南。",
+    "description": "建立開源專案版本治理、deprecated policy、breaking change RFC 與 release flow。",
     "related": [],
     "depends": [
-      "ATM-2-0006",
-      "ATM-3-0001"
+      "ATM-5-0001"
     ],
     "acceptance": [
-      "第三方專案可依文件實作 adapter",
-      "3KLife adapter 可作 reference",
-      "core 禁止 domain logic 規則明確",
-      "第三方專案可依文件接入 artifacts/logs/reports 與 Markdown/JSON state files",
-      "CAR 對照章節說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
-      "HarnessCard-lite 指南說明報告只落在 run report / typed evidence，不替代 core contracts"
+      "MAJOR/MINOR/PATCH 對應 Spec/Adapter/CLI 變更",
+      "adapter compatibility matrix 有格式",
+      "breaking change 需 RFC",
+      "release owner / maintainer duty matrix 已定義",
+      "package naming policy 覆蓋 core / cli / plugin-* / adapter-*",
+      "provenance 與 deprecation / migration policy 已定義",
+      "docs/LIFECYCLE.md 必須定義 framework semver 與 release channel 規則",
+      "docs/ATOM_COMPATIBILITY.md 定義 atom compatibility matrix（framework version ↔ atom schema version ↔ plugin SDK version）",
+      "docs/GOVERNANCE.md 與 release checklist 必須說明 PEV / upgrade proposal 公開審核規則",
+      "deprecated / migration policy 必須列出 breaking change RFC 與回滾窗口"
     ],
     "deliverables": [
-      "docs/ADAPTER_GUIDE.md",
-      "docs/PLUGIN_SDK.md",
-      "examples/hosted-adapter-impl",
-      "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
-      "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
-      "standalone Default Governance Bundle 與 3KLife adapter 的 artifacts/logs/reports mapping 對照",
-      "CAR / HarnessCard-lite adapter reporting guidance"
+      "docs/LIFECYCLE.md",
+      "docs/GOVERNANCE.md",
+      "CHANGELOG.md policy",
+      "release checklist",
+      "docs/ATOM_COMPATIBILITY.md",
+      "docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md",
+      "release owner / maintainer duty matrix",
+      "package naming / provenance / deprecation policy"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter migration guide 要求 | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 CAR/HarnessCard docs acceptance；已 done 卡不回改 | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 release owner、package naming、provenance 與 deprecation 實務要求 | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "撰寫 ProjectAdapter、LanguageAdapter、Capability、Police、Injector plugin 的開發指南。",
+      "summary": "建立開源專案版本治理、deprecated policy、breaking change RFC 與 release flow。",
       "position": "ATM-5",
-      "prereq": "ATM-2-0006、ATM-3-0001"
+      "prereq": "ATM-5-0001"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "ATM-5-0001 quick start / API docs 已開立",
+        "ATM-2-0020 / ATM-2-0021 定義 PEV upgrade proposal 與 human review gate",
+        "ATM-2-0026 / ATM-2-0027 / ATM-2-0029 定義 atom compatibility 與 behavior/state-machine 基礎"
       ],
       "output": [
-        "docs/ADAPTER_GUIDE.md",
-        "docs/PLUGIN_SDK.md",
-        "examples/hosted-adapter-impl",
-        "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
-        "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
-        "CAR 對照章節：說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
-        "HarnessCard-lite 指南：adapter 文件需說明報告只落在 run report / typed evidence，不替代 core contracts"
+        "docs/LIFECYCLE.md",
+        "docs/GOVERNANCE.md",
+        "CHANGELOG.md policy",
+        "release checklist",
+        "docs/ATOM_COMPATIBILITY.md",
+        "release owner / maintainer duty matrix",
+        "package naming policy（core / cli / plugin-* / adapter-*）",
+        "provenance 與 deprecation / migration policy"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-5-0003.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes",
-        "補充 TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 的 host 實作指南"
+        "盤點現有 lifecycle / governance / changelog 文件缺口",
+        "定義 semver、release channel、compatibility matrix 與 package naming policy",
+        "補 PEV / upgrade proposal 公開審核與 breaking change RFC 規則",
+        "補 release checklist、owner duty matrix、provenance 與 deprecation / migration policy",
+        "跑 encoding 與 standard gate，回寫 tracking notes"
       ]
     },
     "harness_evidence": {

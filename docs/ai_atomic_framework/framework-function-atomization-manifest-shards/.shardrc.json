@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "source": "../framework-function-atomization-manifest.md",
+  "indexTitle": "Framework Function Atomization Manifest",
+  "indexPath": "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
+  "type": "markdown-h2",
+  "keepSourceIntact": true,
+  "preambleShard": "manifest-summary",
+  "defaultShard": "manifest-machine-readable",
+  "shards": [
+    {
+      "name": "manifest-summary",
+      "title": "判定結論與邊界",
+      "pattern": "^(判定結論|Layer Boundary|Coverage Status)$"
+    },
+    {
+      "name": "manifest-inventory",
+      "title": "Function Inventory 與 Gate",
+      "pattern": "^(Function Inventory|Required Gate|Planning Backwrite)$"
+    },
+    {
+      "name": "manifest-machine-readable",
+      "title": "Machine-Readable Inventory",
+      "pattern": "^Machine-Readable Inventory$"
+    }
+  ]
+}

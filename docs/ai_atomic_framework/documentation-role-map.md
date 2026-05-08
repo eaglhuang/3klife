@@ -16,7 +16,7 @@
 截至本次盤點，`docs/ai_atomic_framework/` 根目錄共有：
 
 - `18` 份 root files
-- `7` 個 shard directories
+- `8` 個 shard directories
 
 治理原則上，真正應長期留在 root 的，只應該是少數 canonical、唯一 index、少量高價值 reference，以及必要 asset。
 
@@ -54,6 +54,7 @@
 | `atm-evolution-plan-shards/` | `shard` | `ATM框架演進執行規劃書.md` | 持續作為演進計畫 shard |
 | `atm-cross-reference-shards/` | `shard` | `ATM_cross_reference.md` | 持續作為索引 shard |
 | `behavior-reference-shards/` | `shard` | `原子行為參考手冊.md` | 持續作為手冊 shard |
+| `framework-function-atomization-manifest-shards/` | `shard` | `framework-function-atomization-manifest.md` | 持續作為 coverage manifest shard |
 | `evolution-proposal-shards/` | `shard-reference` | `關於進化版的原子提案.md` | 先保留為 reference shard；長期等內容吸收後凍結 |
 | `optimized-roadmap-v02-shards/` | `shard-history` | `AI_Atomic_Framework_Optimized_Roadmap_v0.2.md` | 與歷史 roadmap 一起凍結，後續歸入 `history/` |
 

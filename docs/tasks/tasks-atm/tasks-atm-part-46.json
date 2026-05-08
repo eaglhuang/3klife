@@ -1,76 +1,94 @@
 [
   {
-    "doc_id": "doc_task_0296",
-    "id": "ATM-0-0011",
-    "title": "Context budget 治理補強與文件回寫",
+    "doc_id": "doc_task_0252",
+    "id": "ATM-1-0002",
+    "title": "上游 monorepo package skeleton",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "docs-governance",
-    "phase": "ATM-0",
+    "type": "open-source-core",
+    "phase": "ATM-1",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T23:05:36.3800604+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-08T17:35:00+08:00",
+    "started_at": "2026-05-06T13:35:05+08:00",
+    "started_by_agent": "vs-code-github-copilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "把 context budget 正式提升為 ATM upstream 可獨立治理的 primitive，並回寫相關 roadmap、extraction plan、adopter plan 與 v0.2 companion 文件。",
-    "related": [
-      "ATM-2-0011"
-    ],
+    "description": "建立 AI-Atomic-Framework packages/core、cli、plugin-sdk、adapter-local-git、language-js 的基本 package 結構。",
+    "related": [],
     "depends": [
-      "ATM-0-0010"
+      "ATM-1-0001"
     ],
     "acceptance": [
-      "四份 ATM 規劃文件補上 context budget upstream primitive",
-      "明確定義 plugin-context-budget 或等效 guard/adapter 位置",
-      "把 encoding/context budget/neutrality 收斂成 Agent Governance Bundle",
-      "新增對應 ATM 任務卡與 tasks-atm 條目"
+      "npm install 成功",
+      "workspace scripts 可列出 package",
+      "不依賴 3KLife 檔案"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md",
-      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
-      "docs/agent-briefs/tasks/ATM/ATM-2-0011.md"
+      "packages/core",
+      "packages/cli",
+      "packages/plugin-sdk",
+      "packages/adapter-local-git",
+      "packages/language-js",
+      "workspace package config"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 將 context budget、plugin-context-budget 與 Agent Governance Bundle 正式回寫到四份 ATM 規劃文件，並同步修正 ATM-0-0011/ATM-2-0011 任務真相 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?context budget / governance bundle ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: context budget governance ????????? task shard ????? | ??: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install --package-lock=false / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 28b368a 建立 packages/core、cli、plugin-sdk、adapter-local-git、language-js、workspace package config、package list 與 skeleton validation fixture | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM governance bundle 開卡",
-      "summary": "把 context budget 提升成 upstream 可獨立治理能力，並同步回寫相關 md 文件。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0010"
+      "label": "ATM 上游核心開卡",
+      "summary": "建立 AI-Atomic-Framework packages/core、cli、plugin-sdk、adapter-local-git、language-js 的基本 package 結構。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0001"
     },
     "contracts": {
       "input": [
-        "encoding 已進入 upstream governance 規劃",
-        "context budget 尚未成為對等 primitive"
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "context budget primitive 定義",
-        "Agent Governance Bundle 收斂",
-        "新增對應任務卡"
+        "packages/core",
+        "packages/cli",
+        "packages/plugin-sdk",
+        "packages/adapter-local-git",
+        "packages/language-js",
+        "workspace package config"
       ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0011 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若 tasks-atm 或 doc_id 不一致，使用既有工具重建。",
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
       "execution_steps": [
-        "建立新任務卡",
-        "建立 ATM-2-0011 後續卡",
-        "鎖卡並更新 frontmatter",
-        "回寫四份主文件",
-        "跑 encoding/task-scope/standard gate"
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/core",
+        "AI-Atomic-Framework/packages/cli",
+        "AI-Atomic-Framework/packages/plugin-sdk",
+        "AI-Atomic-Framework/packages/adapter-local-git",
+        "AI-Atomic-Framework/packages/language-js",
+        "AI-Atomic-Framework/scripts/validate-package-skeleton.mjs",
+        "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 28b368a",
+        "npm install --package-lock=false",
+        "npm run packages:list",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking pending commit",
       "trace_artifacts": [],
-      "metrics_summary": []
-    }
+      "metrics_summary": [
+        "upstream commit 28b368a",
+        "5 workspace packages created",
+        "package skeleton validation fixture dependency-free"
+      ]
+    },
+    "completed_at": "2026-05-06T13:38:00+08:00"
   },
   {
     "doc_id": "doc_task_0285",

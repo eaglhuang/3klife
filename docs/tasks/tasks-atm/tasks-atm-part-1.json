@@ -5,13 +5,14 @@
     "title": "Framework Function Atomization Coverage Gate",
     "owner": "codex-gpt-5.5",
     "priority": "P0",
-    "status": "in-progress",
+    "status": "done",
     "type": "governance",
     "phase": "ATM-2",
     "created": "2026-05-08",
     "created_by_agent": "codex-gpt-5",
     "started_at": "2026-05-08T22:43:54.4198874+08:00",
     "started_by_agent": "codex-gpt-5.5",
+    "completed_at": "2026-05-08T23:12:34.2086804+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -51,9 +52,9 @@
       "ATM-3-0015 只代表 task card lifecycle coverage，不得被誤判為全框架 coverage 完成",
       "ATM-2-0015 / ATM-2-0016 / ATM-2-0017 的 brief、shard、thin index 必須一致為 done",
       "ATM-2-0048 / ATM-2-0049 / ATM-3-0015 保持已完成前置，不再被記錄為本卡 blocker",
-      "本卡 scope 必須收斂為 blocker promotion / manifest self-coverage / police finding route follow-up，不重做 coverage gate 主體",
+      "本卡 scope 必須收斂為後續 follow-up extraction，不重做 coverage gate 主體",
       "validate-atm-doc-governance 與 check-doc-shard-health 必須在回寫後通過",
-      "里程碑文件基線必須更新為 done=73 / in_progress=2 / open=39 / total=114"
+      "里程碑文件與 task-store 基線必須更新為 done=74 / in_progress=1 / open=40 / total=115，並引用 ATM-2-0051"
     ],
     "deliverables": [
       "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
@@ -67,7 +68,7 @@
       "docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md",
       "docs/agent-briefs/tasks/ATM/ATM-2-0050.md"
     ],
-    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 開立 ATM framework-wide coverage manifest / gate，並明確排除 generator / map generator / task lifecycle 已有功能卡重複開單 | 阻塞: none\n2026-05-08 | 狀態: in-progress | 驗證: node tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict；node tools_node/validate-atm-doc-governance.js --root docs/ai_atomic_framework --strict | 變更: coverage manifest / fixture / deterministic validator 與文件治理 validator 已落地 | 阻塞: none\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 同步 ATM-2-0015 / ATM-2-0016 / ATM-2-0017 shard 真相為 done，thin index 基線更新為 done=73 / in_progress=2 / open=39 / total=114 | 阻塞: none\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 0050 後續 scope 收斂為 blocker promotion / manifest self-coverage / police finding route follow-up；不回頭重做 coverage gate 主體 | 阻塞: follow-up cards 尚未開立",
+    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 開立 ATM framework-wide coverage manifest / gate，並明確排除 generator / map generator / task lifecycle 已有功能卡重複開單 | 阻塞: none\n2026-05-08 | 狀態: in-progress | 驗證: node tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict；node tools_node/validate-atm-doc-governance.js --root docs/ai_atomic_framework --strict | 變更: coverage manifest / fixture / deterministic validator 與文件治理 validator 已落地 | 阻塞: none\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 同步 ATM-2-0015 / ATM-2-0016 / ATM-2-0017 shard 真相為 done，thin index 基線更新為 done=73 / in_progress=2 / open=39 / total=114 | 阻塞: none\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 0050 後續 scope 收斂為 blocker promotion / manifest self-coverage / police finding route follow-up；不回頭重做 coverage gate 主體 | 阻塞: follow-up cards 尚未開立\n2026-05-08 | 狀態: done | 驗證: node tools_node/task-card-opener.js --id ATM-2-0051 --write；node tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict；node tools_node/validate-atm-doc-governance.js --root docs/ai_atomic_framework --strict | 變更: 已開出 ATM-2-0051 承接 blocker promotion / manifest self-coverage / police finding route；ATM-2-0050 主卡收斂完成 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM dogfooding coverage gate",
@@ -87,7 +88,7 @@
         "framework coverage gate 與 task-store 真相一致",
         "ATM-2-0015 / 0016 / 0017 的 shard 與 thin index 狀態修正為 done",
         "里程碑文件改寫為 73 / 2 / 39 / 114 基線",
-        "ATM-2-0050 scope 收斂為後續 follow-up extraction，而非重做 gate"
+        "ATM-2-0050 已完成主卡收斂，剩餘治理缺口轉交 ATM-2-0051"
       ],
       "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0050.md docs/tasks/tasks-atm/tasks-atm-part-1.json docs/tasks/tasks-atm/tasks-atm-part-31.json docs/tasks/tasks-atm/tasks-atm-part-33.json docs/tasks/tasks-atm/tasks-atm-part-57.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md\nnode tools_node/check-doc-shard-health.js\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict\nnode tools_node/validate-atm-doc-governance.js --root docs/ai_atomic_framework --strict",
       "rollback_hint": "若 shard 真相同步或里程碑回寫有誤，先還原 docs/tasks/tasks-atm/*.json、docs/tasks/tasks-atm.json、atm-framework-stabilization-milestones.md、ATM-2-0050.md。不得因治理回寫而重開 ATM-2-0015 / 0016 / 0017；若仍有缺口，只能另開 follow-up。",

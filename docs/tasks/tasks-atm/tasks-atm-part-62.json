@@ -1,52 +1,8 @@
 [
   {
-    "doc_id": "doc_task_0317",
-    "id": "ATM-2-0014",
-    "title": "Registry Version History v0.1（schema-additive only）",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "registry",
-    "phase": "ATM-2",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-07T16:08:50.7949141+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "completed_at": "2026-05-07T16:31:21.2911795+08:00",
-    "chain_id": "ATM-EVOLUTION-V2",
-    "chain_step": "1/11",
-    "sensor_triggered_by": "atm-evolution-plan-v2",
-    "description": "為 atomic-registry 增加 currentVersion 與 versions[] 欄位，採 schema-additive 升級；既有 registry fixture 必須維持全綠。",
-    "related": [],
-    "depends": [
-      "ATM-2-0004",
-      "ATM-2-0013"
-    ],
-    "acceptance": [
-      "registry entry 可選擇性帶 currentVersion 與 versions[] 陣列；versions[] 元素含 specHash/codeHash/testHash/timestamp",
-      "舊 registry fixture（不含 versions[]）validate 必須維持全綠",
-      "新增 schema 驗證 fixture：v1.0 entry、v1.0+v1.1 multi-version entry、缺欄位 negative case",
-      "CHANGELOG / migration note 標記 schema 升版且 backwards compatible"
-    ],
-    "deliverables": [
-      "packages/core/src/registry/registry-v1.schema.json — 新增 currentVersion / versions[]",
-      "packages/core/src/registry/registry-migration.ts — 舊→新 in-memory upcast",
-      "fixtures/registry/v1-with-versions.json",
-      "fixtures/registry/legacy-no-versions.json"
-    ],
-    "notes": "2026-05-07 | 狀態: done | 驗證: npm.cmd test, node --input-type=module import(index.ts), git commit 604753e | 變更: upstream 已完成 Registry Version History v0.1 起始骨架，包含 currentVersion / versions[] schema、in-memory upcast helper、legacy + versioned fixtures 與 changelog note | 阻塞: none\n2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— registryEntry 追加 optional `semanticFingerprint`、`lineageLogRef`、`ttl`、`governance.tier`；hot entry 欄位數 ≤ 10\n2026-05-07 ATM-2-0042 連鎖影響（notes 追加，不重啟驗收）：versions[] schema 須同時適用 atom 與 map registry entry；map version entry 含 mapHash 與 memberSnapshot",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 開卡",
-      "summary": "Registry 增加版本歷史欄位（schema-additive），為 alpha1 演化管線鋪路。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0004 / ATM-2-0013"
-    }
-  },
-  {
-    "doc_id": "doc_task_0265",
-    "id": "ATM-3-0002",
-    "title": "3KLife ATM config 與 bootstrap wrapper",
+    "doc_id": "doc_task_0266",
+    "id": "ATM-3-0003",
+    "title": "compute-gate ATM profile adapter integration",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
@@ -54,45 +10,43 @@
     "phase": "ATM-3",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T05:36:17+08:00",
+    "started_at": "2026-05-08T05:59:35.560323+08:00",
     "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-08T05:40:47+08:00",
+    "completed_at": "2026-05-08T06:02:56.478299+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+    "description": "把 upstream ATM validate/police/hash-lock 接入 3KLife compute-gate profile。",
     "related": [],
     "depends": [
-      "ATM-3-0001"
+      "ATM-3-0007"
     ],
     "acceptance": [
-      "node tools_node/atomic-framework/atm-cli.js status 可呼叫 upstream",
-      "workbench/registry path 指向本 repo local 區",
-      "不 fork core source",
-      "shadow wrapper 預設 dry-run / report-only，不替換現有 tools_node CLI"
+      "standard gate 不受影響",
+      "atm profile 只在 upstream CLI 可用後啟用",
+      "失敗訊息可指出 atom/spec/adapter 問題"
     ],
     "deliverables": [
-      "tools_node/atomic-framework/bootstrap.js",
-      "tools_node/atomic-framework/atm-cli.js",
-      "atm.config.*",
-      "local workbench path 設定"
+      "tools_node/compute-gate-config.json 新增 atm profile",
+      "atm-police/atm-hash-lock gate wrapper",
+      "failure-as-prompt 輸出"
     ],
-    "notes": "2026-05-08 | 狀態: done | 驗證: encoding/cross-shard/bootstrap smoke/standard gate pass | 變更: 完成 3KLife ATM config、bootstrap wrapper、atm-cli alias，並收尾 shard trim | 阻塞: none",
+    "notes": "2026-05-08 | 狀態: done | 驗證: atm profile pass / police & hash-lock wrappers pass | 變更: compute-gate 新增 atm-police / atm-hash-lock gates，atm-cli 支援 police --all 與 verify --all | 阻塞: none\n2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+      "summary": "把 upstream ATM validate/police/hash-lock 接入 3KLife compute-gate profile。",
       "position": "ATM-3",
-      "prereq": "ATM-3-0001"
+      "prereq": "ATM-3-0002"
     },
     "contracts": {
       "input": [
         "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "tools_node/atomic-framework/bootstrap.js",
-        "atm.config.*",
-        "local workbench path 設定"
+        "tools_node/compute-gate-config.json 新增 atm profile",
+        "atm-police/atm-hash-lock gate wrapper",
+        "failure-as-prompt 輸出"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
@@ -101,6 +55,73 @@
         "實作 adapter 或 case study artifact",
         "跑 adapter/case 驗證",
         "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0283",
+    "id": "ATM-4-0006",
+    "title": "H2U case study 與 Cocos runtime 邊界",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
+    "status": "open",
+    "type": "case-study-policy",
+    "phase": "ATM-4",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+    "related": [],
+    "depends": [
+      "ATM-4-0002",
+      "ATM-3-0005",
+      "ATM-2.5-0002"
+    ],
+    "acceptance": [
+      "Cocos Component/Node/Prefab 明確禁止進 compute atom",
+      "H2U fidelity/domain scoring 僅屬 case study plugin",
+      "case study 可關閉而不影響 core",
+      "case study 啟動條件：self-hosting alpha0 deterministic gate 全綠",
+      "第一輪只允許 dry-run injection + rollback plan，不替換 draft-builder 主幹"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
+      "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 後置條件：alpha0 全綠後只以 dry-run/rollback 進入 | 阻塞: alpha0 gate 未全綠",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM v0.2 整合開卡",
+      "summary": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0002、ATM-3-0005"
+    },
+    "contracts": {
+      "input": [
+        "v0.2 companion analysis 已確認可作務實化補充"
+      ],
+      "output": [
+        "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
+        "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
       ]
     },
     "harness_evidence": {

@@ -1,124 +1,52 @@
 [
   {
-    "doc_id": "doc_task_0314",
-    "id": "ATM-0-0013",
-    "title": "tasks-atm.json thin index 與細分片",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "governance",
-    "phase": "ATM-0",
-    "created": "2026-05-06",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T01:03:22.4082504+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 docs/tasks/tasks-atm.json 從單一大型 aggregate 改為 thin index stub，完整 ATM 任務改存於 docs/tasks/tasks-atm/ 之下的 part 檔，並把每個分片收斂到不超過 300 行、約 10 KB。",
-    "related": [
-      "ATM-3-0009"
-    ],
-    "depends": [
-      "ATM-0-0001"
-    ],
-    "acceptance": [
-      "docs/tasks/tasks-atm.json 不再保存完整 tasks array，而是 thin index stub",
-      "docs/tasks/tasks-atm/tasks-atm-part-*.json 每檔不超過 300 行、約 10 KB",
-      "task-card-opener 在 json-out=docs/tasks/tasks-atm.json 時仍可正確 upsert 任務並重建 thin index",
-      "docs/tasks/README.md 補上 thin index 與 rebuild 指令"
-    ],
-    "deliverables": [
-      "docs/tasks/tasks-atm.json thin index stub",
-      "docs/tasks/tasks-atm/.shardrc.json",
-      "docs/tasks/tasks-atm/tasks-atm-part-*.json",
-      "docs/tasks/README.md 的 thin index / rebuild 說明",
-      "tools_node/lib/tasks-atm-shard-store.js",
-      "tools_node/rebuild-tasks-atm-auto-parts.js thin-index 寫入鏈"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: thin-index rebuild pass；task-card-opener thin-index upsert pass；16 個 part 皆 <=300 行 / <=10 KB；encoding-touched pass；quick gate 3/3 pass；standard gate 僅被既有 unrelated dirty task-scope 擋住 | 變更: 將 tasks-atm.json 改為 thin index，接上 shard store 寫入鏈，並把分片門檻收緊到 300 行 / 10 KB | 阻塞: none",
-    "brief": {
-      "style": "classic",
-      "label": "",
-      "summary": "",
-      "position": "",
-      "prereq": ""
-    },
-    "contracts": {
-      "input": [],
-      "output": [],
-      "validation_cmd": "",
-      "rollback_hint": "",
-      "execution_steps": []
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
-    "doc_id": "doc_task_0284",
-    "id": "ATM-5-0005",
-    "title": "Living Spec 同步器與 PEV Loop",
+    "doc_id": "doc_task_0282",
+    "id": "ATM-0-0008",
+    "title": "3KLife adapter 技術棧校正矩陣",
     "owner": "GitHubCopilot",
     "priority": "P1",
-    "status": "open",
-    "type": "optional-feature",
-    "phase": "ATM-5",
+    "status": "done",
+    "type": "adapter-docs",
+    "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-05T21:28:29+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-08T17:35:00+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
+    "description": "將 v0.2 的工具選型與 3KLife 現況校正成 downstream adopter 採納矩陣，避免把 local workbench 誤當 upstream core。",
     "related": [],
     "depends": [
-      "ATM-5-0001",
-      "ATM-2-0006"
+      "ATM-0-0004"
     ],
     "acceptance": [
-      "PEV Loop 成為標準流程語彙",
-      "MVP 只要求 drift prompt，不要求自動雙向同步",
-      "Living Spec 不阻塞 v0.1 alpha release",
-      "docs/PEV_LOOP.md 必須定義 Plan-Execute-Verify-Converge 如何產生 PEV upgrade proposal",
-      "docs/LIVING_SPEC.md 必須說明 Living Spec sync 不得自動 promote；只能產生 reviewable proposal",
-      "Spec drift prompt schema 必須輸出 atom compatibility impact 與 semver recommendation",
-      "README workflow summary 必須連回 framework semver / atom compatibility / PEV proposal 文件"
+      "task-lock/compute-gate/doc-id/encoding 都被描述為 ProjectAdapter 能力",
+      "tools_node/atomic-framework 僅是 local wrapper/workbench",
+      "不把 H2U/Cocos 規則反推回 core"
     ],
     "deliverables": [
-      "docs/PEV_LOOP.md",
-      "docs/LIVING_SPEC.md",
-      "Spec drift prompt schema",
-      "README workflow summary",
-      "schemas/pev/upgrade-proposal-public.schema.json",
-      "schemas/pev/spec-drift-prompt.schema.json",
-      "PEV upgrade proposal 範例"
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md v0.2 採納/降級/延後矩陣",
+      "3KLife adapter 技術棧校正摘要"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
+    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 補齊 3KLife adapter 技術棧校正細版矩陣，明確區分 upstream core、ProjectAdapter、optional adapter 與延後項 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?adapter matrix / upstream boundary truth rechecked?npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: adapter ??????????OUTPUT_CONTRACT ? task shard ??? | ??: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM v0.2 整合開卡",
-      "summary": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001、ATM-2-0006"
+      "summary": "將 v0.2 的工具選型與 3KLife 現況校正成 downstream adopter 採納矩陣，避免把 local workbench 誤當 upstream core。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0004"
     },
     "contracts": {
       "input": [
         "v0.2 companion analysis 已確認可作務實化補充"
       ],
       "output": [
-        "docs/PEV_LOOP.md",
-        "docs/LIVING_SPEC.md",
-        "Spec drift prompt schema",
-        "README workflow summary",
-        "PEV upgrade proposal 範例，含 atom compatibility impact 與 semver recommendation"
+        "docs/ai_atomic_framework/AI原子框架開發計畫書.md v0.2 採納/降級/延後矩陣",
+        "3KLife adapter 技術棧校正摘要"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-5-0005.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
       "execution_steps": [
         "確認 upstream/downstream 邊界",
@@ -129,10 +57,62 @@
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [],
+      "validation_evidence": [
+        "node tools_node/check-task-scope.js --task ATM-0-0008 --verbose",
+        "node tools_node/check-encoding-touched.js",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback"
+      ],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
     }
+  },
+  {
+    "id": "ATM-1.5-0003",
+    "title": "ATM-CORE-0001 正式收編：舊 seed 標 @deprecated",
+    "status": "done",
+    "priority": "P0",
+    "phase": "ATM-1.5",
+    "type": "governance",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0301",
+    "started_at": "2026-05-06T17:31:00.000Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T18:13:27.1736893+08:00",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:seed-registry / npm run validate:cli / npm run validate:schemas / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d90c2f6 將 seed hand-written source 標為 @deprecated、atomic-registry seed entry 升為 governed、CHANGELOG 新增 Phase B1 complete、atm status 在 framework repo root 顯示 B1-complete 與 governedBy ATM-CORE-0002 | 阻塞: none",
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/CHANGELOG.md",
+        "AI-Atomic-Framework/atomic-registry.json",
+        "AI-Atomic-Framework/packages/cli/src/commands/status.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/registry-shared.mjs",
+        "AI-Atomic-Framework/packages/core/seed.js",
+        "AI-Atomic-Framework/schemas/registry.schema.json",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/scripts/validate-seed-registry.mjs"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit d90c2f6",
+        "node packages/cli/src/atm.mjs status",
+        "npm run validate:seed-registry",
+        "npm run validate:cli",
+        "npm run validate:schemas",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "seed hand-written source is retained but explicitly marked deprecated under ATM-CORE-0002 governance",
+        "atomic-registry seed entry status is now governed and still passes self-verification with committed hash values",
+        "atm status no longer requires .atm/config in the framework repository root to report Phase B1 complete",
+        "CHANGELOG records the Phase B1 milestone and the handoff from ATM-CORE-0001 metadata to ATM-CORE-0002 governance"
+      ]
+    },
+    "depends": [
+      "ATM-1.5-0002"
+    ]
   }
 ]

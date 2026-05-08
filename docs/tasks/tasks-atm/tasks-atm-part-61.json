@@ -1,64 +1,61 @@
 [
   {
-    "doc_id": "doc_task_0280",
-    "id": "ATM-4-0005",
-    "title": "Injection plan 與 rollback dry-run",
+    "doc_id": "doc_task_0247",
+    "id": "ATM-0-0003",
+    "title": "Roadmap 上游開源化改版",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
-    "type": "case-study",
-    "phase": "ATM-4",
+    "status": "done",
+    "type": "docs",
+    "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-05T20:58:01+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-06T08:08:07+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
+    "description": "將 AI_Atomic_Framework_Roadmap.md 改成 AI-Atomic-Framework 上游開源框架藍圖，核心章節不得再綁 3KLife。",
     "related": [],
     "depends": [
-      "ATM-4-0003",
-      "ATM-3-0002",
-      "ATM-2.5-0001",
-      "ATM-2.5-0002"
+      "ATM-0-0001"
     ],
     "acceptance": [
-      "dry-run 可 review",
-      "rollback plan 對稱",
-      "來回套用 diff 可回到原狀",
-      "第一輪只產 dry-run patch plan 與 rollback plan，不 apply patch、不改 legacy runtime",
-      "alpha0 gate evidence link：schema / registry / hash-lock / CLI / hello-world / minimal evidence 全綠"
+      "核心章節不把 3KLife/Cocos/html-to-ucuf/tools_node 當作前提",
+      "明確記載 GitHub repo https://github.com/eaglhuang/AI-Atomic-Framework",
+      "Roadmap 完成後確認 core 不硬依賴外部大型框架，外部工具皆以 adapter/plugin 表示"
     ],
     "deliverables": [
-      "inject-plan JSON schema",
-      "rollback-plan JSON schema",
-      "H2U normalizeCssColor dry-run plan"
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md 轉為 upstream roadmap",
+      "新增 core adapter host project 分層",
+      "html-to-ucuf 降級為 reference case study",
+      "v0.2 companion 的 Core 極簡、無硬依賴與 optional plugin 原則已寫入 upstream Roadmap"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 啟動條件：self-hosting alpha0 全綠後才可 dry-run injection + rollback plan | 阻塞: alpha0 gate 未全綠",
+    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0007（v0.2整合+Roadmap upstream改版）與 ATM-0-0010（self-hosting first回寫）代為完成 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0003、ATM-3-0002"
+      "label": "ATM 開源化開卡",
+      "summary": "將 AI_Atomic_Framework_Roadmap.md 改成 AI-Atomic-Framework 上游開源框架藍圖，核心章節不得再綁 3KLife。",
+      "position": "ATM-0",
+      "prereq": "ATM-0-0001"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
       ],
       "output": [
-        "inject-plan JSON schema",
-        "rollback-plan JSON schema",
-        "H2U normalizeCssColor dry-run plan"
+        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md 轉為 upstream roadmap",
+        "新增 core adapter host project 分層",
+        "html-to-ucuf 降級為 reference case study"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
+        "確認依賴與 scope",
+        "修改或建立對應文件",
+        "跑 encoding 與 standard gate",
+        "回寫 notes"
       ]
     },
     "harness_evidence": {
@@ -70,62 +67,63 @@
     }
   },
   {
-    "doc_id": "doc_task_0283",
-    "id": "ATM-4-0006",
-    "title": "H2U case study 與 Cocos runtime 邊界",
+    "doc_id": "doc_task_0265",
+    "id": "ATM-3-0002",
+    "title": "3KLife ATM config 與 bootstrap wrapper",
     "owner": "GitHubCopilot",
-    "priority": "P1",
-    "status": "open",
-    "type": "case-study-policy",
-    "phase": "ATM-4",
+    "priority": "P0",
+    "status": "done",
+    "type": "adapter",
+    "phase": "ATM-3",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-08T05:36:17+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T05:40:47+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+    "description": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
     "related": [],
     "depends": [
-      "ATM-4-0002",
-      "ATM-3-0005",
-      "ATM-2.5-0002"
+      "ATM-3-0001"
     ],
     "acceptance": [
-      "Cocos Component/Node/Prefab 明確禁止進 compute atom",
-      "H2U fidelity/domain scoring 僅屬 case study plugin",
-      "case study 可關閉而不影響 core",
-      "case study 啟動條件：self-hosting alpha0 deterministic gate 全綠",
-      "第一輪只允許 dry-run injection + rollback plan，不替換 draft-builder 主幹"
+      "node tools_node/atomic-framework/atm-cli.js status 可呼叫 upstream",
+      "workbench/registry path 指向本 repo local 區",
+      "不 fork core source",
+      "shadow wrapper 預設 dry-run / report-only，不替換現有 tools_node CLI"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
-      "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+      "tools_node/atomic-framework/bootstrap.js",
+      "tools_node/atomic-framework/atm-cli.js",
+      "atm.config.*",
+      "local workbench path 設定"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 後置條件：alpha0 全綠後只以 dry-run/rollback 進入 | 阻塞: alpha0 gate 未全綠",
+    "notes": "2026-05-08 | 狀態: done | 驗證: encoding/cross-shard/bootstrap smoke/standard gate pass | 變更: 完成 3KLife ATM config、bootstrap wrapper、atm-cli alias，並收尾 shard trim | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0002、ATM-3-0005"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+      "position": "ATM-3",
+      "prereq": "ATM-3-0001"
     },
     "contracts": {
       "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
-        "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+        "tools_node/atomic-framework/bootstrap.js",
+        "atm.config.*",
+        "local workbench path 設定"
       ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
         "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
       ]
     },
     "harness_evidence": {

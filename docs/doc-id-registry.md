@@ -18,12 +18,12 @@
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 178 |
 | 索引類 | `doc_index` | 17 |
-| 任務卡類 | `doc_task` | 352 |
+| 任務卡類 | `doc_task` | 353 |
 | AI Agent 專用 | `doc_ai` | 31 |
 | Agent Skill 專用 | `doc_agentskill` | 46 |
 | Server 文件類 | `doc_server_<subtype>` | 15 |
 | 其它類 | `doc_other` | 86 |
-| **合計** | — | **807** |
+| **合計** | — | **808** |
 
 ---
 
@@ -419,6 +419,7 @@
 | `doc_task_0358` | docs/agent-briefs/tasks/ATM/ATM-2-0048.md | [ATM-2-0048] ATM task-router / onboarding contract |
 | `doc_task_0356` | docs/agent-briefs/tasks/ATM/ATM-2-0049.md | [ATM-2-0049] Task id reservation and lock race hardening |
 | `doc_task_0360` | docs/agent-briefs/tasks/ATM/ATM-2-0050.md | [ATM-2-0050] Framework Function Atomization Coverage Gate |
+| `doc_task_0361` | docs/agent-briefs/tasks/ATM/ATM-2-0051.md | [ATM-2-0051] Coverage Gate Promotion & Self-Coverage Follow-up |
 | `doc_task_0303` | docs/agent-briefs/tasks/ATM/ATM-2.5-0001.md | [ATM-2.5-0001] Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI |
 | `doc_task_0304` | docs/agent-briefs/tasks/ATM/ATM-2.5-0002.md | [ATM-2.5-0002] Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate |
 | `doc_task_0305` | docs/agent-briefs/tasks/ATM/ATM-2.5-0003.md | [ATM-2.5-0003] Multi-Agent 兼容性驗證：confidence gate |

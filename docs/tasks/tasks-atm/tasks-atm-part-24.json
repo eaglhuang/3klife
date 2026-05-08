@@ -1,101 +1,56 @@
 [
   {
-    "doc_id": "doc_task_0353",
-    "id": "ATM-2-0046",
-    "title": "Registry Catalog Map Section Rendering",
-    "owner": "ClaudeCode_sonnet-4-6",
+    "doc_id": "doc_task_0344",
+    "id": "ATM-2-0037",
+    "title": "Workbench Alias Drift Guard and Projection Alignment",
+    "owner": "vs-code-gpt-5.4-mini",
     "priority": "P1",
-    "status": "open",
-    "type": "registry",
+    "status": "done",
+    "type": "guardrail",
     "phase": "ATM-2",
     "created": "2026-05-07",
-    "created_by_agent": "ClaudeCode_sonnet-4-6",
-    "sensor_triggered_by": "atm-2-0042-map-generator-ripple",
-    "description": "ATM-2-0034 catalog renderer 追加 map 段落，顯示 mapId / member count / status / workbench path。",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T14:09:16.5225687+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
+    "chain_step": "2/2",
+    "sensor_triggered_by": "atm-workbench-alias-drift",
+    "description": "補上自動驗證與展示層收斂，避免 logicalName 再被誤當成 atomId 或 workbench 目錄名，並在 human-readable projection 明確分開 atomId 與 logicalName。",
     "related": [],
     "depends": [
+      "ATM-2-0013",
       "ATM-2-0034",
-      "ATM-2-0042"
+      "ATM-2-0036"
     ],
     "acceptance": [],
     "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 完成"
-  },
-  {
-    "doc_id": "doc_task_0274",
-    "id": "ATM-5-0003",
-    "title": "Semver Lifecycle 與 Governance",
-    "owner": "GitHubCopilot",
-    "priority": "P1",
-    "status": "open",
-    "type": "governance",
-    "phase": "ATM-5",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立開源專案版本治理、deprecated policy、breaking change RFC 與 release flow。",
-    "related": [],
-    "depends": [
-      "ATM-5-0001"
-    ],
-    "acceptance": [
-      "MAJOR/MINOR/PATCH 對應 Spec/Adapter/CLI 變更",
-      "adapter compatibility matrix 有格式",
-      "breaking change 需 RFC",
-      "release owner / maintainer duty matrix 已定義",
-      "package naming policy 覆蓋 core / cli / plugin-* / adapter-*",
-      "provenance 與 deprecation / migration policy 已定義",
-      "docs/LIFECYCLE.md 必須定義 framework semver 與 release channel 規則",
-      "docs/ATOM_COMPATIBILITY.md 定義 atom compatibility matrix（framework version ↔ atom schema version ↔ plugin SDK version）",
-      "docs/GOVERNANCE.md 與 release checklist 必須說明 PEV / upgrade proposal 公開審核規則",
-      "deprecated / migration policy 必須列出 breaking change RFC 與回滾窗口"
-    ],
-    "deliverables": [
-      "docs/LIFECYCLE.md",
-      "docs/GOVERNANCE.md",
-      "CHANGELOG.md policy",
-      "release checklist",
-      "docs/ATOM_COMPATIBILITY.md",
-      "docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md",
-      "release owner / maintainer duty matrix",
-      "package naming / provenance / deprecation policy"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 release owner、package naming、provenance 與 deprecation 實務要求 | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias drift guard 與 projection alignment | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:registry-catalog / npm.cmd test / npm.cmd run lint pass | 變更: 補上 workbench stray directory guard、registry catalog atomId/logicalName 分欄，並修正 validate-registry-catalog 改在 temp root 跑 fixture test runner 以避免重建 ATM-FIXTURE-0004 汙染 root workbench | 阻塞: none\n2026-05-08 | ??: done | ??: npm.cmd run validate:registry-core pass?registry projection / alias drift guard ???? | ??: projection alignment ????????? task shard ????? | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "建立開源專案版本治理、deprecated policy、breaking change RFC 與 release flow。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001"
+      "label": "ATM workbench alias guard 開卡",
+      "summary": "建立非 canonical alias 目錄的 drift guard，並統一 projection 對 atomId / logicalName 的呈現。",
+      "position": "ATM-2（guardrail / projection alignment）",
+      "prereq": "ATM-2-0013 / ATM-2-0034 / ATM-2-0036"
     },
     "contracts": {
       "input": [
-        "ATM-5-0001 quick start / API docs 已開立",
-        "ATM-2-0020 / ATM-2-0021 定義 PEV upgrade proposal 與 human review gate",
-        "ATM-2-0026 / ATM-2-0027 / ATM-2-0029 定義 atom compatibility 與 behavior/state-machine 基礎"
+        "canonical workbench layout 已定義為 atomic_workbench/atoms/<atomId>/",
+        "logicalName 仍可保留於 registry/spec，但不得再當成 workbench folder name",
+        "至少存在一份 human-readable projection 曾把 logicalName 當成 id 呈現"
       ],
       "output": [
-        "docs/LIFECYCLE.md",
-        "docs/GOVERNANCE.md",
-        "CHANGELOG.md policy",
-        "release checklist",
-        "docs/ATOM_COMPATIBILITY.md",
-        "release owner / maintainer duty matrix",
-        "package naming policy（core / cli / plugin-* / adapter-*）",
-        "provenance 與 deprecation / migration policy"
+        "新增或擴充 deterministic validator，檢出 atomic_workbench/atoms 下非 canonical alias 目錄 drift",
+        "驗證規則需容許合法 canonical ATM-* workbench 與明確 adapter override，不可誤殺正式 sourcePaths",
+        "registry catalog 與其他 human-readable projection 若呈現 atom 身分，必須明確區分 atomId 與 logicalName",
+        "補 fixture 或 snapshot，覆蓋 stray alias dir 與 projection 欄位對齊情境"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-5-0003.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:registry-catalog\\nnpm test\\nnpm run lint",
+      "rollback_hint": "若新 guard 對既有 host override 造成誤報，先縮小到 atomic_workbench/atoms default layout 範圍，不得放寬回 logicalName 可當 canonical folder 的舊行為。",
       "execution_steps": [
-        "盤點現有 lifecycle / governance / changelog 文件缺口",
-        "定義 semver、release channel、compatibility matrix 與 package naming policy",
-        "補 PEV / upgrade proposal 公開審核與 breaking change RFC 規則",
-        "補 release checklist、owner duty matrix、provenance 與 deprecation / migration policy",
-        "跑 encoding 與 standard gate，回寫 tracking notes"
+        "盤點目前 validator 與 projection 輸出缺口",
+        "設計 alias drift 判斷規則與允許例外",
+        "補 deterministic test 或 snapshot 覆蓋 stray alias dir 與 projection 欄位",
+        "回寫 catalog 或相關 human-readable projection，確保 atomId / logicalName 分欄或明確標示"
       ]
     },
     "harness_evidence": {
@@ -104,6 +59,31 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-08T17:35:00+08:00"
+  },
+  {
+    "doc_id": "doc_task_0351",
+    "id": "ATM-2-0044",
+    "title": "Backfill Existing Maps Through Map Generator",
+    "owner": "ClaudeCode_sonnet-4-6",
+    "priority": "P0",
+    "status": "open",
+    "type": "migration",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "ClaudeCode_sonnet-4-6",
+    "chain_id": "ATM-MAP-GENERATOR-PROVENANCE-V1",
+    "chain_step": "2/3",
+    "sensor_triggered_by": "atm-2-0042-map-generator-ripple",
+    "description": "遷移 ATM-MAP-NEUTRALITY-0001 從舊格式到 generator canonical 格式（ATM-MAP-{NNNN}、atomic_workbench/maps/ 路徑）。",
+    "related": [],
+    "depends": [
+      "ATM-2-0042",
+      "ATM-2-0043"
+    ],
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 + ATM-2-0043 完成"
   }
 ]

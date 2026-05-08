@@ -1,72 +1,5 @@
 [
   {
-    "doc_id": "doc_task_0247",
-    "id": "ATM-0-0003",
-    "title": "Roadmap 上游開源化改版",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "docs",
-    "phase": "ATM-0",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T20:58:01+08:00",
-    "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-06T08:08:07+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "將 AI_Atomic_Framework_Roadmap.md 改成 AI-Atomic-Framework 上游開源框架藍圖，核心章節不得再綁 3KLife。",
-    "related": [],
-    "depends": [
-      "ATM-0-0001"
-    ],
-    "acceptance": [
-      "核心章節不把 3KLife/Cocos/html-to-ucuf/tools_node 當作前提",
-      "明確記載 GitHub repo https://github.com/eaglhuang/AI-Atomic-Framework",
-      "Roadmap 完成後確認 core 不硬依賴外部大型框架，外部工具皆以 adapter/plugin 表示"
-    ],
-    "deliverables": [
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md 轉為 upstream roadmap",
-      "新增 core adapter host project 分層",
-      "html-to-ucuf 降級為 reference case study",
-      "v0.2 companion 的 Core 極簡、無硬依賴與 optional plugin 原則已寫入 upstream Roadmap"
-    ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: 交付物已存在 | 變更: 工作由 ATM-0-0007（v0.2整合+Roadmap upstream改版）與 ATM-0-0010（self-hosting first回寫）代為完成 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 開源化開卡",
-      "summary": "將 AI_Atomic_Framework_Roadmap.md 改成 AI-Atomic-Framework 上游開源框架藍圖，核心章節不得再綁 3KLife。",
-      "position": "ATM-0",
-      "prereq": "ATM-0-0001"
-    },
-    "contracts": {
-      "input": [
-        "上游 core 與 3KLife adapter 邊界已依 Roadmap 釐清"
-      ],
-      "output": [
-        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md 轉為 upstream roadmap",
-        "新增 core adapter host project 分層",
-        "html-to-ucuf 降級為 reference case study"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "依 git diff 回退本卡 touched files；若已產生 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
-      "execution_steps": [
-        "確認依賴與 scope",
-        "修改或建立對應文件",
-        "跑 encoding 與 standard gate",
-        "回寫 notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
-  },
-  {
     "id": "ATM-1.5-0002",
     "title": "Seed 自我驗證：產生第一份 atomic-registry.json",
     "status": "done",
@@ -112,5 +45,80 @@
     "depends": [
       "ATM-1.5-0001"
     ]
+  },
+  {
+    "doc_id": "doc_task_0294",
+    "id": "ATM-2-0010",
+    "title": "Neutrality boundary rule guard",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "open-source-core",
+    "phase": "ATM-2",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 upstream neutral/boundary rule guard，先以 deterministic 掃描檢查寫死 host 假設，再以 optional semantic audit 補抓隱性耦合與 stale docs。",
+    "related": [
+      "ATM-1-0008",
+      "ATM-1-0009",
+      "ATM-1-0010"
+    ],
+    "depends": [
+      "ATM-2-0007",
+      "ATM-2-0008"
+    ],
+    "acceptance": [
+      "guard 可掃 source/docs/examples/templates/prompt assets",
+      "deterministic 規則可攔截 3KLife/Cocos/html-to-ucuf/task-lock/compute-gate/doc-id 等 protected terms",
+      "semantic audit 只作 warn/needs-review，不單獨決定 hard fail",
+      "guard 區分 code dead-code 與 doc dead-doc，不把 LLM 當唯一裁決",
+      "deterministic / semantic 掃描必須同時涵蓋 .atm/reports/upgrade-proposals/* 與 evidence-store payload",
+      "adopter 私有資訊（3KLife / Cocos / UCUF / html-to-ucuf）出現在 upgrade-proposal 或 evidence 內容時 hard fail"
+    ],
+    "deliverables": [
+      "neutrality/boundary guard spec",
+      "protected-surface 與 banned-term config",
+      "semantic review report schema",
+      "standalone smoke fixture"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 neutrality/boundary rule guard 任務 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM self-hosting first 開卡",
+      "summary": "建立可自動驗證的 neutrality/boundary guard，避免 upstream 再被 adopter 私有假設污染。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0007、ATM-2-0008"
+    },
+    "contracts": {
+      "input": [
+        "governance schema 與 local reference plugins 已定義",
+        "guard 需同時涵蓋 code 與 docs surfaces"
+      ],
+      "output": [
+        "deterministic neutrality scan",
+        "optional semantic audit",
+        "protected surface policy 與 CI smoke"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退 guard 規格或 reference implementation；不得把 3KLife 私有路徑寫回 upstream protected surfaces。",
+      "execution_steps": [
+        "定義 protected surfaces",
+        "定義 banned terms 與 deterministic rules",
+        "補 semantic review report schema",
+        "建立 smoke fixture"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

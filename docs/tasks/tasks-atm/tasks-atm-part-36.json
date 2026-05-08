@@ -1,76 +1,67 @@
 [
   {
-    "doc_id": "doc_task_0264",
-    "id": "ATM-3-0001",
-    "title": "3KLife ProjectAdapter wrapper",
-    "owner": "vs-code-gpt-5.4",
+    "doc_id": "doc_task_0288",
+    "id": "ATM-2-0008",
+    "title": "Local governance reference plugins",
+    "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "adapter",
-    "phase": "ATM-3",
+    "type": "open-source-core",
+    "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-07T09:08:11Z",
+    "started_at": "2026-05-07T16:36:00+08:00",
     "started_by_agent": "vs-code-gpt-5.4",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "在 3KLife 建立 ProjectAdapter wrapper，把 task-card-opener、task-lock、compute-gate、doc-id-registry、shard-manager、artifacts/logs、scope/import/encoding guard 接到 upstream SDK。",
+    "description": "實作 upstream 預設治理套件，讓空白 repo 不依賴 3KLife 也能使用 task、lock、doc index、shard、artifact、log、rule guard 與 evidence workflow。",
     "related": [],
     "depends": [
-      "ATM-2-0006",
-      "ATM-2.5-0002"
+      "ATM-2-0007"
     ],
     "acceptance": [
-      "ProjectAdapter 不複製 upstream core",
-      "lock/gate/doc/encoding 均由既有工具 delegate",
-      "無工具時有明確 fail/dry-run 行為",
-      "3KLife 不搬動既有治理工具，只以 adapter 消費 upstream governance interface",
-      "3KLife artifacts/logs/reports 能映射到 ArtifactStore / LogStore / StateFileAdapter",
-      "shadow-mode report：只讀既有治理 CLI，不改入口行為",
-      "parity test：低風險 helper 路徑不退轉",
-      "Phase 2：每個 GovernanceStore 規劃對應 ATM-GOV-* atom spec",
-      "matrix：標註 Phase 1 adapter 化 / Phase 2 原子化"
+      "空白 repo 可用 atm init / atm bootstrap 建立 canonical .atm governance layout",
+      "@ai-atomic-framework/plugin-governance-local 提供 task/lock/document-index/shard/artifact/log/run-report/state/rule/evidence/context-summary stores",
+      "bootstrap / self-hosting alpha smoke 維持綠燈",
+      "local governance smoke fixture 驗證 .atm/artifacts、.atm/logs、.atm/reports 與其他 canonical stores",
+      "reference plugins 不被 packages/core 直接 import",
+      "reference plugins 標記為 alpha1 gate，不阻塞 alpha0",
+      "version-history / human-review reference plugins 標記為 alpha1，不阻塞 alpha0 release"
     ],
     "deliverables": [
-      "tools_node/adapters/atm-3klife/project-adapter.js",
-      "adapter integration tests",
-      "adapter capability matrix",
-      "tools_node/adapters/atm-3klife/governance-adapter.js",
-      "3KLife task/doc/shard/artifact/log/rule/evidence mapping matrix",
-      "artifacts/、turn artifacts、Cocos/editor/browser logs、Markdown/JSON 狀態檔 mapping"
+      "packages/plugin-governance-local",
+      "packages/cli/src/commands/bootstrap.mjs",
+      "scripts/validate-governance-local.mjs",
+      "tests/governance-local.fixture.json",
+      "examples/agent-bootstrap/README.md",
+      ".atm/artifacts、.atm/logs、.atm/reports default store 與 smoke fixture"
     ],
-    "notes": "2026-05-07 | 狀態: done | 驗證: integration/parity tests + encoding + standard gate pass | 變更: 完成 Phase 1 shadow adapter；matrix/report 內建 Phase 2 atomization path | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: done | 驗證: node scripts/validate-bootstrap.mjs --mode test、node scripts/validate-governance-local.mjs --mode test、node scripts/validate-self-hosting-alpha.mjs --mode test、npm test、npm run typecheck、npm run lint 全綠 | 變更: 新增 plugin-governance-local package 與 standalone governance smoke；CLI bootstrap 改接新 bundle；順手修正 validate-core-spec-parser 的 Windows path compare | 阻塞: none\n2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 將完整 reference plugins 移到 alpha1；alpha0 只要求最小 task/lock/evidence smoke | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "在 3KLife 建立 ProjectAdapter wrapper，把 task-lock、compute-gate、doc-id-registry、encoding 接到 upstream SDK。",
-      "position": "ATM-3",
-      "prereq": "ATM-2-0006"
+      "label": "ATM governance split 開卡",
+      "summary": "建立 upstream Default Governance Bundle 的 local reference plugins，讓 ATM 在空白 repo 能完整運作。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0007"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "governance primitives schema 已定義",
+        "Core 不得硬依賴 reference plugins"
       ],
       "output": [
-        "tools_node/adapters/atm-3klife/project-adapter.js",
-        "adapter integration tests",
-        "adapter capability matrix",
-        "tools_node/adapters/atm-3klife/governance-adapter.js",
-        "3KLife task/doc/shard/artifact/log/rule/evidence mapping matrix",
-        "Phase 2 atomization path doc",
-        "Phase 1/Phase 2 annotated matrix"
+        "local governance reference plugins",
+        "standalone governance example",
+        "CLI governance commands smoke test"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退 reference plugin package；packages/core 不可 import plugin 實作。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes",
-        "驗證 3KLife 只以 adapter 消費既有 governance interface",
-        "對應 artifacts/logs/state 到 store 介面",
-        "跑 shadow/parity test，不替換既有 CLI 行為"
+        "建立 local .atm layout",
+        "實作 task/lock/index/shard/rule/evidence plugins",
+        "補 CLI smoke test",
+        "補 standalone example"
       ]
     },
     "harness_evidence": {
@@ -82,66 +73,47 @@
     }
   },
   {
-    "doc_id": "doc_task_0276",
-    "id": "ATM-6-0001",
-    "title": "跨專案 Registry / DB / Vector 決策",
+    "doc_id": "doc_task_0321",
+    "id": "ATM-2-0018",
+    "title": "BuildAgentPrompt bootstrap atom（000003）",
     "owner": "GitHubCopilot",
-    "priority": "P2",
-    "status": "open",
-    "type": "ecosystem",
-    "phase": "ATM-6",
-    "created": "2026-05-05",
+    "priority": "P0",
+    "status": "done",
+    "type": "bootstrap-atom",
+    "phase": "ATM-2",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
+    "started_at": "2026-05-07T03:03:48Z",
+    "started_by_agent": "vs-code-gpt-5.4",
+    "completed_at": "2026-05-07T03:11:35Z",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "5/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "從 atomic spec 產出受控 AI prompt，內含 forbidden rules、allowed files、evidence contract；屬於 birth pipeline 的 000003 工序。",
     "related": [],
     "depends": [
-      "ATM-5-0004"
+      "ATM-2-0001",
+      "ATM-2-0002",
+      "ATM-2-0005"
     ],
     "acceptance": [
-      "JSON-first 仍是真相",
-      "DB/vector 只作 optional plugin",
-      "不增加 core v0.1 必備依賴"
+      "atom build-agent-prompt 可從 normalized spec 產出 prompt.md，含 frontmatter 列出 forbidden rules / allowed files / evidence contract",
+      "prompt 結構通過 schemas/agent-prompt.schema.json 驗證",
+      "birth fixture：minimal spec → prompt 對 snapshot；spec 變更時 prompt 必須跟著變化"
     ],
     "deliverables": [
-      "docs/ecosystem/registry-db-vector-decision.md",
-      "plugin boundary proposal"
+      "packages/core/src/agent-prompt/build-agent-prompt.ts",
+      "schemas/agent-prompt.schema.json",
+      "fixtures/agent-prompt/minimal.input.json",
+      "fixtures/agent-prompt/minimal.expected.md"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 | 狀態: done | 驗證: validate:agent-prompt / validate:schemas / npm test / npm run typecheck / npm run lint 通過 | 變更: 上游 7791d51 新增 build-agent-prompt、agent-prompt schema、snapshot fixture 與 root validation wiring | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
-      "position": "ATM-6",
-      "prereq": "ATM-5-0004"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "docs/ecosystem/registry-db-vector-decision.md",
-        "plugin boundary proposal"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "補上 Roadmap §7.1 的 000003 缺口，使 birth pipeline 能正式委託 AI。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0001 / ATM-2-0002 / ATM-2-0005"
     }
   }
 ]

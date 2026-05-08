@@ -1,88 +1,5 @@
 [
   {
-    "doc_id": "doc_task_0279",
-    "id": "ATM-4-0003",
-    "title": "normalizeCssColor 首個 case atom",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "atom-case",
-    "phase": "ATM-4",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T10:00:40+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4-mini",
-    "completed_at": "2026-05-08T17:35:00+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
-    "related": [],
-    "depends": [
-      "ATM-4-0002",
-      "ATM-2-0004"
-    ],
-    "acceptance": [
-      "atom test pass",
-      "forbidden import/side-effect police pass",
-      "H2U baseline 不退轉"
-    ],
-    "deliverables": [
-      "H2U normalizeCssColor atomic spec",
-      "5 positive fixtures",
-      "2 negative fixtures",
-      "1 legacy fixture",
-      "registry/hash entry"
-    ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-08 | ??: done | ??: task-router ATM-4-0003 sample route pass?ATM-CORE-0004 / atom-generator acceptance revalidation pass | ??: normalizeCssColor ?? case atom ????????? task shard ????? | ??: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0002、ATM-2-0004"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "H2U normalizeCssColor atomic spec",
-        "5 positive fixtures",
-        "2 negative fixtures",
-        "1 legacy fixture",
-        "registry/hash entry"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [
-        "atomic_workbench/atoms/ATM-CORE-0005/atom.test.report.json",
-        "atomic_workbench/atoms/ATM-CORE-0005/lineage-log.json",
-        "specs/normalize-css-color.atom.json"
-      ],
-      "validation_evidence": [
-        "node atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs",
-        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-core",
-        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-catalog",
-        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-index"
-      ],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": [
-        "8/8 fixture cases passing",
-        "upstream registry and catalog synchronized"
-      ]
-    }
-  },
-  {
     "doc_id": "doc_task_0272",
     "id": "ATM-5-0001",
     "title": "Quick Start 與 API 文件",
@@ -142,6 +59,82 @@
         "實作 adapter 或 case study artifact",
         "跑 adapter/case 驗證",
         "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
+  },
+  {
+    "doc_id": "doc_task_0284",
+    "id": "ATM-5-0005",
+    "title": "Living Spec 同步器與 PEV Loop",
+    "owner": "GitHubCopilot",
+    "priority": "P1",
+    "status": "open",
+    "type": "optional-feature",
+    "phase": "ATM-5",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
+    "related": [],
+    "depends": [
+      "ATM-5-0001",
+      "ATM-2-0006"
+    ],
+    "acceptance": [
+      "PEV Loop 成為標準流程語彙",
+      "MVP 只要求 drift prompt，不要求自動雙向同步",
+      "Living Spec 不阻塞 v0.1 alpha release",
+      "docs/PEV_LOOP.md 必須定義 Plan-Execute-Verify-Converge 如何產生 PEV upgrade proposal",
+      "docs/LIVING_SPEC.md 必須說明 Living Spec sync 不得自動 promote；只能產生 reviewable proposal",
+      "Spec drift prompt schema 必須輸出 atom compatibility impact 與 semver recommendation",
+      "README workflow summary 必須連回 framework semver / atom compatibility / PEV proposal 文件"
+    ],
+    "deliverables": [
+      "docs/PEV_LOOP.md",
+      "docs/LIVING_SPEC.md",
+      "Spec drift prompt schema",
+      "README workflow summary",
+      "schemas/pev/upgrade-proposal-public.schema.json",
+      "schemas/pev/spec-drift-prompt.schema.json",
+      "PEV upgrade proposal 範例"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM v0.2 整合開卡",
+      "summary": "將 v0.2 的 Plan-Execute-Verify-Converge 流程與 Living Spec 輕量同步機制納入開源文件與後續 optional feature。",
+      "position": "ATM-5",
+      "prereq": "ATM-5-0001、ATM-2-0006"
+    },
+    "contracts": {
+      "input": [
+        "v0.2 companion analysis 已確認可作務實化補充"
+      ],
+      "output": [
+        "docs/PEV_LOOP.md",
+        "docs/LIVING_SPEC.md",
+        "Spec drift prompt schema",
+        "README workflow summary",
+        "PEV upgrade proposal 範例，含 atom compatibility impact 與 semver recommendation"
+      ],
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-5-0005.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
       ]
     },
     "harness_evidence": {

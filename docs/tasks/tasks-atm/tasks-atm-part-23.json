@@ -1,88 +1,78 @@
 [
   {
-    "doc_id": "doc_task_0344",
-    "id": "ATM-2-0037",
-    "title": "Workbench Alias Drift Guard and Projection Alignment",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P1",
+    "doc_id": "doc_task_0323",
+    "id": "ATM-2-0020",
+    "title": "ProposeAtomicUpgrade（000012）",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
     "status": "done",
-    "type": "guardrail",
+    "type": "orchestration-atom",
     "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T14:09:16.5225687+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
-    "chain_step": "2/2",
-    "sensor_triggered_by": "atm-workbench-alias-drift",
-    "description": "補上自動驗證與展示層收斂，避免 logicalName 再被誤當成 atomId 或 workbench 目錄名，並在 human-readable projection 明確分開 atomId 與 logicalName。",
+    "created": "2026-05-06",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-08T00:30:00.2262013+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T00:30:00.2262013+08:00",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "7/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "串接 hash-diff / metrics / regression-compare 結果，產出 upgrade-proposal.json，並提供 atm upgrade --propose --dry-run CLI。",
     "related": [],
     "depends": [
-      "ATM-2-0013",
-      "ATM-2-0034",
-      "ATM-2-0036"
+      "ATM-2-0015",
+      "ATM-2-0016",
+      "ATM-2-0017"
     ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias drift guard 與 projection alignment | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:registry-catalog / npm.cmd test / npm.cmd run lint pass | 變更: 補上 workbench stray directory guard、registry catalog atomId/logicalName 分欄，並修正 validate-registry-catalog 改在 temp root 跑 fixture test runner 以避免重建 ATM-FIXTURE-0004 汙染 root workbench | 阻塞: none\n2026-05-08 | ??: done | ??: npm.cmd run validate:registry-core pass?registry projection / alias drift guard ???? | ??: projection alignment ????????? task shard ????? | ??: none",
+    "acceptance": [
+      "upgrade-proposal.schema.json 含 atomId / fromVersion / toVersion / automatedGates / humanReview pending",
+      "CLI atm upgrade --propose --atom <id> --to <ver> --dry-run --json 輸出符合 schema 的 proposal",
+      "automatedGates 任一 fail 時 proposal 必須標記 status=blocked，不允許進入 review queue",
+      "upgrade-proposal.schema.json 增加 decompositionDecision（enum: atom-bump | atom-extract | map-bump）與 mapImpactScope 欄位",
+      "CLI 增加 --target atom|map 旗標；--target map 時必須附 mapId",
+      "decompositionDecision 為 atom-extract 時，proposal 需同時列出新 atomId 與 fork 來源",
+      "upgrade-proposal.schema.json 追加必填欄位 behaviorId（預設 behavior.evolve）；其他合法值由 ATM-2-0029 reference behavior pack 註冊",
+      "node scripts/validate-upgrade-proposal.mjs 必須可在不跑整包 test 的情況下，獨立驗證 schema、status=blocked 邏輯、decompositionDecision / behaviorId invariant",
+      "exemplar 至少保留 proposal-pass.json 與 proposal-blocked.json 兩組，可直接重放 CLI --dry-run --json 輸出到 validator"
+    ],
+    "deliverables": [
+      "schemas/upgrade/upgrade-proposal.schema.json",
+      "packages/core/src/upgrade/propose.mjs",
+      "packages/cli/src/commands/upgrade.mjs",
+      "scripts/validate-upgrade-proposal.mjs",
+      "fixtures/upgrade/proposal-pass.json",
+      "fixtures/upgrade/proposal-blocked.json"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-06 v2 規劃書附錄 B：追加 Atomic Map 演化條文（acceptance additive）\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— upgrade-proposal 追加 behaviorId 欄位（必填，預設 behavior.evolve）\n2026-05-07 附錄 C 治理補丁：升版 proposal 保持為唯一編排 choke point；effect node 僅能寫 evidence，不得直接 promote\n2026-05-07 測試穩定性補丁：維持 orchestration atom 目的不變；補 deterministic validator 與 exemplar pair，讓 proposal contract 失敗可先在本卡 seam 定位\n2026-05-08 | 狀態: done | 驗證: node scripts/validate-upgrade-proposal.mjs --mode validate / node scripts/validate-schemas.mjs --mode test / node scripts/validate-cli.mjs --mode test / npm test / npm run typecheck / npm run lint | 變更: AI-Atomic-Framework commit bd48800 補 ProposeAtomicUpgrade schema/core/CLI/fixtures/validator；CLI 採既有 flat command atm upgrade --propose，proposal 僅彙整既有 evidence/report，不 mutate host、不進 review queue | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM workbench alias guard 開卡",
-      "summary": "建立非 canonical alias 目錄的 drift guard，並統一 projection 對 atomId / logicalName 的呈現。",
-      "position": "ATM-2（guardrail / projection alignment）",
-      "prereq": "ATM-2-0013 / ATM-2-0034 / ATM-2-0036"
-    },
-    "contracts": {
-      "input": [
-        "canonical workbench layout 已定義為 atomic_workbench/atoms/<atomId>/",
-        "logicalName 仍可保留於 registry/spec，但不得再當成 workbench folder name",
-        "至少存在一份 human-readable projection 曾把 logicalName 當成 id 呈現"
-      ],
-      "output": [
-        "新增或擴充 deterministic validator，檢出 atomic_workbench/atoms 下非 canonical alias 目錄 drift",
-        "驗證規則需容許合法 canonical ATM-* workbench 與明確 adapter override，不可誤殺正式 sourcePaths",
-        "registry catalog 與其他 human-readable projection 若呈現 atom 身分，必須明確區分 atomId 與 logicalName",
-        "補 fixture 或 snapshot，覆蓋 stray alias dir 與 projection 欄位對齊情境"
-      ],
-      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:registry-catalog\\nnpm test\\nnpm run lint",
-      "rollback_hint": "若新 guard 對既有 host override 造成誤報，先縮小到 atomic_workbench/atoms default layout 範圍，不得放寬回 logicalName 可當 canonical folder 的舊行為。",
-      "execution_steps": [
-        "盤點目前 validator 與 projection 輸出缺口",
-        "設計 alias drift 判斷規則與允許例外",
-        "補 deterministic test 或 snapshot 覆蓋 stray alias dir 與 projection 欄位",
-        "回寫 catalog 或相關 human-readable projection，確保 atomId / logicalName 分欄或明確標示"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    },
-    "completed_at": "2026-05-08T17:35:00+08:00"
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "evolution 管線首個 orchestration atom：把 birth-pipeline 工具組合成 upgrade 提案。",
+      "position": "ATM-2",
+      "prereq": "ATM-2-0015 / ATM-2-0016 / ATM-2-0017"
+    }
   },
   {
-    "doc_id": "doc_task_0350",
-    "id": "ATM-2-0043",
-    "title": "Map Source Template & Workbench Policy",
-    "owner": "ClaudeCode_sonnet-4-6",
+    "id": "ATM-2.5-0001",
+    "title": "Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI",
+    "status": "done",
     "priority": "P0",
-    "status": "open",
-    "type": "architecture",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "ClaudeCode_sonnet-4-6",
-    "chain_id": "ATM-MAP-GENERATOR-PROVENANCE-V1",
-    "chain_step": "1/3",
-    "sensor_triggered_by": "atm-2-0042-map-generator-ripple",
-    "description": "正式化 map 三件套模板結構與 workbench 檔案命名規則，對標 atom 四件套（ATM-2-0039）。",
-    "related": [],
+    "phase": "ATM-2.5",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0303",
+    "started_at": "2026-05-06T16:42:17Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T17:06:00Z",
     "depends": [
-      "ATM-2-0042"
+      "ATM-2-0013",
+      "ATM-2-0012",
+      "ATM-2-0004",
+      "ATM-2-0005"
     ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 完成"
+    "acceptance": [
+      "alpha0 gate 僅驗 deterministic 4 條 criteria；version history / rollback / evolution metrics 僅作 readiness warning，不阻塞 alpha0 release"
+    ],
+    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | done | upstream 64ec0bc | gate criteria1-4 true；validate:neutrality/cli/self-hosting-alpha + npm test/typecheck/lint pass | blocker: none"
   }
 ]

@@ -2110,5 +2110,11 @@
     "path": "docs/agent-briefs/tasks/ATM/ATM-2-0050.md",
     "title": "[ATM-2-0050] Framework Function Atomization Coverage Gate",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0361",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-2-0051.md",
+    "title": "[ATM-2-0051] Coverage Gate Promotion & Self-Coverage Follow-up",
+    "category": "task"
   }
 ]

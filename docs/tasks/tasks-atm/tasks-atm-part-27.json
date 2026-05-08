@@ -1,77 +1,87 @@
 [
   {
-    "doc_id": "doc_task_0333",
-    "id": "ATM-2-0027",
-    "title": "Atom Status State Machine",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "registry",
+    "doc_id": "doc_task_0343",
+    "id": "ATM-2-0036",
+    "title": "Stale Atom Workspace Alias Directory Cleanup",
+    "owner": "vs-code-gpt-5.4-mini",
+    "priority": "P1",
+    "status": "done",
+    "type": "migration",
     "phase": "ATM-2",
     "created": "2026-05-07",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "GitHubCopilot",
-    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
-    "chain_step": "2/8",
-    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
-    "description": "收斂 status enum 為 draft/validated/active/transitioning/deprecated/expired/quarantined；把 governed 改為獨立的 governance.tier 屬性；定義合法 status transition 矩陣與 police hard-fail 規則。舊值（seed/active/experimental/deprecated/governed）有 migration map 對應。",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T14:07:14.7347467+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
+    "chain_step": "1/2",
+    "sensor_triggered_by": "atm-workbench-alias-drift",
+    "description": "追查並清除 AI-Atomic-Framework/atomic_workbench/atoms 下歷史遺留的 logicalName alias 空目錄，確認 canonical atom workbench 只接受 ATM-* 目錄名。",
     "related": [],
     "depends": [
-      "ATM-2-0026",
-      "ATM-2-0014"
+      "ATM-1-0011",
+      "ATM-2-0013",
+      "ATM-2-0034"
     ],
-    "acceptance": [
-      "registry.schema.json status enum 收斂為 draft/validated/active/transitioning/deprecated/expired/quarantined",
-      "新增 governance.tier 屬性 enum: constitutional/governed/standard/experimental",
-      "舊值 migration map 落地：seed→active+constitutional / governed→active+governed / experimental→validated",
-      "定義合法 status transition 矩陣（10 種 behavior 對應的起點/終點）",
-      "police hard-fail：違反 transition 矩陣 / quarantined 由非警察寫入 / TTL 過期但仍 active",
-      "fixtures：所有 7 種 status 各 1 個 + 4 種 governance.tier 各 1 個 + 5 種非法 transition 反例",
-      "Status enum 與 transition matrix 須同時覆蓋 atom 與 map registry entry；map 經 generator 誕生時 initial status = draft",
-      "Migration map 須包含 legacy map entry（如 ATM-MAP-NEUTRALITY-0001，目前無 status 欄位）",
-      "status-machine.ts 須接受 atomId 和 mapId 兩種 entry type；legal transition 檢查不可假設 entry 只是 atom",
-      "migration fixtures 必須覆蓋 versions[] 已存在 + 舊 status 值 seed/governed 的 entry，確保與 ATM-2-0014 的跨卡升級路徑可通過",
-      "human review reject 狀態處置：approve→active；non-fatal reject 維持原狀；fatal reject 寫 pendingQuarantineRequest 待 lifecycle police 決定",
-      "validate-status-machine.mjs 必須獨立驗證 atom/map legal transition、legacy migration、review reject disposition",
-      "exemplar：legal-transition / illegal-transition / legacy-map-migration / review-reject-pending-quarantine"
-    ],
-    "deliverables": [
-      "schemas/registry.schema.json",
-      "packages/core/src/registry/status-machine.ts",
-      "packages/core/src/registry/status-migration.ts",
-      "scripts/validate-status-machine.mjs",
-      "fixtures/registry/status/legal-transition.json",
-      "fixtures/registry/status/illegal-transition.json",
-      "fixtures/registry/status/legacy-map-migration.json",
-      "fixtures/registry/status/review-reject-pending-quarantine.json"
-    ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: ATM 識別/行為/狀態機提案開卡 | 阻塞: 等 ATM-2-0026 schema 擴充\n2026-05-07 ATM-2-0042：status machine 需覆蓋 map entry / map birth / legacy map migration\n2026-05-07 附錄 C：補 versions[] × legacy status fixture 與 reject/quarantine 處置\n2026-05-07 測試穩定性補丁：追加 validator + exemplar quartet",
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias cleanup 與 migration note | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:scaffold-builder / npm.cmd run validate:test-runner pass | 變更: 清除 AI-Atomic-Framework/atomic_workbench/atoms 下的 stale alias 空目錄，並在 docs/ATOM_SPACE_LAYOUT.md 明定 atom.* 空目錄視為遷移殘留 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?alias cleanup / workbench path ?????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: alias cleanup ??????OUTPUT_CONTRACT ? task shard ??? | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 識別/行為/狀態機提案開卡",
-      "summary": "為原子建立無模糊地帶的狀態機，使每個原子任何時刻恰處一個 status，由特定 behavior 觸發轉換。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0026 / ATM-2-0014"
-    }
+      "label": "ATM workbench alias 清理開卡",
+      "summary": "清除歷史遺留的 logicalName alias 空目錄，收斂 atomic_workbench/atoms 到 canonical atomId 目錄。",
+      "position": "ATM-2（migration hygiene / workbench cleanup）",
+      "prereq": "ATM-1-0011 / ATM-2-0013 / ATM-2-0034"
+    },
+    "contracts": {
+      "input": [
+        "AI-Atomic-Framework/atomic_workbench/atoms 目前只應保留 canonical atomId workbench 目錄",
+        "atom.plugin-rule-guard.neutrality-scanner 與 atom.registry-fixture 已確認為空 alias 目錄",
+        "current core scaffold/registry/test-runner 已以 atomId 當 canonical folder name"
+      ],
+      "output": [
+        "確認 alias 目錄為非 source-of-truth 的歷史殘留，列出來源與影響範圍",
+        "清除 AI-Atomic-Framework/atomic_workbench/atoms 下已知空 alias 目錄，保留 ATM-* canonical 目錄",
+        "補 migration 或 cleanup 說明，明定 logicalName 目錄不再受支援",
+        "驗證 registry/scaffold/test-runner 現況仍只寫入 atomId workbench path"
+      ],
+      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:scaffold-builder\\nnpm run validate:test-runner",
+      "rollback_hint": "若 cleanup 影響任何仍在使用的本機流程，先還原刪除的空目錄並補明確 evidence；不得回退 canonical atomId 規則。",
+      "execution_steps": [
+        "盤點 atomic_workbench/atoms 現況與 git tracked state",
+        "確認空 alias 目錄不屬於 registry source-of-truth",
+        "清除空 alias 目錄並驗證不影響現有 validator",
+        "回寫 migration 或 cleanup 說明與 notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "completed_at": "2026-05-08T17:35:00+08:00"
   },
   {
-    "id": "ATM-3-0010",
-    "title": "task-card-opener.js adapter 化：接入 ATM TaskAdapter",
+    "id": "ATM-2.5-0002",
+    "title": "Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate",
     "status": "done",
-    "priority": "P1",
-    "phase": "ATM-3",
+    "priority": "P0",
+    "phase": "ATM-2.5",
     "type": "implementation",
     "created": "2026-05-05",
-    "owner": "vs-insiders-gpt-5.3-codex",
-    "started_at": "2026-05-08T18:22:00.874+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.3-codex",
-    "completed_at": "2026-05-08T18:24:24.855+08:00",
-    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
-    "doc_id": "doc_task_0310",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0304",
+    "started_at": "2026-05-07T16:09:42.7411577+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "completed_at": "2026-05-07T16:14:13.1446300+08:00",
     "depends": [
-      "ATM-3-0006"
+      "ATM-2.5-0001",
+      "ATM-2-0012"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無\n2026-05-07 架構釐清：本卡為 Phase 1（thin adapter 化），Phase 2 TaskAdapter 原子化為 ATM-GOV-* governed atom\n2026-05-08 | 狀態: done | 驗證: task-card-opener write smoke ✅；compute-gate ts-syntax/eslint-rules ✅ | 變更: 新增 TaskAdapter + task-profile，task-card-opener 改由 adapter 處理 task id lifecycle、assign-doc-id 與 lock promotion | 阻塞: none"
+    "acceptance": [
+      "sandbox fixture 僅涵蓋 birth pipeline（hello-world atom）；evolution sandbox fixture 由 alpha1 新卡承接，不污染 alpha0 fixture"
+    ],
+    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | 狀態: done | 驗證: tests/sandbox/setup.sh + tests/sandbox/verify.sh + sandbox-fixture.mjs pass；self-host-alpha --verify --json 在空 sandbox 回傳全 true | 變更: 新增 sandbox repo fixture、expected baseline 與 CI sandbox gate job | 阻塞: none"
   }
 ]

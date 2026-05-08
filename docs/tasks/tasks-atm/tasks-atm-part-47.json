@@ -1,69 +1,72 @@
 [
   {
-    "doc_id": "doc_task_0281",
-    "id": "ATM-0-0007",
-    "title": "上游 roadmap v0.2 技術選型整合",
+    "doc_id": "doc_task_0296",
+    "id": "ATM-0-0011",
+    "title": "Context budget 治理補強與文件回寫",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "docs",
+    "type": "docs-governance",
     "phase": "ATM-0",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-05T20:58:01+08:00",
+    "started_at": "2026-05-05T23:05:36.3800604+08:00",
     "started_by_agent": "GitHubCopilot",
     "completed_at": "2026-05-08T17:35:00+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
-    "related": [],
+    "description": "把 context budget 正式提升為 ATM upstream 可獨立治理的 primitive，並回寫相關 roadmap、extraction plan、adopter plan 與 v0.2 companion 文件。",
+    "related": [
+      "ATM-2-0011"
+    ],
     "depends": [
-      "ATM-0-0003"
+      "ATM-0-0010"
     ],
     "acceptance": [
-      "Roadmap 清楚標示 v0.2 是 companion analysis",
-      "core 不硬依賴 LangGraph/pgvector/Deno/OpenTelemetry 等外部工具",
-      "TypeScript/Zod/Vitest 等只被描述為 first implementation recommendation"
+      "四份 ATM 規劃文件補上 context budget upstream primitive",
+      "明確定義 plugin-context-budget 或等效 guard/adapter 位置",
+      "把 encoding/context budget/neutrality 收斂成 Agent Governance Bundle",
+      "新增對應 ATM 任務卡與 tasks-atm 條目"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
-      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
-      "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md",
+      "docs/ai_atomic_framework/open-source-extraction-plan.md",
+      "docs/ai_atomic_framework/AI原子框架開發計畫書.md",
+      "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md",
+      "docs/agent-briefs/tasks/ATM/ATM-2-0011.md"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 整合 v0.2 companion 到 Roadmap、3KLife plan、extraction plan，並新增 6 張補強卡 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?Roadmap/companion ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: companion ??????????? task shard ????? | ??: none",
+    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 將 context budget、plugin-context-budget 與 Agent Governance Bundle 正式回寫到四份 ATM 規劃文件，並同步修正 ATM-0-0011/ATM-2-0011 任務真相 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?context budget / governance bundle ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: context budget governance ????????? task shard ????? | ??: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "將 v0.2 companion 藍圖中的 Core 極簡、無硬依賴、6 週 MVP、PEV Loop 與 optional plugin 分層整合回正式 upstream Roadmap。",
+      "label": "ATM governance bundle 開卡",
+      "summary": "把 context budget 提升成 upstream 可獨立治理能力，並同步回寫相關 md 文件。",
       "position": "ATM-0",
-      "prereq": "ATM-0-0003"
+      "prereq": "ATM-0-0010"
     },
     "contracts": {
       "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
+        "encoding 已進入 upstream governance 規劃",
+        "context budget 尚未成為對等 primitive"
       ],
       "output": [
-        "docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md v0.2 務實化章節",
-        "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
-        "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
+        "context budget primitive 定義",
+        "Agent Governance Bundle 收斂",
+        "新增對應任務卡"
       ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/check-task-scope.js --task ATM-0-0011 --verbose; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若 tasks-atm 或 doc_id 不一致，使用既有工具重建。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
+        "建立新任務卡",
+        "建立 ATM-2-0011 後續卡",
+        "鎖卡並更新 frontmatter",
+        "回寫四份主文件",
+        "跑 encoding/task-scope/standard gate"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [
-        "node tools_node/check-encoding-touched.js",
-        "node tools_node/check-task-scope.js --task ATM-0-0007 --verbose",
-        "node tools_node/compute-gate.js --profile standard --agent-feedback"
-      ],
+      "validation_evidence": [],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []

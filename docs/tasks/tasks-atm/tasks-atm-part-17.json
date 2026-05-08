@@ -80,5 +80,20 @@
       "trace_artifacts": [],
       "metrics_summary": []
     }
+  },
+  {
+    "id": "ATM-3-0006",
+    "title": "task-lock.js adapter 化：接入 ATM LockAdapter",
+    "status": "open",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0306",
+    "depends": [
+      "ATM-2.5-0002",
+      "ATM-3-0001"
+    ]
   }
 ]

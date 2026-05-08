@@ -1,56 +1,91 @@
 [
   {
-    "doc_id": "doc_task_0343",
-    "id": "ATM-2-0036",
-    "title": "Stale Atom Workspace Alias Directory Cleanup",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P1",
+    "id": "ATM-3-0010",
+    "title": "task-card-opener.js adapter 化：接入 ATM TaskAdapter",
     "status": "done",
-    "type": "migration",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T14:07:14.7347467+08:00",
-    "started_by_agent": "vs-code-gpt-5.4-mini",
-    "chain_id": "ATM-WORKBENCH-ALIAS-DRIFT-V1",
-    "chain_step": "1/2",
-    "sensor_triggered_by": "atm-workbench-alias-drift",
-    "description": "追查並清除 AI-Atomic-Framework/atomic_workbench/atoms 下歷史遺留的 logicalName alias 空目錄，確認 canonical atom workbench 只接受 ATM-* 目錄名。",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "vs-insiders-gpt-5.3-codex",
+    "started_at": "2026-05-08T18:22:00.874+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.3-codex",
+    "completed_at": "2026-05-08T18:24:24.855+08:00",
+    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
+    "doc_id": "doc_task_0310",
+    "depends": [
+      "ATM-3-0006"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無\n2026-05-07 架構釐清：本卡為 Phase 1（thin adapter 化），Phase 2 TaskAdapter 原子化為 ATM-GOV-* governed atom\n2026-05-08 | 狀態: done | 驗證: task-card-opener write smoke ✅；compute-gate ts-syntax/eslint-rules ✅ | 變更: 新增 TaskAdapter + task-profile，task-card-opener 改由 adapter 處理 task id lifecycle、assign-doc-id 與 lock promotion | 阻塞: none"
+  },
+  {
+    "doc_id": "doc_task_0273",
+    "id": "ATM-5-0002",
+    "title": "Adapter Guide 與 Plugin SDK 文件",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "docs",
+    "phase": "ATM-5",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "撰寫 ProjectAdapter、LanguageAdapter、Capability、Police、Injector plugin 的開發指南。",
     "related": [],
     "depends": [
-      "ATM-1-0011",
-      "ATM-2-0013",
-      "ATM-2-0034"
+      "ATM-2-0006",
+      "ATM-3-0001"
     ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始處理 alias cleanup 與 migration note | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-core / npm.cmd run validate:scaffold-builder / npm.cmd run validate:test-runner pass | 變更: 清除 AI-Atomic-Framework/atomic_workbench/atoms 下的 stale alias 空目錄，並在 docs/ATOM_SPACE_LAYOUT.md 明定 atom.* 空目錄視為遷移殘留 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?alias cleanup / workbench path ?????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: alias cleanup ??????OUTPUT_CONTRACT ? task shard ??? | ??: none",
+    "acceptance": [
+      "第三方專案可依文件實作 adapter",
+      "3KLife adapter 可作 reference",
+      "core 禁止 domain logic 規則明確",
+      "第三方專案可依文件接入 artifacts/logs/reports 與 Markdown/JSON state files",
+      "CAR 對照章節說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
+      "HarnessCard-lite 指南說明報告只落在 run report / typed evidence，不替代 core contracts"
+    ],
+    "deliverables": [
+      "docs/ADAPTER_GUIDE.md",
+      "docs/PLUGIN_SDK.md",
+      "examples/hosted-adapter-impl",
+      "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
+      "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
+      "standalone Default Governance Bundle 與 3KLife adapter 的 artifacts/logs/reports mapping 對照",
+      "CAR / HarnessCard-lite adapter reporting guidance"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter migration guide 要求 | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 CAR/HarnessCard docs acceptance；已 done 卡不回改 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM workbench alias 清理開卡",
-      "summary": "清除歷史遺留的 logicalName alias 空目錄，收斂 atomic_workbench/atoms 到 canonical atomId 目錄。",
-      "position": "ATM-2（migration hygiene / workbench cleanup）",
-      "prereq": "ATM-1-0011 / ATM-2-0013 / ATM-2-0034"
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "撰寫 ProjectAdapter、LanguageAdapter、Capability、Police、Injector plugin 的開發指南。",
+      "position": "ATM-5",
+      "prereq": "ATM-2-0006、ATM-3-0001"
     },
     "contracts": {
       "input": [
-        "AI-Atomic-Framework/atomic_workbench/atoms 目前只應保留 canonical atomId workbench 目錄",
-        "atom.plugin-rule-guard.neutrality-scanner 與 atom.registry-fixture 已確認為空 alias 目錄",
-        "current core scaffold/registry/test-runner 已以 atomId 當 canonical folder name"
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "確認 alias 目錄為非 source-of-truth 的歷史殘留，列出來源與影響範圍",
-        "清除 AI-Atomic-Framework/atomic_workbench/atoms 下已知空 alias 目錄，保留 ATM-* canonical 目錄",
-        "補 migration 或 cleanup 說明，明定 logicalName 目錄不再受支援",
-        "驗證 registry/scaffold/test-runner 現況仍只寫入 atomId workbench path"
+        "docs/ADAPTER_GUIDE.md",
+        "docs/PLUGIN_SDK.md",
+        "examples/hosted-adapter-impl",
+        "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
+        "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
+        "CAR 對照章節：說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
+        "HarnessCard-lite 指南：adapter 文件需說明報告只落在 run report / typed evidence，不替代 core contracts"
       ],
-      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:scaffold-builder\\nnpm run validate:test-runner",
-      "rollback_hint": "若 cleanup 影響任何仍在使用的本機流程，先還原刪除的空目錄並補明確 evidence；不得回退 canonical atomId 規則。",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
-        "盤點 atomic_workbench/atoms 現況與 git tracked state",
-        "確認空 alias 目錄不屬於 registry source-of-truth",
-        "清除空 alias 目錄並驗證不影響現有 validator",
-        "回寫 migration 或 cleanup 說明與 notes"
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes",
+        "補充 TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 的 host 實作指南"
       ]
     },
     "harness_evidence": {
@@ -59,31 +94,6 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    },
-    "completed_at": "2026-05-08T17:35:00+08:00"
-  },
-  {
-    "id": "ATM-2.5-0001",
-    "title": "Self-Hosting Alpha Gate：atm self-host-alpha --verify CLI",
-    "status": "done",
-    "priority": "P0",
-    "phase": "ATM-2.5",
-    "type": "implementation",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0303",
-    "started_at": "2026-05-06T16:42:17Z",
-    "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T17:06:00Z",
-    "depends": [
-      "ATM-2-0013",
-      "ATM-2-0012",
-      "ATM-2-0004",
-      "ATM-2-0005"
-    ],
-    "acceptance": [
-      "alpha0 gate 僅驗 deterministic 4 條 criteria；version history / rollback / evolution metrics 僅作 readiness warning，不阻塞 alpha0 release"
-    ],
-    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | done | upstream 64ec0bc | gate criteria1-4 true；validate:neutrality/cli/self-hosting-alpha + npm test/typecheck/lint pass | blocker: none"
+    }
   }
 ]

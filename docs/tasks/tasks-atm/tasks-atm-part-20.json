@@ -1,113 +1,107 @@
 [
   {
-    "id": "ATM-0-0012",
-    "title": "task-lock cross-shard 重複鎖定檢查",
+    "doc_id": "doc_task_0251",
+    "id": "ATM-1-0001",
+    "title": "上游 repo product charter 與 README",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
     "status": "done",
-    "priority": "P0",
-    "phase": "ATM-0",
-    "type": "governance",
-    "created": "2026-05-05",
-    "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0298",
-    "depends": [
-      "ATM-0-0001"
-    ]
-  },
-  {
-    "doc_id": "doc_task_0291",
-    "id": "ATM-2-0009",
-    "title": "Artifact Log Evidence Store contracts",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
     "type": "open-source-core",
-    "phase": "ATM-2",
+    "phase": "ATM-1",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-06T13:13:43+08:00",
+    "started_by_agent": "vs-code-github-copilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "定義 ATM 通用 ArtifactStore、LogStore、Markdown/JSON state store、RunReportStore、ContextSummary 與 EvidenceStore contract，讓 AI 常用 artifacts、md/json 文件與系統 log 都能被治理與回放。",
+    "description": "在 AI-Atomic-Framework repo 建立產品定位、README、LICENSE、CONTRIBUTING 與非目標清單。",
     "related": [],
     "depends": [
-      "ATM-2-0007"
+      "ATM-0-0003"
     ],
     "acceptance": [
-      "ArtifactStore/LogStore/RunReportStore schema 不引用 3KLife 路徑",
-      "default .atm layout 可保存 artifacts、logs、reports、context summaries",
-      "3KLife adapter 可映射 artifacts/、docs/*.md、docs/*.json、project logs 到同一 interface",
-      "Markdown/JSON state files 可被 validate、index、summarize 並映射到 host repo",
-      "schemas/governance/artifact.schema.json 可描述 generated output",
-      "schemas/governance/evidence.schema.json 可描述 validation evidence",
-      "schemas/governance/context-summary.schema.json 可描述 handoff/context budget 摘要",
-      "schemas/governance/adapter-report.schema.json 可描述 3KLife shadow/parity report",
-      "evidence schema 增 evidenceType: usage-feedback / quality-baseline / quality-comparison / rollback-proof 四種",
-      "所有 evidence 需可被 atm replay 重新驗證（schema 內含 reproducibility 欄位）"
+      "README 可說明 core/adapter/host 邊界",
+      "核心文件不引用 3KLife 私有路徑",
+      "License 策略明確",
+      "README 清楚列出工具選型策略：first implementation recommendation 不是 core contract",
+      "README 明確定義 Agent Operating Layer 與 root-drop 使用者旅程"
     ],
     "deliverables": [
-      "schemas/governance/artifact-store.schema.json",
-      "schemas/governance/log-store.schema.json",
-      "schemas/governance/run-report.schema.json",
-      "packages/plugin-artifacts 或 plugin-evidence",
-      "docs/ADAPTER_GUIDE.md artifact/log mapping 草案",
-      "packages/plugin-state-files",
-      "schemas/governance/state-file-store.schema.json",
-      "schemas/governance/artifact.schema.json",
-      "schemas/governance/evidence.schema.json",
-      "schemas/governance/context-summary.schema.json",
-      "schemas/governance/adapter-report.schema.json",
-      "schemas/governance/evidence/usage-feedback.schema.json",
-      "schemas/governance/evidence/quality-baseline.schema.json",
-      "schemas/governance/evidence/quality-comparison.schema.json",
-      "schemas/governance/evidence/rollback-proof.schema.json"
+      "AI-Atomic-Framework/README.md",
+      "AI-Atomic-Framework/LICENSE",
+      "AI-Atomic-Framework/CONTRIBUTING.md",
+      "AI-Atomic-Framework/docs/ARCHITECTURE.md 初稿",
+      "README 或 docs/ECOSYSTEM_POSITIONING.md 說明 Core vs Adapter vs Plugin 與 Atomic Agents / SDD / Harness Engineering / LangGraph 的定位差異",
+      "README 明確宣告 ATM 是 governance framework，不只是 atom runner",
+      "README 說明 Default Governance Bundle 是官方預設體驗，但不是 packages/core hard dependency",
+      "README 說明 root-drop / zero-install agent bootstrap：使用者放入 ATM 後，任意 AI agent 讀 README/AGENTS 即可開卡、鎖 scope、跑 guard、保存 artifacts/logs/evidence"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 Artifact/Evidence、ContextSummary、AdapterReport schema-first 要求 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit d165def 完成 README、MIT LICENSE 保留、CONTRIBUTING、ARCHITECTURE、ECOSYSTEM_POSITIONING 與 product-charter validation scaffold | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM governance split 開卡",
-      "summary": "把 AI 常用 artifacts、md/json 狀態檔與系統 log 納入 ATM 通用治理 contract。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0007"
+      "label": "ATM 上游核心開卡",
+      "summary": "在 AI-Atomic-Framework repo 建立產品定位、README、LICENSE、CONTRIBUTING 與非目標清單。",
+      "position": "ATM-1",
+      "prereq": "ATM-0-0003"
     },
     "contracts": {
       "input": [
-        "Default Governance Bundle schema 已規劃",
-        "AI agent 需要可回放 artifacts/logs/evidence"
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "ArtifactStore/LogStore/RunReportStore schema",
-        "default .atm artifact/log layout",
-        "3KLife mapping guidance"
+        "AI-Atomic-Framework/README.md",
+        "AI-Atomic-Framework/LICENSE",
+        "AI-Atomic-Framework/CONTRIBUTING.md",
+        "AI-Atomic-Framework/docs/ARCHITECTURE.md 初稿"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退 artifact/log/evidence schema 與 reference plugin；不得引入 3KLife 私有路徑。",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
       "execution_steps": [
-        "盤點 artifacts/log/md/json 類型",
-        "定義 store schema",
-        "補 default layout",
-        "補 adapter mapping 指南"
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes",
+        "確認 product charter 同時涵蓋 Core contracts、Agent Operating Layer、Default Governance Bundle、ProjectAdapter 四層"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/README.md",
+        "AI-Atomic-Framework/LICENSE",
+        "AI-Atomic-Framework/CONTRIBUTING.md",
+        "AI-Atomic-Framework/docs/ARCHITECTURE.md",
+        "AI-Atomic-Framework/docs/ECOSYSTEM_POSITIONING.md",
+        "AI-Atomic-Framework/scripts/validate-product-charter.mjs"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit d165def",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff verified",
       "trace_artifacts": [],
-      "metrics_summary": []
-    }
+      "metrics_summary": [
+        "upstream commit d165def",
+        "product charter validation scaffold dependency-free"
+      ]
+    },
+    "completed_at": "2026-05-06T13:16:32+08:00"
   },
   {
-    "id": "ATM-3-0011",
-    "title": "encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter",
-    "status": "open",
+    "id": "ATM-3-0007",
+    "title": "compute-gate.js adapter 化：接入 ATM GateAdapter",
+    "status": "done",
     "priority": "P1",
     "phase": "ATM-3",
     "type": "implementation",
     "created": "2026-05-05",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0311",
+    "doc_id": "doc_task_0307",
+    "started_at": "2026-05-08T05:52:40.634350+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4",
+    "completed_at": "2026-05-08T05:56:41.421780+08:00",
     "depends": [
       "ATM-3-0006"
     ]

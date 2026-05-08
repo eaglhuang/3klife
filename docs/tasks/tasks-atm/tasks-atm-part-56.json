@@ -64,48 +64,86 @@
     }
   },
   {
-    "id": "ATM-3-0012",
-    "title": "task-scope / import-boundary 規則包遷移 + @deprecated 標記",
+    "doc_id": "doc_task_0279",
+    "id": "ATM-4-0003",
+    "title": "normalizeCssColor 首個 case atom",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
     "status": "done",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
+    "type": "atom-case",
+    "phase": "ATM-4",
     "created": "2026-05-05",
-    "owner": "vs-insiders-gpt-5.3-codex",
-    "started_at": "2026-05-08T18:30:32.413+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.3-codex",
-    "completed_at": "2026-05-08T18:42:15.966+08:00",
-    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
-    "doc_id": "doc_task_0312",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-08T10:00:40+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "completed_at": "2026-05-08T17:35:00+08:00",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
+    "related": [],
     "depends": [
-      "ATM-3-0006"
+      "ATM-4-0002",
+      "ATM-2-0004"
     ],
-    "description": "Move task-scope / import-boundary rules into ATM RuleGuardAdapter rule-pack, and make the rule pack carry proactive police findings instead of only deprecated wrapper warnings.",
     "acceptance": [
-      "rule-pack.json encodes trigger / scope / severity / action plus routeHint for proactive police outputs",
-      "deprecated wrappers emit machine-readable findings instead of only stderr warnings",
-      "compute-gate atm profile routes fast / slow police outputs through ATM RuleGuardAdapter"
+      "atom test pass",
+      "forbidden import/side-effect police pass",
+      "H2U baseline 不退轉"
     ],
+    "deliverables": [
+      "H2U normalizeCssColor atomic spec",
+      "5 positive fixtures",
+      "2 negative fixtures",
+      "1 legacy fixture",
+      "registry/hash entry"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-08 | ??: done | ??: task-router ATM-4-0003 sample route pass?ATM-CORE-0004 / atom-generator acceptance revalidation pass | ??: normalizeCssColor ?? case atom ????????? task shard ????? | ??: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0002、ATM-2-0004"
+    },
     "contracts": {
       "input": [
-        "tools_node/adapters/atm-3klife/rule-pack.json as the shared rule source",
-        "ATM-3-0006 task-lock adapter and ATM-3-0011 / ATM-3-0013 dependency chain"
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "tools_node/adapters/atm-3klife/rule-pack.json",
-        "ATM RuleGuardAdapter consuming rule-pack.json",
-        "machine-readable findings with trigger / scope / severity / action",
-        "deprecated wrappers that warn and route findings"
+        "H2U normalizeCssColor atomic spec",
+        "5 positive fixtures",
+        "2 negative fixtures",
+        "1 legacy fixture",
+        "registry/hash entry"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-3-0012.md docs/tasks/tasks-atm/tasks-atm-part-40.json",
-      "rollback_hint": "Revert touched files and restore the previous deprecated-wrapper-only rule-pack behavior.",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
-        "Normalize the rule-pack schema and routeHint fields",
-        "Wire the adapter to emit findings for task-scope and import-boundary cases",
-        "Keep deprecated wrappers warning-only at the surface",
-        "Validate encoding and sync the task shard"
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
       ]
     },
-    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: rule-pack 升級為主動警察 finding 契約，補 trigger/scope/severity/action 與 routeHint | 阻塞: none\n2026-05-08 | 狀態: done | 驗證: wrapper [DEPRECATED] warning ✅ / run-rule-guard findings JSON ✅ / compute-gate ts-syntax+eslint ✅ | 變更: 新增 rule-pack.json + rule-guard-adapter.js + run-rule-guard.js，check-task-scope/check-import-boundaries 標 deprecated，compute-gate atm profile 改走 rule-guard-atm | 阻塞: atm profile 仍受既有 dirty scope 影響\n2026-05-08 | 狀態: done | 驗證: BattleController fs/path 違規移除後 run-rule-guard 不再出現 cocos-no-fs finding；framework-function-atomization-manifest 對應列已改 covered-existing | 變更: 補修 BattleController fallback 與 manifest 狀態對齊 | 阻塞: task-scope uncovered files 為 repo 既有狀態"
+    "harness_evidence": {
+      "artifact_paths": [
+        "atomic_workbench/atoms/ATM-CORE-0005/atom.test.report.json",
+        "atomic_workbench/atoms/ATM-CORE-0005/lineage-log.json",
+        "specs/normalize-css-color.atom.json"
+      ],
+      "validation_evidence": [
+        "node atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs",
+        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-core",
+        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-catalog",
+        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-index"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "8/8 fixture cases passing",
+        "upstream registry and catalog synchronized"
+      ]
+    }
   }
 ]

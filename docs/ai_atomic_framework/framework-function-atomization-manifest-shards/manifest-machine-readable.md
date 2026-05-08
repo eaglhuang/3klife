@@ -1,3 +1,11 @@
+# Framework Function Atomization Manifest — Machine-Readable Inventory
+
+> 這是 `framework-function-atomization-manifest.md` 的「Machine-Readable Inventory」分片。完整索引見 `docs/ai_atomic_framework/framework-function-atomization-manifest.md`。
+
+## Machine-Readable Inventory
+
+<!-- ATOMIZATION_COVERAGE_MANIFEST:BEGIN -->
+```json
 [
   {
     "functionId": "atomic-spec-schema",
@@ -398,3 +406,5 @@
     "findingContract": null
   }
 ]
+```
+<!-- ATOMIZATION_COVERAGE_MANIFEST:END -->

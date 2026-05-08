@@ -1,39 +1,40 @@
 [
   {
-    "doc_id": "doc_task_0255",
-    "id": "ATM-1-0005",
-    "title": "LocalGitAdapter reference implementation",
+    "doc_id": "doc_task_0256",
+    "id": "ATM-1-0006",
+    "title": "JS/TS LanguageAdapter reference",
     "owner": "GitHubCopilot",
-    "priority": "P0",
+    "priority": "P1",
     "status": "done",
     "type": "adapter",
     "phase": "ATM-1",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T14:34:27+08:00",
+    "started_at": "2026-05-06T14:48:06+08:00",
     "started_by_agent": "vs-code-github-copilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立不依賴任何 host governance 的 LocalGitAdapter，作為 open-source core 預設 adapter。",
+    "description": "建立 JavaScript/TypeScript reference language adapter，負責 import scan、test command 與 entrypoint 規則。",
     "related": [],
     "depends": [
       "ATM-1-0004"
     ],
     "acceptance": [
-      "無 task-lock 系統時仍可 scaffold/test/validate",
-      "adapter 行為明確標示 dry-run/no-op 能力"
+      "JS compute atom 可被 validate",
+      "forbidden import fixture 失敗",
+      "LanguageAdapter API 可讓未來 Python/C# 實作"
     ],
     "deliverables": [
-      "packages/adapter-local-git",
-      "ProjectAdapter no-op lock/gate/doc implementation",
-      "file system registry path support"
+      "packages/language-js",
+      "JS/TS import policy fixture",
+      "test command runner contract"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:adapter-local-git / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 8164a89 建立 LocalGitAdapter reference implementation、no-op lock/gate/doc、filesystem registry path support 與 integration fixture | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm install / npm run packages:list / npm run validate:language-js / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 6f4bcaa 建立 JS/TS LanguageAdapter reference、import scan、forbidden import fixture、entrypoint rule 與 delegated test command runner contract | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
-      "summary": "建立不依賴任何 host governance 的 LocalGitAdapter，作為 open-source core 預設 adapter。",
+      "summary": "建立 JavaScript/TypeScript reference language adapter，負責 import scan、test command 與 entrypoint 規則。",
       "position": "ATM-1",
       "prereq": "ATM-1-0004"
     },
@@ -42,9 +43,9 @@
         "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "packages/adapter-local-git",
-        "ProjectAdapter no-op lock/gate/doc implementation",
-        "file system registry path support"
+        "packages/language-js",
+        "JS/TS import policy fixture",
+        "test command runner contract"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
       "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
@@ -57,19 +58,19 @@
     },
     "harness_evidence": {
       "artifact_paths": [
-        "AI-Atomic-Framework/packages/adapter-local-git/package.json",
-        "AI-Atomic-Framework/packages/adapter-local-git/src/index.ts",
-        "AI-Atomic-Framework/packages/adapter-local-git/src/local-git-adapter.mjs",
-        "AI-Atomic-Framework/packages/adapter-local-git/README.md",
-        "AI-Atomic-Framework/scripts/validate-local-git-adapter.mjs",
-        "AI-Atomic-Framework/tests/adapter-local-git.fixture.json",
+        "AI-Atomic-Framework/packages/language-js/package.json",
+        "AI-Atomic-Framework/packages/language-js/src/index.ts",
+        "AI-Atomic-Framework/packages/language-js/src/language-js-adapter.mjs",
+        "AI-Atomic-Framework/packages/language-js/README.md",
+        "AI-Atomic-Framework/scripts/validate-language-js.mjs",
+        "AI-Atomic-Framework/tests/language-js-fixtures/import-policy.fixture.json",
         "AI-Atomic-Framework/tests/package-skeleton.fixture.json"
       ],
       "validation_evidence": [
-        "AI-Atomic-Framework commit 8164a89",
+        "AI-Atomic-Framework commit 6f4bcaa",
         "npm install",
         "npm run packages:list",
-        "npm run validate:adapter-local-git",
+        "npm run validate:language-js",
         "npm test",
         "npm run typecheck",
         "npm run lint"
@@ -77,56 +78,58 @@
       "handoff_diff_status": "upstream committed; tracking diff verified",
       "trace_artifacts": [],
       "metrics_summary": [
-        "upstream commit 8164a89",
-        "LocalGitAdapter scaffold creates .atm/registry and .atm/reports",
-        "lock/gate/doc return explicit no-op evidence without host governance",
-        "filesystem registry path writes and reads entries",
-        "dry-run scaffold does not write files"
+        "upstream commit 6f4bcaa",
+        "valid JS/TS compute atom passes language adapter validation",
+        "forbidden import fixture fails with ATM_JS_FORBIDDEN_IMPORT",
+        "missing entrypoint export fails with ATM_JS_ENTRYPOINT_EXPORT_MISSING",
+        "test/typecheck/lint commands are delegated to project package scripts"
       ]
     },
-    "completed_at": "2026-05-06T14:39:45+08:00"
+    "completed_at": "2026-05-06T14:51:24+08:00"
   },
   {
-    "doc_id": "doc_task_0328",
-    "id": "ATM-2-0023",
-    "title": "Atomic Map Schema & Registry",
+    "doc_id": "doc_task_0327",
+    "id": "ATM-4-0007",
+    "title": "H2U normalizeCssColor v1.0→v1.1 evolution pilot",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "registry",
-    "phase": "ATM-2",
+    "type": "case-study",
+    "phase": "ATM-4",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
     "started_by_agent": "",
-    "chain_id": "ATM-MAP-EVOLUTION-V2",
-    "chain_step": "1/4",
-    "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
-    "description": "為「原子地圖」建立 schema 與 registry：mapId / mapVersion / members[] / edges[] / entrypoints / qualityTargets / mapHash；可獨立於單一 atom 升版。",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "11/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "以 normalizeCssColor case atom 跑第一次完整 evolution 閉環：proposal → automatedGates → human review → registry update or rollback。",
     "related": [],
     "depends": [
-      "ATM-2-0014"
+      "ATM-4-0003",
+      "ATM-2-0020",
+      "ATM-2-0021"
     ],
     "acceptance": [
-      "atomic-map.schema.json 定義 mapId / mapVersion / members[](atomId@version) / edges[] / entrypoints / qualityTargets / mapHash",
-      "mapHash = hash(sorted(members) + edges + entrypoints)；成員任一 atom 升版必須引發 mapHash 變更",
-      "registry 同時支援 atom entry 與 map entry；舊 atom-only registry fixture 仍綠",
-      "fixtures：minimal-map / multi-edge-map / quality-targets-missing 三種"
+      "normalizeCssColor v1.0 進 registry；v1.1 透過 atm upgrade --propose 產 proposal.json",
+      "automatedGates（nonRegression / qualityImprovement / newCapability）全綠才進 review queue",
+      "human review approve 後 registry currentVersion 指向 v1.1；reject 後保持 v1.0 並寫 decision log",
+      "完整 evidence 鏈可由 atm replay 重新跑 + neutrality scanner 全綠"
     ],
     "deliverables": [
-      "schemas/registry/atomic-map.schema.json",
-      "packages/core/src/registry/map-registry.ts",
-      "packages/core/src/registry/map-hash.ts",
-      "fixtures/registry/map/minimal.json",
-      "fixtures/registry/map/multi-edge.json"
+      "docs/case-studies/h2u-normalize-css-color-evolution-pilot.md",
+      "fixtures/case-studies/normalize-css-color/v1.0.json",
+      "fixtures/case-studies/normalize-css-color/v1.1.json",
+      "fixtures/case-studies/normalize-css-color/proposal.json",
+      "fixtures/case-studies/normalize-css-color/decision-approve.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 演進規劃 v2 附錄 B 開卡",
-      "summary": "把 Atomic Map 升格為 registry 一等公民，為 map-level 演化建立可機讀基礎。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0014"
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "把 alpha1 evolution pipeline 在 H2U case 上做端到端落地，作為 alpha1 acceptance 證據。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0003 / ATM-2-0020 / ATM-2-0021"
     }
   }
 ]

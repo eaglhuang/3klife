@@ -5,16 +5,17 @@
 
 ## 1. 校正後基線
 
-- `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 已對齊為 `done=73 / in_progress=2 / open=39 / total=114`。
+- `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 已對齊為 `done=74 / in_progress=1 / open=40 / total=115`。
 - `ATM-2-0015`、`ATM-2-0016`、`ATM-2-0017` 原本 brief 已完成、shard 仍是 `open`；本輪已同步回 `done`。
 - `ATM-2-0019` 與 `ATM-2-0022` 已完成，附錄 C 補丁已落卡；後續風險不再是「是否有做」，而是與 `ATM-2-0027` 落地後的相容性回歸。
 - `ATM-3-0015` 已完成，task lifecycle atomic map 與 adapter 邊界已入規劃與 brief。
-- 真正仍未收斂的主鏈，現在只剩：`ATM-2-0027 / ATM-3-0014 / ATM-4-0007`，另加 `ATM-2-0050` 的 follow-up extraction。
+- `ATM-2-0050` 已完成 coverage gate 主體、task-store 真相收斂與 follow-up extraction；剩餘治理缺口已交由 `ATM-2-0051` 承接。
+- 真正仍未收斂的主鏈，現在只剩：`ATM-2-0027 / ATM-3-0014 / ATM-4-0007`；coverage gate sidecar 則是 `ATM-2-0051`。
 
 ## 2. 必要修改摘要
 
 - `M0` 保留為「機讀真相校正」，但用途改成防 drift，不再宣稱目前 thin index 失真。
-- `ATM-2-0050` 保留為 framework-wide coverage gate 主卡；後續只補 blocker promotion、自指 coverage、finding route，不重做 gate 主體。
+- `ATM-2-0050` 保留為 framework-wide coverage gate 主卡，但 blocker promotion、自指 coverage、finding route 已正式抽成 `ATM-2-0051`。
 - 所有已 `done` 的卡若仍有治理缺口，一律開 follow-up，不回改為 open，也不重複開既有功能卡。
 - `ATM-2-0015 / 0016 / 0017` 不再是待做主鏈；真正要防的是 task-store 真相再次分裂。
 - `ATM-2-0027` 仍是 registry status state machine 的最後缺口；`ATM-3-0014` 與 `ATM-4-0007` 仍是 evidence 與 pilot 收尾缺口。
@@ -41,7 +42,7 @@ ATM-2-0027 -> ATM-3-0014 -> ATM-4-0007 dry-run
 
 ### M1. 一致性補洞
 
-- [ ] 用 follow-up 卡承接 `ATM-2-0050` 的 blocker promotion / self-coverage / finding route。
+- [x] 已開 `ATM-2-0051` 承接 `ATM-2-0050` 的 blocker promotion / self-coverage / finding route。
 - [ ] 規劃 `ATM-2-0022 x ATM-2-0027` 的 rollback compatibility regression。
 - [ ] 補 `versions[]` / semantic fingerprint backfill sweep follow-up。
 - [ ] 把 `RuleGuardAdapter` read-only 邊界升成可驗證規則。
@@ -73,11 +74,9 @@ ATM-2-0027 -> ATM-3-0014 -> ATM-4-0007 dry-run
 
 | 候選題目 | 目的 |
 |---|---|
-| Coverage Gate Promotion & Self-Coverage Follow-up | 讓 `ATM-2-0050` 有明確 blocker promotion 條件與 manifest 自指收編 |
 | Rollback Proof x Status Enum Compatibility Sweep | 在 `ATM-2-0027` 落地後重跑 rollback 對稱性 regression |
 | Registry Version / Fingerprint Backfill Sweep | 補齊 `versions[]` 與 semantic fingerprint 歷史缺口 |
 | RuleGuardAdapter Read-Only Validator | 把 RuleGuardAdapter 不碰 lifecycle mutation 變成 deterministic gate |
-| ATM-2-0050 Follow-up Extraction | 把 0050 剩餘治理缺口拆成正式承接卡 |
 
 ## 6. 驗證指令
 

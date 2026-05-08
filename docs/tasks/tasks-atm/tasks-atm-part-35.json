@@ -1,75 +1,87 @@
 [
   {
-    "doc_id": "doc_task_0288",
-    "id": "ATM-2-0008",
-    "title": "Local governance reference plugins",
+    "doc_id": "doc_task_0259",
+    "id": "ATM-2-0002",
+    "title": "Scaffold Builder MVP",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
-    "type": "open-source-core",
+    "type": "manager",
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-07T16:36:00+08:00",
-    "started_by_agent": "vs-code-gpt-5.4",
+    "started_at": "2026-05-06T19:28:00.000Z",
+    "started_by_agent": "vs-code-github-copilot",
+    "completed_at": "2026-05-06T20:18:23.9552929+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "實作 upstream 預設治理套件，讓空白 repo 不依賴 3KLife 也能使用 task、lock、doc index、shard、artifact、log、rule guard 與 evidence workflow。",
+    "description": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
     "related": [],
     "depends": [
-      "ATM-2-0007"
+      "ATM-2-0001"
     ],
     "acceptance": [
-      "空白 repo 可用 atm init / atm bootstrap 建立 canonical .atm governance layout",
-      "@ai-atomic-framework/plugin-governance-local 提供 task/lock/document-index/shard/artifact/log/run-report/state/rule/evidence/context-summary stores",
-      "bootstrap / self-hosting alpha smoke 維持綠燈",
-      "local governance smoke fixture 驗證 .atm/artifacts、.atm/logs、.atm/reports 與其他 canonical stores",
-      "reference plugins 不被 packages/core 直接 import",
-      "reference plugins 標記為 alpha1 gate，不阻塞 alpha0",
-      "version-history / human-review reference plugins 標記為 alpha1，不阻塞 alpha0 release"
+      "首次 scaffold 建立檔案",
+      "第二次 scaffold 不覆寫人工實作",
+      "可由 adapter 決定 workbenchPath"
     ],
     "deliverables": [
-      "packages/plugin-governance-local",
-      "packages/cli/src/commands/bootstrap.mjs",
-      "scripts/validate-governance-local.mjs",
-      "tests/governance-local.fixture.json",
-      "examples/agent-bootstrap/README.md",
-      ".atm/artifacts、.atm/logs、.atm/reports default store 與 smoke fixture"
+      "packages/core/src/manager/scaffold.*",
+      "templates/atom.spec.template.json",
+      "templates/atom.test.template.ts"
     ],
-    "notes": "2026-05-07 | 狀態: done | 驗證: node scripts/validate-bootstrap.mjs --mode test、node scripts/validate-governance-local.mjs --mode test、node scripts/validate-self-hosting-alpha.mjs --mode test、npm test、npm run typecheck、npm run lint 全綠 | 變更: 新增 plugin-governance-local package 與 standalone governance smoke；CLI bootstrap 改接新 bundle；順手修正 validate-core-spec-parser 的 Windows path compare | 阻塞: none\n2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 將完整 reference plugins 移到 alpha1；alpha0 只要求最小 task/lock/evidence smoke | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:scaffold-builder / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit b8a3270 新增 core scaffold builder、templates/atom.spec.template.json、templates/atom.test.template.ts，預設產出 atomic_workbench/atoms/<atomId>/atom.spec.json + atom.test.ts，並支援 adapter 指定 workbenchPath 與 idempotent rerun | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM governance split 開卡",
-      "summary": "建立 upstream Default Governance Bundle 的 local reference plugins，讓 ATM 在空白 repo 能完整運作。",
+      "label": "ATM 上游核心開卡",
+      "summary": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0007"
+      "prereq": "ATM-2-0001"
     },
     "contracts": {
       "input": [
-        "governance primitives schema 已定義",
-        "Core 不得硬依賴 reference plugins"
+        "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "local governance reference plugins",
-        "standalone governance example",
-        "CLI governance commands smoke test"
+        "packages/core/src/manager/scaffold.*",
+        "templates/atom.spec.template.json",
+        "templates/atom.test.template.ts"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退 reference plugin package；packages/core 不可 import plugin 實作。",
+      "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
       "execution_steps": [
-        "建立 local .atm layout",
-        "實作 task/lock/index/shard/rule/evidence plugins",
-        "補 CLI smoke test",
-        "補 standalone example"
+        "在上游 repo 建立或修改對應 package",
+        "補 unit/integration fixture",
+        "跑 package 驗證",
+        "回寫 3KLife tracking notes"
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "AI-Atomic-Framework/package.json",
+        "AI-Atomic-Framework/packages/core/src/manager/scaffold.mjs",
+        "AI-Atomic-Framework/scripts/validate-scaffold-builder.mjs",
+        "AI-Atomic-Framework/templates/atom.spec.template.json",
+        "AI-Atomic-Framework/templates/atom.test.template.ts",
+        "AI-Atomic-Framework/tests/scaffold-builder.fixture.json"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit b8a3270",
+        "npm run validate:scaffold-builder",
+        "npm run validate:cli",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
       "trace_artifacts": [],
-      "metrics_summary": []
+      "metrics_summary": [
+        "scaffold builder writes a per-atom workbench by default under atomic_workbench/atoms/<atomId>",
+        "each scaffolded atom currently includes atom.spec.json and atom.test.ts rendered from shared templates",
+        "rerunning scaffold skips existing files so manual edits are preserved by default",
+        "adapter or caller can decide workbenchPath explicitly instead of using the default folder policy"
+      ]
     }
   },
   {

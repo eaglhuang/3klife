@@ -1,8 +1,8 @@
 [
   {
-    "doc_id": "doc_task_0259",
-    "id": "ATM-2-0002",
-    "title": "Scaffold Builder MVP",
+    "doc_id": "doc_task_0258",
+    "id": "ATM-2-0001",
+    "title": "Core Spec loader/parser",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "done",
@@ -10,43 +10,43 @@
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-06T19:28:00.000Z",
+    "started_at": "2026-05-06T18:18:00.000Z",
     "started_by_agent": "vs-code-github-copilot",
-    "completed_at": "2026-05-06T20:18:23.9552929+08:00",
+    "completed_at": "2026-05-06T19:24:57.2838869+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
+    "description": "實作 core spec loader/parser，讀取 spec、套 schema、產 normalized model。",
     "related": [],
     "depends": [
-      "ATM-2-0001"
+      "ATM-1-0003"
     ],
     "acceptance": [
-      "首次 scaffold 建立檔案",
-      "第二次 scaffold 不覆寫人工實作",
-      "可由 adapter 決定 workbenchPath"
+      "valid/invalid fixtures 全覆蓋",
+      "錯誤訊息指出缺欄位與路徑",
+      "不讀 host-specific config"
     ],
     "deliverables": [
-      "packages/core/src/manager/scaffold.*",
-      "templates/atom.spec.template.json",
-      "templates/atom.test.template.ts"
+      "packages/core/src/spec/parse-spec.*",
+      "unit tests",
+      "error-as-prompt report format"
     ],
-    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:scaffold-builder / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit b8a3270 新增 core scaffold builder、templates/atom.spec.template.json、templates/atom.test.template.ts，預設產出 atomic_workbench/atoms/<atomId>/atom.spec.json + atom.test.ts，並支援 adapter 指定 workbenchPath 與 idempotent rerun | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: done | 驗證: npm run validate:core-spec-parser / npm run validate:cli / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 87c689c 新增 packages/core/src/spec/parse-spec.mjs、fixture-driven parser validator、host-agnostic parse proof，並讓 CLI spec --validate 走 core parser 產出 normalized model 與 error-as-prompt report format | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 上游核心開卡",
-      "summary": "從 normalized spec 產生 atom workbench 檔案，並保證 idempotent。",
+      "summary": "實作 core spec loader/parser，讀取 spec、套 schema、產 normalized model。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0001"
+      "prereq": "ATM-1-0003"
     },
     "contracts": {
       "input": [
         "AI-Atomic-Framework repo 已存在且 ATM-0 文件分工已確認"
       ],
       "output": [
-        "packages/core/src/manager/scaffold.*",
-        "templates/atom.spec.template.json",
-        "templates/atom.test.template.ts"
+        "packages/core/src/spec/parse-spec.*",
+        "unit tests",
+        "error-as-prompt report format"
       ],
       "validation_cmd": "npm test; npm run typecheck; npm run lint",
       "rollback_hint": "回退本卡在 AI-Atomic-Framework upstream repo 或 3KLife tracking docs 中的 touched files；保持 adapter 與 core 分離。",
@@ -60,15 +60,15 @@
     "harness_evidence": {
       "artifact_paths": [
         "AI-Atomic-Framework/package.json",
-        "AI-Atomic-Framework/packages/core/src/manager/scaffold.mjs",
-        "AI-Atomic-Framework/scripts/validate-scaffold-builder.mjs",
-        "AI-Atomic-Framework/templates/atom.spec.template.json",
-        "AI-Atomic-Framework/templates/atom.test.template.ts",
-        "AI-Atomic-Framework/tests/scaffold-builder.fixture.json"
+        "AI-Atomic-Framework/packages/cli/src/commands/spec-shared.mjs",
+        "AI-Atomic-Framework/packages/core/src/spec/parse-spec.mjs",
+        "AI-Atomic-Framework/scripts/validate-core-spec-parser.mjs",
+        "AI-Atomic-Framework/tests/core-spec-parser.fixture.json",
+        "AI-Atomic-Framework/tests/core-spec-parser-fixtures/minimal-valid.atom.json"
       ],
       "validation_evidence": [
-        "AI-Atomic-Framework commit b8a3270",
-        "npm run validate:scaffold-builder",
+        "AI-Atomic-Framework commit 87c689c",
+        "npm run validate:core-spec-parser",
         "npm run validate:cli",
         "npm test",
         "npm run typecheck",
@@ -77,56 +77,56 @@
       "handoff_diff_status": "upstream committed; tracking diff pending commit",
       "trace_artifacts": [],
       "metrics_summary": [
-        "scaffold builder writes a per-atom workbench by default under atomic_workbench/atoms/<atomId>",
-        "each scaffolded atom currently includes atom.spec.json and atom.test.ts rendered from shared templates",
-        "rerunning scaffold skips existing files so manual edits are preserved by default",
-        "adapter or caller can decide workbenchPath explicitly instead of using the default folder policy"
+        "core parser now reads atomic spec files, validates against the shared schema, and emits a normalized model",
+        "invalid spec cases return prompt-ready issue records with code, path, text, and direct fix hints",
+        "parser validation covers valid fixture, invalid fixture, missing-file failure, and host-agnostic temp-repo parsing",
+        "CLI spec --validate now reuses the core parser instead of carrying a separate validation path"
       ]
     }
   },
   {
-    "doc_id": "doc_task_0330",
-    "id": "ATM-2-0025",
-    "title": "Cross-Atom Integration Test Runner",
+    "doc_id": "doc_task_0329",
+    "id": "ATM-2-0024",
+    "title": "Map-Level Upgrade & Extract-vs-Bump Decision",
     "owner": "GitHubCopilot",
     "priority": "P0",
     "status": "open",
-    "type": "test-runner",
+    "type": "orchestration-atom",
     "phase": "ATM-2",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
     "started_by_agent": "",
     "chain_id": "ATM-MAP-EVOLUTION-V2",
-    "chain_step": "3/4",
+    "chain_step": "2/4",
     "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
-    "description": "提供 map-level integration test runner：當任一成員 atom 升版時，自動跑該 atom 所屬全部 map 的整合測試與 application-level smoke tests。",
+    "description": "在 upgrade pipeline 加入 decomposition decision：判斷某次改動應走 atom-bump / atom-extract / map-bump，並落地對應 proposal 與 review path。",
     "related": [],
     "depends": [
-      "ATM-2-0003",
+      "ATM-2-0020",
       "ATM-2-0023"
     ],
     "acceptance": [
-      "CLI atm test --map <mapId> 跑 map-level integration tests 並輸出符合 metrics schema 的 report",
-      "CLI atm test --propagate <atomId> 自動找出所有引用該 atom 的 maps 並跑 integration tests",
-      "integration test report 含 perMapStatus[] / propagationDuration / failedDownstream[]",
-      "birth-mode atom test 與 map-level test 共用同一 metrics schema（ATM-2-0016）",
-      "fixtures：propagation-pass / propagation-fail-on-downstream-map 兩種"
+      "CLI atm upgrade --target map --map <id> --to <ver> 可產出 map-level proposal",
+      "decompositionDecision 規則明文：API 不變→atom-bump；行為斷裂→atom-extract；跨原子改動→map-bump",
+      "atom-extract 模式下 proposal 必須同時列舊 atom 保留資訊與新 atom spec stub",
+      "map-bump 模式下 proposal members[] 必須含舊→新 atomId@version 對照",
+      "review queue 視 decompositionDecision 路由至對應 reviewer template"
     ],
     "deliverables": [
-      "packages/core/src/test-runner/map-integration.ts",
-      "packages/core/src/test-runner/propagation.ts",
-      "packages/cli/commands/test-map.ts",
-      "fixtures/test-runner/map-propagation-pass.json",
-      "fixtures/test-runner/map-propagation-fail.json"
+      "packages/core/src/upgrade/decomposition-decision.ts",
+      "packages/core/src/upgrade/map-propose.ts",
+      "packages/cli/commands/upgrade-map-propose.ts",
+      "fixtures/upgrade/map-bump-proposal.json",
+      "fixtures/upgrade/atom-extract-proposal.json"
     ],
     "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 附錄 B 開卡",
-      "summary": "硬規則：任一 atom 升版必須跑所有引用 map 的整合測試；本卡是這條規則的執行器。",
+      "summary": "把「升版 vs. 拆原子」這個關鍵架構決策正式機讀化，避免演化階段隱性破壞 consumer。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0003 / ATM-2-0023"
+      "prereq": "ATM-2-0020 / ATM-2-0023"
     }
   }
 ]
