@@ -52,14 +52,14 @@
     }
   },
   {
-    "doc_id": "doc_task_0283",
-    "id": "ATM-4-0006",
-    "title": "H2U case study 與 Cocos runtime 邊界",
+    "doc_id": "doc_task_0285",
+    "id": "ATM-6-0004",
+    "title": "Performance Budget Police 與成本控制",
     "owner": "GitHubCopilot",
-    "priority": "P1",
+    "priority": "P2",
     "status": "open",
-    "type": "case-study-policy",
-    "phase": "ATM-4",
+    "type": "optional-police",
+    "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -67,39 +67,37 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+    "description": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
     "related": [],
     "depends": [
-      "ATM-4-0002",
-      "ATM-3-0005",
-      "ATM-2.5-0002"
+      "ATM-5-0005"
     ],
     "acceptance": [
-      "Cocos Component/Node/Prefab 明確禁止進 compute atom",
-      "H2U fidelity/domain scoring 僅屬 case study plugin",
-      "case study 可關閉而不影響 core",
-      "case study 啟動條件：self-hosting alpha0 deterministic gate 全綠",
-      "第一輪只允許 dry-run injection + rollback plan，不替換 draft-builder 主幹"
+      "Performance Budget 不進 v0.1 core hard gate",
+      "hot path atom 有 p95/maxRuntimeMs/allocatedBytes 建議",
+      "LLM caching 與 budget 只透過 plugin 啟用"
     ],
     "deliverables": [
-      "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
-      "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+      "docs/ecosystem/performance-budget-police.md",
+      "plugin boundary proposal",
+      "cost control policy"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 後置條件：alpha0 全綠後只以 dry-run/rollback 進入 | 阻塞: alpha0 gate 未全綠",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM v0.2 整合開卡",
-      "summary": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0002、ATM-3-0005"
+      "summary": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
+      "position": "ATM-6",
+      "prereq": "ATM-5-0005"
     },
     "contracts": {
       "input": [
         "v0.2 companion analysis 已確認可作務實化補充"
       ],
       "output": [
-        "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
-        "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+        "docs/ecosystem/performance-budget-police.md",
+        "plugin boundary proposal",
+        "cost control policy"
       ],
       "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",

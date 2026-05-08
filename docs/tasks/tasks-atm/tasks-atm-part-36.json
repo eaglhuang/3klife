@@ -73,22 +73,73 @@
     }
   },
   {
-    "id": "ATM-3-0008",
-    "title": "doc-id-registry.js adapter 化：接入 ATM DocumentIndexAdapter",
-    "status": "done",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
+    "doc_id": "doc_task_0280",
+    "id": "ATM-4-0005",
+    "title": "Injection plan 與 rollback dry-run",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "case-study",
+    "phase": "ATM-4",
     "created": "2026-05-05",
-    "owner": "vs-insiders-gpt-5.3-codex",
-    "started_at": "2026-05-08T18:07:16.711+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.3-codex",
-    "completed_at": "2026-05-08T18:13:48.915+08:00",
-    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
-    "doc_id": "doc_task_0308",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
+    "related": [],
     "depends": [
-      "ATM-3-0006"
+      "ATM-4-0003",
+      "ATM-3-0002",
+      "ATM-2.5-0001",
+      "ATM-2.5-0002"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無\n2026-05-07 架構釐清：本卡為 Phase 1（thin adapter 化），Phase 2 DocumentIndexAdapter 原子化為 ATM-GOV-* governed atom\n2026-05-08 | 狀態: done | 驗證: node tools_node/doc-id-registry.js --assign docs/agent-briefs/tasks/ATM/ATM-3-0008.md ✅；node tools_node/compute-gate.js --gates ts-syntax eslint-rules --agent-feedback ✅；node -e adapter prefix probe ✅ | 變更: 新增 document-index-adapter 與 doc-index-profile，doc-id-registry --assign 改由 adapter 分配 doc_id | 阻塞: check-task-scope 受既有跨卡 dirty files 影響"
+    "acceptance": [
+      "dry-run 可 review",
+      "rollback plan 對稱",
+      "來回套用 diff 可回到原狀",
+      "第一輪只產 dry-run patch plan 與 rollback plan，不 apply patch、不改 legacy runtime",
+      "alpha0 gate evidence link：schema / registry / hash-lock / CLI / hello-world / minimal evidence 全綠"
+    ],
+    "deliverables": [
+      "inject-plan JSON schema",
+      "rollback-plan JSON schema",
+      "H2U normalizeCssColor dry-run plan"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 啟動條件：self-hosting alpha0 全綠後才可 dry-run injection + rollback plan | 阻塞: alpha0 gate 未全綠",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0003、ATM-3-0002"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "inject-plan JSON schema",
+        "rollback-plan JSON schema",
+        "H2U normalizeCssColor dry-run plan"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

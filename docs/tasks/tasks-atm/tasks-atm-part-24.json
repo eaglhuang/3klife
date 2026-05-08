@@ -1,226 +1,121 @@
 [
-    {
-        "doc_id":  "doc_task_0295",
-        "id":  "ATM-1-0009",
-        "title":  "Self-hosting alpha proof",
-        "owner":  "GitHubCopilot",
-        "priority":  "P0",
-        "status":  "done",
-        "type":  "open-source-core",
-        "phase":  "ATM-1",
-        "created":  "2026-05-05",
-        "created_by_agent":  "GitHubCopilot",
-        "started_at":  "",
-        "started_by_agent":  "",
-        "chain_id":  "",
-        "chain_step":  "",
-        "sensor_triggered_by":  "",
-        "description":  "在 standalone upstream repo 內完成 self-hosting alpha proof，並把正式使用者體驗收斂為『1 句官方 prompt 作為單一入口』；使用者只需把 prompt 交給 AI，必要時由 AI 自動執行官方 bootstrap 命令，不需手動拷貝 AGENTS/profile/task/lock，也不需先把 host repo 改造成 Node 專案。",
-        "related":  [
-                        "ATM-1-0010",
-                        "ATM-2-0010"
-                    ],
-        "depends":  [
-                        "ATM-1-0008",
-                        "ATM-2-0008"
-                    ],
-        "acceptance":  [
-                           "使用者只需 1 句官方 prompt 即可啟動 first task；必要時由 AI 自動執行官方 bootstrap 命令",
-                           "空白或 sandbox repo 可在不依賴 3KLife 工具下完成 standalone bootstrap smoke",
-                           "AI agent 只讀 host README 與生成的 AGENTS/.atm profile/task，即可建立 first task、scope lock、artifact/log/evidence 與 first atom smoke",
-                           "standalone smoke 不需引用 3KLife/Cocos/html-to-ucuf 或本地治理工具，且作為 Phase B 進入 downstream adapter 前的硬 gate"
-                       ],
-        "deliverables":  [
-                             "standalone self-hosting alpha checklist",
-                             "official single-entry bootstrap contract",
-                             "agent bootstrap smoke fixture",
-                             "Phase B gate summary"
-                         ],
-        "notes":  "2026-05-06 | 狀態: done | 驗證: upstream npm run validate:self-hosting-alpha / npm run validate:cli / npm run validate:bootstrap / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 75dfca9 新增 bootstrap CLI 入口、single-entry self-hosting alpha prompt、SELF_HOSTING_ALPHA checklist 與 deterministic first-smoke proof gate | 阻塞: none",
-        "brief":  {
-                      "style":  "harn-rich",
-                      "label":  "ATM self-hosting first 開卡",
-                      "summary":  "建立 upstream standalone self-hosting alpha gate，並把官方體驗明確收斂為『1 句 prompt 作為單一入口』後，再進 downstream adapter。",
-                      "position":  "ATM-1",
-                      "prereq":  "ATM-1-0008、ATM-2-0008"
-                  },
-        "contracts":  {
-                          "input":  [
-                                        "zero-install bootstrap 與 local governance reference plugins 已可運作",
-                                        "第一輪 smoke 不得依賴 3KLife 工具"
-                                    ],
-                          "output":  [
-                                         "standalone self-hosting alpha checklist",
-                                         "official single-entry bootstrap contract",
-                                         "bootstrap smoke proof",
-                                         "Phase B exit gate"
-                                     ],
-                          "validation_cmd":  "npm test; npm run typecheck; npm run lint",
-                          "rollback_hint":  "回退本卡 touched files；若 standalone smoke 仍含 3KLife 假設，保持卡片 open 不偷關卡。",
-                          "execution_steps":  [
-                                                  "定義『1 句官方 prompt 作為單一入口；必要時 AI 自動執行 1 個官方 bootstrap 命令』產品目標",
-                                                  "定義 self-hosting alpha gate",
-                                                  "建立 standalone smoke fixture",
-                                                  "驗證 first task/lock/artifact/log/evidence 與 first atom smoke",
-                                                  "回寫 Phase B gate summary"
-                                              ]
-                      },
-        "harness_evidence":  {
-                                 "artifact_paths":  [
-                                                        "AI-Atomic-Framework/packages/cli/src/atm.mjs",
-                                                        "AI-Atomic-Framework/packages/cli/src/commands/bootstrap-entry.mjs",
-                                                        "AI-Atomic-Framework/packages/cli/src/commands/bootstrap.mjs",
-                                                        "AI-Atomic-Framework/scripts/validate-self-hosting-alpha.mjs",
-                                                        "AI-Atomic-Framework/scripts/validate-cli.mjs",
-                                                        "AI-Atomic-Framework/scripts/validate-bootstrap.mjs",
-                                                        "AI-Atomic-Framework/docs/SELF_HOSTING_ALPHA.md",
-                                                        "AI-Atomic-Framework/examples/agent-bootstrap/README.md",
-                                                        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json",
-                                                        "AI-Atomic-Framework/README.md"
-                                                    ],
-                                 "validation_evidence":  [
-                                                             "AI-Atomic-Framework commit 75dfca9",
-                                                             "npm run validate:self-hosting-alpha",
-                                                             "npm run validate:cli",
-                                                             "npm run validate:bootstrap",
-                                                             "npm test",
-                                                             "npm run typecheck",
-                                                             "npm run lint"
-                                                         ],
-                                 "handoff_diff_status":  "upstream committed; tracking diff pending commit",
-                                 "trace_artifacts":  [
-
-                                                     ],
-                                 "metrics_summary":  [
-                                                         "official single-entry prompt checks .atm/config.json and triggers bootstrap when needed",
-                                                         "bootstrap command is an official standalone CLI entry alongside init/status/validate",
-                                                         "self-hosting alpha validator bootstraps a clean upstream repo copy and completes first smoke against hello-world atom",
-                                                         "proof writes task/lock/evidence transitions plus artifact/log/context summary and Phase B exit gate report",
-                                                         "full upstream validation chain remains green after adding the proof gate"
-                                                     ]
-                             },
-        "completed_at":  "2026-05-06T16:34:31+08:00"
+  {
+    "doc_id": "doc_task_0295",
+    "id": "ATM-1-0009",
+    "title": "Self-hosting alpha proof",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "open-source-core",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "在 standalone upstream repo 內完成 self-hosting alpha proof，並把正式使用者體驗收斂為『1 句官方 prompt 作為單一入口』；使用者只需把 prompt 交給 AI，必要時由 AI 自動執行官方 bootstrap 命令，不需手動拷貝 AGENTS/profile/task/lock，也不需先把 host repo 改造成 Node 專案。",
+    "related": [
+      "ATM-1-0010",
+      "ATM-2-0010"
+    ],
+    "depends": [
+      "ATM-1-0008",
+      "ATM-2-0008"
+    ],
+    "acceptance": [
+      "使用者只需 1 句官方 prompt 即可啟動 first task；必要時由 AI 自動執行官方 bootstrap 命令",
+      "空白或 sandbox repo 可在不依賴 3KLife 工具下完成 standalone bootstrap smoke",
+      "AI agent 只讀 host README 與生成的 AGENTS/.atm profile/task，即可建立 first task、scope lock、artifact/log/evidence 與 first atom smoke",
+      "standalone smoke 不需引用 3KLife/Cocos/html-to-ucuf 或本地治理工具，且作為 Phase B 進入 downstream adapter 前的硬 gate"
+    ],
+    "deliverables": [
+      "standalone self-hosting alpha checklist",
+      "official single-entry bootstrap contract",
+      "agent bootstrap smoke fixture",
+      "Phase B gate summary"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: upstream npm run validate:self-hosting-alpha / npm run validate:cli / npm run validate:bootstrap / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 75dfca9 新增 bootstrap CLI 入口、single-entry self-hosting alpha prompt、SELF_HOSTING_ALPHA checklist 與 deterministic first-smoke proof gate | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM self-hosting first 開卡",
+      "summary": "建立 upstream standalone self-hosting alpha gate，並把官方體驗明確收斂為『1 句 prompt 作為單一入口』後，再進 downstream adapter。",
+      "position": "ATM-1",
+      "prereq": "ATM-1-0008、ATM-2-0008"
     },
-    {
-        "doc_id":  "doc_task_0360",
-        "id":  "ATM-2-0050",
-        "title":  "Framework Function Atomization Coverage Gate",
-        "owner":  "codex-gpt-5",
-        "priority":  "P0",
-        "status":  "in-progress",
-        "type":  "governance",
-        "phase":  "ATM-2",
-        "created":  "2026-05-08",
-        "created_by_agent":  "codex-gpt-5",
-        "started_at":  "2026-05-08T17:40:00+08:00",
-        "started_by_agent":  "codex-gpt-5",
-        "chain_id":  "",
-        "chain_step":  "",
-        "sensor_triggered_by":  "",
-        "description":  "建立 framework-wide coverage manifest 與 deterministic gate，逐項證明 ATM framework Layer 2 功能都有 atom / map / adapter facade 或正式例外；不重複既有 generator、task-card system、gate-map 功能卡。",
-        "related":  [
-                        "ATM-1.5-0003",
-                        "ATM-2-0012",
-                        "ATM-2-0023",
-                        "ATM-2-0028",
-                        "ATM-2-0029",
-                        "ATM-3-0001",
-                        "ATM-3-0006",
-                        "ATM-3-0007",
-                        "ATM-3-0008",
-                        "ATM-3-0009",
-                        "ATM-3-0010",
-                        "ATM-3-0011",
-                        "ATM-3-0012",
-                        "ATM-5-0003",
-                        "ATM-5-0005"
-                    ],
-        "depends":  [
-                        "ATM-2-0038",
-                        "ATM-2-0041",
-                        "ATM-2-0042",
-                        "ATM-2-0048",
-                        "ATM-2-0049",
-                        "ATM-3-0015"
-                    ],
-        "acceptance":  [
-                           "framework-function-atomization-manifest.md 逐項列出 Layer 1 / Layer 2 / Layer 3 功能與 coverage status",
-                           "每個 Layer 2 framework function 至少對應 atom / atomic map / adapter facade / open task",
-                           "ATM-3-0015 僅標為 task card lifecycle coverage，不得誤判為全框架 coverage",
-                           "validator 能在缺 manifest entry、例外 layer 不符、Layer 2 無 coverage 時 fail",
-                           "規劃文件已回寫 Roadmap、開發計畫書、演進規劃書與進化版原子提案",
-                           "固定路線正式化：ATM-2-0048 → ATM-3-0015 → ATM-2-0050，不得跳步",
-                           "ATM-2-0049 視為已落地前置，不另占固定路線節點",
-                           "ATM-2-0048 / ATM-3-0015 未完成前，ATM-2-0050 只能做 manifest backwrite / gap mapping / advisory report，不得把 coverage validator 升級成 blocker",
-                           "documentation-governance-policy.md 與 documentation-role-map.md 完成，root docs 皆有建議角色與建議處置",
-                           "validate-atm-doc-governance 固定 Agent Boot Order 與 root / shard 盤點，避免新文件平行長出第二份主真相"
-                       ],
-        "deliverables":  [
-                             "docs/ai_atomic_framework/framework-function-atomization-manifest.md",
-                             "machine-readable coverage manifest fixture",
-                             "validate-framework-atomization-coverage command",
-                             "planning docs backwrite",
-                             "gap-to-task-card mapping",
-                             "docs/ai_atomic_framework/documentation-governance-policy.md",
-                             "docs/ai_atomic_framework/documentation-role-map.md",
-                             "tools_node/validate-atm-doc-governance.js"
-                         ],
-        "notes":  "2026-05-08 | 狀態: open | 驗證: pending | 變更: 補齊 ATM framework-wide 原子化 coverage manifest / gate；不重複 generator、map generator、task card system atomic map 既有功能卡 | 阻塞: 等 ATM-2-0048 / ATM-2-0049 / ATM-3-0015 收斂\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 補入固定開工路線條文；正式規定 framework-wide atomization follow-up 必須先經 ATM-2-0048 → ATM-3-0015 → ATM-2-0050 | 阻塞: ATM-2-0048 尚未完成，ATM-3-0015 尚未落地 atomic map validator\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: 新增文件治理政策與現況角色盤點，先完成邏輯收斂，再規劃後續實體搬移 | 阻塞: none\n2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: police 主動化 model 收斂為 trigger/scope/severity/action、authoring-time / transition-time / sweep-time、fast/slow 與 machine-readable findings | 阻塞: none",
-        "brief":  {
-                      "style":  "harn-rich",
-                      "label":  "ATM dogfooding coverage gate",
-                      "summary":  "建立 Framework Function Atomization Manifest 與 coverage gate，證明 ATM framework Layer 2 功能都有 atom / map / adapter facade 或正式例外。",
-                      "position":  "ATM-2 / framework-wide dogfooding coverage",
-                      "prereq":  "ATM-2-0038 / ATM-2-0041 / ATM-2-0042 已承接 AtomGenerator / MapGenerator / provenance；ATM-3-0015 只覆蓋 task card system atomic map"
-                  },
-        "contracts":  {
-                          "input":  [
-                                        "Layer 1 constitutional schema 只要求 hash-lock / migration gate，不要求自我 atom",
-                                        "Layer 2 governed framework functions must have atom / atomic map / governed adapter facade coverage",
-                                        "Layer 3 mutable host config 只要求 git / adapter config 管理，不列入必須原子化",
-                                        "Existing cards must be reused; do not duplicate generator / task-card / gate-map work",
-                                        "ATM-3-0015 covers only task card lifecycle, not the whole framework",
-                                        "不清楚的功能邊界需回查 docs/ai_atomic_framework/ 規劃書，不以任務卡 notes 片段自行推斷完成"
-                                    ],
-                          "output":  [
-                                         "盤點 CLI / spec / scaffold / registry / test / evidence / police / adapter / task lifecycle / map / PEV 等 framework functions",
-                                         "每個 Layer 2 function 至少對應 atom / atomic map / adapter facade / open task",
-                                         "Layer 1 只能標 constitutional-exception；Layer 3 只能標 mutable-exception",
-                                         "已由既有卡承接的功能必須引用原卡，不重複開功能卡",
-                                         "新增 validator，當 framework function 缺 atom / map / adapter coverage 或例外類型錯誤時 fail",
-                                         "回寫規劃文件，讓 all framework functions atomized 有 coverage gate",
-                                         "把 ATM-2-0048 -\u003e ATM-3-0015 -\u003e ATM-2-0050 固定路線寫成正式 gate 條文，供後續開卡引用",
-                                         "文件治理政策與現況角色盤點完成，明確標示 canonical / reference / adopter / history / index / shard / asset",
-                                         "validate-atm-doc-governance 能檢查 root files / shard dirs / Agent Boot Order，防止新增文件平行長出第二份主真相"
-                                     ],
-                          "validation_cmd":  "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0050.md docs/tasks/tasks-atm/tasks-atm-part-24.json docs/ai_atomic_framework/framework-function-atomization-manifest.md docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md docs/ai_atomic_framework/AI原子框架開發計畫書.md docs/ai_atomic_framework/ATM框架演進執行規劃書.md docs/ai_atomic_framework/關於進化版的原子提案.md docs/ai_atomic_framework/documentation-governance-policy.md docs/ai_atomic_framework/documentation-role-map.md\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md\nnode tools_node/validate-atm-doc-governance.js --root docs/ai_atomic_framework --strict\nnode tools_node/doc-id-registry.js",
-                          "rollback_hint":  "移除 coverage manifest、validator、planning docs backwrite，並保留既有 ATM-2-0038 / ATM-2-0041 / ATM-2-0042 / ATM-3-0015 的功能範圍不變。",
-                          "execution_steps":  [
-                                                  "盤點所有 ATM framework task cards 與 planning docs，先歸併到既有功能卡",
-                                                  "定義 Layer 1 / Layer 2 / Layer 3 邊界與 coverage statuses",
-                                                  "先確認 ATM-2-0048 與 ATM-3-0015 的固定路線是否已滿足前置條件",
-                                                  "建立 framework function coverage manifest",
-                                                  "將缺口連到既有 open 卡或 follow-up，不重複開已存在功能",
-                                                  "新增 deterministic coverage validator",
-                                                  "回寫 Roadmap / 開發計畫書 / 演進規劃書 / 進化版原子提案 / task shard",
-                                                  "建立文件治理政策與現況角色盤點，先完成邏輯收斂，再安排後續 physical reorganization",
-                                                  "Agent Boot Order 固定為 documentation-governance-policy -\u003e documentation-role-map -\u003e ATM_cross_reference -\u003e canonical owner"
-                                              ]
-                      },
-        "harness_evidence":  {
-                                 "artifact_paths":  [
-
-                                                    ],
-                                 "validation_evidence":  [
-
-                                                         ],
-                                 "handoff_diff_status":  "",
-                                 "trace_artifacts":  [
-
-                                                     ],
-                                 "metrics_summary":  [
-
-                                                     ]
-                             }
-    }
+    "contracts": {
+      "input": [
+        "zero-install bootstrap 與 local governance reference plugins 已可運作",
+        "第一輪 smoke 不得依賴 3KLife 工具"
+      ],
+      "output": [
+        "standalone self-hosting alpha checklist",
+        "official single-entry bootstrap contract",
+        "bootstrap smoke proof",
+        "Phase B exit gate"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡 touched files；若 standalone smoke 仍含 3KLife 假設，保持卡片 open 不偷關卡。",
+      "execution_steps": [
+        "定義『1 句官方 prompt 作為單一入口；必要時 AI 自動執行 1 個官方 bootstrap 命令』產品目標",
+        "定義 self-hosting alpha gate",
+        "建立 standalone smoke fixture",
+        "驗證 first task/lock/artifact/log/evidence 與 first atom smoke",
+        "回寫 Phase B gate summary"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [
+        "AI-Atomic-Framework/packages/cli/src/atm.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/bootstrap-entry.mjs",
+        "AI-Atomic-Framework/packages/cli/src/commands/bootstrap.mjs",
+        "AI-Atomic-Framework/scripts/validate-self-hosting-alpha.mjs",
+        "AI-Atomic-Framework/scripts/validate-cli.mjs",
+        "AI-Atomic-Framework/scripts/validate-bootstrap.mjs",
+        "AI-Atomic-Framework/docs/SELF_HOSTING_ALPHA.md",
+        "AI-Atomic-Framework/examples/agent-bootstrap/README.md",
+        "AI-Atomic-Framework/tests/cli-fixtures/cli-mvp.fixture.json",
+        "AI-Atomic-Framework/README.md"
+      ],
+      "validation_evidence": [
+        "AI-Atomic-Framework commit 75dfca9",
+        "npm run validate:self-hosting-alpha",
+        "npm run validate:cli",
+        "npm run validate:bootstrap",
+        "npm test",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "handoff_diff_status": "upstream committed; tracking diff pending commit",
+      "trace_artifacts": [],
+      "metrics_summary": [
+        "official single-entry prompt checks .atm/config.json and triggers bootstrap when needed",
+        "bootstrap command is an official standalone CLI entry alongside init/status/validate",
+        "self-hosting alpha validator bootstraps a clean upstream repo copy and completes first smoke against hello-world atom",
+        "proof writes task/lock/evidence transitions plus artifact/log/context summary and Phase B exit gate report",
+        "full upstream validation chain remains green after adding the proof gate"
+      ]
+    },
+    "completed_at": "2026-05-06T16:34:31+08:00"
+  },
+  {
+    "id": "ATM-3-0008",
+    "title": "doc-id-registry.js adapter 化：接入 ATM DocumentIndexAdapter",
+    "status": "done",
+    "priority": "P1",
+    "phase": "ATM-3",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "vs-insiders-gpt-5.3-codex",
+    "started_at": "2026-05-08T18:07:16.711+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.3-codex",
+    "completed_at": "2026-05-08T18:13:48.915+08:00",
+    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
+    "doc_id": "doc_task_0308",
+    "depends": [
+      "ATM-3-0006"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無\n2026-05-07 架構釐清：本卡為 Phase 1（thin adapter 化），Phase 2 DocumentIndexAdapter 原子化為 ATM-GOV-* governed atom\n2026-05-08 | 狀態: done | 驗證: node tools_node/doc-id-registry.js --assign docs/agent-briefs/tasks/ATM/ATM-3-0008.md ✅；node tools_node/compute-gate.js --gates ts-syntax eslint-rules --agent-feedback ✅；node -e adapter prefix probe ✅ | 變更: 新增 document-index-adapter 與 doc-index-profile，doc-id-registry --assign 改由 adapter 分配 doc_id | 阻塞: check-task-scope 受既有跨卡 dirty files 影響"
+  }
 ]

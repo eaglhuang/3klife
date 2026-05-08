@@ -67,66 +67,25 @@
     "completed_at": "2026-05-06T08:08:07+08:00"
   },
   {
-    "doc_id": "doc_task_0347",
-    "id": "ATM-2-0040",
-    "title": "Backfill Existing Core Atoms Through Atom Generator",
-    "owner": "vs-code-gpt-5.4-mini",
-    "priority": "P0",
+    "id": "ATM-2.5-0002",
+    "title": "Sandbox Repo Fixture：空白 repo 跑完整 Alpha Gate",
     "status": "done",
-    "type": "migration",
-    "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-code-gpt-5.4-mini",
-    "started_at": "2026-05-07T15:14:35.1752897+08:00",
+    "priority": "P0",
+    "phase": "ATM-2.5",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0304",
+    "started_at": "2026-05-07T16:09:42.7411577+08:00",
     "started_by_agent": "vs-code-gpt-5.4-mini",
-    "completed_at": "2026-05-07T15:27:59.2938458+08:00",
-    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
-    "chain_step": "2/3",
-    "sensor_triggered_by": "atm-pre-generator-atom-backfill",
-    "description": "讓既有核心原子 ATM-CORE-0001 與 ATM-CORE-0003 重新走 generator provenance，不直接手改 registry/workbench，並保留既有 atomId 與 hash-lock 可追溯性。",
-    "related": [],
+    "completed_at": "2026-05-07T16:14:13.1446300+08:00",
     "depends": [
-      "ATM-2-0038",
-      "ATM-2-0039"
+      "ATM-2.5-0001",
+      "ATM-2-0012"
     ],
-    "acceptance": [],
-    "deliverables": [],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始回填 pre-generator core atoms provenance | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node scripts/backfill-generator-provenance.mjs / npm run validate:registry-catalog / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: ATM-CORE-0001/0003 補 canonical workbench witness、test report、generator-provenance:backfilled，catalog 顯示 provenance | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM pre-generator atom backfill 開卡",
-      "summary": "用 generator 重新產生或遷移前期核心原子，補齊 generator provenance 與 workbench 四件套。",
-      "position": "ATM-2（migration / generator backfill）",
-      "prereq": "ATM-2-0038 / ATM-2-0039"
-    },
-    "contracts": {
-      "input": [
-        "ATM-CORE-0001 與 ATM-CORE-0003 是 generator 之前手動建立的核心原子",
-        "既有 atomId 不可變",
-        "既有 registry hash-lock 不可靜默失效"
-      ],
-      "output": [
-        "定義 pre-generator atom backfill 流程",
-        "用 generator 或 generator-backed migration 重建 ATM-CORE-0001/0003 workbench",
-        "保留或重算 registry selfVerification 並留下 migration evidence",
-        "catalog 顯示 generator provenance"
-      ],
-      "validation_cmd": "npm run validate:registry-core\\nnpm run validate:registry-catalog\\nnpm test\\nnpm run lint",
-      "rollback_hint": "若 backfill 造成 hash drift，回退該 atom 的 regenerated workbench/registry entry，保留 ATM-2-0038 generator 本體。",
-      "execution_steps": [
-        "盤點 ATM-CORE-0001/0003 既有 sourcePaths",
-        "定義保留 atomId 的 generator-backed backfill 模式",
-        "逐顆重建 workbench/spec/test/report",
-        "重算 registry 與 catalog",
-        "跑完整 registry drift 驗證"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
+    "acceptance": [
+      "sandbox fixture 僅涵蓋 birth pipeline（hello-world atom）；evolution sandbox fixture 由 alpha1 新卡承接，不污染 alpha0 fixture"
+    ],
+    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | 狀態: done | 驗證: tests/sandbox/setup.sh + tests/sandbox/verify.sh + sandbox-fixture.mjs pass；self-host-alpha --verify --json 在空 sandbox 回傳全 true | 變更: 新增 sandbox repo fixture、expected baseline 與 CI sandbox gate job | 阻塞: none"
   }
 ]

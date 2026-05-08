@@ -44,14 +44,14 @@
     }
   },
   {
-    "doc_id": "doc_task_0271",
-    "id": "ATM-4-0004",
-    "title": "parseCssLength 與 parseFragmentList case atoms",
+    "doc_id": "doc_task_0277",
+    "id": "ATM-6-0002",
+    "title": "Community RFC 與貢獻流程",
     "owner": "GitHubCopilot",
-    "priority": "P1",
+    "priority": "P2",
     "status": "open",
-    "type": "atom-case",
-    "phase": "ATM-4",
+    "type": "ecosystem",
+    "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -59,57 +59,46 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom；承接 ATM-4-0003 的 behavior.atomize lineage 規則，不重複開 H2U atomize 卡。",
+    "description": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
     "related": [],
     "depends": [
-      "ATM-4-0003"
+      "ATM-5-0003"
     ],
     "acceptance": [
-      "px/em/%/svg 與 fragment legacy fixtures 覆蓋",
-      "self-test 不退轉",
-      "可 rollback",
-      "兩個新 atom 均使用 behavior.atomize，並包含 lineage.bornBy=atomize",
-      "兩個新 atom 均帶 legacy:// parentRefs 與可追溯 lineage log",
-      "neutrality scan 不得讓 adopter-private 假設流入 upstream core schema"
+      "core vs adapter PR 分流",
+      "domain logic PR 有明確拒絕/轉 plugin 流程",
+      "maintainer decision process 清楚",
+      "release owner 與 maintainer quorum 規則已定義",
+      "security / provenance / package naming 類 RFC escalation path 已定義"
     ],
     "deliverables": [
-      "parseCssLength atom",
-      "parseFragmentList atom",
-      "fixtures",
-      "registry/hash entries",
-      "lineage logs and parentRefs for both extracted atoms",
-      "validation report"
+      "docs/RFC_PROCESS.md",
+      "GitHub issue templates",
+      "PR template"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補社群流程需指定 release owner / maintainer quorum / escalation path | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0003"
+      "summary": "建立社群 issue、RFC、PR review、maintainer 權責流程。",
+      "position": "ATM-6",
+      "prereq": "ATM-5-0003"
     },
     "contracts": {
       "input": [
-        "ATM-4-0003 已提供 normalizeCssColor case atom、legacy fixture、lineage log 與 registry/hash entry",
-        "ATM-2-0033 已定義 ProjectAdapter legacy:// URI 與 atomize / infect adapter contract",
-        "本卡只能新增 parseCssLength / parseFragmentList case atoms，不得重寫 normalizeCssColor done card"
+        "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "parseCssLength atom",
-        "parseFragmentList atom",
-        "fixtures",
-        "registry/hash entries",
-        "兩個新 atom 均使用 behavior.atomize，並包含 lineage.bornBy=atomize",
-        "兩個新 atom 均帶 legacy:// parentRefs 與可追溯 lineage log",
-        "neutrality scan 不得讓 adopter-private 假設流入 upstream core schema"
+        "docs/RFC_PROCESS.md",
+        "GitHub issue templates",
+        "PR template"
       ],
-      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-4-0004.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
       "execution_steps": [
         "確認 upstream/downstream 邊界",
-        "讀取 legacy source range，為 parseCssLength / parseFragmentList 建立 legacy:// parentRefs",
-        "以 behavior.atomize 產生兩個 case atom spec、fixtures、registry/hash entry 與 lineage log",
-        "跑 adapter/case validation 與 neutrality scan",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
         "回寫 tracking notes"
       ]
     },

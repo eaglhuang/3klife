@@ -67,116 +67,56 @@
     }
   },
   {
-    "doc_id": "doc_task_0332",
-    "id": "ATM-2-0026",
-    "title": "Semantic Fingerprint + Lineage + TTL Schema Extension",
-    "owner": "ClaudeCode_opus-4-7",
+    "doc_id": "doc_task_0346",
+    "id": "ATM-2-0039",
+    "title": "Generated Atom Source Template and Code Path Policy",
+    "owner": "vs-code-gpt-5.4-mini",
     "priority": "P0",
-    "status": "open",
-    "type": "registry",
+    "status": "done",
+    "type": "architecture",
     "phase": "ATM-2",
     "created": "2026-05-07",
-    "created_by_agent": "ClaudeCode_opus-4-7",
-    "started_at": "2026-05-07T00:00:00+08:00",
-    "started_by_agent": "ClaudeCode_opus-4-7",
-    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
-    "chain_step": "1/8",
-    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
-    "description": "為 atom 與 atomic-map 加入 semanticFingerprint / lineage / ttl optional 欄位（schema-additive）；採 hot/cold 分離設計：hot registry entry 只放 sf 字串與 lineageLogRef / evidenceIndexRef URI，cold artifact 放完整 history。為去重警察與生命週期警察提供識別基礎。",
+    "created_by_agent": "vs-code-gpt-5.4-mini",
+    "started_at": "2026-05-07T15:14:35.1752897+08:00",
+    "started_by_agent": "vs-code-gpt-5.4-mini",
+    "completed_at": "2026-05-07T15:27:59.2938458+08:00",
+    "chain_id": "ATM-GENERATOR-PROVENANCE-V1",
+    "chain_step": "1/3",
+    "sensor_triggered_by": "atm-generator-source-gap",
+    "description": "讓 Atom Generator 產出的新原子具備正式 source file template，不再以 spec-only 或 spec-as-code 方式暫代 registry codePaths。",
     "related": [],
     "depends": [
-      "ATM-2-0014",
-      "ATM-2-0023"
+      "ATM-2-0038"
     ],
-    "acceptance": [
-      "atomic-spec.schema.json 與 atomic-map.schema.json 皆 additive 加 optional semanticFingerprint / lineage / ttl 欄位，舊資料相容",
-      "semanticFingerprint 為 64-char hex string（無 nested），可直接做 hash table key",
-      "registry hot entry 欄位數 ≤ 10；lineage 與 evidence detail 走 lineageLogRef / evidenceIndexRef URI，不放主 entry",
-      "提供 sf 計算合約：atom 用 sortByName(inputs)+sortByName(outputs)+language.primary+validation.evidenceRequired+performanceBudget；map 用 sortByName(entrypoints)+qualityTargets",
-      "fixtures：atom-with-sf / map-with-sf / legacy-no-sf 三種，舊 fixture 全綠",
-      "semanticFingerprint 必須採 per-version 規則：hot registry entry 只保留 currentVersion 的 semanticFingerprint，歷史版本值寫入 versions[*].semanticFingerprint",
-      "validate-semantic-fingerprint.mjs 必須獨立驗證 atom/map/legacy/pending exemplar 與 hot/cold、per-version 規則",
-      "exemplar：atom-with-sf / map-with-sf / legacy-no-sf / pending-sf-calculation"
-    ],
-    "deliverables": [
-      "schemas/atomic-spec.schema.json",
-      "schemas/registry/atomic-map.schema.json",
-      "packages/core/src/registry/semantic-fingerprint.ts",
-      "scripts/validate-semantic-fingerprint.mjs",
-      "fixtures/registry/atom-with-sf.json",
-      "fixtures/registry/map-with-sf.json",
-      "fixtures/registry/legacy-no-sf.json",
-      "fixtures/registry/pending-sf-calculation.json"
-    ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: ATM 識別/行為/狀態機提案開卡；schema-additive、hot/cold 分離、hot 欄位 ≤10 | 阻塞: 等 ATM-2-0014 / ATM-2-0023 完成\n2026-05-07 ATM-2-0042：generator 與 dogfood map 須共用 SF 規則\n2026-05-07 附錄 C：semanticFingerprint 改為 per-version\n2026-05-07 測試穩定性補丁：追加 validator + exemplar quartet",
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4-mini 開始補 source template/codePaths policy | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: node tests/core/atom-generator.test.mjs / node tests/cli/create.test.mjs / npm run validate:registry-core / npm run validate:generator-provenance / npm test / npm run typecheck / npm run lint pass | 變更: AtomGenerator 產物補 atom.source.mjs，預設 validation command 改跑 source self-check，registry codePaths 不再用 specPath 暫代 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 識別/行為/狀態機提案開卡",
-      "summary": "為原子與原子地圖加入 semanticFingerprint / lineage / ttl，並維持 hot/cold 分離以支援大規模原子庫。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0014 / ATM-2-0023"
-    }
-  },
-  {
-    "doc_id": "doc_task_0275",
-    "id": "ATM-5-0004",
-    "title": "v0.1 alpha release checklist",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "open",
-    "type": "release",
-    "phase": "ATM-5",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "整理 AI-Atomic-Framework v0.1 alpha 發布前檢查表。",
-    "related": [],
-    "depends": [
-      "ATM-5-0001",
-      "ATM-5-0002",
-      "ATM-5-0003"
-    ],
-    "acceptance": [
-      "npm pack/dry-run 成功",
-      "README/examples/schema tests 全綠",
-      "release notes 說明 alpha 限制",
-      "alpha0 checklist 與 alpha1 checklist 分離",
-      "secrets scan / provenance / npm publish dry-run / package naming 檢查項已列入",
-      "release owner sign-off 欄位已列入"
-    ],
-    "deliverables": [
-      "docs/RELEASE_CHECKLIST.md",
-      "GitHub release draft",
-      "npm publish dry-run plan"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 alpha0/alpha1 release checklist：secrets scan、provenance、package naming、release owner | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "整理 AI-Atomic-Framework v0.1 alpha 發布前檢查表。",
-      "position": "ATM-5",
-      "prereq": "ATM-5-0001、ATM-5-0002、ATM-5-0003"
+      "label": "ATM generator source template 開卡",
+      "summary": "補齊 generator 的 source file template 與 codePaths policy，讓新原子真正有 spec/code/test/report 四件套。",
+      "position": "ATM-2（generator provenance / source template）",
+      "prereq": "ATM-2-0038"
     },
     "contracts": {
       "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
+        "ATM-2-0038 alpha0 已能產生 spec/test/report 並登錄 registry",
+        "目前 dogfood fixture 以 spec path 暫作 codePaths，這只是 alpha0 過渡",
+        "Registry selfVerification 需要穩定 codePaths"
       ],
       "output": [
-        "docs/RELEASE_CHECKLIST.md",
-        "GitHub release draft",
-        "npm publish dry-run plan"
+        "新增 generator source template policy",
+        "AtomGenerator 產物包含正式 source file",
+        "Registry codePaths 不再用 specPath 暫代",
+        "補 fixture 覆蓋 source/code/test/report 四件套"
       ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "validation_cmd": "node tests/core/atom-generator.test.mjs\\nnode tests/cli/create.test.mjs\\nnpm run validate:registry-core",
+      "rollback_hint": "回退 source template 與 codePaths policy；保留 ATM-2-0038 birth facade，不回退 allocator/create command。",
       "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
+        "盤點目前 generated atom 檔案組成",
+        "設計 source template 與預設 validation command",
+        "更新 generator 與 tests",
+        "回寫 registry/codePaths policy"
       ]
     },
     "harness_evidence": {

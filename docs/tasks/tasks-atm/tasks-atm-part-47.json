@@ -45,14 +45,14 @@
     }
   },
   {
-    "doc_id": "doc_task_0280",
-    "id": "ATM-4-0005",
-    "title": "Injection plan 與 rollback dry-run",
+    "doc_id": "doc_task_0278",
+    "id": "ATM-6-0003",
+    "title": "多語言 Adapter 擴張計畫",
     "owner": "GitHubCopilot",
-    "priority": "P0",
+    "priority": "P2",
     "status": "open",
-    "type": "case-study",
-    "phase": "ATM-4",
+    "type": "ecosystem",
+    "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
@@ -60,42 +60,36 @@
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
+    "description": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
     "related": [],
     "depends": [
-      "ATM-4-0003",
-      "ATM-3-0002",
-      "ATM-2.5-0001",
-      "ATM-2.5-0002"
+      "ATM-2-0006",
+      "ATM-1-0006"
     ],
     "acceptance": [
-      "dry-run 可 review",
-      "rollback plan 對稱",
-      "來回套用 diff 可回到原狀",
-      "第一輪只產 dry-run patch plan 與 rollback plan，不 apply patch、不改 legacy runtime",
-      "alpha0 gate evidence link：schema / registry / hash-lock / CLI / hello-world / minimal evidence 全綠"
+      "每個 language adapter 有 test/build/import scan contract",
+      "不要求 core 重寫",
+      "Cocos/Unity 引擎物件不進 compute atom"
     ],
     "deliverables": [
-      "inject-plan JSON schema",
-      "rollback-plan JSON schema",
-      "H2U normalizeCssColor dry-run plan"
+      "docs/ecosystem/language-adapter-roadmap.md",
+      "adapter acceptance matrix"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 啟動條件：self-hosting alpha0 全綠後才可 dry-run injection + rollback plan | 阻塞: alpha0 gate 未全綠",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "建立 H2U atom 注入 plan 與 rollback plan，只輸出 patch plan，不直接改 legacy。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0003、ATM-3-0002"
+      "summary": "規劃 Python/C#/Unity/Cocos 等 language adapter 的次序與驗證基準。",
+      "position": "ATM-6",
+      "prereq": "ATM-2-0006、ATM-1-0006"
     },
     "contracts": {
       "input": [
         "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "inject-plan JSON schema",
-        "rollback-plan JSON schema",
-        "H2U normalizeCssColor dry-run plan"
+        "docs/ecosystem/language-adapter-roadmap.md",
+        "adapter acceptance matrix"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",

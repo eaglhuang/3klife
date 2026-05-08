@@ -75,62 +75,91 @@
     "completed_at": "2026-05-05T22:21:53+08:00"
   },
   {
-    "doc_id": "doc_task_0340",
-    "id": "ATM-2-0034",
-    "title": "Registry Catalog Markdown Projection Atom",
-    "owner": "vs-insiders-gpt-5.4-mini",
-    "priority": "P1",
+    "doc_id": "doc_task_0354",
+    "id": "ATM-2-0047",
+    "title": "URN Resolver and RegistryIndex Facade",
+    "owner": "vs-code-copilot",
+    "priority": "P0",
     "status": "done",
     "type": "registry",
     "phase": "ATM-2",
-    "created": "2026-05-07",
-    "created_by_agent": "vs-insiders-gpt-5.4-mini",
-    "started_at": "2026-05-07T03:27:00Z",
-    "started_by_agent": "vs-insiders-gpt-5.4-mini",
-    "completed_at": "2026-05-07T04:12:21.9270570Z",
-    "chain_id": "ATM-REGISTRY-CATALOG-V1",
+    "created": "2026-05-08",
+    "created_by_agent": "vs-code-copilot",
+    "started_at": "2026-05-08T00:50:34+08:00",
+    "started_by_agent": "vs-code-copilot",
+    "completed_at": "2026-05-08T00:58:23.9061276+08:00",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V2",
     "chain_step": "1/1",
-    "sensor_triggered_by": "atm-registry-catalog-gap",
-    "description": "在 atom register/upsert 完成後，依 atomic-registry.json 與對應 spec 的 title/description/tags 自動生成或更新人類可讀 Markdown 原子庫清單；Markdown 只是 registry projection，不可成為新的 source of truth。",
+    "sensor_triggered_by": "atm-urn-registry-index-implementation",
+    "description": "建立 canonical ATM ID 的派生 URN resolver 與 RegistryIndex 查詢 façade，讓 atom/map/police 可用同一個 nodeRef 查詢，同時保留 ATM-CORE/ATM-MAP 作唯一 source of truth。",
     "related": [
-      "ATM-2.5-0001",
-      "ATM-2.5-0002"
+      "ATM-2-0030",
+      "ATM-2-0031",
+      "ATM-2-0005",
+      "ATM-2-0027"
     ],
     "depends": [
-      "ATM-2-0004",
-      "ATM-2-0013"
+      "ATM-1-0011",
+      "ATM-2-0026",
+      "ATM-2-0042"
     ],
     "acceptance": [
-      "register/upsert 流程可在同一輪輸出或更新人類可讀 registry catalog；catalog 至少列出 atomId、功能摘要、類別推導、status、specPath；輸出 path 可配置，並以 atomic_workbench/原子庫列表.md 作為 UTF-8 中文路徑 proving fixture；同一份 registry 重跑時輸出穩定排序且無額外 diff；Markdown 明確標示 projection only，真正 source of truth 仍是 atomic-registry.json"
+      "URN 只可由 canonical atomId/mapId 派生，禁止成為第二套可寫主鍵",
+      "支援 urn:atm:atom:<ATM-ID>@<semver> 與 urn:atm:map:<ATM-MAP-ID>@<semver> parse/format/normalize",
+      "RegistryIndex 建立 atomId/mapId/logicalName/semanticFingerprint/version 四類 index，對單筆 lookup 提供 O(1) façade",
+      "舊 registry entries[] 格式保持相容，index 可由現有 registry document lazy build",
+      "dedup police 可重用 fingerprint-index，不再自建不相容 hash bucket",
+      "validation fixture 覆蓋 atom/map/legacy-no-sf/invalid-urn/duplicate-key"
     ],
     "deliverables": [
-      "packages/core/src/registry/registry-catalog.mjs；packages/core/src/registry/catalog-category-deriver.mjs；packages/core/src/registry/registry.mjs 或等價 register/upsert writer hook；scripts/validate-registry-catalog.mjs；scripts/sync-registry-artifacts.mjs；tests/registry-catalog.fixture.json；tests/registry-catalog.snapshot.md；atomic_workbench/registry-catalog.md example output；atomic_workbench/原子庫列表.md UTF-8 proving fixture"
+      "AI-Atomic-Framework/packages/core/src/registry/urn.mjs",
+      "AI-Atomic-Framework/packages/core/src/registry/registry-index.mjs",
+      "AI-Atomic-Framework/scripts/validate-registry-index.mjs",
+      "AI-Atomic-Framework/fixtures/registry/index/*.json",
+      "docs/ai_atomic_framework/關於進化版的原子提案.md",
+      "docs/ai_atomic_framework/ATM框架演進執行規劃書.md"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 新增 registry human-readable catalog projection atom；排程歸於 ATM-2 alpha0+ / DX follow-up，不列入 ATM-2.5 alpha gate blocker | 阻塞: 等 ATM-2-0004 / ATM-2-0013 完成\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: 開始實作 registry catalog renderer、writer hook、sync script 與 validator；補齊 UTF-8 中文路徑 proving fixture，避免把中文檔名硬寫成唯一預設 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: npm.cmd run validate:registry-catalog pass；npm.cmd run sync:registry-artifacts pass；npm.cmd run validate:registry-core pass；npm.cmd run validate:seed-registry pass；npm.cmd test/typecheck/lint pass | 變更: upstream AI-Atomic-Framework commit c66a4ee 新增 registry catalog renderer、category deriver、writeRegistryArtifacts hook、sync script、snapshot/fixture validator 與 atomic_workbench/registry-catalog.md example output；UTF-8 中文路徑 proving fixture 由 validator 覆蓋 | 阻塞: none",
+    "notes": "2026-05-08 | 狀態: done | 驗證: validate:registry-index / validate:schemas / validate:registry-core / npm test / typecheck / lint pass；3KLife encoding touched pass | 變更: 建立派生 URN resolver、RegistryIndex façade、validator、fixture，並回寫 Part V 與演進規劃書 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM registry DX 開卡",
-      "summary": "把 atomic-registry.json 投影成 agent/human 都能直接讀的原子庫清單，減少每次人工翻 JSON。",
-      "position": "ATM-2（alpha0+ / DX follow-up）",
-      "prereq": "ATM-2-0004 / ATM-2-0013 已完成"
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
     },
     "contracts": {
       "input": [
-        "atomic-registry.json 已可作為單一來源；per-atom spec path 可從 registry 追到；不得把中文檔名硬寫成唯一 core default"
+        "ATM-1-0011 已收斂 canonical Atomic ID",
+        "ATM-2-0042 已完成 canonical ATM-MAP generator",
+        "現有 registry.schema.json 仍以 entries[] 為相容資料源"
       ],
       "output": [
-        "新增 catalog renderer atom / helper；register 流程可選擇輸出 Markdown catalog；預設 example output 為 atomic_workbench/registry-catalog.md，UTF-8 中文路徑 proving fixture 可用 atomic_workbench/原子庫列表.md；encoding 為 UTF-8 without BOM；catalog 僅投影重要欄位，不複製完整 registry"
+        "派生 URN resolver 不改 canonical ID 真相",
+        "RegistryIndex façade 可包住現有 entries[]",
+        "文件明確禁止占用既有 ATM-3-0010~0013 卡號"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退 catalog renderer / register hook / fixture；保留 atomic-registry.json 為唯一真相來源",
+      "validation_cmd": "cd ../AI-Atomic-Framework\\npnpm run validate:registry-index\\npnpm run validate:schemas\\npnpm run validate:registry-core\\npnpm test\\npnpm run typecheck\\npnpm run lint\\ncd ../3KLife\\nnpm run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0047.md docs/tasks/tasks-atm.json docs/tasks/tasks-atm/.shardrc.json docs/tasks/tasks-atm/tasks-atm-part-35.json docs/tasks/tasks-atm/tasks-atm-part-36.json docs/ai_atomic_framework/關於進化版的原子提案.md docs/ai_atomic_framework/ATM框架演進執行規劃書.md",
+      "rollback_hint": "回退 ATM-2-0047 touched files；若 doc-id registry 已分配新 doc_id，改用 doc-id-registry 工具校正，不手動複製代號。",
       "execution_steps": [
-        "建立 catalog renderer，從 registry + spec 組表；實作 category derivation 規則與 fallback；把 register/upsert 流程接上可配置的 Markdown projection hook；補 snapshot / encoding / idempotent 驗證"
+        "建立任務卡與鎖卡",
+        "補文件中的 URN 派生規則與任務映射",
+        "實作 URN resolver 與 RegistryIndex façade",
+        "補 validator 與 fixtures",
+        "跑 upstream validation 與 downstream encoding check"
       ]
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "validation_evidence": [
+        "node scripts/validate-registry-index.mjs --mode validate pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run validate:schemas pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run validate:registry-core pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework test pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run typecheck pass",
+        "cmd /c npm --prefix c:\\Users\\User\\AI-Atomic-Framework run lint pass",
+        "cmd /c npm run check:encoding:touched -- --files ... pass"
+      ],
+      "handoff_diff_status": "clean-validation",
       "trace_artifacts": [],
       "metrics_summary": []
     }

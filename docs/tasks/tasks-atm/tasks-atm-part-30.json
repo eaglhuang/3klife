@@ -85,71 +85,50 @@
     }
   },
   {
-    "doc_id": "doc_task_0265",
-    "id": "ATM-3-0002",
-    "title": "3KLife ATM config 與 bootstrap wrapper",
+    "doc_id": "doc_task_0326",
+    "id": "ATM-3-0014",
+    "title": "3KLife UsageEvidence shadow adapter",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "done",
+    "status": "open",
     "type": "adapter",
     "phase": "ATM-3",
-    "created": "2026-05-05",
+    "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T05:36:17+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-08T05:40:47+08:00",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "ATM-EVOLUTION-V2",
+    "chain_step": "10/11",
+    "sensor_triggered_by": "atm-evolution-plan-v2",
+    "description": "只讀 3KLife 的 artifacts / compute-gate report / logs，產出 usage-feedback evidence；不修改任何既有 CLI / 工具。",
     "related": [],
     "depends": [
-      "ATM-3-0001"
+      "ATM-3-0001",
+      "ATM-2-0009",
+      "ATM-2-0016"
     ],
     "acceptance": [
-      "node tools_node/atomic-framework/atm-cli.js status 可呼叫 upstream",
-      "workbench/registry path 指向本 repo local 區",
-      "不 fork core source",
-      "shadow wrapper 預設 dry-run / report-only，不替換現有 tools_node CLI"
+      "adapter 僅讀，不寫；任何 file mutation 視為違規",
+      "輸出 evidence 必須通過 ATM-2-0009 的 usage-feedback schema",
+      "3KLife 既有 CLI / compute-gate / 工具行為完全不變（shadow / parity）",
+      "neutrality scanner 對輸出 evidence payload 跑 dry-run，不得帶入 adopter 私有 token",
+      "usage-feedback evidence 中加入 callerCount（該 atom 在 host 端被呼叫的次數），作為 ATM-2-0031 lifecycle police sweep 判斷的輸入（zero-caller 才建議 sweep）",
+      "usage tracking 需記錄 sub-function（export symbol）粒度，不只是 atomId 粒度——供 Demand Police 判斷是否觸發 split",
+      "定義 mapping-table.json：來源欄位 → upstream usage-feedback 欄位必須固定映射；host-only 欄位一律落 extras.adopterPrivate{}，不得出現在 payload 主體",
+      "實作 --strict 與 --lenient；來源格式漂移時，--lenient 必須降級為 evidenceType=usage-feedback-skipped 並寫 skipReason",
+      "補一個 compute-gate report 缺欄位 negative fixture，驗證 --strict hard fail 與 --lenient fallback 差異"
     ],
     "deliverables": [
-      "tools_node/atomic-framework/bootstrap.js",
-      "tools_node/atomic-framework/atm-cli.js",
-      "atm.config.*",
-      "local workbench path 設定"
+      "tools_node/atm-adapter/usage-evidence-shadow.js",
+      "fixtures/adapter/3klife-usage-evidence.snapshot.json"
     ],
-    "notes": "2026-05-08 | 狀態: done | 驗證: encoding/cross-shard/bootstrap smoke/standard gate pass | 變更: 完成 3KLife ATM config、bootstrap wrapper、atm-cli alias，並收尾 shard trim | 阻塞: none",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-07 識別/行為/狀態機提案：追加 acceptance（schema-additive，不重啟驗收）— 將「呼叫次數」回填為 atom caller-count（給 lifecycle police 的 sweep 用）\n2026-05-07 ATM-2-0042 連鎖影響（notes）：map evidence artifacts 存在 canonical atomic_workbench/maps/ 路徑，adapter 須同時掃描 maps/ 和 atoms/ 目錄\n2026-05-07 附錄 C 治理補丁：追加 mapping-table / strict-vs-lenient / format-drift fallback，避免 host 私有欄位污染 upstream evidence schema",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM adapter/case/release 開卡",
-      "summary": "建立 3KLife local atm config 與 bootstrap wrapper，讓本 repo 透過上游 package 執行 ATM CLI。",
+      "label": "ATM 演進規劃 v2 開卡",
+      "summary": "alpha1 期間第一個 evolution-evidence 來源；以最小侵入方式餵養 evolution 管線。",
       "position": "ATM-3",
-      "prereq": "ATM-3-0001"
-    },
-    "contracts": {
-      "input": [
-        "上游 core package 與 plugin SDK 任務已開立"
-      ],
-      "output": [
-        "tools_node/atomic-framework/bootstrap.js",
-        "atm.config.*",
-        "local workbench path 設定"
-      ],
-      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "實作 adapter 或 case study artifact",
-        "跑 adapter/case 驗證",
-        "回寫 tracking notes"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
+      "prereq": "ATM-3-0001 / ATM-2-0009 / ATM-2-0016"
     }
   }
 ]

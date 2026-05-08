@@ -49,58 +49,50 @@
     }
   },
   {
-    "doc_id": "doc_task_0279",
-    "id": "ATM-4-0003",
-    "title": "normalizeCssColor 首個 case atom",
+    "doc_id": "doc_task_0276",
+    "id": "ATM-6-0001",
+    "title": "跨專案 Registry / DB / Vector 決策",
     "owner": "GitHubCopilot",
-    "priority": "P0",
-    "status": "done",
-    "type": "atom-case",
-    "phase": "ATM-4",
+    "priority": "P2",
+    "status": "open",
+    "type": "ecosystem",
+    "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "2026-05-08T10:00:40+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4-mini",
-    "completed_at": "2026-05-08T10:02:34+08:00",
+    "started_at": "",
+    "started_by_agent": "",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
+    "description": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
     "related": [],
     "depends": [
-      "ATM-4-0002",
-      "ATM-2-0004"
+      "ATM-5-0004"
     ],
     "acceptance": [
-      "atom test pass",
-      "forbidden import/side-effect police pass",
-      "H2U baseline 不退轉"
+      "JSON-first 仍是真相",
+      "DB/vector 只作 optional plugin",
+      "不增加 core v0.1 必備依賴"
     ],
     "deliverables": [
-      "H2U normalizeCssColor atomic spec",
-      "5 positive fixtures",
-      "2 negative fixtures",
-      "1 legacy fixture",
-      "registry/hash entry"
+      "docs/ecosystem/registry-db-vector-decision.md",
+      "plugin boundary proposal"
     ],
     "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
-      "summary": "以 html-to-ucuf case study 抽第一個低風險 atom normalizeCssColor。",
-      "position": "ATM-4",
-      "prereq": "ATM-4-0002、ATM-2-0004"
+      "summary": "評估跨專案 atom registry、DB 與 pgvector 是否進入 core 或 plugin。",
+      "position": "ATM-6",
+      "prereq": "ATM-5-0004"
     },
     "contracts": {
       "input": [
         "上游 core package 與 plugin SDK 任務已開立"
       ],
       "output": [
-        "H2U normalizeCssColor atomic spec",
-        "5 positive fixtures",
-        "2 negative fixtures",
-        "1 legacy fixture",
-        "registry/hash entry"
+        "docs/ecosystem/registry-db-vector-decision.md",
+        "plugin boundary proposal"
       ],
       "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
       "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
@@ -112,23 +104,11 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [
-        "atomic_workbench/atoms/ATM-CORE-0005/atom.test.report.json",
-        "atomic_workbench/atoms/ATM-CORE-0005/lineage-log.json",
-        "specs/normalize-css-color.atom.json"
-      ],
-      "validation_evidence": [
-        "node atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs",
-        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-core",
-        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-catalog",
-        "npm.cmd --prefix c:/Users/User/AI-Atomic-Framework run validate:registry-index"
-      ],
+      "artifact_paths": [],
+      "validation_evidence": [],
       "handoff_diff_status": "",
       "trace_artifacts": [],
-      "metrics_summary": [
-        "8/8 fixture cases passing",
-        "upstream registry and catalog synchronized"
-      ]
+      "metrics_summary": []
     }
   }
 ]

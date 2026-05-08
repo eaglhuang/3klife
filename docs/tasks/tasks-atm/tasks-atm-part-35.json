@@ -75,20 +75,81 @@
     }
   },
   {
-    "id": "ATM-3-0007",
-    "title": "compute-gate.js adapter 化：接入 ATM GateAdapter",
-    "status": "done",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
+    "doc_id": "doc_task_0271",
+    "id": "ATM-4-0004",
+    "title": "parseCssLength 與 parseFragmentList case atoms",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0307",
-    "started_at": "2026-05-08T05:52:40.634350+08:00",
-    "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-08T05:56:41.421780+08:00",
+    "priority": "P1",
+    "status": "open",
+    "type": "atom-case",
+    "phase": "ATM-4",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom；承接 ATM-4-0003 的 behavior.atomize lineage 規則，不重複開 H2U atomize 卡。",
+    "related": [],
     "depends": [
-      "ATM-3-0006"
-    ]
+      "ATM-4-0003"
+    ],
+    "acceptance": [
+      "px/em/%/svg 與 fragment legacy fixtures 覆蓋",
+      "self-test 不退轉",
+      "可 rollback",
+      "兩個新 atom 均使用 behavior.atomize，並包含 lineage.bornBy=atomize",
+      "兩個新 atom 均帶 legacy:// parentRefs 與可追溯 lineage log",
+      "neutrality scan 不得讓 adopter-private 假設流入 upstream core schema"
+    ],
+    "deliverables": [
+      "parseCssLength atom",
+      "parseFragmentList atom",
+      "fixtures",
+      "registry/hash entries",
+      "lineage logs and parentRefs for both extracted atoms",
+      "validation report"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "延伸 H2U case study，再抽 parseCssLength 與 parseFragmentList 兩個低風險純 atom。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0003"
+    },
+    "contracts": {
+      "input": [
+        "ATM-4-0003 已提供 normalizeCssColor case atom、legacy fixture、lineage log 與 registry/hash entry",
+        "ATM-2-0033 已定義 ProjectAdapter legacy:// URI 與 atomize / infect adapter contract",
+        "本卡只能新增 parseCssLength / parseFragmentList case atoms，不得重寫 normalizeCssColor done card"
+      ],
+      "output": [
+        "parseCssLength atom",
+        "parseFragmentList atom",
+        "fixtures",
+        "registry/hash entries",
+        "兩個新 atom 均使用 behavior.atomize，並包含 lineage.bornBy=atomize",
+        "兩個新 atom 均帶 legacy:// parentRefs 與可追溯 lineage log",
+        "neutrality scan 不得讓 adopter-private 假設流入 upstream core schema"
+      ],
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-4-0004.md\nnode tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "讀取 legacy source range，為 parseCssLength / parseFragmentList 建立 legacy:// parentRefs",
+        "以 behavior.atomize 產生兩個 case atom spec、fixtures、registry/hash entry 與 lineage log",
+        "跑 adapter/case validation 與 neutrality scan",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

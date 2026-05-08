@@ -82,18 +82,81 @@
     }
   },
   {
-    "id": "ATM-3-0013",
-    "title": "finalize-agent-turn.js wrapper 接入 ATM run envelope",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
+    "doc_id": "doc_task_0273",
+    "id": "ATM-5-0002",
+    "title": "Adapter Guide 與 Plugin SDK 文件",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0313",
+    "priority": "P0",
+    "status": "open",
+    "type": "docs",
+    "phase": "ATM-5",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "撰寫 ProjectAdapter、LanguageAdapter、Capability、Police、Injector plugin 的開發指南。",
+    "related": [],
     "depends": [
-      "ATM-3-0006",
-      "ATM-3-0007"
-    ]
+      "ATM-2-0006",
+      "ATM-3-0001"
+    ],
+    "acceptance": [
+      "第三方專案可依文件實作 adapter",
+      "3KLife adapter 可作 reference",
+      "core 禁止 domain logic 規則明確",
+      "第三方專案可依文件接入 artifacts/logs/reports 與 Markdown/JSON state files",
+      "CAR 對照章節說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
+      "HarnessCard-lite 指南說明報告只落在 run report / typed evidence，不替代 core contracts"
+    ],
+    "deliverables": [
+      "docs/ADAPTER_GUIDE.md",
+      "docs/PLUGIN_SDK.md",
+      "examples/hosted-adapter-impl",
+      "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
+      "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
+      "standalone Default Governance Bundle 與 3KLife adapter 的 artifacts/logs/reports mapping 對照",
+      "CAR / HarnessCard-lite adapter reporting guidance"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter migration guide 要求 | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 CAR/HarnessCard docs acceptance；已 done 卡不回改 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "撰寫 ProjectAdapter、LanguageAdapter、Capability、Police、Injector plugin 的開發指南。",
+      "position": "ATM-5",
+      "prereq": "ATM-2-0006、ATM-3-0001"
+    },
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "docs/ADAPTER_GUIDE.md",
+        "docs/PLUGIN_SDK.md",
+        "examples/hosted-adapter-impl",
+        "governance migration guide：從既有 task/doc/shard/artifact/log/rule/evidence 工具接入 ATM",
+        "3KLife adapter mapping 範例與 standalone Default Governance Bundle 範例對照",
+        "CAR 對照章節：說明 host 的 Control / Agency / Runtime 如何映射到 WorkItem、ScopeLock、Evidence、ContextSummary、AdapterReport 與 plugin / adapter surface",
+        "HarnessCard-lite 指南：adapter 文件需說明報告只落在 run report / typed evidence，不替代 core contracts"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes",
+        "補充 TaskStore / LockStore / DocumentIndex / ShardStore / ArtifactStore / LogStore / MarkdownJsonStateStore / RuleGuard / EvidenceStore 的 host 實作指南"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

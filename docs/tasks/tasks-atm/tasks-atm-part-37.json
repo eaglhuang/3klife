@@ -85,17 +85,70 @@
     }
   },
   {
-    "id": "ATM-3-0009",
-    "title": "shard-manager.js adapter 化：接入 ATM ShardAdapter",
-    "status": "open",
-    "priority": "P1",
-    "phase": "ATM-3",
-    "type": "implementation",
-    "created": "2026-05-05",
+    "doc_id": "doc_task_0283",
+    "id": "ATM-4-0006",
+    "title": "H2U case study 與 Cocos runtime 邊界",
     "owner": "GitHubCopilot",
-    "doc_id": "doc_task_0309",
+    "priority": "P1",
+    "status": "open",
+    "type": "case-study-policy",
+    "phase": "ATM-4",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+    "related": [],
     "depends": [
-      "ATM-3-0006"
-    ]
+      "ATM-4-0002",
+      "ATM-3-0005",
+      "ATM-2.5-0002"
+    ],
+    "acceptance": [
+      "Cocos Component/Node/Prefab 明確禁止進 compute atom",
+      "H2U fidelity/domain scoring 僅屬 case study plugin",
+      "case study 可關閉而不影響 core",
+      "case study 啟動條件：self-hosting alpha0 deterministic gate 全綠",
+      "第一輪只允許 dry-run injection + rollback plan，不替換 draft-builder 主幹"
+    ],
+    "deliverables": [
+      "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
+      "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+    ],
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 H2U case study 後置條件：alpha0 全綠後只以 dry-run/rollback 進入 | 阻塞: alpha0 gate 未全綠",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM v0.2 整合開卡",
+      "summary": "補齊 html-to-ucuf reference case study 與 Cocos runtime adapter 邊界，定義哪些 contract 可原子化、哪些只能留在 wrapper/adapter。",
+      "position": "ATM-4",
+      "prereq": "ATM-4-0002、ATM-3-0005"
+    },
+    "contracts": {
+      "input": [
+        "v0.2 companion analysis 已確認可作務實化補充"
+      ],
+      "output": [
+        "docs/ai_atomic_framework/html-to-ucuf-case-study.md 補 runtime 邊界",
+        "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md 補 compute atom 禁止清單"
+      ],
+      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "更新正式文件或 optional plugin 規格",
+        "同步 task shard/doc_id",
+        "跑 encoding 與 standard gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

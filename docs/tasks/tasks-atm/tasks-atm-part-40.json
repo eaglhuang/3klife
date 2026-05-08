@@ -1,66 +1,95 @@
 [
-    {
-        "id":  "ATM-2-0012",
-        "title":  "neutralityScanner atom + CI（ATM-CORE-0003）",
-        "status":  "done",
-        "priority":  "P0",
-        "phase":  "ATM-2",
-        "type":  "implementation",
-        "created":  "2026-05-05",
-        "owner":  "GitHubCopilot",
-        "doc_id":  "doc_task_0302",
-        "started_at":  "2026-05-07T00:20:35.8356720+08:00",
-        "started_by_agent":  "vs-insiders-gpt-5.4-mini",
-        "completed_at":  "2026-05-07T17:05:00Z",
-        "depends":  [
-                        "ATM-2-0001",
-                        "ATM-1.5-0003",
-                        "ATM-2-0013"
-                    ],
-        "acceptance":  [
-                           "scanner atom 直接落於 ATM-2-0013 canonical per-atom folder（atomic_workbench/atoms/ATM-CORE-0003/）；不得散放 spec/code/test/report"
-                       ],
-        "notes":  "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | 狀態: in-progress | 驗證: node atomic_workbench/atoms/ATM-CORE-0003/tests/atom-tests.js / node atomic_workbench/atoms/ATM-CORE-0003/tests/map-integration-tests.js / npm.cmd run check:encoding:touched / node tools_node/compute-gate.js --profile standard --agent-feedback pass | 變更: 已把 ATM-CORE-0003 拆成 5 個 member atoms、建立 ATM-MAP-NEUTRALITY-0001 local map 與 integration report，並同步 tasks-atm thin-index 追蹤狀態 | 阻塞: 上游 GitHub Actions / registry 收編尚未在外部 AI-Atomic-Framework repo 落地\n2026-05-07 | 狀態: done | 驗證: upstream head aa1fcdd 上 validate:neutrality / validate:cli / validate:self-hosting-alpha / test / typecheck / lint 全通過；3KLife compute-gate standard pass | 變更: 本地 tracking 收尾完成，ATM-2-0012 正式標記 done | 阻塞: none"
+  {
+    "id": "ATM-2-0012",
+    "title": "neutralityScanner atom + CI（ATM-CORE-0003）",
+    "status": "done",
+    "priority": "P0",
+    "phase": "ATM-2",
+    "type": "implementation",
+    "created": "2026-05-05",
+    "owner": "GitHubCopilot",
+    "doc_id": "doc_task_0302",
+    "started_at": "2026-05-07T00:20:35.8356720+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.4-mini",
+    "completed_at": "2026-05-07T17:05:00Z",
+    "depends": [
+      "ATM-2-0001",
+      "ATM-1.5-0003",
+      "ATM-2-0013"
+    ],
+    "acceptance": [
+      "scanner atom 直接落於 ATM-2-0013 canonical per-atom folder（atomic_workbench/atoms/ATM-CORE-0003/）；不得散放 spec/code/test/report"
+    ],
+    "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | 狀態: in-progress | 驗證: node atomic_workbench/atoms/ATM-CORE-0003/tests/atom-tests.js / node atomic_workbench/atoms/ATM-CORE-0003/tests/map-integration-tests.js / npm.cmd run check:encoding:touched / node tools_node/compute-gate.js --profile standard --agent-feedback pass | 變更: 已把 ATM-CORE-0003 拆成 5 個 member atoms、建立 ATM-MAP-NEUTRALITY-0001 local map 與 integration report，並同步 tasks-atm thin-index 追蹤狀態 | 阻塞: 上游 GitHub Actions / registry 收編尚未在外部 AI-Atomic-Framework repo 落地\n2026-05-07 | 狀態: done | 驗證: upstream head aa1fcdd 上 validate:neutrality / validate:cli / validate:self-hosting-alpha / test / typecheck / lint 全通過；3KLife compute-gate standard pass | 變更: 本地 tracking 收尾完成，ATM-2-0012 正式標記 done | 阻塞: none"
+  },
+  {
+    "doc_id": "doc_task_0272",
+    "id": "ATM-5-0001",
+    "title": "Quick Start 與 API 文件",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "docs",
+    "phase": "ATM-5",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
+    "related": [],
+    "depends": [
+      "ATM-1-0007",
+      "ATM-2-0006"
+    ],
+    "acceptance": [
+      "30 分鐘內可跑 hello-world",
+      "文件不需要 3KLife 背景知識",
+      "所有命令可複製執行",
+      "Quick Start 不要求安裝 LangGraph、pgvector、Deno sandbox 或 observability stack 才能跑通 hello-world"
+    ],
+    "deliverables": [
+      "docs/QUICK_START.md",
+      "docs/API.md",
+      "docs/SPEC_GUIDE.md",
+      "README quick start section",
+      "Quick Start 對齊 v0.2 六週 MVP，明確區分 v0.1 alpha 必備能力與 optional plugin"
+    ],
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 v0.2 companion 對應交付/驗收條件 | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM adapter/case/release 開卡",
+      "summary": "補齊開源 repo Quick Start、API、Spec Guide，讓新使用者可從零跑 hello-world。",
+      "position": "ATM-5",
+      "prereq": "ATM-1-0007、ATM-2-0006"
     },
-    {
-        "id":  "ATM-3-0012",
-        "title":  "task-scope / import-boundary 規則包遷移 + @deprecated 標記",
-        "status":  "open",
-        "priority":  "P1",
-        "phase":  "ATM-3",
-        "type":  "implementation",
-        "created":  "2026-05-05",
-        "owner":  "GitHubCopilot",
-        "doc_id":  "doc_task_0312",
-        "depends":  [
-                        "ATM-3-0006"
-                    ],
-        "description":  "Move task-scope / import-boundary rules into ATM RuleGuardAdapter rule-pack, and make the rule pack carry proactive police findings instead of only deprecated wrapper warnings.",
-        "acceptance":  [
-                           "rule-pack.json encodes trigger / scope / severity / action plus routeHint for proactive police outputs",
-                           "deprecated wrappers emit machine-readable findings instead of only stderr warnings",
-                           "compute-gate atm profile routes fast / slow police outputs through ATM RuleGuardAdapter"
-                       ],
-        "contracts":  {
-                          "input":  [
-                                        "tools_node/adapters/atm-3klife/rule-pack.json as the shared rule source",
-                                        "ATM-3-0006 task-lock adapter and ATM-3-0011 / ATM-3-0013 dependency chain"
-                                    ],
-                          "output":  [
-                                         "tools_node/adapters/atm-3klife/rule-pack.json",
-                                         "ATM RuleGuardAdapter consuming rule-pack.json",
-                                         "machine-readable findings with trigger / scope / severity / action",
-                                         "deprecated wrappers that warn and route findings"
-                                     ],
-                          "validation_cmd":  "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-3-0012.md docs/tasks/tasks-atm/tasks-atm-part-40.json",
-                          "rollback_hint":  "Revert touched files and restore the previous deprecated-wrapper-only rule-pack behavior.",
-                          "execution_steps":  [
-                                                  "Normalize the rule-pack schema and routeHint fields",
-                                                  "Wire the adapter to emit findings for task-scope and import-boundary cases",
-                                                  "Keep deprecated wrappers warning-only at the surface",
-                                                  "Validate encoding and sync the task shard"
-                                              ]
-                      },
-        "notes":  "2026-05-08 | 狀態: open | 驗證: pending | 變更: rule-pack 升級為主動警察 finding 契約，補 trigger/scope/severity/action 與 routeHint | 阻塞: none"
+    "contracts": {
+      "input": [
+        "上游 core package 與 plugin SDK 任務已開立"
+      ],
+      "output": [
+        "docs/QUICK_START.md",
+        "docs/API.md",
+        "docs/SPEC_GUIDE.md",
+        "README quick start section"
+      ],
+      "validation_cmd": "npm run check:encoding:touched; node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "rollback_hint": "回退本卡 touched files；adapter 變更不得回寫 upstream core，需另開 upstream PR。",
+      "execution_steps": [
+        "確認 upstream/downstream 邊界",
+        "實作 adapter 或 case study artifact",
+        "跑 adapter/case 驗證",
+        "回寫 tracking notes"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
     }
+  }
 ]

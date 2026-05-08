@@ -70,122 +70,27 @@
     }
   },
   {
-    "doc_id": "doc_task_0338",
-    "id": "ATM-2-0032",
-    "title": "Polymorphic Atom Template",
-    "owner": "GitHubCopilot",
-    "priority": "P0",
+    "doc_id": "doc_task_0352",
+    "id": "ATM-2-0045",
+    "title": "Map Generator Provenance Audit",
+    "owner": "ClaudeCode_sonnet-4-6",
+    "priority": "P1",
     "status": "open",
-    "type": "registry",
+    "type": "audit",
     "phase": "ATM-2",
     "created": "2026-05-07",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
-    "chain_step": "7/8",
-    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
-    "description": "為「多形原子」建立規範：一個 polymorphic template + 多個 param-spec 各自一份，實例化結果 lazy 產生不寫進 registry。template 自身是 active；具體實例為 validated。與 behavior.evolve 整合：升版時 template 升 → 所有實例自動繼承新版邏輯。",
+    "created_by_agent": "ClaudeCode_sonnet-4-6",
+    "chain_id": "ATM-MAP-GENERATOR-PROVENANCE-V1",
+    "chain_step": "3/3",
+    "sensor_triggered_by": "atm-2-0042-map-generator-ripple",
+    "description": "等同 ATM-2-0041 的 map 版。掃描 registry 確保所有 map entry 有 generator provenance。",
     "related": [],
     "depends": [
-      "ATM-2-0026",
-      "ATM-2-0029"
+      "ATM-2-0042",
+      "ATM-2-0044"
     ],
-    "acceptance": [
-      "polymorphic-template.schema.json 定義 template 結構：parametricInputs / parametricOutputs / paramConstraint",
-      "param-spec.schema.json 定義 param 實例 spec：templateRef / paramValues",
-      "實例化合約：runtime 產生 instance；不寫進 registry hot path",
-      "behavior.polymorphize 行為：active atom + param-spec 集合 → polymorphic template + N 個 validated 實例",
-      "behavior.evolve 對 template 升版時，所有實例自動繼承（透過 templateRef@version）",
-      "fixtures：1 個 template + 3 種 param 變體 + 升版 propagation 測試"
-    ],
-    "deliverables": [
-      "schemas/atomic-spec/polymorphic-template.schema.json",
-      "schemas/atomic-spec/param-spec.schema.json",
-      "packages/core/src/spec/polymorphic-instance.ts",
-      "fixtures/polymorphic/template-with-3-variants.json"
-    ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 7/8）| 阻塞: 等依賴卡完成",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM 識別/行為/狀態機提案開卡",
-      "summary": "多形原子規範：template + param-spec lazy 實例化，升版時所有變體自動繼承。",
-      "position": "ATM-2",
-      "prereq": "ATM-2-0026 / ATM-2-0029"
-    }
-  },
-  {
-    "doc_id": "doc_task_0286",
-    "id": "ATM-6-0005",
-    "title": "Capability Sandbox 與審計日誌",
-    "owner": "GitHubCopilot",
-    "priority": "P2",
-    "status": "open",
-    "type": "security",
-    "phase": "ATM-6",
-    "created": "2026-05-05",
-    "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
-    "chain_id": "",
-    "chain_step": "",
-    "sensor_triggered_by": "",
-    "description": "規劃 Capability Sandbox、權限控管、審計日誌、prompt injection guardrail 與 observability 的 optional plugin 邊界。",
-    "related": [],
-    "depends": [
-      "ATM-6-0004"
-    ],
-    "acceptance": [
-      "Deno sandbox/OpenTelemetry/Prometheus 不成為 core 必備依賴",
-      "Capability 宣告與審計格式可由 plugin 實作",
-      "安全插件缺席時 core 仍能 standalone 運作",
-      "threat model / provenance / secrets scan policy 已定義",
-      "cost budget policy 與 budget report schema 已對齊",
-      "observability event taxonomy 覆蓋 agent.run、task.lock、schema.validate、atom.verify、evidence.write、adapter.shadow",
-      "HarnessCard-lite report profile 列出 base model/profile、control artifacts、runtime policy、action substrate、execution topology、feedback stack、observability/evaluation 與 known risks",
-      "CAR runtime/audit 對照能標示 Control / Agency / Runtime 來源，不新增 core 必填 schema"
-    ],
-    "deliverables": [
-      "docs/ecosystem/capability-sandbox-audit.md",
-      "security plugin interface proposal",
-      "observability adapter boundary",
-      "HarnessCard-lite report profile",
-      "CAR observability event taxonomy"
-    ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 threat model、cost budget、secrets scan 與 observability event taxonomy | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 HarnessCard-lite / CAR observability acceptance；不阻塞 alpha0 | 阻塞: none",
-    "brief": {
-      "style": "harn-rich",
-      "label": "ATM v0.2 整合開卡",
-      "summary": "規劃 Capability Sandbox、權限控管、審計日誌、prompt injection guardrail 與 observability 的 optional plugin 邊界。",
-      "position": "ATM-6",
-      "prereq": "ATM-6-0004"
-    },
-    "contracts": {
-      "input": [
-        "v0.2 companion analysis 已確認可作務實化補充"
-      ],
-      "output": [
-        "docs/ecosystem/capability-sandbox-audit.md",
-        "security plugin interface proposal",
-        "observability adapter boundary",
-        "HarnessCard-lite report profile：列出 base model/profile、control artifacts、runtime policy、action substrate、execution topology、feedback stack、observability/evaluation、known risks",
-        "CAR runtime/audit 對照：審計事件需能標示 Control / Agency / Runtime 來源，不新增 core 必填 schema"
-      ],
-      "validation_cmd": "node tools_node/check-encoding-touched.js; node tools_node/compute-gate.js --profile standard --agent-feedback",
-      "rollback_hint": "回退本卡 touched files；若已分配 doc_id，使用 doc-id-registry 重建，不手動複製代號。",
-      "execution_steps": [
-        "確認 upstream/downstream 邊界",
-        "更新正式文件或 optional plugin 規格",
-        "同步 task shard/doc_id",
-        "跑 encoding 與 standard gate"
-      ]
-    },
-    "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
-      "trace_artifacts": [],
-      "metrics_summary": []
-    }
+    "acceptance": [],
+    "deliverables": [],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM-2-0042 連鎖影響分析開立 | 阻塞: 等 ATM-2-0042 + ATM-2-0044 完成"
   }
 ]
