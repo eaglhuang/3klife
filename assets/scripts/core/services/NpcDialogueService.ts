@@ -15,6 +15,66 @@ export interface NpcKeywordOptionsResponse {
     categories: Record<string, NpcKeywordOption[]>;
 }
 
+export interface NpcContextOption {
+    contextKey: string;
+    label: string;
+    sourceType: string;
+    confidence: number;
+    evidenceRefs: string[];
+}
+
+export interface NpcContextOptionsResponse {
+    generalId: string;
+    options: NpcContextOption[];
+}
+
+export interface NpcInteractionEventPayload {
+    saveId: string;
+    generalId: string;
+    eventType: string;
+    summary: string;
+    keywords?: string[];
+    playerAction?: string | null;
+    generalReaction?: string | null;
+    isMilestone?: boolean;
+}
+
+export interface NpcInteractionEventResponse {
+    ok: boolean;
+    eventId: string;
+}
+
+export interface NpcGeneralMemory {
+    saveId: string;
+    generalId: string;
+    schemaVersion: number;
+    shortTerm: string;
+    longTerm: string;
+    playerProfile: string;
+    promises: string;
+    lastCompressedIdx: number;
+    uncompressedCount: number;
+    lastCompressedAt?: string | null;
+}
+
+export interface NpcGeneralMemoryContext {
+    saveId: string;
+    shortTerm?: string | null;
+    longTerm?: string | null;
+    playerProfile?: string | null;
+    promises?: string | null;
+}
+
+export interface NpcMemoryCompressRequest {
+    saveId: string;
+    generalId: string;
+    force?: boolean;
+}
+
+export interface NpcMemoryWriteResponse {
+    ok: boolean;
+}
+
 export type NpcDialogueLocale = 'zh-TW' | 'en' | 'ja';
 export type NpcDialogueSpeechContextMode = 'life_chat' | 'encounter_speech' | 'inner_monologue' | 'meeting_statement';
 export type NpcDialogueModelPreset = 'fallback_chain' | 'gemini_pro' | 'gemini_flash' | 'gemini_flash_lite' | 'qwen2_5_7b' | 'qwen2_5_3b' | 'deepseek_r1_7b' | 'local_llama_env';
@@ -28,6 +88,8 @@ export interface NpcDialogueRequest {
     speechContextMode?: NpcDialogueSpeechContextMode;
     llmModelPreset?: NpcDialogueModelPreset;
     maxChars?: number;
+    saveId?: string;
+    memoryContext?: NpcGeneralMemoryContext | null;
 }
 
 export interface NpcDialogueResponse {
@@ -83,6 +145,14 @@ export class NpcDialogueService {
         return this._requestJson<NpcKeywordOptionsResponse>('GET', `/v1/npc/keyword-options?${query}`);
     }
 
+
+    public async getContextOptions(generalId: string, limit?: number): Promise<NpcContextOptionsResponse> {
+        const query = this._buildQuery({
+            generalId,
+            ...(limit === undefined ? {} : { limit: String(limit) }),
+        });
+        return this._requestJson<NpcContextOptionsResponse>('GET', `/v1/npc/context-options?${query}`);
+    }
     public flattenKeywordOptions(response: NpcKeywordOptionsResponse): NpcDialogueKeywordSelection[] {
         const result: NpcDialogueKeywordSelection[] = [];
         for (const [category, options] of Object.entries(response.categories ?? {})) {
@@ -91,6 +161,10 @@ export class NpcDialogueService {
             }
         }
         return result;
+    }
+
+    public flattenContextOptions(response: NpcContextOptionsResponse): NpcContextOption[] {
+        return [...(response.options ?? [])];
     }
 
     public async requestDialogue(request: NpcDialogueRequest): Promise<NpcDialogueResponse> {
@@ -103,6 +177,8 @@ export class NpcDialogueService {
             speechContextMode: request.speechContextMode ?? 'life_chat',
             llmModelPreset: request.llmModelPreset ?? 'fallback_chain',
             maxChars: request.maxChars ?? 90,
+            saveId: request.saveId,
+            memoryContext: request.memoryContext ?? undefined,
         };
         UCUFLogger.info(LogCategory.DATA, '[NpcDialogueService] requestDialogue', payload);
         const response = await this._requestJson<NpcDialogueResponse>('POST', '/v1/npc/dialogue', payload);
@@ -120,6 +196,42 @@ export class NpcDialogueService {
             textPreview: response.text.slice(0, 64),
         });
         return response;
+    }
+
+    public async recordInteractionEvent(request: NpcInteractionEventPayload): Promise<NpcInteractionEventResponse> {
+        const payload = {
+            saveId: request.saveId,
+            generalId: request.generalId,
+            eventType: request.eventType,
+            summary: request.summary,
+            keywords: request.keywords ?? [],
+            playerAction: request.playerAction ?? null,
+            generalReaction: request.generalReaction ?? null,
+            isMilestone: request.isMilestone ?? false,
+        };
+        UCUFLogger.info(LogCategory.DATA, '[NpcDialogueService] recordInteractionEvent', payload);
+        return this._requestJson<NpcInteractionEventResponse>('POST', '/v1/npc/interaction-events', payload);
+    }
+
+    public async getGeneralMemory(saveId: string, generalId: string): Promise<NpcGeneralMemory> {
+        const query = this._buildQuery({ saveId, generalId });
+        return this._requestJson<NpcGeneralMemory>('GET', `/v1/npc/general-memory?${query}`);
+    }
+
+    public async saveGeneralMemory(memory: NpcGeneralMemory): Promise<NpcMemoryWriteResponse> {
+        UCUFLogger.info(LogCategory.DATA, '[NpcDialogueService] saveGeneralMemory', {
+            saveId: memory.saveId,
+            generalId: memory.generalId,
+            schemaVersion: memory.schemaVersion,
+            lastCompressedIdx: memory.lastCompressedIdx,
+            uncompressedCount: memory.uncompressedCount,
+        });
+        return this._requestJson<NpcMemoryWriteResponse>('POST', '/v1/npc/general-memory', memory);
+    }
+
+    public async compressGeneralMemory(request: NpcMemoryCompressRequest): Promise<NpcGeneralMemory> {
+        UCUFLogger.info(LogCategory.DATA, '[NpcDialogueService] compressGeneralMemory', request);
+        return this._requestJson<NpcGeneralMemory>('POST', '/v1/npc/memory/compress', request);
     }
 
     private _buildQuery(params: Record<string, string>): string {

@@ -1,4 +1,3 @@
-<!-- doc_id: doc_index_0007 -->
 # 交叉索引表 (Cross-Reference Index)
 
 > **⚠️ 已拆分為 4 個分片，本檔為索引入口。**
@@ -8,7 +7,7 @@
 
 | 分片 | 路徑 | 大小 |
 |------|------|------|
-| 規格書索引（Sec A） | `docs/cross-ref/cross-ref-specs.md` | 133 行 / ~9 KB |
+| 規格書索引（Sec A） | `docs/cross-ref/cross-ref-specs.md` | 134 行 / ~9 KB |
 | 代碼索引（Sec B） | `docs/cross-ref/cross-ref-code.md` | 349 行 / ~26 KB |
 | UI 規格索引（Sec C） | `docs/cross-ref/cross-ref-ui-spec.md` | 59 行 / ~6 KB |
 | 實作進度（Sec D） | `docs/cross-ref/cross-ref-進度.md` | 195 行 / ~14 KB |

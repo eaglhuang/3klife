@@ -7,6 +7,9 @@ const TASKS_ATM_INDEX_REL = 'docs/tasks/tasks-atm.json';
 const TASKS_ATM_PARTS_DIR_REL = 'docs/tasks/tasks-atm';
 const DEFAULT_MAX_PART_BYTES = 10 * 1024;
 const DEFAULT_MAX_PART_LINES = 300;
+const STABLE_ASSIGNMENT_LAYOUT = 'sticky-least-pool';
+const STABLE_ASSIGNMENT_POOL_FRACTION = 0.15;
+const STABLE_ASSIGNMENT_MIN_POOL = 4;
 
 function normalizeStatus(status) {
   const value = String(status || 'open').trim().toLowerCase();
@@ -64,8 +67,16 @@ function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
-function writeJson(filePath, value) {
-  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+function writeJsonIfChanged(filePath, value) {
+  const next = `${JSON.stringify(value, null, 2)}\n`;
+  if (fs.existsSync(filePath)) {
+    const current = fs.readFileSync(filePath, 'utf8');
+    if (current === next) {
+      return false;
+    }
+  }
+  fs.writeFileSync(filePath, next, 'utf8');
+  return true;
 }
 
 function serializePart(tasks) {
@@ -85,6 +96,30 @@ function calcPartMetrics(tasks) {
     lines: calcTextLineCount(text),
     count: tasks.length,
   };
+}
+
+function extractPartNumber(partName) {
+  const match = String(partName || '').match(/^tasks-atm-part-(\d+)$/);
+  return match ? Number.parseInt(match[1], 10) : Number.POSITIVE_INFINITY;
+}
+
+function comparePartNames(left, right) {
+  const leftNumber = extractPartNumber(left);
+  const rightNumber = extractPartNumber(right);
+  if (leftNumber !== rightNumber) {
+    return leftNumber - rightNumber;
+  }
+  return String(left || '').localeCompare(String(right || ''), 'en', { numeric: true, sensitivity: 'base' });
+}
+
+function stableHashFloat(value) {
+  let hash = 2166136261;
+  const text = String(value || '');
+  for (let index = 0; index < text.length; index += 1) {
+    hash ^= text.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0) / 0xFFFFFFFF;
 }
 
 function compareTaskIds(left, right) {
@@ -109,6 +144,18 @@ function createPartRecord({ name, title, range, layout, stride, offset, indices,
     tasks,
     metrics,
   };
+}
+
+function titleForPart(name, layout, count) {
+  const number = extractPartNumber(name);
+  const label = Number.isFinite(number) ? number : name;
+  return `Part ${label} (${layout}, ${count} items)`;
+}
+
+function titleForShardDefinition(name) {
+  const number = extractPartNumber(name);
+  const label = Number.isFinite(number) ? number : name;
+  return `Part ${label}`;
 }
 
 function buildContiguousParts(tasks, maxPartBytes, maxPartLines) {
@@ -307,6 +354,337 @@ function buildBalancedParts(tasks, partCount, maxPartBytes, maxPartLines) {
   return parts;
 }
 
+function readExistingPartNames(paths) {
+  const names = [];
+  if (fs.existsSync(paths.shardRcPath)) {
+    try {
+      const shardRc = readJson(paths.shardRcPath);
+      for (const shard of Array.isArray(shardRc.shards) ? shardRc.shards : []) {
+        if (shard && shard.name) {
+          names.push(String(shard.name));
+        }
+      }
+    } catch {
+      // Fall back to the files on disk below.
+    }
+  }
+
+  if (fs.existsSync(paths.partsDir)) {
+    for (const entryName of fs.readdirSync(paths.partsDir)) {
+      const match = entryName.match(/^(tasks-atm-part-\d+)\.json$/);
+      if (match) {
+        names.push(match[1]);
+      }
+    }
+  }
+
+  return Array.from(new Set(names)).sort(comparePartNames);
+}
+
+function readExistingPartRecords(paths) {
+  return readExistingPartNames(paths).map((name) => {
+    const partPath = path.join(paths.partsDir, `${name}.json`);
+    const tasks = fs.existsSync(partPath) ? readJson(partPath) : [];
+    if (!Array.isArray(tasks)) {
+      throw new Error(`ATM shard part must be a JSON array: ${partPath}`);
+    }
+    return {
+      name,
+      tasks: sortTasksByTaskId(tasks),
+    };
+  });
+}
+
+function makePartName(parts) {
+  const maxNumber = parts.reduce((maxValue, part) => {
+    const number = extractPartNumber(part.name);
+    return Number.isFinite(number) ? Math.max(maxValue, number) : maxValue;
+  }, 0);
+  return `tasks-atm-part-${maxNumber + 1}`;
+}
+
+function partPathRel(partName) {
+  return `${TASKS_ATM_PARTS_DIR_REL}/${partName}.json`;
+}
+
+function collectLockedPartNames(projectRoot) {
+  const lockDir = path.join(projectRoot, '.task-locks');
+  const locked = new Set();
+  if (!fs.existsSync(lockDir)) {
+    return locked;
+  }
+
+  for (const entryName of fs.readdirSync(lockDir)) {
+    if (!entryName.endsWith('.lock.json')) {
+      continue;
+    }
+    try {
+      const lock = readJson(path.join(lockDir, entryName));
+      for (const filePath of Array.isArray(lock.files) ? lock.files : []) {
+        const normalized = String(filePath || '').replace(/\\/g, '/');
+        const match = normalized.match(/^docs\/tasks\/tasks-atm\/(tasks-atm-part-\d+)\.json$/);
+        if (match) {
+          locked.add(match[1]);
+        }
+      }
+    } catch {
+      // Ignore broken transient locks; lock validation still owns enforcement.
+    }
+  }
+  return locked;
+}
+
+function assertSingleTaskFits(task, maxPartBytes, maxPartLines) {
+  const metrics = calcPartMetrics([task]);
+  if (metrics.bytes > maxPartBytes || metrics.lines > maxPartLines) {
+    const taskId = task && task.id ? task.id : '<unknown>';
+    throw new Error(`ATM task ${taskId} exceeds one-part thresholds (${metrics.bytes} bytes, ${metrics.lines} lines)`);
+  }
+}
+
+function canFitTask(part, task, maxPartBytes, maxPartLines) {
+  const metrics = calcPartMetrics(part.tasks.concat(task));
+  return metrics.bytes <= maxPartBytes && metrics.lines <= maxPartLines
+    ? metrics
+    : null;
+}
+
+function chooseStablePart(parts, task, options) {
+  const maxPartBytes = options.maxPartBytes;
+  const maxPartLines = options.maxPartLines;
+  const lockedPartNames = options.lockedPartNames || new Set();
+  const excludePartName = options.excludePartName || '';
+  const candidates = [];
+
+  for (const part of parts) {
+    if (part.name === excludePartName) {
+      continue;
+    }
+    const metrics = canFitTask(part, task, maxPartBytes, maxPartLines);
+    if (!metrics) {
+      continue;
+    }
+    candidates.push({
+      part,
+      metrics,
+      fill: Math.max(metrics.bytes / maxPartBytes, metrics.lines / maxPartLines),
+      locked: lockedPartNames.has(part.name),
+    });
+  }
+
+  if (candidates.length === 0) {
+    return null;
+  }
+
+  const unlockedCandidates = candidates.filter((candidate) => !candidate.locked);
+  const poolSource = unlockedCandidates.length > 0 ? unlockedCandidates : candidates;
+  poolSource.sort((left, right) => {
+    if (left.fill !== right.fill) {
+      return left.fill - right.fill;
+    }
+    if (left.metrics.lines !== right.metrics.lines) {
+      return left.metrics.lines - right.metrics.lines;
+    }
+    if (left.metrics.bytes !== right.metrics.bytes) {
+      return left.metrics.bytes - right.metrics.bytes;
+    }
+    return comparePartNames(left.part.name, right.part.name);
+  });
+
+  const poolSize = Math.min(
+    poolSource.length,
+    Math.max(STABLE_ASSIGNMENT_MIN_POOL, Math.ceil(poolSource.length * STABLE_ASSIGNMENT_POOL_FRACTION)),
+  );
+  const leastLoadedPool = poolSource.slice(0, poolSize);
+
+  leastLoadedPool.sort((left, right) => {
+    const leftHash = stableHashFloat(`${task && task.id ? task.id : ''}|${left.part.name}`);
+    const rightHash = stableHashFloat(`${task && task.id ? task.id : ''}|${right.part.name}`);
+    if (leftHash !== rightHash) {
+      return rightHash - leftHash;
+    }
+    return comparePartNames(left.part.name, right.part.name);
+  });
+
+  return leastLoadedPool[0].part;
+}
+
+function ensurePartForTask(parts, task, options = {}) {
+  assertSingleTaskFits(task, options.maxPartBytes, options.maxPartLines);
+  let chosenPart = chooseStablePart(parts, task, options);
+  if (!chosenPart) {
+    chosenPart = {
+      name: makePartName(parts),
+      tasks: [],
+    };
+    parts.push(chosenPart);
+  }
+  chosenPart.tasks.push(task);
+  return chosenPart;
+}
+
+function isPartOverLimit(part, maxPartBytes, maxPartLines) {
+  const metrics = calcPartMetrics(part.tasks);
+  return metrics.bytes > maxPartBytes || metrics.lines > maxPartLines;
+}
+
+function taskMovePriority(task, newTaskIds) {
+  const id = String(task && task.id ? task.id : '');
+  const metrics = calcPartMetrics([task]);
+  return {
+    isNew: newTaskIds.has(id) ? 0 : 1,
+    lines: -metrics.lines,
+    bytes: -metrics.bytes,
+    id,
+  };
+}
+
+function compareMoveCandidates(left, right, newTaskIds) {
+  const leftPriority = taskMovePriority(left, newTaskIds);
+  const rightPriority = taskMovePriority(right, newTaskIds);
+  if (leftPriority.isNew !== rightPriority.isNew) {
+    return leftPriority.isNew - rightPriority.isNew;
+  }
+  if (leftPriority.lines !== rightPriority.lines) {
+    return leftPriority.lines - rightPriority.lines;
+  }
+  if (leftPriority.bytes !== rightPriority.bytes) {
+    return leftPriority.bytes - rightPriority.bytes;
+  }
+  return leftPriority.id.localeCompare(rightPriority.id, 'en', { numeric: true, sensitivity: 'base' });
+}
+
+function relieveOverflowParts(parts, options) {
+  const maxPartBytes = options.maxPartBytes;
+  const maxPartLines = options.maxPartLines;
+  const newTaskIds = options.newTaskIds || new Set();
+
+  for (let guard = 0; guard < parts.length * 4 + 32; guard += 1) {
+    const overflowPart = parts.find((part) => isPartOverLimit(part, maxPartBytes, maxPartLines));
+    if (!overflowPart) {
+      return;
+    }
+
+    const candidates = overflowPart.tasks
+      .slice()
+      .sort((left, right) => compareMoveCandidates(left, right, newTaskIds));
+
+    let moved = false;
+    for (const task of candidates) {
+      overflowPart.tasks = overflowPart.tasks.filter((item) => item !== task);
+      const chosenPart = chooseStablePart(parts, task, {
+        ...options,
+        excludePartName: overflowPart.name,
+      });
+      if (chosenPart) {
+        chosenPart.tasks.push(task);
+        moved = true;
+        break;
+      }
+      overflowPart.tasks.push(task);
+    }
+
+    if (moved) {
+      continue;
+    }
+
+    const task = candidates[0];
+    overflowPart.tasks = overflowPart.tasks.filter((item) => item !== task);
+    const newPart = {
+      name: makePartName(parts),
+      tasks: [task],
+    };
+    assertSingleTaskFits(task, maxPartBytes, maxPartLines);
+    parts.push(newPart);
+  }
+
+  throw new Error('Unable to stabilize ATM shard parts within thresholds');
+}
+
+function buildStablePartsFromExisting(projectRoot, tasks, options = {}) {
+  const paths = getStorePaths(projectRoot);
+  const existingParts = readExistingPartRecords(paths);
+  if (existingParts.length === 0) {
+    return null;
+  }
+
+  const maxPartBytes = options.maxPartBytes || DEFAULT_MAX_PART_BYTES;
+  const maxPartLines = options.maxPartLines || DEFAULT_MAX_PART_LINES;
+  const sortedTasks = sortTasksByTaskId(tasks);
+  const incomingIds = new Set(sortedTasks.map((task) => String(task && task.id ? task.id : '')).filter(Boolean));
+  const existingPartByTaskId = new Map();
+  for (const part of existingParts) {
+    for (const task of part.tasks) {
+      const taskId = String(task && task.id ? task.id : '');
+      if (taskId) {
+        existingPartByTaskId.set(taskId, part.name);
+      }
+    }
+  }
+
+  const parts = existingParts.map((part) => ({
+    name: part.name,
+    tasks: [],
+  }));
+  const partByName = new Map(parts.map((part) => [part.name, part]));
+  const newTaskIds = new Set();
+  const unassigned = [];
+
+  for (const task of sortedTasks) {
+    const taskId = String(task && task.id ? task.id : '');
+    const existingPartName = existingPartByTaskId.get(taskId);
+    if (existingPartName && partByName.has(existingPartName)) {
+      partByName.get(existingPartName).tasks.push(task);
+      continue;
+    }
+    if (taskId && !incomingIds.has(taskId)) {
+      continue;
+    }
+    if (taskId) {
+      newTaskIds.add(taskId);
+    }
+    unassigned.push(task);
+  }
+
+  const lockedPartNames = collectLockedPartNames(projectRoot);
+  for (const task of unassigned) {
+    ensurePartForTask(parts, task, {
+      maxPartBytes,
+      maxPartLines,
+      lockedPartNames,
+    });
+  }
+
+  relieveOverflowParts(parts, {
+    maxPartBytes,
+    maxPartLines,
+    lockedPartNames,
+    newTaskIds,
+  });
+
+  return parts
+    .sort((left, right) => comparePartNames(left.name, right.name))
+    .map((part) => {
+      const orderedTasks = sortTasksByTaskId(part.tasks);
+      const metrics = calcPartMetrics(orderedTasks);
+      if (metrics.bytes > maxPartBytes || metrics.lines > maxPartLines) {
+        const taskId = orderedTasks[0] && orderedTasks[0].id ? orderedTasks[0].id : '<empty>';
+        throw new Error(`ATM shard part ${part.name} starting at ${taskId} exceeds thresholds (${metrics.bytes} bytes, ${metrics.lines} lines)`);
+      }
+      return createPartRecord({
+        name: part.name,
+        title: titleForPart(part.name, STABLE_ASSIGNMENT_LAYOUT, orderedTasks.length),
+        range: undefined,
+        layout: STABLE_ASSIGNMENT_LAYOUT,
+        stride: undefined,
+        offset: undefined,
+        indices: undefined,
+        tasks: orderedTasks,
+        metrics,
+      });
+    });
+}
+
 function readTasksAtmStore(projectRoot) {
   const paths = getStorePaths(projectRoot);
   if (!fs.existsSync(paths.indexPath)) {
@@ -380,12 +758,20 @@ function splitTasksIntoParts(tasks, options = {}) {
 function buildIndexStub(projectRoot, parts, summary, options = {}) {
   const maxPartBytes = options.maxPartBytes || DEFAULT_MAX_PART_BYTES;
   const maxPartLines = options.maxPartLines || DEFAULT_MAX_PART_LINES;
+  const assignmentPolicy = options.assignmentPolicy || STABLE_ASSIGNMENT_LAYOUT;
   return {
     kind: 'task-aggregate-index',
     _note: `Thin index stub. Full ATM tasks live in ${TASKS_ATM_PARTS_DIR_REL}/`,
     _usage: `Read ${TASKS_ATM_PARTS_DIR_REL}/tasks-atm-part-*.json as needed`,
     _rebuild: 'node tools_node/rebuild-tasks-atm-auto-parts.js',
     _sourceOfTruth: `${TASKS_ATM_PARTS_DIR_REL}/`,
+    assignmentPolicy: {
+      name: assignmentPolicy,
+      stableExistingTasks: true,
+      newTaskPlacement: 'least-loaded-pool + task-id hash',
+      lockedPartAvoidance: true,
+      rebuildDiff: 'only changed part files plus index; .shardrc changes only when part list changes',
+    },
     thresholds: {
       maxPartKB: Math.round((maxPartBytes / 1024) * 10) / 10,
       maxPartLines,
@@ -398,11 +784,7 @@ function buildIndexStub(projectRoot, parts, summary, options = {}) {
       count: part.metrics.count,
       bytes: part.metrics.bytes,
       lines: part.metrics.lines,
-      range: part.range,
       layout: part.layout,
-      stride: part.stride,
-      offset: part.offset,
-      indices: part.indices,
     })),
   };
 }
@@ -412,8 +794,9 @@ function writeTasksAtmStore(projectRoot, tasks, options = {}) {
   const maxPartBytes = options.maxPartBytes || DEFAULT_MAX_PART_BYTES;
   const maxPartLines = options.maxPartLines || DEFAULT_MAX_PART_LINES;
   const dryRun = Boolean(options.dryRun);
+  const stableParts = buildStablePartsFromExisting(projectRoot, tasks, { maxPartBytes, maxPartLines });
   let preferredPartCount = null;
-  if (fs.existsSync(paths.shardRcPath)) {
+  if (!stableParts && fs.existsSync(paths.shardRcPath)) {
     try {
       const shardRc = readJson(paths.shardRcPath);
       if (Array.isArray(shardRc.shards) && shardRc.shards.length > 1) {
@@ -424,7 +807,7 @@ function writeTasksAtmStore(projectRoot, tasks, options = {}) {
     }
   }
 
-  const parts = splitTasksIntoParts(tasks, { maxPartBytes, maxPartLines, preferredPartCount });
+  const parts = stableParts || splitTasksIntoParts(tasks, { maxPartBytes, maxPartLines, preferredPartCount });
   const summary = recalcSummary(tasks);
   const indexStub = buildIndexStub(projectRoot, parts, summary, { maxPartBytes, maxPartLines });
   const shardRc = {
@@ -436,30 +819,40 @@ function writeTasksAtmStore(projectRoot, tasks, options = {}) {
     source: '../tasks-atm.json',
     indexTitle: 'ATM Tasks (ATM-*) (thin-index parts)',
     type: 'auto-parts',
+    assignmentPolicy: indexStub.assignmentPolicy,
     shards: parts.map((part) => ({
       name: part.name,
-      title: part.title,
-      range: part.range,
+      title: titleForShardDefinition(part.name),
       layout: part.layout,
-      stride: part.stride,
-      offset: part.offset,
-      indices: part.indices,
+      path: `${part.name}.json`,
     })),
   };
+  const taskPartPaths = {};
+  for (const part of parts) {
+    for (const task of part.tasks) {
+      const taskId = String(task && task.id ? task.id : '').trim();
+      if (taskId) {
+        taskPartPaths[taskId] = partPathRel(part.name);
+      }
+    }
+  }
+
+  const changedFiles = [];
 
   if (!dryRun) {
     fs.mkdirSync(paths.partsDir, { recursive: true });
-    for (const entry of fs.readdirSync(paths.partsDir)) {
-      if (entry === '.shardrc.json' || /^tasks-atm-part-\d+\.json$/.test(entry)) {
-        fs.rmSync(path.join(paths.partsDir, entry), { force: true });
+    for (const part of parts) {
+      const partPath = path.join(paths.partsDir, `${part.name}.json`);
+      if (writeJsonIfChanged(partPath, part.tasks)) {
+        changedFiles.push(relPath(projectRoot, partPath));
       }
     }
-
-    for (const part of parts) {
-      writeJson(path.join(paths.partsDir, `${part.name}.json`), part.tasks);
+    if (writeJsonIfChanged(paths.shardRcPath, shardRc)) {
+      changedFiles.push(relPath(projectRoot, paths.shardRcPath));
     }
-    writeJson(paths.shardRcPath, shardRc);
-    writeJson(paths.indexPath, indexStub);
+    if (writeJsonIfChanged(paths.indexPath, indexStub)) {
+      changedFiles.push(relPath(projectRoot, paths.indexPath));
+    }
   }
 
   return {
@@ -467,6 +860,8 @@ function writeTasksAtmStore(projectRoot, tasks, options = {}) {
     shardRc,
     parts,
     summary,
+    changedFiles,
+    taskPartPaths,
     paths: {
       indexPath: relPath(projectRoot, paths.indexPath),
       partsDir: relPath(projectRoot, paths.partsDir),
@@ -484,7 +879,9 @@ function upsertTaskInTasksAtmStore(projectRoot, task, options = {}) {
   } else {
     tasks.push(task);
   }
-  return writeTasksAtmStore(projectRoot, tasks, options);
+  const result = writeTasksAtmStore(projectRoot, tasks, options);
+  result.upsertedTaskPartPath = result.taskPartPaths[String(task && task.id ? task.id : '').trim()] || '';
+  return result;
 }
 
 module.exports = {

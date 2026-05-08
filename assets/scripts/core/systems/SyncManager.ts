@@ -111,6 +111,13 @@ export class SyncManager {
         };
     }
 
+    public getMemorySaveId(): string {
+        if (!this.deviceId) {
+            this.initDeviceId();
+        }
+        return this.deviceId;
+    }
+
     public setup(eventSystem: EventSystem, network: NetworkService): void {
         this.eventSystem = eventSystem;
         this.network = network;

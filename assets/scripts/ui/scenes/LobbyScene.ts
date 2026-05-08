@@ -65,6 +65,7 @@ interface GeneralListOpenPayload {
     options?: {
         factionFilter?: 'all' | 'player' | 'enemy';
         npcDialogueDevControls?: boolean;
+        npcDialogueSaveId?: string;
     };
 }
 
@@ -790,6 +791,7 @@ export class LobbyScene extends Component {
                 this._bringNodeToFront(this._listPanel!.node);
                 await this._listPanel!.show(activePayload.generals, activePayload.options?.factionFilter ?? 'all', {
                     npcDialogueDevControls: activePayload.options?.npcDialogueDevControls,
+                    npcDialogueSaveId: activePayload.options?.npcDialogueSaveId ?? services().sync.getMemorySaveId(),
                 });
             },
             hide: () => {
@@ -907,7 +909,10 @@ export class LobbyScene extends Component {
         void services().ui.open(UIID.GeneralList, {
             generals: displayList,
             onSelectGeneral: (config: GeneralConfig) => this._openGeneralDetailDirect(config),
-            options: { factionFilter: 'all' },
+            options: {
+                factionFilter: 'all',
+                npcDialogueSaveId: services().sync.getMemorySaveId(),
+            },
         } satisfies GeneralListOpenPayload);
     }
 
@@ -915,6 +920,7 @@ export class LobbyScene extends Component {
     public async previewGeneralListSmoke(): Promise<void> {
         await this._showGeneralListWithHandler((config: GeneralConfig) => this._openGeneralDetailDirect(config), {
             factionFilter: 'all',
+            npcDialogueSaveId: services().sync.getMemorySaveId(),
         });
     }
 
@@ -922,6 +928,7 @@ export class LobbyScene extends Component {
         await this._showGeneralListWithHandler((config: GeneralConfig) => this._openGeneralDetailDirect(config), {
             factionFilter: 'all',
             npcDialogueDevControls: true,
+            npcDialogueSaveId: services().sync.getMemorySaveId(),
         });
 
         if (!this._listPanel) {

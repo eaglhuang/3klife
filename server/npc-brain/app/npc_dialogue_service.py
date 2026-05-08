@@ -7,6 +7,24 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, model_validator
 
+from .interaction_memory import (
+    CURRENT_MEMORY_SCHEMA_VERSION,
+    GeneralMemoryContext,
+    GeneralMemoryData,
+    InteractionEventCreateRequest,
+    InteractionEventWriteResponse,
+    MemoryCompressRequest,
+    MemoryWriteResponse,
+    append_interaction_event,
+    build_interaction_event,
+    compress_general_memory_stub,
+    get_memory_runtime_config,
+    has_memory_context_content,
+    increment_uncompressed_count,
+    load_general_memory,
+    memory_context_from_data,
+    save_general_memory,
+)
 from .llm_dialogue_renderer import (
     DEFAULT_DEEPSEEK_REASONER_MODEL,
     DEFAULT_GEMINI_FLASH_LITE_MODEL,
@@ -139,10 +157,16 @@ class DialogueRequest(BaseModel):
     speechContextMode: str = DEFAULT_SPEECH_CONTEXT_MODE
     llmModelPreset: str = DEFAULT_LLM_MODEL_PRESET
     maxChars: int = Field(default=80, ge=12, le=240)
+    saveId: str | None = None
+    memoryContext: GeneralMemoryContext | None = None
 
     @model_validator(mode="after")
     def normalize_request_fields(self):
         self.selectedKeywordKeys = list(dict.fromkeys(key for key in self.selectedKeywordKeys if key))
+        if self.saveId is None and self.memoryContext is not None:
+            self.saveId = self.memoryContext.saveId
+        if self.memoryContext is not None and self.saveId is not None and self.memoryContext.saveId != self.saveId:
+            self.memoryContext = self.memoryContext.model_copy(update={"saveId": self.saveId})
         if self.locale not in SUPPORTED_LOCALES:
             self.locale = DEFAULT_LOCALE
         if self.speechContextMode not in SUPPORTED_SPEECH_CONTEXT_MODES:
@@ -213,6 +237,7 @@ class NpcDialogueService:
     def get_health(self) -> dict:
         provider_order = self.provider_router.provider_order
         vector_config = load_vector_runtime_config()
+        memory_config = get_memory_runtime_config(self.repo_root)
         return {
             "ok": True,
             "service": "npc-brain",
@@ -247,7 +272,36 @@ class NpcDialogueService:
                 ],
             },
             "vector": vector_config.as_health(),
+            "memory": memory_config,
         }
+
+    def record_interaction_event(self, request: InteractionEventCreateRequest) -> InteractionEventWriteResponse:
+        event = build_interaction_event(request)
+        append_success = append_interaction_event(self.repo_root, event)
+        if not append_success:
+            raise RuntimeError(f"failed to append interaction event: {request.saveId}/{request.generalId}")
+        memory = increment_uncompressed_count(self.repo_root, request.saveId, request.generalId)
+        memory_config = get_memory_runtime_config(self.repo_root)
+        delta = memory.uncompressedCount - memory.lastCompressedIdx
+        if delta >= int(memory_config["compressInterval"]):
+            log_debug_event(
+                "memory.compress.pending",
+                saveId=request.saveId,
+                generalId=request.generalId,
+                delta=delta,
+                compressInterval=memory_config["compressInterval"],
+            )
+        return InteractionEventWriteResponse(eventId=event.eventId)
+
+    def get_general_memory(self, save_id: str, general_id: str) -> GeneralMemoryData:
+        return load_general_memory(self.repo_root, save_id, general_id)
+
+    def save_general_memory(self, memory: GeneralMemoryData) -> MemoryWriteResponse:
+        save_general_memory(self.repo_root, memory)
+        return MemoryWriteResponse(ok=True)
+
+    def compress_general_memory(self, request: MemoryCompressRequest) -> GeneralMemoryData:
+        return compress_general_memory_stub(self.repo_root, request)
 
     def get_context_options(self, general_id: str, limit: int | None = None) -> ContextOptionsResponse:
         runtime_persona = self._read_runtime_persona(general_id)
@@ -319,10 +373,13 @@ class NpcDialogueService:
             speechContextMode=request.speechContextMode,
             llmModelPreset=request.llmModelPreset,
             maxChars=request.maxChars,
+            saveId=request.saveId,
+            hasMemoryContext=has_memory_context_content(request.memoryContext),
         )
         context_response = self.get_context_options(request.generalId)
         keyword_response = self.get_keyword_options(request.generalId)
         persona_card = self.get_persona_card(request.generalId)
+        memory_context = self._resolve_memory_context(request)
         selected_context = self._select_context(context_response, request.contextKey)
         keyword_index = self._index_keywords(keyword_response)
 
@@ -375,6 +432,7 @@ class NpcDialogueService:
             DialoguePromptPackage(
                 generalId=request.generalId,
                 personaCardSubset=self._persona_subset(persona_card),
+                memoryContext=memory_context.model_dump(exclude_none=True) if memory_context else None,
                 selectedContext=self._context_subset(selected_context),
                 selectedKeywords=[keyword.model_dump() for keyword in used_keywords],
                 resolvedEvidence=resolved_evidence,
@@ -423,6 +481,14 @@ class NpcDialogueService:
             qualityWarnings=generation.qualityWarnings,
             repairUsed=generation.repairUsed,
         )
+
+    def _resolve_memory_context(self, request: DialogueRequest) -> GeneralMemoryContext | None:
+        if request.memoryContext is not None:
+            return request.memoryContext if has_memory_context_content(request.memoryContext) else None
+        if not request.saveId:
+            return None
+        memory = load_general_memory(self.repo_root, request.saveId, request.generalId)
+        return memory_context_from_data(memory)
 
     def get_persona_card(self, general_id: str) -> PersonaCard | None:
         runtime_persona = self._read_runtime_persona(general_id)

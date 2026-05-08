@@ -13,7 +13,7 @@
  */
 import { _decorator, Node, Label, Button, UITransform, Layout, Widget, HorizontalTextAlignment, VerticalTextAlignment, Color } from 'cc';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
-import type { NpcDialogueKeywordSelection, NpcDialogueLocale, NpcDialogueModelPreset, NpcDialogueResponse, NpcDialogueSpeechContextMode } from '../../core/services/NpcDialogueService';
+import type { NpcContextOption, NpcDialogueKeywordSelection, NpcDialogueLocale, NpcDialogueModelPreset, NpcDialogueResponse, NpcDialogueSpeechContextMode } from '../../core/services/NpcDialogueService';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
@@ -26,6 +26,7 @@ type SortKey = 'name' | 'gender' | 'age' | 'str' | 'int' | 'lea' | 'pol' | 'cha'
 type GeneralFilterMode = 'all' | 'player' | 'enemy';
 export interface GeneralListShowOptions {
     npcDialogueDevControls?: boolean;
+    npcDialogueSaveId?: string;
 }
 
 // 兵種等級順序，供排序比較
@@ -128,9 +129,12 @@ export class GeneralListComposite extends CompositePanel {
     private _headerBaseLabels: Partial<Record<SortKey, string>> = {};
     private readonly _renderedRowsByGeneralId = new Map<string, Node>();
     private _npcDialogueDevControls = false;
+    private _npcDialogueMemorySaveId = '';
     private _npcDialogueSelectedGeneral: GeneralConfig | null = null;
     private _npcDialogueKeywords: NpcDialogueKeywordSelection[] = [];
+    private _npcDialogueContextOptions: NpcContextOption[] = [];
     private _npcDialogueSelectedKeyword: NpcDialogueKeywordSelection | null = null;
+    private _npcDialogueSelectedContext: NpcContextOption | null = null;
     private _npcDialogueLocale: NpcDialogueLocale = 'zh-TW';
     private _npcDialogueSpeechContextMode: NpcDialogueSpeechContextMode = 'life_chat';
 
@@ -165,6 +169,7 @@ export class GeneralListComposite extends CompositePanel {
         this._allGenerals = generals;
         this._filterMode = filterMode;
         this._npcDialogueDevControls = !!options.npcDialogueDevControls;
+        this._npcDialogueMemorySaveId = options.npcDialogueSaveId?.trim() || services().sync.getMemorySaveId();
 
         UCUFLogger.info(LogCategory.LIFECYCLE, '[GeneralListComposite] show start', {
             generalCount: generals.length,
@@ -498,6 +503,8 @@ export class GeneralListComposite extends CompositePanel {
             this._npcDialogueProviderLabel = null;
             this._npcDialogueProviderTraceLabel = null;
             this._npcDialogueMenuNode = null;
+            this._npcDialogueContextOptions = [];
+            this._npcDialogueSelectedContext = null;
             this._setWidgetTop(HEADER_ROW_REL_PATH, 24);
             this._setWidgetTop(LIST_REL_PATH, 68);
             return;
@@ -593,7 +600,9 @@ export class GeneralListComposite extends CompositePanel {
     private async _selectNpcDialogueGeneral(general: GeneralConfig): Promise<void> {
         this._npcDialogueSelectedGeneral = general;
         this._npcDialogueKeywords = [];
+        this._npcDialogueContextOptions = [];
         this._npcDialogueSelectedKeyword = null;
+        this._npcDialogueSelectedContext = null;
         this._setNpcDialogueStatus(`選取武將：${general.name ?? general.id}`);
         this._setNpcDialogueKeywordLabel('關鍵字：載入中...');
         this._setNpcDialogueHint(`正在載入 ${general.name ?? general.id} 的關鍵字。`);
@@ -615,6 +624,23 @@ export class GeneralListComposite extends CompositePanel {
                 generalId: general.id,
                 keywordCount: this._npcDialogueKeywords.length,
             });
+            try {
+                const contextResponse = await services().npcDialogue.getContextOptions(general.id, 8);
+                this._npcDialogueContextOptions = services().npcDialogue.flattenContextOptions(contextResponse);
+                this._npcDialogueSelectedContext = this._npcDialogueContextOptions[0] ?? null;
+                UCUFLogger.info(LogCategory.DATA, '[GeneralListComposite] npc dialogue contexts loaded', {
+                    generalId: general.id,
+                    contextCount: this._npcDialogueContextOptions.length,
+                    selectedContextKey: this._npcDialogueSelectedContext?.contextKey ?? null,
+                });
+            } catch (contextError) {
+                this._npcDialogueContextOptions = [];
+                this._npcDialogueSelectedContext = null;
+                UCUFLogger.warn(LogCategory.DATA, '[GeneralListComposite] npc dialogue context load failed', { generalId: general.id, error: contextError });
+            }
+            this._setNpcDialogueHint(this._npcDialogueSelectedKeyword
+                ? `已載入 ${this._npcDialogueKeywords.length} 個關鍵字、${this._npcDialogueContextOptions.length} 個情境，預設情境：${this._npcDialogueSelectedContext?.label ?? '預設'}`
+                : '此武將目前沒有 keyword pack。');
         } catch (error) {
             this._setNpcDialogueKeywordLabel('關鍵字：載入失敗');
             this._setNpcDialogueHint('NPC brain 連線失敗，確認 http://127.0.0.1:8765 是否已啟動。');
@@ -793,12 +819,14 @@ export class GeneralListComposite extends CompositePanel {
         try {
             const response = await services().npcDialogue.requestDialogue({
                 generalId: this._npcDialogueSelectedGeneral.id,
+                contextKey: this._npcDialogueSelectedContext?.contextKey,
                 selectedKeywordKeys: [this._npcDialogueSelectedKeyword.keywordKey],
                 toneMode: 'in-character',
                 locale: this._npcDialogueLocale,
                 speechContextMode: requestedSpeechContextMode,
                 llmModelPreset: requestedModelPreset,
                 maxChars: 90,
+                saveId: this._npcDialogueMemorySaveId,
             });
             this._setNpcDialogueHint(response.text);
             this._setNpcDialogueProvider(this._npcDialogueProviderButtonText(response, requestedModelPreset));
@@ -806,10 +834,24 @@ export class GeneralListComposite extends CompositePanel {
             const presetWarning = presetMismatch ? [`preset-mismatch:${requestedModelPreset}->${response.llmModelPreset ?? 'missing'}`] : [];
             const qualityText = [...presetWarning, ...(response.qualityWarnings ?? [])].join(',') || (response.repairUsed ? 'repaired' : 'pass');
             this._setNpcDialogueProviderTrace(`Quality：${qualityText}｜Trace：${(response.providerTrace ?? []).join(' > ') || '-'}`);
+            void services().npcDialogue.recordInteractionEvent({
+                saveId: this._npcDialogueMemorySaveId,
+                generalId: this._npcDialogueSelectedGeneral.id,
+                eventType: 'dialogue_test',
+                summary: `對話測試｜${this._npcDialogueSelectedGeneral.name ?? this._npcDialogueSelectedGeneral.id}｜${this._npcDialogueSelectedKeyword.label}｜${this._npcDialogueSelectedContext?.label ?? '預設情境'}`,
+                keywords: [this._npcDialogueSelectedKeyword.keywordKey],
+                playerAction: `speechContext=${requestedSpeechContextMode}, locale=${response.locale ?? this._npcDialogueLocale}`,
+                generalReaction: response.text,
+                isMilestone: false,
+            }).catch((memoryError) => {
+                UCUFLogger.warn(LogCategory.DATA, '[GeneralListComposite] npc dialogue memory write failed', { error: memoryError });
+            });
             services().event.emit('SHOW_TOAST', { message: response.text, duration: 4 });
             UCUFLogger.info(LogCategory.DATA, '[GeneralListComposite] npc dialogue response', {
                 generalId: response.generalId,
                 selectedKeywordKey: this._npcDialogueSelectedKeyword.keywordKey,
+                selectedContextKey: this._npcDialogueSelectedContext?.contextKey ?? null,
+                saveId: this._npcDialogueMemorySaveId,
                 locale: response.locale ?? this._npcDialogueLocale,
                 requestedSpeechContextMode,
                 speechContextMode: response.speechContextMode ?? null,

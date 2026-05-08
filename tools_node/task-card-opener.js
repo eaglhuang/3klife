@@ -780,6 +780,7 @@ function main() {
   }
 
   const mdContent = buildMarkdown(task, mdKind);
+  let lockFilesOverride = null;
   if (mdOutArg) {
     const resolvedMdPath = resolvePath(mdOutArg);
     writeText(resolvedMdPath, mdContent, dryRun);
@@ -799,6 +800,16 @@ function main() {
     if (jsonKind === 'task-aggregate' && isTasksAtmIndexPath(PROJECT_ROOT, jsonPath)) {
       const result = upsertTaskInTasksAtmStore(PROJECT_ROOT, task, { dryRun });
       outputJson = result.indexStub;
+      lockFilesOverride = [
+        relativeOutputFile(mdOutArg),
+        result.upsertedTaskPartPath || '',
+        ...(Array.isArray(result.changedFiles)
+          ? result.changedFiles.filter((filePath) => (
+            /^docs\/tasks\/tasks-atm\/tasks-atm-part-\d+\.json$/.test(filePath)
+            || filePath === 'docs/tasks/tasks-atm/.shardrc.json'
+          ))
+          : []),
+      ].filter(Boolean);
       if (dryRun) {
         printDryRunArtifact('json', `${JSON.stringify(outputJson, null, 2)}\n`);
       }
@@ -819,7 +830,7 @@ function main() {
   }
 
   if (pendingTaskIdReservation && !dryRun) {
-    const lockFiles = [
+    const lockFiles = lockFilesOverride || [
       relativeOutputFile(mdOutArg),
       relativeOutputFile(jsonOutArg),
     ];

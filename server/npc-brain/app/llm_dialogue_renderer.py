@@ -134,6 +134,7 @@ class ResolvedEvidence:
 class DialoguePromptPackage:
     generalId: str
     personaCardSubset: dict
+    memoryContext: dict | None
     selectedContext: dict | None
     selectedKeywords: list[dict]
     resolvedEvidence: list[ResolvedEvidence]
@@ -332,6 +333,7 @@ class GeminiDialogueProvider:
         selected_keyword_labels = [str(keyword.get("label") or "") for keyword in package.selectedKeywords if keyword.get("label")]
         locale_instruction = LOCALE_INSTRUCTIONS.get(package.locale, LOCALE_INSTRUCTIONS[DEFAULT_LOCALE])
         speech_instruction = SPEECH_CONTEXT_INSTRUCTIONS.get(package.speechContextMode, SPEECH_CONTEXT_INSTRUCTIONS[DEFAULT_SPEECH_CONTEXT_MODE])
+        memory_block = self._memory_prompt_block(package.memoryContext)
         evidence_payload = [
             {
                 "evidenceRef": evidence.evidenceRef,
@@ -369,6 +371,7 @@ class GeminiDialogueProvider:
                 "avoid": speech_instruction["avoid"],
             },
             "personaCardSubset": package.personaCardSubset,
+            "playerGeneralMemory": memory_block,
             "selectedContext": package.selectedContext,
             "selectedKeywords": package.selectedKeywords,
             "keywordDirective": {
@@ -390,7 +393,26 @@ class GeminiDialogueProvider:
                 },
             },
         }
+        if memory_block is None:
+            payload.pop("playerGeneralMemory", None)
         return json.dumps(payload, ensure_ascii=False)
+
+    def _memory_prompt_block(self, memory_context: dict | None) -> dict | None:
+        if not memory_context:
+            return None
+        short_term = str(memory_context.get("shortTerm") or "").strip()
+        long_term = str(memory_context.get("longTerm") or "").strip()
+        player_profile = str(memory_context.get("playerProfile") or "").strip()
+        promises = str(memory_context.get("promises") or "").strip()
+        if not any([short_term, long_term, player_profile, promises]):
+            return None
+        return {
+            "instruction": "此為玩家與本武將的互動記憶壓縮摘要，據此維持對話連貫性，不得捏造摘要以外的事實。",
+            "shortTerm": short_term,
+            "longTerm": long_term,
+            "playerProfile": player_profile,
+            "promises": promises,
+        }
 
     def _speaker_identity_guard(self, package: DialoguePromptPackage) -> dict:
         guard = GENERAL_IDENTITY_GUARDS.get(package.generalId, {})
@@ -773,6 +795,13 @@ class LocalLlamaDialogueProvider(GeminiDialogueProvider):
     def _build_local_system_prompt(self, package: DialoguePromptPackage) -> str:
         locale_instruction = LOCALE_INSTRUCTIONS.get(package.locale, LOCALE_INSTRUCTIONS[DEFAULT_LOCALE])
         speech_instruction = SPEECH_CONTEXT_INSTRUCTIONS.get(package.speechContextMode, SPEECH_CONTEXT_INSTRUCTIONS[DEFAULT_SPEECH_CONTEXT_MODE])
+        memory_block = self._memory_prompt_block(package.memoryContext)
+        memory_lines = []
+        if memory_block is not None:
+            memory_lines = [
+                "playerGeneralMemory block:",
+                json.dumps({"playerGeneralMemory": memory_block}, ensure_ascii=False),
+            ]
         identity_guard = self._speaker_identity_guard(package)
         return "\n".join([
             "You are the strict NPC dialogue renderer for a Three Kingdoms game.",
@@ -783,6 +812,7 @@ class LocalLlamaDialogueProvider(GeminiDialogueProvider):
             f"Locale: {package.locale}. {locale_instruction['instruction']}",
             f"Speech context: {package.speechContextMode}. {speech_instruction['instruction']}",
             f"Keyword angle: {speech_instruction['keywordAngle']}",
+            *memory_lines,
             "Speech context must: " + "; ".join(speech_instruction["must"]),
             "Speech context must avoid: " + "; ".join(speech_instruction["avoid"]),
             "Use only the persona, keywords, context, and evidence provided by the user payload.",

@@ -61,12 +61,12 @@
         "既有 dedup / lifecycle / advisory cards 只能重用，不重複開單"
       ],
       "output": [
-      "coverage gate 升 blocker 的 deterministic 條件",
-      "manifest self-coverage 規則與 validator 檢查",
-      "coverage finding schema 與 routeHint / routeClass contract",
-      "task-router / advisory / follow-up 的路由對齊",
-      "ATM-2-0050 收斂完成"
-    ],
+        "coverage gate 升 blocker 的 deterministic 條件",
+        "manifest self-coverage 規則與 validator 檢查",
+        "coverage finding schema 與 routeHint / routeClass contract",
+        "task-router / advisory / follow-up 的路由對齊",
+        "ATM-2-0050 收斂完成"
+      ],
       "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0051.md\\nnode tools_node/validate-framework-atomization-coverage.js --manifest docs/ai_atomic_framework/framework-function-atomization-manifest.md --fixture tools_node/atomic-framework/fixtures/framework-function-atomization-coverage.fixture.json --strict\\nnode tools_node/run-rule-guard.js --profile atm --json\\nnode tools_node/check-doc-shard-health.js",
       "rollback_hint": "回退 coverage gate follow-up touched files；不得把 ATM-2-0050 重新膨脹成主卡，也不得重複開 task-router / rule-guard / dedup / lifecycle 既有功能卡。",
       "execution_steps": [

@@ -4,1236 +4,608 @@
   "_usage": "Read docs/tasks/tasks-atm/tasks-atm-part-*.json as needed",
   "_rebuild": "node tools_node/rebuild-tasks-atm-auto-parts.js",
   "_sourceOfTruth": "docs/tasks/tasks-atm/",
+  "assignmentPolicy": {
+    "name": "sticky-least-pool",
+    "stableExistingTasks": true,
+    "newTaskPlacement": "least-loaded-pool + task-id hash",
+    "lockedPartAvoidance": true,
+    "rebuildDiff": "only changed part files plus index; .shardrc changes only when part list changes"
+  },
   "thresholds": {
     "maxPartKB": 10,
     "maxPartLines": 300
   },
   "summary": {
-    "done": 74,
+    "done": 76,
     "in_progress": 1,
-    "open": 40,
+    "open": 38,
     "total": 115
   },
   "shards": [
     {
       "name": "tasks-atm-part-1",
-      "title": "Part 1 (striped, 1 items)",
+      "title": "Part 1 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-1.json",
       "count": 1,
       "bytes": 9208,
       "lines": 120,
-      "range": [
-        76,
-        76
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 0,
-      "indices": [
-        76
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-2",
-      "title": "Part 2 (striped, 1 items)",
+      "title": "Part 2 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-2.json",
       "count": 1,
       "bytes": 7869,
       "lines": 101,
-      "range": [
-        24,
-        24
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 1,
-      "indices": [
-        24
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-3",
-      "title": "Part 3 (striped, 1 items)",
+      "title": "Part 3 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-3.json",
       "count": 1,
       "bytes": 6217,
       "lines": 100,
-      "range": [
-        96,
-        96
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 2,
-      "indices": [
-        96
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-4",
-      "title": "Part 4 (striped, 1 items)",
+      "title": "Part 4 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-4.json",
       "count": 1,
       "bytes": 5307,
       "lines": 70,
-      "range": [
-        64,
-        64
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 3,
-      "indices": [
-        64
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-5",
-      "title": "Part 5 (striped, 1 items)",
+      "title": "Part 5 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-5.json",
       "count": 1,
       "bytes": 5250,
       "lines": 84,
-      "range": [
-        75,
-        75
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 4,
-      "indices": [
-        75
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-6",
-      "title": "Part 6 (striped, 1 items)",
+      "title": "Part 6 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-6.json",
       "count": 1,
       "bytes": 5056,
       "lines": 102,
-      "range": [
-        23,
-        23
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 5,
-      "indices": [
-        23
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-7",
-      "title": "Part 7 (striped, 1 items)",
+      "title": "Part 7 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-7.json",
       "count": 1,
       "bytes": 4951,
       "lines": 101,
-      "range": [
-        32,
-        32
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 6,
-      "indices": [
-        32
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-8",
-      "title": "Part 8 (striped, 1 items)",
+      "title": "Part 8 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-8.json",
       "count": 1,
       "bytes": 4831,
       "lines": 96,
-      "range": [
-        31,
-        31
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 7,
-      "indices": [
-        31
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-9",
-      "title": "Part 9 (striped, 1 items)",
+      "title": "Part 9 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-9.json",
       "count": 1,
       "bytes": 4742,
       "lines": 58,
-      "range": [
-        49,
-        49
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 8,
-      "indices": [
-        49
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-10",
-      "title": "Part 10 (striped, 1 items)",
+      "title": "Part 10 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-10.json",
       "count": 1,
       "bytes": 4764,
       "lines": 92,
-      "range": [
-        73,
-        73
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 9,
-      "indices": [
-        73
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-11",
-      "title": "Part 11 (striped, 1 items)",
+      "title": "Part 11 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-11.json",
       "count": 1,
       "bytes": 4753,
       "lines": 97,
-      "range": [
-        22,
-        22
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 10,
-      "indices": [
-        22
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-12",
-      "title": "Part 12 (striped, 1 items)",
+      "title": "Part 12 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-12.json",
       "count": 1,
       "bytes": 4708,
       "lines": 86,
-      "range": [
-        14,
-        14
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 11,
-      "indices": [
-        14
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-13",
-      "title": "Part 13 (striped, 1 items)",
+      "title": "Part 13 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-13.json",
       "count": 1,
       "bytes": 4547,
       "lines": 63,
-      "range": [
-        60,
-        60
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 12,
-      "indices": [
-        60
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-14",
-      "title": "Part 14 (striped, 1 items)",
+      "title": "Part 14 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-14.json",
       "count": 1,
       "bytes": 4555,
       "lines": 100,
-      "range": [
-        33,
-        33
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 13,
-      "indices": [
-        33
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-15",
-      "title": "Part 15 (striped, 1 items)",
+      "title": "Part 15 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-15.json",
       "count": 1,
       "bytes": 4550,
       "lines": 98,
-      "range": [
-        30,
-        30
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 14,
-      "indices": [
-        30
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-16",
-      "title": "Part 16 (striped, 1 items)",
+      "title": "Part 16 (sticky-least-pool, 1 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-16.json",
       "count": 1,
       "bytes": 4519,
       "lines": 88,
-      "range": [
-        74,
-        74
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 15,
-      "indices": [
-        74
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-17",
-      "title": "Part 17 (striped, 2 items)",
+      "title": "Part 17 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-17.json",
       "count": 2,
       "bytes": 4838,
       "lines": 99,
-      "range": [
-        40,
-        87
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 16,
-      "indices": [
-        40,
-        87
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-18",
-      "title": "Part 18 (striped, 2 items)",
+      "title": "Part 18 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-18.json",
       "count": 2,
-      "bytes": 4735,
-      "lines": 99,
-      "range": [
-        77,
-        94
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 17,
-      "indices": [
-        77,
-        94
-      ]
+      "bytes": 5605,
+      "lines": 103,
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-19",
-      "title": "Part 19 (striped, 3 items)",
+      "title": "Part 19 (sticky-least-pool, 3 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-19.json",
       "count": 3,
       "bytes": 4810,
       "lines": 126,
-      "range": [
-        11,
-        92
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 18,
-      "indices": [
-        11,
-        17,
-        92
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-20",
-      "title": "Part 20 (striped, 2 items)",
+      "title": "Part 20 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-20.json",
       "count": 2,
       "bytes": 4565,
       "lines": 109,
-      "range": [
-        15,
-        88
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 19,
-      "indices": [
-        15,
-        88
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-21",
-      "title": "Part 21 (striped, 2 items)",
+      "title": "Part 21 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-21.json",
       "count": 2,
       "bytes": 4758,
       "lines": 109,
-      "range": [
-        36,
-        72
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 20,
-      "indices": [
-        36,
-        72
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-22",
-      "title": "Part 22 (striped, 2 items)",
+      "title": "Part 22 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-22.json",
       "count": 2,
       "bytes": 4725,
       "lines": 85,
-      "range": [
-        56,
-        69
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 21,
-      "indices": [
-        56,
-        69
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-23",
-      "title": "Part 23 (striped, 2 items)",
+      "title": "Part 23 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-23.json",
       "count": 2,
       "bytes": 4841,
       "lines": 78,
-      "range": [
-        47,
-        78
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 22,
-      "indices": [
-        47,
-        78
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-24",
-      "title": "Part 24 (striped, 2 items)",
+      "title": "Part 24 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-24.json",
       "count": 2,
       "bytes": 4763,
       "lines": 89,
-      "range": [
-        63,
-        70
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 23,
-      "indices": [
-        63,
-        70
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-25",
-      "title": "Part 25 (striped, 2 items)",
+      "title": "Part 25 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-25.json",
       "count": 2,
       "bytes": 4716,
       "lines": 111,
-      "range": [
-        71,
-        107
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 24,
-      "indices": [
-        71,
-        107
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-26",
-      "title": "Part 26 (striped, 2 items)",
+      "title": "Part 26 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-26.json",
       "count": 2,
       "bytes": 4855,
       "lines": 99,
-      "range": [
-        91,
-        106
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 25,
-      "indices": [
-        91,
-        106
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-27",
-      "title": "Part 27 (striped, 2 items)",
+      "title": "Part 27 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-27.json",
       "count": 2,
       "bytes": 4827,
       "lines": 87,
-      "range": [
-        62,
-        79
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 26,
-      "indices": [
-        62,
-        79
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-28",
-      "title": "Part 28 (striped, 2 items)",
+      "title": "Part 28 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-28.json",
       "count": 2,
-      "bytes": 4810,
-      "lines": 77,
-      "range": [
-        54,
-        90
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 27,
-      "indices": [
-        54,
-        90
-      ]
+      "bytes": 5252,
+      "lines": 79,
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-29",
-      "title": "Part 29 (striped, 2 items)",
+      "title": "Part 29 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-29.json",
       "count": 2,
       "bytes": 5360,
       "lines": 74,
-      "range": [
-        39,
-        68
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 28,
-      "indices": [
-        39,
-        68
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-30",
-      "title": "Part 30 (striped, 2 items)",
+      "title": "Part 30 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-30.json",
       "count": 2,
       "bytes": 4961,
       "lines": 101,
-      "range": [
-        38,
-        89
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 29,
-      "indices": [
-        38,
-        89
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-31",
-      "title": "Part 31 (striped, 2 items)",
+      "title": "Part 31 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-31.json",
       "count": 2,
       "bytes": 5572,
       "lines": 120,
-      "range": [
-        34,
-        50
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 30,
-      "indices": [
-        34,
-        50
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-32",
-      "title": "Part 32 (striped, 2 items)",
+      "title": "Part 32 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-32.json",
       "count": 2,
       "bytes": 5661,
       "lines": 135,
-      "range": [
-        20,
-        103
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 31,
-      "indices": [
-        20,
-        103
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-33",
-      "title": "Part 33 (striped, 2 items)",
+      "title": "Part 33 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-33.json",
       "count": 2,
       "bytes": 5677,
       "lines": 134,
-      "range": [
-        19,
-        52
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 32,
-      "indices": [
-        19,
-        52
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-34",
-      "title": "Part 34 (striped, 2 items)",
+      "title": "Part 34 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-34.json",
       "count": 2,
       "bytes": 5687,
       "lines": 132,
-      "range": [
-        28,
-        51
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 33,
-      "indices": [
-        28,
-        51
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-35",
-      "title": "Part 35 (striped, 2 items)",
+      "title": "Part 35 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-35.json",
       "count": 2,
       "bytes": 5712,
       "lines": 135,
-      "range": [
-        29,
-        61
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 34,
-      "indices": [
-        29,
-        61
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-36",
-      "title": "Part 36 (striped, 2 items)",
+      "title": "Part 36 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-36.json",
       "count": 2,
       "bytes": 5739,
       "lines": 119,
-      "range": [
-        35,
-        45
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 35,
-      "indices": [
-        35,
-        45
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-37",
-      "title": "Part 37 (striped, 2 items)",
+      "title": "Part 37 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-37.json",
       "count": 2,
       "bytes": 5739,
       "lines": 130,
-      "range": [
-        82,
-        104
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 36,
-      "indices": [
-        82,
-        104
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-38",
-      "title": "Part 38 (striped, 2 items)",
+      "title": "Part 38 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-38.json",
       "count": 2,
       "bytes": 5746,
       "lines": 155,
-      "range": [
-        18,
-        110
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 37,
-      "indices": [
-        18,
-        110
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-39",
-      "title": "Part 39 (striped, 2 items)",
+      "title": "Part 39 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-39.json",
       "count": 2,
       "bytes": 5763,
       "lines": 140,
-      "range": [
-        112,
-        114
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 38,
-      "indices": [
-        112,
-        114
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-40",
-      "title": "Part 40 (striped, 2 items)",
+      "title": "Part 40 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-40.json",
       "count": 2,
       "bytes": 5795,
       "lines": 117,
-      "range": [
-        44,
-        85
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 39,
-      "indices": [
-        44,
-        85
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-41",
-      "title": "Part 41 (striped, 2 items)",
+      "title": "Part 41 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-41.json",
       "count": 2,
       "bytes": 5834,
       "lines": 142,
-      "range": [
-        8,
-        97
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 40,
-      "indices": [
-        8,
-        97
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-42",
-      "title": "Part 42 (striped, 2 items)",
+      "title": "Part 42 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-42.json",
       "count": 2,
       "bytes": 5789,
       "lines": 157,
-      "range": [
-        21,
-        111
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 41,
-      "indices": [
-        21,
-        111
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-43",
-      "title": "Part 43 (striped, 2 items)",
+      "title": "Part 43 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-43.json",
       "count": 2,
       "bytes": 5803,
       "lines": 111,
-      "range": [
-        59,
-        66
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 42,
-      "indices": [
-        59,
-        66
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-44",
-      "title": "Part 44 (striped, 2 items)",
+      "title": "Part 44 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-44.json",
       "count": 2,
       "bytes": 5747,
       "lines": 141,
-      "range": [
-        4,
-        81
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 43,
-      "indices": [
-        4,
-        81
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-45",
-      "title": "Part 45 (striped, 2 items)",
+      "title": "Part 45 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-45.json",
       "count": 2,
       "bytes": 5807,
       "lines": 123,
-      "range": [
-        48,
-        108
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 44,
-      "indices": [
-        48,
-        108
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-46",
-      "title": "Part 46 (striped, 2 items)",
+      "title": "Part 46 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-46.json",
       "count": 2,
       "bytes": 5824,
       "lines": 158,
-      "range": [
-        16,
-        113
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 45,
-      "indices": [
-        16,
-        113
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-47",
-      "title": "Part 47 (striped, 2 items)",
+      "title": "Part 47 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-47.json",
       "count": 2,
       "bytes": 5775,
       "lines": 122,
-      "range": [
-        10,
-        25
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 46,
-      "indices": [
-        10,
-        25
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-48",
-      "title": "Part 48 (striped, 2 items)",
+      "title": "Part 48 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-48.json",
       "count": 2,
       "bytes": 5768,
       "lines": 121,
-      "range": [
-        6,
-        58
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 47,
-      "indices": [
-        6,
-        58
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-49",
-      "title": "Part 49 (striped, 2 items)",
+      "title": "Part 49 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-49.json",
       "count": 2,
       "bytes": 5772,
       "lines": 130,
-      "range": [
-        13,
-        65
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 48,
-      "indices": [
-        13,
-        65
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-50",
-      "title": "Part 50 (striped, 2 items)",
+      "title": "Part 50 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-50.json",
       "count": 2,
       "bytes": 5721,
       "lines": 114,
-      "range": [
-        80,
-        100
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 49,
-      "indices": [
-        80,
-        100
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-51",
-      "title": "Part 51 (striped, 2 items)",
+      "title": "Part 51 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-51.json",
       "count": 2,
       "bytes": 5717,
       "lines": 115,
-      "range": [
-        12,
-        53
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 50,
-      "indices": [
-        12,
-        53
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-52",
-      "title": "Part 52 (striped, 2 items)",
+      "title": "Part 52 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-52.json",
       "count": 2,
       "bytes": 5750,
       "lines": 134,
-      "range": [
-        1,
-        9
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 51,
-      "indices": [
-        1,
-        9
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-53",
-      "title": "Part 53 (striped, 2 items)",
+      "title": "Part 53 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-53.json",
       "count": 2,
       "bytes": 5665,
       "lines": 113,
-      "range": [
-        57,
-        67
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 52,
-      "indices": [
-        57,
-        67
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-54",
-      "title": "Part 54 (striped, 2 items)",
+      "title": "Part 54 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-54.json",
       "count": 2,
       "bytes": 5629,
       "lines": 118,
-      "range": [
-        7,
-        27
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 53,
-      "indices": [
-        7,
-        27
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-55",
-      "title": "Part 55 (striped, 2 items)",
+      "title": "Part 55 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-55.json",
       "count": 2,
       "bytes": 5635,
       "lines": 148,
-      "range": [
-        105,
-        109
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 54,
-      "indices": [
-        105,
-        109
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-56",
-      "title": "Part 56 (striped, 2 items)",
+      "title": "Part 56 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-56.json",
       "count": 2,
       "bytes": 5649,
       "lines": 149,
-      "range": [
-        5,
-        99
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 55,
-      "indices": [
-        5,
-        99
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-57",
-      "title": "Part 57 (striped, 2 items)",
+      "title": "Part 57 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-57.json",
       "count": 2,
       "bytes": 5547,
       "lines": 110,
-      "range": [
-        3,
-        93
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 56,
-      "indices": [
-        3,
-        93
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-58",
-      "title": "Part 58 (striped, 2 items)",
+      "title": "Part 58 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-58.json",
       "count": 2,
       "bytes": 5487,
       "lines": 111,
-      "range": [
-        0,
-        42
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 57,
-      "indices": [
-        0,
-        42
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-59",
-      "title": "Part 59 (striped, 2 items)",
+      "title": "Part 59 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-59.json",
       "count": 2,
       "bytes": 5534,
       "lines": 119,
-      "range": [
-        95,
-        101
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 58,
-      "indices": [
-        95,
-        101
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-60",
-      "title": "Part 60 (striped, 2 items)",
+      "title": "Part 60 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-60.json",
       "count": 2,
       "bytes": 5480,
       "lines": 124,
-      "range": [
-        26,
-        37
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 59,
-      "indices": [
-        26,
-        37
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-61",
-      "title": "Part 61 (striped, 2 items)",
+      "title": "Part 61 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-61.json",
       "count": 2,
       "bytes": 5383,
       "lines": 137,
-      "range": [
-        2,
-        83
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 60,
-      "indices": [
-        2,
-        83
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-62",
-      "title": "Part 62 (striped, 2 items)",
+      "title": "Part 62 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-62.json",
       "count": 2,
       "bytes": 5391,
       "lines": 135,
-      "range": [
-        84,
-        102
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 61,
-      "indices": [
-        84,
-        102
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-63",
-      "title": "Part 63 (striped, 2 items)",
+      "title": "Part 63 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-63.json",
       "count": 2,
       "bytes": 5332,
       "lines": 113,
-      "range": [
-        41,
-        86
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 62,
-      "indices": [
-        41,
-        86
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-64",
-      "title": "Part 64 (striped, 2 items)",
+      "title": "Part 64 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-64.json",
       "count": 2,
       "bytes": 5312,
       "lines": 119,
-      "range": [
-        55,
-        98
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 63,
-      "indices": [
-        55,
-        98
-      ]
+      "layout": "sticky-least-pool"
     },
     {
       "name": "tasks-atm-part-65",
-      "title": "Part 65 (striped, 2 items)",
+      "title": "Part 65 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-65.json",
       "count": 2,
       "bytes": 5285,
       "lines": 91,
-      "range": [
-        43,
-        46
-      ],
-      "layout": "striped",
-      "stride": 65,
-      "offset": 64,
-      "indices": [
-        43,
-        46
-      ]
+      "layout": "sticky-least-pool"
     }
   ]
 }
