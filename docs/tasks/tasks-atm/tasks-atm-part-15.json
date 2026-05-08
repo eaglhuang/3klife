@@ -12,7 +12,7 @@
     "created_by_agent": "vs-insiders-gpt-5.4",
     "started_at": "2026-05-08T01:26:52+08:00",
     "started_by_agent": "vs-insiders-gpt-5.4",
-    "completed_at": "2026-05-08T01:48:26+08:00",
+    "completed_at": "2026-05-08T17:35:00+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -41,7 +41,7 @@
       "docs/tasks/tasks-atm/tasks-atm-part-15.json",
       "docs/tasks/tasks-atm/tasks-atm-part-18.json"
     ],
-    "notes": "2026-05-08 | 狀態: done | 驗證: encoding touched pass；JSON parse pass；task-scope pass；compute-gate standard 9/9 pass；AAF neutrality validate pass | 變更: 回寫 CAR/HarnessCard 採納決策、AAF upstream positioning docs、ATM-5-0002/ATM-6-0005 後續 acceptance；已 done 卡未修改；學習正文維持本機 exclude 不提交 | 阻塞: none",
+    "notes": "2026-05-08 | 狀態: done | 驗證: encoding touched pass；JSON parse pass；task-scope pass；compute-gate standard 9/9 pass；AAF neutrality validate pass | 變更: 回寫 CAR/HarnessCard 採納決策、AAF upstream positioning docs、ATM-5-0002/ATM-6-0005 後續 acceptance；已 done 卡未修改；學習正文維持本機 exclude 不提交 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?CAR / HarnessCard / AAF positioning ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: CAR/HarnessCard ????????OUTPUT_CONTRACT ? task shard ??? | ??: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM research integration 開卡",

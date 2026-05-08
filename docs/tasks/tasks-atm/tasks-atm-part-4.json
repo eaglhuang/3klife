@@ -75,7 +75,7 @@
     "created_by_agent": "vs-code-gpt-5.4",
     "started_at": "2026-05-07T18:56:24.0520935+08:00",
     "started_by_agent": "vs-code-gpt-5.4",
-    "completed_at": "2026-05-07T19:12:29.7750424+08:00",
+    "completed_at": "2026-05-08T17:35:00+08:00",
     "chain_id": "ATM-MAP-PROVISIONING-V1",
     "chain_step": "1/1",
     "sensor_triggered_by": "atm-map-provisioning-gap",
@@ -102,7 +102,7 @@
       "atomic_workbench/maps/",
       "tests/core/map-generator.test.mjs"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4 先收斂 canonical mapId / schema scope / workbench home，再落地 map generator 與 CLI create-map 第一版 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: map-id allocator / map-generator / create-map / schema / police / registry / provenance / npm test / typecheck / lint 全通過 | 變更: 完成 canonical ATM-MAP schema、generateAtomicMap、create-map CLI、map-aware catalog/provenance 與 dogfood map ATM-MAP-0001 | 阻塞: none",
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-07 | 狀態: in-progress | 驗證: pending | 變更: vs-code-gpt-5.4 先收斂 canonical mapId / schema scope / workbench home，再落地 map generator 與 CLI create-map 第一版 | 阻塞: none\n2026-05-07 | 狀態: done | 驗證: map-id allocator / map-generator / create-map / schema / police / registry / provenance / npm test / typecheck / lint 全通過 | 變更: 完成 canonical ATM-MAP schema、generateAtomicMap、create-map CLI、map-aware catalog/provenance 與 dogfood map ATM-MAP-0001 | 阻塞: none\n2026-05-08 | ??: done | ??: node tests/core/map-generator.test.mjs pass??????????npm.cmd run validate:registry-core / validate:generator-provenance pass | ??: map generator acceptance ??????????????task shard ??? | ??: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 原子 map 產生器開卡",

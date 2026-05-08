@@ -104,7 +104,7 @@
     "title": "H2U legacy baseline 與 regression matrix",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "case-study",
     "phase": "ATM-4",
     "created": "2026-05-05",
@@ -129,7 +129,7 @@
       "docs/ai_atomic_framework/h2u-regression-matrix.md",
       "baseline summary artifact"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-08 | ??: done | ??: H2U regression matrix / legacy baseline artifact existence rechecked?npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: H2U baseline/regression ??????OUTPUT_CONTRACT ? task shard ??? | ??: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
@@ -161,6 +161,7 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-08T17:35:00+08:00"
   }
 ]

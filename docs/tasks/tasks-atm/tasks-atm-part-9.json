@@ -32,7 +32,7 @@
       "docs/agent-briefs/tasks/ATM/ATM-2-0007.md",
       "docs/agent-briefs/tasks/ATM/ATM-2-0008.md"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope uncovered=0；compute-gate standard 8/8 pass | 變更: 落地 Default Governance Bundle 與 Agent Operating Layer 切分，新增 ATM-1-0008/ATM-2-0009，將 artifacts/logs/md-json state/evidence 納入通用層 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope uncovered=0；compute-gate standard 8/8 pass | 變更: 落地 Default Governance Bundle 與 Agent Operating Layer 切分，新增 ATM-1-0008/ATM-2-0009，將 artifacts/logs/md-json state/evidence 納入通用層 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?governance bundle / state store ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: governance bundle ????????? task shard ????? | ??: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM governance split 開卡",
@@ -72,7 +72,7 @@
       "trace_artifacts": [],
       "metrics_summary": []
     },
-    "completed_at": "2026-05-05T22:21:53+08:00"
+    "completed_at": "2026-05-08T17:35:00+08:00"
   },
   {
     "doc_id": "doc_task_0354",

@@ -12,7 +12,7 @@
     "created_by_agent": "GitHubCopilot",
     "started_at": "2026-05-05T20:58:01+08:00",
     "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-05T21:02:01+08:00",
+    "completed_at": "2026-05-08T17:35:00+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -31,7 +31,7 @@
       "docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md companion status note",
       "docs/ai_atomic_framework/open-source-extraction-plan.md MVP 邊界"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 整合 v0.2 companion 到 Roadmap、3KLife plan、extraction plan，並新增 6 張補強卡 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: done | 驗證: encoding-touched pass；task-scope 無 uncovered files；compute-gate standard 8/8 pass | 變更: 整合 v0.2 companion 到 Roadmap、3KLife plan、extraction plan，並新增 6 張補強卡 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?Roadmap/companion ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: companion ??????????? task shard ????? | ??: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM v0.2 整合開卡",

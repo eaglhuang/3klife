@@ -12,7 +12,7 @@
     "created_by_agent": "GitHubCopilot",
     "started_at": "2026-05-05T22:47:03.1427368+08:00",
     "started_by_agent": "GitHubCopilot",
-    "completed_at": "2026-05-05T22:58:39.0168805+08:00",
+    "completed_at": "2026-05-08T17:35:00+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -34,7 +34,7 @@
       "docs/agent-briefs/tasks/ATM/ATM-1-0010.md",
       "docs/agent-briefs/tasks/ATM/ATM-2-0010.md"
     ],
-    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 回寫 self-hosting first、self-hosting alpha gate、docs neutrality 與 neutrality/boundary guard 到三份主文件，並新增 ATM-1-0009/0010、ATM-2-0010 任務 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: done | 驗證: compute-gate standard 8/8 pass；encoding-touched pass；task-scope warn-only（既有空 files[] locks） | 變更: 回寫 self-hosting first、self-hosting alpha gate、docs neutrality 與 neutrality/boundary guard 到三份主文件，並新增 ATM-1-0009/0010、ATM-2-0010 任務 | 阻塞: none\n2026-05-08 | ??: done | ??: reopened evidence review complete?self-hosting / neutrality guard ????????npm.cmd run check:encoding:touched pass?task shard JSON parse pass?node tools_node/check-ts-syntax.js pass | ??: self-hosting first ??????OUTPUT_CONTRACT ? task shard ??? | ??: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM self-hosting first 開卡",
@@ -106,7 +106,7 @@
       "docs/agent-briefs/tasks/ATM/ATM-2-0048.md",
       "docs/tasks/tasks-atm/tasks-atm-part-25.json"
     ],
-    "notes": "2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: task-router onboarding contract in progress | 阻塞: none",
+    "notes": "2026-05-08 | 狀態: in-progress | 驗證: pending | 變更: task-router onboarding contract in progress | 阻塞: none\n2026-05-08 | ??: done | ??: node tools_node/atomic-framework/task-router.js --task ATM-4-0003 --format markdown pass?upstream atom generator revalidation pass | ??: task-router / onboarding contract ?????????? shard ????????? task shard | ??: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM onboarding router 開卡",
@@ -154,6 +154,6 @@
       "trace_artifacts": [],
       "metrics_summary": []
     },
-    "completed_at": "2026-05-08T16:13:10+08:00"
+    "completed_at": "2026-05-08T17:35:00+08:00"
   }
 ]

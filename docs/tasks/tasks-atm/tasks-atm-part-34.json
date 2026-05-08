@@ -110,7 +110,7 @@
     "created_by_agent": "GitHubCopilot",
     "started_at": "2026-05-08T10:00:40+08:00",
     "started_by_agent": "vs-insiders-gpt-5.4-mini",
-    "completed_at": "2026-05-08T10:02:34+08:00",
+    "completed_at": "2026-05-08T17:35:00+08:00",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -132,7 +132,7 @@
       "1 legacy fixture",
       "registry/hash entry"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-08 | ??: done | ??: task-router ATM-4-0003 sample route pass?ATM-CORE-0004 / atom-generator acceptance revalidation pass | ??: normalizeCssColor ?? case atom ????????? task shard ????? | ??: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
