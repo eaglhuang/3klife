@@ -634,5 +634,11 @@
     "path": "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md",
     "title": "Cocos Runtime Adapter Policy",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0114",
+    "path": "docs/ecosystem/performance-budget-police.md",
+    "title": "Performance Budget Police — ATM Optional Governance Plugin",
+    "category": "other"
   }
 ]
