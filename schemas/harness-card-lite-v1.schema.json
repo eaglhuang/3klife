@@ -1,0 +1,241 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HarnessCard-Lite Report Profile v1",
+  "description": "Minimal observability report schema for ATM task execution; contains base model, control artifacts, runtime policy, action substrate, execution topology, feedback stack, observability evaluation, and known risks",
+  "type": "object",
+  "required": [
+    "profileId",
+    "timestamp",
+    "baseModel",
+    "controlArtifacts",
+    "runtimePolicy",
+    "actionSubstrate",
+    "executionTopology",
+    "feedbackStack",
+    "observabilityEvaluation",
+    "knownRisks"
+  ],
+  "properties": {
+    "profileId": {
+      "type": "string",
+      "pattern": "^harness-card-lite-v\\d+$",
+      "description": "Profile version identifier"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Report generation timestamp (RFC 3339)"
+    },
+    "baseModel": {
+      "type": "object",
+      "required": ["taskId", "agentId", "startTime", "endTime", "durationSeconds"],
+      "properties": {
+        "taskId": {
+          "type": "string",
+          "pattern": "^ATM-\\d+-\\d{4}$",
+          "description": "ATM task identifier"
+        },
+        "agentId": {
+          "type": "string",
+          "description": "Executing agent identity"
+        },
+        "startTime": {
+          "type": "number",
+          "description": "Unix timestamp (seconds)"
+        },
+        "endTime": {
+          "type": "number",
+          "description": "Unix timestamp (seconds)"
+        },
+        "durationSeconds": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Total execution duration"
+        }
+      }
+    },
+    "controlArtifacts": {
+      "type": "array",
+      "description": "Gating & validation artifacts from control layer",
+      "items": {
+        "type": "object",
+        "required": ["artifactType", "status"],
+        "properties": {
+          "artifactType": {
+            "type": "string",
+            "enum": ["budget_check", "encoding_validation", "schema_validation", "security_scan", "regression_test"],
+            "description": "Type of control artifact"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pass", "warn", "fail", "skipped"],
+            "description": "Artifact status"
+          },
+          "details": {
+            "type": "string",
+            "description": "Human-readable status details"
+          }
+        }
+      }
+    },
+    "runtimePolicy": {
+      "type": "object",
+      "required": ["capabilitiesDeclared", "capabilitiesUsed", "sandboxBoundary", "auditLogWritten"],
+      "properties": {
+        "capabilitiesDeclared": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of capabilities declared for this task (e.g., file.read, git.commit)"
+        },
+        "capabilitiesUsed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of capabilities actually used"
+        },
+        "sandboxBoundary": {
+          "type": "string",
+          "enum": ["enforced", "permissive", "disabled"],
+          "description": "Sandbox enforcement level"
+        },
+        "auditLogWritten": {
+          "type": "boolean",
+          "description": "Whether audit log was written"
+        }
+      }
+    },
+    "actionSubstrate": {
+      "type": "object",
+      "required": [
+        "filesModified",
+        "filesCreated",
+        "gitCommitCount",
+        "apiCallsMade",
+        "externalProcessesSpawned"
+      ],
+      "properties": {
+        "filesModified": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Number of files modified"
+        },
+        "filesCreated": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Number of files created"
+        },
+        "gitCommitCount": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Number of git commits"
+        },
+        "apiCallsMade": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Number of external API calls"
+        },
+        "externalProcessesSpawned": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Number of external processes spawned"
+        }
+      }
+    },
+    "executionTopology": {
+      "type": "object",
+      "required": ["sequentialStages", "parallelOps", "dependencyChain"],
+      "properties": {
+        "sequentialStages": {
+          "type": "number",
+          "minimum": 1,
+          "description": "Number of sequential execution stages"
+        },
+        "parallelOps": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Number of parallel operations"
+        },
+        "dependencyChain": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ordered list of operation stages (e.g., lock → write → validate → commit → unlock)"
+        }
+      }
+    },
+    "feedbackStack": {
+      "type": "object",
+      "required": ["automatedFeedback", "manualReviewRequired"],
+      "properties": {
+        "automatedFeedback": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of automated checks that passed (e.g., encoding_ok, syntax_ok)"
+        },
+        "manualReviewRequired": {
+          "type": "boolean",
+          "description": "Whether manual review is required"
+        },
+        "reviewerNotes": {
+          "type": "string",
+          "description": "Optional reviewer comments"
+        }
+      }
+    },
+    "observabilityEvaluation": {
+      "type": "object",
+      "required": [
+        "eventsEmitted",
+        "eventsWithCAR",
+        "auditEntriesLogged",
+        "evidenceCaptured"
+      ],
+      "properties": {
+        "eventsEmitted": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Total observability events emitted"
+        },
+        "eventsWithCAR": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Events with Control/Agency/Runtime labels"
+        },
+        "auditEntriesLogged": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Number of audit log entries"
+        },
+        "evidenceCaptured": {
+          "type": "boolean",
+          "description": "Whether complete evidence trail was captured"
+        }
+      }
+    },
+    "knownRisks": {
+      "type": "array",
+      "description": "Known risks or issues discovered during execution",
+      "items": {
+        "type": "object",
+        "required": ["riskId", "severity", "description"],
+        "properties": {
+          "riskId": {
+            "type": "string",
+            "description": "Unique risk identifier"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low", "info"],
+            "description": "Risk severity level"
+          },
+          "description": {
+            "type": "string",
+            "description": "Risk description"
+          },
+          "mitigation": {
+            "type": "string",
+            "description": "Mitigation strategy (if any)"
+          }
+        }
+      }
+    }
+  }
+}

@@ -640,5 +640,11 @@
     "path": "docs/ecosystem/performance-budget-police.md",
     "title": "Performance Budget Police — ATM Optional Governance Plugin",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0115",
+    "path": "docs/ecosystem/capability-sandbox-audit.md",
+    "title": "Capability Sandbox & Security Audit — ATM Optional Governance Plugin",
+    "category": "other"
   }
 ]

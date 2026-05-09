@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CAR Audit Event Schema",
+  "description": "Audit log entry with Control/Agency/Runtime (CAR) source labeling for ATM security plugin observability",
+  "type": "object",
+  "required": [
+    "auditId",
+    "timestamp",
+    "agentId",
+    "operation",
+    "result",
+    "CAR"
+  ],
+  "properties": {
+    "auditId": {
+      "type": "string",
+      "pattern": "^aud-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "Unique audit entry identifier (format: aud-YYYY-MM-DD-NNN)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Event timestamp in RFC 3339 format"
+    },
+    "agentId": {
+      "type": "string",
+      "description": "Agent that performed or triggered the operation"
+    },
+    "taskId": {
+      "type": "string",
+      "pattern": "^(ATM|TASK)-\\d+-\\d{4}$",
+      "description": "Associated task identifier (optional but recommended)"
+    },
+    "operation": {
+      "type": "string",
+      "enum": [
+        "file.read",
+        "file.write",
+        "file.delete",
+        "git.commit",
+        "git.push",
+        "api.call",
+        "process.spawn",
+        "secret.read",
+        "capability.request",
+        "schema.validate",
+        "atom.verify",
+        "task.lock",
+        "task.unlock",
+        "evidence.write",
+        "evidence.read",
+        "other"
+      ],
+      "description": "Type of operation performed"
+    },
+    "resource": {
+      "type": "string",
+      "description": "Resource identifier (file path, API endpoint, git ref, etc.)"
+    },
+    "result": {
+      "type": "string",
+      "enum": ["success", "denied", "error", "skipped"],
+      "description": "Operation outcome"
+    },
+    "errorMessage": {
+      "type": "string",
+      "description": "Error message if result is 'error' or 'denied'"
+    },
+    "CAR": {
+      "type": "object",
+      "required": ["Control", "Agency", "Runtime"],
+      "properties": {
+        "Control": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+:[a-z0-9-]+$",
+          "description": "Control source (who decided if operation is allowed?). Format: category:component (e.g., policy-engine:task-scope-validator)"
+        },
+        "Agency": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+:[a-z0-9-]+$",
+          "description": "Agency source (who decided to perform the operation?). Format: category:component (e.g., agent-execution:task-lock)"
+        },
+        "Runtime": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+:[a-z0-9-]+$",
+          "description": "Runtime source (who actually executed the operation?). Format: category:component (e.g., adapter:git-adapter)"
+        }
+      }
+    },
+    "details": {
+      "type": "object",
+      "description": "Operation-specific details (e.g., commitHash, fileCount, latency)",
+      "additionalProperties": true
+    },
+    "capabilityToken": {
+      "type": "object",
+      "description": "Capability token used (if applicable)",
+      "properties": {
+        "tokenId": {
+          "type": "string",
+          "description": "Unique token identifier"
+        },
+        "issuedAt": {
+          "type": "number",
+          "description": "Token issuance timestamp (Unix seconds)"
+        },
+        "expiresAt": {
+          "type": "number",
+          "description": "Token expiration timestamp (Unix seconds)"
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "description": "Associated evidence artifacts (hashes, paths, etc.)",
+      "items": {
+        "type": "object",
+        "required": ["type", "value"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["file_hash", "artifact_id", "log_ref", "signature"],
+            "description": "Evidence type"
+          },
+          "value": {
+            "type": "string",
+            "description": "Evidence value (hash, ID, reference, etc.)"
+          }
+        }
+      }
+    },
+    "duration_ms": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Operation duration in milliseconds"
+    }
+  }
+}
