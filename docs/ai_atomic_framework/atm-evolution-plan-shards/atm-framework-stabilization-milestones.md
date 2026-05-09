@@ -1,12 +1,12 @@
 <!-- doc_id: doc_other_0093 -->
 # ATM 框架穩定化里程碑
-> 這份頁面以 `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 的薄索引為準，不再沿用舊的 milestone 草稿數字。當前基線是 `done=87 / in_progress=2 / open=29 / total=118`.
+> 這份頁面以 `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 的薄索引為準，不再沿用舊的 milestone 草稿數字。當前基線是 `done=88 / in_progress=1 / open=29 / total=118`.
 ## 1. 當前狀態
 - `ATM-2-0027`、`ATM-2-0050`、`ATM-2-0051`、`ATM-2-0054` 都已是 `done`，不再當作主缺口。
-- M1 目前只剩三個收尾面向：
+- M1 的三個收尾面向都已收斂，不再保留未完成主缺口。
   - `ATM-2.5-0004`：`ATM-2-0022 x ATM-2-0027` rollback / status 相容性回歸 （目前：done）
   - `ATM-2-0030`：`versions[] / semanticFingerprint` backfill sweep 與 catalog/index 一致性 （目前：done）
-  - `ATM-2-0010`：`RuleGuardAdapter` read-only deterministic gate （目前：in-progress）
+  - `ATM-2-0010`：`RuleGuardAdapter` read-only deterministic gate （目前：done）
 - 不重開已完成卡，也不另外新開 follow-up 卡；所有殘項直接併入既有 open 卡。
 - M2 的主鏈仍是 `ATM-3-0014 -> ATM-4-0007`，但前提是 M1 gate 全綠。
 
@@ -23,7 +23,7 @@ ATM-2.5-0004 -> ATM-2-0030 -> ATM-2-0010
 
 - `ATM-2.5-0004` 先把 rollback / status compatibility regression 收掉，避免 `ATM-2-0022` 與 `ATM-2-0027` 交叉回歸 （目前：done）.
 - `ATM-2-0030` 再做 `versions[] / semanticFingerprint` backfill sweep，確認 catalog / RegistryIndex / registry entry projection 一致 （目前：done）.
-- `ATM-2-0010` 最後把 RuleGuardAdapter 的 read-only 邊界變成 deterministic gate，避免工具鏈偷偷走寫入路徑 （目前：in-progress）.
+- `ATM-2-0010` 最後把 RuleGuardAdapter 的 read-only 邊界變成 deterministic gate，避免工具鏈偷偷走寫入路徑 （目前：done）.
 - `ATM-3-0014` 與 `ATM-4-0007` 只有在上述三個 gate 都過了之後，才視為可繼續推進 （目前：open） / （目前：open）.
 
 ## 4. Checklist
@@ -34,7 +34,7 @@ ATM-2.5-0004 -> ATM-2-0030 -> ATM-2-0010
 [x] `ATM-2-0054` 已完成 task intake / lock stability backwrite，薄索引與 brief 已對齊。
 [x] `ATM-2.5-0004` 完成 `ATM-2-0022 x ATM-2-0027` rollback / status compatibility regression。 （目前：done）
 [x] `ATM-2-0030` 完成 `versions[] / semanticFingerprint` backfill sweep 與 catalog/index 一致性檢查。 （目前：done）
-[ ] `ATM-2-0010` 完成 RuleGuardAdapter read-only deterministic gate。 （目前：in-progress）
+[x] `ATM-2-0010` 完成 RuleGuardAdapter read-only deterministic gate。 （目前：done）
 
 ### M2. 演化閉環證據鏈
 [ ] `ATM-3-0014` 補齊 shadow adapter / usage-feedback evidence。 （目前：open）
@@ -59,7 +59,7 @@ ATM-2.5-0004 -> ATM-2-0030 -> ATM-2-0010
 |---|---|---|
 | Rollback Proof x Status Enum Compatibility Sweep | done | 收斂 `ATM-2-0022` 與 `ATM-2-0027` 的交叉回歸 |
 | Registry Version / Fingerprint Backfill Sweep | done | 補齊 `versions[]` 與 semantic fingerprint 歷史缺口 |
-| RuleGuardAdapter Read-Only Validator | in-progress | 把 RuleGuardAdapter 不碰 lifecycle mutation 變成 deterministic gate |
+| RuleGuardAdapter Read-Only Validator | done | 把 RuleGuardAdapter 不碰 lifecycle mutation 變成 deterministic gate |
 
 ## 6. 驗證命令
 

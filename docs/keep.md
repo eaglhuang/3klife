@@ -12,6 +12,7 @@
 3. **9-slice sprites**：parchment、dark_metal、gold_cta 都需要 9-slice，邊框寬度見 token
 4. **中文優先**：所有標籤用繁體中文，英文只用於微標籤（全大寫）
 5. **輪廓文字**：場景上的文字必須加黑色輪廓（`outlineWidth: 2, outlineColor: #1A1A1A`）
+6. **Claude Code skills**：所有 `SKILL.md` 必須使用 YAML frontmatter，至少包含 `name` 與 `description`；`description` 要寫出用途與觸發情境，`name` 只能用小寫字母 / 數字 / `-`。
 
 ## 分片索引
 

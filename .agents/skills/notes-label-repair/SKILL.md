@@ -1,4 +1,9 @@
-# SKILL: notes-label-repair
+---
+name: notes-label-repair
+description: "Repair corrupted `??:` labels in ATM task-card notes. Use when notes fields contain `??:` instead of `狀態:` / `驗證:` / `變更:` / `阻塞:`."
+---
+
+# Notes Label Repair
 
 ## 用途
 
