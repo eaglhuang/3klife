@@ -532,5 +532,23 @@
     "path": "docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-summary.md",
     "title": "Framework Function Atomization Manifest — 判定結論與邊界",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0097",
+    "path": "docs/SPEC_GUIDE.md",
+    "title": "ATM Spec Guide（Task Store / Milestone）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0098",
+    "path": "docs/API.md",
+    "title": "ATM API（Tracking Repo）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0099",
+    "path": "docs/QUICK_START.md",
+    "title": "ATM Quick Start",
+    "category": "other"
   }
 ]

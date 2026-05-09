@@ -37,7 +37,7 @@
       "name": "registry-index",
       "title": "索引類（index）",
       "path": "docs/doc-id-registry-shards/registry-index.json",
-      "count": 17
+      "count": 18
     },
     {
       "name": "registry-task",
@@ -67,7 +67,7 @@
       "name": "registry-other",
       "title": "其它類（other）",
       "path": "docs/doc-id-registry-shards/registry-other.json",
-      "count": 89
+      "count": 92
     }
   ]
 }
