@@ -19,6 +19,20 @@ API service 層位於 `server/npc-brain/app/`。Pipeline 產出 canonical fixtur
 - `validate_llm_extraction_trial.py`：產出 LLM prompt bundle，並用 schema gate 驗證 baseline / 擋 hallucinated generalId
 - `build_keyword_options.py`：從 event candidates 投影 E-6 keyword options
 - `build_api_readiness_index.py`：產出 context-options / keyword-options / dialogue evidence / Pinecone metadata 靜態 readiness fixtures
+- `run_progress_advancement_loop.py`：ABAB 式進度推進控制器，做 preview / backlog / stage / progress estimate 的外層迴圈
+- `run_three_lane_progress_scheduler.py`：固定順序跑三車道 `sweep -> precision -> promotion-eval`，並把上一車道 baseline 自動接給下一車道
+
+三車道流程的白話說明（資料流 + 決策原理 + 範例）可看：
+
+- `three-lane-progress-explained.zh-TW.md`
+- `full-roster-convergence-highway.zh-TW.md`
+- `full-roster-confidence-rag-highway.zh-TW.md`
+
+全量高速公路 v2 的三張流程圖 JPG 產物會落在：
+
+- `diagram-assets/full-roster-confidence-etl-flow.jpg`
+- `diagram-assets/full-roster-confidence-rag-flow.jpg`
+- `diagram-assets/full-roster-confidence-rumination-flow.jpg`
 
 `clean_and_split.py` 現在也可選擇加上 LangChain `RecursiveCharacterTextSplitter`，額外輸出 `chunks/` 與 `chunks-manifest.json`，用來比較「以 paragraph 為主的 deterministic 切法」與「固定 chunk size + overlap 的 LLM 前處理切法」差異。
 

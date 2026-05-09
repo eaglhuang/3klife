@@ -22,6 +22,9 @@
 | `doc_server_other_0008` | other | server/npc-brain/文件/NPC行為決策流程.md | NPC 最終行為決策流程圖 |
 | `doc_server_pipeline_0001` | pipeline | server/npc-brain/pipelines/sanguo-rag/人名事件解析.md | 人名事件解析 |
 | `doc_server_pipeline_0002` | pipeline | server/npc-brain/pipelines/sanguo-rag/README.md | Sanguo RAG Pipelines |
+| `doc_server_pipeline_0003` | pipeline | server/npc-brain/pipelines/sanguo-rag/three-lane-progress-explained.zh-TW.md | Three-Lane ETL 白話說明（給審核與營運看） |
+| `doc_server_pipeline_0004` | pipeline | server/npc-brain/pipelines/sanguo-rag/postgres-fast-etl-integration.zh-TW.md | Sanguo RAG PostgreSQL 接入說明（給高速 ETL 開發者） |
+| `doc_server_pipeline_0005` | pipeline | server/npc-brain/pipelines/sanguo-rag/full-roster-confidence-rag-highway.zh-TW.md | 全量武將 ETL/RAG 高速公路信任評分與反芻規格 v2 |
 | `doc_server_service_0001` | service | server/npc-brain/README.md | NPC Brain Service |
 | `doc_server_service_0002` | service | server/npc-brain/文件/三國人物資料推進流程.md | 三國人物資料推進流程 |
 | `doc_server_service_0003` | service | server/npc-brain/文件/對話服務與模型回退.md | 對話服務與模型回退 |

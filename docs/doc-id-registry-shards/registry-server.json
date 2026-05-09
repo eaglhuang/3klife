@@ -49,6 +49,27 @@
     "subtype": "pipeline"
   },
   {
+    "id": "doc_server_pipeline_0003",
+    "path": "server/npc-brain/pipelines/sanguo-rag/three-lane-progress-explained.zh-TW.md",
+    "title": "Three-Lane ETL 白話說明（給審核與營運看）",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0004",
+    "path": "server/npc-brain/pipelines/sanguo-rag/postgres-fast-etl-integration.zh-TW.md",
+    "title": "Sanguo RAG PostgreSQL 接入說明（給高速 ETL 開發者）",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0005",
+    "path": "server/npc-brain/pipelines/sanguo-rag/full-roster-confidence-rag-highway.zh-TW.md",
+    "title": "全量武將 ETL/RAG 高速公路信任評分與反芻規格 v2",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
     "id": "doc_server_service_0001",
     "path": "server/npc-brain/README.md",
     "title": "NPC Brain Service",

@@ -1,6 +1,6 @@
 # 文件代號 Registry (doc-id-registry)
 
-> 生成日期: 2026-05-08
+> 生成日期: 2026-05-09
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成，請勿手動編輯。
 > **唯一真相來源。** 文件移動後 doc_id 不變，Agent 可用 doc_id 搜尋定位文件。
 > `docs/doc-id-registry.json` 現在是 index stub；實際 machine-readable 內容位於 `docs/doc-id-registry-shards/registry-*.json`。
@@ -12,18 +12,18 @@
 
 | 類別 | 前綴 | 數量 |
 |------|------|-----:|
-| 技術類 | `doc_tech` | 23 |
+| 技術類 | `doc_tech` | 24 |
 | 畫面UI類 | `doc_ui` | 47 |
 | 美術非UI類 | `doc_art` | 3 |
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 178 |
 | 索引類 | `doc_index` | 17 |
-| 任務卡類 | `doc_task` | 356 |
+| 任務卡類 | `doc_task` | 357 |
 | AI Agent 專用 | `doc_ai` | 31 |
-| Agent Skill 專用 | `doc_agentskill` | 47 |
-| Server 文件類 | `doc_server_<subtype>` | 15 |
-| 其它類 | `doc_other` | 89 |
-| **合計** | — | **808** |
+| Agent Skill 專用 | `doc_agentskill` | 78 |
+| Server 文件類 | `doc_server_<subtype>` | 18 |
+| 其它類 | `doc_other` | 92 |
+| **合計** | — | **847** |
 
 ---
 
@@ -54,6 +54,7 @@
 | `doc_tech_0017` | docs/UCUF技術文件.md | UCUF 技術文件 — Universal Composite UI Framework 架構與原理 |
 | `doc_tech_0018` | docs/ui/ui-system-architecture.md | UI 系統技術架構 |
 | `doc_tech_0019` | docs/uipreviewbuilder-split-blueprint.md | `UIPreviewBuilder.ts` 拆分藍圖 |
+| `doc_tech_0081` | server/npc-brain/pipelines/sanguo-rag/full-roster-convergence-highway.zh-TW.md | 全量武將收斂高速公路設計 |
 
 ## 畫面UI類 (`doc_ui`)
 
@@ -371,7 +372,7 @@
 | `doc_task_0289` | docs/agent-briefs/tasks/ATM/ATM-2-0007.md | [ATM-2-0007] Default Governance Bundle schema |
 | `doc_task_0288` | docs/agent-briefs/tasks/ATM/ATM-2-0008.md | [ATM-2-0008] Local governance reference plugins |
 | `doc_task_0291` | docs/agent-briefs/tasks/ATM/ATM-2-0009.md | [ATM-2-0009] Artifact Log Evidence Store contracts |
-| `doc_task_0294` | docs/agent-briefs/tasks/ATM/ATM-2-0010.md | [ATM-2-0010] Neutrality boundary rule guard |
+| `doc_task_0294` | docs/agent-briefs/tasks/ATM/ATM-2-0010.md | [ATM-2-0010] RuleGuard Read-Only Validator |
 | `doc_task_0297` | docs/agent-briefs/tasks/ATM/ATM-2-0011.md | [ATM-2-0011] Context budget guard |
 | `doc_task_0302` | docs/agent-briefs/tasks/ATM/ATM-2-0012.md | [ATM-2-0012] neutralityScanner atom + CI（ATM-CORE-0003） |
 | `doc_task_0316` | docs/agent-briefs/tasks/ATM/ATM-2-0013.md | [ATM-2-0013] Per-atom folder 以 Atomic ID 命名收斂 |
@@ -391,7 +392,7 @@
 | `doc_task_0333` | docs/agent-briefs/tasks/ATM/ATM-2-0027.md | [ATM-2-0027] Atom Status State Machine |
 | `doc_task_0334` | docs/agent-briefs/tasks/ATM/ATM-2-0028.md | [ATM-2-0028] AtomBehavior Plugin SDK |
 | `doc_task_0335` | docs/agent-briefs/tasks/ATM/ATM-2-0029.md | [ATM-2-0029] Reference Behavior Pack（10 內建行為） |
-| `doc_task_0336` | docs/agent-briefs/tasks/ATM/ATM-2-0030.md | [ATM-2-0030] Dedup Police Plugin |
+| `doc_task_0336` | docs/agent-briefs/tasks/ATM/ATM-2-0030.md | [ATM-2-0030] Registry Version / Fingerprint Backfill Sweep |
 | `doc_task_0337` | docs/agent-briefs/tasks/ATM/ATM-2-0031.md | [ATM-2-0031] Lifecycle Police（TTL + Sweep + 狀態機警察） |
 | `doc_task_0338` | docs/agent-briefs/tasks/ATM/ATM-2-0032.md | [ATM-2-0032] Polymorphic Atom Template |
 | `doc_task_0339` | docs/agent-briefs/tasks/ATM/ATM-2-0033.md | [ATM-2-0033] Atomization & Infection Adapter Contract |
@@ -657,6 +658,7 @@
 | `doc_task_0190` | docs/agent-briefs/tasks/UI/UI-3-0100.md | [UI-3-0100] 虎符卡片 UI 美術規格書 — 基礎兵種首批 |
 | `doc_task_0191` | docs/agent-briefs/UCUF-task-card-template.md | UCUF UI Task Card Template |
 | `doc_task_0192` | docs/agent-briefs/UI-task-card-template.md | UI Task Card Template |
+| `doc_task_0365` | docs/case-studies/h2u-normalize-css-color-evolution-pilot.md | H2U normalizeCssColor v1.0 到 v1.1 Evolution Pilot |
 | `doc_task_0193` | docs/tasks/圖1_武將詳情_task.md | 任務卡 — 圖1：武將詳情（草案） |
 | `doc_task_0194` | docs/tasks/圖2_裝備介面_task.md | 任務卡 — 圖2：裝備介面（草案） |
 | `doc_task_0195` | docs/tasks/圖3_戰令商城_task.md | 任務卡 — 圖3：戰令商城（草案） |
@@ -729,22 +731,45 @@
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
 | `doc_agentskill_0001` | .agents/skills/best-mode/SKILL.md | Best Mode |
-| `doc_agentskill_0002` | .agents/skills/cocos-bug-triage/SKILL.md | Cocos Bug Triage（完整 Bug 調查工作流） |
-| `doc_agentskill_0003` | .agents/skills/cocos-log-reader/SKILL.md | Cocos Log Reader（運行期日誌分析） |
+| `doc_agentskill_0002` | .agents/skills/cocos-bug-triage/SKILL.md | Cocos Bug Triage（鏡像索引） |
+| `doc_agentskill_0003` | .agents/skills/cocos-log-reader/SKILL.md | Cocos Log Reader（鏡像索引） |
 | `doc_agentskill_0004` | .agents/skills/cocos-preview-qa/SKILL.md | Cocos Preview QA（Browser Review 自動截圖 + 比對） |
 | `doc_agentskill_0005` | .agents/skills/cocos-screenshot/SKILL.md | Cocos Screenshot（Editor Preview / Editor 視窗截圖） |
 | `doc_agentskill_0006` | .agents/skills/cocos-vfx-browser-qa/SKILL.md | Cocos VFX Browser QA |
+| `doc_agentskill_0067` | .agents/skills/comfyui-sdxl-partial-asset-gen/SKILL.md | ComfyUI SDXL Partial Asset Gen |
+| `doc_agentskill_0068` | .agents/skills/compute-gate/SKILL.md | Compute Gate Skill |
 | `doc_agentskill_0007` | .agents/skills/context-budget-guard/SKILL.md | Context Budget Guard |
+| `doc_agentskill_0069` | .agents/skills/crossref-progress-scanner/SKILL.md | crossref-progress-scanner Skill |
+| `doc_agentskill_0070` | .agents/skills/dalle3-image-gen/SKILL.md | DALL-E 3 Image Generation |
+| `doc_agentskill_0071` | .agents/skills/doc-consolidation-flow/SKILL.md | Doc Consolidation Flow |
+| `doc_agentskill_0072` | .agents/skills/doc-shard-manager/SKILL.md | Doc Shard Manager SKILL |
 | `doc_agentskill_0008` | .agents/skills/encoding-touched-guard/SKILL.md | Encoding Touched Guard |
 | `doc_agentskill_0061` | .agents/skills/general-avatar-crop/SKILL.md | Skill: general-avatar-crop |
+| `doc_agentskill_0073` | .agents/skills/general-balance-tuner/SKILL.md | General Balance Tuner |
+| `doc_agentskill_0074` | .agents/skills/general-data-pipeline/SKILL.md | General Data Pipeline |
+| `doc_agentskill_0075` | .agents/skills/general-story-writer/SKILL.md | General Story Writer |
+| `doc_agentskill_0076` | .agents/skills/gpt-image-2-gen/SKILL.md | GPT Image 2 Image Generation |
 | `doc_agentskill_0062` | .agents/skills/handoff-text-spacing-extractor/SKILL.md | Handoff Text Spacing Extractor |
-| `doc_agentskill_0066` | .agents/skills/notes-label-repair/SKILL.md | SKILL: notes-label-repair |
+| `doc_agentskill_0077` | .agents/skills/html-to-ucuf/SKILL.md | HTML-to-UCUF Skill |
+| `doc_agentskill_0078` | .agents/skills/nano-banana-gen/SKILL.md | Nano Banana 圖像生成 |
+| `doc_agentskill_0066` | .agents/skills/notes-label-repair/SKILL.md | Notes Label Repair |
 | `doc_agentskill_0042` | .agents/skills/sanguo-event-review-loop/SKILL.md | Sanguo Event Review Loop |
 | `doc_agentskill_0043` | .agents/skills/sanguo-knowledge-growth-loop/SKILL.md | Sanguo Knowledge Growth Loop |
 | `doc_agentskill_0038` | .agents/skills/sanguo-rag-resolution-loop/SKILL.md | Sanguo RAG Resolution Loop |
 | `doc_agentskill_0063` | .agents/skills/task-card-opener/SKILL.md | Task Card Opener |
 | `doc_agentskill_0065` | .agents/skills/task-card-required-adjustment/SKILL.md | 任務卡的必要調整 |
+| `doc_agentskill_0079` | .agents/skills/ui-asset-gen-director/SKILL.md | UI Asset Gen Director |
+| `doc_agentskill_0080` | .agents/skills/ui-asset-qc/SKILL.md | UI Asset QC |
+| `doc_agentskill_0081` | .agents/skills/ui-asset-slice-pipeline/SKILL.md | UI Asset Slice Pipeline |
+| `doc_agentskill_0082` | .agents/skills/ui-brief-generator/SKILL.md | UI Brief Generator |
+| `doc_agentskill_0083` | .agents/skills/ui-family-architect/SKILL.md | UI Family Architect |
+| `doc_agentskill_0084` | .agents/skills/ui-i18n-localize/SKILL.md | UI I18N Localize |
+| `doc_agentskill_0085` | .agents/skills/ui-preview-judge/SKILL.md | UI Preview Judge |
+| `doc_agentskill_0086` | .agents/skills/ui-reference-decompose/SKILL.md | UI Reference Decompose |
+| `doc_agentskill_0087` | .agents/skills/ui-runtime-verify/SKILL.md | UI Runtime Verify |
+| `doc_agentskill_0088` | .agents/skills/ui-spec-scaffold/SKILL.md | UI Spec Scaffold |
 | `doc_agentskill_0064` | .agents/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline |
+| `doc_agentskill_0089` | .github/skills/best-mode/SKILL.md | Best Mode |
 | `doc_agentskill_0009` | .github/skills/cocos-bug-triage/SKILL.md | Cocos Bug Triage（鏡像索引） |
 | `doc_agentskill_0010` | .github/skills/cocos-log-reader/SKILL.md | Cocos Log Reader（鏡像索引） |
 | `doc_agentskill_0011` | .github/skills/cocos-preview-qa/SKILL.md | Cocos Preview QA（Browser Review 自動截圖 + 比對） |
@@ -752,18 +777,26 @@
 | `doc_agentskill_0035` | .github/skills/cocos-vfx-browser-qa/SKILL.md | Cocos VFX Browser QA |
 | `doc_agentskill_0013` | .github/skills/comfyui-sdxl-partial-asset-gen/SKILL.md | ComfyUI SDXL Partial Asset Gen |
 | `doc_agentskill_0060` | .github/skills/compute-gate/SKILL.md | Compute Gate Skill |
+| `doc_agentskill_0090` | .github/skills/context-budget-guard/SKILL.md | Context Budget Guard |
 | `doc_agentskill_0032` | .github/skills/crossref-progress-scanner/SKILL.md | crossref-progress-scanner Skill |
 | `doc_agentskill_0014` | .github/skills/dalle3-image-gen/SKILL.md | DALL-E 3 Image Generation |
 | `doc_agentskill_0034` | .github/skills/doc-consolidation-flow/SKILL.md | Doc Consolidation Flow |
 | `doc_agentskill_0015` | .github/skills/doc-shard-manager/SKILL.md | Doc Shard Manager SKILL |
 | `doc_agentskill_0016` | .github/skills/encoding-touched-guard/SKILL.md | Encoding Touched Guard |
+| `doc_agentskill_0091` | .github/skills/general-avatar-crop/SKILL.md | Skill: general-avatar-crop |
 | `doc_agentskill_0017` | .github/skills/general-balance-tuner/SKILL.md | General Balance Tuner |
 | `doc_agentskill_0018` | .github/skills/general-data-pipeline/SKILL.md | General Data Pipeline |
 | `doc_agentskill_0019` | .github/skills/general-story-writer/SKILL.md | General Story Writer |
 | `doc_agentskill_0044` | .github/skills/gpt-image-2-gen/SKILL.md | GPT Image 2 Image Generation |
+| `doc_agentskill_0092` | .github/skills/handoff-text-spacing-extractor/SKILL.md | Handoff Text Spacing Extractor |
 | `doc_agentskill_0036` | .github/skills/html-to-ucuf/SKILL.md | HTML-to-UCUF Skill |
 | `doc_agentskill_0020` | .github/skills/nano-banana-gen/SKILL.md | Nano Banana 圖像生成 |
-| `doc_agentskill_0026` | .github/skills/task-card-opener/SKILL.md | Task Card Opener（鏡像索引） |
+| `doc_agentskill_0093` | .github/skills/notes-label-repair/SKILL.md | Notes Label Repair |
+| `doc_agentskill_0094` | .github/skills/sanguo-event-review-loop/SKILL.md | Sanguo Event Review Loop |
+| `doc_agentskill_0095` | .github/skills/sanguo-knowledge-growth-loop/SKILL.md | Sanguo Knowledge Growth Loop |
+| `doc_agentskill_0096` | .github/skills/sanguo-rag-resolution-loop/SKILL.md | Sanguo RAG Resolution Loop |
+| `doc_agentskill_0026` | .github/skills/task-card-opener/SKILL.md | Task Card Opener |
+| `doc_agentskill_0097` | .github/skills/task-card-required-adjustment/SKILL.md | 任務卡的必要調整 |
 | `doc_agentskill_0021` | .github/skills/ui-asset-gen-director/SKILL.md | UI Asset Gen Director |
 | `doc_agentskill_0022` | .github/skills/ui-asset-qc/SKILL.md | UI Asset QC |
 | `doc_agentskill_0023` | .github/skills/ui-asset-slice-pipeline/SKILL.md | UI Asset Slice Pipeline |
@@ -774,7 +807,7 @@
 | `doc_agentskill_0028` | .github/skills/ui-reference-decompose/SKILL.md | UI Reference Decompose |
 | `doc_agentskill_0029` | .github/skills/ui-runtime-verify/SKILL.md | UI Runtime Verify |
 | `doc_agentskill_0030` | .github/skills/ui-spec-scaffold/SKILL.md | UI Spec Scaffold |
-| `doc_agentskill_0031` | .github/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline（鏡像索引） |
+| `doc_agentskill_0031` | .github/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline |
 
 ## Server 文件類 (`doc_server_<subtype>`)
 
@@ -792,7 +825,10 @@
 | `doc_server_other_0008` | other | server/npc-brain/文件/NPC行為決策流程.md | NPC 最終行為決策流程圖 |
 | `doc_server_ops_0002` | ops | server/npc-brain/說明文件拆分規劃.md | NPC Brain README 拆分規劃 |
 | `doc_server_pipeline_0001` | pipeline | server/npc-brain/pipelines/sanguo-rag/人名事件解析.md | 人名事件解析 |
+| `doc_server_pipeline_0005` | pipeline | server/npc-brain/pipelines/sanguo-rag/full-roster-confidence-rag-highway.zh-TW.md | 全量武將 ETL/RAG 高速公路信任評分與反芻規格 v2 |
+| `doc_server_pipeline_0004` | pipeline | server/npc-brain/pipelines/sanguo-rag/postgres-fast-etl-integration.zh-TW.md | Sanguo RAG PostgreSQL 接入說明（給高速 ETL 開發者） |
 | `doc_server_pipeline_0002` | pipeline | server/npc-brain/pipelines/sanguo-rag/README.md | Sanguo RAG Pipelines |
+| `doc_server_pipeline_0003` | pipeline | server/npc-brain/pipelines/sanguo-rag/three-lane-progress-explained.zh-TW.md | Three-Lane ETL 白話說明（給審核與營運看） |
 | `doc_server_service_0001` | service | server/npc-brain/README.md | NPC Brain Service |
 | `doc_server_ops_0003` | ops | server/server_docs_reference.md | Server 文件索引總覽 |
 
@@ -825,7 +861,7 @@
 | `doc_other_0052` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-diagnosis.md | ATM 框架演進執行規劃書 — 機讀真相與提案診斷（§1–§3） |
 | `doc_other_0053` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-risk.md | ATM 框架演進執行規劃書 — 風險、排除與結論（§6–§8） |
 | `doc_other_0054` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-evolution-plan-roadmap.md | ATM 框架演進執行規劃書 — 新增任務與依賴重排（§4–§5） |
-| `doc_other_0093` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md | ATM 框架穩定化與演化閉環里程碑 |
+| `doc_other_0093` | docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md | ATM 框架穩定化里程碑 |
 | `doc_other_0043` | docs/ai_atomic_framework/ATM框架演進執行規劃書.md | ATM 框架演進執行規劃書 |
 | `doc_other_0055` | docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-details.md | 原子行為參考手冊 — 各行為詳細說明 |
 | `doc_other_0056` | docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-extension.md | 原子行為參考手冊 — 擴充指南與狀態機參考 |
@@ -861,6 +897,7 @@
 | `doc_other_0041` | docs/ai_atomic_framework/shards/atm-roadmap-milestones.md | AI Atomic Framework Roadmap — 里程碑 Phase 0-7 詳細規格（§8+） |
 | `doc_other_0042` | docs/ai_atomic_framework/shards/atm-roadmap-theory.md | AI Atomic Framework Roadmap — 願景・設計原則（§2–§3） |
 | `doc_other_0035` | docs/ai_atomic_framework/upstream-versioning-policy.md | Upstream Versioning & Lifecycle Policy |
+| `doc_other_0098` | docs/API.md | ATM API（Tracking Repo） |
 | `doc_other_0005` | docs/battle-entry-unification-checklist.md | 戰場入口統一 — Checklist |
 | `doc_other_0074` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
 | `doc_other_0075` | docs/doc-id-registry-md-shards/doc-id-registry-other.md | Doc ID Registry Markdown Index — 其它類 |
@@ -878,7 +915,9 @@
 | `doc_other_0012` | docs/html_skill_rule-evolution2.md | HTML Skill Rule Evolution 2 |
 | `doc_other_0016` | docs/html-to-ucuf-plan5-stale-rule-audit.md | HTML-to-UCUF Stale Rule Audit (Plan5) |
 | `doc_other_0025` | docs/inside-openai-agent-collaboration-study-notes.md | Inside OpenAI's AI Agent Collaboration System 學習筆記 |
+| `doc_other_0099` | docs/QUICK_START.md | ATM Quick Start |
 | `doc_other_0018` | docs/sanguo-rag-abab-progress-workflow-plan.md | Sanguo RAG ABAB…C 整體進度推進規劃書 |
+| `doc_other_0097` | docs/SPEC_GUIDE.md | ATM Spec Guide（Task Store / Milestone） |
 | `doc_other_0079` | docs/tech/參考用npc-dialogue-narrative-runtime-plan.md | 3KLife 人物對話與劇情 Runtime 技術規劃 |
 | `doc_other_0085` | docs/tech/npc-brain-武將互動記憶系統.md | NPC Brain Memory System |
 | `doc_other_0086` | docs/tech/npc-brain-memory/api-contract.md | NPC Brain Memory System — API & Contract（§6-§8） |
