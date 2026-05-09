@@ -188,6 +188,36 @@ def normalize_preview_text(value: Any, limit: int) -> str:
     return text[: max(limit - 3, 0)].rstrip() + "..."
 
 
+def build_review_question_intent(event_key: Any, missing_fields: list[str]) -> str:
+    missing = [str(field).strip() for field in missing_fields if str(field).strip()]
+    if missing:
+        return (
+            f"判斷是否將 `{event_key or '-'}` 納入正式事件候選；若要接受，是否需先補齊 "
+            f"{', '.join(missing)}。"
+        )
+    return f"判斷是否將 `{event_key or '-'}` 納入正式事件候選，並在 A/B/C/D 中選擇處理方式。"
+
+
+def build_allowed_answer_guide(allowed_answers: dict[str, Any]) -> list[dict[str, str]]:
+    defaults = {
+        "A": ("accept", "直接接受為正式事件候選。"),
+        "B": ("accept-with-edits", "接受但需補 location / relationshipEdges / summary 等欄位。"),
+        "C": ("reject", "排除，不進正式事件。"),
+        "D": ("defer", "暫緩，保留到下一輪 review。"),
+    }
+    guide: list[dict[str, str]] = []
+    for code in ("A", "B", "C", "D"):
+        raw_label = str((allowed_answers or {}).get(code) or defaults[code][0]).strip() or defaults[code][0]
+        guide.append(
+            {
+                "code": code,
+                "raw": raw_label,
+                "zh": defaults[code][1],
+            }
+        )
+    return guide
+
+
 def build_review_clues(enriched_answers_path: Path, limit: int = 3) -> list[dict[str, Any]]:
     if not enriched_answers_path.exists():
         return []
@@ -223,6 +253,11 @@ def build_review_clues(enriched_answers_path: Path, limit: int = 3) -> list[dict
                 "sourceQuote": normalize_preview_text(question.get("sourceQuote"), 220) or "-",
                 "summary": normalize_preview_text(question.get("summary"), 180) or "-",
                 "missingFields": list(question.get("missingFields") or []),
+                "questionIntent": build_review_question_intent(
+                    question.get("eventKey"),
+                    list(question.get("missingFields") or []),
+                ),
+                "allowedAnswerGuide": build_allowed_answer_guide(question.get("allowedAnswers") or {}),
                 "recommendedAnswer": str(proposal.get("recommendedAnswer") or "").strip().upper() or "-",
                 "confidence": proposal.get("confidence") or question.get("confidence"),
                 "location": normalize_preview_text(edits.get("location"), 80) or "-",
@@ -456,12 +491,20 @@ def render_review_clues_markdown(report: dict) -> str:
         for clue in clues:
             lines.extend([
                 f"#### `{clue.get('eventKey') or '-'}`",
+                f"- 題目在問什麼: {clue.get('questionIntent') or '-'}",
                 f"- 建議答案: `{clue.get('suggestedAnswer') or '-'}`",
                 f"- 原文線索: {clue.get('sourceQuote') or '-'}",
                 f"- 中文摘要: {clue.get('summary') or '-'}",
                 f"- 來源編號: `{', '.join(clue.get('sourceRefs') or []) or '-'}`",
                 f"- 缺欄位: `{', '.join(clue.get('missingFields') or []) or '-'}`",
                 f"- 推薦判定: `{clue.get('recommendedAnswer') or '-'}`",
+                "- A/B/C/D 中文說明:",
+            ])
+            for answer_item in clue.get("allowedAnswerGuide") or []:
+                lines.append(
+                    f"- {answer_item.get('code')}: `{answer_item.get('raw') or '-'}` / {answer_item.get('zh') or '-'}"
+                )
+            lines.extend([
                 f"- Location: `{clue.get('location') or '-'}`",
                 f"- relationshipEdges: `{clue.get('relationshipEdgeCount') or 0}`",
                 f"- 理由: {'; '.join(clue.get('reasons') or []) or '-'}",
