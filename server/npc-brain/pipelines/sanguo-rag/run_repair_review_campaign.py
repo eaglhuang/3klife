@@ -218,33 +218,43 @@ def main() -> None:
     repair_candidates_path = repair_output_root / f"{round_id}-repair-review-candidates.jsonl"
     repair_summary = read_json(repair_summary_path)
     generals = selected_generals(repair_summary, args.general_id, args.top_generals)
-    if not generals:
-        raise ValueError("No repair generals selected from backlog summary.")
+    no_repair_generals = not generals
 
-    review_command = [
-        "--round-id",
-        round_id,
-        "--candidates",
-        str(repair_candidates_path),
-        "--output-root",
-        str(rounds_root),
-        "--max-generals",
-        str(len(generals)),
-        "--top-per-general",
-        str(args.top_per_general),
-        "--reviewer-preset",
-        args.reviewer_preset,
-        "--reviewer-provider",
-        args.reviewer_provider,
-        "--human-question-threshold",
-        str(args.human_question_threshold),
-        "--step-timeout-seconds",
-        str(args.step_timeout_seconds),
-    ]
-    maybe_append_overwrite(review_command, args.overwrite)
-    for general_id in generals:
-        review_command.extend(["--general-id", general_id])
-    commands.append({"name": "run_knowledge_growth_round", **run_command(script_command("run_knowledge_growth_round.py", review_command))})
+    if no_repair_generals:
+        commands.append(
+            {
+                "name": "run_knowledge_growth_round",
+                "command": "skipped: no repair generals selected from backlog summary",
+                "returnCode": 0,
+                "stdout": "",
+                "stderr": "",
+            }
+        )
+    else:
+        review_command = [
+            "--round-id",
+            round_id,
+            "--candidates",
+            str(repair_candidates_path),
+            "--output-root",
+            str(rounds_root),
+            "--max-generals",
+            str(len(generals)),
+            "--top-per-general",
+            str(args.top_per_general),
+            "--reviewer-preset",
+            args.reviewer_preset,
+            "--reviewer-provider",
+            args.reviewer_provider,
+            "--human-question-threshold",
+            str(args.human_question_threshold),
+            "--step-timeout-seconds",
+            str(args.step_timeout_seconds),
+        ]
+        maybe_append_overwrite(review_command, args.overwrite)
+        for general_id in generals:
+            review_command.extend(["--general-id", general_id])
+        commands.append({"name": "run_knowledge_growth_round", **run_command(script_command("run_knowledge_growth_round.py", review_command))})
 
     review_snapshots_root = rounds_root / f"{round_id}.snapshots"
     stage_args = [
@@ -343,6 +353,7 @@ def main() -> None:
         "roundId": round_id,
         "mergedRoundId": merged_round_id,
         "selectedGenerals": generals,
+        "noRepairGenerals": no_repair_generals,
         "repairTaskSummaryPath": str(repair_summary_path),
         "repairCandidatesPath": str(repair_candidates_path),
         "baselineOverallPercent": baseline_progress.get("overallPercent"),
