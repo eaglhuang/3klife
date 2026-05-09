@@ -33,3 +33,16 @@ atm test --atom hello-world
 - `docs/QUICK_START.md`
 - `docs/API.md`
 - `docs/SPEC_GUIDE.md`
+
+## Governance and PEV Workflow
+
+- Lifecycle policy: `docs/LIFECYCLE.md`
+- Compatibility contract: `docs/ATOM_COMPATIBILITY.md`
+- Governance and review duties: `docs/GOVERNANCE.md`
+- Upgrade proposal public rules: `docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md`
+- PEV loop: `docs/PEV_LOOP.md`
+- Living Spec sync contract: `docs/LIVING_SPEC.md`
+- PEV proposal template: `docs/templates/pev-upgrade-proposal-template.md`
+- Schemas:
+  - `schemas/pev/upgrade-proposal-public.schema.json`
+  - `schemas/pev/spec-drift-prompt.schema.json`

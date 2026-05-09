@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atm://schemas/pev/spec-drift-prompt.schema.json",
+  "title": "ATM Spec Drift Prompt Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "drift_id",
+    "detected_at",
+    "drift_type",
+    "affected_artifacts",
+    "atom_compatibility_impact",
+    "semver_recommendation",
+    "required_evidence"
+  ],
+  "properties": {
+    "drift_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "detected_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "drift_type": {
+      "type": "string",
+      "enum": [
+        "status_drift",
+        "summary_drift",
+        "milestone_drift",
+        "contract_drift"
+      ]
+    },
+    "affected_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "atom_compatibility_impact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "level",
+        "summary"
+      ],
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": [
+            "none",
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affected_atoms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "semver_recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "reason"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "patch",
+            "minor",
+            "major"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "required_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "blocking": {
+      "type": "boolean"
+    }
+  }
+}

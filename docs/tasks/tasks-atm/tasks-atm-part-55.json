@@ -77,13 +77,13 @@
     "title": "Living Spec 同步器與 PEV Loop",
     "owner": "GitHubCopilot",
     "priority": "P1",
-    "status": "open",
+    "status": "done",
     "type": "optional-feature",
     "phase": "ATM-5",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-09T23:32:00+08:00",
+    "started_by_agent": "codex-gpt-5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -111,7 +111,7 @@
       "schemas/pev/spec-drift-prompt.schema.json",
       "PEV upgrade proposal 範例"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則\n2026-05-09 | status: in-progress | validation: pending | change: codex-gpt-5 started PEV loop / living spec / schema / README workflow summary | blocker: none\n2026-05-09 | status: done | validation: encoding/doc-shard/sync-check/rule-guard pass; compute-gate standard blocked at ts-syntax gate (existing baseline issue) | change: delivered PEV loop docs, living spec contract, schemas, template, and README workflow summary | blocker: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM v0.2 整合開卡",
@@ -140,11 +140,26 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "docs/PEV_LOOP.md",
+        "docs/LIVING_SPEC.md",
+        "docs/templates/pev-upgrade-proposal-template.md",
+        "schemas/pev/upgrade-proposal-public.schema.json",
+        "schemas/pev/spec-drift-prompt.schema.json",
+        "README.md"
+      ],
+      "validation_evidence": [
+        "npm.cmd run check:encoding:touched -- --files docs/PEV_LOOP.md docs/LIVING_SPEC.md docs/templates/pev-upgrade-proposal-template.md schemas/pev/upgrade-proposal-public.schema.json schemas/pev/spec-drift-prompt.schema.json README.md docs/agent-briefs/tasks/ATM/ATM-5-0005.md docs/tasks/tasks-atm/tasks-atm-part-55.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md docs/doc-id-registry.json docs/doc-id-registry-shards/registry-other.json server/server_docs_reference.md",
+        "node tools_node/check-doc-shard-health.js",
+        "node tools_node/run-rule-guard.js --profile atm",
+        "node tools_node/sync-atm-stabilization-milestone.js --check --strict",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback (blocked at ts-syntax gate)"
+      ],
+      "handoff_diff_status": "done",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-09T23:36:10+08:00",
+    "completed_by_agent": "codex-gpt-5"
   }
 ]

@@ -610,5 +610,23 @@
     "path": "docs/releases/atm-v0.1.0-alpha-npm-dry-run-plan.md",
     "title": "ATM v0.1.0-alpha npm Dry-Run Plan",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0110",
+    "path": "docs/LIVING_SPEC.md",
+    "title": "ATM Living Spec Sync Contract",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0111",
+    "path": "docs/PEV_LOOP.md",
+    "title": "ATM Plan-Execute-Verify-Converge (PEV) Loop",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0112",
+    "path": "docs/templates/pev-upgrade-proposal-template.md",
+    "title": "PEV Upgrade Proposal Template",
+    "category": "other"
   }
 ]

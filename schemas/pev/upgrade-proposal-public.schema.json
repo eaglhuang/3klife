@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atm://schemas/pev/upgrade-proposal-public.schema.json",
+  "title": "ATM PEV Upgrade Proposal Public Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "proposal_id",
+    "owner",
+    "target_version",
+    "release_channel",
+    "scope",
+    "classification",
+    "compatibility_impact",
+    "semver_recommendation",
+    "validation_evidence",
+    "rollback_contract",
+    "decision"
+  ],
+  "properties": {
+    "proposal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "release_channel": {
+      "type": "string",
+      "enum": [
+        "alpha0",
+        "alpha1",
+        "beta",
+        "stable",
+        "lts"
+      ]
+    },
+    "scope": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "framework",
+          "atom schema",
+          "plugin sdk",
+          "adapter",
+          "tooling",
+          "docs"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "patch",
+        "minor",
+        "major"
+      ]
+    },
+    "compatibility_impact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "affected_surfaces"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affected_surfaces": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "semver_recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "rationale"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "patch",
+            "minor",
+            "major"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "migration_plan": {
+      "type": "string"
+    },
+    "validation_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "rollback_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "window_start",
+        "window_end",
+        "trigger",
+        "route"
+      ],
+      "properties": {
+        "window_start": {
+          "type": "string",
+          "minLength": 1
+        },
+        "window_end": {
+          "type": "string",
+          "minLength": 1
+        },
+        "trigger": {
+          "type": "string",
+          "minLength": 1
+        },
+        "route": {
+          "type": "string",
+          "enum": [
+            "version-pin",
+            "hotfix-patch",
+            "full-revert"
+          ]
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "note"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "approve",
+            "request-changes",
+            "reject"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
