@@ -57,3 +57,31 @@ Release can move to publish only if:
 1. All mandatory checklist items are complete.
 2. No unresolved blocker findings remain.
 3. Owner sign-off is present.
+
+## 7. ATM-5-0004 Execution Record (May 9, 2026)
+
+Release target: `v0.1.0-alpha`
+
+### 7.1 alpha0 Checklist (Foundation Gate)
+
+- [x] Core validators and policy contracts reviewed.
+- [x] Task-store truth sync check passed (`sync-atm-stabilization-milestone --check --strict`).
+- [x] Required governance docs exist and cross-link correctly.
+
+### 7.2 alpha1 Checklist (Governance Gate)
+
+- [x] Upgrade proposal / review contract linked (`UPGRADE_PROPOSAL_PUBLIC_RULES.md`).
+- [x] Compatibility contract linked (`ATOM_COMPATIBILITY.md`).
+- [x] Release owner sign-off section prepared in release draft.
+
+### 7.3 Security and Supply Chain
+
+- [x] Secrets scan step documented and executed as release gate item.
+- [x] Provenance note included in release draft and dry-run plan.
+- [x] Package naming policy checked against canonical prefixes (`core`, `cli`, `plugin-*`, `adapter-*`).
+
+### 7.4 Publishing Readiness
+
+- [x] GitHub release draft prepared: `docs/releases/atm-v0.1.0-alpha-release-draft.md`.
+- [x] npm dry-run plan prepared: `docs/releases/atm-v0.1.0-alpha-npm-dry-run-plan.md`.
+- [x] Local probe executed in tracking repo (`npm pack --dry-run`) and documented as non-publishable host baseline; upstream workspace execution required for final publish gate.

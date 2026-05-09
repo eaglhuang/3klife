@@ -598,5 +598,17 @@
     "path": "docs/PLUGIN_SDK.md",
     "title": "ATM Plugin SDK Guide",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0108",
+    "path": "docs/releases/atm-v0.1.0-alpha-release-draft.md",
+    "title": "AI-Atomic-Framework v0.1.0-alpha (Draft)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0109",
+    "path": "docs/releases/atm-v0.1.0-alpha-npm-dry-run-plan.md",
+    "title": "ATM v0.1.0-alpha npm Dry-Run Plan",
+    "category": "other"
   }
 ]
