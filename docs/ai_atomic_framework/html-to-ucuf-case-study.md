@@ -15,6 +15,17 @@ purpose: reference case study plan
 - 第一輪只做 birth / dry-run injection 與 regression baseline，先證明替換管道能跑通。
 - 案例中的 helper / plugin 只能存在於 downstream case study、adapter 文件或 regression baseline。
 - 所有 case study 變更都要維持「core neutral」，不能反向污染上游框架。
+- 啟動條件是 self-hosting alpha0 deterministic gate 全綠，否則一律維持 planning-only。
+
+## Start Gate（強制）
+
+以下條件未同時成立前，不得啟動任何 H2U case injection：
+
+1. self-hosting alpha0 deterministic gate 全綠。
+2. rule-guard、encoding、context-budget 三道基礎守衛都可重播通過。
+3. 已產出當前版 regression baseline 與對應 evidence。
+
+若任一條件失敗，case study 只能停留在 spec/plan 更新，不可執行 injection。
 
 ## Non-Goals
 
@@ -23,6 +34,7 @@ purpose: reference case study plan
 - 不在這一卡同時推 H2U-REFACTOR 的拆檔與 ATM case atom 抽取。
 - 不把 html-to-ucuf 直接升格成 ATM core 的預設 domain。
 - 不把這份文件變成 H2U-REFACTOR 的替代規格。
+- 第一輪不允許替換 `draft-builder.js` 主幹路徑，只允許 dry-run 注入與回退演練。
 
 ## Domain Plugin List
 
@@ -51,6 +63,16 @@ purpose: reference case study plan
 5. 每次抽完都跑 regression。
 6. 所有 gap 都要落成可讀的 evidence / owner 記錄。
 7. 只在 dry-run 驗證通過後，才進入下一步 injection。
+
+## Injection Safety Contract（ATM-4-0006）
+
+第一輪注入只允許 `dry-run injection + rollback plan`：
+
+- 每次 injection 前先輸出可回放計畫（input hash、target hash、預期輸出路徑）。
+- 注入結果必須落在可清除的暫存輸出，不可覆寫正式主幹產物。
+- 若 regression 指標下降或 gate 失敗，立即執行 rollback，回到上一個已驗證 baseline。
+- rollback 計畫必須包含：回復命令、受影響檔案列表、驗證命令與成功判定條件。
+- 未完成 rollback 可重播驗證前，不得升級為下一輪注入。
 
 ## Success Criteria
 

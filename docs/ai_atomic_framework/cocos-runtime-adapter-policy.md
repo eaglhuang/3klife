@@ -30,6 +30,20 @@
 
 **一句話規則**：任何 `import { ... } from 'cc'` 或 `import * as cc from 'cc'`，**只要出現在 compute atom 檔案中，即構成違規**。
 
+### 2.1 Runtime 物件持有責任（強制）
+
+下列型別只允許由 adapter/wrapper 持有，禁止流入 compute atom：
+
+| 型別 | 允許持有層 | 禁止層 |
+|---|---|---|
+| `cc.Component` | `assets/scripts/ui/**`、`assets/scripts/battle/**` 的 runtime adapter | `assets/scripts/core/**`、`assets/scripts/shared/**` |
+| `cc.Node` | runtime adapter / scene 組裝層 | compute atom / pure helper |
+| `cc.Prefab` | runtime adapter / loader wrapper | compute atom |
+| `cc.Scene` | scene route / bootstrap wrapper | compute atom |
+| `cc.Asset`/`SpriteFrame` 等 AssetRef | runtime adapter / asset loader wrapper | compute atom |
+
+這個責任矩陣對應 ATM-4-0006 的邊界要求：Cocos Component、Node、Prefab、Scene、AssetRef 僅能由 adapter/wrapper 持有。
+
 ---
 
 ## 3. 可原子化的模式（白名單）
@@ -172,6 +186,12 @@ export function applyCardConfig(node: Node, generalId: string): void {
 
 本政策是 3KLife adopter-scope 的 adapter 策略文件，不定義 ATM upstream core 規則。  
 若 ATM upstream 需要類似的 runtime adapter boundary policy（例如 React DOM / Unity / Godot 版本），應在上游 `packages/plugin-rule-guard` 中另開對應的 layer-policy.json，而非把 Cocos 專屬規則寫入 core。
+
+## 9. 與 H2U case study 的啟動契約（ATM-4-0006）
+
+- 只有在 self-hosting alpha0 deterministic gate 全綠後，才允許啟動 H2U case study 注入流程。
+- 第一輪注入限定為 dry-run 與 rollback 演練，不得直接替換 draft-builder 主幹行為。
+- 若任一 guard 失敗，應回退至上一個已驗證基線，並保留 evidence 供下一輪修正。
 
 ---
 
