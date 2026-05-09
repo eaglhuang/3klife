@@ -127,6 +127,7 @@ class ResolvedEvidence:
     sourceType: str = "romance"
     sourceQuote: str | None = None
     factSummary: str | None = None
+    generalIds: list[str] = field(default_factory=list)
     confidence: float = 0.0
 
 
@@ -178,13 +179,14 @@ class DeterministicTemplateProvider:
     name = "deterministic"
 
     def generate(self, package: DialoguePromptPackage) -> DialogueGenerationResult:
+        resolved_refs = [evidence.evidenceRef for evidence in package.resolvedEvidence]
         return DialogueGenerationResult(
             text=package.deterministicText[: package.maxChars],
             provider=self.name,
             model=None,
             generationMode="deterministic-template-v1+persona-card" if package.personaCardSubset else "deterministic-template-v1",
-            fallbackUsed=not bool(package.evidenceRefs),
-            usedEvidenceRefs=package.evidenceRefs,
+            fallbackUsed=not bool(resolved_refs),
+            usedEvidenceRefs=resolved_refs,
         )
 
 
@@ -340,6 +342,7 @@ class GeminiDialogueProvider:
                 "sourceType": evidence.sourceType,
                 "sourceQuote": evidence.sourceQuote,
                 "factSummary": evidence.factSummary,
+                "generalIds": evidence.generalIds,
                 "confidence": evidence.confidence,
             }
             for evidence in package.resolvedEvidence[:5]
@@ -696,7 +699,7 @@ class GeminiDialogueProvider:
 
     def _gibberish_warnings(self, text: str) -> list[str]:
         warnings: list[str] = []
-        if "�" in text or "\ufffd" in text:
+        if "\ufffd" in text:
             warnings.append("gibberish:replacement-character")
         if re.search(r"/[A-Za-z]{2,}", text) or re.search(r"[xXfF]{5,}", text):
             warnings.append("gibberish:artifact-token")
@@ -959,9 +962,10 @@ class DialogueHistoryCacheProvider:
         text = str(best_entry.get("text") or "").strip()
         if not text:
             raise ProviderOutputError("history_cache:empty-text")
-        used_refs = [str(ref) for ref in best_entry.get("usedEvidenceRefs", []) if str(ref) in set(package.evidenceRefs)]
+        allowed_refs = {evidence.evidenceRef for evidence in package.resolvedEvidence}
+        used_refs = [str(ref) for ref in best_entry.get("usedEvidenceRefs", []) if str(ref) in allowed_refs]
         if not used_refs:
-            used_refs = [ref for ref in package.evidenceRefs[:1]]
+            used_refs = [evidence.evidenceRef for evidence in package.resolvedEvidence[:1]]
         log_debug_event(
             "provider.response.history-cache",
             provider=self.name,
@@ -983,7 +987,7 @@ class DialogueHistoryCacheProvider:
     def _find_best_entry(self, package: DialoguePromptPackage) -> dict | None:
         selected_keyword_keys = {str(keyword.get("keywordKey") or "") for keyword in package.selectedKeywords if keyword.get("keywordKey")}
         selected_keyword_labels = {str(keyword.get("label") or "") for keyword in package.selectedKeywords if keyword.get("label")}
-        evidence_refs = set(package.evidenceRefs)
+        evidence_refs = {evidence.evidenceRef for evidence in package.resolvedEvidence}
         selected_context_key = str((package.selectedContext or {}).get("contextKey") or "")
         best_entry: dict | None = None
         best_score = 0

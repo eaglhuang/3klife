@@ -353,7 +353,7 @@ def _run_history_cache_provider_smoke() -> None:
     print("[npc-brain-llm-provider-smoke] history_cache PASS")
     print(
         "[npc-brain-llm-provider-smoke] history_cache text="
-        + json.dumps(cached_response.text, ensure_ascii=False)
+        + json.dumps(cached_response.text, ensure_ascii=True)
     )
 
 
@@ -374,7 +374,7 @@ def _run_json_repair_smoke() -> None:
     print("[npc-brain-llm-provider-smoke] json-repair PASS")
     print(
         "[npc-brain-llm-provider-smoke] repaired="
-        + json.dumps(parsed, ensure_ascii=False)
+        + json.dumps(parsed, ensure_ascii=True)
     )
 
 
@@ -433,7 +433,7 @@ def _run_local_llama_quality_repair_smoke() -> None:
         print("[npc-brain-llm-provider-smoke] local_llama_quality_repair PASS")
         print(
             "[npc-brain-llm-provider-smoke] repair warnings="
-            + json.dumps(response.qualityWarnings, ensure_ascii=False)
+            + json.dumps(response.qualityWarnings, ensure_ascii=True)
         )
     finally:
         server.shutdown()

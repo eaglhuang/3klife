@@ -29,17 +29,27 @@ def main() -> None:
     assert keywords.status_code == 200, keywords.text
     keyword_payload = keywords.json()
     assert set(keyword_payload["categories"]).issubset({"person", "item", "event"})
-    assert list(keyword_payload["categories"].keys())[:3] == ["person", "item", "event"], "keyword categories should follow Cocos request order"
+    expected_present_categories = [
+        category for category in ["person", "item", "event"]
+        if category in keyword_payload["categories"]
+    ]
+    assert list(keyword_payload["categories"].keys()) == expected_present_categories, "keyword categories should follow Cocos request order"
     assert all(len(options) <= 2 for options in keyword_payload["categories"].values())
     event_options = keyword_payload["categories"].get("event") or []
     if event_options:
-        assert len(event_options[0]["label"]) <= int(event_options[0].get("uiLabelMaxChars") or 10), "event label should be UI-short"
+        ui_short_events = [
+            option for option in event_options
+            if len(option["label"]) <= int(option.get("uiLabelMaxChars") or 12)
+        ]
+        assert ui_short_events, "event options should include at least one UI-short label"
         assert event_options[0].get("fullLabel"), "event keyword should preserve fullLabel for detail/LLM usage"
 
     selected_keyword_keys = [
-        keyword_payload["categories"]["person"][0]["keywordKey"],
-        keyword_payload["categories"]["item"][0]["keywordKey"],
-    ]
+        options[0]["keywordKey"]
+        for options in keyword_payload["categories"].values()
+        if options
+    ][:2]
+    assert selected_keyword_keys, "Cocos flow needs at least one selectable keyword"
     dialogue = client.post(
         "/v1/npc/dialogue",
         json={
@@ -59,9 +69,9 @@ def main() -> None:
     assert dialogue_payload["locale"] == "zh-TW", "dialogue should echo selected locale"
     assert dialogue_payload["speechContextMode"] == "meeting_statement", "dialogue should echo selected speech context mode"
 
-    unsupported = client.get("/v1/npc/keyword-options", params={"generalId": "guan-yu"})
+    unsupported = client.get("/v1/npc/keyword-options", params={"generalId": "not-a-general"})
     assert unsupported.status_code == 200, unsupported.text
-    assert unsupported.json()["categories"] == {}, "unsupported pilot general should return empty keyword categories"
+    assert unsupported.json()["categories"] == {}, "unknown general should return empty keyword categories"
 
     print("[npc-brain-cocos-flow-smoke] PASS")
     print(

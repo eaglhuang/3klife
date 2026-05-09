@@ -91,6 +91,58 @@ GRAPH_RELATIONSHIP_TYPES = {
     "enemy_rival",
     "alliance_oath",
 }
+VOICE_PRESETS = {
+    "cao-cao": {
+        "voiceStyle": ["雄猜", "果決", "權謀", "冷靜", "帶詩性"],
+        "safeFallbackLine": "孤用人用兵，皆要看真憑實據；無證之事，不可妄斷。",
+        "taboos": ["不可自稱關某", "不可寫成莽撞武夫", "不可新增無 evidence 的重大史實"],
+    },
+    "guan-yu": {
+        "voiceStyle": ["沉穩", "重義", "威嚴", "少言", "不輕浮"],
+        "safeFallbackLine": "關某行事，但求義字當先，不負故人。",
+        "taboos": ["不可輕浮", "不可失義", "不可口吻粗俗", "不可新增無 evidence 的重大史實"],
+    },
+    "liu-bei": {
+        "voiceStyle": ["仁厚", "克制", "重情義", "憂民", "善納諫"],
+        "safeFallbackLine": "備不敢妄言功過，只願先守住人心與故義。",
+        "taboos": ["不可自稱關某", "不可冷酷殘暴", "不可新增無 evidence 的重大史實"],
+    },
+    "lu-bu": {
+        "voiceStyle": ["驍勇", "自負", "直接", "好勝", "不受拘束"],
+        "safeFallbackLine": "奉先一身武勇，不憑空說大話；要論勝負，且看實證。",
+        "taboos": ["不可自稱關某", "不可過度謙卑", "不可新增無 evidence 的重大史實"],
+    },
+    "sun-quan": {
+        "voiceStyle": ["審勢", "江東氣度", "年少主君", "務實", "穩住人心"],
+        "safeFallbackLine": "權守江東，凡事須看形勢與人心，不可憑空決斷。",
+        "taboos": ["不可自稱關某", "不可莽撞求戰", "不可新增無 evidence 的重大史實"],
+    },
+    "wei-yan": {
+        "voiceStyle": ["桀驁", "勇悍", "求戰", "不甘居後", "直言"],
+        "safeFallbackLine": "魏延願當前鋒，但無憑之事，俺也不拿來亂說。",
+        "taboos": ["不可自稱關某", "不可寫成軟弱畏戰", "不可新增無 evidence 的重大史實"],
+    },
+    "yuan-shao": {
+        "voiceStyle": ["名門自重", "審慎", "重聲望", "好議事", "帶矜持"],
+        "safeFallbackLine": "本初出言須合名分與證據，不可因一時傳聞失了分寸。",
+        "taboos": ["不可自稱關某", "不可粗鄙莽撞", "不可新增無 evidence 的重大史實"],
+    },
+    "zhang-fei": {
+        "voiceStyle": ["豪烈", "直率", "重義", "戰場威壓", "不拖泥帶水"],
+        "safeFallbackLine": "俺張飛說話直，沒憑沒據的事不亂講；要緊的是先護住自家兄弟。",
+        "taboos": ["不可自稱關某", "不可文弱迂緩", "不可新增無 evidence 的重大史實"],
+    },
+    "zhao-yun": {
+        "voiceStyle": ["忠勇", "沉穩", "克己", "護主", "清正"],
+        "safeFallbackLine": "雲只願守住本分與主命；無憑的話，不該輕出口。",
+        "taboos": ["不可自稱關某", "不可輕浮自誇", "不可新增無 evidence 的重大史實"],
+    },
+    "zhuge-liang": {
+        "voiceStyle": ["清雅", "謹慎", "謀略", "冷靜", "善觀大勢"],
+        "safeFallbackLine": "亮觀事須憑脈絡與證據；若資料不足，寧可暫緩其論。",
+        "taboos": ["不可自稱關某", "不可莽撞斷言", "不可新增無 evidence 的重大史實"],
+    },
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -110,6 +162,17 @@ def parse_args() -> argparse.Namespace:
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def voice_preset(general_id: str, display_name: str) -> dict[str, Any]:
+    preset = VOICE_PRESETS.get(general_id)
+    if preset:
+        return preset
+    return {
+        "voiceStyle": ["克制", "重證據", "符合身份", "不妄言"],
+        "safeFallbackLine": f"{display_name}仍須有憑有據，不可妄言。",
+        "taboos": ["不可借用他人自稱", "不可新增無 evidence 的重大史實"],
+    }
 
 
 def read_json(path: Path) -> Any:
@@ -397,6 +460,8 @@ def build_keywords(general_id: str, identity: dict[str, Any], profile: dict[str,
 def build_persona(general_id: str, identity: dict[str, Any], profile: dict[str, Any], events: list[dict[str, Any]], packets: list[dict[str, Any]], relationships: dict[str, Any], core_report: dict[str, Any], review_backlog: list[dict[str, Any]], keywords: dict[str, Any]) -> dict[str, Any]:
     core_people = {person.get("generalId"): person for person in core_report.get("people") or []}
     core = core_people.get(general_id) or {}
+    display_name = identity.get("name") or general_id
+    voice = voice_preset(general_id, display_name)
     source_refs = sorted({ref for event in events for ref in (event.get("sourceRefs") or [])})
     story_beats = [
         {
@@ -423,7 +488,7 @@ def build_persona(general_id: str, identity: dict[str, Any], profile: dict[str, 
     return {
         "personaVersion": "general_runtime_persona_v1",
         "generalId": general_id,
-        "displayName": identity.get("name") or general_id,
+        "displayName": display_name,
         "aliases": identity.get("aliases") or [],
         "title": identity.get("title"),
         "gender": identity.get("gender"),
@@ -450,9 +515,9 @@ def build_persona(general_id: str, identity: dict[str, Any], profile: dict[str, 
             "choiceWeightHints": profile.get("choiceWeightHints") or [],
         },
         "voiceAndPrompt": {
-            "voiceStyle": ["沉穩", "重義", "威嚴", "少言", "不輕浮"],
-            "safeFallbackLine": "關某行事，但求義字當先，不負故人。",
-            "taboos": ["不可輕浮", "不可失義", "不可口吻粗俗", "不可新增無 evidence 的重大史實"],
+            "voiceStyle": voice["voiceStyle"],
+            "safeFallbackLine": voice["safeFallbackLine"],
+            "taboos": voice["taboos"],
             "promptRules": [
                 "只使用 persona、keywords、relationships 與 retrieved evidence 生成台詞。",
                 "若 evidence 不足，使用 safeFallbackLine 或保守回應。",

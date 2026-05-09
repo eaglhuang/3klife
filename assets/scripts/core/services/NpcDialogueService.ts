@@ -101,6 +101,8 @@ export interface NpcDialogueResponse {
     text: string;
     evidenceRefs: string[];
     usedEvidenceRefs?: string[];
+    unresolvedEvidenceRefs?: string[];
+    resolutionTrace?: string[];
     usedKeywords: Array<{
         keywordKey: string;
         category: string;

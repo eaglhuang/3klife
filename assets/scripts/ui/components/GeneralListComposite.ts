@@ -14,6 +14,7 @@
 import { _decorator, Node, Label, Button, UITransform, Layout, Widget, HorizontalTextAlignment, VerticalTextAlignment, Color } from 'cc';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
 import type { NpcContextOption, NpcDialogueKeywordSelection, NpcDialogueLocale, NpcDialogueModelPreset, NpcDialogueResponse, NpcDialogueSpeechContextMode } from '../../core/services/NpcDialogueService';
+import { EVENT_NPC_INTERACTION_COMPLETED } from '../../core/dialogue/NpcMemoryAdapter';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
@@ -815,7 +816,7 @@ export class GeneralListComposite extends CompositePanel {
         const requestedModelPreset = this._npcDialogueModelPreset;
         this._setNpcDialogueHint('正在產生測試對白...');
         this._setNpcDialogueProvider(`Provider：請求中 / preset：${this._npcDialogueModelPresetLabel(requestedModelPreset)}`);
-        this._setNpcDialogueProviderTrace(`Quality：-｜Trace：${requestedSpeechContextMode} / ${requestedModelPreset} / ${this._npcDialogueSelectedKeyword.keywordKey}`);
+        this._setNpcDialogueProviderTrace(`Quality：-｜Resolve：pending｜Trace：${requestedSpeechContextMode} / ${requestedModelPreset} / ${this._npcDialogueSelectedKeyword.keywordKey}`);
         try {
             const response = await services().npcDialogue.requestDialogue({
                 generalId: this._npcDialogueSelectedGeneral.id,
@@ -833,19 +834,23 @@ export class GeneralListComposite extends CompositePanel {
             const presetMismatch = response.llmModelPreset !== requestedModelPreset;
             const presetWarning = presetMismatch ? [`preset-mismatch:${requestedModelPreset}->${response.llmModelPreset ?? 'missing'}`] : [];
             const qualityText = [...presetWarning, ...(response.qualityWarnings ?? [])].join(',') || (response.repairUsed ? 'repaired' : 'pass');
-            this._setNpcDialogueProviderTrace(`Quality：${qualityText}｜Trace：${(response.providerTrace ?? []).join(' > ') || '-'}`);
-            void services().npcDialogue.recordInteractionEvent({
-                saveId: this._npcDialogueMemorySaveId,
-                generalId: this._npcDialogueSelectedGeneral.id,
-                eventType: 'dialogue_test',
-                summary: `對話測試｜${this._npcDialogueSelectedGeneral.name ?? this._npcDialogueSelectedGeneral.id}｜${this._npcDialogueSelectedKeyword.label}｜${this._npcDialogueSelectedContext?.label ?? '預設情境'}`,
-                keywords: [this._npcDialogueSelectedKeyword.keywordKey],
-                playerAction: `speechContext=${requestedSpeechContextMode}, locale=${response.locale ?? this._npcDialogueLocale}`,
-                generalReaction: response.text,
-                isMilestone: false,
-            }).catch((memoryError) => {
-                UCUFLogger.warn(LogCategory.DATA, '[GeneralListComposite] npc dialogue memory write failed', { error: memoryError });
-            });
+            const resolutionText = this._npcDialogueResolutionText(response);
+            this._setNpcDialogueProviderTrace(
+                `Quality：${qualityText}｜Resolve：${resolutionText}｜Trace：${(response.providerTrace ?? []).join(' > ') || '-'}`
+            );
+            if (!response.fallbackUsed) {
+                services().event.emit(EVENT_NPC_INTERACTION_COMPLETED, {
+                    saveId: this._npcDialogueMemorySaveId,
+                    generalId: this._npcDialogueSelectedGeneral.id,
+                    eventType: 'dialogue_test',
+                    summary: `對話測試｜${this._npcDialogueSelectedGeneral.name ?? this._npcDialogueSelectedGeneral.id}｜${this._npcDialogueSelectedKeyword.label}｜${this._npcDialogueSelectedContext?.label ?? '預設情境'}`,
+                    keywords: response.usedKeywords.map((keyword) => keyword.keywordKey),
+                    playerAction: `speechContext=${requestedSpeechContextMode}, locale=${response.locale ?? this._npcDialogueLocale}`,
+                    generalReaction: response.text,
+                    isMilestone: false,
+                    fallbackUsed: response.fallbackUsed,
+                });
+            }
             services().event.emit('SHOW_TOAST', { message: response.text, duration: 4 });
             UCUFLogger.info(LogCategory.DATA, '[GeneralListComposite] npc dialogue response', {
                 generalId: response.generalId,
@@ -859,6 +864,8 @@ export class GeneralListComposite extends CompositePanel {
                 llmModelPreset: response.llmModelPreset ?? null,
                 evidenceRefs: response.evidenceRefs,
                 usedEvidenceRefs: response.usedEvidenceRefs ?? [],
+                unresolvedEvidenceRefs: response.unresolvedEvidenceRefs ?? [],
+                resolutionTrace: response.resolutionTrace ?? [],
                 usedKeywords: response.usedKeywords,
                 provider: response.provider ?? null,
                 model: response.model ?? null,
@@ -923,6 +930,12 @@ export class GeneralListComposite extends CompositePanel {
         return option?.label ?? preset ?? 'missing';
     }
 
+    private _npcDialogueResolutionText(response: NpcDialogueResponse): string {
+        const unresolvedCount = (response.unresolvedEvidenceRefs ?? []).length;
+        const trace = (response.resolutionTrace ?? []).slice(-2).join(' > ') || '-';
+        return unresolvedCount > 0 ? `unresolved=${unresolvedCount}; ${trace}` : trace;
+    }
+
     private _npcDialogueProviderButtonText(response: NpcDialogueResponse, requestedPreset: NpcDialogueModelPreset): string {
         const provider = response.provider ?? 'unknown';
         const model = response.model ? `/${response.model}` : '';
@@ -930,7 +943,7 @@ export class GeneralListComposite extends CompositePanel {
         const presetText = actualPreset === requestedPreset
             ? this._npcDialogueModelPresetLabel(actualPreset)
             : `${this._npcDialogueModelPresetLabel(requestedPreset)}→${this._npcDialogueModelPresetLabel(actualPreset)}`;
-        return `Provider：${provider}${model} / preset：${presetText} / repair：${response.repairUsed ? 'yes' : 'no'}`;
+        return `Provider：${provider}${model} / preset：${presetText} / repair：${response.repairUsed ? 'yes' : 'no'} / fallback：${response.fallbackUsed ? 'yes' : 'no'}`;
     }
 
     private _npcDialogueErrorPreview(error: unknown): string {

@@ -16,6 +16,7 @@ import { NpcDialogueService } from "../services/NpcDialogueService";
 import { BattleSystem } from "../systems/BattleSystem";
 import { NetworkService } from "../systems/NetworkService";
 import { SyncManager } from "../systems/SyncManager";
+import { NpcMemoryAdapter } from "../dialogue/NpcMemoryAdapter";
 import { SceneManager } from "./SceneManager";
 import { GameManager } from "./GameManager";
 import { UIManager } from "./UIManager";
@@ -47,6 +48,8 @@ export class ServiceLoader {
     public readonly sync = new SyncManager();
     /** 三國大腦中台 API facade：Cocos UI 只透過此服務呼叫 NPC brain，不直接散落 HTTP。 */
     public readonly npcDialogue = new NpcDialogueService();
+    /** 玩家-武將互動記憶回寫 adapter：訂閱全域事件後 fire-and-forget 寫回 npc-brain。 */
+    public readonly npcMemory = new NpcMemoryAdapter();
     /** 音效系統：BGM、SFX、循環音效，含 50ms 防重複播放 */
     public readonly audio = new AudioSystem();
     /** 多國語系系統：t(key) 字串查詢 + 語系字型懶載入 / 卸載 */
@@ -115,6 +118,7 @@ export class ServiceLoader {
         // 啟動跨平台網路偵測與自動離線佇列同步服務
         this.network.setup(this.event);
         this.sync.setup(this.event, this.network);
+        this.npcMemory.setup(this.event, this.npcDialogue, this.sync);
 
         this.initialized = true;
     }
