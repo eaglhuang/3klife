@@ -1,0 +1,17 @@
+{
+  "sourceKind": "compute-gate-report",
+  "generatedAt": "2026-05-09T03:16:00.000Z",
+  "workItemId": "ATM-3-0014",
+  "atomId": "ATM-CORE-0004",
+  "subFunction": "normalizeCssColor",
+  "metrics": {
+    "tokens": 640,
+    "interactions": 8,
+    "callerCount": 4
+  },
+  "hostContext": {
+    "project": "3KLife",
+    "engine": "cocos-3.8.8",
+    "pipeline": "atm-m2-shadow-adapter"
+  }
+}

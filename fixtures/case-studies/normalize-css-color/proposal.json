@@ -1,0 +1,79 @@
+{
+  "schemaId": "atm.upgradeProposal",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "ATM-4-0007 normalizeCssColor pilot proposal."
+  },
+  "proposalId": "proposal.atm-core-0004.from-1.0.0.to-1.1.0.atom.behavior-evolve",
+  "atomId": "ATM-CORE-0004",
+  "fromVersion": "1.0.0",
+  "toVersion": "1.1.0",
+  "lifecycleMode": "evolution",
+  "behaviorId": "behavior.evolve",
+  "target": {
+    "kind": "atom"
+  },
+  "decompositionDecision": "atom-bump",
+  "automatedGates": {
+    "nonRegression": {
+      "passed": true,
+      "reportId": "police.non-regression.normalize-css-color",
+      "reportPath": "fixtures/case-studies/normalize-css-color/non-regression-report.json",
+      "summary": "pass (all baseline fixtures passed)"
+    },
+    "qualityComparison": {
+      "passed": true,
+      "reportId": "police.quality-comparison.normalize-css-color",
+      "reportPath": "fixtures/case-studies/normalize-css-color/quality-comparison-report.json",
+      "summary": "pass (errorRate下降、coverage提升、edge cases增量通過)"
+    },
+    "registryCandidate": {
+      "passed": true,
+      "reportId": "police.registry-candidate.normalize-css-color",
+      "reportPath": "fixtures/case-studies/normalize-css-color/registry-candidate-report.json",
+      "summary": "pass (candidate version can be promoted)"
+    },
+    "allPassed": true,
+    "blockedGateNames": []
+  },
+  "humanReview": "pending",
+  "status": "pending",
+  "inputs": [
+    {
+      "kind": "hash-diff",
+      "path": "fixtures/case-studies/normalize-css-color/hash-diff-report.json",
+      "schemaId": "atm.hashDiffReport",
+      "summary": "normalizeCssColor v1.0 -> v1.1 hash diff"
+    },
+    {
+      "kind": "quality-comparison",
+      "path": "fixtures/case-studies/normalize-css-color/quality-comparison-report.json",
+      "schemaId": "atm.police.qualityComparisonReport",
+      "reportId": "police.quality-comparison.normalize-css-color",
+      "summary": "quality regression checks"
+    },
+    {
+      "kind": "registry-candidate",
+      "path": "fixtures/case-studies/normalize-css-color/registry-candidate-report.json",
+      "schemaId": "atm.police.registryCandidateReport",
+      "reportId": "police.registry-candidate.normalize-css-color",
+      "summary": "registry promotion candidate checks"
+    }
+  ],
+  "mapImpactScope": {
+    "affectedMapIds": [
+      "ATM-MAP-0001"
+    ],
+    "propagationStatus": [
+      {
+        "mapId": "ATM-MAP-0001",
+        "integrationTestPassed": true,
+        "message": "Map propagation remains green."
+      }
+    ]
+  },
+  "proposedBy": "ATM-4-0007-pilot",
+  "proposedAt": "2026-05-09T04:30:00.000Z"
+}

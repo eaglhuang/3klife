@@ -1,0 +1,21 @@
+{
+  "sourceKind": "compute-gate-report",
+  "generatedAt": "2026-05-09T03:15:00.000Z",
+  "workItemId": "ATM-3-0014",
+  "atomId": "ATM-CORE-0004",
+  "subFunction": "normalizeCssColor",
+  "metrics": {
+    "sessions": 3,
+    "tokens": 1820,
+    "interactions": 17,
+    "callerCount": 9
+  },
+  "hostContext": {
+    "project": "3KLife",
+    "engine": "cocos-3.8.8",
+    "pipeline": "atm-m2-shadow-adapter"
+  },
+  "artifactHints": [
+    "atomic_workbench/atoms/ATM-CORE-0003/reports/neutrality-map-report.json"
+  ]
+}

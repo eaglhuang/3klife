@@ -1,0 +1,36 @@
+{
+  "adapter": "usage-evidence-shadow",
+  "mode": "strict",
+  "sourcePath": "fixtures/adapter/3klife-usage-source-missing-field.json",
+  "mappingPath": "tools_node/atm-adapter/mapping-table.json",
+  "workbenchRoot": "atomic_workbench",
+  "passed": false,
+  "evidenceType": "",
+  "findings": [
+    {
+      "findingVersion": "coverage-finding/v1",
+      "kind": "coverage-finding",
+      "ruleId": "usage-evidence-shadow",
+      "trigger": "usage-evidence-shadow.mapping.validation",
+      "scope": "tools_node/atm-adapter/usage-evidence-shadow.js",
+      "severity": "block",
+      "action": "fail",
+      "routeClass": "blocker",
+      "routeHint": "補齊 usage-feedback 必填欄位；若來源格式漂移，請改跑 --lenient 產出 usage-feedback-skipped 並帶 skipReason。",
+      "message": "missing required sessions metric",
+      "details": {
+        "field": "details.usageSignals.sessions",
+        "sourcePathsTried": [
+          "metrics.sessions",
+          "usageSignals.sessions",
+          "details.usageSignals.sessions"
+        ]
+      }
+    }
+  ],
+  "workbenchScan": {
+    "atomArtifactCount": 1,
+    "mapArtifactCount": 0
+  },
+  "payload": null
+}

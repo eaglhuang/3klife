@@ -5,3 +5,4 @@ fastapi>=0.136,<1
 uvicorn>=0.46,<1
 pinecone>=6,<8
 qdrant-client>=1.9,<2
+psycopg[binary]>=3.2,<4

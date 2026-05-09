@@ -91,15 +91,15 @@
     "doc_id": "doc_task_0327",
     "id": "ATM-4-0007",
     "title": "H2U normalizeCssColor v1.0→v1.1 evolution pilot",
-    "owner": "GitHubCopilot",
+    "owner": "codex-gpt-5",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "case-study",
     "phase": "ATM-4",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-09T10:59:42+08:00",
+    "started_by_agent": "codex-gpt-5",
     "chain_id": "ATM-EVOLUTION-V2",
     "chain_step": "11/11",
     "sensor_triggered_by": "atm-evolution-plan-v2",
@@ -123,13 +123,14 @@
       "fixtures/case-studies/normalize-css-color/proposal.json",
       "fixtures/case-studies/normalize-css-color/decision-approve.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 A 開立 | 阻塞: 等依賴卡完成\n2026-05-09 | status: done | validation: validate:h2u-evolution-pilot --strict | change: normalizeCssColor v1.0/v1.1 proposal+approve decision fixtures with deterministic hash chain delivered | blocker: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 開卡",
       "summary": "把 alpha1 evolution pipeline 在 H2U case 上做端到端落地，作為 alpha1 acceptance 證據。",
       "position": "ATM-4",
       "prereq": "ATM-4-0003 / ATM-2-0020 / ATM-2-0021"
-    }
+    },
+    "completed_at": "2026-05-09T11:22:00+08:00"
   }
 ]

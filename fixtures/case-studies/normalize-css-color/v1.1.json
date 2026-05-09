@@ -1,0 +1,33 @@
+{
+  "schemaId": "atm.caseStudy.normalizeCssColor",
+  "specVersion": "1.1.0",
+  "atomId": "ATM-CORE-0004",
+  "atomVersion": "1.1.0",
+  "behaviorId": "behavior.evolve",
+  "status": "active",
+  "summary": "Adds stable alpha normalization and transparent edge-case handling.",
+  "cases": [
+    {
+      "input": "rgba(255, 0, 0, 0.5)",
+      "output": "#FF000080"
+    },
+    {
+      "input": "#abc",
+      "output": "#AABBCCFF"
+    },
+    {
+      "input": "transparent",
+      "output": "#00000000"
+    },
+    {
+      "input": "rgb(12 34 56 / 60%)",
+      "output": "#0C223899"
+    }
+  ],
+  "qualityMetrics": {
+    "errorRate": 0.01,
+    "coverage": 0.95,
+    "latencyMsP95": 44,
+    "edgeCaseCount": 3
+  }
+}

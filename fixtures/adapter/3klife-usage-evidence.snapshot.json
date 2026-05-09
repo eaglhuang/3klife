@@ -1,0 +1,79 @@
+{
+  "adapter": "usage-evidence-shadow",
+  "mode": "strict",
+  "sourcePath": "fixtures/adapter/3klife-usage-source.json",
+  "mappingPath": "tools_node/atm-adapter/mapping-table.json",
+  "workbenchRoot": "atomic_workbench",
+  "passed": true,
+  "evidenceType": "usage-feedback",
+  "findings": [],
+  "workbenchScan": {
+    "atomArtifactCount": 1,
+    "mapArtifactCount": 0
+  },
+  "payload": {
+    "schemaId": "atm.evidence.usageFeedback",
+    "specVersion": "0.1.0",
+    "migration": {
+      "strategy": "none",
+      "fromVersion": null,
+      "notes": "3KLife usage-evidence shadow adapter payload."
+    },
+    "evidenceId": "usage-feedback.atm-core-0004.20260509042112",
+    "workItemId": "ATM-CORE-0004",
+    "evidenceKind": "metric",
+    "evidenceType": "usage-feedback",
+    "summary": "usage feedback collected for ATM-CORE-0004 from 3KLife shadow adapter",
+    "artifactPaths": [
+      "fixtures/adapter/3klife-usage-source.json",
+      "atomic_workbench/atoms/ATM-CORE-0003/reports/neutrality-map-report.json"
+    ],
+    "createdAt": "2026-05-09T04:21:12.323Z",
+    "producedBy": "@3klife/usage-evidence-shadow",
+    "reproducibility": {
+      "replayable": true,
+      "replayCommand": [
+        "node",
+        "tools_node/atm-adapter/usage-evidence-shadow.js",
+        "--source",
+        "fixtures/adapter/3klife-usage-source.json",
+        "--mode",
+        "strict"
+      ],
+      "inputs": [
+        "fixtures/adapter/3klife-usage-source.json"
+      ],
+      "expectedArtifacts": [
+        "fixtures/adapter/3klife-usage-source.json",
+        "atomic_workbench/atoms/ATM-CORE-0003/reports/neutrality-map-report.json"
+      ],
+      "notes": "Replay remaps the same source JSON through the deterministic mapping table."
+    },
+    "details": {
+      "feedbackSource": "adapter",
+      "usageSignals": {
+        "sessions": 3,
+        "tokens": 1820,
+        "interactions": 17,
+        "sourceWorkItemId": "ATM-3-0014",
+        "atomId": "ATM-CORE-0004",
+        "callerCount": 9,
+        "subFunctions": [
+          {
+            "symbol": "normalizeCssColor",
+            "callerCount": 9
+          }
+        ],
+        "extras": {
+          "adopterPrivate": {
+            "hostContext": {
+              "project": "3KLife",
+              "engine": "cocos-3.8.8",
+              "pipeline": "atm-m2-shadow-adapter"
+            }
+          }
+        }
+      }
+    }
+  }
+}

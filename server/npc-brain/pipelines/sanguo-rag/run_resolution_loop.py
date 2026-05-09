@@ -18,6 +18,8 @@ DEFAULT_DECISION_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/unres
 DEFAULT_MANUAL_ROSTER_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json")
 DEFAULT_ALIAS_OVERRIDE_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/general-alias-overrides.json")
 DEFAULT_CHOICES_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/resolution-loop")
+DEFAULT_POSTGRES_IMPORTER = Path("server/npc-brain/pipelines/sanguo-rag/import_resolution_seed_to_postgres.py")
+DEFAULT_PG_DSN_ENV = "SANGUO_RAG_PG_DSN"
 ROMANCE_CHARACTER_LIST_RAW_URL = "https://zh.wikipedia.org/w/index.php?title=%E4%B8%89%E5%9B%BD%E6%BC%94%E4%B9%89%E8%A7%92%E8%89%B2%E5%88%97%E8%A1%A8&action=raw"
 DEFAULT_ROMANCE_CHARACTER_CACHE_PATH = DEFAULT_CHOICES_ROOT / "romance-character-list-cache.json"
 DECORATIVE_WRAPPER_CHARS = "【】[]()（）「」『』《》〈〉"
@@ -83,6 +85,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--alias-overrides", default=str(DEFAULT_ALIAS_OVERRIDE_PATH), help="Curated alias override JSON used as secondary recommendation evidence")
     parser.add_argument("--choices-root", default=str(DEFAULT_CHOICES_ROOT), help="Output directory for generated MCQ files")
     parser.add_argument("--top", type=int, default=30, help="Number of unresolved labels to turn into MCQs")
+    parser.add_argument(
+        "--top-source",
+        choices=("auto", "summary", "postgres"),
+        default="auto",
+        help="Source of unresolved top-N labels: summary JSON, postgres query, or auto fallback.",
+    )
+    parser.add_argument(
+        "--pg-dsn",
+        default="",
+        help=f"PostgreSQL DSN. If omitted, read from env {DEFAULT_PG_DSN_ENV}.",
+    )
     parser.add_argument("--max-iterations", type=int, default=1, help="Number of automatic loop iterations to run")
     parser.add_argument("--apply-answers", action="store_true", help="Apply any existing answered MCQs before rebuilding the loop")
     parser.add_argument(
@@ -308,6 +321,133 @@ def load_curated_person_index(manual_roster_path: Path, alias_override_path: Pat
 def run_step(args: list[str]) -> None:
     print("[resolution_loop] $", " ".join(args))
     subprocess.run(args, check=True)
+
+
+def resolve_pg_dsn(pg_dsn_arg: str) -> str:
+    if pg_dsn_arg.strip():
+        return pg_dsn_arg.strip()
+    return os.environ.get(DEFAULT_PG_DSN_ENV, "").strip()
+
+
+def import_psycopg():
+    try:
+        import psycopg
+    except ImportError as exc:
+        raise RuntimeError(
+            "psycopg is not installed. Run `pip install \"psycopg[binary]>=3.2,<4\"` "
+            "in the active pipeline Python environment."
+        ) from exc
+    return psycopg
+
+
+def sync_resolution_seed_to_postgres(
+    pg_dsn: str,
+    observed_path: Path,
+    alias_output_root: Path,
+    decision_path: Path,
+) -> bool:
+    if not pg_dsn:
+        print("[resolution_loop] postgres sync skipped: PG DSN not set")
+        return False
+    if not DEFAULT_POSTGRES_IMPORTER.exists():
+        print(
+            "[resolution_loop] postgres sync skipped: importer not found at "
+            f"{DEFAULT_POSTGRES_IMPORTER}"
+        )
+        return False
+    run_step(
+        [
+            resolve_pipeline_python(),
+            str(DEFAULT_POSTGRES_IMPORTER),
+            "--pg-dsn",
+            pg_dsn,
+            "--observed-mentions",
+            str(observed_path),
+            "--alias-map",
+            str(alias_output_root / "formal-mention-map.json"),
+            "--triage-decisions",
+            str(decision_path),
+        ]
+    )
+    return True
+
+
+def query_unresolved_from_postgres(pg_dsn: str, top: int) -> list[dict]:
+    if top <= 0:
+        return []
+    if not pg_dsn:
+        raise RuntimeError("PostgreSQL DSN is empty.")
+
+    psycopg = import_psycopg()
+    query = """
+        WITH unresolved AS (
+            SELECT m.*
+            FROM sanguo_rag.observed_mentions AS m
+            LEFT JOIN sanguo_rag.triage_label_decisions AS d
+              ON d.normalized = m.normalized
+            WHERE m.match_status = 'unresolved'
+              AND COALESCE(d.decision, '') NOT IN ('noise', 'ambiguous', 'person')
+        ),
+        ranked AS (
+            SELECT
+              normalized,
+              MIN(label) AS label,
+              MIN(mention_type) AS mention_type,
+              COUNT(*)::INTEGER AS mention_count
+            FROM unresolved
+            GROUP BY normalized
+            ORDER BY mention_count DESC, normalized
+            LIMIT %s
+        )
+        SELECT
+          r.label,
+          r.normalized,
+          r.mention_type,
+          r.mention_count,
+          COALESCE(
+            (
+              SELECT ARRAY(
+                SELECT DISTINCT u.source_ref
+                FROM unresolved AS u
+                WHERE u.normalized = r.normalized
+                ORDER BY u.source_ref
+                LIMIT 3
+              )
+            ),
+            ARRAY[]::TEXT[]
+          ) AS source_refs,
+          COALESCE(
+            (
+              SELECT ARRAY(
+                SELECT DISTINCT u.text_snippet
+                FROM unresolved AS u
+                WHERE u.normalized = r.normalized
+                  AND u.text_snippet <> ''
+                LIMIT 3
+              )
+            ),
+            ARRAY[]::TEXT[]
+          ) AS sample_snippets
+        FROM ranked AS r
+        ORDER BY r.mention_count DESC, r.normalized;
+    """
+
+    rows: list[dict] = []
+    with psycopg.connect(pg_dsn) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(query, (top,))
+            for label, normalized, mention_type, mention_count, source_refs, sample_snippets in cursor.fetchall():
+                rows.append(
+                    {
+                        "label": str(label or normalized or ""),
+                        "normalized": str(normalized or ""),
+                        "mentionType": str(mention_type or "unknown"),
+                        "count": int(mention_count or 0),
+                        "sourceRefs": list(source_refs or []),
+                        "sampleSnippets": list(sample_snippets or []),
+                    }
+                )
+    return rows
 
 
 def describe_json_artifact(path: Path, expected_key: str | None = None) -> None:
@@ -798,6 +938,7 @@ def render_choices_markdown(choices: dict) -> str:
         "",
         f"Generated at: {choices['generatedAt']}",
         f"Decision file: `{choices['decisionPath']}`",
+        f"Unresolved top source: `{choices.get('unresolvedTopSource', 'summary')}`",
         "",
         "請對每題選 A/B/C/D；只有 A 需要補 generalId/faction，B/C 可以直接回填到 decision JSON。",
         "",
@@ -847,6 +988,40 @@ def render_choices_markdown(choices: dict) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+def resolve_unresolved_top_labels(
+    summary: dict,
+    summary_path: Path,
+    top: int,
+    top_source: str,
+    pg_dsn: str,
+) -> tuple[list[dict], str]:
+    summary_unresolved = list(summary.get("topUnresolvedLabels") or [])[:top]
+    if top_source == "summary":
+        return summary_unresolved, "summary"
+
+    if top_source in {"auto", "postgres"}:
+        try:
+            postgres_unresolved = query_unresolved_from_postgres(pg_dsn, top)
+            if postgres_unresolved:
+                return postgres_unresolved, "postgres"
+            if top_source == "postgres":
+                print("[resolution_loop] postgres unresolved query returned 0 rows")
+                return [], "postgres"
+            print(
+                "[resolution_loop] postgres unresolved query returned 0 rows; "
+                f"fallback to summary {summary_path}"
+            )
+        except Exception as exc:
+            if top_source == "postgres":
+                raise
+            print(
+                "[resolution_loop] postgres unresolved query failed; "
+                f"fallback to summary {summary_path} ({exc})"
+            )
+
+    return summary_unresolved, "summary"
+
+
 def generate_choices(
     summary_path: Path,
     decision_path: Path,
@@ -854,9 +1029,17 @@ def generate_choices(
     top: int,
     manual_roster_path: Path,
     alias_override_path: Path,
+    top_source: str,
+    pg_dsn: str,
 ) -> tuple[Path, Path, dict, dict]:
     summary = read_json(summary_path)
-    unresolved = summary.get("topUnresolvedLabels", [])[:top]
+    unresolved, resolved_top_source = resolve_unresolved_top_labels(
+        summary,
+        summary_path,
+        top,
+        top_source,
+        pg_dsn,
+    )
     romance_cache_path = DEFAULT_ROMANCE_CHARACTER_CACHE_PATH if choices_root == DEFAULT_CHOICES_ROOT else choices_root / "romance-character-list-cache.json"
     romance_index = load_romance_character_index(romance_cache_path)
     curated_index = load_curated_person_index(manual_roster_path, alias_override_path)
@@ -864,6 +1047,7 @@ def generate_choices(
         "version": "1.0.0",
         "generatedAt": utc_now(),
         "summaryPath": str(summary_path),
+        "unresolvedTopSource": resolved_top_source,
         "decisionPath": str(decision_path),
         "totalMentions": summary.get("totalMentions", 0),
         "resolvedMentionCount": summary.get("resolvedMentionCount", 0),
@@ -947,12 +1131,19 @@ def main() -> None:
     manual_roster_path = Path(args.manual_roster)
     alias_override_path = Path(args.alias_overrides)
     choices_root = Path(args.choices_root)
+    pg_dsn = resolve_pg_dsn(args.pg_dsn)
     observed_path = observed_output_root / "observed-mentions.json"
     summary_path = observed_output_root / "observed-label-summary.json"
     auto_apply_filled = 0
     auto_apply_actionable = 0
     auto_suggestion_filled = 0
     auto_suggestion_actionable = 0
+    postgres_seed_synced = False
+
+    if args.top_source == "postgres" and not pg_dsn:
+        raise RuntimeError(
+            f"--top-source=postgres requires --pg-dsn or env {DEFAULT_PG_DSN_ENV}."
+        )
 
     if args.auto_fill_suggestions:
         auto_suggestion_filled, auto_suggestion_actionable = autofill_answer_suggestions(
@@ -972,6 +1163,19 @@ def main() -> None:
         collect_observed_mentions(chapters_root, alias_output_root, observed_output_root, decision_path, args.top)
         build_alias_dict(alias_output_root, observed_path)
 
+    if args.top_source in {"auto", "postgres"}:
+        try:
+            postgres_seed_synced = sync_resolution_seed_to_postgres(
+                pg_dsn,
+                observed_path,
+                alias_output_root,
+                decision_path,
+            )
+        except Exception as exc:
+            if args.top_source == "postgres":
+                raise
+            print(f"[resolution_loop] postgres sync failed; continue with summary fallback ({exc})")
+
     json_path, markdown_path, choices, answers = generate_choices(
         summary_path,
         decision_path,
@@ -979,6 +1183,8 @@ def main() -> None:
         args.top,
         manual_roster_path,
         alias_override_path,
+        args.top_source,
+        pg_dsn if postgres_seed_synced or args.top_source == "postgres" else "",
     )
     print(f"[resolution_loop] wrote {json_path}")
     print(f"[resolution_loop] wrote {markdown_path}")
@@ -986,6 +1192,7 @@ def main() -> None:
         "[resolution_loop] "
         f"resolved={choices['resolvedMentionCount']} unresolved={choices['unresolvedMentionCount']} "
         f"excluded={choices['excludedMentionCount']} reviewPending={choices['reviewPendingMentionCount']} "
+        f"topSource={choices.get('unresolvedTopSource', 'summary')} postgresSynced={postgres_seed_synced} "
         f"questions={len(choices['questions'])} preservedAnswers={answers['preservedActiveAnswerCount']} "
         f"carriedForward={answers['carriedForwardAnsweredCount']} autoSuggestionFilled={auto_suggestion_filled} "
         f"autoSuggestionActionable={auto_suggestion_actionable} autoApplyFilled={auto_apply_filled} "

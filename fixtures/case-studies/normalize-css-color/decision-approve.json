@@ -1,0 +1,100 @@
+{
+  "schemaId": "atm.humanReviewDecision",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "none",
+    "fromVersion": null,
+    "notes": "ATM-4-0007 normalizeCssColor approve decision."
+  },
+  "decisionId": "decision.proposal.atm-core-0004.from-1.0.0.to-1.1.0.atom.behavior-evolve.approve",
+  "proposalId": "proposal.atm-core-0004.from-1.0.0.to-1.1.0.atom.behavior-evolve",
+  "atomId": "ATM-CORE-0004",
+  "decision": "approve",
+  "reason": "Automated gates are green and rollout risk is acceptable.",
+  "decidedBy": "ATM reviewer",
+  "decidedAt": "2026-05-09T04:35:00.000Z",
+  "decisionSnapshotHash": "sha256:0153f0d11d39f24dfcf6f288fe94ec88d73e1f4efc0b7e8e34d1fc984646d9bf",
+  "queuePath": ".atm/reports/upgrade-proposals.json",
+  "projectionPath": ".atm/reports/upgrade-proposals.md",
+  "queueRecord": {
+    "proposalId": "proposal.atm-core-0004.from-1.0.0.to-1.1.0.atom.behavior-evolve",
+    "atomId": "ATM-CORE-0004",
+    "fromVersion": "1.0.0",
+    "toVersion": "1.1.0",
+    "decompositionDecision": "atom-bump",
+    "automatedGates": {
+      "allPassed": true,
+      "blockedGateNames": []
+    },
+    "status": "approved",
+    "proposalSnapshotHash": "sha256:0153f0d11d39f24dfcf6f288fe94ec88d73e1f4efc0b7e8e34d1fc984646d9bf",
+    "proposal": {
+      "schemaId": "atm.upgradeProposal",
+      "proposalId": "proposal.atm-core-0004.from-1.0.0.to-1.1.0.atom.behavior-evolve",
+      "atomId": "ATM-CORE-0004",
+      "fromVersion": "1.0.0",
+      "toVersion": "1.1.0",
+      "decompositionDecision": "atom-bump",
+      "status": "pending",
+      "automatedGates": {
+        "allPassed": true,
+        "blockedGateNames": []
+      }
+    },
+    "review": {
+      "decision": "approve",
+      "reason": "Automated gates are green and rollout risk is acceptable.",
+      "decidedBy": "ATM reviewer",
+      "decidedAt": "2026-05-09T04:35:00.000Z",
+      "decisionSnapshotHash": "sha256:0153f0d11d39f24dfcf6f288fe94ec88d73e1f4efc0b7e8e34d1fc984646d9bf",
+      "evidenceId": "human-review.proposal.atm-core-0004.from-1.0.0.to-1.1.0.atom.behavior-evolve.approve"
+    }
+  },
+  "evidence": {
+    "schemaId": "atm.evidence.humanReviewDecision",
+    "specVersion": "0.1.0",
+    "migration": {
+      "strategy": "none",
+      "fromVersion": null,
+      "notes": "ATM-4-0007 human review evidence."
+    },
+    "evidenceId": "human-review.proposal.atm-core-0004.from-1.0.0.to-1.1.0.atom.behavior-evolve.approve",
+    "workItemId": "ATM-CORE-0004",
+    "evidenceKind": "review",
+    "evidenceType": "human-review-decision",
+    "summary": "Human review approve for normalizeCssColor v1.0 -> v1.1 proposal.",
+    "artifactPaths": [
+      ".atm/reports/upgrade-proposals.json",
+      ".atm/reports/upgrade-proposals.md"
+    ],
+    "createdAt": "2026-05-09T04:35:00.000Z",
+    "producedBy": "ATM reviewer",
+    "reproducibility": {
+      "replayable": true,
+      "replayCommand": [
+        "node",
+        "tools_node/validate-h2u-evolution-pilot.js",
+        "--strict"
+      ],
+      "inputs": [
+        "fixtures/case-studies/normalize-css-color/proposal.json",
+        "fixtures/case-studies/normalize-css-color/decision-approve.json"
+      ],
+      "expectedArtifacts": [
+        "fixtures/case-studies/normalize-css-color/proposal.json",
+        "fixtures/case-studies/normalize-css-color/decision-approve.json"
+      ],
+      "notes": "Replay validates proposal hash and decision consistency."
+    },
+    "details": {
+      "proposalId": "proposal.atm-core-0004.from-1.0.0.to-1.1.0.atom.behavior-evolve",
+      "atomId": "ATM-CORE-0004",
+      "decision": "approve",
+      "reason": "Automated gates are green and rollout risk is acceptable.",
+      "queuePath": ".atm/reports/upgrade-proposals.json",
+      "projectionPath": ".atm/reports/upgrade-proposals.md",
+      "decisionSnapshotHash": "sha256:0153f0d11d39f24dfcf6f288fe94ec88d73e1f4efc0b7e8e34d1fc984646d9bf",
+      "queueStatus": "approved"
+    }
+  }
+}

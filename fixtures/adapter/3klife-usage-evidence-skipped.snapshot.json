@@ -1,0 +1,50 @@
+{
+  "adapter": "usage-evidence-shadow",
+  "mode": "lenient",
+  "sourcePath": "fixtures/adapter/3klife-usage-source-missing-field.json",
+  "mappingPath": "tools_node/atm-adapter/mapping-table.json",
+  "workbenchRoot": "atomic_workbench",
+  "passed": true,
+  "evidenceType": "usage-feedback-skipped",
+  "findings": [],
+  "workbenchScan": {
+    "atomArtifactCount": 1,
+    "mapArtifactCount": 0
+  },
+  "payload": {
+    "schemaId": "atm.evidence.usageFeedbackSkipped",
+    "specVersion": "0.1.0",
+    "migration": {
+      "strategy": "additive",
+      "fromVersion": null,
+      "notes": "3KLife strict-to-lenient fallback record for ATM-3-0014."
+    },
+    "evidenceId": "usage-feedback-skipped.atm-core-0004.20260509042112",
+    "workItemId": "ATM-CORE-0004",
+    "evidenceKind": "metric",
+    "evidenceType": "usage-feedback-skipped",
+    "summary": "source format drift: missing required sessions metric",
+    "artifactPaths": [
+      "fixtures/adapter/3klife-usage-source-missing-field.json"
+    ],
+    "createdAt": "2026-05-09T04:21:12.329Z",
+    "producedBy": "@3klife/usage-evidence-shadow",
+    "skipReason": "source format drift: missing required sessions metric",
+    "details": {
+      "feedbackSource": "adapter",
+      "usageSignals": {
+        "sessions": 1,
+        "sourceWorkItemId": "ATM-3-0014",
+        "extras": {
+          "adopterPrivate": {
+            "hostContext": {
+              "project": "3KLife",
+              "engine": "cocos-3.8.8",
+              "pipeline": "atm-m2-shadow-adapter"
+            }
+          }
+        }
+      }
+    }
+  }
+}

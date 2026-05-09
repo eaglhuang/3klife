@@ -1,0 +1,29 @@
+{
+  "schemaId": "atm.caseStudy.normalizeCssColor",
+  "specVersion": "1.0.0",
+  "atomId": "ATM-CORE-0004",
+  "atomVersion": "1.0.0",
+  "behaviorId": "behavior.evolve",
+  "status": "active",
+  "summary": "Baseline normalizeCssColor behavior used by html-to-ucuf pipeline.",
+  "cases": [
+    {
+      "input": "rgba(255, 0, 0, 0.5)",
+      "output": "#FF000080"
+    },
+    {
+      "input": "#abc",
+      "output": "#AABBCCFF"
+    },
+    {
+      "input": "transparent",
+      "output": "#00000000"
+    }
+  ],
+  "qualityMetrics": {
+    "errorRate": 0.02,
+    "coverage": 0.9,
+    "latencyMsP95": 45,
+    "edgeCaseCount": 2
+  }
+}

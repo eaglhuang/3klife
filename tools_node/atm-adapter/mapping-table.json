@@ -1,0 +1,86 @@
+{
+  "adapterId": "usage-evidence-shadow",
+  "adapterVersion": "0.1.0",
+  "sourceKind": "3klife.compute-gate.report",
+  "targetSchemaId": "atm.evidence.usageFeedback",
+  "targetSpecVersion": "0.1.0",
+  "fieldMappings": [
+    {
+      "name": "workItemId",
+      "required": true,
+      "sourcePaths": [
+        "workItemId",
+        "taskId"
+      ],
+      "targetPath": "workItemId"
+    },
+    {
+      "name": "atomId",
+      "required": true,
+      "sourcePaths": [
+        "atomId",
+        "target.atomId"
+      ],
+      "targetPath": "details.usageSignals.atomId"
+    },
+    {
+      "name": "sessions",
+      "required": true,
+      "sourcePaths": [
+        "metrics.sessions",
+        "usageSignals.sessions",
+        "details.usageSignals.sessions"
+      ],
+      "targetPath": "details.usageSignals.sessions"
+    },
+    {
+      "name": "tokens",
+      "required": false,
+      "sourcePaths": [
+        "metrics.tokens",
+        "usageSignals.tokens",
+        "details.usageSignals.tokens"
+      ],
+      "targetPath": "details.usageSignals.tokens"
+    },
+    {
+      "name": "interactions",
+      "required": false,
+      "sourcePaths": [
+        "metrics.interactions",
+        "usageSignals.interactions",
+        "details.usageSignals.interactions"
+      ],
+      "targetPath": "details.usageSignals.interactions"
+    },
+    {
+      "name": "callerCount",
+      "required": true,
+      "sourcePaths": [
+        "metrics.callerCount",
+        "callerCount",
+        "usageSignals.callerCount"
+      ],
+      "targetPath": "details.usageSignals.callerCount"
+    },
+    {
+      "name": "subFunction",
+      "required": false,
+      "sourcePaths": [
+        "subFunction",
+        "exportSymbol",
+        "symbol"
+      ],
+      "targetPath": "details.usageSignals.subFunctions[0].symbol"
+    }
+  ],
+  "hostOnlyRouting": {
+    "sourcePaths": [
+      "hostContext",
+      "adopterPrivate",
+      "workspaceContext"
+    ],
+    "targetPath": "details.usageSignals.extras.adopterPrivate",
+    "mode": "move"
+  }
+}
