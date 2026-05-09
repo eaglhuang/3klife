@@ -24,13 +24,15 @@
     "title": "Adapter Guide 與 Plugin SDK 文件",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "docs",
     "phase": "ATM-5",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-09T22:28:29+08:00",
+    "started_by_agent": "codex-gpt-5",
+    "completed_at": "2026-05-09T22:33:41+08:00",
+    "completed_by_agent": "codex-gpt-5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -57,7 +59,7 @@
       "standalone Default Governance Bundle 與 3KLife adapter 的 artifacts/logs/reports mapping 對照",
       "CAR / HarnessCard-lite adapter reporting guidance"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter migration guide 要求 | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 CAR/HarnessCard docs acceptance；已 done 卡不回改 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 governance adapter migration guide 要求 | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 CAR/HarnessCard docs acceptance；已 done 卡不回改 | 阻塞: none\n2026-05-09 | 狀態: in-progress | 驗證: pending | 變更: codex-gpt-5 開始實作 ATM-5-0002（Adapter Guide / Plugin SDK / governance migration / CAR-HarnessCard 對照） | 阻塞: none\n2026-05-09 | 狀態: done | 驗證: encoding/doc-shard/rule-guard pass；compute-gate standard 因 task-scope gate deprecated 改以 RuleGuard 收斂 | 變更: 交付 ADAPTER_GUIDE / PLUGIN_SDK / hosted adapter example 並補齊 migration + CAR/HarnessCard-lite 契約 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
@@ -89,9 +91,20 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "docs/ADAPTER_GUIDE.md",
+        "docs/PLUGIN_SDK.md",
+        "examples/hosted-adapter-impl/README.md",
+        "examples/hosted-adapter-impl/project-adapter-sample.js",
+        "examples/hosted-adapter-impl/adapter.config.json"
+      ],
+      "validation_evidence": [
+        "npm.cmd run check:encoding:touched -- --files docs/ADAPTER_GUIDE.md docs/PLUGIN_SDK.md examples/hosted-adapter-impl/README.md examples/hosted-adapter-impl/project-adapter-sample.js examples/hosted-adapter-impl/adapter.config.json docs/agent-briefs/tasks/ATM/ATM-5-0002.md docs/tasks/tasks-atm/tasks-atm-part-26.json docs/doc-id-registry.json docs/doc-id-registry-shards/registry-index.json docs/doc-id-registry-shards/registry-other.json server/server_docs_reference.md",
+        "node tools_node/check-doc-shard-health.js",
+        "node tools_node/run-rule-guard.js --profile atm",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback (blocked by deprecated task-scope gate)"
+      ],
+      "handoff_diff_status": "done",
       "trace_artifacts": [],
       "metrics_summary": []
     }

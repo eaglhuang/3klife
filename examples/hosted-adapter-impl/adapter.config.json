@@ -1,0 +1,11 @@
+{
+  "repositoryRoot": ".",
+  "adapterName": "@example/hosted-project-adapter",
+  "adapterVersion": "0.1.0-example",
+  "materializeArtifacts": true,
+  "governance": {
+    "shadowMode": true,
+    "allowMutations": false,
+    "artifactRoot": "artifacts/atm-3-0001"
+  }
+}

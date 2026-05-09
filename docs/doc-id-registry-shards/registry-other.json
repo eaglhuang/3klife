@@ -586,5 +586,17 @@
     "path": "CHANGELOG.md",
     "title": "Changelog",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0106",
+    "path": "docs/ADAPTER_GUIDE.md",
+    "title": "ATM Adapter Guide",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0107",
+    "path": "docs/PLUGIN_SDK.md",
+    "title": "ATM Plugin SDK Guide",
+    "category": "other"
   }
 ]
