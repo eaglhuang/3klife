@@ -93,5 +93,76 @@
       ]
     },
     "completed_at": "2026-05-06T15:48:51+08:00"
+  },
+  {
+    "doc_id": "doc_task_0366",
+    "id": "ATM-3-0016",
+    "title": "Validator Orchestrator and AJV Cache Unified Entry",
+    "owner": "codex-gpt-5",
+    "priority": "P1",
+    "status": "open",
+    "type": "implementation",
+    "phase": "ATM-3",
+    "created": "2026-05-10",
+    "created_by_agent": "codex-gpt-5",
+    "started_at": "",
+    "started_by_agent": "",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "Close M3 gap by introducing a unified validator orchestrator entry and shared AJV cache lifecycle.",
+    "related": [],
+    "depends": [
+      "ATM-2-0029",
+      "ATM-2-0031",
+      "ATM-2-0033"
+    ],
+    "acceptance": [
+      "Provide one orchestrator API for run/registry/cache/telemetry",
+      "Introduce shared AJV cache with deterministic invalidation",
+      "Migrate at least three existing validate:* commands to unified entry",
+      "Publish schema compile metrics and cache hit/miss report",
+      "Keep milestone sync strict check green"
+    ],
+    "deliverables": [
+      "tools_node/lib/validator-orchestrator.js",
+      "tools_node/lib/ajv-cache-registry.js",
+      "docs/ai_atomic_framework/validator-orchestrator-and-ajv-cache.md",
+      "docs/agent-briefs/tasks/ATM/ATM-3-0016.md"
+    ],
+    "notes": "2026-05-10 | status: open | validation: pending | change: created M3 gap owner card for validator orchestrator / AJV cache unified entry | blocker: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM M3 gap closure",
+      "summary": "Close milestone M3 missing ownership for validator orchestrator and AJV cache unified entry.",
+      "position": "ATM-3 / M3 validation layer",
+      "prereq": "ATM-2-0029 / ATM-2-0031 / ATM-2-0033"
+    },
+    "contracts": {
+      "input": [
+        "existing validate:* scripts and ATM-2 validator surfaces"
+      ],
+      "output": [
+        "orchestrator entry",
+        "shared AJV cache policy",
+        "migrated validators",
+        "M3 contract docs"
+      ],
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-3-0016.md\nnode tools_node/check-doc-shard-health.js\nnode tools_node/sync-atm-stabilization-milestone.js --check --strict",
+      "rollback_hint": "revert orchestrator/cache touched files and restore previous validate:* entrypoints, then re-run sync checks.",
+      "execution_steps": [
+        "inventory validate entrypoints and AJV compile hotspots",
+        "implement orchestrator and cache registry",
+        "migrate at least three validators",
+        "sync task-store and milestone evidence"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

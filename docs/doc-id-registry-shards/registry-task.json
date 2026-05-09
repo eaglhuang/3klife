@@ -2140,5 +2140,11 @@
     "path": "docs/case-studies/h2u-normalize-css-color-evolution-pilot.md",
     "title": "H2U normalizeCssColor v1.0 到 v1.1 Evolution Pilot",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0366",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-3-0016.md",
+    "title": "[ATM-3-0016] Validator Orchestrator 與 AJV Cache 統一入口",
+    "category": "task"
   }
 ]

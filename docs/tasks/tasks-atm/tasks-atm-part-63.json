@@ -49,13 +49,13 @@
     "title": "Cocos runtime adapter policy",
     "owner": "GitHubCopilot",
     "priority": "P1",
-    "status": "open",
+    "status": "done",
     "type": "adapter-policy",
     "phase": "ATM-3",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
-    "started_by_agent": "",
+    "started_by_agent": "GitHubCopilot",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -76,7 +76,7 @@
       "禁止 import cc 的 atom 規則",
       "明確列出 Cocos Component、Node、Prefab、Scene、AssetRef 僅能由 adapter/wrapper 持有，不可進 compute atom"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 v0.2 companion 對應交付/驗收條件 | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 v0.2 companion 對應交付/驗收條件 | 阻塞: none\n2026-05-10 | status: done | validation: truth-sync | change: aligned shard status with done task card and synchronized completion metadata | blocker: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
@@ -108,6 +108,8 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-09",
+    "completed_by_agent": "GitHubCopilot"
   }
 ]
