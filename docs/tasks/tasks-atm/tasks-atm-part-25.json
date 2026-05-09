@@ -33,13 +33,15 @@
     "title": "Semver Lifecycle 與 Governance",
     "owner": "GitHubCopilot",
     "priority": "P1",
-    "status": "open",
+    "status": "done",
     "type": "governance",
     "phase": "ATM-5",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-09T21:54:58+08:00",
+    "started_by_agent": "codex-gpt-5",
+    "completed_at": "2026-05-09T22:01:14+08:00",
+    "completed_by_agent": "codex-gpt-5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -70,7 +72,7 @@
       "release owner / maintainer duty matrix",
       "package naming / provenance / deprecation policy"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 release owner、package naming、provenance 與 deprecation 實務要求 | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 release owner、package naming、provenance 與 deprecation 實務要求 | 阻塞: none\n2026-05-06 v2 規劃書補丁：補 framework semver / atom compatibility / PEV upgrade proposal 公開規則\n2026-05-09 | 狀態: in-progress | 驗證: pending | 變更: codex-gpt-5 開始執行 ATM-5-0003，先做 lifecycle/governance 文件拆分映射與完整 release checklist 模板 | 阻塞: none\n2026-05-09 | 狀態: done | 驗證: encoding/sync/doc-shard/rule-guard pass；compute-gate standard 因 task-scope gate deprecated，改以 run-rule-guard evidence 收斂 | 變更: 交付 lifecycle/governance/compatibility/proposal-rules/release-checklist/changelog 並同步 task-store 與 milestone | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
@@ -105,11 +107,28 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "docs/LIFECYCLE.md",
+        "docs/GOVERNANCE.md",
+        "docs/ATOM_COMPATIBILITY.md",
+        "docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md",
+        "docs/RELEASE_CHECKLIST.md",
+        "CHANGELOG.md",
+        "docs/ai_atomic_framework/upstream-versioning-policy.md"
+      ],
+      "validation_evidence": [
+        "npm.cmd run check:encoding:touched -- --files CHANGELOG.md docs/LIFECYCLE.md docs/GOVERNANCE.md docs/ATOM_COMPATIBILITY.md docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md docs/RELEASE_CHECKLIST.md docs/ai_atomic_framework/upstream-versioning-policy.md docs/agent-briefs/tasks/ATM/ATM-5-0003.md docs/tasks/tasks-atm/tasks-atm-part-25.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md docs/doc-id-registry.json docs/doc-id-registry-shards/registry-other.json docs/doc-id-registry-shards/registry-index.json docs/doc-id-registry-shards/registry-task.json docs/doc-id-registry-shards/registry-tech.json docs/doc-id-registry-shards/registry-ai.json docs/doc-id-registry-shards/registry-agentskill.json docs/doc-id-registry-shards/registry-ui.json docs/doc-id-registry-shards/registry-art.json docs/doc-id-registry-shards/registry-data.json docs/doc-id-registry-shards/registry-server.json server/server_docs_reference.md",
+        "node tools_node/rebuild-tasks-atm-auto-parts.js",
+        "node tools_node/sync-atm-stabilization-milestone.js --check --strict",
+        "node tools_node/check-doc-shard-health.js",
+        "node tools_node/run-rule-guard.js --profile atm",
+        "node tools_node/compute-gate.js --profile standard --agent-feedback (blocked by deprecated task-scope gate)"
+      ],
+      "handoff_diff_status": "done",
       "trace_artifacts": [],
-      "metrics_summary": []
+      "metrics_summary": [
+        "task-store summary: done=97 / in_progress=0 / open=21 / total=118"
+      ]
     }
   }
 ]

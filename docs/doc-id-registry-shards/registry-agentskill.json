@@ -8,13 +8,13 @@
   {
     "id": "doc_agentskill_0002",
     "path": ".agents/skills/cocos-bug-triage/SKILL.md",
-    "title": "Cocos Bug Triage（完整 Bug 調查工作流）",
+    "title": "Cocos Bug Triage（鏡像索引）",
     "category": "agentskill"
   },
   {
     "id": "doc_agentskill_0003",
     "path": ".agents/skills/cocos-log-reader/SKILL.md",
-    "title": "Cocos Log Reader（運行期日誌分析）",
+    "title": "Cocos Log Reader（鏡像索引）",
     "category": "agentskill"
   },
   {
@@ -152,7 +152,7 @@
   {
     "id": "doc_agentskill_0026",
     "path": ".github/skills/task-card-opener/SKILL.md",
-    "title": "Task Card Opener（鏡像索引）",
+    "title": "Task Card Opener",
     "category": "agentskill"
   },
   {
@@ -182,7 +182,7 @@
   {
     "id": "doc_agentskill_0031",
     "path": ".github/skills/ui-vibe-pipeline/SKILL.md",
-    "title": "UI Vibe Pipeline（鏡像索引）",
+    "title": "UI Vibe Pipeline",
     "category": "agentskill"
   },
   {
@@ -278,7 +278,193 @@
   {
     "id": "doc_agentskill_0066",
     "path": ".agents/skills/notes-label-repair/SKILL.md",
-    "title": "SKILL: notes-label-repair",
+    "title": "Notes Label Repair",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0067",
+    "path": ".agents/skills/comfyui-sdxl-partial-asset-gen/SKILL.md",
+    "title": "ComfyUI SDXL Partial Asset Gen",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0068",
+    "path": ".agents/skills/compute-gate/SKILL.md",
+    "title": "Compute Gate Skill",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0069",
+    "path": ".agents/skills/crossref-progress-scanner/SKILL.md",
+    "title": "crossref-progress-scanner Skill",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0070",
+    "path": ".agents/skills/dalle3-image-gen/SKILL.md",
+    "title": "DALL-E 3 Image Generation",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0071",
+    "path": ".agents/skills/doc-consolidation-flow/SKILL.md",
+    "title": "Doc Consolidation Flow",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0072",
+    "path": ".agents/skills/doc-shard-manager/SKILL.md",
+    "title": "Doc Shard Manager SKILL",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0073",
+    "path": ".agents/skills/general-balance-tuner/SKILL.md",
+    "title": "General Balance Tuner",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0074",
+    "path": ".agents/skills/general-data-pipeline/SKILL.md",
+    "title": "General Data Pipeline",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0075",
+    "path": ".agents/skills/general-story-writer/SKILL.md",
+    "title": "General Story Writer",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0076",
+    "path": ".agents/skills/gpt-image-2-gen/SKILL.md",
+    "title": "GPT Image 2 Image Generation",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0077",
+    "path": ".agents/skills/html-to-ucuf/SKILL.md",
+    "title": "HTML-to-UCUF Skill",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0078",
+    "path": ".agents/skills/nano-banana-gen/SKILL.md",
+    "title": "Nano Banana 圖像生成",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0079",
+    "path": ".agents/skills/ui-asset-gen-director/SKILL.md",
+    "title": "UI Asset Gen Director",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0080",
+    "path": ".agents/skills/ui-asset-qc/SKILL.md",
+    "title": "UI Asset QC",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0081",
+    "path": ".agents/skills/ui-asset-slice-pipeline/SKILL.md",
+    "title": "UI Asset Slice Pipeline",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0082",
+    "path": ".agents/skills/ui-brief-generator/SKILL.md",
+    "title": "UI Brief Generator",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0083",
+    "path": ".agents/skills/ui-family-architect/SKILL.md",
+    "title": "UI Family Architect",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0084",
+    "path": ".agents/skills/ui-i18n-localize/SKILL.md",
+    "title": "UI I18N Localize",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0085",
+    "path": ".agents/skills/ui-preview-judge/SKILL.md",
+    "title": "UI Preview Judge",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0086",
+    "path": ".agents/skills/ui-reference-decompose/SKILL.md",
+    "title": "UI Reference Decompose",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0087",
+    "path": ".agents/skills/ui-runtime-verify/SKILL.md",
+    "title": "UI Runtime Verify",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0088",
+    "path": ".agents/skills/ui-spec-scaffold/SKILL.md",
+    "title": "UI Spec Scaffold",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0089",
+    "path": ".github/skills/best-mode/SKILL.md",
+    "title": "Best Mode",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0090",
+    "path": ".github/skills/context-budget-guard/SKILL.md",
+    "title": "Context Budget Guard",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0091",
+    "path": ".github/skills/general-avatar-crop/SKILL.md",
+    "title": "Skill: general-avatar-crop",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0092",
+    "path": ".github/skills/handoff-text-spacing-extractor/SKILL.md",
+    "title": "Handoff Text Spacing Extractor",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0093",
+    "path": ".github/skills/notes-label-repair/SKILL.md",
+    "title": "Notes Label Repair",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0094",
+    "path": ".github/skills/sanguo-event-review-loop/SKILL.md",
+    "title": "Sanguo Event Review Loop",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0095",
+    "path": ".github/skills/sanguo-knowledge-growth-loop/SKILL.md",
+    "title": "Sanguo Knowledge Growth Loop",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0096",
+    "path": ".github/skills/sanguo-rag-resolution-loop/SKILL.md",
+    "title": "Sanguo RAG Resolution Loop",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0097",
+    "path": ".github/skills/task-card-required-adjustment/SKILL.md",
+    "title": "任務卡的必要調整",
     "category": "agentskill"
   }
 ]

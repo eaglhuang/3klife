@@ -1712,7 +1712,7 @@
   {
     "id": "doc_task_0294",
     "path": "docs/agent-briefs/tasks/ATM/ATM-2-0010.md",
-    "title": "[ATM-2-0010] Neutrality boundary rule guard",
+    "title": "[ATM-2-0010] RuleGuard Read-Only Validator",
     "category": "task"
   },
   {
@@ -1964,7 +1964,7 @@
   {
     "id": "doc_task_0336",
     "path": "docs/agent-briefs/tasks/ATM/ATM-2-0030.md",
-    "title": "[ATM-2-0030] Dedup Police Plugin",
+    "title": "[ATM-2-0030] Registry Version / Fingerprint Backfill Sweep",
     "category": "task"
   },
   {
@@ -2133,6 +2133,12 @@
     "id": "doc_task_0364",
     "path": "docs/agent-briefs/tasks/ATM/ATM-2-0054.md",
     "title": "[ATM-2-0054] Task Intake & Lock Stability Acknowledgement Backwrite",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0365",
+    "path": "docs/case-studies/h2u-normalize-css-color-evolution-pilot.md",
+    "title": "H2U normalizeCssColor v1.0 到 v1.1 Evolution Pilot",
     "category": "task"
   }
 ]

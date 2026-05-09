@@ -1,3 +1,7 @@
+# Upstream Versioning & Lifecycle Policy — Upstream Versioning Core
+
+> 這是 `upstream-versioning-policy.md` 的「Upstream Versioning Core」分片。完整索引見 `docs/ai_atomic_framework/upstream-versioning-policy.md`。
+
 <!-- doc_id: doc_other_0035 -->
 # Upstream Versioning & Lifecycle Policy
 

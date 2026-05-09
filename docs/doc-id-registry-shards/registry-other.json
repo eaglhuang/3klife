@@ -512,7 +512,7 @@
   {
     "id": "doc_other_0093",
     "path": "docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md",
-    "title": "ATM 框架穩定化與演化閉環里程碑",
+    "title": "ATM 框架穩定化里程碑",
     "category": "other"
   },
   {
@@ -549,6 +549,42 @@
     "id": "doc_other_0099",
     "path": "docs/QUICK_START.md",
     "title": "ATM Quick Start",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0100",
+    "path": "docs/LIFECYCLE.md",
+    "title": "ATM Lifecycle Policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0101",
+    "path": "docs/GOVERNANCE.md",
+    "title": "ATM Governance Policy",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0102",
+    "path": "docs/ATOM_COMPATIBILITY.md",
+    "title": "ATM Atom Compatibility Matrix",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0103",
+    "path": "docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md",
+    "title": "ATM Upgrade Proposal Public Rules",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0104",
+    "path": "docs/RELEASE_CHECKLIST.md",
+    "title": "ATM Release Checklist",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0105",
+    "path": "CHANGELOG.md",
+    "title": "Changelog",
     "category": "other"
   }
 ]

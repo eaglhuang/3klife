@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "source": "../upstream-versioning-policy.md",
+  "indexTitle": "Upstream Versioning & Lifecycle Policy",
+  "indexPath": "docs/ai_atomic_framework/upstream-versioning-policy.md",
+  "type": "markdown-h2",
+  "keepSourceIntact": true,
+  "preambleShard": "upstream-versioning-core",
+  "defaultShard": "upstream-versioning-core",
+  "shards": [
+    {
+      "name": "upstream-versioning-core",
+      "title": "Upstream Versioning Core",
+      "pattern": "."
+    }
+  ]
+}
