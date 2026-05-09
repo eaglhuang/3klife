@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -76,7 +78,7 @@ def repo_relative(path: Path) -> str:
 def read_json(path: Path) -> Any:
     if not path.exists():
         return {}
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -129,6 +131,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--run-id", default=None, help="Progress advancement run id. Defaults to progress-advancement-<UTC>.")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Progress advancement output root.")
+    parser.add_argument("--baseline-manifest", default=None, help="Optional baseline manifest JSON to resume from the current best paths.")
+    parser.add_argument("--profile", choices=["sweep", "precision", "promotion-eval"], default="precision", help="Execution profile for coverage, precision, or promotion evaluation.")
+    parser.add_argument("--optimization-target", default="safe-local-readiness", help="Human-readable target recorded in summary and baseline manifest.")
     parser.add_argument("--max-rounds", type=int, default=3, help="Maximum automatic A rounds to run before stopping.")
     parser.add_argument("--max-ab-cycles", type=int, default=3, help="Maximum A->B->A cycle count.")
     parser.add_argument("--edit-backlog", default=str(DEFAULT_EDIT_BACKLOG_PATH), help="Initial reviewed B edit backlog JSONL path.")
@@ -153,6 +158,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--review-decisions", default=None, help="Optional JSON file with B review decisions to apply to the latest batch.")
     parser.add_argument("--failure-rate-limit", type=float, default=0.2, help="Stop when command failure rate exceeds this.")
     parser.add_argument("--review-queue", default=str(DEFAULT_REVIEW_QUEUE_PATH), help="ETL pilot review queue JSON path.")
+    parser.add_argument("--emit-ready-eval", action="store_true", help="Emit pilot-readable evaluation-only ready events for accepted review candidates.")
+    parser.add_argument("--runtime-readiness", choices=["touched", "final", "off"], default="off", help="Run runtime readiness matrix after ABAB, scoped to touched generals or final cohort.")
+    parser.add_argument("--max-wall-time-minutes", type=float, default=None, help="Stop before starting a new A round when this wall-clock limit is exceeded.")
     parser.add_argument("--overwrite", action="store_true", help="Pass --overwrite to inner campaign and B merge steps.")
     parser.add_argument("--dry-run", action="store_true", help="Write plan/summary artifacts without executing campaign rounds.")
     return parser.parse_args()
@@ -200,6 +208,84 @@ def resolve_baseline_paths(base_paths: dict[str, str | Path]) -> dict[str, str]:
     return {key: repo_relative(resolve_path(value)) for key, value in base_paths.items()}
 
 
+def maybe_append_overwrite(command_args: list[str], overwrite: bool) -> list[str]:
+    if overwrite:
+        command_args.append("--overwrite")
+    return command_args
+
+
+def apply_profile_defaults(args: argparse.Namespace) -> None:
+    if args.profile == "sweep":
+        if args.max_rounds == 3:
+            args.max_rounds = 2
+        if args.max_ab_cycles == 3:
+            args.max_ab_cycles = 1
+        if args.top_generals == 5:
+            args.top_generals = 12
+        if args.top_per_general == 5:
+            args.top_per_general = 3
+        if args.review_batch_size == 10:
+            args.review_batch_size = 20
+    elif args.profile == "promotion-eval":
+        if args.max_rounds == 3:
+            args.max_rounds = 1
+        if args.max_ab_cycles == 3:
+            args.max_ab_cycles = 1
+        if args.top_per_general == 5:
+            args.top_per_general = 3
+        args.emit_ready_eval = True
+        if args.runtime_readiness == "off":
+            args.runtime_readiness = "final"
+
+
+def load_baseline_manifest(path_text: str | None) -> dict[str, Any]:
+    if not path_text:
+        return {}
+    path = resolve_path(path_text)
+    if not path.exists():
+        raise FileNotFoundError(f"Baseline manifest not found: {path}")
+    payload = read_json(path)
+    if not isinstance(payload, dict):
+        raise ValueError(f"Baseline manifest must be a JSON object: {path}")
+    return payload
+
+
+def _manifest_path_value(paths: dict[str, Any], *keys: str) -> str | None:
+    for key in keys:
+        value = paths.get(key)
+        if value:
+            return str(value)
+    return None
+
+
+def baseline_paths_from_manifest(manifest: dict[str, Any]) -> dict[str, str]:
+    paths = manifest.get("paths") if isinstance(manifest.get("paths"), dict) else manifest
+    if not isinstance(paths, dict):
+        return {}
+    mapping = {
+        "editBacklog": _manifest_path_value(paths, "editBacklog", "editBacklogPath", "reviewedBEditBacklog"),
+        "baseEvents": _manifest_path_value(paths, "baseEvents", "readyEvents", "readyEventsPath", "baseEventsPath"),
+        "baseRelationshipEvidence": _manifest_path_value(
+            paths,
+            "baseRelationshipEvidence",
+            "relationshipEvidence",
+            "relationshipEvidencePath",
+            "baseRelationshipEvidencePath",
+        ),
+        "baseProgress": _manifest_path_value(paths, "baseProgress", "progress", "progressPath", "baseProgressPath"),
+        "readyEvalEvents": _manifest_path_value(paths, "readyEvalEvents", "readyEvalEventsPath"),
+        "pilotReport": _manifest_path_value(paths, "pilotReport", "pilotReportPath"),
+        "runtimeReadiness": _manifest_path_value(paths, "runtimeReadiness", "runtimeReadinessPath", "runtimeReadinessMatrix"),
+    }
+    return {key: value for key, value in mapping.items() if value}
+
+
+def wall_time_exceeded(started_at: float, max_minutes: float | None) -> bool:
+    if max_minutes is None or max_minutes <= 0:
+        return False
+    return (time.monotonic() - started_at) >= (max_minutes * 60.0)
+
+
 def round_output_paths(run_root: Path, round_id: str) -> dict[str, Path]:
     repair_root = run_root / "repair-review"
     progress_root = repair_root / "knowledge-growth-progress"
@@ -212,6 +298,7 @@ def round_output_paths(run_root: Path, round_id: str) -> dict[str, Path]:
         "baseProgress": progress_root / f"{merged_round_id}.json",
         "baseEvents": core_progress_root / f"{merged_round_id}-staged-ready-events.jsonl",
         "baseRelationshipEvidence": core_progress_root / f"{merged_round_id}-staged-relationship-evidence.jsonl",
+        "readyEvalEvents": core_progress_root / f"{merged_round_id}-ready-eval-events.jsonl",
         "editBacklog": core_progress_root / f"{merged_round_id}-reviewed-b-edit-backlog.jsonl",
         "roundBatch": repair_root / "knowledge-growth-rounds" / f"{round_id}.batch.json",
         "reviewSnapshotRoot": repair_root / "knowledge-growth-rounds" / f"{round_id}.snapshots",
@@ -232,6 +319,7 @@ def b_review_output_paths(run_root: Path, source_round_id: str, review_index: in
         "summaryMd": b_root / f"{b_round_id}-summary.md",
         "baseEvents": stage_root / f"{b_round_id}-staged-ready-events.jsonl",
         "baseRelationshipEvidence": stage_root / f"{b_round_id}-staged-relationship-evidence.jsonl",
+        "readyEvalEvents": stage_root / f"{b_round_id}-ready-eval-events.jsonl",
         "editBacklog": stage_root / f"{b_round_id}-reviewed-b-edit-backlog.jsonl",
         "baseProgress": progress_root / f"{b_round_id}.json",
         "eventSeedRoot": b_root / "event-question-seeds" / b_round_id,
@@ -284,6 +372,8 @@ def build_campaign_command(
     ]
     for general_id in args.general_id:
         command.extend(["--general-id", str(general_id)])
+    if args.emit_ready_eval:
+        command.append("--emit-ready-eval")
     if args.overwrite:
         command.append("--overwrite")
     return round_id, command, outputs["campaignSummary"], outputs
@@ -433,6 +523,48 @@ def residual_fingerprint(item: dict[str, Any]) -> str:
     return f"{item.get('generalId') or 'unknown-general'}:{suffix}"
 
 
+def normalized_text(value: Any) -> str:
+    return " ".join(str(value or "").strip().lower().split())
+
+
+def b_review_cluster_key(item: dict[str, Any]) -> str:
+    edits = dict(item.get("edits") or {})
+    source_refs = "|".join(sorted(str(ref or "").strip() for ref in item.get("sourceRefs") or [] if str(ref or "").strip()))
+    location = normalized_text(edits.get("location") or item.get("currentLocation"))
+    participants = "|".join(sorted(str(general_id or "").strip() for general_id in item.get("generalIds") or [] if str(general_id or "").strip()))
+    summary_hash = hashlib.sha1(normalized_text(edits.get("summary") or item.get("summary")).encode("utf-8")).hexdigest()[:12]
+    return f"src={source_refs};loc={location};people={participants};summary={summary_hash}"
+
+
+def cluster_review_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    clusters: dict[str, dict[str, Any]] = {}
+    order: list[str] = []
+    for item in items:
+        key = b_review_cluster_key(item)
+        row = clusters.get(key)
+        if row is None:
+            row = dict(item)
+            row["cluster"] = {
+                "key": key,
+                "duplicateCount": 0,
+                "duplicateCandidateIds": [],
+                "duplicateEventKeys": [],
+            }
+            clusters[key] = row
+            order.append(key)
+            continue
+
+        cluster = row.setdefault("cluster", {})
+        cluster["duplicateCount"] = int(cluster.get("duplicateCount") or 0) + 1
+        candidate_id = str(item.get("candidateId") or "").strip()
+        event_key = str(item.get("eventKey") or "").strip()
+        if candidate_id:
+            cluster.setdefault("duplicateCandidateIds", []).append(candidate_id)
+        if event_key:
+            cluster.setdefault("duplicateEventKeys", []).append(event_key)
+    return [clusters[key] for key in order]
+
+
 def collect_round_review_items(review_root: Path) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for path in collect_round_review_files(review_root):
@@ -523,7 +655,8 @@ def build_review_batch_payload(
     pilot_pending_count: int,
     batch_size: int,
 ) -> dict[str, Any]:
-    selected_items = items[: max(batch_size, 1)]
+    clustered_items = cluster_review_items(items)
+    selected_items = clustered_items[: max(batch_size, 1)]
     return {
         "version": "1.0.0",
         "generatedAt": utc_now(),
@@ -531,20 +664,23 @@ def build_review_batch_payload(
         "canonicalWrites": False,
         "runId": run_id,
         "sourceRoundId": source_round_id,
-        "itemCount": len(items),
+        "rawItemCount": len(items),
+        "itemCount": len(clustered_items),
         "selectedItemCount": len(selected_items),
-        "remainingItemCount": max(len(items) - len(selected_items), 0),
+        "remainingItemCount": max(len(clustered_items) - len(selected_items), 0),
         "pilotPendingReviewCount": pilot_pending_count,
-        "rootCauseCounts": summarize_root_causes(items),
+        "rootCauseCounts": summarize_root_causes(clustered_items),
+        "rawRootCauseCounts": summarize_root_causes(items),
+        "clusterPolicy": "sourceRefs + location + participant set + summary hash",
         "items": selected_items,
         "decisionTemplate": {
             "decisions": [
                 {
                     "candidateId": "candidate-id",
                     "answer": "B",
-                    "notes": "保留，但需補 location 與 relationshipEdges。",
+                    "notes": "accept with edits: add location or relationshipEdges.",
                     "edits": {
-                        "location": "來源片語",
+                        "location": "source phrase",
                         "relationshipEdges": [],
                     },
                 }
@@ -559,9 +695,12 @@ def render_review_batch_markdown(payload: dict[str, Any]) -> str:
         "",
         f"- Run ID: `{payload['runId']}`",
         f"- Source Round ID: `{payload['sourceRoundId']}`",
+        f"- Raw Items: `{payload.get('rawItemCount', payload['itemCount'])}`",
+        f"- Clustered Items: `{payload['itemCount']}`",
         f"- Selected Items: `{payload['selectedItemCount']}` / `{payload['itemCount']}`",
         f"- Remaining Items After Batch: `{payload['remainingItemCount']}`",
         f"- Pilot Pending Review Count: `{payload['pilotPendingReviewCount']}`",
+        f"- Cluster Policy: `{payload.get('clusterPolicy')}`",
         "",
         "## Root Cause Counts",
         "",
@@ -572,7 +711,7 @@ def render_review_batch_markdown(payload: dict[str, Any]) -> str:
         "",
         "## Decision Contract",
         "",
-        "請建立 JSON 檔並回傳 `decisions`，格式如下：",
+        "Create a JSON file with top-level `decisions`; match each decision by `candidateId` or `eventKey`.",
         "",
         "```json",
         json.dumps(payload["decisionTemplate"], ensure_ascii=False, indent=2),
@@ -580,17 +719,19 @@ def render_review_batch_markdown(payload: dict[str, Any]) -> str:
         "",
         "## Review Items",
         "",
-        "| General | Event Key | Candidate ID | Answer | Root Cause | Missing Fields | Source Refs |",
-        "|---|---|---|---|---|---|---|",
+        "| General | Event Key | Candidate ID | Answer | Root Cause | Cluster Duplicates | Missing Fields | Source Refs |",
+        "|---|---|---|---|---|---:|---|---|",
     ])
     for item in payload.get("items") or []:
+        cluster = item.get("cluster") or {}
         lines.append(
-            "| {general} | `{event_key}` | `{candidate_id}` | `{answer}` | `{root_cause}` | `{missing}` | `{refs}` |".format(
+            "| {general} | `{event_key}` | `{candidate_id}` | `{answer}` | `{root_cause}` | {duplicates} | `{missing}` | `{refs}` |".format(
                 general=item.get("generalId") or "-",
                 event_key=item.get("eventKey") or "-",
                 candidate_id=item.get("candidateId") or "-",
                 answer=item.get("answerCode") or "UNANSWERED",
                 root_cause=item.get("rootCause") or "-",
+                duplicates=cluster.get("duplicateCount") or 0,
                 missing=", ".join(item.get("missingFields") or []) or "-",
                 refs=", ".join(item.get("sourceRefs") or []) or "-",
             )
@@ -625,6 +766,7 @@ def write_review_batch(
         "sourceRoundId": source_round_id,
         "jsonPath": repo_relative(json_path),
         "markdownPath": repo_relative(markdown_path),
+        "rawItemCount": payload.get("rawItemCount", payload["itemCount"]),
         "itemCount": payload["itemCount"],
         "selectedItemCount": payload["selectedItemCount"],
         "remainingItemCount": payload["remainingItemCount"],
@@ -689,9 +831,16 @@ def render_b_review_merge_markdown(summary: dict[str, Any]) -> str:
         f"- Delta Overall: `{summary.get('deltaOverallPercent')}`",
         f"- Success: `{summary.get('success')}`",
         "",
-        "## Commands",
+        "## Outputs",
         "",
     ]
+    for key, value in (summary.get("outputs") or {}).items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.extend([
+        "",
+        "## Commands",
+        "",
+    ])
     for command in summary.get("commands") or []:
         lines.extend([
             f"- `{command.get('name')}` rc=`{command.get('returnCode')}`",
@@ -708,6 +857,8 @@ def run_b_review_merge(
     review_root: Path,
     base_paths: dict[str, str | Path],
     review_index: int,
+    overwrite: bool,
+    emit_ready_eval: bool,
     dry_run: bool,
 ) -> tuple[dict[str, Any], dict[str, Path]]:
     outputs = b_review_output_paths(run_root, source_round_id, review_index)
@@ -715,45 +866,43 @@ def run_b_review_merge(
     resolved_base_paths = resolve_baseline_paths(base_paths)
     commands: list[dict[str, Any]] = []
 
-    stage_command = script_command(
-        "stage_reviewed_a_ready_events.py",
-        [
-            "--review-root",
-            repo_relative(review_root),
-            "--base-events",
-            resolved_base_paths["baseEvents"],
-            "--base-relationship-evidence",
-            resolved_base_paths["baseRelationshipEvidence"],
-            "--output-root",
-            repo_relative(outputs["stageRoot"]),
-            "--round-id",
-            b_round_id,
-            "--overwrite",
-        ],
-    )
+    stage_args = [
+        "--review-root",
+        repo_relative(review_root),
+        "--base-events",
+        resolved_base_paths["baseEvents"],
+        "--base-relationship-evidence",
+        resolved_base_paths["baseRelationshipEvidence"],
+        "--output-root",
+        repo_relative(outputs["stageRoot"]),
+        "--round-id",
+        b_round_id,
+    ]
+    if emit_ready_eval:
+        stage_args.append("--emit-ready-eval")
+    maybe_append_overwrite(stage_args, overwrite)
+    stage_command = script_command("stage_reviewed_a_ready_events.py", stage_args)
     commands.append({"name": "stage_reviewed_a_ready_events", **run_command(stage_command, dry_run)})
 
     seed_command = script_command(
         "build_event_question_seed_bank.py",
-        [
+        maybe_append_overwrite([
             "--relationship-evidence",
             repo_relative(outputs["baseRelationshipEvidence"]),
             "--output-root",
             repo_relative(outputs["eventSeedRoot"]),
-            "--overwrite",
-        ],
+        ], overwrite),
     )
     commands.append({"name": "build_event_question_seed_bank", **run_command(seed_command, dry_run)})
 
     packet_command = script_command(
         "build_source_event_packets.py",
-        [
+        maybe_append_overwrite([
             "--relationship-evidence",
             repo_relative(outputs["baseRelationshipEvidence"]),
             "--output-root",
             repo_relative(outputs["packetRoot"]),
-            "--overwrite",
-        ],
+        ], overwrite),
     )
     commands.append({"name": "build_source_event_packets", **run_command(packet_command, dry_run)})
 
@@ -772,8 +921,8 @@ def run_b_review_merge(
         repo_relative(run_root / "repair-review" / "knowledge-growth-rounds"),
         "--output-root",
         repo_relative(outputs["progressRoot"]),
-        "--overwrite",
     ]
+    maybe_append_overwrite(estimate_args, overwrite)
     for batch_path in existing_round_json_paths(base_paths["baseProgress"]):
         estimate_args.extend(["--round-json", batch_path])
     for batch_path in sorted((run_root / "repair-review" / "knowledge-growth-rounds").glob("*.batch.json")):
@@ -805,6 +954,7 @@ def run_b_review_merge(
             "editBacklog": repo_relative(outputs["editBacklog"]),
             "baseEvents": repo_relative(outputs["baseEvents"]),
             "baseRelationshipEvidence": repo_relative(outputs["baseRelationshipEvidence"]),
+            "readyEvalEvents": repo_relative(outputs["readyEvalEvents"]) if emit_ready_eval else None,
             "baseProgress": repo_relative(outputs["baseProgress"]),
         },
     }
@@ -819,7 +969,99 @@ def run_b_review_merge(
         "baseRelationshipEvidence": outputs["baseRelationshipEvidence"],
         "baseProgress": outputs["baseProgress"],
     }
+    if emit_ready_eval:
+        next_base_paths["readyEvalEvents"] = outputs["readyEvalEvents"]
     return summary, next_base_paths
+
+
+def collect_touched_generals(rounds: list[dict[str, Any]], explicit_generals: list[str]) -> list[str]:
+    seen: set[str] = set()
+    rows: list[str] = []
+    for general_id in explicit_generals:
+        value = str(general_id or "").strip()
+        if value and value not in seen:
+            seen.add(value)
+            rows.append(value)
+    for round_record in rounds:
+        for general_id in ((round_record.get("campaignSummary") or {}).get("selectedGenerals") or []):
+            value = str(general_id or "").strip()
+            if value and value not in seen:
+                seen.add(value)
+                rows.append(value)
+    return rows
+
+
+def run_runtime_readiness_matrix(
+    *,
+    run_root: Path,
+    mode: str,
+    generals: list[str],
+    overwrite: bool,
+    dry_run: bool,
+) -> dict[str, Any]:
+    if mode == "off":
+        return {"mode": "off", "skipped": True}
+    if mode == "touched" and not generals:
+        return {"mode": mode, "skipped": True, "reason": "no-touched-generals"}
+
+    output_root = run_root / "runtime-readiness"
+    command_args = ["--output-root", repo_relative(output_root)]
+    if mode == "touched":
+        for general_id in generals:
+            command_args.extend(["--general-id", general_id])
+    maybe_append_overwrite(command_args, overwrite)
+    command = script_command("build_runtime_readiness_matrix.py", command_args)
+    result = run_command(command, dry_run)
+    output_json = output_root / "multi-general-readiness.json"
+    payload = read_json(output_json) if output_json.exists() else {}
+    fail_count = payload.get("failCount")
+    if fail_count is None and not dry_run and int(result.get("returnCode") or 0) != 0:
+        fail_count = 1
+    return {
+        "mode": mode,
+        "generalIds": generals if mode == "touched" else generals,
+        "command": result,
+        "outputRoot": repo_relative(output_root),
+        "matrixPath": repo_relative(output_json),
+        "failCount": fail_count,
+        "statusCounts": payload.get("statusCounts") or {},
+        "skipped": False,
+    }
+
+
+def build_baseline_manifest(
+    *,
+    args: argparse.Namespace,
+    run_root: Path,
+    final_paths: dict[str, str],
+    summary_path: Path,
+    residual_path: Path,
+    runtime_readiness: dict[str, Any],
+) -> dict[str, Any]:
+    paths: dict[str, Any] = {
+        "editBacklog": final_paths.get("editBacklog"),
+        "readyEvents": final_paths.get("baseEvents"),
+        "relationshipEvidence": final_paths.get("baseRelationshipEvidence"),
+        "progress": final_paths.get("baseProgress"),
+        "progressAdvancementSummary": repo_relative(summary_path),
+        "residualDossier": repo_relative(residual_path),
+    }
+    if final_paths.get("readyEvalEvents"):
+        paths["readyEvalEvents"] = final_paths["readyEvalEvents"]
+    if runtime_readiness and not runtime_readiness.get("skipped"):
+        paths["runtimeReadiness"] = runtime_readiness.get("matrixPath")
+
+    return {
+        "version": "1.0.0",
+        "generatedAt": utc_now(),
+        "mode": "sanguo-progress-baseline-manifest",
+        "canonicalWrites": False,
+        "runId": args.run_id,
+        "profile": args.profile,
+        "optimizationTarget": args.optimization_target,
+        "baselineManifestPath": repo_relative(run_root / "baseline-manifest.json"),
+        "paths": {key: value for key, value in paths.items() if value},
+    }
 
 
 def classify_stop_reason(
@@ -859,6 +1101,8 @@ def render_summary_markdown(summary: dict[str, Any]) -> str:
         f"- Run ID: `{summary['runId']}`",
         f"- Generated At: `{summary['generatedAt']}`",
         f"- Mode: `{summary['mode']}`",
+        f"- Profile: `{summary.get('profile')}`",
+        f"- Optimization Target: `{summary.get('optimizationTarget')}`",
         f"- canonicalWrites: `{summary['canonicalWrites']}`",
         f"- Dry Run: `{summary['dryRun']}`",
         f"- Stop Reason: `{summary.get('stopReason') or '-'}`",
@@ -869,6 +1113,7 @@ def render_summary_markdown(summary: dict[str, Any]) -> str:
         f"- Event Review Pending Count: `{summary['pendingReviewCount']}`",
         f"- Pilot Pending Review Count: `{summary['pilotPendingReviewCount']}`",
         f"- Total Delta Overall: `{summary.get('totalDeltaOverallPercent')}`",
+        f"- Baseline Manifest: `{summary.get('baselineManifestOutputPath') or '-'}`",
         "",
         "## Round Summaries",
         "",
@@ -902,8 +1147,39 @@ def render_summary_markdown(summary: dict[str, Any]) -> str:
             lines.append(
                 f"- `{review.get('reviewRoundId')}` delta=`{review.get('deltaOverallPercent')}` summary=`{review.get('summaryMarkdownPath')}`"
             )
+    runtime_readiness = summary.get("runtimeReadiness") or {}
+    if runtime_readiness:
+        lines.extend(["", "## Runtime Readiness", ""])
+        lines.append(
+            f"- mode=`{runtime_readiness.get('mode')}` failCount=`{runtime_readiness.get('failCount')}` matrix=`{runtime_readiness.get('matrixPath')}`"
+        )
     lines.extend(["", "## Next Recommended Action", "", str(summary.get("nextRecommendedAction") or "-"), ""])
     return "\n".join(lines)
+
+
+def build_rule_repair_proposals(root_cause_counts: dict[str, int]) -> list[dict[str, Any]]:
+    templates = {
+        "identity ambiguity": "Propose alias resolution additions for repeated unresolved person mentions.",
+        "location gap": "Propose location phrase extractor additions for repeated source-location patterns.",
+        "relationship edge/type": "Propose relationship edge/type refinement rules backed by source quotes.",
+        "event boundary": "Propose event-boundary split/merge heuristics for over-broad participant sets.",
+        "missing source evidence": "Propose sourceRef propagation checks before event review emission.",
+        "schema/tool gap": "Propose schema normalization or deterministic extractor guardrails.",
+        "external source needed": "Keep as human research backlog; do not auto-promote extractor behavior.",
+    }
+    proposals: list[dict[str, Any]] = []
+    for group, count in sorted(root_cause_counts.items(), key=lambda item: (-int(item[1] or 0), item[0])):
+        if count <= 0:
+            continue
+        proposals.append(
+            {
+                "rootCause": group,
+                "count": count,
+                "proposal": templates.get(group, "Propose a sandbox-only rule repair."),
+                "gate": "sandbox/regression first; human approval required before extractor changes",
+            }
+        )
+    return proposals
 
 
 def render_residual_dossier(summary: dict[str, Any]) -> str:
@@ -931,6 +1207,21 @@ def render_residual_dossier(summary: dict[str, Any]) -> str:
     ]
     for group in ROOT_CAUSE_GROUPS:
         lines.append(f"- `{group}`: `{root_cause_counts.get(group, 0)}`")
+    lines.extend([
+        "",
+        "## Rule Repair Proposals",
+        "",
+        "Self-improvement output is limited to proposals. Extractor changes still require sandbox/regression plus human approval.",
+        "",
+    ])
+    proposals = build_rule_repair_proposals(root_cause_counts)
+    if proposals:
+        for proposal in proposals:
+            lines.append(
+                f"- `{proposal['rootCause']}` count=`{proposal['count']}`: {proposal['proposal']} Gate: {proposal['gate']}."
+            )
+    else:
+        lines.append("- No rule repair proposal emitted for this run.")
     lines.extend([
         "",
         "## Repeated Residuals",
@@ -999,16 +1290,24 @@ def render_residual_dossier(summary: dict[str, Any]) -> str:
 
 def main() -> None:
     args = parse_args()
+    apply_profile_defaults(args)
     args.run_id = args.run_id or f"progress-advancement-{utc_stamp()}"
+    started_monotonic = time.monotonic()
     run_root = (REPO_ROOT / Path(args.output_root) / args.run_id).resolve()
     run_root.mkdir(parents=True, exist_ok=True)
 
+    baseline_manifest = load_baseline_manifest(args.baseline_manifest)
+    manifest_paths = baseline_paths_from_manifest(baseline_manifest)
     initial_base_paths: dict[str, str | Path] = {
         "editBacklog": args.edit_backlog,
         "baseEvents": args.base_events,
         "baseRelationshipEvidence": args.base_relationship_evidence,
         "baseProgress": args.base_progress,
     }
+    for key in ("editBacklog", "baseEvents", "baseRelationshipEvidence", "baseProgress"):
+        if manifest_paths.get(key):
+            initial_base_paths[key] = manifest_paths[key]
+    latest_ready_eval_events: str | Path | None = manifest_paths.get("readyEvalEvents")
     base_paths = dict(initial_base_paths)
 
     rounds: list[dict[str, Any]] = []
@@ -1027,6 +1326,9 @@ def main() -> None:
     last_pending_count = last_pilot_pending_count
 
     for round_index in range(1, max(args.max_rounds, 1) + 1):
+        if wall_time_exceeded(started_monotonic, args.max_wall_time_minutes):
+            stop_reason = "max-wall-time-minutes"
+            break
         edit_backlog_count = jsonl_record_count(base_paths["editBacklog"])
         if edit_backlog_count == 0:
             stop_reason = "repair-backlog-exhausted"
@@ -1082,7 +1384,7 @@ def main() -> None:
             "nextBaselineCandidates": {
                 key: repo_relative(path)
                 for key, path in output_paths.items()
-                if key in {"editBacklog", "baseEvents", "baseRelationshipEvidence", "baseProgress"}
+                if key in {"editBacklog", "baseEvents", "baseRelationshipEvidence", "baseProgress", "readyEvalEvents"}
             },
             "command": command_result,
             "campaignSummary": campaign_summary,
@@ -1120,6 +1422,9 @@ def main() -> None:
                 "baseRelationshipEvidence": output_paths["baseRelationshipEvidence"],
                 "baseProgress": output_paths["baseProgress"],
             }
+            if args.emit_ready_eval:
+                latest_ready_eval_events = output_paths["readyEvalEvents"]
+                base_paths["readyEvalEvents"] = output_paths["readyEvalEvents"]
 
         if args.review_decisions and round_pending_items and not review_decisions_consumed:
             decision_summary = apply_review_decisions_to_root(output_paths["reviewSnapshotRoot"], resolve_path(args.review_decisions), args.dry_run)
@@ -1133,8 +1438,12 @@ def main() -> None:
                     review_root=output_paths["reviewSnapshotRoot"],
                     base_paths=round_record["baselineInputs"],
                     review_index=b_review_count,
+                    overwrite=args.overwrite,
+                    emit_ready_eval=args.emit_ready_eval,
                     dry_run=args.dry_run,
                 )
+                if args.emit_ready_eval and base_paths.get("readyEvalEvents"):
+                    latest_ready_eval_events = base_paths["readyEvalEvents"]
                 b_reviews.append(b_review_summary)
                 round_record["bReviewSummary"] = b_review_summary
                 if not b_review_summary.get("success"):
@@ -1191,12 +1500,27 @@ def main() -> None:
         except (TypeError, ValueError):
             total_delta = None
 
+    touched_generals = collect_touched_generals(rounds, args.general_id)
+    runtime_readiness = run_runtime_readiness_matrix(
+        run_root=run_root,
+        mode=args.runtime_readiness,
+        generals=touched_generals,
+        overwrite=args.overwrite,
+        dry_run=args.dry_run,
+    )
+    try:
+        runtime_fail_count = int(runtime_readiness.get("failCount") or 0)
+    except (TypeError, ValueError):
+        runtime_fail_count = 0
+    if runtime_fail_count > 0:
+        stop_reason = stop_reason or "runtime-readiness-fail"
+
     next_route = "A-or-B-next"
     if stop_reason in {"pending-review-limit", "review-batch-ready"}:
         next_route = "B-review"
     elif stop_reason == "repair-backlog-exhausted":
         next_route = "complete"
-    elif stop_reason in {"same-residual-repeat-limit", "no-improvement-patience", "failure-rate-limit", "max-rounds", "max-ab-cycles"}:
+    elif stop_reason in {"same-residual-repeat-limit", "no-improvement-patience", "failure-rate-limit", "max-rounds", "max-ab-cycles", "max-wall-time-minutes", "runtime-readiness-fail"}:
         next_route = "C-residual-dossier"
 
     latest_batch_path = review_batches[-1].get("markdownPath") if review_batches else None
@@ -1209,7 +1533,17 @@ def main() -> None:
         "repair-backlog-exhausted": "這輪套用審核後已沒有剩餘 repair backlog 可供下一輪 A 使用；若還要推進，可改檢查 pilot review queue 或改開新的 focus cohort。",
         "max-rounds": "已達到本次 outer loop 的 round 上限；若仍有 pending items，請先做 B review，再決定是否重開新一輪。",
         "max-ab-cycles": "已達到 AB cycle 上限；請先把剩餘 residual 轉成人工審核或規則修補任務，再繼續。",
+        "max-wall-time-minutes": "已達到本次 wall-time 上限；請先檢查 summary 與 baseline manifest，再決定是否續跑。",
+        "runtime-readiness-fail": "runtime readiness matrix 仍有 fail；不可進 Promotion Lane，請先修正 fail rows 後重跑 smoke gate。",
     }.get(stop_reason or "", "請先檢查 summary，再決定要繼續 A、進入 B 審核，或整理 C dossier。")
+
+    final_base_paths_for_summary = dict(base_paths)
+    if latest_ready_eval_events:
+        final_base_paths_for_summary["readyEvalEvents"] = latest_ready_eval_events
+    baseline_manifest_path = run_root / "baseline-manifest.json"
+    summary_json_path = run_root / "progress-advancement-summary.json"
+    summary_md_path = run_root / "progress-advancement-summary.md"
+    residual_md_path = run_root / "residual-review.md"
 
     summary = {
         "version": "1.0.0",
@@ -1218,10 +1552,16 @@ def main() -> None:
         "canonicalWrites": False,
         "dryRun": bool(args.dry_run),
         "runId": args.run_id,
+        "profile": args.profile,
+        "optimizationTarget": args.optimization_target,
         "runRoot": repo_relative(run_root),
+        "baselineManifestInputPath": repo_relative(resolve_path(args.baseline_manifest)) if args.baseline_manifest else None,
+        "baselineManifestOutputPath": repo_relative(baseline_manifest_path),
         "initialBaselinePaths": {key: resolve_baseline_paths(initial_base_paths)[key] for key in sorted(initial_base_paths)},
-        "finalBaselinePaths": {key: resolve_baseline_paths(base_paths)[key] for key in sorted(base_paths)},
+        "finalBaselinePaths": {key: resolve_baseline_paths(final_base_paths_for_summary)[key] for key in sorted(final_base_paths_for_summary)},
         "policy": {
+            "profile": args.profile,
+            "optimizationTarget": args.optimization_target,
             "maxRounds": args.max_rounds,
             "maxABCycles": args.max_ab_cycles,
             "topGenerals": args.top_generals,
@@ -1235,6 +1575,9 @@ def main() -> None:
             "reviewerPreset": args.reviewer_preset,
             "reviewerProvider": args.reviewer_provider,
             "stepTimeoutSeconds": args.step_timeout_seconds,
+            "emitReadyEval": args.emit_ready_eval,
+            "runtimeReadiness": args.runtime_readiness,
+            "maxWallTimeMinutes": args.max_wall_time_minutes,
         },
         "roundsExecuted": len(rounds),
         "abCyclesExecuted": max(b_review_count + 1, 1 if rounds else 0),
@@ -1247,6 +1590,8 @@ def main() -> None:
         "baselineOverallPercent": baseline,
         "finalOverallPercent": result,
         "totalDeltaOverallPercent": total_delta,
+        "touchedGenerals": touched_generals,
+        "runtimeReadiness": runtime_readiness,
         "reviewBatches": review_batches,
         "bReviews": b_reviews,
         "residualSummary": {
@@ -1257,16 +1602,23 @@ def main() -> None:
         "rounds": rounds,
     }
 
-    summary_json_path = run_root / "progress-advancement-summary.json"
-    summary_md_path = run_root / "progress-advancement-summary.md"
-    residual_md_path = run_root / "residual-review.md"
     write_json(summary_json_path, summary)
     summary_md_path.write_text(render_summary_markdown(summary), encoding="utf-8")
     residual_md_path.write_text(render_residual_dossier(summary), encoding="utf-8")
+    final_manifest = build_baseline_manifest(
+        args=args,
+        run_root=run_root,
+        final_paths=summary["finalBaselinePaths"],
+        summary_path=summary_json_path,
+        residual_path=residual_md_path,
+        runtime_readiness=runtime_readiness,
+    )
+    write_json(baseline_manifest_path, final_manifest)
 
     print(f"[run_progress_advancement_loop] wrote {summary_json_path}")
     print(f"[run_progress_advancement_loop] wrote {summary_md_path}")
     print(f"[run_progress_advancement_loop] wrote {residual_md_path}")
+    print(f"[run_progress_advancement_loop] wrote {baseline_manifest_path}")
     print(
         "[run_progress_advancement_loop] "
         f"runId={args.run_id} rounds={len(rounds)} stopReason={stop_reason} "

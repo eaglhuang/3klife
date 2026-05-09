@@ -19,6 +19,13 @@ DEFAULT_STUDIO_OUTPUT_ROOT = Path("local/studio-progress-advancement")
 class SanguoProgressAdvancementState(TypedDict, total=False):
     runLabel: str | None
     studioOutputRoot: str | None
+    baselineManifestPath: str | None
+    optimizationTarget: str | None
+    profile: str | None
+    runRuntimeReadinessMatrix: bool
+    runtimeReadinessMode: str | None
+    promotionMode: bool
+    emitReadyEval: bool
     overwriteOutputs: bool
     dryRun: bool
     maxRounds: int
@@ -34,10 +41,12 @@ class SanguoProgressAdvancementState(TypedDict, total=False):
     pendingReviewLimit: int
     sameResidualRepeatLimit: int
     reviewBatchSize: int
+    maxWallTimeMinutes: float
     reviewDecisionsPath: str | None
     requireHumanReviewInterrupt: bool
     studioRunId: str
     studioRunRoot: str
+    latestBaselineManifestPath: str | None
     progressSummary: dict[str, Any]
     reviewBatches: list[dict[str, Any]]
     residualReviewPath: str | None
@@ -115,11 +124,21 @@ def prepare_progress_workspace(state: SanguoProgressAdvancementState) -> dict[st
 
 
 def _build_progress_args(state: SanguoProgressAdvancementState) -> list[str]:
+    promotion_mode = _bool_flag(state.get("promotionMode"), False)
+    profile = str(state.get("profile") or ("promotion-eval" if promotion_mode else "precision"))
+    emit_ready_eval = _bool_flag(state.get("emitReadyEval"), False) or promotion_mode
+    runtime_mode = str(state.get("runtimeReadinessMode") or "").strip()
+    if not runtime_mode:
+        runtime_mode = "final" if promotion_mode else ("touched" if _bool_flag(state.get("runRuntimeReadinessMatrix"), False) else "off")
     args = [
         "--run-id",
         str(state.get("studioRunId") or f"progress-advancement-{_utc_stamp()}"),
         "--output-root",
         str(state.get("studioRunRoot") or _repo_relative(DEFAULT_STUDIO_OUTPUT_ROOT)),
+        "--profile",
+        profile,
+        "--optimization-target",
+        str(state.get("optimizationTarget") or "safe-local-readiness"),
         "--max-rounds",
         str(int(state.get("maxRounds") or 3)),
         "--max-ab-cycles",
@@ -144,7 +163,15 @@ def _build_progress_args(state: SanguoProgressAdvancementState) -> list[str]:
         str(int(state.get("sameResidualRepeatLimit") or 2)),
         "--review-batch-size",
         str(int(state.get("reviewBatchSize") or 10)),
+        "--runtime-readiness",
+        runtime_mode,
     ]
+    if state.get("baselineManifestPath"):
+        args.extend(["--baseline-manifest", str(state.get("baselineManifestPath"))])
+    if state.get("maxWallTimeMinutes") is not None:
+        args.extend(["--max-wall-time-minutes", str(float(state.get("maxWallTimeMinutes") or 0))])
+    if emit_ready_eval:
+        args.append("--emit-ready-eval")
     if _bool_flag(state.get("overwriteOutputs"), True):
         args.append("--overwrite")
     if _bool_flag(state.get("dryRun"), False):
@@ -162,11 +189,13 @@ def run_progress_advancement(state: SanguoProgressAdvancementState) -> dict[str,
     run_root = _resolve_path(state.get("studioRunRoot"), DEFAULT_STUDIO_OUTPUT_ROOT) / str(state.get("studioRunId"))
     summary_path = run_root / "progress-advancement-summary.json"
     residual_path = run_root / "residual-review.md"
+    baseline_manifest_path = run_root / "baseline-manifest.json"
     summary = _read_optional_json(summary_path)
     return {
         "progressSummary": summary,
         "reviewBatches": list(summary.get("reviewBatches") or []),
         "residualReviewPath": _repo_relative(residual_path) if residual_path.exists() else None,
+        "latestBaselineManifestPath": _repo_relative(baseline_manifest_path) if baseline_manifest_path.exists() else None,
         "commandLogs": list(state.get("commandLogs") or []) + [payload],
     }
 
@@ -194,6 +223,7 @@ def maybe_request_b_review(state: SanguoProgressAdvancementState) -> dict[str, A
             "kind": "progress-advancement-b-review",
             "instructions": "請回傳 {\"decisions\": [...]}，每筆 decision 至少包含 candidateId 與 answer，可附 edits/notes。",
             "runId": state.get("studioRunId"),
+            "baselineManifestPath": state.get("baselineManifestPath"),
             "batchPath": latest_batch.get("jsonPath"),
             "items": batch_payload.get("items") or [],
             "decisionTemplate": batch_payload.get("decisionTemplate") or {"decisions": []},
@@ -220,11 +250,13 @@ def rerun_progress_advancement_with_review(state: SanguoProgressAdvancementState
     run_root = _resolve_path(state.get("studioRunRoot"), DEFAULT_STUDIO_OUTPUT_ROOT) / str(state.get("studioRunId"))
     summary_path = run_root / "progress-advancement-summary.json"
     residual_path = run_root / "residual-review.md"
+    baseline_manifest_path = run_root / "baseline-manifest.json"
     summary = _read_optional_json(summary_path)
     return {
         "progressSummary": summary,
         "reviewBatches": list(summary.get("reviewBatches") or []),
         "residualReviewPath": _repo_relative(residual_path) if residual_path.exists() else None,
+        "latestBaselineManifestPath": _repo_relative(baseline_manifest_path) if baseline_manifest_path.exists() else None,
         "commandLogs": list(state.get("commandLogs") or []) + [payload],
         "reviewDecisionsApplied": True,
     }
@@ -250,6 +282,13 @@ def summarize_progress_advancement(state: SanguoProgressAdvancementState) -> dic
 
     if summary.get("bReviewCount"):
         studio_tips.append(f"本輪已套用 B 審核 {summary.get('bReviewCount')} 次。")
+    if summary.get("baselineManifestOutputPath"):
+        studio_tips.append(f"最新 baseline manifest: {summary.get('baselineManifestOutputPath')}")
+    runtime_readiness = summary.get("runtimeReadiness") or {}
+    if runtime_readiness and not runtime_readiness.get("skipped"):
+        studio_tips.append(
+            f"runtime readiness mode={runtime_readiness.get('mode')} failCount={runtime_readiness.get('failCount')}"
+        )
 
     return {
         "nextBestMove": next_best_move,
@@ -258,6 +297,7 @@ def summarize_progress_advancement(state: SanguoProgressAdvancementState) -> dic
             **summary,
             "latestReviewBatchPath": latest_batch_path,
             "residualReviewPath": residual_path,
+            "latestBaselineManifestPath": state.get("latestBaselineManifestPath"),
             "studioTips": studio_tips,
         },
     }

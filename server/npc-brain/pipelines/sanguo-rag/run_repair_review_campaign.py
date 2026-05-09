@@ -55,6 +55,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--reviewer-preset", default="agent", help="Reviewer preset passed to run_knowledge_growth_round.py")
     parser.add_argument("--reviewer-provider", default="agent-reviewer", help="Reviewer provider passed to run_knowledge_growth_round.py")
     parser.add_argument("--step-timeout-seconds", type=int, default=30, help="Step timeout passed to run_knowledge_growth_round.py")
+    parser.add_argument(
+        "--emit-ready-eval",
+        action="store_true",
+        help="Ask staging to emit an evaluation-only ready event stream without canonical writes.",
+    )
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting outputs")
     return parser.parse_args()
 
@@ -93,6 +98,12 @@ def run_command(command: list[str]) -> dict[str, Any]:
     if result.returncode != 0:
         raise RuntimeError(json.dumps(payload, ensure_ascii=False, indent=2))
     return payload
+
+
+def maybe_append_overwrite(command_args: list[str], overwrite: bool) -> list[str]:
+    if overwrite:
+        command_args.append("--overwrite")
+    return command_args
 
 
 def selected_generals(summary: dict[str, Any], requested_generals: list[str], top_generals: int) -> list[str]:
@@ -143,9 +154,16 @@ def render_markdown(summary: dict[str, Any]) -> str:
         f"- Result Event Question Coverage: `{summary.get('resultEventQuestionCoverage')}`",
         f"- Result Review Validation: `{summary.get('resultReviewValidation')}`",
         "",
-        "## Commands",
+        "## Outputs",
         "",
     ]
+    for key, value in (summary.get("outputs") or {}).items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.extend([
+        "",
+        "## Commands",
+        "",
+    ])
     for command in summary.get("commands") or []:
         lines.extend([
             f"- `{command['name']}` rc=`{command['returnCode']}`",
@@ -164,6 +182,10 @@ def main() -> None:
     event_seed_root = Path(args.event_seed_root) / merged_round_id
     packet_root = Path(args.packet_root) / merged_round_id
     progress_root = Path(args.progress_root)
+    summary_json_path = progress_root / f"{round_id}-campaign-summary.json"
+    summary_md_path = progress_root / f"{round_id}-campaign-summary.md"
+    if not args.overwrite and (summary_json_path.exists() or summary_md_path.exists()):
+        raise FileExistsError("Campaign summary outputs already exist. Re-run with --overwrite.")
 
     commands: list[dict[str, Any]] = []
 
@@ -173,15 +195,14 @@ def main() -> None:
             **run_command(
                 script_command(
                     "build_backlog_repair_tasks.py",
-                    [
+                    maybe_append_overwrite([
                         "--edit-backlog",
                         args.edit_backlog,
                         "--output-root",
                         str(repair_output_root),
                         "--round-id",
                         round_id,
-                        "--overwrite",
-                    ],
+                    ], args.overwrite),
                 )
             ),
         }
@@ -211,30 +232,33 @@ def main() -> None:
         args.reviewer_provider,
         "--step-timeout-seconds",
         str(args.step_timeout_seconds),
-        "--overwrite",
     ]
+    maybe_append_overwrite(review_command, args.overwrite)
     for general_id in generals:
         review_command.extend(["--general-id", general_id])
     commands.append({"name": "run_knowledge_growth_round", **run_command(script_command("run_knowledge_growth_round.py", review_command))})
 
     review_snapshots_root = rounds_root / f"{round_id}.snapshots"
+    stage_args = [
+        "--review-root",
+        str(review_snapshots_root),
+        "--round-id",
+        merged_round_id,
+        "--base-events",
+        args.base_events,
+        "--base-relationship-evidence",
+        args.base_relationship_evidence,
+    ]
+    if args.emit_ready_eval:
+        stage_args.append("--emit-ready-eval")
+    maybe_append_overwrite(stage_args, args.overwrite)
     commands.append(
         {
             "name": "stage_reviewed_a_ready_events",
             **run_command(
                 script_command(
                     "stage_reviewed_a_ready_events.py",
-                    [
-                        "--review-root",
-                        str(review_snapshots_root),
-                        "--round-id",
-                        merged_round_id,
-                        "--base-events",
-                        args.base_events,
-                        "--base-relationship-evidence",
-                        args.base_relationship_evidence,
-                        "--overwrite",
-                    ],
+                    stage_args,
                 )
             ),
         }
@@ -242,6 +266,7 @@ def main() -> None:
 
     merged_ready_events_path = REPO_ROOT / f"artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/{merged_round_id}-staged-ready-events.jsonl"
     merged_relationships_path = REPO_ROOT / f"artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/{merged_round_id}-staged-relationship-evidence.jsonl"
+    ready_eval_events_path = REPO_ROOT / f"artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/{merged_round_id}-ready-eval-events.jsonl"
 
     commands.append(
         {
@@ -249,13 +274,12 @@ def main() -> None:
             **run_command(
                 script_command(
                     "build_event_question_seed_bank.py",
-                    [
+                    maybe_append_overwrite([
                         "--relationship-evidence",
                         str(merged_relationships_path),
                         "--output-root",
                         str(event_seed_root),
-                        "--overwrite",
-                    ],
+                    ], args.overwrite),
                 )
             ),
         }
@@ -266,13 +290,12 @@ def main() -> None:
             **run_command(
                 script_command(
                     "build_source_event_packets.py",
-                    [
+                    maybe_append_overwrite([
                         "--relationship-evidence",
                         str(merged_relationships_path),
                         "--output-root",
                         str(packet_root),
-                        "--overwrite",
-                    ],
+                    ], args.overwrite),
                 )
             ),
         }
@@ -293,8 +316,8 @@ def main() -> None:
         str(rounds_root),
         "--output-root",
         str(progress_root),
-        "--overwrite",
     ]
+    maybe_append_overwrite(estimate_args, args.overwrite)
     for batch_path in existing_round_json_paths(args.base_progress):
         estimate_args.extend(["--round-json", batch_path])
     for batch_path in sorted(rounds_root.glob("*.batch.json")):
@@ -320,10 +343,14 @@ def main() -> None:
         "resultRelationshipGraph": (result_progress.get("rawScores") or {}).get("relationshipGraph"),
         "resultEventQuestionCoverage": (result_progress.get("rawScores") or {}).get("eventQuestionCoverage"),
         "resultReviewValidation": (result_progress.get("rawScores") or {}).get("reviewValidation"),
+        "outputs": {
+            "mergedReadyEventsPath": str(merged_ready_events_path),
+            "mergedRelationshipEvidencePath": str(merged_relationships_path),
+            "readyEvalEventsPath": str(ready_eval_events_path) if args.emit_ready_eval else None,
+            "resultProgressPath": str(result_progress_path),
+        },
         "commands": commands,
     }
-    summary_json_path = progress_root / f"{round_id}-campaign-summary.json"
-    summary_md_path = progress_root / f"{round_id}-campaign-summary.md"
     write_json(summary_json_path, summary)
     summary_md_path.write_text(render_markdown(summary), encoding="utf-8")
 

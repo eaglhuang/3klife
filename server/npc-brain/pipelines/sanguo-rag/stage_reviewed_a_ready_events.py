@@ -26,6 +26,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--round-id", default="current")
     parser.add_argument("--core-general-id", action="append", default=[], help="Optional filter to these focus generalIds.")
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument(
+        "--emit-ready-eval",
+        action="store_true",
+        help=(
+            "Also write an evaluation-only event stream where accepted review "
+            "candidates are projected to reviewStatus=ready while keeping "
+            "canonicalWrites=false."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -237,6 +246,20 @@ def merge_relationship_evidence(base_rows: list[dict[str, Any]], staged_rows: li
     return merged
 
 
+def build_ready_eval_events(merged_events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    ready_eval_events: list[dict[str, Any]] = []
+    for event in merged_events:
+        projected = dict(event)
+        source_review_status = projected.get("reviewStatus")
+        if source_review_status == "accepted-review-candidate":
+            projected["reviewStatus"] = "ready"
+            projected["sourceReviewStatus"] = source_review_status
+            projected["evaluationProjection"] = True
+        projected["canonicalWrites"] = False
+        ready_eval_events.append(projected)
+    return ready_eval_events
+
+
 def render_markdown(report: dict[str, Any]) -> str:
     lines = [
         "# Reviewed A Ready Event Staging",
@@ -251,6 +274,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         f"- B Edit Backlog: `{report['editBacklogCount']}`",
         f"- Merged Ready Events: `{report['mergedReadyEventCount']}`",
         f"- Merged Relationship Evidence: `{report['mergedRelationshipEvidenceCount']}`",
+        f"- Ready Eval Events: `{report['readyEvalEventCount']}`",
         "",
         "## Ready Candidates By General",
         "",
@@ -273,9 +297,12 @@ def main() -> None:
     edit_backlog_path = output_root / f"{args.round_id}-reviewed-b-edit-backlog.jsonl"
     merged_path = output_root / f"{args.round_id}-staged-ready-events.jsonl"
     relationships_path = output_root / f"{args.round_id}-staged-relationship-evidence.jsonl"
+    ready_eval_path = output_root / f"{args.round_id}-ready-eval-events.jsonl"
     report_path = output_root / f"{args.round_id}-ready-staging.json"
     markdown_path = output_root / f"{args.round_id}-ready-staging.md"
     outputs = [candidates_path, edit_backlog_path, merged_path, relationships_path, report_path, markdown_path]
+    if args.emit_ready_eval:
+        outputs.append(ready_eval_path)
     if not args.overwrite and any(path.exists() for path in outputs):
         raise FileExistsError("Staging outputs already exist. Re-run with --overwrite.")
 
@@ -286,6 +313,7 @@ def main() -> None:
     merged_events = merge_events(base_events, ready_candidates)
     staged_relationships = relationship_evidence_from_events(ready_candidates)
     merged_relationships = merge_relationship_evidence(base_relationships, staged_relationships)
+    ready_eval_events = build_ready_eval_events(merged_events) if args.emit_ready_eval else []
     report = {
         "version": "1.0.0",
         "roundId": args.round_id,
@@ -306,12 +334,14 @@ def main() -> None:
         "editBacklogCount": len(edit_backlog),
         "mergedReadyEventCount": len(merged_events),
         "mergedRelationshipEvidenceCount": len(merged_relationships),
+        "readyEvalEventCount": len(ready_eval_events),
         "summary": summary,
         "outputs": {
             "readyCandidatesPath": str(candidates_path),
             "editBacklogPath": str(edit_backlog_path),
             "mergedReadyEventsPath": str(merged_path),
             "mergedRelationshipEvidencePath": str(relationships_path),
+            "readyEvalEventsPath": str(ready_eval_path) if args.emit_ready_eval else None,
             "reportPath": str(report_path),
             "markdownPath": str(markdown_path),
         },
@@ -320,12 +350,16 @@ def main() -> None:
     write_jsonl(edit_backlog_path, edit_backlog)
     write_jsonl(merged_path, merged_events)
     write_jsonl(relationships_path, merged_relationships)
+    if args.emit_ready_eval:
+        write_jsonl(ready_eval_path, ready_eval_events)
     write_json(report_path, report)
     markdown_path.write_text(render_markdown(report), encoding="utf-8")
     print(f"[stage_reviewed_a_ready_events] wrote {candidates_path}")
     print(f"[stage_reviewed_a_ready_events] wrote {edit_backlog_path}")
     print(f"[stage_reviewed_a_ready_events] wrote {merged_path}")
     print(f"[stage_reviewed_a_ready_events] wrote {relationships_path}")
+    if args.emit_ready_eval:
+        print(f"[stage_reviewed_a_ready_events] wrote {ready_eval_path}")
     print(f"[stage_reviewed_a_ready_events] stagedReady={len(ready_candidates)} stagedRelationships={len(staged_relationships)} editBacklog={len(edit_backlog)} canonicalWrites=false")
 
 
