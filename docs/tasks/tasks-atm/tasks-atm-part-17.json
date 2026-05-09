@@ -84,13 +84,16 @@
   {
     "id": "ATM-3-0006",
     "title": "task-lock.js adapter 化：接入 ATM LockAdapter",
-    "status": "open",
+    "status": "done",
     "priority": "P1",
     "phase": "ATM-3",
     "type": "implementation",
     "created": "2026-05-05",
     "owner": "GitHubCopilot",
     "doc_id": "doc_task_0306",
+    "started_at": "2026-05-08T06:17:46.1562656+08:00",
+    "started_by_agent": "vs-code-gpt-5.4",
+    "completed_at": "2026-05-08T06:49:39.2458629+08:00",
     "depends": [
       "ATM-2.5-0002",
       "ATM-3-0001"
