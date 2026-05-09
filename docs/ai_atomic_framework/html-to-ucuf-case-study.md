@@ -74,6 +74,17 @@ purpose: reference case study plan
 - rollback 計畫必須包含：回復命令、受影響檔案列表、驗證命令與成功判定條件。
 - 未完成 rollback 可重播驗證前，不得升級為下一輪注入。
 
+## ATM-4-0005 Tracking Note
+
+ATM-4-0005（Injection plan 與 rollback dry-run）在本輪已完成 plan-only 交付，維持「只產 patch plan，不改 legacy runtime」：
+
+- Inject plan schema：AI-Atomic-Framework/schemas/governance/inject-plan.schema.json
+- Rollback plan schema：AI-Atomic-Framework/schemas/governance/rollback-plan.schema.json
+- H2U normalizeCssColor dry-run inject plan：AI-Atomic-Framework/fixtures/upgrade/normalize-css-color-inject-plan.json
+- H2U normalizeCssColor rollback plan：AI-Atomic-Framework/fixtures/upgrade/normalize-css-color-rollback-plan.json
+
+alpha0 gate evidence link（schema / registry / hash-lock / CLI / hello-world / minimal evidence）已寫入 inject plan 的 `alpha0GateEvidence` 欄位；neutrality 與 scope 邊界證據寫在 `neutralityScopeCheck` 欄位，均為 dry-run contract，不觸發 apply。
+
 ## Success Criteria
 
 - 能產出第一份可回放的 dry-run injection plan。
