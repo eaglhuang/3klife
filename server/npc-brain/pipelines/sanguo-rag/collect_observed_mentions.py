@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -15,8 +14,6 @@ DEFAULT_CHAPTERS_ROOT = Path("artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-
 DEFAULT_FORMAL_MAP_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/formal-mention-map.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions")
 DEFAULT_TRIAGE_DECISIONS_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/unresolved-triage-decisions.json")
-DEFAULT_POSTGRES_SCHEMA_SQL_PATH = Path("server/npc-brain/pipelines/sanguo-rag/sql/postgres_schema.sql")
-DEFAULT_PG_DSN_ENV = "SANGUO_RAG_PG_DSN"
 DECORATIVE_WRAPPER_CHARS = "【】[]()（）「」『』《》〈〉"
 ADDRESS_TITLES = ["將軍", "軍師", "先生", "大人", "主公", "縣令", "太守", "都督", "丞相"]
 CJK_CANDIDATE_RE = re.compile(r"[\u4e00-\u9fff]{2,4}")
@@ -148,22 +145,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--formal-map", default=str(DEFAULT_FORMAL_MAP_PATH), help="formal-mention-map.json path")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory for observed mention files")
     parser.add_argument(
-        "--sink",
-        choices=("json", "postgres"),
-        default="json",
-        help="Output sink mode. `json` keeps legacy artifacts; `postgres` writes mentions incrementally to PostgreSQL.",
-    )
-    parser.add_argument(
-        "--pg-dsn",
-        default="",
-        help=f"PostgreSQL DSN. If omitted in postgres sink mode, read from env {DEFAULT_PG_DSN_ENV}.",
-    )
-    parser.add_argument(
-        "--pg-schema-sql",
-        default=str(DEFAULT_POSTGRES_SCHEMA_SQL_PATH),
-        help="Path to PostgreSQL schema SQL file used in postgres sink mode.",
-    )
-    parser.add_argument(
         "--triage-decisions",
         default=str(DEFAULT_TRIAGE_DECISIONS_PATH),
         help="Optional unresolved triage decision file used to split noise/review-pending labels out of unresolved",
@@ -185,84 +166,6 @@ def read_json(path: Path):
 
 def write_json(path: Path, model: BaseModel) -> None:
     path.write_text(json.dumps(model.model_dump(), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-
-def resolve_pg_dsn(cli_dsn: str) -> str:
-    if cli_dsn.strip():
-        return cli_dsn.strip()
-    env_dsn = os.environ.get(DEFAULT_PG_DSN_ENV, "").strip()
-    if env_dsn:
-        return env_dsn
-    raise RuntimeError(
-        f"PostgreSQL DSN is required for --sink postgres. Pass --pg-dsn or set {DEFAULT_PG_DSN_ENV}."
-    )
-
-
-def import_psycopg():
-    try:
-        import psycopg
-    except ImportError as exc:
-        raise RuntimeError(
-            "psycopg is not installed. Run `pip install \"psycopg[binary]>=3.2,<4\"` "
-            "in the active pipeline Python environment."
-        ) from exc
-    return psycopg
-
-
-def apply_postgres_schema(cursor, schema_sql_path: Path) -> None:
-    if not schema_sql_path.exists():
-        raise FileNotFoundError(f"PostgreSQL schema SQL not found: {schema_sql_path}")
-    cursor.execute(schema_sql_path.read_text(encoding="utf-8"))
-
-
-def build_postgres_rows(mentions: list[ObservedMention]) -> list[tuple]:
-    rows: list[tuple] = []
-    for mention in mentions:
-        rows.append(
-            (
-                mention.label,
-                mention.normalized,
-                mention.mentionType,
-                mention.matchStatus,
-                mention.matchedGeneralIds,
-                mention.sourceRef,
-                mention.chapterNo,
-                mention.paragraphIndex,
-                mention.startOffset,
-                mention.endOffset,
-                mention.textSnippet,
-                mention.sceneParticipants,
-            )
-        )
-    return rows
-
-
-def persist_chapter_mentions_to_postgres(cursor, chapter_stem: str, mentions: list[ObservedMention]) -> int:
-    cursor.execute(
-        """
-        DELETE FROM sanguo_rag.observed_mentions
-        WHERE source_ref LIKE %s;
-        """,
-        (f"{chapter_stem}#p%",),
-    )
-    rows = build_postgres_rows(mentions)
-    if not rows:
-        return 0
-    cursor.executemany(
-        """
-        INSERT INTO sanguo_rag.observed_mentions (
-          label, normalized, mention_type, match_status,
-          matched_general_ids, source_ref, chapter_no, paragraph_index,
-          start_offset, end_offset, text_snippet, scene_participants
-        ) VALUES (
-          %s, %s, %s, %s,
-          %s, %s, %s, %s,
-          %s, %s, %s, %s
-        );
-        """,
-        rows,
-    )
-    return len(rows)
 
 
 def normalize_label(value: str) -> str:
@@ -317,54 +220,24 @@ def load_formal_map(path: Path) -> dict[str, FormalMentionEntry]:
     return formal_map
 
 
-def load_triage_decisions(path: Path) -> tuple[str | None, dict[str, str], list[tuple[str, str, str]]]:
+def load_triage_decisions(path: Path) -> tuple[str | None, dict[str, str]]:
     if not path.exists():
-        return None, {}, []
+        return None, {}
     config = TriageDecisionConfig.model_validate(read_json(path))
     decisions: dict[str, str] = {}
-    rows_by_normalized: dict[str, tuple[str, str, str]] = {}
     for label in config.noiseLabels:
         normalized = normalize_label(label)
         if normalized:
             decisions[normalized] = "excluded"
-            label_text = str(label or "").strip() or normalized
-            rows_by_normalized[normalized] = (normalized, label_text, "noise")
     for label in config.ambiguousLabels:
         normalized = normalize_label(label)
         if normalized:
             decisions[normalized] = "review-pending"
-            label_text = str(label or "").strip() or normalized
-            rows_by_normalized[normalized] = (normalized, label_text, "ambiguous")
     for label in config.personLabels:
         normalized = normalize_label(label)
         if normalized:
             decisions[normalized] = "review-pending"
-            label_text = str(label or "").strip() or normalized
-            rows_by_normalized[normalized] = (normalized, label_text, "person")
-    triage_rows = [rows_by_normalized[key] for key in sorted(rows_by_normalized)]
-    return str(path), decisions, triage_rows
-
-
-def upsert_triage_decisions_postgres(cursor, triage_rows: list[tuple[str, str, str]]) -> int:
-    cursor.execute("DELETE FROM sanguo_rag.triage_label_decisions;")
-    if not triage_rows:
-        return 0
-    cursor.executemany(
-        """
-        INSERT INTO sanguo_rag.triage_label_decisions (
-          normalized, label, decision
-        ) VALUES (
-          %s, %s, %s
-        )
-        ON CONFLICT (normalized) DO UPDATE
-        SET
-          label = EXCLUDED.label,
-          decision = EXCLUDED.decision,
-          inserted_at = NOW();
-        """,
-        triage_rows,
-    )
-    return len(triage_rows)
+    return str(path), decisions
 
 
 def decide_unresolved_status(label: str, triage_decisions: dict[str, str]) -> str:
@@ -651,10 +524,6 @@ def main() -> None:
     chapters_root = Path(args.chapters_root)
     formal_map_path = Path(args.formal_map)
     output_root = Path(args.output_root)
-    sink_mode = str(args.sink)
-    postgres_dsn = ""
-    postgres_connection = None
-    postgres_cursor = None
 
     if not chapters_root.exists():
         raise FileNotFoundError(f"chapters root not found: {chapters_root}")
@@ -666,69 +535,43 @@ def main() -> None:
     formal_map = load_formal_map(formal_map_path)
     formal_entries = sorted(formal_map.values(), key=lambda item: (-len(item.alias), item.alias))
     formal_normalized = set(formal_map)
-    triage_decision_path, triage_decisions, triage_rows = load_triage_decisions(Path(args.triage_decisions))
+    triage_decision_path, triage_decisions = load_triage_decisions(Path(args.triage_decisions))
     ensure_output_root(output_root, overwrite=args.overwrite)
-
-    if sink_mode == "postgres":
-        postgres_dsn = resolve_pg_dsn(args.pg_dsn)
-        schema_sql_path = Path(args.pg_schema_sql)
-        psycopg = import_psycopg()
-        postgres_connection = psycopg.connect(postgres_dsn)
-        postgres_cursor = postgres_connection.cursor()
-        apply_postgres_schema(postgres_cursor, schema_sql_path)
-        upsert_triage_decisions_postgres(postgres_cursor, triage_rows)
 
     all_mentions: list[ObservedMention] = []
     chapter_summaries: list[ChapterMentionSummary] = []
-    try:
-        for chapter_path in chapter_paths:
-            chapter_no = parse_chapter_no(chapter_path)
-            paragraphs = split_paragraphs(chapter_path.read_text(encoding="utf-8"))
-            chapter_mentions: list[ObservedMention] = []
-            skipped_unknown_candidate_count = 0
-            for paragraph_index, paragraph in enumerate(paragraphs, start=1):
-                source_ref = f"{chapter_path.stem}#p{paragraph_index}"
-                paragraph_mentions, skipped_count = collect_from_paragraph(
-                    paragraph,
-                    source_ref,
-                    chapter_no,
-                    paragraph_index,
-                    formal_entries,
-                    formal_normalized,
-                    args.collect_cjk_candidates,
-                    args.candidate_mode,
-                    triage_decisions,
-                )
-                chapter_mentions.extend(paragraph_mentions)
-                skipped_unknown_candidate_count += skipped_count
-
-            if sink_mode == "postgres" and postgres_cursor is not None:
-                persist_chapter_mentions_to_postgres(postgres_cursor, chapter_path.stem, chapter_mentions)
-
-            all_mentions.extend(chapter_mentions)
-            chapter_summaries.append(
-                ChapterMentionSummary(
-                    chapterNo=chapter_no,
-                    chapterPath=str(chapter_path),
-                    mentionCount=len(chapter_mentions),
-                    formalMatchCount=sum(1 for mention in chapter_mentions if mention.mentionType == "formal-match"),
-                    addressTitleCount=sum(1 for mention in chapter_mentions if mention.mentionType == "address-title"),
-                    unknownCandidateCount=sum(1 for mention in chapter_mentions if mention.mentionType == "unknown-candidate"),
-                    skippedUnknownCandidateCount=skipped_unknown_candidate_count,
-                )
+    for chapter_path in chapter_paths:
+        chapter_no = parse_chapter_no(chapter_path)
+        paragraphs = split_paragraphs(chapter_path.read_text(encoding="utf-8"))
+        chapter_mentions: list[ObservedMention] = []
+        skipped_unknown_candidate_count = 0
+        for paragraph_index, paragraph in enumerate(paragraphs, start=1):
+            source_ref = f"{chapter_path.stem}#p{paragraph_index}"
+            paragraph_mentions, skipped_count = collect_from_paragraph(
+                paragraph,
+                source_ref,
+                chapter_no,
+                paragraph_index,
+                formal_entries,
+                formal_normalized,
+                args.collect_cjk_candidates,
+                args.candidate_mode,
+                triage_decisions,
             )
-
-        if sink_mode == "postgres" and postgres_connection is not None:
-            postgres_connection.commit()
-    except Exception:
-        if postgres_connection is not None:
-            postgres_connection.rollback()
-        raise
-    finally:
-        if postgres_cursor is not None:
-            postgres_cursor.close()
-        if postgres_connection is not None:
-            postgres_connection.close()
+            chapter_mentions.extend(paragraph_mentions)
+            skipped_unknown_candidate_count += skipped_count
+        all_mentions.extend(chapter_mentions)
+        chapter_summaries.append(
+            ChapterMentionSummary(
+                chapterNo=chapter_no,
+                chapterPath=str(chapter_path),
+                mentionCount=len(chapter_mentions),
+                formalMatchCount=sum(1 for mention in chapter_mentions if mention.mentionType == "formal-match"),
+                addressTitleCount=sum(1 for mention in chapter_mentions if mention.mentionType == "address-title"),
+                unknownCandidateCount=sum(1 for mention in chapter_mentions if mention.mentionType == "unknown-candidate"),
+                skippedUnknownCandidateCount=skipped_unknown_candidate_count,
+            )
+        )
 
     timestamp = utc_now()
     mentions_bundle = ObservedMentionsBundle(
@@ -755,17 +598,10 @@ def main() -> None:
         topReviewPendingLabels=summarize_labels(all_mentions, "review-pending", args.top),
     )
 
-    if sink_mode == "json":
-        write_json(output_root / "observed-mentions.json", mentions_bundle)
+    write_json(output_root / "observed-mentions.json", mentions_bundle)
     write_json(output_root / "observed-label-summary.json", summary_bundle)
 
-    if sink_mode == "json":
-        print(f"[collect_observed_mentions] wrote {output_root / 'observed-mentions.json'}")
-    else:
-        print(
-            "[collect_observed_mentions] wrote postgres "
-            f"dsn={postgres_dsn} incrementalChapterUpsert=True"
-        )
+    print(f"[collect_observed_mentions] wrote {output_root / 'observed-mentions.json'}")
     print(f"[collect_observed_mentions] wrote {output_root / 'observed-label-summary.json'}")
     print(
         "[collect_observed_mentions] "

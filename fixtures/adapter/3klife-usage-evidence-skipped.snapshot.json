@@ -19,7 +19,7 @@
       "fromVersion": null,
       "notes": "3KLife strict-to-lenient fallback record for ATM-3-0014."
     },
-    "evidenceId": "usage-feedback-skipped.atm-core-0004.20260509101802",
+    "evidenceId": "usage-feedback-skipped.atm-core-0004.20260509042112",
     "workItemId": "ATM-CORE-0004",
     "evidenceKind": "metric",
     "evidenceType": "usage-feedback-skipped",
@@ -27,7 +27,7 @@
     "artifactPaths": [
       "fixtures/adapter/3klife-usage-source-missing-field.json"
     ],
-    "createdAt": "2026-05-09T10:18:02.638Z",
+    "createdAt": "2026-05-09T04:21:12.329Z",
     "producedBy": "@3klife/usage-evidence-shadow",
     "skipReason": "source format drift: missing required sessions metric",
     "details": {

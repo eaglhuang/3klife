@@ -425,18 +425,6 @@ priorityScore =
 
 ### Stage 2. Fetch approved external evidence
 
-這一層現在建議固定走 `3kweb-check` + agent-native CLI：
-
-- 第一入口：`python3 server/npc-brain/pipelines/sanguo-rag/run_3kweb_check.py --fetch-live --fetch-backend auto`
-- CLI 後端：`node tools_node/agent-clis/3klife-source-health.js`
-- `auto` 會優先走 Node CLI，必要時才 fallback 到 Python urllib
-- CLI 會主動移除壞掉的 proxy 環境變數，避免 `WinError 10061` 這類假性外連失敗
-- CLI 產物先進 `local/agent-cli-cache/3klife-source-health/`，只留下 `url / snippet / textHash / fetchedAt / sourceId`
-- 這一層只做 deterministic fetch / decode / hash / relevance check，不直接做 canonical writes
-
-這代表外部證據抓取現在也有自己的 adaptor/gate，像 Unity 的遠端素材 importer：
-先確認來源站拿得到、解碼正確、能留下 hash 與引用線索，再交給後面的 evidence card 與 claim graph。
-
 輸入：
 
 - approved source policy

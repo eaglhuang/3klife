@@ -25,18 +25,6 @@
 node tools_node/rebuild-tasks-atm-auto-parts.js
 ```
 
-官方驗證案例（固定順序）：
-
-```bash
-node tools_node/sync-atm-stabilization-milestone.js --check --strict
-node tools_node/rebuild-tasks-atm-auto-parts.js
-npm.cmd run validate:atm-task-store
-```
-
-- `--check --strict` 為 check-only、non-mutating：只驗證不寫入。
-- 主路徑（架構鏈）為 `tasks-atm-shard-store.js -> sync-atm-stabilization-milestone.js -> rebuild-tasks-atm-auto-parts.js`。
-- `validate:atm-milestone` 保留相容 alias，非主要入口。
-
 預設門檻：單一 part 不超過 `300` 行、約 `10 KB`。
 
 新增任務請直接編輯對應分片，再跑 `node tools_node/build-ui-task-manifest.js` 重建 aggregate。

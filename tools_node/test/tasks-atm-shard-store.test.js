@@ -13,9 +13,6 @@ const {
 const {
   MILESTONE_PATH_REL,
 } = require('../lib/atm-stabilization-milestone');
-const {
-  runTaskStoreTruthPipeline,
-} = require('../sync-atm-stabilization-milestone');
 
 const projectRoot = path.resolve(__dirname, '..', '..');
 const tempRoot = path.join(projectRoot, 'temp', 'tasks-atm-shard-store-test');
@@ -62,10 +59,6 @@ function task(serial, extra = {}) {
 
 function writeAggregate(tasks) {
   fs.writeFileSync(indexPath, `${JSON.stringify({ tasks }, null, 2)}\n`, 'utf8');
-}
-
-function readText(filePath) {
-  return fs.readFileSync(filePath, 'utf8');
 }
 
 function partChanges(result) {
@@ -139,37 +132,6 @@ function main() {
   });
   assert(partChanges(updated).length === 1, `updating one task should change one part, got ${partChanges(updated).join(', ')}`);
   assert(!updated.changedFiles.includes('docs/tasks/tasks-atm/.shardrc.json'), 'updating one task should not rewrite .shardrc');
-
-  const beforeDrift = readText(milestonePath);
-  fs.writeFileSync(milestonePath, `${beforeDrift}\n<!-- drift-fixture -->\n`, 'utf8');
-
-  const checkModeDrift = runTaskStoreTruthPipeline(tempRoot, {
-    check: true,
-    verifyAfterSync: true,
-  });
-  assert(checkModeDrift.report.passed === false, 'check-only pipeline should fail on drift');
-  assert(checkModeDrift.report.changed === true, 'check-only pipeline should report changed=true on drift');
-  assert(
-    checkModeDrift.report.changedFiles.includes(MILESTONE_PATH_REL),
-    'check-only drift should include milestone path in changed files',
-  );
-  assert(
-    readText(milestonePath) === `${beforeDrift}\n<!-- drift-fixture -->\n`,
-    'check-only pipeline must be non-mutating',
-  );
-
-  const syncPipeline = runTaskStoreTruthPipeline(tempRoot, {
-    check: false,
-    verifyAfterSync: true,
-  });
-  assert(syncPipeline.report.passed === true, 'sync pipeline should repair drift and pass post-sync check');
-
-  const checkModeNoDrift = runTaskStoreTruthPipeline(tempRoot, {
-    check: true,
-    verifyAfterSync: true,
-  });
-  assert(checkModeNoDrift.report.passed === true, 'check-only pipeline should pass after sync repair');
-  assert(checkModeNoDrift.report.changed === false, 'check-only pipeline should report changed=false after repair');
 
   cleanupTempRoot();
   console.log('tasks-atm shard store stable assignment tests passed');

@@ -86,12 +86,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--choices-root", default=str(DEFAULT_CHOICES_ROOT), help="Output directory for generated MCQ files")
     parser.add_argument("--top", type=int, default=30, help="Number of unresolved labels to turn into MCQs")
     parser.add_argument(
-        "--collect-sink",
-        choices=("json", "postgres"),
-        default="json",
-        help="Sink mode for collect_observed_mentions. `json` keeps legacy output; `postgres` writes mentions incrementally to PostgreSQL.",
-    )
-    parser.add_argument(
         "--top-source",
         choices=("auto", "summary", "postgres"),
         default="auto",
@@ -585,38 +579,27 @@ def build_alias_dict(alias_output_root: Path, observed_path: Path, retry_without
         ])
 
 
-def collect_observed_mentions(
-    chapters_root: Path,
-    alias_output_root: Path,
-    observed_output_root: Path,
-    decision_path: Path,
-    top: int,
-    collect_sink: str,
-    pg_dsn: str,
-) -> None:
-    args = [
-        resolve_pipeline_python(),
-        "server/npc-brain/pipelines/sanguo-rag/collect_observed_mentions.py",
-        "--chapters-root",
-        str(chapters_root),
-        "--formal-map",
-        str(alias_output_root / "formal-mention-map.json"),
-        "--output-root",
-        str(observed_output_root),
-        "--triage-decisions",
-        str(decision_path),
-        "--sink",
-        collect_sink,
-        "--collect-cjk-candidates",
-        "--candidate-mode",
-        "conservative",
-        "--top",
-        str(top),
-        "--overwrite",
-    ]
-    if collect_sink == "postgres" and pg_dsn:
-        args.extend(["--pg-dsn", pg_dsn])
-    run_step(args)
+def collect_observed_mentions(chapters_root: Path, alias_output_root: Path, observed_output_root: Path, decision_path: Path, top: int) -> None:
+    run_step(
+        [
+            resolve_pipeline_python(),
+            "server/npc-brain/pipelines/sanguo-rag/collect_observed_mentions.py",
+            "--chapters-root",
+            str(chapters_root),
+            "--formal-map",
+            str(alias_output_root / "formal-mention-map.json"),
+            "--output-root",
+            str(observed_output_root),
+            "--triage-decisions",
+            str(decision_path),
+            "--collect-cjk-candidates",
+            "--candidate-mode",
+            "conservative",
+            "--top",
+            str(top),
+            "--overwrite",
+        ]
+    )
 
 
 def make_question(index: int, entry: dict) -> dict:
@@ -1157,11 +1140,6 @@ def main() -> None:
     auto_suggestion_actionable = 0
     postgres_seed_synced = False
 
-    if args.collect_sink == "postgres" and not pg_dsn:
-        raise RuntimeError(
-            f"--collect-sink=postgres requires --pg-dsn or env {DEFAULT_PG_DSN_ENV}."
-        )
-
     if args.top_source == "postgres" and not pg_dsn:
         raise RuntimeError(
             f"--top-source=postgres requires --pg-dsn or env {DEFAULT_PG_DSN_ENV}."
@@ -1182,33 +1160,21 @@ def main() -> None:
     for iteration in range(1, args.max_iterations + 1):
         print(f"[resolution_loop] iteration={iteration}")
         build_alias_dict(alias_output_root, observed_path, retry_without_observed=True)
-        collect_observed_mentions(
-            chapters_root,
-            alias_output_root,
-            observed_output_root,
-            decision_path,
-            args.top,
-            args.collect_sink,
-            pg_dsn,
-        )
+        collect_observed_mentions(chapters_root, alias_output_root, observed_output_root, decision_path, args.top)
         build_alias_dict(alias_output_root, observed_path)
 
     if args.top_source in {"auto", "postgres"}:
-        if args.collect_sink == "postgres":
-            postgres_seed_synced = bool(pg_dsn)
-            print("[resolution_loop] postgres seed sync skipped: collect sink already writes observed mentions + triage decisions")
-        else:
-            try:
-                postgres_seed_synced = sync_resolution_seed_to_postgres(
-                    pg_dsn,
-                    observed_path,
-                    alias_output_root,
-                    decision_path,
-                )
-            except Exception as exc:
-                if args.top_source == "postgres":
-                    raise
-                print(f"[resolution_loop] postgres sync failed; continue with summary fallback ({exc})")
+        try:
+            postgres_seed_synced = sync_resolution_seed_to_postgres(
+                pg_dsn,
+                observed_path,
+                alias_output_root,
+                decision_path,
+            )
+        except Exception as exc:
+            if args.top_source == "postgres":
+                raise
+            print(f"[resolution_loop] postgres sync failed; continue with summary fallback ({exc})")
 
     json_path, markdown_path, choices, answers = generate_choices(
         summary_path,
