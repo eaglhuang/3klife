@@ -4,8 +4,8 @@
     "description": "Central Skills Manifest — 所有 Agent Skill 的唯一索引",
     "version": 1,
     "generated": "2026-05-04",
-    "totalSkills": 29,
-    "portableCount": 14,
+    "totalSkills": 31,
+    "portableCount": 15,
     "categories": ["debug", "ui-production", "asset-gen", "image-gen", "data-pipeline", "agent-workflow", "doc-management", "harness"]
   },
   "skills": [
@@ -364,6 +364,30 @@
       "depends": [],
       "applyTo": "**",
       "tags": ["harness", "gate", "validation", "computational", "sensor"]
+    },
+    {
+      "id": "agent-cli-factory",
+      "version": "1.0.0",
+      "category": "agent-workflow",
+      "portable": true,
+      "description": "Agent-native CLI 二度封裝 — wrap high-frequency websites/APIs/SaaS into compact repo-local CLIs for low-token agent use.",
+      "locations": [".github/skills/agent-cli-factory", ".agents/skills/agent-cli-factory"],
+      "primaryLocation": ".github/skills/agent-cli-factory",
+      "depends": ["encoding-touched-guard"],
+      "applyTo": "tools_node/**,server/npc-brain/pipelines/**,.github/skills/**,.agents/skills/**",
+      "tags": ["agent-workflow", "cli", "printing-press", "external-data", "token-budget"]
+    },
+    {
+      "id": "3kweb-check",
+      "version": "1.0.0",
+      "category": "data-pipeline",
+      "portable": false,
+      "description": "Deterministic external-evidence source validation workflow for Sanguo ETL/RAG with agent-native CLI backend.",
+      "locations": [".github/skills/3kweb-check", ".agents/skills/3kweb-check"],
+      "primaryLocation": ".github/skills/3kweb-check",
+      "depends": ["agent-cli-factory", "encoding-touched-guard"],
+      "applyTo": "server/npc-brain/pipelines/sanguo-rag/**,tools_node/agent-clis/**",
+      "tags": ["sanguo", "etl", "rag", "external-data", "evidence", "cli"]
     }
   ],
   "mirrors": [
@@ -374,12 +398,14 @@
     { "skillId": "cocos-screenshot", "primary": ".github/skills/cocos-screenshot", "mirror": ".agents/skills/cocos-screenshot" },
     { "skillId": "encoding-touched-guard", "primary": ".github/skills/encoding-touched-guard", "mirror": ".agents/skills/encoding-touched-guard" },
     { "skillId": "task-card-opener", "primary": ".github/skills/task-card-opener", "mirror": ".agents/skills/task-card-opener" },
-    { "skillId": "ui-vibe-pipeline", "primary": ".github/skills/ui-vibe-pipeline", "mirror": ".agents/skills/ui-vibe-pipeline" }
+    { "skillId": "ui-vibe-pipeline", "primary": ".github/skills/ui-vibe-pipeline", "mirror": ".agents/skills/ui-vibe-pipeline" },
+    { "skillId": "agent-cli-factory", "primary": ".github/skills/agent-cli-factory", "mirror": ".agents/skills/agent-cli-factory" },
+    { "skillId": "3kweb-check", "primary": ".github/skills/3kweb-check", "mirror": ".agents/skills/3kweb-check" }
   ],
   "dependencyGraph": {
     "debug": ["cocos-bug-triage -> cocos-screenshot", "cocos-bug-triage -> cocos-log-reader"],
-    "agent-workflow": ["best-mode -> context-budget-guard", "task-card-opener -> encoding-touched-guard"],
-    "data-pipeline": ["general-story-writer -> general-balance-tuner", "general-balance-tuner -> general-data-pipeline"],
+    "agent-workflow": ["best-mode -> context-budget-guard", "task-card-opener -> encoding-touched-guard", "agent-cli-factory -> encoding-touched-guard"],
+    "data-pipeline": ["general-story-writer -> general-balance-tuner", "general-balance-tuner -> general-data-pipeline", "3kweb-check -> agent-cli-factory | encoding-touched-guard"],
     "ui-production-pipeline": [
       "ui-reference-decompose",
       "ui-family-architect -> ui-reference-decompose",
@@ -396,4 +422,3 @@
     ]
   }
 }
-

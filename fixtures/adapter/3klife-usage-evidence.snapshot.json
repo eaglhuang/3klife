@@ -19,7 +19,7 @@
       "fromVersion": null,
       "notes": "3KLife usage-evidence shadow adapter payload."
     },
-    "evidenceId": "usage-feedback.atm-core-0004.20260509042112",
+    "evidenceId": "usage-feedback.atm-core-0004.20260509101802",
     "workItemId": "ATM-CORE-0004",
     "evidenceKind": "metric",
     "evidenceType": "usage-feedback",
@@ -28,7 +28,7 @@
       "fixtures/adapter/3klife-usage-source.json",
       "atomic_workbench/atoms/ATM-CORE-0003/reports/neutrality-map-report.json"
     ],
-    "createdAt": "2026-05-09T04:21:12.323Z",
+    "createdAt": "2026-05-09T10:18:02.630Z",
     "producedBy": "@3klife/usage-evidence-shadow",
     "reproducibility": {
       "replayable": true,

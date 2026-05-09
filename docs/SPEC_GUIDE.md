@@ -11,6 +11,12 @@
 
 原則：狀態統計以 task shards 為準，milestone 只做投影。
 
+Task-store 主路徑（架構鏈，不是新增入口）：
+
+1. `tasks-atm-shard-store.js`
+2. `sync-atm-stabilization-milestone.js`
+3. `rebuild-tasks-atm-auto-parts.js`
+
 ## 2) Task Record Core Fields
 
 每張 task 至少包含：
@@ -60,7 +66,19 @@
 最小驗證鏈：
 
 ```bash
-npm run validate:atm-milestone
+node tools_node/sync-atm-stabilization-milestone.js --check --strict
+node tools_node/rebuild-tasks-atm-auto-parts.js
+npm.cmd run validate:atm-task-store
+```
+
+補充：
+
+- `--check --strict` 為 check-only、non-mutating：只檢查 drift，不寫入衍生檔。
+- `validate:atm-milestone` 仍可用，但僅作為相容 alias，不是主要驗證入口。
+
+延伸驗證鏈：
+
+```bash
 npm run validate:rule-guard-read-only
 npm run validate:registry-backfill-sweep
 ```

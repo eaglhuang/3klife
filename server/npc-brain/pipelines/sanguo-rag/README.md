@@ -1,6 +1,19 @@
 <!-- doc_id: doc_server_pipeline_0002 -->
 # Sanguo RAG Pipelines
 
+## External Evidence Fetch Path
+
+`3kweb-check` 現在預設走 agent-native CLI，而不是把 Python urllib 直接放在最外層。
+
+- 主要後端：`node tools_node/agent-clis/3klife-source-health.js`
+- 總控入口：`python3 server/npc-brain/pipelines/sanguo-rag/run_3kweb_check.py --fetch-live --fetch-backend auto`
+- `auto` 規則：先走 Node CLI，只有 CLI 不可用或回傳阻塞時才 fallback 到 Python urllib
+- CLI 會主動清除壞掉的代理變數：
+  `HTTP_PROXY / HTTPS_PROXY / ALL_PROXY / http_proxy / https_proxy / all_proxy`
+- 來源健康檢查只產出 cache / summary / hash，不做 canonical writes
+
+這次 `WinError 10061` 的根因不是網站本身無法外連，而是執行環境把流量導到 `127.0.0.1:9` 的假 proxy。現在這層已經被收進 CLI 與 runner 裡，其他 Agent 只要照 skill 跑就能直接避開。
+
 `server/npc-brain/pipelines/sanguo-rag/` 是三國大腦中台的正式 ETL / RAG pipeline 腳本位置。
 
 以下範例假設已在目標 venv 內執行；若還沒，先 `source` 對應的 `bin/activate`，或設定 `PYTHON_BIN` 指向該環境。
@@ -21,6 +34,9 @@ API service 層位於 `server/npc-brain/app/`。Pipeline 產出 canonical fixtur
 - `build_api_readiness_index.py`：產出 context-options / keyword-options / dialogue evidence / Pinecone metadata 靜態 readiness fixtures
 - `run_progress_advancement_loop.py`：ABAB 式進度推進控制器，做 preview / backlog / stage / progress estimate 的外層迴圈
 - `run_three_lane_progress_scheduler.py`：固定順序跑三車道 `sweep -> precision -> promotion-eval`，並把上一車道 baseline 自動接給下一車道
+- `run_full_roster_convergence_loop.py`：全量高速公路總控（external evidence -> full pilot -> scoreboard -> optional three-lane）
+- `build_external_evidence_cards.py`：來源設定轉 evidenceCard（第一版採 allowlist + manual seed，`canonicalWrites=false`）
+- `build_full_roster_scoreboard.py`：雙分數與 lane 建議（`historicalTrustScore` / `worldbuildingUsabilityScore`）
 
 三車道流程的白話說明（資料流 + 決策原理 + 範例）可看：
 
@@ -41,6 +57,7 @@ API service 層位於 `server/npc-brain/app/`。Pipeline 產出 canonical fixtur
 - `config/general-alias-overrides.json`
 - `config/manual-roster-seeds.json`
 - `config/unresolved-triage-decisions.json`
+- `config/external-evidence-sources.json`
 
 中間產物仍統一落在：
 
