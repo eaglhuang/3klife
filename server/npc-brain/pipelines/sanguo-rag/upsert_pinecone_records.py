@@ -24,7 +24,8 @@ DEFAULT_RECORDS_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/vector
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Embed vector-ready records and upsert them into Pinecone namespaces.")
+    parser = argparse.ArgumentParser(description="Embed vector-ready records and upsert them into Pinecone/Qdrant namespaces.")
+    parser.add_argument("--provider", default="pinecone", choices=["pinecone", "qdrant"], help="vector backend to upsert into")
     parser.add_argument("--records-root", default=str(DEFAULT_RECORDS_ROOT), help="root containing vector-records.*.jsonl")
     parser.add_argument(
         "--namespace",
@@ -36,7 +37,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--embedding-model", default=None, help="override NPC_EMBEDDING_MODEL")
     parser.add_argument("--batch-size", type=int, default=32, help="embedding/upsert batch size")
     parser.add_argument("--limit", type=int, default=0, help="optional max record count per selected namespace for smoke tests")
-    parser.add_argument("--dry-run", action="store_true", help="read and embed records but do not call Pinecone upsert")
+    parser.add_argument("--dry-run", action="store_true", help="read and embed records but do not call backend upsert")
     return parser.parse_args()
 
 
@@ -102,6 +103,7 @@ def main() -> None:
             grouped_records[row.namespace].append(row)
 
     summary = {
+        "provider": args.provider,
         "recordsRoot": repo_relative(records_root),
         "embeddingProvider": embedding_provider,
         "embeddingModel": embedding_model,
@@ -112,7 +114,7 @@ def main() -> None:
     }
 
     upsert_results = []
-    adapter = None if args.dry_run else load_vector_store("pinecone", config=config)
+    adapter = None if args.dry_run else load_vector_store(args.provider, config=config)
     if adapter is not None:
         adapter.ensure_backend(recreate=False)
 

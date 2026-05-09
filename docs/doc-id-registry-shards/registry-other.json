@@ -628,5 +628,11 @@
     "path": "docs/templates/pev-upgrade-proposal-template.md",
     "title": "PEV Upgrade Proposal Template",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0113",
+    "path": "docs/ai_atomic_framework/cocos-runtime-adapter-policy.md",
+    "title": "Cocos Runtime Adapter Policy",
+    "category": "other"
   }
 ]

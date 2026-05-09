@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 import os
+import uuid
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Sequence
@@ -321,6 +322,16 @@ class QdrantVectorStore(VectorStoreAdapter):
                 conditions.append(self._FieldCondition(key=key, match=self._MatchValue(value=value)))
         return self._Filter(must=conditions)
 
+    def _coerce_point_id(self, raw_id: str) -> int | str:
+        text = str(raw_id or "").strip()
+        if text.isdigit():
+            return int(text)
+        try:
+            uuid.UUID(text)
+            return text
+        except ValueError:
+            return str(uuid.uuid5(uuid.NAMESPACE_URL, f"3klife-vector:{text}"))
+
     def ensure_backend(self, recreate: bool = False) -> dict[str, Any]:
         results = []
         for namespace in [self.config.namespace_facts, self.config.namespace_keywords, self.config.namespace_persona]:
@@ -363,7 +374,8 @@ class QdrantVectorStore(VectorStoreAdapter):
                 payload = dict(_clean_metadata(record.metadata) or {})
                 payload.setdefault("text", record.text)
                 payload.setdefault("namespace", record.namespace)
-                points.append(self._PointStruct(id=record.id, vector=record.values, payload=payload))
+                payload.setdefault("recordId", record.id)
+                points.append(self._PointStruct(id=self._coerce_point_id(record.id), vector=record.values, payload=payload))
             self.client.upsert(collection_name=collection_name, points=points)
             total += len(points)
         return {
@@ -381,16 +393,29 @@ class QdrantVectorStore(VectorStoreAdapter):
         metadata_filter: dict[str, Any] | None = None,
     ) -> list[VectorMatch]:
         collection_name = self._collection_name(namespace)
-        hits = self.client.search(
-            collection_name=collection_name,
-            query_vector=list(vector),
-            limit=top_k,
-            query_filter=self._build_filter(metadata_filter),
-            with_payload=True,
-        )
+        query_filter = self._build_filter(metadata_filter)
+        if hasattr(self.client, "search"):
+            hits = self.client.search(
+                collection_name=collection_name,
+                query_vector=list(vector),
+                limit=top_k,
+                query_filter=query_filter,
+                with_payload=True,
+            )
+        elif hasattr(self.client, "query_points"):
+            response = self.client.query_points(
+                collection_name=collection_name,
+                query=list(vector),
+                limit=top_k,
+                query_filter=query_filter,
+                with_payload=True,
+            )
+            hits = list(getattr(response, "points", []) or [])
+        else:
+            raise RuntimeError("Qdrant client does not expose search/query_points API.")
         return [
             VectorMatch(
-                id=str(hit.id),
+                id=str((hit.payload or {}).get("recordId") or hit.id),
                 score=float(hit.score) if hit.score is not None else None,
                 metadata=dict(hit.payload or {}),
                 text=(hit.payload or {}).get("text"),
