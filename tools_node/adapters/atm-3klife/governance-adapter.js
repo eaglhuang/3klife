@@ -6,7 +6,8 @@ const { spawnSync } = require('child_process');
 const yaml = require('yaml');
 
 const projectConfig = require('../../lib/project-config');
-const docIdRegistryLoader = require('../../lib/doc-id-registry-loader');
+const { createDocumentAdapter } = require('./document-adapter');
+const { createEncodingAdapter } = require('./encoding-adapter');
 const tasksAtmStore = require('../../lib/tasks-atm-shard-store');
 const { findTaskCardPath } = require('../../lib/task-card-paths');
 
@@ -411,26 +412,13 @@ function buildTaskCardPath(config, workItemId) {
 }
 
 function buildDocumentIndex(config) {
+  const documentAdapter = createDocumentAdapter({ projectRoot: config.repositoryRoot });
   return {
     resolveDocumentId(documentId) {
-      const registry = docIdRegistryLoader.loadDocIdRegistryMap();
-      const entry = registry[documentId];
-      return entry ? entry.path : null;
+      return documentAdapter.resolveDocumentId(documentId);
     },
     searchDocuments(query) {
-      const needle = String(query || '').trim().toLowerCase();
-      if (!needle) {
-        return [];
-      }
-      const registry = docIdRegistryLoader.loadDocIdRegistryMap();
-      return Object.entries(registry)
-        .filter(([docId, entry]) =>
-          docId.toLowerCase().includes(needle)
-          || String(entry.path || '').toLowerCase().includes(needle)
-          || String(entry.title || '').toLowerCase().includes(needle)
-        )
-        .map(([, entry]) => entry.path)
-        .sort((left, right) => left.localeCompare(right));
+      return documentAdapter.searchDocuments(query);
     },
     updateDocument(documentPath, metadata) {
       const artifact = writeShadowPlan(config, 'document-index', `${path.basename(documentPath)}.json`, {
@@ -698,8 +686,8 @@ function buildStateStore(config) {
 function buildRuleGuard(config) {
   function runEncodingGuard(context) {
     const files = Array.isArray(context.files) ? context.files.map(toPosix) : [];
-    const args = files.length > 0 ? ['--files', ...files] : [];
-    return runNodeTool(config, 'checkEncodingTouched', args);
+    const encodingAdapter = createEncodingAdapter({ projectRoot: config.repositoryRoot });
+    return encodingAdapter.checkTouched(files);
   }
 
   function runTaskScopeGuard(context) {

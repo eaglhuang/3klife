@@ -2,8 +2,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const cp = require('child_process');
 
+const { createDocumentAdapter } = require('./document-adapter');
 const {
   formatTaskIdInspection,
   inspectTaskId,
@@ -90,16 +90,8 @@ class TaskAdapter {
   }
 
   assignDocId(markdownFilePath) {
-    const resolved = path.resolve(markdownFilePath);
-    const relative = path.relative(this.projectRoot, resolved).replace(/\\/g, '/');
-    cp.execFileSync(
-      process.execPath,
-      [path.join(this.projectRoot, 'tools_node', 'doc-id-registry.js'), '--assign', relative],
-      {
-        cwd: this.projectRoot,
-        stdio: 'inherit',
-      }
-    );
+    const documentAdapter = createDocumentAdapter({ projectRoot: this.projectRoot });
+    return documentAdapter.assignDocId(markdownFilePath);
   }
 }
 

@@ -17,12 +17,16 @@ npm ci
 ## 3) 10 分鐘 smoke（本 tracking repo）
 
 ```bash
-npm run validate:atm-milestone
+node tools_node/sync-atm-stabilization-milestone.js --check --strict
+node tools_node/rebuild-tasks-atm-auto-parts.js
+npm.cmd run validate:atm-task-store
 npm run validate:rule-guard-read-only
 npm run validate:registry-backfill-sweep
 ```
 
-預期：三個命令都回傳 `status=pass` 或等價的 `passed=true`。
+預期：三個 task-store 命令與兩個 validator 都回傳 `status=pass` 或等價的 `passed=true`。
+
+補充：`--check --strict` 為 check-only 模式，不會寫入任何檔案。
 
 ## 4) 30 分鐘 hello-world（上游 standalone repo）
 

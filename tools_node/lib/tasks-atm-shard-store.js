@@ -83,6 +83,15 @@ function writeJsonIfChanged(filePath, value) {
   return true;
 }
 
+function hasJsonDrift(filePath, value) {
+  const next = `${JSON.stringify(value, null, 2)}\n`;
+  if (!fs.existsSync(filePath)) {
+    return true;
+  }
+  const current = fs.readFileSync(filePath, 'utf8');
+  return current !== next;
+}
+
 function serializePart(tasks) {
   return `${JSON.stringify(tasks, null, 2)}\n`;
 }
@@ -859,12 +868,25 @@ function writeTasksAtmStore(projectRoot, tasks, options = {}) {
     if (writeJsonIfChanged(paths.indexPath, indexStub)) {
       changedFiles.push(relPath(projectRoot, paths.indexPath));
     }
+  } else {
+    for (const part of parts) {
+      const partPath = path.join(paths.partsDir, `${part.name}.json`);
+      if (hasJsonDrift(partPath, part.tasks)) {
+        changedFiles.push(relPath(projectRoot, partPath));
+      }
+    }
+    if (hasJsonDrift(paths.shardRcPath, shardRc)) {
+      changedFiles.push(relPath(projectRoot, paths.shardRcPath));
+    }
+    if (hasJsonDrift(paths.indexPath, indexStub)) {
+      changedFiles.push(relPath(projectRoot, paths.indexPath));
+    }
   }
 
   if (syncMilestone) {
     const milestoneResult = syncAtmStabilizationMilestone(projectRoot, { tasks, summary }, { dryRun });
     milestoneChanged = Boolean(milestoneResult.changed);
-    if (!dryRun && milestoneResult.changed) {
+    if (milestoneResult.changed) {
       changedFiles.push(milestoneResult.path);
     }
   }

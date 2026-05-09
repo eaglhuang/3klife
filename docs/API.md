@@ -22,7 +22,7 @@ node tools_node/task-lock.js list
 - `lock`：宣告接手任務
 - `unlock`：收工解鎖
 
-## 2) Milestone Sync API
+## 2) Task-Store Sync API
 
 入口：`node tools_node/sync-atm-stabilization-milestone.js`
 
@@ -33,12 +33,29 @@ node tools_node/sync-atm-stabilization-milestone.js
 
 用途：
 
-- `--check --strict`：僅驗證里程碑與 task-store 是否一致
-- 無旗標：依 task-store 真相回寫里程碑
+- `--check --strict`：check-only（不寫檔），驗證 task-store truth pipeline 是否無漂移
+- 無旗標：依 task-store 真相回寫衍生檔（tasks-atm summary + milestone）
+
+主路徑（架構鏈，不是新增入口）：
+
+1. `tasks-atm-shard-store.js`
+2. `sync-atm-stabilization-milestone.js`
+3. `rebuild-tasks-atm-auto-parts.js`
+
+官方驗證序列（固定）：
+
+```bash
+node tools_node/sync-atm-stabilization-milestone.js --check --strict
+node tools_node/rebuild-tasks-atm-auto-parts.js
+npm.cmd run validate:atm-task-store
+```
+
+`validate:atm-milestone` 保留相容 alias，用於舊流程；新流程請以 `validate:atm-task-store` 為主。
 
 ## 3) Deterministic Validators
 
 ```bash
+npm run validate:atm-task-store
 npm run validate:atm-milestone
 npm run validate:rule-guard-read-only
 npm run validate:registry-backfill-sweep
@@ -64,11 +81,13 @@ npm run validate:h2u-evolution-pilot
 
 ## 5) 建議呼叫順序
 
-1. `validate:atm-milestone`
-2. `validate:rule-guard-read-only`
-3. `validate:registry-backfill-sweep`
-4. `validate:usage-evidence-shadow`
-5. `validate:h2u-evolution-pilot`
+1. `sync-atm-stabilization-milestone.js --check --strict`（check-only）
+2. `rebuild-tasks-atm-auto-parts.js`
+3. `validate:atm-task-store`
+4. `validate:rule-guard-read-only`
+5. `validate:registry-backfill-sweep`
+6. `validate:usage-evidence-shadow`
+7. `validate:h2u-evolution-pilot`
 
 ## 6) Upstream CLI（參考）
 
