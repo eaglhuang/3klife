@@ -1,37 +1,28 @@
 ---
-doc_id: doc_agentskill_0002
+doc_id: doc_agentskill_0009
 name: cocos-bug-triage
 description: 'COMPLETE BUG INVESTIGATION WORKFLOW — Combines screenshot + log reading into a full triage pipeline. USE FOR: any bug report that has both visual symptoms AND runtime errors, especially CompositePanel / ChildPanel mount failures, screen spec wiring breaks, or battle scene UI crashes. This is the master debugging workflow that orchestrates cocos-screenshot and cocos-log-reader together.'
 argument-hint: 'Describe the bug symptom briefly. Examples: GeneralDetailComposite mount fail, tab switch blank, BattleHUD crash. The skill will guide screenshot → log → root cause → fix.'
 ---
 
-# Cocos Bug Triage（完整 Bug 調查工作流）
+<!-- 此檔案為 .agents/skills/cocos-bug-triage/SKILL.md (doc_agentskill_0002) 的鏡像副本，供 GitHub Copilot 技能載入使用 -->
+<!-- 主版本位於 c:\Users\User\3KLife\.agents\skills\cocos-bug-triage\SKILL.md -->
 
-## 概觀
+# Cocos Bug Triage（鏡像索引）
 
-這是本專案的**標準 Bug 處理 SOP**，整合截圖與 log 分析，代替使用者手動收集證據。
+這是本專案的**標準 Bug 處理 SOP**，整合截圖與 log 分析。
 
-Unity 對照：就像 Unity 的 Console Window + Game View 同時看 — 截圖看畫面，log 看堆疊。
-
----
-
-## 完整流程（必須按順序執行）
+## 完整流程
 
 ```
-Phase 1: 視覺確認（cocos-screenshot）
-    ↓
-Phase 2: Log 分析（cocos-log-reader）
-    ↓
-Phase 3: 根源定位（程式碼）
-    ↓
-Phase 4: 修復與驗證
+Phase 1: 視覺確認（截圖）→ Phase 2: Log 分析 → Phase 3: 根源定位 → Phase 4: 修復驗證
 ```
 
 ---
 
-## Phase 1 — 視覺確認
+## Phase 1 — 視覺確認（PrintWindow 指定視窗截圖）
 
-### Step 1.1：截圖（PrintWindow 指定視窗，不受前台遮擋影響）
+**不可用全螢幕截圖**，因為 Cocos Editor 可能在背後被 VS Code 遮擋。
 
 ```powershell
 Add-Type @"
@@ -70,12 +61,10 @@ $hwnd = [WinEnum]::FindByTitle("Cocos Creator")
 if ($hwnd -eq [IntPtr]::Zero) { Write-Error "找不到 Cocos Creator 視窗"; return }
 $out = "c:\Users\User\3KLife\temp\cocos-screenshot.png"
 $ok = [WinEnum]::Snap($hwnd, $out)
-if ($ok) { Write-Host "截圖完成: $out ($([int]((Get-Item $out).Length/1KB)) KB)" } else { Write-Error "PrintWindow 失敗" }
+if ($ok) { Write-Host "截圖完成: $out ($([int]((Get-Item $out).Length/1KB)) KB)" }
 ```
 
-> **提示**：若 `WinEnum` 已在同一 PowerShell session 載入，直接從 `$hwnd = ...` 開始即可。
-
-### Step 1.2：縮圖採 thumbnail-first progressive zoom（硬規定，在 `view_image` 前必須執行）
+然後先走 thumbnail-first progressive zoom：
 
 ```powershell
 $imgPath = "c:\Users\User\3KLife\temp\cocos-screenshot.png"
@@ -85,145 +74,66 @@ node tools_node/prepare-view-image.js --input $imgPath
 # node tools_node/prepare-view-image.js --input $imgPath --maxWidth 500
 ```
 
+再呼叫 `view_image { filePath: "c:\Users\User\3KLife\temp\cocos-screenshot.png" }`
+
 > ⚠️ 先試 `125px`，足夠就停止；只有在前一級不足時才可放大。需要看 `>500px` 原圖時，必須先取得使用者明確同意。
-
-### Step 1.3：用 `view_image` 讀取截圖
-
-```
-filePath: c:\Users\User\3KLife\temp\cocos-screenshot.png
-```
-
-### Step 1.4：從截圖提取線索
-
-填寫以下排查表（內部分析用）：
-
-| 項目 | 觀察到的內容 |
-|------|------------|
-| Cocos 錯誤對話框 | 有 / 無，錯誤訊息文字 |
-| 受影響的 UI 區域 | 例：HUD 右上角、TigerTallyPanel |
-| 視覺症狀類型 | 例：節點位移 / label 顯示 key / 空白方塊 |
-| 其他異常 | 例：3D 模型消失 / 顏色錯誤 |
 
 ---
 
 ## Phase 2 — Log 分析
 
-### Step 2.1：快速掃 error/warn/log
-
 ```powershell
 $log = Get-Content "c:\Users\User\3KLife\temp\logs\project.log" -Tail 300 -Encoding UTF8
-
 Write-Host "=== ERROR ===" -ForegroundColor Red
 $log | Where-Object { $_ -match "^\d{4}" -and $_ -match " - error:" } | Select-Object -Last 20
-
-Write-Host "=== WARN ===" -ForegroundColor Yellow  
+Write-Host "=== WARN ===" -ForegroundColor Yellow
 $log | Where-Object { $_ -match "^\d{4}" -and $_ -match " - warn:" } | Select-Object -Last 10
-
 Write-Host "=== LOG（最後執行到哪）===" -ForegroundColor Cyan
 $log | Where-Object { $_ -match "^\d{4}" -and $_ -match " - log:" } | Select-Object -Last 10
+Write-Host "=== GeneralDetail 相關 ===" -ForegroundColor Magenta
+$log | Where-Object { $_ -match "GeneralDetailPanel|GeneralDetailComposite" } | Select-Object -Last 10
 ```
-
-### Step 2.2：根據截圖線索過濾特定組件
-
-範例（替換為實際組件名）：
-```powershell
-Get-Content "c:\Users\User\3KLife\temp\logs\project.log" -Tail 400 -Encoding UTF8 |
-    Where-Object { $_ -match "BattleHUD|BattleScene|TigerTally|CompositePanel|ChildPanel|GeneralDetailComposite|general-detail-unified" } |
-  Select-Object -Last 50
-```
-
-### Step 2.3：讀 stack trace
-
-從 log 的 `error:` 行開始，找到完整 stack trace：
-- 每一行的格式：`at ClassName.method (file:///...OriginalFile.ts:LINE:COL)`
-- **根源 = stack trace 最底部那一行**（第一個出現的 `at`）
-- 忽略 `packer-driver/chunks/XX/` 這段路徑，直接看後面的 `OriginalFile.ts:LINE`
 
 ---
 
 ## Phase 3 — 根源定位
 
-### 常見錯誤模式對照表
+| 截圖症狀 | Log 關鍵字 | 修復方向 |
+|---------|-----------|----------|
+| "Cannot read properties of null (reading 'root')" | `TypeError: Cannot read` | 加 null guard；確認 JSON 路徑 |
+| label 顯示變數名 | `has no textKey/text/bind` | 補 layout JSON 欄位 |
+| buildScreen 完成但空白 | `root.children=0` | 檢查 layout JSON `children` |
 
-| 截圖症狀 | Log 關鍵字 | 根源 | 修復方向 |
-|---------|-----------|------|----------|
-| Error 對話框 "Cannot read properties of null (reading 'root')" | `TypeError: Cannot read` | JSON 載入失敗 / node 已 destroy | 加 null guard；確認 JSON 路徑 |
-| label 顯示變數名（如 "label", "TurnLabel"） | `has no textKey/text/bind` | layout JSON 缺 `textKey` | 補 layout JSON 欄位 |
-| UI 顯示在 3D 空間中 | 無特定 log | 節點 Layer 錯誤 | 設定 node.layer = UI_2D |
-| buildScreen 完成但畫面空白 | `buildScreen 完成 root.children=0` | root 節點無子節點 | 檢查 layout JSON 的 `children` |
-| ProgressBar 不更新 | `找不到 PlayerFortressBar 節點` | 節點名稱與 JSON 不符 | 對齊 JSON 中的 `name` 欄位 |
-
-### 根源定位步驟
-
-1. 從 stack trace 取得檔案名 + 行號
-2. `read_file` 讀取對應行號前後各 20 行
-3. 找到實際呼叫 `.xxx` 的位置
-4. grep 該物件在哪裡被賦值（可能為 null 的地方）
+Stack trace 格式：`at ClassName.method (file:///...OriginalFile.ts:LINE:COL)`  
+根源 = stack 最底部（第一個 `at`）
 
 ---
 
-## Phase 4 — 修復與驗證
+## Phase 4 — 修復後驗證
 
-### 修復前
-
-```powershell
-# 確認相關 JSON 是否存在（常見根源）
-Test-Path "c:\Users\User\3KLife\assets\resources\ui-spec\layouts\{layoutId}.json"
-Test-Path "c:\Users\User\3KLife\assets\resources\ui-spec\skins\{skinId}.json"
-```
-
-### 修復
-
-依據根源分類處理：
-
-**A. JSON 缺失/路徑錯誤**
-```powershell
-Get-ChildItem "c:\Users\User\3KLife\assets\resources\ui-spec\layouts\" -Filter "*.json" | Select-Object Name
-```
-→ 確認 screen spec（`assets/resources/ui-spec/screens/*.json`）中的 `layout` 欄位對應到實際存在的檔案
-
-**B. 程式碼 null 存取**  
-→ 用 `replace_string_in_file` 加 null guard + 詳細 log
-
-**C. layout JSON 缺欄位**  
-→ 讀取對應 JSON，補 `textKey`/`text`/`bind` 欄位
-
-### 修復後驗證
-
-```
-1. get_errors → 確認無新 compile error
-2. 在 Cocos Editor 中 Ctrl+S 觸發 refresh
-3. 再次執行 Phase 1（截圖）→ Phase 2（log）確認修復
-```
+1. `get_errors` → 確認無編譯錯誤  
+2. Cocos Editor Ctrl+S 觸發 refresh  
+3. 再次截圖 + 讀 log 確認修復
 
 ---
 
-## 快速識別：這是哪種 Bug？
+## 組件 Log Tag 速查
 
-```
-使用者說「一團亂/畫面怪怪的/UI 跑掉了」
-    → Phase 1 截圖 → 看 Error 對話框
-        有 Error 對話框 → Phase 2 讀 log error: 行
-        沒有 Error → 看 warn: 行（通常是缺 binding）
-            → 對照截圖症狀 → Phase 3 表格
-
-使用者說「某元件不顯示/功能失效」
-    → Phase 2 過濾那個組件名 → 看最後輸出到哪一步
-        有 log: "xxx 完成" → 問題在完成後的邏輯
-        沒有 "完成" → async 中途失敗 → 看 catch 輸出
-```
-
----
-
-## 本專案 Key 組件 Log Tag 速查
-
-| Tag | 組件 | 關鍵初始化訊息 |
-|-----|------|--------------|
-| `[BattleScene]` | 戰鬥場景入口 | `start() 開始執行` / `✅ start() 全部完成` |
-| `[BattleHUD]` | 戰鬥 HUD | `_initialize: 開始載入` / `buildScreen 完成` / `onBuildComplete 完成` |
+| Tag | 組件 | 關鍵訊息 |
+|-----|------|---------|
+| `[BattleHUD]` | 戰鬥 HUD | `_initialize: 開始載入` / `buildScreen 完成` |
 | `[CompositePanel]` | UI 頁級宿主 | `buildScreen 開始` / `buildScreen 完成` / `mountChildPanel` |
 | `[ChildPanel]` | slot 內容區 | `onDataUpdate` / `onRouteEnter` |
-| `[UISpecLoader]` | JSON 載入器 | `loadLayout: 開始載入` / `載入失敗 — loadJson 回傳 null` |
+| `[UISpecLoader]` | JSON 載入器 | `loadLayout: 開始載入` / `載入失敗` |
 | `[BoardRenderer]` | 棋盤渲染 | `棋盤建立完成 size=NxN` |
-| `[BattleScenePanel]` | UI 總調度 | `BattleScenePanel 已就緒` |
-| `[BuffGainEffectPool]` | Buff 特效池 | `✅ 初始化完成` |
+| `[BattleScene]` | 戰鬥場景 | `start() 開始執行` / `✅ start() 全部完成` |
+
+---
+
+## UCUFLogger 提醒
+
+`assets/scripts/` 內**禁用裸 `console.log`**，統一使用 `UCUFLogger`（`assets/scripts/ui/core/UCUFLogger.ts`）。新增 debug 功能前先確認目標 `LogCategory` 存在或補 enum；不得自建平行 log 模組。
+
+---
+
+完整 SOP 請讀取主版：`.agents/skills/cocos-bug-triage/SKILL.md` (doc_agentskill_0002)

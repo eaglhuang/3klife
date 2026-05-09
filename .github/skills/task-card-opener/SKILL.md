@@ -1,46 +1,182 @@
 ---
-doc_id: doc_agentskill_0026
+doc_id: doc_agentskill_0063
 name: task-card-opener
 description: '通用任務開單器 SKILL — 統一建立或回寫 Markdown task card、docs/tasks/tasks-*.json 分片、UI quality shard，並強制遵守 docs/agent-briefs/Readme.md (doc_ai_0023) 與 docs/遊戲規格文件/系統規格書/名詞定義文件.md (doc_spec_0008) 的硬規則。USE FOR: 開任務卡、開單、task card、task shard、tasks-ui.json、tasks-prog.json、tasks-dc.json、tasks-data.json、agent-briefs/tasks、docs/tasks/*_task.md、UI pipeline 開卡。DO NOT USE FOR: 純 runtime 除錯、單純修改既有功能碼但不需要新卡、只做極小 typo 修補。'
 argument-hint: '提供 task 類別、目標系統、是否需要 Markdown 卡、對應 task id 前綴、owner/priority/status，以及是否屬於 UI 任務。'
 ---
 
-<!-- 主版本位於 .agents/skills/task-card-opener/SKILL.md；此檔作為 GitHub Copilot 技能載入入口。 -->
+# Task Card Opener
 
-# Task Card Opener（鏡像索引）
+## 目的
 
-這個 skill 用來把專案中的任務開單流程統一收斂到同一套規則：
+把專案內不同來源的任務卡建立流程收斂成同一套開單系統，避免：
 
-1. 所有 Markdown 任務卡都要遵守 `docs/agent-briefs/Readme.md (doc_ai_0023)`
-2. `docs/tasks/tasks-*.json` 分片仍是分類任務真相來源
-3. UI task shard 仍要在更新後執行 `node tools_node/build-ui-task-manifest.js`
-4. `ui-vibe-pipeline` 等 workflow 要委派本 skill 開卡，不再各自發展平行規則
-5. 任務卡 ID / 卡號 / 系統代碼一律以 `docs/遊戲規格文件/系統規格書/名詞定義文件.md (doc_spec_0008)` 為唯一來源
+1. 有些卡只建 Markdown，沒同步 shard / manifest
+2. 有些卡只加 JSON，沒有遵守多 Agent 協作欄位
+3. UI pipeline、一般程式任務、Data Center 任務各自長出不同開卡習慣
+
+本 skill 的唯一真相來源是：
+
+1. `docs/agent-briefs/Readme.md (doc_ai_0023)` 的硬規則
+2. `docs/tasks/README.md (doc_index_0013)` 的 shard 規則
+3. `.github/instructions/agent-collaboration.instructions.md (doc_ai_0009)` 的 lock / unlock / post-flight 規則
+4. `docs/遊戲規格文件/系統規格書/名詞定義文件.md (doc_spec_0008)` 的任務卡 ID / 卡號 / 系統代碼定義
+
+## 強制規則
+
+1. 正式工作原則上先有任務卡，再開始實作、重構、批次文件整理或正式 QA。
+2. 先決定任務的主資料面，再落檔；不可先寫 Markdown 再回頭猜 shard，也不可只補 shard 不補協作欄位。
+3. 只要會改 task JSON，就要先依協作規則處理 lock。
+4. 任何新的 Markdown 任務卡，都要遵守 `doc_ai_0023` 的欄位與 notes 慣例。
+5. UI 任務若有 shard/aggregate 流程，仍必須在更新後執行 `node tools_node/build-ui-task-manifest.js`；這條規格不可省略。
 
 ## CLI compiler
 
-對應的可執行工具是 `tools_node/task-card-opener.js`。它支援：
+本 skill 對應的可執行工具是 `tools_node/task-card-opener.js`。它有兩種模式：
 
-1. 直接從參數產出 Markdown 任務卡與 JSON skeleton / aggregate
-2. 透過 `--recipe` 相容既有 UCUF recipe compiler
-3. 在 `agent-briefs` 模式下，`HARN-*` 會預設走 `harn-rich`，直接產出最新 HARN rich brief 結構
+1. 直接模式：從參數產出 Markdown 任務卡與 JSON skeleton / aggregate
+2. recipe 相容模式：若提供 `--recipe`，就直接委派給既有的 recipe compiler
+3. 若是 `docs/agent-briefs/tasks/HARN/HARN-*.md`，`agent-briefs` 模式預設會切到 `harn-rich`，直接產生與現有 HARN 卡相同的 rich brief 結構
 
-常用例子：
+常用範例：
 
 ```bash
 node tools_node/task-card-opener.js --id BAT-1-0001 --title "BattleController 驗證補強" --owner GitHubCopilot --priority P1 --md-out docs/agent-briefs/tasks/BAT/BAT-1-0001.md --json-out docs/tasks/tasks-prog.json --write
 node tools_node/task-card-opener.js --id UI-1-0001 --title "UI quality shard" --md-out docs/agent-briefs/tasks/UI/UI-1-0001.md --json-out docs/ui-quality-tasks/UI-1-0001.json --json-kind ui-quality-task-shard --write
-node tools_node/task-card-opener.js --id HARN-ART-9001 --title "建立 Harness 範例" --md-kind agent-briefs --brief-summary "由 rollout 規劃開立" --brief-position "Phase X / Demo" --chain-id HARN-CHAIN-DEMO --chain-step 1/1 --sensor-triggered-by harness-rollout-planning --input-contract "artifact 已存在|schema baseline 已確認" --output-contract "新增 schema|補 fixture 說明" --validation-cmd "node tools_node/demo.js" --rollback-hint "git checkout tools_node/demo.js" --execution-steps "盤點現況|實作骨架|跑驗證" --artifact-paths "artifacts/demo.json" --validation-evidence "dry-run 結構符合 HARN" --handoff-diff-status pending --md-out docs/agent-briefs/tasks/HARN/HARN-ART-9001.md --assign-doc-id --write
+node tools_node/task-card-opener.js --id HARN-ART-9001 --title "建立 Harness 範例" --md-kind agent-briefs --brief-summary "由 rollout 規劃開立" --brief-position "Phase X / Demo" --brief-prereq "`HARN-ART-0001` 已完成" --chain-id HARN-CHAIN-DEMO --chain-step 1/1 --sensor-triggered-by harness-rollout-planning --input-contract "artifact 已存在|schema baseline 已確認" --output-contract "新增 schema|補 fixture 說明" --validation-cmd "node tools_node/demo.js" --rollback-hint "git checkout tools_node/demo.js" --execution-steps "盤點現況|實作骨架|跑驗證" --artifact-paths "artifacts/demo.json" --validation-evidence "dry-run 結構符合 HARN" --handoff-diff-status pending --md-out docs/agent-briefs/tasks/HARN/HARN-ART-9001.md --assign-doc-id --write
 node tools_node/task-card-opener.js --recipe artifacts/ui-source/example/generated/example-screen.recipe.json --write --out artifacts/ui-source/example/generated/example-task-card.md --shard-out artifacts/ui-source/example/generated/example-task-shard.json
 ```
 
-HARN rich brief 相關重點：
+## HARN rich brief 對齊規則
 
-1. frontmatter 會補齊 `created_by_agent / started_* / chain_id / chain_step / sensor_triggered_by / depends / notes`
-2. 正文標準段落會切成 `問題描述 / INPUT_CONTRACT / OUTPUT_CONTRACT / VALIDATION_CMD / ROLLBACK_HINT / 執行步驟`
-3. 若有提供 `artifact path / validation evidence / handoff diff status / trace artifact / metrics summary`，會額外產生 `HARNESS_EVIDENCE`
-4. 新 Markdown 卡可搭配 `--assign-doc-id` 直接呼叫 `doc-id-registry.js` 注入正式 `doc_id`
+當任務卡符合以下任一條件時，應優先使用 `harn-rich`：
 
-完整 SOP 請讀：
+1. 卡號是 `HARN-*`
+2. 使用者明確要求對齊現有 HARN rich brief
+3. 需要 frontmatter 補齊 `chain_id / chain_step / sensor_triggered_by / started_*`
+4. 需要標準段落：`問題描述 / INPUT_CONTRACT / OUTPUT_CONTRACT / VALIDATION_CMD / ROLLBACK_HINT / 執行步驟`
 
-`.agents/skills/task-card-opener/SKILL.md`
+`harn-rich` 模式下可額外補：
+
+1. `--brief-label` / `--brief-summary` / `--brief-position` / `--brief-prereq`
+2. `--input-contract` / `--output-contract` / `--validation-cmd` / `--rollback-hint` / `--execution-steps`
+3. `--artifact-paths` / `--validation-evidence` / `--handoff-diff-status` / `--trace-artifacts` / `--metrics-summary`
+4. `--assign-doc-id`，在 write 模式下直接呼叫 `doc-id-registry.js` 分配正式 `doc_id`
+
+## 決策流程
+
+### Step 0: Pre-flight
+
+1. 讀 `docs/keep.summary.md (doc_index_0012)`。
+2. 讀 `docs/agent-briefs/Readme.md (doc_ai_0023)`。
+3. 若要改 task JSON，先依 `.github/instructions/agent-collaboration.instructions.md (doc_ai_0009)` 鎖卡。
+
+### Step 1: 判斷任務落在哪個系統
+
+任務卡 ID / 卡號 / 系統代碼一律先以名詞定義文件為準，再決定要落在哪個 shard 或 Markdown 卡。
+
+使用下表決定主資料面：
+
+| 情境 | 主資料面 | 補充輸出 |
+|---|---|---|
+| 一般程式/系統/Data Center/資料契約任務 | `docs/tasks/tasks-*.json` 對應分片 | 視需求補 human-readable Markdown |
+| UI 品質 / UI 生產流程任務 | `docs/ui-quality-tasks/*.json` shard | 視流程補 `docs/tasks/*_task.md` 或 `docs/agent-briefs/tasks/<GROUP>/*.md` |
+| 多 Agent 明確分工 / handoff / 需要 frontmatter 任務卡 | `docs/agent-briefs/tasks/<GROUP>/*.md` | 同步對應 shard / manifest |
+| 使用者明確要求獨立 md 任務卡 | 對應 md 卡路徑 | 同步對應 shard / manifest，不可只建 md |
+
+原則：
+
+1. `docs/tasks/tasks-ui.json`、`tasks-prog.json`、`tasks-dc.json`、`tasks-data.json` 是分類分片真相。
+2. `docs/agent-briefs/tasks/<GROUP>/*.md` 是人類可讀協作卡，不是用來取代 shard。
+3. 若同一任務同時需要 md 卡與 shard，兩邊都要建立，但欄位語意要一致。
+
+### Step 2: 建卡前最低欄位
+
+至少要先確定：
+
+1. `id`
+2. `title`
+3. `owner`
+4. `priority`
+5. `status`
+6. `description`
+7. `acceptance`
+8. `deliverables`
+9. `related / depends`
+10. `notes`
+
+若是 `harn-rich`，另外至少確認：
+
+1. `chain_id`
+2. `chain_step`
+3. `sensor_triggered_by`
+4. `input_contract`
+5. `output_contract`
+6. `validation_cmd`
+7. `rollback_hint`
+8. `execution_steps`
+
+若這張卡已進入 Harness rollout 後期證據鏈，建議再補：
+
+1. artifact path
+2. validation evidence
+3. handoff diff status
+4. trace artifact / summary
+5. metrics summary
+
+`notes` 建議格式固定為：
+
+```text
+YYYY-MM-DD | 狀態: open/in-progress/blocked/done | 驗證: pending/... | 變更: ... | 阻塞: ...
+```
+
+### Step 3: 建立或回寫資料
+
+1. 如果主資料面是 `docs/tasks/tasks-*.json`，直接新增或更新對應分片條目。
+2. 如果需要 Markdown 卡：
+   - `docs/agent-briefs/tasks/<GROUP>/*.md`：遵守 `doc_ai_0023` 的任務卡流程與鎖卡欄位
+   - `docs/tasks/*_task.md`：作為人類可讀補充，但不得脫離 shard 真相
+   - 若是 `HARN-*` 或需要 Harness frontmatter / evidence 欄位，應顯式確認 `brief-style=harn-rich`（`HARN-*` 預設已自動套用）
+3. UI 任務若有 `docs/ui-quality-tasks/*.json` shard，也要同步更新。
+4. UI shard 更新後，執行：
+
+```bash
+node tools_node/build-ui-task-manifest.js
+```
+
+### Step 4: 開工鎖卡
+
+若這張卡要立刻被處理：
+
+1. 設為 `in-progress`
+2. 補 `started_at` / `started_by_agent`
+3. notes 第一筆寫明誰開始做、改什麼、驗證是否 pending
+4. 若是 `harn-rich`，同步補 `chain_id / chain_step / sensor_triggered_by`
+
+### Step 5: 收工與交接
+
+1. 若本輪只是開卡，不實作，也要留下目前狀態與下一步。
+2. 若本輪同時實作，收工前補 `notes`、驗證結果與 blocker。
+3. 若有 lock，照協作規則 unlock。
+
+## 與其他 skill 的關係
+
+### UI Vibe Pipeline
+
+`ui-vibe-pipeline` 在產出 task card / task shard 時，應直接委派給本 skill，而不是再自建一套開卡規則。
+實作層面可直接呼叫 `node tools_node/task-card-opener.js ...`。
+
+### Doc Consolidation
+
+若只是整併規格衝突，不直接開 task card，優先走 `doc-consolidation-flow`；只有需要把後續工作明確落成任務時，再切回本 skill。
+
+## 驗證清單
+
+每次開卡至少確認：
+
+1. 主資料面選對了
+2. 若有 Markdown 卡，已遵守 `doc_ai_0023`
+3. 若有 task JSON，已依協作規則 lock / update / unlock
+4. 若有 UI shard，已執行 `node tools_node/build-ui-task-manifest.js`
+5. touched 文字檔已跑 encoding guard
+6. 若有新 Markdown 卡且尚未拿到正式 `doc_id`，已用 `--assign-doc-id` 或後續補跑 `node tools_node/doc-id-registry.js --assign <path>`

@@ -1,12 +1,9 @@
 ---
-doc_id: doc_agentskill_0035
+doc_id: doc_agentskill_0006
 name: cocos-vfx-browser-qa
 description: 'BROWSER VFX ACCEPTANCE SKILL — Use built-in browser/headless browser to automatically verify Cocos VFX block effects and composed VFX recipes in BattleScene preview (`http://localhost:7456`, `previewMode=true`, `previewTarget=5`). USE FOR: VFX health audit, per-block smoke validation, combo recipe regression checks before merging `vfx-block-registry.ts` / `vfx-effects.json`. DO NOT USE FOR: Cocos Editor window screenshot capture, compile-error debugging, or pure log-only diagnosis without browser preview.'
 argument-hint: 'Provide scope and run id. Example: "scope=blocks runId=VFX-QA-2026-04-16" or "scope=combos source=assets/resources/data/vfx-effects.json runId=VFX-QA-2026-04-16".'
 ---
-<!-- 此檔案為 .agents/skills/cocos-vfx-browser-qa/SKILL.md (doc_agentskill_0009) 的鏡像副本，供 GitHub Copilot 技能載入使用 -->
-<!-- 對應原始路徑：c:\\Users\\User\\3KLife\\.agents\\skills\\cocos-vfx-browser-qa\\SKILL.md -->
-
 
 # Cocos VFX Browser QA
 
@@ -142,4 +139,3 @@ node tools_node/capture-ui-screens.js --target BattleScene --outDir artifacts/vf
 
 - 若有改動 `vfx-block-registry.ts`、`vfx-effects.json`，在回覆中要附本輪 `runId` 與 `report.json` 路徑
 - 圖片檢視仍遵守 thumbnail-first（`125 -> 250 -> 500`）
-
