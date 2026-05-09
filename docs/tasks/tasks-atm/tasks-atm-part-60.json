@@ -52,7 +52,7 @@
     "title": "RuleGuard Read-Only Validator",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "in-progress",
+    "status": "done",
     "type": "open-source-core",
     "phase": "ATM-2",
     "created": "2026-05-05",
@@ -84,7 +84,7 @@
       "tools_node/adapters/atm-3klife/rule-pack.json",
       "read-only finding report"
     ],
-    "notes": "2026-05-09 | 狀態: in-progress | 驗證: pending | 變更: 改承接 RuleGuardAdapter read-only deterministic gate，補只讀 validator 與 rule-pack gate | 阻塞: none",
+    "notes": "2026-05-09 | 狀態: in-progress | 驗證: pending | 變更: 改承接 RuleGuardAdapter read-only deterministic gate，補只讀 validator 與 rule-pack gate | 阻塞: none\n2026-05-09 | 狀態: done | 驗證: validate-rule-guard-read-only --strict pass；run-rule-guard --profile atm --json 仍會掃到其他既有工作樹變更，與本卡產出無關 | 變更: 完成 read-only validator、rule-pack gate 與 adapter read-only scan，並回寫 task card | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM RuleGuard Read-Only Gate",
@@ -118,6 +118,8 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-09T09:46:47.4529388+08:00",
+    "completed_by_agent": "vs-code-gpt-5.4-mini"
   }
 ]
