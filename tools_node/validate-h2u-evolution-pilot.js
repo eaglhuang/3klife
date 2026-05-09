@@ -6,6 +6,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const Ajv = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
+const { createValidatorOrchestrator } = require('./lib/validator-orchestrator');
 
 const ROOT = path.resolve(__dirname, '..');
 const UPSTREAM_ROOT = path.resolve(ROOT, '..', 'AI-Atomic-Framework');
@@ -13,6 +14,36 @@ const UPSTREAM_ROOT = path.resolve(ROOT, '..', 'AI-Atomic-Framework');
 const PROPOSAL_PATH = path.join(ROOT, 'fixtures', 'case-studies', 'normalize-css-color', 'proposal.json');
 const DECISION_PATH = path.join(ROOT, 'fixtures', 'case-studies', 'normalize-css-color', 'decision-approve.json');
 const UPGRADE_SCHEMA_PATH = path.join(UPSTREAM_ROOT, 'schemas', 'upgrade', 'upgrade-proposal.schema.json');
+const orchestrator = createValidatorOrchestrator({
+  orchestratorId: 'validate-h2u-evolution-pilot',
+});
+
+orchestrator.registerValidator({
+  id: 'upgrade-proposal-schema',
+  description: 'Validate upgrade proposal schema with shared AJV cache',
+  tags: ['validate', 'h2u-pilot', 'ajv-cache'],
+  run: ({ proposal }) => {
+    const cacheResult = orchestrator.getOrCompileJsonSchemaValidator({
+      cacheKey: 'upgrade-proposal.schema',
+      schemaPath: UPGRADE_SCHEMA_PATH,
+      buildAjv: () => {
+        const ajv = new Ajv({
+          allErrors: true,
+          strict: false,
+          allowUnionTypes: true,
+        });
+        addFormats(ajv);
+        return ajv;
+      },
+    });
+    const validate = cacheResult.compiled;
+    const valid = validate(proposal);
+    return {
+      ok: Boolean(valid),
+      errors: validate.errors || [],
+    };
+  },
+});
 
 function parseArgs(argv) {
   const parsed = {
@@ -99,19 +130,9 @@ function buildFinding(message, details = {}) {
 }
 
 function validateProposalSchema(proposal) {
-  const schema = readJson(UPGRADE_SCHEMA_PATH);
-  const ajv = new Ajv({
-    allErrors: true,
-    strict: false,
-    allowUnionTypes: true,
+  return orchestrator.runValidator('upgrade-proposal-schema', {
+    proposal,
   });
-  addFormats(ajv);
-  const validate = ajv.compile(schema);
-  const ok = validate(proposal);
-  return {
-    ok: Boolean(ok),
-    errors: validate.errors || [],
-  };
 }
 
 function patchDecisionHashes(decision, hash) {
@@ -256,6 +277,7 @@ function main() {
   }
 
   const blockerCount = findings.length;
+  const telemetry = orchestrator.snapshotTelemetry();
   const report = {
     validator: 'validate-h2u-evolution-pilot',
     passed: blockerCount === 0,
@@ -268,6 +290,7 @@ function main() {
       decisionApprove: rel(DECISION_PATH),
     },
     proposalHash,
+    telemetry,
   };
 
   if (opts.report) {

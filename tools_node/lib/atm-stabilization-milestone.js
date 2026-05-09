@@ -139,7 +139,7 @@ function buildMilestoneMarkdown(state = {}) {
   lines.push(`${renderCheckbox(taskMap, 'ATM-4-0007')} \`ATM-4-0007\` 承接 evolution pilot dry-run 與證據鏈收尾。 ${renderStatusSuffix(taskMap, 'ATM-4-0007')}`);
   lines.push('');
   lines.push('### M3. 機器驗證層');
-  lines.push('- [ ] validator orchestrator 與 AJV cache 的統一入口。');
+  lines.push(`${renderCheckbox(taskMap, 'ATM-3-0016')} \`ATM-3-0016\` validator orchestrator 與 AJV cache 的統一入口。${renderStatusSuffix(taskMap, 'ATM-3-0016')}`);
   lines.push('- [ ] 更廣的 deterministic / semantic 雙軌驗證。');
   lines.push('');
   lines.push('### M4. 負債清單');

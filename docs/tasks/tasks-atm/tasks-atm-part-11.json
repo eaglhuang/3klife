@@ -100,13 +100,15 @@
     "title": "Validator Orchestrator and AJV Cache Unified Entry",
     "owner": "codex-gpt-5",
     "priority": "P1",
-    "status": "open",
+    "status": "done",
     "type": "implementation",
     "phase": "ATM-3",
     "created": "2026-05-10",
     "created_by_agent": "codex-gpt-5",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-10T01:38:01+08:00",
+    "started_by_agent": "codex-gpt-5",
+    "completed_at": "2026-05-10T01:40:35+08:00",
+    "completed_by_agent": "codex-gpt-5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -130,7 +132,7 @@
       "docs/ai_atomic_framework/validator-orchestrator-and-ajv-cache.md",
       "docs/agent-briefs/tasks/ATM/ATM-3-0016.md"
     ],
-    "notes": "2026-05-10 | status: open | validation: pending | change: created M3 gap owner card for validator orchestrator / AJV cache unified entry | blocker: none",
+    "notes": "2026-05-10 | status: open | validation: pending | change: created M3 gap owner card for validator orchestrator / AJV cache unified entry | blocker: none\n2026-05-10 | status: in-progress | validation: pending | change: started validator orchestrator + AJV cache integration and validate:* migration | blocker: none\n2026-05-10 | status: done | validation: validate:usage-evidence-shadow --strict / validate:h2u-evolution-pilot --strict / validate-turn-artifact fixtures / check-doc-shard-health / sync-atm-stabilization-milestone --check --strict / check:encoding:touched pass | change: delivered orchestrator+cache core, migrated three validators, and published M3 contract doc | blocker: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM M3 gap closure",
@@ -158,11 +160,33 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
-      "handoff_diff_status": "",
+      "artifact_paths": [
+        "tools_node/lib/validator-orchestrator.js",
+        "tools_node/lib/ajv-cache-registry.js",
+        "tools_node/validate-turn-artifact.js",
+        "tools_node/validate-usage-evidence-shadow.js",
+        "tools_node/validate-h2u-evolution-pilot.js",
+        "tools_node/lib/atm-stabilization-milestone.js",
+        "docs/ai_atomic_framework/validator-orchestrator-and-ajv-cache.md",
+        "docs/agent-briefs/tasks/ATM/ATM-3-0016.md"
+      ],
+      "validation_evidence": [
+        "npm.cmd run validate:usage-evidence-shadow -- --strict",
+        "npm.cmd run validate:h2u-evolution-pilot -- --strict",
+        "node tools_node/validate-turn-artifact.js --artifact tests/fixtures/harness/turn-artifact.valid.json --strict",
+        "node tools_node/validate-turn-artifact.js --artifact tests/fixtures/harness/turn-artifact.invalid-schema.json",
+        "node tools_node/validate-turn-artifact.js --artifact tests/fixtures/harness/turn-artifact.invalid-invariant.json",
+        "node tools_node/check-doc-shard-health.js",
+        "node tools_node/sync-atm-stabilization-milestone.js --check --strict",
+        "npm.cmd run check:encoding:touched -- --files tools_node/lib/ajv-cache-registry.js tools_node/lib/validator-orchestrator.js tools_node/validate-turn-artifact.js tools_node/validate-usage-evidence-shadow.js tools_node/validate-h2u-evolution-pilot.js docs/ai_atomic_framework/validator-orchestrator-and-ajv-cache.md docs/agent-briefs/tasks/ATM/ATM-3-0016.md"
+      ],
+      "handoff_diff_status": "done",
       "trace_artifacts": [],
-      "metrics_summary": []
+      "metrics_summary": [
+        "orchestrator API landed: register/run/cache/telemetry",
+        "AJV cache exposes deterministic invalidation by schema fingerprint",
+        "three validate entrypoints now share orchestrator + AJV cache telemetry"
+      ]
     }
   }
 ]

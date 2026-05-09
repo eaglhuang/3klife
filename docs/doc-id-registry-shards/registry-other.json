@@ -646,5 +646,11 @@
     "path": "docs/ecosystem/capability-sandbox-audit.md",
     "title": "Capability Sandbox & Security Audit — ATM Optional Governance Plugin",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0116",
+    "path": "docs/ai_atomic_framework/validator-orchestrator-and-ajv-cache.md",
+    "title": "Validator Orchestrator 與 AJV Cache 統一入口",
+    "category": "other"
   }
 ]

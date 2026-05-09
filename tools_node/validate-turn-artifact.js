@@ -7,10 +7,37 @@ const Ajv2020 = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 
 const config = require('./lib/project-config');
+const { createValidatorOrchestrator } = require('./lib/validator-orchestrator');
 
 const PROJECT_ROOT = config.ROOT;
 const DEFAULT_SCHEMA_PATH = path.join(PROJECT_ROOT, 'tools_node', 'schemas', 'turn-artifact.schema.json');
 const RELATIVE_POSIX_PATH_PATTERN = /^(?![A-Za-z]:)(?!\/)(?!\\\\)(?!file:)(?!https?:)(?!db:)[^\\]+(?:\/[^\\]+)*$/;
+const orchestrator = createValidatorOrchestrator({
+  orchestratorId: 'validate-turn-artifact',
+});
+
+orchestrator.registerValidator({
+  id: 'turn-artifact-schema',
+  description: 'Validate turn-artifact schema with shared AJV cache',
+  tags: ['validate', 'turn-artifact', 'ajv-cache'],
+  run: ({ artifact, schemaPath }) => {
+    const cacheResult = orchestrator.getOrCompileJsonSchemaValidator({
+      cacheKey: 'turn-artifact.schema',
+      schemaPath,
+      buildAjv: () => {
+        const ajv = new Ajv2020({ allErrors: true, strict: false });
+        addFormats(ajv);
+        return ajv;
+      },
+    });
+    const validate = cacheResult.compiled;
+    const valid = validate(artifact);
+    return {
+      valid: Boolean(valid),
+      errors: validate.errors || [],
+    };
+  },
+});
 
 function printHelp() {
   console.log('Usage: node tools_node/validate-turn-artifact.js --artifact <path> [--strict]');
@@ -139,16 +166,16 @@ function schemaFixHint(error, field) {
   }
 }
 
-function runSchemaValidation(schema, artifact) {
-  const ajv = new Ajv2020({ allErrors: true, strict: false });
-  addFormats(ajv);
-  const validate = ajv.compile(schema);
-  const valid = validate(artifact);
-  if (valid) {
+function runSchemaValidation(artifact, schemaPath) {
+  const result = orchestrator.runValidator('turn-artifact-schema', {
+    artifact,
+    schemaPath,
+  });
+  if (result.valid) {
     return [];
   }
 
-  return (validate.errors || []).map((error) => {
+  return (result.errors || []).map((error) => {
     const baseField = formatInstancePath(error.instancePath || '');
     let field = baseField;
     if (error.keyword === 'required' && error.params?.missingProperty) {
@@ -322,31 +349,32 @@ function main() {
     process.exit(1);
   }
 
-  let schema;
   let artifact;
   try {
-    schema = readJsonOrThrow(schemaPath, 'schema');
     artifact = readJsonOrThrow(artifactPath, 'artifact');
   } catch (error) {
     console.error(`[turn-artifact] ${error.message}`);
     process.exit(1);
   }
 
-  const schemaFailures = runSchemaValidation(schema, artifact);
+  const schemaFailures = runSchemaValidation(artifact, schemaPath);
   const invariantFailures = schemaFailures.length === 0 ? runInvariantValidation(artifact) : [];
   const totalFailures = schemaFailures.length + invariantFailures.length;
+  const telemetry = orchestrator.snapshotTelemetry();
 
   if (totalFailures === 0) {
     console.log(`✔ turn-artifact valid: ${relativePath(artifactPath)}`);
     console.log(`  schemaVersion=${artifact.schemaVersion} kind=${artifact.kind}`);
     console.log(`  files=${artifact.totals.files} totalBytes=${artifact.totals.totalBytes} estTokens=${artifact.totals.estTokens}`);
     console.log(`  summaryCard.read=${artifact.summaryCard.read.length} nextActions=${artifact.nextActions.length}`);
+    console.log(`  ajv-cache hits=${telemetry.cache.hits} misses=${telemetry.cache.misses} compiles=${telemetry.cache.compileCount} invalidations=${telemetry.cache.invalidations}`);
     return;
   }
 
   console.error(`${args.strict ? '❌' : '⚠'} turn-artifact validation found ${totalFailures} issue(s): ${relativePath(artifactPath)}`);
   printFailures('Schema failures', schemaFailures);
   printFailures('Invariant failures', invariantFailures);
+  console.error(`Telemetry: ajv-cache hits=${telemetry.cache.hits} misses=${telemetry.cache.misses} compiles=${telemetry.cache.compileCount} invalidations=${telemetry.cache.invalidations}`);
 
   if (args.strict) {
     process.exit(1);

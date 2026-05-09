@@ -6,6 +6,7 @@ const path = require('node:path');
 const Ajv = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 const { runAdapter } = require('./atm-adapter/usage-evidence-shadow');
+const { createValidatorOrchestrator } = require('./lib/validator-orchestrator');
 
 const ROOT = path.resolve(__dirname, '..');
 const UPSTREAM_ROOT = path.resolve(ROOT, '..', 'AI-Atomic-Framework');
@@ -17,6 +18,40 @@ const MISSING_SOURCE_PATH = path.join(ROOT, 'fixtures', 'adapter', '3klife-usage
 const GOOD_REPORT_PATH = path.join(ROOT, 'fixtures', 'adapter', '3klife-usage-evidence.snapshot.json');
 const LENIENT_REPORT_PATH = path.join(ROOT, 'fixtures', 'adapter', '3klife-usage-evidence-skipped.snapshot.json');
 const STRICT_NEGATIVE_REPORT_PATH = path.join(ROOT, 'fixtures', 'adapter', '3klife-usage-evidence-missing-field.json');
+const orchestrator = createValidatorOrchestrator({
+  orchestratorId: 'validate-usage-evidence-shadow',
+});
+
+orchestrator.registerValidator({
+  id: 'usage-feedback-schema',
+  description: 'Validate usage-feedback payload schema with shared AJV cache',
+  tags: ['validate', 'usage-feedback', 'ajv-cache'],
+  run: ({ payload }) => {
+    const cacheResult = orchestrator.getOrCompileJsonSchemaValidator({
+      cacheKey: 'usage-feedback.schema',
+      schemaPath: USAGE_SCHEMA_PATH,
+      buildAjv: () => {
+        const ajv = new Ajv({
+          allErrors: true,
+          strict: false,
+          allowUnionTypes: true,
+        });
+        addFormats(ajv);
+        return ajv;
+      },
+      beforeCompile: ({ ajv }) => {
+        const evidenceSchema = readJson(EVIDENCE_SCHEMA_PATH);
+        ajv.addSchema(evidenceSchema, evidenceSchema.$id);
+      },
+    });
+    const validate = cacheResult.compiled;
+    const valid = validate(payload);
+    return {
+      valid: Boolean(valid),
+      errors: validate.errors || [],
+    };
+  },
+});
 
 function parseArgs(argv) {
   const parsed = {
@@ -63,19 +98,6 @@ function writeJson(filePath, payload) {
   const abs = path.resolve(filePath);
   fs.mkdirSync(path.dirname(abs), { recursive: true });
   fs.writeFileSync(abs, `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
-}
-
-function buildSchemaValidator() {
-  const usageSchema = readJson(USAGE_SCHEMA_PATH);
-  const evidenceSchema = readJson(EVIDENCE_SCHEMA_PATH);
-  const ajv = new Ajv({
-    allErrors: true,
-    strict: false,
-    allowUnionTypes: true,
-  });
-  addFormats(ajv);
-  ajv.addSchema(evidenceSchema, evidenceSchema.$id);
-  return ajv.compile(usageSchema);
 }
 
 function runAdapterPasses() {
@@ -190,14 +212,15 @@ function validatePayloadContract(findings, checks) {
 
   const goodReport = readJson(GOOD_REPORT_PATH);
   const payload = goodReport.payload || null;
-  const validateUsage = buildSchemaValidator();
-
-  const schemaPassed = Boolean(payload) && validateUsage(payload);
+  const usageValidation = payload
+    ? orchestrator.runValidator('usage-feedback-schema', { payload })
+    : { valid: false, errors: [] };
+  const schemaPassed = Boolean(payload) && usageValidation.valid;
   checks.push({
     id: 'strict-schema-usage-feedback',
     passed: schemaPassed,
     status: schemaPassed ? 0 : 1,
-    stderr: schemaPassed ? '' : JSON.stringify(validateUsage.errors || [], null, 2),
+    stderr: schemaPassed ? '' : JSON.stringify(usageValidation.errors || [], null, 2),
   });
 
   if (!schemaPassed) {
@@ -213,7 +236,7 @@ function validatePayloadContract(findings, checks) {
       routeHint: '輸出 payload 必須符合 ATM-2-0009 usage-feedback schema。',
       message: 'strict output payload does not satisfy usage-feedback schema',
       details: {
-        errors: validateUsage.errors || [],
+        errors: usageValidation.errors || [],
       },
     });
   }
@@ -256,6 +279,7 @@ function main() {
 
   const blockerCount = findings.filter((item) => item.action === 'fail' || item.severity === 'block').length;
   const warningCount = findings.filter((item) => item.action !== 'fail' && item.severity !== 'block').length;
+  const telemetry = orchestrator.snapshotTelemetry();
   const report = {
     validator: 'validate-usage-evidence-shadow',
     passed: blockerCount === 0,
@@ -268,6 +292,7 @@ function main() {
       strictMissing: rel(STRICT_NEGATIVE_REPORT_PATH),
       lenient: rel(LENIENT_REPORT_PATH),
     },
+    telemetry,
   };
 
   if (opts.report) {

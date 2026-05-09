@@ -1,6 +1,6 @@
 <!-- doc_id: doc_other_0093 -->
 # ATM 框架穩定化里程碑
-> 這份頁面以 `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 的薄索引為準，不再沿用舊的 milestone 草稿數字。當前基線是 `done=107 / in_progress=0 / open=12 / total=119`.
+> 這份頁面以 `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 的薄索引為準，不再沿用舊的 milestone 草稿數字。當前基線是 `done=108 / in_progress=0 / open=11 / total=119`.
 ## 1. 當前狀態
 - `ATM-2-0027`、`ATM-2-0050`、`ATM-2-0051`、`ATM-2-0054` 都已是 `done`，不再當作主缺口。
 - M1 的三個收尾面向都已收斂，不再保留未完成主缺口。
@@ -41,7 +41,7 @@ ATM-2.5-0004 -> ATM-2-0030 -> ATM-2-0010
 [x] `ATM-4-0007` 承接 evolution pilot dry-run 與證據鏈收尾。 （目前：done）
 
 ### M3. 機器驗證層
-- [ ] validator orchestrator 與 AJV cache 的統一入口。
+[x] `ATM-3-0016` validator orchestrator 與 AJV cache 的統一入口。（目前：done）
 - [ ] 更廣的 deterministic / semantic 雙軌驗證。
 
 ### M4. 負債清單
