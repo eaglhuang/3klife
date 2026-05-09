@@ -50,6 +50,8 @@
     "validate:registry-backfill-sweep": "node tools_node/validate-registry-backfill-sweep.js",
     "validate:usage-evidence-shadow": "node tools_node/validate-usage-evidence-shadow.js",
     "validate:h2u-evolution-pilot": "node tools_node/validate-h2u-evolution-pilot.js",
+    "sync:atm-task-store": "node tools_node/sync-atm-stabilization-milestone.js",
+    "validate:atm-task-store": "node tools_node/sync-atm-stabilization-milestone.js --check --strict",
     "sync:atm-milestone": "node tools_node/sync-atm-stabilization-milestone.js",
     "validate:atm-milestone": "node tools_node/sync-atm-stabilization-milestone.js --check --strict",
     "check:ts-syntax": "node tools_node/check-ts-syntax.js",

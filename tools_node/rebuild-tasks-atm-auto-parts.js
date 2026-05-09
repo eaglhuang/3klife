@@ -2,34 +2,32 @@
 'use strict';
 
 const path = require('path');
-const {
-  DEFAULT_MAX_PART_BYTES,
-  DEFAULT_MAX_PART_LINES,
-  readTasksAtmStore,
-  writeTasksAtmStore,
-} = require('./lib/tasks-atm-shard-store');
+const { runTaskStoreTruthPipeline } = require('./sync-atm-stabilization-milestone');
 
 const projectRoot = path.resolve(__dirname, '..');
 
 function main() {
-  const state = readTasksAtmStore(projectRoot);
-  const result = writeTasksAtmStore(projectRoot, state.tasks, {
-    maxPartBytes: DEFAULT_MAX_PART_BYTES,
-    maxPartLines: DEFAULT_MAX_PART_LINES,
-    syncMilestone: true,
+  const pipeline = runTaskStoreTruthPipeline(projectRoot, {
+    check: false,
+    verifyAfterSync: true,
   });
+  const report = pipeline.report;
 
   console.log(JSON.stringify({
-    source: result.paths.indexPath,
-    milestone: result.paths.milestonePath,
-    milestoneChanged: result.milestoneChanged,
-    outputDir: result.paths.partsDir,
-    itemCount: state.tasks.length,
-    partsNeeded: result.parts.length,
-    generatedParts: result.parts.length,
-    maxPartKB: DEFAULT_MAX_PART_BYTES / 1024,
-    maxPartLines: DEFAULT_MAX_PART_LINES,
+    source: report.paths.indexPath,
+    milestone: report.paths.milestonePath,
+    outputDir: report.paths.partsDir,
+    itemCount: report.summary.total,
+    done: report.summary.done,
+    inProgress: report.summary.in_progress,
+    open: report.summary.open,
+    changedFiles: report.changedFiles,
+    postSyncCheckPassed: report.postSyncCheck ? report.postSyncCheck.passed : true,
   }, null, 2));
+
+  if (!report.passed) {
+    throw new Error('post-sync strict verification failed');
+  }
 }
 
 try {
