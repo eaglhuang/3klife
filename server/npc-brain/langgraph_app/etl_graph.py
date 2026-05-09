@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import os
+import shlex
+import sys
 from pathlib import Path
 from typing import Any, Literal, TypedDict
 
@@ -24,6 +27,9 @@ DEFAULT_REVIEW_QUEUE_PATH = Path(
 )
 PIPELINE_ROOT = Path("server/npc-brain/pipelines/sanguo-rag")
 REPAIR_CAMPAIGN_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot")
+PIPELINE_PYTHON = shlex.quote(
+    os.environ.get("SANGUO_RAG_PYTHON") or os.environ.get("PYTHON_BIN") or sys.executable
+)
 
 ETLStatusValue = Literal["ready-for-dialogue-smoke", "thin-but-testable", "needs-etl-evidence"]
 
@@ -235,7 +241,7 @@ def build_next_etl_plan(state: SanguoETLState) -> dict[str, Any]:
 
     if target_general_ids:
         pilot_command_parts = [
-            "$HOME/.venv/3klife-etl/bin/python",
+            PIPELINE_PYTHON,
             "server/npc-brain/pipelines/sanguo-rag/run_etl_quality_pilot.py",
         ]
         for general_id in target_general_ids[:5]:
@@ -254,7 +260,7 @@ def build_next_etl_plan(state: SanguoETLState) -> dict[str, Any]:
         output_root = REPAIR_CAMPAIGN_OUTPUT_ROOT / f"event-review-{general_id}"
         reasoning_report_path = REPAIR_CAMPAIGN_OUTPUT_ROOT / f"deepseek-{general_id}" / "deepseek-reasoning-report.json"
         command_parts = [
-            "$HOME/.venv/3klife-etl/bin/python",
+            PIPELINE_PYTHON,
             "server/npc-brain/pipelines/sanguo-rag/generate_event_review_choices.py",
             "--general-id",
             general_id,
@@ -279,7 +285,7 @@ def build_next_etl_plan(state: SanguoETLState) -> dict[str, Any]:
                 _command_dict(
                     label=f"enrich-review-context-{general_id}",
                     command=(
-                        "$HOME/.venv/3klife-etl/bin/python "
+                        f"{PIPELINE_PYTHON} "
                         "server/npc-brain/pipelines/sanguo-rag/enrich_event_review_context.py "
                         f"--answers {_repo_relative(answers_path)} --model deepseek-r1:7b "
                         "--window-before 2 --window-after 2 --fill-answers --overwrite"
@@ -291,7 +297,7 @@ def build_next_etl_plan(state: SanguoETLState) -> dict[str, Any]:
 
     if target_general_ids:
         repair_command_parts = [
-            "$HOME/.venv/3klife-etl/bin/python",
+            PIPELINE_PYTHON,
             "server/npc-brain/pipelines/sanguo-rag/run_repair_review_campaign.py",
             "--round-id",
             "repair-review-r3-auto",
@@ -328,7 +334,7 @@ def build_next_etl_plan(state: SanguoETLState) -> dict[str, Any]:
             _command_dict(
                 label=f"refresh-api-readiness-{readiness_general_id}",
                 command=(
-                    "$HOME/.venv/3klife-etl/bin/python "
+                    f"{PIPELINE_PYTHON} "
                     "server/npc-brain/pipelines/sanguo-rag/build_api_readiness_index.py "
                     f"--general-id {readiness_general_id} --overwrite"
                 ),

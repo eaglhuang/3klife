@@ -56,20 +56,22 @@ flowchart TD
 
 ## 30 秒快速啟動
 
+以下範例假設你已先啟動目標 venv；若還沒，先 `source` 對應的 `bin/activate`，或自行設定 `PYTHON_BIN` 指向該環境。
+
 ### 啟動 FastAPI
 
 ```bash
 cd server/npc-brain
-$HOME/.venv/3klife-etl/bin/python -m pip install -r requirements.txt
-$HOME/.venv/3klife-etl/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8765 --reload
+python -m pip install -r requirements.txt
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8765 --reload
 ```
 
 ### 啟動 LangGraph dev server
 
 ```bash
 cd server/npc-brain
-$HOME/.venv/3klife-etl/bin/python -m pip install -U "langgraph-cli[inmem]"
-$HOME/.venv/3klife-etl/bin/langgraph dev --no-browser
+python -m pip install -U "langgraph-cli[inmem]"
+langgraph dev --no-browser
 ```
 
 ### 先看健康檢查

@@ -3,6 +3,8 @@
 
 `server/npc-brain/pipelines/sanguo-rag/` 是三國大腦中台的正式 ETL / RAG pipeline 腳本位置。
 
+以下範例假設已在目標 venv 內執行；若還沒，先 `source` 對應的 `bin/activate`，或設定 `PYTHON_BIN` 指向該環境。
+
 API service 層位於 `server/npc-brain/app/`。Pipeline 產出 canonical fixtures，service 再把 fixtures 轉為 Cocos 可呼叫的 `/v1/npc/*` DTO；兩層不要互相混寫。
 
 目前已落地的正式腳本：
@@ -68,7 +70,7 @@ python server/npc-brain/pipelines/sanguo-rag/clean_and_split.py \
 在進入 E-5b 事件抽取前，先跑 alias hit gate，確認近期人工修正的稱呼不會在事件召回層綁錯人物：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/check_event_alias_hits.py --overwrite
+python server/npc-brain/pipelines/sanguo-rag/check_event_alias_hits.py --overwrite
 ```
 
 預設檢查：
@@ -90,7 +92,7 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/check_ev
 E-5a 先解析對話與 address-title：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/resolve_dialogue_mentions.py --overwrite
+python server/npc-brain/pipelines/sanguo-rag/resolve_dialogue_mentions.py --overwrite
 ```
 
 輸出：
@@ -101,7 +103,7 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/resolve_
 E-5b 再用 deterministic baseline 建立事件候選，不直接讓 LLM 猜人物身份：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/extract_event_candidates.py --overwrite
+python server/npc-brain/pipelines/sanguo-rag/extract_event_candidates.py --overwrite
 ```
 
 輸出：
@@ -115,7 +117,7 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/extract_
 目前 MVP 正式 events 產出張飛長坂橋 gold seed、四個 alias smoke events 與一個 dialogue offer event。`generic-battle-candidates.*` 是 review queue，未人工接受前不會進 keyword pack、persona card 或 API readiness。接著 E-6 從正式事件候選投影 keyword pack：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/build_keyword_options.py \
+python server/npc-brain/pipelines/sanguo-rag/build_keyword_options.py \
 	--general-id zhang-fei \
 	--overwrite
 ```
@@ -130,7 +132,7 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/build_ke
 LLM trial 先走離線 schema gate，不假裝已呼叫模型：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/validate_llm_extraction_trial.py --overwrite
+python server/npc-brain/pipelines/sanguo-rag/validate_llm_extraction_trial.py --overwrite
 ```
 
 輸出：
@@ -142,7 +144,7 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/validate
 若本機已安裝 Ollama `deepseek-r1:7b`，可再跑 DeepSeek 推理 sidecar。這一步會依 `--general-id` 過濾 deterministic `events.jsonl` 與 review-only `generic-battle-candidates.jsonl`，再讀對應 keyword pack，輸出事件/關鍵字 review hints；它不會改 canonical events 或 keyword fixtures：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/run_deepseek_reasoning_trial.py \
+python server/npc-brain/pipelines/sanguo-rag/run_deepseek_reasoning_trial.py \
 	--general-id zhang-fei \
 	--model deepseek-r1:7b \
 	--overwrite
@@ -164,7 +166,7 @@ DeepSeek R1 常見的 `<think>...</think>` 會被清洗，只保留短 `reasonin
 要開始把「所有武將回答品質」變成可量測資料流，先跑 review-only pilot，不直接改正式事件或 keyword fixtures：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/run_etl_quality_pilot.py \
+python server/npc-brain/pipelines/sanguo-rag/run_etl_quality_pilot.py \
 	--top 24 \
 	--include-cold 4 \
 	--overwrite
@@ -189,7 +191,7 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/run_etl_
 若某位武將已有 `generic-battle-candidates`，可以把候選轉成可人工審的 MCQ / todo：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/generate_event_review_choices.py \
+python server/npc-brain/pipelines/sanguo-rag/generate_event_review_choices.py \
 	--general-id lu-bu \
 	--reasoning-report artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/deepseek-lu-bu/deepseek-reasoning-report.json \
 	--output-root artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-lu-bu \
@@ -206,7 +208,7 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/generate
 若人類或 DeepSeek 因單段 `sourceQuote` 被截斷而無法判斷 `location` / `relationshipEdges`，先展開 sourceRef 前後文，再讓 DeepSeek 產生 review-only edits：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/enrich_event_review_context.py \
+python server/npc-brain/pipelines/sanguo-rag/enrich_event_review_context.py \
 	--answers artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/event-review-lu-bu/event-review-answers.lu-bu.todo.json \
 	--api-url http://172.31.80.1:11435/api/chat \
 	--model deepseek-r1:7b \
@@ -230,7 +232,7 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/enrich_e
 最後可產出 API / embedding readiness fixtures：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/build_api_readiness_index.py --general-id zhang-fei --overwrite
+python server/npc-brain/pipelines/sanguo-rag/build_api_readiness_index.py --general-id zhang-fei --overwrite
 ```
 
 輸出：
@@ -246,7 +248,7 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/build_ap
 ### Vector-ready export
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/export_vector_records.py \
+python server/npc-brain/pipelines/sanguo-rag/export_vector_records.py \
 	--events artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl \
 	--keyword-root artifacts/data-pipeline/sanguo-rag/extracted/keyword-options \
 	--persona-root artifacts/data-pipeline/sanguo-rag/extracted/persona-cards \
@@ -267,13 +269,13 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/export_v
 先做設定檢查：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/init_pinecone_index.py --dry-run
+python server/npc-brain/pipelines/sanguo-rag/init_pinecone_index.py --dry-run
 ```
 
 建立 index：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/init_pinecone_index.py
+python server/npc-brain/pipelines/sanguo-rag/init_pinecone_index.py
 ```
 
 ### Pinecone upsert
@@ -292,7 +294,7 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/init_pin
 先用 `mock` embedding 做 smoke test（只驗證讀檔與 embedding，不真的寫入）：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/upsert_pinecone_records.py \
+python server/npc-brain/pipelines/sanguo-rag/upsert_pinecone_records.py \
 	--records-root artifacts/data-pipeline/sanguo-rag/extracted/vector-ready \
 	--embedding-provider mock \
 	--dry-run
@@ -301,7 +303,7 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/upsert_p
 確認沒問題後，移除 `--dry-run` 才會真的 upsert：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/upsert_pinecone_records.py \
+python server/npc-brain/pipelines/sanguo-rag/upsert_pinecone_records.py \
 	--records-root artifacts/data-pipeline/sanguo-rag/extracted/vector-ready \
 	--embedding-provider mock
 ```
@@ -320,7 +322,7 @@ NPC_EMBEDDING_MODEL=BAAI/bge-m3
 上傳後，用同一個 embedding provider / model 對一段已知文本 query，確認能讀回 top hit：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/query_pinecone_records.py \
+python server/npc-brain/pipelines/sanguo-rag/query_pinecone_records.py \
 	--namespace keywords \
 	--query-text "武將：sima-yi
 關鍵字分類：person

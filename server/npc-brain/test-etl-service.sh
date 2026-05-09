@@ -2,11 +2,38 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${ROOT_DIR}/../.." && pwd)"
 BASE_URL="${LANGGRAPH_BASE_URL:-http://127.0.0.1:2025}"
 GRAPH_ID="${GRAPH_ID:-sanguo_etl_graph}"
 OUT_DIR="${ROOT_DIR}/local"
 RAW_INPUT="${1:-lu-bu}"
-PYTHON_BIN="${PYTHON_BIN:-$HOME/.venv/3klife-etl/bin/python}"
+
+resolve_python_bin() {
+  local candidates=()
+  if [[ -n "${PYTHON_BIN:-}" ]]; then
+    candidates+=("${PYTHON_BIN}")
+  fi
+  if [[ -n "${SANGUO_RAG_PYTHON:-}" ]]; then
+    candidates+=("${SANGUO_RAG_PYTHON}")
+  fi
+  candidates+=(
+    "${REPO_ROOT}/.venv/bin/python"
+    "${HOME}/.venv/3klife-etl/bin/python"
+  )
+
+  local candidate
+  for candidate in "${candidates[@]}"; do
+    if [[ -x "${candidate}" ]]; then
+      echo "${candidate}"
+      return 0
+    fi
+  done
+
+  echo "Unable to find a Python venv. Set PYTHON_BIN or SANGUO_RAG_PYTHON, or create ${REPO_ROOT}/.venv/bin/python or ${HOME}/.venv/3klife-etl/bin/python." >&2
+  return 1
+}
+
+PYTHON_BIN="$(resolve_python_bin)"
 
 if [[ ! -f "${ROOT_DIR}/.env" ]]; then
   echo "Missing ${ROOT_DIR}/.env" >&2
@@ -15,11 +42,6 @@ fi
 
 if ! command -v curl >/dev/null 2>&1; then
   echo "curl is required." >&2
-  exit 1
-fi
-
-if [[ ! -x "${PYTHON_BIN}" ]]; then
-  echo "Python venv is required: ${PYTHON_BIN}" >&2
   exit 1
 fi
 

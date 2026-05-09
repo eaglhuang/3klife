@@ -4,8 +4,8 @@ try:
     from fastapi import FastAPI, HTTPException, Query
 except ModuleNotFoundError as exc:
     raise RuntimeError(
-        "FastAPI is not installed. Install API dependencies with: "
-        "$HOME/.venv/3klife-etl/bin/python -m pip install fastapi uvicorn"
+        "FastAPI is not installed. Activate the server venv, or set PYTHON_BIN / "
+        "SANGUO_RAG_PYTHON, then install API dependencies with: python -m pip install fastapi uvicorn"
     ) from exc
 
 from fastapi.middleware.cors import CORSMiddleware

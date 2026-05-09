@@ -33,7 +33,7 @@ NPC_MEMORY_COMPRESS_MODEL=gemini_flash # 壓縮專用 LLM provider
 - [ ] `_key(save_id, general_id) -> str` 輔助函式（`f"{save_id}__{general_id}"`）
 - [ ] `_events_path()` / `_memory_path()` 路徑建構函式（基於 env-var root）
 - [ ] TypeScript：`NpcInteractionEventPayload`、`NpcGeneralMemory`、`NpcGeneralMemoryContext` 介面加入 `NpcDialogueService.ts`
-- [ ] TypeScript：`NpcDialogueRequest` 加 `saveId?` 與 `memoryContext?` 欄位
+curl http://127.0.0.1:8765/healthz | "$PYTHON_BIN" -m json.tool | grep -A 8 memory
 
 **驗收**：`from app.interaction_memory import InteractionEvent, GeneralMemoryData` 無 import 錯誤；TypeScript compile 無報錯。
 
@@ -69,7 +69,7 @@ NPC_MEMORY_COMPRESS_MODEL=gemini_flash # 壓縮專用 LLM provider
 
 **驗收**：
 ```bash
-curl http://127.0.0.1:8765/healthz | "$HOME/.venv/3klife-etl/bin/python" -m json.tool | grep -A 8 '"memory"'
+curl http://127.0.0.1:8765/healthz | "$PYTHON_BIN" -m json.tool | grep -A 8 '"memory"'
 curl -X POST http://127.0.0.1:8765/v1/npc/interaction-events \
   -H "Content-Type: application/json" \
   -d '{"saveId":"dev","generalId":"zhang-fei","eventType":"dialogue","summary":"test"}' 
@@ -126,7 +126,7 @@ NPC_LLM_DEBUG=1 curl -X POST http://127.0.0.1:8765/v1/npc/dialogue \
 # POST /v1/npc/memory/compress?force=true
 # 確認 lastCompressedIdx = 60
 curl "http://127.0.0.1:8765/v1/npc/general-memory?saveId=dev&generalId=zhang-fei" \
-  | "$HOME/.venv/3klife-etl/bin/python" -c "import sys,json; m=json.load(sys.stdin); print('idx:', m['lastCompressedIdx'], 'count:', m['uncompressedCount'])"
+  | "$PYTHON_BIN" -c "import sys,json; m=json.load(sys.stdin); print('idx:', m['lastCompressedIdx'], 'count:', m['uncompressedCount'])"
 
 # 失敗模擬：monkeypatch 一個 section 拋出 Exception，確認 idx 不變
 ```
@@ -153,17 +153,23 @@ curl "http://127.0.0.1:8765/v1/npc/general-memory?saveId=dev&generalId=zhang-fei
 
 ### 現有 smoke（每個里程碑結束都應通過）
 
+以下範例假設已在目標 venv 內執行；若還沒，先 `source` 對應的 `bin/activate`，或設定 `PYTHON_BIN` 指向該環境。若你偏好統一入口，可在 shell 先定義：
+
+```bash
+PYTHON_BIN="${PYTHON_BIN:-python}"
+```
+
 ```bash
 cd server/npc-brain
-python -m app.http_smoke_test
-python -m app.cocos_flow_smoke_test
+"$PYTHON_BIN" -m app.http_smoke_test
+"$PYTHON_BIN" -m app.cocos_flow_smoke_test
 ```
 
 ### 新增 memory smoke（M3 完成後可建立）
 
 ```bash
 # 以 deterministic provider 避免 LLM API key 需求
-NPC_LLM_PROVIDER_ORDER=deterministic python -m app.memory_smoke_test
+NPC_LLM_PROVIDER_ORDER=deterministic "$PYTHON_BIN" -m app.memory_smoke_test
 ```
 
 `memory_smoke_test.py` 應驗證：
@@ -176,7 +182,7 @@ NPC_LLM_PROVIDER_ORDER=deterministic python -m app.memory_smoke_test
 
 ```bash
 # 1. 確認 healthz memory 段
-curl http://127.0.0.1:8765/healthz | "$HOME/.venv/3klife-etl/bin/python" -m json.tool | grep -A 8 memory
+curl http://127.0.0.1:8765/healthz | "$PYTHON_BIN" -m json.tool | grep -A 8 memory
 
 # 2. 寫入一筆互動事件
 curl -s -X POST http://127.0.0.1:8765/v1/npc/interaction-events \
@@ -186,16 +192,16 @@ curl -s -X POST http://127.0.0.1:8765/v1/npc/interaction-events \
 
 # 3. 讀取當前記憶（此時四段仍為空，但 uncompressedCount=1）
 curl "http://127.0.0.1:8765/v1/npc/general-memory?saveId=dev-save&generalId=zhang-fei" \
-  | "$HOME/.venv/3klife-etl/bin/python" -m json.tool
+  | "$PYTHON_BIN" -m json.tool
 
 # 4. 強制觸發壓縮（需 GOOGLE_API_KEY）
 curl -s -X POST http://127.0.0.1:8765/v1/npc/memory/compress \
   -H "Content-Type: application/json" \
-  -d '{"saveId":"dev-save","generalId":"zhang-fei","force":true}' | "$HOME/.venv/3klife-etl/bin/python" -m json.tool
+  -d '{"saveId":"dev-save","generalId":"zhang-fei","force":true}' | "$PYTHON_BIN" -m json.tool
 
 # 5. 確認指針推進
 curl "http://127.0.0.1:8765/v1/npc/general-memory?saveId=dev-save&generalId=zhang-fei" \
-  | "$HOME/.venv/3klife-etl/bin/python" -c "import sys,json; m=json.load(sys.stdin); print('idx:', m['lastCompressedIdx'], '/ count:', m['uncompressedCount'])"
+  | "$PYTHON_BIN" -c "import sys,json; m=json.load(sys.stdin); print('idx:', m['lastCompressedIdx'], '/ count:', m['uncompressedCount'])"
 
 # 6. 帶記憶呼叫 dialogue（NPC_LLM_DEBUG=1 顯示 prompt）
 NPC_LLM_DEBUG=1 curl -s -X POST http://127.0.0.1:8765/v1/npc/dialogue \

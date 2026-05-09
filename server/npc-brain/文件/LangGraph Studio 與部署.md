@@ -24,10 +24,12 @@
 
 ## 一次性安裝
 
+以下範例假設已在目標 venv 內執行；若還沒，先 `source` 對應的 `bin/activate`，或設定 `PYTHON_BIN` 指向該環境。
+
 ```bash
 cd server/npc-brain
-$HOME/.venv/3klife-etl/bin/python -m pip install -r requirements.txt
-$HOME/.venv/3klife-etl/bin/python -m pip install -U "langgraph-cli[inmem]"
+python -m pip install -r requirements.txt
+python -m pip install -U "langgraph-cli[inmem]"
 ```
 
 ## `.env` 最小必填
@@ -52,7 +54,7 @@ NPC_BRAIN_DEPLOY_IDENTITY=npc-brain-external-tester
 
 ```bash
 cd server/npc-brain
-$HOME/.venv/3klife-etl/bin/langgraph dev --no-browser
+langgraph dev --no-browser
 ```
 
 成功後會看到：

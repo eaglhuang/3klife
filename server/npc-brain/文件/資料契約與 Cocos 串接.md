@@ -20,7 +20,7 @@ service 預設讀取：
 若要更新這些產物，先重跑 pipeline：
 
 ```bash
-$HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/build_api_readiness_index.py --general-id zhang-fei --overwrite
+python server/npc-brain/pipelines/sanguo-rag/build_api_readiness_index.py --general-id zhang-fei --overwrite
 ```
 
 ## 主要 API
