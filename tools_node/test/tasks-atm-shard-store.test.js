@@ -10,6 +10,9 @@ const {
   upsertTaskInTasksAtmStore,
   writeTasksAtmStore,
 } = require('../lib/tasks-atm-shard-store');
+const {
+  MILESTONE_PATH_REL,
+} = require('../lib/atm-stabilization-milestone');
 
 const projectRoot = path.resolve(__dirname, '..', '..');
 const tempRoot = path.join(projectRoot, 'temp', 'tasks-atm-shard-store-test');
@@ -89,6 +92,24 @@ function main() {
     maxPartLines,
   });
   assert(noOp.changedFiles.length === 0, `no-op rebuild should not rewrite files: ${noOp.changedFiles.join(', ')}`);
+
+  const milestonePath = path.join(tempRoot, MILESTONE_PATH_REL);
+  const milestoneSync = writeTasksAtmStore(tempRoot, readTasksAtmStore(tempRoot).tasks, {
+    maxPartBytes: DEFAULT_MAX_PART_BYTES,
+    maxPartLines,
+    syncMilestone: true,
+  });
+  assert(fs.existsSync(milestonePath), 'syncMilestone should materialize the milestone file');
+  assert(
+    milestoneSync.changedFiles.includes(MILESTONE_PATH_REL),
+    `syncMilestone should report milestone drift, got ${milestoneSync.changedFiles.join(', ')}`,
+  );
+  const milestoneNoOp = writeTasksAtmStore(tempRoot, readTasksAtmStore(tempRoot).tasks, {
+    maxPartBytes: DEFAULT_MAX_PART_BYTES,
+    maxPartLines,
+    syncMilestone: true,
+  });
+  assert(milestoneNoOp.changedFiles.length === 0, `syncMilestone no-op should not rewrite files: ${milestoneNoOp.changedFiles.join(', ')}`);
 
   const addedTask = task(99);
   const added = upsertTaskInTasksAtmStore(tempRoot, addedTask, {

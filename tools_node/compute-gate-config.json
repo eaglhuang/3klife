@@ -7,7 +7,9 @@
       "id": "ts-syntax",
       "label": "TypeScript 語法掃描",
       "cmd": "node",
-      "args": ["tools_node/check-ts-syntax.js"],
+      "args": [
+        "tools_node/check-ts-syntax.js"
+      ],
       "priority": 1,
       "failAction": "block",
       "description": "逐檔 transpile 級別語法掃描，抓缺漏括號 / 非法 token"
@@ -16,7 +18,9 @@
       "id": "encoding",
       "label": "檔案編碼完整性",
       "cmd": "node",
-      "args": ["tools_node/check-encoding-touched.js"],
+      "args": [
+        "tools_node/check-encoding-touched.js"
+      ],
       "priority": 2,
       "failAction": "block",
       "description": "確保所有文字檔為 UTF-8 without BOM"
@@ -25,7 +29,9 @@
       "id": "ui-spec-contract",
       "label": "UI Spec 三層契約驗證",
       "cmd": "node",
-      "args": ["tools_node/validate-ui-specs.js"],
+      "args": [
+        "tools_node/validate-ui-specs.js"
+      ],
       "priority": 3,
       "failAction": "block",
       "description": "驗證 layouts / skins / screens JSON 契約一致性"
@@ -34,7 +40,9 @@
       "id": "general-detail-ui",
       "label": "GeneralDetail UI 契約",
       "cmd": "node",
-      "args": ["tools_node/validate-general-detail-ui.js"],
+      "args": [
+        "tools_node/validate-general-detail-ui.js"
+      ],
       "priority": 4,
       "failAction": "block",
       "description": "武將人物頁 UI 結構完整性"
@@ -43,7 +51,9 @@
       "id": "general-data",
       "label": "武將資料完整性",
       "cmd": "node",
-      "args": ["tools_node/validate-generals-data.js"],
+      "args": [
+        "tools_node/validate-generals-data.js"
+      ],
       "priority": 5,
       "failAction": "warn",
       "description": "驗證 generals.json 資料正確性（圖片路徑、屬性值域、稀有度規則）"
@@ -52,7 +62,9 @@
       "id": "skin-contracts",
       "label": "Skin 契約驗證",
       "cmd": "node",
-      "args": ["tools_node/validate-skin-contracts.js"],
+      "args": [
+        "tools_node/validate-skin-contracts.js"
+      ],
       "priority": 6,
       "failAction": "warn",
       "description": "驗證 skin JSON 與 Design Token 引用一致性"
@@ -61,7 +73,10 @@
       "id": "crossref-integrity",
       "label": "交叉索引完整性",
       "cmd": "node",
-      "args": ["tools_node/rebuild-crossref.js", "--validate"],
+      "args": [
+        "tools_node/rebuild-crossref.js",
+        "--validate"
+      ],
       "priority": 7,
       "failAction": "warn",
       "description": "確認 cross-ref shard 無孤立引用或斷鏈"
@@ -70,7 +85,9 @@
       "id": "task-scope",
       "label": "任務範圍守衛",
       "cmd": "node",
-      "args": ["tools_node/check-task-scope.js"],
+      "args": [
+        "tools_node/check-task-scope.js"
+      ],
       "priority": 8,
       "failAction": "block",
       "description": "確認 git dirty files 皆由 active task lock files[] 覆蓋且無重疊宣告"
@@ -79,16 +96,57 @@
       "id": "rule-guard-atm",
       "label": "ATM RuleGuardAdapter",
       "cmd": "node",
-      "args": ["tools_node/run-rule-guard.js", "--profile", "atm"],
+      "args": [
+        "tools_node/run-rule-guard.js",
+        "--profile",
+        "atm"
+      ],
       "priority": 8.8,
       "failAction": "block",
       "description": "從 rule-pack.json 載入 ATM 規則並輸出 machine-readable findings"
     },
     {
+      "id": "rule-guard-read-only",
+      "label": "ATM RuleGuard Read-Only",
+      "cmd": "node",
+      "args": [
+        "tools_node/validate-rule-guard-read-only.js"
+      ],
+      "priority": 8.81,
+      "failAction": "block",
+      "description": "?? ATM RuleGuardAdapter ????? read-only path???? deterministic findings"
+    },
+    {
+      "id": "registry-backfill-sweep",
+      "label": "ATM Registry Backfill Sweep",
+      "cmd": "node",
+      "args": [
+        "tools_node/validate-registry-backfill-sweep.js"
+      ],
+      "priority": 8.82,
+      "failAction": "block",
+      "description": "?? versions[] / semanticFingerprint ??? registry catalog/index ???"
+    },
+    {
+      "id": "atm-stabilization-milestone",
+      "label": "ATM Stabilization Milestone",
+      "cmd": "node",
+      "args": [
+        "tools_node/sync-atm-stabilization-milestone.js",
+        "--check",
+        "--strict"
+      ],
+      "priority": 8.83,
+      "failAction": "block",
+      "description": "Synchronizes the ATM stabilization milestone from the thin task store and blocks milestone drift."
+    },
+    {
       "id": "doc-shard-health",
       "label": "文件分片健康檢查",
       "cmd": "node",
-      "args": ["tools_node/check-doc-shard-health.js"],
+      "args": [
+        "tools_node/check-doc-shard-health.js"
+      ],
       "priority": 8.5,
       "failAction": "block",
       "description": "確認 docs 內已變更的 md/json 是否為 shard-covered，並檢查受影響 shard group 的 part thresholds 與 thin-index summary"
@@ -97,7 +155,9 @@
       "id": "import-boundary",
       "label": "模組邊界守衛",
       "cmd": "node",
-      "args": ["tools_node/check-import-boundaries.js"],
+      "args": [
+        "tools_node/check-import-boundaries.js"
+      ],
       "priority": 9,
       "failAction": "warn",
       "description": "確保 ui/battle/core/shared 之間的單向依賴規則"
@@ -106,7 +166,9 @@
       "id": "eslint-rules",
       "label": "ESLint 關鍵規則掃描",
       "cmd": "node",
-      "args": ["tools_node/check-eslint-rules.js"],
+      "args": [
+        "tools_node/check-eslint-rules.js"
+      ],
       "priority": 10,
       "failAction": "block",
       "description": "禁裸 console.log / no-var / no-debugger / eqeqeq 規則掃描"
@@ -115,7 +177,9 @@
       "id": "approved-fixtures",
       "label": "行為快照比對",
       "cmd": "node",
-      "args": ["tools_node/approved-fixture-check.js"],
+      "args": [
+        "tools_node/approved-fixture-check.js"
+      ],
       "priority": 11,
       "failAction": "warn",
       "description": "比對人類審核過的預期輸出（Approved Fixtures 模式）"
@@ -124,7 +188,10 @@
       "id": "dead-code",
       "label": "死碼偵測（廢棄模組引用）",
       "cmd": "node",
-      "args": ["tools_node/scan-deprecated-refs.js", "--strict"],
+      "args": [
+        "tools_node/scan-deprecated-refs.js",
+        "--strict"
+      ],
       "priority": 12,
       "failAction": "warn",
       "description": "確保所有 _deprecated/ 引用已清除；有引用即視為潛在技術債，不阻擋但發出警告"
@@ -133,7 +200,11 @@
       "id": "atm-police",
       "label": "ATM Police Gate",
       "cmd": "node",
-      "args": ["tools_node/atomic-framework/atm-cli.js", "police", "--all"],
+      "args": [
+        "tools_node/atomic-framework/atm-cli.js",
+        "police",
+        "--all"
+      ],
       "priority": 13,
       "failAction": "block",
       "description": "透過本地 atm-cli 跑 police 全量驗證，守住 protected surface 與 registry 規則"
@@ -142,7 +213,11 @@
       "id": "atm-hash-lock",
       "label": "ATM Hash-Lock Gate",
       "cmd": "node",
-      "args": ["tools_node/atomic-framework/atm-cli.js", "verify", "--all"],
+      "args": [
+        "tools_node/atomic-framework/atm-cli.js",
+        "verify",
+        "--all"
+      ],
       "priority": 14,
       "failAction": "block",
       "description": "透過本地 atm-cli 跑 hash-lock / registry 核心一致性驗證"
@@ -151,19 +226,56 @@
   "profiles": {
     "quick": {
       "description": "快速驗證（每次代碼修改後）",
-      "gates": ["ts-syntax", "encoding", "eslint-rules"]
+      "gates": [
+        "ts-syntax",
+        "encoding",
+        "eslint-rules"
+      ]
     },
     "standard": {
       "description": "標準驗證（任務卡完成時）",
-      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "task-scope", "doc-shard-health", "import-boundary", "dead-code"]
+      "gates": [
+        "ts-syntax",
+        "encoding",
+        "eslint-rules",
+        "ui-spec-contract",
+        "general-detail-ui",
+        "task-scope",
+        "doc-shard-health",
+        "import-boundary",
+        "dead-code"
+      ]
     },
     "atm": {
-      "description": "ATM 不退轉驗證（police + hash-lock）",
-      "gates": ["encoding", "ts-syntax", "rule-guard-atm", "atm-police", "atm-hash-lock"]
+      "description": "ATM residual gates + police + hash-lock",
+      "gates": [
+        "encoding",
+        "ts-syntax",
+        "rule-guard-atm",
+        "rule-guard-read-only",
+        "registry-backfill-sweep",
+        "atm-stabilization-milestone",
+        "atm-police",
+        "atm-hash-lock"
+      ]
     },
     "full": {
       "description": "完整驗證（階段性交付時）",
-      "gates": ["ts-syntax", "encoding", "eslint-rules", "ui-spec-contract", "general-detail-ui", "general-data", "skin-contracts", "crossref-integrity", "task-scope", "doc-shard-health", "import-boundary", "approved-fixtures", "dead-code"]
+      "gates": [
+        "ts-syntax",
+        "encoding",
+        "eslint-rules",
+        "ui-spec-contract",
+        "general-detail-ui",
+        "general-data",
+        "skin-contracts",
+        "crossref-integrity",
+        "task-scope",
+        "doc-shard-health",
+        "import-boundary",
+        "approved-fixtures",
+        "dead-code"
+      ]
     }
   },
   "selfCorrection": {

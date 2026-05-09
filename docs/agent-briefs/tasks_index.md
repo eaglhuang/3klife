@@ -14,12 +14,12 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 302
-- done: 168
+- Total: 306
+- done: 191
 - completed: 8
-- in-progress: 25
+- in-progress: 24
 - in-review: 5
-- open: 95
+- open: 77
 - not-started: 1
 
 ## Tasks

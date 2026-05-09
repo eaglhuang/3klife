@@ -2,6 +2,10 @@
 
 const fs = require('fs');
 const path = require('path');
+const {
+  MILESTONE_PATH_REL,
+  syncAtmStabilizationMilestone,
+} = require('./atm-stabilization-milestone');
 
 const TASKS_ATM_INDEX_REL = 'docs/tasks/tasks-atm.json';
 const TASKS_ATM_PARTS_DIR_REL = 'docs/tasks/tasks-atm';
@@ -794,6 +798,7 @@ function writeTasksAtmStore(projectRoot, tasks, options = {}) {
   const maxPartBytes = options.maxPartBytes || DEFAULT_MAX_PART_BYTES;
   const maxPartLines = options.maxPartLines || DEFAULT_MAX_PART_LINES;
   const dryRun = Boolean(options.dryRun);
+  const syncMilestone = Boolean(options.syncMilestone);
   const stableParts = buildStablePartsFromExisting(projectRoot, tasks, { maxPartBytes, maxPartLines });
   let preferredPartCount = null;
   if (!stableParts && fs.existsSync(paths.shardRcPath)) {
@@ -838,6 +843,7 @@ function writeTasksAtmStore(projectRoot, tasks, options = {}) {
   }
 
   const changedFiles = [];
+  let milestoneChanged = false;
 
   if (!dryRun) {
     fs.mkdirSync(paths.partsDir, { recursive: true });
@@ -855,15 +861,25 @@ function writeTasksAtmStore(projectRoot, tasks, options = {}) {
     }
   }
 
+  if (syncMilestone) {
+    const milestoneResult = syncAtmStabilizationMilestone(projectRoot, { tasks, summary }, { dryRun });
+    milestoneChanged = Boolean(milestoneResult.changed);
+    if (!dryRun && milestoneResult.changed) {
+      changedFiles.push(milestoneResult.path);
+    }
+  }
+
   return {
     indexStub,
     shardRc,
     parts,
     summary,
     changedFiles,
+    milestoneChanged,
     taskPartPaths,
     paths: {
       indexPath: relPath(projectRoot, paths.indexPath),
+      milestonePath: MILESTONE_PATH_REL,
       partsDir: relPath(projectRoot, paths.partsDir),
       shardRcPath: relPath(projectRoot, paths.shardRcPath),
     },

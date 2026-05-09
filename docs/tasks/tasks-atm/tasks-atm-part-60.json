@@ -49,20 +49,20 @@
   {
     "doc_id": "doc_task_0294",
     "id": "ATM-2-0010",
-    "title": "Neutrality boundary rule guard",
+    "title": "RuleGuard Read-Only Validator",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "in-progress",
     "type": "open-source-core",
     "phase": "ATM-2",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-09T08:15:08.1875634+08:00",
+    "started_by_agent": "codex-gpt-5.5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "建立 upstream neutral/boundary rule guard，先以 deterministic 掃描檢查寫死 host 假設，再以 optional semantic audit 補抓隱性耦合與 stale docs。",
+    "description": "建立 upstream RuleGuard read-only deterministic gate，先以 deterministic 掃描檢查工具鏈是否仍停留在讀檔 / read-only child process，避免 task card / lock / shard / doc registry / lifecycle status mutation path 漏進來。",
     "related": [
       "ATM-1-0008",
       "ATM-1-0009",
@@ -73,43 +73,42 @@
       "ATM-2-0008"
     ],
     "acceptance": [
-      "guard 可掃 source/docs/examples/templates/prompt assets",
-      "deterministic 規則可攔截 3KLife/Cocos/html-to-ucuf/task-lock/compute-gate/doc-id 等 protected terms",
-      "semantic audit 只作 warn/needs-review，不單獨決定 hard fail",
-      "guard 區分 code dead-code 與 doc dead-doc，不把 LLM 當唯一裁決",
-      "deterministic / semantic 掃描必須同時涵蓋 .atm/reports/upgrade-proposals/* 與 evidence-store payload",
-      "adopter 私有資訊（3KLife / Cocos / UCUF / html-to-ucuf）出現在 upgrade-proposal 或 evidence 內容時 hard fail"
+      "RuleGuardAdapter 必須維持 read-only child process 與讀檔檢查，不能直接碰 task card / lock / shard / doc registry / lifecycle status mutation path",
+      "rule-pack.json 必須新增 `rule-guard-read-only`，並掛進 ATM profile，輸出 machine-readable findings",
+      "deterministic validator 必須輸出 `trigger / scope / severity / action / routeClass / routeHint` 等欄位",
+      "read-only gate 的結果要能穩定重跑，且不依賴手動判讀"
     ],
     "deliverables": [
-      "neutrality/boundary guard spec",
-      "protected-surface 與 banned-term config",
-      "semantic review report schema",
-      "standalone smoke fixture"
+      "tools_node/validate-rule-guard-read-only.js",
+      "tools_node/adapters/atm-3klife/rule-guard-adapter.js",
+      "tools_node/adapters/atm-3klife/rule-pack.json",
+      "read-only finding report"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: 補 neutrality/boundary rule guard 任務 | 阻塞: none\n2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）",
+    "notes": "2026-05-09 | 狀態: in-progress | 驗證: pending | 變更: 改承接 RuleGuardAdapter read-only deterministic gate，補只讀 validator 與 rule-pack gate | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM self-hosting first 開卡",
-      "summary": "建立可自動驗證的 neutrality/boundary guard，避免 upstream 再被 adopter 私有假設污染。",
+      "label": "ATM RuleGuard Read-Only Gate",
+      "summary": "把 RuleGuardAdapter 不碰 mutation path 的邊界變成 deterministic gate。",
       "position": "ATM-2",
       "prereq": "ATM-2-0007、ATM-2-0008"
     },
     "contracts": {
       "input": [
         "governance schema 與 local reference plugins 已定義",
-        "guard 需同時涵蓋 code 與 docs surfaces"
+        "guard 需同時涵蓋 code 與 docs surfaces",
+        "tools_node/run-rule-guard.js、tools_node/adapters/atm-3klife/rule-guard-adapter.js、rule-pack.json"
       ],
       "output": [
-        "deterministic neutrality scan",
-        "optional semantic audit",
+        "deterministic read-only scan",
+        "machine-readable findings",
         "protected surface policy 與 CI smoke"
       ],
-      "validation_cmd": "npm test; npm run typecheck; npm run lint",
-      "rollback_hint": "回退 guard 規格或 reference implementation；不得把 3KLife 私有路徑寫回 upstream protected surfaces。",
+      "validation_cmd": "node tools_node/validate-rule-guard-read-only.js --strict\\nnpm test\\nnpm run typecheck\\nnpm run lint",
+      "rollback_hint": "回退 guard 規格或 reference implementation；不得把 3KLife 私有路徑寫回 upstream protected surfaces。若 read-only gate 失敗，只回退這張卡新增的 rule 與 validator。",
       "execution_steps": [
         "定義 protected surfaces",
         "定義 banned terms 與 deterministic rules",
-        "補 semantic review report schema",
+        "補 read-only report schema",
         "建立 smoke fixture"
       ]
     },

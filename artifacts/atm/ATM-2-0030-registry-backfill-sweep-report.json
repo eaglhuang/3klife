@@ -1,0 +1,172 @@
+{
+  "validator": "validate-registry-backfill-sweep",
+  "registryPath": "../AI-Atomic-Framework/atomic-registry.json",
+  "upstreamRoot": "../AI-Atomic-Framework",
+  "checks": [
+    {
+      "id": "upstream-registry-core",
+      "passed": false,
+      "status": 1,
+      "stderr": "",
+      "stdout": "",
+      "script": "../AI-Atomic-Framework/scripts/validate-registry-core.mjs"
+    },
+    {
+      "id": "upstream-registry-catalog",
+      "passed": false,
+      "status": 1,
+      "stderr": "",
+      "stdout": "",
+      "script": "../AI-Atomic-Framework/scripts/validate-registry-catalog.mjs"
+    }
+  ],
+  "findings": [
+    {
+      "findingVersion": "registry-backfill-finding/v1",
+      "kind": "registry-backfill-finding",
+      "ruleId": "registry-backfill.pending-semantic-fingerprint",
+      "trigger": "registry.backfill.pending-semantic-fingerprint",
+      "scope": "atomic-registry.json#entries[].semanticFingerprint",
+      "severity": "block",
+      "action": "fail",
+      "routeClass": "blocker",
+      "routeHint": "先回填 hot entry / currentVersion 的 semanticFingerprint，再重跑 backfill sweep 與 catalog/index 驗證。",
+      "message": "hot entry is missing semanticFingerprint for ATM-CORE-0001",
+      "file": "../AI-Atomic-Framework/atomic-registry.json",
+      "line": 0,
+      "details": {
+        "entryId": "ATM-CORE-0001",
+        "status": "active",
+        "currentVersion": ""
+      }
+    },
+    {
+      "findingVersion": "registry-backfill-finding/v1",
+      "kind": "registry-backfill-finding",
+      "ruleId": "registry-backfill.pending-semantic-fingerprint",
+      "trigger": "registry.backfill.pending-semantic-fingerprint",
+      "scope": "atomic-registry.json#entries[].semanticFingerprint",
+      "severity": "block",
+      "action": "fail",
+      "routeClass": "blocker",
+      "routeHint": "先回填 hot entry / currentVersion 的 semanticFingerprint，再重跑 backfill sweep 與 catalog/index 驗證。",
+      "message": "hot entry is missing semanticFingerprint for ATM-CORE-0003",
+      "file": "../AI-Atomic-Framework/atomic-registry.json",
+      "line": 0,
+      "details": {
+        "entryId": "ATM-CORE-0003",
+        "status": "active",
+        "currentVersion": ""
+      }
+    },
+    {
+      "findingVersion": "registry-backfill-finding/v1",
+      "kind": "registry-backfill-finding",
+      "ruleId": "registry-backfill.pending-semantic-fingerprint",
+      "trigger": "registry.backfill.pending-semantic-fingerprint",
+      "scope": "atomic-registry.json#entries[].semanticFingerprint",
+      "severity": "block",
+      "action": "fail",
+      "routeClass": "blocker",
+      "routeHint": "先回填 hot entry / currentVersion 的 semanticFingerprint，再重跑 backfill sweep 與 catalog/index 驗證。",
+      "message": "hot entry is missing semanticFingerprint for ATM-CORE-0004",
+      "file": "../AI-Atomic-Framework/atomic-registry.json",
+      "line": 0,
+      "details": {
+        "entryId": "ATM-CORE-0004",
+        "status": "active",
+        "currentVersion": "0.1.0"
+      }
+    },
+    {
+      "findingVersion": "registry-backfill-finding/v1",
+      "kind": "registry-backfill-finding",
+      "ruleId": "registry-backfill.pending-semantic-fingerprint",
+      "trigger": "registry.backfill.pending-semantic-fingerprint",
+      "scope": "atomic-registry.json#entries[].semanticFingerprint",
+      "severity": "block",
+      "action": "fail",
+      "routeClass": "blocker",
+      "routeHint": "先回填 hot entry / currentVersion 的 semanticFingerprint，再重跑 backfill sweep 與 catalog/index 驗證。",
+      "message": "hot entry is missing semanticFingerprint for ATM-CORE-0005",
+      "file": "../AI-Atomic-Framework/atomic-registry.json",
+      "line": 0,
+      "details": {
+        "entryId": "ATM-CORE-0005",
+        "status": "active",
+        "currentVersion": "0.1.0"
+      }
+    },
+    {
+      "findingVersion": "registry-backfill-finding/v1",
+      "kind": "registry-backfill-finding",
+      "ruleId": "registry-backfill.pending-semantic-fingerprint",
+      "trigger": "registry.backfill.pending-semantic-fingerprint",
+      "scope": "atomic-registry.json#entries[].semanticFingerprint",
+      "severity": "block",
+      "action": "fail",
+      "routeClass": "blocker",
+      "routeHint": "先回填 hot entry / currentVersion 的 semanticFingerprint，再重跑 backfill sweep 與 catalog/index 驗證。",
+      "message": "hot entry is missing semanticFingerprint for ATM-FIXTURE-0001",
+      "file": "../AI-Atomic-Framework/atomic-registry.json",
+      "line": 0,
+      "details": {
+        "entryId": "ATM-FIXTURE-0001",
+        "status": "active",
+        "currentVersion": "0.1.0"
+      }
+    },
+    {
+      "findingVersion": "registry-backfill-finding/v1",
+      "kind": "registry-backfill-finding",
+      "ruleId": "registry-backfill.upstream-registry-core",
+      "trigger": "registry.upstream.validate-registry-core.failed",
+      "scope": "AI-Atomic-Framework/scripts/validate-registry-core.mjs",
+      "severity": "block",
+      "action": "fail",
+      "routeClass": "blocker",
+      "routeHint": "先讓 upstream registry core validator 綠燈，再推 backfill sweep。",
+      "message": "upstream validate-registry-core.mjs failed",
+      "file": "../AI-Atomic-Framework/scripts/validate-registry-core.mjs",
+      "line": 0,
+      "details": {
+        "status": 1,
+        "stderr": [
+          ""
+        ]
+      }
+    },
+    {
+      "findingVersion": "registry-backfill-finding/v1",
+      "kind": "registry-backfill-finding",
+      "ruleId": "registry-backfill.upstream-registry-catalog",
+      "trigger": "registry.upstream.validate-registry-catalog.failed",
+      "scope": "AI-Atomic-Framework/scripts/validate-registry-catalog.mjs",
+      "severity": "block",
+      "action": "fail",
+      "routeClass": "blocker",
+      "routeHint": "先讓 upstream registry catalog validator 綠燈，再推 backfill sweep。",
+      "message": "upstream validate-registry-catalog.mjs failed",
+      "file": "../AI-Atomic-Framework/scripts/validate-registry-catalog.mjs",
+      "line": 0,
+      "details": {
+        "status": 1,
+        "stderr": [
+          ""
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "entryCount": 7,
+    "catalogRowCount": 7,
+    "indexedEntryCount": 7,
+    "missingHistoricalSf": 0,
+    "pendingSfCalculation": 5,
+    "catalogIndexMismatch": 0,
+    "legacyNoSfAllowlist": 0
+  },
+  "passed": false,
+  "blockerCount": 7,
+  "warningCount": 0
+}

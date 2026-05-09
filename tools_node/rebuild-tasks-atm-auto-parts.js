@@ -16,10 +16,13 @@ function main() {
   const result = writeTasksAtmStore(projectRoot, state.tasks, {
     maxPartBytes: DEFAULT_MAX_PART_BYTES,
     maxPartLines: DEFAULT_MAX_PART_LINES,
+    syncMilestone: true,
   });
 
   console.log(JSON.stringify({
     source: result.paths.indexPath,
+    milestone: result.paths.milestonePath,
+    milestoneChanged: result.milestoneChanged,
     outputDir: result.paths.partsDir,
     itemCount: state.tasks.length,
     partsNeeded: result.parts.length,

@@ -17,6 +17,9 @@ const {
   isTasksAtmIndexPath,
   upsertTaskInTasksAtmStore,
 } = require('./lib/tasks-atm-shard-store');
+const {
+  MILESTONE_PATH_REL,
+} = require('./lib/atm-stabilization-milestone');
 const { createTaskAdapter } = require('./adapters/atm-3klife/task-adapter');
 
 const taskAdapter = createTaskAdapter({
@@ -798,7 +801,10 @@ function main() {
     let outputJson;
 
     if (jsonKind === 'task-aggregate' && isTasksAtmIndexPath(PROJECT_ROOT, jsonPath)) {
-      const result = upsertTaskInTasksAtmStore(PROJECT_ROOT, task, { dryRun });
+      const result = upsertTaskInTasksAtmStore(PROJECT_ROOT, task, {
+        dryRun,
+        syncMilestone: !dryRun,
+      });
       outputJson = result.indexStub;
       lockFilesOverride = [
         relativeOutputFile(mdOutArg),
@@ -807,6 +813,7 @@ function main() {
           ? result.changedFiles.filter((filePath) => (
             /^docs\/tasks\/tasks-atm\/tasks-atm-part-\d+\.json$/.test(filePath)
             || filePath === 'docs/tasks/tasks-atm/.shardrc.json'
+            || filePath === MILESTONE_PATH_REL
           ))
           : []),
       ].filter(Boolean);

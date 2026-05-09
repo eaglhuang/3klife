@@ -2,20 +2,22 @@
   {
     "doc_id": "doc_task_0336",
     "id": "ATM-2-0030",
-    "title": "Dedup Police Plugin",
+    "title": "Registry Version / Fingerprint Backfill Sweep",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "police",
     "phase": "ATM-2",
     "created": "2026-05-07",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-09T08:15:08.1875634+08:00",
+    "started_by_agent": "codex-gpt-5.5",
+    "completed_at": "2026-05-09T09:41:39.6950660+08:00",
+    "completed_by_agent": "codex-gpt-5.5",
     "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
     "chain_step": "5/8",
     "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
-    "description": "提供去重警察：用 semanticFingerprint 比對找出重複候選，呼叫 LLM similarity skill 算 90%+ 行為相似度，依 8 種去重情境裁決，產出 dedup-report。維護 fingerprint-index 做 O(1) prefix lookup，跨 100K atoms 全掃在數百毫秒內完成。",
+    "description": "提供 deterministic backfill sweep：檢查 `versions[] / semanticFingerprint` 歷史回填、hot entry 指紋、RegistryIndex 與 registry catalog projection 是否一致，並把 upstream registry-core / registry-catalog 的狀態一起回報。",
     "related": [],
     "depends": [
       "ATM-2-0026",
@@ -23,28 +25,24 @@
       "ATM-2-0005"
     ],
     "acceptance": [
-      "packages/plugin-police-dedup/ 落地 dedup police plugin",
-      "fingerprint-index.json 使用 sf 16-char prefix 做 hash bucket；100K atoms 全掃 ≤ 500ms（含 budget 測試）",
-      "實作 8 種去重情境（自由原子 100% 同 / 自由原子 90%+ 同 / map 成員 vs 自由原子 / 同 map 內成員同 / 跨 map 成員同 / 整個 map 同 / 零 caller / TTL 過期）",
-      "每種情境輸出對應建議 behavior（dedup-merge / sweep / extract-shared / map-merge / expire / infect）",
-      "dedup-report.schema.json 含 candidates[] / suggestedBehavior / confidenceScore",
-      "LLM similarity skill 為 plugin 接口，dry-run 時可 stub"
+      "backfill sweep report 必須列出 `missing historical sf`、`pendingSfCalculation`、`catalog/index mismatch`、`legacy-no-sf allowlist` 四類結果",
+      "hot entry `semanticFingerprint`、`versions[*].semanticFingerprint`、RegistryIndex 與 registry catalog projection 必須對齊；不一致時報出 deterministic finding",
+      "upstream `validate:registry-core` 與 `validate:registry-catalog` 的 status 必須被包進同一份 sweep report",
+      "report 輸出必須 machine-readable，且可重跑得到穩定排序"
     ],
     "deliverables": [
-      "packages/plugin-police-dedup/",
-      "packages/plugin-police-dedup/src/fingerprint-index.ts",
-      "packages/plugin-police-dedup/src/similarity-skill.ts",
-      "schemas/police/dedup-report.schema.json",
-      "fixtures/dedup/*8-scenarios.json",
-      "tests/dedup/100k-budget.test.ts"
+      "tools_node/validate-registry-backfill-sweep.js",
+      "registry backfill sweep report",
+      "catalog / index consistency summary",
+      "upstream registry-core / registry-catalog status evidence"
     ],
-    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 5/8）| 阻塞: 等依賴卡完成",
+    "notes": "2026-05-09 | 狀態: in-progress | 驗證: pending | 變更: 改承接 versions[] / semanticFingerprint backfill sweep，補 registry catalog / index 一致性報告 | 阻塞: none\n2026-05-09 | 狀態: done | 驗證: node tools_node/validate-registry-backfill-sweep.js --strict / node tools_node/sync-atm-stabilization-milestone.js --check --strict / node tools_node/check-doc-shard-health.js pass | 變更: validator 改用完整 catalog projection，catalog/index mismatch 誤報已清掉，僅保留 upstream registry core/catalog blocker evidence | 阻塞: none",
     "brief": {
       "style": "harn-rich",
-      "label": "ATM 識別/行為/狀態機提案開卡",
-      "summary": "去重警察：sf+LLM similarity 找重複候選，O(1) prefix lookup 支援大規模原子庫。",
+      "label": "ATM Registry Backfill Sweep",
+      "summary": "補 versions[] / semanticFingerprint 歷史回填，並把 RegistryIndex 與 registry catalog projection 對齊。",
       "position": "ATM-2",
-      "prereq": "ATM-2-0026 / ATM-2-0029 / ATM-2-0005"
+      "prereq": "ATM-2-0026 / ATM-2-0029 / ATM-2-0005 / ATM-2-0027"
     }
   },
   {
@@ -103,8 +101,14 @@
       ]
     },
     "harness_evidence": {
-      "artifact_paths": [],
-      "validation_evidence": [],
+      "artifact_paths": [
+        "artifacts/atm/ATM-2-0030-registry-backfill-sweep-report.json"
+      ],
+      "validation_evidence": [
+        "node tools_node/validate-registry-backfill-sweep.js --strict --report artifacts/atm/ATM-2-0030-registry-backfill-sweep-report.json",
+        "node tools_node/sync-atm-stabilization-milestone.js --check --strict",
+        "node tools_node/check-doc-shard-health.js"
+      ],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []

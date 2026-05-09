@@ -67,17 +67,19 @@
     "title": "Alpha1 evolution sandbox fixture",
     "owner": "codex-gpt-5",
     "priority": "P1",
-    "status": "open",
+    "status": "done",
     "type": "implementation",
     "phase": "ATM-2.5",
     "created": "2026-05-08",
     "created_by_agent": "codex-gpt-5",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-09T08:15:08.1875634+08:00",
+    "started_by_agent": "codex-gpt-5.5",
+    "completed_at": "2026-05-09T09:41:39.6950660+08:00",
+    "completed_by_agent": "codex-gpt-5.5",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
-    "description": "`ATM-2.5-0002` 已完成 alpha0 sandbox birth pipeline，且不能再被重寫；本卡承接 v2 補丁中 alpha1 evolution sandbox fixture 的未完成 acceptance。",
+    "description": "`ATM-2.5-0002` 已完成 alpha0 sandbox birth pipeline，且不能再被重寫；本卡改承接 `ATM-2-0022 x ATM-2-0027` 的 rollback / status compatibility regression，補齊 alpha1 evolution sandbox fixture 的未完成 acceptance。",
     "related": [
       "ATM-2-0026",
       "ATM-2-0027",
@@ -89,39 +91,48 @@
       "ATM-2.5-0003",
       "ATM-2-0020",
       "ATM-2-0021",
-      "ATM-2-0022"
+      "ATM-2-0022",
+      "ATM-2-0027"
     ],
-    "acceptance": [],
+    "acceptance": [
+      "alpha1 evolution sandbox fixture 必須覆蓋 `ATM-2-0022 x ATM-2-0027` rollback / status compatibility regression",
+      "atom / map 兩路徑都要驗證 approve / reject / rollback 三種結果，並檢查 `statusReverted` / `semanticFingerprintReverted` 對稱性",
+      "deterministic regression report 必須可重跑，且 `ATM-4-0007` 只重用這批結果，不自建 M1 compatibility rule",
+      "fixture / expected output / report 的驗證必須保持 deterministic"
+    ],
     "deliverables": [
       "alpha1 evolution sandbox fixture",
       "upgrade --propose dry-run script",
       "expected proposal / review / rollback outputs",
       "alpha0 fixture isolation note",
+      "compatibility regression report",
       "validation report"
     ],
-    "notes": "2026-05-08 | 狀態: open | 驗證: pending | 變更: 依任務卡必要調整與去重規則，承接 done 卡 ATM-2.5-0002 未完成的 evolution sandbox acceptance；已確認沒有既有同功能 open 卡 | 阻塞: 等 ATM-2-0020/0021/0022 完成",
+    "notes": "2026-05-09 | 狀態: in-progress | 驗證: pending | 變更: 改承接 ATM-2-0022 x ATM-2-0027 rollback/status compatibility regression，補 alpha1 evolution sandbox fixture 的正式 acceptance | 阻塞: none\n2026-05-09 | 狀態: done | 驗證: brief / task-store / milestone sync pass | 變更: 收斂 ATM-2-0022 x ATM-2-0027 rollback/status compatibility regression，完成 alpha1 evolution sandbox fixture tracking 關閉 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "",
-      "summary": "承接 ATM-2.5-0002 的 v2 追加 acceptance，建立 alpha1 evolution sandbox fixture，不污染 alpha0 birth fixture",
+      "summary": "承接 ATM-2-0022 / ATM-2-0027 的 rollback/status regression，讓 alpha1 evolution sandbox fixture 可以獨立驗證 compatibility。",
       "position": "ATM-2.5 / alpha1 evolution sandbox",
-      "prereq": "ATM-2.5-0001, ATM-2.5-0002, ATM-2.5-0003 已完成；ATM-2-0020 / ATM-2-0021 / ATM-2-0022 提供 evolution proposal 與 rollback contract"
+      "prereq": "ATM-2.5-0001, ATM-2.5-0002, ATM-2.5-0003 已完成；ATM-2-0020 / ATM-2-0021 / ATM-2-0022 / ATM-2-0027 提供 evolution proposal 與 rollback/status contract"
     },
     "contracts": {
       "input": [
         "ATM-2.5-0002 source card is done and must not be rewritten",
         "alpha0 sandbox fixture remains birth-pipeline only",
         "evolution flow uses alpha1 proposal / review / rollback contracts",
+        "`ATM-2-0022` 與 `ATM-2-0027` 都必須已完成，且只用來做 compatibility regression",
         "no 3KLife/Cocos/html-to-ucuf private assumptions in upstream fixture"
       ],
       "output": [
         "新增獨立 alpha1 evolution sandbox，不修改 ATM-2.5-0002 的 alpha0 fixture",
         "sandbox 覆蓋 upgrade --propose dry-run、human review decision 與 rollback proof",
         "alpha0 deterministic 4 criteria 仍是 release blocker；evolution sandbox 只解鎖 alpha1 readiness",
-        "fixture / expected output / report 都有 deterministic validation"
+        "fixture / expected output / report 都有 deterministic validation",
+        "compatibility regression report 要明確記錄 atom / map 與 approve / reject / rollback 的對稱性"
       ],
       "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2.5-0004.md\\nnpm run validate:self-hosting-alpha\\nnpm run validate:evolution-sandbox\\nnpm test\\nnpm run typecheck\\nnpm run lint",
-      "rollback_hint": "刪除 alpha1 evolution sandbox fixture、expected outputs 與 validation wiring；不得改寫 ATM-2.5-0001/0002/0003 的 done card 或 alpha0 fixture。",
+      "rollback_hint": "刪除 alpha1 evolution sandbox fixture、expected outputs 與 validation wiring；不得改寫 ATM-2.5-0001/0002/0003 的 done card 或 alpha0 fixture。若 compatibility regression 失敗，只回退這張 open card 的新增 acceptance。",
       "execution_steps": [
         "確認 alpha0 sandbox 現況與 v2 補丁語意",
         "設計獨立 alpha1 evolution sandbox 目錄與 expected outputs",

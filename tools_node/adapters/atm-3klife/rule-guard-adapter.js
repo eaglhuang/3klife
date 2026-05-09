@@ -165,6 +165,109 @@ function collectImportBoundaryFindings(ruleMap) {
   return { findings, checks };
 }
 
+function normalizeScannerLine(lineText) {
+  return String(lineText || '')
+    .replace(/\/\/.*$/, '')
+    .replace(/\/\*.*?\*\//g, '')
+    .trim();
+}
+
+function collectRuleGuardReadOnlyFindings(ruleMap) {
+  const rule = ruleMap.get('rule-guard-read-only');
+  const findings = [];
+  const checks = [];
+  if (!rule) {
+    return { findings, checks };
+  }
+
+  const targetFiles = [
+    path.join(PROJECT_ROOT, 'tools_node', 'run-rule-guard.js'),
+    path.join(PROJECT_ROOT, 'tools_node', 'adapters', 'atm-3klife', 'rule-guard-adapter.js'),
+  ];
+
+  const forbiddenPatterns = [
+    {
+      id: 'filesystem-write-api',
+      message: 'rule guard source must stay read-only; filesystem write API detected',
+      regex: /\b(?:writeFileSync|writeFile|appendFileSync|appendFile|createWriteStream|mkdirSync|unlinkSync|rmSync|rmdirSync|renameSync|copyFileSync|writeSync)\b/,
+    },
+    {
+      id: 'mutating-task-path',
+      message: 'rule guard source must not call task card / lock mutation entrypoints',
+      regex: /\b(?:task-lock\.js\s+(?:lock|unlock)|lockTask|unlockTask|createTask|updateTask|patchTask|writeTask|deleteTask|setTaskStatus|updateStatus|writeStatus)\b/i,
+    },
+    {
+      id: 'mutating-write-flag',
+      message: 'rule guard source must not opt into writer flags',
+      regex: /['"]--(?:write|fix|apply|update|delete|create|remove|rename|move|commit|push)['"]/i,
+    },
+  ];
+
+  let violationCount = 0;
+  for (const file of targetFiles) {
+    if (!fs.existsSync(file)) {
+      violationCount += 1;
+      findings.push(toFinding(rule, {
+        message: 'required rule-guard source file is missing',
+        file: path.relative(PROJECT_ROOT, file).replace(/\\/g, '/'),
+        line: 0,
+        details: { file: path.relative(PROJECT_ROOT, file).replace(/\\/g, '/') },
+      }));
+      continue;
+    }
+
+    const content = fs.readFileSync(file, 'utf8');
+    const lines = content.split(/\r?\n/);
+    let inForbiddenPatternBlock = false;
+    lines.forEach((lineText, index) => {
+      const cleaned = normalizeScannerLine(lineText);
+      if (!cleaned) {
+        return;
+      }
+
+      if (file.endsWith('rule-guard-adapter.js')) {
+        if (cleaned.includes('const forbiddenPatterns = [')) {
+          inForbiddenPatternBlock = true;
+          return;
+        }
+        if (inForbiddenPatternBlock) {
+          if (cleaned === '];') {
+            inForbiddenPatternBlock = false;
+          }
+          return;
+        }
+      }
+
+      for (const pattern of forbiddenPatterns) {
+        if (!pattern.regex.test(cleaned)) {
+          continue;
+        }
+        violationCount += 1;
+        findings.push(toFinding(rule, {
+          message: pattern.message,
+          file: path.relative(PROJECT_ROOT, file).replace(/\\/g, '/'),
+          line: index + 1,
+          details: {
+            file: path.relative(PROJECT_ROOT, file).replace(/\\/g, '/'),
+            patternId: pattern.id,
+            lineText: cleaned,
+          },
+        }));
+        break;
+      }
+    });
+  }
+
+  checks.push({
+    id: 'rule-guard-read-only-scan',
+    passed: violationCount === 0,
+    status: violationCount === 0 ? 0 : 1,
+    stderr: violationCount === 0 ? '' : `violations=${violationCount}`,
+  });
+
+  return { findings, checks };
+}
+
 function walkFiles(root, extensions) {
   const files = [];
   const stack = [root];
@@ -290,6 +393,10 @@ function evaluateRulePack(options = {}) {
   const boundaryResult = collectImportBoundaryFindings(ruleMap);
   findingBuckets.push(...boundaryResult.findings.filter((item) => allowedRuleIds.has(item.ruleId)));
   checkBuckets.push(...boundaryResult.checks);
+
+  const readOnlyResult = collectRuleGuardReadOnlyFindings(ruleMap);
+  findingBuckets.push(...readOnlyResult.findings.filter((item) => allowedRuleIds.has(item.ruleId)));
+  checkBuckets.push(...readOnlyResult.checks);
 
   const h2uResult = collectH2USkillOnlyFindings(ruleMap);
   findingBuckets.push(...h2uResult.findings.filter((item) => allowedRuleIds.has(item.ruleId)));

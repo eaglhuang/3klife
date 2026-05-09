@@ -6,7 +6,8 @@
       "task-scope-fingerprint",
       "import-boundary-assets-scripts",
       "h2u-skill-only",
-      "cocos-no-fs"
+      "cocos-no-fs",
+      "rule-guard-read-only"
     ]
   },
   "rules": [
@@ -54,6 +55,15 @@
       "action": "fail",
       "routeClass": "blocker",
       "routeHint": "Cocos runtime 腳本禁止 node fs/path/child_process；改走 adapter 或資料注入。"
+    },
+    {
+      "id": "rule-guard-read-only",
+      "trigger": "rule-guard.read-only-mutation-path",
+      "scope": "tools_node/{run-rule-guard.js,adapters/atm-3klife/rule-guard-adapter.js,adapters/atm-3klife/rule-pack.json}",
+      "severity": "block",
+      "action": "fail",
+      "routeClass": "blocker",
+      "routeHint": "只保留 read-only child process 與讀檔檢查；若需要 task card、lock、shard、doc registry 或 lifecycle status mutation，請拆成另一條 writer path。"
     }
   ]
 }
