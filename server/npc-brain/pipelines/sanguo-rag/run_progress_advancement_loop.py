@@ -152,7 +152,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--step-timeout-seconds", type=int, default=30, help="Step timeout passed to repair campaign.")
     parser.add_argument("--no-improvement-threshold", type=float, default=0.05, help="Delta overall below this is weak improvement.")
     parser.add_argument("--no-improvement-patience", type=int, default=2, help="Stop after this many weak-improvement rounds.")
-    parser.add_argument("--pending-review-limit", type=int, default=15, help="Route to B when event-review pending count exceeds this.")
+    parser.add_argument(
+        "--pending-review-limit",
+        type=int,
+        default=20,
+        help="Route to B only when event-review pending count reaches this threshold after preview.",
+    )
     parser.add_argument("--same-residual-repeat-limit", type=int, default=2, help="Route to C when the same residual repeats this many A rounds.")
     parser.add_argument("--review-batch-size", type=int, default=10, help="Maximum event-review items to emit into one B review batch artifact.")
     parser.add_argument("--review-decisions", default=None, help="Optional JSON file with B review decisions to apply to the latest batch.")
@@ -367,6 +372,8 @@ def build_campaign_command(
         args.reviewer_preset,
         "--reviewer-provider",
         args.reviewer_provider,
+        "--human-question-threshold",
+        str(max(args.pending_review_limit, 1)),
         "--step-timeout-seconds",
         str(max(args.step_timeout_seconds, 1)),
     ]
@@ -1083,7 +1090,7 @@ def classify_stop_reason(
         return "failure-rate-limit"
     if same_residual_repeat_count >= same_residual_repeat_limit:
         return "same-residual-repeat-limit"
-    if pending_count > pending_limit:
+    if pending_count >= pending_limit:
         return "pending-review-limit"
     if weak_improvement_count >= no_improvement_patience:
         return "no-improvement-patience"
@@ -1112,6 +1119,8 @@ def render_summary_markdown(summary: dict[str, Any]) -> str:
         f"- B Reviews Applied: `{summary['bReviewCount']}`",
         f"- Event Review Pending Count: `{summary['pendingReviewCount']}`",
         f"- Pilot Pending Review Count: `{summary['pilotPendingReviewCount']}`",
+        f"- Human Question Threshold: `{summary['policy'].get('pendingReviewLimit')}`",
+        "- Preview Policy: `deterministic -> agent -> human`",
         f"- Total Delta Overall: `{summary.get('totalDeltaOverallPercent')}`",
         f"- Baseline Manifest: `{summary.get('baselineManifestOutputPath') or '-'}`",
         "",
@@ -1402,16 +1411,7 @@ def main() -> None:
         }
 
         if round_pending_items:
-            batch_info = write_review_batch(
-                run_root=run_root,
-                run_id=args.run_id,
-                source_round_id=round_id,
-                items=round_pending_items,
-                pilot_pending_count=last_pilot_pending_count,
-                batch_size=max(args.review_batch_size, 1),
-            )
-            review_batches.append(batch_info)
-            round_record["reviewBatch"] = batch_info
+            round_record["previewOnlyPendingCount"] = len(round_pending_items)
 
         rounds.append(round_record)
 
@@ -1462,7 +1462,21 @@ def main() -> None:
                 if round_index < max(args.max_rounds, 1) and b_review_count < max(args.max_ab_cycles, 1):
                     continue
 
-        if round_pending_items and not review_decisions_consumed:
+        pending_threshold = max(args.pending_review_limit, 1)
+        should_surface_human_mcq = len(round_pending_items) >= pending_threshold
+        round_record["surfaceHumanMcq"] = should_surface_human_mcq
+        round_record["pendingReviewThreshold"] = pending_threshold
+        if should_surface_human_mcq and not review_decisions_consumed:
+            batch_info = write_review_batch(
+                run_root=run_root,
+                run_id=args.run_id,
+                source_round_id=round_id,
+                items=round_pending_items,
+                pilot_pending_count=last_pilot_pending_count,
+                batch_size=max(args.review_batch_size, 1),
+            )
+            review_batches.append(batch_info)
+            round_record["reviewBatch"] = batch_info
             round_record["failureRate"] = round(failure_rate, 4)
             stop_reason = "review-batch-ready"
             break
@@ -1569,12 +1583,14 @@ def main() -> None:
             "noImprovementThreshold": args.no_improvement_threshold,
             "noImprovementPatience": args.no_improvement_patience,
             "pendingReviewLimit": args.pending_review_limit,
+            "humanQuestionThreshold": args.pending_review_limit,
             "sameResidualRepeatLimit": args.same_residual_repeat_limit,
             "reviewBatchSize": args.review_batch_size,
             "failureRateLimit": args.failure_rate_limit,
             "reviewerPreset": args.reviewer_preset,
             "reviewerProvider": args.reviewer_provider,
             "stepTimeoutSeconds": args.step_timeout_seconds,
+            "previewPolicy": "deterministic -> agent -> human",
             "emitReadyEval": args.emit_ready_eval,
             "runtimeReadiness": args.runtime_readiness,
             "maxWallTimeMinutes": args.max_wall_time_minutes,

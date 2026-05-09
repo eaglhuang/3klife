@@ -39,6 +39,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--window-after", type=int, default=2, help="Paragraph context after source ref")
     parser.add_argument("--timeout-ms", type=int, default=None, help="Override reviewer preset timeout in milliseconds")
     parser.add_argument("--num-predict", type=int, default=None, help="Override reviewer preset generated token limit")
+    parser.add_argument("--human-question-threshold", type=int, default=20, help="Surface human MCQ only when manual review count reaches this threshold")
     parser.add_argument("--step-timeout-seconds", type=int, default=30, help="Timeout for each generate/enrich subprocess step")
     parser.add_argument("--prompt-only", action="store_true", help="Only generate expanded context bundles")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting outputs")
@@ -157,6 +158,83 @@ def report_counts(path: Path) -> dict[str, int]:
         value = str(answer.get("recommendedAnswer") or "unanswered").strip().upper()
         counter[value if value else "unanswered"] += 1
     return dict(sorted(counter.items()))
+
+
+def manual_review_count(counts: dict[str, int]) -> int:
+    return sum(int(value or 0) for key, value in counts.items() if str(key).strip().upper() != "A")
+
+
+def compact_answer_counts(counts: dict[str, int]) -> str:
+    ordered_keys = ("A", "B", "C", "D", "UNANSWERED", "ERROR")
+    parts: list[str] = []
+    for key in ordered_keys:
+        value = int(counts.get(key) or 0)
+        if value:
+            parts.append(f"{key}:{value}")
+    for key in sorted(counts):
+        normalized = str(key).strip().upper()
+        if normalized in ordered_keys:
+            continue
+        value = int(counts.get(key) or 0)
+        if value:
+            parts.append(f"{normalized}:{value}")
+    return " ".join(parts) or "-"
+
+
+def normalize_preview_text(value: Any, limit: int) -> str:
+    text = " ".join(str(value or "").split())
+    if len(text) <= limit:
+        return text
+    return text[: max(limit - 3, 0)].rstrip() + "..."
+
+
+def build_review_clues(enriched_answers_path: Path, limit: int = 3) -> list[dict[str, Any]]:
+    if not enriched_answers_path.exists():
+        return []
+    payload = read_json(enriched_answers_path)
+    questions = list((payload or {}).get("questions") or [])
+    clues: list[dict[str, Any]] = []
+    for question in questions:
+        answer = str(question.get("answer") or question.get("suggestedAnswer") or "").strip().upper()
+        if answer == "A":
+            continue
+        proposal = question.get("deepseekContextProposal") or {}
+        edits = proposal.get("edits") or question.get("edits") or {}
+        context_preview = []
+        for item in (question.get("expandedContext") or [])[:2]:
+            source_ref = str(item.get("sourceRef") or "").strip()
+            snippet = normalize_preview_text(item.get("text"), 120)
+            if source_ref or snippet:
+                context_preview.append(
+                    {
+                        "sourceRef": source_ref or "-",
+                        "text": snippet or "-",
+                    }
+                )
+        clues.append(
+            {
+                "candidateId": question.get("candidateId"),
+                "eventKey": question.get("eventKey"),
+                "chapterNo": question.get("chapterNo"),
+                "sourceRefs": list(question.get("sourceRefs") or []),
+                "generalIds": list(question.get("generalIds") or []),
+                "answer": answer or "UNANSWERED",
+                "suggestedAnswer": str(question.get("suggestedAnswer") or proposal.get("recommendedAnswer") or "").strip().upper() or "-",
+                "sourceQuote": normalize_preview_text(question.get("sourceQuote"), 220) or "-",
+                "summary": normalize_preview_text(question.get("summary"), 180) or "-",
+                "missingFields": list(question.get("missingFields") or []),
+                "recommendedAnswer": str(proposal.get("recommendedAnswer") or "").strip().upper() or "-",
+                "confidence": proposal.get("confidence") or question.get("confidence"),
+                "location": normalize_preview_text(edits.get("location"), 80) or "-",
+                "relationshipEdgeCount": len(edits.get("relationshipEdges") or []),
+                "reasons": [normalize_preview_text(reason, 100) for reason in (proposal.get("reasons") or question.get("deepseekHint", {}).get("reasons") or [])][:3],
+                "risks": [normalize_preview_text(risk, 100) for risk in (proposal.get("risks") or question.get("deepseekHint", {}).get("risks") or [])][:3],
+                "contextPreview": context_preview,
+            }
+        )
+        if len(clues) >= max(limit, 0):
+            break
+    return clues
 
 
 def raw_error_count(path: Path) -> int:
@@ -290,6 +368,7 @@ def run_for_general(args: argparse.Namespace, row: dict) -> dict:
         "reportAnswerCounts": report_counts(report_path),
         "rawErrorCount": raw_error_count(raw_path),
         "rawParsedCount": raw_parsed_count(raw_path),
+        "reviewClues": build_review_clues(enriched_path, limit=3),
         "generate": generate_result,
         "enrich": enrich_result,
     }
@@ -313,6 +392,91 @@ def build_optimization_notes(results: list[dict]) -> list[str]:
     return notes
 
 
+def preview_gate_summary(results: list[dict], human_question_threshold: int) -> dict[str, Any]:
+    deterministic_manual_review_count = sum(manual_review_count(result.get("originalAnswerCounts") or {}) for result in results)
+    agent_manual_review_count = sum(manual_review_count(result.get("enrichedAnswerCounts") or {}) for result in results)
+    return {
+        "humanQuestionThreshold": human_question_threshold,
+        "deterministicPreviewManualReviewCount": deterministic_manual_review_count,
+        "agentPreviewManualReviewCount": agent_manual_review_count,
+        "surfaceHumanMcq": agent_manual_review_count >= max(human_question_threshold, 1),
+    }
+
+
+def render_preview_gate_markdown(report: dict) -> str:
+    gate = report.get("previewGate") or {}
+    threshold = int(gate.get("humanQuestionThreshold") or 0)
+    agent_preview_enabled = "on" if str(report.get("reviewerProvider") or "").strip().lower() == "agent-reviewer" else "off"
+    lines = [
+        "## Preview Gate",
+        "",
+        "- Deterministic Preview: `on`",
+        f"- Agent Skill Preview: `{agent_preview_enabled}`",
+        f"- Human Question Threshold: `{threshold}`",
+        f"- Deterministic Manual Review Count: `{gate.get('deterministicPreviewManualReviewCount')}`",
+        f"- Agent Manual Review Count: `{gate.get('agentPreviewManualReviewCount')}`",
+        f"- Surface Human MCQ: `{gate.get('surfaceHumanMcq')}`",
+        "",
+        "## Decision Table",
+        "",
+        "| General | Deterministic Preview | Agent Preview | Manual Load | Human? |",
+        "|---|---|---|---:|---|",
+    ]
+    for result in report["results"]:
+        manual_load = manual_review_count(result.get("enrichedAnswerCounts") or {})
+        human = "yes" if manual_load >= max(threshold, 1) else "no"
+        lines.append(
+            f"| `{result['generalId']}` | `{compact_answer_counts(result.get('originalAnswerCounts') or {})}` | "
+            f"`{compact_answer_counts(result.get('enrichedAnswerCounts') or {})}` | {manual_load} | `{human}` |"
+        )
+    lines.append("")
+    return "\n".join(lines)
+
+
+def render_review_clues_markdown(report: dict) -> str:
+    lines = [
+        "## 審核線索",
+        "",
+        "這一段只列出需要你判斷的題目。先看 `原文線索` 和 `中文摘要`，再看 `缺欄位` / `建議答案`。",
+        "",
+    ]
+    any_clues = False
+    for result in report["results"]:
+        clues = list(result.get("reviewClues") or [])
+        if not clues:
+            continue
+        any_clues = True
+        lines.extend([
+            f"### `{result['generalId']}` {result.get('displayName') or ''}",
+            f"- 狀態: `{result.get('status')}`",
+            f"- 原始答案分布: `{compact_answer_counts(result.get('originalAnswerCounts') or {})}`",
+            f"- 預覽後答案分布: `{compact_answer_counts(result.get('enrichedAnswerCounts') or {})}`",
+            "",
+        ])
+        for clue in clues:
+            lines.extend([
+                f"#### `{clue.get('eventKey') or '-'}`",
+                f"- 建議答案: `{clue.get('suggestedAnswer') or '-'}`",
+                f"- 原文線索: {clue.get('sourceQuote') or '-'}",
+                f"- 中文摘要: {clue.get('summary') or '-'}",
+                f"- 來源編號: `{', '.join(clue.get('sourceRefs') or []) or '-'}`",
+                f"- 缺欄位: `{', '.join(clue.get('missingFields') or []) or '-'}`",
+                f"- 推薦判定: `{clue.get('recommendedAnswer') or '-'}`",
+                f"- Location: `{clue.get('location') or '-'}`",
+                f"- relationshipEdges: `{clue.get('relationshipEdgeCount') or 0}`",
+                f"- 理由: {'; '.join(clue.get('reasons') or []) or '-'}",
+                f"- 風險: {'; '.join(clue.get('risks') or []) or '-'}",
+            ])
+            if clue.get("contextPreview"):
+                for index, item in enumerate(clue.get("contextPreview") or [], start=1):
+                    lines.append(f"- 上下文 {index}: `{item.get('sourceRef') or '-'}` {item.get('text') or '-'}")
+            lines.append("")
+    if not any_clues:
+        lines.append("- 這輪沒有需要人工判斷的題目。")
+        lines.append("")
+    return "\n".join(lines)
+
+
 def render_markdown(report: dict) -> str:
     lines = [
         "# Knowledge Growth Round Batch Report",
@@ -323,6 +487,7 @@ def render_markdown(report: dict) -> str:
         f"- Cohort Size: `{len(report['results'])}`",
         f"- Prompt Only: `{report['promptOnly']}`",
         "",
+        render_preview_gate_markdown(report),
         "## Results",
         "",
         "| General | Status | Generic | Original ABCD | Enriched ABCD | Raw Errors |",
@@ -331,10 +496,10 @@ def render_markdown(report: dict) -> str:
     for result in report["results"]:
         lines.append(
             f"| `{result['generalId']}` {result.get('displayName') or ''} | `{result.get('status')}` | "
-            f"{result.get('genericCandidateCount') or 0} | `{result.get('originalAnswerCounts')}` | "
-            f"`{result.get('enrichedAnswerCounts')}` | {result.get('rawErrorCount') or 0} parsed={result.get('rawParsedCount') or 0} |"
+            f"{result.get('genericCandidateCount') or 0} | `{compact_answer_counts(result.get('originalAnswerCounts') or {})}` | "
+            f"`{compact_answer_counts(result.get('enrichedAnswerCounts') or {})}` | {result.get('rawErrorCount') or 0} parsed={result.get('rawParsedCount') or 0} |"
         )
-    lines.extend(["", "## Optimization Notes", ""])
+    lines.extend(["", render_review_clues_markdown(report), "## Optimization Notes", ""])
     for note in report["optimizationNotes"]:
         lines.append(f"- {note}")
     lines.append("")
@@ -369,11 +534,13 @@ def main() -> None:
         "model": args.model,
         "timeoutMs": args.timeout_ms,
         "numPredict": args.num_predict,
+        "humanQuestionThreshold": args.human_question_threshold,
         "stepTimeoutSeconds": args.step_timeout_seconds,
         "cohortOffset": args.cohort_offset,
         "generalIds": args.general_id,
         "cohort": [{"generalId": row.get("generalId"), "genericCandidateCount": row.get("genericCandidateCount")} for row in cohort],
         "results": results,
+        "previewGate": preview_gate_summary(results, args.human_question_threshold),
         "optimizationNotes": build_optimization_notes(results),
     }
     output_root = Path(args.output_root)
@@ -388,7 +555,9 @@ def main() -> None:
     print(f"[run_knowledge_growth_round] wrote {md_path}")
     print(
         f"[run_knowledge_growth_round] roundId={args.round_id} cohort={len(results)} "
-        f"canonicalWrites=false promptOnly={args.prompt_only}"
+        f"canonicalWrites=false promptOnly={args.prompt_only} "
+        f"manualReviewQuestions={report['previewGate']['agentPreviewManualReviewCount']} "
+        f"surfaceHumanMcq={report['previewGate']['surfaceHumanMcq']}"
     )
 
 

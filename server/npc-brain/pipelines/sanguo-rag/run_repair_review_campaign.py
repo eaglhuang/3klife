@@ -54,6 +54,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--top-per-general", type=int, default=5, help="Maximum questions per general")
     parser.add_argument("--reviewer-preset", default="agent", help="Reviewer preset passed to run_knowledge_growth_round.py")
     parser.add_argument("--reviewer-provider", default="agent-reviewer", help="Reviewer provider passed to run_knowledge_growth_round.py")
+    parser.add_argument(
+        "--human-question-threshold",
+        type=int,
+        default=20,
+        help="Surface human MCQ only when the manual review count reaches this threshold.",
+    )
     parser.add_argument("--step-timeout-seconds", type=int, default=30, help="Step timeout passed to run_knowledge_growth_round.py")
     parser.add_argument(
         "--emit-ready-eval",
@@ -230,6 +236,8 @@ def main() -> None:
         args.reviewer_preset,
         "--reviewer-provider",
         args.reviewer_provider,
+        "--human-question-threshold",
+        str(args.human_question_threshold),
         "--step-timeout-seconds",
         str(args.step_timeout_seconds),
     ]
