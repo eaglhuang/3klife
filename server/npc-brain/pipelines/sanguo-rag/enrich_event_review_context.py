@@ -1126,6 +1126,20 @@ def hint_summary(question: dict, location: str | None, edges: list[dict]) -> str
     return current_summary or None
 
 
+def normalized_missing_fields(question: dict) -> list[str]:
+    return sorted(
+        {
+            str(field).strip()
+            for field in (question.get("missingFields") or [])
+            if str(field).strip()
+        }
+    )
+
+
+def question_requires_b_gate(question: dict) -> bool:
+    return bool(normalized_missing_fields(question))
+
+
 def complete_answer_with_hints(answer: dict, question: dict) -> dict:
     edits = answer.get("edits") or {}
     location = edits.get("location")
@@ -1154,6 +1168,72 @@ def complete_answer_with_hints(answer: dict, question: dict) -> dict:
     if answer.get("recommendedAnswer") == "A" and summary_requires_review(summary):
         answer["recommendedAnswer"] = "B"
         answer.setdefault("risks", []).append("summary indicates truce/mediation context that requires human review")
+    return answer
+
+
+def enforce_missing_fields_policy(answer: dict, question: dict) -> dict:
+    missing_fields = normalized_missing_fields(question)
+    if not missing_fields:
+        return answer
+    if answer.get("recommendedAnswer") != "B":
+        answer["recommendedAnswer"] = "B"
+    answer.setdefault("reasons", []).append("missingFields gate applied before acceptance")
+    answer.setdefault("risks", []).append(
+        f"missing fields still flagged in question: {', '.join(missing_fields)}"
+    )
+    return answer
+
+
+def remaining_missing_fields_after_answer(question: dict, answer: dict) -> list[str]:
+    remaining: list[str] = []
+    missing_fields = normalized_missing_fields(question)
+    edits = answer.get("edits") or {}
+    focus_general_id = question.get("focusGeneralId")
+    for field in missing_fields:
+        if field == "location" and location_is_specific(edits.get("location")):
+            continue
+        if field == "relationshipEdges" and answer_has_strong_edge(answer, focus_general_id):
+            continue
+        if field == "summary" and compact_text(edits.get("summary") or "", 140):
+            continue
+        if field == "sourceRefs" and (question.get("sourceRefs") or []):
+            continue
+        if field == "generalIds" and (question.get("generalIds") or []):
+            continue
+        remaining.append(field)
+    return remaining
+
+
+def build_second_check_question(question: dict, answer: dict) -> dict:
+    second_check_question = json.loads(json.dumps(question, ensure_ascii=False))
+    second_check_question["missingFields"] = []
+    edits = answer.get("edits") or {}
+    if edits.get("summary"):
+        second_check_question["currentSummary"] = edits.get("summary")
+    second_check_question["currentEdits"] = edits
+    return second_check_question
+
+
+def build_forced_b_answer(question: dict) -> dict:
+    answer = complete_answer_with_hints(
+        {
+            "eventKey": question.get("eventKey"),
+            "recommendedAnswer": "B",
+            "confidence": 0.8,
+            "edits": {
+                "eventKey": question.get("eventKey"),
+                "summary": None,
+                "location": None,
+                "relationshipEdges": [],
+                "moodTags": ["missing-fields-gate"],
+            },
+            "reasons": [],
+            "risks": [],
+        },
+        question,
+    )
+    answer["recommendedAnswer"] = "B"
+    answer = enforce_missing_fields_policy(answer, question)
     return answer
 
 
@@ -1194,6 +1274,7 @@ def sanitize_answer(raw_answer: Any, question_index: dict[str, dict]) -> dict:
     if sanitized["recommendedAnswer"] == "A" and not answer_is_complete(sanitized, question.get("focusGeneralId")):
         sanitized["recommendedAnswer"] = "B"
         sanitized["risks"].append("required fields are still incomplete after sanitization")
+    sanitized = enforce_missing_fields_policy(sanitized, question)
     return sanitized
 
 
@@ -1323,9 +1404,10 @@ def build_agent_reviewer_answer(question: dict) -> dict:
         candidate_answer["reasons"].append("summary derived from candidate hint evidence text")
     else:
         candidate_answer["risks"].append("summary remains incomplete")
-    if answer_is_complete(candidate_answer, question.get("focusGeneralId")):
+    if answer_is_complete(candidate_answer, question.get("focusGeneralId")) and not question_requires_b_gate(question):
         candidate_answer["recommendedAnswer"] = "A"
         candidate_answer["confidence"] = 0.86
+    candidate_answer = enforce_missing_fields_policy(candidate_answer, question)
     return candidate_answer
 
 
@@ -1353,6 +1435,7 @@ def merge_enriched_answers(original: dict, prompt_bundle: dict, report: dict, fi
         question["expandedContext"] = context_by_key.get(event_key, [])
         question["deepseekContextProposal"] = proposal
         if proposal:
+            question["missingFields"] = remaining_missing_fields_after_answer(question, proposal)
             question["suggestedAnswer"] = proposal.get("recommendedAnswer") or question.get("suggestedAnswer")
             question["edits"] = proposal.get("edits") or question.get("edits")
             if fill_answers:
@@ -1399,30 +1482,75 @@ def request_reasoning(
     prompt_bundle: dict,
     args: argparse.Namespace,
 ) -> tuple[dict, list[dict]]:
+    questions = list(prompt_bundle.get("questions") or [])
+    forced_questions: list[dict] = []
+    review_questions: list[dict] = []
+    for question in questions:
+        if question_requires_b_gate(question):
+            forced_questions.append(question)
+        else:
+            review_questions.append(question)
+
+    forced_answers: list[dict] = []
+    second_check_questions: list[dict] = []
+    for question in forced_questions:
+        deterministic_b = build_forced_b_answer(question)
+        remaining_missing = remaining_missing_fields_after_answer(question, deterministic_b)
+        if remaining_missing:
+            patched_question = {**question, "missingFields": remaining_missing}
+            deterministic_b = enforce_missing_fields_policy(deterministic_b, patched_question)
+            forced_answers.append(deterministic_b)
+            continue
+        second_check_questions.append(build_second_check_question(question, deterministic_b))
+
+    forced_notes: list[str] = []
+    if forced_questions:
+        forced_notes.append(
+            f"missing-fields gate first pass: total={len(forced_questions)} unresolved={len(forced_answers)} second-check={len(second_check_questions)}"
+        )
+    if second_check_questions:
+        forced_notes.append(
+            f"same-round second check enabled for {len(second_check_questions)} question(s) after deterministic field completion"
+        )
+
+    review_bundle = {
+        **prompt_bundle,
+        "questions": review_questions + second_check_questions,
+    }
     raw_requests: list[dict] = []
-    if adapter.provider == "agent-reviewer":
-        parsed = build_agent_reviewer_parsed(prompt_bundle)
-        sanitized = sanitize_report(parsed, prompt_bundle)
+    if not review_bundle["questions"]:
         return {
             "model": adapter.model,
             "payloadSummary": adapter.describe(),
             "reasoningTracePreview": "",
-            **sanitized,
+            "answers": forced_answers,
+            "pipelineNotes": forced_notes or ["all questions gated to deterministic B by missing-fields policy"],
+        }, [{"model": adapter.model, "adapter": adapter.describe(), "skipped": "all-questions-missing-fields-gated"}]
+    if adapter.provider == "agent-reviewer":
+        parsed = build_agent_reviewer_parsed(review_bundle)
+        sanitized = sanitize_report(parsed, review_bundle)
+        return {
+            "model": adapter.model,
+            "payloadSummary": adapter.describe(),
+            "reasoningTracePreview": "",
+            "answers": forced_answers + (sanitized.get("answers") or []),
+            "pipelineNotes": forced_notes + (sanitized.get("pipelineNotes") or []),
         }, [{"model": adapter.model, "adapter": adapter.describe(), "parsedJson": parsed, "skipped": "local-agent-reviewer"}]
     if not adapter.uses_llm:
-        sanitized = sanitize_report({}, prompt_bundle)
+        sanitized = sanitize_report({}, review_bundle)
         return {
             "model": adapter.model,
             "payloadSummary": adapter.describe(),
             "reasoningTracePreview": "",
-            **sanitized,
+            "answers": forced_answers + (sanitized.get("answers") or []),
+            "pipelineNotes": forced_notes + (sanitized.get("pipelineNotes") or []),
         }, [{"model": adapter.model, "adapter": adapter.describe(), "skipped": "hints-only"}]
     if args.batch:
         result = adapter.request_json(
             system_prompt=build_system_prompt(),
-            user_payload=prompt_bundle,
+            user_payload=review_bundle,
         )
-        sanitized = apply_adapter_acceptance_policy(sanitize_report(result.parsedJson, prompt_bundle), adapter)
+        sanitized = apply_adapter_acceptance_policy(sanitize_report(result.parsedJson, review_bundle), adapter)
         raw_requests.append({
             "model": result.model,
             "adapter": adapter.describe(),
@@ -1435,15 +1563,16 @@ def request_reasoning(
             "model": result.model,
             "payloadSummary": result.payloadSummary,
             "reasoningTracePreview": result.reasoningTrace,
-            **sanitized,
+            "answers": forced_answers + (sanitized.get("answers") or []),
+            "pipelineNotes": forced_notes + (sanitized.get("pipelineNotes") or []),
         }, raw_requests
 
-    all_answers: list[dict] = []
-    notes: list[str] = []
+    all_answers: list[dict] = list(forced_answers)
+    notes: list[str] = list(forced_notes)
     last_model = adapter.model
     last_summary: dict = adapter.describe()
     traces: list[str] = []
-    for question in prompt_bundle.get("questions") or []:
+    for question in review_bundle.get("questions") or []:
         single_bundle = build_single_question_payload(question)
         try:
             result = adapter.request_json(
