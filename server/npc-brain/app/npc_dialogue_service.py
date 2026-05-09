@@ -258,17 +258,19 @@ class NpcDialogueService:
         vector_health = vector_config.as_health()
         vector_health["runtimeMode"] = "artifact-first-vector-second"
         vector_health["offlineDegradeReady"] = False
+        vector_second_plan = self.evidence_resolver.vector_second.describe()
         vector_health["vectorSecond"] = {
+            **vector_second_plan,
             "enabled": True,
             "strategies": [
                 "exact-ref-completion",
-                "local-ready-event-hash-vector",
+                "pinecone/qdrant backend query",
             ],
         }
         vector_health["notes"] = [
             "runtime profiles and ready events are the source of truth",
             "remote vector providers supplement recall only",
-            "server currently runs exact-ref completion and a local hash-vector second pass over ready events",
+            "server currently runs exact-ref completion and a Pinecone/Qdrant backend second pass over vector-ready facts",
             "sqlite_vec remains stub and is not a production offline fallback",
         ]
         sqlite_health = dict(vector_health.get("sqliteVec") or {})
