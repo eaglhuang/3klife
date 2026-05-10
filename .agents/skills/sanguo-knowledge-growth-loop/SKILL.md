@@ -33,6 +33,13 @@ Unity 對照：這不是單次資料匯入，而是一條會反覆重跑的 Asse
 10. Focus relevance ranking：`generate_event_review_choices.py --general-id` 會先排 sourceQuote 直接命中該武將正式 name/alias、且有 direct battle cue 的候選；任官、薦舉、招募、傳記段落降權。單字 alias 只能走白名單（例如 `卓/布/飛`），不可自動用姓名最後一字，避免 `除堅`、`紹問` 這類 false focus。
 11. Progress estimate every round：每輪 preview 或 extractor 調整後，先跑 `extract_relationship_evidence.py --overwrite` 重建 source-grounded relationship evidence，再跑 `build_event_question_seed_bank.py --overwrite` 壓出人物 × 題目角度 seeds，接著跑 `build_source_event_packets.py --overwrite` 聚合 sourceRef 事件包，最後跑 `estimate_knowledge_completion.py --round-id current --overwrite`。這個百分比是保守 pipeline 完成度估算，不是內容品質宣告；人物/mention foundation 不能蓋過 source-grounded event slots、relationship graph 與 taxonomy maturity。
 
+## External Source Queue Policy
+
+- 只要白話 sidecar、地方誌、百科、外部女性互動素材或網站 manifest 會被多輪重複查，就先評估 `agent-cli-factory`，把來源 intake 收斂成 repo-local CLI。
+- CLI 應只輸出 compact manifest、quote/snippet、sourceRef 線索、hash 與 quality flags；不要把整站 HTML 或全文小說塞進 repo。
+- `3kweb-check` 負責站點健康與 relevance smoke；`agent-cli-factory` 負責把高頻來源查詢做成可重跑 CLI；本 skill 只消費 compact 輸出與 review artifact。
+- 若來源授權不清楚，停在 manifest / source candidate 層，不自動抓全文。
+
 ## Progress Estimate Formula
 
 每輪完成度用固定權重重算，輸出到 `artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/`。
@@ -86,8 +93,18 @@ Relationship graph refinement：`commands` 不可長期留在 relationshipGraph�
 8. Event-location seed：大事件與地點關係先獨立成穩定索引，例如桃園結義、虎牢關、官渡、赤壁、長坂坡、取西川、夷陵、五丈原、三國歸晉。每筆要有 `chapterRange`、`locationIds`、`participantIds`、`factionIds`、`eventTags`。
 9. 白話 sidecar 不直接 canonical：繁體白話或簡體白話轉繁都只能產 `plainFactProposal` / `plainTextInterpretation`。升 A/ready 前必須回到毛本文言 sourceRef，以原文 gate 找到對應證據。
 10. 簡體來源可用 OpenCC 類工具先轉繁，但必須保留 `originalSimplifiedTextHash`、`convertedTraditionalText`、`conversionProfile` 與 `qualityFlags`。簡轉繁結果可幫助語意理解，不能取代原文證據。
-11. 8book / 無限小說來源先走 manifest，不抓全文：`artifacts/data-pipeline/sanguo-rag/extracted/plaintext-source-candidates/8book-baihua-sanguo-source-manifest.json` 只保存 catalog、chapter id range、URL pattern 與風險註記。若未取得授權或本地文本，管線只能用它做 source candidate 與交叉校驗計畫；不可把 120 回正文寫入 repo。
-12. 8book 讀取 guard：若未來建立 authorized loader，必須從 `https://www.8book.com/read/412204/?{chapterId}` 入口驗證正文 marker；不可直接信任 `sport.thepaperbooks.com` 直連，因為直連可能落到無關 SEO 頁。抓到的頁面必須檢查章題、小說正文關鍵字、下一章/章節列表 marker，並清除 `8book` 浮水印後才進 sidecar。
+11. 8book / 無限小說來源先走 manifest，不抓全文：`artifacts/data-pipeline/sanguo-rag/extracted/plaintext-source-candidates/8book-baihua-sanguo-source-manifest.json` 只保存 catalog、chapter id range、URL pattern 與風險註記。若會多輪重複維護這類來源，先用 `agent-cli-factory` 產 manifest/query CLI；若未取得授權或本地文本，管線只能用它做 source candidate 與交叉校驗計畫；不可把 120 回正文寫入 repo。
+   現成 manifest CLI：
+   ```bash
+   node tools_node/agent-clis/3klife-plaintext-source-manifest.js \
+     --preset 8book-baihua-sanguo-120 \
+     --compact
+
+   node tools_node/agent-clis/3klife-plaintext-source-manifest.js \
+     --input-file artifacts/data-pipeline/sanguo-rag/extracted/plaintext-source-candidates/8book-baihua-sanguo-source-manifest.json \
+     --json
+   ```
+12. 8book 讀取 guard：若未來建立 authorized loader，必須從 `https://www.8book.com/read/412204/?{chapterId}` 入口驗證正文 marker；不可直接信任 `sport.thepaperbooks.com` 直連，因為直連可能落到無關 SEO 頁。抓到的頁面必須檢查章題、小說正文關鍵字、下一章/章節列表 marker，並清除 `8book` 浮水印後才進 sidecar。這類 loader 也應優先走 CLI wrapper，而不是把 HTML 直接餵給 LLM。
 13. Stable bootstrap artifact：每輪文言文 enrichment 前可先跑 `build_stable_knowledge_bootstrap.py --overwrite`，產出 `artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json`。這份資料目前包含 identity seeds、basic profile seeds、ready hard relationship edges、plain relationship proposals、event-location seeds、time-scoped alias hints、review-only faction timelines、social role seeds、auto social role seeds 與 plain fact proposals。
 14. 白話推理 sidecar：`basicProfileSeeds` 必須覆蓋全人物，從 generals/manual roster/observed mentions 推出身份、出場章回、角色、能力傾向、情緒、個性、活動種子與選擇權重；`plainRelationshipProposals` 只能從結構欄位或白話欄位抓人名共現、父母/子女/配偶/君臣/仇敵等候選，標成 `plain-*-proposal-only`。兩者都是讓文言 extractor 回查更準的索引，不是 canonical。
 15. A 升級規則：若候選題的 `generalIds`、chapter/sourceRef、location 與 stable bootstrap 的 `relationshipEdges` / `eventLocationSeeds` / `timeScopedAliasHints` 同時匹配，可作為從 B 升 A 的 deterministic evidence boost；但仍必須有毛本文言 sourceRef gate。若只命中 identity seeds、basic profile seeds、白話 sidecar、plain relationship proposals、欄位 sidecar、auto social roles、plain fact proposals、陣營 timeline、君臣推測或社會角色 tag，最多只能 B/review-only。
@@ -513,6 +530,26 @@ $HOME/.venv/3klife-etl/bin/python server/npc-brain/pipelines/sanguo-rag/run_etl_
   "coverageDelta": {}
 }
 ```
+
+## Evidence Seed v3 Preview Role
+
+當流程提到 `EvidenceSeed`、外部採證 seed、seed ranking、GraphRAG claim graph 或 seed -> card promotion 時，這個 skill 的定位是「補證與互證 reviewer」，不是 canonical author。
+
+優先順序：
+- 先用 deterministic / CLI / strict parser 產生低成本 seed。
+- seed 分數高但缺 quote / locator / hash 時，skill preview 負責補找可引用原文、定位與互證來源。
+- skill preview 可以把 seed 推薦成 `candidate-card`、`preview`、`human-review` 或 `seed-only`，但不得直接判定 canonical promotion。
+- 玩家整理、百科、遊戲 wiki、二創資料只能作為 seed 或 worldbuilding hint；必須被三國演義原文、三國志、後漢書、資治通鑑、可靠研究或多 sourceFamily 互證後，才可提高等級。
+- 女性人物可提高 worldbuilding 補全優先序與可用分數，但不可提高 historicalTrustScore，也不可把演義/傳說誤標為正史。
+- 所有 v3 preview 輸出都要保留 `canonicalWrites=false`，正式套用仍由人工 gate 或專門 apply step 決定。
+
+Preview 回覆至少要包含：
+- 人物與 matchedName。
+- angleType。
+- 原 seedText 與補到的 quote / locator / sourceUrl。
+- 是否跨 sourceFamily 互證。
+- 推薦下一步：`seed-only`、`preview`、`candidate-card`、`human-review`。
+- 不能升級的具體原因，例如 single-source、缺 locator、來源層級太低、疑似同書跨站轉載、claim boundary 不穩。
 
 ## Review Semantics
 

@@ -16,6 +16,7 @@ Unity 對照：這類似一個資料版 AssetPostprocessor。腳本負責 determ
 - 使用者提到 `unresolved`、`alias review`、`observed mentions`、`manual roster seeds`、`文本稱呼表`、`正式對照表`。
 - 使用者想「繼續跑循環」、「產生選擇題」、「套用 A/B/C/D 裁決」、「收斂三國 RAG 人名解析」。
 - 使用者想把候選名詞交給 agent 查證是否為三國人物、地名、官稱或切詞噪音。
+- 同一批名詞會反覆去固定網站或百科來源查證，想先壓成 compact term lookup CLI 再交給 reviewer。
 
 ## Core Files
 
@@ -148,6 +149,24 @@ Do not force all unresolved labels into person seeds. The goal is zero unclassif
 
 ## Web Research Delegation
 
+若同一批名詞會反覆查固定來源，不要每次都直接委派瀏覽器研究。先判斷是否該用 `agent-cli-factory` 建一層 repo-local term lookup CLI，例如 `3klife-sanguo-term-lookup`，把輸出壓成 `--compact --json` 的來源命中摘要、候選 person/noise 判斷與 citation 線索。
+
+CLI-first 的目標不是跳過人工審核，而是先把「明顯不是人名」或「明顯命中既有來源」的候選縮成小結果集，讓 web-capable agent 只處理真正模糊的標籤。
+
+現成 term lookup CLI：
+```bash
+node tools_node/agent-clis/3klife-sanguo-term-lookup.js \
+  --choices-json artifacts/data-pipeline/sanguo-rag/extracted/resolution-loop/unresolved-triage-choices.json \
+  --limit 20 \
+  --compact
+
+node tools_node/agent-clis/3klife-sanguo-term-lookup.js \
+  --label 孔明 \
+  --label 子敬 \
+  --label 主公 \
+  --json
+```
+
 When labels are not obvious, first generate a research brief:
 
 ```bash
@@ -156,7 +175,7 @@ python server/npc-brain/pipelines/sanguo-rag/generate_term_research_brief.py --t
 
 Then delegate the brief to `Sanguo Term Researcher` if available. Ask it to return `answer`, `confidence`, `evidence`, and a suggested `personRecord` only for clear people.
 
-If no web-capable agent/tool is available in the current environment, do not pretend a web check was performed. Provide the research brief path and continue deterministic loop work.
+If no web-capable agent/tool or reusable CLI is available in the current environment, do not pretend a web check was performed. Provide the research brief path and continue deterministic loop work.
 
 ## Research Evidence Rules
 

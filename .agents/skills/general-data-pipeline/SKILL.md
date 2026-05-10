@@ -18,6 +18,7 @@ Unity 對照：類似 AssetPostprocessor 的自動匯入管線，但對象是遊
 - 需要將外部資料源映射為 GeneralConfig 格式
 - 需要對新匯入的武將自動執行稀有度分類 + 品質驗證
 - 需要建立分層的 master 資料集（base / lore / stories）
+- 同一批外部來源會被多輪或多個 Agent 重複查詢，想先把它們收斂成 repo-local CLI
 
 ## Do Not Use
 
@@ -28,6 +29,27 @@ Unity 對照：類似 AssetPostprocessor 的自動匯入管線，但對象是遊
 ## Procedure
 
 ### Phase A：資料收集（Scrape）
+
+#### A0. 外部來源 intake 先判斷要不要走 `agent-cli-factory`
+
+- 若來源只會用一次，或授權 / TOS / 反爬風險不清楚，維持手動整理或使用者貼資料。
+- 若同一個 Wiki / 網站 / SaaS 會被多輪或多 Agent 反覆查，先用 `agent-cli-factory` 建立或重用 repo-local CLI。
+- CLI 輸出優先固定為 `--compact` + `--json`，把 raw HTML / 長頁面 / 大 payload 留在本機 cache，不直接塞進對話。
+- CLI 只能寫 `artifacts/data-pipeline/` 或 `local/agent-cli-cache/` 這類中間產物；不得直接覆蓋 `generals.json`。
+- 現成 intake CLI：
+```bash
+node tools_node/agent-clis/3klife-sanguo-source.js \
+  --wiki-cache temp_workspace/wiki-cache.json \
+  --cache-id zhuge-liang \
+  --name 諸葛亮 \
+  --compact
+
+node tools_node/agent-clis/3klife-sanguo-source.js \
+  --input-file artifacts/data-pipeline/source-intake/zhuge-liang-koei.txt \
+  --source-type koei-stats \
+  --name 諸葛亮 \
+  --json
+```
 
 #### A1. 資料來源
 
@@ -196,8 +218,9 @@ assets/resources/data/
 
 ## Notes
 
-- 這個 skill 純粹在 Copilot 對話中執行，不需要外部 API
-- Wiki 資料的取得建議由使用者手動複製貼上（避免自動爬蟲的法律風險）
+- Mapping / merge / classify / validate 這幾段是本地 deterministic 流程；只有 scrape intake 可能需要外部來源。
+- 若 scrape 會重複發生，優先走 `agent-cli-factory` 做 repo-local CLI，而不是反覆 Browser/Playwright。
+- Wiki 資料的取得若授權或法律風險不清楚，仍建議由使用者手動複製貼上，或只抓可公開使用的 compact 欄位摘要。
 - 光榮數值僅作為「參考基準」，最終數值可由設計師調整
 - 所有匯出都需要人工確認，skill 不會自動覆蓋正式 generals.json
 - 中間產物建議放在 `artifacts/data-pipeline/` 目錄
