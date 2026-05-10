@@ -19,6 +19,8 @@ API service 層位於 `server/npc-brain/app/`。Pipeline 產出 canonical fixtur
 - `validate_llm_extraction_trial.py`：產出 LLM prompt bundle，並用 schema gate 驗證 baseline / 擋 hallucinated generalId
 - `build_keyword_options.py`：從 event candidates 投影 E-6 keyword options
 - `build_api_readiness_index.py`：產出 context-options / keyword-options / dialogue evidence / Pinecone metadata 靜態 readiness fixtures
+- `run_3kweb_check.py`：外部網站 deterministic source health 檢查（allowlist、fetch、term hits、summary）
+- `benchmark_external_source.py`：單站三段 benchmark gate，驗證 precheck / sample harvest / seed yield / 正文採樣
 - `run_progress_advancement_loop.py`：ABAB 式進度推進控制器，做 preview / backlog / stage / progress estimate 的外層迴圈
 - `run_three_lane_progress_scheduler.py`：固定順序跑三車道 `sweep -> precision -> promotion-eval`，並把上一車道 baseline 自動接給下一車道
 
@@ -27,6 +29,16 @@ API service 層位於 `server/npc-brain/app/`。Pipeline 產出 canonical fixtur
 - `three-lane-progress-explained.zh-TW.md`
 - `full-roster-convergence-highway.zh-TW.md`
 - `full-roster-confidence-rag-highway.zh-TW.md`
+- `external-evidence-site-playbook.zh-TW.md`
+- `external-evidence-highway-vnext.zh-TW.md`
+
+外部採證來源政策檔：
+- `config/external-evidence-sources.json`
+
+外部網站 CLI：
+- `tools_node/agent-clis/3klife-source-health.js`：單頁健康檢查與 term hit 摘要
+- `tools_node/agent-clis/3klife-web-page-harvester.js`：列表頁展開內頁、批量抓取、輸出 `pages.jsonl` 與 `page-texts/*.txt`
+- `extract_harvested_page_evidence_seeds.py`：從 `pages.jsonl` 與 `page-texts/*.txt` 抽 `identity / relationship / title / trait / event / worldbuilding_note`
 
 全量高速公路 v2 的三張流程圖 JPG 產物會落在：
 

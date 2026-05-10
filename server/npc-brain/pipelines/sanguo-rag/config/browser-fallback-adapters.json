@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "canonicalWrites": false,
+  "rules": [
+    {
+      "sourceId": "ctext-sanguozhi",
+      "adapterType": "browser-static-html",
+      "autoApply": true,
+      "priority": "high",
+      "suggestion": "HTTP 403 detected. Auto-route to browser-static-html fallback and keep source layer as history.",
+      "rationale": "ctext commonly blocks default CLI user-agent and needs browser-like fetch semantics."
+    },
+    {
+      "sourceId": "rekowiki-musou-character-list",
+      "adapterType": "browser-static-html",
+      "autoApply": true,
+      "priority": "high",
+      "suggestion": "HTTP 403 detected. Auto-route to browser-static-html fallback and keep source layer as game/worldbuilding.",
+      "rationale": "fandom mirrors frequently reject non-browser clients with 403."
+    },
+    {
+      "sourceId": "chiculture-romance-vs-history",
+      "adapterType": "browser-static-html",
+      "autoApply": true,
+      "priority": "high",
+      "suggestion": "HTTP 403 detected. Auto-route to browser-static-html fallback with strict citation extraction.",
+      "rationale": "site may enforce anti-bot policies for non-browser requests."
+    }
+  ]
+}

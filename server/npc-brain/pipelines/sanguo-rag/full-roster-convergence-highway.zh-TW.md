@@ -2,6 +2,7 @@
 # 全量武將收斂高速公路設計
 
 > 補充：若要看 v2 的信任評分、雙分數規則、女性角色加權與反芻降級，請直接看 [full-roster-confidence-rag-highway.zh-TW.md](./full-roster-confidence-rag-highway.zh-TW.md)。
+> 補充：若要看「外部網站如何切句、抽欄位、轉成 Seed/Card」與「目前網站排名」，請看 [external-evidence-site-playbook.zh-TW.md](./external-evidence-site-playbook.zh-TW.md)。
 
 這份文件設計一條新的 Sanguo ETL/RAG 高速公路管線，目標是把「全量武將」都放進同一個可重複、自動收斂、可停在人工閘門前的循環裡。原本的 ABAB / three-lane 管線不改動，這條新管線只把現有腳本當子程序呼叫，並額外補上「無 candidate 的 evidence discovery lane」與「全 roster 狀態追蹤」。
 

@@ -1,0 +1,233 @@
+{
+  "version": "2.0.0",
+  "generatedAt": "2026-05-10T12:00:00+08:00",
+  "policyNotes": [
+    "Any source requiring account login for basic reading should be removed from approved allowlist.",
+    "Any source that cannot fetch usable Sanguo content in deterministic precheck should be removed or blocked first.",
+    "Single-source evidence stays capped at B until cross-family verification passes.",
+    "The official allowlist keeps only approved external sources plus internal manual_quote rows; rejected candidates live in benchmark reports only."
+  ],
+  "sources": [
+    {
+      "sourceId": "wikisource-sanguozhi",
+      "status": "approved",
+      "adapterType": "wikisource",
+      "sourceClass": "primary-text-site",
+      "sourceFamily": "sanguozhi",
+      "sourceLayer": "history",
+      "trustTier": "primary-text-transcription",
+      "baseUrl": "https://zh.wikisource.org/wiki/三國志",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": ["identity", "relationship", "event", "location", "title", "trait", "activity"],
+      "harvestPolicy": {
+        "indexUrl": "https://zh.wikisource.org/wiki/%E4%B8%89%E5%9C%8B%E5%BF%97",
+        "linkInclude": ["^/wiki/%E4%B8%89%E5%9C%8B%E5%BF%97/"],
+        "sameOrigin": true,
+        "maxPages": 120,
+        "recommendedConcurrency": 4,
+        "writesPageTextCache": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 5,
+        "seedPerPage": 151.4,
+        "candidateCardPerPage": 151.4,
+        "lastApprovedAt": "2026-05-10T20:05:44+08:00"
+      },
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      }
+    },
+    {
+      "sourceId": "wikisource-houhanshu",
+      "status": "approved",
+      "adapterType": "wikisource",
+      "sourceClass": "primary-text-site",
+      "sourceFamily": "houhanshu",
+      "sourceLayer": "history",
+      "trustTier": "primary-text-transcription",
+      "baseUrl": "https://zh.wikisource.org/wiki/後漢書",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": ["identity", "relationship", "event", "location", "title"],
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      }
+    },
+    {
+      "sourceId": "wikisource-zizhitongjian",
+      "status": "approved",
+      "adapterType": "wikisource",
+      "sourceClass": "primary-text-site",
+      "sourceFamily": "zizhitongjian",
+      "sourceLayer": "history",
+      "trustTier": "primary-text-transcription",
+      "baseUrl": "https://zh.wikisource.org/wiki/資治通鑑",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": ["identity", "relationship", "event", "location", "title"],
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      }
+    },
+    {
+      "sourceId": "wikisource-romance",
+      "status": "approved",
+      "adapterType": "wikisource",
+      "sourceClass": "primary-text-site",
+      "sourceFamily": "sanguoyanyi",
+      "sourceLayer": "romance",
+      "trustTier": "primary-text-transcription",
+      "baseUrl": "https://zh.wikisource.org/wiki/三國演義",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": ["identity", "relationship", "event", "trait", "activity", "dialogue_seed", "worldbuilding_note"],
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      }
+    },
+    {
+      "sourceId": "commons-sanguozhi-scan",
+      "status": "approved",
+      "adapterType": "scan_pdf",
+      "sourceClass": "primary-text-site",
+      "sourceFamily": "sanguozhi",
+      "sourceLayer": "history",
+      "trustTier": "primary-scan",
+      "baseUrl": "https://commons.wikimedia.org/wiki/File:NCL-01431_01_三國志.pdf",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": ["identity", "relationship", "event", "location", "title"],
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      }
+    },
+    {
+      "sourceId": "gutenberg-sanguozhi",
+      "status": "approved",
+      "adapterType": "gutenberg_text",
+      "sourceClass": "primary-text-site",
+      "sourceFamily": "sanguozhi",
+      "sourceLayer": "history",
+      "trustTier": "secondary",
+      "baseUrl": "https://www.gutenberg.org/ebooks/25606",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": ["identity", "relationship", "event", "location", "title"],
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      }
+    },
+    {
+      "sourceId": "wikipedia-romance-character-list",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "wikipedia-romance-index",
+      "sourceLayer": "encyclopedia",
+      "trustTier": "secondary",
+      "baseUrl": "https://zh.wikipedia.org/wiki/三國演義角色列表",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": ["identity", "relationship", "worldbuilding_note"],
+      "benchmarkBaseline": {
+        "samplePageCount": 1,
+        "seedPerPage": 1108.0,
+        "candidateCardPerPage": 1108.0,
+        "lastApprovedAt": "2026-05-10T20:07:57+08:00"
+      },
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      }
+    },
+    {
+      "sourceId": "shuzi-sanguo-character-database",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "shuzi-character-db",
+      "sourceLayer": "worldbuilding",
+      "trustTier": "secondary",
+      "baseUrl": "https://www.cne3online.com/biography/",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": ["identity", "relationship", "trait", "worldbuilding_note"],
+      "harvestPolicy": {
+        "indexUrl": "https://www.cne3online.com/biography/",
+        "linkInclude": ["^/biography/view/[^/]+\\.shtml$"],
+        "sameOrigin": true,
+        "maxPages": 200,
+        "recommendedConcurrency": 4,
+        "writesPageTextCache": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 6,
+        "seedPerPage": 46.666666666666664,
+        "candidateCardPerPage": 46.333333333333336,
+        "lastApprovedAt": "2026-05-10T20:05:43+08:00"
+      },
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      }
+    },
+    {
+      "sourceId": "lishirenwu-sanguorenwu",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "high-yield-character-site",
+      "sourceFamily": "lishirenwu-character-biography",
+      "sourceLayer": "worldbuilding",
+      "trustTier": "secondary",
+      "baseUrl": "https://www.lishirenwu.com/sanguorenwu/",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": ["identity", "relationship", "event", "trait", "title", "activity", "worldbuilding_note"],
+      "harvestPolicy": {
+        "indexUrl": "https://www.lishirenwu.com/sanguorenwu/",
+        "linkInclude": ["^/sanguorenwu/[^/]+\\.html$"],
+        "sameOrigin": true,
+        "maxPages": 500,
+        "recommendedConcurrency": 4,
+        "lastObservedDetailPageCount": 334,
+        "lastObservedErrorCount": 0,
+        "writesPageTextCache": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 334,
+        "seedPerPage": 1.65,
+        "candidateCardPerPage": 0.95,
+        "lastApprovedAt": "2026-05-10T12:00:00+08:00"
+      }
+    },
+    {
+      "sourceId": "manual-female-targets-history-r1",
+      "status": "approved",
+      "adapterType": "manual_quote",
+      "sourceClass": "manual-quote",
+      "sourceFamily": "manual-curated-history-female",
+      "sourceLayer": "history",
+      "trustTier": "secondary",
+      "baseUrl": "about:manual-female-targets-history-r1",
+      "singleSourceMaxGrade": "B",
+      "manualEvidenceCount": 30,
+      "claimScopes": ["identity", "relationship", "event", "location", "title", "trait", "activity"]
+    },
+    {
+      "sourceId": "manual-female-targets-romance-r1",
+      "status": "approved",
+      "adapterType": "manual_quote",
+      "sourceClass": "manual-quote",
+      "sourceFamily": "manual-curated-romance-female",
+      "sourceLayer": "romance",
+      "trustTier": "folklore",
+      "baseUrl": "about:manual-female-targets-romance-r1",
+      "singleSourceMaxGrade": "B",
+      "manualEvidenceCount": 8,
+      "claimScopes": ["identity", "relationship", "event", "trait", "activity", "worldbuilding_note"]
+    },
+    {
+      "sourceId": "manual-female-targets-folklore-r1",
+      "status": "approved",
+      "adapterType": "manual_quote",
+      "sourceClass": "manual-quote",
+      "sourceFamily": "manual-curated-folklore-female",
+      "sourceLayer": "worldbuilding",
+      "trustTier": "folklore",
+      "baseUrl": "about:manual-female-targets-folklore-r1",
+      "singleSourceMaxGrade": "B",
+      "manualEvidenceCount": 5,
+      "claimScopes": ["identity", "relationship", "trait", "activity", "worldbuilding_note"]
+    }
+  ]
+}

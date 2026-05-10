@@ -1,4 +1,102 @@
 <!-- doc_id: doc_server_pipeline_0005 -->
+
+## v3 補充：Evidence Seed + Strict Evidence Card 雙軌
+
+v3 不取代 v2 的嚴格信任評分，而是在 Evidence Card 前面新增一層低門檻的 `EvidenceSeed`。直覺上可以把它想成 Unity 的 `Import Preview`：先把可能有用的素材抓進暫存池，還不能進正式資產；等 seed 補到可追溯引用、跨站互證或 skill preview 補證後，才升成 candidate Evidence Card，繼續進 B/A gate。
+
+### EvidenceSeed 最小資料格式
+
+```json
+{
+  "seedId": "seed:source:person:angle:hash",
+  "sourceId": "bahamut-sanguo-female-compendium",
+  "sourceFamily": "bahamut-community-compendium",
+  "sourceLayer": "worldbuilding",
+  "sourceUrl": "https://example.com/page",
+  "pageTitle": "三國女性人物整理",
+  "generalId": "guan-yin-ping",
+  "candidatePersonId": null,
+  "matchedName": "關銀屏",
+  "angleType": "identity|relationship|event|trait|habit|activity|role|dialogue_seed|worldbuilding_note|source_conflict",
+  "seedText": "關銀屏常被整理為關羽之女，並有後世傳說婚配李遺。",
+  "hasQuote": true,
+  "hasLocator": false,
+  "hasTime": false,
+  "hasLocation": false,
+  "extractionMethod": "deterministic|llm|hybrid|manual",
+  "seedConfidenceScore": 0,
+  "siteReliabilityMultiplier": 1.0,
+  "crossSiteMatchCount": 0,
+  "promotionTarget": "seed-only|preview|candidate-card|human-review",
+  "canonicalWrites": false
+}
+```
+
+最低門檻只有三個：必須能對到 `generalId` 或 `candidatePersonId`，必須有至少一個 `angleType`，而且 `sourceId/sourceUrl/pageTitle` 至少要有兩項。時間、地點、章回、完整原文都不是 seed 的必要條件，但會影響分數與能不能升 card。
+
+### Seed 信心分數
+
+```text
+seedConfidenceScore =
+  personMatchScore * 0.25
++ angleSpecificityScore * 0.20
++ sourceLayerScore * 0.15
++ textSupportScore * 0.15
++ extractionReliabilityScore * 0.10
++ crossSiteSignalScore * 0.10
++ freshnessAndReachabilityScore * 0.05
+```
+
+`sourceLayerScore` 預設：三國演義章回 85；三國志、後漢書、資治通鑑 80；可靠傳記或研究整理 70；稗官野史、地方傳說、家譜 55；遊戲百科或玩家整理 45；小說、二創 35；AI 摘要或無來源部落格 15 或 blocked。
+
+### 網站動態權重
+
+```text
+siteReliabilityMultiplier =
+  0.70
++ acceptedSeedRate * 0.15
++ cardPromotionRate * 0.10
++ crossSiteAgreementRate * 0.10
+- conflictRate * 0.15
+- staleOrBrokenRate * 0.05
+```
+
+單一網站 multiplier 上限為 `1.20`。玩家整理、百科、遊戲 wiki 不可只靠 multiplier 升 A；它們最多把 seed 推進 preview 或 candidate-card，仍要被更高層級來源互證。
+
+### Seed -> Card -> Gate 流程
+
+```text
+Source Intake
+-> Seed Harvest
+-> Seed Scoring
+-> Cross-site Pairing
+-> Preview Skill Search
+-> Seed -> Candidate Evidence Card
+-> Claim Graph
+-> B/A Gate
+-> Staging / Ready Eval / Human Review
+```
+
+嚴格 Evidence Card 仍然需要 `quote / locator / textHash` 這類可追溯欄位。`EvidenceSeed` 可以沒有 locator，但它不能直接升 A，也不能直接寫 canonical。三國演義資料可以升 `A-romance`，不可宣稱 `A-history`；三國志、後漢書、資治通鑑互證才可進 `A-history`；女性人物可提高 `worldbuildingUsabilityScore` 與採集優先序，但不提高 `historicalTrustScore`。
+
+### v3 腳本與輸出
+
+- `harvest_external_evidence_seeds.py`：從 approved/manual/strict card 來源產生 `external-evidence-seeds.jsonl`。
+- `extract_harvested_page_evidence_seeds.py`：讀 `page-texts/*.txt` 正文句，抽 `trait / event / worldbuilding_note` seed，並標記 `contentSource=page-text`。
+- `score_external_evidence_seeds.py`：計算 seed 分數、網站 multiplier、跨站配對、人物排行與 preview queue。
+- `promote_seed_to_evidence_card.py`：只把高分且可追溯 seed 升成 `candidate-evidence-cards.jsonl`，仍標 `reviewGrade=B` 與 `canonicalWrites=false`。
+- `external-evidence-seed-ranking.zh-TW.md`：列出人物、角度、來源、seedText、分數、跨站配對與下一步建議。
+- `external-evidence-site-playbook.zh-TW.md`：外部網站採證模板（欄位表、切句規則、優先句型、網站排名與採證策略）。
+
+### v3 驗收規則
+
+- 單一網站只產 seed 或 candidate card，不得直接升 A。
+- 沒有 `quote/locator/hash` 的資料可進 seed，但不得直接進 strict Evidence Card。
+- 同一人物同一角度跨兩個 `sourceFamily` 命中時，`crossSiteSignalScore` 必須上升。
+- 玩家整理、遊戲 wiki、百科預設只能進 seed/preview，除非再被高層級來源互證。
+- 需要登入才可讀正文的網站，不得維持 `approved`；應先自 allowlist 移除或標 `blocked`。
+- 連續無法抓到有效三國內容（例如長期 403 或 termHitCount 持續 0）的網站，預設移出 `approved`。
+- 所有輸出維持 `canonicalWrites=false`，正式 promotion 仍需人工 gate。
 # 全量武將 ETL/RAG 高速公路信任評分與反芻規格 v2
 
 這份文件定義一條新的全量武將高速公路 v2，專門處理「全 roster 重算、外部證據整合、雙分數評估、女性資料補全、反芻重驗與可追蹤報表」。它不取代原本的 ABAB 與 three-lane 流程，而是把既有腳本視為既有子程序，在更高一層補上信任評分與收斂規則。
