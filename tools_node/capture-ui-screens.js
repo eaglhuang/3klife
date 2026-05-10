@@ -99,6 +99,10 @@ function parseAnyArg(names, fallback = '') {
     return fallback;
 }
 
+function hasFlag(name) {
+    return process.argv.includes(`--${name}`);
+}
+
 function sanitizeFileStem(value) {
     return String(value || 'screen')
         .trim()
@@ -270,6 +274,146 @@ function selectTargets(targetId) {
         throw new Error(`未知 target: ${targetId}，可用值: ${targets.map(t => t.id).join(', ')}`);
     }
     return [selected];
+}
+
+function buildPublicTargets() {
+    return targets
+        .filter((target) => !target.hiddenAlias)
+        .map((target) => ({
+            id: target.id,
+            screenId: target.screenId,
+            runtimeScreenId: target.runtimeScreenId || null,
+            targetIndex: target.targetIndex,
+            formalScreenId: target.formalScreenId || null,
+            captureMode: target.captureMode || 'legacy-preview-target',
+            uiSourceDir: target.uiSourceDir || null,
+        }));
+}
+
+function printTargetList(jsonOutput) {
+    const payload = {
+        version: '1.0.0',
+        mode: 'capture-ui-screens-target-list',
+        canonicalWrites: false,
+        count: buildPublicTargets().length,
+        targets: buildPublicTargets(),
+    };
+
+    if (jsonOutput) {
+        process.stdout.write(`${JSON.stringify(payload)}\n`);
+        return;
+    }
+
+    console.log('# capture-ui-screens target list');
+    for (const target of payload.targets) {
+        console.log(`- ${target.id} (screenId=${target.screenId}, runtime=${target.runtimeScreenId || '-'})`);
+    }
+}
+
+function buildPrecheckCheck(name, ok, detail, extra = {}) {
+    return {
+        name,
+        status: ok ? 'pass' : 'fail',
+        detail,
+        ...extra,
+    };
+}
+
+async function runTwoLayerPrecheck({
+    baseUrl,
+    browserExecutable,
+    selectedTargets,
+    requestedTargetId,
+    formalScreenId,
+    timeoutMs,
+}) {
+    const checks = [];
+    checks.push(
+        buildPrecheckCheck(
+            'browser-executable',
+            Boolean(browserExecutable),
+            browserExecutable || 'no browser executable found',
+            { executablePath: browserExecutable || null },
+        ),
+    );
+
+    checks.push(
+        buildPrecheckCheck(
+            'target-selection',
+            Array.isArray(selectedTargets) && selectedTargets.length > 0,
+            Array.isArray(selectedTargets) && selectedTargets.length > 0
+                ? `targets=${selectedTargets.map((target) => target.id).join(',')}`
+                : 'no target selected',
+            {
+                requestedTargetId: requestedTargetId || null,
+                formalScreenId: formalScreenId || null,
+                selectedTargetIds: Array.isArray(selectedTargets) ? selectedTargets.map((target) => target.id) : [],
+            },
+        ),
+    );
+
+    try {
+        const response = await withTimeout(
+            requestUrl(baseUrl),
+            Math.max(timeoutMs, 1000),
+            'capture-ui-screens precheck host',
+        );
+        const reachable = response.statusCode > 0 && response.statusCode < 500;
+        checks.push(
+            buildPrecheckCheck(
+                'editor-host',
+                reachable,
+                reachable
+                    ? `reachable status=${response.statusCode}`
+                    : `unreachable status=${response.statusCode}`,
+                {
+                    url: baseUrl,
+                    httpStatus: response.statusCode,
+                },
+            ),
+        );
+    } catch (error) {
+        checks.push(
+            buildPrecheckCheck(
+                'editor-host',
+                false,
+                `request failed: ${String(error)}`,
+                {
+                    url: baseUrl,
+                    httpStatus: 0,
+                },
+            ),
+        );
+    }
+
+    const ok = checks.every((item) => item.status === 'pass');
+    return {
+        version: '1.0.0',
+        mode: 'capture-ui-screens-precheck',
+        canonicalWrites: false,
+        generatedAt: new Date().toISOString(),
+        ok,
+        checks,
+        inputs: {
+            baseUrl,
+            requestedTargetId: requestedTargetId || null,
+            formalScreenId: formalScreenId || null,
+            targetCount: Array.isArray(selectedTargets) ? selectedTargets.length : 0,
+        },
+    };
+}
+
+function emitPrecheckReport(report, jsonOutput) {
+    if (jsonOutput) {
+        process.stdout.write(`${JSON.stringify(report)}\n`);
+        return;
+    }
+
+    console.log('[capture-ui-screens] precheck summary');
+    for (const item of report.checks || []) {
+        console.log(`- [${item.status}] ${item.name}: ${item.detail}`);
+    }
+    console.log(`[capture-ui-screens] precheck result: ${report.ok ? 'PASS' : 'FAIL'}`);
 }
 
 function createPageDiagnostics(page) {
@@ -1160,9 +1304,17 @@ async function writeFailureArtifacts(page, outputDir, target, error, diagnostics
 }
 
 async function main() {
+    const jsonOutput = hasFlag('json');
+    if (hasFlag('list-targets')) {
+        printTargetList(jsonOutput);
+        return;
+    }
+
     const targetId = parseArg('target', '');
     const formalScreenId = parseAnyArg(['formal-screen-id', 'formalScreenId'], '').trim();
     const formalTargetId = parseAnyArg(['formal-target-id', 'formalTargetId'], '').trim();
+    const precheckOnly = hasFlag('precheck-only') || parseArg('precheck', '').trim().toLowerCase() === 'only';
+    const precheckTimeoutMs = Number(parseArg('precheckTimeout', '7000'));
     const outDir = parseArg('outDir', path.join('artifacts', 'ui-qa', 'UI-2-0023'));
     const baseUrl = parseArg('url', 'http://localhost:7456');
     const timeoutMs = Number(parseArg('timeout', '45000'));
@@ -1192,6 +1344,24 @@ async function main() {
             uiVersion,
         };
     });
+
+    const precheckReport = await runTwoLayerPrecheck({
+        baseUrl,
+        browserExecutable,
+        selectedTargets,
+        requestedTargetId: targetId,
+        formalScreenId,
+        timeoutMs: precheckTimeoutMs,
+    });
+    if (precheckOnly || !precheckReport.ok) {
+        emitPrecheckReport(precheckReport, jsonOutput);
+        if (!precheckReport.ok) {
+            process.exit(2);
+        }
+        return;
+    }
+    console.log('[capture-ui-screens] precheck passed, start screenshot capture');
+
     fs.mkdirSync(outDir, { recursive: true });
 
     console.log('='.repeat(70));

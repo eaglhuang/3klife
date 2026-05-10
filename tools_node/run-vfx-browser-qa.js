@@ -93,6 +93,103 @@ function parseNumberArg(name, fallback) {
     return Number.isFinite(numeric) ? numeric : fallback;
 }
 
+function buildPrecheckCheck(name, ok, detail, extra = {}) {
+    return {
+        name,
+        status: ok ? 'pass' : 'fail',
+        detail,
+        ...extra,
+    };
+}
+
+async function runTwoLayerPrecheck({
+    baseUrl,
+    browserExecutable,
+    scope,
+    cases,
+    timeoutMs,
+}) {
+    const checks = [];
+    checks.push(
+        buildPrecheckCheck(
+            'browser-executable',
+            Boolean(browserExecutable),
+            browserExecutable || 'no browser executable found',
+            { executablePath: browserExecutable || null },
+        ),
+    );
+
+    checks.push(
+        buildPrecheckCheck(
+            'case-selection',
+            Array.isArray(cases) && cases.length > 0,
+            `scope=${scope} cases=${Array.isArray(cases) ? cases.length : 0}`,
+        ),
+    );
+
+    try {
+        const response = await withTimeout(
+            requestUrl(baseUrl),
+            Math.max(timeoutMs, 1000),
+            'run-vfx-browser-qa precheck host',
+        );
+        const reachable = response.statusCode > 0 && response.statusCode < 500;
+        checks.push(
+            buildPrecheckCheck(
+                'editor-host',
+                reachable,
+                reachable
+                    ? `reachable status=${response.statusCode}`
+                    : `unreachable status=${response.statusCode}`,
+                {
+                    url: baseUrl,
+                    httpStatus: response.statusCode,
+                },
+            ),
+        );
+    } catch (error) {
+        checks.push(
+            buildPrecheckCheck(
+                'editor-host',
+                false,
+                `request failed: ${String(error)}`,
+                {
+                    url: baseUrl,
+                    httpStatus: 0,
+                },
+            ),
+        );
+    }
+
+    const ok = checks.every((item) => item.status === 'pass');
+    return {
+        version: '1.0.0',
+        mode: 'run-vfx-browser-qa-precheck',
+        canonicalWrites: false,
+        generatedAt: new Date().toISOString(),
+        ok,
+        checks,
+        inputs: {
+            baseUrl,
+            scope,
+            caseCount: Array.isArray(cases) ? cases.length : 0,
+        },
+    };
+}
+
+function emitPrecheckReport(report, jsonOutput) {
+    if (jsonOutput) {
+        process.stdout.write(`${JSON.stringify(report)}\n`);
+        return;
+    }
+
+    console.log('[run-vfx-browser-qa] precheck summary');
+    for (const item of report.checks || []) {
+        console.log(`- [${item.status}] ${item.name}: ${item.detail}`);
+    }
+    console.log(`[run-vfx-browser-qa] precheck result: ${report.ok ? 'PASS' : 'FAIL'}`);
+}
+
 function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -523,6 +620,10 @@ Examples:
   node tools_node/run-vfx-browser-qa.js --scope combos --case skill_zhang_fei,skill_lu_bu
   node tools_node/run-vfx-browser-qa.js --scope all --limit 20 --dryRun true
 `.trim());
+    console.log('Additional two-layer gate options:');
+    console.log('  --precheck-only               Run precheck only (no screenshots)');
+    console.log('  --precheckTimeout <ms>        Host precheck timeout (default 7000)');
+    console.log('  --json                        Emit compact JSON report (for --precheck-only)');
 }
 
 async function runCase(page, caseInfo, settleMs, composerReadyTimeoutMs) {
@@ -735,6 +836,9 @@ async function main() {
         return;
     }
 
+    const jsonOutput = hasFlag('json');
+    const precheckOnly = hasFlag('precheck-only') || parseArg('precheck', '').trim().toLowerCase() === 'only';
+    const precheckTimeoutMs = parseNumberArg('precheckTimeout', 7000);
     const scopeRaw = parseArg('scope', 'all').trim().toLowerCase();
     const scope = ['blocks', 'combos', 'all'].includes(scopeRaw) ? scopeRaw : 'all';
     const caseFilter = new Set(
@@ -775,14 +879,29 @@ async function main() {
     console.log(`- dryRun: ${dryRun}`);
     console.log('='.repeat(72));
 
+    const browserExecutable = resolveBrowserExecutable(browserArg);
+    const precheckReport = await runTwoLayerPrecheck({
+        baseUrl,
+        browserExecutable,
+        scope,
+        cases,
+        timeoutMs: precheckTimeoutMs,
+    });
+    if (precheckOnly || !precheckReport.ok) {
+        emitPrecheckReport(precheckReport, jsonOutput);
+        if (!precheckReport.ok) {
+            process.exit(2);
+        }
+        return;
+    }
     if (dryRun) {
         cases.forEach((item, index) => {
             console.log(`${index + 1}. [${item.kind}] ${item.caseId} -> ${item.blockIds.join(', ')}`);
         });
+        console.log('[run-vfx-browser-qa] precheck passed (dry-run mode, screenshots skipped)');
         return;
     }
-
-    const browserExecutable = resolveBrowserExecutable(browserArg);
+    console.log('[run-vfx-browser-qa] precheck passed, start screenshot QA');
     if (!browserExecutable) {
         throw new Error('找不到可用瀏覽器，請用 --browser 指定 executable path。');
     }
