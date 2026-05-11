@@ -145,6 +145,7 @@ function readText(filePath) {
 }
 
 function readJsonIfExists(filePath) {
+  if (!filePath || typeof filePath !== 'string') return null;
   const full = path.resolve(filePath);
   if (!fs.existsSync(full)) return null;
   return JSON.parse(fs.readFileSync(full, 'utf8').replace(/^\uFEFF/, ''));
@@ -1322,6 +1323,7 @@ function buildSummary(args) {
   const debugInfo = computeDebugOnly(args.opts, args.sourcePackage);
   const visualFidelityRisk = args.visualFidelityRisk || assessVisualFidelityRisk(args.paths, args.metrics, args.opts);
   const interactionRuntime = args.interactionRuntime || assessInteractionRuntime(args.paths, args.steps, args.sourceHtml);
+  const blockerTaxonomy = args.blockerTaxonomy || deriveBlockerTaxonomy(args.metrics, visualFidelityRisk);
   return {
     input: rel(args.opts.input),
     sourcePackage: args.sourcePackage && args.sourcePackage.manifest ? args.sourcePackage.manifest : null,
@@ -1333,6 +1335,7 @@ function buildSummary(args) {
     ruleGuard: args.ruleGuard || { status: 'not-run', blockerCount: 0, warningCount: 0, violations: [] },
     visualFidelityRisk,
     interactionRuntime,
+    blockerTaxonomy,
     tokenGovernance: args.tokenGovernance || null,
     nextFixes: args.nextFixes || [],
     detected: args.detected,
@@ -1400,6 +1403,101 @@ function topRuleGuardFixes(ruleGuard, limit = 3) {
       fixAction: item.fixAction,
       evidence: item.evidence,
     }));
+}
+
+function classifyBlockerCategory(violation) {
+  const text = [
+    violation && violation.ruleId || '',
+    violation && violation.summary || '',
+    violation && violation.fixAction || '',
+    violation && violation.evidence || '',
+  ].join(' ').toLowerCase();
+  if (text.includes('radial')) return 'radial-gradient';
+  if (text.includes('shadow')) return 'shadow';
+  if (text.includes('background')) return 'background-layers';
+  if (text.includes('rounded')) return 'rounded-rect';
+  if (text.includes('interaction')) return 'interaction-routing';
+  if (text.includes('visual-review')) return 'visual-review';
+  if (violation && violation.ruleId === 'H2U-P5-003') return 'renderer-parity-gap';
+  return null;
+}
+
+function deriveBlockerTaxonomy(metrics, visualFidelityRisk) {
+  const runtimeVsSource = metrics && metrics.htmlCocos && metrics.htmlCocos.runtimeVsSource
+    ? metrics.htmlCocos.runtimeVsSource
+    : null;
+  if (runtimeVsSource && runtimeVsSource.blockerTaxonomy) return runtimeVsSource.blockerTaxonomy;
+
+  const blockers = Array.isArray(visualFidelityRisk && visualFidelityRisk.violations)
+    ? visualFidelityRisk.violations.filter(item => item && item.severity === 'blocker')
+    : [];
+  if (blockers.length === 0) return null;
+
+  const categories = [];
+  for (const item of blockers) {
+    const category = classifyBlockerCategory(item);
+    if (category && !categories.includes(category)) categories.push(category);
+  }
+  if (categories.length === 0) return null;
+
+  return {
+    primaryCause: categories[0],
+    categories,
+    source: 'derived-from-visual-fidelity-risk',
+  };
+}
+
+function buildPreRuleGuardFixes(verdict, visualFidelityRisk, interactionRuntime, limit = 3) {
+  const candidates = [];
+  const blockers = Array.isArray(visualFidelityRisk && visualFidelityRisk.violations)
+    ? visualFidelityRisk.violations.filter(item => item && item.severity === 'blocker')
+    : [];
+  for (const blocker of blockers) {
+    candidates.push({
+      ruleId: blocker.ruleId || 'H2U-P4-019',
+      summary: blocker.summary || 'visual fidelity blocker detected',
+      fixAction: blocker.fixAction || 'Resolve visual fidelity blocker and rerun workflow.',
+      evidence: blocker.evidence || null,
+    });
+  }
+  if (interactionRuntime && interactionRuntime.required && interactionRuntime.status !== 'pass') {
+    candidates.push({
+      ruleId: 'H2U-P4-018',
+      summary: `interaction runtime status=${interactionRuntime.status}`,
+      fixAction: 'Restore interaction sidecar routing and rerun runtime interaction smoke.',
+      evidence: JSON.stringify({
+        required: true,
+        actionsDeclared: interactionRuntime.actionsDeclared || 0,
+        actionsBound: interactionRuntime.actionsBound || 0,
+      }),
+    });
+  }
+  if (candidates.length === 0 && verdict && Array.isArray(verdict.remainingIssues) && verdict.remainingIssues.length > 0) {
+    candidates.push({
+      ruleId: 'H2U-P0-001',
+      summary: verdict.remainingIssues[0],
+      fixAction: 'Resolve remaining issue and rerun workflow.',
+      evidence: JSON.stringify({ remainingIssues: verdict.remainingIssues.slice(0, 3) }),
+    });
+  }
+  return mergeNextFixes(candidates, [], limit);
+}
+
+function mergeNextFixes(primaryFixes, secondaryFixes, limit = 3) {
+  const merged = [];
+  const seen = new Set();
+  const all = []
+    .concat(Array.isArray(primaryFixes) ? primaryFixes : [])
+    .concat(Array.isArray(secondaryFixes) ? secondaryFixes : []);
+  for (const item of all) {
+    if (!item) continue;
+    const key = `${item.ruleId || ''}::${item.fixAction || ''}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    merged.push(item);
+    if (merged.length >= limit) break;
+  }
+  return merged;
 }
 
 function assessVisualFidelityRisk(paths, metrics, opts) {
@@ -2034,7 +2132,22 @@ function main() {
     ],
   };
 
-  const preliminarySummary = buildSummary({ opts, sourcePackage, detected, paths, steps, metrics, verdict, runtimeAuthority, visualFidelityRisk, interactionRuntime, tokenGovernance, sourceHtml });
+  const seededFixes = buildPreRuleGuardFixes(verdict, visualFidelityRisk, interactionRuntime);
+  const preliminarySummary = buildSummary({
+    opts,
+    sourcePackage,
+    detected,
+    paths,
+    steps,
+    metrics,
+    verdict,
+    runtimeAuthority,
+    visualFidelityRisk,
+    interactionRuntime,
+    tokenGovernance,
+    sourceHtml,
+    nextFixes: seededFixes,
+  });
   const ruleGuard = runRuleGuard({
     repoRoot: ROOT,
     strict: true,
@@ -2042,7 +2155,7 @@ function main() {
     sourceHtml,
   });
   writeJson(paths.ruleGuardReport, ruleGuard);
-  const nextFixes = topRuleGuardFixes(ruleGuard);
+  const nextFixes = mergeNextFixes(seededFixes, topRuleGuardFixes(ruleGuard));
   steps.push({
     step: 'rule-guard',
     exitCode: ruleGuard.blockerCount > 0 ? 1 : 0,

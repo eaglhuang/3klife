@@ -933,6 +933,8 @@ function relative(repoRoot, filePath) {
 }
 
 function readNumber(value) {
+  if (value === null || value === undefined) return NaN;
+  if (typeof value === 'string' && value.trim() === '') return NaN;
   const number = Number(value);
   return Number.isFinite(number) ? number : NaN;
 }
