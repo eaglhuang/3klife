@@ -21,15 +21,7 @@ const https = require('https');
 const crypto = require('crypto');
 const { execSync } = require('child_process');
 const { writeRuntimeVerdictCaptureResult } = require('./lib/ui-factory-manifest-validator');
-
-let puppeteer;
-try {
-    // eslint-disable-next-line global-require
-    puppeteer = require('puppeteer-core');
-} catch (error) {
-    console.error('[capture-ui-screens] 缺少依賴 puppeteer-core，請先執行: npm i -D puppeteer-core');
-    process.exit(1);
-}
+const browserCaptureCore = require('./lib/browser-capture-core');
 
 const targets = [
     { id: 'LobbyMain', screenId: 'lobby-main-screen', targetIndex: 1, uiSourceDir: 'lobby-main', runtimeScreenId: 'LobbyMain' },
@@ -1381,16 +1373,14 @@ async function main() {
         await delay(1200);
     }
 
-    const browser = await puppeteer.launch({
+    const browser = await browserCaptureCore.launchBrowser({
         executablePath: browserExecutable,
+        viewport: {
+            width: viewport.width,
+            height: viewport.height,
+            deviceScaleFactor: viewport.deviceScaleFactor || 1,
+        },
         headless: true,
-        defaultViewport: viewport,
-        args: [
-            '--disable-gpu',
-            '--disable-http-cache',
-            '--no-sandbox',
-            '--disable-dev-shm-usage',
-        ],
     });
 
     const captured = [];
@@ -1527,7 +1517,7 @@ async function main() {
     } catch (error) {
         throw error;
     } finally {
-        await browser.close();
+        await browserCaptureCore.closeBrowser(browser);
     }
 
     const report = {

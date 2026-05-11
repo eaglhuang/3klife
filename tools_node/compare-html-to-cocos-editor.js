@@ -834,25 +834,30 @@ function loadCaptureProtocolForCompare(args) {
 }
 
 async function captureHtml(htmlPath, outputPng, viewport, browserPath, settleMs, captureProtocol) {
-  let puppeteer;
-  try { puppeteer = require('puppeteer-core'); }
-  catch (error) { throw new Error('puppeteer-core is required for HTML source screenshot'); }
-  const browser = await puppeteer.launch({
+  const browserCaptureCore = require('./lib/browser-capture-core');
+  
+  const dpr = captureProtocol && captureProtocol.viewport && captureProtocol.viewport.dpr ? captureProtocol.viewport.dpr : 1;
+  const browser = await browserCaptureCore.launchBrowser({
     executablePath: browserPath || findBrowser(),
+    viewport: { ...viewport, deviceScaleFactor: dpr },
     headless: true,
-    args: ['--no-sandbox', '--disable-gpu', '--disable-extensions', '--allow-file-access-from-files'],
   });
+
   try {
     const page = await browser.newPage();
-    const dpr = captureProtocol && captureProtocol.viewport && captureProtocol.viewport.dpr ? captureProtocol.viewport.dpr : 1;
-    await page.setViewport({ width: viewport.width, height: viewport.height, deviceScaleFactor: dpr });
-    await page.goto(toFileUrl(htmlPath), { waitUntil: 'networkidle0', timeout: 30000 });
-    try { await page.evaluate(() => document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()); } catch (_) {}
-    await new Promise(resolve => setTimeout(resolve, settleMs));
-    await page.screenshot({ path: outputPng, clip: { x: 0, y: 0, width: viewport.width, height: viewport.height } });
+    await browserCaptureCore.navigatePage(page, toFileUrl(htmlPath), {
+      waitUntil: 'networkidle0',
+      timeout: 30000,
+    });
+    await browserCaptureCore.waitForFonts(page);
+    await browserCaptureCore.captureSelector(page, {
+      path: outputPng,
+      waitMs: settleMs,
+      clip: { x: 0, y: 0, width: viewport.width, height: viewport.height },
+    });
     await page.close();
   } finally {
-    await browser.close();
+    await browserCaptureCore.closeBrowser(browser);
   }
 }
 
