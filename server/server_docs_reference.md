@@ -22,9 +22,11 @@
 | `doc_server_other_0008` | other | server/npc-brain/文件/NPC行為決策流程.md | NPC 最終行為決策流程圖 |
 | `doc_server_pipeline_0001` | pipeline | server/npc-brain/pipelines/sanguo-rag/人名事件解析.md | 人名事件解析 |
 | `doc_server_pipeline_0002` | pipeline | server/npc-brain/pipelines/sanguo-rag/README.md | Sanguo RAG Pipelines |
-| `doc_server_pipeline_0003` | pipeline | server/npc-brain/pipelines/sanguo-rag/three-lane-progress-explained.zh-TW.md | Three-Lane ETL 白話說明（給審核與營運看） |
-| `doc_server_pipeline_0004` | pipeline | server/npc-brain/pipelines/sanguo-rag/postgres-fast-etl-integration.zh-TW.md | Sanguo RAG PostgreSQL 接入說明（給高速 ETL 開發者） |
-| `doc_server_pipeline_0005` | pipeline | server/npc-brain/pipelines/sanguo-rag/full-roster-confidence-rag-highway.zh-TW.md | 全量武將 ETL/RAG 高速公路信任評分與反芻規格 v2 |
+| `doc_server_pipeline_0005` | pipeline | server/npc-brain/pipelines/sanguo-rag/full-roster-confidence-rag-highway.zh-TW.md | v3 補充：Evidence Seed + Strict Evidence Card 雙軌 |
+| `doc_server_pipeline_0006` | pipeline | server/npc-brain/pipelines/sanguo-rag/external-evidence-highway-vnext.zh-TW.md | 外部網站採證高速公路 vNext 規劃 |
+| `doc_server_pipeline_0007` | pipeline | server/npc-brain/pipelines/sanguo-rag/full-roster-convergence-highway-v1.implementation.zh-TW.md | Full Roster Convergence Highway v1 實作說明 |
+| `doc_server_pipeline_0008` | pipeline | server/npc-brain/pipelines/sanguo-rag/external-evidence-site-playbook.zh-TW.md | 外部網站採證模板（Evidence Seed / Evidence Card） |
+| `doc_server_pipeline_0009` | pipeline | server/npc-brain/pipelines/sanguo-rag/precheck-hardcode-audit.zh-TW.md | 主要管線寫死邏輯盤點（precheck / harvest） |
 | `doc_server_service_0001` | service | server/npc-brain/README.md | NPC Brain Service |
 | `doc_server_service_0002` | service | server/npc-brain/文件/三國人物資料推進流程.md | 三國人物資料推進流程 |
 | `doc_server_service_0003` | service | server/npc-brain/文件/對話服務與模型回退.md | 對話服務與模型回退 |

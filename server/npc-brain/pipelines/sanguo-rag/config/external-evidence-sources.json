@@ -7,6 +7,75 @@
     "Single-source evidence stays capped at B until cross-family verification passes.",
     "The official allowlist keeps only approved external sources plus internal manual_quote rows; rejected candidates live in benchmark reports only."
   ],
+  "pipelinePolicies": {
+    "precheckDefaults": {
+      "likelyThreshold": 3,
+      "possibleThreshold": 1,
+      "minimumTermHitCount": 1,
+      "hintKeywords": [
+        "歷史",
+        "历史",
+        "演義",
+        "演义",
+        "三國",
+        "三国"
+      ],
+      "loginPatterns": [
+        "登入",
+        "登录",
+        "sign in",
+        "log in",
+        "建立帳號",
+        "创建账号"
+      ],
+      "javascriptShellContentTypePrefixes": [
+        "application/javascript"
+      ],
+      "loginGatedMaxTermHitCount": 1,
+      "loginGatedMaxBytesRead": 8000
+    },
+    "sourceClassPrecheck": {
+      "high-yield-character-site": {
+        "likelyThreshold": 3,
+        "possibleThreshold": 1
+      },
+      "primary-text-site": {
+        "likelyThreshold": 2,
+        "possibleThreshold": 1
+      },
+      "community-worldbuilding-site": {
+        "likelyThreshold": 2,
+        "possibleThreshold": 1
+      }
+    },
+    "stage2GateDefaults": {
+      "fetchSuccessRateMin": 0.9,
+      "relevantPageRateMin": 0.7,
+      "errorRateMax": 0.1,
+      "duplicateLinkRateMax": 0.05
+    },
+    "stage2ClassGate": {
+      "primary-text-site": {
+        "relevantPageRateMin": 0.6
+      }
+    },
+    "stage3ClassGateDefaults": {
+      "high-yield-character-site": {
+        "seedPerPageMin": 1.0,
+        "candidateCardPerPageMin": 0.4,
+        "canonicalMatchPageRateMin": 0.4,
+        "shadowPeopleMin": 15
+      },
+      "primary-text-site": {
+        "quoteLocatorHashCoverageMin": 0.9,
+        "claimBearingPassageCountMin": 20
+      },
+      "community-worldbuilding-site": {
+        "seedPerPageMin": 0.8,
+        "candidateCardPerPageMin": 0.2
+      }
+    }
+  },
   "sources": [
     {
       "sourceId": "wikisource-sanguozhi",
@@ -18,10 +87,41 @@
       "trustTier": "primary-text-transcription",
       "baseUrl": "https://zh.wikisource.org/wiki/三國志",
       "singleSourceMaxGrade": "B",
-      "claimScopes": ["identity", "relationship", "event", "location", "title", "trait", "activity"],
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "event",
+        "location",
+        "title",
+        "trait",
+        "activity"
+      ],
+      "termHitKeywords": [
+        "三國",
+        "三国",
+        "曹操",
+        "劉備",
+        "刘备",
+        "孫權",
+        "孙权",
+        "關羽",
+        "关羽",
+        "諸葛亮",
+        "诸葛亮",
+        "司馬懿",
+        "司马懿",
+        "王異",
+        "貂蟬",
+        "黃月英",
+        "蔡琰",
+        "甄宓",
+        "辛憲英"
+      ],
       "harvestPolicy": {
         "indexUrl": "https://zh.wikisource.org/wiki/%E4%B8%89%E5%9C%8B%E5%BF%97",
-        "linkInclude": ["^/wiki/%E4%B8%89%E5%9C%8B%E5%BF%97/"],
+        "linkInclude": [
+          "^/wiki/%E4%B8%89%E5%9C%8B%E5%BF%97/"
+        ],
         "sameOrigin": true,
         "maxPages": 120,
         "recommendedConcurrency": 4,
@@ -47,7 +147,44 @@
       "trustTier": "primary-text-transcription",
       "baseUrl": "https://zh.wikisource.org/wiki/後漢書",
       "singleSourceMaxGrade": "B",
-      "claimScopes": ["identity", "relationship", "event", "location", "title"],
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "event",
+        "location",
+        "title"
+      ],
+      "termHitKeywords": [
+        "後漢書",
+        "三國",
+        "三国",
+        "曹操",
+        "劉備",
+        "刘备",
+        "孫權",
+        "孙权",
+        "王異",
+        "蔡琰",
+        "何氏",
+        "曹節",
+        "列女傳"
+      ],
+      "harvestPolicy": {
+        "indexUrl": "https://zh.wikisource.org/wiki/%E5%BE%8C%E6%BC%A2%E6%9B%B8",
+        "linkInclude": [
+          "^/wiki/%E5%BE%8C%E6%BC%A2%E6%9B%B8/"
+        ],
+        "sameOrigin": true,
+        "maxPages": 160,
+        "recommendedConcurrency": 4,
+        "writesPageTextCache": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 5,
+        "seedPerPage": 13.2,
+        "candidateCardPerPage": 13.2,
+        "lastApprovedAt": "2026-05-11T09:01:18+08:00"
+      },
       "singlePagePolicy": {
         "deterministicPrecheck": true
       }
@@ -62,10 +199,51 @@
       "trustTier": "primary-text-transcription",
       "baseUrl": "https://zh.wikisource.org/wiki/資治通鑑",
       "singleSourceMaxGrade": "B",
-      "claimScopes": ["identity", "relationship", "event", "location", "title"],
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "event",
+        "location",
+        "title"
+      ],
+      "termHitKeywords": [
+        "資治通鑑",
+        "三國",
+        "三国",
+        "曹操",
+        "劉備",
+        "刘备",
+        "孫權",
+        "孙权",
+        "司馬懿",
+        "司马懿",
+        "王異",
+        "辛憲英"
+      ],
+      "harvestPolicy": {
+        "indexUrl": "https://zh.wikisource.org/wiki/%E8%B3%87%E6%B2%BB%E9%80%9A%E9%91%91",
+        "linkInclude": [
+          "^/wiki/%E8%B3%87%E6%B2%BB%E9%80%9A%E9%91%91/"
+        ],
+        "sameOrigin": true,
+        "maxPages": 240,
+        "recommendedConcurrency": 4,
+        "writesPageTextCache": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 5,
+        "seedPerPage": 20.0,
+        "candidateCardPerPage": 20.0,
+        "lastApprovedAt": "2026-05-11T09:01:18+08:00"
+      },
       "singlePagePolicy": {
         "deterministicPrecheck": true
-      }
+      },
+      "aliasNoiseDenylist": [
+        "子桓",
+        "子孝",
+        "王立"
+      ]
     },
     {
       "sourceId": "wikisource-romance",
@@ -77,22 +255,48 @@
       "trustTier": "primary-text-transcription",
       "baseUrl": "https://zh.wikisource.org/wiki/三國演義",
       "singleSourceMaxGrade": "B",
-      "claimScopes": ["identity", "relationship", "event", "trait", "activity", "dialogue_seed", "worldbuilding_note"],
-      "singlePagePolicy": {
-        "deterministicPrecheck": true
-      }
-    },
-    {
-      "sourceId": "commons-sanguozhi-scan",
-      "status": "approved",
-      "adapterType": "scan_pdf",
-      "sourceClass": "primary-text-site",
-      "sourceFamily": "sanguozhi",
-      "sourceLayer": "history",
-      "trustTier": "primary-scan",
-      "baseUrl": "https://commons.wikimedia.org/wiki/File:NCL-01431_01_三國志.pdf",
-      "singleSourceMaxGrade": "B",
-      "claimScopes": ["identity", "relationship", "event", "location", "title"],
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "event",
+        "trait",
+        "activity",
+        "dialogue_seed",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "三國演義",
+        "三国演义",
+        "三國",
+        "三国",
+        "貂蟬",
+        "祝融",
+        "鮑三娘",
+        "花鬘",
+        "關銀屏",
+        "黃月英",
+        "孫尚香",
+        "大喬",
+        "小喬",
+        "女將",
+        "女将"
+      ],
+      "harvestPolicy": {
+        "indexUrl": "https://zh.wikisource.org/wiki/%E4%B8%89%E5%9C%8B%E6%BC%94%E7%BE%A9",
+        "linkInclude": [
+          "^/wiki/%E4%B8%89%E5%9C%8B%E6%BC%94%E7%BE%A9/"
+        ],
+        "sameOrigin": true,
+        "maxPages": 140,
+        "recommendedConcurrency": 4,
+        "writesPageTextCache": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 5,
+        "seedPerPage": 86.0,
+        "candidateCardPerPage": 86.0,
+        "lastApprovedAt": "2026-05-11T09:01:18+08:00"
+      },
       "singlePagePolicy": {
         "deterministicPrecheck": true
       }
@@ -107,7 +311,30 @@
       "trustTier": "secondary",
       "baseUrl": "https://www.gutenberg.org/ebooks/25606",
       "singleSourceMaxGrade": "B",
-      "claimScopes": ["identity", "relationship", "event", "location", "title"],
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "event",
+        "location",
+        "title"
+      ],
+      "termHitKeywords": [
+        "三國志",
+        "三国志",
+        "曹操",
+        "劉備",
+        "孙权",
+        "王異",
+        "黃月英"
+      ],
+      "harvestPolicy": {
+        "indexUrl": "https://www.gutenberg.org/ebooks/25606",
+        "linkExtractionMode": "auto-discover-primary-text",
+        "sameOrigin": true,
+        "maxPages": 1,
+        "recommendedConcurrency": 1,
+        "writesPageTextCache": true
+      },
       "singlePagePolicy": {
         "deterministicPrecheck": true
       }
@@ -120,14 +347,49 @@
       "sourceFamily": "wikipedia-romance-index",
       "sourceLayer": "encyclopedia",
       "trustTier": "secondary",
-      "baseUrl": "https://zh.wikipedia.org/wiki/三國演義角色列表",
+      "baseUrl": "https://zh.wikipedia.org/wiki/%E4%B8%89%E5%9C%8B%E6%BC%94%E7%BE%A9%E8%A7%92%E8%89%B2%E5%88%97%E8%A1%A8",
       "singleSourceMaxGrade": "B",
-      "claimScopes": ["identity", "relationship", "worldbuilding_note"],
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "三國演義角色",
+        "三国演义角色",
+        "女性",
+        "女將",
+        "女将",
+        "貂蟬",
+        "黃月英",
+        "孫尚香",
+        "大喬",
+        "小喬",
+        "王異",
+        "甄宓",
+        "蔡琰"
+      ],
       "benchmarkBaseline": {
         "samplePageCount": 1,
         "seedPerPage": 1108.0,
         "candidateCardPerPage": 1108.0,
         "lastApprovedAt": "2026-05-10T20:07:57+08:00"
+      },
+      "harvestPolicy": {
+        "indexUrl": "https://zh.wikipedia.org/wiki/%E4%B8%89%E5%9C%8B%E6%BC%94%E7%BE%A9%E8%A7%92%E8%89%B2%E5%88%97%E8%A1%A8",
+        "linkInclude": [
+          "^/wiki/[^:#?]+$"
+        ],
+        "linkExclude": [
+          "^/wiki/(Wikipedia|Help|Category|Special|Template|Portal|User|Talk):"
+        ],
+        "sameOrigin": true,
+        "maxPages": 300,
+        "recommendedConcurrency": 4,
+        "writesPageTextCache": true,
+        "linkExtractionMode": "table-column-links",
+        "tableClassContains": "wikitable",
+        "tableColumnIndex": 0
       },
       "singlePagePolicy": {
         "deterministicPrecheck": true
@@ -143,10 +405,34 @@
       "trustTier": "secondary",
       "baseUrl": "https://www.cne3online.com/biography/",
       "singleSourceMaxGrade": "B",
-      "claimScopes": ["identity", "relationship", "trait", "worldbuilding_note"],
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "trait",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "三國人物",
+        "三国人物",
+        "女性",
+        "女將",
+        "女将",
+        "王異",
+        "辛憲英",
+        "王元姬",
+        "張春華",
+        "黃月英",
+        "甄宓",
+        "蔡琰",
+        "孫尚香",
+        "大喬",
+        "小喬"
+      ],
       "harvestPolicy": {
         "indexUrl": "https://www.cne3online.com/biography/",
-        "linkInclude": ["^/biography/view/[^/]+\\.shtml$"],
+        "linkInclude": [
+          "^/biography/view/[^/]+\\.shtml$"
+        ],
         "sameOrigin": true,
         "maxPages": 200,
         "recommendedConcurrency": 4,
@@ -172,10 +458,46 @@
       "trustTier": "secondary",
       "baseUrl": "https://www.lishirenwu.com/sanguorenwu/",
       "singleSourceMaxGrade": "B",
-      "claimScopes": ["identity", "relationship", "event", "trait", "title", "activity", "worldbuilding_note"],
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "event",
+        "trait",
+        "title",
+        "activity",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "三國人物",
+        "三国人物",
+        "女性",
+        "女將",
+        "女将",
+        "夫人",
+        "皇后",
+        "公主",
+        "貂蟬",
+        "王異",
+        "辛憲英",
+        "王元姬",
+        "張春華",
+        "黃月英",
+        "孫尚香",
+        "大喬",
+        "小喬",
+        "孫魯班",
+        "孫魯育",
+        "步練師",
+        "甄宓",
+        "蔡琰",
+        "呂玲綺",
+        "張星彩"
+      ],
       "harvestPolicy": {
         "indexUrl": "https://www.lishirenwu.com/sanguorenwu/",
-        "linkInclude": ["^/sanguorenwu/[^/]+\\.html$"],
+        "linkInclude": [
+          "^/sanguorenwu/[^/]+\\.html$"
+        ],
         "sameOrigin": true,
         "maxPages": 500,
         "recommendedConcurrency": 4,
@@ -191,6 +513,555 @@
       }
     },
     {
+      "sourceId": "bahamut-sanguo-female-compendium",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "bahamut-community-compendium",
+      "sourceLayer": "worldbuilding",
+      "trustTier": "secondary",
+      "baseUrl": "https://home.gamer.com.tw/artwork.php?sn=1852708",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "trait",
+        "activity",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "三國",
+        "三国",
+        "女性",
+        "女將",
+        "女将",
+        "貂蟬",
+        "黃月英",
+        "孫尚香",
+        "甄宓",
+        "蔡琰"
+      ],
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 1,
+        "seedPerPage": 303.0,
+        "candidateCardPerPage": 303.0,
+        "lastApprovedAt": "2026-05-11T12:27:30+08:00"
+      }
+    },
+    {
+      "sourceId": "ptt-koei-female-general-list",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "sannv-fc2-female-list",
+      "sourceLayer": "worldbuilding",
+      "trustTier": "secondary",
+      "baseUrl": "http://sannv.web.fc2.com/zong/ngi.html",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "trait",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "三國",
+        "三国",
+        "女性",
+        "女將",
+        "女将",
+        "武將",
+        "武将",
+        "貂蟬",
+        "黃月英",
+        "孫尚香"
+      ],
+      "harvestPolicy": {
+        "indexUrl": "http://sannv.web.fc2.com/zong/ngi.html",
+        "linkInclude": [
+          "^/.+\\.html$"
+        ],
+        "linkExclude": [
+          "/zong/ngi\\.html$"
+        ],
+        "sameOrigin": true,
+        "maxPages": 40,
+        "recommendedConcurrency": 4,
+        "writesPageTextCache": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 9,
+        "seedPerPage": 28.88888888888889,
+        "candidateCardPerPage": 27.666666666666668,
+        "lastApprovedAt": "2026-05-11T12:27:30+08:00"
+      }
+    },
+    {
+      "sourceId": "sanguo-qunfanglu",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "sanguo-heroines-blogspot",
+      "sourceLayer": "worldbuilding",
+      "trustTier": "secondary",
+      "baseUrl": "https://heroinesanguo.blogspot.com/2012/11/blog-post_18.html",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "trait",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "三國",
+        "三国",
+        "女性",
+        "女將",
+        "女将",
+        "貂蟬",
+        "黃月英",
+        "孫尚香",
+        "大喬",
+        "小喬"
+      ],
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 1,
+        "seedPerPage": 202.0,
+        "candidateCardPerPage": 202.0,
+        "lastApprovedAt": "2026-05-11T12:27:30+08:00"
+      }
+    },
+    {
+      "sourceId": "rekowiki-musou-character-list",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "rekowiki-musou",
+      "sourceLayer": "worldbuilding",
+      "trustTier": "secondary",
+      "baseUrl": "https://rekowiki.org/wiki/%E7%9C%9F%E2%80%A7%E4%B8%89%E5%9C%8B%E7%84%A1%E9%9B%99#%E7%99%BB%E5%A0%B4%E4%BA%BA%E7%89%A9",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "trait",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "三國",
+        "三国",
+        "無雙",
+        "无双",
+        "女性",
+        "女將",
+        "女将",
+        "角色",
+        "貂蟬",
+        "呂玲綺"
+      ],
+      "harvestPolicy": {
+        "indexUrl": "https://rekowiki.org/wiki/%E7%9C%9F%E2%80%A7%E4%B8%89%E5%9C%8B%E7%84%A1%E9%9B%99#%E7%99%BB%E5%A0%B4%E4%BA%BA%E7%89%A9",
+        "linkInclude": [
+          "^/wiki/[^:#?]+$"
+        ],
+        "sameOrigin": true,
+        "maxPages": 30,
+        "recommendedConcurrency": 4,
+        "writesPageTextCache": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 20,
+        "seedPerPage": 92.2,
+        "candidateCardPerPage": 89.85,
+        "lastApprovedAt": "2026-05-11T12:27:30+08:00"
+      }
+    },
+    {
+      "sourceId": "bahamut-sanguo-age-registry",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "bahamut-sanguo-age-registry",
+      "sourceLayer": "history",
+      "trustTier": "secondary",
+      "baseUrl": "https://home.gamer.com.tw/artwork.php?sn=1855879",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": [
+        "identity",
+        "lifespan",
+        "title",
+        "relationship",
+        "event",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "\u4e09\u570b",
+        "\u4e09\u56fd",
+        "\u751f\u5e74",
+        "\u5352\u5e74",
+        "\u58fd\u547d",
+        "\u5bff\u547d",
+        "\u66f9\u64cd",
+        "\u5289\u5099",
+        "\u5b6b\u6b0a",
+        "\u8af8\u845b\u4eae",
+        "\u53f8\u99ac\u61ff"
+      ],
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 1,
+        "seedPerPage": 242.0,
+        "candidateCardPerPage": 242.0,
+        "lastApprovedAt": "2026-05-11T12:42:30+08:00"
+      }
+    },
+    {
+      "sourceId": "nobuwiki-sanguo-character",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "nobuwiki-sanguo-character",
+      "sourceLayer": "encyclopedia",
+      "trustTier": "secondary",
+      "baseUrl": "https://www.nobuwiki.org/san/character-san",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "title",
+        "trait",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "\u4e09\u570b",
+        "\u4e09\u56fd",
+        "\u4eba\u7269",
+        "\u66f9\u64cd",
+        "\u5289\u5099",
+        "\u5b6b\u6b0a",
+        "\u8af8\u845b\u4eae",
+        "\u53f8\u99ac\u61ff",
+        "\u95dc\u7fbd"
+      ],
+      "harvestPolicy": {
+        "indexUrl": "https://www.nobuwiki.org/san/character-san",
+        "linkInclude": [
+          "^/san/"
+        ],
+        "sameOrigin": true,
+        "maxPages": 40,
+        "recommendedConcurrency": 4,
+        "writesPageTextCache": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 5,
+        "seedPerPage": 122.8,
+        "candidateCardPerPage": 122.8,
+        "lastApprovedAt": "2026-05-11T12:46:09+08:00"
+      }
+    },
+    {
+      "sourceId": "wikipedia-sanguo-overview",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "wikipedia-sanguo-overview",
+      "sourceLayer": "encyclopedia",
+      "trustTier": "secondary",
+      "baseUrl": "https://zh.wikipedia.org/wiki/%E4%B8%89%E5%9C%8B",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "event",
+        "title",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "\u4e09\u570b",
+        "\u4e09\u56fd",
+        "\u66f9\u64cd",
+        "\u5289\u5099",
+        "\u5b6b\u6b0a",
+        "\u8af8\u845b\u4eae",
+        "\u53f8\u99ac\u61ff",
+        "\u95dc\u7fbd",
+        "\u5f35\u98db"
+      ],
+      "harvestPolicy": {
+        "indexUrl": "https://zh.wikipedia.org/wiki/%E4%B8%89%E5%9C%8B",
+        "linkInclude": [
+          "^/wiki/[^:#?]+$"
+        ],
+        "linkExclude": [
+          "^/wiki/(Wikipedia|Help|Category|Special|Template|Portal|User|Talk):"
+        ],
+        "sameOrigin": true,
+        "maxPages": 30,
+        "recommendedConcurrency": 4,
+        "writesPageTextCache": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 5,
+        "seedPerPage": 235.4,
+        "candidateCardPerPage": 233.8,
+        "lastApprovedAt": "2026-05-11T12:46:09+08:00"
+      }
+    },
+    {
+      "sourceId": "shuzi-sanguo-culture-character-compendium",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "shuzi-culture-romance-character-index",
+      "sourceLayer": "romance",
+      "trustTier": "secondary",
+      "baseUrl": "https://www.cne3online.com/culture/view/11071872/11087895605124.shtml",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "event",
+        "title",
+        "location",
+        "worldbuilding_note",
+        "source_conflict"
+      ],
+      "termHitKeywords": [
+        "三國人物大全",
+        "三国人物大全",
+        "三國演義",
+        "三国演义",
+        "曹操",
+        "劉備",
+        "刘备",
+        "孫權",
+        "孙权",
+        "關羽",
+        "关羽",
+        "諸葛亮",
+        "诸葛亮"
+      ],
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 1,
+        "seedPerPage": 666.0,
+        "candidateCardPerPage": 666.0,
+        "lastApprovedAt": "2026-05-11T14:03:04+08:00"
+      }
+    },
+    {
+      "sourceId": "shuzi-sanguo-culture-article-feed",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "shuzi-culture-article-feed",
+      "sourceLayer": "encyclopedia",
+      "trustTier": "secondary",
+      "baseUrl": "https://www.cne3online.com/culture/",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "event",
+        "trait",
+        "activity",
+        "location",
+        "worldbuilding_note",
+        "source_conflict"
+      ],
+      "termHitKeywords": [
+        "三國文史",
+        "三国文史",
+        "三國演義電子辭典",
+        "曹操",
+        "劉備",
+        "刘备",
+        "孫權",
+        "孙权",
+        "諸葛亮",
+        "诸葛亮",
+        "關羽",
+        "关羽",
+        "司馬懿",
+        "司马懿"
+      ],
+      "harvestPolicy": {
+        "indexUrl": "https://www.cne3online.com/culture/",
+        "linkExtractionMode": "api-json-list",
+        "linkInclude": [
+          "^/culture/view/\\d+/\\d+\\.shtml$"
+        ],
+        "sameOrigin": true,
+        "maxPages": 160,
+        "recommendedConcurrency": 4,
+        "writesPageTextCache": true,
+        "apiUrl": "https://www.cne3online.com/api/api_culture.php",
+        "apiMethod": "POST",
+        "apiHeaders": {
+          "Content-Type": "application/json"
+        },
+        "apiBodyTemplate": {
+          "types": "index",
+          "keywords": "",
+          "pageno": "{pageNo}",
+          "parm": "0"
+        },
+        "apiListPath": "data",
+        "apiUrlField": "url",
+        "apiTitleField": "title",
+        "apiSnippetField": "con",
+        "apiPeopleField": "ren",
+        "apiStartPage": 1,
+        "apiMaxIndexPages": 100
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 20,
+        "seedPerPage": 58.25,
+        "candidateCardPerPage": 58.0,
+        "lastApprovedAt": "2026-05-11T14:33:52+08:00"
+      }
+    },
+    {
+      "sourceId": "kongming-archives-encyclopedia",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "kongming-archives-encyclopedia",
+      "sourceLayer": "encyclopedia",
+      "trustTier": "secondary",
+      "baseUrl": "https://kongming.net/encyclopedia/",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "event",
+        "title",
+        "trait",
+        "role",
+        "activity",
+        "location",
+        "source_conflict",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "Three Kingdoms",
+        "Romance of the Three Kingdoms",
+        "Cao Cao",
+        "Liu Bei",
+        "Sun Quan",
+        "Zhuge Liang",
+        "Sima Yi",
+        "Diaochan",
+        "Da Qiao",
+        "Xingcai"
+      ],
+      "harvestPolicy": {
+        "indexUrl": "https://kongming.net/encyclopedia/",
+        "linkInclude": [
+          "^/encyclopedia/officers/[^/?#]+/?$"
+        ],
+        "sameOrigin": true,
+        "maxPages": 120,
+        "recommendedConcurrency": 4,
+        "writesPageTextCache": true
+      },
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      },
+      "translationPolicy": {
+        "sourceLanguage": "en",
+        "targetLanguage": "zh-Hant",
+        "mode": "rule-based-seed-translation-v2",
+        "preserveOriginalQuote": true
+      },
+      "extractorPolicy": {
+        "allowFallbackSubjectAnchoring": true
+      },
+      "precheckPolicy": {
+        "hintKeywords": [
+          "Three Kingdoms",
+          "Romance of the Three Kingdoms",
+          "Cao Cao",
+          "Liu Bei",
+          "Sun Quan",
+          "Zhuge Liang",
+          "Sima Yi"
+        ]
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 20,
+        "seedPerPage": 9.4,
+        "candidateCardPerPage": 6.95,
+        "lastApprovedAt": "2026-05-11T14:01:37+08:00"
+      }
+    },
+    {
+      "sourceId": "processon-sanguo-main-relationship-map",
+      "status": "approved",
+      "adapterType": "static_html",
+      "sourceClass": "community-worldbuilding-site",
+      "sourceFamily": "processon-sanguo-relationship-map",
+      "sourceLayer": "romance",
+      "trustTier": "secondary",
+      "baseUrl": "https://www.processon.com/view/6080f53fe401fd53c7b4e9b4",
+      "singleSourceMaxGrade": "B",
+      "claimScopes": [
+        "relationship",
+        "role",
+        "worldbuilding_note",
+        "source_conflict"
+      ],
+      "termHitKeywords": [
+        "三國演義",
+        "三国演义",
+        "人物關係",
+        "人物关系",
+        "曹操",
+        "劉備",
+        "刘备",
+        "孫權",
+        "关羽",
+        "張飛",
+        "张飞"
+      ],
+      "singlePagePolicy": {
+        "deterministicPrecheck": true
+      },
+      "extractorPolicy": {
+        "passageMode": "token-window",
+        "tokenWindowSize": 12,
+        "tokenWindowStep": 3,
+        "relationshipDirectionDenoise": true,
+        "bodyStartMarkers": [
+          "大纲 / 内容",
+          "大纲/内容",
+          "大纲 内容"
+        ],
+        "bodyEndMarkers": [
+          "查看更多",
+          "评论 0 条评论"
+        ],
+        "disableTitleIdentity": true
+      },
+      "benchmarkBaseline": {
+        "samplePageCount": 1,
+        "seedPerPage": 46.0,
+        "candidateCardPerPage": 46.0,
+        "lastApprovedAt": "2026-05-11T14:33:56+08:00"
+      }
+    },
+    {
       "sourceId": "manual-female-targets-history-r1",
       "status": "approved",
       "adapterType": "manual_quote",
@@ -201,7 +1072,30 @@
       "baseUrl": "about:manual-female-targets-history-r1",
       "singleSourceMaxGrade": "B",
       "manualEvidenceCount": 30,
-      "claimScopes": ["identity", "relationship", "event", "location", "title", "trait", "activity"]
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "event",
+        "location",
+        "title",
+        "trait",
+        "activity"
+      ],
+      "termHitKeywords": [
+        "王異",
+        "辛憲英",
+        "王元姬",
+        "張春華",
+        "黃月英",
+        "蔡琰",
+        "甄宓",
+        "孫尚香",
+        "大喬",
+        "小喬",
+        "孫魯班",
+        "孫魯育",
+        "步練師"
+      ]
     },
     {
       "sourceId": "manual-female-targets-romance-r1",
@@ -214,7 +1108,26 @@
       "baseUrl": "about:manual-female-targets-romance-r1",
       "singleSourceMaxGrade": "B",
       "manualEvidenceCount": 8,
-      "claimScopes": ["identity", "relationship", "event", "trait", "activity", "worldbuilding_note"]
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "event",
+        "trait",
+        "activity",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "貂蟬",
+        "祝融",
+        "鮑三娘",
+        "花鬘",
+        "關銀屏",
+        "呂玲綺",
+        "張星彩",
+        "演義",
+        "傳說",
+        "民間"
+      ]
     },
     {
       "sourceId": "manual-female-targets-folklore-r1",
@@ -227,7 +1140,25 @@
       "baseUrl": "about:manual-female-targets-folklore-r1",
       "singleSourceMaxGrade": "B",
       "manualEvidenceCount": 5,
-      "claimScopes": ["identity", "relationship", "trait", "activity", "worldbuilding_note"]
+      "claimScopes": [
+        "identity",
+        "relationship",
+        "trait",
+        "activity",
+        "worldbuilding_note"
+      ],
+      "termHitKeywords": [
+        "女性",
+        "女將",
+        "女将",
+        "傳說",
+        "野史",
+        "稗官",
+        "貂蟬",
+        "花鬘",
+        "鮑三娘",
+        "關銀屏"
+      ]
     }
   ]
 }

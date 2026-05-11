@@ -154,6 +154,151 @@ EVENT_KEYWORDS = (
     "投奔",
 )
 
+ROLE_KEYWORDS = (
+    "軍師",
+    "军师",
+    "謀士",
+    "谋士",
+    "重臣",
+    "名臣",
+    "后宮",
+    "后宫",
+    "寵妃",
+    "宠妃",
+    "公主",
+    "皇妃",
+    "侍女",
+    "養女",
+    "养女",
+    "族人",
+    "族親",
+    "族亲",
+    "門客",
+    "门客",
+    "洞主",
+    "部將",
+    "部将",
+)
+
+LOCATION_KEYWORDS = (
+    "潁川",
+    "颖川",
+    "許昌",
+    "许昌",
+    "洛陽",
+    "洛阳",
+    "長安",
+    "长安",
+    "鄴城",
+    "邺城",
+    "荊州",
+    "荆州",
+    "益州",
+    "江東",
+    "江东",
+    "城",
+    "郡",
+    "州",
+    "縣",
+    "县",
+    "關",
+    "关",
+    "山",
+    "江",
+    "河",
+    "谷",
+    "寨",
+    "營",
+    "营",
+    "渡",
+)
+
+HABIT_KEYWORDS = (
+    "常常",
+    "常以",
+    "素來",
+    "素来",
+    "平日",
+    "向來",
+    "向来",
+    "喜歡",
+    "喜欢",
+    "喜好",
+    "嗜酒",
+    "好讀書",
+    "好读书",
+    "善飲",
+    "善饮",
+    "每每",
+)
+
+ACTIVITY_KEYWORDS = (
+    "遊說",
+    "游说",
+    "出使",
+    "守城",
+    "赴宴",
+    "設宴",
+    "设宴",
+    "會盟",
+    "会盟",
+    "巡察",
+    "勸降",
+    "劝降",
+    "讀書",
+    "读书",
+    "作詩",
+    "作诗",
+    "狩獵",
+    "狩猎",
+    "彈琴",
+    "弹琴",
+    "講學",
+    "讲学",
+    "行醫",
+    "行医",
+)
+
+DIALOGUE_KEYWORDS = (
+    "曰",
+    "云",
+    "言",
+    "道",
+    "說",
+    "说",
+    "問",
+    "问",
+    "答",
+    "笑曰",
+    "怒曰",
+    "說道",
+    "说道",
+    "「",
+    "」",
+    "“",
+    "”",
+)
+
+SOURCE_CONFLICT_KEYWORDS = (
+    "一作",
+    "亦作",
+    "又作",
+    "一說",
+    "一说",
+    "另有說法",
+    "另有说法",
+    "後人所創",
+    "后人所创",
+    "後世附會",
+    "后世附会",
+    "傳說",
+    "传说",
+    "小說",
+    "小说",
+    "非史實",
+    "非史实",
+)
+
 WORLDBUILDING_KEYWORDS = (
     "长得",
     "長得",
@@ -275,6 +420,147 @@ TRADITIONAL_TO_SIMPLIFIED = str.maketrans(
     }
 )
 
+LOCATION_RE = re.compile(r"[\u4e00-\u9fff]{1,8}(?:城|郡|州|縣|县|關|关|山|江|河|谷|寨|營|营|渡|口|津|坡|原)")
+LATIN_RE = re.compile(r"[A-Za-z]")
+
+ENGLISH_TEMPLATE_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
+    (re.compile(r"^(?:daughter\s+of)\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之女"),
+    (re.compile(r"^(?:son\s+of)\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之子"),
+    (re.compile(r"^(?:wife\s+of)\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之妻"),
+    (re.compile(r"^(?:husband\s+of)\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之夫"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+the\s+daughter\s+of\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之女"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+the\s+son\s+of\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之子"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+the\s+wife\s+of\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之妻"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+the\s+husband\s+of\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之夫"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+(?:was\s+)?married\s+to\s+(?P<object>.+)$", re.IGNORECASE), "{subject}與{object}成婚"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+served\s+under\s+(?P<object>.+)$", re.IGNORECASE), "{subject}曾仕於{object}麾下"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+(?:later\s+)?served\s+as\s+(?P<object>.+)$", re.IGNORECASE), "{subject}曾任{object}"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+affiliated\s+with\s+(?P<object>.+)$", re.IGNORECASE), "{subject}隸屬於{object}"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+lived\s+during\s+(?P<object>.+)$", re.IGNORECASE), "{subject}活躍於{object}"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+born\s+in\s+(?P<object>.+)$", re.IGNORECASE), "{subject}生於{object}"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+best\s+known\s+for\s+(?P<object>.+)$", re.IGNORECASE), "{subject}最以{object}聞名"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+killed\s+by\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}所殺"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+defeated\s+by\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}所敗"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+known\s+for\s+(?P<object>.+)$", re.IGNORECASE), "{subject}以{object}聞名"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+a\s+fictional\s+character(?:\s+in\s+(?P<object>.+))?$", re.IGNORECASE), "{subject}是{object}中的虛構人物"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+a\s+historical\s+figure(?:\s+of\s+(?P<object>.+))?$", re.IGNORECASE), "{subject}是{object}的歷史人物"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+an?\s+(?P<object>.+?)\s+of\s+(?P<object2>.+)$", re.IGNORECASE), "{subject}是{object2}的{object}"),
+    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+often\s+(?P<object>.+)$", re.IGNORECASE), "{subject}常{object}"),
+)
+
+ENGLISH_PHRASE_REPLACEMENTS: tuple[tuple[str, str], ...] = (
+    ("A Romance of the Three Kingdoms Encyclopedia officer profile", "《三國演義》人物整理條目"),
+    ("Romance of the Three Kingdoms Encyclopedia officer profile", "《三國演義》人物整理條目"),
+    ("Encyclopedia officer profile", "人物整理條目"),
+    ("Romance of the Three Kingdoms", "《三國演義》"),
+    ("Records of the Three Kingdoms", "《三國志》"),
+    ("Three Kingdoms period", "三國時期"),
+    ("Three Kingdoms", "三國"),
+    ("the Three Kingdoms", "三國時期"),
+    ("late Han dynasty", "東漢末年"),
+    ("Later Han dynasty", "東漢"),
+    ("Eastern Han dynasty", "東漢"),
+    ("Cao Wei", "曹魏"),
+    ("Shu Han", "蜀漢"),
+    ("Shu Kingdom", "蜀漢"),
+    ("the Shu Kingdom", "蜀漢"),
+    ("Eastern Wu", "東吳"),
+    ("Wu Kingdom", "東吳"),
+    ("the Wu Kingdom", "東吳"),
+    ("Western Jin", "西晉"),
+    ("Jin dynasty", "晉朝"),
+    ("historical figure", "歷史人物"),
+    ("historical person", "歷史人物"),
+    ("fictional character", "虛構人物"),
+    ("military general", "軍事將領"),
+    ("scholar-official", "士人官員"),
+    ("politician", "政治人物"),
+    ("warlord", "軍閥"),
+    ("affiliated with", "隸屬於"),
+    ("lived during", "活躍於"),
+    ("best known for", "最以"),
+    ("known for", "以"),
+    ("served as", "曾任"),
+    ("served under", "曾仕於"),
+    ("Bao Family Manor", "鮑氏家族莊園"),
+    ("Bao Family", "鮑氏家族"),
+)
+
+ENGLISH_NAME_REPLACEMENTS: tuple[tuple[str, str], ...] = (
+    ("Cao Cao", "曹操"),
+    ("Liu Bei", "劉備"),
+    ("Sun Quan", "孫權"),
+    ("Liu Shan", "劉禪"),
+    ("A Dou", "阿斗"),
+    ("Adou", "阿斗"),
+    ("Zhuge Liang", "諸葛亮"),
+    ("Sima Yi", "司馬懿"),
+    ("Guan Yu", "關羽"),
+    ("Zhang Fei", "張飛"),
+    ("Lu Bu", "呂布"),
+    ("Dong Zhuo", "董卓"),
+    ("Diaochan", "貂蟬"),
+    ("Diao Chan", "貂蟬"),
+    ("Huang Yueying", "黃月英"),
+    ("Sun Shangxiang", "孫尚香"),
+    ("Da Qiao", "大喬"),
+    ("Xiao Qiao", "小喬"),
+    ("Wang Yi", "王異"),
+    ("Xin Xianying", "辛憲英"),
+    ("Wang Yuanji", "王元姬"),
+    ("Zhang Chunhua", "張春華"),
+    ("Bao Sanniang", "鮑三娘"),
+    ("Guan Suo", "關索"),
+    ("Cai Yan", "蔡琰"),
+    ("Zhen Ji", "甄宓"),
+)
+
+ENGLISH_TOKEN_REPLACEMENTS: tuple[tuple[str, str], ...] = (
+    ("courtesy name", "字"),
+    ("style name", "字"),
+    ("daughter of", "之女"),
+    ("son of", "之子"),
+    ("wife of", "之妻"),
+    ("husband of", "之夫"),
+    ("father of", "之父"),
+    ("mother of", "之母"),
+    ("brother of", "之兄弟"),
+    ("sister of", "之姊妹"),
+    ("general", "將領"),
+    ("governor", "太守"),
+    ("administrator", "太守"),
+    ("strategist", "軍師"),
+    ("advisor", "謀士"),
+    ("adviser", "謀士"),
+    ("emperor", "皇帝"),
+    ("empress", "皇后"),
+    ("princess", "公主"),
+    ("lady", "夫人"),
+    ("minister", "大臣"),
+    ("novel", "小說"),
+    ("legend", "傳說"),
+    ("fictional", "虛構"),
+    ("historical", "史實"),
+    ("relationship", "關係"),
+    ("family", "家族"),
+    ("married", "成婚"),
+    ("killed", "殺"),
+    ("defeated", "擊敗"),
+    ("served", "侍奉"),
+    ("often", "常"),
+    ("liked", "喜愛"),
+    ("enjoyed", "喜歡"),
+    ("habit", "習性"),
+    ("activity", "活動"),
+    ("location", "地點"),
+    ("battle", "戰役"),
+    ("Wei", "魏"),
+    ("Shu", "蜀"),
+    ("Wu", "吳"),
+    ("Jin", "晉"),
+    ("Han", "漢"),
+)
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
@@ -348,6 +634,105 @@ def to_traditional_hint(text: str) -> str:
 
 def to_simplified_hint(text: str) -> str:
     return str(text or "").translate(TRADITIONAL_TO_SIMPLIFIED)
+
+
+def contains_cjk_text(text: str) -> bool:
+    return bool(re.search(r"[\u4e00-\u9fff]", str(text or "")))
+
+
+def contains_latin_text(text: str) -> bool:
+    return bool(LATIN_RE.search(str(text or "")))
+
+
+def apply_english_replacements(text: str) -> str:
+    translated = normalize_text(text)
+    if not translated:
+        return ""
+    for source, target in sorted(ENGLISH_NAME_REPLACEMENTS, key=lambda item: -len(item[0])):
+        translated = re.sub(rf"\b{re.escape(source)}\b", target, translated, flags=re.IGNORECASE)
+    for source, target in sorted(ENGLISH_PHRASE_REPLACEMENTS, key=lambda item: -len(item[0])):
+        translated = re.sub(rf"\b{re.escape(source)}\b", target, translated, flags=re.IGNORECASE)
+    for source, target in ENGLISH_TOKEN_REPLACEMENTS:
+        translated = re.sub(rf"\b{re.escape(source)}\b", target, translated, flags=re.IGNORECASE)
+    translated = re.sub(r"\b(?:a|an|the)\b", " ", translated, flags=re.IGNORECASE)
+    translated = (
+        translated.replace("(", "（")
+        .replace(")", "）")
+        .replace(":", "：")
+        .replace(",", "，")
+        .replace(";", "；")
+        .replace(".", "。")
+    )
+    return normalize_text(to_traditional_hint(translated))
+
+
+def translate_english_fragment_to_traditional(fragment: str, *, matched_name: str = "") -> str:
+    working = normalize_text(fragment)
+    if not working:
+        return ""
+    subject = normalize_text(matched_name)
+    for pattern, template in ENGLISH_TEMPLATE_PATTERNS:
+        match = pattern.match(working)
+        if not match:
+            continue
+        groupdict = match.groupdict()
+        subject_value = subject or normalize_text(groupdict.get("subject") or "")
+        subject_value = (apply_english_replacements(subject_value) or subject_value).strip("。；，、：")
+        object_value = (apply_english_replacements(groupdict.get("object") or "") or "相關人物").strip("。；，、：")
+        object2_value = (apply_english_replacements(groupdict.get("object2") or "") or "相關勢力").strip("。；，、：")
+        translated = template.format(
+            subject=subject_value or "此人",
+            object=object_value,
+            object2=object2_value,
+        )
+        translated = apply_english_replacements(translated)
+        return translated
+
+    translated = working
+    if subject:
+        translated = re.sub(r"^[A-Z][A-Za-z' .-]{1,80}", subject, translated, count=1)
+    translated = apply_english_replacements(translated)
+    if subject:
+        translated = re.sub(rf"^(?:{re.escape(subject)})\s*(?:{re.escape(subject)})+", subject, translated)
+    if subject and subject not in translated and contains_latin_text(working):
+        translated = f"{subject}：{translated}"
+    return translated
+
+
+def translate_seed_text_to_traditional(
+    text: str,
+    *,
+    matched_name: str = "",
+    angle_type: str = "",
+) -> str:
+    normalized = normalize_text(text)
+    if not normalized:
+        return ""
+
+    if contains_cjk_text(normalized) and not contains_latin_text(normalized):
+        translated = to_traditional_hint(normalized)
+        return translated if translated != normalized else ""
+
+    working = (
+        normalized.replace("’", "'")
+        .replace("‘", "'")
+        .replace("–", "-")
+        .replace("—", "-")
+    )
+    fragments = [
+        normalize_text(fragment)
+        for fragment in re.split(r"(?<=[\.\?!;])\s+", working)
+        if normalize_text(fragment)
+    ]
+    translated_fragments = [
+        translate_english_fragment_to_traditional(fragment, matched_name=matched_name)
+        for fragment in fragments
+    ]
+    translated_fragments = [fragment for fragment in translated_fragments if fragment]
+    translated = normalize_text("；".join(translated_fragments)) if translated_fragments else ""
+    if not translated or translated == normalized:
+        return ""
+    return translated
 
 
 def page_slug(url: str) -> str:
@@ -595,7 +980,7 @@ def build_identity_seed(
     locator = f"slug={page_slug(str(page.get('url') or ''))};field=title"
     seed_id = stable_hash(source_policy.get("sourceId"), general_id or candidate_person_id, "identity", quote)
     person_fields = {"generalId": general_id} if general_id else {"candidatePersonId": candidate_person_id}
-    return {
+    row = {
         "version": "3.0.0",
         "seedId": f"seed:{source_policy['sourceId']}:{general_id or candidate_person_id}:identity:{seed_id}",
         "sourceId": source_policy["sourceId"],
@@ -624,6 +1009,12 @@ def build_identity_seed(
         "promotionTarget": "seed-only",
         "canonicalWrites": False,
     }
+    translated = translate_seed_text_to_traditional(quote, matched_name=matched_name, angle_type="identity")
+    if translated:
+        row["translatedTraditionalText"] = translated
+        row["translationProfile"] = "seed-text-to-zh-hant-v1"
+        row["sourceLanguage"] = "en" if contains_latin_text(quote) and not contains_cjk_text(quote) else "zh"
+    return row
 
 
 def build_extra_seed(
@@ -644,7 +1035,7 @@ def build_extra_seed(
         locator += f";sentence={sentence_index}"
     seed_id = stable_hash(source_policy.get("sourceId"), general_id or candidate_person_id, angle_type, quote)
     person_fields = {"generalId": general_id} if general_id else {"candidatePersonId": candidate_person_id}
-    return {
+    row = {
         "version": "3.0.0",
         "seedId": f"seed:{source_policy['sourceId']}:{general_id or candidate_person_id}:{angle_type}:{seed_id}",
         "sourceId": source_policy["sourceId"],
@@ -663,7 +1054,7 @@ def build_extra_seed(
         "hasQuote": True,
         "hasLocator": True,
         "hasTime": has_year_like_text(quote),
-        "hasLocation": angle_type == "location",
+        "hasLocation": angle_type == "location" or bool(LOCATION_RE.search(quote)),
         "extractionMethod": "deterministic",
         "sourceLiveStatus": page.get("liveStatus"),
         "contentSource": content_source,
@@ -673,6 +1064,12 @@ def build_extra_seed(
         "promotionTarget": "seed-only",
         "canonicalWrites": False,
     }
+    translated = translate_seed_text_to_traditional(quote, matched_name=matched_name, angle_type=angle_type)
+    if translated:
+        row["translatedTraditionalText"] = translated
+        row["translationProfile"] = "seed-text-to-zh-hant-v1"
+        row["sourceLanguage"] = "en" if contains_latin_text(quote) and not contains_cjk_text(quote) else "zh"
+    return row
 
 
 def match_name_from_page(page: dict[str, Any], general_id: str | None) -> str:
@@ -784,6 +1181,22 @@ def build_seeds_for_page(
             )
         )
 
+    role_identity_quote = next((text for text in [title, *sentences[:4]] if any(keyword in text for keyword in ROLE_KEYWORDS)), "")
+    if role_identity_quote:
+        seeds.append(
+            build_extra_seed(
+                source_policy=source_policy,
+                page=page,
+                general_id=general_id,
+                matched_name=matched_name,
+                candidate_person_id=candidate_person_id,
+                angle_type="role",
+                quote=role_identity_quote,
+                locator_suffix="role",
+                content_source="title" if role_identity_quote == title else "snippet",
+            )
+        )
+
     trait_quote = ""
     for text in [title, *sentences[:3]]:
         if any(keyword in text for keyword in TRAIT_KEYWORDS):
@@ -841,6 +1254,111 @@ def build_seeds_for_page(
                 angle_type="trait",
                 quote=quote,
                 locator_suffix="page-text-trait",
+                content_source="page-text",
+                sentence_index=sentence_index,
+            )
+        )
+
+    for sentence_index, quote in collect_body_quotes(
+        page=page,
+        name_variants=name_variants,
+        keywords=LOCATION_KEYWORDS,
+        max_count=2,
+    ):
+        seeds.append(
+            build_extra_seed(
+                source_policy=source_policy,
+                page=page,
+                general_id=general_id,
+                matched_name=matched_name,
+                candidate_person_id=candidate_person_id,
+                angle_type="location",
+                quote=quote,
+                locator_suffix="page-text-location",
+                content_source="page-text",
+                sentence_index=sentence_index,
+            )
+        )
+
+    for sentence_index, quote in collect_body_quotes(
+        page=page,
+        name_variants=name_variants,
+        keywords=HABIT_KEYWORDS,
+        max_count=2,
+    ):
+        seeds.append(
+            build_extra_seed(
+                source_policy=source_policy,
+                page=page,
+                general_id=general_id,
+                matched_name=matched_name,
+                candidate_person_id=candidate_person_id,
+                angle_type="habit",
+                quote=quote,
+                locator_suffix="page-text-habit",
+                content_source="page-text",
+                sentence_index=sentence_index,
+            )
+        )
+
+    for sentence_index, quote in collect_body_quotes(
+        page=page,
+        name_variants=name_variants,
+        keywords=ACTIVITY_KEYWORDS,
+        max_count=2,
+    ):
+        seeds.append(
+            build_extra_seed(
+                source_policy=source_policy,
+                page=page,
+                general_id=general_id,
+                matched_name=matched_name,
+                candidate_person_id=candidate_person_id,
+                angle_type="activity",
+                quote=quote,
+                locator_suffix="page-text-activity",
+                content_source="page-text",
+                sentence_index=sentence_index,
+            )
+        )
+
+    for sentence_index, quote in collect_body_quotes(
+        page=page,
+        name_variants=name_variants,
+        keywords=DIALOGUE_KEYWORDS,
+        max_count=2,
+    ):
+        seeds.append(
+            build_extra_seed(
+                source_policy=source_policy,
+                page=page,
+                general_id=general_id,
+                matched_name=matched_name,
+                candidate_person_id=candidate_person_id,
+                angle_type="dialogue_seed",
+                quote=quote,
+                locator_suffix="page-text-dialogue",
+                content_source="page-text",
+                sentence_index=sentence_index,
+            )
+        )
+
+    for sentence_index, quote in collect_body_quotes(
+        page=page,
+        name_variants=name_variants,
+        keywords=SOURCE_CONFLICT_KEYWORDS,
+        max_count=2,
+    ):
+        seeds.append(
+            build_extra_seed(
+                source_policy=source_policy,
+                page=page,
+                general_id=general_id,
+                matched_name=matched_name,
+                candidate_person_id=candidate_person_id,
+                angle_type="source_conflict",
+                quote=quote,
+                locator_suffix="page-text-source-conflict",
                 content_source="page-text",
                 sentence_index=sentence_index,
             )

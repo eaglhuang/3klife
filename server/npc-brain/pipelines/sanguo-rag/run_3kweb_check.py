@@ -21,24 +21,27 @@ DEFAULT_SOURCES_CONFIG = Path("server/npc-brain/pipelines/sanguo-rag/config/exte
 DEFAULT_SCOREBOARD_JSON = Path("artifacts/data-pipeline/sanguo-rag/extracted/full-roster-scoreboard/full-roster-scoreboard.json")
 DEFAULT_SOURCE_HEALTH_CLI = Path("tools_node/agent-clis/3klife-source-health.js")
 
-TERM_PATTERNS = [
-    re.compile(pattern)
-    for pattern in (
-        r"三國",
-        r"三国",
-        r"曹操",
-        r"劉備",
-        r"刘备",
-        r"孫權",
-        r"孙权",
-        r"關羽",
-        r"关羽",
-        r"諸葛亮",
-        r"诸葛亮",
-        r"司馬懿",
-        r"司马懿",
-    )
-]
+DEFAULT_TERM_HIT_KEYWORDS = (
+    "三國",
+    "三国",
+    "曹操",
+    "劉備",
+    "刘备",
+    "孫權",
+    "孙权",
+    "關羽",
+    "关羽",
+    "諸葛亮",
+    "诸葛亮",
+    "司馬懿",
+    "司马懿",
+)
+DEFAULT_PRECHECK_POLICY = {
+    "likelyThreshold": 3,
+    "possibleThreshold": 1,
+    "minimumTermHitCount": 1,
+    "hintKeywords": ["歷史", "历史", "演義", "演义"],
+}
 
 
 def utc_now() -> str:
@@ -99,19 +102,131 @@ def text_hash(text: str) -> str:
     return "sha256:" + hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def count_term_hits(plain_text: str) -> int:
-    total = 0
-    for pattern in TERM_PATTERNS:
-        total += len(pattern.findall(plain_text))
-    return total
+def to_int(value: Any, default: int) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return int(default)
 
 
-def relevance_level(term_hit_count: int, plain_text: str) -> str:
-    if term_hit_count >= 3:
+def normalize_text_list(raw_values: Any, fallback: list[str] | tuple[str, ...] | None = None) -> list[str]:
+    if isinstance(raw_values, str):
+        values = [raw_values]
+    elif isinstance(raw_values, list) or isinstance(raw_values, tuple):
+        values = [str(value or "") for value in raw_values]
+    else:
+        values = []
+    normalized: list[str] = []
+    seen: set[str] = set()
+    for value in values:
+        token = str(value or "").strip()
+        if not token or token in seen:
+            continue
+        seen.add(token)
+        normalized.append(token)
+    if normalized:
+        return normalized
+    if fallback is not None:
+        return normalize_text_list(fallback, fallback=None)
+    return []
+
+
+def normalize_term_hit_keywords(raw_keywords: Any, fallback: list[str] | tuple[str, ...] | None = None) -> list[str]:
+    def _normalize(values: Any) -> list[str]:
+        if isinstance(values, str):
+            raw_values = [values]
+        elif isinstance(values, list) or isinstance(values, tuple):
+            raw_values = [str(value or "") for value in values]
+        else:
+            raw_values = []
+        normalized_values: list[str] = []
+        seen_values: set[str] = set()
+        for value in raw_values:
+            token = str(value or "").strip()
+            if not token or token in seen_values:
+                continue
+            seen_values.add(token)
+            normalized_values.append(token)
+        return normalized_values
+
+    normalized = _normalize(raw_keywords)
+    if normalized:
+        return normalized
+    if fallback is not None:
+        return _normalize(fallback)
+    return list(DEFAULT_TERM_HIT_KEYWORDS)
+
+
+def resolve_precheck_policy(source: dict[str, Any], config_payload: dict[str, Any]) -> dict[str, Any]:
+    pipeline_policies = config_payload.get("pipelinePolicies") if isinstance(config_payload, dict) else {}
+    if not isinstance(pipeline_policies, dict):
+        pipeline_policies = {}
+    defaults = pipeline_policies.get("precheckDefaults") if isinstance(pipeline_policies.get("precheckDefaults"), dict) else {}
+    class_policy_map = (
+        pipeline_policies.get("sourceClassPrecheck")
+        if isinstance(pipeline_policies.get("sourceClassPrecheck"), dict)
+        else {}
+    )
+    source_class = str(source.get("sourceClass") or "").strip()
+    class_policy = class_policy_map.get(source_class) if isinstance(class_policy_map.get(source_class), dict) else {}
+    source_policy = source.get("precheckPolicy") if isinstance(source.get("precheckPolicy"), dict) else {}
+    likely_threshold = to_int(
+        source_policy.get("likelyThreshold"),
+        to_int(class_policy.get("likelyThreshold"), to_int(defaults.get("likelyThreshold"), int(DEFAULT_PRECHECK_POLICY["likelyThreshold"]))),
+    )
+    possible_threshold = to_int(
+        source_policy.get("possibleThreshold"),
+        to_int(
+            class_policy.get("possibleThreshold"),
+            to_int(defaults.get("possibleThreshold"), int(DEFAULT_PRECHECK_POLICY["possibleThreshold"])),
+        ),
+    )
+    if likely_threshold < possible_threshold:
+        likely_threshold = possible_threshold
+    minimum_term_hit_count = max(
+        0,
+        to_int(
+            source_policy.get("minimumTermHitCount"),
+            to_int(
+                class_policy.get("minimumTermHitCount"),
+                to_int(defaults.get("minimumTermHitCount"), int(DEFAULT_PRECHECK_POLICY["minimumTermHitCount"])),
+            ),
+        ),
+    )
+    hint_keywords = normalize_text_list(
+        source_policy.get("hintKeywords"),
+        fallback=normalize_text_list(
+            class_policy.get("hintKeywords"),
+            fallback=normalize_text_list(defaults.get("hintKeywords"), fallback=DEFAULT_PRECHECK_POLICY["hintKeywords"]),
+        ),
+    )
+    if not hint_keywords:
+        hint_keywords = list(DEFAULT_PRECHECK_POLICY["hintKeywords"])
+    return {
+        "likelyThreshold": likely_threshold,
+        "possibleThreshold": possible_threshold,
+        "minimumTermHitCount": minimum_term_hit_count,
+        "hintKeywords": hint_keywords,
+    }
+
+
+def count_term_hits(plain_text: str, term_hit_keywords: list[str] | tuple[str, ...] | None = None) -> int:
+    keywords = term_hit_keywords or DEFAULT_TERM_HIT_KEYWORDS
+    return sum(plain_text.count(keyword) for keyword in keywords)
+
+
+def relevance_level(term_hit_count: int, plain_text: str, precheck_policy: dict[str, Any] | None = None) -> str:
+    policy = precheck_policy or DEFAULT_PRECHECK_POLICY
+    likely_threshold = to_int(policy.get("likelyThreshold"), int(DEFAULT_PRECHECK_POLICY["likelyThreshold"]))
+    possible_threshold = to_int(policy.get("possibleThreshold"), int(DEFAULT_PRECHECK_POLICY["possibleThreshold"]))
+    if likely_threshold < possible_threshold:
+        likely_threshold = possible_threshold
+    if term_hit_count >= likely_threshold:
         return "likely-relevant"
-    if term_hit_count >= 1:
+    if term_hit_count >= possible_threshold:
         return "possible-relevant"
-    if "歷史" in plain_text or "演義" in plain_text or "演义" in plain_text:
+    hint_keywords = normalize_text_list(policy.get("hintKeywords"), fallback=DEFAULT_PRECHECK_POLICY["hintKeywords"])
+    if any(keyword in plain_text for keyword in hint_keywords):
         return "possible-relevant"
     return "unclear"
 
@@ -125,7 +240,12 @@ def url_status(url: str) -> str:
     return "manual-url"
 
 
-def fetch_via_python(url: str, timeout_seconds: float) -> dict[str, Any]:
+def fetch_via_python(
+    url: str,
+    timeout_seconds: float,
+    term_hit_keywords: list[str] | None = None,
+    precheck_policy: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     parsed_url = urllib.parse.urlsplit(url)
     safe_url = urllib.parse.urlunsplit(
         (
@@ -150,14 +270,14 @@ def fetch_via_python(url: str, timeout_seconds: float) -> dict[str, Any]:
         status = int(getattr(response, "status", 200))
     html = raw.decode("utf-8", errors="ignore")
     plain_text = strip_html(html)
-    hits = count_term_hits(plain_text)
+    hits = count_term_hits(plain_text, term_hit_keywords)
     return {
         "liveStatus": "ok" if 200 <= status < 400 else "http-error",
         "httpStatus": status,
         "contentType": content_type,
         "bytesRead": len(raw),
         "termHitCount": hits,
-        "relevanceLevel": relevance_level(hits, plain_text),
+        "relevanceLevel": relevance_level(hits, plain_text, precheck_policy=precheck_policy),
         "snippet": truncate(plain_text),
         "title": extract_title(html),
         "textHash": text_hash(plain_text),
@@ -168,7 +288,14 @@ def fetch_via_python(url: str, timeout_seconds: float) -> dict[str, Any]:
     }
 
 
-def fetch_via_node_cli(source_id: str, url: str, timeout_seconds: float, cli_path: Path) -> dict[str, Any]:
+def fetch_via_node_cli(
+    source_id: str,
+    url: str,
+    timeout_seconds: float,
+    cli_path: Path,
+    sources_config_path: Path,
+    term_hit_keywords: list[str] | None = None,
+) -> dict[str, Any]:
     command = [
         "node",
         str(cli_path),
@@ -178,8 +305,12 @@ def fetch_via_node_cli(source_id: str, url: str, timeout_seconds: float, cli_pat
         url,
         "--timeout-seconds",
         str(max(timeout_seconds, 1.0)),
+        "--sources-config",
+        str(sources_config_path),
         "--json",
     ]
+    for keyword in term_hit_keywords or []:
+        command.extend(["--term-hit-keyword", str(keyword)])
     completed = subprocess.run(command, cwd=str(REPO_ROOT), capture_output=True, text=False, check=False)
     if completed.returncode != 0:
         stderr_text = (completed.stderr or b"").decode("utf-8", errors="ignore").strip()
@@ -204,7 +335,14 @@ def fetch_via_node_cli(source_id: str, url: str, timeout_seconds: float, cli_pat
     }
 
 
-def fetch_live(source: dict[str, Any], args: argparse.Namespace, cli_path: Path) -> dict[str, Any]:
+def fetch_live(
+    source: dict[str, Any],
+    args: argparse.Namespace,
+    cli_path: Path,
+    sources_config_path: Path,
+    term_hit_keywords: list[str],
+    precheck_policy: dict[str, Any],
+) -> dict[str, Any]:
     source_id = str(source.get("sourceId") or "").strip()
     base_url = str(source.get("baseUrl") or "").strip()
     manual_count = int(source.get("manualEvidenceCount") or 0)
@@ -247,7 +385,14 @@ def fetch_live(source: dict[str, Any], args: argparse.Namespace, cli_path: Path)
     requested = args.fetch_backend
     if requested in {"auto", "node-cli"} and cli_path.exists():
         try:
-            row = fetch_via_node_cli(source_id, base_url, args.timeout_seconds, cli_path=cli_path)
+            row = fetch_via_node_cli(
+                source_id,
+                base_url,
+                args.timeout_seconds,
+                cli_path=cli_path,
+                sources_config_path=sources_config_path,
+                term_hit_keywords=term_hit_keywords,
+            )
             row["manualEvidenceCount"] = manual_count
             return row
         except Exception as exc:
@@ -269,7 +414,12 @@ def fetch_live(source: dict[str, Any], args: argparse.Namespace, cli_path: Path)
                     "manualEvidenceCount": manual_count,
                 }
             try:
-                python_row = fetch_via_python(base_url, args.timeout_seconds)
+                python_row = fetch_via_python(
+                    base_url,
+                    args.timeout_seconds,
+                    term_hit_keywords=term_hit_keywords,
+                    precheck_policy=precheck_policy,
+                )
             except Exception as python_exc:
                 return {
                     "liveStatus": "fetch-error",
@@ -293,19 +443,25 @@ def fetch_live(source: dict[str, Any], args: argparse.Namespace, cli_path: Path)
             return python_row
 
     try:
-        row = fetch_via_python(base_url, args.timeout_seconds)
+        row = fetch_via_python(
+            base_url,
+            args.timeout_seconds,
+            term_hit_keywords=term_hit_keywords,
+            precheck_policy=precheck_policy,
+        )
         row["manualEvidenceCount"] = manual_count
         return row
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", errors="ignore")
         plain = strip_html(body)
+        hits = count_term_hits(plain, term_hit_keywords)
         return {
             "liveStatus": "http-error",
             "httpStatus": int(exc.code),
             "contentType": str(exc.headers.get("Content-Type") or ""),
             "bytesRead": len(body.encode("utf-8", errors="ignore")),
-            "termHitCount": count_term_hits(plain),
-            "relevanceLevel": relevance_level(count_term_hits(plain), plain),
+            "termHitCount": hits,
+            "relevanceLevel": relevance_level(hits, plain, precheck_policy=precheck_policy),
             "snippet": truncate(plain),
             "title": "",
             "textHash": text_hash(plain),
@@ -375,6 +531,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dry-run", action="store_true", help="Skip live network fetch.")
     parser.add_argument("--fetch-backend", choices=("auto", "node-cli", "python"), default="auto")
     parser.add_argument("--source-health-cli", default=str(DEFAULT_SOURCE_HEALTH_CLI), help="Source health node CLI path.")
+    parser.add_argument(
+        "--term-hit-keyword",
+        action="append",
+        default=[],
+        help="Optional precheck keyword override (repeatable). When provided, applies to all sources.",
+    )
     parser.add_argument("--timeout-seconds", type=float, default=12.0, help="HTTP timeout in seconds.")
     parser.add_argument("--max-gap-generals", type=int, default=60, help="Reserved for future gap analysis.")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting existing outputs.")
@@ -396,12 +558,19 @@ def main() -> None:
     source_rows = list(config.get("sources") or [])
     if args.approved_only:
         source_rows = [row for row in source_rows if str(row.get("status") or "").strip() == "approved"]
+    global_term_hit_keywords = normalize_term_hit_keywords(args.term_hit_keyword, fallback=[])
 
     cli_path = resolve_path(args.source_health_cli)
     source_checks: list[dict[str, Any]] = []
     backend_usage: dict[str, int] = {}
     for source in source_rows:
         base_url = str(source.get("baseUrl") or "")
+        source_precheck_policy = resolve_precheck_policy(source, config_payload=config)
+        source_term_hit_keywords = (
+            list(global_term_hit_keywords)
+            if global_term_hit_keywords
+            else normalize_term_hit_keywords(source.get("termHitKeywords"))
+        )
         info = {
             "sourceId": source.get("sourceId"),
             "status": source.get("status"),
@@ -411,6 +580,8 @@ def main() -> None:
             "trustTier": source.get("trustTier"),
             "baseUrl": base_url,
             "urlStatus": url_status(base_url),
+            "termHitKeywords": source_term_hit_keywords,
+            "precheckPolicy": source_precheck_policy,
         }
         if args.dry_run or not args.fetch_live:
             row = {
@@ -430,7 +601,14 @@ def main() -> None:
                 "manualEvidenceCount": int(source.get("manualEvidenceCount") or 0),
             }
         else:
-            row = fetch_live(source, args=args, cli_path=cli_path)
+            row = fetch_live(
+                source,
+                args=args,
+                cli_path=cli_path,
+                sources_config_path=config_path,
+                term_hit_keywords=source_term_hit_keywords,
+                precheck_policy=source_precheck_policy,
+            )
         combined = {**info, **row, "canonicalWrites": False}
         backend = str(combined.get("fetchBackend") or "none")
         backend_usage[backend] = backend_usage.get(backend, 0) + 1
@@ -470,6 +648,8 @@ def main() -> None:
             "fetchLive": bool(args.fetch_live),
             "dryRun": bool(args.dry_run),
             "fetchBackendRequested": args.fetch_backend,
+            "termHitKeywordsDefault": list(DEFAULT_TERM_HIT_KEYWORDS),
+            "termHitKeywordsOverride": list(global_term_hit_keywords),
         },
         "outputs": {
             "summaryJsonPath": repo_relative(summary_json_path),

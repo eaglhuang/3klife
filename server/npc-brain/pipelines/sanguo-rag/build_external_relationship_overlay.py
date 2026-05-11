@@ -1,0 +1,451 @@
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from collections import Counter
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+from relationship_type_refinement import refine_relationship_type
+
+
+REPO_ROOT = Path(__file__).resolve().parents[4]
+DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth/external-relationship-overlay")
+DEFAULT_ALIAS_MAP = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/formal-mention-map.json")
+ALLOWED_SOURCE_LAYERS = {"history", "romance", "encyclopedia", "worldbuilding", "folklore"}
+LAYER_BASE_CONFIDENCE = {
+    "history": 0.80,
+    "romance": 0.74,
+    "encyclopedia": 0.60,
+    "worldbuilding": 0.56,
+    "folklore": 0.54,
+}
+LAYER_MAX_CONFIDENCE = {
+    "history": 0.88,
+    "romance": 0.82,
+    "encyclopedia": 0.70,
+    "worldbuilding": 0.64,
+    "folklore": 0.62,
+}
+LAYER_SOURCE_EDGE_CAP = {
+    "history": 320,
+    "romance": 260,
+    "encyclopedia": 140,
+    "worldbuilding": 90,
+    "folklore": 70,
+}
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def resolve_path(path_text: str | Path) -> Path:
+    path = Path(path_text)
+    return path if path.is_absolute() else (REPO_ROOT / path).resolve()
+
+
+def repo_relative(path: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(REPO_ROOT.resolve())).replace("\\", "/")
+    except ValueError:
+        return str(path.resolve())
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    rows: list[dict[str, Any]] = []
+    for line in path.read_text(encoding="utf-8-sig").splitlines():
+        text = line.strip()
+        if not text:
+            continue
+        value = json.loads(text)
+        if isinstance(value, dict):
+            rows.append(value)
+    return rows
+
+
+def write_json(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> int:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="\n") as handle:
+        for row in rows:
+            handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+    return len(rows)
+
+
+def parse_chapter_no(locator: str, source_refs: list[str]) -> int | None:
+    for text in [locator, *(source_refs or [])]:
+        value = str(text or "").strip()
+        if not value:
+            continue
+        match = re.search(r"(\d{1,3})#p\d+", value)
+        if match:
+            return int(match.group(1))
+        match = re.search(r"(?:第)?(\d{1,3})(?:回|章)", value)
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def load_alias_mapping(path: Path) -> list[tuple[str, str]]:
+    payload = read_json(path)
+    entries = payload.get("entries") if isinstance(payload, dict) else []
+    pairs: list[tuple[str, str]] = []
+    if not isinstance(entries, list):
+        return pairs
+    for row in entries:
+        if not isinstance(row, dict):
+            continue
+        alias = str(row.get("alias") or "").strip()
+        if len(alias) < 2:
+            continue
+        general_ids = row.get("generalIds") or []
+        if not isinstance(general_ids, list) or len(general_ids) != 1:
+            continue
+        general_id = str(general_ids[0] or "").strip()
+        if not general_id:
+            continue
+        status = str(row.get("status") or "").strip()
+        if status not in {"high-confidence", "medium-confidence"}:
+            continue
+        review_status_by_general = row.get("reviewStatusByGeneral") if isinstance(row.get("reviewStatusByGeneral"), dict) else {}
+        review_status = str(review_status_by_general.get(general_id) or "")
+        if review_status and review_status not in {"accepted", "auto-accepted"}:
+            continue
+        pairs.append((alias, general_id))
+    pairs.sort(key=lambda item: (-len(item[0]), item[0]))
+    return pairs
+
+
+def find_participants(text: str, alias_pairs: list[tuple[str, str]], max_people: int) -> list[str]:
+    compact = re.sub(r"\s+", "", text or "")
+    hits: list[tuple[int, str]] = []
+    for alias, general_id in alias_pairs:
+        pos = compact.find(alias)
+        if pos < 0:
+            continue
+        hits.append((pos, general_id))
+    hits.sort(key=lambda item: (item[0], item[1]))
+    result: list[str] = []
+    for _pos, general_id in hits:
+        if general_id not in result:
+            result.append(general_id)
+        if len(result) >= max(max_people, 2):
+            break
+    return result
+
+
+def list_like_text(text: str, participant_count: int) -> bool:
+    compact = str(text or "")
+    delimiter_count = compact.count("、") + compact.count("，") + compact.count(",") + compact.count("・") + compact.count("/")
+    return participant_count >= 5 or delimiter_count >= 8
+
+
+def base_confidence_for_layer(source_layer: str) -> float:
+    layer = source_layer.lower().strip()
+    return float(LAYER_BASE_CONFIDENCE.get(layer, 0.58))
+
+
+def max_confidence_for_layer(source_layer: str) -> float:
+    layer = source_layer.lower().strip()
+    return float(LAYER_MAX_CONFIDENCE.get(layer, 0.66))
+
+
+def source_edge_cap_for_layer(source_layer: str) -> int:
+    layer = source_layer.lower().strip()
+    return int(LAYER_SOURCE_EDGE_CAP.get(layer, 100))
+
+
+def clamp(value: float, minimum: float, maximum: float) -> float:
+    return max(minimum, min(maximum, value))
+
+
+def should_pass_gate(card: dict[str, Any], *, min_cross_family: int, min_cross_family_non_history: int) -> tuple[bool, str]:
+    if str(card.get("claimType") or "").strip() != "relationship":
+        return False, "claimType-not-relationship"
+    source_layer = str(card.get("sourceLayer") or "").strip().lower()
+    if source_layer not in ALLOWED_SOURCE_LAYERS:
+        return False, "source-layer-not-allowed"
+    quote = str(card.get("quote") or card.get("translatedTraditionalText") or "").strip()
+    if len(quote) < 8:
+        return False, "short-quote"
+    if not (card.get("locator") or card.get("textHash")):
+        return False, "missing-locator-hash"
+    cross_families = list(card.get("crossSiteSourceFamilies") or [])
+    cross_count = len(cross_families)
+    if source_layer == "history":
+        if cross_count < min_cross_family:
+            return False, "history-cross-family-too-low"
+    else:
+        if cross_count < min_cross_family_non_history:
+            return False, "non-history-cross-family-too-low"
+    return True, "ok"
+
+
+def edges_from_card(
+    card: dict[str, Any],
+    *,
+    alias_pairs: list[tuple[str, str]],
+    max_participants_per_card: int,
+) -> tuple[list[dict[str, Any]], str]:
+    quote = str(card.get("quote") or card.get("translatedTraditionalText") or "").strip()
+    anchors = [str(item).strip() for item in (card.get("generalIds") or []) if str(item).strip() and not str(item).startswith("shadow:")]
+    anchors = list(dict.fromkeys(anchors))
+    participants = find_participants(quote, alias_pairs, max_people=max_participants_per_card)
+    for anchor in anchors:
+        if anchor not in participants:
+            participants.insert(0, anchor)
+    participants = list(dict.fromkeys(participants))
+    if len(anchors) == 0:
+        return [], "no-anchor-general"
+    if len(participants) < 2:
+        return [], "not-enough-participants"
+    if list_like_text(quote, len(participants)) and str(card.get("sourceLayer") or "").lower() in {"encyclopedia", "worldbuilding"}:
+        return [], "list-like-noise"
+
+    source_layer = str(card.get("sourceLayer") or "")
+    cross_count = len(list(card.get("crossSiteSourceFamilies") or []))
+    base_conf = base_confidence_for_layer(source_layer)
+    if cross_count >= 5:
+        base_conf += 0.04
+    elif cross_count >= 4:
+        base_conf += 0.03
+    elif cross_count >= 3:
+        base_conf += 0.02
+    elif cross_count >= 2:
+        base_conf += 0.01
+    if card.get("locator") and card.get("textHash"):
+        base_conf += 0.01
+    if list_like_text(quote, len(participants)):
+        base_conf -= 0.08
+    base_conf = clamp(base_conf, 0.45, max_confidence_for_layer(source_layer))
+
+    evidence_id = str(card.get("evidenceId") or "")
+    source_id = str(card.get("sourcePolicyId") or card.get("sourceId") or "unknown-source").strip()
+    locator = str(card.get("locator") or "").strip()
+    chapter_no = parse_chapter_no(locator, list(card.get("sourceRefs") or []))
+    source_ref = f"ext-card:{source_id}:{evidence_id}"
+    edges: list[dict[str, Any]] = []
+    for anchor in anchors:
+        others = [person for person in participants if person != anchor]
+        others = others[: max(max_participants_per_card - 1, 1)]
+        for other in others:
+            edge = {
+                "chapterNo": chapter_no,
+                "fromId": anchor,
+                "toId": other,
+                "type": "relationship_external",
+                "originalType": "relationship_external",
+                "evidenceRefs": [source_ref],
+                "sourceQuote": quote[:220],
+                "evidenceText": quote[:220],
+                "matchedAliases": [],
+                "pattern": "external-relationship-card-gate",
+                "edgeConfidence": round(base_conf, 2),
+                "edgeStrength": round(clamp(base_conf - 0.12, 0.35, 0.90), 2),
+                "reviewStatus": "source-grounded-review" if base_conf < 0.8 else "source-grounded-strong",
+                "sourceLayer": f"external-{source_layer or 'unknown'}",
+                "sourceLayerRaw": source_layer or "unknown",
+                "sourcePolicyId": source_id,
+                "sourceEvidenceId": evidence_id,
+                "crossSiteMatchCount": int(card.get("crossSiteMatchCount") or 0),
+                "crossSiteSourceFamilies": list(card.get("crossSiteSourceFamilies") or []),
+                "textHash": card.get("textHash"),
+                "canonicalWrites": False,
+            }
+            refined_type, reasons = refine_relationship_type(edge, quote)
+            edge["type"] = refined_type
+            edge["refinementReasons"] = reasons
+            edge["edgeId"] = f"rel.external.{source_id}.{evidence_id}.{anchor}.{refined_type}.{other}"
+            edges.append(edge)
+    return edges, "ok"
+
+
+def dedupe_edges(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    by_key: dict[tuple[str, str, str, str], dict[str, Any]] = {}
+    for row in rows:
+        refs = row.get("evidenceRefs") or []
+        ref0 = str(refs[0] if refs else "")
+        key = (str(row.get("fromId") or ""), str(row.get("toId") or ""), str(row.get("type") or ""), ref0)
+        existing = by_key.get(key)
+        if existing is None:
+            by_key[key] = row
+            continue
+        if float(row.get("edgeConfidence") or 0.0) > float(existing.get("edgeConfidence") or 0.0):
+            by_key[key] = row
+    deduped = list(by_key.values())
+    deduped.sort(key=lambda row: (row.get("chapterNo") is None, row.get("chapterNo") or 10**9, str((row.get("evidenceRefs") or [""])[0]), str(row.get("fromId") or ""), str(row.get("type") or ""), str(row.get("toId") or "")))
+    return deduped
+
+
+def apply_source_caps(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    by_source: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        source_id = str(row.get("sourcePolicyId") or "unknown-source").strip()
+        by_source.setdefault(source_id, []).append(row)
+
+    kept: list[dict[str, Any]] = []
+    trimmed_counts: dict[str, int] = {}
+    for source_id, source_rows in by_source.items():
+        source_rows.sort(
+            key=lambda row: (
+                -float(row.get("edgeConfidence") or 0.0),
+                -int(row.get("crossSiteMatchCount") or 0),
+                str(row.get("type") or ""),
+                str(row.get("fromId") or ""),
+                str(row.get("toId") or ""),
+            )
+        )
+        layer = str(source_rows[0].get("sourceLayerRaw") or source_rows[0].get("sourceLayer") or "")
+        if layer.startswith("external-"):
+            layer = layer[len("external-") :]
+        cap = max(source_edge_cap_for_layer(layer), 1)
+        selected = source_rows[:cap]
+        kept.extend(selected)
+        trimmed = max(len(source_rows) - len(selected), 0)
+        if trimmed > 0:
+            trimmed_counts[source_id] = trimmed
+
+    kept.sort(key=lambda row: (str(row.get("sourcePolicyId") or ""), -float(row.get("edgeConfidence") or 0.0), str(row.get("fromId") or ""), str(row.get("toId") or ""), str(row.get("type") or "")))
+    return kept, dict(sorted(trimmed_counts.items()))
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Build strict relationship-edge overlay from global candidate evidence cards.")
+    parser.add_argument("--candidate-evidence-cards", action="append", default=[])
+    parser.add_argument("--alias-map", default=str(DEFAULT_ALIAS_MAP))
+    parser.add_argument("--min-cross-family", type=int, default=2)
+    parser.add_argument("--min-cross-family-non-history", type=int, default=3)
+    parser.add_argument("--max-participants-per-card", type=int, default=4)
+    parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
+    parser.add_argument("--overwrite", action="store_true")
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    output_root = resolve_path(args.output_root)
+    jsonl_path = output_root / "source-grounded-relationship-edges.external.jsonl"
+    summary_path = output_root / "external-relationship-overlay-summary.json"
+    md_path = output_root / "external-relationship-overlay-summary.zh-TW.md"
+    if output_root.exists() and any(output_root.iterdir()) and not args.overwrite:
+        raise FileExistsError(f"output already exists: {repo_relative(output_root)}")
+    output_root.mkdir(parents=True, exist_ok=True)
+
+    alias_pairs = load_alias_mapping(resolve_path(args.alias_map))
+    card_rows: list[dict[str, Any]] = []
+    for path_text in args.candidate_evidence_cards:
+        card_rows.extend(read_jsonl(resolve_path(path_text)))
+
+    gate_reasons = Counter()
+    transform_reasons = Counter()
+    edge_rows: list[dict[str, Any]] = []
+    for card in card_rows:
+        passed, reason = should_pass_gate(
+            card,
+            min_cross_family=max(args.min_cross_family, 1),
+            min_cross_family_non_history=max(args.min_cross_family_non_history, max(args.min_cross_family, 1)),
+        )
+        if not passed:
+            gate_reasons[reason] += 1
+            continue
+        rows, transform_reason = edges_from_card(card, alias_pairs=alias_pairs, max_participants_per_card=max(args.max_participants_per_card, 2))
+        if not rows:
+            transform_reasons[transform_reason] += 1
+            continue
+        edge_rows.extend(rows)
+
+    deduped_rows = dedupe_edges(edge_rows)
+    capped_rows, capped_trimmed_counts = apply_source_caps(deduped_rows)
+    write_jsonl(jsonl_path, capped_rows)
+
+    type_counts = Counter(str(row.get("type") or "") for row in capped_rows)
+    source_policy_counts = Counter(str(row.get("sourcePolicyId") or "") for row in capped_rows)
+    source_layer_counts = Counter(str(row.get("sourceLayer") or "") for row in capped_rows)
+    summary = {
+        "version": "1.0.0",
+        "generatedAt": utc_now(),
+        "mode": "external-relationship-overlay",
+        "canonicalWrites": False,
+        "inputs": {
+            "candidateEvidenceCards": [repo_relative(resolve_path(path)) for path in args.candidate_evidence_cards],
+            "aliasMapPath": repo_relative(resolve_path(args.alias_map)),
+            "minCrossFamily": max(args.min_cross_family, 1),
+            "minCrossFamilyNonHistory": max(args.min_cross_family_non_history, max(args.min_cross_family, 1)),
+            "maxParticipantsPerCard": max(args.max_participants_per_card, 2),
+        },
+        "outputs": {
+            "relationshipEdgesJsonlPath": repo_relative(jsonl_path),
+            "summaryJsonPath": repo_relative(summary_path),
+            "summaryMarkdownPath": repo_relative(md_path),
+        },
+        "metrics": {
+            "cardInputCount": len(card_rows),
+            "edgeRawCount": len(edge_rows),
+            "edgeCountBeforeSourceCap": len(deduped_rows),
+            "edgeCount": len(capped_rows),
+            "uniqueSourcePolicyCount": len(source_policy_counts),
+            "sourceCapTrimmedCount": max(len(deduped_rows) - len(capped_rows), 0),
+            "sourceCapTrimmedBySource": capped_trimmed_counts,
+            "gateRejectCounts": dict(sorted(gate_reasons.items())),
+            "transformRejectCounts": dict(sorted(transform_reasons.items())),
+            "relationshipTypeCounts": dict(sorted(type_counts.items())),
+            "sourcePolicyCounts": dict(sorted(source_policy_counts.items())),
+            "sourceLayerCounts": dict(sorted(source_layer_counts.items())),
+        },
+    }
+    write_json(summary_path, summary)
+    lines = [
+        "# External Relationship Overlay Summary",
+        "",
+        f"- Generated At: `{summary['generatedAt']}`",
+        f"- canonicalWrites: `{summary['canonicalWrites']}`",
+        f"- Card Input: `{summary['metrics']['cardInputCount']}`",
+        f"- Raw Edges: `{summary['metrics']['edgeRawCount']}`",
+        f"- Before Source Cap: `{summary['metrics']['edgeCountBeforeSourceCap']}`",
+        f"- Final Edges: `{summary['metrics']['edgeCount']}`",
+        f"- Source-Cap Trimmed: `{summary['metrics']['sourceCapTrimmedCount']}`",
+        "",
+        "## Gate Rejects",
+        "",
+    ]
+    for key, value in summary["metrics"]["gateRejectCounts"].items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.extend(["", "## Transform Rejects", ""])
+    for key, value in summary["metrics"]["transformRejectCounts"].items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.extend(["", "## Relationship Types", ""])
+    for key, value in summary["metrics"]["relationshipTypeCounts"].items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.extend(["", "## Source Cap Trimmed By Source", ""])
+    for key, value in summary["metrics"]["sourceCapTrimmedBySource"].items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.append("")
+    md_path.write_text("\n".join(lines), encoding="utf-8")
+
+    print(f"[build_external_relationship_overlay] wrote {jsonl_path}")
+    print(f"[build_external_relationship_overlay] wrote {summary_path}")
+    print(f"[build_external_relationship_overlay] wrote {md_path}")
+    print(
+        "[build_external_relationship_overlay] "
+        f"cards={len(card_rows)} edges={len(capped_rows)} canonicalWrites=false"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -368,7 +368,7 @@ def render_markdown(summary: dict[str, Any]) -> str:
         "| --- | --- | --- | --- | ---: | ---: | --- | --- |",
     ]
     for index, row in enumerate(summary["rankedSeeds"][:30], 1):
-        text = str(row.get("seedText") or "").replace("\n", " ").replace("|", "\\|")
+        text = str(row.get("translatedTraditionalText") or row.get("seedText") or row.get("quote") or "").replace("\n", " ").replace("|", "\\|")
         if len(text) > 80:
             text = text[:77] + "..."
         lines.append(

@@ -228,6 +228,11 @@ def parse_args() -> argparse.Namespace:
         default=[],
         help="Input strict evidence cards JSONL. Repeatable. Defaults to latest local highway runs.",
     )
+    parser.add_argument(
+        "--no-default-external-evidence-cards",
+        action="store_true",
+        help="Do not fall back to built-in strict evidence card paths when none are provided.",
+    )
     parser.add_argument("--manual-seeds-jsonl", action="append", default=[], help="Optional hand-written EvidenceSeed JSONL.")
     parser.add_argument("--scoreboard-json", default=str(DEFAULT_SCOREBOARD_JSON), help="Scoreboard JSON for canonical/shadow split.")
     parser.add_argument(
@@ -250,7 +255,7 @@ def main() -> int:
     known_general_ids = known_generals_from_scoreboard(resolve_path(args.scoreboard_json))
     source_health = source_health_by_id(resolve_path(args.source_health_summary))
     card_paths = [resolve_path(path_text) for path_text in args.external_evidence_cards]
-    if not card_paths:
+    if not card_paths and not args.no_default_external_evidence_cards:
         card_paths = [resolve_path(path) for path in DEFAULT_EXTERNAL_EVIDENCE_CARDS if resolve_path(path).exists()]
 
     seeds: dict[str, dict[str, Any]] = {}
@@ -290,6 +295,7 @@ def main() -> int:
         "canonicalWrites": False,
         "inputs": {
             "externalEvidenceCards": [repo_relative(path) for path in card_paths],
+            "noDefaultExternalEvidenceCards": bool(args.no_default_external_evidence_cards),
             "manualSeedsJsonl": [repo_relative(resolve_path(path)) for path in args.manual_seeds_jsonl],
             "scoreboardJson": repo_relative(resolve_path(args.scoreboard_json)),
             "sourceHealthSummary": repo_relative(resolve_path(args.source_health_summary)),

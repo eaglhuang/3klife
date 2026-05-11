@@ -1,0 +1,325 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://3klife.local/sanguo-rag/source-policy.schema.json",
+  "title": "Sanguo External Source Policy",
+  "description": "Schema for crawlable external evidence source policies.",
+  "type": "object",
+  "required": [
+    "version",
+    "sources"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generatedAt": {
+      "type": "string"
+    },
+    "policyNotes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "pipelinePolicies": {
+      "type": "object"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sourceRow"
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "sourceRow": {
+      "type": "object",
+      "required": [
+        "sourceId",
+        "status",
+        "adapterType",
+        "sourceClass",
+        "sourceFamily",
+        "sourceLayer",
+        "trustTier",
+        "baseUrl",
+        "singleSourceMaxGrade",
+        "claimScopes"
+      ],
+      "properties": {
+        "sourceId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "manual_quote"
+          ]
+        },
+        "adapterType": {
+          "type": "string",
+          "enum": [
+            "ctext",
+            "wikisource",
+            "gutenberg_text",
+            "scan_pdf",
+            "manual_quote",
+            "static_html"
+          ]
+        },
+        "sourceClass": {
+          "type": "string",
+          "enum": [
+            "high-yield-character-site",
+            "primary-text-site",
+            "community-worldbuilding-site",
+            "manual-quote"
+          ]
+        },
+        "sourceFamily": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceLayer": {
+          "type": "string",
+          "enum": [
+            "history",
+            "romance",
+            "worldbuilding",
+            "encyclopedia"
+          ]
+        },
+        "trustTier": {
+          "type": "string",
+          "minLength": 1
+        },
+        "baseUrl": {
+          "type": "string",
+          "minLength": 1
+        },
+        "singleSourceMaxGrade": {
+          "type": "string",
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ]
+        },
+        "claimScopes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "termHitKeywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "precheckPolicy": {
+          "type": "object"
+        },
+        "stage2GatePolicy": {
+          "type": "object"
+        },
+        "stage3GatePolicy": {
+          "type": "object"
+        },
+        "harvestPolicy": {
+          "type": "object",
+          "required": [
+            "indexUrl"
+          ],
+          "properties": {
+            "indexUrl": {
+              "type": "string",
+              "minLength": 1
+            },
+            "linkInclude": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "linkExclude": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "sameOrigin": {
+              "type": "boolean"
+            },
+            "maxPages": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "recommendedConcurrency": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "writesPageTextCache": {
+              "type": "boolean"
+            },
+            "linkExtractionMode": {
+              "type": "string",
+              "enum": [
+                "href-regex",
+                "table-column-links",
+                "auto-discover-primary-text",
+                "api-json-list"
+              ]
+            },
+            "tableClassContains": {
+              "type": "string"
+            },
+            "tableColumnIndex": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "apiUrl": {
+              "type": "string"
+            },
+            "apiMethod": {
+              "type": "string"
+            },
+            "apiHeaders": {
+              "type": "object"
+            },
+            "apiBodyTemplate": {},
+            "apiListPath": {
+              "type": "string"
+            },
+            "apiUrlField": {
+              "type": "string"
+            },
+            "apiTitleField": {
+              "type": "string"
+            },
+            "apiSnippetField": {
+              "type": "string"
+            },
+            "apiPeopleField": {
+              "type": "string"
+            },
+            "apiStartPage": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "apiMaxIndexPages": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "singlePagePolicy": {
+          "type": "object"
+        },
+        "translationPolicy": {
+          "type": "object",
+          "properties": {
+            "sourceLanguage": {
+              "type": "string"
+            },
+            "targetLanguage": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string"
+            },
+            "preserveOriginalQuote": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "extractorPolicy": {
+          "type": "object",
+          "properties": {
+            "allowFallbackSubjectAnchoring": {
+              "type": "boolean"
+            },
+            "passageMode": {
+              "type": "string"
+            },
+            "lineWindowSize": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "tokenWindowSize": {
+              "type": "integer",
+              "minimum": 4
+            },
+            "tokenWindowStep": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "bodyStartMarkers": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            "bodyEndMarkers": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            "disableTitleIdentity": {
+              "type": "boolean"
+            },
+            "relationshipDirectionDenoise": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "benchmarkBaseline": {
+          "type": "object",
+          "properties": {
+            "samplePageCount": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "seedPerPage": {
+              "type": "number",
+              "minimum": 0
+            },
+            "candidateCardPerPage": {
+              "type": "number",
+              "minimum": 0
+            },
+            "lastApprovedAt": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
