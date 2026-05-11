@@ -95,13 +95,13 @@
     "title": "跨專案 Registry / DB / Vector 決策",
     "owner": "GitHubCopilot",
     "priority": "P2",
-    "status": "open",
+    "status": "done",
     "type": "ecosystem",
     "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-11T09:33:55+08:00",
+    "started_by_agent": "vs-code-gpt-5.3-codex",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -119,7 +119,7 @@
       "docs/ecosystem/registry-db-vector-decision.md",
       "plugin boundary proposal"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-11 | 狀態: done | 驗證: passed (rule-guard atm) | 變更: 建立 docs/ecosystem/registry-db-vector-decision.md，決定 atom registry/DB/pgvector 歸屬：本機 registry 留 core，其他三項做成獨立 plugin | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
@@ -150,6 +150,8 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-11T09:33:55+08:00",
+    "completed_by_agent": "vs-code-gpt-5.3-codex"
   }
 ]
