@@ -58,6 +58,7 @@ python server/npc-brain/pipelines/sanguo-rag/run_full_roster_convergence_loop.py
   --max-rounds 3 \
   --human-pending-threshold 20 \
   --profile all \
+  --lane-policy-config server/npc-brain/pipelines/sanguo-rag/config/full-roster-lane-policy.json \
   --source-config server/npc-brain/pipelines/sanguo-rag/config/external-evidence-sources.json \
   --overwrite
 ```
@@ -67,6 +68,7 @@ python server/npc-brain/pipelines/sanguo-rag/run_full_roster_convergence_loop.py
 python server/npc-brain/pipelines/sanguo-rag/build_full_roster_scoreboard.py \
   --output-root local/codex-smoke/knowledge-growth/full-roster-scoreboard-smoke \
   --profile female-priority \
+  --lane-policy-config server/npc-brain/pipelines/sanguo-rag/config/full-roster-lane-policy.json \
   --overwrite
 ```
 
@@ -101,11 +103,13 @@ python server/npc-brain/pipelines/sanguo-rag/build_full_roster_scoreboard.py \
 - [x] 人工門檻（`human-pending-threshold`）達標才停
 - [x] 產生中文 human-review batch
 - [x] 產生 rumination downgrade ledger
+- [x] human-review 題目先做 cluster 去重（`sourceRefs + location + participants + summary hash`）
 
-### M5 待補強（下一步）
-- [ ] precision lane 的 `selectedGeneralIds` 加上更細緻 cluster 策略
-- [ ] profile 對 lane 的 class 級閾值配置化（目前是程式內預設）
-- [ ] human-review cluster 去重（`sourceRefs + location + participants + summary hash`）進一步內建
+### M5 收斂補強（已完成）
+- [x] precision lane 的 `selectedGeneralIds` 改為 lane + cluster 配額挑選（避免全部擠在同質候選）
+- [x] profile 對 lane 閾值與 precision 配額改為配置檔（`config/full-roster-lane-policy.json`）
+- [x] `run_full_roster_convergence_loop.py` 會把 lane policy 傳進 `build_full_roster_scoreboard.py`，並回寫 summary inputs
+- [x] human-review batch 顯示 cluster 規模、參與者、地點與摘要指紋，方便人工快速判讀去重結果
 
 ## 6) 驗收指令
 
