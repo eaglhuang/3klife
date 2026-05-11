@@ -2647,7 +2647,12 @@ function runHtmlToUcufFidelityContractGroup() {
 
   withTempDir((tmp) => {
     seedPlan4Repo(tmp, {
-      workflow: 'const sourcePath = firstExistingPath([sidecarPath(paths.finalLayout, suffix), sidecarPath(paths.rawLayout, suffix)]);\n',
+      workflow: [
+        'function syncFinalArtifactsToRuntime(paths) {',
+        '  const sourcePath = firstExistingPath([sidecarPath(paths.finalLayout, suffix), sidecarPath(paths.rawLayout, suffix)]);',
+        '  return sourcePath;',
+        '}',
+      ].join('\n'),
       draftBuilder: [
         'const DRAFT_BUILDER_STAGE_RULES = [];',
         'const hasStoryKey = /story|chronicle|storydock|story-strip|strip-wrap/.test(haystack);',
@@ -2663,6 +2668,26 @@ function runHtmlToUcufFidelityContractGroup() {
     assertRule(report, 'H2U-P4-017');
     assertRule(report, 'H2U-P4-020');
     ok('Plan4 fidelity contract catches story regex, gradient downgrade, and raw sidecar fallback');
+  });
+
+  withTempDir((tmp) => {
+    seedPlan4Repo(tmp, {
+      workflow: [
+        'function buildRuntimeInteractionSmokeStep(paths) {',
+        '  const interactionPath = firstExistingPath([sidecarPath(paths.finalLayout, ".interaction.json"), sidecarPath(paths.rawLayout, ".interaction.json")]);',
+        '  return interactionPath;',
+        '}',
+        'function syncFinalArtifactsToRuntime(paths) {',
+        '  const sourcePath = firstExistingPath([sidecarPath(paths.finalLayout, suffix)]);',
+        '  return sourcePath;',
+        '}',
+      ].join('\n'),
+      draftBuilder: 'const DRAFT_BUILDER_STAGE_RULES = [];',
+      skill: 'current execution spec docs/html_skill_plan5.md and tools_node/lib/html-to-ucuf/rule-registry.json\n',
+    });
+    const report = runRuleGuard({ repoRoot: tmp, scanCore: true });
+    assertNoRule(report, 'H2U-P4-020');
+    ok('Plan4 fidelity contract ignores dry-run raw sidecar fallback outside runtime sync');
   });
 
   const missingVisual = runRuleGuard({
@@ -2984,6 +3009,12 @@ function seedMinimalPlan4UiSpec(uiRoot, options = {}) {
 function assertRule(report, ruleId) {
   if (!report || !Array.isArray(report.violations) || !report.violations.some(v => v.ruleId === ruleId)) {
     fail(`expected ${ruleId}, got ${JSON.stringify(report && report.violations || [], null, 2)}`);
+  }
+}
+
+function assertNoRule(report, ruleId) {
+  if (report && Array.isArray(report.violations) && report.violations.some(v => v.ruleId === ruleId)) {
+    fail(`did not expect ${ruleId}, got ${JSON.stringify(report.violations, null, 2)}`);
   }
 }
 

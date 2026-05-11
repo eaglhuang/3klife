@@ -51,6 +51,7 @@
     "validate:usage-evidence-shadow": "node tools_node/validate-usage-evidence-shadow.js",
     "validate:h2u-evolution-pilot": "node tools_node/validate-h2u-evolution-pilot.js",
     "validate:legacy-h2u-launch": "node tools_node/validate-legacy-h2u-launch.js",
+    "validate:legacy-h2u-first-win": "node tools_node/validate-legacy-h2u-first-win.js",
     "sync:atm-task-store": "node tools_node/sync-atm-stabilization-milestone.js",
     "validate:atm-task-store": "node tools_node/sync-atm-stabilization-milestone.js --check --strict",
     "sync:atm-milestone": "node tools_node/sync-atm-stabilization-milestone.js",

@@ -165,7 +165,8 @@ function scanCoreSource(repoRoot, violations) {
     });
   }
 
-  if (/sidecarPath\(paths\.rawLayout/.test(workflow)) {
+  const runtimeSyncBody = extractFunctionBody(workflow, 'syncFinalArtifactsToRuntime');
+  if (/sidecarPath\(paths\.rawLayout/.test(runtimeSyncBody)) {
     addViolation(violations, 'H2U-P4-020', {
       summary: 'runtime sync still allows raw sidecar fallback',
       evidence: 'tools_node/run-html-to-ucuf-workflow.js'
@@ -182,6 +183,24 @@ function scanCoreSource(repoRoot, violations) {
       evidence: 'assets/scripts/ui/components/UIScreenPreviewHost.ts'
     });
   }
+}
+
+function extractFunctionBody(sourceText, functionName) {
+  const source = String(sourceText || '');
+  if (!source || !functionName) return '';
+  const pattern = new RegExp(`function\\s+${functionName}\\s*\\([^)]*\\)\\s*\\{`, 'm');
+  const match = pattern.exec(source);
+  if (!match) return '';
+  let cursor = match.index + match[0].length;
+  let depth = 1;
+  while (cursor < source.length && depth > 0) {
+    const ch = source[cursor];
+    if (ch === '{') depth += 1;
+    if (ch === '}') depth -= 1;
+    cursor += 1;
+  }
+  if (depth !== 0) return '';
+  return source.slice(match.index, cursor);
 }
 
 function scanSkillDoc(repoRoot, violations) {
