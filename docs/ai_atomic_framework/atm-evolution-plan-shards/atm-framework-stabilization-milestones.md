@@ -1,6 +1,6 @@
 <!-- doc_id: doc_other_0093 -->
 # ATM 框架穩定化里程碑
-> 這份頁面以 `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 的薄索引為準，不再沿用舊的 milestone 草稿數字。當前基線是 `done=117 / in_progress=0 / open=4 / total=121`.
+> 這份頁面以 `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 的薄索引為準，不再沿用舊的 milestone 草稿數字。當前基線是 `done=118 / in_progress=0 / open=3 / total=121`.
 ## 1. 當前狀態
 - `ATM-2-0027`、`ATM-2-0050`、`ATM-2-0051`、`ATM-2-0054` 都已是 `done`，不再當作主缺口。
 - M1 的三個收尾面向都已收斂，不再保留未完成主缺口。
@@ -46,7 +46,7 @@ ATM-2.5-0004 -> ATM-2-0030 -> ATM-2-0010
 
 ### M3. 機器驗證層
 [x] `ATM-3-0016` validator orchestrator 與 AJV cache 的統一入口。（目前：done）
-- [ ] 基礎 deterministic 已由 `ATM-2-0029`(done)、`ATM-2-0031`(done)、`ATM-2-0033`(done) 收斂；若保留 semantic advisory 後續，對映 `ATM-2-0035` （目前：open）。
+- [x] 基礎 deterministic 已由 `ATM-2-0029`(done)、`ATM-2-0031`(done)、`ATM-2-0033`(done) 收斂；若保留 semantic advisory 後續，對映 `ATM-2-0035` （目前：done）。
 
 ### M4. 負債清單
 [x] `ATM-2-0024`、`ATM-4-0004`、`ATM-4-0008` 的 map evolution 主線已收斂，不再列為 blocker。

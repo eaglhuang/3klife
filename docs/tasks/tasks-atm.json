@@ -16,9 +16,9 @@
     "maxPartLines": 300
   },
   "summary": {
-    "done": 117,
+    "done": 118,
     "in_progress": 0,
-    "open": 4,
+    "open": 3,
     "total": 121
   },
   "shards": [
@@ -333,8 +333,8 @@
       "title": "Part 35 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-35.json",
       "count": 2,
-      "bytes": 5712,
-      "lines": 135,
+      "bytes": 6362,
+      "lines": 137,
       "layout": "sticky-least-pool"
     },
     {
