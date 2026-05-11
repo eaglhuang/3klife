@@ -65,6 +65,11 @@ function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
 
+function resetDir(dirPath) {
+  fs.rmSync(dirPath, { recursive: true, force: true });
+  fs.mkdirSync(dirPath, { recursive: true });
+}
+
 function readJsonIfExists(filePath) {
   try {
     if (!filePath || !fs.existsSync(filePath)) return null;
@@ -110,6 +115,24 @@ function hashStableJson(value) {
   return `sha256:${crypto.createHash('sha256').update(canonical).digest('hex')}`;
 }
 
+function isRunSuccess(run) {
+  return Boolean(run) && Number(run.status) === 0;
+}
+
+function summarizeCommandRun(run) {
+  const stdout = String(run && run.stdout || '');
+  const stderr = String(run && run.stderr || '');
+  const stdoutLines = stdout.split(/\r?\n/).filter(Boolean);
+  const stderrLines = stderr.split(/\r?\n/).filter(Boolean);
+  return {
+    label: run && run.label || '',
+    status: Number(run && run.status || 1),
+    error: run && run.error || null,
+    stdoutTail: stdoutLines.slice(-8),
+    stderrTail: stderrLines.slice(-8),
+  };
+}
+
 function pickLaunchCheck(report, id) {
   const checks = Array.isArray(report && report.checks) ? report.checks : [];
   return checks.find((item) => item && item.id === id) || null;
@@ -146,7 +169,7 @@ function runRound(roundId, opts) {
   const summaryRuleGuardReportPath = path.join(roundDir, 'rule-guard.summary.report.json');
   const evidenceManifestPath = path.join(roundDir, 'evidence.manifest.json');
 
-  ensureDir(roundDir);
+  resetDir(roundDir);
   ensureDir(workflowOutDir);
 
   const launchArgs = ['--strict', '--report', launchReportPath];
@@ -186,6 +209,9 @@ function runRound(roundId, opts) {
   const summaryRuleGuardReport = readJsonIfExists(summaryRuleGuardReportPath);
 
   const key = buildEvidenceKey(launchReport, workflowSummary, summaryRuleGuardReport);
+  const commandRuns = [launchRun, workflowRun, summaryRuleGuardRun];
+  const commandSummary = commandRuns.map((run) => summarizeCommandRun(run));
+  const commandFailures = commandSummary.filter((item) => item.status !== 0);
   const manifest = {
     roundId,
     generatedAt: new Date().toISOString(),
@@ -199,16 +225,18 @@ function runRound(roundId, opts) {
       workflow: workflowRun.status,
       summaryRuleGuard: summaryRuleGuardRun.status,
     },
+    commandSummary,
+    commandFailureCount: commandFailures.length,
     key,
     keyHash: hashStableJson(key),
   };
   writeJson(evidenceManifestPath, manifest);
 
-  const launchPassed = !!(launchReport && launchReport.passed);
-  const summaryRuleGuardPassed = !!(summaryRuleGuardReport && summaryRuleGuardReport.blockerCount === 0);
+  const launchPassed = isRunSuccess(launchRun) && !!(launchReport && launchReport.passed);
+  const summaryRuleGuardPassed = isRunSuccess(summaryRuleGuardRun) && !!(summaryRuleGuardReport && summaryRuleGuardReport.blockerCount === 0);
   const interaction = workflowSummary && workflowSummary.interactionRuntime || null;
+  const workflowArtifactsReady = isRunSuccess(workflowRun) && !!workflowSummary;
   const interactionPassed = !!(interaction && interaction.required && interaction.status === 'pass' && interaction.actionsBound === interaction.actionsDeclared);
-  const workflowArtifactsReady = !!workflowSummary;
   const passed = launchPassed && summaryRuleGuardPassed && interactionPassed && workflowArtifactsReady;
 
   return {
@@ -228,6 +256,8 @@ function runRound(roundId, opts) {
     summaryRuleGuardReport,
     key,
     keyHash: manifest.keyHash,
+    commandFailureCount: commandFailures.length,
+    commandSummary,
   };
 }
 

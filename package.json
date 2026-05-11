@@ -54,6 +54,7 @@
     "validate:atm-task-store-single-truth": "node tools_node/validate-atm-task-store-single-truth.js",
     "test:atm-task-store-single-truth": "node tools_node/test/validate-atm-task-store-single-truth.test.js",
     "test:atm-closeout-regression": "node tools_node/test/atm-closeout-regression.test.js",
+    "test:legacy-h2u-first-win-regression": "node tools_node/test/legacy-h2u-first-win-regression.test.js",
     "validate:atm-stability-closeout": "node tools_node/validate-atm-stability-closeout.js",
     "validate:usage-evidence-shadow": "node tools_node/validate-usage-evidence-shadow.js",
     "validate:h2u-evolution-pilot": "node tools_node/validate-h2u-evolution-pilot.js",
