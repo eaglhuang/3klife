@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-FONT-FACE-REGISTRY:base:nominal",
+    "kind": "base",
+    "title": "buildFontFaceRegistry 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:20bccfd827328b58044e2452c6ac5c790329966dfc767174ddb77811a6530001",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L2772-L2787"
+    ]
+  }
+]

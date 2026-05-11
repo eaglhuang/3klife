@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-PARSE-FRAGMENT-LIST:invalid:null",
+    "kind": "invalid",
+    "title": "parseFragmentList null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:856d78fb8f80aa8b321c704509044e0f2c3cef223908b81a88400bed847632ac",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-PARSE-FRAGMENT-LIST:invalid:type",
+    "kind": "invalid",
+    "title": "parseFragmentList 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:856d78fb8f80aa8b321c704509044e0f2c3cef223908b81a88400bed847632ac",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

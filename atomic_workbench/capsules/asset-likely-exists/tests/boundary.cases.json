@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-ASSET-LIKELY-EXISTS:boundary:empty",
+    "kind": "boundary",
+    "title": "assetLikelyExists 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:edd0f45cb412fd8c4f76368c81b3c61728465fb08178722a81d575f47a3e3b85",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-ASSET-LIKELY-EXISTS:boundary:formatted",
+    "kind": "boundary",
+    "title": "assetLikelyExists 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:edd0f45cb412fd8c4f76368c81b3c61728465fb08178722a81d575f47a3e3b85",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

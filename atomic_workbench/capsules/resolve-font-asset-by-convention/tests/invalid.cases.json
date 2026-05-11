@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-RESOLVE-FONT-ASSET-BY-CONVENTION:invalid:null",
+    "kind": "invalid",
+    "title": "resolveFontAssetByConvention null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:a56641346a77e06636d9592e1ea869f1a70470f14748d7007864d803a3764cc4",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-RESOLVE-FONT-ASSET-BY-CONVENTION:invalid:type",
+    "kind": "invalid",
+    "title": "resolveFontAssetByConvention 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:a56641346a77e06636d9592e1ea869f1a70470f14748d7007864d803a3764cc4",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

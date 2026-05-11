@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-INFER-TAB-SEMANTIC-HINTS:boundary:empty",
+    "kind": "boundary",
+    "title": "inferTabSemanticHints 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:1c10eef576a230c5b591a536c7f8e35090120addc5043b62a994df789ebf9b02",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-INFER-TAB-SEMANTIC-HINTS:boundary:formatted",
+    "kind": "boundary",
+    "title": "inferTabSemanticHints 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:1c10eef576a230c5b591a536c7f8e35090120addc5043b62a994df789ebf9b02",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

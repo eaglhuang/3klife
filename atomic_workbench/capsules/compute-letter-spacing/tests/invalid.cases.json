@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-COMPUTE-LETTER-SPACING:invalid:null",
+    "kind": "invalid",
+    "title": "computeLetterSpacing null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:744d871dcabfba6496305acc415010e41c68a2f47c4fd49efd121ce886c90562",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-COMPUTE-LETTER-SPACING:invalid:type",
+    "kind": "invalid",
+    "title": "computeLetterSpacing 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:744d871dcabfba6496305acc415010e41c68a2f47c4fd49efd121ce886c90562",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

@@ -1,0 +1,63 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-IS-TAB-SWITCH-CONTRACT",
+  "symbolName": "isTabSwitchContract",
+  "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+  "moduleSlug": "draft-builder-core-82992a5f",
+  "source": {
+    "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+    "sourceRange": {
+      "startLine": 713,
+      "endLine": 716
+    },
+    "semanticFingerprint": "sf:sha256:f27d045d874af5338874145a113a5fc4d30e8622ff1c4b6f6b6d78d0edb43f0a"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [],
+  "classification": {
+    "exported": false,
+    "lineCount": 4,
+    "severity": "advisory",
+    "riskScore": 25,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": false
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [],
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated isTabSwitchContract"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L713-L716"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:f27d045d874af5338874145a113a5fc4d30e8622ff1c4b6f6b6d78d0edb43f0a"
+  }
+}

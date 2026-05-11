@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-NORMALIZE-CSS-COLOR-TO-HEX:invalid:null",
+    "kind": "invalid",
+    "title": "normalizeCssColorToHex null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:da5cdbdf923c795bc164cee4b8f270f0d7843cf2e378a15dfadc0f5f6d669a4a",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-NORMALIZE-CSS-COLOR-TO-HEX:invalid:type",
+    "kind": "invalid",
+    "title": "normalizeCssColorToHex 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:da5cdbdf923c795bc164cee4b8f270f0d7843cf2e378a15dfadc0f5f6d669a4a",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

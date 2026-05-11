@@ -1,0 +1,30 @@
+{
+  "schemaId": "atm.capsuleGovernancePolicyOverride",
+  "specVersion": "0.1.0",
+  "thresholds": {
+    "functionLinesWarn": 80,
+    "functionLinesBlockRelease": 250,
+    "familyPromotionMinCount": 3,
+    "duplicateFingerprintAction": "reuse-or-merge"
+  },
+  "testRequirements": {
+    "candidate": [
+      "base",
+      "boundary",
+      "invalid"
+    ],
+    "blockRelease": [
+      "base",
+      "boundary",
+      "invalid",
+      "regression"
+    ],
+    "sideEffectRisk": [
+      "boundary",
+      "invalid"
+    ]
+  },
+  "sealedPolicy": {
+    "rules": []
+  }
+}

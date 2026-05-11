@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-RESOLVE-FONT-FAMILY-TO-ASSET:boundary:empty",
+    "kind": "boundary",
+    "title": "resolveFontFamilyToAsset 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:aa9f7f72f502741594e75bf0ef2bbad4acdd50d093ee2510316a4a92bcfccc53",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-RESOLVE-FONT-FAMILY-TO-ASSET:boundary:formatted",
+    "kind": "boundary",
+    "title": "resolveFontFamilyToAsset 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:aa9f7f72f502741594e75bf0ef2bbad4acdd50d093ee2510316a4a92bcfccc53",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

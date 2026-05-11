@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-COLLECT-BEHAVIOR:boundary:empty",
+    "kind": "boundary",
+    "title": "collectBehavior 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:d055feff873b793330a6d48993cb58a1a4c5bc5db91f66a82f7b8d9f996b8c95",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-COLLECT-BEHAVIOR:boundary:formatted",
+    "kind": "boundary",
+    "title": "collectBehavior 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:d055feff873b793330a6d48993cb58a1a4c5bc5db91f66a82f7b8d9f996b8c95",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

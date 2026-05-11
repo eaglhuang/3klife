@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-COMPUTE-LETTER-SPACING:base:nominal",
+    "kind": "base",
+    "title": "computeLetterSpacing 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:744d871dcabfba6496305acc415010e41c68a2f47c4fd49efd121ce886c90562",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L2711-L2722"
+    ]
+  }
+]

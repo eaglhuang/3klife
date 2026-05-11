@@ -1,0 +1,63 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-CONTAINS-TRANSPARENT-CSS-COLOR",
+  "symbolName": "containsTransparentCssColor",
+  "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+  "moduleSlug": "draft-builder-core-82992a5f",
+  "source": {
+    "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+    "sourceRange": {
+      "startLine": 2605,
+      "endLine": 2611
+    },
+    "semanticFingerprint": "sf:sha256:0ce4d5ef68c432ce15c287816e7ef30ae602c20554ed5eeeed44629bfbe12863"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [],
+  "classification": {
+    "exported": false,
+    "lineCount": 7,
+    "severity": "advisory",
+    "riskScore": 25,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": false
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [],
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated containsTransparentCssColor"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L2605-L2611"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:0ce4d5ef68c432ce15c287816e7ef30ae602c20554ed5eeeed44629bfbe12863"
+  }
+}

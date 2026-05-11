@@ -1,0 +1,4783 @@
+{
+  "schemaId": "atm.localCapsuleIndex",
+  "specVersion": "0.2.0",
+  "generatedAt": "2026-05-11T15:02:31.438Z",
+  "candidateReport": "artifacts/atm-atomize/candidates.json",
+  "workbenchRoot": "atomic_workbench",
+  "capsuleRoot": "atomic_workbench/capsules",
+  "anchorRoot": "atomic_workbench/anchors",
+  "summary": {
+    "candidateCount": 169,
+    "anchorCount": 1,
+    "byRecommendedTier": {
+      "local-capsule": 158,
+      "governed-atom": 11
+    },
+    "byCurrentTier": {
+      "local-capsule": 158,
+      "local-capsule-candidate": 11
+    },
+    "bySeverity": {
+      "block-if-untested": 12,
+      "advisory": 156,
+      "block-release": 1
+    },
+    "governedCandidates": [
+      "applyTextTransformGeneral",
+      "buildDraftFromHtml",
+      "buildFontFaceRegistry",
+      "collectBehavior",
+      "computeLetterSpacing",
+      "inferTabSemanticHints",
+      "normalizeCssColorToHex",
+      "parseColor",
+      "parseFragmentList",
+      "resolveFontAssetByConvention",
+      "resolveFontFamilyToAsset"
+    ],
+    "releaseBlockers": [
+      "processElement"
+    ]
+  },
+  "capsules": [
+    {
+      "capsuleId": "H2U-CAPSULE-ANCHOR-TO-WIDGET",
+      "symbolName": "anchorToWidget",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1407,
+          "endLine": 1419
+        },
+        "semanticFingerprint": "sf:sha256:94a7c63316ad533fa1e260bd397f712c016b1831c20e735c2125e5de9789593a"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/anchor-to-widget",
+      "manifestPath": "atomic_workbench/capsules/anchor-to-widget/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/anchor-to-widget/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "exported",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-APPEND-NODE-WITH-GENERATED-SIBLINGS",
+      "symbolName": "appendNodeWithGeneratedSiblings",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1796,
+          "endLine": 1805
+        },
+        "semanticFingerprint": "sf:sha256:cc8dc04d1e88f80565e408b5f9d380a0c9c43e8bcb6a2699ab5438535a37db2f"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/append-node-with-generated-siblings",
+      "manifestPath": "atomic_workbench/capsules/append-node-with-generated-siblings/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/append-node-with-generated-siblings/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-APPLY-CAPTURE-NODE-ATTRS",
+      "symbolName": "applyCaptureNodeAttrs",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1054,
+          "endLine": 1063
+        },
+        "semanticFingerprint": "sf:sha256:98bf2f4b13965fd396f5bc25e0941401d812a52fb7aa7a1ef4d62ce46bbdd0cb"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/apply-capture-node-attrs",
+      "manifestPath": "atomic_workbench/capsules/apply-capture-node-attrs/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/apply-capture-node-attrs/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-APPLY-CLIP-PATH-METADATA",
+      "symbolName": "applyClipPathMetadata",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2490,
+          "endLine": 2496
+        },
+        "semanticFingerprint": "sf:sha256:94b48b751d1ad4259ea57b3975848fa153edccb48dc2b4c1ebc490236a2a94c6"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/apply-clip-path-metadata",
+      "manifestPath": "atomic_workbench/capsules/apply-clip-path-metadata/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/apply-clip-path-metadata/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-APPLY-COMMON-NODE-ATTRS",
+      "symbolName": "applyCommonNodeAttrs",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1038,
+          "endLine": 1053
+        },
+        "semanticFingerprint": "sf:sha256:ef2f05f429f9d696933f37d6539cc76313fd1ec3a1b17c4f49253733bbe986ab"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/apply-common-node-attrs",
+      "manifestPath": "atomic_workbench/capsules/apply-common-node-attrs/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/apply-common-node-attrs/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-APPLY-IMAGE-FIT",
+      "symbolName": "applyImageFit",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1018,
+          "endLine": 1025
+        },
+        "semanticFingerprint": "sf:sha256:d17b747c57f360267c557ba98328227a26d6adf48ae1bab1f8c4bfe428442510"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/apply-image-fit",
+      "manifestPath": "atomic_workbench/capsules/apply-image-fit/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/apply-image-fit/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-APPLY-TEXT-TRANSFORM-GENERAL",
+      "symbolName": "applyTextTransformGeneral",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1848,
+          "endLine": 1861
+        },
+        "semanticFingerprint": "sf:sha256:10829fb9d2417a9614b0b08dcc0ac88a989d11242bcb25ac4ecd4d96d5caae40"
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/apply-text-transform-general",
+      "manifestPath": "atomic_workbench/capsules/apply-text-transform-general/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/apply-text-transform-general/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/apply-text-transform-general/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-APPLY-VISIBILITY-STATE",
+      "symbolName": "applyVisibilityState",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1064,
+          "endLine": 1085
+        },
+        "semanticFingerprint": "sf:sha256:a0e2c5d20a0401a8e6064333bf7d8397e3dddf37fff562ff8bef8206bc0f9200"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/apply-visibility-state",
+      "manifestPath": "atomic_workbench/capsules/apply-visibility-state/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/apply-visibility-state/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ASSET-LIKELY-EXISTS",
+      "symbolName": "assetLikelyExists",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 3047,
+          "endLine": 3056
+        },
+        "semanticFingerprint": "sf:sha256:edd0f45cb412fd8c4f76368c81b3c61728465fb08178722a81d575f47a3e3b85"
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/asset-likely-exists",
+      "manifestPath": "atomic_workbench/capsules/asset-likely-exists/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/asset-likely-exists/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/asset-likely-exists/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ASSIGN-COMPUTED",
+      "symbolName": "assignComputed",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2560,
+          "endLine": 2564
+        },
+        "semanticFingerprint": "sf:sha256:8c6232ce695a18085b0fdc1c0cf63ee44cae2242921e216b389946fea2f7815b"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/assign-computed",
+      "manifestPath": "atomic_workbench/capsules/assign-computed/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/assign-computed/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ASSIGN-WIDGET-EDGE",
+      "symbolName": "assignWidgetEdge",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1420,
+          "endLine": 1430
+        },
+        "semanticFingerprint": "sf:sha256:9528fb60548b0c3cf1f4e60085837d6ff48c649a3a0aee59eb9ee3b8faf9550f"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/assign-widget-edge",
+      "manifestPath": "atomic_workbench/capsules/assign-widget-edge/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/assign-widget-edge/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ATTACH-BOX-SHAPE-METADATA",
+      "symbolName": "attachBoxShapeMetadata",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1972,
+          "endLine": 1987
+        },
+        "semanticFingerprint": "sf:sha256:e9e7707af056d885a35064c551629cb6b5f7f29d45d981d9af9928bd46ac82bb"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/attach-box-shape-metadata",
+      "manifestPath": "atomic_workbench/capsules/attach-box-shape-metadata/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/attach-box-shape-metadata/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-AUTO-NAME",
+      "symbolName": "autoName",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1786,
+          "endLine": 1790
+        },
+        "semanticFingerprint": "sf:sha256:b12853a2634a4298b275bd3289e1a2c48a9844d2c5c2ca5e54bdce137719e83b"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/auto-name",
+      "manifestPath": "atomic_workbench/capsules/auto-name/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/auto-name/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-AUTO-SLOT-ID",
+      "symbolName": "autoSlotId",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1791,
+          "endLine": 1795
+        },
+        "semanticFingerprint": "sf:sha256:1f343101072f81597112389689b36998db026655742fdfe6d1b625d7eae73629"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/auto-slot-id",
+      "manifestPath": "atomic_workbench/capsules/auto-slot-id/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/auto-slot-id/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-DRAFT-FROM-HTML",
+      "symbolName": "buildDraftFromHtml",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 60,
+          "endLine": 172
+        },
+        "semanticFingerprint": "sf:sha256:f920b4c95046c721ad803446582b24d3f11574cdbaab907313299c56d15cd2f2"
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/build-draft-from-html",
+      "manifestPath": "atomic_workbench/capsules/build-draft-from-html/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-draft-from-html/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/build-draft-from-html/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "medium-function",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-EFFECT-SIBLING-NODES",
+      "symbolName": "buildEffectSiblingNodes",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2158,
+          "endLine": 2187
+        },
+        "semanticFingerprint": "sf:sha256:fb052e4c9b6bc7cef76c9562bf60772a071bc2fd971ea78f462ecdfa4b9dcb69"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-effect-sibling-nodes",
+      "manifestPath": "atomic_workbench/capsules/build-effect-sibling-nodes/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-effect-sibling-nodes/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-FONT-FACE-REGISTRY",
+      "symbolName": "buildFontFaceRegistry",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2772,
+          "endLine": 2787
+        },
+        "semanticFingerprint": "sf:sha256:20bccfd827328b58044e2452c6ac5c790329966dfc767174ddb77811a6530001"
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/build-font-face-registry",
+      "manifestPath": "atomic_workbench/capsules/build-font-face-registry/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-font-face-registry/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/build-font-face-registry/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-GRADIENT-RECT-SLOT",
+      "symbolName": "buildGradientRectSlot",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2097,
+          "endLine": 2157
+        },
+        "semanticFingerprint": "sf:sha256:c92a94d12db40047e5ec42887d2b369713fcf72bfbcc7f0f83851caf8e1bac58"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-gradient-rect-slot",
+      "manifestPath": "atomic_workbench/capsules/build-gradient-rect-slot/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-gradient-rect-slot/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-LABEL-TEXT-FINGERPRINT",
+      "symbolName": "buildLabelTextFingerprint",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 633,
+          "endLine": 640
+        },
+        "semanticFingerprint": "sf:sha256:0ac0eb0e26be4cd7fbb94ee0ef514fe800919b46d482422723ec0fb983e35d4f"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-label-text-fingerprint",
+      "manifestPath": "atomic_workbench/capsules/build-label-text-fingerprint/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-label-text-fingerprint/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-PSEUDO-VISUAL-NODE",
+      "symbolName": "buildPseudoVisualNode",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2521,
+          "endLine": 2541
+        },
+        "semanticFingerprint": "sf:sha256:524c7a009e6dcea26b82d9016d5452079ccd1b769fd9b195978219058bb3e6df"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-pseudo-visual-node",
+      "manifestPath": "atomic_workbench/capsules/build-pseudo-visual-node/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-pseudo-visual-node/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-PSEUDO-VISUAL-NODES",
+      "symbolName": "buildPseudoVisualNodes",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2505,
+          "endLine": 2520
+        },
+        "semanticFingerprint": "sf:sha256:2d8e6c49967353d68444405769373cbbd50fa8e75499222df4c7d931c90ba742"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-pseudo-visual-nodes",
+      "manifestPath": "atomic_workbench/capsules/build-pseudo-visual-nodes/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-pseudo-visual-nodes/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-STRUCTURAL-SIGNATURE",
+      "symbolName": "buildStructuralSignature",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 650,
+          "endLine": 667
+        },
+        "semanticFingerprint": "sf:sha256:3cfff0bf5af38ca2b57f05c3285d526ae3451f1b02bf335021e6373232e3db7d"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-structural-signature",
+      "manifestPath": "atomic_workbench/capsules/build-structural-signature/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-structural-signature/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-CALCULATE-SHADOW-PADDING",
+      "symbolName": "calculateShadowPadding",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2246,
+          "endLine": 2261
+        },
+        "semanticFingerprint": "sf:sha256:3ef1ac03ae53f1463e7f67088805c09d011a87d65c9d27a08352d935a8dfe378"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/calculate-shadow-padding",
+      "manifestPath": "atomic_workbench/capsules/calculate-shadow-padding/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/calculate-shadow-padding/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-CAN-USE-GENERATED-EFFECT-SIBLING",
+      "symbolName": "canUseGeneratedEffectSibling",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2188,
+          "endLine": 2196
+        },
+        "semanticFingerprint": "sf:sha256:eb4883cd6513767dee83e57907795b4bcc5a0947c0efa7176b6cf64ad47b0a5f"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/can-use-generated-effect-sibling",
+      "manifestPath": "atomic_workbench/capsules/can-use-generated-effect-sibling/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/can-use-generated-effect-sibling/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-CHILD-HAS-OUT-OF-FLOW-POSITION",
+      "symbolName": "childHasOutOfFlowPosition",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1632,
+          "endLine": 1637
+        },
+        "semanticFingerprint": "sf:sha256:194a0d622833d38182cfa305a167a6af6f8f86939eb66fe3f0a76b6c32ef0b15"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/child-has-out-of-flow-position",
+      "manifestPath": "atomic_workbench/capsules/child-has-out-of-flow-position/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/child-has-out-of-flow-position/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-CLAMP-CSS-BYTE",
+      "symbolName": "clampCssByte",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2092,
+          "endLine": 2096
+        },
+        "semanticFingerprint": "sf:sha256:bddd2c3c5eedca1603c6dcb6e7e5ae08c555e6fcc0df762eb2d400383f06eee3"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/clamp-css-byte",
+      "manifestPath": "atomic_workbench/capsules/clamp-css-byte/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/clamp-css-byte/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COLLECT-BEHAVIOR",
+      "symbolName": "collectBehavior",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1086,
+          "endLine": 1101
+        },
+        "semanticFingerprint": "sf:sha256:d055feff873b793330a6d48993cb58a1a4c5bc5db91f66a82f7b8d9f996b8c95"
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/collect-behavior",
+      "manifestPath": "atomic_workbench/capsules/collect-behavior/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/collect-behavior/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/collect-behavior/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "pure-ish"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COLLECT-ELEMENT-STYLE",
+      "symbolName": "collectElementStyle",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1431,
+          "endLine": 1444
+        },
+        "semanticFingerprint": "sf:sha256:7497bf1e930646fc3254e548305755089321347cca2363592f94ff16bcc80894"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/collect-element-style",
+      "manifestPath": "atomic_workbench/capsules/collect-element-style/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/collect-element-style/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COLLECT-LABEL-TEXTS",
+      "symbolName": "collectLabelTexts",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 641,
+          "endLine": 649
+        },
+        "semanticFingerprint": "sf:sha256:59d94b82b99672300d63020a5138558fff5d7d24f7233e149829c1bb60281ee9"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/collect-label-texts",
+      "manifestPath": "atomic_workbench/capsules/collect-label-texts/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/collect-label-texts/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COLLECT-OUTER-SHADOWS",
+      "symbolName": "collectOuterShadows",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2197,
+          "endLine": 2207
+        },
+        "semanticFingerprint": "sf:sha256:9d6322ace455cb7629b58e3616604754d1ef511da4a92f8bf6bc2047da2e4e18"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/collect-outer-shadows",
+      "manifestPath": "atomic_workbench/capsules/collect-outer-shadows/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/collect-outer-shadows/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COLLECT-SEMANTIC-TOKENS",
+      "symbolName": "collectSemanticTokens",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 834,
+          "endLine": 851
+        },
+        "semanticFingerprint": "sf:sha256:70e6ea9d823c23fc3e2670fcbe82746dc6f85d1fa0b814f3ee3a1027aa23b5c3"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/collect-semantic-tokens",
+      "manifestPath": "atomic_workbench/capsules/collect-semantic-tokens/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/collect-semantic-tokens/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COLLECT-SVG-SHAPES",
+      "symbolName": "collectSvgShapes",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1211,
+          "endLine": 1280
+        },
+        "semanticFingerprint": "sf:sha256:4a23ba12692f1ac3c31f2bdfe04e46eb502de5589a4e4eb7b011a1cc53ea8f39"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/collect-svg-shapes",
+      "manifestPath": "atomic_workbench/capsules/collect-svg-shapes/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/collect-svg-shapes/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COLLECT-TEXT",
+      "symbolName": "collectText",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1834,
+          "endLine": 1842
+        },
+        "semanticFingerprint": "sf:sha256:6a0bab023544694cc30d5afdcb71151d01f31e6793fe07a2634a965e846356d8"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/collect-text",
+      "manifestPath": "atomic_workbench/capsules/collect-text/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/collect-text/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COMPUTE-LETTER-SPACING",
+      "symbolName": "computeLetterSpacing",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2711,
+          "endLine": 2722
+        },
+        "semanticFingerprint": "sf:sha256:744d871dcabfba6496305acc415010e41c68a2f47c4fd49efd121ce886c90562"
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/compute-letter-spacing",
+      "manifestPath": "atomic_workbench/capsules/compute-letter-spacing/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/compute-letter-spacing/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/compute-letter-spacing/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COMPUTE-SVG-OUTER-RADIUS",
+      "symbolName": "computeSvgOuterRadius",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1349,
+          "endLine": 1361
+        },
+        "semanticFingerprint": "sf:sha256:98f45bb035e4586aaed8a081aea4701a0e5172f9a997a4e5ab6e398204d72c7d"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/compute-svg-outer-radius",
+      "manifestPath": "atomic_workbench/capsules/compute-svg-outer-radius/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/compute-svg-outer-radius/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COMPUTE-SVG-TEXT-BOUNDS",
+      "symbolName": "computeSvgTextBounds",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1378,
+          "endLine": 1406
+        },
+        "semanticFingerprint": "sf:sha256:9788b59b35ce2cf17883e97e005e8165015bd7f28d86fb79f572353101eb2762"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/compute-svg-text-bounds",
+      "manifestPath": "atomic_workbench/capsules/compute-svg-text-bounds/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/compute-svg-text-bounds/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-CONTAINS-RICH-INNER",
+      "symbolName": "containsRichInner",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1862,
+          "endLine": 1868
+        },
+        "semanticFingerprint": "sf:sha256:04e97b165be2e27122ebdccac0c1eb43997ebf7145bc878483cdb6c66f09b263"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/contains-rich-inner",
+      "manifestPath": "atomic_workbench/capsules/contains-rich-inner/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/contains-rich-inner/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-CONTAINS-TRANSPARENT-CSS-COLOR",
+      "symbolName": "containsTransparentCssColor",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2605,
+          "endLine": 2611
+        },
+        "semanticFingerprint": "sf:sha256:0ce4d5ef68c432ce15c287816e7ef30ae602c20554ed5eeeed44629bfbe12863"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/contains-transparent-css-color",
+      "manifestPath": "atomic_workbench/capsules/contains-transparent-css-color/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/contains-transparent-css-color/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COUNT-GRID-TRACKS",
+      "symbolName": "countGridTracks",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1553,
+          "endLine": 1559
+        },
+        "semanticFingerprint": "sf:sha256:ae34316d85cea3966c533c1ab5de47cfb0ce1492db1a397d1c37f7bbbae9f752"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/count-grid-tracks",
+      "manifestPath": "atomic_workbench/capsules/count-grid-tracks/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/count-grid-tracks/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COUNT-LABEL-DESCENDANTS",
+      "symbolName": "countLabelDescendants",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 625,
+          "endLine": 632
+        },
+        "semanticFingerprint": "sf:sha256:e8011a85b4f9d0931126d155f60e917244eb7d950fa61167b620cd49dcbcb772"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/count-label-descendants",
+      "manifestPath": "atomic_workbench/capsules/count-label-descendants/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/count-label-descendants/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-DEDUPE-IDENTICAL-LARGE-CHILDREN",
+      "symbolName": "dedupeIdenticalLargeChildren",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 584,
+          "endLine": 624
+        },
+        "semanticFingerprint": "sf:sha256:5a8f319ede528527de49982e9f38efd39ae38614e7510ca0c687c9a5cf73e55b"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/dedupe-identical-large-children",
+      "manifestPath": "atomic_workbench/capsules/dedupe-identical-large-children/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/dedupe-identical-large-children/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-DEDUPE-TAB-SWITCH-CHILDREN",
+      "symbolName": "dedupeTabSwitchChildren",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 553,
+          "endLine": 583
+        },
+        "semanticFingerprint": "sf:sha256:631a0e1f73e5e98073845533dc4a86e8c7009fc1d8db415029b1d6336436fa70"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/dedupe-tab-switch-children",
+      "manifestPath": "atomic_workbench/capsules/dedupe-tab-switch-children/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/dedupe-tab-switch-children/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-DERIVE-COMPUTED-GEOMETRY",
+      "symbolName": "deriveComputedGeometry",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 932,
+          "endLine": 974
+        },
+        "semanticFingerprint": "sf:sha256:9f88c75282e6e4af5c9815d38e4dda4be73b798eb0fc633554179cb3cff3fb75"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/derive-computed-geometry",
+      "manifestPath": "atomic_workbench/capsules/derive-computed-geometry/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/derive-computed-geometry/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-EMIT-SKIN-LAYERS",
+      "symbolName": "emitSkinLayers",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2342,
+          "endLine": 2355
+        },
+        "semanticFingerprint": "sf:sha256:b5397fd605eceb48f1c3f28bf47bfa39c0f8ccbb0e12cfd588f373ac75bb41cd"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/emit-skin-layers",
+      "manifestPath": "atomic_workbench/capsules/emit-skin-layers/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/emit-skin-layers/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ENFORCE-COLOR-RECT-GUARD",
+      "symbolName": "enforceColorRectGuard",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 3057,
+          "endLine": 3074
+        },
+        "semanticFingerprint": "sf:sha256:c2f0f065ab48fc0072f033a675d7be7354c57065e07a4c6db6040f50501119d7"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/enforce-color-rect-guard",
+      "manifestPath": "atomic_workbench/capsules/enforce-color-rect-guard/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/enforce-color-rect-guard/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ENSURE-LABEL-STYLE",
+      "symbolName": "ensureLabelStyle",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2649,
+          "endLine": 2693
+        },
+        "semanticFingerprint": "sf:sha256:8f39b549f10fe0055c0066323b0971cc4d762874efe2a80fbef61dd39ab2e134"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/ensure-label-style",
+      "manifestPath": "atomic_workbench/capsules/ensure-label-style/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/ensure-label-style/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ENSURE-SPRITE-SLOT",
+      "symbolName": "ensureSpriteSlot",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1875,
+          "endLine": 1891
+        },
+        "semanticFingerprint": "sf:sha256:202b62060875bbb5e2a7a4a0023d0c333fe397542084009f4f7d53aae7bde21c"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/ensure-sprite-slot",
+      "manifestPath": "atomic_workbench/capsules/ensure-sprite-slot/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/ensure-sprite-slot/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ENSURE-TAB-BUTTON-SKIN-SLOT",
+      "symbolName": "ensureTabButtonSkinSlot",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1945,
+          "endLine": 1971
+        },
+        "semanticFingerprint": "sf:sha256:aeacf0047b140501290550807ebe5d08c31b233715adc5aa651e5ffb95b15dc7"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/ensure-tab-button-skin-slot",
+      "manifestPath": "atomic_workbench/capsules/ensure-tab-button-skin-slot/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/ensure-tab-button-skin-slot/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ESTIMATE-SVG-TEXT-BOX",
+      "symbolName": "estimateSvgTextBox",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1362,
+          "endLine": 1377
+        },
+        "semanticFingerprint": "sf:sha256:a0138aa8c4014943ffbd2715011bf8078324f14314eb975283db82b30da06f27"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/estimate-svg-text-box",
+      "manifestPath": "atomic_workbench/capsules/estimate-svg-text-box/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/estimate-svg-text-box/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-EXPAND-GRID-REPEAT",
+      "symbolName": "expandGridRepeat",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1598,
+          "endLine": 1607
+        },
+        "semanticFingerprint": "sf:sha256:6865235d4ec5e4ca4f3602fb82a7671f78e514023b46279f6f64255db44774ce"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/expand-grid-repeat",
+      "manifestPath": "atomic_workbench/capsules/expand-grid-repeat/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/expand-grid-repeat/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-EXPAND-WIDGET-FOR-EFFECT",
+      "symbolName": "expandWidgetForEffect",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2262,
+          "endLine": 2272
+        },
+        "semanticFingerprint": "sf:sha256:62038b305642e3751f2d028a3d5ef80a2d64c9c693016a4b6312f608cfa66176"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/expand-widget-for-effect",
+      "manifestPath": "atomic_workbench/capsules/expand-widget-for-effect/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/expand-widget-for-effect/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-EXTRACT-BORDER-COLOR",
+      "symbolName": "extractBorderColor",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2062,
+          "endLine": 2073
+        },
+        "semanticFingerprint": "sf:sha256:32c99edf1afdb61a491f096ca4a1a721f052e8734284e8adc3ebdad929a43045"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/extract-border-color",
+      "manifestPath": "atomic_workbench/capsules/extract-border-color/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/extract-border-color/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-EXTRACT-SVG-RADAR-CHART-META",
+      "symbolName": "extractSvgRadarChartMeta",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1176,
+          "endLine": 1210
+        },
+        "semanticFingerprint": "sf:sha256:30d225ee99e9efcb88847c712cf4ba82e01f98dfafa82e39e50771b5ac076b37"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/extract-svg-radar-chart-meta",
+      "manifestPath": "atomic_workbench/capsules/extract-svg-radar-chart-meta/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/extract-svg-radar-chart-meta/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-EXTRACT-URL",
+      "symbolName": "extractUrl",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2924,
+          "endLine": 2928
+        },
+        "semanticFingerprint": "sf:sha256:bd9de04ae9277953d01c7c672d73e2c6a6112300a2f9c4e7ea8dbe73fda62109"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/extract-url",
+      "manifestPath": "atomic_workbench/capsules/extract-url/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/extract-url/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-FIRST-MEANINGFUL-BORDER-COLOR",
+      "symbolName": "firstMeaningfulBorderColor",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2053,
+          "endLine": 2061
+        },
+        "semanticFingerprint": "sf:sha256:dcdbc1a0111760f35c305721ed17c8af883b6af97b40f8e692925b2980dd6761"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/first-meaningful-border-color",
+      "manifestPath": "atomic_workbench/capsules/first-meaningful-border-color/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/first-meaningful-border-color/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-GUARD-SPRITE-PATH",
+      "symbolName": "guardSpritePath",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 3018,
+          "endLine": 3037
+        },
+        "semanticFingerprint": "sf:sha256:094fa0a3a522e0067dc302942d29c411a9b9324277eb85bb6bd65f2176c8f54b"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/guard-sprite-path",
+      "manifestPath": "atomic_workbench/capsules/guard-sprite-path/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/guard-sprite-path/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-HAS-ELEMENT-CHILD",
+      "symbolName": "hasElementChild",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 3005,
+          "endLine": 3008
+        },
+        "semanticFingerprint": "sf:sha256:6def40a72cb0c748b527139de332e0d400b8d6ed78ad7d6e5a9d8b5fe361f055"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/has-element-child",
+      "manifestPath": "atomic_workbench/capsules/has-element-child/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/has-element-child/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-HAS-EXPLICIT-STORY-STRIP-SIGNAL",
+      "symbolName": "hasExplicitStoryStripSignal",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 852,
+          "endLine": 859
+        },
+        "semanticFingerprint": "sf:sha256:09676e6b3f60b952514b9ce8d157a8213484ca83802534ae10131f75eb6bb873"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/has-explicit-story-strip-signal",
+      "manifestPath": "atomic_workbench/capsules/has-explicit-story-strip-signal/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/has-explicit-story-strip-signal/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-HAS-MEANINGFUL-BACKGROUND",
+      "symbolName": "hasMeaningfulBackground",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2565,
+          "endLine": 2568
+        },
+        "semanticFingerprint": "sf:sha256:fea7de6e80d2a716012af2ae8ec26aa9e794b11f90f07c04c09bc9e431730aab"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/has-meaningful-background",
+      "manifestPath": "atomic_workbench/capsules/has-meaningful-background/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/has-meaningful-background/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-HAS-MEANINGFUL-OBJECT-FIT",
+      "symbolName": "hasMeaningfulObjectFit",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1012,
+          "endLine": 1017
+        },
+        "semanticFingerprint": "sf:sha256:7bf4d0c0f30c71b4b609af780580eb0b8698e02096a4b1d2ed738fc21021af52"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/has-meaningful-object-fit",
+      "manifestPath": "atomic_workbench/capsules/has-meaningful-object-fit/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/has-meaningful-object-fit/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-HAS-MEANINGFUL-TRANSFORM",
+      "symbolName": "hasMeaningfulTransform",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1006,
+          "endLine": 1011
+        },
+        "semanticFingerprint": "sf:sha256:3c862a93abc3967efb19c0809e0170e2093b071d10c88e7d892fa214e6e97b89"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/has-meaningful-transform",
+      "manifestPath": "atomic_workbench/capsules/has-meaningful-transform/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/has-meaningful-transform/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-HAS-ONLY-TEXT-CONTENT",
+      "symbolName": "hasOnlyTextContent",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1143,
+          "endLine": 1152
+        },
+        "semanticFingerprint": "sf:sha256:b4bfe4a907c5867c4e9adb006fa9a154402231968873f966be7de86604870515"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/has-only-text-content",
+      "manifestPath": "atomic_workbench/capsules/has-only-text-content/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/has-only-text-content/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-HAS-RENDERABLE-BORDER",
+      "symbolName": "hasRenderableBorder",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1988,
+          "endLine": 1991
+        },
+        "semanticFingerprint": "sf:sha256:8dd7910d02f67760f12aab570e1a5372d0194be04eacb5eefd8ca88d51f3b549"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/has-renderable-border",
+      "manifestPath": "atomic_workbench/capsules/has-renderable-border/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/has-renderable-border/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-HAS-STORY-STRIP-MULTI-SIGNAL",
+      "symbolName": "hasStoryStripMultiSignal",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 860,
+          "endLine": 867
+        },
+        "semanticFingerprint": "sf:sha256:1fde511593a823152238d408bc22eb68f5a4805e4a6dfd2cc8d5abf160c41d7b"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/has-story-strip-multi-signal",
+      "manifestPath": "atomic_workbench/capsules/has-story-strip-multi-signal/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/has-story-strip-multi-signal/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-BLOCK-FLOW-LAYOUT",
+      "symbolName": "inferBlockFlowLayout",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1531,
+          "endLine": 1552
+        },
+        "semanticFingerprint": "sf:sha256:97d621912c76479d5ddbaecafda7664e53ffdb959328af08a470965b52b5b122"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-block-flow-layout",
+      "manifestPath": "atomic_workbench/capsules/infer-block-flow-layout/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-block-flow-layout/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-CHILD-BLOCK-SPACING",
+      "symbolName": "inferChildBlockSpacing",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1638,
+          "endLine": 1650
+        },
+        "semanticFingerprint": "sf:sha256:53e4b39284dd7043aaa297b6b342c340bd2e3b96537d5bb6273585236785393b"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-child-block-spacing",
+      "manifestPath": "atomic_workbench/capsules/infer-child-block-spacing/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-child-block-spacing/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-COMPOSITE-GEOMETRY-SUMMARY",
+      "symbolName": "inferCompositeGeometrySummary",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1170,
+          "endLine": 1175
+        },
+        "semanticFingerprint": "sf:sha256:1a051a5ae09884b190964a49f134fcc26139384ee3a906aaad7e49bee097597b"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-composite-geometry-summary",
+      "manifestPath": "atomic_workbench/capsules/infer-composite-geometry-summary/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-composite-geometry-summary/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-COMPOSITE-RENDERER-HINT",
+      "symbolName": "inferCompositeRendererHint",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1153,
+          "endLine": 1169
+        },
+        "semanticFingerprint": "sf:sha256:df9d82f41435c64d000b97fd969819eec7d0e5e9efcc466bfd78f87aa8d7206b"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-composite-renderer-hint",
+      "manifestPath": "atomic_workbench/capsules/infer-composite-renderer-hint/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-composite-renderer-hint/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-DEFAULT-TAB-FRAGMENT",
+      "symbolName": "inferDefaultTabFragment",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 804,
+          "endLine": 810
+        },
+        "semanticFingerprint": "sf:sha256:d4336cca100e43e0763610b5164fc8137f630d4a690964784228754a1d71c9e9"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-default-tab-fragment",
+      "manifestPath": "atomic_workbench/capsules/infer-default-tab-fragment/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-default-tab-fragment/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-GRID-CELL-HEIGHT",
+      "symbolName": "inferGridCellHeight",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1573,
+          "endLine": 1583
+        },
+        "semanticFingerprint": "sf:sha256:57f9a5ce7a7832e8e8499ff3c12eb7fd7e52649e5aaddde4fc697f3a5e2e9a54"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-grid-cell-height",
+      "manifestPath": "atomic_workbench/capsules/infer-grid-cell-height/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-grid-cell-height/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-GRID-CELL-WIDTH",
+      "symbolName": "inferGridCellWidth",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1560,
+          "endLine": 1572
+        },
+        "semanticFingerprint": "sf:sha256:e495238f0e12b8a6c402962c7a554c17317143c7054ac951e1e06ab52c448e46"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-grid-cell-width",
+      "manifestPath": "atomic_workbench/capsules/infer-grid-cell-width/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-grid-cell-width/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-GRID-LAYOUT",
+      "symbolName": "inferGridLayout",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1496,
+          "endLine": 1530
+        },
+        "semanticFingerprint": "sf:sha256:97ff316492ed7004b742d0949ef78a9429a607669092a7f7224bc58cc3c248ff"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-grid-layout",
+      "manifestPath": "atomic_workbench/capsules/infer-grid-layout/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-grid-layout/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-LABEL-OVERFLOW",
+      "symbolName": "inferLabelOverflow",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2694,
+          "endLine": 2706
+        },
+        "semanticFingerprint": "sf:sha256:df888adbeb07a7e245ba1ae638672717e439828398419fd278a0a4fa01d68534"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-label-overflow",
+      "manifestPath": "atomic_workbench/capsules/infer-label-overflow/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-label-overflow/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-LAYOUT",
+      "symbolName": "inferLayout",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1445,
+          "endLine": 1472
+        },
+        "semanticFingerprint": "sf:sha256:6665b31e517e49e14dbc8b4bd8d4af0aa0b6428bc4fb056d3d7e159f18b10bb2"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-layout",
+      "manifestPath": "atomic_workbench/capsules/infer-layout/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-layout/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-NODE-TYPE",
+      "symbolName": "inferNodeType",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1102,
+          "endLine": 1121
+        },
+        "semanticFingerprint": "sf:sha256:eefc8d2c3a04bb2f2fb73fb787804e2ac97d527db27b13d2b38ddcd1cb033765"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-node-type",
+      "manifestPath": "atomic_workbench/capsules/infer-node-type/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-node-type/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-OWNER-TAB-FROM-ELEMENT",
+      "symbolName": "inferOwnerTabFromElement",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 897,
+          "endLine": 921
+        },
+        "semanticFingerprint": "sf:sha256:2cc4bfa5e399ad57005a1782ad88f1e5f3e3c237b540fe88a46350d6f7068760"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-owner-tab-from-element",
+      "manifestPath": "atomic_workbench/capsules/infer-owner-tab-from-element/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-owner-tab-from-element/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-STORY-STRIP-HINTS",
+      "symbolName": "inferStoryStripHints",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 811,
+          "endLine": 833
+        },
+        "semanticFingerprint": "sf:sha256:69f0e9c6ce1d79c2fb1b12c1a46cbcd35cd71631a5fb3ca14a831d3686f5e079"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-story-strip-hints",
+      "manifestPath": "atomic_workbench/capsules/infer-story-strip-hints/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-story-strip-hints/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-TAB-ID-FROM-ELEMENT",
+      "symbolName": "inferTabIdFromElement",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 780,
+          "endLine": 803
+        },
+        "semanticFingerprint": "sf:sha256:209b75cfecef32d0b172308ba41abd733dd5c0ca35d1e70e157862f025029639"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/infer-tab-id-from-element",
+      "manifestPath": "atomic_workbench/capsules/infer-tab-id-from-element/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-tab-id-from-element/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INFER-TAB-SEMANTIC-HINTS",
+      "symbolName": "inferTabSemanticHints",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 730,
+          "endLine": 779
+        },
+        "semanticFingerprint": "sf:sha256:1c10eef576a230c5b591a536c7f8e35090120addc5043b62a994df789ebf9b02"
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/infer-tab-semantic-hints",
+      "manifestPath": "atomic_workbench/capsules/infer-tab-semantic-hints/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/infer-tab-semantic-hints/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/infer-tab-semantic-hints/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-INSPECT-ART-DIRECTION-RISKS",
+      "symbolName": "inspectArtDirectionRisks",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2971,
+          "endLine": 2994
+        },
+        "semanticFingerprint": "sf:sha256:a64940b41f6bc281a76760eae3db28ff06a959feca7e8c0b613de6d638a106e3"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/inspect-art-direction-risks",
+      "manifestPath": "atomic_workbench/capsules/inspect-art-direction-risks/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/inspect-art-direction-risks/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-IS-ASYMMETRIC-RADIUS",
+      "symbolName": "isAsymmetricRadius",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 3000,
+          "endLine": 3004
+        },
+        "semanticFingerprint": "sf:sha256:e085427a491c70cacdfb9036976bce45c44a830a56a474483a560c5949fa9ed0"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/is-asymmetric-radius",
+      "manifestPath": "atomic_workbench/capsules/is-asymmetric-radius/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/is-asymmetric-radius/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-IS-BOLD-WEIGHT",
+      "symbolName": "isBoldWeight",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2906,
+          "endLine": 2913
+        },
+        "semanticFingerprint": "sf:sha256:7c1d752809de2535f9c4b761dacbd32a850b46789e5840e73db070e783e6b431"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/is-bold-weight",
+      "manifestPath": "atomic_workbench/capsules/is-bold-weight/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/is-bold-weight/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-IS-EMPTY-FLEX-SPACER",
+      "symbolName": "isEmptyFlexSpacer",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1131,
+          "endLine": 1142
+        },
+        "semanticFingerprint": "sf:sha256:0a3995db100db6cd258e7abd9953b13363fba0378abf21b3a47ed6c6c4c284c8"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/is-empty-flex-spacer",
+      "manifestPath": "atomic_workbench/capsules/is-empty-flex-spacer/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/is-empty-flex-spacer/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-IS-ITALIC-STYLE",
+      "symbolName": "isItalicStyle",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2707,
+          "endLine": 2710
+        },
+        "semanticFingerprint": "sf:sha256:4b5c302472b803acccc9aae5e44626fae095f89ca4fe477941f60b7255f804bc"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/is-italic-style",
+      "manifestPath": "atomic_workbench/capsules/is-italic-style/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/is-italic-style/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-IS-SVG-NONE",
+      "symbolName": "isSvgNone",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1345,
+          "endLine": 1348
+        },
+        "semanticFingerprint": "sf:sha256:abf3c069de037ee157c5e1b548258efa6ce694851bdcf22af923a0fe7738c13e"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/is-svg-none",
+      "manifestPath": "atomic_workbench/capsules/is-svg-none/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/is-svg-none/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-IS-TAB-SWITCH-BUTTON-NODE",
+      "symbolName": "isTabSwitchButtonNode",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 668,
+          "endLine": 672
+        },
+        "semanticFingerprint": "sf:sha256:bfe83f32ddbed89389068a1c589ee68915ba1754cadd0394006d599676e9d6cf"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/is-tab-switch-button-node",
+      "manifestPath": "atomic_workbench/capsules/is-tab-switch-button-node/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/is-tab-switch-button-node/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-IS-TAB-SWITCH-CONTRACT",
+      "symbolName": "isTabSwitchContract",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 713,
+          "endLine": 716
+        },
+        "semanticFingerprint": "sf:sha256:f27d045d874af5338874145a113a5fc4d30e8622ff1c4b6f6b6d78d0edb43f0a"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/is-tab-switch-contract",
+      "manifestPath": "atomic_workbench/capsules/is-tab-switch-contract/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/is-tab-switch-contract/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-IS-TRANSPARENT-CSS-COLOR",
+      "symbolName": "isTransparentCssColor",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2640,
+          "endLine": 2648
+        },
+        "semanticFingerprint": "sf:sha256:0c8f4642fc615a2a76c48d0cbad964feb60d574a61dd8083648ac7adbbfea20e"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/is-transparent-css-color",
+      "manifestPath": "atomic_workbench/capsules/is-transparent-css-color/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/is-transparent-css-color/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-IS-TRANSPARENT-SOURCE-WRAPPER",
+      "symbolName": "isTransparentSourceWrapper",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 197,
+          "endLine": 206
+        },
+        "semanticFingerprint": "sf:sha256:667ffdf4344a06a01c735cac093dcb0f70f4d6a6035522dff599fa50cce96908"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/is-transparent-source-wrapper",
+      "manifestPath": "atomic_workbench/capsules/is-transparent-source-wrapper/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/is-transparent-source-wrapper/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-IS-VISUAL-ONLY-INLINE-PRIMITIVE",
+      "symbolName": "isVisualOnlyInlinePrimitive",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1122,
+          "endLine": 1130
+        },
+        "semanticFingerprint": "sf:sha256:fd479f61978ed867f597c9b3af67219b8dc36dfa560c5dcb250f473483c9e781"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/is-visual-only-inline-primitive",
+      "manifestPath": "atomic_workbench/capsules/is-visual-only-inline-primitive/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/is-visual-only-inline-primitive/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-LOOKS-SIMPLIFIED",
+      "symbolName": "looksSimplified",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1869,
+          "endLine": 1874
+        },
+        "semanticFingerprint": "sf:sha256:432a4d5a388c67fa65a30e8e6e233e2a35d09ab1f284aa5978791081bcf6fe52"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/looks-simplified",
+      "manifestPath": "atomic_workbench/capsules/looks-simplified/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/looks-simplified/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-LOOKUP-COMPUTED-PARENT-RECT",
+      "symbolName": "lookupComputedParentRect",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 975,
+          "endLine": 982
+        },
+        "semanticFingerprint": "sf:sha256:96bb725fa11f1089aa39ee052dc55b55f115bdc48f1fef01c2fa4adfa782116c"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/lookup-computed-parent-rect",
+      "manifestPath": "atomic_workbench/capsules/lookup-computed-parent-rect/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/lookup-computed-parent-rect/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MAP-FLEX-ALIGN-ITEMS",
+      "symbolName": "mapFlexAlignItems",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1473,
+          "endLine": 1483
+        },
+        "semanticFingerprint": "sf:sha256:0b408a72ace1ccec99f81cd5563e6793ac64f1ad33250bb0f51a24232ffc4396"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/map-flex-align-items",
+      "manifestPath": "atomic_workbench/capsules/map-flex-align-items/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/map-flex-align-items/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MAP-FLEX-JUSTIFY-CONTENT",
+      "symbolName": "mapFlexJustifyContent",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1484,
+          "endLine": 1495
+        },
+        "semanticFingerprint": "sf:sha256:57167c14e2a5fdcd31557f34c06ead54be8c59d5cb0ab878a118a1e6cf375775"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/map-flex-justify-content",
+      "manifestPath": "atomic_workbench/capsules/map-flex-justify-content/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/map-flex-justify-content/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MAP-KNOWN-RUNTIME-SPRITE-PATH",
+      "symbolName": "mapKnownRuntimeSpritePath",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 3038,
+          "endLine": 3046
+        },
+        "semanticFingerprint": "sf:sha256:d373fbe05d588f6f60aedd104aa1f7d45c67a2d605c6d76d0f55168809660c37"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/map-known-runtime-sprite-path",
+      "manifestPath": "atomic_workbench/capsules/map-known-runtime-sprite-path/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/map-known-runtime-sprite-path/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MATCHES-SIMPLE-STYLE-RULE",
+      "symbolName": "matchesSimpleStyleRule",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1826,
+          "endLine": 1833
+        },
+        "semanticFingerprint": "sf:sha256:561d039dc9924edd261d08cd8c427b30a270c2746748f9355f1ffaa87c46b097"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/matches-simple-style-rule",
+      "manifestPath": "atomic_workbench/capsules/matches-simple-style-rule/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/matches-simple-style-rule/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MAX-FINITE",
+      "symbolName": "maxFinite",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1667,
+          "endLine": 1675
+        },
+        "semanticFingerprint": "sf:sha256:dee70e48c5aa76c9874929f83edfa169608ee8837831ffb22fd99ac66799b22a"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/max-finite",
+      "manifestPath": "atomic_workbench/capsules/max-finite/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/max-finite/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MEANINGFUL-BACKGROUND-IMAGE",
+      "symbolName": "meaningfulBackgroundImage",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2584,
+          "endLine": 2590
+        },
+        "semanticFingerprint": "sf:sha256:281f4efa09eedd43479deca0bcd090c3f8fd1f69a59fc739062ab0e5fa842eee"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/meaningful-background-image",
+      "manifestPath": "atomic_workbench/capsules/meaningful-background-image/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/meaningful-background-image/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MEANINGFUL-BACKGROUND-VALUE",
+      "symbolName": "meaningfulBackgroundValue",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2576,
+          "endLine": 2583
+        },
+        "semanticFingerprint": "sf:sha256:45ea989dd16ce464843759d06c2ff02e513a9e9008a4d48bb61879062cb62e45"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/meaningful-background-value",
+      "manifestPath": "atomic_workbench/capsules/meaningful-background-value/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/meaningful-background-value/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MEANINGFUL-CLIP-PATH",
+      "symbolName": "meaningfulClipPath",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2497,
+          "endLine": 2504
+        },
+        "semanticFingerprint": "sf:sha256:e8718a5f4473636c48f3c3bd0a5108b216e1f8d7ea4ce538b93e3d131c54a739"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/meaningful-clip-path",
+      "manifestPath": "atomic_workbench/capsules/meaningful-clip-path/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/meaningful-clip-path/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MEANINGFUL-CSS-COLOR",
+      "symbolName": "meaningfulCssColor",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2598,
+          "endLine": 2604
+        },
+        "semanticFingerprint": "sf:sha256:b197a035bee31db2c2460c4c7e8d645302f5476ed2a75eb8dead2cec6e2d8219"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/meaningful-css-color",
+      "manifestPath": "atomic_workbench/capsules/meaningful-css-color/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/meaningful-css-color/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MEANINGFUL-CSS-LENGTH",
+      "symbolName": "meaningfulCssLength",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2612,
+          "endLine": 2618
+        },
+        "semanticFingerprint": "sf:sha256:cb00283ee68f235b50993a8889da9954bc7493b453761ad8c23d74f7895182ba"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/meaningful-css-length",
+      "manifestPath": "atomic_workbench/capsules/meaningful-css-length/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/meaningful-css-length/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MEANINGFUL-CSS-TEXT",
+      "symbolName": "meaningfulCssText",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2626,
+          "endLine": 2631
+        },
+        "semanticFingerprint": "sf:sha256:8f7b461685ae0a0a59756c7642b4952917961c5fc770cf9cef42bfe934237205"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/meaningful-css-text",
+      "manifestPath": "atomic_workbench/capsules/meaningful-css-text/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/meaningful-css-text/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MEANINGFUL-GRADIENT-BACKGROUND",
+      "symbolName": "meaningfulGradientBackground",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2591,
+          "endLine": 2597
+        },
+        "semanticFingerprint": "sf:sha256:187ff3fbced43ffb1a8c5138f6d4fc749a61c8793743ec01f3c273ff4cf61405"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/meaningful-gradient-background",
+      "manifestPath": "atomic_workbench/capsules/meaningful-gradient-background/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/meaningful-gradient-background/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MEANINGFUL-LINE-HEIGHT",
+      "symbolName": "meaningfulLineHeight",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2619,
+          "endLine": 2625
+        },
+        "semanticFingerprint": "sf:sha256:6a03c37b3f04c7bde27baf5140668ef29815eec409ba14ac0d82b33a4d6e2359"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/meaningful-line-height",
+      "manifestPath": "atomic_workbench/capsules/meaningful-line-height/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/meaningful-line-height/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MEANINGFUL-NON-DEFAULT-CSS-TEXT",
+      "symbolName": "meaningfulNonDefaultCssText",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2632,
+          "endLine": 2639
+        },
+        "semanticFingerprint": "sf:sha256:47cd6c5bc2df0436dd1ea4da15bf7b04f2478dbba6913e9744adc2c00a75b350"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/meaningful-non-default-css-text",
+      "manifestPath": "atomic_workbench/capsules/meaningful-non-default-css-text/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/meaningful-non-default-css-text/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MERGE-CLASS-STYLES",
+      "symbolName": "mergeClassStyles",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1810,
+          "endLine": 1825
+        },
+        "semanticFingerprint": "sf:sha256:64c58b115362f4d32757372062bb44ffe7767f237ee27776401942df9e38308b"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/merge-class-styles",
+      "manifestPath": "atomic_workbench/capsules/merge-class-styles/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/merge-class-styles/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MERGE-COMPUTED-STYLE",
+      "symbolName": "mergeComputedStyle",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2406,
+          "endLine": 2489
+        },
+        "semanticFingerprint": "sf:sha256:0b5ebd85a74f2a39cc9626692a3811bf21dd00e8ad7e53f8273725f3dae8d4e1"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/merge-computed-style",
+      "manifestPath": "atomic_workbench/capsules/merge-computed-style/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/merge-computed-style/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "medium-function",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-COMPUTED-VISUAL-STYLE",
+      "symbolName": "normalizeComputedVisualStyle",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2542,
+          "endLine": 2552
+        },
+        "semanticFingerprint": "sf:sha256:67bb7011f95cd7b87fce0820648b331638c8e2db5d599aab1a983086f96340c2"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-computed-visual-style",
+      "manifestPath": "atomic_workbench/capsules/normalize-computed-visual-style/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-computed-visual-style/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-CSS-COLOR-LITERAL",
+      "symbolName": "normalizeCssColorLiteral",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2074,
+          "endLine": 2091
+        },
+        "semanticFingerprint": "sf:sha256:1322e8cd0b6a7798de5588b60d380b0f4bc271095b671e2a8557522cc7b5d542"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-css-color-literal",
+      "manifestPath": "atomic_workbench/capsules/normalize-css-color-literal/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-css-color-literal/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-CSS-COLOR-TO-HEX",
+      "symbolName": "normalizeCssColorToHex",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2867,
+          "endLine": 2900
+        },
+        "semanticFingerprint": "sf:sha256:da5cdbdf923c795bc164cee4b8f270f0d7843cf2e378a15dfadc0f5f6d669a4a"
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/normalize-css-color-to-hex",
+      "manifestPath": "atomic_workbench/capsules/normalize-css-color-to-hex/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-css-color-to-hex/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/normalize-css-color-to-hex/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-FIDELITY-PSEUDO-MAP",
+      "symbolName": "normalizeFidelityPseudoMap",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2373,
+          "endLine": 2391
+        },
+        "semanticFingerprint": "sf:sha256:5504f7787b38f96aada4e0e9169cef5c7f61ba494ebdb25afe2b52fa4fd2ce11"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-fidelity-pseudo-map",
+      "manifestPath": "atomic_workbench/capsules/normalize-fidelity-pseudo-map/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-fidelity-pseudo-map/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-FIDELITY-SNAPSHOT",
+      "symbolName": "normalizeFidelitySnapshot",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2396,
+          "endLine": 2405
+        },
+        "semanticFingerprint": "sf:sha256:f1fb2c41893912f4d7427c495fc0083c484e8ca1e30a6a08ea9f47dd79d37d7c"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-fidelity-snapshot",
+      "manifestPath": "atomic_workbench/capsules/normalize-fidelity-snapshot/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-fidelity-snapshot/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-FIDELITY-SNAPSHOT-MAP",
+      "symbolName": "normalizeFidelitySnapshotMap",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2356,
+          "endLine": 2372
+        },
+        "semanticFingerprint": "sf:sha256:617f86352caefd4cf735d05ead8bc8c7b7dd8590b0f96d56bb3c5db554a5d32d"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-fidelity-snapshot-map",
+      "manifestPath": "atomic_workbench/capsules/normalize-fidelity-snapshot-map/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-fidelity-snapshot-map/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-OBJECT-FIT",
+      "symbolName": "normalizeObjectFit",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1026,
+          "endLine": 1031
+        },
+        "semanticFingerprint": "sf:sha256:6f6a0e031165f8e94690359bff70d27211e6cd7c7c06e75e566d4258dd63cfd7"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-object-fit",
+      "manifestPath": "atomic_workbench/capsules/normalize-object-fit/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-object-fit/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-OBJECT-POSITION",
+      "symbolName": "normalizeObjectPosition",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1032,
+          "endLine": 1037
+        },
+        "semanticFingerprint": "sf:sha256:e72ae0f3d4d0f680e230070668566a80c6b36ac2aaff831f7ce54fba755f6312"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-object-position",
+      "manifestPath": "atomic_workbench/capsules/normalize-object-position/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-object-position/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-RECT",
+      "symbolName": "normalizeRect",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 983,
+          "endLine": 992
+        },
+        "semanticFingerprint": "sf:sha256:4225c8e6ea5ee14c37c137628be38db5425ca560d3f45ff02578fde590576c43"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-rect",
+      "manifestPath": "atomic_workbench/capsules/normalize-rect/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-rect/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-SHADOW",
+      "symbolName": "normalizeShadow",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2208,
+          "endLine": 2218
+        },
+        "semanticFingerprint": "sf:sha256:b83f5c47bb5d61343534495bfd0dd9a243b4b5fd6e55158d3c5816412eb5f29d"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-shadow",
+      "manifestPath": "atomic_workbench/capsules/normalize-shadow/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-shadow/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-SINGLE-CHILD-FILL",
+      "symbolName": "normalizeSingleChildFill",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 485,
+          "endLine": 506
+        },
+        "semanticFingerprint": "sf:sha256:4651c848b2b46daf892e3087086fb31ab6be157870c2f460d8ef1e65eddb1b0f"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-single-child-fill",
+      "manifestPath": "atomic_workbench/capsules/normalize-single-child-fill/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-single-child-fill/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-SVG-INHERITED-ATTRS",
+      "symbolName": "normalizeSvgInheritedAttrs",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1281,
+          "endLine": 1307
+        },
+        "semanticFingerprint": "sf:sha256:336c20577ab20de3bf005b8dbd75374982eed38bac8ae2b469a3dbfb25265745"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-svg-inherited-attrs",
+      "manifestPath": "atomic_workbench/capsules/normalize-svg-inherited-attrs/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-svg-inherited-attrs/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-SVG-PAINT",
+      "symbolName": "normalizeSvgPaint",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1340,
+          "endLine": 1344
+        },
+        "semanticFingerprint": "sf:sha256:c3c5027a271d73a9cefa4b1ebe347d9f73ad8d9b79febd1ecfdc80fee6819656"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-svg-paint",
+      "manifestPath": "atomic_workbench/capsules/normalize-svg-paint/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-svg-paint/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-TAB-RAIL-AND-BUTTON-LAYOUT",
+      "symbolName": "normalizeTabRailAndButtonLayout",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 673,
+          "endLine": 712
+        },
+        "semanticFingerprint": "sf:sha256:986707ab033b16a3118f4471d4c6563f3181d4a38476bf5bea5e0d39dd27046a"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-tab-rail-and-button-layout",
+      "manifestPath": "atomic_workbench/capsules/normalize-tab-rail-and-button-layout/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-tab-rail-and-button-layout/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-TAB-TOKEN",
+      "symbolName": "normalizeTabToken",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 922,
+          "endLine": 931
+        },
+        "semanticFingerprint": "sf:sha256:489edf0a370ef221e32d4fd3096ec5990dc437d79e85ae7ea7b45835d0a8985b"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-tab-token",
+      "manifestPath": "atomic_workbench/capsules/normalize-tab-token/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-tab-token/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NUM-ATTR",
+      "symbolName": "numAttr",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2914,
+          "endLine": 2919
+        },
+        "semanticFingerprint": "sf:sha256:9492fdd6b8ecf2ddd2e1cb72d42cedb4ea79566dff082fc586d2da77827225a3"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/num-attr",
+      "manifestPath": "atomic_workbench/capsules/num-attr/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/num-attr/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-BORDER-WIDTH-VALUE",
+      "symbolName": "parseBorderWidthValue",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2012,
+          "endLine": 2024
+        },
+        "semanticFingerprint": "sf:sha256:14fc6aa47856cac4fcb472690771aa4da83c5ff9f1e995c81b968cd966351bd9"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/parse-border-width-value",
+      "manifestPath": "atomic_workbench/capsules/parse-border-width-value/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-border-width-value/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-BOX",
+      "symbolName": "parseBox",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1676,
+          "endLine": 1688
+        },
+        "semanticFingerprint": "sf:sha256:2e7f1d4a6b0ae1bf8c04ad338454546bb3d60c6a8046362c56e6a0658ebe6f75"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/parse-box",
+      "manifestPath": "atomic_workbench/capsules/parse-box/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-box/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-COLOR",
+      "symbolName": "parseColor",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2942,
+          "endLine": 2970
+        },
+        "semanticFingerprint": "sf:sha256:ea87d4317083ab80a78a7bd6658cb87d6a24da32337f873e84daf5f83a5ec337"
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/parse-color",
+      "manifestPath": "atomic_workbench/capsules/parse-color/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-color/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/parse-color/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-CSS-VAR",
+      "symbolName": "parseCssVar",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1781,
+          "endLine": 1785
+        },
+        "semanticFingerprint": "sf:sha256:efa590c1982f3729b59fa3f715b18e6f59917e07149491e74959cebbc449cecb"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/parse-css-var",
+      "manifestPath": "atomic_workbench/capsules/parse-css-var/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-css-var/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-DROP-SHADOW-FILTERS",
+      "symbolName": "parseDropShadowFilters",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2219,
+          "endLine": 2245
+        },
+        "semanticFingerprint": "sf:sha256:60c07e352aea85beb91712dab6c4f594616429291586021a2e75a6c6c8aec2ba"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/parse-drop-shadow-filters",
+      "manifestPath": "atomic_workbench/capsules/parse-drop-shadow-filters/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-drop-shadow-filters/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-FRAGMENT-LIST",
+      "symbolName": "parseFragmentList",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 868,
+          "endLine": 875
+        },
+        "semanticFingerprint": "sf:sha256:856d78fb8f80aa8b321c704509044e0f2c3cef223908b81a88400bed847632ac"
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/parse-fragment-list",
+      "manifestPath": "atomic_workbench/capsules/parse-fragment-list/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-fragment-list/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/parse-fragment-list/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-GRID-TRACK-PIXELS",
+      "symbolName": "parseGridTrackPixels",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1584,
+          "endLine": 1597
+        },
+        "semanticFingerprint": "sf:sha256:a34d80115ae5d8965948f20f10e68005429d333ee3da5de5dc4d8b911eb1ea56"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/parse-grid-track-pixels",
+      "manifestPath": "atomic_workbench/capsules/parse-grid-track-pixels/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-grid-track-pixels/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-OPACITY",
+      "symbolName": "parseOpacity",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2553,
+          "endLine": 2559
+        },
+        "semanticFingerprint": "sf:sha256:6a9e3d04f26bfc44ae0e4ed05ebf914fbcbbc47eb65771a633fabaed3bbc2d6b"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/parse-opacity",
+      "manifestPath": "atomic_workbench/capsules/parse-opacity/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-opacity/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-PX",
+      "symbolName": "parsePx",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1715,
+          "endLine": 1721
+        },
+        "semanticFingerprint": "sf:sha256:4b2d16466b51076afdb324af96c64c75f5c0c96caaccf5adfeab4eb36094791c"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/parse-px",
+      "manifestPath": "atomic_workbench/capsules/parse-px/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-px/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-SVG-NUMBER",
+      "symbolName": "parseSvgNumber",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1327,
+          "endLine": 1333
+        },
+        "semanticFingerprint": "sf:sha256:35df3363b93a0bfe06491fc2959fe3b9fb31e74809cf70febb3b93bffeedf265"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/parse-svg-number",
+      "manifestPath": "atomic_workbench/capsules/parse-svg-number/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-svg-number/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-SVG-OPACITY",
+      "symbolName": "parseSvgOpacity",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1334,
+          "endLine": 1339
+        },
+        "semanticFingerprint": "sf:sha256:bbdc7aa6c6edbdda65271f9c4b2a43abaa1cc5c8e128377fd6574e205add82a9"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/parse-svg-opacity",
+      "manifestPath": "atomic_workbench/capsules/parse-svg-opacity/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-svg-opacity/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-SVG-POINTS",
+      "symbolName": "parseSvgPoints",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1316,
+          "endLine": 1326
+        },
+        "semanticFingerprint": "sf:sha256:a51fe2d5a171c869b09b983a04a25f7d0e959172fa4e27f3ee99e6341b6fbd22"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/parse-svg-points",
+      "manifestPath": "atomic_workbench/capsules/parse-svg-points/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-svg-points/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-SVG-VIEW-BOX",
+      "symbolName": "parseSvgViewBox",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1308,
+          "endLine": 1315
+        },
+        "semanticFingerprint": "sf:sha256:09e20ebc20fba44683d753a09b9f112d6f23695aab1eb38c94c024cff73122c5"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/parse-svg-view-box",
+      "manifestPath": "atomic_workbench/capsules/parse-svg-view-box/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-svg-view-box/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-UNIFORM-BORDER-RADIUS",
+      "symbolName": "parseUniformBorderRadius",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2287,
+          "endLine": 2296
+        },
+        "semanticFingerprint": "sf:sha256:335a8eaafc272aa083e3e6f64dd4ce6c9dd7b7e6569f133ebdf5a7f0d78411a2"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/parse-uniform-border-radius",
+      "manifestPath": "atomic_workbench/capsules/parse-uniform-border-radius/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-uniform-border-radius/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PASCAL",
+      "symbolName": "pascal",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1806,
+          "endLine": 1809
+        },
+        "semanticFingerprint": "sf:sha256:69095f3e5b2eb0ee2046221b51a79aa67df8f8be31f939834ea0257e4095e4ef"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/pascal",
+      "manifestPath": "atomic_workbench/capsules/pascal/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/pascal/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PICK-BACKGROUND-FILL",
+      "symbolName": "pickBackgroundFill",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2569,
+          "endLine": 2575
+        },
+        "semanticFingerprint": "sf:sha256:0e3a236946641794c0b7d824648cd0bfc06b72bb939ec4fe22c290682871c555"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/pick-background-fill",
+      "manifestPath": "atomic_workbench/capsules/pick-background-fill/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/pick-background-fill/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PICK-DIM",
+      "symbolName": "pickDim",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1722,
+          "endLine": 1731
+        },
+        "semanticFingerprint": "sf:sha256:d3e8753f42888feacf862c16b2846573d273f215324182f00f346ebf28b05924"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/pick-dim",
+      "manifestPath": "atomic_workbench/capsules/pick-dim/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/pick-dim/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PICK-FONT-BY-TAG",
+      "symbolName": "pickFontByTag",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2759,
+          "endLine": 2765
+        },
+        "semanticFingerprint": "sf:sha256:dc5adc9e7bbda31d04db7c7185b81dc7f2600a9b9da52ca4c61e7cc7fafa2ac0"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/pick-font-by-tag",
+      "manifestPath": "atomic_workbench/capsules/pick-font-by-tag/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/pick-font-by-tag/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PROCESS-ELEMENT",
+      "symbolName": "processElement",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "block-release",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 207,
+          "endLine": 484
+        },
+        "semanticFingerprint": "sf:sha256:4c3916dcfbddb53b1c711ed2cdde9fcae674d2ea1d65661d0af222a5e89be96a"
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid",
+        "regression"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/process-element",
+      "manifestPath": "atomic_workbench/capsules/process-element/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/process-element/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/process-element/capsule.behavior.test.mjs",
+      "reasons": [
+        "large-function",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PSEUDO-ORDER",
+      "symbolName": "pseudoOrder",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2392,
+          "endLine": 2395
+        },
+        "semanticFingerprint": "sf:sha256:e7a4210d9c0a28a6cd1711311d48b792043ccc0caf73c648d904f7ede448efd2"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/pseudo-order",
+      "manifestPath": "atomic_workbench/capsules/pseudo-order/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/pseudo-order/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PUSH-ART-WARNING",
+      "symbolName": "pushArtWarning",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2995,
+          "endLine": 2999
+        },
+        "semanticFingerprint": "sf:sha256:26e086fbeb8266fba77d6183122b8d4c0f282ec4324bbc313d873297f2a91eee"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/push-art-warning",
+      "manifestPath": "atomic_workbench/capsules/push-art-warning/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/push-art-warning/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-READ-CANVAS-FROM-HTML",
+      "symbolName": "readCanvasFromHtml",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 184,
+          "endLine": 196
+        },
+        "semanticFingerprint": "sf:sha256:e074c10bd7a1b8ae30f06bf98c287752a7bfb592490ea7c339d458a6c21c82c6"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/read-canvas-from-html",
+      "manifestPath": "atomic_workbench/capsules/read-canvas-from-html/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/read-canvas-from-html/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RECORD-TOKEN-USAGE",
+      "symbolName": "recordTokenUsage",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 3009,
+          "endLine": 3017
+        },
+        "semanticFingerprint": "sf:sha256:b73515da257f2dc01777449b206041950e03dbeee39dc9a10450c89f9c83b13e"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/record-token-usage",
+      "manifestPath": "atomic_workbench/capsules/record-token-usage/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/record-token-usage/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RECT-TO-PARENT-EDGES",
+      "symbolName": "rectToParentEdges",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 993,
+          "endLine": 1005
+        },
+        "semanticFingerprint": "sf:sha256:35c987451e737ebcee9015b65c14f3e48d34ffcf16756961046d8826b5eb6a66"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/rect-to-parent-edges",
+      "manifestPath": "atomic_workbench/capsules/rect-to-parent-edges/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/rect-to-parent-edges/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-REGISTER-TAB-ZONE-HINT",
+      "symbolName": "registerTabZoneHint",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 889,
+          "endLine": 896
+        },
+        "semanticFingerprint": "sf:sha256:a1e85482bf36cd7a5c6e353db26f1dbdc3ae10a2f2a551bb2e132442700377fa"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/register-tab-zone-hint",
+      "manifestPath": "atomic_workbench/capsules/register-tab-zone-hint/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/register-tab-zone-hint/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-BOX-EDGES",
+      "symbolName": "resolveBoxEdges",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1689,
+          "endLine": 1714
+        },
+        "semanticFingerprint": "sf:sha256:7d1f2d426fa6381b7970e35ecdaab8564d87297a2b8cf0dee8c71e7bbb40b827"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-box-edges",
+      "manifestPath": "atomic_workbench/capsules/resolve-box-edges/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-box-edges/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-CORNER-RADIUS-BASIS",
+      "symbolName": "resolveCornerRadiusBasis",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2309,
+          "endLine": 2330
+        },
+        "semanticFingerprint": "sf:sha256:f6ecff5390e9885c6b8fbf1065b8764bc7c00c82f3f0b48760fa054141d88aaa"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-corner-radius-basis",
+      "manifestPath": "atomic_workbench/capsules/resolve-corner-radius-basis/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-corner-radius-basis/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-FILL-CHILD-WIDTHS",
+      "symbolName": "resolveFillChildWidths",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 513,
+          "endLine": 552
+        },
+        "semanticFingerprint": "sf:sha256:efb0ac617f963eaadf3aed8283a7c1cd113de3102b5925f5c967e96a1a109d2e"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-fill-child-widths",
+      "manifestPath": "atomic_workbench/capsules/resolve-fill-child-widths/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-fill-child-widths/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-FONT-ASSET-BY-CONVENTION",
+      "symbolName": "resolveFontAssetByConvention",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2794,
+          "endLine": 2804
+        },
+        "semanticFingerprint": "sf:sha256:a56641346a77e06636d9592e1ea869f1a70470f14748d7007864d803a3764cc4"
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/resolve-font-asset-by-convention",
+      "manifestPath": "atomic_workbench/capsules/resolve-font-asset-by-convention/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-font-asset-by-convention/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/resolve-font-asset-by-convention/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-FONT-FAMILY-TO-ASSET",
+      "symbolName": "resolveFontFamilyToAsset",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2743,
+          "endLine": 2835
+        },
+        "semanticFingerprint": "sf:sha256:aa9f7f72f502741594e75bf0ef2bbad4acdd50d093ee2510316a4a92bcfccc53"
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/resolve-font-family-to-asset",
+      "manifestPath": "atomic_workbench/capsules/resolve-font-family-to-asset/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-font-family-to-asset/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/resolve-font-family-to-asset/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "medium-function",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-GAP-PAIR",
+      "symbolName": "resolveGapPair",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1619,
+          "endLine": 1631
+        },
+        "semanticFingerprint": "sf:sha256:c70b982c8291fc8697b01ba9f8020a1b51d63a6c3214e134934b5ef2f29f90ae"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-gap-pair",
+      "manifestPath": "atomic_workbench/capsules/resolve-gap-pair/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-gap-pair/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-GRID-GAP",
+      "symbolName": "resolveGridGap",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1608,
+          "endLine": 1618
+        },
+        "semanticFingerprint": "sf:sha256:44e112e17665d6665b2e829a2766c00db2e6d71fe6d1beef96d3a11f22fac446"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-grid-gap",
+      "manifestPath": "atomic_workbench/capsules/resolve-grid-gap/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-grid-gap/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-LENGTH",
+      "symbolName": "resolveLength",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1732,
+          "endLine": 1746
+        },
+        "semanticFingerprint": "sf:sha256:fb801293c170274ec61b02ea32da18e151e08bfa751231bb51c3c2eed157c064"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-length",
+      "manifestPath": "atomic_workbench/capsules/resolve-length/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-length/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-LINE-HEIGHT",
+      "symbolName": "resolveLineHeight",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1747,
+          "endLine": 1780
+        },
+        "semanticFingerprint": "sf:sha256:566d44958f80a88b6e5affc4124a12f5582cf13517fb7a62e4b834855d335fc5"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-line-height",
+      "manifestPath": "atomic_workbench/capsules/resolve-line-height/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-line-height/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-RADIUS-DIMENSION",
+      "symbolName": "resolveRadiusDimension",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2331,
+          "endLine": 2341
+        },
+        "semanticFingerprint": "sf:sha256:01f4bde06426e95c940ad9366c5cdc7fd675aa17e84497be46a09f864cb6a8dc"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-radius-dimension",
+      "manifestPath": "atomic_workbench/capsules/resolve-radius-dimension/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-radius-dimension/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-RADIUS-VALUE",
+      "symbolName": "resolveRadiusValue",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2297,
+          "endLine": 2308
+        },
+        "semanticFingerprint": "sf:sha256:f2f85badef2644c219c60ab51e141c22d686c80eb580fdd80aa7636ee479a13e"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-radius-value",
+      "manifestPath": "atomic_workbench/capsules/resolve-radius-value/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-radius-value/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-TYPOGRAPHY-TOKEN",
+      "symbolName": "resolveTypographyToken",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2901,
+          "endLine": 2905
+        },
+        "semanticFingerprint": "sf:sha256:5147b342fa54ac0935979f0d6d03009ecc933c47b9e2293942139525f8d1a0ad"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-typography-token",
+      "manifestPath": "atomic_workbench/capsules/resolve-typography-token/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-typography-token/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-UNIFORM-BORDER-COLOR",
+      "symbolName": "resolveUniformBorderColor",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2025,
+          "endLine": 2052
+        },
+        "semanticFingerprint": "sf:sha256:9e626f026955eb9e38168d92c899711e6d6888e032a36d68d342c4966d36a0f5"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-uniform-border-color",
+      "manifestPath": "atomic_workbench/capsules/resolve-uniform-border-color/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-uniform-border-color/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-UNIFORM-BORDER-WIDTH",
+      "symbolName": "resolveUniformBorderWidth",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1992,
+          "endLine": 2011
+        },
+        "semanticFingerprint": "sf:sha256:f462ac1a7425a12b293afeb149ab2592657322690879c2f3004e1e5518c4c4b3"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-uniform-border-width",
+      "manifestPath": "atomic_workbench/capsules/resolve-uniform-border-width/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-uniform-border-width/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-UNIFORM-CORNER-RADIUS",
+      "symbolName": "resolveUniformCornerRadius",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2273,
+          "endLine": 2286
+        },
+        "semanticFingerprint": "sf:sha256:6d7cbc324c9e481f3ec0b971e6b3b9b36fed8a501af95678c81089634c015415"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-uniform-corner-radius",
+      "manifestPath": "atomic_workbench/capsules/resolve-uniform-corner-radius/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-uniform-corner-radius/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-SHOULD-MATERIALIZE-LAZY-SLOT",
+      "symbolName": "shouldMaterializeLazySlot",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 717,
+          "endLine": 729
+        },
+        "semanticFingerprint": "sf:sha256:86962457ae9b4d014ee1cfe598c1c4aca8d679c38dece0c2e3063ab9e0d48964"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/should-materialize-lazy-slot",
+      "manifestPath": "atomic_workbench/capsules/should-materialize-lazy-slot/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/should-materialize-lazy-slot/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-SHOULD-PRUNE-STANDALONE-STORY-STRIP-LABEL",
+      "symbolName": "shouldPruneStandaloneStoryStripLabel",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 876,
+          "endLine": 888
+        },
+        "semanticFingerprint": "sf:sha256:7f70fff7d5220e1bd2d9a34dd8ddb97e8e51efc166a4aadbb141ce6a0cfc7cac"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/should-prune-standalone-story-strip-label",
+      "manifestPath": "atomic_workbench/capsules/should-prune-standalone-story-strip-label/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/should-prune-standalone-story-strip-label/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-STABILIZE-GRID-LAYOUT",
+      "symbolName": "stabilizeGridLayout",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 1651,
+          "endLine": 1666
+        },
+        "semanticFingerprint": "sf:sha256:26c2bf5831ca19e303ff9643635b9b318a994426a5701b39e3cefe1f959d76ff"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/stabilize-grid-layout",
+      "manifestPath": "atomic_workbench/capsules/stabilize-grid-layout/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/stabilize-grid-layout/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-STRIP-EXT",
+      "symbolName": "stripExt",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 2920,
+          "endLine": 2923
+        },
+        "semanticFingerprint": "sf:sha256:250b18249fcace9065b28359f6789fa86715658a33ecf2656143757a8a781ac7"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/strip-ext",
+      "manifestPath": "atomic_workbench/capsules/strip-ext/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/strip-ext/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-STRIP-NON-VISUAL-BLOCKS-FOR-PARSING",
+      "symbolName": "stripNonVisualBlocksForParsing",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "sourceRange": {
+          "startLine": 173,
+          "endLine": 183
+        },
+        "semanticFingerprint": "sf:sha256:031899ca4c9c791e2d9afee92cd98dd492830dcbd08962a5ce329d371dd04e3a"
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/strip-non-visual-blocks-for-parsing",
+      "manifestPath": "atomic_workbench/capsules/strip-non-visual-blocks-for-parsing/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/strip-non-visual-blocks-for-parsing/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    }
+  ],
+  "anchors": [
+    {
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "moduleSlug": "draft-builder-core-82992a5f",
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "lineCount": 3095
+      },
+      "childCount": 169,
+      "manifestPath": "atomic_workbench/anchors/draft-builder-core-82992a5f/anchor.manifest.json",
+      "testPath": "atomic_workbench/anchors/draft-builder-core-82992a5f/anchor.test.mjs"
+    }
+  ]
+}

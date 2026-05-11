@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-PARSE-COLOR:boundary:empty",
+    "kind": "boundary",
+    "title": "parseColor 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:ea87d4317083ab80a78a7bd6658cb87d6a24da32337f873e84daf5f83a5ec337",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-PARSE-COLOR:boundary:formatted",
+    "kind": "boundary",
+    "title": "parseColor 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:ea87d4317083ab80a78a7bd6658cb87d6a24da32337f873e84daf5f83a5ec337",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

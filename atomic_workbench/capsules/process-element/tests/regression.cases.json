@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-PROCESS-ELEMENT:regression:legacy",
+    "kind": "regression",
+    "title": "processElement legacy regression",
+    "inputSample": {
+      "sourceRef": "legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L207-L484",
+      "mode": "legacy-case-study"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:4c3916dcfbddb53b1c711ed2cdde9fcae674d2ea1d65661d0af222a5e89be96a",
+      "claim": "preserves known legacy behavior for the guarded release-block path"
+    },
+    "notes": [
+      "Seeded for block-release capsule convergence."
+    ]
+  }
+]

@@ -1,0 +1,66 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-ASSET-LIKELY-EXISTS",
+  "symbolName": "assetLikelyExists",
+  "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+  "moduleSlug": "draft-builder-core-82992a5f",
+  "source": {
+    "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+    "sourceRange": {
+      "startLine": 3047,
+      "endLine": 3056
+    },
+    "semanticFingerprint": "sf:sha256:edd0f45cb412fd8c4f76368c81b3c61728465fb08178722a81d575f47a3e3b85"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "side-effect-risk",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "side-effect-boundary"
+  ],
+  "requiredCaseSets": [
+    "boundary",
+    "invalid"
+  ],
+  "classification": {
+    "exported": false,
+    "lineCount": 10,
+    "severity": "advisory",
+    "riskScore": 10,
+    "sideEffectRisk": true
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [],
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated assetLikelyExists"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L3047-L3056"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:edd0f45cb412fd8c4f76368c81b3c61728465fb08178722a81d575f47a3e3b85"
+  }
+}

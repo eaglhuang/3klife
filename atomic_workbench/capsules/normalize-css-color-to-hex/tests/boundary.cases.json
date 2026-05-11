@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-NORMALIZE-CSS-COLOR-TO-HEX:boundary:empty",
+    "kind": "boundary",
+    "title": "normalizeCssColorToHex 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:da5cdbdf923c795bc164cee4b8f270f0d7843cf2e378a15dfadc0f5f6d669a4a",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-NORMALIZE-CSS-COLOR-TO-HEX:boundary:formatted",
+    "kind": "boundary",
+    "title": "normalizeCssColorToHex 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:da5cdbdf923c795bc164cee4b8f270f0d7843cf2e378a15dfadc0f5f6d669a4a",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

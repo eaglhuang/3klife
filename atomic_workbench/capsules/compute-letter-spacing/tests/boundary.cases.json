@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-COMPUTE-LETTER-SPACING:boundary:empty",
+    "kind": "boundary",
+    "title": "computeLetterSpacing 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:744d871dcabfba6496305acc415010e41c68a2f47c4fd49efd121ce886c90562",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-COMPUTE-LETTER-SPACING:boundary:formatted",
+    "kind": "boundary",
+    "title": "computeLetterSpacing 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:744d871dcabfba6496305acc415010e41c68a2f47c4fd49efd121ce886c90562",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

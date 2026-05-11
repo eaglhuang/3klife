@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-DRAFT-FROM-HTML:base:nominal",
+    "kind": "base",
+    "title": "buildDraftFromHtml 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:f920b4c95046c721ad803446582b24d3f11574cdbaab907313299c56d15cd2f2",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L60-L172"
+    ]
+  }
+]

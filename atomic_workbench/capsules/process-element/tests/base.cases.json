@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-PROCESS-ELEMENT:base:nominal",
+    "kind": "base",
+    "title": "processElement 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:4c3916dcfbddb53b1c711ed2cdde9fcae674d2ea1d65661d0af222a5e89be96a",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L207-L484"
+    ]
+  }
+]

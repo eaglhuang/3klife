@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-COLLECT-BEHAVIOR:base:nominal",
+    "kind": "base",
+    "title": "collectBehavior 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:d055feff873b793330a6d48993cb58a1a4c5bc5db91f66a82f7b8d9f996b8c95",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L1086-L1101"
+    ]
+  }
+]

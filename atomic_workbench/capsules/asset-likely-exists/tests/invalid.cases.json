@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-ASSET-LIKELY-EXISTS:invalid:null",
+    "kind": "invalid",
+    "title": "assetLikelyExists null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:edd0f45cb412fd8c4f76368c81b3c61728465fb08178722a81d575f47a3e3b85",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-ASSET-LIKELY-EXISTS:invalid:type",
+    "kind": "invalid",
+    "title": "assetLikelyExists 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:edd0f45cb412fd8c4f76368c81b3c61728465fb08178722a81d575f47a3e3b85",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

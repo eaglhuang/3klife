@@ -1,0 +1,502 @@
+{
+  "schemaId": "atm.registry",
+  "specVersion": "0.1.0",
+  "registryId": "3klife.h2u.local",
+  "generatedAt": "2026-05-11T15:02:31.410Z",
+  "role": "adopter-local-workbench",
+  "upstreamRegistryRef": "C:/Users/User/AI-Atomic-Framework/atomic-registry.json",
+  "notes": [
+    "3KLife owns project-derived H2U atoms locally.",
+    "AI-Atomic-Framework supplies neutral schemas, validators, runners, and examples only."
+  ],
+  "entries": [
+    {
+      "id": "ATM-CORE-0005",
+      "atomId": "ATM-CORE-0005",
+      "logicalName": "atom.html-to-ucuf.normalize-css-color",
+      "atomVersion": "0.1.0",
+      "schemaId": "atm.atomicSpec",
+      "specVersion": "0.1.0",
+      "schemaPath": "schemas/atomic-spec.schema.json",
+      "specPath": "specs/normalize-css-color.atom.json",
+      "hashLock": {
+        "algorithm": "sha256",
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "canonicalization": "json-stable-v1"
+      },
+      "owner": {
+        "name": "3KLife H2U adopter",
+        "contact": "project-local"
+      },
+      "status": "active",
+      "governance": {
+        "tier": "governed"
+      },
+      "location": {
+        "specPath": "specs/normalize-css-color.atom.json",
+        "codePaths": [
+          "atomic_workbench/atoms/ATM-CORE-0005/atom.source.mjs"
+        ],
+        "testPaths": [
+          "atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs"
+        ],
+        "reportPath": "atomic_workbench/atoms/ATM-CORE-0005/atom.test.report.json",
+        "workbenchPath": "atomic_workbench/atoms/ATM-CORE-0005"
+      },
+      "compatibility": {
+        "coreVersion": "0.1.0",
+        "registryVersion": "0.1.0",
+        "pluginApiVersion": "0.1.0",
+        "languageAdapter": "language-js"
+      },
+      "evidence": [
+        "atomic_workbench/atoms/ATM-CORE-0005/atom.test.report.json",
+        "atomic_workbench/atoms/ATM-CORE-0005/lineage-log.json",
+        "generator-provenance:atomize"
+      ],
+      "selfVerification": {
+        "legacyPlanningId": "ATM-CORE-0005",
+        "specHash": "sha256:d27318b84c343b90e38be020d547852351aa5c16aeb408d6f5ab4a1359db722f",
+        "codeHash": "sha256:f5b9125212db663bd993cf81f868d6bf32ed180ccea2fe83db709f81c38e5377",
+        "testHash": "sha256:49a14556f5863cebf5e4feeb33cf24c8a446c1c667017bfe7b5a2adf758aaec9",
+        "sourcePaths": {
+          "spec": "specs/normalize-css-color.atom.json",
+          "code": [
+            "atomic_workbench/atoms/ATM-CORE-0005/atom.source.mjs"
+          ],
+          "tests": [
+            "atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs"
+          ]
+        }
+      },
+      "semanticFingerprint": "sf:sha256:09f9f60dae2ace765e01a7fbb2b9c0f9c55efb7ff784fbc30b6bc7155822bf13",
+      "projectOwnership": {
+        "ownerRepo": "3KLife",
+        "storageTier": "adopter-local",
+        "migratedFrom": "AI-Atomic-Framework",
+        "upstreamRole": "tooling-and-schema-only"
+      },
+      "adopterLocalCanonical": true,
+      "migration": {
+        "strategy": "adopter-localization",
+        "notes": "ATM-CORE-0005 is canonical in 3KLife atomic_workbench; upstream remains tooling/schema only."
+      }
+    },
+    {
+      "id": "ATM-CORE-0006",
+      "atomId": "ATM-CORE-0006",
+      "logicalName": "atom.html-to-ucuf.parse-css-length",
+      "atomVersion": "0.1.0",
+      "schemaId": "atm.atomicSpec",
+      "specVersion": "0.1.0",
+      "schemaPath": "schemas/atomic-spec.schema.json",
+      "specPath": "specs/parse-css-length.atom.json",
+      "hashLock": {
+        "algorithm": "sha256",
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "canonicalization": "json-stable-v1"
+      },
+      "owner": {
+        "name": "3KLife H2U adopter",
+        "contact": "project-local"
+      },
+      "status": "active",
+      "governance": {
+        "tier": "governed"
+      },
+      "location": {
+        "specPath": "specs/parse-css-length.atom.json",
+        "codePaths": [
+          "atomic_workbench/atoms/ATM-CORE-0006/atom.source.mjs"
+        ],
+        "testPaths": [
+          "atomic_workbench/atoms/ATM-CORE-0006/atom.test.mjs"
+        ],
+        "reportPath": "atomic_workbench/atoms/ATM-CORE-0006/atom.test.report.json",
+        "workbenchPath": "atomic_workbench/atoms/ATM-CORE-0006"
+      },
+      "compatibility": {
+        "coreVersion": "0.1.0",
+        "registryVersion": "0.1.0",
+        "pluginApiVersion": "0.1.0",
+        "languageAdapter": "language-js"
+      },
+      "evidence": [
+        "atomic_workbench/atoms/ATM-CORE-0006/atom.test.report.json",
+        "atomic_workbench/atoms/ATM-CORE-0006/lineage-log.json",
+        "generator-provenance:atomize"
+      ],
+      "selfVerification": {
+        "legacyPlanningId": "ATM-CORE-0006",
+        "specHash": "sha256:b390bc528fd0a97fef29ec8ded2f3c57013b693f954709df6095f247bba0554f",
+        "codeHash": "sha256:94cb1349440c1b017ec5ffb0403a5a0e6b955e1f50289af1bb63557b2a6b36d0",
+        "testHash": "sha256:c2dd9c0fcd9c8991457b49356cc2f06842ac68e55606c3fda8371ce1dd5d11e3",
+        "sourcePaths": {
+          "spec": "specs/parse-css-length.atom.json",
+          "code": [
+            "atomic_workbench/atoms/ATM-CORE-0006/atom.source.mjs"
+          ],
+          "tests": [
+            "atomic_workbench/atoms/ATM-CORE-0006/atom.test.mjs"
+          ]
+        }
+      },
+      "semanticFingerprint": "sf:sha256:09f9f60dae2ace765e01a7fbb2b9c0f9c55efb7ff784fbc30b6bc7155822bf13",
+      "projectOwnership": {
+        "ownerRepo": "3KLife",
+        "storageTier": "adopter-local",
+        "migratedFrom": "AI-Atomic-Framework",
+        "upstreamRole": "tooling-and-schema-only"
+      },
+      "adopterLocalCanonical": true,
+      "migration": {
+        "strategy": "adopter-localization",
+        "notes": "ATM-CORE-0006 is canonical in 3KLife atomic_workbench; upstream remains tooling/schema only."
+      }
+    },
+    {
+      "id": "ATM-CORE-0007",
+      "atomId": "ATM-CORE-0007",
+      "logicalName": "atom.html-to-ucuf.parse-fragment-list",
+      "atomVersion": "0.1.0",
+      "schemaId": "atm.atomicSpec",
+      "specVersion": "0.1.0",
+      "schemaPath": "schemas/atomic-spec.schema.json",
+      "specPath": "specs/parse-fragment-list.atom.json",
+      "hashLock": {
+        "algorithm": "sha256",
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "canonicalization": "json-stable-v1"
+      },
+      "owner": {
+        "name": "3KLife H2U adopter",
+        "contact": "project-local"
+      },
+      "status": "active",
+      "governance": {
+        "tier": "governed"
+      },
+      "location": {
+        "specPath": "specs/parse-fragment-list.atom.json",
+        "codePaths": [
+          "atomic_workbench/atoms/ATM-CORE-0007/atom.source.mjs"
+        ],
+        "testPaths": [
+          "atomic_workbench/atoms/ATM-CORE-0007/atom.test.mjs"
+        ],
+        "reportPath": "atomic_workbench/atoms/ATM-CORE-0007/atom.test.report.json",
+        "workbenchPath": "atomic_workbench/atoms/ATM-CORE-0007"
+      },
+      "compatibility": {
+        "coreVersion": "0.1.0",
+        "registryVersion": "0.1.0",
+        "pluginApiVersion": "0.1.0",
+        "languageAdapter": "language-js"
+      },
+      "evidence": [
+        "atomic_workbench/atoms/ATM-CORE-0007/atom.test.report.json",
+        "atomic_workbench/atoms/ATM-CORE-0007/lineage-log.json",
+        "generator-provenance:atomize"
+      ],
+      "selfVerification": {
+        "legacyPlanningId": "ATM-CORE-0007",
+        "specHash": "sha256:5f855ed85d2d8c87131506d0e1d2e870b51e819a9d0cafee298626372dee7285",
+        "codeHash": "sha256:9d4a067eac79f3c1424bb6083fa14eb41a301b250ad29b0cbfb7646115fee193",
+        "testHash": "sha256:91fa2a2509a12f7e8b7870e513d8c6ac201341f6093d5499053c8dbf159a6b58",
+        "sourcePaths": {
+          "spec": "specs/parse-fragment-list.atom.json",
+          "code": [
+            "atomic_workbench/atoms/ATM-CORE-0007/atom.source.mjs"
+          ],
+          "tests": [
+            "atomic_workbench/atoms/ATM-CORE-0007/atom.test.mjs"
+          ]
+        }
+      },
+      "semanticFingerprint": "sf:sha256:09f9f60dae2ace765e01a7fbb2b9c0f9c55efb7ff784fbc30b6bc7155822bf13",
+      "projectOwnership": {
+        "ownerRepo": "3KLife",
+        "storageTier": "adopter-local",
+        "migratedFrom": "AI-Atomic-Framework",
+        "upstreamRole": "tooling-and-schema-only"
+      },
+      "adopterLocalCanonical": true,
+      "migration": {
+        "strategy": "adopter-localization",
+        "notes": "ATM-CORE-0007 is canonical in 3KLife atomic_workbench; upstream remains tooling/schema only."
+      }
+    },
+    {
+      "schemaId": "atm.atomicMap",
+      "specVersion": "0.1.0",
+      "schemaPath": "schemas/registry/atomic-map.schema.json",
+      "mapId": "ATM-MAP-0003",
+      "mapVersion": "0.1.0",
+      "members": [
+        {
+          "atomId": "ATM-CORE-0005",
+          "version": "0.1.0"
+        },
+        {
+          "atomId": "ATM-CORE-0006",
+          "version": "0.1.0"
+        },
+        {
+          "atomId": "ATM-CORE-0007",
+          "version": "0.1.0"
+        }
+      ],
+      "edges": [
+        {
+          "from": "ATM-CORE-0005",
+          "to": "ATM-CORE-0006",
+          "binding": "normalizes-length"
+        },
+        {
+          "from": "ATM-CORE-0006",
+          "to": "ATM-CORE-0007",
+          "binding": "feeds-fragments"
+        }
+      ],
+      "entrypoints": [
+        "ATM-CORE-0005"
+      ],
+      "qualityTargets": {
+        "pilotName": "h2u-map-evolution",
+        "promoteGateRequired": true,
+        "requiredChecks": 3
+      },
+      "mapHash": "sha256:8ce344177a19451fc354776028dc49c1173b9ebb3a3a1181ddc27db81c95faa5",
+      "status": "draft",
+      "governance": {
+        "tier": "standard"
+      },
+      "semanticFingerprint": "sf:sha256:a71b67b0d35a35d395c725f9424f3551715f998bf2421efd05ef1317ef9a3ff9",
+      "location": {
+        "specPath": "atomic_workbench/maps/ATM-MAP-0003/map.spec.json",
+        "codePaths": [],
+        "testPaths": [
+          "atomic_workbench/maps/ATM-MAP-0003/map.integration.test.mjs"
+        ],
+        "reportPath": "atomic_workbench/maps/ATM-MAP-0003/map.test.report.json",
+        "workbenchPath": "atomic_workbench/maps/ATM-MAP-0003"
+      },
+      "evidence": [
+        "generator-provenance:generated",
+        "atomic_workbench/maps/ATM-MAP-0003/map.spec.json",
+        "atomic_workbench/maps/ATM-MAP-0003/map.integration.test.mjs",
+        "atomic_workbench/maps/ATM-MAP-0003/map.test.report.json"
+      ],
+      "owner": {
+        "name": "3KLife H2U adopter",
+        "contact": "project-local"
+      },
+      "projectOwnership": {
+        "ownerRepo": "3KLife",
+        "storageTier": "adopter-local",
+        "migratedFrom": "AI-Atomic-Framework",
+        "upstreamRole": "tooling-and-schema-only"
+      },
+      "adopterLocalCanonical": true,
+      "migration": {
+        "strategy": "adopter-localization",
+        "notes": "ATM-MAP-0003 is canonical in 3KLife atomic_workbench; upstream remains tooling/schema only."
+      }
+    }
+  ],
+  "anchors": [
+    {
+      "id": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+      "logicalName": "anchor.draft-builder-core-82992a5f",
+      "kind": "core-anchor",
+      "role": "semantic-parent",
+      "status": "active",
+      "governance": {
+        "tier": "core-anchor"
+      },
+      "source": {
+        "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "lineCount": 3095
+      },
+      "semanticFingerprint": "sf:sha256:509cc03391c8661e106a087f608baeb1ee4345831088f3bc6f0b9bfd4c95e397",
+      "children": [
+        "H2U-CAPSULE-BUILD-DRAFT-FROM-HTML",
+        "H2U-CAPSULE-RESOLVE-FONT-FAMILY-TO-ASSET",
+        "H2U-CAPSULE-INFER-TAB-SEMANTIC-HINTS",
+        "H2U-CAPSULE-PARSE-FRAGMENT-LIST",
+        "H2U-CAPSULE-APPLY-TEXT-TRANSFORM-GENERAL",
+        "H2U-CAPSULE-COMPUTE-LETTER-SPACING",
+        "H2U-CAPSULE-BUILD-FONT-FACE-REGISTRY",
+        "H2U-CAPSULE-RESOLVE-FONT-ASSET-BY-CONVENTION",
+        "H2U-CAPSULE-NORMALIZE-CSS-COLOR-TO-HEX",
+        "H2U-CAPSULE-PARSE-COLOR",
+        "H2U-CAPSULE-COLLECT-BEHAVIOR",
+        "H2U-CAPSULE-MERGE-COMPUTED-STYLE",
+        "H2U-CAPSULE-ANCHOR-TO-WIDGET",
+        "H2U-CAPSULE-PROCESS-ELEMENT",
+        "H2U-CAPSULE-NORMALIZE-SINGLE-CHILD-FILL",
+        "H2U-CAPSULE-RESOLVE-FILL-CHILD-WIDTHS",
+        "H2U-CAPSULE-DEDUPE-TAB-SWITCH-CHILDREN",
+        "H2U-CAPSULE-DEDUPE-IDENTICAL-LARGE-CHILDREN",
+        "H2U-CAPSULE-BUILD-LABEL-TEXT-FINGERPRINT",
+        "H2U-CAPSULE-COLLECT-LABEL-TEXTS",
+        "H2U-CAPSULE-BUILD-STRUCTURAL-SIGNATURE",
+        "H2U-CAPSULE-NORMALIZE-TAB-RAIL-AND-BUTTON-LAYOUT",
+        "H2U-CAPSULE-INFER-TAB-ID-FROM-ELEMENT",
+        "H2U-CAPSULE-INFER-DEFAULT-TAB-FRAGMENT",
+        "H2U-CAPSULE-INFER-STORY-STRIP-HINTS",
+        "H2U-CAPSULE-COLLECT-SEMANTIC-TOKENS",
+        "H2U-CAPSULE-INFER-OWNER-TAB-FROM-ELEMENT",
+        "H2U-CAPSULE-NORMALIZE-TAB-TOKEN",
+        "H2U-CAPSULE-NORMALIZE-RECT",
+        "H2U-CAPSULE-APPLY-IMAGE-FIT",
+        "H2U-CAPSULE-NORMALIZE-OBJECT-FIT",
+        "H2U-CAPSULE-NORMALIZE-OBJECT-POSITION",
+        "H2U-CAPSULE-APPLY-CAPTURE-NODE-ATTRS",
+        "H2U-CAPSULE-APPLY-VISIBILITY-STATE",
+        "H2U-CAPSULE-INFER-NODE-TYPE",
+        "H2U-CAPSULE-INFER-COMPOSITE-RENDERER-HINT",
+        "H2U-CAPSULE-INFER-COMPOSITE-GEOMETRY-SUMMARY",
+        "H2U-CAPSULE-EXTRACT-SVG-RADAR-CHART-META",
+        "H2U-CAPSULE-COLLECT-SVG-SHAPES",
+        "H2U-CAPSULE-NORMALIZE-SVG-INHERITED-ATTRS",
+        "H2U-CAPSULE-PARSE-SVG-VIEW-BOX",
+        "H2U-CAPSULE-PARSE-SVG-POINTS",
+        "H2U-CAPSULE-PARSE-SVG-NUMBER",
+        "H2U-CAPSULE-PARSE-SVG-OPACITY",
+        "H2U-CAPSULE-NORMALIZE-SVG-PAINT",
+        "H2U-CAPSULE-COMPUTE-SVG-OUTER-RADIUS",
+        "H2U-CAPSULE-COMPUTE-SVG-TEXT-BOUNDS",
+        "H2U-CAPSULE-COLLECT-ELEMENT-STYLE",
+        "H2U-CAPSULE-INFER-LAYOUT",
+        "H2U-CAPSULE-MAP-FLEX-ALIGN-ITEMS",
+        "H2U-CAPSULE-MAP-FLEX-JUSTIFY-CONTENT",
+        "H2U-CAPSULE-INFER-GRID-LAYOUT",
+        "H2U-CAPSULE-INFER-BLOCK-FLOW-LAYOUT",
+        "H2U-CAPSULE-INFER-GRID-CELL-WIDTH",
+        "H2U-CAPSULE-INFER-GRID-CELL-HEIGHT",
+        "H2U-CAPSULE-PARSE-GRID-TRACK-PIXELS",
+        "H2U-CAPSULE-RESOLVE-GRID-GAP",
+        "H2U-CAPSULE-RESOLVE-GAP-PAIR",
+        "H2U-CAPSULE-INFER-CHILD-BLOCK-SPACING",
+        "H2U-CAPSULE-STABILIZE-GRID-LAYOUT",
+        "H2U-CAPSULE-PARSE-BOX",
+        "H2U-CAPSULE-RESOLVE-BOX-EDGES",
+        "H2U-CAPSULE-PARSE-PX",
+        "H2U-CAPSULE-PICK-DIM",
+        "H2U-CAPSULE-RESOLVE-LENGTH",
+        "H2U-CAPSULE-RESOLVE-LINE-HEIGHT",
+        "H2U-CAPSULE-PARSE-CSS-VAR",
+        "H2U-CAPSULE-MERGE-CLASS-STYLES",
+        "H2U-CAPSULE-COLLECT-TEXT",
+        "H2U-CAPSULE-ENSURE-SPRITE-SLOT",
+        "H2U-CAPSULE-ENSURE-TAB-BUTTON-SKIN-SLOT",
+        "H2U-CAPSULE-RESOLVE-UNIFORM-BORDER-WIDTH",
+        "H2U-CAPSULE-PARSE-BORDER-WIDTH-VALUE",
+        "H2U-CAPSULE-RESOLVE-UNIFORM-BORDER-COLOR",
+        "H2U-CAPSULE-EXTRACT-BORDER-COLOR",
+        "H2U-CAPSULE-NORMALIZE-CSS-COLOR-LITERAL",
+        "H2U-CAPSULE-BUILD-GRADIENT-RECT-SLOT",
+        "H2U-CAPSULE-BUILD-EFFECT-SIBLING-NODES",
+        "H2U-CAPSULE-COLLECT-OUTER-SHADOWS",
+        "H2U-CAPSULE-NORMALIZE-SHADOW",
+        "H2U-CAPSULE-PARSE-DROP-SHADOW-FILTERS",
+        "H2U-CAPSULE-RESOLVE-UNIFORM-CORNER-RADIUS",
+        "H2U-CAPSULE-PARSE-UNIFORM-BORDER-RADIUS",
+        "H2U-CAPSULE-RESOLVE-RADIUS-VALUE",
+        "H2U-CAPSULE-RESOLVE-CORNER-RADIUS-BASIS",
+        "H2U-CAPSULE-RESOLVE-RADIUS-DIMENSION",
+        "H2U-CAPSULE-NORMALIZE-FIDELITY-SNAPSHOT-MAP",
+        "H2U-CAPSULE-NORMALIZE-FIDELITY-PSEUDO-MAP",
+        "H2U-CAPSULE-NORMALIZE-FIDELITY-SNAPSHOT",
+        "H2U-CAPSULE-BUILD-PSEUDO-VISUAL-NODES",
+        "H2U-CAPSULE-BUILD-PSEUDO-VISUAL-NODE",
+        "H2U-CAPSULE-NORMALIZE-COMPUTED-VISUAL-STYLE",
+        "H2U-CAPSULE-PARSE-OPACITY",
+        "H2U-CAPSULE-PICK-BACKGROUND-FILL",
+        "H2U-CAPSULE-ENSURE-LABEL-STYLE",
+        "H2U-CAPSULE-INFER-LABEL-OVERFLOW",
+        "H2U-CAPSULE-PICK-FONT-BY-TAG",
+        "H2U-CAPSULE-RESOLVE-TYPOGRAPHY-TOKEN",
+        "H2U-CAPSULE-EXTRACT-URL",
+        "H2U-CAPSULE-GUARD-SPRITE-PATH",
+        "H2U-CAPSULE-MAP-KNOWN-RUNTIME-SPRITE-PATH",
+        "H2U-CAPSULE-APPLY-COMMON-NODE-ATTRS",
+        "H2U-CAPSULE-APPLY-CLIP-PATH-METADATA",
+        "H2U-CAPSULE-STRIP-NON-VISUAL-BLOCKS-FOR-PARSING",
+        "H2U-CAPSULE-READ-CANVAS-FROM-HTML",
+        "H2U-CAPSULE-IS-TRANSPARENT-SOURCE-WRAPPER",
+        "H2U-CAPSULE-COUNT-LABEL-DESCENDANTS",
+        "H2U-CAPSULE-IS-TAB-SWITCH-BUTTON-NODE",
+        "H2U-CAPSULE-IS-TAB-SWITCH-CONTRACT",
+        "H2U-CAPSULE-SHOULD-MATERIALIZE-LAZY-SLOT",
+        "H2U-CAPSULE-HAS-EXPLICIT-STORY-STRIP-SIGNAL",
+        "H2U-CAPSULE-HAS-STORY-STRIP-MULTI-SIGNAL",
+        "H2U-CAPSULE-SHOULD-PRUNE-STANDALONE-STORY-STRIP-LABEL",
+        "H2U-CAPSULE-REGISTER-TAB-ZONE-HINT",
+        "H2U-CAPSULE-DERIVE-COMPUTED-GEOMETRY",
+        "H2U-CAPSULE-LOOKUP-COMPUTED-PARENT-RECT",
+        "H2U-CAPSULE-RECT-TO-PARENT-EDGES",
+        "H2U-CAPSULE-HAS-MEANINGFUL-TRANSFORM",
+        "H2U-CAPSULE-HAS-MEANINGFUL-OBJECT-FIT",
+        "H2U-CAPSULE-IS-VISUAL-ONLY-INLINE-PRIMITIVE",
+        "H2U-CAPSULE-IS-EMPTY-FLEX-SPACER",
+        "H2U-CAPSULE-HAS-ONLY-TEXT-CONTENT",
+        "H2U-CAPSULE-IS-SVG-NONE",
+        "H2U-CAPSULE-ESTIMATE-SVG-TEXT-BOX",
+        "H2U-CAPSULE-ASSIGN-WIDGET-EDGE",
+        "H2U-CAPSULE-COUNT-GRID-TRACKS",
+        "H2U-CAPSULE-EXPAND-GRID-REPEAT",
+        "H2U-CAPSULE-CHILD-HAS-OUT-OF-FLOW-POSITION",
+        "H2U-CAPSULE-MAX-FINITE",
+        "H2U-CAPSULE-AUTO-NAME",
+        "H2U-CAPSULE-AUTO-SLOT-ID",
+        "H2U-CAPSULE-APPEND-NODE-WITH-GENERATED-SIBLINGS",
+        "H2U-CAPSULE-PASCAL",
+        "H2U-CAPSULE-MATCHES-SIMPLE-STYLE-RULE",
+        "H2U-CAPSULE-CONTAINS-RICH-INNER",
+        "H2U-CAPSULE-LOOKS-SIMPLIFIED",
+        "H2U-CAPSULE-ATTACH-BOX-SHAPE-METADATA",
+        "H2U-CAPSULE-HAS-RENDERABLE-BORDER",
+        "H2U-CAPSULE-FIRST-MEANINGFUL-BORDER-COLOR",
+        "H2U-CAPSULE-CLAMP-CSS-BYTE",
+        "H2U-CAPSULE-CAN-USE-GENERATED-EFFECT-SIBLING",
+        "H2U-CAPSULE-CALCULATE-SHADOW-PADDING",
+        "H2U-CAPSULE-EXPAND-WIDGET-FOR-EFFECT",
+        "H2U-CAPSULE-EMIT-SKIN-LAYERS",
+        "H2U-CAPSULE-PSEUDO-ORDER",
+        "H2U-CAPSULE-MEANINGFUL-CLIP-PATH",
+        "H2U-CAPSULE-HAS-MEANINGFUL-BACKGROUND",
+        "H2U-CAPSULE-MEANINGFUL-BACKGROUND-VALUE",
+        "H2U-CAPSULE-MEANINGFUL-BACKGROUND-IMAGE",
+        "H2U-CAPSULE-MEANINGFUL-GRADIENT-BACKGROUND",
+        "H2U-CAPSULE-MEANINGFUL-CSS-COLOR",
+        "H2U-CAPSULE-CONTAINS-TRANSPARENT-CSS-COLOR",
+        "H2U-CAPSULE-MEANINGFUL-CSS-LENGTH",
+        "H2U-CAPSULE-MEANINGFUL-LINE-HEIGHT",
+        "H2U-CAPSULE-MEANINGFUL-CSS-TEXT",
+        "H2U-CAPSULE-MEANINGFUL-NON-DEFAULT-CSS-TEXT",
+        "H2U-CAPSULE-IS-TRANSPARENT-CSS-COLOR",
+        "H2U-CAPSULE-IS-ITALIC-STYLE",
+        "H2U-CAPSULE-IS-BOLD-WEIGHT",
+        "H2U-CAPSULE-NUM-ATTR",
+        "H2U-CAPSULE-STRIP-EXT",
+        "H2U-CAPSULE-INSPECT-ART-DIRECTION-RISKS",
+        "H2U-CAPSULE-IS-ASYMMETRIC-RADIUS",
+        "H2U-CAPSULE-HAS-ELEMENT-CHILD",
+        "H2U-CAPSULE-RECORD-TOKEN-USAGE",
+        "H2U-CAPSULE-ASSIGN-COMPUTED",
+        "H2U-CAPSULE-PUSH-ART-WARNING",
+        "H2U-CAPSULE-ENFORCE-COLOR-RECT-GUARD",
+        "H2U-CAPSULE-ASSET-LIKELY-EXISTS"
+      ],
+      "location": {
+        "manifestPath": "atomic_workbench/anchors/draft-builder-core-82992a5f/anchor.manifest.json",
+        "testPath": "atomic_workbench/anchors/draft-builder-core-82992a5f/anchor.test.mjs",
+        "workbenchPath": "atomic_workbench/anchors/draft-builder-core-82992a5f"
+      }
+    }
+  ],
+  "capsules": []
+}

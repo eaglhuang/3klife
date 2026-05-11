@@ -1,0 +1,70 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-RESOLVE-FONT-FAMILY-TO-ASSET",
+  "symbolName": "resolveFontFamilyToAsset",
+  "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+  "moduleSlug": "draft-builder-core-82992a5f",
+  "source": {
+    "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+    "sourceRange": {
+      "startLine": 2743,
+      "endLine": 2835
+    },
+    "semanticFingerprint": "sf:sha256:aa9f7f72f502741594e75bf0ef2bbad4acdd50d093ee2510316a4a92bcfccc53"
+  },
+  "tier": "local-capsule-candidate",
+  "recommendedTier": "governed-atom",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "exported",
+    "stable-behavior-name",
+    "medium-function",
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "behavior-template",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [
+    "base",
+    "boundary",
+    "invalid"
+  ],
+  "classification": {
+    "exported": true,
+    "lineCount": 93,
+    "severity": "block-if-untested",
+    "riskScore": 100,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [],
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated resolveFontFamilyToAsset"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L2743-L2835"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule-candidate",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:aa9f7f72f502741594e75bf0ef2bbad4acdd50d093ee2510316a4a92bcfccc53"
+  }
+}

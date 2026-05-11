@@ -1,0 +1,69 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-COMPUTE-LETTER-SPACING",
+  "symbolName": "computeLetterSpacing",
+  "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
+  "moduleSlug": "draft-builder-core-82992a5f",
+  "source": {
+    "file": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+    "sourceRange": {
+      "startLine": 2711,
+      "endLine": 2722
+    },
+    "semanticFingerprint": "sf:sha256:744d871dcabfba6496305acc415010e41c68a2f47c4fd49efd121ce886c90562"
+  },
+  "tier": "local-capsule-candidate",
+  "recommendedTier": "governed-atom",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "exported",
+    "stable-behavior-name",
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "behavior-template",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [
+    "base",
+    "boundary",
+    "invalid"
+  ],
+  "classification": {
+    "exported": true,
+    "lineCount": 12,
+    "severity": "block-if-untested",
+    "riskScore": 85,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [],
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated computeLetterSpacing"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L2711-L2722"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule-candidate",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:744d871dcabfba6496305acc415010e41c68a2f47c4fd49efd121ce886c90562"
+  }
+}

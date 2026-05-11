@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-PARSE-FRAGMENT-LIST:base:nominal",
+    "kind": "base",
+    "title": "parseFragmentList 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:856d78fb8f80aa8b321c704509044e0f2c3cef223908b81a88400bed847632ac",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L868-L875"
+    ]
+  }
+]

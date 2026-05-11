@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-RESOLVE-FONT-FAMILY-TO-ASSET:base:nominal",
+    "kind": "base",
+    "title": "resolveFontFamilyToAsset 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:aa9f7f72f502741594e75bf0ef2bbad4acdd50d093ee2510316a4a92bcfccc53",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L2743-L2835"
+    ]
+  }
+]

@@ -1,0 +1,78 @@
+{
+  "schemaId": "atm.capsuleGovernancePolicy",
+  "specVersion": "0.1.0",
+  "thresholds": {
+    "functionLinesWarn": 80,
+    "functionLinesBlockRelease": 250,
+    "familyPromotionMinCount": 3,
+    "duplicateFingerprintAction": "reuse-or-merge"
+  },
+  "tiers": {
+    "local-capsule": {
+      "metadataRequired": true,
+      "behaviorTemplateRequired": false
+    },
+    "local-capsule-candidate": {
+      "metadataRequired": true,
+      "behaviorTemplateRequired": true
+    },
+    "governed-atom": {
+      "metadataRequired": true,
+      "behaviorTemplateRequired": true
+    },
+    "shared-atom": {
+      "metadataRequired": true,
+      "behaviorTemplateRequired": true
+    }
+  },
+  "testRequirements": {
+    "candidate": [
+      "base",
+      "boundary",
+      "invalid"
+    ],
+    "blockRelease": [
+      "base",
+      "boundary",
+      "invalid",
+      "regression"
+    ],
+    "sideEffectRisk": [
+      "boundary",
+      "invalid"
+    ],
+    "oracleMode": "template-contract"
+  },
+  "sealedPolicy": {
+    "defaultSplitPolicy": "splittable",
+    "rules": [
+      {
+        "symbolPattern": "(compress|decompress|encrypt|decrypt|cipher|decipher|stateMachine|serializeState|deserializeState)",
+        "splitPolicy": "sealed",
+        "reason": "state-coupled-or-lossy-transform"
+      }
+    ]
+  },
+  "promotionPolicy": {
+    "candidateToGoverned": {
+      "requireValidateStrict": true,
+      "requireAnchor": true,
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ]
+    },
+    "governedToShared": {
+      "requireDemandPoliceSuggestion": true,
+      "requireCrossWorkflowEvidence": true
+    }
+  },
+  "anchorPolicy": {
+    "required": true,
+    "idPrefix": "H2U-ANCHOR",
+    "kind": "core-anchor",
+    "role": "semantic-parent",
+    "allowSharedPromotion": false
+  }
+}

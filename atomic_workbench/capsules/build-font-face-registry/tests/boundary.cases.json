@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-FONT-FACE-REGISTRY:boundary:empty",
+    "kind": "boundary",
+    "title": "buildFontFaceRegistry 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:20bccfd827328b58044e2452c6ac5c790329966dfc767174ddb77811a6530001",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-FONT-FACE-REGISTRY:boundary:formatted",
+    "kind": "boundary",
+    "title": "buildFontFaceRegistry 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:20bccfd827328b58044e2452c6ac5c790329966dfc767174ddb77811a6530001",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

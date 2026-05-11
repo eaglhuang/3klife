@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-APPLY-TEXT-TRANSFORM-GENERAL:base:nominal",
+    "kind": "base",
+    "title": "applyTextTransformGeneral 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:10829fb9d2417a9614b0b08dcc0ac88a989d11242bcb25ac4ecd4d96d5caae40",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder-core.js#L1848-L1861"
+    ]
+  }
+]
