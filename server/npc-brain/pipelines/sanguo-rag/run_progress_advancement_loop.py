@@ -97,6 +97,11 @@ def write_json(path: Path, payload: Any) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8")
+
+
 def command_text(command: list[str]) -> str:
     return " ".join(command)
 
@@ -164,6 +169,56 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--failure-rate-limit", type=float, default=0.2, help="Stop when command failure rate exceeds this.")
     parser.add_argument("--review-queue", default=str(DEFAULT_REVIEW_QUEUE_PATH), help="ETL pilot review queue JSON path.")
     parser.add_argument("--emit-ready-eval", action="store_true", help="Emit pilot-readable evaluation-only ready events for accepted review candidates.")
+    parser.add_argument(
+        "--same-round-rerun",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Enable same-round rerun: after deterministic repair fills key fields, rerun preview immediately within the same A round.",
+    )
+    parser.add_argument(
+        "--same-round-rerun-max-passes",
+        type=int,
+        default=1,
+        help="Maximum additional same-round rerun passes per A round.",
+    )
+    parser.add_argument(
+        "--same-round-rerun-min-repair-actions",
+        type=int,
+        default=1,
+        help="Minimum location/relationship/boundary repair actions required to trigger a same-round rerun.",
+    )
+    parser.add_argument(
+        "--scoreboard-repair-bridge",
+        action="store_true",
+        help="Augment edit backlog with scoreboard-driven missing-field repair candidates before each A round.",
+    )
+    parser.add_argument(
+        "--scoreboard-json",
+        default=None,
+        help="Optional full-roster scoreboard JSON path. If omitted, infer from base-progress ancestors.",
+    )
+    parser.add_argument(
+        "--bridge-fields",
+        default="location,relationshipEdges",
+        help="Comma-separated missing fields to bridge from scoreboard into repair feed.",
+    )
+    parser.add_argument(
+        "--bridge-max-generals",
+        type=int,
+        default=200,
+        help="Maximum scoreboard target generals injected into bridged edit backlog per A round.",
+    )
+    parser.add_argument(
+        "--bridge-max-per-general",
+        type=int,
+        default=2,
+        help="Maximum candidate rows injected per bridged general.",
+    )
+    parser.add_argument(
+        "--bridge-include-shadow",
+        action="store_true",
+        help="Include shadow roster rows in scoreboard bridge (default canonical-only).",
+    )
     parser.add_argument("--runtime-readiness", choices=["touched", "final", "off"], default="off", help="Run runtime readiness matrix after ABAB, scoped to touched generals or final cohort.")
     parser.add_argument("--max-wall-time-minutes", type=float, default=None, help="Stop before starting a new A round when this wall-clock limit is exceeded.")
     parser.add_argument("--overwrite", action="store_true", help="Pass --overwrite to inner campaign and B merge steps.")
@@ -207,6 +262,324 @@ def existing_round_json_paths(base_progress_path: str | Path) -> list[str]:
         seen.add(key)
         resolved_rows.append(str(raw))
     return resolved_rows
+
+
+def parse_bridge_fields(raw_fields: str) -> set[str]:
+    allowed = {"location", "relationshipEdges"}
+    rows = [token.strip() for token in str(raw_fields or "").split(",")]
+    parsed = {token for token in rows if token in allowed}
+    return parsed or {"location", "relationshipEdges"}
+
+
+def infer_scoreboard_path_from_progress(base_progress_path: str | Path) -> Path | None:
+    progress_path = resolve_path(base_progress_path)
+    for parent in progress_path.parents:
+        candidate = parent / "scoreboard" / "full-roster-scoreboard.json"
+        if candidate.exists():
+            return candidate
+    return None
+
+
+def load_scoreboard_rows(scoreboard_path: Path) -> list[dict[str, Any]]:
+    payload = read_json(scoreboard_path)
+    if isinstance(payload, dict) and isinstance(payload.get("rows"), list):
+        return [row for row in payload.get("rows") or [] if isinstance(row, dict)]
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    return []
+
+
+def candidate_paths_from_progress(base_progress_path: str | Path) -> list[Path]:
+    payload = read_json(resolve_path(base_progress_path))
+    inputs = (payload or {}).get("inputs") or {}
+    path_texts = [
+        str(inputs.get("genericCandidatesPath") or "").strip(),
+        str(inputs.get("femaleCandidatesPath") or "").strip(),
+        str(inputs.get("sourceEventPacketsPath") or "").strip(),
+        str(inputs.get("eventQuestionSeedsPath") or "").strip(),
+    ]
+    rows: list[Path] = []
+    seen: set[str] = set()
+    for path_text in path_texts:
+        if not path_text:
+            continue
+        resolved = resolve_path(path_text)
+        key = str(resolved)
+        if not resolved.exists() or key in seen:
+            continue
+        seen.add(key)
+        rows.append(resolved)
+    return rows
+
+
+def candidate_sort_key(candidate: dict[str, Any]) -> tuple[Any, ...]:
+    source_refs = list(candidate.get("sourceRefs") or [])
+    try:
+        confidence = float(candidate.get("confidence") or 0.0)
+    except (TypeError, ValueError):
+        confidence = 0.0
+    chapter_no = candidate.get("chapterNo")
+    try:
+        chapter_sort = int(chapter_no)
+    except (TypeError, ValueError):
+        chapter_sort = 10**9
+    return (
+        -int(bool(source_refs)),
+        -len(source_refs),
+        -confidence,
+        chapter_sort,
+        str(candidate.get("eventKey") or candidate.get("eventId") or ""),
+    )
+
+
+def build_candidate_index(candidate_paths: list[Path]) -> dict[str, list[dict[str, Any]]]:
+    index: dict[str, list[dict[str, Any]]] = {}
+    for path in candidate_paths:
+        for row in read_jsonl(path):
+            if str(row.get("reviewStatus") or "").strip().lower() == "ready":
+                continue
+            raw_general_ids = list(row.get("generalIds") or [])
+            if not raw_general_ids and row.get("generalId"):
+                raw_general_ids = [row.get("generalId")]
+            general_ids = [str(value or "").strip() for value in raw_general_ids if str(value or "").strip()]
+            if not general_ids:
+                continue
+            event_key = str(row.get("eventKey") or row.get("packetId") or row.get("seedId") or row.get("eventId") or "").strip()
+            if not event_key:
+                continue
+            source_refs = list(row.get("sourceRefs") or [])
+            source_ref = str(row.get("sourceRef") or "").strip()
+            if source_ref and source_ref not in source_refs:
+                source_refs.append(source_ref)
+            examples = list(row.get("examples") or [])
+            summary = row.get("summary") or row.get("claimText") or row.get("seedText")
+            source_quote = row.get("sourceQuote") or row.get("quote")
+            if not summary and examples:
+                summary = str(examples[0])
+            if not source_quote and examples:
+                source_quote = str(examples[0])
+            candidate = {
+                "eventKey": event_key,
+                "eventId": row.get("eventId"),
+                "chapterNo": row.get("chapterNo"),
+                "generalIds": general_ids,
+                "sourceRefs": source_refs,
+                "summary": summary,
+                "sourceQuote": source_quote,
+                "location": row.get("location"),
+                "relationshipEdges": list(row.get("relationshipEdges") or []),
+                "moodTags": list(row.get("moodTags") or []),
+                "confidence": row.get("confidence") or row.get("seedConfidenceScore") or row.get("edgeConfidence"),
+            }
+            for general_id in general_ids:
+                index.setdefault(general_id, []).append(candidate)
+    for general_id, rows in index.items():
+        dedup: dict[str, dict[str, Any]] = {}
+        for row in rows:
+            key = str(row.get("eventKey") or "")
+            if not key or key in dedup:
+                continue
+            dedup[key] = row
+        sorted_rows = sorted(dedup.values(), key=candidate_sort_key)
+        index[general_id] = sorted_rows
+    return index
+
+
+def bridge_target_rows(
+    *,
+    scoreboard_rows: list[dict[str, Any]],
+    requested_generals: list[str],
+    bridge_fields: set[str],
+    canonical_only: bool,
+    max_generals: int,
+) -> list[dict[str, Any]]:
+    requested = {str(general_id or "").strip() for general_id in requested_generals if str(general_id or "").strip()}
+    rows: list[dict[str, Any]] = []
+    for row in scoreboard_rows:
+        general_id = str(row.get("generalId") or "").strip()
+        if not general_id:
+            continue
+        if canonical_only and str(row.get("rosterState") or "").strip() != "canonical":
+            continue
+        if requested and general_id not in requested:
+            continue
+        if str(row.get("nextLane") or "").strip() != "deterministic-repair":
+            continue
+        missing_fields = {str(field or "").strip() for field in row.get("missingFields") or []}
+        bridged_missing = sorted(missing_fields.intersection(bridge_fields))
+        if not bridged_missing:
+            continue
+        rows.append({
+            "generalId": general_id,
+            "missingFields": bridged_missing,
+            "priorityScore": float(row.get("priorityScore") or 0.0),
+            "genericCandidateCount": int(row.get("genericCandidateCount") or 0),
+        })
+    rows.sort(
+        key=lambda row: (
+            -len(row["missingFields"]),
+            -float(row.get("priorityScore") or 0.0),
+            -int(row.get("genericCandidateCount") or 0),
+            str(row.get("generalId") or ""),
+        )
+    )
+    if max_generals > 0:
+        return rows[:max_generals]
+    return rows
+
+
+def make_bridge_backlog_row(
+    *,
+    run_id: str,
+    round_id: str,
+    focus_general_id: str,
+    candidate: dict[str, Any],
+    missing_fields: list[str],
+    scoreboard_path: Path,
+) -> dict[str, Any]:
+    event_key = str(candidate.get("eventKey") or "").strip()
+    candidate_id = f"bridge.{run_id}.{round_id}.{focus_general_id}.{event_key}"
+    return {
+        "candidateId": candidate_id,
+        "focusGeneralId": focus_general_id,
+        "answer": "B",
+        "eventKey": event_key,
+        "chapterNo": candidate.get("chapterNo"),
+        "generalIds": list(candidate.get("generalIds") or [focus_general_id]),
+        "sourceRefs": list(candidate.get("sourceRefs") or []),
+        "summary": candidate.get("summary"),
+        "sourceQuote": candidate.get("sourceQuote"),
+        "currentLocation": candidate.get("location"),
+        "currentRelationshipEdges": list(candidate.get("relationshipEdges") or []),
+        "currentMoodTags": list(candidate.get("moodTags") or []),
+        "expandedContextRefs": list(candidate.get("sourceRefs") or []),
+        "missingFields": list(missing_fields),
+        "sourcePath": f"scoreboard-bridge:{repo_relative(scoreboard_path)}",
+    }
+
+
+def build_scoreboard_repair_bridge(
+    *,
+    args: argparse.Namespace,
+    run_root: Path,
+    round_id: str,
+    base_paths: dict[str, str | Path],
+) -> dict[str, Any]:
+    if not (args.scoreboard_repair_bridge or args.scoreboard_json):
+        return {"enabled": False, "reason": "disabled"}
+
+    bridge_fields = parse_bridge_fields(args.bridge_fields)
+    scoreboard_path = resolve_path(args.scoreboard_json) if args.scoreboard_json else infer_scoreboard_path_from_progress(base_paths["baseProgress"])
+    if scoreboard_path is None or not scoreboard_path.exists():
+        return {"enabled": True, "reason": "scoreboard-not-found", "bridgeFields": sorted(bridge_fields)}
+
+    scoreboard_rows = load_scoreboard_rows(scoreboard_path)
+    if not scoreboard_rows:
+        return {
+            "enabled": True,
+            "reason": "scoreboard-empty",
+            "bridgeFields": sorted(bridge_fields),
+            "scoreboardPath": repo_relative(scoreboard_path),
+        }
+
+    candidate_paths = candidate_paths_from_progress(base_paths["baseProgress"])
+    if not candidate_paths:
+        return {
+            "enabled": True,
+            "reason": "candidate-paths-missing",
+            "bridgeFields": sorted(bridge_fields),
+            "scoreboardPath": repo_relative(scoreboard_path),
+        }
+
+    candidate_index = build_candidate_index(candidate_paths)
+    target_rows = bridge_target_rows(
+        scoreboard_rows=scoreboard_rows,
+        requested_generals=list(args.general_id),
+        bridge_fields=bridge_fields,
+        canonical_only=not args.bridge_include_shadow,
+        max_generals=max(args.bridge_max_generals, 0),
+    )
+
+    source_backlog_path = resolve_path(base_paths["editBacklog"])
+    source_backlog_rows = read_jsonl(source_backlog_path)
+    existing_keys: set[tuple[str, str]] = set()
+    for row in source_backlog_rows:
+        key = (
+            str(row.get("focusGeneralId") or "").strip(),
+            str(row.get("eventKey") or row.get("candidateId") or "").strip(),
+        )
+        if key[0] and key[1]:
+            existing_keys.add(key)
+
+    bridged_rows = list(source_backlog_rows)
+    added_rows = 0
+    matched_generals: set[str] = set()
+    missing_candidate_generals: list[str] = []
+    for target in target_rows:
+        general_id = str(target.get("generalId") or "").strip()
+        if not general_id:
+            continue
+        candidates = list(candidate_index.get(general_id) or [])
+        if not candidates:
+            missing_candidate_generals.append(general_id)
+            continue
+        per_general_count = 0
+        for candidate in candidates:
+            if per_general_count >= max(args.bridge_max_per_general, 1):
+                break
+            event_key = str(candidate.get("eventKey") or "").strip()
+            key = (general_id, event_key)
+            if not event_key or key in existing_keys:
+                continue
+            bridged_rows.append(
+                make_bridge_backlog_row(
+                    run_id=args.run_id,
+                    round_id=round_id,
+                    focus_general_id=general_id,
+                    candidate=candidate,
+                    missing_fields=list(target.get("missingFields") or []),
+                    scoreboard_path=scoreboard_path,
+                )
+            )
+            existing_keys.add(key)
+            per_general_count += 1
+            added_rows += 1
+        if per_general_count > 0:
+            matched_generals.add(general_id)
+
+    if added_rows <= 0:
+        return {
+            "enabled": True,
+            "reason": "no-bridge-rows-added",
+            "bridgeFields": sorted(bridge_fields),
+            "scoreboardPath": repo_relative(scoreboard_path),
+            "sourceBacklogPath": repo_relative(source_backlog_path),
+            "sourceBacklogCount": len(source_backlog_rows),
+            "targetGeneralCount": len(target_rows),
+            "targetGeneralMatchedCount": len(matched_generals),
+            "targetGeneralMissingCandidateCount": len(missing_candidate_generals),
+            "candidatePathCount": len(candidate_paths),
+        }
+
+    bridge_root = run_root / "repair-feed-bridge"
+    bridged_path = bridge_root / f"{round_id}-bridged-edit-backlog.jsonl"
+    write_jsonl(bridged_path, bridged_rows)
+    return {
+        "enabled": True,
+        "reason": "bridged",
+        "bridgeFields": sorted(bridge_fields),
+        "scoreboardPath": repo_relative(scoreboard_path),
+        "candidatePaths": [repo_relative(path) for path in candidate_paths],
+        "sourceBacklogPath": repo_relative(source_backlog_path),
+        "sourceBacklogCount": len(source_backlog_rows),
+        "targetGeneralCount": len(target_rows),
+        "targetGeneralMatchedCount": len(matched_generals),
+        "targetGeneralMissingCandidateCount": len(missing_candidate_generals),
+        "targetGeneralMissingCandidateSample": missing_candidate_generals[:20],
+        "addedRowCount": added_rows,
+        "bridgedBacklogCount": len(bridged_rows),
+        "bridgedEditBacklogPath": repo_relative(bridged_path),
+    }
 
 
 def resolve_baseline_paths(base_paths: dict[str, str | Path]) -> dict[str, str]:
@@ -339,6 +712,16 @@ def build_campaign_command(
     base_paths: dict[str, str | Path],
 ) -> tuple[str, list[str], Path, dict[str, Path]]:
     round_id = f"{args.run_id}-a{round_index}"
+    return build_campaign_command_for_round_id(args=args, run_root=run_root, round_id=round_id, base_paths=base_paths)
+
+
+def build_campaign_command_for_round_id(
+    *,
+    args: argparse.Namespace,
+    run_root: Path,
+    round_id: str,
+    base_paths: dict[str, str | Path],
+) -> tuple[str, list[str], Path, dict[str, Path]]:
     outputs = round_output_paths(run_root, round_id)
     resolved_base_paths = resolve_baseline_paths(base_paths)
     command = [
@@ -384,6 +767,48 @@ def build_campaign_command(
     if args.overwrite:
         command.append("--overwrite")
     return round_id, command, outputs["campaignSummary"], outputs
+
+
+def _coerce_int(value: Any) -> int:
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def repair_signal_count_from_summary(repair_task_summary: dict[str, Any]) -> int:
+    counts = (repair_task_summary or {}).get("repairActionCounts")
+    if not isinstance(counts, dict):
+        return 0
+    score = 0
+    for raw_key, raw_value in counts.items():
+        key = str(raw_key or "").strip().lower()
+        if "location" in key or "relationship" in key or "boundary" in key:
+            score += max(_coerce_int(raw_value), 0)
+    return score
+
+
+def should_trigger_same_round_rerun(
+    *,
+    args: argparse.Namespace,
+    rerun_count_so_far: int,
+    success: bool,
+    pending_count: int,
+    repair_signal_count: int,
+) -> bool:
+    if not bool(args.same_round_rerun):
+        return False
+    if not success:
+        return False
+    if rerun_count_so_far >= max(args.same_round_rerun_max_passes, 0):
+        return False
+    if pending_count <= 0:
+        return False
+    if pending_count >= max(args.pending_review_limit, 1):
+        return False
+    if repair_signal_count < max(args.same_round_rerun_min_repair_actions, 1):
+        return False
+    return True
 
 
 def normalize_allowed_answers(raw: Any) -> dict[str, Any]:
@@ -1126,29 +1551,62 @@ def render_summary_markdown(summary: dict[str, Any]) -> str:
         "",
         "## Round Summaries",
         "",
-        "| Round | Selected Generals | Baseline | Result | Delta | Event Pending | Repeated | B Review | Success |",
-        "|---:|---|---:|---:|---:|---:|---:|---|---|",
+        "| Round | Campaign Round ID | Selected Generals | Baseline | Result | Delta | Event Pending | Repeated | Same-Round Reruns | B Review | Success |",
+        "|---:|---|---|---:|---:|---:|---:|---:|---:|---|---|",
     ]
     for item in summary.get("rounds") or []:
         campaign = item.get("campaignSummary") or {}
         lines.append(
-            "| {round} | `{generals}` | `{base}` | `{result}` | `{delta}` | `{pending}` | `{repeated}` | `{b_review}` | `{success}` |".format(
+            "| {round} | `{campaign_round}` | `{generals}` | `{base}` | `{result}` | `{delta}` | `{pending}` | `{repeated}` | `{reruns}` | `{b_review}` | `{success}` |".format(
                 round=item.get("roundIndex"),
+                campaign_round=item.get("campaignRoundId") or item.get("roundId"),
                 generals=", ".join(campaign.get("selectedGenerals") or []) or "-",
                 base=campaign.get("baselineOverallPercent"),
                 result=campaign.get("resultOverallPercent"),
                 delta=campaign.get("deltaOverallPercent"),
                 pending=item.get("eventReviewPendingCountAfterReview") or item.get("eventReviewPendingCountAfterRound") or 0,
                 repeated=item.get("repeatedResidualCountAfterReview") or item.get("repeatedResidualCountAfterRound") or 0,
+                reruns=item.get("sameRoundRerunPassCount") or 0,
                 b_review="yes" if item.get("bReviewSummary") else "-",
                 success=item.get("success"),
             )
         )
+    if any((item.get("sameRoundPasses") or []) for item in (summary.get("rounds") or [])):
+        lines.extend(["", "## Same-Round Rerun Passes", ""])
+        for item in summary.get("rounds") or []:
+            passes = list(item.get("sameRoundPasses") or [])
+            if not passes:
+                continue
+            lines.append(f"- round `{item.get('roundIndex')}`")
+            for rerun in passes:
+                lines.append(
+                    "  - pass=`{pass_index}` roundId=`{round_id}` delta=`{delta}` pending=`{pending}` repairSignals=`{signals}` rerunTriggered=`{triggered}`".format(
+                        pass_index=rerun.get("passIndex"),
+                        round_id=rerun.get("roundId"),
+                        delta=rerun.get("deltaOverallPercent"),
+                        pending=rerun.get("eventReviewPendingCount"),
+                        signals=rerun.get("repairSignalCount"),
+                        triggered=rerun.get("rerunTriggered"),
+                    )
+                )
     if summary.get("reviewBatches"):
         lines.extend(["", "## B Review Batches", ""])
         for batch in summary.get("reviewBatches") or []:
             lines.append(
                 f"- `{batch.get('sourceRoundId')}` items=`{batch.get('selectedItemCount')}/{batch.get('itemCount')}` md=`{batch.get('markdownPath')}`"
+            )
+    if summary.get("scoreboardBridgeRounds"):
+        lines.extend(["", "## Scoreboard Repair Bridge", ""])
+        for item in summary.get("scoreboardBridgeRounds") or []:
+            lines.append(
+                "- round=`{round}` reason=`{reason}` addedRows=`{added}` backlog=`{backlog}` matchedGenerals=`{matched}/{target}`".format(
+                    round=item.get("roundIndex"),
+                    reason=item.get("reason"),
+                    added=item.get("addedRowCount") or 0,
+                    backlog=item.get("bridgedBacklogCount") or item.get("sourceBacklogCount") or 0,
+                    matched=item.get("targetGeneralMatchedCount") or 0,
+                    target=item.get("targetGeneralCount") or 0,
+                )
             )
     if summary.get("bReviews"):
         lines.extend(["", "## Applied B Reviews", ""])
@@ -1323,6 +1781,7 @@ def main() -> None:
     review_batches: list[dict[str, Any]] = []
     b_reviews: list[dict[str, Any]] = []
     residual_history: dict[str, dict[str, Any]] = {}
+    scoreboard_bridge_history: list[dict[str, Any]] = []
 
     weak_improvement_count = 0
     failure_count = 0
@@ -1338,33 +1797,114 @@ def main() -> None:
         if wall_time_exceeded(started_monotonic, args.max_wall_time_minutes):
             stop_reason = "max-wall-time-minutes"
             break
-        edit_backlog_count = jsonl_record_count(base_paths["editBacklog"])
+        round_base_paths = dict(base_paths)
+        bridge_summary = build_scoreboard_repair_bridge(
+            args=args,
+            run_root=run_root,
+            round_id=f"{args.run_id}-a{round_index}",
+            base_paths=round_base_paths,
+        )
+        if bridge_summary.get("bridgedEditBacklogPath"):
+            round_base_paths["editBacklog"] = str(bridge_summary["bridgedEditBacklogPath"])
+        scoreboard_bridge_history.append({
+            "roundIndex": round_index,
+            **bridge_summary,
+        })
+
+        edit_backlog_count = jsonl_record_count(round_base_paths["editBacklog"])
         if edit_backlog_count == 0:
             stop_reason = "repair-backlog-exhausted"
             break
 
-        round_id, command, summary_path, output_paths = build_campaign_command(args, run_root, round_index, base_paths)
-        command_result = run_command(command, args.dry_run)
-        success = int(command_result["returnCode"] or 0) == 0
-        if not success:
-            failure_count += 1
+        round_id_base = f"{args.run_id}-a{round_index}"
+        pass_base_paths = dict(round_base_paths)
+        round_passes: list[dict[str, Any]] = []
+        rerun_count = 0
+        final_round_id = round_id_base
+        final_summary_path = round_output_paths(run_root, round_id_base)["campaignSummary"]
+        final_output_paths = round_output_paths(run_root, round_id_base)
+        final_command_result: dict[str, Any] = {}
+        final_campaign_summary: dict[str, Any] = {}
+        final_repair_task_summary: dict[str, Any] = {}
+        round_pending_items: list[dict[str, Any]] = []
+        success = False
 
-        campaign_summary = read_json(summary_path)
-        if args.dry_run and not campaign_summary:
-            campaign_summary = {
-                "mode": "repair-review-campaign",
-                "canonicalWrites": False,
-                "roundId": round_id,
-                "selectedGenerals": list(args.general_id),
-                "deltaOverallPercent": None,
-            }
+        while True:
+            pass_round_id = round_id_base if rerun_count <= 0 else f"{round_id_base}-rerun{rerun_count}"
+            _, command, summary_path, output_paths = build_campaign_command_for_round_id(
+                args=args,
+                run_root=run_root,
+                round_id=pass_round_id,
+                base_paths=pass_base_paths,
+            )
+            command_result = run_command(command, args.dry_run)
+            pass_success = int(command_result["returnCode"] or 0) == 0
+            if not pass_success:
+                failure_count += 1
 
-        repair_task_summary = {}
-        repair_task_summary_path = (campaign_summary or {}).get("repairTaskSummaryPath")
-        if repair_task_summary_path:
-            repair_task_summary = read_json(resolve_path(repair_task_summary_path))
+            campaign_summary = read_json(summary_path)
+            if args.dry_run and not campaign_summary:
+                campaign_summary = {
+                    "mode": "repair-review-campaign",
+                    "canonicalWrites": False,
+                    "roundId": pass_round_id,
+                    "selectedGenerals": list(args.general_id),
+                    "deltaOverallPercent": None,
+                }
 
-        delta = (campaign_summary or {}).get("deltaOverallPercent")
+            repair_task_summary = {}
+            repair_task_summary_path = (campaign_summary or {}).get("repairTaskSummaryPath")
+            if repair_task_summary_path:
+                repair_task_summary = read_json(resolve_path(repair_task_summary_path))
+
+            pass_pending_items = collect_round_review_items(output_paths["reviewSnapshotRoot"])
+            repair_signal_count = repair_signal_count_from_summary(repair_task_summary)
+            rerun_triggered = should_trigger_same_round_rerun(
+                args=args,
+                rerun_count_so_far=rerun_count,
+                success=pass_success,
+                pending_count=len(pass_pending_items),
+                repair_signal_count=repair_signal_count,
+            )
+            round_passes.append(
+                {
+                    "passIndex": rerun_count + 1,
+                    "roundId": pass_round_id,
+                    "success": pass_success,
+                    "summaryPath": repo_relative(summary_path),
+                    "command": command_result,
+                    "deltaOverallPercent": (campaign_summary or {}).get("deltaOverallPercent"),
+                    "eventReviewPendingCount": len(pass_pending_items),
+                    "repairSignalCount": repair_signal_count,
+                    "rerunTriggered": bool(rerun_triggered),
+                }
+            )
+
+            final_round_id = pass_round_id
+            final_summary_path = summary_path
+            final_output_paths = output_paths
+            final_command_result = command_result
+            final_campaign_summary = campaign_summary
+            final_repair_task_summary = repair_task_summary
+            round_pending_items = pass_pending_items
+            success = pass_success
+
+            if pass_success:
+                pass_base_paths = {
+                    "editBacklog": output_paths["editBacklog"],
+                    "baseEvents": output_paths["baseEvents"],
+                    "baseRelationshipEvidence": output_paths["baseRelationshipEvidence"],
+                    "baseProgress": output_paths["baseProgress"],
+                }
+                if args.emit_ready_eval:
+                    pass_base_paths["readyEvalEvents"] = output_paths["readyEvalEvents"]
+
+            if rerun_triggered:
+                rerun_count += 1
+                continue
+            break
+
+        delta = (final_campaign_summary or {}).get("deltaOverallPercent")
         try:
             delta_value = float(delta)
         except (TypeError, ValueError):
@@ -1376,7 +1916,6 @@ def main() -> None:
             weak_improvement_count = 0
 
         last_pilot_pending_count = pending_review_count(resolve_path(args.review_queue))
-        round_pending_items = collect_round_review_items(output_paths["reviewSnapshotRoot"])
         record_residual_history(residual_history, round_pending_items)
         repeated_items = repeated_residuals_from_history(residual_history, round_pending_items, max(args.same_residual_repeat_limit, 1))
         last_round_pending_items = round_pending_items
@@ -1386,21 +1925,24 @@ def main() -> None:
         failure_rate = failure_count / max(round_index, 1)
         round_record = {
             "roundIndex": round_index,
-            "roundId": round_id,
+            "roundId": round_id_base,
+            "campaignRoundId": final_round_id,
             "success": success,
-            "summaryPath": repo_relative(summary_path),
-            "baselineInputs": {key: resolve_baseline_paths(base_paths)[key] for key in sorted(base_paths)},
+            "summaryPath": repo_relative(final_summary_path),
+            "baselineInputs": {key: resolve_baseline_paths(round_base_paths)[key] for key in sorted(round_base_paths)},
             "nextBaselineCandidates": {
                 key: repo_relative(path)
-                for key, path in output_paths.items()
+                for key, path in final_output_paths.items()
                 if key in {"editBacklog", "baseEvents", "baseRelationshipEvidence", "baseProgress", "readyEvalEvents"}
             },
-            "command": command_result,
-            "campaignSummary": campaign_summary,
+            "command": final_command_result,
+            "sameRoundPasses": round_passes,
+            "sameRoundRerunPassCount": max(len(round_passes) - 1, 0),
+            "campaignSummary": final_campaign_summary,
             "repairTaskSummary": {
-                "priorityCounts": (repair_task_summary or {}).get("priorityCounts") or {},
-                "repairActionCounts": (repair_task_summary or {}).get("repairActionCounts") or {},
-                "topFocusGenerals": (repair_task_summary or {}).get("topFocusGenerals") or {},
+                "priorityCounts": (final_repair_task_summary or {}).get("priorityCounts") or {},
+                "repairActionCounts": (final_repair_task_summary or {}).get("repairActionCounts") or {},
+                "topFocusGenerals": (final_repair_task_summary or {}).get("topFocusGenerals") or {},
             },
             "pilotPendingReviewCountAfterRound": last_pilot_pending_count,
             "eventReviewPendingCountAfterRound": len(round_pending_items),
@@ -1409,6 +1951,8 @@ def main() -> None:
             "weakImprovementCount": weak_improvement_count,
             "failureRate": round(failure_rate, 4),
         }
+        if bridge_summary:
+            round_record["scoreboardBridge"] = bridge_summary
 
         if round_pending_items:
             round_record["previewOnlyPendingCount"] = len(round_pending_items)
@@ -1417,25 +1961,25 @@ def main() -> None:
 
         if success:
             base_paths = {
-                "editBacklog": output_paths["editBacklog"],
-                "baseEvents": output_paths["baseEvents"],
-                "baseRelationshipEvidence": output_paths["baseRelationshipEvidence"],
-                "baseProgress": output_paths["baseProgress"],
+                "editBacklog": final_output_paths["editBacklog"],
+                "baseEvents": final_output_paths["baseEvents"],
+                "baseRelationshipEvidence": final_output_paths["baseRelationshipEvidence"],
+                "baseProgress": final_output_paths["baseProgress"],
             }
             if args.emit_ready_eval:
-                latest_ready_eval_events = output_paths["readyEvalEvents"]
-                base_paths["readyEvalEvents"] = output_paths["readyEvalEvents"]
+                latest_ready_eval_events = final_output_paths["readyEvalEvents"]
+                base_paths["readyEvalEvents"] = final_output_paths["readyEvalEvents"]
 
         if args.review_decisions and round_pending_items and not review_decisions_consumed:
-            decision_summary = apply_review_decisions_to_root(output_paths["reviewSnapshotRoot"], resolve_path(args.review_decisions), args.dry_run)
+            decision_summary = apply_review_decisions_to_root(final_output_paths["reviewSnapshotRoot"], resolve_path(args.review_decisions), args.dry_run)
             round_record["reviewDecisionApplication"] = decision_summary
             if int(decision_summary.get("updatedQuestionCount") or 0) > 0:
                 review_decisions_consumed = True
                 b_review_count += 1
                 b_review_summary, base_paths = run_b_review_merge(
                     run_root=run_root,
-                    source_round_id=round_id,
-                    review_root=output_paths["reviewSnapshotRoot"],
+                    source_round_id=final_round_id,
+                    review_root=final_output_paths["reviewSnapshotRoot"],
                     base_paths=round_record["baselineInputs"],
                     review_index=b_review_count,
                     overwrite=args.overwrite,
@@ -1451,7 +1995,7 @@ def main() -> None:
                     stop_reason = "failure-rate-limit"
                     break
 
-                round_pending_items = collect_round_review_items(output_paths["reviewSnapshotRoot"])
+                round_pending_items = collect_round_review_items(final_output_paths["reviewSnapshotRoot"])
                 repeated_items = repeated_residuals_from_history(residual_history, round_pending_items, max(args.same_residual_repeat_limit, 1))
                 last_round_pending_items = round_pending_items
                 last_repeated_items = repeated_items
@@ -1470,7 +2014,7 @@ def main() -> None:
             batch_info = write_review_batch(
                 run_root=run_root,
                 run_id=args.run_id,
-                source_round_id=round_id,
+                source_round_id=final_round_id,
                 items=round_pending_items,
                 pilot_pending_count=last_pilot_pending_count,
                 batch_size=max(args.review_batch_size, 1),
@@ -1592,6 +2136,15 @@ def main() -> None:
             "stepTimeoutSeconds": args.step_timeout_seconds,
             "previewPolicy": "deterministic -> agent -> human",
             "emitReadyEval": args.emit_ready_eval,
+            "sameRoundRerun": bool(args.same_round_rerun),
+            "sameRoundRerunMaxPasses": args.same_round_rerun_max_passes,
+            "sameRoundRerunMinRepairActions": args.same_round_rerun_min_repair_actions,
+            "scoreboardRepairBridge": bool(args.scoreboard_repair_bridge or args.scoreboard_json),
+            "scoreboardJson": args.scoreboard_json,
+            "bridgeFields": sorted(parse_bridge_fields(args.bridge_fields)),
+            "bridgeMaxGenerals": args.bridge_max_generals,
+            "bridgeMaxPerGeneral": args.bridge_max_per_general,
+            "bridgeIncludeShadow": bool(args.bridge_include_shadow),
             "runtimeReadiness": args.runtime_readiness,
             "maxWallTimeMinutes": args.max_wall_time_minutes,
         },
@@ -1608,6 +2161,7 @@ def main() -> None:
         "totalDeltaOverallPercent": total_delta,
         "touchedGenerals": touched_generals,
         "runtimeReadiness": runtime_readiness,
+        "scoreboardBridgeRounds": scoreboard_bridge_history,
         "reviewBatches": review_batches,
         "bReviews": b_reviews,
         "residualSummary": {

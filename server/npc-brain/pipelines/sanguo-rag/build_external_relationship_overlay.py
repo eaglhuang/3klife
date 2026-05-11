@@ -36,6 +36,51 @@ LAYER_SOURCE_EDGE_CAP = {
     "worldbuilding": 90,
     "folklore": 70,
 }
+ALLOWED_REPARSE_CLAIM_TYPES = {
+    "event",
+    "title",
+    "trait",
+    "activity",
+    "habit",
+    "role",
+    "dialogue_seed",
+    "worldbuilding_note",
+    "source_conflict",
+}
+RELATIONSHIP_REPARSE_CUE_TERMS = [
+    "妻",
+    "夫",
+    "嫁",
+    "娶",
+    "父",
+    "母",
+    "子",
+    "女",
+    "兄",
+    "弟",
+    "姊",
+    "妹",
+    "師",
+    "徒",
+    "主",
+    "臣",
+    "將",
+    "令",
+    "命",
+    "敵",
+    "仇",
+    "戰",
+    "攻",
+    "殺",
+    "盟",
+    "誓",
+    "同盟",
+    "投降",
+    "背叛",
+    "降",
+    "薦",
+    "拜",
+]
 
 
 def utc_now() -> str:
@@ -219,17 +264,24 @@ def cross_family_gate(
 
 
 def should_pass_card_base_gate(card: dict[str, Any]) -> tuple[bool, str]:
-    if str(card.get("claimType") or "").strip() != "relationship":
-        return False, "claimType-not-relationship"
+    claim_type = str(card.get("claimType") or "").strip().lower()
+    quote = str(card.get("quote") or card.get("translatedTraditionalText") or "").strip()
+    if claim_type != "relationship":
+        if claim_type not in ALLOWED_REPARSE_CLAIM_TYPES:
+            return False, "claimType-not-relationship"
+        compact = re.sub(r"\s+", "", quote)
+        if not any(term in compact for term in RELATIONSHIP_REPARSE_CUE_TERMS):
+            return False, "reparse-missing-relationship-cue"
     source_layer = str(card.get("sourceLayer") or "").strip().lower()
     if source_layer not in ALLOWED_SOURCE_LAYERS:
         return False, "source-layer-not-allowed"
-    quote = str(card.get("quote") or card.get("translatedTraditionalText") or "").strip()
     if len(quote) < 8:
         return False, "short-quote"
     if not (card.get("locator") or card.get("textHash")):
         return False, "missing-locator-hash"
-    return True, "ok"
+    if claim_type == "relationship":
+        return True, "ok"
+    return True, f"ok-reparse:{claim_type}"
 
 
 def trust_signals_for_edge(
@@ -476,6 +528,7 @@ def main() -> int:
         card_rows.extend(read_jsonl(resolve_path(path_text)))
 
     gate_reasons = Counter()
+    gate_accept_reparse = Counter()
     transform_reasons = Counter()
     trust_gate_reasons = Counter()
     signal_counts = Counter()
@@ -486,6 +539,8 @@ def main() -> int:
         if not passed:
             gate_reasons[reason] += 1
             continue
+        if reason.startswith("ok-reparse:"):
+            gate_accept_reparse[reason.split(":", 1)[1]] += 1
         rows, transform_reason = edges_from_card(card, alias_pairs=alias_pairs, max_participants_per_card=max(args.max_participants_per_card, 2))
         if not rows:
             transform_reasons[transform_reason] += 1
@@ -555,6 +610,7 @@ def main() -> int:
             "sourceCapTrimmedCount": max(len(deduped_rows) - len(capped_rows), 0),
             "sourceCapTrimmedBySource": capped_trimmed_counts,
             "gateRejectCounts": dict(sorted(gate_reasons.items())),
+            "gateAcceptReparseByClaimType": dict(sorted(gate_accept_reparse.items())),
             "transformRejectCounts": dict(sorted(transform_reasons.items())),
             "trustGateRejectCounts": dict(sorted(trust_gate_reasons.items())),
             "confidenceSignalCounts": dict(sorted(signal_counts.items())),
@@ -580,6 +636,9 @@ def main() -> int:
         "",
     ]
     for key, value in summary["metrics"]["gateRejectCounts"].items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.extend(["", "## Gate Accept Reparse By ClaimType", ""])
+    for key, value in summary["metrics"]["gateAcceptReparseByClaimType"].items():
         lines.append(f"- `{key}`: `{value}`")
     lines.extend(["", "## Transform Rejects", ""])
     for key, value in summary["metrics"]["transformRejectCounts"].items():

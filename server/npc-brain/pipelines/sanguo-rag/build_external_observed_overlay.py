@@ -12,6 +12,8 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth/external-observed-overlay")
+HISTORY_CROSS_FAMILY_THRESHOLD = 2
+NON_HISTORY_CROSS_FAMILY_THRESHOLD = 3
 
 
 def utc_now() -> str:
@@ -89,6 +91,53 @@ def sanitize_general_ids(raw_ids: Any) -> list[str]:
     return ids
 
 
+def source_layer(value: Any) -> str:
+    return str(value or "").strip().lower()
+
+
+def has_quote_locator_hash(payload: dict[str, Any]) -> bool:
+    quote = str(payload.get("quote") or payload.get("translatedTraditionalText") or payload.get("seedText") or "").strip()
+    return len(quote) >= 8 and bool(payload.get("locator")) and bool(payload.get("textHash"))
+
+
+def cross_family_count(payload: dict[str, Any]) -> int:
+    families = {str(item or "").strip() for item in (payload.get("crossSiteSourceFamilies") or [])}
+    families.discard("")
+    return len(families)
+
+
+def cross_family_threshold(layer: str) -> int:
+    return HISTORY_CROSS_FAMILY_THRESHOLD if source_layer(layer) == "history" else NON_HISTORY_CROSS_FAMILY_THRESHOLD
+
+
+def trust_signals_from_card(card: dict[str, Any]) -> list[str]:
+    signals: list[str] = []
+    layer = source_layer(card.get("sourceLayer"))
+    family_count = cross_family_count(card)
+    if family_count >= cross_family_threshold(layer):
+        signals.append("cross-source")
+    if has_quote_locator_hash(card):
+        signals.append("quote+locator+hash")
+    if str(card.get("reviewGrade") or "").strip().upper() == "A":
+        signals.append("review-grade-a")
+    return signals
+
+
+def trust_signals_from_seed(seed: dict[str, Any], min_score: float) -> list[str]:
+    signals: list[str] = []
+    try:
+        score = float(seed.get("seedConfidenceScore") or 0.0)
+    except (TypeError, ValueError):
+        score = 0.0
+    if score >= min_score:
+        signals.append("seed-confidence")
+    if int(seed.get("crossSiteMatchCount") or 0) >= 2:
+        signals.append("cross-site-match")
+    if has_quote_locator_hash(seed):
+        signals.append("quote+locator+hash")
+    return signals
+
+
 def card_to_observed_rows(card: dict[str, Any]) -> list[dict[str, Any]]:
     general_ids = sanitize_general_ids(card.get("generalIds"))
     if not general_ids:
@@ -105,6 +154,9 @@ def card_to_observed_rows(card: dict[str, Any]) -> list[dict[str, Any]]:
     source_refs = list(card.get("sourceRefs") or [])
     chapter_no = parse_chapter_no(locator, source_refs[0] if source_refs else None, card.get("sourceRef"))
     source_ref = f"ext-card:{source_id}:{evidence_id}"
+    trust_signals = trust_signals_from_card(card)
+    family_count = cross_family_count(card)
+    has_qlh = has_quote_locator_hash(card)
     return [
         {
             "label": label,
@@ -124,6 +176,12 @@ def card_to_observed_rows(card: dict[str, Any]) -> list[dict[str, Any]]:
             "sourceId": source_id,
             "claimType": str(card.get("claimType") or ""),
             "locator": locator,
+            "crossSiteSourceFamilyCount": family_count,
+            "crossSiteMatchCount": int(card.get("crossSiteMatchCount") or 0),
+            "hasQuoteLocatorHash": has_qlh,
+            "trustSignals": list(trust_signals),
+            "trustSignalCount": len(trust_signals),
+            "overlayTrustPassed": bool(trust_signals),
             "canonicalWrites": False,
         }
     ]
@@ -147,6 +205,9 @@ def seed_to_observed_rows(seed: dict[str, Any], min_score: float) -> list[dict[s
     locator = str(seed.get("locator") or "").strip()
     chapter_no = parse_chapter_no(locator, seed.get("sourceRef"))
     source_ref = f"ext-seed:{source_id}:{seed_id}"
+    trust_signals = trust_signals_from_seed(seed, min_score=min_score)
+    family_count = cross_family_count(seed)
+    has_qlh = has_quote_locator_hash(seed)
     return [
         {
             "label": label,
@@ -166,6 +227,12 @@ def seed_to_observed_rows(seed: dict[str, Any], min_score: float) -> list[dict[s
             "sourceId": source_id,
             "angleType": str(seed.get("angleType") or ""),
             "seedConfidenceScore": round(score, 2),
+            "crossSiteSourceFamilyCount": family_count,
+            "crossSiteMatchCount": int(seed.get("crossSiteMatchCount") or 0),
+            "hasQuoteLocatorHash": has_qlh,
+            "trustSignals": list(trust_signals),
+            "trustSignalCount": len(trust_signals),
+            "overlayTrustPassed": bool(trust_signals),
             "canonicalWrites": False,
         }
     ]
@@ -345,6 +412,7 @@ def main() -> int:
             "candidateCardInputCount": card_count,
             "seedRankingInputCount": seed_count,
             "overlayMentionCount": len(rows),
+            "trustPassedOverlayMentionCount": sum(1 for row in rows if bool(row.get("overlayTrustPassed"))),
             "canonicalWrites": False,
             "sourceIdCounts": dict(sorted(Counter(str(row.get("sourceId") or "") for row in rows).items())),
             "claimTypeCounts": dict(sorted(Counter(str(row.get("claimType") or "") for row in rows if row.get("claimType")).items())),
@@ -365,4 +433,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

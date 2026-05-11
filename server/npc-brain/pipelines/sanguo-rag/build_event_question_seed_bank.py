@@ -27,6 +27,21 @@ ANGLE_TERMS = {
     "faction_timeline": ["東吳", "西蜀", "曹魏", "江東", "黃巾", "董卓", "荊州", "益州", "西涼", "南蠻", "北魏", "漢室", "朝廷", "魏王", "吳侯", "蜀兵", "魏兵", "吳兵", "漢軍", "賊軍"],
 }
 
+CLAIM_TO_ANGLE_FAMILY = {
+    "identity": "faction_timeline",
+    "relationship": "relationship",
+    "event": "activity_seed",
+    "location": "location_context",
+    "title": "work_role",
+    "trait": "aptitude_talent",
+    "habit": "activity_seed",
+    "activity": "activity_seed",
+    "role": "work_role",
+    "dialogue_seed": "affect_story",
+    "worldbuilding_note": "faction_timeline",
+    "source_conflict": "decision_weight",
+}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build source-grounded event question seed bank from observed mentions.")
@@ -36,6 +51,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--max-evidence-refs-per-slot", type=int, default=8)
     parser.add_argument("--max-examples-per-slot", type=int, default=3)
+    parser.add_argument("--external-seed-min-score", type=float, default=72.0)
+    parser.add_argument("--history-cross-family-threshold", type=int, default=2)
+    parser.add_argument("--non-history-cross-family-threshold", type=int, default=3)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -95,6 +113,62 @@ def matched_terms(text: str, terms: list[str]) -> list[str]:
     return [term for term in terms if term in text]
 
 
+def is_external_overlay_row(source_ref: str) -> bool:
+    return source_ref.startswith("ext-card:") or source_ref.startswith("ext-seed:")
+
+
+def row_source_layer(row: dict[str, Any]) -> str:
+    return str(row.get("sourceLayer") or "").strip().lower()
+
+
+def row_cross_family_count(row: dict[str, Any]) -> int:
+    try:
+        return int(row.get("crossSiteSourceFamilyCount") or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def row_external_trust_passed(
+    row: dict[str, Any],
+    *,
+    external_seed_min_score: float,
+    history_cross_family_threshold: int,
+    non_history_cross_family_threshold: int,
+) -> bool:
+    if bool(row.get("overlayTrustPassed")):
+        return True
+    if bool(row.get("hasQuoteLocatorHash")):
+        return True
+    signals = row.get("trustSignals")
+    if isinstance(signals, list) and any(str(item or "").strip() for item in signals):
+        return True
+    threshold = history_cross_family_threshold if row_source_layer(row) == "history" else non_history_cross_family_threshold
+    if row_cross_family_count(row) >= max(threshold, 1):
+        return True
+    if str(row.get("mentionType") or "").strip() == "external-evidence-seed":
+        try:
+            score = float(row.get("seedConfidenceScore") or 0.0)
+        except (TypeError, ValueError):
+            score = 0.0
+        if score >= max(external_seed_min_score, 0.0):
+            return True
+    return False
+
+
+def mapped_claim_angle_families(row: dict[str, Any], female_general_ids: set[str], general_ids: list[str]) -> list[str]:
+    mapped: list[str] = []
+    claim_type = str(row.get("claimType") or "").strip().lower()
+    angle_type = str(row.get("angleType") or "").strip().lower()
+    for key in [claim_type, angle_type]:
+        if key in CLAIM_TO_ANGLE_FAMILY:
+            angle_family = CLAIM_TO_ANGLE_FAMILY[key]
+            if angle_family == "female_interaction" and not set(general_ids).intersection(female_general_ids):
+                continue
+            if angle_family not in mapped:
+                mapped.append(angle_family)
+    return mapped
+
+
 def add_slot_evidence(
     slots: dict[tuple[str, str], dict[str, Any]],
     *,
@@ -133,7 +207,15 @@ def add_slot_evidence(
         })
 
 
-def build_observed_slots(rows: list[dict[str, Any]], female_general_ids: set[str], max_examples: int) -> dict[tuple[str, str], dict[str, Any]]:
+def build_observed_slots(
+    rows: list[dict[str, Any]],
+    female_general_ids: set[str],
+    max_examples: int,
+    *,
+    external_seed_min_score: float,
+    history_cross_family_threshold: int,
+    non_history_cross_family_threshold: int,
+) -> dict[tuple[str, str], dict[str, Any]]:
     slots: dict[tuple[str, str], dict[str, Any]] = {}
     for row in rows:
         if row.get("matchStatus") != "resolved":
@@ -141,6 +223,14 @@ def build_observed_slots(rows: list[dict[str, Any]], female_general_ids: set[str
         source_ref = str(row.get("sourceRef") or "").strip()
         evidence_text = clean_text(row.get("textSnippet"))
         if not source_ref or not evidence_text:
+            continue
+        external_overlay = is_external_overlay_row(source_ref)
+        if external_overlay and not row_external_trust_passed(
+            row,
+            external_seed_min_score=external_seed_min_score,
+            history_cross_family_threshold=history_cross_family_threshold,
+            non_history_cross_family_threshold=non_history_cross_family_threshold,
+        ):
             continue
         general_ids = row_general_ids(row)
         if not general_ids:
@@ -163,6 +253,22 @@ def build_observed_slots(rows: list[dict[str, Any]], female_general_ids: set[str
                     source_layer="observed-mentions",
                     max_examples=max_examples,
                 )
+        if external_overlay:
+            claim_angles = mapped_claim_angle_families(row, female_general_ids, general_ids)
+            for angle_family in claim_angles:
+                claim_type = str(row.get("claimType") or row.get("angleType") or "external").strip().lower()
+                for general_id in general_ids:
+                    add_slot_evidence(
+                        slots,
+                        general_id=general_id,
+                        angle_family=angle_family,
+                        source_ref=source_ref,
+                        chapter_no=row.get("chapterNo") if isinstance(row.get("chapterNo"), int) else None,
+                        evidence_text=evidence_text,
+                        terms=[f"claim:{claim_type}"],
+                        source_layer="external-claim-incremental",
+                        max_examples=max_examples,
+                    )
     return slots
 
 
@@ -284,7 +390,14 @@ def main() -> None:
     rows = load_observed_rows(Path(args.observed_mentions))
     female_general_ids = load_female_general_ids(Path(args.stable_knowledge))
     relationship_edges = read_jsonl(Path(args.relationship_evidence))
-    slots = build_observed_slots(rows, female_general_ids, args.max_examples_per_slot)
+    slots = build_observed_slots(
+        rows,
+        female_general_ids,
+        args.max_examples_per_slot,
+        external_seed_min_score=args.external_seed_min_score,
+        history_cross_family_threshold=max(args.history_cross_family_threshold, 1),
+        non_history_cross_family_threshold=max(args.non_history_cross_family_threshold, max(args.history_cross_family_threshold, 1)),
+    )
     merge_relationship_slots(slots, relationship_edges, args.max_examples_per_slot)
     records = finalize_slots(slots, args.max_evidence_refs_per_slot)
     jsonl_path.write_text("".join(json.dumps(record, ensure_ascii=False) + "\n" for record in records), encoding="utf-8")

@@ -111,6 +111,20 @@ python server/npc-brain/pipelines/sanguo-rag/build_full_roster_scoreboard.py \
 - [x] `run_full_roster_convergence_loop.py` 會把 lane policy 傳進 `build_full_roster_scoreboard.py`，並回寫 summary inputs
 - [x] human-review batch 顯示 cluster 規模、參與者、地點與摘要指紋，方便人工快速判讀去重結果
 
+### M6 Candidate Cards 主幹增量注入（已完成）
+- [x] `build_external_observed_overlay.py` 新增 `overlayTrustPassed / trustSignals` 欄位，讓下游可做嚴格 gate
+- [x] `build_event_question_seed_bank.py` 新增外部 `claimType/angleType` 映射角度注入（通過 trust gate 才注入）
+- [x] `build_source_event_packets.py` 同步加入 trust gate + claim 映射，提升 event packet 吞吐
+- [x] `build_external_relationship_overlay.py` 對 `event/title/trait/...` 開啟關係重解析（需關係語義 cue）
+
+### M7 同輪 Repair->Preview Rerun（已完成）
+- [x] `run_progress_advancement_loop.py` 新增同輪 rerun 參數：
+  - `--same-round-rerun / --no-same-round-rerun`（預設啟用）
+  - `--same-round-rerun-max-passes`（預設 1）
+  - `--same-round-rerun-min-repair-actions`（預設 1）
+- [x] 當 repair 補欄位訊號足夠、且 pending 未達人工門檻時，同輪立即再跑一次 preview，不等下一輪
+- [x] summary 新增 `campaignRoundId`、`sameRoundRerunPassCount`、`sameRoundPasses`，可追蹤每次同輪 rerun 是否生效
+
 ## 6) 驗收指令
 
 ### A. 語法驗證
