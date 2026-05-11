@@ -14,6 +14,12 @@ DEFAULT_GENERALS_PATH = Path("assets/resources/data/generals.json")
 DEFAULT_EVENTS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl")
 DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
 DEFAULT_PILOT_REPORT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/etl-quality-pilot-report.json")
+DEFAULT_RELATIONSHIP_EVIDENCE_PATH = Path(
+    "artifacts/data-pipeline/sanguo-rag/extracted/relationship-evidence/source-grounded-relationship-edges.jsonl"
+)
+DEFAULT_EVENT_QUESTION_SEEDS_PATH = Path(
+    "artifacts/data-pipeline/sanguo-rag/extracted/event-question-seeds/event-question-seeds.jsonl"
+)
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/full-roster-scoreboard")
 DEFAULT_LANE_POLICY_CONFIG = Path("server/npc-brain/pipelines/sanguo-rag/config/full-roster-lane-policy.json")
 
@@ -284,6 +290,54 @@ def gather_card_stats(card_rows: list[dict[str, Any]]) -> tuple[dict[str, dict[s
     return stats, shadow_index
 
 
+def gather_relationship_overlay_stats(edge_rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    stats: dict[str, dict[str, Any]] = defaultdict(
+        lambda: {
+            "relationshipEvidenceCount": 0,
+            "relationshipEvidenceStrongCount": 0,
+        }
+    )
+    for row in edge_rows:
+        if not isinstance(row, dict):
+            continue
+        confidence = float(row.get("edgeConfidence") or 0.0)
+        participants = {
+            str(row.get("fromId") or "").strip(),
+            str(row.get("toId") or "").strip(),
+        }
+        participants.discard("")
+        for person_id in participants:
+            target = stats[person_id]
+            target["relationshipEvidenceCount"] += 1
+            if confidence >= 0.75:
+                target["relationshipEvidenceStrongCount"] += 1
+    return stats
+
+
+def gather_event_question_seed_stats(seed_rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    stats: dict[str, dict[str, Any]] = defaultdict(
+        lambda: {
+            "eventQuestionSeedCount": 0,
+            "eventQuestionStrongSeedCount": 0,
+            "eventQuestionSourceRefCount": 0,
+        }
+    )
+    strong_tokens = {"strong", "rich"}
+    for row in seed_rows:
+        if not isinstance(row, dict):
+            continue
+        person_id = str(row.get("generalId") or "").strip()
+        if not person_id:
+            continue
+        target = stats[person_id]
+        target["eventQuestionSeedCount"] += 1
+        target["eventQuestionSourceRefCount"] += int(row.get("sourceRefCount") or 0)
+        slot_strength = str(row.get("slotStrength") or "").strip().lower()
+        if slot_strength in strong_tokens:
+            target["eventQuestionStrongSeedCount"] += 1
+    return stats
+
+
 def completeness_score(
     *,
     display_name: str,
@@ -509,6 +563,8 @@ def missing_angles(
     faction: str,
     event_count: int,
     relationship_edge_count: int,
+    relationship_evidence_count: int,
+    event_question_seed_count: int,
     location_count: int,
     keyword_total: int,
     external_history_count: int,
@@ -519,11 +575,11 @@ def missing_angles(
         angles.append("identity")
     if not faction:
         angles.append("title")
-    if relationship_edge_count <= 0:
+    if relationship_edge_count + relationship_evidence_count <= 0:
         angles.append("relationship")
-    if event_count <= 0:
+    if event_count + event_question_seed_count <= 0:
         angles.append("event")
-    if event_count > 0 and location_count <= 0:
+    if event_count + event_question_seed_count > 0 and location_count <= 0:
         angles.append("location")
     if keyword_total < 3 and external_worldbuilding_count <= 0:
         angles.append("trait")
@@ -562,9 +618,14 @@ def build_row(
     faction: str,
     roster_state: str,
     event_count: int,
+    event_question_seed_count: int,
+    event_question_strong_seed_count: int,
+    event_question_source_ref_count: int,
     generic_candidate_count: int,
     evidence_ref_count: int,
     relationship_edge_count: int,
+    relationship_evidence_count: int,
+    relationship_evidence_strong_count: int,
     location_count: int,
     keyword_total: int,
     readiness_status: str,
@@ -579,12 +640,16 @@ def build_row(
     cross_family_claim_count: int,
     quote_locator_hash_count: int,
 ) -> dict[str, Any]:
+    effective_event_count = event_count + min(max(event_question_seed_count, 0), 3)
+    effective_relationship_edge_count = relationship_edge_count + min(max(relationship_evidence_count, 0), 4)
+    effective_evidence_ref_count = evidence_ref_count + (1 if event_question_source_ref_count > 0 else 0)
+
     missing_fields: list[str] = []
-    if event_count > 0 and location_count <= 0:
+    if effective_event_count > 0 and location_count <= 0:
         missing_fields.append("location")
-    if event_count > 0 and relationship_edge_count <= 0:
+    if effective_event_count > 0 and effective_relationship_edge_count <= 0:
         missing_fields.append("relationshipEdges")
-    if event_count > 0 and evidence_ref_count <= 0:
+    if effective_event_count > 0 and effective_evidence_ref_count <= 0:
         missing_fields.append("sourceRefs")
 
     missing_angle_list = missing_angles(
@@ -592,6 +657,8 @@ def build_row(
         faction=faction,
         event_count=event_count,
         relationship_edge_count=relationship_edge_count,
+        relationship_evidence_count=relationship_evidence_count,
+        event_question_seed_count=event_question_seed_count,
         location_count=location_count,
         keyword_total=keyword_total,
         external_history_count=external_history_count,
@@ -601,24 +668,24 @@ def build_row(
     completeness = completeness_score(
         display_name=display_name,
         faction=faction,
-        event_count=event_count,
-        evidence_ref_count=evidence_ref_count,
-        relationship_edge_count=relationship_edge_count,
+        event_count=effective_event_count,
+        evidence_ref_count=effective_evidence_ref_count,
+        relationship_edge_count=effective_relationship_edge_count,
         location_count=location_count,
         keyword_total=keyword_total,
         external_evidence_count=external_evidence_count,
     )
     female_boost = female_priority_boost(
         gender=gender,
-        event_count=event_count,
+        event_count=effective_event_count,
         external_romance_count=external_romance_count,
         external_worldbuilding_count=external_worldbuilding_count,
         profile=profile,
     )
     breakdown = confidence_breakdown(
-        event_count=event_count,
-        evidence_ref_count=evidence_ref_count,
-        relationship_edge_count=relationship_edge_count,
+        event_count=effective_event_count,
+        evidence_ref_count=effective_evidence_ref_count,
+        relationship_edge_count=effective_relationship_edge_count,
         location_count=location_count,
         external_history_count=external_history_count,
         external_romance_count=external_romance_count,
@@ -642,7 +709,7 @@ def build_row(
         historical_score=historical_score,
         worldbuilding_score=worldbuilding_score,
         distinct_history_family_count=distinct_history_family_count,
-        event_count=event_count,
+        event_count=effective_event_count,
         external_history_count=external_history_count,
         external_romance_count=external_romance_count,
         external_worldbuilding_count=external_worldbuilding_count,
@@ -654,7 +721,7 @@ def build_row(
         historical_score=historical_score,
         missing_fields=missing_fields,
         generic_candidate_count=generic_candidate_count,
-        event_count=event_count,
+        event_count=effective_event_count,
         card_count=card_count,
         gender=gender,
         profile=profile,
@@ -679,8 +746,13 @@ def build_row(
         "promotionState": promotion_state(grade, grade_type),
         "nextLane": lane,
         "eventCount": event_count,
+        "eventSignalCount": effective_event_count,
+        "eventQuestionSeedCount": event_question_seed_count,
+        "eventQuestionStrongSeedCount": event_question_strong_seed_count,
+        "eventQuestionSourceRefCount": event_question_source_ref_count,
         "genericCandidateCount": generic_candidate_count,
         "evidenceRefCount": evidence_ref_count,
+        "evidenceSignalCount": effective_evidence_ref_count,
         "keywordTotal": keyword_total,
         "seedCount": seed_count,
         "cardCount": card_count,
@@ -692,6 +764,9 @@ def build_row(
         "externalDistinctFamilyCount": distinct_source_family_count,
         "externalDistinctHistoryFamilyCount": distinct_history_family_count,
         "relationshipEdgeCount": relationship_edge_count,
+        "relationshipSignalCount": effective_relationship_edge_count,
+        "relationshipEvidenceCount": relationship_evidence_count,
+        "relationshipEvidenceStrongCount": relationship_evidence_strong_count,
         "locationCount": location_count,
         "missingFields": missing_fields,
         "missingAngles": missing_angle_list,
@@ -761,6 +836,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--events", default=str(DEFAULT_EVENTS_PATH))
     parser.add_argument("--generic-candidates", default=str(DEFAULT_GENERIC_CANDIDATES_PATH))
     parser.add_argument("--pilot-report", default=str(DEFAULT_PILOT_REPORT_PATH))
+    parser.add_argument("--relationship-evidence", action="append", default=[])
+    parser.add_argument("--event-question-seeds", action="append", default=[])
     parser.add_argument("--candidate-evidence-cards", action="append", default=[])
     parser.add_argument("--seed-ranking-json", action="append", default=[])
     parser.add_argument("--lane-policy-config", default=str(DEFAULT_LANE_POLICY_CONFIG))
@@ -813,6 +890,19 @@ def main() -> int:
     for path_text in args.candidate_evidence_cards:
         card_rows.extend(read_jsonl(resolve_path(path_text)))
     card_stats, shadow_index = gather_card_stats(card_rows)
+
+    relationship_rows: list[dict[str, Any]] = []
+    relationship_paths = args.relationship_evidence or [str(DEFAULT_RELATIONSHIP_EVIDENCE_PATH)]
+    for path_text in relationship_paths:
+        relationship_rows.extend(read_jsonl(resolve_path(path_text)))
+    relationship_stats = gather_relationship_overlay_stats(relationship_rows)
+
+    event_seed_rows: list[dict[str, Any]] = []
+    event_seed_paths = args.event_question_seeds or [str(DEFAULT_EVENT_QUESTION_SEEDS_PATH)]
+    for path_text in event_seed_paths:
+        event_seed_rows.extend(read_jsonl(resolve_path(path_text)))
+    event_seed_stats = gather_event_question_seed_stats(event_seed_rows)
+
     lane_thresholds = load_lane_thresholds(args.lane_policy_config, args.profile)
 
     if args.pilot_only and pilot_rows:
@@ -830,6 +920,8 @@ def main() -> int:
         pilot_row = pilot_rows.get(general_id) or {}
         seed_row = seed_stats.get(general_id) or {}
         card_row = card_stats.get(general_id) or {}
+        relationship_row = relationship_stats.get(general_id) or {}
+        event_seed_row = event_seed_stats.get(general_id) or {}
 
         readiness_status = str(pilot_row.get("status") or "").strip()
         if not readiness_status:
@@ -850,9 +942,14 @@ def main() -> int:
                 faction=faction,
                 roster_state="canonical",
                 event_count=int(event_row.get("eventCount") or 0),
+                event_question_seed_count=int(event_seed_row.get("eventQuestionSeedCount") or 0),
+                event_question_strong_seed_count=int(event_seed_row.get("eventQuestionStrongSeedCount") or 0),
+                event_question_source_ref_count=int(event_seed_row.get("eventQuestionSourceRefCount") or 0),
                 generic_candidate_count=int(generic_counts.get(general_id) or 0),
                 evidence_ref_count=len(event_row.get("sourceRefs") or set()),
                 relationship_edge_count=int(event_row.get("relationshipEdgeCount") or 0),
+                relationship_evidence_count=int(relationship_row.get("relationshipEvidenceCount") or 0),
+                relationship_evidence_strong_count=int(relationship_row.get("relationshipEvidenceStrongCount") or 0),
                 location_count=int(event_row.get("locationCount") or 0),
                 keyword_total=int(pilot_row.get("keywordTotal") or 0),
                 readiness_status=readiness_status,
@@ -873,6 +970,8 @@ def main() -> int:
     for candidate_person_id, info in shadow_index.items():
         seed_row = seed_stats.get(candidate_person_id) or {}
         card_row = card_stats.get(candidate_person_id) or {}
+        relationship_row = relationship_stats.get(candidate_person_id) or {}
+        event_seed_row = event_seed_stats.get(candidate_person_id) or {}
         shadow_rows.append(
             build_row(
                 profile=args.profile,
@@ -883,9 +982,14 @@ def main() -> int:
                 faction="",
                 roster_state="shadow",
                 event_count=0,
+                event_question_seed_count=int(event_seed_row.get("eventQuestionSeedCount") or 0),
+                event_question_strong_seed_count=int(event_seed_row.get("eventQuestionStrongSeedCount") or 0),
+                event_question_source_ref_count=int(event_seed_row.get("eventQuestionSourceRefCount") or 0),
                 generic_candidate_count=0,
                 evidence_ref_count=0,
                 relationship_edge_count=0,
+                relationship_evidence_count=int(relationship_row.get("relationshipEvidenceCount") or 0),
+                relationship_evidence_strong_count=int(relationship_row.get("relationshipEvidenceStrongCount") or 0),
                 location_count=0,
                 keyword_total=0,
                 readiness_status="needs-etl-evidence",
@@ -929,6 +1033,8 @@ def main() -> int:
             "eventsPath": repo_relative(resolve_path(args.events)),
             "genericCandidatesPath": repo_relative(resolve_path(args.generic_candidates)),
             "pilotReportPath": repo_relative(resolve_path(args.pilot_report)),
+            "relationshipEvidencePaths": [repo_relative(resolve_path(path_text)) for path_text in relationship_paths],
+            "eventQuestionSeedPaths": [repo_relative(resolve_path(path_text)) for path_text in event_seed_paths],
             "candidateEvidenceCardsPaths": [repo_relative(resolve_path(path_text)) for path_text in args.candidate_evidence_cards],
             "seedRankingJsonPaths": [repo_relative(resolve_path(path_text)) for path_text in args.seed_ranking_json],
             "lanePolicyConfigPath": repo_relative(resolve_path(args.lane_policy_config)),
@@ -958,6 +1064,8 @@ def main() -> int:
             "aRomanceCount": sum(1 for row in rows if row.get("gradeType") == "A-romance"),
             "seedCount": sum(int(row.get("seedCount") or 0) for row in rows),
             "candidateCardCount": sum(int(row.get("cardCount") or 0) for row in rows),
+            "relationshipEvidenceCount": sum(int(row.get("relationshipEvidenceCount") or 0) for row in rows),
+            "eventQuestionSeedCount": sum(int(row.get("eventQuestionSeedCount") or 0) for row in rows),
             "laneThresholds": lane_thresholds,
         },
         "rows": rows,

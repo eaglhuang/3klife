@@ -36,6 +36,7 @@ DEFAULT_PRECISION_POLICY = {
     "minPerLane": 1,
     "genericCandidateBucketSize": 3,
 }
+AUTO_RETIRED_VERDICTS = {"auto-retired", "auto-retired-reject", "auto-retired-low-roi"}
 
 
 def utc_now() -> str:
@@ -242,6 +243,181 @@ def sample_size_for_source(row: dict[str, Any]) -> int:
     if cls == "primary-text-site":
         return min(max_pages, 30) if max_pages > 0 else 30
     return min(max_pages, 20) if max_pages > 0 else 20
+
+
+def external_verdict_bucket(verdict: Any) -> str:
+    text = str(verdict or "").strip().lower()
+    if text in AUTO_RETIRED_VERDICTS:
+        return "reject"
+    if text in {"approve", "reject", "manual-only"}:
+        return text
+    return "reject"
+
+
+def previous_source_results_from_manifest(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    summary_path_text = baseline_path(manifest, "externalSummaryPath")
+    if not summary_path_text:
+        return {}
+    summary_path = resolve_path(summary_path_text)
+    payload = read_json(summary_path)
+    rows = payload.get("sourceResults") if isinstance(payload, dict) else []
+    out: dict[str, dict[str, Any]] = {}
+    if not isinstance(rows, list):
+        return out
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        sid = str(row.get("sourceId") or "").strip()
+        if sid:
+            out[sid] = row
+    return out
+
+
+def float_or_none(value: Any) -> float | None:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def low_roi_for_source(
+    *,
+    source_class_text: str,
+    prior_row: dict[str, Any],
+    min_seed_page_high_yield: float,
+    min_card_page_high_yield: float,
+    min_seed_page_community: float,
+    min_card_page_community: float,
+    min_primary_cards: int,
+    min_primary_seeds: int,
+) -> bool:
+    fetched_pages = int(prior_row.get("fetchedPageCount") or 0)
+    seed_count = int(prior_row.get("seedCount") or 0)
+    card_count = int(prior_row.get("candidateCardCount") or 0)
+    seed_per_page = float_or_none(prior_row.get("seedPerPage"))
+    card_per_page = float_or_none(prior_row.get("candidateCardPerPage"))
+
+    if fetched_pages <= 0 and seed_count <= 0 and card_count <= 0:
+        return True
+
+    sclass = str(source_class_text or "").strip().lower()
+    if sclass == "primary-text-site":
+        return card_count < max(min_primary_cards, 0) and seed_count < max(min_primary_seeds, 0)
+    if sclass == "high-yield-character-site":
+        if seed_per_page is None and card_per_page is None:
+            return seed_count <= 0 and card_count <= 0
+        seed_low = seed_per_page is not None and seed_per_page < min_seed_page_high_yield
+        card_low = card_per_page is not None and card_per_page < min_card_page_high_yield
+        return seed_low or card_low
+    # community-worldbuilding-site
+    if seed_per_page is None and card_per_page is None:
+        return seed_count <= 0 and card_count <= 0
+    seed_low = seed_per_page is not None and seed_per_page < min_seed_page_community
+    card_low = card_per_page is not None and card_per_page < min_card_page_community
+    return seed_low or card_low
+
+
+def apply_source_roi_policy(
+    *,
+    sources: list[dict[str, Any]],
+    prior_results: dict[str, dict[str, Any]],
+    enable_roi_policy: bool,
+    auto_retire_reject: bool,
+    downsample_low_roi: bool,
+    low_roi_sample_factor: float,
+    min_seed_page_high_yield: float,
+    min_card_page_high_yield: float,
+    min_seed_page_community: float,
+    min_card_page_community: float,
+    min_primary_cards: int,
+    min_primary_seeds: int,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    prepared: list[dict[str, Any]] = []
+    decisions: list[dict[str, Any]] = []
+    for source in sources:
+        row = dict(source)
+        sid = str(row.get("sourceId") or "").strip()
+        adapter = str(row.get("adapterType") or "").strip().lower()
+        sclass = source_class(row)
+        base_sample = sample_size_for_source(row)
+        decision: dict[str, Any] = {
+            "sourceId": sid,
+            "sourceClass": sclass,
+            "baseSampleSize": base_sample,
+            "action": "keep",
+            "sampleSize": base_sample,
+            "reason": "default",
+            "fromPriorSummary": bool(sid and sid in prior_results),
+        }
+
+        if adapter == "manual_quote":
+            row["__sampleSizeOverride"] = 0
+            row["__roiPolicyAction"] = "manual-keep"
+            row["__roiPolicyReason"] = "manual_quote source"
+            decision["action"] = "manual-keep"
+            decision["sampleSize"] = 0
+            decision["reason"] = "manual_quote source"
+            prepared.append(row)
+            decisions.append(decision)
+            continue
+
+        prior = prior_results.get(sid) if sid else None
+        if not enable_roi_policy or prior is None:
+            row["__sampleSizeOverride"] = base_sample
+            row["__roiPolicyAction"] = "keep"
+            row["__roiPolicyReason"] = "default"
+            prepared.append(row)
+            decisions.append(decision)
+            continue
+
+        prior_verdict = external_verdict_bucket(prior.get("finalVerdict"))
+        if auto_retire_reject and prior_verdict == "reject":
+            row["__skipRoi"] = True
+            row["__sampleSizeOverride"] = 0
+            row["__roiPolicyAction"] = "auto-retired-reject"
+            row["__roiPolicyReason"] = f"prior verdict={prior.get('finalVerdict')}"
+            decision["action"] = "auto-retired-reject"
+            decision["sampleSize"] = 0
+            decision["reason"] = f"prior verdict={prior.get('finalVerdict')}"
+            prepared.append(row)
+            decisions.append(decision)
+            continue
+
+        low_roi = low_roi_for_source(
+            source_class_text=sclass,
+            prior_row=prior,
+            min_seed_page_high_yield=min_seed_page_high_yield,
+            min_card_page_high_yield=min_card_page_high_yield,
+            min_seed_page_community=min_seed_page_community,
+            min_card_page_community=min_card_page_community,
+            min_primary_cards=min_primary_cards,
+            min_primary_seeds=min_primary_seeds,
+        )
+        if downsample_low_roi and low_roi and base_sample > 0:
+            scaled = int(round(base_sample * max(min(low_roi_sample_factor, 1.0), 0.05)))
+            sample_override = min(base_sample, max(scaled, 1))
+            row["__sampleSizeOverride"] = sample_override
+            row["__roiPolicyAction"] = "downsample-low-roi"
+            row["__roiPolicyReason"] = (
+                f"prior seed/page={prior.get('seedPerPage')} card/page={prior.get('candidateCardPerPage')} "
+                f"seed={prior.get('seedCount')} card={prior.get('candidateCardCount')}"
+            )
+            decision["action"] = "downsample-low-roi"
+            decision["sampleSize"] = sample_override
+            decision["reason"] = (
+                f"prior seed/page={prior.get('seedPerPage')} card/page={prior.get('candidateCardPerPage')} "
+                f"seed={prior.get('seedCount')} card={prior.get('candidateCardCount')}"
+            )
+        else:
+            row["__sampleSizeOverride"] = base_sample
+            row["__roiPolicyAction"] = "keep"
+            row["__roiPolicyReason"] = "roi ok or policy disabled"
+            decision["action"] = "keep"
+            decision["sampleSize"] = base_sample
+            decision["reason"] = "roi ok or policy disabled"
+        prepared.append(row)
+        decisions.append(decision)
+    return prepared, decisions
 
 
 def read_baseline_manifest(path_text: str | None) -> dict[str, Any]:
@@ -581,7 +757,11 @@ def build_external_summary(
     by_layer = Counter(str(row.get("sourceLayer") or "") for row in merged_cards if str(row.get("sourceLayer") or "").strip())
     by_family = Counter(str(row.get("sourceFamily") or "") for row in merged_cards if str(row.get("sourceFamily") or "").strip())
     by_tier = Counter(str(row.get("trustTier") or "") for row in merged_cards if str(row.get("trustTier") or "").strip())
-    verdict_counter = Counter(str(row.get("finalVerdict") or "reject") for row in source_results)
+    verdict_counter = Counter(external_verdict_bucket(row.get("finalVerdict")) for row in source_results)
+    roi_action_counter = Counter(str(row.get("roiPolicyAction") or "keep") for row in source_results)
+    auto_retired_count = sum(
+        1 for row in source_results if str(row.get("finalVerdict") or "").strip().lower() in AUTO_RETIRED_VERDICTS
+    )
     summary = {
         "version": "2.1.0",
         "generatedAt": utc_now(),
@@ -598,11 +778,13 @@ def build_external_summary(
         "approveCount": verdict_counter.get("approve", 0),
         "rejectCount": verdict_counter.get("reject", 0),
         "manualOnlyCount": verdict_counter.get("manual-only", 0),
+        "autoRetiredCount": auto_retired_count,
         "manualEvidenceCountTotal": sum(int(row.get("manualEvidenceCount") or 0) for row in source_results),
         "newEvidenceCardCount": len(merged_cards),
         "countsByLayer": dict(sorted(by_layer.items())),
         "countsByFamily": dict(sorted(by_family.items())),
         "countsByTrustTier": dict(sorted(by_tier.items())),
+        "roiActionCounts": dict(sorted(roi_action_counter.items())),
         "sourceResults": source_results,
     }
     lines = [
@@ -613,18 +795,20 @@ def build_external_summary(
         f"- canonicalWrites: `{summary['canonicalWrites']}`",
         f"- Source Count: `{summary['sourceCount']}`",
         f"- Approve/Reject/Manual: `{summary['approveCount']}/{summary['rejectCount']}/{summary['manualOnlyCount']}`",
+        f"- Auto Retired: `{summary['autoRetiredCount']}`",
         f"- Candidate Cards: `{summary['newEvidenceCardCount']}`",
         "",
         "## Source Verdicts",
         "",
-        "| Source | Class | Verdict | Stage1 | Stage2 | Stage3 | ManualEvidence | Seeds | Cards |",
-        "|---|---|---|---|---|---|---:|---:|---:|",
+        "| Source | Class | ROI Action | Verdict | Stage1 | Stage2 | Stage3 | ManualEvidence | Seeds | Cards |",
+        "|---|---|---|---|---|---|---|---:|---:|---:|",
     ]
     for row in source_results:
         lines.append(
-            "| `{sid}` | `{sclass}` | `{verdict}` | `{s1}` | `{s2}` | `{s3}` | `{manual}` | `{seeds}` | `{cards}` |".format(
+            "| `{sid}` | `{sclass}` | `{roi}` | `{verdict}` | `{s1}` | `{s2}` | `{s3}` | `{manual}` | `{seeds}` | `{cards}` |".format(
                 sid=row.get("sourceId"),
                 sclass=row.get("sourceClass"),
+                roi=row.get("roiPolicyAction") or "keep",
                 verdict=row.get("finalVerdict"),
                 s1=row.get("stage1Passed"),
                 s2=row.get("stage2Passed"),
@@ -639,14 +823,15 @@ def build_external_summary(
             "",
             "## Source ROI",
             "",
-            "| Source | Sample Pages | Fetched Pages | ManualEvidence | Seed/Page | Card/Page | Canonical People | Shadow People |",
-            "|---|---:|---:|---:|---:|---:|---:|---:|",
+            "| Source | ROI Action | Sample Pages | Fetched Pages | ManualEvidence | Seed/Page | Card/Page | Canonical People | Shadow People |",
+            "|---|---|---:|---:|---:|---:|---:|---:|---:|",
         ]
     )
     for row in source_results:
         lines.append(
-            "| `{sid}` | `{sample}` | `{fetched}` | `{manual}` | `{seed_page}` | `{card_page}` | `{canon}` | `{shadow}` |".format(
+            "| `{sid}` | `{roi}` | `{sample}` | `{fetched}` | `{manual}` | `{seed_page}` | `{card_page}` | `{canon}` | `{shadow}` |".format(
                 sid=row.get("sourceId"),
+                roi=row.get("roiPolicyAction") or "keep",
                 sample=row.get("samplePageCount") or 0,
                 fetched=row.get("fetchedPageCount") or 0,
                 manual=row.get("manualEvidenceCount") or 0,
@@ -833,6 +1018,84 @@ def human_cluster_key(general_id: str, clue: dict[str, Any]) -> str:
     )
 
 
+def human_meta_cluster_key(item: dict[str, Any]) -> str:
+    row = item.get("representativeRow") if isinstance(item.get("representativeRow"), dict) else {}
+    location = compact_text(item.get("location"))
+    participants = sorted(str(person or "").strip() for person in (item.get("participants") or []) if str(person or "").strip())
+    summary_hash = str(item.get("summaryHash") or "no-summary")
+    missing_fields = sorted(str(field or "").strip() for field in (row.get("missingFields") or []) if str(field or "").strip())
+    seed = [
+        location or "no-location",
+        ",".join(participants) or "no-participant",
+        summary_hash or "no-summary",
+        ",".join(missing_fields) or "no-missing",
+    ]
+    return "|".join(seed)
+
+
+def merge_human_cluster_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    groups: dict[str, list[dict[str, Any]]] = {}
+    for item in items:
+        groups.setdefault(human_meta_cluster_key(item), []).append(item)
+
+    merged: list[dict[str, Any]] = []
+    for meta_key, members in groups.items():
+        members.sort(
+            key=lambda item: (
+                -float((item.get("representativeRow") or {}).get("priorityScore") or 0.0),
+                -int(item.get("clusterSize") or 1),
+                str((item.get("representativeRow") or {}).get("generalId") or ""),
+            )
+        )
+        representative = members[0]
+        representative_row = representative.get("representativeRow") if isinstance(representative.get("representativeRow"), dict) else {}
+        merged.append(
+            {
+                "clusterKey": f"meta:{stable_hash(meta_key, length=12)}",
+                "metaClusterKey": meta_key,
+                "clusterSize": sum(int(item.get("clusterSize") or 1) for item in members),
+                "clusterGeneralIds": sorted(
+                    {
+                        str(gid or "").strip()
+                        for item in members
+                        for gid in (item.get("clusterGeneralIds") or [])
+                        if str(gid or "").strip()
+                    }
+                ),
+                "representativeRow": representative_row,
+                "representativeClue": representative.get("representativeClue") or {},
+                "sourceRefs": sorted(
+                    {
+                        str(ref or "").strip()
+                        for item in members
+                        for ref in (item.get("sourceRefs") or [])
+                        if str(ref or "").strip()
+                    }
+                ),
+                "participants": sorted(
+                    {
+                        str(person or "").strip()
+                        for item in members
+                        for person in (item.get("participants") or [])
+                        if str(person or "").strip()
+                    }
+                ),
+                "location": representative.get("location"),
+                "summaryHash": representative.get("summaryHash"),
+                "strictClusterKeys": [str(item.get("clusterKey") or "") for item in members if str(item.get("clusterKey") or "")],
+            }
+        )
+
+    merged.sort(
+        key=lambda item: (
+            -float((item.get("representativeRow") or {}).get("priorityScore") or 0.0),
+            -int(item.get("clusterSize") or 0),
+            str((item.get("representativeRow") or {}).get("generalId") or ""),
+        )
+    )
+    return merged
+
+
 def cluster_human_review_rows(
     pending_rows: list[dict[str, Any]],
     generic_clues: dict[str, list[dict[str, Any]]],
@@ -845,7 +1108,7 @@ def cluster_human_review_rows(
         key = human_cluster_key(general_id, clue)
         clusters.setdefault(key, []).append({"row": row, "clue": clue, "generalId": general_id})
 
-    items: list[dict[str, Any]] = []
+    strict_items: list[dict[str, Any]] = []
     for key, members in clusters.items():
         members.sort(
             key=lambda item: (
@@ -874,7 +1137,7 @@ def cluster_human_review_rows(
         )
         location = compact_text(clue.get("location"))
         summary_seed = compact_text(clue.get("summary")) or compact_text(clue.get("sourceQuote"))
-        items.append(
+        strict_items.append(
             {
                 "clusterKey": key,
                 "clusterSize": len(members),
@@ -887,14 +1150,7 @@ def cluster_human_review_rows(
                 "summaryHash": stable_hash(summary_seed, length=12) if summary_seed else "no-summary",
             }
         )
-    items.sort(
-        key=lambda item: (
-            -float((item.get("representativeRow") or {}).get("priorityScore") or 0.0),
-            -int(item.get("clusterSize") or 0),
-            str((item.get("representativeRow") or {}).get("generalId") or ""),
-        )
-    )
-    return items
+    return merge_human_cluster_items(strict_items)
 
 
 def build_human_review_batch(
@@ -955,7 +1211,7 @@ def build_human_review_batch(
         "threshold": threshold,
         "pendingRowCount": len(pending_rows),
         "clusteredPendingCount": len(clustered_items),
-        "clusterPolicy": "sourceRefs + location + participants + summary hash",
+        "clusterPolicy": "strict(sourceRefs+location+participants+summary hash) -> meta(location+participants+summary hash+missingFields)",
         "questionCount": len(questions),
         "questions": questions,
     }
@@ -1029,6 +1285,36 @@ def run_external_benchmarks(
         sclass = source_class(source)
         adapter = str(source.get("adapterType") or "").strip().lower()
         status = normalize_status(source.get("status"))
+        roi_action = str(source.get("__roiPolicyAction") or "keep")
+        roi_reason = str(source.get("__roiPolicyReason") or "")
+        sample_override = int(source.get("__sampleSizeOverride") or sample_size_for_source(source))
+        if bool(source.get("__skipRoi")):
+            source_results.append(
+                {
+                    "sourceId": sid,
+                    "sourceClass": sclass,
+                    "adapterType": adapter,
+                    "finalVerdict": roi_action or "auto-retired-low-roi",
+                    "stage1Passed": False,
+                    "stage2Passed": None,
+                    "stage3Passed": None,
+                    "samplePageCount": sample_override,
+                    "fetchedPageCount": 0,
+                    "seedCount": 0,
+                    "candidateCardCount": 0,
+                    "seedPerPage": None,
+                    "candidateCardPerPage": None,
+                    "canonicalPeople": 0,
+                    "shadowPeople": 0,
+                    "manualEvidenceCount": int(source.get("manualEvidenceCount") or 0),
+                    "manualSeedJsonlPath": None,
+                    "manualSeedInjected": False,
+                    "summaryJsonPath": None,
+                    "roiPolicyAction": roi_action,
+                    "roiPolicyReason": roi_reason,
+                }
+            )
+            continue
         if adapter == "manual_quote" or status == "manual_quote":
             manual_source_ids.add(sid)
             source_results.append(
@@ -1052,6 +1338,8 @@ def run_external_benchmarks(
                     "manualSeedJsonlPath": None,
                     "manualSeedInjected": False,
                     "summaryJsonPath": None,
+                    "roiPolicyAction": roi_action,
+                    "roiPolicyReason": roi_reason,
                 }
             )
             continue
@@ -1065,7 +1353,7 @@ def run_external_benchmarks(
             "--source-class",
             sclass,
             "--sample-size",
-            str(sample_size_for_source(source)),
+            str(max(sample_override, 1)),
             "--run-id",
             benchmark_run_id,
             "--output-root",
@@ -1117,6 +1405,8 @@ def run_external_benchmarks(
                 "manualEvidenceCount": int(source.get("manualEvidenceCount") or 0),
                 "manualSeedJsonlPath": None,
                 "manualSeedInjected": False,
+                "roiPolicyAction": roi_action,
+                "roiPolicyReason": roi_reason,
             }
         )
 
@@ -1481,6 +1771,7 @@ def run_round(
     sources: list[dict[str, Any]],
     lane_policy_config_path: Path,
     lane_profile_policy: dict[str, Any],
+    source_roi_decisions: list[dict[str, Any]],
     baseline_manifest: dict[str, Any],
     previous_scoreboard_path: Path | None,
     dry_run: bool,
@@ -1813,6 +2104,40 @@ def run_round(
         core_command.append("--overwrite")
     core_result = run_command(core_command, dry_run=dry_run)
 
+    scoreboard_refresh_command = [
+        sys.executable,
+        str((REPO_ROOT / PIPELINE_ROOT / "build_full_roster_scoreboard.py").resolve()),
+        "--generals",
+        repo_relative(resolve_path(args.generals)),
+        "--events",
+        repo_relative(resolve_path(args.events)),
+        "--generic-candidates",
+        repo_relative(resolve_path(args.generic_candidates)),
+        "--pilot-report",
+        repo_relative(pilot_report_path),
+        "--relationship-evidence",
+        repo_relative(effective_relationship_json_path),
+        "--event-question-seeds",
+        repo_relative(event_seed_json_path),
+        "--output-root",
+        repo_relative(scoreboard_root),
+        "--profile",
+        args.profile,
+        "--lane-policy-config",
+        repo_relative(lane_policy_config_path),
+    ]
+    for ranking_path in ranking_inputs:
+        scoreboard_refresh_command.extend(["--seed-ranking-json", repo_relative(ranking_path)])
+    scoreboard_refresh_command.extend(["--candidate-evidence-cards", repo_relative(cards_path)])
+    if args.overwrite:
+        scoreboard_refresh_command.append("--overwrite")
+    scoreboard_refresh_result = run_command(scoreboard_refresh_command, dry_run=dry_run)
+    if int(scoreboard_refresh_result.get("returnCode") or 0) == 0:
+        scoreboard_result = scoreboard_refresh_result
+    scoreboard_payload = read_json(scoreboard_json_path)
+    scoreboard_rows = list((scoreboard_payload if isinstance(scoreboard_payload, dict) else {}).get("rows") or [])
+    scoreboard_metrics = (scoreboard_payload if isinstance(scoreboard_payload, dict) else {}).get("metrics") or {}
+
     precision_result = run_precision_lane(
         args=args,
         run_root=round_root,
@@ -1867,6 +2192,7 @@ def run_round(
         "externalCardsPath": repo_relative(cards_path),
         "globalSeedRankingPath": global_seed_pipeline.get("rankingPath"),
         "globalCandidateCardsPath": global_seed_pipeline.get("candidateCardsPath"),
+        "sourceRoiDecisions": source_roi_decisions,
         "overlayObservedMentionsPath": repo_relative(overlay_observed_mentions_path),
         "overlayObservedSummaryPath": repo_relative(overlay_observed_summary_path),
         "mergedObservedMentionsPath": repo_relative(effective_observed_mentions_path),
@@ -1918,6 +2244,7 @@ def run_round(
             "estimateKnowledge": estimate_result,
             "estimateCorePerson": core_result,
             "precisionLane": (precision_result or {}).get("command"),
+            "scoreboardRefresh": scoreboard_refresh_result,
             "threeLane": three_lane_result,
         },
         "externalSummary": external_summary,
@@ -1994,6 +2321,22 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--same-residual-repeat-limit", type=int, default=2)
     parser.add_argument("--failure-rate-limit", type=float, default=0.20)
     parser.add_argument("--max-wall-time-minutes", type=float, default=None)
+    parser.add_argument("--enable-source-roi-policy", dest="enable_source_roi_policy", action="store_true")
+    parser.add_argument("--disable-source-roi-policy", dest="enable_source_roi_policy", action="store_false")
+    parser.set_defaults(enable_source_roi_policy=True)
+    parser.add_argument("--source-roi-auto-retire-reject", dest="source_roi_auto_retire_reject", action="store_true")
+    parser.add_argument("--no-source-roi-auto-retire-reject", dest="source_roi_auto_retire_reject", action="store_false")
+    parser.set_defaults(source_roi_auto_retire_reject=True)
+    parser.add_argument("--source-roi-downsample-low", dest="source_roi_downsample_low", action="store_true")
+    parser.add_argument("--no-source-roi-downsample-low", dest="source_roi_downsample_low", action="store_false")
+    parser.set_defaults(source_roi_downsample_low=True)
+    parser.add_argument("--source-roi-low-sample-factor", type=float, default=0.35)
+    parser.add_argument("--source-roi-min-seed-page-high-yield", type=float, default=1.0)
+    parser.add_argument("--source-roi-min-card-page-high-yield", type=float, default=0.4)
+    parser.add_argument("--source-roi-min-seed-page-community", type=float, default=0.8)
+    parser.add_argument("--source-roi-min-card-page-community", type=float, default=0.2)
+    parser.add_argument("--source-roi-min-primary-cards", type=int, default=20)
+    parser.add_argument("--source-roi-min-primary-seeds", type=int, default=20)
     parser.add_argument("--run-precision-lane", dest="run_precision_lane", action="store_true")
     parser.add_argument("--no-precision-lane", dest="run_precision_lane", action="store_false")
     parser.set_defaults(run_precision_lane=True)
@@ -2038,6 +2381,7 @@ def main() -> int:
     rumination_rows: list[dict[str, Any]] = []
     wall_clock_start = time.monotonic()
     human_batch_info: dict[str, Any] | None = None
+    prior_source_results = previous_source_results_from_manifest(baseline_manifest)
 
     for round_index in range(1, max(args.max_rounds, 1) + 1):
         if args.max_wall_time_minutes is not None and args.max_wall_time_minutes > 0:
@@ -2047,19 +2391,42 @@ def main() -> int:
                 next_action = "wall time reached; inspect latest summary and resume from baseline manifest"
                 break
 
+        prepared_sources, source_roi_decisions = apply_source_roi_policy(
+            sources=approved_rows,
+            prior_results=prior_source_results,
+            enable_roi_policy=bool(args.enable_source_roi_policy),
+            auto_retire_reject=bool(args.source_roi_auto_retire_reject),
+            downsample_low_roi=bool(args.source_roi_downsample_low),
+            low_roi_sample_factor=float(args.source_roi_low_sample_factor),
+            min_seed_page_high_yield=float(args.source_roi_min_seed_page_high_yield),
+            min_card_page_high_yield=float(args.source_roi_min_card_page_high_yield),
+            min_seed_page_community=float(args.source_roi_min_seed_page_community),
+            min_card_page_community=float(args.source_roi_min_card_page_community),
+            min_primary_cards=int(args.source_roi_min_primary_cards),
+            min_primary_seeds=int(args.source_roi_min_primary_seeds),
+        )
+
         round_info = run_round(
             args=args,
             run_root=run_root,
             round_index=round_index,
             source_config_path=source_config_path,
-            sources=approved_rows,
+            sources=prepared_sources,
             lane_policy_config_path=lane_policy_config_path,
             lane_profile_policy=lane_profile_policy,
+            source_roi_decisions=source_roi_decisions,
             baseline_manifest=baseline_manifest,
             previous_scoreboard_path=previous_scoreboard_path,
             dry_run=args.dry_run,
         )
         rounds.append({key: value for key, value in round_info.items() if key not in {"externalSummary", "scoreboardRows", "runtimeReadiness"}})
+        current_source_results = (round_info.get("externalSummary") or {}).get("sourceResults")
+        if isinstance(current_source_results, list):
+            prior_source_results = {
+                str(row.get("sourceId") or "").strip(): row
+                for row in current_source_results
+                if isinstance(row, dict) and str(row.get("sourceId") or "").strip()
+            }
 
         for command_key, result in (round_info.get("commands") or {}).items():
             if not result:
@@ -2275,6 +2642,18 @@ def main() -> int:
             "runtimeReadiness": args.runtime_readiness,
             "runPrecisionLane": args.run_precision_lane,
             "runThreeLane": args.run_three_lane,
+            "sourceRoiPolicy": {
+                "enabled": bool(args.enable_source_roi_policy),
+                "autoRetireReject": bool(args.source_roi_auto_retire_reject),
+                "downsampleLowRoi": bool(args.source_roi_downsample_low),
+                "lowSampleFactor": float(args.source_roi_low_sample_factor),
+                "minSeedPageHighYield": float(args.source_roi_min_seed_page_high_yield),
+                "minCardPageHighYield": float(args.source_roi_min_card_page_high_yield),
+                "minSeedPageCommunity": float(args.source_roi_min_seed_page_community),
+                "minCardPageCommunity": float(args.source_roi_min_card_page_community),
+                "minPrimaryCards": int(args.source_roi_min_primary_cards),
+                "minPrimarySeeds": int(args.source_roi_min_primary_seeds),
+            },
         },
         "inputs": {
             "sourcesConfigPath": repo_relative(source_config_path),

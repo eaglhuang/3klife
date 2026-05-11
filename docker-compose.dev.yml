@@ -1,7 +1,5 @@
 services:
   game-server:
-    profiles:
-      - app
     build:
       context: .
       dockerfile: server/Dockerfile.dev
