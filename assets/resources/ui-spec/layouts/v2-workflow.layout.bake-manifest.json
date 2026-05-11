@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.2.0",
+  "schemaSpec": "doc_other_0017 (R-25 + R-26 sourceHtml/viewport + R-27 art-gated autoBake)",
+  "screenId": "v2-workflow",
+  "sidecarBundle": "resources",
+  "sidecarRoot": "assets/resources/sidecars/v2-workflow/",
+  "sourceHtml": "../AppData/Local/Temp/dom-to-ui-selftest-LnBH6p/v2-workflow/v2-workflow.ucuf-ready.html",
+  "viewport": {
+    "width": 64,
+    "height": 64
+  },
+  "bakerHint": {
+    "tool": "puppeteer-core (build-time)",
+    "runWhen": "developer / CI; never at runtime",
+    "runtimeCost": "zero — runtime only loads pre-baked PNGs as SpriteFrame",
+    "autoBakeContract": "Only entries with autoBake=true and bakeAction=auto-screenshot-fragment may be baked automatically. Authors must mark small standalone missing fragments with data-ucuf-bake=\"fragment\"; large UI regions and geometry masks are review/converter work.",
+    "artistOverride": "For autoBake entries only: drop a same-named PNG at outputPath to replace the placeholder; converter loads via uuid, no code change required."
+  },
+  "summary": {
+    "totalEntries": 0,
+    "autoBakeEntries": 0,
+    "reviewOnlyEntries": 0,
+    "byProperty": {},
+    "bySkinSlotKind": {},
+    "byBakeAction": {}
+  },
+  "entries": []
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "legacy-h2u-dryrun",
+  "generatedAt": "2026-05-11T10:51:35.147Z",
+  "_sourceAuthority": "html-to-ucuf",
+  "policy": {
+    "mode": "replace-all-per-run",
+    "source": "token-suggestions sidecars",
+    "note": "Always regenerate full screen-local tokens from current conversion to avoid stale residue."
+  },
+  "sourceSuggestionFiles": [],
+  "stats": {
+    "unresolvedColorCount": 0,
+    "tokenCount": 0
+  },
+  "colors": {},
+  "unresolvedColors": []
+}

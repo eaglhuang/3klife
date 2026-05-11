@@ -1,0 +1,472 @@
+{
+  "type": "container",
+  "name": "TabGeneralContent",
+  "widget": {
+    "top": 0,
+    "left": 0,
+    "right": 0,
+    "bottom": 0
+  },
+  "children": [
+    {
+      "type": "container",
+      "name": "LegacyH2uDryrunGeneralRoot",
+      "children": [
+        {
+          "type": "container",
+          "name": "LegacyH2uDryrunTabGeneral_body",
+          "widget": {
+            "top": 0,
+            "left": 0,
+            "right": 0,
+            "bottom": 0
+          },
+          "children": [
+            {
+              "type": "panel",
+              "name": "LegacyH2uDryrunTabGeneral_div_2",
+              "widget": {
+                "top": 0,
+                "left": 0,
+                "right": 460
+              },
+              "height": 56,
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "paddingTop": 0,
+                "paddingRight": 120,
+                "paddingBottom": 0,
+                "paddingLeft": 120
+              },
+              "skinSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_2",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "LegacyH2uDryrunTabGeneral_div_3",
+                  "opacity": 0.6,
+                  "text": "當前卡池",
+                  "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_3"
+                },
+                {
+                  "type": "label",
+                  "name": "LegacyH2uDryrunTabGeneral_div_4",
+                  "id": "strip-name",
+                  "text": "名將召喚",
+                  "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_4"
+                }
+              ]
+            },
+            {
+              "type": "label",
+              "name": "BtnPoolPrev",
+              "widget": {
+                "top": "50%",
+                "left": 20
+              },
+              "width": 64,
+              "height": 64,
+              "_interactionId": "btn-pool-prev.tab-switch",
+              "_motionId": "btn-pool-prev.transition",
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "justifyContent": "center"
+              },
+              "text": "‹",
+              "styleSlot": "auto.legacy-h2u-dryrun-tab-general.btnpoolprev"
+            },
+            {
+              "type": "label",
+              "name": "BtnPoolNext",
+              "widget": {
+                "top": "50%"
+              },
+              "width": 64,
+              "height": 64,
+              "_interactionId": "btn-pool-next.tab-switch",
+              "_motionId": "btn-pool-next.transition",
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "justifyContent": "center"
+              },
+              "text": "›",
+              "styleSlot": "auto.legacy-h2u-dryrun-tab-general.btnpoolnext"
+            },
+            {
+              "type": "panel",
+              "name": "LegacyH2uDryrunTabGeneral_div_5",
+              "widget": {
+                "top": 16,
+                "left": 20
+              },
+              "id": "pool-brief",
+              "_motionId": "legacy-h2u-dryrun-tab-general_div_5.transition",
+              "layout": {
+                "type": "vertical",
+                "paddingTop": 10,
+                "paddingRight": 16,
+                "paddingBottom": 10,
+                "paddingLeft": 16,
+                "spacingY": 4
+              },
+              "skinSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_5",
+              "children": [
+                {
+                  "type": "label",
+                  "name": "LegacyH2uDryrunTabGeneral_div_6",
+                  "id": "brief-tag",
+                  "text": "▸ 卡池說明",
+                  "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_6"
+                },
+                {
+                  "type": "label",
+                  "name": "LegacyH2uDryrunTabGeneral_div_7",
+                  "id": "brief-line",
+                  "text": "載入中...",
+                  "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_7"
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "RightPanel",
+              "widget": {
+                "top": 0,
+                "right": 0,
+                "bottom": 200
+              },
+              "id": "right-panel",
+              "lazySlot": true,
+              "defaultFragment": "fragments/layouts/legacy-h2u-dryrun-tab-general-overview-content",
+              "warmupHint": "first-frame",
+              "_contract": "tab.content.host",
+              "width": 460,
+              "layout": {
+                "type": "vertical",
+                "spacingY": 0,
+                "paddingTop": 28,
+                "paddingRight": 26,
+                "paddingBottom": 28,
+                "paddingLeft": 26
+              },
+              "skinSlot": "auto.legacy-h2u-dryrun-tab-general.rightpanel"
+            },
+            {
+              "type": "panel",
+              "name": "LegacyH2uDryrunTabGeneral_div_8",
+              "widget": {
+                "left": 0,
+                "right": 0,
+                "bottom": 0
+              },
+              "height": 200,
+              "layout": {
+                "type": "horizontal",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "spacingX": 20,
+                "paddingTop": 0,
+                "paddingRight": 60,
+                "paddingBottom": 0,
+                "paddingLeft": 60
+              },
+              "skinSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_8",
+              "children": [
+                {
+                  "type": "container",
+                  "name": "LegacyH2uDryrunTabGeneral_div_9",
+                  "widget": {
+                    "top": "50%",
+                    "left": 60
+                  },
+                  "layout": {
+                    "type": "vertical",
+                    "spacingY": 3
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "LegacyH2uDryrunTabGeneral_div_10",
+                      "text": "召 喚",
+                      "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_10"
+                    },
+                    {
+                      "type": "label",
+                      "name": "LegacyH2uDryrunTabGeneral_div_11",
+                      "id": "pullbar-name",
+                      "text": "名將召喚",
+                      "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_11"
+                    }
+                  ]
+                },
+                {
+                  "type": "label",
+                  "name": "LegacyH2uDryrunTabGeneral_div_12",
+                  "height": 56,
+                  "_motionId": "legacy-h2u-dryrun-tab-general_div_12.transition",
+                  "layout": {
+                    "type": "horizontal",
+                    "alignItems": "center",
+                    "spacingX": 10,
+                    "paddingTop": 0,
+                    "paddingRight": 24,
+                    "paddingBottom": 0,
+                    "paddingLeft": 24
+                  },
+                  "text": "📜 歷史記錄",
+                  "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_12"
+                },
+                {
+                  "type": "panel",
+                  "name": "LegacyH2uDryrunTabGeneral_div_13",
+                  "height": 88,
+                  "_motionId": "legacy-h2u-dryrun-tab-general_div_13.transition",
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                    "spacingY": 5
+                  },
+                  "skinSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_13",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "LegacyH2uDryrunTabGeneral_div_14",
+                      "text": "單 抽 ×1",
+                      "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_14"
+                    },
+                    {
+                      "type": "panel",
+                      "name": "LegacyH2uDryrunTabGeneral_div_15",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 5,
+                        "paddingTop": 3,
+                        "paddingRight": 12,
+                        "paddingBottom": 3,
+                        "paddingLeft": 12
+                      },
+                      "skinSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_15",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "LegacyH2uDryrunTabGeneral_div_16",
+                          "width": 14,
+                          "height": 14,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 14
+                          },
+                          "text": "◈",
+                          "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_16"
+                        },
+                        {
+                          "type": "label",
+                          "name": "LegacyH2uDryrunTabGeneral_div_17",
+                          "text": "30",
+                          "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_17"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "panel",
+                  "name": "LegacyH2uDryrunTabGeneral_div_18",
+                  "height": 88,
+                  "_motionId": "legacy-h2u-dryrun-tab-general_div_18.transition",
+                  "layout": {
+                    "type": "vertical",
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                    "spacingY": 5
+                  },
+                  "skinSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_18",
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "LegacyH2uDryrunTabGeneral_div_19",
+                      "text": "十 連 ×10",
+                      "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_19"
+                    },
+                    {
+                      "type": "label",
+                      "name": "LegacyH2uDryrunTabGeneral_div_20",
+                      "opacity": 0.75,
+                      "text": "保證 SR 以上 1 枚",
+                      "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_20"
+                    },
+                    {
+                      "type": "panel",
+                      "name": "LegacyH2uDryrunTabGeneral_div_21",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 5,
+                        "paddingTop": 3,
+                        "paddingRight": 12,
+                        "paddingBottom": 3,
+                        "paddingLeft": 12
+                      },
+                      "skinSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_21",
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "LegacyH2uDryrunTabGeneral_div_22",
+                          "width": 14,
+                          "height": 14,
+                          "layout": {
+                            "type": "grid",
+                            "cellHeight": 14
+                          },
+                          "text": "◈",
+                          "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_22"
+                        },
+                        {
+                          "type": "label",
+                          "name": "LegacyH2uDryrunTabGeneral_div_23",
+                          "text": "280",
+                          "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_23"
+                        },
+                        {
+                          "type": "label",
+                          "name": "LegacyH2uDryrunTabGeneral_span_1",
+                          "text": "300",
+                          "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_span_1"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "container",
+                  "name": "LegacyH2uDryrunTabGeneral_div_24",
+                  "layout": {
+                    "type": "vertical",
+                    "spacingY": 8
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "name": "LegacyH2uDryrunTabGeneral_div_25",
+                      "height": 44,
+                      "_motionId": "legacy-h2u-dryrun-tab-general_div_25.transition",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 8,
+                        "paddingTop": 0,
+                        "paddingRight": 20,
+                        "paddingBottom": 0,
+                        "paddingLeft": 20
+                      },
+                      "text": "⚡ 用金幣召喚 (×300)",
+                      "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_25"
+                    },
+                    {
+                      "type": "label",
+                      "name": "LegacyH2uDryrunTabGeneral_div_26",
+                      "height": 44,
+                      "_motionId": "legacy-h2u-dryrun-tab-general_div_26.transition",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "spacingX": 8,
+                        "paddingTop": 0,
+                        "paddingRight": 20,
+                        "paddingBottom": 0,
+                        "paddingLeft": 20
+                      },
+                      "text": "🎟 使用召喚券",
+                      "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_26"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "name": "LegacyH2uDryrunTabGeneral_div_27",
+              "active": false,
+              "opacity": 0,
+              "id": "historyModal",
+              "_motionId": "legacy-h2u-dryrun-tab-general_div_27.transition",
+              "skinSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_27",
+              "children": [
+                {
+                  "type": "panel",
+                  "name": "LegacyH2uDryrunTabGeneral_div_28",
+                  "width": "85%",
+                  "height": "85%",
+                  "layout": {
+                    "type": "vertical"
+                  },
+                  "skinSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_28",
+                  "children": [
+                    {
+                      "type": "container",
+                      "name": "LegacyH2uDryrunTabGeneral_div_29",
+                      "layout": {
+                        "type": "horizontal",
+                        "alignItems": "center",
+                        "justifyContent": "space-between",
+                        "paddingTop": 24,
+                        "paddingRight": 32,
+                        "paddingBottom": 24,
+                        "paddingLeft": 32
+                      },
+                      "children": [
+                        {
+                          "type": "label",
+                          "name": "LegacyH2uDryrunTabGeneral_h2_1",
+                          "text": "歷史記錄",
+                          "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_h2_1"
+                        },
+                        {
+                          "type": "label",
+                          "name": "LegacyH2uDryrunTabGeneral_div_30",
+                          "width": 40,
+                          "height": 40,
+                          "_motionId": "legacy-h2u-dryrun-tab-general_div_30.transition",
+                          "layout": {
+                            "type": "horizontal",
+                            "alignItems": "center",
+                            "justifyContent": "center"
+                          },
+                          "text": "✕",
+                          "styleSlot": "auto.legacy-h2u-dryrun-tab-general.legacyh2udryruntabgeneral_div_30"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "container",
+                      "name": "LegacyH2uDryrunTabGeneral_div_31",
+                      "id": "historyContent",
+                      "layout": {
+                        "type": "vertical",
+                        "spacingY": 0,
+                        "paddingTop": 20,
+                        "paddingRight": 32,
+                        "paddingBottom": 20,
+                        "paddingLeft": 32
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "widget": {
+        "top": 0,
+        "left": 0,
+        "right": 0,
+        "bottom": 0
+      }
+    }
+  ]
+}

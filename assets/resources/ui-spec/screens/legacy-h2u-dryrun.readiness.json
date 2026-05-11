@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "legacy-h2u-dryrun",
+  "generatedAt": "2026-05-11T10:51:35.237Z",
+  "verdict": "not-ready",
+  "readinessScore": 0.708,
+  "summary": {
+    "blockerUnits": 3,
+    "actionUnits": 7,
+    "bounded": true,
+    "nextCriticalAction": "capture Cocos Editor target screen and run final compare"
+  },
+  "paths": {
+    "layout": "assets/resources/ui-spec/layouts/legacy-h2u-dryrun.layout.json",
+    "skin": "assets/resources/ui-spec/skins/legacy-h2u-dryrun.skin.json",
+    "screen": "assets/resources/ui-spec/screens/legacy-h2u-dryrun.json",
+    "captureProtocol": "assets/resources/ui-spec/screens/legacy-h2u-dryrun.final-capture-protocol.json",
+    "zoneOwnership": "assets/resources/ui-spec/screens/legacy-h2u-dryrun.zone-ownership.json",
+    "tabRouting": "assets/resources/ui-spec/screens/legacy-h2u-dryrun.tab-routing.json",
+    "preload": "assets/resources/ui-spec/screens/legacy-h2u-dryrun.preload.json",
+    "performance": "assets/resources/ui-spec/screens/legacy-h2u-dryrun.performance.json",
+    "bakeManifest": "assets/resources/ui-spec/layouts/legacy-h2u-dryrun.layout.bake-manifest.json",
+    "artAuthorityWaivers": "assets/resources/ui-spec/screens/legacy-h2u-dryrun.art-authority-waivers.json",
+    "finalVerdict": "artifacts/legacy-h2u-first-win/round-b/workflow/legacy-h2u-dryrun.html-cocos-verdict.json"
+  },
+  "gates": {
+    "finalGate": {
+      "status": "blocker",
+      "pass": false,
+      "workUnits": 1,
+      "summary": "no measured Cocos Editor final compare verdict"
+    },
+    "capture": {
+      "status": "blocker",
+      "ok": false,
+      "workUnits": 1,
+      "summary": "missing final capture protocol"
+    },
+    "zones": {
+      "status": "blocker",
+      "workUnits": 1,
+      "summary": "missing zone ownership report"
+    },
+    "tabMounts": {
+      "status": "warn",
+      "workUnits": 1,
+      "summary": "missing tab-routing sidecar"
+    },
+    "fragmentGeometry": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0 referenced fragments follow fill-root geometry contract",
+      "checks": [],
+      "failures": []
+    },
+    "textBinding": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0/0 dynamic text candidates missing bind/i18n contract",
+      "totalTextNodes": 0,
+      "dynamicCandidateCount": 0,
+      "missingContractCount": 0,
+      "samples": []
+    },
+    "visualPolicy": {
+      "status": "warn",
+      "workUnits": 1,
+      "summary": "missing bake manifest; texture/clip review cannot be quantified"
+    },
+    "loading": {
+      "status": "warn",
+      "workUnits": 2,
+      "summary": "missing preload manifest; missing performance report",
+      "actualLayoutStats": null,
+      "reportedRendering": null,
+      "skinSlotCount": 0,
+      "issues": [
+        "missing preload manifest",
+        "missing performance report"
+      ]
+    }
+  },
+  "issues": [
+    {
+      "severity": "blocker",
+      "code": "final-gate",
+      "summary": "no measured Cocos Editor final compare verdict",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "capture-protocol",
+      "summary": "missing final capture protocol",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "zone-ownership-waivers",
+      "summary": "missing zone ownership report",
+      "workUnits": 1
+    },
+    {
+      "severity": "warn",
+      "code": "tab-routing-mounts",
+      "summary": "missing tab-routing sidecar",
+      "workUnits": 1
+    },
+    {
+      "severity": "warn",
+      "code": "visual-policy",
+      "summary": "missing bake manifest; texture/clip review cannot be quantified",
+      "workUnits": 1
+    },
+    {
+      "severity": "warn",
+      "code": "loading-performance",
+      "summary": "missing preload manifest; missing performance report",
+      "workUnits": 2
+    }
+  ]
+}
