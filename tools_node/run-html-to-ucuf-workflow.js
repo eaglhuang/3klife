@@ -1588,26 +1588,56 @@ function collectVisualRiskFromSlot(slot, evidence, out) {
 
 function buildRuntimeInteractionSmokeStep(paths, opts, sourceHtml) {
   const runtime = resolveCanonicalRuntimePaths(opts.screenId);
-  const interactionPath = path.join(runtime.screensDir, `${opts.screenId}.interaction.json`);
-  const tabRoutingPath = path.join(runtime.screensDir, `${opts.screenId}.tab-routing.json`);
+  const mode = opts.runtimeSync ? 'runtime' : 'dry-run';
+  const interactionPath = firstExistingPath([
+    opts.runtimeSync ? path.join(runtime.screensDir, `${opts.screenId}.interaction.json`) : null,
+    paths && paths.finalLayout ? sidecarPath(paths.finalLayout, '.interaction.json') : null,
+    paths && paths.rawLayout ? sidecarPath(paths.rawLayout, '.interaction.json') : null,
+  ]);
+  const tabRoutingPath = firstExistingPath([
+    opts.runtimeSync ? path.join(runtime.screensDir, `${opts.screenId}.tab-routing.json`) : null,
+    paths && paths.finalLayout ? sidecarPath(paths.finalLayout, '.tab-routing.json') : null,
+    paths && paths.rawLayout ? sidecarPath(paths.rawLayout, '.tab-routing.json') : null,
+  ]);
+  const screenPath = firstExistingPath([
+    opts.runtimeSync ? runtime.screenPath : null,
+    paths && paths.finalLayout ? sidecarPath(paths.finalLayout, '.screen.json') : null,
+    paths && paths.rawLayout ? sidecarPath(paths.rawLayout, '.screen.json') : null,
+    runtime.screenPath,
+  ]);
+  const layoutPath = firstExistingPath([
+    opts.runtimeSync ? runtime.layoutPath : null,
+    paths && paths.finalLayout ? paths.finalLayout : null,
+    paths && paths.optimizedLayout ? paths.optimizedLayout : null,
+    paths && paths.rawLayout ? paths.rawLayout : null,
+    runtime.layoutPath,
+  ]);
   const interaction = readJsonIfExists(interactionPath);
   const actions = interaction && Array.isArray(interaction.actions) ? interaction.actions : [];
   const required = actions.length > 0 || /data-ucuf-action|tabSwitch|switchTab|pool-prev|pool-next/i.test(String(sourceHtml || ''));
   const base = {
     step: 'runtime-interaction-smoke',
+    mode,
     required,
-    interaction: rel(interactionPath),
-    tabRouting: fs.existsSync(tabRoutingPath) ? rel(tabRoutingPath) : null,
+    interaction: interactionPath ? rel(interactionPath) : null,
+    tabRouting: tabRoutingPath && fs.existsSync(tabRoutingPath) ? rel(tabRoutingPath) : null,
+    screenSource: screenPath ? rel(screenPath) : null,
+    layoutSource: layoutPath ? rel(layoutPath) : null,
     actionsDeclared: actions.length,
     actionsBound: 0,
     smokeResults: [],
   };
   if (!required) return Object.assign(base, { exitCode: 0, ok: true, skipped: true, reason: 'no-interaction-sidecar-or-source-action' });
-  if (!opts.runtimeSync) return Object.assign(base, { exitCode: 1, ok: false, error: 'runtime-sync-disabled' });
-  if (!interaction) return Object.assign(base, { exitCode: 1, ok: false, error: 'synced-interaction-sidecar-missing' });
+  if (!interaction) {
+    return Object.assign(base, {
+      exitCode: 1,
+      ok: false,
+      error: mode === 'runtime' ? 'synced-interaction-sidecar-missing' : 'dryrun-interaction-sidecar-missing',
+    });
+  }
 
-  const screen = readJsonIfExists(runtime.screenPath);
-  const layout = readJsonIfExists(runtime.layoutPath);
+  const screen = readJsonIfExists(screenPath);
+  const layout = readJsonIfExists(layoutPath);
   const tabRouting = readJsonIfExists(tabRoutingPath);
   const nodeIndex = collectLayoutNodeIndex(layout && layout.root);
   const routeMap = buildInteractionRouteMap(screen, tabRouting);
@@ -1636,10 +1666,18 @@ function buildRuntimeInteractionSmokeStep(paths, opts, sourceHtml) {
       results.push({ actionId, trigger, target, status: 'bound' });
       continue;
     }
-    const route = resolveInteractionRoute(routeMap, target);
+    let route = resolveInteractionRoute(routeMap, target);
     if (!route || !route.slotId || !route.fragment) {
       results.push({ actionId, trigger, target, status: 'missing-route' });
       continue;
+    }
+    let fallbackFrom = null;
+    if (!routeFragmentExists(route)) {
+      const fallback = resolveInteractionFallbackRoute(routeMap, target);
+      if (fallback) {
+        fallbackFrom = route.fragment;
+        route = fallback;
+      }
     }
     if (lazySlots.size > 0 && !lazySlots.has(route.slotId)) {
       results.push({ actionId, trigger, target, status: 'missing-slot', slotId: route.slotId, fragment: route.fragment });
@@ -1650,7 +1688,15 @@ function buildRuntimeInteractionSmokeStep(paths, opts, sourceHtml) {
       results.push({ actionId, trigger, target, status: 'missing-fragment', slotId: route.slotId, fragment: route.fragment });
       continue;
     }
-    results.push({ actionId, trigger, target, status: 'bound', slotId: route.slotId, fragment: route.fragment });
+    results.push({
+      actionId,
+      trigger,
+      target,
+      status: 'bound',
+      slotId: route.slotId,
+      fragment: route.fragment,
+      fallbackFrom,
+    });
   }
 
   const actionsBound = results.filter(result => result.status === 'bound').length;
@@ -1705,6 +1751,26 @@ function resolveInteractionRoute(routeMap, target) {
   return null;
 }
 
+function routeFragmentExists(route) {
+  if (!route || !route.fragment) return false;
+  const fragmentPath = path.join(ROOT, 'assets', 'resources', 'ui-spec', `${route.fragment}.json`);
+  return fs.existsSync(fragmentPath);
+}
+
+function resolveInteractionFallbackRoute(routeMap, target) {
+  const key = normalizeInteractionKey(target);
+  if (!/^(?:pool-)?(?:prev(?:ious)?|next)$/.test(key)) return null;
+  const candidates = [];
+  for (const [routeKey, route] of routeMap.entries()) {
+    if (!route || !route.slotId || !route.fragment) continue;
+    if (/^(?:pool-)?(?:prev(?:ious)?|next)$/.test(routeKey)) continue;
+    if (!routeFragmentExists(route)) continue;
+    candidates.push(route);
+  }
+  if (candidates.length === 0) return null;
+  return /prev/.test(key) ? candidates[candidates.length - 1] : candidates[0];
+}
+
 function normalizeInteractionKey(value) {
   return String(value || '')
     .trim()
@@ -1724,9 +1790,16 @@ function assessInteractionRuntime(paths, steps, sourceHtml) {
   const smokeStep = (steps || []).find(step => step && step.step === 'runtime-interaction-smoke');
   const smokeResults = smokeStep && Array.isArray(smokeStep.smokeResults) ? smokeStep.smokeResults : [];
   const actionsBound = Number(smokeStep && smokeStep.actionsBound || 0);
+  const status = !required
+    ? 'pass'
+    : !smokeStep
+      ? 'not-run'
+      : (smokeStep.ok ? 'pass' : 'fail');
   return {
     required,
-    status: required ? (smokeStep && smokeStep.ok ? 'pass' : 'not-run') : 'pass',
+    status,
+    mode: smokeStep && smokeStep.mode || null,
+    error: smokeStep && smokeStep.error || null,
     actionsDeclared: actionCount,
     actionsBound,
     smokeResults,
