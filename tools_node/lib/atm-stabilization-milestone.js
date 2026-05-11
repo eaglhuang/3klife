@@ -34,6 +34,9 @@ const M3_DETERMINISTIC_FOUNDATION_IDS = [
 const M3_SEMANTIC_ADVISORY_ID = 'ATM-2-0035';
 const M5_ADAPTER_PARITY_ID = 'ATM-4-0006';
 const FORMER_MAIN_BLOCKER_IDS = ['ATM-4-0005', 'ATM-6-0004', 'ATM-6-0005'];
+const RESOLVED_M4_MAP_EVOLUTION_IDS = ['ATM-2-0024', 'ATM-4-0004', 'ATM-4-0008'];
+const RESOLVED_M5_HOST_CHAIN_IDS = ['ATM-4-0005', 'ATM-4-0006', 'ATM-6-0005'];
+const FOLLOW_ON_BACKLOG_IDS = ['ATM-2-0032', 'ATM-6-0001', 'ATM-6-0002', 'ATM-6-0003'];
 
 function normalizeStatus(status) {
   const value = String(status || 'open').trim().toLowerCase();
@@ -80,6 +83,10 @@ function renderCheckbox(taskMap, taskId) {
   return isTaskDone(taskMap, taskId) ? '[x]' : '[ ]';
 }
 
+function renderGroupCheckbox(taskMap, taskIds) {
+  return taskIds.every((taskId) => isTaskDone(taskMap, taskId)) ? '[x]' : '[ ]';
+}
+
 function renderStatusSuffix(taskMap, taskId) {
   return `（目前：${renderStatus(taskMap, taskId)}）`;
 }
@@ -122,6 +129,9 @@ function buildMilestoneMarkdown(state = {}) {
   lines.push(`  - \`ATM-2-0030\`：\`versions[] / semanticFingerprint\` backfill sweep 與 catalog/index 一致性 ${renderStatusSuffix(taskMap, 'ATM-2-0030')}`);
   lines.push(`  - \`ATM-2-0010\`：\`RuleGuardAdapter\` read-only deterministic gate ${renderStatusSuffix(taskMap, 'ATM-2-0010')}`);
   lines.push(`- ${joinIds(FORMER_MAIN_BLOCKER_IDS)} 已經收斂，不再列為主 blocker。`);
+  lines.push(`- ${joinIds(RESOLVED_M4_MAP_EVOLUTION_IDS)} 已作為 map evolution 主線證據收斂，不再列為 M4 blocker。`);
+  lines.push(`- ${joinIds(RESOLVED_M5_HOST_CHAIN_IDS)} 已作為 3KLife host 主鏈收斂，不再列為 M5 blocker。`);
+  lines.push(`- ${joinIds(FOLLOW_ON_BACKLOG_IDS)} 屬 follow-on backlog，不列為目前 stabilization blocker。`);
   lines.push('- 不重開已完成卡，也不另外新開 follow-up 卡；所有殘項直接併入既有 open 卡。');
   lines.push('- M2 的主鏈仍是 `ATM-3-0014 -> ATM-4-0007`，但前提是 M1 gate 全綠。');
   lines.push('');
@@ -160,13 +170,15 @@ function buildMilestoneMarkdown(state = {}) {
   lines.push(`- ${renderCheckbox(taskMap, M3_SEMANTIC_ADVISORY_ID)} 基礎 deterministic 已由 ${joinIdStatuses(taskMap, M3_DETERMINISTIC_FOUNDATION_IDS)} 收斂；若保留 semantic advisory 後續，對映 \`${M3_SEMANTIC_ADVISORY_ID}\` ${renderStatusSuffix(taskMap, M3_SEMANTIC_ADVISORY_ID)}。`);
   lines.push('');
   lines.push('### M4. 負債清單');
+  lines.push(`${renderGroupCheckbox(taskMap, RESOLVED_M4_MAP_EVOLUTION_IDS)} ${joinIds(RESOLVED_M4_MAP_EVOLUTION_IDS)} 的 map evolution 主線已收斂，不再列為 blocker。`);
   lines.push('- [ ] evidence retention contract 與 rotation policy。');
   lines.push('- [ ] registry sharding 與 `versions[]` sidecar 的 resolver / rollback / catalog 收斂。');
   lines.push('');
   lines.push('### M5. 3KLife Host');
-  lines.push('- [ ] HarnessCard-lite control / agency / runtime 的一致敘述。');
+  lines.push(`${renderCheckbox(taskMap, 'ATM-6-0005')} \`ATM-6-0005\` 已補齊 HarnessCard-lite / CAR runtime-audit 對齊 ${renderStatusSuffix(taskMap, 'ATM-6-0005')}.`);
   lines.push(`${renderCheckbox(taskMap, M5_ADAPTER_PARITY_ID)} adapter parity harness 改由 \`${M5_ADAPTER_PARITY_ID}\` 承接 ${renderStatusSuffix(taskMap, M5_ADAPTER_PARITY_ID)}。`);
-  lines.push('- [ ] injection + rollback e2e 的最小閉環。');
+  lines.push(`${renderCheckbox(taskMap, 'ATM-4-0005')} \`ATM-4-0005\` 已補齊 injection + rollback dry-run 最小閉環 ${renderStatusSuffix(taskMap, 'ATM-4-0005')}.`);
+  lines.push(`- ${joinIds(FOLLOW_ON_BACKLOG_IDS.filter((taskId) => taskId.startsWith('ATM-6-')))} 改歸 ecosystem / follow-on backlog，不列為 host 主鏈 blocker。`);
   lines.push('');
   lines.push('## 5. 任務對照');
   lines.push('');

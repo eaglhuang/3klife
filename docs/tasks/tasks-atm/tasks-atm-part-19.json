@@ -180,15 +180,24 @@
   {
     "id": "ATM-3-0011",
     "title": "encoding adapter 化：check-encoding-touched / check-encoding-integrity 接入 ATM EncodingAdapter",
-    "status": "open",
+    "status": "done",
     "priority": "P1",
     "phase": "ATM-3",
     "type": "implementation",
     "created": "2026-05-05",
-    "owner": "GitHubCopilot",
+    "owner": "vs-insiders-gpt-5.3-codex",
     "doc_id": "doc_task_0311",
     "depends": [
       "ATM-3-0006"
-    ]
+    ],
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-11T08:54:39.3139686+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.3-codex",
+    "completed_at": "2026-05-11T09:02:10.5914724+08:00",
+    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無\\n2026-05-07 架構釐清：本卡為 Phase 1（thin adapter 化），Phase 2 EncodingAdapter 原子化為 ATM-GOV-* governed atom\\n2026-05-11 | 狀態: in-progress | 驗證: compute-gate standard 9/9 pass + document/encoding adapter hook tests + parity tests | 變更: check-encoding-touched/check-encoding-integrity 已改 thin wrapper，核心邏輯移入 encoding-adapter | 阻塞: 無\\n2026-05-11 | 狀態: done | 驗證: compute-gate --profile standard --agent-feedback ✅、check-task-scope（warn-only, no fail）✅、document/encoding adapter hook tests ✅、parity tests ✅ | 變更: ATM-3-0011 交付物全部完成並收尾解鎖 | 阻塞: 無"
   }
 ]

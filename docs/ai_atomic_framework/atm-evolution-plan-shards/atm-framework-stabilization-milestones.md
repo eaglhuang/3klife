@@ -1,6 +1,6 @@
 <!-- doc_id: doc_other_0093 -->
 # ATM 框架穩定化里程碑
-> 這份頁面以 `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 的薄索引為準，不再沿用舊的 milestone 草稿數字。當前基線是 `done=111 / in_progress=0 / open=10 / total=121`.
+> 這份頁面以 `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 的薄索引為準，不再沿用舊的 milestone 草稿數字。當前基線是 `done=116 / in_progress=0 / open=5 / total=121`.
 ## 1. 當前狀態
 - `ATM-2-0027`、`ATM-2-0050`、`ATM-2-0051`、`ATM-2-0054` 都已是 `done`，不再當作主缺口。
 - M1 的三個收尾面向都已收斂，不再保留未完成主缺口。
@@ -8,6 +8,9 @@
   - `ATM-2-0030`：`versions[] / semanticFingerprint` backfill sweep 與 catalog/index 一致性 （目前：done）
   - `ATM-2-0010`：`RuleGuardAdapter` read-only deterministic gate （目前：done）
 - `ATM-4-0005`、`ATM-6-0004`、`ATM-6-0005` 已經收斂，不再列為主 blocker。
+- `ATM-2-0024`、`ATM-4-0004`、`ATM-4-0008` 已作為 map evolution 主線證據收斂，不再列為 M4 blocker。
+- `ATM-4-0005`、`ATM-4-0006`、`ATM-6-0005` 已作為 3KLife host 主鏈收斂，不再列為 M5 blocker。
+- `ATM-2-0032`、`ATM-6-0001`、`ATM-6-0002`、`ATM-6-0003` 屬 follow-on backlog，不列為目前 stabilization blocker。
 - 不重開已完成卡，也不另外新開 follow-up 卡；所有殘項直接併入既有 open 卡。
 - M2 的主鏈仍是 `ATM-3-0014 -> ATM-4-0007`，但前提是 M1 gate 全綠。
 
@@ -46,13 +49,15 @@ ATM-2.5-0004 -> ATM-2-0030 -> ATM-2-0010
 - [ ] 基礎 deterministic 已由 `ATM-2-0029`(done)、`ATM-2-0031`(done)、`ATM-2-0033`(done) 收斂；若保留 semantic advisory 後續，對映 `ATM-2-0035` （目前：open）。
 
 ### M4. 負債清單
+[x] `ATM-2-0024`、`ATM-4-0004`、`ATM-4-0008` 的 map evolution 主線已收斂，不再列為 blocker。
 - [ ] evidence retention contract 與 rotation policy。
 - [ ] registry sharding 與 `versions[]` sidecar 的 resolver / rollback / catalog 收斂。
 
 ### M5. 3KLife Host
-- [ ] HarnessCard-lite control / agency / runtime 的一致敘述。
+[x] `ATM-6-0005` 已補齊 HarnessCard-lite / CAR runtime-audit 對齊 （目前：done）.
 [x] adapter parity harness 改由 `ATM-4-0006` 承接 （目前：done）。
-- [ ] injection + rollback e2e 的最小閉環。
+[x] `ATM-4-0005` 已補齊 injection + rollback dry-run 最小閉環 （目前：done）.
+- `ATM-6-0001`、`ATM-6-0002`、`ATM-6-0003` 改歸 ecosystem / follow-on backlog，不列為 host 主鏈 blocker。
 
 ## 5. 任務對照
 

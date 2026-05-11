@@ -11,6 +11,9 @@ const {
   recalcSummary,
   readTasksAtmStore,
 } = require('./lib/tasks-atm-shard-store');
+const {
+  MILESTONE_PATH_REL,
+} = require('./lib/atm-stabilization-milestone');
 
 const ROOT = path.resolve(__dirname, '..');
 const DOCS_ROOT = path.join(ROOT, 'docs');
@@ -137,6 +140,7 @@ function buildShardGroups() {
   const managedFiles = new Set();
   const fileToGroupDirs = new Map();
   const groupByRcPath = new Map();
+  managedFiles.add(path.resolve(ROOT, MILESTONE_PATH_REL));
 
   for (const rcPath of shardRcFiles) {
     let cfg;

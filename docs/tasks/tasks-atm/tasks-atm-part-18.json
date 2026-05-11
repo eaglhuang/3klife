@@ -88,16 +88,25 @@
   {
     "id": "ATM-3-0013",
     "title": "finalize-agent-turn.js wrapper 接入 ATM run envelope",
-    "status": "open",
+    "status": "done",
     "priority": "P1",
     "phase": "ATM-3",
     "type": "implementation",
     "created": "2026-05-05",
-    "owner": "GitHubCopilot",
+    "owner": "vs-insiders-gpt-5.3-codex",
     "doc_id": "doc_task_0313",
     "depends": [
       "ATM-3-0006",
       "ATM-3-0007"
-    ]
+    ],
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-11T09:08:45.1120648+08:00",
+    "started_by_agent": "vs-insiders-gpt-5.3-codex",
+    "completed_at": "2026-05-11T09:10:30.8293984+08:00",
+    "completed_by_agent": "vs-insiders-gpt-5.3-codex",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "notes": "finalize-agent-turn 是 3KLife 私有流程整合點，永久保留為 Wrapper；見 3klife-tooling-fate.md §finalize-agent-turn"
   }
 ]

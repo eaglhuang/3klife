@@ -39,13 +39,13 @@
     "title": "parseCssLength 與 parseFragmentList case atoms",
     "owner": "GitHubCopilot",
     "priority": "P1",
-    "status": "open",
+    "status": "done",
     "type": "atom-case",
     "phase": "ATM-4",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-11T08:54:35.6749913+08:00",
+    "started_by_agent": "vs-code-gpt-5.3-codex",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -70,7 +70,7 @@
       "lineage logs and parentRefs for both extracted atoms",
       "validation report"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\\n2026-05-11 | 狀態: in-progress | 驗證: pending | 變更: Lane 2 接手，與 ATM-4-0008 打包處理 | 阻塞: 無\\n2026-05-11 | 狀態: done | 驗證: node atomic_workbench/atoms/ATM-CORE-0006/atom.test.mjs + ATM-CORE-0007/atom.test.mjs PASS；encoding-touched PASS | 變更: 新增 ATM-CORE-0006(parseCssLength) 與 ATM-CORE-0007(parseFragmentList) spec/source/test/fixtures/lineage-log；registry 加入兩筆 atom entries（bornBy=atomize + legacy parentRefs）| 阻塞: 無",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
@@ -109,6 +109,8 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "",
+    "completed_by_agent": ""
   }
 ]

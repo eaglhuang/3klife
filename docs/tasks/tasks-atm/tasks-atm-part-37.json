@@ -87,13 +87,13 @@
     "title": "H2U Map Evolution Pilot",
     "owner": "GitHubCopilot",
     "priority": "P0",
-    "status": "open",
+    "status": "done",
     "type": "case-study",
     "phase": "ATM-4",
     "created": "2026-05-06",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-11T08:54:35.6749913+08:00",
+    "started_by_agent": "vs-code-gpt-5.3-codex",
     "chain_id": "ATM-MAP-EVOLUTION-V2",
     "chain_step": "4/4",
     "sensor_triggered_by": "atm-evolution-plan-v2-appendix-b",
@@ -102,7 +102,8 @@
     "depends": [
       "ATM-4-0007",
       "ATM-2-0024",
-      "ATM-2-0025"
+      "ATM-2-0025",
+      "ATM-2-0042"
     ],
     "acceptance": [
       "h2u-map v1.0 寫入 registry，含 qualityTargets",
@@ -118,13 +119,15 @@
       "fixtures/case-studies/h2u-map/atom-extract.proposal.json",
       "fixtures/case-studies/h2u-map/map-bump.proposal.json"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成",
+    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: 由 ATM 演進規劃書 v2 附錄 B 開立 | 阻塞: 等依賴卡完成\\n2026-05-07 ATM-2-0042 連鎖影響：追加 AC 6~7（h2u-map 須透過 generator 建立、workbench 須在 canonical maps/ 路徑）\\n2026-05-11 | 狀態: in-progress | 驗證: pending | 變更: Lane 2 接手，與 ATM-4-0004 打包執行 | 阻塞: 無\\n2026-05-11 | 狀態: done | 驗證: create-map(command handler) 建立 ATM-MAP-0003；map.spec/map.test.report 產出；node atomic_workbench/atoms/ATM-CORE-0006/atom.test.mjs + ATM-CORE-0007/atom.test.mjs PASS；encoding-touched PASS | 變更: 新增 h2u-map v1.0 baseline 與 atom-bump/atom-extract/map-bump 三條 proposal fixture；補 pilot report（含 mapId/mapHash/memberSnapshot/三件套/propagation 摘要）| 阻塞: 3KLife repo 另有 ATM-3-0011 既存 dirty files，task-scope 工具對整個工作樹會顯示額外警告",
     "brief": {
       "style": "harn-rich",
       "label": "ATM 演進規劃 v2 附錄 B 開卡",
       "summary": "以 H2U map 端到端驗證三種演化路徑與整合測試傳遞，作為 alpha1 map-level acceptance 證據。",
       "position": "ATM-4",
       "prereq": "ATM-4-0007 / ATM-2-0024 / ATM-2-0025"
-    }
+    },
+    "completed_at": "",
+    "completed_by_agent": ""
   }
 ]
