@@ -94,13 +94,15 @@
     "title": "Regression tests for doc-id fallback and closeout",
     "owner": "vs-code-gpt-5.3-codex",
     "priority": "P1",
-    "status": "open",
+    "status": "done",
     "type": "governance",
     "phase": "ATM-8",
     "created": "2026-05-11",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-11T14:50:44+08:00",
+    "started_by_agent": "vs-code-gpt-5.3-codex",
+    "completed_at": "2026-05-11T14:52:32+08:00",
+    "completed_by_agent": "vs-code-gpt-5.3-codex",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -111,9 +113,10 @@
       "doc-id assign fallback regression test pass"
     ],
     "deliverables": [
-      "tools_node/test/*.test.js"
+      "tools_node/test/*.test.js",
+      "tools_node/test/atm-closeout-regression.test.js"
     ],
-    "notes": "2026-05-11 | 狀態: open | 驗證: pending | 變更: hardening backlog 建立 | 阻塞: 無",
+    "notes": "2026-05-11 | 狀態: done | 驗證: npm.cmd run test:atm-closeout-regression；npm.cmd run test:atm-task-store-single-truth；npm.cmd run validate:atm-task-store-single-truth -- --strict；npm.cmd run validate:atm-milestone；npm.cmd run validate:atm-stability-closeout -- --strict；node tools_node/check-doc-shard-health.js；npm.cmd run check:encoding:touched -- --files tools_node/test/atm-closeout-regression.test.js package.json docs/agent-briefs/tasks/ATM/ATM-8-0004.md docs/tasks/tasks-atm/tasks-atm-part-65.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md | 變更: 新增 doc-id fallback 與 closeout 綁定回歸測試，將 closeout 單一真相檢查納入可測 contract | 阻塞: 無\n2026-05-11 | 狀態: in-progress | 驗證: pending | 變更: 啟動 doc-id fallback / closeout 回歸測試補強 | 阻塞: 無\n2026-05-11 | 狀態: open | 驗證: pending | 變更: hardening backlog 建立 | 阻塞: 無",
     "brief": {
       "style": "classic",
       "label": "",
@@ -130,7 +133,15 @@
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [],
+      "validation_evidence": [
+        "npm.cmd run test:atm-closeout-regression",
+        "npm.cmd run test:atm-task-store-single-truth",
+        "npm.cmd run validate:atm-task-store-single-truth -- --strict",
+        "npm.cmd run validate:atm-milestone",
+        "npm.cmd run validate:atm-stability-closeout -- --strict",
+        "node tools_node/check-doc-shard-health.js",
+        "npm.cmd run check:encoding:touched -- --files tools_node/test/atm-closeout-regression.test.js package.json docs/agent-briefs/tasks/ATM/ATM-8-0004.md docs/tasks/tasks-atm/tasks-atm-part-65.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md"
+      ],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
