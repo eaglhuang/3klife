@@ -863,10 +863,12 @@ async function main() {
   await rebuildRegistryFromScan();
 }
 
-main().catch((error) => {
-  console.error(error && error.stack ? error.stack : error);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error && error.stack ? error.stack : error);
+    process.exit(1);
+  });
+}
 
 module.exports = {
   classify,
@@ -876,4 +878,5 @@ module.exports = {
   verifyRegistry,
   reshardCurrentRegistry,
   parseDocIdMeta,
+  main,
 };

@@ -89,7 +89,7 @@ class TaskAdapter {
     this.lockAdapter.lock(taskId, agentName, normalizedFiles);
   }
 
-  assignDocId(markdownFilePath) {
+  async assignDocId(markdownFilePath) {
     const documentAdapter = createDocumentAdapter({ projectRoot: this.projectRoot });
     return documentAdapter.assignDocId(markdownFilePath);
   }

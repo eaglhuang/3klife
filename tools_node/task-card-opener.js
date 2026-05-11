@@ -673,7 +673,7 @@ function promoteReservationToLock(taskId, agentName, files) {
   clearTaskIdReservation();
 }
 
-function main() {
+async function main() {
   if (hasFlag(process.argv, 'help')) {
     printHelp();
     return;
@@ -788,7 +788,7 @@ function main() {
     const resolvedMdPath = resolvePath(mdOutArg);
     writeText(resolvedMdPath, mdContent, dryRun);
     if (!dryRun && assignDocId) {
-      taskAdapter.assignDocId(resolvedMdPath);
+      await taskAdapter.assignDocId(resolvedMdPath);
     }
   } else if (dryRun) {
     printDryRunArtifact('markdown', mdContent);
@@ -860,10 +860,8 @@ function main() {
   console.log(JSON.stringify(outputSummary, null, 2));
 }
 
-try {
-  main();
-} catch (error) {
+main().catch((error) => {
   cleanupPendingTaskIdReservation();
   console.error(`[task-card-opener] ${error.message}`);
   process.exit(1);
-}
+});

@@ -52,7 +52,18 @@ class DocumentAdapter {
     return this.documentIndexAdapter.assignId(relPath, classified, registry);
   }
 
-  assignDocId(markdownFilePath, options = {}) {
+  shouldFallbackToModuleApi(result, options = {}) {
+    if (options.disableModuleFallback) {
+      return false;
+    }
+    if (!result || !result.error) {
+      return false;
+    }
+    const code = String(result.error.code || '').toUpperCase();
+    return code === 'EPERM' || code === 'EAGAIN' || code === 'UNKNOWN';
+  }
+
+  async assignDocId(markdownFilePath, options = {}) {
     const relative = this.toRelativePath(markdownFilePath);
     const result = cp.spawnSync(process.execPath, [this.assignScriptPath, '--assign', relative], {
       cwd: this.projectRoot,
@@ -63,9 +74,27 @@ class DocumentAdapter {
 
     const status = result.status ?? 1;
     if (status !== 0) {
+      if (this.shouldFallbackToModuleApi(result, options)) {
+        const moduleExports = require(this.assignScriptPath);
+        if (!moduleExports || typeof moduleExports.assignFile !== 'function') {
+          throw new Error(`doc-id assignment fallback unavailable for ${relative}`);
+        }
+        await moduleExports.assignFile(path.join(this.projectRoot, relative));
+        return {
+          ok: true,
+          status: 0,
+          command: `node tools_node/doc-id-registry.js --assign ${relative}`,
+          documentPath: relative,
+          stdout: String(result.stdout || ''),
+          stderr: String(result.stderr || ''),
+          fallback: 'module-api',
+          spawnErrorCode: result.error && result.error.code ? String(result.error.code) : '',
+        };
+      }
       const stderr = String(result.stderr || '').trim();
       const stdout = String(result.stdout || '').trim();
-      throw new Error(stderr || stdout || `doc-id assignment failed for ${relative}`);
+      const spawnError = result.error ? String(result.error.message || result.error.code || '').trim() : '';
+      throw new Error(stderr || stdout || spawnError || `doc-id assignment failed for ${relative}`);
     }
 
     return {
