@@ -1241,6 +1241,8 @@ def run_round(
         str((REPO_ROOT / PIPELINE_ROOT / "build_external_relationship_overlay.py").resolve()),
         "--candidate-evidence-cards",
         repo_relative(cards_path),
+        "--internal-relationship-evidence",
+        repo_relative(relationship_json_path),
         "--output-root",
         repo_relative(external_relationship_root),
     ]

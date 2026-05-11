@@ -174,7 +174,51 @@ def clamp(value: float, minimum: float, maximum: float) -> float:
     return max(minimum, min(maximum, value))
 
 
-def should_pass_gate(card: dict[str, Any], *, min_cross_family: int, min_cross_family_non_history: int) -> tuple[bool, str]:
+def edge_pair_key(from_id: str, to_id: str) -> str:
+    left = str(from_id or "").strip()
+    right = str(to_id or "").strip()
+    if not left or not right:
+        return ""
+    return "|".join(sorted((left, right)))
+
+
+def load_internal_pair_keys(paths: list[Path]) -> set[str]:
+    keys: set[str] = set()
+    for path in paths:
+        for row in read_jsonl(path):
+            from_id = str(row.get("fromId") or "").strip()
+            to_id = str(row.get("toId") or "").strip()
+            key = edge_pair_key(from_id, to_id)
+            if key:
+                keys.add(key)
+    return keys
+
+
+def cross_family_count(card: dict[str, Any]) -> int:
+    families = {str(item or "").strip() for item in (card.get("crossSiteSourceFamilies") or [])}
+    families.discard("")
+    return len(families)
+
+
+def has_quote_locator_hash(card: dict[str, Any]) -> bool:
+    quote = str(card.get("quote") or card.get("translatedTraditionalText") or "").strip()
+    return len(quote) >= 8 and bool(card.get("locator")) and bool(card.get("textHash"))
+
+
+def cross_family_gate(
+    card: dict[str, Any],
+    *,
+    min_cross_family: int,
+    min_cross_family_non_history: int,
+) -> tuple[bool, int, int]:
+    layer = str(card.get("sourceLayer") or "").strip().lower()
+    count = cross_family_count(card)
+    threshold = min_cross_family if layer == "history" else min_cross_family_non_history
+    threshold = max(threshold, 1)
+    return count >= threshold, count, threshold
+
+
+def should_pass_card_base_gate(card: dict[str, Any]) -> tuple[bool, str]:
     if str(card.get("claimType") or "").strip() != "relationship":
         return False, "claimType-not-relationship"
     source_layer = str(card.get("sourceLayer") or "").strip().lower()
@@ -185,15 +229,92 @@ def should_pass_gate(card: dict[str, Any], *, min_cross_family: int, min_cross_f
         return False, "short-quote"
     if not (card.get("locator") or card.get("textHash")):
         return False, "missing-locator-hash"
-    cross_families = list(card.get("crossSiteSourceFamilies") or [])
-    cross_count = len(cross_families)
-    if source_layer == "history":
-        if cross_count < min_cross_family:
-            return False, "history-cross-family-too-low"
-    else:
-        if cross_count < min_cross_family_non_history:
-            return False, "non-history-cross-family-too-low"
     return True, "ok"
+
+
+def trust_signals_for_edge(
+    *,
+    card: dict[str, Any],
+    edge: dict[str, Any],
+    internal_pair_keys: set[str],
+    min_cross_family: int,
+    min_cross_family_non_history: int,
+) -> list[str]:
+    signals: list[str] = []
+    cross_ok, _cross_count, _threshold = cross_family_gate(
+        card,
+        min_cross_family=min_cross_family,
+        min_cross_family_non_history=min_cross_family_non_history,
+    )
+    if cross_ok:
+        signals.append("cross-source")
+    if has_quote_locator_hash(card):
+        signals.append("quote+locator+hash")
+
+    pair_key = edge_pair_key(str(edge.get("fromId") or ""), str(edge.get("toId") or ""))
+    if pair_key and pair_key in internal_pair_keys:
+        signals.append("internal-external")
+    return signals
+
+
+def apply_signal_boost(edge: dict[str, Any], *, source_layer: str, signals: list[str]) -> dict[str, Any]:
+    boosted = dict(edge)
+    boost = 0.0
+    if "cross-source" in signals:
+        boost += 0.02
+    if "quote+locator+hash" in signals:
+        boost += 0.02
+    if "internal-external" in signals:
+        boost += 0.03
+
+    base = float(boosted.get("edgeConfidence") or 0.0)
+    next_conf = clamp(base + boost, 0.45, max_confidence_for_layer(source_layer))
+    boosted["edgeConfidence"] = round(next_conf, 2)
+    boosted["edgeStrength"] = round(clamp(next_conf - 0.12, 0.35, 0.90), 2)
+    boosted["confidenceSignals"] = list(signals)
+    boosted["confidenceGate"] = "passed"
+    boosted["sidecarOnly"] = False
+    return boosted
+
+
+def build_sidecar_row(
+    *,
+    card: dict[str, Any],
+    edge: dict[str, Any],
+    reason: str,
+    signals: list[str],
+    min_cross_family: int,
+    min_cross_family_non_history: int,
+    internal_pair_keys: set[str],
+) -> dict[str, Any]:
+    cross_ok, cross_count, threshold = cross_family_gate(
+        card,
+        min_cross_family=min_cross_family,
+        min_cross_family_non_history=min_cross_family_non_history,
+    )
+    from_id = str(edge.get("fromId") or "").strip()
+    to_id = str(edge.get("toId") or "").strip()
+    return {
+        "mode": "external-relationship-sidecar",
+        "sidecarReason": reason,
+        "edgeId": edge.get("edgeId"),
+        "fromId": from_id,
+        "toId": to_id,
+        "type": edge.get("type"),
+        "sourcePolicyId": edge.get("sourcePolicyId") or card.get("sourcePolicyId") or card.get("sourceId"),
+        "sourceEvidenceId": edge.get("sourceEvidenceId") or card.get("evidenceId"),
+        "sourceLayer": str(card.get("sourceLayer") or ""),
+        "crossFamilyCount": cross_count,
+        "crossFamilyThreshold": threshold,
+        "crossSourcePassed": cross_ok,
+        "hasQuoteLocatorHash": has_quote_locator_hash(card),
+        "internalExternalMatched": edge_pair_key(from_id, to_id) in internal_pair_keys,
+        "confidenceSignals": list(signals),
+        "quote": str(card.get("quote") or card.get("translatedTraditionalText") or "")[:220],
+        "locator": card.get("locator"),
+        "textHash": card.get("textHash"),
+        "canonicalWrites": False,
+    }
 
 
 def edges_from_card(
@@ -327,6 +448,7 @@ def apply_source_caps(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]],
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build strict relationship-edge overlay from global candidate evidence cards.")
     parser.add_argument("--candidate-evidence-cards", action="append", default=[])
+    parser.add_argument("--internal-relationship-evidence", action="append", default=[])
     parser.add_argument("--alias-map", default=str(DEFAULT_ALIAS_MAP))
     parser.add_argument("--min-cross-family", type=int, default=2)
     parser.add_argument("--min-cross-family-non-history", type=int, default=3)
@@ -340,6 +462,7 @@ def main() -> int:
     args = parse_args()
     output_root = resolve_path(args.output_root)
     jsonl_path = output_root / "source-grounded-relationship-edges.external.jsonl"
+    sidecar_jsonl_path = output_root / "source-grounded-relationship-edges.sidecar.jsonl"
     summary_path = output_root / "external-relationship-overlay-summary.json"
     md_path = output_root / "external-relationship-overlay-summary.zh-TW.md"
     if output_root.exists() and any(output_root.iterdir()) and not args.overwrite:
@@ -347,19 +470,19 @@ def main() -> int:
     output_root.mkdir(parents=True, exist_ok=True)
 
     alias_pairs = load_alias_mapping(resolve_path(args.alias_map))
+    internal_pair_keys = load_internal_pair_keys([resolve_path(path_text) for path_text in args.internal_relationship_evidence])
     card_rows: list[dict[str, Any]] = []
     for path_text in args.candidate_evidence_cards:
         card_rows.extend(read_jsonl(resolve_path(path_text)))
 
     gate_reasons = Counter()
     transform_reasons = Counter()
+    trust_gate_reasons = Counter()
+    signal_counts = Counter()
     edge_rows: list[dict[str, Any]] = []
+    sidecar_rows: list[dict[str, Any]] = []
     for card in card_rows:
-        passed, reason = should_pass_gate(
-            card,
-            min_cross_family=max(args.min_cross_family, 1),
-            min_cross_family_non_history=max(args.min_cross_family_non_history, max(args.min_cross_family, 1)),
-        )
+        passed, reason = should_pass_card_base_gate(card)
         if not passed:
             gate_reasons[reason] += 1
             continue
@@ -367,11 +490,37 @@ def main() -> int:
         if not rows:
             transform_reasons[transform_reason] += 1
             continue
-        edge_rows.extend(rows)
+        source_layer = str(card.get("sourceLayer") or "").strip().lower()
+        for edge in rows:
+            signals = trust_signals_for_edge(
+                card=card,
+                edge=edge,
+                internal_pair_keys=internal_pair_keys,
+                min_cross_family=max(args.min_cross_family, 1),
+                min_cross_family_non_history=max(args.min_cross_family_non_history, max(args.min_cross_family, 1)),
+            )
+            if not signals:
+                trust_gate_reasons["no-trust-signal"] += 1
+                sidecar_rows.append(
+                    build_sidecar_row(
+                        card=card,
+                        edge=edge,
+                        reason="no-trust-signal",
+                        signals=signals,
+                        min_cross_family=max(args.min_cross_family, 1),
+                        min_cross_family_non_history=max(args.min_cross_family_non_history, max(args.min_cross_family, 1)),
+                        internal_pair_keys=internal_pair_keys,
+                    )
+                )
+                continue
+            for signal in signals:
+                signal_counts[signal] += 1
+            edge_rows.append(apply_signal_boost(edge, source_layer=source_layer, signals=signals))
 
     deduped_rows = dedupe_edges(edge_rows)
     capped_rows, capped_trimmed_counts = apply_source_caps(deduped_rows)
     write_jsonl(jsonl_path, capped_rows)
+    write_jsonl(sidecar_jsonl_path, sidecar_rows)
 
     type_counts = Counter(str(row.get("type") or "") for row in capped_rows)
     source_policy_counts = Counter(str(row.get("sourcePolicyId") or "") for row in capped_rows)
@@ -383,6 +532,7 @@ def main() -> int:
         "canonicalWrites": False,
         "inputs": {
             "candidateEvidenceCards": [repo_relative(resolve_path(path)) for path in args.candidate_evidence_cards],
+            "internalRelationshipEvidence": [repo_relative(resolve_path(path)) for path in args.internal_relationship_evidence],
             "aliasMapPath": repo_relative(resolve_path(args.alias_map)),
             "minCrossFamily": max(args.min_cross_family, 1),
             "minCrossFamilyNonHistory": max(args.min_cross_family_non_history, max(args.min_cross_family, 1)),
@@ -390,19 +540,24 @@ def main() -> int:
         },
         "outputs": {
             "relationshipEdgesJsonlPath": repo_relative(jsonl_path),
+            "sidecarJsonlPath": repo_relative(sidecar_jsonl_path),
             "summaryJsonPath": repo_relative(summary_path),
             "summaryMarkdownPath": repo_relative(md_path),
         },
         "metrics": {
             "cardInputCount": len(card_rows),
+            "internalRelationshipPairCount": len(internal_pair_keys),
             "edgeRawCount": len(edge_rows),
             "edgeCountBeforeSourceCap": len(deduped_rows),
             "edgeCount": len(capped_rows),
+            "sidecarEdgeCount": len(sidecar_rows),
             "uniqueSourcePolicyCount": len(source_policy_counts),
             "sourceCapTrimmedCount": max(len(deduped_rows) - len(capped_rows), 0),
             "sourceCapTrimmedBySource": capped_trimmed_counts,
             "gateRejectCounts": dict(sorted(gate_reasons.items())),
             "transformRejectCounts": dict(sorted(transform_reasons.items())),
+            "trustGateRejectCounts": dict(sorted(trust_gate_reasons.items())),
+            "confidenceSignalCounts": dict(sorted(signal_counts.items())),
             "relationshipTypeCounts": dict(sorted(type_counts.items())),
             "sourcePolicyCounts": dict(sorted(source_policy_counts.items())),
             "sourceLayerCounts": dict(sorted(source_layer_counts.items())),
@@ -418,6 +573,7 @@ def main() -> int:
         f"- Raw Edges: `{summary['metrics']['edgeRawCount']}`",
         f"- Before Source Cap: `{summary['metrics']['edgeCountBeforeSourceCap']}`",
         f"- Final Edges: `{summary['metrics']['edgeCount']}`",
+        f"- Sidecar-Only Edges: `{summary['metrics']['sidecarEdgeCount']}`",
         f"- Source-Cap Trimmed: `{summary['metrics']['sourceCapTrimmedCount']}`",
         "",
         "## Gate Rejects",
@@ -427,6 +583,12 @@ def main() -> int:
         lines.append(f"- `{key}`: `{value}`")
     lines.extend(["", "## Transform Rejects", ""])
     for key, value in summary["metrics"]["transformRejectCounts"].items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.extend(["", "## Trust Gate Rejects", ""])
+    for key, value in summary["metrics"]["trustGateRejectCounts"].items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.extend(["", "## Confidence Signals", ""])
+    for key, value in summary["metrics"]["confidenceSignalCounts"].items():
         lines.append(f"- `{key}`: `{value}`")
     lines.extend(["", "## Relationship Types", ""])
     for key, value in summary["metrics"]["relationshipTypeCounts"].items():
@@ -438,6 +600,7 @@ def main() -> int:
     md_path.write_text("\n".join(lines), encoding="utf-8")
 
     print(f"[build_external_relationship_overlay] wrote {jsonl_path}")
+    print(f"[build_external_relationship_overlay] wrote {sidecar_jsonl_path}")
     print(f"[build_external_relationship_overlay] wrote {summary_path}")
     print(f"[build_external_relationship_overlay] wrote {md_path}")
     print(
