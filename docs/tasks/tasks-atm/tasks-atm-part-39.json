@@ -5,13 +5,13 @@
     "title": "多語言 Adapter 擴張計畫",
     "owner": "GitHubCopilot",
     "priority": "P2",
-    "status": "open",
+    "status": "done",
     "type": "ecosystem",
     "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-11T09:35:57+08:00",
+    "started_by_agent": "vs-code-gpt-5.3-codex",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -30,7 +30,7 @@
       "docs/ecosystem/language-adapter-roadmap.md",
       "adapter acceptance matrix"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none\n2026-05-11 | 狀態: done | 驗證: npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-6-0003.md docs/ecosystem/language-adapter-roadmap.md; node tools_node/check-doc-shard-health.js; node tools_node/sync-atm-stabilization-milestone.js --check --strict | 變更: 建立多語言 adapter roadmap，納入 Python / C# / Unity / Cocos / Rust / Go 優先順序、adapter API 契約與 acceptance matrix | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
@@ -61,7 +61,9 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-11T09:35:57+08:00",
+    "completed_by_agent": "vs-code-gpt-5.3-codex"
   },
   {
     "doc_id": "doc_task_0286",
