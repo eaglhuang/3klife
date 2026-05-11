@@ -1340,6 +1340,7 @@ function buildSummary(args) {
   const visualFidelityRisk = args.visualFidelityRisk || assessVisualFidelityRisk(args.paths, args.metrics, args.opts);
   const interactionRuntime = args.interactionRuntime || assessInteractionRuntime(args.paths, args.steps, args.sourceHtml);
   const blockerTaxonomy = args.blockerTaxonomy || deriveBlockerTaxonomy(args.metrics, visualFidelityRisk);
+  const fidelityDimensions = buildFidelityDimensions(args.metrics, args.verdict, interactionRuntime);
   return {
     input: rel(args.opts.input),
     sourcePackage: args.sourcePackage && args.sourcePackage.manifest ? args.sourcePackage.manifest : null,
@@ -1351,6 +1352,7 @@ function buildSummary(args) {
     ruleGuard: args.ruleGuard || { status: 'not-run', blockerCount: 0, warningCount: 0, violations: [] },
     visualFidelityRisk,
     interactionRuntime,
+    fidelityDimensions,
     blockerTaxonomy,
     tokenGovernance: args.tokenGovernance || null,
     nextFixes: args.nextFixes || [],
@@ -1381,6 +1383,36 @@ function buildSummary(args) {
       }()),
     },
     generatedAt: new Date().toISOString(),
+  };
+}
+
+function buildFidelityDimensions(metrics, verdict, interactionRuntime) {
+  const runtimeVsSource = metrics && metrics.htmlCocos && metrics.htmlCocos.runtimeVsSource
+    ? metrics.htmlCocos.runtimeVsSource
+    : null;
+  const existing = runtimeVsSource && runtimeVsSource.fidelityDimensions
+    ? runtimeVsSource.fidelityDimensions
+    : (metrics && metrics.fidelityDimensions ? metrics.fidelityDimensions : null);
+  if (existing && typeof existing === 'object') return existing;
+
+  const structuralPass = !!(verdict && verdict.converterPass);
+  const colorFillPass = !!(verdict && verdict.previewDiagnosticPass);
+  const layoutGeometryPass = !!(verdict && verdict.runtimeFinalPass);
+  const interactionSmokePass = interactionRuntime
+    ? (interactionRuntime.required ? interactionRuntime.status === 'pass' : true)
+    : !!(verdict && verdict.interactionRuntimePass);
+
+  const mk = (pass, source) => ({
+    pass: !!pass,
+    status: pass ? 'pass' : 'fail',
+    source,
+  });
+
+  return {
+    structural: mk(structuralPass, 'workflow-verdict.converterPass'),
+    colorFill: mk(colorFillPass, 'workflow-verdict.previewDiagnosticPass'),
+    layoutGeometry: mk(layoutGeometryPass, 'workflow-verdict.runtimeFinalPass'),
+    interactionSmoke: mk(interactionSmokePass, 'workflow-verdict.interactionRuntimePass'),
   };
 }
 

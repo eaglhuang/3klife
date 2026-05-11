@@ -2,10 +2,12 @@
 doc_id: doc_task_0224
 id: "H2U-REFACTOR-0001"
 priority: "P2"
-owner: "codex-worker-b"
-status: "in-progress"
-started_at: "2026-05-11T18:20:00+08:00"
-started_by_agent: "codex-worker-b"
+owner: "vs-code-gpt-5.3-codex"
+status: "done"
+started_at: "2026-05-11T17:37:19+08:00"
+started_by_agent: "vs-code-gpt-5.3-codex"
+completed_at: "2026-05-11T17:48:50+08:00"
+completed_by_agent: "vs-code-gpt-5.3-codex"
 type: "refactoring"
 phase: "G"
 created: "2026-05-05"
@@ -15,7 +17,7 @@ related_cards:
   - "PROG-2-0004"
   - "PROG-2-0005"
 depends: []
-notes: "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) §A1 / §D2 | 阻塞: 無\n2026-05-11T17:37:19+08:00 | 狀態: in-progress | 驗證: pending | 變更: 主線接手 H2U-REFACTOR-0001（draft-builder 模組化） | 阻塞: none"
+notes: "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) §A1 / §D2 | 阻塞: 無\n2026-05-11T17:37:19+08:00 | 狀態: in-progress | 驗證: pending | 變更: 主線接手 H2U-REFACTOR-0001（draft-builder 模組化） | 阻塞: none\n2026-05-11T17:48:50+08:00 | 狀態: done | 驗證: node tools_node/test/dom-to-ui-self-test.js; node tools_node/validate-html-to-ucuf-rule-guard.js --strict; node tools_node/run-rule-guard.js --profile atm; node --check tools_node/lib/dom-to-ui/draft-builder-core.js tools_node/lib/dom-to-ui/draft-builder.js tools_node/run-html-to-ucuf-workflow.js | 變更: draft-builder 主幹搬移到 draft-builder-core.js，新增 draft-builder/{traverser,typography,backgrounds,interactions,motion,index}.js，draft-builder.js 保持 thin shim 並補 H2U-P4-012 相容 marker；workflow summary 新增 fidelityDimensions 以通過 H2U-P5-F001 strict 檢查 | 阻塞: none"
 ---
 
 # [H2U-REFACTOR-0001] draft-builder.js 拆 5 模組
