@@ -97,5 +97,63 @@
       "ATM-3-0006"
     ],
     "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無\n2026-05-07 架構釐清：本卡為 Phase 1（thin adapter 化），Phase 2 DocumentIndexAdapter 原子化為 ATM-GOV-* governed atom\n2026-05-08 | 狀態: done | 驗證: node tools_node/doc-id-registry.js --assign docs/agent-briefs/tasks/ATM/ATM-3-0008.md ✅；node tools_node/compute-gate.js --gates ts-syntax eslint-rules --agent-feedback ✅；node -e adapter prefix probe ✅ | 變更: 新增 document-index-adapter 與 doc-index-profile，doc-id-registry --assign 改由 adapter 分配 doc_id | 阻塞: check-task-scope 受既有跨卡 dirty files 影響"
+  },
+  {
+    "doc_id": "",
+    "id": "ATM-8-0001",
+    "title": "Stability warnings governance and allowlist contract",
+    "owner": "vs-code-gpt-5.3-codex",
+    "priority": "P1",
+    "status": "done",
+    "type": "governance",
+    "phase": "ATM-8",
+    "created": "2026-05-11",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-11T14:26:46+08:00",
+    "started_by_agent": "GitHubCopilot",
+    "completed_at": "2026-05-11T14:32:05+08:00",
+    "completed_by_agent": "vs-code-gpt-5.3-codex",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 ATM closeout 目前 warning（turn-artifact legacy path、registry upstream spawn fallback）收斂為可治理、可審核、可追蹤的 allowlist/分級契約，避免每輪都被相同噪音干擾。",
+    "related": [],
+    "depends": [],
+    "acceptance": [
+      "turn-artifact legacy path 需走顯式 allowlist，非 allowlist legacy 一律警示"
+    ],
+    "deliverables": [
+      "tools_node/validate-turn-artifact-retention.js",
+      "tools_node/lib/turn-artifact-storage.js",
+      "tools_node/rotate-turn-artifacts.js"
+    ],
+    "notes": "2026-05-11 | 狀態: done | 驗證: node tools_node/validate-turn-artifact-retention.js --strict；node tools_node/rotate-turn-artifacts.js --dry-run；npm.cmd run validate:atm-stability-closeout -- --strict；npm.cmd run validate:atm-milestone；npm.cmd run check:encoding:touched -- --files tools_node/lib/turn-artifact-storage.js tools_node/validate-turn-artifact-retention.js tools_node/rotate-turn-artifacts.js | 變更: 將 turn-artifact legacy path 納入顯式 allowlist 契約，新增 allowlisted 分級與 summary 指標，並讓 rotation dry-run 跳過 allowlisted legacy | 阻塞: 無\n2026-05-11 | 狀態: in-progress | 驗證: pending | 變更: 開始收斂 closeout warnings 為可治理契約 | 阻塞: 無",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [
+        "node tools_node/validate-turn-artifact-retention.js --strict",
+        "node tools_node/rotate-turn-artifacts.js --dry-run",
+        "npm.cmd run validate:atm-stability-closeout -- --strict",
+        "npm.cmd run validate:atm-milestone",
+        "npm.cmd run check:encoding:touched -- --files tools_node/lib/turn-artifact-storage.js tools_node/validate-turn-artifact-retention.js tools_node/rotate-turn-artifacts.js"
+      ],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

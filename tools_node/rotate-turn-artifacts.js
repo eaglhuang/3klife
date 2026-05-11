@@ -169,6 +169,21 @@ function buildCandidate(filePath, artifact, rotationDays) {
   if (isCanonicalFormalPath(relativePath)) {
     return { candidate: null, skipped: { path: relativePath, reason: 'already-canonical' } };
   }
+  const allowlistEntry = storage.findLegacyFormalPathAllowlistEntry(relativePath);
+  if (allowlistEntry) {
+    return {
+      candidate: null,
+      skipped: {
+        path: relativePath,
+        reason: 'legacy-allowlisted',
+        details: {
+          ownerTask: normalizeText(allowlistEntry.ownerTask),
+          reviewBy: normalizeText(allowlistEntry.reviewBy),
+          note: normalizeText(allowlistEntry.reason),
+        },
+      },
+    };
+  }
 
   const workflow = normalizeText(artifact && artifact.workflow);
   const task = normalizeText(artifact && artifact.task);

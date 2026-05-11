@@ -80,5 +80,53 @@
       ]
     },
     "completed_at": "2026-05-08T15:05:00+08:00"
+  },
+  {
+    "doc_id": "",
+    "id": "ATM-8-0003",
+    "title": "Task-store single-truth anti-bypass guard",
+    "owner": "vs-code-gpt-5.3-codex",
+    "priority": "P1",
+    "status": "open",
+    "type": "governance",
+    "phase": "ATM-8",
+    "created": "2026-05-11",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "GitHubCopilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "補上 anti-bypass 檢查，禁止直接改 milestone/thin-index 卻未經 shard truth pipeline。",
+    "related": [],
+    "depends": [],
+    "acceptance": [
+      "check mode 可偵測 bypass 變更"
+    ],
+    "deliverables": [
+      "sync/guard scripts and docs"
+    ],
+    "notes": "2026-05-11 | 狀態: open | 驗證: pending | 變更: hardening backlog 建立 | 阻塞: 無",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

@@ -7,6 +7,20 @@ const config = require('./project-config');
 const PROJECT_ROOT = config.ROOT;
 const FORMAL_ROOT = path.join(config.paths.artifactsDir, 'turn-artifacts');
 const SCRATCH_ROOT = path.join(PROJECT_ROOT, 'scratch');
+const LEGACY_FORMAL_PATH_ALLOWLIST = Object.freeze([
+  Object.freeze({
+    path: 'artifacts/turn-artifacts/atm-3-0001/context-summary/ATM-3-0001.json',
+    ownerTask: 'ATM-3-0001',
+    reason: 'adapter-owned context summary legacy path pending canonical migration plan',
+    reviewBy: '2026-06-30',
+  }),
+  Object.freeze({
+    path: 'artifacts/turn-artifacts/h2u-refactor-0006-rule-guard.json',
+    ownerTask: 'H2U-P4-020',
+    reason: 'legacy pilot rule-guard snapshot retained for first-win replay evidence',
+    reviewBy: '2026-06-30',
+  }),
+]);
 
 const TURN_ARTIFACT_STORAGE_POLICY = Object.freeze({
   schemaVersion: 'turn-artifact-storage/v1',
@@ -27,6 +41,7 @@ const TURN_ARTIFACT_STORAGE_POLICY = Object.freeze({
       '未對應 task card、commit 或 baseline 的 local probe artifact',
     ],
   },
+  legacyFormalPathAllowlist: LEGACY_FORMAL_PATH_ALLOWLIST,
 });
 
 function toPosixPath(filePath) {
@@ -35,6 +50,16 @@ function toPosixPath(filePath) {
 
 function toProjectRelative(absolutePath) {
   return toPosixPath(path.relative(PROJECT_ROOT, path.resolve(absolutePath)));
+}
+
+function normalizeRelativeTurnArtifactPath(filePath) {
+  const raw = path.isAbsolute(String(filePath || ''))
+    ? toProjectRelative(filePath)
+    : toPosixPath(String(filePath || ''));
+  return raw
+    .replace(/^[./\\]+/, '')
+    .replace(/\/+/g, '/')
+    .trim();
 }
 
 function normalizeDatePart(value = new Date()) {
@@ -96,6 +121,7 @@ function describeTurnArtifactStorage() {
     formalUsage: TURN_ARTIFACT_STORAGE_POLICY.formalUsage,
     scratchUsage: TURN_ARTIFACT_STORAGE_POLICY.scratchUsage,
     retention: TURN_ARTIFACT_STORAGE_POLICY.retention,
+    legacyFormalPathAllowlist: TURN_ARTIFACT_STORAGE_POLICY.legacyFormalPathAllowlist,
   };
 }
 
@@ -125,6 +151,21 @@ function classifyTurnArtifactPath(filePath) {
   return 'custom';
 }
 
+const LEGACY_ALLOWLIST_LOOKUP = new Map(
+  TURN_ARTIFACT_STORAGE_POLICY.legacyFormalPathAllowlist.map((entry) => [
+    normalizeRelativeTurnArtifactPath(entry.path).toLowerCase(),
+    entry,
+  ]),
+);
+
+function findLegacyFormalPathAllowlistEntry(filePath) {
+  const key = normalizeRelativeTurnArtifactPath(filePath).toLowerCase();
+  if (!key) {
+    return null;
+  }
+  return LEGACY_ALLOWLIST_LOOKUP.get(key) || null;
+}
+
 module.exports = {
   PROJECT_ROOT,
   FORMAL_ROOT,
@@ -132,6 +173,7 @@ module.exports = {
   TURN_ARTIFACT_STORAGE_POLICY,
   toPosixPath,
   toProjectRelative,
+  normalizeRelativeTurnArtifactPath,
   normalizeDatePart,
   sanitizePathSegment,
   isFormalTurnArtifactPath,
@@ -139,4 +181,5 @@ module.exports = {
   describeTurnArtifactStorage,
   buildFormalTurnArtifactPath,
   classifyTurnArtifactPath,
+  findLegacyFormalPathAllowlistEntry,
 };

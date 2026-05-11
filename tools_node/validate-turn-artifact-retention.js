@@ -181,6 +181,17 @@ function ageDaysSince(datePrefix) {
   return Math.floor((now - parsed.getTime()) / (24 * 60 * 60 * 1000));
 }
 
+function buildAllowlistDetails(entry) {
+  if (!entry || typeof entry !== 'object') {
+    return {};
+  }
+  return {
+    ownerTask: normalizeText(entry.ownerTask),
+    reason: normalizeText(entry.reason),
+    reviewBy: normalizeText(entry.reviewBy),
+  };
+}
+
 function buildReport(args) {
   const scanRoot = resolveProjectPath(args.root);
   const files = walkJsonFiles(scanRoot);
@@ -191,6 +202,8 @@ function buildReport(args) {
     fileCount: files.length,
     canonicalFormalCount: 0,
     legacyFormalCount: 0,
+    legacyFormalAllowlistedCount: 0,
+    legacyFormalUnallowlistedCount: 0,
     parseErrorCount: 0,
     blockerCount: 0,
     warningCount: 0,
@@ -307,6 +320,29 @@ function buildReport(args) {
 
     summary.legacyFormalCount += 1;
     const ageDays = ageDaysSince(generatedDate || toDatePrefix(artifact.generatedAt));
+    const allowlistEntry = storage.findLegacyFormalPathAllowlistEntry(relativePath);
+    if (allowlistEntry) {
+      summary.legacyFormalAllowlistedCount += 1;
+      findings.push(buildFinding({
+        ruleId: 'turn-artifact-retention.legacy-path-allowlisted',
+        trigger: 'turnArtifactRetention.legacyPath.allowlisted',
+        scope: 'formal path canonicalization allowlist',
+        severity: 'info',
+        action: 'allow',
+        routeClass: 'allowlisted',
+        routeHint: 'legacy path 已納入治理 allowlist；維持保留直到 canonical migration 完成。',
+        message: 'formal artifact path is allowlisted as governed legacy',
+        file: relativePath,
+        details: {
+          generatedAt,
+          ageDays,
+          ...buildAllowlistDetails(allowlistEntry),
+        },
+      }));
+      continue;
+    }
+
+    summary.legacyFormalUnallowlistedCount += 1;
     findings.push(buildFinding({
       ruleId: 'turn-artifact-retention.legacy-path',
       trigger: 'turnArtifactRetention.legacyPath.detected',

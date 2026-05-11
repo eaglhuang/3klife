@@ -87,5 +87,53 @@
       "position": "ATM-2",
       "prereq": "ATM-2-0018 / ATM-2-0006"
     }
+  },
+  {
+    "doc_id": "",
+    "id": "ATM-8-0004",
+    "title": "Regression tests for doc-id fallback and closeout",
+    "owner": "vs-code-gpt-5.3-codex",
+    "priority": "P1",
+    "status": "open",
+    "type": "governance",
+    "phase": "ATM-8",
+    "created": "2026-05-11",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "GitHubCopilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "新增工具層回歸測試，覆蓋 task-card-opener doc-id fallback 與 closeout aggregator。",
+    "related": [],
+    "depends": [],
+    "acceptance": [
+      "doc-id assign fallback regression test pass"
+    ],
+    "deliverables": [
+      "tools_node/test/*.test.js"
+    ],
+    "notes": "2026-05-11 | 狀態: open | 驗證: pending | 變更: hardening backlog 建立 | 阻塞: 無",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]
