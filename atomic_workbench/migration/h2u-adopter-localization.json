@@ -1,0 +1,52 @@
+{
+  "schemaId": "atm.adopterLocalizationReport",
+  "generatedAt": "2026-05-11T13:40:08.860Z",
+  "upstreamRoot": "C:/Users/User/AI-Atomic-Framework",
+  "localWorkbenchRoot": "C:/Users/User/3KLife/atomic_workbench",
+  "localRegistryPath": "C:/Users/User/3KLife/atomic-registry.json",
+  "copied": [
+    {
+      "kind": "atom",
+      "id": "ATM-CORE-0005",
+      "source": "C:/Users/User/AI-Atomic-Framework/atomic_workbench/atoms/ATM-CORE-0005",
+      "dest": "C:/Users/User/3KLife/atomic_workbench/atoms/ATM-CORE-0005"
+    },
+    {
+      "kind": "atom",
+      "id": "ATM-CORE-0006",
+      "source": "C:/Users/User/AI-Atomic-Framework/atomic_workbench/atoms/ATM-CORE-0006",
+      "dest": "C:/Users/User/3KLife/atomic_workbench/atoms/ATM-CORE-0006"
+    },
+    {
+      "kind": "atom",
+      "id": "ATM-CORE-0007",
+      "source": "C:/Users/User/AI-Atomic-Framework/atomic_workbench/atoms/ATM-CORE-0007",
+      "dest": "C:/Users/User/3KLife/atomic_workbench/atoms/ATM-CORE-0007"
+    },
+    {
+      "kind": "map",
+      "id": "ATM-MAP-0003",
+      "source": "C:/Users/User/AI-Atomic-Framework/atomic_workbench/maps/ATM-MAP-0003",
+      "dest": "C:/Users/User/3KLife/atomic_workbench/maps/ATM-MAP-0003"
+    },
+    {
+      "kind": "spec",
+      "id": "normalize-css-color.atom.json",
+      "source": "C:/Users/User/AI-Atomic-Framework/specs/normalize-css-color.atom.json",
+      "dest": "C:/Users/User/3KLife/specs/normalize-css-color.atom.json"
+    },
+    {
+      "kind": "spec",
+      "id": "parse-css-length.atom.json",
+      "source": "C:/Users/User/AI-Atomic-Framework/specs/parse-css-length.atom.json",
+      "dest": "C:/Users/User/3KLife/specs/parse-css-length.atom.json"
+    },
+    {
+      "kind": "spec",
+      "id": "parse-fragment-list.atom.json",
+      "source": "C:/Users/User/AI-Atomic-Framework/specs/parse-fragment-list.atom.json",
+      "dest": "C:/Users/User/3KLife/specs/parse-fragment-list.atom.json"
+    }
+  ],
+  "registryEntryCount": 4
+}

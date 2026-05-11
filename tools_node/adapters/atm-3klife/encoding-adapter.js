@@ -67,14 +67,38 @@ class EncodingAdapter {
     });
 
     if ((result.status ?? 1) !== 0) {
+      const statusFileFallback = this.readGitStatusFallback();
+      if (statusFileFallback) {
+        return statusFileFallback;
+      }
       const stderr = (result.stderr || '').trim();
-      throw new Error(stderr || `git ${args.join(' ')} failed.`);
+      const spawnError = result.error ? ` ${String(result.error.message || result.error)}` : '';
+      throw new Error(stderr || `git ${args.join(' ')} failed.${spawnError}`);
     }
 
     return String(result.stdout || '')
       .split(/\r?\n/)
       .map((line) => line.trim())
       .filter(Boolean);
+  }
+
+  readGitStatusFallback() {
+    const rawPath = String(process.env.ATM_WORKTREE_STATUS_FILE || '').trim();
+    if (!rawPath) {
+      return null;
+    }
+    const absolutePath = path.isAbsolute(rawPath)
+      ? rawPath
+      : path.resolve(this.projectRoot, rawPath);
+    if (!fs.existsSync(absolutePath)) {
+      return null;
+    }
+    return fs.readFileSync(absolutePath, 'utf8')
+      .split(/\r?\n/)
+      .map((line) => line.length > 3 ? line.slice(3).trim() : '')
+      .filter(Boolean)
+      .map((filePath) => filePath.includes(' -> ') ? filePath.split(' -> ').pop().trim() : filePath)
+      .map((filePath) => this.toPosixPath(filePath));
   }
 
   collectTouchedFiles() {

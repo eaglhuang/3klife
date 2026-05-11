@@ -16,7 +16,11 @@ const upstreamCliEntrypoint = path.resolve(
 );
 
 const localWorkbenchRoot = path.resolve(
-  process.env.ATM_LOCAL_WORKBENCH_ROOT || path.join(ROOT, 'tools_node', 'atomic-framework', 'workbench')
+  process.env.ATM_LOCAL_WORKBENCH_ROOT || path.join(ROOT, 'atomic_workbench')
+);
+
+const shadowWorkbenchRoot = path.resolve(
+  process.env.ATM_SHADOW_WORKBENCH_ROOT || path.join(ROOT, 'tools_node', 'atomic-framework', 'workbench')
 );
 
 const config = {
@@ -32,6 +36,7 @@ const config = {
   upstreamCliPackageRoot: path.join(upstreamRepoRoot, 'packages', 'cli'),
   localWorkbenchRoot,
   workbenchRoot: localWorkbenchRoot,
+  shadowWorkbenchRoot,
   bootstrapCommand: 'bootstrap',
   defaultCliCommand: 'status',
   defaultBootstrapArgs: ['--dry-run', '--json'],
