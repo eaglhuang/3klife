@@ -149,13 +149,7 @@ function patchDecisionHashes(decision, hash) {
   return decision;
 }
 
-function main() {
-  const opts = parseArgs(process.argv.slice(2));
-  if (opts.help) {
-    printHelp();
-    return;
-  }
-
+function runValidation(opts = {}) {
   const checks = [];
   const findings = [];
 
@@ -293,13 +287,24 @@ function main() {
     telemetry,
   };
 
+  return report;
+}
+
+function main() {
+  const opts = parseArgs(process.argv.slice(2));
+  if (opts.help) {
+    printHelp();
+    return;
+  }
+
+  const report = runValidation(opts);
   if (opts.report) {
     writeJson(opts.report, report);
     console.error(`[validate-h2u-evolution-pilot] report=${rel(opts.report)}`);
   }
 
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
-  console.error(`[validate-h2u-evolution-pilot] status=${report.passed ? 'pass' : 'fail'} blockers=${blockerCount}`);
+  console.error(`[validate-h2u-evolution-pilot] status=${report.passed ? 'pass' : 'fail'} blockers=${report.blockerCount}`);
 
   if (opts.strict && !report.passed) {
     process.exit(1);
@@ -314,3 +319,10 @@ if (require.main === module) {
     process.exit(1);
   }
 }
+
+module.exports = {
+  parseArgs,
+  runValidation,
+  patchDecisionHashes,
+  validateProposalSchema,
+};

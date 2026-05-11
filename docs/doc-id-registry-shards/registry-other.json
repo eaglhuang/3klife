@@ -652,5 +652,11 @@
     "path": "docs/ai_atomic_framework/validator-orchestrator-and-ajv-cache.md",
     "title": "Validator Orchestrator 與 AJV Cache 統一入口",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0117",
+    "path": "docs/ai_atomic_framework/legacy-h2u-first-battle-launch-checklist.md",
+    "title": "Legacy 大挑戰啟動條件與首戰清單（H2U 首勝版）",
+    "category": "other"
   }
 ]
