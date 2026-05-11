@@ -18,6 +18,7 @@ function printHelp() {
   console.log('  --json                 Print JSON result');
   console.log('  --strict               Exit 1 on warn as well as fail');
   console.log('  --verbose              Print warning/details even when status is pass');
+  console.log('  ATM_WORKTREE_STATUS_FILE=<path> may provide a git status --short snapshot when child git is unavailable');
   console.log('  --help, -h             Show this help message');
 }
 

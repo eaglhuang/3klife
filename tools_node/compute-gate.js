@@ -25,6 +25,8 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const vm = require('vm');
+const Module = require('module');
 const gateAdapter = require('./adapters/atm-3klife/gate-adapter');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
@@ -130,6 +132,69 @@ function resolveGates(config, args) {
 // ────────────────────────────────────────────────────────────
 // 執行單一 gate
 // ────────────────────────────────────────────────────────────
+function runNodeGateInProcess(scriptPath, scriptArgs) {
+  const stdout = [];
+  const stderr = [];
+  const moduleObject = { exports: {} };
+  const processProxy = Object.create(process);
+  processProxy.argv = [process.execPath, scriptPath, ...(scriptArgs || [])];
+  processProxy.exit = (code = 0) => {
+    const exitCode = Number(code) || 0;
+    if (exitCode === 0) {
+      processProxy.exitCode = 0;
+      return;
+    }
+    const error = new Error(`process.exit(${code})`);
+    error.code = 'ATM_IN_PROCESS_EXIT';
+    error.exitCode = exitCode;
+    throw error;
+  };
+
+  const sandbox = {
+    Buffer,
+    clearImmediate,
+    clearInterval,
+    clearTimeout,
+    console: {
+      log: (...items) => stdout.push(items.join(' ')),
+      info: (...items) => stdout.push(items.join(' ')),
+      warn: (...items) => stderr.push(items.join(' ')),
+      error: (...items) => stderr.push(items.join(' ')),
+    },
+    exports: moduleObject.exports,
+    global: null,
+    __dirname: path.dirname(scriptPath),
+    __filename: scriptPath,
+    module: moduleObject,
+    process: processProxy,
+    require: Module.createRequire(scriptPath),
+    setImmediate,
+    setInterval,
+    setTimeout,
+  };
+  sandbox.global = sandbox;
+
+  let status = 0;
+  try {
+    const source = fs.readFileSync(scriptPath, 'utf8');
+    new vm.Script(source, { filename: scriptPath }).runInNewContext(sandbox);
+  } catch (error) {
+    if (error && error.code === 'ATM_IN_PROCESS_EXIT') {
+      status = error.exitCode;
+    } else {
+      status = 1;
+      stderr.push(String(error && (error.stack || error.message) || error));
+    }
+  }
+
+  return {
+    status,
+    stdout: stdout.join('\n'),
+    stderr: stderr.join('\n'),
+    error: null,
+  };
+}
+
 function runGate(gate) {
   const startTime = Date.now();
   const cmdPath = gate.cmd === 'node' ? process.execPath : gate.cmd;
@@ -154,7 +219,8 @@ function runGate(gate) {
     }
   }
 
-  const result = spawnSync(cmdPath, cmdArgs, {
+  let fallbackMethod = '';
+  let result = spawnSync(cmdPath, cmdArgs, {
     cwd: PROJECT_ROOT,
     stdio: 'pipe',
     encoding: 'utf8',
@@ -162,10 +228,32 @@ function runGate(gate) {
     timeout: 60000, // 60 秒超時
   });
 
+  if (result.error && /EPERM/i.test(String(result.error.message || result.error))) {
+    const fallback = spawnSync(cmdPath, cmdArgs, {
+      cwd: PROJECT_ROOT,
+      stdio: 'pipe',
+      encoding: 'utf8',
+      shell: true,
+      timeout: 60000,
+    });
+    if (!fallback.error) {
+      fallbackMethod = 'shell-fallback-after-spawn-eperm';
+      result = fallback;
+    }
+  }
+  if (result.error && gate.cmd === 'node' && cmdArgs[0] && fs.existsSync(cmdArgs[0])) {
+    result = runNodeGateInProcess(cmdArgs[0], cmdArgs.slice(1));
+    fallbackMethod = 'in-process-node-gate-after-spawn-eperm';
+  }
+
   const durationMs = Date.now() - startTime;
   const exitCode = result.status ?? 1;
   const stdout = (result.stdout || '').trim();
-  const stderr = (result.stderr || '').trim();
+  const stderr = [
+    (result.stderr || '').trim(),
+    result.error ? `spawn error: ${String(result.error.message || result.error)}` : '',
+    fallbackMethod ? `fallback: ${fallbackMethod}` : '',
+  ].filter(Boolean).join('\n');
   const passed = exitCode === 0;
 
   // 產生 Agent 友善的修正提示

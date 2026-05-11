@@ -161,7 +161,8 @@ function runCommandOrThrow(command, args, cwd) {
 
   if ((result.status ?? 1) !== 0) {
     const stderr = (result.stderr || '').trim();
-    throw new Error(stderr || `${command} ${args.join(' ')} failed`);
+    const spawnError = result.error ? ` ${String(result.error.message || result.error)}` : '';
+    throw new Error(stderr || `${command} ${args.join(' ')} failed${spawnError}`);
   }
 
   return result.stdout || '';
@@ -172,8 +173,22 @@ function resolveGitRepositoryRoot(repositoryPath) {
     throw new Error(`找不到 repository：${repositoryPath}`);
   }
 
-  const stdout = runCommandOrThrow('git', ['rev-parse', '--show-toplevel'], repositoryPath);
-  return path.resolve(stdout.trim());
+  try {
+    const stdout = runCommandOrThrow('git', ['rev-parse', '--show-toplevel'], repositoryPath);
+    return path.resolve(stdout.trim());
+  } catch (error) {
+    let current = path.resolve(repositoryPath);
+    while (true) {
+      if (fs.existsSync(path.join(current, '.git'))) {
+        return current;
+      }
+      const parent = path.dirname(current);
+      if (parent === current) {
+        throw error;
+      }
+      current = parent;
+    }
+  }
 }
 
 function buildStates(code) {
@@ -266,9 +281,34 @@ function normalizeMockGitEntry(entry, index) {
 }
 
 function readGitChangedEntries(repositoryRoot) {
+  const statusFileEntries = readGitChangedEntriesFromStatusFile(repositoryRoot);
+  if (statusFileEntries) {
+    return statusFileEntries;
+  }
   const stdout = runCommandOrThrow('git', ['status', '--short', '--untracked-files=all'], repositoryRoot);
   const entries = [];
   for (const line of stdout.split(/\r?\n/)) {
+    const entry = parseGitStatusLine(line);
+    if (entry) {
+      entries.push(entry);
+    }
+  }
+  return entries;
+}
+
+function readGitChangedEntriesFromStatusFile(repositoryRoot) {
+  const rawPath = String(process.env.ATM_WORKTREE_STATUS_FILE || '').trim();
+  if (!rawPath) {
+    return null;
+  }
+  const statusPath = path.isAbsolute(rawPath)
+    ? rawPath
+    : path.resolve(repositoryRoot, rawPath);
+  if (!fs.existsSync(statusPath)) {
+    return null;
+  }
+  const entries = [];
+  for (const line of fs.readFileSync(statusPath, 'utf8').split(/\r?\n/)) {
     const entry = parseGitStatusLine(line);
     if (entry) {
       entries.push(entry);

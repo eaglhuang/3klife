@@ -86,11 +86,13 @@
       "label": "任務範圍守衛",
       "cmd": "node",
       "args": [
-        "tools_node/check-task-scope.js"
+        "tools_node/run-rule-guard.js",
+        "--profile",
+        "atm"
       ],
       "priority": 8,
       "failAction": "block",
-      "description": "確認 git dirty files 皆由 active task lock files[] 覆蓋且無重疊宣告"
+      "description": "透過 ATM RuleGuard 執行任務範圍與治理路由檢查"
     },
     {
       "id": "rule-guard-atm",

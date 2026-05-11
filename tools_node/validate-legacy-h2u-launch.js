@@ -18,6 +18,18 @@ const DEFAULT_CANONICAL_EVIDENCE = [
   'fixtures/case-studies/normalize-css-color/proposal.json',
   'fixtures/case-studies/normalize-css-color/decision-approve.json',
 ];
+const LOCAL_ATOMIC_EVIDENCE = [
+  'atomic-registry.json',
+  'atomic_workbench/atoms/ATM-CORE-0005/atom.source.mjs',
+  'atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs',
+  'atomic_workbench/atoms/ATM-CORE-0006/atom.source.mjs',
+  'atomic_workbench/atoms/ATM-CORE-0006/atom.test.mjs',
+  'atomic_workbench/atoms/ATM-CORE-0007/atom.source.mjs',
+  'atomic_workbench/atoms/ATM-CORE-0007/atom.test.mjs',
+  'atomic_workbench/maps/ATM-MAP-0003/map.spec.json',
+  'atomic_workbench/maps/ATM-MAP-0003/map.integration.test.mjs',
+];
+const LOCAL_ATOMIC_IDS = ['ATM-CORE-0005', 'ATM-CORE-0006', 'ATM-CORE-0007', 'ATM-MAP-0003'];
 
 function parseArgs(argv) {
   const parsed = {
@@ -199,6 +211,42 @@ function checkCanonicalEvidence() {
     status: missing.length === 0 ? 0 : 1,
     stderr: missing.length === 0 ? '' : `missing=${missing.join(',')}`,
     missing,
+  };
+}
+
+function checkLocalAtomicWorkbench() {
+  const missing = [];
+  for (const relPath of LOCAL_ATOMIC_EVIDENCE) {
+    if (!fs.existsSync(path.resolve(ROOT, relPath))) {
+      missing.push(relPath);
+    }
+  }
+
+  let registry = null;
+  let registryError = '';
+  try {
+    registry = JSON.parse(fs.readFileSync(path.resolve(ROOT, 'atomic-registry.json'), 'utf8'));
+  } catch (error) {
+    registryError = String(error && (error.message || error) || 'registry unreadable');
+  }
+
+  const entries = Array.isArray(registry && registry.entries) ? registry.entries : [];
+  const presentIds = new Set(entries.map((entry) => entry && (entry.atomId || entry.mapId || entry.id)).filter(Boolean));
+  const missingIds = LOCAL_ATOMIC_IDS.filter((id) => !presentIds.has(id));
+  const wrongOwner = entries
+    .filter((entry) => LOCAL_ATOMIC_IDS.includes(entry.atomId || entry.mapId || entry.id))
+    .filter((entry) => !entry.projectOwnership || entry.projectOwnership.ownerRepo !== '3KLife')
+    .map((entry) => entry.atomId || entry.mapId || entry.id);
+  const passed = missing.length === 0 && !registryError && missingIds.length === 0 && wrongOwner.length === 0;
+  return {
+    id: 'h2u-local-atomic-workbench',
+    passed,
+    status: passed ? 0 : 1,
+    stderr: passed ? '' : `missing=${missing.join(',')} missingIds=${missingIds.join(',')} wrongOwner=${wrongOwner.join(',')} registryError=${registryError}`,
+    missing,
+    missingIds,
+    wrongOwner,
+    registryId: registry && registry.registryId || '',
   };
 }
 
@@ -395,6 +443,27 @@ function runValidation(opts = {}) {
     }));
   }
 
+  const localAtomicWorkbench = checkLocalAtomicWorkbench();
+  checks.push(localAtomicWorkbench);
+  if (!localAtomicWorkbench.passed) {
+    findings.push(buildFinding({
+      ruleId: 'legacy-launch.h2u-local-atomic-workbench',
+      trigger: 'legacy.launch.h2u-local-atomic-workbench',
+      scope: 'atomic_workbench + atomic-registry.json',
+      severity: 'block',
+      action: 'fail',
+      routeClass: 'blocker',
+      routeHint: 'H2U project-derived atoms must be canonical in the 3KLife adopter-local workbench before first-win replay.',
+      message: 'H2U local atomic workbench is incomplete or not project-owned',
+      details: {
+        missing: localAtomicWorkbench.missing,
+        missingIds: localAtomicWorkbench.missingIds,
+        wrongOwner: localAtomicWorkbench.wrongOwner,
+        registryId: localAtomicWorkbench.registryId,
+      },
+    }));
+  }
+
   const atmMilestone = checkAtmMilestone();
   checks.push(atmMilestone);
   if (!atmMilestone.passed) {
@@ -542,6 +611,7 @@ module.exports = {
   parseArgs,
   runValidation,
   checkCanonicalEvidence,
+  checkLocalAtomicWorkbench,
   checkWorktreeIsolation,
   main,
 };
