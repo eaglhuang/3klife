@@ -35,6 +35,7 @@ function parseArgs(argv) {
     policy: null,
     policyHook: null,
     registryPath: null,
+    usageRefFile: null,
     capsuleId: '',
     targetTier: '',
   };
@@ -80,6 +81,11 @@ function parseArgs(argv) {
       index += 1;
       continue;
     }
+    if (token === '--usage-ref-file') {
+      args.usageRefFile = path.resolve(ROOT, argv[index + 1] || '');
+      index += 1;
+      continue;
+    }
     if (token === '--capsule') {
       args.capsuleId = String(argv[index + 1] || '').trim();
       index += 1;
@@ -116,6 +122,7 @@ function printHelp() {
   console.log('scaffold --candidate-report artifacts/atm-atomize/candidates.json');
   console.log('validate --strict');
   console.log('demand-police --strict');
+  console.log('scan --file tools_node/lib/dom-to-ui/draft-builder-core.js --usage-ref-file artifacts/atm-atomize/usage-refs.json');
   console.log('promote --capsule H2U-CAPSULE-PARSE-COLOR --to governed-atom');
 }
 
@@ -174,6 +181,10 @@ function slug(value) {
 
 function dedupeStrings(list) {
   return [...new Set((Array.isArray(list) ? list : []).map((item) => String(item || '').trim()).filter(Boolean))];
+}
+
+function escapeRegExp(value) {
+  return String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function deepMerge(base, override) {
@@ -239,6 +250,248 @@ function getInputFiles(args) {
     files.add(path.join(ROOT, 'tools_node', 'lib', 'dom-to-ui', 'draft-builder-core.js'));
   }
   return [...files].filter((filePath) => fs.existsSync(filePath));
+}
+
+function fileExists(filePath) {
+  try {
+    return fs.existsSync(filePath);
+  } catch (_) {
+    return false;
+  }
+}
+
+function isSupportedUsageFile(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  return ['.js', '.mjs', '.ts', '.json', '.md'].includes(ext);
+}
+
+function runRipgrepFileList(includeGlobs, excludeGlobs) {
+  const args = ['--files'];
+  for (const item of includeGlobs) {
+    args.push('-g', item);
+  }
+  for (const item of excludeGlobs) {
+    args.push('-g', `!${item}`);
+  }
+  const proc = cp.spawnSync('rg', args, {
+    cwd: ROOT,
+    encoding: 'utf8',
+    shell: false,
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  if (proc.error || proc.status !== 0) {
+    return null;
+  }
+  return String(proc.stdout || '')
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((item) => path.resolve(ROOT, item))
+    .filter((filePath) => fileExists(filePath) && isSupportedUsageFile(filePath));
+}
+
+function walkFiles(rootDir, maxDepth, output) {
+  if (!fileExists(rootDir)) return;
+  const stack = [{ dir: rootDir, depth: 0 }];
+  while (stack.length > 0) {
+    const current = stack.pop();
+    let entries = [];
+    try {
+      entries = fs.readdirSync(current.dir, { withFileTypes: true });
+    } catch (_) {
+      continue;
+    }
+    for (const entry of entries) {
+      const entryPath = path.join(current.dir, entry.name);
+      if (entry.isDirectory()) {
+        if (current.depth < maxDepth) {
+          stack.push({ dir: entryPath, depth: current.depth + 1 });
+        }
+        continue;
+      }
+      if (entry.isFile() && isSupportedUsageFile(entryPath)) {
+        output.add(path.resolve(entryPath));
+      }
+    }
+  }
+}
+
+function listUsageFilesFallback(policy) {
+  const include = Array.isArray(policy?.usageReferencePolicy?.includeGlobs)
+    ? policy.usageReferencePolicy.includeGlobs
+    : [];
+  const output = new Set();
+  if (include.length === 0) {
+    walkFiles(path.join(ROOT, 'tools_node'), 16, output);
+    walkFiles(path.join(ROOT, 'assets', 'scripts'), 16, output);
+    walkFiles(path.join(ROOT, 'docs', 'case-studies'), 16, output);
+    walkFiles(path.join(ROOT, 'atomic_workbench', 'maps'), 16, output);
+    walkFiles(path.join(ROOT, 'specs'), 8, output);
+    return [...output];
+  }
+  for (const pattern of include) {
+    const base = String(pattern || '').split('**')[0].replace(/[/*]+$/g, '');
+    if (!base) continue;
+    const absolute = path.resolve(ROOT, base);
+    walkFiles(absolute, 16, output);
+  }
+  return [...output];
+}
+
+function resolveUsageReferenceFiles(args, candidates, policy) {
+  const usagePolicy = policy.usageReferencePolicy || {};
+  if (usagePolicy.enabled === false) {
+    return [];
+  }
+  const includeGlobs = dedupeStrings(usagePolicy.includeGlobs || []);
+  const excludeGlobs = dedupeStrings(usagePolicy.excludeGlobs || []);
+  const fromRipgrep = runRipgrepFileList(includeGlobs, excludeGlobs);
+  const files = new Set(fromRipgrep || listUsageFilesFallback(policy));
+  const maxDepth = Number(usagePolicy.externalScanMaxDepth || 2);
+  for (const candidate of candidates) {
+    const candidateAbs = path.resolve(ROOT, candidate.file);
+    if (candidateAbs.startsWith(ROOT)) continue;
+    walkFiles(path.dirname(candidateAbs), maxDepth, files);
+  }
+  return [...files]
+    .filter((filePath) => fileExists(filePath) && isSupportedUsageFile(filePath))
+    .sort((a, b) => a.localeCompare(b));
+}
+
+function inferUsageRefKind(fileRef) {
+  const normalized = normalizeSlashes(fileRef).toLowerCase();
+  const basename = path.basename(normalized);
+  if (normalized.includes('atomic_workbench/maps/') || basename.endsWith('map.spec.json')) return 'map';
+  if (normalized.includes('docs/case-studies/')) return 'case-study';
+  if (normalized.includes('/workflow') || basename.includes('workflow')) return 'workflow';
+  if (normalized.includes('assets/scripts/')) return 'runtime';
+  if (normalized.includes('/test/') || basename.includes('.test.')) return 'test';
+  if (normalized.includes('tools_node/')) return 'tooling';
+  if (basename.endsWith('.md')) return 'docs';
+  return 'other';
+}
+
+function parseUsageRef(ref) {
+  const text = String(ref || '').trim();
+  const match = text.match(/^([a-z-]+):(.*)#L(\d+)$/i);
+  if (!match) {
+    return { kind: 'other', file: text, line: null };
+  }
+  return {
+    kind: String(match[1] || 'other').toLowerCase(),
+    file: String(match[2] || ''),
+    line: Number(match[3] || 0),
+  };
+}
+
+function buildUsageRefStats(usageRefs, candidateFile) {
+  const parsed = usageRefs.map((item) => parseUsageRef(item));
+  const files = new Set(parsed.map((item) => item.file).filter(Boolean));
+  const kinds = new Set(parsed.map((item) => item.kind).filter(Boolean));
+  const externalRefs = parsed.filter((item) => item.file && normalizeSlashes(item.file) !== normalizeSlashes(candidateFile)).length;
+  return {
+    totalRefs: usageRefs.length,
+    distinctFiles: files.size,
+    distinctKinds: kinds.size,
+    externalRefs,
+    kinds: [...kinds].sort(),
+  };
+}
+
+function loadManualUsageRefMap(usageRefFile) {
+  if (!usageRefFile || !fileExists(usageRefFile)) {
+    return {
+      bySymbol: {},
+      byCapsuleId: {},
+    };
+  }
+  const source = readJson(usageRefFile, {});
+  return {
+    bySymbol: isObject(source.bySymbol) ? source.bySymbol : {},
+    byCapsuleId: isObject(source.byCapsuleId) ? source.byCapsuleId : {},
+  };
+}
+
+function collectUsageRefs(args, candidates, policy) {
+  const symbols = [...new Set(candidates.map((item) => item.symbolName).filter(Boolean))];
+  if (symbols.length === 0) {
+    return {
+      bySymbol: new Map(),
+      filesScanned: [],
+    };
+  }
+  const files = resolveUsageReferenceFiles(args, candidates, policy);
+  const alternation = symbols
+    .map((item) => escapeRegExp(item))
+    .sort((a, b) => b.length - a.length)
+    .join('|');
+  const tokenPattern = new RegExp(`\\b(${alternation})\\b`, 'g');
+  const bySymbol = new Map(symbols.map((item) => [item, []]));
+  for (const filePath of files) {
+    let source = '';
+    try {
+      source = readText(filePath);
+    } catch (_) {
+      continue;
+    }
+    const fileRef = sourceRef(filePath);
+    const kind = inferUsageRefKind(fileRef);
+    const lines = source.split(/\r?\n/);
+    for (let lineNumber = 1; lineNumber <= lines.length; lineNumber += 1) {
+      const line = lines[lineNumber - 1];
+      tokenPattern.lastIndex = 0;
+      let match;
+      while ((match = tokenPattern.exec(line))) {
+        const symbolName = String(match[1] || '');
+        const refs = bySymbol.get(symbolName);
+        if (!refs) continue;
+        refs.push(`${kind}:${fileRef}#L${lineNumber}`);
+      }
+    }
+  }
+  return {
+    bySymbol,
+    filesScanned: files.map((item) => sourceRef(item)),
+  };
+}
+
+function attachUsageRefsToCandidates(args, candidates, policy) {
+  const usagePolicy = policy.usageReferencePolicy || {};
+  const maxRefs = Number(usagePolicy.maxRefsPerSymbol || 24);
+  const manualMap = loadManualUsageRefMap(args.usageRefFile);
+  const collected = collectUsageRefs(args, candidates, policy);
+  for (const candidate of candidates) {
+    const capsuleId = buildCapsuleId(candidate.symbolName);
+    const autoRefs = collected.bySymbol.get(candidate.symbolName) || [];
+    const manualSymbolRefs = Array.isArray(manualMap.bySymbol[candidate.symbolName]) ? manualMap.bySymbol[candidate.symbolName] : [];
+    const manualCapsuleRefs = Array.isArray(manualMap.byCapsuleId[capsuleId]) ? manualMap.byCapsuleId[capsuleId] : [];
+    const merged = dedupeStrings([
+      ...(candidate.usageRefs || []),
+      ...autoRefs,
+      ...manualSymbolRefs,
+      ...manualCapsuleRefs,
+    ]);
+    const filtered = merged.filter((ref) => {
+      const parsed = parseUsageRef(ref);
+      if (!parsed.file) return false;
+      if (normalizeSlashes(parsed.file) !== normalizeSlashes(candidate.file)) {
+        return true;
+      }
+      if (!Number.isInteger(parsed.line) || parsed.line <= 0) {
+        return true;
+      }
+      const range = candidate.sourceRange || {};
+      if (!Number.isInteger(range.startLine) || !Number.isInteger(range.endLine)) {
+        return true;
+      }
+      return parsed.line < range.startLine || parsed.line > range.endLine;
+    });
+    candidate.usageRefs = filtered.slice(0, maxRefs);
+    candidate.usageRefStats = buildUsageRefStats(candidate.usageRefs, candidate.file);
+  }
+  return {
+    filesScanned: collected.filesScanned,
+  };
 }
 
 function lineNumberAt(source, offset) {
@@ -356,7 +609,33 @@ function ensurePolicyShape(policy) {
       governedToShared: {
         requireSharedSuggestion: true,
         minUsageRefs: 2,
+        minDistinctFiles: 2,
+        minDistinctKinds: 2,
+        requireCrossWorkflowEvidence: true,
+        crossWorkflowKinds: ['map', 'workflow', 'case-study', 'runtime', 'tooling'],
       },
+    },
+    usageReferencePolicy: {
+      enabled: true,
+      includeGlobs: [
+        'tools_node/**/*.js',
+        'tools_node/**/*.mjs',
+        'assets/scripts/**/*.ts',
+        'docs/case-studies/**/*.md',
+        'atomic_workbench/maps/**/*.json',
+        'specs/**/*.json',
+      ],
+      excludeGlobs: [
+        'node_modules/**',
+        'artifacts/**',
+        'atomic_workbench/capsules/**',
+        'library/**',
+        'temp/**',
+        'server/dist/**',
+        '.git/**',
+      ],
+      maxRefsPerSymbol: 24,
+      externalScanMaxDepth: 2,
     },
     anchorPolicy: {
       required: true,
@@ -370,6 +649,9 @@ function ensurePolicyShape(policy) {
   merged.testRequirements.blockRelease = dedupeStrings(merged.testRequirements.blockRelease);
   merged.testRequirements.sideEffectRisk = dedupeStrings(merged.testRequirements.sideEffectRisk);
   merged.sealedPolicy.rules = Array.isArray(merged.sealedPolicy.rules) ? merged.sealedPolicy.rules : [];
+  merged.promotionPolicy.governedToShared.crossWorkflowKinds = dedupeStrings(merged.promotionPolicy.governedToShared.crossWorkflowKinds);
+  merged.usageReferencePolicy.includeGlobs = dedupeStrings(merged.usageReferencePolicy.includeGlobs);
+  merged.usageReferencePolicy.excludeGlobs = dedupeStrings(merged.usageReferencePolicy.excludeGlobs);
   return merged;
 }
 
@@ -548,6 +830,13 @@ function buildCandidate(fn, options = {}) {
     sideEffectRisk: scored.sideEffect,
     manualTestRequired: false,
     usageRefs: [],
+    usageRefStats: {
+      totalRefs: 0,
+      distinctFiles: 0,
+      distinctKinds: 0,
+      externalRefs: 0,
+      kinds: [],
+    },
     anchorId: options.anchor?.anchorId || null,
     moduleSlug: options.anchor?.moduleSlug || null,
     splitPolicy: null,
@@ -697,6 +986,13 @@ function buildCapsuleManifest(candidate) {
     splitPolicy: candidate.splitPolicy || null,
     splitPolicyReason: candidate.splitPolicyReason || null,
     usageRefs: candidate.usageRefs || [],
+    usageRefStats: candidate.usageRefStats || {
+      totalRefs: 0,
+      distinctFiles: 0,
+      distinctKinds: 0,
+      externalRefs: 0,
+      kinds: [],
+    },
     duplicateResolution: candidate.duplicateResolution || null,
     policyFindings: candidate.policyFindings || [],
     lineage: {
@@ -1058,6 +1354,7 @@ function buildCapsuleIndexFromState(workbenchRoot, candidateReportPath) {
       splitPolicy: item.manifest.splitPolicy || null,
       anchorId: item.manifest.anchorId,
       source: item.manifest.source,
+      usageRefStats: item.manifest.usageRefStats || null,
       requiredCaseSets: item.manifest.requiredCaseSets || [],
       capsuleDir: rel(item.capsuleDir),
       manifestPath: rel(item.manifestPath),
@@ -1164,6 +1461,27 @@ function validateCapsuleCharacteristics(manifest, policy) {
   }
   if (!Array.isArray(manifest.requiredCaseSets)) {
     fail('requiredCaseSets must be an array');
+  }
+  if (!Array.isArray(manifest.usageRefs)) {
+    fail('usageRefs must be an array');
+  }
+  if (manifest.usageRefStats !== undefined) {
+    const stats = manifest.usageRefStats || {};
+    if (!Number.isInteger(Number(stats.totalRefs)) || Number(stats.totalRefs) < 0) {
+      fail('usageRefStats.totalRefs must be non-negative integer', { actual: stats.totalRefs });
+    }
+    if (!Number.isInteger(Number(stats.distinctFiles)) || Number(stats.distinctFiles) < 0) {
+      fail('usageRefStats.distinctFiles must be non-negative integer', { actual: stats.distinctFiles });
+    }
+    if (!Number.isInteger(Number(stats.distinctKinds)) || Number(stats.distinctKinds) < 0) {
+      fail('usageRefStats.distinctKinds must be non-negative integer', { actual: stats.distinctKinds });
+    }
+    if (!Number.isInteger(Number(stats.externalRefs)) || Number(stats.externalRefs) < 0) {
+      fail('usageRefStats.externalRefs must be non-negative integer', { actual: stats.externalRefs });
+    }
+    if (stats.kinds !== undefined && !Array.isArray(stats.kinds)) {
+      fail('usageRefStats.kinds must be an array when present', { actual: stats.kinds });
+    }
   }
   if (manifest.behaviorContract?.manualTestRequired !== undefined && typeof manifest.behaviorContract.manualTestRequired !== 'boolean') {
     fail('behaviorContract.manualTestRequired must be boolean');
@@ -1392,6 +1710,23 @@ function collectWorkbenchState(workbenchRoot) {
   return { capsuleRoot, anchorRoot, capsules, anchors };
 }
 
+function summarizeUsageForDemand(manifest) {
+  const refs = dedupeStrings(Array.isArray(manifest.usageRefs) ? manifest.usageRefs : []);
+  const parsed = refs.map((item) => parseUsageRef(item));
+  const distinctFiles = new Set(parsed.map((item) => item.file).filter(Boolean));
+  const distinctKinds = new Set(parsed.map((item) => item.kind).filter(Boolean));
+  const sourceFile = normalizeSlashes(String(manifest.source?.file || ''));
+  const externalRefs = parsed.filter((item) => item.file && normalizeSlashes(item.file) !== sourceFile).length;
+  return {
+    totalRefs: refs.length,
+    distinctFiles: distinctFiles.size,
+    distinctKinds: distinctKinds.size,
+    externalRefs,
+    kinds: [...distinctKinds].sort(),
+    refs,
+  };
+}
+
 function evaluateDemandPolice(workbenchRoot, policy) {
   const state = collectWorkbenchState(workbenchRoot);
   const findings = [];
@@ -1463,20 +1798,47 @@ function evaluateDemandPolice(workbenchRoot, policy) {
         anchorId: manifest.anchorId,
       });
     }
-    const usageRefs = Array.isArray(manifest.usageRefs) ? manifest.usageRefs : [];
-    if (usageRefs.length >= Number(policy.promotionPolicy.governedToShared.minUsageRefs || 2)) {
+    const usage = summarizeUsageForDemand(manifest);
+    const sharedPolicy = policy.promotionPolicy.governedToShared || {};
+    const minUsageRefs = Number(sharedPolicy.minUsageRefs || 2);
+    const minDistinctFiles = Number(sharedPolicy.minDistinctFiles || 2);
+    const minDistinctKinds = Number(sharedPolicy.minDistinctKinds || 2);
+    const crossWorkflowKinds = new Set(dedupeStrings(sharedPolicy.crossWorkflowKinds || []));
+    const hasCrossWorkflow = usage.kinds.some((kind) => crossWorkflowKinds.has(kind));
+    const meetsThresholds = usage.totalRefs >= minUsageRefs
+      && usage.distinctFiles >= minDistinctFiles
+      && usage.distinctKinds >= minDistinctKinds;
+    const sharedEligible = meetsThresholds
+      && (!sharedPolicy.requireCrossWorkflowEvidence || hasCrossWorkflow);
+    if (sharedEligible) {
       findings.push({
         ruleId: 'high-fan-in-shared-suggestion',
         severity: 'warning',
         capsuleId: manifest.capsuleId,
-        usageRefs,
+        usageRefs: usage.refs,
+        usageRefStats: {
+          totalRefs: usage.totalRefs,
+          distinctFiles: usage.distinctFiles,
+          distinctKinds: usage.distinctKinds,
+          externalRefs: usage.externalRefs,
+          kinds: usage.kinds,
+          hasCrossWorkflow,
+        },
       });
     } else {
       findings.push({
         ruleId: 'single-use-stay-local',
         severity: 'info',
         capsuleId: manifest.capsuleId,
-        usageRefs,
+        usageRefs: usage.refs,
+        usageRefStats: {
+          totalRefs: usage.totalRefs,
+          distinctFiles: usage.distinctFiles,
+          distinctKinds: usage.distinctKinds,
+          externalRefs: usage.externalRefs,
+          kinds: usage.kinds,
+          hasCrossWorkflow,
+        },
       });
     }
   }
@@ -1563,6 +1925,7 @@ function runScan(args) {
       }));
     }
   }
+  const usageCollection = attachUsageRefsToCandidates(args, candidates, policy);
   candidates.sort((a, b) => b.riskScore - a.riskScore || a.file.localeCompare(b.file) || a.sourceRange.startLine - b.sourceRange.startLine);
   const demandPolice = findDuplicateHints(candidates, policy);
   const anchors = [...anchorsByFile.values()].map((anchor) => ({
@@ -1583,6 +1946,11 @@ function runScan(args) {
     anchorPolicy: policy.anchorPolicy,
     candidateCount: candidates.length,
     anchors,
+    usageReferenceCollection: {
+      filesScanned: usageCollection.filesScanned,
+      fileCount: usageCollection.filesScanned.length,
+      usageRefFile: args.usageRefFile ? sourceRef(args.usageRefFile) : null,
+    },
     candidates,
     demandPolice,
   };

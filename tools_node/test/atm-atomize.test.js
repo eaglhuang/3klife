@@ -22,6 +22,8 @@ const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'atm-atomize-test-'));
 const workbenchRoot = path.join(tempRoot, 'atomic_workbench');
 const policyRoot = path.join(workbenchRoot, 'policies');
 const fixtureFile = path.join(tempRoot, 'fixture.js');
+const workflowUsageFile = path.join(tempRoot, 'legacy-workflow-usage.js');
+const mapUsageFile = path.join(tempRoot, 'pilot-map.spec.json');
 const reportPath = path.join(tempRoot, 'candidates.json');
 
 fs.mkdirSync(policyRoot, { recursive: true });
@@ -74,6 +76,20 @@ fixtureLines.push('  parseThing,');
 fixtureLines.push('};');
 fixtureLines.push('');
 fs.writeFileSync(fixtureFile, fixtureLines.join('\n'), 'utf8');
+fs.writeFileSync(workflowUsageFile, [
+  "'use strict';",
+  "const { parseThing } = require('./fixture');",
+  "function runWorkflow(raw) {",
+  "  return parseThing(raw).join('|');",
+  "}",
+  "module.exports = { runWorkflow };",
+  "",
+].join('\n'), 'utf8');
+fs.writeFileSync(mapUsageFile, JSON.stringify({
+  mapId: 'TEST-MAP-0001',
+  members: ['parseThing'],
+  notes: 'parseThing is used by pilot map contract',
+}, null, 2), 'utf8');
 
 const { policy, defaultPolicy, projectPolicy, hookPath } = loadPolicyStack({
   workbenchRoot,
@@ -130,6 +146,12 @@ const scanReport = runScan({
 assert.equal(scanReport.candidateCount, 3, 'scan emits candidates');
 assert.equal(scanReport.anchors.length, 1, 'scan emits one source anchor');
 assert.equal(scanReport.thresholds.functionLinesWarn, 10, 'scan uses merged project threshold');
+const scannedParseThing = scanReport.candidates.find((item) => item.symbolName === 'parseThing');
+assert.ok(scannedParseThing, 'scan includes parseThing candidate');
+assert.ok(Array.isArray(scannedParseThing.usageRefs) && scannedParseThing.usageRefs.length > 0, 'usage refs collected automatically');
+assert.ok(scannedParseThing.usageRefs.some((item) => item.includes('legacy-workflow-usage.js#L')), 'workflow usage is recorded');
+assert.ok(scannedParseThing.usageRefs.some((item) => item.includes('pilot-map.spec.json#L')), 'map usage is recorded');
+assert.ok(scannedParseThing.usageRefStats && scannedParseThing.usageRefStats.distinctKinds >= 2, 'usage stats include kind coverage');
 assert.ok(fs.existsSync(reportPath), 'scan report written');
 
 const scaffoldReport = runScaffold({
@@ -153,6 +175,10 @@ const demandPoliceReport = runDemandPolice({
   workbenchRoot,
 });
 assert.equal(demandPoliceReport.passed, true, 'demand police passes on clean scaffold');
+assert.ok(
+  demandPoliceReport.findings.some((item) => item.ruleId === 'high-fan-in-shared-suggestion' && item.capsuleId === 'H2U-CAPSULE-PARSE-THING'),
+  'auto usage refs drive shared suggestion on parseThing'
+);
 
 const promoteReport = runPromote({
   workbenchRoot,

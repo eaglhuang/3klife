@@ -65,8 +65,40 @@
     },
     "governedToShared": {
       "requireDemandPoliceSuggestion": true,
-      "requireCrossWorkflowEvidence": true
+      "requireCrossWorkflowEvidence": true,
+      "minUsageRefs": 2,
+      "minDistinctFiles": 2,
+      "minDistinctKinds": 2,
+      "crossWorkflowKinds": [
+        "map",
+        "workflow",
+        "case-study",
+        "runtime",
+        "tooling"
+      ]
     }
+  },
+  "usageReferencePolicy": {
+    "enabled": true,
+    "includeGlobs": [
+      "tools_node/**/*.js",
+      "tools_node/**/*.mjs",
+      "assets/scripts/**/*.ts",
+      "docs/case-studies/**/*.md",
+      "atomic_workbench/maps/**/*.json",
+      "specs/**/*.json"
+    ],
+    "excludeGlobs": [
+      "node_modules/**",
+      "artifacts/**",
+      "atomic_workbench/capsules/**",
+      "library/**",
+      "temp/**",
+      "server/dist/**",
+      ".git/**"
+    ],
+    "maxRefsPerSymbol": 24,
+    "externalScanMaxDepth": 2
   },
   "anchorPolicy": {
     "required": true,
