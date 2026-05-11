@@ -2,18 +2,19 @@
 doc_id: doc_task_0226
 id: "H2U-REFACTOR-0003"
 priority: "P2"
-owner: "codex-worker-b"
+owner: "Unassigned"
 status: "done"
 started_at: "2026-05-11T18:30:00+08:00"
-completed_at: "2026-05-11T18:45:00+08:00"
+completed_at: "2026-05-11T18:34:55+08:00"
 started_by_agent: "codex-worker-b"
+completed_by_agent: "vs-insiders-gpt-5.3-codex"
 type: "refactoring"
 phase: "G"
 created: "2026-05-05"
 created_by_agent: "ClaudeCode_claude-sonnet-4-6"
 related_cards: []
 depends: []
-notes: "2026-05-11 | 狀態: done | Agent B 完成: 新建 browser-capture-core.js，統一 puppeteer init 邏輯，compare-html-to-cocos-editor.js 與 capture-ui-screens.js 改用 core，重複代碼刪除。語法驗證通過。"
+notes: "2026-05-11 | 狀態: done | 完成作者: vs-insiders-gpt-5.3-codex | 完成時間更新為 2026-05-11T18:34:55+08:00 | 佔用已釋放(owner=Unassigned) | Agent B 完成: 新建 browser-capture-core.js，統一 puppeteer init 邏輯，compare-html-to-cocos-editor.js 與 capture-ui-screens.js 改用 core，重複代碼刪除。語法驗證通過。"
 ---
 
 # [H2U-REFACTOR-0003] 抽 browser-capture-core
