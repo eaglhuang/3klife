@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const syncModule = require('./sync-atm-stabilization-milestone');
+const taskStoreTruthValidator = require('./validate-atm-task-store-single-truth');
 const retentionValidator = require('./validate-turn-artifact-retention');
 const sidecarValidator = require('./validate-registry-sidecar-convergence');
 const ruleGuardValidator = require('./validate-rule-guard-read-only');
@@ -101,6 +102,14 @@ function runSyncCheck() {
   return run.report;
 }
 
+function runTaskStoreSingleTruthCheck() {
+  return taskStoreTruthValidator.buildReport({
+    strict: true,
+    staged: false,
+    skipSyncCheck: true,
+  });
+}
+
 function runRetentionCheck() {
   return retentionValidator.buildReport({
     strict: true,
@@ -145,6 +154,7 @@ async function main() {
 
   const startedAt = new Date().toISOString();
   const syncReport = runSyncCheck();
+  const taskStoreSingleTruthReport = runTaskStoreSingleTruthCheck();
   const retentionReport = runRetentionCheck();
   const sidecarReport = await runSidecarCheck();
   const backfillCompat = buildBackfillCompatCheck(sidecarReport);
@@ -154,6 +164,11 @@ async function main() {
     toCheck('sync-atm-task-store', syncReport, {
       changedFiles: syncReport.changedFiles || [],
       summary: syncReport.summary || {},
+    }),
+    toCheck('validate-atm-task-store-single-truth', taskStoreSingleTruthReport, {
+      summary: taskStoreSingleTruthReport.summary || {},
+      derivedPaths: taskStoreSingleTruthReport.derivedPaths || [],
+      sourcePaths: taskStoreSingleTruthReport.sourcePaths || [],
     }),
     toCheck('validate-turn-artifact-retention', retentionReport, {
       root: retentionReport.root,
@@ -209,6 +224,7 @@ module.exports = {
   parseArgs,
   buildFindings,
   runSyncCheck,
+  runTaskStoreSingleTruthCheck,
   runRetentionCheck,
   runSidecarCheck,
   runRuleGuardCheck,

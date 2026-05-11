@@ -87,13 +87,15 @@
     "title": "Task-store single-truth anti-bypass guard",
     "owner": "vs-code-gpt-5.3-codex",
     "priority": "P1",
-    "status": "open",
+    "status": "done",
     "type": "governance",
     "phase": "ATM-8",
     "created": "2026-05-11",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-11T14:43:39+08:00",
+    "started_by_agent": "vs-code-gpt-5.3-codex",
+    "completed_at": "2026-05-11T14:48:28+08:00",
+    "completed_by_agent": "vs-code-gpt-5.3-codex",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -104,9 +106,11 @@
       "check mode 可偵測 bypass 變更"
     ],
     "deliverables": [
-      "sync/guard scripts and docs"
+      "sync/guard scripts and docs",
+      "tools_node/validate-atm-task-store-single-truth.js",
+      "tools_node/test/validate-atm-task-store-single-truth.test.js"
     ],
-    "notes": "2026-05-11 | 狀態: open | 驗證: pending | 變更: hardening backlog 建立 | 阻塞: 無",
+    "notes": "2026-05-11 | 狀態: done | 驗證: npm.cmd run test:atm-task-store-single-truth；npm.cmd run validate:atm-task-store-single-truth -- --strict；npm.cmd run validate:atm-milestone；npm.cmd run validate:atm-stability-closeout -- --strict；node tools_node/check-doc-shard-health.js；npm.cmd run check:encoding:touched -- --files tools_node/validate-atm-task-store-single-truth.js tools_node/test/validate-atm-task-store-single-truth.test.js tools_node/validate-atm-stability-closeout.js package.json docs/agent-briefs/tasks/ATM/ATM-8-0003.md docs/tasks/tasks-atm/tasks-atm-part-5.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md | 變更: 新增 task-store single-truth anti-bypass validator、加入 closeout 聚合檢查、補齊單元測試與 npm scripts | 阻塞: Node child-process git scan 在本機沙箱下 EPERM，已降級為 advisory 並保留 sync-check 阻擋能力\n2026-05-11 | 狀態: in-progress | 驗證: pending | 變更: 啟動 anti-bypass guard 實作與驗證串接 | 阻塞: 無\n2026-05-11 | 狀態: open | 驗證: pending | 變更: hardening backlog 建立 | 阻塞: 無",
     "brief": {
       "style": "classic",
       "label": "",
@@ -123,7 +127,14 @@
     },
     "harness_evidence": {
       "artifact_paths": [],
-      "validation_evidence": [],
+      "validation_evidence": [
+        "npm.cmd run test:atm-task-store-single-truth",
+        "npm.cmd run validate:atm-task-store-single-truth -- --strict",
+        "npm.cmd run validate:atm-milestone",
+        "npm.cmd run validate:atm-stability-closeout -- --strict",
+        "node tools_node/check-doc-shard-health.js",
+        "npm.cmd run check:encoding:touched -- --files tools_node/validate-atm-task-store-single-truth.js tools_node/test/validate-atm-task-store-single-truth.test.js tools_node/validate-atm-stability-closeout.js package.json docs/agent-briefs/tasks/ATM/ATM-8-0003.md docs/tasks/tasks-atm/tasks-atm-part-5.json docs/tasks/tasks-atm.json docs/ai_atomic_framework/atm-evolution-plan-shards/atm-framework-stabilization-milestones.md"
+      ],
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
