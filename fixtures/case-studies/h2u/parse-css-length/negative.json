@@ -1,0 +1,12 @@
+{
+  "suite": "parse-css-length-negative",
+  "atomId": "ATM-CORE-0006",
+  "cases": [
+    { "name": "percent", "input": "80%", "expected": 0 },
+    { "name": "keyword-auto", "input": "auto", "expected": 0 }
+  ],
+  "neutrality": {
+    "passed": true,
+    "note": "No 3KLife/Cocos private contract leaked into atom schema."
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schemaId": "atm.upgradeProposal",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "breaking",
+    "fromVersion": "0.1.0",
+    "notes": "ATM-4-0008 route-3 map-bump pilot for cross-atom change set."
+  },
+  "proposalId": "proposal.atm-core-0005.from-0.1.0.to-0.2.0.map-atm-map-0003.behavior-evolve",
+  "atomId": "ATM-CORE-0005",
+  "fromVersion": "0.1.0",
+  "toVersion": "0.2.0",
+  "lifecycleMode": "evolution",
+  "behaviorId": "behavior.evolve",
+  "target": {
+    "kind": "map",
+    "mapId": "ATM-MAP-0003"
+  },
+  "decompositionDecision": "map-bump",
+  "reviewTemplate": "review.template.map-bump",
+  "automatedGates": {
+    "nonRegression": {
+      "passed": true,
+      "reportId": "h2u-map.non-regression.route-3",
+      "reportPath": "fixtures/case-studies/h2u-map/route-3-non-regression.json",
+      "summary": "pass (cross-atom baseline kept)"
+    },
+    "qualityComparison": {
+      "passed": true,
+      "reportId": "h2u-map.quality.route-3",
+      "reportPath": "fixtures/case-studies/h2u-map/route-3-quality-comparison.json",
+      "summary": "pass (cross-atom quality and propagation passed)"
+    },
+    "registryCandidate": {
+      "passed": true,
+      "reportId": "h2u-map.registry.route-3",
+      "reportPath": "fixtures/case-studies/h2u-map/route-3-registry-candidate.json",
+      "summary": "pass (map-level candidate can promote)"
+    },
+    "allPassed": true,
+    "blockedGateNames": []
+  },
+  "humanReview": "pending",
+  "status": "pending",
+  "inputs": [
+    {
+      "kind": "hash-diff",
+      "path": "fixtures/case-studies/h2u-map/route-3-hash-diff.json",
+      "schemaId": "atm.hashDiffReport",
+      "summary": "h2u-map v0.1.0 -> v0.2.0"
+    },
+    {
+      "kind": "quality-comparison",
+      "path": "fixtures/case-studies/h2u-map/route-3-quality-comparison.json",
+      "schemaId": "atm.police.qualityComparisonReport",
+      "reportId": "h2u-map.quality.route-3",
+      "summary": "route-3 quality checks"
+    },
+    {
+      "kind": "registry-candidate",
+      "path": "fixtures/case-studies/h2u-map/route-3-registry-candidate.json",
+      "schemaId": "atm.police.registryCandidateReport",
+      "reportId": "h2u-map.registry.route-3",
+      "summary": "route-3 registry candidate checks"
+    }
+  ],
+  "mapImpactScope": {
+    "affectedMapIds": [
+      "ATM-MAP-0003"
+    ],
+    "propagationStatus": [
+      {
+        "mapId": "ATM-MAP-0003",
+        "integrationTestPassed": true,
+        "message": "Map bump propagation report is green."
+      }
+    ]
+  },
+  "members": [
+    { "from": "ATM-CORE-0005@0.1.0", "to": "ATM-CORE-0005@0.2.0" },
+    { "from": "ATM-CORE-0006@0.1.0", "to": "ATM-CORE-0006@0.2.0" },
+    { "from": "ATM-CORE-0007@0.1.0", "to": "ATM-CORE-0011@0.2.0" }
+  ],
+  "generatorProvenance": "generated",
+  "proposedBy": "ATM-4-0008-pilot",
+  "proposedAt": "2026-05-11T01:12:00.000Z"
+}

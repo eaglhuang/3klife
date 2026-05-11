@@ -1,0 +1,19 @@
+{
+  "schemaId": "atm.caseStudy.parseCssLength",
+  "specVersion": "1.0.0",
+  "atomId": "ATM-CORE-0006",
+  "atomVersion": "0.1.0",
+  "behaviorId": "behavior.atomize",
+  "lineage": {
+    "bornBy": "atomize",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/dom-to-ui/snapshot-to-slots.js#L6-L10"
+    ]
+  },
+  "summary": "Extracted parseCssLength case atom for html-to-ucuf snapshot path.",
+  "cases": [
+    { "input": "16px", "output": 16 },
+    { "input": "-24.5px", "output": -24.5 },
+    { "input": "80%", "output": 0 }
+  ]
+}

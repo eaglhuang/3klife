@@ -1,0 +1,97 @@
+{
+  "schemaId": "atm.upgradeProposal",
+  "specVersion": "0.1.0",
+  "migration": {
+    "strategy": "breaking",
+    "fromVersion": "0.1.0",
+    "notes": "ATM-4-0008 route-2 atom-extract pilot for parseFragmentList decomposition."
+  },
+  "proposalId": "proposal.atm-core-0007.from-0.1.0.to-0.2.0.atom.behavior-atomize",
+  "atomId": "ATM-CORE-0007",
+  "fromVersion": "0.1.0",
+  "toVersion": "0.2.0",
+  "lifecycleMode": "evolution",
+  "behaviorId": "behavior.atomize",
+  "target": {
+    "kind": "atom"
+  },
+  "decompositionDecision": "atom-extract",
+  "reviewTemplate": "review.template.atom-extract",
+  "automatedGates": {
+    "nonRegression": {
+      "passed": true,
+      "reportId": "h2u-map.non-regression.route-2",
+      "reportPath": "fixtures/case-studies/h2u-map/route-2-non-regression.json",
+      "summary": "pass (legacy + atom fixtures passed)"
+    },
+    "qualityComparison": {
+      "passed": true,
+      "reportId": "h2u-map.quality.route-2",
+      "reportPath": "fixtures/case-studies/h2u-map/route-2-quality-comparison.json",
+      "summary": "pass (extract candidate quality acceptable)"
+    },
+    "registryCandidate": {
+      "passed": true,
+      "reportId": "h2u-map.registry.route-2",
+      "reportPath": "fixtures/case-studies/h2u-map/route-2-registry-candidate.json",
+      "summary": "pass (extract candidate can promote)"
+    },
+    "allPassed": true,
+    "blockedGateNames": []
+  },
+  "humanReview": "pending",
+  "status": "pending",
+  "inputs": [
+    {
+      "kind": "hash-diff",
+      "path": "fixtures/case-studies/h2u-map/route-2-hash-diff.json",
+      "schemaId": "atm.hashDiffReport",
+      "summary": "parseFragmentList v0.1.0 -> v0.2.0"
+    },
+    {
+      "kind": "quality-comparison",
+      "path": "fixtures/case-studies/h2u-map/route-2-quality-comparison.json",
+      "schemaId": "atm.police.qualityComparisonReport",
+      "reportId": "h2u-map.quality.route-2",
+      "summary": "route-2 quality checks"
+    },
+    {
+      "kind": "registry-candidate",
+      "path": "fixtures/case-studies/h2u-map/route-2-registry-candidate.json",
+      "schemaId": "atm.police.registryCandidateReport",
+      "reportId": "h2u-map.registry.route-2",
+      "summary": "route-2 registry candidate checks"
+    }
+  ],
+  "mapImpactScope": {
+    "affectedMapIds": [
+      "ATM-MAP-0003"
+    ],
+    "propagationStatus": [
+      {
+        "mapId": "ATM-MAP-0003",
+        "integrationTestPassed": true,
+        "message": "Route-2 member replacement replay passed."
+      }
+    ]
+  },
+  "fork": {
+    "sourceAtomId": "ATM-CORE-0007",
+    "newAtomId": "ATM-CORE-0011"
+  },
+  "extractPlan": {
+    "preservedSourceAtom": {
+      "atomId": "ATM-CORE-0007",
+      "retainedAtVersion": "0.1.0",
+      "retentionMode": "legacy-preserved"
+    },
+    "newAtomSpecStub": {
+      "atomId": "ATM-CORE-0011",
+      "seededFromAtomId": "ATM-CORE-0007",
+      "initialVersion": "0.2.0",
+      "lifecycleMode": "evolution"
+    }
+  },
+  "proposedBy": "ATM-4-0008-pilot",
+  "proposedAt": "2026-05-11T01:08:00.000Z"
+}

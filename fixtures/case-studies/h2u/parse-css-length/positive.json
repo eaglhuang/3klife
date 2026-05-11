@@ -1,0 +1,9 @@
+{
+  "suite": "parse-css-length-positive",
+  "atomId": "ATM-CORE-0006",
+  "cases": [
+    { "name": "basic-px", "input": "16px", "expected": 16 },
+    { "name": "decimal-px", "input": "-24.5px", "expected": -24.5 },
+    { "name": "embedded-token", "input": "calc(100% - 12px)", "expected": 12 }
+  ]
+}

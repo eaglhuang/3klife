@@ -1,0 +1,9 @@
+{
+  "suite": "parse-fragment-list-positive",
+  "atomId": "ATM-CORE-0007",
+  "cases": [
+    { "name": "basic-list", "input": "fragments/layouts/a,fragments/layouts/b", "expected": ["fragments/layouts/a", "fragments/layouts/b"] },
+    { "name": "spaces-and-empty", "input": " alpha , , beta ,  gamma  ", "expected": ["alpha", "beta", "gamma"] },
+    { "name": "single", "input": "slot.story-strip", "expected": ["slot.story-strip"] }
+  ]
+}

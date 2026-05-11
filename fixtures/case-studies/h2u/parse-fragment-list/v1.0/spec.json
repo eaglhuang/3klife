@@ -1,0 +1,19 @@
+{
+  "schemaId": "atm.caseStudy.parseFragmentList",
+  "specVersion": "1.0.0",
+  "atomId": "ATM-CORE-0007",
+  "atomVersion": "0.1.0",
+  "behaviorId": "behavior.atomize",
+  "lineage": {
+    "bornBy": "atomize",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/dom-to-ui/draft-builder.js#L869-L874"
+    ]
+  },
+  "summary": "Extracted parseFragmentList case atom for draft builder fragment routing.",
+  "cases": [
+    { "input": "a,b", "output": ["a", "b"] },
+    { "input": " alpha , , beta ", "output": ["alpha", "beta"] },
+    { "input": "", "output": [] }
+  ]
+}

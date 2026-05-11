@@ -1,0 +1,12 @@
+{
+  "suite": "parse-fragment-list-negative",
+  "atomId": "ATM-CORE-0007",
+  "cases": [
+    { "name": "empty-string", "input": "", "expected": [] },
+    { "name": "null-input", "input": null, "expected": [] }
+  ],
+  "neutrality": {
+    "passed": true,
+    "note": "No adopter-specific assumptions in parser output contract."
+  }
+}
