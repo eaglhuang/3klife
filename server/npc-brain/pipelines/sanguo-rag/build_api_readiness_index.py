@@ -21,6 +21,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--persona-card", default=str(DEFAULT_PERSONA_CARD_PATH), help="general persona card path")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory")
     parser.add_argument("--general-id", default=DEFAULT_GENERAL_ID, help="General id for fixture responses")
+    parser.add_argument("--vector-check-report", default="", help="optional vector backend check JSON report path")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting outputs")
     return parser.parse_args()
 
@@ -45,6 +46,7 @@ def ensure_output_root(output_root: Path, overwrite: bool) -> None:
         output_root / "dialogue-evidence-probe.json",
         output_root / "persona-card.response.json",
         output_root / "pinecone-metadata-manifest.json",
+        output_root / "vector-backend-check.json",
         output_root / "api-readiness-report.md",
     ]
     existing = [path for path in outputs if path.exists()]
@@ -148,7 +150,10 @@ def build_pinecone_manifest(events: list[dict], keyword_pack: dict, persona_card
     }
 
 
-def render_report(context_options: dict, keyword_options: dict, persona_card: dict, dialogue_probe: dict, manifest: dict) -> str:
+def render_report(context_options: dict, keyword_options: dict, persona_card: dict, dialogue_probe: dict, manifest: dict, vector_check: dict) -> str:
+    vector_status = "skipped"
+    if vector_check:
+        vector_status = str(vector_check.get("status") or "unknown")
     lines = [
         "# API Readiness Report",
         "",
@@ -157,6 +162,7 @@ def render_report(context_options: dict, keyword_options: dict, persona_card: di
         f"- Context Options: `{len(context_options.get('options') or [])}`",
         f"- Persona Card: `{'pass' if persona_card else 'missing'}`",
         f"- Dialogue Evidence Probe: `{dialogue_probe.get('readiness')}`",
+        f"- Vector Backend Check: `{vector_status}`",
         "",
         "## Keyword Counts",
         "",
@@ -166,6 +172,23 @@ def render_report(context_options: dict, keyword_options: dict, persona_card: di
     lines.extend(["", "## Pinecone Namespaces", ""])
     for namespace, info in manifest["namespacePlan"].items():
         lines.append(f"- `{namespace}` records=`{info['records']}` metadata=`{', '.join(info['requiredMetadata'])}`")
+    if vector_check:
+        lines.extend(["", "## Vector Backend Probe", ""])
+        expected_id = vector_check.get("expectedRecordId")
+        namespace = vector_check.get("namespace")
+        if expected_id:
+            lines.append(f"- Expected Record ID: `{expected_id}`")
+        if namespace:
+            lines.append(f"- Namespace: `{namespace}`")
+        providers = vector_check.get("providers") or {}
+        for provider_name in sorted(providers.keys()):
+            provider = providers.get(provider_name) or {}
+            contains = bool(provider.get("containsExpected"))
+            match_count = provider.get("matchCount")
+            top_ids = provider.get("topIds") or []
+            lines.append(
+                f"- `{provider_name}` containsExpected=`{contains}` matchCount=`{match_count}` topIds=`{', '.join(str(item) for item in top_ids[:3])}`"
+            )
     lines.append("")
     return "\n".join(lines)
 
@@ -181,13 +204,23 @@ def main() -> None:
     keyword_options = build_keyword_options(keyword_pack)
     dialogue_probe = build_dialogue_probe(context_options, keyword_options)
     manifest = build_pinecone_manifest(events, keyword_pack, persona_card, args.general_id)
+    vector_check = {}
+    if args.vector_check_report:
+        vector_path = Path(args.vector_check_report)
+        if vector_path.exists():
+            vector_check = read_json(vector_path)
 
     (output_root / "context-options.response.json").write_text(json.dumps(context_options, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (output_root / "keyword-options.response.json").write_text(json.dumps(keyword_options, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (output_root / "dialogue-evidence-probe.json").write_text(json.dumps(dialogue_probe, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (output_root / "persona-card.response.json").write_text(json.dumps(persona_card, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (output_root / "pinecone-metadata-manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    (output_root / "api-readiness-report.md").write_text(render_report(context_options, keyword_options, persona_card, dialogue_probe, manifest), encoding="utf-8")
+    if vector_check:
+        (output_root / "vector-backend-check.json").write_text(json.dumps(vector_check, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (output_root / "api-readiness-report.md").write_text(
+        render_report(context_options, keyword_options, persona_card, dialogue_probe, manifest, vector_check),
+        encoding="utf-8",
+    )
     print(f"[build_api_readiness_index] wrote {output_root}")
     print(f"[build_api_readiness_index] contexts={len(context_options['options'])} dialogueProbe={dialogue_probe['readiness']}")
     if dialogue_probe["readiness"] != "pass":

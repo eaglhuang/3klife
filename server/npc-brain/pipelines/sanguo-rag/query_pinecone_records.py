@@ -81,7 +81,7 @@ def main() -> None:
             for match in matches
         ],
     }
-    print(json.dumps(payload, ensure_ascii=False, indent=2))
+    print(json.dumps(payload, ensure_ascii=True, indent=2))
 
 
 if __name__ == "__main__":
