@@ -97,3 +97,9 @@ npm run smoke:all:strict
 - NPC brain env template: `server/npc-brain/.env.example`
 
 `server` 會先讀 `server/.env`，找不到時再讀 root `.env`。
+
+## Shared Skill Runtime Contract
+
+- `shared/skill-runtime.ts` 是 **Server / 測試 / 工具鏈** 使用的主契約檔。
+- 這份檔案必須保持 **不依賴 Cocos (`cc`)**，避免 Docker/Node 編譯被 `assets/` 耦合。
+- 不要把 `shared/skill-runtime.ts` 改成空 stub；若要調整欄位，請維持既有 export（enum/type/interface）相容性。

@@ -8,10 +8,18 @@
     "esModuleInterop": true,
     "strict": false,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": "..",
+    "paths": {
+      "@shared/*": ["shared/*"]
+    }
   },
   "include": [
     "src/**/*.ts",
     "../shared/**/*.ts"
+  ],
+  "exclude": [
+    "../assets/**/*.ts",
+    "../node_modules/**/*"
   ]
 }
