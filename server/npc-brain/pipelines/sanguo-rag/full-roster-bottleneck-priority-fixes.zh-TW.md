@@ -108,7 +108,7 @@ Smoke（`p3-same-round-smoke-r1`）：
 
 - [x] P0 Scoreboard->Repair Feed bridge
 - [x] P3 同輪 repair->preview 強化
-- [ ] P6 human-review cluster 去重
+- [x] P6 human-review cluster 去重
 
 目標：
 
@@ -131,7 +131,8 @@ Smoke（`p3-same-round-smoke-r1`）：
 
 - [ ] P4 角度抽取規則擴充
 - [ ] P5 canonical / shadow 雙 KPI
-- [ ] P7 來源 ROI 退場與權重修正
+- [x] P7 來源 ROI 退場與權重修正
+- [x] P8 runtime fail generals evidence-ref 補洞 blitz（r3a2）
 
 目標：
 
@@ -153,3 +154,19 @@ Smoke（`p3-same-round-smoke-r1`）：
 - `P5` 的雙 KPI 主要是「觀測修正」，不是品質魔法拉分。
 - 真正能把資料品質推上去的，還是 `P0 + P1 + P2 + P3` 這四件事。
 - 你現在的策略方向是對的：先把 B 級大量轉成可決策 A/B，再讓人工只處理高價值衝突點。
+
+## 7) 2026-05-11 最新執行快照（r3）
+
+- [x] 已完成 `r3` 全量續跑：`full-roster-max-progress-r3`
+- [x] P7 已生效：`source ROI action = keep(18) / manual-keep(3) / auto-retired-reject(1)`
+- [x] `overallPercent`：`70.12 -> 79.59`（`+9.47`）
+- [x] relationship evidence：`1808 -> 2308`（`+500`）
+- [x] event seed：`3128 -> 3270`（`+142`）
+- [x] event packets：`11102 -> 15232`（`+4130`）
+- [x] runtime gate 補洞 rerun：`24 fail -> 0 fail`（24 位 targeted generals 全數 pass）
+
+下一步固定：
+
+1. 將 `runtime-fail-ref-blitz-r3a2` 產生的 runtime profiles 併回主幹路徑或正式橋接步驟。
+2. 再跑一輪 full roster convergence 驗證主幹 `runtimeReadinessFailCount == 0`。
+3. 若主幹也歸零，再推進下一輪 canonical-safe 收斂。
