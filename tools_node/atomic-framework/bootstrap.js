@@ -166,6 +166,43 @@ function runUpstreamScript(scriptRelativePath, commandArgs = [], overrides = {})
   return typeof result.status === 'number' ? result.status : 1;
 }
 
+function runRunEnvelope(argv = process.argv.slice(2), overrides = {}) {
+  const parsed = parseWrapperArgs(argv);
+  const config = resolveConfig({
+    ...parsed,
+    ...overrides,
+  });
+
+  const scriptPath = path.resolve(config.repositoryRoot, 'tools_node', 'atomic-framework', 'run-envelope.js');
+  if (!fs.existsSync(scriptPath)) {
+    process.stderr.write(`[atm wrapper] Missing run envelope script: ${scriptPath}\n`);
+    return 1;
+  }
+
+  const result = spawnSync(process.execPath, [scriptPath, ...parsed.args], {
+    cwd: config.repositoryRoot,
+    env: {
+      ...process.env,
+      ATM_UPSTREAM_REPO_ROOT: config.upstreamRepoRoot,
+      ATM_UPSTREAM_CLI_ENTRYPOINT: config.upstreamCliEntrypoint,
+      ATM_LOCAL_WORKBENCH_ROOT: config.localWorkbenchRoot,
+    },
+    encoding: 'utf8',
+  });
+
+  if (result.stdout) {
+    process.stdout.write(result.stdout);
+  }
+  if (result.stderr) {
+    process.stderr.write(result.stderr);
+  }
+  if (result.error) {
+    process.stderr.write(`[atm wrapper] ${result.error.message}\n`);
+  }
+
+  return typeof result.status === 'number' ? result.status : 1;
+}
+
 function runPoliceAll(argv = process.argv.slice(2), overrides = {}) {
   const parsed = parseWrapperArgs(argv);
   return runUpstreamScript('scripts/validate-police.mjs', ['--mode', 'validate', ...parsed.args], overrides);
@@ -202,6 +239,10 @@ function runAtmCli(argv = process.argv.slice(2), overrides = {}) {
     return runVerifyAll(argv, config);
   }
 
+  if (commandName === 'run') {
+    return runRunEnvelope(argv, config);
+  }
+
   return runUpstreamCommand(commandName, parsed.command ? parsed.args : parsed.args, config);
 }
 
@@ -221,4 +262,5 @@ module.exports = {
   runAtmCli,
   runPoliceAll,
   runVerifyAll,
+  runRunEnvelope,
 };

@@ -165,5 +165,44 @@ export function createFinalizeAgentTurnCliSuite(): TestSuite {
         assert.equals(2, result.json.turnUsage.totals.files, 'turn usage 應只統計 task lock files');
     });
 
+    suite.test('ATM 任務會呼叫 atm run --finalize 並使用 atm profile', () => {
+        const result = runFinalizeAgentTurn([
+            '--workflow', 'plain-workflow',
+            '--task', 'ATM-3-0013',
+            '--skip-ucuf',
+            '--files', 'tests/run-cli.ts',
+        ], {
+            'atm-run-finalize': {
+                status: 0,
+                stdout: JSON.stringify({
+                    ok: true,
+                    mode: 'run-envelope',
+                    finalize: true,
+                    computeGate: {
+                        ok: true,
+                        command: 'node tools_node/compute-gate.js --profile atm --agent-feedback',
+                    },
+                }),
+            },
+        });
+
+        assert.equals(0, result.status ?? -1, `CLI 應成功結束，stderr:\n${result.stderr}`);
+        assert.isTrue(result.json.atmEnvelope.invoked === true, 'ATM 任務應觸發 atm envelope');
+        assert.equals('atm', result.json.atmEnvelope.profile, 'ATM 任務應使用 atm profile');
+        assert.isTrue(result.json.atmEnvelope.ok === true, 'atm envelope 應回傳成功');
+    });
+
+    suite.test('非 ATM 任務不應觸發 atm envelope', () => {
+        const result = runFinalizeAgentTurn([
+            '--workflow', 'plain-workflow',
+            '--task', 'UI-2-0108',
+            '--skip-ucuf',
+            '--files', 'tests/run-cli.ts',
+        ]);
+
+        assert.equals(0, result.status ?? -1, `CLI 應成功結束，stderr:\n${result.stderr}`);
+        assert.isTrue(result.json.atmEnvelope.invoked === false, '非 ATM 任務不應觸發 atm envelope');
+    });
+
     return suite;
 }

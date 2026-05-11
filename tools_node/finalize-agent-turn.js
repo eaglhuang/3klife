@@ -560,6 +560,63 @@ function runUcufPreSubmitGate(args) {
   return { passed: errors.length === 0, errors, warnings };
 }
 
+function isAtmTask(taskId) {
+  return /^ATM-/i.test(String(taskId || '').trim());
+}
+
+function runAtmFinalizeEnvelope(args) {
+  const taskId = String(args.task || '').trim();
+  const testStubs = loadTestStubs();
+  if (testStubs && Object.prototype.hasOwnProperty.call(testStubs, 'atm-run-finalize')) {
+    const stub = testStubs['atm-run-finalize'] || {};
+    const status = Number.isInteger(stub.status) ? stub.status : (stub.ok === false ? 1 : 0);
+    return {
+      invoked: true,
+      ok: status === 0,
+      status,
+      profile: isAtmTask(taskId) ? 'atm' : 'standard',
+      stdout: String(stub.stdout || ''),
+      stderr: String(stub.stderr || ''),
+      command: 'node tools_node/atomic-framework/atm-cli.js run --finalize ... (stubbed)',
+    };
+  }
+
+  const atmCliPath = path.join(__dirname, 'atomic-framework', 'atm-cli.js');
+  const commandArgs = [
+    atmCliPath,
+    'run',
+    '--finalize',
+    '--task',
+    taskId,
+    '--workflow',
+    String(args.workflow || ''),
+    '--json',
+  ];
+  const result = spawnSync(process.execPath, commandArgs, {
+    cwd: PROJECT_ROOT,
+    encoding: 'utf8',
+    shell: false,
+  });
+
+  let parsed = null;
+  try {
+    parsed = JSON.parse(String(result.stdout || ''));
+  } catch {
+    parsed = null;
+  }
+
+  return {
+    invoked: true,
+    ok: (result.status ?? 1) === 0,
+    status: result.status ?? 1,
+    profile: parsed && parsed.computeGate ? (parsed.computeGate.command.includes('--profile atm') ? 'atm' : 'standard') : (isAtmTask(taskId) ? 'atm' : 'standard'),
+    stdout: String(result.stdout || ''),
+    stderr: String(result.stderr || ''),
+    command: 'node tools_node/atomic-framework/atm-cli.js run --finalize --task <task> --workflow <workflow> --json',
+    payload: parsed,
+  };
+}
+
 function buildHandoffErrorResult(message, artifactPath) {
   return {
     status: 'fail',
@@ -764,6 +821,17 @@ function main() {
   const ucufGate = args.skipUcuf
     ? { passed: true, errors: [], warnings: [], skipped: true }
     : runUcufPreSubmitGate(args);
+  const atmEnvelope = isAtmTask(args.task)
+    ? runAtmFinalizeEnvelope(args)
+    : {
+      invoked: false,
+      ok: true,
+      status: 0,
+      profile: 'standard',
+      stdout: '',
+      stderr: '',
+      command: '',
+    };
 
   const result = {
     workflow: args.workflow,
@@ -793,6 +861,7 @@ function main() {
     handoffDiff: handoffDiffResult,
     traceSummary,
     ucufGate,
+    atmEnvelope,
     finalLine: `Token 量級：${usage.tier}（估算約 ${usage.totals.estTokens} tokens，非 API 精準值）`,
   };
 
@@ -835,6 +904,9 @@ function main() {
       : `errors=${traceSummary.errors.length}`;
     console.log(`[finalize-agent-turn] trace-summary=${traceSummary.status.toUpperCase()} path=${traceSummary.artifactPath} ${summaryText}`);
   }
+  if (atmEnvelope.invoked) {
+    console.log(`[finalize-agent-turn] atm-envelope: ${atmEnvelope.ok ? 'PASS' : 'FAIL'} profile=${atmEnvelope.profile}`);
+  }
 
   // Print gate result
   if (ucufGate.skipped) {
@@ -851,6 +923,9 @@ function main() {
   console.log(result.finalLine);
 
   if (args.strictHandoff && handoffDiffResult && handoffDiffResult.status === 'fail') {
+    process.exit(1);
+  }
+  if (atmEnvelope.invoked && !atmEnvelope.ok) {
     process.exit(1);
   }
 }
