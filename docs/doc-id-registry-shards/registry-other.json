@@ -1,5 +1,11 @@
 [
   {
+    "id": "doc_other_0000",
+    "path": "docs/ai_atomic_framework/turn-artifact-retention-policy.md",
+    "title": "ATM Turn Artifact Retention and Rotation Policy",
+    "category": "other"
+  },
+  {
     "id": "doc_other_0001",
     "path": ".github/agents/sanguo-term-researcher.agent.md",
     "title": "Inputs",
@@ -582,12 +588,6 @@
     "category": "other"
   },
   {
-    "id": "doc_other_0105",
-    "path": "CHANGELOG.md",
-    "title": "Changelog",
-    "category": "other"
-  },
-  {
     "id": "doc_other_0106",
     "path": "docs/ADAPTER_GUIDE.md",
     "title": "ATM Adapter Guide",
@@ -657,6 +657,60 @@
     "id": "doc_other_0117",
     "path": "docs/ai_atomic_framework/legacy-h2u-first-battle-launch-checklist.md",
     "title": "Legacy 大挑戰啟動條件與首戰清單（H2U 首勝版）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0121",
+    "path": ".github/ISSUE_TEMPLATE/bug_report.md",
+    "title": "問題描述",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0122",
+    "path": ".github/ISSUE_TEMPLATE/feature_request.md",
+    "title": "功能描述",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0123",
+    "path": ".github/ISSUE_TEMPLATE/rfc.md",
+    "title": "RFC 摘要",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0124",
+    "path": ".github/pull_request_template.md",
+    "title": "Pull Request",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0125",
+    "path": "docs/ai_atomic_framework/upstream-versioning-policy-shards/upstream-versioning-core.md",
+    "title": "Upstream Versioning & Lifecycle Policy — Upstream Versioning Core",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0126",
+    "path": "docs/case-studies/h2u-map-evolution-pilot.md",
+    "title": "H2U Map Evolution Pilot",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0127",
+    "path": "docs/ecosystem/language-adapter-roadmap.md",
+    "title": "多語言 Adapter 擴張計畫",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0128",
+    "path": "docs/ecosystem/registry-db-vector-decision.md",
+    "title": "跨專案 Registry / DB / Vector — Core vs Plugin 決策文件",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0129",
+    "path": "docs/RFC_PROCESS.md",
+    "title": "AI Atomic Framework — RFC 與社群貢獻流程",
     "category": "other"
   }
 ]

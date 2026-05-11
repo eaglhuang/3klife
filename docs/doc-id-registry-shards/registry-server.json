@@ -49,23 +49,37 @@
     "subtype": "pipeline"
   },
   {
-    "id": "doc_server_pipeline_0003",
-    "path": "server/npc-brain/pipelines/sanguo-rag/three-lane-progress-explained.zh-TW.md",
-    "title": "Three-Lane ETL 白話說明（給審核與營運看）",
-    "category": "server",
-    "subtype": "pipeline"
-  },
-  {
-    "id": "doc_server_pipeline_0004",
-    "path": "server/npc-brain/pipelines/sanguo-rag/postgres-fast-etl-integration.zh-TW.md",
-    "title": "Sanguo RAG PostgreSQL 接入說明（給高速 ETL 開發者）",
-    "category": "server",
-    "subtype": "pipeline"
-  },
-  {
     "id": "doc_server_pipeline_0005",
     "path": "server/npc-brain/pipelines/sanguo-rag/full-roster-confidence-rag-highway.zh-TW.md",
-    "title": "全量武將 ETL/RAG 高速公路信任評分與反芻規格 v2",
+    "title": "v3 補充：Evidence Seed + Strict Evidence Card 雙軌",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0006",
+    "path": "server/npc-brain/pipelines/sanguo-rag/external-evidence-highway-vnext.zh-TW.md",
+    "title": "外部網站採證高速公路 vNext 規劃",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0007",
+    "path": "server/npc-brain/pipelines/sanguo-rag/full-roster-convergence-highway-v1.implementation.zh-TW.md",
+    "title": "Full Roster Convergence Highway v1 實作說明",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0008",
+    "path": "server/npc-brain/pipelines/sanguo-rag/external-evidence-site-playbook.zh-TW.md",
+    "title": "外部網站採證模板（Evidence Seed / Evidence Card）",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0009",
+    "path": "server/npc-brain/pipelines/sanguo-rag/precheck-hardcode-audit.zh-TW.md",
+    "title": "主要管線寫死邏輯盤點（precheck / harvest）",
     "category": "server",
     "subtype": "pipeline"
   },

@@ -2146,5 +2146,23 @@
     "path": "docs/agent-briefs/tasks/ATM/ATM-3-0016.md",
     "title": "[ATM-3-0016] Validator Orchestrator 與 AJV Cache 統一入口",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0367",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-7-0001.md",
+    "title": "[ATM-7-0001] Evidence retention contract and rotation policy",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0368",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-7-0002.md",
+    "title": "[ATM-7-0002] Registry sharding and versions sidecar convergence",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0369",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-1-0010.md",
+    "title": "[PROG-1-0010] BloodlineTreePanel 元件實作（祖先樹 + 因子繼承 + 子嗣預測）",
+    "category": "task"
   }
 ]

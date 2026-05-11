@@ -1,6 +1,6 @@
 # 文件代號 Registry (doc-id-registry)
 
-> 生成日期: 2026-05-09
+> 生成日期: 2026-05-11
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成，請勿手動編輯。
 > **唯一真相來源。** 文件移動後 doc_id 不變，Agent 可用 doc_id 搜尋定位文件。
 > `docs/doc-id-registry.json` 現在是 index stub；實際 machine-readable 內容位於 `docs/doc-id-registry-shards/registry-*.json`。
@@ -18,12 +18,12 @@
 | 數值類 | `doc_data` | 2 |
 | 遊戲規格類 | `doc_spec` | 178 |
 | 索引類 | `doc_index` | 17 |
-| 任務卡類 | `doc_task` | 357 |
+| 任務卡類 | `doc_task` | 360 |
 | AI Agent 專用 | `doc_ai` | 31 |
-| Agent Skill 專用 | `doc_agentskill` | 78 |
-| Server 文件類 | `doc_server_<subtype>` | 18 |
-| 其它類 | `doc_other` | 92 |
-| **合計** | — | **847** |
+| Agent Skill 專用 | `doc_agentskill` | 80 |
+| Server 文件類 | `doc_server_<subtype>` | 20 |
+| 其它類 | `doc_other` | 119 |
+| **合計** | — | **881** |
 
 ---
 
@@ -436,6 +436,7 @@
 | `doc_task_0313` | docs/agent-briefs/tasks/ATM/ATM-3-0013.md | [ATM-3-0013] finalize-agent-turn.js wrapper 接入 ATM run envelope |
 | `doc_task_0326` | docs/agent-briefs/tasks/ATM/ATM-3-0014.md | [ATM-3-0014] 3KLife UsageEvidence shadow adapter |
 | `doc_task_0357` | docs/agent-briefs/tasks/ATM/ATM-3-0015.md | [ATM-3-0015] Task card system atomic map planning |
+| `doc_task_0366` | docs/agent-briefs/tasks/ATM/ATM-3-0016.md | [ATM-3-0016] Validator Orchestrator 與 AJV Cache 統一入口 |
 | `doc_task_0269` | docs/agent-briefs/tasks/ATM/ATM-4-0001.md | [ATM-4-0001] html-to-ucuf reference case study plan |
 | `doc_task_0270` | docs/agent-briefs/tasks/ATM/ATM-4-0002.md | [ATM-4-0002] H2U legacy baseline 與 regression matrix |
 | `doc_task_0279` | docs/agent-briefs/tasks/ATM/ATM-4-0003.md | [ATM-4-0003] normalizeCssColor 首個 case atom |
@@ -454,6 +455,8 @@
 | `doc_task_0278` | docs/agent-briefs/tasks/ATM/ATM-6-0003.md | [ATM-6-0003] 多語言 Adapter 擴張計畫 |
 | `doc_task_0285` | docs/agent-briefs/tasks/ATM/ATM-6-0004.md | [ATM-6-0004] Performance Budget Police 與成本控制 |
 | `doc_task_0286` | docs/agent-briefs/tasks/ATM/ATM-6-0005.md | [ATM-6-0005] Capability Sandbox 與審計日誌 |
+| `doc_task_0367` | docs/agent-briefs/tasks/ATM/ATM-7-0001.md | [ATM-7-0001] Evidence retention contract and rotation policy |
+| `doc_task_0368` | docs/agent-briefs/tasks/ATM/ATM-7-0002.md | [ATM-7-0002] Registry sharding and versions sidecar convergence |
 | `doc_task_0224` | docs/agent-briefs/tasks/H2U/H2U-REFACTOR-0001.md | [H2U-REFACTOR-0001] draft-builder.js 拆 5 模組 |
 | `doc_task_0225` | docs/agent-briefs/tasks/H2U/H2U-REFACTOR-0002.md | [H2U-REFACTOR-0002] rule-checkers.js 拆目錄 |
 | `doc_task_0226` | docs/agent-briefs/tasks/H2U/H2U-REFACTOR-0003.md | [H2U-REFACTOR-0003] 抽 browser-capture-core |
@@ -730,6 +733,7 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
+| `doc_agentskill_0101` | .agents/skills/3kweb-check/SKILL.md | 3kweb-check |
 | `doc_agentskill_0001` | .agents/skills/best-mode/SKILL.md | Best Mode |
 | `doc_agentskill_0002` | .agents/skills/cocos-bug-triage/SKILL.md | Cocos Bug Triage（鏡像索引） |
 | `doc_agentskill_0003` | .agents/skills/cocos-log-reader/SKILL.md | Cocos Log Reader（鏡像索引） |
@@ -769,6 +773,7 @@
 | `doc_agentskill_0087` | .agents/skills/ui-runtime-verify/SKILL.md | UI Runtime Verify |
 | `doc_agentskill_0088` | .agents/skills/ui-spec-scaffold/SKILL.md | UI Spec Scaffold |
 | `doc_agentskill_0064` | .agents/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline |
+| `doc_agentskill_0102` | .github/skills/3kweb-check/SKILL.md | 3kweb-check |
 | `doc_agentskill_0089` | .github/skills/best-mode/SKILL.md | Best Mode |
 | `doc_agentskill_0009` | .github/skills/cocos-bug-triage/SKILL.md | Cocos Bug Triage（鏡像索引） |
 | `doc_agentskill_0010` | .github/skills/cocos-log-reader/SKILL.md | Cocos Log Reader（鏡像索引） |
@@ -825,10 +830,12 @@
 | `doc_server_other_0008` | other | server/npc-brain/文件/NPC行為決策流程.md | NPC 最終行為決策流程圖 |
 | `doc_server_ops_0002` | ops | server/npc-brain/說明文件拆分規劃.md | NPC Brain README 拆分規劃 |
 | `doc_server_pipeline_0001` | pipeline | server/npc-brain/pipelines/sanguo-rag/人名事件解析.md | 人名事件解析 |
-| `doc_server_pipeline_0005` | pipeline | server/npc-brain/pipelines/sanguo-rag/full-roster-confidence-rag-highway.zh-TW.md | 全量武將 ETL/RAG 高速公路信任評分與反芻規格 v2 |
-| `doc_server_pipeline_0004` | pipeline | server/npc-brain/pipelines/sanguo-rag/postgres-fast-etl-integration.zh-TW.md | Sanguo RAG PostgreSQL 接入說明（給高速 ETL 開發者） |
+| `doc_server_pipeline_0006` | pipeline | server/npc-brain/pipelines/sanguo-rag/external-evidence-highway-vnext.zh-TW.md | 外部網站採證高速公路 vNext 規劃 |
+| `doc_server_pipeline_0008` | pipeline | server/npc-brain/pipelines/sanguo-rag/external-evidence-site-playbook.zh-TW.md | 外部網站採證模板（Evidence Seed / Evidence Card） |
+| `doc_server_pipeline_0005` | pipeline | server/npc-brain/pipelines/sanguo-rag/full-roster-confidence-rag-highway.zh-TW.md | v3 補充：Evidence Seed + Strict Evidence Card 雙軌 |
+| `doc_server_pipeline_0007` | pipeline | server/npc-brain/pipelines/sanguo-rag/full-roster-convergence-highway-v1.implementation.zh-TW.md | Full Roster Convergence Highway v1 實作說明 |
+| `doc_server_pipeline_0009` | pipeline | server/npc-brain/pipelines/sanguo-rag/precheck-hardcode-audit.zh-TW.md | 主要管線寫死邏輯盤點（precheck / harvest） |
 | `doc_server_pipeline_0002` | pipeline | server/npc-brain/pipelines/sanguo-rag/README.md | Sanguo RAG Pipelines |
-| `doc_server_pipeline_0003` | pipeline | server/npc-brain/pipelines/sanguo-rag/three-lane-progress-explained.zh-TW.md | Three-Lane ETL 白話說明（給審核與營運看） |
 | `doc_server_service_0001` | service | server/npc-brain/README.md | NPC Brain Service |
 | `doc_server_ops_0003` | ops | server/server_docs_reference.md | Server 文件索引總覽 |
 
@@ -837,11 +844,16 @@
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
 | `doc_other_0001` | .github/agents/sanguo-term-researcher.agent.md | Inputs |
+| `doc_other_0121` | .github/ISSUE_TEMPLATE/bug_report.md | 問題描述 |
+| `doc_other_0122` | .github/ISSUE_TEMPLATE/feature_request.md | 功能描述 |
+| `doc_other_0123` | .github/ISSUE_TEMPLATE/rfc.md | RFC 摘要 |
+| `doc_other_0124` | .github/pull_request_template.md | Pull Request |
 | `doc_other_0002` | docs/決策-Mobile-Offline-2026-04-23.md | 決策：Mobile-first Offline Support（2026-04-23） |
 | `doc_other_0092` | docs/學習文件/Harness Engineering for Language Agents.md | Harness Engineering for Language Agents |
 | `doc_other_0027` | docs/學習文件/harness_engineering_analysis.md | Harness Engineering 深度分析與 3KLife 專案對照 |
 | `doc_other_0023` | docs/學習文件/HarnessEngineering.md | Harness Engineering 中文學習版與 3KProject 參考手冊 |
 | `doc_other_0084` | docs/學習文件/The Anatomy of an Agent Harness.md | Key Takeaways |
+| `doc_other_0106` | docs/ADAPTER_GUIDE.md | ATM Adapter Guide |
 | `doc_other_0038` | docs/agent-identity-map.md | Agent Identity Map |
 | `doc_other_0032` | docs/ai_atomic_framework/3klife-coexistence-plan.md | 3KLife × ATM 並行開發協議（Coexistence Plan） |
 | `doc_other_0033` | docs/ai_atomic_framework/3klife-consumption-roadmap.md | 3KLife 長期消費 ATM 路線圖（Consumption Roadmap） |
@@ -868,6 +880,7 @@
 | `doc_other_0057` | docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-overview.md | 原子行為參考手冊 — 概覽與行為總表 |
 | `doc_other_0058` | docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-police.md | 原子行為參考手冊 — 行為×警察使用關係表 |
 | `doc_other_0059` | docs/ai_atomic_framework/behavior-reference-shards/behavior-ref-poly.md | 原子行為參考手冊 — 廣義多形化原則 |
+| `doc_other_0113` | docs/ai_atomic_framework/cocos-runtime-adapter-policy.md | Cocos Runtime Adapter Policy |
 | `doc_other_0060` | docs/ai_atomic_framework/dev-plan-shards/dev-plan-appendices.md | AI 原子框架開發計畫書 — 附錄 |
 | `doc_other_0061` | docs/ai_atomic_framework/dev-plan-shards/dev-plan-context.md | AI 原子框架開發計畫書 — Context 與分工決策 |
 | `doc_other_0062` | docs/ai_atomic_framework/dev-plan-shards/dev-plan-execution.md | AI 原子框架開發計畫書 — Checklist、風險與驗證 |
@@ -886,6 +899,7 @@
 | `doc_other_0089` | docs/ai_atomic_framework/framework-function-atomization-manifest.md | Framework Function Atomization Manifest |
 | `doc_other_0082` | docs/ai_atomic_framework/h2u-regression-matrix.md | H2U Regression Matrix |
 | `doc_other_0081` | docs/ai_atomic_framework/html-to-ucuf-case-study.md | html-to-ucuf Reference Case Study |
+| `doc_other_0117` | docs/ai_atomic_framework/legacy-h2u-first-battle-launch-checklist.md | Legacy 大挑戰啟動條件與首戰清單（H2U 首勝版） |
 | `doc_other_0034` | docs/ai_atomic_framework/multi-agent-compatibility-matrix.md | Multi-AI Agent 兼容性測試矩陣 |
 | `doc_other_0030` | docs/ai_atomic_framework/open-source-extraction-plan.md | AI Atomic Framework 開源拆出計畫 |
 | `doc_other_0070` | docs/ai_atomic_framework/optimized-roadmap-v02-shards/optimized-roadmap-ecosystem.md | AI Atomic Framework Optimized Roadmap v0.2 — 生態、風險、結構（§5–§7） |
@@ -896,15 +910,25 @@
 | `doc_other_0040` | docs/ai_atomic_framework/shards/atm-roadmap-intro.md | AI Atomic Framework Roadmap — 核心結論・問題背景（§0–§1） |
 | `doc_other_0041` | docs/ai_atomic_framework/shards/atm-roadmap-milestones.md | AI Atomic Framework Roadmap — 里程碑 Phase 0-7 詳細規格（§8+） |
 | `doc_other_0042` | docs/ai_atomic_framework/shards/atm-roadmap-theory.md | AI Atomic Framework Roadmap — 願景・設計原則（§2–§3） |
+| `doc_other_0000` | docs/ai_atomic_framework/turn-artifact-retention-policy.md | ATM Turn Artifact Retention and Rotation Policy |
+| `doc_other_0125` | docs/ai_atomic_framework/upstream-versioning-policy-shards/upstream-versioning-core.md | Upstream Versioning & Lifecycle Policy — Upstream Versioning Core |
 | `doc_other_0035` | docs/ai_atomic_framework/upstream-versioning-policy.md | Upstream Versioning & Lifecycle Policy |
+| `doc_other_0116` | docs/ai_atomic_framework/validator-orchestrator-and-ajv-cache.md | Validator Orchestrator 與 AJV Cache 統一入口 |
 | `doc_other_0098` | docs/API.md | ATM API（Tracking Repo） |
+| `doc_other_0102` | docs/ATOM_COMPATIBILITY.md | ATM Atom Compatibility Matrix |
 | `doc_other_0005` | docs/battle-entry-unification-checklist.md | 戰場入口統一 — Checklist |
+| `doc_other_0126` | docs/case-studies/h2u-map-evolution-pilot.md | H2U Map Evolution Pilot |
 | `doc_other_0074` | docs/doc-id-registry-md-shards/doc-id-registry-agent-server.md | Doc ID Registry Markdown Index — AI / AgentSkill / Server |
 | `doc_other_0075` | docs/doc-id-registry-md-shards/doc-id-registry-other.md | Doc ID Registry Markdown Index — 其它類 |
 | `doc_other_0076` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_0077` | docs/doc-id-registry-md-shards/doc-id-registry-stats.md | Doc ID Registry Markdown Index — 分類統計 |
 | `doc_other_0078` | docs/doc-id-registry-md-shards/doc-id-registry-tech-ui-art.md | Doc ID Registry Markdown Index — Tech / UI / Art / Data |
 | `doc_other_0006` | docs/doc-id-registry.md | 文件代號 Registry (doc-id-registry) |
+| `doc_other_0115` | docs/ecosystem/capability-sandbox-audit.md | Capability Sandbox & Security Audit — ATM Optional Governance Plugin |
+| `doc_other_0127` | docs/ecosystem/language-adapter-roadmap.md | 多語言 Adapter 擴張計畫 |
+| `doc_other_0114` | docs/ecosystem/performance-budget-police.md | Performance Budget Police — ATM Optional Governance Plugin |
+| `doc_other_0128` | docs/ecosystem/registry-db-vector-decision.md | 跨專案 Registry / DB / Vector — Core vs Plugin 決策文件 |
+| `doc_other_0101` | docs/GOVERNANCE.md | ATM Governance Policy |
 | `doc_other_0009` | docs/html_skill_plan.md | HTML Skill Plan |
 | `doc_other_0008` | docs/html_skill_plan2.md | HTML Skill Plan 2 |
 | `doc_other_0011` | docs/html_skill_plan3.md | HTML Skill Plan 3 |
@@ -915,7 +939,15 @@
 | `doc_other_0012` | docs/html_skill_rule-evolution2.md | HTML Skill Rule Evolution 2 |
 | `doc_other_0016` | docs/html-to-ucuf-plan5-stale-rule-audit.md | HTML-to-UCUF Stale Rule Audit (Plan5) |
 | `doc_other_0025` | docs/inside-openai-agent-collaboration-study-notes.md | Inside OpenAI's AI Agent Collaboration System 學習筆記 |
+| `doc_other_0100` | docs/LIFECYCLE.md | ATM Lifecycle Policy |
+| `doc_other_0110` | docs/LIVING_SPEC.md | ATM Living Spec Sync Contract |
+| `doc_other_0111` | docs/PEV_LOOP.md | ATM Plan-Execute-Verify-Converge (PEV) Loop |
+| `doc_other_0107` | docs/PLUGIN_SDK.md | ATM Plugin SDK Guide |
 | `doc_other_0099` | docs/QUICK_START.md | ATM Quick Start |
+| `doc_other_0104` | docs/RELEASE_CHECKLIST.md | ATM Release Checklist |
+| `doc_other_0109` | docs/releases/atm-v0.1.0-alpha-npm-dry-run-plan.md | ATM v0.1.0-alpha npm Dry-Run Plan |
+| `doc_other_0108` | docs/releases/atm-v0.1.0-alpha-release-draft.md | AI-Atomic-Framework v0.1.0-alpha (Draft) |
+| `doc_other_0129` | docs/RFC_PROCESS.md | AI Atomic Framework — RFC 與社群貢獻流程 |
 | `doc_other_0018` | docs/sanguo-rag-abab-progress-workflow-plan.md | Sanguo RAG ABAB…C 整體進度推進規劃書 |
 | `doc_other_0097` | docs/SPEC_GUIDE.md | ATM Spec Guide（Task Store / Milestone） |
 | `doc_other_0079` | docs/tech/參考用npc-dialogue-narrative-runtime-plan.md | 3KLife 人物對話與劇情 Runtime 技術規劃 |
@@ -923,8 +955,10 @@
 | `doc_other_0086` | docs/tech/npc-brain-memory/api-contract.md | NPC Brain Memory System — API & Contract（§6-§8） |
 | `doc_other_0087` | docs/tech/npc-brain-memory/data-model.md | NPC Brain Memory System — Data Model（§4-§5） |
 | `doc_other_0088` | docs/tech/npc-brain-memory/ops.md | NPC Brain Memory System — Ops & Milestones（§9-§12） |
+| `doc_other_0112` | docs/templates/pev-upgrade-proposal-template.md | PEV Upgrade Proposal Template |
 | `doc_other_0014` | docs/UCUF-developer-guide.md | UCUF 開發者指南 |
 | `doc_other_0015` | docs/UCUF-migration-completion-2026-04-13.md | UCUF Migration Active Checklist (2026-04-13) |
 | `doc_other_0022` | docs/UCUF已驗收功能.md | UCUF 已驗收功能索引 |
 | `doc_other_0019` | docs/ui-screen-migration-coverage.md | UI Screen Migration Coverage |
+| `doc_other_0103` | docs/UPGRADE_PROPOSAL_PUBLIC_RULES.md | ATM Upgrade Proposal Public Rules |
 | `doc_other_0080` | docs/windows-wsl-cli-routing.md | Windows / WSL CLI Routing Rules |

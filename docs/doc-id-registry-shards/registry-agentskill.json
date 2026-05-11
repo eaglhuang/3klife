@@ -466,5 +466,17 @@
     "path": ".github/skills/task-card-required-adjustment/SKILL.md",
     "title": "任務卡的必要調整",
     "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0101",
+    "path": ".agents/skills/3kweb-check/SKILL.md",
+    "title": "3kweb-check",
+    "category": "agentskill"
+  },
+  {
+    "id": "doc_agentskill_0102",
+    "path": ".github/skills/3kweb-check/SKILL.md",
+    "title": "3kweb-check",
+    "category": "agentskill"
   }
 ]
