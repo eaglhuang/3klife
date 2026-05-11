@@ -1,5 +1,12 @@
 <!-- doc_id: doc_task_0366 -->
 
+## 2026-05-11 Local Workbench Ownership
+
+- Canonical owner: `3KLife` adopter-local workbench.
+- Source of truth: `atomic-registry.json`.
+- Canonical artifact root: `atomic_workbench/maps/ATM-MAP-0003`.
+- Upstream `AI-Atomic-Framework` is tooling/schema only for this project-derived H2U map.
+
 # H2U Map Evolution Pilot
 
 ## 目標

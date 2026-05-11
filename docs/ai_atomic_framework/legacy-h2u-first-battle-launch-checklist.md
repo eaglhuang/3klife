@@ -1,4 +1,11 @@
 <!-- doc_id: doc_other_0117 -->
+
+## 2026-05-11 ATM Ownership Boundary
+
+- `AI-Atomic-Framework`: neutral upstream core, schemas, validators, CLI, synthetic examples.
+- `3KLife`: adopter-local owner for H2U atoms, maps, lineage, and project evidence.
+- H2U first-win gates must read `3KLife/atomic-registry.json` and `3KLife/atomic_workbench`.
+- Project-derived lineage such as `legacy://3KLife/...` must not be added back to upstream core registry.
 # Legacy 大挑戰啟動條件與首戰清單（H2U 首勝版）
 
 ## Summary

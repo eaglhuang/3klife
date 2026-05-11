@@ -1,5 +1,12 @@
 <!-- doc_id: doc_task_0365 -->
 
+## 2026-05-11 Local Workbench Ownership
+
+- Canonical owner: `3KLife` adopter-local workbench.
+- Source of truth: `atomic-registry.json`.
+- Canonical atom root: `atomic_workbench/atoms/ATM-CORE-0005`.
+- Upstream `AI-Atomic-Framework` is tooling/schema only for this project-derived H2U atom.
+
 # H2U normalizeCssColor v1.0 到 v1.1 Evolution Pilot
 
 ## 目標
