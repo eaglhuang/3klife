@@ -19,6 +19,7 @@ function parseArgs(argv) {
     sourceDir: 'Design System 3',
     mainHtml: 'ui_kits/gacha/index.html',
     bundle: 'lobby_ui',
+    worktreeStatusFile: null,
     allowDirtyPrefixes: [],
     requireWorktreeCheck: false,
     help: false,
@@ -35,6 +36,7 @@ function parseArgs(argv) {
       case '--source-dir': opts.sourceDir = next(); break;
       case '--main-html': opts.mainHtml = next(); break;
       case '--bundle': opts.bundle = next(); break;
+      case '--worktree-status-file': opts.worktreeStatusFile = next(); break;
       case '--allow-dirty-prefix': {
         const value = String(next() || '').trim();
         if (value) opts.allowDirtyPrefixes.push(value);
@@ -53,7 +55,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log('Usage: node tools_node/validate-legacy-h2u-first-win.js [--strict] [--report <json>]');
+  console.log('Usage: node tools_node/validate-legacy-h2u-first-win.js [--strict] [--report <json>] [--worktree-status-file <txt>]');
   console.log('');
   console.log('Runs two-round H2U first-win replay validation and emits evidence manifests.');
 }
@@ -135,17 +137,124 @@ function isRunSuccess(run) {
   return Boolean(run) && Number(run.status) === 0;
 }
 
-function isWorkflowRunAcceptable(run, workflowSummary) {
-  if (isRunSuccess(run)) return true;
-  if (!run || run.error || !workflowSummary) return false;
-  const status = Number(run.status || 1);
-  if (status !== 1) return false;
-  const combined = `${run.stdout || ''}\n${run.stderr || ''}`;
-  if (/verdict=needs-review/i.test(combined)) return true;
-  return Boolean(workflowSummary && workflowSummary.debugOnly === true);
+function collectDryRunContract(workflowSummary) {
+  const missing = [];
+  if (!workflowSummary || typeof workflowSummary !== 'object') {
+    return {
+      ok: false,
+      missing: ['workflow-summary-missing'],
+      debugOnlyReasons: [],
+      nextFixRuleIds: [],
+      interactionRuntime: null,
+    };
+  }
+
+  const debugOnlyReasons = Array.isArray(workflowSummary.debugOnlyReasons)
+    ? workflowSummary.debugOnlyReasons.map((item) => String(item || '').trim()).filter(Boolean)
+    : [];
+  if (workflowSummary.debugOnly !== true) missing.push('debugOnly-flag-not-true');
+  if (!debugOnlyReasons.includes('runtime-sync-disabled')) missing.push('debugOnlyReason:runtime-sync-disabled');
+  if (!debugOnlyReasons.includes('editor-compare-skipped')) missing.push('debugOnlyReason:editor-compare-skipped');
+
+  const interaction = workflowSummary.interactionRuntime && typeof workflowSummary.interactionRuntime === 'object'
+    ? workflowSummary.interactionRuntime
+    : null;
+  const hasInteractionContract = !!interaction
+    && typeof interaction.required === 'boolean'
+    && typeof interaction.status === 'string'
+    && Number.isFinite(Number(interaction.actionsDeclared))
+    && Number.isFinite(Number(interaction.actionsBound));
+  if (!hasInteractionContract) missing.push('interactionRuntime-contract-missing');
+
+  const nextFixes = Array.isArray(workflowSummary.nextFixes) ? workflowSummary.nextFixes : [];
+  const nextFixRuleIds = [...new Set(nextFixes
+    .map((item) => String(item && item.ruleId || '').trim())
+    .filter(Boolean))].sort();
+  if (nextFixRuleIds.length === 0) missing.push('nextFixes-ruleId-missing');
+
+  return {
+    ok: missing.length === 0,
+    missing,
+    debugOnlyReasons,
+    nextFixRuleIds,
+    interactionRuntime: interaction ? {
+      required: !!interaction.required,
+      status: String(interaction.status || ''),
+      actionsDeclared: Number(interaction.actionsDeclared || 0),
+      actionsBound: Number(interaction.actionsBound || 0),
+    } : null,
+  };
 }
 
-function summarizeCommandRun(run) {
+function classifyWorkflowRunOutcome(run, workflowSummary) {
+  if (isRunSuccess(run)) {
+    return {
+      accepted: true,
+      category: 'success',
+      hardFail: false,
+      reason: 'exit-zero',
+      dryRunContract: collectDryRunContract(workflowSummary),
+    };
+  }
+  if (!run) {
+    return {
+      accepted: false,
+      category: 'hard-fail',
+      hardFail: true,
+      reason: 'missing-workflow-run',
+      dryRunContract: collectDryRunContract(workflowSummary),
+    };
+  }
+  if (run.error) {
+    return {
+      accepted: false,
+      category: 'hard-fail',
+      hardFail: true,
+      reason: 'process-error',
+      dryRunContract: collectDryRunContract(workflowSummary),
+    };
+  }
+
+  const status = Number(run.status || 1);
+  if (status !== 1) {
+    return {
+      accepted: false,
+      category: 'hard-fail',
+      hardFail: true,
+      reason: `unexpected-exit-${status}`,
+      dryRunContract: collectDryRunContract(workflowSummary),
+    };
+  }
+
+  const combined = `${run.stdout || ''}\n${run.stderr || ''}`;
+  const dryRunContract = collectDryRunContract(workflowSummary);
+  const hasNeedsReviewVerdict = /verdict=needs-review/i.test(combined);
+  const allowedExpectedNonzero = dryRunContract.ok && hasNeedsReviewVerdict;
+  if (allowedExpectedNonzero) {
+    return {
+      accepted: true,
+      category: 'expected-nonzero',
+      hardFail: false,
+      reason: 'dry-run-expected-nonzero',
+      dryRunContract,
+    };
+  }
+
+  const reason = !hasNeedsReviewVerdict
+    ? 'missing-needs-review-verdict'
+    : (dryRunContract.missing.length > 0
+      ? `incomplete-dry-run-contract:${dryRunContract.missing.join(',')}`
+      : 'unexpected-nonzero');
+  return {
+    accepted: false,
+    category: 'hard-fail',
+    hardFail: true,
+    reason,
+    dryRunContract,
+  };
+}
+
+function summarizeCommandRun(run, evaluation) {
   const stdout = String(run && run.stdout || '');
   const stderr = String(run && run.stderr || '');
   const stdoutLines = stdout.split(/\r?\n/).filter(Boolean);
@@ -159,6 +268,12 @@ function summarizeCommandRun(run) {
     fallbackFrom: run && run.fallbackFrom || null,
     stdoutTail: stdoutLines.slice(-8),
     stderrTail: stderrLines.slice(-8),
+    acceptance: evaluation && evaluation.category
+      ? evaluation.category
+      : (Number(rawStatus) === 0 ? 'success' : 'hard-fail'),
+    accepted: evaluation ? !!evaluation.accepted : Number(rawStatus) === 0,
+    hardFail: evaluation ? !!evaluation.hardFail : Number(rawStatus) !== 0,
+    reason: evaluation && evaluation.reason ? evaluation.reason : null,
   };
 }
 
@@ -205,6 +320,9 @@ async function runRound(roundId, opts) {
   for (const prefix of opts.allowDirtyPrefixes) {
     launchArgs.push('--allow-dirty-prefix', prefix);
   }
+  if (opts.worktreeStatusFile) {
+    launchArgs.push('--worktree-status-file', opts.worktreeStatusFile);
+  }
   if (opts.requireWorktreeCheck) {
     launchArgs.push('--require-worktree-check');
   }
@@ -239,8 +357,21 @@ async function runRound(roundId, opts) {
 
   const key = buildEvidenceKey(launchReport, workflowSummary, summaryRuleGuardReport);
   const commandRuns = [launchRun, workflowRun, summaryRuleGuardRun];
-  const commandSummary = commandRuns.map((run) => summarizeCommandRun(run));
-  const commandFailures = commandRuns.filter((run) => !isRunSuccess(run));
+  const workflowOutcome = classifyWorkflowRunOutcome(workflowRun, workflowSummary);
+  const commandSummary = commandRuns.map((run) => {
+    if (run.label === 'run-html-to-ucuf-workflow') {
+      return summarizeCommandRun(run, workflowOutcome);
+    }
+    const ok = isRunSuccess(run);
+    return summarizeCommandRun(run, {
+      accepted: ok,
+      category: ok ? 'success' : 'hard-fail',
+      hardFail: !ok,
+      reason: ok ? 'exit-zero' : `unexpected-exit-${Number(run && run.status || 1)}`,
+    });
+  });
+  const commandFailures = commandSummary.filter((item) => !item.accepted);
+  const hardFailures = commandSummary.filter((item) => !!item.hardFail);
   const manifest = {
     roundId,
     generatedAt: new Date().toISOString(),
@@ -256,6 +387,13 @@ async function runRound(roundId, opts) {
     },
     commandSummary,
     commandFailureCount: commandFailures.length,
+    hardFailCount: hardFailures.length,
+    workflowOutcome: {
+      category: workflowOutcome.category,
+      accepted: workflowOutcome.accepted,
+      reason: workflowOutcome.reason,
+      dryRunContractMissing: workflowOutcome.dryRunContract ? workflowOutcome.dryRunContract.missing : [],
+    },
     key,
     keyHash: hashStableJson(key),
   };
@@ -264,9 +402,10 @@ async function runRound(roundId, opts) {
   const launchPassed = isRunSuccess(launchRun) && !!(launchReport && launchReport.passed);
   const summaryRuleGuardPassed = isRunSuccess(summaryRuleGuardRun) && !!(summaryRuleGuardReport && summaryRuleGuardReport.blockerCount === 0);
   const interaction = workflowSummary && workflowSummary.interactionRuntime || null;
-  const workflowArtifactsReady = Boolean(workflowSummary) && isWorkflowRunAcceptable(workflowRun, workflowSummary);
+  const workflowArtifactsReady = Boolean(workflowSummary) && workflowOutcome.accepted;
   const interactionPassed = !!(interaction && interaction.required && interaction.status === 'pass' && interaction.actionsBound === interaction.actionsDeclared);
-  const passed = launchPassed && summaryRuleGuardPassed && interactionPassed && workflowArtifactsReady;
+  const hasHardFail = hardFailures.length > 0;
+  const passed = launchPassed && summaryRuleGuardPassed && interactionPassed && workflowArtifactsReady && !hasHardFail;
 
   return {
     roundId,
@@ -280,6 +419,9 @@ async function runRound(roundId, opts) {
     summaryRuleGuardPassed,
     interactionPassed,
     workflowArtifactsReady,
+    workflowOutcome,
+    hasHardFail,
+    hardFailCount: hardFailures.length,
     launchReport,
     workflowSummary,
     summaryRuleGuardReport,
@@ -303,7 +445,9 @@ function compareRoundKeys(roundA, roundB) {
 }
 
 function buildFinalReport(opts, roundA, roundB, compare) {
-  const passed = roundA.passed && roundB.passed && compare.passed;
+  const roundAHardFail = !!(roundA && (roundA.hasHardFail || Number(roundA.hardFailCount || 0) > 0));
+  const roundBHardFail = !!(roundB && (roundB.hasHardFail || Number(roundB.hardFailCount || 0) > 0));
+  const passed = roundA.passed && roundB.passed && compare.passed && !roundAHardFail && !roundBHardFail;
   return {
     validator: 'validate-legacy-h2u-first-win',
     passed,
@@ -322,6 +466,8 @@ function buildFinalReport(opts, roundA, roundB, compare) {
         launchPassed: roundA.launchPassed,
         summaryRuleGuardPassed: roundA.summaryRuleGuardPassed,
         interactionPassed: roundA.interactionPassed,
+        workflowOutcome: roundA.workflowOutcome || null,
+        hasHardFail: roundAHardFail,
       },
       {
         roundId: roundB.roundId,
@@ -330,15 +476,20 @@ function buildFinalReport(opts, roundA, roundB, compare) {
         launchPassed: roundB.launchPassed,
         summaryRuleGuardPassed: roundB.summaryRuleGuardPassed,
         interactionPassed: roundB.interactionPassed,
+        workflowOutcome: roundB.workflowOutcome || null,
+        hasHardFail: roundBHardFail,
       },
     ],
     compare,
     summary: {
       baseOut: rel(opts.baseOut),
       failedRounds: [roundA, roundB].filter((item) => !item.passed).map((item) => item.roundId),
+      hardFailRounds: [roundAHardFail ? roundA.roundId : null, roundBHardFail ? roundB.roundId : null].filter(Boolean),
       blockers: passed ? [] : [
         ...(roundA.passed ? [] : [`${roundA.roundId} failed`]),
         ...(roundB.passed ? [] : [`${roundB.roundId} failed`]),
+        ...(roundAHardFail ? [`${roundA.roundId} hard-fail detected`] : []),
+        ...(roundBHardFail ? [`${roundB.roundId} hard-fail detected`] : []),
         ...(compare.passed ? [] : ['round comparison mismatch']),
       ],
     },

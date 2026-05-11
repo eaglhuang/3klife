@@ -24,6 +24,7 @@ function parseArgs(argv) {
     strict: false,
     report: null,
     ruleGuardReport: null,
+    worktreeStatusFile: null,
     allowDirtyPrefixes: [],
     requireWorktreeCheck: false,
     help: false,
@@ -42,6 +43,11 @@ function parseArgs(argv) {
     }
     if (token === '--rule-guard-report') {
       parsed.ruleGuardReport = argv[index + 1] || null;
+      index += 1;
+      continue;
+    }
+    if (token === '--worktree-status-file') {
+      parsed.worktreeStatusFile = argv[index + 1] || null;
       index += 1;
       continue;
     }
@@ -68,7 +74,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log('Usage: node tools_node/validate-legacy-h2u-launch.js [--strict] [--report <json>] [--rule-guard-report <json>] [--allow-dirty-prefix <path>] [--require-worktree-check]');
+  console.log('Usage: node tools_node/validate-legacy-h2u-launch.js [--strict] [--report <json>] [--rule-guard-report <json>] [--worktree-status-file <txt>] [--allow-dirty-prefix <path>] [--require-worktree-check]');
   console.log('');
   console.log('Validates the H2U first-battle launch gates for Legacy challenge kickoff.');
 }
@@ -92,6 +98,45 @@ function parseGitStatusLines(text) {
       return normalizePath(renamed);
     })
     .filter(Boolean);
+}
+
+function runGitStatusShort() {
+  const proc = cp.spawnSync('git', ['status', '--short'], {
+    cwd: ROOT,
+    encoding: 'utf8',
+    shell: false,
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  return proc;
+}
+
+function readWorktreeStatusFromFile(inputPath) {
+  const raw = String(inputPath || '').trim();
+  if (!raw) {
+    return {
+      ok: false,
+      error: 'worktree-status-file path missing',
+      method: 'status-file',
+      dirtyFiles: [],
+    };
+  }
+  const absolute = path.isAbsolute(raw) ? raw : path.resolve(ROOT, raw);
+  try {
+    const output = fs.readFileSync(absolute, 'utf8');
+    return {
+      ok: true,
+      error: '',
+      method: `status-file:${rel(absolute)}`,
+      dirtyFiles: parseGitStatusLines(output),
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      error: `worktree-status-file unreadable: ${String(error && (error.message || error) || 'unknown')}`,
+      method: `status-file:${rel(absolute)}`,
+      dirtyFiles: [],
+    };
+  }
 }
 
 function isPathAllowed(filePath, allowPrefixes) {
@@ -157,36 +202,79 @@ function checkCanonicalEvidence() {
   };
 }
 
-function checkWorktreeIsolation(allowDirtyPrefixes, requireWorktreeCheck) {
-  try {
-    const output = cp.execSync('git status --short', {
-      cwd: ROOT,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
-    const dirtyFiles = parseGitStatusLines(output);
-    const unrelated = dirtyFiles.filter((filePath) => !isPathAllowed(filePath, allowDirtyPrefixes));
+function checkWorktreeIsolation(allowDirtyPrefixes, options = {}) {
+  const requireWorktreeCheck = Boolean(options.requireWorktreeCheck);
+  const strict = Boolean(options.strict);
+  const statusFile = String(options.worktreeStatusFile || '').trim();
+  if (statusFile) {
+    const fileStatus = readWorktreeStatusFromFile(statusFile);
+    if (!fileStatus.ok) {
+      const blockOnSkip = strict || requireWorktreeCheck;
+      return {
+        id: 'worktree-isolation',
+        method: fileStatus.method,
+        passed: !blockOnSkip,
+        status: blockOnSkip ? 1 : 0,
+        skipped: true,
+        checkUnavailable: true,
+        error: fileStatus.error,
+        stderr: `worktree check skipped: ${fileStatus.error}`,
+        dirtyFiles: [],
+        unrelatedDirtyFiles: [],
+      };
+    }
+    const unrelatedFromFile = fileStatus.dirtyFiles.filter((filePath) => !isPathAllowed(filePath, allowDirtyPrefixes));
     return {
       id: 'worktree-isolation',
-      passed: unrelated.length === 0,
-      status: unrelated.length === 0 ? 0 : 1,
+      method: fileStatus.method,
+      passed: unrelatedFromFile.length === 0,
+      status: unrelatedFromFile.length === 0 ? 0 : 1,
       skipped: false,
-      stderr: unrelated.length === 0 ? '' : `unrelatedDirty=${unrelated.join(',')}`,
-      dirtyFiles,
-      unrelatedDirtyFiles: unrelated,
+      checkUnavailable: false,
+      error: '',
+      stderr: unrelatedFromFile.length === 0 ? '' : `unrelatedDirty=${unrelatedFromFile.join(',')}`,
+      dirtyFiles: fileStatus.dirtyFiles,
+      unrelatedDirtyFiles: unrelatedFromFile,
     };
-  } catch (error) {
-    const message = String(error && (error.message || error) || 'git status unavailable');
+  }
+
+  const method = 'spawnSync:git status --short';
+  const proc = runGitStatusShort();
+  const unavailable = Boolean(proc.error) || typeof proc.status !== 'number' || proc.status !== 0;
+  if (unavailable) {
+    const stderr = String(proc && proc.stderr || '').trim();
+    const errMsg = String(proc && proc.error && (proc.error.message || proc.error) || '').trim();
+    const message = errMsg || stderr || `git status exit=${proc.status}`;
+    const blockOnSkip = strict || requireWorktreeCheck;
     return {
       id: 'worktree-isolation',
-      passed: requireWorktreeCheck ? false : true,
-      status: requireWorktreeCheck ? 1 : 0,
+      method,
+      passed: !blockOnSkip,
+      status: blockOnSkip ? 1 : 0,
       skipped: true,
+      checkUnavailable: true,
+      error: message,
       stderr: `worktree check skipped: ${message}`,
       dirtyFiles: [],
       unrelatedDirtyFiles: [],
     };
   }
+
+  const output = String(proc.stdout || '');
+  const dirtyFiles = parseGitStatusLines(output);
+  const unrelated = dirtyFiles.filter((filePath) => !isPathAllowed(filePath, allowDirtyPrefixes));
+  return {
+    id: 'worktree-isolation',
+    method,
+    passed: unrelated.length === 0,
+    status: unrelated.length === 0 ? 0 : 1,
+    skipped: false,
+    checkUnavailable: false,
+    error: '',
+    stderr: unrelated.length === 0 ? '' : `unrelatedDirty=${unrelated.join(',')}`,
+    dirtyFiles,
+    unrelatedDirtyFiles: unrelated,
+  };
 }
 
 function checkAtmMilestone() {
@@ -263,7 +351,11 @@ function runValidation(opts = {}) {
   const findings = [];
   const checks = [];
 
-  const worktree = checkWorktreeIsolation(opts.allowDirtyPrefixes || [], Boolean(opts.requireWorktreeCheck));
+  const worktree = checkWorktreeIsolation(opts.allowDirtyPrefixes || [], {
+    requireWorktreeCheck: Boolean(opts.requireWorktreeCheck),
+    strict: Boolean(opts.strict),
+    worktreeStatusFile: opts.worktreeStatusFile || null,
+  });
   checks.push(worktree);
   if (!worktree.passed) {
     findings.push(buildFinding({
@@ -279,6 +371,8 @@ function runValidation(opts = {}) {
         unrelatedDirtyFiles: worktree.unrelatedDirtyFiles,
         allowDirtyPrefixes: opts.allowDirtyPrefixes || [],
         skipped: worktree.skipped,
+        method: worktree.method || '',
+        error: worktree.error || '',
       },
     }));
   }
@@ -398,6 +492,14 @@ function runValidation(opts = {}) {
       blockerCount: findings.length,
       allowDirtyPrefixes: opts.allowDirtyPrefixes || [],
       worktreeCheckSkipped: Boolean(worktree.skipped),
+    },
+    worktreeCheck: {
+      method: worktree.method || '',
+      skipped: Boolean(worktree.skipped),
+      checkUnavailable: Boolean(worktree.checkUnavailable),
+      error: worktree.error || '',
+      dirtyFileCount: Array.isArray(worktree.dirtyFiles) ? worktree.dirtyFiles.length : 0,
+      unrelatedDirtyFileCount: Array.isArray(worktree.unrelatedDirtyFiles) ? worktree.unrelatedDirtyFiles.length : 0,
     },
     generatedAt: new Date().toISOString(),
   };
