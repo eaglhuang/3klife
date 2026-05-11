@@ -93,13 +93,13 @@
     "title": "Community RFC 與貢獻流程",
     "owner": "GitHubCopilot",
     "priority": "P2",
-    "status": "open",
+    "status": "done",
     "type": "ecosystem",
     "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
-    "started_at": "",
-    "started_by_agent": "",
+    "started_at": "2026-05-11T00:00:00Z",
+    "started_by_agent": "vs-insiders-gpt-5.3-codex",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -120,7 +120,7 @@
       "GitHub issue templates",
       "PR template"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補社群流程需指定 release owner / maintainer quorum / escalation path | 阻塞: none",
+    "notes": "2026-05-11 | 狀態: done | 驗證: passed (9/9 gates) | 變更: 建立 docs/RFC_PROCESS.md、.github/ISSUE_TEMPLATE/{bug_report,feature_request,rfc}.md、.github/pull_request_template.md，含 release owner quorum 與 escalation path | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM adapter/case/release 開卡",
@@ -152,6 +152,8 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-11T09:26:41+08:00",
+    "completed_by_agent": "vs-code-gpt-5.3-codex"
   }
 ]
