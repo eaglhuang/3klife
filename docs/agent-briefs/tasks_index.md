@@ -14,12 +14,12 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 306
-- done: 191
+- Total: 313
+- done: 229
 - completed: 8
-- in-progress: 24
+- in-progress: 22
 - in-review: 5
-- open: 77
+- open: 48
 - not-started: 1
 
 ## Tasks
@@ -136,7 +136,7 @@ manifest: ../ui-quality-todo.json
 | PROG-1-0007 | Agent1 | open | P1 | P | implementation | [PROG-1-0007](./tasks/PROG-1-0007.md) |
 | PROG-1-0008 | Agent1 | open | P1 | P | implementation | [PROG-1-0008](./tasks/PROG-1-0008.md) |
 | PROG-1-0009 | Agent1 | open | P1 | P | implementation | [PROG-1-0009](./tasks/PROG-1-0009.md) |
-| PROG-1-0010 | Agent1 | open | P1 | P | ui-component | [PROG-1-0010](./tasks/PROG-1-0010.md) |
+| PROG-1-0010 | Agent1 | done | P1 | P | ui-component | [PROG-1-0010](./tasks/PROG/PROG-1-0010.md) |
 | PROG-1-0011 | Agent1 | open | P1 | P | ui-component | [PROG-1-0011](./tasks/PROG-1-0011.md) |
 | PROG-1-0012 | Agent1 | open | P2 | P | validation | [PROG-1-0012](./tasks/PROG-1-0012.md) |
 | PROG-1-0013 | Agent1 | open | P2 | P | validation | [PROG-1-0013](./tasks/PROG-1-0013.md) |
@@ -151,7 +151,7 @@ manifest: ../ui-quality-todo.json
 | PROG-2-0006 | GitHubCopilot | done | P1 | Plan5 | workflow-tooling | [PROG-2-0006](./tasks/PROG-2-0006.md (doc_task_0182)) (doc_task_0182) |
 | PROG-2-0007 | GitHubCopilot | open | P1 | Plan5 | qa-tooling | [PROG-2-0007](./tasks/PROG-2-0007.md (doc_task_0183)) (doc_task_0183) |
 | PROG-2-0008 | GitHubCopilot | done | P1 | Plan5 | skill-docs | [PROG-2-0008](./tasks/PROG-2-0008.md (doc_task_0184)) (doc_task_0184) |
-| PROG-2-0009 | GitHubCopilot | in-progress | P1 | Plan5 | tooling | [PROG-2-0009](./tasks/PROG-2-0009.md (doc_task_0219)) (doc_task_0219) |
+| PROG-2-0009 | GitHubCopilot | done | P1 | Plan5 | tooling | [PROG-2-0009](./tasks/PROG-2-0009.md (doc_task_0219)) (doc_task_0219) |
 | DC-0-0001 | Agent1 | done | P0 | DC | data-structure | [DC-0-0001](./tasks/DC-0-0001.md) |
 | DC-0-0002 | Agent1 | done | P0 | DC | data-structure | [DC-0-0002](./tasks/DC-0-0002.md) |
 | DC-0-0003 | Agent1 | done | P0 | DC | feature | [DC-0-0003](./tasks/DC-0-0003.md) |

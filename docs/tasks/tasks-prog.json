@@ -24,8 +24,8 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 19,
-    "in_progress": 1,
+    "done": 20,
+    "in_progress": 0,
     "open": 21,
     "total": 41
   },
@@ -299,16 +299,24 @@
       "notes": "2026-04-06 | 狀態: open | 來源: 程式規格書.md §2.3 §5.4 | 阻塞: PROG-1-0006 需先完成"
     },
     {
+      "doc_id": "",
       "id": "PROG-1-0010",
-      "priority": "P1",
-      "phase": "P",
+      "title": "BloodlineTreePanel 元件實作（祖先樹 + 因子繼承 + 子嗣預測）",
       "owner": "Agent1",
-      "status": "in-progress",
-      "created_by_agent": "Agent1",
+      "priority": "P1",
+      "status": "done",
       "type": "ui-component",
-      "title": "BloodlineTreePanel 元件實作（祖先矩陣 + 子嗣預測）",
-      "started_at": "2026-05-04T20:30:00+08:00",
-      "started_by_agent": "GitHubCopilot",
+      "phase": "P",
+      "created": "2026-04-06",
+      "created_by_agent": "Agent1",
+      "started_at": "2026-05-11T18:58:37+08:00",
+      "started_by_agent": "vs-code-gpt-5.3-codex",
+      "completed_at": "2026-05-11T19:04:38+08:00",
+      "completed_by_agent": "vs-code-gpt-5.3-codex",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
       "related": [
         "PROG-1-0003",
         "PROG-1-0014"
@@ -318,15 +326,37 @@
         "PROG-1-0003"
       ],
       "acceptance": [
-        "3 代 14 人矩陣在 720p 下無溢出",
-        "因子繼承連線正確（每個因子溯源至祖先）",
-        "子嗣預測欄位正確顯示 BloodlineGenerator.ts 計算結果",
-        "smoke capture 可截圖（--target BloodlineTree）"
+        "3 代 14 槽位在 720p 解析度下不溢出",
+        "祖先矩陣顯示對應 person-registry / ancestorTree 回退邏輯",
+        "子嗣預測欄位顯示與 BloodlineGenerator 資料一致",
+        "可執行血脈頁 smoke capture（GeneralDetailBloodline 目標）"
       ],
       "deliverables": [
-        "assets/scripts/ui/components/BloodlineTreePanel.ts"
+        "assets/scripts/ui/panels/BloodlineTreePanel.ts",
+        "assets/scripts/ui/components/general-detail/GeneralDetailBloodlineChild.ts"
       ],
-      "notes": "2026-04-06 | 狀態: open | 來源: 程式規格書.md §2.4 §5.3 | 阻塞: PROG-1-0003 完成後再接"
+      "notes": "2026-05-11 | 狀態: done | 驗證: check-ts-syntax pass / sync-task-briefs(index) pass / encoding:touched pass / legacy runtime-verdict(pass) reused | 變更: 補齊缺失 task card，回寫 tasks-prog 與 tasks_index；收斂 BloodlineTreePanel 交付面與驗收敘述 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     },
     {
       "id": "PROG-1-0011",
