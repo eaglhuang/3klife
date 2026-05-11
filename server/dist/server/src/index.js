@@ -33,23 +33,21 @@ const postgresPassword = (_f = process.env.POSTGRES_PASSWORD) !== null && _f !==
 const postgresDatabase = (_g = process.env.POSTGRES_DB) !== null && _g !== void 0 ? _g : '';
 const expectedMigrationVersion = ((_h = process.env.POSTGRES_EXPECTED_MIGRATION_VERSION) !== null && _h !== void 0 ? _h : '').trim();
 const requireMigrationVersion = ['1', 'true', 'yes'].includes(((_j = process.env.POSTGRES_REQUIRE_MIGRATION_VERSION) !== null && _j !== void 0 ? _j : '').trim().toLowerCase());
-const migrationVersionQuery = (_k = process.env.POSTGRES_MIGRATION_VERSION_QUERY) !== null && _k !== void 0 ? _k : `
-SELECT COALESCE(
-    CASE
-        WHEN to_regclass('public.schema_migrations') IS NOT NULL
-            THEN (SELECT MAX(version)::text FROM public.schema_migrations)
-    END,
-    CASE
-        WHEN to_regclass('public.knex_migrations') IS NOT NULL
-            THEN (SELECT MAX(name)::text FROM public.knex_migrations)
-    END,
-    CASE
-        WHEN to_regclass('public.flyway_schema_history') IS NOT NULL
-            THEN (SELECT MAX(version)::text FROM public.flyway_schema_history WHERE success = true)
-    END,
-    'unversioned'
-) AS version;
-`.trim();
+const customMigrationVersionQuery = ((_k = process.env.POSTGRES_MIGRATION_VERSION_QUERY) !== null && _k !== void 0 ? _k : '').trim();
+const migrationVersionProbes = [
+    {
+        tableName: 'public.schema_migrations',
+        query: 'SELECT MAX(version)::text AS version FROM public.schema_migrations;'
+    },
+    {
+        tableName: 'public.knex_migrations',
+        query: 'SELECT MAX(name)::text AS version FROM public.knex_migrations;'
+    },
+    {
+        tableName: 'public.flyway_schema_history',
+        query: 'SELECT MAX(version)::text AS version FROM public.flyway_schema_history WHERE success = true;'
+    }
+];
 const postgresConfigured = Boolean(postgresHost && postgresUser && postgresDatabase);
 const postgresPool = postgresConfigured
     ? new pg_1.Pool({
@@ -70,13 +68,56 @@ const mockDatabase = {
         Assets: { Gold: 1000, Exp: 0 }
     }
 };
+function normalizeMigrationVersion(rawVersion) {
+    return rawVersion && String(rawVersion).trim() ? String(rawVersion).trim() : 'unversioned';
+}
+function isMissingRelationError(error) {
+    if (!error || typeof error !== 'object') {
+        return false;
+    }
+    const relationMissingCode = error.code;
+    if (relationMissingCode === '42P01') {
+        return true;
+    }
+    const message = error instanceof Error ? error.message : String(error);
+    return message.includes('relation') && message.includes('does not exist');
+}
+async function resolveMigrationVersion(pool) {
+    var _a, _b;
+    if (customMigrationVersionQuery) {
+        try {
+            const customResult = await pool.query(customMigrationVersionQuery);
+            return normalizeMigrationVersion((_a = customResult.rows[0]) === null || _a === void 0 ? void 0 : _a.version);
+        }
+        catch (error) {
+            if (isMissingRelationError(error)) {
+                return 'unversioned';
+            }
+            throw error;
+        }
+    }
+    for (const probe of migrationVersionProbes) {
+        try {
+            const result = await pool.query(probe.query);
+            const version = normalizeMigrationVersion((_b = result.rows[0]) === null || _b === void 0 ? void 0 : _b.version);
+            if (version !== 'unversioned') {
+                return version;
+            }
+        }
+        catch (error) {
+            // 某些 migration 表可能尚未建立；缺表時改回 unversioned，不中斷 healthcheck。
+            if (isMissingRelationError(error)) {
+                continue;
+            }
+            throw error;
+        }
+    }
+    return 'unversioned';
+}
 async function checkPostgresMigrationVersion(pool) {
-    var _a;
     const startedAt = Date.now();
     try {
-        const result = await pool.query(migrationVersionQuery);
-        const rawVersion = (_a = result.rows[0]) === null || _a === void 0 ? void 0 : _a.version;
-        const version = rawVersion && String(rawVersion).trim() ? String(rawVersion).trim() : 'unversioned';
+        const version = await resolveMigrationVersion(pool);
         const expectedVersion = expectedMigrationVersion || null;
         if (expectedVersion && version !== expectedVersion) {
             return {
