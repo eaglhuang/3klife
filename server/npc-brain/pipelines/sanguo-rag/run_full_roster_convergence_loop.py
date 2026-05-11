@@ -17,12 +17,25 @@ PIPELINE_ROOT = Path("server/npc-brain/pipelines/sanguo-rag")
 
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth")
 DEFAULT_SOURCE_CONFIG = Path("server/npc-brain/pipelines/sanguo-rag/config/external-evidence-sources.json")
+DEFAULT_LANE_POLICY_CONFIG = Path("server/npc-brain/pipelines/sanguo-rag/config/full-roster-lane-policy.json")
 DEFAULT_GENERALS_PATH = Path("assets/resources/data/generals.json")
 DEFAULT_EVENTS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl")
 DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_OBSERVED_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-label-summary.json")
 PROFILE_CHOICES = ("all", "female-priority", "history-romance")
+DEFAULT_PRECISION_POLICY = {
+    "laneAllowlist": ["deterministic-repair", "skill-preview", "human-review", "seed-to-card"],
+    "laneWeights": {
+        "deterministic-repair": 0.35,
+        "skill-preview": 0.35,
+        "human-review": 0.20,
+        "seed-to-card": 0.10,
+    },
+    "maxPerCluster": 2,
+    "minPerLane": 1,
+    "genericCandidateBucketSize": 3,
+}
 
 
 def utc_now() -> str:
@@ -81,6 +94,47 @@ def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> int:
 def stable_hash(*parts: Any, length: int = 16) -> str:
     joined = "\n".join(str(part or "") for part in parts)
     return hashlib.sha256(joined.encode("utf-8")).hexdigest()[:length]
+
+
+def merge_dict(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+    merged = dict(base)
+    for key, value in override.items():
+        if isinstance(value, dict) and isinstance(merged.get(key), dict):
+            merged[key] = merge_dict(merged[key], value)
+        else:
+            merged[key] = value
+    return merged
+
+
+def load_lane_policy(config_path: str | Path | None) -> dict[str, Any]:
+    payload: dict[str, Any] = {}
+    if config_path:
+        path = resolve_path(config_path)
+        if path.exists():
+            loaded = read_json(path)
+            if isinstance(loaded, dict):
+                payload = loaded
+    defaults = payload.get("defaults") if isinstance(payload.get("defaults"), dict) else {}
+    return {
+        "version": str(payload.get("version") or "1.0.0"),
+        "defaults": defaults,
+        "profiles": payload.get("profiles") if isinstance(payload.get("profiles"), dict) else {},
+    }
+
+
+def profile_lane_policy(lane_policy: dict[str, Any], profile: str) -> dict[str, Any]:
+    defaults = lane_policy.get("defaults") if isinstance(lane_policy.get("defaults"), dict) else {}
+    profiles = lane_policy.get("profiles") if isinstance(lane_policy.get("profiles"), dict) else {}
+    profile_payload = profiles.get(profile) if isinstance(profiles.get(profile), dict) else {}
+    merged = merge_dict(defaults, profile_payload)
+    precision = merged.get("precisionSelection") if isinstance(merged.get("precisionSelection"), dict) else {}
+    merged["precisionSelection"] = merge_dict(DEFAULT_PRECISION_POLICY, precision)
+    return merged
+
+
+def compact_text(value: Any) -> str:
+    text = str(value or "").strip()
+    return " ".join(text.split())
 
 
 def command_text(command: list[str]) -> str:
@@ -228,6 +282,7 @@ def load_roster_names(path: Path) -> dict[str, str]:
 def collect_generic_clues(path: Path) -> dict[str, list[dict[str, Any]]]:
     by_general: dict[str, list[dict[str, Any]]] = {}
     for row in read_jsonl(path):
+        participants = [str(item or "").strip() for item in (row.get("generalIds") or []) if str(item or "").strip()]
         clue = {
             "eventKey": str(row.get("eventKey") or row.get("candidateId") or "").strip(),
             "sourceQuote": str(row.get("sourceQuote") or "").strip(),
@@ -236,6 +291,7 @@ def collect_generic_clues(path: Path) -> dict[str, list[dict[str, Any]]]:
             "missingFields": list(row.get("missingFields") or []),
             "location": row.get("location"),
             "relationshipEdges": list(row.get("relationshipEdges") or []),
+            "participants": participants,
         }
         for raw_id in row.get("generalIds") or []:
             general_id = str(raw_id or "").strip()
@@ -730,6 +786,117 @@ def run_runtime_readiness(
     }
 
 
+def select_best_clue(clues: list[dict[str, Any]]) -> dict[str, Any]:
+    if not clues:
+        return {}
+    ranked = sorted(
+        clues,
+        key=lambda clue: (
+            -len(clue.get("sourceRefs") or []),
+            -len(compact_text(clue.get("summary"))),
+            -len(compact_text(clue.get("sourceQuote"))),
+        ),
+    )
+    return ranked[0] if ranked else {}
+
+
+def clue_participants(general_id: str, clue: dict[str, Any]) -> list[str]:
+    participants: set[str] = {str(general_id or "").strip()}
+    for raw in clue.get("participants") or []:
+        person = str(raw or "").strip()
+        if person:
+            participants.add(person)
+    for edge in clue.get("relationshipEdges") or []:
+        if not isinstance(edge, dict):
+            continue
+        for key in ("fromId", "toId", "generalId"):
+            person = str(edge.get(key) or "").strip()
+            if person:
+                participants.add(person)
+    participants.discard("")
+    return sorted(participants)
+
+
+def human_cluster_key(general_id: str, clue: dict[str, Any]) -> str:
+    source_refs = sorted({str(ref or "").strip() for ref in (clue.get("sourceRefs") or []) if str(ref or "").strip()})
+    location = compact_text(clue.get("location"))
+    participants = clue_participants(general_id, clue)
+    summary_seed = compact_text(clue.get("summary")) or compact_text(clue.get("sourceQuote"))
+    summary_hash = stable_hash(summary_seed, length=12) if summary_seed else "no-summary"
+    return "|".join(
+        [
+            ",".join(source_refs) or "no-ref",
+            location or "no-location",
+            ",".join(participants) or "no-participant",
+            summary_hash,
+        ]
+    )
+
+
+def cluster_human_review_rows(
+    pending_rows: list[dict[str, Any]],
+    generic_clues: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    clusters: dict[str, list[dict[str, Any]]] = {}
+    for row in pending_rows:
+        general_id = str(row.get("generalId") or "").strip()
+        clues = generic_clues.get(general_id) or []
+        clue = select_best_clue(clues)
+        key = human_cluster_key(general_id, clue)
+        clusters.setdefault(key, []).append({"row": row, "clue": clue, "generalId": general_id})
+
+    items: list[dict[str, Any]] = []
+    for key, members in clusters.items():
+        members.sort(
+            key=lambda item: (
+                -float(item["row"].get("priorityScore") or 0.0),
+                -int(item["row"].get("genericCandidateCount") or 0),
+                str(item["generalId"]),
+            )
+        )
+        representative = members[0]
+        clue = representative.get("clue") if isinstance(representative.get("clue"), dict) else {}
+        source_refs = sorted(
+            {
+                str(ref or "").strip()
+                for member in members
+                for ref in ((member.get("clue") or {}).get("sourceRefs") or [])
+                if str(ref or "").strip()
+            }
+        )
+        participants = sorted(
+            {
+                person
+                for member in members
+                for person in clue_participants(str(member.get("generalId") or ""), member.get("clue") or {})
+                if person
+            }
+        )
+        location = compact_text(clue.get("location"))
+        summary_seed = compact_text(clue.get("summary")) or compact_text(clue.get("sourceQuote"))
+        items.append(
+            {
+                "clusterKey": key,
+                "clusterSize": len(members),
+                "clusterGeneralIds": [str(member.get("generalId") or "") for member in members],
+                "representativeRow": representative.get("row") or {},
+                "representativeClue": clue,
+                "sourceRefs": source_refs,
+                "participants": participants,
+                "location": location,
+                "summaryHash": stable_hash(summary_seed, length=12) if summary_seed else "no-summary",
+            }
+        )
+    items.sort(
+        key=lambda item: (
+            -float((item.get("representativeRow") or {}).get("priorityScore") or 0.0),
+            -int(item.get("clusterSize") or 0),
+            str((item.get("representativeRow") or {}).get("generalId") or ""),
+        )
+    )
+    return items
+
+
 def build_human_review_batch(
     *,
     run_root: Path,
@@ -739,22 +906,16 @@ def build_human_review_batch(
     threshold: int,
 ) -> dict[str, Any] | None:
     pending_rows = [row for row in rows if str(row.get("nextLane") or "") == "human-review"]
-    if len(pending_rows) < threshold:
+    clustered_items = cluster_human_review_rows(pending_rows, generic_clues)
+    if len(clustered_items) < threshold:
         return None
-
-    pending_rows.sort(
-        key=lambda row: (
-            -float(row.get("priorityScore") or 0.0),
-            -int(row.get("genericCandidateCount") or 0),
-            str(row.get("generalId") or ""),
-        )
-    )
-    batch_rows = pending_rows[: max(threshold, 20)]
+    batch_items = clustered_items[: max(threshold, 20)]
     questions: list[dict[str, Any]] = []
 
-    for index, row in enumerate(batch_rows, 1):
+    for index, item in enumerate(batch_items, 1):
+        row = item.get("representativeRow") if isinstance(item.get("representativeRow"), dict) else {}
+        clue = item.get("representativeClue") if isinstance(item.get("representativeClue"), dict) else {}
         general_id = str(row.get("generalId") or "")
-        clue = (generic_clues.get(general_id) or [{}])[0]
         questions.append(
             {
                 "questionId": f"{run_id}-q{index:03d}",
@@ -764,9 +925,15 @@ def build_human_review_batch(
                 "questionIntentZhTw": "這題在確認事件是否可先進 staging（A）或需要補證（B/C/D）。",
                 "sourceQuote": clue.get("sourceQuote") or "",
                 "summaryZhTw": clue.get("summary") or "",
-                "sourceRefs": list(clue.get("sourceRefs") or []),
+                "sourceRefs": list(item.get("sourceRefs") or clue.get("sourceRefs") or []),
                 "eventKey": clue.get("eventKey"),
                 "missingFields": list(row.get("missingFields") or []),
+                "clusterKey": item.get("clusterKey"),
+                "clusterSize": int(item.get("clusterSize") or 1),
+                "clusterGeneralIds": list(item.get("clusterGeneralIds") or [general_id]),
+                "clusterParticipants": list(item.get("participants") or []),
+                "clusterLocation": item.get("location"),
+                "clusterSummaryHash": item.get("summaryHash"),
                 "recommendedAnswer": "B" if row.get("missingFields") else "A",
                 "allowedAnswers": [
                     {"code": "A", "zhTw": "證據足夠，先進 staged ready-eval（仍不 canonical write）。"},
@@ -780,12 +947,15 @@ def build_human_review_batch(
         )
 
     payload = {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "generatedAt": utc_now(),
         "mode": "full-roster-human-review-batch",
         "canonicalWrites": False,
         "runId": run_id,
         "threshold": threshold,
+        "pendingRowCount": len(pending_rows),
+        "clusteredPendingCount": len(clustered_items),
+        "clusterPolicy": "sourceRefs + location + participants + summary hash",
         "questionCount": len(questions),
         "questions": questions,
     }
@@ -798,7 +968,10 @@ def build_human_review_batch(
         f"- Run ID: `{run_id}`",
         f"- Generated At: `{payload['generatedAt']}`",
         f"- Threshold: `{threshold}`",
+        f"- Pending Rows: `{payload['pendingRowCount']}`",
+        f"- Clustered Pending: `{payload['clusteredPendingCount']}`",
         f"- Questions: `{len(questions)}`",
+        f"- Cluster Policy: `{payload['clusterPolicy']}`",
         "",
     ]
     for question in questions:
@@ -811,6 +984,9 @@ def build_human_review_batch(
                 f"- 中文摘要：{question.get('summaryZhTw') or '-'}",
                 f"- 來源編號：`{', '.join(question.get('sourceRefs') or []) or '-'}`",
                 f"- 缺欄位：`{', '.join(question.get('missingFields') or []) or '-'}`",
+                f"- Cluster 規模：`{question.get('clusterSize')}`（武將：`{', '.join(question.get('clusterGeneralIds') or []) or '-'}`）",
+                f"- Cluster 參與者：`{', '.join(question.get('clusterParticipants') or []) or '-'}`；地點：`{question.get('clusterLocation') or '-'}`",
+                f"- Cluster 指紋：`{question.get('clusterSummaryHash') or '-'}` / `{question.get('clusterKey') or '-'}`",
                 "- A/B/C/D 說明：",
             ]
         )
@@ -822,6 +998,8 @@ def build_human_review_batch(
         "jsonPath": repo_relative(json_path),
         "markdownPath": repo_relative(md_path),
         "questionCount": len(questions),
+        "pendingRowCount": len(pending_rows),
+        "clusteredPendingCount": len(clustered_items),
     }
 
 
@@ -969,6 +1147,250 @@ def run_external_benchmarks(
     return source_results, card_paths, ranking_paths, harvested_seed_paths, manual_seed_paths
 
 
+def precision_row_sort_key(row: dict[str, Any]) -> tuple[Any, ...]:
+    return (
+        -float(row.get("priorityScore") or 0.0),
+        -float(row.get("worldbuildingUsabilityScore") or 0.0),
+        -float(row.get("historicalTrustScore") or 0.0),
+        -int(row.get("genericCandidateCount") or 0),
+        str(row.get("generalId") or ""),
+    )
+
+
+def precision_cluster_key(row: dict[str, Any], generic_bucket_size: int) -> str:
+    lane = str(row.get("nextLane") or "unknown")
+    grade = str(row.get("reviewGrade") or "D")
+    missing = sorted(str(field).strip() for field in (row.get("missingFields") or []) if str(field).strip())
+    missing_key = ",".join(missing) if missing else "none"
+    bucket = max(generic_bucket_size, 1)
+    generic_count = int(row.get("genericCandidateCount") or 0)
+    bucket_index = generic_count // bucket
+    lower = bucket_index * bucket
+    upper = lower + bucket - 1
+    return f"{lane}|{grade}|missing:{missing_key}|generic:{lower}-{upper}"
+
+
+def allocate_precision_lane_targets(
+    *,
+    lane_candidates: dict[str, list[dict[str, Any]]],
+    allowlist: list[str],
+    lane_weights: dict[str, float],
+    total: int,
+    min_per_lane: int,
+) -> dict[str, int]:
+    active_lanes = [lane for lane in allowlist if lane_candidates.get(lane)]
+    targets = {lane: 0 for lane in active_lanes}
+    remaining = max(total, 0)
+    minimum = max(min_per_lane, 0)
+
+    for lane in active_lanes:
+        if remaining <= 0:
+            break
+        capacity = len(lane_candidates.get(lane) or [])
+        grant = min(minimum, capacity, remaining)
+        targets[lane] = grant
+        remaining -= grant
+
+    if remaining <= 0:
+        return targets
+
+    weighted_lanes = [lane for lane in active_lanes if targets[lane] < len(lane_candidates.get(lane) or [])]
+    if not weighted_lanes:
+        return targets
+
+    weights = {lane: max(float(lane_weights.get(lane, 0.0) or 0.0), 0.0) for lane in weighted_lanes}
+    total_weight = sum(weights.values())
+    if total_weight <= 0:
+        weights = {lane: 1.0 for lane in weighted_lanes}
+        total_weight = float(len(weighted_lanes))
+
+    extra_alloc: dict[str, int] = {lane: 0 for lane in weighted_lanes}
+    remainders: list[tuple[float, str]] = []
+    assigned = 0
+    for lane in weighted_lanes:
+        share = remaining * (weights[lane] / total_weight)
+        base = int(share)
+        capacity_left = max(len(lane_candidates.get(lane) or []) - targets[lane], 0)
+        grant = min(base, capacity_left)
+        extra_alloc[lane] = grant
+        assigned += grant
+        remainders.append((share - base, lane))
+
+    remaining_extra = max(remaining - assigned, 0)
+    for _, lane in sorted(remainders, key=lambda item: (-item[0], item[1])):
+        if remaining_extra <= 0:
+            break
+        capacity_left = len(lane_candidates.get(lane) or []) - targets[lane] - extra_alloc[lane]
+        if capacity_left <= 0:
+            continue
+        extra_alloc[lane] += 1
+        remaining_extra -= 1
+
+    for lane, grant in extra_alloc.items():
+        targets[lane] += grant
+    return targets
+
+
+def select_from_lane_with_clusters(
+    *,
+    rows: list[dict[str, Any]],
+    target: int,
+    max_per_cluster: int,
+    generic_bucket_size: int,
+    selected_ids: set[str],
+) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    if target <= 0 or not rows:
+        return [], {}
+    cluster_cap = max(max_per_cluster, 1)
+    clusters: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        key = precision_cluster_key(row, generic_bucket_size)
+        clusters.setdefault(key, []).append(row)
+    for cluster_rows in clusters.values():
+        cluster_rows.sort(key=precision_row_sort_key)
+    ordered_keys = sorted(
+        clusters.keys(),
+        key=lambda key: (
+            precision_row_sort_key(clusters[key][0]) if clusters.get(key) else (0, 0, 0, 0, ""),
+            key,
+        ),
+    )
+    indices = {key: 0 for key in ordered_keys}
+    cluster_counts = {key: 0 for key in ordered_keys}
+    chosen: list[dict[str, Any]] = []
+
+    # Pass 1: honor per-cluster cap.
+    while len(chosen) < target:
+        progressed = False
+        for key in ordered_keys:
+            if len(chosen) >= target:
+                break
+            if cluster_counts[key] >= cluster_cap:
+                continue
+            members = clusters.get(key) or []
+            while indices[key] < len(members):
+                row = members[indices[key]]
+                indices[key] += 1
+                gid = str(row.get("generalId") or "").strip()
+                if not gid or gid in selected_ids:
+                    continue
+                chosen.append(row)
+                selected_ids.add(gid)
+                cluster_counts[key] += 1
+                progressed = True
+                break
+        if not progressed:
+            break
+
+    # Pass 2: relax cap if lane quota still not met.
+    if len(chosen) < target:
+        for key in ordered_keys:
+            members = clusters.get(key) or []
+            while len(chosen) < target and indices[key] < len(members):
+                row = members[indices[key]]
+                indices[key] += 1
+                gid = str(row.get("generalId") or "").strip()
+                if not gid or gid in selected_ids:
+                    continue
+                chosen.append(row)
+                selected_ids.add(gid)
+                cluster_counts[key] += 1
+            if len(chosen) >= target:
+                break
+
+    non_zero_clusters = {key: count for key, count in cluster_counts.items() if count > 0}
+    return chosen, non_zero_clusters
+
+
+def select_precision_rows(
+    *,
+    scoreboard_rows: list[dict[str, Any]],
+    precision_policy: dict[str, Any],
+    top_n: int,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    limit = max(int(top_n or 0), 1)
+    allowlist = [str(item).strip() for item in (precision_policy.get("laneAllowlist") or []) if str(item).strip()]
+    if not allowlist:
+        allowlist = list(DEFAULT_PRECISION_POLICY["laneAllowlist"])
+    lane_weights = precision_policy.get("laneWeights") if isinstance(precision_policy.get("laneWeights"), dict) else {}
+    max_per_cluster = int(precision_policy.get("maxPerCluster") or DEFAULT_PRECISION_POLICY["maxPerCluster"])
+    min_per_lane = int(precision_policy.get("minPerLane") or DEFAULT_PRECISION_POLICY["minPerLane"])
+    generic_bucket_size = int(
+        precision_policy.get("genericCandidateBucketSize") or DEFAULT_PRECISION_POLICY["genericCandidateBucketSize"]
+    )
+    generic_bucket_size = max(generic_bucket_size, 1)
+
+    candidates = [
+        row
+        for row in scoreboard_rows
+        if str(row.get("rosterState") or "") == "canonical" and str(row.get("nextLane") or "") in set(allowlist)
+    ]
+    candidates.sort(key=precision_row_sort_key)
+
+    lane_candidates: dict[str, list[dict[str, Any]]] = {lane: [] for lane in allowlist}
+    for row in candidates:
+        lane = str(row.get("nextLane") or "")
+        lane_candidates.setdefault(lane, []).append(row)
+    for lane_rows in lane_candidates.values():
+        lane_rows.sort(key=precision_row_sort_key)
+
+    lane_targets = allocate_precision_lane_targets(
+        lane_candidates=lane_candidates,
+        allowlist=allowlist,
+        lane_weights={str(key): float(value or 0.0) for key, value in lane_weights.items()},
+        total=limit,
+        min_per_lane=min_per_lane,
+    )
+    selected_ids: set[str] = set()
+    selected_rows: list[dict[str, Any]] = []
+    lane_selected_counts: dict[str, int] = {}
+    lane_cluster_counts: dict[str, dict[str, int]] = {}
+
+    for lane in allowlist:
+        lane_rows = lane_candidates.get(lane) or []
+        target = int(lane_targets.get(lane) or 0)
+        chosen, cluster_counts = select_from_lane_with_clusters(
+            rows=lane_rows,
+            target=target,
+            max_per_cluster=max_per_cluster,
+            generic_bucket_size=generic_bucket_size,
+            selected_ids=selected_ids,
+        )
+        selected_rows.extend(chosen)
+        lane_selected_counts[lane] = len(chosen)
+        lane_cluster_counts[lane] = cluster_counts
+
+    if len(selected_rows) < limit:
+        for row in candidates:
+            if len(selected_rows) >= limit:
+                break
+            gid = str(row.get("generalId") or "").strip()
+            if not gid or gid in selected_ids:
+                continue
+            selected_ids.add(gid)
+            selected_rows.append(row)
+            lane = str(row.get("nextLane") or "")
+            lane_selected_counts[lane] = int(lane_selected_counts.get(lane) or 0) + 1
+
+    selected_rows.sort(key=precision_row_sort_key)
+    selected_rows = selected_rows[:limit]
+    metadata = {
+        "candidateCount": len(candidates),
+        "selectedCount": len(selected_rows),
+        "laneTargets": lane_targets,
+        "laneSelectedCounts": lane_selected_counts,
+        "clusterSelectedCounts": lane_cluster_counts,
+        "precisionPolicy": {
+            "laneAllowlist": allowlist,
+            "laneWeights": {str(key): float(value or 0.0) for key, value in lane_weights.items()},
+            "maxPerCluster": max_per_cluster,
+            "minPerLane": min_per_lane,
+            "genericCandidateBucketSize": generic_bucket_size,
+        },
+    }
+    return selected_rows, metadata
+
+
 def run_precision_lane(
     *,
     args: argparse.Namespace,
@@ -976,25 +1398,33 @@ def run_precision_lane(
     round_id: str,
     scoreboard_rows: list[dict[str, Any]],
     baseline_manifest: dict[str, Any],
+    lane_profile_policy: dict[str, Any],
     dry_run: bool,
 ) -> dict[str, Any] | None:
     if not args.run_precision_lane:
         return None
 
-    candidates = [
-        row
-        for row in scoreboard_rows
-        if str(row.get("rosterState") or "") == "canonical"
-        and str(row.get("nextLane") or "") in {"deterministic-repair", "skill-preview", "human-review", "seed-to-card"}
-    ]
-    candidates.sort(
-        key=lambda row: (
-            -float(row.get("priorityScore") or 0.0),
-            -float(row.get("worldbuildingUsabilityScore") or 0.0),
-        )
+    precision_policy = (
+        lane_profile_policy.get("precisionSelection")
+        if isinstance(lane_profile_policy.get("precisionSelection"), dict)
+        else DEFAULT_PRECISION_POLICY
     )
-    selected = [str(row.get("generalId") or "").strip() for row in candidates[: max(args.precision_top_generals, 1)]]
+    selected_rows, selection_meta = select_precision_rows(
+        scoreboard_rows=scoreboard_rows,
+        precision_policy=precision_policy,
+        top_n=max(args.precision_top_generals, 1),
+    )
+    selected = [str(row.get("generalId") or "").strip() for row in selected_rows]
     selected = [gid for gid in selected if gid]
+    if not selected:
+        return {
+            "command": None,
+            "summaryPath": None,
+            "baselineManifestPath": None,
+            "selectedGeneralIds": [],
+            "selection": selection_meta,
+            "summary": {},
+        }
 
     precision_root = run_root / "precision-lane"
     precision_run_id = f"{round_id}-precision"
@@ -1008,7 +1438,7 @@ def run_precision_lane(
         "--profile",
         "precision",
         "--top-generals",
-        str(max(args.precision_top_generals, 1)),
+        str(max(len(selected), 1)),
         "--top-per-general",
         str(max(args.precision_top_per_general, 1)),
         "--pending-review-limit",
@@ -1037,6 +1467,7 @@ def run_precision_lane(
         "summaryPath": repo_relative(summary_path),
         "baselineManifestPath": repo_relative(baseline_path_out),
         "selectedGeneralIds": selected,
+        "selection": selection_meta,
         "summary": summary_payload if isinstance(summary_payload, dict) else {},
     }
 
@@ -1048,6 +1479,8 @@ def run_round(
     round_index: int,
     source_config_path: Path,
     sources: list[dict[str, Any]],
+    lane_policy_config_path: Path,
+    lane_profile_policy: dict[str, Any],
     baseline_manifest: dict[str, Any],
     previous_scoreboard_path: Path | None,
     dry_run: bool,
@@ -1148,6 +1581,8 @@ def run_round(
         repo_relative(scoreboard_root),
         "--profile",
         args.profile,
+        "--lane-policy-config",
+        repo_relative(lane_policy_config_path),
     ]
     for ranking_path in ranking_inputs:
         scoreboard_command.extend(["--seed-ranking-json", repo_relative(ranking_path)])
@@ -1384,6 +1819,7 @@ def run_round(
         round_id=round_id,
         scoreboard_rows=scoreboard_rows,
         baseline_manifest=baseline_manifest,
+        lane_profile_policy=lane_profile_policy,
         dry_run=dry_run,
     )
 
@@ -1454,6 +1890,7 @@ def run_round(
         "precisionSummaryPath": (precision_result or {}).get("summaryPath"),
         "precisionBaselineManifestPath": (precision_result or {}).get("baselineManifestPath"),
         "precisionGeneralIds": (precision_result or {}).get("selectedGeneralIds"),
+        "precisionSelection": (precision_result or {}).get("selection"),
         "threeLaneSummaryPath": repo_relative(three_lane_summary_path) if three_lane_summary_path else None,
         "threeLaneStopReason": (three_lane_summary_payload if isinstance(three_lane_summary_payload, dict) else {}).get("stopReason"),
         "threeLaneFinalBaselineManifest": (three_lane_summary_payload if isinstance(three_lane_summary_payload, dict) else {}).get("finalBaselineManifest"),
@@ -1539,6 +1976,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--run-id", default=None)
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--source-config", default=str(DEFAULT_SOURCE_CONFIG))
+    parser.add_argument("--lane-policy-config", default=str(DEFAULT_LANE_POLICY_CONFIG))
     parser.add_argument("--baseline-manifest", default=None)
     parser.add_argument("--generals", default=str(DEFAULT_GENERALS_PATH))
     parser.add_argument("--observed-mentions", default=str(DEFAULT_OBSERVED_MENTIONS_PATH))
@@ -1575,6 +2013,9 @@ def main() -> int:
     run_root.mkdir(parents=True, exist_ok=True)
 
     source_config_path = resolve_path(args.source_config)
+    lane_policy_config_path = resolve_path(args.lane_policy_config)
+    lane_policy_payload = load_lane_policy(lane_policy_config_path)
+    lane_profile_policy = profile_lane_policy(lane_policy_payload, args.profile)
     source_rows = source_rows_from_config(source_config_path)
     config_sanity = sanity_check_source_config(source_config_path, source_rows)
     approved_rows = approved_sources(source_rows)
@@ -1612,6 +2053,8 @@ def main() -> int:
             round_index=round_index,
             source_config_path=source_config_path,
             sources=approved_rows,
+            lane_policy_config_path=lane_policy_config_path,
+            lane_profile_policy=lane_profile_policy,
             baseline_manifest=baseline_manifest,
             previous_scoreboard_path=previous_scoreboard_path,
             dry_run=args.dry_run,
@@ -1835,12 +2278,15 @@ def main() -> int:
         },
         "inputs": {
             "sourcesConfigPath": repo_relative(source_config_path),
+            "lanePolicyConfigPath": repo_relative(lane_policy_config_path),
+            "lanePolicyVersion": str(lane_policy_payload.get("version") or "1.0.0"),
             "baselineManifestInput": args.baseline_manifest,
             "baseObservedMentionsPath": repo_relative(resolve_path(args.observed_mentions)),
             "baseObservedSummaryPath": repo_relative(resolve_path(args.observed_summary)),
             "top": args.top,
             "includeCold": args.include_cold,
             "profile": args.profile,
+            "laneProfilePolicy": lane_profile_policy,
             "approvedSourceCount": len(approved_rows),
             "rosterCount": len(roster_names),
             "sourceConfigSanity": config_sanity,

@@ -15,8 +15,14 @@ DEFAULT_EVENTS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/
 DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
 DEFAULT_PILOT_REPORT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/etl-quality-pilot-report.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/full-roster-scoreboard")
+DEFAULT_LANE_POLICY_CONFIG = Path("server/npc-brain/pipelines/sanguo-rag/config/full-roster-lane-policy.json")
 
 PROFILE_CHOICES = ("all", "female-priority", "history-romance")
+DEFAULT_LANE_THRESHOLDS = {
+    "aRuminationHistoricalMax": 75.0,
+    "cHumanReviewGenericMin": 3,
+    "femalePriorityCToSkillPreview": True,
+}
 FEMALE_TOKENS = {"female", "f", "woman", "女", "女性"}
 MALE_TOKENS = {"male", "m", "man", "男", "男性"}
 
@@ -41,6 +47,36 @@ def read_json(path: Path) -> Any:
     if not path.exists():
         return {}
     return json.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def merge_dict(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+    merged = dict(base)
+    for key, value in override.items():
+        if isinstance(value, dict) and isinstance(merged.get(key), dict):
+            merged[key] = merge_dict(merged[key], value)
+        else:
+            merged[key] = value
+    return merged
+
+
+def load_lane_thresholds(config_path: str | Path | None, profile: str) -> dict[str, Any]:
+    defaults = dict(DEFAULT_LANE_THRESHOLDS)
+    if not config_path:
+        return defaults
+    path = resolve_path(config_path)
+    if not path.exists():
+        return defaults
+    payload = read_json(path)
+    if not isinstance(payload, dict):
+        return defaults
+    root_defaults = payload.get("defaults") if isinstance(payload.get("defaults"), dict) else {}
+    root_lane = root_defaults.get("laneThresholds") if isinstance(root_defaults.get("laneThresholds"), dict) else {}
+    merged = merge_dict(defaults, root_lane)
+    profiles = payload.get("profiles") if isinstance(payload.get("profiles"), dict) else {}
+    profile_payload = profiles.get(profile) if isinstance(profiles.get(profile), dict) else {}
+    profile_lane = profile_payload.get("laneThresholds") if isinstance(profile_payload.get("laneThresholds"), dict) else {}
+    merged = merge_dict(merged, profile_lane)
+    return merged
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -432,8 +468,13 @@ def next_lane(
     card_count: int,
     gender: str,
     profile: str,
+    lane_thresholds: dict[str, Any],
 ) -> str:
-    if grade == "A" and historical_score < 75.0:
+    rumination_max = float(lane_thresholds.get("aRuminationHistoricalMax") or 75.0)
+    c_human_min = int(lane_thresholds.get("cHumanReviewGenericMin") or 3)
+    female_c_to_skill = bool(lane_thresholds.get("femalePriorityCToSkillPreview", True))
+
+    if grade == "A" and historical_score < rumination_max:
         return "rumination"
     if grade == "A":
         return "runtime-readiness"
@@ -444,8 +485,8 @@ def next_lane(
     if grade == "C":
         if missing_fields:
             return "deterministic-repair"
-        if generic_candidate_count >= 3:
-            if profile == "female-priority" and gender == "female":
+        if generic_candidate_count >= c_human_min:
+            if profile == "female-priority" and gender == "female" and female_c_to_skill:
                 return "skill-preview"
             return "human-review"
         return "skill-preview"
@@ -514,6 +555,7 @@ def priority_score(
 def build_row(
     *,
     profile: str,
+    lane_thresholds: dict[str, Any],
     general_id: str,
     display_name: str,
     gender: str,
@@ -616,6 +658,7 @@ def build_row(
         card_count=card_count,
         gender=gender,
         profile=profile,
+        lane_thresholds=lane_thresholds,
     )
     priority = priority_score(
         historical_score=historical_score,
@@ -720,6 +763,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pilot-report", default=str(DEFAULT_PILOT_REPORT_PATH))
     parser.add_argument("--candidate-evidence-cards", action="append", default=[])
     parser.add_argument("--seed-ranking-json", action="append", default=[])
+    parser.add_argument("--lane-policy-config", default=str(DEFAULT_LANE_POLICY_CONFIG))
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--profile", choices=PROFILE_CHOICES, default="all")
     parser.add_argument("--pilot-only", action="store_true")
@@ -769,6 +813,7 @@ def main() -> int:
     for path_text in args.candidate_evidence_cards:
         card_rows.extend(read_jsonl(resolve_path(path_text)))
     card_stats, shadow_index = gather_card_stats(card_rows)
+    lane_thresholds = load_lane_thresholds(args.lane_policy_config, args.profile)
 
     if args.pilot_only and pilot_rows:
         selected_ids = list(pilot_rows.keys())
@@ -798,6 +843,7 @@ def main() -> int:
         canonical_rows.append(
             build_row(
                 profile=args.profile,
+                lane_thresholds=lane_thresholds,
                 general_id=general_id,
                 display_name=display_name,
                 gender=gender,
@@ -830,6 +876,7 @@ def main() -> int:
         shadow_rows.append(
             build_row(
                 profile=args.profile,
+                lane_thresholds=lane_thresholds,
                 general_id=candidate_person_id,
                 display_name=str(info.get("displayName") or candidate_person_id),
                 gender="unknown",
@@ -872,7 +919,7 @@ def main() -> int:
     world_scores = [float(row.get("worldbuildingUsabilityScore") or 0.0) for row in rows]
 
     payload = {
-        "version": "2.1.0",
+        "version": "2.2.0",
         "generatedAt": utc_now(),
         "mode": "full-roster-scoreboard",
         "profile": args.profile,
@@ -884,6 +931,7 @@ def main() -> int:
             "pilotReportPath": repo_relative(resolve_path(args.pilot_report)),
             "candidateEvidenceCardsPaths": [repo_relative(resolve_path(path_text)) for path_text in args.candidate_evidence_cards],
             "seedRankingJsonPaths": [repo_relative(resolve_path(path_text)) for path_text in args.seed_ranking_json],
+            "lanePolicyConfigPath": repo_relative(resolve_path(args.lane_policy_config)),
             "pilotOnly": bool(args.pilot_only),
         },
         "outputs": {
@@ -910,6 +958,7 @@ def main() -> int:
             "aRomanceCount": sum(1 for row in rows if row.get("gradeType") == "A-romance"),
             "seedCount": sum(int(row.get("seedCount") or 0) for row in rows),
             "candidateCardCount": sum(int(row.get("cardCount") or 0) for row in rows),
+            "laneThresholds": lane_thresholds,
         },
         "rows": rows,
     }

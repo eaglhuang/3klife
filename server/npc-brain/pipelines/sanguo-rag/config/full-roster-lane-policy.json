@@ -1,0 +1,68 @@
+{
+  "version": "1.0.0",
+  "defaults": {
+    "laneThresholds": {
+      "aRuminationHistoricalMax": 75.0,
+      "cHumanReviewGenericMin": 3,
+      "femalePriorityCToSkillPreview": true
+    },
+    "precisionSelection": {
+      "laneAllowlist": [
+        "deterministic-repair",
+        "skill-preview",
+        "human-review",
+        "seed-to-card"
+      ],
+      "laneWeights": {
+        "deterministic-repair": 0.35,
+        "skill-preview": 0.35,
+        "human-review": 0.2,
+        "seed-to-card": 0.1
+      },
+      "maxPerCluster": 2,
+      "minPerLane": 1,
+      "genericCandidateBucketSize": 3
+    }
+  },
+  "profiles": {
+    "all": {},
+    "female-priority": {
+      "laneThresholds": {
+        "cHumanReviewGenericMin": 4,
+        "femalePriorityCToSkillPreview": true
+      },
+      "precisionSelection": {
+        "laneWeights": {
+          "deterministic-repair": 0.3,
+          "skill-preview": 0.45,
+          "human-review": 0.15,
+          "seed-to-card": 0.1
+        },
+        "maxPerCluster": 3,
+        "genericCandidateBucketSize": 2
+      }
+    },
+    "history-romance": {
+      "laneThresholds": {
+        "aRuminationHistoricalMax": 78.0,
+        "cHumanReviewGenericMin": 3,
+        "femalePriorityCToSkillPreview": false
+      },
+      "precisionSelection": {
+        "laneAllowlist": [
+          "deterministic-repair",
+          "skill-preview",
+          "human-review"
+        ],
+        "laneWeights": {
+          "deterministic-repair": 0.45,
+          "skill-preview": 0.4,
+          "human-review": 0.15
+        },
+        "maxPerCluster": 2,
+        "minPerLane": 1,
+        "genericCandidateBucketSize": 4
+      }
+    }
+  }
+}
