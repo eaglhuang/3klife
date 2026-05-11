@@ -550,4 +550,16 @@ function main() {
   }
 }
 
-main();
+if (require.main === module) {
+  try {
+    main();
+  } catch (error) {
+    console.error(`[optimize-ucuf-layout] ${error && (error.stack || error.message) || error}`);
+    process.exit(1);
+  }
+}
+
+module.exports = {
+  parseArgs,
+  main,
+};

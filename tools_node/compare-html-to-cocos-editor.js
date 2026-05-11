@@ -987,4 +987,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { normalizePng, parseViewport, parseRect };
+module.exports = { normalizePng, parseViewport, parseRect, parseArgs, main };

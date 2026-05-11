@@ -455,22 +455,32 @@ async function main(argv) {
     let htmlForDraft = html;
     let fidelitySnapshots = null;
     if (opts.useComputedStyle) {
-      precomputedFidelity = await buildFidelitySidecars({
-        htmlPath: opts.input,
-        outputBasePath: opts.output,
-        screenId: opts.screenId,
-        viewport: effectiveCanvas
-          ? { width: effectiveCanvas.designWidth, height: effectiveCanvas.designHeight }
-          : { width: 1334, height: 750 },
-        browserPath: opts.browser,
-        tokensSource: opts.tokensSource,
-        tokensRuntime: opts.tokensRuntime,
-        tokensHandoff: opts.tokensHandoff,
-        emitCssCoverage: false,
-        emitTokenSuggestions: false,
-        emitImageWaivers: false,
-        sourceDir: opts.sourceCss ? path.dirname(path.resolve(opts.sourceCss)) : path.dirname(path.resolve(opts.input)),
-      });
+      try {
+        precomputedFidelity = await buildFidelitySidecars({
+          htmlPath: opts.input,
+          outputBasePath: opts.output,
+          screenId: opts.screenId,
+          viewport: effectiveCanvas
+            ? { width: effectiveCanvas.designWidth, height: effectiveCanvas.designHeight }
+            : { width: 1334, height: 750 },
+          browserPath: opts.browser,
+          tokensSource: opts.tokensSource,
+          tokensRuntime: opts.tokensRuntime,
+          tokensHandoff: opts.tokensHandoff,
+          emitCssCoverage: false,
+          emitTokenSuggestions: false,
+          emitImageWaivers: false,
+          sourceDir: opts.sourceCss ? path.dirname(path.resolve(opts.sourceCss)) : path.dirname(path.resolve(opts.input)),
+        });
+      } catch (error) {
+        const message = String(error && (error.message || error) || 'unknown-error');
+        precomputedFidelity = {
+          ok: false,
+          reason: /EPERM/i.test(message)
+            ? 'computed-style-browser-spawn-eperm'
+            : `computed-style-build-error:${message}`,
+        };
+      }
       if (precomputedFidelity.ok && precomputedFidelity.annotatedHtml) {
         htmlForDraft = precomputedFidelity.annotatedHtml;
         fidelitySnapshots = buildSnapshotStyleMap(precomputedFidelity.snapshots);
@@ -767,25 +777,36 @@ async function main(argv) {
 
   let fidelitySidecars = null;
   if (opts.input && (opts.emitCssCoverage || opts.emitTokenSuggestions || opts.emitImageWaivers)) {
-    fidelitySidecars = await buildFidelitySidecars({
-      htmlPath: opts.input,
-      outputBasePath: opts.output,
-      screenId: opts.screenId,
-      viewport: {
-        width: (layoutDraft.canvas && layoutDraft.canvas.designWidth) || 1334,
-        height: (layoutDraft.canvas && layoutDraft.canvas.designHeight) || 750,
-      },
-      browserPath: opts.browser,
-      tokensSource: opts.tokensSource,
-      tokensRuntime: opts.tokensRuntime,
-      tokensHandoff: opts.tokensHandoff,
-      emitCssCoverage: opts.emitCssCoverage,
-      emitTokenSuggestions: opts.emitTokenSuggestions,
-      emitImageWaivers: opts.emitImageWaivers,
-      manualWaiverPath: opts.manualWaivers,
-      sourceDir: opts.sourceCss ? path.dirname(path.resolve(opts.sourceCss)) : path.dirname(path.resolve(opts.input)),
-      evolutionLog: opts.evolutionLog,
-    });
+    try {
+      fidelitySidecars = await buildFidelitySidecars({
+        htmlPath: opts.input,
+        outputBasePath: opts.output,
+        screenId: opts.screenId,
+        viewport: {
+          width: (layoutDraft.canvas && layoutDraft.canvas.designWidth) || 1334,
+          height: (layoutDraft.canvas && layoutDraft.canvas.designHeight) || 750,
+        },
+        browserPath: opts.browser,
+        tokensSource: opts.tokensSource,
+        tokensRuntime: opts.tokensRuntime,
+        tokensHandoff: opts.tokensHandoff,
+        emitCssCoverage: opts.emitCssCoverage,
+        emitTokenSuggestions: opts.emitTokenSuggestions,
+        emitImageWaivers: opts.emitImageWaivers,
+        manualWaiverPath: opts.manualWaivers,
+        sourceDir: opts.sourceCss ? path.dirname(path.resolve(opts.sourceCss)) : path.dirname(path.resolve(opts.input)),
+        evolutionLog: opts.evolutionLog,
+      });
+    } catch (error) {
+      const message = String(error && (error.message || error) || 'unknown-error');
+      fidelitySidecars = {
+        ok: false,
+        skipped: true,
+        reason: /EPERM/i.test(message)
+          ? 'fidelity-sidecar-browser-spawn-eperm'
+          : `fidelity-sidecar-build-error:${message}`,
+      };
+    }
     if (fidelitySidecars.ok) {
       if (typeof opts.strictCoverage === 'number' && !Number.isNaN(opts.strictCoverage)
           && fidelitySidecars.coverage.coveragePercent < opts.strictCoverage) {
@@ -1025,4 +1046,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { parseArgs, buildDraftFromHtml };
+module.exports = { parseArgs, buildDraftFromHtml, main };

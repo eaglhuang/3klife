@@ -186,7 +186,9 @@ if (require.main === module) {
 
 module.exports = {
   findBrowser,
+  parseArgs,
   prepareSource,
   toFileUrl,
   waitForPageSettle,
+  main,
 };

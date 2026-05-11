@@ -8,6 +8,7 @@ const cp = require('child_process');
 const crypto = require('crypto');
 const { resolveSourcePackage, writeSourcePackageManifest, writeHtmlWithSourceCss } = require('./lib/html-to-ucuf/source-package');
 const { runRuleGuard } = require('./lib/html-to-ucuf/rule-guard');
+const { runScriptInProcess, shouldFallbackForEperm } = require('./lib/in-process-cli-runner');
 const {
   assessReferencedFragmentGeometry,
   normalizeReferencedFragmentFiles,
@@ -176,17 +177,32 @@ function detectInputShape(html) {
   };
 }
 
-function runNodeStep(label, scriptName, args, extraEnv) {
+async function runNodeStep(label, scriptName, args, extraEnv) {
   console.log(`[run-html-to-ucuf-workflow] step=${label}`);
-  const proc = cp.spawnSync(process.execPath, [path.resolve(ROOT, 'tools_node', scriptName), ...args], {
+  const scriptPath = path.resolve(ROOT, 'tools_node', scriptName);
+  const proc = cp.spawnSync(process.execPath, [scriptPath, ...args], {
     cwd: ROOT,
     encoding: 'utf8',
     env: Object.assign({}, process.env, { DOM_TO_UI_TELEMETRY: '0' }, extraEnv || {}),
     shell: false,
   });
-  if (proc.stdout) process.stdout.write(proc.stdout);
-  if (proc.stderr) process.stderr.write(proc.stderr);
-  return proc;
+  if (!shouldFallbackForEperm(proc)) {
+    if (proc.stdout) process.stdout.write(proc.stdout);
+    if (proc.stderr) process.stderr.write(proc.stderr);
+    return proc;
+  }
+
+  console.warn(`[run-html-to-ucuf-workflow] step=${label} spawn EPERM; fallback=in-process`);
+  const inProcess = await runScriptInProcess({
+    scriptPath,
+    args,
+    cwd: ROOT,
+    envPatch: Object.assign({}, { DOM_TO_UI_TELEMETRY: '0' }, extraEnv || {}),
+    label,
+  });
+  if (inProcess.stdout) process.stdout.write(inProcess.stdout);
+  if (inProcess.stderr) process.stderr.write(inProcess.stderr);
+  return inProcess;
 }
 
 function extractIssues(text) {
@@ -1142,7 +1158,7 @@ function updateLazySlotDefaultFragments(layoutPath, tabRouting) {
   return { changed };
 }
 
-function runPerTabReplay(paths, opts, sourcePackage, inputPath) {
+async function runPerTabReplay(paths, opts, sourcePackage, inputPath) {
   if (!opts.perTabReplay) return { skipped: true, reason: 'disabled' };
   const routing = readFinalTabRouting(paths);
   const tabs = pickPerTabReplayTabs(routing);
@@ -1158,7 +1174,7 @@ function runPerTabReplay(paths, opts, sourcePackage, inputPath) {
   // Plan 4.1：沒有可靠 final tab-routing 時，直接由 source DOM 的 role/data-tab/aria-controls 發現 tabs。
   if (tabs.length > 0) renderArgs.push('--tabs', tabs.map(tab => tab.key).join(','));
   if (opts.browser) renderArgs.push('--browser', opts.browser);
-  const renderProc = runNodeStep('render-html-tab-fragments', 'render-html-tab-fragments.js', renderArgs);
+  const renderProc = await runNodeStep('render-html-tab-fragments', 'render-html-tab-fragments.js', renderArgs);
 
   const manifestPath = path.join(paths.tabReplayDir, `${opts.screenId}.tab-fragments.json`);
   const manifest = readJsonIfExists(manifestPath);
@@ -1227,7 +1243,7 @@ function runPerTabReplay(paths, opts, sourcePackage, inputPath) {
     }
     args.push('--use-computed-style');
 
-    const proc = runNodeStep(`dom-to-ui-json:tab-fragment:${key}`, 'dom-to-ui-json.js', args);
+    const proc = await runNodeStep(`dom-to-ui-json:tab-fragment:${key}`, 'dom-to-ui-json.js', args);
     const converted = readJsonIfExists(layoutOut);
     const normalized = normalizeFragmentLayout(converted, tab.id, slotWidthByTabId.get(tab.id) || null);
     const fragmentTarget = path.join(runtime.fragmentsDir, `${prefix}-${key}-content.json`);
@@ -1807,7 +1823,7 @@ function assessInteractionRuntime(paths, steps, sourceHtml) {
   };
 }
 
-function main() {
+async function main() {
   const opts = parseArgs(process.argv);
   const allowedMergeModes = new Set(['preserve-human', 'html-authoritative', 'dry-run']);
   if (!allowedMergeModes.has(opts.updateMergeMode)) {
@@ -1859,7 +1875,7 @@ function main() {
   if (detected.needsPrerender) {
     const args = ['--input', inputPath, '--output', paths.renderedHtml, '--viewport', opts.viewport, '--settle-ms', String(opts.settleMs)];
     if (opts.browser) args.push('--browser', opts.browser);
-    const proc = runNodeStep('render-html-snapshot', 'render-html-snapshot.js', args);
+    const proc = await runNodeStep('render-html-snapshot', 'render-html-snapshot.js', args);
     steps.push({ step: 'render-html-snapshot', exitCode: proc.status ?? 1, ok: proc.status === 0 });
     if (proc.status !== 0) {
       writeSummaryAndExit(steps, detected, paths, opts, 1);
@@ -1885,7 +1901,7 @@ function main() {
   } else {
     const args = ['--html', workingHtml, '--screen-id', opts.screenId, '--apply', '--out', paths.readyHtml, '--report', paths.annotateReport];
     if (opts.contentContract) args.push('--content-contract', opts.contentContract);
-    const proc = runNodeStep('annotate-html-bindings', 'annotate-html-bindings.js', args);
+    const proc = await runNodeStep('annotate-html-bindings', 'annotate-html-bindings.js', args);
     steps.push({ step: 'annotate-html-bindings', exitCode: proc.status ?? 1, ok: proc.status === 0 });
     if (proc.status !== 0) {
       writeSummaryAndExit(steps, detected, paths, opts, 1);
@@ -1929,7 +1945,7 @@ function main() {
   ];
   if (sourcePackage) baseArgs.push('--tokens-source', sourcePackage.tokensPath, '--source-css', sourcePackage.cssPath, '--use-computed-style');
   if (opts.evolutionLog) baseArgs.push('--evolution-log', opts.evolutionLog);
-  const baseProc = runNodeStep('dom-to-ui-json:raw', 'dom-to-ui-json.js', baseArgs);
+  const baseProc = await runNodeStep('dom-to-ui-json:raw', 'dom-to-ui-json.js', baseArgs);
   steps.push({ step: 'dom-to-ui-json:raw', exitCode: baseProc.status ?? 1, ok: baseProc.status === 0, issues: extractIssues((baseProc.stdout || '') + '\n' + (baseProc.stderr || '')) });
   if (baseProc.status !== 0) {
     writeSummaryAndExit(steps, detected, paths, opts, 1);
@@ -1940,7 +1956,7 @@ function main() {
     fs.copyFileSync(paths.rawLayout, paths.optimizedLayout);
     steps.push({ step: 'optimize-ucuf-layout', exitCode: 0, ok: true, skipped: true });
   } else {
-    const proc = runNodeStep('optimize-ucuf-layout', 'optimize-ucuf-layout.js', ['--input', paths.rawLayout, '--output', paths.optimizedLayout, '--report', paths.optimizeReport]);
+    const proc = await runNodeStep('optimize-ucuf-layout', 'optimize-ucuf-layout.js', ['--input', paths.rawLayout, '--output', paths.optimizedLayout, '--report', paths.optimizeReport]);
     steps.push({ step: 'optimize-ucuf-layout', exitCode: proc.status ?? 1, ok: proc.status === 0 });
     if (proc.status !== 0) {
       writeSummaryAndExit(steps, detected, paths, opts, 1);
@@ -1951,7 +1967,7 @@ function main() {
   const visualReview = paths.rawLayout.replace(/\.json$/i, '.visual-review.json');
   const skinArgs = ['--skin', paths.rawSkin, '--report', paths.skinFixReport];
   if (fs.existsSync(visualReview)) skinArgs.push('--visual-review', visualReview);
-  const skinProc = runNodeStep('auto-fix-ucuf-skin', 'auto-fix-ucuf-skin.js', skinArgs);
+  const skinProc = await runNodeStep('auto-fix-ucuf-skin', 'auto-fix-ucuf-skin.js', skinArgs);
   steps.push({ step: 'auto-fix-ucuf-skin', exitCode: skinProc.status ?? 1, ok: skinProc.status === 0 });
   if (skinProc.status !== 0) {
     writeSummaryAndExit(steps, detected, paths, opts, 1);
@@ -1985,7 +2001,7 @@ function main() {
   }
   if (sourcePackage) strictArgs.push('--tokens-source', sourcePackage.tokensPath, '--source-css', sourcePackage.cssPath);
   if (!opts.noValidate) strictArgs.push('--validate');
-  const strictProc = runNodeStep('dom-to-ui-json:strict-replay', 'dom-to-ui-json.js', strictArgs);
+  const strictProc = await runNodeStep('dom-to-ui-json:strict-replay', 'dom-to-ui-json.js', strictArgs);
   steps.push({
     step: 'dom-to-ui-json:strict-replay',
     exitCode: strictProc.status ?? 1,
@@ -1996,7 +2012,7 @@ function main() {
     issues: extractIssues((strictProc.stdout || '') + '\n' + (strictProc.stderr || '')),
   });
 
-  const perTabReplay = runPerTabReplay(paths, opts, sourcePackage, inputPath);
+  const perTabReplay = await runPerTabReplay(paths, opts, sourcePackage, inputPath);
   steps.push({
     step: 'per-tab-replay',
     exitCode: perTabReplay.skipped || perTabReplay.ok ? 0 : 1,
@@ -2107,7 +2123,7 @@ function main() {
     if (opts.browser) compareArgs.push('--browser', opts.browser);
     if (sourcePackage) compareArgs.push('--tokens', sourcePackage.tokensPath);
     if (opts.artAuthorityWaivers) compareArgs.push('--art-authority-waivers', opts.artAuthorityWaivers);
-    compareProc = runNodeStep('dom-to-ui-compare', 'dom-to-ui-compare.js', compareArgs);
+    compareProc = await runNodeStep('dom-to-ui-compare', 'dom-to-ui-compare.js', compareArgs);
     steps.push({ step: 'dom-to-ui-compare', exitCode: compareProc.status ?? 1, ok: compareProc.status === 0, issues: extractIssues((compareProc.stdout || '') + '\n' + (compareProc.stderr || '')) });
   }
 
@@ -2126,7 +2142,7 @@ function main() {
     if (opts.captureReport) editorArgs.push('--capture-report', opts.captureReport);
     if (opts.artAuthorityWaivers) editorArgs.push('--art-authority-waivers', opts.artAuthorityWaivers);
     if (opts.evolutionLog) editorArgs.push('--evolution-log', opts.evolutionLog);
-    editorCompareProc = runNodeStep('compare-html-to-cocos-editor', 'compare-html-to-cocos-editor.js', editorArgs);
+    editorCompareProc = await runNodeStep('compare-html-to-cocos-editor', 'compare-html-to-cocos-editor.js', editorArgs);
     steps.push({ step: 'compare-html-to-cocos-editor', exitCode: editorCompareProc.status ?? 1, ok: editorCompareProc.status === 0, issues: extractIssues((editorCompareProc.stdout || '') + '\n' + (editorCompareProc.stderr || '')) });
   } else if (sourcePackage && !opts.skipEditorCompare) {
     steps.push({ step: 'compare-html-to-cocos-editor', exitCode: 2, ok: false, issues: ['editor-screenshot-required'] });
@@ -2140,7 +2156,7 @@ function main() {
   ];
   if (opts.captureProtocol) readinessArgs.push('--capture-protocol', opts.captureProtocol);
   if (opts.artAuthorityWaivers) readinessArgs.push('--art-authority-waivers', opts.artAuthorityWaivers);
-  const readinessProc = runNodeStep('html-to-ucuf-readiness', 'html-to-ucuf-readiness.js', readinessArgs);
+  const readinessProc = await runNodeStep('html-to-ucuf-readiness', 'html-to-ucuf-readiness.js', readinessArgs);
   steps.push({
     step: 'html-to-ucuf-readiness',
     exitCode: readinessProc.status ?? 1,
@@ -2302,4 +2318,14 @@ function writeSummaryAndExit(steps, detected, paths, opts, code) {
   process.exit(code);
 }
 
-main();
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(`[run-html-to-ucuf-workflow] ${error && (error.stack || error.message) || error}`);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  parseArgs,
+  main,
+};

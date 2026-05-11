@@ -264,4 +264,16 @@ function main() {
   }
 }
 
-main();
+if (require.main === module) {
+  try {
+    main();
+  } catch (error) {
+    console.error(`[auto-fix-ucuf-skin] ${error && (error.stack || error.message) || error}`);
+    process.exit(1);
+  }
+}
+
+module.exports = {
+  parseArgs,
+  main,
+};

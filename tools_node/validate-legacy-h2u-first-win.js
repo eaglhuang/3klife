@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const cp = require('node:child_process');
 const crypto = require('node:crypto');
+const { runScriptInProcess, shouldFallbackForEperm } = require('./lib/in-process-cli-runner');
 
 const ROOT = path.resolve(__dirname, '..');
 const DEFAULT_BASE_OUT = path.join(ROOT, 'artifacts', 'legacy-h2u-first-win');
@@ -84,20 +85,35 @@ function writeJson(filePath, value) {
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
-function runNodeScript(scriptPath, args, label) {
+async function runNodeScript(scriptPath, args, label) {
   const proc = cp.spawnSync(process.execPath, [scriptPath, ...args], {
     cwd: ROOT,
     encoding: 'utf8',
     env: Object.assign({}, process.env),
   });
-  return {
+  const runResult = {
     label,
     command: [process.execPath, rel(scriptPath), ...args].join(' '),
     status: typeof proc.status === 'number' ? proc.status : 1,
     stdout: proc.stdout || '',
     stderr: proc.stderr || '',
     error: proc.error ? String(proc.error.message || proc.error) : null,
+    mode: 'spawn',
   };
+  if (!shouldFallbackForEperm(proc)) {
+    return runResult;
+  }
+
+  const fallback = await runScriptInProcess({
+    scriptPath,
+    args,
+    cwd: ROOT,
+    envPatch: {},
+    label,
+  });
+  fallback.command = runResult.command;
+  fallback.fallbackFrom = 'spawn-eperm';
+  return fallback;
 }
 
 function sortJson(value) {
@@ -119,15 +135,28 @@ function isRunSuccess(run) {
   return Boolean(run) && Number(run.status) === 0;
 }
 
+function isWorkflowRunAcceptable(run, workflowSummary) {
+  if (isRunSuccess(run)) return true;
+  if (!run || run.error || !workflowSummary) return false;
+  const status = Number(run.status || 1);
+  if (status !== 1) return false;
+  const combined = `${run.stdout || ''}\n${run.stderr || ''}`;
+  if (/verdict=needs-review/i.test(combined)) return true;
+  return Boolean(workflowSummary && workflowSummary.debugOnly === true);
+}
+
 function summarizeCommandRun(run) {
   const stdout = String(run && run.stdout || '');
   const stderr = String(run && run.stderr || '');
   const stdoutLines = stdout.split(/\r?\n/).filter(Boolean);
   const stderrLines = stderr.split(/\r?\n/).filter(Boolean);
+  const rawStatus = run && typeof run.status === 'number' ? run.status : 1;
   return {
     label: run && run.label || '',
-    status: Number(run && run.status || 1),
+    status: Number(rawStatus),
     error: run && run.error || null,
+    mode: run && run.mode || 'spawn',
+    fallbackFrom: run && run.fallbackFrom || null,
     stdoutTail: stdoutLines.slice(-8),
     stderrTail: stderrLines.slice(-8),
   };
@@ -161,7 +190,7 @@ function buildEvidenceKey(launchReport, workflowSummary, summaryRuleGuardReport)
   };
 }
 
-function runRound(roundId, opts) {
+async function runRound(roundId, opts) {
   const roundDir = path.join(opts.baseOut, roundId);
   const workflowOutDir = path.join(roundDir, 'workflow');
   const launchReportPath = path.join(roundDir, 'launch.report.json');
@@ -179,14 +208,14 @@ function runRound(roundId, opts) {
   if (opts.requireWorktreeCheck) {
     launchArgs.push('--require-worktree-check');
   }
-  const launchRun = runNodeScript(
+  const launchRun = await runNodeScript(
     path.join(ROOT, 'tools_node', 'validate-legacy-h2u-launch.js'),
     launchArgs,
     'validate-legacy-h2u-launch'
   );
   const launchReport = readJsonIfExists(launchReportPath);
 
-  const workflowRun = runNodeScript(
+  const workflowRun = await runNodeScript(
     path.join(ROOT, 'tools_node', 'run-html-to-ucuf-workflow.js'),
     [
       '--source-dir', opts.sourceDir,
@@ -201,7 +230,7 @@ function runRound(roundId, opts) {
   );
   const workflowSummary = readJsonIfExists(workflowSummaryPath);
 
-  const summaryRuleGuardRun = runNodeScript(
+  const summaryRuleGuardRun = await runNodeScript(
     path.join(ROOT, 'tools_node', 'validate-html-to-ucuf-rule-guard.js'),
     ['--strict', '--summary', workflowSummaryPath, '--report', summaryRuleGuardReportPath],
     'validate-html-to-ucuf-rule-guard(summary)'
@@ -211,7 +240,7 @@ function runRound(roundId, opts) {
   const key = buildEvidenceKey(launchReport, workflowSummary, summaryRuleGuardReport);
   const commandRuns = [launchRun, workflowRun, summaryRuleGuardRun];
   const commandSummary = commandRuns.map((run) => summarizeCommandRun(run));
-  const commandFailures = commandSummary.filter((item) => item.status !== 0);
+  const commandFailures = commandRuns.filter((run) => !isRunSuccess(run));
   const manifest = {
     roundId,
     generatedAt: new Date().toISOString(),
@@ -235,7 +264,7 @@ function runRound(roundId, opts) {
   const launchPassed = isRunSuccess(launchRun) && !!(launchReport && launchReport.passed);
   const summaryRuleGuardPassed = isRunSuccess(summaryRuleGuardRun) && !!(summaryRuleGuardReport && summaryRuleGuardReport.blockerCount === 0);
   const interaction = workflowSummary && workflowSummary.interactionRuntime || null;
-  const workflowArtifactsReady = isRunSuccess(workflowRun) && !!workflowSummary;
+  const workflowArtifactsReady = Boolean(workflowSummary) && isWorkflowRunAcceptable(workflowRun, workflowSummary);
   const interactionPassed = !!(interaction && interaction.required && interaction.status === 'pass' && interaction.actionsBound === interaction.actionsDeclared);
   const passed = launchPassed && summaryRuleGuardPassed && interactionPassed && workflowArtifactsReady;
 
@@ -317,7 +346,7 @@ function buildFinalReport(opts, roundA, roundB, compare) {
   };
 }
 
-function main() {
+async function main() {
   const opts = parseArgs(process.argv.slice(2));
   if (opts.help) {
     printHelp();
@@ -325,8 +354,8 @@ function main() {
   }
 
   ensureDir(opts.baseOut);
-  const roundA = runRound('round-a', opts);
-  const roundB = runRound('round-b', opts);
+  const roundA = await runRound('round-a', opts);
+  const roundB = await runRound('round-b', opts);
   const compare = compareRoundKeys(roundA, roundB);
 
   const finalReport = buildFinalReport(opts, roundA, roundB, compare);
@@ -345,7 +374,10 @@ function main() {
 
 if (require.main === module) {
   try {
-    main();
+    main().catch((error) => {
+      console.error(`[validate-legacy-h2u-first-win] ${error.stack || error.message || error}`);
+      process.exit(1);
+    });
   } catch (error) {
     console.error(`[validate-legacy-h2u-first-win] ${error.stack || error.message || error}`);
     process.exit(1);

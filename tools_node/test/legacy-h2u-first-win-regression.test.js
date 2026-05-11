@@ -45,7 +45,7 @@ function buildDefaultOpts(baseOut) {
   };
 }
 
-function testRoundRejectsStaleArtifactsOnCommandFailure() {
+async function testRoundRejectsStaleArtifactsOnCommandFailure() {
   resetTempRoot();
 
   const opts = buildDefaultOpts(path.join(TEMP_ROOT, 'out'));
@@ -78,7 +78,7 @@ function testRoundRejectsStaleArtifactsOnCommandFailure() {
   });
 
   try {
-    const round = firstWin.runRound('round-a', opts);
+    const round = await firstWin.runRound('round-a', opts);
     assert(round.passed === false, 'round should fail when child commands fail');
     assert(round.commandFailureCount === 3, 'all three commands should be counted as failures');
     assert(round.launchPassed === false, 'launch should be treated as failed');
@@ -97,9 +97,12 @@ function testRoundRejectsStaleArtifactsOnCommandFailure() {
   }
 }
 
-function main() {
-  testRoundRejectsStaleArtifactsOnCommandFailure();
+async function main() {
+  await testRoundRejectsStaleArtifactsOnCommandFailure();
   console.log('legacy h2u first-win regression tests passed');
 }
 
-main();
+main().catch((error) => {
+  console.error(error && error.stack ? error.stack : error);
+  process.exit(1);
+});

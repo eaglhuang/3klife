@@ -1176,7 +1176,14 @@ async function main() {
   console.log(`[dom-to-ui-compare] sidecar=${metaPath}`);
 }
 
-main().catch(err => {
-  console.error(`[dom-to-ui-compare] fatal: ${err.message}`);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch(err => {
+    console.error(`[dom-to-ui-compare] fatal: ${err.message}`);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  parseArgs,
+  main,
+};

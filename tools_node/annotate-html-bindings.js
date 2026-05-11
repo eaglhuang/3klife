@@ -342,4 +342,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { annotate, inferAnnotations };
+module.exports = { annotate, inferAnnotations, parseArgs, main };

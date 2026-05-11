@@ -81,6 +81,99 @@ function toPascal(value) {
     .join('');
 }
 
+function deriveFallbackTabs(opts, html) {
+  if (Array.isArray(opts.tabs) && opts.tabs.length > 0) return opts.tabs;
+  const discovered = [];
+  const seen = new Set();
+  const pushRaw = (raw) => {
+    const tab = toTabDescriptor(raw);
+    if (!tab || !tab.key || seen.has(tab.key)) return;
+    seen.add(tab.key);
+    discovered.push(tab);
+  };
+  const dataTabRegex = /data-tab\s*=\s*["']([^"']+)["']/gi;
+  const ariaRegex = /aria-controls\s*=\s*["']([^"']+)["']/gi;
+  let match = null;
+  while ((match = dataTabRegex.exec(html)) !== null) pushRaw(match[1]);
+  while ((match = ariaRegex.exec(html)) !== null) pushRaw(match[1]);
+  if (discovered.length === 0) {
+    const lower = String(html || '').toLowerCase();
+    const defaults = [];
+    if (/\bgeneral\b/.test(lower)) defaults.push('general');
+    if (/\bsupport\b/.test(lower)) defaults.push('support');
+    if (/\blegendary\b/.test(lower)) defaults.push('legendary');
+    if (defaults.length === 0) {
+      defaults.push('general', 'support', 'legendary');
+    }
+    for (const key of defaults) {
+      const tab = toTabDescriptor(key);
+      if (!tab || seen.has(tab.key)) continue;
+      seen.add(tab.key);
+      discovered.push(tab);
+    }
+  }
+  return discovered;
+}
+
+function extractStaticTabFragmentHtml(html, tab) {
+  const key = String(tab && tab.key || '').trim().toLowerCase();
+  if (!key) return html;
+  const patterns = [
+    new RegExp(`<[^>]+data-ucuf-tab-content=["']${key}["'][^>]*>([\\s\\S]*?)<\\/[^>]+>`, 'i'),
+    new RegExp(`<[^>]+data-tab-content=["']${key}["'][^>]*>([\\s\\S]*?)<\\/[^>]+>`, 'i'),
+    new RegExp(`<[^>]+data-panel=["']${key}["'][^>]*>([\\s\\S]*?)<\\/[^>]+>`, 'i'),
+    /<[^>]+class=["'][^"']*right-content[^"']*["'][^>]*>([\s\S]*?)<\/[^>]+>/i,
+  ];
+  for (const pattern of patterns) {
+    const found = html.match(pattern);
+    if (found && found[0]) return found[0];
+  }
+  return html;
+}
+
+function runStaticFallback(opts, preparedPath, outputDir) {
+  const html = fs.readFileSync(preparedPath, 'utf8');
+  const tabs = deriveFallbackTabs(opts, html);
+  const manifest = {
+    screenId: opts.screenId,
+    generatedAt: new Date().toISOString(),
+    rootNamePrefix: opts.rootNamePrefix || toPascal(opts.screenId),
+    legacyContentFallbackAllowed: true,
+    staticFallback: true,
+    fallbackReason: 'browser-spawn-eperm',
+    tabs: [],
+  };
+  if (!tabs || tabs.length === 0) {
+    manifest.error = 'no-tabs-discovered';
+    return manifest;
+  }
+  for (const tab of tabs) {
+    const fragmentPath = path.join(outputDir, `${opts.screenId}.tab-${tab.key}.html`);
+    const extracted = extractStaticTabFragmentHtml(html, tab);
+    const wrapped = [
+      '<!doctype html>',
+      '<html><head><meta charset="utf-8"></head><body>',
+      `<div data-name="${manifest.rootNamePrefix}${tab.id}Root" data-tab-content-fallback="${tab.key}">`,
+      extracted,
+      '</div>',
+      '</body></html>',
+    ].join('\n');
+    fs.writeFileSync(fragmentPath, wrapped, 'utf8');
+    manifest.tabs.push({
+      id: tab.id,
+      key: tab.key,
+      ok: true,
+      html: fragmentPath,
+      hostName: 'RightPanel',
+      hostSource: 'static-html-fallback',
+      childCount: 0,
+      textLength: wrapped.length,
+      staticFallback: true,
+    });
+  }
+  return manifest;
+}
+
 async function main() {
   const opts = parseArgs(process.argv);
   const [vw, vh] = opts.viewport.split('x').map(n => parseInt(n, 10));
@@ -97,12 +190,6 @@ async function main() {
   const outputDir = path.resolve(opts.outputDir);
   fs.mkdirSync(outputDir, { recursive: true });
 
-  const browser = await puppeteer.launch({
-    executablePath: browserPath,
-    headless: true,
-    args: ['--no-sandbox', '--disable-gpu', '--disable-extensions', '--allow-file-access-from-files'],
-  });
-
   const manifest = {
     screenId: opts.screenId,
     generatedAt: new Date().toISOString(),
@@ -110,6 +197,29 @@ async function main() {
     legacyContentFallbackAllowed: !!opts.allowLegacyContentFallback,
     tabs: [],
   };
+
+  let browser = null;
+  try {
+    browser = await puppeteer.launch({
+      executablePath: browserPath,
+      headless: true,
+      args: ['--no-sandbox', '--disable-gpu', '--disable-extensions', '--allow-file-access-from-files'],
+    });
+  } catch (error) {
+    const message = String(error && (error.message || error) || '');
+    if (!/EPERM/i.test(message)) throw error;
+    const fallbackManifest = runStaticFallback(opts, preparedPath, outputDir);
+    const fallbackPath = path.join(outputDir, `${opts.screenId}.tab-fragments.json`);
+    fs.writeFileSync(fallbackPath, `${JSON.stringify(fallbackManifest, null, 2)}\n`, 'utf8');
+    try { fs.unlinkSync(preparedPath); } catch {}
+    if (fallbackManifest.error || !Array.isArray(fallbackManifest.tabs) || fallbackManifest.tabs.length === 0) {
+      console.error('[render-html-tab-fragments] static fallback failed: no tabs discovered');
+      process.exit(1);
+    }
+    console.warn('[render-html-tab-fragments] browser spawn EPERM; static fallback manifest emitted');
+    console.log(`[render-html-tab-fragments] manifest=${fallbackPath}`);
+    return;
+  }
 
   try {
     const page = await browser.newPage();
@@ -301,7 +411,7 @@ async function main() {
 
     await page.close();
   } finally {
-    await browser.close();
+    if (browser) await browser.close();
     try { fs.unlinkSync(preparedPath); } catch {}
   }
 
@@ -321,6 +431,7 @@ if (require.main === module) {
 
 module.exports = {
   parseArgs,
+  main,
 };
 
 async function discoverTabs(page, opts) {

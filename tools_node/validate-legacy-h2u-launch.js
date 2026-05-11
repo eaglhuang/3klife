@@ -441,4 +441,5 @@ module.exports = {
   runValidation,
   checkCanonicalEvidence,
   checkWorktreeIsolation,
+  main,
 };

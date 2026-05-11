@@ -85,6 +85,19 @@ function main() {
   if (opts.strict && report.blockerCount > 0) process.exit(12);
 }
 
+function runValidation(opts = {}) {
+  return runRuleGuard({
+    repoRoot: ROOT,
+    strict: Boolean(opts.strict),
+    workflowSummaryPath: opts.summary || null,
+    sourceHtmlPath: opts.sourceHtml || null,
+    layout: opts.layout || null,
+    captureReportPath: opts.captureReport || null,
+    expectedScreenId: opts.expectedScreenId || null,
+    scanCore: opts.scanCore !== false,
+  });
+}
+
 function rel(filePath) {
   return path.relative(ROOT, path.resolve(filePath)).replace(/\\/g, '/');
 }
@@ -96,4 +109,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { parseArgs };
+module.exports = { parseArgs, runValidation, main };
