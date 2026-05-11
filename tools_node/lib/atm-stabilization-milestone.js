@@ -25,6 +25,16 @@ const M2_IDS = [
   'ATM-4-0007',
 ];
 
+const M3_DETERMINISTIC_FOUNDATION_IDS = [
+  'ATM-2-0029',
+  'ATM-2-0031',
+  'ATM-2-0033',
+];
+
+const M3_SEMANTIC_ADVISORY_ID = 'ATM-2-0035';
+const M5_ADAPTER_PARITY_ID = 'ATM-4-0006';
+const FORMER_MAIN_BLOCKER_IDS = ['ATM-4-0005', 'ATM-6-0004', 'ATM-6-0005'];
+
 function normalizeStatus(status) {
   const value = String(status || 'open').trim().toLowerCase();
   if (value === 'done' || value === 'closed' || value === 'completed') {
@@ -78,6 +88,12 @@ function joinIds(taskIds) {
   return taskIds.map((taskId) => `\`${taskId}\``).join('、');
 }
 
+function joinIdStatuses(taskMap, taskIds) {
+  return taskIds
+    .map((taskId) => `\`${taskId}\`(${renderStatus(taskMap, taskId)})`)
+    .join('、');
+}
+
 function buildMilestoneMarkdown(state = {}) {
   const tasks = Array.isArray(state.tasks) ? state.tasks : [];
   const summary = state.summary && typeof state.summary === 'object'
@@ -105,6 +121,7 @@ function buildMilestoneMarkdown(state = {}) {
   lines.push(`  - \`ATM-2.5-0004\`：\`ATM-2-0022 x ATM-2-0027\` rollback / status 相容性回歸 ${renderStatusSuffix(taskMap, 'ATM-2.5-0004')}`);
   lines.push(`  - \`ATM-2-0030\`：\`versions[] / semanticFingerprint\` backfill sweep 與 catalog/index 一致性 ${renderStatusSuffix(taskMap, 'ATM-2-0030')}`);
   lines.push(`  - \`ATM-2-0010\`：\`RuleGuardAdapter\` read-only deterministic gate ${renderStatusSuffix(taskMap, 'ATM-2-0010')}`);
+  lines.push(`- ${joinIds(FORMER_MAIN_BLOCKER_IDS)} 已經收斂，不再列為主 blocker。`);
   lines.push('- 不重開已完成卡，也不另外新開 follow-up 卡；所有殘項直接併入既有 open 卡。');
   lines.push('- M2 的主鏈仍是 `ATM-3-0014 -> ATM-4-0007`，但前提是 M1 gate 全綠。');
   lines.push('');
@@ -140,7 +157,7 @@ function buildMilestoneMarkdown(state = {}) {
   lines.push('');
   lines.push('### M3. 機器驗證層');
   lines.push(`${renderCheckbox(taskMap, 'ATM-3-0016')} \`ATM-3-0016\` validator orchestrator 與 AJV cache 的統一入口。${renderStatusSuffix(taskMap, 'ATM-3-0016')}`);
-  lines.push('- [ ] 更廣的 deterministic / semantic 雙軌驗證。');
+  lines.push(`- ${renderCheckbox(taskMap, M3_SEMANTIC_ADVISORY_ID)} 基礎 deterministic 已由 ${joinIdStatuses(taskMap, M3_DETERMINISTIC_FOUNDATION_IDS)} 收斂；若保留 semantic advisory 後續，對映 \`${M3_SEMANTIC_ADVISORY_ID}\` ${renderStatusSuffix(taskMap, M3_SEMANTIC_ADVISORY_ID)}。`);
   lines.push('');
   lines.push('### M4. 負債清單');
   lines.push('- [ ] evidence retention contract 與 rotation policy。');
@@ -148,7 +165,7 @@ function buildMilestoneMarkdown(state = {}) {
   lines.push('');
   lines.push('### M5. 3KLife Host');
   lines.push('- [ ] HarnessCard-lite control / agency / runtime 的一致敘述。');
-  lines.push('- [ ] adapter parity harness 與 ATM adapter 的證據對齊。');
+  lines.push(`${renderCheckbox(taskMap, M5_ADAPTER_PARITY_ID)} adapter parity harness 改由 \`${M5_ADAPTER_PARITY_ID}\` 承接 ${renderStatusSuffix(taskMap, M5_ADAPTER_PARITY_ID)}。`);
   lines.push('- [ ] injection + rollback e2e 的最小閉環。');
   lines.push('');
   lines.push('## 5. 任務對照');

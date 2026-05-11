@@ -97,5 +97,84 @@
         "AI-Atomic-Framework commit: 250c8b9"
       ]
     }
+  },
+  {
+    "doc_id": "doc_task_0338",
+    "id": "ATM-2-0032",
+    "title": "Polymorphic Atom Template",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "open",
+    "type": "registry",
+    "phase": "ATM-2",
+    "created": "2026-05-07",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "",
+    "started_by_agent": "GitHubCopilot",
+    "chain_id": "ATM-IDENTITY-BEHAVIOR-V1",
+    "chain_step": "7/8",
+    "sensor_triggered_by": "atm-evolution-plan-identity-behavior",
+    "description": "為「廣義多形原子」建立規範（ATM-POLY-001）：不限於參數差異，任何高度相似 spec（差異可被維度參數解釋——包含參數/類型/語言/品質/輸出形狀/行為變體）皆為多形化候選。一個 polymorphic template + 多個 dimension-spec 各自一份，實例化結果 lazy 產生不寫進 registry。template 自身是 active；具體實例為 validated。與 behavior.evolve 整合：升版時 template 升 → 所有實例自動繼承新版邏輯。",
+    "related": [],
+    "depends": [
+      "ATM-2-0026",
+      "ATM-2-0029"
+    ],
+    "acceptance": [
+      "polymorphic-template schema（支援 6 種維度：參數/類型/語言/品質/輸出形狀/行為變體）",
+      "dimension-spec schema（取代原 param-spec，支援多維度）",
+      "lazy 實例化合約",
+      "升版 propagation 規則",
+      "polymorph-dimension-detector 工具：自動分析兩個相似 atom 的差異是否可被維度參數解釋",
+      "與 dedup police 整合：多形 instances 視為同一原子，不觸發去重"
+    ],
+    "deliverables": [
+      "polymorphic-template schema。",
+      "dimension-spec schema，取代單純 param-spec，支援參數 / 類型 / 語言 / 品質 / 輸出形狀 / 行為變體。",
+      "lazy instantiation contract 與 registry 不展開規則。",
+      "behavior.evolve propagation 測試。",
+      "polymorph-dimension-detector 與 dedup police integration fixture。"
+    ],
+    "notes": "2026-05-07 | 狀態: open | 驗證: pending | 變更: 由 ATM 識別/行為/狀態機提案開立（chain ATM-IDENTITY-BEHAVIOR-V1 7/8）| 阻塞: 等 ATM-2-0026 / 0029 完成\n2026-05-07 ATM-2-0042 釐清：polymorphic map template 不在本卡範圍；map 是 composition 不是 parameterization",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM 識別/行為/狀態機提案開卡",
+      "summary": "廣義多形原子規範（multi-dimension polymorphism）：template + dimension-spec lazy 實例化，升版時所有變體自動繼承。",
+      "position": "：ATM-2",
+      "prereq": "：ATM-2-0026 / ATM-2-0029"
+    },
+    "contracts": {
+      "input": [
+        "ATM-2-0026 sf/lineage 欄位已加",
+        "ATM-2-0029 polymorphize 行為已實作",
+        "ATM-2-0042 已釐清 map 是 composition，不是 parameterization；polymorphic map template 不屬於本卡 scope。"
+      ],
+      "output": [
+        "polymorphic-template schema（支援 6 種維度：參數/類型/語言/品質/輸出形狀/行為變體）",
+        "dimension-spec schema（取代原 param-spec，支援多維度）",
+        "lazy 實例化合約",
+        "升版 propagation 規則",
+        "polymorph-dimension-detector 工具：自動分析兩個相似 atom 的差異是否可被維度參數解釋",
+        "與 dedup police 整合：多形 instances 視為同一原子，不觸發去重"
+      ],
+      "validation_cmd": "npm.cmd run check:encoding:touched -- --files docs/agent-briefs/tasks/ATM/ATM-2-0032.md\nnpm test\nnpm run typecheck\nnpm run lint",
+      "rollback_hint": "回退本卡 touched files；template 與 instance 不可在 registry 重複展開。",
+      "execution_steps": [
+        "定義 polymorphic-template schema",
+        "定義 dimension-spec schema（取代 param-spec）",
+        "實作 lazy 實例化（runtime 才生成）",
+        "behavior.polymorphize 整合測試",
+        "behavior.evolve 升版 propagation 測試"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "completed_at": "",
+    "completed_by_agent": ""
   }
 ]

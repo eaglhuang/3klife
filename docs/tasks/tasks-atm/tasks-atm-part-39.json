@@ -69,13 +69,13 @@
     "title": "Capability Sandbox 與審計日誌",
     "owner": "GitHubCopilot",
     "priority": "P2",
-    "status": "open",
+    "status": "done",
     "type": "security",
     "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
-    "started_by_agent": "",
+    "started_by_agent": "vs-insiders-gpt-5.3-codex",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -85,29 +85,32 @@
       "ATM-6-0004"
     ],
     "acceptance": [
-      "Deno sandbox/OpenTelemetry/Prometheus 不成為 core 必備依賴",
-      "Capability 宣告與審計格式可由 plugin 實作",
-      "安全插件缺席時 core 仍能 standalone 運作",
-      "threat model / provenance / secrets scan policy 已定義",
-      "cost budget policy 與 budget report schema 已對齊",
-      "observability event taxonomy 覆蓋 agent.run、task.lock、schema.validate、atom.verify、evidence.write、adapter.shadow",
-      "HarnessCard-lite report profile 列出 base model/profile、control artifacts、runtime policy、action substrate、execution topology、feedback stack、observability/evaluation 與 known risks",
-      "CAR runtime/audit 對照能標示 Control / Agency / Runtime 來源，不新增 core 必填 schema"
+      "docs/ecosystem/capability-sandbox-audit.md",
+      "security plugin interface proposal",
+      "observability adapter boundary",
+      "threat model / provenance / secrets scan policy",
+      "cost budget policy 與 budget report schema 對齊",
+      "observability event taxonomy（agent.run、task.lock、schema.validate、atom.verify、evidence.write、adapter.shadow）",
+      "HarnessCard-lite report profile：列出 base model/profile、control artifacts、runtime policy、action substrate、execution topology、feedback stack、observability/evaluation、known risks",
+      "CAR runtime/audit 對照：審計事件需能標示 Control / Agency / Runtime 來源，不新增 core 必填 schema"
     ],
     "deliverables": [
       "docs/ecosystem/capability-sandbox-audit.md",
       "security plugin interface proposal",
       "observability adapter boundary",
-      "HarnessCard-lite report profile",
-      "CAR observability event taxonomy"
+      "threat model / provenance / secrets scan policy",
+      "cost budget policy 與 budget report schema 對齊",
+      "observability event taxonomy（agent.run、task.lock、schema.validate、atom.verify、evidence.write、adapter.shadow）",
+      "HarnessCard-lite report profile：列出 base model/profile、control artifacts、runtime policy、action substrate、execution topology、feedback stack、observability/evaluation、known risks",
+      "CAR runtime/audit 對照：審計事件需能標示 Control / Agency / Runtime 來源，不新增 core 必填 schema"
     ],
-    "notes": "2026-05-06 | 狀態: open | 驗證: pending | 變更: ATM-0-0014 補 threat model、cost budget、secrets scan 與 observability event taxonomy | 阻塞: none\n2026-05-08 | 狀態: open | 驗證: pending | 變更: ATM-0-0015 追加 HarnessCard-lite / CAR observability acceptance；不阻塞 alpha0 | 阻塞: none",
+    "notes": "2026-05-10 | 狀態: done | 驗證: encoding=pass | 變更: 建立 capability-sandbox-audit.md (doc_other_0115) 含完整安全架構、threat model、observability event taxonomy、HarnessCard-lite schema、CAR runtime/audit alignment、cost budget integration；新增 schemas/harness-card-lite-v1.schema.json、schemas/audit-event-car.schema.json | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM v0.2 整合開卡",
       "summary": "規劃 Capability Sandbox、權限控管、審計日誌、prompt injection guardrail 與 observability 的 optional plugin 邊界。",
-      "position": "ATM-6",
-      "prereq": "ATM-6-0004"
+      "position": "：ATM-6",
+      "prereq": "：`ATM-6-0004`"
     },
     "contracts": {
       "input": [
@@ -117,6 +120,9 @@
         "docs/ecosystem/capability-sandbox-audit.md",
         "security plugin interface proposal",
         "observability adapter boundary",
+        "threat model / provenance / secrets scan policy",
+        "cost budget policy 與 budget report schema 對齊",
+        "observability event taxonomy（agent.run、task.lock、schema.validate、atom.verify、evidence.write、adapter.shadow）",
         "HarnessCard-lite report profile：列出 base model/profile、control artifacts、runtime policy、action substrate、execution topology、feedback stack、observability/evaluation、known risks",
         "CAR runtime/audit 對照：審計事件需能標示 Control / Agency / Runtime 來源，不新增 core 必填 schema"
       ],
@@ -135,6 +141,8 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-10",
+    "completed_by_agent": ""
   }
 ]

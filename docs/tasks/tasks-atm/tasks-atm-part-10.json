@@ -1,5 +1,74 @@
 [
   {
+    "doc_id": "doc_task_0293",
+    "id": "ATM-1-0010",
+    "title": "Upstream docs neutrality audit",
+    "owner": "GitHubCopilot",
+    "priority": "P0",
+    "status": "done",
+    "type": "open-source-core",
+    "phase": "ATM-1",
+    "created": "2026-05-05",
+    "created_by_agent": "GitHubCopilot",
+    "started_at": "2026-05-06T16:41:32.7788261+08:00",
+    "started_by_agent": "vs-code-github-copilot",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "全盤掃描 upstream README、AGENTS、docs、examples、templates 與 prompt assets，確認不含 3KLife、Cocos、html-to-ucuf 或本地工具前提。",
+    "related": [],
+    "depends": [
+      "ATM-1-0001",
+      "ATM-1-0008"
+    ],
+    "acceptance": [
+      "upstream docs neutrality audit checklist",
+      "banned-term scan scope",
+      "adopter-only reference migration list"
+    ],
+    "deliverables": [
+      "upstream docs neutrality audit checklist",
+      "banned-term scan scope",
+      "adopter-only reference migration list"
+    ],
+    "notes": "2026-05-06 | 狀態: done | 驗證: node scripts/validate-product-charter.mjs --mode validate / npm test / npm run typecheck / npm run lint pass | 變更: AI-Atomic-Framework upstream commit 6460be7 新增 docs neutrality audit doc、machine-readable scan policy，並讓 validate-product-charter 掃描 README/CONTRIBUTING/docs/examples/templates protected surfaces | 阻塞: none",
+    "brief": {
+      "style": "harn-rich",
+      "label": "ATM self-hosting first 開卡",
+      "summary": "建立 upstream 文件去污染與中立性稽核，避免 README/docs 再帶入 3KLife 私有資訊。",
+      "position": "：ATM-1",
+      "prereq": "：ATM-1-0001、ATM-1-0008"
+    },
+    "contracts": {
+      "input": [
+        "upstream product charter 與 zero-install bootstrap 已定義",
+        "upstream docs 不得綁定 adopter 私有資訊"
+      ],
+      "output": [
+        "upstream docs neutrality audit checklist",
+        "banned-term scan scope",
+        "adopter-only reference migration list"
+      ],
+      "validation_cmd": "npm test; npm run typecheck; npm run lint",
+      "rollback_hint": "回退本卡 touched files；upstream docs 若仍含 adopter 私有敘事，保持卡片 open 不偷關卡。",
+      "execution_steps": [
+        "盤點 upstream docs surfaces",
+        "定義 banned terms 與 protected surfaces",
+        "補 audit checklist",
+        "對齊 self-hosting alpha gate"
+      ]
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "completed_at": "2026-05-06T16:46:25.4089375+08:00",
+    "completed_by_agent": ""
+  },
+  {
     "doc_id": "doc_task_0354",
     "id": "ATM-2-0047",
     "title": "URN Resolver and RegistryIndex Facade",

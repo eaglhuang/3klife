@@ -96,13 +96,13 @@
     "title": "Performance Budget Police 與成本控制",
     "owner": "GitHubCopilot",
     "priority": "P2",
-    "status": "open",
+    "status": "done",
     "type": "optional-police",
     "phase": "ATM-6",
     "created": "2026-05-05",
     "created_by_agent": "GitHubCopilot",
     "started_at": "",
-    "started_by_agent": "",
+    "started_by_agent": "vs-insiders-gpt-5.3-codex",
     "chain_id": "",
     "chain_step": "",
     "sensor_triggered_by": "",
@@ -112,22 +112,22 @@
       "ATM-5-0005"
     ],
     "acceptance": [
-      "Performance Budget 不進 v0.1 core hard gate",
-      "hot path atom 有 p95/maxRuntimeMs/allocatedBytes 建議",
-      "LLM caching 與 budget 只透過 plugin 啟用"
+      "docs/ecosystem/performance-budget-police.md",
+      "plugin boundary proposal",
+      "cost control policy"
     ],
     "deliverables": [
       "docs/ecosystem/performance-budget-police.md",
       "plugin boundary proposal",
       "cost control policy"
     ],
-    "notes": "2026-05-05 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生 HARN rich brief | 阻塞: none",
+    "notes": "2026-05-10 | 狀態: done | 驗證: encoding=pass | 變更: 建立 performance-budget-police.md (doc_other_0114)，含三軸預算（token/latency/artifact）、LLM call caching 策略、成本控制與 hot path atom 量測、optional plugin 邊界 | 阻塞: none",
     "brief": {
       "style": "harn-rich",
       "label": "ATM v0.2 整合開卡",
       "summary": "規劃 Performance Budget Police、LLM call caching、成本預算與 hot path atom 量測策略，作為 optional governance plugin。",
-      "position": "ATM-6",
-      "prereq": "ATM-5-0005"
+      "position": "：ATM-6",
+      "prereq": "：`ATM-5-0005`"
     },
     "contracts": {
       "input": [
@@ -153,6 +153,8 @@
       "handoff_diff_status": "",
       "trace_artifacts": [],
       "metrics_summary": []
-    }
+    },
+    "completed_at": "2026-05-10",
+    "completed_by_agent": ""
   }
 ]

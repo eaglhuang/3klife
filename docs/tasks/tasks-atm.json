@@ -16,10 +16,10 @@
     "maxPartLines": 300
   },
   "summary": {
-    "done": 108,
+    "done": 111,
     "in_progress": 0,
-    "open": 11,
-    "total": 119
+    "open": 10,
+    "total": 121
   },
   "shards": [
     {
@@ -78,11 +78,11 @@
     },
     {
       "name": "tasks-atm-part-7",
-      "title": "Part 7 (sticky-least-pool, 1 items)",
+      "title": "Part 7 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-7.json",
-      "count": 1,
-      "bytes": 4951,
-      "lines": 101,
+      "count": 2,
+      "bytes": 9174,
+      "lines": 180,
       "layout": "sticky-least-pool"
     },
     {
@@ -105,11 +105,11 @@
     },
     {
       "name": "tasks-atm-part-10",
-      "title": "Part 10 (sticky-least-pool, 1 items)",
+      "title": "Part 10 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-10.json",
-      "count": 1,
-      "bytes": 4764,
-      "lines": 92,
+      "count": 2,
+      "bytes": 7539,
+      "lines": 161,
       "layout": "sticky-least-pool"
     },
     {
@@ -369,8 +369,8 @@
       "title": "Part 39 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-39.json",
       "count": 2,
-      "bytes": 5763,
-      "lines": 140,
+      "bytes": 6601,
+      "lines": 148,
       "layout": "sticky-least-pool"
     },
     {
@@ -432,8 +432,8 @@
       "title": "Part 46 (sticky-least-pool, 2 items)",
       "path": "docs/tasks/tasks-atm/tasks-atm-part-46.json",
       "count": 2,
-      "bytes": 5824,
-      "lines": 158,
+      "bytes": 6015,
+      "lines": 160,
       "layout": "sticky-least-pool"
     },
     {
