@@ -46,7 +46,32 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L1913",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2038",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2119",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2657",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L3084",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder/backgrounds.js#L6",
+    "tooling:tools_node/lib/dom-to-ui/snapshot-to-slots.js#L37",
+    "tooling:tools_node/lib/dom-to-ui/snapshot-to-slots.js#L247",
+    "tooling:tools_node/lib/dom-to-ui/snapshot-to-slots.js#L276",
+    "tooling:tools_node/lib/dom-to-ui/snapshot-to-slots.js#L343",
+    "tooling:tools_node/lib/dom-to-ui/snapshot-to-slots.js#L365",
+    "tooling:tools_node/lib/dom-to-ui/snapshot-to-slots.js#L368",
+    "tooling:tools_node/lib/dom-to-ui/token-suggestion.js#L26",
+    "tooling:tools_node/lib/dom-to-ui/token-suggestion.js#L44",
+    "tooling:tools_node/lib/dom-to-ui/token-suggestion.js#L80"
+  ],
+  "usageRefStats": {
+    "totalRefs": 15,
+    "distinctFiles": 4,
+    "distinctKinds": 1,
+    "externalRefs": 10,
+    "kinds": [
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {

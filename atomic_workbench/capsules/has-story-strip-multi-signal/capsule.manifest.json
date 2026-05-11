@@ -40,7 +40,21 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L818",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L885",
+    "tooling:tools_node/lib/html-to-ucuf/rule-checkers.js#L149",
+    "tooling:tools_node/lib/html-to-ucuf/rule-checkers/source-package.js#L62"
+  ],
+  "usageRefStats": {
+    "totalRefs": 4,
+    "distinctFiles": 3,
+    "distinctKinds": 1,
+    "externalRefs": 2,
+    "kinds": [
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {

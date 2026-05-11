@@ -41,7 +41,25 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "tooling:tools_node/lib/dom-to-ui/art-authority-waivers.js#L130",
+    "tooling:tools_node/lib/dom-to-ui/art-authority-waivers.js#L158",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L944",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L981",
+    "tooling:tools_node/lib/dom-to-ui/final-capture-protocol.js#L56",
+    "tooling:tools_node/lib/dom-to-ui/final-capture-protocol.js#L57",
+    "tooling:tools_node/lib/dom-to-ui/final-capture-protocol.js#L58",
+    "tooling:tools_node/lib/dom-to-ui/final-capture-protocol.js#L120"
+  ],
+  "usageRefStats": {
+    "totalRefs": 8,
+    "distinctFiles": 3,
+    "distinctKinds": 1,
+    "externalRefs": 6,
+    "kinds": [
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {

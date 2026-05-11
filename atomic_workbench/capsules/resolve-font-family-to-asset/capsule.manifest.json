@@ -47,7 +47,35 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L3087",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder/typography.js#L8",
+    "test:tools_node/test/dom-to-ui-self-test.js#L963",
+    "test:tools_node/test/dom-to-ui-self-test.js#L968",
+    "test:tools_node/test/dom-to-ui-self-test.js#L971",
+    "test:tools_node/test/dom-to-ui-self-test.js#L974",
+    "test:tools_node/test/dom-to-ui-self-test.js#L977",
+    "test:tools_node/test/dom-to-ui-self-test.js#L981",
+    "test:tools_node/test/dom-to-ui-self-test.js#L985",
+    "test:tools_node/test/dom-to-ui-self-test.js#L988",
+    "test:tools_node/test/dom-to-ui-self-test.js#L992",
+    "test:tools_node/test/dom-to-ui-self-test.js#L995",
+    "test:tools_node/test/dom-to-ui-self-test.js#L998",
+    "test:tools_node/test/dom-to-ui-self-test.js#L1002",
+    "test:tools_node/test/dom-to-ui-self-test.js#L1039",
+    "test:tools_node/test/dom-to-ui-self-test.js#L1077",
+    "test:tools_node/test/dom-to-ui-self-test.js#L1078"
+  ],
+  "usageRefStats": {
+    "totalRefs": 17,
+    "distinctFiles": 3,
+    "distinctKinds": 2,
+    "externalRefs": 16,
+    "kinds": [
+      "test",
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {

@@ -41,7 +41,21 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L606",
+    "tooling:tools_node/optimize-ucuf-layout.js#L408",
+    "tooling:tools_node/optimize-ucuf-layout.js#L426",
+    "tooling:tools_node/optimize-ucuf-layout.js#L442"
+  ],
+  "usageRefStats": {
+    "totalRefs": 4,
+    "distinctFiles": 2,
+    "distinctKinds": 1,
+    "externalRefs": 3,
+    "kinds": [
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {

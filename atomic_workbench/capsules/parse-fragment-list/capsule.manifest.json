@@ -46,7 +46,25 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "case-study:docs/case-studies/h2u-map-evolution-pilot.md#L41",
+    "other:specs/parse-fragment-list.atom.json#L7",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L259",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L3080",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder/interactions.js#L9",
+    "tooling:tools_node/validate-legacy-h2u-launch.js#L552"
+  ],
+  "usageRefStats": {
+    "totalRefs": 6,
+    "distinctFiles": 5,
+    "distinctKinds": 3,
+    "externalRefs": 4,
+    "kinds": [
+      "case-study",
+      "other",
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {

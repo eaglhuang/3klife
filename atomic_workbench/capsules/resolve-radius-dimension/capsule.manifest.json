@@ -41,7 +41,19 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2312",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2319"
+  ],
+  "usageRefStats": {
+    "totalRefs": 2,
+    "distinctFiles": 1,
+    "distinctKinds": 1,
+    "externalRefs": 0,
+    "kinds": [
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {

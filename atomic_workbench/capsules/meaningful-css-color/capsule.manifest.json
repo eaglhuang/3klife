@@ -40,7 +40,27 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2420",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2424",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2470",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2476",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2477",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2478",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2479",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2545",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2572",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2574"
+  ],
+  "usageRefStats": {
+    "totalRefs": 10,
+    "distinctFiles": 1,
+    "distinctKinds": 1,
+    "externalRefs": 0,
+    "kinds": [
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {

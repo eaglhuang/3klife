@@ -39,7 +39,41 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2424",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2425",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2426",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2427",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2428",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2429",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2430",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2431",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2432",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2433",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2434",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2435",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2436",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2437",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2438",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2439",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2440",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2441",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2442",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2443",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2444",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2445",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2446",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L2447"
+  ],
+  "usageRefStats": {
+    "totalRefs": 24,
+    "distinctFiles": 1,
+    "distinctKinds": 1,
+    "externalRefs": 0,
+    "kinds": [
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {

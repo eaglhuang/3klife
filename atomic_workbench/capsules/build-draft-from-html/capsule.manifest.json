@@ -47,7 +47,42 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "tooling:tools_node/dom-to-ui-json.js#L22",
+    "tooling:tools_node/dom-to-ui-json.js#L432",
+    "tooling:tools_node/dom-to-ui-json.js#L493",
+    "tooling:tools_node/dom-to-ui-json.js#L1049",
+    "tooling:tools_node/lib/dom-to-ui/accuracy-harness.js#L4",
+    "tooling:tools_node/lib/dom-to-ui/accuracy-harness.js#L13",
+    "tooling:tools_node/lib/dom-to-ui/accuracy-harness.js#L178",
+    "tooling:tools_node/lib/dom-to-ui/accuracy-harness.js#L185",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L3077",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder/traverser.js#L6",
+    "test:tools_node/test/dom-to-ui-self-test.js#L19",
+    "test:tools_node/test/dom-to-ui-self-test.js#L144",
+    "test:tools_node/test/dom-to-ui-self-test.js#L465",
+    "test:tools_node/test/dom-to-ui-self-test.js#L500",
+    "test:tools_node/test/dom-to-ui-self-test.js#L508",
+    "test:tools_node/test/dom-to-ui-self-test.js#L531",
+    "test:tools_node/test/dom-to-ui-self-test.js#L553",
+    "test:tools_node/test/dom-to-ui-self-test.js#L575",
+    "test:tools_node/test/dom-to-ui-self-test.js#L588",
+    "test:tools_node/test/dom-to-ui-self-test.js#L603",
+    "test:tools_node/test/dom-to-ui-self-test.js#L620",
+    "test:tools_node/test/dom-to-ui-self-test.js#L668",
+    "test:tools_node/test/dom-to-ui-self-test.js#L682",
+    "test:tools_node/test/dom-to-ui-self-test.js#L2023"
+  ],
+  "usageRefStats": {
+    "totalRefs": 24,
+    "distinctFiles": 5,
+    "distinctKinds": 2,
+    "externalRefs": 23,
+    "kinds": [
+      "test",
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {

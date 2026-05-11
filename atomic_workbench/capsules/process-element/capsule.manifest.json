@@ -46,7 +46,21 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L144",
+    "test:tools_node/test/atm-atomize.test.js#L65",
+    "test:tools_node/test/atm-atomize.test.js#L129"
+  ],
+  "usageRefStats": {
+    "totalRefs": 3,
+    "distinctFiles": 2,
+    "distinctKinds": 2,
+    "externalRefs": 2,
+    "kinds": [
+      "test",
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {

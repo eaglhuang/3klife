@@ -40,7 +40,22 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L1657",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L1658",
+    "tooling:tools_node/lib/dom-to-ui/fragment-geometry-contract.js#L271",
+    "tooling:tools_node/lib/dom-to-ui/fragment-geometry-contract.js#L272",
+    "tooling:tools_node/lib/dom-to-ui/fragment-geometry-contract.js#L319"
+  ],
+  "usageRefStats": {
+    "totalRefs": 5,
+    "distinctFiles": 2,
+    "distinctKinds": 1,
+    "externalRefs": 3,
+    "kinds": [
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {

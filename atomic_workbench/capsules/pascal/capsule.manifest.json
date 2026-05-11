@@ -40,7 +40,21 @@
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
-  "usageRefs": [],
+  "usageRefs": [
+    "tooling:tools_node/dom-to-ui-json.js#L250",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L132",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L215",
+    "tooling:tools_node/lib/dom-to-ui/draft-builder-core.js#L1789"
+  ],
+  "usageRefStats": {
+    "totalRefs": 4,
+    "distinctFiles": 2,
+    "distinctKinds": 1,
+    "externalRefs": 1,
+    "kinds": [
+      "tooling"
+    ]
+  },
   "duplicateResolution": null,
   "policyFindings": [
     {
