@@ -1,0 +1,13 @@
+FROM node:20-bookworm-slim
+
+WORKDIR /app/server
+
+COPY server/package.json ./package.json
+
+RUN npm install
+
+WORKDIR /app
+
+EXPOSE 3000
+
+CMD ["sh", "-lc", "cd /app/server && npm run dev"]

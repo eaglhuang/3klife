@@ -1,0 +1,13 @@
+services:
+  game-server:
+    ports: !override
+      - "13000:3000"
+
+  postgres:
+    ports: !override
+      - "15432:5432"
+
+  qdrant:
+    ports: !override
+      - "16333:6333"
+      - "16334:6334"

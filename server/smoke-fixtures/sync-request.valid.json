@@ -1,0 +1,25 @@
+{
+  "Player_ID": "PLAYER_TEST_01",
+  "Session_Secret": "MOCK_SECRET_KEY",
+  "Previous_Hash": "INIT_HASH",
+  "Action_Records": [
+    {
+      "Seq": 1,
+      "Timestamp": 1710000001000,
+      "Action": "BATTLE_WIN",
+      "Payload": {
+        "Gold": 120
+      },
+      "Tx_Hash": "b45038e6ee34827169c3464179642b10a79254721cdcee1adb745c4a085d6930"
+    },
+    {
+      "Seq": 2,
+      "Timestamp": 1710000002000,
+      "Action": "SHOP_BUY",
+      "Payload": {
+        "Cost": 40
+      },
+      "Tx_Hash": "beef84b14b59e7016ec3895b04855f6983f14fa70fcd38aab0149e0dfc85f776"
+    }
+  ]
+}

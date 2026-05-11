@@ -1,0 +1,73 @@
+services:
+  game-server:
+    profiles:
+      - app
+    build:
+      context: .
+      dockerfile: server/Dockerfile.dev
+    container_name: 3klife-game-server-dev
+    environment:
+      HOST: 0.0.0.0
+      PORT: ${SERVER_PORT:-3000}
+      NODE_ENV: development
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-game_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-game_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-game_pass}
+      QDRANT_URL: http://qdrant:6333
+    ports:
+      - "${SERVER_HOST_PORT:-3000}:${SERVER_PORT:-3000}"
+    volumes:
+      - .:/app
+      - server_node_modules:/app/server/node_modules
+    working_dir: /app/server
+    command: npm run dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - node -e "const http=require('http');const port=process.env.PORT||3000;const req=http.get('http://127.0.0.1:'+port+'/healthz',(res)=>process.exit(res.statusCode===200?0:1));req.on('error',()=>process.exit(1));"
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  postgres:
+    image: postgres:16
+    container_name: 3klife-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-game_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-game_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-game_pass}
+    ports:
+      - "${POSTGRES_HOST_PORT:-5432}:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${POSTGRES_USER:-game_user} -d ${POSTGRES_DB:-game_dev}
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: 3klife-qdrant-dev
+    restart: unless-stopped
+    ports:
+      - "${QDRANT_HTTP_PORT:-6333}:6333"
+      - "${QDRANT_GRPC_PORT:-6334}:6334"
+    volumes:
+      - qdrant_dev_data:/qdrant/storage
+
+volumes:
+  postgres_dev_data:
+  qdrant_dev_data:
+  server_node_modules:
