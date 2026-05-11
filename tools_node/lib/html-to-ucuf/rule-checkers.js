@@ -958,31 +958,6 @@ function readNumber(value) {
   return Number.isFinite(number) ? number : NaN;
 }
 
-module.exports = {
-  RULE_REGISTRY,
-  DEFAULT_CORE_FILES,
-  listRules,
-  getRule,
-  getDraftBuilderStageRules,
-  getFidelityThresholds,
-  getExemptCategories,
-  getKnownGaps,
-  buildViolation,
-  addViolation,
-  loadWorkflowSummary,
-  loadSourceHtml,
-  loadCaptureReport,
-  scanCoreSource,
-  scanSkillDoc,
-  scanDraftBuilderRegistry,
-  validateDraftBuilderStageRules,
-  validatePlan5RegistryContracts,
-  validateWorkflowSummary,
-  validateCaptureReportArtifact,
-  validateRadarGeometryFromSummary,
-  validateRadarGeometryInFile,
-  missingRadarGeometryFields,
-  readTextIfExists,
-  readJsonIfExists,
-  relative
-};
+// rule-checkers.js — thin shim：實際實作已拆入 rule-checkers/ 子目錄。
+// rule-guard.js 等所有呼叫端的 require('./rule-checkers') 路徑不需任何修改。
+module.exports = require('./rule-checkers/index');

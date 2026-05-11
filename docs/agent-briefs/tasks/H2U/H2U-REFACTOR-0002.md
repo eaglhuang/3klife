@@ -2,8 +2,12 @@
 doc_id: doc_task_0225
 id: "H2U-REFACTOR-0002"
 priority: "P2"
-owner: "Unassigned"
-status: "open"
+owner: "GitHubCopilot"
+status: "done"
+started_at: "2026-05-11T17:40:13+08:00"
+started_by_agent: "GitHubCopilot"
+completed_at: "2026-05-11T18:10:00+08:00"
+completed_by_agent: "GitHubCopilot"
 type: "refactoring"
 phase: "G"
 created: "2026-05-05"
@@ -11,7 +15,9 @@ created_by_agent: "ClaudeCode_claude-sonnet-4-6"
 related_cards:
   - "H2U-REFACTOR-0006"
 depends: []
-notes: "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) §A2 / §D3 | 阻塞: 無"
+notes: |
+  2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) §A2 / §D3 | 阻塞: 無
+  2026-05-11 | 狀態: done | 驗證: node tools_node/validate-html-to-ucuf-rule-guard.js → status=pass blockers=0 | 變更: rule-checkers.js 拆為 rule-checkers/ 目錄（base/source-package/draft-builder/workflow-summary/formal-entry/index），rule-checkers.js 改為 thin shim，rule-guard.js require API 不變 | agent: GitHubCopilot
 ---
 
 # [H2U-REFACTOR-0002] rule-checkers.js 拆目錄
