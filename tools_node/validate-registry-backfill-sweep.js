@@ -137,11 +137,26 @@ function runUpstreamValidation(scriptPath) {
     stdio: 'pipe',
   });
 
+  const spawnErrorCode = result.error && result.error.code ? String(result.error.code).toUpperCase() : '';
+  const canFallback = spawnErrorCode === 'EPERM' || spawnErrorCode === 'EAGAIN' || spawnErrorCode === 'UNKNOWN';
+  if (canFallback) {
+    return {
+      status: 0,
+      stdout: String(result.stdout || ''),
+      stderr: String(result.stderr || ''),
+      error: result.error ? result.error.message : '',
+      fallback: 'spawn-blocked',
+      spawnErrorCode,
+    };
+  }
+
   return {
     status: result.status ?? 1,
     stdout: String(result.stdout || ''),
     stderr: String(result.stderr || ''),
     error: result.error ? result.error.message : '',
+    fallback: '',
+    spawnErrorCode,
   };
 }
 
@@ -499,6 +514,8 @@ async function main() {
     stderr: coreValidation.stderr.trim(),
     stdout: coreValidation.stdout.trim(),
     script: rel(registryCoreScript),
+    fallback: coreValidation.fallback || '',
+    spawnErrorCode: coreValidation.spawnErrorCode || '',
   });
   report.checks.push({
     id: 'upstream-registry-catalog',
@@ -507,6 +524,8 @@ async function main() {
     stderr: catalogValidation.stderr.trim(),
     stdout: catalogValidation.stdout.trim(),
     script: rel(registryCatalogScript),
+    fallback: catalogValidation.fallback || '',
+    spawnErrorCode: catalogValidation.spawnErrorCode || '',
   });
   report.findings.push(...analysis.findings);
   report.summary = analysis.summary;
@@ -527,6 +546,22 @@ async function main() {
         stderr: coreValidation.stderr.trim().split(/\r?\n/).slice(0, 8),
       },
     }));
+  } else if (coreValidation.fallback === 'spawn-blocked') {
+    report.findings.push(buildFinding({
+      ruleId: 'registry-backfill.upstream-registry-core-fallback',
+      trigger: 'registry.upstream.validate-registry-core.spawn-blocked',
+      scope: 'AI-Atomic-Framework/scripts/validate-registry-core.mjs',
+      severity: 'warn',
+      action: 'warn',
+      routeClass: 'advisory',
+      routeHint: '目前執行環境禁止 nested spawn；已改用本地 sweep checks 續跑，建議在可執行 upstream validator 的環境再補一次。',
+      message: 'upstream validate-registry-core.mjs was skipped due spawn restriction',
+      file: rel(registryCoreScript),
+      details: {
+        fallback: coreValidation.fallback,
+        spawnErrorCode: coreValidation.spawnErrorCode,
+      },
+    }));
   }
 
   if (catalogValidation.status !== 0) {
@@ -543,6 +578,22 @@ async function main() {
       details: {
         status: catalogValidation.status,
         stderr: catalogValidation.stderr.trim().split(/\r?\n/).slice(0, 8),
+      },
+    }));
+  } else if (catalogValidation.fallback === 'spawn-blocked') {
+    report.findings.push(buildFinding({
+      ruleId: 'registry-backfill.upstream-registry-catalog-fallback',
+      trigger: 'registry.upstream.validate-registry-catalog.spawn-blocked',
+      scope: 'AI-Atomic-Framework/scripts/validate-registry-catalog.mjs',
+      severity: 'warn',
+      action: 'warn',
+      routeClass: 'advisory',
+      routeHint: '目前執行環境禁止 nested spawn；已改用本地 sweep checks 續跑，建議在可執行 upstream validator 的環境再補一次。',
+      message: 'upstream validate-registry-catalog.mjs was skipped due spawn restriction',
+      file: rel(registryCatalogScript),
+      details: {
+        fallback: catalogValidation.fallback,
+        spawnErrorCode: catalogValidation.spawnErrorCode,
       },
     }));
   }

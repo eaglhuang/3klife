@@ -1,6 +1,6 @@
 <!-- doc_id: doc_other_0093 -->
 # ATM 框架穩定化里程碑
-> 這份頁面以 `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 的薄索引為準，不再沿用舊的 milestone 草稿數字。當前基線是 `done=121 / in_progress=0 / open=0 / total=121`.
+> 這份頁面以 `docs/tasks/tasks-atm.json` 與 `docs/tasks/tasks-atm/tasks-atm-part-*.json` 的薄索引為準，不再沿用舊的 milestone 草稿數字。當前基線是 `done=123 / in_progress=0 / open=0 / total=123`.
 ## 1. 當前狀態
 - `ATM-2-0027`、`ATM-2-0050`、`ATM-2-0051`、`ATM-2-0054` 都已是 `done`，不再當作主缺口。
 - M1 的三個收尾面向都已收斂，不再保留未完成主缺口。
@@ -50,8 +50,8 @@ ATM-2.5-0004 -> ATM-2-0030 -> ATM-2-0010
 
 ### M4. 負債清單
 [x] `ATM-2-0024`、`ATM-4-0004`、`ATM-4-0008` 的 map evolution 主線已收斂，不再列為 blocker。
-- [ ] evidence retention contract 與 rotation policy。
-- [ ] registry sharding 與 `versions[]` sidecar 的 resolver / rollback / catalog 收斂。
+[x] `ATM-7-0001` evidence retention contract 與 rotation policy。 （目前：done）
+[x] `ATM-7-0002` registry sharding 與 `versions[]` sidecar 的 resolver / rollback / catalog 收斂。 （目前：done）
 
 ### M5. 3KLife Host
 [x] `ATM-6-0005` 已補齊 HarnessCard-lite / CAR runtime-audit 對齊 （目前：done）.

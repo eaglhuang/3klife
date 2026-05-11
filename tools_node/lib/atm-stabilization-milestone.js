@@ -33,6 +33,8 @@ const M3_DETERMINISTIC_FOUNDATION_IDS = [
 
 const M3_SEMANTIC_ADVISORY_ID = 'ATM-2-0035';
 const M5_ADAPTER_PARITY_ID = 'ATM-4-0006';
+const M4_RETENTION_POLICY_ID = 'ATM-7-0001';
+const M4_REGISTRY_SIDECAR_ID = 'ATM-7-0002';
 const FORMER_MAIN_BLOCKER_IDS = ['ATM-4-0005', 'ATM-6-0004', 'ATM-6-0005'];
 const RESOLVED_M4_MAP_EVOLUTION_IDS = ['ATM-2-0024', 'ATM-4-0004', 'ATM-4-0008'];
 const RESOLVED_M5_HOST_CHAIN_IDS = ['ATM-4-0005', 'ATM-4-0006', 'ATM-6-0005'];
@@ -171,8 +173,8 @@ function buildMilestoneMarkdown(state = {}) {
   lines.push('');
   lines.push('### M4. 負債清單');
   lines.push(`${renderGroupCheckbox(taskMap, RESOLVED_M4_MAP_EVOLUTION_IDS)} ${joinIds(RESOLVED_M4_MAP_EVOLUTION_IDS)} 的 map evolution 主線已收斂，不再列為 blocker。`);
-  lines.push('- [ ] evidence retention contract 與 rotation policy。');
-  lines.push('- [ ] registry sharding 與 `versions[]` sidecar 的 resolver / rollback / catalog 收斂。');
+  lines.push(`${renderCheckbox(taskMap, M4_RETENTION_POLICY_ID)} \`${M4_RETENTION_POLICY_ID}\` evidence retention contract 與 rotation policy。 ${renderStatusSuffix(taskMap, M4_RETENTION_POLICY_ID)}`);
+  lines.push(`${renderCheckbox(taskMap, M4_REGISTRY_SIDECAR_ID)} \`${M4_REGISTRY_SIDECAR_ID}\` registry sharding 與 \`versions[]\` sidecar 的 resolver / rollback / catalog 收斂。 ${renderStatusSuffix(taskMap, M4_REGISTRY_SIDECAR_ID)}`);
   lines.push('');
   lines.push('### M5. 3KLife Host');
   lines.push(`${renderCheckbox(taskMap, 'ATM-6-0005')} \`ATM-6-0005\` 已補齊 HarnessCard-lite / CAR runtime-audit 對齊 ${renderStatusSuffix(taskMap, 'ATM-6-0005')}.`);

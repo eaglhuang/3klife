@@ -74,5 +74,65 @@
       "alpha0 gate 僅驗 deterministic 4 條 criteria；version history / rollback / evolution metrics 僅作 readiness warning，不阻塞 alpha0 release"
     ],
     "notes": "2026-05-06 v2 規劃書補丁：依附錄 A.2 補強 acceptance（不重啟驗收，僅追加）\n2026-05-07 | done | upstream 64ec0bc | gate criteria1-4 true；validate:neutrality/cli/self-hosting-alpha + npm test/typecheck/lint pass | blocker: none"
+  },
+  {
+    "doc_id": "doc_task_0368",
+    "id": "ATM-7-0002",
+    "title": "Registry sharding and versions sidecar convergence",
+    "owner": "vs-code-gpt-5.3-codex",
+    "priority": "P1",
+    "status": "done",
+    "type": "governance",
+    "phase": "ATM-7",
+    "created": "2026-05-11",
+    "created_by_agent": "vs-code-gpt-5.3-codex",
+    "started_at": "2026-05-11T13:42:03+08:00",
+    "started_by_agent": "vs-code-gpt-5.3-codex",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "收斂 registry sharding 與 versions[] sidecar 在 resolver/rollback/catalog 的一致性，補齊 strict convergence validator 與 mismatch report。",
+    "related": [],
+    "depends": [
+      "ATM-2-0030",
+      "ATM-2-0046",
+      "ATM-2-0047",
+      "ATM-2-0022"
+    ],
+    "acceptance": [
+      "新增 convergence validator：validate-registry-sidecar-convergence --strict",
+      "覆蓋 hot entry / versions[] / RegistryIndex / catalog projection 一致性",
+      "覆蓋 rollback target 與 canonical/sidecar 對齊檢查",
+      "輸出 machine-readable mismatch report",
+      "M4 第二條由 task-store 狀態動態投影 [x]"
+    ],
+    "deliverables": [
+      "tools_node/validate-registry-sidecar-convergence.js",
+      "artifacts/registry-sidecar-convergence/*.json",
+      "milestone M4 第二條動態對映"
+    ],
+    "notes": "2026-05-11 | 狀態: done | 驗證: node tools_node/validate-registry-sidecar-convergence.js --strict; node tools_node/validate-atm-stability-closeout.js --strict | 變更: 補齊 sidecar convergence validator 與 machine-readable report | 阻塞: 無",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    },
+    "completed_at": "2026-05-11T14:11:32+08:00"
   }
 ]
