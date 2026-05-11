@@ -2,8 +2,10 @@
 doc_id: doc_task_0224
 id: "H2U-REFACTOR-0001"
 priority: "P2"
-owner: "Unassigned"
-status: "open"
+owner: "codex-worker-b"
+status: "in-progress"
+started_at: "2026-05-11T18:20:00+08:00"
+started_by_agent: "codex-worker-b"
 type: "refactoring"
 phase: "G"
 created: "2026-05-05"
@@ -13,7 +15,7 @@ related_cards:
   - "PROG-2-0004"
   - "PROG-2-0005"
 depends: []
-notes: "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) §A1 / §D2 | 阻塞: 無"
+notes: "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) §A1 / §D2 | 阻塞: 無\n2026-05-11T17:37:19+08:00 | 狀態: in-progress | 驗證: pending | 變更: 主線接手 H2U-REFACTOR-0001（draft-builder 模組化） | 阻塞: none"
 ---
 
 # [H2U-REFACTOR-0001] draft-builder.js 拆 5 模組
