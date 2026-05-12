@@ -3,13 +3,73 @@
   "version": 1,
   "slots": {
     "auto.gacha-ds3.gachads3_div_2": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/gacha/generated/gacha_banner_bg_general_formal_1460x880",
-      "spriteType": "simple",
-      "allowAutoAtlas": false,
-      "expectedWidth": 1460,
-      "expectedHeight": 880,
-      "_assetPreserveReason": "PROG-2-0005 formal-runtime-assetization"
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "120% 80% at 40% 30%",
+            "center": {
+              "x": 0.4,
+              "y": 0.3
+            },
+            "radius": {
+              "x": 1.2,
+              "y": 0.8
+            },
+            "repeatSpanRatio": 1,
+            "stops": [
+              {
+                "color": "rgb(26, 10, 46)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(22, 6, 31)",
+                "offset": 0.4
+              },
+              {
+                "color": "rgb(10, 6, 18)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 1,
+        "shape": "120% 80% at 40% 30%",
+        "center": {
+          "x": 0.4,
+          "y": 0.3
+        },
+        "radius": {
+          "x": 1.2,
+          "y": 0.8
+        },
+        "stops": [
+          {
+            "color": "rgb(26, 10, 46)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(22, 6, 31)",
+            "offset": 0.4,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(10, 6, 18)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.gacha-ds3.gachads3_div_3": {
       "kind": "gradient-rect",
@@ -209,13 +269,73 @@
       "horizontalAlign": "START"
     },
     "auto.gacha-ds3.gachads3_div_12": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/gacha/generated/gacha_banner_bg_gold_formal_1460x880",
-      "spriteType": "simple",
-      "allowAutoAtlas": false,
-      "expectedWidth": 1460,
-      "expectedHeight": 880,
-      "_assetPreserveReason": "PROG-2-0005 formal-runtime-assetization"
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "120% 80% at 40% 30%",
+            "center": {
+              "x": 0.4,
+              "y": 0.3
+            },
+            "radius": {
+              "x": 1.2,
+              "y": 0.8
+            },
+            "repeatSpanRatio": 1,
+            "stops": [
+              {
+                "color": "rgb(42, 26, 0)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(26, 15, 0)",
+                "offset": 0.4
+              },
+              {
+                "color": "rgb(10, 6, 18)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 1,
+        "shape": "120% 80% at 40% 30%",
+        "center": {
+          "x": 0.4,
+          "y": 0.3
+        },
+        "radius": {
+          "x": 1.2,
+          "y": 0.8
+        },
+        "stops": [
+          {
+            "color": "rgb(42, 26, 0)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(26, 15, 0)",
+            "offset": 0.4,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(10, 6, 18)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.gacha-ds3.gachads3_div_13": {
       "kind": "gradient-rect",
@@ -415,13 +535,73 @@
       "horizontalAlign": "START"
     },
     "auto.gacha-ds3.gachads3_div_22": {
-      "kind": "sprite-frame",
-      "path": "sprites/ui_families/gacha/generated/gacha_banner_bg_teal_formal_1460x880",
-      "spriteType": "simple",
-      "allowAutoAtlas": false,
-      "expectedWidth": 1460,
-      "expectedHeight": 880,
-      "_assetPreserveReason": "PROG-2-0005 formal-runtime-assetization"
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "120% 80% at 40% 30%",
+            "center": {
+              "x": 0.4,
+              "y": 0.3
+            },
+            "radius": {
+              "x": 1.2,
+              "y": 0.8
+            },
+            "repeatSpanRatio": 1,
+            "stops": [
+              {
+                "color": "rgb(6, 32, 32)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(4, 20, 20)",
+                "offset": 0.4
+              },
+              {
+                "color": "rgb(3, 10, 10)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 1,
+        "shape": "120% 80% at 40% 30%",
+        "center": {
+          "x": 0.4,
+          "y": 0.3
+        },
+        "radius": {
+          "x": 1.2,
+          "y": 0.8
+        },
+        "stops": [
+          {
+            "color": "rgb(6, 32, 32)",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(4, 20, 20)",
+            "offset": 0.4,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(3, 10, 10)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
     },
     "auto.gacha-ds3.gachads3_div_23": {
       "kind": "gradient-rect",
@@ -3089,9 +3269,9 @@
       ]
     },
     "tokenSources": {
-      "runtimePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\ui-design-tokens.json",
-      "handoffPath": "C:\\Users\\User\\3KLife\\Design System\\design_handoff\\source\\ui-design-tokens.json",
-      "sourcePath": "C:\\Users\\User\\3KLife\\Design System 3\\source\\ui-design-tokens.json"
+      "runtimePath": "c:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "c:\\Users\\User\\3KLife\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "sourcePath": "c:\\Users\\User\\3KLife\\Design System 3\\source\\ui-design-tokens.json"
     },
     "tokenConflictReport": [],
     "atlasUsageReport": {
@@ -3100,6 +3280,6 @@
       "limit": 4,
       "_warning": null
     },
-    "perTabReplayMergedAt": "2026-05-04T14:16:15.087Z"
+    "perTabReplayMergedAt": "2026-05-12T16:10:46.155Z"
   }
 }

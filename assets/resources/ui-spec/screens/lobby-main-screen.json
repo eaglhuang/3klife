@@ -1,11 +1,18 @@
 {
   "id": "lobby-main-screen",
   "version": 2,
-  "uiId": "LobbyMain",
-  "layer": "UI2D",
+  "uiId": "lobby-main-screen",
+  "layout": "lobby-main-screen",
+  "skin": "lobby-main-screen.skin",
   "bundle": "lobby_ui",
-  "layout": "lobby-main-main",
-  "skin": "lobby-main-default",
+  "meta": {
+    "htmlToUcufPlan4": true,
+    "runtimeAuthority": "synced-final-runtime-json"
+  },
+  "content": {
+    "source": "lobby-main-states-v1",
+    "state": "smoke-default"
+  },
   "contentRequirements": {
     "schemaId": "lobby-main-content",
     "familyId": "lobby-main",
@@ -49,15 +56,6 @@
       "intelGridBody"
     ]
   },
-  "content": {
-    "source": "lobby-main-states-v1",
-    "state": "smoke-default"
-  },
-  "actions": [
-    { "node": "NavBar/BtnGacha", "type": "tap", "action": "open-screen", "target": "gacha-ds3" }
-  ],
-  "validation": {
-    "devices": ["phone-16-9", "phone-19_5-9", "tablet-4-3"],
-    "allowMissingSkin": true
-  }
+  "runtimeVersion": "lobby-20260513-001",
+  "runtimeVersionUpdatedAt": "2026-05-12T16:13:02.965Z"
 }

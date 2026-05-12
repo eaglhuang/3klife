@@ -5,15 +5,15 @@
     "deferredNodeCount": 4,
     "totalNodeCount": 60,
     "maxDepth": 6,
-    "estimatedDrawCalls": 6,
+    "estimatedDrawCalls": 3,
     "colorRectCount": 0
   },
   "loading": {
     "atlasCount": 0,
     "atlasLimit": 4,
-    "preloadSpriteCount": 3,
+    "preloadSpriteCount": 0,
     "deferredSpriteCount": 0,
-    "estimatedTextureBytes": 15417600,
+    "estimatedTextureBytes": 0,
     "fontCount": 3
   },
   "lifecycle": {

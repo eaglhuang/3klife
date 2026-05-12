@@ -1,0 +1,28 @@
+{
+  "screenId": "lobby-main-screen",
+  "version": 1,
+  "firstScreen": {
+    "bundles": [
+      "lobby_ui",
+      "generals"
+    ],
+    "spriteFrames": [
+      "sprites/generals/avatars/cao_cao_avatar",
+      "sprites/generals/guan_yu_portrait"
+    ],
+    "fonts": [
+      "fonts/newsreader/font",
+      "fonts/manrope/font",
+      "fonts/notosans_tc/font"
+    ],
+    "fragments": []
+  },
+  "deferred": {
+    "lazySlots": []
+  },
+  "counts": {
+    "firstScreenSpriteCount": 2,
+    "deferredSpriteCount": 0
+  },
+  "_warnings": []
+}

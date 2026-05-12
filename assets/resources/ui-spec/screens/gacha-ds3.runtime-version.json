@@ -1,7 +1,7 @@
 {
   "screenId": "gacha-ds3",
   "uiShortName": "gacds3",
-  "uiVersion": "gacds3-20260504-021",
-  "outDir": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker",
-  "generatedAt": "2026-05-04T14:16:15.124Z"
+  "uiVersion": "gacds3-20260513-002",
+  "outDir": "artifacts/html-to-ucuf-plan5/gacha-ds3",
+  "generatedAt": "2026-05-12T16:10:46.220Z"
 }

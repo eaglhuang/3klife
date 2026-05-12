@@ -13,8 +13,8 @@
     "source": "gacha-main-states-v1",
     "state": "bloodline-seed"
   },
-  "runtimeVersion": "gacds3-20260504-021",
-  "runtimeVersionUpdatedAt": "2026-05-04T14:16:15.112Z",
+  "runtimeVersion": "gacds3-20260513-002",
+  "runtimeVersionUpdatedAt": "2026-05-12T16:10:46.200Z",
   "tabRouting": {
     "General": {
       "slotId": "RightPanel",

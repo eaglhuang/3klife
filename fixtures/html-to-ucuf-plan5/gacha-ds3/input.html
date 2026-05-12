@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<title>3KLife · 轉蛋</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+html, body {
+  width: 1920px; height: 1080px; overflow: hidden;
+  font-family: var(--font-body); color: var(--text-primary);
+}
+
+/* ══ Pool data (drives everything) ══════════════════════════ */
+/* Handled by JS: pools[] array */
+
+/* ══ Layout ══════════════════════════════════════════════════ */
+
+/* Full-bleed banner (left ~60%) */
+.banner-stage {
+  position: absolute; top: 0; left: 0; right: 460px; bottom: 200px;
+  overflow: hidden;
+}
+.banner-slide {
+  position: absolute; inset: 0;
+  opacity: 0; transition: opacity 380ms var(--ease-default);
+  pointer-events: none;
+}
+.banner-slide.active { opacity: 1; pointer-events: auto; }
+
+.banner-bg-fill { position: absolute; inset: 0; }
+.banner-art-area {
+  position: absolute; inset: 0;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.banner-art-placeholder {
+  width: 480px; height: 85%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-label); font-size: 12px; letter-spacing: .12em;
+  border-radius: 20px 20px 0 0;
+}
+.banner-title-block {
+  position: absolute; bottom: 44px; left: 52px; z-index: 5;
+}
+.banner-event-chip {
+  display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px;
+  font-family: var(--font-label); font-size: 10px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 4px;
+}
+.banner-hero-name {
+  font-family: var(--font-headline); font-size: 72px; font-weight: 900;
+  letter-spacing: .08em; line-height: 1;
+  text-shadow: 0 0 40px var(--pool-glow, rgba(255,224,136,.5)), 0 4px 8px rgba(0,0,0,.9);
+}
+.banner-hero-title {
+  font-family: var(--font-label); font-size: 14px; letter-spacing: .4em;
+  margin-top: 10px; color: #A4D2D0;
+}
+.banner-guarantee-chip {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 16px;
+  border-radius: 8px; padding: 8px 18px;
+  font-family: var(--font-label); font-size: 11px; letter-spacing: .1em;
+}
+
+/* Fade edges on banner */
+.banner-fade-right {
+  position: absolute; top: 0; right: 0; width: 180px; bottom: 0;
+  background: linear-gradient(90deg, transparent, var(--pool-bg-edge, #0a0612));
+  pointer-events: none; z-index: 4;
+}
+.banner-fade-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+  background: linear-gradient(0deg, var(--pool-bg-bottom, #0a0612), transparent);
+  pointer-events: none; z-index: 4;
+}
+
+/* Pool brief chip (spec-driven) */
+.pool-brief {
+  position: absolute; top: 16px; left: 20px; z-index: 20;
+  background: rgba(0,0,0,.75); border-radius: 8px; padding: 10px 16px;
+  backdrop-filter: blur(10px); max-width: 280px;
+  border: 1px solid rgba(255,255,255,.08);
+  transition: opacity 300ms;
+}
+.brief-tag  { font-family: var(--font-label); font-size: 8px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 4px; }
+.brief-line { font-family: var(--font-label); font-size: 11px; color: #D0C5AF; line-height: 1.55; letter-spacing: .04em; }
+.brief-line strong { color: #CE93D8; }
+
+/* ── NAV ARROWS (on banner sides) ─────────────────────────── */
+.nav-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 64px; height: 64px; border-radius: 50%; z-index: 30; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; font-weight: 900;
+  background: rgba(0,0,0,.55); border: 2px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(8px);
+  transition: all 160ms var(--ease-default);
+  color: #D0C5AF; user-select: none;
+}
+.nav-arrow:hover { background: rgba(212,175,55,.2); border-color: #D4AF37; color: #FFE088; transform: translateY(-50%) scale(1.06); }
+.nav-arrow.prev { left: 20px; }
+.nav-arrow.next { right: 20px; }
+
+/* Pool indicator dots */
+.pool-dots {
+  position: absolute; bottom: 220px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 10px; z-index: 30;
+}
+.pool-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,.2); border: 1.5px solid rgba(255,255,255,.3);
+  cursor: pointer; transition: all 200ms;
+}
+.pool-dot.active { background: #D4AF37; border-color: #D4AF37; width: 24px; border-radius: 4px; }
+
+/* Pool name tab strip at top of banner */
+.pool-name-strip {
+  position: absolute; top: 0; left: 0; right: 460px;
+  height: 56px; z-index: 25;
+  background: linear-gradient(180deg, rgba(0,0,0,.8), rgba(0,0,0,0));
+  display: flex; align-items: center; padding: 0 120px;
+  pointer-events: none;
+}
+.pool-name-label {
+  font-family: var(--font-label); font-size: 10px; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase; opacity: .6;
+}
+.pool-name-val {
+  font-family: var(--font-headline); font-size: 16px; font-weight: 700;
+  color: #FFE088; letter-spacing: .14em; margin-left: 14px;
+}
+
+/* ── RIGHT PANEL ──────────────────────────────────────────── */
+.right-panel {
+  position: absolute; top: 0; right: 0; width: 460px; bottom: 200px;
+  background: linear-gradient(180deg, #0e0a16 0%, #0a0810 100%);
+  border-left: 1px solid rgba(255,255,255,.06);
+  display: flex; flex-direction: column; padding: 28px 26px; gap: 0;
+  overflow: hidden;
+}
+
+/* Right panel has animated transition */
+.rp-content { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+.rp-slide { transition: opacity 300ms, transform 300ms var(--ease-default); }
+.rp-slide.out { opacity: 0; transform: translateX(16px); }
+
+/* Pool header in right panel */
+.rp-pool-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.rp-pool-name { font-family: var(--font-headline); font-size: 22px; font-weight: 700; color: #FFE088; letter-spacing: .08em; line-height: 1.2; }
+.rp-pool-sub  { font-family: var(--font-label); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; margin-top: 5px; }
+.rp-pool-badge {
+  padding: 4px 12px; border-radius: 20px;
+  font-family: var(--font-label); font-size: 9px; font-weight: 800; letter-spacing: .12em;
+  flex-shrink: 0;
+}
+
+/* Pity bar */
+.pity-block { }
+.pity-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.pity-title { font-family: var(--font-label); font-size: 9px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+.pity-link  { font-family: var(--font-label); font-size: 10px; color: #4D4635; letter-spacing: .06em; cursor: pointer; text-decoration: underline; }
+.pity-track {
+  height: 30px; border-radius: 6px; background: rgba(0,0,0,.5);
+  border: 1px solid rgba(255,255,255,.08); overflow: hidden; position: relative;
+}
+.pity-fill  { height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; transition: width 500ms var(--ease-default); }
+.pity-fill-label { font-family: var(--font-num); font-size: 13px; font-weight: 700; color: #fff; }
+.pity-scale {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-label); font-size: 9px; color: #3a3030; letter-spacing: .06em; margin-top: 4px;
+}
+
+/* Rate table */
+.rate-block { }
+.block-label { font-family: var(--font-label); font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #4D4635; margin-bottom: 10px; }
+.rate-list { display: flex; flex-direction: column; gap: 5px; }
+.rate-item {
+  display: flex; align-items: center; gap: 10px; padding: 6px 10px;
+  background: rgba(255,255,255,.025); border-radius: 6px; border-left: 3px solid;
+}
+.rate-rarity { font-family: var(--font-label); font-size: 10px; font-weight: 800; letter-spacing: .1em; min-width: 36px; }
+.rate-track  { flex: 1; height: 5px; background: rgba(0,0,0,.5); border-radius: 3px; overflow: hidden; }
+.rate-bar    { height: 100%; border-radius: 3px; transition: width 500ms var(--ease-default); }
+.rate-pct    { font-family: var(--font-num); font-size: 12px; font-weight: 700; min-width: 42px; text-align: right; }
+
+/* Cost card */
+.cost-card {
+  border-radius: 10px; padding: 12px 16px;
+  display: flex; justify-content: space-around; align-items: center;
+  background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
+}
+.cost-item { text-align: center; }
+.cost-label { font-family: var(--font-label); font-size: 9px; color: #4D4635; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 4px; }
+.cost-val   { font-family: var(--font-num); font-size: 18px; font-weight: 700; }
+.cost-sep   { width: 1px; height: 36px; background: rgba(255,255,255,.08); }
+
+.rules-note {
+  font-family: var(--font-label); font-size: 9px; color: #2a2a3a; letter-spacing: .08em; line-height: 1.7;
+}
+
+/* ── HISTORY MODAL ──────────────────────────────────────── */
+.history-modal {
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(0,0,0,.85); backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 280ms;
+}
+.history-modal.open { display: flex; opacity: 1; }
+.history-modal.closing { opacity: 0; }
+
+.history-panel {
+  width: 85%; max-width: 1200px; height: 85%;
+  background: linear-gradient(180deg, #1a1520 0%, #0f0c14 100%);
+  border: 1.5px solid rgba(212,175,55,.4);
+  border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,.9);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+
+.history-header {
+  padding: 24px 32px; border-bottom: 1px solid rgba(212,175,55,.2);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.history-title {
+  font-family: var(--font-headline); font-size: 28px; font-weight: 800;
+  color: #FFE088; letter-spacing: .15em;
+}
+.history-close {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,.06); border: 1.5px solid #4D4635;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: #B0A880; transition: all 140ms;
+}
+.history-close:hover { background: rgba(212,175,55,.2); border-color: #D4AF37; color: #FFE088; }
+
+.history-content {
+  flex: 1; overflow-y: auto; padding: 20px 32px;
+  display: flex; flex-direction: column; gap: 0;
+  scrollbar-width: thin; scrollbar-color: #4D4635 transparent;
+}
+.history-content::-webkit-scrollbar { width: 6px; }
+.history-content::-webkit-scrollbar-thumb { background: #4D4635; border-radius: 3px; }
+.history-content::-webkit-scrollbar-track { background: transparent; }
+
+.history-row {
+  display: grid; grid-template-columns: 60px 1fr 80px 100px 80px 120px;
+  gap: 16px; align-items: center;
+  padding: 12px 16px; border-radius: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  transition: background 140ms;
+}
+.history-row:hover { background: rgba(212,175,55,.08); }
+
+.history-row-num {
+  font-family: var(--font-num); font-size: 13px; font-weight: 700;
+  color: #6B5E4E; text-align: center;
+}
+
+.history-row-card {
+  display: flex; align-items: center; gap: 10px;
+}
+.history-row-card-img {
+  width: 48px; height: 48px; border-radius: 6px;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(212,175,55,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-headline); font-size: 18px; font-weight: 800;
+}
+.history-row-card-info { flex: 1; min-width: 0; }
+.history-row-card-name {
+  font-family: var(--font-headline); font-size: 14px; font-weight: 700;
+  color: #FFE088; letter-spacing: .08em; white-space: nowrap;
+}
+.history-row-card-rarity {
+  font-family: var(--font-label); font-size: 9px; color: #6B5E4E;
+  letter-spacing: .08em; margin-top: 2px;
+}
+
+.history-row-pull {
+  font-family: var(--font-num); font-size: 12px; font-weight: 700;
+  color: #B0A880; text-align: center;
+}
+
+.history-row-rarity-badge {
+  padding: 4px 10px; border-radius: 6px;
+  font-family: var(--font-label); font-size: 10px; font-weight: 800;
+  letter-spacing: .08em; text-align: center;
+}
+.rarity-ssr { background: #FFD700; color: #2D1E00; }
+.rarity-sr  { background: #86E1A5; color: #1a1a1a; }
+.rarity-r   { background: #6B5E4E; color: #E8E4DC; }
+
+.history-row-time {
+  font-family: var(--font-label); font-size: 10px; color: #4D4635;
+  letter-spacing: .06em; text-align: right; white-space: nowrap;
+}
+
+/* ── PULL BAR (bottom) ───────────────────────────────────── */
+.pull-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 200px;
+  background: linear-gradient(0deg, rgba(0,0,0,.97) 60%, rgba(0,0,0,.8) 100%);
+  display: flex; align-items: center; justify-content: center; gap: 20px;
+  padding: 0 60px; z-index: 20;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.btn-history {
+  height: 56px; padding: 0 24px; cursor: pointer;
+  background: rgba(255,255,255,.04); border: 1.5px solid #2a2a3a;
+  border-radius: 10px; color: #6B5E4E;
+  font-family: var(--font-label); font-size: 13px; font-weight: 700; letter-spacing: .1em;
+  display: flex; align-items: center; gap: 10px;
+  transition: all 140ms;
+}
+.btn-history:hover { border-color: #4D4635; color: #D0C5AF; }
+
+.pull-btn {
+  height: 88px; border-radius: 14px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  font-family: var(--font-label); font-weight: 800; letter-spacing: .1em;
+  transition: all 150ms var(--ease-default);
+}
+.pull-single {
+  min-width: 220px;
+  background: linear-gradient(180deg, #20201f, #111);
+  border: 2px solid #3a3328; color: #D0C5AF;
+  box-shadow: 0 4px 14px rgba(0,0,0,.5);
+}
+.pull-single:hover { border-color: #D4AF37; color: #FFE088; }
+.pull-ten {
+  min-width: 290px;
+  background: linear-gradient(180deg, #FFE088 0%, #D4AF37 55%, #8A6E1F 100%);
+  border: 2px solid #3a2b08; color: #2D1E00;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 4px 0 #3a2b08, 0 9px 22px rgba(0,0,0,.65);
+}
+.pull-ten:hover { filter: brightness(1.07); }
+.pull-label { font-size: 20px; }
+.pull-sub   { font-size: 11px; opacity: .75; }
+.pull-cost-chip {
+  display: flex; align-items: center; gap: 5px; margin-top: 2px;
+  background: rgba(0,0,0,.25); border-radius: 20px; padding: 3px 12px;
+}
+.pc-ico { width: 14px; height: 14px; border-radius: 50%; display: grid; place-items: center; font-size: 7px; font-weight: 800; }
+.pc-num { font-size: 13px; font-weight: 800; }
+
+.btn-alt-group { display: flex; flex-direction: column; gap: 8px; }
+.btn-alt {
+  height: 44px; padding: 0 20px; cursor: pointer;
+  background: rgba(255,255,255,.04); border: 1.5px solid #2a2a3a;
+  border-radius: 8px; color: #6B5E4E;
+  font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 140ms;
+}
+.btn-alt:hover { border-color: #4D4635; color: #D0C5AF; }
+
+/* Pull bar left label */
+.pull-bar-pool {
+  position: absolute; left: 60px; top: 50%; transform: translateY(-50%);
+  text-align: left;
+}
+.pull-bar-pool-label { font-family: var(--font-label); font-size: 9px; color: #3a3030; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 3px; }
+.pull-bar-pool-name  { font-family: var(--font-headline); font-size: 18px; font-weight: 700; color: #FFE088; letter-spacing: .08em; }
+</style>
+</head>
+<body>
+
+<!-- Banner stage — slides for each pool -->
+<div class="banner-stage" id="banner-stage"></div>
+
+<!-- Pool name strip overlay -->
+<div class="pool-name-strip">
+  <div class="pool-name-label">當前卡池</div>
+  <div class="pool-name-val" id="strip-name">名將召喚</div>
+</div>
+
+<!-- NAV ARROWS (on banner left & right) -->
+<div class="nav-arrow prev" onclick="navigate(-1)" data-ucuf-action="tabSwitch" data-target="pool-prev" data-name="BtnPoolPrev">‹</div>
+<div class="nav-arrow next" onclick="navigate(1)"
+     style="right: calc(460px + 20px);" data-ucuf-action="tabSwitch" data-target="pool-next" data-name="BtnPoolNext">›</div>
+
+<!-- Pool dots (UCUF tab-rail) -->
+<div class="pool-dots" id="tab-rail" data-name="PoolTabRail"></div>
+
+<!-- Brief chip -->
+<div class="pool-brief" id="pool-brief">
+  <div class="brief-tag" id="brief-tag">▸ 卡池說明</div>
+  <div class="brief-line" id="brief-line">載入中...</div>
+</div>
+
+<!-- Right panel (UCUF tab content host) -->
+<div class="right-panel" id="right-panel" data-ucuf-tab-content data-name="RightPanel">
+  <div class="rp-content" id="rp-content">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<!-- Pull bar -->
+<div class="pull-bar">
+  <div class="pull-bar-pool">
+    <div class="pull-bar-pool-label">召　喚</div>
+    <div class="pull-bar-pool-name" id="pullbar-name">名將召喚</div>
+  </div>
+  <div class="btn-history">📜 歷史記錄</div>
+  <div class="pull-btn pull-single">
+    <div class="pull-label">單　抽 ×1</div>
+    <div class="pull-cost-chip">
+      <div class="pc-ico" style="background:radial-gradient(circle,#c8aaff,#6a1b9a);color:#fff;">◈</div>
+      <div class="pc-num" style="color:#c8aaff;">30</div>
+    </div>
+  </div>
+  <div class="pull-btn pull-ten">
+    <div class="pull-label">十　連 ×10</div>
+    <div class="pull-sub">保證 SR 以上 1 枚</div>
+    <div class="pull-cost-chip" style="background:rgba(0,0,0,.3);">
+      <div class="pc-ico" style="background:radial-gradient(circle,#c8aaff,#6a1b9a);color:#fff;">◈</div>
+      <div class="pc-num" style="color:#2D1E00;">280</div>
+      <span style="font-size:10px;color:#5a3e00;text-decoration:line-through;margin-left:2px;">300</span>
+    </div>
+  </div>
+  <div class="btn-alt-group">
+    <div class="btn-alt">⚡ 用金幣召喚 (×300)</div>
+    <div class="btn-alt">🎟 使用召喚券</div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   POOL DATA — add more pools here freely
+   ═══════════════════════════════════════ */
+const POOLS = [
+  {
+    id: 'general',
+    name: '名將召喚',
+    sub: '以血脈為種，召來傳世名將',
+    badge: '常設池',
+    badgeBg: 'rgba(156,39,176,.2)', badgeBorder: '#9C27B0', badgeColor: '#CE93D8',
+    heroName: '關　羽',
+    heroTitle: '美髯公 · SSR 武將',
+    eventLabel: '★ 名將系列 · 常設',
+    eventChipBg: 'rgba(156,39,176,.15)', eventChipBorder: '#9C27B0', eventChipColor: '#CE93D8',
+    bgGrad: 'radial-gradient(ellipse 120% 80% at 40% 30%, #1a0a2e 0%, #16061f 40%, #0a0612 100%)',
+    artBg:  'repeating-linear-gradient(45deg,#1e1028,#1e1028 6px,#251833 6px,#251833 12px)',
+    artColor: '#3a2550',
+    glowColor: 'rgba(206,147,216,.5)',
+    bgEdge: '#0a0612', bgBottom: '#0a0612',
+    heroNameColor: '#CE93D8',
+    titleColor: '#BA68C8',
+    guaranteeLabel: '✦ SSR 保底 90 抽',
+    guaranteeBg: 'rgba(156,39,176,.15)', guaranteeBorder: 'rgba(156,39,176,.35)', guaranteeColor: '#CE93D8',
+    brief: { tag: '▸ 名將池說明', line: '本池為 <strong>Bloodline_Seed</strong> 系列\n英靈卡·虎符卡不可由此池獲得', color: '#9C27B0' },
+    pity: { cur: 62, max: 90, label: 'SSR 保底進度', color: '#9C27B0', grad: 'linear-gradient(90deg,#6a1b9a,#CE93D8)' },
+    rates: [
+      { r:'N',  pct:87.0, color:'#686868', border:'#484848' },
+      { r:'R',  pct:10.0, color:'#4CAF50', border:'#3a7a3d' },
+      { r:'SR', pct:2.0,  color:'#2196F3', border:'#1a5c9a' },
+      { r:'SSR',pct:1.0,  color:'#9C27B0', border:'#662299' },
+    ],
+    costSingle: 30, costTen: 280, balance: 340, currency: '◈',
+    currColor: '#c8aaff', balColor: '#A4D2D0',
+    rpBg: 'linear-gradient(180deg,#16061f 0%,#0f0509 100%)',
+    rpBorder: 'rgba(156,39,176,.12)',
+  },
+  {
+    id: 'legendary',
+    name: '傳奇召喚',
+    sub: '稀世傳奇，命運之星的新生',
+    badge: '常設池',
+    badgeBg: 'rgba(255,193,7,.2)', badgeBorder: '#aa8800', badgeColor: '#FFE088',
+    heroName: '呂　布',
+    heroTitle: '天下無雙 · UR 武將',
+    eventLabel: '★ 傳奇系列 · 常設',
+    eventChipBg: 'rgba(255,193,7,.15)', eventChipBorder: '#aa8800', eventChipColor: '#FFE088',
+    bgGrad: 'radial-gradient(ellipse 120% 80% at 40% 30%, #2a1a00 0%, #1a0f00 40%, #0a0612 100%)',
+    artBg:  'repeating-linear-gradient(45deg,#1e1810,#1e1810 6px,#251f10 6px,#251f10 12px)',
+    artColor: '#3a3020',
+    glowColor: 'rgba(255,193,7,.5)',
+    bgEdge: '#0a0612', bgBottom: '#0a0612',
+    heroNameColor: '#FFE088',
+    titleColor: '#FFD700',
+    guaranteeLabel: '👑 UR 保底 180 抽　　SSR 保底 90 抽',
+    guaranteeBg: 'rgba(255,193,7,.15)', guaranteeBorder: 'rgba(255,193,7,.35)', guaranteeColor: '#FFE088',
+    brief: { tag: '▸ 傳奇池說明', line: '本池為稀世傳奇武將專屬池\n最高稀有度 UR，保底機制更深', color: '#D4AF37' },
+    pity: { cur: 87, max: 180, label: 'UR 保底進度', color: '#D4AF37', grad: 'linear-gradient(90deg,#aa8800,#FFE088)' },
+    rates: [
+      { r:'N',  pct:58.3, color:'#686868', border:'#484848' },
+      { r:'R',  pct:26.0, color:'#4CAF50', border:'#3a7a3d' },
+      { r:'SR', pct:10.0, color:'#2196F3', border:'#1a5c9a' },
+      { r:'SSR',pct:4.0,  color:'#9C27B0', border:'#662299' },
+      { r:'UR', pct:1.7,  color:'#FFC107', border:'#aa8800' },
+    ],
+    costSingle: 50, costTen: 450, balance: 340, currency: '◈',
+    currColor: '#FFE088', balColor: '#A4D2D0',
+    rpBg: 'linear-gradient(180deg,#1a1408 0%,#0f0a06 100%)',
+    rpBorder: 'rgba(255,193,7,.12)',
+  },
+  {
+    id: 'support',
+    name: '支援卡召喚',
+    sub: '培育深度，鍛造最強後盾',
+    badge: 'Nurture Depth',
+    badgeBg: 'rgba(140,207,196,.15)', badgeBorder: '#8CCFC4', badgeColor: '#A4D2D0',
+    heroName: '大　喬',
+    heroTitle: '吳宮秘書 · SSR 支援卡',
+    eventLabel: '教官系列 · 第二季',
+    eventChipBg: 'rgba(140,207,196,.12)', eventChipBorder: '#8CCFC4', eventChipColor: '#A4D2D0',
+    bgGrad: 'radial-gradient(ellipse 120% 80% at 40% 30%, #062020 0%, #041414 40%, #030a0a 100%)',
+    artBg:  'repeating-linear-gradient(45deg,#0e1e1e,#0e1e1e 6px,#121e1e 6px,#121e1e 12px)',
+    artColor: '#1a3838',
+    glowColor: 'rgba(140,207,196,.5)',
+    bgEdge: '#030a0a', bgBottom: '#030a0a',
+    heroNameColor: '#A4D2D0',
+    titleColor: '#FFE088',
+    guaranteeLabel: '🎓 SSR 支援卡保底 80 抽',
+    guaranteeBg: 'rgba(140,207,196,.12)', guaranteeBorder: 'rgba(140,207,196,.3)', guaranteeColor: '#8CCFC4',
+    brief: { tag: '▸ 支援卡池說明', line: '本池為 <strong>Nurture_Depth</strong> 系列\n英靈傳道教官可在此專屬池獲得', color: '#3F6A62' },
+    pity: { cur: 28, max: 80, label: 'SSR 支援卡保底', color: '#3F6A62', grad: 'linear-gradient(90deg,#1e4a44,#8CCFC4)' },
+    rates: [
+      { r:'N',  pct:62.0, color:'#686868', border:'#484848' },
+      { r:'R',  pct:26.0, color:'#4CAF50', border:'#3a7a3d' },
+      { r:'SR', pct:9.0,  color:'#2196F3', border:'#1a5c9a' },
+      { r:'SSR',pct:3.0,  color:'#3F6A62', border:'#2a4a44' },
+    ],
+    costSingle: 30, costTen: 280, balance: 340, currency: '◈',
+    currColor: '#A4D2D0', balColor: '#A4D2D0',
+    rpBg: 'linear-gradient(180deg,#04100e 0%,#030a08 100%)',
+    rpBorder: 'rgba(140,207,196,.1)',
+  }
+];
+
+let cur = parseInt(localStorage.getItem('3klife-gacha-pool') || '0');
+let animating = false;
+
+/* ── Build banner slides ── */
+const stage = document.getElementById('banner-stage');
+POOLS.forEach((p, i) => {
+  const slide = document.createElement('div');
+  slide.className = 'banner-slide' + (i === cur ? ' active' : '');
+  slide.dataset.idx = i;
+  slide.setAttribute('data-pool-id', p.id);
+  slide.setAttribute('data-name', 'BannerSlide_' + p.id);
+  slide.id = 'pool-panel-' + p.id;
+  slide.innerHTML = `
+    <div class="banner-bg-fill" style="background:${p.bgGrad};"></div>
+    <div class="banner-fade-right" style="background:linear-gradient(90deg,transparent,${p.bgEdge});"></div>
+    <div class="banner-fade-bottom" style="background:linear-gradient(0deg,${p.bgBottom},transparent);"></div>
+    <div class="banner-art-area">
+      <div class="banner-art-placeholder" style="background:${p.artBg};color:${p.artColor};">
+        hero artwork<br>立繪佔位
+      </div>
+    </div>
+    <div class="banner-title-block">
+      <div class="banner-event-chip" style="background:${p.eventChipBg};border:1px solid ${p.eventChipBorder};color:${p.eventChipColor};">
+        ${p.eventLabel}
+      </div>
+      <div class="banner-hero-name" style="color:${p.heroNameColor};--pool-glow:${p.glowColor};">${p.heroName}</div>
+      <div class="banner-hero-title" style="color:${p.titleColor};">${p.heroTitle}</div>
+      <div class="banner-guarantee-chip" style="background:${p.guaranteeBg};border:1px solid ${p.guaranteeBorder};color:${p.guaranteeColor};">
+        ${p.guaranteeLabel}
+      </div>
+    </div>
+  `;
+  stage.appendChild(slide);
+});
+
+/* ── Build pool dots ── */
+const dotsEl = document.getElementById('tab-rail');
+POOLS.forEach((p, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'pool-dot' + (i === cur ? ' active' : '');
+  dot.setAttribute('role', 'tab');
+  dot.setAttribute('data-tab', p.id);
+  dot.setAttribute('data-name', 'PoolDot_' + p.id);
+  dot.setAttribute('aria-controls', 'pool-panel-' + p.id);
+  dot.onclick = () => goTo(i);
+  dotsEl.appendChild(dot);
+});
+
+/* ── Render right panel ── */
+function renderRight(p) {
+  const rp = document.getElementById('right-panel');
+  rp.style.background = p.rpBg;
+  rp.style.borderLeftColor = p.rpBorder;
+
+  document.getElementById('rp-content').innerHTML = `
+    <div class="rp-pool-header">
+      <div>
+        <div class="rp-pool-name">${p.name}</div>
+        <div class="rp-pool-sub" style="color:${p.pity.color};">${p.sub}</div>
+      </div>
+      <div class="rp-pool-badge" style="background:${p.badgeBg};border:1px solid ${p.badgeBorder};color:${p.badgeColor};">
+        ${p.badge}
+      </div>
+    </div>
+
+    <div class="pity-block">
+      <div class="pity-row">
+        <div class="pity-title" style="color:${p.pity.color};">${p.pity.label}</div>
+        <div class="pity-link">查看機率 ›</div>
+      </div>
+      <div class="pity-track" style="border-color:rgba(${hexToRgb(p.pity.color)},.25);">
+        <div class="pity-fill" style="width:${(p.pity.cur/p.pity.max*100).toFixed(1)}%;background:${p.pity.grad};">
+          <span class="pity-fill-label">${p.pity.cur} / ${p.pity.max}</span>
+        </div>
+      </div>
+      <div class="pity-scale"><span>0</span><span>25%</span><span>50%</span><span>75%</span><span>保底</span></div>
+    </div>
+
+    <div class="rate-block">
+      <div class="block-label">召喚機率</div>
+      <div class="rate-list">
+        ${p.rates.map(r => `
+          <div class="rate-item" style="border-left-color:${r.border};">
+            <div class="rate-rarity" style="color:${r.color};">${r.r}</div>
+            <div class="rate-track">
+              <div class="rate-bar" style="background:${r.color};width:${Math.max(r.pct/70*100,1.5)}%;"></div>
+            </div>
+            <div class="rate-pct" style="color:${r.color};">${r.pct.toFixed(2)}%</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="cost-card" style="border-color:${p.rpBorder};">
+      <div class="cost-item">
+        <div class="cost-label">單抽</div>
+        <div class="cost-val" style="color:${p.currColor};">${p.currency} ${p.costSingle}</div>
+      </div>
+      <div class="cost-sep"></div>
+      <div class="cost-item">
+        <div class="cost-label">十連</div>
+        <div class="cost-val" style="color:${p.currColor};">${p.currency} ${p.costTen}</div>
+      </div>
+      <div class="cost-sep"></div>
+      <div class="cost-item">
+        <div class="cost-label">我的餘額</div>
+        <div class="cost-val" style="color:${p.balColor};">${p.currency} ${p.balance}</div>
+      </div>
+    </div>
+
+    <div class="rules-note">
+      ✦ 十連保證 SR 以上 1 枚　　✦ 保底不跨池累積<br>
+      ✦ 限定武將機率加成 ×1.5　　✦ 抽出已擁有武將轉換碎片
+    </div>
+  `;
+}
+
+/* ── Render brief chip ── */
+function renderBrief(p) {
+  document.getElementById('brief-tag').textContent = p.brief.tag;
+  document.getElementById('brief-tag').style.color = p.brief.color;
+  document.getElementById('brief-line').innerHTML = p.brief.line.replace('\n', '<br>');
+}
+
+/* ── Navigate ── */
+function navigate(dir) {
+  goTo((cur + dir + POOLS.length) % POOLS.length);
+}
+function goTo(idx) {
+  if (idx === cur || animating) return;
+  animating = true;
+  const slides = document.querySelectorAll('.banner-slide');
+  const dots   = document.querySelectorAll('.pool-dot');
+  const rp = document.getElementById('rp-content');
+
+  // Fade out
+  slides[cur].classList.remove('active');
+  dots[cur].classList.remove('active');
+  rp.style.opacity = '0';
+  rp.style.transform = 'translateX(14px)';
+  rp.style.transition = 'opacity 220ms, transform 220ms';
+
+  cur = idx;
+  localStorage.setItem('3klife-gacha-pool', cur);
+
+  setTimeout(() => {
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+    document.getElementById('strip-name').textContent = POOLS[cur].name;
+    document.getElementById('pullbar-name').textContent = POOLS[cur].name;
+    renderBrief(POOLS[cur]);
+    renderRight(POOLS[cur]);
+    requestAnimationFrame(() => {
+      rp.style.transform = 'translateX(0)';
+      rp.style.opacity = '1';
+    });
+    setTimeout(() => { animating = false; }, 280);
+  }, 250);
+}
+
+/* ── Util ── */
+function hexToRgb(hex) {
+  const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return r ? `${parseInt(r[1],16)},${parseInt(r[2],16)},${parseInt(r[3],16)}` : '255,255,255';
+}
+
+/* ── Init ── */
+renderRight(POOLS[cur]);
+renderBrief(POOLS[cur]);
+document.getElementById('strip-name').textContent = POOLS[cur].name;
+document.getElementById('pullbar-name').textContent = POOLS[cur].name;
+
+/* ── History Modal ── */
+const gachaHistory = [
+  { id: 1, name: "趙雲", rarity: "SSR", poolType: "general", pullCount: 47, timestamp: "2026-04-26 14:32" },
+  { id: 2, name: "關羽", rarity: "SR", poolType: "general", pullCount: 46, timestamp: "2026-04-26 14:15" },
+  { id: 3, name: "王異", rarity: "SR", poolType: "general", pullCount: 45, timestamp: "2026-04-26 13:58" },
+  { id: 4, name: "諸葛亮", rarity: "SSR", poolType: "general", pullCount: 44, timestamp: "2026-04-26 13:42" },
+  { id: 5, name: "張飛", rarity: "R", poolType: "general", pullCount: 43, timestamp: "2026-04-26 13:25" },
+  { id: 6, name: "馬超", rarity: "SR", poolType: "support", pullCount: 42, timestamp: "2026-04-26 13:08" },
+  { id: 7, name: "典韋", rarity: "SR", poolType: "general", pullCount: 41, timestamp: "2026-04-26 12:51" },
+  { id: 8, name: "黃忠", rarity: "SSR", poolType: "general", pullCount: 40, timestamp: "2026-04-26 12:34" },
+  { id: 9, name: "周瑜", rarity: "SR", poolType: "general", pullCount: 39, timestamp: "2026-04-26 12:17" },
+  { id: 10, name: "孫尚香", rarity: "R", poolType: "general", pullCount: 38, timestamp: "2026-04-26 12:00" },
+];
+
+function openHistory() {
+  const modal = document.getElementById('historyModal');
+  const content = document.getElementById('historyContent');
+  
+  content.innerHTML = gachaHistory.map((record) => `
+    <div class="history-row">
+      <div class="history-row-num">#${record.id}</div>
+      <div class="history-row-card">
+        <div class="history-row-card-img">${record.name[0]}</div>
+        <div class="history-row-card-info">
+          <div class="history-row-card-name">${record.name}</div>
+          <div class="history-row-card-rarity">${record.poolType === 'general' ? '三國名將池' : '教官池'}</div>
+        </div>
+      </div>
+      <div class="history-row-pull">第 ${record.pullCount} 抽</div>
+      <div class="history-row-rarity-badge rarity-${record.rarity.toLowerCase()}">${record.rarity}</div>
+      <div class="history-row-time">${record.timestamp}</div>
+    </div>
+  `).join('');
+  
+  modal.classList.add('open');
+}
+
+function closeHistory() {
+  const modal = document.getElementById('historyModal');
+  modal.classList.add('closing');
+  setTimeout(() => {
+    modal.classList.remove('open', 'closing');
+  }, 280);
+}
+
+const historyBtn = document.querySelector('.btn-history');
+if (historyBtn) {
+  historyBtn.addEventListener('click', openHistory);
+}
+
+const historyModal = document.getElementById('historyModal');
+if (historyModal) {
+  historyModal.addEventListener('click', (e) => {
+    if (e.target === historyModal) {
+      closeHistory();
+    }
+  });
+}
+</script>
+
+<!-- History Modal -->
+<div class="history-modal" id="historyModal">
+  <div class="history-panel">
+    <div class="history-header">
+      <h2 class="history-title">歷史記錄</h2>
+      <div class="history-close" onclick="closeHistory()">✕</div>
+    </div>
+    <div class="history-content" id="historyContent">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

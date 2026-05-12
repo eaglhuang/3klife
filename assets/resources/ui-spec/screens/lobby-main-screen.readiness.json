@@ -1,0 +1,146 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "lobby-main-screen",
+  "generatedAt": "2026-05-12T16:13:11.498Z",
+  "verdict": "not-ready",
+  "readinessScore": 0.833,
+  "summary": {
+    "blockerUnits": 3,
+    "actionUnits": 4,
+    "bounded": true,
+    "nextCriticalAction": "capture Cocos Editor target screen and run final compare"
+  },
+  "paths": {
+    "layout": "assets/resources/ui-spec/layouts/lobby-main-screen.json",
+    "skin": "assets/resources/ui-spec/skins/lobby-main-screen.skin.json",
+    "screen": "assets/resources/ui-spec/screens/lobby-main-screen.json",
+    "captureProtocol": "assets/resources/ui-spec/screens/lobby-main-screen.final-capture-protocol.json",
+    "zoneOwnership": "assets/resources/ui-spec/screens/lobby-main-screen.zone-ownership.json",
+    "tabRouting": "assets/resources/ui-spec/screens/lobby-main-screen.tab-routing.json",
+    "preload": "assets/resources/ui-spec/screens/lobby-main-screen.preload.json",
+    "performance": "assets/resources/ui-spec/screens/lobby-main-screen.performance.json",
+    "bakeManifest": "assets/resources/ui-spec/layouts/lobby-main-screen.layout.bake-manifest.json",
+    "artAuthorityWaivers": "assets/resources/ui-spec/screens/lobby-main-screen.art-authority-waivers.json",
+    "finalVerdict": "artifacts/html-to-ucuf-plan5/lobby-main-screen/lobby-main-screen.html-cocos-verdict.json"
+  },
+  "gates": {
+    "finalGate": {
+      "status": "blocker",
+      "pass": false,
+      "workUnits": 1,
+      "summary": "runtimeVsSource raw=0 adjusted=0 verdict=fail",
+      "rawScore": 0,
+      "adjustedScore": 0,
+      "verdict": "fail"
+    },
+    "capture": {
+      "status": "pass",
+      "ok": true,
+      "workUnits": 0,
+      "summary": "capture protocol present",
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "settleMs": 800,
+      "warnings": [],
+      "errors": []
+    },
+    "zones": {
+      "status": "blocker",
+      "workUnits": 1,
+      "summary": "missing zone ownership report"
+    },
+    "tabMounts": {
+      "status": "warn",
+      "workUnits": 1,
+      "summary": "missing tab-routing sidecar"
+    },
+    "fragmentGeometry": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0 referenced fragments follow fill-root geometry contract",
+      "checks": [],
+      "failures": []
+    },
+    "textBinding": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0/16 dynamic text candidates missing bind/i18n contract",
+      "totalTextNodes": 43,
+      "dynamicCandidateCount": 16,
+      "missingContractCount": 0,
+      "samples": []
+    },
+    "visualPolicy": {
+      "status": "pass",
+      "workUnits": 0,
+      "summary": "0 clip/mask geometry entries, 0 small texture entries, 0 unsafe auto-bake entries",
+      "totalEntries": 1,
+      "byBakeAction": {
+        "review-only": 1
+      },
+      "clipGeometryCount": 0,
+      "smallTextureCount": 0,
+      "unsafeAutoBakeCount": 0
+    },
+    "loading": {
+      "status": "blocker",
+      "workUnits": 1,
+      "summary": "node-count-blocker: 73 (>60)",
+      "actualLayoutStats": {
+        "nodeCount": 73,
+        "deferredNodeCount": 0,
+        "totalNodeCount": 73,
+        "maxDepth": 6,
+        "colorRectCount": 0,
+        "lazySlotCount": 0,
+        "warmupHints": {
+          "next-frame": 0,
+          "idle": 0,
+          "tab-hover": 0,
+          "manual": 0
+        }
+      },
+      "reportedRendering": {
+        "nodeCount": 73,
+        "deferredNodeCount": 0,
+        "totalNodeCount": 73,
+        "maxDepth": 6,
+        "estimatedDrawCalls": 5,
+        "colorRectCount": 0
+      },
+      "skinSlotCount": 65,
+      "issues": [
+        "node-count-blocker: 73 (>60)"
+      ]
+    }
+  },
+  "issues": [
+    {
+      "severity": "blocker",
+      "code": "final-gate",
+      "summary": "runtimeVsSource raw=0 adjusted=0 verdict=fail",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "zone-ownership-waivers",
+      "summary": "missing zone ownership report",
+      "workUnits": 1
+    },
+    {
+      "severity": "warn",
+      "code": "tab-routing-mounts",
+      "summary": "missing tab-routing sidecar",
+      "workUnits": 1
+    },
+    {
+      "severity": "blocker",
+      "code": "loading-performance",
+      "summary": "node-count-blocker: 73 (>60)",
+      "workUnits": 1
+    }
+  ]
+}

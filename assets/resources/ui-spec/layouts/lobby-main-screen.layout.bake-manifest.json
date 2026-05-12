@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.2.0",
+  "schemaSpec": "doc_other_0017 (R-25 + R-26 sourceHtml/viewport + R-27 art-gated autoBake)",
+  "screenId": "lobby-main-screen",
+  "sidecarBundle": "resources",
+  "sidecarRoot": "assets/resources/sidecars/lobby-main-screen/",
+  "sourceHtml": "artifacts/html-to-ucuf-plan5/lobby-main-screen/lobby-main-screen.ucuf-ready.html",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "bakerHint": {
+    "tool": "puppeteer-core (build-time)",
+    "runWhen": "developer / CI; never at runtime",
+    "runtimeCost": "zero — runtime only loads pre-baked PNGs as SpriteFrame",
+    "autoBakeContract": "Only entries with autoBake=true and bakeAction=auto-screenshot-fragment may be baked automatically. Authors must mark small standalone missing fragments with data-ucuf-bake=\"fragment\"; large UI regions and geometry masks are review/converter work.",
+    "artistOverride": "For autoBake entries only: drop a same-named PNG at outputPath to replace the placeholder; converter loads via uuid, no code change required."
+  },
+  "summary": {
+    "totalEntries": 1,
+    "autoBakeEntries": 0,
+    "reviewOnlyEntries": 1,
+    "byProperty": {
+      "box-shadow": 1
+    },
+    "bySkinSlotKind": {
+      "shadow-set": 1
+    },
+    "byBakeAction": {
+      "review-only": 1
+    }
+  },
+  "entries": [
+    {
+      "bakeId": "lobby-main-screen__div_9__box-shadow",
+      "screenId": "lobby-main-screen",
+      "selector": "div.topbar[2]>div.player[0]>div.p-info[1]>div.bar[2]",
+      "ucufId": null,
+      "tag": "div",
+      "nodeId": 9,
+      "property": "box-shadow",
+      "value": "rgba(0, 0, 0, 0.8) 0px 1px 3px 0px inset",
+      "capability": "assetize",
+      "bakeMode": null,
+      "bakeNote": null,
+      "target": {
+        "x": 122,
+        "y": 86.5,
+        "width": 180,
+        "height": 10,
+        "dpr": 2
+      },
+      "outputPath": null,
+      "bundleHint": "resources",
+      "skinSlotKind": "shadow-set",
+      "autoBake": false,
+      "bakeAction": "review-only",
+      "artGuidance": "Not auto-baked by default. Add data-ucuf-bake=\"fragment\" only to small standalone missing visual fragments.",
+      "status": "needs-art-direction"
+    }
+  ]
+}

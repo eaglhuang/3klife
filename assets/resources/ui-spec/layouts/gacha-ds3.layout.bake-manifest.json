@@ -4,7 +4,7 @@
   "screenId": "gacha-ds3",
   "sidecarBundle": "resources",
   "sidecarRoot": "assets/resources/sidecars/gacha-ds3/",
-  "sourceHtml": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.ucuf-ready.html",
+  "sourceHtml": "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.ucuf-ready.html",
   "viewport": {
     "width": 1920,
     "height": 1080
@@ -17,19 +17,19 @@
     "artistOverride": "For autoBake entries only: drop a same-named PNG at outputPath to replace the placeholder; converter loads via uuid, no code change required."
   },
   "summary": {
-    "totalEntries": 8,
+    "totalEntries": 6,
     "autoBakeEntries": 0,
-    "reviewOnlyEntries": 8,
+    "reviewOnlyEntries": 6,
     "byProperty": {
       "backdrop-filter": 3,
-      "background-image": 5
+      "background-image": 3
     },
     "bySkinSlotKind": {
       "shadow-set": 3,
-      "background-set": 5
+      "background-set": 3
     },
     "byBakeAction": {
-      "review-only": 5,
+      "review-only": 3,
       "manual-art-asset": 3
     }
   },
@@ -54,7 +54,6 @@
         "dpr": 2
       },
       "outputPath": null,
-      "runtimeAssetPath": "sprites/ui_families/gacha/generated/gacha_banner_bg_general_formal_1460x880",
       "bundleHint": "resources",
       "skinSlotKind": "shadow-set",
       "autoBake": false,
@@ -117,60 +116,6 @@
       "status": "needs-art-direction"
     },
     {
-      "bakeId": "gacha-ds3__div_112__background-image",
-      "screenId": "gacha-ds3",
-      "selector": "div.pull-bar[7]>div.pull-btn.pull-single[2]>div.pull-cost-chip[1]>div.pc-ico[0]",
-      "ucufId": null,
-      "tag": "div",
-      "nodeId": 112,
-      "property": "background-image",
-      "value": "radial-gradient(circle, rgb(200, 170, 255), rgb(106, 27, 154))",
-      "capability": "assetize",
-      "bakeMode": null,
-      "bakeNote": null,
-      "target": {
-        "x": 770.98,
-        "y": 990.5,
-        "width": 14,
-        "height": 14,
-        "dpr": 2
-      },
-      "outputPath": null,
-      "bundleHint": "resources",
-      "skinSlotKind": "background-set",
-      "autoBake": false,
-      "bakeAction": "review-only",
-      "artGuidance": "Not auto-baked by default. Add data-ucuf-bake=\"fragment\" only to small standalone missing visual fragments.",
-      "status": "needs-art-direction"
-    },
-    {
-      "bakeId": "gacha-ds3__div_118__background-image",
-      "screenId": "gacha-ds3",
-      "selector": "div.pull-bar[7]>div.pull-btn.pull-ten[3]>div.pull-cost-chip[2]>div.pc-ico[0]",
-      "ucufId": null,
-      "tag": "div",
-      "nodeId": 118,
-      "property": "background-image",
-      "value": "radial-gradient(circle, rgb(200, 170, 255), rgb(106, 27, 154))",
-      "capability": "assetize",
-      "bakeMode": null,
-      "bakeNote": null,
-      "target": {
-        "x": 1027.06,
-        "y": 1000.5,
-        "width": 14,
-        "height": 14,
-        "dpr": 2
-      },
-      "outputPath": null,
-      "bundleHint": "resources",
-      "skinSlotKind": "background-set",
-      "autoBake": false,
-      "bakeAction": "review-only",
-      "artGuidance": "Not auto-baked by default. Add data-ucuf-bake=\"fragment\" only to small standalone missing visual fragments.",
-      "status": "needs-art-direction"
-    },
-    {
       "bakeId": "gacha-ds3__div_3__background-image",
       "screenId": "gacha-ds3",
       "selector": "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
@@ -194,8 +139,8 @@
       "skinSlotKind": "background-set",
       "autoBake": false,
       "bakeAction": "manual-art-asset",
-      "artGuidance": "Resolved by PROG-2-0005 formal JPG runtime asset / family layer; keep source CSS entry as manual-art-asset trace evidence.",
-      "status": "runtime-asset-bound"
+      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
+      "status": "needs-art-asset"
     },
     {
       "bakeId": "gacha-ds3__div_14__background-image",
@@ -217,13 +162,12 @@
         "dpr": 2
       },
       "outputPath": null,
-      "runtimeAssetPath": "sprites/ui_families/gacha/generated/gacha_banner_bg_gold_formal_1460x880",
       "bundleHint": "resources",
       "skinSlotKind": "background-set",
       "autoBake": false,
       "bakeAction": "manual-art-asset",
-      "artGuidance": "Resolved by PROG-2-0005 formal JPG runtime asset / family layer; keep source CSS entry as manual-art-asset trace evidence.",
-      "status": "runtime-asset-bound"
+      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
+      "status": "needs-art-asset"
     },
     {
       "bakeId": "gacha-ds3__div_25__background-image",
@@ -245,13 +189,12 @@
         "dpr": 2
       },
       "outputPath": null,
-      "runtimeAssetPath": "sprites/ui_families/gacha/generated/gacha_banner_bg_teal_formal_1460x880",
       "bundleHint": "resources",
       "skinSlotKind": "background-set",
       "autoBake": false,
       "bakeAction": "manual-art-asset",
-      "artGuidance": "Resolved by PROG-2-0005 formal JPG runtime asset / family layer; keep source CSS entry as manual-art-asset trace evidence.",
-      "status": "runtime-asset-bound"
+      "artGuidance": "Element is too large for screenshot-fragment bake. Use a proper art asset/JPG/family layer, not a captured UI rectangle.",
+      "status": "needs-art-asset"
     }
   ]
 }

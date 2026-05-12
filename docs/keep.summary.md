@@ -27,9 +27,14 @@
 
 ## §1. 專案基準
 - 3KLife / Cocos Creator 3.8.8 / TypeScript ES2015 / Web+Android+iOS / UI 量產期
+- 三 repo 正式定位（2026-05-13）：
+  - `3klife`（本 repo，本機資料夾 `3KLife`）：主遊戲 repo，負責 Cocos 遊戲本體、規格、資料與工具鏈
+  - `AI-Atomic-Framework`：ATM 原子框架 repo，負責 Agent 治理與開源框架，不是遊戲主內容真相來源
+  - `npc-brain`：NPC Brain repo，負責人物知識/檢索/對話/LangGraph 服務，不是 Cocos 主遊戲 repo
 
 ## §2. Pre-flight
 - 先讀本摘要 → 繁體中文 → 新決策補回 keep → 規格異動回寫母規格 → 同步交叉索引
+- 任何任務先判斷當前工作屬於哪個 repo，再讀對應文件與執行命令；禁止把 3klife / ATM / npc-brain 的責任邊界混用
 - 核心 `rarityTier` 與商業 `commercial band` 分離：平衡真相只看 core tier，商業卡面 / 招牌 / 限定一律走衍生規則
 - **公式層平衡原則**：遊戲平衡透過戰鬥/生產/政務公式實現（指數壓縮 or 加權組合），不直接截斷基本屬性；基本屬性維持歷史語意正確性
 - **資料生命周期收斂原則**：史實武將永久保留；動態後裔死亡後優先轉 `SpiritCard` + 血脈摘要，完整主體移入待刪區；AI/自動繁殖後裔必須受生育配額、支系壓縮與季結 GC 控制，避免單機長局資料無限膨脹

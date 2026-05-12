@@ -1,0 +1,57 @@
+{
+  "screenId": "lobby-main-screen",
+  "generatedBy": "dom-to-ui-logic-guard",
+  "summary": {
+    "featureCount": 4,
+    "byKind": {
+      "bind-path": 1,
+      "button-handler": 3
+    }
+  },
+  "features": [
+    {
+      "featureId": "bind-path:lobby-main-screen.hero-name",
+      "kind": "bind-path",
+      "sourceFile": null,
+      "nodePath": "LobbyMainScreen/LobbyMainScreen_body/LobbyMainScreen_div_22",
+      "triggerNode": "LobbyMainScreen/LobbyMainScreen_body/LobbyMainScreen_div_22",
+      "targetNode": "LobbyMainScreen_div_22",
+      "ucufId": "lobby-main-screen.hero-name",
+      "bindPath": "general.name",
+      "autoSmoke": true
+    },
+    {
+      "featureId": "button-handler:LobbyMainScreen/LobbyMainScreen_body/LobbyMainScreen_div_47/LobbyMainScreen_button_1",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "LobbyMainScreen/LobbyMainScreen_body/LobbyMainScreen_div_47/LobbyMainScreen_button_1",
+      "triggerNode": "LobbyMainScreen/LobbyMainScreen_body/LobbyMainScreen_div_47/LobbyMainScreen_button_1",
+      "targetNode": "LobbyMainScreen_button_1",
+      "ucufId": null,
+      "contract": null,
+      "autoSmoke": true
+    },
+    {
+      "featureId": "button-handler:LobbyMainScreen/LobbyMainScreen_body/LobbyMainScreen_div_47/LobbyMainScreen_button_2",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "LobbyMainScreen/LobbyMainScreen_body/LobbyMainScreen_div_47/LobbyMainScreen_button_2",
+      "triggerNode": "LobbyMainScreen/LobbyMainScreen_body/LobbyMainScreen_div_47/LobbyMainScreen_button_2",
+      "targetNode": "LobbyMainScreen_button_2",
+      "ucufId": null,
+      "contract": null,
+      "autoSmoke": true
+    },
+    {
+      "featureId": "button-handler:LobbyMainScreen/LobbyMainScreen_body/LobbyMainScreen_div_47/LobbyMainScreen_button_3",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "LobbyMainScreen/LobbyMainScreen_body/LobbyMainScreen_div_47/LobbyMainScreen_button_3",
+      "triggerNode": "LobbyMainScreen/LobbyMainScreen_body/LobbyMainScreen_div_47/LobbyMainScreen_button_3",
+      "targetNode": "LobbyMainScreen_button_3",
+      "ucufId": null,
+      "contract": null,
+      "autoSmoke": true
+    }
+  ]
+}

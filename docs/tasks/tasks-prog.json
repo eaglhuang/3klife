@@ -1358,10 +1358,12 @@
       "id": "PROG-2-0010",
       "priority": "P0",
       "phase": "Plan5",
-      "owner": "Unassigned",
-      "status": "open",
+      "owner": "vs-code-gpt-5.3-codex",
+      "status": "in-progress",
       "created": "2026-05-05",
       "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "started_at": "2026-05-12T21:46:49.5319874+08:00",
+      "started_by_agent": "vs-code-gpt-5.3-codex",
       "type": "regression-baseline",
       "title": "gacha-ds3 formal rerun + 2 個非 gacha fixture（多畫面 baseline）",
       "description": "建立 multi-fixture baseline 作為 PROG-2-0007 95% closure 前置；fixtures/html-to-ucuf-plan5/ 下加 2 個非 gacha source package；以 formal capture protocol 重跑 gacha-ds3；產 artifacts/html-to-ucuf-plan5/regression-summary.json",
@@ -1386,7 +1388,7 @@
         "artifacts/html-to-ucuf-plan5/<3 fixture>/workflow-summary.json",
         "artifacts/html-to-ucuf-plan5/regression-summary.json"
       ],
-      "notes": "2026-05-05 | 狀態: open | 來源: html_skill_postmortem (doc_other_0026) | 阻塞: depends PROG-2-0005,PROG-2-0009"
+      "notes": "2026-05-12 | 狀態: in-progress | 變更: 鎖卡/Pre-flight 完成，開始執行 PROG-2-0010 baseline 盤點與 formal capture 嘗試 | 阻塞: localhost:7456 不可用且本機無 CocosCreator.exe 可啟動，無法產 fresh capture-report"
     },
     {
       "id": "PROG-2-0011",

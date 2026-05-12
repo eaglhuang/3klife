@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "lobby-main-screen",
+  "generatedAt": "2026-05-12T16:13:02.956Z",
+  "_sourceAuthority": "html-to-ucuf",
+  "policy": {
+    "mode": "replace-all-per-run",
+    "source": "token-suggestions sidecars",
+    "note": "Always regenerate full screen-local tokens from current conversion to avoid stale residue."
+  },
+  "sourceSuggestionFiles": [
+    "artifacts/html-to-ucuf-plan5/lobby-main-screen/lobby-main-screen.final.layout.token-suggestions.json"
+  ],
+  "stats": {
+    "unresolvedColorCount": 0,
+    "tokenCount": 0
+  },
+  "colors": {},
+  "unresolvedColors": []
+}

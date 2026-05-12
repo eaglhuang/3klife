@@ -1,0 +1,990 @@
+{
+  "id": "lobby-main-screen",
+  "version": 1,
+  "specVersion": 1,
+  "canvas": {
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "LobbyMainScreen",
+    "widget": {
+      "top": 0,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "children": [
+      {
+        "type": "container",
+        "name": "LobbyMainScreen_body",
+        "widget": {
+          "top": 0,
+          "left": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "LobbyMainScreen_div_1",
+            "widget": {
+              "left": 740,
+              "right": 154,
+              "top": 24,
+              "bottom": 680
+            },
+            "width": 441,
+            "height": 46,
+            "text": "三 國 志 ・ 生 存",
+            "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_1",
+            "textKey": "auto.lobby-main-screen.lobby-main-screen-div-1"
+          },
+          {
+            "type": "label",
+            "name": "LobbyMainScreen_div_2",
+            "widget": {
+              "left": 806,
+              "right": 220,
+              "top": 72,
+              "bottom": 663
+            },
+            "width": 307,
+            "height": 15,
+            "text": "THREE KINGDOMS · SURVIVAL",
+            "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_2",
+            "textKey": "auto.lobby-main-screen.lobby-main-screen-div-2"
+          },
+          {
+            "type": "container",
+            "name": "LobbyMainScreen_div_3",
+            "widget": {
+              "top": 24,
+              "left": 32,
+              "right": 32,
+              "bottom": 972
+            },
+            "_ucufId": "lobby-main-screen.topbar",
+            "_visualZone": "header",
+            "width": 1856,
+            "height": 84,
+            "layout": {
+              "type": "horizontal",
+              "alignItems": "center",
+              "justifyContent": "space-between"
+            },
+            "children": [
+              {
+                "type": "container",
+                "name": "LobbyMainScreen_div_4",
+                "width": 296,
+                "height": 84,
+                "layout": {
+                  "type": "horizontal",
+                  "alignItems": "center",
+                  "justifyContent": "start",
+                  "spacingX": 14,
+                  "paddingTop": 6,
+                  "paddingRight": 24,
+                  "paddingBottom": 6,
+                  "paddingLeft": 6
+                },
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "LobbyMainScreen_div_5",
+                    "width": 180,
+                    "height": 61,
+                    "layout": {
+                      "type": "vertical"
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_div_6",
+                        "width": 180,
+                        "height": 32,
+                        "text": "劉玄德",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_6"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_div_7",
+                        "width": 180,
+                        "height": 15,
+                        "text": "LV · 42 · 義軍首領",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_7",
+                        "textKey": "auto.lobby-main-screen.lobby-main-screen-div-7"
+                      }
+                    ],
+                    "skinLayers": [
+                      {
+                        "layerId": "LobbyMainScreen_div_8_LobbyMainScreen_div_8_baseSkin",
+                        "slotId": "auto.lobby-main-screen.lobbymainscreen_div_8",
+                        "zOrder": 0,
+                        "expand": true
+                      },
+                      {
+                        "layerId": "LobbyMainScreen_div_8_LobbyMainScreen_i_1",
+                        "slotId": "auto.lobby-main-screen.lobbymainscreen_i_1",
+                        "zOrder": 1,
+                        "expand": false,
+                        "width": 115,
+                        "height": 10
+                      }
+                    ]
+                  }
+                ],
+                "skinLayers": [
+                  {
+                    "layerId": "LobbyMainScreen_div_4_baseSkin",
+                    "slotId": "auto.lobby-main-screen.lobbymainscreen_div_4",
+                    "zOrder": -1,
+                    "expand": true
+                  },
+                  {
+                    "layerId": "LobbyMainScreen_img_1",
+                    "slotId": "auto.lobby-main-screen.lobbymainscreen_img_1",
+                    "zOrder": 0,
+                    "expand": false,
+                    "width": 68,
+                    "height": 68,
+                    "widget": {
+                      "left": 0,
+                      "right": 228,
+                      "top": 8,
+                      "bottom": 8
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "name": "LobbyMainScreen_div_9",
+                "width": 524,
+                "height": 52,
+                "layout": {
+                  "type": "horizontal",
+                  "justifyContent": "start",
+                  "spacingX": 10
+                },
+                "children": [
+                  {
+                    "type": "panel",
+                    "name": "LobbyMainScreen_div_10",
+                    "width": 181,
+                    "height": 52,
+                    "layout": {
+                      "type": "horizontal",
+                      "alignItems": "center",
+                      "justifyContent": "start",
+                      "spacingX": 10,
+                      "paddingTop": 8,
+                      "paddingRight": 20,
+                      "paddingBottom": 8,
+                      "paddingLeft": 8
+                    },
+                    "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_10",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_div_11",
+                        "width": 34,
+                        "height": 34,
+                        "layout": {
+                          "type": "grid",
+                          "cellHeight": 34
+                        },
+                        "text": "金",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_11"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_span_1",
+                        "width": 63,
+                        "height": 22,
+                        "text": "248,400",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_1",
+                        "textKey": "auto.lobby-main-screen.lobby-main-screen-span-1"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_span_2",
+                        "width": 28,
+                        "height": 28,
+                        "layout": {
+                          "type": "grid",
+                          "cellHeight": 28
+                        },
+                        "text": "+",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_2"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "LobbyMainScreen_div_12",
+                    "width": 162,
+                    "height": 52,
+                    "layout": {
+                      "type": "horizontal",
+                      "alignItems": "center",
+                      "justifyContent": "start",
+                      "spacingX": 10,
+                      "paddingTop": 8,
+                      "paddingRight": 20,
+                      "paddingBottom": 8,
+                      "paddingLeft": 8
+                    },
+                    "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_12",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_div_13",
+                        "width": 34,
+                        "height": 34,
+                        "layout": {
+                          "type": "grid",
+                          "cellHeight": 34
+                        },
+                        "text": "玉",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_13"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_span_3",
+                        "width": 44,
+                        "height": 22,
+                        "text": "1,820",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_3",
+                        "textKey": "auto.lobby-main-screen.lobby-main-screen-span-3"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_span_4",
+                        "width": 28,
+                        "height": 28,
+                        "layout": {
+                          "type": "grid",
+                          "cellHeight": 28
+                        },
+                        "text": "+",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_4"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "LobbyMainScreen_div_14",
+                    "width": 162,
+                    "height": 52,
+                    "layout": {
+                      "type": "horizontal",
+                      "alignItems": "center",
+                      "justifyContent": "start",
+                      "spacingX": 10,
+                      "paddingTop": 8,
+                      "paddingRight": 20,
+                      "paddingBottom": 8,
+                      "paddingLeft": 8
+                    },
+                    "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_14",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_div_15",
+                        "width": 34,
+                        "height": 34,
+                        "layout": {
+                          "type": "grid",
+                          "cellHeight": 34
+                        },
+                        "text": "糧",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_15"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_span_5",
+                        "width": 44,
+                        "height": 22,
+                        "text": "6,400",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_5",
+                        "textKey": "auto.lobby-main-screen.lobby-main-screen-span-5"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_span_6",
+                        "width": 28,
+                        "height": 28,
+                        "layout": {
+                          "type": "grid",
+                          "cellHeight": 28
+                        },
+                        "text": "+",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_6"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "LobbyMainScreen_nav_1",
+            "widget": {
+              "left": 32,
+              "right": 1192,
+              "top": 266,
+              "bottom": -64
+            },
+            "width": 110,
+            "height": 548,
+            "layout": {
+              "type": "vertical",
+              "justifyContent": "start",
+              "spacingY": 12
+            },
+            "children": [
+              {
+                "type": "panel",
+                "name": "LobbyMainScreen_div_16",
+                "width": 110,
+                "height": 100,
+                "_motionId": "lobby-main-screen_div_16.transition",
+                "layout": {
+                  "type": "vertical",
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "spacingY": 6
+                },
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_16",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_span_7",
+                    "width": 40,
+                    "height": 40,
+                    "layout": {
+                      "type": "grid",
+                      "cellHeight": 40
+                    },
+                    "text": "帥",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_7"
+                  },
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_span_8",
+                    "width": 33,
+                    "height": 13,
+                    "text": "LOBBY",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_8"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "LobbyMainScreen_div_17",
+                "width": 110,
+                "height": 100,
+                "_motionId": "lobby-main-screen_div_17.transition",
+                "layout": {
+                  "type": "vertical",
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "spacingY": 6
+                },
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_17",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_span_9",
+                    "width": 40,
+                    "height": 40,
+                    "layout": {
+                      "type": "grid",
+                      "cellHeight": 40
+                    },
+                    "text": "鑑",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_9"
+                  },
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_span_10",
+                    "width": 35,
+                    "height": 13,
+                    "text": "CODEX",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_10"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "LobbyMainScreen_div_18",
+                "width": 110,
+                "height": 100,
+                "_motionId": "lobby-main-screen_div_18.transition",
+                "layout": {
+                  "type": "vertical",
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "spacingY": 6
+                },
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_18",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_span_11",
+                    "width": 40,
+                    "height": 40,
+                    "layout": {
+                      "type": "grid",
+                      "cellHeight": 40
+                    },
+                    "text": "符",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_11"
+                  },
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_span_12",
+                    "width": 36,
+                    "height": 13,
+                    "text": "GACHA",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_12"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "LobbyMainScreen_div_19",
+                "width": 110,
+                "height": 100,
+                "_motionId": "lobby-main-screen_div_19.transition",
+                "layout": {
+                  "type": "vertical",
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "spacingY": 6
+                },
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_19",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_span_13",
+                    "width": 40,
+                    "height": 40,
+                    "layout": {
+                      "type": "grid",
+                      "cellHeight": 40
+                    },
+                    "text": "市",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_13"
+                  },
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_span_14",
+                    "width": 28,
+                    "height": 13,
+                    "text": "SHOP",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_14"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "LobbyMainScreen_div_20",
+                "width": 110,
+                "height": 100,
+                "_motionId": "lobby-main-screen_div_20.transition",
+                "layout": {
+                  "type": "vertical",
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "spacingY": 6
+                },
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_20",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_span_15",
+                    "width": 40,
+                    "height": 40,
+                    "layout": {
+                      "type": "grid",
+                      "cellHeight": 40
+                    },
+                    "text": "信",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_15"
+                  },
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_span_16",
+                    "width": 25,
+                    "height": 13,
+                    "text": "MAIL",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_16"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "LobbyMainScreen_div_22",
+            "widget": {
+              "left": 889,
+              "right": 303,
+              "top": 151,
+              "bottom": 518
+            },
+            "_ucufId": "lobby-main-screen.hero-name",
+            "width": 142,
+            "height": 81,
+            "text": "關 羽",
+            "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_22",
+            "_contract": "general.name"
+          },
+          {
+            "type": "label",
+            "name": "LobbyMainScreen_div_23",
+            "widget": {
+              "left": 853,
+              "right": 267,
+              "top": 238,
+              "bottom": 493
+            },
+            "width": 214,
+            "height": 19,
+            "text": "YUN CHANG · SSR",
+            "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_23",
+            "textKey": "auto.lobby-main-screen.lobby-main-screen-div-23"
+          },
+          {
+            "type": "container",
+            "name": "LobbyMainScreen_div_24",
+            "widget": {
+              "top": 130,
+              "left": 1528,
+              "right": 32,
+              "bottom": 516
+            },
+            "width": 360,
+            "height": 435,
+            "layout": {
+              "type": "vertical",
+              "justifyContent": "start",
+              "spacingY": 14
+            },
+            "children": [
+              {
+                "type": "panel",
+                "name": "LobbyMainScreen_div_25",
+                "width": 360,
+                "height": 136,
+                "_motionId": "lobby-main-screen_div_25.transition",
+                "layout": {
+                  "type": "vertical"
+                },
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_25",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "LobbyMainScreen_div_26",
+                    "width": 356,
+                    "height": 53,
+                    "layout": {
+                      "type": "horizontal",
+                      "alignItems": "center",
+                      "justifyContent": "space-between",
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_div_27",
+                        "width": 134,
+                        "height": 29,
+                        "text": "赤壁之戰 · 限時",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_27",
+                        "textKey": "auto.lobby-main-screen.lobby-main-screen-div-27"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_div_28",
+                        "width": 64,
+                        "height": 20,
+                        "text": "LIMITED",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_28"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_div_29",
+                    "width": 356,
+                    "height": 44,
+                    "text": "火燒連環船。集結三千水師共破百萬雄兵。",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_29",
+                    "textKey": "auto.lobby-main-screen.lobby-main-screen-div-29"
+                  },
+                  {
+                    "type": "container",
+                    "name": "LobbyMainScreen_div_30",
+                    "_ucufId": "lobby-main-screen.ev-footer",
+                    "_visualZone": "footer",
+                    "width": 356,
+                    "height": 35,
+                    "layout": {
+                      "type": "horizontal",
+                      "justifyContent": "space-between",
+                      "paddingTop": 8,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_span_17",
+                        "width": 85,
+                        "height": 15,
+                        "text": "剩餘 · 2 日 14 時",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_17",
+                        "textKey": "auto.lobby-main-screen.lobby-main-screen-span-17"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_span_18",
+                        "width": 24,
+                        "height": 15,
+                        "text": "參戰",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_18"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "LobbyMainScreen_div_31",
+                "width": 360,
+                "height": 136,
+                "_motionId": "lobby-main-screen_div_31.transition",
+                "layout": {
+                  "type": "vertical"
+                },
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_31",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "LobbyMainScreen_div_32",
+                    "width": 356,
+                    "height": 53,
+                    "layout": {
+                      "type": "horizontal",
+                      "alignItems": "center",
+                      "justifyContent": "space-between",
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_div_33",
+                        "width": 174,
+                        "height": 29,
+                        "text": "兵符轉蛋 · 雲長降臨",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_33",
+                        "textKey": "auto.lobby-main-screen.lobby-main-screen-div-33"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_div_34",
+                        "width": 45,
+                        "height": 20,
+                        "text": "NEW",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_34"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_div_35",
+                    "width": 356,
+                    "height": 44,
+                    "text": "首抽保底必得 SSR。10 連送紅玉 100。",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_35",
+                    "textKey": "auto.lobby-main-screen.lobby-main-screen-div-35"
+                  },
+                  {
+                    "type": "container",
+                    "name": "LobbyMainScreen_div_36",
+                    "_ucufId": "lobby-main-screen.ev-footer-2",
+                    "_visualZone": "footer",
+                    "width": 356,
+                    "height": 35,
+                    "layout": {
+                      "type": "horizontal",
+                      "justifyContent": "space-between",
+                      "paddingTop": 8,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_span_19",
+                        "width": 81,
+                        "height": 15,
+                        "text": "新人池 · 開放中",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_19",
+                        "textKey": "auto.lobby-main-screen.lobby-main-screen-span-19"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_span_20",
+                        "width": 24,
+                        "height": 15,
+                        "text": "前往",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_20"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "LobbyMainScreen_div_37",
+                "width": 360,
+                "height": 136,
+                "_motionId": "lobby-main-screen_div_37.transition",
+                "layout": {
+                  "type": "vertical"
+                },
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_37",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "LobbyMainScreen_div_38",
+                    "width": 356,
+                    "height": 53,
+                    "layout": {
+                      "type": "horizontal",
+                      "alignItems": "center",
+                      "justifyContent": "space-between",
+                      "paddingTop": 12,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_div_39",
+                        "width": 134,
+                        "height": 29,
+                        "text": "每日晨報 · 軍情",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_39",
+                        "textKey": "auto.lobby-main-screen.lobby-main-screen-div-39"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_div_40",
+                        "width": 50,
+                        "height": 20,
+                        "text": "DAILY",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_40"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "name": "LobbyMainScreen_div_41",
+                    "width": 356,
+                    "height": 44,
+                    "text": "領取每日登入獎勵、查看戰令進度。",
+                    "styleSlot": "auto.lobby-main-screen.lobbymainscreen_div_41",
+                    "textKey": "auto.lobby-main-screen.lobby-main-screen-div-41"
+                  },
+                  {
+                    "type": "container",
+                    "name": "LobbyMainScreen_div_42",
+                    "_ucufId": "lobby-main-screen.ev-footer-3",
+                    "_visualZone": "footer",
+                    "width": 356,
+                    "height": 35,
+                    "layout": {
+                      "type": "horizontal",
+                      "justifyContent": "space-between",
+                      "paddingTop": 8,
+                      "paddingRight": 16,
+                      "paddingBottom": 12,
+                      "paddingLeft": 16
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_span_21",
+                        "width": 78,
+                        "height": 15,
+                        "text": "已重置 · 05:00",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_21",
+                        "textKey": "auto.lobby-main-screen.lobby-main-screen-span-21"
+                      },
+                      {
+                        "type": "label",
+                        "name": "LobbyMainScreen_span_22",
+                        "width": 24,
+                        "height": 15,
+                        "text": "領取",
+                        "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_22"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "LobbyMainScreen_div_43",
+            "widget": {
+              "top": 962,
+              "left": 32,
+              "right": 1614,
+              "bottom": 32
+            },
+            "_ucufId": "lobby-main-screen.tabs",
+            "_visualZone": "tabBar",
+            "width": 274,
+            "height": 86,
+            "layout": {
+              "type": "horizontal",
+              "justifyContent": "start",
+              "spacingX": 8
+            },
+            "children": [
+              {
+                "type": "label",
+                "name": "LobbyMainScreen_div_44",
+                "width": 86,
+                "height": 86,
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_44",
+                "text": "⚙",
+                "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_23"
+              },
+              {
+                "type": "label",
+                "name": "LobbyMainScreen_div_45",
+                "width": 86,
+                "height": 86,
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_45",
+                "text": "♖",
+                "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_24"
+              },
+              {
+                "type": "label",
+                "name": "LobbyMainScreen_div_46",
+                "width": 86,
+                "height": 86,
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_div_46",
+                "text": "☰",
+                "styleSlot": "auto.lobby-main-screen.lobbymainscreen_span_25"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "LobbyMainScreen_div_47",
+            "widget": {
+              "left": 663,
+              "right": 77,
+              "top": 988,
+              "bottom": -306
+            },
+            "width": 594,
+            "height": 68,
+            "layout": {
+              "type": "horizontal",
+              "justifyContent": "start",
+              "spacingX": 12
+            },
+            "children": [
+              {
+                "type": "button",
+                "name": "LobbyMainScreen_button_1",
+                "width": 182,
+                "height": 68,
+                "_motionId": "lobby-main-screen_button_1.transition",
+                "layout": {
+                  "type": "horizontal",
+                  "alignItems": "center",
+                  "justifyContent": "start",
+                  "spacingX": 14,
+                  "paddingTop": 0,
+                  "paddingRight": 36,
+                  "paddingBottom": 0,
+                  "paddingLeft": 36
+                },
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_button_1"
+              },
+              {
+                "type": "button",
+                "name": "LobbyMainScreen_button_2",
+                "width": 260,
+                "height": 68,
+                "_motionId": "lobby-main-screen_button_2.transition",
+                "layout": {
+                  "type": "horizontal",
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "spacingX": 14,
+                  "paddingTop": 0,
+                  "paddingRight": 36,
+                  "paddingBottom": 0,
+                  "paddingLeft": 36
+                },
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_button_2"
+              },
+              {
+                "type": "button",
+                "name": "LobbyMainScreen_button_3",
+                "width": 129,
+                "height": 68,
+                "_motionId": "lobby-main-screen_button_3.transition",
+                "layout": {
+                  "type": "horizontal",
+                  "alignItems": "center",
+                  "justifyContent": "start",
+                  "spacingX": 14,
+                  "paddingTop": 0,
+                  "paddingRight": 36,
+                  "paddingBottom": 0,
+                  "paddingLeft": 36
+                },
+                "skinSlot": "auto.lobby-main-screen.lobbymainscreen_button_3"
+              }
+            ]
+          }
+        ],
+        "skinLayers": [
+          {
+            "layerId": "LobbyMainScreen_div_21_LobbyMainScreen_img_2",
+            "slotId": "auto.lobby-main-screen.lobbymainscreen_img_2",
+            "zOrder": 0,
+            "expand": false,
+            "width": 402,
+            "height": 720
+          }
+        ]
+      }
+    ]
+  }
+}

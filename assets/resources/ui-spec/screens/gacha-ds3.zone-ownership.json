@@ -1,33 +1,213 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "screenId": "gacha-ds3",
   "taxonomy": [
     "art-authority",
     "manual-art-asset",
+    "runtime-renderer",
     "converter-geometry",
     "source-html-fix",
     "runtime-bug"
+  ],
+  "ownerBuckets": [
+    "art-authority-owner",
+    "assetization-owner",
+    "runtime-renderer-owner",
+    "converter-owner",
+    "source-html-owner",
+    "runtime-behavior-owner"
   ],
   "summary": {
     "totalZones": 20,
     "byTaxonomy": {
       "art-authority": 0,
-      "manual-art-asset": 0,
-      "converter-geometry": 20,
+      "manual-art-asset": 20,
+      "runtime-renderer": 0,
+      "converter-geometry": 0,
       "source-html-fix": 0,
       "runtime-bug": 0
+    },
+    "byOwnerBucket": {
+      "art-authority-owner": 0,
+      "assetization-owner": 20,
+      "runtime-renderer-owner": 0,
+      "converter-owner": 0,
+      "source-html-owner": 0,
+      "runtime-behavior-owner": 0
     },
     "waiverEligibleCount": 0,
     "missingRectCount": 0
   },
+  "nextFixes": [
+    {
+      "ownerBucket": "assetization-owner",
+      "taxonomy": "manual-art-asset",
+      "count": 20,
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer",
+      "suggestedSlice": "formal-runtime-assetization",
+      "sourceProperties": [
+        "background-image"
+      ]
+    }
+  ],
+  "compactResidualSummary": {
+    "totalZones": 20,
+    "byTaxonomy": {
+      "art-authority": 0,
+      "manual-art-asset": 20,
+      "runtime-renderer": 0,
+      "converter-geometry": 0,
+      "source-html-fix": 0,
+      "runtime-bug": 0
+    },
+    "byOwnerBucket": {
+      "art-authority-owner": 0,
+      "assetization-owner": 20,
+      "runtime-renderer-owner": 0,
+      "converter-owner": 0,
+      "source-html-owner": 0,
+      "runtime-behavior-owner": 0
+    },
+    "topZones": [
+      {
+        "id": "pixel-diff:1",
+        "taxonomy": "manual-art-asset",
+        "ownerBucket": "assetization-owner",
+        "rect": {
+          "x": 0,
+          "y": 128,
+          "w": 64,
+          "h": 64
+        },
+        "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "selectorTracePending": false
+      },
+      {
+        "id": "pixel-diff:2",
+        "taxonomy": "manual-art-asset",
+        "ownerBucket": "assetization-owner",
+        "rect": {
+          "x": 320,
+          "y": 384,
+          "w": 64,
+          "h": 64
+        },
+        "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "selectorTracePending": false
+      },
+      {
+        "id": "pixel-diff:3",
+        "taxonomy": "manual-art-asset",
+        "ownerBucket": "assetization-owner",
+        "rect": {
+          "x": 384,
+          "y": 384,
+          "w": 64,
+          "h": 64
+        },
+        "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "selectorTracePending": false
+      },
+      {
+        "id": "pixel-diff:4",
+        "taxonomy": "manual-art-asset",
+        "ownerBucket": "assetization-owner",
+        "rect": {
+          "x": 128,
+          "y": 448,
+          "w": 64,
+          "h": 64
+        },
+        "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "selectorTracePending": false
+      },
+      {
+        "id": "pixel-diff:5",
+        "taxonomy": "manual-art-asset",
+        "ownerBucket": "assetization-owner",
+        "rect": {
+          "x": 192,
+          "y": 448,
+          "w": 64,
+          "h": 64
+        },
+        "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "selectorTracePending": false
+      },
+      {
+        "id": "pixel-diff:6",
+        "taxonomy": "manual-art-asset",
+        "ownerBucket": "assetization-owner",
+        "rect": {
+          "x": 256,
+          "y": 448,
+          "w": 64,
+          "h": 64
+        },
+        "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "selectorTracePending": false
+      },
+      {
+        "id": "pixel-diff:7",
+        "taxonomy": "manual-art-asset",
+        "ownerBucket": "assetization-owner",
+        "rect": {
+          "x": 320,
+          "y": 448,
+          "w": 64,
+          "h": 64
+        },
+        "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "selectorTracePending": false
+      },
+      {
+        "id": "pixel-diff:8",
+        "taxonomy": "manual-art-asset",
+        "ownerBucket": "assetization-owner",
+        "rect": {
+          "x": 384,
+          "y": 448,
+          "w": 64,
+          "h": 64
+        },
+        "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "selectorTracePending": false
+      }
+    ]
+  },
   "zones": [
     {
       "id": "pixel-diff:1",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-1",
       "rect": {
-        "x": 1024,
-        "y": 64,
+        "x": 0,
+        "y": 128,
         "w": 64,
         "h": 64
       },
@@ -36,19 +216,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:2",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-2",
       "rect": {
-        "x": 1088,
-        "y": 64,
+        "x": 320,
+        "y": 384,
         "w": 64,
         "h": 64
       },
@@ -57,19 +263,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:3",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-3",
       "rect": {
-        "x": 1152,
-        "y": 64,
+        "x": 384,
+        "y": 384,
         "w": 64,
         "h": 64
       },
@@ -78,19 +310,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:4",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-4",
       "rect": {
-        "x": 1216,
-        "y": 64,
+        "x": 128,
+        "y": 448,
         "w": 64,
         "h": 64
       },
@@ -99,19 +357,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:5",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-5",
       "rect": {
-        "x": 1280,
-        "y": 64,
+        "x": 192,
+        "y": 448,
         "w": 64,
         "h": 64
       },
@@ -120,19 +404,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:6",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-6",
       "rect": {
-        "x": 0,
-        "y": 128,
+        "x": 256,
+        "y": 448,
         "w": 64,
         "h": 64
       },
@@ -141,19 +451,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:7",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-7",
       "rect": {
-        "x": 1088,
-        "y": 128,
+        "x": 320,
+        "y": 448,
         "w": 64,
         "h": 64
       },
@@ -162,19 +498,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:8",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-8",
       "rect": {
-        "x": 1152,
-        "y": 128,
+        "x": 384,
+        "y": 448,
         "w": 64,
         "h": 64
       },
@@ -183,19 +545,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:9",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-9",
       "rect": {
-        "x": 1216,
-        "y": 128,
+        "x": 1024,
+        "y": 448,
         "w": 64,
         "h": 64
       },
@@ -204,19 +592,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:10",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-10",
       "rect": {
-        "x": 1280,
-        "y": 128,
+        "x": 1088,
+        "y": 448,
         "w": 64,
         "h": 64
       },
@@ -225,19 +639,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:11",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-11",
       "rect": {
-        "x": 1152,
-        "y": 192,
+        "x": 128,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -246,19 +686,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:12",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-12",
       "rect": {
-        "x": 1216,
-        "y": 192,
+        "x": 192,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -267,19 +733,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:13",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-13",
       "rect": {
-        "x": 1280,
-        "y": 192,
+        "x": 256,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -288,19 +780,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:14",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-14",
       "rect": {
-        "x": 1152,
-        "y": 256,
+        "x": 320,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -309,19 +827,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:15",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-15",
       "rect": {
-        "x": 1216,
-        "y": 256,
+        "x": 384,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -330,19 +874,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:16",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-16",
       "rect": {
-        "x": 1280,
-        "y": 256,
+        "x": 1024,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -351,19 +921,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:17",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-17",
       "rect": {
-        "x": 0,
-        "y": 320,
+        "x": 1088,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -372,19 +968,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:18",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-18",
       "rect": {
-        "x": 1088,
-        "y": 320,
+        "x": 1152,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -393,19 +1015,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:19",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-19",
       "rect": {
-        "x": 1152,
-        "y": 320,
+        "x": 1216,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -414,19 +1062,45 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     },
     {
       "id": "pixel-diff:20",
-      "taxonomy": "converter-geometry",
+      "taxonomy": "manual-art-asset",
+      "ownerBucket": "assetization-owner",
       "zoneId": "pixel-diff-bucket-20",
       "rect": {
-        "x": 1216,
-        "y": 320,
+        "x": 0,
+        "y": 576,
         "w": 64,
         "h": 64
       },
@@ -435,11 +1109,36 @@
         {
           "type": "pixel-diff",
           "mismatchPixels": 4096,
-          "mismatchRatio": 1
+          "mismatchRatio": 1,
+          "suggestedByCssProperties": []
         }
       ],
+      "traceability": {
+        "sourceDomSelectors": [
+          "div#banner-stage.banner-stage[0]>div#pool-panel-general.banner-slide.active[0]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-legendary.banner-slide[1]>div.banner-bg-fill[0]",
+          "div#banner-stage.banner-stage[0]>div#pool-panel-support.banner-slide[2]>div.banner-bg-fill[0]"
+        ],
+        "ucufNodeSlots": [],
+        "runtimeOwner": "assetization-owner",
+        "sourceProperties": [
+          "background-image"
+        ],
+        "confidence": "bake-manifest-layout",
+        "selectorTracePending": false,
+        "bakeActions": [
+          "manual-art-asset"
+        ],
+        "bakeStatuses": [
+          "needs-art-asset"
+        ],
+        "runtimeAssetPaths": [],
+        "skinSlotKinds": [
+          "background-set"
+        ]
+      },
       "waiverEligible": false,
-      "recommendation": "inspect-against-css-and-layout-before-art-waiver"
+      "recommendation": "replace-css-gap-with-formal-runtime-asset-or-family-layer"
     }
   ]
 }

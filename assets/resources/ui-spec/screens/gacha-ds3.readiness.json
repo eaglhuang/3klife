@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "gacha-ds3",
-  "generatedAt": "2026-05-04T14:16:24.632Z",
+  "generatedAt": "2026-05-12T16:10:59.247Z",
   "verdict": "not-ready",
   "readinessScore": 0.958,
   "summary": {
@@ -21,14 +21,17 @@
     "performance": "assets/resources/ui-spec/screens/gacha-ds3.performance.json",
     "bakeManifest": "assets/resources/ui-spec/layouts/gacha-ds3.layout.bake-manifest.json",
     "artAuthorityWaivers": "assets/resources/ui-spec/screens/gacha-ds3.art-authority-waivers.json",
-    "finalVerdict": "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.html-cocos-verdict.json"
+    "finalVerdict": "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.html-cocos-verdict.json"
   },
   "gates": {
     "finalGate": {
       "status": "blocker",
       "pass": false,
       "workUnits": 1,
-      "summary": "no measured Cocos Editor final compare verdict"
+      "summary": "runtimeVsSource raw=0.6475 adjusted=0.6475 verdict=fail",
+      "rawScore": 0.6474922839506173,
+      "adjustedScore": 0.6474922839506173,
+      "verdict": "fail"
     },
     "capture": {
       "status": "pass",
@@ -51,14 +54,16 @@
       "taxonomy": [
         "art-authority",
         "manual-art-asset",
+        "runtime-renderer",
         "converter-geometry",
         "source-html-fix",
         "runtime-bug"
       ],
       "byTaxonomy": {
         "art-authority": 0,
-        "manual-art-asset": 0,
-        "converter-geometry": 20,
+        "manual-art-asset": 20,
+        "runtime-renderer": 0,
+        "converter-geometry": 0,
         "source-html-fix": 0,
         "runtime-bug": 0
       },
@@ -111,7 +116,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-general-content.json",
+          "filePath": "c:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-general-content.json",
           "path": "fragments/layouts/gacha-ds3-general-content.json"
         },
         {
@@ -124,7 +129,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-legendary-content.json",
+          "filePath": "c:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-legendary-content.json",
           "path": "fragments/layouts/gacha-ds3-legendary-content.json"
         },
         {
@@ -137,7 +142,7 @@
           "summary": "fragment mount layers fill lazySlot",
           "recommendation": null,
           "findings": [],
-          "filePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-support-content.json",
+          "filePath": "c:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\fragments\\layouts\\gacha-ds3-support-content.json",
           "path": "fragments/layouts/gacha-ds3-support-content.json"
         }
       ],
@@ -155,14 +160,14 @@
     "visualPolicy": {
       "status": "pass",
       "workUnits": 0,
-      "summary": "0 clip/mask geometry entries, 2 small texture entries, 0 unsafe auto-bake entries",
-      "totalEntries": 8,
+      "summary": "0 clip/mask geometry entries, 0 small texture entries, 0 unsafe auto-bake entries",
+      "totalEntries": 6,
       "byBakeAction": {
-        "review-only": 5,
+        "review-only": 3,
         "manual-art-asset": 3
       },
       "clipGeometryCount": 0,
-      "smallTextureCount": 2,
+      "smallTextureCount": 0,
       "unsafeAutoBakeCount": 0
     },
     "loading": {
@@ -200,7 +205,7 @@
     {
       "severity": "blocker",
       "code": "final-gate",
-      "summary": "no measured Cocos Editor final compare verdict",
+      "summary": "runtimeVsSource raw=0.6475 adjusted=0.6475 verdict=fail",
       "workUnits": 1
     }
   ]

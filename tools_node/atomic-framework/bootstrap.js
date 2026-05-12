@@ -203,6 +203,53 @@ function runRunEnvelope(argv = process.argv.slice(2), overrides = {}) {
   return typeof result.status === 'number' ? result.status : 1;
 }
 
+function runLocalScript(scriptName, scriptArgs = [], overrides = {}) {
+  const config = resolveConfig(overrides);
+  const scriptPath = path.resolve(config.repositoryRoot, 'tools_node', 'atomic-framework', scriptName);
+  if (!fs.existsSync(scriptPath)) {
+    process.stderr.write(`[atm wrapper] Missing local script: ${scriptPath}\n`);
+    return 1;
+  }
+
+  const result = spawnSync(process.execPath, [scriptPath, ...scriptArgs], {
+    cwd: config.repositoryRoot,
+    env: {
+      ...process.env,
+      ATM_UPSTREAM_REPO_ROOT: config.upstreamRepoRoot,
+      ATM_UPSTREAM_CLI_ENTRYPOINT: config.upstreamCliEntrypoint,
+      ATM_LOCAL_WORKBENCH_ROOT: config.localWorkbenchRoot,
+    },
+    encoding: 'utf8',
+  });
+
+  if (result.stdout) {
+    process.stdout.write(result.stdout);
+  }
+  if (result.stderr) {
+    process.stderr.write(result.stderr);
+  }
+  if (result.error) {
+    const errorMessage = result.error.message || String(result.error);
+    if (/EPERM/i.test(errorMessage)) {
+      try {
+        const localModule = require(scriptPath);
+        if (!localModule || typeof localModule.main !== 'function') {
+          process.stderr.write(`[atm wrapper] ${errorMessage}\n`);
+          return typeof result.status === 'number' ? result.status : 1;
+        }
+        return localModule.main(scriptArgs);
+      } catch (fallbackError) {
+        process.stderr.write(`[atm wrapper] ${errorMessage}\n`);
+        process.stderr.write(`[atm wrapper] fallback failed: ${fallbackError instanceof Error ? fallbackError.message : String(fallbackError)}\n`);
+        return typeof result.status === 'number' ? result.status : 1;
+      }
+    }
+    process.stderr.write(`[atm wrapper] ${errorMessage}\n`);
+  }
+
+  return typeof result.status === 'number' ? result.status : 1;
+}
+
 function runPoliceAll(argv = process.argv.slice(2), overrides = {}) {
   const parsed = parseWrapperArgs(argv);
   return runUpstreamScript('scripts/validate-police.mjs', ['--mode', 'validate', ...parsed.args], overrides);
@@ -221,6 +268,64 @@ function runBootstrap(argv = process.argv.slice(2), overrides = {}) {
   });
 
   return runUpstreamCommand('bootstrap', parsed.args, config);
+}
+
+function buildKickoffArgsFromStart(startArgs = []) {
+  const raw = Array.isArray(startArgs) ? startArgs : [];
+  if (raw.includes('--goal')) {
+    return [...raw];
+  }
+
+  const passthrough = [];
+  const goalTokens = [];
+
+  for (let index = 0; index < raw.length; index += 1) {
+    const token = raw[index];
+
+    if (token === '--mode' || token === '--task' || token === '--format') {
+      passthrough.push(token);
+      const value = raw[index + 1];
+      if (value && !value.startsWith('--')) {
+        passthrough.push(value);
+        index += 1;
+      }
+      continue;
+    }
+
+    if (token === '--json' || token === '--help' || token === '-h') {
+      passthrough.push(token);
+      continue;
+    }
+
+    if (token.startsWith('--')) {
+      passthrough.push(token);
+      continue;
+    }
+
+    goalTokens.push(token);
+  }
+
+  if (goalTokens.length === 0) {
+    return passthrough;
+  }
+
+  return ['--goal', goalTokens.join(' '), ...passthrough];
+}
+
+function runStartCommand(argv = process.argv.slice(2), overrides = {}) {
+  const parsed = parseWrapperArgs(argv);
+  const config = resolveConfig({
+    ...parsed,
+    ...overrides,
+  });
+  const kickoffArgs = buildKickoffArgsFromStart(parsed.args);
+  const hasHelp = kickoffArgs.includes('--help') || kickoffArgs.includes('-h');
+  const hasGoal = kickoffArgs.includes('--goal');
+  if (!hasHelp && !hasGoal) {
+    process.stderr.write('start requires a goal text. Example: node tools_node/atomic-framework/atm-cli.js start "幫我寫一個小遊戲"\n');
+    return 2;
+  }
+  return runLocalScript('kickoff.js', kickoffArgs, config);
 }
 
 function runAtmCli(argv = process.argv.slice(2), overrides = {}) {
@@ -243,6 +348,18 @@ function runAtmCli(argv = process.argv.slice(2), overrides = {}) {
     return runRunEnvelope(argv, config);
   }
 
+  if (commandName === 'start') {
+    return runStartCommand(argv, config);
+  }
+
+  if (commandName === 'doctor') {
+    return runLocalScript('doctor.js', parsed.args, config);
+  }
+
+  if (commandName === 'kickoff') {
+    return runLocalScript('kickoff.js', parsed.args, config);
+  }
+
   return runUpstreamCommand(commandName, parsed.command ? parsed.args : parsed.args, config);
 }
 
@@ -263,4 +380,7 @@ module.exports = {
   runPoliceAll,
   runVerifyAll,
   runRunEnvelope,
+  runLocalScript,
+  buildKickoffArgsFromStart,
+  runStartCommand,
 };

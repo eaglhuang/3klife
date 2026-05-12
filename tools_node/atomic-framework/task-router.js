@@ -216,7 +216,7 @@ function buildCreateCommand(task, hints) {
   ];
 }
 
-function buildDiscoveryChannels(taskId = '') {
+function buildAtomDiscoveryChannels(taskId = '') {
   const channels = [];
   if (taskId) {
     channels.push({
@@ -236,6 +236,39 @@ function buildDiscoveryChannels(taskId = '') {
     command: `node ${upstreamCliPath.replace(/\\/g, '/')} guide create-atom`,
   });
   return channels;
+}
+
+function buildFixH2uDiscoveryChannels(taskId = '') {
+  const channels = [];
+  if (taskId) {
+    channels.push({
+      channel: 'task-card',
+      when: '有明確 task card 可讀時。',
+      command: `node tools_node/atomic-framework/task-router.js --task ${taskId} --format markdown`,
+    });
+  }
+  channels.push({
+    channel: 'intent',
+    when: '沒有 task card，但目標是修 H2U / html-to-ucuf legacy 流程。',
+    command: 'node tools_node/atomic-framework/task-router.js --intent fix-h2u --goal "<Goal>" --format markdown',
+  });
+  channels.push({
+    channel: 'upstream-guide',
+    when: '需要回到 upstream ATM 的通用導覽，再由 host repo 自行擴充私有 intent。',
+    command: `node ${upstreamCliPath.replace(/\\/g, '/')} guide overview`,
+  });
+  return channels;
+}
+
+function buildFixH2uCommands(args = {}) {
+  const goal = normalizeText(args.goal || args.description || args.title || 'Fix H2U legacy flow');
+  const escapedGoal = goal.replace(/"/g, '\\"');
+  return [
+    `node tools_node/atomic-framework/doctor.js --goal "${escapedGoal}" --mode dev --json`,
+    'node tools_node/validate-legacy-h2u-launch.js --strict',
+    'node tools_node/atm-flow.js --mode dev --json',
+    'node tools_node/validate-legacy-h2u-first-win.js --strict --require-worktree-check',
+  ];
 }
 
 function applyIntentOverrides(hints, args = {}) {
@@ -271,90 +304,161 @@ function buildIntentTask(args = {}) {
 }
 
 function buildIntentRoute(intent, args = {}) {
-  if (intent !== 'create-atom') {
-    throw new Error(`Unsupported intent: ${intent}. Supported intents: create-atom.`);
-  }
+  if (intent === 'create-atom') {
+    const task = buildIntentTask(args);
+    const route = {
+      kind: 'atom-generation',
+      reasons: ['intent=create-atom', 'fallback=no-task-card'],
+    };
+    const baseHints = inferHints(task, route.kind);
+    const hints = applyIntentOverrides(baseHints, args);
+    if (!hints.logicalNameHint && hints.namespaceHint && hints.titleToken) {
+      hints.logicalNameHint = `atom.${toKebabCase(hints.namespaceHint)}.${toKebabCase(hints.titleToken)}`;
+    }
+    const validationHints = parseCommandLines(args.validation || '');
+    const readFirst = [
+      'docs/keep.summary.md',
+      'docs/ATOM_GENERATOR.md',
+      'docs/SELF_HOSTING_ALPHA.md',
+    ];
+    const primaryAtom = {
+      atomId: 'ATM-CORE-0004',
+      logicalName: 'atom.core-atom-generator',
+      upstreamCli: upstreamCliPath.replace(/\\/g, '/'),
+      createCommand: buildCreateCommand(task, hints),
+    };
 
-  const task = buildIntentTask(args);
-  const route = {
-    kind: 'atom-generation',
-    reasons: ['intent=create-atom', 'fallback=no-task-card'],
-  };
-  const baseHints = inferHints(task, route.kind);
-  const hints = applyIntentOverrides(baseHints, args);
-  if (!hints.logicalNameHint && hints.namespaceHint && hints.titleToken) {
-    hints.logicalNameHint = `atom.${toKebabCase(hints.namespaceHint)}.${toKebabCase(hints.titleToken)}`;
-  }
-  const validationHints = parseCommandLines(args.validation || '');
-  const readFirst = [
-    'docs/keep.summary.md',
-    'docs/ATOM_GENERATOR.md',
-    'docs/SELF_HOSTING_ALPHA.md',
-  ];
-  const primaryAtom = {
-    atomId: 'ATM-CORE-0004',
-    logicalName: 'atom.core-atom-generator',
-    upstreamCli: upstreamCliPath.replace(/\\/g, '/'),
-    createCommand: buildCreateCommand(task, hints),
-  };
-
-  return {
-    ok: true,
-    task: {
-      id: '',
-      docId: '',
-      title: task.title,
-      type: task.type,
-      phase: '',
-      status: task.status,
-      owner: '',
-      startedAt: '',
-      startedByAgent: '',
-      depends: [],
-      related: [],
-    },
-    lock: {
-      locked: false,
-      agentName: '',
-      lockedAt: '',
-      files: [],
-    },
-    route: {
-      intent,
-      kind: route.kind,
-      reasons: route.reasons,
+    return {
+      ok: true,
+      task: {
+        id: '',
+        docId: '',
+        title: task.title,
+        type: task.type,
+        phase: '',
+        status: task.status,
+        owner: '',
+        startedAt: '',
+        startedByAgent: '',
+        depends: [],
+        related: [],
+      },
+      lock: {
+        locked: false,
+        agentName: '',
+        lockedAt: '',
+        files: [],
+      },
+      route: {
+        intent,
+        kind: route.kind,
+        reasons: route.reasons,
+        readFirst,
+        upstreamDocs: [
+          'docs/ATOM_GENERATOR.md',
+          'docs/ARCHITECTURE.md',
+          'docs/SELF_HOSTING_ALPHA.md',
+        ],
+        discoveryChannels: buildAtomDiscoveryChannels(),
+        primaryAtom,
+        guardrails: [
+          '不要手工配 ATM-* ID。',
+          '不要先寫 registry entry 再回頭補 generator。',
+          '先用 --dry-run，把 bucket / logicalName / description 定好再正式建立。',
+        ],
+      },
+      hints: {
+        bucketHint: hints.bucketHint,
+        namespaceHint: hints.namespaceHint,
+        titleToken: hints.titleToken,
+        logicalNameHint: hints.logicalNameHint,
+        legacyRef: normalizeText(args.legacyRef || ''),
+      },
+      validationHints,
+      inputs: {
+        taskCard: '',
+        taskStore: '',
+      },
+      routeKind: route.kind,
+      taskStatus: task.status,
       readFirst,
-      upstreamDocs: [
-        'docs/ATOM_GENERATOR.md',
-        'docs/ARCHITECTURE.md',
-        'docs/SELF_HOSTING_ALPHA.md',
-      ],
-      discoveryChannels: buildDiscoveryChannels(),
       primaryAtom,
-      guardrails: [
-        '不要手工配 ATM-* ID。',
-        '不要先寫 registry entry 再回頭補 generator。',
-        '先用 --dry-run，把 bucket / logicalName / description 定好再正式建立。',
-      ],
-    },
-    hints: {
-      bucketHint: hints.bucketHint,
-      namespaceHint: hints.namespaceHint,
-      titleToken: hints.titleToken,
-      logicalNameHint: hints.logicalNameHint,
-      legacyRef: normalizeText(args.legacyRef || ''),
-    },
-    validationHints,
-    inputs: {
-      taskCard: '',
-      taskStore: '',
-    },
-    routeKind: route.kind,
-    taskStatus: task.status,
-    readFirst,
-    primaryAtom,
-    summary: '沒有 task card 時，先走 create-atom intent route，再交由 ATM-CORE-0004 / atm create 負責正式 birth。',
-  };
+      summary: '沒有 task card 時，先走 create-atom intent route，再交由 ATM-CORE-0004 / atm create 負責正式 birth。',
+    };
+  }
+
+  if (intent === 'fix-h2u') {
+    const goal = normalizeText(args.goal || args.description || args.title || 'Fix H2U legacy flow');
+    const readFirst = [
+      'docs/keep.summary.md',
+      'docs/ai_atomic_framework/legacy-h2u-first-battle-launch-checklist.md',
+      'docs/ai_atomic_framework/atm-h2u-three-tier-gates.md',
+      'docs/html_skill_plan5.md',
+    ];
+    const nextCommands = buildFixH2uCommands(args);
+    const validationHints = [
+      'node tools_node/validate-legacy-h2u-launch.js --strict',
+      'node tools_node/atm-flow.js --mode dev --json',
+    ];
+
+    return {
+      ok: true,
+      task: {
+        id: '',
+        docId: '',
+        title: goal,
+        type: 'intent',
+        phase: '',
+        status: 'untracked',
+        owner: '',
+        startedAt: '',
+        startedByAgent: '',
+        depends: [],
+        related: [],
+      },
+      lock: {
+        locked: false,
+        agentName: '',
+        lockedAt: '',
+        files: [],
+      },
+      route: {
+        intent,
+        kind: 'legacy-fix',
+        reasons: ['intent=fix-h2u', 'domain=html-to-ucuf', 'guard=legacy-gates'],
+        readFirst,
+        upstreamDocs: [
+          'README.md',
+          'docs/ATOM_GENERATOR.md',
+          'docs/SELF_HOSTING_ALPHA.md',
+        ],
+        discoveryChannels: buildFixH2uDiscoveryChannels(),
+        primaryAtom: null,
+        nextCommands,
+        guardrails: [
+          '不要直接重寫 draft-builder 主幹。',
+          '先過 launch gate，再進 flow gate。',
+          '分數不達標時，先回報 nextFixes / owner bucket，不做全盤大改。',
+        ],
+      },
+      hints: {
+        goal,
+        legacyRef: normalizeText(args.legacyRef || ''),
+      },
+      validationHints,
+      inputs: {
+        taskCard: '',
+        taskStore: '',
+      },
+      routeKind: 'legacy-fix',
+      taskStatus: 'untracked',
+      readFirst,
+      primaryAtom: null,
+      summary: '沒有 task card 時，fix-h2u intent 先導向 launch/flow/first-win 三段閘門，再依 gate 結果拆小卡處理。',
+    };
+  }
+
+  throw new Error(`Unsupported intent: ${intent}. Supported intents: create-atom, fix-h2u.`);
 }
 
 function buildTaskRoute(taskId) {
@@ -427,7 +531,7 @@ function buildTaskRoute(taskId) {
         'docs/ARCHITECTURE.md',
         'docs/SELF_HOSTING_ALPHA.md',
       ],
-      discoveryChannels: buildDiscoveryChannels(taskId),
+      discoveryChannels: buildAtomDiscoveryChannels(taskId),
       primaryAtom: route.kind === 'atom-generation'
         ? {
             atomId: 'ATM-CORE-0004',
@@ -539,6 +643,7 @@ function parseArgs(argv = process.argv.slice(2)) {
     intent: '',
     format: 'markdown',
     bucket: '',
+    goal: '',
     title: '',
     description: '',
     logicalName: '',
@@ -591,6 +696,16 @@ function parseArgs(argv = process.argv.slice(2)) {
       continue;
     }
 
+    if (token === '--goal') {
+      const value = argv[index + 1];
+      if (!value || value.startsWith('--')) {
+        throw new Error('--goal requires a value.');
+      }
+      state.goal = value;
+      index += 1;
+      continue;
+    }
+
     if (token === '--format') {
       const value = argv[index + 1];
       if (!value || value.startsWith('--')) {
@@ -621,11 +736,12 @@ function parseArgs(argv = process.argv.slice(2)) {
 
 function printUsage() {
   process.stdout.write([
-    'Usage: node tools_node/atomic-framework/task-router.js (--task <task-id> | --intent create-atom) [options]',
+    'Usage: node tools_node/atomic-framework/task-router.js (--task <task-id> | --intent <create-atom|fix-h2u>) [options]',
     '',
     'Examples:',
     '  node tools_node/atomic-framework/task-router.js --task ATM-4-0003 --format markdown',
     '  node tools_node/atomic-framework/task-router.js --intent create-atom --title NormalizeCssColor --description "Canonicalize CSS color input" --domain html-to-ucuf --format markdown',
+    '  node tools_node/atomic-framework/task-router.js --intent fix-h2u --goal "把 H2U 功能改好" --format markdown',
     '  node tools_node/atomic-framework/task-router.js ATM-2-0048 --json',
   ].join('\n') + '\n');
 }

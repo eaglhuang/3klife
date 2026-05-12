@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "screenId": "gacha-ds3",
-  "generatedAt": "2026-05-04T14:16:15.104Z",
+  "generatedAt": "2026-05-12T16:10:46.184Z",
   "_sourceAuthority": "html-to-ucuf",
   "policy": {
     "mode": "replace-all-per-run",
@@ -9,10 +9,10 @@
     "note": "Always regenerate full screen-local tokens from current conversion to avoid stale residue."
   },
   "sourceSuggestionFiles": [
-    "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json",
-    "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json",
-    "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
-    "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
+    "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+    "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json",
+    "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
+    "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
   ],
   "stats": {
     "unresolvedColorCount": 13,
@@ -46,10 +46,10 @@
         "distance": 8
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
       ]
     },
     {
@@ -64,10 +64,10 @@
         "distance": 19
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
       ]
     },
     {
@@ -82,10 +82,10 @@
         "distance": 14
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
       ]
     },
     {
@@ -100,8 +100,8 @@
         "distance": 22
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json"
       ]
     },
     {
@@ -116,8 +116,8 @@
         "distance": 40
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-general.layout.token-suggestions.json"
       ]
     },
     {
@@ -132,9 +132,9 @@
         "distance": 52
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-legendary.layout.token-suggestions.json",
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/tab-replay/gacha-ds3-tab-support.layout.token-suggestions.json"
       ]
     },
     {
@@ -149,7 +149,7 @@
         "distance": 16
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -164,7 +164,7 @@
         "distance": 18
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -179,7 +179,7 @@
         "distance": 12
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -194,7 +194,7 @@
         "distance": 21
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -209,7 +209,7 @@
         "distance": 65
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -224,7 +224,7 @@
         "distance": 9
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
       ]
     },
     {
@@ -239,7 +239,7 @@
         "distance": 13
       },
       "sources": [
-        "artifacts/skill-test-html-to-ucuf/gacha-ds3-rerun-20260504-r5-gradient-blocker/gacha-ds3.final.layout.token-suggestions.json"
+        "artifacts/html-to-ucuf-plan5/gacha-ds3/gacha-ds3.final.layout.token-suggestions.json"
       ]
     }
   ]

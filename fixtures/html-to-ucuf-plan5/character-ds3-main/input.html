@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<title>3KLife · 張飛 — 人物詳情頁</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Scale 1920×1080 canvas to viewport ── */
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+  .stage {
+    width: 1920px; height: 1080px;
+    transform-origin: top left;
+    position: absolute; top: 0; left: 0;
+    overflow: hidden; font-family: var(--font-body); color: var(--text-primary);
+    background: #0a0a0a;
+  }
+
+  /* ── Portrait (left 62%) ── */
+  .portrait-bg {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 62%;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(139,98,42,.3), transparent 55%),
+      radial-gradient(ellipse at 80% 70%, rgba(44,58,66,.25), transparent 60%),
+      linear-gradient(180deg, #2a2720 0%, #1a1814 40%, #100e0a 100%);
+    overflow: hidden;
+    transition: opacity 320ms cubic-bezier(.4,0,.2,1);
+  }
+  .portrait-bg.hidden {
+    opacity: 0;
+    pointer-events: none;
+    animation: portraitFadeOut 400ms cubic-bezier(.34,.1,.68,1);
+  }
+  
+  @keyframes portraitFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+  .portrait-bg::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent 45%, rgba(10,10,10,.7) 75%, #0a0a0a 100%);
+    pointer-events: none;
+  }
+  .portrait-img {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-45%);
+    height: 98%; width: auto; max-width: 130%;
+    object-fit: contain; object-position: center bottom;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,.7));
+    z-index: 1;
+  }
+
+  /* ── Portrait nav buttons (left / right of portrait) ── */
+  .portrait-nav {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 8;
+    width: 96px; height: 96px; border-radius: 50%;
+    border: 3px solid #D4AF37;
+    background: linear-gradient(135deg, rgba(212,175,55,.18), rgba(138,110,31,.1));
+    cursor: pointer; display: grid; place-items: center;
+    font-family: var(--font-headline); font-size: 48px; font-weight: 800;
+    color: #D4AF37; transition: all 200ms;
+    box-shadow: inset 0 0 16px rgba(212,175,55,.1), 0 0 24px rgba(212,175,55,.2);
+  }
+  .portrait-nav:hover {
+    background: linear-gradient(135deg, rgba(212,175,55,.32), rgba(138,110,31,.2));
+    box-shadow: inset 0 0 16px rgba(212,175,55,.2), 0 0 36px rgba(212,175,55,.4);
+    transform: translateY(-50%) scale(1.06);
+  }
+  .portrait-nav.left  { left: 24px; }
+  .portrait-nav.right { right: 24px; }
+
+  /* ── Rank badge (top-left) ── */
+  .rank-badge {
+    position: absolute; top: 28px; left: 28px; z-index: 6;
+    width: 90px; height: 90px; border-radius: 16px;
+    background: linear-gradient(135deg, #3F6A62, #1f332e);
+    border: 2px solid #8CCFC4;
+    box-shadow: 0 6px 20px rgba(0,0,0,.5), inset 0 0 20px rgba(140,207,196,.15);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  }
+  .rank-badge .r-label { font-family: var(--font-headline); font-size: 32px; font-weight: 800; color: #FFE088; }
+  .rank-badge .r-sub   { font-family: var(--font-label); font-size: 9px; letter-spacing: .3em; color: #A4D2D0; text-transform: uppercase; }
+
+  /* ── Portrait title (bottom-left) ── */
+  .portrait-title {
+    position: absolute; left: 36px; bottom: 36px; z-index: 5;
+    font-family: var(--font-headline); font-size: 20px; font-weight: 600;
+    color: rgba(232,223,208,.35); letter-spacing: .6em;
+  }
+
+  /* ── Back button (top-right fixed) ── */
+  .back-btn {
+    position: absolute; top: 28px; right: 28px; z-index: 30;
+    width: 88px; height: 88px; border-radius: 50%;
+    border: 3px solid #4D4635;
+    background: linear-gradient(180deg, #20201F, #111);
+    cursor: pointer; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 2px;
+    transition: all 150ms;
+    box-shadow: 0 4px 16px rgba(0,0,0,.5);
+  }
+  .back-btn:hover {
+    border-color: #D4AF37;
+    box-shadow: 0 0 20px rgba(212,175,55,.35);
+  }
+  .back-btn .back-arrow { font-family: var(--font-headline); font-size: 28px; color: #FFE088; line-height: 1; }
+  .back-btn .back-label { font-family: var(--font-label); font-size: 11px; color: #B0A880; letter-spacing: .15em; }
+
+  /* ── RIGHT SHELL: tab rail + content, pinned to right ── */
+  .right-shell {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 720px;           /* 160 tab + 20 gap + 540 content */
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    z-index: 10;
+  }
+
+  /* ── Content pane ── */
+  .right-content {
+    flex: 1;
+    padding-top: 50px;
+    padding-bottom: 60px;
+    padding-right: 20px;
+    padding-left: 20px;
+    overflow-y: auto; overflow-x: hidden;
+    scrollbar-width: thin; scrollbar-color: #4D4635 transparent;
+  }
+  .right-content::-webkit-scrollbar { width: 4px; }
+  .right-content::-webkit-scrollbar-thumb { background: #4D4635; border-radius: 2px; }
+  .right-content::-webkit-scrollbar-track { background: transparent; }
+
+  /* ── Tab rail ── */
+  .tab-rail-wrap {
+    width: 160px;
+    flex-shrink: 0;
+    padding-top: 150px;
+    padding-bottom: 20px;
+    padding-right: 16px;
+    padding-left: 10px;
+    overflow-y: auto; overflow-x: hidden;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    scrollbar-width: none;
+  }
+  .tab-rail-wrap::-webkit-scrollbar { display: none; }
+
+  /* ── Story strip ── */
+  .story-strip-wrap {
+    position: absolute; left: 0; right: 780px; bottom: 0; height: 0; z-index: 12;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,.78) 18%, rgba(0,0,0,.97));
+    overflow: hidden; transition: height 320ms cubic-bezier(.4,0,.2,1);
+  }
+  .story-strip-wrap.open { height: 240px; }
+  .strip-toggle {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 13;
+    padding: 5px 28px; border-radius: 10px 10px 0 0; cursor: pointer;
+    background: rgba(20,20,18,.9); border: 1px solid #4D4635; border-bottom: none;
+    font-family: var(--font-label); font-size: 11px; color: #B0A880; letter-spacing: .3em;
+    transition: bottom 320ms cubic-bezier(.4,0,.2,1);
+  }
+  .strip-toggle.open { bottom: 240px; }
+
+  /* ── Bloodline fullscreen (left 62%, replaces portrait) ── */
+  .bloodline-fullscreen {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 62%;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(139,98,42,.2), transparent 55%),
+      radial-gradient(ellipse at 80% 70%, rgba(44,58,66,.15), transparent 60%),
+      linear-gradient(180deg, #1f1a15 0%, #141210 40%, #0a0806 100%);
+    overflow: auto; overflow-x: hidden;
+    opacity: 0; pointer-events: none;
+    transition: opacity 400ms cubic-bezier(.34,.1,.68,1);
+    padding: 30px 24px 280px 24px;
+    z-index: 7;
+    scrollbar-width: thin; scrollbar-color: #4D4635 transparent;
+    display: none;
+  }
+  .bloodline-fullscreen.visible {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+    animation: bloodlineSlideIn 400ms cubic-bezier(.34,.1,.68,1);
+  }
+  
+  .bloodline-fullscreen::-webkit-scrollbar { width: 4px; }
+  .bloodline-fullscreen::-webkit-scrollbar-thumb { background: #4D4635; border-radius: 2px; }
+  .bloodline-fullscreen::-webkit-scrollbar-track { background: transparent; }
+  
+  @keyframes bloodlineSlideIn {
+    from { transform: translateX(-8px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  .bloodline-fullscreen-inner {
+    max-width: 100%;
+  }
+
+  /* Right shell ALWAYS stays visible — never hide it */
+  .strip-head { display: flex; align-items: baseline; gap: 12px; padding: 14px 28px 8px; }
+  .strip-head h4 { font-family: var(--font-headline); font-size: 16px; font-weight: 700; color: #FFE088; letter-spacing: .4em; }
+  .strip-head .en { font-family: var(--font-headline); font-style: italic; font-size: 12px; color: #9a8f74; }
+  .strip-head .line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(212,175,55,.35), transparent); }
+  .strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; height: 168px; padding: 0 28px; }
+  .cell {
+    position: relative; overflow: hidden;
+    border: 2px solid rgba(212,175,55,.28); cursor: pointer;
+    transition: transform 150ms, border-color 150ms, box-shadow 150ms;
+    clip-path: polygon(0 0, 100% 0, 100% 86%, 91% 100%, 0 100%);
+  }
+  .cell:last-child { clip-path: none; }
+  .cell:hover { transform: translateY(-5px) scale(1.025); border-color: #D4AF37; box-shadow: 0 10px 28px rgba(0,0,0,.75), 0 0 14px rgba(212,175,55,.35); z-index: 2; }
+  .cell-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+  /* screen-tone texture */
+  .cell::before {
+    content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,.07) 3px, rgba(0,0,0,.07) 4px);
+  }
+  .cell::after {
+    content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,.08) 0%, transparent 32%, transparent 48%, rgba(0,0,0,.84) 100%);
+  }
+  .cell-num {
+    position: absolute; top: 0; left: 0; z-index: 4;
+    font-family: var(--font-headline); font-style: italic; font-size: 30px; font-weight: 900;
+    color: rgba(255,224,136,.13); line-height: 1; padding: 3px 6px; letter-spacing: -.02em;
+  }
+  .cell-label { position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; padding: 6px 8px 9px; }
+  .cell-label .t {
+    font-family: var(--font-headline); font-size: 13px; font-weight: 800;
+    color: #FFE088; letter-spacing: .15em; display: block;
+    text-shadow: 0 1px 0 #000, 0 0 10px rgba(0,0,0,.9);
+  }
+  .cell-label .s { display: block; font-family: var(--font-label); font-size: 9px; color: rgba(208,197,175,.65); letter-spacing: .12em; text-transform: uppercase; margin-top: 2px; }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- Portrait (hidden when viewing bloodline) -->
+  <div class="portrait-bg" id="portrait-bg">
+    <button class="portrait-nav left"  onclick="prevCharacter()">‹</button>
+    <img class="portrait-img" src="../../assets/generals/zhang_fei.png" alt="張飛"
+         onerror="this.style.opacity='0.2'">
+    <button class="portrait-nav right" onclick="nextCharacter()">›</button>
+  </div>
+  <div class="portrait-title" id="portrait-title">燕 人 武 聖</div>
+  <div class="rank-badge" id="rank-badge">
+    <span class="r-label">傳</span>
+    <span class="r-sub">LEGEND</span>
+  </div>
+
+  <!-- Bloodline fullscreen (left 62%, shown only when bloodline tab active) -->
+  <div class="bloodline-fullscreen" id="bloodline-fullscreen">
+    <div class="bloodline-fullscreen-inner" id="bloodline-fullscreen-inner"></div>
+  </div>
+
+  <!-- Back button (top-right fixed) -->
+  <button class="back-btn" onclick="goBack()">
+    <span class="back-arrow">←</span>
+    <span class="back-label">返回</span>
+  </button>
+
+  <!-- Right shell (tab rail + content) -->
+  <div class="right-shell">
+    <!-- Content -->
+    <div class="right-content" id="right-content"></div>
+    <!-- Tab rail -->
+    <div class="tab-rail-wrap" id="tab-rail"></div>
+  </div>
+
+  <!-- Story strip -->
+  <div class="story-strip-wrap" id="strip-wrap">
+    <div class="strip-head">
+      <h4>逸 事</h4><span class="en">Chronicles</span><span class="line"></span>
+    </div>
+    <div class="strip" id="strip-cells"></div>
+  </div>
+  <div class="strip-toggle" id="strip-toggle" onclick="toggleStrip()">▲ 逸 事 ▲</div>
+
+</div>
+
+<!-- Scale stage to viewport -->
+<script>
+(function scaleStage() {
+  const stage = document.getElementById('stage');
+  function fit() {
+    const scaleX = window.innerWidth  / 1920;
+    const scaleY = window.innerHeight / 1080;
+    const scale  = Math.min(scaleX, scaleY);
+    const x = (window.innerWidth  - 1920 * scale) / 2;
+    const y = (window.innerHeight - 1080 * scale) / 2;
+    stage.style.transform = `translate(${x}px,${y}px) scale(${scale})`;
+  }
+  fit();
+  window.addEventListener('resize', fit);
+})();
+</script>
+
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="tabs.jsx"></script>
+
+<script type="text/babel">
+
+const TABS = [
+  { id: "overview",  label: "將", en: "GEN"  },
+  { id: "stats",     label: "屬", en: "STAT" },
+  { id: "tactics",   label: "技", en: "TACT" },
+  { id: "bloodline", label: "命", en: "FATE" },
+  { id: "equip",     label: "寶", en: "GEAR" },
+  { id: "aptitude",  label: "適", en: "APT"  },
+];
+
+// ── Tab Rail ──
+function TabRail({ active, onChange }) {
+  return React.createElement(React.Fragment, null,
+    TABS.map(t =>
+      React.createElement("button", {
+        key: t.id,
+        onClick: () => onChange(t.id),
+        style: {
+          width: 128, height: 128, borderRadius: "50%", flexShrink: 0,
+          border: active === t.id ? "4px solid #D4AF37" : "3px solid #4D4635",
+          background: active === t.id
+            ? "linear-gradient(180deg,rgba(212,175,55,.25),rgba(138,110,31,.12))"
+            : "linear-gradient(180deg,#20201F,#111)",
+          cursor: "pointer",
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+          transition: "all 150ms",
+          boxShadow: active === t.id
+            ? "0 0 28px rgba(212,175,55,.45),inset 0 0 20px rgba(212,175,55,.18)"
+            : "0 4px 16px rgba(0,0,0,.5)",
+        }
+      },
+        React.createElement("span", { style:{ fontFamily:"var(--font-headline)", fontSize:32, fontWeight:700, color:"#FFE088", lineHeight:1 } }, t.label),
+        React.createElement("span", { style:{ fontFamily:"var(--font-label)", fontSize:12, fontWeight:600, color:"#B0A880", letterSpacing:".15em", textTransform:"uppercase", marginTop:6 } }, t.en),
+      )
+    )
+  );
+}
+
+// ── Root ──
+function Root() {
+  const [tab, setTab] = React.useState("overview");
+  const data = ZHANG_FEI;
+
+  const changeTab = (newTab) => {
+    console.log('Tab changed to:', newTab);
+    setTab(newTab);
+    
+    const portraitBg = document.getElementById('portrait-bg');
+    const portraitTitle = document.getElementById('portrait-title');
+    const rankBadge = document.getElementById('rank-badge');
+    const bloodlineFS = document.getElementById('bloodline-fullscreen');
+    
+    if (!portraitBg || !portraitTitle || !rankBadge || !bloodlineFS) {
+      console.error('DOM elements not found');
+      return;
+    }
+    
+    if (newTab === 'bloodline') {
+      portraitBg.classList.add('hidden');
+      portraitTitle.style.opacity = '0';
+      rankBadge.style.opacity = '0';
+      bloodlineFS.classList.add('visible');
+    } else {
+      portraitBg.classList.remove('hidden');
+      portraitTitle.style.opacity = '1';
+      rankBadge.style.opacity = '1';
+      bloodlineFS.classList.remove('visible');
+    }
+    
+    const rc = document.getElementById('right-content');
+    if (rc) rc.scrollTop = 0;
+  };
+
+  // Render bloodline tree to left panel
+  React.useEffect(() => {
+    if (tab !== 'bloodline') return;
+    const container = document.getElementById('bloodline-fullscreen-inner');
+    if (!container) return;
+    
+    const renderBloodlineTree = () => {
+      const d = data;
+      const bl = d.bloodline;
+      const GEN_COLORS = { blue:"#6fa8ff", pink:"#ff9bba", green:"#86E1A5", purple:"#c494ff", white:"#d0d0d0", red:"#ff8d6e" };
+
+      const tree = {
+        ggp: [
+          { name:"張祖父", origin:"燕地", genes:[{color:"blue",label:"武力★3"},{color:"green",label:"戰法★2"}] },
+          { name:"張祖母", origin:"幽州", genes:[{color:"pink",label:"統率★2"}] },
+          { name:"張外祖父", origin:"北境", genes:[{color:"blue",label:"武力★2"},{color:"red",label:"體魄★3"}] },
+          { name:"張外祖母", origin:"燕地", genes:[{color:"white",label:"天賦★1"}] },
+          { name:"燕祖父", origin:"南蠻", genes:[{color:"purple",label:"運氣★2"}] },
+          { name:"燕祖母", origin:"蠻裔", genes:[{color:"green",label:"適性★2"}] },
+          { name:"燕外祖父", origin:"北境", genes:[{color:"red",label:"體魄★2"}] },
+          { name:"燕外祖母", origin:"南蠻", genes:[{color:"pink",label:"魅力★2"}] },
+        ],
+        gp: [
+          { name:"張父父", origin:"幽州", genes:[{color:"blue",label:"武力★4"},{color:"green",label:"戰法★3"}] },
+          { name:"張父母", origin:"燕地", genes:[{color:"pink",label:"統率★3"}] },
+          { name:"燕氏父", origin:"南蠻", genes:[{color:"purple",label:"運氣★3"},{color:"red",label:"體魄★2"}] },
+          { name:"燕氏母", origin:"蠻裔", genes:[{color:"green",label:"適性★3"}] },
+        ],
+        parents: [
+          { name:"張威", title:"父·幽州武人", origin:"幽州", genes:[{color:"blue",label:"武力★5"},{color:"green",label:"戰法★4"},{color:"red",label:"體魄★3"}] },
+          { name:"燕氏", title:"母·燕人女將", origin:"南蠻", genes:[{color:"pink",label:"魅力★3"},{color:"purple",label:"運氣★2"}] },
+        ],
+      };
+
+      function NodeCard({ person, size }) {
+        const w = size==="lg"?220:size==="md"?210:138;
+        const avatarSize = size==="lg"?100:size==="md"?86:68;
+        const fontSize = size==="lg"?24:size==="md"?20:17;
+        const geneSize = size==="lg"?13:size==="md"?12:10;
+        const dotSize = size==="sm"?11:13;
+
+        return React.createElement("div",{style:{width:w,display:"flex",flexDirection:"column",alignItems:"center",gap:4,textAlign:"center"}},
+          React.createElement("div",{style:{width:avatarSize,height:avatarSize,borderRadius:"50%",background:"linear-gradient(180deg,#3a2e20,#1a1612)",border:"2px solid #8A6E1F",display:"grid",placeItems:"center",fontFamily:"var(--font-headline)",fontSize:avatarSize*0.42,color:"#FFE088",fontWeight:800,boxShadow:"0 3px 10px rgba(0,0,0,.6)",flexShrink:0}},person.name[0]),
+          React.createElement("span",{style:{fontFamily:"var(--font-headline)",fontSize:fontSize,fontWeight:700,color:"#E8E4DC",letterSpacing:".05em",lineHeight:1.1,whiteSpace:"nowrap"}},person.name),
+          person.origin && React.createElement("span",{style:{fontFamily:"var(--font-label)",fontSize:10,color:"#6b6456",letterSpacing:".08em",whiteSpace:"nowrap"}},`(${person.origin})`),
+          React.createElement("div",{style:{display:"flex",gap:3,flexWrap:"nowrap",justifyContent:"center",marginTop:2}},
+            person.genes.map((g,i)=>React.createElement("span",{key:i,style:{width:dotSize,height:dotSize,borderRadius:dotSize/2,background:GEN_COLORS[g.color]||"#888",display:"inline-block",flexShrink:0}}))
+          ),
+          React.createElement("div",{style:{display:"flex",gap:2,flexWrap:"nowrap",justifyContent:"center",overflow:"hidden"}},
+            person.genes.map((g,i)=>React.createElement("span",{key:i,style:{fontFamily:"var(--font-label)",fontSize:geneSize,padding:"1px 4px",borderRadius:2,background:GEN_COLORS[g.color]+"22",border:"1px solid "+GEN_COLORS[g.color]+"66",color:GEN_COLORS[g.color],whiteSpace:"nowrap"}},g.label))
+          ),
+        );
+      }
+
+      // Left label column
+      function GenLabel({ zh, sub, color="#6b6456" }) {
+        return React.createElement("div",{style:{width:72,flexShrink:0,display:"flex",flexDirection:"column",alignItems:"flex-end",justifyContent:"flex-start",paddingTop:8,paddingRight:10}},
+          React.createElement("span",{style:{fontFamily:"var(--font-headline)",fontSize:15,color,letterSpacing:".08em",textAlign:"right",fontWeight:700}},zh),
+          React.createElement("span",{style:{fontFamily:"var(--font-label)",fontSize:11,color:"#4D4635",letterSpacing:".08em"}},sub),
+        );
+      }
+
+      // SVG connector: pairs = [[a,b],[c,d],...] indices into 'count' slots → 'outCount' slots
+      function Connector({ pairs, inCount, outCount, color="#4D4635", h=28 }) {
+        const W=600;
+        const inW=W/inCount, outW=W/outCount;
+        return React.createElement("div",{style:{height:h,position:"relative",marginLeft:82}},
+          React.createElement("svg",{width:"100%",height:h,viewBox:`0 0 ${W} ${h}`,preserveAspectRatio:"none"},
+            pairs.map(([a,b,t],i)=>{
+              const ax=inW*(a+.5),bx=inW*(b+.5),midx=(ax+bx)/2,tx=outW*(t+.5);
+              return React.createElement("g",{key:i,stroke:color,strokeWidth:1.5,fill:"none"},
+                React.createElement("line",{x1:ax,y1:0,x2:ax,y2:h*0.5}),
+                React.createElement("line",{x1:bx,y1:0,x2:bx,y2:h*0.5}),
+                React.createElement("line",{x1:ax,y1:h*0.5,x2:bx,y2:h*0.5}),
+                React.createElement("line",{x1:midx,y1:h*0.5,x2:tx,y2:h}),
+              );
+            })
+          )
+        );
+      }
+
+      return React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:0,padding:"28px 20px",fontFamily:"var(--font-body)",height:"100%"}},
+        // Header row
+        React.createElement("div",{style:{display:"flex",alignItems:"center",gap:10,marginBottom:18,paddingBottom:12,borderBottom:"1.5px solid #4D4635"}},
+          React.createElement("div",{style:{width:5,height:30,background:"linear-gradient(180deg,#FFE088,#D4AF37)",borderRadius:3}}),
+          React.createElement("div",null,
+            React.createElement("div",{style:{fontFamily:"var(--font-headline)",fontSize:24,fontWeight:800,color:"#FFE088",letterSpacing:".2em"}},"家族血統"),
+            React.createElement("div",{style:{fontFamily:"var(--font-label)",fontSize:11,color:"#6b6456",letterSpacing:".15em",marginTop:2}},"14-PERSON ANCESTRY MATRIX"),
+          ),
+          React.createElement("div",{style:{marginLeft:"auto",display:"flex",gap:20,alignItems:"center"}},
+            React.createElement("div",{style:{textAlign:"right"}},
+              React.createElement("div",{style:{fontFamily:"var(--font-num)",fontSize:36,fontWeight:900,color:"#FFE088",lineHeight:1}},bl.ep),
+              React.createElement("div",{style:{fontFamily:"var(--font-label)",fontSize:10,color:"#B0A880",marginTop:2}},"爆發力 EP"),
+            ),
+            React.createElement("div",{style:{textAlign:"right"}},
+              React.createElement("div",{style:{fontFamily:"var(--font-headline)",fontSize:16,color:"#8CCFC4",fontWeight:700}},bl.name),
+              React.createElement("div",{style:{fontFamily:"var(--font-label)",fontSize:10,color:"#3F6A62",marginTop:2}},"血脈名稱"),
+            ),
+          ),
+        ),
+
+        // 曾祖父母 8人
+        React.createElement("div",{style:{display:"flex",alignItems:"flex-start",gap:0}},
+          React.createElement(GenLabel,{zh:"曾祖父母",sub:"(8人)",color:"#6b6456"}),
+          React.createElement("div",{style:{flex:1,display:"flex",justifyContent:"space-around",alignItems:"flex-start"}},
+            tree.ggp.map((p,i)=>React.createElement(NodeCard,{key:i,person:p,size:"sm"}))
+          ),
+        ),
+
+        // SVG GGP→GP
+        React.createElement(Connector,{pairs:[[0,1,0],[2,3,1],[4,5,2],[6,7,3]],inCount:8,outCount:4,color:"#4D4635",h:32}),
+
+        // 祖父母 4人
+        React.createElement("div",{style:{display:"flex",alignItems:"flex-start",gap:0}},
+          React.createElement(GenLabel,{zh:"祖父母",sub:"(4人)",color:"#8c8575"}),
+          React.createElement("div",{style:{flex:1,display:"flex",justifyContent:"space-around",alignItems:"flex-start"}},
+            tree.gp.map((p,i)=>React.createElement(NodeCard,{key:i,person:p,size:"sm"}))
+          ),
+        ),
+
+        // SVG GP→parents
+        React.createElement(Connector,{pairs:[[0,1,0],[2,3,1]],inCount:4,outCount:2,color:"#D4AF37",h:32}),
+
+        // 父母 2人
+        React.createElement("div",{style:{display:"flex",alignItems:"flex-start",gap:0}},
+          React.createElement(GenLabel,{zh:"父母",sub:"(2人)",color:"#C8B87A"}),
+          React.createElement("div",{style:{flex:1,display:"flex",justifyContent:"space-around",alignItems:"flex-start"}},
+            tree.parents.map((p,i)=>React.createElement("div",{key:i,style:{display:"flex",flexDirection:"column",alignItems:"center",gap:3}},
+              React.createElement(NodeCard,{person:p,size:"md"}),
+              p.title && React.createElement("span",{style:{fontFamily:"var(--font-headline)",fontStyle:"italic",fontSize:11,color:"#3F6A62",letterSpacing:".06em"}},p.title),
+            )),
+          ),
+        ),
+
+        // SVG parents→subject
+        React.createElement("div",{style:{height:32,position:"relative",marginLeft:82}},
+          React.createElement("svg",{width:"100%",height:32,viewBox:"0 0 600 32",preserveAspectRatio:"none"},
+            React.createElement("g",{stroke:"#FFE088",strokeWidth:2,fill:"none"},
+              React.createElement("line",{x1:150,y1:0,x2:150,y2:16}),
+              React.createElement("line",{x1:450,y1:0,x2:450,y2:16}),
+              React.createElement("line",{x1:150,y1:16,x2:450,y2:16}),
+              React.createElement("line",{x1:300,y1:16,x2:300,y2:32}),
+            )
+          )
+        ),
+
+        // 本代 張飛
+        React.createElement("div",{style:{display:"flex",alignItems:"flex-start",gap:0}},
+          React.createElement(GenLabel,{zh:"本代",sub:"(1人)",color:"#FFE088"}),
+          React.createElement("div",{style:{flex:1,display:"flex",justifyContent:"center",alignItems:"flex-start"}},
+            React.createElement("div",{style:{display:"flex",flexDirection:"column",alignItems:"center",gap:5}},
+              React.createElement("div",{style:{width:96,height:96,borderRadius:"50%",background:"linear-gradient(180deg,#B22222,#5a0f0f)",border:"3px solid #FFE088",display:"grid",placeItems:"center",fontFamily:"var(--font-headline)",fontSize:36,color:"#FFE088",fontWeight:800,boxShadow:"0 0 28px rgba(212,175,55,.5)"}},d.name[0]),
+              React.createElement("span",{style:{fontFamily:"var(--font-headline)",fontSize:28,fontWeight:800,color:"#FFE088",letterSpacing:".15em"}},d.name),
+              React.createElement("div",{style:{display:"flex",gap:4,flexWrap:"wrap",justifyContent:"center"}},
+                [{color:"blue",label:"武力★5"},{color:"green",label:"戰法★4"},{color:"red",label:"體魄★4"}].map((g,i)=>
+                  React.createElement("span",{key:i,style:{fontFamily:"var(--font-label)",fontSize:12,padding:"2px 8px",borderRadius:4,background:GEN_COLORS[g.color]+"25",border:"1px solid "+GEN_COLORS[g.color]+"66",color:GEN_COLORS[g.color]}},g.label)
+                )
+              ),
+            ),
+          ),
+        ),
+
+        // Gene legend
+        React.createElement("div",{style:{marginTop:"auto",paddingTop:14,borderTop:"1px solid #4D4635",display:"flex",gap:14,flexWrap:"wrap"}},
+          Object.entries(GEN_COLORS).map(([name,col])=>
+            React.createElement("div",{key:name,style:{display:"flex",alignItems:"center",gap:5}},
+              React.createElement("span",{style:{width:12,height:12,borderRadius:6,background:col,display:"inline-block"}}),
+              React.createElement("span",{style:{fontFamily:"var(--font-label)",fontSize:11,color:col}},({blue:"藍·武力",pink:"粉·傳授",green:"綠·戰法",purple:"紫·運氣",white:"白·靈獸",red:"紅·體魄"})[name]),
+            )
+          )
+        ),
+      );
+    };
+    
+    const root = ReactDOM.createRoot(container);
+    root.render(renderBloodlineTree());
+  }, [tab, data]);
+
+
+
+  const tabContent = {
+    overview:  React.createElement(TabOverview,  { data }),
+    stats:     React.createElement(TabStats,     { data }),
+    tactics:   React.createElement(TabTactics,   { data }),
+    bloodline: React.createElement(TabBloodline, { data }),
+    equip:     React.createElement(TabEquip,     { data }),
+    aptitude:  React.createElement(TabAptitude,  { data }),
+  };
+
+  return React.createElement(React.Fragment, null,
+    ReactDOM.createPortal(tabContent[tab], document.getElementById('right-content')),
+    ReactDOM.createPortal(React.createElement(TabRail, { active: tab, onChange: changeTab }), document.getElementById('tab-rail')),
+  );
+}
+const rootMount = document.createElement('div');
+document.getElementById('stage').appendChild(rootMount);
+ReactDOM.createRoot(rootMount).render(React.createElement(Root));
+</script>
+
+<script type="text/babel">
+// Story strip
+(() => {
+  const strips = window.ZHANG_FEI ? window.ZHANG_FEI.storyStrip : [];
+  const container = document.getElementById("strip-cells");
+  // Each scene gets a unique atmospheric dual-tone gradient
+  const panelGrads = [
+    "linear-gradient(145deg,#7a6040 0%,#3a2e18 45%,#1a130a 100%)",  // 01 涿郡
+    "linear-gradient(145deg,#7a2020 0%,#3a1212 45%,#120608 100%)",  // 02 桃園
+    "linear-gradient(145deg,#5a1010 0%,#2a0808 45%,#0e0404 100%)",  // 03 長坂
+    "linear-gradient(145deg,#384820 0%,#1e2c10 45%,#0a0e06 100%)",  // 04 嚴顏
+    "linear-gradient(145deg,#6a3a18 0%,#341c0a 45%,#120a04 100%)",  // 05 醉後
+    "linear-gradient(145deg,#1e3a3a 0%,#0e2020 45%,#060c0c 100%)",  // 06 傳承
+  ];
+  if (container && strips) {
+    strips.forEach((s, i) => {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      cell.innerHTML = `
+        <div class="cell-bg" style="background:${panelGrads[i]||panelGrads[0]};"></div>
+        <span class="cell-num">${s.num}</span>
+        <div class="cell-label">
+          <div class="t">${s.title}</div>
+          <span class="s">${s.en}</span>
+        </div>`;
+      container.appendChild(cell);
+    });
+  }
+})();
+
+window.toggleStrip = () => {
+  window._stripOpen = !window._stripOpen;
+  document.getElementById("strip-wrap").classList.toggle("open", window._stripOpen);
+  document.getElementById("strip-toggle").classList.toggle("open", window._stripOpen);
+  document.getElementById("strip-toggle").textContent = window._stripOpen ? "▼ 收 起 ▼" : "▲ 逸 事 ▲";
+};
+window.goBack = () => console.log('← go back');
+window.prevCharacter = () => console.log('← prev character');
+window.nextCharacter = () => console.log('→ next character');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+{
+  "screenId": "lobby-main-screen",
+  "rendering": {
+    "nodeCount": 73,
+    "deferredNodeCount": 0,
+    "totalNodeCount": 73,
+    "maxDepth": 6,
+    "estimatedDrawCalls": 5,
+    "colorRectCount": 0
+  },
+  "loading": {
+    "atlasCount": 2,
+    "atlasLimit": 4,
+    "preloadSpriteCount": 2,
+    "deferredSpriteCount": 0,
+    "estimatedTextureBytes": 1176256,
+    "fontCount": 3
+  },
+  "lifecycle": {
+    "lazySlotCount": 0,
+    "warmupHints": {
+      "next-frame": 0,
+      "idle": 0,
+      "tab-hover": 0,
+      "manual": 0
+    }
+  },
+  "runtimeGate": {
+    "nodeCount": {
+      "value": 73,
+      "warning": 35,
+      "blocker": 60,
+      "status": "fail"
+    },
+    "maxDepth": {
+      "value": 6,
+      "warning": 8,
+      "blocker": 12,
+      "status": "pass"
+    }
+  },
+  "verdict": {
+    "level": "blocker",
+    "warnings": [
+      "node-count-warning: 73 (>35)"
+    ],
+    "blockers": [
+      "node-count-blocker: 73 (>60)"
+    ]
+  }
+}

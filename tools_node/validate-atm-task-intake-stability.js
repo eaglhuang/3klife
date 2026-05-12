@@ -36,6 +36,15 @@ function runNode(label, args, cwd = projectRoot) {
   return result;
 }
 
+function runNodeAllowFailure(args, cwd = projectRoot) {
+  return spawnSync(process.execPath, args, {
+    cwd,
+    encoding: 'utf8',
+    shell: false,
+    env: { ...process.env },
+  });
+}
+
 function parseJsonResult(label, result) {
   try {
     return JSON.parse(String(result.stdout || '').trim());
@@ -79,6 +88,22 @@ function validateRouterSmoke() {
   assert(intentRoute.routeKind === 'atom-generation', 'intent create-atom should route to atom-generation');
   assert(intentRoute.route && intentRoute.route.primaryAtom && intentRoute.route.primaryAtom.atomId === 'ATM-CORE-0004', 'intent route should anchor at ATM-CORE-0004');
 
+  const fixH2uRoute = parseJsonResult(
+    'task-router intent fix-h2u',
+    runNode('task-router intent fix-h2u', [
+      taskRouterCli,
+      '--intent',
+      'fix-h2u',
+      '--goal',
+      '把 H2U 功能改好',
+      '--format',
+      'json',
+    ])
+  );
+  assert(fixH2uRoute.ok === true, 'intent fix-h2u route should succeed');
+  assert(fixH2uRoute.routeKind === 'legacy-fix', 'intent fix-h2u should route to legacy-fix');
+  assert(Array.isArray(fixH2uRoute.route.nextCommands) && fixH2uRoute.route.nextCommands.some((line) => /validate-legacy-h2u-launch/.test(line)), 'fix-h2u route should include launch gate command');
+
   const taskIntake = parseJsonResult(
     'task-router ATM-2-0048',
     runNode('task-router ATM-2-0048', [
@@ -105,6 +130,19 @@ function validateUpstreamGuide() {
   ]);
   const stdout = String(result.stdout || '');
   assert(/ATM_GUIDE_READY/.test(stdout) || /Guide for create-atom is ready/i.test(stdout), 'upstream guide should advertise create-atom readiness');
+
+  const fixH2u = runNodeAllowFailure([
+    upstreamGuideCli,
+    'guide',
+    'fix-h2u',
+  ]);
+  const fixStdout = String(fixH2u.stdout || '');
+  const fixStderr = String(fixH2u.stderr || '');
+  assert(fixH2u.status !== 0, 'upstream guide should reject project-specific fix-h2u intent');
+  assert(
+    /Unknown guide intent/i.test(fixStdout) || /Unknown guide intent/i.test(fixStderr),
+    'upstream guide should keep fix-h2u as host-specific intent'
+  );
   console.log('[validate-atm-task-intake-stability] upstream guide ok');
 }
 

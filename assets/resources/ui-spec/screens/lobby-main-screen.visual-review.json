@@ -1,0 +1,56 @@
+{
+  "screenId": "lobby-main-screen",
+  "verdict": "pass",
+  "metrics": {
+    "screenshotZoneConfidence": 1,
+    "motionPresenceRate": 1,
+    "interactionSuccessRate": 1,
+    "buttonStateLayerCoverage": 1,
+    "compositeReviewCoverage": 1
+  },
+  "zones": [
+    {
+      "node": "LobbyMainScreen_div_3",
+      "width": 1856,
+      "height": 84,
+      "stableBounds": true,
+      "zone": "header"
+    },
+    {
+      "node": "LobbyMainScreen_div_30",
+      "width": 356,
+      "height": 35,
+      "stableBounds": true,
+      "zone": "footer"
+    },
+    {
+      "node": "LobbyMainScreen_div_36",
+      "width": 356,
+      "height": 35,
+      "stableBounds": true,
+      "zone": "footer"
+    },
+    {
+      "node": "LobbyMainScreen_div_42",
+      "width": 356,
+      "height": 35,
+      "stableBounds": true,
+      "zone": "footer"
+    },
+    {
+      "node": "LobbyMainScreen_div_43",
+      "width": 274,
+      "height": 86,
+      "stableBounds": true,
+      "zone": "tabBar"
+    }
+  ],
+  "stateLayerIssues": [],
+  "compositeReviewRequired": [],
+  "effectReview": [
+    "css-effect-needs-art-review",
+    "css-transform-manual-layout-risk",
+    "overflow-hidden-clipping-risk"
+  ],
+  "blockers": []
+}

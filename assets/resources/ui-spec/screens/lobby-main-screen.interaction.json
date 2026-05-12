@@ -1,0 +1,10 @@
+{
+  "screenId": "lobby-main-screen",
+  "actions": [],
+  "warnings": [],
+  "summary": {
+    "actionCount": 0,
+    "missingTargetCount": 0,
+    "manualAdapterCount": 0
+  }
+}

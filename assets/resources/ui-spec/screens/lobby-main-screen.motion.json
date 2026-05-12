@@ -1,0 +1,184 @@
+{
+  "screenId": "lobby-main-screen",
+  "motionTokens": {
+    "instant": {
+      "durationMs": 80,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "fast": {
+      "durationMs": 120,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "standard": {
+      "durationMs": 180,
+      "easing": "quadOut",
+      "emphasis": "medium"
+    },
+    "slow": {
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "emphasis": "medium"
+    },
+    "emphasis": {
+      "durationMs": 360,
+      "easing": "backOut",
+      "emphasis": "high"
+    }
+  },
+  "motions": [
+    {
+      "id": "lobby-main-screen_div_16.transition",
+      "target": "LobbyMainScreen_div_16",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "lobby-main-screen_div_17.transition",
+      "target": "LobbyMainScreen_div_17",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "lobby-main-screen_div_18.transition",
+      "target": "LobbyMainScreen_div_18",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "lobby-main-screen_div_19.transition",
+      "target": "LobbyMainScreen_div_19",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "lobby-main-screen_div_20.transition",
+      "target": "LobbyMainScreen_div_20",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "lobby-main-screen_div_25.transition",
+      "target": "LobbyMainScreen_div_25",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "lobby-main-screen_div_31.transition",
+      "target": "LobbyMainScreen_div_31",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "lobby-main-screen_div_37.transition",
+      "target": "LobbyMainScreen_div_37",
+      "trigger": "state-change",
+      "preset": "slide",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "lobby-main-screen_button_1.transition",
+      "target": "LobbyMainScreen_button_1",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "lobby-main-screen_button_2.transition",
+      "target": "LobbyMainScreen_button_2",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "lobby-main-screen_button_3.transition",
+      "target": "LobbyMainScreen_button_3",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "motionCount": 11,
+    "tokenCount": 5,
+    "manualRewriteCount": 15
+  }
+}

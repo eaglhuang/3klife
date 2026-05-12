@@ -1,0 +1,15 @@
+{
+  "screenId": "lobby-main-screen",
+  "currentBundle": "lobby_ui",
+  "distribution": [
+    {
+      "bundle": "generals",
+      "spriteCount": 2
+    }
+  ],
+  "suggestion": {
+    "primary": "generals",
+    "confidence": "high",
+    "reason": "current=lobby_ui 但實際資產主要落在 generals (2)"
+  }
+}
