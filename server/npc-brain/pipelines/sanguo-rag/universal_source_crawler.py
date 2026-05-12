@@ -10,12 +10,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from repo_layout import pipeline_config_path, pipeline_root, resolve_repo_root
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+REPO_ROOT = resolve_repo_root(__file__)
+PIPELINE_ROOT = pipeline_root(REPO_ROOT)
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth")
-DEFAULT_SOURCE_CONFIG = Path("server/npc-brain/pipelines/sanguo-rag/config/external-evidence-sources.json")
-DEFAULT_SOURCE_SCHEMA = Path("server/npc-brain/pipelines/sanguo-rag/config/source-policy.schema.json")
-DEFAULT_BENCHMARK_SCRIPT = Path("server/npc-brain/pipelines/sanguo-rag/benchmark_external_source.py")
+DEFAULT_SOURCE_CONFIG = pipeline_config_path(REPO_ROOT, "external-evidence-sources.json")
+DEFAULT_SOURCE_SCHEMA = pipeline_config_path(REPO_ROOT, "source-policy.schema.json")
+DEFAULT_BENCHMARK_SCRIPT = PIPELINE_ROOT / "benchmark_external_source.py"
 
 CRAWLABLE_SOURCE_CLASSES = (
     "high-yield-character-site",

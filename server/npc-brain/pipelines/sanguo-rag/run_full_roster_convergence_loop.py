@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import time
@@ -11,13 +12,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from repo_layout import pipeline_config_path, pipeline_root, resolve_repo_root
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-PIPELINE_ROOT = Path("server/npc-brain/pipelines/sanguo-rag")
+
+REPO_ROOT = resolve_repo_root(__file__)
+PIPELINE_ROOT = pipeline_root(REPO_ROOT)
 
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth")
-DEFAULT_SOURCE_CONFIG = Path("server/npc-brain/pipelines/sanguo-rag/config/external-evidence-sources.json")
-DEFAULT_LANE_POLICY_CONFIG = Path("server/npc-brain/pipelines/sanguo-rag/config/full-roster-lane-policy.json")
+DEFAULT_SOURCE_CONFIG = pipeline_config_path(REPO_ROOT, "external-evidence-sources.json")
+DEFAULT_LANE_POLICY_CONFIG = pipeline_config_path(REPO_ROOT, "full-roster-lane-policy.json")
 DEFAULT_GENERALS_PATH = Path("assets/resources/data/generals.json")
 DEFAULT_EVENTS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl")
 DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
@@ -37,6 +40,21 @@ DEFAULT_PRECISION_POLICY = {
     "genericCandidateBucketSize": 3,
 }
 AUTO_RETIRED_VERDICTS = {"auto-retired", "auto-retired-reject", "auto-retired-low-roi"}
+TRANSIENT_HTTP_STATUS = {408, 425, 429, 500, 502, 503, 504, 520, 522, 524}
+TRANSIENT_REASON_KEYWORDS = (
+    "timeout",
+    "timed out",
+    "gateway timeout",
+    "gateway time-out",
+    "connection reset",
+    "connection refused",
+    "socket hang up",
+    "econnreset",
+    "econnrefused",
+    "etimedout",
+    "eai_again",
+    "network error",
+)
 
 
 def utc_now() -> str:
@@ -142,7 +160,12 @@ def command_text(command: list[str]) -> str:
     return " ".join(command)
 
 
-def run_command(command: list[str], *, dry_run: bool) -> dict[str, Any]:
+def run_command(
+    command: list[str],
+    *,
+    dry_run: bool,
+    env_overrides: dict[str, str] | None = None,
+) -> dict[str, Any]:
     if dry_run:
         return {
             "command": command_text(command),
@@ -151,6 +174,9 @@ def run_command(command: list[str], *, dry_run: bool) -> dict[str, Any]:
             "stdout": "",
             "stderr": "",
         }
+    env = os.environ.copy()
+    if env_overrides:
+        env.update({str(key): str(value) for key, value in env_overrides.items() if value is not None})
     result = subprocess.run(
         command,
         cwd=REPO_ROOT,
@@ -158,6 +184,7 @@ def run_command(command: list[str], *, dry_run: bool) -> dict[str, Any]:
         capture_output=True,
         encoding="utf-8",
         errors="replace",
+        env=env,
     )
     return {
         "command": command_text(command),
@@ -252,6 +279,70 @@ def external_verdict_bucket(verdict: Any) -> str:
     if text in {"approve", "reject", "manual-only"}:
         return text
     return "reject"
+
+
+def parse_http_status_token(value: Any) -> int | None:
+    text = str(value or "").strip().lower()
+    if not text:
+        return None
+    if text.startswith("httpstatus="):
+        text = text.split("=", 1)[1].strip()
+    try:
+        status = int(text)
+    except (TypeError, ValueError):
+        return None
+    return status if status > 0 else None
+
+
+def is_transient_network_reject(prior_row: dict[str, Any]) -> bool:
+    status = parse_http_status_token(prior_row.get("stage1HttpStatus"))
+    if status in TRANSIENT_HTTP_STATUS:
+        return True
+
+    failure_reasons = prior_row.get("stage1FailureReasons")
+    stage2_reasons = prior_row.get("stage2FailureReasons")
+    stage3_reasons = prior_row.get("stage3FailureReasons")
+    reason_text = compact_text(prior_row.get("stage1Reason")).lower()
+    live_status = compact_text(prior_row.get("stage1LiveStatus")).lower()
+
+    # Backward compatibility: old summaries may not carry stage1/stage2 fields.
+    summary_path_text = str(prior_row.get("summaryJsonPath") or "").strip()
+    if summary_path_text and (status is None or not failure_reasons or not reason_text or not live_status):
+        summary_payload = read_json(resolve_path(summary_path_text))
+        if isinstance(summary_payload, dict):
+            stage1_payload = summary_payload.get("stage1Precheck")
+            if isinstance(stage1_payload, dict):
+                if status is None:
+                    status = parse_http_status_token(stage1_payload.get("httpStatus"))
+                if not reason_text:
+                    reason_text = compact_text(stage1_payload.get("reason")).lower()
+                if not live_status:
+                    live_status = compact_text(stage1_payload.get("liveStatus")).lower()
+            if not failure_reasons and isinstance(summary_payload.get("stage1FailureReasons"), list):
+                failure_reasons = summary_payload.get("stage1FailureReasons")
+            if not stage2_reasons and isinstance(summary_payload.get("stage2FailureReasons"), list):
+                stage2_reasons = summary_payload.get("stage2FailureReasons")
+            if not stage3_reasons and isinstance(summary_payload.get("stage3FailureReasons"), list):
+                stage3_reasons = summary_payload.get("stage3FailureReasons")
+
+    if status in TRANSIENT_HTTP_STATUS:
+        return True
+
+    if isinstance(failure_reasons, list):
+        for token in failure_reasons:
+            parsed = parse_http_status_token(token)
+            if parsed in TRANSIENT_HTTP_STATUS:
+                return True
+
+    combined_parts = [reason_text, live_status]
+    if isinstance(failure_reasons, list):
+        combined_parts.extend(compact_text(token).lower() for token in failure_reasons)
+    if isinstance(stage2_reasons, list):
+        combined_parts.extend(compact_text(token).lower() for token in stage2_reasons)
+    if isinstance(stage3_reasons, list):
+        combined_parts.extend(compact_text(token).lower() for token in stage3_reasons)
+    combined_text = " ".join(part for part in combined_parts if part)
+    return any(keyword in combined_text for keyword in TRANSIENT_REASON_KEYWORDS)
 
 
 def previous_source_results_from_manifest(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -370,8 +461,21 @@ def apply_source_roi_policy(
             decisions.append(decision)
             continue
 
+        prior_verdict_raw = str(prior.get("finalVerdict") or "").strip().lower()
+        if prior_verdict_raw in AUTO_RETIRED_VERDICTS and sclass == "primary-text-site":
+            row["__sampleSizeOverride"] = base_sample
+            row["__roiPolicyAction"] = "retry-stale-auto-retire"
+            row["__roiPolicyReason"] = "prior auto-retired verdict is treated as stale for primary-text; retry allowed"
+            decision["action"] = "retry-stale-auto-retire"
+            decision["sampleSize"] = base_sample
+            decision["reason"] = "prior auto-retired verdict is treated as stale for primary-text; retry allowed"
+            prepared.append(row)
+            decisions.append(decision)
+            continue
+
         prior_verdict = external_verdict_bucket(prior.get("finalVerdict"))
-        if auto_retire_reject and prior_verdict == "reject":
+        prior_transient_reject = is_transient_network_reject(prior)
+        if auto_retire_reject and prior_verdict == "reject" and not prior_transient_reject:
             row["__skipRoi"] = True
             row["__sampleSizeOverride"] = 0
             row["__roiPolicyAction"] = "auto-retired-reject"
@@ -379,6 +483,16 @@ def apply_source_roi_policy(
             decision["action"] = "auto-retired-reject"
             decision["sampleSize"] = 0
             decision["reason"] = f"prior verdict={prior.get('finalVerdict')}"
+            prepared.append(row)
+            decisions.append(decision)
+            continue
+        if auto_retire_reject and prior_verdict == "reject" and prior_transient_reject:
+            row["__sampleSizeOverride"] = base_sample
+            row["__roiPolicyAction"] = "retry-transient-reject"
+            row["__roiPolicyReason"] = "prior reject appears transient network failure; retry allowed"
+            decision["action"] = "retry-transient-reject"
+            decision["sampleSize"] = base_sample
+            decision["reason"] = "prior reject appears transient network failure; retry allowed"
             prepared.append(row)
             decisions.append(decision)
             continue
@@ -638,12 +752,63 @@ def collect_manual_source_metrics(
     return summarized
 
 
+def build_seed_to_card_priority_allowlist(
+    *,
+    scoreboard_path: Path,
+    limit: int,
+    output_path: Path,
+) -> tuple[list[str], str]:
+    payload = read_json(scoreboard_path)
+    rows = payload.get("rows") if isinstance(payload, dict) else []
+    if not isinstance(rows, list):
+        rows = []
+    if limit <= 0:
+        return [], "disabled(limit<=0)"
+
+    candidates: list[dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("nextLane") or "").strip() != "seed-to-card":
+            continue
+        person_id = str(row.get("generalId") or row.get("candidatePersonId") or "").strip()
+        if not person_id:
+            continue
+        candidates.append(row)
+
+    candidates.sort(
+        key=lambda row: (
+            -float(row.get("priorityScore") or 0.0),
+            -float(row.get("worldbuildingUsabilityScore") or 0.0),
+            -float(row.get("historicalTrustScore") or 0.0),
+            -int(row.get("seedCount") or 0),
+            -int(row.get("cardCount") or 0),
+            str(row.get("generalId") or row.get("candidatePersonId") or ""),
+        )
+    )
+    selected_ids: list[str] = []
+    for row in candidates:
+        person_id = str(row.get("generalId") or row.get("candidatePersonId") or "").strip()
+        if not person_id or person_id in selected_ids:
+            continue
+        selected_ids.append(person_id)
+        if len(selected_ids) >= limit:
+            break
+
+    if not selected_ids:
+        return [], "no-seed-to-card-candidates"
+
+    write_json(output_path, {"personIds": selected_ids, "count": len(selected_ids), "canonicalWrites": False})
+    return selected_ids, "ok"
+
+
 def run_global_seed_pipeline(
     *,
     round_root: Path,
     round_id: str,
     scoreboard_path: Path | None,
     seed_paths: list[Path],
+    seed_to_card_priority_limit: int,
     dry_run: bool,
     overwrite: bool,
 ) -> dict[str, Any]:
@@ -653,6 +818,7 @@ def run_global_seed_pipeline(
     ranking_path = pipeline_root / "external-evidence-seed-ranking.json"
     candidate_cards_path = pipeline_root / "candidate-evidence-cards.jsonl"
     candidate_summary_path = pipeline_root / "candidate-evidence-card-summary.json"
+    allowlist_path = pipeline_root / "seed-to-card-priority-person-allowlist.json"
 
     if not scoreboard_path or not scoreboard_path.exists():
         return {
@@ -668,6 +834,10 @@ def run_global_seed_pipeline(
             "harvestCommand": None,
             "scoreCommand": None,
             "promoteCommand": None,
+            "seedToCardPriorityLimit": int(seed_to_card_priority_limit),
+            "seedToCardPrioritySelectedCount": 0,
+            "seedToCardPriorityAllowlistPath": None,
+            "seedToCardPriorityReason": "missing-scoreboard-json",
         }
 
     seed_rows = merge_seed_rows(seed_paths)
@@ -685,9 +855,19 @@ def run_global_seed_pipeline(
             "harvestCommand": None,
             "scoreCommand": None,
             "promoteCommand": None,
+            "seedToCardPriorityLimit": int(seed_to_card_priority_limit),
+            "seedToCardPrioritySelectedCount": 0,
+            "seedToCardPriorityAllowlistPath": None,
+            "seedToCardPriorityReason": "no-seed-input",
         }
 
     write_jsonl(merged_seed_path, seed_rows)
+
+    allowlist_ids, allowlist_reason = build_seed_to_card_priority_allowlist(
+        scoreboard_path=scoreboard_path,
+        limit=int(seed_to_card_priority_limit),
+        output_path=allowlist_path,
+    )
 
     harvest_command = [
         sys.executable,
@@ -724,6 +904,8 @@ def run_global_seed_pipeline(
         "--output-root",
         repo_relative(pipeline_root),
     ]
+    if allowlist_ids:
+        promote_command.extend(["--person-allowlist-json", repo_relative(allowlist_path)])
     if overwrite:
         promote_command.append("--overwrite")
     promote_result = run_command(promote_command, dry_run=dry_run)
@@ -741,6 +923,10 @@ def run_global_seed_pipeline(
         "harvestCommand": harvest_result,
         "scoreCommand": score_result,
         "promoteCommand": promote_result,
+        "seedToCardPriorityLimit": int(seed_to_card_priority_limit),
+        "seedToCardPrioritySelectedCount": len(allowlist_ids),
+        "seedToCardPriorityAllowlistPath": repo_relative(allowlist_path) if allowlist_ids else None,
+        "seedToCardPriorityReason": allowlist_reason,
     }
 
 
@@ -945,30 +1131,346 @@ def run_runtime_readiness(
     touched = [gid for gid in touched if gid]
     selected = touched[:30] if runtime_mode == "touched" else touched[:80]
 
-    output_root = run_root / "runtime-readiness"
+    matrix = run_runtime_readiness_matrix_once(
+        output_root=run_root / "runtime-readiness",
+        general_ids=selected,
+        dry_run=dry_run,
+        overwrite=overwrite,
+    )
+    return {
+        "enabled": True,
+        "mode": runtime_mode,
+        "command": matrix.get("command"),
+        "returnCode": matrix.get("returnCode"),
+        "summaryPath": matrix.get("summaryPath"),
+        "statusCounts": dict(matrix.get("statusCounts") or {}),
+        "failCount": int(matrix.get("failCount") or 0),
+        "warnCount": int(matrix.get("warnCount") or 0),
+        "selectedGeneralIds": selected,
+        "failGeneralIds": list(matrix.get("failGeneralIds") or []),
+        "rows": matrix.get("rows") if isinstance(matrix.get("rows"), list) else [],
+    }
+
+
+def run_runtime_readiness_matrix_once(
+    *,
+    output_root: Path,
+    general_ids: list[str],
+    dry_run: bool,
+    overwrite: bool,
+    env_overrides: dict[str, str] | None = None,
+) -> dict[str, Any]:
     command = [
         sys.executable,
         str((REPO_ROOT / PIPELINE_ROOT / "build_runtime_readiness_matrix.py").resolve()),
         "--output-root",
         repo_relative(output_root),
     ]
-    for general_id in selected:
-        command.extend(["--general-id", general_id])
+    for general_id in general_ids:
+        command.extend(["--general-id", str(general_id)])
     if overwrite:
         command.append("--overwrite")
-    result = run_command(command, dry_run=dry_run)
+    result = run_command(command, dry_run=dry_run, env_overrides=env_overrides)
     payload = read_json(output_root / "multi-general-readiness.json")
     summary = payload.get("summary") if isinstance(payload, dict) else {}
+    rows = payload.get("rows") if isinstance(payload, dict) else []
+    row_items = rows if isinstance(rows, list) else []
+    fail_general_ids = sorted(
+        {
+            str(row.get("generalId") or "").strip()
+            for row in row_items
+            if isinstance(row, dict) and str(row.get("status") or "").strip().lower() == "fail"
+        }
+    )
+    fail_count = int((summary or {}).get("failCount") or 0)
+    warn_count = int((summary or {}).get("warnCount") or 0)
+    status_counts = dict((summary or {}).get("statusCounts") or {})
+    return_code = int(result.get("returnCode") or 0)
+    if not dry_run and return_code != 0 and not row_items:
+        fallback_ids = [str(gid or "").strip() for gid in general_ids if str(gid or "").strip()]
+        fail_general_ids = sorted(set(fallback_ids))
+        fail_count = max(fail_count, len(fail_general_ids) if fail_general_ids else 1)
+        status_counts["fail"] = fail_count
     return {
-        "enabled": True,
-        "mode": runtime_mode,
         "command": result,
-        "returnCode": result.get("returnCode"),
+        "returnCode": return_code,
         "summaryPath": repo_relative(output_root / "multi-general-readiness.json"),
-        "statusCounts": dict((summary or {}).get("statusCounts") or {}),
-        "failCount": int((summary or {}).get("failCount") or 0),
-        "warnCount": int((summary or {}).get("warnCount") or 0),
+        "statusCounts": status_counts,
+        "failCount": fail_count,
+        "warnCount": warn_count,
+        "failGeneralIds": fail_general_ids,
+        "rows": row_items,
     }
+
+
+def runtime_packet_strength(packet: dict[str, Any]) -> int:
+    rank = {"strong": 3, "rich": 2, "thin": 1}
+    return rank.get(str(packet.get("packetStrength") or "").strip().lower(), 0)
+
+
+def synth_summary_from_packet(general_id: str, packet: dict[str, Any]) -> str:
+    text = compact_text((packet.get("examples") or [None])[0])
+    if text:
+        return text[:160]
+    source_ref = compact_text(packet.get("sourceRef"))
+    return f"{general_id} synthetic runtime event from {source_ref or 'source packet'}"
+
+
+def build_runtime_ref_blitz_synthetic_events(
+    *,
+    round_id: str,
+    output_path: Path,
+    fail_general_ids: list[str],
+    source_event_packets_path: Path,
+    max_events_per_general: int,
+) -> dict[str, Any]:
+    packets = read_jsonl(source_event_packets_path)
+    fail_set = {str(gid or "").strip() for gid in fail_general_ids if str(gid or "").strip()}
+    grouped: dict[str, list[dict[str, Any]]] = {gid: [] for gid in fail_set}
+    for packet in packets:
+        general_ids = [str(gid or "").strip() for gid in (packet.get("generalIds") or []) if str(gid or "").strip()]
+        if not general_ids:
+            continue
+        matched = [gid for gid in general_ids if gid in fail_set]
+        if not matched:
+            continue
+        for gid in matched:
+            grouped.setdefault(gid, []).append(packet)
+
+    rows: list[dict[str, Any]] = []
+    no_packet_generals: list[str] = []
+    created_per_general: dict[str, int] = {}
+    max_per_general = max(max_events_per_general, 1)
+    for general_id in sorted(fail_set):
+        candidates = grouped.get(general_id) or []
+        if not candidates:
+            no_packet_generals.append(general_id)
+            created_per_general[general_id] = 0
+            continue
+        ranked = sorted(
+            candidates,
+            key=lambda packet: (
+                runtime_packet_strength(packet),
+                len(packet.get("angleFamilies") or []),
+                len(packet.get("generalIds") or []),
+                len(compact_text((packet.get("examples") or [None])[0])),
+            ),
+            reverse=True,
+        )
+        used_source_refs: set[str] = set()
+        created = 0
+        for packet in ranked:
+            source_ref = compact_text(packet.get("sourceRef"))
+            if not source_ref or source_ref in used_source_refs:
+                continue
+            used_source_refs.add(source_ref)
+            created += 1
+            chapter_no = packet.get("chapterNo")
+            summary = synth_summary_from_packet(general_id, packet)
+            packet_general_ids = [str(gid or "").strip() for gid in (packet.get("generalIds") or []) if str(gid or "").strip()]
+            participant_ids = sorted({general_id, *packet_general_ids})
+            confidence = 0.76 if runtime_packet_strength(packet) >= 2 else 0.70
+            event_key = f"synth-{general_id}-{created:02d}"
+            event_id = f"synth-event.{general_id}.{created:02d}.{stable_hash(round_id, general_id, source_ref, summary, length=8)}"
+            rows.append(
+                {
+                    "eventId": event_id,
+                    "eventKey": event_key,
+                    "generalIds": participant_ids,
+                    "sourceRefs": [source_ref],
+                    "chapterNo": chapter_no if isinstance(chapter_no, int) else None,
+                    "location": None,
+                    "summary": summary,
+                    "sourceQuote": summary,
+                    "confidence": confidence,
+                    "eventType": "runtime-ref-blitz-synthetic",
+                    "reviewStatus": "ready",
+                    "canonicalWrites": False,
+                }
+            )
+            if created >= max_per_general:
+                break
+        created_per_general[general_id] = created
+    write_jsonl(output_path, rows)
+    return {
+        "eventPath": repo_relative(output_path),
+        "eventCount": len(rows),
+        "noPacketGenerals": no_packet_generals,
+        "createdPerGeneral": created_per_general,
+    }
+
+
+def export_runtime_profiles_for_generals(
+    *,
+    general_ids: list[str],
+    stable_knowledge_path: Path,
+    relationship_evidence_path: Path,
+    source_event_packets_path: Path,
+    events_path: Path,
+    core_report_path: Path,
+    output_root: Path,
+    dry_run: bool,
+    overwrite: bool,
+) -> dict[str, Any]:
+    command_results: list[dict[str, Any]] = []
+    success_general_ids: list[str] = []
+    failed_general_ids: list[str] = []
+    for general_id in general_ids:
+        command = [
+            sys.executable,
+            str((REPO_ROOT / PIPELINE_ROOT / "export_general_runtime_profile.py").resolve()),
+            "--general-id",
+            general_id,
+            "--stable-knowledge",
+            repo_relative(stable_knowledge_path),
+            "--source-event-packets",
+            repo_relative(source_event_packets_path),
+            "--events",
+            repo_relative(events_path),
+            "--relationship-evidence",
+            repo_relative(relationship_evidence_path),
+            "--core-report",
+            repo_relative(core_report_path),
+            "--output-root",
+            repo_relative(output_root),
+        ]
+        if overwrite:
+            command.append("--overwrite")
+        result = run_command(command, dry_run=dry_run)
+        command_results.append({"generalId": general_id, "result": result})
+        if int(result.get("returnCode") or 0) == 0:
+            success_general_ids.append(general_id)
+        else:
+            failed_general_ids.append(general_id)
+    return {
+        "commandResults": command_results,
+        "successGeneralIds": success_general_ids,
+        "failedGeneralIds": failed_general_ids,
+        "runtimeProfileRoot": repo_relative(output_root),
+    }
+
+
+def run_runtime_readiness_with_ref_blitz(
+    *,
+    run_root: Path,
+    round_id: str,
+    rows: list[dict[str, Any]],
+    runtime_mode: str,
+    dry_run: bool,
+    overwrite: bool,
+    enable_ref_blitz: bool,
+    max_events_per_general: int,
+    stable_knowledge_path: Path,
+    relationship_evidence_path: Path,
+    source_event_packets_path: Path,
+    core_report_path: Path,
+) -> dict[str, Any]:
+    primary = run_runtime_readiness(
+        run_root=run_root,
+        rows=rows,
+        runtime_mode=runtime_mode,
+        dry_run=dry_run,
+        overwrite=overwrite,
+    )
+    primary["primarySummaryPath"] = primary.get("summaryPath")
+    primary["primaryFailCount"] = int(primary.get("failCount") or 0)
+    primary["refBlitzApplied"] = False
+    primary["refBlitzReason"] = "disabled"
+
+    if runtime_mode == "off":
+        primary["refBlitzReason"] = "runtime-off"
+        return primary
+    if not enable_ref_blitz:
+        return primary
+    if dry_run:
+        primary["refBlitzReason"] = "dry-run"
+        return primary
+
+    fail_general_ids = [str(gid or "").strip() for gid in (primary.get("failGeneralIds") or []) if str(gid or "").strip()]
+    fail_general_ids = sorted(set(fail_general_ids))
+    if not fail_general_ids:
+        primary["refBlitzReason"] = "no-fail-generals"
+        return primary
+
+    blitz_root = run_root / "runtime-readiness-ref-blitz"
+    blitz_root.mkdir(parents=True, exist_ok=True)
+    synthetic_events_path = blitz_root / "synthetic-events.from-packets.jsonl"
+    synthetic_events = build_runtime_ref_blitz_synthetic_events(
+        round_id=round_id,
+        output_path=synthetic_events_path,
+        fail_general_ids=fail_general_ids,
+        source_event_packets_path=source_event_packets_path,
+        max_events_per_general=max_events_per_general,
+    )
+    if int(synthetic_events.get("eventCount") or 0) <= 0:
+        primary["refBlitzReason"] = "no-synthetic-events"
+        primary["refBlitzSyntheticEventsPath"] = synthetic_events.get("eventPath")
+        primary["refBlitzNoPacketGenerals"] = synthetic_events.get("noPacketGenerals") or []
+        return primary
+
+    runtime_profile_root = blitz_root / "runtime-profiles"
+    exported = export_runtime_profiles_for_generals(
+        general_ids=fail_general_ids,
+        stable_knowledge_path=stable_knowledge_path,
+        relationship_evidence_path=relationship_evidence_path,
+        source_event_packets_path=source_event_packets_path,
+        events_path=synthetic_events_path,
+        core_report_path=core_report_path,
+        output_root=runtime_profile_root,
+        dry_run=dry_run,
+        overwrite=True,
+    )
+    exported_generals = [str(gid or "").strip() for gid in (exported.get("successGeneralIds") or []) if str(gid or "").strip()]
+    if not exported_generals:
+        primary["refBlitzReason"] = "runtime-profile-export-failed"
+        primary["refBlitzSyntheticEventsPath"] = synthetic_events.get("eventPath")
+        primary["refBlitzExport"] = exported
+        return primary
+
+    rerun = run_runtime_readiness_matrix_once(
+        output_root=blitz_root / "runtime-readiness-rerun",
+        general_ids=exported_generals,
+        dry_run=dry_run,
+        overwrite=True,
+        env_overrides={"NPC_RUNTIME_PROFILE_ROOT": str(runtime_profile_root.resolve())},
+    )
+    rerun_fail = [str(gid or "").strip() for gid in (rerun.get("failGeneralIds") or []) if str(gid or "").strip()]
+    unresolved_fail = sorted(set(rerun_fail))
+    resolved_fail = sorted(set(fail_general_ids) - set(unresolved_fail))
+
+    merged_status = dict(primary.get("statusCounts") or {})
+    base_pass = int((primary.get("statusCounts") or {}).get("pass") or 0)
+    base_warn = int((primary.get("statusCounts") or {}).get("warn") or 0)
+    merged_status["pass"] = base_pass + len(resolved_fail)
+    if base_warn > 0:
+        merged_status["warn"] = base_warn
+    else:
+        merged_status.pop("warn", None)
+    if unresolved_fail:
+        merged_status["fail"] = len(unresolved_fail)
+    else:
+        merged_status.pop("fail", None)
+
+    primary["statusCounts"] = merged_status
+    primary["failCount"] = len(unresolved_fail)
+    primary["warnCount"] = int(rerun.get("warnCount") or 0)
+    primary["summaryPath"] = rerun.get("summaryPath")
+    primary["failGeneralIds"] = unresolved_fail
+    primary["returnCode"] = rerun.get("returnCode")
+    primary["refBlitzApplied"] = True
+    primary["refBlitzReason"] = "applied"
+    primary["refBlitzFailGeneralCount"] = len(fail_general_ids)
+    primary["refBlitzResolvedCount"] = len(resolved_fail)
+    primary["refBlitzUnresolvedCount"] = len(unresolved_fail)
+    primary["refBlitzRerunSummaryPath"] = rerun.get("summaryPath")
+    primary["refBlitzRuntimeProfileRoot"] = repo_relative(runtime_profile_root)
+    primary["refBlitzSyntheticEventsPath"] = synthetic_events.get("eventPath")
+    primary["refBlitzSyntheticEventCount"] = int(synthetic_events.get("eventCount") or 0)
+    primary["refBlitzNoPacketGenerals"] = synthetic_events.get("noPacketGenerals") or []
+    primary["refBlitzCreatedPerGeneral"] = synthetic_events.get("createdPerGeneral") or {}
+    primary["refBlitzExport"] = exported
+    primary["refBlitzRerun"] = rerun
+    return primary
 
 
 def select_best_clue(clues: list[dict[str, Any]]) -> dict[str, Any]:
@@ -1310,6 +1812,12 @@ def run_external_benchmarks(
                     "manualSeedJsonlPath": None,
                     "manualSeedInjected": False,
                     "summaryJsonPath": None,
+                    "stage1FailureReasons": [],
+                    "stage1HttpStatus": None,
+                    "stage1LiveStatus": "",
+                    "stage1Reason": "",
+                    "stage2FailureReasons": [],
+                    "stage3FailureReasons": [],
                     "roiPolicyAction": roi_action,
                     "roiPolicyReason": roi_reason,
                 }
@@ -1338,6 +1846,12 @@ def run_external_benchmarks(
                     "manualSeedJsonlPath": None,
                     "manualSeedInjected": False,
                     "summaryJsonPath": None,
+                    "stage1FailureReasons": [],
+                    "stage1HttpStatus": None,
+                    "stage1LiveStatus": "",
+                    "stage1Reason": "",
+                    "stage2FailureReasons": [],
+                    "stage3FailureReasons": [],
                     "roiPolicyAction": roi_action,
                     "roiPolicyReason": roi_reason,
                 }
@@ -1369,6 +1883,7 @@ def run_external_benchmarks(
 
         summary_path = benchmark_root / benchmark_run_id / "benchmark-summary.json"
         summary = read_json(summary_path)
+        stage1 = summary.get("stage1Precheck") if isinstance(summary, dict) and isinstance(summary.get("stage1Precheck"), dict) else {}
         stage2 = summary.get("stage2Harvest") if isinstance(summary, dict) else {}
         stage3 = summary.get("stage3Yield") if isinstance(summary, dict) else {}
         outputs = stage3.get("outputs") if isinstance(stage3, dict) else {}
@@ -1392,8 +1907,14 @@ def run_external_benchmarks(
                 "summaryJsonPath": repo_relative(summary_path),
                 "finalVerdict": summary.get("finalVerdict") if isinstance(summary, dict) else "reject",
                 "stage1Passed": summary.get("stage1Passed") if isinstance(summary, dict) else False,
+                "stage1FailureReasons": summary.get("stage1FailureReasons") if isinstance(summary, dict) else [],
+                "stage1HttpStatus": stage1.get("httpStatus") if isinstance(stage1, dict) else None,
+                "stage1LiveStatus": stage1.get("liveStatus") if isinstance(stage1, dict) else "",
+                "stage1Reason": stage1.get("reason") if isinstance(stage1, dict) else "",
                 "stage2Passed": summary.get("stage2Passed") if isinstance(summary, dict) else False,
+                "stage2FailureReasons": summary.get("stage2FailureReasons") if isinstance(summary, dict) else [],
                 "stage3Passed": summary.get("stage3Passed") if isinstance(summary, dict) else False,
+                "stage3FailureReasons": summary.get("stage3FailureReasons") if isinstance(summary, dict) else [],
                 "samplePageCount": (stage2 or {}).get("samplePageCount") if isinstance(stage2, dict) else 0,
                 "fetchedPageCount": (stage2 or {}).get("fetchedPageCount") if isinstance(stage2, dict) else 0,
                 "seedCount": (stage3 or {}).get("seedCount") if isinstance(stage3, dict) else 0,
@@ -1806,6 +2327,7 @@ def run_round(
         round_id=round_id,
         scoreboard_path=effective_scoreboard_path,
         seed_paths=seed_input_paths,
+        seed_to_card_priority_limit=max(int(args.seed_to_card_priority_limit), 0),
         dry_run=dry_run,
         overwrite=args.overwrite,
     )
@@ -1969,6 +2491,8 @@ def run_round(
         repo_relative(cards_path),
         "--internal-relationship-evidence",
         repo_relative(relationship_json_path),
+        "--source-config",
+        repo_relative(source_config_path),
         "--output-root",
         repo_relative(external_relationship_root),
     ]
@@ -1978,36 +2502,47 @@ def run_round(
     external_relationship_json_path = external_relationship_root / "source-grounded-relationship-edges.external.jsonl"
     merged_relationship_json_path = relationship_root / "source-grounded-relationship-edges.merged.jsonl"
     merged_relationship_summary_path = relationship_root / "relationship-evidence-merge-summary.json"
-    merged_relationship_rows = merge_relationship_edges(
-        [
-            path
-            for path in [relationship_json_path, external_relationship_json_path]
-            if path.exists()
-        ]
-    )
-    write_jsonl(merged_relationship_json_path, merged_relationship_rows)
-    base_relationship_rows = read_jsonl(relationship_json_path)
-    external_relationship_rows = read_jsonl(external_relationship_json_path)
-    merged_relationship_summary = {
-        "version": "1.0.0",
-        "generatedAt": utc_now(),
-        "canonicalWrites": False,
-        "inputs": {
-            "baseRelationshipPath": repo_relative(relationship_json_path),
-            "externalRelationshipPath": repo_relative(external_relationship_json_path),
-        },
-        "outputs": {
-            "mergedRelationshipPath": repo_relative(merged_relationship_json_path),
-            "summaryPath": repo_relative(merged_relationship_summary_path),
-        },
-        "metrics": {
-            "baseEdgeCount": len(base_relationship_rows),
-            "externalEdgeCount": len(external_relationship_rows),
-            "mergedEdgeCount": len(merged_relationship_rows),
-            "dedupRemovedCount": len(base_relationship_rows) + len(external_relationship_rows) - len(merged_relationship_rows),
-        },
-    }
-    write_json(merged_relationship_summary_path, merged_relationship_summary)
+    item_relationship_json_path: Path | None = None
+    item_relationship_result: dict[str, Any] | None = None
+
+    def write_relationship_merge_summary(*, item_path: Path | None = None) -> dict[str, Any]:
+        base_relationship_rows = read_jsonl(relationship_json_path)
+        external_relationship_rows = read_jsonl(external_relationship_json_path)
+        item_relationship_rows = read_jsonl(item_path) if item_path and item_path.exists() else []
+        merged_relationship_rows = merge_relationship_edges(
+            [
+                path
+                for path in [relationship_json_path, external_relationship_json_path, item_path]
+                if isinstance(path, Path) and path.exists()
+            ]
+        )
+        write_jsonl(merged_relationship_json_path, merged_relationship_rows)
+        input_row_count = len(base_relationship_rows) + len(external_relationship_rows) + len(item_relationship_rows)
+        summary = {
+            "version": "1.0.0",
+            "generatedAt": utc_now(),
+            "canonicalWrites": False,
+            "inputs": {
+                "baseRelationshipPath": repo_relative(relationship_json_path),
+                "externalRelationshipPath": repo_relative(external_relationship_json_path),
+                "itemRelationshipPath": repo_relative(item_path) if item_path and item_path.exists() else None,
+            },
+            "outputs": {
+                "mergedRelationshipPath": repo_relative(merged_relationship_json_path),
+                "summaryPath": repo_relative(merged_relationship_summary_path),
+            },
+            "metrics": {
+                "baseEdgeCount": len(base_relationship_rows),
+                "externalEdgeCount": len(external_relationship_rows),
+                "itemEdgeCount": len(item_relationship_rows),
+                "mergedEdgeCount": len(merged_relationship_rows),
+                "dedupRemovedCount": input_row_count - len(merged_relationship_rows),
+            },
+        }
+        write_json(merged_relationship_summary_path, summary)
+        return summary
+
+    merged_relationship_summary = write_relationship_merge_summary()
     effective_relationship_json_path = merged_relationship_json_path if merged_relationship_json_path.exists() else relationship_json_path
 
     event_seed_root = round_root / "event-question-seeds"
@@ -2045,6 +2580,25 @@ def run_round(
         packet_command.append("--overwrite")
     packet_result = run_command(packet_command, dry_run=dry_run)
     packet_json_path = packet_root / "source-event-packets.jsonl"
+
+    item_relationship_root = round_root / "item-relationship-overlay"
+    item_relationship_command = [
+        sys.executable,
+        str((REPO_ROOT / PIPELINE_ROOT / "build_item_relationship_overlay.py").resolve()),
+        "--source-event-packets",
+        repo_relative(packet_json_path),
+        "--source-config",
+        repo_relative(source_config_path),
+        "--output-root",
+        repo_relative(item_relationship_root),
+    ]
+    if args.overwrite:
+        item_relationship_command.append("--overwrite")
+    item_relationship_result = run_command(item_relationship_command, dry_run=dry_run)
+    item_relationship_json_path = item_relationship_root / "person-item-relationship-edges.external.jsonl"
+
+    if item_relationship_json_path.exists():
+        merged_relationship_summary = write_relationship_merge_summary(item_path=item_relationship_json_path)
 
     estimate_root = round_root / "knowledge-progress"
     estimate_command = [
@@ -2103,6 +2657,7 @@ def run_round(
     if args.overwrite:
         core_command.append("--overwrite")
     core_result = run_command(core_command, dry_run=dry_run)
+    core_progress_json_path = core_progress_root / f"{round_id}.json"
 
     scoreboard_refresh_command = [
         sys.executable,
@@ -2175,12 +2730,19 @@ def run_round(
         three_lane_summary_path = three_lane_root / three_lane_run_id / "three-lane-progress-summary.json"
         three_lane_summary_payload = read_json(three_lane_summary_path)
 
-    runtime_payload = run_runtime_readiness(
+    runtime_payload = run_runtime_readiness_with_ref_blitz(
         run_root=round_root,
+        round_id=round_id,
         rows=scoreboard_rows,
         runtime_mode=args.runtime_readiness,
         dry_run=dry_run,
         overwrite=args.overwrite,
+        enable_ref_blitz=bool(args.runtime_ref_blitz),
+        max_events_per_general=max(args.runtime_ref_blitz_max_events_per_general, 1),
+        stable_knowledge_path=stable_json_path,
+        relationship_evidence_path=effective_relationship_json_path,
+        source_event_packets_path=packet_json_path,
+        core_report_path=core_progress_json_path,
     )
 
     return {
@@ -2208,11 +2770,12 @@ def run_round(
         "relationshipEvidencePath": repo_relative(effective_relationship_json_path),
         "baseRelationshipEvidencePath": repo_relative(relationship_json_path),
         "externalRelationshipEvidencePath": repo_relative(external_relationship_json_path),
+        "itemRelationshipEvidencePath": repo_relative(item_relationship_json_path) if item_relationship_json_path else None,
         "relationshipMergeSummaryPath": repo_relative(merged_relationship_summary_path),
         "eventQuestionSeedsPath": repo_relative(event_seed_json_path),
         "sourceEventPacketsPath": repo_relative(packet_json_path),
         "progressJsonPath": repo_relative(progress_json_path),
-        "coreProgressJsonPath": repo_relative(core_progress_root / f"{round_id}.json"),
+        "coreProgressJsonPath": repo_relative(core_progress_json_path),
         "precisionSummaryPath": (precision_result or {}).get("summaryPath"),
         "precisionBaselineManifestPath": (precision_result or {}).get("baselineManifestPath"),
         "precisionGeneralIds": (precision_result or {}).get("selectedGeneralIds"),
@@ -2221,6 +2784,14 @@ def run_round(
         "threeLaneStopReason": (three_lane_summary_payload if isinstance(three_lane_summary_payload, dict) else {}).get("stopReason"),
         "threeLaneFinalBaselineManifest": (three_lane_summary_payload if isinstance(three_lane_summary_payload, dict) else {}).get("finalBaselineManifest"),
         "runtimeReadinessSummaryPath": runtime_payload.get("summaryPath"),
+        "runtimeReadinessPrimarySummaryPath": runtime_payload.get("primarySummaryPath"),
+        "runtimeRefBlitzApplied": runtime_payload.get("refBlitzApplied"),
+        "runtimeRefBlitzReason": runtime_payload.get("refBlitzReason"),
+        "runtimeRefBlitzFailGeneralCount": runtime_payload.get("refBlitzFailGeneralCount"),
+        "runtimeRefBlitzResolvedCount": runtime_payload.get("refBlitzResolvedCount"),
+        "runtimeRefBlitzSyntheticEventCount": runtime_payload.get("refBlitzSyntheticEventCount"),
+        "runtimeRefBlitzRuntimeProfileRoot": runtime_payload.get("refBlitzRuntimeProfileRoot"),
+        "runtimeRefBlitzRerunSummaryPath": runtime_payload.get("refBlitzRerunSummaryPath"),
         "runtimeReadinessFailCount": runtime_payload.get("failCount"),
         "pendingReviewCount": pilot_pending_count,
         "newEvidenceCardCount": int(external_summary.get("newEvidenceCardCount") or 0),
@@ -2239,6 +2810,7 @@ def run_round(
             "stableKnowledge": stable_result,
             "relationshipEvidence": relationship_result,
             "externalRelationshipOverlay": external_relationship_result,
+            "itemRelationshipOverlay": item_relationship_result,
             "eventQuestionSeeds": event_seed_result,
             "sourceEventPackets": packet_result,
             "estimateKnowledge": estimate_result,
@@ -2340,10 +2912,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--run-precision-lane", dest="run_precision_lane", action="store_true")
     parser.add_argument("--no-precision-lane", dest="run_precision_lane", action="store_false")
     parser.set_defaults(run_precision_lane=True)
+    parser.add_argument(
+        "--seed-to-card-priority-limit",
+        type=int,
+        default=180,
+        help="Only promote seed->card for top priority seed-to-card people from scoreboard (0 disables filtering).",
+    )
     parser.add_argument("--precision-top-generals", type=int, default=12)
     parser.add_argument("--precision-top-per-general", type=int, default=3)
     parser.add_argument("--run-three-lane", action="store_true")
     parser.add_argument("--runtime-readiness", choices=["touched", "final", "off"], default="touched")
+    parser.add_argument("--runtime-ref-blitz", dest="runtime_ref_blitz", action="store_true")
+    parser.add_argument("--no-runtime-ref-blitz", dest="runtime_ref_blitz", action="store_false")
+    parser.set_defaults(runtime_ref_blitz=True)
+    parser.add_argument("--runtime-ref-blitz-max-events-per-general", type=int, default=12)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
@@ -2594,6 +3176,9 @@ def main() -> int:
         "threeLaneSummaryPath": latest_round.get("threeLaneSummaryPath"),
         "threeLaneFinalBaselineManifest": final_three_lane_manifest,
         "runtimeReadinessSummaryPath": latest_round.get("runtimeReadinessSummaryPath"),
+        "runtimeReadinessPrimarySummaryPath": latest_round.get("runtimeReadinessPrimarySummaryPath"),
+        "runtimeRefBlitzRuntimeProfileRoot": latest_round.get("runtimeRefBlitzRuntimeProfileRoot"),
+        "runtimeRefBlitzRerunSummaryPath": latest_round.get("runtimeRefBlitzRerunSummaryPath"),
         "ruleProposalsJsonPath": repo_relative(rule_json_path),
         "ruleProposalsMarkdownPath": repo_relative(rule_md_path),
         "ruminationLedgerPath": repo_relative(rumination_path),
@@ -2640,7 +3225,10 @@ def main() -> int:
             "sameResidualRepeatLimit": args.same_residual_repeat_limit,
             "failureRateLimit": args.failure_rate_limit,
             "runtimeReadiness": args.runtime_readiness,
+            "runtimeRefBlitz": bool(args.runtime_ref_blitz),
+            "runtimeRefBlitzMaxEventsPerGeneral": int(args.runtime_ref_blitz_max_events_per_general),
             "runPrecisionLane": args.run_precision_lane,
+            "seedToCardPriorityLimit": int(args.seed_to_card_priority_limit),
             "runThreeLane": args.run_three_lane,
             "sourceRoiPolicy": {
                 "enabled": bool(args.enable_source_roi_policy),

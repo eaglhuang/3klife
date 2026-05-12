@@ -309,7 +309,7 @@
       "sourceFamily": "sanguozhi",
       "sourceLayer": "history",
       "trustTier": "secondary",
-      "baseUrl": "https://www.gutenberg.org/ebooks/25606",
+      "baseUrl": "https://www.gutenberg.org/ebooks/25606.txt.utf-8",
       "singleSourceMaxGrade": "B",
       "claimScopes": [
         "identity",

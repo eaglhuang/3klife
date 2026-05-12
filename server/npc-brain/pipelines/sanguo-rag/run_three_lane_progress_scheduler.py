@@ -9,9 +9,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from repo_layout import pipeline_root, resolve_repo_root
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-PIPELINE_ROOT = Path("server/npc-brain/pipelines/sanguo-rag")
+REPO_ROOT = resolve_repo_root(__file__)
+PIPELINE_ROOT = pipeline_root(REPO_ROOT)
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/progress-advancement")
 HUMAN_STOP_REASONS = {"pending-review-limit", "review-batch-ready"}
 FATAL_STOP_REASONS = {"failure-rate-limit", "runtime-readiness-fail"}

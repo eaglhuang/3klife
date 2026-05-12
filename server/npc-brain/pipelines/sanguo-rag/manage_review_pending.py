@@ -6,15 +6,18 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from repo_layout import pipeline_config_path, pipeline_root, resolve_repo_root
 
+
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-label-summary.json")
-DEFAULT_DECISION_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/unresolved-triage-decisions.json")
-DEFAULT_MANUAL_ROSTER_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json")
-DEFAULT_ALIAS_OVERRIDE_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/general-alias-overrides.json")
+DEFAULT_DECISION_PATH = pipeline_config_path(REPO_ROOT, "unresolved-triage-decisions.json")
+DEFAULT_MANUAL_ROSTER_PATH = pipeline_config_path(REPO_ROOT, "manual-roster-seeds.json")
+DEFAULT_ALIAS_OVERRIDE_PATH = pipeline_config_path(REPO_ROOT, "general-alias-overrides.json")
 DEFAULT_CACHE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/resolution-loop/romance-character-list-cache.json")
 DEFAULT_BUCKETS_JSON = Path("artifacts/data-pipeline/sanguo-rag/extracted/resolution-loop/review-pending-buckets.json")
 DEFAULT_BUCKETS_MD = Path("artifacts/data-pipeline/sanguo-rag/extracted/resolution-loop/review-pending-buckets.md")
-DEFAULT_LOOP_MODULE = Path("server/npc-brain/pipelines/sanguo-rag/run_resolution_loop.py")
+DEFAULT_LOOP_MODULE = pipeline_root(REPO_ROOT) / "run_resolution_loop.py"
 
 
 def parse_args() -> argparse.Namespace:

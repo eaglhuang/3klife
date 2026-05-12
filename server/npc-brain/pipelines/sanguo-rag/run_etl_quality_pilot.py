@@ -8,12 +8,14 @@ from pathlib import Path
 
 from build_keyword_options import build_keyword_pack, load_roster_names
 from build_persona_cards import build_persona_card, index_events
+from repo_layout import pipeline_config_path, resolve_repo_root
 
 
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_EVENTS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl")
 DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
 DEFAULT_GENERALS_PATH = Path("assets/resources/data/generals.json")
-DEFAULT_MANUAL_ROSTER_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json")
+DEFAULT_MANUAL_ROSTER_PATH = pipeline_config_path(REPO_ROOT, "manual-roster-seeds.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot")
 CORE_PILOT_GENERAL_IDS = ["zhang-fei", "guan-yu", "zhao-yun", "liu-bei", "cao-cao", "zhuge-liang"]
 SPEECH_CONTEXT_MODES = ["life_chat", "encounter_line", "inner_monologue", "meeting_statement"]

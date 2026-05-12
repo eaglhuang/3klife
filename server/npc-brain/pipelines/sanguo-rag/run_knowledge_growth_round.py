@@ -10,14 +10,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from repo_layout import pipeline_root, resolve_repo_root
+
 
 DEFAULT_PILOT_REPORT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/etl-quality-pilot-report.json")
 DEFAULT_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds")
 DEFAULT_REVIEW_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot")
 DEFAULT_DEEPSEEK_API_URL = "http://172.31.80.1:11435/api/chat"
-REPO_ROOT = Path(__file__).resolve().parents[4]
-PIPELINE_ROOT = Path("server/npc-brain/pipelines/sanguo-rag")
+REPO_ROOT = resolve_repo_root(__file__)
+PIPELINE_ROOT = pipeline_root(REPO_ROOT)
 
 
 def parse_args() -> argparse.Namespace:

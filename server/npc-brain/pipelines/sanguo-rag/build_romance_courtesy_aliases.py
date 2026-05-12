@@ -7,10 +7,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
+from repo_layout import pipeline_config_path, resolve_repo_root
 
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_GENERALS_PATH = Path("assets/resources/data/generals.json")
 DEFAULT_PEOPLE_PATH = Path("assets/resources/data/person-registry.json")
-DEFAULT_MANUAL_ROSTER_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json")
+DEFAULT_MANUAL_ROSTER_PATH = pipeline_config_path(REPO_ROOT, "manual-roster-seeds.json")
 DEFAULT_OUTPUT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/romance-courtesy-aliases.json")
 ROMANCE_CHARACTER_LIST_RAW_URL = "https://zh.wikipedia.org/w/index.php?title=%E4%B8%89%E5%9B%BD%E6%BC%94%E4%B9%89%E8%A7%92%E8%89%B2%E5%88%97%E8%A1%A8&action=raw"
 DECORATIVE_WRAPPER_CHARS = "【】[]「」『』《》〈〉"

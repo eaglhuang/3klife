@@ -7,8 +7,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
+from repo_layout import resolve_repo_root
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth/external-evidence-seeds-v3-r1")
 DEFAULT_RANKING_JSON = DEFAULT_OUTPUT_ROOT / "external-evidence-seed-ranking.json"
 
@@ -33,6 +34,19 @@ def read_json(path: Path) -> Any:
     if not path.exists():
         return {}
     return json.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def load_person_allowlist(path: Path | None) -> set[str]:
+    if path is None or not path.exists():
+        return set()
+    payload = read_json(path)
+    if isinstance(payload, dict):
+        rows = payload.get("personIds")
+    else:
+        rows = payload
+    if not isinstance(rows, list):
+        return set()
+    return {str(item or "").strip() for item in rows if str(item or "").strip()}
 
 
 def write_json(path: Path, payload: Any) -> None:
@@ -153,6 +167,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Promote high-quality EvidenceSeed rows into candidate EvidenceCard JSONL.")
     parser.add_argument("--ranking-json", default=str(DEFAULT_RANKING_JSON), help="Input external-evidence-seed-ranking.json.")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory.")
+    parser.add_argument(
+        "--person-allowlist-json",
+        default=None,
+        help="Optional JSON (array or {personIds: []}) allowlist; only seeds for listed person ids are promoted.",
+    )
     parser.add_argument("--min-score", type=float, default=70.0, help="Minimum seedConfidenceScore for candidate card promotion.")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting outputs.")
     return parser.parse_args()
@@ -161,6 +180,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     ranking_path = resolve_path(args.ranking_json)
+    allowlist_path = resolve_path(args.person_allowlist_json) if args.person_allowlist_json else None
     output_root = resolve_path(args.output_root)
     cards_path = output_root / "candidate-evidence-cards.jsonl"
     summary_path = output_root / "candidate-evidence-card-summary.json"
@@ -172,17 +192,22 @@ def main() -> int:
     seeds = ranking.get("rankedSeeds") if isinstance(ranking, dict) else []
     if not isinstance(seeds, list):
         seeds = []
+    person_allowlist = load_person_allowlist(allowlist_path)
 
     cards: list[dict[str, Any]] = []
     rejected: list[dict[str, Any]] = []
     for seed in seeds:
         if not isinstance(seed, dict):
             continue
+        pid = person_id(seed)
+        if person_allowlist and pid not in person_allowlist:
+            rejected.append({"seedId": seed.get("seedId"), "personId": pid, "reason": "personId not in allowlist"})
+            continue
         ok, reason = can_promote(seed, args.min_score)
         if ok:
             cards.append(card_from_seed(seed))
         else:
-            rejected.append({"seedId": seed.get("seedId"), "personId": person_id(seed), "reason": reason})
+            rejected.append({"seedId": seed.get("seedId"), "personId": pid, "reason": reason})
 
     written = write_jsonl(cards_path, cards)
     summary = {
@@ -190,7 +215,12 @@ def main() -> int:
         "generatedAt": utc_now(),
         "mode": "seed-to-candidate-evidence-card-promotion",
         "canonicalWrites": False,
-        "inputs": {"rankingJson": repo_relative(ranking_path), "minScore": args.min_score},
+        "inputs": {
+            "rankingJson": repo_relative(ranking_path),
+            "minScore": args.min_score,
+            "personAllowlistJson": repo_relative(allowlist_path) if allowlist_path else None,
+            "personAllowlistCount": len(person_allowlist),
+        },
         "outputs": {
             "candidateEvidenceCardsJsonl": repo_relative(cards_path),
             "summaryJson": repo_relative(summary_path),

@@ -236,12 +236,18 @@ class NpcDialogueService:
     ) -> None:
         self.repo_root = repo_root or find_repo_root(Path.cwd())
         load_local_env(self.repo_root)
+        artifact_root_path = artifact_root or Path(os.environ.get("NPC_ARTIFACT_ROOT") or DEFAULT_ARTIFACT_ROOT)
+        persona_root_path = persona_root or Path(os.environ.get("NPC_PERSONA_ROOT") or DEFAULT_PERSONA_ROOT)
+        runtime_profile_root_path = runtime_profile_root or Path(
+            os.environ.get("NPC_RUNTIME_PROFILE_ROOT") or DEFAULT_RUNTIME_PROFILE_ROOT
+        )
+        event_root_path = event_root or Path(os.environ.get("NPC_EVENT_ROOT") or DEFAULT_EVENT_ROOT)
         self.store = RuntimeProfileStore(
             repo_root=self.repo_root,
-            artifact_root=artifact_root or DEFAULT_ARTIFACT_ROOT,
-            persona_root=persona_root or DEFAULT_PERSONA_ROOT,
-            runtime_profile_root=runtime_profile_root or Path(os.environ.get("NPC_RUNTIME_PROFILE_ROOT") or DEFAULT_RUNTIME_PROFILE_ROOT),
-            event_root=event_root or DEFAULT_EVENT_ROOT,
+            artifact_root=artifact_root_path,
+            persona_root=persona_root_path,
+            runtime_profile_root=runtime_profile_root_path,
+            event_root=event_root_path,
         )
         self.artifact_root = self.store.artifact_root
         self.persona_root = self.store.persona_root
@@ -709,8 +715,14 @@ class NpcDialogueService:
 
 
 def find_repo_root(start: Path) -> Path:
+    override = (os.environ.get("NPC_REPO_ROOT") or "").strip()
+    if override:
+        return Path(override).resolve()
+
     current = start.resolve()
     for candidate in [current, *current.parents]:
         if (candidate / "AGENTS.md").exists() and (candidate / "server/npc-brain").exists():
+            return candidate
+        if (candidate / "app").exists() and (candidate / "pipelines/sanguo-rag").exists():
             return candidate
     raise FileNotFoundError("Could not locate repo root from current working directory.")

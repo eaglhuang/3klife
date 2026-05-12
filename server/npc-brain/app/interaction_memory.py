@@ -13,8 +13,8 @@ from .llm_dialogue_renderer import log_debug_event
 
 
 CURRENT_MEMORY_SCHEMA_VERSION = 1
-DEFAULT_MEMORY_EVENTS_ROOT = Path("server/npc-brain/local/interaction-events")
-DEFAULT_MEMORY_STORE_ROOT = Path("server/npc-brain/local/general-memory")
+DEFAULT_MEMORY_EVENTS_SUBPATH = Path("local/interaction-events")
+DEFAULT_MEMORY_STORE_SUBPATH = Path("local/general-memory")
 DEFAULT_MEMORY_COMPRESS_INTERVAL = 50
 DEFAULT_MEMORY_RECENT_WINDOW = 15
 
@@ -33,6 +33,16 @@ def _normalize_keywords(keywords: list[str] | None) -> list[str]:
 def _resolve_root(repo_root: Path, configured_root: str | Path | None, default_root: Path) -> Path:
     candidate = Path(configured_root) if configured_root is not None else default_root
     return candidate if candidate.is_absolute() else repo_root / candidate
+
+
+def _detect_npc_brain_root(repo_root: Path) -> Path:
+    override = (os.environ.get("NPC_BRAIN_ROOT") or "").strip()
+    if override:
+        return Path(override).resolve()
+    monorepo_path = repo_root / "server/npc-brain"
+    if monorepo_path.exists():
+        return monorepo_path.resolve()
+    return repo_root.resolve()
 
 
 def _atomic_tmp_path(path: Path) -> Path:
@@ -161,8 +171,11 @@ def memory_key(save_id: str, general_id: str) -> str:
 
 
 def resolve_memory_roots(repo_root: Path) -> tuple[Path, Path]:
-    events_root = _resolve_root(repo_root, os.environ.get("NPC_MEMORY_EVENTS_ROOT"), DEFAULT_MEMORY_EVENTS_ROOT)
-    store_root = _resolve_root(repo_root, os.environ.get("NPC_MEMORY_STORE_ROOT"), DEFAULT_MEMORY_STORE_ROOT)
+    npc_brain_root = _detect_npc_brain_root(repo_root)
+    default_events_root = npc_brain_root / DEFAULT_MEMORY_EVENTS_SUBPATH
+    default_store_root = npc_brain_root / DEFAULT_MEMORY_STORE_SUBPATH
+    events_root = _resolve_root(repo_root, os.environ.get("NPC_MEMORY_EVENTS_ROOT"), default_events_root)
+    store_root = _resolve_root(repo_root, os.environ.get("NPC_MEMORY_STORE_ROOT"), default_store_root)
     return events_root, store_root
 
 

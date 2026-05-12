@@ -14,10 +14,13 @@ from typing import Any
 from urllib.parse import quote, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
+from repo_layout import pipeline_config_path, pipeline_root, resolve_repo_root
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+
+REPO_ROOT = resolve_repo_root(__file__)
+PIPELINE_ROOT = pipeline_root(REPO_ROOT)
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth")
-DEFAULT_SOURCE_CONFIG = Path("server/npc-brain/pipelines/sanguo-rag/config/external-evidence-sources.json")
+DEFAULT_SOURCE_CONFIG = pipeline_config_path(REPO_ROOT, "external-evidence-sources.json")
 DEFAULT_ALIAS_MAP = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/formal-mention-map.json")
 DEFAULT_SCOREBOARD_JSON = Path(
     "local/codex-smoke/knowledge-growth/full-roster-highway-wang-yi-female-fix-r1/"
@@ -25,11 +28,11 @@ DEFAULT_SCOREBOARD_JSON = Path(
 )
 DEFAULT_SOURCE_HEALTH_CLI = Path("tools_node/agent-clis/3klife-source-health.js")
 DEFAULT_HARVESTER_CLI = Path("tools_node/agent-clis/3klife-web-page-harvester.js")
-DEFAULT_BIOGRAPHY_EXTRACTOR = Path("server/npc-brain/pipelines/sanguo-rag/extract_harvested_page_evidence_seeds.py")
-DEFAULT_GENERIC_EXTRACTOR = Path("server/npc-brain/pipelines/sanguo-rag/extract_generic_passage_evidence_seeds.py")
-DEFAULT_SEED_HARVESTER = Path("server/npc-brain/pipelines/sanguo-rag/harvest_external_evidence_seeds.py")
-DEFAULT_SEED_SCORER = Path("server/npc-brain/pipelines/sanguo-rag/score_external_evidence_seeds.py")
-DEFAULT_SEED_PROMOTER = Path("server/npc-brain/pipelines/sanguo-rag/promote_seed_to_evidence_card.py")
+DEFAULT_BIOGRAPHY_EXTRACTOR = PIPELINE_ROOT / "extract_harvested_page_evidence_seeds.py"
+DEFAULT_GENERIC_EXTRACTOR = PIPELINE_ROOT / "extract_generic_passage_evidence_seeds.py"
+DEFAULT_SEED_HARVESTER = PIPELINE_ROOT / "harvest_external_evidence_seeds.py"
+DEFAULT_SEED_SCORER = PIPELINE_ROOT / "score_external_evidence_seeds.py"
+DEFAULT_SEED_PROMOTER = PIPELINE_ROOT / "promote_seed_to_evidence_card.py"
 
 SOURCE_CLASSES = (
     "high-yield-character-site",

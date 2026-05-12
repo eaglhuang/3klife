@@ -10,15 +10,21 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
+from repo_layout import pipeline_config_path, pipeline_root, resolve_npc_brain_root, resolve_repo_root
+
+
+REPO_ROOT = resolve_repo_root(__file__)
+NPC_BRAIN_ROOT = resolve_npc_brain_root(REPO_ROOT)
+PIPELINE_ROOT = pipeline_root(REPO_ROOT)
 
 DEFAULT_CHAPTERS_ROOT = Path("artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters")
 DEFAULT_ALIAS_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary")
 DEFAULT_OBSERVED_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions")
-DEFAULT_DECISION_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/unresolved-triage-decisions.json")
-DEFAULT_MANUAL_ROSTER_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json")
-DEFAULT_ALIAS_OVERRIDE_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/general-alias-overrides.json")
+DEFAULT_DECISION_PATH = pipeline_config_path(REPO_ROOT, "unresolved-triage-decisions.json")
+DEFAULT_MANUAL_ROSTER_PATH = pipeline_config_path(REPO_ROOT, "manual-roster-seeds.json")
+DEFAULT_ALIAS_OVERRIDE_PATH = pipeline_config_path(REPO_ROOT, "general-alias-overrides.json")
 DEFAULT_CHOICES_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/resolution-loop")
-DEFAULT_POSTGRES_IMPORTER = Path("server/npc-brain/pipelines/sanguo-rag/import_resolution_seed_to_postgres.py")
+DEFAULT_POSTGRES_IMPORTER = PIPELINE_ROOT / "import_resolution_seed_to_postgres.py"
 DEFAULT_PG_DSN_ENV = "SANGUO_RAG_PG_DSN"
 ROMANCE_CHARACTER_LIST_RAW_URL = "https://zh.wikipedia.org/w/index.php?title=%E4%B8%89%E5%9B%BD%E6%BC%94%E4%B9%89%E8%A7%92%E8%89%B2%E5%88%97%E8%A1%A8&action=raw"
 DEFAULT_ROMANCE_CHARACTER_CACHE_PATH = DEFAULT_CHOICES_ROOT / "romance-character-list-cache.json"
@@ -57,7 +63,7 @@ def resolve_pipeline_python() -> str:
         [
             sys.executable,
             str(Path.home() / ".venv/3klife-etl/bin/python"),
-            "server/npc-brain/.venv/bin/python",
+            str((NPC_BRAIN_ROOT / ".venv/bin/python").resolve()),
             ".venv/bin/python",
         ]
     )
@@ -541,7 +547,7 @@ def apply_answer_file(choices_root: Path, decision_path: Path, manual_roster_pat
     run_step(
         [
             resolve_pipeline_python(),
-            "server/npc-brain/pipelines/sanguo-rag/apply_triage_answers.py",
+            str((PIPELINE_ROOT / "apply_triage_answers.py").resolve()),
             "--answers",
             str(answers_path),
             "--decisions",
@@ -556,7 +562,7 @@ def apply_answer_file(choices_root: Path, decision_path: Path, manual_roster_pat
 def build_alias_dict(alias_output_root: Path, observed_path: Path, retry_without_observed: bool = False) -> None:
     args = [
         resolve_pipeline_python(),
-        "server/npc-brain/pipelines/sanguo-rag/build_alias_dict.py",
+        str((PIPELINE_ROOT / "build_alias_dict.py").resolve()),
         "--overwrite",
         "--output-root",
         str(alias_output_root),
@@ -583,7 +589,7 @@ def collect_observed_mentions(chapters_root: Path, alias_output_root: Path, obse
     run_step(
         [
             resolve_pipeline_python(),
-            "server/npc-brain/pipelines/sanguo-rag/collect_observed_mentions.py",
+            str((PIPELINE_ROOT / "collect_observed_mentions.py").resolve()),
             "--chapters-root",
             str(chapters_root),
             "--formal-map",

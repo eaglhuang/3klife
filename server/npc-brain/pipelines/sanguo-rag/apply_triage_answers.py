@@ -4,10 +4,12 @@ import argparse
 import json
 from pathlib import Path
 
+from repo_layout import pipeline_config_path, resolve_repo_root
 
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_ANSWERS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/resolution-loop/unresolved-triage-answers.todo.json")
-DEFAULT_DECISIONS_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/unresolved-triage-decisions.json")
-DEFAULT_MANUAL_ROSTER_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json")
+DEFAULT_DECISIONS_PATH = pipeline_config_path(REPO_ROOT, "unresolved-triage-decisions.json")
+DEFAULT_MANUAL_ROSTER_PATH = pipeline_config_path(REPO_ROOT, "manual-roster-seeds.json")
 
 
 def parse_args() -> argparse.Namespace:

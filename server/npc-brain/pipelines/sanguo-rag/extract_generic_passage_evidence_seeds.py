@@ -18,11 +18,12 @@ from extract_harvested_page_evidence_seeds import (
     to_traditional_hint,
     translate_seed_text_to_traditional,
 )
+from repo_layout import pipeline_config_path, resolve_repo_root
 
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_PAGES_JSONL = Path("local/codex-smoke/knowledge-growth/tmp-wikisource-sanguozhi-sample/pages.jsonl")
-DEFAULT_SOURCE_CONFIG = Path("server/npc-brain/pipelines/sanguo-rag/config/external-evidence-sources.json")
+DEFAULT_SOURCE_CONFIG = pipeline_config_path(REPO_ROOT, "external-evidence-sources.json")
 DEFAULT_ALIAS_MAP = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/formal-mention-map.json")
 DEFAULT_SCOREBOARD_JSON = Path(
     "local/codex-smoke/knowledge-growth/full-roster-highway-wang-yi-female-fix-r1/"

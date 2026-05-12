@@ -8,9 +8,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from repo_layout import pipeline_config_path, resolve_repo_root
 
+
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_GENERALS_PATH = Path("assets/resources/data/generals.json")
-DEFAULT_MANUAL_ROSTER_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json")
+DEFAULT_MANUAL_ROSTER_PATH = pipeline_config_path(REPO_ROOT, "manual-roster-seeds.json")
 DEFAULT_ALIAS_REPORT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/alias-review-report.json")
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_OBSERVED_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-label-summary.json")

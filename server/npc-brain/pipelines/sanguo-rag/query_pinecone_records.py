@@ -5,9 +5,10 @@ import json
 import sys
 from pathlib import Path
 
+from repo_layout import resolve_npc_brain_root, resolve_repo_root
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-SERVER_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = resolve_repo_root(__file__)
+SERVER_ROOT = resolve_npc_brain_root(REPO_ROOT)
 PIPELINE_ROOT = Path(__file__).resolve().parent
 for path in (SERVER_ROOT, PIPELINE_ROOT):
     if str(path) not in sys.path:

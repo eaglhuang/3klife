@@ -7,8 +7,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from repo_layout import pipeline_config_path, resolve_repo_root
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+
+REPO_ROOT = resolve_repo_root(__file__)
 
 DEFAULT_GENERALS_PATH = Path("assets/resources/data/generals.json")
 DEFAULT_EVENTS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl")
@@ -21,7 +23,7 @@ DEFAULT_EVENT_QUESTION_SEEDS_PATH = Path(
     "artifacts/data-pipeline/sanguo-rag/extracted/event-question-seeds/event-question-seeds.jsonl"
 )
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/full-roster-scoreboard")
-DEFAULT_LANE_POLICY_CONFIG = Path("server/npc-brain/pipelines/sanguo-rag/config/full-roster-lane-policy.json")
+DEFAULT_LANE_POLICY_CONFIG = pipeline_config_path(REPO_ROOT, "full-roster-lane-policy.json")
 
 PROFILE_CHOICES = ("all", "female-priority", "history-romance")
 DEFAULT_LANE_THRESHOLDS = {

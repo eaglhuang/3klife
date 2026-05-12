@@ -9,8 +9,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from repo_layout import resolve_repo_root
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth/external-observed-overlay")
 HISTORY_CROSS_FAMILY_THRESHOLD = 2
 NON_HISTORY_CROSS_FAMILY_THRESHOLD = 3

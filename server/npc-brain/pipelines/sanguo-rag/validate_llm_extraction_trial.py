@@ -6,12 +6,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from pydantic import BaseModel, Field, ValidationError, model_validator
+from repo_layout import pipeline_config_path, resolve_repo_root
 
 
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_EVENTS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl")
 DEFAULT_DIALOGUE_RESOLUTION_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/dialogue-resolution/dialogue-resolution.json")
 DEFAULT_GENERALS_PATH = Path("assets/resources/data/generals.json")
-DEFAULT_MANUAL_ROSTER_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json")
+DEFAULT_MANUAL_ROSTER_PATH = pipeline_config_path(REPO_ROOT, "manual-roster-seeds.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/llm-extraction-trial")
 
 

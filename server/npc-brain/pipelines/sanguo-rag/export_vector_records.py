@@ -8,9 +8,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Iterable
 
+from repo_layout import resolve_npc_brain_root, resolve_repo_root
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-SERVER_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = resolve_repo_root(__file__)
+SERVER_ROOT = resolve_npc_brain_root(REPO_ROOT)
 if str(SERVER_ROOT) not in sys.path:
     sys.path.insert(0, str(SERVER_ROOT))
 

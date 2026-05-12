@@ -8,12 +8,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from pydantic import BaseModel, Field
+from repo_layout import pipeline_config_path, resolve_repo_root
 
 
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_CHAPTERS_ROOT = Path("artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters")
 DEFAULT_FORMAL_MAP_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/formal-mention-map.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions")
-DEFAULT_TRIAGE_DECISIONS_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/unresolved-triage-decisions.json")
+DEFAULT_TRIAGE_DECISIONS_PATH = pipeline_config_path(REPO_ROOT, "unresolved-triage-decisions.json")
 DECORATIVE_WRAPPER_CHARS = "【】[]()（）「」『』《》〈〉"
 ADDRESS_TITLES = ["將軍", "軍師", "先生", "大人", "主公", "縣令", "太守", "都督", "丞相"]
 CJK_CANDIDATE_RE = re.compile(r"[\u4e00-\u9fff]{2,4}")

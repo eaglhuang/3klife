@@ -9,12 +9,20 @@ from pathlib import Path
 from typing import Any
 
 from relationship_type_refinement import refine_relationship_type
+from repo_layout import pipeline_config_path, resolve_repo_root
 
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth/external-relationship-overlay")
 DEFAULT_ALIAS_MAP = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/formal-mention-map.json")
+DEFAULT_SOURCE_CONFIG = pipeline_config_path(REPO_ROOT, "external-evidence-sources.json")
 ALLOWED_SOURCE_LAYERS = {"history", "romance", "encyclopedia", "worldbuilding", "folklore"}
+PRIMARY_TEXT_SOURCE_CLASSES = {"primary-text-site"}
+PRIMARY_TEXT_TRUST_TIERS = {"primary-text", "primary-text-transcription"}
+LAYER_PRIMARY_TEXT_CAP_MULTIPLIER = {
+    "history": 1.75,
+    "romance": 1.50,
+}
 LAYER_BASE_CONFIDENCE = {
     "history": 0.80,
     "romance": 0.74,
@@ -103,6 +111,21 @@ def read_json(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
     return json.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def load_source_policy_index(path: Path) -> dict[str, dict[str, Any]]:
+    payload = read_json(path)
+    rows = payload.get("sources") if isinstance(payload, dict) else []
+    index: dict[str, dict[str, Any]] = {}
+    if not isinstance(rows, list):
+        return index
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        source_id = str(row.get("sourceId") or "").strip()
+        if source_id:
+            index[source_id] = row
+    return index
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -213,6 +236,23 @@ def max_confidence_for_layer(source_layer: str) -> float:
 def source_edge_cap_for_layer(source_layer: str) -> int:
     layer = source_layer.lower().strip()
     return int(LAYER_SOURCE_EDGE_CAP.get(layer, 100))
+
+
+def source_edge_cap_for_profile(
+    *,
+    source_layer: str,
+    source_class: str,
+    trust_tier: str,
+) -> int:
+    layer = source_layer.lower().strip()
+    base_cap = max(source_edge_cap_for_layer(layer), 1)
+    normalized_class = source_class.lower().strip()
+    normalized_tier = trust_tier.lower().strip()
+    is_primary_text = normalized_class in PRIMARY_TEXT_SOURCE_CLASSES or normalized_tier in PRIMARY_TEXT_TRUST_TIERS
+    multiplier = LAYER_PRIMARY_TEXT_CAP_MULTIPLIER.get(layer, 1.0)
+    if is_primary_text and multiplier > 1.0:
+        base_cap = int(round(base_cap * multiplier))
+    return max(base_cap, 1)
 
 
 def clamp(value: float, minimum: float, maximum: float) -> float:
@@ -374,6 +414,7 @@ def edges_from_card(
     *,
     alias_pairs: list[tuple[str, str]],
     max_participants_per_card: int,
+    source_policy_index: dict[str, dict[str, Any]],
 ) -> tuple[list[dict[str, Any]], str]:
     quote = str(card.get("quote") or card.get("translatedTraditionalText") or "").strip()
     anchors = [str(item).strip() for item in (card.get("generalIds") or []) if str(item).strip() and not str(item).startswith("shadow:")]
@@ -390,7 +431,11 @@ def edges_from_card(
     if list_like_text(quote, len(participants)) and str(card.get("sourceLayer") or "").lower() in {"encyclopedia", "worldbuilding"}:
         return [], "list-like-noise"
 
-    source_layer = str(card.get("sourceLayer") or "")
+    source_id = str(card.get("sourcePolicyId") or card.get("sourceId") or "unknown-source").strip()
+    source_policy = source_policy_index.get(source_id, {})
+    source_layer = str(card.get("sourceLayer") or source_policy.get("sourceLayer") or "")
+    source_class = str(card.get("sourceClass") or source_policy.get("sourceClass") or "").strip().lower()
+    trust_tier = str(card.get("trustTier") or source_policy.get("trustTier") or "").strip().lower()
     cross_count = len(list(card.get("crossSiteSourceFamilies") or []))
     base_conf = base_confidence_for_layer(source_layer)
     if cross_count >= 5:
@@ -408,7 +453,6 @@ def edges_from_card(
     base_conf = clamp(base_conf, 0.45, max_confidence_for_layer(source_layer))
 
     evidence_id = str(card.get("evidenceId") or "")
-    source_id = str(card.get("sourcePolicyId") or card.get("sourceId") or "unknown-source").strip()
     locator = str(card.get("locator") or "").strip()
     chapter_no = parse_chapter_no(locator, list(card.get("sourceRefs") or []))
     source_ref = f"ext-card:{source_id}:{evidence_id}"
@@ -433,6 +477,8 @@ def edges_from_card(
                 "reviewStatus": "source-grounded-review" if base_conf < 0.8 else "source-grounded-strong",
                 "sourceLayer": f"external-{source_layer or 'unknown'}",
                 "sourceLayerRaw": source_layer or "unknown",
+                "sourceClass": source_class or "unknown",
+                "trustTier": trust_tier or "unknown",
                 "sourcePolicyId": source_id,
                 "sourceEvidenceId": evidence_id,
                 "crossSiteMatchCount": int(card.get("crossSiteMatchCount") or 0),
@@ -465,7 +511,7 @@ def dedupe_edges(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return deduped
 
 
-def apply_source_caps(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, int]]:
+def apply_source_caps(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, int], dict[str, int]]:
     by_source: dict[str, list[dict[str, Any]]] = {}
     for row in rows:
         source_id = str(row.get("sourcePolicyId") or "unknown-source").strip()
@@ -473,6 +519,7 @@ def apply_source_caps(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]],
 
     kept: list[dict[str, Any]] = []
     trimmed_counts: dict[str, int] = {}
+    cap_by_source: dict[str, int] = {}
     for source_id, source_rows in by_source.items():
         source_rows.sort(
             key=lambda row: (
@@ -486,7 +533,14 @@ def apply_source_caps(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]],
         layer = str(source_rows[0].get("sourceLayerRaw") or source_rows[0].get("sourceLayer") or "")
         if layer.startswith("external-"):
             layer = layer[len("external-") :]
-        cap = max(source_edge_cap_for_layer(layer), 1)
+        source_class = str(source_rows[0].get("sourceClass") or "").strip()
+        trust_tier = str(source_rows[0].get("trustTier") or "").strip()
+        cap = source_edge_cap_for_profile(
+            source_layer=layer,
+            source_class=source_class,
+            trust_tier=trust_tier,
+        )
+        cap_by_source[source_id] = cap
         selected = source_rows[:cap]
         kept.extend(selected)
         trimmed = max(len(source_rows) - len(selected), 0)
@@ -494,7 +548,7 @@ def apply_source_caps(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]],
             trimmed_counts[source_id] = trimmed
 
     kept.sort(key=lambda row: (str(row.get("sourcePolicyId") or ""), -float(row.get("edgeConfidence") or 0.0), str(row.get("fromId") or ""), str(row.get("toId") or ""), str(row.get("type") or "")))
-    return kept, dict(sorted(trimmed_counts.items()))
+    return kept, dict(sorted(trimmed_counts.items())), dict(sorted(cap_by_source.items()))
 
 
 def parse_args() -> argparse.Namespace:
@@ -502,6 +556,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--candidate-evidence-cards", action="append", default=[])
     parser.add_argument("--internal-relationship-evidence", action="append", default=[])
     parser.add_argument("--alias-map", default=str(DEFAULT_ALIAS_MAP))
+    parser.add_argument("--source-config", default=str(DEFAULT_SOURCE_CONFIG))
     parser.add_argument("--min-cross-family", type=int, default=2)
     parser.add_argument("--min-cross-family-non-history", type=int, default=3)
     parser.add_argument("--max-participants-per-card", type=int, default=4)
@@ -522,6 +577,7 @@ def main() -> int:
     output_root.mkdir(parents=True, exist_ok=True)
 
     alias_pairs = load_alias_mapping(resolve_path(args.alias_map))
+    source_policy_index = load_source_policy_index(resolve_path(args.source_config))
     internal_pair_keys = load_internal_pair_keys([resolve_path(path_text) for path_text in args.internal_relationship_evidence])
     card_rows: list[dict[str, Any]] = []
     for path_text in args.candidate_evidence_cards:
@@ -541,7 +597,12 @@ def main() -> int:
             continue
         if reason.startswith("ok-reparse:"):
             gate_accept_reparse[reason.split(":", 1)[1]] += 1
-        rows, transform_reason = edges_from_card(card, alias_pairs=alias_pairs, max_participants_per_card=max(args.max_participants_per_card, 2))
+        rows, transform_reason = edges_from_card(
+            card,
+            alias_pairs=alias_pairs,
+            max_participants_per_card=max(args.max_participants_per_card, 2),
+            source_policy_index=source_policy_index,
+        )
         if not rows:
             transform_reasons[transform_reason] += 1
             continue
@@ -573,7 +634,7 @@ def main() -> int:
             edge_rows.append(apply_signal_boost(edge, source_layer=source_layer, signals=signals))
 
     deduped_rows = dedupe_edges(edge_rows)
-    capped_rows, capped_trimmed_counts = apply_source_caps(deduped_rows)
+    capped_rows, capped_trimmed_counts, source_caps = apply_source_caps(deduped_rows)
     write_jsonl(jsonl_path, capped_rows)
     write_jsonl(sidecar_jsonl_path, sidecar_rows)
 
@@ -589,6 +650,7 @@ def main() -> int:
             "candidateEvidenceCards": [repo_relative(resolve_path(path)) for path in args.candidate_evidence_cards],
             "internalRelationshipEvidence": [repo_relative(resolve_path(path)) for path in args.internal_relationship_evidence],
             "aliasMapPath": repo_relative(resolve_path(args.alias_map)),
+            "sourceConfigPath": repo_relative(resolve_path(args.source_config)),
             "minCrossFamily": max(args.min_cross_family, 1),
             "minCrossFamilyNonHistory": max(args.min_cross_family_non_history, max(args.min_cross_family, 1)),
             "maxParticipantsPerCard": max(args.max_participants_per_card, 2),
@@ -609,6 +671,7 @@ def main() -> int:
             "uniqueSourcePolicyCount": len(source_policy_counts),
             "sourceCapTrimmedCount": max(len(deduped_rows) - len(capped_rows), 0),
             "sourceCapTrimmedBySource": capped_trimmed_counts,
+            "sourceCapBySource": source_caps,
             "gateRejectCounts": dict(sorted(gate_reasons.items())),
             "gateAcceptReparseByClaimType": dict(sorted(gate_accept_reparse.items())),
             "transformRejectCounts": dict(sorted(transform_reasons.items())),
@@ -654,6 +717,9 @@ def main() -> int:
         lines.append(f"- `{key}`: `{value}`")
     lines.extend(["", "## Source Cap Trimmed By Source", ""])
     for key, value in summary["metrics"]["sourceCapTrimmedBySource"].items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.extend(["", "## Source Cap By Source", ""])
+    for key, value in summary["metrics"]["sourceCapBySource"].items():
         lines.append(f"- `{key}`: `{value}`")
     lines.append("")
     md_path.write_text("\n".join(lines), encoding="utf-8")

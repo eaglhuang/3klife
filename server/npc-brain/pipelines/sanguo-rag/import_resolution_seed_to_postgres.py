@@ -6,6 +6,9 @@ import os
 import re
 from pathlib import Path
 
+from repo_layout import pipeline_config_path, pipeline_root, resolve_repo_root
+
+REPO_ROOT = resolve_repo_root(__file__)
 
 DEFAULT_OBSERVED_MENTIONS = Path(
     "artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json"
@@ -13,12 +16,8 @@ DEFAULT_OBSERVED_MENTIONS = Path(
 DEFAULT_ALIAS_MAP = Path(
     "artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/formal-mention-map.json"
 )
-DEFAULT_TRIAGE_DECISIONS = Path(
-    "server/npc-brain/pipelines/sanguo-rag/config/unresolved-triage-decisions.json"
-)
-DEFAULT_SCHEMA_SQL = Path(
-    "server/npc-brain/pipelines/sanguo-rag/sql/postgres_schema.sql"
-)
+DEFAULT_TRIAGE_DECISIONS = pipeline_config_path(REPO_ROOT, "unresolved-triage-decisions.json")
+DEFAULT_SCHEMA_SQL = pipeline_root(REPO_ROOT) / "sql/postgres_schema.sql"
 DEFAULT_PG_DSN_ENV = "SANGUO_RAG_PG_DSN"
 
 

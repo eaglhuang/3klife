@@ -17,12 +17,14 @@ from ollama_reasoning_client import (
     compact_text,
 )
 from reviewer_adapters import ReviewerAdapter, resolve_reviewer_adapter
+from repo_layout import pipeline_config_path, resolve_repo_root
 
 
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_ANSWERS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/event-review-answers.todo.json")
 DEFAULT_CHAPTERS_ROOT = Path("artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters")
 DEFAULT_PEOPLE_PATH = Path("assets/resources/data/person-registry.json")
-DEFAULT_MANUAL_ROSTER_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json")
+DEFAULT_MANUAL_ROSTER_PATH = pipeline_config_path(REPO_ROOT, "manual-roster-seeds.json")
 DEFAULT_WIKI_COURTESY_ALIASES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/romance-courtesy-aliases.json")
 DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
 SOURCE_REF_RE = re.compile(r"^(?P<chapter>\d{3})#p(?P<paragraph>\d+)$")

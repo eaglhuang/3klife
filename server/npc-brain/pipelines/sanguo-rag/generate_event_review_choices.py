@@ -6,12 +6,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from repo_layout import pipeline_config_path, resolve_repo_root
 
+
+REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/events")
 DEFAULT_REASONING_REPORT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning/deepseek-reasoning-report.json")
 DEFAULT_GENERALS_PATH = Path("assets/resources/data/generals.json")
-DEFAULT_MANUAL_ROSTER_PATH = Path("server/npc-brain/pipelines/sanguo-rag/config/manual-roster-seeds.json")
+DEFAULT_MANUAL_ROSTER_PATH = pipeline_config_path(REPO_ROOT, "manual-roster-seeds.json")
 DIRECT_BATTLE_TERMS = ["交鋒", "廝殺", "交戰", "搦戰", "親戰", "迎敵", "迎戰", "便戰", "酣戰", "直取", "攻打", "殺敗", "大敗", "截住", "追趕", "追襲", "斬", "殺"]
 LOW_REVIEW_VALUE_TERMS = ["表陳", "薦爲", "除", "遷", "奏其功", "前功", "司馬", "縣令", "現居何職", "白身", "太守", "鎮", "招募", "來投", "來會", "帳前吏", "族弟", "弟兄", "習槍棒", "散家資"]
 RANKING_SINGLE_ALIAS_HINTS = {
