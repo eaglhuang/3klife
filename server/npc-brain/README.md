@@ -109,7 +109,8 @@ flowchart TD
 | [LangGraph Studio 與部署](./文件/LangGraph%20Studio%20與部署.md) | Graphs、Studio 連線、本地 dev server、localtunnel、Deployments |
 | [開發啟動與煙霧測試](./文件/開發啟動與煙霧測試.md) | 本機安裝、healthz、smoke tests、建議檢查順序 |
 | [資料契約與 Cocos 串接](./文件/資料契約與%20Cocos%20串接.md) | Data contract、前端呼叫方式、debug panel 與 DTO 欄位 |
-| [README 拆分規劃](./說明文件拆分規劃.md) | 這次拆分的原則、命名與維護方式 |
+| [拆分歷史（已歸檔）](./文件/archive/說明文件拆分規劃.md) | 這次拆分的原則、命名與維護方式（歷史紀錄） |
+| [獨立 Repo 拆分實作清單（已歸檔）](./文件/archive/npc-brain-獨立-repo-拆分實作清單.zh-TW.md) | 拆分落地時的里程碑、工時估算與風險紀錄（歷史紀錄） |
 
 ### 文件關聯導航矩陣
 
