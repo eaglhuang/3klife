@@ -1,0 +1,51 @@
+{
+  "screenId": "battle-hud-screen",
+  "rendering": {
+    "nodeCount": 111,
+    "deferredNodeCount": 0,
+    "totalNodeCount": 111,
+    "maxDepth": 6,
+    "estimatedDrawCalls": 6,
+    "colorRectCount": 0
+  },
+  "loading": {
+    "atlasCount": 3,
+    "atlasLimit": 4,
+    "preloadSpriteCount": 4,
+    "deferredSpriteCount": 0,
+    "estimatedTextureBytes": 235152,
+    "fontCount": 3
+  },
+  "lifecycle": {
+    "lazySlotCount": 0,
+    "warmupHints": {
+      "next-frame": 0,
+      "idle": 0,
+      "tab-hover": 0,
+      "manual": 0
+    }
+  },
+  "runtimeGate": {
+    "nodeCount": {
+      "value": 111,
+      "warning": 35,
+      "blocker": 60,
+      "status": "fail"
+    },
+    "maxDepth": {
+      "value": 6,
+      "warning": 8,
+      "blocker": 12,
+      "status": "pass"
+    }
+  },
+  "verdict": {
+    "level": "blocker",
+    "warnings": [
+      "node-count-warning: 111 (>35)"
+    ],
+    "blockers": [
+      "node-count-blocker: 111 (>60)"
+    ]
+  }
+}

@@ -1,0 +1,5039 @@
+{
+  "id": "battle-hud-screen.skin",
+  "version": 1,
+  "slots": {
+    "auto.battle-hud-screen.battlehudscreen_div_1": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(10, 10, 10, 0.95)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(10, 10, 10, 0.6)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "backgroundDeep",
+            "offset": 0,
+            "opacity": 0.95
+          },
+          {
+            "color": "backgroundDeep",
+            "offset": 1,
+            "opacity": 0.6
+          }
+        ]
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_1_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 4,
+          "blur": 14,
+          "spread": 0,
+          "color": "rgba(0, 0, 0, 0.5)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 14,
+        "right": 14,
+        "top": 10,
+        "bottom": 18
+      },
+      "cornerRadius": 0
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_4": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 34,
+      "lineHeight": 48,
+      "letterSpacing": 2.72,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 0,
+        "blur": 12,
+        "color": "#FFE0884D"
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_5": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 3.3,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_7": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 26,
+      "lineHeight": 36,
+      "letterSpacing": 7.8,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 2,
+        "blur": 4,
+        "color": "#000000CC"
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_8": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 4.5,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_10": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_11": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "gdv3InkDeep",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_12": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "labelLg",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_15": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_16": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_17": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_18": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(240, 232, 216, 0.08)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(240, 232, 216, 0.03)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 0,
+            "opacity": 0.08
+          },
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 1,
+            "opacity": 0.03
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#b4a0642e"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_19": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(240, 232, 216, 0.08)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(240, 232, 216, 0.03)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 0,
+            "opacity": 0.08
+          },
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 1,
+            "opacity": 0.03
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#b4a0642e"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_20": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_21": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_22": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_23": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_24": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_25": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(255, 224, 136, 0.28)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(212, 175, 55, 0.08)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "secondaryLight",
+            "offset": 0,
+            "opacity": 0.28
+          },
+          {
+            "color": "secondary",
+            "offset": 1,
+            "opacity": 0.08
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ffe088"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_26": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(240, 232, 216, 0.08)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(240, 232, 216, 0.03)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 0,
+            "opacity": 0.08
+          },
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 1,
+            "opacity": 0.03
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#b4a0642e"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_27": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(240, 232, 216, 0.08)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(240, 232, 216, 0.03)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 0,
+            "opacity": 0.08
+          },
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 1,
+            "opacity": 0.03
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#b4a0642e"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_28": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_29": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_30": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_31": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_32": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_33": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_34": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(255, 224, 136, 0.28)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(212, 175, 55, 0.08)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "secondaryLight",
+            "offset": 0,
+            "opacity": 0.28
+          },
+          {
+            "color": "secondary",
+            "offset": 1,
+            "opacity": 0.08
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ffe088"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_35": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(255, 224, 136, 0.28)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(212, 175, 55, 0.08)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "secondaryLight",
+            "offset": 0,
+            "opacity": 0.28
+          },
+          {
+            "color": "secondary",
+            "offset": 1,
+            "opacity": 0.08
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ffe088"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_36": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_37": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_38": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_39": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_40": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_41": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_42": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(240, 232, 216, 0.08)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(240, 232, 216, 0.03)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 0,
+            "opacity": 0.08
+          },
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 1,
+            "opacity": 0.03
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#b4a0642e"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_43": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(240, 232, 216, 0.08)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(240, 232, 216, 0.03)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 0,
+            "opacity": 0.08
+          },
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 1,
+            "opacity": 0.03
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#b4a0642e"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_44": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_45": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_46": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_47": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_48": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_49": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(164, 210, 208, 0.12)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(63, 106, 98, 0.06)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "mirrorSigilField",
+            "offset": 0,
+            "opacity": 0.12
+          },
+          {
+            "color": "stdButtonPrimary",
+            "offset": 1,
+            "opacity": 0.06
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#8ccfc44d"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_50": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(240, 232, 216, 0.08)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(240, 232, 216, 0.03)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 0,
+            "opacity": 0.08
+          },
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 1,
+            "opacity": 0.03
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#b4a0642e"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_51": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(240, 232, 216, 0.08)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(240, 232, 216, 0.03)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 0,
+            "opacity": 0.08
+          },
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 1,
+            "opacity": 0.03
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#b4a0642e"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_52": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_53": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_54": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(178, 34, 34, 0.14)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(178, 34, 34, 0.04)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "primary",
+            "offset": 0,
+            "opacity": 0.14
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 0.04
+          }
+        ]
+      },
+      "borderWidth": 1,
+      "borderColor": "#ff6b6b40"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_56": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "opacity": 1,
+      "cornerRadius": 35,
+      "borderWidth": 3,
+      "borderColor": "#ffe088"
+    },
+    "auto.battle-hud-screen.battlehudscreen_img_1": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_common/placeholder/missing_sprite",
+      "expectedWidth": 64,
+      "expectedHeight": 64
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_57": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "opacity": 1,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_i_1": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(134, 225, 165)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(46, 139, 87)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 90,
+        "stops": [
+          {
+            "color": "tertiaryLight",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "tertiary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_58": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0.55,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 1,
+        "blur": 2,
+        "color": "#000000FF"
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_59": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "overflow": "RESIZE_HEIGHT",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_61": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "opacity": 1,
+      "cornerRadius": 35,
+      "borderWidth": 3,
+      "borderColor": "#a4d2d0"
+    },
+    "auto.battle-hud-screen.battlehudscreen_img_2": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_common/placeholder/missing_sprite",
+      "expectedWidth": 64,
+      "expectedHeight": 64
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_62": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "opacity": 1,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_i_2": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(134, 225, 165)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(46, 139, 87)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 90,
+        "stops": [
+          {
+            "color": "tertiaryLight",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "tertiary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_63": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0.55,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 1,
+        "blur": 2,
+        "color": "#000000FF"
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_64": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "overflow": "RESIZE_HEIGHT",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_66": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "opacity": 1,
+      "cornerRadius": 35,
+      "borderWidth": 3,
+      "borderColor": "#a4d2d0"
+    },
+    "auto.battle-hud-screen.battlehudscreen_img_3": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_common/placeholder/missing_sprite",
+      "expectedWidth": 64,
+      "expectedHeight": 64
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_67": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "opacity": 1,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_i_3": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(134, 225, 165)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(46, 139, 87)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 90,
+        "stops": [
+          {
+            "color": "tertiaryLight",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "tertiary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_68": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0.55,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 1,
+        "blur": 2,
+        "color": "#000000FF"
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_69": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "overflow": "RESIZE_HEIGHT",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_71": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "opacity": 1,
+      "cornerRadius": 35,
+      "borderWidth": 3,
+      "borderColor": "#a4d2d0"
+    },
+    "auto.battle-hud-screen.battlehudscreen_img_4": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_common/placeholder/missing_sprite",
+      "expectedWidth": 64,
+      "expectedHeight": 64
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_72": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "opacity": 1,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_i_4": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(134, 225, 165)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(46, 139, 87)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 90,
+        "stops": [
+          {
+            "color": "tertiaryLight",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "tertiary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_73": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0.55,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 1,
+        "blur": 2,
+        "color": "#000000FF"
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_74": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "overflow": "RESIZE_HEIGHT",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_76": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "opacity": 1,
+      "cornerRadius": 35,
+      "borderWidth": 3,
+      "borderColor": "#ff6b6b"
+    },
+    "auto.battle-hud-screen.battlehudscreen_img_5": {
+      "kind": "sprite-frame",
+      "path": "sprites/generals/avatars/lu_bu_avatar",
+      "expectedWidth": 64,
+      "expectedHeight": 64
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_77": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "opacity": 1,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_i_5": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(255, 107, 107)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(178, 34, 34)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 90,
+        "stops": [
+          {
+            "color": "error",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_78": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0.55,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 1,
+        "blur": 2,
+        "color": "#000000FF"
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_79": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "overflow": "RESIZE_HEIGHT",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_81": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "opacity": 1,
+      "cornerRadius": 35,
+      "borderWidth": 3,
+      "borderColor": "#ff6b6b"
+    },
+    "auto.battle-hud-screen.battlehudscreen_img_6": {
+      "kind": "sprite-frame",
+      "path": "sprites/generals/avatars/cao_cao_avatar",
+      "expectedWidth": 64,
+      "expectedHeight": 64
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_82": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "opacity": 1,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_i_6": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(255, 107, 107)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(178, 34, 34)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 90,
+        "stops": [
+          {
+            "color": "error",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_83": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0.55,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 1,
+        "blur": 2,
+        "color": "#000000FF"
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_84": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "overflow": "RESIZE_HEIGHT",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_86": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "opacity": 1,
+      "cornerRadius": 35,
+      "borderWidth": 3,
+      "borderColor": "#ff6b6b"
+    },
+    "auto.battle-hud-screen.battlehudscreen_img_7": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_common/placeholder/missing_sprite",
+      "expectedWidth": 64,
+      "expectedHeight": 64
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_87": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "opacity": 1,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_i_7": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(255, 107, 107)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(178, 34, 34)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 90,
+        "stops": [
+          {
+            "color": "error",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_88": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0.55,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 1,
+        "blur": 2,
+        "color": "#000000FF"
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_89": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "overflow": "RESIZE_HEIGHT",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_91": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
+      "opacity": 1,
+      "cornerRadius": 35,
+      "borderWidth": 3,
+      "borderColor": "#ff6b6b"
+    },
+    "auto.battle-hud-screen.battlehudscreen_img_8": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_common/placeholder/missing_sprite",
+      "expectedWidth": 64,
+      "expectedHeight": 64
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_92": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "opacity": 1,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_i_8": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(255, 107, 107)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(178, 34, 34)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 90,
+        "stops": [
+          {
+            "color": "error",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "primary",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_93": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 0.55,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true,
+      "shadow": {
+        "offsetX": 0,
+        "offsetY": 1,
+        "blur": 2,
+        "color": "#000000FF"
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_94": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "overflow": "RESIZE_HEIGHT",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_1": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 3.6,
+      "color": "error",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_aside_1": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(32, 32, 31, 0.92)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(15, 15, 15, 0.95)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceContainer",
+            "offset": 0,
+            "opacity": 0.92
+          },
+          {
+            "color": "background",
+            "offset": 1,
+            "opacity": 0.95
+          }
+        ]
+      },
+      "cornerRadius": 12,
+      "borderWidth": 2,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_aside_1_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 8,
+          "blur": 20,
+          "spread": 0,
+          "color": "rgba(0, 0, 0, 0.55)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 20,
+        "right": 20,
+        "top": 12,
+        "bottom": 28
+      },
+      "cornerRadius": 12
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_96": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(32, 32, 31)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(21, 21, 19)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceContainer",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "backgroundOlive",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_97": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 14,
+      "lineHeight": 20,
+      "letterSpacing": 1.4,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "style": "bodySm",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_98": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 0,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_2": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "mirrorSigilField",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_b_1": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "textPrimary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_3": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "error",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_4": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_5": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "error",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_6": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_7": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "mirrorSigilField",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_b_2": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "textPrimary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_8": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 0,
+      "color": "mirrorSigilField",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_aside_2": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "repeatSpanRatio": 1,
+            "stops": [
+              {
+                "color": "rgb(32, 32, 31)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(21, 21, 19)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 1,
+        "stops": [
+          {
+            "color": "surfaceContainer",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "backgroundOlive",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 14,
+      "borderWidth": 2,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_aside_2_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 8,
+          "blur": 24,
+          "spread": 0,
+          "color": "rgba(0, 0, 0, 0.65)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 24,
+        "right": 24,
+        "top": 16,
+        "bottom": 32
+      },
+      "cornerRadius": 14
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_105": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "repeatSpanRatio": 1,
+            "stops": [
+              {
+                "color": "rgb(63, 106, 98)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(42, 75, 68)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 1,
+        "stops": [
+          {
+            "color": "stdButtonPrimary",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "rgb(42, 75, 68)",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_img_9": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_common/placeholder/missing_sprite",
+      "expectedWidth": 48,
+      "expectedHeight": 48
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_107": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 24,
+      "lineHeight": 34,
+      "letterSpacing": 0,
+      "color": "stdLabelButton",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_108": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 11,
+      "lineHeight": 15,
+      "letterSpacing": 1.98,
+      "color": "mirrorSigilField",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_109": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 12,
+      "lineHeight": 17,
+      "letterSpacing": 1.8,
+      "color": "colorWhite",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_9": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 1.56,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_10": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_11": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 1.56,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_12": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_13": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 1.56,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_14": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_15": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 1.56,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_16": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_17": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 1.56,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_span_18": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_116": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(240, 232, 216, 0.06)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(240, 232, 216, 0.02)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 0,
+            "opacity": 0.06
+          },
+          {
+            "color": "surfaceParchmentFill",
+            "offset": 1,
+            "opacity": 0.02
+          }
+        ]
+      },
+      "cornerRadius": 8,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_117": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_118": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 12,
+      "lineHeight": 18,
+      "letterSpacing": 0,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "overflow": "RESIZE_HEIGHT"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_119": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(255, 224, 136, 0.1)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(255, 224, 136, 0.02)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "secondaryLight",
+            "offset": 0,
+            "opacity": 0.1
+          },
+          {
+            "color": "secondaryLight",
+            "offset": 1,
+            "opacity": 0.02
+          }
+        ]
+      },
+      "cornerRadius": 8,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_120": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 15,
+      "lineHeight": 21,
+      "letterSpacing": 0,
+      "color": "resourceGold",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_121": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/font",
+      "fontSize": 12,
+      "lineHeight": 18,
+      "letterSpacing": 0,
+      "color": "textSecondary",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "overflow": "RESIZE_HEIGHT"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_123": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgb(32, 32, 31)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(17, 17, 17)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceContainer",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "backgroundMid",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 12,
+      "borderWidth": 3,
+      "borderColor": "#d4af37"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_123_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 0,
+          "blur": 24,
+          "spread": 0,
+          "color": "rgba(255, 224, 136, 0.35)",
+          "inset": false
+        },
+        {
+          "x": 0,
+          "y": 8,
+          "blur": 16,
+          "spread": 0,
+          "color": "rgba(0, 0, 0, 0.7)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 24,
+        "right": 24,
+        "top": 24,
+        "bottom": 24
+      },
+      "cornerRadius": 12
+    },
+    "auto.battle-hud-screen.battlehudscreen_img_10": {
+      "kind": "sprite-frame",
+      "path": "sprites/generals/guan_yu_portrait",
+      "expectedWidth": 154,
+      "expectedHeight": 154
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_124": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "letterSpacing": 1.6,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "CENTER",
+      "style": "labelLg",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_125": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "stops": [
+              {
+                "color": "rgba(32, 32, 31, 0.92)",
+                "offset": 0
+              },
+              {
+                "color": "rgba(15, 15, 15, 0.95)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "stops": [
+          {
+            "color": "surfaceContainer",
+            "offset": 0,
+            "opacity": 0.92
+          },
+          {
+            "color": "background",
+            "offset": 1,
+            "opacity": 0.95
+          }
+        ]
+      },
+      "cornerRadius": 16,
+      "borderWidth": 2,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_127": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2.5,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_128": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "opacity": 1,
+      "cornerRadius": 8,
+      "borderWidth": 1,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_i_9": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 90,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "repeatSpanRatio": 0.6,
+            "stops": [
+              {
+                "color": "rgb(134, 225, 165)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(255, 224, 136)",
+                "offset": 0.6
+              },
+              {
+                "color": "rgb(255, 215, 0)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 90,
+        "repeatSpanRatio": 0.6,
+        "stops": [
+          {
+            "color": "tertiaryLight",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "secondaryLight",
+            "offset": 0.6,
+            "opacity": 1
+          },
+          {
+            "color": "resourceGold",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_129": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 2.5,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_130": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "circle at 35% 30%",
+            "center": {
+              "x": 0.35,
+              "y": 0.3
+            },
+            "radius": {
+              "x": 0.35,
+              "y": 0.3
+            },
+            "repeatSpanRatio": 0.75,
+            "stops": [
+              {
+                "color": "rgb(58, 58, 58)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(26, 26, 26)",
+                "offset": 0.75
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 0.75,
+        "shape": "circle at 35% 30%",
+        "center": {
+          "x": 0.35,
+          "y": 0.3
+        },
+        "radius": {
+          "x": 0.35,
+          "y": 0.3
+        },
+        "stops": [
+          {
+            "color": "surfaceMidGray",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "surface",
+            "offset": 0.75,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 44,
+      "borderWidth": 3,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_131": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 28,
+      "lineHeight": 39,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_132": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 1.5,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_133": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "circle at 35% 30%",
+            "center": {
+              "x": 0.35,
+              "y": 0.3
+            },
+            "radius": {
+              "x": 0.35,
+              "y": 0.3
+            },
+            "repeatSpanRatio": 0.75,
+            "stops": [
+              {
+                "color": "rgb(58, 58, 58)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(26, 26, 26)",
+                "offset": 0.75
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 0.75,
+        "shape": "circle at 35% 30%",
+        "center": {
+          "x": 0.35,
+          "y": 0.3
+        },
+        "radius": {
+          "x": 0.35,
+          "y": 0.3
+        },
+        "stops": [
+          {
+            "color": "surfaceMidGray",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "surface",
+            "offset": 0.75,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 44,
+      "borderWidth": 3,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_134": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 28,
+      "lineHeight": 39,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_135": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 1.5,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_136": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "circle at 35% 30%",
+            "center": {
+              "x": 0.35,
+              "y": 0.3
+            },
+            "radius": {
+              "x": 0.35,
+              "y": 0.3
+            },
+            "repeatSpanRatio": 1,
+            "stops": [
+              {
+                "color": "rgb(255, 224, 136)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(212, 175, 55)",
+                "offset": 0.7
+              },
+              {
+                "color": "rgb(138, 110, 31)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 1,
+        "shape": "circle at 35% 30%",
+        "center": {
+          "x": 0.35,
+          "y": 0.3
+        },
+        "radius": {
+          "x": 0.35,
+          "y": 0.3
+        },
+        "stops": [
+          {
+            "color": "secondaryLight",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "secondary",
+            "offset": 0.7,
+            "opacity": 1
+          },
+          {
+            "color": "gdv3GoldBorder",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 54,
+      "borderWidth": 4,
+      "borderColor": "resourceGold"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_136_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 0,
+          "blur": 36,
+          "spread": 0,
+          "color": "rgba(255, 215, 0, 0.84)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 36,
+        "right": 36,
+        "top": 36,
+        "bottom": 36
+      },
+      "cornerRadius": 54
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_137": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 28,
+      "lineHeight": 39,
+      "letterSpacing": 0,
+      "color": "gdv3InkDeep",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_138": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 1.5,
+      "color": "gdv3InkDeep",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_139": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "circle at 35% 30%",
+            "center": {
+              "x": 0.35,
+              "y": 0.3
+            },
+            "radius": {
+              "x": 0.35,
+              "y": 0.3
+            },
+            "repeatSpanRatio": 0.75,
+            "stops": [
+              {
+                "color": "rgb(58, 58, 58)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(26, 26, 26)",
+                "offset": 0.75
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 0.75,
+        "shape": "circle at 35% 30%",
+        "center": {
+          "x": 0.35,
+          "y": 0.3
+        },
+        "radius": {
+          "x": 0.35,
+          "y": 0.3
+        },
+        "stops": [
+          {
+            "color": "surfaceMidGray",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "surface",
+            "offset": 0.75,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 44,
+      "borderWidth": 3,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_140": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 28,
+      "lineHeight": 39,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_141": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 1.5,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_142": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "radial",
+            "repeating": false,
+            "angle": 180,
+            "shape": "circle at 35% 30%",
+            "center": {
+              "x": 0.35,
+              "y": 0.3
+            },
+            "radius": {
+              "x": 0.35,
+              "y": 0.3
+            },
+            "repeatSpanRatio": 0.75,
+            "stops": [
+              {
+                "color": "rgb(58, 58, 58)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(26, 26, 26)",
+                "offset": 0.75
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "radial",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 0.75,
+        "shape": "circle at 35% 30%",
+        "center": {
+          "x": 0.35,
+          "y": 0.3
+        },
+        "radius": {
+          "x": 0.35,
+          "y": 0.3
+        },
+        "stops": [
+          {
+            "color": "surfaceMidGray",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "surface",
+            "offset": 0.75,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 44,
+      "borderWidth": 3,
+      "borderColor": "#4d4635"
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_143": {
+      "kind": "label-style",
+      "font": "fonts/newsreader/font",
+      "fontSize": 28,
+      "lineHeight": 39,
+      "letterSpacing": 0,
+      "color": "secondaryLight",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "isBold": true
+    },
+    "auto.battle-hud-screen.battlehudscreen_div_144": {
+      "kind": "label-style",
+      "font": "fonts/manrope/font",
+      "fontSize": 10,
+      "lineHeight": 14,
+      "letterSpacing": 1.5,
+      "color": "textKhaki",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START"
+    },
+    "auto.battle-hud-screen.battlehudscreen_button_1": {
+      "kind": "gradient-rect",
+      "backgroundLayers": [
+        {
+          "kind": "gradient",
+          "gradient": {
+            "type": "linear",
+            "repeating": false,
+            "angle": 180,
+            "shape": null,
+            "center": null,
+            "radius": null,
+            "repeatSpanRatio": 0.6,
+            "stops": [
+              {
+                "color": "rgb(255, 224, 136)",
+                "offset": 0
+              },
+              {
+                "color": "rgb(212, 175, 55)",
+                "offset": 0.6
+              },
+              {
+                "color": "rgb(138, 110, 31)",
+                "offset": 1
+              }
+            ]
+          }
+        }
+      ],
+      "gradient": {
+        "type": "linear",
+        "repeating": false,
+        "angle": 180,
+        "repeatSpanRatio": 0.6,
+        "stops": [
+          {
+            "color": "secondaryLight",
+            "offset": 0,
+            "opacity": 1
+          },
+          {
+            "color": "secondary",
+            "offset": 0.6,
+            "opacity": 1
+          },
+          {
+            "color": "gdv3GoldBorder",
+            "offset": 1,
+            "opacity": 1
+          }
+        ]
+      },
+      "cornerRadius": 14,
+      "borderWidth": 2,
+      "borderColor": "#000000",
+      "states": {
+        "normal": "#888888",
+        "hover": "#9c9c9c",
+        "pressed": "#747474",
+        "disabled": "#555555"
+      }
+    },
+    "auto.battle-hud-screen.battlehudscreen_button_1_cssshadow": {
+      "kind": "shadow-set",
+      "boxShadows": [
+        {
+          "x": 0,
+          "y": 4,
+          "blur": 0,
+          "spread": 0,
+          "color": "rgb(58, 43, 8)",
+          "inset": false
+        },
+        {
+          "x": 0,
+          "y": 6,
+          "blur": 14,
+          "spread": 0,
+          "color": "rgba(0, 0, 0, 0.7)",
+          "inset": false
+        }
+      ],
+      "padding": {
+        "left": 14,
+        "right": 14,
+        "top": 8,
+        "bottom": 20
+      },
+      "cornerRadius": 14
+    }
+  },
+  "bundles": [
+    "battle_ui"
+  ],
+  "meta": {
+    "draftStageRules": [
+      {
+        "stage": "css-capture",
+        "status": "active",
+        "ruleIds": [
+          "H2U-P4-009",
+          "H2U-P4-012",
+          "H2U-P4-024"
+        ],
+        "testTags": [
+          "source-css-token-authority-required"
+        ]
+      },
+      {
+        "stage": "layout-extraction",
+        "status": "active",
+        "ruleIds": [
+          "H2U-P4-004",
+          "H2U-P4-012"
+        ],
+        "testTags": [
+          "per-tab-replay-required-for-tabbed-source"
+        ]
+      },
+      {
+        "stage": "skin-extraction",
+        "status": "active",
+        "ruleIds": [
+          "H2U-P4-007",
+          "H2U-P4-012",
+          "H2U-P4-016",
+          "H2U-P4-017"
+        ],
+        "testTags": [
+          "no-default-skin-formal-fallback",
+          "background-layer-preservation",
+          "radial-background-preserved-or-blocked"
+        ]
+      },
+      {
+        "stage": "semantic-extraction",
+        "status": "active",
+        "ruleIds": [
+          "H2U-P4-010",
+          "H2U-P4-012",
+          "H2U-P4-014",
+          "H2U-P4-015"
+        ],
+        "testTags": [
+          "data-driven-tab-routing",
+          "history-not-story",
+          "story-strip-explicit-or-multi-signal"
+        ]
+      },
+      {
+        "stage": "composite-svg-extraction",
+        "status": "active",
+        "ruleIds": [
+          "H2U-P4-011",
+          "H2U-P4-012"
+        ],
+        "testTags": [
+          "svg-radar-chart-full-geometry"
+        ]
+      },
+      {
+        "stage": "asset-mapping",
+        "status": "active",
+        "ruleIds": [
+          "H2U-P4-009",
+          "H2U-P4-012"
+        ],
+        "testTags": [
+          "source-css-token-authority-required"
+        ]
+      },
+      {
+        "stage": "token-governance",
+        "status": "active",
+        "ruleIds": [
+          "H2U-P4-025",
+          "H2U-P4-026",
+          "H2U-P4-027",
+          "H2U-P4-028"
+        ],
+        "testTags": [
+          "screen-local-token-regenerate-required",
+          "screen-local-token-diff-required",
+          "token-promotion-gate",
+          "token-waiver-expiry-required"
+        ]
+      }
+    ],
+    "tokenUsageReport": {
+      "colors": [
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_4.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_5.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_7.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_8.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_10.color"
+        },
+        {
+          "token": "gdv3InkDeep",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_11.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_12.color"
+        },
+        {
+          "token": "backgroundMid",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_56.color"
+        },
+        {
+          "token": "backgroundDeep",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_57.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_58.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_59.color"
+        },
+        {
+          "token": "backgroundMid",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_61.color"
+        },
+        {
+          "token": "backgroundDeep",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_62.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_63.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_64.color"
+        },
+        {
+          "token": "backgroundMid",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_66.color"
+        },
+        {
+          "token": "backgroundDeep",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_67.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_68.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_69.color"
+        },
+        {
+          "token": "backgroundMid",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_71.color"
+        },
+        {
+          "token": "backgroundDeep",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_72.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_73.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_74.color"
+        },
+        {
+          "token": "backgroundMid",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_76.color"
+        },
+        {
+          "token": "backgroundDeep",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_77.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_78.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_79.color"
+        },
+        {
+          "token": "backgroundMid",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_81.color"
+        },
+        {
+          "token": "backgroundDeep",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_82.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_83.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_84.color"
+        },
+        {
+          "token": "backgroundMid",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_86.color"
+        },
+        {
+          "token": "backgroundDeep",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_87.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_88.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_89.color"
+        },
+        {
+          "token": "backgroundMid",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_91.color"
+        },
+        {
+          "token": "backgroundDeep",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_92.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_93.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_94.color"
+        },
+        {
+          "token": "error",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_1.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_97.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_98.color"
+        },
+        {
+          "token": "mirrorSigilField",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_2.color"
+        },
+        {
+          "token": "textPrimary",
+          "detail": "auto.battle-hud-screen.battlehudscreen_b_1.color"
+        },
+        {
+          "token": "error",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_3.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_4.color"
+        },
+        {
+          "token": "error",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_5.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_6.color"
+        },
+        {
+          "token": "mirrorSigilField",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_7.color"
+        },
+        {
+          "token": "textPrimary",
+          "detail": "auto.battle-hud-screen.battlehudscreen_b_2.color"
+        },
+        {
+          "token": "mirrorSigilField",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_8.color"
+        },
+        {
+          "token": "stdLabelButton",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_107.color"
+        },
+        {
+          "token": "mirrorSigilField",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_108.color"
+        },
+        {
+          "token": "colorWhite",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_109.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_9.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_10.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_11.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_12.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_13.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_14.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_15.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_16.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_17.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_18.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_117.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_118.color"
+        },
+        {
+          "token": "resourceGold",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_120.color"
+        },
+        {
+          "token": "textSecondary",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_121.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_124.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_127.color"
+        },
+        {
+          "token": "backgroundDeep",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_128.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_129.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_131.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_132.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_134.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_135.color"
+        },
+        {
+          "token": "resourceGold",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_136.borderColor"
+        },
+        {
+          "token": "gdv3InkDeep",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_137.color"
+        },
+        {
+          "token": "gdv3InkDeep",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_138.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_140.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_141.color"
+        },
+        {
+          "token": "secondaryLight",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_143.color"
+        },
+        {
+          "token": "textKhaki",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_144.color"
+        }
+      ],
+      "cssVars": [],
+      "spacing": [
+        {
+          "token": "spacing.xxl",
+          "detail": "BattleHudScreen_div_1.padding"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "BattleHudScreen_div_2.gap"
+        },
+        {
+          "token": "spacing.xs",
+          "detail": "BattleHudScreen_div_14.gap"
+        },
+        {
+          "token": "spacing.sm",
+          "detail": "BattleHudScreen_div_99.gap"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "BattleHudScreen_div_105.gap"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "BattleHudScreen_div_110.padding"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "BattleHudScreen_div_116.padding"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "BattleHudScreen_div_119.padding"
+        }
+      ],
+      "typography": [
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_10.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_10.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_11.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_11.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_12.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_12.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_1.fontSize"
+        },
+        {
+          "token": "typography.bodySm",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_97.style"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_2.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_b_1.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_3.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_4.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_5.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_6.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_7.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_b_2.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_span_8.fontSize"
+        },
+        {
+          "token": "spacing.xl",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_107.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_109.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_118.fontSize"
+        },
+        {
+          "token": "spacing.md",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_121.fontSize"
+        },
+        {
+          "token": "typography.labelLg",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_124.style"
+        },
+        {
+          "token": "spacing.lg",
+          "detail": "auto.battle-hud-screen.battlehudscreen_div_124.fontSize"
+        }
+      ],
+      "artWarnings": [
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "BattleHudScreen_div_1",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_1",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_25",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_34",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_35",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_56",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_56",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_img_1",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_57",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_61",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_61",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_img_2",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_62",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_66",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_66",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_img_3",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_67",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_71",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_71",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_img_4",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_72",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_76",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_76",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_img_5",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_77",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_81",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_81",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_img_6",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_82",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_86",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_86",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_img_7",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_87",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_91",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_91",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_img_8",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_92",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "BattleHudScreen_div_95",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_aside_1",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "BattleHudScreen_aside_1",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_aside_1",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_aside_2",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "BattleHudScreen_aside_2",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_aside_2",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_105",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_img_9",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "BattleHudScreen_div_122",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_123",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_123",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_img_10",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_125",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "overflow-hidden-clipping-risk",
+          "node": "BattleHudScreen_div_128",
+          "detail": "overflow 裁切可能吃掉水墨 bleed、glow 或九宮外沿"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_i_9",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_div_136",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        },
+        {
+          "code": "z-index-manual-zorder-risk",
+          "node": "BattleHudScreen_button_1",
+          "detail": "z-index 需要人工確認 UCUF children / skinLayers 順序"
+        },
+        {
+          "code": "css-effect-needs-art-review",
+          "node": "BattleHudScreen_button_1",
+          "detail": "filter / shadow 應改成可控 sprite layer，不宜直接近似"
+        }
+      ]
+    },
+    "tokenSources": {
+      "runtimePath": "C:\\Users\\User\\3KLife\\assets\\resources\\ui-spec\\ui-design-tokens.json",
+      "handoffPath": "C:\\Users\\User\\3KLife\\Design System\\design_handoff\\source\\ui-design-tokens.json",
+      "sourcePath": "C:\\Users\\User\\3KLife\\Design System 3\\source\\ui-design-tokens.json"
+    },
+    "tokenConflictReport": [],
+    "atlasUsageReport": {
+      "atlases": [
+        {
+          "atlasId": "ui_common/placeholder",
+          "slotCount": 7
+        },
+        {
+          "atlasId": "generals/avatars",
+          "slotCount": 2
+        },
+        {
+          "atlasId": "generals/guan_yu_portrait",
+          "slotCount": 1
+        }
+      ],
+      "atlasCount": 3,
+      "limit": 4,
+      "_warning": null
+    }
+  }
+}

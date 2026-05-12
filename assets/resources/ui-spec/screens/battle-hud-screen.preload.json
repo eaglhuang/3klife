@@ -1,0 +1,31 @@
+{
+  "screenId": "battle-hud-screen",
+  "version": 1,
+  "firstScreen": {
+    "bundles": [
+      "battle_ui",
+      "ui_common",
+      "generals"
+    ],
+    "spriteFrames": [
+      "sprites/ui_common/placeholder/missing_sprite",
+      "sprites/generals/avatars/lu_bu_avatar",
+      "sprites/generals/avatars/cao_cao_avatar",
+      "sprites/generals/guan_yu_portrait"
+    ],
+    "fonts": [
+      "fonts/newsreader/font",
+      "fonts/manrope/font",
+      "fonts/notosans_tc/font"
+    ],
+    "fragments": []
+  },
+  "deferred": {
+    "lazySlots": []
+  },
+  "counts": {
+    "firstScreenSpriteCount": 4,
+    "deferredSpriteCount": 0
+  },
+  "_warnings": []
+}

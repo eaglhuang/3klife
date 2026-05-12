@@ -1,0 +1,35 @@
+{
+  "screenId": "battle-hud-screen",
+  "verdict": "pass",
+  "metrics": {
+    "screenshotZoneConfidence": 1,
+    "motionPresenceRate": 1,
+    "interactionSuccessRate": 1,
+    "buttonStateLayerCoverage": 1,
+    "compositeReviewCoverage": 1
+  },
+  "zones": [
+    {
+      "node": "BattleHudScreen_div_1",
+      "width": 1920,
+      "height": 88,
+      "stableBounds": true,
+      "zone": "header"
+    },
+    {
+      "node": "BattleHudScreen_div_123",
+      "width": 160,
+      "height": 160,
+      "stableBounds": true,
+      "zone": "portrait"
+    }
+  ],
+  "stateLayerIssues": [],
+  "compositeReviewRequired": [],
+  "effectReview": [
+    "css-effect-needs-art-review",
+    "css-transform-manual-layout-risk",
+    "overflow-hidden-clipping-risk"
+  ],
+  "blockers": []
+}

@@ -1,0 +1,23 @@
+{
+  "screenId": "battle-hud-screen",
+  "generatedBy": "dom-to-ui-logic-guard",
+  "summary": {
+    "featureCount": 1,
+    "byKind": {
+      "button-handler": 1
+    }
+  },
+  "features": [
+    {
+      "featureId": "button-handler:BattleHudScreen/BattleHudScreen_body/BattleHudScreen_button_1",
+      "kind": "button-handler",
+      "sourceFile": null,
+      "nodePath": "BattleHudScreen/BattleHudScreen_body/BattleHudScreen_button_1",
+      "triggerNode": "BattleHudScreen/BattleHudScreen_body/BattleHudScreen_button_1",
+      "targetNode": "BattleHudScreen_button_1",
+      "ucufId": null,
+      "contract": null,
+      "autoSmoke": true
+    }
+  ]
+}

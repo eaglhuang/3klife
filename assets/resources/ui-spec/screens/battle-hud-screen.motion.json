@@ -1,0 +1,154 @@
+{
+  "screenId": "battle-hud-screen",
+  "motionTokens": {
+    "instant": {
+      "durationMs": 80,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "fast": {
+      "durationMs": 120,
+      "easing": "quadOut",
+      "emphasis": "low"
+    },
+    "standard": {
+      "durationMs": 180,
+      "easing": "quadOut",
+      "emphasis": "medium"
+    },
+    "slow": {
+      "durationMs": 280,
+      "easing": "cubicOut",
+      "emphasis": "medium"
+    },
+    "emphasis": {
+      "durationMs": 360,
+      "easing": "backOut",
+      "emphasis": "high"
+    }
+  },
+  "motions": [
+    {
+      "id": "battle-hud-screen_div_55.bob",
+      "target": "BattleHudScreen_div_55",
+      "trigger": "onShow",
+      "preset": "slide",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "transform"
+      ],
+      "keyframes": [
+        {
+          "at": "100%",
+          "body": "transform: translate(-50%, -72%);"
+        },
+        {
+          "at": "50%",
+          "body": "transform: translate(-50%,-76%);"
+        }
+      ],
+      "source": "css-keyframes"
+    },
+    {
+      "id": "battle-hud-screen_div_130.transition",
+      "target": "BattleHudScreen_div_130",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "battle-hud-screen_div_133.transition",
+      "target": "BattleHudScreen_div_133",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "battle-hud-screen_div_136.transition",
+      "target": "BattleHudScreen_div_136",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "battle-hud-screen_div_136.ready-pulse",
+      "target": "BattleHudScreen_div_136",
+      "trigger": "onShow",
+      "preset": "custom-motion",
+      "token": "emphasis",
+      "durationMs": 360,
+      "easing": "backOut",
+      "properties": [
+        "box-shadow"
+      ],
+      "keyframes": [
+        {
+          "at": "100%",
+          "body": "box-shadow: 0 0 22px rgba(255,215,0,.5), inset 0 2px 4px rgba(255,255,255,.6);"
+        },
+        {
+          "at": "50%",
+          "body": "box-shadow: 0 0 36px rgba(255,215,0,.85), inset 0 2px 4px rgba(255,255,255,.7);"
+        }
+      ],
+      "source": "css-keyframes"
+    },
+    {
+      "id": "battle-hud-screen_div_139.transition",
+      "target": "BattleHudScreen_div_139",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    },
+    {
+      "id": "battle-hud-screen_div_142.transition",
+      "target": "BattleHudScreen_div_142",
+      "trigger": "state-change",
+      "preset": "scale-fade",
+      "token": "standard",
+      "durationMs": 180,
+      "easing": "quadOut",
+      "properties": [
+        "opacity",
+        "transform"
+      ],
+      "source": "css-transition"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "motionCount": 7,
+    "tokenCount": 5,
+    "manualRewriteCount": 24
+  }
+}

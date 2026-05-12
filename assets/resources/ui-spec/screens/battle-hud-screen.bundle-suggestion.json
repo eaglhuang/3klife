@@ -1,0 +1,19 @@
+{
+  "screenId": "battle-hud-screen",
+  "currentBundle": "battle_ui",
+  "distribution": [
+    {
+      "bundle": "ui_common",
+      "spriteCount": 7
+    },
+    {
+      "bundle": "generals",
+      "spriteCount": 3
+    }
+  ],
+  "suggestion": {
+    "primary": "ui_common",
+    "confidence": "medium",
+    "reason": "most-sprites-in-this-bundle"
+  }
+}

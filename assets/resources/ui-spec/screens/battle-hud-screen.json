@@ -1,11 +1,18 @@
 {
   "id": "battle-hud-screen",
   "version": 1,
-  "uiId": "BattleHUD",
-  "layer": "Game",
+  "uiId": "battle-hud-screen",
+  "layout": "battle-hud-screen",
+  "skin": "battle-hud-screen.skin",
   "bundle": "battle_ui",
-  "layout": "battle-hud-main",
-  "skin": "battle-hud-default",
+  "meta": {
+    "htmlToUcufPlan4": true,
+    "runtimeAuthority": "synced-final-runtime-json"
+  },
+  "content": {
+    "source": "battle-hud-states-v1",
+    "state": "smoke-default"
+  },
   "contentRequirements": {
     "schemaId": "battle-hud-content",
     "familyId": "battle-hud",
@@ -17,12 +24,6 @@
       "stageSalvageBody"
     ]
   },
-  "content": {
-    "source": "battle-hud-states-v1",
-    "state": "smoke-default"
-  },
-  "validation": {
-    "devices": ["phone-16-9", "phone-19_5-9"],
-    "allowMissingSkin": true
-  }
+  "runtimeVersion": "bathud-20260513-001",
+  "runtimeVersionUpdatedAt": "2026-05-12T16:18:26.241Z"
 }

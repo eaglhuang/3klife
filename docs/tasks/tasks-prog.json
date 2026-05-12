@@ -1388,7 +1388,7 @@
         "artifacts/html-to-ucuf-plan5/<3 fixture>/workflow-summary.json",
         "artifacts/html-to-ucuf-plan5/regression-summary.json"
       ],
-      "notes": "2026-05-12 | 狀態: in-progress | 變更: 鎖卡/Pre-flight 完成，開始執行 PROG-2-0010 baseline 盤點與 formal capture 嘗試 | 阻塞: localhost:7456 不可用且本機無 CocosCreator.exe 可啟動，無法產 fresh capture-report"
+      "notes": "2026-05-13 | 狀態: in-progress | 變更: 已完成 gacha-ds3/lobby-main-screen/battle-hud-screen 三組 formal capture + workflow，3 份 workflow-summary 皆 debugOnly=false，並產出 artifacts/html-to-ucuf-plan5/regression-summary.json | 阻塞: 最高 adjustedScore=0.64749，未達 acceptance >=0.95，需後續 renderer parity / assetization 修復"
     },
     {
       "id": "PROG-2-0011",

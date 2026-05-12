@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "screenId": "battle-hud-screen",
+  "generatedAt": "2026-05-12T16:18:26.227Z",
+  "_sourceAuthority": "html-to-ucuf",
+  "policy": {
+    "mode": "replace-all-per-run",
+    "source": "token-suggestions sidecars",
+    "note": "Always regenerate full screen-local tokens from current conversion to avoid stale residue."
+  },
+  "sourceSuggestionFiles": [
+    "artifacts/html-to-ucuf-plan5/battle-hud-screen/battle-hud-screen.final.layout.token-suggestions.json"
+  ],
+  "stats": {
+    "unresolvedColorCount": 1,
+    "tokenCount": 1
+  },
+  "colors": {
+    "battle_hud_screen_local_color_01": "#B4A064"
+  },
+  "unresolvedColors": [
+    {
+      "token": "battle_hud_screen_local_color_01",
+      "value": "rgba(180, 160, 100, 0.18)",
+      "normalized": "#b4a064",
+      "hex": "#B4A064",
+      "occurrences": 8,
+      "nearestExisting": {
+        "token": "stdArtTroopBanner",
+        "value": "#B88D5F",
+        "distance": 20
+      },
+      "sources": [
+        "artifacts/html-to-ucuf-plan5/battle-hud-screen/battle-hud-screen.final.layout.token-suggestions.json"
+      ]
+    }
+  ]
+}
