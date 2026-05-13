@@ -1,0 +1,79 @@
+name: ATM Governance
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: atm-governance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  atm-governance:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Collect changed files for ATM flow
+        id: changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/ci
+
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+            head_sha="${{ github.event.pull_request.head.sha }}"
+          else
+            base_sha="${{ github.event.before }}"
+            head_sha="${{ github.sha }}"
+          fi
+
+          if [[ -z "${base_sha}" || "${base_sha}" == "0000000000000000000000000000000000000000" ]]; then
+            base_sha="$(git rev-parse "${head_sha}^" || true)"
+          fi
+
+          if [[ -z "${base_sha}" ]]; then
+            echo "Unable to resolve base SHA for changed-file detection." >&2
+            exit 1
+          fi
+
+          git diff --name-only "${base_sha}" "${head_sha}" | sed '/^[[:space:]]*$/d' > artifacts/ci/atm-changed-files.txt
+
+          if [[ -s artifacts/ci/atm-changed-files.txt ]]; then
+            awk '{ print "M  " $0 }' artifacts/ci/atm-changed-files.txt > artifacts/ci/atm-worktree-status.txt
+          else
+            : > artifacts/ci/atm-worktree-status.txt
+          fi
+
+          echo "base_sha=${base_sha}" >> "${GITHUB_OUTPUT}"
+          echo "head_sha=${head_sha}" >> "${GITHUB_OUTPUT}"
+          echo "changed_count=$(wc -l < artifacts/ci/atm-changed-files.txt | tr -d ' ')" >> "${GITHUB_OUTPUT}"
+
+      - name: ATM flow (dev)
+        run: node tools_node/atm-flow.js --mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt
+
+      - name: ATM flow (pr)
+        run: node tools_node/atm-flow.js --mode pr --from-mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt
