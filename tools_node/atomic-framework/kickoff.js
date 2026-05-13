@@ -4,9 +4,13 @@
 const path = require('node:path');
 
 const { buildGovernanceReport } = require('./governance/checker');
+const { resolveUpstreamPaths } = require('../lib/upstream-env');
 
 const projectRoot = path.resolve(__dirname, '..', '..');
-const upstreamCliPath = path.join(projectRoot, '..', 'AI-Atomic-Framework', 'packages', 'cli', 'src', 'atm.mjs');
+const upstreamPaths = resolveUpstreamPaths({
+  projectRoot,
+});
+const upstreamCliPath = upstreamPaths.upstreamCliEntrypoint;
 
 function normalizeText(value) {
   return String(value || '').replace(/\s+/g, ' ').trim();
@@ -245,13 +249,13 @@ function buildPlan(args) {
   const guardrails = [
     'Keep governance generation limited to shared repo-tracked surfaces.',
     'Do not absorb H2U, UCUF, or Cocos domain rules into ATM core.',
-    'Treat release portability as adapter-scoped until sibling upstream path assumptions are removed.',
+    'Treat release portability as governance-profile-driven and verify it through doctor probes.',
   ];
 
   if (governanceStatus === 'drift') {
     guardrails.unshift('Fix governance drift before routing new work through stale shared surfaces.');
   } else if (governanceStatus === 'blocked-by-portability') {
-    guardrails.push('Release portability is still blocked by sibling AI-Atomic-Framework path assumptions.');
+    guardrails.push('Release portability is still blocked by active governance portability probes.');
   } else if (governanceStatus === 'advisory-local-only') {
     guardrails.push('Local editor-private settings remain advisory and outside the canonical shared profile.');
   }

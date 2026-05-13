@@ -7,9 +7,12 @@ const crypto = require('node:crypto');
 const Ajv = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 const { createValidatorOrchestrator } = require('./lib/validator-orchestrator');
+const { resolveUpstreamRepoRoot } = require('./lib/upstream-env');
 
 const ROOT = path.resolve(__dirname, '..');
-const UPSTREAM_ROOT = path.resolve(ROOT, '..', 'AI-Atomic-Framework');
+const UPSTREAM_ROOT = resolveUpstreamRepoRoot({
+  projectRoot: ROOT,
+}).upstreamRepoRoot;
 
 const PROPOSAL_PATH = path.join(ROOT, 'fixtures', 'case-studies', 'normalize-css-color', 'proposal.json');
 const DECISION_PATH = path.join(ROOT, 'fixtures', 'case-studies', 'normalize-css-color', 'decision-approve.json');

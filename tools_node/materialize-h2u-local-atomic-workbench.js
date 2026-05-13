@@ -3,9 +3,13 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { resolveUpstreamRepoRoot } = require('./lib/upstream-env');
 
 const ROOT = path.resolve(__dirname, '..');
-const UPSTREAM_ROOT = path.resolve(process.env.ATM_UPSTREAM_REPO_ROOT || path.join(ROOT, '..', 'AI-Atomic-Framework'));
+const UPSTREAM_ROOT = resolveUpstreamRepoRoot({
+  projectRoot: ROOT,
+}).upstreamRepoRoot;
+const UPSTREAM_REPO_LABEL = path.basename(UPSTREAM_ROOT);
 const LOCAL_WORKBENCH_ROOT = path.resolve(process.env.ATM_LOCAL_WORKBENCH_ROOT || path.join(ROOT, 'atomic_workbench'));
 const LOCAL_REGISTRY_PATH = path.join(ROOT, 'atomic-registry.json');
 const LOCAL_LIBRARY_MD = path.join(LOCAL_WORKBENCH_ROOT, '原子庫列表.md');
@@ -130,7 +134,7 @@ function rewriteEntry(entry, upstreamRoot) {
   out.projectOwnership = {
     ownerRepo: '3KLife',
     storageTier: 'adopter-local',
-    migratedFrom: 'AI-Atomic-Framework',
+    migratedFrom: UPSTREAM_REPO_LABEL,
     upstreamRole: 'tooling-and-schema-only',
   };
   if (out.location) {
@@ -179,7 +183,7 @@ function buildLocalRegistry(upstreamRegistry, upstreamRoot) {
     upstreamRegistryRef: normalizeSlashes(path.join(upstreamRoot, 'atomic-registry.json')),
     notes: [
       '3KLife owns project-derived H2U atoms locally.',
-      'AI-Atomic-Framework supplies neutral schemas, validators, runners, and examples only.',
+      `${UPSTREAM_REPO_LABEL} supplies neutral schemas, validators, runners, and examples only.`,
     ],
     entries,
   };
@@ -195,7 +199,7 @@ function renderLibraryMarkdown(registry, registryPath) {
     `> Generated at: \`${registry.generatedAt}\``,
     '',
     'This workbench is the canonical adopter-local home for H2U project atoms.',
-    'AI-Atomic-Framework remains the neutral upstream core and no longer owns these project-derived artifacts.',
+    `${UPSTREAM_REPO_LABEL} remains the neutral upstream core and no longer owns these project-derived artifacts.`,
     '',
     '## Entries',
     '',

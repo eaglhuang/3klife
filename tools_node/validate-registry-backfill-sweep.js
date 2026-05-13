@@ -5,9 +5,13 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { pathToFileURL } = require('node:url');
+const { resolveUpstreamRepoRoot } = require('./lib/upstream-env');
 
 const projectRoot = path.resolve(__dirname, '..');
-const upstreamRoot = path.resolve(projectRoot, '..', 'AI-Atomic-Framework');
+const upstreamRoot = resolveUpstreamRepoRoot({
+  projectRoot,
+}).upstreamRepoRoot;
+const upstreamRepoLabel = path.basename(upstreamRoot);
 const registryPath = path.join(upstreamRoot, 'atomic-registry.json');
 const registryCoreScript = path.join(upstreamRoot, 'scripts', 'validate-registry-core.mjs');
 const registryCatalogScript = path.join(upstreamRoot, 'scripts', 'validate-registry-catalog.mjs');
@@ -534,7 +538,7 @@ async function main() {
     report.findings.push(buildFinding({
       ruleId: 'registry-backfill.upstream-registry-core',
       trigger: 'registry.upstream.validate-registry-core.failed',
-      scope: 'AI-Atomic-Framework/scripts/validate-registry-core.mjs',
+      scope: `${upstreamRepoLabel}/scripts/validate-registry-core.mjs`,
       severity: 'block',
       action: 'fail',
       routeClass: 'blocker',
@@ -550,7 +554,7 @@ async function main() {
     report.findings.push(buildFinding({
       ruleId: 'registry-backfill.upstream-registry-core-fallback',
       trigger: 'registry.upstream.validate-registry-core.spawn-blocked',
-      scope: 'AI-Atomic-Framework/scripts/validate-registry-core.mjs',
+      scope: `${upstreamRepoLabel}/scripts/validate-registry-core.mjs`,
       severity: 'warn',
       action: 'warn',
       routeClass: 'advisory',
@@ -568,7 +572,7 @@ async function main() {
     report.findings.push(buildFinding({
       ruleId: 'registry-backfill.upstream-registry-catalog',
       trigger: 'registry.upstream.validate-registry-catalog.failed',
-      scope: 'AI-Atomic-Framework/scripts/validate-registry-catalog.mjs',
+      scope: `${upstreamRepoLabel}/scripts/validate-registry-catalog.mjs`,
       severity: 'block',
       action: 'fail',
       routeClass: 'blocker',
@@ -584,7 +588,7 @@ async function main() {
     report.findings.push(buildFinding({
       ruleId: 'registry-backfill.upstream-registry-catalog-fallback',
       trigger: 'registry.upstream.validate-registry-catalog.spawn-blocked',
-      scope: 'AI-Atomic-Framework/scripts/validate-registry-catalog.mjs',
+      scope: `${upstreamRepoLabel}/scripts/validate-registry-catalog.mjs`,
       severity: 'warn',
       action: 'warn',
       routeClass: 'advisory',

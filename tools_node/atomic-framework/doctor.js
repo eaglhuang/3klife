@@ -320,7 +320,7 @@ function applyGovernanceGuidance(userFacing, governance) {
   if (doctorStatus === 'blocked-by-portability') {
     return {
       blockedAt: userFacing.blockedAt || 'release-portability',
-      why: `${userFacing.why} Shared governance surfaces are in sync, but release portability is still blocked by sibling AI-Atomic-Framework path assumptions.`,
+      why: `${userFacing.why} Shared governance surfaces are in sync, but release portability is still blocked by active governance portability probes.`,
       nextCommand: userFacing.nextCommand,
       afterNext: uniqueList([
         governanceCheckCommand,

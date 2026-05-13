@@ -166,26 +166,7 @@
         "label": "Codex editor-local hook settings stay outside the canonical governance profile."
       }
     ],
-    "portabilityBlockers": [
-      {
-        "id": "release-upstream-sibling-path",
-        "label": "Release governance still depends on sibling AI-Atomic-Framework paths.",
-        "probes": [
-          {
-            "path": "tools_node/adapters/atm-3klife/atm.config.js",
-            "pattern": "AI-Atomic-Framework"
-          },
-          {
-            "path": "tools_node/atomic-framework/kickoff.js",
-            "pattern": "AI-Atomic-Framework"
-          },
-          {
-            "path": "tools_node/validate-registry-sidecar-convergence.js",
-            "pattern": "AI-Atomic-Framework"
-          }
-        ]
-      }
-    ]
+    "portabilityBlockers": []
   },
   "gateEntrypoints": {
     "dev": "node tools_node/atm-flow.js --mode dev",

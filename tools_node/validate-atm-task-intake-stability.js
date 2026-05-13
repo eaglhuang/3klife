@@ -3,12 +3,15 @@
 
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { resolveUpstreamPaths } = require('./lib/upstream-env');
 
 const projectRoot = path.resolve(__dirname, '..');
 const taskRouterCli = path.join(projectRoot, 'tools_node', 'atomic-framework', 'task-router.js');
 const taskIdGuardTest = path.join(projectRoot, 'tools_node', 'test', 'task-id-guard-flow.test.js');
 const taskLockCrossShardTest = path.join(projectRoot, 'tools_node', 'test', 'task-lock-cross-shard.test.js');
-const upstreamGuideCli = path.join(projectRoot, '..', 'AI-Atomic-Framework', 'packages', 'cli', 'src', 'atm.mjs');
+const upstreamGuideCli = resolveUpstreamPaths({
+  projectRoot,
+}).upstreamCliEntrypoint;
 
 function assert(condition, message) {
   if (!condition) {

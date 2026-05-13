@@ -7,9 +7,12 @@ const Ajv = require('ajv/dist/2020');
 const addFormats = require('ajv-formats');
 const { runAdapter } = require('./atm-adapter/usage-evidence-shadow');
 const { createValidatorOrchestrator } = require('./lib/validator-orchestrator');
+const { resolveUpstreamRepoRoot } = require('./lib/upstream-env');
 
 const ROOT = path.resolve(__dirname, '..');
-const UPSTREAM_ROOT = path.resolve(ROOT, '..', 'AI-Atomic-Framework');
+const UPSTREAM_ROOT = resolveUpstreamRepoRoot({
+  projectRoot: ROOT,
+}).upstreamRepoRoot;
 const USAGE_SCHEMA_PATH = path.join(UPSTREAM_ROOT, 'schemas', 'governance', 'evidence', 'usage-feedback.schema.json');
 const EVIDENCE_SCHEMA_PATH = path.join(UPSTREAM_ROOT, 'schemas', 'governance', 'evidence.schema.json');
 

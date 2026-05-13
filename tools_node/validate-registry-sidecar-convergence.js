@@ -4,9 +4,12 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
+const { resolveUpstreamRepoRoot } = require('./lib/upstream-env');
 
 const projectRoot = path.resolve(__dirname, '..');
-const upstreamRoot = path.resolve(projectRoot, '..', 'AI-Atomic-Framework');
+const upstreamRoot = resolveUpstreamRepoRoot({
+  projectRoot,
+}).upstreamRepoRoot;
 const registryPath = path.join(upstreamRoot, 'atomic-registry.json');
 
 function parseArgs(argv) {

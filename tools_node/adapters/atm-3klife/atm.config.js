@@ -6,14 +6,13 @@ const {
   ROOT,
   default3KLifeGovernanceConfig,
 } = require('./governance-adapter');
+const { resolveUpstreamPaths } = require('../../lib/upstream-env');
 
-const upstreamRepoRoot = path.resolve(
-  process.env.ATM_UPSTREAM_REPO_ROOT || path.join(ROOT, '..', 'AI-Atomic-Framework')
-);
-
-const upstreamCliEntrypoint = path.resolve(
-  process.env.ATM_UPSTREAM_CLI_ENTRYPOINT || path.join(upstreamRepoRoot, 'packages', 'cli', 'src', 'atm.mjs')
-);
+const upstreamPaths = resolveUpstreamPaths({
+  projectRoot: ROOT,
+});
+const upstreamRepoRoot = upstreamPaths.upstreamRepoRoot;
+const upstreamCliEntrypoint = upstreamPaths.upstreamCliEntrypoint;
 
 const localWorkbenchRoot = path.resolve(
   process.env.ATM_LOCAL_WORKBENCH_ROOT || path.join(ROOT, 'atomic_workbench')

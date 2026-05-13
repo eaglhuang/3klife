@@ -12,13 +12,16 @@ const {
   findTaskCardPath,
   getTaskCardRelativePath,
 } = require('../lib/task-card-paths');
+const { resolveUpstreamPaths } = require('../lib/upstream-env');
 
 const projectRoot = projectConfig.ROOT;
 const taskCardDir = path.join(projectRoot, 'docs', 'agent-briefs', 'tasks');
 const taskCardDirRel = path.relative(projectRoot, taskCardDir);
 const taskStorePath = path.join(projectRoot, 'docs', 'tasks', 'tasks-atm.json');
-const upstreamRepoRoot = path.resolve(projectRoot, '..', 'AI-Atomic-Framework');
-const upstreamCliPath = path.join(upstreamRepoRoot, 'packages', 'cli', 'src', 'atm.mjs');
+const upstreamPaths = resolveUpstreamPaths({
+  projectRoot,
+});
+const upstreamCliPath = upstreamPaths.upstreamCliEntrypoint;
 const lockAdapter = new LockAdapter(createLockAdapterConfig());
 
 function toRelative(filePath) {
