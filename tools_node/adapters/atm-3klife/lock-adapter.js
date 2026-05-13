@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const handoffDiff = require('../../lib/handoff-diff-core');
+const { deriveAgentIdentity } = require('../../lib/agent-identity');
 const { findTaskCardPath } = require('../../lib/task-card-paths');
 const {
     formatTaskIdInspection,
@@ -91,7 +92,11 @@ class LockAdapter {
     }
 
     getDefaultAgentName() {
-        return String(process.env.AGENT_IDENTITY || '').trim();
+        const derived = deriveAgentIdentity({ cwd: this.projectRoot });
+        if (derived && derived.ok && derived.agentName) {
+            return derived.agentName;
+        }
+        return '';
     }
 
     ensureLockDir() {

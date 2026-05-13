@@ -107,6 +107,12 @@ function buildPlan(args) {
   const safeGoal = escapeDoubleQuotes(args.goal);
   const safeTitle = inferTitle(args.goal);
 
+  steps.push({
+    id: 'identity-gate',
+    title: '先對齊 Agent 身分（AGENT_IDENTITY + repo-local git identity）',
+    command: 'node tools_node/agent-identity.js ensure --write-git',
+  });
+
   if (args.task) {
     nextCommand = `node tools_node/atomic-framework/task-router.js --task ${args.task} --format markdown`;
     steps.push({
@@ -186,6 +192,7 @@ function renderMarkdown(result) {
     '',
     `- Goal: ${result.goal}`,
     `- routeProfile: ${result.routeProfile}`,
+    '- Identity gate: node tools_node/agent-identity.js ensure --write-git',
     `- Next: ${result.nextCommand}`,
     '',
     '## Steps',

@@ -2182,5 +2182,11 @@
     "path": "docs/agent-briefs/tasks/ATM/ATM-8-0004.md",
     "title": "[ATM-8-0004] Regression tests for doc-id fallback and closeout",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0373",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-2-0055.md",
+    "title": "[ATM-2-0055] Agent identity entry hardening for task lock flow",
+    "category": "task"
   }
 ]

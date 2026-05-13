@@ -66,5 +66,53 @@
       "trace_artifacts": [],
       "metrics_summary": []
     }
+  },
+  {
+    "doc_id": "doc_task_0373",
+    "id": "ATM-2-0055",
+    "title": "Agent identity entry hardening for task lock flow",
+    "owner": "codex-desktop",
+    "priority": "P1",
+    "status": "done",
+    "type": "governance",
+    "phase": "ATM-2",
+    "created": "2026-05-13",
+    "created_by_agent": "codex-desktop",
+    "started_at": "2026-05-13T10:08:45+08:00",
+    "started_by_agent": "codex-desktop",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "修補 Agent 身分入口：讓 task-lock/task-card-opener/kickoff 在無人工設定下也能使用當前 Agent 身分，避免沿用前一位 Agent。",
+    "related": [],
+    "depends": [
+      "ATM-2-0054"
+    ],
+    "acceptance": [
+      "agent-identity ensure --write-git 能自動對齊 repo-local git 身分"
+    ],
+    "deliverables": [],
+    "notes": "2026-05-13 | 狀態: done | 驗證: atm:flow dev/pr pass；compute-gate standard pass | 變更: identity gate 入口接線與預設身分推導完成 | 阻塞: none",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

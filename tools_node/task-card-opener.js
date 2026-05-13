@@ -20,6 +20,7 @@ const {
 const {
   MILESTONE_PATH_REL,
 } = require('./lib/atm-stabilization-milestone');
+const { deriveAgentIdentity } = require('./lib/agent-identity');
 const { createTaskAdapter } = require('./adapters/atm-3klife/task-adapter');
 
 const taskAdapter = createTaskAdapter({
@@ -32,7 +33,11 @@ function todayIso() {
 }
 
 function getDefaultAgentName() {
-  return String(process.env.AGENT_IDENTITY || 'GitHubCopilot').trim();
+  const derived = deriveAgentIdentity({ cwd: PROJECT_ROOT });
+  if (derived && derived.ok && derived.agentName) {
+    return derived.agentName;
+  }
+  return 'GitHubCopilot';
 }
 
 function nowRfc3339() {
@@ -572,13 +577,13 @@ function printHelp() {
     '',
     '常用選項：',
     '  --description     任務摘要 / 說明',
-    '  --owner           預設 AGENT_IDENTITY；未設定時回落 GitHubCopilot',
+    '  --owner           預設取 AGENT_IDENTITY，若缺值會嘗試 repo-local git user.name，再回落 GitHubCopilot',
     '  --priority        預設 P1',
     '  --status          預設 open',
     '  --type            預設 implementation',
     '  --phase           預設 M0',
     '  --created         預設今日 YYYY-MM-DD',
-    '  --created-by-agent 預設 AGENT_IDENTITY；未設定時回落 GitHubCopilot',
+    '  --created-by-agent 預設取 AGENT_IDENTITY，若缺值會嘗試 repo-local git user.name，再回落 GitHubCopilot',
     '  --related         以逗號、|、; 或換行分隔的相關卡號',
     '  --depends         以逗號、|、; 或換行分隔的依賴卡號',
     '  --acceptance      驗收條件清單',
