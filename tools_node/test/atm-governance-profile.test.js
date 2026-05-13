@@ -30,6 +30,11 @@ function testReleaseSurfaceIsRendered() {
   const report = runGovernanceCheck();
   const workflowTarget = report.renderedTargets.find((target) => target && target.targetPath === '.github/workflows/atm-governance.yml');
   assert.ok(workflowTarget, 'governance workflow target should exist');
+  assert.match(workflowTarget.content, /ATM flow \(release-shadow\)/, 'workflow should include release-shadow gate step');
+  assert.match(workflowTarget.content, /if: \$\{\{ github\.event_name == 'pull_request' \}\}/, 'release-shadow gate should run only on pull_request events');
+  assert.match(workflowTarget.content, /--shadow/, 'release-shadow gate should run in shadow mode');
+  assert.match(workflowTarget.content, /atm-release-shadow-report\.json/, 'release-shadow gate should emit report artifact');
+  assert.match(workflowTarget.content, /atm-release-shadow-metrics\.json/, 'release-shadow gate should emit metrics artifact');
   assert.match(workflowTarget.content, /ATM flow \(release\)/, 'workflow should include release gate step');
   assert.match(workflowTarget.content, /if: \$\{\{ github\.event_name == 'push' \}\}/, 'release gate should run only on push events');
 }

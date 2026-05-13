@@ -51,6 +51,7 @@ function validateStringArray(errors, value, fieldName, { allowEmpty = false } = 
 
 function validateGovernanceProfile(profile) {
   const errors = [];
+  const referencedEntrypointKeys = [];
   if (!profile || typeof profile !== 'object' || Array.isArray(profile)) {
     return {
       ok: false,
@@ -134,6 +135,9 @@ function validateGovernanceProfile(profile) {
         workflow.steps.forEach((step, stepIndex) => {
           validateString(errors, step.name, `ci.workflows[${index}].steps[${stepIndex}].name`);
           validateString(errors, step.entrypointKey, `ci.workflows[${index}].steps[${stepIndex}].entrypointKey`);
+          if (typeof step.entrypointKey === 'string' && step.entrypointKey.trim()) {
+            referencedEntrypointKeys.push(step.entrypointKey.trim());
+          }
           if (step.if !== undefined && step.if !== null) {
             validateString(errors, step.if, `ci.workflows[${index}].steps[${stepIndex}].if`);
           }
@@ -179,9 +183,12 @@ function validateGovernanceProfile(profile) {
   if (!entrypoints || typeof entrypoints !== 'object') {
     errors.push('gateEntrypoints must be an object');
   } else {
-    ['dev', 'pr', 'ciDriftCheck', 'ciDev', 'ciPr', 'ciRelease'].forEach((key) => {
+    ['dev', 'pr', 'ciDriftCheck', 'ciDev', 'ciPr', 'ciRelease', 'ciReleaseShadow'].forEach((key) => {
       validateString(errors, entrypoints[key], `gateEntrypoints.${key}`);
     });
+    for (const key of referencedEntrypointKeys) {
+      validateString(errors, entrypoints[key], `gateEntrypoints.${key}`);
+    }
   }
 
   return {

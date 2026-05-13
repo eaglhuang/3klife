@@ -148,6 +148,11 @@
             "entrypointKey": "ciPr"
           },
           {
+            "name": "ATM flow (release-shadow)",
+            "entrypointKey": "ciReleaseShadow",
+            "if": "github.event_name == 'pull_request'"
+          },
+          {
             "name": "ATM flow (release)",
             "entrypointKey": "ciRelease",
             "if": "github.event_name == 'push'"
@@ -179,6 +184,7 @@
     "ciDriftCheck": "node tools_node/atomic-framework/atm-cli.js governance check --json --strict",
     "ciDev": "node tools_node/atm-flow.js --mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt",
     "ciPr": "node tools_node/atm-flow.js --mode pr --from-mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt",
+    "ciReleaseShadow": "node tools_node/atm-flow.js --mode release --from-mode pr --worktree-status-file artifacts/ci/atm-worktree-status.txt --shadow --metrics-file artifacts/ci/atm-release-shadow-metrics.json --report artifacts/ci/atm-release-shadow-report.json",
     "ciRelease": "node tools_node/atm-flow.js --mode release --from-mode pr --worktree-status-file artifacts/ci/atm-worktree-status.txt"
   }
 }
