@@ -1149,6 +1149,28 @@
       return state.data?.displayName || "這名人物";
     }
 
+    function cleanNarrativeFragment(value) {
+      const raw = normalizeNarrativeText(value, "").trim();
+      if (!raw) {
+        return "";
+      }
+      return raw
+        .replace(/^原文[:：]\s*/u, "")
+        .replace(/^線索[:：]\s*/u, "")
+        .replace(/^[^：「」]{1,18}[:：]\s*/u, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function humanizeTextList(values) {
+      const list = Array.isArray(values)
+        ? values
+        : String(values || "")
+          .split(/[、,，·\s]+/u)
+          .filter(Boolean);
+      return uniqueList(list.map((item) => humanizeSymbolicText(item)).filter(Boolean));
+    }
+
     const storyDirectorForbiddenPhrases = [
       "這條線索",
       "心裡先浮起",
@@ -1165,36 +1187,68 @@
     function fallbackBeatSegmentFromData(bundle, segment) {
       const card = bundle?.card || {};
       const angle = angleDefinitions[card.angle]?.label || "人物角度";
-      const rawText = String(card.summary || card.quote || card.title || "").trim();
-      const location = String(card.location || "").trim();
+      const summaryText = cleanNarrativeFragment(card.summary || card.title || "");
+      const quoteText = cleanNarrativeFragment(card.quote || "");
+      const location = cleanNarrativeFragment(card.location || "");
       const targetLabel = String(bundle?.target?.label || "").trim();
-      const dataAnchor = [
-        angle ? `${angle}` : "",
-        targetLabel ? `互動對象：${targetLabel}` : "",
-        card.contextKey ? `情境：${card.contextKey}` : "",
-      ].filter(Boolean);
-      const base = [rawText, location ? `地點：${location}` : ""]
-        .filter(Boolean)
-        .join("；");
-      const merged = dataAnchor.concat([base]).filter(Boolean).join(" / ");
+      const persona = state.data?.persona || {};
+      const profile = persona.profile || {};
+      const personalityText = humanizeTextList([
+        ...(Array.isArray(profile.personalityTags) ? profile.personalityTags : []),
+        ...(Array.isArray(persona.personalityTraits) ? persona.personalityTraits : []),
+      ]).join("、");
+      const baseScene = [location, summaryText || quoteText].filter(Boolean).join("，");
+      const memoryLead = quoteText || summaryText || location || "未取得可用原文線索";
+      const emotionLead = personalityText || buildDecisionFocus(card.angle);
+      const targetLead = targetLabel ? `關於「${targetLabel}」` : "關於眼前局勢";
       const fallbackMap = {
-        scene: merged,
-        memory: merged,
-        emotion: merged,
-        intent: merged,
+        scene: baseScene || `${angle}${targetLabel ? `／${targetLabel}` : ""}`,
+        memory: `原文線索：${memoryLead}`,
+        emotion: `${currentActorName()}的性格底色仍是${emotionLead}。`,
+        intent: `${targetLead}，最後他決定以「${buildDecisionFocus(card.angle)}」為判斷軸。`,
       };
-      return fallbackMap[segment] || base;
+      return fallbackMap[segment] || baseScene;
     }
 
     function buildCompactFallbackStory(bundle, parts = {}) {
-      const merged = [
-        parts?.sceneText,
-        parts?.memoryText,
-        parts?.emotionText,
-        parts?.dialogueText,
-        parts?.intentText,
-      ].map((text) => String(text || "").trim()).filter(Boolean).join(" ");
-      return merged || "未回傳完整敘事片段，請稍後重試。";
+      const actor = currentActorName();
+      const target = String(bundle?.target?.label || "關聯對象").trim();
+      const scene = cleanNarrativeFragment(parts?.sceneText);
+      const memory = cleanNarrativeFragment(parts?.memoryText);
+      const emotion = cleanNarrativeFragment(parts?.emotionText);
+      const dialogue = cleanNarrativeFragment(parts?.dialogueText);
+      const intent = cleanNarrativeFragment(parts?.intentText);
+      const sentences = [];
+      if (scene) {
+        sentences.push(scene);
+      }
+      if (memory) {
+        sentences.push(`${actor}想起：${memory}`);
+      }
+      if (emotion) {
+        sentences.push(`${actor}心中的傾向因此更接近${emotion}`);
+      }
+      if (dialogue) {
+        sentences.push(`${actor}低聲道：「${dialogue}」`);
+      }
+      if (intent) {
+        sentences.push(intent.startsWith("最後") ? intent : `最後，他決定${intent}`);
+      }
+      const story = sentences
+        .map((text) => String(text || "").trim())
+        .filter(Boolean)
+        .map((text) => (/[。！？]$/.test(text) ? text : `${text}。`))
+        .join("");
+      return story || `${actor}與${target}的這一幕，暫時還在等待可用敘事素材。`;
+    }
+
+    function buildImmediateBeatParts(bundle) {
+      return {
+        sceneText: bundle?.sceneText || fallbackBeatSegmentFromData(bundle, "scene"),
+        memoryText: bundle?.memoryText || fallbackBeatSegmentFromData(bundle, "memory"),
+        emotionText: bundle?.emotionText || fallbackBeatSegmentFromData(bundle, "emotion"),
+        intentText: bundle?.intentText || fallbackBeatSegmentFromData(bundle, "intent"),
+      };
     }
 
     async function buildNarrativeBeatParts(bundle, directorPayload) {
@@ -2350,9 +2404,15 @@
         target.thoughtTone ? `與「${targetHint}」關係線索：${target.thoughtTone}` : "",
         adjustedCard.quote ? `原文：${adjustedCard.quote}` : "",
       ].filter(Boolean).join("；"), { maxSentences: 2, maxChars: 130 });
+      const emotionTags = humanizeTextList([
+        ...(Array.isArray(profile.personalityTags) ? profile.personalityTags : []),
+        ...(Array.isArray(persona.personalityTraits) ? persona.personalityTraits : []),
+      ]).join("、");
       const emotionText = collectConciseSentences([
-        profile && profile.personalityTags && profile.personalityTags.join("、"),
-        Array.isArray(persona.personalityTraits) ? persona.personalityTraits.join("、") : "",
+        emotionTags ? `性格底色：${emotionTags}` : "",
+        Array.isArray(profile.roleActivityTags) && profile.roleActivityTags.length
+          ? `角色行動：${humanizeTextList(profile.roleActivityTags).join("、")}`
+          : "",
       ].filter(Boolean).join("；"), { maxSentences: 1, maxChars: 120 }) || "等待情緒傾向與性格資訊。";
       const dialogueText = [
         target.dialogueTone || "",
@@ -2639,9 +2699,9 @@
       try {
         elements.sceneTitle.textContent = bundle.sceneTitle;
         elements.sceneNote.textContent = bundle.sceneNote;
-      elements.sourceBadge.textContent = state.data.sourceMode === "runtime-general-profiles"
-        ? `${bundle.card.sourceType} / 真資料`
-        : `${bundle.card.sourceType} / 服務待補`;
+        elements.sourceBadge.textContent = state.data.sourceMode === "runtime-general-profiles"
+          ? `${bundle.card.sourceType} / 真資料`
+          : `${bundle.card.sourceType} / 服務待補`;
         renderMetaChips(bundle.meta);
 
         elements.sceneText.innerHTML = `<span class="loading-pulse">正在把這幕慢慢演出來……</span>`;
@@ -2651,15 +2711,25 @@
         elements.intentText.innerHTML = "";
         elements.storyText.innerHTML = `<span class="loading-pulse">正在請 npc-brain 生成完整敘事……</span>`;
         refreshIllustrationPrompt();
-        const directorPayload = await requestSceneDirector(bundle);
-        const beatParts = await buildNarrativeBeatParts(bundle, directorPayload);
+        const immediateBeatParts = buildImmediateBeatParts(bundle);
+        const directorPromise = requestSceneDirector(bundle);
+        const dialoguePromise = requestSceneDialogue(bundle);
+        const imagePromise = requestSceneIllustration(bundle);
+        const directorPayload = await Promise.race([
+          directorPromise,
+          wait(900).then(() => null),
+        ]);
+        const beatParts = directorPayload?.beats ? directorPayload.beats : immediateBeatParts;
         const chorusPromise = directorPayload?.chorusLines?.length
           ? Promise.resolve(renderDirectorChorusLines(directorPayload.chorusLines))
           : renderChorusLines(bundle);
-        const dialoguePromise = directorPayload?.beats?.dialogueText
-          ? Promise.resolve({ text: directorPayload.beats.dialogueText, provider: "scene-director", model: null })
-          : requestSceneDialogue(bundle);
-        const imagePromise = requestSceneIllustration(bundle);
+        const narrativeSource = directorPayload?.beats ? "敘事：NPC service beats" : "敘事：local fallback beats";
+        const dialogueSource = directorPayload?.beats?.dialogueText
+          ? "台詞：scene-director"
+          : "台詞：本地備援";
+        let storySource = directorPayload?.storyText
+          ? `完整敘事：${directorPayload.storyProvider || "scene-director"}${directorPayload.storyModel ? `/${directorPayload.storyModel}` : ""}`
+          : "完整敘事：local fallback";
 
         await wait(220);
         const sceneNarrativeText = beatParts.sceneText;
@@ -2668,18 +2738,19 @@
         await revealText(elements.memoryText, memoryNarrativeText, 320);
         const emotionNarrativeText = beatParts.emotionText;
         await revealText(elements.emotionText, emotionNarrativeText, 320);
-        const dialoguePayload = await dialoguePromise;
+        const dialoguePayload = await Promise.race([
+          dialoguePromise,
+          wait(1200).then(() => null),
+        ]);
         const runtimeDialogueText = normalizeNarrativeText(dialoguePayload?.text, "");
         const dialogueText = runtimeDialogueText || bundle?.dialogueText || beatParts.dialogueText || "等待 NPC service 回傳對白。";
         const intentNarrativeText = beatParts.intentText;
         bundle.runtimeIntentText = intentNarrativeText;
-        const narrativeSource = "敘事：NPC service beats";
-        const dialogueSource = dialoguePayload?.provider
+        const dialogueRuntimeSource = dialoguePayload?.provider
           ? `台詞：${dialoguePayload.provider}${dialoguePayload.model ? `/${dialoguePayload.model}` : ""}`
-          : "台詞：服務待補";
-        let storySource = "完整敘事：服務 fallback";
+          : dialogueSource;
         if (state.currentBundle === bundle) {
-          elements.sceneNote.textContent = `${bundle.sceneNote}；${narrativeSource}；${dialogueSource}；${storySource}`;
+          elements.sceneNote.textContent = `${bundle.sceneNote}；${narrativeSource}；${dialogueRuntimeSource}；${storySource}`;
         }
         await revealText(elements.dialogueText, dialogueText, 300);
         await revealText(elements.intentText, intentNarrativeText, 320);
@@ -2691,20 +2762,26 @@
           intentText: intentNarrativeText,
         };
         const mergedStoryFallback = buildCompactFallbackStory(bundle, storyBeatParts);
-        const storyFusionPayload = directorPayload?.storyText
-          ? {
+        const storyFusionPromise = directorPayload?.storyText
+          ? Promise.resolve({
             text: directorPayload.storyText,
             provider: directorPayload.storyProvider || "scene-director",
             model: directorPayload.storyModel || null,
             qualityReason: "service",
             fallbackUsed: Boolean(directorPayload.storyFallbackUsed),
-          }
-          : await requestStoryFusion(bundle, storyBeatParts, mergedStoryFallback);
-        const mergedStoryText = normalizeNarrativeText(storyFusionPayload?.text, mergedStoryFallback);
+          })
+          : requestStoryFusion(bundle, storyBeatParts, mergedStoryFallback);
+        const storyFusionPayload = await Promise.race([
+          storyFusionPromise,
+          wait(900).then(() => null),
+        ]);
+        const mergedStoryText = normalizeNarrativeText(storyFusionPayload?.text || mergedStoryFallback, mergedStoryFallback);
         if (storyFusionPayload?.provider) {
           storySource = `完整敘事：${storyFusionPayload.provider}${storyFusionPayload.model ? `/${storyFusionPayload.model}` : ""}`;
         } else if (storyFusionPayload?.qualityReason) {
           storySource = `完整敘事：品質閘門 fallback（${storyFusionPayload.qualityReason}）`;
+        } else {
+          storySource = "完整敘事：local fallback";
         }
         if (state.currentBundle === bundle) {
           elements.sceneNote.textContent = `${bundle.sceneNote}；${narrativeSource}；${dialogueSource}；${storySource}`;
@@ -2875,6 +2952,7 @@
       renderAngles();
       renderRelationships();
       resetStageTexts();
+      await advanceScene();
     }
 
     init().catch((error) => {

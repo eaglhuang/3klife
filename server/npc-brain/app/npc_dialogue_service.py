@@ -875,7 +875,7 @@ class NpcDialogueService:
             f"{target_label}相關的線索，讓{display_name}重新想起一段需要慎重處理的舊事。",
             max_chars=128,
         )
-        trait_text = "、".join(str(trait) for trait in (profile.persona.get("personalityTraits") or [])[:3] if str(trait).strip())
+        trait_text = self._humanize_tag_list((profile.persona.get("personalityTraits") or [])[:3])
         emotion_text = self._sentence_or_default(
             f"{presence.reason}。{display_name}此刻的反應需要符合人物性格：{trait_text or '依照 persona 判斷'}。",
             f"{display_name}不能只照一時情緒做決定，還要回到人物性格與眼前證據。",
@@ -1456,8 +1456,8 @@ class NpcDialogueService:
         interaction_targets: list[NarrativeInteractionTarget],
     ) -> str:
         voice_style = ", ".join((runtime_persona.get("voiceAndPrompt") or {}).get("voiceStyle") or [])
-        personality_tags = ", ".join((runtime_persona.get("profile") or {}).get("personalityTags") or [])
-        affect_tags = ", ".join((runtime_persona.get("profile") or {}).get("affectTags") or [])
+        personality_tags = self._humanize_tag_list((runtime_persona.get("profile") or {}).get("personalityTags") or [])
+        affect_tags = self._humanize_tag_list((runtime_persona.get("profile") or {}).get("affectTags") or [])
         key_targets = "、".join(target.label for target in interaction_targets[:3])
         return (
             f"以三國敘事插畫描繪{display_name}，畫面偏古典寫實與水墨戲劇感，"
@@ -1473,6 +1473,40 @@ class NpcDialogueService:
         except (TypeError, ValueError):
             return default
         return max(0.0, min(1.0, numeric))
+
+    def _humanize_tag_list(self, values: Any, fallback: str = "") -> str:
+        if not values:
+            return fallback
+        if isinstance(values, str):
+            raw_items = [part.strip() for part in re.split(r"[、,，·\s]+", values) if part.strip()]
+        elif isinstance(values, (list, tuple, set)):
+            raw_items = [str(part).strip() for part in values if str(part).strip()]
+        else:
+            raw_items = [str(values).strip()] if str(values).strip() else []
+        tag_map = {
+            "governance-minded": "重治理",
+            "literary": "文雅",
+            "family-bound": "重家室與結義",
+            "direct_force": "行動果斷",
+            "commanding": "統率威嚴",
+            "analytical": "審勢而行",
+            "administrative": "善理政務",
+            "persuasive": "善於勸說",
+            "opportunistic": "臨機應變",
+            "family_affection": "家族牽掛",
+            "mercy_compassion": "仁心與憐憫",
+            "grief_regret": "悲痛與遺憾",
+            "ambition_pride": "志氣與自尊",
+            "host_banquet": "設宴安撫",
+            "family_duty": "家室安置",
+            "suppress_unrest": "平亂整軍",
+        }
+        humanized: list[str] = []
+        for item in raw_items:
+            mapped = tag_map.get(item, item)
+            if mapped and mapped not in humanized:
+                humanized.append(mapped)
+        return "、".join(humanized) or fallback
 
     def _resolve_path(self, path: Path) -> Path:
         return path if path.is_absolute() else self.repo_root / path
