@@ -31,13 +31,13 @@
   },
   {
     "id": "doc_other_0008",
-    "path": "docs/html_skill_plan2.md",
+    "path": "docs/html-to-ucuf/history/html_skill_plan2.md",
     "title": "HTML Skill Plan 2",
     "category": "other"
   },
   {
     "id": "doc_other_0009",
-    "path": "docs/html_skill_plan.md",
+    "path": "docs/html-to-ucuf/history/html_skill_plan.md",
     "title": "HTML Skill Plan",
     "category": "other"
   },
@@ -49,7 +49,7 @@
   },
   {
     "id": "doc_other_0011",
-    "path": "docs/html_skill_plan3.md",
+    "path": "docs/html-to-ucuf/history/html_skill_plan3.md",
     "title": "HTML Skill Plan 3",
     "category": "other"
   },
@@ -73,7 +73,7 @@
   },
   {
     "id": "doc_other_0016",
-    "path": "docs/html-to-ucuf-plan5-stale-rule-audit.md",
+    "path": "docs/html-to-ucuf/history/html-to-ucuf-plan5-stale-rule-audit.md",
     "title": "HTML-to-UCUF Stale Rule Audit (Plan5)",
     "category": "other"
   },
@@ -91,13 +91,13 @@
   },
   {
     "id": "doc_other_0020",
-    "path": "docs/html_skill_plan4.md",
+    "path": "docs/html-to-ucuf/history/html_skill_plan4.md",
     "title": "HTML-to-UCUF Plan 4: 權威重整、通用化與自我驗證計畫",
     "category": "other"
   },
   {
     "id": "doc_other_0021",
-    "path": "docs/html_skill_plan5.md",
+    "path": "docs/html-to-ucuf/history/html_skill_plan5.md",
     "title": "HTML-to-UCUF Plan5: Final Fidelity and Rule Decay Closure",
     "category": "other"
   },
@@ -121,7 +121,7 @@
   },
   {
     "id": "doc_other_0026",
-    "path": "docs/html_skill_postmortem.md",
+    "path": "docs/html-to-ucuf/history/html_skill_postmortem.md",
     "title": "HTML-to-UCUF Skill 五次大改 Postmortem 與架構審查",
     "category": "other"
   },
@@ -656,7 +656,7 @@
   {
     "id": "doc_other_0117",
     "path": "docs/ai_atomic_framework/legacy-h2u-first-battle-launch-checklist.md",
-    "title": "Legacy 大挑戰啟動條件與首戰清單（H2U 首勝版）",
+    "title": "2026-05-11 ATM Ownership Boundary",
     "category": "other"
   },
   {
@@ -692,7 +692,7 @@
   {
     "id": "doc_other_0126",
     "path": "docs/case-studies/h2u-map-evolution-pilot.md",
-    "title": "H2U Map Evolution Pilot",
+    "title": "2026-05-11 Local Workbench Ownership",
     "category": "other"
   },
   {
@@ -717,6 +717,12 @@
     "id": "doc_other_0130",
     "path": "docs/ai_atomic_framework/atm-h2u-three-tier-gates.md",
     "title": "ATM/H2U 三層閘門與單一入口",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0131",
+    "path": "docs/html-to-ucuf/current-roadmap.md",
+    "title": "HTML-to-UCUF Current Roadmap (Single Active Entry)",
     "category": "other"
   }
 ]

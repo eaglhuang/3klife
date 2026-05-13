@@ -2683,7 +2683,7 @@ function runHtmlToUcufFidelityContractGroup() {
         '}',
       ].join('\n'),
       draftBuilder: 'const DRAFT_BUILDER_STAGE_RULES = [];',
-      skill: 'current execution spec docs/html_skill_plan5.md and tools_node/lib/html-to-ucuf/rule-registry.json\n',
+      skill: 'current execution spec docs/html-to-ucuf/current-roadmap.md and tools_node/lib/html-to-ucuf/rule-registry.json\n',
     });
     const report = runRuleGuard({ repoRoot: tmp, scanCore: true });
     assertNoRule(report, 'H2U-P4-020');

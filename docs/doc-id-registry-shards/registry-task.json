@@ -1076,7 +1076,7 @@
   {
     "id": "doc_task_0183",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-0007.md",
-    "title": "[PROG-2-0007] HTML-to-UCUF gacha-ds3 + 2 非 gacha fixture 95% final gate closure",
+    "title": "[PROG-2-0007] HTML-to-UCUF 95% Umbrella Closeout",
     "category": "task"
   },
   {
@@ -1328,7 +1328,7 @@
   {
     "id": "doc_task_0230",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-0010.md",
-    "title": "[PROG-2-0010] gacha-ds3 formal rerun + 2 個非 gacha fixture（多畫面 baseline）",
+    "title": "[PROG-2-0010] Multi-Fixture Regression Baseline",
     "category": "task"
   },
   {
@@ -2138,7 +2138,7 @@
   {
     "id": "doc_task_0365",
     "path": "docs/case-studies/h2u-normalize-css-color-evolution-pilot.md",
-    "title": "H2U normalizeCssColor v1.0 到 v1.1 Evolution Pilot",
+    "title": "2026-05-11 Local Workbench Ownership",
     "category": "task"
   },
   {
@@ -2163,6 +2163,24 @@
     "id": "doc_task_0369",
     "path": "docs/agent-briefs/tasks/PROG/PROG-1-0010.md",
     "title": "[PROG-1-0010] BloodlineTreePanel 元件實作（祖先樹 + 因子繼承 + 子嗣預測）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0370",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-8-0001.md",
+    "title": "[ATM-8-0001] Stability warnings governance and allowlist contract",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0371",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-8-0003.md",
+    "title": "[ATM-8-0003] Task-store single-truth anti-bypass guard",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_0372",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-8-0004.md",
+    "title": "[ATM-8-0004] Regression tests for doc-id fallback and closeout",
     "category": "task"
   }
 ]

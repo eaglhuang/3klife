@@ -213,12 +213,16 @@ function scanSkillDoc(repoRoot, violations) {
     });
     return;
   }
-  const hasPlan5Current = /current execution spec/i.test(text) && /docs\/html_skill_plan5\.md/i.test(text);
-  const mentionsRegistry = /tools_node\/lib\/html-to-ucuf\/rule-registry\.json|rule-registry\.json/i.test(text);
-  const plan4AsCurrent = /(Plan 4|Plan4)[^\n]{0,80}current execution spec/i.test(text);
-  if (!hasPlan5Current || !mentionsRegistry || plan4AsCurrent) {
+  const normalized = String(text || '').replace(/\\/g, '/');
+  const currentExecutionSpec = String(RULE_REGISTRY.currentExecutionSpec || '').replace(/\\/g, '/').toLowerCase();
+  const hasCurrentSpec = /current execution spec/i.test(normalized)
+    && Boolean(currentExecutionSpec)
+    && normalized.toLowerCase().includes(currentExecutionSpec);
+  const mentionsRegistry = /tools_node\/lib\/html-to-ucuf\/rule-registry\.json|rule-registry\.json/i.test(normalized);
+  const plan4AsCurrent = /(Plan 4|Plan4)[^\n]{0,80}current execution spec/i.test(normalized);
+  if (!hasCurrentSpec || !mentionsRegistry || plan4AsCurrent) {
     addViolation(violations, 'H2U-P5-001', {
-      summary: 'skill doc does not point to Plan5 + rule-registry.json as the current governance source',
+      summary: 'skill doc does not point to current-roadmap + rule-registry.json as the current governance source',
       evidence: RULE_REGISTRY.skillDocPath || '.github/skills/html-to-ucuf/SKILL.md'
     });
   }

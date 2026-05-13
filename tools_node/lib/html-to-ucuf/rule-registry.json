@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "registryId": "html-to-ucuf-rules",
-  "currentExecutionSpec": "docs/html_skill_plan5.md",
+  "currentExecutionSpec": "docs/html-to-ucuf/current-roadmap.md",
   "skillDocPath": ".github/skills/html-to-ucuf/SKILL.md",
   "rules": [
     {
@@ -349,8 +349,8 @@
       "status": "active",
       "checkerId": "plan5-current-spec-and-registry-source",
       "scope": ["skill-doc", "registry"],
-      "message": "Plan5 is the current execution spec and rule-registry.json is the single rule source of truth.",
-      "fixAction": "Update SKILL.md to point to Plan5 as current execution spec and to reference tools_node/lib/html-to-ucuf/rule-registry.json as the authoritative rule registry.",
+      "message": "Current roadmap is the current execution spec and rule-registry.json is the single rule source of truth.",
+      "fixAction": "Update SKILL.md to point to docs/html-to-ucuf/current-roadmap.md as current execution spec and to reference tools_node/lib/html-to-ucuf/rule-registry.json as the authoritative rule registry.",
       "owner": "skill-doc"
     },
     {

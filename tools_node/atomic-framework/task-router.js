@@ -393,7 +393,7 @@ function buildIntentRoute(intent, args = {}) {
       'docs/keep.summary.md',
       'docs/ai_atomic_framework/legacy-h2u-first-battle-launch-checklist.md',
       'docs/ai_atomic_framework/atm-h2u-three-tier-gates.md',
-      'docs/html_skill_plan5.md',
+      'docs/html-to-ucuf/current-roadmap.md',
     ];
     const nextCommands = buildFixH2uCommands(args);
     const validationHints = [

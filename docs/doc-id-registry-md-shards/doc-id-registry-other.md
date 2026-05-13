@@ -37,7 +37,7 @@
 | `doc_other_0026` | docs/html_skill_postmortem.md | HTML-to-UCUF Skill 五次大改 Postmortem 與架構審查 |
 | `doc_other_0010` | docs/html_skill_rule-evolution.md | HTML Skill Rule Evolution |
 | `doc_other_0012` | docs/html_skill_rule-evolution2.md | HTML Skill Rule Evolution 2 |
-| `doc_other_0016` | docs/html-to-ucuf-plan5-stale-rule-audit.md | HTML-to-UCUF Stale Rule Audit (Plan5) |
+| `doc_other_0016` | docs/html-to-ucuf/history/html-to-ucuf-plan5-stale-rule-audit.md | HTML-to-UCUF Stale Rule Audit (Plan5) |
 | `doc_other_0025` | docs/inside-openai-agent-collaboration-study-notes.md | Inside OpenAI's AI Agent Collaboration System 學習筆記 |
 | `doc_other_0018` | docs/sanguo-rag-abab-progress-workflow-plan.md | Sanguo RAG ABAB…C 整體進度推進規劃書 |
 | `doc_other_0013` | docs/sanguo-rag-phase4b-phase5-execution-plan.md | Sanguo RAG Phase 4b / Phase 5 Execution Plan |

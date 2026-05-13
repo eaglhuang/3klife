@@ -8,7 +8,7 @@
   },
   {
     "id": "doc_server_ops_0002",
-    "path": "server/npc-brain/說明文件拆分規劃.md",
+    "path": "server/npc-brain/文件/archive/說明文件拆分規劃.md",
     "title": "NPC Brain README 拆分規劃",
     "category": "server",
     "subtype": "ops"
@@ -35,6 +35,20 @@
     "subtype": "other"
   },
   {
+    "id": "doc_server_other_0009",
+    "path": "server/npc-brain/local/codex-smoke/knowledge-growth/post-split-smoke-r1/three-lane-progress-summary.md",
+    "title": "Three-Lane Progress Scheduler",
+    "category": "server",
+    "subtype": "other"
+  },
+  {
+    "id": "doc_server_other_0010",
+    "path": "server/README.dev.md",
+    "title": "Server Dev Workflow",
+    "category": "server",
+    "subtype": "other"
+  },
+  {
     "id": "doc_server_pipeline_0001",
     "path": "server/npc-brain/pipelines/sanguo-rag/人名事件解析.md",
     "title": "人名事件解析",
@@ -45,6 +59,13 @@
     "id": "doc_server_pipeline_0002",
     "path": "server/npc-brain/pipelines/sanguo-rag/README.md",
     "title": "Sanguo RAG Pipelines",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0004",
+    "path": "server/npc-brain/pipelines/sanguo-rag/postgres-fast-etl-integration.zh-TW.md",
+    "title": "Sanguo RAG PostgreSQL 接入說明（給高速 ETL 開發者）",
     "category": "server",
     "subtype": "pipeline"
   },
@@ -80,6 +101,27 @@
     "id": "doc_server_pipeline_0009",
     "path": "server/npc-brain/pipelines/sanguo-rag/precheck-hardcode-audit.zh-TW.md",
     "title": "主要管線寫死邏輯盤點（precheck / harvest）",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0010",
+    "path": "server/npc-brain/pipelines/sanguo-rag/external-evidence-highway-vnext.addendum.zh-TW.md",
+    "title": "外部網站採證高速公路 vNext 增補",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0011",
+    "path": "server/npc-brain/pipelines/sanguo-rag/full-roster-bottleneck-priority-fixes.zh-TW.md",
+    "title": "全量收斂瓶頸拆解與優先修復清單（ROI 版）",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0012",
+    "path": "server/npc-brain/pipelines/sanguo-rag/runtime-fail-ref-blitz-r3a2.report.zh-TW.md",
+    "title": "Runtime Fail Evidence-Ref Blitz（r3a2）執行報告",
     "category": "server",
     "subtype": "pipeline"
   },
@@ -136,6 +178,13 @@
     "id": "doc_server_service_0008",
     "path": "server/npc-brain/文件/武將基本資料從0到1的誕生.md",
     "title": "武將基本資料從0到1的誕生",
+    "category": "server",
+    "subtype": "service"
+  },
+  {
+    "id": "doc_server_service_0009",
+    "path": "server/npc-brain/文件/archive/npc-brain-獨立-repo-拆分實作清單.zh-TW.md",
+    "title": "npc-brain 獨立 Repo 拆分實作清單（含工時）",
     "category": "server",
     "subtype": "service"
   }

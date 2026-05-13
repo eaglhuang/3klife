@@ -1,31 +1,29 @@
 ---
 doc_id: doc_agentskill_0036
 name: html-to-ucuf
-description: "HTML -> UCUF (Cocos Creator UI) conversion skill. Use for turning a complete HTML source package with ui-design-tokens.json and colors_and_type.css into Cocos usable layout/skin/screen JSON, then validating with Plan5 final fidelity gates: stale-rule audit, rule guard, visual fidelity risk, runtime interaction smoke, Cocos Editor final gate, and 95% regression matrix."
+description: "HTML -> UCUF (Cocos Creator UI) conversion skill. Use for turning a complete HTML source package with ui-design-tokens.json and colors_and_type.css into Cocos usable layout/skin/screen JSON, then validating with rule guard, visual fidelity risk, runtime interaction smoke, Cocos Editor final gate, and regression evidence."
 argument-hint: "Formal runs need --source-dir, --main-html, --screen-id, --bundle, --editor-screenshot, --capture-protocol, and --capture-report. --input, --skip-editor-compare, --no-runtime-sync, and --no-per-tab-replay are debug only."
 ---
 
 # HTML-to-UCUF Skill
 
-This skill converts HTML into UCUF JSON for Cocos Creator UI. The current execution spec is `docs/html_skill_plan5.md`.
+This skill converts HTML into UCUF JSON for Cocos Creator UI. The current execution spec is `docs/html-to-ucuf/current-roadmap.md`.
 
 Authority order:
 
-- Plan 2 (`docs/html_skill_plan2.md`): historical evidence only.
-- Plan 3 (`docs/html_skill_plan3.md`): historical transition source.
-- Plan 4 (`docs/html_skill_plan4.md`): prior execution evidence and Plan 4.1 regression closure.
-- Plan 5 (`docs/html_skill_plan5.md`): current execution spec for final fidelity, stale-rule cleanup, and 95% Cocos final gate closure.
+- Current Roadmap (`docs/html-to-ucuf/current-roadmap.md`): single active execution spec.
+- Historical plans and postmortem (`docs/html-to-ucuf/history/`): historical evidence only.
 
 ## Rule Source
 
 - `tools_node/lib/html-to-ucuf/rule-registry.json` is the single machine-readable rule source of truth.
 - `tools_node/lib/html-to-ucuf/rule-checkers.js` contains rule checker implementations.
-- `docs/html_skill_plan4.md` and `docs/html_skill_plan5.md` are version deltas and decision records, not the formal rule registry.
+- `docs/html-to-ucuf/history/` files are decision records and historical evidence, not the formal rule registry.
 
 Unity 對照：這條流程相當於 UI Toolkit importer + Prefab/Scene sync + Play Mode interaction smoke + Game View final compare；不要把 debug 輸出當成正式通過。
 
-> **⚠️ Spec Authority**: `docs/html_skill_plan5.md` is the only active execution spec.
-> `docs/html_skill_plan.md` ~ `docs/html_skill_plan4.md` are HISTORICAL; do not follow them without consulting `docs/html_skill_postmortem.md`.
+> **⚠️ Spec Authority**: `docs/html-to-ucuf/current-roadmap.md` is the only active execution spec.
+> `docs/html-to-ucuf/history/*` are historical references; do not treat them as current policy.
 
 ## Formal Entry
 
@@ -53,7 +51,7 @@ Formal flow also requires:
 - final replay from source-derived output.
 - per-tab replay fragments for tabbed sources.
 - runtime sync into `assets/resources/ui-spec`.
-- Plan5 stale-rule and final-fidelity requirements.
+- current-roadmap governance requirements.
 - Plan 4.1 rule guard pass.
 - runtime interaction smoke when interaction sidecars exist.
 - visual fidelity risk pass for semantic, background, and composite fidelity.
@@ -82,7 +80,7 @@ These switches always mean `debugOnly=true` and cannot produce a formal pass ver
 6. Replay each tab and write fragment JSON for tabbed sources.
 7. Sync final layout/skin/screen into `assets/resources/ui-spec`.
 8. Run Plan 4.1 rule guard.
-9. Run Plan5 stale-rule checks when touching workflow/converter/runtime/final-gate logic.
+9. Run current-roadmap governance checks when touching workflow/converter/runtime/final-gate logic.
 10. Run visual fidelity risk checks for semantic, background, and composite fidelity.
 11. Run runtime interaction smoke when interaction sidecars exist.
 12. Capture Cocos through the formal route: `node tools_node/capture-ui-screens.js --formal-screen-id <screen-id> --uiVersion <workflow-uiVersion> --maxWidth 0`.
@@ -115,10 +113,10 @@ node tools_node/check-context-budget.js --changed --emit-keep-note
 
 ## Notes For Agents
 
-- Do not resurrect Phase B tools as the main path. `generate-tab-childpanels.js`, `runtime-screen-diff.js`, and `cutover-screen-variant.js` are not the formal Plan5 flow.
+- Do not resurrect Phase B tools as the main path. `generate-tab-childpanels.js`, `runtime-screen-diff.js`, and `cutover-screen-variant.js` are not the formal active flow.
 - DS3 may be used as a fixture, but core converter/workflow/validator code must stay screen-agnostic.
 - If the score is low, keep testing the converted JSON from the current HTML source package. Do not switch to default skins or old runtime files to make the gate easier.
-- If browser coverage is high but Cocos final gate is low, treat the run as a Plan5 diagnostic failure until `blockerTaxonomy` and `nextFixes` identify the next tool/runtime fix.
+- If browser coverage is high but Cocos final gate is low, treat the run as a diagnostic failure until `blockerTaxonomy` and `nextFixes` identify the next tool/runtime fix.
 - If final gate reports a low score, inspect `captureAuthority` first. A legacy `GachaMain`/product route mismatch is a blocker, not a converter fidelity result.
 - Keep `history-not-story`, `radial-slide-background`, and `interaction-carousel` style regressions as fixtures.
 - When adding logic to `draft-builder.js`, first attach it to the registry-backed `draftBuilderStageRules` mapping and add a self-test tag.
