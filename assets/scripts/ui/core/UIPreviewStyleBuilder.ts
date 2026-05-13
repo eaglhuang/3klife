@@ -1,19 +1,14 @@
-// @spec-source → 見 docs/cross-reference-index.md
+// @spec-source ??閬?docs/cross-reference-index.md
 /**
  * UIPreviewStyleBuilder
  *
- * 負責所有視覺樣式的套用，包括：
- *   - 背景 skin（color-rect / sprite-frame）
- *   - 按鈕 skin（多狀態 sprite）
- *   - Label 樣式套用
- *   - Sprite 類型與 9-slice inset 設定
- *   - Widget 對齊設定
+ * 鞎痊???閬箸見撘?憟嚗??穿?
+ *   - ? skin嚗olor-rect / sprite-frame嚗? *   - ?? skin嚗????sprite嚗? *   - Label 璅??憟
+ *   - Sprite 憿???9-slice inset 閮剖?
+ *   - Widget 撠?閮剖?
  *
- * 不持有自己的場景狀態，依賴外部傳入的 UISkinResolver 與 fontCache。
- * 可被 UIPreviewBuilder 與 UIPreviewShadowManager 共用。
- *
- * Unity 對照：相當於 UIStyleApplier + UILayoutHelper 的組合
- */
+ * 銝??撌梁??湔???靘陷憭?喳??UISkinResolver ??fontCache?? * ?航◤ UIPreviewBuilder ??UIPreviewShadowManager ?梁?? *
+ * Unity 撠嚗?嗆 UIStyleApplier + UILayoutHelper ???? */
 import { Node, Sprite, UITransform, Label, Button, Font, Color, Vec2 } from 'cc';
 import { RoundedRectBackground } from '../components/RoundedRectBackground';
 import { SolidBackground } from '../components/SolidBackground';
@@ -23,7 +18,7 @@ import { UISkinResolver, ResolvedButtonSkin, ResolvedLabelStyle } from './UISkin
 import type { UILayoutNodeSpec } from './UISpecTypes';
 import { UIPreviewDiagnostics } from './UIPreviewDiagnostics';
 
-/** 按鈕視覺狀態（對照 Unity Selectable.SelectionState） */
+/** ??閬死???撠 Unity Selectable.SelectionState嚗?*/
 export type ButtonVisualState = 'normal' | 'pressed' | 'hover' | 'disabled' | 'selected';
 
 export class UIPreviewStyleBuilder {
@@ -33,15 +28,13 @@ export class UIPreviewStyleBuilder {
         private readonly fontCache: Map<string, Font | null>,
     ) {}
 
-    // ─── 背景 Skin ────────────────────────────────────────────────────────────
+    // ??? ? Skin ????????????????????????????????????????????????????????????
 
     /**
-     * 套用背景 skin 到節點（color-rect 或 sprite-frame）。
-     * 回傳 true 代表套用成功；false 代表找不到資源（呼叫端可做 fallback）。
-     * Unity 對照：Image.color + Image.sprite 的分支邏輯
-     */
+     * 憟? skin ?啁?暺?color-rect ??sprite-frame嚗?     * ? true 隞?”憟??嚗alse 隞?”?曆??啗?皞??澆蝡臬??fallback嚗?     * Unity 撠嚗mage.color + Image.sprite ???舫?頛?     */
     async applyBackgroundSkin(node: Node, skinSlot: string): Promise<boolean> {
         const slot = this.skinResolver.getSlot(skinSlot);
+        const slotAny = slot as Record<string, any> | null;
         const resolveOpacity = (rawOpacity: unknown): number | null => {
             if (typeof rawOpacity !== 'number' || Number.isNaN(rawOpacity)) {
                 return null;
@@ -50,7 +43,7 @@ export class UIPreviewStyleBuilder {
             return Math.max(0, Math.min(255, opacityValue));
         };
 
-        if (slot && (slot as any).kind === 'transparent') {
+        if (slot && slotAny.kind === 'transparent') {
             const sprite = node.getComponent(Sprite);
             if (sprite) {
                 sprite.enabled = false;
@@ -74,7 +67,7 @@ export class UIPreviewStyleBuilder {
             return true;
         }
 
-        if (slot && (slot as any).kind === 'gradient-rect') {
+        if (slot && slotAny.kind === 'gradient-rect') {
             const solid = node.getComponent(SolidBackground);
             if (solid) {
                 solid.enabled = false;
@@ -88,21 +81,21 @@ export class UIPreviewStyleBuilder {
                 roundedRect.enabled = false;
             }
 
-            const gradient = (slot as any).gradient || {};
+            const gradient = slotAny.gradient || {};
             const stops: GradientColorStop[] = Array.isArray(gradient.stops)
-                ? gradient.stops.map((stop: any) => ({
+                ? gradient.stops.map((stop) => ({
                     color: this._resolveGradientColor(stop.color, stop.opacity),
                     offset: typeof stop.offset === 'number' ? stop.offset : 0,
                 }))
                 : [];
-            const borderWidthRaw = (slot as any).borderWidth ?? (slot as any).strokeWidth;
+            const borderWidthRaw = slotAny.borderWidth ?? slotAny.strokeWidth;
             const borderWidth = typeof borderWidthRaw === 'number' && !Number.isNaN(borderWidthRaw)
                 ? Math.max(0, borderWidthRaw)
                 : 0;
             const cornerRadius = this._resolveCornerRadius(slot);
-            const borderColorKey = (slot as any).borderColor ?? (slot as any).strokeColor;
-            const hasRepeatingLayer = Array.isArray((slot as any).backgroundLayers)
-                && (slot as any).backgroundLayers.some((layer: any) => layer?.kind === 'gradient' && layer.gradient?.repeating === true);
+            const borderColorKey = slotAny.borderColor ?? slotAny.strokeColor;
+            const hasRepeatingLayer = Array.isArray(slotAny.backgroundLayers)
+                && slotAny.backgroundLayers.some((layer) => layer?.kind === 'gradient' && layer.gradient?.repeating === true);
             const gradientShape = {
                 cornerRadius,
                 borderWidth,
@@ -128,12 +121,12 @@ export class UIPreviewStyleBuilder {
             } else {
                 background.setLinearGradient(typeof gradient.angle === 'number' ? gradient.angle : 180, stops, gradientShape);
             }
-            const alpha = resolveOpacity((slot as any).alpha ?? (slot as any).opacity);
+            const alpha = resolveOpacity(slotAny.alpha ?? slotAny.opacity);
             background.setTintColor(new Color(255, 255, 255, alpha ?? 255));
             return true;
         }
 
-        if (slot && (slot as any).kind === 'shadow-set') {
+        if (slot && slotAny.kind === 'shadow-set') {
             const solid = node.getComponent(SolidBackground);
             if (solid) {
                 solid.enabled = false;
@@ -147,8 +140,8 @@ export class UIPreviewStyleBuilder {
                 gradient.enabled = false;
             }
 
-            const shadowLayers: ShadowLayerDef[] = Array.isArray((slot as any).boxShadows)
-                ? (slot as any).boxShadows.map((shadow: any) => ({
+            const shadowLayers: ShadowLayerDef[] = Array.isArray(slotAny.boxShadows)
+                ? slotAny.boxShadows.map((shadow) => ({
                     x: typeof shadow.x === 'number' ? shadow.x : 0,
                     y: typeof shadow.y === 'number' ? shadow.y : 0,
                     blur: typeof shadow.blur === 'number' ? shadow.blur : 0,
@@ -159,27 +152,27 @@ export class UIPreviewStyleBuilder {
                 : [];
             const background = node.getComponent(ShadowBackground) || node.addComponent(ShadowBackground);
             background.enabled = true;
-            background.setShadows(shadowLayers, (slot as any).padding, this._resolveCornerRadius(slot));
-            const alpha = resolveOpacity((slot as any).alpha ?? (slot as any).opacity);
+            background.setShadows(shadowLayers, slotAny.padding, this._resolveCornerRadius(slot));
+            const alpha = resolveOpacity(slotAny.alpha ?? slotAny.opacity);
             background.setTintColor(new Color(255, 255, 255, alpha ?? 255));
             return true;
         }
 
-        // 純色背景
-        if (slot && (slot.kind === 'color-rect' || (slot as any).kind === 'color')) {
-            const resolvedColor = this.skinResolver.resolveColor((slot as any).color);
-            const alpha = resolveOpacity((slot as any).alpha ?? (slot as any).opacity);
-            // alpha / opacity 直接寫入 SolidBackground 的 color.a，避免 UIOpacity cascade 影響子節點（Labels 等）
-            // Unity 對照：Image.color = new Color(r,g,b,a) 只影響自身 renderer，不 cascade
+        // 蝝?
+        if (slot && (slot.kind === 'color-rect' || slotAny.kind === 'color')) {
+            const resolvedColor = this.skinResolver.resolveColor(slotAny.color);
+            const alpha = resolveOpacity(slotAny.alpha ?? slotAny.opacity);
+            // alpha / opacity ?湔撖怠 SolidBackground ??color.a嚗??UIOpacity cascade 敶梢摮?暺?Labels 蝑?
+            // Unity 撠嚗mage.color = new Color(r,g,b,a) ?芸蔣?輯頨?renderer嚗? cascade
             if (alpha !== null) {
                 resolvedColor.a = alpha;
             }
-            const borderWidthRaw = (slot as any).borderWidth ?? (slot as any).strokeWidth;
+            const borderWidthRaw = slotAny.borderWidth ?? slotAny.strokeWidth;
             const borderWidth = typeof borderWidthRaw === 'number' && !Number.isNaN(borderWidthRaw)
                 ? Math.max(0, borderWidthRaw)
                 : 0;
             const cornerRadius = this._resolveCornerRadius(slot);
-            const borderColorKey = (slot as any).borderColor ?? (slot as any).strokeColor;
+            const borderColorKey = slotAny.borderColor ?? slotAny.strokeColor;
             const usesRoundedRect = cornerRadius > 0 || borderWidth > 0 || typeof borderColorKey === 'string';
 
             if (usesRoundedRect) {
@@ -224,14 +217,14 @@ export class UIPreviewStyleBuilder {
             return true;
         }
 
-        // 圖片背景
+        // ???
         const frame = await this.skinResolver.getSpriteFrame(skinSlot);
         if (!frame) return false;
 
         const sprite = node.getComponent(Sprite) || node.addComponent(Sprite);
         sprite.sizeMode = Sprite.SizeMode.CUSTOM;
         sprite.spriteFrame = frame;
-        const alpha = resolveOpacity((slot as any)?.opacity ?? (slot as any)?.alpha);
+        const alpha = resolveOpacity(slotAny?.opacity ?? slotAny?.alpha);
         if (alpha !== null) {
             sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, alpha);
         }
@@ -281,7 +274,8 @@ export class UIPreviewStyleBuilder {
     }
 
     private _resolveCornerRadius(slot: unknown): number {
-        const raw = (slot as any)?.cornerRadius ?? (slot as any)?.radius ?? (slot as any)?.border?.radius;
+        const slotRecord = slot as Record<string, any> | null;
+        const raw = slotRecord?.cornerRadius ?? slotRecord?.radius ?? slotRecord?.border?.radius;
         if (typeof raw === 'number' && !Number.isNaN(raw)) {
             return Math.max(0, raw);
         }
@@ -298,12 +292,10 @@ export class UIPreviewStyleBuilder {
         return 0;
     }
 
-    // ─── 按鈕 Skin ────────────────────────────────────────────────────────────
+    // ??? ?? Skin ????????????????????????????????????????????????????????????
 
     /**
-     * 套用按鈕 skin（多狀態 sprite）到節點。
-     * 回傳 true 代表套用成功。
-     * Unity 對照：Button.SpriteState + SpriteSwapper
+     * 憟?? skin嚗????sprite嚗蝭暺?     * ? true 隞?”憟????     * Unity 撠嚗utton.SpriteState + SpriteSwapper
      */
     async applyButtonSkin(node: Node, slotId: string, button: Button): Promise<boolean> {
         const slot = this.skinResolver.getSlot(slotId);
@@ -330,16 +322,14 @@ export class UIPreviewStyleBuilder {
         button.pressedSprite = stateMap.pressed;
         button.hoverSprite   = stateMap.hover;
         button.disabledSprite = stateMap.disabled;
-        // 快取各狀態 frame 供 setButtonVisualState 使用
-        (button as any)._buttonSkinStateMap = stateMap;
-        (node as any)._buttonSkinStateMap = stateMap;
+        // 敹怠?????frame 靘?setButtonVisualState 雿輻
+        (button as Button & { _buttonSkinStateMap?: typeof stateMap })._buttonSkinStateMap = stateMap;
+        (node as Node & { _buttonSkinStateMap?: typeof stateMap })._buttonSkinStateMap = stateMap;
         return true;
     }
 
     /**
-     * 為按鈕 frame 設定 9-slice border inset。
-     * Unity 對照：Sprite.border（四邊 sliced 距離）
-     */
+     * ?箸???frame 閮剖? 9-slice border inset??     * Unity 撠嚗prite.border嚗???sliced 頝嚗?     */
     prepareButtonFrame(
         frame: ResolvedButtonSkin['normal'],
         border?: [number, number, number, number],
@@ -355,11 +345,10 @@ export class UIPreviewStyleBuilder {
         return frame;
     }
 
-    // ─── Sprite 類型 ──────────────────────────────────────────────────────────
+    // ??? Sprite 憿? ??????????????????????????????????????????????????????????
 
     /**
-     * 設定 Sprite 顯示類型（simple / sliced / tiled）並寫入 9-slice inset。
-     * Unity 對照：Image.type（Simple / Sliced / Tiled）+ Sprite.border
+     * 閮剖? Sprite 憿舐內憿?嚗imple / sliced / tiled嚗蒂撖怠 9-slice inset??     * Unity 撠嚗mage.type嚗imple / Sliced / Tiled嚗? Sprite.border
      */
     applySpriteSkin(
         sprite: Sprite,
@@ -381,13 +370,10 @@ export class UIPreviewStyleBuilder {
         sprite.spriteFrame.insetLeft   = left;
     }
 
-    // ─── Label 樣式 ───────────────────────────────────────────────────────────
+    // ??? Label 璅?? ???????????????????????????????????????????????????????????
 
     /**
-     * 套用 LabelStyle 到 Label 元件。
-     * 若 buildScreen 時已預載字型，此處直接從 fontCache 取用。
-     * Unity 對照：TMP_Text 的各屬性賦值
-     */
+     * 憟 LabelStyle ??Label ?辣??     * ??buildScreen ?歇??摮?嚗迨??亙? fontCache ???     * Unity 撠嚗MP_Text ??撅祆扯釵??     */
     applyLabelStyle(label: Label, style: ResolvedLabelStyle): void {
         label.fontSize        = style.fontSize;
         label.lineHeight      = style.lineHeight;
@@ -395,10 +381,8 @@ export class UIPreviewStyleBuilder {
         label.spacingX        = style.letterSpacing;
         label.horizontalAlign = style.horizontalAlign;
         label.verticalAlign   = style.verticalAlign;
-        // overflow floor：不允許 skin 將 overflow 設為 NONE（0），
-        // 強制最低保障為 SHRINK（2），確保文字永不溢出容器。
-        // CLAMP(1)、RESIZE_HEIGHT(3) 同樣安全，准許使用。
-        // Unity 對照：TextMeshPro 永遠啟用 AutoSize 作為底線
+        // overflow floor嚗??迂 skin 撠?overflow 閮剔 NONE嚗?嚗?
+        // 撘瑕?雿?? SHRINK嚗?嚗?蝣箔???瘞訾?皞Ｗ摰孵??        // CLAMP(1)?ESIZE_HEIGHT(3) ?見摰嚗?閮曹蝙?具?        // Unity 撠嚗extMeshPro 瘞賊?? AutoSize 雿摨?
         label.overflow = style.overflow === 0 ? 2 : style.overflow;
         if (style.outlineColor) {
             label.outlineColor = style.outlineColor;
@@ -406,8 +390,8 @@ export class UIPreviewStyleBuilder {
         if (style.outlineWidth !== undefined) {
             label.outlineWidth = style.outlineWidth;
         }
-        // R-11: 原生 Label shadow，converter 在 layout 階段已把 CSS text-shadow
-        // 解析為 { color, offsetX, offsetY, blur }；此處只做 runtime wiring。
+        // R-11: ?? Label shadow嚗onverter ??layout ?挾撌脫? CSS text-shadow
+        // 閫????{ color, offsetX, offsetY, blur }嚗迨???runtime wiring
         if (style.shadow) {
             label.enableShadow = true;
             label.shadowColor  = style.shadow.color;
@@ -422,3 +406,4 @@ export class UIPreviewStyleBuilder {
         }
     }
 }
+

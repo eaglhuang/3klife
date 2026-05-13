@@ -19,7 +19,7 @@ export class Label {
     static readonly VerticalAlign   = { TOP: 0, CENTER: 1, BOTTOM: 2 };
     static readonly Overflow        = { NONE: 0, CLAMP: 1, SHRINK: 2, RESIZE_HEIGHT: 3 };
     string = ''; fontSize = 20; color = new Color(); horizontalAlign = 0; verticalAlign = 0; overflow = 0;
-    getComponent<T>(_type: any): T | null { return null; }
+    getComponent<T>(_type: unknown): T | null { return null; }
 }
 
 export class Layout {
@@ -42,8 +42,8 @@ export class Node {
     public children: Node[] = [];
     private _parent: Node | null = null;
     public layer = 1;
-    private _handlers = new Map<string, Array<(arg?: any) => void>>();
-    private _components: any[] = [];
+    private _handlers = new Map<string, Array<(arg?: unknown) => void>>();
+    private _components: unknown[] = [];
 
     constructor(public name: string = "") {}
 
@@ -57,16 +57,16 @@ export class Node {
         if (v && v.children.indexOf(this) === -1) v.children.push(this);
     }
 
-    addComponent<T>(type: any): T {
-        const comp = new type() as any;
-        comp.node = this;
+    addComponent<T>(type: { new (): T }): T {
+        const comp = new type();
+        (comp as unknown as { node?: Node }).node = this;
         this._components.push(comp);
         return comp;
     }
 
-    getComponent<T>(type: any): T | null {
+    getComponent<T>(type: unknown): T | null {
         if (!type || typeof type !== 'function') return null;
-        return this._components.find(c => c instanceof type) || null;
+        return (this._components.find((c) => c instanceof (type as new (...args: unknown[]) => unknown)) as T | undefined) ?? null;
     }
 
     addChild(node: Node): void { node.parent = this; }
@@ -78,7 +78,7 @@ export class Node {
         this.children = [];
     }
 
-    on(event: string, handler: (arg?: any) => void): void {
+    on(event: string, handler: (arg?: unknown) => void): void {
         const list = this._handlers.get(event) ?? [];
         list.push(handler);
         this._handlers.set(event, list);
@@ -86,15 +86,15 @@ export class Node {
 
     once(event: string, handler: () => void): void { this.on(event, handler); }
 
-    setPosition(_x: any, _y?: number, _z?: number): void {}
-    setWorldPosition(_pos: any): void {}
+    setPosition(_x: unknown, _y?: number, _z?: number): void {}
+    setWorldPosition(_pos: unknown): void {}
     setRotationFromEuler(_x: number, _y: number, _z: number): void {}
-    setScale(_v: any, _y?: number, _z?: number): void {}
+    setScale(_v: unknown, _y?: number, _z?: number): void {}
     get active(): boolean { return true; }
     set active(_v: boolean) {}
     get isValid(): boolean { return true; }
 
-    __emit(event: string, arg?: any): void {
+    __emit(event: string, arg?: unknown): void {
         const list = this._handlers.get(event) ?? [];
         list.forEach(h => h(arg));
     }
@@ -106,12 +106,12 @@ export class Component {
     scheduleOnce(fn: () => void, _delay: number): void { fn(); }
 }
 
-export function instantiate(noP: any): Node {
+export function instantiate(noP: unknown): Node {
     if (noP instanceof Node) return new Node(noP.name + " (Clone)");
     return new Node("New Instance");
 }
 
-export function tween(_target: any) {
+export function tween(_target: unknown) {
     return {
         to: (_duration?: number, _props?: Record<string, unknown>) => tween(_target),
         call: (_fn?: () => void) => tween(_target),
@@ -125,9 +125,9 @@ export const Layers = { Enum: { DEFAULT: 1 } };
 export const geometry = {};
 export const gfx = { CullMode: { NONE: 0 } };
 export const _decorator = {
-    ccclass: () => (_: any) => {},
-    property: () => (_: any, __: any) => {},
-    requireComponent: () => (_: any, __: any) => {},
+    ccclass: () => (_: unknown) => {},
+    property: () => (_: unknown, __: unknown) => {},
+    requireComponent: () => (_: unknown, __: unknown) => {},
 };
 
 export const sys = {
@@ -147,7 +147,7 @@ export const sys = {
 export class Animation { play(): void {} }
 export class Camera {}
 export class Graphics {}
-export class ParticleSystem { startColor: any; play(): void {} }
+export class ParticleSystem { startColor: unknown; play(): void {} }
 export class AudioSource {
     loop = false;
     volume = 1;

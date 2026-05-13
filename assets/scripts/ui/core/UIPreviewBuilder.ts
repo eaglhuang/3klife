@@ -39,7 +39,7 @@ export class UIPreviewBuilder extends Component {
     protected i18nStrings: Record<string, string> = {};
 
     /** Design Tokens（顏色、elevation 等設計變數） */
-    protected tokens: any = {};
+    protected tokens: Record<string, unknown> = {};
 
     // 字型預載快取，buildScreen 前預載，applyLabelStyle 時直接取用
     private _fontCache = new Map<string, Font | null>();
@@ -65,7 +65,7 @@ export class UIPreviewBuilder extends Component {
         layout: UILayoutSpec,
         skin: UISkinManifest | null,
         i18n?: Record<string, string>,
-        tokens?: any,
+        tokens?: Record<string, unknown>,
     ): Promise<Node> {
         // ⚠️ 防禦：layout 或 layout.root 為 null 時提前拋出有意義的錯誤
         // 這可讓 BattleHUD catch 區段印出詳細來源，而不是神秘的 "reading 'root'"
@@ -172,7 +172,9 @@ export class UIPreviewBuilder extends Component {
      */
     protected setButtonVisualState(node: Node, state: ButtonVisualState): boolean {
         const sprite   = node.getComponent(Sprite);
-        const stateMap = (node as any)._buttonSkinStateMap as Record<ButtonVisualState, ResolvedButtonSkin['normal']> | undefined;
+        const stateMap = (node as Node & {
+            _buttonSkinStateMap?: Record<ButtonVisualState, ResolvedButtonSkin['normal']>;
+        })._buttonSkinStateMap;
         if (!sprite || !stateMap) return false;
         const frame = stateMap[state] ?? stateMap.normal;
         if (!frame) return false;
@@ -233,7 +235,7 @@ export class UIPreviewBuilder extends Component {
             UIPreviewDiagnostics.populateListNodeNotFound(listPath, this.node.children.map(c => c.name));
             return;
         }
-        const template = (listNode as any)._itemTemplate as UILayoutNodeSpec | undefined;
+        const template = (listNode as Node & { _itemTemplate?: UILayoutNodeSpec })._itemTemplate;
         if (!template) {
             UIPreviewDiagnostics.populateListTemplateNotFound(listPath, listNode.children.map(c => c.name));
             return;
@@ -281,8 +283,11 @@ export class UIPreviewBuilder extends Component {
         const node   = new Node(spec.name);
         node.layer   = parent.layer;  // 繼承 UI_2D layer，確保 2D 攝影機下可見
         node.parent  = parent;
-        const contract = typeof (spec as any)._contract === 'string' ? String((spec as any)._contract).trim().toLowerCase() : '';
-        if (contract.length > 0) (node as any)._ucufContract = contract;
+        const specContract = (spec as UILayoutNodeSpec & { _contract?: unknown })._contract;
+        const contract = typeof specContract === 'string' ? specContract.trim().toLowerCase() : '';
+        if (contract.length > 0) {
+            (node as Node & { _ucufContract?: string })._ucufContract = contract;
+        }
 
         const flowChildInLayout = this._isLayoutFlowChild(spec, parent);
         const widgetDef = flowChildInLayout ? undefined : spec.widget;
@@ -436,7 +441,7 @@ export class UIPreviewBuilder extends Component {
         const duplicates: Array<{ contract: string; path: string }> = [];
 
         const walk = (node: Node, path: string): void => {
-            const contract = String((node as any)._ucufContract || '').trim().toLowerCase();
+            const contract = String((node as Node & { _ucufContract?: string })._ucufContract || '').trim().toLowerCase();
             if (/^tab\.switch(?:\.|$)/.test(contract)) {
                 if (seenContracts.has(contract)) {
                     node.active = false;
@@ -524,8 +529,8 @@ export class UIPreviewBuilder extends Component {
             left: widgetDef.left,
             right: widgetDef.right,
             bottom: widgetDef.bottom,
-            hCenter: (widgetDef as any).hCenter,
-            vCenter: (widgetDef as any).vCenter,
+            hCenter: (widgetDef as UILayoutNodeSpec['widget'] & { hCenter?: number | string }).hCenter,
+            vCenter: (widgetDef as UILayoutNodeSpec['widget'] & { vCenter?: number | string }).vCenter,
         };
 
         return normalized.top === 0
@@ -577,8 +582,9 @@ export class UIPreviewBuilder extends Component {
         const lineHeight = style?.lineHeight ?? Math.ceil(fontSize * 1.4);
         const text = this._resolveSpecText(spec);
         const slot = spec.styleSlot ? this.skinResolver.getSlot(spec.styleSlot) : null;
-        const letterSpacing = typeof (slot as any)?.letterSpacing === 'number'
-            ? (slot as any).letterSpacing
+        const slotWithLetterSpacing = slot as { letterSpacing?: unknown } | null;
+        const letterSpacing = typeof slotWithLetterSpacing?.letterSpacing === 'number'
+            ? slotWithLetterSpacing.letterSpacing
             : 0;
         const chars = Array.from(text || ' ');
         const textWidth = chars.reduce((sum, char) => {
@@ -604,8 +610,9 @@ export class UIPreviewBuilder extends Component {
         if (spec.textKey) {
             return this.i18nStrings[spec.textKey] ?? spec.textKey;
         }
-        if ((spec as any).text !== undefined) {
-            return String((spec as any).text);
+        const rawText = (spec as UILayoutNodeSpec & { text?: unknown }).text;
+        if (rawText !== undefined) {
+            return String(rawText);
         }
         if (spec.bind) {
             return `{${spec.bind}}`;
@@ -862,8 +869,9 @@ export class UIPreviewBuilder extends Component {
     private async _preloadFonts(skin: UISkinManifest): Promise<void> {
         const paths = new Set<string>();
         for (const slot of Object.values(skin.slots)) {
-            if (slot.kind === 'label-style' && (slot as any).font) {
-                paths.add((slot as any).font as string);
+            const slotWithFont = slot as { kind?: string; font?: unknown };
+            if (slotWithFont.kind === 'label-style' && typeof slotWithFont.font === 'string' && slotWithFont.font.trim()) {
+                paths.add(slotWithFont.font);
             }
         }
         await Promise.all([...paths].map(async (path) => {
@@ -902,7 +910,7 @@ export class UIPreviewBuilder extends Component {
         const layout = node.getComponent(Layout);
         if (!layout || layout.type === Layout.Type.NONE || layout.type === Layout.Type.GRID) return;
 
-        const layoutDef = (node as any).__ucufLayoutDef as UILayoutNodeSpec['layout'] | undefined;
+        const layoutDef = (node as Node & { __ucufLayoutDef?: UILayoutNodeSpec['layout'] }).__ucufLayoutDef;
         if (layoutDef?.enforceBounds !== true) return;
 
         const containerT = node.getComponent(UITransform);

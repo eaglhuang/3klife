@@ -15,17 +15,17 @@ export interface ServerStatus {
 export interface ToolDefinition {
     name: string;
     description: string;
-    inputSchema: any;
+    inputSchema: Record<string, unknown>;
 }
 
 export interface ToolResponse {
     success: boolean;
-    data?: any;
+    data?: unknown;
     message?: string;
     error?: string;
     instruction?: string;
     warning?: string;
-    verificationData?: any;
+    verificationData?: unknown;
     updatedProperties?: string[];
 }
 
@@ -46,7 +46,7 @@ export interface NodeInfo {
 export interface ComponentInfo {
     type: string;
     enabled: boolean;
-    properties?: Record<string, any>;
+    properties?: Record<string, unknown>;
 }
 
 export interface SceneInfo {
@@ -98,14 +98,14 @@ export interface PerformanceStats {
     componentCount: number;
     drawCalls: number;
     triangles: number;
-    memory: Record<string, any>;
+    memory: Record<string, unknown>;
 }
 
 export interface ValidationIssue {
     type: 'error' | 'warning' | 'info';
     category: string;
     message: string;
-    details?: any;
+    details?: unknown;
     suggestion?: string;
 }
 
@@ -123,7 +123,7 @@ export interface MCPClient {
 
 export interface ToolExecutor {
     getTools(): ToolDefinition[];
-    execute(toolName: string, args: any): Promise<ToolResponse>;
+    execute(toolName: string, args: Record<string, unknown>): Promise<ToolResponse>;
 }
 
 // 工具配置管理相关接口

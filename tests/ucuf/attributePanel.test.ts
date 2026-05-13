@@ -12,6 +12,9 @@
 
 import { TestSuite, assert } from '../TestRunner';
 import type { AttributeEntry } from '../../assets/scripts/ui/core/panels/AttributePanel';
+import type { Node } from 'cc';
+import type { UISkinResolver } from '../../assets/scripts/ui/core/UISkinResolver';
+import type { UITemplateBinder } from '../../assets/scripts/ui/core/UITemplateBinder';
 
 // ─── Mock 基礎設施 ────────────────────────────────────────────────────────────
 
@@ -24,17 +27,29 @@ class MockLabel {
 class MockNode {
     active  = true;
     children: MockNode[] = [];
-    private _components: Record<string, any> = {};
+    private _components: Record<string, unknown> = {};
 
-    addComponent(cls: any): any {
-        const key = typeof cls === 'string' ? cls : cls.name;
+    private static toKey(cls: string | { name: string }): string {
+        return typeof cls === 'string' ? cls : cls.name;
+    }
+
+    setComponentByKey(key: string, component: unknown): void {
+        this._components[key] = component;
+    }
+
+    getLabelByKey(key: string): MockLabel {
+        return this._components[key] as MockLabel;
+    }
+
+    addComponent(cls: string | { new (): unknown; name: string }): unknown {
+        const key = MockNode.toKey(cls);
         const instance = typeof cls === 'function' ? new cls() : new MockLabel();
         this._components[key] = instance;
         return instance;
     }
 
-    getComponent(cls: any): any {
-        const key = typeof cls === 'string' ? cls : (cls as any).name;
+    getComponent(cls: string | { name: string }): unknown {
+        const key = MockNode.toKey(cls);
         return this._components[key] ?? null;
     }
 }
@@ -47,8 +62,8 @@ function makeHostNode(rowCount: number): MockNode {
         const labelNode  = new MockNode();
         const valueNode  = new MockNode();
         // 使用字串 key 模擬 AttributePanel._setLabelText 內部的 getComponent('Label') 呼叫
-        (labelNode as any)._components['cc.Label'] = new MockLabel();
-        (valueNode as any)._components['cc.Label'] = new MockLabel();
+        labelNode.setComponentByKey('cc.Label', new MockLabel());
+        valueNode.setComponentByKey('cc.Label', new MockLabel());
         row.children.push(labelNode, valueNode);
         host.children.push(row);
     }
@@ -56,8 +71,9 @@ function makeHostNode(rowCount: number): MockNode {
 }
 
 /** 最簡 mock UISkinResolver / UITemplateBinder（AttributePanel 建構子需要） */
-const mockSkinResolver  = {} as any;
-const mockBinder        = {} as any;
+const mockSkinResolver = {} as unknown as UISkinResolver;
+const mockBinder = {} as unknown as UITemplateBinder;
+const asNode = (node: MockNode): Node => node as unknown as Node;
 
 // ─── 建立測試套件 ─────────────────────────────────────────────────────────────
 export function createAttributePanelSuite(): TestSuite {
@@ -67,13 +83,13 @@ export function createAttributePanelSuite(): TestSuite {
 
     suite.test('validateDataFormat：空陣列視為合法', async () => {
         const { AttributePanel } = await import('../../assets/scripts/ui/core/panels/AttributePanel');
-        const panel = new AttributePanel(makeHostNode(0) as any, mockSkinResolver, mockBinder);
+        const panel = new AttributePanel(asNode(makeHostNode(0)), mockSkinResolver, mockBinder);
         assert.equals(null, panel.validateDataFormat([]));
     });
 
     suite.test('validateDataFormat：正確結構陣列回傳 null', async () => {
         const { AttributePanel } = await import('../../assets/scripts/ui/core/panels/AttributePanel');
-        const panel = new AttributePanel(makeHostNode(0) as any, mockSkinResolver, mockBinder);
+        const panel = new AttributePanel(asNode(makeHostNode(0)), mockSkinResolver, mockBinder);
         const good: AttributeEntry[] = [
             { label: '攻擊力', value: '350' },
             { label: '防禦力', value: '200' },
@@ -83,14 +99,14 @@ export function createAttributePanelSuite(): TestSuite {
 
     suite.test('validateDataFormat：非陣列輸入回傳錯誤訊息', async () => {
         const { AttributePanel } = await import('../../assets/scripts/ui/core/panels/AttributePanel');
-        const panel = new AttributePanel(makeHostNode(0) as any, mockSkinResolver, mockBinder);
+        const panel = new AttributePanel(asNode(makeHostNode(0)), mockSkinResolver, mockBinder);
         const result = panel.validateDataFormat({ label: 'x', value: 'y' });
         assert.notEquals(null, result);
     });
 
     suite.test('validateDataFormat：缺少 label 欄位回傳錯誤訊息', async () => {
         const { AttributePanel } = await import('../../assets/scripts/ui/core/panels/AttributePanel');
-        const panel = new AttributePanel(makeHostNode(0) as any, mockSkinResolver, mockBinder);
+        const panel = new AttributePanel(asNode(makeHostNode(0)), mockSkinResolver, mockBinder);
         const bad = [{ value: '350' }];
         const result = panel.validateDataFormat(bad);
         assert.notEquals(null, result);
@@ -98,7 +114,7 @@ export function createAttributePanelSuite(): TestSuite {
 
     suite.test('validateDataFormat：缺少 value 欄位回傳錯誤訊息', async () => {
         const { AttributePanel } = await import('../../assets/scripts/ui/core/panels/AttributePanel');
-        const panel = new AttributePanel(makeHostNode(0) as any, mockSkinResolver, mockBinder);
+        const panel = new AttributePanel(asNode(makeHostNode(0)), mockSkinResolver, mockBinder);
         const bad = [{ label: '攻擊力' }];
         const result = panel.validateDataFormat(bad);
         assert.notEquals(null, result);
@@ -106,7 +122,7 @@ export function createAttributePanelSuite(): TestSuite {
 
     suite.test('validateDataFormat：label 為數字型回傳錯誤訊息', async () => {
         const { AttributePanel } = await import('../../assets/scripts/ui/core/panels/AttributePanel');
-        const panel = new AttributePanel(makeHostNode(0) as any, mockSkinResolver, mockBinder);
+        const panel = new AttributePanel(asNode(makeHostNode(0)), mockSkinResolver, mockBinder);
         const bad = [{ label: 123, value: '350' }];
         const result = panel.validateDataFormat(bad);
         assert.notEquals(null, result);
@@ -116,8 +132,8 @@ export function createAttributePanelSuite(): TestSuite {
 
     suite.test('onDataUpdate：資料行 = 容器行，所有行 active=true 且文字正確', async () => {
         const { AttributePanel } = await import('../../assets/scripts/ui/core/panels/AttributePanel');
-        const host  = makeHostNode(2) as any;
-        const panel = new AttributePanel(host, mockSkinResolver, mockBinder);
+        const host = makeHostNode(2);
+        const panel = new AttributePanel(asNode(host), mockSkinResolver, mockBinder);
         const data: AttributeEntry[] = [
             { label: '攻擊力', value: '350' },
             { label: '防禦力', value: '200' },
@@ -128,16 +144,16 @@ export function createAttributePanelSuite(): TestSuite {
         const row1 = host.children[1];
         assert.equals(true, row0.active);
         assert.equals(true, row1.active);
-        assert.equals('攻擊力', row0.children[0]._components['cc.Label'].string);
-        assert.equals('350',   row0.children[1]._components['cc.Label'].string);
-        assert.equals('防禦力', row1.children[0]._components['cc.Label'].string);
-        assert.equals('200',   row1.children[1]._components['cc.Label'].string);
+        assert.equals('攻擊力', row0.children[0].getLabelByKey('cc.Label').string);
+        assert.equals('350', row0.children[1].getLabelByKey('cc.Label').string);
+        assert.equals('防禦力', row1.children[0].getLabelByKey('cc.Label').string);
+        assert.equals('200', row1.children[1].getLabelByKey('cc.Label').string);
     });
 
     suite.test('onDataUpdate：資料行 < 容器行，多餘行 active=false', async () => {
         const { AttributePanel } = await import('../../assets/scripts/ui/core/panels/AttributePanel');
-        const host  = makeHostNode(3) as any;
-        const panel = new AttributePanel(host, mockSkinResolver, mockBinder);
+        const host = makeHostNode(3);
+        const panel = new AttributePanel(asNode(host), mockSkinResolver, mockBinder);
         const data: AttributeEntry[] = [
             { label: '攻擊力', value: '350' },
         ];
@@ -150,8 +166,8 @@ export function createAttributePanelSuite(): TestSuite {
 
     suite.test('onDataUpdate：資料行 > 容器行，超出部分不寫入（不崩潰）', async () => {
         const { AttributePanel } = await import('../../assets/scripts/ui/core/panels/AttributePanel');
-        const host  = makeHostNode(1) as any;
-        const panel = new AttributePanel(host, mockSkinResolver, mockBinder);
+        const host = makeHostNode(1);
+        const panel = new AttributePanel(asNode(host), mockSkinResolver, mockBinder);
         const data: AttributeEntry[] = [
             { label: '攻擊力', value: '350' },
             { label: '防禦力', value: '200' },  // 超出，應被靜默忽略
@@ -161,13 +177,13 @@ export function createAttributePanelSuite(): TestSuite {
         try { panel.onDataUpdate(data); } catch (_) { threw = true; }
         assert.equals(false, threw);
         // 只有第 0 行寫入
-        assert.equals('攻擊力', host.children[0].children[0]._components['cc.Label'].string);
+        assert.equals('攻擊力', host.children[0].children[0].getLabelByKey('cc.Label').string);
     });
 
     suite.test('onDataUpdate：格式錯誤時不渲染也不崩潰', async () => {
         const { AttributePanel } = await import('../../assets/scripts/ui/core/panels/AttributePanel');
-        const host  = makeHostNode(2) as any;
-        const panel = new AttributePanel(host, mockSkinResolver, mockBinder);
+        const host = makeHostNode(2);
+        const panel = new AttributePanel(asNode(host), mockSkinResolver, mockBinder);
         // 傳入非法格式（字串而非陣列）
         let threw = false;
         try { panel.onDataUpdate('invalid'); } catch (_) { threw = true; }
@@ -178,7 +194,7 @@ export function createAttributePanelSuite(): TestSuite {
 
     suite.test('AttributePanel.dataSource 預設為 "attributes"', async () => {
         const { AttributePanel } = await import('../../assets/scripts/ui/core/panels/AttributePanel');
-        const panel = new AttributePanel(makeHostNode(0) as any, mockSkinResolver, mockBinder);
+        const panel = new AttributePanel(asNode(makeHostNode(0)), mockSkinResolver, mockBinder);
         assert.equals('attributes', panel.dataSource);
     });
 
@@ -195,7 +211,7 @@ export function createAttributePanelSuite(): TestSuite {
                 this.lastChangedValue = value;
             }
         }
-        const panel = new TrackingPanel(makeHostNode(0) as any, mockSkinResolver, mockBinder);
+        const panel = new TrackingPanel(asNode(makeHostNode(0)), mockSkinResolver, mockBinder);
         panel.setCustomProp('theme', 'dark');
         assert.equals('dark', panel.customProps['theme']);
         assert.equals('theme', panel.lastChangedKey);
