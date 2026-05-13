@@ -14,15 +14,16 @@
 5. **輪廓文字**：場景上的文字必須加黑色輪廓（`outlineWidth: 2, outlineColor: #1A1A1A`）
 6. **Claude Code skills**：所有 `SKILL.md` 必須使用 YAML frontmatter，至少包含 `name` 與 `description`；`description` 要寫出用途與觸發情境，`name` 只能用小寫字母 / 數字 / `-`。
 
-## 三 repo 正式定位（2026-05-13）
+## 四 repo 正式定位（2026-05-13）
 
 - `3klife`（本 repo，本機資料夾 `3KLife`）：主遊戲 repo，負責 Cocos 遊戲本體、規格、資料與工具鏈。
 - `AI-Atomic-Framework`：ATM 原子框架 repo，負責 Agent 治理與開源框架，不是遊戲主內容真相來源。
 - `npc-brain`：NPC Brain repo，負責人物知識/檢索/對話/LangGraph 服務，不是 Cocos 主遊戲 repo。
+- `AI-learning-notes`：個人分享網站 repo，負責公開學習筆記與對外內容整理，不是遊戲 runtime 與 ATM 核心治理來源。
 
 ## Pre-flight 補充
 
-- 任何任務先判斷當前工作屬於哪個 repo，再讀對應文件與執行命令；禁止把 `3klife / ATM / npc-brain` 的責任邊界混用。
+- 任何任務先判斷當前工作屬於哪個 repo，再讀對應文件與執行命令；禁止把 `3klife / AI-Atomic-Framework / npc-brain / AI-learning-notes` 的責任邊界混用。
 
 ## 分片索引
 

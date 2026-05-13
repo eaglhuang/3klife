@@ -48,10 +48,11 @@
 - 語言: `TypeScript (ES2015)`
 - 主要平台: `Web / Android / iOS`
 - 階段: `資料管理中心 (DC Phase) 基礎建設完成 / UI 量產期`
-- 三 repo 正式定位（2026-05-13）：
+- 四 repo 正式定位（2026-05-13）：
   - `3klife`（本 repo，本機資料夾 `3KLife`）：主遊戲 repo，負責 Cocos 遊戲本體、規格、資料與工具鏈
   - `AI-Atomic-Framework`：ATM 原子框架 repo，負責 Agent 治理與開源框架，不是遊戲主內容真相來源
   - `npc-brain`：NPC Brain repo，負責人物知識/檢索/對話/LangGraph 服務，不是 Cocos 主遊戲 repo
+  - `AI-learning-notes`：個人分享網站 repo，負責公開學習筆記與對外內容整理，不是遊戲 runtime 與 ATM 核心治理來源
 
 Unity 對照:
 - `Cocos Creator Editor` 對應 Unity Editor
@@ -65,7 +66,7 @@ Unity 對照:
 2. 回覆與推理一律使用繁體中文與台灣慣用術語。
 3. 若有新技術決策，必須補回 `docs/keep.md (doc_index_0011)` (doc_index_0011)。
 4. 新會話開始時，先摘要 keep 目前重點。
-5. 任何任務先判斷當前工作屬於哪個 repo，再讀對應文件與執行命令；禁止把 `3klife / ATM / npc-brain` 的責任邊界混用。
+5. 任何任務先判斷當前工作屬於哪個 repo，再讀對應文件與執行命令；禁止把 `3klife / AI-Atomic-Framework / npc-brain / AI-learning-notes` 的責任邊界混用。
 6. 規格異動優先回寫正式母規格，不把補遺當成長期單一真相來源。
 7. 補遺只允許作為短期工作底稿、compare note 或跨功能整理；若不是全新功能規格，結案前必須併回正式規格書。
 8. 只要正式規格書有新增、刪改或重定位，必須同步更新 `docs/cross-reference-index.md (doc_index_0005)` (doc_index_0005)。

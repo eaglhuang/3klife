@@ -61,7 +61,7 @@ doc_refs: []
 ## 欄位說明
 
 - `hostKind`：這張卡主要對應的主場景，例：`upstream`、`downstream-3klife`、`tracking-docs`、`case-study`
-- `targetRepo`：這張卡實際落點，例：`AI-Atomic-Framework`、`3KLife`
+- `targetRepo`：這張卡實際落點，例：`AI-Atomic-Framework`、`3KLife`、`npc-brain`、`AI-learning-notes`
 - `alphaGate`：是否必須先過 alpha0；若會阻塞後續卡，就把 `requiresAlpha0` 與 `blocker` 的組合寫清楚
 - `packageScope`：主要修改範圍，例：`packages/core`、`packages/cli`、`docs/agent-briefs`、`docs/tasks`
 - `adapterScope`：適配層範圍，例：`tools_node/adapters/atm-3klife`
