@@ -75,6 +75,10 @@ jobs:
       - name: Governance drift check
         run: node tools_node/atomic-framework/atm-cli.js governance check --json --strict
 
+      - name: Agent identity consistency (advisory)
+        if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
+        run: node tools_node/check-agent-identity-consistency.js --mode advisory --json
+
       - name: ATM flow (dev)
         run: node tools_node/atm-flow.js --mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt
 
@@ -84,6 +88,10 @@ jobs:
       - name: ATM flow (release-shadow)
         if: ${{ github.event_name == 'pull_request' }}
         run: node tools_node/atm-flow.js --mode release --from-mode pr --worktree-status-file artifacts/ci/atm-worktree-status.txt --shadow --metrics-file artifacts/ci/atm-release-shadow-metrics.json --report artifacts/ci/atm-release-shadow-report.json
+
+      - name: ATM flow (release-shadow summary)
+        if: ${{ github.event_name == 'pull_request' && always() }}
+        run: node tools_node/render-atm-release-shadow-summary.js --report artifacts/ci/atm-release-shadow-report.json --metrics artifacts/ci/atm-release-shadow-metrics.json --output "$GITHUB_STEP_SUMMARY" --top 5
 
       - name: ATM flow (release)
         if: ${{ github.event_name == 'push' }}

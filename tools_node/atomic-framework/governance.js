@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const { runGovernanceCheck, runGovernanceRender } = require('./governance/index');
+const { runGovernanceCheck, runGovernanceMigrate, runGovernanceRender } = require('./governance/index');
 
 function parseArgs(argv = process.argv.slice(2)) {
   const state = {
@@ -9,6 +9,8 @@ function parseArgs(argv = process.argv.slice(2)) {
     json: false,
     strict: false,
     dryRun: false,
+    fromVersion: '',
+    toVersion: '',
     profilePath: '',
     help: false,
   };
@@ -33,6 +35,14 @@ function parseArgs(argv = process.argv.slice(2)) {
       state.dryRun = true;
       continue;
     }
+    if (token === '--from') {
+      state.fromVersion = String(next() || '').trim();
+      continue;
+    }
+    if (token === '--to') {
+      state.toVersion = String(next() || '').trim();
+      continue;
+    }
     if (token === '--profile') {
       state.profilePath = String(next() || '').trim();
       continue;
@@ -49,11 +59,13 @@ function parseArgs(argv = process.argv.slice(2)) {
 
 function printHelp() {
   process.stdout.write([
-    'Usage: node tools_node/atomic-framework/governance.js <render|check> [options]',
+    'Usage: node tools_node/atomic-framework/governance.js <render|check|migrate> [options]',
     '',
     'Options:',
     '  --profile <path>  Override governance profile path.',
     '  --dry-run         Render without writing files.',
+    '  --from <version>  Migration source version (example: v2).',
+    '  --to <version>    Migration target version (example: v3).',
     '  --json            Emit machine-readable output.',
     '  --strict          Exit non-zero on schema/drift failures.',
   ].join('\n') + '\n');
@@ -95,6 +107,29 @@ function renderMarkdown(result, command) {
   return `${lines.join('\n')}\n`;
 }
 
+function renderMigrateMarkdown(result) {
+  const lines = [
+    '# ATM Governance Migrate',
+    '',
+    `- Profile: ${result.profileRelPath}`,
+    `- Dry run: ${result.dryRun}`,
+    `- From: v${result.fromVersion}`,
+    `- To: v${result.toVersion}`,
+    `- Schema: ${result.schema.ok ? 'pass' : 'fail'}`,
+    `- Wrote profile: ${result.wroteProfile}`,
+  ];
+  if (Array.isArray(result.migration && result.migration.changes) && result.migration.changes.length > 0) {
+    lines.push('', '## Changes');
+    for (const change of result.migration.changes) {
+      lines.push(`- ${change}`);
+    }
+  }
+  if (!result.schema.ok) {
+    lines.push('', '## Errors', ...result.schema.errors.map((error) => `- ${error}`));
+  }
+  return `${lines.join('\n')}\n`;
+}
+
 function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv);
   if (args.help || !args.command) {
@@ -112,6 +147,13 @@ function main(argv = process.argv.slice(2)) {
     result = runGovernanceCheck({
       profilePath: args.profilePath,
     });
+  } else if (args.command === 'migrate') {
+    result = runGovernanceMigrate({
+      profilePath: args.profilePath,
+      dryRun: args.dryRun,
+      fromVersion: args.fromVersion,
+      toVersion: args.toVersion,
+    });
   } else {
     throw new Error(`unknown governance command: ${args.command}`);
   }
@@ -119,7 +161,11 @@ function main(argv = process.argv.slice(2)) {
   if (args.json) {
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
   } else {
-    process.stdout.write(renderMarkdown(result, args.command));
+    if (args.command === 'migrate') {
+      process.stdout.write(renderMigrateMarkdown(result));
+    } else {
+      process.stdout.write(renderMarkdown(result, args.command));
+    }
   }
 
   if (args.strict && !result.ok) {

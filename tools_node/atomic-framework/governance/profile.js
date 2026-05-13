@@ -52,6 +52,7 @@ function validateStringArray(errors, value, fieldName, { allowEmpty = false } = 
 function validateGovernanceProfile(profile) {
   const errors = [];
   const referencedEntrypointKeys = [];
+  const profileVersion = Number(profile && profile.version);
   if (!profile || typeof profile !== 'object' || Array.isArray(profile)) {
     return {
       ok: false,
@@ -177,13 +178,35 @@ function validateGovernanceProfile(profile) {
         }
       });
     }
+
+    if (doctor.identityConsistency !== undefined && doctor.identityConsistency !== null) {
+      if (!doctor.identityConsistency || typeof doctor.identityConsistency !== 'object' || Array.isArray(doctor.identityConsistency)) {
+        errors.push('doctor.identityConsistency must be an object when provided');
+      } else {
+        if (typeof doctor.identityConsistency.enabled !== 'boolean') {
+          errors.push('doctor.identityConsistency.enabled must be a boolean');
+        }
+        validateString(errors, doctor.identityConsistency.defaultMode, 'doctor.identityConsistency.defaultMode');
+        if (!['advisory', 'blocking'].includes(String(doctor.identityConsistency.defaultMode || '').trim().toLowerCase())) {
+          errors.push('doctor.identityConsistency.defaultMode must be advisory or blocking');
+        }
+        validateString(errors, doctor.identityConsistency.commandAdvisory, 'doctor.identityConsistency.commandAdvisory');
+        validateString(errors, doctor.identityConsistency.commandBlocking, 'doctor.identityConsistency.commandBlocking');
+      }
+    } else if (Number.isFinite(profileVersion) && profileVersion >= 3) {
+      errors.push('doctor.identityConsistency is required for profile version >= 3');
+    }
   }
 
   const entrypoints = profile.gateEntrypoints;
   if (!entrypoints || typeof entrypoints !== 'object') {
     errors.push('gateEntrypoints must be an object');
   } else {
-    ['dev', 'pr', 'ciDriftCheck', 'ciDev', 'ciPr', 'ciRelease', 'ciReleaseShadow'].forEach((key) => {
+    const requiredKeys = ['dev', 'pr', 'ciDriftCheck', 'ciDev', 'ciPr', 'ciRelease', 'ciReleaseShadow', 'ciReleaseShadowSummary'];
+    if (Number.isFinite(profileVersion) && profileVersion >= 3) {
+      requiredKeys.push('ciIdentityAdvisory', 'ciIdentityBlocking');
+    }
+    requiredKeys.forEach((key) => {
       validateString(errors, entrypoints[key], `gateEntrypoints.${key}`);
     });
     for (const key of referencedEntrypointKeys) {

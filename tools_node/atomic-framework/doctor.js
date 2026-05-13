@@ -6,6 +6,8 @@ const path = require('node:path');
 const cp = require('node:child_process');
 
 const { buildGovernanceReport } = require('./governance/checker');
+const { loadGovernanceProfile } = require('./governance/profile');
+const { evaluateIdentityConsistency } = require('../check-agent-identity-consistency');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const VALID_MODES = new Set(['dev', 'pr', 'release']);
@@ -65,6 +67,7 @@ function parseArgs(argv = process.argv.slice(2)) {
     worktreeStatusFile: '',
     allowDirtyPrefixes: [],
     checkGovernanceDrift: false,
+    identityMode: '',
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -98,6 +101,10 @@ function parseArgs(argv = process.argv.slice(2)) {
       state.checkGovernanceDrift = true;
       continue;
     }
+    if (token === '--identity-mode') {
+      state.identityMode = String(next() || '').trim().toLowerCase();
+      continue;
+    }
     if (token === '--json') {
       state.json = true;
       continue;
@@ -127,6 +134,7 @@ function printUsage() {
     '  --worktree-status-file <path>  Optional fallback git-status snapshot.',
     '  --allow-dirty-prefix <path>    Forwarded to strict H2U validators (repeatable).',
     '  --check-governance-drift       Compare canonical governance surfaces against governance-profile.json.',
+    '  --identity-mode <mode>         Force identity check mode (advisory|blocking).',
     '  --json                         Emit machine-readable result.',
   ].join('\n') + '\n');
 }
@@ -250,6 +258,62 @@ function runGovernanceDoctor(args) {
   return buildGovernanceReport();
 }
 
+function resolveIdentityDoctorConfig() {
+  try {
+    const loaded = loadGovernanceProfile();
+    const identity = loaded && loaded.profile && loaded.profile.doctor
+      ? loaded.profile.doctor.identityConsistency
+      : null;
+    if (!identity || typeof identity !== 'object' || identity.enabled === false) {
+      return {
+        enabled: false,
+      };
+    }
+    return {
+      enabled: true,
+      defaultMode: String(identity.defaultMode || 'advisory').trim().toLowerCase() || 'advisory',
+      commandAdvisory: String(identity.commandAdvisory || '').trim(),
+      commandBlocking: String(identity.commandBlocking || '').trim(),
+    };
+  } catch (error) {
+    return {
+      enabled: false,
+      error: String(error && (error.message || error) || 'unknown'),
+    };
+  }
+}
+
+function runIdentityConsistencyDoctor(args) {
+  const config = resolveIdentityDoctorConfig();
+  if (!config.enabled) {
+    return {
+      enabled: false,
+      status: 'pass',
+      mode: 'advisory',
+      command: '',
+      consistent: true,
+      issues: [],
+    };
+  }
+
+  const mode = ['advisory', 'blocking'].includes(args.identityMode)
+    ? args.identityMode
+    : config.defaultMode;
+  const result = evaluateIdentityConsistency({
+    mode,
+    cwd: ROOT,
+  });
+  const command = mode === 'blocking'
+    ? config.commandBlocking
+    : config.commandAdvisory;
+
+  return {
+    enabled: true,
+    ...result,
+    command,
+  };
+}
+
 function buildAtmFlowGuidance(profile, flow, changed, mode) {
   const fallback = 'node tools_node/atm-flow.js --mode dev --json';
   const nextCommand = flow.report && flow.report.userFacing && flow.report.userFacing.nextCommand
@@ -296,58 +360,94 @@ function buildAtmFlowGuidance(profile, flow, changed, mode) {
   };
 }
 
-function applyGovernanceGuidance(userFacing, governance) {
-  if (!governance) {
-    return userFacing;
-  }
-
+function applyGovernanceGuidance(userFacing, governance, identity) {
   const governanceCheckCommand = 'node tools_node/atomic-framework/atm-cli.js governance check --json';
-  const doctorStatus = governance.overall.doctorStatus;
+  let next = {
+    ...userFacing,
+    afterNext: uniqueList(userFacing.afterNext || []),
+  };
 
-  if (doctorStatus === 'drift') {
+  if (governance) {
+    const doctorStatus = governance.overall.doctorStatus;
+    if (doctorStatus === 'drift') {
+      next = {
+        blockedAt: 'governance-drift',
+        why: 'Canonical shared governance surfaces drifted away from governance-profile.json.',
+        nextCommand: 'node tools_node/atomic-framework/atm-cli.js governance render',
+        afterNext: uniqueList([
+          `${governanceCheckCommand} --strict`,
+          userFacing.nextCommand,
+          ...userFacing.afterNext,
+        ]),
+      };
+    } else if (doctorStatus === 'blocked-by-portability') {
+      next = {
+        blockedAt: userFacing.blockedAt || 'release-portability',
+        why: `${userFacing.why} Shared governance surfaces are in sync, but release portability is still blocked by active governance portability probes.`,
+        nextCommand: userFacing.nextCommand,
+        afterNext: uniqueList([
+          governanceCheckCommand,
+          ...userFacing.afterNext,
+        ]),
+      };
+    } else if (doctorStatus === 'advisory-local-only') {
+      next = {
+        blockedAt: userFacing.blockedAt,
+        why: `${userFacing.why} Local editor-private governance settings exist outside the canonical shared profile.`,
+        nextCommand: userFacing.nextCommand,
+        afterNext: uniqueList([
+          governanceCheckCommand,
+          ...userFacing.afterNext,
+        ]),
+      };
+    } else {
+      next = {
+        blockedAt: userFacing.blockedAt,
+        why: `${userFacing.why} Canonical shared governance surfaces are in sync.`,
+        nextCommand: userFacing.nextCommand,
+        afterNext: uniqueList([
+          governanceCheckCommand,
+          ...userFacing.afterNext,
+        ]),
+      };
+    }
+  }
+
+  if (!identity || !identity.enabled) {
+    return next;
+  }
+
+  if (identity.status === 'blocking') {
     return {
-      blockedAt: 'governance-drift',
-      why: 'Canonical shared governance surfaces drifted away from governance-profile.json.',
-      nextCommand: 'node tools_node/atomic-framework/atm-cli.js governance render',
+      blockedAt: next.blockedAt || 'identity-consistency',
+      why: `${next.why} Agent identity consistency is in blocking mode and currently mismatched.`,
+      nextCommand: identity.command || 'node tools_node/agent-identity.js ensure --write-git',
       afterNext: uniqueList([
-        `${governanceCheckCommand} --strict`,
-        userFacing.nextCommand,
-        ...userFacing.afterNext,
+        'node tools_node/agent-identity.js ensure --write-git',
+        ...next.afterNext,
       ]),
     };
   }
 
-  if (doctorStatus === 'blocked-by-portability') {
+  if (identity.status === 'advisory') {
     return {
-      blockedAt: userFacing.blockedAt || 'release-portability',
-      why: `${userFacing.why} Shared governance surfaces are in sync, but release portability is still blocked by active governance portability probes.`,
-      nextCommand: userFacing.nextCommand,
+      blockedAt: next.blockedAt,
+      why: `${next.why} Agent identity consistency check returned advisory warnings.`,
+      nextCommand: next.nextCommand,
       afterNext: uniqueList([
-        governanceCheckCommand,
-        ...userFacing.afterNext,
-      ]),
-    };
-  }
-
-  if (doctorStatus === 'advisory-local-only') {
-    return {
-      blockedAt: userFacing.blockedAt,
-      why: `${userFacing.why} Local editor-private governance settings exist outside the canonical shared profile.`,
-      nextCommand: userFacing.nextCommand,
-      afterNext: uniqueList([
-        governanceCheckCommand,
-        ...userFacing.afterNext,
+        identity.command || 'node tools_node/check-agent-identity-consistency.js --mode advisory --json',
+        ...next.afterNext,
       ]),
     };
   }
 
   return {
-    blockedAt: userFacing.blockedAt,
-    why: `${userFacing.why} Canonical shared governance surfaces are in sync.`,
-    nextCommand: userFacing.nextCommand,
+    blockedAt: next.blockedAt,
+    why: `${next.why} Agent identity consistency is aligned.`,
+    nextCommand: next.nextCommand,
     afterNext: uniqueList([
-      governanceCheckCommand,
-      ...userFacing.afterNext,
+      identity.command || 'node tools_node/check-agent-identity-consistency.js --mode advisory --json',
+      ...next.afterNext,
     ]),
   };
 }
@@ -366,6 +466,24 @@ function summarizeGovernance(governance) {
     portabilityStatus: governance.portability.status,
     doctorStatus: governance.overall.doctorStatus,
     mismatches: governance.drift.mismatches.map((item) => item.targetPath),
+  };
+}
+
+function summarizeIdentity(identity) {
+  if (!identity || !identity.enabled) {
+    return {
+      enabled: false,
+    };
+  }
+  return {
+    enabled: true,
+    mode: identity.mode,
+    status: identity.status,
+    consistent: identity.consistent,
+    canonicalAgent: identity.canonicalAgent || '',
+    expectedEmail: identity.expectedEmail || '',
+    issueCount: Array.isArray(identity.issues) ? identity.issues.length : 0,
+    issues: Array.isArray(identity.issues) ? identity.issues.map((item) => item.code) : [],
   };
 }
 
@@ -390,6 +508,10 @@ function renderMarkdown(result) {
     lines.push(`- Governance drift: ${result.governance.driftStatus}`);
     lines.push(`- Governance portability: ${result.governance.portabilityStatus}`);
   }
+  if (result.identityConsistency && result.identityConsistency.enabled) {
+    lines.push(`- Identity consistency: ${result.identityConsistency.status}`);
+    lines.push(`- Identity issues: ${result.identityConsistency.issueCount}`);
+  }
 
   lines.push('', '## After Next');
   for (const command of result.userFacing.afterNext) {
@@ -410,9 +532,11 @@ function main(argv = process.argv.slice(2)) {
   const routeProfile = classifyGoal(args.goal, areas);
   const flow = runAtmFlowDoctor(args);
   const governance = runGovernanceDoctor(args);
+  const identity = runIdentityConsistencyDoctor(args);
   const userFacing = applyGovernanceGuidance(
     buildAtmFlowGuidance(routeProfile, flow, changed, args.mode),
-    governance
+    governance,
+    identity
   );
 
   const result = {
@@ -431,6 +555,7 @@ function main(argv = process.argv.slice(2)) {
       parseOk: Boolean(flow.report),
     },
     governance: summarizeGovernance(governance),
+    identityConsistency: summarizeIdentity(identity),
     userFacing,
   };
 
@@ -460,5 +585,6 @@ module.exports = {
   main,
   parseArgs,
   runAtmFlowDoctor,
+  runIdentityConsistencyDoctor,
   runGovernanceDoctor,
 };

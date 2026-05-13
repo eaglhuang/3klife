@@ -140,6 +140,11 @@
             "entrypointKey": "ciDriftCheck"
           },
           {
+            "name": "Agent identity consistency (advisory)",
+            "entrypointKey": "ciIdentityAdvisory",
+            "if": "github.event_name == 'pull_request' || github.event_name == 'push'"
+          },
+          {
             "name": "ATM flow (dev)",
             "entrypointKey": "ciDev"
           },
@@ -153,6 +158,11 @@
             "if": "github.event_name == 'pull_request'"
           },
           {
+            "name": "ATM flow (release-shadow summary)",
+            "entrypointKey": "ciReleaseShadowSummary",
+            "if": "github.event_name == 'pull_request' && always()"
+          },
+          {
             "name": "ATM flow (release)",
             "entrypointKey": "ciRelease",
             "if": "github.event_name == 'push'"
@@ -162,6 +172,12 @@
     ]
   },
   "doctor": {
+    "identityConsistency": {
+      "enabled": true,
+      "defaultMode": "advisory",
+      "commandAdvisory": "node tools_node/check-agent-identity-consistency.js --mode advisory --json",
+      "commandBlocking": "node tools_node/check-agent-identity-consistency.js --mode blocking --json"
+    },
     "advisoryLocalSurfaces": [
       {
         "id": "claude-local-settings",
@@ -182,9 +198,12 @@
     "dev": "node tools_node/atm-flow.js --mode dev",
     "pr": "node tools_node/atm-flow.js --mode pr --from-mode dev",
     "ciDriftCheck": "node tools_node/atomic-framework/atm-cli.js governance check --json --strict",
+    "ciIdentityAdvisory": "node tools_node/check-agent-identity-consistency.js --mode advisory --json",
+    "ciIdentityBlocking": "node tools_node/check-agent-identity-consistency.js --mode blocking --json",
     "ciDev": "node tools_node/atm-flow.js --mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt",
     "ciPr": "node tools_node/atm-flow.js --mode pr --from-mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt",
     "ciReleaseShadow": "node tools_node/atm-flow.js --mode release --from-mode pr --worktree-status-file artifacts/ci/atm-worktree-status.txt --shadow --metrics-file artifacts/ci/atm-release-shadow-metrics.json --report artifacts/ci/atm-release-shadow-report.json",
+    "ciReleaseShadowSummary": "node tools_node/render-atm-release-shadow-summary.js --report artifacts/ci/atm-release-shadow-report.json --metrics artifacts/ci/atm-release-shadow-metrics.json --output \"$GITHUB_STEP_SUMMARY\" --top 5",
     "ciRelease": "node tools_node/atm-flow.js --mode release --from-mode pr --worktree-status-file artifacts/ci/atm-worktree-status.txt"
   }
 }
