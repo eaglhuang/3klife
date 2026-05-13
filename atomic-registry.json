@@ -80,7 +80,42 @@
       "migration": {
         "strategy": "adopter-localization",
         "notes": "ATM-CORE-0005 is canonical in 3KLife atomic_workbench; upstream remains tooling/schema only."
-      }
+      },
+      "currentVersion": "0.1.0",
+      "versions": [
+        {
+          "entryId": "ATM-CORE-0005",
+          "version": "0.1.0",
+          "status": "active",
+          "semanticFingerprint": "sf:sha256:09f9f60dae2ace765e01a7fbb2b9c0f9c55efb7ff784fbc30b6bc7155822bf13",
+          "specHash": "sha256:d27318b84c343b90e38be020d547852351aa5c16aeb408d6f5ab4a1359db722f",
+          "codeHash": "sha256:f5b9125212db663bd993cf81f868d6bf32ed180ccea2fe83db709f81c38e5377",
+          "testHash": "sha256:49a14556f5863cebf5e4feeb33cf24c8a446c1c667017bfe7b5a2adf758aaec9",
+          "hashLock": {
+            "algorithm": "sha256",
+            "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+            "canonicalization": "json-stable-v1"
+          },
+          "evidence": [
+            "atomic_workbench/atoms/ATM-CORE-0005/atom.test.report.json",
+            "atomic_workbench/atoms/ATM-CORE-0005/lineage-log.json",
+            "generator-provenance:atomize"
+          ],
+          "sourcePaths": {
+            "spec": "specs/normalize-css-color.atom.json",
+            "code": [
+              "atomic_workbench/atoms/ATM-CORE-0005/atom.source.mjs"
+            ],
+            "tests": [
+              "atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs"
+            ]
+          },
+          "timestamp": "2026-05-13T11:45:13.856Z",
+          "createdAt": "2026-05-13T11:45:13.856Z",
+          "updatedAt": "2026-05-13T11:45:13.856Z",
+          "changeKind": "current-snapshot"
+        }
+      ]
     },
     {
       "id": "ATM-CORE-0006",
@@ -152,7 +187,42 @@
       "migration": {
         "strategy": "adopter-localization",
         "notes": "ATM-CORE-0006 is canonical in 3KLife atomic_workbench; upstream remains tooling/schema only."
-      }
+      },
+      "currentVersion": "0.1.0",
+      "versions": [
+        {
+          "entryId": "ATM-CORE-0006",
+          "version": "0.1.0",
+          "status": "active",
+          "semanticFingerprint": "sf:sha256:09f9f60dae2ace765e01a7fbb2b9c0f9c55efb7ff784fbc30b6bc7155822bf13",
+          "specHash": "sha256:b390bc528fd0a97fef29ec8ded2f3c57013b693f954709df6095f247bba0554f",
+          "codeHash": "sha256:94cb1349440c1b017ec5ffb0403a5a0e6b955e1f50289af1bb63557b2a6b36d0",
+          "testHash": "sha256:c2dd9c0fcd9c8991457b49356cc2f06842ac68e55606c3fda8371ce1dd5d11e3",
+          "hashLock": {
+            "algorithm": "sha256",
+            "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+            "canonicalization": "json-stable-v1"
+          },
+          "evidence": [
+            "atomic_workbench/atoms/ATM-CORE-0006/atom.test.report.json",
+            "atomic_workbench/atoms/ATM-CORE-0006/lineage-log.json",
+            "generator-provenance:atomize"
+          ],
+          "sourcePaths": {
+            "spec": "specs/parse-css-length.atom.json",
+            "code": [
+              "atomic_workbench/atoms/ATM-CORE-0006/atom.source.mjs"
+            ],
+            "tests": [
+              "atomic_workbench/atoms/ATM-CORE-0006/atom.test.mjs"
+            ]
+          },
+          "timestamp": "2026-05-13T11:45:13.856Z",
+          "createdAt": "2026-05-13T11:45:13.856Z",
+          "updatedAt": "2026-05-13T11:45:13.856Z",
+          "changeKind": "current-snapshot"
+        }
+      ]
     },
     {
       "id": "ATM-CORE-0007",
@@ -224,7 +294,42 @@
       "migration": {
         "strategy": "adopter-localization",
         "notes": "ATM-CORE-0007 is canonical in 3KLife atomic_workbench; upstream remains tooling/schema only."
-      }
+      },
+      "currentVersion": "0.1.0",
+      "versions": [
+        {
+          "entryId": "ATM-CORE-0007",
+          "version": "0.1.0",
+          "status": "active",
+          "semanticFingerprint": "sf:sha256:09f9f60dae2ace765e01a7fbb2b9c0f9c55efb7ff784fbc30b6bc7155822bf13",
+          "specHash": "sha256:5f855ed85d2d8c87131506d0e1d2e870b51e819a9d0cafee298626372dee7285",
+          "codeHash": "sha256:9d4a067eac79f3c1424bb6083fa14eb41a301b250ad29b0cbfb7646115fee193",
+          "testHash": "sha256:91fa2a2509a12f7e8b7870e513d8c6ac201341f6093d5499053c8dbf159a6b58",
+          "hashLock": {
+            "algorithm": "sha256",
+            "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+            "canonicalization": "json-stable-v1"
+          },
+          "evidence": [
+            "atomic_workbench/atoms/ATM-CORE-0007/atom.test.report.json",
+            "atomic_workbench/atoms/ATM-CORE-0007/lineage-log.json",
+            "generator-provenance:atomize"
+          ],
+          "sourcePaths": {
+            "spec": "specs/parse-fragment-list.atom.json",
+            "code": [
+              "atomic_workbench/atoms/ATM-CORE-0007/atom.source.mjs"
+            ],
+            "tests": [
+              "atomic_workbench/atoms/ATM-CORE-0007/atom.test.mjs"
+            ]
+          },
+          "timestamp": "2026-05-13T11:45:13.856Z",
+          "createdAt": "2026-05-13T11:45:13.856Z",
+          "updatedAt": "2026-05-13T11:45:13.856Z",
+          "changeKind": "current-snapshot"
+        }
+      ]
     },
     {
       "schemaId": "atm.atomicMap",
@@ -301,7 +406,61 @@
       "migration": {
         "strategy": "adopter-localization",
         "notes": "ATM-MAP-0003 is canonical in 3KLife atomic_workbench; upstream remains tooling/schema only."
-      }
+      },
+      "currentVersion": "0.1.0",
+      "versions": [
+        {
+          "entryId": "ATM-MAP-0003",
+          "version": "0.1.0",
+          "status": "draft",
+          "semanticFingerprint": "sf:sha256:a71b67b0d35a35d395c725f9424f3551715f998bf2421efd05ef1317ef9a3ff9",
+          "mapHash": "sha256:8ce344177a19451fc354776028dc49c1173b9ebb3a3a1181ddc27db81c95faa5",
+          "members": [
+            {
+              "atomId": "ATM-CORE-0005",
+              "version": "0.1.0"
+            },
+            {
+              "atomId": "ATM-CORE-0006",
+              "version": "0.1.0"
+            },
+            {
+              "atomId": "ATM-CORE-0007",
+              "version": "0.1.0"
+            }
+          ],
+          "edges": [
+            {
+              "from": "ATM-CORE-0005",
+              "to": "ATM-CORE-0006",
+              "binding": "normalizes-length"
+            },
+            {
+              "from": "ATM-CORE-0006",
+              "to": "ATM-CORE-0007",
+              "binding": "feeds-fragments"
+            }
+          ],
+          "entrypoints": [
+            "ATM-CORE-0005"
+          ],
+          "qualityTargets": {
+            "pilotName": "h2u-map-evolution",
+            "promoteGateRequired": true,
+            "requiredChecks": 3
+          },
+          "evidence": [
+            "generator-provenance:generated",
+            "atomic_workbench/maps/ATM-MAP-0003/map.spec.json",
+            "atomic_workbench/maps/ATM-MAP-0003/map.integration.test.mjs",
+            "atomic_workbench/maps/ATM-MAP-0003/map.test.report.json"
+          ],
+          "timestamp": "2026-05-13T11:45:13.856Z",
+          "createdAt": "2026-05-13T11:45:13.856Z",
+          "updatedAt": "2026-05-13T11:45:13.856Z",
+          "changeKind": "current-snapshot"
+        }
+      ]
     }
   ],
   "anchors": [
