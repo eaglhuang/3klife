@@ -13,6 +13,7 @@ const { pixelDiff, writeHeatmap } = require('./lib/dom-to-ui/pixel-diff');
 const { buildCssCapabilityReport } = require('./lib/dom-to-ui/css-capability-matrix');
 const { appendRuntimeVisualCandidate } = require('./lib/dom-to-ui/rule-evolution2');
 const { buildZoneOwnershipReport } = require('./lib/dom-to-ui/zone-ownership');
+const { startCoverage, stopCoverage } = require('./lib/dom-to-ui/css-coverage-trace');
 const {
   findFinalCaptureProtocolPath,
   readFinalCaptureProtocol,
@@ -187,7 +188,7 @@ async function main() {
   });
 
   const viewport = parseViewport(opts.viewport);
-  await captureHtml(preparedHtml, sourcePng, viewport, opts.browser, opts.settleMs, captureProtocol.normalized);
+  const cssCoverageData = await captureHtml(preparedHtml, sourcePng, viewport, opts.browser, opts.settleMs, captureProtocol.normalized);
   const sourceNormalization = normalizePng(
     sourcePng,
     sourceNormalized,
@@ -255,6 +256,10 @@ async function main() {
     cssCapabilities,
     artAuthorityValidation: artAuthority.validation,
     traceCatalog: traceCatalog.entries,
+    cssCoverageData,
+    layoutBundle: {
+      traceCatalog: traceCatalog.entries,
+    },
   });
   fs.writeFileSync(zoneOwnershipJson, JSON.stringify(zoneOwnership, null, 2) + '\n', 'utf8');
 
@@ -845,17 +850,26 @@ async function captureHtml(htmlPath, outputPng, viewport, browserPath, settleMs,
 
   try {
     const page = await browser.newPage();
+    let coverageStarted = false;
     await browserCaptureCore.navigatePage(page, toFileUrl(htmlPath), {
       waitUntil: 'networkidle0',
       timeout: 30000,
     });
+    try {
+      const coverageState = await startCoverage(page);
+      coverageStarted = coverageState && coverageState.enabled === true;
+    } catch (_) {
+      coverageStarted = false;
+    }
     await browserCaptureCore.waitForFonts(page);
     await browserCaptureCore.captureSelector(page, {
       path: outputPng,
       waitMs: settleMs,
       clip: { x: 0, y: 0, width: viewport.width, height: viewport.height },
     });
+    const coverageData = coverageStarted ? await stopCoverage(page) : { rawCoverage: [], selectorRects: [] };
     await page.close();
+    return coverageData;
   } finally {
     await browserCaptureCore.closeBrowser(browser);
   }

@@ -463,6 +463,18 @@
       "owner": "context-budget"
     },
     {
+      "id": "H2U-P5-011",
+      "slug": "selector-traceability-required-for-top-residual-zones",
+      "phase": "Plan5",
+      "severity": "blocker",
+      "status": "advisory",
+      "checkerId": "selector-traceability-required-for-top-residual-zones",
+      "scope": ["workflow-summary", "zone-ownership"],
+      "message": "Top residual zones in zone-ownership must have sourceDomSelectors and selectorTracePending=false.",
+      "fixAction": "Wire CSS coverage trace into compare + zone ownership so top zones can map back to source selectors.",
+      "owner": "html-to-ucuf-workflow"
+    },
+    {
       "id": "H2U-P5-F001",
       "slug": "four-dimension-fidelity-gate-required",
       "phase": "Plan5",

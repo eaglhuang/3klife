@@ -1393,10 +1393,14 @@
       "id": "PROG-2-0011",
       "priority": "P1",
       "phase": "Plan5",
-      "owner": "Unassigned",
-      "status": "open",
+      "owner": "vs-code-gpt-5.3-codex",
+      "status": "done",
       "created": "2026-05-05",
       "created_by_agent": "ClaudeCode_claude-sonnet-4-6",
+      "started_at": "2026-05-13T00:30:00+08:00",
+      "started_by_agent": "vs-code-gpt-5.3-codex",
+      "completed_at": "2026-05-13T10:35:00+08:00",
+      "completed_by_agent": "vs-code-gpt-5.3-codex",
       "type": "diagnostic-tooling",
       "title": "CSS coverage → UCUF slot trace（封閉 selectorTracePending）",
       "description": "新建 css-coverage-trace.js；compare-html-to-cocos-editor 整合；rule-registry 加 H2U-P5-011 強制 selectorTracePending=false",
@@ -1418,7 +1422,7 @@
         "tools_node/lib/html-to-ucuf/rule-registry.json",
         "tools_node/lib/html-to-ucuf/rule-checkers.js"
       ],
-      "notes": "2026-05-05 | 狀態: open | 來源: docs/html-to-ucuf/history/html_skill_postmortem.md (doc_other_0026) | 阻塞: depends PROG-2-0009"
+      "notes": "2026-05-13 | 狀態: done | 變更: 已新增 css-coverage-trace 並串接 compare/zone-ownership，補上 H2U-P5-011 checker；gacha top20 traced=true、pending=0，rule-guard pass | 阻塞: compute-gate standard 受既有大型 docs/html_skill_rule-evolution2.md（非本卡變更）阻擋 doc-shard-health"
     }
   ]
 }

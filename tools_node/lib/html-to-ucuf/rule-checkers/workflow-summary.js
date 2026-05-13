@@ -129,6 +129,7 @@ function validateKnownGapRegistry(violations) {
 function validatePlan5Summary(repoRoot, summary, violations) {
   validateFourDimensionFidelityGate(summary, violations);
   validateZoneOwnershipRegistryRefs(repoRoot, summary, violations);
+  validateSelectorTraceability(repoRoot, summary, violations);
 
   const browserCoverage = readNumber(summary && summary.metrics && summary.metrics.compare && summary.metrics.compare.adjustedCoverage);
   const runtimeVsSource = summary && summary.metrics && summary.metrics.htmlCocos && summary.metrics.htmlCocos.runtimeVsSource
@@ -169,6 +170,41 @@ function validatePlan5Summary(repoRoot, summary, violations) {
         });
       }
     }
+  }
+}
+
+function validateSelectorTraceability(repoRoot, summary, violations) {
+  if (!summary || summary.debugOnly === true) return;
+  const zoneOwnership = resolveZoneOwnershipReport(repoRoot, summary);
+  if (!zoneOwnership || !Array.isArray(zoneOwnership.zones) || zoneOwnership.zones.length === 0) return;
+
+  const topZones = zoneOwnership.zones.slice(0, 20);
+  const missingSelectors = [];
+  const pendingZones = [];
+
+  topZones.forEach((zone, index) => {
+    const traceability = zone && zone.traceability && typeof zone.traceability === 'object'
+      ? zone.traceability
+      : {};
+    const selectors = Array.isArray(traceability.sourceDomSelectors)
+      ? traceability.sourceDomSelectors.filter((value) => typeof value === 'string' && value.trim())
+      : [];
+    const zoneId = firstNonEmpty(zone && zone.id, zone && zone.zoneId, `zone[${index}]`);
+    if (selectors.length === 0) missingSelectors.push(zoneId);
+    if (traceability.selectorTracePending === true) pendingZones.push(zoneId);
+  });
+
+  if (missingSelectors.length > 0 || pendingZones.length > 0) {
+    addViolation(violations, 'H2U-P5-011', {
+      summary: 'top residual zones must complete selector traceability (sourceDomSelectors + selectorTracePending=false)',
+      evidence: JSON.stringify({
+        inspectedZones: topZones.length,
+        missingSelectorCount: missingSelectors.length,
+        pendingCount: pendingZones.length,
+        missingSelectors: missingSelectors.slice(0, 6),
+        pendingZones: pendingZones.slice(0, 6),
+      }),
+    });
   }
 }
 

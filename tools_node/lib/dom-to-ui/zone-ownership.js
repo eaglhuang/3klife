@@ -1,6 +1,8 @@
 // doc_id: doc_other_0009 - Visual diff zone ownership taxonomy.
 'use strict';
 
+const { mapZoneToSelectors } = require('./css-coverage-trace');
+
 const TAXONOMY = ['art-authority', 'manual-art-asset', 'runtime-renderer', 'converter-geometry', 'source-html-fix', 'runtime-bug'];
 const OWNER_BUCKETS = [
   'art-authority-owner',
@@ -21,7 +23,7 @@ function buildZoneOwnershipReport(args) {
   appendSyncAssetZones(zones, args.syncReport);
   appendCssZones(zones, args.cssCapabilities);
   appendPixelDiffZones(zones, args.pixelDiff, pixelContext);
-  hydrateTraceability(zones, args.traceCatalog);
+  hydrateTraceability(zones, args.traceCatalog, args.cssCoverageData, args.layoutBundle);
   const summary = summarize(zones);
   return {
     schemaVersion: '1.1.0',
@@ -176,13 +178,49 @@ function buildTraceability(args) {
   };
 }
 
-function hydrateTraceability(zones, traceCatalog) {
+function hydrateTraceability(zones, traceCatalog, cssCoverageData, layoutBundle) {
   const catalog = Array.isArray(traceCatalog) ? traceCatalog : [];
-  if (catalog.length === 0) return;
   for (const zone of zones) {
-    zone.traceability = resolveZoneTraceability(zone, catalog);
+    zone.traceability = catalog.length > 0
+      ? resolveZoneTraceability(zone, catalog)
+      : (zone.traceability || buildTraceability({
+        runtimeOwner: zone && zone.ownerBucket ? zone.ownerBucket : ownerBucketForTaxonomy(zone && zone.taxonomy),
+        sourceProperties: inferZonePropertyHints(zone),
+      }));
+    applyCoverageTraceability(zone, cssCoverageData, layoutBundle);
     retargetZoneFromTraceability(zone);
   }
+}
+
+function applyCoverageTraceability(zone, cssCoverageData, layoutBundle) {
+  if (!zone || !zone.rect || !zone.traceability || !cssCoverageData) return;
+  const mapped = mapZoneToSelectors(zone.rect, cssCoverageData, layoutBundle || {});
+  const mappedSelectors = uniqueStrings(mapped && mapped.sourceDomSelectors ? mapped.sourceDomSelectors : []);
+  const mappedUcufNodeIds = uniqueStrings(mapped && mapped.ucufNodeIds ? mapped.ucufNodeIds : []);
+  if (mappedSelectors.length === 0 && mappedUcufNodeIds.length === 0) return;
+
+  zone.traceability.sourceDomSelectors = uniqueStrings([].concat(
+    Array.isArray(zone.traceability.sourceDomSelectors) ? zone.traceability.sourceDomSelectors : [],
+    mappedSelectors,
+  ));
+
+  const mappedSlots = mappedUcufNodeIds.map((ucufId) => ({
+    ucufId,
+    nodeName: null,
+    nodeId: null,
+    layerId: null,
+    slotId: null,
+    kind: 'coverage-trace',
+  }));
+  zone.traceability.ucufNodeSlots = uniqueSlotRefs([].concat(
+    Array.isArray(zone.traceability.ucufNodeSlots) ? zone.traceability.ucufNodeSlots : [],
+    mappedSlots,
+  ));
+
+  zone.traceability.confidence = zone.traceability.confidence === 'unknown'
+    ? 'css-coverage-trace'
+    : zone.traceability.confidence;
+  zone.traceability.selectorTracePending = zone.traceability.sourceDomSelectors.length === 0;
 }
 
 function resolveZoneTraceability(zone, traceCatalog) {
