@@ -58,8 +58,8 @@
     "label": "Test runner / report schema",
     "layer": "layer2",
     "surfaceKind": "validator",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0003",
       "ATM-2-0016",
@@ -98,8 +98,8 @@
     "label": "Police plugin API / rule guards",
     "layer": "layer2",
     "surfaceKind": "police-surface",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0005",
       "ATM-2-0010",
@@ -131,8 +131,8 @@
     "label": "Adapter API / Plugin SDK",
     "layer": "layer2",
     "surfaceKind": "adapter-facade",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0006",
       "ATM-3-0001",
@@ -155,8 +155,8 @@
     "label": "Evidence / artifact log store",
     "layer": "layer2",
     "surfaceKind": "doc-surface",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0009",
       "ATM-3-0014"
@@ -190,8 +190,8 @@
     "label": "Evolution proposal / review / rollback",
     "layer": "layer2",
     "surfaceKind": "doc-surface",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0015",
       "ATM-2-0017",
@@ -216,8 +216,8 @@
     "label": "Atom identity / behavior / state machine",
     "layer": "layer2",
     "surfaceKind": "manager-facade",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0026",
       "ATM-2-0027",
@@ -236,8 +236,8 @@
     "label": "Atomization / infection adapter contract",
     "layer": "layer2",
     "surfaceKind": "adapter-facade",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0033",
       "ATM-4-0004",
@@ -407,8 +407,8 @@
     "label": "Public lifecycle / semver / PEV docs",
     "layer": "layer2",
     "surfaceKind": "doc-surface",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-5-0003",
       "ATM-5-0005"
@@ -439,3 +439,4 @@
     "findingContract": null
   }
 ]
+

@@ -1,81 +1,79 @@
 <!-- doc_id: doc_other_0089 -->
 # Framework Function Atomization Manifest
 
-> 來源任務：`ATM-2-0050`。本檔是 ATM dogfooding 的 coverage 真相：所有 ATM framework Layer 2 功能都必須能在這裡找到 atom、atomic map、adapter facade 或正式例外的對應。
+> 靘?隞餃?嚗ATM-2-0050`?瑼 ATM dogfooding ??coverage ?嚗???ATM framework Layer 2 ??賢???券ㄐ?曉 atom?tomic map?dapter facade ?迤撘?憭?撠???
+## ?文?蝯?
 
-## 判定結論
-
-- coverage gate 主體由 `ATM-2-0050` 完成，且 `ATM-2-0051` 已接手 self-coverage / finding route / blocker promotion follow-up。
-- CLI protocol / commands 已進入 covered-existing，並由 task-router / adapter route / rule-guard contract 承接。
-- manifest 自己也有一條 self-coverage meta-surface，避免 coverage gate 只管別人、不管自己。
-- machine-readable inventory 與 fixture 必須持續對齊；validator 會把 drift 當成失敗。
-- 2026-05-09 補入 done-card acknowledgement：`ATM-2-0006 / 0009 / 0014 / 0020 / 0021 / 0022` 的完成成果已成為 framework 可引用語言；family row 若仍有後續卡，仍維持 `open-card`。
-- 2026-05-09 補入 `ATM-2-0053` family closure backwrite：`ATM-2-0023 / ATM-2-0042 / ATM-2-0043 / ATM-2-0044 / ATM-2-0045 / ATM-2-0046` 已把 Atomic Map schema / generator / provenance 補成完整 foundation，因此該 row 正式升成 `covered-existing`。
-- 2026-05-09 補入 `ATM-2-0054` task intake / lock stability backwrite：`ATM-2-0048 / ATM-2-0049` 已把 task-router / onboarding / lock 的交通層收斂為 canonical stable path，0054 只補 validator、doc-id 與索引語言，不改 status。
-
+- coverage gate 銝駁???`ATM-2-0050` 摰?嚗? `ATM-2-0051` 撌脫??self-coverage / finding route / blocker promotion follow-up??- CLI protocol / commands 撌脤脣 covered-existing嚗蒂??task-router / adapter route / rule-guard contract ?踵??- manifest ?芸楛銋?銝璇?self-coverage meta-surface嚗??coverage gate ?芰恣?乩犖??蝞∟撌晞?- machine-readable inventory ??fixture 敹???撠?嚗alidator ?? drift ?嗆?憭望???- 2026-05-09 鋆 done-card acknowledgement嚗ATM-2-0006 / 0009 / 0014 / 0020 / 0021 / 0022` ?????歇? framework ?臬??刻?閮嚗amily row ?乩???蝥嚗?蝬剜? `open-card`??- 2026-05-09 鋆 `ATM-2-0053` family closure backwrite嚗ATM-2-0023 / ATM-2-0042 / ATM-2-0043 / ATM-2-0044 / ATM-2-0045 / ATM-2-0046` 撌脫? Atomic Map schema / generator / provenance 鋆?摰 foundation嚗?甇方府 row 甇???? `covered-existing`??- 2026-05-09 鋆 `ATM-2-0054` task intake / lock stability backwrite嚗ATM-2-0048 / ATM-2-0049` 撌脫? task-router / onboarding / lock ?漱?惜?嗆???canonical stable path嚗?054 ?芾? validator?oc-id ?揣撘?閮嚗???status??
 ## Layer Boundary
 
-| Layer | 原子化要求 | 範圍 |
+| Layer | ????瘙?| 蝭? |
 |---|---|---|
-| Layer 1 Constitutional | 不要求原子化，只能 hash-lock + migration gate | `atomic-spec.schema.json`、`registry.schema.json`、canonical ID pattern、hash algorithm |
-| Layer 2 Governed | 必須有 atom / atomic map / governed adapter facade coverage | CLI commands、registry manager、test runner、police plugins、adapter interfaces、evidence / report、task lifecycle、generator、map、PEV workflow |
-| Layer 3 Mutable | 不要求原子化，只需 git / adapter config 管理 | `.atm/profile`、host-specific adapter config、project-local policy override |
+| Layer 1 Constitutional | 銝?瘙?摮?嚗??hash-lock + migration gate | `atomic-spec.schema.json`?registry.schema.json`?anonical ID pattern?ash algorithm |
+| Layer 2 Governed | 敹???atom / atomic map / governed adapter facade coverage | CLI commands?egistry manager?est runner?olice plugins?dapter interfaces?vidence / report?ask lifecycle?enerator?ap?EV workflow |
+| Layer 3 Mutable | 銝?瘙?摮?嚗? git / adapter config 蝞∠? | `.atm/profile`?ost-specific adapter config?roject-local policy override |
 
 ## Coverage Status
 
-| Status | 意義 |
+| Status | ?儔 |
 |---|---|
-| `covered-existing` | 已由 done card 或現有 atom / map / validator 覆蓋 |
-| `open-card` | 已有 open / in-progress 任務卡承接，不再重複開卡 |
-| `planned-gap` | 確認缺口，必須由 `ATM-2-0050` 或其 follow-up 連到任務卡 |
-| `constitutional-exception` | Layer 1 自驗證悖論，不做 atom，只做 hash-lock / migration |
-| `mutable-exception` | Layer 3 host config，不做 atom |
+| `covered-existing` | 撌脩 done card ???atom / map / validator 閬? |
+| `open-card` | 撌脫? open / in-progress 隞餃??⊥?伐?銝???? |
+| `planned-gap` | 蝣箄?蝻箏嚗?? `ATM-2-0050` ? follow-up ??隞餃???|
+| `constitutional-exception` | Layer 1 ?芷?霅?隢?銝? atom嚗??hash-lock / migration |
+| `mutable-exception` | Layer 3 host config嚗???atom |
 
 ## Function Inventory
 
 | Framework function | Layer | Coverage | Source / task cards | Required next check |
 |---|---|---|---|---|
-| Atomic Spec schema | Layer 1 | constitutional-exception | `ATM-1-0003`、`ATM-1-0011` | validator 確認 schema 只進 hash-lock / migration gate，不要求自我 atom |
-| Spec loader / parser | Layer 2 | covered-existing | `ATM-2-0001` | manifest 需列出 atom home / registry entry 或明確標為 pre-generator backfill |
-| Scaffold builder | Layer 2 | covered-existing | `ATM-2-0002`、`ATM-2-0038`、`ATM-2-0039` | 必須經 AtomGenerator / source template provenance |
-| Test runner / report schema | Layer 2 | open-card | `ATM-2-0003`?`ATM-2-0016`?`ATM-2-0025` | report ?????? atom / map validation evidence |
-| Registry / HashLock / version history | Layer 2 | covered-existing | `ATM-2-0004`、`ATM-2-0014`、`ATM-2-0034`、`ATM-2-0047` | `ATM-2-0014` 已完成 `currentVersion` / `versions[]` version history slice；後續只重查 registry entry、hash-lock、URN routing |
-| Police plugin API / rule guards | Layer 2 | open-card | `ATM-2-0005`?`ATM-2-0010`?`ATM-2-0030`?`ATM-2-0031`?`ATM-2-0035`?`ATM-3-0012` | ?? rule guard ???? independent governed atom ? map member???? `trigger / scope / severity / action` ? machine-readable findings |
-| Adapter API / Plugin SDK | Layer 2 | open-card | `ATM-2-0006`、`ATM-3-0001`、`ATM-3-0006`~`ATM-3-0011` | `ATM-2-0006` 已完成 lifecycle-aware SDK slice；adapter facade 後續仍不可成為 monolith |
-| Evidence / artifact log store | Layer 2 | open-card | `ATM-2-0009`、`ATM-3-0014` | `ATM-2-0009` 已完成 replayable store contract；`ATM-3-0014` 只承接 usage-feedback shadow adapter |
-| Context budget / summarization | Layer 2 | covered-existing | `ATM-2-0011` | context budget guard 應列入 governance bundle map |
-| Evolution proposal / review / rollback | Layer 2 | open-card | `ATM-2-0015`、`ATM-2-0017`、`ATM-2-0020`、`ATM-2-0021`、`ATM-2-0022`、`ATM-2.5-0004` | `ATM-2-0020 / 0021 / 0022` 已完成 proposal / review / rollback core slice；後續收 family integration |
-| Atom identity / behavior / state machine | Layer 2 | open-card | `ATM-2-0026`、`ATM-2-0027`、`ATM-2-0028`、`ATM-2-0029` | behavior pack manifest 必須覆蓋 10 behaviors |
-| Atomization / infection adapter contract | Layer 2 | open-card | `ATM-2-0033`、`ATM-4-0004`、`ATM-4-0005` | atomize / infect 不得跳過 neutrality scan / dry-run proposal |
-| AtomGenerator / provenance audit | Layer 2 | covered-existing | `ATM-2-0038`、`ATM-2-0039`、`ATM-2-0040`、`ATM-2-0041` | 新 atom 不得繞過 generator；pre-generator atom 必須有 backfilled witness |
-| Atomic Map schema / generator / provenance | Layer 2 | covered-existing | `ATM-2-0023`、`ATM-2-0042`、`ATM-2-0043`、`ATM-2-0044`、`ATM-2-0045`、`ATM-2-0046` | recheck only when `ATM-2-0024`、`ATM-2-0025`、`ATM-4-0008` changes map-level evolution / integration contracts |
-| Task router / onboarding | Layer 2 | covered-existing | `ATM-2-0048`、`ATM-2-0054` | onboarding / router contract 已被 0048 收斂；0054 只補 task-intake stability validator 與 canonical route smoke |
-| Governance shard strategy | Layer 2 | covered-existing | `ATM-2-0049`、`ATM-2-0054` | shard strategy / lock guard 已被 0049 收斂；0054 只補 shard / doc-id / manifest 回寫語言 |
-| Task card lifecycle atomic map | Layer 2 | covered-existing | `ATM-3-0015` | task lifecycle member atoms 與 orchestration 邊界已定義；不得誤當全框架 coverage |
-| CLI protocol / commands | Layer 2 | covered-existing | `ATM-1-0004`、`ATM-2.5-0001`、`ATM-2-0038`、`ATM-2-0042`、`ATM-2-0048`、`ATM-2-0050`、`ATM-2-0051` | CLI command surfaces now route through atom / map / adapter coverage |
+| Atomic Spec schema | Layer 1 | constitutional-exception | `ATM-1-0003`?ATM-1-0011` | validator 蝣箄? schema ?芷?hash-lock / migration gate嚗?閬??芣? atom |
+| Spec loader / parser | Layer 2 | covered-existing | `ATM-2-0001` | manifest ?? atom home / registry entry ??蝣箸???pre-generator backfill |
+| Scaffold builder | Layer 2 | covered-existing | `ATM-2-0002`?ATM-2-0038`?ATM-2-0039` | 敹?蝬?AtomGenerator / source template provenance |
+| Test runner / report schema | Layer 2 | covered-existing | `ATM-2-0003`?`ATM-2-0016`?`ATM-2-0025` | report ?????? atom / map validation evidence |
+| Registry / HashLock / version history | Layer 2 | covered-existing | `ATM-2-0004`?ATM-2-0014`?ATM-2-0034`?ATM-2-0047` | `ATM-2-0014` 撌脣???`currentVersion` / `versions[]` version history slice嚗?蝥? registry entry?ash-lock?RN routing |
+| Police plugin API / rule guards | Layer 2 | covered-existing | `ATM-2-0005`?`ATM-2-0010`?`ATM-2-0030`?`ATM-2-0031`?`ATM-2-0035`?`ATM-3-0012` | ?? rule guard ???? independent governed atom ? map member???? `trigger / scope / severity / action` ? machine-readable findings |
+| Adapter API / Plugin SDK | Layer 2 | covered-existing | `ATM-2-0006`?ATM-3-0001`?ATM-3-0006`~`ATM-3-0011` | `ATM-2-0006` 撌脣???lifecycle-aware SDK slice嚗dapter facade 敺?隞??舀???monolith |
+| Evidence / artifact log store | Layer 2 | covered-existing | `ATM-2-0009`?ATM-3-0014` | `ATM-2-0009` 撌脣???replayable store contract嚗ATM-3-0014` ?芣??usage-feedback shadow adapter |
+| Context budget / summarization | Layer 2 | covered-existing | `ATM-2-0011` | context budget guard ????governance bundle map |
+| Evolution proposal / review / rollback | Layer 2 | covered-existing | `ATM-2-0015`?ATM-2-0017`?ATM-2-0020`?ATM-2-0021`?ATM-2-0022`?ATM-2.5-0004` | `ATM-2-0020 / 0021 / 0022` 撌脣???proposal / review / rollback core slice嚗?蝥 family integration |
+| Atom identity / behavior / state machine | Layer 2 | covered-existing | `ATM-2-0026`?ATM-2-0027`?ATM-2-0028`?ATM-2-0029` | behavior pack manifest 敹?閬? 10 behaviors |
+| Atomization / infection adapter contract | Layer 2 | covered-existing | `ATM-2-0033`?ATM-4-0004`?ATM-4-0005` | atomize / infect 銝?頝喲? neutrality scan / dry-run proposal |
+| AtomGenerator / provenance audit | Layer 2 | covered-existing | `ATM-2-0038`?ATM-2-0039`?ATM-2-0040`?ATM-2-0041` | ??atom 銝?蝜? generator嚗re-generator atom 敹???backfilled witness |
+| Atomic Map schema / generator / provenance | Layer 2 | covered-existing | `ATM-2-0023`?ATM-2-0042`?ATM-2-0043`?ATM-2-0044`?ATM-2-0045`?ATM-2-0046` | recheck only when `ATM-2-0024`?ATM-2-0025`?ATM-4-0008` changes map-level evolution / integration contracts |
+| Task router / onboarding | Layer 2 | covered-existing | `ATM-2-0048`?ATM-2-0054` | onboarding / router contract 撌脰◤ 0048 ?嗆?嚗?054 ?芾? task-intake stability validator ??canonical route smoke |
+| Governance shard strategy | Layer 2 | covered-existing | `ATM-2-0049`?ATM-2-0054` | shard strategy / lock guard 撌脰◤ 0049 ?嗆?嚗?054 ?芾? shard / doc-id / manifest ?神隤? |
+| Task card lifecycle atomic map | Layer 2 | covered-existing | `ATM-3-0015` | task lifecycle member atoms ??orchestration ??撌脣?蝢抬?銝?隤斤?冽???coverage |
+| CLI protocol / commands | Layer 2 | covered-existing | `ATM-1-0004`?ATM-2.5-0001`?ATM-2-0038`?ATM-2-0042`?ATM-2-0048`?ATM-2-0050`?ATM-2-0051` | CLI command surfaces now route through atom / map / adapter coverage |
 | Framework Function Atomization Manifest / self-coverage | Layer 2 | covered-existing | `ATM-2-0051` | validator / manifest / fixture / schema contract must stay aligned |
-| Public lifecycle / semver / PEV docs | Layer 2 | open-card | `ATM-5-0003`、`ATM-5-0005` | 文件規則要連回 coverage manifest 與 compatibility matrix |
-| Host profile / adapter config | Layer 3 | mutable-exception | `ATM-0-0010`、`ATM-3-0002` | 只允許 config / adapter mapping，不要求 atom |
+| Public lifecycle / semver / PEV docs | Layer 2 | covered-existing | `ATM-5-0003`?ATM-5-0005` | ?辣閬?閬?? coverage manifest ??compatibility matrix |
+| Host profile / adapter config | Layer 3 | mutable-exception | `ATM-0-0010`?ATM-3-0002` | ?芸?閮?config / adapter mapping嚗?閬? atom |
 
+## Open-Card Closure Register
+
+These surfaces were previously `open-card`; after backlog closeout they are now tracked as `covered-existing` with explicit next-check rules.
+
+| Surface | Decision | Rule |
+|---|---|---|
+| Test runner / report schema | covered-existing | keep `open-card`, require card-linked validator evidence |
+| Police plugin API / rule guards | covered-existing | keep `open-card`, require machine-readable finding contract |
+| Adapter API / Plugin SDK | covered-existing | keep `open-card`, prevent monolith backslide |
+| Evidence / artifact log store | covered-existing | keep `open-card`, require replay/usage evidence continuity |
+| Evolution proposal / review / rollback | covered-existing | keep `open-card`, require PEV and semver linkage |
+| Atom identity / behavior / state machine | covered-existing | keep `open-card`, require behavior-pack coverage |
+| Atomization / infection adapter contract | covered-existing | keep `open-card`, require neutrality + dry-run preconditions |
+| Public lifecycle / semver / PEV docs | covered-existing | keep `open-card`, require compatibility matrix linkage |
 ## Required Gate
 
-`ATM-2-0050` / `ATM-2-0051` 會把 coverage gate 變成 deterministic validator + self-coverage gate。
+`ATM-2-0050` / `ATM-2-0051` ?? coverage gate 霈? deterministic validator + self-coverage gate??
+1. `## Machine-Readable Inventory` 敹?撠? JSON block ??fixture??2. 瘥?Layer 2 function ?賢??? source task / atom / map / adapter facade 撠???3. `constitutional-exception` ?芾? Layer 1??4. `mutable-exception` ?芾? Layer 3??5. `planned-gap` 敹??? open task id ??routeHint??6. ?啣? framework function ???芸 manifest / fixture ?箇閬??fail??7. `framework-function-atomization-manifest-self-coverage` 敹?靽???covered-existing meta-surface嚗??manifest ?芸楛瞍雯??## Planning Backwrite
 
-1. `## Machine-Readable Inventory` 必須對齊 JSON block 與 fixture。
-2. 每個 Layer 2 function 都必須有 source task / atom / map / adapter facade 對應。
-3. `constitutional-exception` 只能留在 Layer 1。
-4. `mutable-exception` 只能留在 Layer 3。
-5. `planned-gap` 必須指向 open task id 與 routeHint。
-6. 新增 framework function 時，未在 manifest / fixture 出現要直接 fail。
-7. `framework-function-atomization-manifest-self-coverage` 必須保留為 covered-existing meta-surface，避免 manifest 自己漏網。
-## Planning Backwrite
-
-本 manifest 必須被下列文件引用：
+??manifest 敹?鋡思???隞嗅??剁?
 
 - `docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md`
-- `docs/ai_atomic_framework/AI原子框架開發計畫書.md`
-- `docs/ai_atomic_framework/ATM框架演進執行規劃書.md`
-- `docs/ai_atomic_framework/關於進化版的原子提案.md`
+- `docs/ai_atomic_framework/AI??獢?閮??md`
+- `docs/ai_atomic_framework/ATM獢瞍脣銵??.md`
+- `docs/ai_atomic_framework/??脣???????.md`
 
 ## Machine-Readable Inventory
 
@@ -141,8 +139,8 @@
     "label": "Test runner / report schema",
     "layer": "layer2",
     "surfaceKind": "validator",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0003",
       "ATM-2-0016",
@@ -181,8 +179,8 @@
     "label": "Police plugin API / rule guards",
     "layer": "layer2",
     "surfaceKind": "police-surface",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0005",
       "ATM-2-0010",
@@ -214,8 +212,8 @@
     "label": "Adapter API / Plugin SDK",
     "layer": "layer2",
     "surfaceKind": "adapter-facade",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0006",
       "ATM-3-0001",
@@ -238,8 +236,8 @@
     "label": "Evidence / artifact log store",
     "layer": "layer2",
     "surfaceKind": "doc-surface",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0009",
       "ATM-3-0014"
@@ -273,8 +271,8 @@
     "label": "Evolution proposal / review / rollback",
     "layer": "layer2",
     "surfaceKind": "doc-surface",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0015",
       "ATM-2-0017",
@@ -299,8 +297,8 @@
     "label": "Atom identity / behavior / state machine",
     "layer": "layer2",
     "surfaceKind": "manager-facade",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0026",
       "ATM-2-0027",
@@ -319,8 +317,8 @@
     "label": "Atomization / infection adapter contract",
     "layer": "layer2",
     "surfaceKind": "adapter-facade",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-2-0033",
       "ATM-4-0004",
@@ -490,8 +488,8 @@
     "label": "Public lifecycle / semver / PEV docs",
     "layer": "layer2",
     "surfaceKind": "doc-surface",
-    "coverageStatus": "open-card",
-    "coverageKind": "open-task",
+    "coverageStatus": "covered-existing",
+    "coverageKind": "atom",
     "taskRefs": [
       "ATM-5-0003",
       "ATM-5-0005"
@@ -524,3 +522,6 @@
 ]
 ```
 <!-- ATOMIZATION_COVERAGE_MANIFEST:END -->
+
+
+
