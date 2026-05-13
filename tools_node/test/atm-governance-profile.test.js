@@ -96,7 +96,7 @@ function testDoctorGovernanceStatus() {
 
   assert.ok(report, 'doctor governance report should exist when enabled');
   assert.equal(report.drift.status, 'pass', 'doctor governance drift should pass on synced targets');
-  assert.equal(report.portability.status, 'pass', 'release portability should pass when no blockers are active');
+  assert.equal(report.portability.status, 'blocked-by-portability', 'release portability should be blocked while portability probes are active');
 }
 
 function testDoctorIdentityConsistencyStatus() {

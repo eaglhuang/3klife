@@ -192,7 +192,32 @@
         "label": "Codex editor-local hook settings stay outside the canonical governance profile."
       }
     ],
-    "portabilityBlockers": []
+    "portabilityBlockers": [
+      {
+        "id": "release-sidecar-upstream-registry-modules",
+        "label": "Release closeout still imports upstream registry internals via sidecar convergence validator.",
+        "probes": [
+          {
+            "path": "tools_node/validate-registry-sidecar-convergence.js",
+            "pattern": "packages/core/src/registry/registry-catalog\\.mjs"
+          },
+          {
+            "path": "tools_node/validate-registry-sidecar-convergence.js",
+            "pattern": "packages/core/src/registry/registry-index\\.mjs"
+          }
+        ]
+      },
+      {
+        "id": "release-closeout-sidecar-coupling",
+        "label": "Release closeout still couples portability outcome to sidecar convergence checks.",
+        "probes": [
+          {
+            "path": "tools_node/validate-atm-stability-closeout.js",
+            "pattern": "validate-registry-sidecar-convergence"
+          }
+        ]
+      }
+    ]
   },
   "gateEntrypoints": {
     "dev": "node tools_node/atm-flow.js --mode dev",
