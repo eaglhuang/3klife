@@ -11,6 +11,8 @@ const upstreamRoot = resolveUpstreamRepoRoot({
   projectRoot,
 }).upstreamRepoRoot;
 const registryPath = path.join(upstreamRoot, 'atomic-registry.json');
+const registryCatalogScript = path.join(upstreamRoot, 'packages/core/src/registry/registry-catalog.ts');
+const registryIndexScript = path.join(upstreamRoot, 'packages/core/src/registry/registry-index.ts');
 
 function parseArgs(argv) {
   const parsed = {
@@ -138,8 +140,8 @@ function buildFinding({
 
 async function loadRegistryHelpers() {
   const [catalogModule, indexModule] = await Promise.all([
-    import(pathToFileURL(path.join(upstreamRoot, 'packages/core/src/registry/registry-catalog.mjs')).href),
-    import(pathToFileURL(path.join(upstreamRoot, 'packages/core/src/registry/registry-index.mjs')).href),
+    import(pathToFileURL(registryCatalogScript).href),
+    import(pathToFileURL(registryIndexScript).href),
   ]);
 
   return {

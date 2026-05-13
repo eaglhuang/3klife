@@ -8,6 +8,8 @@ const syncModule = require('./sync-atm-stabilization-milestone');
 const taskStoreTruthValidator = require('./validate-atm-task-store-single-truth');
 const retentionValidator = require('./validate-turn-artifact-retention');
 const sidecarValidator = require('./validate-registry-sidecar-convergence');
+const versionGovernanceValidator = require('./validate-registry-version-governance');
+const anyBoundaryValidator = require('./validate-atm-any-boundaries');
 const ruleGuardValidator = require('./validate-rule-guard-read-only');
 const { loadRulePack, evaluateRulePack } = require('./adapters/atm-3klife/rule-guard-adapter');
 
@@ -132,6 +134,14 @@ function runRuleGuardCheck() {
   return ruleGuardValidator.buildReport(runtime, structure);
 }
 
+function runVersionGovernanceCheck() {
+  return versionGovernanceValidator.buildReport(JSON.parse(fs.readFileSync(path.join(projectRoot, 'atomic-registry.json'), 'utf8').replace(/^\uFEFF/, '')));
+}
+
+function runAnyBoundaryCheck() {
+  return anyBoundaryValidator.buildReport();
+}
+
 function buildBackfillCompatCheck(sidecarReport) {
   const summary = sidecarReport && sidecarReport.summary ? sidecarReport.summary : {};
   const blockers = Number(summary.missingHistoricalSf || 0)
@@ -157,7 +167,9 @@ async function main() {
   const taskStoreSingleTruthReport = runTaskStoreSingleTruthCheck();
   const retentionReport = runRetentionCheck();
   const sidecarReport = await runSidecarCheck();
+  const versionGovernanceReport = runVersionGovernanceCheck();
   const backfillCompat = buildBackfillCompatCheck(sidecarReport);
+  const anyBoundaryReport = runAnyBoundaryCheck();
   const ruleGuardReport = runRuleGuardCheck();
 
   const checks = [
@@ -177,9 +189,17 @@ async function main() {
     toCheck('validate-registry-sidecar-convergence', sidecarReport, {
       summary: sidecarReport.summary || {},
     }),
+    toCheck('validate-registry-version-governance', versionGovernanceReport, {
+      summary: versionGovernanceReport.summary || {},
+      plan: versionGovernanceReport.plan || [],
+    }),
     toCheck('validate-registry-backfill-sweep', backfillCompat, {
       source: 'derived-from-validate-registry-sidecar-convergence',
       summary: backfillCompat.summary || {},
+    }),
+    toCheck('validate-atm-any-boundaries', anyBoundaryReport, {
+      summary: anyBoundaryReport.summary || {},
+      findings: anyBoundaryReport.findings || [],
     }),
     toCheck('validate-rule-guard-read-only', ruleGuardReport, {
       checks: ruleGuardReport.checks || [],
@@ -227,6 +247,8 @@ module.exports = {
   runTaskStoreSingleTruthCheck,
   runRetentionCheck,
   runSidecarCheck,
+  runVersionGovernanceCheck,
+  runAnyBoundaryCheck,
   runRuleGuardCheck,
   buildBackfillCompatCheck,
 };

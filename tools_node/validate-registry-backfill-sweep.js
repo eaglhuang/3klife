@@ -13,8 +13,8 @@ const upstreamRoot = resolveUpstreamRepoRoot({
 }).upstreamRepoRoot;
 const upstreamRepoLabel = path.basename(upstreamRoot);
 const registryPath = path.join(upstreamRoot, 'atomic-registry.json');
-const registryCoreScript = path.join(upstreamRoot, 'scripts', 'validate-registry-core.mjs');
-const registryCatalogScript = path.join(upstreamRoot, 'scripts', 'validate-registry-catalog.mjs');
+const registryCoreScript = path.join(upstreamRoot, 'scripts', 'validate-registry-core.ts');
+const registryCatalogScript = path.join(upstreamRoot, 'scripts', 'validate-registry-catalog.ts');
 
 function parseArgs(argv) {
   const parsed = {
@@ -166,8 +166,8 @@ function runUpstreamValidation(scriptPath) {
 
 async function loadRegistryHelpers() {
   const [catalogModule, indexModule] = await Promise.all([
-    import(pathToFileURL(path.join(upstreamRoot, 'packages/core/src/registry/registry-catalog.mjs')).href),
-    import(pathToFileURL(path.join(upstreamRoot, 'packages/core/src/registry/registry-index.mjs')).href),
+    import(pathToFileURL(path.join(upstreamRoot, 'packages/core/src/registry/registry-catalog.ts')).href),
+    import(pathToFileURL(path.join(upstreamRoot, 'packages/core/src/registry/registry-index.ts')).href),
   ]);
 
   return {
@@ -538,12 +538,12 @@ async function main() {
     report.findings.push(buildFinding({
       ruleId: 'registry-backfill.upstream-registry-core',
       trigger: 'registry.upstream.validate-registry-core.failed',
-      scope: `${upstreamRepoLabel}/scripts/validate-registry-core.mjs`,
+      scope: `${upstreamRepoLabel}/scripts/validate-registry-core.ts`,
       severity: 'block',
       action: 'fail',
       routeClass: 'blocker',
       routeHint: '先讓 upstream registry core validator 綠燈，再推 backfill sweep。',
-      message: 'upstream validate-registry-core.mjs failed',
+      message: 'upstream validate-registry-core.ts failed',
       file: rel(registryCoreScript),
       details: {
         status: coreValidation.status,
@@ -554,12 +554,12 @@ async function main() {
     report.findings.push(buildFinding({
       ruleId: 'registry-backfill.upstream-registry-core-fallback',
       trigger: 'registry.upstream.validate-registry-core.spawn-blocked',
-      scope: `${upstreamRepoLabel}/scripts/validate-registry-core.mjs`,
+      scope: `${upstreamRepoLabel}/scripts/validate-registry-core.ts`,
       severity: 'warn',
       action: 'warn',
       routeClass: 'advisory',
       routeHint: '目前執行環境禁止 nested spawn；已改用本地 sweep checks 續跑，建議在可執行 upstream validator 的環境再補一次。',
-      message: 'upstream validate-registry-core.mjs was skipped due spawn restriction',
+      message: 'upstream validate-registry-core.ts was skipped due spawn restriction',
       file: rel(registryCoreScript),
       details: {
         fallback: coreValidation.fallback,
@@ -572,12 +572,12 @@ async function main() {
     report.findings.push(buildFinding({
       ruleId: 'registry-backfill.upstream-registry-catalog',
       trigger: 'registry.upstream.validate-registry-catalog.failed',
-      scope: `${upstreamRepoLabel}/scripts/validate-registry-catalog.mjs`,
+      scope: `${upstreamRepoLabel}/scripts/validate-registry-catalog.ts`,
       severity: 'block',
       action: 'fail',
       routeClass: 'blocker',
       routeHint: '先讓 upstream registry catalog validator 綠燈，再推 backfill sweep。',
-      message: 'upstream validate-registry-catalog.mjs failed',
+      message: 'upstream validate-registry-catalog.ts failed',
       file: rel(registryCatalogScript),
       details: {
         status: catalogValidation.status,
@@ -588,12 +588,12 @@ async function main() {
     report.findings.push(buildFinding({
       ruleId: 'registry-backfill.upstream-registry-catalog-fallback',
       trigger: 'registry.upstream.validate-registry-catalog.spawn-blocked',
-      scope: `${upstreamRepoLabel}/scripts/validate-registry-catalog.mjs`,
+      scope: `${upstreamRepoLabel}/scripts/validate-registry-catalog.ts`,
       severity: 'warn',
       action: 'warn',
       routeClass: 'advisory',
       routeHint: '目前執行環境禁止 nested spawn；已改用本地 sweep checks 續跑，建議在可執行 upstream validator 的環境再補一次。',
-      message: 'upstream validate-registry-catalog.mjs was skipped due spawn restriction',
+      message: 'upstream validate-registry-catalog.ts was skipped due spawn restriction',
       file: rel(registryCatalogScript),
       details: {
         fallback: catalogValidation.fallback,
