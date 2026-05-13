@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -293,6 +294,71 @@ class SceneIllustrationResponse(BaseModel):
     mimeType: str
     imageBase64: str
     caption: str | None = None
+
+
+class SceneDirectorRequest(BaseModel):
+    generalId: str
+    angle: str | None = None
+    targetId: str | None = None
+    evidenceId: str | None = None
+    chorusTargetIds: list[str] = Field(default_factory=list)
+    locale: str = DEFAULT_LOCALE
+    llmModelPreset: str = DEFAULT_LLM_MODEL_PRESET
+    maxStoryChars: int = Field(default=560, ge=160, le=650)
+    maxChorusChars: int = Field(default=110, ge=24, le=180)
+
+    @model_validator(mode="after")
+    def normalize_scene_director_fields(self):
+        self.chorusTargetIds = list(dict.fromkeys(target_id for target_id in self.chorusTargetIds if target_id))
+        if self.locale not in SUPPORTED_LOCALES:
+            self.locale = DEFAULT_LOCALE
+        if self.llmModelPreset not in SUPPORTED_LLM_MODEL_PRESETS:
+            self.llmModelPreset = DEFAULT_LLM_MODEL_PRESET
+        return self
+
+
+class ScenePresenceDecision(BaseModel):
+    status: str
+    reason: str
+    sourceText: str | None = None
+
+
+class SceneDirectorBeats(BaseModel):
+    sceneText: str
+    memoryText: str
+    emotionText: str
+    dialogueText: str
+    intentText: str
+    presence: ScenePresenceDecision
+    sourceRefs: list[str] = Field(default_factory=list)
+    evidenceId: str | None = None
+
+
+class SceneChorusLine(BaseModel):
+    targetId: str
+    label: str
+    role: str
+    text: str
+    provider: str | None = None
+    model: str | None = None
+    fallbackUsed: bool = False
+    evidenceRefs: list[str] = Field(default_factory=list)
+
+
+class SceneDirectorResponse(BaseModel):
+    generalId: str
+    displayName: str
+    canonicalWrites: bool = False
+    angle: str | None = None
+    targetId: str | None = None
+    targetLabel: str | None = None
+    beats: SceneDirectorBeats
+    storyText: str
+    storyProvider: str | None = None
+    storyModel: str | None = None
+    storyFallbackUsed: bool = False
+    chorusLines: list[SceneChorusLine] = Field(default_factory=list)
+    providerTrace: list[str] = Field(default_factory=list)
 
 
 class NpcDialogueService:
@@ -686,6 +752,319 @@ class NpcDialogueService:
             imageBase64=result.image_base64,
             caption=result.caption,
         )
+
+    def build_scene_director(self, request: SceneDirectorRequest) -> SceneDirectorResponse:
+        profile = self.get_narrative_profile(request.generalId)
+        card = self._select_narrative_card(profile.evidenceCards, request.evidenceId, request.angle)
+        target = self._select_narrative_target(profile.interactionTargets, request.targetId)
+        beats = self._build_scene_director_beats(profile, card, target, request.angle)
+        evidence_refs = sorted(set(beats.sourceRefs + (target.evidenceRefs if target else [])))
+        story_fallback = self._render_scene_director_story(profile.displayName, target, beats)
+        story_generation = self._generate_scene_director_text(
+            general_id=request.generalId,
+            persona_card=self.get_persona_card(request.generalId),
+            memory_context={
+                "saveId": f"demo-scene-director-{request.generalId}",
+                "shortTerm": beats.sceneText,
+                "longTerm": f"{beats.memoryText} {beats.emotionText}",
+                "playerProfile": (
+                    f"{profile.displayName}正在面對與{target.label if target else '互動對象'}相關的局勢。"
+                    f"在場判斷：{beats.presence.status}；依據：{beats.presence.reason}"
+                ),
+                "promises": (
+                    "請把 sceneText/memoryText/emotionText/dialogueText/intentText 當作導演 beats，"
+                    "寫成 350-550 字繁體中文連續舞台敘事；保留原文證據，不要模板拼貼。"
+                ),
+            },
+            evidence_refs=evidence_refs,
+            deterministic_text=story_fallback,
+            max_chars=request.maxStoryChars,
+            locale=request.locale,
+            llm_model_preset=request.llmModelPreset,
+        )
+        chorus_targets = self._select_chorus_targets(profile.interactionTargets, request.chorusTargetIds, target.targetId if target else None)
+        chorus_lines = [
+            self._build_scene_chorus_line(
+                request=request,
+                profile=profile,
+                target=chorus_target,
+                main_target=target,
+                card=card,
+                beats=beats,
+            )
+            for chorus_target in chorus_targets
+        ]
+        return SceneDirectorResponse(
+            generalId=request.generalId,
+            displayName=profile.displayName,
+            canonicalWrites=False,
+            angle=card.angle if card else request.angle,
+            targetId=target.targetId if target else request.targetId,
+            targetLabel=target.label if target else None,
+            beats=beats,
+            storyText=story_generation.text,
+            storyProvider=story_generation.provider,
+            storyModel=story_generation.model,
+            storyFallbackUsed=story_generation.fallbackUsed,
+            chorusLines=chorus_lines,
+            providerTrace=story_generation.providerTrace,
+        )
+
+    def _select_narrative_card(
+        self,
+        cards: list[NarrativeEvidenceCard],
+        evidence_id: str | None,
+        angle: str | None,
+    ) -> NarrativeEvidenceCard | None:
+        if evidence_id:
+            for card in cards:
+                if card.evidenceId == evidence_id:
+                    return card
+        if angle:
+            for card in cards:
+                if card.angle == angle:
+                    return card
+        return cards[0] if cards else None
+
+    def _select_narrative_target(
+        self,
+        targets: list[NarrativeInteractionTarget],
+        target_id: str | None,
+    ) -> NarrativeInteractionTarget | None:
+        if target_id:
+            for target in targets:
+                if target.targetId == target_id:
+                    return target
+        return targets[0] if targets else None
+
+    def _select_chorus_targets(
+        self,
+        targets: list[NarrativeInteractionTarget],
+        requested_ids: list[str],
+        active_target_id: str | None,
+    ) -> list[NarrativeInteractionTarget]:
+        by_id = {target.targetId: target for target in targets}
+        selected = [by_id[target_id] for target_id in requested_ids if target_id in by_id and target_id != active_target_id]
+        if selected:
+            return selected[:4]
+        return [target for target in targets if target.targetId != active_target_id][:4]
+
+    def _build_scene_director_beats(
+        self,
+        profile: NarrativeProfileResponse,
+        card: NarrativeEvidenceCard | None,
+        target: NarrativeInteractionTarget | None,
+        angle: str | None,
+    ) -> SceneDirectorBeats:
+        display_name = profile.displayName
+        target_label = target.label if target else "互動對象"
+        card_angle = card.angle if card else angle
+        source_refs = list(dict.fromkeys((card.sourceRefs if card else []) + (target.evidenceRefs if target else [])))
+        quote = str(card.quote or "").strip() if card else ""
+        summary = str(card.summary or "").strip() if card else ""
+        title = str(card.title or "").strip() if card else ""
+        location = str(card.location or "").strip() if card and card.location else ""
+        presence = self._infer_scene_presence(target_label, [quote, summary, title, location])
+        scene_text = self._sentence_or_default(
+            " ".join(part for part in [f"場景位置靠近{location}" if location else "", summary] if part),
+            f"{display_name}被{target_label}相關線索牽動，先停下來看清這段關係背後的證據。",
+            max_chars=96,
+        )
+        memory_text = self._sentence_or_default(
+            " ".join(part for part in [summary, f"原文線索：{quote}" if quote else ""] if part),
+            f"{target_label}相關的線索，讓{display_name}重新想起一段需要慎重處理的舊事。",
+            max_chars=128,
+        )
+        trait_text = "、".join(str(trait) for trait in (profile.persona.get("personalityTraits") or [])[:3] if str(trait).strip())
+        emotion_text = self._sentence_or_default(
+            f"{presence.reason}。{display_name}此刻的反應需要符合人物性格：{trait_text or '依照 persona 判斷'}。",
+            f"{display_name}不能只照一時情緒做決定，還要回到人物性格與眼前證據。",
+            max_chars=112,
+        )
+        dialogue_text = self._sentence_or_default(
+            str((profile.persona.get("safeFallbackLine") or "")).strip(),
+            f"{display_name}先把話壓低，提醒自己要看證據、看人心，也看後路。",
+            max_chars=90,
+        )
+        focus = self._angle_focus(card_angle)
+        intent_text = self._sentence_or_default(
+            f"先處理{target.role if target else '人物關係'}，再用「{focus}」去校正眼前這一步。",
+            f"先用「{focus}」去校正眼前這一步。",
+            max_chars=96,
+        )
+        return SceneDirectorBeats(
+            sceneText=scene_text,
+            memoryText=memory_text,
+            emotionText=emotion_text,
+            dialogueText=dialogue_text,
+            intentText=intent_text,
+            presence=presence,
+            sourceRefs=source_refs[:12],
+            evidenceId=card.evidenceId if card else None,
+        )
+
+    def _infer_scene_presence(self, target_label: str, text_parts: list[str]) -> ScenePresenceDecision:
+        joined = " ".join(part for part in text_parts if part).strip()
+        if not target_label or target_label not in joined:
+            return ScenePresenceDecision(status="unknown", reason="原文沒有直接寫出互動對象姓名", sourceText=joined[:120] or None)
+        index = joined.find(target_label)
+        near_target = joined[max(0, index - 36) : index + len(target_label) + 54]
+        present_signals = re.compile(r"(同席|同在|在旁|相見|面見|謁|問曰|答曰|謂|曰|迎|隨|陪|入帳|入席|共|俱)")
+        offstage_signals = re.compile(r"(聞|報|使人|消息|召見|將要|欲|去留|婚盟|嫁|聘|許婚|歸|留|遣)")
+        if present_signals.search(near_target):
+            return ScenePresenceDecision(status="present", reason=f"原文近句含在場訊號：{near_target[:76]}", sourceText=near_target)
+        if offstage_signals.search(near_target):
+            return ScenePresenceDecision(status="offstage", reason=f"原文近句偏向局勢牽涉：{near_target[:76]}", sourceText=near_target)
+        return ScenePresenceDecision(status="unknown", reason=f"原文提到{target_label}，但沒有足夠同場動作", sourceText=near_target)
+
+    def _render_scene_director_story(
+        self,
+        display_name: str,
+        target: NarrativeInteractionTarget | None,
+        beats: SceneDirectorBeats,
+    ) -> str:
+        target_label = target.label if target else "互動對象"
+        presence_line = (
+            f"{target_label}就在局中，{display_name}說話時必須同時顧到眼前人的反應與背後局勢。"
+            if beats.presence.status == "present"
+            else f"{beats.presence.reason}，所以{target_label}在這一幕裡更像牽動局勢的線索，而不是被硬拉到眼前的同場人物。"
+        )
+        quote_line = f"他抓住的原文線索是：{beats.memoryText}" if beats.memoryText else ""
+        return " ".join(
+            self._ensure_sentence(line)
+            for line in [
+                f"{display_name}先從這一幕的證據裡抓住核心：{beats.sceneText}",
+                quote_line,
+                beats.emotionText,
+                presence_line,
+                f"他把聲音壓低，像是在對帳中眾人，也像是在提醒自己：「{beats.dialogueText}」",
+                f"最後他把念頭收回眼前，決定{beats.intentText}",
+                f"這樣一來，角度不再只是標籤，而是變成{display_name}此刻會怎麼忍、怎麼問、怎麼往下一步走的理由。",
+            ]
+            if line
+        )
+
+    def _build_scene_chorus_line(
+        self,
+        request: SceneDirectorRequest,
+        profile: NarrativeProfileResponse,
+        target: NarrativeInteractionTarget,
+        main_target: NarrativeInteractionTarget | None,
+        card: NarrativeEvidenceCard | None,
+        beats: SceneDirectorBeats,
+    ) -> SceneChorusLine:
+        fallback = self._render_chorus_fallback(profile.displayName, target, main_target, card, beats)
+        evidence_refs = sorted(set((card.sourceRefs if card else []) + target.evidenceRefs))
+        generation = self._generate_scene_director_text(
+            general_id=target.targetId,
+            persona_card=self.get_persona_card(target.targetId),
+            memory_context={
+                "saveId": f"demo-chorus-{request.generalId}",
+                "shortTerm": beats.sceneText,
+                "longTerm": f"{beats.memoryText} {beats.emotionText}",
+                "playerProfile": f"{target.label}的角色關係是{target.role}。請用{target.label}本人的性格，對{profile.displayName}此刻面對的局勢說一句感想或內心話。",
+                "promises": "只輸出一句繁體中文台詞或內心獨白；不要旁白，不要套用『看著某人提起』句型。",
+            },
+            evidence_refs=evidence_refs,
+            deterministic_text=fallback,
+            max_chars=request.maxChorusChars,
+            locale=request.locale,
+            llm_model_preset=request.llmModelPreset,
+            speech_context_mode="inner_monologue",
+        )
+        return SceneChorusLine(
+            targetId=target.targetId,
+            label=target.label,
+            role=target.role,
+            text=generation.text,
+            provider=generation.provider,
+            model=generation.model,
+            fallbackUsed=generation.fallbackUsed,
+            evidenceRefs=evidence_refs[:12],
+        )
+
+    def _render_chorus_fallback(
+        self,
+        display_name: str,
+        target: NarrativeInteractionTarget,
+        main_target: NarrativeInteractionTarget | None,
+        card: NarrativeEvidenceCard | None,
+        beats: SceneDirectorBeats,
+    ) -> str:
+        topic = card.title if card else "這幕局勢"
+        relation = target.role or target.relationshipType or "人物線索"
+        main_label = main_target.label if main_target else "此人"
+        if target.femaleFocus:
+            return f"若{display_name}連去留與情分都要壓進心裡，這一步就不能只看勝負。"
+        if target.relationshipType in {"enemy_rival", "battlefield_opponent"}:
+            return f"{topic}牽動人心，越是這種時候，越要防話裡有話。"
+        if target.relationshipType in {"sworn_sibling", "battle_ally"}:
+            return f"{display_name}要顧全大局，我便先替他看住退路與人心。"
+        return f"以{relation}來看，{display_name}此刻對{main_label}不能只憑情緒，還得看證據與後路。"
+
+    def _generate_scene_director_text(
+        self,
+        general_id: str,
+        persona_card: PersonaCard | None,
+        memory_context: dict[str, Any],
+        evidence_refs: list[str],
+        deterministic_text: str,
+        max_chars: int,
+        locale: str,
+        llm_model_preset: str,
+        speech_context_mode: str = "inner_monologue",
+    ):
+        evidence_pack = self._resolve_evidence(general_id, None, [], evidence_refs)
+        preset_config = LLM_MODEL_PRESETS.get(llm_model_preset, LLM_MODEL_PRESETS[DEFAULT_LLM_MODEL_PRESET])
+        return self.provider_router.generate(
+            DialoguePromptPackage(
+                generalId=general_id,
+                personaCardSubset=self._persona_subset(persona_card),
+                memoryContext=memory_context,
+                selectedContext=None,
+                selectedKeywords=[],
+                resolvedEvidence=evidence_pack.resolvedEvidence,
+                evidenceRefs=evidence_refs,
+                deterministicText=deterministic_text[:max_chars],
+                maxChars=max_chars,
+                toneMode="narrative_fusion",
+                locale=locale,
+                speechContextMode=speech_context_mode,
+            ),
+            provider_order=preset_config["providerOrder"],
+            model_overrides=preset_config["modelOverrides"],
+            allow_deterministic_fallback=preset_config["allowDeterministicFallback"],
+        )
+
+    def _sentence_or_default(self, text: str, default: str, max_chars: int) -> str:
+        normalized = " ".join(str(text or "").split()).strip() or default
+        if len(normalized) > max_chars:
+            normalized = normalized[: max_chars - 1] + "…"
+        return self._ensure_sentence(normalized)
+
+    def _ensure_sentence(self, text: str) -> str:
+        stripped = str(text or "").strip()
+        if not stripped:
+            return ""
+        return stripped if stripped.endswith(("。", "！", "？")) else f"{stripped}。"
+
+    def _angle_focus(self, angle: str | None) -> str:
+        return {
+            "people": "先安人心與秩序",
+            "bond": "先確保同伴與承諾",
+            "battlefield": "先整隊與看退路",
+            "rival": "先衡量人心代價",
+            "resource": "先盤點糧草與恩義",
+            "habit": "先巡營與問細事",
+            "emotion": "先想家室與心事",
+            "identity": "先對齊人物定位與責任",
+            "relationship": "先判斷人際網與信任邊界",
+            "location": "先抓地利與路線節奏",
+            "activity": "先排可執行的小行動",
+            "decision": "先選策略方向與代價",
+            "personality": "先用性格校正決策語氣",
+            "role": "先站回角色責任",
+        }.get(str(angle or ""), "先讓局面站穩")
 
     def _resolve_memory_context(self, request: DialogueRequest) -> GeneralMemoryContext | None:
         if request.memoryContext is not None:

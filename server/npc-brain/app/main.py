@@ -26,6 +26,8 @@ from .npc_dialogue_service import (
     KeywordOptionsResponse,
     NarrativeProfileResponse,
     NpcDialogueService,
+    SceneDirectorRequest,
+    SceneDirectorResponse,
     SceneIllustrationRequest,
     SceneIllustrationResponse,
 )
@@ -106,6 +108,13 @@ def create_app() -> FastAPI:
     def dialogue(request: DialogueRequest):
         try:
             return service.build_dialogue(request)
+        except ProviderUnavailableError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+    @app.post("/v1/npc/scene-director", response_model=SceneDirectorResponse)
+    def scene_director(request: SceneDirectorRequest):
+        try:
+            return service.build_scene_director(request)
         except ProviderUnavailableError as exc:
             raise HTTPException(status_code=503, detail=str(exc)) from exc
 
