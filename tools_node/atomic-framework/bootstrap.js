@@ -5,6 +5,7 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
 const baseConfig = require('../adapters/atm-3klife/atm.config');
+const { buildNodeEntrypointArgs, resolveCliFromRepoRoot } = require('../lib/upstream-env');
 
 function readNextValue(argv, index, flagName) {
   const value = argv[index + 1];
@@ -67,7 +68,7 @@ function resolveConfig(overrides = {}) {
   config.repositoryRoot = path.resolve(config.repositoryRoot || baseConfig.repositoryRoot || process.cwd());
   config.upstreamRepoRoot = path.resolve(config.upstreamRepoRoot || baseConfig.upstreamRepoRoot);
   config.upstreamCliEntrypoint = path.resolve(
-    config.upstreamCliEntrypoint || baseConfig.upstreamCliEntrypoint || path.join(config.upstreamRepoRoot, 'packages', 'cli', 'src', 'atm.mjs')
+    config.upstreamCliEntrypoint || baseConfig.upstreamCliEntrypoint || resolveCliFromRepoRoot(config.upstreamRepoRoot)
   );
   config.localWorkbenchRoot = path.resolve(
     config.localWorkbenchRoot || config.workbenchRoot || baseConfig.localWorkbenchRoot || path.join(config.repositoryRoot, 'tools_node', 'atomic-framework', 'workbench')
@@ -109,7 +110,7 @@ function runUpstreamCommand(commandName, commandArgs = [], overrides = {}) {
   }
 
   const args = buildCommandArgs(commandName, commandArgs, config);
-  const result = spawnSync(process.execPath, [config.upstreamCliEntrypoint, commandName, ...args], {
+  const result = spawnSync(process.execPath, buildNodeEntrypointArgs(config.upstreamCliEntrypoint, [commandName, ...args]), {
     cwd: config.repositoryRoot,
     env: {
       ...process.env,

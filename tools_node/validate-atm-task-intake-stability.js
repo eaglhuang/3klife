@@ -3,7 +3,7 @@
 
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { resolveUpstreamPaths } = require('./lib/upstream-env');
+const { buildNodeEntrypointArgs, resolveUpstreamPaths } = require('./lib/upstream-env');
 
 const projectRoot = path.resolve(__dirname, '..');
 const taskRouterCli = path.join(projectRoot, 'tools_node', 'atomic-framework', 'task-router.js');
@@ -127,17 +127,19 @@ function validateRouterSmoke() {
 
 function validateUpstreamGuide() {
   const result = runNode('upstream guide create-atom', [
-    upstreamGuideCli,
+    ...buildNodeEntrypointArgs(upstreamGuideCli, [
     'guide',
     'create-atom',
+    ]),
   ]);
   const stdout = String(result.stdout || '');
   assert(/ATM_GUIDE_READY/.test(stdout) || /Guide for create-atom is ready/i.test(stdout), 'upstream guide should advertise create-atom readiness');
 
   const fixH2u = runNodeAllowFailure([
-    upstreamGuideCli,
+    ...buildNodeEntrypointArgs(upstreamGuideCli, [
     'guide',
     'fix-h2u',
+    ]),
   ]);
   const fixStdout = String(fixH2u.stdout || '');
   const fixStderr = String(fixH2u.stderr || '');

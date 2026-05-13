@@ -12,7 +12,11 @@ const {
   findTaskCardPath,
   getTaskCardRelativePath,
 } = require('../lib/task-card-paths');
-const { resolveUpstreamPaths } = require('../lib/upstream-env');
+const {
+  buildNodeEntrypointArgs,
+  buildNodeInvocationCommand,
+  resolveUpstreamPaths,
+} = require('../lib/upstream-env');
 
 const projectRoot = projectConfig.ROOT;
 const taskCardDir = path.join(projectRoot, 'docs', 'agent-briefs', 'tasks');
@@ -22,6 +26,7 @@ const upstreamPaths = resolveUpstreamPaths({
   projectRoot,
 });
 const upstreamCliPath = upstreamPaths.upstreamCliEntrypoint;
+const upstreamCliCommandBase = buildNodeInvocationCommand(upstreamCliPath);
 const lockAdapter = new LockAdapter(createLockAdapterConfig());
 
 function toRelative(filePath) {
@@ -205,7 +210,7 @@ function inferHints(task, routeKind) {
 function buildCreateCommand(task, hints) {
   return [
     'node',
-    upstreamCliPath.replace(/\\/g, '/'),
+    ...buildNodeEntrypointArgs(upstreamCliPath, [
     'create',
     '--bucket',
     hints.bucketHint || '<bucket>',
@@ -216,6 +221,7 @@ function buildCreateCommand(task, hints) {
     '--logical-name',
     hints.logicalNameHint || '<logical-name>',
     '--dry-run',
+    ]),
   ];
 }
 
@@ -236,7 +242,7 @@ function buildAtomDiscoveryChannels(taskId = '') {
   channels.push({
     channel: 'upstream-guide',
     when: '不是從 3KLife task flow 進來，或是其他 ATM 使用者。',
-    command: `node ${upstreamCliPath.replace(/\\/g, '/')} guide create-atom`,
+    command: buildNodeInvocationCommand(upstreamCliPath, ['guide', 'create-atom']),
   });
   return channels;
 }
@@ -258,7 +264,7 @@ function buildFixH2uDiscoveryChannels(taskId = '') {
   channels.push({
     channel: 'upstream-guide',
     when: '需要回到 upstream ATM 的通用導覽，再由 host repo 自行擴充私有 intent。',
-    command: `node ${upstreamCliPath.replace(/\\/g, '/')} guide overview`,
+    command: buildNodeInvocationCommand(upstreamCliPath, ['guide', 'overview']),
   });
   return channels;
 }
@@ -327,7 +333,7 @@ function buildIntentRoute(intent, args = {}) {
     const primaryAtom = {
       atomId: 'ATM-CORE-0004',
       logicalName: 'atom.core-atom-generator',
-      upstreamCli: upstreamCliPath.replace(/\\/g, '/'),
+      upstreamCli: upstreamCliCommandBase,
       createCommand: buildCreateCommand(task, hints),
     };
 
@@ -483,7 +489,7 @@ function buildTaskRoute(taskId) {
     ? {
         atomId: 'ATM-CORE-0004',
         logicalName: 'atom.core-atom-generator',
-        upstreamCli: upstreamCliPath.replace(/\\/g, '/'),
+        upstreamCli: upstreamCliCommandBase,
         createCommand: buildCreateCommand(task, hints),
       }
     : null;
@@ -539,7 +545,7 @@ function buildTaskRoute(taskId) {
         ? {
             atomId: 'ATM-CORE-0004',
             logicalName: 'atom.core-atom-generator',
-            upstreamCli: upstreamCliPath.replace(/\\/g, '/'),
+            upstreamCli: upstreamCliCommandBase,
             createCommand: buildCreateCommand(task, hints),
           }
         : null,

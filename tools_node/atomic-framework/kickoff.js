@@ -4,7 +4,7 @@
 const path = require('node:path');
 
 const { buildGovernanceReport } = require('./governance/checker');
-const { resolveUpstreamPaths } = require('../lib/upstream-env');
+const { buildNodeInvocationCommand, resolveUpstreamPaths } = require('../lib/upstream-env');
 
 const projectRoot = path.resolve(__dirname, '..', '..');
 const upstreamPaths = resolveUpstreamPaths({
@@ -167,12 +167,12 @@ function buildRoutingSteps(args, routeProfile) {
 
   if (routeProfile === 'map-birth') {
     return {
-      nextCommand: `node ${upstreamCliPath.replace(/\\/g, '/')} guide create-map`,
+      nextCommand: buildNodeInvocationCommand(upstreamCliPath, ['guide', 'create-map']),
       steps: [
         {
           id: 'guide-map',
           title: 'Open the upstream create-map guide.',
-          command: `node ${upstreamCliPath.replace(/\\/g, '/')} guide create-map`,
+          command: buildNodeInvocationCommand(upstreamCliPath, ['guide', 'create-map']),
         },
       ],
     };

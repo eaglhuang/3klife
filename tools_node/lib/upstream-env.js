@@ -6,7 +6,11 @@ const path = require('node:path');
 const { ROOT } = require('./project-config');
 
 const DEFAULT_UPSTREAM_REPO_NAME = 'upstream-atm-repo';
-const UPSTREAM_CLI_RELATIVE_PATH = path.join('packages', 'cli', 'src', 'atm.mjs');
+const UPSTREAM_CLI_RELATIVE_CANDIDATES = [
+  path.join('packages', 'cli', 'dist', 'atm.mjs'),
+  path.join('packages', 'cli', 'src', 'atm.mjs'),
+  path.join('packages', 'cli', 'src', 'atm.ts'),
+];
 const UPSTREAM_REGISTRY_FILENAME = 'atomic-registry.json';
 
 function uniquePaths(paths = []) {
@@ -32,7 +36,7 @@ function hasUpstreamMarkers(repoRoot) {
     return false;
   }
   const root = path.resolve(repoRoot);
-  const hasCli = fs.existsSync(path.join(root, UPSTREAM_CLI_RELATIVE_PATH));
+  const hasCli = UPSTREAM_CLI_RELATIVE_CANDIDATES.some((candidate) => fs.existsSync(path.join(root, candidate)));
   const hasRegistry = fs.existsSync(path.join(root, UPSTREAM_REGISTRY_FILENAME));
   return hasCli && hasRegistry;
 }
@@ -74,6 +78,44 @@ function deriveRepoRootFromCliEntrypoint(cliEntrypoint) {
     return null;
   }
   return path.resolve(cliEntrypoint, '..', '..', '..', '..');
+}
+
+function resolveCliFromRepoRoot(repoRoot) {
+  const absoluteRoot = path.resolve(repoRoot);
+  for (const relativePath of UPSTREAM_CLI_RELATIVE_CANDIDATES) {
+    const candidate = path.join(absoluteRoot, relativePath);
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return path.join(absoluteRoot, UPSTREAM_CLI_RELATIVE_CANDIDATES[0]);
+}
+
+function shouldUseStripTypes(entrypoint) {
+  return String(entrypoint || '').toLowerCase().endsWith('.ts');
+}
+
+function buildNodeEntrypointArgs(entrypoint, args = []) {
+  const entry = path.resolve(entrypoint);
+  const extra = Array.isArray(args) ? args : [];
+  if (shouldUseStripTypes(entry)) {
+    return ['--experimental-strip-types', entry, ...extra];
+  }
+  return [entry, ...extra];
+}
+
+function toPosixPath(value) {
+  return String(value || '').replace(/\\/g, '/');
+}
+
+function buildNodeInvocationCommand(entrypoint, args = []) {
+  const entry = toPosixPath(path.resolve(entrypoint));
+  const commandParts = ['node'];
+  if (shouldUseStripTypes(entrypoint)) {
+    commandParts.push('--experimental-strip-types');
+  }
+  commandParts.push(entry, ...(args || []));
+  return commandParts.join(' ');
 }
 
 function resolveUpstreamRepoRoot(options = {}) {
@@ -144,7 +186,7 @@ function resolveUpstreamCliEntrypoint(options = {}) {
 
   const upstreamRepo = resolveUpstreamRepoRoot(options);
   return {
-    upstreamCliEntrypoint: path.resolve(upstreamRepo.upstreamRepoRoot, UPSTREAM_CLI_RELATIVE_PATH),
+    upstreamCliEntrypoint: resolveCliFromRepoRoot(upstreamRepo.upstreamRepoRoot),
     source: `derived:${upstreamRepo.source}`,
   };
 }
@@ -166,9 +208,12 @@ function resolveUpstreamPaths(options = {}) {
 
 module.exports = {
   DEFAULT_UPSTREAM_REPO_NAME,
-  UPSTREAM_CLI_RELATIVE_PATH,
+  UPSTREAM_CLI_RELATIVE_CANDIDATES,
   UPSTREAM_REGISTRY_FILENAME,
+  buildNodeEntrypointArgs,
+  buildNodeInvocationCommand,
   hasUpstreamMarkers,
+  resolveCliFromRepoRoot,
   resolveUpstreamCliEntrypoint,
   resolveUpstreamPaths,
   resolveUpstreamRepoRoot,

@@ -1,6 +1,6 @@
 {
-  "profileId": "3klife.shared-governance-surfaces.v1",
-  "version": 1,
+  "profileId": "3klife.shared-governance-surfaces.v2",
+  "version": 2,
   "editorHooks": {
     "manifests": [
       {
@@ -146,6 +146,11 @@
           {
             "name": "ATM flow (pr)",
             "entrypointKey": "ciPr"
+          },
+          {
+            "name": "ATM flow (release)",
+            "entrypointKey": "ciRelease",
+            "if": "github.event_name == 'push'"
           }
         ]
       }
@@ -173,6 +178,7 @@
     "pr": "node tools_node/atm-flow.js --mode pr --from-mode dev",
     "ciDriftCheck": "node tools_node/atomic-framework/atm-cli.js governance check --json --strict",
     "ciDev": "node tools_node/atm-flow.js --mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt",
-    "ciPr": "node tools_node/atm-flow.js --mode pr --from-mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt"
+    "ciPr": "node tools_node/atm-flow.js --mode pr --from-mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt",
+    "ciRelease": "node tools_node/atm-flow.js --mode release --from-mode pr --worktree-status-file artifacts/ci/atm-worktree-status.txt"
   }
 }

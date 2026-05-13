@@ -81,3 +81,7 @@ jobs:
       - name: ATM flow (pr)
         run: node tools_node/atm-flow.js --mode pr --from-mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt
 
+      - name: ATM flow (release)
+        if: ${{ github.event_name == 'push' }}
+        run: node tools_node/atm-flow.js --mode release --from-mode pr --worktree-status-file artifacts/ci/atm-worktree-status.txt
+

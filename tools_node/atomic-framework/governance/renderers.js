@@ -176,6 +176,9 @@ function renderWorkflow(workflow, gateEntrypoints) {
     }
     lines.push('');
     lines.push(`      - name: ${step.name}`);
+    if (step.if) {
+      lines.push(`        if: \${{ ${step.if} }}`);
+    }
     lines.push(`        run: ${command}`);
   }
 

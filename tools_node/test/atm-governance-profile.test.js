@@ -26,6 +26,14 @@ function testTrackedTargetsAreInSync() {
   assert.equal(report.drift.status, 'pass', 'tracked governance targets should be in sync');
 }
 
+function testReleaseSurfaceIsRendered() {
+  const report = runGovernanceCheck();
+  const workflowTarget = report.renderedTargets.find((target) => target && target.targetPath === '.github/workflows/atm-governance.yml');
+  assert.ok(workflowTarget, 'governance workflow target should exist');
+  assert.match(workflowTarget.content, /ATM flow \(release\)/, 'workflow should include release gate step');
+  assert.match(workflowTarget.content, /if: \$\{\{ github\.event_name == 'push' \}\}/, 'release gate should run only on push events');
+}
+
 function testInjectedDriftIsDetected() {
   const report = runGovernanceCheck({
     readFile(absolutePath) {
@@ -66,6 +74,7 @@ function testKickoffIncludesGovernanceCheck() {
 function main() {
   testRenderDeterminism();
   testTrackedTargetsAreInSync();
+  testReleaseSurfaceIsRendered();
   testInjectedDriftIsDetected();
   testDoctorGovernanceStatus();
   testKickoffIncludesGovernanceCheck();
