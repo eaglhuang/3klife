@@ -30,7 +30,7 @@ function buildWorktreeStatusFixture() {
 }
 
 function testKickoffDoctorFlowIntegration() {
-  const goal = '把 H2U 功能改好';
+  const goal = 'fix h2u launch flow';
   const worktreeStatusFile = buildWorktreeStatusFixture();
 
   const kickoffPlan = kickoff.buildPlan({
@@ -39,6 +39,7 @@ function testKickoffDoctorFlowIntegration() {
     mode: 'dev',
   });
   assert(kickoffPlan.routeProfile === 'h2u-fix', 'kickoff should classify as h2u-fix');
+  assert(kickoffPlan.steps.some((step) => step.id === 'governance-check'), 'kickoff should include governance check');
   assert(kickoffPlan.nextCommand.includes('--intent fix-h2u'), 'kickoff should route to fix-h2u intent');
   assert(kickoffPlan.steps.some((step) => step.id === 'doctor-h2u'), 'kickoff should include doctor-h2u step');
   assert(kickoffPlan.steps.some((step) => step.id === 'flow-dev'), 'kickoff should include flow-dev step');
@@ -62,6 +63,11 @@ function testKickoffDoctorFlowIntegration() {
     allowDirtyPrefixes: [],
   });
   assert(typeof flowProbe.command === 'string' && flowProbe.command.includes('tools_node/atm-flow.js'), 'doctor should probe atm-flow');
+
+  const governanceProbe = doctor.runGovernanceDoctor({
+    checkGovernanceDrift: true,
+  });
+  assert(governanceProbe && governanceProbe.drift.status === 'pass', 'doctor governance drift should pass on synced targets');
 
   const flowReport = atmFlow.runFlow({
     mode: 'dev',

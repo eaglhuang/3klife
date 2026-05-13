@@ -98,5 +98,66 @@
       ]
     },
     "completed_at": "2026-05-06T16:34:31+08:00"
+  },
+  {
+    "doc_id": "doc_task_0374",
+    "id": "ATM-2-0056",
+    "title": "Single-source governance profile for shared enforcement surfaces",
+    "owner": "codex-desktop",
+    "priority": "P1",
+    "status": "done",
+    "type": "governance",
+    "phase": "ATM-2",
+    "created": "2026-05-13",
+    "created_by_agent": "codex-desktop",
+    "started_at": "2026-05-13T11:28:48+08:00",
+    "started_by_agent": "codex-desktop",
+    "chain_id": "",
+    "chain_step": "",
+    "sensor_triggered_by": "",
+    "description": "將 3KLife 目前分散在 editor hook manifest、git pre-commit、CI workflow 與 doctor drift check 的共享治理表面，收斂為一份 host-owned canonical governance profile，並由 ATM renderer/checker 生成與驗證，避免再手工維護多套平行設定。",
+    "related": [
+      "ATM-2-0055",
+      "ATM-3-0012",
+      "ATM-3-0013"
+    ],
+    "depends": [
+      "ATM-2-0055",
+      "ATM-3-0012"
+    ],
+    "acceptance": [
+      "新增 host-owned canonical governance profile，描述 editorHooks/gitHooks/ci/doctor/gateEntrypoints 五個區塊",
+      "新增 governance render/check，能 deterministic 生成 token-guard manifest、.githooks/pre-commit、ATM Governance workflow",
+      "doctor --check-governance-drift 能回傳 pass/drift/advisory-local-only/blocked-by-portability，且 kickoff 先檢查 profile 漂移再進 routing",
+      "v1 只治理 repo-shareable 表面，不納入 .claude/settings.local.json 等本機私人設定，release surface 暫不生成"
+    ],
+    "deliverables": [
+      "tools_node/adapters/atm-3klife/governance-profile.json",
+      "tools_node/atomic-framework/governance/* renderer/checker modules",
+      "atm-cli/doctor/kickoff integration",
+      "generated token-guard manifest、.githooks/pre-commit、ATM Governance workflow parity tests"
+    ],
+    "notes": "2026-05-13 | 狀態: in-progress | 驗證: pending | 變更: 接手 single-source governance profile 收斂，將 shared governance surfaces 改由 canonical profile + renderer/checker 驅動 | 阻塞: none\\n2026-05-13 | 狀態: done | 驗證: governance check --json --strict ✅；atm governance profile/onboarding/kickoff-doctor tests ✅；atm-flow dev (scoped snapshot) ✅；atm-flow pr 因 repo 既有 dirty files 超出 ATM-2-0056 scope 而阻擋，非本卡新增 | 變更: 新增 governance-profile.json、governance render/check、doctor/kickoff governance drift 接線，並將 token-guard/pre-commit/ATM Governance workflow 改由 canonical profile 生成 | 阻塞: repo 內既有 battle-hud-screen meta、examples/liu-bei-memory-intent-game 與 npc-brain dirty files 仍會讓 full worktree compute-gate standard fail",
+    "brief": {
+      "style": "classic",
+      "label": "",
+      "summary": "",
+      "position": "",
+      "prereq": ""
+    },
+    "contracts": {
+      "input": [],
+      "output": [],
+      "validation_cmd": "",
+      "rollback_hint": "",
+      "execution_steps": []
+    },
+    "harness_evidence": {
+      "artifact_paths": [],
+      "validation_evidence": [],
+      "handoff_diff_status": "",
+      "trace_artifacts": [],
+      "metrics_summary": []
+    }
   }
 ]

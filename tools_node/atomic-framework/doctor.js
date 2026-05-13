@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 'use strict';
 
+const fs = require('node:fs');
 const path = require('node:path');
 const cp = require('node:child_process');
+
+const { buildGovernanceReport } = require('./governance/checker');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const VALID_MODES = new Set(['dev', 'pr', 'release']);
@@ -24,14 +27,20 @@ function normalizePath(input) {
 
 function uniquePaths(items) {
   const seen = new Set();
-  const out = [];
+  const output = [];
   for (const item of items || []) {
     const value = normalizePath(item).trim();
-    if (!value || seen.has(value)) continue;
+    if (!value || seen.has(value)) {
+      continue;
+    }
     seen.add(value);
-    out.push(value);
+    output.push(value);
   }
-  return out;
+  return output;
+}
+
+function uniqueList(items) {
+  return Array.from(new Set((items || []).map((item) => String(item || '').trim()).filter(Boolean)));
 }
 
 function parseGitStatusLines(text) {
@@ -55,6 +64,7 @@ function parseArgs(argv = process.argv.slice(2)) {
     json: false,
     worktreeStatusFile: '',
     allowDirtyPrefixes: [],
+    checkGovernanceDrift: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -79,7 +89,13 @@ function parseArgs(argv = process.argv.slice(2)) {
     }
     if (token === '--allow-dirty-prefix') {
       const value = String(next() || '').trim();
-      if (value) state.allowDirtyPrefixes.push(value);
+      if (value) {
+        state.allowDirtyPrefixes.push(value);
+      }
+      continue;
+    }
+    if (token === '--check-governance-drift') {
+      state.checkGovernanceDrift = true;
       continue;
     }
     if (token === '--json') {
@@ -105,11 +121,12 @@ function printUsage() {
     'Usage: node tools_node/atomic-framework/doctor.js [options]',
     '',
     'Options:',
-    '  --goal <text>                  Optional natural-language goal.',
-    '  --mode <dev|pr|release>       Flow mode for diagnostics (default: dev).',
-    '  --from-mode <mode>            Optional escalation hint for atm-flow.',
-    '  --worktree-status-file <path> Optional fallback git-status snapshot.',
-    '  --allow-dirty-prefix <path>   Forwarded to strict H2U validators (repeatable).',
+    '  --goal <text>                   Optional natural-language goal.',
+    '  --mode <dev|pr|release>        Flow mode for diagnostics (default: dev).',
+    '  --from-mode <mode>             Optional escalation hint for atm-flow.',
+    '  --worktree-status-file <path>  Optional fallback git-status snapshot.',
+    '  --allow-dirty-prefix <path>    Forwarded to strict H2U validators (repeatable).',
+    '  --check-governance-drift       Compare canonical governance surfaces against governance-profile.json.',
     '  --json                         Emit machine-readable result.',
   ].join('\n') + '\n');
 }
@@ -117,12 +134,12 @@ function printUsage() {
 function detectChangedFiles(args) {
   if (args.worktreeStatusFile) {
     try {
-      const absolute = path.isAbsolute(args.worktreeStatusFile)
+      const absolutePath = path.isAbsolute(args.worktreeStatusFile)
         ? args.worktreeStatusFile
         : path.resolve(ROOT, args.worktreeStatusFile);
-      const output = require('node:fs').readFileSync(absolute, 'utf8');
+      const output = fs.readFileSync(absolutePath, 'utf8');
       return {
-        source: `worktree-status-file:${normalizePath(path.relative(ROOT, absolute))}`,
+        source: `worktree-status-file:${normalizePath(path.relative(ROOT, absolutePath))}`,
         error: '',
         files: uniquePaths(parseGitStatusLines(output)),
       };
@@ -226,11 +243,22 @@ function runAtmFlowDoctor(args) {
   };
 }
 
-function buildGuidance(profile, flow, changed, mode) {
+function runGovernanceDoctor(args) {
+  if (!args.checkGovernanceDrift) {
+    return null;
+  }
+  return buildGovernanceReport();
+}
+
+function buildAtmFlowGuidance(profile, flow, changed, mode) {
   const fallback = 'node tools_node/atm-flow.js --mode dev --json';
-  const nextCommand = flow.report?.userFacing?.nextCommand || fallback;
-  const why = flow.report?.userFacing?.why || (flow.ok ? '目前 gate 可跑。' : 'atm-flow 沒有回傳標準診斷。');
-  const blockedAt = flow.report?.userFacing?.blockedAt || '';
+  const nextCommand = flow.report && flow.report.userFacing && flow.report.userFacing.nextCommand
+    ? flow.report.userFacing.nextCommand
+    : fallback;
+  const why = flow.report && flow.report.userFacing && flow.report.userFacing.why
+    ? flow.report.userFacing.why
+    : (flow.ok ? 'atm-flow diagnostics are ready.' : 'atm-flow reported a blocker that needs attention.');
+  const blockedAt = flow.report && flow.report.userFacing ? flow.report.userFacing.blockedAt || '' : '';
   const fallbackSnapshot = 'git status --short > artifacts/legacy-h2u-first-win/worktree-status.txt';
   const fallbackWithSnapshot = `node tools_node/atm-flow.js --mode ${mode} --worktree-status-file artifacts/legacy-h2u-first-win/worktree-status.txt --json`;
   const sawEperm = /eperm/i.test(String(changed.error || ''))
@@ -240,7 +268,7 @@ function buildGuidance(profile, flow, changed, mode) {
   if (sawEperm) {
     return {
       blockedAt: blockedAt || 'environment-permission',
-      why: '執行環境阻擋即時 git/node child process（EPERM），請先產生 worktree snapshot 再跑 flow。',
+      why: 'Git or Node child-process access hit EPERM, so doctor is falling back to a worktree snapshot flow.',
       nextCommand: fallbackSnapshot,
       afterNext: [
         fallbackWithSnapshot,
@@ -253,18 +281,91 @@ function buildGuidance(profile, flow, changed, mode) {
 
   const afterNext = profile === 'h2u-fix'
     ? [
-        'node tools_node/validate-legacy-h2u-launch.js --strict',
-        'node tools_node/validate-legacy-h2u-first-win.js --strict --require-worktree-check',
-      ]
+      'node tools_node/validate-legacy-h2u-launch.js --strict',
+      'node tools_node/validate-legacy-h2u-first-win.js --strict --require-worktree-check',
+    ]
     : [
-        'npm run atm:flow -- --mode pr --from-mode dev',
-      ];
+      'npm run atm:flow -- --mode pr --from-mode dev',
+    ];
 
   return {
     blockedAt,
     why,
     nextCommand,
     afterNext,
+  };
+}
+
+function applyGovernanceGuidance(userFacing, governance) {
+  if (!governance) {
+    return userFacing;
+  }
+
+  const governanceCheckCommand = 'node tools_node/atomic-framework/atm-cli.js governance check --json';
+  const doctorStatus = governance.overall.doctorStatus;
+
+  if (doctorStatus === 'drift') {
+    return {
+      blockedAt: 'governance-drift',
+      why: 'Canonical shared governance surfaces drifted away from governance-profile.json.',
+      nextCommand: 'node tools_node/atomic-framework/atm-cli.js governance render',
+      afterNext: uniqueList([
+        `${governanceCheckCommand} --strict`,
+        userFacing.nextCommand,
+        ...userFacing.afterNext,
+      ]),
+    };
+  }
+
+  if (doctorStatus === 'blocked-by-portability') {
+    return {
+      blockedAt: userFacing.blockedAt || 'release-portability',
+      why: `${userFacing.why} Shared governance surfaces are in sync, but release portability is still blocked by sibling AI-Atomic-Framework path assumptions.`,
+      nextCommand: userFacing.nextCommand,
+      afterNext: uniqueList([
+        governanceCheckCommand,
+        ...userFacing.afterNext,
+      ]),
+    };
+  }
+
+  if (doctorStatus === 'advisory-local-only') {
+    return {
+      blockedAt: userFacing.blockedAt,
+      why: `${userFacing.why} Local editor-private governance settings exist outside the canonical shared profile.`,
+      nextCommand: userFacing.nextCommand,
+      afterNext: uniqueList([
+        governanceCheckCommand,
+        ...userFacing.afterNext,
+      ]),
+    };
+  }
+
+  return {
+    blockedAt: userFacing.blockedAt,
+    why: `${userFacing.why} Canonical shared governance surfaces are in sync.`,
+    nextCommand: userFacing.nextCommand,
+    afterNext: uniqueList([
+      governanceCheckCommand,
+      ...userFacing.afterNext,
+    ]),
+  };
+}
+
+function summarizeGovernance(governance) {
+  if (!governance) {
+    return {
+      enabled: false,
+    };
+  }
+  return {
+    enabled: true,
+    profileRelPath: governance.profileRelPath,
+    driftStatus: governance.drift.status,
+    localSurfaceStatus: governance.localSurfaces.status,
+    portabilityStatus: governance.portability.status,
+    doctorStatus: governance.overall.doctorStatus,
+    mismatches: governance.drift.mismatches.map((item) => item.targetPath),
   };
 }
 
@@ -285,6 +386,11 @@ function renderMarkdown(result) {
     lines.push(`- Blocked at: ${result.userFacing.blockedAt}`);
   }
 
+  if (result.governance && result.governance.enabled) {
+    lines.push(`- Governance drift: ${result.governance.driftStatus}`);
+    lines.push(`- Governance portability: ${result.governance.portabilityStatus}`);
+  }
+
   lines.push('', '## After Next');
   for (const command of result.userFacing.afterNext) {
     lines.push(`- ${command}`);
@@ -303,7 +409,11 @@ function main(argv = process.argv.slice(2)) {
   const areas = classifyAreas(changed.files);
   const routeProfile = classifyGoal(args.goal, areas);
   const flow = runAtmFlowDoctor(args);
-  const userFacing = buildGuidance(routeProfile, flow, changed, args.mode);
+  const governance = runGovernanceDoctor(args);
+  const userFacing = applyGovernanceGuidance(
+    buildAtmFlowGuidance(routeProfile, flow, changed, args.mode),
+    governance
+  );
 
   const result = {
     ok: true,
@@ -320,6 +430,7 @@ function main(argv = process.argv.slice(2)) {
       command: flow.command,
       parseOk: Boolean(flow.report),
     },
+    governance: summarizeGovernance(governance),
     userFacing,
   };
 
@@ -341,10 +452,13 @@ if (require.main === module) {
 }
 
 module.exports = {
+  applyGovernanceGuidance,
+  buildAtmFlowGuidance,
   classifyAreas,
   classifyGoal,
   detectChangedFiles,
   main,
   parseArgs,
   runAtmFlowDoctor,
+  runGovernanceDoctor,
 };

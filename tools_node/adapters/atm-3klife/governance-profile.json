@@ -1,0 +1,197 @@
+{
+  "profileId": "3klife.shared-governance-surfaces.v1",
+  "version": 1,
+  "editorHooks": {
+    "manifests": [
+      {
+        "id": "copilot-token-guard",
+        "targetPath": ".github/hooks/token-guard.json",
+        "hooks": [
+          {
+            "stage": "SessionStart",
+            "entries": [
+              {
+                "type": "command",
+                "command": "node .github/hooks/scripts/session-start.js",
+                "windows": "node .github/hooks/scripts/session-start.js",
+                "timeout": 10
+              }
+            ]
+          },
+          {
+            "stage": "PreToolUse",
+            "entries": [
+              {
+                "type": "command",
+                "command": "node .github/hooks/scripts/pre-tool-guard.js",
+                "windows": "node .github/hooks/scripts/pre-tool-guard.js",
+                "timeout": 10
+              }
+            ]
+          },
+          {
+            "stage": "PostToolUse",
+            "entries": [
+              {
+                "type": "command",
+                "command": "node .github/hooks/scripts/post-encode-check.js",
+                "windows": "node .github/hooks/scripts/post-encode-check.js",
+                "timeout": 20
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "gitHooks": {
+    "preCommit": {
+      "id": "shared-pre-commit",
+      "targetPath": ".githooks/pre-commit",
+      "shell": "/bin/sh",
+      "steps": [
+        {
+          "id": "encoding-integrity",
+          "kind": "always",
+          "run": "node tools_node/check-encoding-integrity.js --staged",
+          "failMessages": [
+            "pre-commit blocked: encoding integrity check failed."
+          ]
+        },
+        {
+          "id": "ui-spec-validation",
+          "kind": "staged-match",
+          "variableName": "STAGED_UI_SPEC",
+          "diffFilter": "ACMR",
+          "grepFlag": "",
+          "patternLines": [
+            "^assets/resources/ui-spec/.*\\.json$"
+          ],
+          "announce": "[pre-commit] staged ui-spec changes detected; running validate-ui-specs",
+          "run": "node tools_node/validate-ui-specs.js",
+          "failMessages": [
+            "pre-commit blocked: ui-spec validation failed."
+          ]
+        },
+        {
+          "id": "architecture-governance",
+          "kind": "staged-match",
+          "comment": "Architecture governance: run when Overview-related source files change",
+          "variableName": "STAGED_GOVERNANCE",
+          "diffFilter": "ACMR",
+          "grepFlag": "-E",
+          "multiline": true,
+          "patternLines": [
+            "^assets/scripts/ui/(components/GeneralDetail|components/GeneralDetailOverviewShell|scenes/LoadingScene)\\.ts$"
+          ],
+          "announce": "[pre-commit] GeneralDetail/LoadingScene changes detected; running architecture governance test",
+          "run": "node node_modules/ts-node/dist/bin.js --project tsconfig.test.json tests/run-ucuf-only.ts --suite governance",
+          "failMessages": [
+            "pre-commit blocked: architecture governance test failed.",
+            "  Fix: update tests/ucuf/architectureGovernance.test.ts to match current architecture,",
+            "       or fix the broken invariant in the source files."
+          ]
+        },
+        {
+          "id": "tasks-atm-shard-health",
+          "kind": "staged-match",
+          "variableName": "STAGED_TASKS_ATM",
+          "diffFilter": "ACMR",
+          "grepFlag": "-E",
+          "multiline": true,
+          "patternLines": [
+            "^docs/tasks/tasks-atm(\\.json|/\\.shardrc\\.json|/tasks-atm-part-[0-9]+\\.json)$"
+          ],
+          "announce": "[pre-commit] tasks-atm shard changes detected; running doc shard health check",
+          "run": "node tools_node/check-doc-shard-health.js",
+          "failMessages": [
+            "pre-commit blocked: doc shard health check failed.",
+            "  Fix: run node tools_node/rebuild-tasks-atm-auto-parts.js and re-stage the refreshed index/parts."
+          ]
+        }
+      ]
+    }
+  },
+  "ci": {
+    "workflows": [
+      {
+        "id": "atm-governance",
+        "targetPath": ".github/workflows/atm-governance.yml",
+        "name": "ATM Governance",
+        "branches": {
+          "pullRequest": [
+            "main",
+            "master"
+          ],
+          "push": [
+            "main",
+            "master"
+          ]
+        },
+        "nodeVersion": "22",
+        "changedFiles": {
+          "artifactDir": "artifacts/ci",
+          "changedFilesPath": "artifacts/ci/atm-changed-files.txt",
+          "worktreeStatusPath": "artifacts/ci/atm-worktree-status.txt"
+        },
+        "steps": [
+          {
+            "name": "Governance drift check",
+            "entrypointKey": "ciDriftCheck"
+          },
+          {
+            "name": "ATM flow (dev)",
+            "entrypointKey": "ciDev"
+          },
+          {
+            "name": "ATM flow (pr)",
+            "entrypointKey": "ciPr"
+          }
+        ]
+      }
+    ]
+  },
+  "doctor": {
+    "advisoryLocalSurfaces": [
+      {
+        "id": "claude-local-settings",
+        "path": ".claude/settings.local.json",
+        "status": "not-canonical",
+        "label": "Local Claude permission settings stay outside the canonical governance profile."
+      },
+      {
+        "id": "codex-hooks-local",
+        "path": "codex_hooks",
+        "status": "not-canonical",
+        "label": "Codex editor-local hook settings stay outside the canonical governance profile."
+      }
+    ],
+    "portabilityBlockers": [
+      {
+        "id": "release-upstream-sibling-path",
+        "label": "Release governance still depends on sibling AI-Atomic-Framework paths.",
+        "probes": [
+          {
+            "path": "tools_node/adapters/atm-3klife/atm.config.js",
+            "pattern": "AI-Atomic-Framework"
+          },
+          {
+            "path": "tools_node/atomic-framework/kickoff.js",
+            "pattern": "AI-Atomic-Framework"
+          },
+          {
+            "path": "tools_node/validate-registry-sidecar-convergence.js",
+            "pattern": "AI-Atomic-Framework"
+          }
+        ]
+      }
+    ]
+  },
+  "gateEntrypoints": {
+    "dev": "node tools_node/atm-flow.js --mode dev",
+    "pr": "node tools_node/atm-flow.js --mode pr --from-mode dev",
+    "ciDriftCheck": "node tools_node/atomic-framework/atm-cli.js governance check --json --strict",
+    "ciDev": "node tools_node/atm-flow.js --mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt",
+    "ciPr": "node tools_node/atm-flow.js --mode pr --from-mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt"
+  }
+}

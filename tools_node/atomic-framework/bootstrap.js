@@ -360,6 +360,10 @@ function runAtmCli(argv = process.argv.slice(2), overrides = {}) {
     return runLocalScript('kickoff.js', parsed.args, config);
   }
 
+  if (commandName === 'governance') {
+    return runLocalScript('governance.js', parsed.args, config);
+  }
+
   return runUpstreamCommand(commandName, parsed.command ? parsed.args : parsed.args, config);
 }
 

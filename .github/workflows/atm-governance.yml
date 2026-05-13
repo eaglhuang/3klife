@@ -72,8 +72,12 @@ jobs:
           echo "head_sha=${head_sha}" >> "${GITHUB_OUTPUT}"
           echo "changed_count=$(wc -l < artifacts/ci/atm-changed-files.txt | tr -d ' ')" >> "${GITHUB_OUTPUT}"
 
+      - name: Governance drift check
+        run: node tools_node/atomic-framework/atm-cli.js governance check --json --strict
+
       - name: ATM flow (dev)
         run: node tools_node/atm-flow.js --mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt
 
       - name: ATM flow (pr)
         run: node tools_node/atm-flow.js --mode pr --from-mode dev --worktree-status-file artifacts/ci/atm-worktree-status.txt
+

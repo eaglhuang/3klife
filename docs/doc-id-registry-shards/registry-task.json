@@ -2188,5 +2188,11 @@
     "path": "docs/agent-briefs/tasks/ATM/ATM-2-0055.md",
     "title": "[ATM-2-0055] Agent identity entry hardening for task lock flow",
     "category": "task"
+  },
+  {
+    "id": "doc_task_0374",
+    "path": "docs/agent-briefs/tasks/ATM/ATM-2-0056.md",
+    "title": "[ATM-2-0056] Single-source governance profile for shared enforcement surfaces",
+    "category": "task"
   }
 ]

@@ -3,6 +3,8 @@
 
 const path = require('node:path');
 
+const { buildGovernanceReport } = require('./governance/checker');
+
 const projectRoot = path.resolve(__dirname, '..', '..');
 const upstreamCliPath = path.join(projectRoot, '..', 'AI-Atomic-Framework', 'packages', 'cli', 'src', 'atm.mjs');
 
@@ -71,14 +73,16 @@ function printUsage() {
     '',
     'Options:',
     '  --task <task-id>               Optional task card id.',
-    '  --mode <dev|pr|release>        Initial flow mode for doctor (default: dev).',
-    '  --json                         Emit machine-readable result.',
+    '  --mode <dev|pr|release>       Initial flow mode for doctor (default: dev).',
+    '  --json                        Emit machine-readable result.',
   ].join('\n') + '\n');
 }
 
 function inferTitle(goal) {
   const tokens = normalizeText(goal).split(/\s+/).filter(Boolean);
-  if (tokens.length === 0) return 'CreateAtom';
+  if (tokens.length === 0) {
+    return 'CreateAtom';
+  }
   const seed = tokens.slice(0, 5).join(' ');
   return seed
     .replace(/[^A-Za-z0-9 ]+/g, ' ')
@@ -90,9 +94,15 @@ function inferTitle(goal) {
 
 function classifyGoal(goal) {
   const text = normalizeText(goal).toLowerCase();
-  if (/h2u|html-to-ucuf|legacy/.test(text)) return 'h2u-fix';
-  if (/create-map|map|atomic map|映射/.test(text)) return 'map-birth';
-  if (/create|new|build|atom|原子|capsule/.test(text)) return 'atom-birth';
+  if (/h2u|html-to-ucuf|legacy/.test(text)) {
+    return 'h2u-fix';
+  }
+  if (/create-map|map|atomic map/.test(text)) {
+    return 'map-birth';
+  }
+  if (/create|new|build|atom|capsule/.test(text)) {
+    return 'atom-birth';
+  }
   return 'generic';
 }
 
@@ -100,89 +110,167 @@ function escapeDoubleQuotes(value) {
   return String(value || '').replace(/"/g, '\\"');
 }
 
-function buildPlan(args) {
-  const routeProfile = classifyGoal(args.goal);
-  const steps = [];
-  let nextCommand = '';
+function probeGovernance() {
+  try {
+    return buildGovernanceReport();
+  } catch {
+    return null;
+  }
+}
+
+function buildRoutingSteps(args, routeProfile) {
   const safeGoal = escapeDoubleQuotes(args.goal);
   const safeTitle = inferTitle(args.goal);
 
-  steps.push({
-    id: 'identity-gate',
-    title: '先對齊 Agent 身分（AGENT_IDENTITY + repo-local git identity）',
-    command: 'node tools_node/agent-identity.js ensure --write-git',
-  });
-
   if (args.task) {
-    nextCommand = `node tools_node/atomic-framework/task-router.js --task ${args.task} --format markdown`;
-    steps.push({
-      id: 'route-task',
-      title: '先走 task-router（task 驅動）',
-      command: nextCommand,
-    });
-  } else if (routeProfile === 'h2u-fix') {
-    nextCommand = `node tools_node/atomic-framework/task-router.js --intent fix-h2u --goal "${safeGoal}" --format markdown`;
-    steps.push({
-      id: 'route-intent-fix-h2u',
-      title: '先走 fix-h2u intent route（no-task-card）',
-      command: nextCommand,
-    });
-  } else if (routeProfile === 'atom-birth') {
-    nextCommand = `node tools_node/atomic-framework/task-router.js --intent create-atom --title ${safeTitle} --description "${safeGoal}" --format markdown`;
-    steps.push({
-      id: 'route-intent',
-      title: '先走 intent route（no-task-card）',
-      command: nextCommand,
-    });
-  } else if (routeProfile === 'map-birth') {
-    nextCommand = `node ${upstreamCliPath.replace(/\\/g, '/')} guide create-map`;
-    steps.push({
-      id: 'guide-map',
-      title: '讀 upstream create-map guide',
-      command: nextCommand,
-    });
-  } else {
-    nextCommand = `node tools_node/atomic-framework/doctor.js --goal "${safeGoal}" --mode ${args.mode} --json`;
-    steps.push({
-      id: 'doctor-first',
-      title: '先跑 doctor 取當前 lane 的下一步',
-      command: nextCommand,
-    });
+    return {
+      nextCommand: `node tools_node/atomic-framework/task-router.js --task ${args.task} --format markdown`,
+      steps: [
+        {
+          id: 'route-task',
+          title: 'Route directly from task id.',
+          command: `node tools_node/atomic-framework/task-router.js --task ${args.task} --format markdown`,
+        },
+      ],
+    };
   }
 
   if (routeProfile === 'h2u-fix') {
+    return {
+      nextCommand: `node tools_node/atomic-framework/task-router.js --intent fix-h2u --goal "${safeGoal}" --format markdown`,
+      steps: [
+        {
+          id: 'route-intent-fix-h2u',
+          title: 'Route through the fix-h2u intent taxonomy.',
+          command: `node tools_node/atomic-framework/task-router.js --intent fix-h2u --goal "${safeGoal}" --format markdown`,
+        },
+      ],
+    };
+  }
+
+  if (routeProfile === 'atom-birth') {
+    return {
+      nextCommand: `node tools_node/atomic-framework/task-router.js --intent create-atom --title ${safeTitle} --description "${safeGoal}" --format markdown`,
+      steps: [
+        {
+          id: 'route-intent',
+          title: 'Route through the create-atom intent.',
+          command: `node tools_node/atomic-framework/task-router.js --intent create-atom --title ${safeTitle} --description "${safeGoal}" --format markdown`,
+        },
+      ],
+    };
+  }
+
+  if (routeProfile === 'map-birth') {
+    return {
+      nextCommand: `node ${upstreamCliPath.replace(/\\/g, '/')} guide create-map`,
+      steps: [
+        {
+          id: 'guide-map',
+          title: 'Open the upstream create-map guide.',
+          command: `node ${upstreamCliPath.replace(/\\/g, '/')} guide create-map`,
+        },
+      ],
+    };
+  }
+
+  return {
+    nextCommand: `node tools_node/atomic-framework/doctor.js --goal "${safeGoal}" --mode ${args.mode} --json`,
+    steps: [
+      {
+        id: 'doctor-first',
+        title: 'Run doctor first to pick the right lane.',
+        command: `node tools_node/atomic-framework/doctor.js --goal "${safeGoal}" --mode ${args.mode} --json`,
+      },
+    ],
+  };
+}
+
+function buildPlan(args) {
+  const routeProfile = classifyGoal(args.goal);
+  const governance = probeGovernance();
+  const governanceStatus = governance ? governance.overall.doctorStatus : 'pass';
+  const routing = buildRoutingSteps(args, routeProfile);
+  const steps = [
+    {
+      id: 'identity-gate',
+      title: 'Align AGENT_IDENTITY and repo-local git identity.',
+      command: 'node tools_node/agent-identity.js ensure --write-git',
+    },
+  ];
+
+  if (governance) {
     steps.push({
-      id: 'doctor-h2u',
-      title: '跑 doctor 取得當前 lane 的實際下一步',
-      command: `node tools_node/atomic-framework/doctor.js --goal "${safeGoal}" --mode dev --json`,
+      id: 'governance-check',
+      title: 'Check canonical shared governance surfaces.',
+      command: 'node tools_node/atomic-framework/atm-cli.js governance check --json',
     });
-    steps.push({
-      id: 'h2u-launch-gate',
-      title: '跑 H2U 首戰 launch gate',
-      command: 'node tools_node/validate-legacy-h2u-launch.js --strict',
-    });
-    steps.push({
-      id: 'flow-dev',
-      title: '跑 ATM dev gate',
-      command: 'node tools_node/atm-flow.js --mode dev --json',
-    });
+    if (governanceStatus === 'drift') {
+      steps.push({
+        id: 'governance-render',
+        title: 'Re-render shared governance surfaces from the canonical profile.',
+        command: 'node tools_node/atomic-framework/atm-cli.js governance render',
+      });
+    }
+  }
+
+  steps.push(...routing.steps);
+
+  if (routeProfile === 'h2u-fix') {
+    steps.push(
+      {
+        id: 'doctor-h2u',
+        title: 'Run doctor on the H2U lane.',
+        command: `node tools_node/atomic-framework/doctor.js --goal "${escapeDoubleQuotes(args.goal)}" --mode dev --check-governance-drift --json`,
+      },
+      {
+        id: 'h2u-launch-gate',
+        title: 'Run the H2U launch gate.',
+        command: 'node tools_node/validate-legacy-h2u-launch.js --strict',
+      },
+      {
+        id: 'flow-dev',
+        title: 'Run the ATM dev gate.',
+        command: 'node tools_node/atm-flow.js --mode dev --json',
+      }
+    );
   } else {
     steps.push({
       id: 'flow-dev',
-      title: '跑 ATM dev gate',
+      title: 'Run the ATM dev gate.',
       command: 'node tools_node/atm-flow.js --mode dev --json',
     });
+  }
+
+  const guardrails = [
+    'Keep governance generation limited to shared repo-tracked surfaces.',
+    'Do not absorb H2U, UCUF, or Cocos domain rules into ATM core.',
+    'Treat release portability as adapter-scoped until sibling upstream path assumptions are removed.',
+  ];
+
+  if (governanceStatus === 'drift') {
+    guardrails.unshift('Fix governance drift before routing new work through stale shared surfaces.');
+  } else if (governanceStatus === 'blocked-by-portability') {
+    guardrails.push('Release portability is still blocked by sibling AI-Atomic-Framework path assumptions.');
+  } else if (governanceStatus === 'advisory-local-only') {
+    guardrails.push('Local editor-private settings remain advisory and outside the canonical shared profile.');
   }
 
   return {
     routeProfile,
-    nextCommand,
+    nextCommand: governanceStatus === 'drift'
+      ? 'node tools_node/atomic-framework/atm-cli.js governance render'
+      : routing.nextCommand,
     steps,
-    guardrails: [
-      '先拿下一步命令，不要直接改主幹。',
-      '先 dry-run / gate，再做 apply。',
-      '若 gate 回傳 blocker，先解 blocker 再前進。',
-    ],
+    guardrails,
+    governance: governance
+      ? {
+        profileRelPath: governance.profileRelPath,
+        doctorStatus: governance.overall.doctorStatus,
+        driftStatus: governance.drift.status,
+        portabilityStatus: governance.portability.status,
+      }
+      : null,
   };
 }
 
@@ -194,9 +282,13 @@ function renderMarkdown(result) {
     `- routeProfile: ${result.routeProfile}`,
     '- Identity gate: node tools_node/agent-identity.js ensure --write-git',
     `- Next: ${result.nextCommand}`,
-    '',
-    '## Steps',
   ];
+
+  if (result.governance) {
+    lines.push(`- Governance status: ${result.governance.doctorStatus}`);
+  }
+
+  lines.push('', '## Steps');
   for (const step of result.steps) {
     lines.push(`- ${step.id}: ${step.title}`);
     lines.push(`  ${step.command}`);
@@ -223,6 +315,7 @@ function main(argv = process.argv.slice(2)) {
     nextCommand: plan.nextCommand,
     steps: plan.steps,
     guardrails: plan.guardrails,
+    governance: plan.governance,
   };
 
   if (args.format === 'json') {
@@ -249,4 +342,5 @@ module.exports = {
   inferTitle,
   main,
   parseArgs,
+  toKebabCase,
 };
