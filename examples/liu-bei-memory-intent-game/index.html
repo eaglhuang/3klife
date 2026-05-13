@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:,">
-  <title>劉備回憶意圖劇場</title>
+  <title>人物回憶意圖劇場</title>
   <style>
     :root {
       --ink: #1c211c;
@@ -729,7 +729,7 @@
       </div>
       <div class="status-card">
         <strong id="dataModeValue">資料偵測中</strong>
-        <span id="dataModeHint">優先連到 npc-brain narrative profile API；如果 API 沒開，會自動退回示範資料。</span>
+          <span id="dataModeHint">優先連到 npc-brain narrative profile API；未回傳資料前不會套用本機模板。</span>
       </div>
     </header>
 
@@ -737,11 +737,11 @@
       <aside>
         <section class="panel profile">
           <div class="portrait-wrap">
-            <img class="portrait" src="../../assets/resources/sprites/generals/liu_bei_portrait.png" alt="劉備肖像" onerror="this.style.display='none';">
+            <img class="portrait" src="../../assets/resources/sprites/generals/liu_bei_portrait.png" alt="人物肖像" onerror="this.style.display='none';">
           </div>
           <div class="profile-body">
             <div class="profile-title">
-              <h2 id="profileName">劉備</h2>
+              <h2 id="profileName">人物</h2>
               <span class="grade" id="profileGrade">A-romance</span>
             </div>
             <ul class="trait-list" id="traitList"></ul>
@@ -793,8 +793,8 @@
       <section class="panel stage">
         <div class="stage-header">
           <div>
-            <h2 id="sceneTitle">營火未熄，劉備正在聽風</h2>
-            <p class="stage-note" id="sceneNote">請先選擇一個角度與互動對象。這個頁面會慢慢把劉備的心事與下一步行動演出來。</p>
+            <h2 id="sceneTitle">劇情待啟</h2>
+            <p class="stage-note" id="sceneNote">請先選擇一個角度與互動對象。頁面會依據 npc-brain 回傳的證據逐幕生成敘事。</p>
           </div>
           <span class="source-badge" id="sourceBadge">等待資料</span>
         </div>
@@ -802,7 +802,7 @@
         <section class="stage-showcase">
           <article class="current-scene">
             <div class="scene-meta" id="sceneMeta"></div>
-            <p class="scene-text" id="sceneText">劉備立在帳前，聽見遠處巡哨回報，卻沒有立刻下令。他只是把手按在案邊，像是在等某段舊事自己慢慢浮上來。</p>
+            <p class="scene-text" id="sceneText">等待第一幕資料。</p>
           </article>
 
           <aside class="scene-visual">
@@ -812,7 +812,7 @@
             </div>
             <div class="visual-frame">
               <img id="illustrationImage" alt="本幕插圖" hidden>
-              <div class="visual-placeholder" id="illustrationPlaceholder">等待第一幕。<br>一旦劇情開始，右側會直接向圖像 LLM 送出構圖 prompt，生成這一幕的劉備插圖。</div>
+              <div class="visual-placeholder" id="illustrationPlaceholder">等待第一幕。<br>一旦劇情開始，右側會直接向圖像 LLM 送出構圖 prompt。</div>
             </div>
             <p class="visual-status" id="illustrationStatus">尚未送出插圖請求。</p>
           </aside>
@@ -829,23 +829,23 @@
           </div>
           <div class="intent">
             <strong>對此人的一句話</strong>
-            <p id="dialogueText">等第一幕觸發後，這裡會出現更像劉備會說的話。</p>
+            <p id="dialogueText">等第一幕觸發後，這裡會出現更像角色會說的話。</p>
           </div>
           <div class="intent">
             <strong>接下來想做什麼</strong>
-            <p id="intentText">每一幕都會把資料轉成劉備下一步的行動意圖。</p>
+            <p id="intentText">每一幕都會把資料轉成角色下一步的行動意圖。</p>
           </div>
         </div>
 
         <section class="story-fusion">
           <strong>本幕完整敘事</strong>
-          <p id="storyText">等這一幕的四段內容都出現後，這裡會自動融合成一段更有畫面感的完整敘事。</p>
+          <p id="storyText">四段內容到齊後，這裡會融合成一段更完整的場景敘事。</p>
         </section>
 
         <section class="chorus-panel">
           <div class="chorus-head">
             <strong>旁人一句感想</strong>
-            <span id="chorusHint">每幕最多 4 人；預設 2 人走 LLM，其餘走快速模板。</span>
+            <span id="chorusHint">每幕最多 4 人；NPC service 主要負責旁觀感想，缺漏時維持占位回覆。</span>
           </div>
           <div class="chorus-grid" id="chorusGrid"></div>
         </section>
@@ -894,243 +894,27 @@
       role: { label: "角色定位", desc: "君主、統帥、治理者等角色職責", focus: "先站回角色責任" },
     };
 
-    const specialTargetOverrides = {
-      "mi-shi": {
-        role: "家室 / 託付",
-        thoughtTone: "想到糜氏，劉備先浮起的不是佔城得失，而是亂世裡有人把一家命數託到自己身上。",
-        dialogueTone: "「我若連跟隨之人的家室都護不住，又憑什麼談仁義？」",
-        actionBias: "先查家眷與退路，再決定是否急進",
-        meterDelta: { bond: 4, longing: 7, prudence: 2, resolve: -1 },
-      },
-      "gan-shi": {
-        role: "舊情 / 家室",
-        thoughtTone: "想到甘氏時，劉備的心會比平常更柔軟，也更怕自己把身邊的人拖進風浪。",
-        dialogueTone: "「有些牽掛不必說出口，卻會在每一次行軍時自己壓到心上。」",
-        actionBias: "先安排安置與護送，再談進退",
-        meterDelta: { benevolence: 3, longing: 8, prudence: 2, resolve: -1 },
-      },
-      "sun-shang-xiang": {
-        role: "盟婚 / 去留",
-        thoughtTone: "想到孫夫人，劉備會同時想起盟約、疑懼與真真假假的情分，心裡往往不是單一的喜怒。",
-        dialogueTone: "「局勢可以是局，情分卻未必全是假，我總得替彼此留一步餘地。」",
-        actionBias: "先看對方去留與局勢，再決定是否逼近",
-        meterDelta: { prudence: 4, longing: 5, resolve: 1 },
-      },
-    };
-
-    const fallbackNarrativeData = {
-      displayName: "劉備",
-      grade: "A-romance",
-      dataMode: "示範資料",
-      dataHint: "npc-brain API 尚未連上，目前先用頁面內建示範資料演出。",
-      sourceMode: "fallback-demo",
-      traits: ["仁厚", "重義", "憂民", "重情", "善結人心", "有號召力"],
+    const EMPTY_NARRATIVE_DATA = {
+      displayName: "",
+      grade: "loading",
+      dataMode: "等待服務資料",
+      dataHint: "未收到 npc-brain narrative-profile 資料，暫停播放，等待服務就緒。",
+      sourceMode: "runtime-general-profiles",
+      traits: [],
       persona: {
-        voiceStyle: ["仁厚", "憂民", "懇切", "重情"],
-        personalityTraits: ["仁德", "重義", "善結人心", "憂患", "有號召力"],
-        safeFallbackLine: "備所念者，不過百姓得安、兄弟不離。",
+        voiceStyle: [],
+        personalityTraits: [],
         profile: {
-          affectTags: ["family_affection", "mercy_compassion", "grief_regret"],
-          activitySeedHints: ["host_banquet", "family_duty", "suppress_unrest"],
-          personalityTags: ["governance-minded", "family-bound", "persuasive"],
+          affectTags: [],
+          activitySeedHints: [],
+          personalityTags: [],
+          roleActivityTags: [],
         },
       },
-      activitySeeds: [
-        { keywordKey: "activity.family_duty", label: "家室安置" },
-        { keywordKey: "activity.host_banquet", label: "設宴安撫" },
-        { keywordKey: "activity.suppress_unrest", label: "平亂整軍" },
-      ],
-      interactionTargets: [],
-      relationships: [
-        {
-          targetId: "zhang-fei",
-          label: "張飛",
-          role: "兄弟 / 斷後之託",
-          thoughtTone: "想到張飛，劉備會先想到自己還欠他多少次不該由他獨扛的危局。",
-          dialogueTone: "「翼德先頂住，我不能再讓你一個人替全軍擋災。」",
-          actionBias: "先探退路，再查張飛安危",
-          meterDelta: { bond: 6, resolve: 2, longing: 2 },
-          femaleFocus: false,
-          confidence: 0.88,
-          sourceType: "fallback",
-          relationshipType: "battle_ally",
-        },
-        {
-          targetId: "guan-yu",
-          label: "關羽",
-          role: "兄弟 / 義氣與節操",
-          thoughtTone: "想到關羽，劉備會更在意自己是否還配得上當初那份義氣。",
-          dialogueTone: "「雲長在前，我便不能讓此心先散。」",
-          actionBias: "先守承諾，再談勝負",
-          meterDelta: { bond: 7, benevolence: 2, longing: 1 },
-          femaleFocus: false,
-          confidence: 0.9,
-          sourceType: "fallback",
-          relationshipType: "sworn_sibling",
-        },
-        {
-          targetId: "zhuge-liang",
-          label: "諸葛亮",
-          role: "軍師 / 大局與謀定",
-          thoughtTone: "想到孔明時，劉備會願意多忍一步，先把局面想清楚。",
-          dialogueTone: "「孔明既在，這一步不妨先緩，待眾心站穩再動。」",
-          actionBias: "先盤算與整編，再決定推進節奏",
-          meterDelta: { prudence: 4, resolve: -1, bond: 1 },
-          femaleFocus: false,
-          confidence: 0.82,
-          sourceType: "fallback",
-          relationshipType: "patron_client",
-        },
-        {
-          targetId: "cao-cao",
-          label: "曹操",
-          role: "宿敵 / 勝負與人心對照",
-          thoughtTone: "想到曹操，劉備常會更清楚自己想贏，卻不想用同樣的方法去贏。",
-          dialogueTone: "「快可以奪城，未必奪心；我若只學其快，也就失了立足之本。」",
-          actionBias: "先衡量百姓代價，再決定是否用強",
-          meterDelta: { prudence: 4, resolve: 4, benevolence: 2 },
-          femaleFocus: false,
-          confidence: 0.86,
-          sourceType: "fallback",
-          relationshipType: "enemy_rival",
-        },
-        {
-          targetId: "mi-zhu",
-          label: "糜竺",
-          role: "舊恩 / 家業相託",
-          thoughtTone: "想到糜竺，劉備會先想起最困頓時，有人把家業與親族一起託來。",
-          dialogueTone: "「舊恩不能只掛在嘴上，得先讓跟著我的人過得去。」",
-          actionBias: "先開副倉與點名冊，再談調兵",
-          meterDelta: { benevolence: 4, bond: 4, prudence: -1 },
-          femaleFocus: false,
-          confidence: 0.76,
-          sourceType: "fallback",
-          relationshipType: "patron_client",
-        },
-        {
-          targetId: "mi-shi",
-          label: "糜氏",
-          role: "家室 / 託付",
-          thoughtTone: specialTargetOverrides["mi-shi"].thoughtTone,
-          dialogueTone: specialTargetOverrides["mi-shi"].dialogueTone,
-          actionBias: specialTargetOverrides["mi-shi"].actionBias,
-          meterDelta: specialTargetOverrides["mi-shi"].meterDelta,
-          femaleFocus: true,
-          confidence: 0.72,
-          sourceType: "fallback",
-          relationshipType: "female_interaction",
-        },
-        {
-          targetId: "gan-shi",
-          label: "甘氏",
-          role: "舊情 / 家室",
-          thoughtTone: specialTargetOverrides["gan-shi"].thoughtTone,
-          dialogueTone: specialTargetOverrides["gan-shi"].dialogueTone,
-          actionBias: specialTargetOverrides["gan-shi"].actionBias,
-          meterDelta: specialTargetOverrides["gan-shi"].meterDelta,
-          femaleFocus: true,
-          confidence: 0.7,
-          sourceType: "fallback",
-          relationshipType: "female_interaction",
-        },
-        {
-          targetId: "sun-shang-xiang",
-          label: "孫夫人",
-          role: "盟婚 / 去留",
-          thoughtTone: specialTargetOverrides["sun-shang-xiang"].thoughtTone,
-          dialogueTone: specialTargetOverrides["sun-shang-xiang"].dialogueTone,
-          actionBias: specialTargetOverrides["sun-shang-xiang"].actionBias,
-          meterDelta: specialTargetOverrides["sun-shang-xiang"].meterDelta,
-          femaleFocus: true,
-          confidence: 0.74,
-          sourceType: "fallback",
-          relationshipType: "female_interaction",
-        },
-      ],
-      evidenceCards: [
-        {
-          evidenceId: "fallback-people-1",
-          angle: "people",
-          title: "先護百姓，再談天下",
-          summary: "劉備每逢動亂，先想到的往往不是城池，而是跟著自己的人能不能先活下來。",
-          quote: "若連跟隨之人都護不住，談天下便只是空話。",
-          sourceType: "fallback-persona",
-          sourceRefs: ["persona"],
-          relatedTargetIds: ["commoners"],
-          confidence: 0.82,
-        },
-        {
-          evidenceId: "fallback-bond-1",
-          angle: "bond",
-          title: "長坂橋邊的虧欠",
-          summary: "張飛在長坂橋斷後，替劉備爭來退路，卻也把一份虧欠留在他心裡。",
-          quote: "那不是豪勇故事，而是一筆欠在心上的命。",
-          location: "長坂橋",
-          chapterNo: 42,
-          sourceType: "fallback-memory",
-          sourceRefs: ["042#p1", "042#p2", "042#p3"],
-          relatedTargetIds: ["zhang-fei"],
-          confidence: 0.9,
-        },
-        {
-          evidenceId: "fallback-battlefield-1",
-          angle: "battlefield",
-          title: "戰場不是只算快慢",
-          summary: "每次看見追兵與亂隊，劉備都會想起撤退時最怕的從來不是慢，而是人心散。",
-          quote: "仁德若沒有隊伍承接，最後只會變成哭聲。",
-          location: "長坂一帶",
-          sourceType: "fallback-memory",
-          sourceRefs: ["keyword:changban-bridge"],
-          relatedTargetIds: ["cao-cao", "zhang-fei"],
-          confidence: 0.88,
-        },
-        {
-          evidenceId: "fallback-rival-1",
-          angle: "rival",
-          title: "不能只學曹操的快",
-          summary: "曹操式的取勝效率讓劉備敬畏，也讓他更清楚自己想守住什麼。",
-          quote: "人心一失，再快也只是敗路。",
-          sourceType: "fallback-memory",
-          sourceRefs: ["017#p10"],
-          relatedTargetIds: ["cao-cao"],
-          confidence: 0.84,
-        },
-        {
-          evidenceId: "fallback-resource-1",
-          angle: "resource",
-          title: "糜氏與副倉",
-          summary: "軍資告急時，劉備會先想到糜氏舊部是否也在缺糧名冊上。",
-          quote: "舊恩之人，不可先寒心。",
-          sourceType: "fallback-memory",
-          sourceRefs: ["external-evidence"],
-          relatedTargetIds: ["mi-zhu", "mi-shi"],
-          confidence: 0.78,
-        },
-        {
-          evidenceId: "fallback-habit-1",
-          angle: "habit",
-          title: "火邊問傷兵",
-          summary: "夜裡巡營時，劉備常先問傷兵與役夫的細事，再回頭談軍令。",
-          quote: "他先問傷兵痛不痛，再問役夫家在何處。",
-          sourceType: "fallback-worldbuilding",
-          sourceRefs: ["worldbuilding-note"],
-          relatedTargetIds: ["commoners"],
-          confidence: 0.76,
-        },
-        {
-          evidenceId: "fallback-emotion-1",
-          contextKey: null,
-          angle: "emotion",
-          title: "亂世裡的家室牽掛",
-          summary: "一牽涉到家室與女性互動，劉備的念頭常會從勝負轉成安置與去留。",
-          quote: "有些牽掛不必說出口，卻會在每一次行軍時自己壓到心上。",
-          sourceType: "fallback-female",
-          sourceRefs: ["female-interaction"],
-          relatedTargetIds: ["mi-shi", "gan-shi", "sun-shang-xiang"],
-          confidence: 0.8,
-        },
-      ],
-      illustrationPromptBase: "以三國古典敘事插畫描繪劉備，氣質仁厚、憂民、重情，畫面帶水墨與寫實戲劇感，人物像正從回憶裡走出來準備做決定。",
+      activitySeeds: [],
+      relationships: [],
+      evidenceCards: [],
+      illustrationPromptBase: "三國人物劇場場景插畫。",
       keywords: {},
     };
 
@@ -1365,100 +1149,6 @@
       return state.data?.displayName || "這名人物";
     }
 
-    function evidenceTextPool(bundle) {
-      return [
-        bundle?.card?.quote,
-        bundle?.card?.summary,
-        bundle?.card?.title,
-        bundle?.card?.location,
-        bundle?.sceneText,
-        bundle?.memoryText,
-        bundle?.emotionText,
-      ].map((part) => String(part || "").trim()).filter(Boolean);
-    }
-
-    function buildEvidenceSeed(bundle) {
-      const targetName = String(bundle?.target?.label || "").trim();
-      const pool = evidenceTextPool(bundle);
-      const quote = String(bundle?.card?.quote || "").trim();
-      const summary = String(bundle?.card?.summary || "").trim();
-      const location = String(bundle?.card?.location || "").trim();
-      const quoteAnchor = quote && quote.length <= 120 && !quote.includes("「")
-        ? `原文線索：「${shortenText(trimInnerQuotes(quote), 82)}」`
-        : "";
-      return {
-        targetName,
-        sourceRefs: (bundle?.card?.sourceRefs || []).slice(0, 4),
-        quote,
-        summary,
-        location,
-        quoteAnchor,
-        sceneAnchor: collectConciseSentences([location ? `場景位置靠近${location}` : "", summary].join(" "), { maxSentences: 1, maxChars: 92 }),
-        memoryAnchor: collectConciseSentences([summary, quoteAnchor].join(" "), { maxSentences: 1, maxChars: 108 }),
-        evidenceText: pool.join(" "),
-      };
-    }
-
-    function inferTargetPresence(bundle) {
-      const seed = buildEvidenceSeed(bundle);
-      const targetName = seed.targetName;
-      const text = seed.evidenceText;
-      if (!targetName || !text.includes(targetName)) {
-        return { status: "unknown", reason: "原文沒有直接寫出互動對象姓名", sourceText: seed.quote || seed.summary || "" };
-      }
-      const index = text.indexOf(targetName);
-      const nearTarget = text.slice(Math.max(0, index - 36), index + targetName.length + 54);
-      const presentSignals = /(同席|同在|在旁|相見|見|面見|謁|問曰|答曰|謂|曰|迎|隨|陪|入帳|入席|共|俱)/;
-      const offstageSignals = /(聞|報|使人|消息|召見|將要|欲|去留|婚盟|嫁|聘|許婚|歸|留|遣)/;
-      if (presentSignals.test(nearTarget)) {
-        return { status: "present", reason: `原文近句含在場訊號：${shortenText(nearTarget, 76)}`, sourceText: nearTarget };
-      }
-      if (offstageSignals.test(nearTarget)) {
-        return { status: "offstage", reason: `原文近句偏向局勢牽涉，不足以判定同場：${shortenText(nearTarget, 76)}`, sourceText: nearTarget };
-      }
-      return { status: "unknown", reason: `原文提到${targetName}，但沒有足夠同場動作`, sourceText: nearTarget };
-    }
-
-    function isEasternWuMarriageScene(bundle) {
-      const joined = evidenceTextPool(bundle).concat([
-        bundle?.target?.targetId,
-        bundle?.target?.label,
-        bundle?.target?.role,
-      ]).join(" ");
-      return /sun-shang-xiang|孫尚香|孫夫人|東吳|吳侯|國太|江東|婚盟|盟婚/.test(joined);
-    }
-
-    function cleanBeatSentence(text, maxChars = 82) {
-      const cleaned = stripAnalyticTone(trimInnerQuotes(text, 22))
-        .replace(/心裡先浮起「[^」]+」這段舊事[。！？]?/g, "")
-        .replace(/這條線索在[^。！？]{0,90}[。！？]?/g, "")
-        .replace(/昔日翼德[^。！？]{0,140}[。！？]?/g, "")
-        .replace(/喝退曹軍百萬[^。！？]{0,80}[。！？]?/g, "")
-        .replace(/\s+/g, " ")
-        .trim();
-      return collectConciseSentences(cleaned, { maxSentences: 1, maxChars });
-    }
-
-    function buildStoryBeatParts(bundle) {
-      const speaker = currentActorName();
-      const targetName = bundle?.target?.label || "對方";
-      const angleFocus = buildDecisionFocus(bundle?.card?.angle);
-      const seed = buildEvidenceSeed(bundle);
-      const presence = inferTargetPresence(bundle);
-      const sceneText = cleanBeatSentence(seed.sceneAnchor || `${speaker}在當前局勢裡被${targetName}牽動，先停下來看清這段關係背後的證據。`, 94);
-      const memoryText = cleanBeatSentence(seed.memoryAnchor || bundle?.memoryText || `${targetName}相關的線索，讓${speaker}重新想起一段需要慎重處理的舊事。`, 104);
-      const emotionSeed = bundle?.target?.thoughtTone || `${presence.reason}。這讓${speaker}不能只照一時情緒做決定。`;
-      const dialogueSeed = stripOuterQuotes(bundle?.target?.dialogueTone || bundle?.dialogueText || `${speaker}先把話壓低，提醒自己要看證據、看人心，也看後路。`);
-      return {
-        sceneText,
-        memoryText,
-        emotionText: cleanBeatSentence(emotionSeed, 96),
-        dialogueText: cleanBeatSentence(dialogueSeed, 82),
-        intentText: cleanBeatSentence(`${bundle?.target?.actionBias || angleFocus}，再用「${angleFocus}」去校正眼前這一步。`, 82),
-        presence,
-      };
-    }
-
     const storyDirectorForbiddenPhrases = [
       "這條線索",
       "心裡先浮起",
@@ -1472,92 +1162,58 @@
       "sourceRef",
     ];
 
-    function buildStoryDirectorBeats(bundle, parts) {
-      const speaker = currentActorName();
-      const targetName = bundle?.target?.label || "對方";
-      const relationshipRole = bundle?.target?.role || "人物關係";
-      const angleLabel = angleDefinitions[bundle?.card?.angle]?.label || "處境";
-      const seed = buildEvidenceSeed(bundle);
-      const presence = inferTargetPresence(bundle);
-      const locationHint = seed.location ? `在${seed.location}` : "在當前局勢裡";
-      const sourceHint = bundle?.card?.sourceType ? `（${bundle.card.sourceType}）` : "";
-      const cardTitle = bundle?.card?.title && String(bundle.card.title).length > 4 ? humanizeSymbolicText(bundle.card.title) : "";
-      const sceneAnchor = collectConciseSentences(stripSceneLeadRedundancy(parts?.sceneText || seed.sceneAnchor || "", speaker, targetName), {
-        maxSentences: 1,
-        maxChars: 82,
-      });
-      const memoryAnchor = collectConciseSentences(parts?.memoryText || seed.memoryAnchor || seed.summary || "", {
-        maxSentences: 1,
-        maxChars: 108,
-      });
-      const emotionCore = collectConciseSentences(parts?.emotionText || "", { maxSentences: 1, maxChars: 72 });
-      const speechSeed = collectConciseSentences(stripOuterQuotes(parts?.dialogueText || ""), { maxSentences: 1, maxChars: 70 });
-      const nextAction = collectConciseSentences(parts?.intentText || "", { maxSentences: 1, maxChars: 72 });
-      const targetPresent = presence.status === "present";
+    function fallbackBeatSegmentFromData(bundle, segment) {
+      const card = bundle?.card || {};
+      const angle = angleDefinitions[card.angle]?.label || "人物角度";
+      const rawText = String(card.summary || card.quote || card.title || "").trim();
+      const location = String(card.location || "").trim();
+      const targetLabel = String(bundle?.target?.label || "").trim();
+      const dataAnchor = [
+        angle ? `${angle}` : "",
+        targetLabel ? `互動對象：${targetLabel}` : "",
+        card.contextKey ? `情境：${card.contextKey}` : "",
+      ].filter(Boolean);
+      const base = [rawText, location ? `地點：${location}` : ""]
+        .filter(Boolean)
+        .join("；");
+      const merged = dataAnchor.concat([base]).filter(Boolean).join(" / ");
+      const fallbackMap = {
+        scene: merged,
+        memory: merged,
+        emotion: merged,
+        intent: merged,
+      };
+      return fallbackMap[segment] || base;
+    }
+
+    function buildCompactFallbackStory(bundle, parts = {}) {
+      const merged = [
+        parts?.sceneText,
+        parts?.memoryText,
+        parts?.emotionText,
+        parts?.dialogueText,
+        parts?.intentText,
+      ].map((text) => String(text || "").trim()).filter(Boolean).join(" ");
+      return merged || "未回傳完整敘事片段，請稍後重試。";
+    }
+
+    async function buildNarrativeBeatParts(bundle, directorPayload) {
+      if (directorPayload?.beats) {
+        return directorPayload.beats;
+      }
+      const [scenePayload, memoryPayload, emotionPayload, intentPayload] = await Promise.all([
+        requestNarrativeSegment(bundle, "scene"),
+        requestNarrativeSegment(bundle, "memory"),
+        requestNarrativeSegment(bundle, "emotion"),
+        requestNarrativeSegment(bundle, "intent"),
+      ]);
       return {
-        speaker,
-        targetName,
-        relationshipRole,
-        angleLabel,
-        locationHint,
-        sourceHint,
-        cardTitle,
-        sceneAnchor,
-        memoryAnchor,
-        emotionCore,
-        quoteHint: seed.quoteAnchor,
-        speechSeed,
-        nextAction,
-        targetPresent,
-        presenceStatus: presence.status,
-        presenceReason: presence.reason,
-        sourceRefs: seed.sourceRefs,
-        forbiddenPhrases: storyDirectorForbiddenPhrases,
-        source: normalizeMatchText(`${bundle?.card?.sourceType || "fallback"}${locationHint} ${cardTitle} ${sourceHint}`),
+        sceneText: selectSegmentNarrativeText("scene", bundle, scenePayload, fallbackBeatSegmentFromData(bundle, "scene")),
+        memoryText: selectSegmentNarrativeText("memory", bundle, memoryPayload, fallbackBeatSegmentFromData(bundle, "memory")),
+        emotionText: selectSegmentNarrativeText("emotion", bundle, emotionPayload, fallbackBeatSegmentFromData(bundle, "emotion")),
+        intentText: selectSegmentNarrativeText("intent", bundle, intentPayload, fallbackBeatSegmentFromData(bundle, "intent")),
       };
     }
-
-    function buildDirectorFallbackStory(bundle, parts) {
-      const beats = buildStoryDirectorBeats(bundle, parts);
-      const sourceRefs = beats.sourceRefs?.length ? `來源 ${beats.sourceRefs.join("、")} 的線索讓這一幕有了落點。` : "";
-      const quoteLine = beats.quoteHint ? `${beats.quoteHint} ` : "";
-      const presenceLine = beats.targetPresent
-        ? `${beats.targetName}就在局中，${beats.speaker}說話時必須同時顧到眼前人的反應與背後局勢。`
-        : `${beats.presenceReason}，所以${beats.targetName}在這一幕裡更像是一條牽動局勢的線，而不是被硬拉到眼前的同場人物。`;
-      const speechLine = beats.speechSeed
-        ? (beats.targetPresent
-          ? `${beats.speaker}把聲音壓低，對${beats.targetName}說：「${stripOuterQuotes(beats.speechSeed)}」`
-          : `${beats.speaker}把聲音壓低，像是在對帳中眾人，也像是在提醒自己：「${stripOuterQuotes(beats.speechSeed)}」`)
-        : `${beats.speaker}沒有急著把話說滿，只讓那句未出口的判斷先在心裡沉住。`;
-      const nextLine = beats.nextAction
-        ? `最後他把念頭收回眼前，先決定${beats.nextAction}。`
-        : `最後他把念頭收回眼前，先替人心、分寸與後路各留一步。`;
-      const closingLine = `這樣一來，${beats.angleLabel}不再只是紙上的標籤，而是變成${beats.speaker}此刻會怎麼忍、怎麼問、怎麼往下一步走的理由。`;
-      return [
-        `${beats.locationHint}，${beats.speaker}先從原文線索裡抓住這一幕的核心。${sourceRefs}`,
-        beats.sceneAnchor || `${beats.cardTitle || beats.angleLabel}把這場局勢壓到他面前。`,
-        `${quoteLine}${beats.memoryAnchor || "舊事與當下在他心裡靠近，讓他不敢只看表面的勝負。"}`,
-        beats.emotionCore || "那股情緒沒有立刻散去，反而把眼前局勢壓得更沉。",
-        presenceLine,
-        speechLine,
-        nextLine,
-        closingLine,
-      ]
-        .filter(Boolean)
-        .map((line) => normalizeSentenceBody(line))
-        .map((line) => ensureSentenceEnd(line))
-        .join(" ");
-    }
-
-    function buildCompactFallbackStory(bundle, parts) {
-      const story = buildDirectorFallbackStory(bundle, parts);
-      return story.length >= 260 ? story : `${story} 這一幕暫時先用資料化 fallback 承接；等後端 LLM 回傳合格長段落時，會改由完整敘事覆蓋。`;
-    }
-
-    function composeMergedNarrative(bundle, parts) {
-      return buildDirectorFallbackStory(bundle, parts);
-    }
-
     function buildStoryFusionCacheKey(bundle, parts) {
       const refs = (bundle?.card?.sourceRefs || []).slice(0, 4).join("|");
       const keyParts = [
@@ -1588,17 +1244,9 @@
       if (targetName && !normalized.includes(targetName)) {
         return { ok: false, reason: "target-mismatch" };
       }
-      const presence = inferTargetPresence(bundle);
-      if (presence.status !== "present" && targetName) {
-        const escapedTarget = targetName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const offstageViolation = new RegExp(`(望向|看向|對著|朝著|轉頭向)${escapedTarget}|對${escapedTarget}低聲道`);
-        if (offstageViolation.test(normalized)) {
-          return { ok: false, reason: "presence-overstated" };
-        }
-      }
       const cueHits = [
         /想起|記起|念及|回憶|舊事|原文|線索/.test(normalized),
-        /心裡|心中|警惕|委屈|遲疑|分寸|大義|人心|情緒/.test(normalized),
+        /心裡|心中|警惕|犧牲|分寸|大義|人心|情緒|決策/.test(normalized),
         /「[^」]{4,}」/.test(normalized),
         /於是|接著|隨即|決定|先|退路|下一步/.test(normalized),
       ].filter(Boolean).length;
@@ -1628,7 +1276,15 @@
         ...pickNarrativeKeywordKeys(bundle, "emotion", 3),
         ...pickNarrativeKeywordKeys(bundle, "intent", 3),
       ], 6);
-      const beats = buildStoryDirectorBeats(bundle, parts);
+      const actor = currentActorName();
+      const target = String(bundle?.target?.label || "關聯對象");
+      const sceneText = String(parts?.sceneText || "").trim();
+      const memoryText = String(parts?.memoryText || "").trim();
+      const emotionText = String(parts?.emotionText || "").trim();
+      const intentText = String(parts?.intentText || "").trim();
+      const sourceRefs = Array.isArray(bundle?.card?.sourceRefs)
+        ? bundle.card.sourceRefs.slice(0, 3).join("；")
+        : "";
       const body = {
         generalId: GENERAL_ID,
         contextKey: resolveDialogueContextKey(bundle),
@@ -1641,15 +1297,16 @@
         saveId: `demo-story-fusion-${GENERAL_ID}`,
         memoryContext: {
           saveId: `demo-story-fusion-${GENERAL_ID}`,
-          shortTerm: `${beats.speaker}${beats.locationHint}，主題是${beats.cardTitle || beats.sceneAnchor || "眼前局勢"}`.trim(),
-          longTerm: `${beats.memoryAnchor} ${beats.emotionCore || ""}`.trim(),
+          shortTerm: `主角：${actor}；對象：${target}；主題：${angleDefinitions[bundle?.card?.angle]?.label || "現況判斷"}。`.trim(),
+          longTerm: `場景素材：${sceneText ? shortenText(sceneText, 120) : "無"}。${sourceRefs ? `來源摘要：${sourceRefs}` : ""}`.trim(),
           playerProfile: [
-            `${beats.speaker}正處理與${beats.targetName}相關的${beats.relationshipRole}局勢。`,
-            `在場判斷：${beats.presenceStatus}。依據：${beats.presenceReason}`,
-            beats.targetPresent ? "可以寫當面互動。" : "不要寫成當面對視或直接對話；只能寫成牽念、局勢核心、傳聞、回憶或即將面對的對象。",
-            beats.speechSeed ? `可參考台詞語氣：${beats.speechSeed}` : "",
+            `本幕以${bundle?.target?.relationshipType || "互動"}軸，並沿用證據：${bundle?.card?.contextKey || "runtime 線索"}。`,
+            `${actor}的敘事可保留原文脈絡，不要捏造不存在的場景關係。`,
+            memoryText ? `回憶素材：${shortenText(memoryText, 110)}` : "",
+            emotionText ? `情緒素材：${shortenText(emotionText, 84)}` : "",
+            intentText ? `意圖素材：${shortenText(intentText, 84)}` : "",
           ].filter(Boolean).join(" "),
-          promises: `場景導演 Beats：${JSON.stringify(beats, null, 0)}。請一次寫成 350-550 字的連續敘事，重點放在場景、原文證據、回憶、心理轉折、短對白與下一步，不要分析口吻，不要模板拼貼。`,
+          promises: `請直接一次輸出 350-550 字、連續且可閱讀的完整敘事：需融合 scene/memory/emotion/intent 四段，明確保留與目標人物的關係。`,
         },
       };
       try {
@@ -2347,34 +2004,16 @@
     function buildSceneLeadFromCardTitle(title) {
       const normalized = String(title || "").replace(/\s+/g, " ").trim();
       if (!normalized) {
-        return "一段舊事重新浮上來。";
+        return "";
       }
-      if (/[。！？]$/.test(normalized)) {
-        return normalized;
-      }
-      const sentenceLike = /^(想起|念頭|地勢|把|先|一想到|面對|他)/.test(normalized);
-      if (sentenceLike) {
-        return `${normalized}。`;
-      }
-      return `這段線索指向「${normalized}」。`;
+      return normalized;
     }
 
     function adaptCardForTarget(card, target) {
-      const directMatch = !Array.isArray(card.relatedTargetIds)
-        || card.relatedTargetIds.length === 0
-        || card.relatedTargetIds.includes(target.targetId);
-      if (directMatch) {
-        return {
-          title: card.title,
-          summary: card.summary,
-          quote: card.quote,
-          sourceRefs: card.sourceRefs || [],
-        };
-      }
       return {
-        title: `借鏡舊事，對照${target.label}`,
-        summary: `這段線索原本不是直接描述${target.label}，但劉備把其中的得失借來對照眼前局勢。`,
-        quote: "",
+        title: card.title,
+        summary: card.summary,
+        quote: card.quote,
         sourceRefs: card.sourceRefs || [],
       };
     }
@@ -2419,71 +2058,26 @@
 
     function decorateRelationshipTarget(raw) {
       const relationType = String(raw.relationshipType || "");
-      const fallbackTone = raw.femaleFocus ? {
-        role: "女性互動線索",
-        thoughtTone: "一牽涉到女性與家室，劉備的念頭就會從單純的勝負轉成更細的去留與安置。",
-        dialogueTone: "「此事不只關乎成敗，也關乎誰要承擔餘波。」",
-        actionBias: "先顧家室與去留，再談出兵與否",
-        meterDelta: { benevolence: 2, bond: 2, longing: 5, prudence: 1 },
-      } : {
-        role: raw.role || "人物線索",
-        thoughtTone: "這個人會把劉備的心事往另一個方向推去，讓他重新衡量自己該先守住什麼。",
-        dialogueTone: "「此事不可只看一時快慢，還要看後頭的人心會怎麼散。」",
-        actionBias: "先看局面與人心，再定下一步",
-        meterDelta: { benevolence: 2, prudence: 2, resolve: 1 },
+      const actor = currentActorName();
+      const targetLabel = String(raw.label || raw.targetId || "關係對象").trim();
+      const relationLabelMap = {
+        sworn_sibling: "義兄弟",
+        battle_ally: "戰場同盟",
+        enemy_rival: "宿敵",
+        battlefield_opponent: "戰場對手",
+        patron_client: "舊恩舊識",
+        betrayal_surrender: "降附 / 去留未定",
+        parent_child: "親子",
+        spouse: "伴侶",
+        sibling: "手足",
       };
-      const relationToneMap = {
-        sworn_sibling: {
-          role: raw.role || "兄弟 / 義氣相託",
-          thoughtTone: "想到這段義氣，劉備往往先想起自己還欠下多少不該由對方獨扛的風浪。",
-          dialogueTone: "「先讓我把人護住，再談勝負也不遲。」",
-          actionBias: "先護住兄弟與退路，再談推進",
-          meterDelta: { bond: 6, longing: 2, resolve: 2 },
-        },
-        battle_ally: {
-          role: raw.role || "戰陣同盟",
-          thoughtTone: "對方一出現，劉備會立刻把心神轉到聯手與護側上。",
-          dialogueTone: "「你先守住那一翼，我來把剩下的人心整回來。」",
-          actionBias: "先協同與補位，再追下一步",
-          meterDelta: { bond: 4, resolve: 2, prudence: 1 },
-        },
-        enemy_rival: {
-          role: raw.role || "宿敵 / 勝負對照",
-          thoughtTone: "想到宿敵，劉備不只是起戒心，也會更清楚自己不想失掉的底線。",
-          dialogueTone: "「若要贏得只剩手段，便連自己也輸了。」",
-          actionBias: "先衡量代價，再決定是否用強",
-          meterDelta: { prudence: 4, resolve: 4, benevolence: 1 },
-        },
-        battlefield_opponent: {
-          role: raw.role || "戰場對手",
-          thoughtTone: "這種對手會讓劉備立刻警覺起來，但他仍會先看己方是否穩得住。",
-          dialogueTone: "「先別躁進，把隊形收緊，讓人心站穩。」",
-          actionBias: "先整隊與試探，再決定強攻",
-          meterDelta: { prudence: 3, resolve: 3, bond: 1 },
-        },
-        patron_client: {
-          role: raw.role || "舊恩 / 倚重",
-          thoughtTone: "這種人物會讓劉備先想到自己受過的援手，以及該如何把恩義還回去。",
-          dialogueTone: "「恩義不是口頭記著就夠，得落到實際安置上。」",
-          actionBias: "先盤點支援與安置，再談用兵",
-          meterDelta: { benevolence: 4, bond: 4, prudence: -1 },
-        },
-        betrayal_surrender: {
-          role: raw.role || "降附 / 去留未定",
-          thoughtTone: "這樣的人會讓劉備同時想到機會與反噬，心裡多半不會完全放鬆。",
-          dialogueTone: "「能收人，卻未必能立刻收心，得先把防線留好。」",
-          actionBias: "先設防與觀望，再決定是否倚重",
-          meterDelta: { prudence: 4, resolve: 1, longing: -1 },
-        },
+      const tone = {
+        role: raw.role || relationLabelMap[relationType] || "人物線索",
+        thoughtTone: raw.thoughtTone || "",
+        dialogueTone: raw.dialogueTone || "",
+        actionBias: raw.actionBias || "",
+        meterDelta: raw.meterDelta && typeof raw.meterDelta === "object" ? raw.meterDelta : { bond: 1, prudence: 1 },
       };
-      const special = specialTargetOverrides[raw.targetId];
-      const tone = special ? {
-        role: special.role,
-        thoughtTone: special.thoughtTone,
-        dialogueTone: special.dialogueTone,
-        actionBias: special.actionBias,
-        meterDelta: special.meterDelta,
-      } : (relationToneMap[relationType] || fallbackTone);
 
       return {
         targetId: raw.targetId,
@@ -2507,8 +2101,8 @@
         evidenceId: rawCard.evidenceId || `runtime-card-${Math.random().toString(36).slice(2)}`,
         contextKey: rawCard.contextKey || null,
         angle,
-        title: rawCard.title || "舊事浮現",
-        summary: rawCard.summary || rawCard.quote || "一段線索正在慢慢浮上心頭。",
+        title: rawCard.title || "資料片段",
+        summary: rawCard.summary || rawCard.quote || "未提供完整摘要，請使用原文片段補足。",
         quote: rawCard.quote || "",
         location: rawCard.location || "",
         chapterNo: Number.isInteger(rawCard.chapterNo) ? rawCard.chapterNo : null,
@@ -2532,39 +2126,9 @@
 
     function buildKeywordAngleNarrative(angle, label) {
       const normalizedLabel = humanizeSymbolicText(label || "線索");
-      const narrativeMap = {
-        identity: {
-          title: "想起自己的身分與名號",
-          summary: `他提醒自己，「${normalizedLabel}」不只是稱呼，而是要扛住的人心與責任。`,
-        },
-        relationship: {
-          title: "念頭先回到人情牽連",
-          summary: `一想到「${normalizedLabel}」，他就會先衡量彼此情義與後續代價，再決定怎麼走下一步。`,
-        },
-        location: {
-          title: "地勢與路線先在心裡排開",
-          summary: `「${normalizedLabel}」這條線索讓他先看地利與退路，避免憑一時情緒躁進。`,
-        },
-        activity: {
-          title: "把日常作法帶回戰局",
-          summary: `他習慣從「${normalizedLabel}」這類細節下手，先穩住人與節奏，再談推進。`,
-        },
-        decision: {
-          title: "心裡先把取捨拉到眼前",
-          summary: `面對抉擇時，他的第一反應偏向「${normalizedLabel}」，但仍會留一步觀察局勢。`,
-        },
-        personality: {
-          title: "性格牽著他的判斷",
-          summary: `「${normalizedLabel}」這種性格傾向會直接影響他出手快慢，也影響他願意承擔的風險。`,
-        },
-        role: {
-          title: "先把自己的位置想清楚",
-          summary: `他記得自己此刻肩上是「${normalizedLabel}」的責任，因此先守秩序，再談勝負。`,
-        },
-      };
-      return narrativeMap[angle] || {
-        title: "一條線索忽然變得清楚",
-        summary: `${normalizedLabel}這件事，讓他更確定眼前該先守住什麼。`,
+      return {
+        title: angleDefinitions[angle]?.label || "角度",
+        summary: `關鍵字條目：${normalizedLabel}`,
       };
     }
 
@@ -2648,7 +2212,7 @@
     function normalizeNarrativePayload(payload) {
       const persona = payload.persona || {};
       const profile = persona.profile || {};
-      const keywordCategories = payload.keywords || fallbackNarrativeData.keywords || {};
+      const keywordCategories = payload.keywords || EMPTY_NARRATIVE_DATA.keywords || {};
       const traits = uniqueList([
         ...(persona.voiceStyle || []),
         ...(persona.personalityTraits || []),
@@ -2663,24 +2227,24 @@
         label: humanizeSymbolicText(seed.label || seed.rawTag || seed.keywordKey),
       }));
       return {
-        displayName: payload.displayName || persona.displayName || "劉備",
+        displayName: payload.displayName || persona.displayName || "人物",
         grade: persona.runtimeReadiness?.status || "runtime-profile",
         dataMode: "npc-brain 真資料",
         dataHint: `已連到 ${payload.sourceMode || "runtime-general-profiles"}，目前優先使用 runtime persona / relationships / evidence cards。`,
         sourceMode: payload.sourceMode || "runtime-general-profiles",
-        traits: traits.length ? traits : fallbackNarrativeData.traits,
+        traits: traits.length ? traits : EMPTY_NARRATIVE_DATA.traits,
         persona: {
-          ...fallbackNarrativeData.persona,
+          ...EMPTY_NARRATIVE_DATA.persona,
           ...persona,
           profile: {
-            ...(fallbackNarrativeData.persona.profile || {}),
+            ...(EMPTY_NARRATIVE_DATA.persona.profile || {}),
             ...(persona.profile || {}),
           },
         },
-        activitySeeds: activitySeeds.length ? activitySeeds : fallbackNarrativeData.activitySeeds,
-        relationships: relationships.length ? relationships : fallbackNarrativeData.relationships,
-        evidenceCards: cards.length ? cards : fallbackNarrativeData.evidenceCards,
-        illustrationPromptBase: payload.illustrationPromptBase || fallbackNarrativeData.illustrationPromptBase,
+        activitySeeds: activitySeeds.length ? activitySeeds : EMPTY_NARRATIVE_DATA.activitySeeds,
+        relationships: relationships.length ? relationships : EMPTY_NARRATIVE_DATA.relationships,
+        evidenceCards: cards.length ? cards : EMPTY_NARRATIVE_DATA.evidenceCards,
+        illustrationPromptBase: payload.illustrationPromptBase || EMPTY_NARRATIVE_DATA.illustrationPromptBase,
         keywords: keywordCategories,
       };
     }
@@ -2703,7 +2267,7 @@
         return normalizeNarrativePayload(payload);
       } catch (error) {
         console.warn("narrative-profile fallback:", error);
-        return { ...fallbackNarrativeData };
+        return { ...EMPTY_NARRATIVE_DATA };
       } finally {
         timeout.clear();
       }
@@ -2719,9 +2283,9 @@
       }
       elements.traitList.innerHTML = data.traits.map((trait) => `<li>${trait}</li>`).join("");
       setStatus(data.dataMode, data.dataHint);
-      elements.sourceBadge.textContent = data.sourceMode === "runtime-general-profiles" ? "真資料模式" : "示範模式";
+      elements.sourceBadge.textContent = data.sourceMode === "runtime-general-profiles" ? "真資料模式" : "服務待補";
       if (elements.chorusHint) {
-        elements.chorusHint.textContent = `每幕最多 4 人；預設 2 人走 LLM，其餘走快速模板。可用互動人物 ${data.relationships.length} 位。`;
+        elements.chorusHint.textContent = `每幕最多 4 人；以 NPC service 先輸出感想，缺漏時保持短句占位。可用互動人物 ${data.relationships.length} 位。`;
       }
       if (!state.data.relationships.find((target) => target.targetId === state.activePerson)) {
         state.activePerson = state.data.relationships[0]?.targetId || "mi-shi";
@@ -2768,26 +2332,38 @@
       const persona = state.data.persona || {};
       const profile = persona.profile || {};
       const actorName = state.data.displayName || GENERAL_ID;
-      const safeLine = persona.safeFallbackLine || `${actorName}先按住情緒，回到眼前證據與人心。`;
-      const affect = humanizeSymbolicText(pickFromArray(profile.affectTags || [], 0, "牽掛"));
-      const activity = humanizeSymbolicText(pickFromArray(state.data.activitySeeds.map((seed) => seed.label), 1, "巡營問細事"));
-      const voice = humanizeSymbolicText(pickFromArray(state.data.traits, 2, "仁厚"));
+      const evidenceSummary = collectConciseSentences(
+        [adjustedCard.summary, adjustedCard.quote, card.location].filter(Boolean).join("；"),
+        { maxSentences: 2, maxChars: 120 },
+      );
+      const evidenceTitle = humanizeSymbolicText(adjustedCard.title || "");
+      const defaultSceneNote = `資料來源：${card.sourceType}；角度：${angleDefinitions[card.angle].label}；互動：${target.role || "關係證據"}`;
       const chapterTag = card.chapterNo ? `第 ${card.chapterNo} 回` : "runtime 線索";
-      const locationLead = card.location ? `在${card.location}的記憶邊上，` : "夜色一沉，";
-      const quoteLine = adjustedCard.quote ? `他記得那句原文：「${shortenText(adjustedCard.quote, 72)}」` : `那股${affect}的感受沒有完全散去。`;
-      const emotionalLead = target.femaleFocus
-        ? `一牽涉到家室、去留或情分，${actorName}的心思就不再只剩勝負。`
-        : target.relationshipType === "enemy_rival" || target.relationshipType === "battlefield_opponent"
-        ? "想到對手時，他的戒心會先升起，但還是會忍住躁進。"
-        : "想到眼前這個人時，他的心先被情義與責任拉住。";
-      const sceneTitle = `${adjustedCard.title}，對著${target.label}動了心思`;
-      const sceneNote = `資料來源：${card.sourceType}；角度：${angleDefinitions[card.angle].label}；互動：${target.role}；節奏：${(state.autoDelayMs / 1000).toFixed(1)} 秒 / 輪`;
-      const sceneLead = buildSceneLeadFromCardTitle(adjustedCard.title);
-      const sceneText = `${locationLead}${actorName}一聽見${target.label}的名字，${sceneLead} ${adjustedCard.summary} ${quoteLine} ${emotionalLead} 於是他沒有急著下令，而是先想著${target.actionBias}，再決定要不要把事情往前推。`;
-      const memoryText = `${adjustedCard.summary}${card.location ? ` 那段記憶總會把他帶回${card.location}。` : ""}`;
-      const emotionText = `${target.thoughtTone} 這也讓他身上的「${voice}」不是抽象標籤，而是會真的影響選擇的情緒。`;
-      const dialogueText = `${target.dialogueTone} ${safeLine}`;
-      const intentText = `他接下來想先${target.actionBias}，並以「${buildDecisionFocus(card.angle)}」作為眼前這一步的判準，同時把${activity}也一起排進今日的行動裡。`;
+      const actorHint = actorName || "角色";
+      const targetHint = target?.label || "關係對象";
+      const sceneNote = `${defaultSceneNote}；節奏：${(state.autoDelayMs / 1000).toFixed(1)} 秒 / 輪`;
+      const sceneText = collectConciseSentences(
+        [evidenceTitle, evidenceSummary, card.location].filter(Boolean).join("；"),
+        { maxSentences: 2, maxChars: 150 },
+      ) || "未取得可用場景素材。";
+      const memoryText = collectConciseSentences([
+        target.thoughtTone ? `與「${targetHint}」關係線索：${target.thoughtTone}` : "",
+        adjustedCard.quote ? `原文：${adjustedCard.quote}` : "",
+      ].filter(Boolean).join("；"), { maxSentences: 2, maxChars: 130 });
+      const emotionText = collectConciseSentences([
+        profile && profile.personalityTags && profile.personalityTags.join("、"),
+        Array.isArray(persona.personalityTraits) ? persona.personalityTraits.join("、") : "",
+      ].filter(Boolean).join("；"), { maxSentences: 1, maxChars: 120 }) || "等待情緒傾向與性格資訊。";
+      const dialogueText = [
+        target.dialogueTone || "",
+        target.thoughtTone || "",
+        profile && profile.activitySeedHints ? `與${actorHint}相關活動提示：${profile.activitySeedHints.join("、")}` : "",
+      ].filter(Boolean).join("；") || `對「${targetHint}」與「${actorHint}」待補足直接對話素材。`;
+      const intentText = collectConciseSentences([
+        target.actionBias ? `行為傾向：${target.actionBias}` : "",
+        `以「${buildDecisionFocus(card.angle)}」為判斷軸。`,
+      ].filter(Boolean).join("；"), { maxSentences: 2, maxChars: 120 }) || "尚待 NPC service 回傳具體決策意圖。";
+      const sceneTitle = `角度：${angleDefinitions[card.angle].label} / 對象：${target.label}`;
       return {
         sceneTitle,
         sceneNote,
@@ -2910,12 +2486,12 @@
       return "人物線索";
     }
 
-    function buildTemplateChorusLine(bundle, target) {
+    function fallbackChorusLine(bundle, target) {
       const sourceLine = normalizeSentenceBody(target?.dialogueTone || target?.thoughtTone || "");
       if (sourceLine) {
         return `「${shortenText(stripOuterQuotes(sourceLine), 86)}」`;
       }
-      return `「${target?.label || "旁人"}暫時沒有足夠的性格證據；這一句先留給 LLM 依照原文與關係補上。」`;
+      return `「${target?.label || "這位角色"}待取得對應觀點回應。」`;
     }
 
     function isWeakChorusLine(text) {
@@ -2924,16 +2500,12 @@
         return true;
       }
       const blockedPatterns = [
-        /看著劉備提起/,
         /看著.+提起/,
-        /先想到.+背後的代價/,
-        /這一步若慢半拍/,
-        /反而能看清全局/,
-        /勝負之外，去留與安置也要先算進去/,
-        /若此刻躁進，反而會被人心反噬/,
-        /提起「/,
         /角色定位/,
         /決策傾向/,
+        /心裡先浮起/,
+        /這條線索/,
+        /想法是/,
       ];
       if (blockedPatterns.some((pattern) => pattern.test(normalized))) {
         return true;
@@ -3001,7 +2573,7 @@
         return;
       }
       elements.chorusGrid.innerHTML = targets.map((target) => {
-        const quote = overrideQuotes[target.targetId] || buildTemplateChorusLine(bundle, target);
+        const quote = overrideQuotes[target.targetId] || fallbackChorusLine(bundle, target);
         const role = target.role || "人物線索";
         return `
           <article class="chorus-card" data-target-id="${target.targetId}">
@@ -3018,7 +2590,7 @@
       }
       elements.chorusGrid.innerHTML = lines.map((line) => {
         const role = line.role || "人物線索";
-        const text = normalizeNarrativeText(line.text, "這名人物暫時沒有足夠證據產生感想。");
+        const text = normalizeNarrativeText(line.text, "等待對話服務補齊旁觀者感想。");
         return `
           <article class="chorus-card" data-target-id="${line.targetId}">
             <strong>${line.label}・${role}</strong>
@@ -3067,20 +2639,20 @@
       try {
         elements.sceneTitle.textContent = bundle.sceneTitle;
         elements.sceneNote.textContent = bundle.sceneNote;
-        elements.sourceBadge.textContent = state.data.sourceMode === "runtime-general-profiles"
-          ? `${bundle.card.sourceType} / 真資料`
-          : `${bundle.card.sourceType} / 示範`;
+      elements.sourceBadge.textContent = state.data.sourceMode === "runtime-general-profiles"
+        ? `${bundle.card.sourceType} / 真資料`
+        : `${bundle.card.sourceType} / 服務待補`;
         renderMetaChips(bundle.meta);
 
         elements.sceneText.innerHTML = `<span class="loading-pulse">正在把這幕慢慢演出來……</span>`;
         elements.memoryText.innerHTML = "";
         elements.emotionText.innerHTML = "";
-        elements.dialogueText.innerHTML = `<span class="loading-pulse">正在依據 persona 與證據生成一句更像本人會說的話……</span>`;
+        elements.dialogueText.innerHTML = `<span class="loading-pulse">正在等待服務產生可追溯對白……</span>`;
         elements.intentText.innerHTML = "";
-        elements.storyText.innerHTML = `<span class="loading-pulse">正在請 npc-brain 導演這一幕……</span>`;
+        elements.storyText.innerHTML = `<span class="loading-pulse">正在請 npc-brain 生成完整敘事……</span>`;
         refreshIllustrationPrompt();
         const directorPayload = await requestSceneDirector(bundle);
-        const beatParts = directorPayload?.beats || buildStoryBeatParts(bundle);
+        const beatParts = await buildNarrativeBeatParts(bundle, directorPayload);
         const chorusPromise = directorPayload?.chorusLines?.length
           ? Promise.resolve(renderDirectorChorusLines(directorPayload.chorusLines))
           : renderChorusLines(bundle);
@@ -3098,16 +2670,14 @@
         await revealText(elements.emotionText, emotionNarrativeText, 320);
         const dialoguePayload = await dialoguePromise;
         const runtimeDialogueText = normalizeNarrativeText(dialoguePayload?.text, "");
-        const dialogueText = isEasternWuMarriageScene(bundle) && /張飛|翼德|長坂|曹軍百萬/.test(runtimeDialogueText)
-          ? beatParts.dialogueText
-          : (runtimeDialogueText || beatParts.dialogueText);
+        const dialogueText = runtimeDialogueText || bundle?.dialogueText || beatParts.dialogueText || "等待 NPC service 回傳對白。";
         const intentNarrativeText = beatParts.intentText;
         bundle.runtimeIntentText = intentNarrativeText;
-        const narrativeSource = "敘事：劇情 beats";
+        const narrativeSource = "敘事：NPC service beats";
         const dialogueSource = dialoguePayload?.provider
           ? `台詞：${dialoguePayload.provider}${dialoguePayload.model ? `/${dialoguePayload.model}` : ""}`
-          : "台詞：模板 fallback";
-        let storySource = "完整敘事：規則融合 fallback";
+          : "台詞：服務待補";
+        let storySource = "完整敘事：服務 fallback";
         if (state.currentBundle === bundle) {
           elements.sceneNote.textContent = `${bundle.sceneNote}；${narrativeSource}；${dialogueSource}；${storySource}`;
         }
@@ -3222,18 +2792,18 @@
       state.imageAbortController = null;
       state.dialogueAbortController = null;
       state.currentBundle = null;
-      elements.sceneTitle.textContent = "營火未熄，劉備正在聽風";
-      elements.sceneNote.textContent = "請先選擇一個角度與互動對象。這個頁面會慢慢把劉備的心事與下一步行動演出來。";
-      elements.sourceBadge.textContent = state.data.sourceMode === "runtime-general-profiles" ? "真資料待命" : "示範待命";
+      elements.sceneTitle.textContent = "劇情待啟";
+      elements.sceneNote.textContent = "請先選擇一個角度與互動對象，由 npc-brain 以證據驅動逐幕生成內容。";
+      elements.sourceBadge.textContent = state.data.sourceMode === "runtime-general-profiles" ? "真資料待命" : "服務待補待命";
       elements.sceneMeta.innerHTML = "";
-      elements.sceneText.textContent = "劉備立在帳前，聽見遠處巡哨回報，卻沒有立刻下令。他只是把手按在案邊，像是在等某段舊事自己慢慢浮上來。";
+      elements.sceneText.textContent = "等待場景素材...";
       elements.memoryText.textContent = "等待資料與第一幕。";
-      elements.emotionText.textContent = "人物情緒會依照角度與互動對象慢慢出現。";
-      elements.dialogueText.textContent = "等第一幕觸發後，這裡會出現更像劉備會說的話。";
-      elements.intentText.textContent = "每一幕都會把資料轉成劉備下一步的行動意圖。";
-      elements.storyText.textContent = "等這一幕的四段內容都出現後，這裡會自動融合成一段更有畫面感的完整敘事。";
-      elements.illustrationPrompt.textContent = "等待第一幕生成後，這裡會自動整理一段可以直接餵給圖像模型的 prompt。";
-      elements.illustrationHint.textContent = "現在這段 prompt 會保留在左側，真正生成的插圖會顯示在右側。";
+      elements.emotionText.textContent = "等待情緒素材。";
+      elements.dialogueText.textContent = "等待對白素材。";
+      elements.intentText.textContent = "等待意圖素材。";
+      elements.storyText.textContent = "四段素材到齊後，這裡會由 npc-brain 融合成完整敘事。";
+      elements.illustrationPrompt.textContent = "等待第一幕資料後，會整理可直接送入圖像模型的 prompt。";
+      elements.illustrationHint.textContent = "當串流回應完成後，prompt 與插圖將同步更新。";
       elements.illustrationImage.hidden = true;
       elements.illustrationImage.removeAttribute("src");
       setIllustrationVisualState("尚未送出插圖請求。", { showPlaceholder: true });
@@ -3309,13 +2879,14 @@
 
     init().catch((error) => {
       console.error(error);
-      applyData({ ...fallbackNarrativeData });
+      applyData({ ...EMPTY_NARRATIVE_DATA });
       renderAngles();
       renderRelationships();
       resetStageTexts();
-      setStatus("示範資料", "初始化失敗，已退回內建示範模式。");
+      setStatus("服務待補", "初始化失敗，暫時等待服務資料回補。");
     });
   </script>
 </body>
 </html>
+
 
