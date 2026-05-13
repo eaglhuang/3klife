@@ -4,6 +4,7 @@ import json
 import os
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -48,6 +49,7 @@ from .llm_dialogue_renderer import (
 )
 from .memory_compressor import compress_general_memory
 from .runtime_profile_store import RuntimeProfileStore
+from .scene_image_renderer import GeminiSceneImageRenderer
 from .vector_config import load_vector_runtime_config
 
 
@@ -156,6 +158,56 @@ class KeywordOptionsResponse(BaseModel):
     categories: dict[str, list[KeywordOption]] = Field(default_factory=dict)
 
 
+class NarrativeInteractionTarget(BaseModel):
+    targetId: str
+    label: str
+    role: str
+    gender: str | None = None
+    sourceType: str
+    relationshipType: str | None = None
+    confidence: float = Field(default=0.68, ge=0.0, le=1.0)
+    evidenceRefs: list[str] = Field(default_factory=list)
+    femaleFocus: bool = False
+
+
+class NarrativeEvidenceCard(BaseModel):
+    evidenceId: str
+    contextKey: str | None = None
+    angle: str
+    title: str
+    summary: str
+    quote: str | None = None
+    location: str | None = None
+    chapterNo: int | None = None
+    sourceType: str
+    sourceRefs: list[str] = Field(default_factory=list)
+    relatedTargetIds: list[str] = Field(default_factory=list)
+    confidence: float = Field(default=0.72, ge=0.0, le=1.0)
+
+
+class NarrativeActivitySeed(BaseModel):
+    keywordKey: str
+    label: str
+    confidence: float = Field(default=0.72, ge=0.0, le=1.0)
+    sourceRefs: list[str] = Field(default_factory=list)
+    rawTag: str | None = None
+
+
+class NarrativeProfileResponse(BaseModel):
+    generalId: str
+    displayName: str
+    sourceMode: str
+    canonicalWrites: bool = False
+    persona: dict[str, Any] = Field(default_factory=dict)
+    keywords: dict[str, list[dict[str, Any]]] = Field(default_factory=dict)
+    relationshipEdges: list[dict[str, Any]] = Field(default_factory=list)
+    evidenceCards: list[NarrativeEvidenceCard] = Field(default_factory=list)
+    itemRelations: list[dict[str, Any]] = Field(default_factory=list)
+    activitySeeds: list[NarrativeActivitySeed] = Field(default_factory=list)
+    interactionTargets: list[NarrativeInteractionTarget] = Field(default_factory=list)
+    illustrationPromptBase: str = ""
+
+
 class DialogueRequest(BaseModel):
     generalId: str
     contextKey: str | None = None
@@ -164,7 +216,7 @@ class DialogueRequest(BaseModel):
     locale: str = DEFAULT_LOCALE
     speechContextMode: str = DEFAULT_SPEECH_CONTEXT_MODE
     llmModelPreset: str = DEFAULT_LLM_MODEL_PRESET
-    maxChars: int = Field(default=80, ge=12, le=240)
+    maxChars: int = Field(default=80, ge=12, le=650)
     saveId: str | None = None
     memoryContext: GeneralMemoryContext | None = None
 
@@ -224,6 +276,25 @@ class DialogueResponse(BaseModel):
     repairUsed: bool = False
 
 
+class SceneIllustrationRequest(BaseModel):
+    generalId: str
+    prompt: str | None = None
+    aspectRatio: str = "4:5"
+    imageSize: str = "1K"
+
+
+class SceneIllustrationResponse(BaseModel):
+    generalId: str
+    canonicalWrites: bool = False
+    provider: str
+    model: str
+    cacheHit: bool = False
+    promptUsed: str
+    mimeType: str
+    imageBase64: str
+    caption: str | None = None
+
+
 class NpcDialogueService:
     def __init__(
         self,
@@ -256,6 +327,8 @@ class NpcDialogueService:
         self.history_cache_path = self._resolve_path(Path(os.environ.get("NPC_LLM_HISTORY_CACHE_PATH") or DEFAULT_HISTORY_CACHE_PATH))
         self.provider_router = provider_router or DialogueProviderRouter()
         self.evidence_resolver = EvidenceResolver(self.store)
+        self.scene_image_renderer = GeminiSceneImageRenderer(cache_root=self.repo_root / "local/npc-scene-image-cache")
+        self._roster_index_cache: dict[str, dict[str, Any]] | None = None
 
     def get_health(self) -> dict:
         provider_order = self.provider_router.provider_order
@@ -292,6 +365,8 @@ class NpcDialogueService:
                 "geminiModel": os.environ.get("NPC_LLM_MODEL_GEMINI") or os.environ.get("NPC_LLM_MODEL") or "gemini-2.5-pro",
                 "geminiFlashModel": os.environ.get("NPC_LLM_MODEL_GEMINI_FLASH") or "gemini-2.5-flash",
                 "geminiFlashLiteModel": os.environ.get("NPC_LLM_MODEL_GEMINI_FLASH_LITE") or "gemini-2.5-flash-lite",
+                "geminiImageConfigured": bool(self.scene_image_renderer.api_key),
+                "geminiImageModel": self.scene_image_renderer.model,
                 "localLlamaEnabled": "local_llama" in provider_order,
                 "localLlamaModel": os.environ.get("NPC_LLM_MODEL_LOCAL_LLAMA") or DEFAULT_LOCAL_LLAMA_MODEL,
                 "localLlamaOptions": {
@@ -407,6 +482,58 @@ class NpcDialogueService:
                 for category, options in response.categories.items()
             }
         return response
+
+    def get_narrative_profile(self, general_id: str) -> NarrativeProfileResponse:
+        runtime_persona = self.store.read_runtime_persona(general_id) or {}
+        runtime_keywords = self.store.read_runtime_keywords(general_id) or {}
+        runtime_relationships = self.store.read_runtime_relationships(general_id) or {}
+        persona_card = self.get_persona_card(general_id)
+        roster_index = self._load_roster_index()
+        display_name = (
+            str(runtime_persona.get("displayName") or "").strip()
+            or (persona_card.displayName if persona_card else "")
+            or self._roster_name_for(general_id, roster_index)
+            or general_id
+        )
+        interaction_targets = self._build_interaction_targets(
+            general_id=general_id,
+            runtime_persona=runtime_persona,
+            runtime_keywords=runtime_keywords,
+            runtime_relationships=runtime_relationships,
+            roster_index=roster_index,
+        )
+        evidence_cards = self._build_narrative_evidence_cards(
+            runtime_persona=runtime_persona,
+            runtime_relationships=runtime_relationships,
+            interaction_targets=interaction_targets,
+        )
+        activity_seeds = self._build_activity_seeds(runtime_persona=runtime_persona, runtime_keywords=runtime_keywords)
+        persona_payload = {
+            **runtime_persona,
+            "displayName": display_name,
+            "voiceStyle": (runtime_persona.get("voiceAndPrompt") or {}).get("voiceStyle")
+            or (persona_card.voiceStyle if persona_card else []),
+            "personalityTraits": (runtime_persona.get("profile") or {}).get("personalityTags")
+            or (persona_card.personalityTraits if persona_card else []),
+            "safeFallbackLine": (runtime_persona.get("voiceAndPrompt") or {}).get("safeFallbackLine")
+            or (persona_card.safeFallbackLine if persona_card else ""),
+            "taboos": (runtime_persona.get("voiceAndPrompt") or {}).get("taboos")
+            or (persona_card.taboos if persona_card else []),
+        }
+        return NarrativeProfileResponse(
+            generalId=general_id,
+            displayName=display_name,
+            sourceMode="runtime-general-profiles" if runtime_persona else "persona-card-fallback",
+            canonicalWrites=False,
+            persona=persona_payload,
+            keywords=runtime_keywords.get("categories") or {},
+            relationshipEdges=list(runtime_relationships.get("anchors") or []),
+            evidenceCards=evidence_cards,
+            itemRelations=[],
+            activitySeeds=activity_seeds,
+            interactionTargets=interaction_targets,
+            illustrationPromptBase=self._build_illustration_prompt(display_name, runtime_persona, interaction_targets),
+        )
 
     def build_dialogue(self, request: DialogueRequest) -> DialogueResponse:
         log_debug_event(
@@ -534,6 +661,32 @@ class NpcDialogueService:
             repairUsed=generation.repairUsed,
         )
 
+    def render_scene_illustration(self, request: SceneIllustrationRequest) -> SceneIllustrationResponse:
+        runtime_persona = self.store.read_runtime_persona(request.generalId) or {}
+        roster_index = self._load_roster_index()
+        display_name = (
+            str(runtime_persona.get("displayName") or "").strip()
+            or self._roster_name_for(request.generalId, roster_index)
+            or request.generalId
+        )
+        prompt = str(request.prompt or "").strip() or self._build_illustration_prompt(display_name, runtime_persona, [])
+        result = self.scene_image_renderer.render(
+            prompt,
+            aspect_ratio=request.aspectRatio,
+            image_size=request.imageSize,
+        )
+        return SceneIllustrationResponse(
+            generalId=request.generalId,
+            canonicalWrites=False,
+            provider=result.provider,
+            model=result.model,
+            cacheHit=result.cache_hit,
+            promptUsed=result.prompt_used,
+            mimeType=result.mime_type,
+            imageBase64=result.image_base64,
+            caption=result.caption,
+        )
+
     def _resolve_memory_context(self, request: DialogueRequest) -> GeneralMemoryContext | None:
         if request.memoryContext is not None:
             return request.memoryContext if has_memory_context_content(request.memoryContext) else None
@@ -576,6 +729,371 @@ class NpcDialogueService:
 
     def _read_runtime_keywords(self, general_id: str):
         return self.store.read_runtime_keywords(general_id)
+
+    def _read_runtime_relationships(self, general_id: str):
+        return self.store.read_runtime_relationships(general_id)
+
+    def _load_roster_index(self) -> dict[str, dict[str, Any]]:
+        if self._roster_index_cache is not None:
+            return self._roster_index_cache
+        path = self.repo_root / "assets/resources/data/generals.json"
+        if not path.exists():
+            self._roster_index_cache = {}
+            return self._roster_index_cache
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            self._roster_index_cache = {}
+            return self._roster_index_cache
+        if not isinstance(payload, list):
+            self._roster_index_cache = {}
+            return self._roster_index_cache
+        self._roster_index_cache = {
+            str(row.get("id")): row
+            for row in payload
+            if isinstance(row, dict) and str(row.get("id") or "").strip()
+        }
+        return self._roster_index_cache
+
+    def _roster_name_for(self, general_id: str, roster_index: dict[str, dict[str, Any]]) -> str:
+        row = roster_index.get(general_id) or {}
+        return str(row.get("name") or general_id)
+
+    def _roster_gender_for(self, general_id: str, roster_index: dict[str, dict[str, Any]]) -> str | None:
+        row = roster_index.get(general_id) or {}
+        value = str(row.get("gender") or "").strip()
+        return value or None
+
+    def _build_activity_seeds(
+        self,
+        runtime_persona: dict[str, Any],
+        runtime_keywords: dict[str, Any],
+    ) -> list[NarrativeActivitySeed]:
+        seeds: list[NarrativeActivitySeed] = []
+        seen: set[str] = set()
+        for option in ((runtime_keywords.get("categories") or {}).get("activity") or []):
+            keyword_key = str(option.get("keywordKey") or "").strip()
+            if not keyword_key or keyword_key in seen:
+                continue
+            seen.add(keyword_key)
+            seeds.append(
+                NarrativeActivitySeed(
+                    keywordKey=keyword_key,
+                    label=str(option.get("label") or option.get("rawTag") or keyword_key),
+                    confidence=self._coerce_float(option.get("confidence"), default=0.78),
+                    sourceRefs=[str(ref) for ref in (option.get("sourceRefs") or []) if str(ref).strip()],
+                    rawTag=str(option.get("rawTag") or "") or None,
+                )
+            )
+        for raw_tag in ((runtime_persona.get("profile") or {}).get("activitySeedHints") or []):
+            keyword_key = f"activity.{raw_tag}"
+            if keyword_key in seen:
+                continue
+            seen.add(keyword_key)
+            seeds.append(
+                NarrativeActivitySeed(
+                    keywordKey=keyword_key,
+                    label=str(raw_tag),
+                    confidence=0.72,
+                    sourceRefs=[],
+                    rawTag=str(raw_tag),
+                )
+            )
+        return seeds[:12]
+
+    def _build_interaction_targets(
+        self,
+        general_id: str,
+        runtime_persona: dict[str, Any],
+        runtime_keywords: dict[str, Any],
+        runtime_relationships: dict[str, Any],
+        roster_index: dict[str, dict[str, Any]],
+    ) -> list[NarrativeInteractionTarget]:
+        buckets: dict[str, dict[str, Any]] = {}
+        category_weight = {
+            "person": 2.4,
+            "event": 1.4,
+            "relationship": 2.0,
+            "location": 0.8,
+            "affect": 0.6,
+        }
+        default_female_target_ids = ("mi-shi", "gan-shi", "sun-shang-xiang")
+        female_hint_map = {
+            "liu-bei": default_female_target_ids,
+        }
+
+        def ensure_bucket(target_id: str) -> dict[str, Any]:
+            bucket = buckets.get(target_id)
+            if bucket is not None:
+                return bucket
+            gender = self._roster_gender_for(target_id, roster_index)
+            bucket = {
+                "targetId": target_id,
+                "label": self._roster_name_for(target_id, roster_index),
+                "role": "人物線索",
+                "gender": gender,
+                "sourceType": "keyword-cooccurrence",
+                "relationshipType": None,
+                "confidence": 0.58,
+                "score": 0.0,
+                "evidenceRefs": [],
+                "femaleFocus": gender == "female",
+            }
+            buckets[target_id] = bucket
+            return bucket
+
+        for edge in (runtime_relationships.get("anchors") or []):
+            target_id = str(edge.get("targetId") or "").strip()
+            if not target_id or target_id == general_id:
+                continue
+            bucket = ensure_bucket(target_id)
+            bucket["label"] = str(edge.get("targetName") or bucket["label"] or target_id)
+            bucket["role"] = str(edge.get("typeLabel") or edge.get("type") or bucket["role"])
+            bucket["relationshipType"] = str(edge.get("type") or "") or None
+            bucket["sourceType"] = "relationship-edge"
+            bucket["confidence"] = max(bucket["confidence"], self._coerce_float(edge.get("edgeConfidence"), default=0.72))
+            bucket["score"] += 4.0 + bucket["confidence"]
+            bucket["evidenceRefs"].extend(str(ref) for ref in (edge.get("evidenceRefs") or []) if str(ref).strip())
+
+        for category, options in (runtime_keywords.get("categories") or {}).items():
+            for option in options or []:
+                refs = [str(ref) for ref in (option.get("sourceRefs") or []) if str(ref).strip()]
+                for target_id in (option.get("generalIds") or []):
+                    target_key = str(target_id or "").strip()
+                    if not target_key or target_key == general_id:
+                        continue
+                    bucket = ensure_bucket(target_key)
+                    bucket["score"] += category_weight.get(category, 0.45)
+                    bucket["confidence"] = max(bucket["confidence"], self._coerce_float(option.get("confidence"), default=0.62))
+                    if bucket["sourceType"] != "relationship-edge":
+                        bucket["role"] = (
+                            "人物線索"
+                            if category == "person"
+                            else "事件共振"
+                            if category == "event"
+                            else "場景牽動"
+                            if category == "location"
+                            else "情緒關聯"
+                            if category == "affect"
+                            else "互動線索"
+                        )
+                    bucket["evidenceRefs"].extend(refs)
+
+        for target_id in default_female_target_ids:
+            bucket = buckets.get(target_id)
+            if bucket is None:
+                continue
+            bucket["femaleFocus"] = True
+            bucket["score"] += 1.25
+            if bucket["role"] == "人物線索":
+                bucket["role"] = "女性互動線索"
+
+        has_female_signal = any(
+            "female_interaction" in {str(family).strip() for family in (highlight.get("angleFamilies") or [])}
+            for highlight in (runtime_persona.get("sourceHighlights") or [])
+        )
+        if has_female_signal:
+            for target_id in female_hint_map.get(general_id, ()):
+                if target_id not in roster_index:
+                    continue
+                bucket = ensure_bucket(target_id)
+                bucket["femaleFocus"] = True
+                bucket["confidence"] = max(bucket["confidence"], 0.68)
+                bucket["score"] += 1.8
+                if bucket["role"] == "人物線索":
+                    bucket["role"] = "女性互動線索"
+
+        def sort_key(item: dict[str, Any]) -> tuple[int, int, float, float, str]:
+            return (
+                0 if item["sourceType"] == "relationship-edge" else 1,
+                0 if item["femaleFocus"] else 1,
+                -float(item["confidence"]),
+                -float(item["score"]),
+                str(item["label"]),
+            )
+
+        targets = [
+            NarrativeInteractionTarget(
+                targetId=item["targetId"],
+                label=str(item["label"] or item["targetId"]),
+                role=str(item["role"] or "人物線索"),
+                gender=item["gender"],
+                sourceType=str(item["sourceType"]),
+                relationshipType=item["relationshipType"],
+                confidence=self._coerce_float(item["confidence"], default=0.68),
+                evidenceRefs=sorted(set(item["evidenceRefs"]))[:12],
+                femaleFocus=bool(item["femaleFocus"]),
+            )
+            for item in sorted(buckets.values(), key=sort_key)[:12]
+        ]
+        return targets
+
+    def _build_narrative_evidence_cards(
+        self,
+        runtime_persona: dict[str, Any],
+        runtime_relationships: dict[str, Any],
+        interaction_targets: list[NarrativeInteractionTarget],
+    ) -> list[NarrativeEvidenceCard]:
+        cards: list[NarrativeEvidenceCard] = []
+        seen: set[str] = set()
+        target_labels = {target.targetId: target.label for target in interaction_targets}
+        highlight_by_ref = {
+            str(item.get("sourceRef") or "").strip(): item
+            for item in (runtime_persona.get("sourceHighlights") or [])
+            if str(item.get("sourceRef") or "").strip()
+        }
+
+        for beat in (runtime_persona.get("storyBeats") or [])[:14]:
+            refs = [str(ref) for ref in (beat.get("sourceRefs") or []) if str(ref).strip()]
+            primary_ref = refs[0] if refs else ""
+            families = list((highlight_by_ref.get(primary_ref) or {}).get("angleFamilies") or [])
+            related_target_ids = self._detect_related_target_ids(
+                " ".join(
+                    str(value)
+                    for value in [
+                        beat.get("summary"),
+                        beat.get("sourceQuote"),
+                        beat.get("location"),
+                    ]
+                    if value
+                ),
+                target_labels,
+            )
+            evidence_id = str(beat.get("eventId") or beat.get("eventKey") or primary_ref or f"story-beat-{len(cards)}").strip()
+            if not evidence_id or evidence_id in seen:
+                continue
+            seen.add(evidence_id)
+            chapter_no = beat.get("chapterNo")
+            cards.append(
+                NarrativeEvidenceCard(
+                    evidenceId=evidence_id,
+                    contextKey=str(beat.get("eventKey") or "").strip() or None,
+                    angle=self._classify_narrative_angle(families=families, relationship_type=None, related_target_ids=related_target_ids),
+                    title=str(beat.get("location") or beat.get("eventKey") or "舊事浮現"),
+                    summary=str(beat.get("summary") or beat.get("sourceQuote") or "一段舊事正在浮上心頭。"),
+                    quote=str(beat.get("sourceQuote") or "") or None,
+                    location=str(beat.get("location") or "") or None,
+                    chapterNo=int(chapter_no) if isinstance(chapter_no, int) else None,
+                    sourceType="runtime-story-beat",
+                    sourceRefs=refs,
+                    relatedTargetIds=related_target_ids,
+                    confidence=self._coerce_float(beat.get("confidence"), default=0.72),
+                )
+            )
+
+        for edge in (runtime_relationships.get("anchors") or [])[:12]:
+            target_id = str(edge.get("targetId") or "").strip()
+            evidence_id = f"relationship:{target_id}:{edge.get('type') or len(cards)}"
+            if not target_id or evidence_id in seen:
+                continue
+            seen.add(evidence_id)
+            relationship_type = str(edge.get("type") or "").strip() or None
+            quote = next((str(line) for line in (edge.get("sourceQuotes") or []) if str(line).strip()), None)
+            target_name = str(edge.get("targetName") or target_labels.get(target_id) or target_id)
+            cards.append(
+                NarrativeEvidenceCard(
+                    evidenceId=evidence_id,
+                    contextKey=None,
+                    angle=self._classify_narrative_angle(families=[], relationship_type=relationship_type, related_target_ids=[target_id]),
+                    title=f"想到{target_name}",
+                    summary=quote or f"{runtime_persona.get('displayName') or '此人'}與{target_name}之間有{edge.get('typeLabel') or relationship_type or '一段互動'}。",
+                    quote=quote,
+                    location=None,
+                    chapterNo=None,
+                    sourceType="runtime-relationship-edge",
+                    sourceRefs=[str(ref) for ref in (edge.get("evidenceRefs") or []) if str(ref).strip()],
+                    relatedTargetIds=[target_id],
+                    confidence=self._coerce_float(edge.get("edgeConfidence"), default=0.7),
+                )
+            )
+
+        for highlight in (runtime_persona.get("sourceHighlights") or [])[:12]:
+            if len(cards) >= 24:
+                break
+            evidence_id = f"highlight:{highlight.get('sourceRef') or len(cards)}"
+            if evidence_id in seen:
+                continue
+            seen.add(evidence_id)
+            families = list(highlight.get("angleFamilies") or [])
+            example = str(highlight.get("example") or "").strip()
+            source_ref = str(highlight.get("sourceRef") or "").strip()
+            related_target_ids = self._detect_related_target_ids(example, target_labels)
+            cards.append(
+                NarrativeEvidenceCard(
+                    evidenceId=evidence_id,
+                    contextKey=None,
+                    angle=self._classify_narrative_angle(families=families, relationship_type=None, related_target_ids=related_target_ids),
+                    title=source_ref or "線索片段",
+                    summary=example or "一條來自來源封包的片段線索。",
+                    quote=example or None,
+                    location=None,
+                    chapterNo=None,
+                    sourceType="runtime-source-highlight",
+                    sourceRefs=[source_ref] if source_ref else [],
+                    relatedTargetIds=related_target_ids,
+                    confidence=0.7 if families else 0.64,
+                )
+            )
+
+        return cards
+
+    def _classify_narrative_angle(
+        self,
+        families: list[str],
+        relationship_type: str | None,
+        related_target_ids: list[str],
+    ) -> str:
+        relation = relationship_type or ""
+        family_set = {str(family).strip() for family in families if str(family).strip()}
+        if relation in {"sworn_sibling", "alliance_oath", "battle_ally", "protects_family"}:
+            return "bond"
+        if relation in {"enemy_rival", "battlefield_opponent", "betrayal_surrender"}:
+            return "rival"
+        if "female_interaction" in family_set:
+            return "emotion"
+        if "item_equipment" in family_set:
+            return "resource"
+        if "battle" in family_set or "location_context" in family_set:
+            return "battlefield"
+        if "activity_seed" in family_set or "work_role" in family_set:
+            return "habit"
+        if related_target_ids:
+            return "people"
+        return "people"
+
+    def _detect_related_target_ids(self, text: str, target_labels: dict[str, str]) -> list[str]:
+        if not text:
+            return []
+        hits: list[str] = []
+        for target_id, label in target_labels.items():
+            if label and label in text:
+                hits.append(target_id)
+        return hits[:4]
+
+    def _build_illustration_prompt(
+        self,
+        display_name: str,
+        runtime_persona: dict[str, Any],
+        interaction_targets: list[NarrativeInteractionTarget],
+    ) -> str:
+        voice_style = ", ".join((runtime_persona.get("voiceAndPrompt") or {}).get("voiceStyle") or [])
+        personality_tags = ", ".join((runtime_persona.get("profile") or {}).get("personalityTags") or [])
+        affect_tags = ", ".join((runtime_persona.get("profile") or {}).get("affectTags") or [])
+        key_targets = "、".join(target.label for target in interaction_targets[:3])
+        return (
+            f"以三國敘事插畫描繪{display_name}，畫面偏古典寫實與水墨戲劇感，"
+            f"保留角色氣質：{voice_style or personality_tags or '仁德與沉著'}；"
+            f"情緒核心：{affect_tags or '情義與憂民'}；"
+            f"可加入互動對象：{key_targets or '張飛、關羽、百姓'}；"
+            "讓人物像剛從回憶中走出來，正準備做出下一個決定。"
+        )
+
+    def _coerce_float(self, value: Any, default: float) -> float:
+        try:
+            numeric = float(value)
+        except (TypeError, ValueError):
+            return default
+        return max(0.0, min(1.0, numeric))
 
     def _resolve_path(self, path: Path) -> Path:
         return path if path.is_absolute() else self.repo_root / path
@@ -720,9 +1238,11 @@ def find_repo_root(start: Path) -> Path:
         return Path(override).resolve()
 
     current = start.resolve()
+    monorepo_candidates = [candidate for candidate in [current, *current.parents] if (candidate / "AGENTS.md").exists() and (candidate / "server/npc-brain").exists()]
+    if monorepo_candidates:
+        return monorepo_candidates[0]
+
     for candidate in [current, *current.parents]:
-        if (candidate / "AGENTS.md").exists() and (candidate / "server/npc-brain").exists():
-            return candidate
         if (candidate / "app").exists() and (candidate / "pipelines/sanguo-rag").exists():
             return candidate
     raise FileNotFoundError("Could not locate repo root from current working directory.")

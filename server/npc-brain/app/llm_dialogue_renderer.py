@@ -121,6 +121,20 @@ def log_debug_event(event: str, **payload) -> None:
     LOGGER.info("[npc-brain-debug] %s %s", event, json.dumps(payload, ensure_ascii=False, default=str))
 
 
+def _env_flag(name: str, default: bool = False) -> bool:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    return str(raw).strip().lower() in _DEBUG_TRUE_VALUES
+
+
+def _open_url(request: urllib.request.Request, timeout_seconds: float, *, disable_proxy: bool) -> object:
+    if disable_proxy:
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        return opener.open(request, timeout=timeout_seconds)
+    return urllib.request.urlopen(request, timeout=timeout_seconds)
+
+
 @dataclass(frozen=True)
 class ResolvedEvidence:
     evidenceRef: str
@@ -220,11 +234,14 @@ class GeminiDialogueProvider:
         self.thinking_budget = int(os.environ.get("NPC_LLM_GEMINI_THINKING_BUDGET") or DEFAULT_GEMINI_THINKING_BUDGET)
         self.max_output_tokens = int(os.environ.get("NPC_LLM_GEMINI_MAX_OUTPUT_TOKENS") or DEFAULT_GEMINI_MAX_OUTPUT_TOKENS)
         self.retry_count = max(1, int(os.environ.get("NPC_LLM_GEMINI_RETRY_COUNT") or DEFAULT_GEMINI_RETRY_COUNT))
+        self.disable_proxy = _env_flag("NPC_LLM_DISABLE_PROXY", default=True)
 
     def generate(self, package: DialoguePromptPackage) -> DialogueGenerationResult:
         if not self.api_key:
             raise ProviderUnavailableError("gemini:no-api-key")
-        if not package.resolvedEvidence:
+        tone_mode = str(package.toneMode or "").strip().lower()
+        allow_memory_only = tone_mode == "narrative_fusion"
+        if not package.resolvedEvidence and not allow_memory_only:
             raise ProviderUnavailableError("gemini:no-resolved-evidence")
 
         prompt = self._build_prompt(package)
@@ -267,7 +284,7 @@ class GeminiDialogueProvider:
         last_error: ProviderUnavailableError | None = None
         for attempt_index in range(self.retry_count):
             try:
-                with urllib.request.urlopen(request, timeout=self.timeout_ms / 1000) as response:
+                with _open_url(request, self.timeout_ms / 1000, disable_proxy=self.disable_proxy) as response:
                     payload = json.loads(response.read().decode("utf-8"))
                 break
             except urllib.error.HTTPError as exc:
@@ -301,7 +318,7 @@ class GeminiDialogueProvider:
 
         allowed_refs = {evidence.evidenceRef for evidence in package.resolvedEvidence}
         used_refs = [ref for ref in parsed.get("usedEvidenceRefs", []) if ref in allowed_refs]
-        if not used_refs:
+        if not used_refs and package.resolvedEvidence:
             used_refs = [package.resolvedEvidence[0].evidenceRef]
 
         log_debug_event(
@@ -336,6 +353,7 @@ class GeminiDialogueProvider:
         locale_instruction = LOCALE_INSTRUCTIONS.get(package.locale, LOCALE_INSTRUCTIONS[DEFAULT_LOCALE])
         speech_instruction = SPEECH_CONTEXT_INSTRUCTIONS.get(package.speechContextMode, SPEECH_CONTEXT_INSTRUCTIONS[DEFAULT_SPEECH_CONTEXT_MODE])
         memory_block = self._memory_prompt_block(package.memoryContext)
+        tone_mode = str(package.toneMode or "").strip().lower()
         evidence_payload = [
             {
                 "evidenceRef": evidence.evidenceRef,
@@ -347,55 +365,116 @@ class GeminiDialogueProvider:
             }
             for evidence in package.resolvedEvidence[:5]
         ]
-        payload = {
-            "task": "Write one in-character dialogue line for a Three Kingdoms game NPC.",
-            "hardRules": [
-                "Return JSON only.",
-                "Use only personaCardSubset, selectedContext, selectedKeywords, and resolvedEvidence.",
-                "Do not invent major historical facts not supported by resolvedEvidence.",
-                "Do not mention being an AI or model.",
-                "Never write from the identity of another Three Kingdoms character.",
-                "The speechContextDirective is binding: choose the addressee, emotional distance, and public/private register from it.",
-                "For zh-TW output, do not mix English words, pinyin, simplified Chinese, mojibake, code fragments, or slash artifacts.",
-                "If selectedKeywords is not empty, the final line must directly mention or clearly allude to at least one selected keyword label.",
-            ],
-            "speakerIdentityGuard": self._speaker_identity_guard(package),
-            "localeDirective": {
-                "locale": package.locale,
-                "languageLabel": locale_instruction["label"],
-                "instruction": locale_instruction["instruction"],
-            },
-            "speechContextDirective": {
-                "mode": package.speechContextMode,
-                "label": speech_instruction["label"],
-                "instruction": speech_instruction["instruction"],
-                "keywordAngle": speech_instruction["keywordAngle"],
-                "must": speech_instruction["must"],
-                "avoid": speech_instruction["avoid"],
-            },
-            "personaCardSubset": package.personaCardSubset,
-            "playerGeneralMemory": memory_block,
-            "selectedContext": package.selectedContext,
-            "selectedKeywords": package.selectedKeywords,
-            "keywordDirective": {
-                "mustReflectSelectedKeyword": bool(selected_keyword_labels),
-                "preferredLabels": selected_keyword_labels,
-                "selectedKeywordCount": len(selected_keyword_labels),
-            },
-            "resolvedEvidence": evidence_payload,
-            "outputContract": {
-                "language": package.locale,
-                "maxChars": package.maxChars,
-                "format": {
-                    "text": "string",
-                    "usedKeywordKeys": ["keywordKey"],
-                    "usedEvidenceRefs": ["evidenceRef"],
-                    "usedPersonaAnchors": ["string"],
-                    "safetyFallbackUsed": False,
-                    "violations": [],
+        if tone_mode == "narrative_fusion":
+            draft_fragments = {
+                "sceneDraft": str((package.memoryContext or {}).get("shortTerm") or "").strip(),
+                "emotionDraft": str((package.memoryContext or {}).get("longTerm") or "").strip(),
+                "dialogueDraft": str((package.memoryContext or {}).get("playerProfile") or "").strip(),
+                "intentDraft": str((package.memoryContext or {}).get("promises") or "").strip(),
+            }
+            payload = {
+                "task": "Fuse draft fragments into one vivid, natural Chinese narrative paragraph for a Three Kingdoms scene.",
+                "hardRules": [
+                    "Return JSON only.",
+                    "Use only personaCardSubset, selectedContext, selectedKeywords, resolvedEvidence, and draftFragments.",
+                    "If draftFragments.intentDraft contains 場景導演 Beats, treat those beats as the authoritative story outline.",
+                    "Do not invent major historical facts not supported by resolvedEvidence/draftFragments.",
+                    "Do not mention being an AI or model.",
+                    "Narrative must be fluent and cinematic, not bullet-style concatenation.",
+                    "Keep perspective consistent and preserve key names from draft fragments.",
+                    "For zh-TW output, do not mix English words, pinyin, simplified Chinese, mojibake, code fragments, or slash artifacts.",
+                    "Do not use analysis phrases such as 這條線索, 心裡先浮起, 決策傾向, runtime, sourceRef, or 人物定位.",
+                    "If selectedKeywords is not empty, the final paragraph must clearly allude to at least one selected keyword label.",
+                ],
+                "speakerIdentityGuard": self._speaker_identity_guard(package),
+                "localeDirective": {
+                    "locale": package.locale,
+                    "languageLabel": locale_instruction["label"],
+                    "instruction": locale_instruction["instruction"],
                 },
-            },
-        }
+                "narrativeDirective": {
+                    "mode": "story-fusion",
+                    "goal": "Use scene/memory/emotion/dialogue/intent as story beats, then write a coherent 350-550 Chinese-character scene with transitions.",
+                    "style": [
+                        "third-person narrative centered on persona displayName",
+                        "include one quoted line if dialogueDraft is available",
+                        "end with a concrete next-step intention",
+                        "keep the selected target and current scene as the main thread; do not jump to unrelated memories",
+                    ],
+                },
+                "personaCardSubset": package.personaCardSubset,
+                "selectedContext": package.selectedContext,
+                "selectedKeywords": package.selectedKeywords,
+                "keywordDirective": {
+                    "mustReflectSelectedKeyword": bool(selected_keyword_labels),
+                    "preferredLabels": selected_keyword_labels,
+                    "selectedKeywordCount": len(selected_keyword_labels),
+                },
+                "draftFragments": draft_fragments,
+                "resolvedEvidence": evidence_payload,
+                "outputContract": {
+                    "language": package.locale,
+                    "maxChars": package.maxChars,
+                    "format": {
+                        "text": "string",
+                        "usedKeywordKeys": ["keywordKey"],
+                        "usedEvidenceRefs": ["evidenceRef"],
+                        "usedPersonaAnchors": ["string"],
+                        "safetyFallbackUsed": False,
+                        "violations": [],
+                    },
+                },
+            }
+        else:
+            payload = {
+                "task": "Write one in-character dialogue line for a Three Kingdoms game NPC.",
+                "hardRules": [
+                    "Return JSON only.",
+                    "Use only personaCardSubset, selectedContext, selectedKeywords, and resolvedEvidence.",
+                    "Do not invent major historical facts not supported by resolvedEvidence.",
+                    "Do not mention being an AI or model.",
+                    "Never write from the identity of another Three Kingdoms character.",
+                    "The speechContextDirective is binding: choose the addressee, emotional distance, and public/private register from it.",
+                    "For zh-TW output, do not mix English words, pinyin, simplified Chinese, mojibake, code fragments, or slash artifacts.",
+                    "If selectedKeywords is not empty, the final line must directly mention or clearly allude to at least one selected keyword label.",
+                ],
+                "speakerIdentityGuard": self._speaker_identity_guard(package),
+                "localeDirective": {
+                    "locale": package.locale,
+                    "languageLabel": locale_instruction["label"],
+                    "instruction": locale_instruction["instruction"],
+                },
+                "speechContextDirective": {
+                    "mode": package.speechContextMode,
+                    "label": speech_instruction["label"],
+                    "instruction": speech_instruction["instruction"],
+                    "keywordAngle": speech_instruction["keywordAngle"],
+                    "must": speech_instruction["must"],
+                    "avoid": speech_instruction["avoid"],
+                },
+                "personaCardSubset": package.personaCardSubset,
+                "playerGeneralMemory": memory_block,
+                "selectedContext": package.selectedContext,
+                "selectedKeywords": package.selectedKeywords,
+                "keywordDirective": {
+                    "mustReflectSelectedKeyword": bool(selected_keyword_labels),
+                    "preferredLabels": selected_keyword_labels,
+                    "selectedKeywordCount": len(selected_keyword_labels),
+                },
+                "resolvedEvidence": evidence_payload,
+                "outputContract": {
+                    "language": package.locale,
+                    "maxChars": package.maxChars,
+                    "format": {
+                        "text": "string",
+                        "usedKeywordKeys": ["keywordKey"],
+                        "usedEvidenceRefs": ["evidenceRef"],
+                        "usedPersonaAnchors": ["string"],
+                        "safetyFallbackUsed": False,
+                        "violations": [],
+                    },
+                },
+            }
         if memory_block is None:
             payload.pop("playerGeneralMemory", None)
         return json.dumps(payload, ensure_ascii=False)
@@ -724,9 +803,12 @@ class LocalLlamaDialogueProvider(GeminiDialogueProvider):
         self.repeat_penalty = float(os.environ.get("NPC_LLM_LOCAL_LLAMA_REPEAT_PENALTY") or DEFAULT_LOCAL_LLAMA_REPEAT_PENALTY)
         self.num_ctx = int(os.environ.get("NPC_LLM_LOCAL_LLAMA_NUM_CTX") or DEFAULT_LOCAL_LLAMA_NUM_CTX)
         self.repair_retry_count = max(0, int(os.environ.get("NPC_LLM_LOCAL_LLAMA_REPAIR_RETRY_COUNT") or DEFAULT_LOCAL_LLAMA_REPAIR_RETRY_COUNT))
+        self.disable_proxy = _env_flag("NPC_LLM_DISABLE_PROXY_LOCAL", default=True)
 
     def generate(self, package: DialoguePromptPackage) -> DialogueGenerationResult:
-        if not package.resolvedEvidence:
+        tone_mode = str(package.toneMode or "").strip().lower()
+        allow_memory_only = tone_mode == "narrative_fusion"
+        if not package.resolvedEvidence and not allow_memory_only:
             raise ProviderUnavailableError("local_llama:no-resolved-evidence")
 
         prompt = self._build_prompt(package)
@@ -845,7 +927,7 @@ class LocalLlamaDialogueProvider(GeminiDialogueProvider):
             method="POST",
         )
         try:
-            with urllib.request.urlopen(request, timeout=self.timeout_ms / 1000) as response:
+            with _open_url(request, self.timeout_ms / 1000, disable_proxy=self.disable_proxy) as response:
                 payload = json.loads(response.read().decode("utf-8"))
         except urllib.error.HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")[:300]
@@ -877,7 +959,7 @@ class LocalLlamaDialogueProvider(GeminiDialogueProvider):
 
         allowed_refs = {evidence.evidenceRef for evidence in package.resolvedEvidence}
         used_refs = [ref for ref in parsed.get("usedEvidenceRefs", []) if ref in allowed_refs]
-        if not used_refs:
+        if not used_refs and package.resolvedEvidence:
             used_refs = [package.resolvedEvidence[0].evidenceRef]
         return parsed, dialogue_text, used_keyword_keys, used_refs
 

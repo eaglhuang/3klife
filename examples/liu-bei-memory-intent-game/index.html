@@ -1,0 +1,3164 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>劉備回憶意圖劇場</title>
+  <style>
+    :root {
+      --ink: #1c211c;
+      --muted: #58645d;
+      --paper: #f6f0df;
+      --paper-2: #ece4cf;
+      --panel: rgba(252, 248, 238, 0.9);
+      --jade: #1f6d5c;
+      --jade-2: #17493f;
+      --cinnabar: #9e4337;
+      --gold: #b69042;
+      --river: #527b8a;
+      --line: rgba(28, 33, 28, 0.14);
+      --shadow: 0 18px 56px rgba(20, 28, 23, 0.16);
+      --radius: 10px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "Noto Serif TC", "Source Han Serif TC", "Microsoft JhengHei", serif;
+      background:
+        linear-gradient(135deg, rgba(31, 109, 92, 0.13), transparent 28%),
+        linear-gradient(220deg, rgba(158, 67, 55, 0.12), transparent 30%),
+        repeating-linear-gradient(
+          0deg,
+          rgba(28, 33, 28, 0.022),
+          rgba(28, 33, 28, 0.022) 1px,
+          transparent 1px,
+          transparent 18px
+        ),
+        var(--paper);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .app {
+      width: min(1240px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 26px 0 34px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--cinnabar);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(31px, 4vw, 56px);
+      line-height: 1.03;
+    }
+
+    .subtitle {
+      max-width: 620px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      line-height: 1.72;
+      font-size: 15px;
+    }
+
+    .status-card {
+      min-width: 220px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 252, 245, 0.76);
+      box-shadow: var(--shadow);
+    }
+
+    .status-card strong {
+      display: block;
+      font-size: 23px;
+      color: var(--jade-2);
+    }
+
+    .status-card span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .game {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 22px;
+      padding-top: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .profile {
+      overflow: hidden;
+    }
+
+    .portrait-wrap {
+      position: relative;
+      min-height: 292px;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(182, 144, 66, 0.26), transparent 42%),
+        linear-gradient(180deg, rgba(23, 73, 63, 0.18), rgba(82, 123, 138, 0.08)),
+        var(--paper-2);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      place-items: end center;
+      overflow: hidden;
+    }
+
+    .portrait-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1px solid rgba(31, 109, 92, 0.2);
+      pointer-events: none;
+    }
+
+    .portrait {
+      position: relative;
+      width: min(80%, 255px);
+      max-height: 270px;
+      object-fit: contain;
+      filter: drop-shadow(0 16px 22px rgba(25, 32, 27, 0.28));
+    }
+
+    .profile-body {
+      padding: 18px;
+    }
+
+    .profile-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .profile-title h2 {
+      margin: 0;
+      font-size: 29px;
+    }
+
+    .grade {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      color: var(--paper);
+      background: var(--jade);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .trait-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 0 0 18px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .trait-list li {
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 109, 92, 0.28);
+      background: rgba(31, 109, 92, 0.08);
+      color: var(--jade-2);
+      font-size: 13px;
+    }
+
+    .meters {
+      display: grid;
+      gap: 12px;
+    }
+
+    .meter {
+      display: grid;
+      grid-template-columns: 72px 1fr 36px;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .meter strong {
+      color: var(--ink);
+      font-size: 12px;
+    }
+
+    .meter-track {
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(25, 32, 27, 0.1);
+    }
+
+    .meter-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--jade), var(--gold));
+      transition: width 280ms ease;
+    }
+
+    .control-panel,
+    .prompt-panel {
+      margin-top: 16px;
+      padding: 18px;
+    }
+
+    .panel-title {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .panel-note {
+      margin: -2px 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .angle-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .relationship-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 14px;
+      max-height: 392px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .angle-button,
+    .relationship-button,
+    .command-button {
+      border: 1px solid rgba(25, 32, 27, 0.18);
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.45);
+      color: var(--ink);
+      padding: 11px 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .angle-button:hover,
+    .relationship-button:hover,
+    .command-button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(31, 109, 92, 0.42);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .angle-button.active,
+    .relationship-button.active {
+      border-color: rgba(31, 109, 92, 0.56);
+      background:
+        linear-gradient(180deg, rgba(31, 109, 92, 0.12), rgba(182, 144, 66, 0.1)),
+        rgba(255, 255, 255, 0.88);
+      box-shadow: inset 0 0 0 1px rgba(31, 109, 92, 0.18);
+    }
+
+    .angle-button strong,
+    .relationship-button strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .angle-button span,
+    .relationship-button span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .speed-wrap {
+      margin-top: 14px;
+      padding: 12px 12px 10px;
+      border: 1px dashed rgba(31, 109, 92, 0.28);
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.36);
+    }
+
+    .speed-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .speed-head strong {
+      font-size: 14px;
+    }
+
+    .speed-head span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--jade);
+    }
+
+    .command-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .command-button.primary {
+      color: var(--paper);
+      background: linear-gradient(180deg, var(--jade), var(--jade-2));
+      border-color: transparent;
+    }
+
+    .command-button.secondary {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .prompt-box {
+      border: 1px solid rgba(82, 123, 138, 0.26);
+      border-radius: var(--radius-sm);
+      background:
+        linear-gradient(180deg, rgba(82, 123, 138, 0.08), rgba(255, 255, 255, 0.5)),
+        rgba(255, 255, 255, 0.62);
+      padding: 14px;
+      min-height: 166px;
+    }
+
+    .prompt-box p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.74;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+
+    .prompt-caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .prompt-caption span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .stage {
+      padding: 20px;
+    }
+
+    .stage-header {
+      display: flex;
+      gap: 18px;
+      align-items: start;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 15px;
+    }
+
+    .stage-header h2 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 36px);
+      line-height: 1.15;
+    }
+
+    .stage-note {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .source-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(82, 123, 138, 0.12);
+      color: var(--river);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .stage-showcase {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .current-scene,
+    .scene-visual {
+      padding: 18px;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(236, 228, 207, 0.72)),
+        rgba(255, 255, 255, 0.75);
+      border: 1px solid rgba(25, 32, 27, 0.08);
+    }
+
+    .scene-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .scene-meta span {
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: rgba(31, 109, 92, 0.08);
+      color: var(--jade-2);
+      font-size: 12px;
+    }
+
+    .scene-text {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.96;
+      min-height: 168px;
+    }
+
+    .visual-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .visual-head strong {
+      font-size: 16px;
+      color: var(--jade-2);
+    }
+
+    .visual-frame {
+      position: relative;
+      min-height: 420px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 22%, rgba(182, 144, 66, 0.3), transparent 36%),
+        linear-gradient(180deg, rgba(31, 109, 92, 0.16), rgba(23, 73, 63, 0.04)),
+        rgba(237, 228, 207, 0.88);
+      border: 1px solid rgba(25, 32, 27, 0.12);
+      display: grid;
+      place-items: center;
+    }
+
+    .visual-frame img {
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .visual-placeholder {
+      padding: 22px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .visual-status {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      min-height: 44px;
+    }
+
+    .intent-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .intent {
+      padding: 16px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(25, 32, 27, 0.08);
+      background: rgba(255, 255, 255, 0.62);
+    }
+
+    .intent strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: var(--jade-2);
+    }
+
+    .intent p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+      min-height: 78px;
+    }
+
+    .story-fusion {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(25, 32, 27, 0.08);
+      background:
+        linear-gradient(135deg, rgba(31, 109, 92, 0.08), rgba(255, 255, 255, 0.62)),
+        rgba(255, 255, 255, 0.72);
+    }
+
+    .story-fusion strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: var(--jade-2);
+    }
+
+    .story-fusion p {
+      margin: 0;
+      color: var(--ink);
+      line-height: 1.9;
+      font-size: 15px;
+      min-height: 96px;
+      white-space: pre-wrap;
+    }
+
+    .timeline {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.62);
+      border: 1px solid rgba(25, 32, 27, 0.08);
+    }
+
+    .chorus-panel {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.62);
+      border: 1px solid rgba(25, 32, 27, 0.08);
+    }
+
+    .chorus-head {
+      margin: 0 0 10px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .chorus-head strong {
+      font-size: 15px;
+      color: var(--jade-2);
+    }
+
+    .chorus-head span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .chorus-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .chorus-card {
+      border: 1px solid rgba(31, 109, 92, 0.2);
+      border-radius: 8px;
+      background: rgba(247, 252, 250, 0.9);
+      padding: 8px 9px;
+    }
+
+    .chorus-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      color: var(--jade-2);
+    }
+
+    .chorus-card p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--ink);
+      white-space: pre-wrap;
+    }
+
+    .timeline h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+
+    .log-item + .log-item {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(25, 32, 27, 0.12);
+    }
+
+    .log-item strong {
+      display: block;
+      font-size: 13px;
+      color: var(--ink);
+    }
+
+    .log-item p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .reveal-fragment {
+      opacity: 0;
+      transform: translateY(7px);
+      transition: opacity 420ms ease, transform 420ms ease;
+      white-space: pre-wrap;
+    }
+
+    .reveal-fragment.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .loading-pulse {
+      color: var(--muted);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    @media (max-width: 980px) {
+      .game {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        align-items: start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .app {
+        width: min(100vw - 18px, 100%);
+      }
+
+      .stage-showcase,
+      .angle-grid,
+      .intent-grid,
+      .chorus-grid,
+      .command-row {
+        grid-template-columns: 1fr;
+      }
+
+      .scene-text {
+        min-height: 208px;
+        font-size: 17px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">資料驅動互動小劇場</p>
+        <h1>劉備回憶意圖劇場</h1>
+        <p class="subtitle">
+          這個原型會優先讀取 <code>npc-brain</code> 的真實 persona、relationship edges、evidence cards 與 activity seeds，
+          再把它們轉成「想到誰、心裡怎麼變、接下來想做什麼」的互動敘事。女性人物一旦成為互動對象，劉備的情緒與想法也會跟著改變。
+        </p>
+      </div>
+      <div class="status-card">
+        <strong id="dataModeValue">資料偵測中</strong>
+        <span id="dataModeHint">優先連到 npc-brain narrative profile API；如果 API 沒開，會自動退回示範資料。</span>
+      </div>
+    </header>
+
+    <section class="game">
+      <aside>
+        <section class="panel profile">
+          <div class="portrait-wrap">
+            <img class="portrait" src="../../assets/resources/sprites/generals/liu_bei_portrait.png" alt="劉備肖像" onerror="this.style.display='none';">
+          </div>
+          <div class="profile-body">
+            <div class="profile-title">
+              <h2 id="profileName">劉備</h2>
+              <span class="grade" id="profileGrade">A-romance</span>
+            </div>
+            <ul class="trait-list" id="traitList"></ul>
+            <div class="meters" id="meters"></div>
+          </div>
+        </section>
+
+        <section class="panel control-panel">
+          <h2 class="panel-title">觸發角度</h2>
+          <p class="panel-note">先選劉備現在被什麼觸動，再選互動對象，他的回憶、情緒與行動描述就會跟著轉向。</p>
+          <p class="panel-note" id="angleCoverageNote">角度載入中…</p>
+          <div class="angle-grid" id="angleGrid"></div>
+
+          <h2 class="panel-title" style="margin-top:18px;">互動對象</h2>
+          <p class="panel-note">這裡會優先顯示真資料裡的關係人物；女性互動對象會額外強化情感與去留的戲劇感。</p>
+          <div class="relationship-grid" id="relationshipGrid"></div>
+
+          <div class="speed-wrap">
+            <div class="speed-head">
+              <strong>自動上演節奏</strong>
+              <span id="speedValue">9.5 秒 / 輪</span>
+            </div>
+            <input id="speedRange" type="range" min="9000" max="22000" step="500" value="12000">
+          </div>
+
+          <div class="command-row">
+            <button class="command-button primary" id="nextButton" type="button">下一幕</button>
+            <button class="command-button secondary" id="autoButton" type="button">慢速自動上演</button>
+          </div>
+          <div class="command-row">
+            <button class="command-button secondary" id="resetButton" type="button">重置劇場</button>
+            <button class="command-button secondary" id="randomButton" type="button">隨機角度</button>
+          </div>
+        </section>
+
+        <section class="panel prompt-panel">
+          <h2 class="panel-title">插圖構圖 Prompt</h2>
+          <p class="panel-note">這裡會保留送去圖像模型的原始 prompt，右側則直接顯示 API 生成後的插圖，方便你同時看劇情與構圖依據。</p>
+          <div class="prompt-box">
+            <p id="illustrationPrompt">等待第一幕生成後，這裡會自動整理一段可以直接餵給圖像模型的 prompt。</p>
+          </div>
+          <div class="prompt-caption">
+            <span id="illustrationHint">目前是 prompt 版，適合後續接 GPT Image、DALL·E 或其他圖像模型。</span>
+            <button class="command-button secondary" id="refreshPromptButton" type="button">刷新構圖</button>
+          </div>
+        </section>
+      </aside>
+
+      <section class="panel stage">
+        <div class="stage-header">
+          <div>
+            <h2 id="sceneTitle">營火未熄，劉備正在聽風</h2>
+            <p class="stage-note" id="sceneNote">請先選擇一個角度與互動對象。這個頁面會慢慢把劉備的心事與下一步行動演出來。</p>
+          </div>
+          <span class="source-badge" id="sourceBadge">等待資料</span>
+        </div>
+
+        <section class="stage-showcase">
+          <article class="current-scene">
+            <div class="scene-meta" id="sceneMeta"></div>
+            <p class="scene-text" id="sceneText">劉備立在帳前，聽見遠處巡哨回報，卻沒有立刻下令。他只是把手按在案邊，像是在等某段舊事自己慢慢浮上來。</p>
+          </article>
+
+          <aside class="scene-visual">
+            <div class="visual-head">
+              <strong>即時插圖</strong>
+              <button class="command-button secondary" id="renderImageButton" type="button">重畫插圖</button>
+            </div>
+            <div class="visual-frame">
+              <img id="illustrationImage" alt="本幕插圖" hidden>
+              <div class="visual-placeholder" id="illustrationPlaceholder">等待第一幕。<br>一旦劇情開始，右側會直接向圖像 LLM 送出構圖 prompt，生成這一幕的劉備插圖。</div>
+            </div>
+            <p class="visual-status" id="illustrationStatus">尚未送出插圖請求。</p>
+          </aside>
+        </section>
+
+        <div class="intent-grid">
+          <div class="intent">
+            <strong>想起什麼</strong>
+            <p id="memoryText">等待資料與第一幕。</p>
+          </div>
+          <div class="intent">
+            <strong>心裡怎麼變</strong>
+            <p id="emotionText">人物情緒會依照角度與互動對象慢慢出現。</p>
+          </div>
+          <div class="intent">
+            <strong>對此人的一句話</strong>
+            <p id="dialogueText">等第一幕觸發後，這裡會出現更像劉備會說的話。</p>
+          </div>
+          <div class="intent">
+            <strong>接下來想做什麼</strong>
+            <p id="intentText">每一幕都會把資料轉成劉備下一步的行動意圖。</p>
+          </div>
+        </div>
+
+        <section class="story-fusion">
+          <strong>本幕完整敘事</strong>
+          <p id="storyText">等這一幕的四段內容都出現後，這裡會自動融合成一段更有畫面感的完整敘事。</p>
+        </section>
+
+        <section class="chorus-panel">
+          <div class="chorus-head">
+            <strong>旁人一句感想</strong>
+            <span id="chorusHint">每幕最多 4 人；預設 2 人走 LLM，其餘走快速模板。</span>
+          </div>
+          <div class="chorus-grid" id="chorusGrid"></div>
+        </section>
+
+        <section class="timeline">
+          <h3 id="timelineTitle">上演紀錄</h3>
+          <div id="timeline"></div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const searchParams = new URLSearchParams(window.location.search);
+    const GENERAL_ID = searchParams.get("generalId") || "liu-bei";
+    const API_BASE = searchParams.get("apiBase") || "http://127.0.0.1:8000";
+    const DEFAULT_AUTO_DELAY = 12000;
+    const DEFAULT_DIALOGUE_TIMEOUT_MS = 12000;
+    const DEFAULT_ILLUSTRATION_TIMEOUT_MS = 32000;
+    const DEFAULT_PROFILE_TIMEOUT_MS = 10000;
+    const DEFAULT_NARRATIVE_TIMEOUT_MS = 16000;
+    const DEFAULT_STORY_FUSION_TIMEOUT_MS = 22000;
+
+    const meterDefinitions = [
+      { key: "benevolence", label: "仁德" },
+      { key: "bond", label: "情義" },
+      { key: "resolve", label: "決斷" },
+      { key: "prudence", label: "戒慎" },
+      { key: "longing", label: "牽念" },
+    ];
+
+    const angleDefinitions = {
+      people: { label: "眾生", desc: "看見百姓、舊部與人心", focus: "先安人心與秩序" },
+      bond: { label: "情義", desc: "想起兄弟、託付與虧欠", focus: "先確保同伴與承諾" },
+      battlefield: { label: "戰場", desc: "想起撤退、追兵與佈陣", focus: "先整隊與看退路" },
+      rival: { label: "宿敵", desc: "對照曹操式的取勝方式", focus: "先衡量人心代價" },
+      resource: { label: "恩義", desc: "軍資、借糧、家業與補給", focus: "先盤點糧草與恩義" },
+      habit: { label: "日常", desc: "軍中習慣、傷兵、帳務與民生", focus: "先巡營與問細事" },
+      emotion: { label: "情感", desc: "與女性、家室、去留與隱痛有關", focus: "先想家室與心事" },
+      identity: { label: "身分", desc: "名字、字號、頭銜與身份定位", focus: "先對齊人物定位與責任" },
+      relationship: { label: "關係", desc: "親屬、結義、盟友、敵對關係", focus: "先判斷人際網與信任邊界" },
+      location: { label: "地點", desc: "城池、州郡、行軍節點與地利", focus: "先抓地利與路線節奏" },
+      activity: { label: "活動", desc: "日常政務、軍務、社交與生活行為", focus: "先排可執行的小行動" },
+      decision: { label: "抉擇", desc: "偏好戰、和、治、謀與風險承受", focus: "先選策略方向與代價" },
+      personality: { label: "性格", desc: "人格傾向與處世習慣", focus: "先用性格校正決策語氣" },
+      role: { label: "角色定位", desc: "君主、統帥、治理者等角色職責", focus: "先站回角色責任" },
+    };
+
+    const specialTargetOverrides = {
+      "mi-shi": {
+        role: "家室 / 託付",
+        thoughtTone: "想到糜氏，劉備先浮起的不是佔城得失，而是亂世裡有人把一家命數託到自己身上。",
+        dialogueTone: "「我若連跟隨之人的家室都護不住，又憑什麼談仁義？」",
+        actionBias: "先查家眷與退路，再決定是否急進",
+        meterDelta: { bond: 4, longing: 7, prudence: 2, resolve: -1 },
+      },
+      "gan-shi": {
+        role: "舊情 / 家室",
+        thoughtTone: "想到甘氏時，劉備的心會比平常更柔軟，也更怕自己把身邊的人拖進風浪。",
+        dialogueTone: "「有些牽掛不必說出口，卻會在每一次行軍時自己壓到心上。」",
+        actionBias: "先安排安置與護送，再談進退",
+        meterDelta: { benevolence: 3, longing: 8, prudence: 2, resolve: -1 },
+      },
+      "sun-shang-xiang": {
+        role: "盟婚 / 去留",
+        thoughtTone: "想到孫夫人，劉備會同時想起盟約、疑懼與真真假假的情分，心裡往往不是單一的喜怒。",
+        dialogueTone: "「局勢可以是局，情分卻未必全是假，我總得替彼此留一步餘地。」",
+        actionBias: "先看對方去留與局勢，再決定是否逼近",
+        meterDelta: { prudence: 4, longing: 5, resolve: 1 },
+      },
+    };
+
+    const fallbackNarrativeData = {
+      displayName: "劉備",
+      grade: "A-romance",
+      dataMode: "示範資料",
+      dataHint: "npc-brain API 尚未連上，目前先用頁面內建示範資料演出。",
+      sourceMode: "fallback-demo",
+      traits: ["仁厚", "重義", "憂民", "重情", "善結人心", "有號召力"],
+      persona: {
+        voiceStyle: ["仁厚", "憂民", "懇切", "重情"],
+        personalityTraits: ["仁德", "重義", "善結人心", "憂患", "有號召力"],
+        safeFallbackLine: "備所念者，不過百姓得安、兄弟不離。",
+        profile: {
+          affectTags: ["family_affection", "mercy_compassion", "grief_regret"],
+          activitySeedHints: ["host_banquet", "family_duty", "suppress_unrest"],
+          personalityTags: ["governance-minded", "family-bound", "persuasive"],
+        },
+      },
+      activitySeeds: [
+        { keywordKey: "activity.family_duty", label: "家室安置" },
+        { keywordKey: "activity.host_banquet", label: "設宴安撫" },
+        { keywordKey: "activity.suppress_unrest", label: "平亂整軍" },
+      ],
+      interactionTargets: [],
+      relationships: [
+        {
+          targetId: "zhang-fei",
+          label: "張飛",
+          role: "兄弟 / 斷後之託",
+          thoughtTone: "想到張飛，劉備會先想到自己還欠他多少次不該由他獨扛的危局。",
+          dialogueTone: "「翼德先頂住，我不能再讓你一個人替全軍擋災。」",
+          actionBias: "先探退路，再查張飛安危",
+          meterDelta: { bond: 6, resolve: 2, longing: 2 },
+          femaleFocus: false,
+          confidence: 0.88,
+          sourceType: "fallback",
+          relationshipType: "battle_ally",
+        },
+        {
+          targetId: "guan-yu",
+          label: "關羽",
+          role: "兄弟 / 義氣與節操",
+          thoughtTone: "想到關羽，劉備會更在意自己是否還配得上當初那份義氣。",
+          dialogueTone: "「雲長在前，我便不能讓此心先散。」",
+          actionBias: "先守承諾，再談勝負",
+          meterDelta: { bond: 7, benevolence: 2, longing: 1 },
+          femaleFocus: false,
+          confidence: 0.9,
+          sourceType: "fallback",
+          relationshipType: "sworn_sibling",
+        },
+        {
+          targetId: "zhuge-liang",
+          label: "諸葛亮",
+          role: "軍師 / 大局與謀定",
+          thoughtTone: "想到孔明時，劉備會願意多忍一步，先把局面想清楚。",
+          dialogueTone: "「孔明既在，這一步不妨先緩，待眾心站穩再動。」",
+          actionBias: "先盤算與整編，再決定推進節奏",
+          meterDelta: { prudence: 4, resolve: -1, bond: 1 },
+          femaleFocus: false,
+          confidence: 0.82,
+          sourceType: "fallback",
+          relationshipType: "patron_client",
+        },
+        {
+          targetId: "cao-cao",
+          label: "曹操",
+          role: "宿敵 / 勝負與人心對照",
+          thoughtTone: "想到曹操，劉備常會更清楚自己想贏，卻不想用同樣的方法去贏。",
+          dialogueTone: "「快可以奪城，未必奪心；我若只學其快，也就失了立足之本。」",
+          actionBias: "先衡量百姓代價，再決定是否用強",
+          meterDelta: { prudence: 4, resolve: 4, benevolence: 2 },
+          femaleFocus: false,
+          confidence: 0.86,
+          sourceType: "fallback",
+          relationshipType: "enemy_rival",
+        },
+        {
+          targetId: "mi-zhu",
+          label: "糜竺",
+          role: "舊恩 / 家業相託",
+          thoughtTone: "想到糜竺，劉備會先想起最困頓時，有人把家業與親族一起託來。",
+          dialogueTone: "「舊恩不能只掛在嘴上，得先讓跟著我的人過得去。」",
+          actionBias: "先開副倉與點名冊，再談調兵",
+          meterDelta: { benevolence: 4, bond: 4, prudence: -1 },
+          femaleFocus: false,
+          confidence: 0.76,
+          sourceType: "fallback",
+          relationshipType: "patron_client",
+        },
+        {
+          targetId: "mi-shi",
+          label: "糜氏",
+          role: "家室 / 託付",
+          thoughtTone: specialTargetOverrides["mi-shi"].thoughtTone,
+          dialogueTone: specialTargetOverrides["mi-shi"].dialogueTone,
+          actionBias: specialTargetOverrides["mi-shi"].actionBias,
+          meterDelta: specialTargetOverrides["mi-shi"].meterDelta,
+          femaleFocus: true,
+          confidence: 0.72,
+          sourceType: "fallback",
+          relationshipType: "female_interaction",
+        },
+        {
+          targetId: "gan-shi",
+          label: "甘氏",
+          role: "舊情 / 家室",
+          thoughtTone: specialTargetOverrides["gan-shi"].thoughtTone,
+          dialogueTone: specialTargetOverrides["gan-shi"].dialogueTone,
+          actionBias: specialTargetOverrides["gan-shi"].actionBias,
+          meterDelta: specialTargetOverrides["gan-shi"].meterDelta,
+          femaleFocus: true,
+          confidence: 0.7,
+          sourceType: "fallback",
+          relationshipType: "female_interaction",
+        },
+        {
+          targetId: "sun-shang-xiang",
+          label: "孫夫人",
+          role: "盟婚 / 去留",
+          thoughtTone: specialTargetOverrides["sun-shang-xiang"].thoughtTone,
+          dialogueTone: specialTargetOverrides["sun-shang-xiang"].dialogueTone,
+          actionBias: specialTargetOverrides["sun-shang-xiang"].actionBias,
+          meterDelta: specialTargetOverrides["sun-shang-xiang"].meterDelta,
+          femaleFocus: true,
+          confidence: 0.74,
+          sourceType: "fallback",
+          relationshipType: "female_interaction",
+        },
+      ],
+      evidenceCards: [
+        {
+          evidenceId: "fallback-people-1",
+          angle: "people",
+          title: "先護百姓，再談天下",
+          summary: "劉備每逢動亂，先想到的往往不是城池，而是跟著自己的人能不能先活下來。",
+          quote: "若連跟隨之人都護不住，談天下便只是空話。",
+          sourceType: "fallback-persona",
+          sourceRefs: ["persona"],
+          relatedTargetIds: ["commoners"],
+          confidence: 0.82,
+        },
+        {
+          evidenceId: "fallback-bond-1",
+          angle: "bond",
+          title: "長坂橋邊的虧欠",
+          summary: "張飛在長坂橋斷後，替劉備爭來退路，卻也把一份虧欠留在他心裡。",
+          quote: "那不是豪勇故事，而是一筆欠在心上的命。",
+          location: "長坂橋",
+          chapterNo: 42,
+          sourceType: "fallback-memory",
+          sourceRefs: ["042#p1", "042#p2", "042#p3"],
+          relatedTargetIds: ["zhang-fei"],
+          confidence: 0.9,
+        },
+        {
+          evidenceId: "fallback-battlefield-1",
+          angle: "battlefield",
+          title: "戰場不是只算快慢",
+          summary: "每次看見追兵與亂隊，劉備都會想起撤退時最怕的從來不是慢，而是人心散。",
+          quote: "仁德若沒有隊伍承接，最後只會變成哭聲。",
+          location: "長坂一帶",
+          sourceType: "fallback-memory",
+          sourceRefs: ["keyword:changban-bridge"],
+          relatedTargetIds: ["cao-cao", "zhang-fei"],
+          confidence: 0.88,
+        },
+        {
+          evidenceId: "fallback-rival-1",
+          angle: "rival",
+          title: "不能只學曹操的快",
+          summary: "曹操式的取勝效率讓劉備敬畏，也讓他更清楚自己想守住什麼。",
+          quote: "人心一失，再快也只是敗路。",
+          sourceType: "fallback-memory",
+          sourceRefs: ["017#p10"],
+          relatedTargetIds: ["cao-cao"],
+          confidence: 0.84,
+        },
+        {
+          evidenceId: "fallback-resource-1",
+          angle: "resource",
+          title: "糜氏與副倉",
+          summary: "軍資告急時，劉備會先想到糜氏舊部是否也在缺糧名冊上。",
+          quote: "舊恩之人，不可先寒心。",
+          sourceType: "fallback-memory",
+          sourceRefs: ["external-evidence"],
+          relatedTargetIds: ["mi-zhu", "mi-shi"],
+          confidence: 0.78,
+        },
+        {
+          evidenceId: "fallback-habit-1",
+          angle: "habit",
+          title: "火邊問傷兵",
+          summary: "夜裡巡營時，劉備常先問傷兵與役夫的細事，再回頭談軍令。",
+          quote: "他先問傷兵痛不痛，再問役夫家在何處。",
+          sourceType: "fallback-worldbuilding",
+          sourceRefs: ["worldbuilding-note"],
+          relatedTargetIds: ["commoners"],
+          confidence: 0.76,
+        },
+        {
+          evidenceId: "fallback-emotion-1",
+          contextKey: null,
+          angle: "emotion",
+          title: "亂世裡的家室牽掛",
+          summary: "一牽涉到家室與女性互動，劉備的念頭常會從勝負轉成安置與去留。",
+          quote: "有些牽掛不必說出口，卻會在每一次行軍時自己壓到心上。",
+          sourceType: "fallback-female",
+          sourceRefs: ["female-interaction"],
+          relatedTargetIds: ["mi-shi", "gan-shi", "sun-shang-xiang"],
+          confidence: 0.8,
+        },
+      ],
+      illustrationPromptBase: "以三國古典敘事插畫描繪劉備，氣質仁厚、憂民、重情，畫面帶水墨與寫實戲劇感，人物像正從回憶裡走出來準備做決定。",
+      keywords: {},
+    };
+
+    const elements = {
+      dataModeValue: document.getElementById("dataModeValue"),
+      dataModeHint: document.getElementById("dataModeHint"),
+      profileName: document.getElementById("profileName"),
+      profileGrade: document.getElementById("profileGrade"),
+      traitList: document.getElementById("traitList"),
+      meters: document.getElementById("meters"),
+      angleCoverageNote: document.getElementById("angleCoverageNote"),
+      angleGrid: document.getElementById("angleGrid"),
+      relationshipGrid: document.getElementById("relationshipGrid"),
+      speedRange: document.getElementById("speedRange"),
+      speedValue: document.getElementById("speedValue"),
+      nextButton: document.getElementById("nextButton"),
+      autoButton: document.getElementById("autoButton"),
+      resetButton: document.getElementById("resetButton"),
+      randomButton: document.getElementById("randomButton"),
+      refreshPromptButton: document.getElementById("refreshPromptButton"),
+      renderImageButton: document.getElementById("renderImageButton"),
+      illustrationPrompt: document.getElementById("illustrationPrompt"),
+      illustrationHint: document.getElementById("illustrationHint"),
+      illustrationImage: document.getElementById("illustrationImage"),
+      illustrationPlaceholder: document.getElementById("illustrationPlaceholder"),
+      illustrationStatus: document.getElementById("illustrationStatus"),
+      sceneTitle: document.getElementById("sceneTitle"),
+      sceneNote: document.getElementById("sceneNote"),
+      sourceBadge: document.getElementById("sourceBadge"),
+      sceneMeta: document.getElementById("sceneMeta"),
+      sceneText: document.getElementById("sceneText"),
+      memoryText: document.getElementById("memoryText"),
+      emotionText: document.getElementById("emotionText"),
+      dialogueText: document.getElementById("dialogueText"),
+      intentText: document.getElementById("intentText"),
+      storyText: document.getElementById("storyText"),
+      chorusGrid: document.getElementById("chorusGrid"),
+      chorusHint: document.getElementById("chorusHint"),
+      timeline: document.getElementById("timeline"),
+      timelineTitle: document.getElementById("timelineTitle"),
+    };
+
+    const state = {
+      turn: 1,
+      activeAngle: "emotion",
+      activePerson: "mi-shi",
+      auto: false,
+      timer: null,
+      rendering: false,
+      revealToken: 0,
+      imageRequestToken: 0,
+      dialogueRequestToken: 0,
+      narrativeRequestToken: 0,
+      dialogueAbortController: null,
+      imageAbortController: null,
+      narrativeAbortControllers: {},
+      chorusQuoteCache: {},
+      storyFusionCache: {},
+      autoDelayMs: DEFAULT_AUTO_DELAY,
+      currentBundle: null,
+      data: null,
+      meters: {
+        benevolence: 74,
+        bond: 83,
+        resolve: 58,
+        prudence: 49,
+        longing: 62,
+      },
+    };
+
+    function wait(ms) {
+      return new Promise((resolve) => window.setTimeout(resolve, ms));
+    }
+
+    function createTimeoutController(timeoutMs) {
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => {
+        controller.abort();
+      }, timeoutMs);
+      return {
+        controller,
+        signal: controller.signal,
+        clear() {
+          window.clearTimeout(timeoutId);
+        },
+      };
+    }
+
+    function abortIfAlive(controller) {
+      if (controller && !controller.signal.aborted) {
+        controller.abort();
+      }
+    }
+
+    function abortAllNarrativeControllers() {
+      for (const controller of Object.values(state.narrativeAbortControllers || {})) {
+        abortIfAlive(controller);
+      }
+      state.narrativeAbortControllers = {};
+    }
+
+    function clamp(value) {
+      return Math.max(0, Math.min(100, value));
+    }
+
+    function uniqueList(values, limit = 8) {
+      const seen = new Set();
+      const result = [];
+      for (const value of values) {
+        const text = String(value || "").trim();
+        if (!text || seen.has(text)) {
+          continue;
+        }
+        seen.add(text);
+        result.push(text);
+        if (result.length >= limit) {
+          break;
+        }
+      }
+      return result;
+    }
+
+    function shortenText(text, maxLength = 56) {
+      const normalized = String(text || "").replace(/\s+/g, " ").trim();
+      if (normalized.length <= maxLength) {
+        return normalized;
+      }
+      return `${normalized.slice(0, maxLength)}…`;
+    }
+
+    function splitSentences(text) {
+      return String(text || "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .split(/(?<=[。！？；])/)
+        .map((part) => part.trim())
+        .filter(Boolean);
+    }
+
+    function normalizeSentenceBody(text) {
+      return String(text || "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .replace(/[。！？；]+$/g, "");
+    }
+
+    function ensureSentenceEnd(text) {
+      const raw = String(text || "").trim();
+      if (!raw) {
+        return "";
+      }
+      return /[。！？；]$/.test(raw) ? raw : `${raw}。`;
+    }
+
+    function stripOuterQuotes(text) {
+      return String(text || "")
+        .trim()
+        .replace(/^「/, "")
+        .replace(/」$/, "")
+        .replace(/^"/, "")
+        .replace(/"$/, "");
+    }
+
+    function escapeRegExp(value) {
+      return String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function trimInnerQuotes(text, maxQuoteLength = 26) {
+      return String(text || "").replace(/「([^」]+)」/g, (whole, inside) => {
+        const normalized = String(inside || "").replace(/\s+/g, " ").trim();
+        if (normalized.length <= maxQuoteLength) {
+          return `「${normalized}」`;
+        }
+        return `「${shortenText(normalized, maxQuoteLength)}」`;
+      });
+    }
+
+    function stripAnalyticTone(text) {
+      const raw = String(text || "").replace(/\s+/g, " ").trim();
+      if (!raw) {
+        return "";
+      }
+      const rewritten = raw
+        .replace(/(人物身分|人際關係|地點線索|活動習慣|決策傾向|性格面向|角色定位)\s*[:：]\s*/g, "")
+        .replace(/這條線索在(?:說明|補充|提示|指出|描述|提醒)[^。！？]{0,90}[。！？]?/g, "")
+        .replace(/資料角度[^。！？]{0,60}[。！？]?/g, "")
+        .trim();
+      if (!rewritten) {
+        return raw;
+      }
+      return rewritten.length < Math.max(8, Math.floor(raw.length * 0.28)) ? raw : rewritten;
+    }
+
+    function stripSceneLeadRedundancy(text, speaker, targetName) {
+      let output = String(text || "").trim();
+      if (!output) {
+        return "";
+      }
+      const speakerEscaped = escapeRegExp(speaker || "");
+      const targetEscaped = escapeRegExp(targetName || "");
+      if (speakerEscaped) {
+        output = output.replace(new RegExp(`${speakerEscaped}一聽見[^，。]{0,24}[，,]?`), "");
+      }
+      if (targetEscaped) {
+        output = output.replace(new RegExp(`一聽見${targetEscaped}的名字[，,]?`), "");
+      }
+      output = output.replace(/^在[^。]{0,18}的記憶邊上[，,]?/, "");
+      return output.trim();
+    }
+
+    function collectConciseSentences(text, { maxSentences = 1, maxChars = 72 } = {}) {
+      const rewritten = trimInnerQuotes(stripAnalyticTone(text), 24);
+      const sentences = splitSentences(rewritten);
+      const picked = [];
+      const seen = new Set();
+      for (const sentence of sentences) {
+        const normalized = normalizeMatchText(sentence);
+        if (!normalized || normalized.length < 6 || seen.has(normalized)) {
+          continue;
+        }
+        seen.add(normalized);
+        picked.push(ensureSentenceEnd(sentence));
+        if (picked.length >= maxSentences) {
+          break;
+        }
+      }
+      const merged = picked.join(" ").trim();
+      return shortenText(merged || rewritten, maxChars);
+    }
+
+    function isEasternWuMarriageScene(bundle) {
+      const joined = [
+        bundle?.target?.targetId,
+        bundle?.target?.label,
+        bundle?.target?.role,
+        bundle?.card?.title,
+        bundle?.card?.summary,
+        bundle?.card?.quote,
+        bundle?.card?.location,
+      ].join(" ");
+      return /sun-shang-xiang|孫尚香|孫夫人|東吳|吳侯|國太|江東|盟婚|婚盟/.test(joined);
+    }
+
+    function cleanBeatSentence(text, maxChars = 82) {
+      const cleaned = stripAnalyticTone(trimInnerQuotes(text, 22))
+        .replace(/心裡先浮起「[^」]+」這段舊事[。！？]?/g, "")
+        .replace(/這條線索在[^。！？]{0,90}[。！？]?/g, "")
+        .replace(/昔日翼德[^。！？]{0,140}[。！？]?/g, "")
+        .replace(/喝退曹軍百萬[^。！？]{0,80}[。！？]?/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+      return collectConciseSentences(cleaned, { maxSentences: 1, maxChars });
+    }
+
+    function buildStoryBeatParts(bundle) {
+      const speaker = state.data?.displayName || "劉備";
+      const targetName = bundle?.target?.label || "對方";
+      const angleFocus = buildDecisionFocus(bundle?.card?.angle);
+      const location = bundle?.card?.location || "";
+      if (isEasternWuMarriageScene(bundle)) {
+        return {
+          sceneText: "江東館舍裡，國太與吳侯將要召見的消息傳來，孫尚香與婚盟局勢都壓在這一刻。",
+          memoryText: "劉備想起的是東吳設下的禮數與試探：若一步失當，荊州、人心與兩家盟約都會被牽動。",
+          emotionText: "他心中有警惕，也有委屈；可他仍把荊州安穩與大義放在私情之前。",
+          dialogueText: "吳侯與國太親自要見，此事非同小可。備當以禮相待，也要替彼此留一線餘地。",
+          intentText: "以禮赴會，先試探東吳意圖，再守住荊州與盟約的退路。",
+        };
+      }
+      const sceneBase = location
+        ? `${location}的局勢壓到眼前，${speaker}面對${targetName}時先停住腳步。`
+        : `軍帳裡燈火未穩，${speaker}面對${targetName}時先把局勢在心裡重排。`;
+      return {
+        sceneText: cleanBeatSentence(sceneBase, 86),
+        memoryText: cleanBeatSentence(bundle?.card?.summary || bundle?.memoryText || `${targetName}牽動一段舊事，讓${speaker}重新衡量眼前關係。`, 88),
+        emotionText: cleanBeatSentence(bundle?.target?.thoughtTone || "他沒有立刻下令，而是先讓情義、戒慎與責任在心裡各自站定。", 86),
+        dialogueText: cleanBeatSentence(stripOuterQuotes(bundle?.target?.dialogueTone || bundle?.dialogueText || "此事不可躁進，先讓人心站穩。"), 72),
+        intentText: cleanBeatSentence(`${bundle?.target?.actionBias || angleFocus}，再以「${angleFocus}」作為下一步判準。`, 78),
+      };
+    }
+
+    const storyDirectorForbiddenPhrases = [
+      "這條線索",
+      "心裡先浮起",
+      "決策傾向",
+      "決策風格",
+      "人物定位",
+      "這不是",
+      "先說",
+      "選擇傾向",
+      "runtime",
+      "sourceRef",
+    ];
+
+    function buildStoryDirectorBeats(bundle, parts) {
+      const speaker = state.data?.displayName || "劉備";
+      const targetName = bundle?.target?.label || "對方";
+      const relationshipRole = bundle?.target?.role || "人物關係";
+      const angleLabel = angleDefinitions[bundle?.card?.angle]?.label || "處境";
+      const locationHint = bundle?.card?.location ? `在${bundle.card.location}` : "在當前局勢裡";
+      const sourceHint = bundle?.card?.sourceType ? `（${bundle.card.sourceType}）` : "";
+      const cardTitle = bundle?.card?.title && String(bundle.card.title).length > 4 ? bundle.card.title : "";
+      const cardSummary = collectConciseSentences(
+        [bundle?.card?.summary || bundle.sceneText || "", bundle?.card?.location ? `這段記憶總會指向${bundle.card.location}` : ""].join(" "),
+        { maxSentences: 1, maxChars: 74 },
+      );
+      const emotionCore = collectConciseSentences(parts?.emotionText || "", { maxSentences: 1, maxChars: 60 });
+      const sceneAnchor = collectConciseSentences(stripSceneLeadRedundancy(parts?.sceneText || "", speaker, targetName), {
+        maxSentences: 1,
+        maxChars: 74,
+      });
+      const memoryAnchor = collectConciseSentences(`${cardSummary}`, { maxSentences: 1, maxChars: 82 });
+      const rawQuote = String(bundle?.card?.quote || "").trim();
+      const quoteHint = rawQuote && rawQuote.length <= 44 && !rawQuote.includes("「")
+        ? `他也想起一句原文：「${shortenText(trimInnerQuotes(bundle.card.quote), 56)}」。`
+        : "";
+      const speechSeed = collectConciseSentences(stripOuterQuotes(parts?.dialogueText || ""), {
+        maxSentences: 1,
+        maxChars: 58,
+      });
+      const nextAction = collectConciseSentences(parts?.intentText || "", { maxSentences: 1, maxChars: 60 });
+      return {
+        speaker,
+        targetName,
+        relationshipRole,
+        angleLabel,
+        locationHint,
+        sourceHint,
+        cardTitle,
+        sceneAnchor,
+        memoryAnchor,
+        emotionCore,
+        quoteHint,
+        speechSeed,
+        nextAction,
+        forbiddenPhrases: storyDirectorForbiddenPhrases,
+        source: normalizeMatchText(`${bundle?.card?.sourceType || "fallback"}${locationHint} ${cardTitle} ${sourceHint}`),
+      };
+    }
+
+    function buildDirectorFallbackStory(bundle, parts) {
+      const beats = buildStoryDirectorBeats(bundle, parts);
+      if (isEasternWuMarriageScene(bundle)) {
+        return [
+          "江東館舍外夜風掠過，燈火被壓得微微一晃，國太與吳侯將要召見的消息已傳進帳中。",
+          "劉備想到的不是長坂橋的戰聲，而是這場婚盟背後的試探：孫尚香的去留、荊州的安穩、東吳的禮數，都被放在同一張案上。",
+          "他心裡自然有警惕，也有委屈；可他更清楚，若此刻只按私情進退，反倒會把兩家盟約與大義一同推入險處。",
+          `他望向${beats.targetName}，低聲道：「吳侯與國太親自要見，此事非同小可。備當以禮相待，也替彼此留一線餘地。」`,
+          "說罷，他先壓住急躁，決定以禮赴會，試探東吳真正意圖，再守住荊州與盟約的退路。",
+        ].join(" ");
+      }
+      const firstLine = [
+        beats.locationHint,
+        beats.sceneAnchor,
+        beats.emotionCore || "心神先被那段記憶牽住。",
+      ].filter(Boolean).join(" ");
+      const secondLine = beats.memoryAnchor
+        ? `${beats.memoryAnchor}。${beats.quoteHint || ""}`
+        : `這幕的舊事讓${beats.speaker}把「${beats.angleLabel}」放在第一順位。`;
+      const thirdLine = beats.relationshipRole.includes("女性")
+        ? `他想起與${beats.targetName}的線索，既有去留牽掛，也有大局責任，不能只靠勇烈抉擇。`
+        : `想到${beats.targetName}，${beats.speaker}更在意關係的邊界，先守住信任，再問對方能否承受後續代價。`;
+      const fourthLine = beats.speechSeed
+        ? `${beats.speaker}轉頭向${beats.targetName}低聲道：「${stripOuterQuotes(beats.speechSeed)}」`
+        : `他與${beats.targetName}短暫對視，互相看見對方仍在承擔。`;
+      const finalLine = beats.nextAction
+        ? `接著${beats.speaker}決定先${beats.nextAction}，把局勢推到更穩的下一步。`
+        : `他先把陣腳穩住，再確認下個時刻是否可往前推。`;
+      return [firstLine, secondLine, thirdLine, fourthLine, finalLine]
+        .filter(Boolean)
+        .map((line) => normalizeSentenceBody(line))
+        .map((line) => ensureSentenceEnd(line))
+        .join(" ");
+    }
+
+    function composeMergedNarrative(bundle, parts) {
+      return buildDirectorFallbackStory(bundle, parts);
+    }
+
+    function buildStoryFusionCacheKey(bundle, parts) {
+      const refs = (bundle?.card?.sourceRefs || []).slice(0, 4).join("|");
+      const keyParts = [
+        GENERAL_ID,
+        bundle?.card?.evidenceId || "",
+        bundle?.card?.contextKey || "",
+        bundle?.card?.angle || "",
+        bundle?.target?.targetId || "",
+        refs,
+        parts?.sceneText || "",
+        parts?.memoryText || "",
+        parts?.emotionText || "",
+        parts?.dialogueText || "",
+        parts?.intentText || "",
+      ];
+      return keyParts.map((part) => normalizeMatchText(part)).join("||").slice(0, 1400);
+    }
+
+    function storyFusionQualityCheck(bundle, text) {
+      const normalized = normalizeNarrativeText(text, "").trim();
+      if (!normalized) {
+        return { ok: false, reason: "empty" };
+      }
+      if (normalized.length < 120) {
+        return { ok: false, reason: "too-short" };
+      }
+      const targetName = String(bundle?.target?.label || "").trim();
+      if (targetName && !normalized.includes(targetName)) {
+        return { ok: false, reason: "target-mismatch" };
+      }
+      const cueHits = [
+        /想起|回憶|牽掛|往事|記起|憶|回到/.test(normalized),
+        /心|情緒|猶豫|慎重|決心|戒心|不敢|緊張|安穩/.test(normalized),
+        /「[^」]{4,}」/.test(normalized),
+        /接著|因此|先是|最後|先|再|接下來|下一步|決定/.test(normalized),
+      ].filter(Boolean).length;
+      if (cueHits < 3) {
+        return { ok: false, reason: "abcd-incomplete" };
+      }
+      for (const phrase of storyDirectorForbiddenPhrases) {
+        if (phrase && normalized.includes(phrase)) {
+          return { ok: false, reason: "forbidden-phrase" };
+        }
+      }
+      return { ok: true, reason: "pass" };
+    }
+
+    async function requestStoryFusion(bundle, parts, fallbackText) {
+      const requestToken = state.narrativeRequestToken;
+      const cacheKey = buildStoryFusionCacheKey(bundle, parts);
+      const cached = state.storyFusionCache[cacheKey];
+      if (cached?.text) {
+        return cached;
+      }
+      const timeout = createTimeoutController(DEFAULT_STORY_FUSION_TIMEOUT_MS);
+      abortIfAlive(state.narrativeAbortControllers.storyFusion);
+      state.narrativeAbortControllers.storyFusion = timeout.controller;
+      const selectedKeywordKeys = uniqueList([
+        ...pickNarrativeKeywordKeys(bundle, "scene", 4),
+        ...pickNarrativeKeywordKeys(bundle, "emotion", 3),
+        ...pickNarrativeKeywordKeys(bundle, "intent", 3),
+      ], 6);
+      const beats = buildStoryDirectorBeats(bundle, parts);
+      const body = {
+        generalId: GENERAL_ID,
+        contextKey: resolveDialogueContextKey(bundle),
+        selectedKeywordKeys,
+        toneMode: "narrative_fusion",
+        locale: "zh-TW",
+        speechContextMode: "inner_monologue",
+        llmModelPreset: "fallback_chain",
+        maxChars: 420,
+        saveId: `demo-story-fusion-${GENERAL_ID}`,
+        memoryContext: {
+          saveId: `demo-story-fusion-${GENERAL_ID}`,
+          shortTerm: `${beats.speaker}${beats.locationHint}，${beats.cardTitle || beats.sceneAnchor || ""}`.trim(),
+          longTerm: `${beats.memoryAnchor}；${beats.emotionCore || ""}`.trim(),
+          playerProfile: `${beats.speaker}在${beats.relationshipRole}上，面對${beats.targetName}時，核心是在「信任」與「責任」間平衡。${
+            beats.speechSeed ? `可用台詞雛形：${beats.speechSeed}` : ""
+          }`.trim(),
+          promises: `場景導演 Beats（含主軸）：${JSON.stringify(beats, null, 0)}；下一步：${beats.nextAction || "先觀察局勢與人心"}。`.trim(),
+        },
+      };
+      try {
+        const response = await fetch(`${API_BASE}/v1/npc/dialogue`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+          signal: timeout.signal,
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const payload = await response.json();
+        if (requestToken !== state.narrativeRequestToken) {
+          return null;
+        }
+        const text = normalizeNarrativeText(payload?.text, fallbackText || "");
+        if (!text) {
+          return null;
+        }
+        const quality = storyFusionQualityCheck(bundle, text);
+        if (!quality.ok) {
+          return {
+            text: fallbackText || text,
+            provider: payload?.provider || null,
+            model: payload?.model || null,
+            fallbackUsed: true,
+            qualityReason: quality.reason,
+          };
+        }
+        const result = {
+          text,
+          provider: payload?.provider || null,
+          model: payload?.model || null,
+          fallbackUsed: Boolean(payload?.fallbackUsed),
+          qualityReason: "pass",
+        };
+        state.storyFusionCache[cacheKey] = result;
+        return result;
+      } catch (error) {
+        if (error?.name === "AbortError") {
+          return null;
+        }
+        console.warn("story-fusion fallback:", error);
+        return null;
+      } finally {
+        timeout.clear();
+        if (state.narrativeAbortControllers.storyFusion === timeout.controller) {
+          delete state.narrativeAbortControllers.storyFusion;
+        }
+      }
+    }
+
+    function humanizeSymbolicText(value) {
+      const raw = String(value || "").trim();
+      if (!raw) {
+        return "";
+      }
+      const directMap = {
+        family_affection: "家族牽掛",
+        mercy_compassion: "仁心與憐憫",
+        grief_regret: "悲痛與遺憾",
+        ambition_pride: "志氣與自尊",
+        host_banquet: "設宴安撫",
+        family_duty: "家室安置",
+        suppress_unrest: "平亂整軍",
+        governance_minded: "重治理",
+        family_bound: "重家室與結義",
+        direct_force: "行動果斷",
+        commanding: "統率威嚴",
+        analytical: "審勢而行",
+        administrative: "善理政務",
+        persuasive: "善於勸說",
+        opportunistic: "臨機應變",
+        warlord: "軍閥領袖",
+        ruler: "君主",
+        monarch: "君主",
+        sovereign: "統治者",
+        regent: "攝政者",
+        strategist: "軍師",
+        commander: "統帥",
+        governor: "地方治理者",
+        marshal: "主將",
+        chancellor: "丞相",
+        minister: "大臣",
+      };
+      if (directMap[raw]) {
+        return directMap[raw];
+      }
+      if (/^[a-z0-9_.-]+$/i.test(raw)) {
+        const tokenMap = {
+          family: "家族",
+          affection: "情感",
+          mercy: "仁心",
+          compassion: "憐憫",
+          grief: "悲痛",
+          regret: "遺憾",
+          ambition: "志氣",
+          pride: "自尊",
+          host: "設宴",
+          banquet: "宴席",
+          duty: "責任",
+          suppress: "壓制",
+          unrest: "動亂",
+          command: "統率",
+          strategy: "謀略",
+          civil: "文政",
+          governance: "治理",
+          diplomacy: "外交",
+          speech: "言辭",
+          martial: "武備",
+          weapon: "兵械",
+          opportunistic: "臨機",
+          survival: "求生",
+          prefers: "偏好",
+          battle: "戰鬥",
+          risk: "風險",
+          planning: "謀劃",
+          trap: "設伏",
+          frontline: "前線",
+          action: "行動",
+          negotiation: "談判",
+          recruitment: "招募",
+          office: "官務",
+          policy: "政務",
+        };
+        const terminal = raw.split(".").pop() || raw;
+        const parts = terminal.split("_").filter(Boolean).map((part) => tokenMap[part] || part);
+        return parts.join("、");
+      }
+      return raw
+        .replace(/\bwarlord\b/gi, "軍閥領袖")
+        .replace(/\bruler\b/gi, "君主")
+        .replace(/\bmonarch\b/gi, "君主")
+        .replace(/\bsovereign\b/gi, "統治者")
+        .replace(/\bstrategist\b/gi, "軍師")
+        .replace(/\bcommander\b/gi, "統帥")
+        .replace(/\bgovernor\b/gi, "地方治理者")
+        .replace(/\bmarshal\b/gi, "主將")
+        .replace(/\bchancellor\b/gi, "丞相")
+        .replace(/\bminister\b/gi, "大臣")
+        .replace(/\s*,\s*/g, "、");
+    }
+
+    function normalizeMatchText(value) {
+      return String(value || "").replace(/\s+/g, "").trim();
+    }
+
+    function flattenKeywordCatalog(keywordCategories) {
+      const entries = [];
+      for (const [category, options] of Object.entries(keywordCategories || {})) {
+        for (const option of options || []) {
+          entries.push({
+            category,
+            keywordKey: option.keywordKey,
+            label: option.label || option.rawTag || option.keywordKey,
+            sourceRefs: option.sourceRefs || [],
+          });
+        }
+      }
+      return entries;
+    }
+
+    function sourceRefOverlapScore(leftRefs, rightRefs) {
+      const rightSet = new Set((rightRefs || []).map((ref) => String(ref)));
+      let hits = 0;
+      for (const ref of leftRefs || []) {
+        if (rightSet.has(String(ref))) {
+          hits += 1;
+        }
+      }
+      return hits;
+    }
+
+    function scoreKeywordForBundle(entry, bundle, priorities) {
+      let score = 0;
+      const priorityIndex = priorities.indexOf(entry.category);
+      if (priorityIndex >= 0) {
+        score += 6 - priorityIndex;
+      }
+      if (bundle.card.contextKey && String(entry.keywordKey || "").includes(bundle.card.contextKey)) {
+        score += 5;
+      }
+      const overlapCount = sourceRefOverlapScore(entry.sourceRefs, bundle.card.sourceRefs);
+      score += overlapCount * 3;
+      if (entry.category === "location" && bundle.card.location && normalizeMatchText(entry.label) === normalizeMatchText(bundle.card.location)) {
+        score += 4;
+      }
+      if (
+        normalizeMatchText(entry.label) === normalizeMatchText(bundle.target.label)
+        || String(entry.keywordKey || "").includes(bundle.target.targetId)
+      ) {
+        score += 4;
+      }
+      if (bundle.target.femaleFocus && entry.category === "affect") {
+        score += 2;
+      }
+      return score;
+    }
+
+    function pickDialogueKeywordKeys(bundle, limit = 4) {
+      const categoryPriorities = {
+        people: ["person", "relationship", "affect", "event"],
+        bond: ["relationship", "person", "event", "affect"],
+        battlefield: ["event", "location", "relationship", "person"],
+        rival: ["person", "relationship", "event", "decision"],
+        resource: ["activity", "decision", "location", "person"],
+        habit: ["activity", "affect", "choice", "location"],
+        emotion: ["affect", "relationship", "person", "event"],
+        identity: ["identity", "personality", "role", "relationship"],
+        relationship: ["relationship", "person", "event", "affect"],
+        location: ["location", "event", "relationship", "person"],
+        activity: ["activity", "choice", "decision", "location"],
+        decision: ["decision", "choice", "relationship", "event"],
+        personality: ["personality", "affect", "decision", "relationship"],
+        role: ["identity", "decision", "activity", "relationship"],
+      };
+      const priorities = categoryPriorities[bundle.card.angle] || ["event", "person", "relationship"];
+      return flattenKeywordCatalog(state.data.keywords)
+        .map((entry) => ({ ...entry, score: scoreKeywordForBundle(entry, bundle, priorities) }))
+        .filter((entry) => entry.score > 0)
+        .sort((left, right) => right.score - left.score)
+        .map((entry) => entry.keywordKey)
+        .filter((keywordKey, index, array) => keywordKey && array.indexOf(keywordKey) === index)
+        .slice(0, limit);
+    }
+
+    function pickSpeechContextMode(bundle) {
+      if (bundle.card.angle === "resource") {
+        return "meeting_statement";
+      }
+      if (bundle.card.angle === "decision" || bundle.card.angle === "role") {
+        return "meeting_statement";
+      }
+      if (bundle.card.angle === "identity" || bundle.card.angle === "personality") {
+        return "inner_monologue";
+      }
+      if (bundle.card.angle === "people" || bundle.card.angle === "habit") {
+        return "life_chat";
+      }
+      if (bundle.card.angle === "emotion" && bundle.target.femaleFocus) {
+        return bundle.card.relatedTargetIds.includes(bundle.target.targetId) ? "encounter_speech" : "inner_monologue";
+      }
+      return "encounter_speech";
+    }
+
+    function resolveDialogueContextKey(bundle) {
+      const key = String(bundle?.card?.contextKey || "").trim();
+      if (key) {
+        return key;
+      }
+      const targetId = String(bundle?.target?.targetId || "").trim();
+      const fallbackCards = (state.data?.evidenceCards || []).filter((card) => {
+        return card?.contextKey && card.evidenceId !== bundle?.card?.evidenceId;
+      });
+      const scored = fallbackCards
+        .map((card) => {
+          let score = Number(card?.confidence || 0);
+          if (targetId && Array.isArray(card.relatedTargetIds) && card.relatedTargetIds.includes(targetId)) {
+            score += 7;
+          }
+          if (card.angle && bundle?.card?.angle && card.angle === bundle.card.angle) {
+            score += 4;
+          }
+          score += sourceRefOverlapScore(card.sourceRefs, bundle?.card?.sourceRefs || []) * 3;
+          if (
+            bundle?.card?.location
+            && card.location
+            && normalizeMatchText(bundle.card.location) === normalizeMatchText(card.location)
+          ) {
+            score += 2;
+          }
+          return {
+            contextKey: String(card.contextKey || "").trim(),
+            score,
+          };
+        })
+        .filter((entry) => entry.contextKey)
+        .sort((left, right) => right.score - left.score);
+      if (scored.length && scored[0].score >= 5.5) {
+        return scored[0].contextKey;
+      }
+      // Prevent backend defaulting to the first context option (often an unrelated battle scene).
+      return "__scene_without_explicit_context__";
+    }
+
+    async function requestSceneDialogue(bundle) {
+      const requestToken = ++state.dialogueRequestToken;
+      abortIfAlive(state.dialogueAbortController);
+      const timeout = createTimeoutController(DEFAULT_DIALOGUE_TIMEOUT_MS);
+      state.dialogueAbortController = timeout.controller;
+      const body = {
+        generalId: GENERAL_ID,
+        contextKey: resolveDialogueContextKey(bundle),
+        selectedKeywordKeys: pickDialogueKeywordKeys(bundle),
+        toneMode: "in-character",
+        locale: "zh-TW",
+        speechContextMode: pickSpeechContextMode(bundle),
+        llmModelPreset: "fallback_chain",
+        maxChars: 92,
+      };
+      try {
+        const response = await fetch(`${API_BASE}/v1/npc/dialogue`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+          signal: timeout.signal,
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const payload = await response.json();
+        if (requestToken !== state.dialogueRequestToken) {
+          return null;
+        }
+        return payload;
+      } catch (error) {
+        if (error?.name === "AbortError") {
+          return null;
+        }
+        console.warn("dialogue fallback:", error);
+        return null;
+      } finally {
+        timeout.clear();
+        if (state.dialogueAbortController === timeout.controller) {
+          state.dialogueAbortController = null;
+        }
+      }
+    }
+
+    function pickNarrativeKeywordKeys(bundle, segment, limit = 5) {
+      const categoryPrioritiesBySegment = {
+        scene: ["event", "relationship", "person", "location", "decision"],
+        memory: ["event", "location", "relationship", "person", "affect"],
+        emotion: ["affect", "relationship", "person", "event", "activity"],
+        intent: ["decision", "choice", "activity", "relationship", "location"],
+      };
+      const priorities = categoryPrioritiesBySegment[segment] || ["event", "person", "relationship"];
+      return flattenKeywordCatalog(state.data.keywords)
+        .map((entry) => ({ ...entry, score: scoreKeywordForBundle(entry, bundle, priorities) }))
+        .filter((entry) => entry.score > 0)
+        .sort((left, right) => right.score - left.score)
+        .map((entry) => entry.keywordKey)
+        .filter((keywordKey, index, array) => keywordKey && array.indexOf(keywordKey) === index)
+        .slice(0, limit);
+    }
+
+    function narrativeSegmentConfig(segment) {
+      switch (segment) {
+        case "scene":
+          return { speechContextMode: "inner_monologue", maxChars: 220 };
+        case "memory":
+          return { speechContextMode: "inner_monologue", maxChars: 170 };
+        case "emotion":
+          return { speechContextMode: "inner_monologue", maxChars: 160 };
+        case "intent":
+          return { speechContextMode: "meeting_statement", maxChars: 180 };
+        default:
+          return { speechContextMode: pickSpeechContextMode(state.currentBundle || { card: {}, target: {} }), maxChars: 120 };
+      }
+    }
+
+    function replaceSymbolicTokensInSentence(text) {
+      const replacements = {
+        family_affection: "家族牽掛",
+        mercy_compassion: "仁心與憐憫",
+        grief_regret: "悲痛與遺憾",
+        ambition_pride: "志氣與自尊",
+        host_banquet: "設宴安撫",
+        family_duty: "家室安置",
+        suppress_unrest: "平亂整軍",
+      };
+      let output = String(text || "");
+      for (const [token, human] of Object.entries(replacements)) {
+        output = output.replaceAll(token, human);
+      }
+      return output;
+    }
+
+    function normalizeNarrativeText(text, fallbackText) {
+      const raw = String(text || "").trim();
+      if (!raw) {
+        return fallbackText;
+      }
+      const cleaned = humanizeSymbolicText(
+        replaceSymbolicTokensInSentence(raw).replace(/\s+/g, " ").trim(),
+      );
+      return cleaned || fallbackText;
+    }
+
+    function shouldUseSegmentFallback(segment, bundle, payload, text) {
+      const normalized = normalizeNarrativeText(text, "").trim();
+      if (!normalized) {
+        return true;
+      }
+      const hasTemplateMarkers = normalized.includes("決策傾向") || normalized.includes("人物定位") || normalized.includes("這條線索") || normalized.includes("runtime") || normalized.includes("sourceRef");
+      if (hasTemplateMarkers) {
+        return true;
+      }
+      const isDeterministicLike = payload?.provider === "deterministic" || Boolean(payload?.fallbackUsed);
+      if (isDeterministicLike && normalized.length < 42) {
+        return true;
+      }
+      if (segment === "scene") {
+        const targetName = String(bundle?.target?.label || "").trim();
+        if (targetName && !normalized.includes(targetName) && normalized.length < 120) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function selectSegmentNarrativeText(segment, bundle, payload, fallbackText) {
+      const normalized = normalizeNarrativeText(payload?.text, "");
+      if (shouldUseSegmentFallback(segment, bundle, payload, normalized)) {
+        return fallbackText;
+      }
+      return normalized || fallbackText;
+    }
+
+    function pickChorusKeywordKeys(bundle, target, limit = 4) {
+      const categoryPriorities = {
+        relationship: ["relationship", "person", "event", "affect"],
+        people: ["person", "relationship", "event", "affect"],
+        battlefield: ["event", "relationship", "person", "location"],
+        location: ["location", "event", "relationship", "person"],
+        emotion: ["affect", "relationship", "person", "event"],
+      };
+      const priorities = categoryPriorities[bundle.card.angle] || ["relationship", "person", "event"];
+      return flattenKeywordCatalog(state.data.keywords)
+        .map((entry) => {
+          let score = scoreKeywordForBundle(entry, bundle, priorities);
+          const keywordKey = String(entry.keywordKey || "");
+          const label = String(entry.label || "");
+          if (target?.targetId && keywordKey.includes(target.targetId)) {
+            score += 5;
+          }
+          if (target?.label && normalizeMatchText(label).includes(normalizeMatchText(target.label))) {
+            score += 3;
+          }
+          if (target?.relationshipType && entry.category === "relationship") {
+            score += 2;
+          }
+          return { ...entry, score };
+        })
+        .filter((entry) => entry.score > 0)
+        .sort((left, right) => right.score - left.score)
+        .map((entry) => entry.keywordKey)
+        .filter((keywordKey, index, array) => keywordKey && array.indexOf(keywordKey) === index)
+        .slice(0, limit);
+    }
+
+    async function requestNarrativeSegment(bundle, segment) {
+      const requestToken = state.narrativeRequestToken;
+      const timeout = createTimeoutController(DEFAULT_NARRATIVE_TIMEOUT_MS);
+      abortIfAlive(state.narrativeAbortControllers[segment]);
+      state.narrativeAbortControllers[segment] = timeout.controller;
+      const config = narrativeSegmentConfig(segment);
+      const body = {
+        generalId: GENERAL_ID,
+        contextKey: resolveDialogueContextKey(bundle),
+        selectedKeywordKeys: pickNarrativeKeywordKeys(bundle, segment),
+        toneMode: "in-character",
+        locale: "zh-TW",
+        speechContextMode: config.speechContextMode,
+        llmModelPreset: "fallback_chain",
+        maxChars: config.maxChars,
+      };
+      try {
+        const response = await fetch(`${API_BASE}/v1/npc/dialogue`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+          signal: timeout.signal,
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const payload = await response.json();
+        if (requestToken !== state.narrativeRequestToken) {
+          return null;
+        }
+        return payload;
+      } catch (error) {
+        if (error?.name === "AbortError") {
+          return null;
+        }
+        console.warn(`narrative-${segment} fallback:`, error);
+        return null;
+      } finally {
+        timeout.clear();
+        if (state.narrativeAbortControllers[segment] === timeout.controller) {
+          delete state.narrativeAbortControllers[segment];
+        }
+      }
+    }
+
+    function setIllustrationVisualState(message, { showPlaceholder = false } = {}) {
+      elements.illustrationStatus.textContent = message;
+      elements.illustrationPlaceholder.hidden = !showPlaceholder;
+    }
+
+    async function requestSceneIllustration(bundle, { force = false } = {}) {
+      const prompt = buildIllustrationPrompt(bundle);
+      const requestToken = ++state.imageRequestToken;
+      abortIfAlive(state.imageAbortController);
+      const timeout = createTimeoutController(DEFAULT_ILLUSTRATION_TIMEOUT_MS);
+      state.imageAbortController = timeout.controller;
+      elements.illustrationImage.hidden = true;
+      setIllustrationVisualState(
+        state.auto && !force
+          ? "正在背景生成本幕插圖。自動上演模式下會盡量維持慢節奏，避免畫面跳動太快。"
+          : "正在向圖像 LLM 生成本幕插圖……",
+        { showPlaceholder: true },
+      );
+      try {
+        const response = await fetch(`${API_BASE}/v1/npc/scene-illustration`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            generalId: GENERAL_ID,
+            prompt,
+            aspectRatio: bundle.target.femaleFocus ? "4:5" : "3:4",
+            imageSize: "1K",
+          }),
+          signal: timeout.signal,
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const payload = await response.json();
+        if (requestToken !== state.imageRequestToken) {
+          return null;
+        }
+        elements.illustrationImage.src = `data:${payload.mimeType};base64,${payload.imageBase64}`;
+        elements.illustrationImage.hidden = false;
+        setIllustrationVisualState(
+          payload.caption
+            ? `插圖已由 ${payload.provider} / ${payload.model} ${payload.cacheHit ? "快取命中" : "新生成"}。提示：${shortenText(payload.caption, 72)}`
+            : `插圖已由 ${payload.provider} / ${payload.model} ${payload.cacheHit ? "快取命中" : "新生成"}。`,
+          { showPlaceholder: false },
+        );
+        return payload;
+      } catch (error) {
+        if (error?.name === "AbortError") {
+          if (requestToken === state.imageRequestToken) {
+            setIllustrationVisualState("插圖請求逾時，已保留目前畫面，可稍後重畫。", { showPlaceholder: true });
+          }
+          return null;
+        }
+        console.warn("scene-illustration fallback:", error);
+        if (requestToken !== state.imageRequestToken) {
+          return null;
+        }
+        setIllustrationVisualState("圖像 API 暫時不可用，先保留構圖 prompt 與文字劇情。", { showPlaceholder: true });
+        return null;
+      } finally {
+        timeout.clear();
+        if (state.imageAbortController === timeout.controller) {
+          state.imageAbortController = null;
+        }
+      }
+    }
+
+    function renderMeters() {
+      elements.meters.innerHTML = meterDefinitions.map((meter) => {
+        const value = Math.round(state.meters[meter.key] ?? 50);
+        return `
+          <div class="meter">
+            <span>${meter.label}</span>
+            <div class="meter-track" aria-hidden="true">
+              <div class="meter-fill" style="width:${value}%"></div>
+            </div>
+            <strong>${value}</strong>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function setStatus(mode, hint) {
+      elements.dataModeValue.textContent = mode;
+      elements.dataModeHint.textContent = hint;
+    }
+
+    function countCardsByAngle() {
+      const counts = {};
+      for (const card of state.data?.evidenceCards || []) {
+        const key = String(card.angle || "");
+        if (!key) {
+          continue;
+        }
+        counts[key] = (counts[key] || 0) + 1;
+      }
+      return counts;
+    }
+
+    function updateAngleCoverageNote() {
+      if (!elements.angleCoverageNote || !state.data) {
+        return;
+      }
+      const counts = countCardsByAngle();
+      const activeAngles = Object.keys(angleDefinitions);
+      const availableAngles = activeAngles.filter((key) => Number(counts[key] || 0) > 0);
+      elements.angleCoverageNote.textContent = `可用角度 ${availableAngles.length} 種（已開放 ${activeAngles.length} 種）；當前資料卡 ${state.data.evidenceCards.length} 張。`;
+    }
+
+    function renderAngles() {
+      const counts = countCardsByAngle();
+      elements.angleGrid.innerHTML = Object.entries(angleDefinitions).map(([key, angle]) => `
+        <button class="angle-button ${state.activeAngle === key ? "active" : ""}" type="button" data-angle="${key}">
+          <strong>${angle.label}（${counts[key] || 0}）</strong>
+          <span>${angle.desc}</span>
+        </button>
+      `).join("");
+      elements.angleGrid.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.activeAngle = button.dataset.angle;
+          renderAngles();
+          if (state.currentBundle) {
+            refreshIllustrationPrompt();
+          }
+        });
+      });
+      updateAngleCoverageNote();
+    }
+
+    function renderRelationships() {
+      elements.relationshipGrid.innerHTML = state.data.relationships.map((target) => `
+        <button class="relationship-button ${state.activePerson === target.targetId ? "active" : ""}" type="button" data-person="${target.targetId}">
+          <strong>${target.label}${target.femaleFocus ? "・女性" : ""}</strong>
+          <span>${target.role}</span>
+        </button>
+      `).join("");
+      elements.relationshipGrid.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.activePerson = button.dataset.person;
+          renderRelationships();
+          if (state.currentBundle) {
+            refreshIllustrationPrompt();
+          }
+        });
+      });
+    }
+
+    function updateSpeedLabel() {
+      elements.speedValue.textContent = `${(state.autoDelayMs / 1000).toFixed(1)} 秒 / 輪`;
+    }
+
+    function activeTarget() {
+      return state.data.relationships.find((target) => target.targetId === state.activePerson) || state.data.relationships[0];
+    }
+
+    function pickFromArray(values, offset = 0, fallback = "") {
+      if (!Array.isArray(values) || values.length === 0) {
+        return fallback;
+      }
+      return values[(state.turn + offset) % values.length];
+    }
+
+    function buildDecisionFocus(angleKey) {
+      return angleDefinitions[angleKey]?.focus || "先讓局面站穩";
+    }
+
+    function buildSceneLeadFromCardTitle(title) {
+      const normalized = String(title || "").replace(/\s+/g, " ").trim();
+      if (!normalized) {
+        return "心裡先浮起一段舊事。";
+      }
+      if (/[。！？]$/.test(normalized)) {
+        return normalized;
+      }
+      const sentenceLike = /^(想起|念頭|地勢|把|先|一想到|面對|他)/.test(normalized);
+      if (sentenceLike) {
+        return `${normalized}。`;
+      }
+      return `心裡先浮起「${normalized}」這段舊事。`;
+    }
+
+    function adaptCardForTarget(card, target) {
+      const directMatch = !Array.isArray(card.relatedTargetIds)
+        || card.relatedTargetIds.length === 0
+        || card.relatedTargetIds.includes(target.targetId);
+      if (directMatch) {
+        return {
+          title: card.title,
+          summary: card.summary,
+          quote: card.quote,
+          sourceRefs: card.sourceRefs || [],
+        };
+      }
+      return {
+        title: `借鏡舊事，對照${target.label}`,
+        summary: `這段線索原本不是直接描述${target.label}，但劉備把其中的得失借來對照眼前局勢。`,
+        quote: "",
+        sourceRefs: card.sourceRefs || [],
+      };
+    }
+
+    function guessAngleFromText(text) {
+      const source = String(text || "");
+      if (/字|本名|號|稱|官|太守|將軍|皇后|身分|身份/.test(source)) {
+        return "identity";
+      }
+      if (/關係|兄弟|父|母|妻|夫|盟|結義|親屬|同族/.test(source)) {
+        return "relationship";
+      }
+      if (/城|州|郡|縣|橋|路|渡|營|地點/.test(source)) {
+        return "location";
+      }
+      if (/習慣|巡營|宴|日常|生活|嗜好|活動|作息/.test(source)) {
+        return "activity";
+      }
+      if (/決定|選擇|偏好|是否|取捨|風險/.test(source)) {
+        return "decision";
+      }
+      if (/性格|個性|氣質|作風|審慎|果決/.test(source)) {
+        return "personality";
+      }
+      if (/角色|定位|君主|統帥|治理者|軍師/.test(source)) {
+        return "role";
+      }
+      if (/家|妻|夫人|情|別離|牽掛|女性/.test(source)) {
+        return "emotion";
+      }
+      if (/糧|倉|兵書|裝備|車|輜重|軍資/.test(source)) {
+        return "resource";
+      }
+      if (/戰|橋|退|兵|軍|追/.test(source)) {
+        return "battlefield";
+      }
+      if (/兄|義|盟|託/.test(source)) {
+        return "bond";
+      }
+      return "people";
+    }
+
+    function decorateRelationshipTarget(raw) {
+      const relationType = String(raw.relationshipType || "");
+      const fallbackTone = raw.femaleFocus ? {
+        role: "女性互動線索",
+        thoughtTone: "一牽涉到女性與家室，劉備的念頭就會從單純的勝負轉成更細的去留與安置。",
+        dialogueTone: "「此事不只關乎成敗，也關乎誰要承擔餘波。」",
+        actionBias: "先顧家室與去留，再談出兵與否",
+        meterDelta: { benevolence: 2, bond: 2, longing: 5, prudence: 1 },
+      } : {
+        role: raw.role || "人物線索",
+        thoughtTone: "這個人會把劉備的心事往另一個方向推去，讓他重新衡量自己該先守住什麼。",
+        dialogueTone: "「此事不可只看一時快慢，還要看後頭的人心會怎麼散。」",
+        actionBias: "先看局面與人心，再定下一步",
+        meterDelta: { benevolence: 2, prudence: 2, resolve: 1 },
+      };
+      const relationToneMap = {
+        sworn_sibling: {
+          role: raw.role || "兄弟 / 義氣相託",
+          thoughtTone: "想到這段義氣，劉備往往先想起自己還欠下多少不該由對方獨扛的風浪。",
+          dialogueTone: "「先讓我把人護住，再談勝負也不遲。」",
+          actionBias: "先護住兄弟與退路，再談推進",
+          meterDelta: { bond: 6, longing: 2, resolve: 2 },
+        },
+        battle_ally: {
+          role: raw.role || "戰陣同盟",
+          thoughtTone: "對方一出現，劉備會立刻把心神轉到聯手與護側上。",
+          dialogueTone: "「你先守住那一翼，我來把剩下的人心整回來。」",
+          actionBias: "先協同與補位，再追下一步",
+          meterDelta: { bond: 4, resolve: 2, prudence: 1 },
+        },
+        enemy_rival: {
+          role: raw.role || "宿敵 / 勝負對照",
+          thoughtTone: "想到宿敵，劉備不只是起戒心，也會更清楚自己不想失掉的底線。",
+          dialogueTone: "「若要贏得只剩手段，便連自己也輸了。」",
+          actionBias: "先衡量代價，再決定是否用強",
+          meterDelta: { prudence: 4, resolve: 4, benevolence: 1 },
+        },
+        battlefield_opponent: {
+          role: raw.role || "戰場對手",
+          thoughtTone: "這種對手會讓劉備立刻警覺起來，但他仍會先看己方是否穩得住。",
+          dialogueTone: "「先別躁進，把隊形收緊，讓人心站穩。」",
+          actionBias: "先整隊與試探，再決定強攻",
+          meterDelta: { prudence: 3, resolve: 3, bond: 1 },
+        },
+        patron_client: {
+          role: raw.role || "舊恩 / 倚重",
+          thoughtTone: "這種人物會讓劉備先想到自己受過的援手，以及該如何把恩義還回去。",
+          dialogueTone: "「恩義不是口頭記著就夠，得落到實際安置上。」",
+          actionBias: "先盤點支援與安置，再談用兵",
+          meterDelta: { benevolence: 4, bond: 4, prudence: -1 },
+        },
+        betrayal_surrender: {
+          role: raw.role || "降附 / 去留未定",
+          thoughtTone: "這樣的人會讓劉備同時想到機會與反噬，心裡多半不會完全放鬆。",
+          dialogueTone: "「能收人，卻未必能立刻收心，得先把防線留好。」",
+          actionBias: "先設防與觀望，再決定是否倚重",
+          meterDelta: { prudence: 4, resolve: 1, longing: -1 },
+        },
+      };
+      const special = specialTargetOverrides[raw.targetId];
+      const tone = special ? {
+        role: special.role,
+        thoughtTone: special.thoughtTone,
+        dialogueTone: special.dialogueTone,
+        actionBias: special.actionBias,
+        meterDelta: special.meterDelta,
+      } : (relationToneMap[relationType] || fallbackTone);
+
+      return {
+        targetId: raw.targetId,
+        label: raw.label || raw.targetId,
+        role: tone.role,
+        thoughtTone: tone.thoughtTone,
+        dialogueTone: tone.dialogueTone,
+        actionBias: tone.actionBias,
+        meterDelta: tone.meterDelta,
+        femaleFocus: Boolean(raw.femaleFocus),
+        confidence: Number(raw.confidence || 0.68),
+        sourceType: raw.sourceType || "runtime",
+        relationshipType: relationType || null,
+        evidenceRefs: raw.evidenceRefs || [],
+      };
+    }
+
+    function normalizeEvidenceCard(rawCard) {
+      const angle = angleDefinitions[rawCard.angle] ? rawCard.angle : guessAngleFromText(`${rawCard.title || ""} ${rawCard.summary || ""}`);
+      return {
+        evidenceId: rawCard.evidenceId || `runtime-card-${Math.random().toString(36).slice(2)}`,
+        contextKey: rawCard.contextKey || null,
+        angle,
+        title: rawCard.title || "舊事浮現",
+        summary: rawCard.summary || rawCard.quote || "一段線索正在慢慢浮上心頭。",
+        quote: rawCard.quote || "",
+        location: rawCard.location || "",
+        chapterNo: Number.isInteger(rawCard.chapterNo) ? rawCard.chapterNo : null,
+        sourceType: rawCard.sourceType || "runtime",
+        sourceRefs: rawCard.sourceRefs || [],
+        relatedTargetIds: rawCard.relatedTargetIds || [],
+        confidence: Number(rawCard.confidence || 0.72),
+      };
+    }
+
+    function parseTargetIdFromKeywordKey(keywordKey) {
+      const text = String(keywordKey || "");
+      if (text.startsWith("relationship.")) {
+        return text.split(".")[1] || null;
+      }
+      if (text.startsWith("person.")) {
+        return text.split(".")[1] || null;
+      }
+      return null;
+    }
+
+    function buildKeywordAngleNarrative(angle, label) {
+      const normalizedLabel = humanizeSymbolicText(label || "線索");
+      const narrativeMap = {
+        identity: {
+          title: "想起自己的身分與名號",
+          summary: `他提醒自己，「${normalizedLabel}」不只是稱呼，而是要扛住的人心與責任。`,
+        },
+        relationship: {
+          title: "念頭先回到人情牽連",
+          summary: `一想到「${normalizedLabel}」，他就會先衡量彼此情義與後續代價，再決定怎麼走下一步。`,
+        },
+        location: {
+          title: "地勢與路線先在心裡排開",
+          summary: `「${normalizedLabel}」這條線索讓他先看地利與退路，避免憑一時情緒躁進。`,
+        },
+        activity: {
+          title: "把日常作法帶回戰局",
+          summary: `他習慣從「${normalizedLabel}」這類細節下手，先穩住人與節奏，再談推進。`,
+        },
+        decision: {
+          title: "心裡先把取捨拉到眼前",
+          summary: `面對抉擇時，他的第一反應偏向「${normalizedLabel}」，但仍會留一步觀察局勢。`,
+        },
+        personality: {
+          title: "性格牽著他的判斷",
+          summary: `「${normalizedLabel}」這種性格傾向會直接影響他出手快慢，也影響他願意承擔的風險。`,
+        },
+        role: {
+          title: "先把自己的位置想清楚",
+          summary: `他記得自己此刻肩上是「${normalizedLabel}」的責任，因此先守秩序，再談勝負。`,
+        },
+      };
+      return narrativeMap[angle] || {
+        title: "一條線索忽然變得清楚",
+        summary: `${normalizedLabel}這件事，讓他更確定眼前該先守住什麼。`,
+      };
+    }
+
+    function buildKeywordAngleTitle(angle, label) {
+      return buildKeywordAngleNarrative(angle, label).title;
+    }
+
+    function buildKeywordAngleSummary(angle, label) {
+      return buildKeywordAngleNarrative(angle, label).summary;
+    }
+
+    function mergeEvidenceCards(baseCards, extraCards) {
+      const byId = new Map();
+      for (const card of baseCards || []) {
+        byId.set(card.evidenceId, card);
+      }
+      for (const card of extraCards || []) {
+        if (!byId.has(card.evidenceId)) {
+          byId.set(card.evidenceId, card);
+        }
+      }
+      return Array.from(byId.values());
+    }
+
+    function buildKeywordAngleCards(keywordCategories, profile) {
+      const cards = [];
+      const categoryConfigs = [
+        { category: "identity", angle: "identity", limit: 4 },
+        { category: "relationship", angle: "relationship", limit: 5 },
+        { category: "location", angle: "location", limit: 5 },
+        { category: "activity", angle: "activity", limit: 5 },
+        { category: "decision", angle: "decision", limit: 5 },
+        { category: "personality", angle: "personality", limit: 5 },
+      ];
+      for (const config of categoryConfigs) {
+        const options = Array.isArray(keywordCategories?.[config.category]) ? keywordCategories[config.category] : [];
+        const sorted = [...options].sort((left, right) => Number(right?.confidence || 0) - Number(left?.confidence || 0));
+        for (const option of sorted.slice(0, config.limit)) {
+          const keywordKey = String(option?.keywordKey || "");
+          const label = String(option?.label || option?.fullLabel || keywordKey || "線索");
+          const sourceRefs = Array.isArray(option?.sourceRefs) ? option.sourceRefs.filter(Boolean).map(String) : [];
+          const targetId = parseTargetIdFromKeywordKey(keywordKey);
+          cards.push({
+            evidenceId: `keyword-angle:${config.angle}:${keywordKey || label}`,
+            contextKey: null,
+            angle: config.angle,
+            title: buildKeywordAngleTitle(config.angle, label),
+            summary: buildKeywordAngleSummary(config.angle, label),
+            quote: "",
+            location: "",
+            chapterNo: null,
+            sourceType: "runtime-keyword-angle",
+            sourceRefs,
+            relatedTargetIds: targetId ? [targetId] : [],
+            confidence: Number(option?.confidence || 0.68),
+          });
+        }
+      }
+
+      const roleTags = Array.isArray(profile?.roleActivityTags) ? profile.roleActivityTags.slice(0, 4) : [];
+      for (const rawTag of roleTags) {
+        const label = humanizeSymbolicText(rawTag);
+        cards.push({
+          evidenceId: `keyword-angle:role:${rawTag}`,
+          contextKey: null,
+          angle: "role",
+          title: buildKeywordAngleTitle("role", label),
+          summary: buildKeywordAngleSummary("role", label),
+          quote: "",
+          location: "",
+          chapterNo: null,
+          sourceType: "runtime-role-angle",
+          sourceRefs: [],
+          relatedTargetIds: [],
+          confidence: 0.66,
+        });
+      }
+      return cards;
+    }
+
+    function normalizeNarrativePayload(payload) {
+      const persona = payload.persona || {};
+      const profile = persona.profile || {};
+      const keywordCategories = payload.keywords || fallbackNarrativeData.keywords || {};
+      const traits = uniqueList([
+        ...(persona.voiceStyle || []),
+        ...(persona.personalityTraits || []),
+        ...(profile.personalityTags || []),
+      ].map((trait) => humanizeSymbolicText(trait)), 8);
+      const relationships = (payload.interactionTargets || []).map(decorateRelationshipTarget);
+      const rawCards = (payload.evidenceCards || []).map(normalizeEvidenceCard);
+      const keywordAngleCards = buildKeywordAngleCards(keywordCategories, profile);
+      const cards = mergeEvidenceCards(rawCards, keywordAngleCards);
+      const activitySeeds = (payload.activitySeeds || []).map((seed) => ({
+        keywordKey: seed.keywordKey,
+        label: humanizeSymbolicText(seed.label || seed.rawTag || seed.keywordKey),
+      }));
+      return {
+        displayName: payload.displayName || persona.displayName || "劉備",
+        grade: persona.runtimeReadiness?.status || "runtime-profile",
+        dataMode: "npc-brain 真資料",
+        dataHint: `已連到 ${payload.sourceMode || "runtime-general-profiles"}，目前優先使用 runtime persona / relationships / evidence cards。`,
+        sourceMode: payload.sourceMode || "runtime-general-profiles",
+        traits: traits.length ? traits : fallbackNarrativeData.traits,
+        persona: {
+          ...fallbackNarrativeData.persona,
+          ...persona,
+          profile: {
+            ...(fallbackNarrativeData.persona.profile || {}),
+            ...(persona.profile || {}),
+          },
+        },
+        activitySeeds: activitySeeds.length ? activitySeeds : fallbackNarrativeData.activitySeeds,
+        relationships: relationships.length ? relationships : fallbackNarrativeData.relationships,
+        evidenceCards: cards.length ? cards : fallbackNarrativeData.evidenceCards,
+        illustrationPromptBase: payload.illustrationPromptBase || fallbackNarrativeData.illustrationPromptBase,
+        keywords: keywordCategories,
+      };
+    }
+
+    async function loadNarrativeData() {
+      const timeout = createTimeoutController(DEFAULT_PROFILE_TIMEOUT_MS);
+      try {
+        const response = await fetch(`${API_BASE}/v1/npc/narrative-profile?generalId=${encodeURIComponent(GENERAL_ID)}`, {
+          signal: timeout.signal,
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const payload = await response.json();
+        const hasUsableNarrativeData = Array.isArray(payload.evidenceCards) && payload.evidenceCards.length > 0
+          && Array.isArray(payload.interactionTargets) && payload.interactionTargets.length > 0;
+        if (!hasUsableNarrativeData) {
+          throw new Error("Narrative payload is empty.");
+        }
+        return normalizeNarrativePayload(payload);
+      } catch (error) {
+        console.warn("narrative-profile fallback:", error);
+        return { ...fallbackNarrativeData };
+      } finally {
+        timeout.clear();
+      }
+    }
+
+    function applyData(data) {
+      state.data = data;
+      elements.profileName.textContent = data.displayName;
+      elements.profileGrade.textContent = data.grade;
+      elements.traitList.innerHTML = data.traits.map((trait) => `<li>${trait}</li>`).join("");
+      setStatus(data.dataMode, data.dataHint);
+      elements.sourceBadge.textContent = data.sourceMode === "runtime-general-profiles" ? "真資料模式" : "示範模式";
+      if (elements.chorusHint) {
+        elements.chorusHint.textContent = `每幕最多 4 人；預設 2 人走 LLM，其餘走快速模板。可用互動人物 ${data.relationships.length} 位。`;
+      }
+      if (!state.data.relationships.find((target) => target.targetId === state.activePerson)) {
+        state.activePerson = state.data.relationships[0]?.targetId || "mi-shi";
+      }
+    }
+
+    function pickCardForCurrentState() {
+      const anglePool = state.data.evidenceCards.filter((card) => card.angle === state.activeAngle);
+      const targetedPool = anglePool.filter((card) => {
+        return !card.relatedTargetIds.length || card.relatedTargetIds.includes(state.activePerson);
+      });
+      const pool = targetedPool.length ? targetedPool : (anglePool.length ? anglePool : state.data.evidenceCards);
+      return pool[(state.turn - 1) % pool.length];
+    }
+
+    function applyMeterChanges(card, target) {
+      const angleDeltaMap = {
+        people: { benevolence: 5, bond: 1, prudence: 1 },
+        bond: { bond: 5, longing: 2, resolve: 2 },
+        battlefield: { prudence: 4, resolve: 4, bond: 1 },
+        rival: { prudence: 5, resolve: 4, benevolence: 1 },
+        resource: { benevolence: 4, bond: 3, prudence: 1 },
+        habit: { benevolence: 3, prudence: 2, longing: 1 },
+        emotion: { longing: 6, bond: 3, prudence: 1, resolve: -1 },
+        identity: { prudence: 3, resolve: 1, benevolence: 1 },
+        relationship: { bond: 4, prudence: 2, longing: 1 },
+        location: { prudence: 4, resolve: 1 },
+        activity: { benevolence: 2, bond: 2, prudence: 2 },
+        decision: { resolve: 4, prudence: 3, benevolence: -1 },
+        personality: { prudence: 2, resolve: 2, longing: 1 },
+        role: { resolve: 3, prudence: 3, bond: 1 },
+      };
+      const delta = angleDeltaMap[card.angle] || { benevolence: 2 };
+      for (const [key, value] of Object.entries(delta)) {
+        state.meters[key] = clamp((state.meters[key] ?? 50) + value);
+      }
+      for (const [key, value] of Object.entries(target.meterDelta || {})) {
+        state.meters[key] = clamp((state.meters[key] ?? 50) + value);
+      }
+    }
+
+    function buildSceneBundle(card, target) {
+      const adjustedCard = adaptCardForTarget(card, target);
+      const persona = state.data.persona || {};
+      const profile = persona.profile || {};
+      const safeLine = persona.safeFallbackLine || "備所念者，不過百姓得安、兄弟不離。";
+      const affect = humanizeSymbolicText(pickFromArray(profile.affectTags || [], 0, "牽掛"));
+      const activity = humanizeSymbolicText(pickFromArray(state.data.activitySeeds.map((seed) => seed.label), 1, "巡營問細事"));
+      const voice = humanizeSymbolicText(pickFromArray(state.data.traits, 2, "仁厚"));
+      const chapterTag = card.chapterNo ? `第 ${card.chapterNo} 回` : "runtime 線索";
+      const locationLead = card.location ? `在${card.location}的記憶邊上，` : "夜色一沉，";
+      const quoteLine = adjustedCard.quote ? `他記得那句原文：「${shortenText(adjustedCard.quote, 72)}」` : `那股${affect}的感受沒有完全散去。`;
+      const emotionalLead = target.femaleFocus
+        ? "一牽涉到女性與家室，劉備的心思就不再只剩勝負。"
+        : target.relationshipType === "enemy_rival" || target.relationshipType === "battlefield_opponent"
+        ? "想到對手時，他的戒心會先升起，但還是會忍住躁進。"
+        : "想到眼前這個人時，他的心先被情義與責任拉住。";
+      const sceneTitle = `${adjustedCard.title}，對著${target.label}動了心思`;
+      const sceneNote = `資料來源：${card.sourceType}；角度：${angleDefinitions[card.angle].label}；互動：${target.role}；節奏：${(state.autoDelayMs / 1000).toFixed(1)} 秒 / 輪`;
+      const sceneLead = buildSceneLeadFromCardTitle(adjustedCard.title);
+      const sceneText = `${locationLead}${state.data.displayName}一聽見${target.label}的名字，${sceneLead} ${adjustedCard.summary} ${quoteLine} ${emotionalLead} 於是他沒有急著下令，而是先想著${target.actionBias}，再決定要不要把事情往前推。`;
+      const memoryText = `${adjustedCard.summary}${card.location ? ` 那段記憶總會把他帶回${card.location}。` : ""}`;
+      const emotionText = `${target.thoughtTone} 這也讓他身上的「${voice}」不是抽象標籤，而是會真的影響選擇的情緒。`;
+      const dialogueText = `${target.dialogueTone} ${safeLine}`;
+      const intentText = `他接下來想先${target.actionBias}，並以「${buildDecisionFocus(card.angle)}」作為眼前這一步的判準，同時把${activity}也一起排進今日的行動裡。`;
+      return {
+        sceneTitle,
+        sceneNote,
+        sceneText,
+        memoryText,
+        emotionText,
+        dialogueText,
+        intentText,
+        meta: [
+          `第 ${state.turn} 幕`,
+          angleDefinitions[card.angle].label,
+          target.label,
+          chapterTag,
+          `可信度 ${(card.confidence * 100).toFixed(0)}%`,
+        ],
+        card: {
+          ...card,
+          title: adjustedCard.title,
+          summary: adjustedCard.summary,
+          quote: adjustedCard.quote,
+          sourceRefs: adjustedCard.sourceRefs,
+        },
+        target,
+      };
+    }
+
+    async function revealText(element, text, delayMs) {
+      const token = state.revealToken;
+      const fragments = splitSentences(text);
+      element.innerHTML = "";
+      if (!fragments.length) {
+        element.textContent = text;
+        return;
+      }
+      for (const fragment of fragments) {
+        if (token !== state.revealToken) {
+          return;
+        }
+        const span = document.createElement("span");
+        span.className = "reveal-fragment";
+        span.textContent = `${fragment}${fragment.endsWith("。") || fragment.endsWith("！") || fragment.endsWith("？") ? "" : " "}`;
+        element.appendChild(span);
+        window.requestAnimationFrame(() => {
+          span.classList.add("visible");
+        });
+        await wait(delayMs);
+      }
+    }
+
+    function renderMetaChips(items) {
+      elements.sceneMeta.innerHTML = items.map((item) => `<span>${item}</span>`).join("");
+    }
+
+    function buildIllustrationPrompt(bundle) {
+      const target = bundle.target;
+      const card = bundle.card;
+      const mood = target.femaleFocus ? "含蓄情感、家室牽掛、亂世去留" : angleDefinitions[card.angle].desc;
+      const detail = card.location ? `場景位置：${card.location}；` : "";
+      return `${state.data.illustrationPromptBase}\n場景主題：${bundle.sceneTitle}\n互動對象：${target.label}（${target.role}）\n畫面情緒：${mood}\n${detail}關鍵文字線索：${shortenText(card.summary, 80)}\n構圖要求：半身到全身，營火或軍帳光源，人物剛從回憶中回神，像正要下達下一步命令。`;
+    }
+
+    function refreshIllustrationPrompt() {
+      if (!state.currentBundle) {
+        return;
+      }
+      const prompt = buildIllustrationPrompt(state.currentBundle);
+      elements.illustrationPrompt.textContent = prompt;
+      elements.illustrationHint.textContent = `目前互動對象：${state.currentBundle.target.label}；如果之後接圖像 API，這段 prompt 可以直接拿去生成插圖。`;
+    }
+
+    function addTimelineLog(bundle) {
+      const log = document.createElement("article");
+      log.className = "log-item";
+      const intentLine = bundle.runtimeIntentText || bundle.intentText;
+      log.innerHTML = `
+        <strong>第 ${state.turn} 幕 / ${angleDefinitions[bundle.card.angle].label} / ${bundle.target.label}</strong>
+        <p>${intentLine}</p>
+      `;
+      elements.timeline.prepend(log);
+      while (elements.timeline.children.length > 6) {
+        elements.timeline.removeChild(elements.timeline.lastElementChild);
+      }
+    }
+
+    function selectChorusTargets(bundle, limit = 4) {
+      const activeId = bundle.target?.targetId;
+      const sourceRefs = new Set((bundle.card?.sourceRefs || []).map(String));
+      const candidates = (state.data.relationships || [])
+        .filter((target) => target.targetId && target.targetId !== activeId)
+        .map((target) => {
+          let score = Number(target.confidence || 0.6) * 10;
+          const refHits = (target.evidenceRefs || []).filter((ref) => sourceRefs.has(String(ref))).length;
+          score += refHits * 4;
+          if (target.relationshipType && String(bundle.card?.angle || "").includes("relationship")) {
+            score += 1.5;
+          }
+          if (target.femaleFocus && bundle.card?.angle === "emotion") {
+            score += 2;
+          }
+          return { target, score };
+        })
+        .sort((left, right) => right.score - left.score)
+        .slice(0, limit)
+        .map((entry) => entry.target);
+      return candidates;
+    }
+
+    function buildTemplateChorusLine(bundle, target) {
+      const roleLead = target.femaleFocus ? "她" : "他";
+      const angleLabel = angleDefinitions[bundle.card.angle]?.label || "這幕";
+      const humanizedTitle = humanizeSymbolicText(bundle.card.title || "這幕舊事");
+      const base = `${target.label}看著劉備提起「${humanizedTitle}」，${roleLead}先想到${angleLabel}背後的代價。`;
+      if (target.relationshipType === "enemy_rival" || target.relationshipType === "battlefield_opponent") {
+        return `${base}「若此刻躁進，反而會被人心反噬。」`;
+      }
+      if (target.relationshipType === "sworn_sibling" || target.relationshipType === "battle_ally") {
+        return `${base}「先把同袍站穩，再談下一步。」`;
+      }
+      if (target.femaleFocus) {
+        return `${base}「勝負之外，去留與安置也要先算進去。」`;
+      }
+      return `${base}「他這一步若慢半拍，反而能看清全局。」`;
+    }
+
+    function chorusCacheKey(bundle, target) {
+      const refs = (bundle.card?.sourceRefs || []).slice(0, 3).join("|");
+      return `${GENERAL_ID}|${target.targetId}|${bundle.card?.angle || ""}|${bundle.card?.contextKey || ""}|${refs}`;
+    }
+
+    async function requestChorusDialogueLine(bundle, target) {
+      const cacheKey = chorusCacheKey(bundle, target);
+      if (state.chorusQuoteCache[cacheKey]) {
+        return state.chorusQuoteCache[cacheKey];
+      }
+      const body = {
+        generalId: target.targetId,
+        contextKey: resolveDialogueContextKey(bundle),
+        selectedKeywordKeys: pickChorusKeywordKeys(bundle, target, 4),
+        toneMode: "in-character",
+        locale: "zh-TW",
+        speechContextMode: "encounter_speech",
+        llmModelPreset: "fallback_chain",
+        maxChars: 92,
+        saveId: `demo-chorus-${GENERAL_ID}`,
+        memoryContext: {
+          saveId: `demo-chorus-${GENERAL_ID}`,
+          shortTerm: shortenText(bundle.sceneText || "", 140),
+          longTerm: shortenText(`${bundle.memoryText || ""} ${bundle.emotionText || ""}`.trim(), 140),
+          playerProfile: shortenText(`劉備正在對${target.label}相關局勢做判斷。`, 96),
+          promises: shortenText(bundle.intentText || "", 120),
+        },
+      };
+      try {
+        const response = await fetch(`${API_BASE}/v1/npc/dialogue`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const payload = await response.json();
+        if (payload?.fallbackUsed && payload?.provider === "deterministic") {
+          return null;
+        }
+        const text = normalizeNarrativeText(payload?.text, "");
+        if (!text) {
+          return null;
+        }
+        state.chorusQuoteCache[cacheKey] = text;
+        return text;
+      } catch (error) {
+        console.warn(`chorus-line fallback: ${target.targetId}`, error);
+        return null;
+      }
+    }
+
+    function renderChorusCards(targets, bundle, overrideQuotes = {}) {
+      if (!elements.chorusGrid) {
+        return;
+      }
+      elements.chorusGrid.innerHTML = targets.map((target) => {
+        const quote = overrideQuotes[target.targetId] || buildTemplateChorusLine(bundle, target);
+        const role = target.role || "人物線索";
+        return `
+          <article class="chorus-card" data-target-id="${target.targetId}">
+            <strong>${target.label}・${role}</strong>
+            <p>${quote}</p>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function renderChorusLines(bundle) {
+      const runToken = state.narrativeRequestToken;
+      const targets = selectChorusTargets(bundle, 4);
+      if (!targets.length) {
+        if (elements.chorusGrid) {
+          elements.chorusGrid.innerHTML = "";
+        }
+        return;
+      }
+      renderChorusCards(targets, bundle, {});
+      const quotes = {};
+      const llmTargetCount = state.auto ? 2 : Math.min(4, targets.length);
+      const llmTargets = targets.slice(0, llmTargetCount);
+      const results = await Promise.all(
+        llmTargets.map(async (target) => {
+          const line = await requestChorusDialogueLine(bundle, target);
+          return { targetId: target.targetId, line };
+        }),
+      );
+      if (runToken !== state.narrativeRequestToken) {
+        return;
+      }
+      for (const result of results) {
+        if (result.line) {
+          quotes[result.targetId] = result.line;
+        }
+      }
+      renderChorusCards(targets, bundle, quotes);
+    }
+
+    async function playBundle(bundle) {
+      state.rendering = true;
+      state.revealToken += 1;
+      state.currentBundle = bundle;
+      state.narrativeRequestToken += 1;
+      abortAllNarrativeControllers();
+      try {
+        elements.sceneTitle.textContent = bundle.sceneTitle;
+        elements.sceneNote.textContent = bundle.sceneNote;
+        elements.sourceBadge.textContent = state.data.sourceMode === "runtime-general-profiles"
+          ? `${bundle.card.sourceType} / 真資料`
+          : `${bundle.card.sourceType} / 示範`;
+        renderMetaChips(bundle.meta);
+
+        elements.sceneText.innerHTML = `<span class="loading-pulse">正在把這幕慢慢演出來……</span>`;
+        elements.memoryText.innerHTML = "";
+        elements.emotionText.innerHTML = "";
+        elements.dialogueText.innerHTML = `<span class="loading-pulse">正在依據 persona 與證據生成一句更像劉備會說的話……</span>`;
+        elements.intentText.innerHTML = "";
+        elements.storyText.innerHTML = `<span class="loading-pulse">正在把四段敘事融合成完整劇情……</span>`;
+        refreshIllustrationPrompt();
+        const beatParts = buildStoryBeatParts(bundle);
+        const chorusPromise = renderChorusLines(bundle);
+        const dialoguePromise = requestSceneDialogue(bundle);
+        const imagePromise = requestSceneIllustration(bundle);
+
+        await wait(220);
+        const sceneNarrativeText = beatParts.sceneText;
+        await revealText(elements.sceneText, sceneNarrativeText, 520);
+        const memoryNarrativeText = beatParts.memoryText;
+        await revealText(elements.memoryText, memoryNarrativeText, 320);
+        const emotionNarrativeText = beatParts.emotionText;
+        await revealText(elements.emotionText, emotionNarrativeText, 320);
+        const dialoguePayload = await dialoguePromise;
+        const runtimeDialogueText = normalizeNarrativeText(dialoguePayload?.text, "");
+        const dialogueText = isEasternWuMarriageScene(bundle) && /張飛|翼德|長坂|曹軍百萬/.test(runtimeDialogueText)
+          ? beatParts.dialogueText
+          : (runtimeDialogueText || beatParts.dialogueText);
+        const intentNarrativeText = beatParts.intentText;
+        bundle.runtimeIntentText = intentNarrativeText;
+        const narrativeSource = "敘事：劇情 beats";
+        const dialogueSource = dialoguePayload?.provider
+          ? `台詞：${dialoguePayload.provider}${dialoguePayload.model ? `/${dialoguePayload.model}` : ""}`
+          : "台詞：模板 fallback";
+        let storySource = "完整敘事：規則融合 fallback";
+        if (state.currentBundle === bundle) {
+          elements.sceneNote.textContent = `${bundle.sceneNote}；${narrativeSource}；${dialogueSource}；${storySource}`;
+        }
+        await revealText(elements.dialogueText, dialogueText, 300);
+        await revealText(elements.intentText, intentNarrativeText, 320);
+        const storyBeatParts = {
+          sceneText: sceneNarrativeText,
+          memoryText: memoryNarrativeText,
+          emotionText: emotionNarrativeText,
+          dialogueText,
+          intentText: intentNarrativeText,
+        };
+        const mergedStoryFallback = composeMergedNarrative(bundle, storyBeatParts);
+        const storyFusionPayload = await requestStoryFusion(bundle, storyBeatParts, mergedStoryFallback);
+        const mergedStoryText = normalizeNarrativeText(storyFusionPayload?.text, mergedStoryFallback);
+        if (storyFusionPayload?.provider && storyFusionPayload?.qualityReason === "pass") {
+          storySource = `完整敘事：${storyFusionPayload.provider}${storyFusionPayload.model ? `/${storyFusionPayload.model}` : ""}`;
+        } else if (storyFusionPayload?.qualityReason) {
+          storySource = `完整敘事：品質閘門 fallback（${storyFusionPayload.qualityReason}）`;
+        }
+        if (state.currentBundle === bundle) {
+          elements.sceneNote.textContent = `${bundle.sceneNote}；${narrativeSource}；${dialogueSource}；${storySource}`;
+        }
+        await revealText(elements.storyText, mergedStoryText, 260);
+        await chorusPromise;
+        await imagePromise;
+      } catch (error) {
+        console.error("playBundle failed:", error);
+        elements.sceneNote.textContent = `${bundle.sceneNote}；本回合中斷，已自動復原，可直接按下一則重試。`;
+      } finally {
+        state.rendering = false;
+      }
+    }
+
+    async function advanceScene() {
+      if (state.rendering) {
+        return;
+      }
+      const card = pickCardForCurrentState();
+      const target = activeTarget();
+      applyMeterChanges(card, target);
+      renderMeters();
+      const bundle = buildSceneBundle(card, target);
+      await playBundle(bundle);
+      addTimelineLog(bundle);
+      state.turn += 1;
+    }
+
+    function cycleSelectionForAuto() {
+      const angleKeys = Object.keys(angleDefinitions);
+      const nextAngleIndex = (angleKeys.indexOf(state.activeAngle) + 1) % angleKeys.length;
+      state.activeAngle = angleKeys[nextAngleIndex];
+      const people = state.data.relationships;
+      const personIndex = people.findIndex((target) => target.targetId === state.activePerson);
+      state.activePerson = people[(personIndex + 1 + people.length) % people.length].targetId;
+      renderAngles();
+      renderRelationships();
+    }
+
+    function clearAutoTimer() {
+      if (state.timer) {
+        window.clearTimeout(state.timer);
+        state.timer = null;
+      }
+    }
+
+    function scheduleAuto() {
+      clearAutoTimer();
+      if (!state.auto) {
+        return;
+      }
+      state.timer = window.setTimeout(async () => {
+        if (!state.auto) {
+          return;
+        }
+        if (state.rendering) {
+          scheduleAuto();
+          return;
+        }
+        cycleSelectionForAuto();
+        await advanceScene();
+        scheduleAuto();
+      }, state.autoDelayMs);
+    }
+
+    function toggleAuto() {
+      state.auto = !state.auto;
+      elements.autoButton.textContent = state.auto ? "停止自動上演" : "慢速自動上演";
+      if (state.auto) {
+        scheduleAuto();
+      } else {
+        clearAutoTimer();
+      }
+    }
+
+    function resetStageTexts() {
+      state.revealToken += 1;
+      state.imageRequestToken += 1;
+      state.dialogueRequestToken += 1;
+      state.narrativeRequestToken += 1;
+      abortIfAlive(state.imageAbortController);
+      abortIfAlive(state.dialogueAbortController);
+      abortAllNarrativeControllers();
+      state.imageAbortController = null;
+      state.dialogueAbortController = null;
+      state.currentBundle = null;
+      elements.sceneTitle.textContent = "營火未熄，劉備正在聽風";
+      elements.sceneNote.textContent = "請先選擇一個角度與互動對象。這個頁面會慢慢把劉備的心事與下一步行動演出來。";
+      elements.sourceBadge.textContent = state.data.sourceMode === "runtime-general-profiles" ? "真資料待命" : "示範待命";
+      elements.sceneMeta.innerHTML = "";
+      elements.sceneText.textContent = "劉備立在帳前，聽見遠處巡哨回報，卻沒有立刻下令。他只是把手按在案邊，像是在等某段舊事自己慢慢浮上來。";
+      elements.memoryText.textContent = "等待資料與第一幕。";
+      elements.emotionText.textContent = "人物情緒會依照角度與互動對象慢慢出現。";
+      elements.dialogueText.textContent = "等第一幕觸發後，這裡會出現更像劉備會說的話。";
+      elements.intentText.textContent = "每一幕都會把資料轉成劉備下一步的行動意圖。";
+      elements.storyText.textContent = "等這一幕的四段內容都出現後，這裡會自動融合成一段更有畫面感的完整敘事。";
+      elements.illustrationPrompt.textContent = "等待第一幕生成後，這裡會自動整理一段可以直接餵給圖像模型的 prompt。";
+      elements.illustrationHint.textContent = "現在這段 prompt 會保留在左側，真正生成的插圖會顯示在右側。";
+      elements.illustrationImage.hidden = true;
+      elements.illustrationImage.removeAttribute("src");
+      setIllustrationVisualState("尚未送出插圖請求。", { showPlaceholder: true });
+      if (elements.chorusGrid) {
+        elements.chorusGrid.innerHTML = "";
+      }
+      elements.timeline.innerHTML = "";
+    }
+
+    function resetGame() {
+      clearAutoTimer();
+      state.auto = false;
+      state.turn = 1;
+      state.activeAngle = "emotion";
+      state.activePerson = state.data.relationships.find((target) => target.femaleFocus)?.targetId || state.data.relationships[0].targetId;
+      state.meters = {
+        benevolence: 74,
+        bond: 83,
+        resolve: 58,
+        prudence: 49,
+        longing: 62,
+      };
+      state.rendering = false;
+      elements.autoButton.textContent = "慢速自動上演";
+      renderMeters();
+      renderAngles();
+      renderRelationships();
+      resetStageTexts();
+    }
+
+    function bindEvents() {
+      elements.speedRange.addEventListener("input", () => {
+        state.autoDelayMs = Number(elements.speedRange.value);
+        updateSpeedLabel();
+        if (state.auto) {
+          scheduleAuto();
+        }
+      });
+      elements.nextButton.addEventListener("click", advanceScene);
+      elements.autoButton.addEventListener("click", toggleAuto);
+      elements.resetButton.addEventListener("click", resetGame);
+      elements.randomButton.addEventListener("click", async () => {
+        if (state.rendering) {
+          return;
+        }
+        const angleKeys = Object.keys(angleDefinitions);
+        const people = state.data.relationships;
+        state.activeAngle = angleKeys[Math.floor(Math.random() * angleKeys.length)];
+        state.activePerson = people[Math.floor(Math.random() * people.length)].targetId;
+        renderAngles();
+        renderRelationships();
+        await advanceScene();
+      });
+      elements.refreshPromptButton.addEventListener("click", refreshIllustrationPrompt);
+      elements.renderImageButton.addEventListener("click", async () => {
+        if (!state.currentBundle) {
+          return;
+        }
+        await requestSceneIllustration(state.currentBundle, { force: true });
+      });
+    }
+
+    async function init() {
+      bindEvents();
+      updateSpeedLabel();
+      renderMeters();
+      const data = await loadNarrativeData();
+      applyData(data);
+      renderAngles();
+      renderRelationships();
+      resetStageTexts();
+    }
+
+    init().catch((error) => {
+      console.error(error);
+      applyData({ ...fallbackNarrativeData });
+      renderAngles();
+      renderRelationships();
+      resetStageTexts();
+      setStatus("示範資料", "初始化失敗，已退回內建示範模式。");
+    });
+  </script>
+</body>
+</html>

@@ -35,6 +35,9 @@ class RuntimeProfileStore:
     def read_runtime_keywords(self, general_id: str) -> dict | None:
         return self._read_runtime_json(general_id, "keywords")
 
+    def read_runtime_relationships(self, general_id: str) -> dict | None:
+        return self._read_runtime_json(general_id, "relationships")
+
     def read_persona_card(self, general_id: str) -> dict | None:
         path = self.persona_root / f"{general_id}.persona.json"
         if path.exists():
