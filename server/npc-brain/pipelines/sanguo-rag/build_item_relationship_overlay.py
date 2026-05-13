@@ -258,6 +258,30 @@ def source_edge_cap_for_profile(*, source_layer: str, source_class: str, trust_t
     return max(base_cap, 1)
 
 
+def is_primary_text_source(source_class: str, trust_tier: str) -> bool:
+    normalized_class = str(source_class or "").strip().lower()
+    normalized_tier = str(trust_tier or "").strip().lower()
+    return normalized_class in PRIMARY_TEXT_SOURCE_CLASSES or normalized_tier in PRIMARY_TEXT_TRUST_TIERS
+
+
+def summarize_source_profile_counts(
+    source_counts: Counter[str],
+    source_policy_index: dict[str, dict[str, Any]],
+) -> tuple[dict[str, int], dict[str, int], list[str]]:
+    source_class_counts: Counter[str] = Counter()
+    trust_tier_counts: Counter[str] = Counter()
+    primary_text_source_ids: list[str] = []
+    for source_id, packet_count in source_counts.items():
+        source_policy = source_policy_index.get(source_id, {})
+        source_class = str(source_policy.get("sourceClass") or "unknown").strip().lower() or "unknown"
+        trust_tier = str(source_policy.get("trustTier") or "unknown").strip().lower() or "unknown"
+        source_class_counts[source_class] += int(packet_count)
+        trust_tier_counts[trust_tier] += int(packet_count)
+        if is_primary_text_source(source_class, trust_tier):
+            primary_text_source_ids.append(source_id)
+    return dict(sorted(source_class_counts.items())), dict(sorted(trust_tier_counts.items())), sorted(primary_text_source_ids)
+
+
 def packet_terms(packet: dict[str, Any]) -> list[str]:
     matched = packet.get("matchedTermsByAngle") if isinstance(packet.get("matchedTermsByAngle"), dict) else {}
     raw_terms = matched.get("item_equipment") if isinstance(matched, dict) else []
@@ -517,6 +541,23 @@ def render_markdown(summary: dict[str, Any]) -> str:
     lines.extend(["", "## Source Layers", ""])
     for key, value in summary["metrics"]["sourceLayerCounts"].items():
         lines.append(f"- `{key}`: `{value}`")
+    lines.extend(["", "## Source Classes", ""])
+    for key, value in summary["metrics"]["sourceClassCounts"].items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.extend(["", "## Trust Tiers", ""])
+    for key, value in summary["metrics"]["trustTierCounts"].items():
+        lines.append(f"- `{key}`: `{value}`")
+    lines.extend(["", "## Primary Text Cap", ""])
+    lines.append(f"- Source Count: `{summary['metrics']['primaryTextSourceCount']}`")
+    lines.append(f"- Packet Count: `{summary['metrics']['primaryTextPacketCount']}`")
+    lines.append(f"- Edges Before Cap: `{summary['metrics']['primaryTextEdgeCountBeforeCap']}`")
+    lines.append(f"- Final Edges: `{summary['metrics']['primaryTextEdgeCount']}`")
+    lines.append(f"- Trimmed: `{summary['metrics']['primaryTextTrimmedCount']}`")
+    lines.extend(["", "### Primary Text Sources", ""])
+    for key in summary["metrics"]["primaryTextSources"]:
+        trimmed = summary["metrics"]["sourceCapTrimmedBySource"].get(key, 0)
+        cap = summary["metrics"]["sourceCapBySource"].get(key, 0)
+        lines.append(f"- `{key}`: cap=`{cap}` trimmed=`{trimmed}`")
     lines.extend(["", "## Source Caps", ""])
     for key, value in summary["metrics"]["sourceCapBySource"].items():
         trimmed = summary["metrics"]["sourceCapTrimmedBySource"].get(key, 0)
@@ -543,10 +584,16 @@ def main() -> int:
     )
     deduped_rows = dedupe_edges(raw_rows)
     capped_rows, capped_trimmed_counts, source_caps = apply_source_caps(deduped_rows)
+    source_class_counts, trust_tier_counts, primary_text_source_ids = summarize_source_profile_counts(source_counts, source_policy_index)
     write_jsonl(jsonl_path, capped_rows)
     final_type_counts = Counter(str(row.get("type") or "") for row in capped_rows)
     final_category_counts = Counter(str(row.get("itemCategory") or "") for row in capped_rows)
     final_layer_counts = Counter(str(row.get("sourceLayerRaw") or "") for row in capped_rows)
+    primary_text_source_set = set(primary_text_source_ids)
+    primary_text_packet_count = sum(int(source_counts.get(source_id) or 0) for source_id in primary_text_source_ids)
+    primary_text_edge_count_before_cap = sum(1 for row in deduped_rows if str(row.get("sourcePolicyId") or "") in primary_text_source_set)
+    primary_text_edge_count = sum(1 for row in capped_rows if str(row.get("sourcePolicyId") or "") in primary_text_source_set)
+    primary_text_trimmed_count = sum(int(capped_trimmed_counts.get(source_id) or 0) for source_id in primary_text_source_ids)
 
     summary = {
         "version": "1.0.0",
@@ -571,6 +618,14 @@ def main() -> int:
             "sourceCapTrimmedCount": max(len(deduped_rows) - len(capped_rows), 0),
             "sourceCapTrimmedBySource": capped_trimmed_counts,
             "sourceCapBySource": source_caps,
+            "sourceClassCounts": source_class_counts,
+            "trustTierCounts": trust_tier_counts,
+            "primaryTextSourceCount": len(primary_text_source_ids),
+            "primaryTextPacketCount": primary_text_packet_count,
+            "primaryTextEdgeCountBeforeCap": primary_text_edge_count_before_cap,
+            "primaryTextEdgeCount": primary_text_edge_count,
+            "primaryTextTrimmedCount": primary_text_trimmed_count,
+            "primaryTextSources": primary_text_source_ids,
             "rejectCounts": dict(sorted(reject_counts.items())),
             "sourcePolicyPacketCounts": dict(sorted(source_counts.items())),
             "rawRelationshipTypeCounts": dict(sorted(type_counts.items())),

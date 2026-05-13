@@ -6,30 +6,160 @@ from typing import Any
 
 COARSE_RELATIONSHIP_TYPES = {"commands", "allies", "confronts", "killing"}
 STABLE_RELATIONSHIP_TYPES = {"spouse", "parent_child", "sibling", "sworn_sibling", "protects"}
+KINSHIP_RELATIONSHIP_TYPES = {"spouse", "parent_child", "sibling", "sworn_sibling"}
+
+RELATIONSHIP_TYPE_FAMILIES = {
+    "spouse": "kinship",
+    "parent_child": "kinship",
+    "sibling": "kinship",
+    "sworn_sibling": "kinship",
+    "protects": "support",
+    "ruler_subject": "authority",
+    "patron_client": "authority",
+    "mentor_student": "instruction",
+    "betrayal_surrender": "conflict",
+    "enemy_rival": "conflict",
+    "alliance_oath": "oath",
+}
 
 TYPE_LABELS = {
     "spouse": "夫妻婚配",
     "parent_child": "親子關係",
     "sibling": "手足關係",
     "sworn_sibling": "結義兄弟",
-    "ruler_subject": "君臣主從",
-    "patron_client": "提攜投靠",
-    "mentor_student": "師友教導",
+    "ruler_subject": "君臣關係",
+    "patron_client": "庇護依附",
+    "mentor_student": "師徒傳授",
     "betrayal_surrender": "背叛投降",
     "enemy_rival": "敵對競爭",
-    "alliance_oath": "盟約同盟",
+    "alliance_oath": "盟約結盟",
 }
 
-BETRAYAL_TERMS = ["請降", "歸降", "投降", "降", "叛", "反", "背", "縛", "擒", "獻城", "謀害", "相害"]
-MENTOR_TERMS = ["指教", "問計", "獻計", "授", "教", "師", "先生", "門生", "弟子", "學"]
-PATRON_TERMS = ["薦", "舉", "拜", "封", "賜", "收留", "投", "依", "歸", "納", "聘", "請"]
-ALLIANCE_TERMS = ["結盟", "同盟", "會盟", "歃血", "盟", "誓", "合兵", "共破", "同救", "共守", "同往", "同入"]
-ENEMY_TERMS = ["交鋒", "廝殺", "交戰", "大戰", "直取", "截住", "追趕", "追襲", "殺敗", "攻打", "迎敵", "敵", "攻", "戰", "殺", "斬", "追", "敗", "仇", "害"]
-COMMAND_TERMS = ["令", "命", "使", "遣", "差", "教", "撥"]
-SPOUSE_TERMS = ["之妻", "其妻", "妻子", "夫人", "配偶", "娶", "嫁給", "嫁與", "嫁于", "結婚", "婚配", "之夫", "其夫", "丈夫"]
-PARENT_CHILD_TERMS = ["之子", "其子", "長子", "次子", "幼子", "子女", "之女", "其女", "生子", "生女", "父子", "母子", "父女", "母女", "父為", "母為", "兒子", "女兒", "嫡子"]
-SIBLING_TERMS = ["兄妹", "姐弟", "姊弟", "姊妹", "姐妹", "兄弟二人", "兄弟三人", "從兄", "從弟", "胞兄", "胞弟", "長兄", "次兄", "長姊", "長姐", "同母弟", "同母兄"]
-SWORN_SIBLING_TERMS = ["義兄弟", "义兄弟", "結義", "结义", "桃園結義", "桃园结义", "歃血為盟", "歃血为盟", "義結金蘭", "义结金兰", "誓同生死", "拜把"]
+BETRAYAL_TERMS = [
+    "背叛",
+    "反叛",
+    "叛",
+    "降",
+    "投降",
+    "歸降",
+    "歸附",
+    "叛離",
+    "離去",
+    "棄",
+    "賣",
+]
+MENTOR_TERMS = [
+    "師",
+    "授",
+    "教",
+    "傳授",
+    "受業",
+    "學藝",
+    "求教",
+    "門生",
+    "弟子",
+    "拜師",
+]
+PATRON_TERMS = [
+    "庇護",
+    "依附",
+    "投靠",
+    "歸附",
+    "門客",
+    "賓客",
+    "屬下",
+    "部曲",
+    "附屬",
+    "收留",
+    "部屬",
+]
+ALLIANCE_TERMS = [
+    "結盟",
+    "盟約",
+    "同盟",
+    "盟誓",
+    "會盟",
+    "盟友",
+    "盟",
+    "聯盟",
+    "誓盟",
+]
+ENEMY_TERMS = [
+    "仇",
+    "敵",
+    "怨",
+    "冤家",
+    "對立",
+    "對峙",
+    "相攻",
+    "交戰",
+    "攻伐",
+    "征討",
+    "討伐",
+    "相鬥",
+]
+COMMAND_TERMS = [
+    "命",
+    "令",
+    "統領",
+    "率",
+    "領",
+    "奉命",
+    "受命",
+]
+SPOUSE_TERMS = [
+    "婚配",
+    "夫妻",
+    "夫婦",
+    "配偶",
+    "成婚",
+    "結婚",
+    "聯姻",
+    "妻子",
+    "丈夫",
+    "夫人",
+    "嫁娶",
+]
+PARENT_CHILD_TERMS = [
+    "親子",
+    "父子",
+    "母子",
+    "父女",
+    "母女",
+    "子女",
+    "兒子",
+    "女兒",
+    "養子",
+    "養女",
+    "繼子",
+    "繼女",
+    "嗣子",
+    "嫡子",
+    "庶子",
+]
+SIBLING_TERMS = [
+    "兄弟",
+    "姐妹",
+    "兄妹",
+    "姊妹",
+    "手足",
+    "兄長",
+    "弟弟",
+    "姊姊",
+    "姐姐",
+    "妹妹",
+]
+SWORN_SIBLING_TERMS = [
+    "結義",
+    "結拜",
+    "桃園",
+    "義兄",
+    "義弟",
+    "義姐",
+    "義妹",
+    "義兄弟",
+    "義姐妹",
+]
 
 
 def compact_text(value: Any) -> str:
@@ -48,6 +178,11 @@ def edge_text(edge: dict[str, Any], fallback_text: str = "") -> str:
 
 def contains_any(text: str, terms: list[str]) -> bool:
     return any(term in text for term in terms)
+
+
+def relationship_type_family(relation_type: str) -> str:
+    normalized = str(relation_type or "").strip()
+    return RELATIONSHIP_TYPE_FAMILIES.get(normalized, "relationship")
 
 
 def refine_relationship_type(edge: dict[str, Any], fallback_text: str = "") -> tuple[str, list[str]]:

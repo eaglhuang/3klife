@@ -2301,6 +2301,26 @@ def run_round(
     round_root = run_root / round_id
     round_root.mkdir(parents=True, exist_ok=True)
 
+    baseline_scoreboard_path = None
+    baseline_progress_path = None
+    baseline_relationship_path = None
+    if baseline_manifest:
+        from_baseline_scoreboard = baseline_path(baseline_manifest, "scoreboardJsonPath", "scorecardJsonPath")
+        if from_baseline_scoreboard:
+            candidate = resolve_path(from_baseline_scoreboard)
+            if candidate.exists():
+                baseline_scoreboard_path = candidate
+        from_baseline_progress = baseline_path(baseline_manifest, "progressPath", "progressJsonPath")
+        if from_baseline_progress:
+            candidate = resolve_path(from_baseline_progress)
+            if candidate.exists():
+                baseline_progress_path = candidate
+        from_baseline_relationship = baseline_path(baseline_manifest, "relationshipEvidencePath", "baseRelationshipEvidencePath")
+        if from_baseline_relationship:
+            candidate = resolve_path(from_baseline_relationship)
+            if candidate.exists():
+                baseline_relationship_path = candidate
+
     effective_scoreboard_path = previous_scoreboard_path
     if not effective_scoreboard_path:
         from_baseline = baseline_path(baseline_manifest, "scoreboardJsonPath", "scorecardJsonPath")
@@ -2744,6 +2764,74 @@ def run_round(
         source_event_packets_path=packet_json_path,
         core_report_path=core_progress_json_path,
     )
+    runtime_round_summary_root = round_root / "runtime-readiness"
+    runtime_round_summary_path = runtime_round_summary_root / "runtime-readiness-summary.json"
+    runtime_round_summary = {
+        "version": "1.0.0",
+        "generatedAt": utc_now(),
+        "mode": "full-roster-runtime-readiness-summary",
+        "canonicalWrites": False,
+        "roundId": round_id,
+        "runtimeMode": args.runtime_readiness,
+        "summaryPath": repo_relative(runtime_round_summary_path),
+        "primarySummaryPath": runtime_payload.get("primarySummaryPath"),
+        "primaryFailCount": runtime_payload.get("primaryFailCount"),
+        "statusCounts": runtime_payload.get("statusCounts"),
+        "failCount": runtime_payload.get("failCount"),
+        "warnCount": runtime_payload.get("warnCount"),
+        "refBlitzApplied": runtime_payload.get("refBlitzApplied"),
+        "refBlitzReason": runtime_payload.get("refBlitzReason"),
+        "refBlitzFailGeneralCount": runtime_payload.get("refBlitzFailGeneralCount"),
+        "refBlitzResolvedCount": runtime_payload.get("refBlitzResolvedCount"),
+        "refBlitzUnresolvedCount": runtime_payload.get("refBlitzUnresolvedCount"),
+        "refBlitzSyntheticEventCount": runtime_payload.get("refBlitzSyntheticEventCount"),
+        "refBlitzRuntimeProfileRoot": runtime_payload.get("refBlitzRuntimeProfileRoot"),
+        "refBlitzRerunSummaryPath": runtime_payload.get("refBlitzRerunSummaryPath"),
+        "refBlitzSyntheticEventsPath": runtime_payload.get("refBlitzSyntheticEventsPath"),
+        "refBlitzNoPacketGenerals": runtime_payload.get("refBlitzNoPacketGenerals"),
+        "refBlitzCreatedPerGeneral": runtime_payload.get("refBlitzCreatedPerGeneral"),
+        "refBlitzExport": runtime_payload.get("refBlitzExport"),
+        "refBlitzRerun": runtime_payload.get("refBlitzRerun"),
+        "selectedGeneralIds": runtime_payload.get("selectedGeneralIds"),
+        "failGeneralIds": runtime_payload.get("failGeneralIds"),
+        "rows": runtime_payload.get("rows"),
+    }
+    write_json(runtime_round_summary_path, runtime_round_summary)
+
+    round_summary_root = round_root / "round-summaries"
+    round_summary_command = [
+        sys.executable,
+        str((REPO_ROOT / PIPELINE_ROOT / "build_full_roster_round_summaries.py").resolve()),
+        "--round-id",
+        round_id,
+        "--scoreboard-json",
+        repo_relative(scoreboard_json_path),
+        "--progress-json",
+        repo_relative(progress_json_path),
+        "--relationship-evidence-jsonl",
+        repo_relative(effective_relationship_json_path),
+        "--runtime-readiness-summary",
+        repo_relative(runtime_round_summary_path),
+        "--item-relationship-overlay-summary",
+        repo_relative(item_relationship_root / "item-relationship-overlay-summary.json"),
+        "--output-root",
+        repo_relative(round_summary_root),
+    ]
+    if baseline_scoreboard_path:
+        round_summary_command.extend(["--baseline-scoreboard-json", repo_relative(baseline_scoreboard_path)])
+    if baseline_progress_path:
+        round_summary_command.extend(["--baseline-progress-json", repo_relative(baseline_progress_path)])
+    if baseline_relationship_path:
+        round_summary_command.extend(["--baseline-relationship-evidence-jsonl", repo_relative(baseline_relationship_path)])
+    if args.overwrite:
+        round_summary_command.append("--overwrite")
+    round_summary_result = run_command(round_summary_command, dry_run=dry_run)
+    scoreboard_summary_json_path = round_summary_root / "full-roster-scoreboard-summary.json"
+    scoreboard_summary_md_path = round_summary_root / "full-roster-scoreboard-summary.zh-TW.md"
+    bottleneck_delta_json_path = round_summary_root / "full-roster-bottleneck-delta.json"
+    bottleneck_delta_md_path = round_summary_root / "full-roster-bottleneck-delta.zh-TW.md"
+    next_lane_summary_json_path = round_summary_root / "full-roster-next-lane-summary.json"
+    next_lane_summary_md_path = round_summary_root / "full-roster-next-lane-summary.zh-TW.md"
 
     return {
         "roundIndex": round_index,
@@ -2776,6 +2864,9 @@ def run_round(
         "sourceEventPacketsPath": repo_relative(packet_json_path),
         "progressJsonPath": repo_relative(progress_json_path),
         "coreProgressJsonPath": repo_relative(core_progress_json_path),
+        "baselineScoreboardJsonPath": repo_relative(baseline_scoreboard_path) if baseline_scoreboard_path else None,
+        "baselineProgressJsonPath": repo_relative(baseline_progress_path) if baseline_progress_path else None,
+        "baselineRelationshipEvidencePath": repo_relative(baseline_relationship_path) if baseline_relationship_path else None,
         "precisionSummaryPath": (precision_result or {}).get("summaryPath"),
         "precisionBaselineManifestPath": (precision_result or {}).get("baselineManifestPath"),
         "precisionGeneralIds": (precision_result or {}).get("selectedGeneralIds"),
@@ -2792,6 +2883,14 @@ def run_round(
         "runtimeRefBlitzSyntheticEventCount": runtime_payload.get("refBlitzSyntheticEventCount"),
         "runtimeRefBlitzRuntimeProfileRoot": runtime_payload.get("refBlitzRuntimeProfileRoot"),
         "runtimeRefBlitzRerunSummaryPath": runtime_payload.get("refBlitzRerunSummaryPath"),
+        "runtimeReadinessRoundSummaryPath": repo_relative(runtime_round_summary_path),
+        "scoreboardSummaryJsonPath": repo_relative(scoreboard_summary_json_path),
+        "scoreboardSummaryMarkdownPath": repo_relative(scoreboard_summary_md_path),
+        "bottleneckDeltaJsonPath": repo_relative(bottleneck_delta_json_path),
+        "bottleneckDeltaMarkdownPath": repo_relative(bottleneck_delta_md_path),
+        "nextLaneSummaryJsonPath": repo_relative(next_lane_summary_json_path),
+        "nextLaneSummaryMarkdownPath": repo_relative(next_lane_summary_md_path),
+        "roundSummaryRoot": repo_relative(round_summary_root),
         "runtimeReadinessFailCount": runtime_payload.get("failCount"),
         "pendingReviewCount": pilot_pending_count,
         "newEvidenceCardCount": int(external_summary.get("newEvidenceCardCount") or 0),
@@ -2818,6 +2917,7 @@ def run_round(
             "precisionLane": (precision_result or {}).get("command"),
             "scoreboardRefresh": scoreboard_refresh_result,
             "threeLane": three_lane_result,
+            "roundSummaries": round_summary_result,
         },
         "externalSummary": external_summary,
         "scoreboardRows": scoreboard_rows,
@@ -2839,12 +2939,20 @@ def render_summary_md(summary: dict[str, Any]) -> str:
         "",
         "## Rounds",
         "",
-        "| Round | New Evidence | Pending | Avg H-Score | Avg W-Score | Overall % | Precision | Three-Lane | Runtime Fail |",
-        "|---|---:|---:|---:|---:|---:|---|---|---:|",
+        "| Round | New Evidence | Pending | Avg H-Score | Avg W-Score | Overall % | Precision | Three-Lane | Runtime Fail | Ref Blitz |",
+        "|---|---:|---:|---:|---:|---:|---|---|---:|---|",
     ]
     for row in summary.get("rounds") or []:
+        runtime_ref_blitz = "-"
+        if row.get("runtimeRefBlitzApplied"):
+            runtime_ref_blitz = "applied {resolved}->{unresolved}".format(
+                resolved=row.get("runtimeRefBlitzResolvedCount") or 0,
+                unresolved=row.get("runtimeReadinessFailCount") or 0,
+            )
+        elif row.get("runtimeRefBlitzReason"):
+            runtime_ref_blitz = str(row.get("runtimeRefBlitzReason"))
         lines.append(
-            "| `{rid}` | `{new}` | `{pending}` | `{h}` | `{w}` | `{overall}` | `{precision}` | `{three}` | `{runtime_fail}` |".format(
+            "| `{rid}` | `{new}` | `{pending}` | `{h}` | `{w}` | `{overall}` | `{precision}` | `{three}` | `{runtime_fail}` | {ref_blitz} |".format(
                 rid=row.get("roundId"),
                 new=row.get("newEvidenceCardCount"),
                 pending=row.get("pendingReviewCount"),
@@ -2854,6 +2962,7 @@ def render_summary_md(summary: dict[str, Any]) -> str:
                 precision=row.get("precisionSummaryPath") or "-",
                 three=row.get("threeLaneStopReason") or "-",
                 runtime_fail=row.get("runtimeReadinessFailCount") or 0,
+                ref_blitz=runtime_ref_blitz,
             )
         )
     lines.extend(
@@ -2863,6 +2972,10 @@ def render_summary_md(summary: dict[str, Any]) -> str:
             "",
             f"- Baseline Manifest: `{summary.get('outputs', {}).get('baselineManifestPath')}`",
             f"- Rule Proposals: `{summary.get('outputs', {}).get('ruleProposalsMarkdownPath')}`",
+            f"- Scoreboard Summary: `{summary.get('outputs', {}).get('scoreboardSummaryMarkdownPath')}`",
+            f"- Bottleneck Delta: `{summary.get('outputs', {}).get('bottleneckDeltaMarkdownPath')}`",
+            f"- Next Lane Summary: `{summary.get('outputs', {}).get('nextLaneSummaryMarkdownPath')}`",
+            f"- Runtime Readiness Round Summary: `{summary.get('outputs', {}).get('runtimeReadinessRoundSummaryPath')}`",
             f"- Summary JSON: `{summary.get('outputs', {}).get('summaryJsonPath')}`",
             "",
         ]
@@ -3177,8 +3290,16 @@ def main() -> int:
         "threeLaneFinalBaselineManifest": final_three_lane_manifest,
         "runtimeReadinessSummaryPath": latest_round.get("runtimeReadinessSummaryPath"),
         "runtimeReadinessPrimarySummaryPath": latest_round.get("runtimeReadinessPrimarySummaryPath"),
+        "runtimeReadinessRoundSummaryPath": latest_round.get("runtimeReadinessRoundSummaryPath"),
         "runtimeRefBlitzRuntimeProfileRoot": latest_round.get("runtimeRefBlitzRuntimeProfileRoot"),
         "runtimeRefBlitzRerunSummaryPath": latest_round.get("runtimeRefBlitzRerunSummaryPath"),
+        "scoreboardSummaryJsonPath": latest_round.get("scoreboardSummaryJsonPath"),
+        "scoreboardSummaryMarkdownPath": latest_round.get("scoreboardSummaryMarkdownPath"),
+        "bottleneckDeltaJsonPath": latest_round.get("bottleneckDeltaJsonPath"),
+        "bottleneckDeltaMarkdownPath": latest_round.get("bottleneckDeltaMarkdownPath"),
+        "nextLaneSummaryJsonPath": latest_round.get("nextLaneSummaryJsonPath"),
+        "nextLaneSummaryMarkdownPath": latest_round.get("nextLaneSummaryMarkdownPath"),
+        "roundSummaryRoot": latest_round.get("roundSummaryRoot"),
         "ruleProposalsJsonPath": repo_relative(rule_json_path),
         "ruleProposalsMarkdownPath": repo_relative(rule_md_path),
         "ruminationLedgerPath": repo_relative(rumination_path),
@@ -3202,6 +3323,14 @@ def main() -> int:
             "commandFailureCount": command_failures,
             "commandFailureRate": round(command_failures / max(command_count, 1), 4),
         },
+        "runtimeReadinessFailCount": latest_round.get("runtimeReadinessFailCount"),
+        "runtimeRefBlitzApplied": latest_round.get("runtimeRefBlitzApplied"),
+        "runtimeRefBlitzReason": latest_round.get("runtimeRefBlitzReason"),
+        "runtimeRefBlitzFailGeneralCount": latest_round.get("runtimeRefBlitzFailGeneralCount"),
+        "runtimeRefBlitzResolvedCount": latest_round.get("runtimeRefBlitzResolvedCount"),
+        "runtimeRefBlitzSyntheticEventCount": latest_round.get("runtimeRefBlitzSyntheticEventCount"),
+        "runtimeRefBlitzRuntimeProfileRoot": latest_round.get("runtimeRefBlitzRuntimeProfileRoot"),
+        "runtimeRefBlitzRerunSummaryPath": latest_round.get("runtimeRefBlitzRerunSummaryPath"),
     }
     write_json(baseline_output_path, baseline_payload)
 
@@ -3267,8 +3396,24 @@ def main() -> int:
             "ruminationLedgerPath": repo_relative(rumination_path),
             "humanReviewBatchJsonPath": (human_batch_info or {}).get("jsonPath"),
             "humanReviewBatchMarkdownPath": (human_batch_info or {}).get("markdownPath"),
+            "scoreboardSummaryJsonPath": latest_round.get("scoreboardSummaryJsonPath"),
+            "scoreboardSummaryMarkdownPath": latest_round.get("scoreboardSummaryMarkdownPath"),
+            "bottleneckDeltaJsonPath": latest_round.get("bottleneckDeltaJsonPath"),
+            "bottleneckDeltaMarkdownPath": latest_round.get("bottleneckDeltaMarkdownPath"),
+            "nextLaneSummaryJsonPath": latest_round.get("nextLaneSummaryJsonPath"),
+            "nextLaneSummaryMarkdownPath": latest_round.get("nextLaneSummaryMarkdownPath"),
+            "runtimeReadinessRoundSummaryPath": latest_round.get("runtimeReadinessRoundSummaryPath"),
+            "roundSummaryRoot": latest_round.get("roundSummaryRoot"),
         },
         "rounds": rounds,
+        "runtimeReadinessFailCount": latest_round.get("runtimeReadinessFailCount"),
+        "runtimeRefBlitzApplied": latest_round.get("runtimeRefBlitzApplied"),
+        "runtimeRefBlitzReason": latest_round.get("runtimeRefBlitzReason"),
+        "runtimeRefBlitzFailGeneralCount": latest_round.get("runtimeRefBlitzFailGeneralCount"),
+        "runtimeRefBlitzResolvedCount": latest_round.get("runtimeRefBlitzResolvedCount"),
+        "runtimeRefBlitzSyntheticEventCount": latest_round.get("runtimeRefBlitzSyntheticEventCount"),
+        "runtimeRefBlitzRuntimeProfileRoot": latest_round.get("runtimeRefBlitzRuntimeProfileRoot"),
+        "runtimeRefBlitzRerunSummaryPath": latest_round.get("runtimeRefBlitzRerunSummaryPath"),
     }
     write_json(summary_json_path, summary_payload)
     summary_md_path.write_text(render_summary_md(summary_payload), encoding="utf-8")
