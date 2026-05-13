@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-RUN-PER-TAB-REPLAY:boundary:empty",
+    "kind": "boundary",
+    "title": "runPerTabReplay 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:da0f4f2f82608945138d1760e8eeeb60866f950641c79bec10a6fae020bde110",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-RUN-PER-TAB-REPLAY:boundary:formatted",
+    "kind": "boundary",
+    "title": "runPerTabReplay 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:da0f4f2f82608945138d1760e8eeeb60866f950641c79bec10a6fae020bde110",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

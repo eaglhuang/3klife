@@ -1,0 +1,78 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-RUN-PER-TAB-REPLAY",
+  "symbolName": "runPerTabReplay",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 1176,
+      "endLine": 1302
+    },
+    "semanticFingerprint": "sf:sha256:da0f4f2f82608945138d1760e8eeeb60866f950641c79bec10a6fae020bde110"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "medium-function",
+    "side-effect-risk",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "side-effect-boundary"
+  ],
+  "requiredCaseSets": [
+    "boundary",
+    "invalid"
+  ],
+  "classification": {
+    "exported": false,
+    "lineCount": 127,
+    "severity": "advisory",
+    "riskScore": 25,
+    "sideEffectRisk": true
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2063"
+  ],
+  "usageRefStats": {
+    "totalRefs": 1,
+    "distinctFiles": 1,
+    "distinctKinds": 1,
+    "externalRefs": 0,
+    "kinds": [
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated runPerTabReplay"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1176-L1302"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:da0f4f2f82608945138d1760e8eeeb60866f950641c79bec10a6fae020bde110"
+  }
+}

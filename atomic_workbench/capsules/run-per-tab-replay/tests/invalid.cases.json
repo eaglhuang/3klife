@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-RUN-PER-TAB-REPLAY:invalid:null",
+    "kind": "invalid",
+    "title": "runPerTabReplay null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:da0f4f2f82608945138d1760e8eeeb60866f950641c79bec10a6fae020bde110",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-RUN-PER-TAB-REPLAY:invalid:type",
+    "kind": "invalid",
+    "title": "runPerTabReplay 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:da0f4f2f82608945138d1760e8eeeb60866f950641c79bec10a6fae020bde110",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

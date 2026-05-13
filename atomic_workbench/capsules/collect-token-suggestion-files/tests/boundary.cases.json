@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-COLLECT-TOKEN-SUGGESTION-FILES:boundary:empty",
+    "kind": "boundary",
+    "title": "collectTokenSuggestionFiles 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:99d76c593d5ecff114ca891ab838b4f220f141cb61f2c6372d88c47874ec16de",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-COLLECT-TOKEN-SUGGESTION-FILES:boundary:formatted",
+    "kind": "boundary",
+    "title": "collectTokenSuggestionFiles 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:99d76c593d5ecff114ca891ab838b4f220f141cb61f2c6372d88c47874ec16de",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

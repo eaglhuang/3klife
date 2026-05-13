@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-MAIN:regression:legacy",
+    "kind": "regression",
+    "title": "main legacy regression",
+    "inputSample": {
+      "sourceRef": "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1873-L2307",
+      "mode": "legacy-case-study"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:859558f739c1872b067cfe27ba3e6f621904132c42d70fa94aafed8e373ab679",
+      "claim": "preserves known legacy behavior for the guarded release-block path"
+    },
+    "notes": [
+      "Seeded for block-release capsule convergence."
+    ]
+  }
+]

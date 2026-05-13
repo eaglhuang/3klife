@@ -1,0 +1,99 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-READ-TEXT",
+  "symbolName": "readText",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 154,
+      "endLine": 157
+    },
+    "semanticFingerprint": "sf:sha256:b37f80656a21b28456309dadbc231c008fee0d61f71fde37557503abd6cfd2bb"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "side-effect-risk",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "side-effect-boundary"
+  ],
+  "requiredCaseSets": [
+    "boundary",
+    "invalid"
+  ],
+  "classification": {
+    "exported": false,
+    "lineCount": 4,
+    "severity": "advisory",
+    "riskScore": 10,
+    "sideEffectRisk": true
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "tooling:tools_node/atm-atomize.js#L145",
+    "tooling:tools_node/atm-atomize.js#L153",
+    "tooling:tools_node/atm-atomize.js#L433",
+    "tooling:tools_node/atm-atomize.js#L552",
+    "tooling:tools_node/atm-atomize.js#L692",
+    "tooling:tools_node/atm-atomize.js#L1590",
+    "tooling:tools_node/atm-atomize.js#L1670",
+    "tooling:tools_node/atm-atomize.js#L1978",
+    "tooling:tools_node/lib/ucuf-proof-utils.js#L141",
+    "tooling:tools_node/lib/ucuf-proof-utils.js#L748",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1910",
+    "test:tools_node/test/tasks-atm-shard-store.test.js#L67",
+    "test:tools_node/test/tasks-atm-shard-store.test.js#L143",
+    "test:tools_node/test/tasks-atm-shard-store.test.js#L157",
+    "tooling:tools_node/validate-atm-any-boundaries.js#L61",
+    "tooling:tools_node/validate-atm-any-boundaries.js#L96",
+    "tooling:tools_node/validate-atm-doc-governance.js#L59",
+    "tooling:tools_node/validate-atm-doc-governance.js#L161",
+    "tooling:tools_node/validate-atm-doc-governance.js#L202",
+    "tooling:tools_node/validate-framework-atomization-coverage.js#L86",
+    "tooling:tools_node/validate-framework-atomization-coverage.js#L436"
+  ],
+  "usageRefStats": {
+    "totalRefs": 21,
+    "distinctFiles": 7,
+    "distinctKinds": 3,
+    "externalRefs": 20,
+    "kinds": [
+      "test",
+      "tooling",
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated readText"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L154-L157"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:b37f80656a21b28456309dadbc231c008fee0d61f71fde37557503abd6cfd2bb"
+  }
+}

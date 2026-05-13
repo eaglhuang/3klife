@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-FIRST-EXISTING-PATH:invalid:null",
+    "kind": "invalid",
+    "title": "firstExistingPath null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:58ead0768a97a7e373f210e9c476d15ea7a2957ba4e6d6e7bb4e782f3c8f3162",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-FIRST-EXISTING-PATH:invalid:type",
+    "kind": "invalid",
+    "title": "firstExistingPath 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:58ead0768a97a7e373f210e9c476d15ea7a2957ba4e6d6e7bb4e782f3c8f3162",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

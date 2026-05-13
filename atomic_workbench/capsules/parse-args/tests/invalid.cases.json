@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-PARSE-ARGS:invalid:null",
+    "kind": "invalid",
+    "title": "parseArgs null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:6f6c99a207efd154e4e4a4d4b9c9f54fd6de6d90bb3bea94b3a7168aeaa7768d",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-PARSE-ARGS:invalid:type",
+    "kind": "invalid",
+    "title": "parseArgs 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:6f6c99a207efd154e4e4a4d4b9c9f54fd6de6d90bb3bea94b3a7168aeaa7768d",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

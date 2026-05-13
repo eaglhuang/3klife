@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-ENSURE-DIR:boundary:empty",
+    "kind": "boundary",
+    "title": "ensureDir 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:03a8d901d1533a3872d561fd9ea8e68a73c54f04e1f94e8c59749b4c82516ac0",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-ENSURE-DIR:boundary:formatted",
+    "kind": "boundary",
+    "title": "ensureDir 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:03a8d901d1533a3872d561fd9ea8e68a73c54f04e1f94e8c59749b4c82516ac0",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

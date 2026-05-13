@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-WRITE-JSON:boundary:empty",
+    "kind": "boundary",
+    "title": "writeJson 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:010c62e9c58eb6d6c36947f07fe29af3c860431c36f13d9c7e4f24367ef0d328",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-WRITE-JSON:boundary:formatted",
+    "kind": "boundary",
+    "title": "writeJson 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:010c62e9c58eb6d6c36947f07fe29af3c860431c36f13d9c7e4f24367ef0d328",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

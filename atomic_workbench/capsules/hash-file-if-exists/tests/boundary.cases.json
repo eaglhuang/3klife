@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-HASH-FILE-IF-EXISTS:boundary:empty",
+    "kind": "boundary",
+    "title": "hashFileIfExists 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:f42b065f5acaf54775f772c81afb0bef71e18349e552025c60cbed7cf18f008b",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-HASH-FILE-IF-EXISTS:boundary:formatted",
+    "kind": "boundary",
+    "title": "hashFileIfExists 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:f42b065f5acaf54775f772c81afb0bef71e18349e552025c60cbed7cf18f008b",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

@@ -1,0 +1,82 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-WRITE-SUMMARY-AND-EXIT",
+  "symbolName": "writeSummaryAndExit",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 2308,
+      "endLine": 2333
+    },
+    "semanticFingerprint": "sf:sha256:2d5a20f19a66c636ead68b1492a05b79394f61ed3a2cf3e248926b648e728cc8"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "side-effect-risk"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "side-effect-boundary"
+  ],
+  "requiredCaseSets": [
+    "boundary",
+    "invalid"
+  ],
+  "classification": {
+    "exported": false,
+    "lineCount": 26,
+    "severity": "advisory",
+    "riskScore": 0,
+    "sideEffectRisk": true
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1929",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1955",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1999",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2010",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2021",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2079",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2119"
+  ],
+  "usageRefStats": {
+    "totalRefs": 7,
+    "distinctFiles": 1,
+    "distinctKinds": 1,
+    "externalRefs": 0,
+    "kinds": [
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated writeSummaryAndExit"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L2308-L2333"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:2d5a20f19a66c636ead68b1492a05b79394f61ed3a2cf3e248926b648e728cc8"
+  }
+}

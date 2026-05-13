@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-MERGE-SKIN-SLOTS:invalid:null",
+    "kind": "invalid",
+    "title": "mergeSkinSlots null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:eb8b511db645e73126ba19d04c13813e5880d83f1c8d97b659b8cef6e71c0af8",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-MERGE-SKIN-SLOTS:invalid:type",
+    "kind": "invalid",
+    "title": "mergeSkinSlots 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:eb8b511db645e73126ba19d04c13813e5880d83f1c8d97b659b8cef6e71c0af8",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

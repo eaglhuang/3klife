@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-HASH-FILE-IF-EXISTS:invalid:null",
+    "kind": "invalid",
+    "title": "hashFileIfExists null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:f42b065f5acaf54775f772c81afb0bef71e18349e552025c60cbed7cf18f008b",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-HASH-FILE-IF-EXISTS:invalid:type",
+    "kind": "invalid",
+    "title": "hashFileIfExists 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:f42b065f5acaf54775f772c81afb0bef71e18349e552025c60cbed7cf18f008b",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

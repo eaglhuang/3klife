@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-INTERACTION-SMOKE-STEP:boundary:empty",
+    "kind": "boundary",
+    "title": "buildRuntimeInteractionSmokeStep 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:15d52ce65b9b4a091f80aa9a85cedff4a136971a1d9231e0acd0fa969e2c9a47",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-INTERACTION-SMOKE-STEP:boundary:formatted",
+    "kind": "boundary",
+    "title": "buildRuntimeInteractionSmokeStep 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:15d52ce65b9b4a091f80aa9a85cedff4a136971a1d9231e0acd0fa969e2c9a47",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

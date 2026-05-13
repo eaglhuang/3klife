@@ -5,10 +5,10 @@ It is the project-local capsule workbench for H2U. These capsules are not upstre
 
 ## Summary
 
-- Total capsules: 169
-- Anchors: 1
-- Local capsules: 158
-- Candidate capsules: 11
+- Total capsules: 249
+- Anchors: 2
+- Local capsules: 237
+- Candidate capsules: 12
 - Governed capsules: 0
 - Shared capsules: 0
 - Release blockers: 1
@@ -22,6 +22,7 @@ It is the project-local capsule workbench for H2U. These capsules are not upstre
 - computeLetterSpacing
 - inferTabSemanticHints
 - normalizeCssColorToHex
+- parseArgs
 - parseColor
 - parseFragmentList
 - resolveFontAssetByConvention

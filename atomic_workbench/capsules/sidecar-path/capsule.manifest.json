@@ -1,0 +1,98 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-SIDECAR-PATH",
+  "symbolName": "sidecarPath",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 666,
+      "endLine": 669
+    },
+    "semanticFingerprint": "sf:sha256:d5fa8238b7b4c90a4c138c03afa99f7ac106621dd5d02915dc1ec25c307d768c"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [],
+  "classification": {
+    "exported": false,
+    "lineCount": 4,
+    "severity": "advisory",
+    "riskScore": 25,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": false
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "tooling:tools_node/lib/html-to-ucuf/rule-checkers.js#L132",
+    "tooling:tools_node/lib/html-to-ucuf/rule-checkers.js#L133",
+    "tooling:tools_node/lib/html-to-ucuf/rule-checkers.js#L169",
+    "tooling:tools_node/lib/html-to-ucuf/rule-checkers/source-package.js#L45",
+    "tooling:tools_node/lib/html-to-ucuf/rule-checkers/source-package.js#L46",
+    "tooling:tools_node/lib/html-to-ucuf/rule-checkers/source-package.js#L82",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/runtime-sync.js#L7",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/runtime-sync.js#L33",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/runtime-sync.js#L95",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/runtime-sync.js#L103",
+    "tooling:tools_node/open-screen-migration-task.js#L74",
+    "tooling:tools_node/open-screen-migration-task.js#L75",
+    "tooling:tools_node/open-screen-migration-task.js#L77",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L766",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L782",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L795",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L860",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L869",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L986",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1149",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1297",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1658",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1659",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1663"
+  ],
+  "usageRefStats": {
+    "totalRefs": 24,
+    "distinctFiles": 5,
+    "distinctKinds": 2,
+    "externalRefs": 13,
+    "kinds": [
+      "tooling",
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated sidecarPath"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L666-L669"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:d5fa8238b7b4c90a4c138c03afa99f7ac106621dd5d02915dc1ec25c307d768c"
+  }
+}

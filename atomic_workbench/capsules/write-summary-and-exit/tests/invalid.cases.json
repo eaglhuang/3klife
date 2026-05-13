@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-WRITE-SUMMARY-AND-EXIT:invalid:null",
+    "kind": "invalid",
+    "title": "writeSummaryAndExit null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:2d5a20f19a66c636ead68b1492a05b79394f61ed3a2cf3e248926b648e728cc8",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-WRITE-SUMMARY-AND-EXIT:invalid:type",
+    "kind": "invalid",
+    "title": "writeSummaryAndExit 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:2d5a20f19a66c636ead68b1492a05b79394f61ed3a2cf3e248926b648e728cc8",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

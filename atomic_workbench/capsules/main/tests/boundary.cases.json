@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-MAIN:boundary:empty",
+    "kind": "boundary",
+    "title": "main 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:5baf923fe74672431734e992c0da72b5b9629e0ad29178625b6caa0cef278133",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-MAIN:boundary:formatted",
+    "kind": "boundary",
+    "title": "main 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:5baf923fe74672431734e992c0da72b5b9629e0ad29178625b6caa0cef278133",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

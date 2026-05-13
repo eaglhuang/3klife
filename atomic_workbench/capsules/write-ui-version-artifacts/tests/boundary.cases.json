@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-WRITE-UI-VERSION-ARTIFACTS:boundary:empty",
+    "kind": "boundary",
+    "title": "writeUiVersionArtifacts 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:cc3e003f407e44e1c31419500e1799e756698d7385acfaa902ec0bc3fdb83a31",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-WRITE-UI-VERSION-ARTIFACTS:boundary:formatted",
+    "kind": "boundary",
+    "title": "writeUiVersionArtifacts 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:cc3e003f407e44e1c31419500e1799e756698d7385acfaa902ec0bc3fdb83a31",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

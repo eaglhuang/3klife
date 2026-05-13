@@ -1,0 +1,93 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-TO-KEBAB",
+  "symbolName": "toKebab",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 685,
+      "endLine": 693
+    },
+    "semanticFingerprint": "sf:sha256:b8758192d74979f4877dba227029cfbf2991977976a735634c90399da93a1c8c"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [],
+  "classification": {
+    "exported": false,
+    "lineCount": 9,
+    "severity": "advisory",
+    "riskScore": 25,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": false
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "tooling:tools_node/bake-css-background-asset.js#L58",
+    "tooling:tools_node/bake-css-background-asset.js#L75",
+    "tooling:tools_node/extract-ucuf-lazy-fragment.js#L45",
+    "tooling:tools_node/extract-ucuf-lazy-fragment.js#L65",
+    "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L244",
+    "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L302",
+    "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L313",
+    "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L323",
+    "tooling:tools_node/lib/dom-to-ui/token-registry.js#L124",
+    "tooling:tools_node/lib/dom-to-ui/token-registry.js#L127",
+    "tooling:tools_node/lib/dom-to-ui/token-registry.js#L133",
+    "tooling:tools_node/lib/dom-to-ui/token-registry.js#L137",
+    "tooling:tools_node/lib/dom-to-ui/token-registry.js#L168",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1106",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1107",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1119",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1123",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1124",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1235"
+  ],
+  "usageRefStats": {
+    "totalRefs": 19,
+    "distinctFiles": 5,
+    "distinctKinds": 2,
+    "externalRefs": 13,
+    "kinds": [
+      "tooling",
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated toKebab"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L685-L693"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:b8758192d74979f4877dba227029cfbf2991977976a735634c90399da93a1c8c"
+  }
+}

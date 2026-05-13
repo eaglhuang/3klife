@@ -1,0 +1,98 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-WALK",
+  "symbolName": "walk",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 271,
+      "endLine": 277
+    },
+    "semanticFingerprint": "sf:sha256:3ad695b1a6b29a320acd93cb6f13c3528e85206cd512584b03590c06c7f6bf0f"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [],
+  "classification": {
+    "exported": false,
+    "lineCount": 7,
+    "severity": "advisory",
+    "riskScore": 25,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": false
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "runtime:assets/scripts/core/systems/EffectSystem.ts#L181",
+    "runtime:assets/scripts/core/systems/EffectSystem.ts#L207",
+    "runtime:assets/scripts/ui/core/UIPreviewBuilder.ts#L438",
+    "runtime:assets/scripts/ui/core/UIPreviewBuilder.ts#L450",
+    "runtime:assets/scripts/ui/core/UIPreviewBuilder.ts#L454",
+    "runtime:assets/scripts/ui/core/UITemplateResolver.ts#L250",
+    "runtime:assets/scripts/ui/core/UITemplateResolver.ts#L253",
+    "runtime:assets/scripts/ui/core/UITemplateResolver.ts#L256",
+    "tooling:tools_node/.deprecated/generate-tab-childpanels.js#L228",
+    "tooling:tools_node/.deprecated/generate-tab-childpanels.js#L231",
+    "tooling:tools_node/.deprecated/generate-tab-childpanels.js#L233",
+    "tooling:tools_node/annotate-html-bindings.js#L73",
+    "tooling:tools_node/audit-md-references.js#L127",
+    "tooling:tools_node/audit-md-references.js#L132",
+    "tooling:tools_node/audit-md-references.js#L136",
+    "tooling:tools_node/audit-ui-asset-paths.js#L127",
+    "tooling:tools_node/audit-ui-asset-paths.js#L129",
+    "tooling:tools_node/audit-ui-asset-paths.js#L146",
+    "tooling:tools_node/bake-ucuf-sidecars.js#L25",
+    "tooling:tools_node/bake-ucuf-sidecars.js#L93",
+    "tooling:tools_node/check-ts-syntax.js#L24",
+    "tooling:tools_node/check-ts-syntax.js#L30",
+    "tooling:tools_node/check-ts-syntax.js#L67",
+    "tooling:tools_node/consolidation-scanner.js#L82"
+  ],
+  "usageRefStats": {
+    "totalRefs": 24,
+    "distinctFiles": 10,
+    "distinctKinds": 2,
+    "externalRefs": 24,
+    "kinds": [
+      "runtime",
+      "tooling"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated walk"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L271-L277"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:3ad695b1a6b29a320acd93cb6f13c3528e85206cd512584b03590c06c7f6bf0f"
+  }
+}

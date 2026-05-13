@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-ROUTE-FRAGMENT-EXISTS:boundary:empty",
+    "kind": "boundary",
+    "title": "routeFragmentExists 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:060971ee7f444beb5b49d91e0c89a1b91cd3d5227c07dafbe91d75e5bfbade02",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-ROUTE-FRAGMENT-EXISTS:boundary:formatted",
+    "kind": "boundary",
+    "title": "routeFragmentExists 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:060971ee7f444beb5b49d91e0c89a1b91cd3d5227c07dafbe91d75e5bfbade02",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

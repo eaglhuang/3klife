@@ -1,0 +1,30 @@
+{
+  "schemaId": "atm.coreAnchorManifest",
+  "specVersion": "0.1.0",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "kind": "core-anchor",
+  "role": "semantic-parent",
+  "logicalName": "anchor.run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "lineCount": 187
+  },
+  "semanticFingerprint": "sf:sha256:8a7356717d435d006a8e3bdef353066bbc084a66ab34b06511b47e45e04be5e1",
+  "children": [
+    "H2U-CAPSULE-PARSE-ARGS",
+    "H2U-CAPSULE-MAIN",
+    "H2U-CAPSULE-PRINT-HELP"
+  ],
+  "lineage": {
+    "bornBy": "anchorize",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js"
+    ]
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "promotion": {
+    "currentTier": "core-anchor",
+    "allowSharedPromotion": false
+  }
+}

@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-RESOLVE-UPDATE-COVERAGE-BASELINE:boundary:empty",
+    "kind": "boundary",
+    "title": "resolveUpdateCoverageBaseline 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:afcbedf39d729c2aedfa9fb43ec79b7f47b7c76dd33e05812d22943c37bb0e3c",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-RESOLVE-UPDATE-COVERAGE-BASELINE:boundary:formatted",
+    "kind": "boundary",
+    "title": "resolveUpdateCoverageBaseline 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:afcbedf39d729c2aedfa9fb43ec79b7f47b7c76dd33e05812d22943c37bb0e3c",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

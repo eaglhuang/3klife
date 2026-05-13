@@ -1,0 +1,99 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-PRINT-HELP",
+  "symbolName": "printHelp",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 101,
+      "endLine": 138
+    },
+    "semanticFingerprint": "sf:sha256:80fdc71fffa84c536c9295954a23aecfe3bb39c1226284ecd0541f03b0055da8"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "side-effect-risk"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "side-effect-boundary"
+  ],
+  "requiredCaseSets": [
+    "boundary",
+    "invalid"
+  ],
+  "classification": {
+    "exported": false,
+    "lineCount": 38,
+    "severity": "advisory",
+    "riskScore": 0,
+    "sideEffectRisk": true
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "tooling:tools_node/accumulate-harness-metrics.js#L14",
+    "tooling:tools_node/accumulate-harness-metrics.js#L509",
+    "tooling:tools_node/accumulate-harness-metrics.js#L514",
+    "tooling:tools_node/agent-clis/3klife-plaintext-source-manifest.js#L77",
+    "tooling:tools_node/agent-clis/3klife-plaintext-source-manifest.js#L286",
+    "tooling:tools_node/agent-clis/3klife-sanguo-source.js#L29",
+    "tooling:tools_node/agent-clis/3klife-sanguo-source.js#L498",
+    "tooling:tools_node/agent-clis/3klife-sanguo-term-lookup.js#L49",
+    "tooling:tools_node/agent-clis/3klife-sanguo-term-lookup.js#L465",
+    "tooling:tools_node/agent-clis/3klife-source-health.js#L61",
+    "tooling:tools_node/agent-clis/3klife-source-health.js#L420",
+    "tooling:tools_node/agent-clis/3klife-web-page-harvester.js#L58",
+    "tooling:tools_node/agent-clis/3klife-web-page-harvester.js#L920",
+    "tooling:tools_node/archive-unused-history-assets.js#L87",
+    "tooling:tools_node/archive-unused-history-assets.js#L611",
+    "tooling:tools_node/atm-adapter/usage-evidence-shadow.js#L80",
+    "tooling:tools_node/atm-adapter/usage-evidence-shadow.js#L519",
+    "tooling:tools_node/atm-atomize.js#L117",
+    "tooling:tools_node/atm-atomize.js#L2179",
+    "tooling:tools_node/atm-flow.js#L107",
+    "tooling:tools_node/atm-flow.js#L1167",
+    "tooling:tools_node/atomic-framework/governance.js#L60",
+    "tooling:tools_node/atomic-framework/governance.js#L136",
+    "tooling:tools_node/audit-asset-usage.js#L54"
+  ],
+  "usageRefStats": {
+    "totalRefs": 24,
+    "distinctFiles": 12,
+    "distinctKinds": 1,
+    "externalRefs": 24,
+    "kinds": [
+      "tooling"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated printHelp"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L101-L138"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:80fdc71fffa84c536c9295954a23aecfe3bb39c1226284ecd0541f03b0055da8"
+  }
+}

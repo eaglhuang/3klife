@@ -1,0 +1,100 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-ENSURE-DIR",
+  "symbolName": "ensureDir",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 150,
+      "endLine": 153
+    },
+    "semanticFingerprint": "sf:sha256:03a8d901d1533a3872d561fd9ea8e68a73c54f04e1f94e8c59749b4c82516ac0"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "stable-behavior-name",
+    "side-effect-risk"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "side-effect-boundary"
+  ],
+  "requiredCaseSets": [
+    "boundary",
+    "invalid"
+  ],
+  "classification": {
+    "exported": false,
+    "lineCount": 4,
+    "severity": "advisory",
+    "riskScore": 25,
+    "sideEffectRisk": true
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "tooling:tools_node/agent-clis/3klife-plaintext-source-manifest.js#L10",
+    "tooling:tools_node/agent-clis/3klife-plaintext-source-manifest.js#L291",
+    "tooling:tools_node/agent-clis/3klife-sanguo-source.js#L10",
+    "tooling:tools_node/agent-clis/3klife-sanguo-source.js#L503",
+    "tooling:tools_node/agent-clis/3klife-sanguo-term-lookup.js#L12",
+    "tooling:tools_node/agent-clis/3klife-sanguo-term-lookup.js#L470",
+    "tooling:tools_node/agent-clis/3klife-source-health.js#L11",
+    "tooling:tools_node/agent-clis/3klife-source-health.js#L424",
+    "tooling:tools_node/agent-clis/3klife-web-page-harvester.js#L11",
+    "tooling:tools_node/agent-clis/3klife-web-page-harvester.js#L704",
+    "tooling:tools_node/agent-clis/3klife-web-page-harvester.js#L815",
+    "tooling:tools_node/agent-clis/3klife-web-page-harvester.js#L925",
+    "tooling:tools_node/agent-clis/3klife-web-page-harvester.js#L943",
+    "tooling:tools_node/build-sanguoyanyi-mao-corpus.js#L77",
+    "tooling:tools_node/build-sanguoyanyi-mao-corpus.js#L348",
+    "tooling:tools_node/compile-family-map-to-asset-tasks.js#L93",
+    "tooling:tools_node/compile-family-map-to-asset-tasks.js#L327",
+    "tooling:tools_node/compile-family-map-to-asset-tasks.js#L328",
+    "tooling:tools_node/compile-family-map-to-asset-tasks.js#L329",
+    "tooling:tools_node/compile-family-map-to-param-tune-tasks.js#L51",
+    "tooling:tools_node/compile-family-map-to-param-tune-tasks.js#L219",
+    "tooling:tools_node/compile-family-map-to-param-tune-tasks.js#L220",
+    "tooling:tools_node/compile-proof-to-family-map.js#L62",
+    "tooling:tools_node/compile-proof-to-family-map.js#L412"
+  ],
+  "usageRefStats": {
+    "totalRefs": 24,
+    "distinctFiles": 9,
+    "distinctKinds": 1,
+    "externalRefs": 24,
+    "kinds": [
+      "tooling"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated ensureDir"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L150-L153"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:03a8d901d1533a3872d561fd9ea8e68a73c54f04e1f94e8c59749b4c82516ac0"
+  }
+}

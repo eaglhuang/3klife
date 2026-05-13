@@ -1,0 +1,79 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-DERIVE-FRAGMENT-PREFIX",
+  "symbolName": "deriveFragmentPrefix",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 681,
+      "endLine": 684
+    },
+    "semanticFingerprint": "sf:sha256:0c18bdbff0313d397e9d985dd5e72f6e3d66ecd9d9ba8c9b87b5e1030226d9df"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [],
+  "classification": {
+    "exported": false,
+    "lineCount": 4,
+    "severity": "advisory",
+    "riskScore": 25,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": false
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L237",
+    "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L243",
+    "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L254",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1117",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1222"
+  ],
+  "usageRefStats": {
+    "totalRefs": 5,
+    "distinctFiles": 2,
+    "distinctKinds": 2,
+    "externalRefs": 3,
+    "kinds": [
+      "tooling",
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated deriveFragmentPrefix"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L681-L684"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:0c18bdbff0313d397e9d985dd5e72f6e3d66ecd9d9ba8c9b87b5e1030226d9df"
+  }
+}

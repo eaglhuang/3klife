@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-COPY-JSON-FILE:invalid:null",
+    "kind": "invalid",
+    "title": "copyJsonFile null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:6045c1cdb076ed1781b7cf83f8f6ea30b583ae1e36ac901a5c1dc7e56e7da8a0",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-COPY-JSON-FILE:invalid:type",
+    "kind": "invalid",
+    "title": "copyJsonFile 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:6045c1cdb076ed1781b7cf83f8f6ea30b583ae1e36ac901a5c1dc7e56e7da8a0",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

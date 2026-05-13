@@ -1,0 +1,81 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-BUILD-RUNTIME-INTERACTION-SMOKE-STEP",
+  "symbolName": "buildRuntimeInteractionSmokeStep",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 1652,
+      "endLine": 1775
+    },
+    "semanticFingerprint": "sf:sha256:15d52ce65b9b4a091f80aa9a85cedff4a136971a1d9231e0acd0fa969e2c9a47"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "stable-behavior-name",
+    "medium-function",
+    "side-effect-risk",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "side-effect-boundary"
+  ],
+  "requiredCaseSets": [
+    "boundary",
+    "invalid"
+  ],
+  "classification": {
+    "exported": false,
+    "lineCount": 124,
+    "severity": "advisory",
+    "riskScore": 50,
+    "sideEffectRisk": true
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2123",
+    "test:tools_node/test/dom-to-ui-self-test.js#L2676"
+  ],
+  "usageRefStats": {
+    "totalRefs": 2,
+    "distinctFiles": 2,
+    "distinctKinds": 2,
+    "externalRefs": 1,
+    "kinds": [
+      "test",
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated buildRuntimeInteractionSmokeStep"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1652-L1775"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:15d52ce65b9b4a091f80aa9a85cedff4a136971a1d9231e0acd0fa969e2c9a47"
+  }
+}

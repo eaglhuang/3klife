@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-SCREEN-LOCAL-TOKEN-PAYLOAD:invalid:null",
+    "kind": "invalid",
+    "title": "buildScreenLocalTokenPayload null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:93095e42b8f9e9dbd6fd98ca2c4838121491a4a9ad890a9a7fcfdf4bda640594",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-SCREEN-LOCAL-TOKEN-PAYLOAD:invalid:type",
+    "kind": "invalid",
+    "title": "buildScreenLocalTokenPayload 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:93095e42b8f9e9dbd6fd98ca2c4838121491a4a9ad890a9a7fcfdf4bda640594",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

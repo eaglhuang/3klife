@@ -1,0 +1,85 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-TO-PASCAL",
+  "symbolName": "toPascal",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 694,
+      "endLine": 701
+    },
+    "semanticFingerprint": "sf:sha256:f4afd30eeaf7e40166be6833aaae286db017afc95ea8f799b70c3e89eb929f10"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [],
+  "classification": {
+    "exported": false,
+    "lineCount": 8,
+    "severity": "advisory",
+    "riskScore": 25,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": false
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L304",
+    "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L308",
+    "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L309",
+    "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L322",
+    "tooling:tools_node/render-html-tab-fragments.js#L76",
+    "tooling:tools_node/render-html-tab-fragments.js#L140",
+    "tooling:tools_node/render-html-tab-fragments.js#L196",
+    "tooling:tools_node/render-html-tab-fragments.js#L386",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L887",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1111",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1112"
+  ],
+  "usageRefStats": {
+    "totalRefs": 11,
+    "distinctFiles": 3,
+    "distinctKinds": 2,
+    "externalRefs": 8,
+    "kinds": [
+      "tooling",
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated toPascal"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L694-L701"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:f4afd30eeaf7e40166be6833aaae286db017afc95ea8f799b70c3e89eb929f10"
+  }
+}

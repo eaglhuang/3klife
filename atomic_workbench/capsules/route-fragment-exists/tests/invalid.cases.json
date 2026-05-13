@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-ROUTE-FRAGMENT-EXISTS:invalid:null",
+    "kind": "invalid",
+    "title": "routeFragmentExists null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:060971ee7f444beb5b49d91e0c89a1b91cd3d5227c07dafbe91d75e5bfbade02",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-ROUTE-FRAGMENT-EXISTS:invalid:type",
+    "kind": "invalid",
+    "title": "routeFragmentExists 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:060971ee7f444beb5b49d91e0c89a1b91cd3d5227c07dafbe91d75e5bfbade02",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

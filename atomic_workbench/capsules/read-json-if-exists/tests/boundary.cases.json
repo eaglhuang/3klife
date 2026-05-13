@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-READ-JSON-IF-EXISTS:boundary:empty",
+    "kind": "boundary",
+    "title": "readJsonIfExists 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:1cf72489a8078ff1e1fadb65e97d61049b2a1ff5f0b1452a24ef3512b8445f26",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-READ-JSON-IF-EXISTS:boundary:formatted",
+    "kind": "boundary",
+    "title": "readJsonIfExists 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:1cf72489a8078ff1e1fadb65e97d61049b2a1ff5f0b1452a24ef3512b8445f26",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

@@ -1,25 +1,25 @@
 {
   "schemaId": "atm.localCapsuleIndex",
   "specVersion": "0.2.0",
-  "generatedAt": "2026-05-11T15:24:08.769Z",
+  "generatedAt": "2026-05-13T11:45:13.919Z",
   "candidateReport": "artifacts/atm-atomize/candidates.json",
   "workbenchRoot": "atomic_workbench",
   "capsuleRoot": "atomic_workbench/capsules",
   "anchorRoot": "atomic_workbench/anchors",
   "summary": {
-    "candidateCount": 169,
-    "anchorCount": 1,
+    "candidateCount": 249,
+    "anchorCount": 2,
     "byRecommendedTier": {
-      "local-capsule": 158,
-      "governed-atom": 11
+      "local-capsule": 237,
+      "governed-atom": 12
     },
     "byCurrentTier": {
-      "local-capsule": 158,
-      "local-capsule-candidate": 11
+      "local-capsule": 237,
+      "local-capsule-candidate": 12
     },
     "bySeverity": {
-      "block-if-untested": 12,
-      "advisory": 156,
+      "advisory": 234,
+      "block-if-untested": 14,
       "block-release": 1
     },
     "governedCandidates": [
@@ -30,6 +30,7 @@
       "computeLetterSpacing",
       "inferTabSemanticHints",
       "normalizeCssColorToHex",
+      "parseArgs",
       "parseColor",
       "parseFragmentList",
       "resolveFontAssetByConvention",
@@ -40,6 +41,45 @@
     ]
   },
   "capsules": [
+    {
+      "capsuleId": "H2U-CAPSULE-ALLOCATE-UI-VERSION",
+      "symbolName": "allocateUiVersion",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 724,
+          "endLine": 743
+        },
+        "semanticFingerprint": "sf:sha256:489b4f7bb4870a032a06d81e3054d3341c324c524022525c29629f779ab124f1"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/allocate-ui-version",
+      "manifestPath": "atomic_workbench/capsules/allocate-ui-version/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/allocate-ui-version/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/allocate-ui-version/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
     {
       "capsuleId": "H2U-CAPSULE-ANCHOR-TO-WIDGET",
       "symbolName": "anchorToWidget",
@@ -260,6 +300,43 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-APPLY-SCREEN-LOCAL-COLOR-TOKENS-TO-SKIN",
+      "symbolName": "applyScreenLocalColorTokensToSkin",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 543,
+          "endLine": 586
+        },
+        "semanticFingerprint": "sf:sha256:0d084d1e7dfe67558ea44ce0402a63a7582416abb9cd9bcc1250850d04ba6341"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/apply-screen-local-color-tokens-to-skin",
+      "manifestPath": "atomic_workbench/capsules/apply-screen-local-color-tokens-to-skin/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/apply-screen-local-color-tokens-to-skin/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-APPLY-TEXT-TRANSFORM-GENERAL",
       "symbolName": "applyTextTransformGeneral",
       "tier": "local-capsule-candidate",
@@ -335,6 +412,78 @@
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ASSESS-INTERACTION-RUNTIME",
+      "symbolName": "assessInteractionRuntime",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1846,
+          "endLine": 1872
+        },
+        "semanticFingerprint": "sf:sha256:91f8a4b4f47cad711ba98de4e5d657cfb1f83f98de8ead0ff4aa7c05aeaacbb3"
+      },
+      "usageRefStats": {
+        "totalRefs": 2,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/assess-interaction-runtime",
+      "manifestPath": "atomic_workbench/capsules/assess-interaction-runtime/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/assess-interaction-runtime/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ASSESS-VISUAL-FIDELITY-RISK",
+      "symbolName": "assessVisualFidelityRisk",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1566,
+          "endLine": 1628
+        },
+        "semanticFingerprint": "sf:sha256:4732a3fb67bf53081f50697df050376eceaba910d0c44a99d2f3b8334d20ac77"
+      },
+      "usageRefStats": {
+        "totalRefs": 2,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/assess-visual-fidelity-risk",
+      "manifestPath": "atomic_workbench/capsules/assess-visual-fidelity-risk/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/assess-visual-fidelity-risk/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
         "pure-ish",
         "return-contract"
       ]
@@ -558,6 +707,45 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-BOOTSTRAP-FINAL-DRAFT-FROM-RUNTIME",
+      "symbolName": "bootstrapFinalDraftFromRuntime",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1327,
+          "endLine": 1352
+        },
+        "semanticFingerprint": "sf:sha256:3bbdce903c679e2d49558127aa3385cc348a4cb9db7f77cc507e7adffe2ecb39"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/bootstrap-final-draft-from-runtime",
+      "manifestPath": "atomic_workbench/capsules/bootstrap-final-draft-from-runtime/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/bootstrap-final-draft-from-runtime/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/bootstrap-final-draft-from-runtime/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-BUILD-DRAFT-FROM-HTML",
       "symbolName": "buildDraftFromHtml",
       "tier": "local-capsule-candidate",
@@ -631,6 +819,43 @@
       "capsuleDir": "atomic_workbench/capsules/build-effect-sibling-nodes",
       "manifestPath": "atomic_workbench/capsules/build-effect-sibling-nodes/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/build-effect-sibling-nodes/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-FIDELITY-DIMENSIONS",
+      "symbolName": "buildFidelityDimensions",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1404,
+          "endLine": 1433
+        },
+        "semanticFingerprint": "sf:sha256:aca98bdb77a1ab000e12767960113f18e2ffeef98bc86ed656d8b3c382166465"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-fidelity-dimensions",
+      "manifestPath": "atomic_workbench/capsules/build-fidelity-dimensions/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-fidelity-dimensions/capsule.test.mjs",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -719,6 +944,43 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-BUILD-INTERACTION-ROUTE-MAP",
+      "symbolName": "buildInteractionRouteMap",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1789,
+          "endLine": 1807
+        },
+        "semanticFingerprint": "sf:sha256:15a34010d4bb67eb6aedb708880c7b97ba9eb4cd06f27371557572fbe8a184a5"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-interaction-route-map",
+      "manifestPath": "atomic_workbench/capsules/build-interaction-route-map/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-interaction-route-map/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-BUILD-LABEL-TEXT-FINGERPRINT",
       "symbolName": "buildLabelTextFingerprint",
       "tier": "local-capsule",
@@ -748,6 +1010,154 @@
       "capsuleDir": "atomic_workbench/capsules/build-label-text-fingerprint",
       "manifestPath": "atomic_workbench/capsules/build-label-text-fingerprint/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/build-label-text-fingerprint/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-LOCAL-COLOR-TOKEN-LOOKUP",
+      "symbolName": "buildLocalColorTokenLookup",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 528,
+          "endLine": 542
+        },
+        "semanticFingerprint": "sf:sha256:13dd2818f531df316117a635fc971c6afb04e1dd30e7324c83d1269a012dd98e"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-local-color-token-lookup",
+      "manifestPath": "atomic_workbench/capsules/build-local-color-token-lookup/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-local-color-token-lookup/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-LOCAL-TOKEN-DIFF",
+      "symbolName": "buildLocalTokenDiff",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 510,
+          "endLine": 527
+        },
+        "semanticFingerprint": "sf:sha256:f20dd5a4cc2c48e1abc8ebaaba29ea7494e6e5d081d63f9f37fe251b4be2275a"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-local-token-diff",
+      "manifestPath": "atomic_workbench/capsules/build-local-token-diff/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-local-token-diff/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-PATHS",
+      "symbolName": "buildPaths",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 347,
+          "endLine": 373
+        },
+        "semanticFingerprint": "sf:sha256:c993df285cfd373f73845cd0a1f9c50d756016305545934a4b9c7df60754b45e"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-paths",
+      "manifestPath": "atomic_workbench/capsules/build-paths/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-paths/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-PRE-RULE-GUARD-FIXES",
+      "symbolName": "buildPreRuleGuardFixes",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1513,
+          "endLine": 1548
+        },
+        "semanticFingerprint": "sf:sha256:179c28f170d7412b2a1f0564f2b779701e3ceccb0f13a54a347bf6c320b11256"
+      },
+      "usageRefStats": {
+        "totalRefs": 3,
+        "distinctFiles": 2,
+        "distinctKinds": 1,
+        "externalRefs": 2,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-pre-rule-guard-fixes",
+      "manifestPath": "atomic_workbench/capsules/build-pre-rule-guard-fixes/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-pre-rule-guard-fixes/capsule.test.mjs",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -830,6 +1240,162 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-BUILD-RUNTIME-AUTHORITY",
+      "symbolName": "buildRuntimeAuthority",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1446,
+          "endLine": 1458
+        },
+        "semanticFingerprint": "sf:sha256:38e3ac8b9228bf831f1217e9e4d7eaa0190c45c773fee9def93363c111ac7131"
+      },
+      "usageRefStats": {
+        "totalRefs": 2,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-runtime-authority",
+      "manifestPath": "atomic_workbench/capsules/build-runtime-authority/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-runtime-authority/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-RUNTIME-INTERACTION-SMOKE-STEP",
+      "symbolName": "buildRuntimeInteractionSmokeStep",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1652,
+          "endLine": 1775
+        },
+        "semanticFingerprint": "sf:sha256:15d52ce65b9b4a091f80aa9a85cedff4a136971a1d9231e0acd0fa969e2c9a47"
+      },
+      "usageRefStats": {
+        "totalRefs": 2,
+        "distinctFiles": 2,
+        "distinctKinds": 2,
+        "externalRefs": 1,
+        "kinds": [
+          "test",
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/build-runtime-interaction-smoke-step",
+      "manifestPath": "atomic_workbench/capsules/build-runtime-interaction-smoke-step/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-runtime-interaction-smoke-step/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/build-runtime-interaction-smoke-step/capsule.behavior.test.mjs",
+      "reasons": [
+        "stable-behavior-name",
+        "medium-function",
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-RUNTIME-TAB-ROUTING-MAP",
+      "symbolName": "buildRuntimeTabRoutingMap",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 768,
+          "endLine": 771
+        },
+        "semanticFingerprint": "sf:sha256:9bca1320f1be41a61a533297d27064d6f9a7bba11d098d00f7238b2627910388"
+      },
+      "usageRefStats": {
+        "totalRefs": 5,
+        "distinctFiles": 2,
+        "distinctKinds": 1,
+        "externalRefs": 3,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/build-runtime-tab-routing-map",
+      "manifestPath": "atomic_workbench/capsules/build-runtime-tab-routing-map/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-runtime-tab-routing-map/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-SCREEN-LOCAL-TOKEN-PAYLOAD",
+      "symbolName": "buildScreenLocalTokenPayload",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 446,
+          "endLine": 509
+        },
+        "semanticFingerprint": "sf:sha256:93095e42b8f9e9dbd6fd98ca2c4838121491a4a9ad890a9a7fcfdf4bda640594"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/build-screen-local-token-payload",
+      "manifestPath": "atomic_workbench/capsules/build-screen-local-token-payload/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-screen-local-token-payload/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/build-screen-local-token-payload/capsule.behavior.test.mjs",
+      "reasons": [
+        "stable-behavior-name",
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-BUILD-STRUCTURAL-SIGNATURE",
       "symbolName": "buildStructuralSignature",
       "tier": "local-capsule",
@@ -863,6 +1429,47 @@
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-SUMMARY",
+      "symbolName": "buildSummary",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1353,
+          "endLine": 1403
+        },
+        "semanticFingerprint": "sf:sha256:74857cce385d6a4a405a14daebaedd9f273682dad22e4ee20f929122652b971b"
+      },
+      "usageRefStats": {
+        "totalRefs": 17,
+        "distinctFiles": 7,
+        "distinctKinds": 2,
+        "externalRefs": 14,
+        "kinds": [
+          "tooling",
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/build-summary",
+      "manifestPath": "atomic_workbench/capsules/build-summary/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-summary/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/build-summary/capsule.behavior.test.mjs",
+      "reasons": [
+        "stable-behavior-name",
+        "side-effect-risk",
         "return-contract"
       ]
     },
@@ -1011,6 +1618,42 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-CLASSIFY-BLOCKER-CATEGORY",
+      "symbolName": "classifyBlockerCategory",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1471,
+          "endLine": 1487
+        },
+        "semanticFingerprint": "sf:sha256:792c52ded475d426291cd32ef6f9cf013c53a20bf413f190b4319fb0f8678fef"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/classify-blocker-category",
+      "manifestPath": "atomic_workbench/capsules/classify-blocker-category/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/classify-blocker-category/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-COLLECT-BEHAVIOR",
       "symbolName": "collectBehavior",
       "tier": "local-capsule-candidate",
@@ -1118,6 +1761,44 @@
       "capsuleDir": "atomic_workbench/capsules/collect-label-texts",
       "manifestPath": "atomic_workbench/capsules/collect-label-texts/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/collect-label-texts/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COLLECT-LAYOUT-NODE-INDEX",
+      "symbolName": "collectLayoutNodeIndex",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1776,
+          "endLine": 1788
+        },
+        "semanticFingerprint": "sf:sha256:8807e707fe3f4d026478229830f9ae3c23ca08bb9a6806d5bee83b239e23f5c6"
+      },
+      "usageRefStats": {
+        "totalRefs": 3,
+        "distinctFiles": 2,
+        "distinctKinds": 2,
+        "externalRefs": 2,
+        "kinds": [
+          "tooling",
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/collect-layout-node-index",
+      "manifestPath": "atomic_workbench/capsules/collect-layout-node-index/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/collect-layout-node-index/capsule.test.mjs",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1266,6 +1947,157 @@
       "capsuleDir": "atomic_workbench/capsules/collect-text",
       "manifestPath": "atomic_workbench/capsules/collect-text/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/collect-text/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COLLECT-TOKEN-SUGGESTION-FILES",
+      "symbolName": "collectTokenSuggestionFiles",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 430,
+          "endLine": 445
+        },
+        "semanticFingerprint": "sf:sha256:99d76c593d5ecff114ca891ab838b4f220f141cb61f2c6372d88c47874ec16de"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/collect-token-suggestion-files",
+      "manifestPath": "atomic_workbench/capsules/collect-token-suggestion-files/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/collect-token-suggestion-files/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/collect-token-suggestion-files/capsule.behavior.test.mjs",
+      "reasons": [
+        "stable-behavior-name",
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COLLECT-VISUAL-RISK-FROM-SLOT",
+      "symbolName": "collectVisualRiskFromSlot",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1629,
+          "endLine": 1651
+        },
+        "semanticFingerprint": "sf:sha256:ae2241e23564eb91f547c9e07eb5b556124931410fb6e6aaa988a8e6e8c911a6"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/collect-visual-risk-from-slot",
+      "manifestPath": "atomic_workbench/capsules/collect-visual-risk-from-slot/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/collect-visual-risk-from-slot/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COLLECT-WIDTHS",
+      "symbolName": "collectWidths",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1027,
+          "endLine": 1037
+        },
+        "semanticFingerprint": "sf:sha256:452ff152ed1c024f0781aba4f85ab6326e2fcbe5de994e0d8915374dca75b376"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/collect-widths",
+      "manifestPath": "atomic_workbench/capsules/collect-widths/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/collect-widths/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COMPUTE-DEBUG-ONLY",
+      "symbolName": "computeDebugOnly",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1434,
+          "endLine": 1445
+        },
+        "semanticFingerprint": "sf:sha256:5fa56443f00a5565ec9ba6daf1c3d779616840d83bc63b784fed24b32530c04b"
+      },
+      "usageRefStats": {
+        "totalRefs": 2,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/compute-debug-only",
+      "manifestPath": "atomic_workbench/capsules/compute-debug-only/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/compute-debug-only/capsule.test.mjs",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1462,6 +2294,81 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-COPY-IF-PRESENT",
+      "symbolName": "copyIfPresent",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 629,
+          "endLine": 636
+        },
+        "semanticFingerprint": "sf:sha256:e9e101337050abb5852c0856dd38580ca9ed23f0d8c67a25c469dc2137a0807d"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/copy-if-present",
+      "manifestPath": "atomic_workbench/capsules/copy-if-present/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/copy-if-present/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-COPY-JSON-FILE",
+      "symbolName": "copyJsonFile",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 674,
+          "endLine": 680
+        },
+        "semanticFingerprint": "sf:sha256:6045c1cdb076ed1781b7cf83f8f6ea30b583ae1e36ac901a5c1dc7e56e7da8a0"
+      },
+      "usageRefStats": {
+        "totalRefs": 13,
+        "distinctFiles": 2,
+        "distinctKinds": 1,
+        "externalRefs": 6,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/copy-json-file",
+      "manifestPath": "atomic_workbench/capsules/copy-json-file/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/copy-json-file/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/copy-json-file/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-COUNT-GRID-TRACKS",
       "symbolName": "countGridTracks",
       "tier": "local-capsule",
@@ -1608,6 +2515,79 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-DERIVE-BLOCKER-TAXONOMY",
+      "symbolName": "deriveBlockerTaxonomy",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1488,
+          "endLine": 1512
+        },
+        "semanticFingerprint": "sf:sha256:368d153bce043811698d3e0ff57f03befc8386e7ac4246ad4dd84801182e31f9"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/derive-blocker-taxonomy",
+      "manifestPath": "atomic_workbench/capsules/derive-blocker-taxonomy/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/derive-blocker-taxonomy/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-DERIVE-CHILD-PANEL-CLASS",
+      "symbolName": "deriveChildPanelClass",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1109,
+          "endLine": 1114
+        },
+        "semanticFingerprint": "sf:sha256:d8d660ec3d9671565e8f4d12ad015bdcd35cc9d69df30058a7a22d364eb81add"
+      },
+      "usageRefStats": {
+        "totalRefs": 3,
+        "distinctFiles": 2,
+        "distinctKinds": 2,
+        "externalRefs": 2,
+        "kinds": [
+          "tooling",
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/derive-child-panel-class",
+      "manifestPath": "atomic_workbench/capsules/derive-child-panel-class/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/derive-child-panel-class/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-DERIVE-COMPUTED-GEOMETRY",
       "symbolName": "deriveComputedGeometry",
       "tier": "local-capsule",
@@ -1637,6 +2617,187 @@
       "capsuleDir": "atomic_workbench/capsules/derive-computed-geometry",
       "manifestPath": "atomic_workbench/capsules/derive-computed-geometry/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/derive-computed-geometry/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-DERIVE-CSS-COVERAGE-PATH-FROM-LAYOUT",
+      "symbolName": "deriveCssCoveragePathFromLayout",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1303,
+          "endLine": 1307
+        },
+        "semanticFingerprint": "sf:sha256:8c38ce00f74e38c1fcc206b2c378f3e4b09e13931db756fe1b7dbdec0833f77c"
+      },
+      "usageRefStats": {
+        "totalRefs": 2,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/derive-css-coverage-path-from-layout",
+      "manifestPath": "atomic_workbench/capsules/derive-css-coverage-path-from-layout/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/derive-css-coverage-path-from-layout/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-DERIVE-FRAGMENT-PREFIX",
+      "symbolName": "deriveFragmentPrefix",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 681,
+          "endLine": 684
+        },
+        "semanticFingerprint": "sf:sha256:0c18bdbff0313d397e9d985dd5e72f6e3d66ecd9d9ba8c9b87b5e1030226d9df"
+      },
+      "usageRefStats": {
+        "totalRefs": 5,
+        "distinctFiles": 2,
+        "distinctKinds": 2,
+        "externalRefs": 3,
+        "kinds": [
+          "tooling",
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/derive-fragment-prefix",
+      "manifestPath": "atomic_workbench/capsules/derive-fragment-prefix/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/derive-fragment-prefix/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-DERIVE-TOKEN-SUGGESTION-PATH-FROM-LAYOUT",
+      "symbolName": "deriveTokenSuggestionPathFromLayout",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 404,
+          "endLine": 408
+        },
+        "semanticFingerprint": "sf:sha256:9e6fe021b0fc1c6984d04913ea8f3d9b864d6b09b7977c19364a409520a37d92"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/derive-token-suggestion-path-from-layout",
+      "manifestPath": "atomic_workbench/capsules/derive-token-suggestion-path-from-layout/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/derive-token-suggestion-path-from-layout/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-DERIVE-UI-SHORT-NAME",
+      "symbolName": "deriveUiShortName",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 709,
+          "endLine": 723
+        },
+        "semanticFingerprint": "sf:sha256:3e393c5118056503ad426892ef6c5f15ff49ec8b50cda8e496d55418b0f9b37a"
+      },
+      "usageRefStats": {
+        "totalRefs": 2,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/derive-ui-short-name",
+      "manifestPath": "atomic_workbench/capsules/derive-ui-short-name/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/derive-ui-short-name/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-DETECT-INPUT-SHAPE",
+      "symbolName": "detectInputShape",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 180,
+          "endLine": 189
+        },
+        "semanticFingerprint": "sf:sha256:477e1a47384356e94ab40222468a804ff77a0a986bb02e7cf22c1fd47d87886a"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/detect-input-shape",
+      "manifestPath": "atomic_workbench/capsules/detect-input-shape/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/detect-input-shape/capsule.test.mjs",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -1712,6 +2873,45 @@
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ENSURE-DIR",
+      "symbolName": "ensureDir",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 150,
+          "endLine": 153
+        },
+        "semanticFingerprint": "sf:sha256:03a8d901d1533a3872d561fd9ea8e68a73c54f04e1f94e8c59749b4c82516ac0"
+      },
+      "usageRefStats": {
+        "totalRefs": 24,
+        "distinctFiles": 9,
+        "distinctKinds": 1,
+        "externalRefs": 24,
+        "kinds": [
+          "tooling"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/ensure-dir",
+      "manifestPath": "atomic_workbench/capsules/ensure-dir/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/ensure-dir/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/ensure-dir/capsule.behavior.test.mjs",
+      "reasons": [
+        "stable-behavior-name",
+        "side-effect-risk"
       ]
     },
     {
@@ -1971,6 +3171,117 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-EXTRACT-COMPARE-METRICS",
+      "symbolName": "extractCompareMetrics",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 225,
+          "endLine": 236
+        },
+        "semanticFingerprint": "sf:sha256:2924f39004b81f6d0b7cda5e14f4878f26e68ec8d775e4be0330d1a6323af450"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/extract-compare-metrics",
+      "manifestPath": "atomic_workbench/capsules/extract-compare-metrics/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/extract-compare-metrics/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-EXTRACT-ISSUES",
+      "symbolName": "extractIssues",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 218,
+          "endLine": 224
+        },
+        "semanticFingerprint": "sf:sha256:34558e293e9b58104dda6941ca0d41e619f69fc267a19a56a033255e5605e87e"
+      },
+      "usageRefStats": {
+        "totalRefs": 12,
+        "distinctFiles": 2,
+        "distinctKinds": 1,
+        "externalRefs": 6,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/extract-issues",
+      "manifestPath": "atomic_workbench/capsules/extract-issues/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/extract-issues/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-EXTRACT-PERF-METRICS",
+      "symbolName": "extractPerfMetrics",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 237,
+          "endLine": 245
+        },
+        "semanticFingerprint": "sf:sha256:f24d9213e01e790b25e4864f6276617fd67e09910c8cfacd17d789a6d15054d2"
+      },
+      "usageRefStats": {
+        "totalRefs": 5,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/extract-perf-metrics",
+      "manifestPath": "atomic_workbench/capsules/extract-perf-metrics/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/extract-perf-metrics/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-EXTRACT-SVG-RADAR-CHART-META",
       "symbolName": "extractSvgRadarChartMeta",
       "tier": "local-capsule",
@@ -2041,6 +3352,83 @@
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-FIND-LAYOUT-NODE-BY-NAME",
+      "symbolName": "findLayoutNodeByName",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 913,
+          "endLine": 923
+        },
+        "semanticFingerprint": "sf:sha256:9b56bd83c20f680f7bc3ad755613a3587e8bc4cece545bc84c0b57713ecaff8f"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/find-layout-node-by-name",
+      "manifestPath": "atomic_workbench/capsules/find-layout-node-by-name/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/find-layout-node-by-name/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-FIRST-EXISTING-PATH",
+      "symbolName": "firstExistingPath",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 670,
+          "endLine": 673
+        },
+        "semanticFingerprint": "sf:sha256:58ead0768a97a7e373f210e9c476d15ea7a2957ba4e6d6e7bb4e782f3c8f3162"
+      },
+      "usageRefStats": {
+        "totalRefs": 23,
+        "distinctFiles": 4,
+        "distinctKinds": 3,
+        "externalRefs": 11,
+        "kinds": [
+          "test",
+          "tooling",
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/first-existing-path",
+      "manifestPath": "atomic_workbench/capsules/first-existing-path/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/first-existing-path/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/first-existing-path/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk",
         "return-contract"
       ]
     },
@@ -2186,6 +3574,45 @@
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-HASH-FILE-IF-EXISTS",
+      "symbolName": "hashFileIfExists",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 169,
+          "endLine": 179
+        },
+        "semanticFingerprint": "sf:sha256:f42b065f5acaf54775f772c81afb0bef71e18349e552025c60cbed7cf18f008b"
+      },
+      "usageRefStats": {
+        "totalRefs": 6,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/hash-file-if-exists",
+      "manifestPath": "atomic_workbench/capsules/hash-file-if-exists/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/hash-file-if-exists/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/hash-file-if-exists/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk",
         "return-contract"
       ]
     },
@@ -2399,6 +3826,42 @@
       "capsuleDir": "atomic_workbench/capsules/has-story-strip-multi-signal",
       "manifestPath": "atomic_workbench/capsules/has-story-strip-multi-signal/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/has-story-strip-multi-signal/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-HAS-TEXT-BINDING-CONTRACT",
+      "symbolName": "hasTextBindingContract",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 945,
+          "endLine": 949
+        },
+        "semanticFingerprint": "sf:sha256:6fb9d084c46a2970b9a20679f335d6f55b185d944bd94f61bfdc202be2fc50b8"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/has-text-binding-contract",
+      "manifestPath": "atomic_workbench/capsules/has-text-binding-contract/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/has-text-binding-contract/capsule.test.mjs",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2966,6 +4429,42 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-INJECT-DYNAMIC-TEXT-CONTRACTS",
+      "symbolName": "injectDynamicTextContracts",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 959,
+          "endLine": 982
+        },
+        "semanticFingerprint": "sf:sha256:94b8c1038b00096007b1759450ed11bd68c41dc070af156e79d4d9d0107753e0"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/inject-dynamic-text-contracts",
+      "manifestPath": "atomic_workbench/capsules/inject-dynamic-text-contracts/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/inject-dynamic-text-contracts/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-INSPECT-ART-DIRECTION-RISKS",
       "symbolName": "inspectArtDirectionRisks",
       "tier": "local-capsule",
@@ -3067,6 +4566,42 @@
       "capsuleDir": "atomic_workbench/capsules/is-bold-weight",
       "manifestPath": "atomic_workbench/capsules/is-bold-weight/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/is-bold-weight/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-IS-DYNAMIC-TEXT-CANDIDATE-FOR-CONTRACT",
+      "symbolName": "isDynamicTextCandidateForContract",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 936,
+          "endLine": 944
+        },
+        "semanticFingerprint": "sf:sha256:e4f245594e82c0cd97dde82463434138fbb501816ab2398a63358145d6565b9e"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/is-dynamic-text-candidate-for-contract",
+      "manifestPath": "atomic_workbench/capsules/is-dynamic-text-candidate-for-contract/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/is-dynamic-text-candidate-for-contract/capsule.test.mjs",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3430,6 +4965,46 @@
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MAIN",
+      "symbolName": "main",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 139,
+          "endLine": 174
+        },
+        "semanticFingerprint": "sf:sha256:5baf923fe74672431734e992c0da72b5b9629e0ad29178625b6caa0cef278133"
+      },
+      "usageRefStats": {
+        "totalRefs": 24,
+        "distinctFiles": 15,
+        "distinctKinds": 1,
+        "externalRefs": 24,
+        "kinds": [
+          "runtime"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/main",
+      "manifestPath": "atomic_workbench/capsules/main/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/main/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/main/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "side-effect-risk",
         "return-contract"
       ]
     },
@@ -4016,6 +5591,157 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-MERGE-NEXT-FIXES",
+      "symbolName": "mergeNextFixes",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1549,
+          "endLine": 1565
+        },
+        "semanticFingerprint": "sf:sha256:88845893484891b13eab516f9f5b2a0cac712929f39082a912269cf7ff5169e0"
+      },
+      "usageRefStats": {
+        "totalRefs": 4,
+        "distinctFiles": 2,
+        "distinctKinds": 1,
+        "externalRefs": 2,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/merge-next-fixes",
+      "manifestPath": "atomic_workbench/capsules/merge-next-fixes/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/merge-next-fixes/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MERGE-RUNTIME-SCREEN-CONTENT-CONTRACT",
+      "symbolName": "mergeRuntimeScreenContentContract",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 644,
+          "endLine": 665
+        },
+        "semanticFingerprint": "sf:sha256:a971443de089793506e59ebd152bc733742bdcbe32997ef1880b4941bb3987a5"
+      },
+      "usageRefStats": {
+        "totalRefs": 3,
+        "distinctFiles": 2,
+        "distinctKinds": 1,
+        "externalRefs": 1,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/merge-runtime-screen-content-contract",
+      "manifestPath": "atomic_workbench/capsules/merge-runtime-screen-content-contract/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/merge-runtime-screen-content-contract/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-MERGE-SKIN-SLOTS",
+      "symbolName": "mergeSkinSlots",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1082,
+          "endLine": 1100
+        },
+        "semanticFingerprint": "sf:sha256:eb8b511db645e73126ba19d04c13813e5880d83f1c8d97b659b8cef6e71c0af8"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/merge-skin-slots",
+      "manifestPath": "atomic_workbench/capsules/merge-skin-slots/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/merge-skin-slots/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/merge-skin-slots/capsule.behavior.test.mjs",
+      "reasons": [
+        "stable-behavior-name",
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-COLOR-VALUE",
+      "symbolName": "normalizeColorValue",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 409,
+          "endLine": 429
+        },
+        "semanticFingerprint": "sf:sha256:4284c51a9869ee2ebc5bc4e079a77c5f6959a781e5ab337717bb9bffe8efa396"
+      },
+      "usageRefStats": {
+        "totalRefs": 3,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-color-value",
+      "manifestPath": "atomic_workbench/capsules/normalize-color-value/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-color-value/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-NORMALIZE-COMPUTED-VISUAL-STYLE",
       "symbolName": "normalizeComputedVisualStyle",
       "tier": "local-capsule",
@@ -4235,6 +5961,118 @@
       "capsuleDir": "atomic_workbench/capsules/normalize-fidelity-snapshot-map",
       "manifestPath": "atomic_workbench/capsules/normalize-fidelity-snapshot-map/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/normalize-fidelity-snapshot-map/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-FRAGMENT-LAYOUT",
+      "symbolName": "normalizeFragmentLayout",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 883,
+          "endLine": 896
+        },
+        "semanticFingerprint": "sf:sha256:3d72d3b0bef0bde21c252528547069fe30389f0845ca52e7a96fbe40eb8c77f1"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-fragment-layout",
+      "manifestPath": "atomic_workbench/capsules/normalize-fragment-layout/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-fragment-layout/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-INTERACTION-KEY",
+      "symbolName": "normalizeInteractionKey",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1837,
+          "endLine": 1845
+        },
+        "semanticFingerprint": "sf:sha256:bdc0ce9090970dfbb1b2adf23eded8b51ca9d78e2621a2a0f2e169fcde0cab21"
+      },
+      "usageRefStats": {
+        "totalRefs": 6,
+        "distinctFiles": 2,
+        "distinctKinds": 2,
+        "externalRefs": 3,
+        "kinds": [
+          "tooling",
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-interaction-key",
+      "manifestPath": "atomic_workbench/capsules/normalize-interaction-key/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-interaction-key/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-NORMALIZE-INTERACTION-TRIGGERS-FROM-LAYOUT",
+      "symbolName": "normalizeInteractionTriggersFromLayout",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 983,
+          "endLine": 1026
+        },
+        "semanticFingerprint": "sf:sha256:f9cda792a2eeabf299ae691c60b6cbe92f8fb070031bb437180dab96ec8d76ba"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout",
+      "manifestPath": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout/capsule.test.mjs",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4607,6 +6445,48 @@
       "testPath": "atomic_workbench/capsules/num-attr/capsule.test.mjs",
       "behaviorTestPath": null,
       "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PARSE-ARGS",
+      "symbolName": "parseArgs",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 22,
+          "endLine": 100
+        },
+        "semanticFingerprint": "sf:sha256:6f6c99a207efd154e4e4a4d4b9c9f54fd6de6d90bb3bea94b3a7168aeaa7768d"
+      },
+      "usageRefStats": {
+        "totalRefs": 24,
+        "distinctFiles": 11,
+        "distinctKinds": 1,
+        "externalRefs": 24,
+        "kinds": [
+          "tooling"
+        ]
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/parse-args",
+      "manifestPath": "atomic_workbench/capsules/parse-args/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/parse-args/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/parse-args/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
         "pure-ish",
         "return-contract"
       ]
@@ -5290,6 +7170,117 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-PICK-PER-TAB-REPLAY-TABS",
+      "symbolName": "pickPerTabReplayTabs",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1101,
+          "endLine": 1108
+        },
+        "semanticFingerprint": "sf:sha256:54201aa3485c13d90ea940b73e5745525474ea25599a3e7fe06596062f099916"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/pick-per-tab-replay-tabs",
+      "manifestPath": "atomic_workbench/capsules/pick-per-tab-replay-tabs/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/pick-per-tab-replay-tabs/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PIN-PRIMARY-FRAGMENT-CONTENT-WRAPPER",
+      "symbolName": "pinPrimaryFragmentContentWrapper",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 897,
+          "endLine": 912
+        },
+        "semanticFingerprint": "sf:sha256:34b9de9ce678429eb9bc32ba88af14c46763802644cddbd1e250f94938691078"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/pin-primary-fragment-content-wrapper",
+      "manifestPath": "atomic_workbench/capsules/pin-primary-fragment-content-wrapper/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/pin-primary-fragment-content-wrapper/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-PRINT-HELP",
+      "symbolName": "printHelp",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 101,
+          "endLine": 138
+        },
+        "semanticFingerprint": "sf:sha256:80fdc71fffa84c536c9295954a23aecfe3bb39c1226284ecd0541f03b0055da8"
+      },
+      "usageRefStats": {
+        "totalRefs": 24,
+        "distinctFiles": 12,
+        "distinctKinds": 1,
+        "externalRefs": 24,
+        "kinds": [
+          "tooling"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/print-help",
+      "manifestPath": "atomic_workbench/capsules/print-help/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/print-help/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/print-help/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-PROCESS-ELEMENT",
       "symbolName": "processElement",
       "tier": "local-capsule",
@@ -5440,6 +7431,158 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-READ-FINAL-TAB-ROUTING",
+      "symbolName": "readFinalTabRouting",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 764,
+          "endLine": 767
+        },
+        "semanticFingerprint": "sf:sha256:d394cd65c03ba9d94bcacb7eaceb06fda967b90d5ad99fae169b41d6ec21c26b"
+      },
+      "usageRefStats": {
+        "totalRefs": 6,
+        "distinctFiles": 2,
+        "distinctKinds": 1,
+        "externalRefs": 3,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/read-final-tab-routing",
+      "manifestPath": "atomic_workbench/capsules/read-final-tab-routing/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/read-final-tab-routing/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-READ-JSON-IF-EXISTS",
+      "symbolName": "readJsonIfExists",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 158,
+          "endLine": 164
+        },
+        "semanticFingerprint": "sf:sha256:1cf72489a8078ff1e1fadb65e97d61049b2a1ff5f0b1452a24ef3512b8445f26"
+      },
+      "usageRefStats": {
+        "totalRefs": 24,
+        "distinctFiles": 6,
+        "distinctKinds": 1,
+        "externalRefs": 24,
+        "kinds": [
+          "tooling"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/read-json-if-exists",
+      "manifestPath": "atomic_workbench/capsules/read-json-if-exists/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/read-json-if-exists/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/read-json-if-exists/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-READ-RUNTIME-STATE-ROUTE",
+      "symbolName": "readRuntimeStateRoute",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 637,
+          "endLine": 643
+        },
+        "semanticFingerprint": "sf:sha256:3f09acd3aaae5964a8ca6f4f7b3bb38bd5e2fe490efe9e13ea281ddd16fdcb62"
+      },
+      "usageRefStats": {
+        "totalRefs": 3,
+        "distinctFiles": 2,
+        "distinctKinds": 1,
+        "externalRefs": 1,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/read-runtime-state-route",
+      "manifestPath": "atomic_workbench/capsules/read-runtime-state-route/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/read-runtime-state-route/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-READ-TEXT",
+      "symbolName": "readText",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 154,
+          "endLine": 157
+        },
+        "semanticFingerprint": "sf:sha256:b37f80656a21b28456309dadbc231c008fee0d61f71fde37557503abd6cfd2bb"
+      },
+      "usageRefStats": {
+        "totalRefs": 21,
+        "distinctFiles": 7,
+        "distinctKinds": 3,
+        "externalRefs": 20,
+        "kinds": [
+          "test",
+          "tooling",
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/read-text",
+      "manifestPath": "atomic_workbench/capsules/read-text/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/read-text/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/read-text/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-RECORD-TOKEN-USAGE",
       "symbolName": "recordTokenUsage",
       "tier": "local-capsule",
@@ -5548,6 +7691,42 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-REL",
+      "symbolName": "rel",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 146,
+          "endLine": 149
+        },
+        "semanticFingerprint": "sf:sha256:7f28c47a5af0e97257edc79f0951e9ba230cd11ce4260392fbc39705c80b7d46"
+      },
+      "usageRefStats": {
+        "totalRefs": 24,
+        "distinctFiles": 3,
+        "distinctKinds": 1,
+        "externalRefs": 24,
+        "kinds": [
+          "tooling"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/rel",
+      "manifestPath": "atomic_workbench/capsules/rel/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/rel/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-RESOLVE-BOX-EDGES",
       "symbolName": "resolveBoxEdges",
       "tier": "local-capsule",
@@ -5577,6 +7756,43 @@
       "capsuleDir": "atomic_workbench/capsules/resolve-box-edges",
       "manifestPath": "atomic_workbench/capsules/resolve-box-edges/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/resolve-box-edges/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-CANONICAL-RUNTIME-PATHS",
+      "symbolName": "resolveCanonicalRuntimePaths",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 388,
+          "endLine": 403
+        },
+        "semanticFingerprint": "sf:sha256:e4eacfec87a645b9500d2b12cc23617891dbaa3480f9a10af8bdf53ffa831c0f"
+      },
+      "usageRefStats": {
+        "totalRefs": 11,
+        "distinctFiles": 2,
+        "distinctKinds": 1,
+        "externalRefs": 1,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-canonical-runtime-paths",
+      "manifestPath": "atomic_workbench/capsules/resolve-canonical-runtime-paths/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-canonical-runtime-paths/capsule.test.mjs",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -5820,6 +8036,80 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-INTERACTION-FALLBACK-ROUTE",
+      "symbolName": "resolveInteractionFallbackRoute",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1823,
+          "endLine": 1836
+        },
+        "semanticFingerprint": "sf:sha256:095781997d98411c084ed8a905d96240ac89117574e238e15b9c80843959c497"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-interaction-fallback-route",
+      "manifestPath": "atomic_workbench/capsules/resolve-interaction-fallback-route/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-interaction-fallback-route/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-INTERACTION-ROUTE",
+      "symbolName": "resolveInteractionRoute",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1808,
+          "endLine": 1816
+        },
+        "semanticFingerprint": "sf:sha256:c60244dae7f87a7a43e2a85de5c864b41efb691919ce934b2fe048a68a8c51ff"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-interaction-route",
+      "manifestPath": "atomic_workbench/capsules/resolve-interaction-route/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-interaction-route/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-RESOLVE-LENGTH",
       "symbolName": "resolveLength",
       "tier": "local-capsule",
@@ -5960,6 +8250,80 @@
       "capsuleDir": "atomic_workbench/capsules/resolve-radius-value",
       "manifestPath": "atomic_workbench/capsules/resolve-radius-value/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/resolve-radius-value/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-RUNTIME-SPEC-PATHS",
+      "symbolName": "resolveRuntimeSpecPaths",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 374,
+          "endLine": 387
+        },
+        "semanticFingerprint": "sf:sha256:1dc076c18fcdfa7cd659987b8b6d86b27d9ac09f001ffd09dbf2edde9c6485b2"
+      },
+      "usageRefStats": {
+        "totalRefs": 3,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-runtime-spec-paths",
+      "manifestPath": "atomic_workbench/capsules/resolve-runtime-spec-paths/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-runtime-spec-paths/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-SLOT-WIDTH",
+      "symbolName": "resolveSlotWidth",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 924,
+          "endLine": 935
+        },
+        "semanticFingerprint": "sf:sha256:aeb343c4f733b276b450db122e8f21487099c5d84c102e8d9593e7f60d3ba6d5"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/resolve-slot-width",
+      "manifestPath": "atomic_workbench/capsules/resolve-slot-width/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-slot-width/capsule.test.mjs",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6116,6 +8480,200 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-RESOLVE-UPDATE-COVERAGE-BASELINE",
+      "symbolName": "resolveUpdateCoverageBaseline",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1308,
+          "endLine": 1326
+        },
+        "semanticFingerprint": "sf:sha256:afcbedf39d729c2aedfa9fb43ec79b7f47b7c76dd33e05812d22943c37bb0e3c"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/resolve-update-coverage-baseline",
+      "manifestPath": "atomic_workbench/capsules/resolve-update-coverage-baseline/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/resolve-update-coverage-baseline/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/resolve-update-coverage-baseline/capsule.behavior.test.mjs",
+      "reasons": [
+        "stable-behavior-name",
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-ROUTE-FRAGMENT-EXISTS",
+      "symbolName": "routeFragmentExists",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1817,
+          "endLine": 1822
+        },
+        "semanticFingerprint": "sf:sha256:060971ee7f444beb5b49d91e0c89a1b91cd3d5227c07dafbe91d75e5bfbade02"
+      },
+      "usageRefStats": {
+        "totalRefs": 2,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/route-fragment-exists",
+      "manifestPath": "atomic_workbench/capsules/route-fragment-exists/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/route-fragment-exists/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/route-fragment-exists/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RUN-NODE-STEP",
+      "symbolName": "runNodeStep",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 190,
+          "endLine": 217
+        },
+        "semanticFingerprint": "sf:sha256:f18e32d1c8c61bebf46386125cdabe91fdff1447f09165b7b93ad6ac6384f826"
+      },
+      "usageRefStats": {
+        "totalRefs": 11,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/run-node-step",
+      "manifestPath": "atomic_workbench/capsules/run-node-step/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/run-node-step/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/run-node-step/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RUN-PER-TAB-REPLAY",
+      "symbolName": "runPerTabReplay",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1176,
+          "endLine": 1302
+        },
+        "semanticFingerprint": "sf:sha256:da0f4f2f82608945138d1760e8eeeb60866f950641c79bec10a6fae020bde110"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/run-per-tab-replay",
+      "manifestPath": "atomic_workbench/capsules/run-per-tab-replay/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/run-per-tab-replay/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/run-per-tab-replay/capsule.behavior.test.mjs",
+      "reasons": [
+        "medium-function",
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-SANITIZE-KEY-SEGMENT",
+      "symbolName": "sanitizeKeySegment",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 950,
+          "endLine": 958
+        },
+        "semanticFingerprint": "sf:sha256:0a50ed1d1ceb89be8ad4408479f2d28a1bb8e67032465f3aa74867d1e0303a10"
+      },
+      "usageRefStats": {
+        "totalRefs": 2,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/sanitize-key-segment",
+      "manifestPath": "atomic_workbench/capsules/sanitize-key-segment/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/sanitize-key-segment/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-SHOULD-MATERIALIZE-LAZY-SLOT",
       "symbolName": "shouldMaterializeLazySlot",
       "tier": "local-capsule",
@@ -6188,6 +8746,43 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-SIDECAR-PATH",
+      "symbolName": "sidecarPath",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 666,
+          "endLine": 669
+        },
+        "semanticFingerprint": "sf:sha256:d5fa8238b7b4c90a4c138c03afa99f7ac106621dd5d02915dc1ec25c307d768c"
+      },
+      "usageRefStats": {
+        "totalRefs": 24,
+        "distinctFiles": 5,
+        "distinctKinds": 2,
+        "externalRefs": 13,
+        "kinds": [
+          "tooling",
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/sidecar-path",
+      "manifestPath": "atomic_workbench/capsules/sidecar-path/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/sidecar-path/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-STABILIZE-GRID-LAYOUT",
       "symbolName": "stabilizeGridLayout",
       "tier": "local-capsule",
@@ -6220,6 +8815,42 @@
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-STRETCH-OVERSIZED-FULL-WIDTH-NODES",
+      "symbolName": "stretchOversizedFullWidthNodes",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1038,
+          "endLine": 1081
+        },
+        "semanticFingerprint": "sf:sha256:3ed9770cb411729b7d836c8cd188e9e391a03a17f161b149f7adbea9e0cc05c3"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/stretch-oversized-full-width-nodes",
+      "manifestPath": "atomic_workbench/capsules/stretch-oversized-full-width-nodes/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/stretch-oversized-full-width-nodes/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
         "pure-ish",
         "return-contract"
       ]
@@ -6295,6 +8926,385 @@
         "pure-ish",
         "return-contract"
       ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-SYNC-FINAL-ARTIFACTS-TO-RUNTIME",
+      "symbolName": "syncFinalArtifactsToRuntime",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 772,
+          "endLine": 882
+        },
+        "semanticFingerprint": "sf:sha256:f3f2dbdbbc9f48e362067af370224a538448afcb128f2e5eb255f8733c821da2"
+      },
+      "usageRefStats": {
+        "totalRefs": 8,
+        "distinctFiles": 5,
+        "distinctKinds": 3,
+        "externalRefs": 6,
+        "kinds": [
+          "test",
+          "tooling",
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/sync-final-artifacts-to-runtime",
+      "manifestPath": "atomic_workbench/capsules/sync-final-artifacts-to-runtime/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/sync-final-artifacts-to-runtime/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/sync-final-artifacts-to-runtime/capsule.behavior.test.mjs",
+      "reasons": [
+        "medium-function",
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-TO-KEBAB",
+      "symbolName": "toKebab",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 685,
+          "endLine": 693
+        },
+        "semanticFingerprint": "sf:sha256:b8758192d74979f4877dba227029cfbf2991977976a735634c90399da93a1c8c"
+      },
+      "usageRefStats": {
+        "totalRefs": 19,
+        "distinctFiles": 5,
+        "distinctKinds": 2,
+        "externalRefs": 13,
+        "kinds": [
+          "tooling",
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/to-kebab",
+      "manifestPath": "atomic_workbench/capsules/to-kebab/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/to-kebab/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-TO-PASCAL",
+      "symbolName": "toPascal",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 694,
+          "endLine": 701
+        },
+        "semanticFingerprint": "sf:sha256:f4afd30eeaf7e40166be6833aaae286db017afc95ea8f799b70c3e89eb929f10"
+      },
+      "usageRefStats": {
+        "totalRefs": 11,
+        "distinctFiles": 3,
+        "distinctKinds": 2,
+        "externalRefs": 8,
+        "kinds": [
+          "tooling",
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/to-pascal",
+      "manifestPath": "atomic_workbench/capsules/to-pascal/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/to-pascal/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-TOP-RULE-GUARD-FIXES",
+      "symbolName": "topRuleGuardFixes",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1459,
+          "endLine": 1470
+        },
+        "semanticFingerprint": "sf:sha256:93612dff3575a2daeab3c688aacb7e408ad32754ac459caa19975c8381f4a848"
+      },
+      "usageRefStats": {
+        "totalRefs": 3,
+        "distinctFiles": 2,
+        "distinctKinds": 1,
+        "externalRefs": 2,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/top-rule-guard-fixes",
+      "manifestPath": "atomic_workbench/capsules/top-rule-guard-fixes/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/top-rule-guard-fixes/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-UPDATE-LAZY-SLOT-DEFAULT-FRAGMENTS",
+      "symbolName": "updateLazySlotDefaultFragments",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1152,
+          "endLine": 1175
+        },
+        "semanticFingerprint": "sf:sha256:08b55dc6e62d37dd94c4ac5889deab6dc2bfc8fd96f2cab8b5e7c6281c38c495"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/update-lazy-slot-default-fragments",
+      "manifestPath": "atomic_workbench/capsules/update-lazy-slot-default-fragments/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/update-lazy-slot-default-fragments/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-WALK",
+      "symbolName": "walk",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 271,
+          "endLine": 277
+        },
+        "semanticFingerprint": "sf:sha256:3ad695b1a6b29a320acd93cb6f13c3528e85206cd512584b03590c06c7f6bf0f"
+      },
+      "usageRefStats": {
+        "totalRefs": 24,
+        "distinctFiles": 10,
+        "distinctKinds": 2,
+        "externalRefs": 24,
+        "kinds": [
+          "runtime",
+          "tooling"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/walk",
+      "manifestPath": "atomic_workbench/capsules/walk/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/walk/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-WRITE-JSON",
+      "symbolName": "writeJson",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 165,
+          "endLine": 168
+        },
+        "semanticFingerprint": "sf:sha256:010c62e9c58eb6d6c36947f07fe29af3c860431c36f13d9c7e4f24367ef0d328"
+      },
+      "usageRefStats": {
+        "totalRefs": 24,
+        "distinctFiles": 5,
+        "distinctKinds": 1,
+        "externalRefs": 24,
+        "kinds": [
+          "tooling"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/write-json",
+      "manifestPath": "atomic_workbench/capsules/write-json/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/write-json/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/write-json/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-WRITE-PER-TAB-REPLAY-ROUTING",
+      "symbolName": "writePerTabReplayRouting",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 1115,
+          "endLine": 1151
+        },
+        "semanticFingerprint": "sf:sha256:fc170dfc4abb11ec05b31672714d4b4918cbed9371aae998aaed4cffa08c6810"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/write-per-tab-replay-routing",
+      "manifestPath": "atomic_workbench/capsules/write-per-tab-replay-routing/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/write-per-tab-replay-routing/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/write-per-tab-replay-routing/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-WRITE-SUMMARY-AND-EXIT",
+      "symbolName": "writeSummaryAndExit",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 2308,
+          "endLine": 2333
+        },
+        "semanticFingerprint": "sf:sha256:2d5a20f19a66c636ead68b1492a05b79394f61ed3a2cf3e248926b648e728cc8"
+      },
+      "usageRefStats": {
+        "totalRefs": 7,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/write-summary-and-exit",
+      "manifestPath": "atomic_workbench/capsules/write-summary-and-exit/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/write-summary-and-exit/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/write-summary-and-exit/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-WRITE-UI-VERSION-ARTIFACTS",
+      "symbolName": "writeUiVersionArtifacts",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "sourceRange": {
+          "startLine": 744,
+          "endLine": 763
+        },
+        "semanticFingerprint": "sf:sha256:cc3e003f407e44e1c31419500e1799e756698d7385acfaa902ec0bc3fdb83a31"
+      },
+      "usageRefStats": {
+        "totalRefs": 1,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/write-ui-version-artifacts",
+      "manifestPath": "atomic_workbench/capsules/write-ui-version-artifacts/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/write-ui-version-artifacts/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/write-ui-version-artifacts/capsule.behavior.test.mjs",
+      "reasons": [
+        "side-effect-risk",
+        "return-contract"
+      ]
     }
   ],
   "anchors": [
@@ -6308,6 +9318,17 @@
       "childCount": 169,
       "manifestPath": "atomic_workbench/anchors/draft-builder-core-82992a5f/anchor.manifest.json",
       "testPath": "atomic_workbench/anchors/draft-builder-core-82992a5f/anchor.test.mjs"
+    },
+    {
+      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+      "source": {
+        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "lineCount": 187
+      },
+      "childCount": 3,
+      "manifestPath": "atomic_workbench/anchors/run-html-to-ucuf-workflow-33d9a610/anchor.manifest.json",
+      "testPath": "atomic_workbench/anchors/run-html-to-ucuf-workflow-33d9a610/anchor.test.mjs"
     }
   ]
 }

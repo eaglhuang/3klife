@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-READ-TEXT:boundary:empty",
+    "kind": "boundary",
+    "title": "readText 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:b37f80656a21b28456309dadbc231c008fee0d61f71fde37557503abd6cfd2bb",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-READ-TEXT:boundary:formatted",
+    "kind": "boundary",
+    "title": "readText 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:b37f80656a21b28456309dadbc231c008fee0d61f71fde37557503abd6cfd2bb",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

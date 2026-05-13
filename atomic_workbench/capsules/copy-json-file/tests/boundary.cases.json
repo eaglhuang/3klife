@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-COPY-JSON-FILE:boundary:empty",
+    "kind": "boundary",
+    "title": "copyJsonFile 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:6045c1cdb076ed1781b7cf83f8f6ea30b583ae1e36ac901a5c1dc7e56e7da8a0",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-COPY-JSON-FILE:boundary:formatted",
+    "kind": "boundary",
+    "title": "copyJsonFile 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:6045c1cdb076ed1781b7cf83f8f6ea30b583ae1e36ac901a5c1dc7e56e7da8a0",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

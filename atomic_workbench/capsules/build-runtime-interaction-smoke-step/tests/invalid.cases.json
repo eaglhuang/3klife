@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-INTERACTION-SMOKE-STEP:invalid:null",
+    "kind": "invalid",
+    "title": "buildRuntimeInteractionSmokeStep null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:15d52ce65b9b4a091f80aa9a85cedff4a136971a1d9231e0acd0fa969e2c9a47",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-INTERACTION-SMOKE-STEP:invalid:type",
+    "kind": "invalid",
+    "title": "buildRuntimeInteractionSmokeStep 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:15d52ce65b9b4a091f80aa9a85cedff4a136971a1d9231e0acd0fa969e2c9a47",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

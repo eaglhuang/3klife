@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-RESOLVE-UPDATE-COVERAGE-BASELINE:invalid:null",
+    "kind": "invalid",
+    "title": "resolveUpdateCoverageBaseline null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:afcbedf39d729c2aedfa9fb43ec79b7f47b7c76dd33e05812d22943c37bb0e3c",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-RESOLVE-UPDATE-COVERAGE-BASELINE:invalid:type",
+    "kind": "invalid",
+    "title": "resolveUpdateCoverageBaseline 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:afcbedf39d729c2aedfa9fb43ec79b7f47b7c76dd33e05812d22943c37bb0e3c",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

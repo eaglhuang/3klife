@@ -7,6 +7,9 @@ const cp = require('node:child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const VALID_MODES = new Set(['dev', 'pr', 'release']);
+const VALID_ATOMIZE_CONSENT = new Set(['ask', 'yes', 'no']);
+const ATOMIZE_CODE_FILE_PATTERN = /\.(js|mjs|ts)$/i;
+const ATOMIZE_IGNORED_PREFIXES = ['node_modules/', 'artifacts/', 'library/', 'temp/', '.git/'];
 
 const H2U_PATH_PATTERNS = [
   /^tools_node\/lib\/html-to-ucuf\//i,
@@ -26,6 +29,7 @@ function parseArgs(argv) {
     files: [],
     worktreeStatusFile: '',
     allowDirtyPrefixes: [],
+    atomizeConsent: 'ask',
     json: false,
     shadow: false,
     metricsFile: '',
@@ -52,6 +56,10 @@ function parseArgs(argv) {
     if (token === '--allow-dirty-prefix') {
       const value = String(next() || '').trim();
       if (value) args.allowDirtyPrefixes.push(value);
+      continue;
+    }
+    if (token === '--atomize-consent') {
+      args.atomizeConsent = String(next() || '').trim().toLowerCase();
       continue;
     }
     if (token === '--files') {
@@ -90,6 +98,9 @@ function parseArgs(argv) {
   if (!VALID_MODES.has(args.mode)) {
     throw new Error(`invalid --mode: ${args.mode} (expected dev|pr|release)`);
   }
+  if (!VALID_ATOMIZE_CONSENT.has(args.atomizeConsent)) {
+    throw new Error(`invalid --atomize-consent: ${args.atomizeConsent} (expected ask|yes|no)`);
+  }
   return args;
 }
 
@@ -101,6 +112,7 @@ function printHelp() {
   console.log('  --files <path...>               Use explicit changed files instead of git status.');
   console.log('  --worktree-status-file <path>   Use git status --short snapshot file (EPERM fallback).');
   console.log('  --allow-dirty-prefix <path>     Forwarded to H2U strict validators (repeatable).');
+  console.log('  --atomize-consent <ask|yes|no>  Oversize function atomization consent (default: ask).');
   console.log('  --json                          Print machine-readable report.');
   console.log('  --report <path>                 Write machine-readable report JSON.');
   console.log('  --shadow                        Shadow mode: do not hard-block process exit.');
@@ -361,6 +373,396 @@ function buildStepGuide(stepId) {
   }
 }
 
+function writeJsonFile(filePath, value) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+}
+
+function countFileLines(filePath) {
+  try {
+    const source = fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '');
+    return source.split(/\r?\n/).length;
+  } catch (_) {
+    return 0;
+  }
+}
+
+function isAtomizeCodeFile(filePath) {
+  const normalized = normalizePath(filePath);
+  if (!ATOMIZE_CODE_FILE_PATTERN.test(normalized)) return false;
+  return !ATOMIZE_IGNORED_PREFIXES.some((prefix) => normalized.startsWith(prefix));
+}
+
+function isInteractivePromptAllowed(args) {
+  if (args.json) return false;
+  return Boolean(process.stdin && process.stdin.isTTY && process.stdout && process.stdout.isTTY);
+}
+
+function shouldEnableAtomizationAdvisor(args) {
+  if (args.mode !== 'dev') return false;
+  if (args.atomizeConsent === 'no') return false;
+  if (args.atomizeConsent === 'yes') return true;
+  return isInteractivePromptAllowed(args);
+}
+
+function readOneLineFromStdin() {
+  const chunks = [];
+  const buffer = Buffer.alloc(1024);
+  const fd = process.stdin && Number.isInteger(process.stdin.fd) ? process.stdin.fd : 0;
+  try {
+    while (true) {
+      const bytes = fs.readSync(fd, buffer, 0, buffer.length, null);
+      if (!bytes || bytes <= 0) break;
+      const part = buffer.toString('utf8', 0, bytes);
+      chunks.push(part);
+      if (part.includes('\n')) break;
+      if (chunks.join('').length > 4096) break;
+    }
+  } catch (_) {
+    return '';
+  }
+  return chunks.join('');
+}
+
+function normalizeConsentAnswer(answer) {
+  const value = String(answer || '').trim().toLowerCase();
+  if (value === 'y' || value === 'yes') return 'yes';
+  if (value === 'n' || value === 'no') return 'no';
+  return 'no';
+}
+
+function askAtomizeConsent(question) {
+  process.stdout.write(`${question} [y/N]: `);
+  const raw = readOneLineFromStdin();
+  const normalized = normalizeConsentAnswer(raw);
+  return {
+    answer: normalized,
+    accepted: normalized === 'yes',
+    raw: String(raw || '').trim(),
+  };
+}
+
+function buildAtomizationProbe(changedFiles) {
+  const codeFiles = uniquePaths(changedFiles || [])
+    .filter((filePath) => isAtomizeCodeFile(filePath))
+    .map((filePath) => path.resolve(ROOT, filePath))
+    .filter((filePath) => fs.existsSync(filePath));
+
+  if (codeFiles.length === 0) {
+    return {
+      ok: true,
+      triggered: false,
+      reason: 'no-eligible-code-files',
+      codeFiles: [],
+      sourceFiles: [],
+      candidateCount: 0,
+      blockReleaseCandidates: [],
+      oversizedFiles: [],
+      thresholds: {
+        functionLinesBlockRelease: 250,
+        fileLinesBlockRelease: 400,
+      },
+      scanReportPath: '',
+      scanReportAbsPath: '',
+    };
+  }
+
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const outDir = path.join(ROOT, 'artifacts', 'atm-atomize', 'auto-consent');
+  const scanReportAbsPath = path.join(outDir, `scan-${timestamp}.json`);
+
+  try {
+    const { runScan } = require('./atm-atomize');
+    const scanReport = runScan({
+      command: 'scan',
+      files: codeFiles,
+      changed: false,
+      report: scanReportAbsPath,
+      candidateReport: scanReportAbsPath,
+      workbenchRoot: path.join(ROOT, 'atomic_workbench'),
+      strict: false,
+      json: true,
+      help: false,
+      policy: null,
+      policyHook: null,
+      registryPath: null,
+      usageRefFile: null,
+      capsuleId: '',
+      targetTier: '',
+    });
+
+    const functionThreshold = Number(scanReport && scanReport.thresholds && scanReport.thresholds.functionLinesBlockRelease || 250);
+    const fileThreshold = 400;
+    const sourceFiles = codeFiles
+      .map((absPath) => ({
+        file: rel(absPath),
+        lineCountBefore: countFileLines(absPath),
+      }))
+      .sort((a, b) => b.lineCountBefore - a.lineCountBefore);
+    const blockReleaseCandidates = Array.isArray(scanReport && scanReport.candidates)
+      ? scanReport.candidates
+        .filter((item) => item && item.severity === 'block-release')
+        .map((item) => ({
+          symbolName: String(item.symbolName || ''),
+          file: String(item.file || ''),
+          lineCount: Number(item.lineCount || 0),
+          startLine: Number(item.sourceRange && item.sourceRange.startLine || 0),
+          endLine: Number(item.sourceRange && item.sourceRange.endLine || 0),
+          tier: String(item.tier || ''),
+          recommendedTier: String(item.recommendedTier || ''),
+        }))
+        .sort((a, b) => b.lineCount - a.lineCount)
+      : [];
+
+    const oversizedFiles = sourceFiles
+      .map((item) => ({
+        file: item.file,
+        lineCount: item.lineCountBefore,
+      }))
+      .filter((item) => item.lineCount > fileThreshold)
+      .sort((a, b) => b.lineCount - a.lineCount);
+
+    return {
+      ok: true,
+      triggered: blockReleaseCandidates.length > 0 || oversizedFiles.length > 0,
+      reason: '',
+      codeFiles: codeFiles.map(rel),
+      sourceFiles,
+      candidateCount: Number(scanReport && scanReport.candidateCount || 0),
+      blockReleaseCandidates,
+      oversizedFiles,
+      thresholds: {
+        functionLinesBlockRelease: functionThreshold,
+        fileLinesBlockRelease: fileThreshold,
+      },
+      scanReportPath: rel(scanReportAbsPath),
+      scanReportAbsPath,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      triggered: false,
+      reason: String(error && (error.message || error) || 'atomize-scan-failed'),
+      codeFiles: codeFiles.map(rel),
+      sourceFiles: codeFiles.map((filePath) => ({
+        file: rel(filePath),
+        lineCountBefore: countFileLines(filePath),
+      })),
+      candidateCount: 0,
+      blockReleaseCandidates: [],
+      oversizedFiles: [],
+      thresholds: {
+        functionLinesBlockRelease: 250,
+        fileLinesBlockRelease: 400,
+      },
+      scanReportPath: rel(scanReportAbsPath),
+      scanReportAbsPath,
+    };
+  }
+}
+
+function runAtomizationPipeline(probe) {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const outDir = path.join(ROOT, 'artifacts', 'atm-atomize', 'auto-consent');
+  const scaffoldPath = path.join(outDir, `scaffold-${timestamp}.report.json`);
+  const validatePath = path.join(outDir, `validate-${timestamp}.report.json`);
+  const demandPolicePath = path.join(outDir, `demand-police-${timestamp}.report.json`);
+
+  try {
+    const { runScaffold, runValidate, runDemandPolice } = require('./atm-atomize');
+    const scaffoldReport = runScaffold({
+      command: 'scaffold',
+      candidateReport: probe.scanReportAbsPath,
+      report: probe.scanReportAbsPath,
+      workbenchRoot: path.join(ROOT, 'atomic_workbench'),
+      strict: false,
+      json: true,
+      help: false,
+      policy: null,
+      policyHook: null,
+      registryPath: null,
+      usageRefFile: null,
+      capsuleId: '',
+      targetTier: '',
+    });
+    const validateReport = runValidate({
+      command: 'validate',
+      workbenchRoot: path.join(ROOT, 'atomic_workbench'),
+      strict: false,
+      json: true,
+      help: false,
+      policy: null,
+      policyHook: null,
+      registryPath: null,
+      usageRefFile: null,
+      capsuleId: '',
+      targetTier: '',
+    });
+    const demandPoliceReport = runDemandPolice({
+      command: 'demand-police',
+      workbenchRoot: path.join(ROOT, 'atomic_workbench'),
+      strict: false,
+      json: true,
+      help: false,
+      policy: null,
+      policyHook: null,
+      registryPath: null,
+      usageRefFile: null,
+      capsuleId: '',
+      targetTier: '',
+    });
+
+    writeJsonFile(scaffoldPath, scaffoldReport);
+    writeJsonFile(validatePath, validateReport);
+    writeJsonFile(demandPolicePath, demandPoliceReport);
+
+    const passed = Boolean(validateReport && validateReport.passed !== false)
+      && Boolean(demandPoliceReport && demandPoliceReport.passed !== false);
+    const sourceSize = Array.isArray(probe && probe.sourceFiles)
+      ? probe.sourceFiles.map((item) => {
+        const after = countFileLines(path.resolve(ROOT, item.file));
+        return {
+          file: item.file,
+          lineCountBefore: Number(item.lineCountBefore || 0),
+          lineCountAfter: after,
+          deltaLines: after - Number(item.lineCountBefore || 0),
+        };
+      })
+      : [];
+    const sourceChanged = sourceSize.filter((item) => item.deltaLines !== 0);
+    const totalDeltaLines = sourceSize.reduce((sum, item) => sum + Number(item.deltaLines || 0), 0);
+
+    return {
+      ran: true,
+      passed,
+      error: '',
+      paths: {
+        scaffold: rel(scaffoldPath),
+        validate: rel(validatePath),
+        demandPolice: rel(demandPolicePath),
+      },
+      summary: {
+        createdCapsules: Number(scaffoldReport && scaffoldReport.created && scaffoldReport.created.length || 0),
+        createdAnchors: Number(scaffoldReport && scaffoldReport.createdAnchors && scaffoldReport.createdAnchors.length || 0),
+        validationFailures: Number(validateReport && validateReport.failed || 0),
+        demandFindings: Number(demandPoliceReport && demandPoliceReport.findings && demandPoliceReport.findings.length || 0),
+        outputRoots: {
+          capsules: 'atomic_workbench/capsules',
+          anchors: 'atomic_workbench/anchors',
+        },
+        sourceSize: {
+          checkedFileCount: sourceSize.length,
+          changedFileCount: sourceChanged.length,
+          totalDeltaLines,
+          files: sourceSize,
+        },
+      },
+    };
+  } catch (error) {
+    return {
+      ran: true,
+      passed: false,
+      error: String(error && (error.message || error) || 'atomization-pipeline-failed'),
+      paths: {
+        scaffold: rel(scaffoldPath),
+        validate: rel(validatePath),
+        demandPolice: rel(demandPolicePath),
+      },
+      summary: {
+        createdCapsules: 0,
+        createdAnchors: 0,
+        validationFailures: 0,
+        demandFindings: 0,
+        outputRoots: {
+          capsules: 'atomic_workbench/capsules',
+          anchors: 'atomic_workbench/anchors',
+        },
+        sourceSize: {
+          checkedFileCount: 0,
+          changedFileCount: 0,
+          totalDeltaLines: 0,
+          files: [],
+        },
+      },
+    };
+  }
+}
+
+function maybeRunAtomizationAdvisor(args, changedFiles) {
+  if (!shouldEnableAtomizationAdvisor(args)) {
+    return {
+      enabled: false,
+      status: args.mode !== 'dev'
+        ? 'disabled-outside-dev'
+        : (args.atomizeConsent === 'no' ? 'disabled-by-consent' : 'disabled-non-interactive'),
+      probe: null,
+      consent: null,
+      pipeline: null,
+    };
+  }
+
+  const probe = buildAtomizationProbe(changedFiles);
+  if (!probe.ok) {
+    return {
+      enabled: true,
+      status: 'probe-failed',
+      probe,
+      consent: null,
+      pipeline: null,
+    };
+  }
+
+  if (!probe.triggered) {
+    return {
+      enabled: true,
+      status: 'no-trigger',
+      probe,
+      consent: null,
+      pipeline: null,
+    };
+  }
+
+  let consent = {
+    mode: args.atomizeConsent,
+    prompted: false,
+    answer: args.atomizeConsent,
+    accepted: args.atomizeConsent === 'yes',
+  };
+
+  if (args.atomizeConsent === 'ask') {
+    const topFn = probe.blockReleaseCandidates.slice(0, 3).map((item) => `${item.symbolName} (${item.lineCount} lines @ ${item.file}:${item.startLine}-${item.endLine})`);
+    const topFiles = probe.oversizedFiles.slice(0, 3).map((item) => `${item.file} (${item.lineCount} lines)`);
+    const hints = [];
+    if (topFn.length > 0) hints.push(`large functions: ${topFn.join('; ')}`);
+    if (topFiles.length > 0) hints.push(`large files: ${topFiles.join('; ')}`);
+    console.log(`[atm-flow] atomize-advisor detected oversize surfaces (${hints.join(' | ')})`);
+    consent = {
+      mode: 'ask',
+      prompted: true,
+      ...askAtomizeConsent('Trigger ATM atomization now (scan -> scaffold -> validate -> demand-police)?'),
+    };
+  }
+
+  if (!consent.accepted) {
+    return {
+      enabled: true,
+      status: 'declined',
+      probe,
+      consent,
+      pipeline: null,
+    };
+  }
+
+  const pipeline = runAtomizationPipeline(probe);
+  return {
+    enabled: true,
+    status: pipeline.passed ? 'triggered' : 'triggered-with-issues',
+    probe,
+    consent,
+    pipeline,
+  };
+}
+
 function percentile(values, ratio) {
   if (!Array.isArray(values) || values.length === 0) return 0;
   const sorted = [...values].sort((a, b) => a - b);
@@ -488,6 +890,19 @@ function buildUserFacingSummary(report) {
     };
   }
 
+  if (
+    report.mode === 'dev'
+    && report.atomizationAdvisor
+    && report.atomizationAdvisor.enabled
+    && report.atomizationAdvisor.status === 'declined'
+  ) {
+    return {
+      blockedAt: '',
+      why: 'Oversize code was detected; atomization was skipped because consent was not granted.',
+      nextCommand: 'npm run atm:flow -- --mode dev --atomize-consent yes',
+    };
+  }
+
   if (report.mode === 'dev') {
     return {
       blockedAt: '',
@@ -544,6 +959,13 @@ function runFlow(args) {
       changedFiles: detection.files,
       changedFilesSource: detection.source,
       changedFilesError: detection.error || '',
+      atomizationAdvisor: {
+        enabled: false,
+        status: 'skipped-by-precheck-failure',
+        probe: null,
+        consent: null,
+        pipeline: null,
+      },
       areas: classifyTouchedAreas([]),
       escalation,
       precheck: {
@@ -571,6 +993,7 @@ function runFlow(args) {
   }
 
   const changedFiles = detection.ok ? detection.files : [];
+  const atomizationAdvisor = maybeRunAtomizationAdvisor(args, changedFiles);
   const areas = classifyTouchedAreas(changedFiles);
   const plan = buildExecutionPlan(args.mode, areas);
   const steps = [];
@@ -619,6 +1042,7 @@ function runFlow(args) {
     changedFiles,
     changedFilesSource: detection.source,
     changedFilesError: detection.error || '',
+    atomizationAdvisor,
     areas,
     escalation,
     steps,
@@ -656,6 +1080,66 @@ function printHumanReadable(report) {
       continue;
     }
     console.log(`[atm-flow] - ${step.id}: ${step.passed ? 'PASS' : 'FAIL'} (${step.durationMs}ms)`);
+  }
+
+  if (report.atomizationAdvisor && report.atomizationAdvisor.enabled) {
+    const advisor = report.atomizationAdvisor;
+    console.log(`[atm-flow] atomize-advisor=${advisor.status}`);
+    if (advisor.probe && advisor.probe.triggered) {
+      console.log(`[atm-flow] atomize-advisor trigger: function>${advisor.probe.thresholds.functionLinesBlockRelease} or file>${advisor.probe.thresholds.fileLinesBlockRelease}`);
+      console.log(
+        `[atm-flow] atomize-advisor scan-summary: candidates=${Number(advisor.probe.candidateCount || 0)} `
+        + `block-release=${Array.isArray(advisor.probe.blockReleaseCandidates) ? advisor.probe.blockReleaseCandidates.length : 0} `
+        + `oversized-files=${Array.isArray(advisor.probe.oversizedFiles) ? advisor.probe.oversizedFiles.length : 0}`
+      );
+      if (advisor.probe.scanReportPath) {
+        console.log(`[atm-flow] atomize-advisor scan=${advisor.probe.scanReportPath}`);
+      }
+    }
+    if (advisor.pipeline && advisor.pipeline.ran) {
+      console.log(`[atm-flow] atomize-advisor pipeline=${advisor.pipeline.passed ? 'PASS' : 'FAIL'}`);
+      if (advisor.pipeline.summary) {
+        console.log(
+          `[atm-flow] atomize-advisor generated: capsules=${Number(advisor.pipeline.summary.createdCapsules || 0)} `
+          + `anchors=${Number(advisor.pipeline.summary.createdAnchors || 0)} `
+          + `validation-failures=${Number(advisor.pipeline.summary.validationFailures || 0)} `
+          + `demand-findings=${Number(advisor.pipeline.summary.demandFindings || 0)}`
+        );
+        if (advisor.pipeline.summary.outputRoots) {
+          console.log(
+            `[atm-flow] atomize-advisor output-dirs: `
+            + `${advisor.pipeline.summary.outputRoots.capsules}, `
+            + `${advisor.pipeline.summary.outputRoots.anchors}`
+          );
+        }
+        const sourceSize = advisor.pipeline.summary.sourceSize || null;
+        if (sourceSize) {
+          console.log(
+            `[atm-flow] atomize-advisor source-size: checked=${Number(sourceSize.checkedFileCount || 0)} `
+            + `changed=${Number(sourceSize.changedFileCount || 0)} `
+            + `total-delta-lines=${Number(sourceSize.totalDeltaLines || 0)}`
+          );
+          if (Array.isArray(sourceSize.files)) {
+            const changedTop = sourceSize.files
+              .filter((item) => Number(item.deltaLines || 0) !== 0)
+              .sort((a, b) => Math.abs(Number(b.deltaLines || 0)) - Math.abs(Number(a.deltaLines || 0)))
+              .slice(0, 3);
+            for (const item of changedTop) {
+              const sign = Number(item.deltaLines || 0) > 0 ? '+' : '';
+              console.log(`[atm-flow] atomize-advisor source-delta: ${item.file} ${item.lineCountBefore} -> ${item.lineCountAfter} (${sign}${item.deltaLines})`);
+            }
+          }
+        }
+      }
+      if (advisor.pipeline.paths) {
+        console.log(`[atm-flow] atomize-advisor scaffold=${advisor.pipeline.paths.scaffold}`);
+        console.log(`[atm-flow] atomize-advisor validate=${advisor.pipeline.paths.validate}`);
+        console.log(`[atm-flow] atomize-advisor demand-police=${advisor.pipeline.paths.demandPolice}`);
+      }
+      if (advisor.pipeline.error) {
+        console.warn(`[atm-flow] atomize-advisor error=${advisor.pipeline.error}`);
+      }
+    }
   }
 
   console.log('');

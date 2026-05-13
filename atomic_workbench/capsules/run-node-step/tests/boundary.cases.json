@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-RUN-NODE-STEP:boundary:empty",
+    "kind": "boundary",
+    "title": "runNodeStep 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:f18e32d1c8c61bebf46386125cdabe91fdff1447f09165b7b93ad6ac6384f826",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-RUN-NODE-STEP:boundary:formatted",
+    "kind": "boundary",
+    "title": "runNodeStep 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:f18e32d1c8c61bebf46386125cdabe91fdff1447f09165b7b93ad6ac6384f826",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

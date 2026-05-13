@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-MERGE-SKIN-SLOTS:boundary:empty",
+    "kind": "boundary",
+    "title": "mergeSkinSlots 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:eb8b511db645e73126ba19d04c13813e5880d83f1c8d97b659b8cef6e71c0af8",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-MERGE-SKIN-SLOTS:boundary:formatted",
+    "kind": "boundary",
+    "title": "mergeSkinSlots 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:eb8b511db645e73126ba19d04c13813e5880d83f1c8d97b659b8cef6e71c0af8",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

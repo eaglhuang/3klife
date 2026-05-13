@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-MAIN:base:nominal",
+    "kind": "base",
+    "title": "main 正常主路徑",
+    "inputSample": {
+      "mode": "dry-run",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:859558f739c1872b067cfe27ba3e6f621904132c42d70fa94aafed8e373ab679",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1873-L2307"
+    ]
+  }
+]

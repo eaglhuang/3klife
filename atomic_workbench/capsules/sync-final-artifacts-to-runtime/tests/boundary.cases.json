@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-SYNC-FINAL-ARTIFACTS-TO-RUNTIME:boundary:empty",
+    "kind": "boundary",
+    "title": "syncFinalArtifactsToRuntime 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:f3f2dbdbbc9f48e362067af370224a538448afcb128f2e5eb255f8733c821da2",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-SYNC-FINAL-ARTIFACTS-TO-RUNTIME:boundary:formatted",
+    "kind": "boundary",
+    "title": "syncFinalArtifactsToRuntime 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:f3f2dbdbbc9f48e362067af370224a538448afcb128f2e5eb255f8733c821da2",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

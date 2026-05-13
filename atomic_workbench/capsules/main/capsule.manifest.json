@@ -1,0 +1,101 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-MAIN",
+  "symbolName": "main",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 139,
+      "endLine": 174
+    },
+    "semanticFingerprint": "sf:sha256:5baf923fe74672431734e992c0da72b5b9629e0ad29178625b6caa0cef278133"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "exported",
+    "side-effect-risk",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "side-effect-boundary"
+  ],
+  "requiredCaseSets": [
+    "boundary",
+    "invalid"
+  ],
+  "classification": {
+    "exported": true,
+    "lineCount": 36,
+    "severity": "block-if-untested",
+    "riskScore": 45,
+    "sideEffectRisk": true
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "runtime:assets/scripts/battle/views/effects/BuffGainEffectPool.ts#L190",
+    "runtime:assets/scripts/core/config/UIConfig.ts#L147",
+    "runtime:assets/scripts/core/config/UIConfig.ts#L152",
+    "runtime:assets/scripts/core/config/UIConfig.ts#L157",
+    "runtime:assets/scripts/core/data/BattleBindData.ts#L22",
+    "runtime:assets/scripts/core/data/BattleBindData.ts#L45",
+    "runtime:assets/scripts/core/data/BattleBindData.ts#L70",
+    "runtime:assets/scripts/core/data/BattleBindData.ts#L89",
+    "runtime:assets/scripts/core/data/BattleBindData.ts#L102",
+    "runtime:assets/scripts/core/utils/ParticleUtils.ts#L138",
+    "runtime:assets/scripts/ui/components/BattleHUD.ts#L10",
+    "runtime:assets/scripts/ui/components/BattleScenePanel.ts#L35",
+    "runtime:assets/scripts/ui/components/GeneralDetailComposite.ts#L87",
+    "runtime:assets/scripts/ui/components/GeneralDetailComposite.ts#L112",
+    "runtime:assets/scripts/ui/components/GeneralDetailComposite.ts#L169",
+    "runtime:assets/scripts/ui/components/GeneralListPanel.ts#L215",
+    "runtime:assets/scripts/ui/components/GeneralPortraitPanel.ts#L49",
+    "runtime:assets/scripts/ui/components/GeneralQuickViewPanel.ts#L20",
+    "runtime:assets/scripts/ui/components/ResultPopup.ts#L8",
+    "runtime:assets/scripts/ui/components/StyleCheckPanel.ts#L20",
+    "runtime:assets/scripts/ui/components/TigerTallyPanel.ts#L288",
+    "runtime:assets/scripts/ui/components/TigerTallyPanel.ts#L300",
+    "runtime:assets/scripts/ui/components/ToastMessage.ts#L95",
+    "runtime:assets/scripts/ui/core/UIPreviewLayoutBuilder.ts#L156"
+  ],
+  "usageRefStats": {
+    "totalRefs": 24,
+    "distinctFiles": 15,
+    "distinctKinds": 1,
+    "externalRefs": 24,
+    "kinds": [
+      "runtime"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated main"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L139-L174"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:5baf923fe74672431734e992c0da72b5b9629e0ad29178625b6caa0cef278133"
+  }
+}

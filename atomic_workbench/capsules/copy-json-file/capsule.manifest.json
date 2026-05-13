@@ -1,0 +1,89 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-COPY-JSON-FILE",
+  "symbolName": "copyJsonFile",
+  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "source": {
+    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "sourceRange": {
+      "startLine": 674,
+      "endLine": 680
+    },
+    "semanticFingerprint": "sf:sha256:6045c1cdb076ed1781b7cf83f8f6ea30b583ae1e36ac901a5c1dc7e56e7da8a0"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "side-effect-risk",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "side-effect-boundary"
+  ],
+  "requiredCaseSets": [
+    "boundary",
+    "invalid"
+  ],
+  "classification": {
+    "exported": false,
+    "lineCount": 7,
+    "severity": "advisory",
+    "riskScore": 10,
+    "sideEffectRisk": true
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "workflow:tools_node/lib/html-to-ucuf/workflow/runtime-sync.js#L42",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/runtime-sync.js#L43",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/runtime-sync.js#L44",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/runtime-sync.js#L92",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/runtime-sync.js#L98",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/runtime-sync.js#L104",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L785",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L804",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L805",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L806",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L856",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L863",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L870"
+  ],
+  "usageRefStats": {
+    "totalRefs": 13,
+    "distinctFiles": 2,
+    "distinctKinds": 1,
+    "externalRefs": 6,
+    "kinds": [
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated copyJsonFile"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L674-L680"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:6045c1cdb076ed1781b7cf83f8f6ea30b583ae1e36ac901a5c1dc7e56e7da8a0"
+  }
+}
