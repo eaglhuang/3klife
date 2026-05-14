@@ -14,7 +14,7 @@ from typing import Any
 from urllib.parse import quote, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
-from repo_layout import pipeline_config_path, pipeline_root, resolve_repo_root
+from repo_layout import pipeline_config_path, pipeline_root, resolve_npc_brain_root, resolve_repo_root
 
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -26,8 +26,30 @@ DEFAULT_SCOREBOARD_JSON = Path(
     "local/codex-smoke/knowledge-growth/full-roster-highway-wang-yi-female-fix-r1/"
     "full-roster-highway-wang-yi-female-fix-r1-r1/scoreboard/full-roster-scoreboard.json"
 )
-DEFAULT_SOURCE_HEALTH_CLI = Path("tools_node/agent-clis/3klife-source-health.js")
-DEFAULT_HARVESTER_CLI = Path("tools_node/agent-clis/3klife-web-page-harvester.js")
+NPC_BRAIN_ROOT = resolve_npc_brain_root(REPO_ROOT)
+
+
+def resolve_default_cli(cli_name: str) -> Path:
+    seen: set[Path] = set()
+    ancestors: list[Path] = []
+    for anchor in [REPO_ROOT, NPC_BRAIN_ROOT]:
+        current = anchor
+        for _ in range(len(current.parents) + 1):
+            if current not in seen:
+                ancestors.append(current)
+                seen.add(current)
+            if current.parent == current:
+                break
+            current = current.parent
+    for root in ancestors:
+        candidate = root / "tools_node" / "agent-clis" / cli_name
+        if candidate.exists():
+            return candidate
+    return REPO_ROOT / "tools_node" / "agent-clis" / cli_name
+
+
+DEFAULT_SOURCE_HEALTH_CLI = resolve_default_cli("3klife-source-health.js")
+DEFAULT_HARVESTER_CLI = resolve_default_cli("3klife-web-page-harvester.js")
 DEFAULT_BIOGRAPHY_EXTRACTOR = PIPELINE_ROOT / "extract_harvested_page_evidence_seeds.py"
 DEFAULT_GENERIC_EXTRACTOR = PIPELINE_ROOT / "extract_generic_passage_evidence_seeds.py"
 DEFAULT_SEED_HARVESTER = PIPELINE_ROOT / "harvest_external_evidence_seeds.py"
@@ -100,6 +122,37 @@ def utc_stamp() -> str:
 def resolve_path(path_text: str | Path) -> Path:
     path = Path(path_text)
     return path if path.is_absolute() else (REPO_ROOT / path).resolve()
+
+
+def resolve_existing_path(path_text: str | Path, *, fallback_roots: list[Path] | None = None) -> Path:
+    base_path = Path(path_text)
+    if base_path.is_absolute():
+        return base_path
+
+    search_roots = [
+        REPO_ROOT,
+        NPC_BRAIN_ROOT,
+        REPO_ROOT.parent,
+        NPC_BRAIN_ROOT.parent,
+        REPO_ROOT.parent.parent,
+        NPC_BRAIN_ROOT.parent.parent,
+    ]
+    if fallback_roots:
+        search_roots.extend(fallback_roots)
+
+    candidates: list[Path] = []
+    seen = set()
+    for root in search_roots:
+        candidate = (root / base_path).resolve()
+        if candidate not in seen:
+            seen.add(candidate)
+            candidates.append(candidate)
+
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+
+    return candidates[0] if candidates else resolve_path(base_path)
 
 
 def repo_relative(path: Path) -> str:
@@ -1297,8 +1350,8 @@ def main() -> int:
 
     source_health_cli = resolve_path(args.source_health_cli)
     harvester_cli = resolve_path(args.harvester_cli)
-    alias_map_path = resolve_path(args.alias_map)
-    scoreboard_path = resolve_path(args.scoreboard_json)
+    alias_map_path = resolve_existing_path(args.alias_map)
+    scoreboard_path = resolve_existing_path(args.scoreboard_json)
     single_source_health_path = run_root / "single-source-health-summary.json"
     benchmark_summary_path = run_root / "benchmark-summary.json"
     benchmark_markdown_path = run_root / "benchmark-summary.zh-TW.md"
@@ -1403,4 +1456,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

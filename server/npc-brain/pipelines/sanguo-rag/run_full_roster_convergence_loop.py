@@ -12,11 +12,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from repo_layout import pipeline_config_path, pipeline_root, resolve_repo_root
+from repo_layout import pipeline_config_path, pipeline_root, resolve_npc_brain_root, resolve_repo_root
 
 
 REPO_ROOT = resolve_repo_root(__file__)
 PIPELINE_ROOT = pipeline_root(REPO_ROOT)
+NPC_BRAIN_ROOT = resolve_npc_brain_root(REPO_ROOT)
 
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth")
 DEFAULT_SOURCE_CONFIG = pipeline_config_path(REPO_ROOT, "external-evidence-sources.json")
@@ -68,6 +69,37 @@ def utc_stamp() -> str:
 def resolve_path(path_text: str | Path) -> Path:
     path = Path(path_text)
     return path if path.is_absolute() else (REPO_ROOT / path).resolve()
+
+
+def resolve_existing_path(path_text: str | Path, *, fallback_roots: list[Path] | None = None) -> Path:
+    base_path = Path(path_text)
+    if base_path.is_absolute():
+        return base_path
+
+    search_roots = [
+        REPO_ROOT,
+        NPC_BRAIN_ROOT,
+        REPO_ROOT.parent,
+        NPC_BRAIN_ROOT.parent,
+        REPO_ROOT.parent.parent,
+        NPC_BRAIN_ROOT.parent.parent,
+    ]
+    if fallback_roots:
+        search_roots.extend(fallback_roots)
+
+    candidates: list[Path] = []
+    seen = set()
+    for root in search_roots:
+        candidate = (root / base_path).resolve()
+        if candidate not in seen:
+            seen.add(candidate)
+            candidates.append(candidate)
+
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+
+    return candidates[0] if candidates else resolve_path(base_path)
 
 
 def repo_relative(path: Path) -> str:
@@ -128,7 +160,7 @@ def merge_dict(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]
 def load_lane_policy(config_path: str | Path | None) -> dict[str, Any]:
     payload: dict[str, Any] = {}
     if config_path:
-        path = resolve_path(config_path)
+        path = resolve_existing_path(config_path)
         if path.exists():
             loaded = read_json(path)
             if isinstance(loaded, dict):
@@ -308,7 +340,7 @@ def is_transient_network_reject(prior_row: dict[str, Any]) -> bool:
     # Backward compatibility: old summaries may not carry stage1/stage2 fields.
     summary_path_text = str(prior_row.get("summaryJsonPath") or "").strip()
     if summary_path_text and (status is None or not failure_reasons or not reason_text or not live_status):
-        summary_payload = read_json(resolve_path(summary_path_text))
+        summary_payload = read_json(resolve_existing_path(summary_path_text))
         if isinstance(summary_payload, dict):
             stage1_payload = summary_payload.get("stage1Precheck")
             if isinstance(stage1_payload, dict):
@@ -349,7 +381,7 @@ def previous_source_results_from_manifest(manifest: dict[str, Any]) -> dict[str,
     summary_path_text = baseline_path(manifest, "externalSummaryPath")
     if not summary_path_text:
         return {}
-    summary_path = resolve_path(summary_path_text)
+    summary_path = resolve_existing_path(summary_path_text)
     payload = read_json(summary_path)
     rows = payload.get("sourceResults") if isinstance(payload, dict) else []
     out: dict[str, dict[str, Any]] = {}
@@ -537,7 +569,7 @@ def apply_source_roi_policy(
 def read_baseline_manifest(path_text: str | None) -> dict[str, Any]:
     if not path_text:
         return {}
-    path = resolve_path(path_text)
+    path = resolve_existing_path(path_text)
     if not path.exists():
         raise FileNotFoundError(f"baseline manifest not found: {path}")
     payload = read_json(path)
@@ -1887,7 +1919,7 @@ def run_external_benchmarks(
         stage2 = summary.get("stage2Harvest") if isinstance(summary, dict) else {}
         stage3 = summary.get("stage3Yield") if isinstance(summary, dict) else {}
         outputs = stage3.get("outputs") if isinstance(stage3, dict) else {}
-        ranking_path = resolve_path(outputs.get("rankingJson")) if outputs and outputs.get("rankingJson") else None
+        ranking_path = resolve_existing_path(outputs.get("rankingJson")) if outputs and outputs.get("rankingJson") else None
         cards_path = benchmark_root / benchmark_run_id / "standard-pipeline" / "candidate-evidence-cards.jsonl"
         harvested_seed_path = benchmark_root / benchmark_run_id / "extracted-seeds" / "manual-evidence-seeds.jsonl"
         if ranking_path and ranking_path.exists():
@@ -1951,7 +1983,7 @@ def run_external_benchmarks(
             row["manualSeedInjected"] = bool(stats.get("manualSeedInjected"))
             manual_seed_path_text = str(stats.get("manualSeedJsonlPath") or "").strip()
             if manual_seed_path_text:
-                manual_seed_path = resolve_path(manual_seed_path_text)
+                manual_seed_path = resolve_existing_path(manual_seed_path_text)
                 if manual_seed_path.exists():
                     manual_seed_paths.append(manual_seed_path)
 
@@ -2263,7 +2295,7 @@ def run_precision_lane(
 
     precision_baseline = baseline_path(baseline_manifest, "progressBaselineManifestPath", "baselineManifestPath")
     if precision_baseline:
-        baseline_resolved = resolve_path(precision_baseline)
+        baseline_resolved = resolve_existing_path(precision_baseline)
         if baseline_resolved.exists():
             command.extend(["--baseline-manifest", repo_relative(baseline_resolved)])
 
@@ -2289,6 +2321,11 @@ def run_round(
     run_root: Path,
     round_index: int,
     source_config_path: Path,
+    generals_path: Path,
+    events_path: Path,
+    generic_candidates_path: Path,
+    observed_mentions_path: Path,
+    observed_summary_path: Path,
     sources: list[dict[str, Any]],
     lane_policy_config_path: Path,
     lane_profile_policy: dict[str, Any],
@@ -2307,17 +2344,17 @@ def run_round(
     if baseline_manifest:
         from_baseline_scoreboard = baseline_path(baseline_manifest, "scoreboardJsonPath", "scorecardJsonPath")
         if from_baseline_scoreboard:
-            candidate = resolve_path(from_baseline_scoreboard)
+            candidate = resolve_existing_path(from_baseline_scoreboard)
             if candidate.exists():
                 baseline_scoreboard_path = candidate
         from_baseline_progress = baseline_path(baseline_manifest, "progressPath", "progressJsonPath")
         if from_baseline_progress:
-            candidate = resolve_path(from_baseline_progress)
+            candidate = resolve_existing_path(from_baseline_progress)
             if candidate.exists():
                 baseline_progress_path = candidate
         from_baseline_relationship = baseline_path(baseline_manifest, "relationshipEvidencePath", "baseRelationshipEvidencePath")
         if from_baseline_relationship:
-            candidate = resolve_path(from_baseline_relationship)
+            candidate = resolve_existing_path(from_baseline_relationship)
             if candidate.exists():
                 baseline_relationship_path = candidate
 
@@ -2325,7 +2362,7 @@ def run_round(
     if not effective_scoreboard_path:
         from_baseline = baseline_path(baseline_manifest, "scoreboardJsonPath", "scorecardJsonPath")
         if from_baseline:
-            candidate = resolve_path(from_baseline)
+            candidate = resolve_existing_path(from_baseline)
             if candidate.exists():
                 effective_scoreboard_path = candidate
 
@@ -2351,9 +2388,11 @@ def run_round(
         dry_run=dry_run,
         overwrite=args.overwrite,
     )
-    global_ranking_path = resolve_path(global_seed_pipeline["rankingPath"]) if global_seed_pipeline.get("rankingPath") else None
+    global_ranking_path = (
+        resolve_existing_path(global_seed_pipeline["rankingPath"]) if global_seed_pipeline.get("rankingPath") else None
+    )
     global_cards_path = (
-        resolve_path(global_seed_pipeline["candidateCardsPath"])
+        resolve_existing_path(global_seed_pipeline["candidateCardsPath"])
         if global_seed_pipeline.get("candidateCardsPath")
         else None
     )
@@ -2379,14 +2418,16 @@ def run_round(
     pilot_command = [
         sys.executable,
         str((REPO_ROOT / PIPELINE_ROOT / "run_etl_quality_pilot.py").resolve()),
+        "--generals",
+        repo_relative(generals_path),
         "--top",
         str(max(args.top, 1)),
         "--include-cold",
         str(max(args.include_cold, 0)),
         "--events",
-        repo_relative(resolve_path(args.events)),
+        repo_relative(events_path),
         "--generic-candidates",
-        repo_relative(resolve_path(args.generic_candidates)),
+        repo_relative(generic_candidates_path),
         "--output-root",
         repo_relative(full_pilot_root),
     ]
@@ -2403,11 +2444,11 @@ def run_round(
         sys.executable,
         str((REPO_ROOT / PIPELINE_ROOT / "build_full_roster_scoreboard.py").resolve()),
         "--generals",
-        repo_relative(resolve_path(args.generals)),
+        repo_relative(generals_path),
         "--events",
-        repo_relative(resolve_path(args.events)),
+        repo_relative(events_path),
         "--generic-candidates",
-        repo_relative(resolve_path(args.generic_candidates)),
+        repo_relative(generic_candidates_path),
         "--pilot-report",
         repo_relative(pilot_report_path),
         "--output-root",
@@ -2447,8 +2488,8 @@ def run_round(
     overlay_observed_summary_path = observed_overlay_root / "observed-label-summary.json"
 
     merged_observed_root = observed_bridge_root / "merged"
-    base_observed_mentions = resolve_path(args.observed_mentions)
-    base_observed_summary = resolve_path(args.observed_summary)
+    base_observed_mentions = observed_mentions_path
+    base_observed_summary = observed_summary_path
     merge_observed_command = [
         sys.executable,
         str((REPO_ROOT / PIPELINE_ROOT / "merge_observed_mentions_overlay.py").resolve()),
@@ -2475,6 +2516,8 @@ def run_round(
     stable_command = [
         sys.executable,
         str((REPO_ROOT / PIPELINE_ROOT / "build_stable_knowledge_bootstrap.py").resolve()),
+        "--generals",
+        repo_relative(generals_path),
         "--observed-mentions",
         repo_relative(effective_observed_mentions_path),
         "--observed-summary",
@@ -2637,9 +2680,9 @@ def run_round(
         "--source-event-packets",
         repo_relative(packet_json_path),
         "--ready-events",
-        repo_relative(resolve_path(args.events)),
+        repo_relative(events_path),
         "--generic-candidates",
-        repo_relative(resolve_path(args.generic_candidates)),
+        repo_relative(generic_candidates_path),
         "--output-root",
         repo_relative(estimate_root),
     ]
@@ -2670,7 +2713,7 @@ def run_round(
         "--relationship-evidence",
         repo_relative(effective_relationship_json_path),
         "--ready-events",
-        repo_relative(resolve_path(args.events)),
+        repo_relative(events_path),
         "--output-root",
         repo_relative(core_progress_root),
     ]
@@ -2683,11 +2726,11 @@ def run_round(
         sys.executable,
         str((REPO_ROOT / PIPELINE_ROOT / "build_full_roster_scoreboard.py").resolve()),
         "--generals",
-        repo_relative(resolve_path(args.generals)),
+        repo_relative(generals_path),
         "--events",
-        repo_relative(resolve_path(args.events)),
+        repo_relative(events_path),
         "--generic-candidates",
-        repo_relative(resolve_path(args.generic_candidates)),
+        repo_relative(generic_candidates_path),
         "--pilot-report",
         repo_relative(pilot_report_path),
         "--relationship-evidence",
@@ -2741,7 +2784,7 @@ def run_round(
         ]
         baseline_for_three_lane = baseline_path(baseline_manifest, "finalThreeLaneBaselineManifest", "threeLaneFinalBaselineManifest")
         if baseline_for_three_lane:
-            baseline_resolved = resolve_path(baseline_for_three_lane)
+            baseline_resolved = resolve_existing_path(baseline_for_three_lane)
             if baseline_resolved.exists():
                 three_lane_command.extend(["--baseline-manifest", repo_relative(baseline_resolved)])
         if args.overwrite:
@@ -3047,19 +3090,25 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     args.run_id = args.run_id or f"full-roster-convergence-{utc_stamp()}"
-    run_root = resolve_path(Path(args.output_root) / args.run_id)
+    run_root_base = resolve_existing_path(Path(args.output_root))
+    run_root = run_root_base / args.run_id
     run_root.mkdir(parents=True, exist_ok=True)
 
-    source_config_path = resolve_path(args.source_config)
-    lane_policy_config_path = resolve_path(args.lane_policy_config)
+    source_config_path = resolve_existing_path(args.source_config)
+    lane_policy_config_path = resolve_existing_path(args.lane_policy_config)
+    generals_path = resolve_existing_path(args.generals)
+    events_path = resolve_existing_path(args.events)
+    generic_candidates_path = resolve_existing_path(args.generic_candidates)
+    observed_mentions_path = resolve_existing_path(args.observed_mentions)
+    observed_summary_path = resolve_existing_path(args.observed_summary)
     lane_policy_payload = load_lane_policy(lane_policy_config_path)
     lane_profile_policy = profile_lane_policy(lane_policy_payload, args.profile)
     source_rows = source_rows_from_config(source_config_path)
     config_sanity = sanity_check_source_config(source_config_path, source_rows)
     approved_rows = approved_sources(source_rows)
     baseline_manifest = read_baseline_manifest(args.baseline_manifest)
-    roster_names = load_roster_names(resolve_path(args.generals))
-    generic_clues = collect_generic_clues(resolve_path(args.generic_candidates))
+    roster_names = load_roster_names(generals_path)
+    generic_clues = collect_generic_clues(generic_candidates_path)
 
     rounds: list[dict[str, Any]] = []
     command_count = 0
@@ -3106,6 +3155,11 @@ def main() -> int:
             run_root=run_root,
             round_index=round_index,
             source_config_path=source_config_path,
+            generals_path=generals_path,
+            events_path=events_path,
+            generic_candidates_path=generic_candidates_path,
+            observed_mentions_path=observed_mentions_path,
+            observed_summary_path=observed_summary_path,
             sources=prepared_sources,
             lane_policy_config_path=lane_policy_config_path,
             lane_profile_policy=lane_profile_policy,
@@ -3191,7 +3245,7 @@ def main() -> int:
                     }
                 )
         previous_a_map = current_a_map
-        previous_scoreboard_path = resolve_path(round_info["scoreboardJsonPath"])
+        previous_scoreboard_path = resolve_existing_path(round_info["scoreboardJsonPath"])
 
         human_batch_info = build_human_review_batch(
             run_root=run_root,
@@ -3237,7 +3291,11 @@ def main() -> int:
         next_action = "max rounds reached; review scoreboard and resume with baseline manifest if needed"
 
     latest_round = rounds[-1] if rounds else {}
-    latest_scoreboard_payload = read_json(resolve_path(latest_round.get("scoreboardJsonPath"))) if latest_round.get("scoreboardJsonPath") else {}
+    latest_scoreboard_payload = (
+        read_json(resolve_existing_path(latest_round.get("scoreboardJsonPath")))
+        if latest_round.get("scoreboardJsonPath")
+        else {}
+    )
     latest_rows = list((latest_scoreboard_payload if isinstance(latest_scoreboard_payload, dict) else {}).get("rows") or [])
     proposals = build_rule_proposals(latest_rows)
 
@@ -3377,8 +3435,8 @@ def main() -> int:
             "lanePolicyConfigPath": repo_relative(lane_policy_config_path),
             "lanePolicyVersion": str(lane_policy_payload.get("version") or "1.0.0"),
             "baselineManifestInput": args.baseline_manifest,
-            "baseObservedMentionsPath": repo_relative(resolve_path(args.observed_mentions)),
-            "baseObservedSummaryPath": repo_relative(resolve_path(args.observed_summary)),
+            "baseObservedMentionsPath": repo_relative(observed_mentions_path),
+            "baseObservedSummaryPath": repo_relative(observed_summary_path),
             "top": args.top,
             "includeCold": args.include_cold,
             "profile": args.profile,
