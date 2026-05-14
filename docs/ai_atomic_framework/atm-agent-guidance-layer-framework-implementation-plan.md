@@ -345,3 +345,78 @@ npm run validate:quick
 npm run validate:standard
 ```
 
+## 16. 務實執行 Checklist（2026-05-14 回寫）
+
+本節將 Wave 1→4 拆成可直接執行與驗證的落地項目。路徑皆以 `AI-Atomic-Framework` repo 為準，除非明確標示 `3KLife`。
+
+### 16.1 前置與邊界
+
+- [x] 確認實作目標是 `AI-Atomic-Framework`，不是 3KLife 或其他 adopter repo。
+- [x] 實作前執行 baseline：`npm run validate:quick`，結果需為綠燈。
+- [x] 確認 `atomize/infect/split` 是 behavior action，不是新增 CLI 一級命令。
+- [x] 確認 CLI 新增一級命令只有 `orient/start/explain`，並改寫既有 `next` 為 guidance-aware。
+
+### 16.2 Wave 1：Core foundation
+
+- [x] 新增 `packages/core/src/guidance/guidance-packet.ts`，集中 `ProjectOrientationReport`、`RouteDecision`、`GuidanceSession`、`GuidancePacket`、host policy 型別。
+- [x] 新增 `packages/core/src/guidance/project-probe.ts`，以 deterministic 掃描輸出 repo orientation；缺資料只進 `unknowns`。
+- [x] 新增 `packages/core/src/guidance/route-engine.ts`，支援 `create-atom/atomize/infect/split/evolve/adapter-bootstrap/legacy-fix/docs-first` route。
+- [x] 新增 `packages/core/src/guidance/legacy-route-plan.ts`，提供 legacy segment 與 plan contract。
+- [x] 新增 `packages/core/src/guidance/mutation-gate.ts`，集中 guidance error code 與 block details。
+- [x] 新增 `packages/core/src/guidance/session-store.ts`，寫入 `.atm/runtime/guidance/active-session.json` 與 `.atm/history/guidance/*`。
+- [x] 新增 `packages/core/src/guidance/index.ts` 並由 `packages/core/src/index.ts` 匯出。
+
+### 16.3 Wave 2：CLI integration
+
+- [x] 新增 `packages/cli/src/commands/orient.ts`：`node atm.mjs orient --cwd <repo> --json` 回 `ProjectOrientationReport`。
+- [x] 新增 `packages/cli/src/commands/start.ts`：`node atm.mjs start --cwd <repo> --goal "<goal>" --json` 建立 guidance session 與 packet。
+- [x] 新增 `packages/cli/src/commands/explain.ts`：`node atm.mjs explain --why blocked --session <id> --json` 回 block 原因、缺失 evidence 與解除路徑。
+- [x] 改寫 `packages/cli/src/commands/next.ts`：有 active guidance session 時回唯一 `nextAction.command`，並附 `allowedCommands/blockedCommands/missingEvidence`。
+- [x] 更新 `packages/cli/src/atm.ts`，註冊 `orient/start/explain` runner。
+- [x] 更新 `packages/cli/src/commands/command-specs.ts`，補新命令 help spec 與 `next` guidance summary。
+- [x] 更新 `packages/cli/src/index.ts`，補 planned command descriptors。
+- [x] 更新 `packages/cli/src/commands/guide.ts`，將 overview 改為 guidance-first 入口，保留 `glossary/help`。
+
+### 16.4 Wave 3：SDK、adapter、behavior gate
+
+- [x] 更新 `packages/plugin-sdk/src/project-adapter.ts`，新增 optional `listHostGates/listNoTouchZones/resolveMutationPolicy` host policy hooks。
+- [x] 更新 `packages/plugin-sdk/src/index.ts`，匯出 `HostGate/NoTouchZone/MutationPolicy`。
+- [x] 更新 `packages/adapter-local-git/src/local-git-adapter.ts`，提供中立預設：host gates 空陣列、no-touch zones 空陣列、保守 mutation policy。
+- [x] 更新 `packages/adapter-local-git/src/index.ts`，同步 local-git adapter 型別。
+- [x] 更新 `packages/plugin-sdk/src/behavior-registry.ts`，在 `executeGuarded()` 針對 host mutation/apply/promote 或明確 `requireGuidanceGate` 的行為套用 `MutationGate`。
+- [x] 保留既有 behavior dry-run proposal 行為，不把單純 proposal generation 誤擋成 host mutation。
+
+### 16.5 Wave 4：Validation、fixtures、release
+
+- [x] 新增 `scripts/validate-guidance.ts`，驗證 orientation、route decision、CLI session flow、mutation gate、BehaviorRegistry gate。
+- [x] 更新 `scripts/validators.config.json`，把 `validate-guidance` 加入 `test` 與 `standard` profile；`full` 透過 `standard` 繼承。
+- [x] 新增 `npm run validate:guidance`。
+- [x] 新增 `tests/cli-fixtures/help-snapshots/orient.json`、`start.json`、`explain.json`。
+- [x] 更新 `tests/cli-fixtures/help-snapshots/command-list.json` 與 `next.json`。
+- [x] 更新 `tests/cli-fixtures/cli-mvp.fixture.json`，加入 `orient/start/explain`。
+- [x] 更新 `scripts/validate-cli.ts`，將新 command help snapshots 納入比對。
+- [x] 更新 `scripts/validate-root-drop-release.ts` 與 `scripts/validate-onefile-release.ts`，補 guidance 命令 smoke。
+
+### 16.6 收尾驗證
+
+- [x] 已跑 `npm run typecheck`，結果為綠燈。
+- [x] 已跑 `npm run validate:guidance`，結果為綠燈。
+- [x] 已跑 `npm run validate:cli`，結果為綠燈。
+- [x] 已跑 `npm run validate:adapter-local-git`，結果為綠燈。
+- [x] 已跑 `npm run validate:behavior-sdk`，結果為綠燈。
+- [x] 已跑 `npm run validate:behavior-pack`，結果為綠燈。
+- [x] 已跑 `npm run validate:standard`，結果為綠燈。
+- [x] 已跑 `npm run build`、`npm run validate:root-drop-release`、`npm run validate:onefile-release`，結果為綠燈。
+- [x] 已跑 `npm run validate:full --parallel`，結果為綠燈（47 passed / 0 failed）。
+
+## 17. 已確認接入點
+
+- CLI 派發入口：`packages/cli/src/atm.ts` 的 `cliCommandRunners`。
+- CLI help contract：`packages/cli/src/commands/command-specs.ts` 與 `tests/cli-fixtures/help-snapshots/*`。
+- CLI descriptor contract：`packages/cli/src/index.ts`，`validate-cli` 會檢查 fixture commands 是否存在 descriptor。
+- 現有 `next` 基礎：`packages/cli/src/commands/next.ts`，原本只依 doctor/runtime state 決策，本輪改為 active guidance session 優先。
+- Behavior action gate：`packages/plugin-sdk/src/behavior-registry.ts` 的 `executeGuarded()`；`atomize/infect/split` 保持 behavior action，不新增同名 CLI 命令。
+- Adapter host facts：`packages/plugin-sdk/src/project-adapter.ts` 與 `packages/adapter-local-git/src/local-git-adapter.ts`。
+- Release root-drop：`scripts/build-root-drop-release.ts` 會複製 `packages/scripts/tests`，新增 source 檔與 validator 自動進 bundle。
+- Onefile release：`scripts/build-onefile-release.ts` 以 root-drop payload 打包；因此 guidance 檔案進 root-drop 後會隨 payload 進 onefile。
+
