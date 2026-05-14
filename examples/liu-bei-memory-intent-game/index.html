@@ -2100,10 +2100,10 @@
       elements.dataModeHint.textContent = hint;
     }
 
-    function countCardsByAngle() {
+    function countTargetsByAngle() {
       const counts = {};
       for (const key of Object.keys(angleDefinitions)) {
-        counts[key] = getCardsForPair(key, state.activePerson).length;
+        counts[key] = getAvailableTargetsForAngle(key).length;
       }
       return counts;
     }
@@ -2119,11 +2119,11 @@
     }
 
     function renderAngles() {
-      const counts = countCardsByAngle();
+      const counts = countTargetsByAngle();
       const visibleAngles = getAvailableAnglesForTarget(state.activePerson);
       elements.angleGrid.innerHTML = visibleAngles.map((key) => `
         <button class="angle-button ${state.activeAngle === key ? "active" : ""}" type="button" data-angle="${key}">
-          <strong>${angleDefinitions[key].label}（${counts[key] || 0}）</strong>
+          <strong>${angleDefinitions[key].label}（${counts[key] || 0}位）</strong>
           <span>${angleDefinitions[key].desc}</span>
         </button>
       `).join("");

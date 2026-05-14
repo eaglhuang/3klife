@@ -803,20 +803,28 @@ class NpcDialogueService:
         profile = self.get_narrative_profile(request.generalId)
         target = self._select_narrative_target(profile.interactionTargets, request.targetId)
         target_invalid = bool(request.targetId and target is None)
-        card = self._select_narrative_card(profile.evidenceCards, request.evidenceId, request.angle, target)
+        card = self._select_narrative_card(
+            profile.evidenceCards,
+            request.evidenceId,
+            request.angle,
+            target,
+            actor_aliases=self._actor_label_aliases(profile),
+        )
         evidence_invalid = bool(request.evidenceId and not any(card_item.evidenceId == request.evidenceId for card_item in profile.evidenceCards))
-        has_scene_data = card is not None and not target_invalid and not evidence_invalid
+        semantic_empty_reason = self._scene_pair_empty_reason(request.angle, card, target)
+        has_scene_data = card is not None and not target_invalid and not evidence_invalid and not semantic_empty_reason
         data_status, fallback_reason = self._scene_data_status(
             requested_angle=request.angle,
             requested_target_id=request.targetId,
             requested_evidence_id=request.evidenceId,
             target_invalid=target_invalid,
             evidence_invalid=evidence_invalid,
+            semantic_empty_reason=semantic_empty_reason,
             card=card,
             target=target,
         )
         beats = self._build_scene_director_beats(profile, card, target, request.angle) if has_scene_data else self._build_empty_scene_director_beats()
-        evidence_refs = sorted(set(beats.sourceRefs + (target.evidenceRefs if target else [])))
+        evidence_refs = sorted(set(beats.sourceRefs))
         evidence_resolution = SceneEvidenceResolution(
             usedEvidenceRefs=evidence_refs[:12],
             unresolvedEvidenceRefs=[],
@@ -934,12 +942,15 @@ class NpcDialogueService:
         requested_evidence_id: str | None,
         target_invalid: bool,
         evidence_invalid: bool,
+        semantic_empty_reason: str | None,
         card: NarrativeEvidenceCard | None,
         target: NarrativeInteractionTarget | None,
     ) -> tuple[str, str | None]:
         if target_invalid or evidence_invalid:
             reason = "targetId 不存在" if target_invalid else "evidenceId 不存在"
             return "invalid_request", reason
+        if semantic_empty_reason:
+            return "empty", semantic_empty_reason
         if card is None:
             return "empty", "目前沒有可用資料"
         angle_matches = not requested_angle or card.angle == requested_angle
@@ -953,20 +964,45 @@ class NpcDialogueService:
             return "target_empty_filled", f"requestedTarget={requested_target_id}; resolvedTarget={target.targetId if target else '-'}"
         return "direct", None
 
+    def _scene_pair_empty_reason(
+        self,
+        requested_angle: str | None,
+        card: NarrativeEvidenceCard | None,
+        target: NarrativeInteractionTarget | None,
+    ) -> str | None:
+        if not card or not target:
+            return None
+        relationship_type = str(target.relationshipType or "")
+        role = str(target.role or "")
+        if requested_angle in {"people", "resource", "bond"} and (
+            relationship_type in {"enemy_rival", "battlefield_opponent", "betrayal_surrender"}
+            or "敵對" in role
+            or "戰場對手" in role
+        ):
+            label = {"people": "眾生", "resource": "恩義", "bond": "情義"}.get(requested_angle, requested_angle)
+            return f"{label}角度不使用敵對競爭目標；請改用宿敵、戰場或關係角度"
+        return None
+
     def _select_narrative_card(
         self,
         cards: list[NarrativeEvidenceCard],
         evidence_id: str | None,
         angle: str | None,
         target: NarrativeInteractionTarget | None = None,
+        actor_aliases: list[str] | None = None,
     ) -> NarrativeEvidenceCard | None:
         if evidence_id:
             for card in cards:
-                if card.evidenceId == evidence_id and self._card_matches_target(card, target):
-                    return card
+                if card.evidenceId == evidence_id:
+                    return card if self._card_matches_target(card, target) and self._card_source_matches_scene(card, target, actor_aliases) else None
+            return None
         if angle:
             for card in cards:
-                if card.angle == angle and self._card_matches_target(card, target):
+                if (
+                    card.angle == angle
+                    and self._card_matches_target(card, target)
+                    and self._card_source_matches_scene(card, target, actor_aliases)
+                ):
                     return card
         if target is not None:
             return None
@@ -979,7 +1015,73 @@ class NpcDialogueService:
     ) -> bool:
         if card is None or target is None:
             return card is not None
-        return target.targetId in set(card.relatedTargetIds or [])
+        return target.targetId in set(card.relatedTargetIds or []) and self._card_source_mentions_target(card, target)
+
+    def _card_source_mentions_target(
+        self,
+        card: NarrativeEvidenceCard | None,
+        target: NarrativeInteractionTarget | None,
+    ) -> bool:
+        if not card or not target:
+            return False
+        return self._card_source_mentions_any(card, self._target_aliases_for_interaction(target))
+
+    def _card_source_mentions_actor(
+        self,
+        card: NarrativeEvidenceCard | None,
+        actor_aliases: list[str] | None,
+    ) -> bool:
+        return self._card_source_mentions_any(card, actor_aliases or [])
+
+    def _card_source_matches_scene(
+        self,
+        card: NarrativeEvidenceCard | None,
+        target: NarrativeInteractionTarget | None,
+        actor_aliases: list[str] | None,
+    ) -> bool:
+        if not card:
+            return False
+        target_aliases = self._target_aliases_for_interaction(target) if target else []
+        actor_aliases = actor_aliases or []
+        units = self._card_match_text_units(card)
+        if target_aliases and actor_aliases:
+            return any(
+                any(alias and alias in unit for alias in target_aliases)
+                and any(alias and alias in unit for alias in actor_aliases)
+                for unit in units
+            )
+        if target_aliases:
+            return any(any(alias and alias in unit for alias in target_aliases) for unit in units)
+        if actor_aliases:
+            return any(any(alias and alias in unit for alias in actor_aliases) for unit in units)
+        return True
+
+    def _card_source_mentions_any(
+        self,
+        card: NarrativeEvidenceCard | None,
+        aliases: list[str],
+    ) -> bool:
+        if not card or not aliases:
+            return True
+        return any(any(alias and alias in unit for alias in aliases) for unit in self._card_match_text_units(card))
+
+    def _card_match_text_units(self, card: NarrativeEvidenceCard | None) -> list[str]:
+        if not card:
+            return []
+        raw_units = [
+            str(card.summary or "").strip(),
+            str(card.quote or "").strip(),
+            str(card.title or "").strip(),
+            str(card.location or "").strip() if card.location else "",
+        ]
+        raw_units.extend(self._source_ref_paragraph(ref) for ref in card.sourceRefs if ref)
+        units: list[str] = []
+        for raw_unit in raw_units:
+            if not raw_unit:
+                continue
+            sentences = self._split_source_sentences(raw_unit)
+            units.extend(sentences or [raw_unit])
+        return [unit for unit in units if unit]
 
     def _select_narrative_target(
         self,
@@ -990,6 +1092,7 @@ class NpcDialogueService:
             for target in targets:
                 if target.targetId == target_id:
                     return target
+            return None
         return targets[0] if targets else None
 
     def _select_chorus_targets(
@@ -1057,11 +1160,7 @@ class NpcDialogueService:
             allow_secondary=not self._should_keep_dialogue_on_primary(primary_source_text, target),
         )
         dialogue_text = self._sentence_or_default(
-            dialogue_seed
-            or self._first_dialogue_seed(
-                candidate_cards,
-                allow_secondary=not self._should_keep_dialogue_on_primary(primary_source_text, target),
-            ),
+            dialogue_seed,
             "",
             max_chars=80,
         )
@@ -1113,8 +1212,9 @@ class NpcDialogueService:
         if not target:
             return [card] if card else []
         target_refs = set(target.evidenceRefs)
-        target_aliases = self._target_label_aliases(target.label)
+        target_aliases = self._target_aliases_for_interaction(target)
         requested_angle = angle or (card.angle if card else None)
+        primary_refs = set(card.sourceRefs or []) if card else set()
 
         def score(candidate: NarrativeEvidenceCard) -> tuple[float, str]:
             candidate_refs = set(candidate.sourceRefs)
@@ -1144,11 +1244,18 @@ class NpcDialogueService:
                 continue
             candidate_refs = set(candidate.sourceRefs)
             source_text = self._card_source_text(candidate)
+            mentions_target = any(alias and alias in source_text for alias in target_aliases)
+            if (
+                primary_refs
+                and candidate.evidenceId != (card.evidenceId if card else None)
+                and not (candidate_refs & primary_refs)
+            ):
+                continue
             is_related = (
                 candidate.evidenceId == (card.evidenceId if card else None)
-                or target.targetId in candidate.relatedTargetIds
-                or bool(candidate_refs & target_refs)
-                or any(alias and alias in source_text for alias in target_aliases)
+                or (target.targetId in candidate.relatedTargetIds and mentions_target)
+                or (bool(candidate_refs & target_refs) and mentions_target)
+                or mentions_target
             )
             if not is_related:
                 continue
@@ -1164,14 +1271,14 @@ class NpcDialogueService:
         refs: list[str] = []
         for candidate in candidate_cards:
             refs.extend(candidate.sourceRefs)
-        if target:
+        if not refs and target:
             refs.extend(target.evidenceRefs)
         return list(dict.fromkeys(ref for ref in refs if ref))[:12]
 
     def _card_source_text(self, card: NarrativeEvidenceCard | None) -> str:
         if not card:
             return ""
-        source_context = self._source_context_for_refs(card.sourceRefs)
+        source_context = self._source_context_for_refs(card.sourceRefs, max_refs=1)
         return " ".join(
             part
             for part in [
@@ -1187,12 +1294,37 @@ class NpcDialogueService:
     def _source_context_for_refs(self, source_refs: list[str], max_refs: int = 2) -> str:
         paragraphs: list[str] = []
         for source_ref in source_refs:
-            paragraph = self._source_ref_paragraph(source_ref)
-            if paragraph and paragraph not in paragraphs:
-                paragraphs.append(paragraph)
+            for paragraph in self._source_ref_context_window(source_ref):
+                if paragraph and paragraph not in paragraphs:
+                    paragraphs.append(paragraph)
             if len(paragraphs) >= max_refs:
                 break
         return " ".join(paragraphs)
+
+    def _source_ref_context_window(self, source_ref: str, radius: int = 1) -> list[str]:
+        match = re.match(r"^(\d{3})#p(\d+)$", str(source_ref or "").strip())
+        if not match:
+            return []
+        chapter_id, paragraph_index_text = match.groups()
+        try:
+            paragraph_index = int(paragraph_index_text)
+        except ValueError:
+            return []
+        paragraphs = self._chapter_paragraphs(chapter_id)
+        if paragraph_index < 0 or paragraph_index >= len(paragraphs):
+            return []
+        indexes = [paragraph_index]
+        for offset in range(1, radius + 1):
+            indexes.extend([paragraph_index - offset, paragraph_index + offset])
+        result: list[str] = []
+        for index in indexes:
+            if index < 0 or index >= len(paragraphs):
+                continue
+            paragraph = paragraphs[index]
+            if paragraph.startswith("#"):
+                continue
+            result.append(paragraph)
+        return result
 
     def _source_ref_paragraph(self, source_ref: str) -> str:
         match = re.match(r"^(\d{3})#p(\d+)$", str(source_ref or "").strip())
@@ -1236,7 +1368,7 @@ class NpcDialogueService:
     ) -> str:
         options: list[tuple[float, str]] = []
         primary_options: list[tuple[float, str]] = []
-        target_aliases = self._target_label_aliases(target.label) if target else []
+        target_aliases = self._target_aliases_for_interaction(target) if target else []
         for index, candidate in enumerate(candidate_cards):
             for value in [candidate.summary, candidate.quote, self._source_context_for_refs(candidate.sourceRefs), candidate.title]:
                 cleaned = self._clean_source_fragment(str(value or ""), target, actor_aliases, max_chars=120)
@@ -1282,12 +1414,12 @@ class NpcDialogueService:
         target: NarrativeInteractionTarget | None,
         allow_secondary: bool = True,
     ) -> str:
-        target_aliases = self._target_label_aliases(target.label) if target else []
+        target_aliases = self._target_aliases_for_interaction(target) if target else []
         scored: list[tuple[float, str]] = []
         for index, candidate in enumerate(candidate_cards):
             if index > 0 and not allow_secondary:
                 break
-            for text in [self._source_context_for_refs(candidate.sourceRefs), candidate.quote, candidate.summary]:
+            for text in [self._source_context_for_refs(candidate.sourceRefs, max_refs=1), candidate.quote, candidate.summary]:
                 scored.extend(
                     self._extract_actor_dialogue_candidates(
                         text=str(text or ""),
@@ -1314,8 +1446,20 @@ class NpcDialogueService:
         if not speaker_pattern:
             return []
         candidates: list[tuple[float, str]] = []
-        for match in re.finditer(rf"({speaker_pattern})[^。！？「」]{{0,12}}(?:曰|道|告|泣告)[:：]?[「『]([^」』]{{2,140}})[」』]", source):
-            line = " ".join(match.group(2).split()).strip()
+        target_bridge_pattern = "|".join(re.escape(alias.replace(" ", "")) for alias in target_aliases if alias)
+        for match in re.finditer(rf"({speaker_pattern})([^。！？「」]{{0,12}})(?:曰|道|告|泣告)[:：]?[「『]([^」』]{{2,140}})[」』]", source):
+            bridge = str(match.group(2) or "")
+            if "之" in bridge or re.search(r"其人|聞.*答|小童|童子|水鏡|先生", bridge):
+                continue
+            bridge_compact = re.sub(r"[，,、：:\s]", "", bridge)
+            bridge_is_plain = bool(re.fullmatch(r"(?:又|復)?(?:問|答|告|謂|笑|泣|大叫|低聲)?", bridge_compact))
+            bridge_addresses_target = bool(
+                target_bridge_pattern
+                and re.fullmatch(rf"(?:又|復)?(?:告|謂|問)(?:{target_bridge_pattern})", bridge_compact)
+            )
+            if not (bridge_is_plain or bridge_addresses_target):
+                continue
+            line = " ".join(match.group(3).split()).strip()
             if not line:
                 continue
             sentence_start = max(0, source.rfind("。", 0, match.start()) + 1)
@@ -1330,6 +1474,8 @@ class NpcDialogueService:
             ]
             sentence_end = min(sentence_end_candidates) + 1 if sentence_end_candidates else min(len(source), match.end() + 80)
             near_sentence = source[sentence_start:sentence_end]
+            if target_aliases and not any(alias and alias in near_sentence for alias in target_aliases):
+                continue
             score = 100.0 - source_index * 18
             if target_aliases and any(alias and alias in near_sentence for alias in target_aliases):
                 score += 35.0
@@ -1427,12 +1573,15 @@ class NpcDialogueService:
         return result
 
     def _extract_time_markers(self, text: str) -> list[str]:
-        return re.findall(r"(正行間|正行之間|當夜|是夜|次日|是日|五更|黎明|黃昏|既而|少頃|片刻|年終|歲旦|正旦|元旦)", str(text or ""))
+        return re.findall(
+            r"(正談論間|正行間|正行之間|當夜|是夜|次日|是日|當日|五更|黎明|黃昏|既而|少頃|片刻|月餘|數月前|年終|歲旦|正旦|元旦)",
+            str(text or ""),
+        )
 
     def _extract_location_markers(self, text: str) -> list[str]:
         source = str(text or "")
         markers: list[str] = []
-        for literal in ["南徐", "東吳", "荊州", "江邊", "官道"]:
+        for literal in ["南徐", "東吳", "荊州", "新野", "古城", "芒碭山", "南漳", "莊外", "莊院", "草堂", "大溪", "江邊", "官道", "北門", "南門"]:
             if literal in source:
                 markers.append(literal)
         if re.search(r"正行間|正行之間|行間|行路", source):
@@ -1444,7 +1593,7 @@ class NpcDialogueService:
         for match in re.findall(r"([\u4e00-\u9fff]{1,4}(?:江|津|城|寨|營|山|橋|關|郡|州|縣|渡|船中))", source):
             if (
                 len(match) <= 6
-                and not re.match(r"(只去|不想|殺奔|回|望|在|到|前面|使|龍)", match)
+                and not re.match(r"(只去|不想|殺奔|回|望|在|到|過|抹過|前面|使|龍|某夜來|可作速|恐有人|可乘|曹兵下|統眾將至|布上|倘|遂引兵攻)", match)
                 and not re.search(r"報說|說荊州|使荊州", match)
             ):
                 markers.append(match)
@@ -1456,9 +1605,15 @@ class NpcDialogueService:
             ("荊州危急", r"荊州危急"),
             ("追兵", r"追兵"),
             ("喊聲", r"喊聲"),
+            ("古城", r"古城"),
             ("錦囊", r"錦囊"),
             ("府堂", r"府堂"),
             ("官道", r"官道"),
+            ("二嫂", r"二嫂|嫂嫂|二夫人"),
+            ("縣印", r"縣印"),
+            ("蛇矛", r"蛇矛|丈八蛇矛"),
+            ("蔡瑁設謀", r"蔡瑁設謀|蔡瑁"),
+            ("躍馬檀溪", r"躍馬|檀溪|過溪"),
             ("車駕", r"車|推車"),
             ("船隻", r"船|船隻"),
             ("兵馬", r"兵|軍|人馬"),
@@ -1560,18 +1715,30 @@ class NpcDialogueService:
         readable = [(index, sentence) for index, sentence in enumerate(sentences) if self._is_readable_source_sentence(sentence)]
         if not readable:
             return ""
-        target_aliases = self._target_label_aliases(target.label) if target else []
+        target_aliases = self._target_aliases_for_interaction(target) if target else []
         target_indexes = [
             index
             for index, sentence in readable
             if target_aliases and any(alias and alias in sentence for alias in target_aliases)
         ]
+        actor_indexes = [
+            index
+            for index, sentence in readable
+            if actor_aliases and any(alias and alias in sentence for alias in actor_aliases)
+        ]
+        joint_indexes = [index for index in target_indexes if index in set(actor_indexes)]
         selected: list[str] = []
-        if target_indexes:
-            target_index = target_indexes[0]
+        if joint_indexes:
+            target_index = joint_indexes[0]
             previous = next((sentence for index, sentence in reversed(readable) if index < target_index), "")
             if previous and len(previous) <= 42 and not re.match(r"^[雲肅瑜亮操權備飛羽].{0,8}(故意|催|逼|曰|問|謂)", previous):
                 selected.append(previous)
+            selected.append(next(sentence for index, sentence in readable if index == target_index))
+        elif actor_indexes:
+            actor_index = actor_indexes[0]
+            selected.append(next(sentence for index, sentence in readable if index == actor_index))
+        elif target_indexes:
+            target_index = target_indexes[0]
             selected.append(next(sentence for index, sentence in readable if index == target_index))
         else:
             selected.append(readable[0][1])
@@ -1600,7 +1767,7 @@ class NpcDialogueService:
         normalized = re.sub(r"^曰[:：]?", "", normalized)
         normalized = re.sub(r"^[，,、；：\s]+", "", normalized)
         if target:
-            for alias in self._target_label_aliases(target.label):
+            for alias in self._target_aliases_for_interaction(target):
                 if alias and normalized.startswith(f"{alias}曰"):
                     normalized = normalized.replace(f"{alias}曰", f"{alias}說", 1)
                     break
@@ -1633,6 +1800,10 @@ class NpcDialogueService:
         if not self._source_mentions_target(text, target):
             return ""
         target_label = self._source_target_label(text, target)
+        if re.search(r"躍馬過溪|水鏡|趙雲|雲長|翼德", text) and re.search(r"相見大喜|投新野|蔡瑁設謀", text):
+            return f"脫險後重會{target_label}與舊部，眾人同回新野商議後路。"
+        if re.search(r"芒碭山|占住城池|古城", text) and re.search(r"雲長|關公|二嫂|嫂嫂", text):
+            return f"{target_label}據住古城，見雲長護送二嫂前來，怒疑他背義投曹。"
         if re.search(r"趙子龍|荊州危急|錦囊", text) and re.search(r"暗暗垂淚|垂淚", text):
             return f"聽趙雲報稱荊州危急後，入見{target_label}，以憂色試探去留。"
         if re.search(r"心腹之言|泣告", text):
@@ -1651,6 +1822,12 @@ class NpcDialogueService:
         text = str(source_text or "")
         if not text:
             return ""
+        if target and self._source_mentions_target(text, target):
+            target_label = self._source_target_label(text, target)
+            if re.search(r"躍馬過溪|水鏡|趙雲|雲長|翼德", text) and re.search(r"相見大喜|投新野|蔡瑁設謀", text):
+                return f"躍馬檀溪脫險後，趙雲尋到莊外，{target_label}也趕來相會。"
+            if re.search(r"芒碭山|占住城池|古城", text) and re.search(r"雲長|關公|二嫂|嫂嫂", text):
+                return f"{target_label}在古城安身，聽聞雲長護送二嫂前來，疑心他已背義投曹。"
         if target and (target.femaleFocus or angle == "emotion") and self._source_mentions_target(text, target):
             if re.search(r"趙子龍|荊州危急|錦囊", text) and re.search(r"暗暗垂淚|垂淚", text):
                 return "趙雲帶來荊州危急的消息，他必須借思親祭祖向孫夫人開口。"
@@ -1677,11 +1854,11 @@ class NpcDialogueService:
 
     def _source_mentions_target(self, source_text: str, target: NarrativeInteractionTarget) -> bool:
         text = str(source_text or "")
-        return any(alias and alias in text for alias in self._target_label_aliases(target.label))
+        return any(alias and alias in text for alias in self._target_aliases_for_interaction(target))
 
     def _source_target_label(self, source_text: str, target: NarrativeInteractionTarget) -> str:
         text = str(source_text or "")
-        aliases = self._target_label_aliases(target.label)
+        aliases = self._target_aliases_for_interaction(target)
         for alias in aliases:
             if alias and alias in text:
                 return alias
@@ -1697,6 +1874,11 @@ class NpcDialogueService:
         text = str(source_text or "")
         if not text or not target:
             return ""
+        if self._source_mentions_target(text, target):
+            if re.search(r"躍馬過溪|水鏡|趙雲|雲長|翼德", text) and re.search(r"相見大喜|投新野|蔡瑁設謀", text):
+                return "脫險後見舊部追至，驚疑才轉成安定與喜悅。"
+            if re.search(r"芒碭山|占住城池|古城", text) and re.search(r"雲長|關公|二嫂|嫂嫂", text):
+                return "久別後先起疑怒，重逢的喜意被背義之疑壓住。"
         if (angle == "emotion" or target.femaleFocus) and self._source_mentions_target(text, target):
             if re.search(r"欲去，又捨不得夫人|荊州有失|被天下人恥笑", text):
                 return "想救荊州，又捨不得夫人，心緒在責任與情分之間拉扯。"
@@ -1706,13 +1888,15 @@ class NpcDialogueService:
                 return "危局逼到眼前，情緒收束成求援與決斷。"
             if re.search(r"暗暗垂淚|垂淚", text):
                 return "去留難處壓在心裡，先以憂色試探對方態度。"
-        if (angle == "emotion" or target.femaleFocus) and re.search(r"垂淚|煩惱|憂|驚|懼|泣", text):
+        if target.femaleFocus and re.search(r"垂淚|煩惱|憂|驚|懼|泣", text):
             return "心緒落在憂懼與牽掛。"
-        if re.search(r"追兵|喊聲|大起|急|走|速退", text):
+        if angle == "emotion" and not target.femaleFocus:
+            return ""
+        if re.search(r"追兵|喊聲大起|逼近|趕來|趕至", text):
             return "追兵逼近，心緒先轉為急迫。"
-        if re.search(r"垂淚|煩惱|憂|驚|懼|泣", text):
+        if target.femaleFocus and re.search(r"垂淚|煩惱|憂|驚|懼|泣", text):
             return "心緒落在憂懼與牽掛。"
-        if presence.status == "present" and (target.femaleFocus or angle == "emotion") and re.search(r"夫人|妻|妹|家|阿斗|嫂", text):
+        if presence.status == "present" and target.femaleFocus and re.search(r"夫人|妻|妹|家|阿斗|嫂", text):
             return "情緒落在家室與眼前安危。"
         return ""
 
@@ -1725,6 +1909,11 @@ class NpcDialogueService:
         text = str(source_text or "")
         if not text or not target:
             return ""
+        if self._source_mentions_target(text, target):
+            if re.search(r"躍馬過溪|水鏡|趙雲|雲長|翼德", text) and re.search(r"投新野|蔡瑁設謀|致書於景升", text):
+                return "先回新野，再由孫乾赴荊州說明蔡瑁設謀。"
+            if re.search(r"芒碭山|占住城池|古城", text) and re.search(r"雲長|關公|二嫂|嫂嫂", text):
+                return "先問明雲長去向與二嫂所證，再決定是否迎入古城。"
         if (angle == "emotion" or target.femaleFocus) and self._source_mentions_target(text, target):
             if re.search(r"兩個商議已定|正旦日|官道等候", text):
                 return "與孫夫人定下正旦祭祖離開，並讓趙雲先到官道接應。"
@@ -1734,13 +1923,15 @@ class NpcDialogueService:
                 return "先把心腹之言說明，請她出面解危。"
             if re.search(r"暗暗垂淚|垂淚", text):
                 return "先把去留難處說開，再尋求同行支持。"
-        if (angle == "emotion" or target.femaleFocus) and re.search(r"垂淚|煩惱|憂|驚|懼|泣", text):
+        if target.femaleFocus and re.search(r"垂淚|煩惱|憂|驚|懼|泣", text):
             return "先把眼前的憂慮說清楚。"
-        if re.search(r"追兵|喊聲|大起|速退", text):
+        if angle == "emotion" and not target.femaleFocus:
+            return ""
+        if re.search(r"追兵|喊聲大起|逼近|趕來|趕至", text):
             return "先避開追兵，保住同行的人。"
-        if re.search(r"垂淚|煩惱|憂|驚|懼|泣", text):
+        if target.femaleFocus and re.search(r"垂淚|煩惱|憂|驚|懼|泣", text):
             return "先把眼前的憂慮說清楚。"
-        if (target.femaleFocus or angle == "emotion") and re.search(r"夫人|妻|妹|家|阿斗|嫂", text):
+        if target.femaleFocus and re.search(r"夫人|妻|妹|家|阿斗|嫂", text):
             return "先顧住同行家眷的安危。"
         return ""
 
@@ -1755,7 +1946,7 @@ class NpcDialogueService:
         intent_text: str,
     ) -> dict[str, Any]:
         facts = scene_facts or {}
-        people = self._scene_seed_people(profile, target, facts)
+        people = self._scene_seed_people(profile, target, facts, extra_text=f"{memory_text} {intent_text}")
         objects = self._scene_seed_objects(facts)
         time_seed = self._scene_seed_time(facts)
         place_seed = self._scene_seed_place(facts, objects)
@@ -1782,6 +1973,7 @@ class NpcDialogueService:
         profile: NarrativeProfileResponse,
         target: NarrativeInteractionTarget | None,
         facts: dict[str, Any],
+        extra_text: str = "",
     ) -> list[dict[str, str | None]]:
         result: list[dict[str, str | None]] = []
         seen: set[str] = set()
@@ -1796,7 +1988,7 @@ class NpcDialogueService:
         add(profile.generalId, profile.displayName, "主角")
         if target:
             add(target.targetId, target.label, target.role)
-        fact_text = " ".join(str(value or "") for value in [facts.get("event"), facts.get("dialogue")])
+        fact_text = " ".join(str(value or "") for value in [facts.get("event"), facts.get("dialogue"), extra_text])
         for item in facts.get("people") or []:
             if not isinstance(item, dict):
                 continue
@@ -1814,7 +2006,23 @@ class NpcDialogueService:
 
     def _scene_seed_objects(self, facts: dict[str, Any]) -> list[str]:
         raw_objects = [str(item).strip() for item in facts.get("objects") or [] if str(item).strip()]
-        priority = ["荊州危急", "追兵", "喊聲", "錦囊", "官道", "船隻", "車駕", "家眷", "府堂", "劍"]
+        priority = [
+            "荊州危急",
+            "躍馬檀溪",
+            "蔡瑁設謀",
+            "古城",
+            "二嫂",
+            "蛇矛",
+            "追兵",
+            "喊聲",
+            "錦囊",
+            "官道",
+            "船隻",
+            "車駕",
+            "家眷",
+            "府堂",
+            "劍",
+        ]
         ordered = [item for item in priority if item in raw_objects]
         for item in raw_objects:
             if item in {"馬", "兵馬"} and not any(flag in raw_objects for flag in ["追兵", "喊聲"]):
@@ -1825,6 +2033,12 @@ class NpcDialogueService:
 
     def _scene_seed_time(self, facts: dict[str, Any]) -> str:
         time_markers = [str(item).strip() for item in facts.get("time") or [] if str(item).strip()]
+        if "正談論間" in time_markers:
+            return "正談論間"
+        if "月餘" in time_markers:
+            return "據城月餘後"
+        if "當日" in time_markers:
+            return "當日"
         if "年終" in time_markers:
             return "年終前後"
         if "正旦" in time_markers:
@@ -1841,9 +2055,20 @@ class NpcDialogueService:
                 continue
             if re.search(r"報說|使荊州|龍報|不想|只去", location):
                 continue
+            if location == "入城":
+                continue
             if "荊州危急" in objects and location == "荊州":
                 continue
             locations.append(location)
+        if "古城" in locations:
+            return "古城"
+        if "躍馬檀溪" in objects:
+            if "南漳" in locations and "莊外" in locations:
+                return "南漳莊外"
+            if "莊外" in locations:
+                return "莊外"
+        if "新野" in locations:
+            return "新野"
         return locations[0] if locations else ""
 
     def _scene_seed_event(
@@ -1859,6 +2084,11 @@ class NpcDialogueService:
         labels = [str(item.get("label") or "") for item in people if isinstance(item, dict)]
         target_label = target.label if target else ""
         has_zhao_yun = any(label == "趙雲" for label in labels)
+        if "躍馬檀溪" in objects and target_label:
+            messenger = "趙雲先尋來，" if has_zhao_yun else ""
+            return f"躍馬檀溪脫險後，{messenger}{target_label}與舊部隨後趕來重會"
+        if "古城" in objects and target_label:
+            return f"{target_label}據住古城，見雲長護送二嫂前來，怒疑他背義投曹"
         if "荊州危急" in objects and target_label:
             messenger = "趙雲報來荊州危急" if has_zhao_yun else "荊州危急傳來"
             if re.search(r"正旦|官道|接應", intent_text):
@@ -1921,7 +2151,7 @@ class NpcDialogueService:
         if beats.dialogueText:
             speaker_target = target_label or "眼前的人"
             parts.append(self._ensure_sentence(f"{actor}轉向{speaker_target}，低聲說：「{beats.dialogueText}」"))
-        intent_sentence = self._scene_story_intent_sentence(beats.intentText, target_label)
+        intent_sentence = self._scene_story_intent_sentence(beats.intentText, target_label, had_dialogue=bool(beats.dialogueText))
         if intent_sentence:
             parts.append(intent_sentence)
         return "".join(self._dedupe_scene_story_sentences(parts))
@@ -1943,13 +2173,14 @@ class NpcDialogueService:
             return self._ensure_sentence(clean)
         return self._ensure_sentence(f"{actor}{clean}")
 
-    def _scene_story_intent_sentence(self, intent_text: str, target_label: str) -> str:
+    def _scene_story_intent_sentence(self, intent_text: str, target_label: str, had_dialogue: bool) -> str:
         intent = self._clean_seed_text(intent_text, max_chars=100)
         if not intent:
             return ""
         if target_label and intent.startswith(f"與{target_label}"):
             intent = "兩人" + intent[len(f"與{target_label}") :]
-        return self._ensure_sentence(f"話說開後，{intent}")
+        prefix = "話說開後" if had_dialogue else "局勢明朗後"
+        return self._ensure_sentence(f"{prefix}，{intent}")
 
     def _dedupe_scene_story_sentences(self, sentences: list[str]) -> list[str]:
         result: list[str] = []
@@ -3276,6 +3507,7 @@ class NpcDialogueService:
         cards: list[NarrativeEvidenceCard] = []
         seen: set[str] = set()
         target_labels = {target.targetId: target.label for target in interaction_targets}
+        target_by_id = {target.targetId: target for target in interaction_targets}
         female_target_ids = [target.targetId for target in interaction_targets if target.femaleFocus]
         highlight_by_ref = {
             str(item.get("sourceRef") or "").strip(): item
@@ -3311,11 +3543,22 @@ class NpcDialogueService:
                 continue
             seen.add(evidence_id)
             chapter_no = beat.get("chapterNo")
+            classification_text = " ".join(
+                str(value)
+                for value in [
+                    beat.get("summary"),
+                    beat.get("sourceQuote"),
+                    beat.get("location"),
+                ]
+                if value
+            )
             card_angle = self._classify_narrative_angle(
                 families=families,
                 relationship_type=None,
                 related_target_ids=related_target_ids,
+                source_text=classification_text,
             )
+            related_target_ids = self._filter_related_target_ids_for_angle(card_angle, related_target_ids, target_by_id)
             if card_angle == "emotion" and not related_target_ids and female_target_ids:
                 related_target_ids = female_target_ids[:4]
             cards.append(
@@ -3360,7 +3603,9 @@ class NpcDialogueService:
                 families=families,
                 relationship_type=None,
                 related_target_ids=related_target_ids,
+                source_text=example,
             )
+            related_target_ids = self._filter_related_target_ids_for_angle(card_angle, related_target_ids, target_by_id)
             if card_angle == "emotion" and not related_target_ids and female_target_ids:
                 related_target_ids = female_target_ids[:4]
             cards.append(
@@ -3395,7 +3640,12 @@ class NpcDialogueService:
                 NarrativeEvidenceCard(
                     evidenceId=evidence_id,
                     contextKey=None,
-                    angle=self._classify_narrative_angle(families=[], relationship_type=relationship_type, related_target_ids=[target_id]),
+                    angle=self._classify_narrative_angle(
+                        families=[],
+                        relationship_type=relationship_type,
+                        related_target_ids=[target_id],
+                        source_text=" ".join(value for value in [quote or "", target_name] if value),
+                    ),
                     title=f"想到{target_name}",
                     summary=quote or f"{runtime_persona.get('displayName') or '此人'}與{target_name}之間有{edge.get('typeLabel') or relationship_type or '一段互動'}。",
                     quote=quote,
@@ -3410,26 +3660,68 @@ class NpcDialogueService:
 
         return cards
 
+    def _filter_related_target_ids_for_angle(
+        self,
+        angle: str,
+        related_target_ids: list[str],
+        target_by_id: dict[str, NarrativeInteractionTarget],
+    ) -> list[str]:
+        if angle not in {"people", "resource", "bond"}:
+            return related_target_ids
+        filtered: list[str] = []
+        for target_id in related_target_ids:
+            target = target_by_id.get(target_id)
+            relationship_type = str(target.relationshipType or "") if target else ""
+            role = str(target.role or "") if target else ""
+            if relationship_type in {"enemy_rival", "battlefield_opponent", "betrayal_surrender"}:
+                continue
+            if "敵對" in role or "戰場對手" in role:
+                continue
+            filtered.append(target_id)
+        return filtered
+
+    def _text_has_resource_signal(self, text: str) -> bool:
+        return bool(
+            re.search(
+                r"糧草|糧食|錢糧|軍資|輜重|補給|俸祿|金銀|金帛|府庫|倉廩|"
+                r"資財|家業|牌印|印綬|器皿|輜車|軍械|兵器",
+                str(text or ""),
+            )
+        )
+
     def _classify_narrative_angle(
         self,
         families: list[str],
         relationship_type: str | None,
         related_target_ids: list[str],
+        source_text: str = "",
     ) -> str:
         relation = relationship_type or ""
         family_set = {str(family).strip() for family in families if str(family).strip()}
+        text = str(source_text or "")
+        bond_markers = r"stableKnowledgeBootstrap:sworn_sibling|結義|盟誓|桃園|兄弟|付託|託付|二夫人|嫂|三罪|故人舊日之情"
         if relation in {"sworn_sibling", "alliance_oath", "battle_ally", "protects_family"}:
             return "bond"
         if relation in {"enemy_rival", "battlefield_opponent", "betrayal_surrender"}:
             return "rival"
         if "female_interaction" in family_set:
             return "emotion"
-        if "item_equipment" in family_set:
-            return "resource"
+        if "relationship" in family_set:
+            if re.search(bond_markers, text):
+                return "bond"
+            return "relationship"
+        if re.search(bond_markers, text):
+            return "bond"
+        if "decision_weight" in family_set or "faction_timeline" in family_set:
+            return "decision"
         if "battle" in family_set or "location_context" in family_set:
             return "battlefield"
+        if "item_equipment" in family_set and self._text_has_resource_signal(text):
+            return "resource"
         if "activity_seed" in family_set or "work_role" in family_set:
             return "habit"
+        if "item_equipment" in family_set:
+            return "battlefield"
         if related_target_ids:
             return "people"
         return "people"
@@ -3457,6 +3749,30 @@ class NpcDialogueService:
                 if bare_spouse not in aliases:
                     aliases.append(bare_spouse)
         return aliases
+
+    def _target_aliases_for_interaction(self, target: NarrativeInteractionTarget) -> list[str]:
+        seeds = [target.label]
+        try:
+            runtime_persona = self.store.read_runtime_persona(target.targetId)
+        except Exception:
+            runtime_persona = None
+        if isinstance(runtime_persona, dict):
+            for key in ("aliases", "nameAliases"):
+                value = runtime_persona.get(key)
+                if isinstance(value, list):
+                    seeds.extend(str(item) for item in value if str(item).strip())
+                elif value:
+                    seeds.append(str(value))
+        if "益德" in seeds and "翼德" not in seeds:
+            seeds.append("翼德")
+        if "翼德" in seeds and "益德" not in seeds:
+            seeds.append("益德")
+        aliases: list[str] = []
+        for seed in seeds:
+            for alias in self._target_label_aliases(seed):
+                if alias and alias not in aliases:
+                    aliases.append(alias)
+        return sorted(aliases, key=len, reverse=True)
 
     def _detect_related_target_ids(
         self,
