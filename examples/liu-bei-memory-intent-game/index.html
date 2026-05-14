@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
@@ -821,25 +821,25 @@
         <div class="intent-grid">
           <div class="intent">
             <strong>想起什麼</strong>
-            <p id="memoryText">等待資料與第一幕。</p>
+            <p id="memoryText"></p>
           </div>
           <div class="intent">
             <strong>心裡怎麼變</strong>
-            <p id="emotionText">人物情緒會依照角度與互動對象慢慢出現。</p>
+            <p id="emotionText"></p>
           </div>
           <div class="intent">
             <strong>對此人的一句話</strong>
-            <p id="dialogueText">等第一幕觸發後，這裡會出現更像角色會說的話。</p>
+            <p id="dialogueText"></p>
           </div>
           <div class="intent">
             <strong>接下來想做什麼</strong>
-            <p id="intentText">每一幕都會把資料轉成角色下一步的行動意圖。</p>
+            <p id="intentText"></p>
           </div>
         </div>
 
         <section class="story-fusion">
           <strong>本幕完整敘事</strong>
-          <p id="storyText">四段內容到齊後，這裡會融合成一段更完整的場景敘事。</p>
+          <p id="storyText"></p>
         </section>
 
         <section class="chorus-panel">
@@ -864,6 +864,7 @@
     const API_BASE = searchParams.get("apiBase") || "http://127.0.0.1:8000";
     const DEFAULT_AUTO_DELAY = 12000;
     const DEFAULT_DIALOGUE_TIMEOUT_MS = 12000;
+    const DEFAULT_SCENE_DIRECTOR_TIMEOUT_MS = 3500;
     const DEFAULT_ILLUSTRATION_TIMEOUT_MS = 32000;
     const DEFAULT_PROFILE_TIMEOUT_MS = 10000;
     const DEFAULT_NARRATIVE_TIMEOUT_MS = 16000;
@@ -970,12 +971,15 @@
       narrativeRequestToken: 0,
       dialogueAbortController: null,
       imageAbortController: null,
+      sceneDirectorAbortController: null,
+      sceneDirectorCircuitOpenUntil: 0,
       narrativeAbortControllers: {},
       chorusQuoteCache: {},
       storyFusionCache: {},
       autoDelayMs: DEFAULT_AUTO_DELAY,
       currentBundle: null,
       data: null,
+      linkedIndex: null,
       meters: {
         benevolence: 74,
         bond: 83,
@@ -1014,6 +1018,8 @@
         abortIfAlive(controller);
       }
       state.narrativeAbortControllers = {};
+      abortIfAlive(state.sceneDirectorAbortController);
+      state.sceneDirectorAbortController = null;
     }
 
     function clamp(value) {
@@ -1147,6 +1153,105 @@
 
     function currentActorName() {
       return state.data?.displayName || "這名人物";
+    }
+
+    function actorNameSeeds(extra = []) {
+      const persona = state.data?.persona || {};
+      const profile = persona.profile || {};
+      const fromValue = (value) => {
+        if (Array.isArray(value)) {
+          return value.map((item) => String(item || "").trim()).filter(Boolean);
+        }
+        if (!value) {
+          return [];
+        }
+        return [String(value).trim()].filter(Boolean);
+      };
+      const seeds = [
+        ...fromValue(state.data?.displayName),
+        ...fromValue(persona.displayName),
+        ...fromValue(persona.fullName),
+        ...fromValue(persona.name),
+        ...fromValue(persona.courtesyName),
+        ...fromValue(persona.alias),
+        ...fromValue(persona.aliases),
+        ...fromValue(persona.nameAliases),
+        ...fromValue(profile.courtesyName),
+        ...fromValue(profile.alias),
+        ...fromValue(profile.aliases),
+        ...fromValue(profile.nameAliases),
+        ...fromValue(extra),
+      ];
+      return uniqueList(
+        seeds
+          .map((text) => String(text || "").replace(/[\s·•．\-.]/g, "").trim())
+          .filter((text) => text.length >= 2),
+        24,
+      );
+    }
+
+    function actorNameVariants(extra = []) {
+      const base = actorNameSeeds(extra);
+      const variants = new Set(base);
+      for (const seed of base) {
+        const surname = seed.charAt(0);
+        for (const alias of base) {
+          if (!alias || alias === seed || alias.length < 2) {
+            continue;
+          }
+          variants.add(`${surname}${alias}`);
+        }
+      }
+      return Array.from(variants).sort((left, right) => right.length - left.length);
+    }
+
+    function stripActorNames(text, extraNames = []) {
+      let output = String(text || "");
+      for (const name of actorNameVariants(extraNames)) {
+        const escaped = escapeRegExp(name);
+        if (!escaped) {
+          continue;
+        }
+        output = output.replace(new RegExp(escaped, "gu"), "");
+      }
+      return output
+        .replace(/\s+/g, " ")
+        .replace(/[，,]{2,}/g, "，")
+        .replace(/^[，,。；：\s]+/u, "")
+        .replace(/[，,；：\s]+$/u, "")
+        .trim();
+    }
+
+    function isTemplateLikeText(text) {
+      const normalized = String(text || "");
+      return [
+        /stableKnowledgeBootstrap/i,
+        /sourceRef/i,
+        /targetId|evidenceId|contextKey|angle=/i,
+        /(性格標籤|角度|資料欄位)\s*[=:：]/u,
+        /同場狀態未明/u,
+        /此人未被直接命中/u,
+        /人物性格[:：]/u,
+      ].some((pattern) => pattern.test(normalized));
+    }
+
+    function sanitizeDisplayText(text, { removeActor = false, extraActorNames = [] } = {}) {
+      let output = normalizeNarrativeText(text, "").trim();
+      if (!output) {
+        return "";
+      }
+      output = output
+        .replace(/^\s*(原文|線索|請葛理|請葛里|請葛理日)\s*[:：]\s*/u, "")
+        .replace(/(性格標籤|資料角度|角度|targetId|evidenceId|contextKey)\s*[=:：][^。！？；]{0,40}/giu, "")
+        .replace(/\s+/g, " ")
+        .trim();
+      if (removeActor) {
+        output = stripActorNames(output, extraActorNames);
+      }
+      if (isTemplateLikeText(output)) {
+        return "";
+      }
+      return output;
     }
 
     function cleanNarrativeFragment(value) {
@@ -1412,13 +1517,20 @@
     }
 
     async function requestSceneDirector(bundle) {
+      if (Date.now() < (state.sceneDirectorCircuitOpenUntil || 0)) {
+        return null;
+      }
       const requestToken = state.narrativeRequestToken;
+      abortIfAlive(state.sceneDirectorAbortController);
+      const timeout = createTimeoutController(DEFAULT_SCENE_DIRECTOR_TIMEOUT_MS);
+      state.sceneDirectorAbortController = timeout.controller;
       const targets = selectChorusTargets(bundle, 4);
       const body = {
         generalId: GENERAL_ID,
         angle: bundle.card?.angle || state.activeAngle,
         targetId: bundle.target?.targetId || state.activePerson,
         evidenceId: bundle.card?.evidenceId || null,
+        renderMode: "data_first",
         chorusTargetIds: targets.map((target) => target.targetId),
         locale: "zh-TW",
         llmModelPreset: "fallback_chain",
@@ -1430,6 +1542,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
+          signal: timeout.signal,
         });
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
@@ -1438,10 +1551,21 @@
         if (requestToken !== state.narrativeRequestToken) {
           return null;
         }
+        state.sceneDirectorCircuitOpenUntil = 0;
         return payload;
       } catch (error) {
+        if (error?.name === "AbortError") {
+          state.sceneDirectorCircuitOpenUntil = Date.now() + 5000;
+          return null;
+        }
+        state.sceneDirectorCircuitOpenUntil = Date.now() + 5000;
         console.warn("scene-director fallback:", error);
         return null;
+      } finally {
+        timeout.clear();
+        if (state.sceneDirectorAbortController === timeout.controller) {
+          state.sceneDirectorAbortController = null;
+        }
       }
     }
 
@@ -1978,12 +2102,8 @@
 
     function countCardsByAngle() {
       const counts = {};
-      for (const card of state.data?.evidenceCards || []) {
-        const key = String(card.angle || "");
-        if (!key) {
-          continue;
-        }
-        counts[key] = (counts[key] || 0) + 1;
+      for (const key of Object.keys(angleDefinitions)) {
+        counts[key] = getCardsForPair(key, state.activePerson).length;
       }
       return counts;
     }
@@ -1992,24 +2112,27 @@
       if (!elements.angleCoverageNote || !state.data) {
         return;
       }
-      const counts = countCardsByAngle();
-      const activeAngles = Object.keys(angleDefinitions);
-      const availableAngles = activeAngles.filter((key) => Number(counts[key] || 0) > 0);
-      elements.angleCoverageNote.textContent = `可用角度 ${availableAngles.length} 種（已開放 ${activeAngles.length} 種）；當前資料卡 ${state.data.evidenceCards.length} 張。`;
+      const allAngles = getAnglesWithAnyData();
+      const availableAngles = getAvailableAnglesForTarget(state.activePerson);
+      const visiblePeople = getAvailableTargetsForAngle(state.activeAngle);
+      elements.angleCoverageNote.textContent = `可用角度 ${availableAngles.length}/${allAngles.length}；可用互動 ${visiblePeople.length} 位；資料卡 ${state.data.evidenceCards.length} 張。`;
     }
 
     function renderAngles() {
       const counts = countCardsByAngle();
-      elements.angleGrid.innerHTML = Object.entries(angleDefinitions).map(([key, angle]) => `
+      const visibleAngles = getAvailableAnglesForTarget(state.activePerson);
+      elements.angleGrid.innerHTML = visibleAngles.map((key) => `
         <button class="angle-button ${state.activeAngle === key ? "active" : ""}" type="button" data-angle="${key}">
-          <strong>${angle.label}（${counts[key] || 0}）</strong>
-          <span>${angle.desc}</span>
+          <strong>${angleDefinitions[key].label}（${counts[key] || 0}）</strong>
+          <span>${angleDefinitions[key].desc}</span>
         </button>
       `).join("");
       elements.angleGrid.querySelectorAll("button").forEach((button) => {
         button.addEventListener("click", () => {
           state.activeAngle = button.dataset.angle;
+          ensureLinkedSelection({ prefer: "angle" });
           renderAngles();
+          renderRelationships();
           if (state.currentBundle) {
             refreshIllustrationPrompt();
           }
@@ -2019,7 +2142,8 @@
     }
 
     function renderRelationships() {
-      elements.relationshipGrid.innerHTML = state.data.relationships.map((target) => `
+      const visibleTargets = getAvailableTargetsForAngle(state.activeAngle);
+      elements.relationshipGrid.innerHTML = visibleTargets.map((target) => `
         <button class="relationship-button ${state.activePerson === target.targetId ? "active" : ""}" type="button" data-person="${target.targetId}">
           <strong>${target.label}${target.femaleFocus ? "・女性" : ""}</strong>
           <span>${target.role}</span>
@@ -2028,6 +2152,8 @@
       elements.relationshipGrid.querySelectorAll("button").forEach((button) => {
         button.addEventListener("click", () => {
           state.activePerson = button.dataset.person;
+          ensureLinkedSelection({ prefer: "target" });
+          renderAngles();
           renderRelationships();
           if (state.currentBundle) {
             refreshIllustrationPrompt();
@@ -2041,7 +2167,8 @@
     }
 
     function activeTarget() {
-      return state.data.relationships.find((target) => target.targetId === state.activePerson) || state.data.relationships[0];
+      const visibleTargets = getAvailableTargetsForAngle(state.activeAngle);
+      return visibleTargets.find((target) => target.targetId === state.activePerson) || visibleTargets[0] || null;
     }
 
     function pickFromArray(values, offset = 0, fallback = "") {
@@ -2274,8 +2401,7 @@
       ].map((trait) => humanizeSymbolicText(trait)), 8);
       const relationships = (payload.interactionTargets || []).map(decorateRelationshipTarget);
       const rawCards = (payload.evidenceCards || []).map(normalizeEvidenceCard);
-      const keywordAngleCards = buildKeywordAngleCards(keywordCategories, profile);
-      const cards = mergeEvidenceCards(rawCards, keywordAngleCards);
+      const cards = rawCards;
       const activitySeeds = (payload.activitySeeds || []).map((seed) => ({
         keywordKey: seed.keywordKey,
         label: humanizeSymbolicText(seed.label || seed.rawTag || seed.keywordKey),
@@ -2329,6 +2455,7 @@
 
     function applyData(data) {
       state.data = data;
+      state.linkedIndex = buildLinkedDataIndex(data);
       elements.profileName.textContent = data.displayName;
       elements.profileGrade.textContent = data.grade;
       const stageTitle = document.querySelector(".topbar h1");
@@ -2341,17 +2468,139 @@
       if (elements.chorusHint) {
         elements.chorusHint.textContent = `每幕最多 4 人；以 NPC service 先輸出感想，缺漏時保持短句占位。可用互動人物 ${data.relationships.length} 位。`;
       }
-      if (!state.data.relationships.find((target) => target.targetId === state.activePerson)) {
-        state.activePerson = state.data.relationships[0]?.targetId || "mi-shi";
+      ensureLinkedSelection({ prefer: "angle" });
+    }
+
+    function pairKey(angle, targetId) {
+      return `${String(angle || "")}@@${String(targetId || "")}`;
+    }
+
+    function buildLinkedDataIndex(data) {
+      const targetIds = new Set((data.relationships || []).map((target) => String(target.targetId || "")).filter(Boolean));
+      const angleToTargets = new Map();
+      const targetToAngles = new Map();
+      const pairToCards = new Map();
+      for (const card of data.evidenceCards || []) {
+        const angle = String(card.angle || "");
+        if (!angleDefinitions[angle]) {
+          continue;
+        }
+        const relatedIds = (card.relatedTargetIds || []).map(String).filter((targetId) => targetIds.has(targetId));
+        if (!relatedIds.length) {
+          continue;
+        }
+        for (const targetId of relatedIds) {
+          if (!angleToTargets.has(angle)) {
+            angleToTargets.set(angle, new Set());
+          }
+          angleToTargets.get(angle).add(targetId);
+          if (!targetToAngles.has(targetId)) {
+            targetToAngles.set(targetId, new Set());
+          }
+          targetToAngles.get(targetId).add(angle);
+          const key = pairKey(angle, targetId);
+          if (!pairToCards.has(key)) {
+            pairToCards.set(key, []);
+          }
+          pairToCards.get(key).push(card);
+        }
+      }
+      return { angleToTargets, targetToAngles, pairToCards };
+    }
+
+    function getCardsForPair(angle, targetId) {
+      return state.linkedIndex?.pairToCards?.get(pairKey(angle, targetId)) || [];
+    }
+
+    function getAnglesWithAnyData() {
+      return Object.keys(angleDefinitions).filter((angle) => (state.linkedIndex?.angleToTargets?.get(angle)?.size || 0) > 0);
+    }
+
+    function getTargetsWithAnyData() {
+      return (state.data?.relationships || []).filter((target) => {
+        return (state.linkedIndex?.targetToAngles?.get(target.targetId)?.size || 0) > 0;
+      });
+    }
+
+    function getAvailableTargetsForAngle(angle) {
+      const targetSet = state.linkedIndex?.angleToTargets?.get(String(angle || ""));
+      if (!targetSet) {
+        return [];
+      }
+      return (state.data?.relationships || []).filter((target) => targetSet.has(target.targetId));
+    }
+
+    function getAvailableAnglesForTarget(targetId) {
+      const angleSet = state.linkedIndex?.targetToAngles?.get(String(targetId || ""));
+      if (!angleSet) {
+        return [];
+      }
+      return Object.keys(angleDefinitions).filter((angle) => angleSet.has(angle));
+    }
+
+    function ensureLinkedSelection({ prefer = "angle" } = {}) {
+      const anglesWithData = getAnglesWithAnyData();
+      const targetsWithData = getTargetsWithAnyData();
+      if (!anglesWithData.length || !targetsWithData.length) {
+        state.activeAngle = anglesWithData[0] || Object.keys(angleDefinitions)[0] || "";
+        state.activePerson = targetsWithData[0]?.targetId || "";
+        return;
+      }
+
+      if (!targetsWithData.some((target) => target.targetId === state.activePerson)) {
+        state.activePerson = targetsWithData[0].targetId;
+      }
+      if (!anglesWithData.includes(state.activeAngle)) {
+        state.activeAngle = anglesWithData[0];
+      }
+
+      const alignFromAngle = () => {
+        const targetsForAngle = getAvailableTargetsForAngle(state.activeAngle);
+        if (!targetsForAngle.length) {
+          return false;
+        }
+        if (!targetsForAngle.some((target) => target.targetId === state.activePerson)) {
+          state.activePerson = targetsForAngle[0].targetId;
+        }
+        return true;
+      };
+
+      const alignFromTarget = () => {
+        const anglesForTarget = getAvailableAnglesForTarget(state.activePerson);
+        if (!anglesForTarget.length) {
+          return false;
+        }
+        if (!anglesForTarget.includes(state.activeAngle)) {
+          state.activeAngle = anglesForTarget[0];
+        }
+        return true;
+      };
+
+      if (prefer === "target") {
+        if (!alignFromTarget()) {
+          state.activePerson = targetsWithData[0].targetId;
+        }
+        if (!alignFromAngle()) {
+          state.activeAngle = anglesWithData[0];
+          alignFromAngle();
+        }
+      } else {
+        if (!alignFromAngle()) {
+          state.activeAngle = anglesWithData[0];
+          alignFromAngle();
+        }
+        if (!alignFromTarget()) {
+          state.activePerson = targetsWithData[0].targetId;
+          alignFromTarget();
+        }
       }
     }
 
     function pickCardForCurrentState() {
-      const anglePool = state.data.evidenceCards.filter((card) => card.angle === state.activeAngle);
-      const targetedPool = anglePool.filter((card) => {
-        return !card.relatedTargetIds.length || card.relatedTargetIds.includes(state.activePerson);
-      });
-      const pool = targetedPool.length ? targetedPool : (anglePool.length ? anglePool : state.data.evidenceCards);
+      const pool = getCardsForPair(state.activeAngle, state.activePerson);
+      if (!pool.length) {
+        return null;
+      }
       return pool[(state.turn - 1) % pool.length];
     }
 
@@ -2482,7 +2731,7 @@
       const card = bundle.card;
       const mood = target.femaleFocus ? "含蓄情感、家室牽掛、亂世去留" : angleDefinitions[card.angle].desc;
       const detail = card.location ? `場景位置：${card.location}；` : "";
-      return `${state.data.illustrationPromptBase}\n場景主題：${bundle.sceneTitle}\n互動對象：${target.label}（${target.role}）\n畫面情緒：${mood}\n${detail}關鍵文字線索：${shortenText(card.summary, 80)}\n構圖要求：半身到全身，營火或軍帳光源，人物剛從回憶中回神，像正要下達下一步命令。`;
+      return `${state.data.illustrationPromptBase}\n場景主題：${bundle.sceneTitle}\n互動對象：${target.label}（${target.role}）\n畫面情緒：${mood}\n${detail}關鍵文字線索：${shortenText(card.summary, 80)}\n畫風要求：清爽、輕鬆、易讀的劇情角色插畫，乾淨線條、柔和色彩、自然表情、溫暖電影光感；不要水墨山水、卷軸感、厚重筆刷或過度史詩化構圖。\n構圖要求：半身到全身，人物與互動對象在營火或軍帳光源旁，像剛從回憶中回神、準備安排行動。畫面中不要出現任何文字、中文字、字幕或招牌字。`;
     }
 
     function refreshIllustrationPrompt() {
@@ -2648,9 +2897,16 @@
       if (!elements.chorusGrid) {
         return;
       }
+      if (!Array.isArray(lines) || !lines.length) {
+        elements.chorusGrid.innerHTML = "";
+        return;
+      }
       elements.chorusGrid.innerHTML = lines.map((line) => {
         const role = line.role || "人物線索";
-        const text = normalizeNarrativeText(line.text, "等待對話服務補齊旁觀者感想。");
+        const text = sanitizeDisplayText(line.text, {
+          removeActor: true,
+          extraActorNames: [line.label || ""],
+        });
         return `
           <article class="chorus-card" data-target-id="${line.targetId}">
             <strong>${line.label}・${role}</strong>
@@ -2696,6 +2952,14 @@
       state.currentBundle = bundle;
       state.narrativeRequestToken += 1;
       abortAllNarrativeControllers();
+      const renderingGuard = window.setTimeout(() => {
+        if (!state.rendering || state.currentBundle !== bundle) {
+          return;
+        }
+        state.revealToken += 1;
+        state.rendering = false;
+        elements.sceneNote.textContent = `${bundle.sceneNote}；本回合逾時保護已觸發，可直接切換角度或按下一幕。`;
+      }, 12000);
       try {
         elements.sceneTitle.textContent = bundle.sceneTitle;
         elements.sceneNote.textContent = bundle.sceneNote;
@@ -2707,92 +2971,48 @@
         elements.sceneText.innerHTML = `<span class="loading-pulse">正在把這幕慢慢演出來……</span>`;
         elements.memoryText.innerHTML = "";
         elements.emotionText.innerHTML = "";
-        elements.dialogueText.innerHTML = `<span class="loading-pulse">正在等待服務產生可追溯對白……</span>`;
+        elements.dialogueText.innerHTML = "";
         elements.intentText.innerHTML = "";
-        elements.storyText.innerHTML = `<span class="loading-pulse">正在請 npc-brain 生成完整敘事……</span>`;
+        elements.storyText.innerHTML = "";
         refreshIllustrationPrompt();
-        const immediateBeatParts = buildImmediateBeatParts(bundle);
         const directorPromise = requestSceneDirector(bundle);
-        const dialoguePromise = requestSceneDialogue(bundle);
-        const imagePromise = requestSceneIllustration(bundle);
-        const directorPayload = await Promise.race([
-          directorPromise,
-          wait(900).then(() => null),
-        ]);
-        const beatParts = directorPayload?.beats ? directorPayload.beats : immediateBeatParts;
-        const chorusPromise = directorPayload?.chorusLines?.length
-          ? Promise.resolve(renderDirectorChorusLines(directorPayload.chorusLines))
-          : renderChorusLines(bundle);
-        const narrativeSource = directorPayload?.beats ? "敘事：NPC service beats" : "敘事：local fallback beats";
-        const dialogueSource = directorPayload?.beats?.dialogueText
-          ? "台詞：scene-director"
-          : "台詞：本地備援";
-        let storySource = directorPayload?.storyText
-          ? `完整敘事：${directorPayload.storyProvider || "scene-director"}${directorPayload.storyModel ? `/${directorPayload.storyModel}` : ""}`
-          : "完整敘事：local fallback";
+        void requestSceneIllustration(bundle).catch(() => null);
+        const directorPayload = await directorPromise;
+        const beats = directorPayload?.beats || {};
+        const dataStatus = String(directorPayload?.dataStatus || "").trim();
+        const sceneText = sanitizeDisplayText(beats.sceneText || "", { removeActor: false });
+        const memoryText = sanitizeDisplayText(beats.memoryText || "", { removeActor: true });
+        const emotionText = sanitizeDisplayText(beats.emotionText || "", { removeActor: true });
+        const dialogueText = sanitizeDisplayText(beats.dialogueText || "", { removeActor: true });
+        const intentText = sanitizeDisplayText(beats.intentText || "", { removeActor: true });
+        const storyText = sanitizeDisplayText(directorPayload?.storyText || "", { removeActor: false });
+        const isEmpty = Boolean(directorPayload?.isEmpty) || (
+          !sceneText
+          && !memoryText
+          && !emotionText
+          && !dialogueText
+          && !intentText
+          && !storyText
+        );
+        const sourceLabel = dataStatus
+          ? `scene-director/${dataStatus}`
+          : (directorPayload ? "scene-director" : "scene-director unavailable");
+        elements.sceneNote.textContent = `${bundle.sceneNote}；${sourceLabel}${isEmpty ? "；本角度/人物目前無資料" : ""}`;
 
         await wait(220);
-        const sceneNarrativeText = beatParts.sceneText;
-        await revealText(elements.sceneText, sceneNarrativeText, 520);
-        const memoryNarrativeText = beatParts.memoryText;
-        await revealText(elements.memoryText, memoryNarrativeText, 320);
-        const emotionNarrativeText = beatParts.emotionText;
-        await revealText(elements.emotionText, emotionNarrativeText, 320);
-        const dialoguePayload = await Promise.race([
-          dialoguePromise,
-          wait(1200).then(() => null),
-        ]);
-        const runtimeDialogueText = normalizeNarrativeText(dialoguePayload?.text, "");
-        const dialogueText = runtimeDialogueText || bundle?.dialogueText || beatParts.dialogueText || "等待 NPC service 回傳對白。";
-        const intentNarrativeText = beatParts.intentText;
-        bundle.runtimeIntentText = intentNarrativeText;
-        const dialogueRuntimeSource = dialoguePayload?.provider
-          ? `台詞：${dialoguePayload.provider}${dialoguePayload.model ? `/${dialoguePayload.model}` : ""}`
-          : dialogueSource;
-        if (state.currentBundle === bundle) {
-          elements.sceneNote.textContent = `${bundle.sceneNote}；${narrativeSource}；${dialogueRuntimeSource}；${storySource}`;
-        }
+        await revealText(elements.sceneText, sceneText, 520);
+        await revealText(elements.memoryText, memoryText, 320);
+        await revealText(elements.emotionText, emotionText, 320);
         await revealText(elements.dialogueText, dialogueText, 300);
-        await revealText(elements.intentText, intentNarrativeText, 320);
-        const storyBeatParts = {
-          sceneText: sceneNarrativeText,
-          memoryText: memoryNarrativeText,
-          emotionText: emotionNarrativeText,
-          dialogueText,
-          intentText: intentNarrativeText,
-        };
-        const mergedStoryFallback = buildCompactFallbackStory(bundle, storyBeatParts);
-        const storyFusionPromise = directorPayload?.storyText
-          ? Promise.resolve({
-            text: directorPayload.storyText,
-            provider: directorPayload.storyProvider || "scene-director",
-            model: directorPayload.storyModel || null,
-            qualityReason: "service",
-            fallbackUsed: Boolean(directorPayload.storyFallbackUsed),
-          })
-          : requestStoryFusion(bundle, storyBeatParts, mergedStoryFallback);
-        const storyFusionPayload = await Promise.race([
-          storyFusionPromise,
-          wait(900).then(() => null),
-        ]);
-        const mergedStoryText = normalizeNarrativeText(storyFusionPayload?.text || mergedStoryFallback, mergedStoryFallback);
-        if (storyFusionPayload?.provider) {
-          storySource = `完整敘事：${storyFusionPayload.provider}${storyFusionPayload.model ? `/${storyFusionPayload.model}` : ""}`;
-        } else if (storyFusionPayload?.qualityReason) {
-          storySource = `完整敘事：品質閘門 fallback（${storyFusionPayload.qualityReason}）`;
-        } else {
-          storySource = "完整敘事：local fallback";
-        }
-        if (state.currentBundle === bundle) {
-          elements.sceneNote.textContent = `${bundle.sceneNote}；${narrativeSource}；${dialogueSource}；${storySource}`;
-        }
-        await revealText(elements.storyText, mergedStoryText, 260);
-        await chorusPromise;
-        await imagePromise;
+        await revealText(elements.intentText, intentText, 320);
+        await revealText(elements.storyText, storyText, 260);
+        renderDirectorChorusLines(Array.isArray(directorPayload?.chorusLines) ? directorPayload.chorusLines : []);
+        bundle.runtimeIntentText = intentText;
       } catch (error) {
         console.error("playBundle failed:", error);
         elements.sceneNote.textContent = `${bundle.sceneNote}；本回合中斷，已自動復原，可直接按下一則重試。`;
       } finally {
+        window.clearTimeout(renderingGuard);
         state.rendering = false;
       }
     }
@@ -2801,8 +3021,21 @@
       if (state.rendering) {
         return;
       }
+      ensureLinkedSelection({ prefer: "angle" });
       const card = pickCardForCurrentState();
       const target = activeTarget();
+      if (!card || !target) {
+        elements.sceneTitle.textContent = "本角度 / 對象目前無資料";
+        elements.sceneNote.textContent = "scene-director data_first：無可用資料。";
+        elements.sceneText.textContent = "";
+        elements.memoryText.textContent = "";
+        elements.emotionText.textContent = "";
+        elements.dialogueText.textContent = "";
+        elements.intentText.textContent = "";
+        elements.storyText.textContent = "";
+        renderDirectorChorusLines([]);
+        return;
+      }
       applyMeterChanges(card, target);
       renderMeters();
       const bundle = buildSceneBundle(card, target);
@@ -2812,12 +3045,19 @@
     }
 
     function cycleSelectionForAuto() {
-      const angleKeys = Object.keys(angleDefinitions);
-      const nextAngleIndex = (angleKeys.indexOf(state.activeAngle) + 1) % angleKeys.length;
-      state.activeAngle = angleKeys[nextAngleIndex];
-      const people = state.data.relationships;
-      const personIndex = people.findIndex((target) => target.targetId === state.activePerson);
-      state.activePerson = people[(personIndex + 1 + people.length) % people.length].targetId;
+      const pairs = [];
+      for (const angle of getAnglesWithAnyData()) {
+        for (const target of getAvailableTargetsForAngle(angle)) {
+          pairs.push({ angle, targetId: target.targetId });
+        }
+      }
+      if (!pairs.length) {
+        return;
+      }
+      const currentIndex = pairs.findIndex((pair) => pair.angle === state.activeAngle && pair.targetId === state.activePerson);
+      const next = currentIndex >= 0 ? pairs[(currentIndex + 1) % pairs.length] : pairs[0];
+      state.activeAngle = next.angle;
+      state.activePerson = next.targetId;
       renderAngles();
       renderRelationships();
     }
@@ -2865,20 +3105,22 @@
       state.narrativeRequestToken += 1;
       abortIfAlive(state.imageAbortController);
       abortIfAlive(state.dialogueAbortController);
+      abortIfAlive(state.sceneDirectorAbortController);
       abortAllNarrativeControllers();
       state.imageAbortController = null;
       state.dialogueAbortController = null;
+      state.sceneDirectorAbortController = null;
       state.currentBundle = null;
       elements.sceneTitle.textContent = "劇情待啟";
       elements.sceneNote.textContent = "請先選擇一個角度與互動對象，由 npc-brain 以證據驅動逐幕生成內容。";
       elements.sourceBadge.textContent = state.data.sourceMode === "runtime-general-profiles" ? "真資料待命" : "服務待補待命";
       elements.sceneMeta.innerHTML = "";
       elements.sceneText.textContent = "等待場景素材...";
-      elements.memoryText.textContent = "等待資料與第一幕。";
-      elements.emotionText.textContent = "等待情緒素材。";
-      elements.dialogueText.textContent = "等待對白素材。";
-      elements.intentText.textContent = "等待意圖素材。";
-      elements.storyText.textContent = "四段素材到齊後，這裡會由 npc-brain 融合成完整敘事。";
+      elements.memoryText.textContent = "";
+      elements.emotionText.textContent = "";
+      elements.dialogueText.textContent = "";
+      elements.intentText.textContent = "";
+      elements.storyText.textContent = "";
       elements.illustrationPrompt.textContent = "等待第一幕資料後，會整理可直接送入圖像模型的 prompt。";
       elements.illustrationHint.textContent = "當串流回應完成後，prompt 與插圖將同步更新。";
       elements.illustrationImage.hidden = true;
@@ -2894,8 +3136,9 @@
       clearAutoTimer();
       state.auto = false;
       state.turn = 1;
-      state.activeAngle = "emotion";
-      state.activePerson = state.data.relationships.find((target) => target.femaleFocus)?.targetId || state.data.relationships[0].targetId;
+      state.activeAngle = getAnglesWithAnyData()[0] || "emotion";
+      state.activePerson = getAvailableTargetsForAngle(state.activeAngle)[0]?.targetId || getTargetsWithAnyData()[0]?.targetId || "";
+      ensureLinkedSelection({ prefer: "angle" });
       state.meters = {
         benevolence: 74,
         bond: 83,
@@ -2926,10 +3169,19 @@
         if (state.rendering) {
           return;
         }
-        const angleKeys = Object.keys(angleDefinitions);
-        const people = state.data.relationships;
-        state.activeAngle = angleKeys[Math.floor(Math.random() * angleKeys.length)];
-        state.activePerson = people[Math.floor(Math.random() * people.length)].targetId;
+        const pairs = [];
+        for (const angle of getAnglesWithAnyData()) {
+          for (const target of getAvailableTargetsForAngle(angle)) {
+            pairs.push({ angle, targetId: target.targetId });
+          }
+        }
+        if (!pairs.length) {
+          return;
+        }
+        const picked = pairs[Math.floor(Math.random() * pairs.length)];
+        state.activeAngle = picked.angle;
+        state.activePerson = picked.targetId;
+        ensureLinkedSelection({ prefer: "angle" });
         renderAngles();
         renderRelationships();
         await advanceScene();
@@ -2949,6 +3201,7 @@
       renderMeters();
       const data = await loadNarrativeData();
       applyData(data);
+      ensureLinkedSelection({ prefer: "angle" });
       renderAngles();
       renderRelationships();
       resetStageTexts();
@@ -2966,5 +3219,3 @@
   </script>
 </body>
 </html>
-
-

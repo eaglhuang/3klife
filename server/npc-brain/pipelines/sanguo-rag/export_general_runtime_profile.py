@@ -237,6 +237,132 @@ def name_for(general_id: str, identities: dict[str, dict[str, Any]]) -> str:
     return str((identities.get(general_id) or {}).get("name") or general_id)
 
 
+def identity_aliases(general_id: str, identity: dict[str, Any]) -> list[str]:
+    values = [identity.get("name"), *(identity.get("aliases") or [])]
+    aliases: list[str] = []
+    is_female = str(identity.get("gender") or "").strip().lower() in {"female", "f", "woman", "女", "女性"}
+    for value in values:
+        cleaned = re.sub(r"\s+", "", str(value or "").strip())
+        if len(cleaned) < 2:
+            continue
+        aliases.append(cleaned)
+        if cleaned.endswith("氏") and len(cleaned) >= 2:
+            aliases.append(f"{cleaned[:-1]}夫人")
+        if cleaned.endswith("夫人") and len(cleaned) >= 3:
+            aliases.append(f"{cleaned[:-2]}氏")
+        if is_female:
+            surname = cleaned[:1]
+            if surname:
+                aliases.extend([f"{surname}夫人", f"{surname}氏"])
+    return unique(aliases)
+
+
+def build_alias_index(identities: dict[str, dict[str, Any]]) -> dict[str, list[str]]:
+    return {general_id: identity_aliases(general_id, identity) for general_id, identity in identities.items()}
+
+
+def text_mentioned_general_ids(text: str, alias_index: dict[str, list[str]], general_id: str) -> list[str]:
+    compact = re.sub(r"\s+", "", str(text or ""))
+    if not compact:
+        return []
+    hits: list[str] = []
+    for target_id, aliases in alias_index.items():
+        if target_id == general_id:
+            continue
+        if any(alias and alias in compact for alias in aliases):
+            hits.append(target_id)
+    return sorted(set(hits))
+
+
+def index_relationship_targets_by_ref(relationships: dict[str, Any]) -> dict[str, set[str]]:
+    by_ref: dict[str, set[str]] = defaultdict(set)
+    for anchor in relationships.get("anchors") or []:
+        target_id = str(anchor.get("targetId") or "").strip()
+        if not target_id:
+            continue
+        for ref in anchor.get("evidenceRefs") or []:
+            ref_key = str(ref or "").strip()
+            if ref_key:
+                by_ref[ref_key].add(target_id)
+    return by_ref
+
+
+def relationship_edge_general_ids(edges: list[dict[str, Any]], general_id: str) -> list[str]:
+    hits: set[str] = set()
+    for edge in edges or []:
+        from_id = str(edge.get("fromId") or "").strip()
+        to_id = str(edge.get("toId") or "").strip()
+        if from_id == general_id and to_id:
+            hits.add(to_id)
+        if to_id == general_id and from_id:
+            hits.add(from_id)
+    return sorted(hits)
+
+
+def source_ref_related_ids(refs: list[str], relationship_targets_by_ref: dict[str, set[str]]) -> list[str]:
+    hits: set[str] = set()
+    for ref in refs:
+        hits.update(relationship_targets_by_ref.get(str(ref or "").strip(), set()))
+    return sorted(hits)
+
+
+def linked_general_ids(
+    *,
+    general_id: str,
+    declared_ids: list[str],
+    text: str,
+    refs: list[str],
+    relationship_edges: list[dict[str, Any]] | None,
+    relationship_targets_by_ref: dict[str, set[str]],
+    alias_index: dict[str, list[str]],
+) -> tuple[list[str], list[dict[str, Any]]]:
+    trace: list[dict[str, Any]] = []
+    buckets: dict[str, set[str]] = defaultdict(set)
+    for target_id in declared_ids or []:
+        target_key = str(target_id or "").strip()
+        if target_key and target_key != general_id:
+            buckets[target_key].add("declared-generalIds")
+    for target_id in relationship_edge_general_ids(relationship_edges or [], general_id):
+        buckets[target_id].add("relationshipEdges")
+    for target_id in source_ref_related_ids(refs, relationship_targets_by_ref):
+        if target_id != general_id:
+            buckets[target_id].add("relationshipRefs")
+    for target_id in text_mentioned_general_ids(text, alias_index, general_id):
+        buckets[target_id].add("aliasMatch")
+    for target_id, reasons in sorted(buckets.items()):
+        trace.append({"targetId": target_id, "sources": sorted(reasons)})
+    return sorted(buckets), trace
+
+
+def build_angle_target_links(story_beats: list[dict[str, Any]], source_highlights: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    links: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for beat in story_beats:
+        angles = beat.get("angleFamilies") or ["story_event"]
+        for angle in angles:
+            for target_id in beat.get("relatedGeneralIds") or []:
+                key = (str(angle), str(target_id), str(beat.get("eventId") or beat.get("eventKey") or ""))
+                links[key] = {
+                    "angleFamily": str(angle),
+                    "targetId": str(target_id),
+                    "sourceRef": (beat.get("sourceRefs") or [None])[0],
+                    "sourceId": beat.get("eventId") or beat.get("eventKey"),
+                    "sourceType": "storyBeat",
+                }
+    for highlight in source_highlights:
+        angles = highlight.get("angleFamilies") or ["source_highlight"]
+        for angle in angles:
+            for target_id in highlight.get("relatedGeneralIds") or []:
+                key = (str(angle), str(target_id), str(highlight.get("sourceRef") or ""))
+                links[key] = {
+                    "angleFamily": str(angle),
+                    "targetId": str(target_id),
+                    "sourceRef": highlight.get("sourceRef"),
+                    "sourceId": highlight.get("sourceRef"),
+                    "sourceType": "sourceHighlight",
+                }
+    return list(links.values())
+
+
 def load_review_backlog(paths: list[Path], general_id: str) -> list[dict[str, Any]]:
     backlog: list[dict[str, Any]] = []
     for path in paths:
@@ -457,34 +583,87 @@ def build_keywords(general_id: str, identity: dict[str, Any], profile: dict[str,
     }
 
 
-def build_persona(general_id: str, identity: dict[str, Any], profile: dict[str, Any], events: list[dict[str, Any]], packets: list[dict[str, Any]], relationships: dict[str, Any], core_report: dict[str, Any], review_backlog: list[dict[str, Any]], keywords: dict[str, Any]) -> dict[str, Any]:
+def build_persona(
+    general_id: str,
+    identity: dict[str, Any],
+    profile: dict[str, Any],
+    events: list[dict[str, Any]],
+    packets: list[dict[str, Any]],
+    relationships: dict[str, Any],
+    core_report: dict[str, Any],
+    review_backlog: list[dict[str, Any]],
+    keywords: dict[str, Any],
+    identities: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
     core_people = {person.get("generalId"): person for person in core_report.get("people") or []}
     core = core_people.get(general_id) or {}
     display_name = identity.get("name") or general_id
     voice = voice_preset(general_id, display_name)
     source_refs = sorted({ref for event in events for ref in (event.get("sourceRefs") or [])})
-    story_beats = [
-        {
+    alias_index = build_alias_index(identities)
+    relationship_targets_by_ref = index_relationship_targets_by_ref(relationships)
+    highlight_by_ref = {str(packet.get("sourceRef") or "").strip(): packet for packet in packets if str(packet.get("sourceRef") or "").strip()}
+    story_beats: list[dict[str, Any]] = []
+    for event in events[:18]:
+        refs = [str(ref) for ref in (event.get("sourceRefs") or []) if str(ref).strip()]
+        primary_packet = next((highlight_by_ref.get(ref) for ref in refs if highlight_by_ref.get(ref)), None) or {}
+        text = " ".join(
+            str(value)
+            for value in [
+                event.get("summary"),
+                event.get("sourceQuote"),
+                event.get("location"),
+            ]
+            if value
+        )
+        related_ids, link_trace = linked_general_ids(
+            general_id=general_id,
+            declared_ids=[str(item) for item in (event.get("generalIds") or [])],
+            text=text,
+            refs=refs,
+            relationship_edges=event.get("relationshipEdges") or [],
+            relationship_targets_by_ref=relationship_targets_by_ref,
+            alias_index=alias_index,
+        )
+        story_beats.append(
+            {
             "eventId": event.get("eventId"),
             "eventKey": event.get("eventKey"),
             "chapterNo": event.get("chapterNo"),
             "location": event.get("location"),
             "summary": event.get("summary"),
             "sourceQuote": event.get("sourceQuote"),
-            "sourceRefs": event.get("sourceRefs") or [],
+            "sourceRefs": refs,
+            "angleFamilies": primary_packet.get("angleFamilies") or [],
+            "relatedGeneralIds": related_ids,
+            "targetLinkTrace": link_trace,
             "confidence": event.get("confidence"),
-        }
-        for event in events[:18]
-    ]
-    source_highlights = [
-        {
+            }
+        )
+    source_highlights: list[dict[str, Any]] = []
+    for packet in packets[:16]:
+        source_ref = str(packet.get("sourceRef") or "").strip()
+        example = (packet.get("examples") or [None])[0]
+        related_ids, link_trace = linked_general_ids(
+            general_id=general_id,
+            declared_ids=[str(item) for item in (packet.get("generalIds") or [])],
+            text=str(example or ""),
+            refs=[source_ref] if source_ref else [],
+            relationship_edges=[],
+            relationship_targets_by_ref=relationship_targets_by_ref,
+            alias_index=alias_index,
+        )
+        source_highlights.append(
+            {
             "sourceRef": packet.get("sourceRef"),
             "packetStrength": packet.get("packetStrength"),
             "angleFamilies": packet.get("angleFamilies") or [],
-            "example": (packet.get("examples") or [None])[0],
-        }
-        for packet in packets[:16]
-    ]
+            "example": example,
+            "relatedGeneralIds": related_ids,
+            "targetLinkTrace": link_trace,
+            }
+        )
+    angle_target_links = build_angle_target_links(story_beats, source_highlights)
     return {
         "personaVersion": "general_runtime_persona_v1",
         "generalId": general_id,
@@ -526,6 +705,12 @@ def build_persona(general_id: str, identity: dict[str, Any], profile: dict[str, 
         },
         "storyBeats": story_beats,
         "sourceHighlights": source_highlights,
+        "angleTargetLinks": angle_target_links,
+        "targetLinking": {
+            "version": "deterministic_source_link_v1",
+            "policy": "source generalIds + relationship evidenceRefs + exact alias match; no LLM inference",
+            "linkCount": len(angle_target_links),
+        },
         "relationshipSummary": {
             "typeCounts": relationships.get("typeCounts") or {},
             "topAnchors": (relationships.get("anchors") or [])[:12],
@@ -587,7 +772,7 @@ def main() -> None:
     review_backlog = load_review_backlog(review_paths, general_id)
     relationships = build_relationships(general_id, edges, identities)
     keywords = build_keywords(general_id, identity, profile, events, packets, relationships)
-    persona = build_persona(general_id, identity, profile, events, packets, relationships, core_report, review_backlog, keywords)
+    persona = build_persona(general_id, identity, profile, events, packets, relationships, core_report, review_backlog, keywords, identities)
 
     write_json(outputs[0], persona)
     write_json(outputs[1], keywords)
