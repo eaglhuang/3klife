@@ -42,6 +42,7 @@ from .llm_dialogue_renderer import (
     DEFAULT_LOCAL_LLAMA_TOP_P,
     DEFAULT_SPEECH_CONTEXT_MODE,
     LOCALE_INSTRUCTIONS,
+    DialogueGenerationResult,
     DialoguePromptPackage,
     DialogueProviderRouter,
     SPEECH_CONTEXT_INSTRUCTIONS,
@@ -755,45 +756,63 @@ class NpcDialogueService:
 
     def build_scene_director(self, request: SceneDirectorRequest) -> SceneDirectorResponse:
         profile = self.get_narrative_profile(request.generalId)
-        card = self._select_narrative_card(profile.evidenceCards, request.evidenceId, request.angle)
         target = self._select_narrative_target(profile.interactionTargets, request.targetId)
-        beats = self._build_scene_director_beats(profile, card, target, request.angle)
-        evidence_refs = sorted(set(beats.sourceRefs + (target.evidenceRefs if target else [])))
-        story_fallback = self._render_scene_director_story(profile.displayName, target, beats)
-        story_generation = self._generate_scene_director_text(
-            general_id=request.generalId,
-            persona_card=self.get_persona_card(request.generalId),
-            memory_context={
-                "saveId": f"demo-scene-director-{request.generalId}",
-                "shortTerm": beats.sceneText,
-                "longTerm": f"{beats.memoryText} {beats.emotionText}",
-                "playerProfile": (
-                    f"{profile.displayName}正在面對與{target.label if target else '互動對象'}相關的局勢。"
-                    f"在場判斷：{beats.presence.status}；依據：{beats.presence.reason}"
-                ),
-                "promises": (
-                    "請把 sceneText/memoryText/emotionText/dialogueText/intentText 當作導演 beats，"
-                    "寫成 350-550 字繁體中文連續舞台敘事；保留原文證據，不要模板拼貼。"
-                ),
-            },
-            evidence_refs=evidence_refs,
-            deterministic_text=story_fallback,
-            max_chars=request.maxStoryChars,
-            locale=request.locale,
-            llm_model_preset=request.llmModelPreset,
+        card = self._select_narrative_card(profile.evidenceCards, request.evidenceId, request.angle, target)
+        has_direct_scene_data = card is not None and (target is None or self._card_matches_target(card, target))
+        beats = (
+            self._build_scene_director_beats(profile, card, target, request.angle)
+            if has_direct_scene_data
+            else self._build_empty_scene_director_beats()
         )
-        chorus_targets = self._select_chorus_targets(profile.interactionTargets, request.chorusTargetIds, target.targetId if target else None)
-        chorus_lines = [
-            self._build_scene_chorus_line(
-                request=request,
-                profile=profile,
-                target=chorus_target,
-                main_target=target,
-                card=card,
-                beats=beats,
+        evidence_refs = sorted(set(beats.sourceRefs + (target.evidenceRefs if target else [])))
+        if has_direct_scene_data:
+            story_fallback = self._render_scene_director_story(profile.displayName, target, beats)
+            story_generation = self._generate_scene_director_text(
+                general_id=request.generalId,
+                persona_card=self.get_persona_card(request.generalId),
+                memory_context={
+                    "saveId": f"demo-scene-director-{request.generalId}",
+                    "shortTerm": beats.sceneText,
+                    "longTerm": f"{beats.memoryText} {beats.emotionText}",
+                    "playerProfile": (
+                        f"{profile.displayName}正在面對與{target.label if target else '互動對象'}相關的局勢。"
+                        f"在場判斷：{beats.presence.status}；依據：{beats.presence.reason}"
+                    ),
+                    "promises": (
+                        "請把 sceneText/memoryText/emotionText/dialogueText/intentText 當作導演 beats，"
+                        "寫成 350-550 字繁體中文連續舞台敘事；保留原文證據，不要模板拼貼。"
+                    ),
+                },
+                evidence_refs=evidence_refs,
+                deterministic_text=story_fallback,
+                max_chars=request.maxStoryChars,
+                locale=request.locale,
+                llm_model_preset=request.llmModelPreset,
             )
-            for chorus_target in chorus_targets
-        ]
+            chorus_targets = self._select_chorus_targets(profile.interactionTargets, request.chorusTargetIds, target.targetId if target else None)
+            chorus_lines = [
+                self._build_scene_chorus_line(
+                    request=request,
+                    profile=profile,
+                    target=chorus_target,
+                    main_target=target,
+                    card=card,
+                    beats=beats,
+                )
+                for chorus_target in chorus_targets
+            ]
+        else:
+            story_generation = DialogueGenerationResult(
+                text="",
+                provider="data_first",
+                model=None,
+                generationMode="data_first-empty",
+                fallbackUsed=False,
+                providerTrace=["scene-director.no-direct-data"],
+                qualityWarnings=[],
+                repairUsed=False,
+            )
+            chorus_lines = []
         return SceneDirectorResponse(
             generalId=request.generalId,
             displayName=profile.displayName,
@@ -815,16 +834,28 @@ class NpcDialogueService:
         cards: list[NarrativeEvidenceCard],
         evidence_id: str | None,
         angle: str | None,
+        target: NarrativeInteractionTarget | None = None,
     ) -> NarrativeEvidenceCard | None:
         if evidence_id:
             for card in cards:
-                if card.evidenceId == evidence_id:
+                if card.evidenceId == evidence_id and self._card_matches_target(card, target):
                     return card
         if angle:
             for card in cards:
-                if card.angle == angle:
+                if card.angle == angle and self._card_matches_target(card, target):
                     return card
+        if target is not None:
+            return None
         return cards[0] if cards else None
+
+    def _card_matches_target(
+        self,
+        card: NarrativeEvidenceCard | None,
+        target: NarrativeInteractionTarget | None,
+    ) -> bool:
+        if card is None or target is None:
+            return card is not None
+        return target.targetId in set(card.relatedTargetIds or [])
 
     def _select_narrative_target(
         self,
@@ -848,6 +879,18 @@ class NpcDialogueService:
         if selected:
             return selected[:4]
         return [target for target in targets if target.targetId != active_target_id][:4]
+
+    def _build_empty_scene_director_beats(self) -> SceneDirectorBeats:
+        return SceneDirectorBeats(
+            sceneText="",
+            memoryText="",
+            emotionText="",
+            dialogueText="",
+            intentText="",
+            presence=ScenePresenceDecision(status="unknown", reason="", sourceText=None),
+            sourceRefs=[],
+            evidenceId=None,
+        )
 
     def _build_scene_director_beats(
         self,

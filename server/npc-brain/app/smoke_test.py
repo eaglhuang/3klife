@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import json
 
-from .npc_dialogue_service import DialogueRequest, NpcDialogueService
+from .npc_dialogue_service import DialogueRequest, NpcDialogueService, SceneDirectorRequest
 
 
 def main() -> None:
@@ -28,6 +28,14 @@ def main() -> None:
             maxChars=90,
         )
     )
+    missing_scene = service.build_scene_director(
+        SceneDirectorRequest(
+            generalId="liu-bei",
+            angle="emotion",
+            targetId="guan-yu",
+            llmModelPreset="fallback_chain",
+        )
+    )
 
     assert contexts.options, "context options should not be empty"
     assert keywords.categories.get("person"), "person keyword options should not be empty"
@@ -40,6 +48,13 @@ def main() -> None:
     assert response.llmModelPreset == "fallback_chain", "dialogue response should echo model preset"
     assert response.rejectedKeywordKeys == ["unknown-key"], "unknown keyword should be rejected explicitly"
     assert "關某" not in persona.safeFallbackLine, "zhang-fei fallback line must not use guan-yu self-name"
+    assert missing_scene.beats.sceneText == "", "scene-director should not invent scene text without direct angle-target data"
+    assert missing_scene.beats.memoryText == "", "scene-director should not fill memory text from substitute evidence"
+    assert missing_scene.beats.emotionText == "", "scene-director should not fill emotion text from substitute evidence"
+    assert missing_scene.beats.dialogueText == "", "scene-director should not fill dialogue text from substitute evidence"
+    assert missing_scene.beats.intentText == "", "scene-director should not fill intent text from substitute evidence"
+    assert missing_scene.storyText == "", "scene-director should not call story LLM without direct angle-target data"
+    assert missing_scene.chorusLines == [], "scene-director should not generate chorus lines without direct angle-target data"
     print("[npc-brain-smoke] PASS")
     print(f"[npc-brain-smoke] contexts={len(contexts.options)} categories={len(keywords.categories)} evidenceRefs={len(response.evidenceRefs)}")
     print("[npc-brain-smoke] text=" + json.dumps(response.text, ensure_ascii=True))
