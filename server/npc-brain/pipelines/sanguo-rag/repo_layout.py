@@ -26,10 +26,14 @@ def resolve_npc_brain_root(repo_root: Path) -> Path:
     if override:
         return Path(override).resolve()
 
-    monorepo_root = repo_root / "server/npc-brain"
+    resolved_repo_root = repo_root.resolve()
+    if (resolved_repo_root / "app").exists() and (resolved_repo_root / "pipelines/sanguo-rag").exists():
+        return resolved_repo_root
+
+    monorepo_root = resolved_repo_root / "server/npc-brain"
     if monorepo_root.exists():
         return monorepo_root.resolve()
-    return repo_root.resolve()
+    return resolved_repo_root
 
 
 def pipeline_root(repo_root: Path) -> Path:
@@ -38,4 +42,3 @@ def pipeline_root(repo_root: Path) -> Path:
 
 def pipeline_config_path(repo_root: Path, filename: str) -> Path:
     return (pipeline_root(repo_root) / "config" / filename).resolve()
-

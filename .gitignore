@@ -79,10 +79,8 @@ server/npc-brain/.env
 #//////////////////////////
 # Design System archives & extra copies
 #//////////////////////////
-Design System 2.zip
-Design System 3.zip
-Design System 2/
-Design System 3/
+Design System*/
+Design System*.zip
 
 #//////////////////////////
 # LangGraph runtime

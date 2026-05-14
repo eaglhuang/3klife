@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import time
@@ -28,6 +29,12 @@ DEFAULT_BASE_RELATIONSHIP_EVIDENCE_PATH = Path(
 DEFAULT_BASE_PROGRESS_PATH = Path(
     "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/repair-review-r1-merged.json"
 )
+DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
+DEFAULT_OBSERVED_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-label-summary.json")
+DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
+DEFAULT_EVENTS_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/events-summary.json")
+DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
+DEFAULT_FEMALE_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl")
 
 ROOT_CAUSE_GROUPS = [
     "identity ambiguity",
@@ -51,6 +58,12 @@ EVENT_REVIEW_SYNONYMS = {
     "DEFER": "D",
 }
 
+LOCATION_FROM_CUE_PATTERN = re.compile(
+    r"(?:於|在|至|攻打|圍攻|駐守|屯於|赴|入|到)([一-龥]{1,4}(?:州|郡|縣|城|關|渡|津|寨|山|江|河|口))"
+)
+LOCATION_STRONG_PATTERN = re.compile(r"([一-龥]{1,4}(?:州|郡|縣|城|關|渡|津|寨))")
+LOCATION_BAD_PREFIX = {"上", "下", "出", "入", "攻", "守", "聞", "戰", "至", "在", "於"}
+
 
 def utc_stamp() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
@@ -67,6 +80,38 @@ def resolve_path(path_text: str | Path | None) -> Path:
     if raw_path.is_absolute():
         return raw_path.resolve()
     return (REPO_ROOT / raw_path).resolve()
+
+
+def resolve_existing_path(path_text: str | Path) -> Path:
+    raw_path = Path(path_text)
+    if raw_path.is_absolute():
+        return raw_path.resolve()
+
+    variants = [raw_path]
+    parts = list(raw_path.parts)
+    if len(parts) >= 2 and [part.lower() for part in parts[:2]] == ["server", "npc-brain"]:
+        stripped = Path(*parts[2:])
+        if str(stripped):
+            variants.append(stripped)
+
+    search_roots = [REPO_ROOT, REPO_ROOT.parent, REPO_ROOT.parent.parent]
+    for root in search_roots:
+        for relative_path in variants:
+            candidate = (root / relative_path).resolve()
+            if candidate.exists():
+                return candidate
+    return (REPO_ROOT / variants[0]).resolve()
+
+
+def path_from_progress_inputs(inputs: dict[str, Any], *keys: str, default: str | Path) -> Path:
+    for key in keys:
+        value = str(inputs.get(key) or "").strip()
+        if not value:
+            continue
+        candidate = resolve_existing_path(value)
+        if candidate.exists():
+            return candidate
+    return resolve_existing_path(default)
 
 
 def repo_relative(path: Path) -> str:
@@ -167,6 +212,28 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--same-residual-repeat-limit", type=int, default=2, help="Route to C when the same residual repeats this many A rounds.")
     parser.add_argument("--review-batch-size", type=int, default=10, help="Maximum event-review items to emit into one B review batch artifact.")
     parser.add_argument("--review-decisions", default=None, help="Optional JSON file with B review decisions to apply to the latest batch.")
+    parser.add_argument(
+        "--auto-review-root-cause",
+        action="append",
+        default=[],
+        help="Auto-generate B decisions for pending items that match these root causes (repeatable).",
+    )
+    parser.add_argument(
+        "--auto-review-location-gap",
+        action="store_true",
+        help="Shortcut for --auto-review-root-cause 'location gap'.",
+    )
+    parser.add_argument(
+        "--auto-review-answer",
+        default="B",
+        help="Answer code used by auto-generated review decisions (default: B).",
+    )
+    parser.add_argument(
+        "--auto-review-max-items",
+        type=int,
+        default=0,
+        help="Cap auto-generated decisions per round (0 means all matched pending items).",
+    )
     parser.add_argument("--failure-rate-limit", type=float, default=0.2, help="Stop when command failure rate exceeds this.")
     parser.add_argument("--review-queue", default=str(DEFAULT_REVIEW_QUEUE_PATH), help="ETL pilot review queue JSON path.")
     parser.add_argument("--emit-ready-eval", action="store_true", help="Emit pilot-readable evaluation-only ready events for accepted review candidates.")
@@ -892,6 +959,25 @@ def apply_review_decisions_to_questions(questions: list[dict[str, Any]], decisio
             merged_edits = dict(question.get("edits") or {})
             merged_edits.update(edits)
             question["edits"] = merged_edits
+
+            # Keep missingFields in sync when human/auto decisions provide concrete edits.
+            current_missing = [str(field or "").strip() for field in question.get("missingFields") or [] if str(field or "").strip()]
+            remaining_missing: list[str] = []
+            for field in current_missing:
+                if field == "location":
+                    if str(merged_edits.get("location") or "").strip():
+                        continue
+                elif field == "relationshipEdges":
+                    if list(merged_edits.get("relationshipEdges") or []):
+                        continue
+                elif field == "sourceRefs":
+                    if list(question.get("sourceRefs") or []):
+                        continue
+                elif field == "generalIds":
+                    if list(question.get("generalIds") or []):
+                        continue
+                remaining_missing.append(field)
+            question["missingFields"] = remaining_missing
         updated_count += 1
     return updated_count
 
@@ -1242,6 +1328,134 @@ def apply_review_decisions_to_root(review_root: Path, decision_path: Path, dry_r
     }
 
 
+def normalize_root_cause_values(values: list[str], *, include_location_gap: bool) -> set[str]:
+    normalized = {str(value or "").strip().lower() for value in values if str(value or "").strip()}
+    if include_location_gap:
+        normalized.add("location gap")
+    return normalized
+
+
+def extract_location_candidate(text: Any) -> str | None:
+    raw_text = str(text or "").strip()
+    if not raw_text:
+        return None
+    compact = " ".join(raw_text.split())
+    for pattern in (LOCATION_FROM_CUE_PATTERN, LOCATION_STRONG_PATTERN):
+        for match in pattern.finditer(compact):
+            value = str(match.group(1) or "").strip(" ，。、《》「」『』()（）[]")
+            if not value:
+                continue
+            if len(value) < 2 or len(value) > 5:
+                continue
+            if value[0] in LOCATION_BAD_PREFIX:
+                continue
+            return value
+    return None
+
+
+def infer_location_from_item(item: dict[str, Any], edits: dict[str, Any]) -> str | None:
+    existing = str(edits.get("location") or "").strip()
+    if existing:
+        return existing
+    texts = [
+        edits.get("summary"),
+        item.get("summary"),
+        item.get("sourceQuote"),
+    ]
+    for text in texts:
+        candidate = extract_location_candidate(text)
+        if candidate:
+            return candidate
+    return None
+
+
+def has_required_auto_review_edits(root_cause_key: str, edits: dict[str, Any]) -> bool:
+    if root_cause_key == "location gap":
+        return bool(str(edits.get("location") or "").strip())
+    if root_cause_key == "relationship edge/type":
+        return bool(list(edits.get("relationshipEdges") or []))
+    return True
+
+
+def build_auto_review_decisions(
+    *,
+    items: list[dict[str, Any]],
+    root_causes: set[str],
+    answer: str,
+    max_items: int,
+) -> tuple[list[dict[str, Any]], dict[str, int], dict[str, int]]:
+    decisions: list[dict[str, Any]] = []
+    root_cause_counts: dict[str, int] = {}
+    skipped_missing_edits: dict[str, int] = {}
+    seen_keys: set[str] = set()
+    normalized_answer = str(answer or "B").strip().upper() or "B"
+    max_count = max(int(max_items), 0)
+
+    for item in items:
+        root_cause = str(item.get("rootCause") or "").strip()
+        root_cause_key = root_cause.lower()
+        if root_causes and root_cause_key not in root_causes:
+            continue
+        edits = dict(item.get("edits") or {})
+        inferred_location = infer_location_from_item(item, edits)
+        if root_cause_key == "location gap" and inferred_location and not str(edits.get("location") or "").strip():
+            edits["location"] = inferred_location
+        if not has_required_auto_review_edits(root_cause_key, edits):
+            bucket = root_cause or "unknown"
+            skipped_missing_edits[bucket] = int(skipped_missing_edits.get(bucket) or 0) + 1
+            continue
+
+        candidate_id = str(item.get("candidateId") or "").strip()
+        event_key = str(item.get("eventKey") or "").strip()
+        dedup_key = candidate_id or event_key
+        if not dedup_key or dedup_key in seen_keys:
+            continue
+
+        seen_keys.add(dedup_key)
+        decision: dict[str, Any] = {
+            "answer": normalized_answer,
+            "notes": f"auto-review {root_cause or 'pending'}",
+        }
+        if candidate_id:
+            decision["candidateId"] = candidate_id
+        if event_key:
+            decision["eventKey"] = event_key
+        if edits:
+            decision["edits"] = edits
+        decisions.append(decision)
+        root_cause_counts[root_cause or "unknown"] = int(root_cause_counts.get(root_cause or "unknown") or 0) + 1
+        if max_count > 0 and len(decisions) >= max_count:
+            break
+    return decisions, root_cause_counts, skipped_missing_edits
+
+
+def write_auto_review_decisions_file(
+    *,
+    run_root: Path,
+    source_round_id: str,
+    decisions: list[dict[str, Any]],
+    root_causes: set[str],
+    answer: str,
+    root_cause_counts: dict[str, int],
+) -> Path:
+    auto_root = run_root / "auto-review-decisions"
+    decision_path = auto_root / f"{source_round_id}-auto-review-decisions.json"
+    payload = {
+        "version": "1.0.0",
+        "generatedAt": utc_now(),
+        "mode": "progress-advancement-auto-review-decisions",
+        "canonicalWrites": False,
+        "sourceRoundId": source_round_id,
+        "rootCauseFilter": sorted(root_causes),
+        "answer": str(answer or "B").strip().upper() or "B",
+        "decisionCount": len(decisions),
+        "rootCauseCounts": root_cause_counts,
+        "decisions": decisions,
+    }
+    write_json(decision_path, payload)
+    return decision_path
+
+
 def progress_overall_percent(path_text: str | Path) -> float | None:
     payload = read_json(resolve_path(path_text))
     completion = (payload or {}).get("completion") or {}
@@ -1297,6 +1511,40 @@ def run_b_review_merge(
     outputs = b_review_output_paths(run_root, source_round_id, review_index)
     b_round_id = outputs["bRoundId"].name
     resolved_base_paths = resolve_baseline_paths(base_paths)
+    base_progress_payload = read_json(resolve_existing_path(base_paths["baseProgress"]))
+    base_progress_inputs = base_progress_payload.get("inputs") if isinstance(base_progress_payload.get("inputs"), dict) else {}
+    observed_mentions_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "observedMentionsPath",
+        "mergedObservedMentionsPath",
+        default=DEFAULT_OBSERVED_MENTIONS_PATH,
+    )
+    observed_summary_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "observedSummaryPath",
+        "mergedObservedSummaryPath",
+        default=DEFAULT_OBSERVED_SUMMARY_PATH,
+    )
+    stable_knowledge_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "stableKnowledgePath",
+        default=DEFAULT_STABLE_KNOWLEDGE_PATH,
+    )
+    events_summary_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "eventsSummaryPath",
+        default=DEFAULT_EVENTS_SUMMARY_PATH,
+    )
+    generic_candidates_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "genericCandidatesPath",
+        default=DEFAULT_GENERIC_CANDIDATES_PATH,
+    )
+    female_candidates_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "femaleCandidatesPath",
+        default=DEFAULT_FEMALE_CANDIDATES_PATH,
+    )
     commands: list[dict[str, Any]] = []
 
     stage_args = [
@@ -1320,6 +1568,10 @@ def run_b_review_merge(
     seed_command = script_command(
         "build_event_question_seed_bank.py",
         maybe_append_overwrite([
+            "--observed-mentions",
+            str(observed_mentions_path),
+            "--stable-knowledge",
+            str(stable_knowledge_path),
             "--relationship-evidence",
             repo_relative(outputs["baseRelationshipEvidence"]),
             "--output-root",
@@ -1331,6 +1583,10 @@ def run_b_review_merge(
     packet_command = script_command(
         "build_source_event_packets.py",
         maybe_append_overwrite([
+            "--observed-mentions",
+            str(observed_mentions_path),
+            "--stable-knowledge",
+            str(stable_knowledge_path),
             "--relationship-evidence",
             repo_relative(outputs["baseRelationshipEvidence"]),
             "--output-root",
@@ -1342,8 +1598,18 @@ def run_b_review_merge(
     estimate_args = [
         "--round-id",
         b_round_id,
+        "--stable-knowledge",
+        str(stable_knowledge_path),
+        "--observed-summary",
+        str(observed_summary_path),
+        "--events-summary",
+        str(events_summary_path),
         "--ready-events",
         repo_relative(outputs["baseEvents"]),
+        "--generic-candidates",
+        str(generic_candidates_path),
+        "--female-candidates",
+        str(female_candidates_path),
         "--relationship-evidence",
         repo_relative(outputs["baseRelationshipEvidence"]),
         "--event-question-seeds",
@@ -1793,6 +2059,10 @@ def main() -> None:
     last_repeated_items: list[dict[str, Any]] = []
     last_pilot_pending_count = pending_review_count(resolve_path(args.review_queue))
     last_pending_count = last_pilot_pending_count
+    configured_auto_review_root_causes = normalize_root_cause_values(
+        list(args.auto_review_root_cause or []),
+        include_location_gap=bool(args.auto_review_location_gap),
+    )
 
     for round_index in range(1, max(args.max_rounds, 1) + 1):
         if wall_time_exceeded(started_monotonic, args.max_wall_time_minutes):
@@ -1876,6 +2146,7 @@ def main() -> None:
                     "command": command_result,
                     "deltaOverallPercent": (campaign_summary or {}).get("deltaOverallPercent"),
                     "eventReviewPendingCount": len(pass_pending_items),
+                    "rootCauseCounts": summarize_root_causes(pass_pending_items),
                     "repairSignalCount": repair_signal_count,
                     "rerunTriggered": bool(rerun_triggered),
                 }
@@ -1947,6 +2218,7 @@ def main() -> None:
             },
             "pilotPendingReviewCountAfterRound": last_pilot_pending_count,
             "eventReviewPendingCountAfterRound": len(round_pending_items),
+            "rootCauseCountsAfterRound": summarize_root_causes(round_pending_items),
             "repeatedResidualCountAfterRound": len(repeated_items),
             "repeatedResidualsPreview": repeated_items[:5],
             "weakImprovementCount": weak_improvement_count,
@@ -1971,8 +2243,49 @@ def main() -> None:
                 latest_ready_eval_events = final_output_paths["readyEvalEvents"]
                 base_paths["readyEvalEvents"] = final_output_paths["readyEvalEvents"]
 
-        if args.review_decisions and round_pending_items and not review_decisions_consumed:
-            decision_summary = apply_review_decisions_to_root(final_output_paths["reviewSnapshotRoot"], resolve_path(args.review_decisions), args.dry_run)
+        decision_path_for_round: Path | None = resolve_path(args.review_decisions) if args.review_decisions else None
+        if (
+            decision_path_for_round is None
+            and round_pending_items
+            and not review_decisions_consumed
+            and configured_auto_review_root_causes
+        ):
+            auto_decisions, auto_root_cause_counts, auto_skipped_missing_edits = build_auto_review_decisions(
+                items=round_pending_items,
+                root_causes=configured_auto_review_root_causes,
+                answer=args.auto_review_answer,
+                max_items=max(args.auto_review_max_items, 0),
+            )
+            if auto_decisions:
+                auto_decision_path = write_auto_review_decisions_file(
+                    run_root=run_root,
+                    source_round_id=final_round_id,
+                    decisions=auto_decisions,
+                    root_causes=configured_auto_review_root_causes,
+                    answer=args.auto_review_answer,
+                    root_cause_counts=auto_root_cause_counts,
+                )
+                decision_path_for_round = auto_decision_path
+                round_record["autoReviewDecision"] = {
+                    "decisionPath": repo_relative(auto_decision_path),
+                    "decisionCount": len(auto_decisions),
+                    "answer": str(args.auto_review_answer or "B").strip().upper() or "B",
+                    "rootCauseCounts": auto_root_cause_counts,
+                    "rootCauseFilter": sorted(configured_auto_review_root_causes),
+                    "skippedMissingEditCounts": auto_skipped_missing_edits,
+                }
+            elif auto_skipped_missing_edits:
+                round_record["autoReviewDecision"] = {
+                    "decisionPath": None,
+                    "decisionCount": 0,
+                    "answer": str(args.auto_review_answer or "B").strip().upper() or "B",
+                    "rootCauseCounts": {},
+                    "rootCauseFilter": sorted(configured_auto_review_root_causes),
+                    "skippedMissingEditCounts": auto_skipped_missing_edits,
+                }
+
+        if decision_path_for_round and round_pending_items and not review_decisions_consumed:
+            decision_summary = apply_review_decisions_to_root(final_output_paths["reviewSnapshotRoot"], decision_path_for_round, args.dry_run)
             round_record["reviewDecisionApplication"] = decision_summary
             if int(decision_summary.get("updatedQuestionCount") or 0) > 0:
                 review_decisions_consumed = True
@@ -2002,6 +2315,7 @@ def main() -> None:
                 last_repeated_items = repeated_items
                 last_pending_count = len(round_pending_items) if round_pending_items else last_pilot_pending_count
                 round_record["eventReviewPendingCountAfterReview"] = len(round_pending_items)
+                round_record["rootCauseCountsAfterReview"] = summarize_root_causes(round_pending_items)
                 round_record["repeatedResidualCountAfterReview"] = len(repeated_items)
 
                 if round_index < max(args.max_rounds, 1) and b_review_count < max(args.max_ab_cycles, 1):
@@ -2099,6 +2413,23 @@ def main() -> None:
     final_base_paths_for_summary = dict(base_paths)
     if latest_ready_eval_events:
         final_base_paths_for_summary["readyEvalEvents"] = latest_ready_eval_events
+
+    location_gap_first: int | None = None
+    location_gap_last: int | None = None
+    if rounds:
+        first_counts = dict((rounds[0].get("rootCauseCountsAfterRound") or {}))
+        last_round = rounds[-1]
+        last_counts = dict(
+            (last_round.get("rootCauseCountsAfterReview") or {})
+            or (last_round.get("rootCauseCountsAfterRound") or {})
+        )
+        location_gap_first = int(first_counts.get("location gap") or 0)
+        location_gap_last = int(last_counts.get("location gap") or 0)
+
+    location_gap_delta: int | None = None
+    if location_gap_first is not None and location_gap_last is not None:
+        location_gap_delta = int(location_gap_last - location_gap_first)
+
     baseline_manifest_path = run_root / "baseline-manifest.json"
     summary_json_path = run_root / "progress-advancement-summary.json"
     summary_md_path = run_root / "progress-advancement-summary.md"
@@ -2146,6 +2477,9 @@ def main() -> None:
             "bridgeMaxGenerals": args.bridge_max_generals,
             "bridgeMaxPerGeneral": args.bridge_max_per_general,
             "bridgeIncludeShadow": bool(args.bridge_include_shadow),
+            "autoReviewRootCauses": sorted(configured_auto_review_root_causes),
+            "autoReviewAnswer": str(args.auto_review_answer or "B").strip().upper() or "B",
+            "autoReviewMaxItems": int(args.auto_review_max_items),
             "runtimeReadiness": args.runtime_readiness,
             "maxWallTimeMinutes": args.max_wall_time_minutes,
         },
@@ -2160,6 +2494,12 @@ def main() -> None:
         "baselineOverallPercent": baseline,
         "finalOverallPercent": result,
         "totalDeltaOverallPercent": total_delta,
+        "locationGapStats": {
+            "firstRoundAfterA": location_gap_first,
+            "lastRoundAfterAorB": location_gap_last,
+            "delta": location_gap_delta,
+            "improved": bool(location_gap_delta is not None and location_gap_delta < 0),
+        },
         "touchedGenerals": touched_generals,
         "runtimeReadiness": runtime_readiness,
         "scoreboardBridgeRounds": scoreboard_bridge_history,

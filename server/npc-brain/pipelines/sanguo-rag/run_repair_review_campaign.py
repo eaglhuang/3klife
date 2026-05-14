@@ -30,6 +30,12 @@ DEFAULT_ROUNDS_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowled
 DEFAULT_EVENT_SEED_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/event-question-seeds")
 DEFAULT_PACKET_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/source-event-packets")
 DEFAULT_PROGRESS_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress")
+DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
+DEFAULT_OBSERVED_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-label-summary.json")
+DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
+DEFAULT_EVENTS_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/events-summary.json")
+DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
+DEFAULT_FEMALE_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl")
 
 
 def parse_args() -> argparse.Namespace:
@@ -78,7 +84,7 @@ def utc_now() -> str:
 def read_json(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -88,6 +94,36 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def script_command(script_name: str, args: list[str]) -> list[str]:
     return [sys.executable, str(REPO_ROOT / PIPELINE_ROOT / script_name), *args]
+
+
+def resolve_existing_path(path_text: str | Path) -> Path:
+    raw_path = Path(path_text)
+    if raw_path.is_absolute():
+        return raw_path
+    variants = [raw_path]
+    parts = list(raw_path.parts)
+    if len(parts) >= 2 and [part.lower() for part in parts[:2]] == ["server", "npc-brain"]:
+        stripped = Path(*parts[2:])
+        if str(stripped):
+            variants.append(stripped)
+    search_roots = [REPO_ROOT, REPO_ROOT.parent, REPO_ROOT.parent.parent]
+    for root in search_roots:
+        for relative_path in variants:
+            candidate = (root / relative_path).resolve()
+            if candidate.exists():
+                return candidate
+    return (REPO_ROOT / variants[0]).resolve()
+
+
+def path_from_progress_inputs(inputs: dict[str, Any], *keys: str, default: Path) -> Path:
+    for key in keys:
+        value = str(inputs.get(key) or "").strip()
+        if not value:
+            continue
+        candidate = resolve_existing_path(value)
+        if candidate.exists():
+            return candidate
+    return resolve_existing_path(default)
 
 
 def command_summary(command: list[str]) -> str:
@@ -194,7 +230,51 @@ def main() -> None:
     if not args.overwrite and (summary_json_path.exists() or summary_md_path.exists()):
         raise FileExistsError("Campaign summary outputs already exist. Re-run with --overwrite.")
 
+    edit_backlog_path = resolve_existing_path(args.edit_backlog)
+    base_events_path = resolve_existing_path(args.base_events)
+    base_relationship_evidence_path = resolve_existing_path(args.base_relationship_evidence)
+    base_progress_path = resolve_existing_path(args.base_progress)
+
     commands: list[dict[str, Any]] = []
+    base_progress_payload = read_json(base_progress_path)
+    base_progress_inputs = base_progress_payload.get("inputs") if isinstance(base_progress_payload.get("inputs"), dict) else {}
+    observed_mentions_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "observedMentionsPath",
+        "mergedObservedMentionsPath",
+        default=DEFAULT_OBSERVED_MENTIONS_PATH,
+    )
+    observed_summary_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "observedSummaryPath",
+        "mergedObservedSummaryPath",
+        default=DEFAULT_OBSERVED_SUMMARY_PATH,
+    )
+    stable_knowledge_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "stableKnowledgePath",
+        default=DEFAULT_STABLE_KNOWLEDGE_PATH,
+    )
+    events_summary_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "eventsSummaryPath",
+        default=DEFAULT_EVENTS_SUMMARY_PATH,
+    )
+    ready_events_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "readyEventsPath",
+        default=base_events_path,
+    )
+    generic_candidates_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "genericCandidatesPath",
+        default=DEFAULT_GENERIC_CANDIDATES_PATH,
+    )
+    female_candidates_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "femaleCandidatesPath",
+        default=DEFAULT_FEMALE_CANDIDATES_PATH,
+    )
 
     commands.append(
         {
@@ -204,7 +284,7 @@ def main() -> None:
                     "build_backlog_repair_tasks.py",
                     maybe_append_overwrite([
                         "--edit-backlog",
-                        args.edit_backlog,
+                        str(edit_backlog_path),
                         "--output-root",
                         str(repair_output_root),
                         "--round-id",
@@ -264,9 +344,9 @@ def main() -> None:
         "--round-id",
         merged_round_id,
         "--base-events",
-        args.base_events,
+        str(base_events_path),
         "--base-relationship-evidence",
-        args.base_relationship_evidence,
+        str(base_relationship_evidence_path),
     ]
     if args.emit_ready_eval:
         stage_args.append("--emit-ready-eval")
@@ -294,6 +374,10 @@ def main() -> None:
                 script_command(
                     "build_event_question_seed_bank.py",
                     maybe_append_overwrite([
+                        "--observed-mentions",
+                        str(observed_mentions_path),
+                        "--stable-knowledge",
+                        str(stable_knowledge_path),
                         "--relationship-evidence",
                         str(merged_relationships_path),
                         "--output-root",
@@ -310,6 +394,10 @@ def main() -> None:
                 script_command(
                     "build_source_event_packets.py",
                     maybe_append_overwrite([
+                        "--observed-mentions",
+                        str(observed_mentions_path),
+                        "--stable-knowledge",
+                        str(stable_knowledge_path),
                         "--relationship-evidence",
                         str(merged_relationships_path),
                         "--output-root",
@@ -323,8 +411,18 @@ def main() -> None:
     estimate_args = [
         "--round-id",
         merged_round_id,
+        "--stable-knowledge",
+        str(stable_knowledge_path),
+        "--observed-summary",
+        str(observed_summary_path),
+        "--events-summary",
+        str(events_summary_path),
         "--ready-events",
-        str(merged_ready_events_path),
+        str(ready_events_path),
+        "--generic-candidates",
+        str(generic_candidates_path),
+        "--female-candidates",
+        str(female_candidates_path),
         "--relationship-evidence",
         str(merged_relationships_path),
         "--event-question-seeds",
@@ -337,13 +435,13 @@ def main() -> None:
         str(progress_root),
     ]
     maybe_append_overwrite(estimate_args, args.overwrite)
-    for batch_path in existing_round_json_paths(args.base_progress):
+    for batch_path in existing_round_json_paths(str(base_progress_path)):
         estimate_args.extend(["--round-json", batch_path])
     for batch_path in sorted(rounds_root.glob("*.batch.json")):
         estimate_args.extend(["--round-json", str(batch_path)])
     commands.append({"name": "estimate_knowledge_completion", **run_command(script_command("estimate_knowledge_completion.py", estimate_args))})
 
-    baseline_progress = read_json(Path(args.base_progress)).get("completion") or {}
+    baseline_progress = read_json(base_progress_path).get("completion") or {}
     result_progress_path = progress_root / f"{merged_round_id}.json"
     result_progress = (read_json(result_progress_path).get("completion") or {}) if result_progress_path.exists() else {}
     summary = {

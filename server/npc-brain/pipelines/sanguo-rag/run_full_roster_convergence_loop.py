@@ -25,6 +25,7 @@ DEFAULT_LANE_POLICY_CONFIG = pipeline_config_path(REPO_ROOT, "full-roster-lane-p
 DEFAULT_GENERALS_PATH = Path("assets/resources/data/generals.json")
 DEFAULT_EVENTS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl")
 DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
+DEFAULT_ROUND_JSON_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds")
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_OBSERVED_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-label-summary.json")
 PROFILE_CHOICES = ("all", "female-priority", "history-romance")
@@ -76,6 +77,13 @@ def resolve_existing_path(path_text: str | Path, *, fallback_roots: list[Path] |
     if base_path.is_absolute():
         return base_path
 
+    path_variants = [base_path]
+    base_parts = list(base_path.parts)
+    if len(base_parts) >= 2 and [part.lower() for part in base_parts[:2]] == ["server", "npc-brain"]:
+        stripped = Path(*base_parts[2:])
+        if str(stripped):
+            path_variants.append(stripped)
+
     search_roots = [
         REPO_ROOT,
         NPC_BRAIN_ROOT,
@@ -90,10 +98,11 @@ def resolve_existing_path(path_text: str | Path, *, fallback_roots: list[Path] |
     candidates: list[Path] = []
     seen = set()
     for root in search_roots:
-        candidate = (root / base_path).resolve()
-        if candidate not in seen:
-            seen.add(candidate)
-            candidates.append(candidate)
+        for relative_path in path_variants:
+            candidate = (root / relative_path).resolve()
+            if candidate not in seen:
+                seen.add(candidate)
+                candidates.append(candidate)
 
     for candidate in candidates:
         if candidate.exists():
@@ -234,6 +243,8 @@ def normalize_status(value: Any) -> str:
 def source_rows_from_config(path: Path) -> list[dict[str, Any]]:
     payload = read_json(path)
     rows = payload.get("sources") if isinstance(payload, dict) else []
+    if not isinstance(rows, list):
+        return []
     return [row for row in rows if isinstance(row, dict)]
 
 
@@ -623,14 +634,252 @@ def collect_generic_clues(path: Path) -> dict[str, list[dict[str, Any]]]:
 
 
 def merge_cards(paths: list[Path]) -> list[dict[str, Any]]:
+    def card_score(row: dict[str, Any]) -> tuple[int, int, int, int, int, int, int, int]:
+        general_count = sum(1 for raw_id in (row.get("generalIds") or []) if str(raw_id or "").strip())
+        family_count = sum(1 for item in (row.get("crossSiteSourceFamilies") or []) if str(item or "").strip())
+        quote_length = len(str(row.get("quote") or row.get("translatedTraditionalText") or "").strip())
+        non_empty_fields = sum(1 for value in row.values() if value not in (None, "", [], {}, ()))
+        return (
+            1 if str(row.get("claimType") or "").strip().lower() == "relationship" else 0,
+            general_count,
+            family_count,
+            1 if row.get("locator") else 0,
+            1 if row.get("textHash") else 0,
+            1 if (row.get("sourcePolicyId") or row.get("sourceId")) else 0,
+            quote_length,
+            non_empty_fields,
+        )
+
     merged: dict[str, dict[str, Any]] = {}
     for path in paths:
         for row in read_jsonl(path):
             key = str(row.get("evidenceId") or stable_hash(row))
-            merged[key] = row
+            existing = merged.get(key)
+            if existing is None or card_score(row) > card_score(existing):
+                merged[key] = row
     rows = list(merged.values())
     rows.sort(key=lambda row: (str(row.get("sourcePolicyId") or row.get("sourceFamily") or ""), str(row.get("evidenceId") or "")))
     return rows
+
+
+def existing_paths(paths: list[Path]) -> list[Path]:
+    output: list[Path] = []
+    seen: set[Path] = set()
+    for path in paths:
+        if not isinstance(path, Path) or not path.exists():
+            continue
+        resolved = path.resolve()
+        if resolved in seen:
+            continue
+        seen.add(resolved)
+        output.append(path)
+    return output
+
+
+def ranking_source_key(path: Path) -> str:
+    payload = read_json(path)
+    if isinstance(payload, dict):
+        site_reliability = payload.get("siteReliability")
+        if isinstance(site_reliability, list):
+            for row in site_reliability:
+                if not isinstance(row, dict):
+                    continue
+                source_id = str(row.get("sourceId") or "").strip()
+                if source_id:
+                    return source_id
+        ranked_rows = payload.get("rankedSeeds")
+        if isinstance(ranked_rows, list):
+            for row in ranked_rows[:5]:
+                if not isinstance(row, dict):
+                    continue
+                source_id = str(row.get("sourceId") or row.get("sourceFamily") or "").strip()
+                if source_id:
+                    return source_id
+    return f"path:{path.resolve()}"
+
+
+def merge_ranking_paths(*groups: list[Path]) -> list[Path]:
+    by_source: dict[str, Path] = {}
+    for paths in groups:
+        for path in paths:
+            if not isinstance(path, Path) or not path.exists():
+                continue
+            by_source[ranking_source_key(path)] = path
+    return existing_paths(list(by_source.values()))
+
+
+def collect_external_artifacts_from_manifest(manifest: dict[str, Any]) -> dict[str, list[Path]]:
+    card_paths: list[Path] = []
+    ranking_paths: list[Path] = []
+
+    for key in ("externalCardsPath", "globalCandidateCardsPath"):
+        path_text = baseline_path(manifest, key)
+        if not path_text:
+            continue
+        candidate = resolve_existing_path(path_text)
+        if candidate.exists():
+            card_paths.append(candidate)
+
+    for key in ("globalSeedRankingPath", "globalSeedRankingJsonPath"):
+        path_text = baseline_path(manifest, key)
+        if not path_text:
+            continue
+        candidate = resolve_existing_path(path_text)
+        if candidate.exists():
+            ranking_paths.append(candidate)
+
+    summary_path_text = baseline_path(manifest, "externalSummaryPath")
+    if summary_path_text:
+        summary_path = resolve_existing_path(summary_path_text)
+        summary_payload = read_json(summary_path)
+        source_rows = summary_payload.get("sourceResults") if isinstance(summary_payload, dict) else []
+        if isinstance(source_rows, list):
+            for row in source_rows:
+                if not isinstance(row, dict):
+                    continue
+                summary_json_text = str(row.get("summaryJsonPath") or "").strip()
+                if not summary_json_text:
+                    continue
+                try:
+                    benchmark_payload = read_json(resolve_existing_path(summary_json_text))
+                except Exception:
+                    continue
+                stage3 = benchmark_payload.get("stage3Yield") if isinstance(benchmark_payload, dict) else {}
+                outputs = stage3.get("outputs") if isinstance(stage3, dict) else {}
+                if not isinstance(outputs, dict):
+                    continue
+                ranking_json_text = str(outputs.get("rankingJson") or "").strip()
+                if ranking_json_text:
+                    ranking_candidate = resolve_existing_path(ranking_json_text)
+                    if ranking_candidate.exists():
+                        ranking_paths.append(ranking_candidate)
+                candidate_summary_text = str(outputs.get("candidateSummary") or "").strip()
+                if candidate_summary_text:
+                    candidate_summary_path = resolve_existing_path(candidate_summary_text)
+                    candidate_cards_path = candidate_summary_path.with_name("candidate-evidence-cards.jsonl")
+                    if candidate_cards_path.exists():
+                        card_paths.append(candidate_cards_path)
+
+    return {
+        "cardPaths": existing_paths(card_paths),
+        "rankingPaths": merge_ranking_paths(ranking_paths),
+    }
+
+
+def collect_round_json_paths_from_progress_payload(progress_payload: dict[str, Any]) -> list[Path]:
+    round_paths: list[Path] = []
+    if not isinstance(progress_payload, dict):
+        return []
+
+    inputs = progress_payload.get("inputs") if isinstance(progress_payload.get("inputs"), dict) else {}
+    round_json_values = inputs.get("roundJsonPaths") if isinstance(inputs, dict) else []
+    if isinstance(round_json_values, list):
+        for value in round_json_values:
+            path_text = str(value or "").strip()
+            if not path_text:
+                continue
+            candidate = resolve_existing_path(path_text)
+            if candidate.exists():
+                round_paths.append(candidate)
+
+    completion = progress_payload.get("completion") if isinstance(progress_payload.get("completion"), dict) else {}
+    round_summary = completion.get("roundSummary") if isinstance(completion, dict) else {}
+    included_rounds = round_summary.get("includedRounds") if isinstance(round_summary, dict) else []
+    if isinstance(included_rounds, list):
+        for row in included_rounds:
+            if not isinstance(row, dict):
+                continue
+            path_text = str(row.get("path") or "").strip()
+            if not path_text:
+                continue
+            candidate = resolve_existing_path(path_text)
+            if candidate.exists():
+                round_paths.append(candidate)
+    return existing_paths(round_paths)
+
+
+def collect_round_json_paths_from_root(round_json_root: Path, *, limit: int = 6) -> list[Path]:
+    if limit <= 0 or not round_json_root.exists() or not round_json_root.is_dir():
+        return []
+    candidates = sorted(
+        round_json_root.glob("*.batch.json"),
+        key=lambda path: path.stat().st_mtime if path.exists() else 0.0,
+        reverse=True,
+    )
+    return existing_paths(candidates[:limit])
+
+
+def collect_round_json_paths_from_manifest(
+    manifest: dict[str, Any],
+    *,
+    _visited_manifest_paths: set[Path] | None = None,
+    _visited_progress_paths: set[Path] | None = None,
+) -> list[Path]:
+    if not isinstance(manifest, dict):
+        return []
+
+    visited_manifest_paths = _visited_manifest_paths if _visited_manifest_paths is not None else set()
+    visited_progress_paths = _visited_progress_paths if _visited_progress_paths is not None else set()
+    round_paths: list[Path] = []
+
+    manifest_paths = manifest.get("paths") if isinstance(manifest.get("paths"), dict) else {}
+    direct_round_jsons = manifest_paths.get("roundJsonPaths") if isinstance(manifest_paths, dict) else []
+    if isinstance(direct_round_jsons, list):
+        for value in direct_round_jsons:
+            path_text = str(value or "").strip()
+            if not path_text:
+                continue
+            candidate = resolve_existing_path(path_text)
+            if candidate.exists():
+                round_paths.append(candidate)
+
+    progress_path_text = baseline_path(manifest, "progressPath", "progressJsonPath")
+    if progress_path_text:
+        progress_path = resolve_existing_path(progress_path_text)
+        resolved_progress_path = progress_path.resolve()
+        if progress_path.exists() and resolved_progress_path not in visited_progress_paths:
+            visited_progress_paths.add(resolved_progress_path)
+            round_paths.extend(collect_round_json_paths_from_progress_payload(read_json(progress_path)))
+
+    nested_manifest_values: list[str] = []
+    for value in [
+        manifest.get("initialBaselineManifest"),
+        manifest.get("finalThreeLaneBaselineManifest"),
+        manifest_paths.get("precisionBaselineManifestPath") if isinstance(manifest_paths, dict) else None,
+        manifest_paths.get("threeLaneFinalBaselineManifest") if isinstance(manifest_paths, dict) else None,
+    ]:
+        path_text = str(value or "").strip()
+        if path_text:
+            nested_manifest_values.append(path_text)
+
+    for manifest_text in nested_manifest_values:
+        manifest_path = resolve_existing_path(manifest_text)
+        resolved_manifest_path = manifest_path.resolve()
+        if not manifest_path.exists() or resolved_manifest_path in visited_manifest_paths:
+            continue
+        visited_manifest_paths.add(resolved_manifest_path)
+        nested_manifest = read_baseline_manifest(str(manifest_path))
+        round_paths.extend(
+            collect_round_json_paths_from_manifest(
+                nested_manifest,
+                _visited_manifest_paths=visited_manifest_paths,
+                _visited_progress_paths=visited_progress_paths,
+            )
+        )
+
+    return existing_paths(round_paths)
+
+
+def merge_external_artifacts(
+    base: dict[str, list[Path]] | None,
+    extra: dict[str, list[Path]] | None,
+) -> dict[str, list[Path]]:
+    base = base or {}
+    extra = extra or {}
+    return {
+        "cardPaths": existing_paths([*(base.get("cardPaths") or []), *(extra.get("cardPaths") or [])]),
+        "rankingPaths": merge_ranking_paths(base.get("rankingPaths") or [], extra.get("rankingPaths") or []),
+    }
 
 
 def merge_relationship_edges(paths: list[Path]) -> list[dict[str, Any]]:
@@ -789,12 +1038,15 @@ def build_seed_to_card_priority_allowlist(
     scoreboard_path: Path,
     limit: int,
     output_path: Path,
+    extra_person_ids: list[str] | None = None,
 ) -> tuple[list[str], str]:
     payload = read_json(scoreboard_path)
     rows = payload.get("rows") if isinstance(payload, dict) else []
     if not isinstance(rows, list):
         rows = []
-    if limit <= 0:
+    explicit_ids = [str(person_id or "").strip() for person_id in (extra_person_ids or [])]
+    explicit_ids = [person_id for person_id in explicit_ids if person_id]
+    if limit <= 0 and not explicit_ids:
         return [], "disabled(limit<=0)"
 
     candidates: list[dict[str, Any]] = []
@@ -819,18 +1071,24 @@ def build_seed_to_card_priority_allowlist(
         )
     )
     selected_ids: list[str] = []
+    for person_id in explicit_ids:
+        if person_id not in selected_ids:
+            selected_ids.append(person_id)
+    effective_limit = max(int(limit), len(selected_ids))
     for row in candidates:
         person_id = str(row.get("generalId") or row.get("candidatePersonId") or "").strip()
         if not person_id or person_id in selected_ids:
             continue
         selected_ids.append(person_id)
-        if len(selected_ids) >= limit:
+        if len(selected_ids) >= effective_limit:
             break
 
     if not selected_ids:
         return [], "no-seed-to-card-candidates"
 
     write_json(output_path, {"personIds": selected_ids, "count": len(selected_ids), "canonicalWrites": False})
+    if explicit_ids:
+        return selected_ids, f"ok+explicit({len(explicit_ids)})"
     return selected_ids, "ok"
 
 
@@ -841,6 +1099,8 @@ def run_global_seed_pipeline(
     scoreboard_path: Path | None,
     seed_paths: list[Path],
     seed_to_card_priority_limit: int,
+    seed_to_card_priority_extra_ids: list[str] | None,
+    seed_to_card_min_score: float,
     dry_run: bool,
     overwrite: bool,
 ) -> dict[str, Any]:
@@ -867,6 +1127,7 @@ def run_global_seed_pipeline(
             "scoreCommand": None,
             "promoteCommand": None,
             "seedToCardPriorityLimit": int(seed_to_card_priority_limit),
+            "seedToCardMinScore": float(seed_to_card_min_score),
             "seedToCardPrioritySelectedCount": 0,
             "seedToCardPriorityAllowlistPath": None,
             "seedToCardPriorityReason": "missing-scoreboard-json",
@@ -888,6 +1149,7 @@ def run_global_seed_pipeline(
             "scoreCommand": None,
             "promoteCommand": None,
             "seedToCardPriorityLimit": int(seed_to_card_priority_limit),
+            "seedToCardMinScore": float(seed_to_card_min_score),
             "seedToCardPrioritySelectedCount": 0,
             "seedToCardPriorityAllowlistPath": None,
             "seedToCardPriorityReason": "no-seed-input",
@@ -899,6 +1161,7 @@ def run_global_seed_pipeline(
         scoreboard_path=scoreboard_path,
         limit=int(seed_to_card_priority_limit),
         output_path=allowlist_path,
+        extra_person_ids=seed_to_card_priority_extra_ids,
     )
 
     harvest_command = [
@@ -935,6 +1198,8 @@ def run_global_seed_pipeline(
         repo_relative(ranking_path),
         "--output-root",
         repo_relative(pipeline_root),
+        "--min-score",
+        str(float(seed_to_card_min_score)),
     ]
     if allowlist_ids:
         promote_command.extend(["--person-allowlist-json", repo_relative(allowlist_path)])
@@ -956,6 +1221,7 @@ def run_global_seed_pipeline(
         "scoreCommand": score_result,
         "promoteCommand": promote_result,
         "seedToCardPriorityLimit": int(seed_to_card_priority_limit),
+        "seedToCardMinScore": float(seed_to_card_min_score),
         "seedToCardPrioritySelectedCount": len(allowlist_ids),
         "seedToCardPriorityAllowlistPath": repo_relative(allowlist_path) if allowlist_ids else None,
         "seedToCardPriorityReason": allowlist_reason,
@@ -1137,6 +1403,124 @@ def build_residual_signature(rows: list[dict[str, Any]]) -> str:
         if str(row.get("reviewGrade") or "") != "A"
     )
     return stable_hash(json.dumps(items, ensure_ascii=False, sort_keys=True))
+
+
+def int_or_none(value: Any) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def float_or_none(value: Any) -> float | None:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def extract_precision_location_metrics(summary_payload: dict[str, Any]) -> dict[str, Any]:
+    location_gap_before: int | None = None
+    location_gap_after: int | None = None
+    location_gap_delta: int | None = None
+
+    location_stats = summary_payload.get("locationGapStats")
+    if isinstance(location_stats, dict):
+        location_gap_before = int_or_none(location_stats.get("firstRoundAfterA"))
+        location_gap_after = int_or_none(location_stats.get("lastRoundAfterAorB"))
+        location_gap_delta = int_or_none(location_stats.get("delta"))
+
+    rounds = [row for row in (summary_payload.get("rounds") or []) if isinstance(row, dict)]
+    if rounds and (location_gap_before is None or location_gap_after is None):
+        first_counts = rounds[0].get("rootCauseCountsAfterRound")
+        last_counts = rounds[-1].get("rootCauseCountsAfterReview") or rounds[-1].get("rootCauseCountsAfterRound")
+        if isinstance(first_counts, dict):
+            location_gap_before = int_or_none(first_counts.get("location gap"))
+        if isinstance(last_counts, dict):
+            location_gap_after = int_or_none(last_counts.get("location gap"))
+        if location_gap_before is not None and location_gap_after is not None:
+            location_gap_delta = int(location_gap_after - location_gap_before)
+
+    auto_review_decision_count = 0
+    review_decision_applied_count = 0
+    for row in rounds:
+        auto_review = row.get("autoReviewDecision")
+        if isinstance(auto_review, dict):
+            auto_review_decision_count += int(auto_review.get("decisionCount") or 0)
+        review_apply = row.get("reviewDecisionApplication")
+        if isinstance(review_apply, dict):
+            review_decision_applied_count += int(review_apply.get("updatedQuestionCount") or 0)
+
+    return {
+        "bReviewCount": int(summary_payload.get("bReviewCount") or 0),
+        "totalDeltaOverallPercent": float_or_none(summary_payload.get("totalDeltaOverallPercent")),
+        "locationGapBefore": location_gap_before,
+        "locationGapAfter": location_gap_after,
+        "locationGapDelta": location_gap_delta,
+        "locationGapImproved": bool(location_gap_delta is not None and location_gap_delta < 0),
+        "autoReviewDecisionCount": auto_review_decision_count,
+        "reviewDecisionAppliedCount": review_decision_applied_count,
+    }
+
+
+def decide_precision_carry_forward(
+    *,
+    candidate_path: Path | None,
+    metrics: dict[str, Any],
+    guard_enabled: bool,
+    min_delta: float,
+    require_location_improvement: bool,
+) -> dict[str, Any]:
+    decision = {
+        "candidatePath": repo_relative(candidate_path) if candidate_path else None,
+        "guardEnabled": bool(guard_enabled),
+        "minDeltaRequired": float(min_delta),
+        "requireLocationImprovement": bool(require_location_improvement),
+        "bReviewCount": int(metrics.get("bReviewCount") or 0),
+        "totalDeltaOverallPercent": metrics.get("totalDeltaOverallPercent"),
+        "locationGapBefore": metrics.get("locationGapBefore"),
+        "locationGapAfter": metrics.get("locationGapAfter"),
+        "locationGapDelta": metrics.get("locationGapDelta"),
+        "locationGapImproved": bool(metrics.get("locationGapImproved")),
+        "applied": False,
+        "reason": "not-evaluated",
+    }
+    if not candidate_path:
+        decision["reason"] = "missing-carry-events"
+        return decision
+
+    if not guard_enabled:
+        decision["applied"] = True
+        decision["reason"] = "guard-disabled"
+        return decision
+
+    if int(metrics.get("bReviewCount") or 0) <= 0:
+        decision["reason"] = "no-b-review-merge"
+        return decision
+
+    delta_value = float_or_none(metrics.get("totalDeltaOverallPercent"))
+    delta_ok = bool(delta_value is not None and delta_value >= float(min_delta))
+    location_improved = bool(metrics.get("locationGapImproved"))
+    location_delta_known = metrics.get("locationGapDelta") is not None
+
+    if require_location_improvement:
+        if location_delta_known and not location_improved:
+            decision["reason"] = "location-gap-not-improved"
+            return decision
+        if not location_delta_known and not delta_ok:
+            decision["reason"] = "location-gap-unknown-and-delta-below-threshold"
+            return decision
+        decision["applied"] = True
+        decision["reason"] = "location-gap-improved" if location_improved else "delta-threshold-pass"
+        return decision
+
+    if not (location_improved or delta_ok):
+        decision["reason"] = "no-positive-carry-signal"
+        return decision
+
+    decision["applied"] = True
+    decision["reason"] = "location-gap-improved" if location_improved else "delta-threshold-pass"
+    return decision
 
 
 def run_runtime_readiness(
@@ -2240,6 +2624,10 @@ def run_precision_lane(
     run_root: Path,
     round_id: str,
     scoreboard_rows: list[dict[str, Any]],
+    scoreboard_json_path: Path | None,
+    progress_json_path: Path | None,
+    relationship_json_path: Path | None,
+    events_path: Path,
     baseline_manifest: dict[str, Any],
     lane_profile_policy: dict[str, Any],
     dry_run: bool,
@@ -2259,6 +2647,12 @@ def run_precision_lane(
     )
     selected = [str(row.get("generalId") or "").strip() for row in selected_rows]
     selected = [gid for gid in selected if gid]
+    explicit_general_ids = [str(gid or "").strip() for gid in (args.precision_general_id or [])]
+    for explicit_general_id in explicit_general_ids:
+        if explicit_general_id and explicit_general_id not in selected:
+            selected.append(explicit_general_id)
+    selection_meta["explicitGeneralIds"] = [gid for gid in explicit_general_ids if gid]
+    selection_meta["effectiveSelectedCount"] = len(selected)
     if not selected:
         return {
             "command": None,
@@ -2271,6 +2665,10 @@ def run_precision_lane(
 
     precision_root = run_root / "precision-lane"
     precision_run_id = f"{round_id}-precision"
+    top_generals_for_command = max(len(selected), 1)
+    if args.precision_scoreboard_bridge and args.precision_bridge_global:
+        top_generals_for_command = max(top_generals_for_command, max(int(args.precision_bridge_max_generals), 1))
+
     command = [
         sys.executable,
         str((REPO_ROOT / PIPELINE_ROOT / "run_progress_advancement_loop.py").resolve()),
@@ -2281,7 +2679,7 @@ def run_precision_lane(
         "--profile",
         "precision",
         "--top-generals",
-        str(max(len(selected), 1)),
+        str(top_generals_for_command),
         "--top-per-general",
         str(max(args.precision_top_per_general, 1)),
         "--pending-review-limit",
@@ -2290,14 +2688,46 @@ def run_precision_lane(
         "off",
         "--emit-ready-eval",
     ]
-    for general_id in selected:
-        command.extend(["--general-id", general_id])
+    if args.precision_auto_review_location_gap:
+        command.append("--auto-review-location-gap")
+    for root_cause in (args.precision_auto_review_root_cause or []):
+        root_cause_text = str(root_cause or "").strip()
+        if root_cause_text:
+            command.extend(["--auto-review-root-cause", root_cause_text])
+    auto_review_answer = str(args.precision_auto_review_answer or "").strip()
+    if auto_review_answer:
+        command.extend(["--auto-review-answer", auto_review_answer])
+    if int(args.precision_auto_review_max_items or 0) > 0:
+        command.extend(["--auto-review-max-items", str(int(args.precision_auto_review_max_items))])
+    if progress_json_path and progress_json_path.exists():
+        command.extend(["--base-progress", repo_relative(progress_json_path)])
+    if relationship_json_path and relationship_json_path.exists():
+        command.extend(["--base-relationship-evidence", repo_relative(relationship_json_path)])
+    if events_path.exists():
+        command.extend(["--base-events", repo_relative(events_path)])
 
-    precision_baseline = baseline_path(baseline_manifest, "progressBaselineManifestPath", "baselineManifestPath")
-    if precision_baseline:
-        baseline_resolved = resolve_existing_path(precision_baseline)
-        if baseline_resolved.exists():
-            command.extend(["--baseline-manifest", repo_relative(baseline_resolved)])
+    if args.precision_scoreboard_bridge:
+        command.append("--scoreboard-repair-bridge")
+        if scoreboard_json_path and scoreboard_json_path.exists():
+            command.extend(["--scoreboard-json", repo_relative(scoreboard_json_path)])
+        command.extend(["--bridge-fields", str(args.precision_bridge_fields or "location,relationshipEdges")])
+        command.extend(["--bridge-max-generals", str(max(int(args.precision_bridge_max_generals), 1))])
+        command.extend(["--bridge-max-per-general", str(max(int(args.precision_bridge_max_per_general), 1))])
+    if not (args.precision_scoreboard_bridge and args.precision_bridge_global):
+        for general_id in selected:
+            command.extend(["--general-id", general_id])
+
+    if args.precision_use_baseline_manifest:
+        precision_baseline = baseline_path(
+            baseline_manifest,
+            "precisionBaselineManifestPath",
+            "progressBaselineManifestPath",
+            "baselineManifestPath",
+        )
+        if precision_baseline:
+            baseline_resolved = resolve_existing_path(precision_baseline)
+            if baseline_resolved.exists():
+                command.extend(["--baseline-manifest", repo_relative(baseline_resolved)])
 
     if args.overwrite:
         command.append("--overwrite")
@@ -2331,6 +2761,8 @@ def run_round(
     lane_profile_policy: dict[str, Any],
     source_roi_decisions: list[dict[str, Any]],
     baseline_manifest: dict[str, Any],
+    carry_forward_external_artifacts: dict[str, list[Path]] | None,
+    carry_forward_round_json_paths: list[Path] | None,
     previous_scoreboard_path: Path | None,
     dry_run: bool,
 ) -> dict[str, Any]:
@@ -2385,6 +2817,11 @@ def run_round(
         scoreboard_path=effective_scoreboard_path,
         seed_paths=seed_input_paths,
         seed_to_card_priority_limit=max(int(args.seed_to_card_priority_limit), 0),
+        seed_to_card_priority_extra_ids=[
+            *[str(item or "").strip() for item in (args.seed_to_card_priority_general_id or [])],
+            *[str(item or "").strip() for item in (args.precision_general_id or [])],
+        ],
+        seed_to_card_min_score=float(args.seed_to_card_min_score),
         dry_run=dry_run,
         overwrite=args.overwrite,
     )
@@ -2397,8 +2834,22 @@ def run_round(
         else None
     )
 
-    ranking_inputs = [global_ranking_path] if global_ranking_path and global_ranking_path.exists() else ranking_paths
-    merged_cards = read_jsonl(global_cards_path) if global_cards_path and global_cards_path.exists() else merge_cards(card_paths)
+    carry_forward_card_paths = existing_paths(list((carry_forward_external_artifacts or {}).get("cardPaths") or []))
+    carry_forward_ranking_paths = merge_ranking_paths(list((carry_forward_external_artifacts or {}).get("rankingPaths") or []))
+    current_ranking_inputs = merge_ranking_paths(ranking_paths)
+    ranking_inputs = merge_ranking_paths(
+        carry_forward_ranking_paths,
+        current_ranking_inputs,
+        [global_ranking_path] if global_ranking_path and global_ranking_path.exists() else [],
+    )
+
+    current_card_paths = existing_paths(card_paths)
+    card_inputs = [
+        *carry_forward_card_paths,
+        *current_card_paths,
+        *([global_cards_path] if global_cards_path and global_cards_path.exists() else []),
+    ]
+    merged_cards = merge_cards(card_inputs) if card_inputs else []
     cards_path = external_root / "external-evidence-cards.jsonl"
     write_jsonl(cards_path, merged_cards)
     external_summary_path = external_root / "external-evidence-summary.json"
@@ -2559,6 +3010,8 @@ def run_round(
         "--output-root",
         repo_relative(external_relationship_root),
     ]
+    if args.external_relationship_shadow_fallback:
+        external_relationship_command.append("--allow-shadow-partner-fallback")
     if args.overwrite:
         external_relationship_command.append("--overwrite")
     external_relationship_result = run_command(external_relationship_command, dry_run=dry_run)
@@ -2664,6 +3117,9 @@ def run_round(
         merged_relationship_summary = write_relationship_merge_summary(item_path=item_relationship_json_path)
 
     estimate_root = round_root / "knowledge-progress"
+    round_json_inputs = existing_paths(list(carry_forward_round_json_paths or []))
+    events_summary_path = events_path.with_name("events-summary.json")
+    female_candidates_path = generic_candidates_path.with_name("female-interaction-candidates.jsonl")
     estimate_command = [
         sys.executable,
         str((REPO_ROOT / PIPELINE_ROOT / "estimate_knowledge_completion.py").resolve()),
@@ -2679,13 +3135,19 @@ def run_round(
         repo_relative(event_seed_json_path),
         "--source-event-packets",
         repo_relative(packet_json_path),
+        "--events-summary",
+        repo_relative(events_summary_path),
         "--ready-events",
         repo_relative(events_path),
         "--generic-candidates",
         repo_relative(generic_candidates_path),
+        "--female-candidates",
+        repo_relative(female_candidates_path),
         "--output-root",
         repo_relative(estimate_root),
     ]
+    for round_json_path in round_json_inputs:
+        estimate_command.extend(["--round-json", repo_relative(round_json_path)])
     if args.overwrite:
         estimate_command.append("--overwrite")
     estimate_result = run_command(estimate_command, dry_run=dry_run)
@@ -2697,6 +3159,7 @@ def run_round(
         overall_percent = progress_payload.get("overallPercent")
 
     core_progress_root = round_root / "core-person-progress"
+    rounds_root_path = generic_candidates_path.parent.parent / "knowledge-growth-rounds"
     core_command = [
         sys.executable,
         str((REPO_ROOT / PIPELINE_ROOT / "estimate_core_person_completion.py").resolve()),
@@ -2714,6 +3177,8 @@ def run_round(
         repo_relative(effective_relationship_json_path),
         "--ready-events",
         repo_relative(events_path),
+        "--rounds-root",
+        repo_relative(rounds_root_path),
         "--output-root",
         repo_relative(core_progress_root),
     ]
@@ -2761,10 +3226,61 @@ def run_round(
         run_root=round_root,
         round_id=round_id,
         scoreboard_rows=scoreboard_rows,
+        scoreboard_json_path=scoreboard_json_path,
+        progress_json_path=progress_json_path,
+        relationship_json_path=effective_relationship_json_path,
+        events_path=events_path,
         baseline_manifest=baseline_manifest,
         lane_profile_policy=lane_profile_policy,
         dry_run=dry_run,
     )
+    precision_summary_payload = (precision_result or {}).get("summary") if isinstance((precision_result or {}).get("summary"), dict) else {}
+    precision_metrics = (
+        extract_precision_location_metrics(precision_summary_payload)
+        if isinstance(precision_summary_payload, dict) and precision_summary_payload
+        else {
+            "bReviewCount": 0,
+            "totalDeltaOverallPercent": None,
+            "locationGapBefore": None,
+            "locationGapAfter": None,
+            "locationGapDelta": None,
+            "locationGapImproved": False,
+            "autoReviewDecisionCount": 0,
+            "reviewDecisionAppliedCount": 0,
+        }
+    )
+    precision_final_paths = (
+        precision_summary_payload.get("finalBaselinePaths")
+        if isinstance(precision_summary_payload.get("finalBaselinePaths"), dict)
+        else {}
+    )
+    precision_carry_events_path: Path | None = None
+    precision_carry_relationship_path: Path | None = None
+    precision_carry_progress_path: Path | None = None
+    for key in ("baseEvents", "readyEvents", "readyEventsPath"):
+        value = str((precision_final_paths or {}).get(key) or "").strip()
+        if not value:
+            continue
+        candidate = resolve_existing_path(value)
+        if candidate.exists():
+            precision_carry_events_path = candidate
+            break
+    for key in ("baseRelationshipEvidence", "relationshipEvidence", "relationshipEvidencePath"):
+        value = str((precision_final_paths or {}).get(key) or "").strip()
+        if not value:
+            continue
+        candidate = resolve_existing_path(value)
+        if candidate.exists():
+            precision_carry_relationship_path = candidate
+            break
+    for key in ("baseProgress", "progress", "progressPath"):
+        value = str((precision_final_paths or {}).get(key) or "").strip()
+        if not value:
+            continue
+        candidate = resolve_existing_path(value)
+        if candidate.exists():
+            precision_carry_progress_path = candidate
+            break
 
     three_lane_summary_path: Path | None = None
     three_lane_summary_payload: dict[str, Any] = {}
@@ -2885,6 +3401,11 @@ def run_round(
         "externalCardsPath": repo_relative(cards_path),
         "globalSeedRankingPath": global_seed_pipeline.get("rankingPath"),
         "globalCandidateCardsPath": global_seed_pipeline.get("candidateCardsPath"),
+        "rankingInputPaths": [repo_relative(path) for path in ranking_inputs],
+        "roundJsonPaths": [repo_relative(path) for path in round_json_inputs],
+        "carryForwardExternalCardPathCount": len(carry_forward_card_paths),
+        "carryForwardSeedRankingPathCount": len(carry_forward_ranking_paths),
+        "carryForwardRoundJsonPathCount": len(round_json_inputs),
         "sourceRoiDecisions": source_roi_decisions,
         "overlayObservedMentionsPath": repo_relative(overlay_observed_mentions_path),
         "overlayObservedSummaryPath": repo_relative(overlay_observed_summary_path),
@@ -2914,6 +3435,12 @@ def run_round(
         "precisionBaselineManifestPath": (precision_result or {}).get("baselineManifestPath"),
         "precisionGeneralIds": (precision_result or {}).get("selectedGeneralIds"),
         "precisionSelection": (precision_result or {}).get("selection"),
+        "precisionMetrics": precision_metrics,
+        "precisionCarryReadyEventsPath": repo_relative(precision_carry_events_path) if precision_carry_events_path else None,
+        "precisionCarryRelationshipEvidencePath": (
+            repo_relative(precision_carry_relationship_path) if precision_carry_relationship_path else None
+        ),
+        "precisionCarryProgressPath": repo_relative(precision_carry_progress_path) if precision_carry_progress_path else None,
         "threeLaneSummaryPath": repo_relative(three_lane_summary_path) if three_lane_summary_path else None,
         "threeLaneStopReason": (three_lane_summary_payload if isinstance(three_lane_summary_payload, dict) else {}).get("stopReason"),
         "threeLaneFinalBaselineManifest": (three_lane_summary_payload if isinstance(three_lane_summary_payload, dict) else {}).get("finalBaselineManifest"),
@@ -2982,8 +3509,8 @@ def render_summary_md(summary: dict[str, Any]) -> str:
         "",
         "## Rounds",
         "",
-        "| Round | New Evidence | Pending | Avg H-Score | Avg W-Score | Overall % | Precision | Three-Lane | Runtime Fail | Ref Blitz |",
-        "|---|---:|---:|---:|---:|---:|---|---|---:|---|",
+        "| Round | New Evidence | Pending | Avg H-Score | Avg W-Score | Overall % | Precision | Precision Carry | Three-Lane | Runtime Fail | Ref Blitz |",
+        "|---|---:|---:|---:|---:|---:|---|---|---|---:|---|",
     ]
     for row in summary.get("rounds") or []:
         runtime_ref_blitz = "-"
@@ -2994,8 +3521,13 @@ def render_summary_md(summary: dict[str, Any]) -> str:
             )
         elif row.get("runtimeRefBlitzReason"):
             runtime_ref_blitz = str(row.get("runtimeRefBlitzReason"))
+        carry_decision = row.get("precisionCarryDecision") if isinstance(row.get("precisionCarryDecision"), dict) else {}
+        carry_text = "-"
+        if carry_decision:
+            status = "apply" if carry_decision.get("applied") else "skip"
+            carry_text = f"{status}:{carry_decision.get('reason') or '-'}"
         lines.append(
-            "| `{rid}` | `{new}` | `{pending}` | `{h}` | `{w}` | `{overall}` | `{precision}` | `{three}` | `{runtime_fail}` | {ref_blitz} |".format(
+            "| `{rid}` | `{new}` | `{pending}` | `{h}` | `{w}` | `{overall}` | `{precision}` | `{carry}` | `{three}` | `{runtime_fail}` | {ref_blitz} |".format(
                 rid=row.get("roundId"),
                 new=row.get("newEvidenceCardCount"),
                 pending=row.get("pendingReviewCount"),
@@ -3003,6 +3535,7 @@ def render_summary_md(summary: dict[str, Any]) -> str:
                 w=row.get("avgWorldbuildingUsabilityScore"),
                 overall=row.get("overallPercent"),
                 precision=row.get("precisionSummaryPath") or "-",
+                carry=carry_text,
                 three=row.get("threeLaneStopReason") or "-",
                 runtime_fail=row.get("runtimeReadinessFailCount") or 0,
                 ref_blitz=runtime_ref_blitz,
@@ -3033,6 +3566,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--source-config", default=str(DEFAULT_SOURCE_CONFIG))
     parser.add_argument("--lane-policy-config", default=str(DEFAULT_LANE_POLICY_CONFIG))
     parser.add_argument("--baseline-manifest", default=None)
+    parser.add_argument("--carry-forward-manifest", action="append", default=[])
+    parser.add_argument("--round-json", action="append", default=[])
+    parser.add_argument("--round-json-root", default=str(DEFAULT_ROUND_JSON_ROOT))
+    parser.add_argument("--round-json-fallback-limit", type=int, default=6)
     parser.add_argument("--generals", default=str(DEFAULT_GENERALS_PATH))
     parser.add_argument("--observed-mentions", default=str(DEFAULT_OBSERVED_MENTIONS_PATH))
     parser.add_argument("--observed-summary", default=str(DEFAULT_OBSERVED_SUMMARY_PATH))
@@ -3074,14 +3611,120 @@ def parse_args() -> argparse.Namespace:
         default=180,
         help="Only promote seed->card for top priority seed-to-card people from scoreboard (0 disables filtering).",
     )
+    parser.add_argument("--seed-to-card-min-score", type=float, default=70.0)
+    parser.add_argument("--seed-to-card-priority-general-id", action="append", default=[])
     parser.add_argument("--precision-top-generals", type=int, default=12)
     parser.add_argument("--precision-top-per-general", type=int, default=3)
+    parser.add_argument("--precision-general-id", action="append", default=[])
+    parser.add_argument(
+        "--precision-auto-review-root-cause",
+        action="append",
+        default=[],
+        help="Pass-through auto review root causes for precision lane progress loop.",
+    )
+    parser.add_argument(
+        "--precision-auto-review-location-gap",
+        dest="precision_auto_review_location_gap",
+        action="store_true",
+        help="Enable location-gap auto B decisions in precision lane (default on).",
+    )
+    parser.add_argument(
+        "--no-precision-auto-review-location-gap",
+        dest="precision_auto_review_location_gap",
+        action="store_false",
+        help="Disable location-gap auto B decisions in precision lane.",
+    )
+    parser.set_defaults(precision_auto_review_location_gap=True)
+    parser.add_argument(
+        "--precision-auto-review-answer",
+        default="B",
+        help="Answer code for precision auto review decisions (default B).",
+    )
+    parser.add_argument(
+        "--precision-auto-review-max-items",
+        type=int,
+        default=0,
+        help="Cap auto-generated review decisions in precision lane (0 means all matched).",
+    )
+    parser.add_argument(
+        "--precision-carry-guard",
+        dest="precision_carry_guard",
+        action="store_true",
+        help="Require positive precision merge signals before carrying precision ready-events into the next full round.",
+    )
+    parser.add_argument(
+        "--no-precision-carry-guard",
+        dest="precision_carry_guard",
+        action="store_false",
+        help="Always carry precision ready-events when present.",
+    )
+    parser.set_defaults(precision_carry_guard=True)
+    parser.add_argument(
+        "--precision-carry-min-delta",
+        type=float,
+        default=0.0,
+        help="Minimum precision total delta (overall percent) required when location-gap trend is unavailable.",
+    )
+    parser.add_argument(
+        "--precision-carry-require-location-improvement",
+        dest="precision_carry_require_location_improvement",
+        action="store_true",
+        help="Carry precision ready-events only when location-gap residual trend improves (default on).",
+    )
+    parser.add_argument(
+        "--no-precision-carry-require-location-improvement",
+        dest="precision_carry_require_location_improvement",
+        action="store_false",
+        help="Allow carry-forward without location-gap improvement when other signals pass.",
+    )
+    parser.set_defaults(precision_carry_require_location_improvement=True)
+    parser.add_argument(
+        "--precision-scoreboard-bridge",
+        dest="precision_scoreboard_bridge",
+        action="store_true",
+        help="Enable scoreboard repair bridge in precision lane.",
+    )
+    parser.add_argument(
+        "--no-precision-scoreboard-bridge",
+        dest="precision_scoreboard_bridge",
+        action="store_false",
+        help="Disable scoreboard repair bridge in precision lane.",
+    )
+    parser.set_defaults(precision_scoreboard_bridge=True)
+    parser.add_argument(
+        "--precision-bridge-fields",
+        default="location,relationshipEdges",
+        help="Comma-separated bridge fields for precision lane scoreboard bridge.",
+    )
+    parser.add_argument(
+        "--precision-bridge-max-generals",
+        type=int,
+        default=220,
+        help="Maximum bridged generals for precision lane scoreboard bridge.",
+    )
+    parser.add_argument(
+        "--precision-bridge-max-per-general",
+        type=int,
+        default=2,
+        help="Maximum bridged backlog rows per general in precision lane scoreboard bridge.",
+    )
+    parser.add_argument(
+        "--precision-bridge-global",
+        action="store_true",
+        help="Run precision bridge globally instead of selected general IDs only.",
+    )
+    parser.add_argument(
+        "--precision-use-baseline-manifest",
+        action="store_true",
+        help="Let precision lane reuse precisionBaselineManifestPath from baseline manifest (default off).",
+    )
     parser.add_argument("--run-three-lane", action="store_true")
     parser.add_argument("--runtime-readiness", choices=["touched", "final", "off"], default="touched")
     parser.add_argument("--runtime-ref-blitz", dest="runtime_ref_blitz", action="store_true")
     parser.add_argument("--no-runtime-ref-blitz", dest="runtime_ref_blitz", action="store_false")
     parser.set_defaults(runtime_ref_blitz=True)
     parser.add_argument("--runtime-ref-blitz-max-events-per-general", type=int, default=12)
+    parser.add_argument("--external-relationship-shadow-fallback", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
@@ -3107,6 +3750,27 @@ def main() -> int:
     config_sanity = sanity_check_source_config(source_config_path, source_rows)
     approved_rows = approved_sources(source_rows)
     baseline_manifest = read_baseline_manifest(args.baseline_manifest)
+    carry_forward_external_artifacts = collect_external_artifacts_from_manifest(baseline_manifest)
+    carry_forward_round_json_paths = collect_round_json_paths_from_manifest(baseline_manifest)
+    manual_round_json_paths = existing_paths([resolve_existing_path(path_text) for path_text in args.round_json])
+    carry_forward_round_json_paths = existing_paths([*carry_forward_round_json_paths, *manual_round_json_paths])
+    round_json_root_path = resolve_existing_path(args.round_json_root)
+    for manifest_text in args.carry_forward_manifest:
+        extra_manifest = read_baseline_manifest(manifest_text)
+        carry_forward_external_artifacts = merge_external_artifacts(
+            carry_forward_external_artifacts,
+            collect_external_artifacts_from_manifest(extra_manifest),
+        )
+        carry_forward_round_json_paths = existing_paths(
+            [*carry_forward_round_json_paths, *collect_round_json_paths_from_manifest(extra_manifest)]
+        )
+    fallback_round_json_paths: list[Path] = []
+    if not carry_forward_round_json_paths:
+        fallback_round_json_paths = collect_round_json_paths_from_root(
+            round_json_root_path,
+            limit=max(int(args.round_json_fallback_limit), 0),
+        )
+        carry_forward_round_json_paths = existing_paths([*carry_forward_round_json_paths, *fallback_round_json_paths])
     roster_names = load_roster_names(generals_path)
     generic_clues = collect_generic_clues(generic_candidates_path)
 
@@ -3126,6 +3790,7 @@ def main() -> int:
     wall_clock_start = time.monotonic()
     human_batch_info: dict[str, Any] | None = None
     prior_source_results = previous_source_results_from_manifest(baseline_manifest)
+    effective_events_path = events_path
 
     for round_index in range(1, max(args.max_rounds, 1) + 1):
         if args.max_wall_time_minutes is not None and args.max_wall_time_minutes > 0:
@@ -3150,13 +3815,14 @@ def main() -> int:
             min_primary_seeds=int(args.source_roi_min_primary_seeds),
         )
 
+        round_events_input_path = effective_events_path
         round_info = run_round(
             args=args,
             run_root=run_root,
             round_index=round_index,
             source_config_path=source_config_path,
             generals_path=generals_path,
-            events_path=events_path,
+            events_path=effective_events_path,
             generic_candidates_path=generic_candidates_path,
             observed_mentions_path=observed_mentions_path,
             observed_summary_path=observed_summary_path,
@@ -3165,10 +3831,38 @@ def main() -> int:
             lane_profile_policy=lane_profile_policy,
             source_roi_decisions=source_roi_decisions,
             baseline_manifest=baseline_manifest,
+            carry_forward_external_artifacts=carry_forward_external_artifacts,
+            carry_forward_round_json_paths=carry_forward_round_json_paths,
             previous_scoreboard_path=previous_scoreboard_path,
             dry_run=args.dry_run,
         )
-        rounds.append({key: value for key, value in round_info.items() if key not in {"externalSummary", "scoreboardRows", "runtimeReadiness"}})
+        round_snapshot = {key: value for key, value in round_info.items() if key not in {"externalSummary", "scoreboardRows", "runtimeReadiness"}}
+        round_snapshot["eventsInputPath"] = repo_relative(round_events_input_path)
+        precision_carry_events_text = str(round_info.get("precisionCarryReadyEventsPath") or "").strip()
+        precision_carry_events_candidate: Path | None = None
+        if precision_carry_events_text:
+            candidate = resolve_existing_path(precision_carry_events_text)
+            if candidate.exists():
+                precision_carry_events_candidate = candidate
+        precision_carry_decision = decide_precision_carry_forward(
+            candidate_path=precision_carry_events_candidate,
+            metrics=dict(round_info.get("precisionMetrics") or {}),
+            guard_enabled=bool(args.precision_carry_guard),
+            min_delta=float(args.precision_carry_min_delta),
+            require_location_improvement=bool(args.precision_carry_require_location_improvement),
+        )
+        round_snapshot["precisionCarryDecision"] = precision_carry_decision
+        if precision_carry_decision.get("applied") and precision_carry_events_candidate:
+            effective_events_path = precision_carry_events_candidate
+        round_snapshot["eventsOutputPath"] = repo_relative(effective_events_path)
+        rounds.append(round_snapshot)
+        carry_forward_external_artifacts = merge_external_artifacts(
+            carry_forward_external_artifacts,
+            collect_external_artifacts_from_manifest({"paths": round_info}),
+        )
+        carry_forward_round_json_paths = existing_paths(
+            [*carry_forward_round_json_paths, *collect_round_json_paths_from_manifest({"paths": round_info})]
+        )
         current_source_results = (round_info.get("externalSummary") or {}).get("sourceResults")
         if isinstance(current_source_results, list):
             prior_source_results = {
@@ -3327,6 +4021,10 @@ def main() -> int:
         "externalSummaryPath": latest_round.get("externalSummaryPath"),
         "externalSourceRoiPath": latest_round.get("externalSourceRoiPath"),
         "externalCardsPath": latest_round.get("externalCardsPath"),
+        "globalSeedRankingPath": latest_round.get("globalSeedRankingPath"),
+        "globalCandidateCardsPath": latest_round.get("globalCandidateCardsPath"),
+        "rankingInputPaths": latest_round.get("rankingInputPaths"),
+        "roundJsonPaths": latest_round.get("roundJsonPaths"),
         "overlayObservedMentionsPath": latest_round.get("overlayObservedMentionsPath"),
         "overlayObservedSummaryPath": latest_round.get("overlayObservedSummaryPath"),
         "mergedObservedMentionsPath": latest_round.get("mergedObservedMentionsPath"),
@@ -3344,6 +4042,9 @@ def main() -> int:
         "coreProgressPath": latest_round.get("coreProgressJsonPath"),
         "precisionSummaryPath": latest_round.get("precisionSummaryPath"),
         "precisionBaselineManifestPath": latest_round.get("precisionBaselineManifestPath"),
+        "precisionCarryReadyEventsPath": latest_round.get("precisionCarryReadyEventsPath"),
+        "precisionCarryRelationshipEvidencePath": latest_round.get("precisionCarryRelationshipEvidencePath"),
+        "precisionCarryProgressPath": latest_round.get("precisionCarryProgressPath"),
         "threeLaneSummaryPath": latest_round.get("threeLaneSummaryPath"),
         "threeLaneFinalBaselineManifest": final_three_lane_manifest,
         "runtimeReadinessSummaryPath": latest_round.get("runtimeReadinessSummaryPath"),
@@ -3415,6 +4116,19 @@ def main() -> int:
             "runtimeRefBlitz": bool(args.runtime_ref_blitz),
             "runtimeRefBlitzMaxEventsPerGeneral": int(args.runtime_ref_blitz_max_events_per_general),
             "runPrecisionLane": args.run_precision_lane,
+            "precisionScoreboardBridge": bool(args.precision_scoreboard_bridge),
+            "precisionBridgeGlobal": bool(args.precision_bridge_global),
+            "precisionBridgeFields": str(args.precision_bridge_fields or "location,relationshipEdges"),
+            "precisionBridgeMaxGenerals": int(args.precision_bridge_max_generals),
+            "precisionBridgeMaxPerGeneral": int(args.precision_bridge_max_per_general),
+            "precisionUseBaselineManifest": bool(args.precision_use_baseline_manifest),
+            "precisionAutoReviewLocationGap": bool(args.precision_auto_review_location_gap),
+            "precisionAutoReviewRootCauses": [str(item or "").strip() for item in (args.precision_auto_review_root_cause or []) if str(item or "").strip()],
+            "precisionAutoReviewAnswer": str(args.precision_auto_review_answer or "B"),
+            "precisionAutoReviewMaxItems": int(args.precision_auto_review_max_items),
+            "precisionCarryGuard": bool(args.precision_carry_guard),
+            "precisionCarryMinDelta": float(args.precision_carry_min_delta),
+            "precisionCarryRequireLocationImprovement": bool(args.precision_carry_require_location_improvement),
             "seedToCardPriorityLimit": int(args.seed_to_card_priority_limit),
             "runThreeLane": args.run_three_lane,
             "sourceRoiPolicy": {
@@ -3444,6 +4158,16 @@ def main() -> int:
             "approvedSourceCount": len(approved_rows),
             "rosterCount": len(roster_names),
             "sourceConfigSanity": config_sanity,
+            "seedToCardMinScore": float(args.seed_to_card_min_score),
+            "seedToCardPriorityGeneralIds": [str(item or "").strip() for item in (args.seed_to_card_priority_general_id or []) if str(item or "").strip()],
+            "precisionGeneralIds": [str(item or "").strip() for item in (args.precision_general_id or []) if str(item or "").strip()],
+            "externalRelationshipShadowFallback": bool(args.external_relationship_shadow_fallback),
+            "manualRoundJsonPaths": [repo_relative(path) for path in manual_round_json_paths],
+            "carryForwardRoundJsonPaths": [repo_relative(path) for path in carry_forward_round_json_paths],
+            "roundJsonRoot": repo_relative(round_json_root_path),
+            "fallbackRoundJsonPaths": [repo_relative(path) for path in fallback_round_json_paths],
+            "initialEventsPath": repo_relative(events_path),
+            "finalEventsPath": repo_relative(effective_events_path),
         },
         "outputs": {
             "summaryJsonPath": repo_relative(summary_json_path),

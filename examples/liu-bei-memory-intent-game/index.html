@@ -845,7 +845,7 @@
         <section class="chorus-panel">
           <div class="chorus-head">
             <strong>旁人一句感想</strong>
-            <span id="chorusHint">每幕最多 4 人；NPC service 主要負責旁觀感想，缺漏時維持占位回覆。</span>
+            <span id="chorusHint">每幕最多 4 人；由 NPC service 切換旁人視角生成，無資料時不顯示。</span>
           </div>
           <div class="chorus-grid" id="chorusGrid"></div>
         </section>
@@ -864,7 +864,7 @@
     const API_BASE = searchParams.get("apiBase") || "http://127.0.0.1:8000";
     const DEFAULT_AUTO_DELAY = 12000;
     const DEFAULT_DIALOGUE_TIMEOUT_MS = 12000;
-    const DEFAULT_SCENE_DIRECTOR_TIMEOUT_MS = 3500;
+    const DEFAULT_SCENE_DIRECTOR_TIMEOUT_MS = 10000;
     const DEFAULT_ILLUSTRATION_TIMEOUT_MS = 32000;
     const DEFAULT_PROFILE_TIMEOUT_MS = 10000;
     const DEFAULT_NARRATIVE_TIMEOUT_MS = 16000;
@@ -1530,11 +1530,11 @@
         angle: bundle.card?.angle || state.activeAngle,
         targetId: bundle.target?.targetId || state.activePerson,
         evidenceId: bundle.card?.evidenceId || null,
-        renderMode: "data_first",
+        renderMode: "llm_polish",
         chorusTargetIds: targets.map((target) => target.targetId),
         locale: "zh-TW",
-        llmModelPreset: "fallback_chain",
-        maxStoryChars: 560,
+        llmModelPreset: "scene_director_fast",
+        maxStoryChars: 420,
         maxChorusChars: 120,
       };
       try {
@@ -2901,19 +2901,23 @@
         elements.chorusGrid.innerHTML = "";
         return;
       }
-      elements.chorusGrid.innerHTML = lines.map((line) => {
+      const cards = lines.map((line) => {
         const role = line.role || "人物線索";
         const text = sanitizeDisplayText(line.text, {
           removeActor: true,
           extraActorNames: [line.label || ""],
         });
+        if (!text) {
+          return "";
+        }
         return `
           <article class="chorus-card" data-target-id="${line.targetId}">
             <strong>${line.label}・${role}</strong>
             <p>${text}</p>
           </article>
         `;
-      }).join("");
+      }).filter(Boolean);
+      elements.chorusGrid.innerHTML = cards.join("");
     }
 
     async function renderChorusLines(bundle) {

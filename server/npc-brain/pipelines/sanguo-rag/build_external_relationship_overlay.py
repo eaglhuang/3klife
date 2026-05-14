@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from collections import Counter
@@ -97,7 +98,14 @@ def utc_now() -> str:
 
 def resolve_path(path_text: str | Path) -> Path:
     path = Path(path_text)
-    return path if path.is_absolute() else (REPO_ROOT / path).resolve()
+    if path.is_absolute():
+        return path
+    search_roots = [REPO_ROOT, REPO_ROOT.parent, REPO_ROOT.parent.parent]
+    for root in search_roots:
+        candidate = (root / path).resolve()
+        if candidate.exists():
+            return candidate
+    return (REPO_ROOT / path).resolve()
 
 
 def repo_relative(path: Path) -> str:
@@ -199,6 +207,11 @@ def load_alias_mapping(path: Path) -> list[tuple[str, str]]:
     return pairs
 
 
+def stable_hash(*parts: Any, length: int = 16) -> str:
+    joined = "\n".join(str(part or "") for part in parts)
+    return hashlib.sha256(joined.encode("utf-8")).hexdigest()[:length]
+
+
 def find_participants(text: str, alias_pairs: list[tuple[str, str]], max_people: int) -> list[str]:
     compact = re.sub(r"\s+", "", text or "")
     hits: list[tuple[int, str]] = []
@@ -215,6 +228,53 @@ def find_participants(text: str, alias_pairs: list[tuple[str, str]], max_people:
         if len(result) >= max(max_people, 2):
             break
     return result
+
+
+def normalize_partner_token(token: str) -> str:
+    text = re.sub(r"[^\u4e00-\u9fff·]", "", str(token or ""))
+    for prefix in ("曹魏", "蜀漢", "孫吳", "東吳", "西晉"):
+        if text.startswith(prefix) and len(text) > len(prefix):
+            text = text[len(prefix) :]
+            break
+    if len(text) < 2 or len(text) > 8:
+        return ""
+    return text
+
+
+def infer_partner_ids_from_quote(
+    quote: str,
+    *,
+    alias_pairs: list[tuple[str, str]],
+    existing_people: set[str],
+    max_new_people: int,
+) -> list[str]:
+    compact = re.sub(r"\s+", "", quote or "")
+    if not compact:
+        return []
+    alias_map: dict[str, str] = {}
+    for alias, general_id in alias_pairs:
+        if alias not in alias_map:
+            alias_map[alias] = general_id
+    patterns = [
+        r"嫁(?P<name>[\u4e00-\u9fff·]{2,8})",
+        r"(?P<name>[\u4e00-\u9fff·]{2,8})之(?:女|子|妻|夫|母|父|兄|弟)",
+        r"與(?P<name>[\u4e00-\u9fff·]{2,8})(?:婚|為婚|結婚)",
+    ]
+    inferred: list[str] = []
+    for pattern in patterns:
+        for match in re.finditer(pattern, compact):
+            token = normalize_partner_token(match.group("name"))
+            if not token:
+                continue
+            partner_id = alias_map.get(token)
+            if not partner_id:
+                partner_id = f"shadow:relationship-hint:{token}:{stable_hash(token)}"
+            if partner_id in existing_people or partner_id in inferred:
+                continue
+            inferred.append(partner_id)
+            if len(inferred) >= max(max_new_people, 1):
+                return inferred
+    return inferred
 
 
 def list_like_text(text: str, participant_count: int) -> bool:
@@ -415,6 +475,7 @@ def edges_from_card(
     alias_pairs: list[tuple[str, str]],
     max_participants_per_card: int,
     source_policy_index: dict[str, dict[str, Any]],
+    allow_shadow_partner_fallback: bool,
 ) -> tuple[list[dict[str, Any]], str]:
     quote = str(card.get("quote") or card.get("translatedTraditionalText") or "").strip()
     anchors = [str(item).strip() for item in (card.get("generalIds") or []) if str(item).strip() and not str(item).startswith("shadow:")]
@@ -423,6 +484,15 @@ def edges_from_card(
     for anchor in anchors:
         if anchor not in participants:
             participants.insert(0, anchor)
+    claim_type = str(card.get("claimType") or "").strip().lower()
+    if allow_shadow_partner_fallback and len(participants) < 2 and claim_type == "relationship":
+        inferred_people = infer_partner_ids_from_quote(
+            quote,
+            alias_pairs=alias_pairs,
+            existing_people=set(participants),
+            max_new_people=max(max_participants_per_card - len(participants), 1),
+        )
+        participants.extend(inferred_people)
     participants = list(dict.fromkeys(participants))
     if len(anchors) == 0:
         return [], "no-anchor-general"
@@ -560,6 +630,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-cross-family", type=int, default=2)
     parser.add_argument("--min-cross-family-non-history", type=int, default=3)
     parser.add_argument("--max-participants-per-card", type=int, default=4)
+    parser.add_argument("--allow-shadow-partner-fallback", action="store_true")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
@@ -602,6 +673,7 @@ def main() -> int:
             alias_pairs=alias_pairs,
             max_participants_per_card=max(args.max_participants_per_card, 2),
             source_policy_index=source_policy_index,
+            allow_shadow_partner_fallback=bool(args.allow_shadow_partner_fallback),
         )
         if not rows:
             transform_reasons[transform_reason] += 1
@@ -654,6 +726,7 @@ def main() -> int:
             "minCrossFamily": max(args.min_cross_family, 1),
             "minCrossFamilyNonHistory": max(args.min_cross_family_non_history, max(args.min_cross_family, 1)),
             "maxParticipantsPerCard": max(args.max_participants_per_card, 2),
+            "allowShadowPartnerFallback": bool(args.allow_shadow_partner_fallback),
         },
         "outputs": {
             "relationshipEdgesJsonlPath": repo_relative(jsonl_path),

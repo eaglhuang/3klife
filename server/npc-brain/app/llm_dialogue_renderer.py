@@ -226,21 +226,28 @@ class MockDialogueProvider:
 class GeminiDialogueProvider:
     name = "gemini"
 
-    def __init__(self, api_key: str | None = None, model: str | None = None, timeout_ms: int | None = None) -> None:
+    def __init__(
+        self,
+        api_key: str | None = None,
+        model: str | None = None,
+        timeout_ms: int | None = None,
+        retry_count: int | None = None,
+    ) -> None:
         self.api_key = api_key or os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
         self.model = model or os.environ.get("NPC_LLM_MODEL_GEMINI") or os.environ.get("NPC_LLM_MODEL") or DEFAULT_GEMINI_MODEL
         self.timeout_ms = timeout_ms or int(os.environ.get("NPC_LLM_TIMEOUT_MS") or DEFAULT_TIMEOUT_MS)
         self.endpoint_base = os.environ.get("GEMINI_API_BASE") or "https://generativelanguage.googleapis.com/v1beta"
         self.thinking_budget = int(os.environ.get("NPC_LLM_GEMINI_THINKING_BUDGET") or DEFAULT_GEMINI_THINKING_BUDGET)
         self.max_output_tokens = int(os.environ.get("NPC_LLM_GEMINI_MAX_OUTPUT_TOKENS") or DEFAULT_GEMINI_MAX_OUTPUT_TOKENS)
-        self.retry_count = max(1, int(os.environ.get("NPC_LLM_GEMINI_RETRY_COUNT") or DEFAULT_GEMINI_RETRY_COUNT))
+        self.retry_count = max(1, retry_count or int(os.environ.get("NPC_LLM_GEMINI_RETRY_COUNT") or DEFAULT_GEMINI_RETRY_COUNT))
         self.disable_proxy = _env_flag("NPC_LLM_DISABLE_PROXY", default=True)
 
     def generate(self, package: DialoguePromptPackage) -> DialogueGenerationResult:
         if not self.api_key:
             raise ProviderUnavailableError("gemini:no-api-key")
         tone_mode = str(package.toneMode or "").strip().lower()
-        allow_memory_only = tone_mode == "narrative_fusion"
+        selected_task = str((package.selectedContext or {}).get("task") or "").strip()
+        allow_memory_only = tone_mode == "narrative_fusion" or selected_task == "chorus-line"
         if not package.resolvedEvidence and not allow_memory_only:
             raise ProviderUnavailableError("gemini:no-resolved-evidence")
 
@@ -378,6 +385,8 @@ class GeminiDialogueProvider:
                     "Return JSON only.",
                     "Use only personaCardSubset, selectedContext, selectedKeywords, resolvedEvidence, and draftFragments.",
                     "If draftFragments.intentDraft contains 場景導演 Beats, treat those beats as the authoritative story outline.",
+                    "If selectedContext.task is scene-director-script, treat draftFragments as seed material and rewrite it as a short directed scene, not a field-by-field summary.",
+                    "If selectedContext.sceneFacts is present, use its people/event/time/locations/objects as the first source of scene grounding before writing the scene.",
                     "Do not invent major historical facts not supported by resolvedEvidence/draftFragments.",
                     "Do not mention being an AI or model.",
                     "Narrative must be fluent and cinematic, not bullet-style concatenation.",
@@ -394,9 +403,10 @@ class GeminiDialogueProvider:
                 },
                 "narrativeDirective": {
                     "mode": "story-fusion",
-                    "goal": "Use scene/memory/emotion/dialogue/intent as story beats, then write a coherent 350-550 Chinese-character scene with transitions.",
+                    "goal": "Use scene/memory/emotion/dialogue/intent as story beats, then write a coherent 180-420 Chinese-character short scene with transitions.",
                     "style": [
                         "third-person narrative centered on persona displayName",
+                        "make the opening sentence establish the key person, situation, and setting when sceneFacts provides them",
                         "include one quoted line if dialogueDraft is available",
                         "end with a concrete next-step intention",
                         "keep the selected target and current scene as the main thread; do not jump to unrelated memories",
@@ -430,10 +440,15 @@ class GeminiDialogueProvider:
                 "task": "Write one in-character dialogue line for a Three Kingdoms game NPC.",
                 "hardRules": [
                     "Return JSON only.",
-                    "Use only personaCardSubset, selectedContext, selectedKeywords, and resolvedEvidence.",
+                    "Use only personaCardSubset, playerGeneralMemory, selectedContext, selectedKeywords, and resolvedEvidence.",
                     "Do not invent major historical facts not supported by resolvedEvidence.",
                     "Do not mention being an AI or model.",
                     "Never write from the identity of another Three Kingdoms character.",
+                    "Do not mention the speaker's own name in the final line.",
+                    "If selectedContext.task is chorus-line, speak from that speaker's perspective toward the mainActor and the sceneScript.",
+                    "If selectedContext.task is chorus-line, the line must reflect speakerPersona voiceStyle/personalityTraits/lore when provided.",
+                    "If selectedContext.sceneFacts is present, ground the line in its people/event/time/locations/objects instead of generic advice.",
+                    "Avoid generic advice such as '先看證據', '先說清楚', '再說判斷', or lines that could fit any speaker.",
                     "The speechContextDirective is binding: choose the addressee, emotional distance, and public/private register from it.",
                     "For zh-TW output, do not mix English words, pinyin, simplified Chinese, mojibake, code fragments, or slash artifacts.",
                     "If selectedKeywords is not empty, the final line must directly mention or clearly allude to at least one selected keyword label.",
@@ -998,22 +1013,36 @@ class LocalLlamaDialogueProvider(GeminiDialogueProvider):
 class GeminiFlashDialogueProvider(GeminiDialogueProvider):
     name = "gemini_flash"
 
-    def __init__(self, api_key: str | None = None, model: str | None = None, timeout_ms: int | None = None) -> None:
+    def __init__(
+        self,
+        api_key: str | None = None,
+        model: str | None = None,
+        timeout_ms: int | None = None,
+        retry_count: int | None = None,
+    ) -> None:
         super().__init__(
             api_key=api_key,
             model=model or os.environ.get("NPC_LLM_MODEL_GEMINI_FLASH") or DEFAULT_GEMINI_FLASH_MODEL,
             timeout_ms=timeout_ms,
+            retry_count=retry_count,
         )
 
 
 class GeminiFlashLiteDialogueProvider(GeminiDialogueProvider):
     name = "gemini_flash_lite"
 
-    def __init__(self, api_key: str | None = None, model: str | None = None, timeout_ms: int | None = None) -> None:
+    def __init__(
+        self,
+        api_key: str | None = None,
+        model: str | None = None,
+        timeout_ms: int | None = None,
+        retry_count: int | None = None,
+    ) -> None:
         super().__init__(
             api_key=api_key,
             model=model or os.environ.get("NPC_LLM_MODEL_GEMINI_FLASH_LITE") or DEFAULT_GEMINI_FLASH_LITE_MODEL,
             timeout_ms=timeout_ms,
+            retry_count=retry_count,
         )
         self.thinking_budget = int(os.environ.get("NPC_LLM_GEMINI_FLASH_LITE_THINKING_BUDGET") or DEFAULT_GEMINI_FLASH_LITE_THINKING_BUDGET)
 
@@ -1169,12 +1198,14 @@ class DialogueProviderRouter:
 
     def _create_provider(self, provider_name: str, model_overrides: dict[str, str] | None = None) -> DialogueProvider:
         model_overrides = model_overrides or {}
+        timeout_ms = int(model_overrides["__timeoutMs"]) if str(model_overrides.get("__timeoutMs") or "").isdigit() else None
+        retry_count = int(model_overrides["__retryCount"]) if str(model_overrides.get("__retryCount") or "").isdigit() else None
         if provider_name == "gemini":
-            return GeminiDialogueProvider(model=model_overrides.get("gemini"))
+            return GeminiDialogueProvider(model=model_overrides.get("gemini"), timeout_ms=timeout_ms, retry_count=retry_count)
         if provider_name == "gemini_flash":
-            return GeminiFlashDialogueProvider(model=model_overrides.get("gemini_flash"))
+            return GeminiFlashDialogueProvider(model=model_overrides.get("gemini_flash"), timeout_ms=timeout_ms, retry_count=retry_count)
         if provider_name == "gemini_flash_lite":
-            return GeminiFlashLiteDialogueProvider(model=model_overrides.get("gemini_flash_lite"))
+            return GeminiFlashLiteDialogueProvider(model=model_overrides.get("gemini_flash_lite"), timeout_ms=timeout_ms, retry_count=retry_count)
         if provider_name == "local_llama":
             return LocalLlamaDialogueProvider(model=model_overrides.get("local_llama"))
         if provider_name == "deepseek_reasoner":

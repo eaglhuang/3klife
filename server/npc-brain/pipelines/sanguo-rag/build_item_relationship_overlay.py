@@ -150,7 +150,14 @@ def utc_now() -> str:
 
 def resolve_path(path_text: str | Path) -> Path:
     path = Path(path_text)
-    return path if path.is_absolute() else (REPO_ROOT / path).resolve()
+    if path.is_absolute():
+        return path
+    search_roots = [REPO_ROOT, REPO_ROOT.parent, REPO_ROOT.parent.parent]
+    for root in search_roots:
+        candidate = (root / path).resolve()
+        if candidate.exists():
+            return candidate
+    return (REPO_ROOT / path).resolve()
 
 
 def repo_relative(path: Path) -> str:

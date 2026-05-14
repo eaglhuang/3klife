@@ -3,8 +3,12 @@ from __future__ import annotations
 import json
 import os
 import re
+import hashlib
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
+from threading import Lock
 from typing import Any
 
 from pydantic import BaseModel, Field, model_validator
@@ -59,6 +63,7 @@ DEFAULT_ARTIFACT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/api-r
 DEFAULT_EVENT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/events")
 DEFAULT_PERSONA_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/persona-cards")
 DEFAULT_RUNTIME_PROFILE_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/runtime-general-profiles")
+DEFAULT_CHAPTER_ROOT = Path("artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters")
 PERSONA_VERSION = "general_persona_v2"
 LLM_HISTORY_PROVIDERS = {"gemini", "gemini_flash", "gemini_flash_lite", "local_llama"}
 SUPPORTED_LOCALES = set(LOCALE_INSTRUCTIONS.keys())
@@ -92,6 +97,13 @@ LLM_MODEL_PRESETS = {
         "providerOrder": ["gemini_flash_lite"],
         "modelOverrides": {"gemini_flash_lite": DEFAULT_GEMINI_FLASH_LITE_MODEL},
         "allowDeterministicFallback": False,
+    },
+    "scene_director_fast": {
+        "label": "Scene Director Fast",
+        "description": "Fast service-side scene director chain for demo rendering.",
+        "providerOrder": ["gemini_flash_lite", "deterministic"],
+        "modelOverrides": {"__timeoutMs": "1800", "__retryCount": "1"},
+        "allowDeterministicFallback": True,
     },
     "qwen2_5_7b": {
         "label": "Qwen2.5 7B Local",
@@ -334,6 +346,8 @@ class SceneDirectorBeats(BaseModel):
     dialogueText: str
     intentText: str
     presence: ScenePresenceDecision
+    sceneFacts: dict[str, Any] = Field(default_factory=dict)
+    sceneSeeds: dict[str, Any] = Field(default_factory=dict)
     sourceRefs: list[str] = Field(default_factory=list)
     evidenceId: str | None = None
 
@@ -412,6 +426,9 @@ class NpcDialogueService:
         self.evidence_resolver = EvidenceResolver(self.store)
         self.scene_image_renderer = GeminiSceneImageRenderer(cache_root=self.repo_root / "local/npc-scene-image-cache")
         self._roster_index_cache: dict[str, dict[str, Any]] | None = None
+        self._chapter_paragraph_cache: dict[str, list[str]] = {}
+        self._scene_chorus_cache: dict[str, SceneChorusLine] = {}
+        self._scene_chorus_cache_lock = Lock()
 
     def get_health(self) -> dict:
         provider_order = self.provider_router.provider_order
@@ -810,43 +827,37 @@ class NpcDialogueService:
             ],
         )
         if has_scene_data and request.renderMode == "llm_polish":
-            story_fallback = self._render_scene_director_story(profile.displayName, target, beats)
+            story_fallback = self._render_scene_director_story(profile, target, beats)
             story_generation = self._generate_scene_director_text(
                 general_id=request.generalId,
                 persona_card=self.get_persona_card(request.generalId),
-                memory_context={
-                    "saveId": f"demo-scene-director-{request.generalId}",
-                    "shortTerm": beats.sceneText,
-                    "longTerm": f"{beats.memoryText} {beats.emotionText}",
-                    "playerProfile": (
-                        f"{profile.displayName}正在面對與{target.label if target else '互動對象'}相關的局勢。"
-                        f"在場判斷：{beats.presence.status}；依據：{beats.presence.reason}"
-                    ),
-                    "promises": (
-                        "請把 sceneText/memoryText/emotionText/dialogueText/intentText 當作導演 beats，"
-                        "寫成 350-550 字繁體中文連續舞台敘事；保留原文證據，不要模板拼貼。"
-                    ),
-                },
+                memory_context=self._build_scene_director_story_context(profile, target, card, beats),
+                selected_context=self._build_scene_director_selected_context(profile, target, card, beats),
                 evidence_refs=evidence_refs,
                 deterministic_text=story_fallback,
                 max_chars=request.maxStoryChars,
                 locale=request.locale,
                 llm_model_preset=request.llmModelPreset,
+                tone_mode="narrative_fusion",
+            )
+            story_generation = self._repair_complete_generation(
+                story_generation,
+                fallback_text=story_fallback,
+                max_chars=request.maxStoryChars,
+                warning_code="scene_story_trimmed_to_complete_sentence",
             )
             chorus_targets = self._select_chorus_targets(profile.interactionTargets, request.chorusTargetIds, target.targetId if target else None)
-            chorus_lines = [
-                self._build_scene_chorus_line(
-                    request=request,
-                    profile=profile,
-                    target=chorus_target,
-                    main_target=target,
-                    card=card,
-                    beats=beats,
-                )
-                for chorus_target in chorus_targets
-            ]
+            chorus_lines = self._build_scene_chorus_lines(
+                request=request,
+                profile=profile,
+                targets=chorus_targets,
+                main_target=target,
+                card=card,
+                beats=beats,
+                story_text=story_generation.text,
+            )
         elif has_scene_data:
-            story_text = self._render_scene_director_story(profile.displayName, target, beats)
+            story_text = self._render_scene_director_story(profile, target, beats)
             story_generation = DialogueGenerationResult(
                 text=story_text,
                 provider="data_first",
@@ -860,10 +871,12 @@ class NpcDialogueService:
             chorus_targets = self._select_chorus_targets(profile.interactionTargets, request.chorusTargetIds, target.targetId if target else None)
             chorus_lines = [
                 self._build_data_first_chorus_line(
+                    profile=profile,
                     target=chorus_target,
                     main_target=target,
                     card=card,
                     beats=beats,
+                    story_text=story_text,
                 )
                 for chorus_target in chorus_targets
             ]
@@ -999,6 +1012,8 @@ class NpcDialogueService:
             dialogueText="",
             intentText="",
             presence=ScenePresenceDecision(status="unknown", reason="", sourceText=None),
+            sceneFacts={},
+            sceneSeeds={},
             sourceRefs=[],
             evidenceId=None,
         )
@@ -1012,17 +1027,69 @@ class NpcDialogueService:
     ) -> SceneDirectorBeats:
         target_label = target.label if target else "互動對象"
         card_angle = card.angle if card else angle
-        source_refs = list(dict.fromkeys((card.sourceRefs if card else []) + (target.evidenceRefs if target else [])))
-        quote = str(card.quote or "").strip() if card else ""
-        summary = str(card.summary or "").strip() if card else ""
-        title = str(card.title or "").strip() if card else ""
-        location = str(card.location or "").strip() if card and card.location else ""
-        presence = self._infer_scene_presence(target_label, [quote, summary, title, location])
-        scene_text = self._sentence_or_default("；".join(part for part in [location, summary] if part), "", max_chars=120)
-        memory_text = self._sentence_or_default(quote or summary or title, "", max_chars=120)
-        emotion_text = self._sentence_or_default(self._deterministic_emotion_text(card_angle, target, presence), "", max_chars=96)
-        dialogue_text = self._sentence_or_default(self._extract_quoted_dialogue(quote), "", max_chars=80)
-        intent_text = self._sentence_or_default(self._deterministic_intent_text(card_angle, target), "", max_chars=88)
+        actor_aliases = self._actor_label_aliases(profile)
+        candidate_cards = self._scene_seed_candidate_cards(profile, card, target, angle)
+        source_refs = self._scene_seed_source_refs(candidate_cards, target)
+        source_text_parts = [self._card_source_text(candidate) for candidate in candidate_cards]
+        source_text = " ".join(part for part in source_text_parts if part)
+        primary_source_text = self._card_source_text(card) or source_text
+        presence = self._infer_scene_presence(target_label, [primary_source_text] if primary_source_text else source_text_parts)
+        scene_text = self._first_clean_scene_seed(candidate_cards, target, actor_aliases)
+        contextual_scene_text = self._source_derived_scene_text(card_angle, target, primary_source_text)
+        if contextual_scene_text:
+            scene_text = contextual_scene_text
+        memory_text = self._sentence_or_default(
+            self._source_derived_memory_text(card_angle, target, primary_source_text, scene_text),
+            "",
+            max_chars=120,
+        )
+        if not memory_text:
+            memory_text = scene_text
+        emotion_text = self._sentence_or_default(
+            self._source_derived_emotion_text(card_angle, target, presence, primary_source_text),
+            "",
+            max_chars=96,
+        )
+        dialogue_seed = self._first_actor_dialogue_seed(
+            candidate_cards,
+            actor_aliases=actor_aliases,
+            target=target,
+            allow_secondary=not self._should_keep_dialogue_on_primary(primary_source_text, target),
+        )
+        dialogue_text = self._sentence_or_default(
+            dialogue_seed
+            or self._first_dialogue_seed(
+                candidate_cards,
+                allow_secondary=not self._should_keep_dialogue_on_primary(primary_source_text, target),
+            ),
+            "",
+            max_chars=80,
+        )
+        intent_text = self._sentence_or_default(
+            self._source_derived_intent_text(card_angle, target, primary_source_text),
+            "",
+            max_chars=88,
+        )
+        scene_facts = self._build_scene_facts(
+            profile=profile,
+            card=card,
+            target=target,
+            candidate_cards=candidate_cards,
+            angle=card_angle,
+            source_text=primary_source_text,
+            scene_text=scene_text,
+            dialogue_text=dialogue_text,
+            source_refs=source_refs,
+        )
+        scene_seeds = self._build_scene_six_seeds(
+            profile=profile,
+            target=target,
+            scene_facts=scene_facts,
+            memory_text=memory_text,
+            emotion_text=emotion_text,
+            dialogue_text=dialogue_text,
+            intent_text=intent_text,
+        )
         return SceneDirectorBeats(
             sceneText=scene_text,
             memoryText=memory_text,
@@ -1030,9 +1097,376 @@ class NpcDialogueService:
             dialogueText=dialogue_text,
             intentText=intent_text,
             presence=presence,
+            sceneFacts=scene_facts,
+            sceneSeeds=scene_seeds,
             sourceRefs=source_refs[:12],
             evidenceId=card.evidenceId if card else None,
         )
+
+    def _scene_seed_candidate_cards(
+        self,
+        profile: NarrativeProfileResponse,
+        card: NarrativeEvidenceCard | None,
+        target: NarrativeInteractionTarget | None,
+        angle: str | None,
+    ) -> list[NarrativeEvidenceCard]:
+        if not target:
+            return [card] if card else []
+        target_refs = set(target.evidenceRefs)
+        target_aliases = self._target_label_aliases(target.label)
+        requested_angle = angle or (card.angle if card else None)
+
+        def score(candidate: NarrativeEvidenceCard) -> tuple[float, str]:
+            candidate_refs = set(candidate.sourceRefs)
+            source_text = self._card_source_text(candidate)
+            value = float(candidate.confidence)
+            if card and candidate.evidenceId == card.evidenceId:
+                value += 1000.0
+            if candidate.angle == requested_angle:
+                value += 70.0
+            if target.targetId in candidate.relatedTargetIds:
+                value += 60.0
+            if candidate_refs & target_refs:
+                value += 35.0 + min(len(candidate_refs & target_refs), 6)
+            if any(alias and alias in source_text for alias in target_aliases):
+                value += 28.0
+            if self._extract_quoted_dialogue(source_text):
+                value += 14.0
+            if candidate.angle == "emotion" or target.femaleFocus:
+                if re.search(r"夫人|垂淚|煩惱|追兵|家|阿斗|嫂", source_text):
+                    value += 10.0
+            return (-value, candidate.evidenceId)
+
+        candidates: list[NarrativeEvidenceCard] = []
+        seen: set[str] = set()
+        for candidate in [card, *profile.evidenceCards]:
+            if candidate is None or candidate.evidenceId in seen:
+                continue
+            candidate_refs = set(candidate.sourceRefs)
+            source_text = self._card_source_text(candidate)
+            is_related = (
+                candidate.evidenceId == (card.evidenceId if card else None)
+                or target.targetId in candidate.relatedTargetIds
+                or bool(candidate_refs & target_refs)
+                or any(alias and alias in source_text for alias in target_aliases)
+            )
+            if not is_related:
+                continue
+            seen.add(candidate.evidenceId)
+            candidates.append(candidate)
+        return sorted(candidates, key=score)[:10]
+
+    def _scene_seed_source_refs(
+        self,
+        candidate_cards: list[NarrativeEvidenceCard],
+        target: NarrativeInteractionTarget | None,
+    ) -> list[str]:
+        refs: list[str] = []
+        for candidate in candidate_cards:
+            refs.extend(candidate.sourceRefs)
+        if target:
+            refs.extend(target.evidenceRefs)
+        return list(dict.fromkeys(ref for ref in refs if ref))[:12]
+
+    def _card_source_text(self, card: NarrativeEvidenceCard | None) -> str:
+        if not card:
+            return ""
+        source_context = self._source_context_for_refs(card.sourceRefs)
+        return " ".join(
+            part
+            for part in [
+                str(card.summary or "").strip(),
+                str(card.quote or "").strip(),
+                str(card.title or "").strip(),
+                str(card.location or "").strip() if card.location else "",
+                source_context,
+            ]
+            if part
+        )
+
+    def _source_context_for_refs(self, source_refs: list[str], max_refs: int = 2) -> str:
+        paragraphs: list[str] = []
+        for source_ref in source_refs:
+            paragraph = self._source_ref_paragraph(source_ref)
+            if paragraph and paragraph not in paragraphs:
+                paragraphs.append(paragraph)
+            if len(paragraphs) >= max_refs:
+                break
+        return " ".join(paragraphs)
+
+    def _source_ref_paragraph(self, source_ref: str) -> str:
+        match = re.match(r"^(\d{3})#p(\d+)$", str(source_ref or "").strip())
+        if not match:
+            return ""
+        chapter_id, paragraph_index_text = match.groups()
+        try:
+            paragraph_index = int(paragraph_index_text)
+        except ValueError:
+            return ""
+        paragraphs = self._chapter_paragraphs(chapter_id)
+        if paragraph_index < 0 or paragraph_index >= len(paragraphs):
+            return ""
+        paragraph = paragraphs[paragraph_index]
+        if paragraph.startswith("#"):
+            return ""
+        return paragraph
+
+    def _chapter_paragraphs(self, chapter_id: str) -> list[str]:
+        cached = self._chapter_paragraph_cache.get(chapter_id)
+        if cached is not None:
+            return cached
+        path = self.repo_root / DEFAULT_CHAPTER_ROOT / f"{chapter_id}.md"
+        if not path.exists():
+            self._chapter_paragraph_cache[chapter_id] = []
+            return []
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            self._chapter_paragraph_cache[chapter_id] = []
+            return []
+        paragraphs = [" ".join(line.split()) for line in text.splitlines() if line.strip()]
+        self._chapter_paragraph_cache[chapter_id] = paragraphs
+        return paragraphs
+
+    def _first_clean_scene_seed(
+        self,
+        candidate_cards: list[NarrativeEvidenceCard],
+        target: NarrativeInteractionTarget | None,
+        actor_aliases: list[str],
+    ) -> str:
+        options: list[tuple[float, str]] = []
+        primary_options: list[tuple[float, str]] = []
+        target_aliases = self._target_label_aliases(target.label) if target else []
+        for index, candidate in enumerate(candidate_cards):
+            for value in [candidate.summary, candidate.quote, self._source_context_for_refs(candidate.sourceRefs), candidate.title]:
+                cleaned = self._clean_source_fragment(str(value or ""), target, actor_aliases, max_chars=120)
+                if cleaned:
+                    source_text = self._card_source_text(candidate)
+                    score = float(candidate.confidence) + max(0, 120 - index * 18)
+                    if self._extract_quoted_dialogue(source_text):
+                        score += 45.0
+                    if any(alias and alias in cleaned for alias in target_aliases):
+                        score += 30.0
+                    if re.search(r"追兵|喊聲|垂淚|煩惱|心腹之言|如之奈何", cleaned):
+                        score += 24.0
+                    if re.match(r"^[雲肅瑜亮操權備飛羽]故意", cleaned):
+                        score -= 18.0
+                    option = (score, cleaned)
+                    if index == 0:
+                        primary_options.append(option)
+                    options.append(option)
+        if primary_options:
+            return sorted(primary_options, key=lambda item: (-item[0], item[1]))[0][1]
+        if not options:
+            return ""
+        return sorted(options, key=lambda item: (-item[0], item[1]))[0][1]
+
+    def _first_dialogue_seed(
+        self,
+        candidate_cards: list[NarrativeEvidenceCard],
+        allow_secondary: bool = True,
+    ) -> str:
+        for index, candidate in enumerate(candidate_cards):
+            if index > 0 and not allow_secondary:
+                break
+            for value in [candidate.quote, candidate.summary]:
+                dialogue = self._extract_quoted_dialogue(str(value or ""))
+                if dialogue:
+                    return dialogue
+        return ""
+
+    def _first_actor_dialogue_seed(
+        self,
+        candidate_cards: list[NarrativeEvidenceCard],
+        actor_aliases: list[str],
+        target: NarrativeInteractionTarget | None,
+        allow_secondary: bool = True,
+    ) -> str:
+        target_aliases = self._target_label_aliases(target.label) if target else []
+        scored: list[tuple[float, str]] = []
+        for index, candidate in enumerate(candidate_cards):
+            if index > 0 and not allow_secondary:
+                break
+            for text in [self._source_context_for_refs(candidate.sourceRefs), candidate.quote, candidate.summary]:
+                scored.extend(
+                    self._extract_actor_dialogue_candidates(
+                        text=str(text or ""),
+                        actor_aliases=actor_aliases,
+                        target_aliases=target_aliases,
+                        source_index=index,
+                    )
+                )
+        if not scored:
+            return ""
+        return sorted(scored, key=lambda item: (-item[0], item[1]))[0][1]
+
+    def _extract_actor_dialogue_candidates(
+        self,
+        text: str,
+        actor_aliases: list[str],
+        target_aliases: list[str],
+        source_index: int,
+    ) -> list[tuple[float, str]]:
+        source = str(text or "")
+        if not source or not actor_aliases:
+            return []
+        speaker_pattern = "|".join(re.escape(alias) for alias in actor_aliases if alias)
+        if not speaker_pattern:
+            return []
+        candidates: list[tuple[float, str]] = []
+        for match in re.finditer(rf"({speaker_pattern})[^。！？「」]{{0,12}}(?:曰|道|告|泣告)[:：]?[「『]([^」』]{{2,140}})[」』]", source):
+            line = " ".join(match.group(2).split()).strip()
+            if not line:
+                continue
+            sentence_start = max(0, source.rfind("。", 0, match.start()) + 1)
+            sentence_end_candidates = [
+                index
+                for index in [
+                    source.find("。", match.end()),
+                    source.find("！", match.end()),
+                    source.find("？", match.end()),
+                ]
+                if index != -1
+            ]
+            sentence_end = min(sentence_end_candidates) + 1 if sentence_end_candidates else min(len(source), match.end() + 80)
+            near_sentence = source[sentence_start:sentence_end]
+            score = 100.0 - source_index * 18
+            if target_aliases and any(alias and alias in near_sentence for alias in target_aliases):
+                score += 35.0
+            if re.search(r"夫人既知|備安敢相瞞|備欲不去|欲去，又捨不得夫人|荊州有失", line):
+                score += 48.0
+            if re.search(r"夫人|荊州|欲去|捨不得|煩惱|心腹之言|如之奈何|生死難忘", line):
+                score += 22.0
+            if re.search(r"切勿漏泄|若如此", line):
+                score -= 42.0
+            if re.search(r"有甚事|你且暫退|必須與夫人商議", line):
+                score -= 30.0
+            candidates.append((score, line))
+        return candidates
+
+    def _build_scene_facts(
+        self,
+        profile: NarrativeProfileResponse,
+        card: NarrativeEvidenceCard | None,
+        target: NarrativeInteractionTarget | None,
+        candidate_cards: list[NarrativeEvidenceCard],
+        angle: str | None,
+        source_text: str,
+        scene_text: str,
+        dialogue_text: str,
+        source_refs: list[str],
+    ) -> dict[str, Any]:
+        target_by_id = {item.targetId: item for item in profile.interactionTargets}
+        people: list[dict[str, str | None]] = [
+            {"id": profile.generalId, "label": profile.displayName, "role": "主角"}
+        ]
+        seen_people = {profile.generalId}
+        if target:
+            people.append({"id": target.targetId, "label": target.label, "role": target.role})
+            seen_people.add(target.targetId)
+        for candidate in candidate_cards:
+            for related_id in candidate.relatedTargetIds:
+                if related_id in seen_people:
+                    continue
+                related_target = target_by_id.get(related_id)
+                related_label = related_target.label if related_target else self._roster_name_for(related_id, self._load_roster_index())
+                if not any(alias and alias in source_text for alias in self._target_label_aliases(related_label)):
+                    continue
+                people.append(
+                    {
+                        "id": related_id,
+                        "label": related_label,
+                        "role": related_target.role if related_target else "相關人物",
+                    }
+                )
+                seen_people.add(related_id)
+                if len(people) >= 8:
+                    break
+            if len(people) >= 8:
+                break
+
+        primary_locations = [card.location] if card and card.location else []
+        related_locations = [
+            candidate.location
+            for candidate in candidate_cards
+            if candidate.location and (not card or candidate.evidenceId != card.evidenceId)
+        ]
+        locations = self._unique_nonempty(
+            [
+                *primary_locations,
+                *self._extract_location_markers(source_text),
+                *related_locations,
+            ],
+            limit=6,
+        )
+        time_markers = self._unique_nonempty(self._extract_time_markers(source_text), limit=5)
+        objects = self._unique_nonempty(self._extract_scene_objects(source_text), limit=8)
+        event_text = self._ensure_sentence(
+            scene_text or self._clean_source_fragment(source_text, target, self._actor_label_aliases(profile), max_chars=96)
+        )
+        return {
+            "people": people,
+            "event": event_text,
+            "time": time_markers,
+            "locations": locations,
+            "objects": objects,
+            "dialogue": dialogue_text,
+            "angle": angle,
+            "evidenceIds": [candidate.evidenceId for candidate in candidate_cards[:6]],
+            "sourceRefs": source_refs[:10],
+        }
+
+    def _unique_nonempty(self, values: list[str], limit: int) -> list[str]:
+        result: list[str] = []
+        for value in values:
+            normalized = " ".join(str(value or "").split()).strip()
+            if normalized and normalized not in result:
+                result.append(normalized)
+            if len(result) >= limit:
+                break
+        return result
+
+    def _extract_time_markers(self, text: str) -> list[str]:
+        return re.findall(r"(正行間|正行之間|當夜|是夜|次日|是日|五更|黎明|黃昏|既而|少頃|片刻|年終|歲旦|正旦|元旦)", str(text or ""))
+
+    def _extract_location_markers(self, text: str) -> list[str]:
+        source = str(text or "")
+        markers: list[str] = []
+        for literal in ["南徐", "東吳", "荊州", "江邊", "官道"]:
+            if literal in source:
+                markers.append(literal)
+        if re.search(r"正行間|正行之間|行間|行路", source):
+            markers.append("行路途中")
+        if re.search(r"追兵|喊聲大起|背後喊聲", source):
+            markers.append("退路附近")
+        if re.search(r"船中|船隻|船邊|渡口|津", source):
+            markers.append("水路渡口")
+        for match in re.findall(r"([\u4e00-\u9fff]{1,4}(?:江|津|城|寨|營|山|橋|關|郡|州|縣|渡|船中))", source):
+            if (
+                len(match) <= 6
+                and not re.match(r"(只去|不想|殺奔|回|望|在|到|前面|使|龍)", match)
+                and not re.search(r"報說|說荊州|使荊州", match)
+            ):
+                markers.append(match)
+        return markers
+
+    def _extract_scene_objects(self, text: str) -> list[str]:
+        source = str(text or "")
+        rules = [
+            ("荊州危急", r"荊州危急"),
+            ("追兵", r"追兵"),
+            ("喊聲", r"喊聲"),
+            ("錦囊", r"錦囊"),
+            ("府堂", r"府堂"),
+            ("官道", r"官道"),
+            ("車駕", r"車|推車"),
+            ("船隻", r"船|船隻"),
+            ("兵馬", r"兵|軍|人馬"),
+            ("劍", r"劍"),
+            ("馬", r"馬"),
+            ("家眷", r"夫人|家眷|阿斗|嫂"),
+        ]
+        return [label for label, pattern in rules if re.search(pattern, source)]
 
     def _infer_scene_presence(self, target_label: str, text_parts: list[str]) -> ScenePresenceDecision:
         joined = " ".join(part for part in text_parts if part).strip()
@@ -1096,29 +1530,556 @@ class NpcDialogueService:
         matches = re.findall(r"[「『]([^」』]{2,80})[」』]", text)
         return matches[0].strip() if matches else ""
 
+    def _actor_label_aliases(self, profile: NarrativeProfileResponse) -> list[str]:
+        seeds = [profile.displayName]
+        persona = profile.persona if isinstance(profile.persona, dict) else {}
+        for key in ("aliases", "nameAliases"):
+            value = persona.get(key)
+            if isinstance(value, list):
+                seeds.extend(str(item) for item in value if str(item).strip())
+            elif value:
+                seeds.append(str(value))
+        aliases: list[str] = []
+        for seed in seeds:
+            for alias in self._target_label_aliases(seed):
+                if alias and alias not in aliases:
+                    aliases.append(alias)
+        return sorted(aliases, key=len, reverse=True)
+
+    def _clean_source_fragment(
+        self,
+        text: str,
+        target: NarrativeInteractionTarget | None,
+        actor_aliases: list[str],
+        max_chars: int,
+    ) -> str:
+        sentences = [
+            self._normalize_source_sentence(sentence, target, actor_aliases)
+            for sentence in self._split_source_sentences(text)
+        ]
+        readable = [(index, sentence) for index, sentence in enumerate(sentences) if self._is_readable_source_sentence(sentence)]
+        if not readable:
+            return ""
+        target_aliases = self._target_label_aliases(target.label) if target else []
+        target_indexes = [
+            index
+            for index, sentence in readable
+            if target_aliases and any(alias and alias in sentence for alias in target_aliases)
+        ]
+        selected: list[str] = []
+        if target_indexes:
+            target_index = target_indexes[0]
+            previous = next((sentence for index, sentence in reversed(readable) if index < target_index), "")
+            if previous and len(previous) <= 42 and not re.match(r"^[雲肅瑜亮操權備飛羽].{0,8}(故意|催|逼|曰|問|謂)", previous):
+                selected.append(previous)
+            selected.append(next(sentence for index, sentence in readable if index == target_index))
+        else:
+            selected.append(readable[0][1])
+        return self._sentence_or_default("".join(selected), "", max_chars=max_chars)
+
+    def _split_source_sentences(self, text: str) -> list[str]:
+        normalized = re.sub(r"\s+", "", str(text or ""))
+        normalized = re.sub(r"^(原文|線索|摘要)[:：]", "", normalized)
+        if not normalized:
+            return []
+        return [match.group(0).strip() for match in re.finditer(r"[^。！？!?]+[。！？!?][」』]?", normalized)]
+
+    def _normalize_source_sentence(
+        self,
+        sentence: str,
+        target: NarrativeInteractionTarget | None,
+        actor_aliases: list[str],
+    ) -> str:
+        normalized = str(sentence or "").strip()
+        if not normalized:
+            return ""
+        for alias in actor_aliases:
+            if alias:
+                normalized = re.sub(rf"^{re.escape(alias)}", "", normalized)
+        normalized = re.sub(r"^[又復]?(告|謂|問)([^曰：]{1,12})曰[:：]?", r"向\2說：", normalized)
+        normalized = re.sub(r"^曰[:：]?", "", normalized)
+        normalized = re.sub(r"^[，,、；：\s]+", "", normalized)
+        if target:
+            for alias in self._target_label_aliases(target.label):
+                if alias and normalized.startswith(f"{alias}曰"):
+                    normalized = normalized.replace(f"{alias}曰", f"{alias}說", 1)
+                    break
+        return normalized
+
+    def _is_readable_source_sentence(self, sentence: str) -> bool:
+        normalized = str(sentence or "").strip()
+        if not normalized:
+            return False
+        if re.search(r"stableKnowledgeBootstrap|targetId|evidenceId|contextKey|angle=", normalized, re.I):
+            return False
+        if normalized.count("「") != normalized.count("」") or normalized.count("『") != normalized.count("』"):
+            return False
+        core = re.sub(r"[。！？!?，「」『』：；、\s]", "", normalized)
+        if len(core) < 6:
+            return False
+        if re.fullmatch(r"[\u4e00-\u9fff]{1,4}(夫人|氏)?[。！？!?]?", normalized):
+            return False
+        return True
+
+    def _source_derived_scene_text(
+        self,
+        angle: str | None,
+        target: NarrativeInteractionTarget | None,
+        source_text: str,
+    ) -> str:
+        text = str(source_text or "")
+        if not text or not target or not (target.femaleFocus or angle == "emotion"):
+            return ""
+        if not self._source_mentions_target(text, target):
+            return ""
+        target_label = self._source_target_label(text, target)
+        if re.search(r"趙子龍|荊州危急|錦囊", text) and re.search(r"暗暗垂淚|垂淚", text):
+            return f"聽趙雲報稱荊州危急後，入見{target_label}，以憂色試探去留。"
+        if re.search(r"心腹之言|泣告", text):
+            return f"車前泣告{target_label}，以心腹之言求她出面解危。"
+        if re.search(r"暗暗垂淚|垂淚", text):
+            return f"入見{target_label}，以垂淚引出去留難處。"
+        return ""
+
+    def _source_derived_memory_text(
+        self,
+        angle: str | None,
+        target: NarrativeInteractionTarget | None,
+        source_text: str,
+        scene_text: str,
+    ) -> str:
+        text = str(source_text or "")
+        if not text:
+            return ""
+        if target and (target.femaleFocus or angle == "emotion") and self._source_mentions_target(text, target):
+            if re.search(r"趙子龍|荊州危急|錦囊", text) and re.search(r"暗暗垂淚|垂淚", text):
+                return "趙雲帶來荊州危急的消息，他必須借思親祭祖向孫夫人開口。"
+            if re.search(r"前後無路|追兵|心腹之言|泣告", text):
+                return "前後受阻與追兵逼近，讓他想起必須請孫夫人出面解危。"
+            if re.search(r"暗暗垂淚|垂淚", text):
+                return "去留之事壓到眼前，只能先把藏住的難處帶到孫夫人面前。"
+        if scene_text and scene_text not in text:
+            return scene_text
+        return ""
+
+    def _should_keep_dialogue_on_primary(
+        self,
+        source_text: str,
+        target: NarrativeInteractionTarget | None,
+    ) -> bool:
+        text = str(source_text or "")
+        return bool(
+            target
+            and target.femaleFocus
+            and self._source_mentions_target(text, target)
+            and re.search(r"暗暗垂淚|垂淚|泣告|心腹之言", text)
+        )
+
+    def _source_mentions_target(self, source_text: str, target: NarrativeInteractionTarget) -> bool:
+        text = str(source_text or "")
+        return any(alias and alias in text for alias in self._target_label_aliases(target.label))
+
+    def _source_target_label(self, source_text: str, target: NarrativeInteractionTarget) -> str:
+        text = str(source_text or "")
+        aliases = self._target_label_aliases(target.label)
+        for alias in aliases:
+            if alias and alias in text:
+                return alias
+        return target.label
+
+    def _source_derived_emotion_text(
+        self,
+        angle: str | None,
+        target: NarrativeInteractionTarget | None,
+        presence: ScenePresenceDecision,
+        source_text: str,
+    ) -> str:
+        text = str(source_text or "")
+        if not text or not target:
+            return ""
+        if (angle == "emotion" or target.femaleFocus) and self._source_mentions_target(text, target):
+            if re.search(r"欲去，又捨不得夫人|荊州有失|被天下人恥笑", text):
+                return "想救荊州，又捨不得夫人，心緒在責任與情分之間拉扯。"
+            if re.search(r"念備一身飄蕩異鄉|悒怏不已", text):
+                return "他以思親祭祖開口，實則把回荊州的急迫壓在心裡。"
+            if re.search(r"心腹之言|泣告", text):
+                return "危局逼到眼前，情緒收束成求援與決斷。"
+            if re.search(r"暗暗垂淚|垂淚", text):
+                return "去留難處壓在心裡，先以憂色試探對方態度。"
+        if (angle == "emotion" or target.femaleFocus) and re.search(r"垂淚|煩惱|憂|驚|懼|泣", text):
+            return "心緒落在憂懼與牽掛。"
+        if re.search(r"追兵|喊聲|大起|急|走|速退", text):
+            return "追兵逼近，心緒先轉為急迫。"
+        if re.search(r"垂淚|煩惱|憂|驚|懼|泣", text):
+            return "心緒落在憂懼與牽掛。"
+        if presence.status == "present" and (target.femaleFocus or angle == "emotion") and re.search(r"夫人|妻|妹|家|阿斗|嫂", text):
+            return "情緒落在家室與眼前安危。"
+        return ""
+
+    def _source_derived_intent_text(
+        self,
+        angle: str | None,
+        target: NarrativeInteractionTarget | None,
+        source_text: str,
+    ) -> str:
+        text = str(source_text or "")
+        if not text or not target:
+            return ""
+        if (angle == "emotion" or target.femaleFocus) and self._source_mentions_target(text, target):
+            if re.search(r"兩個商議已定|正旦日|官道等候", text):
+                return "與孫夫人定下正旦祭祖離開，並讓趙雲先到官道接應。"
+            if re.search(r"夫人既知|備欲不去|欲去，又捨不得夫人", text):
+                return "把荊州危急與不忍分離一併說明，請她共同決定去留。"
+            if re.search(r"心腹之言|泣告", text):
+                return "先把心腹之言說明，請她出面解危。"
+            if re.search(r"暗暗垂淚|垂淚", text):
+                return "先把去留難處說開，再尋求同行支持。"
+        if (angle == "emotion" or target.femaleFocus) and re.search(r"垂淚|煩惱|憂|驚|懼|泣", text):
+            return "先把眼前的憂慮說清楚。"
+        if re.search(r"追兵|喊聲|大起|速退", text):
+            return "先避開追兵，保住同行的人。"
+        if re.search(r"垂淚|煩惱|憂|驚|懼|泣", text):
+            return "先把眼前的憂慮說清楚。"
+        if (target.femaleFocus or angle == "emotion") and re.search(r"夫人|妻|妹|家|阿斗|嫂", text):
+            return "先顧住同行家眷的安危。"
+        return ""
+
+    def _build_scene_six_seeds(
+        self,
+        profile: NarrativeProfileResponse,
+        target: NarrativeInteractionTarget | None,
+        scene_facts: dict[str, Any],
+        memory_text: str,
+        emotion_text: str,
+        dialogue_text: str,
+        intent_text: str,
+    ) -> dict[str, Any]:
+        facts = scene_facts or {}
+        people = self._scene_seed_people(profile, target, facts)
+        objects = self._scene_seed_objects(facts)
+        time_seed = self._scene_seed_time(facts)
+        place_seed = self._scene_seed_place(facts, objects)
+        event_seed = self._scene_seed_event(
+            target=target,
+            facts=facts,
+            people=people,
+            objects=objects,
+            memory_text=memory_text,
+            dialogue_text=dialogue_text,
+            intent_text=intent_text,
+        )
+        return {
+            "people": people,
+            "event": event_seed,
+            "time": time_seed,
+            "place": place_seed,
+            "objects": objects,
+            "emotion": self._clean_seed_text(emotion_text, max_chars=90),
+        }
+
+    def _scene_seed_people(
+        self,
+        profile: NarrativeProfileResponse,
+        target: NarrativeInteractionTarget | None,
+        facts: dict[str, Any],
+    ) -> list[dict[str, str | None]]:
+        result: list[dict[str, str | None]] = []
+        seen: set[str] = set()
+
+        def add(person_id: str | None, label: str | None, role: str | None) -> None:
+            clean_label = str(label or "").strip()
+            if not clean_label or clean_label in seen:
+                return
+            result.append({"id": person_id, "label": clean_label, "role": role})
+            seen.add(clean_label)
+
+        add(profile.generalId, profile.displayName, "主角")
+        if target:
+            add(target.targetId, target.label, target.role)
+        fact_text = " ".join(str(value or "") for value in [facts.get("event"), facts.get("dialogue")])
+        for item in facts.get("people") or []:
+            if not isinstance(item, dict):
+                continue
+            label = str(item.get("label") or "")
+            if label and label not in {profile.displayName, target.label if target else ""} and label not in fact_text:
+                continue
+            add(
+                str(item.get("id") or "") or None,
+                label,
+                str(item.get("role") or "") or None,
+            )
+            if len(result) >= 6:
+                break
+        return result[:6]
+
+    def _scene_seed_objects(self, facts: dict[str, Any]) -> list[str]:
+        raw_objects = [str(item).strip() for item in facts.get("objects") or [] if str(item).strip()]
+        priority = ["荊州危急", "追兵", "喊聲", "錦囊", "官道", "船隻", "車駕", "家眷", "府堂", "劍"]
+        ordered = [item for item in priority if item in raw_objects]
+        for item in raw_objects:
+            if item in {"馬", "兵馬"} and not any(flag in raw_objects for flag in ["追兵", "喊聲"]):
+                continue
+            if item not in ordered:
+                ordered.append(item)
+        return ordered[:5]
+
+    def _scene_seed_time(self, facts: dict[str, Any]) -> str:
+        time_markers = [str(item).strip() for item in facts.get("time") or [] if str(item).strip()]
+        if "年終" in time_markers:
+            return "年終前後"
+        if "正旦" in time_markers:
+            return "正旦前後"
+        if "歲旦" in time_markers:
+            return "歲旦前後"
+        return time_markers[0] if time_markers else ""
+
+    def _scene_seed_place(self, facts: dict[str, Any], objects: list[str]) -> str:
+        locations = []
+        for item in facts.get("locations") or []:
+            location = str(item or "").strip()
+            if not location:
+                continue
+            if re.search(r"報說|使荊州|龍報|不想|只去", location):
+                continue
+            if "荊州危急" in objects and location == "荊州":
+                continue
+            locations.append(location)
+        return locations[0] if locations else ""
+
+    def _scene_seed_event(
+        self,
+        target: NarrativeInteractionTarget | None,
+        facts: dict[str, Any],
+        people: list[dict[str, str | None]],
+        objects: list[str],
+        memory_text: str,
+        dialogue_text: str,
+        intent_text: str,
+    ) -> str:
+        labels = [str(item.get("label") or "") for item in people if isinstance(item, dict)]
+        target_label = target.label if target else ""
+        has_zhao_yun = any(label == "趙雲" for label in labels)
+        if "荊州危急" in objects and target_label:
+            messenger = "趙雲報來荊州危急" if has_zhao_yun else "荊州危急傳來"
+            if re.search(r"正旦|官道|接應", intent_text):
+                return f"{messenger}，去留已經不能再拖"
+            return f"{messenger}，必須向{target_label}說明去留難處"
+        if "追兵" in objects and target_label:
+            return f"追兵逼近，眼前先要護住{target_label}與同行的人"
+        for value in [facts.get("event"), memory_text]:
+            seed = self._clean_seed_text(str(value or ""), max_chars=90)
+            if seed:
+                return seed
+        if dialogue_text:
+            return self._clean_seed_text(f"話題轉到「{dialogue_text}」", max_chars=90)
+        return ""
+
+    def _clean_seed_text(self, text: str, max_chars: int = 96) -> str:
+        value = " ".join(str(text or "").split()).strip()
+        value = value.strip("。；，、 ")
+        if len(value) <= max_chars:
+            return value
+        trimmed = value[:max_chars].rstrip("，、；： ")
+        return trimmed
+
     def _render_scene_director_story(
         self,
-        display_name: str,
+        profile: NarrativeProfileResponse,
         target: NarrativeInteractionTarget | None,
         beats: SceneDirectorBeats,
     ) -> str:
-        parts = [
-            beats.sceneText,
-            beats.memoryText if beats.memoryText and beats.memoryText != beats.sceneText else "",
-            beats.emotionText,
-            f"他低聲說：「{beats.dialogueText}」" if beats.dialogueText else "",
-            beats.intentText,
+        seeds = beats.sceneSeeds or self._build_scene_six_seeds(
+            profile=profile,
+            target=target,
+            scene_facts=beats.sceneFacts,
+            memory_text=beats.memoryText,
+            emotion_text=beats.emotionText,
+            dialogue_text=beats.dialogueText,
+            intent_text=beats.intentText,
+        )
+        place = str(seeds.get("place") or "").strip()
+        time_text = str(seeds.get("time") or "").strip()
+        event = str(seeds.get("event") or "").strip()
+        emotion = str(seeds.get("emotion") or "").strip()
+        fact_text = " ".join(
+            str(value or "")
+            for value in [beats.sceneFacts.get("event"), beats.sceneFacts.get("dialogue")]
+            if isinstance(beats.sceneFacts, dict)
+        )
+        target_label = self._source_target_label(fact_text, target) if target else ""
+        actor = "他" if profile.displayName else "此人"
+
+        parts: list[str] = []
+        setting = self._scene_seed_setting_sentence(time_text, place)
+        if event:
+            parts.append(self._ensure_sentence(f"{setting}，{event}" if setting else event))
+        elif setting:
+            parts.append(self._ensure_sentence(setting))
+        emotion_sentence = self._scene_story_emotion_sentence(actor, emotion)
+        if emotion_sentence:
+            parts.append(emotion_sentence)
+        if beats.dialogueText:
+            speaker_target = target_label or "眼前的人"
+            parts.append(self._ensure_sentence(f"{actor}轉向{speaker_target}，低聲說：「{beats.dialogueText}」"))
+        intent_sentence = self._scene_story_intent_sentence(beats.intentText, target_label)
+        if intent_sentence:
+            parts.append(intent_sentence)
+        return "".join(self._dedupe_scene_story_sentences(parts))
+
+    def _scene_seed_setting_sentence(self, time_text: str, place: str) -> str:
+        if time_text and place:
+            if time_text.endswith("前後"):
+                return f"{time_text}的{place}"
+            return f"{place}，{time_text}"
+        return place or time_text
+
+    def _scene_story_emotion_sentence(self, actor: str, emotion: str) -> str:
+        clean = self._clean_seed_text(emotion, max_chars=88)
+        if not clean:
+            return ""
+        if "責任與情分" in clean:
+            return self._ensure_sentence(f"責任與情分同時壓上來，{actor}先把急迫藏進停頓裡")
+        if clean.startswith("想") or clean.startswith("心緒") or clean.startswith("情緒"):
+            return self._ensure_sentence(clean)
+        return self._ensure_sentence(f"{actor}{clean}")
+
+    def _scene_story_intent_sentence(self, intent_text: str, target_label: str) -> str:
+        intent = self._clean_seed_text(intent_text, max_chars=100)
+        if not intent:
+            return ""
+        if target_label and intent.startswith(f"與{target_label}"):
+            intent = "兩人" + intent[len(f"與{target_label}") :]
+        return self._ensure_sentence(f"話說開後，{intent}")
+
+    def _dedupe_scene_story_sentences(self, sentences: list[str]) -> list[str]:
+        result: list[str] = []
+        seen_keywords: set[str] = set()
+        for sentence in sentences:
+            clean = self._ensure_sentence(sentence)
+            if not clean:
+                continue
+            normalized = re.sub(r"[，。；：「」『』、\s]", "", clean)
+            keywords = {
+                keyword
+                for keyword in ["荊州危急", "趙雲", "孫夫人", "去留", "責任", "情分", "正旦", "官道", "追兵"]
+                if keyword in clean
+            }
+            if any(normalized in existing or existing in normalized for existing in [re.sub(r"[，。；：「」『』、\s]", "", item) for item in result]):
+                continue
+            if keywords and keywords == seen_keywords and result:
+                continue
+            seen_keywords |= keywords
+            result.append(clean)
+        return result
+
+    def _scene_fact_opening(
+        self,
+        display_name: str,
+        target: NarrativeInteractionTarget | None,
+        scene_facts: dict[str, Any] | None,
+    ) -> str:
+        facts = scene_facts or {}
+        locations = [str(item).strip() for item in facts.get("locations") or [] if str(item).strip()]
+        time_markers = [str(item).strip() for item in facts.get("time") or [] if str(item).strip()]
+        objects = [str(item).strip() for item in facts.get("objects") or [] if str(item).strip()]
+        people = [
+            str(item.get("label") or "").strip()
+            for item in facts.get("people") or []
+            if isinstance(item, dict) and str(item.get("label") or "").strip()
         ]
-        return "".join(self._ensure_sentence(part) for part in parts if part)
+        fact_text = " ".join(
+            str(value or "")
+            for value in [facts.get("event"), facts.get("dialogue")]
+        )
+        target_label = self._source_target_label(fact_text, target) if target else ""
+        companion_labels = [
+            label
+            for label in people
+            if label and label not in {display_name, target_label}
+        ][:2]
+        setting_locations = list(locations)
+        if "荊州危急" in objects and len(setting_locations) > 1:
+            setting_locations = [item for item in setting_locations if item != "荊州"] or setting_locations
+        setting_limit = 1 if "荊州危急" in objects else 2
+        setting = "、".join(setting_locations[:setting_limit])
+        time_text = time_markers[0] if time_markers else ""
+        pressure = self._join_zh(self._scene_pressure_terms(objects)[:2])
+        stakes = self._join_zh(self._scene_stake_terms(objects)[:2])
+        if target_label:
+            people_text = f"{target_label}也被牽入去留之事"
+        elif companion_labels:
+            people_text = f"{self._join_zh(companion_labels)}也被牽入局勢"
+        else:
+            people_text = "同行的人都被牽住"
+
+        def format_place_time() -> str:
+            if setting and time_text and time_text not in setting:
+                if time_text in {"年終", "歲旦", "正旦", "元旦"}:
+                    return f"{time_text}前後的{setting}"
+                return f"{setting}，{time_text}"
+            return setting or time_text
+
+        place_time = format_place_time()
+        if not place_time and not pressure and not stakes:
+            return ""
+        if "荊州危急" in objects:
+            messenger = "趙雲報來" if "趙雲" in people else ""
+            if place_time:
+                return self._ensure_sentence(f"{place_time}，{messenger}荊州危急，{people_text}")
+            return self._ensure_sentence(f"{messenger}荊州危急，{people_text}")
+        if pressure:
+            if place_time:
+                return self._ensure_sentence(f"{place_time}，{pressure}壓近，{people_text}")
+            return self._ensure_sentence(f"{pressure}壓近，{people_text}")
+        if stakes:
+            if place_time:
+                return self._ensure_sentence(f"{place_time}，{stakes}牽動局面，{people_text}")
+            return self._ensure_sentence(f"{stakes}牽動局面，{people_text}")
+        return self._ensure_sentence(f"{place_time}，{people_text}")
+
+    def _scene_pressure_terms(self, objects: list[str]) -> list[str]:
+        pressure_labels = {"追兵", "喊聲", "兵馬"}
+        if "追兵" not in objects and "喊聲" not in objects:
+            pressure_labels = pressure_labels - {"兵馬"}
+        return [item for item in objects if item in pressure_labels]
+
+    def _scene_stake_terms(self, objects: list[str]) -> list[str]:
+        mapping = {
+            "家眷": "家眷安危",
+            "車駕": "車前去留",
+            "船隻": "水路去留",
+            "劍": "兵器威脅",
+            "馬": "行路去留",
+        }
+        return [mapping[item] for item in objects if item in mapping]
+
+    def _join_zh(self, values: list[str]) -> str:
+        cleaned = [value for value in values if value]
+        if not cleaned:
+            return ""
+        if len(cleaned) == 1:
+            return cleaned[0]
+        return "、".join(cleaned[:-1]) + "與" + cleaned[-1]
 
     def _build_data_first_chorus_line(
         self,
+        profile: NarrativeProfileResponse,
         target: NarrativeInteractionTarget,
         main_target: NarrativeInteractionTarget | None,
         card: NarrativeEvidenceCard | None,
         beats: SceneDirectorBeats,
+        story_text: str,
     ) -> SceneChorusLine:
-        text = self._render_chorus_fallback("", target, main_target, card, beats)
+        persona_card = self.get_persona_card(target.targetId)
+        text = self._render_persona_chorus_fallback(
+            profile=profile,
+            target=target,
+            main_target=main_target,
+            card=card,
+            beats=beats,
+            story_text=story_text,
+            persona_card=persona_card,
+        )
         evidence_refs = sorted(set((card.sourceRefs if card else []) + target.evidenceRefs))
         return SceneChorusLine(
             targetId=target.targetId,
@@ -1131,6 +2092,71 @@ class NpcDialogueService:
             evidenceRefs=evidence_refs[:12],
         )
 
+    def _scene_seed_text(self, beats: SceneDirectorBeats) -> str:
+        pairs = [
+            ("想起什麼", beats.memoryText),
+            ("心裡怎麼變", beats.emotionText),
+            ("對此人的一句話", beats.dialogueText),
+            ("接下來想做什麼", beats.intentText),
+        ]
+        return "\n".join(f"{label}：{value}" for label, value in pairs if str(value or "").strip())
+
+    def _build_scene_director_story_context(
+        self,
+        profile: NarrativeProfileResponse,
+        target: NarrativeInteractionTarget | None,
+        card: NarrativeEvidenceCard | None,
+        beats: SceneDirectorBeats,
+    ) -> dict[str, Any]:
+        return {
+            "saveId": f"demo-scene-director-{profile.generalId}",
+            "shortTerm": f"導演六種子：{json.dumps(beats.sceneSeeds, ensure_ascii=False)}",
+            "longTerm": (
+                f"主角：{profile.displayName}。"
+                f"互動對象：{target.label if target else '未指定'}。"
+                f"關係：{target.role if target else '未指定'}。"
+                f"角度：{card.angle if card else '未指定'}。"
+                f"在場判斷：{beats.presence.status}。"
+            ),
+            "playerProfile": (
+                f"場景事實：{json.dumps(beats.sceneFacts, ensure_ascii=False)}。"
+                f"原始四格只作為溯源，不得逐句拼貼：{self._scene_seed_text(beats)}。"
+                f"可用證據：{'、'.join(beats.sourceRefs[:6]) if beats.sourceRefs else '無'}。"
+            ),
+            "promises": (
+                "請當場景導演，只用六種子的人、事、時、地、物、感情編成一齣短劇本。"
+                "四格原文只能協助理解，不得逐句拼接或重複同一事實；"
+                "不要出現資料欄位名、英文變數、模板語氣或無根據的新事件。"
+            ),
+        }
+
+    def _build_scene_director_selected_context(
+        self,
+        profile: NarrativeProfileResponse,
+        target: NarrativeInteractionTarget | None,
+        card: NarrativeEvidenceCard | None,
+        beats: SceneDirectorBeats,
+    ) -> dict[str, Any]:
+        return {
+            "task": "scene-director-script",
+            "mainActor": {"generalId": profile.generalId, "displayName": profile.displayName},
+            "activeTarget": {
+                "targetId": target.targetId if target else None,
+                "label": target.label if target else None,
+                "role": target.role if target else None,
+            },
+            "angle": card.angle if card else None,
+            "sceneFacts": beats.sceneFacts,
+            "sceneSeeds": beats.sceneSeeds,
+            "sourceBeats": {
+                "memoryText": beats.memoryText,
+                "emotionText": beats.emotionText,
+                "dialogueText": beats.dialogueText,
+                "intentText": beats.intentText,
+            },
+            "sourceRefs": beats.sourceRefs,
+        }
+
     def _build_scene_chorus_line(
         self,
         request: SceneDirectorRequest,
@@ -1139,18 +2165,58 @@ class NpcDialogueService:
         main_target: NarrativeInteractionTarget | None,
         card: NarrativeEvidenceCard | None,
         beats: SceneDirectorBeats,
+        story_text: str,
     ) -> SceneChorusLine:
-        fallback = self._render_chorus_fallback(profile.displayName, target, main_target, card, beats)
+        cache_key = self._scene_chorus_cache_key(request, profile, target, main_target, card, beats)
+        with self._scene_chorus_cache_lock:
+            cached = self._scene_chorus_cache.get(cache_key)
+        if cached is not None:
+            return cached.model_copy(deep=True)
+
+        persona_card = self.get_persona_card(target.targetId)
+        speaker_context = self._speaker_persona_context(target, persona_card)
+        fallback = self._render_persona_chorus_fallback(
+            profile=profile,
+            target=target,
+            main_target=main_target,
+            card=card,
+            beats=beats,
+            story_text=story_text,
+            persona_card=persona_card,
+            speaker_context=speaker_context,
+        )
         evidence_refs = sorted(set((card.sourceRefs if card else []) + target.evidenceRefs))
         generation = self._generate_scene_director_text(
             general_id=target.targetId,
-            persona_card=self.get_persona_card(target.targetId),
+            persona_card=persona_card,
             memory_context={
                 "saveId": f"demo-chorus-{request.generalId}",
-                "shortTerm": beats.sceneText,
-                "longTerm": f"{beats.memoryText} {beats.emotionText}",
-                "playerProfile": f"{target.label} 以 {target.role} 的關係旁觀這一幕。",
-                "promises": "請輸出一句短評，不要提到自己的名字，不要使用資料欄位名。",
+                "shortTerm": f"本幕短劇本：{story_text}",
+                "longTerm": self._scene_seed_text(beats),
+                "playerProfile": (
+                    f"發話者與主角{profile.displayName}的關係：{target.role}。"
+                    f"本幕互動對象：{main_target.label if main_target else '未指定'}。"
+                    f"發話者人格資料：{self._speaker_persona_summary(speaker_context)}。"
+                ),
+                "promises": (
+                    "請以發話者視角說一句自然短對白；要讓 persona、關係與本幕短劇本共同決定語氣。"
+                    "不要提到自己的名字；不要用旁白解釋資料；"
+                    "不要回『先看證據、先說清楚、再談判斷、安住人心』這種可套到任何人的泛句。"
+                ),
+            },
+            selected_context={
+                "task": "chorus-line",
+                "speaker": {"generalId": target.targetId, "displayName": target.label, "relationshipToMain": target.role},
+                "speakerPersona": speaker_context,
+                "mainActor": {"generalId": request.generalId, "displayName": profile.displayName},
+                "activeTarget": {
+                    "targetId": main_target.targetId if main_target else None,
+                    "label": main_target.label if main_target else None,
+                    "role": main_target.role if main_target else None,
+                },
+                "sceneScript": story_text,
+                "sceneFacts": beats.sceneFacts,
+                "sceneSeed": beats.model_dump(),
             },
             evidence_refs=evidence_refs,
             deterministic_text=fallback,
@@ -1158,8 +2224,23 @@ class NpcDialogueService:
             locale=request.locale,
             llm_model_preset=request.llmModelPreset,
             speech_context_mode="inner_monologue",
+            tone_mode="in-character",
+            selected_keywords=self._scene_chorus_keywords(profile, target, main_target, beats, speaker_context),
         )
-        return SceneChorusLine(
+        generation = self._repair_complete_generation(
+            generation,
+            fallback_text=fallback,
+            max_chars=request.maxChorusChars,
+            warning_code="scene_chorus_trimmed_to_complete_sentence",
+        )
+        generation = self._repair_chorus_generation(
+            generation=generation,
+            fallback_text=fallback,
+            max_chars=request.maxChorusChars,
+            target=target,
+            speaker_context=speaker_context,
+        )
+        line = SceneChorusLine(
             targetId=target.targetId,
             label=target.label,
             role=target.role,
@@ -1169,6 +2250,554 @@ class NpcDialogueService:
             fallbackUsed=generation.fallbackUsed,
             evidenceRefs=evidence_refs[:12],
         )
+        with self._scene_chorus_cache_lock:
+            self._scene_chorus_cache[cache_key] = line.model_copy(deep=True)
+        return line
+
+    def _build_scene_chorus_lines(
+        self,
+        request: SceneDirectorRequest,
+        profile: NarrativeProfileResponse,
+        targets: list[NarrativeInteractionTarget],
+        main_target: NarrativeInteractionTarget | None,
+        card: NarrativeEvidenceCard | None,
+        beats: SceneDirectorBeats,
+        story_text: str,
+    ) -> list[SceneChorusLine]:
+        if not targets:
+            return []
+        results: list[SceneChorusLine | None] = [None] * len(targets)
+        max_workers = min(4, len(targets))
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_map = {
+                executor.submit(
+                    self._build_scene_chorus_line,
+                    request,
+                    profile,
+                    target,
+                    main_target,
+                    card,
+                    beats,
+                    story_text,
+                ): index
+                for index, target in enumerate(targets)
+            }
+            for future in as_completed(future_map):
+                index = future_map[future]
+                target = targets[index]
+                try:
+                    results[index] = future.result()
+                except Exception as exc:  # pragma: no cover - defensive fallback for provider failures
+                    log_debug_event(
+                        "scene_director.chorus.error",
+                        targetId=target.targetId,
+                        error=str(exc)[:240],
+                    )
+                    evidence_refs = sorted(set((card.sourceRefs if card else []) + target.evidenceRefs))
+                    results[index] = SceneChorusLine(
+                        targetId=target.targetId,
+                        label=target.label,
+                        role=target.role,
+                        text=self._render_persona_chorus_fallback(
+                            profile=profile,
+                            target=target,
+                            main_target=main_target,
+                            card=card,
+                            beats=beats,
+                            story_text=story_text,
+                            persona_card=self.get_persona_card(target.targetId),
+                        ),
+                        provider="data_first",
+                        model=None,
+                        fallbackUsed=True,
+                        evidenceRefs=evidence_refs[:12],
+                    )
+        return [line for line in results if line is not None]
+
+    def _scene_chorus_cache_key(
+        self,
+        request: SceneDirectorRequest,
+        profile: NarrativeProfileResponse,
+        target: NarrativeInteractionTarget,
+        main_target: NarrativeInteractionTarget | None,
+        card: NarrativeEvidenceCard | None,
+        beats: SceneDirectorBeats,
+    ) -> str:
+        payload = {
+            "version": 3,
+            "generalId": request.generalId,
+            "speakerId": target.targetId,
+            "speakerRole": target.role,
+            "activeTargetId": main_target.targetId if main_target else None,
+            "activeTargetRole": main_target.role if main_target else None,
+            "evidenceId": card.evidenceId if card else None,
+            "angle": card.angle if card else request.angle,
+            "locale": request.locale,
+            "maxChars": request.maxChorusChars,
+            "seed": {
+                "memoryText": beats.memoryText,
+                "emotionText": beats.emotionText,
+                "dialogueText": beats.dialogueText,
+                "intentText": beats.intentText,
+            },
+            "sourceRefs": beats.sourceRefs,
+        }
+        raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        return hashlib.sha1(raw.encode("utf-8")).hexdigest()
+
+    def _scene_chorus_keywords(
+        self,
+        profile: NarrativeProfileResponse,
+        target: NarrativeInteractionTarget,
+        main_target: NarrativeInteractionTarget | None,
+        beats: SceneDirectorBeats,
+        speaker_context: dict[str, Any] | None = None,
+    ) -> list[dict[str, Any]]:
+        keywords: list[dict[str, Any]] = [
+            {
+                "keywordKey": f"relationship.{target.targetId}.{profile.generalId}",
+                "category": "relationship",
+                "label": target.role,
+                "sourceRefs": target.evidenceRefs[:4],
+            }
+        ]
+        for label in self._speaker_persona_anchor_terms(speaker_context or {})[:2]:
+            keywords.append(
+                {
+                    "keywordKey": f"speaker_persona.{target.targetId}.{label}",
+                    "category": "speaker_persona",
+                    "label": label,
+                    "sourceRefs": target.evidenceRefs[:4],
+                }
+            )
+        if main_target:
+            keywords.append(
+                {
+                    "keywordKey": f"active_target.{main_target.targetId}",
+                    "category": "target",
+                    "label": main_target.role or main_target.label,
+                    "sourceRefs": main_target.evidenceRefs[:4],
+                }
+            )
+        seed_text = " ".join([beats.memoryText, beats.emotionText, beats.dialogueText, beats.intentText])
+        for key, pattern, label in [
+            ("chase", r"追兵|喊聲|逼近|急迫", "追兵逼近"),
+            ("worry", r"垂淚|憂懼|牽掛|煩惱", "憂懼牽掛"),
+            ("family", r"夫人|家眷|家室|同行的人", "家室安危"),
+            ("decision", r"去留|下一步|說清楚|避開", "下一步抉擇"),
+        ]:
+            if re.search(pattern, seed_text):
+                keywords.append(
+                    {
+                        "keywordKey": f"scene_seed.{key}",
+                        "category": "scene_seed",
+                        "label": label,
+                        "sourceRefs": beats.sourceRefs[:4],
+                    }
+                )
+        return keywords[:6]
+
+    def _speaker_persona_context(
+        self,
+        target: NarrativeInteractionTarget,
+        persona_card: PersonaCard | None,
+    ) -> dict[str, Any]:
+        roster_row = self._load_roster_index().get(target.targetId) or {}
+        voice_style = list(persona_card.voiceStyle if persona_card else [])
+        personality_traits = list(persona_card.personalityTraits if persona_card else [])
+        lore_values = [
+            roster_row.get("historicalAnecdote"),
+            roster_row.get("bloodlineRumor"),
+            roster_row.get("parentsSummary"),
+            roster_row.get("description"),
+            roster_row.get("story"),
+            roster_row.get("personality"),
+        ]
+        lore_text = " ".join(str(value or "").strip() for value in lore_values if str(value or "").strip())
+        role_text = " ".join(
+            str(value or "")
+            for value in [
+                target.role,
+                target.relationshipType,
+                target.sourceType,
+                target.gender,
+                lore_text,
+                " ".join(voice_style),
+                " ".join(personality_traits),
+            ]
+        )
+        return {
+            "generalId": target.targetId,
+            "displayName": persona_card.displayName if persona_card else target.label,
+            "relationshipToMain": target.role,
+            "relationshipType": target.relationshipType,
+            "voiceStyle": voice_style,
+            "personalityTraits": personality_traits,
+            "safeFallbackLine": persona_card.safeFallbackLine if persona_card else "",
+            "gender": target.gender,
+            "femaleFocus": target.femaleFocus,
+            "lore": self._compact_persona_lore(lore_text),
+            "anchors": self._extract_persona_anchor_terms(role_text),
+            "archetype": self._speaker_archetype(role_text, target),
+            "personaSource": "persona-card" if persona_card else "relationship-only",
+        }
+
+    def _compact_persona_lore(self, lore_text: str, max_chars: int = 170) -> str:
+        compact = " ".join(str(lore_text or "").split())
+        if len(compact) <= max_chars:
+            return compact
+        sentence_ends = [index + 1 for index, char in enumerate(compact[:max_chars]) if char in "。！？"]
+        if sentence_ends:
+            return compact[: sentence_ends[-1]]
+        return compact[: max_chars - 1] + "…"
+
+    def _extract_persona_anchor_terms(self, text: str) -> list[str]:
+        raw = str(text or "")
+        candidates = [
+            "江東",
+            "主君",
+            "形勢",
+            "人心",
+            "務實",
+            "審勢",
+            "婚盟",
+            "宗室",
+            "內母",
+            "面子",
+            "家線",
+            "家室",
+            "家眷",
+            "阿斗",
+            "孩子",
+            "生路",
+            "犧牲",
+            "長坂坡",
+            "自主",
+            "鋒性",
+            "帶兵",
+            "騎射",
+            "重義",
+            "豪烈",
+            "直率",
+            "沉穩",
+            "威嚴",
+            "少言",
+            "軍師",
+            "謀定",
+            "謹慎應對",
+        ]
+        mapped_traits = self._humanize_tag_list(re.split(r"[\s,、]+", raw))
+        values: list[str] = []
+        for candidate in candidates:
+            if candidate and candidate in raw and candidate not in values:
+                values.append(candidate)
+        for item in re.split(r"[、,\s]+", mapped_traits):
+            if item and item not in {"符合三國語境", "謹慎應對"} and item not in values:
+                values.append(item)
+        return values[:8]
+
+    def _speaker_persona_anchor_terms(self, speaker_context: dict[str, Any]) -> list[str]:
+        anchors = [str(item).strip() for item in (speaker_context.get("anchors") or []) if str(item).strip()]
+        if anchors:
+            return anchors
+        fallback_values = [
+            speaker_context.get("relationshipToMain"),
+            speaker_context.get("relationshipType"),
+            speaker_context.get("gender"),
+        ]
+        return [str(item).strip() for item in fallback_values if str(item).strip()][:3]
+
+    def _speaker_archetype(self, text: str, target: NarrativeInteractionTarget) -> str:
+        raw = str(text or "")
+        if any(token in raw for token in ["婚盟", "宗室", "內母", "面子"]):
+            return "marriage_mediator"
+        if any(token in raw for token in ["長坂坡", "犧牲感", "犧牲", "生路讓給", "井底"]):
+            return "family_sacrifice"
+        if any(token in raw for token in ["家線", "不成額外的負擔", "顛沛", "阿斗"]):
+            return "family_line"
+        if any(token in raw for token in ["生路", "犧牲", "嬰孩", "孩子", "長坂坡"]):
+            return "family_sacrifice"
+        if any(token in raw for token in ["江東", "主君", "審勢", "務實", "形勢", "governance-minded", "strategic"]):
+            return "jiangdong_ruler"
+        if any(token in raw for token in ["豪烈", "直率", "戰場威壓", "direct_force", "martial"]):
+            return "martial_direct"
+        if any(token in raw for token in ["沉穩", "威嚴", "少言", "重義", "sworn_sibling", "loyal_oath"]):
+            return "oath_guardian"
+        if target.femaleFocus:
+            return "family_witness"
+        if target.relationshipType in {"enemy_rival", "battlefield_opponent"}:
+            return "rival_observer"
+        return "measured_observer"
+
+    def _speaker_persona_summary(self, speaker_context: dict[str, Any]) -> str:
+        anchors = "、".join(self._speaker_persona_anchor_terms(speaker_context)[:5])
+        source = str(speaker_context.get("personaSource") or "")
+        lore = str(speaker_context.get("lore") or "").strip()
+        parts = [
+            f"來源={source}" if source else "",
+            f"人格錨點={anchors}" if anchors else "",
+            f"角色弧光={speaker_context.get('archetype') or ''}",
+            f"人物小傳={lore}" if lore else "",
+        ]
+        return "；".join(part for part in parts if part)
+
+    def _render_persona_chorus_fallback(
+        self,
+        profile: NarrativeProfileResponse,
+        target: NarrativeInteractionTarget,
+        main_target: NarrativeInteractionTarget | None,
+        card: NarrativeEvidenceCard | None,
+        beats: SceneDirectorBeats,
+        story_text: str,
+        persona_card: PersonaCard | None,
+        speaker_context: dict[str, Any] | None = None,
+    ) -> str:
+        context = speaker_context or self._speaker_persona_context(target, persona_card)
+        seed_text = " ".join(
+            part
+            for part in [beats.memoryText, beats.emotionText, beats.dialogueText, beats.intentText, story_text]
+            if part
+        )
+        archetype = str(context.get("archetype") or "measured_observer")
+        pressure_scene = bool(re.search(r"追兵|喊聲|逼近|急迫|兵馬", seed_text))
+        worry_scene = bool(re.search(r"垂淚|憂懼|牽掛|煩惱|心事|去留", seed_text))
+        active_is_family = bool(main_target and (main_target.femaleFocus or re.search(r"夫人|家室|家眷|姻親|家", main_target.role)))
+        variants_by_archetype: dict[str, list[str]] = {
+            "jiangdong_ruler": [
+                "江東若被拖進這場家事，就得先分清情面與兵勢。",
+                "人心若亂，後頭再好的兵勢也壓不住。",
+                "婚事牽到兵事，不能只讓一時心軟作主。",
+            ],
+            "marriage_mediator": [
+                "婚盟走到這一步，先把家人的臉面與安危擺平。",
+                "刀還沒出鞘，家裡的話要先有人接住。",
+                "別讓兩家的情面先碎在門內。",
+            ],
+            "family_line": [
+                "越亂的時候，越不能讓家室再成他的牽累。",
+                "人能穩住，這一路顛沛才不會把心也磨散。",
+                "顛沛已經夠重，家裡這條線不能再被扯斷。",
+            ],
+            "family_sacrifice": [
+                "生路若只剩一線，就先把孩子與家統護住。",
+                "亂軍最會吞人，家裡那條線不能再斷。",
+                "該讓路時，先讓能活下去的人走。",
+            ],
+            "martial_direct": [
+                "追兵近了就先擋，心裡的話等人站穩再說。",
+                "要護住人，就別讓追兵碰到車前。",
+                "情勢已經逼到背後，話再急也得先把路打開。",
+            ],
+            "oath_guardian": [
+                "只要他要護人，我就替他把退路撐住。",
+                "義字到了眼前，不必多言，先把人護穩。",
+                "他心裡有難處，身邊的人更不能散。",
+            ],
+            "rival_observer": [
+                "這一退若亂了章法，破綻就會自己露出來。",
+                "人情壓到軍務上，正是最容易失手的時候。",
+                "越想兩邊都保住，越要防有人趁縫下手。",
+            ],
+            "family_witness": [
+                "話若牽到家室，就不能只靠沉默撐過去。",
+                "人已在局中，去留與安危都得當面說明。",
+                "這不是一句煩惱能帶過的事，先把同行的人護住。",
+            ],
+            "measured_observer": [
+                "此刻若只看眼前一口氣，後面的路反而會亂。",
+                "人心已被牽動，下一步就不能只照兵勢走。",
+                "話可以慢些說，但退路與安危不能慢。",
+            ],
+        }
+        variants = list(variants_by_archetype.get(archetype) or variants_by_archetype["measured_observer"])
+        if pressure_scene and archetype == "measured_observer":
+            variants.append("追兵既近，先讓人離開險處，其他話才說得下去。")
+        if worry_scene and active_is_family and archetype == "measured_observer":
+            variants.append("家室已被牽進局裡，這話不能只按軍務處置。")
+        key = json.dumps(
+            {
+                "speaker": target.targetId,
+                "archetype": archetype,
+                "mainTarget": main_target.targetId if main_target else None,
+                "angle": card.angle if card else None,
+                "seed": self._scene_seed_text(beats),
+                "story": story_text[:120],
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        return self._strip_speaker_self_mentions(
+            self._ensure_sentence(self._pick_chorus_fallback_variant(key, variants)),
+            target,
+            persona_card,
+        )
+
+    def _repair_chorus_generation(
+        self,
+        generation: DialogueGenerationResult,
+        fallback_text: str,
+        max_chars: int,
+        target: NarrativeInteractionTarget,
+        speaker_context: dict[str, Any],
+    ) -> DialogueGenerationResult:
+        persona_card = self.get_persona_card(target.targetId)
+        cleaned = self._strip_speaker_self_mentions(generation.text, target, persona_card)
+        repaired = self._complete_generated_text(cleaned, fallback_text, max_chars)
+        warnings = list(generation.qualityWarnings)
+        repair_used = generation.repairUsed
+        if repaired != generation.text:
+            warnings.append("scene_chorus_self_name_or_sentence_repaired")
+            repair_used = True
+        if self._is_generic_chorus_line(repaired, speaker_context):
+            warnings.append("scene_chorus_generic_replaced_by_persona_fallback")
+            return replace(
+                generation,
+                text=fallback_text,
+                fallbackUsed=True,
+                qualityWarnings=warnings,
+                repairUsed=True,
+            )
+        return replace(
+            generation,
+            text=repaired,
+            qualityWarnings=warnings,
+            repairUsed=repair_used,
+        )
+
+    def _strip_speaker_self_mentions(
+        self,
+        text: str,
+        target: NarrativeInteractionTarget,
+        persona_card: PersonaCard | None,
+    ) -> str:
+        cleaned = str(text or "").strip()
+        names = [target.label]
+        if persona_card:
+            names.append(persona_card.displayName)
+        names = [name for name in dict.fromkeys(name.strip() for name in names if name and len(name.strip()) >= 2)]
+        for name in names:
+            cleaned = re.sub(rf"^{re.escape(name)}[：:，,、\s]*(認為|覺得|看來|說|道)?[：:，,、\s]*", "", cleaned)
+            cleaned = cleaned.replace(f"{name}認為", "")
+            cleaned = cleaned.replace(f"{name}覺得", "")
+            cleaned = cleaned.replace(f"{name}看來", "")
+        return self._ensure_sentence(cleaned)
+
+    def _is_generic_chorus_line(self, text: str, speaker_context: dict[str, Any]) -> bool:
+        cleaned = str(text or "").strip()
+        if not cleaned:
+            return True
+        generic_patterns = [
+            r"先看證據",
+            r"再說判斷",
+            r"先說清楚",
+            r"先聽完",
+            r"別的判斷",
+            r"安得住人",
+            r"安住人心",
+            r"這份憂色",
+            r"這份憂慮",
+            r"話還沒說透",
+            r"局勢如何轉圜",
+            r"局勢才不會",
+            r"這一步不能只看",
+            r"先看後路",
+        ]
+        has_generic_phrase = any(re.search(pattern, cleaned) for pattern in generic_patterns)
+        anchors = self._speaker_persona_anchor_terms(speaker_context)
+        has_persona_anchor = any(anchor and anchor in cleaned for anchor in anchors)
+        return has_generic_phrase and not has_persona_anchor
+
+    def _render_seeded_chorus_fallback(
+        self,
+        profile: NarrativeProfileResponse,
+        target: NarrativeInteractionTarget,
+        main_target: NarrativeInteractionTarget | None,
+        beats: SceneDirectorBeats,
+    ) -> str:
+        seed_text = " ".join([beats.memoryText, beats.emotionText, beats.dialogueText, beats.intentText])
+        if re.search(r"追兵|喊聲|逼近", seed_text):
+            if main_target and main_target.femaleFocus:
+                return self._pick_chorus_fallback_variant(
+                    target.targetId,
+                    [
+                        "這不是單純進退，家室與去留都被追兵逼到眼前了。",
+                        "若連同行的人都未安，這一步就不能只按兵勢來算。",
+                        "追兵壓上來時，最怕情分與軍務一起亂成一團。",
+                    ],
+                )
+            if target.femaleFocus:
+                return self._pick_chorus_fallback_variant(
+                    target.targetId,
+                    [
+                        "先讓人離開險處，情分與話語都可稍後再理。",
+                        "這時候先保住同行的人，比急著分說更要緊。",
+                        "路若還不穩，心裡的話就先放輕一些。",
+                    ],
+                )
+            if target.relationshipType in {"sworn_sibling", "battle_ally", "loyal_oath"}:
+                return self._pick_chorus_fallback_variant(
+                    target.targetId,
+                    [
+                        "若他要護住同行的人，我便替他把後路守穩。",
+                        "先把追兵擋遠，才輪得到心裡那些難處。",
+                        "他要顧全身邊的人，我先替他看住亂局。",
+                    ],
+                )
+            if target.relationshipType in {"enemy_rival", "battlefield_opponent"}:
+                return self._pick_chorus_fallback_variant(
+                    target.targetId,
+                    [
+                        "這一退若露出破綻，後面的局勢便會被人咬住。",
+                        "越是倉促，越容易讓旁人看出可趁之處。",
+                    ],
+                )
+            return self._pick_chorus_fallback_variant(
+                target.targetId,
+                [
+                    "追兵一近，話裡的分寸比刀兵還容易失手。",
+                    "這一刻若只看退路，反而會漏掉人的去留。",
+                ],
+            )
+        if re.search(r"垂淚|憂懼|牽掛|煩惱", seed_text):
+            if main_target and main_target.femaleFocus:
+                return self._pick_chorus_fallback_variant(
+                    target.targetId,
+                    [
+                        "這份憂色牽著家室，也牽著兩邊日後的去路。",
+                        "話還沒說透，人的心已經先被這場局勢牽住了。",
+                        "此刻最難的不是開口，而是開口後仍能把人安住。",
+                    ],
+                )
+            if target.femaleFocus:
+                return self._pick_chorus_fallback_variant(
+                    target.targetId,
+                    [
+                        "這話若壓在心裡，只會讓人更難安定。",
+                        "心事牽著家室，就不能只藏在心裡。",
+                        "心事已到眼前，別再只用沉默撐著。",
+                    ],
+                )
+            if target.relationshipType in {"sworn_sibling", "battle_ally", "loyal_oath"}:
+                return self._pick_chorus_fallback_variant(
+                    target.targetId,
+                    [
+                        "他若心中有事，我先替他把局面撐住。",
+                        "先讓他把難處說出口，我再看該往哪裡補位。",
+                        "人心不穩時，身邊總得有人先站住。",
+                    ],
+                )
+            return self._pick_chorus_fallback_variant(target.targetId, ["先聽完這份憂慮，再看局勢如何轉圜。", "話說開之前，局勢還不能急著下斷。"])
+        if main_target and target.relationshipType in {"sworn_sibling", "battle_ally", "loyal_oath"}:
+            return "他若一時難決，我先替他穩住身邊的人。"
+        if target.relationshipType in {"enemy_rival", "battlefield_opponent"}:
+            return "這一步若慢了，便會露出可趁之機。"
+        return "先把話說清，局勢才不會繼續散開。"
+
+    def _pick_chorus_fallback_variant(self, key: str, variants: list[str]) -> str:
+        if not variants:
+            return ""
+        digest = hashlib.sha1(str(key or "").encode("utf-8")).hexdigest()
+        return variants[int(digest[:4], 16) % len(variants)]
 
     def _render_chorus_fallback(
         self,
@@ -1178,29 +2807,51 @@ class NpcDialogueService:
         card: NarrativeEvidenceCard | None,
         beats: SceneDirectorBeats,
     ) -> str:
-        if target.femaleFocus:
-            return "這一步不能只看勝負，也要先顧到人的安危。"
-        if target.relationshipType in {"enemy_rival", "battlefield_opponent"}:
-            return "若此刻躁進，局勢很容易反咬回來。"
-        if target.relationshipType in {"sworn_sibling", "battle_ally", "loyal_oath"}:
-            return "先把同伴站穩，再談下一步。"
-        if card and card.angle == "battlefield":
-            return "眼前最要緊的是退路與兵勢。"
-        if card and card.angle == "resource":
-            return "先把可用的東西算清楚，才不會失衡。"
-        return "先看證據，再說判斷。"
+        source_text = " ".join(
+            part
+            for part in [
+                card.summary if card else "",
+                card.quote if card else "",
+                beats.sceneText,
+                beats.dialogueText,
+            ]
+            if part
+        )
+        shared_refs = set(card.sourceRefs if card else []) & set(target.evidenceRefs)
+        if not shared_refs and (not main_target or target.targetId != main_target.targetId):
+            return ""
+        if re.search(r"追兵|喊聲|大起|速退", source_text):
+            if target.femaleFocus:
+                return "先脫離追兵，人的安危最要緊。"
+            if target.relationshipType in {"sworn_sibling", "battle_ally", "loyal_oath"}:
+                return "我先看住後路，別讓追兵逼近。"
+            return ""
+        if re.search(r"垂淚|煩惱|憂|驚|懼|泣", source_text):
+            if target.femaleFocus:
+                if main_target and main_target.femaleFocus:
+                    return "這話牽著家室與去留，先說清楚才安得住人。"
+                return "心事若牽著家室，就不能只藏在心裡。"
+            return ""
+        if target.relationshipType in {"enemy_rival", "battlefield_opponent"} and card and card.angle == "rival":
+            return "越是急處，越要防對方借勢。"
+        if target.relationshipType in {"sworn_sibling", "battle_ally", "loyal_oath"} and card and card.angle in {"bond", "battlefield"}:
+            return "我先補住後路，再聽他怎麼定奪。"
+        return ""
 
     def _generate_scene_director_text(
         self,
         general_id: str,
         persona_card: PersonaCard | None,
         memory_context: dict[str, Any],
+        selected_context: dict[str, Any] | None,
         evidence_refs: list[str],
         deterministic_text: str,
         max_chars: int,
         locale: str,
         llm_model_preset: str,
         speech_context_mode: str = "inner_monologue",
+        tone_mode: str = "narrative_fusion",
+        selected_keywords: list[dict[str, Any]] | None = None,
     ):
         evidence_pack = self._resolve_evidence(general_id, None, [], evidence_refs)
         preset_config = LLM_MODEL_PRESETS.get(llm_model_preset, LLM_MODEL_PRESETS[DEFAULT_LLM_MODEL_PRESET])
@@ -1209,13 +2860,13 @@ class NpcDialogueService:
                 generalId=general_id,
                 personaCardSubset=self._persona_subset(persona_card),
                 memoryContext=memory_context,
-                selectedContext=None,
-                selectedKeywords=[],
+                selectedContext=selected_context,
+                selectedKeywords=selected_keywords or [],
                 resolvedEvidence=evidence_pack.resolvedEvidence,
                 evidenceRefs=evidence_refs,
                 deterministicText=deterministic_text[:max_chars],
                 maxChars=max_chars,
-                toneMode="narrative_fusion",
+                toneMode=tone_mode,
                 locale=locale,
                 speechContextMode=speech_context_mode,
             ),
@@ -1223,6 +2874,48 @@ class NpcDialogueService:
             model_overrides=preset_config["modelOverrides"],
             allow_deterministic_fallback=preset_config["allowDeterministicFallback"],
         )
+
+    def _repair_complete_generation(
+        self,
+        generation: DialogueGenerationResult,
+        fallback_text: str,
+        max_chars: int,
+        warning_code: str,
+    ) -> DialogueGenerationResult:
+        repaired = self._complete_generated_text(generation.text, fallback_text, max_chars)
+        if repaired == generation.text:
+            return generation
+        return replace(
+            generation,
+            text=repaired,
+            qualityWarnings=[*generation.qualityWarnings, warning_code],
+            repairUsed=True,
+        )
+
+    def _complete_generated_text(self, text: str, fallback_text: str, max_chars: int) -> str:
+        cleaned = " ".join(str(text or "").split()).strip()
+        fallback = str(fallback_text or "").strip()
+        if not cleaned:
+            return fallback
+        if len(cleaned) > max_chars:
+            cleaned = cleaned[:max_chars]
+        if self._has_balanced_quotes(cleaned) and cleaned.endswith(("。", "！", "？", "。」", "！」", "？」", "。』", "！』", "？』")):
+            return cleaned
+        candidates = [
+            index + 1
+            for index, char in enumerate(cleaned)
+            if char in "。！？!?"
+        ]
+        minimum = max(16, int(len(cleaned) * 0.45))
+        candidates = [index for index in candidates if index >= minimum]
+        for index in reversed(candidates):
+            candidate = cleaned[:index].strip()
+            if self._has_balanced_quotes(candidate):
+                return candidate
+        return fallback
+
+    def _has_balanced_quotes(self, text: str) -> bool:
+        return str(text or "").count("「") == str(text or "").count("」") and str(text or "").count("『") == str(text or "").count("』")
 
     def _sentence_or_default(self, text: str, default: str, max_chars: int) -> str:
         normalized = " ".join(str(text or "").split()).strip() or default
@@ -1234,7 +2927,7 @@ class NpcDialogueService:
         stripped = str(text or "").strip()
         if not stripped:
             return ""
-        return stripped if stripped.endswith(("。", "！", "？")) else f"{stripped}。"
+        return stripped if stripped.endswith(("。", "！", "？", "。」", "！」", "？」", "。』", "！』", "？』")) else f"{stripped}。"
 
     def _angle_focus(self, angle: str | None) -> str:
         return {
@@ -1371,6 +3064,26 @@ class NpcDialogueService:
             )
         return seeds[:12]
 
+    def _relationship_display_priority(self, relationship_type: str | None, original_types: set[str]) -> int:
+        if "spouse" in original_types or relationship_type == "spouse":
+            return 95
+        priority = {
+            "sworn_sibling": 92,
+            "protects_family": 88,
+            "spouse": 95,
+            "parent_child": 86,
+            "mentor": 82,
+            "battle_ally": 76,
+            "loyal_oath": 74,
+            "enemy_rival": 72,
+            "battlefield_opponent": 68,
+            "resource_support": 62,
+            "ruler_subject": 50,
+            "battlefield_contact": 42,
+            "political_contact": 40,
+        }
+        return priority.get(str(relationship_type or ""), 35)
+
     def _build_interaction_targets(
         self,
         general_id: str,
@@ -1400,6 +3113,7 @@ class NpcDialogueService:
                 "gender": gender,
                 "sourceType": "keyword-cooccurrence",
                 "relationshipType": None,
+                "relationshipPriority": 0,
                 "confidence": 0.58,
                 "score": 0.0,
                 "evidenceRefs": [],
@@ -1413,10 +3127,19 @@ class NpcDialogueService:
             if not target_id or target_id == general_id:
                 continue
             bucket = ensure_bucket(target_id)
+            original_types = {str(item).strip() for item in (edge.get("originalTypes") or []) if str(item).strip()}
+            edge_type = str(edge.get("type") or "") or None
+            edge_label = str(edge.get("typeLabel") or edge_type or bucket["role"])
+            if "spouse" in original_types:
+                edge_type = "spouse"
+                edge_label = "姻親 / 家室"
+            edge_priority = self._relationship_display_priority(edge_type, original_types)
             bucket["label"] = str(edge.get("targetName") or bucket["label"] or target_id)
-            bucket["role"] = str(edge.get("typeLabel") or edge.get("type") or bucket["role"])
-            bucket["relationshipType"] = str(edge.get("type") or "") or None
-            bucket["sourceType"] = "relationship-edge"
+            if edge_priority >= int(bucket.get("relationshipPriority") or 0):
+                bucket["role"] = edge_label
+                bucket["relationshipType"] = edge_type
+                bucket["sourceType"] = "relationship-edge"
+                bucket["relationshipPriority"] = edge_priority
             bucket["confidence"] = max(bucket["confidence"], self._coerce_float(edge.get("edgeConfidence"), default=0.72))
             bucket["score"] += 4.0 + bucket["confidence"]
             bucket["evidenceRefs"].extend(str(ref) for ref in (edge.get("evidenceRefs") or []) if str(ref).strip())
@@ -1612,7 +3335,7 @@ class NpcDialogueService:
                 )
             )
 
-        for highlight in (runtime_persona.get("sourceHighlights") or [])[:12]:
+        for highlight in (runtime_persona.get("sourceHighlights") or []):
             if len(cards) >= 30:
                 break
             evidence_id = f"highlight:{highlight.get('sourceRef') or len(cards)}"
