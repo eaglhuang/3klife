@@ -1,1 +1,4 @@
 {"who":"ATM CLI","when":"2026-05-15T09:48:28.526Z","action":"guidance.start","reason":"H2U legacy leaf-first guided rollout","result":"split","profile":"dev","sessionId":"guidance-20260515094828-35ac54f29b"}
+{"who":"H2U live rollout generator","when":"2026-05-15T15:14:48.869Z","action":"guidance.start","reason":"H2U live rollout leaf rehearsal","result":"split","profile":"dev","sessionId":"guidance-20260515151448-b6eb380442"}
+{"who":"H2U live rollout generator","when":"2026-05-15T15:15:28.230Z","action":"guidance.start","reason":"H2U live rollout leaf rehearsal","result":"split","profile":"dev","sessionId":"guidance-20260515151528-80771964ea"}
+{"who":"H2U live rollout generator","when":"2026-05-15T15:33:42.523Z","action":"guidance.start","reason":"H2U live rollout leaf rehearsal","result":"split","profile":"dev","sessionId":"guidance-20260515153342-416a8fe97e"}

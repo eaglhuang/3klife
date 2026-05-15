@@ -218,7 +218,29 @@ function buildSyntheticInputDocs(context) {
       passed: true,
       regressed: false,
       regressedMetrics: [],
-      mapImpactScope: { propagationStatus: [] },
+      metrics: [
+        {
+          name: 'leafReplayCompleteness',
+          baseline: 1,
+          current: 1,
+          delta: 0,
+          direction: 'higher-is-better',
+          tolerance: 0,
+          passed: true,
+        },
+        {
+          name: 'trunkMutationRisk',
+          baseline: 0,
+          current: 0,
+          delta: 0,
+          direction: 'lower-is-better',
+          tolerance: 0,
+          passed: true,
+        },
+      ],
+      mapImpactScope: { affectedMapIds: [], propagationStatus: [] },
+      dedupCandidates: [],
+      dedupIgnoredAsPolymorph: [],
       summary: 'Synthetic quality-comparison pass for H2U live rollout replay.',
       reportPath: '',
       ...baseContext,
@@ -269,10 +291,11 @@ function runGenerator(opts) {
   const artifactsRoot = path.resolve(ROOT, opts.artifactsRoot || DEFAULT_LIVE_ROLLOUT_ARTIFACT_ROOT);
   const runId = opts.runId || buildRunId();
   const runDir = path.join(artifactsRoot, runId);
+  const forcedSourceEntrypoint = path.resolve(ROOT, '..', 'AI-Atomic-Framework', 'packages', 'cli', 'src', 'atm.ts');
   const upstreamPaths = resolveUpstreamPaths({
     projectRoot: ROOT,
     upstreamRepoRoot: opts.upstreamRepoRoot || '',
-    upstreamCliEntrypoint: opts.upstreamCliEntrypoint || '',
+    upstreamCliEntrypoint: opts.upstreamCliEntrypoint || forcedSourceEntrypoint,
   });
 
   ensureDir(runDir);

@@ -1,0 +1,2088 @@
+{
+  "schemaId": "atm.guidanceSession",
+  "specVersion": "0.1.0",
+  "sessionId": "guidance-20260515151448-b6eb380442",
+  "repositoryRoot": "c:\\Users\\User\\3KLife",
+  "goal": "H2U live rollout leaf rehearsal",
+  "createdAt": "2026-05-15T15:14:48.869Z",
+  "updatedAt": "2026-05-15T15:14:48.869Z",
+  "actor": "H2U live rollout generator",
+  "orientation": {
+    "schemaId": "atm.projectOrientationReport",
+    "specVersion": "0.1.0",
+    "repositoryRoot": "c:\\Users\\User\\3KLife",
+    "detectedLanguages": [
+      "JavaScript",
+      "TypeScript"
+    ],
+    "packageManager": "npm",
+    "testEntrypoints": [
+      "harness:eslint: node tools_node/check-eslint-rules.js --fix-hint",
+      "test: node tools_node/run-tests.js",
+      "test:atm-atomize: node tools_node/test/atm-atomize.test.js",
+      "test:atm-closeout-regression: node tools_node/test/atm-closeout-regression.test.js",
+      "test:atm-flow: node tools_node/test/atm-flow.test.js",
+      "test:atm-governance-profile: node tools_node/test/atm-governance-profile.test.js",
+      "test:atm-kickoff-doctor-flow: node tools_node/test/atm-kickoff-doctor-flow.integration.test.js",
+      "test:atm-onboarding-arrows: node tools_node/test/atm-onboarding-arrows.test.js",
+      "test:atm-start-entry: node tools_node/test/atm-start-entry.test.js",
+      "test:atm-task-store-single-truth: node tools_node/test/validate-atm-task-store-single-truth.test.js",
+      "test:battle-skill-smoke: ts-node --transpile-only -r ./tests/register-cc-test-stub.js -r ./tests/register-tsconfig-test-paths.js --project tsconfig.test.json tests/run-battle-skill-smoke.ts",
+      "test:legacy-h2u-first-win-regression: node tools_node/test/legacy-h2u-first-win-regression.test.js",
+      "test:snapshot: node tools_node/headless-snapshot-test.js",
+      "test:snapshot:ci: node tools_node/headless-snapshot-test.js --ci",
+      "test:snapshot:update: node tools_node/headless-snapshot-test.js --update",
+      "test:ucuf: ts-node --project tsconfig.test.json tests/run-ucuf-only.ts",
+      "test:ucuf:governance: ts-node --project tsconfig.test.json tests/run-ucuf-only.ts --suite governance",
+      "test:ucuf:m10: ts-node --project tsconfig.test.json tests/run-m10-only.ts",
+      "test:ucuf:m11: ts-node --project tsconfig.test.json tests/run-m11-only.ts",
+      "test:watch: node tools_node/watch-tests.js",
+      "validate:atm-any-boundaries: node tools_node/validate-atm-any-boundaries.js",
+      "validate:atm-milestone: node tools_node/sync-atm-stabilization-milestone.js --check --strict",
+      "validate:atm-stability-closeout: node tools_node/validate-atm-stability-closeout.js",
+      "validate:atm-task-store-single-truth: node tools_node/validate-atm-task-store-single-truth.js",
+      "validate:atm-task-store: node tools_node/sync-atm-stabilization-milestone.js --check --strict",
+      "validate:h2u-evolution-pilot: node tools_node/validate-h2u-evolution-pilot.js",
+      "validate:legacy-h2u-first-win: node tools_node/validate-legacy-h2u-first-win.js",
+      "validate:legacy-h2u-launch: node tools_node/validate-legacy-h2u-launch.js",
+      "validate:registry-backfill-sweep: node tools_node/validate-registry-backfill-sweep.js",
+      "validate:registry-sidecar-convergence: node tools_node/validate-registry-sidecar-convergence.js",
+      "validate:registry-version-governance: node tools_node/validate-registry-version-governance.js",
+      "validate:rule-guard-read-only: node tools_node/validate-rule-guard-read-only.js",
+      "validate:turn-artifact-retention: node tools_node/validate-turn-artifact-retention.js",
+      "validate:usage-evidence-shadow: node tools_node/validate-usage-evidence-shadow.js"
+    ],
+    "governanceFiles": [
+      ".atm/config.json",
+      "AGENTS.md",
+      "CLAUDE.md",
+      "atomic-registry.json"
+    ],
+    "adapterStatus": {
+      "status": "available",
+      "reason": ".atm/config.json exists"
+    },
+    "availableAdapters": [],
+    "registryState": {
+      "status": "partial",
+      "paths": [
+        "atomic-registry.json"
+      ],
+      "count": 1
+    },
+    "mapState": {
+      "status": "partial",
+      "paths": [
+        "atomic_workbench/maps"
+      ],
+      "count": 1
+    },
+    "atomState": {
+      "status": "partial",
+      "paths": [
+        "atomic_workbench/atoms"
+      ],
+      "count": 4
+    },
+    "legacyUriSupport": {
+      "supported": true,
+      "scheme": "legacy",
+      "resolver": "local-git-compatible"
+    },
+    "hostGates": [],
+    "noTouchZones": [
+      {
+        "path": "tools_node/lib/dom-to-ui/draft-builder-core.js#processElement",
+        "reason": "release blocker: processElement is a trunk coordination function",
+        "scope": "file"
+      }
+    ],
+    "mutationPolicy": {
+      "requireSession": true,
+      "requireDryRunProposal": true,
+      "requireReviewBeforeApply": true,
+      "allowUnguidedInDev": true,
+      "allowUnguidedInCI": false
+    },
+    "legacyHotspots": [],
+    "configLegacyHotspots": [
+      {
+        "path": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "releaseBlockers": [
+          "processElement"
+        ],
+        "demandReportPath": ".atm/guidance/h2u-demand-report.json",
+        "existingAtomIndexPath": ".atm/guidance/h2u-atom-index.json"
+      }
+    ],
+    "releaseBlockers": [],
+    "defaultLegacyFlow": "shadow",
+    "unknowns": []
+  },
+  "routeDecision": {
+    "schemaId": "atm.guidanceRouteDecision",
+    "specVersion": "0.1.0",
+    "recommendedRoute": "split",
+    "confidence": 0.9,
+    "reasons": [
+      "Legacy route plan marks trunk release blocker(s): processElement. Direct trunk mutation is blocked; proceed leaf-first.",
+      "Selected safe leaf resolveLength for split dry-run proposal."
+    ],
+    "routeChoices": [
+      {
+        "route": "split",
+        "reason": "safe leaf resolveLength"
+      }
+    ],
+    "requiredEvidence": [
+      "LegacyRoutePlan",
+      "split dry-run proposal",
+      "human review before apply"
+    ],
+    "blockedBy": [],
+    "nextCommand": "node atm.mjs upgrade --propose --behavior behavior.split --dry-run --json"
+  },
+  "packet": {
+    "schemaId": "atm.guidancePacket",
+    "specVersion": "0.1.0",
+    "sessionId": "guidance-20260515151448-b6eb380442",
+    "readFirst": [
+      "README.md",
+      "docs/ATOM_GENERATOR.md",
+      "docs/LIFECYCLE.md"
+    ],
+    "doNotTouch": [
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#processElement"
+    ],
+    "nextCommand": "node atm.mjs upgrade --propose --behavior behavior.split --dry-run --json",
+    "allowedCommands": [
+      "node atm.mjs orient --cwd . --json",
+      "node atm.mjs start --cwd . --goal \"<goal>\" --json",
+      "node atm.mjs next --cwd . --json",
+      "node atm.mjs explain --why blocked --json",
+      "node atm.mjs upgrade --propose --behavior behavior.split --dry-run --json"
+    ],
+    "blockedCommands": [
+      "host mutation without active guidance session",
+      "atomize/infect/split apply without dry-run proposal",
+      "apply without human review approval",
+      "direct trunk function rewrite",
+      "release promote while release blockers exist"
+    ],
+    "requiredGates": [],
+    "missingEvidence": [
+      "LegacyRoutePlan",
+      "split dry-run proposal",
+      "human review before apply"
+    ],
+    "rollbackHint": "Discard generated guidance proposals and rerun `node atm.mjs orient --cwd . --json` before retrying.",
+    "whyThisRoute": [
+      "Legacy route plan marks trunk release blocker(s): processElement. Direct trunk mutation is blocked; proceed leaf-first.",
+      "Selected safe leaf resolveLength for split dry-run proposal."
+    ]
+  },
+  "legacyRoutePlan": {
+    "schemaId": "atm.legacyRoutePlan",
+    "specVersion": "0.1.0",
+    "targetFile": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+    "segments": [
+      {
+        "symbolName": "buildDraftFromHtml",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 18,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "stripNonVisualBlocksForParsing",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "readCanvasFromHtml",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "isTransparentSourceWrapper",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "processElement",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 56,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "normalizeSingleChildFill",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "resolveFillChildWidths",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "dedupeTabSwitchChildren",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 7,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "dedupeIdenticalLargeChildren",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 7,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "countLabelDescendants",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "buildLabelTextFingerprint",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "collectLabelTexts",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "buildStructuralSignature",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "isTabSwitchButtonNode",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "normalizeTabRailAndButtonLayout",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "isTabSwitchContract",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "shouldMaterializeLazySlot",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "inferTabSemanticHints",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 9,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "inferTabIdFromElement",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 7,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "inferDefaultTabFragment",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "inferStoryStripHints",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 8,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "collectSemanticTokens",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "hasExplicitStoryStripSignal",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "hasStoryStripMultiSignal",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "parseFragmentList",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 4,
+        "existingAtomMatch": "ATM-CORE-0007",
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "shouldPruneStandaloneStoryStripLabel",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 7,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "registerTabZoneHint",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "inferOwnerTabFromElement",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "normalizeTabToken",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "deriveComputedGeometry",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 13,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "lookupComputedParentRect",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "normalizeRect",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "rectToParentEdges",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "hasMeaningfulTransform",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "hasMeaningfulObjectFit",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "applyImageFit",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "normalizeObjectFit",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "normalizeObjectPosition",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "applyCommonNodeAttrs",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "applyCaptureNodeAttrs",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "applyVisibilityState",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "collectBehavior",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "inferNodeType",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 8,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "isVisualOnlyInlinePrimitive",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "isEmptyFlexSpacer",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 9,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "hasOnlyTextContent",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "inferCompositeRendererHint",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "inferCompositeGeometrySummary",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "extractSvgRadarChartMeta",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 7,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "collectSvgShapes",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 15,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "normalizeSvgInheritedAttrs",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "parseSvgViewBox",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "parseSvgPoints",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 7,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "parseSvgNumber",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "parseSvgOpacity",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "normalizeSvgPaint",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "isSvgNone",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "computeSvgOuterRadius",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "estimateSvgTextBox",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "computeSvgTextBounds",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 9,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "anchorToWidget",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "assignWidgetEdge",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "collectElementStyle",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "inferLayout",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 8,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "mapFlexAlignItems",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "mapFlexJustifyContent",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "inferGridLayout",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 9,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "inferBlockFlowLayout",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "countGridTracks",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "inferGridCellWidth",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "inferGridCellHeight",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "parseGridTrackPixels",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 7,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "expandGridRepeat",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 7,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "resolveGridGap",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "resolveGapPair",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "childHasOutOfFlowPosition",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "inferChildBlockSpacing",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "stabilizeGridLayout",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "maxFinite",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "parseBox",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 9,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "resolveBoxEdges",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "parsePx",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "pickDim",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "resolveLength",
+        "role": "leaf",
+        "riskLevel": "medium",
+        "fanOut": 4,
+        "callerDemand": 9,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "split"
+      },
+      {
+        "symbolName": "resolveLineHeight",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 10,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "parseCssVar",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "autoName",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "autoSlotId",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "appendNodeWithGeneratedSiblings",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "pascal",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "mergeClassStyles",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "matchesSimpleStyleRule",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "collectText",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "applyTextTransformGeneral",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 8,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "containsRichInner",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "looksSimplified",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "ensureSpriteSlot",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "ensureSpriteOrColorSlot",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 13,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "ensureTabButtonSkinSlot",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "attachBoxShapeMetadata",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "hasRenderableBorder",
+        "role": "adapter-boundary",
+        "riskLevel": "medium",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "resolveUniformBorderWidth",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "parseBorderWidthValue",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 7,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "resolveUniformBorderColor",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "firstMeaningfulBorderColor",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "extractBorderColor",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "normalizeCssColorLiteral",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 12,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "clampCssByte",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "buildGradientRectSlot",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 8,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "buildEffectSiblingNodes",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 8,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "canUseGeneratedEffectSibling",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 0,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "collectOuterShadows",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "normalizeShadow",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "parseDropShadowFilters",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 7,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "calculateShadowPadding",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "expandWidgetForEffect",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "resolveUniformCornerRadius",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "parseUniformBorderRadius",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 8,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "resolveRadiusValue",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 7,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "resolveCornerRadiusBasis",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "resolveRadiusDimension",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "emitSkinLayers",
+        "role": "adapter-boundary",
+        "riskLevel": "medium",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "normalizeFidelitySnapshotMap",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "normalizeFidelityPseudoMap",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "pseudoOrder",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 0,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "normalizeFidelitySnapshot",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 0,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "mergeComputedStyle",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "applyClipPathMetadata",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "meaningfulClipPath",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "buildPseudoVisualNodes",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "buildPseudoVisualNode",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "normalizeComputedVisualStyle",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "parseOpacity",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "assignComputed",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "hasMeaningfulBackground",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "pickBackgroundFill",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "meaningfulBackgroundValue",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "meaningfulBackgroundImage",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "meaningfulGradientBackground",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "meaningfulCssColor",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "containsTransparentCssColor",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "meaningfulCssLength",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "meaningfulLineHeight",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "meaningfulCssText",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "meaningfulNonDefaultCssText",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "isTransparentCssColor",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "ensureLabelStyle",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 15,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "inferLabelOverflow",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "isItalicStyle",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "computeLetterSpacing",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 8,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "resolveFontFamilyToAsset",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 7,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "pickFontByTag",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "buildFontFaceRegistry",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "resolveFontAssetByConvention",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "parseSimpleTextShadow",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 15,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "normalizeCssColorToHex",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 18,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "resolveTypographyToken",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "isBoldWeight",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "numAttr",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "stripExt",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "extractUrl",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "parseColor",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 11,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "inspectArtDirectionRisks",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 5,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "pushArtWarning",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "isAsymmetricRadius",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 4,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "hasElementChild",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 2,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "recordTokenUsage",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 3,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      },
+      {
+        "symbolName": "guardSpritePath",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 8,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "mapKnownRuntimeSpritePath",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 6,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "assetLikelyExists",
+        "role": "trunk",
+        "riskLevel": "high",
+        "fanOut": 9,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "leave-in-place"
+      },
+      {
+        "symbolName": "enforceColorRectGuard",
+        "role": "leaf",
+        "riskLevel": "low",
+        "fanOut": 1,
+        "callerDemand": 0,
+        "existingAtomMatch": null,
+        "recommendedBehavior": "atomize"
+      }
+    ],
+    "trunkFunctions": [
+      "buildDraftFromHtml",
+      "processElement",
+      "dedupeTabSwitchChildren",
+      "dedupeIdenticalLargeChildren",
+      "collectLabelTexts",
+      "buildStructuralSignature",
+      "normalizeTabRailAndButtonLayout",
+      "inferTabSemanticHints",
+      "inferTabIdFromElement",
+      "inferStoryStripHints",
+      "collectSemanticTokens",
+      "parseFragmentList",
+      "shouldPruneStandaloneStoryStripLabel",
+      "inferOwnerTabFromElement",
+      "normalizeTabToken",
+      "deriveComputedGeometry",
+      "applyVisibilityState",
+      "inferNodeType",
+      "isVisualOnlyInlinePrimitive",
+      "isEmptyFlexSpacer",
+      "inferCompositeRendererHint",
+      "extractSvgRadarChartMeta",
+      "collectSvgShapes",
+      "parseSvgViewBox",
+      "parseSvgPoints",
+      "estimateSvgTextBox",
+      "computeSvgTextBounds",
+      "collectElementStyle",
+      "inferLayout",
+      "inferGridLayout",
+      "inferBlockFlowLayout",
+      "inferGridCellWidth",
+      "parseGridTrackPixels",
+      "expandGridRepeat",
+      "resolveGapPair",
+      "parseBox",
+      "resolveBoxEdges",
+      "resolveLineHeight",
+      "matchesSimpleStyleRule",
+      "collectText",
+      "applyTextTransformGeneral",
+      "ensureSpriteSlot",
+      "ensureSpriteOrColorSlot",
+      "parseBorderWidthValue",
+      "resolveUniformBorderColor",
+      "normalizeCssColorLiteral",
+      "buildGradientRectSlot",
+      "buildEffectSiblingNodes",
+      "collectOuterShadows",
+      "parseDropShadowFilters",
+      "resolveUniformCornerRadius",
+      "parseUniformBorderRadius",
+      "resolveRadiusValue",
+      "normalizeFidelityPseudoMap",
+      "mergeComputedStyle",
+      "buildPseudoVisualNodes",
+      "buildPseudoVisualNode",
+      "parseOpacity",
+      "meaningfulBackgroundValue",
+      "isTransparentCssColor",
+      "ensureLabelStyle",
+      "inferLabelOverflow",
+      "computeLetterSpacing",
+      "resolveFontFamilyToAsset",
+      "buildFontFaceRegistry",
+      "resolveFontAssetByConvention",
+      "parseSimpleTextShadow",
+      "normalizeCssColorToHex",
+      "isBoldWeight",
+      "parseColor",
+      "inspectArtDirectionRisks",
+      "guardSpritePath",
+      "mapKnownRuntimeSpritePath",
+      "assetLikelyExists"
+    ],
+    "leafFunctions": [
+      "stripNonVisualBlocksForParsing",
+      "readCanvasFromHtml",
+      "isTransparentSourceWrapper",
+      "normalizeSingleChildFill",
+      "resolveFillChildWidths",
+      "countLabelDescendants",
+      "buildLabelTextFingerprint",
+      "isTabSwitchButtonNode",
+      "isTabSwitchContract",
+      "shouldMaterializeLazySlot",
+      "inferDefaultTabFragment",
+      "hasExplicitStoryStripSignal",
+      "hasStoryStripMultiSignal",
+      "registerTabZoneHint",
+      "lookupComputedParentRect",
+      "normalizeRect",
+      "rectToParentEdges",
+      "hasMeaningfulTransform",
+      "hasMeaningfulObjectFit",
+      "applyImageFit",
+      "normalizeObjectFit",
+      "normalizeObjectPosition",
+      "applyCommonNodeAttrs",
+      "applyCaptureNodeAttrs",
+      "collectBehavior",
+      "hasOnlyTextContent",
+      "inferCompositeGeometrySummary",
+      "normalizeSvgInheritedAttrs",
+      "parseSvgNumber",
+      "parseSvgOpacity",
+      "normalizeSvgPaint",
+      "isSvgNone",
+      "computeSvgOuterRadius",
+      "anchorToWidget",
+      "assignWidgetEdge",
+      "mapFlexAlignItems",
+      "mapFlexJustifyContent",
+      "countGridTracks",
+      "inferGridCellHeight",
+      "resolveGridGap",
+      "childHasOutOfFlowPosition",
+      "inferChildBlockSpacing",
+      "stabilizeGridLayout",
+      "maxFinite",
+      "parsePx",
+      "pickDim",
+      "resolveLength",
+      "parseCssVar",
+      "autoName",
+      "autoSlotId",
+      "appendNodeWithGeneratedSiblings",
+      "pascal",
+      "mergeClassStyles",
+      "containsRichInner",
+      "looksSimplified",
+      "ensureTabButtonSkinSlot",
+      "attachBoxShapeMetadata",
+      "resolveUniformBorderWidth",
+      "firstMeaningfulBorderColor",
+      "extractBorderColor",
+      "clampCssByte",
+      "canUseGeneratedEffectSibling",
+      "normalizeShadow",
+      "calculateShadowPadding",
+      "expandWidgetForEffect",
+      "resolveCornerRadiusBasis",
+      "resolveRadiusDimension",
+      "normalizeFidelitySnapshotMap",
+      "pseudoOrder",
+      "normalizeFidelitySnapshot",
+      "applyClipPathMetadata",
+      "meaningfulClipPath",
+      "normalizeComputedVisualStyle",
+      "assignComputed",
+      "hasMeaningfulBackground",
+      "pickBackgroundFill",
+      "meaningfulBackgroundImage",
+      "meaningfulGradientBackground",
+      "meaningfulCssColor",
+      "containsTransparentCssColor",
+      "meaningfulCssLength",
+      "meaningfulLineHeight",
+      "meaningfulCssText",
+      "meaningfulNonDefaultCssText",
+      "isItalicStyle",
+      "pickFontByTag",
+      "resolveTypographyToken",
+      "numAttr",
+      "stripExt",
+      "extractUrl",
+      "pushArtWarning",
+      "isAsymmetricRadius",
+      "hasElementChild",
+      "recordTokenUsage",
+      "enforceColorRectGuard"
+    ],
+    "adapterBoundaries": [
+      "hasRenderableBorder",
+      "emitSkinLayers"
+    ],
+    "existingAtomMatches": [
+      "ATM-CORE-0007"
+    ],
+    "releaseBlockers": [
+      "processElement"
+    ],
+    "safeFirstAtoms": [
+      "stripNonVisualBlocksForParsing",
+      "readCanvasFromHtml",
+      "isTransparentSourceWrapper",
+      "normalizeSingleChildFill",
+      "resolveFillChildWidths",
+      "countLabelDescendants",
+      "buildLabelTextFingerprint",
+      "isTabSwitchButtonNode",
+      "isTabSwitchContract",
+      "shouldMaterializeLazySlot",
+      "inferDefaultTabFragment",
+      "hasExplicitStoryStripSignal",
+      "hasStoryStripMultiSignal",
+      "registerTabZoneHint",
+      "lookupComputedParentRect",
+      "normalizeRect",
+      "rectToParentEdges",
+      "hasMeaningfulTransform",
+      "hasMeaningfulObjectFit",
+      "applyImageFit",
+      "normalizeObjectFit",
+      "normalizeObjectPosition",
+      "applyCommonNodeAttrs",
+      "applyCaptureNodeAttrs",
+      "collectBehavior",
+      "hasOnlyTextContent",
+      "inferCompositeGeometrySummary",
+      "normalizeSvgInheritedAttrs",
+      "parseSvgNumber",
+      "parseSvgOpacity",
+      "normalizeSvgPaint",
+      "isSvgNone",
+      "computeSvgOuterRadius",
+      "anchorToWidget",
+      "assignWidgetEdge",
+      "mapFlexAlignItems",
+      "mapFlexJustifyContent",
+      "countGridTracks",
+      "inferGridCellHeight",
+      "resolveGridGap",
+      "childHasOutOfFlowPosition",
+      "inferChildBlockSpacing",
+      "stabilizeGridLayout",
+      "maxFinite",
+      "parsePx",
+      "pickDim",
+      "resolveLength",
+      "parseCssVar",
+      "autoName",
+      "autoSlotId",
+      "appendNodeWithGeneratedSiblings",
+      "pascal",
+      "mergeClassStyles",
+      "containsRichInner",
+      "looksSimplified",
+      "ensureTabButtonSkinSlot",
+      "attachBoxShapeMetadata",
+      "resolveUniformBorderWidth",
+      "firstMeaningfulBorderColor",
+      "extractBorderColor",
+      "clampCssByte",
+      "canUseGeneratedEffectSibling",
+      "normalizeShadow",
+      "calculateShadowPadding",
+      "expandWidgetForEffect",
+      "resolveCornerRadiusBasis",
+      "resolveRadiusDimension",
+      "normalizeFidelitySnapshotMap",
+      "pseudoOrder",
+      "normalizeFidelitySnapshot",
+      "applyClipPathMetadata",
+      "meaningfulClipPath",
+      "normalizeComputedVisualStyle",
+      "assignComputed",
+      "hasMeaningfulBackground",
+      "pickBackgroundFill",
+      "meaningfulBackgroundImage",
+      "meaningfulGradientBackground",
+      "meaningfulCssColor",
+      "containsTransparentCssColor",
+      "meaningfulCssLength",
+      "meaningfulLineHeight",
+      "meaningfulCssText",
+      "meaningfulNonDefaultCssText",
+      "isItalicStyle",
+      "pickFontByTag",
+      "resolveTypographyToken",
+      "numAttr",
+      "stripExt",
+      "extractUrl",
+      "pushArtWarning",
+      "isAsymmetricRadius",
+      "hasElementChild",
+      "recordTokenUsage",
+      "enforceColorRectGuard"
+    ],
+    "noTouchZones": [
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#processElement",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#buildDraftFromHtml",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#dedupeTabSwitchChildren",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#dedupeIdenticalLargeChildren",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#collectLabelTexts",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#buildStructuralSignature",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#normalizeTabRailAndButtonLayout",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#inferTabSemanticHints",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#inferTabIdFromElement",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#inferStoryStripHints",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#collectSemanticTokens",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#parseFragmentList",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#shouldPruneStandaloneStoryStripLabel",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#inferOwnerTabFromElement",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#normalizeTabToken",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#deriveComputedGeometry",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#applyVisibilityState",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#inferNodeType",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#isVisualOnlyInlinePrimitive",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#isEmptyFlexSpacer",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#inferCompositeRendererHint",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#extractSvgRadarChartMeta",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#collectSvgShapes",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#parseSvgViewBox",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#parseSvgPoints",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#estimateSvgTextBox",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#computeSvgTextBounds",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#collectElementStyle",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#inferLayout",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#inferGridLayout",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#inferBlockFlowLayout",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#inferGridCellWidth",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#parseGridTrackPixels",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#expandGridRepeat",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#resolveGapPair",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#parseBox",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#resolveBoxEdges",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#resolveLineHeight",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#matchesSimpleStyleRule",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#collectText",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#applyTextTransformGeneral",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#ensureSpriteSlot",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#ensureSpriteOrColorSlot",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#parseBorderWidthValue",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#resolveUniformBorderColor",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#normalizeCssColorLiteral",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#buildGradientRectSlot",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#buildEffectSiblingNodes",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#collectOuterShadows",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#parseDropShadowFilters",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#resolveUniformCornerRadius",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#parseUniformBorderRadius",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#resolveRadiusValue",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#normalizeFidelityPseudoMap",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#mergeComputedStyle",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#buildPseudoVisualNodes",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#buildPseudoVisualNode",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#parseOpacity",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#meaningfulBackgroundValue",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#isTransparentCssColor",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#ensureLabelStyle",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#inferLabelOverflow",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#computeLetterSpacing",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#resolveFontFamilyToAsset",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#buildFontFaceRegistry",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#resolveFontAssetByConvention",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#parseSimpleTextShadow",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#normalizeCssColorToHex",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#isBoldWeight",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#parseColor",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#inspectArtDirectionRisks",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#guardSpritePath",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#mapKnownRuntimeSpritePath",
+      "tools_node/lib/dom-to-ui/draft-builder-core.js#assetLikelyExists"
+    ],
+    "requiredDryRunProposal": true
+  },
+  "shadowMode": true
+}

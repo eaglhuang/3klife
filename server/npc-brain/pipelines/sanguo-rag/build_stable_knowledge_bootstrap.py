@@ -22,6 +22,59 @@ DEFAULT_8BOOK_MANIFEST_PATH = Path(
     "artifacts/data-pipeline/sanguo-rag/extracted/plaintext-source-candidates/8book-baihua-sanguo-source-manifest.json"
 )
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap")
+STABLE_BOOTSTRAP_SOURCE_LAYER = "stable-bootstrap-seed"
+HISTORY_PROFILE_BASELINE_SOURCE_LAYER = "stable-history-profile-baseline"
+
+HISTORY_PROFILE_AUTHORITY_TERMS = (
+    "麾下",
+    "效忠",
+    "亲信",
+    "親信",
+    "侍衛",
+    "侍卫",
+    "部下",
+    "部將",
+    "部将",
+    "大將",
+    "大将",
+    "幕僚",
+    "投奔",
+    "投靠",
+    "歸降",
+    "归降",
+    "歸順",
+    "归顺",
+    "追隨",
+    "追随",
+    "侍奉",
+)
+HISTORY_PROFILE_TRANSIENT_TERMS = ("一度", "曾", "短暫", "短暂", "先", "後", "后")
+HAN_VARIANT_TRANSLATION = str.maketrans(
+    {
+        "刘": "劉",
+        "关": "關",
+        "张": "張",
+        "赵": "趙",
+        "孙": "孫",
+        "权": "權",
+        "诸": "諸",
+        "葛": "葛",
+        "禅": "禪",
+        "韦": "韋",
+        "庞": "龐",
+        "马": "馬",
+        "黄": "黃",
+        "颜": "顏",
+        "吕": "呂",
+        "陆": "陸",
+        "逊": "遜",
+        "献": "獻",
+        "汉": "漢",
+        "魏": "魏",
+        "吴": "吳",
+        "蜀": "蜀",
+    }
+)
 
 
 COMMON_RELATION_LABELS = {
@@ -59,6 +112,7 @@ HARD_RELATIONSHIP_SPECS: list[dict[str, Any]] = [
     {"type": "parent_child", "fromName": "孫堅", "toName": "孫權", "sourceRefs": ["029#jiangdong"], "confidence": 0.96},
     {"type": "sibling", "fromName": "孫策", "toName": "孫權", "sourceRefs": ["029#jiangdong"], "confidence": 0.95},
     {"type": "parent_child", "fromName": "劉備", "toName": "劉禪", "sourceRefs": ["041#changban-a-dou"], "confidence": 0.94},
+    {"type": "ruler_subject", "fromName": "劉備", "toName": "趙雲", "sourceRefs": ["041#changban-a-dou", "054#zhao-yun-guards"], "confidence": 0.93},
     {"type": "spouse", "fromName": "劉備", "toName": "孫尚香", "sourceRefs": ["054#marriage-alliance"], "confidence": 0.94},
     {"type": "parent_child", "fromName": "關羽", "toName": "關興", "sourceRefs": ["077#next-generation"], "confidence": 0.9},
     {"type": "parent_child", "fromName": "關羽", "toName": "關平", "sourceRefs": ["077#maicheng"], "confidence": 0.88},
@@ -548,7 +602,7 @@ def build_relationship_edges(index: dict[str, dict[str, Any]]) -> tuple[list[dic
                                 "validToChapter": spec.get("validToChapter"),
                                 "edgeConfidence": spec.get("confidence", 0.9),
                                 "reviewStatus": spec.get("status", "ready"),
-                                "sourceLayer": "stable-bootstrap-seed",
+                                "sourceLayer": STABLE_BOOTSTRAP_SOURCE_LAYER,
                             },
                             seen,
                         )
@@ -581,7 +635,7 @@ def build_relationship_edges(index: dict[str, dict[str, Any]]) -> tuple[list[dic
                     "validToChapter": spec.get("validToChapter"),
                     "edgeConfidence": spec.get("confidence", 0.9),
                     "reviewStatus": spec.get("status", "ready"),
-                    "sourceLayer": "stable-bootstrap-seed",
+                    "sourceLayer": STABLE_BOOTSTRAP_SOURCE_LAYER,
                 },
                 seen,
             )
@@ -617,6 +671,114 @@ def build_parent_summary_edges(people: list[dict[str, Any]], index: dict[str, di
                 "sourceLayer": "generals-parent-summary",
             }
         )
+    return edges
+
+
+def normalize_history_text(text: str) -> str:
+    return str(text or "").translate(HAN_VARIANT_TRANSLATION)
+
+
+def compact_history_text(text: str) -> str:
+    return re.sub(r"\s+", "", normalize_history_text(text))
+
+
+def unique_strings(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    rows: list[str] = []
+    for value in values:
+        if value in seen:
+            continue
+        seen.add(value)
+        rows.append(value)
+    return rows
+
+
+def person_id(person: dict[str, Any]) -> str:
+    return str(person.get("generalId") or person.get("id") or "").strip()
+
+
+def person_labels(person: dict[str, Any]) -> list[str]:
+    labels: list[str] = []
+    for value in [person.get("name"), *(person.get("alias") or [])]:
+        text = normalize_history_text(str(value or "").strip())
+        if len(text) >= 2 and text not in labels:
+            labels.append(text)
+    return labels
+
+
+def profile_relation_snippets(text: str, labels: list[str]) -> list[str]:
+    compact = compact_history_text(text)
+    if not compact or not labels:
+        return []
+    snippets: list[str] = []
+    for label in labels:
+        escaped = re.escape(label)
+        patterns = [
+            rf"{escaped}(?:的|之)?(?:麾下|重要親信|重要亲信|主要親信|主要亲信|親信|亲信|侍衛|侍卫|部下|幕僚|核心幕僚)",
+            rf"(?:效忠|侍奉|追隨|追随|跟隨|跟随){escaped}",
+            rf"(?:投奔|投靠|歸降|归降|歸順|归顺){escaped}",
+            rf"(?:成為|成为){escaped}(?:的|之)?部將",
+            rf"接受{escaped}(?:指揮|指挥)",
+        ]
+        for pattern in patterns:
+            for match in re.finditer(pattern, compact):
+                left = max(0, match.start() - 16)
+                right = min(len(compact), match.end() + 16)
+                snippets.append(compact[left:right])
+    return unique_strings(snippets)[:3]
+
+
+def profile_relation_type(snippets: list[str]) -> str:
+    text = " ".join(snippets)
+    if any(term in text for term in ("投奔", "投靠", "歸降", "归降", "歸順", "归顺")):
+        return "patron_client"
+    return "ruler_subject"
+
+
+def profile_relation_confidence(snippets: list[str]) -> float:
+    text = " ".join(snippets)
+    if any(term in text for term in ("麾下", "效忠", "親信", "亲信", "侍衛", "侍卫")):
+        return 0.9
+    if any(term in text for term in HISTORY_PROFILE_TRANSIENT_TERMS):
+        return 0.82
+    return 0.86
+
+
+def build_history_profile_relationship_edges(
+    people: list[dict[str, Any]],
+    index: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    del index
+    people_with_labels = [(person, person_id(person), person_labels(person)) for person in people]
+    edges: list[dict[str, Any]] = []
+    seen: set[tuple[str, str, str]] = set()
+    for subject, subject_id, _subject_labels in people_with_labels:
+        if not subject_id:
+            continue
+        profile_text = str(subject.get("historicalAnecdote") or "").strip()
+        if not profile_text:
+            continue
+        for target, target_id, target_labels in people_with_labels:
+            if not target_id or target_id == subject_id or not target_labels:
+                continue
+            snippets = profile_relation_snippets(profile_text, target_labels)
+            if not snippets:
+                continue
+            relation_type = profile_relation_type(snippets)
+            edge = {
+                "fromId": target_id,
+                "toId": subject_id,
+                "type": relation_type,
+                "evidenceRefs": [f"generals.historicalAnecdote:{subject_id}"],
+                "eventTags": ["history_profile_relationship"],
+                "edgeConfidence": profile_relation_confidence(snippets),
+                "reviewStatus": "ready",
+                "sourceLayer": HISTORY_PROFILE_BASELINE_SOURCE_LAYER,
+                "claimLayer": "history",
+                "claimGrade": "A-history-profile-baseline",
+                "sourceQuote": snippets[0],
+            }
+            add_edge(edges, edge, seen)
     return edges
 
 
@@ -1315,6 +1477,8 @@ def main() -> None:
     seen_relationships = {edge_key(edge) for edge in relationship_edges}
     for edge in build_parent_summary_edges(people, name_index):
         add_edge(relationship_edges, edge, seen_relationships)
+    for edge in build_history_profile_relationship_edges(people, name_index):
+        add_edge(relationship_edges, edge, seen_relationships)
     event_location_seeds, missing_events = build_event_location_seeds(name_index)
     faction_timelines, missing_factions = build_faction_timeline(name_index)
     social_roles, missing_roles = build_social_roles(name_index)
@@ -1389,7 +1553,7 @@ def main() -> None:
                 "basicProfileSeeds without a Mao Hant sourceRef gate",
                 "femalePriorityProfiles without a Mao Hant sourceRef gate",
                 "plainRelationshipProposals without a Mao Hant sourceRef gate",
-                "ruler_subject or faction membership without chapter/event interval",
+                "ruler_subject or faction membership without chapter/event interval, except exact history-profile baseline patterns",
                 "socialRoleSeeds or decisionWeightHints without a Mao Hant sourceRef gate",
                 "autoSocialRoleSeeds or plainFactProposals without a Mao Hant sourceRef gate",
                 "missing generalId coverage",

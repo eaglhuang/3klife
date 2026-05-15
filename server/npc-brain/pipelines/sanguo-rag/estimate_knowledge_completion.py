@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -45,6 +46,9 @@ DEFAULT_WEIGHTS = {
     "femalePriority": 5.0,
     "pipelineReliability": 4.0,
 }
+
+ROUND_PASS_PATTERN = re.compile(r"^(?P<prefix>.+)-a(?P<pass>\d+)$")
+ROUND_RERUN_PATTERN = re.compile(r"^(?P<base>.+)-rerun(?P<rerun>\d+)$")
 
 
 def parse_args() -> argparse.Namespace:
@@ -122,8 +126,56 @@ def latest_rounds(rounds_root: Path) -> list[Path]:
     return [item[1] for item in candidates.values()]
 
 
+def round_selection_key(payload: dict[str, Any], path: Path) -> tuple[str, int, int, str, str]:
+    round_id = str(payload.get("roundId") or path.stem).strip()
+    generated_at = str(payload.get("generatedAt") or "").strip()
+
+    rerun_index = 0
+    base_round_id = round_id
+    rerun_match = ROUND_RERUN_PATTERN.match(base_round_id)
+    if rerun_match:
+        base_round_id = str(rerun_match.group("base") or "").strip() or base_round_id
+        rerun_index = int(rerun_match.group("rerun") or 0)
+
+    pass_index = 0
+    bucket = base_round_id
+    pass_match = ROUND_PASS_PATTERN.match(base_round_id)
+    if pass_match:
+        bucket = str(pass_match.group("prefix") or "").strip() or bucket
+        pass_index = int(pass_match.group("pass") or 0)
+
+    return bucket, pass_index, rerun_index, generated_at, str(path)
+
+
+def select_effective_round_paths(paths: list[Path]) -> list[Path]:
+    unique_paths: list[Path] = []
+    seen_paths: set[str] = set()
+    for path in paths:
+        resolved = path.resolve()
+        key = str(resolved)
+        if key in seen_paths:
+            continue
+        seen_paths.add(key)
+        unique_paths.append(resolved)
+
+    selected: dict[str, tuple[tuple[int, int, str, str], Path]] = {}
+    for path in unique_paths:
+        payload = read_json(path)
+        bucket, pass_index, rerun_index, generated_at, path_text = round_selection_key(payload, path)
+        rank = (pass_index, rerun_index, generated_at, path_text)
+        current = selected.get(bucket)
+        if current is None or rank > current[0]:
+            selected[bucket] = (rank, path)
+
+    resolved = [item[1] for item in selected.values()]
+    resolved.sort(key=lambda value: str(value))
+    return resolved
+
+
 def summarize_rounds(paths: list[Path]) -> dict[str, Any]:
+    selected_paths = select_effective_round_paths(paths)
     answer_counts: Counter[str] = Counter()
+    non_review_answer_counts: Counter[str] = Counter()
     unique_generals: set[str] = set()
     female_generals: set[str] = set()
     timed_out = 0
@@ -131,11 +183,12 @@ def summarize_rounds(paths: list[Path]) -> dict[str, Any]:
     parsed = 0
     total_results = 0
     included = []
-    for path in paths:
+    for path in selected_paths:
         payload = read_json(path)
         candidate_path = str(payload.get("candidatesPath") or "")
         is_female = "female-interaction" in candidate_path
         local_counts: Counter[str] = Counter()
+        local_non_review_counts: Counter[str] = Counter()
         for result in payload.get("results") or []:
             total_results += 1
             general_id = str(result.get("generalId") or "").strip()
@@ -145,8 +198,14 @@ def summarize_rounds(paths: list[Path]) -> dict[str, Any]:
                     female_generals.add(general_id)
             counts = result.get("reportAnswerCounts") or result.get("enrichedAnswerCounts") or {}
             for answer, count in counts.items():
-                answer_counts[str(answer).upper()] += int(count or 0)
-                local_counts[str(answer).upper()] += int(count or 0)
+                answer_key = str(answer).upper()
+                value = int(count or 0)
+                if answer_key in {"A", "B", "C", "D"}:
+                    answer_counts[answer_key] += value
+                    local_counts[answer_key] += value
+                else:
+                    non_review_answer_counts[answer_key] += value
+                    local_non_review_counts[answer_key] += value
             raw_errors += int(result.get("rawErrorCount") or 0)
             parsed += int(result.get("rawParsedCount") or 0)
             generate = result.get("generate") or {}
@@ -158,15 +217,21 @@ def summarize_rounds(paths: list[Path]) -> dict[str, Any]:
             "roundId": payload.get("roundId"),
             "candidatesPath": candidate_path,
             "answerCounts": dict(sorted(local_counts.items())),
+            "nonReviewAnswerCounts": dict(sorted(local_non_review_counts.items())),
             "cohortSize": len(payload.get("cohort") or []),
         })
     total_answers = sum(answer_counts.values())
+    total_answer_attempts = total_answers + raw_errors
     return {
+        "inputRoundPathCount": len(paths),
+        "selectedRoundPathCount": len(selected_paths),
         "includedRounds": included,
         "answerCounts": dict(sorted(answer_counts.items())),
+        "nonReviewAnswerCounts": dict(sorted(non_review_answer_counts.items())),
         "acceptedA": int(answer_counts.get("A", 0)),
         "reviewB": int(answer_counts.get("B", 0)),
         "totalAnswers": int(total_answers),
+        "totalAnswerAttempts": int(total_answer_attempts),
         "aRate": safe_ratio(answer_counts.get("A", 0), total_answers),
         "sampledGeneralCount": len(unique_generals),
         "sampledFemaleGeneralCount": len(female_generals),
@@ -352,7 +417,11 @@ def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[
     total_answers = float(round_summary.get("totalAnswers") or 0)
     a_rate = float(round_summary.get("aRate") or 0.0)
     sample_coverage = safe_ratio(round_summary.get("sampledGeneralCount") or 0, people_count)
-    reliability_in_review = 1.0 - safe_ratio((round_summary.get("rawErrorCount") or 0) + (round_summary.get("timedOutStepCount") or 0), max(1.0, total_answers))
+    total_answer_attempts = float(round_summary.get("totalAnswerAttempts") or total_answers)
+    reliability_in_review = 1.0 - safe_ratio(
+        (round_summary.get("rawErrorCount") or 0) + (round_summary.get("timedOutStepCount") or 0),
+        max(1.0, total_answer_attempts),
+    )
     review_validation = clamp(a_rate * 0.65 + sample_coverage * 0.25 + reliability_in_review * 0.10)
 
     female_profile_count = float(stable_summary.get("femalePriorityProfileCount") or 0)

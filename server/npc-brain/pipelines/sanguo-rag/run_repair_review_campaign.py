@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -37,6 +38,8 @@ DEFAULT_EVENTS_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted
 DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
 DEFAULT_FEMALE_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl")
 DEFAULT_PILOT_REPORT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/etl-quality-pilot-report.json")
+ROUND_PASS_PATTERN = re.compile(r"^(?P<prefix>.+)-a(?P<pass>\d+)$")
+ROUND_RERUN_PATTERN = re.compile(r"^(?P<base>.+)-rerun(?P<rerun>\d+)$")
 
 
 def parse_args() -> argparse.Namespace:
@@ -223,6 +226,52 @@ def round_batch_has_quality_signal(path: Path) -> bool:
         if _to_int(enrich.get("returnCode")) == 0:
             return True
     return False
+
+
+def round_selection_key(payload: dict[str, Any], path: Path) -> tuple[str, int, int, str, str]:
+    round_id = str(payload.get("roundId") or path.stem).strip()
+    generated_at = str(payload.get("generatedAt") or "").strip()
+
+    rerun_index = 0
+    base_round_id = round_id
+    rerun_match = ROUND_RERUN_PATTERN.match(base_round_id)
+    if rerun_match:
+        base_round_id = str(rerun_match.group("base") or "").strip() or base_round_id
+        rerun_index = int(rerun_match.group("rerun") or 0)
+
+    pass_index = 0
+    bucket = base_round_id
+    pass_match = ROUND_PASS_PATTERN.match(base_round_id)
+    if pass_match:
+        bucket = str(pass_match.group("prefix") or "").strip() or bucket
+        pass_index = int(pass_match.group("pass") or 0)
+
+    return bucket, pass_index, rerun_index, generated_at, str(path)
+
+
+def select_effective_round_batches(paths: list[Path]) -> list[Path]:
+    unique_paths: list[Path] = []
+    seen_paths: set[str] = set()
+    for path in paths:
+        resolved = path.resolve()
+        key = str(resolved)
+        if key in seen_paths:
+            continue
+        seen_paths.add(key)
+        unique_paths.append(resolved)
+
+    selected: dict[str, tuple[tuple[int, int, str, str], Path]] = {}
+    for path in unique_paths:
+        payload = read_json(path)
+        bucket, pass_index, rerun_index, generated_at, path_text = round_selection_key(payload, path)
+        rank = (pass_index, rerun_index, generated_at, path_text)
+        current = selected.get(bucket)
+        if current is None or rank > current[0]:
+            selected[bucket] = (rank, path)
+
+    rows = [item[1] for item in selected.values()]
+    rows.sort(key=lambda value: str(value))
+    return rows
 
 
 def render_markdown(summary: dict[str, Any]) -> str:
@@ -501,11 +550,16 @@ def main() -> None:
         str(progress_root),
     ]
     maybe_append_overwrite(estimate_args, args.overwrite)
+    estimate_round_paths: list[Path] = []
     for batch_path in existing_round_json_paths(str(base_progress_path)):
-        estimate_args.extend(["--round-json", batch_path])
+        resolved = resolve_existing_path(batch_path)
+        if resolved.exists():
+            estimate_round_paths.append(resolved)
     for batch_path in sorted(rounds_root.glob("*.batch.json")):
         if not round_batch_has_quality_signal(batch_path):
             continue
+        estimate_round_paths.append(batch_path.resolve())
+    for batch_path in select_effective_round_batches(estimate_round_paths):
         estimate_args.extend(["--round-json", str(batch_path)])
     commands.append({"name": "estimate_knowledge_completion", **run_command(script_command("estimate_knowledge_completion.py", estimate_args))})
 

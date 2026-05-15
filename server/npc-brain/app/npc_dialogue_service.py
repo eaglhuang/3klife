@@ -3349,7 +3349,31 @@ class NpcDialogueService:
         }
         return priority.get(str(relationship_type or ""), 35)
 
-    def _runtime_edge_source_text(self, edge: dict[str, Any]) -> str:
+    def _runtime_sources_for_refs(self, runtime_persona: dict[str, Any] | None, refs: set[str]) -> list[str]:
+        if not runtime_persona or not refs:
+            return []
+        matched: list[str] = []
+        for source in [*(runtime_persona.get("storyBeats") or []), *(runtime_persona.get("sourceHighlights") or [])]:
+            source_refs = {str(ref).strip() for ref in (source.get("sourceRefs") or []) if str(ref).strip()}
+            source_ref = str(source.get("sourceRef") or "").strip()
+            if source_ref:
+                source_refs.add(source_ref)
+            if not source_refs.intersection(refs):
+                continue
+            matched.extend(
+                str(value)
+                for value in [
+                    source.get("summary"),
+                    source.get("sourceQuote"),
+                    source.get("quote"),
+                    source.get("example"),
+                ]
+                if value
+            )
+        return matched
+
+    def _runtime_edge_source_text(self, edge: dict[str, Any], runtime_persona: dict[str, Any] | None = None) -> str:
+        refs = self._runtime_edge_refs(edge)
         return " ".join(
             str(value)
             for value in [
@@ -3357,9 +3381,18 @@ class NpcDialogueService:
                 edge.get("sourceQuote"),
                 edge.get("evidenceText"),
                 edge.get("summary"),
+                *self._runtime_sources_for_refs(runtime_persona, refs),
             ]
             if value
         )
+
+    def _runtime_edge_is_stable_relationship(self, edge: dict[str, Any]) -> bool:
+        source_layer = str(edge.get("sourceLayer") or "").strip()
+        return source_layer in {
+            "stable-bootstrap-seed",
+            "stable-history-profile-baseline",
+            "generals-parent-summary",
+        } or str(edge.get("claimGrade") or "").startswith("A-history")
 
     def _runtime_actor_aliases(self, runtime_persona: dict[str, Any]) -> list[str]:
         display_name = str(runtime_persona.get("displayName") or "").strip()
@@ -3371,6 +3404,48 @@ class NpcDialogueService:
     def _text_mentions_runtime_actor(self, runtime_persona: dict[str, Any], text: str) -> bool:
         source = str(text or "")
         return any(alias and alias in source for alias in self._runtime_actor_aliases(runtime_persona))
+
+    def _runtime_target_aliases(self, target_id: str | None, target_name: str | None) -> list[str]:
+        seeds: list[str] = []
+        if target_name:
+            seeds.append(str(target_name))
+        target_key = str(target_id or "").strip()
+        if target_key:
+            try:
+                target_persona = self.store.read_runtime_persona(target_key) or {}
+            except (OSError, json.JSONDecodeError):
+                target_persona = {}
+            seeds.extend(
+                str(value)
+                for value in [
+                    target_persona.get("displayName"),
+                    *((target_persona.get("aliases") or []) if isinstance(target_persona.get("aliases"), list) else []),
+                ]
+                if value
+            )
+        aliases: list[str] = []
+        for seed in seeds:
+            for alias in self._target_label_aliases(seed):
+                if alias and alias not in aliases:
+                    aliases.append(alias)
+            if seed and len(seed) >= 2:
+                family = seed[0]
+                for suffix in ("軍", "兵", "營", "部"):
+                    alias = f"{family}{suffix}"
+                    if alias not in aliases:
+                        aliases.append(alias)
+        return aliases
+
+    def _text_mentions_runtime_target(self, edge: dict[str, Any], text: str) -> bool:
+        source = str(text or "")
+        target_aliases = self._runtime_target_aliases(edge.get("targetId"), edge.get("targetName"))
+        return any(alias and alias in source for alias in target_aliases)
+
+    def _edge_has_direct_pair_signal(self, edge: dict[str, Any], runtime_persona: dict[str, Any]) -> bool:
+        text = self._runtime_edge_source_text(edge, runtime_persona)
+        if not text:
+            return False
+        return self._text_mentions_runtime_actor(runtime_persona, text) and self._text_mentions_runtime_target(edge, text)
 
     def _runtime_edge_refs(self, edge: dict[str, Any]) -> set[str]:
         return {str(ref).strip() for ref in (edge.get("evidenceRefs") or []) if str(ref).strip()}
@@ -3437,6 +3512,7 @@ class NpcDialogueService:
     def _preferred_non_conflict_relationships(
         self,
         runtime_relationships: dict[str, Any],
+        runtime_persona: dict[str, Any],
     ) -> dict[str, dict[str, Any]]:
         conflict_types = {"enemy_rival", "battlefield_opponent", "betrayal_surrender"}
         preferred: dict[str, dict[str, Any]] = {}
@@ -3444,6 +3520,10 @@ class NpcDialogueService:
             target_id = str(edge.get("targetId") or "").strip()
             edge_type = str(edge.get("type") or "").strip()
             if not target_id or not edge_type or edge_type in conflict_types:
+                continue
+            if edge_type == "ruler_subject" and not self._edge_has_authority_signal(edge, runtime_persona):
+                continue
+            if edge_type == "patron_client" and not self._edge_has_patron_signal(edge, runtime_persona):
                 continue
             priority = self._relationship_display_priority(edge_type, set(edge.get("originalTypes") or []))
             current = preferred.get(target_id)
@@ -3459,45 +3539,41 @@ class NpcDialogueService:
         return preferred
 
     def _edge_has_command_or_ally_signal(self, edge: dict[str, Any], runtime_persona: dict[str, Any]) -> bool:
-        text = self._runtime_edge_source_text(edge)
+        text = self._runtime_edge_source_text(edge, runtime_persona)
         if not text:
             return False
-        has_actor = self._text_mentions_runtime_actor(runtime_persona, text)
+        if not self._edge_has_direct_pair_signal(edge, runtime_persona):
+            return False
         command_terms = ("令", "命", "遣", "撥", "使", "差", "引軍", "為先鋒", "爲先鋒")
-        ally_terms = ("助戰", "救起", "同救", "來投", "投降", "歸順", "歸降")
-        return (has_actor and any(term in text for term in command_terms)) or any(term in text for term in ally_terms)
+        ally_terms = ("助戰", "救起", "同救", "來投", "投降", "歸順", "歸降", "保")
+        return any(term in text for term in [*command_terms, *ally_terms])
 
     def _edge_has_authority_signal(self, edge: dict[str, Any], runtime_persona: dict[str, Any]) -> bool:
-        text = self._runtime_edge_source_text(edge)
+        text = self._runtime_edge_source_text(edge, runtime_persona)
+        if self._runtime_edge_is_stable_relationship(edge):
+            return True
         if not self._text_mentions_runtime_actor(runtime_persona, text):
             return False
-        target_name = str(edge.get("targetName") or "").strip()
-        target_aliases = self._target_label_aliases(target_name)
-        has_target = any(alias and alias in text for alias in target_aliases)
+        has_target = self._text_mentions_runtime_target(edge, text)
+        strict_authority_terms = ("麾下", "效忠", "親信", "亲信", "侍衛", "侍卫", "部下", "部將", "部将", "主公", "臣", "君")
+        return has_target and any(term in text for term in strict_authority_terms)
         authority_terms = ("令", "命", "遣", "撥", "使", "差", "引軍", "為先鋒", "爲先鋒", "部將", "主公")
         return has_target and any(term in text for term in authority_terms)
 
     def _edge_has_patron_signal(self, edge: dict[str, Any], runtime_persona: dict[str, Any]) -> bool:
-        text = self._runtime_edge_source_text(edge)
+        text = self._runtime_edge_source_text(edge, runtime_persona)
         if not self._text_mentions_runtime_actor(runtime_persona, text):
             return False
-        target_name = str(edge.get("targetName") or "").strip()
-        target_aliases = self._target_label_aliases(target_name)
-        has_target = any(alias and alias in text for alias in target_aliases)
+        has_target = self._text_mentions_runtime_target(edge, text)
         patron_terms = ("來投", "投降", "歸順", "厚待", "收留", "薦", "請", "降", "授", "拜")
         return has_target and any(term in text for term in patron_terms)
 
     def _edge_has_direct_conflict_signal(self, edge: dict[str, Any], runtime_persona: dict[str, Any]) -> bool:
-        text = self._runtime_edge_source_text(edge)
+        text = self._runtime_edge_source_text(edge, runtime_persona)
         if not text:
             return False
-        actor_aliases = self._runtime_actor_aliases(runtime_persona)
-        target_name = str(edge.get("targetName") or "").strip()
-        target_aliases = [target_name]
-        if len(target_name) == 2:
-            target_aliases.append(target_name[1:])
-        has_actor = any(alias and alias in text for alias in actor_aliases)
-        has_target = any(alias and alias in text for alias in target_aliases)
+        has_actor = self._text_mentions_runtime_actor(runtime_persona, text)
+        has_target = self._text_mentions_runtime_target(edge, text)
         conflict_terms = ("戰", "攻", "討", "殺", "追", "圍", "敗", "斬", "拒", "敵", "廝殺", "搦戰")
         return has_actor and has_target and any(term in text for term in conflict_terms)
 
@@ -3514,18 +3590,24 @@ class NpcDialogueService:
         if self._edge_points_to_yellow_turban_enemy(edge):
             if edge_type in {"ruler_subject", "patron_client", "mentor_student", "political_contact", "battlefield_contact"}:
                 return "enemy_rival"
+        edge_text = self._runtime_edge_source_text(edge, runtime_persona)
+        direct_pair = self._edge_has_direct_pair_signal(edge, runtime_persona)
         if edge_type not in {"enemy_rival", "battlefield_opponent", "betrayal_surrender"}:
             if edge_type == "ruler_subject" and not self._edge_has_authority_signal(edge, runtime_persona):
-                return "political_contact"
+                return "battlefield_contact" if direct_pair and self._text_has_battle_signal(edge_text) else "political_contact"
             if edge_type == "patron_client" and not self._edge_has_patron_signal(edge, runtime_persona):
                 if self._edge_has_direct_conflict_signal(edge, runtime_persona):
                     return "enemy_rival"
-                return "battlefield_contact" if self._text_has_battle_signal(self._runtime_edge_source_text(edge)) else "political_contact"
+                return "battlefield_contact" if direct_pair and self._text_has_battle_signal(edge_text) else "political_contact"
             return edge_type
 
         target_id = str(edge.get("targetId") or "").strip()
         refs = self._runtime_edge_refs(edge)
         preferred = preferred_non_conflict.get(target_id)
+        if not direct_pair:
+            if preferred:
+                return str(preferred.get("type") or edge_type)
+            return "battlefield_contact" if self._text_has_battle_signal(edge_text) else "political_contact"
         if preferred and refs and refs.intersection(preferred.get("refs") or set()):
             return str(preferred.get("type") or edge_type)
 
@@ -3555,7 +3637,7 @@ class NpcDialogueService:
             "location": 0.8,
             "affect": 0.6,
         }
-        preferred_non_conflict = self._preferred_non_conflict_relationships(runtime_relationships)
+        preferred_non_conflict = self._preferred_non_conflict_relationships(runtime_relationships, runtime_persona)
 
         def ensure_bucket(target_id: str) -> dict[str, Any]:
             bucket = buckets.get(target_id)
@@ -3748,7 +3830,7 @@ class NpcDialogueService:
         target_labels = {target.targetId: target.label for target in interaction_targets}
         target_by_id = {target.targetId: target for target in interaction_targets}
         female_target_ids = [target.targetId for target in interaction_targets if target.femaleFocus]
-        preferred_non_conflict = self._preferred_non_conflict_relationships(runtime_relationships)
+        preferred_non_conflict = self._preferred_non_conflict_relationships(runtime_relationships, runtime_persona)
 
         def normalize_related_ids(raw_ids: list[Any] | None, source_text: str = "") -> list[str]:
             related_ids: list[str] = []

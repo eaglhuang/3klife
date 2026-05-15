@@ -91,6 +91,36 @@ GRAPH_RELATIONSHIP_TYPES = {
     "enemy_rival",
     "alliance_oath",
 }
+SEMANTIC_RELATIONSHIP_TYPES = GRAPH_RELATIONSHIP_TYPES | {
+    "battlefield_contact",
+    "political_contact",
+    "battlefield_opponent",
+    "intimidates_enemy",
+    "protects_family",
+    "strategy_pressure",
+    "battle_ally",
+    "loyal_oath",
+}
+STABLE_RELATIONSHIP_SOURCE_LAYER = "stable-bootstrap-seed"
+STABLE_RELATIONSHIP_SOURCE_LAYERS = {
+    STABLE_RELATIONSHIP_SOURCE_LAYER,
+    "stable-history-profile-baseline",
+    "generals-parent-summary",
+}
+RULER_SUBJECT_AUTHORITY_TERMS = (
+    "麾下",
+    "效忠",
+    "親信",
+    "亲信",
+    "侍衛",
+    "侍卫",
+    "部下",
+    "部將",
+    "部将",
+    "主公",
+    "臣",
+    "君",
+)
 VOICE_PRESETS = {
     "cao-cao": {
         "voiceStyle": ["雄猜", "果決", "權謀", "冷靜", "帶詩性"],
@@ -274,6 +304,88 @@ def text_mentioned_general_ids(text: str, alias_index: dict[str, list[str]], gen
     return sorted(set(hits))
 
 
+def text_mentions_general(text: str, general_id: str, alias_index: dict[str, list[str]]) -> bool:
+    compact = re.sub(r"\s+", "", str(text or ""))
+    if not compact:
+        return False
+    return any(alias and alias in compact for alias in alias_index.get(general_id, []))
+
+
+def edge_compact_text(edge: dict[str, Any]) -> str:
+    return re.sub(
+        r"\s+",
+        "",
+        " ".join(
+            str(value)
+            for value in [
+                edge.get("sourceQuote"),
+                edge.get("evidenceText"),
+                edge.get("summary"),
+                *list(edge.get("sourceQuotes") or []),
+            ]
+            if value
+        ),
+    )
+
+
+def is_stable_relationship_edge(edge: dict[str, Any]) -> bool:
+    source_layer = str(edge.get("sourceLayer") or "").strip()
+    return source_layer in STABLE_RELATIONSHIP_SOURCE_LAYERS or str(edge.get("claimGrade") or "").startswith("A-history")
+
+
+def edge_has_authority_baseline_terms(edge: dict[str, Any]) -> bool:
+    text = edge_compact_text(edge)
+    return any(term in text for term in RULER_SUBJECT_AUTHORITY_TERMS)
+
+
+def edge_has_direct_pair_signal(
+    edge: dict[str, Any],
+    general_id: str,
+    target_id: str,
+    alias_index: dict[str, list[str]],
+) -> bool:
+    text = edge_compact_text(edge)
+    return text_mentions_general(text, general_id, alias_index) and text_mentions_general(text, target_id, alias_index)
+
+
+def stable_relationship_edges_for_general(stable: dict[str, Any], general_id: str) -> list[dict[str, Any]]:
+    edges: list[dict[str, Any]] = []
+    for edge in stable.get("relationshipEdges") or []:
+        from_id = str(edge.get("fromId") or "").strip()
+        to_id = str(edge.get("toId") or "").strip()
+        if general_id not in {from_id, to_id}:
+            continue
+        edges.append(
+            {
+                "fromId": from_id,
+                "toId": to_id,
+                "type": edge.get("type"),
+                "evidenceRefs": list(edge.get("evidenceRefs") or []),
+                "edgeConfidence": edge.get("edgeConfidence") or edge.get("confidence") or 0.9,
+                "edgeStrength": edge.get("edgeStrength") or 0.85,
+                "sourceQuote": edge.get("sourceQuote"),
+                "sourceLayer": edge.get("sourceLayer") or STABLE_RELATIONSHIP_SOURCE_LAYER,
+                "claimLayer": edge.get("claimLayer"),
+                "claimGrade": edge.get("claimGrade"),
+                "reviewStatus": edge.get("reviewStatus") or "ready",
+                "eventTags": list(edge.get("eventTags") or []),
+                "validFromChapter": edge.get("validFromChapter"),
+                "validToChapter": edge.get("validToChapter"),
+            }
+        )
+    return edges
+
+
+def stable_type_index(stable_edges: list[dict[str, Any]], general_id: str) -> dict[str, set[str]]:
+    index: dict[str, set[str]] = defaultdict(set)
+    for edge in stable_edges:
+        target = relationship_target(edge, general_id)
+        rel_type = str(edge.get("type") or "").strip()
+        if target and rel_type:
+            index[target].add(rel_type)
+    return index
+
+
 def index_relationship_targets_by_ref(relationships: dict[str, Any]) -> dict[str, set[str]]:
     by_ref: dict[str, set[str]] = defaultdict(set)
     for anchor in relationships.get("anchors") or []:
@@ -318,10 +430,6 @@ def linked_general_ids(
 ) -> tuple[list[str], list[dict[str, Any]]]:
     trace: list[dict[str, Any]] = []
     buckets: dict[str, set[str]] = defaultdict(set)
-    for target_id in declared_ids or []:
-        target_key = str(target_id or "").strip()
-        if target_key and target_key != general_id:
-            buckets[target_key].add("declared-generalIds")
     for target_id in relationship_edge_general_ids(relationship_edges or [], general_id):
         buckets[target_id].add("relationshipEdges")
     for target_id in source_ref_related_ids(refs, relationship_targets_by_ref):
@@ -422,7 +530,13 @@ def refine_relationship_type(edge: dict[str, Any], general_id: str) -> tuple[str
     quote = str(edge.get("sourceQuote") or "")
     refs = " ".join(str(ref) for ref in edge.get("evidenceRefs") or [])
     reasons: list[str] = []
+    if is_stable_relationship_edge(edge):
+        reasons.append("stable_relationship_baseline")
+        return original or "relationship", reasons
     if original in GRAPH_RELATIONSHIP_TYPES:
+        if original == "ruler_subject" and not edge_has_authority_baseline_terms(edge):
+            reasons.append("source_graph_ruler_subject_without_authority_baseline_terms")
+            return "battlefield_contact", reasons
         reasons.append("source_graph_refined_type")
         return original, reasons
     if target == "cao-cao" and any(term in quote for term in ["勒住馬", "速退", "又中諸葛亮之計"]):
@@ -440,7 +554,7 @@ def refine_relationship_type(edge: dict[str, Any], general_id: str) -> tuple[str
     if target in {"liu-bei", "mi-shi", "gan-shi", "liu-shan"} and any(term in quote for term in ["二嫂嫂", "甘夫人", "阿斗", "家眷", "付託"]):
         reasons.append("family_guardian_terms")
         return "protects_family", reasons
-    if target == "liu-bei":
+    if target == "liu-bei" and any(term in quote for term in ["結義", "盟誓", "桃園", "誓同生死"]):
         reasons.append("liu_bei_core_oath_relation")
         return "loyal_oath", reasons
     if target == "liu-bei" and ("025#" in refs or "073#" in refs or "007#" in refs):
@@ -453,14 +567,46 @@ def refine_relationship_type(edge: dict[str, Any], general_id: str) -> tuple[str
     return "battlefield_contact", reasons
 
 
-def build_relationships(general_id: str, edges: list[dict[str, Any]], identities: dict[str, dict[str, Any]]) -> dict[str, Any]:
+def build_relationships(
+    general_id: str,
+    edges: list[dict[str, Any]],
+    identities: dict[str, dict[str, Any]],
+    stable_edges: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     grouped: dict[tuple[str, str], dict[str, Any]] = {}
     counts = Counter()
-    for edge in edges:
+    rejected: list[dict[str, Any]] = []
+    alias_index = build_alias_index(identities)
+    stable_edges = stable_edges or []
+    stable_types_by_target = stable_type_index(stable_edges, general_id)
+    for edge in [*stable_edges, *edges]:
         target = relationship_target(edge, general_id)
         if not target:
             continue
         refined_type, reasons = refine_relationship_type(edge, general_id)
+        is_stable = is_stable_relationship_edge(edge)
+        direct_pair_signal = edge_has_direct_pair_signal(edge, general_id, target, alias_index)
+        stable_types = stable_types_by_target.get(target) or set()
+        reject_reasons: list[str] = []
+        if not is_stable and stable_types and refined_type not in stable_types and not direct_pair_signal:
+            reject_reasons.append("conflicts_with_stable_relationship_without_direct_pair_evidence")
+        if not is_stable and refined_type in SEMANTIC_RELATIONSHIP_TYPES and not direct_pair_signal:
+            reject_reasons.append("semantic_relationship_without_direct_pair_evidence")
+        if reject_reasons:
+            rejected.append(
+                {
+                    "targetId": target,
+                    "targetName": name_for(target, identities),
+                    "type": refined_type,
+                    "originalType": edge.get("type"),
+                    "evidenceRefs": list(edge.get("evidenceRefs") or []),
+                    "sourceQuote": edge.get("sourceQuote"),
+                    "rejectionReasons": unique(reject_reasons),
+                    "refinementReasons": reasons,
+                    "reviewStatus": "rejected-runtime-export",
+                }
+            )
+            continue
         direction = "outgoing" if edge.get("fromId") == general_id else "incoming"
         key = (target, refined_type)
         current = grouped.get(key)
@@ -478,6 +624,7 @@ def build_relationships(general_id: str, edges: list[dict[str, Any]], identities
                 "sourceQuotes": [edge.get("sourceQuote")] if edge.get("sourceQuote") else [],
                 "refinementReasons": reasons,
                 "reviewStatus": edge.get("reviewStatus") or "reviewed",
+                "sourceLayer": edge.get("sourceLayer"),
             }
             continue
         current["originalTypes"] = unique(list(current.get("originalTypes") or []) + [edge.get("type")])
@@ -501,9 +648,13 @@ def build_relationships(general_id: str, edges: list[dict[str, Any]], identities
         "relationshipCount": len(anchors),
         "typeCounts": dict(sorted(counts.items())),
         "anchors": anchors,
+        "rejectedRelationshipEdges": rejected,
         "taxonomyPolicy": {
             "commands": "not exported as final type; refined into semantic runtime labels when possible",
             "fallbackType": "battlefield_contact",
+            "directPairGate": "semantic relationship edges must mention both endpoints unless they come from stable bootstrap",
+            "stableConflictPolicy": "stable relationship baseline types cannot be overwritten by indirect short evidence",
+            "commandPolicy": "command or dispatch evidence is battlefield contact unless a stable authority baseline or explicit lordship terms exist",
         },
     }
 
@@ -679,6 +830,7 @@ def build_persona(
             "completionPercent": core.get("completionPercent"),
             "readyEventCount": len(events),
             "relationshipCount": len(relationships.get("anchors") or []),
+            "rejectedRelationshipEdgeCount": len(relationships.get("rejectedRelationshipEdges") or []),
             "keywordCategoryCounts": keywords.get("categoryCounts") or {},
             "reviewBacklogCount": len(review_backlog),
         },
@@ -732,6 +884,7 @@ def render_summary(general_id: str, persona: dict[str, Any], keywords: dict[str,
         f"- Completion: `{persona['runtimeReadiness'].get('completionPercent')}`",
         f"- Ready Events: `{persona['runtimeReadiness']['readyEventCount']}`",
         f"- Relationships: `{persona['runtimeReadiness']['relationshipCount']}`",
+        f"- Rejected Relationship Edges: `{persona['runtimeReadiness'].get('rejectedRelationshipEdgeCount', 0)}`",
         f"- Review Backlog: `{persona['runtimeReadiness']['reviewBacklogCount']}`",
         "",
         "## Keyword Categories",
@@ -770,7 +923,8 @@ def main() -> None:
     core_report = read_json(Path(args.core_report))
     review_paths = [Path(path) for path in args.review_answers]
     review_backlog = load_review_backlog(review_paths, general_id)
-    relationships = build_relationships(general_id, edges, identities)
+    stable_edges = stable_relationship_edges_for_general(stable, general_id)
+    relationships = build_relationships(general_id, edges, identities, stable_edges=stable_edges)
     keywords = build_keywords(general_id, identity, profile, events, packets, relationships)
     persona = build_persona(general_id, identity, profile, events, packets, relationships, core_report, review_backlog, keywords, identities)
 
