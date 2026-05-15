@@ -6,7 +6,8 @@ const path = require('node:path');
 const cp = require('node:child_process');
 const crypto = require('node:crypto');
 const { runScriptInProcess, shouldFallbackForEperm } = require('./lib/in-process-cli-runner');
-const { inspectH2uWorktreeIsolation } = require('./lib/h2u-worktree-isolation');
+const { buildStatusSnapshotText, inspectH2uWorktreeIsolation } = require('./lib/h2u-worktree-isolation');
+const { DEFAULT_H2U_BASELINE_WORKTREE_STATUS_FILE, DEFAULT_H2U_WORKTREE_STATUS_FILE } = require('./lib/h2u-gate-defaults');
 
 const ROOT = path.resolve(__dirname, '..');
 const DEFAULT_BASE_OUT = path.join(ROOT, 'artifacts', 'legacy-h2u-first-win');
@@ -90,6 +91,79 @@ function readJsonIfExists(filePath) {
 function writeJson(filePath, value) {
   ensureDir(path.dirname(filePath));
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+}
+
+function resolveRootPath(filePath) {
+  const raw = String(filePath || '').trim();
+  if (!raw) {
+    return '';
+  }
+  return path.isAbsolute(raw) ? raw : path.resolve(ROOT, raw);
+}
+
+function writeSnapshotFile(filePath, snapshotText) {
+  const absolutePath = resolveRootPath(filePath);
+  if (!absolutePath) {
+    return false;
+  }
+  ensureDir(path.dirname(absolutePath));
+  fs.writeFileSync(absolutePath, String(snapshotText || ''), 'utf8');
+  return true;
+}
+
+function ensureDefaultH2uSnapshots(opts) {
+  const providedWorktreeStatusFile = String(opts.worktreeStatusFile || '').trim();
+  const providedBaselineWorktreeStatusFile = String(opts.baselineWorktreeStatusFile || '').trim();
+  const worktreeStatusFile = providedWorktreeStatusFile || DEFAULT_H2U_WORKTREE_STATUS_FILE;
+  const baselineWorktreeStatusFile = providedBaselineWorktreeStatusFile || DEFAULT_H2U_BASELINE_WORKTREE_STATUS_FILE;
+  const defaultedWorktreeStatusFile = !providedWorktreeStatusFile;
+  const defaultedBaselineWorktreeStatusFile = !providedBaselineWorktreeStatusFile;
+
+  if (!defaultedWorktreeStatusFile && !defaultedBaselineWorktreeStatusFile) {
+    return {
+      worktreeStatusFile,
+      baselineWorktreeStatusFile,
+      snapshotGenerated: false,
+      baselineSnapshotGenerated: false,
+      snapshotError: '',
+    };
+  }
+
+  const probe = inspectH2uWorktreeIsolation({
+    root: ROOT,
+    strict: false,
+    requireWorktreeCheck: false,
+  });
+  const snapshotText = buildStatusSnapshotText(Array.isArray(probe && probe.dirtyFiles) ? probe.dirtyFiles : []);
+  let snapshotError = '';
+
+  if (defaultedWorktreeStatusFile) {
+    try {
+      writeSnapshotFile(worktreeStatusFile, snapshotText);
+    } catch (error) {
+      snapshotError = String(error && (error.message || error) || 'cannot write default H2U worktree status snapshot');
+    }
+  }
+
+  if (defaultedBaselineWorktreeStatusFile) {
+    try {
+      writeSnapshotFile(baselineWorktreeStatusFile, snapshotText);
+    } catch (error) {
+      snapshotError = snapshotError || String(error && (error.message || error) || 'cannot write default H2U baseline worktree status snapshot');
+    }
+  }
+
+  if (probe && probe.checkUnavailable && !snapshotError) {
+    snapshotError = String(probe.error || probe.stderr || 'cannot read current git status for H2U snapshot');
+  }
+
+  return {
+    worktreeStatusFile,
+    baselineWorktreeStatusFile,
+    snapshotGenerated: defaultedWorktreeStatusFile,
+    baselineSnapshotGenerated: defaultedBaselineWorktreeStatusFile,
+    snapshotError,
+  };
 }
 
 async function runNodeScript(scriptPath, args, label) {
@@ -322,15 +396,17 @@ async function runRound(roundId, opts) {
   resetDir(roundDir);
   ensureDir(workflowOutDir);
 
+  const h2uSnapshots = ensureDefaultH2uSnapshots(opts);
+
   const launchArgs = ['--strict', '--report', launchReportPath];
-  if (opts.baselineWorktreeStatusFile) {
-    launchArgs.push('--baseline-worktree-status-file', opts.baselineWorktreeStatusFile);
+  if (h2uSnapshots.baselineWorktreeStatusFile) {
+    launchArgs.push('--baseline-worktree-status-file', h2uSnapshots.baselineWorktreeStatusFile);
   }
   for (const prefix of opts.allowDirtyPrefixes) {
     launchArgs.push('--allow-dirty-prefix', prefix);
   }
-  if (opts.worktreeStatusFile) {
-    launchArgs.push('--worktree-status-file', opts.worktreeStatusFile);
+  if (h2uSnapshots.worktreeStatusFile) {
+    launchArgs.push('--worktree-status-file', h2uSnapshots.worktreeStatusFile);
   }
   if (roundStatusSnapshotOut) {
     launchArgs.push('--status-snapshot-out', roundStatusSnapshotOut);
@@ -410,6 +486,13 @@ async function runRound(roundId, opts) {
     gateFailReasons: [],
     key,
     keyHash: hashStableJson(key),
+    h2uSnapshots: {
+      worktreeStatusFile: h2uSnapshots.worktreeStatusFile,
+      baselineWorktreeStatusFile: h2uSnapshots.baselineWorktreeStatusFile,
+      snapshotGenerated: h2uSnapshots.snapshotGenerated,
+      baselineSnapshotGenerated: h2uSnapshots.baselineSnapshotGenerated,
+      snapshotError: h2uSnapshots.snapshotError,
+    },
   };
   writeJson(evidenceManifestPath, manifest);
 
