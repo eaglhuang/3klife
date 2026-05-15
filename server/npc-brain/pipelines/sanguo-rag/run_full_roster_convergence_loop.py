@@ -1790,6 +1790,52 @@ def build_runtime_ref_blitz_synthetic_events(
     }
 
 
+def merge_ready_events_with_runtime_ref_blitz(
+    *,
+    base_events_path: Path,
+    synthetic_events_path: Path,
+    output_path: Path,
+    dry_run: bool,
+) -> dict[str, Any]:
+    base_rows = read_jsonl(base_events_path)
+    synthetic_rows = read_jsonl(synthetic_events_path)
+
+    merged: list[dict[str, Any]] = []
+    seen_keys: set[str] = set()
+
+    def event_key(row: dict[str, Any]) -> str:
+        event_id = str(row.get("eventId") or "").strip()
+        if event_id:
+            return f"id:{event_id}"
+        event_key_text = str(row.get("eventKey") or "").strip()
+        if event_key_text:
+            return f"key:{event_key_text}"
+        summary = compact_text(row.get("summary")) or compact_text(row.get("sourceQuote"))
+        refs = ",".join(sorted(str(item or "").strip() for item in (row.get("sourceRefs") or []) if str(item or "").strip()))
+        participants = ",".join(sorted(str(item or "").strip() for item in (row.get("generalIds") or []) if str(item or "").strip()))
+        return f"fallback:{stable_hash(summary, refs, participants, length=16)}"
+
+    for row in [*base_rows, *synthetic_rows]:
+        if not isinstance(row, dict):
+            continue
+        key = event_key(row)
+        if key in seen_keys:
+            continue
+        seen_keys.add(key)
+        merged.append(row)
+
+    if not dry_run:
+        write_jsonl(output_path, merged)
+
+    return {
+        "baseEventCount": len(base_rows),
+        "syntheticEventCount": len(synthetic_rows),
+        "mergedEventCount": len(merged),
+        "dedupRemovedCount": len(base_rows) + len(synthetic_rows) - len(merged),
+        "outputPath": repo_relative(output_path),
+    }
+
+
 def export_runtime_profiles_for_generals(
     *,
     general_ids: list[str],
@@ -3153,6 +3199,12 @@ def run_round(
         repo_relative(effective_relationship_json_path),
         "--output-root",
         repo_relative(event_seed_root),
+        "--external-seed-min-score",
+        str(max(float(args.event_throughput_external_seed_min_score), 0.0)),
+        "--history-cross-family-threshold",
+        str(max(int(args.event_throughput_history_cross_family_threshold), 1)),
+        "--non-history-cross-family-threshold",
+        str(max(int(args.event_throughput_non_history_cross_family_threshold), 1)),
     ]
     if args.overwrite:
         event_seed_command.append("--overwrite")
@@ -3171,6 +3223,12 @@ def run_round(
         repo_relative(effective_relationship_json_path),
         "--output-root",
         repo_relative(packet_root),
+        "--external-seed-min-score",
+        str(max(float(args.event_throughput_external_seed_min_score), 0.0)),
+        "--history-cross-family-threshold",
+        str(max(int(args.event_throughput_history_cross_family_threshold), 1)),
+        "--non-history-cross-family-threshold",
+        str(max(int(args.event_throughput_non_history_cross_family_threshold), 1)),
     ]
     if args.overwrite:
         packet_command.append("--overwrite")
@@ -3198,7 +3256,17 @@ def run_round(
 
     estimate_root = round_root / "knowledge-progress"
     round_json_inputs = existing_paths(list(carry_forward_round_json_paths or []))
-    events_summary_path = events_path.with_name("events-summary.json")
+    events_summary_candidates = [
+        events_path.with_name("events-summary.json"),
+        generic_candidates_path.with_name("events-summary.json"),
+        observed_summary_path.parent.parent / "events" / "events-summary.json",
+        resolve_path(DEFAULT_EVENTS_PATH).with_name("events-summary.json"),
+    ]
+    events_summary_path = events_summary_candidates[0]
+    for candidate in events_summary_candidates:
+        if isinstance(candidate, Path) and candidate.exists():
+            events_summary_path = candidate
+            break
     female_candidates_path = generic_candidates_path.with_name("female-interaction-candidates.jsonl")
     estimate_command = [
         sys.executable,
@@ -3403,6 +3471,20 @@ def run_round(
         source_event_packets_path=packet_json_path,
         core_report_path=core_progress_json_path,
     )
+    runtime_ref_blitz_carry_summary: dict[str, Any] | None = None
+    runtime_ref_blitz_carry_events_path: Path | None = None
+    if bool(args.runtime_ref_blitz_carry_events):
+        synthetic_events_text = str(runtime_payload.get("refBlitzSyntheticEventsPath") or "").strip()
+        synthetic_events_count = int(runtime_payload.get("refBlitzSyntheticEventCount") or 0)
+        synthetic_events_path = resolve_existing_path(synthetic_events_text) if synthetic_events_text else Path()
+        if synthetic_events_count > 0 and synthetic_events_path.exists():
+            runtime_ref_blitz_carry_events_path = round_root / "runtime-readiness-ref-blitz" / "ready-events.with-runtime-ref-blitz.jsonl"
+            runtime_ref_blitz_carry_summary = merge_ready_events_with_runtime_ref_blitz(
+                base_events_path=events_path,
+                synthetic_events_path=synthetic_events_path,
+                output_path=runtime_ref_blitz_carry_events_path,
+                dry_run=dry_run,
+            )
     runtime_round_summary_root = round_root / "runtime-readiness"
     runtime_round_summary_path = runtime_round_summary_root / "runtime-readiness-summary.json"
     runtime_round_summary = {
@@ -3429,6 +3511,10 @@ def run_round(
         "refBlitzSyntheticEventsPath": runtime_payload.get("refBlitzSyntheticEventsPath"),
         "refBlitzNoPacketGenerals": runtime_payload.get("refBlitzNoPacketGenerals"),
         "refBlitzCreatedPerGeneral": runtime_payload.get("refBlitzCreatedPerGeneral"),
+        "refBlitzCarryEventsPath": (
+            repo_relative(runtime_ref_blitz_carry_events_path) if runtime_ref_blitz_carry_events_path else None
+        ),
+        "refBlitzCarryEvents": runtime_ref_blitz_carry_summary,
         "refBlitzExport": runtime_payload.get("refBlitzExport"),
         "refBlitzRerun": runtime_payload.get("refBlitzRerun"),
         "selectedGeneralIds": runtime_payload.get("selectedGeneralIds"),
@@ -3531,6 +3617,11 @@ def run_round(
         "runtimeRefBlitzFailGeneralCount": runtime_payload.get("refBlitzFailGeneralCount"),
         "runtimeRefBlitzResolvedCount": runtime_payload.get("refBlitzResolvedCount"),
         "runtimeRefBlitzSyntheticEventCount": runtime_payload.get("refBlitzSyntheticEventCount"),
+        "runtimeRefBlitzSyntheticEventsPath": runtime_payload.get("refBlitzSyntheticEventsPath"),
+        "runtimeRefBlitzCarryEventsPath": (
+            repo_relative(runtime_ref_blitz_carry_events_path) if runtime_ref_blitz_carry_events_path else None
+        ),
+        "runtimeRefBlitzCarryEventsSummary": runtime_ref_blitz_carry_summary,
         "runtimeRefBlitzRuntimeProfileRoot": runtime_payload.get("refBlitzRuntimeProfileRoot"),
         "runtimeRefBlitzRerunSummaryPath": runtime_payload.get("refBlitzRerunSummaryPath"),
         "runtimeReadinessRoundSummaryPath": repo_relative(runtime_round_summary_path),
@@ -3744,6 +3835,24 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--source-roi-min-card-page-community", type=float, default=0.2)
     parser.add_argument("--source-roi-min-primary-cards", type=int, default=20)
     parser.add_argument("--source-roi-min-primary-seeds", type=int, default=20)
+    parser.add_argument(
+        "--event-throughput-external-seed-min-score",
+        type=float,
+        default=72.0,
+        help="Pass-through external seed confidence threshold for event seed/packet builders.",
+    )
+    parser.add_argument(
+        "--event-throughput-history-cross-family-threshold",
+        type=int,
+        default=2,
+        help="Pass-through cross-family trust threshold for history-layer external overlay rows.",
+    )
+    parser.add_argument(
+        "--event-throughput-non-history-cross-family-threshold",
+        type=int,
+        default=3,
+        help="Pass-through cross-family trust threshold for non-history external overlay rows.",
+    )
     parser.add_argument("--run-precision-lane", dest="run_precision_lane", action="store_true")
     parser.add_argument("--no-precision-lane", dest="run_precision_lane", action="store_false")
     parser.set_defaults(run_precision_lane=True)
@@ -3890,6 +3999,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--runtime-ref-blitz", dest="runtime_ref_blitz", action="store_true")
     parser.add_argument("--no-runtime-ref-blitz", dest="runtime_ref_blitz", action="store_false")
     parser.set_defaults(runtime_ref_blitz=True)
+    parser.add_argument("--runtime-ref-blitz-carry-events", dest="runtime_ref_blitz_carry_events", action="store_true")
+    parser.add_argument("--no-runtime-ref-blitz-carry-events", dest="runtime_ref_blitz_carry_events", action="store_false")
+    parser.set_defaults(runtime_ref_blitz_carry_events=False)
     parser.add_argument("--runtime-ref-blitz-max-events-per-general", type=int, default=12)
     parser.add_argument("--external-relationship-shadow-fallback", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
@@ -4163,6 +4275,22 @@ def main() -> int:
                     else:
                         round_snapshot["carryAwareRoundSummaryApplied"] = False
                         round_snapshot["carryAwareRoundSummaryReason"] = "carry-summary-input-missing"
+
+        runtime_ref_blitz_carry_text = str(round_info.get("runtimeRefBlitzCarryEventsPath") or "").strip()
+        runtime_ref_blitz_carry_candidate: Path | None = None
+        if runtime_ref_blitz_carry_text:
+            candidate = resolve_existing_path(runtime_ref_blitz_carry_text)
+            if candidate.exists():
+                runtime_ref_blitz_carry_candidate = candidate
+
+        if runtime_ref_blitz_carry_candidate and not precision_carry_decision.get("applied"):
+            effective_events_path = runtime_ref_blitz_carry_candidate
+            round_snapshot["runtimeRefBlitzCarryApplied"] = True
+            round_snapshot["runtimeRefBlitzCarryReason"] = "applied"
+        elif runtime_ref_blitz_carry_candidate and precision_carry_decision.get("applied"):
+            round_snapshot["runtimeRefBlitzCarryApplied"] = False
+            round_snapshot["runtimeRefBlitzCarryReason"] = "precision-carry-has-priority"
+
         round_snapshot["eventsOutputPath"] = repo_relative(effective_events_path)
         rounds.append(round_snapshot)
         baseline_manifest = {"paths": dict(round_info)}
@@ -4426,6 +4554,7 @@ def main() -> int:
             "failureRateLimit": args.failure_rate_limit,
             "runtimeReadiness": args.runtime_readiness,
             "runtimeRefBlitz": bool(args.runtime_ref_blitz),
+            "runtimeRefBlitzCarryEvents": bool(args.runtime_ref_blitz_carry_events),
             "runtimeRefBlitzMaxEventsPerGeneral": int(args.runtime_ref_blitz_max_events_per_general),
             "runPrecisionLane": args.run_precision_lane,
             "precisionScoreboardBridge": bool(args.precision_scoreboard_bridge),
@@ -4445,6 +4574,9 @@ def main() -> int:
             "precisionCarryScoreboardMinImprove": float(args.precision_carry_scoreboard_min_improve),
             "precisionCarryScoreboardMaxRegression": float(args.precision_carry_scoreboard_max_regression),
             "seedToCardPriorityLimit": int(args.seed_to_card_priority_limit),
+            "eventThroughputExternalSeedMinScore": float(args.event_throughput_external_seed_min_score),
+            "eventThroughputHistoryCrossFamilyThreshold": int(args.event_throughput_history_cross_family_threshold),
+            "eventThroughputNonHistoryCrossFamilyThreshold": int(args.event_throughput_non_history_cross_family_threshold),
             "runThreeLane": args.run_three_lane,
             "sourceRoiPolicy": {
                 "enabled": bool(args.enable_source_roi_policy),
@@ -4476,6 +4608,10 @@ def main() -> int:
             "sourceConfigSanity": config_sanity,
             "seedToCardMinScore": float(args.seed_to_card_min_score),
             "seedToCardPriorityGeneralIds": [str(item or "").strip() for item in (args.seed_to_card_priority_general_id or []) if str(item or "").strip()],
+            "eventThroughputExternalSeedMinScore": float(args.event_throughput_external_seed_min_score),
+            "eventThroughputHistoryCrossFamilyThreshold": int(args.event_throughput_history_cross_family_threshold),
+            "eventThroughputNonHistoryCrossFamilyThreshold": int(args.event_throughput_non_history_cross_family_threshold),
+            "runtimeRefBlitzCarryEvents": bool(args.runtime_ref_blitz_carry_events),
             "precisionGeneralIds": [str(item or "").strip() for item in (args.precision_general_id or []) if str(item or "").strip()],
             "externalRelationshipShadowFallback": bool(args.external_relationship_shadow_fallback),
             "manualRoundJsonPaths": [repo_relative(path) for path in manual_round_json_paths],
