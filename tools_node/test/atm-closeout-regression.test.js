@@ -157,10 +157,126 @@ function testCloseoutAggregatorBindings() {
   );
 }
 
+function testCloseoutH2uLiveRolloutBindings() {
+  const parsed = closeout.parseArgs([
+    '--strict',
+    '--include-h2u-live-rollout',
+    '--worktree-status-file',
+    'artifacts/legacy-h2u-first-win/worktree-status.txt',
+    '--allow-dirty-prefix',
+    'assets/resources/ui-spec/screens/legacy-h2u-dryrun.local-tokens.json',
+    '--allow-dirty-prefix',
+    'assets/resources/ui-spec/screens/legacy-h2u-dryrun.readiness.json',
+  ]);
+  assert(parsed.strict === true, 'closeout parser should keep strict flag');
+  assert(parsed.includeH2uLiveRollout === true, 'closeout parser should parse include-h2u-live-rollout');
+  assert(
+    parsed.worktreeStatusFile === 'artifacts/legacy-h2u-first-win/worktree-status.txt',
+    'closeout parser should parse worktree status file',
+  );
+  assert(
+    Array.isArray(parsed.allowDirtyPrefixes) && parsed.allowDirtyPrefixes.length === 2,
+    'closeout parser should collect allow-dirty-prefix values',
+  );
+
+  const guidanceReport = closeout.runH2uHostLocalGuidanceConfigCheck();
+  assert(guidanceReport && typeof guidanceReport.passed === 'boolean', 'closeout should expose h2u guidance check report');
+  assert(
+    guidanceReport.summary && guidanceReport.summary.hotspotPath === 'tools_node/lib/dom-to-ui/draft-builder-core.js',
+    'h2u guidance check should inspect draft-builder-core hotspot path',
+  );
+}
+
+function testAtm4SummaryBlock() {
+  const checks = [
+    {
+      id: 'validate-registry-version-governance',
+      passed: true,
+      details: {
+        blockerCount: 0,
+        warningCount: 0,
+        summary: {
+          entryCount: 4,
+          atomEntryCount: 3,
+          mapEntryCount: 1,
+          backfillRequiredCount: 0,
+          currentPointerDriftCount: 0,
+          unverifiableHistoryCount: 0,
+          alreadyAlignedCount: 4,
+        },
+      },
+    },
+    {
+      id: 'validate-h2u-atomize-validate',
+      passed: true,
+      details: {
+        blockerCount: 0,
+        warningCount: 0,
+        summary: {
+          failed: 0,
+          total: 268,
+          releaseBlockers: ['processElement', 'runWorkflowMain'],
+        },
+      },
+    },
+    {
+      id: 'validate-h2u-demand-police',
+      passed: true,
+      details: {
+        blockerCount: 0,
+        warningCount: 0,
+        summary: {
+          blockingCount: 0,
+          capsules: 256,
+          anchors: 12,
+          sharedSuggestions: 21,
+        },
+      },
+    },
+    {
+      id: 'validate-h2u-host-local-guidance-config',
+      passed: true,
+      details: {
+        blockerCount: 0,
+        warningCount: 0,
+        summary: {
+          hotspotPath: 'tools_node/lib/dom-to-ui/draft-builder-core.js',
+          releaseBlocker: 'processElement',
+          expectedAtomMatch: 'parseFragmentList:ATM-CORE-0007',
+          splitDemandSymbol: 'resolveLength',
+          issues: [],
+        },
+      },
+    },
+  ];
+
+  const summary = closeout.buildAtm4Summary(checks, {
+    includeH2uLiveRollout: true,
+    h2uGateConfig: {
+      worktreeStatusFile: 'artifacts/legacy-h2u-first-win/worktree-status.txt',
+      allowDirtyPrefixes: ['assets/resources/ui-spec/screens/legacy-h2u-dryrun.local-tokens.json'],
+    },
+  });
+
+  assert(summary && summary.section === 'atm4-live-rollout-summary', 'atm4 summary should expose dedicated section key');
+  assert(summary.status === 'pass', 'atm4 summary status should be pass when all sub-gates pass');
+  assert(summary.passed === true, 'atm4 summary should mark passed=true');
+  assert(summary.versionGovernance.metrics.backfillRequiredCount === 0, 'atm4 summary should surface backfillRequiredCount');
+  assert(summary.h2uLiveRollout.enabled === true, 'atm4 summary should mark h2u live rollout enabled');
+  assert(summary.h2uLiveRollout.metrics.capsules === 256, 'atm4 summary should expose demand-police capsules metric');
+  assert(summary.h2uLiveRollout.metrics.guidanceIssueCount === 0, 'atm4 summary should expose guidance issue count');
+  assert(
+    Array.isArray(summary.h2uLiveRollout.releaseBlockers) && summary.h2uLiveRollout.releaseBlockers.includes('processElement'),
+    'atm4 summary should preserve release blocker list',
+  );
+}
+
 async function main() {
   await testDocIdFallbackViaModuleApi();
   await testDocIdFallbackDisabledThrows();
   testCloseoutAggregatorBindings();
+  testCloseoutH2uLiveRolloutBindings();
+  testAtm4SummaryBlock();
   console.log('atm closeout regression tests passed');
 }
 

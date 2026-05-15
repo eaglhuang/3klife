@@ -2,7 +2,7 @@
   "schemaId": "atm.registry",
   "specVersion": "0.1.0",
   "registryId": "3klife.h2u.local",
-  "generatedAt": "2026-05-13T11:45:13.856Z",
+  "generatedAt": "2026-05-15T08:42:47.695Z",
   "role": "adopter-local-workbench",
   "upstreamRegistryRef": "C:/Users/User/AI-Atomic-Framework/atomic-registry.json",
   "notes": [
@@ -80,7 +80,42 @@
       "migration": {
         "strategy": "adopter-localization",
         "notes": "ATM-CORE-0005 is canonical in 3KLife atomic_workbench; upstream remains tooling/schema only."
-      }
+      },
+      "currentVersion": "0.1.0",
+      "versions": [
+        {
+          "entryId": "ATM-CORE-0005",
+          "version": "0.1.0",
+          "status": "active",
+          "semanticFingerprint": "sf:sha256:09f9f60dae2ace765e01a7fbb2b9c0f9c55efb7ff784fbc30b6bc7155822bf13",
+          "specHash": "sha256:d27318b84c343b90e38be020d547852351aa5c16aeb408d6f5ab4a1359db722f",
+          "codeHash": "sha256:f5b9125212db663bd993cf81f868d6bf32ed180ccea2fe83db709f81c38e5377",
+          "testHash": "sha256:49a14556f5863cebf5e4feeb33cf24c8a446c1c667017bfe7b5a2adf758aaec9",
+          "hashLock": {
+            "algorithm": "sha256",
+            "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+            "canonicalization": "json-stable-v1"
+          },
+          "evidence": [
+            "atomic_workbench/atoms/ATM-CORE-0005/atom.test.report.json",
+            "atomic_workbench/atoms/ATM-CORE-0005/lineage-log.json",
+            "generator-provenance:atomize"
+          ],
+          "sourcePaths": {
+            "spec": "specs/normalize-css-color.atom.json",
+            "code": [
+              "atomic_workbench/atoms/ATM-CORE-0005/atom.source.mjs"
+            ],
+            "tests": [
+              "atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs"
+            ]
+          },
+          "timestamp": "2026-05-15T08:42:47.695Z",
+          "createdAt": "2026-05-15T08:42:47.695Z",
+          "updatedAt": "2026-05-15T08:42:47.695Z",
+          "changeKind": "current-snapshot"
+        }
+      ]
     },
     {
       "id": "ATM-CORE-0006",
@@ -152,7 +187,42 @@
       "migration": {
         "strategy": "adopter-localization",
         "notes": "ATM-CORE-0006 is canonical in 3KLife atomic_workbench; upstream remains tooling/schema only."
-      }
+      },
+      "currentVersion": "0.1.0",
+      "versions": [
+        {
+          "entryId": "ATM-CORE-0006",
+          "version": "0.1.0",
+          "status": "active",
+          "semanticFingerprint": "sf:sha256:09f9f60dae2ace765e01a7fbb2b9c0f9c55efb7ff784fbc30b6bc7155822bf13",
+          "specHash": "sha256:b390bc528fd0a97fef29ec8ded2f3c57013b693f954709df6095f247bba0554f",
+          "codeHash": "sha256:94cb1349440c1b017ec5ffb0403a5a0e6b955e1f50289af1bb63557b2a6b36d0",
+          "testHash": "sha256:c2dd9c0fcd9c8991457b49356cc2f06842ac68e55606c3fda8371ce1dd5d11e3",
+          "hashLock": {
+            "algorithm": "sha256",
+            "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+            "canonicalization": "json-stable-v1"
+          },
+          "evidence": [
+            "atomic_workbench/atoms/ATM-CORE-0006/atom.test.report.json",
+            "atomic_workbench/atoms/ATM-CORE-0006/lineage-log.json",
+            "generator-provenance:atomize"
+          ],
+          "sourcePaths": {
+            "spec": "specs/parse-css-length.atom.json",
+            "code": [
+              "atomic_workbench/atoms/ATM-CORE-0006/atom.source.mjs"
+            ],
+            "tests": [
+              "atomic_workbench/atoms/ATM-CORE-0006/atom.test.mjs"
+            ]
+          },
+          "timestamp": "2026-05-15T08:42:47.695Z",
+          "createdAt": "2026-05-15T08:42:47.695Z",
+          "updatedAt": "2026-05-15T08:42:47.695Z",
+          "changeKind": "current-snapshot"
+        }
+      ]
     },
     {
       "id": "ATM-CORE-0007",
@@ -224,7 +294,42 @@
       "migration": {
         "strategy": "adopter-localization",
         "notes": "ATM-CORE-0007 is canonical in 3KLife atomic_workbench; upstream remains tooling/schema only."
-      }
+      },
+      "currentVersion": "0.1.0",
+      "versions": [
+        {
+          "entryId": "ATM-CORE-0007",
+          "version": "0.1.0",
+          "status": "active",
+          "semanticFingerprint": "sf:sha256:09f9f60dae2ace765e01a7fbb2b9c0f9c55efb7ff784fbc30b6bc7155822bf13",
+          "specHash": "sha256:5f855ed85d2d8c87131506d0e1d2e870b51e819a9d0cafee298626372dee7285",
+          "codeHash": "sha256:9d4a067eac79f3c1424bb6083fa14eb41a301b250ad29b0cbfb7646115fee193",
+          "testHash": "sha256:91fa2a2509a12f7e8b7870e513d8c6ac201341f6093d5499053c8dbf159a6b58",
+          "hashLock": {
+            "algorithm": "sha256",
+            "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+            "canonicalization": "json-stable-v1"
+          },
+          "evidence": [
+            "atomic_workbench/atoms/ATM-CORE-0007/atom.test.report.json",
+            "atomic_workbench/atoms/ATM-CORE-0007/lineage-log.json",
+            "generator-provenance:atomize"
+          ],
+          "sourcePaths": {
+            "spec": "specs/parse-fragment-list.atom.json",
+            "code": [
+              "atomic_workbench/atoms/ATM-CORE-0007/atom.source.mjs"
+            ],
+            "tests": [
+              "atomic_workbench/atoms/ATM-CORE-0007/atom.test.mjs"
+            ]
+          },
+          "timestamp": "2026-05-15T08:42:47.695Z",
+          "createdAt": "2026-05-15T08:42:47.695Z",
+          "updatedAt": "2026-05-15T08:42:47.695Z",
+          "changeKind": "current-snapshot"
+        }
+      ]
     },
     {
       "schemaId": "atm.atomicMap",
@@ -301,10 +406,134 @@
       "migration": {
         "strategy": "adopter-localization",
         "notes": "ATM-MAP-0003 is canonical in 3KLife atomic_workbench; upstream remains tooling/schema only."
-      }
+      },
+      "currentVersion": "0.1.0",
+      "versions": [
+        {
+          "entryId": "ATM-MAP-0003",
+          "version": "0.1.0",
+          "status": "draft",
+          "semanticFingerprint": "sf:sha256:a71b67b0d35a35d395c725f9424f3551715f998bf2421efd05ef1317ef9a3ff9",
+          "mapHash": "sha256:8ce344177a19451fc354776028dc49c1173b9ebb3a3a1181ddc27db81c95faa5",
+          "members": [
+            {
+              "atomId": "ATM-CORE-0005",
+              "version": "0.1.0"
+            },
+            {
+              "atomId": "ATM-CORE-0006",
+              "version": "0.1.0"
+            },
+            {
+              "atomId": "ATM-CORE-0007",
+              "version": "0.1.0"
+            }
+          ],
+          "edges": [
+            {
+              "from": "ATM-CORE-0005",
+              "to": "ATM-CORE-0006",
+              "binding": "normalizes-length"
+            },
+            {
+              "from": "ATM-CORE-0006",
+              "to": "ATM-CORE-0007",
+              "binding": "feeds-fragments"
+            }
+          ],
+          "entrypoints": [
+            "ATM-CORE-0005"
+          ],
+          "qualityTargets": {
+            "pilotName": "h2u-map-evolution",
+            "promoteGateRequired": true,
+            "requiredChecks": 3
+          },
+          "evidence": [
+            "generator-provenance:generated",
+            "atomic_workbench/maps/ATM-MAP-0003/map.spec.json",
+            "atomic_workbench/maps/ATM-MAP-0003/map.integration.test.mjs",
+            "atomic_workbench/maps/ATM-MAP-0003/map.test.report.json"
+          ],
+          "timestamp": "2026-05-15T08:42:47.695Z",
+          "createdAt": "2026-05-15T08:42:47.695Z",
+          "updatedAt": "2026-05-15T08:42:47.695Z",
+          "changeKind": "current-snapshot"
+        }
+      ]
     }
   ],
   "anchors": [
+    {
+      "id": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+      "logicalName": "anchor.cli-shell-context-74c85a60",
+      "kind": "core-anchor",
+      "role": "semantic-parent",
+      "status": "active",
+      "governance": {
+        "tier": "core-anchor"
+      },
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
+        "lineCount": 708
+      },
+      "semanticFingerprint": "sf:sha256:8db9fc3416ff3d854a6672e90d8a821144916e194d1595390bb37aec9401e169",
+      "children": [
+        "H2U-CAPSULE-EXTRACT-ISSUES",
+        "H2U-CAPSULE-EXTRACT-COMPARE-METRICS",
+        "H2U-CAPSULE-EXTRACT-PERF-METRICS",
+        "H2U-CAPSULE-BUILD-PATHS",
+        "H2U-CAPSULE-RESOLVE-RUNTIME-SPEC-PATHS",
+        "H2U-CAPSULE-RESOLVE-CANONICAL-RUNTIME-PATHS",
+        "H2U-CAPSULE-MERGE-RUNTIME-SCREEN-CONTENT-CONTRACT",
+        "H2U-CAPSULE-BUILD-RUNTIME-TAB-ROUTING-MAP",
+        "H2U-CAPSULE-NORMALIZE-INTERACTION-TRIGGERS-FROM-LAYOUT",
+        "H2U-CAPSULE-BUILD-SUMMARY",
+        "H2U-CAPSULE-BUILD-FIDELITY-DIMENSIONS",
+        "H2U-CAPSULE-COMPUTE-DEBUG-ONLY",
+        "H2U-CAPSULE-BUILD-RUNTIME-AUTHORITY",
+        "H2U-CAPSULE-BUILD-PRE-RULE-GUARD-FIXES",
+        "H2U-CAPSULE-MERGE-NEXT-FIXES",
+        "H2U-CAPSULE-BUILD-RUNTIME-INTERACTION-SMOKE-STEP",
+        "H2U-CAPSULE-RESOLVE-UPDATE-COVERAGE-BASELINE",
+        "H2U-CAPSULE-REL",
+        "H2U-CAPSULE-ENSURE-DIR",
+        "H2U-CAPSULE-DETECT-INPUT-SHAPE",
+        "H2U-CAPSULE-WALK",
+        "H2U-CAPSULE-REGENERATE-SCREEN-LOCAL-TOKENS",
+        "H2U-CAPSULE-COPY-IF-PRESENT",
+        "H2U-CAPSULE-READ-RUNTIME-STATE-ROUTE",
+        "H2U-CAPSULE-SIDECAR-PATH",
+        "H2U-CAPSULE-DERIVE-UI-SHORT-NAME",
+        "H2U-CAPSULE-READ-FINAL-TAB-ROUTING",
+        "H2U-CAPSULE-SYNC-FINAL-ARTIFACTS-TO-RUNTIME",
+        "H2U-CAPSULE-INJECT-DYNAMIC-TEXT-CONTRACTS",
+        "H2U-CAPSULE-RUN-PER-TAB-REPLAY",
+        "H2U-CAPSULE-DERIVE-CSS-COVERAGE-PATH-FROM-LAYOUT",
+        "H2U-CAPSULE-TOP-RULE-GUARD-FIXES",
+        "H2U-CAPSULE-CLASSIFY-BLOCKER-CATEGORY",
+        "H2U-CAPSULE-DERIVE-BLOCKER-TAXONOMY",
+        "H2U-CAPSULE-ASSESS-VISUAL-FIDELITY-RISK",
+        "H2U-CAPSULE-ASSESS-INTERACTION-RUNTIME",
+        "H2U-CAPSULE-READ-TEXT",
+        "H2U-CAPSULE-READ-JSON-IF-EXISTS",
+        "H2U-CAPSULE-HASH-FILE-IF-EXISTS",
+        "H2U-CAPSULE-RUN-NODE-STEP",
+        "H2U-CAPSULE-FIRST-EXISTING-PATH",
+        "H2U-CAPSULE-COPY-JSON-FILE",
+        "H2U-CAPSULE-ALLOCATE-UI-VERSION",
+        "H2U-CAPSULE-WRITE-UI-VERSION-ARTIFACTS",
+        "H2U-CAPSULE-BOOTSTRAP-FINAL-DRAFT-FROM-RUNTIME",
+        "H2U-CAPSULE-WRITE-JSON",
+        "H2U-CAPSULE-WRITE-SUMMARY-AND-EXIT"
+      ],
+      "location": {
+        "manifestPath": "atomic_workbench/anchors/cli-shell-context-74c85a60/anchor.manifest.json",
+        "testPath": "atomic_workbench/anchors/cli-shell-context-74c85a60/anchor.test.mjs",
+        "workbenchPath": "atomic_workbench/anchors/cli-shell-context-74c85a60"
+      }
+    },
     {
       "id": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
       "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
@@ -498,6 +727,160 @@
       }
     },
     {
+      "id": "H2U-ANCHOR-FINAL-VERDICT-2E58DEC4",
+      "anchorId": "H2U-ANCHOR-FINAL-VERDICT-2E58DEC4",
+      "logicalName": "anchor.final-verdict-2e58dec4",
+      "kind": "core-anchor",
+      "role": "semantic-parent",
+      "status": "active",
+      "governance": {
+        "tier": "core-anchor"
+      },
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/final-verdict.js",
+        "lineCount": 179
+      },
+      "semanticFingerprint": "sf:sha256:054aa759289bfffef9e5acbda0e089d88c3f70969f8a68c256bdc1c2403ba067",
+      "children": [
+        "H2U-CAPSULE-BUILD-INITIAL-VERDICT",
+        "H2U-CAPSULE-FINALIZE-WORKFLOW-VERDICT"
+      ],
+      "location": {
+        "manifestPath": "atomic_workbench/anchors/final-verdict-2e58dec4/anchor.manifest.json",
+        "testPath": "atomic_workbench/anchors/final-verdict-2e58dec4/anchor.test.mjs",
+        "workbenchPath": "atomic_workbench/anchors/final-verdict-2e58dec4"
+      }
+    },
+    {
+      "id": "H2U-ANCHOR-GATE-ORCHESTRATION-3DF999E5",
+      "anchorId": "H2U-ANCHOR-GATE-ORCHESTRATION-3DF999E5",
+      "logicalName": "anchor.gate-orchestration-3df999e5",
+      "kind": "core-anchor",
+      "role": "semantic-parent",
+      "status": "active",
+      "governance": {
+        "tier": "core-anchor"
+      },
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js",
+        "lineCount": 69
+      },
+      "semanticFingerprint": "sf:sha256:9fc3c649258c614b30f2e0d7afeaafc06f704a4c0cab181551e8a821dd7d04ba",
+      "children": [
+        "H2U-CAPSULE-BUILD-RUNTIME-SYNC-STEP",
+        "H2U-CAPSULE-BUILD-RULE-GUARD-STEP",
+        "H2U-CAPSULE-DERIVE-GATE-SIGNALS"
+      ],
+      "location": {
+        "manifestPath": "atomic_workbench/anchors/gate-orchestration-3df999e5/anchor.manifest.json",
+        "testPath": "atomic_workbench/anchors/gate-orchestration-3df999e5/anchor.test.mjs",
+        "workbenchPath": "atomic_workbench/anchors/gate-orchestration-3df999e5"
+      }
+    },
+    {
+      "id": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
+      "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
+      "logicalName": "anchor.interaction-smoke-f0cad253",
+      "kind": "core-anchor",
+      "role": "semantic-parent",
+      "status": "active",
+      "governance": {
+        "tier": "core-anchor"
+      },
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js",
+        "lineCount": 239
+      },
+      "semanticFingerprint": "sf:sha256:d10fd2c7a2945e8ba32a4795fceadba65fe620cb427ba98bb47d02b6019283b8",
+      "children": [
+        "H2U-CAPSULE-BUILD-RUNTIME-INTERACTION-SMOKE-STEP",
+        "H2U-CAPSULE-ASSESS-INTERACTION-RUNTIME",
+        "H2U-CAPSULE-NORMALIZE-INTERACTION-KEY",
+        "H2U-CAPSULE-COLLECT-LAYOUT-NODE-INDEX",
+        "H2U-CAPSULE-BUILD-INTERACTION-ROUTE-MAP",
+        "H2U-CAPSULE-RESOLVE-INTERACTION-ROUTE",
+        "H2U-CAPSULE-RESOLVE-INTERACTION-FALLBACK-ROUTE",
+        "H2U-CAPSULE-ROUTE-FRAGMENT-EXISTS"
+      ],
+      "location": {
+        "manifestPath": "atomic_workbench/anchors/interaction-smoke-f0cad253/anchor.manifest.json",
+        "testPath": "atomic_workbench/anchors/interaction-smoke-f0cad253/anchor.test.mjs",
+        "workbenchPath": "atomic_workbench/anchors/interaction-smoke-f0cad253"
+      }
+    },
+    {
+      "id": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
+      "logicalName": "anchor.per-tab-replay-e0734ba6",
+      "kind": "core-anchor",
+      "role": "semantic-parent",
+      "status": "active",
+      "governance": {
+        "tier": "core-anchor"
+      },
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
+        "lineCount": 354
+      },
+      "semanticFingerprint": "sf:sha256:130b13216bb7f009f31f77bb78a285fda08b06d693cfb5bfb36b527291ff2e8c",
+      "children": [
+        "H2U-CAPSULE-RUN-PER-TAB-REPLAY",
+        "H2U-CAPSULE-NORMALIZE-FRAGMENT-LAYOUT",
+        "H2U-CAPSULE-RESOLVE-SLOT-WIDTH",
+        "H2U-CAPSULE-COLLECT-WIDTHS",
+        "H2U-CAPSULE-PICK-PER-TAB-REPLAY-TABS",
+        "H2U-CAPSULE-MERGE-SKIN-SLOTS",
+        "H2U-CAPSULE-DERIVE-FRAGMENT-PREFIX",
+        "H2U-CAPSULE-TO-KEBAB",
+        "H2U-CAPSULE-TO-PASCAL",
+        "H2U-CAPSULE-PIN-PRIMARY-FRAGMENT-CONTENT-WRAPPER",
+        "H2U-CAPSULE-FIND-LAYOUT-NODE-BY-NAME",
+        "H2U-CAPSULE-STRETCH-OVERSIZED-FULL-WIDTH-NODES",
+        "H2U-CAPSULE-DERIVE-CHILD-PANEL-CLASS",
+        "H2U-CAPSULE-UPDATE-LAZY-SLOT-DEFAULT-FRAGMENTS",
+        "H2U-CAPSULE-WRITE-PER-TAB-REPLAY-ROUTING"
+      ],
+      "location": {
+        "manifestPath": "atomic_workbench/anchors/per-tab-replay-e0734ba6/anchor.manifest.json",
+        "testPath": "atomic_workbench/anchors/per-tab-replay-e0734ba6/anchor.test.mjs",
+        "workbenchPath": "atomic_workbench/anchors/per-tab-replay-e0734ba6"
+      }
+    },
+    {
+      "id": "H2U-ANCHOR-QUALITY-VERDICT-UTILS-1DA9B161",
+      "anchorId": "H2U-ANCHOR-QUALITY-VERDICT-UTILS-1DA9B161",
+      "logicalName": "anchor.quality-verdict-utils-1da9b161",
+      "kind": "core-anchor",
+      "role": "semantic-parent",
+      "status": "active",
+      "governance": {
+        "tier": "core-anchor"
+      },
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js",
+        "lineCount": 314
+      },
+      "semanticFingerprint": "sf:sha256:d8cee43bc5e5f659617dd05f41678a552454e20fb8d0c61ce93e824911a43ccb",
+      "children": [
+        "H2U-CAPSULE-BUILD-FIDELITY-DIMENSIONS",
+        "H2U-CAPSULE-COMPUTE-DEBUG-ONLY",
+        "H2U-CAPSULE-BUILD-RUNTIME-AUTHORITY",
+        "H2U-CAPSULE-MERGE-NEXT-FIXES",
+        "H2U-CAPSULE-BUILD-PRE-RULE-GUARD-FIXES",
+        "H2U-CAPSULE-COLLECT-VISUAL-RISK-FROM-SLOT",
+        "H2U-CAPSULE-BUILD-SUMMARY",
+        "H2U-CAPSULE-TOP-RULE-GUARD-FIXES",
+        "H2U-CAPSULE-CLASSIFY-BLOCKER-CATEGORY",
+        "H2U-CAPSULE-DERIVE-BLOCKER-TAXONOMY",
+        "H2U-CAPSULE-ASSESS-VISUAL-FIDELITY-RISK"
+      ],
+      "location": {
+        "manifestPath": "atomic_workbench/anchors/quality-verdict-utils-1da9b161/anchor.manifest.json",
+        "testPath": "atomic_workbench/anchors/quality-verdict-utils-1da9b161/anchor.test.mjs",
+        "workbenchPath": "atomic_workbench/anchors/quality-verdict-utils-1da9b161"
+      }
+    },
+    {
       "id": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
       "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
       "logicalName": "anchor.run-html-to-ucuf-workflow-33d9a610",
@@ -521,6 +904,114 @@
         "manifestPath": "atomic_workbench/anchors/run-html-to-ucuf-workflow-33d9a610/anchor.manifest.json",
         "testPath": "atomic_workbench/anchors/run-html-to-ucuf-workflow-33d9a610/anchor.test.mjs",
         "workbenchPath": "atomic_workbench/anchors/run-html-to-ucuf-workflow-33d9a610"
+      }
+    },
+    {
+      "id": "H2U-ANCHOR-RUNTIME-SYNC-E2B5B235",
+      "anchorId": "H2U-ANCHOR-RUNTIME-SYNC-E2B5B235",
+      "logicalName": "anchor.runtime-sync-e2b5b235",
+      "kind": "core-anchor",
+      "role": "semantic-parent",
+      "status": "active",
+      "governance": {
+        "tier": "core-anchor"
+      },
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/runtime-sync.js",
+        "lineCount": 124
+      },
+      "semanticFingerprint": "sf:sha256:f71cc9b49bcbd836ddcf13dfa92d49f3fe516fe9d56cf9fe49596548bbd29d31",
+      "children": [
+        "H2U-CAPSULE-BUILD-RUNTIME-TAB-ROUTING-MAP",
+        "H2U-CAPSULE-READ-FINAL-TAB-ROUTING",
+        "H2U-CAPSULE-SYNC-FINAL-ARTIFACTS-TO-RUNTIME"
+      ],
+      "location": {
+        "manifestPath": "atomic_workbench/anchors/runtime-sync-e2b5b235/anchor.manifest.json",
+        "testPath": "atomic_workbench/anchors/runtime-sync-e2b5b235/anchor.test.mjs",
+        "workbenchPath": "atomic_workbench/anchors/runtime-sync-e2b5b235"
+      }
+    },
+    {
+      "id": "H2U-ANCHOR-TEXT-CONTRACT-SYNC-B14BCEFF",
+      "anchorId": "H2U-ANCHOR-TEXT-CONTRACT-SYNC-B14BCEFF",
+      "logicalName": "anchor.text-contract-sync-b14bceff",
+      "kind": "core-anchor",
+      "role": "semantic-parent",
+      "status": "active",
+      "governance": {
+        "tier": "core-anchor"
+      },
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/text-contract-sync.js",
+        "lineCount": 96
+      },
+      "semanticFingerprint": "sf:sha256:8b4036c63b124def4f6a8024bc31f90a02599a90a81d3e62e462b0bee1c70f7a",
+      "children": [
+        "H2U-CAPSULE-NORMALIZE-INTERACTION-TRIGGERS-FROM-LAYOUT",
+        "H2U-CAPSULE-INJECT-DYNAMIC-TEXT-CONTRACTS",
+        "H2U-CAPSULE-HAS-TEXT-BINDING-CONTRACT",
+        "H2U-CAPSULE-SANITIZE-KEY-SEGMENT"
+      ],
+      "location": {
+        "manifestPath": "atomic_workbench/anchors/text-contract-sync-b14bceff/anchor.manifest.json",
+        "testPath": "atomic_workbench/anchors/text-contract-sync-b14bceff/anchor.test.mjs",
+        "workbenchPath": "atomic_workbench/anchors/text-contract-sync-b14bceff"
+      }
+    },
+    {
+      "id": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
+      "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
+      "logicalName": "anchor.token-governance-7dfb32fb",
+      "kind": "core-anchor",
+      "role": "semantic-parent",
+      "status": "active",
+      "governance": {
+        "tier": "core-anchor"
+      },
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
+        "lineCount": 231
+      },
+      "semanticFingerprint": "sf:sha256:58db1af803f63c8b80d35ac23c5612cf53911694bac4e888e8f3ae883efc7f9b",
+      "children": [
+        "H2U-CAPSULE-NORMALIZE-COLOR-VALUE",
+        "H2U-CAPSULE-BUILD-LOCAL-TOKEN-DIFF",
+        "H2U-CAPSULE-BUILD-LOCAL-COLOR-TOKEN-LOOKUP",
+        "H2U-CAPSULE-APPLY-SCREEN-LOCAL-COLOR-TOKENS-TO-SKIN",
+        "H2U-CAPSULE-REGENERATE-SCREEN-LOCAL-TOKENS",
+        "H2U-CAPSULE-COLLECT-TOKEN-SUGGESTION-FILES",
+        "H2U-CAPSULE-BUILD-SCREEN-LOCAL-TOKEN-PAYLOAD",
+        "H2U-CAPSULE-DERIVE-TOKEN-SUGGESTION-PATH-FROM-LAYOUT"
+      ],
+      "location": {
+        "manifestPath": "atomic_workbench/anchors/token-governance-7dfb32fb/anchor.manifest.json",
+        "testPath": "atomic_workbench/anchors/token-governance-7dfb32fb/anchor.test.mjs",
+        "workbenchPath": "atomic_workbench/anchors/token-governance-7dfb32fb"
+      }
+    },
+    {
+      "id": "H2U-ANCHOR-WORKFLOW-MAIN-CF37CACF",
+      "anchorId": "H2U-ANCHOR-WORKFLOW-MAIN-CF37CACF",
+      "logicalName": "anchor.workflow-main-cf37cacf",
+      "kind": "core-anchor",
+      "role": "semantic-parent",
+      "status": "active",
+      "governance": {
+        "tier": "core-anchor"
+      },
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/workflow-main.js",
+        "lineCount": 474
+      },
+      "semanticFingerprint": "sf:sha256:ee85a7eb41b631309be9082657d5fe5fbbac7c09919d5a31b0fac56ff56566d1",
+      "children": [
+        "H2U-CAPSULE-RUN-WORKFLOW-MAIN"
+      ],
+      "location": {
+        "manifestPath": "atomic_workbench/anchors/workflow-main-cf37cacf/anchor.manifest.json",
+        "testPath": "atomic_workbench/anchors/workflow-main-cf37cacf/anchor.test.mjs",
+        "workbenchPath": "atomic_workbench/anchors/workflow-main-cf37cacf"
       }
     }
   ],
