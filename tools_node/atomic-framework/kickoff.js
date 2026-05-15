@@ -5,6 +5,7 @@ const path = require('node:path');
 
 const { buildGovernanceReport } = require('./governance/checker');
 const { buildNodeInvocationCommand, resolveUpstreamPaths } = require('../lib/upstream-env');
+const { buildH2uGateArgs, resolveH2uGateConfig } = require('../lib/h2u-gate-defaults');
 
 const projectRoot = path.resolve(__dirname, '..', '..');
 const upstreamPaths = resolveUpstreamPaths({
@@ -114,6 +115,11 @@ function escapeDoubleQuotes(value) {
   return String(value || '').replace(/"/g, '\\"');
 }
 
+function buildH2uGateArgString(config) {
+  const args = buildH2uGateArgs(config || resolveH2uGateConfig({}));
+  return args.length > 0 ? ` ${args.join(' ')}` : '';
+}
+
 function probeGovernance() {
   try {
     return buildGovernanceReport();
@@ -194,6 +200,7 @@ function buildPlan(args) {
   const routeProfile = classifyGoal(args.goal);
   const governance = probeGovernance();
   const governanceStatus = governance ? governance.overall.doctorStatus : 'pass';
+  const h2uGateArgString = buildH2uGateArgString(resolveH2uGateConfig({}));
   const routing = buildRoutingSteps(args, routeProfile);
   const steps = [
     {
@@ -225,17 +232,17 @@ function buildPlan(args) {
       {
         id: 'doctor-h2u',
         title: 'Run doctor on the H2U lane.',
-        command: `node tools_node/atomic-framework/doctor.js --goal "${escapeDoubleQuotes(args.goal)}" --mode dev --check-governance-drift --json`,
+        command: `node tools_node/atomic-framework/doctor.js --goal "${escapeDoubleQuotes(args.goal)}" --mode dev --check-governance-drift${h2uGateArgString} --json`,
       },
       {
         id: 'h2u-launch-gate',
         title: 'Run the H2U launch gate.',
-        command: 'node tools_node/validate-legacy-h2u-launch.js --strict',
+        command: `node tools_node/validate-legacy-h2u-launch.js --strict --require-worktree-check${h2uGateArgString}`,
       },
       {
         id: 'flow-dev',
         title: 'Run the ATM dev gate.',
-        command: 'node tools_node/atm-flow.js --mode dev --json',
+        command: `node tools_node/atm-flow.js --mode dev${h2uGateArgString} --json`,
       }
     );
   } else {

@@ -4,6 +4,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const cp = require('node:child_process');
+const { DEFAULT_H2U_WORKTREE_STATUS_FILE, resolveH2uGateConfig } = require('./lib/h2u-gate-defaults');
 
 const ROOT = path.resolve(__dirname, '..');
 const VALID_MODES = new Set(['dev', 'pr', 'release']);
@@ -110,8 +111,8 @@ function printHelp() {
   console.log('Options:');
   console.log('  --from-mode <dev|pr|release>    Optional escalation hint.');
   console.log('  --files <path...>               Use explicit changed files instead of git status.');
-  console.log('  --worktree-status-file <path>   Use git status --short snapshot file (EPERM fallback).');
-  console.log('  --allow-dirty-prefix <path>     Forwarded to H2U strict validators (repeatable).');
+  console.log(`  --worktree-status-file <path>   Use git status --short snapshot file (H2U default: ${DEFAULT_H2U_WORKTREE_STATUS_FILE}).`);
+  console.log('  --allow-dirty-prefix <path>     Forwarded to H2U strict validators; default H2U lane auto-adds 3 exact legacy-h2u-dryrun files.');
   console.log('  --atomize-consent <ask|yes|no>  Oversize function atomization consent (default: ask).');
   console.log('  --json                          Print machine-readable report.');
   console.log('  --report <path>                 Write machine-readable report JSON.');
@@ -139,6 +140,14 @@ function uniquePaths(items) {
   return out;
 }
 
+function buildStatusSnapshotText(files) {
+  const normalized = uniquePaths(files).map((filePath) => normalizePath(filePath));
+  if (normalized.length === 0) {
+    return '\n';
+  }
+  return `${normalized.map((filePath) => ` M ${filePath}`).join('\n')}\n`;
+}
+
 function parseGitStatusLines(text) {
   return String(text || '')
     .split(/\r?\n/)
@@ -160,6 +169,7 @@ function readWorktreeStatusFromFile(inputPath) {
       source: 'worktree-status-file',
       error: 'worktree-status-file path missing',
       files: [],
+      rawStatusOutput: '',
     };
   }
   const absolute = path.isAbsolute(raw) ? raw : path.resolve(ROOT, raw);
@@ -170,6 +180,7 @@ function readWorktreeStatusFromFile(inputPath) {
       source: `worktree-status-file:${rel(absolute)}`,
       error: '',
       files: uniquePaths(parseGitStatusLines(output)),
+      rawStatusOutput: output,
     };
   } catch (error) {
     return {
@@ -177,17 +188,20 @@ function readWorktreeStatusFromFile(inputPath) {
       source: `worktree-status-file:${rel(absolute)}`,
       error: `cannot read worktree status file: ${String(error && (error.message || error) || 'unknown')}`,
       files: [],
+      rawStatusOutput: '',
     };
   }
 }
 
 function detectChangedFiles(args) {
   if (Array.isArray(args.files) && args.files.length > 0) {
+    const files = uniquePaths(args.files);
     return {
       ok: true,
       source: 'cli-files',
       error: '',
-      files: uniquePaths(args.files),
+      files,
+      rawStatusOutput: buildStatusSnapshotText(files),
     };
   }
 
@@ -209,6 +223,7 @@ function detectChangedFiles(args) {
       source: 'git-status',
       error: errMsg || stderr || `git status exit=${proc.status}`,
       files: [],
+      rawStatusOutput: '',
     };
   }
   return {
@@ -216,6 +231,55 @@ function detectChangedFiles(args) {
     source: 'git-status',
     error: '',
     files: uniquePaths(parseGitStatusLines(proc.stdout || '')),
+    rawStatusOutput: String(proc.stdout || ''),
+  };
+}
+
+function prepareH2uGateConfig(args, areas, detection) {
+  if (!areas.touchesH2U) {
+    return {
+      enabled: false,
+      worktreeStatusFile: String(args.worktreeStatusFile || '').trim(),
+      allowDirtyPrefixes: uniquePaths(args.allowDirtyPrefixes || []),
+      defaultedStatusFile: false,
+      snapshotGenerated: false,
+      snapshotError: '',
+    };
+  }
+
+  const defaultedStatusFile = !String(args.worktreeStatusFile || '').trim();
+  const resolved = resolveH2uGateConfig({
+    worktreeStatusFile: args.worktreeStatusFile,
+    allowDirtyPrefixes: args.allowDirtyPrefixes,
+  });
+  const absoluteStatusFile = path.isAbsolute(resolved.worktreeStatusFile)
+    ? resolved.worktreeStatusFile
+    : path.resolve(ROOT, resolved.worktreeStatusFile);
+
+  let snapshotGenerated = false;
+  let snapshotError = '';
+  if (defaultedStatusFile) {
+    const statusSnapshot = String(detection && detection.rawStatusOutput || '').trim().length > 0
+      ? String(detection.rawStatusOutput)
+      : buildStatusSnapshotText(detection && detection.files ? detection.files : []);
+    try {
+      fs.mkdirSync(path.dirname(absoluteStatusFile), { recursive: true });
+      fs.writeFileSync(absoluteStatusFile, statusSnapshot, 'utf8');
+      snapshotGenerated = true;
+    } catch (error) {
+      snapshotError = String(error && (error.message || error) || 'cannot write default h2u worktree status snapshot');
+    }
+  }
+
+  return {
+    enabled: true,
+    worktreeStatusFile: path.isAbsolute(resolved.worktreeStatusFile)
+      ? rel(resolved.worktreeStatusFile)
+      : normalizePath(resolved.worktreeStatusFile),
+    allowDirtyPrefixes: resolved.allowDirtyPrefixes,
+    defaultedStatusFile,
+    snapshotGenerated,
+    snapshotError,
   };
 }
 
@@ -243,15 +307,24 @@ function classifyTouchedAreas(changedFiles) {
   };
 }
 
-function buildCommand(stepId, args) {
+function buildCommand(stepId, args, h2uGateConfig = null) {
   const node = process.execPath;
-  const worktreeArgs = args.worktreeStatusFile
-    ? ['--worktree-status-file', args.worktreeStatusFile]
+  const effectiveWorktreeStatusFile = h2uGateConfig && h2uGateConfig.enabled
+    ? h2uGateConfig.worktreeStatusFile
+    : args.worktreeStatusFile;
+  const effectiveAllowDirtyPrefixes = h2uGateConfig && h2uGateConfig.enabled
+    ? h2uGateConfig.allowDirtyPrefixes
+    : (args.allowDirtyPrefixes || []);
+  const worktreeArgs = effectiveWorktreeStatusFile
+    ? ['--worktree-status-file', effectiveWorktreeStatusFile]
     : [];
   const allowDirtyArgs = [];
-  for (const prefix of args.allowDirtyPrefixes || []) {
+  for (const prefix of effectiveAllowDirtyPrefixes) {
     allowDirtyArgs.push('--allow-dirty-prefix', prefix);
   }
+  const closeoutH2uArgs = h2uGateConfig && h2uGateConfig.enabled
+    ? ['--include-h2u-live-rollout', ...worktreeArgs, ...allowDirtyArgs]
+    : [];
 
   switch (stepId) {
     case 'compute-gate-quick':
@@ -285,7 +358,7 @@ function buildCommand(stepId, args) {
         ...allowDirtyArgs,
       ];
     case 'validate-atm-stability-closeout':
-      return [node, path.join(ROOT, 'tools_node', 'validate-atm-stability-closeout.js'), '--strict'];
+      return [node, path.join(ROOT, 'tools_node', 'validate-atm-stability-closeout.js'), '--strict', ...closeoutH2uArgs];
     default:
       throw new Error(`unknown step id: ${stepId}`);
   }
@@ -348,7 +421,21 @@ function runCommand(command) {
   };
 }
 
-function buildStepGuide(stepId) {
+function buildStepGuide(stepId, h2uGateConfig = null) {
+  const h2uExtra = [];
+  if (h2uGateConfig && h2uGateConfig.enabled && h2uGateConfig.worktreeStatusFile) {
+    h2uExtra.push(`--worktree-status-file ${h2uGateConfig.worktreeStatusFile}`);
+  }
+  if (h2uGateConfig && h2uGateConfig.enabled) {
+    for (const prefix of h2uGateConfig.allowDirtyPrefixes || []) {
+      h2uExtra.push(`--allow-dirty-prefix ${prefix}`);
+    }
+  }
+  const h2uSuffix = h2uExtra.length > 0 ? ` ${h2uExtra.join(' ')}` : '';
+  const closeoutH2uSuffix = h2uGateConfig && h2uGateConfig.enabled
+    ? ` --include-h2u-live-rollout${h2uSuffix}`
+    : '';
+
   switch (stepId) {
     case 'compute-gate-quick':
       return 'node tools_node/compute-gate.js --profile quick';
@@ -363,11 +450,11 @@ function buildStepGuide(stepId) {
     case 'validate-h2u-rule-guard':
       return 'node tools_node/validate-html-to-ucuf-rule-guard.js --strict';
     case 'validate-legacy-h2u-launch':
-      return 'node tools_node/validate-legacy-h2u-launch.js --strict --require-worktree-check';
+      return `node tools_node/validate-legacy-h2u-launch.js --strict --require-worktree-check${h2uSuffix}`;
     case 'validate-legacy-h2u-first-win':
-      return 'node tools_node/validate-legacy-h2u-first-win.js --strict --require-worktree-check';
+      return `node tools_node/validate-legacy-h2u-first-win.js --strict --require-worktree-check${h2uSuffix}`;
     case 'validate-atm-stability-closeout':
-      return 'node tools_node/validate-atm-stability-closeout.js --strict';
+      return `node tools_node/validate-atm-stability-closeout.js --strict${closeoutH2uSuffix}`;
     default:
       return '';
   }
@@ -995,6 +1082,7 @@ function runFlow(args) {
   const changedFiles = detection.ok ? detection.files : [];
   const atomizationAdvisor = maybeRunAtomizationAdvisor(args, changedFiles);
   const areas = classifyTouchedAreas(changedFiles);
+  const h2uGateConfig = prepareH2uGateConfig(args, areas, detection);
   const plan = buildExecutionPlan(args.mode, areas);
   const steps = [];
 
@@ -1012,7 +1100,7 @@ function runFlow(args) {
       continue;
     }
 
-    const command = buildCommand(planned.id, args);
+    const command = buildCommand(planned.id, args, h2uGateConfig);
     const run = runCommand(command);
     steps.push({
       id: planned.id,
@@ -1023,7 +1111,7 @@ function runFlow(args) {
       reason: run.passed ? '' : 'command-failed',
       error: run.error || '',
       command: command.map((item) => normalizePath(item)).join(' '),
-      guideCommand: buildStepGuide(planned.id),
+      guideCommand: buildStepGuide(planned.id, h2uGateConfig),
       stdoutTail: run.stdoutTail,
       stderrTail: run.stderrTail,
     });
@@ -1044,6 +1132,7 @@ function runFlow(args) {
     changedFilesError: detection.error || '',
     atomizationAdvisor,
     areas,
+    h2uWorktreeGate: h2uGateConfig,
     escalation,
     steps,
     summary: {
@@ -1195,9 +1284,11 @@ module.exports = {
   parseArgs,
   parseGitStatusLines,
   detectChangedFiles,
+  prepareH2uGateConfig,
   classifyTouchedAreas,
   buildExecutionPlan,
   buildCommand,
+  buildStepGuide,
   runFlow,
   createEscalationCheck,
 };

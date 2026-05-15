@@ -11,6 +11,7 @@ const { runRuleGuard } = require('./lib/html-to-ucuf/rule-guard');
 
 const ROOT = path.resolve(__dirname, '..');
 const WORKFLOW_ENTRY = path.join(ROOT, 'tools_node', 'run-html-to-ucuf-workflow.js');
+const WORKFLOW_MODULE_DIR = path.join(ROOT, 'tools_node', 'lib', 'html-to-ucuf', 'workflow');
 const DEFAULT_CANONICAL_EVIDENCE = [
   'tools_node/lib/dom-to-ui/draft-builder.js',
   'fixtures/case-studies/normalize-css-color/v1.0.json',
@@ -395,6 +396,110 @@ function checkWorkflowSyntax() {
   }
 }
 
+function extractSourceSymbols(sourceText) {
+  const symbols = new Set();
+  const functionRegex = /(^|\n)\s*function\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\(/g;
+  const variableFnRegex = /(^|\n)\s*(?:const|let|var)\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*(?:async\s+)?(?:function\b|\([^\n]*?\)\s*=>|[A-Za-z_$][A-Za-z0-9_$]*\s*=>)/g;
+  let match;
+  while ((match = functionRegex.exec(sourceText)) !== null) {
+    if (match[2]) symbols.add(String(match[2]));
+  }
+  while ((match = variableFnRegex.exec(sourceText)) !== null) {
+    if (match[2]) symbols.add(String(match[2]));
+  }
+  return symbols;
+}
+
+function listWorkflowModuleSymbols() {
+  const symbols = new Set();
+  if (!fs.existsSync(WORKFLOW_MODULE_DIR)) {
+    return symbols;
+  }
+
+  const queue = [WORKFLOW_MODULE_DIR];
+  while (queue.length > 0) {
+    const current = queue.shift();
+    const entries = fs.readdirSync(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const absolutePath = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        queue.push(absolutePath);
+        continue;
+      }
+      if (!entry.isFile() || !entry.name.endsWith('.js')) {
+        continue;
+      }
+      const source = fs.readFileSync(absolutePath, 'utf8');
+      const found = extractSourceSymbols(source);
+      for (const symbolName of found) {
+        symbols.add(symbolName);
+      }
+    }
+  }
+  return symbols;
+}
+
+function checkWorkflowCapsuleSourceBinding() {
+  const capsulesRoot = path.join(ROOT, 'atomic_workbench', 'capsules');
+  const staleCapsules = [];
+  const parseErrors = [];
+  const workflowSymbols = listWorkflowModuleSymbols();
+  if (!fs.existsSync(capsulesRoot)) {
+    return {
+      id: 'h2u-workflow-capsule-source-binding',
+      passed: true,
+      status: 0,
+      stderr: '',
+      staleCapsules,
+      parseErrors,
+      workflowSymbolCount: workflowSymbols.size,
+    };
+  }
+
+  const capsuleDirs = fs.readdirSync(capsulesRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => path.join(capsulesRoot, entry.name));
+
+  for (const capsuleDir of capsuleDirs) {
+    const manifestPath = path.join(capsuleDir, 'capsule.manifest.json');
+    if (!fs.existsSync(manifestPath)) continue;
+    let manifest = null;
+    try {
+      manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8').replace(/^\uFEFF/, ''));
+    } catch (error) {
+      parseErrors.push({
+        manifestPath: rel(manifestPath),
+        error: String(error && (error.message || error) || 'manifest parse failed'),
+      });
+      continue;
+    }
+    const symbolName = String(manifest && manifest.symbolName || '').trim();
+    if (!symbolName || !workflowSymbols.has(symbolName)) continue;
+    const sourceFile = normalizePath(manifest && manifest.source && manifest.source.file || '');
+    if (sourceFile === 'tools_node/run-html-to-ucuf-workflow.js') {
+      staleCapsules.push({
+        capsuleId: String(manifest && manifest.capsuleId || path.basename(capsuleDir)),
+        symbolName,
+        sourceFile,
+        manifestPath: rel(manifestPath),
+      });
+    }
+  }
+
+  const passed = staleCapsules.length === 0 && parseErrors.length === 0;
+  return {
+    id: 'h2u-workflow-capsule-source-binding',
+    passed,
+    status: passed ? 0 : 1,
+    stderr: passed
+      ? ''
+      : `staleCapsules=${staleCapsules.map((item) => item.capsuleId).join(',')} parseErrors=${parseErrors.length}`,
+    staleCapsules,
+    parseErrors,
+    workflowSymbolCount: workflowSymbols.size,
+  };
+}
+
 function runValidation(opts = {}) {
   const findings = [];
   const checks = [];
@@ -460,6 +565,26 @@ function runValidation(opts = {}) {
         missingIds: localAtomicWorkbench.missingIds,
         wrongOwner: localAtomicWorkbench.wrongOwner,
         registryId: localAtomicWorkbench.registryId,
+      },
+    }));
+  }
+
+  const workflowCapsuleSourceBinding = checkWorkflowCapsuleSourceBinding();
+  checks.push(workflowCapsuleSourceBinding);
+  if (!workflowCapsuleSourceBinding.passed) {
+    findings.push(buildFinding({
+      ruleId: 'legacy-launch.h2u-workflow-capsule-source-binding',
+      trigger: 'legacy.launch.h2u-workflow-capsule-source-binding',
+      scope: 'atomic_workbench/capsules + tools_node/lib/html-to-ucuf/workflow',
+      severity: 'block',
+      action: 'fail',
+      routeClass: 'blocker',
+      routeHint: 'Workflow-migrated capsules must bind source.file to workflow modules, not the legacy wrapper entrypoint.',
+      message: 'Detected workflow symbols still bound to tools_node/run-html-to-ucuf-workflow.js in capsule manifests',
+      details: {
+        staleCapsules: workflowCapsuleSourceBinding.staleCapsules,
+        parseErrors: workflowCapsuleSourceBinding.parseErrors,
+        workflowSymbolCount: workflowCapsuleSourceBinding.workflowSymbolCount,
       },
     }));
   }

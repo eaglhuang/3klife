@@ -8,6 +8,7 @@ const cp = require('node:child_process');
 const { buildGovernanceReport } = require('./governance/checker');
 const { loadGovernanceProfile } = require('./governance/profile');
 const { evaluateIdentityConsistency } = require('../check-agent-identity-consistency');
+const { buildH2uGateArgs, resolveH2uGateConfig, DEFAULT_H2U_WORKTREE_STATUS_FILE } = require('../lib/h2u-gate-defaults');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const VALID_MODES = new Set(['dev', 'pr', 'release']);
@@ -43,6 +44,12 @@ function uniquePaths(items) {
 
 function uniqueList(items) {
   return Array.from(new Set((items || []).map((item) => String(item || '').trim()).filter(Boolean)));
+}
+
+function buildH2uGateArgString(config) {
+  if (!config) return '';
+  const args = buildH2uGateArgs(config);
+  return args.length > 0 ? ` ${args.join(' ')}` : '';
 }
 
 function parseGitStatusLines(text) {
@@ -227,6 +234,17 @@ function buildAtmFlowArgs(args) {
 
 function runAtmFlowDoctor(args) {
   const flowArgs = buildAtmFlowArgs(args);
+  const displayArgs = ['--mode', args.mode];
+  if (args.fromMode) {
+    displayArgs.push('--from-mode', args.fromMode);
+  }
+  if (args.worktreeStatusFile) {
+    displayArgs.push('--worktree-status-file', args.worktreeStatusFile);
+  }
+  for (const prefix of args.allowDirtyPrefixes || []) {
+    displayArgs.push('--allow-dirty-prefix', prefix);
+  }
+  displayArgs.push('--json');
   const proc = cp.spawnSync(process.execPath, flowArgs, {
     cwd: ROOT,
     encoding: 'utf8',
@@ -244,7 +262,7 @@ function runAtmFlowDoctor(args) {
   return {
     ok: (proc.status ?? 1) === 0,
     status: proc.status ?? 1,
-    command: ['node', 'tools_node/atm-flow.js', '--mode', args.mode, '--json'].join(' '),
+    command: ['node', 'tools_node/atm-flow.js', ...displayArgs].join(' '),
     stdout,
     stderr,
     report,
@@ -314,7 +332,7 @@ function runIdentityConsistencyDoctor(args) {
   };
 }
 
-function buildAtmFlowGuidance(profile, flow, changed, mode) {
+function buildAtmFlowGuidance(profile, flow, changed, mode, h2uGateConfig = null) {
   const fallback = 'node tools_node/atm-flow.js --mode dev --json';
   const nextCommand = flow.report && flow.report.userFacing && flow.report.userFacing.nextCommand
     ? flow.report.userFacing.nextCommand
@@ -323,8 +341,15 @@ function buildAtmFlowGuidance(profile, flow, changed, mode) {
     ? flow.report.userFacing.why
     : (flow.ok ? 'atm-flow diagnostics are ready.' : 'atm-flow reported a blocker that needs attention.');
   const blockedAt = flow.report && flow.report.userFacing ? flow.report.userFacing.blockedAt || '' : '';
-  const fallbackSnapshot = 'git status --short > artifacts/legacy-h2u-first-win/worktree-status.txt';
-  const fallbackWithSnapshot = `node tools_node/atm-flow.js --mode ${mode} --worktree-status-file artifacts/legacy-h2u-first-win/worktree-status.txt --json`;
+  const fallbackSnapshot = `git status --short > ${DEFAULT_H2U_WORKTREE_STATUS_FILE}`;
+  const fallbackH2uConfig = h2uGateConfig || resolveH2uGateConfig({
+    worktreeStatusFile: DEFAULT_H2U_WORKTREE_STATUS_FILE,
+    allowDirtyPrefixes: [],
+  });
+  const h2uGateArgsText = buildH2uGateArgString(fallbackH2uConfig);
+  const h2uLaunchGateCommand = `node tools_node/validate-legacy-h2u-launch.js --strict --require-worktree-check${h2uGateArgsText}`;
+  const h2uFirstWinGateCommand = `node tools_node/validate-legacy-h2u-first-win.js --strict --require-worktree-check${h2uGateArgsText}`;
+  const fallbackWithSnapshot = `node tools_node/atm-flow.js --mode ${mode}${h2uGateArgsText} --json`;
   const sawEperm = /eperm/i.test(String(changed.error || ''))
     || /eperm/i.test(String(flow.stderr || ''))
     || /eperm/i.test(String(flow.stdout || ''));
@@ -337,7 +362,7 @@ function buildAtmFlowGuidance(profile, flow, changed, mode) {
       afterNext: [
         fallbackWithSnapshot,
         profile === 'h2u-fix'
-          ? 'node tools_node/validate-legacy-h2u-launch.js --strict --worktree-status-file artifacts/legacy-h2u-first-win/worktree-status.txt'
+          ? h2uLaunchGateCommand
           : 'npm run atm:flow -- --mode pr --from-mode dev',
       ],
     };
@@ -345,8 +370,8 @@ function buildAtmFlowGuidance(profile, flow, changed, mode) {
 
   const afterNext = profile === 'h2u-fix'
     ? [
-      'node tools_node/validate-legacy-h2u-launch.js --strict',
-      'node tools_node/validate-legacy-h2u-first-win.js --strict --require-worktree-check',
+      h2uLaunchGateCommand,
+      h2uFirstWinGateCommand,
     ]
     : [
       'npm run atm:flow -- --mode pr --from-mode dev',
@@ -530,11 +555,21 @@ function main(argv = process.argv.slice(2)) {
   const changed = detectChangedFiles(args);
   const areas = classifyAreas(changed.files);
   const routeProfile = classifyGoal(args.goal, areas);
-  const flow = runAtmFlowDoctor(args);
+  const h2uGateConfig = areas.touchesH2U
+    ? resolveH2uGateConfig({
+      worktreeStatusFile: args.worktreeStatusFile,
+      allowDirtyPrefixes: args.allowDirtyPrefixes,
+    })
+    : null;
+  const flow = runAtmFlowDoctor({
+    ...args,
+    worktreeStatusFile: h2uGateConfig ? h2uGateConfig.worktreeStatusFile : args.worktreeStatusFile,
+    allowDirtyPrefixes: h2uGateConfig ? h2uGateConfig.allowDirtyPrefixes : args.allowDirtyPrefixes,
+  });
   const governance = runGovernanceDoctor(args);
   const identity = runIdentityConsistencyDoctor(args);
   const userFacing = applyGovernanceGuidance(
-    buildAtmFlowGuidance(routeProfile, flow, changed, args.mode),
+    buildAtmFlowGuidance(routeProfile, flow, changed, args.mode, h2uGateConfig),
     governance,
     identity
   );
@@ -548,6 +583,17 @@ function main(argv = process.argv.slice(2)) {
     changedFilesError: changed.error,
     changedFiles: changed.files,
     areas,
+    h2uWorktreeGate: h2uGateConfig
+      ? {
+        enabled: true,
+        worktreeStatusFile: h2uGateConfig.worktreeStatusFile,
+        allowDirtyPrefixes: h2uGateConfig.allowDirtyPrefixes,
+      }
+      : {
+        enabled: false,
+        worktreeStatusFile: '',
+        allowDirtyPrefixes: [],
+      },
     atmFlow: {
       ok: flow.ok,
       status: flow.status,

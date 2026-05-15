@@ -17,6 +17,7 @@ const {
   buildNodeInvocationCommand,
   resolveUpstreamPaths,
 } = require('../lib/upstream-env');
+const { buildH2uGateArgs, resolveH2uGateConfig } = require('../lib/h2u-gate-defaults');
 
 const projectRoot = projectConfig.ROOT;
 const taskCardDir = path.join(projectRoot, 'docs', 'agent-briefs', 'tasks');
@@ -272,11 +273,13 @@ function buildFixH2uDiscoveryChannels(taskId = '') {
 function buildFixH2uCommands(args = {}) {
   const goal = normalizeText(args.goal || args.description || args.title || 'Fix H2U legacy flow');
   const escapedGoal = goal.replace(/"/g, '\\"');
+  const h2uGateArgs = buildH2uGateArgs(resolveH2uGateConfig({}));
+  const h2uGateArgText = h2uGateArgs.length > 0 ? ` ${h2uGateArgs.join(' ')}` : '';
   return [
-    `node tools_node/atomic-framework/doctor.js --goal "${escapedGoal}" --mode dev --json`,
-    'node tools_node/validate-legacy-h2u-launch.js --strict',
-    'node tools_node/atm-flow.js --mode dev --json',
-    'node tools_node/validate-legacy-h2u-first-win.js --strict --require-worktree-check',
+    `node tools_node/atomic-framework/doctor.js --goal "${escapedGoal}" --mode dev${h2uGateArgText} --json`,
+    `node tools_node/validate-legacy-h2u-launch.js --strict --require-worktree-check${h2uGateArgText}`,
+    `node tools_node/atm-flow.js --mode dev${h2uGateArgText} --json`,
+    `node tools_node/validate-legacy-h2u-first-win.js --strict --require-worktree-check${h2uGateArgText}`,
   ];
 }
 
@@ -406,8 +409,8 @@ function buildIntentRoute(intent, args = {}) {
     ];
     const nextCommands = buildFixH2uCommands(args);
     const validationHints = [
-      'node tools_node/validate-legacy-h2u-launch.js --strict',
-      'node tools_node/atm-flow.js --mode dev --json',
+      nextCommands[1],
+      nextCommands[2],
     ];
 
     return {

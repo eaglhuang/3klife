@@ -8,6 +8,13 @@ const path = require('node:path');
 
 const atmFlow = require('../atm-flow');
 
+const DEFAULT_H2U_STATUS_FILE = 'artifacts/legacy-h2u-first-win/worktree-status.txt';
+const DEFAULT_H2U_ALLOW_DIRTY_PREFIXES = [
+  'assets/resources/ui-spec/screens/legacy-h2u-dryrun.local-tokens.json',
+  'assets/resources/ui-spec/screens/legacy-h2u-dryrun.readiness.json',
+  'assets/resources/ui-spec/screens/legacy-h2u-dryrun.runtime-version.json',
+];
+
 function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
@@ -124,10 +131,47 @@ function testRunFlowRoutesPrAndRelease() {
     const releaseStepIds = releaseReport.steps.filter((step) => !step.skipped).map((step) => step.id);
     assert(releaseStepIds.includes('validate-legacy-h2u-launch'), 'release should run h2u launch strict');
     assert(releaseStepIds.includes('validate-legacy-h2u-first-win'), 'release should run h2u first-win strict');
+
+    const releaseCloseoutCommand = commands.find((item) => item.includes('validate-atm-stability-closeout.js')) || '';
+    assert(releaseCloseoutCommand.includes('--include-h2u-live-rollout'), 'release closeout should include h2u live-rollout gate');
+    assert(releaseCloseoutCommand.includes(`--worktree-status-file ${DEFAULT_H2U_STATUS_FILE}`), 'release closeout should include default status-file');
+    for (const prefix of DEFAULT_H2U_ALLOW_DIRTY_PREFIXES) {
+      assert(releaseCloseoutCommand.includes(`--allow-dirty-prefix ${prefix}`), `release closeout should include default allow-dirty prefix: ${prefix}`);
+    }
   });
 
   assert(commands.some((item) => item.includes('validate-legacy-h2u-launch.js')), 'mock should execute h2u launch command');
   assert(commands.some((item) => item.includes('validate-legacy-h2u-first-win.js')), 'mock should execute h2u first-win command');
+}
+
+function testRunFlowInjectsDefaultH2uWorktreeArgs() {
+  const commands = [];
+  const report = withMockSpawn((cmd, args) => {
+    commands.push([cmd, ...(args || [])].join(' '));
+    return successRun();
+  }, () => atmFlow.runFlow({
+    mode: 'pr',
+    fromMode: 'dev',
+    files: ['tools_node/run-html-to-ucuf-workflow.js'],
+    worktreeStatusFile: '',
+    allowDirtyPrefixes: [],
+    shadow: false,
+    metricsFile: '',
+    report: '',
+    json: true,
+    help: false,
+  }));
+
+  assert(report.passed === true, 'pr report should pass with default h2u gate args');
+  assert(report.h2uWorktreeGate && report.h2uWorktreeGate.enabled === true, 'h2u worktree gate should be enabled');
+  assert(report.h2uWorktreeGate.worktreeStatusFile === DEFAULT_H2U_STATUS_FILE, 'should default status-file path for h2u gate');
+
+  const launchCommand = commands.find((item) => item.includes('validate-legacy-h2u-launch.js')) || '';
+  assert(launchCommand.includes(`--worktree-status-file ${DEFAULT_H2U_STATUS_FILE}`), 'launch command should include default status-file');
+  for (const prefix of DEFAULT_H2U_ALLOW_DIRTY_PREFIXES) {
+    assert(launchCommand.includes(`--allow-dirty-prefix ${prefix}`), `launch command should include default allow-dirty prefix: ${prefix}`);
+  }
+
 }
 
 function testRunFlowDetectFailureForPrWhenGitUnavailable() {
@@ -263,6 +307,7 @@ function main() {
   testClassifyTouchedAreas();
   testBuildExecutionPlan();
   testRunFlowRoutesPrAndRelease();
+  testRunFlowInjectsDefaultH2uWorktreeArgs();
   testRunFlowDetectFailureForPrWhenGitUnavailable();
   testShadowModeDoesNotBlockExitSemantic();
   testAtomizeAdvisorTriggersOnLargeFileWithConsent();

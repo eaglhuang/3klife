@@ -9,6 +9,8 @@ const doctor = require('../atomic-framework/doctor');
 const atmFlow = require('../atm-flow');
 
 const projectRoot = path.resolve(__dirname, '..', '..');
+const DEFAULT_H2U_STATUS_FILE = 'artifacts/legacy-h2u-first-win/worktree-status.txt';
+const DEFAULT_H2U_ALLOW_DIRTY_PREFIX = 'assets/resources/ui-spec/screens/legacy-h2u-dryrun.local-tokens.json';
 
 function assert(condition, message) {
   if (!condition) {
@@ -43,6 +45,12 @@ function testKickoffDoctorFlowIntegration() {
   assert(kickoffPlan.nextCommand.includes('--intent fix-h2u'), 'kickoff should route to fix-h2u intent');
   assert(kickoffPlan.steps.some((step) => step.id === 'doctor-h2u'), 'kickoff should include doctor-h2u step');
   assert(kickoffPlan.steps.some((step) => step.id === 'flow-dev'), 'kickoff should include flow-dev step');
+  const doctorStep = kickoffPlan.steps.find((step) => step.id === 'doctor-h2u');
+  assert(doctorStep && doctorStep.command.includes(`--worktree-status-file ${DEFAULT_H2U_STATUS_FILE}`), 'kickoff doctor-h2u command should include default status-file');
+  assert(doctorStep && doctorStep.command.includes(`--allow-dirty-prefix ${DEFAULT_H2U_ALLOW_DIRTY_PREFIX}`), 'kickoff doctor-h2u command should include default allow-dirty prefix');
+  const launchGateStep = kickoffPlan.steps.find((step) => step.id === 'h2u-launch-gate');
+  assert(launchGateStep && launchGateStep.command.includes('--require-worktree-check'), 'kickoff launch gate command should require worktree check');
+  assert(launchGateStep && launchGateStep.command.includes(`--worktree-status-file ${DEFAULT_H2U_STATUS_FILE}`), 'kickoff launch gate command should include default status-file');
 
   const changed = doctor.detectChangedFiles({
     worktreeStatusFile,
