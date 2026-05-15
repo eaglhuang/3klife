@@ -27,6 +27,10 @@ TYPE_LABELS = {
     "strategy_pressure": "策略牽制",
     "loyal_oath": "忠義盟約",
     "battlefield_contact": "戰場接觸",
+    "spouse": "夫妻姻親",
+    "parent_child": "親子",
+    "sibling": "手足",
+    "protects": "守護",
     "ruler_subject": "君臣主從",
     "patron_client": "提攜投靠",
     "mentor_student": "師友教導",
@@ -537,6 +541,9 @@ def refine_relationship_type(edge: dict[str, Any], general_id: str) -> tuple[str
         reasons.append("stable_relationship_baseline")
         return original or "relationship", reasons
     if original in GRAPH_RELATIONSHIP_TYPES:
+        if original in {"mentor_student", "patron_client", "ruler_subject"}:
+            reasons.append("non_stable_authority_type_demoted")
+            return "battlefield_contact", reasons
         if original == "ruler_subject" and not edge_has_authority_baseline_terms(edge):
             reasons.append("source_graph_ruler_subject_without_authority_baseline_terms")
             return "battlefield_contact", reasons

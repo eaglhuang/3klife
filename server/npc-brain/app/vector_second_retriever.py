@@ -163,36 +163,35 @@ class VectorSecondRetriever:
             if relationship_hits:
                 trace.append(f"exact-ref-fill:runtime-relationship:{relationship_hits}")
 
-        if len(resolved) < limit:
-            packet_hits = 0
-            for packet in self.store.load_source_event_packets():
-                source_ref = str(packet.get("sourceRef") or "").strip()
-                if source_ref not in wanted:
-                    continue
-                packet_general_ids = [str(value) for value in packet.get("generalIds") or [] if str(value).strip()]
-                if packet_general_ids and general_id not in packet_general_ids:
-                    continue
-                covered_refs.add(source_ref)
-                if source_ref in seen_event_refs:
-                    continue
-                seen_event_refs.add(source_ref)
-                packet_hits += 1
-                examples = [str(item) for item in (packet.get("examples") or []) if str(item).strip()]
-                angles = [str(item) for item in (packet.get("angleFamilies") or []) if str(item).strip()]
-                resolved.append(
-                    ResolvedEvidence(
-                        evidenceRef=source_ref,
-                        sourceType="source-event-packet",
-                        sourceQuote=examples[0] if examples else None,
-                        factSummary=f"source-event-packet:{source_ref}:{'/'.join(angles[:4])}",
-                        generalIds=packet_general_ids or [general_id],
-                        confidence=0.64 if packet.get("packetStrength") == "strong" else 0.58,
-                    )
+        packet_hits = 0
+        packet_appends = 0
+        for packet in self.store.load_source_event_packets():
+            source_ref = str(packet.get("sourceRef") or "").strip()
+            if source_ref not in wanted:
+                continue
+            packet_general_ids = [str(value) for value in packet.get("generalIds") or [] if str(value).strip()]
+            if packet_general_ids and general_id not in packet_general_ids:
+                continue
+            covered_refs.add(source_ref)
+            packet_hits += 1
+            if source_ref in seen_event_refs or len(resolved) >= limit:
+                continue
+            seen_event_refs.add(source_ref)
+            packet_appends += 1
+            examples = [str(item) for item in (packet.get("examples") or []) if str(item).strip()]
+            angles = [str(item) for item in (packet.get("angleFamilies") or []) if str(item).strip()]
+            resolved.append(
+                ResolvedEvidence(
+                    evidenceRef=source_ref,
+                    sourceType="source-event-packet",
+                    sourceQuote=examples[0] if examples else None,
+                    factSummary=f"source-event-packet:{source_ref}:{'/'.join(angles[:4])}",
+                    generalIds=packet_general_ids or [general_id],
+                    confidence=0.64 if packet.get("packetStrength") == "strong" else 0.58,
                 )
-                if len(resolved) >= limit:
-                    break
-            if packet_hits:
-                trace.append(f"exact-ref-fill:source-event-packet:{packet_hits}")
+            )
+        if packet_hits:
+            trace.append(f"exact-ref-fill:source-event-packet:{packet_appends}/{packet_hits}")
 
         if len(resolved) < limit:
             highlight_hits = 0
