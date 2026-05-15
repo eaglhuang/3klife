@@ -4,7 +4,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const cp = require('node:child_process');
-const { DEFAULT_H2U_WORKTREE_STATUS_FILE, resolveH2uGateConfig } = require('./lib/h2u-gate-defaults');
+const { DEFAULT_H2U_BASELINE_WORKTREE_STATUS_FILE, DEFAULT_H2U_STATUS_SNAPSHOT_OUT, DEFAULT_H2U_WORKTREE_STATUS_FILE, resolveH2uGateConfig } = require('./lib/h2u-gate-defaults');
 
 const ROOT = path.resolve(__dirname, '..');
 const VALID_MODES = new Set(['dev', 'pr', 'release']);
@@ -112,6 +112,8 @@ function printHelp() {
   console.log('  --from-mode <dev|pr|release>    Optional escalation hint.');
   console.log('  --files <path...>               Use explicit changed files instead of git status.');
   console.log(`  --worktree-status-file <path>   Use git status --short snapshot file (H2U default: ${DEFAULT_H2U_WORKTREE_STATUS_FILE}).`);
+  console.log(`  --baseline-worktree-status-file <path>  Use baseline worktree snapshot file (H2U default: ${DEFAULT_H2U_BASELINE_WORKTREE_STATUS_FILE}).`);
+  console.log(`  --status-snapshot-out <path>    Write normalized status snapshot file (H2U default: ${DEFAULT_H2U_STATUS_SNAPSHOT_OUT}).`);
   console.log('  --allow-dirty-prefix <path>     Forwarded to H2U strict validators; default H2U lane auto-adds 3 exact legacy-h2u-dryrun files.');
   console.log('  --atomize-consent <ask|yes|no>  Oversize function atomization consent (default: ask).');
   console.log('  --json                          Print machine-readable report.');
@@ -240,24 +242,42 @@ function prepareH2uGateConfig(args, areas, detection) {
     return {
       enabled: false,
       worktreeStatusFile: String(args.worktreeStatusFile || '').trim(),
+      baselineWorktreeStatusFile: String(args.baselineWorktreeStatusFile || '').trim(),
+      statusSnapshotOut: String(args.statusSnapshotOut || '').trim(),
       allowDirtyPrefixes: uniquePaths(args.allowDirtyPrefixes || []),
       defaultedStatusFile: false,
+      defaultedBaselineFile: false,
+      defaultedSnapshotOut: false,
       snapshotGenerated: false,
+      baselineSnapshotGenerated: false,
       snapshotError: '',
+      baselineSnapshotError: '',
     };
   }
 
   const defaultedStatusFile = !String(args.worktreeStatusFile || '').trim();
+  const defaultedBaselineFile = !String(args.baselineWorktreeStatusFile || '').trim();
+  const defaultedSnapshotOut = !String(args.statusSnapshotOut || '').trim();
   const resolved = resolveH2uGateConfig({
     worktreeStatusFile: args.worktreeStatusFile,
+    baselineWorktreeStatusFile: args.baselineWorktreeStatusFile,
+    statusSnapshotOut: args.statusSnapshotOut,
     allowDirtyPrefixes: args.allowDirtyPrefixes,
   });
   const absoluteStatusFile = path.isAbsolute(resolved.worktreeStatusFile)
     ? resolved.worktreeStatusFile
     : path.resolve(ROOT, resolved.worktreeStatusFile);
+  const absoluteBaselineFile = path.isAbsolute(resolved.baselineWorktreeStatusFile)
+    ? resolved.baselineWorktreeStatusFile
+    : path.resolve(ROOT, resolved.baselineWorktreeStatusFile);
+  const absoluteSnapshotOut = path.isAbsolute(resolved.statusSnapshotOut)
+    ? resolved.statusSnapshotOut
+    : path.resolve(ROOT, resolved.statusSnapshotOut);
 
   let snapshotGenerated = false;
   let snapshotError = '';
+  let baselineSnapshotGenerated = false;
+  let baselineSnapshotError = '';
   if (defaultedStatusFile) {
     const statusSnapshot = String(detection && detection.rawStatusOutput || '').trim().length > 0
       ? String(detection.rawStatusOutput)
@@ -270,16 +290,49 @@ function prepareH2uGateConfig(args, areas, detection) {
       snapshotError = String(error && (error.message || error) || 'cannot write default h2u worktree status snapshot');
     }
   }
+  if (defaultedBaselineFile) {
+    const baselineSnapshot = String(detection && detection.rawStatusOutput || '').trim().length > 0
+      ? String(detection.rawStatusOutput)
+      : buildStatusSnapshotText(detection && detection.files ? detection.files : []);
+    try {
+      fs.mkdirSync(path.dirname(absoluteBaselineFile), { recursive: true });
+      fs.writeFileSync(absoluteBaselineFile, baselineSnapshot, 'utf8');
+      baselineSnapshotGenerated = true;
+    } catch (error) {
+      baselineSnapshotError = String(error && (error.message || error) || 'cannot write default h2u baseline worktree status snapshot');
+    }
+  }
+  if (defaultedSnapshotOut) {
+    const snapshotOut = String(detection && detection.rawStatusOutput || '').trim().length > 0
+      ? String(detection.rawStatusOutput)
+      : buildStatusSnapshotText(detection && detection.files ? detection.files : []);
+    try {
+      fs.mkdirSync(path.dirname(absoluteSnapshotOut), { recursive: true });
+      fs.writeFileSync(absoluteSnapshotOut, snapshotOut, 'utf8');
+    } catch (error) {
+      snapshotError = snapshotError || String(error && (error.message || error) || 'cannot write default h2u status snapshot out');
+    }
+  }
 
   return {
     enabled: true,
     worktreeStatusFile: path.isAbsolute(resolved.worktreeStatusFile)
       ? rel(resolved.worktreeStatusFile)
       : normalizePath(resolved.worktreeStatusFile),
+    baselineWorktreeStatusFile: path.isAbsolute(resolved.baselineWorktreeStatusFile)
+      ? rel(resolved.baselineWorktreeStatusFile)
+      : normalizePath(resolved.baselineWorktreeStatusFile),
+    statusSnapshotOut: path.isAbsolute(resolved.statusSnapshotOut)
+      ? rel(resolved.statusSnapshotOut)
+      : normalizePath(resolved.statusSnapshotOut),
     allowDirtyPrefixes: resolved.allowDirtyPrefixes,
     defaultedStatusFile,
+    defaultedBaselineFile,
+    defaultedSnapshotOut,
     snapshotGenerated,
+    baselineSnapshotGenerated,
     snapshotError,
+    baselineSnapshotError,
   };
 }
 
@@ -318,6 +371,12 @@ function buildCommand(stepId, args, h2uGateConfig = null) {
   const worktreeArgs = effectiveWorktreeStatusFile
     ? ['--worktree-status-file', effectiveWorktreeStatusFile]
     : [];
+  const baselineWorktreeArgs = h2uGateConfig && h2uGateConfig.enabled && h2uGateConfig.baselineWorktreeStatusFile
+    ? ['--baseline-worktree-status-file', h2uGateConfig.baselineWorktreeStatusFile]
+    : [];
+  const snapshotOutArgs = h2uGateConfig && h2uGateConfig.enabled && h2uGateConfig.statusSnapshotOut
+    ? ['--status-snapshot-out', h2uGateConfig.statusSnapshotOut]
+    : [];
   const allowDirtyArgs = [];
   for (const prefix of effectiveAllowDirtyPrefixes) {
     allowDirtyArgs.push('--allow-dirty-prefix', prefix);
@@ -346,6 +405,8 @@ function buildCommand(stepId, args, h2uGateConfig = null) {
         '--strict',
         '--require-worktree-check',
         ...worktreeArgs,
+        ...baselineWorktreeArgs,
+        ...snapshotOutArgs,
         ...allowDirtyArgs,
       ];
     case 'validate-legacy-h2u-first-win':
@@ -355,7 +416,24 @@ function buildCommand(stepId, args, h2uGateConfig = null) {
         '--strict',
         '--require-worktree-check',
         ...worktreeArgs,
+        ...baselineWorktreeArgs,
+        ...snapshotOutArgs,
         ...allowDirtyArgs,
+      ];
+    case 'run-h2u-guided-leaf-rollout':
+      return [
+        node,
+        path.join(ROOT, 'tools_node', 'run-h2u-guided-leaf-rollout.js'),
+        '--target-file', 'tools_node/lib/dom-to-ui/draft-builder-core.js',
+        '--release-blocker', 'processElement',
+        '--goal', 'H2U live rollout leaf rehearsal',
+        '--json',
+      ];
+    case 'validate-legacy-h2u-live-rollout':
+      return [
+        node,
+        path.join(ROOT, 'tools_node', 'validate-legacy-h2u-live-rollout.js'),
+        '--strict',
       ];
     case 'validate-atm-stability-closeout':
       return [node, path.join(ROOT, 'tools_node', 'validate-atm-stability-closeout.js'), '--strict', ...closeoutH2uArgs];
@@ -389,8 +467,10 @@ function buildExecutionPlan(mode, areas) {
     return [
       ...basePrSteps,
       { id: 'validate-atm-milestone', condition: true },
-      { id: 'validate-atm-stability-closeout', condition: true },
       { id: 'validate-legacy-h2u-first-win', condition: !!areas.touchesH2U },
+      { id: 'run-h2u-guided-leaf-rollout', condition: !!areas.touchesH2U },
+      { id: 'validate-legacy-h2u-live-rollout', condition: !!areas.touchesH2U },
+      { id: 'validate-atm-stability-closeout', condition: true },
     ];
   }
 
@@ -426,6 +506,12 @@ function buildStepGuide(stepId, h2uGateConfig = null) {
   if (h2uGateConfig && h2uGateConfig.enabled && h2uGateConfig.worktreeStatusFile) {
     h2uExtra.push(`--worktree-status-file ${h2uGateConfig.worktreeStatusFile}`);
   }
+  if (h2uGateConfig && h2uGateConfig.enabled && h2uGateConfig.baselineWorktreeStatusFile) {
+    h2uExtra.push(`--baseline-worktree-status-file ${h2uGateConfig.baselineWorktreeStatusFile}`);
+  }
+  if (h2uGateConfig && h2uGateConfig.enabled && h2uGateConfig.statusSnapshotOut) {
+    h2uExtra.push(`--status-snapshot-out ${h2uGateConfig.statusSnapshotOut}`);
+  }
   if (h2uGateConfig && h2uGateConfig.enabled) {
     for (const prefix of h2uGateConfig.allowDirtyPrefixes || []) {
       h2uExtra.push(`--allow-dirty-prefix ${prefix}`);
@@ -453,6 +539,10 @@ function buildStepGuide(stepId, h2uGateConfig = null) {
       return `node tools_node/validate-legacy-h2u-launch.js --strict --require-worktree-check${h2uSuffix}`;
     case 'validate-legacy-h2u-first-win':
       return `node tools_node/validate-legacy-h2u-first-win.js --strict --require-worktree-check${h2uSuffix}`;
+    case 'run-h2u-guided-leaf-rollout':
+      return 'node tools_node/run-h2u-guided-leaf-rollout.js --target-file tools_node/lib/dom-to-ui/draft-builder-core.js --release-blocker processElement --goal "H2U live rollout leaf rehearsal" --json';
+    case 'validate-legacy-h2u-live-rollout':
+      return 'node tools_node/validate-legacy-h2u-live-rollout.js --strict';
     case 'validate-atm-stability-closeout':
       return `node tools_node/validate-atm-stability-closeout.js --strict${closeoutH2uSuffix}`;
     default:

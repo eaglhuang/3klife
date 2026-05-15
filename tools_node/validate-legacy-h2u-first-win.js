@@ -6,6 +6,7 @@ const path = require('node:path');
 const cp = require('node:child_process');
 const crypto = require('node:crypto');
 const { runScriptInProcess, shouldFallbackForEperm } = require('./lib/in-process-cli-runner');
+const { inspectH2uWorktreeIsolation } = require('./lib/h2u-worktree-isolation');
 
 const ROOT = path.resolve(__dirname, '..');
 const DEFAULT_BASE_OUT = path.join(ROOT, 'artifacts', 'legacy-h2u-first-win');
@@ -20,6 +21,8 @@ function parseArgs(argv) {
     mainHtml: 'ui_kits/gacha/index.html',
     bundle: 'lobby_ui',
     worktreeStatusFile: null,
+    baselineWorktreeStatusFile: null,
+    statusSnapshotOut: null,
     allowDirtyPrefixes: [],
     requireWorktreeCheck: false,
     help: false,
@@ -37,6 +40,8 @@ function parseArgs(argv) {
       case '--main-html': opts.mainHtml = next(); break;
       case '--bundle': opts.bundle = next(); break;
       case '--worktree-status-file': opts.worktreeStatusFile = next(); break;
+      case '--baseline-worktree-status-file': opts.baselineWorktreeStatusFile = next(); break;
+      case '--status-snapshot-out': opts.statusSnapshotOut = next(); break;
       case '--allow-dirty-prefix': {
         const value = String(next() || '').trim();
         if (value) opts.allowDirtyPrefixes.push(value);
@@ -55,7 +60,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log('Usage: node tools_node/validate-legacy-h2u-first-win.js [--strict] [--report <json>] [--worktree-status-file <txt>]');
+  console.log('Usage: node tools_node/validate-legacy-h2u-first-win.js [--strict] [--report <json>] [--worktree-status-file <txt>] [--baseline-worktree-status-file <txt>] [--status-snapshot-out <txt>]');
   console.log('');
   console.log('Runs two-round H2U first-win replay validation and emits evidence manifests.');
 }
@@ -312,16 +317,23 @@ async function runRound(roundId, opts) {
   const workflowSummaryPath = path.join(workflowOutDir, `${opts.screenId}.workflow-summary.json`);
   const summaryRuleGuardReportPath = path.join(roundDir, 'rule-guard.summary.report.json');
   const evidenceManifestPath = path.join(roundDir, 'evidence.manifest.json');
+  const roundStatusSnapshotOut = opts.statusSnapshotOut || path.join(roundDir, 'worktree-status.txt');
 
   resetDir(roundDir);
   ensureDir(workflowOutDir);
 
   const launchArgs = ['--strict', '--report', launchReportPath];
+  if (opts.baselineWorktreeStatusFile) {
+    launchArgs.push('--baseline-worktree-status-file', opts.baselineWorktreeStatusFile);
+  }
   for (const prefix of opts.allowDirtyPrefixes) {
     launchArgs.push('--allow-dirty-prefix', prefix);
   }
   if (opts.worktreeStatusFile) {
     launchArgs.push('--worktree-status-file', opts.worktreeStatusFile);
+  }
+  if (roundStatusSnapshotOut) {
+    launchArgs.push('--status-snapshot-out', roundStatusSnapshotOut);
   }
   if (opts.requireWorktreeCheck) {
     launchArgs.push('--require-worktree-check');
@@ -365,9 +377,9 @@ async function runRound(roundId, opts) {
     const ok = isRunSuccess(run);
     return summarizeCommandRun(run, {
       accepted: ok,
-      category: ok ? 'success' : 'hard-fail',
-      hardFail: !ok,
-      reason: ok ? 'exit-zero' : `unexpected-exit-${Number(run && run.status || 1)}`,
+      category: ok ? 'success' : 'gate-fail',
+      hardFail: false,
+      reason: ok ? 'exit-zero' : `gate-fail:${run.label}:unexpected-exit-${Number(run && run.status || 1)}`,
     });
   });
   const commandFailures = commandSummary.filter((item) => !item.accepted);
@@ -394,6 +406,8 @@ async function runRound(roundId, opts) {
       reason: workflowOutcome.reason,
       dryRunContractMissing: workflowOutcome.dryRunContract ? workflowOutcome.dryRunContract.missing : [],
     },
+    workflowHardFail: Boolean(workflowOutcome && workflowOutcome.hardFail),
+    gateFailReasons: [],
     key,
     keyHash: hashStableJson(key),
   };
@@ -404,8 +418,17 @@ async function runRound(roundId, opts) {
   const interaction = workflowSummary && workflowSummary.interactionRuntime || null;
   const workflowArtifactsReady = Boolean(workflowSummary) && workflowOutcome.accepted;
   const interactionPassed = !!(interaction && interaction.required && interaction.status === 'pass' && interaction.actionsBound === interaction.actionsDeclared);
-  const hasHardFail = hardFailures.length > 0;
-  const passed = launchPassed && summaryRuleGuardPassed && interactionPassed && workflowArtifactsReady && !hasHardFail;
+  const workflowHardFail = Boolean(workflowOutcome && workflowOutcome.hardFail);
+  const gateFailReasons = [];
+  if (!launchPassed) gateFailReasons.push('launch');
+  if (!summaryRuleGuardPassed) gateFailReasons.push('summary-rule-guard');
+  if (!interactionPassed) gateFailReasons.push('interaction');
+  const gateFail = gateFailReasons.length > 0;
+  const hasHardFail = workflowHardFail;
+  const passed = launchPassed && summaryRuleGuardPassed && interactionPassed && workflowArtifactsReady && !workflowHardFail;
+
+  manifest.workflowHardFail = workflowHardFail;
+  manifest.gateFailReasons = gateFailReasons;
 
   return {
     roundId,
@@ -420,6 +443,9 @@ async function runRound(roundId, opts) {
     interactionPassed,
     workflowArtifactsReady,
     workflowOutcome,
+    workflowHardFail,
+    gateFail,
+    gateFailReasons,
     hasHardFail,
     hardFailCount: hardFailures.length,
     launchReport,
@@ -445,9 +471,11 @@ function compareRoundKeys(roundA, roundB) {
 }
 
 function buildFinalReport(opts, roundA, roundB, compare) {
-  const roundAHardFail = !!(roundA && (roundA.hasHardFail || Number(roundA.hardFailCount || 0) > 0));
-  const roundBHardFail = !!(roundB && (roundB.hasHardFail || Number(roundB.hardFailCount || 0) > 0));
-  const passed = roundA.passed && roundB.passed && compare.passed && !roundAHardFail && !roundBHardFail;
+  const roundAHardFail = !!(roundA && roundA.workflowHardFail);
+  const roundBHardFail = !!(roundB && roundB.workflowHardFail);
+  const roundAGateFail = !!(roundA && roundA.gateFail);
+  const roundBGateFail = !!(roundB && roundB.gateFail);
+  const passed = roundA.passed && roundB.passed && compare.passed;
   return {
     validator: 'validate-legacy-h2u-first-win',
     passed,
@@ -467,6 +495,9 @@ function buildFinalReport(opts, roundA, roundB, compare) {
         summaryRuleGuardPassed: roundA.summaryRuleGuardPassed,
         interactionPassed: roundA.interactionPassed,
         workflowOutcome: roundA.workflowOutcome || null,
+        workflowHardFail: roundAHardFail,
+        gateFail: roundAGateFail,
+        gateFailReasons: roundA.gateFailReasons || [],
         hasHardFail: roundAHardFail,
       },
       {
@@ -477,6 +508,9 @@ function buildFinalReport(opts, roundA, roundB, compare) {
         summaryRuleGuardPassed: roundB.summaryRuleGuardPassed,
         interactionPassed: roundB.interactionPassed,
         workflowOutcome: roundB.workflowOutcome || null,
+        workflowHardFail: roundBHardFail,
+        gateFail: roundBGateFail,
+        gateFailReasons: roundB.gateFailReasons || [],
         hasHardFail: roundBHardFail,
       },
     ],
@@ -485,11 +519,14 @@ function buildFinalReport(opts, roundA, roundB, compare) {
       baseOut: rel(opts.baseOut),
       failedRounds: [roundA, roundB].filter((item) => !item.passed).map((item) => item.roundId),
       hardFailRounds: [roundAHardFail ? roundA.roundId : null, roundBHardFail ? roundB.roundId : null].filter(Boolean),
+      gateFailRounds: [roundAGateFail ? roundA.roundId : null, roundBGateFail ? roundB.roundId : null].filter(Boolean),
       blockers: passed ? [] : [
         ...(roundA.passed ? [] : [`${roundA.roundId} failed`]),
         ...(roundB.passed ? [] : [`${roundB.roundId} failed`]),
-        ...(roundAHardFail ? [`${roundA.roundId} hard-fail detected`] : []),
-        ...(roundBHardFail ? [`${roundB.roundId} hard-fail detected`] : []),
+        ...(roundAHardFail ? [`${roundA.roundId} workflow hard-fail detected`] : []),
+        ...(roundBHardFail ? [`${roundB.roundId} workflow hard-fail detected`] : []),
+        ...(roundAGateFail ? [`${roundA.roundId} gate-fail: ${roundA.gateFailReasons.join(',')}`] : []),
+        ...(roundBGateFail ? [`${roundB.roundId} gate-fail: ${roundB.gateFailReasons.join(',')}`] : []),
         ...(compare.passed ? [] : ['round comparison mismatch']),
       ],
     },

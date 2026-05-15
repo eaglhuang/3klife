@@ -8,6 +8,7 @@ const vm = require('node:vm');
 const { runTaskStoreTruthPipeline } = require('./sync-atm-stabilization-milestone');
 const { runValidation: runH2uEvolutionValidation } = require('./validate-h2u-evolution-pilot');
 const { runRuleGuard } = require('./lib/html-to-ucuf/rule-guard');
+const { inspectH2uWorktreeIsolation } = require('./lib/h2u-worktree-isolation');
 
 const ROOT = path.resolve(__dirname, '..');
 const WORKFLOW_ENTRY = path.join(ROOT, 'tools_node', 'run-html-to-ucuf-workflow.js');
@@ -38,6 +39,8 @@ function parseArgs(argv) {
     report: null,
     ruleGuardReport: null,
     worktreeStatusFile: null,
+    baselineWorktreeStatusFile: null,
+    statusSnapshotOut: null,
     allowDirtyPrefixes: [],
     requireWorktreeCheck: false,
     help: false,
@@ -64,6 +67,16 @@ function parseArgs(argv) {
       index += 1;
       continue;
     }
+    if (token === '--baseline-worktree-status-file') {
+      parsed.baselineWorktreeStatusFile = argv[index + 1] || null;
+      index += 1;
+      continue;
+    }
+    if (token === '--status-snapshot-out') {
+      parsed.statusSnapshotOut = argv[index + 1] || null;
+      index += 1;
+      continue;
+    }
     if (token === '--allow-dirty-prefix') {
       const value = argv[index + 1] || '';
       index += 1;
@@ -87,7 +100,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log('Usage: node tools_node/validate-legacy-h2u-launch.js [--strict] [--report <json>] [--rule-guard-report <json>] [--worktree-status-file <txt>] [--allow-dirty-prefix <path>] [--require-worktree-check]');
+  console.log('Usage: node tools_node/validate-legacy-h2u-launch.js [--strict] [--report <json>] [--rule-guard-report <json>] [--worktree-status-file <txt>] [--baseline-worktree-status-file <txt>] [--status-snapshot-out <txt>] [--allow-dirty-prefix <path>] [--require-worktree-check]');
   console.log('');
   console.log('Validates the H2U first-battle launch gates for Legacy challenge kickoff.');
 }
@@ -252,77 +265,33 @@ function checkLocalAtomicWorkbench() {
 }
 
 function checkWorktreeIsolation(allowDirtyPrefixes, options = {}) {
-  const requireWorktreeCheck = Boolean(options.requireWorktreeCheck);
-  const strict = Boolean(options.strict);
-  const statusFile = String(options.worktreeStatusFile || '').trim();
-  if (statusFile) {
-    const fileStatus = readWorktreeStatusFromFile(statusFile);
-    if (!fileStatus.ok) {
-      const blockOnSkip = strict || requireWorktreeCheck;
-      return {
-        id: 'worktree-isolation',
-        method: fileStatus.method,
-        passed: !blockOnSkip,
-        status: blockOnSkip ? 1 : 0,
-        skipped: true,
-        checkUnavailable: true,
-        error: fileStatus.error,
-        stderr: `worktree check skipped: ${fileStatus.error}`,
-        dirtyFiles: [],
-        unrelatedDirtyFiles: [],
-      };
-    }
-    const unrelatedFromFile = fileStatus.dirtyFiles.filter((filePath) => !isPathAllowed(filePath, allowDirtyPrefixes));
-    return {
-      id: 'worktree-isolation',
-      method: fileStatus.method,
-      passed: unrelatedFromFile.length === 0,
-      status: unrelatedFromFile.length === 0 ? 0 : 1,
-      skipped: false,
-      checkUnavailable: false,
-      error: '',
-      stderr: unrelatedFromFile.length === 0 ? '' : `unrelatedDirty=${unrelatedFromFile.join(',')}`,
-      dirtyFiles: fileStatus.dirtyFiles,
-      unrelatedDirtyFiles: unrelatedFromFile,
-    };
-  }
-
-  const method = 'spawnSync:git status --short';
-  const proc = runGitStatusShort();
-  const unavailable = Boolean(proc.error) || typeof proc.status !== 'number' || proc.status !== 0;
-  if (unavailable) {
-    const stderr = String(proc && proc.stderr || '').trim();
-    const errMsg = String(proc && proc.error && (proc.error.message || proc.error) || '').trim();
-    const message = errMsg || stderr || `git status exit=${proc.status}`;
-    const blockOnSkip = strict || requireWorktreeCheck;
-    return {
-      id: 'worktree-isolation',
-      method,
-      passed: !blockOnSkip,
-      status: blockOnSkip ? 1 : 0,
-      skipped: true,
-      checkUnavailable: true,
-      error: message,
-      stderr: `worktree check skipped: ${message}`,
-      dirtyFiles: [],
-      unrelatedDirtyFiles: [],
-    };
-  }
-
-  const output = String(proc.stdout || '');
-  const dirtyFiles = parseGitStatusLines(output);
-  const unrelated = dirtyFiles.filter((filePath) => !isPathAllowed(filePath, allowDirtyPrefixes));
+  const isolation = inspectH2uWorktreeIsolation({
+    root: ROOT,
+    allowDirtyPrefixes,
+    strict: Boolean(options.strict),
+    requireWorktreeCheck: Boolean(options.requireWorktreeCheck),
+    worktreeStatusFile: options.worktreeStatusFile || null,
+    baselineWorktreeStatusFile: options.baselineWorktreeStatusFile || null,
+    statusSnapshotOut: options.statusSnapshotOut || null,
+  });
   return {
     id: 'worktree-isolation',
-    method,
-    passed: unrelated.length === 0,
-    status: unrelated.length === 0 ? 0 : 1,
-    skipped: false,
-    checkUnavailable: false,
-    error: '',
-    stderr: unrelated.length === 0 ? '' : `unrelatedDirty=${unrelated.join(',')}`,
-    dirtyFiles,
-    unrelatedDirtyFiles: unrelated,
+    method: isolation.method || '',
+    passed: Boolean(isolation.passed),
+    status: Number.isFinite(Number(isolation.status)) ? Number(isolation.status) : 1,
+    skipped: Boolean(isolation.skipped),
+    checkUnavailable: Boolean(isolation.checkUnavailable),
+    error: isolation.error || '',
+    stderr: isolation.stderr || '',
+    dirtyFiles: Array.isArray(isolation.dirtyFiles) ? isolation.dirtyFiles : [],
+    baselineDirtyFiles: Array.isArray(isolation.baselineDirtyFiles) ? isolation.baselineDirtyFiles : [],
+    introducedDirtyFiles: Array.isArray(isolation.introducedDirtyFiles) ? isolation.introducedDirtyFiles : [],
+    unrelatedDirtyFiles: Array.isArray(isolation.unrelatedDirtyFiles) ? isolation.unrelatedDirtyFiles : [],
+    allowedDirtyFiles: Array.isArray(isolation.allowedDirtyFiles) ? isolation.allowedDirtyFiles : [],
+    baselineSource: isolation.baselineSource || '',
+    currentSource: isolation.currentSource || '',
+    statusSnapshotOut: isolation.statusSnapshotOut || '',
+    snapshotWrite: isolation.snapshotWrite || null,
   };
 }
 
@@ -508,6 +477,8 @@ function runValidation(opts = {}) {
     requireWorktreeCheck: Boolean(opts.requireWorktreeCheck),
     strict: Boolean(opts.strict),
     worktreeStatusFile: opts.worktreeStatusFile || null,
+    baselineWorktreeStatusFile: opts.baselineWorktreeStatusFile || null,
+    statusSnapshotOut: opts.statusSnapshotOut || null,
   });
   checks.push(worktree);
   if (!worktree.passed) {
@@ -522,10 +493,13 @@ function runValidation(opts = {}) {
       message: 'worktree contains unrelated dirty files for H2U first-battle launch',
       details: {
         unrelatedDirtyFiles: worktree.unrelatedDirtyFiles,
+        baselineDirtyFiles: worktree.baselineDirtyFiles,
+        introducedDirtyFiles: worktree.introducedDirtyFiles,
         allowDirtyPrefixes: opts.allowDirtyPrefixes || [],
         skipped: worktree.skipped,
         method: worktree.method || '',
         error: worktree.error || '',
+        statusSnapshotOut: worktree.statusSnapshotOut || '',
       },
     }));
   }
@@ -686,6 +660,8 @@ function runValidation(opts = {}) {
       blockerCount: findings.length,
       allowDirtyPrefixes: opts.allowDirtyPrefixes || [],
       worktreeCheckSkipped: Boolean(worktree.skipped),
+      baselineWorktreeStatusFile: opts.baselineWorktreeStatusFile || '',
+      statusSnapshotOut: opts.statusSnapshotOut || '',
     },
     worktreeCheck: {
       method: worktree.method || '',
@@ -693,7 +669,14 @@ function runValidation(opts = {}) {
       checkUnavailable: Boolean(worktree.checkUnavailable),
       error: worktree.error || '',
       dirtyFileCount: Array.isArray(worktree.dirtyFiles) ? worktree.dirtyFiles.length : 0,
+      baselineDirtyFileCount: Array.isArray(worktree.baselineDirtyFiles) ? worktree.baselineDirtyFiles.length : 0,
+      introducedDirtyFileCount: Array.isArray(worktree.introducedDirtyFiles) ? worktree.introducedDirtyFiles.length : 0,
       unrelatedDirtyFileCount: Array.isArray(worktree.unrelatedDirtyFiles) ? worktree.unrelatedDirtyFiles.length : 0,
+      allowedDirtyFileCount: Array.isArray(worktree.allowedDirtyFiles) ? worktree.allowedDirtyFiles.length : 0,
+      baselineSource: worktree.baselineSource || '',
+      currentSource: worktree.currentSource || '',
+      statusSnapshotOut: worktree.statusSnapshotOut || '',
+      snapshotWrite: worktree.snapshotWrite || null,
     },
     generatedAt: new Date().toISOString(),
   };
