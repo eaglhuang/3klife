@@ -3390,9 +3390,9 @@ class NpcDialogueService:
         source_layer = str(edge.get("sourceLayer") or "").strip()
         return source_layer in {
             "stable-bootstrap-seed",
-            "stable-history-profile-baseline",
             "generals-parent-summary",
-        } or str(edge.get("claimGrade") or "").startswith("A-history")
+            "claim-graph-a-history",
+        } or str(edge.get("claimGrade") or "") in {"A-history", "A-history-cross-source"}
 
     def _runtime_actor_aliases(self, runtime_persona: dict[str, Any]) -> list[str]:
         display_name = str(runtime_persona.get("displayName") or "").strip()

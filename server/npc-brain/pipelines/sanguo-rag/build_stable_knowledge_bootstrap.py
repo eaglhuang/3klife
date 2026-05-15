@@ -22,6 +22,9 @@ DEFAULT_8BOOK_MANIFEST_PATH = Path(
     "artifacts/data-pipeline/sanguo-rag/extracted/plaintext-source-candidates/8book-baihua-sanguo-source-manifest.json"
 )
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap")
+DEFAULT_RELATIONSHIP_CLAIM_GRAPH_PATH = Path(
+    "artifacts/data-pipeline/sanguo-rag/extracted/relationship-claim-graph/a-history-relationship-claims.jsonl"
+)
 STABLE_BOOTSTRAP_SOURCE_LAYER = "stable-bootstrap-seed"
 HISTORY_PROFILE_BASELINE_SOURCE_LAYER = "stable-history-profile-baseline"
 
@@ -425,6 +428,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--observed-summary", default=str(DEFAULT_OBSERVED_SUMMARY_PATH), help="observed-label-summary.json path")
     parser.add_argument("--events-summary", default=str(DEFAULT_EVENTS_SUMMARY_PATH), help="events-summary.json path")
     parser.add_argument("--8book-manifest", default=str(DEFAULT_8BOOK_MANIFEST_PATH), help="8book source manifest path")
+    parser.add_argument(
+        "--relationship-claim-graph",
+        default=str(DEFAULT_RELATIONSHIP_CLAIM_GRAPH_PATH),
+        help="A-history relationship claim graph JSONL path",
+    )
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting existing outputs")
     return parser.parse_args()
@@ -436,6 +444,20 @@ def utc_now() -> str:
 
 def read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    rows: list[dict[str, Any]] = []
+    for line in path.read_text(encoding="utf-8-sig").splitlines():
+        text = line.strip()
+        if not text:
+            continue
+        value = json.loads(text)
+        if isinstance(value, dict):
+            rows.append(value)
+    return rows
 
 
 def write_json(path: Path, payload: Any) -> None:
@@ -572,6 +594,17 @@ def add_edge(edges: list[dict[str, Any]], edge: dict[str, Any], seen: set[tuple[
         return
     seen.add(key)
     edges.append(edge)
+
+
+def upsert_a_history_edge(edges: list[dict[str, Any]], edge: dict[str, Any], seen: set[tuple[str, str, str]]) -> None:
+    key = edge_key(edge)
+    if key not in seen:
+        add_edge(edges, edge, seen)
+        return
+    for index, current in enumerate(edges):
+        if edge_key(current) == key:
+            edges[index] = edge
+            return
 
 
 def build_relationship_edges(index: dict[str, dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -775,11 +808,54 @@ def build_history_profile_relationship_edges(
                 "reviewStatus": "ready",
                 "sourceLayer": HISTORY_PROFILE_BASELINE_SOURCE_LAYER,
                 "claimLayer": "history",
-                "claimGrade": "A-history-profile-baseline",
+                "claimGrade": "B-history-profile-baseline",
                 "sourceQuote": snippets[0],
             }
             add_edge(edges, edge, seen)
     return edges
+
+
+def load_a_history_claim_edges(path: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    if not path.exists():
+        return [], [{"kind": "relationship-claim-graph", "path": str(path), "status": "missing"}]
+
+    edges: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+    for row in read_jsonl(path):
+        grade = str(row.get("claimGrade") or "").strip()
+        if grade not in {"A-history", "A-history-cross-source"}:
+            skipped.append({"kind": "relationship-claim-graph-row", "claimId": row.get("claimId"), "status": "non-a-history", "claimGrade": grade})
+            continue
+        from_id = str(row.get("fromId") or "").strip()
+        to_id = str(row.get("toId") or "").strip()
+        rel_type = str(row.get("type") or "").strip()
+        if not from_id or not to_id or not rel_type:
+            skipped.append({"kind": "relationship-claim-graph-row", "claimId": row.get("claimId"), "status": "invalid-endpoints"})
+            continue
+        edges.append(
+            {
+                "fromId": from_id,
+                "toId": to_id,
+                "type": rel_type,
+                "evidenceRefs": list(row.get("evidenceRefs") or []),
+                "eventTags": ["relationship_claim_graph"],
+                "edgeConfidence": row.get("edgeConfidence") or 0.95,
+                "edgeStrength": row.get("edgeStrength") or 0.9,
+                "reviewStatus": "ready",
+                "sourceLayer": "claim-graph-a-history",
+                "claimLayer": "history",
+                "claimGrade": grade,
+                "claimId": row.get("claimId"),
+                "sourcePolicyId": row.get("sourcePolicyId"),
+                "sourceEvidenceId": row.get("sourceEvidenceId"),
+                "sourceFamily": row.get("sourceFamily"),
+                "locator": row.get("locator"),
+                "textHash": row.get("textHash"),
+                "sourceQuote": row.get("quote"),
+                "promotionTrace": list(row.get("promotionTrace") or []),
+            }
+        )
+    return edges, skipped
 
 
 def resolve_names(names: list[str], index: dict[str, dict[str, Any]]) -> tuple[list[str], list[str]]:
@@ -1443,8 +1519,8 @@ def render_markdown(payload: dict[str, Any]) -> str:
             "",
             "## Gate Usage",
             "",
-            "- 可作 A 升級輔助：`relationshipEdges`、`eventLocationSeeds`、`timeScopedAliasHints`。",
-            "- 僅作提示：`identitySeeds`、`basicProfileSeeds`、`femalePriorityProfiles`、`plainRelationshipProposals`、`factionTimelines`、`socialRoleSeeds`、`autoSocialRoleSeeds`、`plainFactProposals` 目前是 review-only，避免把身份/女性互動 profile/白話欄位/君臣/陣營當永久關係。",
+            "- 可作 A 升級輔助：`relationshipEdges`、`relationshipClaimGraph`、`eventLocationSeeds`、`timeScopedAliasHints`。",
+            "- 僅作提示：`identitySeeds`、`basicProfileSeeds`、`femalePriorityProfiles`、`plainRelationshipProposals`、`factionTimelines`、`socialRoleSeeds`、`autoSocialRoleSeeds`、`plainFactProposals`、`B-history-profile-baseline` 目前是 review-only，避免把身份/女性互動 profile/白話欄位/君臣/陣營當永久關係。",
             "- 白話文只提供語意 sidecar；canonical 仍必須回到毛本文言 sourceRef gate。",
             "",
             "## Missing Coverage",
@@ -1475,6 +1551,9 @@ def main() -> None:
 
     relationship_edges, missing_relationships = build_relationship_edges(name_index)
     seen_relationships = {edge_key(edge) for edge in relationship_edges}
+    a_history_edges, missing_claim_graph = load_a_history_claim_edges(Path(args.relationship_claim_graph))
+    for edge in a_history_edges:
+        upsert_a_history_edge(relationship_edges, edge, seen_relationships)
     for edge in build_parent_summary_edges(people, name_index):
         add_edge(relationship_edges, edge, seen_relationships)
     for edge in build_history_profile_relationship_edges(people, name_index):
@@ -1501,6 +1580,7 @@ def main() -> None:
             "observedMentionsPath": args.observed_mentions,
             "observedSummaryPath": args.observed_summary,
             "eventsSummaryPath": args.events_summary,
+            "relationshipClaimGraphPath": args.relationship_claim_graph,
         },
         "baseline": {
             "alias": {
@@ -1553,14 +1633,19 @@ def main() -> None:
                 "basicProfileSeeds without a Mao Hant sourceRef gate",
                 "femalePriorityProfiles without a Mao Hant sourceRef gate",
                 "plainRelationshipProposals without a Mao Hant sourceRef gate",
-                "ruler_subject or faction membership without chapter/event interval, except exact history-profile baseline patterns",
+                "ruler_subject or faction membership without chapter/event interval, except A-history claim graph or curated hard baseline",
                 "socialRoleSeeds or decisionWeightHints without a Mao Hant sourceRef gate",
                 "autoSocialRoleSeeds or plainFactProposals without a Mao Hant sourceRef gate",
                 "missing generalId coverage",
                 "alias collision outside time-scoped hint range",
             ],
         },
-        "missingCoverage": missing_relationships + missing_events + missing_factions + missing_roles + missing_alias_hints,
+        "missingCoverage": missing_relationships
+        + missing_claim_graph
+        + missing_events
+        + missing_factions
+        + missing_roles
+        + missing_alias_hints,
     }
     payload["summary"] = summarize_counts(payload)
 

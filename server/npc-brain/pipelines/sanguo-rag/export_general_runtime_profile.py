@@ -104,9 +104,10 @@ SEMANTIC_RELATIONSHIP_TYPES = GRAPH_RELATIONSHIP_TYPES | {
 STABLE_RELATIONSHIP_SOURCE_LAYER = "stable-bootstrap-seed"
 STABLE_RELATIONSHIP_SOURCE_LAYERS = {
     STABLE_RELATIONSHIP_SOURCE_LAYER,
-    "stable-history-profile-baseline",
     "generals-parent-summary",
+    "claim-graph-a-history",
 }
+A_HISTORY_RELATIONSHIP_GRADES = {"A-history", "A-history-cross-source"}
 RULER_SUBJECT_AUTHORITY_TERMS = (
     "麾下",
     "效忠",
@@ -330,7 +331,7 @@ def edge_compact_text(edge: dict[str, Any]) -> str:
 
 def is_stable_relationship_edge(edge: dict[str, Any]) -> bool:
     source_layer = str(edge.get("sourceLayer") or "").strip()
-    return source_layer in STABLE_RELATIONSHIP_SOURCE_LAYERS or str(edge.get("claimGrade") or "").startswith("A-history")
+    return source_layer in STABLE_RELATIONSHIP_SOURCE_LAYERS or str(edge.get("claimGrade") or "") in A_HISTORY_RELATIONSHIP_GRADES
 
 
 def edge_has_authority_baseline_terms(edge: dict[str, Any]) -> bool:
@@ -354,6 +355,8 @@ def stable_relationship_edges_for_general(stable: dict[str, Any], general_id: st
         from_id = str(edge.get("fromId") or "").strip()
         to_id = str(edge.get("toId") or "").strip()
         if general_id not in {from_id, to_id}:
+            continue
+        if not is_stable_relationship_edge(edge):
             continue
         edges.append(
             {

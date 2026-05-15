@@ -131,6 +131,70 @@ class VectorSecondRetriever:
                 trace.append(f"exact-ref-fill:ready-event:{ready_event_hits}")
 
         if len(resolved) < limit:
+            relationship_hits = 0
+            runtime_relationships = self.store.read_runtime_relationships(general_id) or {}
+            for anchor in runtime_relationships.get("anchors") or []:
+                anchor_refs = self._normalize_refs(anchor.get("evidenceRefs"))
+                matched_refs = [ref for ref in anchor_refs if ref in wanted]
+                if not matched_refs:
+                    continue
+                evidence_ref = matched_refs[0]
+                covered_refs.update(matched_refs)
+                if evidence_ref in seen_event_refs:
+                    continue
+                seen_event_refs.add(evidence_ref)
+                relationship_hits += 1
+                target_id = str(anchor.get("targetId") or "").strip()
+                target_name = str(anchor.get("targetName") or target_id).strip()
+                rel_label = str(anchor.get("typeLabel") or anchor.get("type") or "relationship").strip()
+                source_quotes = [str(item) for item in (anchor.get("sourceQuotes") or []) if str(item).strip()]
+                resolved.append(
+                    ResolvedEvidence(
+                        evidenceRef=evidence_ref,
+                        sourceType="runtime-relationship",
+                        sourceQuote=source_quotes[0] if source_quotes else None,
+                        factSummary=f"{target_name}:{rel_label}",
+                        generalIds=[value for value in [general_id, target_id] if value],
+                        confidence=float(anchor.get("edgeConfidence") or 0.72),
+                    )
+                )
+                if len(resolved) >= limit:
+                    break
+            if relationship_hits:
+                trace.append(f"exact-ref-fill:runtime-relationship:{relationship_hits}")
+
+        if len(resolved) < limit:
+            packet_hits = 0
+            for packet in self.store.load_source_event_packets():
+                source_ref = str(packet.get("sourceRef") or "").strip()
+                if source_ref not in wanted:
+                    continue
+                packet_general_ids = [str(value) for value in packet.get("generalIds") or [] if str(value).strip()]
+                if packet_general_ids and general_id not in packet_general_ids:
+                    continue
+                covered_refs.add(source_ref)
+                if source_ref in seen_event_refs:
+                    continue
+                seen_event_refs.add(source_ref)
+                packet_hits += 1
+                examples = [str(item) for item in (packet.get("examples") or []) if str(item).strip()]
+                angles = [str(item) for item in (packet.get("angleFamilies") or []) if str(item).strip()]
+                resolved.append(
+                    ResolvedEvidence(
+                        evidenceRef=source_ref,
+                        sourceType="source-event-packet",
+                        sourceQuote=examples[0] if examples else None,
+                        factSummary=f"source-event-packet:{source_ref}:{'/'.join(angles[:4])}",
+                        generalIds=packet_general_ids or [general_id],
+                        confidence=0.64 if packet.get("packetStrength") == "strong" else 0.58,
+                    )
+                )
+                if len(resolved) >= limit:
+                    break
+            if packet_hits:
+                trace.append(f"exact-ref-fill:source-event-packet:{packet_hits}")
+
+        if len(resolved) < limit:
             highlight_hits = 0
             for highlight in runtime_persona.get("sourceHighlights") or []:
                 source_ref = str(highlight.get("sourceRef") or "")

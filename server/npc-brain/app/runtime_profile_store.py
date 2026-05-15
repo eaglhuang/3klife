@@ -19,6 +19,7 @@ class RuntimeProfileStore:
         self.runtime_profile_root = self._resolve_path(runtime_profile_root)
         self.event_root = self._resolve_path(event_root)
         self._ready_events_cache: list[dict] | None = None
+        self._source_event_packets_cache: list[dict] | None = None
 
     def read_api_fixture(self, filename: str) -> dict:
         return json.loads((self.artifact_root / filename).read_text(encoding="utf-8"))
@@ -63,6 +64,23 @@ class RuntimeProfileStore:
                 events.append(payload)
         self._ready_events_cache = events
         return events
+
+    def load_source_event_packets(self) -> list[dict]:
+        if self._source_event_packets_cache is not None:
+            return self._source_event_packets_cache
+        path = self.artifact_root.parent / "source-event-packets" / "source-event-packets.jsonl"
+        if not path.exists():
+            self._source_event_packets_cache = []
+            return self._source_event_packets_cache
+        packets: list[dict] = []
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            payload = json.loads(line)
+            if isinstance(payload, dict):
+                packets.append(payload)
+        self._source_event_packets_cache = packets
+        return packets
 
     def list_runtime_general_ids(self) -> list[str]:
         if not self.runtime_profile_root.exists():
