@@ -69,6 +69,40 @@ LLM_HISTORY_PROVIDERS = {"gemini", "gemini_flash", "gemini_flash_lite", "local_l
 SUPPORTED_LOCALES = set(LOCALE_INSTRUCTIONS.keys())
 SUPPORTED_SPEECH_CONTEXT_MODES = set(SPEECH_CONTEXT_INSTRUCTIONS.keys())
 DEFAULT_LLM_MODEL_PRESET = "fallback_chain"
+HARD_RELATIONSHIP_PAIR_TYPES: dict[frozenset[str], str] = {
+    frozenset({"liu-bei", "guan-yu"}): "sworn_sibling",
+    frozenset({"liu-bei", "zhang-fei"}): "sworn_sibling",
+    frozenset({"guan-yu", "zhang-fei"}): "sworn_sibling",
+}
+TARGET_ID_NAME_COLLISIONS: dict[str, dict[str, str]] = {
+    "zhang-bao": {
+        "張寶": "zhang-bao-enemy",
+        "张宝": "zhang-bao-enemy",
+        "地公將軍": "zhang-bao-enemy",
+        "地公将军": "zhang-bao-enemy",
+    },
+}
+YELLOW_TURBAN_TARGET_IDS = {"zhang-bao-enemy", "zhang-jiao", "zhang-liang"}
+YELLOW_TURBAN_CONTEXT_TERMS = (
+    "黃巾",
+    "黄巾",
+    "張角",
+    "张角",
+    "張梁",
+    "张梁",
+    "張寶",
+    "张宝",
+    "地公將軍",
+    "地公将军",
+    "賊",
+    "贼",
+    "對壘",
+    "对垒",
+    "追襲",
+    "追袭",
+    "死戰",
+    "死战",
+)
 LLM_MODEL_PRESETS = {
     "fallback_chain": {
         "label": "Fallback Chain",
@@ -3315,6 +3349,196 @@ class NpcDialogueService:
         }
         return priority.get(str(relationship_type or ""), 35)
 
+    def _runtime_edge_source_text(self, edge: dict[str, Any]) -> str:
+        return " ".join(
+            str(value)
+            for value in [
+                *(edge.get("sourceQuotes") or []),
+                edge.get("sourceQuote"),
+                edge.get("evidenceText"),
+                edge.get("summary"),
+            ]
+            if value
+        )
+
+    def _runtime_actor_aliases(self, runtime_persona: dict[str, Any]) -> list[str]:
+        display_name = str(runtime_persona.get("displayName") or "").strip()
+        aliases = [display_name, *(runtime_persona.get("aliases") or [])]
+        if len(display_name) == 2:
+            aliases.append(display_name[1:])
+        return [alias for alias in aliases if alias]
+
+    def _text_mentions_runtime_actor(self, runtime_persona: dict[str, Any], text: str) -> bool:
+        source = str(text or "")
+        return any(alias and alias in source for alias in self._runtime_actor_aliases(runtime_persona))
+
+    def _runtime_edge_refs(self, edge: dict[str, Any]) -> set[str]:
+        return {str(ref).strip() for ref in (edge.get("evidenceRefs") or []) if str(ref).strip()}
+
+    def _normalize_runtime_target_id(
+        self,
+        target_id: str | None,
+        target_label: str | None = None,
+        source_text: str | None = None,
+    ) -> str:
+        normalized_id = str(target_id or "").strip()
+        if not normalized_id:
+            return ""
+        collision_map = TARGET_ID_NAME_COLLISIONS.get(normalized_id)
+        if not collision_map:
+            return normalized_id
+        evidence = f"{target_label or ''} {source_text or ''}"
+        for marker, replacement_id in collision_map.items():
+            if marker and marker in evidence:
+                return replacement_id
+        return normalized_id
+
+    def _edge_points_to_yellow_turban_enemy(self, edge: dict[str, Any]) -> bool:
+        target_id = str(edge.get("targetId") or "").strip()
+        if target_id in YELLOW_TURBAN_TARGET_IDS:
+            return True
+        text = self._runtime_edge_source_text(edge)
+        label = str(edge.get("targetName") or "")
+        return any(term in f"{label} {text}" for term in YELLOW_TURBAN_CONTEXT_TERMS)
+
+    def _hard_relationship_override(
+        self,
+        edge: dict[str, Any],
+        runtime_persona: dict[str, Any],
+    ) -> str | None:
+        source_id = str(runtime_persona.get("generalId") or "").strip()
+        target_id = str(edge.get("targetId") or "").strip()
+        if not source_id or not target_id:
+            return None
+        return HARD_RELATIONSHIP_PAIR_TYPES.get(frozenset({source_id, target_id}))
+
+    def _relationship_type_label(self, relationship_type: str | None, fallback: str | None = None) -> str:
+        labels = {
+            "sworn_sibling": "結義兄弟",
+            "protects_family": "護衛家室",
+            "spouse": "姻親 / 家室",
+            "parent_child": "親子",
+            "mentor": "師友",
+            "mentor_student": "師友",
+            "battle_ally": "戰場同袍",
+            "loyal_oath": "忠義相托",
+            "alliance_oath": "盟友",
+            "enemy_rival": "敵對競爭",
+            "battlefield_opponent": "戰場對手",
+            "betrayal_surrender": "背叛 / 降服",
+            "resource_support": "資源支援",
+            "ruler_subject": "君臣主從",
+            "battlefield_contact": "戰場接觸",
+            "political_contact": "政治接觸",
+        }
+        normalized = str(relationship_type or "").strip()
+        return labels.get(normalized) or str(fallback or normalized or "互動關係")
+
+    def _preferred_non_conflict_relationships(
+        self,
+        runtime_relationships: dict[str, Any],
+    ) -> dict[str, dict[str, Any]]:
+        conflict_types = {"enemy_rival", "battlefield_opponent", "betrayal_surrender"}
+        preferred: dict[str, dict[str, Any]] = {}
+        for edge in runtime_relationships.get("anchors") or []:
+            target_id = str(edge.get("targetId") or "").strip()
+            edge_type = str(edge.get("type") or "").strip()
+            if not target_id or not edge_type or edge_type in conflict_types:
+                continue
+            priority = self._relationship_display_priority(edge_type, set(edge.get("originalTypes") or []))
+            current = preferred.get(target_id)
+            if current and int(current.get("priority") or 0) >= priority:
+                current["refs"].update(self._runtime_edge_refs(edge))
+                continue
+            preferred[target_id] = {
+                "type": edge_type,
+                "label": self._relationship_type_label(edge_type, edge.get("typeLabel")),
+                "priority": priority,
+                "refs": set(self._runtime_edge_refs(edge)),
+            }
+        return preferred
+
+    def _edge_has_command_or_ally_signal(self, edge: dict[str, Any], runtime_persona: dict[str, Any]) -> bool:
+        text = self._runtime_edge_source_text(edge)
+        if not text:
+            return False
+        has_actor = self._text_mentions_runtime_actor(runtime_persona, text)
+        command_terms = ("令", "命", "遣", "撥", "使", "差", "引軍", "為先鋒", "爲先鋒")
+        ally_terms = ("助戰", "救起", "同救", "來投", "投降", "歸順", "歸降")
+        return (has_actor and any(term in text for term in command_terms)) or any(term in text for term in ally_terms)
+
+    def _edge_has_authority_signal(self, edge: dict[str, Any], runtime_persona: dict[str, Any]) -> bool:
+        text = self._runtime_edge_source_text(edge)
+        if not self._text_mentions_runtime_actor(runtime_persona, text):
+            return False
+        target_name = str(edge.get("targetName") or "").strip()
+        target_aliases = self._target_label_aliases(target_name)
+        has_target = any(alias and alias in text for alias in target_aliases)
+        authority_terms = ("令", "命", "遣", "撥", "使", "差", "引軍", "為先鋒", "爲先鋒", "部將", "主公")
+        return has_target and any(term in text for term in authority_terms)
+
+    def _edge_has_patron_signal(self, edge: dict[str, Any], runtime_persona: dict[str, Any]) -> bool:
+        text = self._runtime_edge_source_text(edge)
+        if not self._text_mentions_runtime_actor(runtime_persona, text):
+            return False
+        target_name = str(edge.get("targetName") or "").strip()
+        target_aliases = self._target_label_aliases(target_name)
+        has_target = any(alias and alias in text for alias in target_aliases)
+        patron_terms = ("來投", "投降", "歸順", "厚待", "收留", "薦", "請", "降", "授", "拜")
+        return has_target and any(term in text for term in patron_terms)
+
+    def _edge_has_direct_conflict_signal(self, edge: dict[str, Any], runtime_persona: dict[str, Any]) -> bool:
+        text = self._runtime_edge_source_text(edge)
+        if not text:
+            return False
+        actor_aliases = self._runtime_actor_aliases(runtime_persona)
+        target_name = str(edge.get("targetName") or "").strip()
+        target_aliases = [target_name]
+        if len(target_name) == 2:
+            target_aliases.append(target_name[1:])
+        has_actor = any(alias and alias in text for alias in actor_aliases)
+        has_target = any(alias and alias in text for alias in target_aliases)
+        conflict_terms = ("戰", "攻", "討", "殺", "追", "圍", "敗", "斬", "拒", "敵", "廝殺", "搦戰")
+        return has_actor and has_target and any(term in text for term in conflict_terms)
+
+    def _resolve_runtime_relationship_type(
+        self,
+        edge: dict[str, Any],
+        runtime_persona: dict[str, Any],
+        preferred_non_conflict: dict[str, dict[str, Any]],
+    ) -> str | None:
+        edge_type = str(edge.get("type") or "").strip() or None
+        hard_override = self._hard_relationship_override(edge, runtime_persona)
+        if hard_override:
+            return hard_override
+        if self._edge_points_to_yellow_turban_enemy(edge):
+            if edge_type in {"ruler_subject", "patron_client", "mentor_student", "political_contact", "battlefield_contact"}:
+                return "enemy_rival"
+        if edge_type not in {"enemy_rival", "battlefield_opponent", "betrayal_surrender"}:
+            if edge_type == "ruler_subject" and not self._edge_has_authority_signal(edge, runtime_persona):
+                return "political_contact"
+            if edge_type == "patron_client" and not self._edge_has_patron_signal(edge, runtime_persona):
+                if self._edge_has_direct_conflict_signal(edge, runtime_persona):
+                    return "enemy_rival"
+                return "battlefield_contact" if self._text_has_battle_signal(self._runtime_edge_source_text(edge)) else "political_contact"
+            return edge_type
+
+        target_id = str(edge.get("targetId") or "").strip()
+        refs = self._runtime_edge_refs(edge)
+        preferred = preferred_non_conflict.get(target_id)
+        if preferred and refs and refs.intersection(preferred.get("refs") or set()):
+            return str(preferred.get("type") or edge_type)
+
+        if self._edge_has_command_or_ally_signal(edge, runtime_persona):
+            return "ruler_subject"
+
+        target_name = str(edge.get("targetName") or "")
+        looks_like_indirect_family_or_woman = any(term in target_name for term in ("氏", "夫人", "后", "妃"))
+        if looks_like_indirect_family_or_woman and not self._edge_has_direct_conflict_signal(edge, runtime_persona):
+            return "political_contact"
+
+        return edge_type
+
     def _build_interaction_targets(
         self,
         general_id: str,
@@ -3331,6 +3555,7 @@ class NpcDialogueService:
             "location": 0.8,
             "affect": 0.6,
         }
+        preferred_non_conflict = self._preferred_non_conflict_relationships(runtime_relationships)
 
         def ensure_bucket(target_id: str) -> dict[str, Any]:
             bucket = buckets.get(target_id)
@@ -3354,18 +3579,24 @@ class NpcDialogueService:
             return bucket
 
         for edge in (runtime_relationships.get("anchors") or []):
-            target_id = str(edge.get("targetId") or "").strip()
+            target_id = self._normalize_runtime_target_id(
+                edge.get("targetId"),
+                edge.get("targetName"),
+                self._runtime_edge_source_text(edge),
+            )
             if not target_id or target_id == general_id:
                 continue
+            if target_id != str(edge.get("targetId") or "").strip():
+                edge = {**edge, "targetId": target_id}
             bucket = ensure_bucket(target_id)
             original_types = {str(item).strip() for item in (edge.get("originalTypes") or []) if str(item).strip()}
-            edge_type = str(edge.get("type") or "") or None
-            edge_label = str(edge.get("typeLabel") or edge_type or bucket["role"])
+            edge_type = self._resolve_runtime_relationship_type(edge, runtime_persona, preferred_non_conflict)
+            edge_label = self._relationship_type_label(edge_type, edge.get("typeLabel") or bucket["role"])
             if "spouse" in original_types:
                 edge_type = "spouse"
                 edge_label = "姻親 / 家室"
             edge_priority = self._relationship_display_priority(edge_type, original_types)
-            bucket["label"] = str(edge.get("targetName") or bucket["label"] or target_id)
+            bucket["label"] = self._roster_name_for(target_id, roster_index) or str(edge.get("targetName") or bucket["label"] or target_id)
             if edge_priority >= int(bucket.get("relationshipPriority") or 0):
                 bucket["role"] = edge_label
                 bucket["relationshipType"] = edge_type
@@ -3379,7 +3610,11 @@ class NpcDialogueService:
             for option in options or []:
                 refs = [str(ref) for ref in (option.get("sourceRefs") or []) if str(ref).strip()]
                 for target_id in (option.get("generalIds") or []):
-                    target_key = str(target_id or "").strip()
+                    target_key = self._normalize_runtime_target_id(
+                        str(target_id or "").strip(),
+                        option.get("label") or option.get("fullLabel"),
+                        " ".join(str(ref) for ref in refs),
+                    )
                     if not target_key or target_key == general_id:
                         continue
                     bucket = ensure_bucket(target_key)
@@ -3405,7 +3640,11 @@ class NpcDialogueService:
                 refs.append(str(source.get("sourceRef")))
             families = {str(family).strip() for family in (source.get("angleFamilies") or []) if str(family).strip()}
             for target_id in source.get("relatedGeneralIds") or []:
-                target_key = str(target_id or "").strip()
+                target_key = self._normalize_runtime_target_id(
+                    str(target_id or "").strip(),
+                    None,
+                    " ".join(str(value) for value in [source.get("summary"), source.get("sourceQuote"), source.get("quote")] if value),
+                )
                 if not target_key or target_key == general_id:
                     continue
                 bucket = ensure_bucket(target_key)
@@ -3509,6 +3748,26 @@ class NpcDialogueService:
         target_labels = {target.targetId: target.label for target in interaction_targets}
         target_by_id = {target.targetId: target for target in interaction_targets}
         female_target_ids = [target.targetId for target in interaction_targets if target.femaleFocus]
+        preferred_non_conflict = self._preferred_non_conflict_relationships(runtime_relationships)
+
+        def normalize_related_ids(raw_ids: list[Any] | None, source_text: str = "") -> list[str]:
+            related_ids: list[str] = []
+            for raw_id in raw_ids or []:
+                target_id = self._normalize_runtime_target_id(str(raw_id), None, source_text)
+                if target_id in target_labels and target_id not in related_ids:
+                    related_ids.append(target_id)
+            return related_ids
+
+        def normalize_relationship_edge(edge: dict[str, Any]) -> dict[str, Any]:
+            target_id = self._normalize_runtime_target_id(
+                edge.get("targetId"),
+                edge.get("targetName"),
+                self._runtime_edge_source_text(edge),
+            )
+            if target_id and target_id != str(edge.get("targetId") or "").strip():
+                return {**edge, "targetId": target_id}
+            return edge
+
         highlight_by_ref = {
             str(item.get("sourceRef") or "").strip(): item
             for item in (runtime_persona.get("sourceHighlights") or [])
@@ -3519,31 +3778,7 @@ class NpcDialogueService:
             refs = [str(ref) for ref in (beat.get("sourceRefs") or []) if str(ref).strip()]
             primary_ref = refs[0] if refs else ""
             families = list((highlight_by_ref.get(primary_ref) or {}).get("angleFamilies") or [])
-            related_target_ids = [
-                str(target_id)
-                for target_id in (beat.get("relatedGeneralIds") or [])
-                if str(target_id) in target_labels
-            ]
-            if not related_target_ids:
-                related_target_ids = self._detect_related_target_ids(
-                    " ".join(
-                        str(value)
-                        for value in [
-                            beat.get("summary"),
-                            beat.get("sourceQuote"),
-                            beat.get("location"),
-                        ]
-                        if value
-                    ),
-                    target_labels,
-                    female_target_ids=female_target_ids,
-                )
-            evidence_id = str(beat.get("eventId") or beat.get("eventKey") or primary_ref or f"story-beat-{len(cards)}").strip()
-            if not evidence_id or evidence_id in seen:
-                continue
-            seen.add(evidence_id)
-            chapter_no = beat.get("chapterNo")
-            classification_text = " ".join(
+            beat_text = " ".join(
                 str(value)
                 for value in [
                     beat.get("summary"),
@@ -3552,15 +3787,34 @@ class NpcDialogueService:
                 ]
                 if value
             )
+            related_target_ids = normalize_related_ids(beat.get("relatedGeneralIds"), beat_text)
+            if not related_target_ids:
+                related_target_ids = self._detect_related_target_ids(
+                    beat_text,
+                    target_labels,
+                    female_target_ids=female_target_ids,
+                )
+            evidence_id = str(beat.get("eventId") or beat.get("eventKey") or primary_ref or f"story-beat-{len(cards)}").strip()
+            if not evidence_id or evidence_id in seen:
+                continue
+            seen.add(evidence_id)
+            chapter_no = beat.get("chapterNo")
+            classification_text = beat_text
             card_angle = self._classify_narrative_angle(
                 families=families,
                 relationship_type=None,
                 related_target_ids=related_target_ids,
                 source_text=classification_text,
             )
-            related_target_ids = self._filter_related_target_ids_for_angle(card_angle, related_target_ids, target_by_id)
-            if card_angle == "emotion" and not related_target_ids and female_target_ids:
-                related_target_ids = female_target_ids[:4]
+            related_target_ids = self._filter_related_target_ids_for_angle(
+                card_angle,
+                related_target_ids,
+                target_by_id,
+                source_text=classification_text,
+                runtime_persona=runtime_persona,
+            )
+            if card_angle == "emotion" and not related_target_ids:
+                continue
             cards.append(
                 NarrativeEvidenceCard(
                     evidenceId=evidence_id,
@@ -3588,11 +3842,7 @@ class NpcDialogueService:
             families = list(highlight.get("angleFamilies") or [])
             example = str(highlight.get("example") or "").strip()
             source_ref = str(highlight.get("sourceRef") or "").strip()
-            related_target_ids = [
-                str(target_id)
-                for target_id in (highlight.get("relatedGeneralIds") or [])
-                if str(target_id) in target_labels
-            ]
+            related_target_ids = normalize_related_ids(highlight.get("relatedGeneralIds"), example)
             if not related_target_ids:
                 related_target_ids = self._detect_related_target_ids(
                     example,
@@ -3605,9 +3855,15 @@ class NpcDialogueService:
                 related_target_ids=related_target_ids,
                 source_text=example,
             )
-            related_target_ids = self._filter_related_target_ids_for_angle(card_angle, related_target_ids, target_by_id)
-            if card_angle == "emotion" and not related_target_ids and female_target_ids:
-                related_target_ids = female_target_ids[:4]
+            related_target_ids = self._filter_related_target_ids_for_angle(
+                card_angle,
+                related_target_ids,
+                target_by_id,
+                source_text=example,
+                runtime_persona=runtime_persona,
+            )
+            if card_angle == "emotion" and not related_target_ids:
+                continue
             cards.append(
                 NarrativeEvidenceCard(
                     evidenceId=evidence_id,
@@ -3625,17 +3881,38 @@ class NpcDialogueService:
                 )
             )
 
-        for edge in (runtime_relationships.get("anchors") or [])[:12]:
+        target_order = {target.targetId: index for index, target in enumerate(interaction_targets)}
+
+        def relationship_edge_sort_key(edge: dict[str, Any]) -> tuple[int, int, int, str]:
+            edge = normalize_relationship_edge(edge)
+            target_id = str(edge.get("targetId") or "").strip()
+            target = target_by_id.get(target_id)
+            resolved_type = self._resolve_runtime_relationship_type(edge, runtime_persona, preferred_non_conflict)
+            return (
+                0 if target else 1,
+                target_order.get(target_id, 999),
+                0 if target and target.relationshipType == resolved_type else 1,
+                str(edge.get("type") or ""),
+            )
+
+        for edge in sorted(runtime_relationships.get("anchors") or [], key=relationship_edge_sort_key):
             if len(cards) >= 36:
                 break
+            edge = normalize_relationship_edge(edge)
             target_id = str(edge.get("targetId") or "").strip()
-            evidence_id = f"relationship:{target_id}:{edge.get('type') or len(cards)}"
-            if not target_id or evidence_id in seen:
+            if not target_id or target_id not in target_by_id:
+                continue
+            relationship_type = self._resolve_runtime_relationship_type(edge, runtime_persona, preferred_non_conflict)
+            target = target_by_id.get(target_id)
+            if target and target.relationshipType and relationship_type != target.relationshipType:
+                relationship_type = target.relationshipType
+            evidence_id = f"relationship:{target_id}:{relationship_type or edge.get('type') or len(cards)}"
+            if evidence_id in seen:
                 continue
             seen.add(evidence_id)
-            relationship_type = str(edge.get("type") or "").strip() or None
             quote = next((str(line) for line in (edge.get("sourceQuotes") or []) if str(line).strip()), None)
             target_name = str(edge.get("targetName") or target_labels.get(target_id) or target_id)
+            relationship_label = self._relationship_type_label(relationship_type, edge.get("typeLabel"))
             cards.append(
                 NarrativeEvidenceCard(
                     evidenceId=evidence_id,
@@ -3665,7 +3942,35 @@ class NpcDialogueService:
         angle: str,
         related_target_ids: list[str],
         target_by_id: dict[str, NarrativeInteractionTarget],
+        source_text: str = "",
+        runtime_persona: dict[str, Any] | None = None,
     ) -> list[str]:
+        if angle == "emotion":
+            return [
+                target_id
+                for target_id in related_target_ids
+                if self._is_valid_emotion_target(
+                    target_by_id.get(target_id),
+                    source_text=source_text,
+                    runtime_persona=runtime_persona or {},
+                )
+            ]
+        if angle == "bond":
+            bond_types = {
+                "sworn_sibling",
+                "battle_ally",
+                "loyal_oath",
+                "protects_family",
+                "spouse",
+                "parent_child",
+                "sibling",
+                "alliance_oath",
+            }
+            return [
+                target_id
+                for target_id in related_target_ids
+                if str((target_by_id.get(target_id).relationshipType if target_by_id.get(target_id) else "") or "") in bond_types
+            ]
         if angle not in {"people", "resource", "bond"}:
             return related_target_ids
         filtered: list[str] = []
@@ -3680,6 +3985,25 @@ class NpcDialogueService:
             filtered.append(target_id)
         return filtered
 
+    def _is_valid_emotion_target(
+        self,
+        target: NarrativeInteractionTarget | None,
+        source_text: str,
+        runtime_persona: dict[str, Any],
+    ) -> bool:
+        if not target or not target.femaleFocus:
+            return False
+        relationship_type = str(target.relationshipType or "")
+        if relationship_type in {"spouse", "parent_child", "sibling", "protects_family", "lover"}:
+            return True
+        text = str(source_text or "")
+        if not self._text_mentions_runtime_actor(runtime_persona, text):
+            return False
+        if not any(alias and alias in text for alias in self._target_label_aliases(target.label)):
+            return False
+        emotion_terms = ("夫人", "家眷", "妻", "母", "女", "嫁", "婚", "去留", "煩惱", "垂淚", "思親", "情")
+        return any(term in text for term in emotion_terms)
+
     def _text_has_resource_signal(self, text: str) -> bool:
         return bool(
             re.search(
@@ -3688,6 +4012,9 @@ class NpcDialogueService:
                 str(text or ""),
             )
         )
+
+    def _text_has_battle_signal(self, text: str) -> bool:
+        return any(term in str(text or "") for term in ("戰", "兵", "軍", "殺", "攻", "追", "退", "圍", "敗", "斬", "陣", "馬"))
 
     def _classify_narrative_angle(
         self,
@@ -3704,6 +4031,10 @@ class NpcDialogueService:
             return "bond"
         if relation in {"enemy_rival", "battlefield_opponent", "betrayal_surrender"}:
             return "rival"
+        if relation in {"battlefield_contact", "political_contact"}:
+            return "people"
+        if relation in {"ruler_subject", "patron_client", "mentor_student"}:
+            return "relationship"
         if "female_interaction" in family_set:
             return "emotion"
         if "relationship" in family_set:

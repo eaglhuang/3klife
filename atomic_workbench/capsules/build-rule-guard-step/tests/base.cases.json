@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-RULE-GUARD-STEP:base:nominal",
+    "kind": "base",
+    "title": "buildRuleGuardStep 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:e40284d83200452e1193e1b128a8382e472dc3b617e8d01d1f3436d7a9bad324",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js#L17-L28"
+    ]
+  }
+]

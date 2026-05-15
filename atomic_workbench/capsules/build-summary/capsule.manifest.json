@@ -3,44 +3,41 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-BUILD-SUMMARY",
   "symbolName": "buildSummary",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+  "moduleSlug": "cli-shell-context-74c85a60",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
     "sourceRange": {
-      "startLine": 1353,
-      "endLine": 1403
+      "startLine": 544,
+      "endLine": 554
     },
-    "semanticFingerprint": "sf:sha256:74857cce385d6a4a405a14daebaedd9f273682dad22e4ee20f929122652b971b"
+    "semanticFingerprint": "sf:sha256:5d2ae2cc080b2e3ccabe63312fbde24dcc0197be693fb18cc0f91f159f7db02c"
   },
   "tier": "local-capsule",
   "recommendedTier": "local-capsule",
   "targetWorkbenchRoot": "atomic_workbench",
   "reasons": [
     "stable-behavior-name",
-    "side-effect-risk",
+    "pure-ish",
     "return-contract"
   ],
   "testStrategy": [
     "source-range-fingerprint",
     "capsule-metadata",
-    "side-effect-boundary"
+    "edge-cases"
   ],
-  "requiredCaseSets": [
-    "boundary",
-    "invalid"
-  ],
+  "requiredCaseSets": [],
   "classification": {
     "exported": false,
-    "lineCount": 51,
+    "lineCount": 11,
     "severity": "advisory",
-    "riskScore": 35,
-    "sideEffectRisk": true
+    "riskScore": 50,
+    "sideEffectRisk": false
   },
   "behaviorContract": {
     "oracleMode": "template-contract",
     "manualTestRequired": false,
-    "templateCompletenessRequired": true
+    "templateCompletenessRequired": false
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
@@ -52,22 +49,27 @@
     "tooling:tools_node/check-task-scope.js#L243",
     "tooling:tools_node/collect-execution-trace.js#L167",
     "tooling:tools_node/collect-execution-trace.js#L216",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L26",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L631",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L689",
     "workflow:tools_node/lib/html-to-ucuf/workflow/final-verdict.js#L83",
     "workflow:tools_node/lib/html-to-ucuf/workflow/final-verdict.js#L106",
     "workflow:tools_node/lib/html-to-ucuf/workflow/final-verdict.js#L148",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js#L251",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js#L306",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L46",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L417",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L428",
     "tooling:tools_node/render-atom-library-report.js#L92",
     "tooling:tools_node/render-atom-library-report.js#L232",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2255",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2266",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2310",
     "tooling:tools_node/summarize-structured-diff.js#L258",
     "tooling:tools_node/summarize-structured-diff.js#L372"
   ],
   "usageRefStats": {
-    "totalRefs": 17,
-    "distinctFiles": 7,
+    "totalRefs": 22,
+    "distinctFiles": 9,
     "distinctKinds": 2,
-    "externalRefs": 14,
+    "externalRefs": 19,
     "kinds": [
       "tooling",
       "workflow"
@@ -83,13 +85,13 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1353-L1403"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L544-L554"
     ]
   },
   "promotion": {
     "currentTier": "local-capsule",
     "history": [],
     "sourceIdentityStable": true,
-    "semanticFingerprint": "sf:sha256:74857cce385d6a4a405a14daebaedd9f273682dad22e4ee20f929122652b971b"
+    "semanticFingerprint": "sf:sha256:5d2ae2cc080b2e3ccabe63312fbde24dcc0197be693fb18cc0f91f159f7db02c"
   }
 }

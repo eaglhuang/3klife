@@ -1,0 +1,38 @@
+{
+  "schemaId": "atm.coreAnchorManifest",
+  "specVersion": "0.1.0",
+  "anchorId": "H2U-ANCHOR-QUALITY-VERDICT-UTILS-1DA9B161",
+  "kind": "core-anchor",
+  "role": "semantic-parent",
+  "logicalName": "anchor.quality-verdict-utils-1da9b161",
+  "source": {
+    "file": "tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js",
+    "lineCount": 314
+  },
+  "semanticFingerprint": "sf:sha256:d8cee43bc5e5f659617dd05f41678a552454e20fb8d0c61ce93e824911a43ccb",
+  "children": [
+    "H2U-CAPSULE-BUILD-FIDELITY-DIMENSIONS",
+    "H2U-CAPSULE-COMPUTE-DEBUG-ONLY",
+    "H2U-CAPSULE-BUILD-RUNTIME-AUTHORITY",
+    "H2U-CAPSULE-MERGE-NEXT-FIXES",
+    "H2U-CAPSULE-BUILD-PRE-RULE-GUARD-FIXES",
+    "H2U-CAPSULE-COLLECT-VISUAL-RISK-FROM-SLOT",
+    "H2U-CAPSULE-BUILD-SUMMARY",
+    "H2U-CAPSULE-TOP-RULE-GUARD-FIXES",
+    "H2U-CAPSULE-CLASSIFY-BLOCKER-CATEGORY",
+    "H2U-CAPSULE-DERIVE-BLOCKER-TAXONOMY",
+    "H2U-CAPSULE-ASSESS-VISUAL-FIDELITY-RISK"
+  ],
+  "lineage": {
+    "bornBy": "anchorize",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js"
+    ]
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "promotion": {
+    "currentTier": "core-anchor",
+    "allowSharedPromotion": false
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schemaId": "atm.coreAnchorManifest",
+  "specVersion": "0.1.0",
+  "anchorId": "H2U-ANCHOR-GATE-ORCHESTRATION-3DF999E5",
+  "kind": "core-anchor",
+  "role": "semantic-parent",
+  "logicalName": "anchor.gate-orchestration-3df999e5",
+  "source": {
+    "file": "tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js",
+    "lineCount": 69
+  },
+  "semanticFingerprint": "sf:sha256:9fc3c649258c614b30f2e0d7afeaafc06f704a4c0cab181551e8a821dd7d04ba",
+  "children": [
+    "H2U-CAPSULE-BUILD-RUNTIME-SYNC-STEP",
+    "H2U-CAPSULE-BUILD-RULE-GUARD-STEP",
+    "H2U-CAPSULE-DERIVE-GATE-SIGNALS"
+  ],
+  "lineage": {
+    "bornBy": "anchorize",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js"
+    ]
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "promotion": {
+    "currentTier": "core-anchor",
+    "allowSharedPromotion": false
+  }
+}

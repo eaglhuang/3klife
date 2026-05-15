@@ -3,15 +3,15 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-BUILD-SCREEN-LOCAL-TOKEN-PAYLOAD",
   "symbolName": "buildScreenLocalTokenPayload",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
+  "moduleSlug": "token-governance-7dfb32fb",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
     "sourceRange": {
-      "startLine": 446,
-      "endLine": 509
+      "startLine": 47,
+      "endLine": 109
     },
-    "semanticFingerprint": "sf:sha256:93095e42b8f9e9dbd6fd98ca2c4838121491a4a9ad890a9a7fcfdf4bda640594"
+    "semanticFingerprint": "sf:sha256:0d971292a18c4d584ae50e2fcf8aabce06a2c237a7c0e45200fbc21df70b9a49"
   },
   "tier": "local-capsule",
   "recommendedTier": "local-capsule",
@@ -32,7 +32,7 @@
   ],
   "classification": {
     "exported": false,
-    "lineCount": 64,
+    "lineCount": 63,
     "severity": "advisory",
     "riskScore": 35,
     "sideEffectRisk": true
@@ -45,7 +45,7 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L592"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/token-governance.js#L193"
   ],
   "usageRefStats": {
     "totalRefs": 1,
@@ -66,13 +66,13 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L446-L509"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/token-governance.js#L47-L109"
     ]
   },
   "promotion": {
     "currentTier": "local-capsule",
     "history": [],
     "sourceIdentityStable": true,
-    "semanticFingerprint": "sf:sha256:93095e42b8f9e9dbd6fd98ca2c4838121491a4a9ad890a9a7fcfdf4bda640594"
+    "semanticFingerprint": "sf:sha256:0d971292a18c4d584ae50e2fcf8aabce06a2c237a7c0e45200fbc21df70b9a49"
   }
 }

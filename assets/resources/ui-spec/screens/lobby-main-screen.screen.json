@@ -1,7 +1,7 @@
 {
   "screenId": "lobby-main-screen",
-  "layout": "lobby-main-screen",
-  "skin": "lobby-main-screen.skin",
+  "layout": "lobby-main-main",
+  "skin": "lobby-main-default",
   "layoutRef": "artifacts/html-to-ucuf-plan5/lobby-main-screen/lobby-main-screen.final.layout.json",
   "skinRef": "artifacts/html-to-ucuf-plan5/lobby-main-screen/lobby-main-screen.final.skin.json",
   "meta": {

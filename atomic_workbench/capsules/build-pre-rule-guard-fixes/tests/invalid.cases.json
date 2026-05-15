@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-PRE-RULE-GUARD-FIXES:invalid:null",
+    "kind": "invalid",
+    "title": "buildPreRuleGuardFixes null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:179c28f170d7412b2a1f0564f2b779701e3ceccb0f13a54a347bf6c320b11256",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-PRE-RULE-GUARD-FIXES:invalid:type",
+    "kind": "invalid",
+    "title": "buildPreRuleGuardFixes 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:179c28f170d7412b2a1f0564f2b779701e3ceccb0f13a54a347bf6c320b11256",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

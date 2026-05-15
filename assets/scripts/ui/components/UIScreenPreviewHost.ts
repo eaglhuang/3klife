@@ -167,6 +167,8 @@ export class UIScreenPreviewHost extends UIPreviewBuilder {
         this._isLoading = true;
         try {
             this._destroyBuiltChildren();
+            // 強制讓 specLoader 重新從磁碟載入最新 spec（清除 session 快取中的舊值）
+            this._specLoader.invalidateScreen(screenId);
 
             const { screen, layout, skin } = await this._specLoader.loadFullScreen(screenId);
             const i18n = await this._specLoader.loadI18n(this.locale);

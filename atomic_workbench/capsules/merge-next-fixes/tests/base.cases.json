@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-MERGE-NEXT-FIXES:base:nominal",
+    "kind": "base",
+    "title": "mergeNextFixes 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:88845893484891b13eab516f9f5b2a0cac712929f39082a912269cf7ff5169e0",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js#L111-L127"
+    ]
+  }
+]

@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-WRITE-SUMMARY-AND-EXIT",
   "symbolName": "writeSummaryAndExit",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+  "moduleSlug": "cli-shell-context-74c85a60",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
     "sourceRange": {
-      "startLine": 2308,
-      "endLine": 2333
+      "startLine": 629,
+      "endLine": 654
     },
     "semanticFingerprint": "sf:sha256:2d5a20f19a66c636ead68b1492a05b79394f61ed3a2cf3e248926b648e728cc8"
   },
@@ -43,19 +43,21 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1929",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1955",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1999",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2010",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2021",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2079",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2119"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L701",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L16",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L91",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L117",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L161",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L172",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L183",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L241",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L281"
   ],
   "usageRefStats": {
-    "totalRefs": 7,
-    "distinctFiles": 1,
+    "totalRefs": 9,
+    "distinctFiles": 2,
     "distinctKinds": 1,
-    "externalRefs": 0,
+    "externalRefs": 8,
     "kinds": [
       "workflow"
     ]
@@ -70,7 +72,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L2308-L2333"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L629-L654"
     ]
   },
   "promotion": {

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-TAB-ROUTING-MAP:invalid:null",
+    "kind": "invalid",
+    "title": "buildRuntimeTabRoutingMap null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:46e118e0487c2e35b27257efdeb6b26a812d4fb2fa624ed7f98c693714cb717f",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-TAB-ROUTING-MAP:invalid:type",
+    "kind": "invalid",
+    "title": "buildRuntimeTabRoutingMap 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:46e118e0487c2e35b27257efdeb6b26a812d4fb2fa624ed7f98c693714cb717f",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

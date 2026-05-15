@@ -3,15 +3,15 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-APPLY-SCREEN-LOCAL-COLOR-TOKENS-TO-SKIN",
   "symbolName": "applyScreenLocalColorTokensToSkin",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
+  "moduleSlug": "token-governance-7dfb32fb",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
     "sourceRange": {
-      "startLine": 543,
-      "endLine": 586
+      "startLine": 143,
+      "endLine": 186
     },
-    "semanticFingerprint": "sf:sha256:0d084d1e7dfe67558ea44ce0402a63a7582416abb9cd9bcc1250850d04ba6341"
+    "semanticFingerprint": "sf:sha256:bc67f7d10c948e4a86f4139f0b99ed5b5f6d733184adb62e4cb0113fe6b815b7"
   },
   "tier": "local-capsule",
   "recommendedTier": "local-capsule",
@@ -42,7 +42,7 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L594"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/token-governance.js#L195"
   ],
   "usageRefStats": {
     "totalRefs": 1,
@@ -63,13 +63,13 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L543-L586"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/token-governance.js#L143-L186"
     ]
   },
   "promotion": {
     "currentTier": "local-capsule",
     "history": [],
     "sourceIdentityStable": true,
-    "semanticFingerprint": "sf:sha256:0d084d1e7dfe67558ea44ce0402a63a7582416abb9cd9bcc1250850d04ba6341"
+    "semanticFingerprint": "sf:sha256:bc67f7d10c948e4a86f4139f0b99ed5b5f6d733184adb62e4cb0113fe6b815b7"
   }
 }

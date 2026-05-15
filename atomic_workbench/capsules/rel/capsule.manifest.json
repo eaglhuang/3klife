@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-REL",
   "symbolName": "rel",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+  "moduleSlug": "cli-shell-context-74c85a60",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
     "sourceRange": {
-      "startLine": 146,
-      "endLine": 149
+      "startLine": 40,
+      "endLine": 42
     },
     "semanticFingerprint": "sf:sha256:7f28c47a5af0e97257edc79f0951e9ba230cd11ce4260392fbc39705c80b7d46"
   },
@@ -28,7 +28,7 @@
   "requiredCaseSets": [],
   "classification": {
     "exported": false,
-    "lineCount": 4,
+    "lineCount": 3,
     "severity": "advisory",
     "riskScore": 25,
     "sideEffectRisk": false
@@ -85,7 +85,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L146-L149"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L40-L42"
     ]
   },
   "promotion": {

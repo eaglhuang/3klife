@@ -1,0 +1,79 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-REGENERATE-SCREEN-LOCAL-TOKENS",
+  "symbolName": "regenerateScreenLocalTokens",
+  "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+  "moduleSlug": "cli-shell-context-74c85a60",
+  "source": {
+    "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
+    "sourceRange": {
+      "startLine": 297,
+      "endLine": 310
+    },
+    "semanticFingerprint": "sf:sha256:0c84647ffcb8829da37b02f59fb5c7b0ea6ed2cdb15af3363f7e32dceec21fa8"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [],
+  "classification": {
+    "exported": false,
+    "lineCount": 14,
+    "severity": "advisory",
+    "riskScore": 25,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": false
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L24",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L673",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/token-governance.js#L188",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/token-governance.js#L229",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L27",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L261"
+  ],
+  "usageRefStats": {
+    "totalRefs": 6,
+    "distinctFiles": 3,
+    "distinctKinds": 1,
+    "externalRefs": 4,
+    "kinds": [
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated regenerateScreenLocalTokens"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L297-L310"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:0c84647ffcb8829da37b02f59fb5c7b0ea6ed2cdb15af3363f7e32dceec21fa8"
+  }
+}

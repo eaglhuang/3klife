@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-RUN-WORKFLOW-MAIN:invalid:null",
+    "kind": "invalid",
+    "title": "runWorkflowMain null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:146b58740a2dfd3ec218fe5a60cbee9b37a500499425e1d23f911728cfad162f",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-RUN-WORKFLOW-MAIN:invalid:type",
+    "kind": "invalid",
+    "title": "runWorkflowMain 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:146b58740a2dfd3ec218fe5a60cbee9b37a500499425e1d23f911728cfad162f",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

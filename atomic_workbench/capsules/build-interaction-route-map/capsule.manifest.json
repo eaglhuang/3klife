@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-BUILD-INTERACTION-ROUTE-MAP",
   "symbolName": "buildInteractionRouteMap",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
+  "moduleSlug": "interaction-smoke-f0cad253",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js",
     "sourceRange": {
-      "startLine": 1789,
-      "endLine": 1807
+      "startLine": 27,
+      "endLine": 45
     },
     "semanticFingerprint": "sf:sha256:15a34010d4bb67eb6aedb708880c7b97ba9eb4cd06f27371557572fbe8a184a5"
   },
@@ -42,7 +42,7 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1707"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js#L137"
   ],
   "usageRefStats": {
     "totalRefs": 1,
@@ -63,7 +63,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1789-L1807"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js#L27-L45"
     ]
   },
   "promotion": {

@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-NORMALIZE-COLOR-VALUE",
   "symbolName": "normalizeColorValue",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
+  "moduleSlug": "token-governance-7dfb32fb",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
     "sourceRange": {
-      "startLine": 409,
-      "endLine": 429
+      "startLine": 10,
+      "endLine": 30
     },
     "semanticFingerprint": "sf:sha256:4284c51a9869ee2ebc5bc4e079a77c5f6959a781e5ab337717bb9bffe8efa396"
   },
@@ -42,9 +42,9 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L454",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L535",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L571"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/token-governance.js#L55",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/token-governance.js#L135",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/token-governance.js#L171"
   ],
   "usageRefStats": {
     "totalRefs": 3,
@@ -65,7 +65,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L409-L429"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/token-governance.js#L10-L30"
     ]
   },
   "promotion": {

@@ -17,6 +17,7 @@ DEFAULT_PILOT_REPORT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/e
 DEFAULT_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds")
 DEFAULT_REVIEW_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot")
+DEFAULT_CHAPTERS_ROOT = Path("artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters")
 DEFAULT_DEEPSEEK_API_URL = "http://172.31.80.1:11435/api/chat"
 REPO_ROOT = resolve_repo_root(__file__)
 PIPELINE_ROOT = pipeline_root(REPO_ROOT)
@@ -53,6 +54,8 @@ def utc_now() -> str:
 
 
 def read_json(path: Path) -> dict:
+    if not path.exists():
+        return {}
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -65,6 +68,18 @@ def read_jsonl(path: Path) -> list[dict]:
 def write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def resolve_chapters_root() -> Path:
+    candidates = [
+        (REPO_ROOT / DEFAULT_CHAPTERS_ROOT).resolve(),
+        (REPO_ROOT.parent / DEFAULT_CHAPTERS_ROOT).resolve(),
+        (REPO_ROOT.parent.parent / DEFAULT_CHAPTERS_ROOT).resolve(),
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return candidates[0]
 
 
 def choose_cohort(pilot: dict, max_generals: int, cohort_offset: int = 0, general_ids: list[str] | None = None) -> list[dict]:
@@ -329,6 +344,7 @@ def run_for_general(args: argparse.Namespace, row: dict) -> dict:
     general_id = str(row.get("generalId") or "").strip()
     if not general_id:
         return failed_general_result(row, "missing generalId in cohort row")
+    chapters_root = resolve_chapters_root()
     output_dir = Path(args.review_root) / f"event-review-{general_id}"
     choices_path = output_dir / f"event-review-choices.{general_id}.md"
     answers_path = output_dir / f"event-review-answers.{general_id}.todo.json"
@@ -353,6 +369,8 @@ def run_for_general(args: argparse.Namespace, row: dict) -> dict:
         str(PIPELINE_ROOT / "enrich_event_review_context.py"),
         "--answers",
         str(answers_path),
+        "--chapters-root",
+        str(chapters_root),
         "--reviewer-preset",
         args.reviewer_preset,
         "--api-url",
@@ -554,11 +572,31 @@ def render_markdown(report: dict) -> str:
 def main() -> None:
     args = parse_args()
     candidates = read_jsonl(Path(args.candidates))
+    pilot_path = Path(args.pilot_report)
+    cohort_source = "live-candidates"
     if candidates:
         cohort = choose_live_candidate_cohort(candidates, args.max_generals, args.cohort_offset, args.general_id)
     else:
-        pilot = read_json(Path(args.pilot_report))
+        pilot = read_json(pilot_path)
         cohort = choose_cohort(pilot, args.max_generals, args.cohort_offset, args.general_id)
+        cohort_source = "pilot-report" if pilot else "empty-fallback"
+
+    if not cohort and args.general_id:
+        # When both candidates and pilot report are unavailable, still honor explicit general targets
+        # so outer repair loops can continue without hard-failing.
+        cohort = [
+            {
+                "generalId": str(general_id or "").strip(),
+                "displayName": str(general_id or "").strip(),
+                "status": "fallback-general-id",
+                "genericCandidateCount": 0,
+                "keywordTotal": 0,
+            }
+            for general_id in args.general_id
+            if str(general_id or "").strip()
+        ]
+        if cohort:
+            cohort_source = "explicit-general-fallback"
     results = []
     for row in cohort:
         try:
@@ -574,6 +612,8 @@ def main() -> None:
         "promptOnly": args.prompt_only,
         "apiUrl": args.api_url,
         "candidatesPath": args.candidates,
+        "pilotReportPath": args.pilot_report,
+        "cohortSource": cohort_source,
         "reviewerPreset": args.reviewer_preset,
         "reviewerProvider": args.reviewer_provider,
         "model": args.model,

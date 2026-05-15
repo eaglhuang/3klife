@@ -1,0 +1,79 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-DERIVE-GATE-SIGNALS",
+  "symbolName": "deriveGateSignals",
+  "anchorId": "H2U-ANCHOR-GATE-ORCHESTRATION-3DF999E5",
+  "moduleSlug": "gate-orchestration-3df999e5",
+  "source": {
+    "file": "tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js",
+    "sourceRange": {
+      "startLine": 29,
+      "endLine": 61
+    },
+    "semanticFingerprint": "sf:sha256:74f5b2e397af26d05c6f2d2cf4d8b4fd6ee0178656031eeb637051c3f7438f26"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "exported",
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [],
+  "classification": {
+    "exported": true,
+    "lineCount": 33,
+    "severity": "block-if-untested",
+    "riskScore": 60,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": false
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "workflow:tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js#L66",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L42",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L381",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L12",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L169"
+  ],
+  "usageRefStats": {
+    "totalRefs": 5,
+    "distinctFiles": 3,
+    "distinctKinds": 1,
+    "externalRefs": 4,
+    "kinds": [
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated deriveGateSignals"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js#L29-L61"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:74f5b2e397af26d05c6f2d2cf4d8b4fd6ee0178656031eeb637051c3f7438f26"
+  }
+}

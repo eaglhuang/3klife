@@ -1,0 +1,80 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-FINALIZE-WORKFLOW-VERDICT",
+  "symbolName": "finalizeWorkflowVerdict",
+  "anchorId": "H2U-ANCHOR-FINAL-VERDICT-2E58DEC4",
+  "moduleSlug": "final-verdict-2e58dec4",
+  "source": {
+    "file": "tools_node/lib/html-to-ucuf/workflow/final-verdict.js",
+    "sourceRange": {
+      "startLine": 57,
+      "endLine": 172
+    },
+    "semanticFingerprint": "sf:sha256:d50ce0b08c55a2ef5b2bdba2228dc0c7fbffeefda375ae6510f8b2d0f4c8dcad"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "exported",
+    "medium-function",
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [],
+  "classification": {
+    "exported": true,
+    "lineCount": 116,
+    "severity": "block-if-untested",
+    "riskScore": 75,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": false
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "workflow:tools_node/lib/html-to-ucuf/workflow/final-verdict.js#L176",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L43",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L393",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L14",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L170"
+  ],
+  "usageRefStats": {
+    "totalRefs": 5,
+    "distinctFiles": 3,
+    "distinctKinds": 1,
+    "externalRefs": 4,
+    "kinds": [
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated finalizeWorkflowVerdict"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/final-verdict.js#L57-L172"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:d50ce0b08c55a2ef5b2bdba2228dc0c7fbffeefda375ae6510f8b2d0f4c8dcad"
+  }
+}

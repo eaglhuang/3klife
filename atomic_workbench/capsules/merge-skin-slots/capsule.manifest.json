@@ -3,15 +3,15 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-MERGE-SKIN-SLOTS",
   "symbolName": "mergeSkinSlots",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
+  "moduleSlug": "per-tab-replay-e0734ba6",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
     "sourceRange": {
-      "startLine": 1082,
-      "endLine": 1100
+      "startLine": 129,
+      "endLine": 147
     },
-    "semanticFingerprint": "sf:sha256:eb8b511db645e73126ba19d04c13813e5880d83f1c8d97b659b8cef6e71c0af8"
+    "semanticFingerprint": "sf:sha256:0a2973151ba494de8e0ef9090f273c9a30c23caf74a91c710d4cc7b7d3cf8e00"
   },
   "tier": "local-capsule",
   "recommendedTier": "local-capsule",
@@ -45,7 +45,7 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1268"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L315"
   ],
   "usageRefStats": {
     "totalRefs": 1,
@@ -66,13 +66,13 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1082-L1100"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L129-L147"
     ]
   },
   "promotion": {
     "currentTier": "local-capsule",
     "history": [],
     "sourceIdentityStable": true,
-    "semanticFingerprint": "sf:sha256:eb8b511db645e73126ba19d04c13813e5880d83f1c8d97b659b8cef6e71c0af8"
+    "semanticFingerprint": "sf:sha256:0a2973151ba494de8e0ef9090f273c9a30c23caf74a91c710d4cc7b7d3cf8e00"
   }
 }

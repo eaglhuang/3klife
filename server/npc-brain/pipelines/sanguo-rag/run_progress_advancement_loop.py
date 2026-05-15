@@ -65,6 +65,29 @@ LOCATION_STRONG_PATTERN = re.compile(r"([一-龥]{1,4}(?:州|郡|縣|城|關|渡
 LOCATION_BAD_PREFIX = {"上", "下", "出", "入", "攻", "守", "聞", "戰", "至", "在", "於"}
 
 
+LOCATION_FROM_CUE_PATTERN = re.compile(
+    r"(?:在|於|至|屯於|駐於|守於|戰於|會於|攻克|進軍|退守)"
+    r"([\u4e00-\u9fff]{1,8}(?:州|郡|縣|城|關|渡|津|寨|山|水|口|原|川|都|京)?)"
+)
+LOCATION_STRONG_PATTERN = re.compile(
+    r"([\u4e00-\u9fff]{2,8}(?:州|郡|縣|城|關|渡|津|寨|山|水|口|原|川|都|京))"
+)
+LOCATION_BAD_PREFIX = {"上", "下", "出", "入", "攻", "守", "聞", "戰", "至", "在", "於"}
+LOCATION_STOP_TOKENS = {"人物", "事件", "關係", "武將", "候選", "段落"}
+
+# Canonical deterministic location heuristics (override any legacy/mojibake patterns above).
+LOCATION_SUFFIX_PATTERN = re.compile(r"(州|郡|縣|城|關|渡|津|寨|山|水|口|原|川|都|京)$")
+LOCATION_FROM_CUE_PATTERN = re.compile(
+    r"(?:在|於|至|屯於|駐於|守於|戰於|會於|攻克|進軍|退守)"
+    r"([\u4e00-\u9fff]{1,8}(?:州|郡|縣|城|關|渡|津|寨|山|水|口|原|川|都|京)?)"
+)
+LOCATION_STRONG_PATTERN = re.compile(
+    r"([\u4e00-\u9fff]{2,8}(?:州|郡|縣|城|關|渡|津|寨|山|水|口|原|川|都|京))"
+)
+LOCATION_BAD_PREFIX = {"上", "下", "出", "入", "攻", "守", "聞", "戰", "至", "在", "於"}
+LOCATION_STOP_TOKENS = {"人物", "事件", "關係", "武將", "候選", "段落", "入城", "出城"}
+
+
 def utc_stamp() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
 
@@ -136,6 +159,27 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
             continue
         rows.append(json.loads(line))
     return rows
+
+
+def jsonl_count(path: Path) -> int:
+    if not path.exists():
+        return 0
+    count = 0
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            if line.strip():
+                count += 1
+    return count
+
+
+def prefer_richer_jsonl(generated_path: Path, baseline_path: Path | None) -> Path:
+    if baseline_path is None or not baseline_path.exists():
+        return generated_path
+    generated_count = jsonl_count(generated_path)
+    baseline_count = jsonl_count(baseline_path)
+    if generated_count >= baseline_count:
+        return generated_path
+    return baseline_path
 
 
 def write_json(path: Path, payload: Any) -> None:
@@ -332,6 +376,27 @@ def existing_round_json_paths(base_progress_path: str | Path) -> list[str]:
     return resolved_rows
 
 
+def _to_int(value: Any) -> int:
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def round_batch_has_quality_signal(path: Path) -> bool:
+    payload = read_json(path)
+    results = list((payload if isinstance(payload, dict) else {}).get("results") or [])
+    if not results:
+        return False
+    for result in results:
+        if not isinstance(result, dict):
+            continue
+        enrich = result.get("enrich") if isinstance(result.get("enrich"), dict) else {}
+        if _to_int(enrich.get("returnCode")) == 0:
+            return True
+    return False
+
+
 def parse_bridge_fields(raw_fields: str) -> set[str]:
     allowed = {"location", "relationshipEdges"}
     rows = [token.strip() for token in str(raw_fields or "").split(",")]
@@ -378,6 +443,94 @@ def candidate_paths_from_progress(base_progress_path: str | Path) -> list[Path]:
         seen.add(key)
         rows.append(resolved)
     return rows
+
+
+def build_source_ref_general_index(candidate_paths: list[Path]) -> dict[str, list[str]]:
+    index: dict[str, list[str]] = {}
+    for path in candidate_paths:
+        path_key = str(path).replace("\\", "/").lower()
+        if "source-event-packets" not in path_key:
+            continue
+        for row in read_jsonl(path):
+            source_ref = str(row.get("sourceRef") or row.get("source_ref") or "").strip()
+            if not source_ref:
+                continue
+            general_ids = [str(value or "").strip() for value in (row.get("generalIds") or []) if str(value or "").strip()]
+            if not general_ids:
+                continue
+            bucket = index.setdefault(source_ref, [])
+            for general_id in general_ids:
+                if general_id in bucket:
+                    continue
+                bucket.append(general_id)
+                if len(bucket) >= 24:
+                    break
+    return index
+
+
+def infer_general_ids_from_item(
+    item: dict[str, Any],
+    edits: dict[str, Any],
+    source_ref_general_index: dict[str, list[str]] | None = None,
+    *,
+    max_generals: int = 7,
+) -> list[str]:
+    source_ref_general_index = source_ref_general_index or {}
+    max_keep = max(int(max_generals), 2)
+
+    existing = [
+        str(value or "").strip()
+        for value in (edits.get("generalIds") or [])
+        if str(value or "").strip() and not str(value or "").strip().startswith("romance-person-")
+    ]
+    if existing:
+        ordered_existing = list(dict.fromkeys(existing))
+        return ordered_existing[:max_keep]
+
+    original = [
+        str(value or "").strip()
+        for value in (item.get("generalIds") or [])
+        if str(value or "").strip() and not str(value or "").strip().startswith("romance-person-")
+    ]
+
+    result: list[str] = []
+    seen: set[str] = set()
+
+    def push(general_id: str) -> None:
+        gid = str(general_id or "").strip()
+        if not gid or gid.startswith("romance-person-") or gid in seen:
+            return
+        seen.add(gid)
+        result.append(gid)
+
+    focus_general_id = str(item.get("generalId") or "").strip()
+    if focus_general_id:
+        push(focus_general_id)
+
+    for edge in list(edits.get("relationshipEdges") or []):
+        push(str(edge.get("fromId") or ""))
+        push(str(edge.get("toId") or ""))
+        if len(result) >= max_keep:
+            return result[:max_keep]
+
+    source_refs = [str(ref or "").strip() for ref in (item.get("sourceRefs") or []) if str(ref or "").strip()]
+    rank_counts: dict[str, int] = {}
+    for source_ref in source_refs:
+        for general_id in source_ref_general_index.get(source_ref) or []:
+            gid = str(general_id or "").strip()
+            if not gid or gid.startswith("romance-person-"):
+                continue
+            rank_counts[gid] = int(rank_counts.get(gid) or 0) + 1
+    for gid, _ in sorted(rank_counts.items(), key=lambda pair: (-int(pair[1]), pair[0])):
+        push(gid)
+        if len(result) >= max_keep:
+            return result[:max_keep]
+
+    for gid in original:
+        push(gid)
+        if len(result) >= max_keep:
+            return result[:max_keep]
+    return result[:max_keep]
 
 
 def candidate_sort_key(candidate: dict[str, Any]) -> tuple[Any, ...]:
@@ -959,6 +1112,14 @@ def apply_review_decisions_to_questions(questions: list[dict[str, Any]], decisio
             merged_edits = dict(question.get("edits") or {})
             merged_edits.update(edits)
             question["edits"] = merged_edits
+            if isinstance(merged_edits.get("generalIds"), list):
+                normalized_general_ids = [
+                    str(value or "").strip()
+                    for value in merged_edits.get("generalIds") or []
+                    if str(value or "").strip()
+                ]
+                if normalized_general_ids:
+                    question["generalIds"] = list(dict.fromkeys(normalized_general_ids))
 
             # Keep missingFields in sync when human/auto decisions provide concrete edits.
             current_missing = [str(field or "").strip() for field in question.get("missingFields") or [] if str(field or "").strip()]
@@ -1006,10 +1167,11 @@ def classify_root_cause(item: dict[str, Any]) -> str:
 
     missing_fields = {str(value or "").strip() for value in item.get("missingFields") or []}
     source_refs = list(item.get("sourceRefs") or [])
-    general_ids = [str(value or "").strip() for value in item.get("generalIds") or [] if str(value or "").strip()]
-    unresolved_general_ids = [value for value in general_ids if value.startswith("romance-person-")]
     edits = dict(item.get("edits") or {})
-    location = str(edits.get("location") or "").strip()
+    edited_general_ids = [str(value or "").strip() for value in (edits.get("generalIds") or []) if str(value or "").strip()]
+    general_ids = edited_general_ids or [str(value or "").strip() for value in item.get("generalIds") or [] if str(value or "").strip()]
+    unresolved_general_ids = [value for value in general_ids if value.startswith("romance-person-")]
+    location = str(normalize_location_candidate(edits.get("location")) or "").strip()
     relationship_edges = list(edits.get("relationshipEdges") or [])
 
     if "sourceRefs" in missing_fields or not source_refs:
@@ -1335,6 +1497,30 @@ def normalize_root_cause_values(values: list[str], *, include_location_gap: bool
     return normalized
 
 
+def normalize_location_candidate(value: Any) -> str | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    compact = " ".join(text.split()).strip(" ,.;:!?()[]{}<>\"'`")
+    if not compact:
+        return None
+    if compact in LOCATION_STOP_TOKENS:
+        return None
+    if compact[0] in LOCATION_BAD_PREFIX:
+        return None
+    if len(compact) < 1 or len(compact) > 12:
+        return None
+    if len(compact) >= 5 and not LOCATION_SUFFIX_PATTERN.search(compact):
+        return None
+    noisy_tokens = ("然後", "請", "曰", "說", "命", "令", "嫂", "夫人")
+    if any(token in compact for token in noisy_tokens):
+        return None
+    question_marks = compact.count("?") + compact.count("？")
+    if question_marks > 0 and question_marks >= max(1, len(compact) // 2):
+        return None
+    return compact
+
+
 def extract_location_candidate(text: Any) -> str | None:
     raw_text = str(text or "").strip()
     if not raw_text:
@@ -1342,21 +1528,47 @@ def extract_location_candidate(text: Any) -> str | None:
     compact = " ".join(raw_text.split())
     for pattern in (LOCATION_FROM_CUE_PATTERN, LOCATION_STRONG_PATTERN):
         for match in pattern.finditer(compact):
-            value = str(match.group(1) or "").strip(" ，。、《》「」『』()（）[]")
-            if not value:
-                continue
-            if len(value) < 2 or len(value) > 5:
-                continue
-            if value[0] in LOCATION_BAD_PREFIX:
-                continue
-            return value
+            value = normalize_location_candidate(match.group(1))
+            if value:
+                return value
     return None
 
 
-def infer_location_from_item(item: dict[str, Any], edits: dict[str, Any]) -> str | None:
+def build_source_ref_location_index(candidate_paths: list[Path]) -> dict[str, list[str]]:
+    index: dict[str, list[str]] = {}
+    for path in candidate_paths:
+        path_key = str(path).replace("\\", "/").lower()
+        if "generic-battle-candidates" not in path_key and "female-interaction-candidates" not in path_key:
+            continue
+        for row in read_jsonl(path):
+            location_value = normalize_location_candidate(row.get("location"))
+            if not location_value:
+                location_value = extract_location_candidate(row.get("summary"))
+            if not location_value:
+                location_value = extract_location_candidate(row.get("sourceQuote"))
+            if not location_value:
+                continue
+            refs = [str(ref or "").strip() for ref in (row.get("sourceRefs") or []) if str(ref or "").strip()]
+            for source_ref in refs:
+                bucket = index.setdefault(source_ref, [])
+                if location_value in bucket:
+                    continue
+                bucket.append(location_value)
+                if len(bucket) >= 8:
+                    break
+    return index
+
+
+def infer_location_from_item(
+    item: dict[str, Any],
+    edits: dict[str, Any],
+    source_ref_location_index: dict[str, list[str]] | None = None,
+) -> str | None:
     existing = str(edits.get("location") or "").strip()
-    if existing:
-        return existing
+    normalized_existing = normalize_location_candidate(existing)
+    if normalized_existing:
+        return normalized_existing
+    source_ref_location_index = source_ref_location_index or {}
     texts = [
         edits.get("summary"),
         item.get("summary"),
@@ -1366,15 +1578,340 @@ def infer_location_from_item(item: dict[str, Any], edits: dict[str, Any]) -> str
         candidate = extract_location_candidate(text)
         if candidate:
             return candidate
+
+    source_refs = [str(ref or "").strip() for ref in (item.get("sourceRefs") or []) if str(ref or "").strip()]
+    for source_ref in source_refs:
+        for candidate in source_ref_location_index.get(source_ref) or []:
+            normalized = normalize_location_candidate(candidate)
+            if normalized:
+                return normalized
     return None
+
+
+def normalize_relationship_edge(edge: dict[str, Any], *, fallback_source_ref: str) -> dict[str, Any] | None:
+    from_id = str(edge.get("fromId") or "").strip()
+    to_id = str(edge.get("toId") or "").strip()
+    if not from_id or not to_id:
+        return None
+    relation_type = str(edge.get("type") or edge.get("originalType") or "interacts_with").strip() or "interacts_with"
+    evidence_refs = [str(ref or "").strip() for ref in (edge.get("evidenceRefs") or []) if str(ref or "").strip()]
+    if fallback_source_ref and fallback_source_ref not in evidence_refs:
+        evidence_refs = [fallback_source_ref, *evidence_refs]
+    return {
+        "fromId": from_id,
+        "toId": to_id,
+        "type": relation_type,
+        "evidenceRefs": evidence_refs[:4],
+        "edgeConfidence": float(edge.get("edgeConfidence") or 0.7),
+        "edgeStrength": float(edge.get("edgeStrength") or 0.7),
+    }
+
+
+def is_item_style_relationship(from_id: str, to_id: str, relation_type: str) -> bool:
+    relation_key = str(relation_type or "").strip().lower()
+    if relation_key.startswith("item_"):
+        return True
+    endpoint_prefixes = (
+        "item:",
+        "item-",
+        "weapon:",
+        "armor:",
+        "mount:",
+        "document:",
+        "insignia:",
+        "supply:",
+        "treasure:",
+        "vehicle:",
+    )
+    lower_from = str(from_id or "").strip().lower()
+    lower_to = str(to_id or "").strip().lower()
+    return any(lower_from.startswith(prefix) or lower_to.startswith(prefix) for prefix in endpoint_prefixes)
+
+
+def build_relationship_edge_index(path_text: str | Path) -> dict[str, list[dict[str, Any]]]:
+    path = resolve_path(path_text)
+    rows = read_jsonl(path)
+    index: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        refs = [str(ref or "").strip() for ref in (row.get("evidenceRefs") or []) if str(ref or "").strip()]
+        if not refs:
+            continue
+        for ref in refs:
+            bucket = index.setdefault(ref, [])
+            if len(bucket) >= 12:
+                continue
+            normalized = normalize_relationship_edge(row, fallback_source_ref=ref)
+            if normalized:
+                bucket.append(normalized)
+    return index
+
+
+def build_relationship_pair_index(path_text: str | Path) -> dict[tuple[str, str], list[dict[str, Any]]]:
+    path = resolve_path(path_text)
+    rows = read_jsonl(path)
+    index: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for row in rows:
+        normalized = normalize_relationship_edge(row, fallback_source_ref="")
+        if not normalized:
+            continue
+        from_id = str(normalized.get("fromId") or "").strip()
+        to_id = str(normalized.get("toId") or "").strip()
+        if not from_id or not to_id:
+            continue
+        bucket = index.setdefault((from_id, to_id), [])
+        if len(bucket) >= 8:
+            continue
+        bucket.append(normalized)
+    return index
+
+
+def infer_relationship_edges_from_item(
+    item: dict[str, Any],
+    edits: dict[str, Any],
+    relationship_edge_index: dict[str, list[dict[str, Any]]],
+    relationship_pair_index: dict[tuple[str, str], list[dict[str, Any]]] | None = None,
+    source_ref_general_index: dict[str, list[str]] | None = None,
+    allow_generic_fallback: bool = True,
+) -> list[dict[str, Any]]:
+    existing_edges = list(edits.get("relationshipEdges") or [])
+    if existing_edges:
+        return existing_edges
+
+    current_edges = list(item.get("currentRelationshipEdges") or [])
+    if current_edges:
+        return current_edges
+
+    relationship_pair_index = relationship_pair_index or {}
+    source_ref_general_index = source_ref_general_index or {}
+    if not relationship_edge_index and not source_ref_general_index:
+        return []
+
+    focus_general_ids = [
+        str(value or "").strip()
+        for value in (item.get("generalIds") or [])
+        if str(value or "").strip() and not str(value or "").strip().startswith("romance-person-")
+    ]
+    if not focus_general_ids:
+        fallback_focus_general_id = str(item.get("generalId") or "").strip()
+        if fallback_focus_general_id and not fallback_focus_general_id.startswith("romance-person-"):
+            focus_general_ids = [fallback_focus_general_id]
+    focus_set = set(focus_general_ids)
+    source_refs = [str(ref or "").strip() for ref in (item.get("sourceRefs") or []) if str(ref or "").strip()]
+    if not focus_general_ids and source_refs and source_ref_general_index:
+        focus_counts: dict[str, int] = {}
+        for source_ref in source_refs:
+            for general_id in source_ref_general_index.get(source_ref) or []:
+                canonical_general_id = str(general_id or "").strip()
+                if not canonical_general_id or canonical_general_id.startswith("romance-person-"):
+                    continue
+                focus_counts[canonical_general_id] = int(focus_counts.get(canonical_general_id) or 0) + 1
+        if focus_counts:
+            focus_general_ids = [
+                general_id
+                for general_id, _ in sorted(focus_counts.items(), key=lambda item: (-int(item[1]), item[0]))[:2]
+            ]
+            focus_set = set(focus_general_ids)
+    inferred: list[dict[str, Any]] = []
+    seen_keys: set[tuple[str, str, str]] = set()
+    for source_ref in source_refs:
+        for edge in relationship_edge_index.get(source_ref) or []:
+            from_id = str(edge.get("fromId") or "").strip()
+            to_id = str(edge.get("toId") or "").strip()
+            relation_type = str(edge.get("type") or "").strip()
+            if not from_id or not to_id:
+                continue
+            if from_id.startswith("romance-person-") or to_id.startswith("romance-person-"):
+                continue
+            if is_item_style_relationship(from_id, to_id, relation_type):
+                continue
+            if focus_set and from_id not in focus_set and to_id not in focus_set:
+                continue
+            key = (from_id, to_id, relation_type)
+            if key in seen_keys:
+                continue
+            seen_keys.add(key)
+            inferred.append(edge)
+            if len(inferred) >= 4:
+                return inferred
+
+    if inferred or not source_ref_general_index:
+        return inferred
+
+    if not focus_general_ids or not source_refs:
+        return inferred
+
+    candidate_partner_counts: dict[str, int] = {}
+    partner_source_ref: dict[str, str] = {}
+    for source_ref in source_refs:
+        for partner_general_id in source_ref_general_index.get(source_ref) or []:
+            partner_id = str(partner_general_id or "").strip()
+            if not partner_id or partner_id in focus_set or partner_id.startswith("romance-person-"):
+                continue
+            candidate_partner_counts[partner_id] = int(candidate_partner_counts.get(partner_id) or 0) + 1
+            partner_source_ref.setdefault(partner_id, source_ref)
+
+    if not candidate_partner_counts:
+        # Fallback: when sourceRef partner mining returns only the same cohort,
+        # build edges from participants already present in the item itself.
+        row_general_ids = [
+            str(value or "").strip()
+            for value in (item.get("generalIds") or [])
+            if str(value or "").strip() and not str(value or "").strip().startswith("romance-person-")
+        ]
+        row_general_ids = list(dict.fromkeys(row_general_ids))
+        if focus_general_ids and row_general_ids and source_refs:
+            default_ref = source_refs[0]
+            for focus_general_id in focus_general_ids:
+                for partner_general_id in row_general_ids:
+                    if partner_general_id == focus_general_id:
+                        continue
+                    edge_key = (focus_general_id, partner_general_id, "relationship_external")
+                    if edge_key in seen_keys:
+                        continue
+
+                    pair_rows = list(relationship_pair_index.get((focus_general_id, partner_general_id)) or [])
+                    pair_rows.extend(relationship_pair_index.get((partner_general_id, focus_general_id)) or [])
+                    if pair_rows:
+                        pair_rows.sort(
+                            key=lambda row: (
+                                -float(row.get("edgeConfidence") or 0.0),
+                                -float(row.get("edgeStrength") or 0.0),
+                            )
+                        )
+                        normalized = normalize_relationship_edge(pair_rows[0], fallback_source_ref=default_ref)
+                        if normalized:
+                            normalized_from = str(normalized.get("fromId") or "").strip()
+                            normalized_to = str(normalized.get("toId") or "").strip()
+                            normalized_type = str(normalized.get("type") or "").strip()
+                            if not is_item_style_relationship(normalized_from, normalized_to, normalized_type):
+                                normalized_key = (normalized_from, normalized_to, normalized_type)
+                                if normalized_key not in seen_keys:
+                                    seen_keys.add(normalized_key)
+                                    inferred.append(normalized)
+                                    if len(inferred) >= 4:
+                                        return inferred
+                                continue
+
+                    if not allow_generic_fallback:
+                        continue
+                    seen_keys.add(edge_key)
+                    inferred.append(
+                        {
+                            "fromId": focus_general_id,
+                            "toId": partner_general_id,
+                            "type": "relationship_external",
+                            "evidenceRefs": [default_ref],
+                            "edgeConfidence": 0.6,
+                            "edgeStrength": 0.5,
+                        }
+                    )
+                    if len(inferred) >= 4:
+                        return inferred
+        return inferred
+
+    ranked_partners = sorted(
+        candidate_partner_counts.items(),
+        key=lambda item: (-int(item[1]), item[0]),
+    )
+    for focus_general_id in focus_general_ids:
+        for partner_general_id, hit_count in ranked_partners:
+            edge_key = (focus_general_id, partner_general_id, "relationship_external")
+            if edge_key in seen_keys:
+                continue
+            evidence_ref = partner_source_ref.get(partner_general_id) or source_refs[0]
+
+            pair_rows = list(relationship_pair_index.get((focus_general_id, partner_general_id)) or [])
+            pair_rows.extend(relationship_pair_index.get((partner_general_id, focus_general_id)) or [])
+            if pair_rows:
+                pair_rows.sort(
+                    key=lambda row: (
+                        -float(row.get("edgeConfidence") or 0.0),
+                        -float(row.get("edgeStrength") or 0.0),
+                    )
+                )
+                normalized = normalize_relationship_edge(pair_rows[0], fallback_source_ref=evidence_ref)
+                if normalized:
+                    normalized_from = str(normalized.get("fromId") or "").strip()
+                    normalized_to = str(normalized.get("toId") or "").strip()
+                    normalized_type = str(normalized.get("type") or "").strip()
+                    if is_item_style_relationship(normalized_from, normalized_to, normalized_type):
+                        normalized = None
+                if normalized:
+                    normalized_key = (
+                        normalized_from,
+                        normalized_to,
+                        normalized_type,
+                    )
+                    if normalized_key not in seen_keys:
+                        seen_keys.add(normalized_key)
+                        inferred.append(normalized)
+                        if len(inferred) >= 4:
+                            return inferred
+                    continue
+
+            if not allow_generic_fallback:
+                continue
+
+            seen_keys.add(edge_key)
+            confidence = min(0.72, 0.56 + 0.04 * min(int(hit_count), 4))
+            inferred.append(
+                {
+                    "fromId": focus_general_id,
+                    "toId": partner_general_id,
+                    "type": "relationship_external",
+                    "evidenceRefs": [evidence_ref],
+                    "edgeConfidence": round(confidence, 2),
+                    "edgeStrength": 0.5,
+                }
+            )
+            if len(inferred) >= 4:
+                return inferred
+    return inferred
 
 
 def has_required_auto_review_edits(root_cause_key: str, edits: dict[str, Any]) -> bool:
     if root_cause_key == "location gap":
-        return bool(str(edits.get("location") or "").strip())
+        return bool(normalize_location_candidate(edits.get("location")))
     if root_cause_key == "relationship edge/type":
         return bool(list(edits.get("relationshipEdges") or []))
+    if root_cause_key == "identity ambiguity":
+        general_ids = [str(value or "").strip() for value in (edits.get("generalIds") or []) if str(value or "").strip()]
+        return bool(general_ids) and not any(general_id.startswith("romance-person-") for general_id in general_ids)
+    if root_cause_key == "event boundary":
+        general_ids = [str(value or "").strip() for value in (edits.get("generalIds") or []) if str(value or "").strip()]
+        return bool(general_ids) and len(general_ids) <= 7
+    if root_cause_key == "schema/tool gap":
+        location = normalize_location_candidate(edits.get("location"))
+        relationship_edges = list(edits.get("relationshipEdges") or [])
+        general_ids = [str(value or "").strip() for value in (edits.get("generalIds") or []) if str(value or "").strip()]
+        if not location or not relationship_edges or not general_ids:
+            return False
+        if any(general_id.startswith("romance-person-") for general_id in general_ids):
+            return False
+        if len(general_ids) > 7:
+            return False
+        return True
     return True
+
+
+def deterministic_root_cause_override(
+    *,
+    item: dict[str, Any],
+    edits: dict[str, Any],
+    root_causes: set[str],
+) -> str | None:
+    if not root_causes:
+        return None
+    root_cause_key = str(item.get("rootCause") or "").strip().lower()
+    if root_cause_key not in {"identity ambiguity", "event boundary"}:
+        return None
+    has_location = bool(normalize_location_candidate(edits.get("location")))
+    has_relationship = bool(list(edits.get("relationshipEdges") or []))
+    if "relationship edge/type" in root_causes and has_relationship:
+        return "relationship edge/type"
+    if "location gap" in root_causes and has_location:
+        return "location gap"
+    return None
 
 
 def build_auto_review_decisions(
@@ -1383,6 +1920,10 @@ def build_auto_review_decisions(
     root_causes: set[str],
     answer: str,
     max_items: int,
+    relationship_edge_index: dict[str, list[dict[str, Any]]] | None = None,
+    relationship_pair_index: dict[tuple[str, str], list[dict[str, Any]]] | None = None,
+    source_ref_general_index: dict[str, list[str]] | None = None,
+    source_ref_location_index: dict[str, list[str]] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, int], dict[str, int]]:
     decisions: list[dict[str, Any]] = []
     root_cause_counts: dict[str, int] = {}
@@ -1394,16 +1935,94 @@ def build_auto_review_decisions(
     for item in items:
         root_cause = str(item.get("rootCause") or "").strip()
         root_cause_key = root_cause.lower()
-        if root_causes and root_cause_key not in root_causes:
-            continue
         edits = dict(item.get("edits") or {})
-        inferred_location = infer_location_from_item(item, edits)
-        if root_cause_key == "location gap" and inferred_location and not str(edits.get("location") or "").strip():
+        inferred_location = infer_location_from_item(
+            item,
+            edits,
+            source_ref_location_index=source_ref_location_index,
+        )
+        if inferred_location and not normalize_location_candidate(edits.get("location")):
             edits["location"] = inferred_location
-        if not has_required_auto_review_edits(root_cause_key, edits):
-            bucket = root_cause or "unknown"
+        inferred_edges = infer_relationship_edges_from_item(
+            item,
+            edits,
+            relationship_edge_index or {},
+            relationship_pair_index=relationship_pair_index or {},
+            source_ref_general_index=source_ref_general_index,
+            allow_generic_fallback=normalized_answer != "A",
+        )
+        if inferred_edges and not list(edits.get("relationshipEdges") or []):
+            edits["relationshipEdges"] = inferred_edges
+        original_general_ids = [str(value or "").strip() for value in (item.get("generalIds") or []) if str(value or "").strip()]
+        inferred_general_ids = infer_general_ids_from_item(
+            item,
+            edits,
+            source_ref_general_index=source_ref_general_index,
+            max_generals=7,
+        )
+        if inferred_general_ids and (
+            root_cause_key in {"identity ambiguity", "event boundary"}
+            or len(inferred_general_ids) < len(original_general_ids)
+        ):
+            edits["generalIds"] = inferred_general_ids
+        if root_cause_key == "schema/tool gap":
+            if not str(edits.get("summary") or "").strip():
+                fallback_summary = str(item.get("summary") or "").strip()
+                if fallback_summary:
+                    edits["summary"] = fallback_summary
+            if not normalize_location_candidate(edits.get("location")):
+                fallback_location = normalize_location_candidate(item.get("currentLocation") or item.get("location"))
+                if fallback_location:
+                    edits["location"] = fallback_location
+            if not list(edits.get("relationshipEdges") or []):
+                fallback_edges = list(item.get("currentRelationshipEdges") or item.get("relationshipEdges") or [])
+                if fallback_edges:
+                    edits["relationshipEdges"] = fallback_edges
+            if not list(edits.get("generalIds") or []):
+                fallback_general_ids = [str(value or "").strip() for value in (item.get("generalIds") or []) if str(value or "").strip()]
+                if fallback_general_ids:
+                    edits["generalIds"] = fallback_general_ids
+
+        effective_root_cause = root_cause
+        effective_root_cause_key = root_cause_key
+        if root_causes and root_cause_key not in root_causes:
+            override = deterministic_root_cause_override(
+                item=item,
+                edits=edits,
+                root_causes=root_causes,
+            )
+            if not override:
+                continue
+            effective_root_cause = override
+            effective_root_cause_key = override
+
+        if not has_required_auto_review_edits(effective_root_cause_key, edits):
+            bucket = effective_root_cause or root_cause or "unknown"
             skipped_missing_edits[bucket] = int(skipped_missing_edits.get(bucket) or 0) + 1
             continue
+        decision_answer = normalized_answer
+        if effective_root_cause_key == "schema/tool gap":
+            # Deterministic schema gate: when mandatory publishability fields are already present,
+            # auto-promote to A instead of requeueing another B-only cycle.
+            decision_answer = "A"
+
+        if decision_answer == "A":
+            if not str(edits.get("eventKey") or item.get("eventKey") or "").strip():
+                bucket = effective_root_cause or root_cause or "unknown"
+                skipped_missing_edits[bucket] = int(skipped_missing_edits.get(bucket) or 0) + 1
+                continue
+            if not str(edits.get("summary") or item.get("summary") or "").strip():
+                bucket = effective_root_cause or root_cause or "unknown"
+                skipped_missing_edits[bucket] = int(skipped_missing_edits.get(bucket) or 0) + 1
+                continue
+            if not str(edits.get("location") or "").strip():
+                bucket = effective_root_cause or root_cause or "unknown"
+                skipped_missing_edits[bucket] = int(skipped_missing_edits.get(bucket) or 0) + 1
+                continue
+            if not list(edits.get("relationshipEdges") or []):
+                bucket = effective_root_cause or root_cause or "unknown"
+                skipped_missing_edits[bucket] = int(skipped_missing_edits.get(bucket) or 0) + 1
+                continue
 
         candidate_id = str(item.get("candidateId") or "").strip()
         event_key = str(item.get("eventKey") or "").strip()
@@ -1413,17 +2032,23 @@ def build_auto_review_decisions(
 
         seen_keys.add(dedup_key)
         decision: dict[str, Any] = {
-            "answer": normalized_answer,
-            "notes": f"auto-review {root_cause or 'pending'}",
+            "answer": decision_answer,
+            "notes": f"auto-review {effective_root_cause or root_cause or 'pending'}",
         }
         if candidate_id:
             decision["candidateId"] = candidate_id
         if event_key:
             decision["eventKey"] = event_key
+        if effective_root_cause and effective_root_cause != root_cause:
+            decision["meta"] = {
+                "originalRootCause": root_cause,
+                "effectiveRootCause": effective_root_cause,
+            }
         if edits:
             decision["edits"] = edits
         decisions.append(decision)
-        root_cause_counts[root_cause or "unknown"] = int(root_cause_counts.get(root_cause or "unknown") or 0) + 1
+        root_bucket = effective_root_cause or root_cause or "unknown"
+        root_cause_counts[root_bucket] = int(root_cause_counts.get(root_bucket) or 0) + 1
         if max_count > 0 and len(decisions) >= max_count:
             break
     return decisions, root_cause_counts, skipped_missing_edits
@@ -1545,6 +2170,16 @@ def run_b_review_merge(
         "femaleCandidatesPath",
         default=DEFAULT_FEMALE_CANDIDATES_PATH,
     )
+    baseline_event_seed_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "eventQuestionSeedsPath",
+        default=outputs["eventSeedRoot"] / "event-question-seeds.jsonl",
+    )
+    baseline_packet_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "sourceEventPacketsPath",
+        default=outputs["packetRoot"] / "source-event-packets.jsonl",
+    )
     commands: list[dict[str, Any]] = []
 
     stage_args = [
@@ -1595,6 +2230,11 @@ def run_b_review_merge(
     )
     commands.append({"name": "build_source_event_packets", **run_command(packet_command, dry_run)})
 
+    generated_event_seed_path = outputs["eventSeedRoot"] / "event-question-seeds.jsonl"
+    generated_packet_path = outputs["packetRoot"] / "source-event-packets.jsonl"
+    selected_event_seed_path = prefer_richer_jsonl(generated_event_seed_path, baseline_event_seed_path)
+    selected_packet_path = prefer_richer_jsonl(generated_packet_path, baseline_packet_path)
+
     estimate_args = [
         "--round-id",
         b_round_id,
@@ -1613,9 +2253,9 @@ def run_b_review_merge(
         "--relationship-evidence",
         repo_relative(outputs["baseRelationshipEvidence"]),
         "--event-question-seeds",
-        repo_relative(outputs["eventSeedRoot"] / "event-question-seeds.jsonl"),
+        repo_relative(selected_event_seed_path),
         "--source-event-packets",
-        repo_relative(outputs["packetRoot"] / "source-event-packets.jsonl"),
+        repo_relative(selected_packet_path),
         "--rounds-root",
         repo_relative(run_root / "repair-review" / "knowledge-growth-rounds"),
         "--output-root",
@@ -1625,6 +2265,8 @@ def run_b_review_merge(
     for batch_path in existing_round_json_paths(base_paths["baseProgress"]):
         estimate_args.extend(["--round-json", batch_path])
     for batch_path in sorted((run_root / "repair-review" / "knowledge-growth-rounds").glob("*.batch.json")):
+        if not round_batch_has_quality_signal(batch_path):
+            continue
         estimate_args.extend(["--round-json", repo_relative(batch_path)])
     estimate_command = script_command("estimate_knowledge_completion.py", estimate_args)
     commands.append({"name": "estimate_knowledge_completion", **run_command(estimate_command, dry_run)})
@@ -2054,7 +2696,7 @@ def main() -> None:
     failure_count = 0
     b_review_count = 0
     stop_reason: str | None = None
-    review_decisions_consumed = False
+    manual_review_decisions_consumed = False
     last_round_pending_items: list[dict[str, Any]] = []
     last_repeated_items: list[dict[str, Any]] = []
     last_pilot_pending_count = pending_review_count(resolve_path(args.review_queue))
@@ -2243,18 +2885,27 @@ def main() -> None:
                 latest_ready_eval_events = final_output_paths["readyEvalEvents"]
                 base_paths["readyEvalEvents"] = final_output_paths["readyEvalEvents"]
 
-        decision_path_for_round: Path | None = resolve_path(args.review_decisions) if args.review_decisions else None
+        manual_decision_path: Path | None = resolve_path(args.review_decisions) if args.review_decisions else None
+        decision_path_for_round: Path | None = manual_decision_path
         if (
             decision_path_for_round is None
             and round_pending_items
-            and not review_decisions_consumed
             and configured_auto_review_root_causes
         ):
+            candidate_paths = candidate_paths_from_progress(round_record["baselineInputs"]["baseProgress"])
+            relationship_edge_index = build_relationship_edge_index(round_record["baselineInputs"]["baseRelationshipEvidence"])
+            relationship_pair_index = build_relationship_pair_index(round_record["baselineInputs"]["baseRelationshipEvidence"])
+            source_ref_general_index = build_source_ref_general_index(candidate_paths)
+            source_ref_location_index = build_source_ref_location_index(candidate_paths)
             auto_decisions, auto_root_cause_counts, auto_skipped_missing_edits = build_auto_review_decisions(
                 items=round_pending_items,
                 root_causes=configured_auto_review_root_causes,
                 answer=args.auto_review_answer,
                 max_items=max(args.auto_review_max_items, 0),
+                relationship_edge_index=relationship_edge_index,
+                relationship_pair_index=relationship_pair_index,
+                source_ref_general_index=source_ref_general_index,
+                source_ref_location_index=source_ref_location_index,
             )
             if auto_decisions:
                 auto_decision_path = write_auto_review_decisions_file(
@@ -2284,11 +2935,13 @@ def main() -> None:
                     "skippedMissingEditCounts": auto_skipped_missing_edits,
                 }
 
-        if decision_path_for_round and round_pending_items and not review_decisions_consumed:
+        is_manual_decision = bool(manual_decision_path and decision_path_for_round == manual_decision_path)
+        if decision_path_for_round and round_pending_items and (not is_manual_decision or not manual_review_decisions_consumed):
             decision_summary = apply_review_decisions_to_root(final_output_paths["reviewSnapshotRoot"], decision_path_for_round, args.dry_run)
             round_record["reviewDecisionApplication"] = decision_summary
             if int(decision_summary.get("updatedQuestionCount") or 0) > 0:
-                review_decisions_consumed = True
+                if is_manual_decision:
+                    manual_review_decisions_consumed = True
                 b_review_count += 1
                 b_review_summary, base_paths = run_b_review_merge(
                     run_root=run_root,
@@ -2325,7 +2978,7 @@ def main() -> None:
         should_surface_human_mcq = len(round_pending_items) >= pending_threshold
         round_record["surfaceHumanMcq"] = should_surface_human_mcq
         round_record["pendingReviewThreshold"] = pending_threshold
-        if should_surface_human_mcq and not review_decisions_consumed:
+        if should_surface_human_mcq:
             batch_info = write_review_batch(
                 run_root=run_root,
                 run_id=args.run_id,

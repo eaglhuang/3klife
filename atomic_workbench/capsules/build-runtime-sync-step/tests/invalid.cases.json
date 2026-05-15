@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-SYNC-STEP:invalid:null",
+    "kind": "invalid",
+    "title": "buildRuntimeSyncStep null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:b8f03df457286b0a02e37e00482e3c6046d7550d3ad08a4ecfa3e34a7f6a5f00",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-SYNC-STEP:invalid:type",
+    "kind": "invalid",
+    "title": "buildRuntimeSyncStep 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:b8f03df457286b0a02e37e00482e3c6046d7550d3ad08a4ecfa3e34a7f6a5f00",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

@@ -5,20 +5,24 @@ It is the project-local capsule workbench for H2U. These capsules are not upstre
 
 ## Summary
 
-- Total capsules: 249
-- Anchors: 2
-- Local capsules: 237
-- Candidate capsules: 12
+- Total capsules: 256
+- Anchors: 12
+- Local capsules: 240
+- Candidate capsules: 16
 - Governed capsules: 0
 - Shared capsules: 0
-- Release blockers: 1
+- Release blockers: 2
 
 ## Governed Atom Candidates
 
 - applyTextTransformGeneral
 - buildDraftFromHtml
 - buildFontFaceRegistry
+- buildInitialVerdict
+- buildRuleGuardStep
+- buildRuntimeSyncStep
 - collectBehavior
+- collectVisualRiskFromSlot
 - computeLetterSpacing
 - inferTabSemanticHints
 - normalizeCssColorToHex
@@ -31,6 +35,7 @@ It is the project-local capsule workbench for H2U. These capsules are not upstre
 ## Release Blockers
 
 - processElement
+- runWorkflowMain
 
 ## How To Verify
 

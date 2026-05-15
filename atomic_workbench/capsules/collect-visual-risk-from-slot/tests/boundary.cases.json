@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-COLLECT-VISUAL-RISK-FROM-SLOT:boundary:empty",
+    "kind": "boundary",
+    "title": "collectVisualRiskFromSlot 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:ae2241e23564eb91f547c9e07eb5b556124931410fb6e6aaa988a8e6e8c911a6",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-COLLECT-VISUAL-RISK-FROM-SLOT:boundary:formatted",
+    "kind": "boundary",
+    "title": "collectVisualRiskFromSlot 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:ae2241e23564eb91f547c9e07eb5b556124931410fb6e6aaa988a8e6e8c911a6",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

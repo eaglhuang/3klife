@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-COLLECT-VISUAL-RISK-FROM-SLOT:invalid:null",
+    "kind": "invalid",
+    "title": "collectVisualRiskFromSlot null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:ae2241e23564eb91f547c9e07eb5b556124931410fb6e6aaa988a8e6e8c911a6",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-COLLECT-VISUAL-RISK-FROM-SLOT:invalid:type",
+    "kind": "invalid",
+    "title": "collectVisualRiskFromSlot 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:ae2241e23564eb91f547c9e07eb5b556124931410fb6e6aaa988a8e6e8c911a6",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

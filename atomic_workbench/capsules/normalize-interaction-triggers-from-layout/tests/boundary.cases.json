@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-NORMALIZE-INTERACTION-TRIGGERS-FROM-LAYOUT:boundary:empty",
+    "kind": "boundary",
+    "title": "normalizeInteractionTriggersFromLayout 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:224e53f6493b38a6ee6e59987a166512b0ebc9e2a57578afd01c46681a28196c",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-NORMALIZE-INTERACTION-TRIGGERS-FROM-LAYOUT:boundary:formatted",
+    "kind": "boundary",
+    "title": "normalizeInteractionTriggersFromLayout 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:224e53f6493b38a6ee6e59987a166512b0ebc9e2a57578afd01c46681a28196c",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

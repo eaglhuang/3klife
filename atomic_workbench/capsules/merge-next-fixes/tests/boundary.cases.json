@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-MERGE-NEXT-FIXES:boundary:empty",
+    "kind": "boundary",
+    "title": "mergeNextFixes 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:88845893484891b13eab516f9f5b2a0cac712929f39082a912269cf7ff5169e0",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-MERGE-NEXT-FIXES:boundary:formatted",
+    "kind": "boundary",
+    "title": "mergeNextFixes 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:88845893484891b13eab516f9f5b2a0cac712929f39082a912269cf7ff5169e0",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

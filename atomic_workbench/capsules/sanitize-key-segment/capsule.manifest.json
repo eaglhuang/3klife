@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-SANITIZE-KEY-SEGMENT",
   "symbolName": "sanitizeKeySegment",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-TEXT-CONTRACT-SYNC-B14BCEFF",
+  "moduleSlug": "text-contract-sync-b14bceff",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/text-contract-sync.js",
     "sourceRange": {
-      "startLine": 950,
-      "endLine": 958
+      "startLine": 7,
+      "endLine": 15
     },
     "semanticFingerprint": "sf:sha256:0a50ed1d1ceb89be8ad4408479f2d28a1bb8e67032465f3aa74867d1e0303a10"
   },
@@ -41,8 +41,8 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L969",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L970"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/text-contract-sync.js#L35",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/text-contract-sync.js#L36"
   ],
   "usageRefStats": {
     "totalRefs": 2,
@@ -63,7 +63,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L950-L958"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/text-contract-sync.js#L7-L15"
     ]
   },
   "promotion": {

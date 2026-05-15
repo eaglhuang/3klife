@@ -1,0 +1,35 @@
+{
+  "schemaId": "atm.coreAnchorManifest",
+  "specVersion": "0.1.0",
+  "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
+  "kind": "core-anchor",
+  "role": "semantic-parent",
+  "logicalName": "anchor.token-governance-7dfb32fb",
+  "source": {
+    "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
+    "lineCount": 231
+  },
+  "semanticFingerprint": "sf:sha256:58db1af803f63c8b80d35ac23c5612cf53911694bac4e888e8f3ae883efc7f9b",
+  "children": [
+    "H2U-CAPSULE-NORMALIZE-COLOR-VALUE",
+    "H2U-CAPSULE-BUILD-LOCAL-TOKEN-DIFF",
+    "H2U-CAPSULE-BUILD-LOCAL-COLOR-TOKEN-LOOKUP",
+    "H2U-CAPSULE-APPLY-SCREEN-LOCAL-COLOR-TOKENS-TO-SKIN",
+    "H2U-CAPSULE-REGENERATE-SCREEN-LOCAL-TOKENS",
+    "H2U-CAPSULE-COLLECT-TOKEN-SUGGESTION-FILES",
+    "H2U-CAPSULE-BUILD-SCREEN-LOCAL-TOKEN-PAYLOAD",
+    "H2U-CAPSULE-DERIVE-TOKEN-SUGGESTION-PATH-FROM-LAYOUT"
+  ],
+  "lineage": {
+    "bornBy": "anchorize",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/token-governance.js"
+    ]
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "promotion": {
+    "currentTier": "core-anchor",
+    "allowSharedPromotion": false
+  }
+}

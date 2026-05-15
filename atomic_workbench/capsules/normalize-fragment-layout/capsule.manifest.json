@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-NORMALIZE-FRAGMENT-LAYOUT",
   "symbolName": "normalizeFragmentLayout",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
+  "moduleSlug": "per-tab-replay-e0734ba6",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
     "sourceRange": {
-      "startLine": 883,
-      "endLine": 896
+      "startLine": 26,
+      "endLine": 39
     },
     "semanticFingerprint": "sf:sha256:3d72d3b0bef0bde21c252528547069fe30389f0845ca52e7a96fbe40eb8c77f1"
   },
@@ -42,7 +42,7 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1264"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L311"
   ],
   "usageRefStats": {
     "totalRefs": 1,
@@ -63,7 +63,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L883-L896"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L26-L39"
     ]
   },
   "promotion": {

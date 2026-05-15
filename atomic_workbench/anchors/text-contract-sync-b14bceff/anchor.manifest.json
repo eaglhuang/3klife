@@ -1,0 +1,31 @@
+{
+  "schemaId": "atm.coreAnchorManifest",
+  "specVersion": "0.1.0",
+  "anchorId": "H2U-ANCHOR-TEXT-CONTRACT-SYNC-B14BCEFF",
+  "kind": "core-anchor",
+  "role": "semantic-parent",
+  "logicalName": "anchor.text-contract-sync-b14bceff",
+  "source": {
+    "file": "tools_node/lib/html-to-ucuf/workflow/text-contract-sync.js",
+    "lineCount": 96
+  },
+  "semanticFingerprint": "sf:sha256:8b4036c63b124def4f6a8024bc31f90a02599a90a81d3e62e462b0bee1c70f7a",
+  "children": [
+    "H2U-CAPSULE-NORMALIZE-INTERACTION-TRIGGERS-FROM-LAYOUT",
+    "H2U-CAPSULE-INJECT-DYNAMIC-TEXT-CONTRACTS",
+    "H2U-CAPSULE-HAS-TEXT-BINDING-CONTRACT",
+    "H2U-CAPSULE-SANITIZE-KEY-SEGMENT"
+  ],
+  "lineage": {
+    "bornBy": "anchorize",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/text-contract-sync.js"
+    ]
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "promotion": {
+    "currentTier": "core-anchor",
+    "allowSharedPromotion": false
+  }
+}

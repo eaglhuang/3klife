@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-PRE-RULE-GUARD-FIXES:boundary:empty",
+    "kind": "boundary",
+    "title": "buildPreRuleGuardFixes 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:179c28f170d7412b2a1f0564f2b779701e3ceccb0f13a54a347bf6c320b11256",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-PRE-RULE-GUARD-FIXES:boundary:formatted",
+    "kind": "boundary",
+    "title": "buildPreRuleGuardFixes 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:179c28f170d7412b2a1f0564f2b779701e3ceccb0f13a54a347bf6c320b11256",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

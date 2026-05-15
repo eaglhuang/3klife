@@ -1,0 +1,84 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-BUILD-RULE-GUARD-STEP",
+  "symbolName": "buildRuleGuardStep",
+  "anchorId": "H2U-ANCHOR-GATE-ORCHESTRATION-3DF999E5",
+  "moduleSlug": "gate-orchestration-3df999e5",
+  "source": {
+    "file": "tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js",
+    "sourceRange": {
+      "startLine": 17,
+      "endLine": 28
+    },
+    "semanticFingerprint": "sf:sha256:e40284d83200452e1193e1b128a8382e472dc3b617e8d01d1f3436d7a9bad324"
+  },
+  "tier": "local-capsule-candidate",
+  "recommendedTier": "governed-atom",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "exported",
+    "stable-behavior-name",
+    "pure-ish",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "behavior-template",
+    "edge-cases"
+  ],
+  "requiredCaseSets": [
+    "base",
+    "boundary",
+    "invalid"
+  ],
+  "classification": {
+    "exported": true,
+    "lineCount": 12,
+    "severity": "block-if-untested",
+    "riskScore": 85,
+    "sideEffectRisk": false
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "workflow:tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js#L65",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L50",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L426",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L11",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L168"
+  ],
+  "usageRefStats": {
+    "totalRefs": 5,
+    "distinctFiles": 3,
+    "distinctKinds": 1,
+    "externalRefs": 4,
+    "kinds": [
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated buildRuleGuardStep"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js#L17-L28"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule-candidate",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:e40284d83200452e1193e1b128a8382e472dc3b617e8d01d1f3436d7a9bad324"
+  }
+}

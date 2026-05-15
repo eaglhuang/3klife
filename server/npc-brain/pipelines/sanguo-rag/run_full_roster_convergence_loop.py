@@ -1419,6 +1419,23 @@ def float_or_none(value: Any) -> float | None:
         return None
 
 
+def extract_progress_overall_percent(payload: Any) -> float | None:
+    if not isinstance(payload, dict):
+        return None
+    completion_payload = payload.get("completion")
+    if isinstance(completion_payload, dict):
+        value = float_or_none(completion_payload.get("overallPercent"))
+        if value is not None:
+            return value
+    return float_or_none(payload.get("overallPercent"))
+
+
+def read_progress_overall_percent(path: Path | None) -> float | None:
+    if not path or not path.exists():
+        return None
+    return extract_progress_overall_percent(read_json(path))
+
+
 def extract_precision_location_metrics(summary_payload: dict[str, Any]) -> dict[str, Any]:
     location_gap_before: int | None = None
     location_gap_after: int | None = None
@@ -1453,6 +1470,7 @@ def extract_precision_location_metrics(summary_payload: dict[str, Any]) -> dict[
 
     return {
         "bReviewCount": int(summary_payload.get("bReviewCount") or 0),
+        "pendingReviewCount": int(summary_payload.get("pendingReviewCount") or 0),
         "totalDeltaOverallPercent": float_or_none(summary_payload.get("totalDeltaOverallPercent")),
         "locationGapBefore": location_gap_before,
         "locationGapAfter": location_gap_after,
@@ -1477,6 +1495,7 @@ def decide_precision_carry_forward(
         "minDeltaRequired": float(min_delta),
         "requireLocationImprovement": bool(require_location_improvement),
         "bReviewCount": int(metrics.get("bReviewCount") or 0),
+        "pendingReviewCount": int(metrics.get("pendingReviewCount") or 0),
         "totalDeltaOverallPercent": metrics.get("totalDeltaOverallPercent"),
         "locationGapBefore": metrics.get("locationGapBefore"),
         "locationGapAfter": metrics.get("locationGapAfter"),
@@ -1494,14 +1513,19 @@ def decide_precision_carry_forward(
         decision["reason"] = "guard-disabled"
         return decision
 
-    if int(metrics.get("bReviewCount") or 0) <= 0:
-        decision["reason"] = "no-b-review-merge"
-        return decision
-
     delta_value = float_or_none(metrics.get("totalDeltaOverallPercent"))
     delta_ok = bool(delta_value is not None and delta_value >= float(min_delta))
     location_improved = bool(metrics.get("locationGapImproved"))
     location_delta_known = metrics.get("locationGapDelta") is not None
+    pending_review_count = int(metrics.get("pendingReviewCount") or 0)
+
+    if int(metrics.get("bReviewCount") or 0) <= 0:
+        if delta_ok and pending_review_count <= 0:
+            decision["applied"] = True
+            decision["reason"] = "no-b-review-clean-positive-delta"
+            return decision
+        decision["reason"] = "no-b-review-merge"
+        return decision
 
     if require_location_improvement:
         if location_delta_known and not location_improved:
@@ -1521,6 +1545,56 @@ def decide_precision_carry_forward(
     decision["applied"] = True
     decision["reason"] = "location-gap-improved" if location_improved else "delta-threshold-pass"
     return decision
+
+
+def apply_carry_scoreboard_autopick(
+    *,
+    decision: dict[str, Any],
+    enabled: bool,
+    base_overall_percent: float | None,
+    carry_overall_percent: float | None,
+    min_improve: float,
+    max_regression: float,
+) -> dict[str, Any]:
+    result = {
+        "enabled": bool(enabled),
+        "baseOverallPercent": base_overall_percent,
+        "carryOverallPercent": carry_overall_percent,
+        "minImproveRequired": float(min_improve),
+        "maxRegressionAllowed": float(max_regression),
+        "overrideApplied": False,
+        "overrideReason": None,
+    }
+    if not enabled:
+        result["overrideReason"] = "disabled"
+        return result
+    if carry_overall_percent is None:
+        result["overrideReason"] = "carry-overall-missing"
+        return result
+
+    if not bool(decision.get("applied")):
+        if base_overall_percent is None or carry_overall_percent >= base_overall_percent + float(min_improve):
+            decision["applied"] = True
+            decision["reason"] = "scoreboard-autopick-promote"
+            result["overrideApplied"] = True
+            result["overrideReason"] = "promote-carry-by-overall"
+            return result
+        result["overrideReason"] = "carry-not-better-than-base"
+        return result
+
+    if base_overall_percent is None:
+        result["overrideReason"] = "base-overall-missing"
+        return result
+
+    if carry_overall_percent + float(max_regression) < base_overall_percent:
+        decision["applied"] = False
+        decision["reason"] = "scoreboard-autopick-reject-regression"
+        result["overrideApplied"] = True
+        result["overrideReason"] = "reject-carry-by-regression"
+        return result
+
+    result["overrideReason"] = "keep-carry"
+    return result
 
 
 def run_runtime_readiness(
@@ -2648,10 +2722,16 @@ def run_precision_lane(
     selected = [str(row.get("generalId") or "").strip() for row in selected_rows]
     selected = [gid for gid in selected if gid]
     explicit_general_ids = [str(gid or "").strip() for gid in (args.precision_general_id or [])]
-    for explicit_general_id in explicit_general_ids:
-        if explicit_general_id and explicit_general_id not in selected:
-            selected.append(explicit_general_id)
+    explicit_general_ids = [gid for gid in explicit_general_ids if gid]
+    explicit_only_mode = bool(explicit_general_ids) and not bool(args.precision_scoreboard_bridge)
+    if explicit_only_mode:
+        selected = list(dict.fromkeys(explicit_general_ids))
+    else:
+        for explicit_general_id in explicit_general_ids:
+            if explicit_general_id and explicit_general_id not in selected:
+                selected.append(explicit_general_id)
     selection_meta["explicitGeneralIds"] = [gid for gid in explicit_general_ids if gid]
+    selection_meta["explicitOnlyMode"] = explicit_only_mode
     selection_meta["effectiveSelectedCount"] = len(selected)
     if not selected:
         return {
@@ -3495,6 +3575,61 @@ def run_round(
     }
 
 
+def refresh_round_summaries(
+    *,
+    round_id: str,
+    scoreboard_json_path: Path,
+    progress_json_path: Path,
+    relationship_evidence_path: Path,
+    runtime_readiness_summary_path: Path,
+    item_relationship_overlay_summary_path: Path,
+    round_summary_root: Path,
+    baseline_scoreboard_path: Path | None,
+    baseline_progress_path: Path | None,
+    baseline_relationship_path: Path | None,
+    overwrite: bool,
+    dry_run: bool,
+) -> dict[str, Any]:
+    command = [
+        sys.executable,
+        str((REPO_ROOT / PIPELINE_ROOT / "build_full_roster_round_summaries.py").resolve()),
+        "--round-id",
+        round_id,
+        "--scoreboard-json",
+        repo_relative(scoreboard_json_path),
+        "--progress-json",
+        repo_relative(progress_json_path),
+        "--relationship-evidence-jsonl",
+        repo_relative(relationship_evidence_path),
+        "--runtime-readiness-summary",
+        repo_relative(runtime_readiness_summary_path),
+        "--item-relationship-overlay-summary",
+        repo_relative(item_relationship_overlay_summary_path),
+        "--output-root",
+        repo_relative(round_summary_root),
+    ]
+    if baseline_scoreboard_path and baseline_scoreboard_path.exists():
+        command.extend(["--baseline-scoreboard-json", repo_relative(baseline_scoreboard_path)])
+    if baseline_progress_path and baseline_progress_path.exists():
+        command.extend(["--baseline-progress-json", repo_relative(baseline_progress_path)])
+    if baseline_relationship_path and baseline_relationship_path.exists():
+        command.extend(["--baseline-relationship-evidence-jsonl", repo_relative(baseline_relationship_path)])
+    if overwrite:
+        command.append("--overwrite")
+
+    command_result = run_command(command, dry_run=dry_run)
+    return {
+        "commandResult": command_result,
+        "scoreboardSummaryJsonPath": repo_relative(round_summary_root / "full-roster-scoreboard-summary.json"),
+        "scoreboardSummaryMarkdownPath": repo_relative(round_summary_root / "full-roster-scoreboard-summary.zh-TW.md"),
+        "bottleneckDeltaJsonPath": repo_relative(round_summary_root / "full-roster-bottleneck-delta.json"),
+        "bottleneckDeltaMarkdownPath": repo_relative(round_summary_root / "full-roster-bottleneck-delta.zh-TW.md"),
+        "nextLaneSummaryJsonPath": repo_relative(round_summary_root / "full-roster-next-lane-summary.json"),
+        "nextLaneSummaryMarkdownPath": repo_relative(round_summary_root / "full-roster-next-lane-summary.zh-TW.md"),
+        "roundSummaryRoot": repo_relative(round_summary_root),
+    }
+
+
 def render_summary_md(summary: dict[str, Any]) -> str:
     lines = [
         "# Full Roster Convergence Loop",
@@ -3526,6 +3661,13 @@ def render_summary_md(summary: dict[str, Any]) -> str:
         if carry_decision:
             status = "apply" if carry_decision.get("applied") else "skip"
             carry_text = f"{status}:{carry_decision.get('reason') or '-'}"
+        autopick = (
+            row.get("precisionCarryScoreboardAutopick")
+            if isinstance(row.get("precisionCarryScoreboardAutopick"), dict)
+            else {}
+        )
+        if autopick and autopick.get("overrideApplied"):
+            carry_text = f"{carry_text}/auto:{autopick.get('overrideReason') or '-'}"
         lines.append(
             "| `{rid}` | `{new}` | `{pending}` | `{h}` | `{w}` | `{overall}` | `{precision}` | `{carry}` | `{three}` | `{runtime_fail}` | {ref_blitz} |".format(
                 rid=row.get("roundId"),
@@ -3679,6 +3821,31 @@ def parse_args() -> argparse.Namespace:
     )
     parser.set_defaults(precision_carry_require_location_improvement=True)
     parser.add_argument(
+        "--precision-carry-scoreboard-autopick",
+        dest="precision_carry_scoreboard_autopick",
+        action="store_true",
+        help="Auto choose carry result by overallPercent uplift/regression guard (default on).",
+    )
+    parser.add_argument(
+        "--no-precision-carry-scoreboard-autopick",
+        dest="precision_carry_scoreboard_autopick",
+        action="store_false",
+        help="Disable carry scoreboard auto pick and follow guard decision only.",
+    )
+    parser.set_defaults(precision_carry_scoreboard_autopick=True)
+    parser.add_argument(
+        "--precision-carry-scoreboard-min-improve",
+        type=float,
+        default=0.0,
+        help="Minimum overallPercent uplift required to force-promote carry when guard says no.",
+    )
+    parser.add_argument(
+        "--precision-carry-scoreboard-max-regression",
+        type=float,
+        default=0.0,
+        help="Maximum tolerated overallPercent regression before auto-rejecting carry.",
+    )
+    parser.add_argument(
         "--precision-scoreboard-bridge",
         dest="precision_scoreboard_bridge",
         action="store_true",
@@ -3790,7 +3957,17 @@ def main() -> int:
     wall_clock_start = time.monotonic()
     human_batch_info: dict[str, Any] | None = None
     prior_source_results = previous_source_results_from_manifest(baseline_manifest)
-    effective_events_path = events_path
+    baseline_seed_events_path: Path | None = None
+    for key in ("precisionCarryReadyEventsPath", "eventsPath", "eventsOutputPath"):
+        baseline_events_text = baseline_path(baseline_manifest, key)
+        if not baseline_events_text:
+            continue
+        candidate = resolve_existing_path(baseline_events_text)
+        if candidate.exists():
+            baseline_seed_events_path = candidate
+            break
+
+    effective_events_path = baseline_seed_events_path or events_path
 
     for round_index in range(1, max(args.max_rounds, 1) + 1):
         if args.max_wall_time_minutes is not None and args.max_wall_time_minutes > 0:
@@ -3844,6 +4021,18 @@ def main() -> int:
             candidate = resolve_existing_path(precision_carry_events_text)
             if candidate.exists():
                 precision_carry_events_candidate = candidate
+        precision_carry_progress_text = str(round_info.get("precisionCarryProgressPath") or "").strip()
+        precision_carry_progress_candidate: Path | None = None
+        if precision_carry_progress_text:
+            candidate = resolve_existing_path(precision_carry_progress_text)
+            if candidate.exists():
+                precision_carry_progress_candidate = candidate
+        precision_carry_relationship_text = str(round_info.get("precisionCarryRelationshipEvidencePath") or "").strip()
+        precision_carry_relationship_candidate: Path | None = None
+        if precision_carry_relationship_text:
+            candidate = resolve_existing_path(precision_carry_relationship_text)
+            if candidate.exists():
+                precision_carry_relationship_candidate = candidate
         precision_carry_decision = decide_precision_carry_forward(
             candidate_path=precision_carry_events_candidate,
             metrics=dict(round_info.get("precisionMetrics") or {}),
@@ -3851,11 +4040,132 @@ def main() -> int:
             min_delta=float(args.precision_carry_min_delta),
             require_location_improvement=bool(args.precision_carry_require_location_improvement),
         )
+        base_overall_percent = float_or_none(round_info.get("overallPercent"))
+        carry_overall_percent = read_progress_overall_percent(precision_carry_progress_candidate)
+        carry_autopick = apply_carry_scoreboard_autopick(
+            decision=precision_carry_decision,
+            enabled=bool(args.precision_carry_scoreboard_autopick),
+            base_overall_percent=base_overall_percent,
+            carry_overall_percent=carry_overall_percent,
+            min_improve=float(args.precision_carry_scoreboard_min_improve),
+            max_regression=float(args.precision_carry_scoreboard_max_regression),
+        )
+        round_info["precisionCarryScoreboardAutopick"] = carry_autopick
+        round_snapshot["precisionCarryScoreboardAutopick"] = carry_autopick
         round_snapshot["precisionCarryDecision"] = precision_carry_decision
-        if precision_carry_decision.get("applied") and precision_carry_events_candidate:
-            effective_events_path = precision_carry_events_candidate
+        if precision_carry_decision.get("applied"):
+            if precision_carry_events_candidate:
+                effective_events_path = precision_carry_events_candidate
+            if precision_carry_progress_candidate:
+                carry_progress_rel = repo_relative(precision_carry_progress_candidate)
+                round_info["progressJsonPath"] = carry_progress_rel
+                round_snapshot["progressJsonPath"] = carry_progress_rel
+                if carry_overall_percent is not None:
+                    round_info["overallPercent"] = carry_overall_percent
+                    round_snapshot["overallPercent"] = carry_overall_percent
+            if precision_carry_relationship_candidate:
+                carry_relationship_rel = repo_relative(precision_carry_relationship_candidate)
+                round_info["relationshipEvidencePath"] = carry_relationship_rel
+                round_snapshot["relationshipEvidencePath"] = carry_relationship_rel
+
+            if precision_carry_progress_candidate or precision_carry_relationship_candidate:
+                scoreboard_text = str(round_info.get("scoreboardJsonPath") or "").strip()
+                progress_text = str(round_info.get("progressJsonPath") or "").strip()
+                relationship_text = str(round_info.get("relationshipEvidencePath") or "").strip()
+                runtime_summary_text = str(round_info.get("runtimeReadinessRoundSummaryPath") or "").strip()
+                round_summary_root_text = str(round_info.get("roundSummaryRoot") or "").strip()
+                round_root_text = str(round_info.get("roundRoot") or "").strip()
+                if not (
+                    scoreboard_text
+                    and (precision_carry_progress_candidate or progress_text)
+                    and (precision_carry_relationship_candidate or relationship_text)
+                    and runtime_summary_text
+                    and round_summary_root_text
+                    and round_root_text
+                ):
+                    round_snapshot["carryAwareRoundSummaryApplied"] = False
+                    round_snapshot["carryAwareRoundSummaryReason"] = "missing-required-paths"
+                else:
+                    scoreboard_candidate = resolve_existing_path(scoreboard_text)
+                    progress_candidate = precision_carry_progress_candidate or resolve_existing_path(progress_text)
+                    relationship_candidate = (
+                        precision_carry_relationship_candidate
+                        or resolve_existing_path(relationship_text)
+                    )
+                    runtime_summary_candidate = resolve_existing_path(runtime_summary_text)
+                    round_summary_root_candidate = resolve_existing_path(round_summary_root_text)
+                    round_root_candidate = resolve_existing_path(round_root_text)
+                    item_overlay_summary_candidate = (
+                        round_root_candidate / "item-relationship-overlay" / "item-relationship-overlay-summary.json"
+                    )
+                    baseline_scoreboard_candidate: Path | None = None
+                    baseline_progress_candidate: Path | None = None
+                    baseline_relationship_candidate: Path | None = None
+                    baseline_scoreboard_text = str(round_info.get("baselineScoreboardJsonPath") or "").strip()
+                    baseline_progress_text = str(round_info.get("baselineProgressJsonPath") or "").strip()
+                    baseline_relationship_text = str(round_info.get("baselineRelationshipEvidencePath") or "").strip()
+                    if baseline_scoreboard_text:
+                        candidate = resolve_existing_path(baseline_scoreboard_text)
+                        if candidate.exists():
+                            baseline_scoreboard_candidate = candidate
+                    if baseline_progress_text:
+                        candidate = resolve_existing_path(baseline_progress_text)
+                        if candidate.exists():
+                            baseline_progress_candidate = candidate
+                    if baseline_relationship_text:
+                        candidate = resolve_existing_path(baseline_relationship_text)
+                        if candidate.exists():
+                            baseline_relationship_candidate = candidate
+
+                    if (
+                        scoreboard_candidate.exists()
+                        and progress_candidate.exists()
+                        and relationship_candidate.exists()
+                        and runtime_summary_candidate.exists()
+                        and item_overlay_summary_candidate.exists()
+                    ):
+                        refreshed_summary = refresh_round_summaries(
+                            round_id=str(round_info.get("roundId") or ""),
+                            scoreboard_json_path=scoreboard_candidate,
+                            progress_json_path=progress_candidate,
+                            relationship_evidence_path=relationship_candidate,
+                            runtime_readiness_summary_path=runtime_summary_candidate,
+                            item_relationship_overlay_summary_path=item_overlay_summary_candidate,
+                            round_summary_root=round_summary_root_candidate,
+                            baseline_scoreboard_path=baseline_scoreboard_candidate,
+                            baseline_progress_path=baseline_progress_candidate,
+                            baseline_relationship_path=baseline_relationship_candidate,
+                            overwrite=args.overwrite,
+                            dry_run=args.dry_run,
+                        )
+                        round_commands = (
+                            round_info.get("commands")
+                            if isinstance(round_info.get("commands"), dict)
+                            else {}
+                        )
+                        round_commands["roundSummaries"] = refreshed_summary.get("commandResult")
+                        round_commands["roundSummariesCarryAware"] = refreshed_summary.get("commandResult")
+                        round_info["commands"] = round_commands
+                        for key in (
+                            "scoreboardSummaryJsonPath",
+                            "scoreboardSummaryMarkdownPath",
+                            "bottleneckDeltaJsonPath",
+                            "bottleneckDeltaMarkdownPath",
+                            "nextLaneSummaryJsonPath",
+                            "nextLaneSummaryMarkdownPath",
+                            "roundSummaryRoot",
+                        ):
+                            value = refreshed_summary.get(key)
+                            if value:
+                                round_info[key] = value
+                                round_snapshot[key] = value
+                        round_snapshot["carryAwareRoundSummaryApplied"] = True
+                    else:
+                        round_snapshot["carryAwareRoundSummaryApplied"] = False
+                        round_snapshot["carryAwareRoundSummaryReason"] = "carry-summary-input-missing"
         round_snapshot["eventsOutputPath"] = repo_relative(effective_events_path)
         rounds.append(round_snapshot)
+        baseline_manifest = {"paths": dict(round_info)}
         carry_forward_external_artifacts = merge_external_artifacts(
             carry_forward_external_artifacts,
             collect_external_artifacts_from_manifest({"paths": round_info}),
@@ -4013,6 +4323,8 @@ def main() -> int:
 
     final_three_lane_manifest = latest_round.get("threeLaneFinalBaselineManifest")
     final_paths = {
+        "eventsPath": latest_round.get("eventsOutputPath"),
+        "eventsOutputPath": latest_round.get("eventsOutputPath"),
         "scoreboardJsonPath": latest_round.get("scoreboardJsonPath"),
         "scoreboardMarkdownPath": latest_round.get("scoreboardMarkdownPath"),
         "scorecardJsonPath": latest_round.get("scorecardJsonPath"),
@@ -4129,6 +4441,9 @@ def main() -> int:
             "precisionCarryGuard": bool(args.precision_carry_guard),
             "precisionCarryMinDelta": float(args.precision_carry_min_delta),
             "precisionCarryRequireLocationImprovement": bool(args.precision_carry_require_location_improvement),
+            "precisionCarryScoreboardAutopick": bool(args.precision_carry_scoreboard_autopick),
+            "precisionCarryScoreboardMinImprove": float(args.precision_carry_scoreboard_min_improve),
+            "precisionCarryScoreboardMaxRegression": float(args.precision_carry_scoreboard_max_regression),
             "seedToCardPriorityLimit": int(args.seed_to_card_priority_limit),
             "runThreeLane": args.run_three_lane,
             "sourceRoiPolicy": {
@@ -4149,6 +4464,7 @@ def main() -> int:
             "lanePolicyConfigPath": repo_relative(lane_policy_config_path),
             "lanePolicyVersion": str(lane_policy_payload.get("version") or "1.0.0"),
             "baselineManifestInput": args.baseline_manifest,
+            "baselineSeedEventsPath": repo_relative(baseline_seed_events_path) if baseline_seed_events_path else None,
             "baseObservedMentionsPath": repo_relative(observed_mentions_path),
             "baseObservedSummaryPath": repo_relative(observed_summary_path),
             "top": args.top,

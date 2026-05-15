@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-INITIAL-VERDICT:base:nominal",
+    "kind": "base",
+    "title": "buildInitialVerdict 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:0e85b6b9a46351b68be1c0211dded848ced90c19961b2a56b9dcb5c345511386",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/final-verdict.js#L2-L56"
+    ]
+  }
+]

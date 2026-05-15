@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-COLLECT-LAYOUT-NODE-INDEX",
   "symbolName": "collectLayoutNodeIndex",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
+  "moduleSlug": "interaction-smoke-f0cad253",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js",
     "sourceRange": {
-      "startLine": 1776,
-      "endLine": 1788
+      "startLine": 14,
+      "endLine": 26
     },
     "semanticFingerprint": "sf:sha256:8807e707fe3f4d026478229830f9ae3c23ca08bb9a6806d5bee83b239e23f5c6"
   },
@@ -42,7 +42,7 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1706",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js#L136",
     "tooling:tools_node/validate-ui-specs.js#L157",
     "tooling:tools_node/validate-ui-specs.js#L736"
   ],
@@ -66,7 +66,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1776-L1788"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js#L14-L26"
     ]
   },
   "promotion": {

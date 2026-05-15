@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-RULE-GUARD-STEP:boundary:empty",
+    "kind": "boundary",
+    "title": "buildRuleGuardStep 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:e40284d83200452e1193e1b128a8382e472dc3b617e8d01d1f3436d7a9bad324",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-RULE-GUARD-STEP:boundary:formatted",
+    "kind": "boundary",
+    "title": "buildRuleGuardStep 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:e40284d83200452e1193e1b128a8382e472dc3b617e8d01d1f3436d7a9bad324",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

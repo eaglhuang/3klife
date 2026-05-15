@@ -3,15 +3,15 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-INJECT-DYNAMIC-TEXT-CONTRACTS",
   "symbolName": "injectDynamicTextContracts",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+  "moduleSlug": "cli-shell-context-74c85a60",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
     "sourceRange": {
-      "startLine": 959,
-      "endLine": 982
+      "startLine": 453,
+      "endLine": 463
     },
-    "semanticFingerprint": "sf:sha256:94b8c1038b00096007b1759450ed11bd68c41dc070af156e79d4d9d0107753e0"
+    "semanticFingerprint": "sf:sha256:c31e6f926eca3a7506e278471bb07d41eb993c3f85bf33e4e331315784257072"
   },
   "tier": "local-capsule",
   "recommendedTier": "local-capsule",
@@ -28,7 +28,7 @@
   "requiredCaseSets": [],
   "classification": {
     "exported": false,
-    "lineCount": 24,
+    "lineCount": 11,
     "severity": "advisory",
     "riskScore": 25,
     "sideEffectRisk": false
@@ -41,13 +41,18 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2083"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L17",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L684",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/text-contract-sync.js#L25",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/text-contract-sync.js#L93",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L25",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L245"
   ],
   "usageRefStats": {
-    "totalRefs": 1,
-    "distinctFiles": 1,
+    "totalRefs": 6,
+    "distinctFiles": 3,
     "distinctKinds": 1,
-    "externalRefs": 0,
+    "externalRefs": 4,
     "kinds": [
       "workflow"
     ]
@@ -62,13 +67,13 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L959-L982"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L453-L463"
     ]
   },
   "promotion": {
     "currentTier": "local-capsule",
     "history": [],
     "sourceIdentityStable": true,
-    "semanticFingerprint": "sf:sha256:94b8c1038b00096007b1759450ed11bd68c41dc070af156e79d4d9d0107753e0"
+    "semanticFingerprint": "sf:sha256:c31e6f926eca3a7506e278471bb07d41eb993c3f85bf33e4e331315784257072"
   }
 }

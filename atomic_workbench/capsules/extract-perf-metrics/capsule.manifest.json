@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-EXTRACT-PERF-METRICS",
   "symbolName": "extractPerfMetrics",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+  "moduleSlug": "cli-shell-context-74c85a60",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
     "sourceRange": {
-      "startLine": 237,
-      "endLine": 245
+      "startLine": 130,
+      "endLine": 138
     },
     "semanticFingerprint": "sf:sha256:f24d9213e01e790b25e4864f6276617fd67e09910c8cfacd17d789a6d15054d2"
   },
@@ -42,17 +42,19 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2208",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2209",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2210",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2316",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2318"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L637",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L639",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L667",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L34",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L370",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L371",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L372"
   ],
   "usageRefStats": {
-    "totalRefs": 5,
-    "distinctFiles": 1,
+    "totalRefs": 7,
+    "distinctFiles": 2,
     "distinctKinds": 1,
-    "externalRefs": 0,
+    "externalRefs": 4,
     "kinds": [
       "workflow"
     ]
@@ -67,7 +69,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L237-L245"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L130-L138"
     ]
   },
   "promotion": {

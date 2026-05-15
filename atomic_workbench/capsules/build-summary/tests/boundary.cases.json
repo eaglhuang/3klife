@@ -6,7 +6,7 @@
     "inputSample": "",
     "expectation": {
       "mode": "template-contract",
-      "semanticFingerprint": "sf:sha256:74857cce385d6a4a405a14daebaedd9f273682dad22e4ee20f929122652b971b",
+      "semanticFingerprint": "sf:sha256:af4d7d807396843cf3efcee95968a8a10eeba9bd3ea396f5008258ce61d2c4d8",
       "claim": "handles empty or whitespace-only input without crashing"
     }
   },
@@ -17,7 +17,7 @@
     "inputSample": "  ALPHA , beta  ",
     "expectation": {
       "mode": "template-contract",
-      "semanticFingerprint": "sf:sha256:74857cce385d6a4a405a14daebaedd9f273682dad22e4ee20f929122652b971b",
+      "semanticFingerprint": "sf:sha256:af4d7d807396843cf3efcee95968a8a10eeba9bd3ea396f5008258ce61d2c4d8",
       "claim": "handles trimming/casing/format boundary deterministically"
     }
   }

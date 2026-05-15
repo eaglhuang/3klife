@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-NORMALIZE-INTERACTION-TRIGGERS-FROM-LAYOUT:invalid:null",
+    "kind": "invalid",
+    "title": "normalizeInteractionTriggersFromLayout null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:224e53f6493b38a6ee6e59987a166512b0ebc9e2a57578afd01c46681a28196c",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-NORMALIZE-INTERACTION-TRIGGERS-FROM-LAYOUT:invalid:type",
+    "kind": "invalid",
+    "title": "normalizeInteractionTriggersFromLayout 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:224e53f6493b38a6ee6e59987a166512b0ebc9e2a57578afd01c46681a28196c",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

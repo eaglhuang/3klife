@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-TO-KEBAB",
   "symbolName": "toKebab",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
+  "moduleSlug": "per-tab-replay-e0734ba6",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
     "sourceRange": {
-      "startLine": 685,
-      "endLine": 693
+      "startLine": 9,
+      "endLine": 17
     },
     "semanticFingerprint": "sf:sha256:b8758192d74979f4877dba227029cfbf2991977976a735634c90399da93a1c8c"
   },
@@ -54,12 +54,12 @@
     "tooling:tools_node/lib/dom-to-ui/token-registry.js#L133",
     "tooling:tools_node/lib/dom-to-ui/token-registry.js#L137",
     "tooling:tools_node/lib/dom-to-ui/token-registry.js#L168",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1106",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1107",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1119",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1123",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1124",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1235"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L153",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L154",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L166",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L170",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L171",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L282"
   ],
   "usageRefStats": {
     "totalRefs": 19,
@@ -81,7 +81,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L685-L693"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L9-L17"
     ]
   },
   "promotion": {

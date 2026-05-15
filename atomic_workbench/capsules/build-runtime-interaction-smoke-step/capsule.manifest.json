@@ -3,57 +3,58 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-BUILD-RUNTIME-INTERACTION-SMOKE-STEP",
   "symbolName": "buildRuntimeInteractionSmokeStep",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+  "moduleSlug": "cli-shell-context-74c85a60",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
     "sourceRange": {
-      "startLine": 1652,
-      "endLine": 1775
+      "startLine": 598,
+      "endLine": 614
     },
-    "semanticFingerprint": "sf:sha256:15d52ce65b9b4a091f80aa9a85cedff4a136971a1d9231e0acd0fa969e2c9a47"
+    "semanticFingerprint": "sf:sha256:344286e5234c5f4b73012d1e8ae9bdfd9c517dfa2c644c18fb6334f0e3186d93"
   },
   "tier": "local-capsule",
   "recommendedTier": "local-capsule",
   "targetWorkbenchRoot": "atomic_workbench",
   "reasons": [
     "stable-behavior-name",
-    "medium-function",
-    "side-effect-risk",
+    "pure-ish",
     "return-contract"
   ],
   "testStrategy": [
     "source-range-fingerprint",
     "capsule-metadata",
-    "side-effect-boundary"
+    "edge-cases"
   ],
-  "requiredCaseSets": [
-    "boundary",
-    "invalid"
-  ],
+  "requiredCaseSets": [],
   "classification": {
     "exported": false,
-    "lineCount": 124,
+    "lineCount": 17,
     "severity": "advisory",
     "riskScore": 50,
-    "sideEffectRisk": true
+    "sideEffectRisk": false
   },
   "behaviorContract": {
     "oracleMode": "template-contract",
     "manualTestRequired": false,
-    "templateCompletenessRequired": true
+    "templateCompletenessRequired": false
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2123",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L21",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L699",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js#L76",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js#L236",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L30",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L285",
     "test:tools_node/test/dom-to-ui-self-test.js#L2676"
   ],
   "usageRefStats": {
-    "totalRefs": 2,
-    "distinctFiles": 2,
+    "totalRefs": 7,
+    "distinctFiles": 4,
     "distinctKinds": 2,
-    "externalRefs": 1,
+    "externalRefs": 5,
     "kinds": [
       "test",
       "workflow"
@@ -69,13 +70,13 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1652-L1775"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L598-L614"
     ]
   },
   "promotion": {
     "currentTier": "local-capsule",
     "history": [],
     "sourceIdentityStable": true,
-    "semanticFingerprint": "sf:sha256:15d52ce65b9b4a091f80aa9a85cedff4a136971a1d9231e0acd0fa969e2c9a47"
+    "semanticFingerprint": "sf:sha256:344286e5234c5f4b73012d1e8ae9bdfd9c517dfa2c644c18fb6334f0e3186d93"
   }
 }

@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-REGENERATE-SCREEN-LOCAL-TOKENS:boundary:empty",
+    "kind": "boundary",
+    "title": "regenerateScreenLocalTokens 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:8d8c24eed40e49baae7c68c3cc79a2abf7df1e972c0ce4b0532feb99eea5257a",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-REGENERATE-SCREEN-LOCAL-TOKENS:boundary:formatted",
+    "kind": "boundary",
+    "title": "regenerateScreenLocalTokens 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:8d8c24eed40e49baae7c68c3cc79a2abf7df1e972c0ce4b0532feb99eea5257a",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

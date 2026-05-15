@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-TAB-ROUTING-MAP:boundary:empty",
+    "kind": "boundary",
+    "title": "buildRuntimeTabRoutingMap 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:46e118e0487c2e35b27257efdeb6b26a812d4fb2fa624ed7f98c693714cb717f",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-TAB-ROUTING-MAP:boundary:formatted",
+    "kind": "boundary",
+    "title": "buildRuntimeTabRoutingMap 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:46e118e0487c2e35b27257efdeb6b26a812d4fb2fa624ed7f98c693714cb717f",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

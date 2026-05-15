@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-DERIVE-TOKEN-SUGGESTION-PATH-FROM-LAYOUT",
   "symbolName": "deriveTokenSuggestionPathFromLayout",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
+  "moduleSlug": "token-governance-7dfb32fb",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
     "sourceRange": {
-      "startLine": 404,
-      "endLine": 408
+      "startLine": 5,
+      "endLine": 9
     },
     "semanticFingerprint": "sf:sha256:9e6fe021b0fc1c6984d04913ea8f3d9b864d6b09b7977c19364a409520a37d92"
   },
@@ -41,7 +41,7 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L433"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/token-governance.js#L34"
   ],
   "usageRefStats": {
     "totalRefs": 1,
@@ -62,7 +62,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L404-L408"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/token-governance.js#L5-L9"
     ]
   },
   "promotion": {

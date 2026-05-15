@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-READ-TEXT",
   "symbolName": "readText",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+  "moduleSlug": "cli-shell-context-74c85a60",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
     "sourceRange": {
-      "startLine": 154,
-      "endLine": 157
+      "startLine": 47,
+      "endLine": 50
     },
     "semanticFingerprint": "sf:sha256:b37f80656a21b28456309dadbc231c008fee0d61f71fde37557503abd6cfd2bb"
   },
@@ -52,9 +52,11 @@
     "tooling:tools_node/atm-atomize.js#L1590",
     "tooling:tools_node/atm-atomize.js#L1670",
     "tooling:tools_node/atm-atomize.js#L1978",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L659",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L10",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L72",
     "tooling:tools_node/lib/ucuf-proof-utils.js#L141",
     "tooling:tools_node/lib/ucuf-proof-utils.js#L748",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1910",
     "test:tools_node/test/tasks-atm-shard-store.test.js#L67",
     "test:tools_node/test/tasks-atm-shard-store.test.js#L143",
     "test:tools_node/test/tasks-atm-shard-store.test.js#L157",
@@ -67,10 +69,10 @@
     "tooling:tools_node/validate-framework-atomization-coverage.js#L436"
   ],
   "usageRefStats": {
-    "totalRefs": 21,
-    "distinctFiles": 7,
+    "totalRefs": 23,
+    "distinctFiles": 8,
     "distinctKinds": 3,
-    "externalRefs": 20,
+    "externalRefs": 22,
     "kinds": [
       "test",
       "tooling",
@@ -87,7 +89,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L154-L157"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L47-L50"
     ]
   },
   "promotion": {

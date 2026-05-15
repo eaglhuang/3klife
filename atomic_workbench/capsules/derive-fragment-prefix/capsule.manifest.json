@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-DERIVE-FRAGMENT-PREFIX",
   "symbolName": "deriveFragmentPrefix",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
+  "moduleSlug": "per-tab-replay-e0734ba6",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
     "sourceRange": {
-      "startLine": 681,
-      "endLine": 684
+      "startLine": 5,
+      "endLine": 8
     },
     "semanticFingerprint": "sf:sha256:0c18bdbff0313d397e9d985dd5e72f6e3d66ecd9d9ba8c9b87b5e1030226d9df"
   },
@@ -44,8 +44,8 @@
     "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L237",
     "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L243",
     "tooling:tools_node/lib/dom-to-ui/sidecar-emitters.js#L254",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1117",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1222"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L164",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L269"
   ],
   "usageRefStats": {
     "totalRefs": 5,
@@ -67,7 +67,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L681-L684"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L5-L8"
     ]
   },
   "promotion": {

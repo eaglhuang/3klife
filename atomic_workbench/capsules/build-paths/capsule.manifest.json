@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-BUILD-PATHS",
   "symbolName": "buildPaths",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+  "moduleSlug": "cli-shell-context-74c85a60",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
     "sourceRange": {
-      "startLine": 347,
-      "endLine": 373
+      "startLine": 240,
+      "endLine": 266
     },
     "semanticFingerprint": "sf:sha256:c993df285cfd373f73845cd0a1f9c50d756016305545934a4b9c7df60754b45e"
   },
@@ -42,13 +42,15 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1912"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L670",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L12",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L74"
   ],
   "usageRefStats": {
-    "totalRefs": 1,
-    "distinctFiles": 1,
+    "totalRefs": 3,
+    "distinctFiles": 2,
     "distinctKinds": 1,
-    "externalRefs": 0,
+    "externalRefs": 2,
     "kinds": [
       "workflow"
     ]
@@ -63,7 +65,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L347-L373"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L240-L266"
     ]
   },
   "promotion": {

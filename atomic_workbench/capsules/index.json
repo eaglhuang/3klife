@@ -1,32 +1,36 @@
 {
   "schemaId": "atm.localCapsuleIndex",
   "specVersion": "0.2.0",
-  "generatedAt": "2026-05-13T11:45:13.919Z",
-  "candidateReport": "artifacts/atm-atomize/candidates.json",
+  "generatedAt": "2026-05-15T08:42:47.746Z",
+  "candidateReport": "artifacts/atm-atomize/workflow-rebind.scan.report.json",
   "workbenchRoot": "atomic_workbench",
   "capsuleRoot": "atomic_workbench/capsules",
   "anchorRoot": "atomic_workbench/anchors",
   "summary": {
-    "candidateCount": 249,
-    "anchorCount": 2,
+    "candidateCount": 256,
+    "anchorCount": 12,
     "byRecommendedTier": {
-      "local-capsule": 237,
-      "governed-atom": 12
+      "local-capsule": 240,
+      "governed-atom": 16
     },
     "byCurrentTier": {
-      "local-capsule": 237,
-      "local-capsule-candidate": 12
+      "local-capsule": 240,
+      "local-capsule-candidate": 16
     },
     "bySeverity": {
       "advisory": 234,
-      "block-if-untested": 14,
-      "block-release": 1
+      "block-if-untested": 20,
+      "block-release": 2
     },
     "governedCandidates": [
       "applyTextTransformGeneral",
       "buildDraftFromHtml",
       "buildFontFaceRegistry",
+      "buildInitialVerdict",
+      "buildRuleGuardStep",
+      "buildRuntimeSyncStep",
       "collectBehavior",
+      "collectVisualRiskFromSlot",
       "computeLetterSpacing",
       "inferTabSemanticHints",
       "normalizeCssColorToHex",
@@ -37,7 +41,8 @@
       "resolveFontFamilyToAsset"
     ],
     "releaseBlockers": [
-      "processElement"
+      "processElement",
+      "runWorkflowMain"
     ]
   },
   "capsules": [
@@ -49,20 +54,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 724,
-          "endLine": 743
+          "startLine": 386,
+          "endLine": 405
         },
         "semanticFingerprint": "sf:sha256:489b4f7bb4870a032a06d81e3054d3341c324c524022525c29629f779ab124f1"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 3,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 2,
         "kinds": [
           "workflow"
         ]
@@ -307,14 +312,14 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
         "sourceRange": {
-          "startLine": 543,
-          "endLine": 586
+          "startLine": 143,
+          "endLine": 186
         },
-        "semanticFingerprint": "sf:sha256:0d084d1e7dfe67558ea44ce0402a63a7582416abb9cd9bcc1250850d04ba6341"
+        "semanticFingerprint": "sf:sha256:bc67f7d10c948e4a86f4139f0b99ed5b5f6d733184adb62e4cb0113fe6b815b7"
       },
       "usageRefStats": {
         "totalRefs": 1,
@@ -424,20 +429,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1846,
-          "endLine": 1872
+          "startLine": 615,
+          "endLine": 628
         },
-        "semanticFingerprint": "sf:sha256:91f8a4b4f47cad711ba98de4e5d657cfb1f83f98de8ead0ff4aa7c05aeaacbb3"
+        "semanticFingerprint": "sf:sha256:1409db3621b0ff27b47341f66d34e82f3f45a492df9cf13df21d51ece941f80a"
       },
       "usageRefStats": {
-        "totalRefs": 2,
-        "distinctFiles": 1,
+        "totalRefs": 8,
+        "distinctFiles": 4,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 5,
         "kinds": [
           "workflow"
         ]
@@ -460,20 +465,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1566,
-          "endLine": 1628
+          "startLine": 590,
+          "endLine": 597
         },
-        "semanticFingerprint": "sf:sha256:4732a3fb67bf53081f50697df050376eceaba910d0c44a99d2f3b8334d20ac77"
+        "semanticFingerprint": "sf:sha256:4b81f9ab293daae6f7b1ccd7301c9a21388736553c0be07560d886042cf73b18"
       },
       "usageRefStats": {
-        "totalRefs": 2,
-        "distinctFiles": 1,
+        "totalRefs": 7,
+        "distinctFiles": 3,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 5,
         "kinds": [
           "workflow"
         ]
@@ -714,20 +719,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1327,
-          "endLine": 1352
+          "startLine": 518,
+          "endLine": 543
         },
         "semanticFingerprint": "sf:sha256:3bbdce903c679e2d49558127aa3385cc348a4cb9db7f77cc507e7adffe2ecb39"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 3,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 2,
         "kinds": [
           "workflow"
         ]
@@ -834,20 +839,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1404,
-          "endLine": 1433
+          "startLine": 555,
+          "endLine": 558
         },
-        "semanticFingerprint": "sf:sha256:aca98bdb77a1ab000e12767960113f18e2ffeef98bc86ed656d8b3c382166465"
+        "semanticFingerprint": "sf:sha256:ca40af78e22d1cdb55332a08d294ab0a1b011b0bb4ed37ab29ace73b3622f1b4"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 5,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 3,
         "kinds": [
           "workflow"
         ]
@@ -856,7 +861,7 @@
       "capsuleDir": "atomic_workbench/capsules/build-fidelity-dimensions",
       "manifestPath": "atomic_workbench/capsules/build-fidelity-dimensions/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/build-fidelity-dimensions/capsule.test.mjs",
-      "behaviorTestPath": null,
+      "behaviorTestPath": "atomic_workbench/capsules/build-fidelity-dimensions/capsule.behavior.test.mjs",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -944,6 +949,48 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-BUILD-INITIAL-VERDICT",
+      "symbolName": "buildInitialVerdict",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-FINAL-VERDICT-2E58DEC4",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/final-verdict.js",
+        "sourceRange": {
+          "startLine": 2,
+          "endLine": 56
+        },
+        "semanticFingerprint": "sf:sha256:0e85b6b9a46351b68be1c0211dded848ced90c19961b2a56b9dcb5c345511386"
+      },
+      "usageRefStats": {
+        "totalRefs": 2,
+        "distinctFiles": 1,
+        "distinctKinds": 1,
+        "externalRefs": 0,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/build-initial-verdict",
+      "manifestPath": "atomic_workbench/capsules/build-initial-verdict/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-initial-verdict/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/build-initial-verdict/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-BUILD-INTERACTION-ROUTE-MAP",
       "symbolName": "buildInteractionRouteMap",
       "tier": "local-capsule",
@@ -951,12 +998,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js",
         "sourceRange": {
-          "startLine": 1789,
-          "endLine": 1807
+          "startLine": 27,
+          "endLine": 45
         },
         "semanticFingerprint": "sf:sha256:15a34010d4bb67eb6aedb708880c7b97ba9eb4cd06f27371557572fbe8a184a5"
       },
@@ -1025,12 +1072,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
         "sourceRange": {
-          "startLine": 528,
-          "endLine": 542
+          "startLine": 128,
+          "endLine": 142
         },
         "semanticFingerprint": "sf:sha256:13dd2818f531df316117a635fc971c6afb04e1dd30e7324c83d1269a012dd98e"
       },
@@ -1062,12 +1109,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
         "sourceRange": {
-          "startLine": 510,
-          "endLine": 527
+          "startLine": 110,
+          "endLine": 127
         },
         "semanticFingerprint": "sf:sha256:f20dd5a4cc2c48e1abc8ebaaba29ea7494e6e5d081d63f9f37fe251b4be2275a"
       },
@@ -1099,20 +1146,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 347,
-          "endLine": 373
+          "startLine": 240,
+          "endLine": 266
         },
         "semanticFingerprint": "sf:sha256:c993df285cfd373f73845cd0a1f9c50d756016305545934a4b9c7df60754b45e"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 3,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 2,
         "kinds": [
           "workflow"
         ]
@@ -1136,20 +1183,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1513,
-          "endLine": 1548
+          "startLine": 582,
+          "endLine": 585
         },
-        "semanticFingerprint": "sf:sha256:179c28f170d7412b2a1f0564f2b779701e3ceccb0f13a54a347bf6c320b11256"
+        "semanticFingerprint": "sf:sha256:a11d28d18b06ea06b21de68d0d9c1a79e6bddb5785056f4454d8b0472b671f76"
       },
       "usageRefStats": {
-        "totalRefs": 3,
-        "distinctFiles": 2,
+        "totalRefs": 8,
+        "distinctFiles": 4,
         "distinctKinds": 1,
-        "externalRefs": 2,
+        "externalRefs": 6,
         "kinds": [
           "workflow"
         ]
@@ -1158,7 +1205,7 @@
       "capsuleDir": "atomic_workbench/capsules/build-pre-rule-guard-fixes",
       "manifestPath": "atomic_workbench/capsules/build-pre-rule-guard-fixes/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/build-pre-rule-guard-fixes/capsule.test.mjs",
-      "behaviorTestPath": null,
+      "behaviorTestPath": "atomic_workbench/capsules/build-pre-rule-guard-fixes/capsule.behavior.test.mjs",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -1240,6 +1287,48 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-BUILD-RULE-GUARD-STEP",
+      "symbolName": "buildRuleGuardStep",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-GATE-ORCHESTRATION-3DF999E5",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js",
+        "sourceRange": {
+          "startLine": 17,
+          "endLine": 28
+        },
+        "semanticFingerprint": "sf:sha256:e40284d83200452e1193e1b128a8382e472dc3b617e8d01d1f3436d7a9bad324"
+      },
+      "usageRefStats": {
+        "totalRefs": 5,
+        "distinctFiles": 3,
+        "distinctKinds": 1,
+        "externalRefs": 4,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/build-rule-guard-step",
+      "manifestPath": "atomic_workbench/capsules/build-rule-guard-step/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-rule-guard-step/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/build-rule-guard-step/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-BUILD-RUNTIME-AUTHORITY",
       "symbolName": "buildRuntimeAuthority",
       "tier": "local-capsule",
@@ -1247,20 +1336,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1446,
-          "endLine": 1458
+          "startLine": 563,
+          "endLine": 569
         },
-        "semanticFingerprint": "sf:sha256:38e3ac8b9228bf831f1217e9e4d7eaa0190c45c773fee9def93363c111ac7131"
+        "semanticFingerprint": "sf:sha256:1bdcd287b76a32372e0a008e8c63d6a70ffdf4a76b514ab845428da22c91c90a"
       },
       "usageRefStats": {
-        "totalRefs": 2,
-        "distinctFiles": 1,
+        "totalRefs": 7,
+        "distinctFiles": 3,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 5,
         "kinds": [
           "workflow"
         ]
@@ -1269,7 +1358,7 @@
       "capsuleDir": "atomic_workbench/capsules/build-runtime-authority",
       "manifestPath": "atomic_workbench/capsules/build-runtime-authority/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/build-runtime-authority/capsule.test.mjs",
-      "behaviorTestPath": null,
+      "behaviorTestPath": "atomic_workbench/capsules/build-runtime-authority/capsule.behavior.test.mjs",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -1284,37 +1373,75 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1652,
-          "endLine": 1775
+          "startLine": 598,
+          "endLine": 614
         },
-        "semanticFingerprint": "sf:sha256:15d52ce65b9b4a091f80aa9a85cedff4a136971a1d9231e0acd0fa969e2c9a47"
+        "semanticFingerprint": "sf:sha256:344286e5234c5f4b73012d1e8ae9bdfd9c517dfa2c644c18fb6334f0e3186d93"
       },
       "usageRefStats": {
-        "totalRefs": 2,
-        "distinctFiles": 2,
+        "totalRefs": 7,
+        "distinctFiles": 4,
         "distinctKinds": 2,
-        "externalRefs": 1,
+        "externalRefs": 5,
         "kinds": [
           "test",
           "workflow"
         ]
       },
-      "requiredCaseSets": [
-        "boundary",
-        "invalid"
-      ],
+      "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-runtime-interaction-smoke-step",
       "manifestPath": "atomic_workbench/capsules/build-runtime-interaction-smoke-step/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/build-runtime-interaction-smoke-step/capsule.test.mjs",
       "behaviorTestPath": "atomic_workbench/capsules/build-runtime-interaction-smoke-step/capsule.behavior.test.mjs",
       "reasons": [
         "stable-behavior-name",
-        "medium-function",
-        "side-effect-risk",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-BUILD-RUNTIME-SYNC-STEP",
+      "symbolName": "buildRuntimeSyncStep",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-GATE-ORCHESTRATION-3DF999E5",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js",
+        "sourceRange": {
+          "startLine": 2,
+          "endLine": 16
+        },
+        "semanticFingerprint": "sf:sha256:b8f03df457286b0a02e37e00482e3c6046d7550d3ad08a4ecfa3e34a7f6a5f00"
+      },
+      "usageRefStats": {
+        "totalRefs": 5,
+        "distinctFiles": 3,
+        "distinctKinds": 1,
+        "externalRefs": 4,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/build-runtime-sync-step",
+      "manifestPath": "atomic_workbench/capsules/build-runtime-sync-step/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/build-runtime-sync-step/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/build-runtime-sync-step/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "stable-behavior-name",
+        "pure-ish",
         "return-contract"
       ]
     },
@@ -1326,12 +1453,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 768,
-          "endLine": 771
+          "startLine": 430,
+          "endLine": 433
         },
         "semanticFingerprint": "sf:sha256:9bca1320f1be41a61a533297d27064d6f9a7bba11d098d00f7238b2627910388"
       },
@@ -1348,7 +1475,7 @@
       "capsuleDir": "atomic_workbench/capsules/build-runtime-tab-routing-map",
       "manifestPath": "atomic_workbench/capsules/build-runtime-tab-routing-map/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/build-runtime-tab-routing-map/capsule.test.mjs",
-      "behaviorTestPath": null,
+      "behaviorTestPath": "atomic_workbench/capsules/build-runtime-tab-routing-map/capsule.behavior.test.mjs",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -1363,14 +1490,14 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
         "sourceRange": {
-          "startLine": 446,
-          "endLine": 509
+          "startLine": 47,
+          "endLine": 109
         },
-        "semanticFingerprint": "sf:sha256:93095e42b8f9e9dbd6fd98ca2c4838121491a4a9ad890a9a7fcfdf4bda640594"
+        "semanticFingerprint": "sf:sha256:0d971292a18c4d584ae50e2fcf8aabce06a2c237a7c0e45200fbc21df70b9a49"
       },
       "usageRefStats": {
         "totalRefs": 1,
@@ -1440,36 +1567,33 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1353,
-          "endLine": 1403
+          "startLine": 544,
+          "endLine": 554
         },
-        "semanticFingerprint": "sf:sha256:74857cce385d6a4a405a14daebaedd9f273682dad22e4ee20f929122652b971b"
+        "semanticFingerprint": "sf:sha256:5d2ae2cc080b2e3ccabe63312fbde24dcc0197be693fb18cc0f91f159f7db02c"
       },
       "usageRefStats": {
-        "totalRefs": 17,
-        "distinctFiles": 7,
+        "totalRefs": 22,
+        "distinctFiles": 9,
         "distinctKinds": 2,
-        "externalRefs": 14,
+        "externalRefs": 19,
         "kinds": [
           "tooling",
           "workflow"
         ]
       },
-      "requiredCaseSets": [
-        "boundary",
-        "invalid"
-      ],
+      "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-summary",
       "manifestPath": "atomic_workbench/capsules/build-summary/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/build-summary/capsule.test.mjs",
       "behaviorTestPath": "atomic_workbench/capsules/build-summary/capsule.behavior.test.mjs",
       "reasons": [
         "stable-behavior-name",
-        "side-effect-risk",
+        "pure-ish",
         "return-contract"
       ]
     },
@@ -1625,20 +1749,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1471,
-          "endLine": 1487
+          "startLine": 574,
+          "endLine": 577
         },
-        "semanticFingerprint": "sf:sha256:792c52ded475d426291cd32ef6f9cf013c53a20bf413f190b4319fb0f8678fef"
+        "semanticFingerprint": "sf:sha256:2076704c909a2d1169a78ccae35b2d662abc826db4ce030c3a63323d9127dc71"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 5,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 3,
         "kinds": [
           "workflow"
         ]
@@ -1776,12 +1900,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js",
         "sourceRange": {
-          "startLine": 1776,
-          "endLine": 1788
+          "startLine": 14,
+          "endLine": 26
         },
         "semanticFingerprint": "sf:sha256:8807e707fe3f4d026478229830f9ae3c23ca08bb9a6806d5bee83b239e23f5c6"
       },
@@ -1962,12 +2086,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
         "sourceRange": {
-          "startLine": 430,
-          "endLine": 445
+          "startLine": 31,
+          "endLine": 46
         },
         "semanticFingerprint": "sf:sha256:99d76c593d5ecff114ca891ab838b4f220f141cb61f2c6372d88c47874ec16de"
       },
@@ -1997,22 +2121,22 @@
     {
       "capsuleId": "H2U-CAPSULE-COLLECT-VISUAL-RISK-FROM-SLOT",
       "symbolName": "collectVisualRiskFromSlot",
-      "tier": "local-capsule",
-      "currentTier": "local-capsule",
-      "recommendedTier": "local-capsule",
-      "severity": "advisory",
+      "tier": "local-capsule-candidate",
+      "currentTier": "local-capsule-candidate",
+      "recommendedTier": "governed-atom",
+      "severity": "block-if-untested",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-QUALITY-VERDICT-UTILS-1DA9B161",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js",
         "sourceRange": {
-          "startLine": 1629,
-          "endLine": 1651
+          "startLine": 164,
+          "endLine": 186
         },
         "semanticFingerprint": "sf:sha256:ae2241e23564eb91f547c9e07eb5b556124931410fb6e6aaa988a8e6e8c911a6"
       },
       "usageRefStats": {
-        "totalRefs": 1,
+        "totalRefs": 2,
         "distinctFiles": 1,
         "distinctKinds": 1,
         "externalRefs": 0,
@@ -2020,12 +2144,17 @@
           "workflow"
         ]
       },
-      "requiredCaseSets": [],
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid"
+      ],
       "capsuleDir": "atomic_workbench/capsules/collect-visual-risk-from-slot",
       "manifestPath": "atomic_workbench/capsules/collect-visual-risk-from-slot/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/collect-visual-risk-from-slot/capsule.test.mjs",
-      "behaviorTestPath": null,
+      "behaviorTestPath": "atomic_workbench/capsules/collect-visual-risk-from-slot/capsule.behavior.test.mjs",
       "reasons": [
+        "exported",
         "stable-behavior-name",
         "pure-ish",
         "return-contract"
@@ -2039,12 +2168,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 1027,
-          "endLine": 1037
+          "startLine": 75,
+          "endLine": 85
         },
         "semanticFingerprint": "sf:sha256:452ff152ed1c024f0781aba4f85ab6326e2fcbe5de994e0d8915374dca75b376"
       },
@@ -2076,20 +2205,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1434,
-          "endLine": 1445
+          "startLine": 559,
+          "endLine": 562
         },
-        "semanticFingerprint": "sf:sha256:5fa56443f00a5565ec9ba6daf1c3d779616840d83bc63b784fed24b32530c04b"
+        "semanticFingerprint": "sf:sha256:b01e94e76a35f1092898f264f2849aa27688ded4fc05194430090b4fcba8a910"
       },
       "usageRefStats": {
-        "totalRefs": 2,
-        "distinctFiles": 1,
+        "totalRefs": 7,
+        "distinctFiles": 3,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 5,
         "kinds": [
           "workflow"
         ]
@@ -2098,7 +2227,7 @@
       "capsuleDir": "atomic_workbench/capsules/compute-debug-only",
       "manifestPath": "atomic_workbench/capsules/compute-debug-only/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/compute-debug-only/capsule.test.mjs",
-      "behaviorTestPath": null,
+      "behaviorTestPath": "atomic_workbench/capsules/compute-debug-only/capsule.behavior.test.mjs",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -2301,12 +2430,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 629,
-          "endLine": 636
+          "startLine": 311,
+          "endLine": 319
         },
         "semanticFingerprint": "sf:sha256:e9e101337050abb5852c0856dd38580ca9ed23f0d8c67a25c469dc2137a0807d"
       },
@@ -2337,17 +2466,17 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 674,
-          "endLine": 680
+          "startLine": 357,
+          "endLine": 363
         },
         "semanticFingerprint": "sf:sha256:6045c1cdb076ed1781b7cf83f8f6ea30b583ae1e36ac901a5c1dc7e56e7da8a0"
       },
       "usageRefStats": {
-        "totalRefs": 13,
+        "totalRefs": 8,
         "distinctFiles": 2,
         "distinctKinds": 1,
         "externalRefs": 6,
@@ -2522,20 +2651,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1488,
-          "endLine": 1512
+          "startLine": 578,
+          "endLine": 581
         },
-        "semanticFingerprint": "sf:sha256:368d153bce043811698d3e0ff57f03befc8386e7ac4246ad4dd84801182e31f9"
+        "semanticFingerprint": "sf:sha256:b507cc4cfb83f9a021271feaf79685163e7cdc3a05602b4f0ccdba00b5919538"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 5,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 3,
         "kinds": [
           "workflow"
         ]
@@ -2558,12 +2687,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 1109,
-          "endLine": 1114
+          "startLine": 156,
+          "endLine": 161
         },
         "semanticFingerprint": "sf:sha256:d8d660ec3d9671565e8f4d12ad015bdcd35cc9d69df30058a7a22d364eb81add"
       },
@@ -2631,12 +2760,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1303,
-          "endLine": 1307
+          "startLine": 494,
+          "endLine": 498
         },
         "semanticFingerprint": "sf:sha256:8c38ce00f74e38c1fcc206b2c378f3e4b09e13931db756fe1b7dbdec0833f77c"
       },
@@ -2667,12 +2796,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 681,
-          "endLine": 684
+          "startLine": 5,
+          "endLine": 8
         },
         "semanticFingerprint": "sf:sha256:0c18bdbff0313d397e9d985dd5e72f6e3d66ecd9d9ba8c9b87b5e1030226d9df"
       },
@@ -2697,6 +2826,43 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-DERIVE-GATE-SIGNALS",
+      "symbolName": "deriveGateSignals",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-GATE-ORCHESTRATION-3DF999E5",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js",
+        "sourceRange": {
+          "startLine": 29,
+          "endLine": 61
+        },
+        "semanticFingerprint": "sf:sha256:74f5b2e397af26d05c6f2d2cf4d8b4fd6ee0178656031eeb637051c3f7438f26"
+      },
+      "usageRefStats": {
+        "totalRefs": 5,
+        "distinctFiles": 3,
+        "distinctKinds": 1,
+        "externalRefs": 4,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/derive-gate-signals",
+      "manifestPath": "atomic_workbench/capsules/derive-gate-signals/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/derive-gate-signals/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "exported",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-DERIVE-TOKEN-SUGGESTION-PATH-FROM-LAYOUT",
       "symbolName": "deriveTokenSuggestionPathFromLayout",
       "tier": "local-capsule",
@@ -2704,12 +2870,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
         "sourceRange": {
-          "startLine": 404,
-          "endLine": 408
+          "startLine": 5,
+          "endLine": 9
         },
         "semanticFingerprint": "sf:sha256:9e6fe021b0fc1c6984d04913ea8f3d9b864d6b09b7977c19364a409520a37d92"
       },
@@ -2740,12 +2906,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 709,
-          "endLine": 723
+          "startLine": 371,
+          "endLine": 385
         },
         "semanticFingerprint": "sf:sha256:3e393c5118056503ad426892ef6c5f15ff49ec8b50cda8e496d55418b0f9b37a"
       },
@@ -2776,20 +2942,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 180,
-          "endLine": 189
+          "startLine": 73,
+          "endLine": 82
         },
         "semanticFingerprint": "sf:sha256:477e1a47384356e94ab40222468a804ff77a0a986bb02e7cf22c1fd47d87886a"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 3,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 2,
         "kinds": [
           "workflow"
         ]
@@ -2883,12 +3049,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 150,
-          "endLine": 153
+          "startLine": 43,
+          "endLine": 46
         },
         "semanticFingerprint": "sf:sha256:03a8d901d1533a3872d561fd9ea8e68a73c54f04e1f94e8c59749b4c82516ac0"
       },
@@ -3178,20 +3344,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 225,
-          "endLine": 236
+          "startLine": 118,
+          "endLine": 129
         },
         "semanticFingerprint": "sf:sha256:2924f39004b81f6d0b7cda5e14f4878f26e68ec8d775e4be0330d1a6323af450"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 3,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 2,
         "kinds": [
           "workflow"
         ]
@@ -3215,20 +3381,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 218,
-          "endLine": 224
+          "startLine": 111,
+          "endLine": 117
         },
         "semanticFingerprint": "sf:sha256:34558e293e9b58104dda6941ca0d41e619f69fc267a19a56a033255e5605e87e"
       },
       "usageRefStats": {
-        "totalRefs": 12,
-        "distinctFiles": 2,
+        "totalRefs": 14,
+        "distinctFiles": 3,
         "distinctKinds": 1,
-        "externalRefs": 6,
+        "externalRefs": 13,
         "kinds": [
           "workflow"
         ]
@@ -3252,20 +3418,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 237,
-          "endLine": 245
+          "startLine": 130,
+          "endLine": 138
         },
         "semanticFingerprint": "sf:sha256:f24d9213e01e790b25e4864f6276617fd67e09910c8cfacd17d789a6d15054d2"
       },
       "usageRefStats": {
-        "totalRefs": 5,
-        "distinctFiles": 1,
+        "totalRefs": 7,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 4,
         "kinds": [
           "workflow"
         ]
@@ -3356,6 +3522,44 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-FINALIZE-WORKFLOW-VERDICT",
+      "symbolName": "finalizeWorkflowVerdict",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "block-if-untested",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-FINAL-VERDICT-2E58DEC4",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/final-verdict.js",
+        "sourceRange": {
+          "startLine": 57,
+          "endLine": 172
+        },
+        "semanticFingerprint": "sf:sha256:d50ce0b08c55a2ef5b2bdba2228dc0c7fbffeefda375ae6510f8b2d0f4c8dcad"
+      },
+      "usageRefStats": {
+        "totalRefs": 5,
+        "distinctFiles": 3,
+        "distinctKinds": 1,
+        "externalRefs": 4,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/finalize-workflow-verdict",
+      "manifestPath": "atomic_workbench/capsules/finalize-workflow-verdict/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/finalize-workflow-verdict/capsule.test.mjs",
+      "behaviorTestPath": null,
+      "reasons": [
+        "exported",
+        "medium-function",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-FIND-LAYOUT-NODE-BY-NAME",
       "symbolName": "findLayoutNodeByName",
       "tier": "local-capsule",
@@ -3363,12 +3567,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 913,
-          "endLine": 923
+          "startLine": 52,
+          "endLine": 62
         },
         "semanticFingerprint": "sf:sha256:9b56bd83c20f680f7bc3ad755613a3587e8bc4cece545bc84c0b57713ecaff8f"
       },
@@ -3399,20 +3603,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 670,
-          "endLine": 673
+          "startLine": 353,
+          "endLine": 356
         },
         "semanticFingerprint": "sf:sha256:58ead0768a97a7e373f210e9c476d15ea7a2957ba4e6d6e7bb4e782f3c8f3162"
       },
       "usageRefStats": {
         "totalRefs": 23,
-        "distinctFiles": 4,
+        "distinctFiles": 6,
         "distinctKinds": 3,
-        "externalRefs": 11,
+        "externalRefs": 17,
         "kinds": [
           "test",
           "tooling",
@@ -3585,20 +3789,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 169,
-          "endLine": 179
+          "startLine": 62,
+          "endLine": 72
         },
         "semanticFingerprint": "sf:sha256:f42b065f5acaf54775f772c81afb0bef71e18349e552025c60cbed7cf18f008b"
       },
       "usageRefStats": {
-        "totalRefs": 6,
-        "distinctFiles": 1,
+        "totalRefs": 8,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 6,
         "kinds": [
           "workflow"
         ]
@@ -3840,12 +4044,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-TEXT-CONTRACT-SYNC-B14BCEFF",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/text-contract-sync.js",
         "sourceRange": {
-          "startLine": 945,
-          "endLine": 949
+          "startLine": 2,
+          "endLine": 6
         },
         "semanticFingerprint": "sf:sha256:6fb9d084c46a2970b9a20679f335d6f55b185d944bd94f61bfdc202be2fc50b8"
       },
@@ -4436,20 +4640,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 959,
-          "endLine": 982
+          "startLine": 453,
+          "endLine": 463
         },
-        "semanticFingerprint": "sf:sha256:94b8c1038b00096007b1759450ed11bd68c41dc070af156e79d4d9d0107753e0"
+        "semanticFingerprint": "sf:sha256:c31e6f926eca3a7506e278471bb07d41eb993c3f85bf33e4e331315784257072"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 6,
+        "distinctFiles": 3,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 4,
         "kinds": [
           "workflow"
         ]
@@ -5598,20 +5802,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1549,
-          "endLine": 1565
+          "startLine": 586,
+          "endLine": 589
         },
-        "semanticFingerprint": "sf:sha256:88845893484891b13eab516f9f5b2a0cac712929f39082a912269cf7ff5169e0"
+        "semanticFingerprint": "sf:sha256:c7b9853f4be2cde2cacc88d61917d4f9d0d415de7eb22b3cd3a4047a9e634d62"
       },
       "usageRefStats": {
-        "totalRefs": 4,
-        "distinctFiles": 2,
+        "totalRefs": 9,
+        "distinctFiles": 4,
         "distinctKinds": 1,
-        "externalRefs": 2,
+        "externalRefs": 7,
         "kinds": [
           "workflow"
         ]
@@ -5620,7 +5824,7 @@
       "capsuleDir": "atomic_workbench/capsules/merge-next-fixes",
       "manifestPath": "atomic_workbench/capsules/merge-next-fixes/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/merge-next-fixes/capsule.test.mjs",
-      "behaviorTestPath": null,
+      "behaviorTestPath": "atomic_workbench/capsules/merge-next-fixes/capsule.behavior.test.mjs",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -5635,12 +5839,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 644,
-          "endLine": 665
+          "startLine": 327,
+          "endLine": 348
         },
         "semanticFingerprint": "sf:sha256:a971443de089793506e59ebd152bc733742bdcbe32997ef1880b4941bb3987a5"
       },
@@ -5672,14 +5876,14 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 1082,
-          "endLine": 1100
+          "startLine": 129,
+          "endLine": 147
         },
-        "semanticFingerprint": "sf:sha256:eb8b511db645e73126ba19d04c13813e5880d83f1c8d97b659b8cef6e71c0af8"
+        "semanticFingerprint": "sf:sha256:0a2973151ba494de8e0ef9090f273c9a30c23caf74a91c710d4cc7b7d3cf8e00"
       },
       "usageRefStats": {
         "totalRefs": 1,
@@ -5712,12 +5916,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
         "sourceRange": {
-          "startLine": 409,
-          "endLine": 429
+          "startLine": 10,
+          "endLine": 30
         },
         "semanticFingerprint": "sf:sha256:4284c51a9869ee2ebc5bc4e079a77c5f6959a781e5ab337717bb9bffe8efa396"
       },
@@ -5976,12 +6180,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 883,
-          "endLine": 896
+          "startLine": 26,
+          "endLine": 39
         },
         "semanticFingerprint": "sf:sha256:3d72d3b0bef0bde21c252528547069fe30389f0845ca52e7a96fbe40eb8c77f1"
       },
@@ -6013,12 +6217,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js",
         "sourceRange": {
-          "startLine": 1837,
-          "endLine": 1845
+          "startLine": 5,
+          "endLine": 13
         },
         "semanticFingerprint": "sf:sha256:bdc0ce9090970dfbb1b2adf23eded8b51ca9d78e2621a2a0f2e169fcde0cab21"
       },
@@ -6051,20 +6255,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 983,
-          "endLine": 1026
+          "startLine": 464,
+          "endLine": 474
         },
-        "semanticFingerprint": "sf:sha256:f9cda792a2eeabf299ae691c60b6cbe92f8fb070031bb437180dab96ec8d76ba"
+        "semanticFingerprint": "sf:sha256:a3e001414851669228faec35be1c4c21c0c46d72386d31f24c3d7e1f14f46377"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 6,
+        "distinctFiles": 3,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 4,
         "kinds": [
           "workflow"
         ]
@@ -6073,7 +6277,7 @@
       "capsuleDir": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout",
       "manifestPath": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout/capsule.test.mjs",
-      "behaviorTestPath": null,
+      "behaviorTestPath": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout/capsule.behavior.test.mjs",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -7177,12 +7381,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 1101,
-          "endLine": 1108
+          "startLine": 148,
+          "endLine": 155
         },
         "semanticFingerprint": "sf:sha256:54201aa3485c13d90ea940b73e5745525474ea25599a3e7fe06596062f099916"
       },
@@ -7214,14 +7418,14 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 897,
-          "endLine": 912
+          "startLine": 40,
+          "endLine": 51
         },
-        "semanticFingerprint": "sf:sha256:34b9de9ce678429eb9bc32ba88af14c46763802644cddbd1e250f94938691078"
+        "semanticFingerprint": "sf:sha256:c9885c3b9157643a6624adb1da4c3f0f311f902de3e039ba55d18a416211963a"
       },
       "usageRefStats": {
         "totalRefs": 1,
@@ -7438,20 +7642,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 764,
-          "endLine": 767
+          "startLine": 426,
+          "endLine": 429
         },
         "semanticFingerprint": "sf:sha256:d394cd65c03ba9d94bcacb7eaceb06fda967b90d5ad99fae169b41d6ec21c26b"
       },
       "usageRefStats": {
-        "totalRefs": 6,
-        "distinctFiles": 2,
+        "totalRefs": 7,
+        "distinctFiles": 3,
         "distinctKinds": 1,
-        "externalRefs": 3,
+        "externalRefs": 4,
         "kinds": [
           "workflow"
         ]
@@ -7474,12 +7678,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 158,
-          "endLine": 164
+          "startLine": 51,
+          "endLine": 57
         },
         "semanticFingerprint": "sf:sha256:1cf72489a8078ff1e1fadb65e97d61049b2a1ff5f0b1452a24ef3512b8445f26"
       },
@@ -7513,12 +7717,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 637,
-          "endLine": 643
+          "startLine": 320,
+          "endLine": 326
         },
         "semanticFingerprint": "sf:sha256:3f09acd3aaae5964a8ca6f4f7b3bb38bd5e2fe490efe9e13ea281ddd16fdcb62"
       },
@@ -7549,20 +7753,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 154,
-          "endLine": 157
+          "startLine": 47,
+          "endLine": 50
         },
         "semanticFingerprint": "sf:sha256:b37f80656a21b28456309dadbc231c008fee0d61f71fde37557503abd6cfd2bb"
       },
       "usageRefStats": {
-        "totalRefs": 21,
-        "distinctFiles": 7,
+        "totalRefs": 23,
+        "distinctFiles": 8,
         "distinctKinds": 3,
-        "externalRefs": 20,
+        "externalRefs": 22,
         "kinds": [
           "test",
           "tooling",
@@ -7655,6 +7859,42 @@
       ]
     },
     {
+      "capsuleId": "H2U-CAPSULE-REGENERATE-SCREEN-LOCAL-TOKENS",
+      "symbolName": "regenerateScreenLocalTokens",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "advisory",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
+        "sourceRange": {
+          "startLine": 297,
+          "endLine": 310
+        },
+        "semanticFingerprint": "sf:sha256:0c84647ffcb8829da37b02f59fb5c7b0ea6ed2cdb15af3363f7e32dceec21fa8"
+      },
+      "usageRefStats": {
+        "totalRefs": 6,
+        "distinctFiles": 3,
+        "distinctKinds": 1,
+        "externalRefs": 4,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [],
+      "capsuleDir": "atomic_workbench/capsules/regenerate-screen-local-tokens",
+      "manifestPath": "atomic_workbench/capsules/regenerate-screen-local-tokens/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/regenerate-screen-local-tokens/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/regenerate-screen-local-tokens/capsule.behavior.test.mjs",
+      "reasons": [
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
       "capsuleId": "H2U-CAPSULE-REGISTER-TAB-ZONE-HINT",
       "symbolName": "registerTabZoneHint",
       "tier": "local-capsule",
@@ -7698,12 +7938,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 146,
-          "endLine": 149
+          "startLine": 40,
+          "endLine": 42
         },
         "semanticFingerprint": "sf:sha256:7f28c47a5af0e97257edc79f0951e9ba230cd11ce4260392fbc39705c80b7d46"
       },
@@ -7771,20 +8011,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 388,
-          "endLine": 403
+          "startLine": 281,
+          "endLine": 296
         },
         "semanticFingerprint": "sf:sha256:e4eacfec87a645b9500d2b12cc23617891dbaa3480f9a10af8bdf53ffa831c0f"
       },
       "usageRefStats": {
-        "totalRefs": 11,
-        "distinctFiles": 2,
+        "totalRefs": 17,
+        "distinctFiles": 7,
         "distinctKinds": 1,
-        "externalRefs": 1,
+        "externalRefs": 9,
         "kinds": [
           "workflow"
         ]
@@ -8043,14 +8283,14 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js",
         "sourceRange": {
-          "startLine": 1823,
-          "endLine": 1836
+          "startLine": 61,
+          "endLine": 74
         },
-        "semanticFingerprint": "sf:sha256:095781997d98411c084ed8a905d96240ac89117574e238e15b9c80843959c497"
+        "semanticFingerprint": "sf:sha256:283c229326fad0d92c7ab6b641166de9a816ace84f3c04c49c1da8067c8780f0"
       },
       "usageRefStats": {
         "totalRefs": 1,
@@ -8080,12 +8320,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js",
         "sourceRange": {
-          "startLine": 1808,
-          "endLine": 1816
+          "startLine": 46,
+          "endLine": 54
         },
         "semanticFingerprint": "sf:sha256:c60244dae7f87a7a43e2a85de5c864b41efb691919ce934b2fe048a68a8c51ff"
       },
@@ -8265,17 +8505,17 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 374,
-          "endLine": 387
+          "startLine": 267,
+          "endLine": 280
         },
         "semanticFingerprint": "sf:sha256:1dc076c18fcdfa7cd659987b8b6d86b27d9ac09f001ffd09dbf2edde9c6485b2"
       },
       "usageRefStats": {
-        "totalRefs": 3,
+        "totalRefs": 4,
         "distinctFiles": 1,
         "distinctKinds": 1,
         "externalRefs": 0,
@@ -8302,14 +8542,14 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 924,
-          "endLine": 935
+          "startLine": 63,
+          "endLine": 74
         },
-        "semanticFingerprint": "sf:sha256:aeb343c4f733b276b450db122e8f21487099c5d84c102e8d9593e7f60d3ba6d5"
+        "semanticFingerprint": "sf:sha256:42f7c0014d1b8daea25a501cf894ab79f9b7d5c9a9d01ce2ffeb2362f4c20a97"
       },
       "usageRefStats": {
         "totalRefs": 1,
@@ -8487,20 +8727,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1308,
-          "endLine": 1326
+          "startLine": 499,
+          "endLine": 517
         },
         "semanticFingerprint": "sf:sha256:afcbedf39d729c2aedfa9fb43ec79b7f47b7c76dd33e05812d22943c37bb0e3c"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 3,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 2,
         "kinds": [
           "workflow"
         ]
@@ -8527,14 +8767,14 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js",
         "sourceRange": {
-          "startLine": 1817,
-          "endLine": 1822
+          "startLine": 55,
+          "endLine": 60
         },
-        "semanticFingerprint": "sf:sha256:060971ee7f444beb5b49d91e0c89a1b91cd3d5227c07dafbe91d75e5bfbade02"
+        "semanticFingerprint": "sf:sha256:3cd42d2e7e6c46daea077f86be4d2a5b3e7d393bb83aed081e00eff050ca9789"
       },
       "usageRefStats": {
         "totalRefs": 2,
@@ -8566,20 +8806,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 190,
-          "endLine": 217
+          "startLine": 83,
+          "endLine": 110
         },
         "semanticFingerprint": "sf:sha256:f18e32d1c8c61bebf46386125cdabe91fdff1447f09165b7b93ad6ac6384f826"
       },
       "usageRefStats": {
-        "totalRefs": 11,
-        "distinctFiles": 1,
+        "totalRefs": 14,
+        "distinctFiles": 3,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 12,
         "kinds": [
           "workflow"
         ]
@@ -8605,34 +8845,73 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1176,
-          "endLine": 1302
+          "startLine": 475,
+          "endLine": 493
         },
-        "semanticFingerprint": "sf:sha256:da0f4f2f82608945138d1760e8eeeb60866f950641c79bec10a6fae020bde110"
+        "semanticFingerprint": "sf:sha256:14caa48d30c737373d8a1cbdb24f1debbacba33e7a9ce0769fa78c328d0c02a4"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 6,
+        "distinctFiles": 3,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 4,
         "kinds": [
           "workflow"
         ]
       },
-      "requiredCaseSets": [
-        "boundary",
-        "invalid"
-      ],
+      "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/run-per-tab-replay",
       "manifestPath": "atomic_workbench/capsules/run-per-tab-replay/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/run-per-tab-replay/capsule.test.mjs",
       "behaviorTestPath": "atomic_workbench/capsules/run-per-tab-replay/capsule.behavior.test.mjs",
       "reasons": [
-        "medium-function",
+        "pure-ish",
+        "return-contract"
+      ]
+    },
+    {
+      "capsuleId": "H2U-CAPSULE-RUN-WORKFLOW-MAIN",
+      "symbolName": "runWorkflowMain",
+      "tier": "local-capsule",
+      "currentTier": "local-capsule",
+      "recommendedTier": "local-capsule",
+      "severity": "block-release",
+      "splitPolicy": null,
+      "anchorId": "H2U-ANCHOR-WORKFLOW-MAIN-CF37CACF",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/workflow-main.js",
+        "sourceRange": {
+          "startLine": 2,
+          "endLine": 469
+        },
+        "semanticFingerprint": "sf:sha256:146b58740a2dfd3ec218fe5a60cbee9b37a500499425e1d23f911728cfad162f"
+      },
+      "usageRefStats": {
+        "totalRefs": 3,
+        "distinctFiles": 2,
+        "distinctKinds": 1,
+        "externalRefs": 2,
+        "kinds": [
+          "workflow"
+        ]
+      },
+      "requiredCaseSets": [
+        "base",
+        "boundary",
+        "invalid",
+        "regression"
+      ],
+      "capsuleDir": "atomic_workbench/capsules/run-workflow-main",
+      "manifestPath": "atomic_workbench/capsules/run-workflow-main/capsule.manifest.json",
+      "testPath": "atomic_workbench/capsules/run-workflow-main/capsule.test.mjs",
+      "behaviorTestPath": "atomic_workbench/capsules/run-workflow-main/capsule.behavior.test.mjs",
+      "reasons": [
+        "exported",
+        "large-function",
         "side-effect-risk",
         "return-contract"
       ]
@@ -8645,12 +8924,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-TEXT-CONTRACT-SYNC-B14BCEFF",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/text-contract-sync.js",
         "sourceRange": {
-          "startLine": 950,
-          "endLine": 958
+          "startLine": 7,
+          "endLine": 15
         },
         "semanticFingerprint": "sf:sha256:0a50ed1d1ceb89be8ad4408479f2d28a1bb8e67032465f3aa74867d1e0303a10"
       },
@@ -8753,20 +9032,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 666,
-          "endLine": 669
+          "startLine": 349,
+          "endLine": 352
         },
         "semanticFingerprint": "sf:sha256:d5fa8238b7b4c90a4c138c03afa99f7ac106621dd5d02915dc1ec25c307d768c"
       },
       "usageRefStats": {
         "totalRefs": 24,
-        "distinctFiles": 5,
+        "distinctFiles": 6,
         "distinctKinds": 2,
-        "externalRefs": 13,
+        "externalRefs": 17,
         "kinds": [
           "tooling",
           "workflow"
@@ -8827,14 +9106,14 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 1038,
-          "endLine": 1081
+          "startLine": 86,
+          "endLine": 128
         },
-        "semanticFingerprint": "sf:sha256:3ed9770cb411729b7d836c8cd188e9e391a03a17f161b149f7adbea9e0cc05c3"
+        "semanticFingerprint": "sf:sha256:37e8cd10f49b8c799cae6dd411c2c9261329a4e997c60e623daadd7272c79f17"
       },
       "usageRefStats": {
         "totalRefs": 1,
@@ -8935,37 +9214,33 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 772,
-          "endLine": 882
+          "startLine": 434,
+          "endLine": 452
         },
-        "semanticFingerprint": "sf:sha256:f3f2dbdbbc9f48e362067af370224a538448afcb128f2e5eb255f8733c821da2"
+        "semanticFingerprint": "sf:sha256:fae3fb671500c2618cc406ec796c7210fa5e8794931cd70c68da479b1b54dc65"
       },
       "usageRefStats": {
-        "totalRefs": 8,
-        "distinctFiles": 5,
+        "totalRefs": 10,
+        "distinctFiles": 6,
         "distinctKinds": 3,
-        "externalRefs": 6,
+        "externalRefs": 8,
         "kinds": [
           "test",
           "tooling",
           "workflow"
         ]
       },
-      "requiredCaseSets": [
-        "boundary",
-        "invalid"
-      ],
+      "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/sync-final-artifacts-to-runtime",
       "manifestPath": "atomic_workbench/capsules/sync-final-artifacts-to-runtime/capsule.manifest.json",
       "testPath": "atomic_workbench/capsules/sync-final-artifacts-to-runtime/capsule.test.mjs",
       "behaviorTestPath": "atomic_workbench/capsules/sync-final-artifacts-to-runtime/capsule.behavior.test.mjs",
       "reasons": [
-        "medium-function",
-        "side-effect-risk",
+        "pure-ish",
         "return-contract"
       ]
     },
@@ -8977,12 +9252,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 685,
-          "endLine": 693
+          "startLine": 9,
+          "endLine": 17
         },
         "semanticFingerprint": "sf:sha256:b8758192d74979f4877dba227029cfbf2991977976a735634c90399da93a1c8c"
       },
@@ -9014,12 +9289,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 694,
-          "endLine": 701
+          "startLine": 18,
+          "endLine": 25
         },
         "semanticFingerprint": "sf:sha256:f4afd30eeaf7e40166be6833aaae286db017afc95ea8f799b70c3e89eb929f10"
       },
@@ -9051,20 +9326,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 1459,
-          "endLine": 1470
+          "startLine": 570,
+          "endLine": 573
         },
-        "semanticFingerprint": "sf:sha256:93612dff3575a2daeab3c688aacb7e408ad32754ac459caa19975c8381f4a848"
+        "semanticFingerprint": "sf:sha256:c904a6d17d8fe67703f84f424607333bf530e1c4d80cde37796e3ccab3bce078"
       },
       "usageRefStats": {
-        "totalRefs": 3,
-        "distinctFiles": 2,
+        "totalRefs": 8,
+        "distinctFiles": 4,
         "distinctKinds": 1,
-        "externalRefs": 2,
+        "externalRefs": 6,
         "kinds": [
           "workflow"
         ]
@@ -9087,14 +9362,14 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 1152,
-          "endLine": 1175
+          "startLine": 199,
+          "endLine": 222
         },
-        "semanticFingerprint": "sf:sha256:08b55dc6e62d37dd94c4ac5889deab6dc2bfc8fd96f2cab8b5e7c6281c38c495"
+        "semanticFingerprint": "sf:sha256:de6c7514854c1661e90fe8997e653cac23a333764052ac149350f41d0fe3a374"
       },
       "usageRefStats": {
         "totalRefs": 1,
@@ -9123,12 +9398,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 271,
-          "endLine": 277
+          "startLine": 164,
+          "endLine": 170
         },
         "semanticFingerprint": "sf:sha256:3ad695b1a6b29a320acd93cb6f13c3528e85206cd512584b03590c06c7f6bf0f"
       },
@@ -9160,12 +9435,12 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 165,
-          "endLine": 168
+          "startLine": 58,
+          "endLine": 61
         },
         "semanticFingerprint": "sf:sha256:010c62e9c58eb6d6c36947f07fe29af3c860431c36f13d9c7e4f24367ef0d328"
       },
@@ -9198,14 +9473,14 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
         "sourceRange": {
-          "startLine": 1115,
-          "endLine": 1151
+          "startLine": 162,
+          "endLine": 198
         },
-        "semanticFingerprint": "sf:sha256:fc170dfc4abb11ec05b31672714d4b4918cbed9371aae998aaed4cffa08c6810"
+        "semanticFingerprint": "sf:sha256:926586b3da685588c07a0f579675f11526e206e04596575e01a6bea16801426a"
       },
       "usageRefStats": {
         "totalRefs": 1,
@@ -9237,20 +9512,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 2308,
-          "endLine": 2333
+          "startLine": 629,
+          "endLine": 654
         },
         "semanticFingerprint": "sf:sha256:2d5a20f19a66c636ead68b1492a05b79394f61ed3a2cf3e248926b648e728cc8"
       },
       "usageRefStats": {
-        "totalRefs": 7,
-        "distinctFiles": 1,
+        "totalRefs": 9,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 8,
         "kinds": [
           "workflow"
         ]
@@ -9275,20 +9550,20 @@
       "recommendedTier": "local-capsule",
       "severity": "advisory",
       "splitPolicy": null,
-      "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
       "source": {
-        "file": "tools_node/run-html-to-ucuf-workflow.js",
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
         "sourceRange": {
-          "startLine": 744,
-          "endLine": 763
+          "startLine": 406,
+          "endLine": 425
         },
         "semanticFingerprint": "sf:sha256:cc3e003f407e44e1c31419500e1799e756698d7385acfaa902ec0bc3fdb83a31"
       },
       "usageRefStats": {
-        "totalRefs": 1,
-        "distinctFiles": 1,
+        "totalRefs": 3,
+        "distinctFiles": 2,
         "distinctKinds": 1,
-        "externalRefs": 0,
+        "externalRefs": 2,
         "kinds": [
           "workflow"
         ]
@@ -9309,6 +9584,17 @@
   ],
   "anchors": [
     {
+      "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+      "moduleSlug": "cli-shell-context-74c85a60",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
+        "lineCount": 708
+      },
+      "childCount": 47,
+      "manifestPath": "atomic_workbench/anchors/cli-shell-context-74c85a60/anchor.manifest.json",
+      "testPath": "atomic_workbench/anchors/cli-shell-context-74c85a60/anchor.test.mjs"
+    },
+    {
       "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
       "moduleSlug": "draft-builder-core-82992a5f",
       "source": {
@@ -9320,6 +9606,61 @@
       "testPath": "atomic_workbench/anchors/draft-builder-core-82992a5f/anchor.test.mjs"
     },
     {
+      "anchorId": "H2U-ANCHOR-FINAL-VERDICT-2E58DEC4",
+      "moduleSlug": "final-verdict-2e58dec4",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/final-verdict.js",
+        "lineCount": 179
+      },
+      "childCount": 2,
+      "manifestPath": "atomic_workbench/anchors/final-verdict-2e58dec4/anchor.manifest.json",
+      "testPath": "atomic_workbench/anchors/final-verdict-2e58dec4/anchor.test.mjs"
+    },
+    {
+      "anchorId": "H2U-ANCHOR-GATE-ORCHESTRATION-3DF999E5",
+      "moduleSlug": "gate-orchestration-3df999e5",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/gate-orchestration.js",
+        "lineCount": 69
+      },
+      "childCount": 3,
+      "manifestPath": "atomic_workbench/anchors/gate-orchestration-3df999e5/anchor.manifest.json",
+      "testPath": "atomic_workbench/anchors/gate-orchestration-3df999e5/anchor.test.mjs"
+    },
+    {
+      "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
+      "moduleSlug": "interaction-smoke-f0cad253",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js",
+        "lineCount": 239
+      },
+      "childCount": 8,
+      "manifestPath": "atomic_workbench/anchors/interaction-smoke-f0cad253/anchor.manifest.json",
+      "testPath": "atomic_workbench/anchors/interaction-smoke-f0cad253/anchor.test.mjs"
+    },
+    {
+      "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
+      "moduleSlug": "per-tab-replay-e0734ba6",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
+        "lineCount": 354
+      },
+      "childCount": 15,
+      "manifestPath": "atomic_workbench/anchors/per-tab-replay-e0734ba6/anchor.manifest.json",
+      "testPath": "atomic_workbench/anchors/per-tab-replay-e0734ba6/anchor.test.mjs"
+    },
+    {
+      "anchorId": "H2U-ANCHOR-QUALITY-VERDICT-UTILS-1DA9B161",
+      "moduleSlug": "quality-verdict-utils-1da9b161",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js",
+        "lineCount": 314
+      },
+      "childCount": 11,
+      "manifestPath": "atomic_workbench/anchors/quality-verdict-utils-1da9b161/anchor.manifest.json",
+      "testPath": "atomic_workbench/anchors/quality-verdict-utils-1da9b161/anchor.test.mjs"
+    },
+    {
       "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
       "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
       "source": {
@@ -9329,6 +9670,50 @@
       "childCount": 3,
       "manifestPath": "atomic_workbench/anchors/run-html-to-ucuf-workflow-33d9a610/anchor.manifest.json",
       "testPath": "atomic_workbench/anchors/run-html-to-ucuf-workflow-33d9a610/anchor.test.mjs"
+    },
+    {
+      "anchorId": "H2U-ANCHOR-RUNTIME-SYNC-E2B5B235",
+      "moduleSlug": "runtime-sync-e2b5b235",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/runtime-sync.js",
+        "lineCount": 124
+      },
+      "childCount": 3,
+      "manifestPath": "atomic_workbench/anchors/runtime-sync-e2b5b235/anchor.manifest.json",
+      "testPath": "atomic_workbench/anchors/runtime-sync-e2b5b235/anchor.test.mjs"
+    },
+    {
+      "anchorId": "H2U-ANCHOR-TEXT-CONTRACT-SYNC-B14BCEFF",
+      "moduleSlug": "text-contract-sync-b14bceff",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/text-contract-sync.js",
+        "lineCount": 96
+      },
+      "childCount": 4,
+      "manifestPath": "atomic_workbench/anchors/text-contract-sync-b14bceff/anchor.manifest.json",
+      "testPath": "atomic_workbench/anchors/text-contract-sync-b14bceff/anchor.test.mjs"
+    },
+    {
+      "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
+      "moduleSlug": "token-governance-7dfb32fb",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/token-governance.js",
+        "lineCount": 231
+      },
+      "childCount": 8,
+      "manifestPath": "atomic_workbench/anchors/token-governance-7dfb32fb/anchor.manifest.json",
+      "testPath": "atomic_workbench/anchors/token-governance-7dfb32fb/anchor.test.mjs"
+    },
+    {
+      "anchorId": "H2U-ANCHOR-WORKFLOW-MAIN-CF37CACF",
+      "moduleSlug": "workflow-main-cf37cacf",
+      "source": {
+        "file": "tools_node/lib/html-to-ucuf/workflow/workflow-main.js",
+        "lineCount": 474
+      },
+      "childCount": 1,
+      "manifestPath": "atomic_workbench/anchors/workflow-main-cf37cacf/anchor.manifest.json",
+      "testPath": "atomic_workbench/anchors/workflow-main-cf37cacf/anchor.test.mjs"
     }
   ]
 }

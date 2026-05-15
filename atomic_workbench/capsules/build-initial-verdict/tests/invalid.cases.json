@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-INITIAL-VERDICT:invalid:null",
+    "kind": "invalid",
+    "title": "buildInitialVerdict null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:0e85b6b9a46351b68be1c0211dded848ced90c19961b2a56b9dcb5c345511386",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-INITIAL-VERDICT:invalid:type",
+    "kind": "invalid",
+    "title": "buildInitialVerdict 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:0e85b6b9a46351b68be1c0211dded848ced90c19961b2a56b9dcb5c345511386",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

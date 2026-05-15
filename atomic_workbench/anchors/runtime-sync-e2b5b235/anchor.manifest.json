@@ -1,0 +1,30 @@
+{
+  "schemaId": "atm.coreAnchorManifest",
+  "specVersion": "0.1.0",
+  "anchorId": "H2U-ANCHOR-RUNTIME-SYNC-E2B5B235",
+  "kind": "core-anchor",
+  "role": "semantic-parent",
+  "logicalName": "anchor.runtime-sync-e2b5b235",
+  "source": {
+    "file": "tools_node/lib/html-to-ucuf/workflow/runtime-sync.js",
+    "lineCount": 124
+  },
+  "semanticFingerprint": "sf:sha256:f71cc9b49bcbd836ddcf13dfa92d49f3fe516fe9d56cf9fe49596548bbd29d31",
+  "children": [
+    "H2U-CAPSULE-BUILD-RUNTIME-TAB-ROUTING-MAP",
+    "H2U-CAPSULE-READ-FINAL-TAB-ROUTING",
+    "H2U-CAPSULE-SYNC-FINAL-ARTIFACTS-TO-RUNTIME"
+  ],
+  "lineage": {
+    "bornBy": "anchorize",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/runtime-sync.js"
+    ]
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "promotion": {
+    "currentTier": "core-anchor",
+    "allowSharedPromotion": false
+  }
+}

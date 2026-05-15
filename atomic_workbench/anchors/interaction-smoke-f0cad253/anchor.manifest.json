@@ -1,0 +1,35 @@
+{
+  "schemaId": "atm.coreAnchorManifest",
+  "specVersion": "0.1.0",
+  "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
+  "kind": "core-anchor",
+  "role": "semantic-parent",
+  "logicalName": "anchor.interaction-smoke-f0cad253",
+  "source": {
+    "file": "tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js",
+    "lineCount": 239
+  },
+  "semanticFingerprint": "sf:sha256:d10fd2c7a2945e8ba32a4795fceadba65fe620cb427ba98bb47d02b6019283b8",
+  "children": [
+    "H2U-CAPSULE-BUILD-RUNTIME-INTERACTION-SMOKE-STEP",
+    "H2U-CAPSULE-ASSESS-INTERACTION-RUNTIME",
+    "H2U-CAPSULE-NORMALIZE-INTERACTION-KEY",
+    "H2U-CAPSULE-COLLECT-LAYOUT-NODE-INDEX",
+    "H2U-CAPSULE-BUILD-INTERACTION-ROUTE-MAP",
+    "H2U-CAPSULE-RESOLVE-INTERACTION-ROUTE",
+    "H2U-CAPSULE-RESOLVE-INTERACTION-FALLBACK-ROUTE",
+    "H2U-CAPSULE-ROUTE-FRAGMENT-EXISTS"
+  ],
+  "lineage": {
+    "bornBy": "anchorize",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js"
+    ]
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "promotion": {
+    "currentTier": "core-anchor",
+    "allowSharedPromotion": false
+  }
+}

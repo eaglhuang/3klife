@@ -6,7 +6,7 @@
     "inputSample": null,
     "expectation": {
       "mode": "template-contract",
-      "semanticFingerprint": "sf:sha256:da0f4f2f82608945138d1760e8eeeb60866f950641c79bec10a6fae020bde110",
+      "semanticFingerprint": "sf:sha256:ae199e1a218d10e089d8a964e8b0f89166f3047112a48cf69c8515a74466a04f",
       "claim": "rejects or safely normalizes null-like input"
     }
   },
@@ -19,7 +19,7 @@
     },
     "expectation": {
       "mode": "template-contract",
-      "semanticFingerprint": "sf:sha256:da0f4f2f82608945138d1760e8eeeb60866f950641c79bec10a6fae020bde110",
+      "semanticFingerprint": "sf:sha256:ae199e1a218d10e089d8a964e8b0f89166f3047112a48cf69c8515a74466a04f",
       "claim": "rejects unsupported input types predictably"
     }
   }

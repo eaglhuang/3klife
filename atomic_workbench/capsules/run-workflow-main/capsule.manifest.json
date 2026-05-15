@@ -1,0 +1,83 @@
+{
+  "schemaId": "atm.localCapsuleManifest",
+  "specVersion": "0.2.0",
+  "capsuleId": "H2U-CAPSULE-RUN-WORKFLOW-MAIN",
+  "symbolName": "runWorkflowMain",
+  "anchorId": "H2U-ANCHOR-WORKFLOW-MAIN-CF37CACF",
+  "moduleSlug": "workflow-main-cf37cacf",
+  "source": {
+    "file": "tools_node/lib/html-to-ucuf/workflow/workflow-main.js",
+    "sourceRange": {
+      "startLine": 2,
+      "endLine": 469
+    },
+    "semanticFingerprint": "sf:sha256:146b58740a2dfd3ec218fe5a60cbee9b37a500499425e1d23f911728cfad162f"
+  },
+  "tier": "local-capsule",
+  "recommendedTier": "local-capsule",
+  "targetWorkbenchRoot": "atomic_workbench",
+  "reasons": [
+    "exported",
+    "large-function",
+    "side-effect-risk",
+    "return-contract"
+  ],
+  "testStrategy": [
+    "source-range-fingerprint",
+    "capsule-metadata",
+    "side-effect-boundary"
+  ],
+  "requiredCaseSets": [
+    "base",
+    "boundary",
+    "invalid",
+    "regression"
+  ],
+  "classification": {
+    "exported": true,
+    "lineCount": 468,
+    "severity": "block-release",
+    "riskScore": 75,
+    "sideEffectRisk": true
+  },
+  "behaviorContract": {
+    "oracleMode": "template-contract",
+    "manualTestRequired": false,
+    "templateCompletenessRequired": true
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "usageRefs": [
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L472",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L15",
+    "workflow:tools_node/run-html-to-ucuf-workflow.js#L158"
+  ],
+  "usageRefStats": {
+    "totalRefs": 3,
+    "distinctFiles": 2,
+    "distinctKinds": 1,
+    "externalRefs": 2,
+    "kinds": [
+      "workflow"
+    ]
+  },
+  "duplicateResolution": null,
+  "policyFindings": [
+    {
+      "severity": "info",
+      "message": "policy hook evaluated runWorkflowMain"
+    }
+  ],
+  "lineage": {
+    "bornBy": "authoring-time-auto-atomization",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L2-L469"
+    ]
+  },
+  "promotion": {
+    "currentTier": "local-capsule",
+    "history": [],
+    "sourceIdentityStable": true,
+    "semanticFingerprint": "sf:sha256:146b58740a2dfd3ec218fe5a60cbee9b37a500499425e1d23f911728cfad162f"
+  }
+}

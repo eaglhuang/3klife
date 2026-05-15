@@ -3,15 +3,15 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-MERGE-NEXT-FIXES",
   "symbolName": "mergeNextFixes",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+  "moduleSlug": "cli-shell-context-74c85a60",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
     "sourceRange": {
-      "startLine": 1549,
-      "endLine": 1565
+      "startLine": 586,
+      "endLine": 589
     },
-    "semanticFingerprint": "sf:sha256:88845893484891b13eab516f9f5b2a0cac712929f39082a912269cf7ff5169e0"
+    "semanticFingerprint": "sf:sha256:c7b9853f4be2cde2cacc88d61917d4f9d0d415de7eb22b3cd3a4047a9e634d62"
   },
   "tier": "local-capsule",
   "recommendedTier": "local-capsule",
@@ -29,7 +29,7 @@
   "requiredCaseSets": [],
   "classification": {
     "exported": false,
-    "lineCount": 17,
+    "lineCount": 4,
     "severity": "advisory",
     "riskScore": 50,
     "sideEffectRisk": false
@@ -42,16 +42,21 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L34",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L697",
     "workflow:tools_node/lib/html-to-ucuf/workflow/final-verdict.js#L85",
     "workflow:tools_node/lib/html-to-ucuf/workflow/final-verdict.js#L130",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1547",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2257"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js#L112",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js#L162",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js#L311",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L48",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L419"
   ],
   "usageRefStats": {
-    "totalRefs": 4,
-    "distinctFiles": 2,
+    "totalRefs": 9,
+    "distinctFiles": 4,
     "distinctKinds": 1,
-    "externalRefs": 2,
+    "externalRefs": 7,
     "kinds": [
       "workflow"
     ]
@@ -66,13 +71,13 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1549-L1565"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L586-L589"
     ]
   },
   "promotion": {
     "currentTier": "local-capsule",
     "history": [],
     "sourceIdentityStable": true,
-    "semanticFingerprint": "sf:sha256:88845893484891b13eab516f9f5b2a0cac712929f39082a912269cf7ff5169e0"
+    "semanticFingerprint": "sf:sha256:c7b9853f4be2cde2cacc88d61917d4f9d0d415de7eb22b3cd3a4047a9e634d62"
   }
 }

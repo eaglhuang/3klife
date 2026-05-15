@@ -440,6 +440,22 @@ export class UISpecLoader {
         return spec;
     }
 
+    /**
+     * 失效指定 screen 及其 layout / skin 的快取，強制下次從磁碟重新載入。
+     * 用於 screen JSON 已修改但 session 快取仍有舊值的情況。
+     */
+    invalidateScreen(screenId: string): void {
+        const cached = this._screenCache.get(screenId);
+        if (cached) {
+            this._layoutCache.delete(cached.layout);
+            this._skinCache.delete(cached.skin);
+            this._rm.releaseAsset(`ui-spec/layouts/${cached.layout}`);
+            this._rm.releaseAsset(`ui-spec/skins/${cached.skin}`);
+        }
+        this._screenCache.delete(screenId);
+        this._rm.releaseAsset(`ui-spec/screens/${screenId}`);
+    }
+
     /** 清除所有快取（場景切換時呼叫） */
     clearCache(): void {
         this._layoutCache.clear();

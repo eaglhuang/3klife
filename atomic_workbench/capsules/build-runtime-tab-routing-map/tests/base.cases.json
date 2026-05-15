@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-TAB-ROUTING-MAP:base:nominal",
+    "kind": "base",
+    "title": "buildRuntimeTabRoutingMap 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:46e118e0487c2e35b27257efdeb6b26a812d4fb2fa624ed7f98c693714cb717f",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/runtime-sync.js#L9-L23"
+    ]
+  }
+]

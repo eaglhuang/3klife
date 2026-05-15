@@ -1,0 +1,24 @@
+{
+  "schemaId": "atm.hostConfig",
+  "specVersion": "0.1.0",
+  "guidance": {
+    "legacyHotspots": [
+      {
+        "path": "tools_node/lib/dom-to-ui/draft-builder-core.js",
+        "releaseBlockers": [
+          "processElement"
+        ],
+        "demandReportPath": ".atm/guidance/h2u-demand-report.json",
+        "existingAtomIndexPath": ".atm/guidance/h2u-atom-index.json"
+      }
+    ],
+    "noTouchZones": [
+      {
+        "path": "tools_node/lib/dom-to-ui/draft-builder-core.js#processElement",
+        "reason": "release blocker: processElement is a trunk coordination function",
+        "scope": "file"
+      }
+    ],
+    "defaultLegacyFlow": "shadow"
+  }
+}

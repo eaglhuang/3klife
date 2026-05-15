@@ -1,0 +1,19 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-PRE-RULE-GUARD-FIXES:base:nominal",
+    "kind": "base",
+    "title": "buildPreRuleGuardFixes 正常主路徑",
+    "inputSample": {
+      "mode": "nominal",
+      "raw": "alpha, beta"
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:179c28f170d7412b2a1f0564f2b779701e3ceccb0f13a54a347bf6c320b11256",
+      "claim": "covers the most common path with stable input/output expectations"
+    },
+    "notes": [
+      "Auto scaffolded from legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js#L128-L163"
+    ]
+  }
+]

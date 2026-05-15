@@ -50,6 +50,24 @@ def compact_text(value: Any) -> str:
     return re.sub(r"\s+", "", str(value or "").strip())
 
 
+def passes_schema_tool_gap_check(row: dict[str, Any]) -> bool:
+    candidate_or_event = str(row.get("candidateId") or row.get("eventKey") or "").strip()
+    summary = compact_text(row.get("summary"))
+    source_refs = [str(ref or "").strip() for ref in (row.get("sourceRefs") or []) if str(ref or "").strip()]
+    general_ids = [str(value or "").strip() for value in (row.get("generalIds") or []) if str(value or "").strip()]
+    relationship_edges = list(row.get("currentRelationshipEdges") or [])
+    location = compact_text(row.get("currentLocation"))
+    if not candidate_or_event or not summary:
+        return False
+    if not source_refs or not general_ids or not relationship_edges or not location:
+        return False
+    if len(general_ids) > 7:
+        return False
+    if any(general_id.startswith("romance-person-") for general_id in general_ids):
+        return False
+    return True
+
+
 def repair_actions(row: dict[str, Any]) -> list[str]:
     missing = {str(item) for item in row.get("missingFields") or []}
     actions: list[str] = []
@@ -67,13 +85,21 @@ def repair_actions(row: dict[str, Any]) -> list[str]:
         actions.append("narrow_event_boundary")
     if compact_text(row.get("summary")).startswith("：") or compact_text(row.get("summary")).startswith("」"):
         actions.append("sanitize_summary_boundary")
+    if not actions and passes_schema_tool_gap_check(row):
+        actions.append("schema_tool_gap_check")
     if not actions:
         actions.append("manual_review_confirm_publishability")
     return actions
 
 
 def priority_for(actions: list[str], row: dict[str, Any]) -> str:
-    high_value_actions = {"verify_source_refs", "resolve_participants", "repair_relationship_edges", "narrow_event_boundary"}
+    high_value_actions = {
+        "verify_source_refs",
+        "resolve_participants",
+        "repair_relationship_edges",
+        "narrow_event_boundary",
+        "schema_tool_gap_check",
+    }
     if high_value_actions.intersection(actions):
         return "high"
     if "fill_location" in actions or "rewrite_summary" in actions:
@@ -91,6 +117,8 @@ def repair_confidence(priority: str, actions: list[str]) -> float:
     if "repair_relationship_edges" in actions:
         base += 0.02
     if "fill_location" in actions:
+        base += 0.01
+    if "schema_tool_gap_check" in actions:
         base += 0.01
     return round(min(0.84, base), 2)
 

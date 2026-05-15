@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-SYNC-STEP:boundary:empty",
+    "kind": "boundary",
+    "title": "buildRuntimeSyncStep 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:b8f03df457286b0a02e37e00482e3c6046d7550d3ad08a4ecfa3e34a7f6a5f00",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-SYNC-STEP:boundary:formatted",
+    "kind": "boundary",
+    "title": "buildRuntimeSyncStep 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:b8f03df457286b0a02e37e00482e3c6046d7550d3ad08a4ecfa3e34a7f6a5f00",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

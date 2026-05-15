@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-FIDELITY-DIMENSIONS:boundary:empty",
+    "kind": "boundary",
+    "title": "buildFidelityDimensions 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:aca98bdb77a1ab000e12767960113f18e2ffeef98bc86ed656d8b3c382166465",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-FIDELITY-DIMENSIONS:boundary:formatted",
+    "kind": "boundary",
+    "title": "buildFidelityDimensions 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:aca98bdb77a1ab000e12767960113f18e2ffeef98bc86ed656d8b3c382166465",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-AUTHORITY:boundary:empty",
+    "kind": "boundary",
+    "title": "buildRuntimeAuthority 空值邊界",
+    "inputSample": "",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:4d47a329cd91eac5e45b6063871759d1aa01f2c25ad23c30c6ab8f0a4210b4c7",
+      "claim": "handles empty or whitespace-only input without crashing"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-AUTHORITY:boundary:formatted",
+    "kind": "boundary",
+    "title": "buildRuntimeAuthority 格式邊界",
+    "inputSample": "  ALPHA , beta  ",
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:4d47a329cd91eac5e45b6063871759d1aa01f2c25ad23c30c6ab8f0a4210b4c7",
+      "claim": "handles trimming/casing/format boundary deterministically"
+    }
+  }
+]

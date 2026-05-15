@@ -3,13 +3,13 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-RESOLVE-CANONICAL-RUNTIME-PATHS",
   "symbolName": "resolveCanonicalRuntimePaths",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+  "moduleSlug": "cli-shell-context-74c85a60",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
     "sourceRange": {
-      "startLine": 388,
-      "endLine": 403
+      "startLine": 281,
+      "endLine": 296
     },
     "semanticFingerprint": "sf:sha256:e4eacfec87a645b9500d2b12cc23617891dbaa3480f9a10af8bdf53ffa831c0f"
   },
@@ -42,23 +42,29 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L303",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L408",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L441",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L487",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L549",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L566",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L607",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L672",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js#L84",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L268",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js#L46",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js#L289",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/quality-verdict-utils.js#L293",
     "workflow:tools_node/lib/html-to-ucuf/workflow/runtime-sync.js#L29",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L589",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L746",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L779",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L791",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1221",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1393",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1397",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1448",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1654",
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2190"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/token-governance.js#L190",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L33",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L352"
   ],
   "usageRefStats": {
-    "totalRefs": 11,
-    "distinctFiles": 2,
+    "totalRefs": 17,
+    "distinctFiles": 7,
     "distinctKinds": 1,
-    "externalRefs": 1,
+    "externalRefs": 9,
     "kinds": [
       "workflow"
     ]
@@ -73,7 +79,7 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L388-L403"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L281-L296"
     ]
   },
   "promotion": {

@@ -1,0 +1,28 @@
+{
+  "schemaId": "atm.coreAnchorManifest",
+  "specVersion": "0.1.0",
+  "anchorId": "H2U-ANCHOR-WORKFLOW-MAIN-CF37CACF",
+  "kind": "core-anchor",
+  "role": "semantic-parent",
+  "logicalName": "anchor.workflow-main-cf37cacf",
+  "source": {
+    "file": "tools_node/lib/html-to-ucuf/workflow/workflow-main.js",
+    "lineCount": 474
+  },
+  "semanticFingerprint": "sf:sha256:ee85a7eb41b631309be9082657d5fe5fbbac7c09919d5a31b0fac56ff56566d1",
+  "children": [
+    "H2U-CAPSULE-RUN-WORKFLOW-MAIN"
+  ],
+  "lineage": {
+    "bornBy": "anchorize",
+    "parentRefs": [
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/workflow-main.js"
+    ]
+  },
+  "splitPolicy": null,
+  "splitPolicyReason": null,
+  "promotion": {
+    "currentTier": "core-anchor",
+    "allowSharedPromotion": false
+  }
+}

@@ -3,15 +3,15 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-RESOLVE-INTERACTION-FALLBACK-ROUTE",
   "symbolName": "resolveInteractionFallbackRoute",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
+  "moduleSlug": "interaction-smoke-f0cad253",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js",
     "sourceRange": {
-      "startLine": 1823,
-      "endLine": 1836
+      "startLine": 61,
+      "endLine": 74
     },
-    "semanticFingerprint": "sf:sha256:095781997d98411c084ed8a905d96240ac89117574e238e15b9c80843959c497"
+    "semanticFingerprint": "sf:sha256:283c229326fad0d92c7ab6b641166de9a816ace84f3c04c49c1da8067c8780f0"
   },
   "tier": "local-capsule",
   "recommendedTier": "local-capsule",
@@ -42,7 +42,7 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L1740"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js#L170"
   ],
   "usageRefStats": {
     "totalRefs": 1,
@@ -63,13 +63,13 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1823-L1836"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/interaction-smoke.js#L61-L74"
     ]
   },
   "promotion": {
     "currentTier": "local-capsule",
     "history": [],
     "sourceIdentityStable": true,
-    "semanticFingerprint": "sf:sha256:095781997d98411c084ed8a905d96240ac89117574e238e15b9c80843959c497"
+    "semanticFingerprint": "sf:sha256:283c229326fad0d92c7ab6b641166de9a816ace84f3c04c49c1da8067c8780f0"
   }
 }

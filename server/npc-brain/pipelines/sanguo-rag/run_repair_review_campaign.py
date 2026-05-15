@@ -36,6 +36,7 @@ DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extract
 DEFAULT_EVENTS_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/events-summary.json")
 DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
 DEFAULT_FEMALE_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl")
+DEFAULT_PILOT_REPORT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/etl-quality-pilot-report.json")
 
 
 def parse_args() -> argparse.Namespace:
@@ -85,6 +86,27 @@ def read_json(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
     return json.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def jsonl_count(path: Path) -> int:
+    if not path.exists():
+        return 0
+    count = 0
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            if line.strip():
+                count += 1
+    return count
+
+
+def prefer_richer_jsonl(generated_path: Path, baseline_path: Path | None) -> Path:
+    if baseline_path is None or not baseline_path.exists():
+        return generated_path
+    generated_count = jsonl_count(generated_path)
+    baseline_count = jsonl_count(baseline_path)
+    if generated_count >= baseline_count:
+        return generated_path
+    return baseline_path
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -182,6 +204,27 @@ def existing_round_json_paths(base_progress_path: str) -> list[str]:
     return resolved_rows
 
 
+def _to_int(value: Any) -> int:
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def round_batch_has_quality_signal(path: Path) -> bool:
+    payload = read_json(path)
+    results = list((payload if isinstance(payload, dict) else {}).get("results") or [])
+    if not results:
+        return False
+    for result in results:
+        if not isinstance(result, dict):
+            continue
+        enrich = result.get("enrich") if isinstance(result.get("enrich"), dict) else {}
+        if _to_int(enrich.get("returnCode")) == 0:
+            return True
+    return False
+
+
 def render_markdown(summary: dict[str, Any]) -> str:
     lines = [
         "# Repair Review Campaign",
@@ -275,6 +318,22 @@ def main() -> None:
         "femaleCandidatesPath",
         default=DEFAULT_FEMALE_CANDIDATES_PATH,
     )
+    baseline_event_seed_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "eventQuestionSeedsPath",
+        default=event_seed_root / "event-question-seeds.jsonl",
+    )
+    baseline_packet_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "sourceEventPacketsPath",
+        default=packet_root / "source-event-packets.jsonl",
+    )
+    pilot_report_path = path_from_progress_inputs(
+        base_progress_inputs,
+        "pilotReportPath",
+        "pilotReport",
+        default=DEFAULT_PILOT_REPORT_PATH,
+    )
 
     commands.append(
         {
@@ -317,6 +376,8 @@ def main() -> None:
             round_id,
             "--candidates",
             str(repair_candidates_path),
+            "--pilot-report",
+            str(pilot_report_path),
             "--output-root",
             str(rounds_root),
             "--max-generals",
@@ -408,6 +469,11 @@ def main() -> None:
         }
     )
 
+    generated_event_seed_path = event_seed_root / "event-question-seeds.jsonl"
+    generated_packet_path = packet_root / "source-event-packets.jsonl"
+    selected_event_seed_path = prefer_richer_jsonl(generated_event_seed_path, baseline_event_seed_path)
+    selected_packet_path = prefer_richer_jsonl(generated_packet_path, baseline_packet_path)
+
     estimate_args = [
         "--round-id",
         merged_round_id,
@@ -426,9 +492,9 @@ def main() -> None:
         "--relationship-evidence",
         str(merged_relationships_path),
         "--event-question-seeds",
-        str(event_seed_root / "event-question-seeds.jsonl"),
+        str(selected_event_seed_path),
         "--source-event-packets",
-        str(packet_root / "source-event-packets.jsonl"),
+        str(selected_packet_path),
         "--rounds-root",
         str(rounds_root),
         "--output-root",
@@ -438,6 +504,8 @@ def main() -> None:
     for batch_path in existing_round_json_paths(str(base_progress_path)):
         estimate_args.extend(["--round-json", batch_path])
     for batch_path in sorted(rounds_root.glob("*.batch.json")):
+        if not round_batch_has_quality_signal(batch_path):
+            continue
         estimate_args.extend(["--round-json", str(batch_path)])
     commands.append({"name": "estimate_knowledge_completion", **run_command(script_command("estimate_knowledge_completion.py", estimate_args))})
 

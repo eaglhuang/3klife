@@ -1,0 +1,26 @@
+[
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-AUTHORITY:invalid:null",
+    "kind": "invalid",
+    "title": "buildRuntimeAuthority null 輸入",
+    "inputSample": null,
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:4d47a329cd91eac5e45b6063871759d1aa01f2c25ad23c30c6ab8f0a4210b4c7",
+      "claim": "rejects or safely normalizes null-like input"
+    }
+  },
+  {
+    "id": "H2U-CAPSULE-BUILD-RUNTIME-AUTHORITY:invalid:type",
+    "kind": "invalid",
+    "title": "buildRuntimeAuthority 錯誤型別",
+    "inputSample": {
+      "unsupported": true
+    },
+    "expectation": {
+      "mode": "template-contract",
+      "semanticFingerprint": "sf:sha256:4d47a329cd91eac5e45b6063871759d1aa01f2c25ad23c30c6ab8f0a4210b4c7",
+      "claim": "rejects unsupported input types predictably"
+    }
+  }
+]

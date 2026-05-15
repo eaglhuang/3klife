@@ -3,15 +3,15 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-STRETCH-OVERSIZED-FULL-WIDTH-NODES",
   "symbolName": "stretchOversizedFullWidthNodes",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
+  "moduleSlug": "per-tab-replay-e0734ba6",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js",
     "sourceRange": {
-      "startLine": 1038,
-      "endLine": 1081
+      "startLine": 86,
+      "endLine": 128
     },
-    "semanticFingerprint": "sf:sha256:3ed9770cb411729b7d836c8cd188e9e391a03a17f161b149f7adbea9e0cc05c3"
+    "semanticFingerprint": "sf:sha256:37e8cd10f49b8c799cae6dd411c2c9261329a4e997c60e623daadd7272c79f17"
   },
   "tier": "local-capsule",
   "recommendedTier": "local-capsule",
@@ -28,7 +28,7 @@
   "requiredCaseSets": [],
   "classification": {
     "exported": false,
-    "lineCount": 44,
+    "lineCount": 43,
     "severity": "advisory",
     "riskScore": 25,
     "sideEffectRisk": false
@@ -41,7 +41,7 @@
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L894"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L37"
   ],
   "usageRefStats": {
     "totalRefs": 1,
@@ -62,13 +62,13 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1038-L1081"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L86-L128"
     ]
   },
   "promotion": {
     "currentTier": "local-capsule",
     "history": [],
     "sourceIdentityStable": true,
-    "semanticFingerprint": "sf:sha256:3ed9770cb411729b7d836c8cd188e9e391a03a17f161b149f7adbea9e0cc05c3"
+    "semanticFingerprint": "sf:sha256:37e8cd10f49b8c799cae6dd411c2c9261329a4e997c60e623daadd7272c79f17"
   }
 }

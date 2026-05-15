@@ -3,55 +3,56 @@
   "specVersion": "0.2.0",
   "capsuleId": "H2U-CAPSULE-RUN-PER-TAB-REPLAY",
   "symbolName": "runPerTabReplay",
-  "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
-  "moduleSlug": "run-html-to-ucuf-workflow-33d9a610",
+  "anchorId": "H2U-ANCHOR-CLI-SHELL-CONTEXT-74C85A60",
+  "moduleSlug": "cli-shell-context-74c85a60",
   "source": {
-    "file": "tools_node/run-html-to-ucuf-workflow.js",
+    "file": "tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js",
     "sourceRange": {
-      "startLine": 1176,
-      "endLine": 1302
+      "startLine": 475,
+      "endLine": 493
     },
-    "semanticFingerprint": "sf:sha256:da0f4f2f82608945138d1760e8eeeb60866f950641c79bec10a6fae020bde110"
+    "semanticFingerprint": "sf:sha256:14caa48d30c737373d8a1cbdb24f1debbacba33e7a9ce0769fa78c328d0c02a4"
   },
   "tier": "local-capsule",
   "recommendedTier": "local-capsule",
   "targetWorkbenchRoot": "atomic_workbench",
   "reasons": [
-    "medium-function",
-    "side-effect-risk",
+    "pure-ish",
     "return-contract"
   ],
   "testStrategy": [
     "source-range-fingerprint",
     "capsule-metadata",
-    "side-effect-boundary"
+    "edge-cases"
   ],
-  "requiredCaseSets": [
-    "boundary",
-    "invalid"
-  ],
+  "requiredCaseSets": [],
   "classification": {
     "exported": false,
-    "lineCount": 127,
+    "lineCount": 19,
     "severity": "advisory",
     "riskScore": 25,
-    "sideEffectRisk": true
+    "sideEffectRisk": false
   },
   "behaviorContract": {
     "oracleMode": "template-contract",
     "manualTestRequired": false,
-    "templateCompletenessRequired": true
+    "templateCompletenessRequired": false
   },
   "splitPolicy": null,
   "splitPolicyReason": null,
   "usageRefs": [
-    "workflow:tools_node/run-html-to-ucuf-workflow.js#L2063"
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L14",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L686",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L224",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/per-tab-replay.js#L352",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L24",
+    "workflow:tools_node/lib/html-to-ucuf/workflow/workflow-main.js#L225"
   ],
   "usageRefStats": {
-    "totalRefs": 1,
-    "distinctFiles": 1,
+    "totalRefs": 6,
+    "distinctFiles": 3,
     "distinctKinds": 1,
-    "externalRefs": 0,
+    "externalRefs": 4,
     "kinds": [
       "workflow"
     ]
@@ -66,13 +67,13 @@
   "lineage": {
     "bornBy": "authoring-time-auto-atomization",
     "parentRefs": [
-      "legacy://3KLife/tools_node/run-html-to-ucuf-workflow.js#L1176-L1302"
+      "legacy://3KLife/tools_node/lib/html-to-ucuf/workflow/cli-shell-context.js#L475-L493"
     ]
   },
   "promotion": {
     "currentTier": "local-capsule",
     "history": [],
     "sourceIdentityStable": true,
-    "semanticFingerprint": "sf:sha256:da0f4f2f82608945138d1760e8eeeb60866f950641c79bec10a6fae020bde110"
+    "semanticFingerprint": "sf:sha256:14caa48d30c737373d8a1cbdb24f1debbacba33e7a9ce0769fa78c328d0c02a4"
   }
 }

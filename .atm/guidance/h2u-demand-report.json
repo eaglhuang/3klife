@@ -1,0 +1,8 @@
+{
+  "callerDistribution": {
+    "resolveLength": 9,
+    "parseFragmentList": 4,
+    "parseCssLength": 2
+  },
+  "demandThreshold": 6
+}
