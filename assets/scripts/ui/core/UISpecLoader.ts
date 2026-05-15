@@ -449,11 +449,11 @@ export class UISpecLoader {
         if (cached) {
             this._layoutCache.delete(cached.layout);
             this._skinCache.delete(cached.skin);
-            this._rm.releaseAsset(`ui-spec/layouts/${cached.layout}`);
-            this._rm.releaseAsset(`ui-spec/skins/${cached.skin}`);
+            this._rm.forceRelease(`ui-spec/layouts/${cached.layout}`);
+            this._rm.forceRelease(`ui-spec/skins/${cached.skin}`);
         }
         this._screenCache.delete(screenId);
-        this._rm.releaseAsset(`ui-spec/screens/${screenId}`);
+        this._rm.forceRelease(`ui-spec/screens/${screenId}`);
     }
 
     /** 清除所有快取（場景切換時呼叫） */
