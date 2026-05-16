@@ -278,6 +278,63 @@ def load_core_person_completion_policy(
     return read_governance_json(path, required_id="Policy_CorePersonCompletionScoring_P2")
 
 
+
+def load_event_candidate_extraction_policy(
+    root: str | Path | None = None,
+    *,
+    event_candidate_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(event_candidate_policy).resolve()
+        if event_candidate_policy
+        else _path(base, "policies", "policy-event-candidate-extraction.json")
+    )
+    return read_governance_json(path, required_id="Policy_EventCandidateExtraction_P1")
+
+
+def load_event_candidate_cue_rules(
+    root: str | Path | None = None,
+    *,
+    event_candidate_cue_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(event_candidate_cue_rules).resolve()
+        if event_candidate_cue_rules
+        else _path(base, "rules", "rule-event-candidate-cues.jsonl")
+    )
+    return read_governance_jsonl(path, required_fields=("id", "extractor", "constantName", "kind"))
+
+
+def load_event_question_seed_bank_policy(
+    root: str | Path | None = None,
+    *,
+    event_question_seed_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(event_question_seed_policy).resolve()
+        if event_question_seed_policy
+        else _path(base, "policies", "policy-event-question-seed-bank.json")
+    )
+    return read_governance_json(path, required_id="Policy_EventQuestionSeedBank_P1")
+
+
+def load_event_question_angle_cue_rules(
+    root: str | Path | None = None,
+    *,
+    event_question_angle_cue_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(event_question_angle_cue_rules).resolve()
+        if event_question_angle_cue_rules
+        else _path(base, "rules", "rule-event-question-angle-cues.jsonl")
+    )
+    return read_governance_jsonl(path, required_fields=("id", "extractor", "angleFamily", "terms"))
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
@@ -296,12 +353,16 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-evidence-seed-extraction.json", "consumer": "extract_*_evidence_seeds.py"},
         {"section": "policies", "file": "policy-knowledge-completion-scoring.json", "consumer": "estimate_knowledge_completion.py"},
         {"section": "policies", "file": "policy-core-person-completion-scoring.json", "consumer": "estimate_core_person_completion.py"},
+        {"section": "policies", "file": "policy-event-candidate-extraction.json", "consumer": "extract_event_candidates.py"},
+        {"section": "policies", "file": "policy-event-question-seed-bank.json", "consumer": "build_event_question_seed_bank.py"},
         {"section": "rules", "file": "rule-basic-profile-cues.json", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "rules", "file": "rule-location-extraction.json", "consumer": "run_progress_advancement_loop.py"},
         {"section": "rules", "file": "rule-evidence-seed-keyword-cues.jsonl", "consumer": "extract_*_evidence_seeds.py"},
         {"section": "rules", "file": "rule-relationship-direction-denoise.jsonl", "consumer": "extract_generic_passage_evidence_seeds.py"},
         {"section": "rules", "file": "rule-text-normalization-replacements.jsonl", "consumer": "extract_harvested_page_evidence_seeds.py"},
         {"section": "rules", "file": "rule-page-text-cleanup.jsonl", "consumer": "extract_*_evidence_seeds.py"},
+        {"section": "rules", "file": "rule-event-candidate-cues.jsonl", "consumer": "extract_event_candidates.py"},
+        {"section": "rules", "file": "rule-event-question-angle-cues.jsonl", "consumer": "build_event_question_seed_bank.py"},
         {"section": "schemas", "file": "schema-stable-bootstrap-payload.json", "consumer": "validate_sanguo_governance.py"},
         {"section": "schemas", "file": "schema-governance-bundle.json", "consumer": "validate_sanguo_governance.py"},
     ]

@@ -16,6 +16,10 @@ from sanguo_governance_loader import (
     load_evidence_seed_direction_denoise_rules,
     load_evidence_seed_keyword_cue_rules,
     load_evidence_seed_page_text_cleanup_rules,
+    load_event_candidate_cue_rules,
+    load_event_candidate_extraction_policy,
+    load_event_question_angle_cue_rules,
+    load_event_question_seed_bank_policy,
     load_evidence_seed_text_normalization_rules,
     load_full_roster_runner_governance,
     load_knowledge_completion_policy,
@@ -120,6 +124,10 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     text_normalization_rules = load_evidence_seed_text_normalization_rules(root)
     knowledge_completion = load_knowledge_completion_policy(root)
     core_person_completion = load_core_person_completion_policy(root)
+    event_candidate_policy = load_event_candidate_extraction_policy(root)
+    event_candidate_cues = load_event_candidate_cue_rules(root)
+    event_question_policy = load_event_question_seed_bank_policy(root)
+    event_question_angle_cues = load_event_question_angle_cue_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -402,6 +410,88 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         raise SanguoGovernanceError("policy-core-person-completion-scoring profileDepth must define fields and positive increment")
     if set((core_person_completion.get("recommendedActionByComponent") or {}).keys()) != core_component_keys:
         raise SanguoGovernanceError("policy-core-person-completion-scoring recommendedActionByComponent key mismatch")
+
+    event_candidate_caps = event_candidate_policy.get("candidateCaps") if isinstance(event_candidate_policy.get("candidateCaps"), dict) else {}
+    if any(int(event_candidate_caps.get(key) or 0) <= 0 for key in ("maxSnippets", "maxGenericBattleCandidates", "maxFemaleInteractionCandidates")):
+        raise SanguoGovernanceError("policy-event-candidate-extraction candidateCaps must be positive")
+    if not event_candidate_policy.get("aliasSmokeTargets"):
+        raise SanguoGovernanceError("policy-event-candidate-extraction aliasSmokeTargets cannot be empty")
+    event_candidate_required = {
+        "LOCATION_FALSE_POSITIVE_TERMS",
+        "BATTLE_SIGNAL_TERMS",
+        "DIRECT_BATTLE_SIGNAL_TERMS",
+        "GENERIC_BATTLE_EXCLUDE_TERMS",
+        "FEMALE_INTERACTION_SIGNAL_TERMS",
+        "FEMALE_INTERACTION_LOCATION_TERMS",
+        "FEMALE_CONTEXT_GENERAL_INJECTIONS",
+        "FEMALE_INTERACTION_SUBTYPE_RULES",
+    }
+    event_candidate_by_name: dict[str, dict[str, Any]] = {}
+    for row in event_candidate_cues:
+        extractor = str(row.get("extractor") or "").strip()
+        constant_name = str(row.get("constantName") or "").strip()
+        if extractor != "extractEventCandidates":
+            raise SanguoGovernanceError(f"rule-event-candidate-cues invalid extractor: {extractor}")
+        if constant_name in event_candidate_by_name:
+            raise SanguoGovernanceError(f"rule-event-candidate-cues duplicate constantName: {constant_name}")
+        event_candidate_by_name[constant_name] = row
+        kind = str(row.get("kind") or "").strip()
+        if kind == "termList":
+            terms = row.get("terms")
+            if not isinstance(terms, list) or not terms:
+                raise SanguoGovernanceError(f"rule-event-candidate-cues {constant_name} terms must be non-empty list")
+            normalized = [str(term).strip() for term in terms]
+            if any(not term for term in normalized):
+                raise SanguoGovernanceError(f"rule-event-candidate-cues {constant_name} has blank term")
+            if len(set(normalized)) != len(normalized):
+                raise SanguoGovernanceError(f"rule-event-candidate-cues {constant_name} has duplicate term")
+        elif kind in {"contextGeneralInjections", "femaleInteractionSubtypeRules"}:
+            entries = row.get("entries")
+            if not isinstance(entries, list) or not entries:
+                raise SanguoGovernanceError(f"rule-event-candidate-cues {constant_name} entries must be non-empty list")
+        else:
+            raise SanguoGovernanceError(f"rule-event-candidate-cues {constant_name} unsupported kind: {kind}")
+    missing_event_candidate = sorted(event_candidate_required - event_candidate_by_name.keys())
+    if missing_event_candidate:
+        raise SanguoGovernanceError(f"rule-event-candidate-cues missing rules: {', '.join(missing_event_candidate)}")
+
+    question_angle_families: set[str] = set()
+    for row in event_question_angle_cues:
+        extractor = str(row.get("extractor") or "").strip()
+        angle_family = str(row.get("angleFamily") or "").strip()
+        if extractor != "buildEventQuestionSeedBank":
+            raise SanguoGovernanceError(f"rule-event-question-angle-cues invalid extractor: {extractor}")
+        if not angle_family:
+            raise SanguoGovernanceError("rule-event-question-angle-cues angleFamily cannot be blank")
+        if angle_family in question_angle_families:
+            raise SanguoGovernanceError(f"rule-event-question-angle-cues duplicate angleFamily: {angle_family}")
+        question_angle_families.add(angle_family)
+        terms = row.get("terms")
+        if not isinstance(terms, list) or not terms:
+            raise SanguoGovernanceError(f"rule-event-question-angle-cues {angle_family} terms must be non-empty list")
+        normalized_terms = [str(term).strip() for term in terms]
+        if any(not term for term in normalized_terms):
+            raise SanguoGovernanceError(f"rule-event-question-angle-cues {angle_family} has blank term")
+        if len(set(normalized_terms)) != len(normalized_terms):
+            raise SanguoGovernanceError(f"rule-event-question-angle-cues {angle_family} has duplicate term")
+    claim_to_angle = event_question_policy.get("claimToAngleFamily")
+    if not isinstance(claim_to_angle, dict) or not claim_to_angle:
+        raise SanguoGovernanceError("policy-event-question-seed-bank claimToAngleFamily cannot be empty")
+    allowed_question_angles = set(question_angle_families) | {"relationship"}
+    invalid_angles = sorted({str(value) for value in claim_to_angle.values()} - allowed_question_angles)
+    if invalid_angles:
+        raise SanguoGovernanceError(f"policy-event-question-seed-bank claimToAngleFamily has invalid angle families: {invalid_angles}")
+    event_question_gate = event_question_policy.get("externalTrustGate") if isinstance(event_question_policy.get("externalTrustGate"), dict) else {}
+    if float(event_question_gate.get("externalSeedMinScore") or 0.0) <= 0.0:
+        raise SanguoGovernanceError("policy-event-question-seed-bank externalTrustGate.externalSeedMinScore must be positive")
+    if int(event_question_gate.get("historyCrossFamilyThreshold") or 0) <= 0 or int(event_question_gate.get("nonHistoryCrossFamilyThreshold") or 0) <= 0:
+        raise SanguoGovernanceError("policy-event-question-seed-bank cross-family thresholds must be positive")
+    slot_rules = event_question_policy.get("slotStrengthRules")
+    if not isinstance(slot_rules, list) or not slot_rules:
+        raise SanguoGovernanceError("policy-event-question-seed-bank slotStrengthRules cannot be empty")
+    if not any(isinstance(rule, dict) and rule.get("default") is True for rule in slot_rules):
+        raise SanguoGovernanceError("policy-event-question-seed-bank slotStrengthRules must include default rule")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -428,6 +518,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "knowledgeCompletionAngleFamilyCount": len(normalized_angle_families),
         "corePersonCompletionComponentWeightCount": len(core_weights),
         "corePersonCompletionActionCount": len(core_person_completion.get("recommendedActionByComponent") or {}),
+        "eventCandidateCueRuleCount": len(event_candidate_cues),
+        "eventQuestionAngleCueRuleCount": len(event_question_angle_cues),
+        "eventQuestionClaimMappingCount": len(claim_to_angle),
     }
 
 

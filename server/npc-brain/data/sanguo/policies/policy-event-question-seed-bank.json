@@ -1,0 +1,45 @@
+{
+  "id": "Policy_EventQuestionSeedBank_P1",
+  "description": "Externalized source-grounded event question seed policy. Values are copied from build_event_question_seed_bank.py Phase 7 baseline.",
+  "claimToAngleFamily": {
+    "identity": "faction_timeline",
+    "relationship": "relationship",
+    "event": "activity_seed",
+    "location": "location_context",
+    "title": "work_role",
+    "trait": "aptitude_talent",
+    "habit": "activity_seed",
+    "activity": "activity_seed",
+    "role": "work_role",
+    "dialogue_seed": "affect_story",
+    "worldbuilding_note": "faction_timeline",
+    "source_conflict": "decision_weight"
+  },
+  "externalTrustGate": {
+    "externalSeedMinScore": 72.0,
+    "historyCrossFamilyThreshold": 2,
+    "nonHistoryCrossFamilyThreshold": 3
+  },
+  "slotStrengthRules": [
+    {
+      "slotStrength": "strong",
+      "unitWeight": 0.35,
+      "minSourceRefCount": 5,
+      "relationshipEvidencePasses": true
+    },
+    {
+      "slotStrength": "rich",
+      "unitWeight": 0.25,
+      "minSourceRefCount": 3
+    },
+    {
+      "slotStrength": "thin",
+      "unitWeight": 0.1,
+      "default": true
+    }
+  ],
+  "seedRowDefaults": {
+    "reviewStatus": "source-grounded-seed",
+    "canonicalWrites": false
+  }
+}

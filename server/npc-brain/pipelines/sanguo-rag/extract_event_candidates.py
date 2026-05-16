@@ -6,55 +6,34 @@ import re
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 from pydantic import BaseModel, Field
 
 from gold_seed_registry import GOLD_SEED_BATTLE_SPECS as RAW_GOLD_SEED_BATTLE_SPECS
+from sanguo_governance_loader import (
+    SanguoGovernanceError,
+    load_event_candidate_cue_rules,
+    load_event_candidate_extraction_policy,
+)
 
 
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_DIALOGUE_RESOLUTION_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/dialogue-resolution/dialogue-resolution.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/events")
 DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
-DEFAULT_PILOT_GENERAL = "zhang-fei"
-DEFAULT_ALIAS_SMOKE_TARGETS = {
-    "許諸": "xu-zhu",
-    "孫郎": "sun-ce",
-    "曹瞞": "cao-cao",
-    "祝融": "zhu-rong-furen",
-}
+DEFAULT_PILOT_GENERAL = ""
+DEFAULT_ALIAS_SMOKE_TARGETS: dict[str, str] = {}
 DECORATIVE_WRAPPER_CHARS = "【】[]()（）「」『』《》〈〉"
 LOCATION_PATTERN = re.compile(r"([一-龥]{1,8}(?:津口|橋|口|坡|寨|城|津|渡|關|山|江|河))")
-LOCATION_FALSE_POSITIVE_TERMS = ["有寶劍", "殺出", "送至", "迎接入", "親自渡", "指曰", "便問"]
-BATTLE_SIGNAL_TERMS = ["戰", "軍", "兵", "陣", "敵", "殺", "斬", "攻", "追", "退", "走", "敗", "馬"]
-DIRECT_BATTLE_SIGNAL_TERMS = ["交鋒", "廝殺", "交戰", "搦戰", "迎敵", "迎戰", "攻打", "殺敗", "大敗", "截住", "追趕", "追襲", "斬", "殺", "攻"]
-GENERIC_BATTLE_EXCLUDE_TERMS = ["表陳", "薦爲", "除", "遷", "奏其功", "前功", "司馬", "縣令", "丞", "尉", "現居何職", "白身"]
-FEMALE_INTERACTION_SIGNAL_TERMS = [
-    "夫人", "主母", "嫂嫂", "小姐", "母親", "母病", "結親", "成親", "婚", "嫁", "娶", "妾", "妻", "夫主",
-    "阿斗", "國太", "侍婢", "槍刀", "佩劍", "兵器", "回吳", "歸", "思歸", "灑淚", "哭", "投江", "驚", "怒",
-    "不肯", "復仇", "報仇", "雪讎", "病危", "情願", "愛敬", "歡洽", "商議", "祭祖", "抱", "孩子",
-]
-FEMALE_INTERACTION_LOCATION_TERMS = ["東吳", "甘露寺", "南徐", "荊州", "江邊", "沙頭鎮", "油江夾口", "白帝城", "長坂坡", "長阪坡", "下邳", "小沛", "徐州", "吳", "船"]
-FEMALE_RELATIONSHIP_TYPE_OVERRIDES = {
-    ("cai-shi", "liu-biao"): "spouse",
-    ("cai-shi", "liu-cong"): "parent_child",
-    ("gan-shi", "liu-bei"): "spouse",
-    ("gan-shi", "liu-shan"): "parent_child",
-    ("mi-shi", "liu-bei"): "spouse",
-    ("mi-shi", "liu-shan"): "protects",
-    ("sun-shang-xiang", "liu-bei"): "spouse",
-    ("sun-shang-xiang", "sun-quan"): "sibling",
-    ("wu-guo-tai", "sun-jian"): "spouse",
-    ("wu-guo-tai", "sun-ce"): "parent_child",
-    ("wu-guo-tai", "sun-quan"): "parent_child",
-    ("wu-guo-tai", "sun-shang-xiang"): "parent_child",
-    ("zhu-rong-furen", "meng-huo"): "spouse",
-}
-FEMALE_CONTEXT_GENERAL_INJECTIONS = [
-    {"femaleId": "cai-shi", "cueTerms": ["與母蔡夫人", "母蔡夫人"], "generalId": "liu-cong"},
-    {"femaleId": "gan-shi", "cueTerms": ["阿斗", "孩兒", "孩子"], "generalId": "liu-shan"},
-    {"femaleId": "mi-shi", "cueTerms": ["阿斗", "孩兒", "孩子"], "generalId": "liu-shan"},
-]
+LOCATION_FALSE_POSITIVE_TERMS: list[str] = []
+BATTLE_SIGNAL_TERMS: list[str] = []
+DIRECT_BATTLE_SIGNAL_TERMS: list[str] = []
+GENERIC_BATTLE_EXCLUDE_TERMS: list[str] = []
+FEMALE_INTERACTION_SIGNAL_TERMS: list[str] = []
+FEMALE_INTERACTION_LOCATION_TERMS: list[str] = []
+FEMALE_RELATIONSHIP_TYPE_OVERRIDES: dict[tuple[str, str], str] = {}
+FEMALE_CONTEXT_GENERAL_INJECTIONS: list[dict[str, object]] = []
 
 
 class RelationshipEdge(BaseModel):
@@ -108,22 +87,158 @@ class GoldSeedBattleSpec(BaseModel):
 GOLD_SEED_BATTLE_SPECS = [GoldSeedBattleSpec.model_validate(spec) for spec in RAW_GOLD_SEED_BATTLE_SPECS]
 
 
+
+EVENT_CANDIDATE_POLICY: dict[str, Any] = {}
+EVENT_CANDIDATE_CUE_RULES: list[dict[str, Any]] = []
+
+
+def _coerce_terms(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value]
+
+
+def _event_candidate_rule_by_name(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return {str(row.get("constantName") or ""): row for row in rows}
+
+
+def _alias_smoke_targets_from_policy(policy: dict[str, Any]) -> dict[str, str]:
+    targets: dict[str, str] = {}
+    for row in policy.get("aliasSmokeTargets") or []:
+        if not isinstance(row, dict):
+            continue
+        label = str(row.get("label") or "").strip()
+        general_id = str(row.get("generalId") or "").strip()
+        if label and general_id:
+            targets[label] = general_id
+    return targets
+
+
+def apply_event_candidate_governance(policy: dict[str, Any], cue_rules: list[dict[str, Any]]) -> None:
+    global EVENT_CANDIDATE_POLICY, EVENT_CANDIDATE_CUE_RULES
+    global DEFAULT_PILOT_GENERAL, DEFAULT_ALIAS_SMOKE_TARGETS
+    global LOCATION_FALSE_POSITIVE_TERMS, BATTLE_SIGNAL_TERMS, DIRECT_BATTLE_SIGNAL_TERMS, GENERIC_BATTLE_EXCLUDE_TERMS
+    global FEMALE_INTERACTION_SIGNAL_TERMS, FEMALE_INTERACTION_LOCATION_TERMS
+    global FEMALE_RELATIONSHIP_TYPE_OVERRIDES, FEMALE_CONTEXT_GENERAL_INJECTIONS
+
+    EVENT_CANDIDATE_POLICY = dict(policy)
+    EVENT_CANDIDATE_CUE_RULES = list(cue_rules)
+    DEFAULT_PILOT_GENERAL = str(policy.get("pilotGeneral") or "")
+    DEFAULT_ALIAS_SMOKE_TARGETS = _alias_smoke_targets_from_policy(policy)
+    by_name = _event_candidate_rule_by_name(cue_rules)
+    LOCATION_FALSE_POSITIVE_TERMS = _coerce_terms(by_name.get("LOCATION_FALSE_POSITIVE_TERMS", {}).get("terms"))
+    BATTLE_SIGNAL_TERMS = _coerce_terms(by_name.get("BATTLE_SIGNAL_TERMS", {}).get("terms"))
+    DIRECT_BATTLE_SIGNAL_TERMS = _coerce_terms(by_name.get("DIRECT_BATTLE_SIGNAL_TERMS", {}).get("terms"))
+    GENERIC_BATTLE_EXCLUDE_TERMS = _coerce_terms(by_name.get("GENERIC_BATTLE_EXCLUDE_TERMS", {}).get("terms"))
+    FEMALE_INTERACTION_SIGNAL_TERMS = _coerce_terms(by_name.get("FEMALE_INTERACTION_SIGNAL_TERMS", {}).get("terms"))
+    FEMALE_INTERACTION_LOCATION_TERMS = _coerce_terms(by_name.get("FEMALE_INTERACTION_LOCATION_TERMS", {}).get("terms"))
+    context_row = by_name.get("FEMALE_CONTEXT_GENERAL_INJECTIONS", {})
+    FEMALE_CONTEXT_GENERAL_INJECTIONS = [entry for entry in context_row.get("entries") or [] if isinstance(entry, dict)]
+    FEMALE_RELATIONSHIP_TYPE_OVERRIDES = {
+        (str(row.get("fromId") or ""), str(row.get("toId") or "")): str(row.get("type") or "")
+        for row in policy.get("femaleRelationshipTypeOverrides") or []
+        if isinstance(row, dict) and row.get("fromId") and row.get("toId") and row.get("type")
+    }
+
+
+def effective_candidate_cap(cli_value: int | None, policy_key: str, fallback: int) -> int:
+    if cli_value is not None:
+        return cli_value
+    caps = EVENT_CANDIDATE_POLICY.get("candidateCaps") if isinstance(EVENT_CANDIDATE_POLICY.get("candidateCaps"), dict) else {}
+    try:
+        return int(caps.get(policy_key, fallback))
+    except (TypeError, ValueError):
+        return fallback
+
+
+def generic_battle_candidate_policy() -> dict[str, Any]:
+    policy = EVENT_CANDIDATE_POLICY.get("genericBattleCandidate")
+    if isinstance(policy, dict):
+        return policy
+    return {"minGeneralIds": 3, "minSignalScore": 2, "confidenceCap": 0.78, "confidenceBase": 0.45, "generalIdWeight": 0.025, "signalScoreWeight": 0.025}
+
+
+def generic_battle_confidence(general_count: int, signal_score: int) -> float:
+    policy = generic_battle_candidate_policy()
+    return min(
+        float(policy.get("confidenceCap", 0.78)),
+        float(policy.get("confidenceBase", 0.45))
+        + general_count * float(policy.get("generalIdWeight", 0.025))
+        + signal_score * float(policy.get("signalScoreWeight", 0.025)),
+    )
+
+
+def female_interaction_candidate_policy() -> dict[str, Any]:
+    policy = EVENT_CANDIDATE_POLICY.get("femaleInteractionCandidate")
+    if isinstance(policy, dict):
+        return policy
+    return {"minSignalScore": 1, "confidenceCap": 0.82, "confidenceBase": 0.5, "femaleIdWeight": 0.04, "generalIdWeight": 0.015, "signalScoreWeight": 0.035}
+
+
+def female_interaction_confidence(female_count: int, general_count: int, signal_score: int) -> float:
+    policy = female_interaction_candidate_policy()
+    return min(
+        float(policy.get("confidenceCap", 0.82)),
+        float(policy.get("confidenceBase", 0.5))
+        + female_count * float(policy.get("femaleIdWeight", 0.04))
+        + general_count * float(policy.get("generalIdWeight", 0.015))
+        + signal_score * float(policy.get("signalScoreWeight", 0.035)),
+    )
+
+
+def female_interaction_subtype_rules() -> list[dict[str, Any]]:
+    by_name = _event_candidate_rule_by_name(EVENT_CANDIDATE_CUE_RULES)
+    subtype_row = by_name.get("FEMALE_INTERACTION_SUBTYPE_RULES", {})
+    return [entry for entry in subtype_row.get("entries") or [] if isinstance(entry, dict)]
+
+
+def female_relationship_edge_policy() -> dict[str, Any]:
+    policy = EVENT_CANDIDATE_POLICY.get("femaleRelationshipEdge")
+    return policy if isinstance(policy, dict) else {}
+
+
+def female_relation_type_for_subtype(subtype: str) -> str:
+    relation_by_subtype = female_relationship_edge_policy().get("relationTypeBySubtype")
+    if not isinstance(relation_by_subtype, dict):
+        return "spouse" if subtype == "marriage_alliance" else "mentions"
+    return str(relation_by_subtype.get(subtype) or relation_by_subtype.get("default") or "mentions")
+
+
+def female_edge_scores(edge_type: str) -> tuple[float, float]:
+    defaults = female_relationship_edge_policy().get("edgeDefaults")
+    if not isinstance(defaults, dict):
+        return (0.62, 0.35) if edge_type == "mentions" else (0.82, 0.65)
+    key = "mentions" if edge_type == "mentions" else "specificRelation"
+    values = defaults.get(key) if isinstance(defaults.get(key), dict) else {}
+    return float(values.get("edgeConfidence", 0.62 if edge_type == "mentions" else 0.82)), float(values.get("edgeStrength", 0.35 if edge_type == "mentions" else 0.65))
+
+
+def female_edge_limit() -> int:
+    try:
+        return int(female_relationship_edge_policy().get("maxEdges", 4))
+    except (TypeError, ValueError):
+        return 4
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build deterministic pilot event candidates from observed mentions.")
     parser.add_argument("--observed-mentions", default=str(DEFAULT_OBSERVED_MENTIONS_PATH), help="observed-mentions.json path")
     parser.add_argument("--dialogue-resolution", default=str(DEFAULT_DIALOGUE_RESOLUTION_PATH), help="dialogue-resolution.json path")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory for event candidates")
     parser.add_argument("--stable-knowledge", default=str(DEFAULT_STABLE_KNOWLEDGE_PATH), help="stable-knowledge-bootstrap.json path for female priority profiles")
-    parser.add_argument("--pilot-general", default=DEFAULT_PILOT_GENERAL, help="Primary generalId for the pilot event")
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--event-candidate-policy", default=None, help="Override policy-event-candidate-extraction.json path")
+    parser.add_argument("--event-candidate-cue-rules", default=None, help="Override rule-event-candidate-cues.jsonl path")
+    parser.add_argument("--pilot-general", default=None, help="Primary generalId for the pilot event. Defaults to governance policy.")
     parser.add_argument(
         "--alias-smoke-target",
         action="append",
         default=[],
-        help="Alias smoke target in label=generalId form. Defaults to 許諸/孫郎/曹瞞/祝融.",
+        help="Alias smoke target in label=generalId form. Defaults to governance policy alias smoke targets.",
     )
-    parser.add_argument("--max-snippets", type=int, default=8, help="Maximum snippets per event review section")
-    parser.add_argument("--max-generic-battle-candidates", type=int, default=12, help="Maximum generic battle candidates to write into review queue")
-    parser.add_argument("--max-female-interaction-candidates", type=int, default=40, help="Maximum female interaction candidates to write into review queue")
+    parser.add_argument("--max-snippets", type=int, default=None, help="Maximum snippets per event review section")
+    parser.add_argument("--max-generic-battle-candidates", type=int, default=None, help="Maximum generic battle candidates to write into review queue")
+    parser.add_argument("--max-female-interaction-candidates", type=int, default=None, help="Maximum female interaction candidates to write into review queue")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting output files")
     return parser.parse_args()
 
@@ -143,9 +258,9 @@ def normalize_label(value: str) -> str:
     return cleaned.strip().lower()
 
 
-def parse_alias_smoke_targets(raw_targets: list[str]) -> dict[str, str]:
+def parse_alias_smoke_targets(raw_targets: list[str], default_targets: dict[str, str] | None = None) -> dict[str, str]:
     if not raw_targets:
-        return dict(DEFAULT_ALIAS_SMOKE_TARGETS)
+        return dict(default_targets or DEFAULT_ALIAS_SMOKE_TARGETS)
     targets: dict[str, str] = {}
     for raw_target in raw_targets:
         if "=" not in raw_target:
@@ -328,7 +443,8 @@ def build_generic_battle_candidates(rows: list[dict], max_candidates: int) -> li
     for (chapter_no, source_ref), source_rows in grouped.items():
         general_ids = collect_general_ids(source_rows)
         signal_score = battle_signal_score(source_rows)
-        if len(general_ids) < 3 or signal_score < 2:
+        generic_policy = generic_battle_candidate_policy()
+        if len(general_ids) < int(generic_policy.get("minGeneralIds", 3)) or signal_score < int(generic_policy.get("minSignalScore", 2)):
             continue
         if looks_like_non_battle_biography(source_rows):
             continue
@@ -336,7 +452,7 @@ def build_generic_battle_candidates(rows: list[dict], max_candidates: int) -> li
         if not source_quote:
             continue
         event_key = f"generic-battle-{source_ref_key(source_ref)}"
-        confidence = min(0.78, 0.45 + len(general_ids) * 0.025 + signal_score * 0.025)
+        confidence = generic_battle_confidence(len(general_ids), signal_score)
         candidates.append(
             EventCandidate(
                 eventId=f"romance.generic-battle.{source_ref_key(source_ref)}",
@@ -386,23 +502,30 @@ def derive_female_interaction_location(rows: list[dict]) -> str | None:
 
 def infer_female_interaction_subtype(rows: list[dict]) -> tuple[str, list[str], list[str], list[str]]:
     text = "".join(str(row.get("textSnippet") or "") for row in rows)
-    if any(term in text for term in ["結親", "成親", "婚", "嫁", "娶", "夫主", "歡洽"]):
-        return "marriage_alliance", ["romance_love"], ["marriage_alliance"], ["family_duty", "host_banquet"]
-    if any(term in text for term in ["母親", "母病", "病危", "阿斗", "孩子", "主母", "嫂嫂", "抱"]):
-        return "family_affection", ["family_affection"], ["family_or_lineage_scene"], ["family_duty", "household_travel"]
-    if any(term in text for term in ["槍刀", "佩劍", "兵器", "侍婢", "戰", "殺", "截住"]):
-        return "armed_household", ["ambition_pride", "fear_shame"], ["battle_or_training_scene"], ["serve_army", "household_travel"]
-    if any(term in text for term in ["灑淚", "哭", "投江", "流離", "死"]):
-        return "grief_or_exile", ["grief_regret"], ["grief_or_exile_memory"], ["household_travel"]
-    if any(term in text for term in ["復仇", "報仇", "雪讎", "不肯", "拒絕", "怒"]):
-        return "revenge_or_refusal", ["anger_revenge"], ["revenge_or_refusal_scene"], ["family_duty"]
-    return "female_interaction", ["family_affection"], ["relationship_discovery"], ["daily_dialogue"]
+    for rule in female_interaction_subtype_rules():
+        terms = [str(term) for term in rule.get("terms") or []]
+        if any(term in text for term in terms):
+            return (
+                str(rule.get("subtype") or "female_interaction"),
+                [str(item) for item in rule.get("affectTags") or []],
+                [str(item) for item in rule.get("interactionTags") or []],
+                [str(item) for item in rule.get("activitySeedHints") or []],
+            )
+    default_rule = female_interaction_candidate_policy().get("subtypeDefault")
+    if not isinstance(default_rule, dict):
+        default_rule = {"subtype": "female_interaction", "affectTags": ["family_affection"], "interactionTags": ["relationship_discovery"], "activitySeedHints": ["daily_dialogue"]}
+    return (
+        str(default_rule.get("subtype") or "female_interaction"),
+        [str(item) for item in default_rule.get("affectTags") or []],
+        [str(item) for item in default_rule.get("interactionTags") or []],
+        [str(item) for item in default_rule.get("activitySeedHints") or []],
+    )
 
 
 def build_female_relationship_edges(general_ids: list[str], female_ids: list[str], profiles: dict[str, dict], source_ref: str, subtype: str) -> list[RelationshipEdge]:
     edges: list[RelationshipEdge] = []
     seen: set[tuple[str, str, str]] = set()
-    relation_type = "spouse" if subtype == "marriage_alliance" else "mentions"
+    relation_type = female_relation_type_for_subtype(subtype)
     for female_id in female_ids:
         focus_ids = list(profiles.get(female_id, {}).get("relationshipFocusIds") or [])
         focus_ids.extend(target_id for source_id, target_id in FEMALE_RELATIONSHIP_TYPE_OVERRIDES if source_id == female_id and target_id in general_ids)
@@ -420,11 +543,11 @@ def build_female_relationship_edges(general_ids: list[str], female_ids: list[str
                     toId=target_id,
                     type=edge_type,
                     evidenceRefs=[source_ref],
-                    edgeConfidence=0.82 if edge_type != "mentions" else 0.62,
-                    edgeStrength=0.65 if edge_type != "mentions" else 0.35,
+                    edgeConfidence=female_edge_scores(edge_type)[0],
+                    edgeStrength=female_edge_scores(edge_type)[1],
                 )
             )
-    return edges[:4]
+    return edges[: max(female_edge_limit(), 0)]
 
 
 def apply_female_context_general_injections(general_ids: list[str], female_ids: list[str], rows: list[dict]) -> list[str]:
@@ -462,7 +585,8 @@ def build_female_interaction_candidates(rows: list[dict], profiles: dict[str, di
         general_ids = collect_general_ids(source_rows)
         female_ids = sorted(set(general_ids).intersection(female_general_ids))
         signal_score = female_interaction_signal_score(source_rows)
-        if not female_ids or signal_score < 1:
+        female_policy = female_interaction_candidate_policy()
+        if not female_ids or signal_score < int(female_policy.get("minSignalScore", 1)):
             continue
         general_ids = apply_female_context_general_injections(general_ids, female_ids, source_rows)
         source_quote = representative_quote(source_rows, preferred_terms=FEMALE_INTERACTION_SIGNAL_TERMS)
@@ -471,7 +595,7 @@ def build_female_interaction_candidates(rows: list[dict], profiles: dict[str, di
         subtype, affect_tags, interaction_tags, activity_hints = infer_female_interaction_subtype(source_rows)
         profile_tags = unique_sorted(tag for female_id in female_ids for tag in profiles.get(female_id, {}).get("interactionPriorities") or [])
         location = derive_female_interaction_location(source_rows)
-        confidence = min(0.82, 0.5 + len(female_ids) * 0.04 + len(general_ids) * 0.015 + signal_score * 0.035)
+        confidence = female_interaction_confidence(len(female_ids), len(general_ids), signal_score)
         display_names = "、".join(profiles.get(female_id, {}).get("name") or female_id for female_id in female_ids)
         event_key = f"female-interaction-{source_ref_key(source_ref)}"
         candidates.append(
@@ -743,6 +867,16 @@ def write_outputs(
 
 def main() -> None:
     args = parse_args()
+    event_candidate_policy = load_event_candidate_extraction_policy(
+        args.governance_root,
+        event_candidate_policy=args.event_candidate_policy,
+    )
+    event_candidate_cue_rules = load_event_candidate_cue_rules(
+        args.governance_root,
+        event_candidate_cue_rules=args.event_candidate_cue_rules,
+    )
+    apply_event_candidate_governance(event_candidate_policy, event_candidate_cue_rules)
+
     observed_mentions_path = Path(args.observed_mentions)
     dialogue_resolution_path = Path(args.dialogue_resolution)
     output_root = Path(args.output_root)
@@ -750,15 +884,18 @@ def main() -> None:
     observed_mentions = load_observed_mentions(observed_mentions_path)
     dialogue_data = load_dialogue_resolution(dialogue_resolution_path)
     female_priority_profiles = load_female_priority_profiles(Path(args.stable_knowledge))
-    targets = parse_alias_smoke_targets(args.alias_smoke_target)
+    targets = parse_alias_smoke_targets(args.alias_smoke_target, DEFAULT_ALIAS_SMOKE_TARGETS)
     events = build_gold_seed_battle_events(observed_mentions)
     events.extend(build_alias_smoke_event(label, general_id, observed_mentions) for label, general_id in targets.items())
     events.extend(build_dialogue_resolution_events(dialogue_data))
-    generic_battle_candidates = build_generic_battle_candidates(observed_mentions, args.max_generic_battle_candidates)
+    generic_battle_candidates = build_generic_battle_candidates(
+        observed_mentions,
+        effective_candidate_cap(args.max_generic_battle_candidates, "maxGenericBattleCandidates", 12),
+    )
     female_interaction_candidates = build_female_interaction_candidates(
         observed_mentions,
         female_priority_profiles,
-        args.max_female_interaction_candidates,
+        effective_candidate_cap(args.max_female_interaction_candidates, "maxFemaleInteractionCandidates", 40),
     )
     write_outputs(output_root, events, generic_battle_candidates, female_interaction_candidates, observed_mentions_path)
     if any(event.reviewStatus != "ready" for event in events):
@@ -766,4 +903,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SanguoGovernanceError as exc:
+        raise SystemExit(f"[extract_event_candidates] {exc}") from None

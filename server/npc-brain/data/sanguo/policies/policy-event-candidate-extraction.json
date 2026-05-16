@@ -1,0 +1,140 @@
+{
+  "id": "Policy_EventCandidateExtraction_P1",
+  "description": "Externalized deterministic event candidate extraction defaults. Values are copied from extract_event_candidates.py Phase 7 baseline.",
+  "pilotGeneral": "zhang-fei",
+  "aliasSmokeTargets": [
+    {
+      "label": "許諸",
+      "generalId": "xu-zhu"
+    },
+    {
+      "label": "孫郎",
+      "generalId": "sun-ce"
+    },
+    {
+      "label": "曹瞞",
+      "generalId": "cao-cao"
+    },
+    {
+      "label": "祝融",
+      "generalId": "zhu-rong-furen"
+    }
+  ],
+  "candidateCaps": {
+    "maxSnippets": 8,
+    "maxGenericBattleCandidates": 12,
+    "maxFemaleInteractionCandidates": 40
+  },
+  "genericBattleCandidate": {
+    "minGeneralIds": 3,
+    "minSignalScore": 2,
+    "confidenceCap": 0.78,
+    "confidenceBase": 0.45,
+    "generalIdWeight": 0.025,
+    "signalScoreWeight": 0.025
+  },
+  "femaleInteractionCandidate": {
+    "minSignalScore": 1,
+    "confidenceCap": 0.82,
+    "confidenceBase": 0.5,
+    "femaleIdWeight": 0.04,
+    "generalIdWeight": 0.015,
+    "signalScoreWeight": 0.035,
+    "subtypeDefault": {
+      "subtype": "female_interaction",
+      "affectTags": [
+        "family_affection"
+      ],
+      "interactionTags": [
+        "relationship_discovery"
+      ],
+      "activitySeedHints": [
+        "daily_dialogue"
+      ]
+    }
+  },
+  "femaleRelationshipEdge": {
+    "relationTypeBySubtype": {
+      "marriage_alliance": "spouse",
+      "default": "mentions"
+    },
+    "edgeDefaults": {
+      "specificRelation": {
+        "edgeConfidence": 0.82,
+        "edgeStrength": 0.65
+      },
+      "mentions": {
+        "edgeConfidence": 0.62,
+        "edgeStrength": 0.35
+      }
+    },
+    "maxEdges": 4
+  },
+  "femaleRelationshipTypeOverrides": [
+    {
+      "fromId": "cai-shi",
+      "toId": "liu-biao",
+      "type": "spouse"
+    },
+    {
+      "fromId": "cai-shi",
+      "toId": "liu-cong",
+      "type": "parent_child"
+    },
+    {
+      "fromId": "gan-shi",
+      "toId": "liu-bei",
+      "type": "spouse"
+    },
+    {
+      "fromId": "gan-shi",
+      "toId": "liu-shan",
+      "type": "parent_child"
+    },
+    {
+      "fromId": "mi-shi",
+      "toId": "liu-bei",
+      "type": "spouse"
+    },
+    {
+      "fromId": "mi-shi",
+      "toId": "liu-shan",
+      "type": "protects"
+    },
+    {
+      "fromId": "sun-shang-xiang",
+      "toId": "liu-bei",
+      "type": "spouse"
+    },
+    {
+      "fromId": "sun-shang-xiang",
+      "toId": "sun-quan",
+      "type": "sibling"
+    },
+    {
+      "fromId": "wu-guo-tai",
+      "toId": "sun-jian",
+      "type": "spouse"
+    },
+    {
+      "fromId": "wu-guo-tai",
+      "toId": "sun-ce",
+      "type": "parent_child"
+    },
+    {
+      "fromId": "wu-guo-tai",
+      "toId": "sun-quan",
+      "type": "parent_child"
+    },
+    {
+      "fromId": "wu-guo-tai",
+      "toId": "sun-shang-xiang",
+      "type": "parent_child"
+    },
+    {
+      "fromId": "zhu-rong-furen",
+      "toId": "meng-huo",
+      "type": "spouse"
+    }
+  ]
+}

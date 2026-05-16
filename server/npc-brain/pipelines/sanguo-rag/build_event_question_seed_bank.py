@@ -8,39 +8,49 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from sanguo_governance_loader import (
+    SanguoGovernanceError,
+    load_event_question_angle_cue_rules,
+    load_event_question_seed_bank_policy,
+)
+
 
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
 DEFAULT_RELATIONSHIP_EVIDENCE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/relationship-evidence/source-grounded-relationship-edges.jsonl")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/event-question-seeds")
 
-ANGLE_TERMS = {
-    "battle": ["戰", "軍", "兵", "陣", "敵", "殺", "斬", "攻", "追", "敗", "馬", "交鋒", "廝殺", "迎戰", "直取"],
-    "affect_story": ["哭", "怒", "喜", "驚", "恨", "恩", "義", "忠", "悔", "愛", "敬", "羞", "懼", "灑淚", "大怒"],
-    "work_role": ["耕", "商", "販", "官", "吏", "太守", "縣令", "丞", "尉", "司馬", "將軍", "軍師", "謀士"],
-    "activity_seed": ["請", "薦", "拜", "見", "議", "問", "答", "救", "守", "送", "迎", "借", "求", "降", "逃"],
-    "item_equipment": ["劍", "刀", "槍", "矛", "馬", "弓", "箭", "甲", "鎧", "印", "書", "金", "銀", "糧", "船"],
-    "location_context": ["城", "寨", "關", "橋", "江", "河", "山", "津", "渡", "郡", "州", "縣", "營"],
-    "aptitude_talent": ["武藝", "弓馬", "善戰", "勇力", "勇猛", "智謀", "計策", "奇謀", "妙計", "謀略", "辯才", "才學", "醫術", "神醫", "方術", "占卜", "天文", "兵法", "善射", "善書"],
-    "decision_weight": ["商議", "議曰", "諫", "勸", "從其言", "不從", "請降", "歸降", "投降", "拒", "不許", "計議", "定計", "獻計", "問計", "籌畫"],
-    "female_interaction": ["夫人", "主母", "母親", "母病", "嫂嫂", "小姐", "妻", "妾", "嫁", "娶", "婚", "阿斗", "孩兒", "孩子", "抱", "灑淚", "侍婢", "國太"],
-    "faction_timeline": ["東吳", "西蜀", "曹魏", "江東", "黃巾", "董卓", "荊州", "益州", "西涼", "南蠻", "北魏", "漢室", "朝廷", "魏王", "吳侯", "蜀兵", "魏兵", "吳兵", "漢軍", "賊軍"],
-}
+ANGLE_TERMS: dict[str, list[str]] = {}
 
-CLAIM_TO_ANGLE_FAMILY = {
-    "identity": "faction_timeline",
-    "relationship": "relationship",
-    "event": "activity_seed",
-    "location": "location_context",
-    "title": "work_role",
-    "trait": "aptitude_talent",
-    "habit": "activity_seed",
-    "activity": "activity_seed",
-    "role": "work_role",
-    "dialogue_seed": "affect_story",
-    "worldbuilding_note": "faction_timeline",
-    "source_conflict": "decision_weight",
-}
+CLAIM_TO_ANGLE_FAMILY: dict[str, str] = {}
+
+
+EVENT_QUESTION_SEED_POLICY: dict[str, Any] = {}
+
+
+def apply_event_question_seed_governance(policy: dict[str, Any], angle_cue_rules: list[dict[str, Any]]) -> None:
+    global EVENT_QUESTION_SEED_POLICY, ANGLE_TERMS, CLAIM_TO_ANGLE_FAMILY
+    EVENT_QUESTION_SEED_POLICY = dict(policy)
+    ANGLE_TERMS = {
+        str(row.get("angleFamily") or ""): [str(term) for term in row.get("terms") or []]
+        for row in angle_cue_rules
+        if row.get("angleFamily")
+    }
+    CLAIM_TO_ANGLE_FAMILY = {str(key): str(value) for key, value in (policy.get("claimToAngleFamily") or {}).items()}
+
+
+def event_question_trust_gate() -> dict[str, Any]:
+    gate = EVENT_QUESTION_SEED_POLICY.get("externalTrustGate")
+    if isinstance(gate, dict):
+        return gate
+    return {"externalSeedMinScore": 72.0, "historyCrossFamilyThreshold": 2, "nonHistoryCrossFamilyThreshold": 3}
+
+
+def event_question_seed_defaults() -> dict[str, Any]:
+    defaults = EVENT_QUESTION_SEED_POLICY.get("seedRowDefaults")
+    if isinstance(defaults, dict):
+        return defaults
+    return {"reviewStatus": "source-grounded-seed", "canonicalWrites": False}
 
 
 def parse_args() -> argparse.Namespace:
@@ -49,11 +59,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--stable-knowledge", default=str(DEFAULT_STABLE_KNOWLEDGE_PATH))
     parser.add_argument("--relationship-evidence", default=str(DEFAULT_RELATIONSHIP_EVIDENCE_PATH))
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--event-question-seed-policy", default=None, help="Override policy-event-question-seed-bank.json path")
+    parser.add_argument("--event-question-angle-cue-rules", default=None, help="Override rule-event-question-angle-cues.jsonl path")
     parser.add_argument("--max-evidence-refs-per-slot", type=int, default=8)
     parser.add_argument("--max-examples-per-slot", type=int, default=3)
-    parser.add_argument("--external-seed-min-score", type=float, default=72.0)
-    parser.add_argument("--history-cross-family-threshold", type=int, default=2)
-    parser.add_argument("--non-history-cross-family-threshold", type=int, default=3)
+    parser.add_argument("--external-seed-min-score", type=float, default=None)
+    parser.add_argument("--history-cross-family-threshold", type=int, default=None)
+    parser.add_argument("--non-history-cross-family-threshold", type=int, default=None)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -297,10 +310,19 @@ def merge_relationship_slots(slots: dict[tuple[str, str], dict[str, Any]], edges
 
 def slot_confidence(evidence_ref_count: int, source_layers: list[str]) -> tuple[str, float]:
     has_relationship_evidence = "relationship-evidence" in source_layers
-    if has_relationship_evidence or evidence_ref_count >= 5:
-        return "strong", 0.35
-    if evidence_ref_count >= 3:
-        return "rich", 0.25
+    default_rule: dict[str, Any] | None = None
+    for rule in EVENT_QUESTION_SEED_POLICY.get("slotStrengthRules") or []:
+        if not isinstance(rule, dict):
+            continue
+        if rule.get("default") is True:
+            default_rule = rule
+            continue
+        min_refs = int(rule.get("minSourceRefCount") or 0)
+        relationship_passes = bool(rule.get("relationshipEvidencePasses")) and has_relationship_evidence
+        if relationship_passes or evidence_ref_count >= min_refs:
+            return str(rule.get("slotStrength") or "strong"), float(rule.get("unitWeight") or 0.0)
+    if default_rule:
+        return str(default_rule.get("slotStrength") or "thin"), float(default_rule.get("unitWeight") or 0.0)
     return "thin", 0.1
 
 
@@ -321,8 +343,8 @@ def finalize_slots(slots: dict[tuple[str, str], dict[str, Any]], max_refs: int) 
             "sourceLayers": sorted(slot["sourceLayers"]),
             "slotStrength": strength,
             "eventQuestionUnitWeight": unit_weight,
-            "reviewStatus": "source-grounded-seed",
-            "canonicalWrites": False,
+            "reviewStatus": str(event_question_seed_defaults().get("reviewStatus") or "source-grounded-seed"),
+            "canonicalWrites": bool(event_question_seed_defaults().get("canonicalWrites", False)),
         })
     return sorted(records, key=lambda record: (record["generalId"], record["angleFamily"]))
 
@@ -379,6 +401,16 @@ def render_markdown(summary: dict[str, Any], records: list[dict[str, Any]]) -> s
 
 def main() -> None:
     args = parse_args()
+    policy = load_event_question_seed_bank_policy(
+        args.governance_root,
+        event_question_seed_policy=args.event_question_seed_policy,
+    )
+    angle_rules = load_event_question_angle_cue_rules(
+        args.governance_root,
+        event_question_angle_cue_rules=args.event_question_angle_cue_rules,
+    )
+    apply_event_question_seed_governance(policy, angle_rules)
+
     output_root = Path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
     jsonl_path = output_root / "event-question-seeds.jsonl"
@@ -390,13 +422,28 @@ def main() -> None:
     rows = load_observed_rows(Path(args.observed_mentions))
     female_general_ids = load_female_general_ids(Path(args.stable_knowledge))
     relationship_edges = read_jsonl(Path(args.relationship_evidence))
+    trust_gate = event_question_trust_gate()
+    history_threshold = (
+        args.history_cross_family_threshold
+        if args.history_cross_family_threshold is not None
+        else int(trust_gate.get("historyCrossFamilyThreshold", 2))
+    )
+    non_history_threshold = (
+        args.non_history_cross_family_threshold
+        if args.non_history_cross_family_threshold is not None
+        else int(trust_gate.get("nonHistoryCrossFamilyThreshold", 3))
+    )
     slots = build_observed_slots(
         rows,
         female_general_ids,
         args.max_examples_per_slot,
-        external_seed_min_score=args.external_seed_min_score,
-        history_cross_family_threshold=max(args.history_cross_family_threshold, 1),
-        non_history_cross_family_threshold=max(args.non_history_cross_family_threshold, max(args.history_cross_family_threshold, 1)),
+        external_seed_min_score=(
+            args.external_seed_min_score
+            if args.external_seed_min_score is not None
+            else float(trust_gate.get("externalSeedMinScore", 72.0))
+        ),
+        history_cross_family_threshold=max(history_threshold, 1),
+        non_history_cross_family_threshold=max(non_history_threshold, max(history_threshold, 1)),
     )
     merge_relationship_slots(slots, relationship_edges, args.max_examples_per_slot)
     records = finalize_slots(slots, args.max_evidence_refs_per_slot)
@@ -418,4 +465,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SanguoGovernanceError as exc:
+        raise SystemExit(f"[build_event_question_seed_bank] {exc}") from None
