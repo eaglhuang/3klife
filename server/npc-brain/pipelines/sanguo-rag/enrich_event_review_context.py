@@ -283,24 +283,57 @@ def write_json(path: Path, payload: Any) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="\n") as fp:
+        for row in rows:
+            fp.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+
+
+def jsonl_mirror_rows(row_type: str, rows: list[Any], generated_at: str) -> list[dict[str, Any]]:
+    mirror_rows: list[dict[str, Any]] = []
+    for row_index, row in enumerate(rows):
+        payload = row if isinstance(row, dict) else {"value": row}
+        mirror_row = dict(payload)
+        mirror_row["rowType"] = row_type
+        mirror_row["rowIndex"] = row_index
+        mirror_row["generatedAt"] = generated_at
+        mirror_rows.append(mirror_row)
+    return mirror_rows
+
+
 def output_paths(output_root: Path, answers_path: Path) -> dict[str, Path]:
     stem = answers_path.name.replace("event-review-answers", "event-review-context").replace(".todo.json", "")
     answer_stem = answers_path.name.replace(".todo.json", ".enriched.todo.json")
     return {
         "bundle": output_root / f"{stem}-bundle.json",
+        "bundleQuestionsJsonl": output_root / f"{stem}-bundle-questions.jsonl",
         "report": output_root / f"{stem}-report.json",
+        "reportAnswersJsonl": output_root / f"{stem}-report-answers.jsonl",
         "markdown": output_root / f"{stem}-report.md",
         "raw": output_root / f"{stem}-raw.json",
+        "rawRequestsJsonl": output_root / f"{stem}-raw-requests.jsonl",
         "enrichedAnswers": output_root / answer_stem,
+        "enrichedQuestionsJsonl": output_root / f"{stem}-enriched-questions.jsonl",
     }
 
 
 def ensure_outputs(paths: dict[str, Path], overwrite: bool, prompt_only: bool) -> None:
     for path in paths.values():
         path.parent.mkdir(parents=True, exist_ok=True)
-    targets = [paths["bundle"]]
+    targets = [paths["bundle"], paths["bundleQuestionsJsonl"]]
     if not prompt_only:
-        targets.extend([paths["report"], paths["markdown"], paths["raw"], paths["enrichedAnswers"]])
+        targets.extend(
+            [
+                paths["report"],
+                paths["markdown"],
+                paths["raw"],
+                paths["enrichedAnswers"],
+                paths["reportAnswersJsonl"],
+                paths["rawRequestsJsonl"],
+                paths["enrichedQuestionsJsonl"],
+            ]
+        )
     existing = [path for path in targets if path.exists()]
     if existing and not overwrite:
         raise FileExistsError(f"Output already exists. Re-run with --overwrite: {existing}")
@@ -1720,8 +1753,13 @@ def main() -> None:
     stable_knowledge = load_stable_knowledge(Path(args.stable_knowledge))
     prompt_bundle = build_prompt_bundle(answers, Path(args.chapters_root), max(args.window_before, 0), max(args.window_after, 0), name_hints, stable_knowledge)
     write_json(paths["bundle"], prompt_bundle)
+    write_jsonl(
+        paths["bundleQuestionsJsonl"],
+        jsonl_mirror_rows("bundleQuestion", prompt_bundle.get("questions", []), prompt_bundle["generatedAt"]),
+    )
     if args.prompt_only:
         print(f"[enrich_event_review_context] wrote {paths['bundle']}")
+        print(f"[enrich_event_review_context] wrote {paths['bundleQuestionsJsonl']}")
         print("[enrich_event_review_context] promptOnly=true")
         return
 
@@ -1767,9 +1805,25 @@ def main() -> None:
     write_json(paths["raw"], raw)
     write_json(paths["enrichedAnswers"], enriched_answers)
     paths["markdown"].write_text(render_markdown(report, prompt_bundle), encoding="utf-8")
+    write_jsonl(
+        paths["reportAnswersJsonl"],
+        jsonl_mirror_rows("reportAnswer", report.get("answers", []), report["generatedAt"]),
+    )
+    write_jsonl(
+        paths["rawRequestsJsonl"],
+        jsonl_mirror_rows("rawRequest", raw.get("requests", []), report["generatedAt"]),
+    )
+    write_jsonl(
+        paths["enrichedQuestionsJsonl"],
+        jsonl_mirror_rows("enrichedQuestion", enriched_answers.get("questions", []), report["generatedAt"]),
+    )
     print(f"[enrich_event_review_context] wrote {paths['bundle']}")
+    print(f"[enrich_event_review_context] wrote {paths['bundleQuestionsJsonl']}")
     print(f"[enrich_event_review_context] wrote {paths['report']}")
+    print(f"[enrich_event_review_context] wrote {paths['reportAnswersJsonl']}")
+    print(f"[enrich_event_review_context] wrote {paths['rawRequestsJsonl']}")
     print(f"[enrich_event_review_context] wrote {paths['enrichedAnswers']}")
+    print(f"[enrich_event_review_context] wrote {paths['enrichedQuestionsJsonl']}")
     print(f"[enrich_event_review_context] proposals={len(report['answers'])} canonicalWrites=false")
 
 

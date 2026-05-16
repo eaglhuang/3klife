@@ -78,9 +78,110 @@ def write_json(path: Path, payload: Any) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="\n") as fp:
+        for row in rows:
+            fp.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+
+
 def write_text(path: Path, payload: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(payload, encoding="utf-8")
+
+
+def jsonl_mirror_rows(row_type: str, rows: list[Any], generated_at: str) -> list[dict[str, Any]]:
+    mirror_rows: list[dict[str, Any]] = []
+    for row_index, row in enumerate(rows):
+        payload = row if isinstance(row, dict) else {"value": row}
+        mirror_row = dict(payload)
+        mirror_row["rowType"] = row_type
+        mirror_row["rowIndex"] = row_index
+        mirror_row["generatedAt"] = generated_at
+        mirror_rows.append(mirror_row)
+    return mirror_rows
+
+
+def bottleneck_metric_rows(
+    *,
+    row_type: str,
+    metric_group: str,
+    values: Any,
+    generated_at: str,
+    start_index: int,
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    if isinstance(values, dict):
+        iterable = list(values.items())
+    elif isinstance(values, list):
+        iterable = list(enumerate(values))
+    else:
+        iterable = []
+    for offset, (name, value) in enumerate(iterable):
+        payload = value if isinstance(value, dict) else {"value": value}
+        metric_name = (
+            payload.get("metricName")
+            or payload.get("component")
+            or payload.get("name")
+            or payload.get("lane")
+            or payload.get("relationshipType")
+            or payload.get("relationshipFamily")
+            or str(name)
+        )
+        rows.append(
+            {
+                "rowType": row_type,
+                "rowIndex": start_index + offset,
+                "generatedAt": generated_at,
+                "metricGroup": metric_group,
+                "metricName": metric_name,
+                "baseline": payload.get("baseline"),
+                "current": payload.get("current"),
+                "delta": payload.get("delta"),
+                "value": payload.get("value", value if not isinstance(value, dict) else payload.get("delta")),
+                "payload": payload,
+            }
+        )
+    return rows
+
+
+def bottleneck_delta_jsonl_rows(bottleneck_delta: dict[str, Any]) -> list[dict[str, Any]]:
+    generated_at = str(bottleneck_delta.get("generatedAt", ""))
+    metrics = bottleneck_delta.get("metrics", {})
+    rows: list[dict[str, Any]] = []
+    for row_type, metric_group in [
+        ("progressComponent", "progressComponentDeltas"),
+        ("laneCount", "laneCountDeltas"),
+        ("relationshipType", "relationshipTypeDeltas"),
+        ("relationshipFamily", "relationshipFamilyDeltas"),
+    ]:
+        rows.extend(
+            bottleneck_metric_rows(
+                row_type=row_type,
+                metric_group=metric_group,
+                values=metrics.get(metric_group, {}),
+                generated_at=generated_at,
+                start_index=len(rows),
+            )
+        )
+    for point in metrics.get("pressurePoints", []):
+        payload = point if isinstance(point, dict) else {"value": point}
+        metric_name = payload.get("metricName") or payload.get("type") or payload.get("name") or payload.get("reason") or f"pressurePoint:{len(rows)}"
+        rows.append(
+            {
+                "rowType": "pressurePoint",
+                "rowIndex": len(rows),
+                "generatedAt": generated_at,
+                "metricGroup": "pressurePoints",
+                "metricName": metric_name,
+                "baseline": None,
+                "current": None,
+                "delta": None,
+                "value": None,
+                "payload": payload,
+            }
+        )
+    return rows
 
 
 def to_float(value: Any, default: float | None = None) -> float | None:
@@ -719,7 +820,20 @@ def main() -> int:
     bottleneck_delta_md = output_root / "full-roster-bottleneck-delta.zh-TW.md"
     next_lane_json = output_root / "full-roster-next-lane-summary.json"
     next_lane_md = output_root / "full-roster-next-lane-summary.zh-TW.md"
-    outputs = [scoreboard_summary_json, scoreboard_summary_md, bottleneck_delta_json, bottleneck_delta_md, next_lane_json, next_lane_md]
+    scoreboard_top_canonical_jsonl = output_root / "full-roster-scoreboard-top-canonical-rows.jsonl"
+    bottleneck_deltas_jsonl = output_root / "full-roster-bottleneck-deltas.jsonl"
+    next_lane_groups_jsonl = output_root / "full-roster-next-lane-groups.jsonl"
+    outputs = [
+        scoreboard_summary_json,
+        scoreboard_summary_md,
+        bottleneck_delta_json,
+        bottleneck_delta_md,
+        next_lane_json,
+        next_lane_md,
+        scoreboard_top_canonical_jsonl,
+        bottleneck_deltas_jsonl,
+        next_lane_groups_jsonl,
+    ]
     if any(path.exists() for path in outputs) and not args.overwrite:
         raise FileExistsError(f"Output already exists. Re-run with --overwrite: {output_root}")
 
@@ -813,13 +927,25 @@ def main() -> int:
     write_text(bottleneck_delta_md, render_bottleneck_md(bottleneck_delta))
     write_json(next_lane_json, next_lane_summary)
     write_text(next_lane_md, render_next_lane_md(next_lane_summary))
+    write_jsonl(
+        scoreboard_top_canonical_jsonl,
+        jsonl_mirror_rows("topCanonicalRow", scoreboard_summary.get("topCanonicalRows", []), scoreboard_summary["generatedAt"]),
+    )
+    write_jsonl(bottleneck_deltas_jsonl, bottleneck_delta_jsonl_rows(bottleneck_delta))
+    write_jsonl(
+        next_lane_groups_jsonl,
+        jsonl_mirror_rows("nextLaneGroup", next_lane_summary.get("metrics", {}).get("laneGroups", []), next_lane_summary["generatedAt"]),
+    )
 
     print(f"[build_full_roster_round_summaries] wrote {scoreboard_summary_json}")
     print(f"[build_full_roster_round_summaries] wrote {scoreboard_summary_md}")
+    print(f"[build_full_roster_round_summaries] wrote {scoreboard_top_canonical_jsonl}")
     print(f"[build_full_roster_round_summaries] wrote {bottleneck_delta_json}")
     print(f"[build_full_roster_round_summaries] wrote {bottleneck_delta_md}")
+    print(f"[build_full_roster_round_summaries] wrote {bottleneck_deltas_jsonl}")
     print(f"[build_full_roster_round_summaries] wrote {next_lane_json}")
     print(f"[build_full_roster_round_summaries] wrote {next_lane_md}")
+    print(f"[build_full_roster_round_summaries] wrote {next_lane_groups_jsonl}")
     return 0
 
 
