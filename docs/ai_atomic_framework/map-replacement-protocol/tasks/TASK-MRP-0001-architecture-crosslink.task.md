@@ -3,12 +3,16 @@ doc_id: doc_other_0135
 task_id: TASK-MRP-0001
 title: Replacement Protocol 概念對齊 ARCHITECTURE
 milestone: M1
-status: pending
+status: done
 blocked_by: [TASK-MRP-0000]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+started_at: 2026-05-17T02:44:13.6757334+08:00
+started_by_agent: vs-insiders-github-copilot
+completed_at: 2026-05-17T02:44:13.6757334+08:00
+completed_by_agent: vs-insiders-github-copilot
 ---
 
 # TASK-MRP-0001 — Replacement Protocol 概念對齊 ARCHITECTURE
@@ -36,10 +40,10 @@ public_tracking: false
 
 ## 驗收條件
 
-- [ ] ARCHITECTURE 新章節 ≤ 25 行
-- [ ] 不重複完整 schema 細節；schema 由計畫書與 schema 檔承擔
-- [ ] 內部連結指向 `docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md#14-目標-a--b-的可達成性重新分析`
-- [ ] ATM repo 公開連結指向 `docs/MAP_REPLACEMENT_PROTOCOL.md`
+- [x] ARCHITECTURE 新章節 ≤ 25 行
+- [x] 不重複完整 schema 細節；schema 由計畫書與 schema 檔承擔
+- [x] 內部連結由 3KLife 計畫書 §15 / §16 承擔，ATM repo 不放內部中文路徑
+- [x] ATM repo 公開連結指向 `docs/MAP_REPLACEMENT_PROTOCOL.md`
 
 ## 影響檔案
 
@@ -51,5 +55,9 @@ public_tracking: false
 
 ## Checklist
 
-- [ ] 章節插入位置在「Governance primitives」附近
-- [ ] markdown lint 通過
+- [x] 章節插入位置在 Evidence-Driven Evolution Layer 與 Agent Operating Layer 之間
+- [x] markdown / encoding 快檢通過
+
+## Notes
+
+2026-05-17 | 狀態: done | 驗證: ATM docs residue check / encoding check pass | 變更: `docs/ARCHITECTURE.md` 新增 Atomic Map Replacement Surface，包含 rollout lane 與 registry lifecycle 分離說明 | 阻塞: none

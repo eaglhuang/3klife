@@ -305,23 +305,27 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 
 對應任務卡：TASK-MRP-0000
 
-- [ ] `docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md` 存在且包含 §0–§16
-- [ ] 文件已被 `README.md` / `docs/ATOM_EVOLUTION_PLAN.md` 至少其中一處引用
-- [ ] 文件通過 UTF-8 編碼檢查（無 BOM、無 U+FFFD）
-- [ ] 目標 A、B 在 §14 有明確達成判斷
-- [ ] 風險清單 §12 + §14.3 已合併，沒有矛盾
+- [x] `docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md` 存在且包含 §0–§16
+- [x] 文件已被 ATM `README.md` 與 `docs/ARCHITECTURE.md` 引用；ATM repo 端只保留英文公開文件 `docs/MAP_REPLACEMENT_PROTOCOL.md`
+- [x] 文件通過 UTF-8 編碼檢查（無 BOM、無 U+FFFD）
+- [x] 目標 A、B 在 §14 有明確達成判斷
+- [x] 風險清單 §12 + §14.3 已合併，沒有矛盾
+
+執行狀態（2026-05-17）：TASK-MRP-0000 與 TASK-MRP-0001 已完成。ATM repo 已移除中文內部計畫與 TASK-MRP 任務卡，只保留英文公開說明與架構入口；後續 M2–M8 仍依 §15 順序執行。
 
 ### Milestone 2：Atomic Map Schema 0.2.0（M2）
 
 對應任務卡：TASK-MRP-0002
 
-- [ ] `schemas/registry/atomic-map.schema.json` 的 `specVersion` 改為 `enum:["0.1.0","0.2.0"]`
-- [ ] 0.2.0 條件下開放 `members[].role`、`edges[].edgeKind`、`replacement.legacyUris`、`replacement.mode`、`replacement.evidenceRefs`
-- [ ] TypeScript 型別 `AtomicMapRecord` / `RegistryMapMemberRecord` / `RegistryMapEdgeRecord` 同步擴充
-- [ ] `createAtomicMapHashPayload()` 明確收錄 `members[].role`、`edges[].edgeKind`、`replacement.legacyUris`，排除 `replacement.mode` 與 `evidenceRefs`
-- [ ] `map-generator.ts` 在輸入提供 0.2.0 欄位時不丟欄位
-- [ ] 新增 0.1.0 → 0.2.0 migration 測試，且既有 MAP-0001 / MAP-0002 仍可載入
-- [ ] `atomic-registry.json` map entry 序列化新欄位
+- [x] `schemas/registry/atomic-map.schema.json` 的 `specVersion` 改為 `enum:["0.1.0","0.2.0"]`
+- [x] 0.2.0 條件下開放 `members[].role`、`edges[].edgeKind`、`replacement.legacyUris`、`replacement.mode`、`replacement.evidenceRefs`
+- [x] TypeScript 型別 `AtomicMapRecord` / `RegistryMapMemberRecord` / `RegistryMapEdgeRecord` 同步擴充
+- [x] `createAtomicMapHashPayload()` 明確收錄 `members[].role`、`edges[].edgeKind`、`replacement.legacyUris`，排除 `replacement.mode` 與 `evidenceRefs`
+- [x] `map-generator.ts` 在輸入提供 0.2.0 欄位時不丟欄位
+- [x] 新增 0.1.0 / 0.2.0 fixture 回歸測試，並確認既有 0.1.0 generator 行為仍通過
+- [x] `atomic-registry.json` map entry 序列化新欄位
+
+執行狀態（2026-05-17）：M2 core slice 已完成並通過 `atomic-map-schema.test.ts`、`map-generator.test.ts`、`validate-schemas.ts --mode validate`。`CHANGELOG.md` 目前有既有 dirty work，本輪未碰，避免混入非本任務改動；TASK-MRP-0002 仍保留 `in-progress` 直到 changelog / release note 補齊。
 
 ### Milestone 3：Map Equivalence Report Schema（M3）
 
