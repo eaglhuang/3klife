@@ -12,6 +12,7 @@ from typing import Any, Iterable
 from urllib.parse import urlparse
 
 from repo_layout import pipeline_config_path, resolve_repo_root
+from sanguo_governance_loader import default_governance_root, load_evidence_seed_extraction_policy
 
 REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_PAGES_JSONL = Path("local/codex-smoke/knowledge-growth/lishirenwu-page-harvest-r1/pages.jsonl")
@@ -22,6 +23,16 @@ DEFAULT_SCOREBOARD_JSON = Path(
     "full-roster-highway-wang-yi-female-fix-r1-r1/scoreboard/full-roster-scoreboard.json"
 )
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth/lishirenwu-pipeline-eval-r1/extracted-seeds")
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
+REQUIRED_SOURCE_POLICY_FIELDS: tuple[str, ...] = ("sourceId", "sourceClass", "sourceFamily", "sourceLayer", "trustTier")
+HARVESTED_SOURCE_CLASSES = {"high-yield-character-site"}
+SEED_ROW_DEFAULTS: dict[str, Any] = {
+    "seedConfidenceScore": 0.0,
+    "siteReliabilityMultiplier": 1.0,
+    "crossSiteMatchCount": 0,
+    "promotionTarget": "seed-only",
+    "canonicalWrites": False,
+}
 
 RELATIONSHIP_KEYWORDS = (
     "之女",
@@ -751,6 +762,37 @@ def load_source_policy(path: Path, source_id: str) -> dict[str, Any]:
     raise ValueError(f"sourceId not found in source config: {source_id}")
 
 
+def apply_evidence_seed_extraction_policy(
+    governance_root: str | Path | None,
+    *,
+    evidence_seed_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    global REQUIRED_SOURCE_POLICY_FIELDS, HARVESTED_SOURCE_CLASSES, SEED_ROW_DEFAULTS
+
+    policy = load_evidence_seed_extraction_policy(governance_root, evidence_seed_policy=evidence_seed_policy)
+    required_fields = policy.get("requiredSourcePolicyFields")
+    if isinstance(required_fields, list) and required_fields:
+        REQUIRED_SOURCE_POLICY_FIELDS = tuple(str(value).strip() for value in required_fields if str(value).strip())
+    harvested = policy.get("harvestedPage") if isinstance(policy.get("harvestedPage"), dict) else {}
+    source_classes = harvested.get("sourceClasses")
+    if isinstance(source_classes, list) and source_classes:
+        HARVESTED_SOURCE_CLASSES = {str(value).strip() for value in source_classes if str(value).strip()}
+    defaults = harvested.get("seedRowDefaults")
+    if isinstance(defaults, dict):
+        SEED_ROW_DEFAULTS = {**SEED_ROW_DEFAULTS, **defaults}
+    return policy
+
+
+def validate_source_policy_metadata(source_policy: dict[str, Any], *, expected_classes: set[str]) -> None:
+    missing = [field for field in REQUIRED_SOURCE_POLICY_FIELDS if not str(source_policy.get(field) or "").strip()]
+    if missing:
+        source_id = str(source_policy.get("sourceId") or "<unknown>")
+        raise ValueError(f"source policy {source_id} missing required governance fields: {', '.join(missing)}")
+    source_class = str(source_policy.get("sourceClass") or "").strip()
+    if expected_classes and source_class not in expected_classes:
+        raise ValueError(f"source policy {source_policy.get('sourceId')} sourceClass={source_class} not allowed for harvested-page extractor")
+
+
 def load_scoreboard_rows(path: Path) -> list[dict[str, Any]]:
     payload = read_json(path)
     rows = payload.get("rows") if isinstance(payload, dict) else []
@@ -1004,11 +1046,7 @@ def build_identity_seed(
         "extractionMethod": "deterministic",
         "sourceLiveStatus": page.get("liveStatus"),
         "contentSource": "title",
-        "seedConfidenceScore": 0.0,
-        "siteReliabilityMultiplier": 1.0,
-        "crossSiteMatchCount": 0,
-        "promotionTarget": "seed-only",
-        "canonicalWrites": False,
+        **SEED_ROW_DEFAULTS,
     }
     translated = translate_seed_text_to_traditional(quote, matched_name=matched_name, angle_type="identity")
     if translated:
@@ -1059,11 +1097,7 @@ def build_extra_seed(
         "extractionMethod": "deterministic",
         "sourceLiveStatus": page.get("liveStatus"),
         "contentSource": content_source,
-        "seedConfidenceScore": 0.0,
-        "siteReliabilityMultiplier": 1.0,
-        "crossSiteMatchCount": 0,
-        "promotionTarget": "seed-only",
-        "canonicalWrites": False,
+        **SEED_ROW_DEFAULTS,
     }
     translated = translate_seed_text_to_traditional(quote, matched_name=matched_name, angle_type=angle_type)
     if translated:
@@ -1441,17 +1475,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--alias-map", default=str(DEFAULT_ALIAS_MAP))
     parser.add_argument("--scoreboard-json", default=str(DEFAULT_SCOREBOARD_JSON))
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
+    parser.add_argument("--evidence-seed-policy", default=None)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
+    apply_evidence_seed_extraction_policy(args.governance_root, evidence_seed_policy=args.evidence_seed_policy)
     pages_path = resolve_path(args.pages_jsonl)
     output_root = resolve_path(args.output_root)
     source_config_path = resolve_path(args.source_config)
     alias_map_path = resolve_path(args.alias_map)
     scoreboard_path = resolve_path(args.scoreboard_json)
+    governance_root = resolve_path(args.governance_root)
     seeds_path = output_root / "manual-evidence-seeds.jsonl"
     summary_path = output_root / "manual-evidence-seeds-summary.json"
     markdown_path = output_root / "manual-evidence-seeds-summary.zh-TW.md"
@@ -1460,6 +1498,7 @@ def main() -> int:
         raise SystemExit(f"Output root already exists and is not empty: {repo_relative(output_root)}")
 
     source_policy = load_source_policy(source_config_path, args.source_id)
+    validate_source_policy_metadata(source_policy, expected_classes=HARVESTED_SOURCE_CLASSES)
     pages = list(iter_jsonl(pages_path))
     scoreboard_rows = load_scoreboard_rows(scoreboard_path)
     slug_index = build_slug_index(scoreboard_rows)
@@ -1516,6 +1555,8 @@ def main() -> int:
             "sourceConfig": repo_relative(source_config_path),
             "aliasMap": repo_relative(alias_map_path),
             "scoreboardJson": repo_relative(scoreboard_path),
+            "governanceRoot": repo_relative(governance_root),
+            "evidenceSeedPolicy": str(args.evidence_seed_policy or "policy-evidence-seed-extraction.json"),
         },
         "outputs": {
             "manualSeedsJsonl": repo_relative(seeds_path),

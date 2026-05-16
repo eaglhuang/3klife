@@ -157,6 +157,34 @@ def load_relationship_runtime_canon_policy(
     return read_governance_json(path, required_id="Policy_RelationshipRuntimeCanon_P1")
 
 
+def load_source_event_packet_policy(
+    root: str | Path | None = None,
+    *,
+    source_event_packet_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(source_event_packet_policy).resolve()
+        if source_event_packet_policy
+        else _path(base, "policies", "policy-source-event-packets.json")
+    )
+    return read_governance_json(path, required_id="Policy_SourceEventPackets_P1")
+
+
+def load_evidence_seed_extraction_policy(
+    root: str | Path | None = None,
+    *,
+    evidence_seed_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(evidence_seed_policy).resolve()
+        if evidence_seed_policy
+        else _path(base, "policies", "policy-evidence-seed-extraction.json")
+    )
+    return read_governance_json(path, required_id="Policy_EvidenceSeedExtraction_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
@@ -171,6 +199,8 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-full-roster-runner.json", "consumer": "run_full_roster_convergence_loop.py"},
         {"section": "policies", "file": "policy-progress-advancement-runner.json", "consumer": "run_progress_advancement_loop.py"},
         {"section": "policies", "file": "policy-relationship-runtime-canon.json", "consumer": "relationship runtime canon consumers"},
+        {"section": "policies", "file": "policy-source-event-packets.json", "consumer": "build_source_event_packets.py"},
+        {"section": "policies", "file": "policy-evidence-seed-extraction.json", "consumer": "extract_*_evidence_seeds.py"},
         {"section": "rules", "file": "rule-basic-profile-cues.json", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "rules", "file": "rule-location-extraction.json", "consumer": "run_progress_advancement_loop.py"},
         {"section": "schemas", "file": "schema-stable-bootstrap-payload.json", "consumer": "validate_sanguo_governance.py"},

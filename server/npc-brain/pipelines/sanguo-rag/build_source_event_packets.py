@@ -8,11 +8,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from sanguo_governance_loader import default_governance_root, load_source_event_packet_policy
 
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
 DEFAULT_RELATIONSHIP_EVIDENCE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/relationship-evidence/source-grounded-relationship-edges.jsonl")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/source-event-packets")
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 
 ANGLE_TERMS = {
     "battle": ["戰", "軍", "兵", "陣", "敵", "殺", "斬", "攻", "追", "敗", "馬", "交鋒", "廝殺", "迎戰", "直取"],
@@ -41,6 +43,36 @@ CLAIM_TO_ANGLE_FAMILY = {
     "worldbuilding_note": "faction_timeline",
     "source_conflict": "decision_weight",
 }
+EXTERNAL_SEED_MIN_SCORE = 72.0
+HISTORY_CROSS_FAMILY_THRESHOLD = 2
+NON_HISTORY_CROSS_FAMILY_THRESHOLD = 3
+PACKET_STRENGTH_RULES = [
+    {
+        "strength": "strong",
+        "unitWeight": 0.4,
+        "relationshipEvidencePass": True,
+        "minAngleCount": 3,
+        "minGeneralCount": 2,
+    },
+    {
+        "strength": "rich",
+        "unitWeight": 0.22,
+        "minAngleCount": 2,
+        "minGeneralCount": 1,
+    },
+    {
+        "strength": "thin",
+        "unitWeight": 0.08,
+        "minAngleCount": 1,
+        "minGeneralCount": 2,
+    },
+]
+DISCARD_STRENGTH = {"strength": "discard", "unitWeight": 0.0}
+OUTPUT_FILES = {
+    "packets": "source-event-packets.jsonl",
+    "summary": "source-event-packets-summary.json",
+    "review": "source-event-packets-review.md",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -50,11 +82,45 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--relationship-evidence", default=str(DEFAULT_RELATIONSHIP_EVIDENCE_PATH))
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--max-examples-per-packet", type=int, default=3)
-    parser.add_argument("--external-seed-min-score", type=float, default=72.0)
-    parser.add_argument("--history-cross-family-threshold", type=int, default=2)
-    parser.add_argument("--non-history-cross-family-threshold", type=int, default=3)
+    parser.add_argument("--external-seed-min-score", type=float, default=None)
+    parser.add_argument("--history-cross-family-threshold", type=int, default=None)
+    parser.add_argument("--non-history-cross-family-threshold", type=int, default=None)
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
+    parser.add_argument("--source-event-packet-policy", default=None)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
+
+
+def apply_source_event_packet_policy(governance_root: str | Path | None, source_event_packet_policy: str | Path | None = None) -> None:
+    global CLAIM_TO_ANGLE_FAMILY
+    global EXTERNAL_SEED_MIN_SCORE
+    global HISTORY_CROSS_FAMILY_THRESHOLD
+    global NON_HISTORY_CROSS_FAMILY_THRESHOLD
+    global PACKET_STRENGTH_RULES
+    global DISCARD_STRENGTH
+    global OUTPUT_FILES
+
+    policy = load_source_event_packet_policy(governance_root, source_event_packet_policy=source_event_packet_policy)
+    mapping = policy.get("claimToAngleFamily")
+    if isinstance(mapping, dict):
+        CLAIM_TO_ANGLE_FAMILY = {str(key): str(value) for key, value in mapping.items()}
+    trust_gate = policy.get("externalTrustGate") if isinstance(policy.get("externalTrustGate"), dict) else {}
+    EXTERNAL_SEED_MIN_SCORE = float(trust_gate.get("externalSeedMinScore") or EXTERNAL_SEED_MIN_SCORE)
+    HISTORY_CROSS_FAMILY_THRESHOLD = int(trust_gate.get("historyCrossFamilyThreshold") or HISTORY_CROSS_FAMILY_THRESHOLD)
+    NON_HISTORY_CROSS_FAMILY_THRESHOLD = int(trust_gate.get("nonHistoryCrossFamilyThreshold") or NON_HISTORY_CROSS_FAMILY_THRESHOLD)
+    rules = policy.get("packetStrengthRules")
+    if isinstance(rules, list):
+        PACKET_STRENGTH_RULES = [row for row in rules if isinstance(row, dict)]
+    discard = policy.get("discardStrength")
+    if isinstance(discard, dict):
+        DISCARD_STRENGTH = dict(discard)
+    output_files = policy.get("outputFiles")
+    if isinstance(output_files, dict):
+        OUTPUT_FILES = {**OUTPUT_FILES, **{str(key): str(value) for key, value in output_files.items()}}
+
+
+def cli_or_policy_number(value: float | int | None, fallback: float | int) -> float | int:
+    return fallback if value is None else value
 
 
 def utc_now() -> str:
@@ -179,13 +245,17 @@ def claim_angle_hits(row: dict[str, Any], general_ids: list[str], female_general
 
 
 def packet_strength(angle_count: int, general_count: int, has_relationship_evidence: bool) -> tuple[str, float]:
-    if has_relationship_evidence or (angle_count >= 3 and general_count >= 2):
-        return "strong", 0.4
-    if angle_count >= 2 and general_count >= 1:
-        return "rich", 0.22
-    if angle_count >= 1 and general_count >= 2:
-        return "thin", 0.08
-    return "discard", 0.0
+    for rule in PACKET_STRENGTH_RULES:
+        strength = str(rule.get("strength") or "").strip()
+        if not strength:
+            continue
+        if bool(rule.get("relationshipEvidencePass")) and has_relationship_evidence:
+            return strength, float(rule.get("unitWeight") or 0.0)
+        min_angle = int(rule.get("minAngleCount") or 0)
+        min_general = int(rule.get("minGeneralCount") or 0)
+        if angle_count >= min_angle and general_count >= min_general:
+            return strength, float(rule.get("unitWeight") or 0.0)
+    return str(DISCARD_STRENGTH.get("strength") or "discard"), float(DISCARD_STRENGTH.get("unitWeight") or 0.0)
 
 
 def build_relationship_index(edges: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
@@ -332,11 +402,12 @@ def render_markdown(summary: dict[str, Any], records: list[dict[str, Any]]) -> s
 
 def main() -> None:
     args = parse_args()
+    apply_source_event_packet_policy(args.governance_root, args.source_event_packet_policy)
     output_root = Path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
-    jsonl_path = output_root / "source-event-packets.jsonl"
-    summary_path = output_root / "source-event-packets-summary.json"
-    md_path = output_root / "source-event-packets-review.md"
+    jsonl_path = output_root / OUTPUT_FILES["packets"]
+    summary_path = output_root / OUTPUT_FILES["summary"]
+    md_path = output_root / OUTPUT_FILES["review"]
     if not args.overwrite and any(path.exists() for path in (jsonl_path, summary_path, md_path)):
         raise FileExistsError("Source event packet outputs already exist. Re-run with --overwrite.")
 
@@ -348,15 +419,20 @@ def main() -> None:
         relationship_edges,
         female_general_ids,
         args.max_examples_per_packet,
-        external_seed_min_score=args.external_seed_min_score,
-        history_cross_family_threshold=max(args.history_cross_family_threshold, 1),
-        non_history_cross_family_threshold=max(args.non_history_cross_family_threshold, max(args.history_cross_family_threshold, 1)),
+        external_seed_min_score=float(cli_or_policy_number(args.external_seed_min_score, EXTERNAL_SEED_MIN_SCORE)),
+        history_cross_family_threshold=max(int(cli_or_policy_number(args.history_cross_family_threshold, HISTORY_CROSS_FAMILY_THRESHOLD)), 1),
+        non_history_cross_family_threshold=max(
+            int(cli_or_policy_number(args.non_history_cross_family_threshold, NON_HISTORY_CROSS_FAMILY_THRESHOLD)),
+            max(int(cli_or_policy_number(args.history_cross_family_threshold, HISTORY_CROSS_FAMILY_THRESHOLD)), 1),
+        ),
     )
     jsonl_path.write_text("".join(json.dumps(record, ensure_ascii=False) + "\n" for record in records), encoding="utf-8")
     summary = summarize(records, {
         "observedMentionsPath": args.observed_mentions,
         "stableKnowledgePath": args.stable_knowledge,
         "relationshipEvidencePath": args.relationship_evidence,
+        "governanceRoot": args.governance_root,
+        "sourceEventPacketPolicy": args.source_event_packet_policy or "policy-source-event-packets.json",
     })
     write_json(summary_path, summary)
     md_path.write_text(render_markdown(summary, records), encoding="utf-8")

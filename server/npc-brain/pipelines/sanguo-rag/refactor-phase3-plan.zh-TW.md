@@ -48,7 +48,12 @@
 
 ## Next Candidates
 
-- `benchmark_external_source.py`：將 source layer review wording 改接 policy text。
-- `build_source_event_packets.py`：將 event/source packet 分層政策外部化。
+- `benchmark_external_source.py`：已將 romance review caution 接到 `Policy_RelationshipRuntimeCanon_P1.policyText`。
+- `build_source_event_packets.py`：已將 external seed trust gate、claim-to-angle mapping、packet strength rule 接到 `Policy_SourceEventPackets_P1`。
 - `extract_*_evidence_seeds.py`：將 source family 與 confidence gate 外部化。
 - `run_resolution_loop.py`：暫留 P3 state / database 規劃，不進本階段。
+
+## Phase 3 Progress Notes
+
+- `Policy_SourceEventPackets_P1` 已落地：外部化 external seed trust gate、claim-to-angle mapping、packet strength rule 與 output filename policy；`build_source_event_packets.py` 保留舊 CLI，CLI 參數優先於 governance policy。
+- `Policy_EvidenceSeedExtraction_P1` 已落地：外部化 EvidenceSeed extractor 的來源類型白名單、source policy 必填欄位、seed row 預設值與 generic alias noise denylist；`extract_harvested_page_evidence_seeds.py` 與 `extract_generic_passage_evidence_seeds.py` 只保留抽取演算法與 I/O。

@@ -1,0 +1,44 @@
+{
+  "id": "Policy_EvidenceSeedExtraction_P1",
+  "version": "1.0.0",
+  "description": "P1 governance policy for deterministic EvidenceSeed extractors. This policy keeps source admission, seed row defaults, and metadata requirements outside extractor code without changing extraction behavior.",
+  "requiredSourcePolicyFields": [
+    "sourceId",
+    "sourceClass",
+    "sourceFamily",
+    "sourceLayer",
+    "trustTier"
+  ],
+  "harvestedPage": {
+    "consumer": "extract_harvested_page_evidence_seeds.py",
+    "sourceClasses": [
+      "high-yield-character-site"
+    ],
+    "seedRowDefaults": {
+      "seedConfidenceScore": 0.0,
+      "siteReliabilityMultiplier": 1.0,
+      "crossSiteMatchCount": 0,
+      "promotionTarget": "seed-only",
+      "canonicalWrites": false
+    }
+  },
+  "genericPassage": {
+    "consumer": "extract_generic_passage_evidence_seeds.py",
+    "sourceClasses": [
+      "primary-text-site",
+      "community-worldbuilding-site"
+    ],
+    "aliasNoiseDenylist": [
+      "\u5b50\u6853",
+      "\u5b50\u5b5d",
+      "\u738b\u7acb"
+    ],
+    "seedRowDefaults": {
+      "seedConfidenceScore": 0.0,
+      "siteReliabilityMultiplier": 1.0,
+      "crossSiteMatchCount": 0,
+      "promotionTarget": "seed-only",
+      "canonicalWrites": false
+    }
+  }
+}

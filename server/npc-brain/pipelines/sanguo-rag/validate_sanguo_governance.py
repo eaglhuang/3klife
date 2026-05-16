@@ -10,9 +10,11 @@ from typing import Any
 from sanguo_governance_loader import (
     SanguoGovernanceError,
     expected_governance_files,
+    load_evidence_seed_extraction_policy,
     load_full_roster_runner_governance,
     load_progress_runner_governance,
     load_relationship_runtime_canon_policy,
+    load_source_event_packet_policy,
     load_stable_bootstrap_governance,
     read_governance_json,
     read_governance_jsonl,
@@ -48,6 +50,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     full = load_full_roster_runner_governance(root)
     progress = load_progress_runner_governance(root)
     relationship = load_relationship_runtime_canon_policy(root)
+    source_event_packets = load_source_event_packet_policy(root)
+    evidence_seed_extraction = load_evidence_seed_extraction_policy(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -67,6 +71,26 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         raise SanguoGovernanceError("policy-relationship-runtime-canon relationshipClaimGraphOutputs.aCanon cannot be empty")
     if "A-romance" not in (relationship.get("scoreboardReadyEvalGradeTypes") or []):
         raise SanguoGovernanceError("policy-relationship-runtime-canon scoreboardReadyEvalGradeTypes must include A-romance")
+    trust_gate = source_event_packets.get("externalTrustGate") if isinstance(source_event_packets.get("externalTrustGate"), dict) else {}
+    if float(trust_gate.get("externalSeedMinScore") or 0.0) <= 0.0:
+        raise SanguoGovernanceError("policy-source-event-packets externalTrustGate.externalSeedMinScore must be positive")
+    if not source_event_packets.get("claimToAngleFamily"):
+        raise SanguoGovernanceError("policy-source-event-packets claimToAngleFamily cannot be empty")
+    if not source_event_packets.get("packetStrengthRules"):
+        raise SanguoGovernanceError("policy-source-event-packets packetStrengthRules cannot be empty")
+    required_source_fields = evidence_seed_extraction.get("requiredSourcePolicyFields")
+    if not isinstance(required_source_fields, list) or "sourceId" not in required_source_fields:
+        raise SanguoGovernanceError("policy-evidence-seed-extraction requiredSourcePolicyFields must include sourceId")
+    harvested = evidence_seed_extraction.get("harvestedPage") if isinstance(evidence_seed_extraction.get("harvestedPage"), dict) else {}
+    generic = evidence_seed_extraction.get("genericPassage") if isinstance(evidence_seed_extraction.get("genericPassage"), dict) else {}
+    if "high-yield-character-site" not in (harvested.get("sourceClasses") or []):
+        raise SanguoGovernanceError("policy-evidence-seed-extraction harvestedPage.sourceClasses must include high-yield-character-site")
+    if "primary-text-site" not in (generic.get("sourceClasses") or []):
+        raise SanguoGovernanceError("policy-evidence-seed-extraction genericPassage.sourceClasses must include primary-text-site")
+    for section_name, section in (("harvestedPage", harvested), ("genericPassage", generic)):
+        defaults = section.get("seedRowDefaults") if isinstance(section.get("seedRowDefaults"), dict) else {}
+        if defaults.get("canonicalWrites") is not False:
+            raise SanguoGovernanceError(f"policy-evidence-seed-extraction {section_name}.seedRowDefaults.canonicalWrites must be false")
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -82,6 +106,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "rootCauseGroupCount": len(progress["policy"].get("rootCauseGroups") or []),
         "aCanonGradeCount": len(relationship.get("aCanonGrades") or []),
         "stableRuntimeSourceLayerCount": len(relationship.get("stableRuntimeSourceLayers") or []),
+        "sourceEventPacketStrengthRuleCount": len(source_event_packets.get("packetStrengthRules") or []),
+        "evidenceSeedRequiredSourceFieldCount": len(required_source_fields or []),
+        "evidenceSeedGenericSourceClassCount": len(generic.get("sourceClasses") or []),
     }
 
 

@@ -1,0 +1,52 @@
+{
+  "id": "Policy_SourceEventPackets_P1",
+  "externalTrustGate": {
+    "externalSeedMinScore": 72.0,
+    "historyCrossFamilyThreshold": 2,
+    "nonHistoryCrossFamilyThreshold": 3
+  },
+  "claimToAngleFamily": {
+    "identity": "faction_timeline",
+    "relationship": "relationship",
+    "event": "activity_seed",
+    "location": "location_context",
+    "title": "work_role",
+    "trait": "aptitude_talent",
+    "habit": "activity_seed",
+    "activity": "activity_seed",
+    "role": "work_role",
+    "dialogue_seed": "affect_story",
+    "worldbuilding_note": "faction_timeline",
+    "source_conflict": "decision_weight"
+  },
+  "packetStrengthRules": [
+    {
+      "strength": "strong",
+      "unitWeight": 0.4,
+      "relationshipEvidencePass": true,
+      "minAngleCount": 3,
+      "minGeneralCount": 2
+    },
+    {
+      "strength": "rich",
+      "unitWeight": 0.22,
+      "minAngleCount": 2,
+      "minGeneralCount": 1
+    },
+    {
+      "strength": "thin",
+      "unitWeight": 0.08,
+      "minAngleCount": 1,
+      "minGeneralCount": 2
+    }
+  ],
+  "discardStrength": {
+    "strength": "discard",
+    "unitWeight": 0.0
+  },
+  "outputFiles": {
+    "packets": "source-event-packets.jsonl",
+    "summary": "source-event-packets-summary.json",
+    "review": "source-event-packets-review.md"
+  }
+}
