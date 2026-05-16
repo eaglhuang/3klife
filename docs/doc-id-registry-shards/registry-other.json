@@ -660,6 +660,12 @@
     "category": "other"
   },
   {
+    "id": "doc_other_0120",
+    "path": "docs/ai_atomic_framework/atm-agent-guidance-layer-framework-implementation-plan.md",
+    "title": "ATM Agent Guidance Layer（框架本體版）實作計劃書",
+    "category": "other"
+  },
+  {
     "id": "doc_other_0121",
     "path": ".github/ISSUE_TEMPLATE/bug_report.md",
     "title": "問題描述",
@@ -723,6 +729,72 @@
     "id": "doc_other_0131",
     "path": "docs/html-to-ucuf/current-roadmap.md",
     "title": "HTML-to-UCUF Current Roadmap (Single Active Entry)",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0132",
+    "path": "docs/ai_atomic_framework/atm-follow-up-backlog.md",
+    "title": "ATM 後續待辦清單",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0133",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md",
+    "title": "拆解大型功能優化原子map計畫書",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0134",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0000-doc-finalize.task.md",
+    "title": "TASK-MRP-0000 — 文件定稿與 cross-link",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0135",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0001-architecture-crosslink.task.md",
+    "title": "TASK-MRP-0001 — Replacement Protocol 概念對齊 ARCHITECTURE",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0136",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0002-schema-0.2.0.task.md",
+    "title": "TASK-MRP-0002 — Atomic Map Schema 0.2.0",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0137",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0003-equivalence-schema.task.md",
+    "title": "TASK-MRP-0003 — Map Equivalence Report Schema",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0138",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0004-equivalence-cli.task.md",
+    "title": "TASK-MRP-0004 — Map Equivalence Test CLI",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0139",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0005-upgrade-gates.task.md",
+    "title": "TASK-MRP-0005 — Upgrade Gates: equivalence + rollback",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0140",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0006-replacement-lane.task.md",
+    "title": "TASK-MRP-0006 — Replacement Lane Transition",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0141",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0007-decomposition-plan.task.md",
+    "title": "TASK-MRP-0007 — Decomposition Plan → Map",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0142",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0008-scopelock-polymorph.task.md",
+    "title": "TASK-MRP-0008 — ScopeLock 0.2.0 + Polymorph Impact",
     "category": "other"
   }
 ]
