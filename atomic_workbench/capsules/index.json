@@ -78,8 +78,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/allocate-ui-version",
       "manifestPath": "atomic_workbench/capsules/allocate-ui-version/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/allocate-ui-version/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/allocate-ui-version/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/allocate-ui-version/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/allocate-ui-version/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk",
         "return-contract"
@@ -114,7 +114,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/anchor-to-widget",
       "manifestPath": "atomic_workbench/capsules/anchor-to-widget/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/anchor-to-widget/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/anchor-to-widget/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "exported",
@@ -151,7 +151,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/append-node-with-generated-siblings",
       "manifestPath": "atomic_workbench/capsules/append-node-with-generated-siblings/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/append-node-with-generated-siblings/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/append-node-with-generated-siblings/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -187,7 +187,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/apply-capture-node-attrs",
       "manifestPath": "atomic_workbench/capsules/apply-capture-node-attrs/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/apply-capture-node-attrs/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/apply-capture-node-attrs/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -224,7 +224,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/apply-clip-path-metadata",
       "manifestPath": "atomic_workbench/capsules/apply-clip-path-metadata/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/apply-clip-path-metadata/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/apply-clip-path-metadata/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -260,7 +260,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/apply-common-node-attrs",
       "manifestPath": "atomic_workbench/capsules/apply-common-node-attrs/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/apply-common-node-attrs/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/apply-common-node-attrs/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -296,7 +296,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/apply-image-fit",
       "manifestPath": "atomic_workbench/capsules/apply-image-fit/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/apply-image-fit/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/apply-image-fit/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -333,7 +333,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/apply-screen-local-color-tokens-to-skin",
       "manifestPath": "atomic_workbench/capsules/apply-screen-local-color-tokens-to-skin/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/apply-screen-local-color-tokens-to-skin/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/apply-screen-local-color-tokens-to-skin/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -375,8 +375,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/apply-text-transform-general",
       "manifestPath": "atomic_workbench/capsules/apply-text-transform-general/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/apply-text-transform-general/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/apply-text-transform-general/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/apply-text-transform-general/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/apply-text-transform-general/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -413,7 +413,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/apply-visibility-state",
       "manifestPath": "atomic_workbench/capsules/apply-visibility-state/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/apply-visibility-state/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/apply-visibility-state/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -450,7 +450,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/assess-interaction-runtime",
       "manifestPath": "atomic_workbench/capsules/assess-interaction-runtime/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/assess-interaction-runtime/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/assess-interaction-runtime/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -486,7 +486,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/assess-visual-fidelity-risk",
       "manifestPath": "atomic_workbench/capsules/assess-visual-fidelity-risk/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/assess-visual-fidelity-risk/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/assess-visual-fidelity-risk/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -525,8 +525,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/asset-likely-exists",
       "manifestPath": "atomic_workbench/capsules/asset-likely-exists/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/asset-likely-exists/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/asset-likely-exists/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/asset-likely-exists/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/asset-likely-exists/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk",
         "return-contract"
@@ -561,7 +561,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/assign-computed",
       "manifestPath": "atomic_workbench/capsules/assign-computed/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/assign-computed/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/assign-computed/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish"
@@ -596,7 +596,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/assign-widget-edge",
       "manifestPath": "atomic_workbench/capsules/assign-widget-edge/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/assign-widget-edge/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/assign-widget-edge/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -632,7 +632,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/attach-box-shape-metadata",
       "manifestPath": "atomic_workbench/capsules/attach-box-shape-metadata/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/attach-box-shape-metadata/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/attach-box-shape-metadata/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -668,7 +668,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/auto-name",
       "manifestPath": "atomic_workbench/capsules/auto-name/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/auto-name/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/auto-name/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -704,7 +704,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/auto-slot-id",
       "manifestPath": "atomic_workbench/capsules/auto-slot-id/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/auto-slot-id/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/auto-slot-id/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -743,8 +743,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/bootstrap-final-draft-from-runtime",
       "manifestPath": "atomic_workbench/capsules/bootstrap-final-draft-from-runtime/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/bootstrap-final-draft-from-runtime/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/bootstrap-final-draft-from-runtime/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/bootstrap-final-draft-from-runtime/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/bootstrap-final-draft-from-runtime/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk",
         "return-contract"
@@ -784,8 +784,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/build-draft-from-html",
       "manifestPath": "atomic_workbench/capsules/build-draft-from-html/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-draft-from-html/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/build-draft-from-html/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-draft-from-html/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/build-draft-from-html/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -823,7 +823,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-effect-sibling-nodes",
       "manifestPath": "atomic_workbench/capsules/build-effect-sibling-nodes/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-effect-sibling-nodes/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-effect-sibling-nodes/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -860,8 +860,8 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-fidelity-dimensions",
       "manifestPath": "atomic_workbench/capsules/build-fidelity-dimensions/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-fidelity-dimensions/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/build-fidelity-dimensions/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-fidelity-dimensions/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/build-fidelity-dimensions/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -902,8 +902,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/build-font-face-registry",
       "manifestPath": "atomic_workbench/capsules/build-font-face-registry/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-font-face-registry/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/build-font-face-registry/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-font-face-registry/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/build-font-face-registry/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -940,7 +940,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-gradient-rect-slot",
       "manifestPath": "atomic_workbench/capsules/build-gradient-rect-slot/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-gradient-rect-slot/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-gradient-rect-slot/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -981,8 +981,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/build-initial-verdict",
       "manifestPath": "atomic_workbench/capsules/build-initial-verdict/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-initial-verdict/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/build-initial-verdict/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-initial-verdict/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/build-initial-verdict/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -1019,7 +1019,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-interaction-route-map",
       "manifestPath": "atomic_workbench/capsules/build-interaction-route-map/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-interaction-route-map/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-interaction-route-map/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1056,7 +1056,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-label-text-fingerprint",
       "manifestPath": "atomic_workbench/capsules/build-label-text-fingerprint/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-label-text-fingerprint/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-label-text-fingerprint/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1093,7 +1093,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-local-color-token-lookup",
       "manifestPath": "atomic_workbench/capsules/build-local-color-token-lookup/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-local-color-token-lookup/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-local-color-token-lookup/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1130,7 +1130,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-local-token-diff",
       "manifestPath": "atomic_workbench/capsules/build-local-token-diff/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-local-token-diff/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-local-token-diff/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1167,7 +1167,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-paths",
       "manifestPath": "atomic_workbench/capsules/build-paths/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-paths/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-paths/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1204,8 +1204,8 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-pre-rule-guard-fixes",
       "manifestPath": "atomic_workbench/capsules/build-pre-rule-guard-fixes/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-pre-rule-guard-fixes/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/build-pre-rule-guard-fixes/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-pre-rule-guard-fixes/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/build-pre-rule-guard-fixes/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -1241,7 +1241,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-pseudo-visual-node",
       "manifestPath": "atomic_workbench/capsules/build-pseudo-visual-node/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-pseudo-visual-node/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-pseudo-visual-node/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1278,7 +1278,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-pseudo-visual-nodes",
       "manifestPath": "atomic_workbench/capsules/build-pseudo-visual-nodes/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-pseudo-visual-nodes/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-pseudo-visual-nodes/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1319,8 +1319,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/build-rule-guard-step",
       "manifestPath": "atomic_workbench/capsules/build-rule-guard-step/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-rule-guard-step/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/build-rule-guard-step/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-rule-guard-step/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/build-rule-guard-step/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -1357,8 +1357,8 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-runtime-authority",
       "manifestPath": "atomic_workbench/capsules/build-runtime-authority/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-runtime-authority/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/build-runtime-authority/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-runtime-authority/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/build-runtime-authority/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -1395,8 +1395,8 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-runtime-interaction-smoke-step",
       "manifestPath": "atomic_workbench/capsules/build-runtime-interaction-smoke-step/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-runtime-interaction-smoke-step/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/build-runtime-interaction-smoke-step/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-runtime-interaction-smoke-step/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/build-runtime-interaction-smoke-step/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -1436,8 +1436,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/build-runtime-sync-step",
       "manifestPath": "atomic_workbench/capsules/build-runtime-sync-step/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-runtime-sync-step/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/build-runtime-sync-step/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-runtime-sync-step/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/build-runtime-sync-step/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -1474,8 +1474,8 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-runtime-tab-routing-map",
       "manifestPath": "atomic_workbench/capsules/build-runtime-tab-routing-map/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-runtime-tab-routing-map/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/build-runtime-tab-routing-map/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-runtime-tab-routing-map/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/build-runtime-tab-routing-map/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -1514,8 +1514,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/build-screen-local-token-payload",
       "manifestPath": "atomic_workbench/capsules/build-screen-local-token-payload/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-screen-local-token-payload/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/build-screen-local-token-payload/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-screen-local-token-payload/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/build-screen-local-token-payload/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "side-effect-risk",
@@ -1551,7 +1551,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-structural-signature",
       "manifestPath": "atomic_workbench/capsules/build-structural-signature/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-structural-signature/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-structural-signature/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1589,8 +1589,8 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/build-summary",
       "manifestPath": "atomic_workbench/capsules/build-summary/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/build-summary/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/build-summary/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/build-summary/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/build-summary/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -1626,7 +1626,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/calculate-shadow-padding",
       "manifestPath": "atomic_workbench/capsules/calculate-shadow-padding/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/calculate-shadow-padding/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/calculate-shadow-padding/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -1662,7 +1662,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/can-use-generated-effect-sibling",
       "manifestPath": "atomic_workbench/capsules/can-use-generated-effect-sibling/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/can-use-generated-effect-sibling/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/can-use-generated-effect-sibling/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -1698,7 +1698,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/child-has-out-of-flow-position",
       "manifestPath": "atomic_workbench/capsules/child-has-out-of-flow-position/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/child-has-out-of-flow-position/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/child-has-out-of-flow-position/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -1734,7 +1734,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/clamp-css-byte",
       "manifestPath": "atomic_workbench/capsules/clamp-css-byte/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/clamp-css-byte/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/clamp-css-byte/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -1770,7 +1770,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/classify-blocker-category",
       "manifestPath": "atomic_workbench/capsules/classify-blocker-category/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/classify-blocker-category/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/classify-blocker-category/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -1810,8 +1810,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/collect-behavior",
       "manifestPath": "atomic_workbench/capsules/collect-behavior/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/collect-behavior/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/collect-behavior/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/collect-behavior/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/collect-behavior/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -1847,7 +1847,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/collect-element-style",
       "manifestPath": "atomic_workbench/capsules/collect-element-style/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/collect-element-style/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/collect-element-style/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1884,7 +1884,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/collect-label-texts",
       "manifestPath": "atomic_workbench/capsules/collect-label-texts/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/collect-label-texts/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/collect-label-texts/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1922,7 +1922,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/collect-layout-node-index",
       "manifestPath": "atomic_workbench/capsules/collect-layout-node-index/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/collect-layout-node-index/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/collect-layout-node-index/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1959,7 +1959,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/collect-outer-shadows",
       "manifestPath": "atomic_workbench/capsules/collect-outer-shadows/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/collect-outer-shadows/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/collect-outer-shadows/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -1996,7 +1996,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/collect-semantic-tokens",
       "manifestPath": "atomic_workbench/capsules/collect-semantic-tokens/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/collect-semantic-tokens/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/collect-semantic-tokens/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -2033,7 +2033,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/collect-svg-shapes",
       "manifestPath": "atomic_workbench/capsules/collect-svg-shapes/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/collect-svg-shapes/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/collect-svg-shapes/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -2070,7 +2070,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/collect-text",
       "manifestPath": "atomic_workbench/capsules/collect-text/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/collect-text/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/collect-text/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -2110,8 +2110,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/collect-token-suggestion-files",
       "manifestPath": "atomic_workbench/capsules/collect-token-suggestion-files/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/collect-token-suggestion-files/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/collect-token-suggestion-files/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/collect-token-suggestion-files/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/collect-token-suggestion-files/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "side-effect-risk",
@@ -2151,8 +2151,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/collect-visual-risk-from-slot",
       "manifestPath": "atomic_workbench/capsules/collect-visual-risk-from-slot/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/collect-visual-risk-from-slot/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/collect-visual-risk-from-slot/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/collect-visual-risk-from-slot/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/collect-visual-risk-from-slot/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -2189,7 +2189,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/collect-widths",
       "manifestPath": "atomic_workbench/capsules/collect-widths/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/collect-widths/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/collect-widths/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -2226,8 +2226,8 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/compute-debug-only",
       "manifestPath": "atomic_workbench/capsules/compute-debug-only/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/compute-debug-only/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/compute-debug-only/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/compute-debug-only/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/compute-debug-only/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -2267,8 +2267,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/compute-letter-spacing",
       "manifestPath": "atomic_workbench/capsules/compute-letter-spacing/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/compute-letter-spacing/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/compute-letter-spacing/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/compute-letter-spacing/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/compute-letter-spacing/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -2305,7 +2305,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/compute-svg-outer-radius",
       "manifestPath": "atomic_workbench/capsules/compute-svg-outer-radius/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/compute-svg-outer-radius/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/compute-svg-outer-radius/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -2342,7 +2342,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/compute-svg-text-bounds",
       "manifestPath": "atomic_workbench/capsules/compute-svg-text-bounds/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/compute-svg-text-bounds/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/compute-svg-text-bounds/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -2379,7 +2379,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/contains-rich-inner",
       "manifestPath": "atomic_workbench/capsules/contains-rich-inner/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/contains-rich-inner/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/contains-rich-inner/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2415,7 +2415,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/contains-transparent-css-color",
       "manifestPath": "atomic_workbench/capsules/contains-transparent-css-color/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/contains-transparent-css-color/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/contains-transparent-css-color/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2451,7 +2451,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/copy-if-present",
       "manifestPath": "atomic_workbench/capsules/copy-if-present/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/copy-if-present/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/copy-if-present/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2490,8 +2490,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/copy-json-file",
       "manifestPath": "atomic_workbench/capsules/copy-json-file/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/copy-json-file/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/copy-json-file/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/copy-json-file/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/copy-json-file/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk",
         "return-contract"
@@ -2526,7 +2526,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/count-grid-tracks",
       "manifestPath": "atomic_workbench/capsules/count-grid-tracks/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/count-grid-tracks/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/count-grid-tracks/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2562,7 +2562,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/count-label-descendants",
       "manifestPath": "atomic_workbench/capsules/count-label-descendants/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/count-label-descendants/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/count-label-descendants/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2598,7 +2598,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/dedupe-identical-large-children",
       "manifestPath": "atomic_workbench/capsules/dedupe-identical-large-children/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/dedupe-identical-large-children/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/dedupe-identical-large-children/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -2635,7 +2635,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/dedupe-tab-switch-children",
       "manifestPath": "atomic_workbench/capsules/dedupe-tab-switch-children/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/dedupe-tab-switch-children/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/dedupe-tab-switch-children/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -2672,7 +2672,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/derive-blocker-taxonomy",
       "manifestPath": "atomic_workbench/capsules/derive-blocker-taxonomy/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/derive-blocker-taxonomy/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/derive-blocker-taxonomy/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2709,7 +2709,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/derive-child-panel-class",
       "manifestPath": "atomic_workbench/capsules/derive-child-panel-class/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/derive-child-panel-class/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/derive-child-panel-class/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2745,7 +2745,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/derive-computed-geometry",
       "manifestPath": "atomic_workbench/capsules/derive-computed-geometry/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/derive-computed-geometry/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/derive-computed-geometry/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2781,7 +2781,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/derive-css-coverage-path-from-layout",
       "manifestPath": "atomic_workbench/capsules/derive-css-coverage-path-from-layout/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/derive-css-coverage-path-from-layout/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/derive-css-coverage-path-from-layout/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2818,7 +2818,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/derive-fragment-prefix",
       "manifestPath": "atomic_workbench/capsules/derive-fragment-prefix/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/derive-fragment-prefix/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/derive-fragment-prefix/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2854,7 +2854,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/derive-gate-signals",
       "manifestPath": "atomic_workbench/capsules/derive-gate-signals/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/derive-gate-signals/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/derive-gate-signals/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "exported",
@@ -2891,7 +2891,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/derive-token-suggestion-path-from-layout",
       "manifestPath": "atomic_workbench/capsules/derive-token-suggestion-path-from-layout/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/derive-token-suggestion-path-from-layout/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/derive-token-suggestion-path-from-layout/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2927,7 +2927,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/derive-ui-short-name",
       "manifestPath": "atomic_workbench/capsules/derive-ui-short-name/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/derive-ui-short-name/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/derive-ui-short-name/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2963,7 +2963,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/detect-input-shape",
       "manifestPath": "atomic_workbench/capsules/detect-input-shape/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/detect-input-shape/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/detect-input-shape/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -2999,7 +2999,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/emit-skin-layers",
       "manifestPath": "atomic_workbench/capsules/emit-skin-layers/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/emit-skin-layers/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/emit-skin-layers/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3035,7 +3035,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/enforce-color-rect-guard",
       "manifestPath": "atomic_workbench/capsules/enforce-color-rect-guard/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/enforce-color-rect-guard/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/enforce-color-rect-guard/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish"
@@ -3073,8 +3073,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/ensure-dir",
       "manifestPath": "atomic_workbench/capsules/ensure-dir/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/ensure-dir/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/ensure-dir/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/ensure-dir/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/ensure-dir/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "side-effect-risk"
@@ -3109,7 +3109,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/ensure-label-style",
       "manifestPath": "atomic_workbench/capsules/ensure-label-style/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/ensure-label-style/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/ensure-label-style/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -3146,7 +3146,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/ensure-sprite-slot",
       "manifestPath": "atomic_workbench/capsules/ensure-sprite-slot/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/ensure-sprite-slot/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/ensure-sprite-slot/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -3183,7 +3183,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/ensure-tab-button-skin-slot",
       "manifestPath": "atomic_workbench/capsules/ensure-tab-button-skin-slot/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/ensure-tab-button-skin-slot/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/ensure-tab-button-skin-slot/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -3220,7 +3220,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/estimate-svg-text-box",
       "manifestPath": "atomic_workbench/capsules/estimate-svg-text-box/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/estimate-svg-text-box/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/estimate-svg-text-box/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3256,7 +3256,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/expand-grid-repeat",
       "manifestPath": "atomic_workbench/capsules/expand-grid-repeat/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/expand-grid-repeat/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/expand-grid-repeat/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3292,7 +3292,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/expand-widget-for-effect",
       "manifestPath": "atomic_workbench/capsules/expand-widget-for-effect/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/expand-widget-for-effect/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/expand-widget-for-effect/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3328,7 +3328,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/extract-border-color",
       "manifestPath": "atomic_workbench/capsules/extract-border-color/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/extract-border-color/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/extract-border-color/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -3365,7 +3365,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/extract-compare-metrics",
       "manifestPath": "atomic_workbench/capsules/extract-compare-metrics/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/extract-compare-metrics/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/extract-compare-metrics/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -3402,7 +3402,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/extract-issues",
       "manifestPath": "atomic_workbench/capsules/extract-issues/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/extract-issues/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/extract-issues/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -3439,7 +3439,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/extract-perf-metrics",
       "manifestPath": "atomic_workbench/capsules/extract-perf-metrics/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/extract-perf-metrics/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/extract-perf-metrics/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -3476,7 +3476,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/extract-svg-radar-chart-meta",
       "manifestPath": "atomic_workbench/capsules/extract-svg-radar-chart-meta/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/extract-svg-radar-chart-meta/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/extract-svg-radar-chart-meta/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -3513,7 +3513,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/extract-url",
       "manifestPath": "atomic_workbench/capsules/extract-url/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/extract-url/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/extract-url/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -3550,7 +3550,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/finalize-workflow-verdict",
       "manifestPath": "atomic_workbench/capsules/finalize-workflow-verdict/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/finalize-workflow-verdict/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/finalize-workflow-verdict/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "exported",
@@ -3588,7 +3588,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/find-layout-node-by-name",
       "manifestPath": "atomic_workbench/capsules/find-layout-node-by-name/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/find-layout-node-by-name/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/find-layout-node-by-name/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3629,8 +3629,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/first-existing-path",
       "manifestPath": "atomic_workbench/capsules/first-existing-path/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/first-existing-path/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/first-existing-path/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/first-existing-path/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/first-existing-path/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk",
         "return-contract"
@@ -3665,7 +3665,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/first-meaningful-border-color",
       "manifestPath": "atomic_workbench/capsules/first-meaningful-border-color/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/first-meaningful-border-color/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/first-meaningful-border-color/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3701,7 +3701,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/guard-sprite-path",
       "manifestPath": "atomic_workbench/capsules/guard-sprite-path/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/guard-sprite-path/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/guard-sprite-path/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -3738,7 +3738,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/has-element-child",
       "manifestPath": "atomic_workbench/capsules/has-element-child/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/has-element-child/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/has-element-child/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3774,7 +3774,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/has-explicit-story-strip-signal",
       "manifestPath": "atomic_workbench/capsules/has-explicit-story-strip-signal/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/has-explicit-story-strip-signal/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/has-explicit-story-strip-signal/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3813,8 +3813,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/hash-file-if-exists",
       "manifestPath": "atomic_workbench/capsules/hash-file-if-exists/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/hash-file-if-exists/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/hash-file-if-exists/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/hash-file-if-exists/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/hash-file-if-exists/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk",
         "return-contract"
@@ -3849,7 +3849,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/has-meaningful-background",
       "manifestPath": "atomic_workbench/capsules/has-meaningful-background/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/has-meaningful-background/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/has-meaningful-background/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3885,7 +3885,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/has-meaningful-object-fit",
       "manifestPath": "atomic_workbench/capsules/has-meaningful-object-fit/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/has-meaningful-object-fit/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/has-meaningful-object-fit/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3921,7 +3921,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/has-meaningful-transform",
       "manifestPath": "atomic_workbench/capsules/has-meaningful-transform/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/has-meaningful-transform/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/has-meaningful-transform/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3957,7 +3957,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/has-only-text-content",
       "manifestPath": "atomic_workbench/capsules/has-only-text-content/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/has-only-text-content/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/has-only-text-content/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -3993,7 +3993,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/has-renderable-border",
       "manifestPath": "atomic_workbench/capsules/has-renderable-border/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/has-renderable-border/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/has-renderable-border/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -4029,7 +4029,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/has-story-strip-multi-signal",
       "manifestPath": "atomic_workbench/capsules/has-story-strip-multi-signal/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/has-story-strip-multi-signal/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/has-story-strip-multi-signal/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -4065,7 +4065,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/has-text-binding-contract",
       "manifestPath": "atomic_workbench/capsules/has-text-binding-contract/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/has-text-binding-contract/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/has-text-binding-contract/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -4101,7 +4101,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-block-flow-layout",
       "manifestPath": "atomic_workbench/capsules/infer-block-flow-layout/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-block-flow-layout/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-block-flow-layout/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4138,7 +4138,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-child-block-spacing",
       "manifestPath": "atomic_workbench/capsules/infer-child-block-spacing/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-child-block-spacing/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-child-block-spacing/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4175,7 +4175,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-composite-geometry-summary",
       "manifestPath": "atomic_workbench/capsules/infer-composite-geometry-summary/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-composite-geometry-summary/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-composite-geometry-summary/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4212,7 +4212,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-composite-renderer-hint",
       "manifestPath": "atomic_workbench/capsules/infer-composite-renderer-hint/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-composite-renderer-hint/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-composite-renderer-hint/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4249,7 +4249,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-default-tab-fragment",
       "manifestPath": "atomic_workbench/capsules/infer-default-tab-fragment/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-default-tab-fragment/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-default-tab-fragment/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4286,7 +4286,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-grid-cell-height",
       "manifestPath": "atomic_workbench/capsules/infer-grid-cell-height/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-grid-cell-height/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-grid-cell-height/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4323,7 +4323,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-grid-cell-width",
       "manifestPath": "atomic_workbench/capsules/infer-grid-cell-width/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-grid-cell-width/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-grid-cell-width/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4360,7 +4360,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-grid-layout",
       "manifestPath": "atomic_workbench/capsules/infer-grid-layout/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-grid-layout/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-grid-layout/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4397,7 +4397,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-label-overflow",
       "manifestPath": "atomic_workbench/capsules/infer-label-overflow/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-label-overflow/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-label-overflow/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4434,7 +4434,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-layout",
       "manifestPath": "atomic_workbench/capsules/infer-layout/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-layout/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-layout/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4471,7 +4471,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-node-type",
       "manifestPath": "atomic_workbench/capsules/infer-node-type/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-node-type/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-node-type/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4508,7 +4508,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-owner-tab-from-element",
       "manifestPath": "atomic_workbench/capsules/infer-owner-tab-from-element/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-owner-tab-from-element/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-owner-tab-from-element/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4545,7 +4545,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-story-strip-hints",
       "manifestPath": "atomic_workbench/capsules/infer-story-strip-hints/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-story-strip-hints/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-story-strip-hints/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4582,7 +4582,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/infer-tab-id-from-element",
       "manifestPath": "atomic_workbench/capsules/infer-tab-id-from-element/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-tab-id-from-element/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-tab-id-from-element/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -4623,8 +4623,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/infer-tab-semantic-hints",
       "manifestPath": "atomic_workbench/capsules/infer-tab-semantic-hints/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/infer-tab-semantic-hints/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/infer-tab-semantic-hints/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/infer-tab-semantic-hints/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/infer-tab-semantic-hints/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -4661,7 +4661,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/inject-dynamic-text-contracts",
       "manifestPath": "atomic_workbench/capsules/inject-dynamic-text-contracts/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/inject-dynamic-text-contracts/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/inject-dynamic-text-contracts/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -4697,7 +4697,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/inspect-art-direction-risks",
       "manifestPath": "atomic_workbench/capsules/inspect-art-direction-risks/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/inspect-art-direction-risks/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/inspect-art-direction-risks/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -4733,7 +4733,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/is-asymmetric-radius",
       "manifestPath": "atomic_workbench/capsules/is-asymmetric-radius/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/is-asymmetric-radius/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/is-asymmetric-radius/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -4769,7 +4769,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/is-bold-weight",
       "manifestPath": "atomic_workbench/capsules/is-bold-weight/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/is-bold-weight/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/is-bold-weight/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -4805,7 +4805,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/is-dynamic-text-candidate-for-contract",
       "manifestPath": "atomic_workbench/capsules/is-dynamic-text-candidate-for-contract/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/is-dynamic-text-candidate-for-contract/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/is-dynamic-text-candidate-for-contract/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -4841,7 +4841,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/is-empty-flex-spacer",
       "manifestPath": "atomic_workbench/capsules/is-empty-flex-spacer/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/is-empty-flex-spacer/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/is-empty-flex-spacer/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -4877,7 +4877,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/is-italic-style",
       "manifestPath": "atomic_workbench/capsules/is-italic-style/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/is-italic-style/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/is-italic-style/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -4913,7 +4913,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/is-svg-none",
       "manifestPath": "atomic_workbench/capsules/is-svg-none/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/is-svg-none/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/is-svg-none/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -4949,7 +4949,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/is-tab-switch-button-node",
       "manifestPath": "atomic_workbench/capsules/is-tab-switch-button-node/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/is-tab-switch-button-node/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/is-tab-switch-button-node/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -4985,7 +4985,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/is-tab-switch-contract",
       "manifestPath": "atomic_workbench/capsules/is-tab-switch-contract/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/is-tab-switch-contract/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/is-tab-switch-contract/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5021,7 +5021,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/is-transparent-css-color",
       "manifestPath": "atomic_workbench/capsules/is-transparent-css-color/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/is-transparent-css-color/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/is-transparent-css-color/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5057,7 +5057,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/is-transparent-source-wrapper",
       "manifestPath": "atomic_workbench/capsules/is-transparent-source-wrapper/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/is-transparent-source-wrapper/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/is-transparent-source-wrapper/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5093,7 +5093,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/is-visual-only-inline-primitive",
       "manifestPath": "atomic_workbench/capsules/is-visual-only-inline-primitive/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/is-visual-only-inline-primitive/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/is-visual-only-inline-primitive/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5129,7 +5129,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/looks-simplified",
       "manifestPath": "atomic_workbench/capsules/looks-simplified/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/looks-simplified/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/looks-simplified/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5165,7 +5165,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/lookup-computed-parent-rect",
       "manifestPath": "atomic_workbench/capsules/lookup-computed-parent-rect/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/lookup-computed-parent-rect/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/lookup-computed-parent-rect/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5204,8 +5204,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/main",
       "manifestPath": "atomic_workbench/capsules/main/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/main/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/main/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/main/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/main/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "side-effect-risk",
@@ -5241,7 +5241,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/map-flex-align-items",
       "manifestPath": "atomic_workbench/capsules/map-flex-align-items/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/map-flex-align-items/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/map-flex-align-items/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -5278,7 +5278,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/map-flex-justify-content",
       "manifestPath": "atomic_workbench/capsules/map-flex-justify-content/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/map-flex-justify-content/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/map-flex-justify-content/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -5315,7 +5315,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/map-known-runtime-sprite-path",
       "manifestPath": "atomic_workbench/capsules/map-known-runtime-sprite-path/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/map-known-runtime-sprite-path/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/map-known-runtime-sprite-path/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -5352,7 +5352,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/matches-simple-style-rule",
       "manifestPath": "atomic_workbench/capsules/matches-simple-style-rule/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/matches-simple-style-rule/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/matches-simple-style-rule/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5388,7 +5388,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/max-finite",
       "manifestPath": "atomic_workbench/capsules/max-finite/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/max-finite/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/max-finite/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5424,7 +5424,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/meaningful-background-image",
       "manifestPath": "atomic_workbench/capsules/meaningful-background-image/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/meaningful-background-image/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/meaningful-background-image/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5460,7 +5460,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/meaningful-background-value",
       "manifestPath": "atomic_workbench/capsules/meaningful-background-value/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/meaningful-background-value/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/meaningful-background-value/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5496,7 +5496,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/meaningful-clip-path",
       "manifestPath": "atomic_workbench/capsules/meaningful-clip-path/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/meaningful-clip-path/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/meaningful-clip-path/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5532,7 +5532,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/meaningful-css-color",
       "manifestPath": "atomic_workbench/capsules/meaningful-css-color/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/meaningful-css-color/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/meaningful-css-color/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5568,7 +5568,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/meaningful-css-length",
       "manifestPath": "atomic_workbench/capsules/meaningful-css-length/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/meaningful-css-length/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/meaningful-css-length/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5604,7 +5604,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/meaningful-css-text",
       "manifestPath": "atomic_workbench/capsules/meaningful-css-text/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/meaningful-css-text/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/meaningful-css-text/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5640,7 +5640,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/meaningful-gradient-background",
       "manifestPath": "atomic_workbench/capsules/meaningful-gradient-background/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/meaningful-gradient-background/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/meaningful-gradient-background/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5676,7 +5676,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/meaningful-line-height",
       "manifestPath": "atomic_workbench/capsules/meaningful-line-height/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/meaningful-line-height/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/meaningful-line-height/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5712,7 +5712,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/meaningful-non-default-css-text",
       "manifestPath": "atomic_workbench/capsules/meaningful-non-default-css-text/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/meaningful-non-default-css-text/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/meaningful-non-default-css-text/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -5748,7 +5748,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/merge-class-styles",
       "manifestPath": "atomic_workbench/capsules/merge-class-styles/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/merge-class-styles/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/merge-class-styles/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -5785,7 +5785,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/merge-computed-style",
       "manifestPath": "atomic_workbench/capsules/merge-computed-style/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/merge-computed-style/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/merge-computed-style/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -5823,8 +5823,8 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/merge-next-fixes",
       "manifestPath": "atomic_workbench/capsules/merge-next-fixes/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/merge-next-fixes/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/merge-next-fixes/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/merge-next-fixes/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/merge-next-fixes/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -5860,7 +5860,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/merge-runtime-screen-content-contract",
       "manifestPath": "atomic_workbench/capsules/merge-runtime-screen-content-contract/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/merge-runtime-screen-content-contract/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/merge-runtime-screen-content-contract/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -5900,8 +5900,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/merge-skin-slots",
       "manifestPath": "atomic_workbench/capsules/merge-skin-slots/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/merge-skin-slots/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/merge-skin-slots/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/merge-skin-slots/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/merge-skin-slots/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "side-effect-risk",
@@ -5937,7 +5937,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-color-value",
       "manifestPath": "atomic_workbench/capsules/normalize-color-value/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-color-value/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-color-value/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -5974,7 +5974,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-computed-visual-style",
       "manifestPath": "atomic_workbench/capsules/normalize-computed-visual-style/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-computed-visual-style/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-computed-visual-style/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6011,7 +6011,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-css-color-literal",
       "manifestPath": "atomic_workbench/capsules/normalize-css-color-literal/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-css-color-literal/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-css-color-literal/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6052,8 +6052,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/normalize-css-color-to-hex",
       "manifestPath": "atomic_workbench/capsules/normalize-css-color-to-hex/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-css-color-to-hex/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/normalize-css-color-to-hex/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-css-color-to-hex/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/normalize-css-color-to-hex/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -6090,7 +6090,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-fidelity-pseudo-map",
       "manifestPath": "atomic_workbench/capsules/normalize-fidelity-pseudo-map/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-fidelity-pseudo-map/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-fidelity-pseudo-map/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6127,7 +6127,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-fidelity-snapshot",
       "manifestPath": "atomic_workbench/capsules/normalize-fidelity-snapshot/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-fidelity-snapshot/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-fidelity-snapshot/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6164,7 +6164,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-fidelity-snapshot-map",
       "manifestPath": "atomic_workbench/capsules/normalize-fidelity-snapshot-map/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-fidelity-snapshot-map/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-fidelity-snapshot-map/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6201,7 +6201,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-fragment-layout",
       "manifestPath": "atomic_workbench/capsules/normalize-fragment-layout/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-fragment-layout/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-fragment-layout/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6239,7 +6239,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-interaction-key",
       "manifestPath": "atomic_workbench/capsules/normalize-interaction-key/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-interaction-key/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-interaction-key/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6276,8 +6276,8 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout",
       "manifestPath": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/normalize-interaction-triggers-from-layout/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "pure-ish",
@@ -6313,7 +6313,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-object-fit",
       "manifestPath": "atomic_workbench/capsules/normalize-object-fit/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-object-fit/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-object-fit/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6350,7 +6350,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-object-position",
       "manifestPath": "atomic_workbench/capsules/normalize-object-position/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-object-position/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-object-position/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6387,7 +6387,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-rect",
       "manifestPath": "atomic_workbench/capsules/normalize-rect/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-rect/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-rect/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6424,7 +6424,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-shadow",
       "manifestPath": "atomic_workbench/capsules/normalize-shadow/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-shadow/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-shadow/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6461,7 +6461,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-single-child-fill",
       "manifestPath": "atomic_workbench/capsules/normalize-single-child-fill/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-single-child-fill/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-single-child-fill/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6498,7 +6498,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-svg-inherited-attrs",
       "manifestPath": "atomic_workbench/capsules/normalize-svg-inherited-attrs/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-svg-inherited-attrs/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-svg-inherited-attrs/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6535,7 +6535,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-svg-paint",
       "manifestPath": "atomic_workbench/capsules/normalize-svg-paint/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-svg-paint/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-svg-paint/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6572,7 +6572,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-tab-rail-and-button-layout",
       "manifestPath": "atomic_workbench/capsules/normalize-tab-rail-and-button-layout/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-tab-rail-and-button-layout/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-tab-rail-and-button-layout/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6609,7 +6609,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/normalize-tab-token",
       "manifestPath": "atomic_workbench/capsules/normalize-tab-token/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/normalize-tab-token/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/normalize-tab-token/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6646,7 +6646,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/num-attr",
       "manifestPath": "atomic_workbench/capsules/num-attr/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/num-attr/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/num-attr/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -6686,8 +6686,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/parse-args",
       "manifestPath": "atomic_workbench/capsules/parse-args/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-args/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/parse-args/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-args/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/parse-args/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -6724,7 +6724,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/parse-border-width-value",
       "manifestPath": "atomic_workbench/capsules/parse-border-width-value/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-border-width-value/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-border-width-value/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6761,7 +6761,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/parse-box",
       "manifestPath": "atomic_workbench/capsules/parse-box/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-box/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-box/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6802,8 +6802,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/parse-color",
       "manifestPath": "atomic_workbench/capsules/parse-color/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-color/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/parse-color/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-color/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/parse-color/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -6840,7 +6840,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/parse-css-var",
       "manifestPath": "atomic_workbench/capsules/parse-css-var/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-css-var/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-css-var/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6877,7 +6877,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/parse-drop-shadow-filters",
       "manifestPath": "atomic_workbench/capsules/parse-drop-shadow-filters/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-drop-shadow-filters/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-drop-shadow-filters/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6920,8 +6920,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/parse-fragment-list",
       "manifestPath": "atomic_workbench/capsules/parse-fragment-list/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-fragment-list/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/parse-fragment-list/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-fragment-list/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/parse-fragment-list/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -6958,7 +6958,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/parse-grid-track-pixels",
       "manifestPath": "atomic_workbench/capsules/parse-grid-track-pixels/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-grid-track-pixels/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-grid-track-pixels/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -6995,7 +6995,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/parse-opacity",
       "manifestPath": "atomic_workbench/capsules/parse-opacity/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-opacity/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-opacity/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -7032,7 +7032,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/parse-px",
       "manifestPath": "atomic_workbench/capsules/parse-px/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-px/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-px/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -7069,7 +7069,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/parse-svg-number",
       "manifestPath": "atomic_workbench/capsules/parse-svg-number/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-svg-number/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-svg-number/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -7106,7 +7106,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/parse-svg-opacity",
       "manifestPath": "atomic_workbench/capsules/parse-svg-opacity/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-svg-opacity/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-svg-opacity/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -7143,7 +7143,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/parse-svg-points",
       "manifestPath": "atomic_workbench/capsules/parse-svg-points/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-svg-points/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-svg-points/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -7180,7 +7180,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/parse-svg-view-box",
       "manifestPath": "atomic_workbench/capsules/parse-svg-view-box/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-svg-view-box/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-svg-view-box/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -7217,7 +7217,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/parse-uniform-border-radius",
       "manifestPath": "atomic_workbench/capsules/parse-uniform-border-radius/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/parse-uniform-border-radius/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/parse-uniform-border-radius/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -7254,7 +7254,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/pascal",
       "manifestPath": "atomic_workbench/capsules/pascal/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/pascal/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/pascal/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -7290,7 +7290,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/pick-background-fill",
       "manifestPath": "atomic_workbench/capsules/pick-background-fill/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/pick-background-fill/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/pick-background-fill/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -7327,7 +7327,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/pick-dim",
       "manifestPath": "atomic_workbench/capsules/pick-dim/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/pick-dim/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/pick-dim/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -7365,7 +7365,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/pick-font-by-tag",
       "manifestPath": "atomic_workbench/capsules/pick-font-by-tag/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/pick-font-by-tag/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/pick-font-by-tag/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -7402,7 +7402,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/pick-per-tab-replay-tabs",
       "manifestPath": "atomic_workbench/capsules/pick-per-tab-replay-tabs/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/pick-per-tab-replay-tabs/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/pick-per-tab-replay-tabs/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -7439,7 +7439,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/pin-primary-fragment-content-wrapper",
       "manifestPath": "atomic_workbench/capsules/pin-primary-fragment-content-wrapper/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/pin-primary-fragment-content-wrapper/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/pin-primary-fragment-content-wrapper/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -7478,8 +7478,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/print-help",
       "manifestPath": "atomic_workbench/capsules/print-help/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/print-help/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/print-help/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/print-help/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/print-help/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk"
       ]
@@ -7519,8 +7519,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/process-element",
       "manifestPath": "atomic_workbench/capsules/process-element/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/process-element/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/process-element/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/process-element/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/process-element/capsule.behavior.test.ts",
       "reasons": [
         "large-function",
         "pure-ish",
@@ -7556,7 +7556,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/pseudo-order",
       "manifestPath": "atomic_workbench/capsules/pseudo-order/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/pseudo-order/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/pseudo-order/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -7592,7 +7592,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/push-art-warning",
       "manifestPath": "atomic_workbench/capsules/push-art-warning/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/push-art-warning/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/push-art-warning/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish"
@@ -7627,7 +7627,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/read-canvas-from-html",
       "manifestPath": "atomic_workbench/capsules/read-canvas-from-html/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/read-canvas-from-html/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/read-canvas-from-html/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -7663,7 +7663,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/read-final-tab-routing",
       "manifestPath": "atomic_workbench/capsules/read-final-tab-routing/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/read-final-tab-routing/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/read-final-tab-routing/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -7702,8 +7702,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/read-json-if-exists",
       "manifestPath": "atomic_workbench/capsules/read-json-if-exists/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/read-json-if-exists/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/read-json-if-exists/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/read-json-if-exists/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/read-json-if-exists/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk",
         "return-contract"
@@ -7738,7 +7738,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/read-runtime-state-route",
       "manifestPath": "atomic_workbench/capsules/read-runtime-state-route/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/read-runtime-state-route/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/read-runtime-state-route/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -7779,8 +7779,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/read-text",
       "manifestPath": "atomic_workbench/capsules/read-text/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/read-text/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/read-text/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/read-text/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/read-text/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk",
         "return-contract"
@@ -7815,7 +7815,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/record-token-usage",
       "manifestPath": "atomic_workbench/capsules/record-token-usage/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/record-token-usage/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/record-token-usage/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -7851,7 +7851,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/rect-to-parent-edges",
       "manifestPath": "atomic_workbench/capsules/rect-to-parent-edges/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/rect-to-parent-edges/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/rect-to-parent-edges/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -7887,8 +7887,8 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/regenerate-screen-local-tokens",
       "manifestPath": "atomic_workbench/capsules/regenerate-screen-local-tokens/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/regenerate-screen-local-tokens/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/regenerate-screen-local-tokens/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/regenerate-screen-local-tokens/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/regenerate-screen-local-tokens/capsule.behavior.test.ts",
       "reasons": [
         "pure-ish",
         "return-contract"
@@ -7923,7 +7923,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/register-tab-zone-hint",
       "manifestPath": "atomic_workbench/capsules/register-tab-zone-hint/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/register-tab-zone-hint/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/register-tab-zone-hint/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -7959,7 +7959,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/rel",
       "manifestPath": "atomic_workbench/capsules/rel/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/rel/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/rel/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -7995,7 +7995,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-box-edges",
       "manifestPath": "atomic_workbench/capsules/resolve-box-edges/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-box-edges/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-box-edges/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8032,7 +8032,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-canonical-runtime-paths",
       "manifestPath": "atomic_workbench/capsules/resolve-canonical-runtime-paths/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-canonical-runtime-paths/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-canonical-runtime-paths/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8069,7 +8069,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-corner-radius-basis",
       "manifestPath": "atomic_workbench/capsules/resolve-corner-radius-basis/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-corner-radius-basis/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-corner-radius-basis/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8106,7 +8106,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-fill-child-widths",
       "manifestPath": "atomic_workbench/capsules/resolve-fill-child-widths/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-fill-child-widths/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-fill-child-widths/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8148,8 +8148,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/resolve-font-asset-by-convention",
       "manifestPath": "atomic_workbench/capsules/resolve-font-asset-by-convention/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-font-asset-by-convention/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/resolve-font-asset-by-convention/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-font-asset-by-convention/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/resolve-font-asset-by-convention/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -8191,8 +8191,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/resolve-font-family-to-asset",
       "manifestPath": "atomic_workbench/capsules/resolve-font-family-to-asset/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-font-family-to-asset/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/resolve-font-family-to-asset/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-font-family-to-asset/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/resolve-font-family-to-asset/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "stable-behavior-name",
@@ -8230,7 +8230,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-gap-pair",
       "manifestPath": "atomic_workbench/capsules/resolve-gap-pair/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-gap-pair/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-gap-pair/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8267,7 +8267,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-grid-gap",
       "manifestPath": "atomic_workbench/capsules/resolve-grid-gap/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-grid-gap/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-grid-gap/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8304,7 +8304,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-interaction-fallback-route",
       "manifestPath": "atomic_workbench/capsules/resolve-interaction-fallback-route/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-interaction-fallback-route/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-interaction-fallback-route/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8341,7 +8341,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-interaction-route",
       "manifestPath": "atomic_workbench/capsules/resolve-interaction-route/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-interaction-route/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-interaction-route/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8378,7 +8378,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-length",
       "manifestPath": "atomic_workbench/capsules/resolve-length/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-length/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-length/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8415,7 +8415,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-line-height",
       "manifestPath": "atomic_workbench/capsules/resolve-line-height/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-line-height/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-line-height/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8452,7 +8452,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-radius-dimension",
       "manifestPath": "atomic_workbench/capsules/resolve-radius-dimension/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-radius-dimension/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-radius-dimension/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8489,7 +8489,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-radius-value",
       "manifestPath": "atomic_workbench/capsules/resolve-radius-value/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-radius-value/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-radius-value/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8526,7 +8526,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-runtime-spec-paths",
       "manifestPath": "atomic_workbench/capsules/resolve-runtime-spec-paths/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-runtime-spec-paths/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-runtime-spec-paths/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8563,7 +8563,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-slot-width",
       "manifestPath": "atomic_workbench/capsules/resolve-slot-width/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-slot-width/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-slot-width/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8600,7 +8600,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-typography-token",
       "manifestPath": "atomic_workbench/capsules/resolve-typography-token/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-typography-token/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-typography-token/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8637,7 +8637,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-uniform-border-color",
       "manifestPath": "atomic_workbench/capsules/resolve-uniform-border-color/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-uniform-border-color/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-uniform-border-color/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8674,7 +8674,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-uniform-border-width",
       "manifestPath": "atomic_workbench/capsules/resolve-uniform-border-width/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-uniform-border-width/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-uniform-border-width/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8711,7 +8711,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/resolve-uniform-corner-radius",
       "manifestPath": "atomic_workbench/capsules/resolve-uniform-corner-radius/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-uniform-corner-radius/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-uniform-corner-radius/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -8751,8 +8751,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/resolve-update-coverage-baseline",
       "manifestPath": "atomic_workbench/capsules/resolve-update-coverage-baseline/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/resolve-update-coverage-baseline/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/resolve-update-coverage-baseline/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/resolve-update-coverage-baseline/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/resolve-update-coverage-baseline/capsule.behavior.test.ts",
       "reasons": [
         "stable-behavior-name",
         "side-effect-risk",
@@ -8791,8 +8791,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/route-fragment-exists",
       "manifestPath": "atomic_workbench/capsules/route-fragment-exists/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/route-fragment-exists/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/route-fragment-exists/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/route-fragment-exists/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/route-fragment-exists/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk",
         "return-contract"
@@ -8830,8 +8830,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/run-node-step",
       "manifestPath": "atomic_workbench/capsules/run-node-step/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/run-node-step/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/run-node-step/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/run-node-step/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/run-node-step/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk",
         "return-contract"
@@ -8866,8 +8866,8 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/run-per-tab-replay",
       "manifestPath": "atomic_workbench/capsules/run-per-tab-replay/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/run-per-tab-replay/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/run-per-tab-replay/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/run-per-tab-replay/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/run-per-tab-replay/capsule.behavior.test.ts",
       "reasons": [
         "pure-ish",
         "return-contract"
@@ -8907,8 +8907,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/run-workflow-main",
       "manifestPath": "atomic_workbench/capsules/run-workflow-main/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/run-workflow-main/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/run-workflow-main/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/run-workflow-main/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/run-workflow-main/capsule.behavior.test.ts",
       "reasons": [
         "exported",
         "large-function",
@@ -8945,7 +8945,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/sanitize-key-segment",
       "manifestPath": "atomic_workbench/capsules/sanitize-key-segment/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/sanitize-key-segment/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/sanitize-key-segment/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -8981,7 +8981,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/should-materialize-lazy-slot",
       "manifestPath": "atomic_workbench/capsules/should-materialize-lazy-slot/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/should-materialize-lazy-slot/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/should-materialize-lazy-slot/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -9017,7 +9017,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/should-prune-standalone-story-strip-label",
       "manifestPath": "atomic_workbench/capsules/should-prune-standalone-story-strip-label/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/should-prune-standalone-story-strip-label/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/should-prune-standalone-story-strip-label/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -9054,7 +9054,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/sidecar-path",
       "manifestPath": "atomic_workbench/capsules/sidecar-path/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/sidecar-path/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/sidecar-path/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -9090,7 +9090,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/stabilize-grid-layout",
       "manifestPath": "atomic_workbench/capsules/stabilize-grid-layout/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/stabilize-grid-layout/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/stabilize-grid-layout/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "stable-behavior-name",
@@ -9127,7 +9127,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/stretch-oversized-full-width-nodes",
       "manifestPath": "atomic_workbench/capsules/stretch-oversized-full-width-nodes/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/stretch-oversized-full-width-nodes/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/stretch-oversized-full-width-nodes/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -9163,7 +9163,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/strip-ext",
       "manifestPath": "atomic_workbench/capsules/strip-ext/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/strip-ext/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/strip-ext/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -9199,7 +9199,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/strip-non-visual-blocks-for-parsing",
       "manifestPath": "atomic_workbench/capsules/strip-non-visual-blocks-for-parsing/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/strip-non-visual-blocks-for-parsing/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/strip-non-visual-blocks-for-parsing/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -9237,8 +9237,8 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/sync-final-artifacts-to-runtime",
       "manifestPath": "atomic_workbench/capsules/sync-final-artifacts-to-runtime/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/sync-final-artifacts-to-runtime/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/sync-final-artifacts-to-runtime/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/sync-final-artifacts-to-runtime/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/sync-final-artifacts-to-runtime/capsule.behavior.test.ts",
       "reasons": [
         "pure-ish",
         "return-contract"
@@ -9274,7 +9274,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/to-kebab",
       "manifestPath": "atomic_workbench/capsules/to-kebab/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/to-kebab/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/to-kebab/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -9311,7 +9311,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/to-pascal",
       "manifestPath": "atomic_workbench/capsules/to-pascal/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/to-pascal/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/to-pascal/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -9347,7 +9347,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/top-rule-guard-fixes",
       "manifestPath": "atomic_workbench/capsules/top-rule-guard-fixes/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/top-rule-guard-fixes/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/top-rule-guard-fixes/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -9383,7 +9383,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/update-lazy-slot-default-fragments",
       "manifestPath": "atomic_workbench/capsules/update-lazy-slot-default-fragments/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/update-lazy-slot-default-fragments/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/update-lazy-slot-default-fragments/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -9420,7 +9420,7 @@
       "requiredCaseSets": [],
       "capsuleDir": "atomic_workbench/capsules/walk",
       "manifestPath": "atomic_workbench/capsules/walk/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/walk/capsule.test.mjs",
+      "testPath": "atomic_workbench/capsules/walk/capsule.test.ts",
       "behaviorTestPath": null,
       "reasons": [
         "pure-ish",
@@ -9459,8 +9459,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/write-json",
       "manifestPath": "atomic_workbench/capsules/write-json/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/write-json/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/write-json/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/write-json/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/write-json/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk"
       ]
@@ -9497,8 +9497,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/write-per-tab-replay-routing",
       "manifestPath": "atomic_workbench/capsules/write-per-tab-replay-routing/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/write-per-tab-replay-routing/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/write-per-tab-replay-routing/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/write-per-tab-replay-routing/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/write-per-tab-replay-routing/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk",
         "return-contract"
@@ -9536,8 +9536,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/write-summary-and-exit",
       "manifestPath": "atomic_workbench/capsules/write-summary-and-exit/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/write-summary-and-exit/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/write-summary-and-exit/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/write-summary-and-exit/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/write-summary-and-exit/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk"
       ]
@@ -9574,8 +9574,8 @@
       ],
       "capsuleDir": "atomic_workbench/capsules/write-ui-version-artifacts",
       "manifestPath": "atomic_workbench/capsules/write-ui-version-artifacts/capsule.manifest.json",
-      "testPath": "atomic_workbench/capsules/write-ui-version-artifacts/capsule.test.mjs",
-      "behaviorTestPath": "atomic_workbench/capsules/write-ui-version-artifacts/capsule.behavior.test.mjs",
+      "testPath": "atomic_workbench/capsules/write-ui-version-artifacts/capsule.test.ts",
+      "behaviorTestPath": "atomic_workbench/capsules/write-ui-version-artifacts/capsule.behavior.test.ts",
       "reasons": [
         "side-effect-risk",
         "return-contract"
@@ -9592,7 +9592,7 @@
       },
       "childCount": 47,
       "manifestPath": "atomic_workbench/anchors/cli-shell-context-74c85a60/anchor.manifest.json",
-      "testPath": "atomic_workbench/anchors/cli-shell-context-74c85a60/anchor.test.mjs"
+      "testPath": "atomic_workbench/anchors/cli-shell-context-74c85a60/anchor.test.ts"
     },
     {
       "anchorId": "H2U-ANCHOR-DRAFT-BUILDER-CORE-82992A5F",
@@ -9603,7 +9603,7 @@
       },
       "childCount": 169,
       "manifestPath": "atomic_workbench/anchors/draft-builder-core-82992a5f/anchor.manifest.json",
-      "testPath": "atomic_workbench/anchors/draft-builder-core-82992a5f/anchor.test.mjs"
+      "testPath": "atomic_workbench/anchors/draft-builder-core-82992a5f/anchor.test.ts"
     },
     {
       "anchorId": "H2U-ANCHOR-FINAL-VERDICT-2E58DEC4",
@@ -9614,7 +9614,7 @@
       },
       "childCount": 2,
       "manifestPath": "atomic_workbench/anchors/final-verdict-2e58dec4/anchor.manifest.json",
-      "testPath": "atomic_workbench/anchors/final-verdict-2e58dec4/anchor.test.mjs"
+      "testPath": "atomic_workbench/anchors/final-verdict-2e58dec4/anchor.test.ts"
     },
     {
       "anchorId": "H2U-ANCHOR-GATE-ORCHESTRATION-3DF999E5",
@@ -9625,7 +9625,7 @@
       },
       "childCount": 3,
       "manifestPath": "atomic_workbench/anchors/gate-orchestration-3df999e5/anchor.manifest.json",
-      "testPath": "atomic_workbench/anchors/gate-orchestration-3df999e5/anchor.test.mjs"
+      "testPath": "atomic_workbench/anchors/gate-orchestration-3df999e5/anchor.test.ts"
     },
     {
       "anchorId": "H2U-ANCHOR-INTERACTION-SMOKE-F0CAD253",
@@ -9636,7 +9636,7 @@
       },
       "childCount": 8,
       "manifestPath": "atomic_workbench/anchors/interaction-smoke-f0cad253/anchor.manifest.json",
-      "testPath": "atomic_workbench/anchors/interaction-smoke-f0cad253/anchor.test.mjs"
+      "testPath": "atomic_workbench/anchors/interaction-smoke-f0cad253/anchor.test.ts"
     },
     {
       "anchorId": "H2U-ANCHOR-PER-TAB-REPLAY-E0734BA6",
@@ -9647,7 +9647,7 @@
       },
       "childCount": 15,
       "manifestPath": "atomic_workbench/anchors/per-tab-replay-e0734ba6/anchor.manifest.json",
-      "testPath": "atomic_workbench/anchors/per-tab-replay-e0734ba6/anchor.test.mjs"
+      "testPath": "atomic_workbench/anchors/per-tab-replay-e0734ba6/anchor.test.ts"
     },
     {
       "anchorId": "H2U-ANCHOR-QUALITY-VERDICT-UTILS-1DA9B161",
@@ -9658,7 +9658,7 @@
       },
       "childCount": 11,
       "manifestPath": "atomic_workbench/anchors/quality-verdict-utils-1da9b161/anchor.manifest.json",
-      "testPath": "atomic_workbench/anchors/quality-verdict-utils-1da9b161/anchor.test.mjs"
+      "testPath": "atomic_workbench/anchors/quality-verdict-utils-1da9b161/anchor.test.ts"
     },
     {
       "anchorId": "H2U-ANCHOR-RUN-HTML-TO-UCUF-WORKFLOW-33D9A610",
@@ -9669,7 +9669,7 @@
       },
       "childCount": 3,
       "manifestPath": "atomic_workbench/anchors/run-html-to-ucuf-workflow-33d9a610/anchor.manifest.json",
-      "testPath": "atomic_workbench/anchors/run-html-to-ucuf-workflow-33d9a610/anchor.test.mjs"
+      "testPath": "atomic_workbench/anchors/run-html-to-ucuf-workflow-33d9a610/anchor.test.ts"
     },
     {
       "anchorId": "H2U-ANCHOR-RUNTIME-SYNC-E2B5B235",
@@ -9680,7 +9680,7 @@
       },
       "childCount": 3,
       "manifestPath": "atomic_workbench/anchors/runtime-sync-e2b5b235/anchor.manifest.json",
-      "testPath": "atomic_workbench/anchors/runtime-sync-e2b5b235/anchor.test.mjs"
+      "testPath": "atomic_workbench/anchors/runtime-sync-e2b5b235/anchor.test.ts"
     },
     {
       "anchorId": "H2U-ANCHOR-TEXT-CONTRACT-SYNC-B14BCEFF",
@@ -9691,7 +9691,7 @@
       },
       "childCount": 4,
       "manifestPath": "atomic_workbench/anchors/text-contract-sync-b14bceff/anchor.manifest.json",
-      "testPath": "atomic_workbench/anchors/text-contract-sync-b14bceff/anchor.test.mjs"
+      "testPath": "atomic_workbench/anchors/text-contract-sync-b14bceff/anchor.test.ts"
     },
     {
       "anchorId": "H2U-ANCHOR-TOKEN-GOVERNANCE-7DFB32FB",
@@ -9702,7 +9702,7 @@
       },
       "childCount": 8,
       "manifestPath": "atomic_workbench/anchors/token-governance-7dfb32fb/anchor.manifest.json",
-      "testPath": "atomic_workbench/anchors/token-governance-7dfb32fb/anchor.test.mjs"
+      "testPath": "atomic_workbench/anchors/token-governance-7dfb32fb/anchor.test.ts"
     },
     {
       "anchorId": "H2U-ANCHOR-WORKFLOW-MAIN-CF37CACF",
@@ -9713,7 +9713,7 @@
       },
       "childCount": 1,
       "manifestPath": "atomic_workbench/anchors/workflow-main-cf37cacf/anchor.manifest.json",
-      "testPath": "atomic_workbench/anchors/workflow-main-cf37cacf/anchor.test.mjs"
+      "testPath": "atomic_workbench/anchors/workflow-main-cf37cacf/anchor.test.ts"
     }
   ]
 }

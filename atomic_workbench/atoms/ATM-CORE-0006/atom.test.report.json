@@ -28,7 +28,7 @@
       {
         "commandId": "validation-1",
         "commandKind": "test",
-        "command": "node atomic_workbench/atoms/ATM-CORE-0006/atom.test.mjs",
+        "command": "node atomic_workbench/atoms/ATM-CORE-0006/atom.test.ts",
         "required": true
       }
     ]
@@ -101,7 +101,7 @@
         "C:/Users/User/3KLife/atomic_workbench/atoms/ATM-CORE-0006/atom.source.mjs"
       ],
       "tests": [
-        "C:/Users/User/3KLife/atomic_workbench/atoms/ATM-CORE-0006/atom.test.mjs"
+        "C:/Users/User/3KLife/atomic_workbench/atoms/ATM-CORE-0006/atom.test.ts"
       ]
     }
   },

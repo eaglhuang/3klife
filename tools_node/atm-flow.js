@@ -9,7 +9,7 @@ const { DEFAULT_H2U_BASELINE_WORKTREE_STATUS_FILE, DEFAULT_H2U_STATUS_SNAPSHOT_O
 const ROOT = path.resolve(__dirname, '..');
 const VALID_MODES = new Set(['dev', 'pr', 'release']);
 const VALID_ATOMIZE_CONSENT = new Set(['ask', 'yes', 'no']);
-const ATOMIZE_CODE_FILE_PATTERN = /\.(js|mjs|ts)$/i;
+const ATOMIZE_CODE_FILE_PATTERN = /\.(js|mjs|ts|mts)$/i;
 const ATOMIZE_IGNORED_PREFIXES = ['node_modules/', 'artifacts/', 'library/', 'temp/', '.git/'];
 
 const H2U_PATH_PATTERNS = [

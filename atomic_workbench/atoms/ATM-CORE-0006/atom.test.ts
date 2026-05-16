@@ -96,7 +96,7 @@ runLegacyFixture(fixtures.legacy);
 const durationMs = Date.now() - startedAt;
 const specHash = sha256ForFile(specPath);
 const codeHash = sha256ForFiles([sourcePath]);
-const testHash = sha256ForFiles([path.join(atomRoot, 'atom.test.mjs')]);
+const testHash = sha256ForFiles([path.join(atomRoot, 'atom.test.ts')]);
 const report = {
   schemaId: 'atm.testReport',
   specVersion: '0.1.0',
@@ -127,7 +127,7 @@ const report = {
       {
         commandId: 'validation-1',
         commandKind: 'test',
-        command: 'node atomic_workbench/atoms/ATM-CORE-0006/atom.test.mjs',
+        command: 'node atomic_workbench/atoms/ATM-CORE-0006/atom.test.ts',
         required: true
       }
     ]
@@ -147,7 +147,7 @@ const report = {
     sourcePaths: {
       spec: specPath.replace(/\\/g, '/'),
       code: [sourcePath.replace(/\\/g, '/')],
-      tests: [path.join(atomRoot, 'atom.test.mjs').replace(/\\/g, '/')]
+      tests: [path.join(atomRoot, 'atom.test.ts').replace(/\\/g, '/')]
     }
   },
   artifacts: [

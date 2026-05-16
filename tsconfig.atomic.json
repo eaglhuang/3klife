@@ -1,0 +1,32 @@
+{
+  /**
+   * tsconfig.atomic.json — atomic_workbench TypeScript 型別檢查設定
+   *
+   * 覆蓋範圍：
+   *   - atomic_workbench/**\/*.ts  （capsule / anchor / atom / map test 檔 + spec stub）
+   *
+   * atomic_workbench/package.json 設有 "type": "module"，.ts 即為 ESM。
+   *
+   * 不繼承 Cocos tsconfig，也不影響主遊戲編譯流程。
+   *
+   * 執行型別檢查：
+   *   tsc --project tsconfig.atomic.json
+   *
+   * 執行單一 test（Node 24 native strip-types）：
+   *   node --experimental-strip-types atomic_workbench/capsules/<name>/capsule.test.ts
+   */
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "strict": false,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["node"],
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "include": [
+    "atomic_workbench/**/*.ts"
+  ]
+}

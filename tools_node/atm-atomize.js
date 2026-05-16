@@ -1242,9 +1242,9 @@ function syncPromotedCapsuleToRegistry(registryPath, manifest, capsuleDir) {
     location: {
       manifestPath: rel(path.join(capsuleDir, 'capsule.manifest.json')),
       capsuleDir: rel(capsuleDir),
-      testPath: rel(path.join(capsuleDir, 'capsule.test.mjs')),
-      behaviorTestPath: fs.existsSync(path.join(capsuleDir, 'capsule.behavior.test.mjs'))
-        ? rel(path.join(capsuleDir, 'capsule.behavior.test.mjs'))
+      testPath: rel(path.join(capsuleDir, 'capsule.test.ts')),
+      behaviorTestPath: fs.existsSync(path.join(capsuleDir, 'capsule.behavior.test.ts'))
+        ? rel(path.join(capsuleDir, 'capsule.behavior.test.ts'))
         : null,
     },
     lineage: manifest.lineage,
@@ -1324,14 +1324,14 @@ function buildCapsuleIndexFromState(workbenchRoot, candidateReportPath) {
   const manifests = collectCapsuleRoots(capsuleRoot).map((capsuleDir) => ({
     capsuleDir,
     manifestPath: path.join(capsuleDir, 'capsule.manifest.json'),
-    testPath: path.join(capsuleDir, 'capsule.test.mjs'),
-    behaviorTestPath: path.join(capsuleDir, 'capsule.behavior.test.mjs'),
+    testPath: path.join(capsuleDir, 'capsule.test.ts'),
+    behaviorTestPath: path.join(capsuleDir, 'capsule.behavior.test.ts'),
     manifest: readJson(path.join(capsuleDir, 'capsule.manifest.json')),
   }));
   const anchors = collectAnchorRoots(anchorRoot).map((anchorDir) => ({
     anchorDir,
     manifestPath: path.join(anchorDir, 'anchor.manifest.json'),
-    testPath: path.join(anchorDir, 'anchor.test.mjs'),
+    testPath: path.join(anchorDir, 'anchor.test.ts'),
     manifest: readJson(path.join(anchorDir, 'anchor.manifest.json')),
   }));
   const summary = summarizeState(manifests.map((item) => item.manifest), anchors.map((item) => item.manifest));
@@ -1615,7 +1615,7 @@ function runCapsuleBehaviorTemplateCheck(capsuleRoot, manifest) {
   if (required.length === 0) {
     return { ok: true, findings };
   }
-  const behaviorTestPath = path.join(capsuleRoot, 'capsule.behavior.test.mjs');
+  const behaviorTestPath = path.join(capsuleRoot, 'capsule.behavior.test.ts');
   if (!fs.existsSync(behaviorTestPath)) {
     fail('behavior test template missing', { path: rel(behaviorTestPath) });
   }
@@ -1692,8 +1692,8 @@ function collectWorkbenchState(workbenchRoot) {
     return {
       capsuleDir,
       manifestPath,
-      testPath: path.join(capsuleDir, 'capsule.test.mjs'),
-      behaviorTestPath: path.join(capsuleDir, 'capsule.behavior.test.mjs'),
+      testPath: path.join(capsuleDir, 'capsule.test.ts'),
+      behaviorTestPath: path.join(capsuleDir, 'capsule.behavior.test.ts'),
       testsDir: path.join(capsuleDir, 'tests'),
       manifest: readJson(manifestPath),
     };
@@ -1703,7 +1703,7 @@ function collectWorkbenchState(workbenchRoot) {
     return {
       anchorDir,
       manifestPath,
-      testPath: path.join(anchorDir, 'anchor.test.mjs'),
+      testPath: path.join(anchorDir, 'anchor.test.ts'),
       manifest: readJson(manifestPath),
     };
   });
@@ -1968,7 +1968,7 @@ function runScaffold(args) {
   for (const anchorInfo of report.anchors || []) {
     const anchorDir = path.join(args.workbenchRoot, 'anchors', anchorInfo.moduleSlug);
     const manifestPath = path.join(anchorDir, 'anchor.manifest.json');
-    const testPath = path.join(anchorDir, 'anchor.test.mjs');
+    const testPath = path.join(anchorDir, 'anchor.test.ts');
     const anchorCandidates = (report.candidates || []).filter((item) => item.anchorId === anchorInfo.anchorId);
     const descriptor = {
       anchorId: anchorInfo.anchorId,
@@ -1992,8 +1992,8 @@ function runScaffold(args) {
   for (const candidate of report.candidates || []) {
     const capsuleDir = path.join(args.workbenchRoot, 'capsules', slug(candidate.symbolName));
     const manifestPath = path.join(capsuleDir, 'capsule.manifest.json');
-    const testPath = path.join(capsuleDir, 'capsule.test.mjs');
-    const behaviorTestPath = path.join(capsuleDir, 'capsule.behavior.test.mjs');
+    const testPath = path.join(capsuleDir, 'capsule.test.ts');
+    const behaviorTestPath = path.join(capsuleDir, 'capsule.behavior.test.ts');
     const manifest = buildCapsuleManifest(candidate);
     writeJson(manifestPath, manifest);
     writeText(testPath, buildCapsuleTest('capsule.manifest.json'));

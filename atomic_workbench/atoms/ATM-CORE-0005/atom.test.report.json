@@ -9,7 +9,7 @@
   "atomId": "ATM-CORE-0005",
   "ok": true,
   "exitCode": 0,
-  "generatedAt": "2026-05-11T14:13:41.474Z",
+  "generatedAt": "2026-05-16T17:36:06.100Z",
   "repositoryRoot": "C:/Users/User/3KLife",
   "specPath": "C:/Users/User/3KLife/specs/normalize-css-color.atom.json",
   "hashLock": {
@@ -28,7 +28,7 @@
       {
         "commandId": "validation-1",
         "commandKind": "test",
-        "command": "node atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs",
+        "command": "node atomic_workbench/atoms/ATM-CORE-0005/atom.test.ts",
         "required": true
       }
     ]
@@ -110,14 +110,14 @@
     "legacyPlanningId": "ATM-CORE-0005",
     "specHash": "sha256:d27318b84c343b90e38be020d547852351aa5c16aeb408d6f5ab4a1359db722f",
     "codeHash": "sha256:f5b9125212db663bd993cf81f868d6bf32ed180ccea2fe83db709f81c38e5377",
-    "testHash": "sha256:49a14556f5863cebf5e4feeb33cf24c8a446c1c667017bfe7b5a2adf758aaec9",
+    "testHash": "sha256:ffc15c884661203c35964b4d73ceec4e62df43f9029c24efd77aad122dfc890c",
     "sourcePaths": {
       "spec": "C:/Users/User/3KLife/specs/normalize-css-color.atom.json",
       "code": [
         "C:/Users/User/3KLife/atomic_workbench/atoms/ATM-CORE-0005/atom.source.mjs"
       ],
       "tests": [
-        "C:/Users/User/3KLife/atomic_workbench/atoms/ATM-CORE-0005/atom.test.mjs"
+        "C:/Users/User/3KLife/atomic_workbench/atoms/ATM-CORE-0005/atom.test.ts"
       ]
     }
   },
