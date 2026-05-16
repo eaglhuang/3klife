@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from repo_layout import pipeline_config_path, resolve_repo_root
+from sanguo_governance_loader import default_governance_root, load_relationship_runtime_canon_policy
 
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -24,6 +25,7 @@ DEFAULT_EVENT_QUESTION_SEEDS_PATH = Path(
 )
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/full-roster-scoreboard")
 DEFAULT_LANE_POLICY_CONFIG = pipeline_config_path(REPO_ROOT, "full-roster-lane-policy.json")
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 
 PROFILE_CHOICES = ("all", "female-priority", "history-romance")
 DEFAULT_LANE_THRESHOLDS = {
@@ -33,6 +35,28 @@ DEFAULT_LANE_THRESHOLDS = {
 }
 FEMALE_TOKENS = {"female", "f", "woman", "女", "女性"}
 MALE_TOKENS = {"male", "m", "man", "男", "男性"}
+A_HISTORY_GRADE_TYPE = "A-history"
+A_ROMANCE_GRADE_TYPE = "A-romance"
+READY_EVAL_GRADE_TYPES = {"A-history", "A-romance"}
+A_HISTORY_MIN_HISTORICAL_SCORE = 80.0
+A_ROMANCE_MIN_WORLDBUILDING_SCORE = 80.0
+
+
+def apply_relationship_runtime_canon_policy(governance_root: str | Path | None, relationship_policy: str | Path | None = None) -> None:
+    global A_HISTORY_GRADE_TYPE
+    global A_ROMANCE_GRADE_TYPE
+    global READY_EVAL_GRADE_TYPES
+    global A_HISTORY_MIN_HISTORICAL_SCORE
+    global A_ROMANCE_MIN_WORLDBUILDING_SCORE
+
+    policy = load_relationship_runtime_canon_policy(governance_root, relationship_policy=relationship_policy)
+    A_HISTORY_GRADE_TYPE = str(policy.get("scoreboardHistoryGradeType") or A_HISTORY_GRADE_TYPE)
+    A_ROMANCE_GRADE_TYPE = str(policy.get("scoreboardRomanceGradeType") or A_ROMANCE_GRADE_TYPE)
+    ready_types = policy.get("scoreboardReadyEvalGradeTypes")
+    if isinstance(ready_types, list):
+        READY_EVAL_GRADE_TYPES = {str(item).strip() for item in ready_types if str(item).strip()}
+    A_HISTORY_MIN_HISTORICAL_SCORE = float(policy.get("scoreboardHistoryMinHistoricalScore") or A_HISTORY_MIN_HISTORICAL_SCORE)
+    A_ROMANCE_MIN_WORLDBUILDING_SCORE = float(policy.get("scoreboardRomanceMinWorldbuildingScore") or A_ROMANCE_MIN_WORLDBUILDING_SCORE)
 
 
 def utc_now() -> str:
@@ -503,10 +527,12 @@ def review_grade(
     generic_candidate_count: int,
     missing_fields: list[str],
 ) -> tuple[str, str]:
-    if historical_score >= 80.0 and (distinct_history_family_count >= 2 or (event_count > 0 and external_history_count > 0)):
-        return "A", "A-history"
-    if worldbuilding_score >= 80.0 and (external_romance_count > 0 or external_worldbuilding_count > 0):
-        return "A", "A-romance"
+    if historical_score >= A_HISTORY_MIN_HISTORICAL_SCORE and (
+        distinct_history_family_count >= 2 or (event_count > 0 and external_history_count > 0)
+    ):
+        return "A", A_HISTORY_GRADE_TYPE
+    if worldbuilding_score >= A_ROMANCE_MIN_WORLDBUILDING_SCORE and external_romance_count > 0:
+        return "A", A_ROMANCE_GRADE_TYPE
     if historical_score >= 50.0 or worldbuilding_score >= 50.0:
         return "B", "B"
     if generic_candidate_count > 0 or missing_fields:
@@ -552,7 +578,7 @@ def next_lane(
 
 
 def promotion_state(grade: str, grade_type: str) -> str:
-    if grade == "A" and grade_type == "A-history":
+    if grade == "A" and grade_type in READY_EVAL_GRADE_TYPES:
         return "ready-eval"
     if grade in {"A", "B"}:
         return "staged"
@@ -843,6 +869,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--candidate-evidence-cards", action="append", default=[])
     parser.add_argument("--seed-ranking-json", action="append", default=[])
     parser.add_argument("--lane-policy-config", default=str(DEFAULT_LANE_POLICY_CONFIG))
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
+    parser.add_argument("--relationship-policy", default=None)
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--profile", choices=PROFILE_CHOICES, default="all")
     parser.add_argument("--pilot-only", action="store_true")
@@ -852,6 +880,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    apply_relationship_runtime_canon_policy(args.governance_root, args.relationship_policy)
     output_root = resolve_path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
 
@@ -1062,8 +1091,8 @@ def main() -> int:
             ),
             "gradeCounts": dict(sorted(grade_counts.items())),
             "laneCounts": dict(sorted(lane_counts.items())),
-            "aHistoryCount": sum(1 for row in rows if row.get("gradeType") == "A-history"),
-            "aRomanceCount": sum(1 for row in rows if row.get("gradeType") == "A-romance"),
+            "aHistoryCount": sum(1 for row in rows if row.get("gradeType") == A_HISTORY_GRADE_TYPE),
+            "aRomanceCount": sum(1 for row in rows if row.get("gradeType") == A_ROMANCE_GRADE_TYPE),
             "seedCount": sum(int(row.get("seedCount") or 0) for row in rows),
             "candidateCardCount": sum(int(row.get("cardCount") or 0) for row in rows),
             "relationshipEvidenceCount": sum(int(row.get("relationshipEvidenceCount") or 0) for row in rows),

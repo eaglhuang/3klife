@@ -15,6 +15,7 @@ from urllib.parse import quote, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
 from repo_layout import pipeline_config_path, pipeline_root, resolve_npc_brain_root, resolve_repo_root
+from sanguo_governance_loader import default_governance_root, load_relationship_runtime_canon_policy
 
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -27,6 +28,15 @@ DEFAULT_SCOREBOARD_JSON = Path(
     "full-roster-highway-wang-yi-female-fix-r1-r1/scoreboard/full-roster-scoreboard.json"
 )
 NPC_BRAIN_ROOT = resolve_npc_brain_root(REPO_ROOT)
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
+RELATIONSHIP_RUNTIME_CANON_POLICY = load_relationship_runtime_canon_policy(DEFAULT_GOVERNANCE_ROOT)
+RELATIONSHIP_POLICY_TEXT = (
+    RELATIONSHIP_RUNTIME_CANON_POLICY.get("policyText") if isinstance(RELATIONSHIP_RUNTIME_CANON_POLICY.get("policyText"), dict) else {}
+)
+A_ROMANCE_REVIEW_CAUTION_ZH_TW = str(
+    RELATIONSHIP_POLICY_TEXT.get("aRomanceReviewCautionZhTw")
+    or "這是演義層資料；《三國演義》本文可作本專案 canonical A-romance，但不要標成 A-history 史實。"
+)
 
 
 def resolve_default_cli(cli_name: str) -> Path:
@@ -556,7 +566,7 @@ def build_review_summary_zh_tw(row: dict[str, Any]) -> str:
     if len(quote) >= 80:
         caution_parts.append("句子偏長，建議先看前半句主語，再看後半句補述。")
     if source_layer == "romance":
-        caution_parts.append("這是演義層資料，可用來補世界觀，但不要直接當成 A-history。")
+        caution_parts.append(A_ROMANCE_REVIEW_CAUTION_ZH_TW)
     elif source_layer == "worldbuilding":
         caution_parts.append("這是整理/世界觀層資料，適合 seed 或 B 級旁證。")
     else:

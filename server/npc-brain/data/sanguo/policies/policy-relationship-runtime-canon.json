@@ -1,0 +1,99 @@
+{
+  "id": "Policy_RelationshipRuntimeCanon_P1",
+  "historySourceFamilies": [
+    "houhanshu",
+    "sanguozhi",
+    "zizhitongjian"
+  ],
+  "romanceSourceFamilies": [
+    "romance-mao-hant",
+    "sanguoyanyi"
+  ],
+  "promotableRelationshipTypes": [
+    "alliance_oath",
+    "betrayal_surrender",
+    "enemy_rival",
+    "mentor_student",
+    "parent_child",
+    "patron_client",
+    "ruler_subject",
+    "sibling",
+    "spouse",
+    "sworn_sibling"
+  ],
+  "stableBaselineSourceLayers": [
+    "stable-bootstrap-seed"
+  ],
+  "profileBaselineSourceLayers": [
+    "generals-parent-summary",
+    "stable-history-profile-baseline"
+  ],
+  "internalRomanceSourceLayers": [
+    "mao-hant-observed-mentions"
+  ],
+  "externalHistorySourceLayers": [
+    "external-history"
+  ],
+  "externalRomanceSourceLayers": [
+    "external-romance"
+  ],
+  "aHistoryGrades": [
+    "A-history",
+    "A-history-cross-source"
+  ],
+  "aRomanceGrades": [
+    "A-romance"
+  ],
+  "aCanonGrades": [
+    "A-history",
+    "A-history-cross-source",
+    "A-romance"
+  ],
+  "aBaselineGrades": [
+    "A-baseline"
+  ],
+  "stableRuntimeSourceLayers": [
+    "stable-bootstrap-seed",
+    "generals-parent-summary",
+    "claim-graph-a-history",
+    "claim-graph-a-romance"
+  ],
+  "scoreboardHistoryGradeType": "A-history",
+  "scoreboardRomanceGradeType": "A-romance",
+  "scoreboardReadyEvalGradeTypes": [
+    "A-history",
+    "A-romance"
+  ],
+  "scoreboardHistoryMinHistoricalScore": 80.0,
+  "scoreboardRomanceMinWorldbuildingScore": 80.0,
+  "relationshipClaimGraphOutputs": {
+    "all": "relationship-claims.jsonl",
+    "aHistory": "a-history-relationship-claims.jsonl",
+    "aRomance": "a-romance-relationship-claims.jsonl",
+    "aCanon": "a-canon-relationship-claims.jsonl",
+    "aBaseline": "a-baseline-relationship-claims.jsonl",
+    "romance": "romance-relationship-claims.jsonl",
+    "rejected": "rejected-relationship-claims.jsonl",
+    "summary": "relationship-claim-summary.json",
+    "audit": "relationship-claim-audit.md"
+  },
+  "gradeRank": {
+    "A-history": 90,
+    "A-history-cross-source": 90,
+    "A-romance": 90,
+    "A-baseline": 80,
+    "B-history": 60,
+    "B-history-profile-baseline": 45,
+    "B-romance": 40,
+    "B-secondary": 30
+  },
+  "policyText": {
+    "aHistoryRule": "A-history requires a primary history source family, direct pair signal, quote, locator, textHash, and cross/internal trust signal.",
+    "aHistoryCrossSourceRule": "A-history-cross-source requires the same ordered pair and refined relationship type from at least two history source families.",
+    "aRomanceRule": "A-romance is canonical A for project runtime when it comes from Romance of the Three Kingdoms / Mao-Hant romance with a concrete relationship type, quote, locator, and textHash; it is equal-rank runtime canon, but not labeled as historical fact.",
+    "aRomanceReviewCautionZhTw": "這是演義層資料；《三國演義》本文可作本專案 canonical A-romance，但不要標成 A-history 史實。",
+    "aCanonRule": "A-history, A-history-cross-source, and A-romance are equal-rank runtime canon; keep claimLayer/sourceFamily to separate history from romance.",
+    "profileBaselineRule": "Profile-derived relationship baselines stay B-history-profile-baseline; they are not treated as final source truth.",
+    "stableBootstrapRule": "Local curated hard relationships stay A-baseline until an external history claim with locator/hash confirms them."
+  }
+}

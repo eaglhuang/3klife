@@ -64,6 +64,17 @@ DEFAULT_EVENT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/events")
 DEFAULT_PERSONA_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/persona-cards")
 DEFAULT_RUNTIME_PROFILE_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/runtime-general-profiles")
 DEFAULT_CHAPTER_ROOT = Path("artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters")
+DEFAULT_RELATIONSHIP_RUNTIME_CANON_POLICY_MONOREPO_PATH = Path(
+    "server/npc-brain/data/sanguo/policies/policy-relationship-runtime-canon.json"
+)
+DEFAULT_RELATIONSHIP_RUNTIME_CANON_POLICY_LOCAL_PATH = Path("data/sanguo/policies/policy-relationship-runtime-canon.json")
+DEFAULT_STABLE_RELATIONSHIP_SOURCE_LAYERS = {
+    "stable-bootstrap-seed",
+    "generals-parent-summary",
+    "claim-graph-a-history",
+    "claim-graph-a-romance",
+}
+DEFAULT_A_CANON_RELATIONSHIP_GRADES = {"A-history", "A-history-cross-source", "A-romance"}
 PERSONA_VERSION = "general_persona_v2"
 LLM_HISTORY_PROVIDERS = {"gemini", "gemini_flash", "gemini_flash_lite", "local_llama"}
 SUPPORTED_LOCALES = set(LOCALE_INSTRUCTIONS.keys())
@@ -444,6 +455,7 @@ class NpcDialogueService:
             os.environ.get("NPC_RUNTIME_PROFILE_ROOT") or DEFAULT_RUNTIME_PROFILE_ROOT
         )
         event_root_path = event_root or Path(os.environ.get("NPC_EVENT_ROOT") or DEFAULT_EVENT_ROOT)
+        self.relationship_runtime_policy = self._load_relationship_runtime_canon_policy()
         self.store = RuntimeProfileStore(
             repo_root=self.repo_root,
             artifact_root=artifact_root_path,
@@ -463,6 +475,19 @@ class NpcDialogueService:
         self._chapter_paragraph_cache: dict[str, list[str]] = {}
         self._scene_chorus_cache: dict[str, SceneChorusLine] = {}
         self._scene_chorus_cache_lock = Lock()
+
+    def _load_relationship_runtime_canon_policy(self) -> dict[str, Any]:
+        candidates = [
+            self.repo_root / DEFAULT_RELATIONSHIP_RUNTIME_CANON_POLICY_MONOREPO_PATH,
+            self.repo_root / DEFAULT_RELATIONSHIP_RUNTIME_CANON_POLICY_LOCAL_PATH,
+        ]
+        path = next((candidate for candidate in candidates if candidate.exists()), candidates[0])
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+        if not isinstance(payload, dict):
+            raise ValueError(f"Relationship runtime canon policy must be an object: {path}")
+        if payload.get("id") != "Policy_RelationshipRuntimeCanon_P1":
+            raise ValueError(f"Unexpected relationship runtime canon policy id: {path}")
+        return payload
 
     def get_health(self) -> dict:
         provider_order = self.provider_router.provider_order
@@ -3388,11 +3413,19 @@ class NpcDialogueService:
 
     def _runtime_edge_is_stable_relationship(self, edge: dict[str, Any]) -> bool:
         source_layer = str(edge.get("sourceLayer") or "").strip()
-        return source_layer in {
-            "stable-bootstrap-seed",
-            "generals-parent-summary",
-            "claim-graph-a-history",
-        } or str(edge.get("claimGrade") or "") in {"A-history", "A-history-cross-source"}
+        source_layers = self.relationship_runtime_policy.get("stableRuntimeSourceLayers")
+        grades = self.relationship_runtime_policy.get("aCanonGrades")
+        stable_source_layers = (
+            {str(item).strip() for item in source_layers if str(item).strip()}
+            if isinstance(source_layers, list)
+            else DEFAULT_STABLE_RELATIONSHIP_SOURCE_LAYERS
+        )
+        a_canon_grades = (
+            {str(item).strip() for item in grades if str(item).strip()}
+            if isinstance(grades, list)
+            else DEFAULT_A_CANON_RELATIONSHIP_GRADES
+        )
+        return source_layer in stable_source_layers or str(edge.get("claimGrade") or "") in a_canon_grades
 
     def _runtime_actor_aliases(self, runtime_persona: dict[str, Any]) -> list[str]:
         display_name = str(runtime_persona.get("displayName") or "").strip()

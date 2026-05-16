@@ -147,6 +147,16 @@ def load_progress_runner_governance(
     }
 
 
+def load_relationship_runtime_canon_policy(
+    root: str | Path | None = None,
+    *,
+    relationship_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = Path(relationship_policy).resolve() if relationship_policy else _path(base, "policies", "policy-relationship-runtime-canon.json")
+    return read_governance_json(path, required_id="Policy_RelationshipRuntimeCanon_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
@@ -160,6 +170,7 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-stable-bootstrap.json", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "policies", "file": "policy-full-roster-runner.json", "consumer": "run_full_roster_convergence_loop.py"},
         {"section": "policies", "file": "policy-progress-advancement-runner.json", "consumer": "run_progress_advancement_loop.py"},
+        {"section": "policies", "file": "policy-relationship-runtime-canon.json", "consumer": "relationship runtime canon consumers"},
         {"section": "rules", "file": "rule-basic-profile-cues.json", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "rules", "file": "rule-location-extraction.json", "consumer": "run_progress_advancement_loop.py"},
         {"section": "schemas", "file": "schema-stable-bootstrap-payload.json", "consumer": "validate_sanguo_governance.py"},

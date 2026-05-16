@@ -12,6 +12,7 @@ from typing import Any
 
 from relationship_type_refinement import refine_relationship_type, relationship_type_family
 from repo_layout import pipeline_config_path
+from sanguo_governance_loader import default_governance_root, load_relationship_runtime_canon_policy
 
 
 def resolve_workspace_root(anchor_file: str | Path) -> Path:
@@ -31,6 +32,7 @@ DEFAULT_STABLE_BOOTSTRAP_PATH = Path(
 )
 DEFAULT_SOURCE_CONFIG_PATH = pipeline_config_path(REPO_ROOT, "external-evidence-sources.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/relationship-claim-graph")
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 DEFAULT_RELATIONSHIP_EDGE_PATTERNS = [
     "artifacts/data-pipeline/sanguo-rag/extracted/relationship-evidence/source-grounded-relationship-edges.jsonl",
     "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/*staged-relationship-evidence.jsonl",
@@ -62,6 +64,38 @@ INTERNAL_ROMANCE_LAYERS = {"mao-hant-observed-mentions"}
 EXTERNAL_HISTORY_LAYERS = {"external-history"}
 EXTERNAL_ROMANCE_LAYERS = {"external-romance"}
 A_HISTORY_GRADES = {"A-history", "A-history-cross-source"}
+A_ROMANCE_GRADES = {"A-romance"}
+A_CANON_GRADES = A_HISTORY_GRADES | A_ROMANCE_GRADES
+A_BASELINE_GRADES = {"A-baseline"}
+GRADE_RANK = {
+    "A-history": 90,
+    "A-history-cross-source": 90,
+    "A-romance": 90,
+    "A-baseline": 80,
+    "B-history": 60,
+    "B-history-profile-baseline": 45,
+    "B-romance": 40,
+    "B-secondary": 30,
+}
+RELATIONSHIP_OUTPUT_FILES = {
+    "all": "relationship-claims.jsonl",
+    "aHistory": "a-history-relationship-claims.jsonl",
+    "aRomance": "a-romance-relationship-claims.jsonl",
+    "aCanon": "a-canon-relationship-claims.jsonl",
+    "aBaseline": "a-baseline-relationship-claims.jsonl",
+    "romance": "romance-relationship-claims.jsonl",
+    "rejected": "rejected-relationship-claims.jsonl",
+    "summary": "relationship-claim-summary.json",
+    "audit": "relationship-claim-audit.md",
+}
+POLICY_TEXT = {
+    "aHistoryRule": "A-history requires a primary history source family, direct pair signal, quote, locator, textHash, and cross/internal trust signal.",
+    "aHistoryCrossSourceRule": "A-history-cross-source requires the same ordered pair and refined relationship type from at least two history source families.",
+    "aRomanceRule": "A-romance is canonical A for project runtime when it comes from Romance of the Three Kingdoms / Mao-Hant romance with a concrete relationship type, quote, locator, and textHash; it is equal-rank runtime canon, but not labeled as historical fact.",
+    "aCanonRule": "A-history, A-history-cross-source, and A-romance are equal-rank runtime canon; keep claimLayer/sourceFamily to separate history from romance.",
+    "profileBaselineRule": "Profile-derived relationship baselines stay B-history-profile-baseline; they are not treated as final source truth.",
+    "stableBootstrapRule": "Local curated hard relationships stay A-baseline until an external history claim with locator/hash confirms them.",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -78,8 +112,58 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--external-evidence-card-pattern", action="append", default=[])
     parser.add_argument("--no-default-external-evidence-cards", action="store_true")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
+    parser.add_argument("--relationship-policy", default=None)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
+
+
+def policy_set(policy: dict[str, Any], key: str, fallback: set[str]) -> set[str]:
+    values = policy.get(key)
+    if not isinstance(values, list):
+        return set(fallback)
+    return {str(item).strip() for item in values if str(item).strip()}
+
+
+def apply_relationship_runtime_canon_policy(governance_root: str | Path | None, relationship_policy: str | Path | None = None) -> None:
+    global HISTORY_SOURCE_FAMILIES
+    global ROMANCE_SOURCE_FAMILIES
+    global PROMOTABLE_HISTORY_TYPES
+    global STABLE_BASELINE_LAYERS
+    global PROFILE_BASELINE_LAYERS
+    global INTERNAL_ROMANCE_LAYERS
+    global EXTERNAL_HISTORY_LAYERS
+    global EXTERNAL_ROMANCE_LAYERS
+    global A_HISTORY_GRADES
+    global A_ROMANCE_GRADES
+    global A_CANON_GRADES
+    global A_BASELINE_GRADES
+    global GRADE_RANK
+    global RELATIONSHIP_OUTPUT_FILES
+    global POLICY_TEXT
+
+    policy = load_relationship_runtime_canon_policy(governance_root, relationship_policy=relationship_policy)
+    HISTORY_SOURCE_FAMILIES = policy_set(policy, "historySourceFamilies", HISTORY_SOURCE_FAMILIES)
+    ROMANCE_SOURCE_FAMILIES = policy_set(policy, "romanceSourceFamilies", ROMANCE_SOURCE_FAMILIES)
+    PROMOTABLE_HISTORY_TYPES = policy_set(policy, "promotableRelationshipTypes", PROMOTABLE_HISTORY_TYPES)
+    STABLE_BASELINE_LAYERS = policy_set(policy, "stableBaselineSourceLayers", STABLE_BASELINE_LAYERS)
+    PROFILE_BASELINE_LAYERS = policy_set(policy, "profileBaselineSourceLayers", PROFILE_BASELINE_LAYERS)
+    INTERNAL_ROMANCE_LAYERS = policy_set(policy, "internalRomanceSourceLayers", INTERNAL_ROMANCE_LAYERS)
+    EXTERNAL_HISTORY_LAYERS = policy_set(policy, "externalHistorySourceLayers", EXTERNAL_HISTORY_LAYERS)
+    EXTERNAL_ROMANCE_LAYERS = policy_set(policy, "externalRomanceSourceLayers", EXTERNAL_ROMANCE_LAYERS)
+    A_HISTORY_GRADES = policy_set(policy, "aHistoryGrades", A_HISTORY_GRADES)
+    A_ROMANCE_GRADES = policy_set(policy, "aRomanceGrades", A_ROMANCE_GRADES)
+    A_CANON_GRADES = policy_set(policy, "aCanonGrades", A_HISTORY_GRADES | A_ROMANCE_GRADES)
+    A_BASELINE_GRADES = policy_set(policy, "aBaselineGrades", A_BASELINE_GRADES)
+    rank_payload = policy.get("gradeRank")
+    if isinstance(rank_payload, dict):
+        GRADE_RANK = {str(key): int(value) for key, value in rank_payload.items()}
+    output_payload = policy.get("relationshipClaimGraphOutputs")
+    if isinstance(output_payload, dict):
+        RELATIONSHIP_OUTPUT_FILES = {**RELATIONSHIP_OUTPUT_FILES, **{str(key): str(value) for key, value in output_payload.items()}}
+    text_payload = policy.get("policyText")
+    if isinstance(text_payload, dict):
+        POLICY_TEXT = {**POLICY_TEXT, **{str(key): str(value) for key, value in text_payload.items()}}
 
 
 def utc_now() -> str:
@@ -317,11 +401,15 @@ def edge_has_pair_relation_cue(
                     has_connector = any(connector in between for connector in connectors)
                     cue_in_window = bool(cue.search(window))
                     cue_in_between = bool(cue.search(between))
+                    if rel_type in {"mentor_student", "patron_client", "ruler_subject"}:
+                        if has_connector and cue_in_between:
+                            return True
+                        continue
                     if has_connector and cue_in_window:
                         return True
                     if rel_type == "enemy_rival" and cue_in_between:
                         return True
-                    if rel_type in {"parent_child", "spouse", "sibling", "sworn_sibling"} and cue_in_window:
+                    if rel_type in {"parent_child", "spouse", "sibling", "sworn_sibling"} and cue_in_between:
                         return True
     return False
 
@@ -341,6 +429,14 @@ def override_broad_type_from_pair_cue(
 def has_quote_locator_hash(row: dict[str, Any]) -> bool:
     quote = str(row.get("quote") or row.get("sourceQuote") or row.get("evidenceText") or "").strip()
     return len(quote) >= 8 and bool(row.get("locator")) and bool(row.get("textHash"))
+
+
+def claim_layer_for_grade(grade: str) -> str:
+    if grade in A_HISTORY_GRADES or "history" in grade:
+        return "history"
+    if grade in A_ROMANCE_GRADES or "romance" in grade:
+        return "romance"
+    return "relationship"
 
 
 def source_profile(edge: dict[str, Any], source_policy_index: dict[str, dict[str, Any]]) -> dict[str, str]:
@@ -434,7 +530,12 @@ def grade_claim(
     if is_romance:
         if quote_locator_hash:
             trace.append("quote-locator-hash")
-            return "A-romance", trace
+            if refined_type in PROMOTABLE_HISTORY_TYPES and (not pair_relation_required or pair_relation):
+                return "A-romance", trace
+            if refined_type not in PROMOTABLE_HISTORY_TYPES:
+                trace.append("non-promotable-romance-type")
+            if pair_relation_required and not pair_relation:
+                trace.append("missing-required-pair-relation")
         return "B-romance", trace
 
     return "B-secondary", trace
@@ -511,7 +612,7 @@ def normalize_edge_to_claim(
         "type": refined_type,
         "typeFamily": relationship_type_family(refined_type),
         "claimGrade": claim_grade,
-        "claimLayer": "history" if claim_grade.endswith("history") or "history" in claim_grade else "relationship",
+        "claimLayer": claim_layer_for_grade(claim_grade),
         "directPairSignal": direct_pair,
         "pairRelationSignal": pair_relation,
         "pairRelationRequired": pair_relation_required,
@@ -542,24 +643,14 @@ def normalize_edge_to_claim(
 
 def dedupe_claims(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     by_key: dict[tuple[str, str, str, str], dict[str, Any]] = {}
-    grade_rank = {
-        "A-history": 90,
-        "A-history-cross-source": 90,
-        "A-baseline": 80,
-        "A-romance": 70,
-        "B-history": 60,
-        "B-history-profile-baseline": 45,
-        "B-romance": 40,
-        "B-secondary": 30,
-    }
     for row in rows:
         key = claim_key(row)
         existing = by_key.get(key)
         if existing is None:
             by_key[key] = row
             continue
-        current_rank = grade_rank.get(str(row.get("claimGrade") or ""), 0)
-        existing_rank = grade_rank.get(str(existing.get("claimGrade") or ""), 0)
+        current_rank = GRADE_RANK.get(str(row.get("claimGrade") or ""), 0)
+        existing_rank = GRADE_RANK.get(str(existing.get("claimGrade") or ""), 0)
         if (current_rank, float(row.get("edgeConfidence") or 0.0)) > (
             existing_rank,
             float(existing.get("edgeConfidence") or 0.0),
@@ -587,7 +678,11 @@ def detect_conflicts(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             by_pair[key].append(row)
 
     for pair_key, pair_rows in by_pair.items():
-        strong_rows = [row for row in pair_rows if str(row.get("claimGrade") or "") in A_HISTORY_GRADES or row.get("claimGrade") == "A-baseline"]
+        strong_rows = [
+            row
+            for row in pair_rows
+            if str(row.get("claimGrade") or "") in A_CANON_GRADES or str(row.get("claimGrade") or "") in A_BASELINE_GRADES
+        ]
         if not strong_rows:
             continue
         strong_families = {str(row.get("typeFamily") or "") for row in strong_rows}
@@ -868,6 +963,8 @@ def render_markdown(summary: dict[str, Any], conflicts: list[dict[str, Any]]) ->
         f"- Generated At: `{summary['generatedAt']}`",
         f"- Claim Count: `{summary['metrics']['claimCount']}`",
         f"- A-History Claim Count: `{summary['metrics']['aHistoryClaimCount']}`",
+        f"- A-Romance Claim Count: `{summary['metrics']['aRomanceClaimCount']}`",
+        f"- A-Canon Claim Count: `{summary['metrics']['aCanonClaimCount']}`",
         f"- A-Baseline Claim Count: `{summary['metrics']['aBaselineClaimCount']}`",
         f"- Cross-Source Promotion Count: `{summary['metrics']['crossSourcePromotionCount']}`",
         f"- Rejected Count: `{summary['metrics']['rejectedCount']}`",
@@ -894,10 +991,18 @@ def render_markdown(summary: dict[str, Any], conflicts: list[dict[str, Any]]) ->
         if remaining > 0:
             lines.append(f"- `... {remaining} more`")
     lines.extend(["", "## Policy", ""])
-    lines.append("- `A-history` requires a primary history source family, direct pair signal, quote, locator, textHash, and cross/internal trust signal.")
-    lines.append("- `A-history-cross-source` requires the same ordered pair and refined relationship type from at least two history source families.")
-    lines.append("- Profile-derived relationship baselines stay `B-history-profile-baseline`; they are not treated as final source truth.")
-    lines.append("- Local curated hard relationships stay `A-baseline` until an external history claim with locator/hash confirms them.")
+    policy_lines = summary.get("policy") if isinstance(summary.get("policy"), dict) else {}
+    for key in [
+        "aHistoryRule",
+        "aHistoryCrossSourceRule",
+        "aRomanceRule",
+        "aCanonRule",
+        "profileBaselineRule",
+        "stableBootstrapRule",
+    ]:
+        text = str(policy_lines.get(key) or "").strip()
+        if text:
+            lines.append(f"- {text}")
     if conflicts:
         lines.extend(["", "## Conflicts", ""])
         for item in conflicts[:80]:
@@ -910,6 +1015,7 @@ def render_markdown(summary: dict[str, Any], conflicts: list[dict[str, Any]]) ->
 
 def main() -> int:
     args = parse_args()
+    apply_relationship_runtime_canon_policy(args.governance_root, args.relationship_policy)
     output_root = resolve_path(args.output_root)
     if output_root.exists() and any(output_root.iterdir()) and not args.overwrite:
         raise FileExistsError(f"output already exists: {repo_relative(output_root)}")
@@ -951,6 +1057,8 @@ def main() -> int:
     claims, cross_source_promotions = promote_cross_source_history_claims(claims)
     conflicts = detect_conflicts(claims)
     a_history = [row for row in claims if str(row.get("claimGrade") or "") in A_HISTORY_GRADES]
+    a_romance = [row for row in claims if str(row.get("claimGrade") or "") in A_ROMANCE_GRADES]
+    a_canon = [row for row in claims if str(row.get("claimGrade") or "") in A_CANON_GRADES]
     a_baseline = [row for row in claims if row.get("claimGrade") == "A-baseline"]
     romance = [row for row in claims if "romance" in str(row.get("claimGrade") or "")]
 
@@ -972,13 +1080,15 @@ def main() -> int:
             "externalEvidenceCardPaths": [repo_relative(path) for path in external_card_paths],
         },
         "outputs": {
-            "relationshipClaims": repo_relative(output_root / "relationship-claims.jsonl"),
-            "aHistoryRelationshipClaims": repo_relative(output_root / "a-history-relationship-claims.jsonl"),
-            "aBaselineRelationshipClaims": repo_relative(output_root / "a-baseline-relationship-claims.jsonl"),
-            "romanceRelationshipClaims": repo_relative(output_root / "romance-relationship-claims.jsonl"),
-            "rejectedRelationshipClaims": repo_relative(output_root / "rejected-relationship-claims.jsonl"),
-            "summary": repo_relative(output_root / "relationship-claim-summary.json"),
-            "audit": repo_relative(output_root / "relationship-claim-audit.md"),
+            "relationshipClaims": repo_relative(output_root / RELATIONSHIP_OUTPUT_FILES["all"]),
+            "aHistoryRelationshipClaims": repo_relative(output_root / RELATIONSHIP_OUTPUT_FILES["aHistory"]),
+            "aRomanceRelationshipClaims": repo_relative(output_root / RELATIONSHIP_OUTPUT_FILES["aRomance"]),
+            "aCanonRelationshipClaims": repo_relative(output_root / RELATIONSHIP_OUTPUT_FILES["aCanon"]),
+            "aBaselineRelationshipClaims": repo_relative(output_root / RELATIONSHIP_OUTPUT_FILES["aBaseline"]),
+            "romanceRelationshipClaims": repo_relative(output_root / RELATIONSHIP_OUTPUT_FILES["romance"]),
+            "rejectedRelationshipClaims": repo_relative(output_root / RELATIONSHIP_OUTPUT_FILES["rejected"]),
+            "summary": repo_relative(output_root / RELATIONSHIP_OUTPUT_FILES["summary"]),
+            "audit": repo_relative(output_root / RELATIONSHIP_OUTPUT_FILES["audit"]),
         },
         "metrics": {
             "rawEdgeCount": len(raw_edges),
@@ -986,6 +1096,8 @@ def main() -> int:
             "externalEvidenceCardKeyCount": len(external_card_index),
             "claimCount": len(claims),
             "aHistoryClaimCount": len(a_history),
+            "aRomanceClaimCount": len(a_romance),
+            "aCanonClaimCount": len(a_canon),
             "aBaselineClaimCount": len(a_baseline),
             "romanceClaimCount": len(romance),
             "rejectedCount": len(rejected),
@@ -996,28 +1108,27 @@ def main() -> int:
             "sourceLayerCounts": dict(sorted(source_layer_counts.items())),
             "relationshipTypeCounts": dict(sorted(type_counts.items())),
         },
-        "policy": {
-            "aHistoryRule": "primary history source family + directPair + quote + locator + textHash + cross/internal trust signal; or strict same pair/type confirmed by two history source families",
-            "profileBaselineRule": "profile-derived rows stay B-history-profile-baseline and are not consumed as final relationship truth",
-            "stableBootstrapRule": "curated hard rows stay A-baseline until external history confirms them",
-        },
+        "policy": POLICY_TEXT,
         "crossSourcePromotions": cross_source_promotions[:250],
         "conflicts": conflicts[:250],
     }
 
-    write_jsonl(output_root / "relationship-claims.jsonl", claims)
-    write_jsonl(output_root / "a-history-relationship-claims.jsonl", a_history)
-    write_jsonl(output_root / "a-baseline-relationship-claims.jsonl", a_baseline)
-    write_jsonl(output_root / "romance-relationship-claims.jsonl", romance)
-    write_jsonl(output_root / "rejected-relationship-claims.jsonl", rejected)
-    write_json(output_root / "relationship-claim-summary.json", summary)
-    (output_root / "relationship-claim-audit.md").write_text(render_markdown(summary, conflicts), encoding="utf-8")
+    write_jsonl(output_root / RELATIONSHIP_OUTPUT_FILES["all"], claims)
+    write_jsonl(output_root / RELATIONSHIP_OUTPUT_FILES["aHistory"], a_history)
+    write_jsonl(output_root / RELATIONSHIP_OUTPUT_FILES["aRomance"], a_romance)
+    write_jsonl(output_root / RELATIONSHIP_OUTPUT_FILES["aCanon"], a_canon)
+    write_jsonl(output_root / RELATIONSHIP_OUTPUT_FILES["aBaseline"], a_baseline)
+    write_jsonl(output_root / RELATIONSHIP_OUTPUT_FILES["romance"], romance)
+    write_jsonl(output_root / RELATIONSHIP_OUTPUT_FILES["rejected"], rejected)
+    write_json(output_root / RELATIONSHIP_OUTPUT_FILES["summary"], summary)
+    (output_root / RELATIONSHIP_OUTPUT_FILES["audit"]).write_text(render_markdown(summary, conflicts), encoding="utf-8")
 
-    print(f"[build_relationship_claim_graph] wrote {output_root / 'relationship-claims.jsonl'}")
-    print(f"[build_relationship_claim_graph] wrote {output_root / 'a-history-relationship-claims.jsonl'}")
+    print(f"[build_relationship_claim_graph] wrote {output_root / RELATIONSHIP_OUTPUT_FILES['all']}")
+    print(f"[build_relationship_claim_graph] wrote {output_root / RELATIONSHIP_OUTPUT_FILES['aHistory']}")
     print(
         "[build_relationship_claim_graph] "
-        f"claims={len(claims)} aHistory={len(a_history)} aBaseline={len(a_baseline)} rejected={len(rejected)}"
+        f"claims={len(claims)} aHistory={len(a_history)} aRomance={len(a_romance)} "
+        f"aCanon={len(a_canon)} aBaseline={len(a_baseline)} rejected={len(rejected)}"
     )
     return 0
 

@@ -12,6 +12,7 @@ from sanguo_governance_loader import (
     expected_governance_files,
     load_full_roster_runner_governance,
     load_progress_runner_governance,
+    load_relationship_runtime_canon_policy,
     load_stable_bootstrap_governance,
     read_governance_json,
     read_governance_jsonl,
@@ -46,6 +47,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     stable = load_stable_bootstrap_governance(root)
     full = load_full_roster_runner_governance(root)
     progress = load_progress_runner_governance(root)
+    relationship = load_relationship_runtime_canon_policy(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -56,6 +58,15 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         raise SanguoGovernanceError("policy-full-roster-runner transientHttpStatus cannot be empty")
     if not progress["locationRule"].get("fromCuePattern"):
         raise SanguoGovernanceError("rule-location-extraction fromCuePattern cannot be empty")
+    if "A-romance" not in (relationship.get("aCanonGrades") or []):
+        raise SanguoGovernanceError("policy-relationship-runtime-canon aCanonGrades must include A-romance")
+    if "claim-graph-a-romance" not in (relationship.get("stableRuntimeSourceLayers") or []):
+        raise SanguoGovernanceError("policy-relationship-runtime-canon stableRuntimeSourceLayers must include claim-graph-a-romance")
+    outputs = relationship.get("relationshipClaimGraphOutputs") if isinstance(relationship.get("relationshipClaimGraphOutputs"), dict) else {}
+    if not outputs.get("aCanon"):
+        raise SanguoGovernanceError("policy-relationship-runtime-canon relationshipClaimGraphOutputs.aCanon cannot be empty")
+    if "A-romance" not in (relationship.get("scoreboardReadyEvalGradeTypes") or []):
+        raise SanguoGovernanceError("policy-relationship-runtime-canon scoreboardReadyEvalGradeTypes must include A-romance")
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -69,6 +80,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "femaleProfileOverrideCount": len(stable["femaleProfileOverrides"]),
         "transientHttpStatusCount": len(full.get("transientHttpStatus") or []),
         "rootCauseGroupCount": len(progress["policy"].get("rootCauseGroups") or []),
+        "aCanonGradeCount": len(relationship.get("aCanonGrades") or []),
+        "stableRuntimeSourceLayerCount": len(relationship.get("stableRuntimeSourceLayers") or []),
     }
 
 

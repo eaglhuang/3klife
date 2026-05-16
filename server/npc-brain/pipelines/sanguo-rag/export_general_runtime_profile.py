@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from sanguo_governance_loader import default_governance_root, load_relationship_runtime_canon_policy
 
 DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
 DEFAULT_EVENT_QUESTION_SEEDS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/event-question-seeds/event-question-seeds.jsonl")
@@ -17,6 +18,7 @@ DEFAULT_STAGED_RELATIONSHIPS_PATH = Path("artifacts/data-pipeline/sanguo-rag/ext
 DEFAULT_CORE_REPORT_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/core-guanyu-boost-r1-after.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/runtime-general-profiles")
 DEFAULT_GENERAL_ID = "guan-yu"
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 
 TYPE_LABELS = {
     "sworn_sibling": "結義兄弟",
@@ -110,8 +112,9 @@ STABLE_RELATIONSHIP_SOURCE_LAYERS = {
     STABLE_RELATIONSHIP_SOURCE_LAYER,
     "generals-parent-summary",
     "claim-graph-a-history",
+    "claim-graph-a-romance",
 }
-A_HISTORY_RELATIONSHIP_GRADES = {"A-history", "A-history-cross-source"}
+A_CANON_RELATIONSHIP_GRADES = {"A-history", "A-history-cross-source", "A-romance"}
 RULER_SUBJECT_AUTHORITY_TERMS = (
     "麾下",
     "效忠",
@@ -191,8 +194,23 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--core-report", default=str(DEFAULT_CORE_REPORT_PATH))
     parser.add_argument("--review-answers", action="append", default=[])
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
+    parser.add_argument("--relationship-policy", default=None)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
+
+
+def apply_relationship_runtime_canon_policy(governance_root: str | Path | None, relationship_policy: str | Path | None = None) -> None:
+    global STABLE_RELATIONSHIP_SOURCE_LAYERS
+    global A_CANON_RELATIONSHIP_GRADES
+
+    policy = load_relationship_runtime_canon_policy(governance_root, relationship_policy=relationship_policy)
+    stable_layers = policy.get("stableRuntimeSourceLayers")
+    if isinstance(stable_layers, list):
+        STABLE_RELATIONSHIP_SOURCE_LAYERS = {str(item).strip() for item in stable_layers if str(item).strip()}
+    grades = policy.get("aCanonGrades")
+    if isinstance(grades, list):
+        A_CANON_RELATIONSHIP_GRADES = {str(item).strip() for item in grades if str(item).strip()}
 
 
 def utc_now() -> str:
@@ -335,7 +353,7 @@ def edge_compact_text(edge: dict[str, Any]) -> str:
 
 def is_stable_relationship_edge(edge: dict[str, Any]) -> bool:
     source_layer = str(edge.get("sourceLayer") or "").strip()
-    return source_layer in STABLE_RELATIONSHIP_SOURCE_LAYERS or str(edge.get("claimGrade") or "") in A_HISTORY_RELATIONSHIP_GRADES
+    return source_layer in STABLE_RELATIONSHIP_SOURCE_LAYERS or str(edge.get("claimGrade") or "") in A_CANON_RELATIONSHIP_GRADES
 
 
 def edge_has_authority_baseline_terms(edge: dict[str, Any]) -> bool:
@@ -914,6 +932,7 @@ def render_summary(general_id: str, persona: dict[str, Any], keywords: dict[str,
 
 def main() -> None:
     args = parse_args()
+    apply_relationship_runtime_canon_policy(args.governance_root, args.relationship_policy)
     general_id = args.general_id
     output_dir = Path(args.output_root) / general_id
     outputs = [output_dir / f"{general_id}.{suffix}.json" for suffix in ["persona", "keywords", "relationships"]]

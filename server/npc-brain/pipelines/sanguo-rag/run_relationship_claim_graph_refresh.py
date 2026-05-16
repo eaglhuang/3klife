@@ -10,6 +10,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from sanguo_governance_loader import default_governance_root, load_relationship_runtime_canon_policy
+
 def resolve_workspace_root(anchor_file: str | Path) -> Path:
     anchor = Path(anchor_file).resolve()
     start = anchor if anchor.is_dir() else anchor.parent
@@ -24,6 +26,7 @@ PIPELINE_ROOT = Path(__file__).resolve().parent
 DEFAULT_RUNTIME_PROFILE_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/runtime-general-profiles")
 DEFAULT_LOCK_PATH = Path("artifacts/data-pipeline/sanguo-rag/.locks/relationship-claim-graph-refresh.lock")
 DEFAULT_REPORT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/relationship-claim-graph")
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 DEFAULT_GENERAL_IDS = [
     "cao-cao",
     "guan-yu",
@@ -45,11 +48,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--runtime-profile-root", default=str(DEFAULT_RUNTIME_PROFILE_ROOT))
     parser.add_argument("--lock-path", default=str(DEFAULT_LOCK_PATH))
     parser.add_argument("--report-root", default=str(DEFAULT_REPORT_ROOT))
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
+    parser.add_argument("--relationship-policy", default=None)
     parser.add_argument("--step-timeout-seconds", type=int, default=60)
     parser.add_argument("--export-timeout-seconds", type=int, default=15)
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--skip-readiness", action="store_true")
     return parser.parse_args()
+
+
+def relationship_policy_args(args: argparse.Namespace) -> list[str]:
+    values = ["--governance-root", str(args.governance_root)]
+    if args.relationship_policy:
+        values.extend(["--relationship-policy", str(args.relationship_policy)])
+    return values
 
 
 def utc_now() -> str:
@@ -222,13 +234,17 @@ def main() -> int:
         try:
             common = [sys.executable]
             overwrite = ["--overwrite"] if args.overwrite else []
-            a_history_claims_path = report_root / "a-history-relationship-claims.jsonl"
+            relationship_policy = load_relationship_runtime_canon_policy(args.governance_root, relationship_policy=args.relationship_policy)
+            outputs = relationship_policy.get("relationshipClaimGraphOutputs") if isinstance(relationship_policy.get("relationshipClaimGraphOutputs"), dict) else {}
+            a_canon_claims_path = report_root / str(outputs.get("aCanon") or "a-canon-relationship-claims.jsonl")
+            policy_args = relationship_policy_args(args)
             steps.append(
                 run_step(
                     "build-relationship-claim-graph",
                     [
                         *common,
                         str(PIPELINE_ROOT / "build_relationship_claim_graph.py"),
+                        *policy_args,
                         *overwrite,
                     ],
                     timeout_seconds=args.step_timeout_seconds,
@@ -241,7 +257,9 @@ def main() -> int:
                         *common,
                         str(PIPELINE_ROOT / "build_stable_knowledge_bootstrap.py"),
                         "--relationship-claim-graph",
-                        str(a_history_claims_path),
+                        str(a_canon_claims_path),
+                        "--governance-root",
+                        str(args.governance_root),
                         *overwrite,
                     ],
                     timeout_seconds=args.step_timeout_seconds,
@@ -256,6 +274,7 @@ def main() -> int:
                             str(PIPELINE_ROOT / "export_general_runtime_profile.py"),
                             "--general-id",
                             general_id,
+                            *policy_args,
                             *overwrite,
                         ],
                         timeout_seconds=args.export_timeout_seconds,
