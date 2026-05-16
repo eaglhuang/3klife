@@ -12,6 +12,7 @@ from typing import Any, Iterable
 from urllib.parse import urlparse
 
 from extract_harvested_page_evidence_seeds import (
+    apply_evidence_seed_text_normalization_rules,
     contains_cjk_text,
     contains_latin_text,
     to_simplified_hint,
@@ -24,6 +25,7 @@ from sanguo_governance_loader import (
     load_evidence_seed_direction_denoise_rules,
     load_evidence_seed_extraction_policy,
     load_evidence_seed_keyword_cue_rules,
+    load_evidence_seed_page_text_cleanup_rules,
 )
 
 
@@ -139,34 +141,8 @@ COMPOUND_SURNAMES = (
     "慕容",
 )
 
-TAIL_TRIM_MARKERS = ("Cookie", "Copyright", "ICP")
-NOISE_MARKERS = (
-    "維基文庫",
-    "维基文库",
-    "自由的圖書館",
-    "自由的图书馆",
-    "主菜單",
-    "主菜单",
-    "跳轉到內容",
-    "跳转到内容",
-    "移至側欄",
-    "移至侧栏",
-    "隨機作品",
-    "随机作品",
-    "創建賬號",
-    "创建账号",
-    "登入",
-    "登录",
-    "查看歷史",
-    "查看历史",
-    "頁面信息",
-    "页面信息",
-    "三國演義電子辭典",
-    "投票總數",
-    "总票数",
-    "熱門人物",
-    "热点人物",
-)
+TAIL_TRIM_MARKERS: tuple[str, ...] = ()
+NOISE_MARKERS: tuple[str, ...] = ()
 
 CJK_NAME_RE = re.compile(r"^[\u4e00-\u9fff]{2,12}$")
 COURTESY_ALIAS_RE = re.compile(r"^\u5b50[\u4e00-\u9fff]{1,2}$")
@@ -365,6 +341,31 @@ def apply_evidence_seed_direction_denoise_rules(
             globals()[constant_name] = int(value)
         else:
             raise ValueError(f"invalid relation direction rule kind={kind} for {constant_name}")
+
+
+def apply_evidence_seed_page_text_cleanup_rules(
+    governance_root: str | Path | None,
+    *,
+    page_text_cleanup_rules: str | Path | None = None,
+) -> None:
+    required_constants = (
+        "TAIL_TRIM_MARKERS",
+        "NOISE_MARKERS",
+    )
+    rows = load_evidence_seed_page_text_cleanup_rules(
+        governance_root,
+        page_text_cleanup_rules=page_text_cleanup_rules,
+    )
+    by_name = {
+        str(row.get("constantName") or ""): tuple(str(value) for value in row.get("value") or [])
+        for row in rows
+        if str(row.get("extractor") or "") == "genericPassage"
+    }
+    missing = [name for name in required_constants if not by_name.get(name)]
+    if missing:
+        raise ValueError(f"missing generic-passage cleanup rules: {', '.join(missing)}")
+    for name in required_constants:
+        globals()[name] = by_name[name]
 
 
 def load_scoreboard_rows(path: Path) -> list[dict[str, Any]]:
@@ -1253,6 +1254,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--evidence-seed-policy", default=None)
     parser.add_argument("--keyword-cue-rules", default=None)
     parser.add_argument("--relationship-direction-rules", default=None)
+    parser.add_argument("--text-normalization-rules", default=None)
+    parser.add_argument("--page-text-cleanup-rules", default=None)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -1264,6 +1267,14 @@ def main() -> int:
     apply_evidence_seed_direction_denoise_rules(
         args.governance_root,
         relationship_direction_rules=args.relationship_direction_rules,
+    )
+    apply_evidence_seed_text_normalization_rules(
+        args.governance_root,
+        text_normalization_rules=args.text_normalization_rules,
+    )
+    apply_evidence_seed_page_text_cleanup_rules(
+        args.governance_root,
+        page_text_cleanup_rules=args.page_text_cleanup_rules,
     )
     if args.source_class not in SOURCE_CLASSES:
         raise SystemExit(f"source-class not allowed by evidence seed governance policy: {args.source_class}")
@@ -1360,6 +1371,8 @@ def main() -> int:
             "evidenceSeedPolicy": str(args.evidence_seed_policy or "policy-evidence-seed-extraction.json"),
             "keywordCueRules": str(args.keyword_cue_rules or "rule-evidence-seed-keyword-cues.jsonl"),
             "relationshipDirectionRules": str(args.relationship_direction_rules or "rule-relationship-direction-denoise.jsonl"),
+            "textNormalizationRules": str(args.text_normalization_rules or "rule-text-normalization-replacements.jsonl"),
+            "pageTextCleanupRules": str(args.page_text_cleanup_rules or "rule-page-text-cleanup.jsonl"),
             "aliasNoiseDenylist": sorted(alias_noise_denylist),
         },
         "outputs": {

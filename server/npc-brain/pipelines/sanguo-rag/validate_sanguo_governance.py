@@ -14,6 +14,7 @@ from sanguo_governance_loader import (
     load_evidence_seed_extraction_policy,
     load_evidence_seed_direction_denoise_rules,
     load_evidence_seed_keyword_cue_rules,
+    load_evidence_seed_page_text_cleanup_rules,
     load_evidence_seed_text_normalization_rules,
     load_full_roster_runner_governance,
     load_progress_runner_governance,
@@ -58,6 +59,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     evidence_seed_extraction = load_evidence_seed_extraction_policy(root)
     evidence_keyword_cues = load_evidence_seed_keyword_cue_rules(root)
     relationship_direction_denoise_rules = load_evidence_seed_direction_denoise_rules(root)
+    page_text_cleanup_rules = load_evidence_seed_page_text_cleanup_rules(root)
     text_normalization_rules = load_evidence_seed_text_normalization_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
@@ -234,6 +236,40 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
                     raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} invalid regex: {exc}") from exc
         else:
             raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} unsupported kind: {kind}")
+    required_page_cleanup_rules = {
+        ("harvestedPage", "BODY_NOISE_MARKERS"),
+        ("harvestedPage", "BODY_TAIL_MARKERS"),
+        ("genericPassage", "TAIL_TRIM_MARKERS"),
+        ("genericPassage", "NOISE_MARKERS"),
+    }
+    cleanup_by_key: dict[tuple[str, str], dict[str, Any]] = {}
+    for row in page_text_cleanup_rules:
+        row_id = str(row.get("id") or "").strip()
+        extractor = str(row.get("extractor") or "").strip()
+        constant_name = str(row.get("constantName") or "").strip()
+        kind = str(row.get("kind") or "").strip()
+        value = row.get("value")
+        key = (extractor, constant_name)
+        if key not in required_page_cleanup_rules:
+            raise SanguoGovernanceError(
+                f"rule-page-text-cleanup unexpected rule: {extractor}.{constant_name} ({row_id or '<missing-id>'})"
+            )
+        if key in cleanup_by_key:
+            raise SanguoGovernanceError(f"rule-page-text-cleanup duplicate rule: {extractor}.{constant_name}")
+        if kind != "markerList":
+            raise SanguoGovernanceError(f"rule-page-text-cleanup {row_id or key} unsupported kind: {kind}")
+        if not isinstance(value, list) or not value:
+            raise SanguoGovernanceError(f"rule-page-text-cleanup {row_id or key} value must be non-empty list")
+        normalized = [str(item).strip() for item in value]
+        if any(not item for item in normalized):
+            raise SanguoGovernanceError(f"rule-page-text-cleanup {row_id or key} has blank marker")
+        if len(set(normalized)) != len(normalized):
+            raise SanguoGovernanceError(f"rule-page-text-cleanup {row_id or key} has duplicate marker")
+        cleanup_by_key[key] = row
+    missing_cleanup = sorted(required_page_cleanup_rules - cleanup_by_key.keys())
+    if missing_cleanup:
+        missing_text = ", ".join(f"{extractor}.{name}" for extractor, name in missing_cleanup)
+        raise SanguoGovernanceError(f"rule-page-text-cleanup missing rules: {missing_text}")
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -255,6 +291,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "evidenceSeedKeywordCueRuleCount": len(evidence_keyword_cues),
         "relationshipDirectionDenoiseRuleCount": len(relationship_direction_denoise_rules),
         "textNormalizationReplacementRuleCount": len(text_normalization_rules),
+        "pageTextCleanupRuleCount": len(page_text_cleanup_rules),
     }
 
 

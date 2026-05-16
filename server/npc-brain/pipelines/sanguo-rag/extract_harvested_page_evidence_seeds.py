@@ -16,6 +16,7 @@ from sanguo_governance_loader import (
     default_governance_root,
     load_evidence_seed_extraction_policy,
     load_evidence_seed_keyword_cue_rules,
+    load_evidence_seed_page_text_cleanup_rules,
     load_evidence_seed_text_normalization_rules,
 )
 
@@ -61,39 +62,9 @@ SOURCE_CONFLICT_KEYWORDS: tuple[str, ...] = ()
 
 WORLDBUILDING_KEYWORDS: tuple[str, ...] = ()
 
-BODY_NOISE_MARKERS = (
-    "历史人物网",
-    "歷史人物網",
-    "当前位置",
-    "當前位置",
-    "首页",
-    "首頁",
-    "上一篇",
-    "下一篇",
-    "版权声明",
-    "版權聲明",
-    "本文链接",
-    "本文鏈接",
-    "热搜历史人物",
-    "熱搜歷史人物",
-    "Copyright",
-    "ICP备",
-)
+BODY_NOISE_MARKERS: tuple[str, ...] = ()
 
-BODY_TAIL_MARKERS = (
-    "上一篇：",
-    "上一篇:",
-    "下一篇：",
-    "下一篇:",
-    "本文链接：",
-    "本文链接:",
-    "本文鏈接：",
-    "本文鏈接:",
-    "版权声明：",
-    "版权声明:",
-    "版權聲明：",
-    "版權聲明:",
-)
+BODY_TAIL_MARKERS: tuple[str, ...] = ()
 
 SIMPLIFIED_TO_TRADITIONAL = str.maketrans({})
 
@@ -357,6 +328,31 @@ def apply_evidence_seed_keyword_cue_rules(
     missing = [name for name in required_constants if not by_name.get(name)]
     if missing:
         raise ValueError(f"missing harvested-page keyword cue rules: {', '.join(missing)}")
+    for name in required_constants:
+        globals()[name] = by_name[name]
+
+
+def apply_evidence_seed_page_text_cleanup_rules(
+    governance_root: str | Path | None,
+    *,
+    page_text_cleanup_rules: str | Path | None = None,
+) -> None:
+    required_constants = (
+        "BODY_NOISE_MARKERS",
+        "BODY_TAIL_MARKERS",
+    )
+    rows = load_evidence_seed_page_text_cleanup_rules(
+        governance_root,
+        page_text_cleanup_rules=page_text_cleanup_rules,
+    )
+    by_name = {
+        str(row.get("constantName") or ""): tuple(str(value) for value in row.get("value") or [])
+        for row in rows
+        if str(row.get("extractor") or "") == "harvestedPage"
+    }
+    missing = [name for name in required_constants if not by_name.get(name)]
+    if missing:
+        raise ValueError(f"missing harvested-page cleanup rules: {', '.join(missing)}")
     for name in required_constants:
         globals()[name] = by_name[name]
 
@@ -1115,6 +1111,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--evidence-seed-policy", default=None)
     parser.add_argument("--keyword-cue-rules", default=None)
     parser.add_argument("--text-normalization-rules", default=None)
+    parser.add_argument("--page-text-cleanup-rules", default=None)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -1126,6 +1123,10 @@ def main() -> int:
     apply_evidence_seed_text_normalization_rules(
         args.governance_root,
         text_normalization_rules=args.text_normalization_rules,
+    )
+    apply_evidence_seed_page_text_cleanup_rules(
+        args.governance_root,
+        page_text_cleanup_rules=args.page_text_cleanup_rules,
     )
     pages_path = resolve_path(args.pages_jsonl)
     output_root = resolve_path(args.output_root)
@@ -1202,6 +1203,7 @@ def main() -> int:
             "evidenceSeedPolicy": str(args.evidence_seed_policy or "policy-evidence-seed-extraction.json"),
             "keywordCueRules": str(args.keyword_cue_rules or "rule-evidence-seed-keyword-cues.jsonl"),
             "textNormalizationRules": str(args.text_normalization_rules or "rule-text-normalization-replacements.jsonl"),
+            "pageTextCleanupRules": str(args.page_text_cleanup_rules or "rule-page-text-cleanup.jsonl"),
         },
         "outputs": {
             "manualSeedsJsonl": repo_relative(seeds_path),
