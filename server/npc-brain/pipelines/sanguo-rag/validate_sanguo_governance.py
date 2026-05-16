@@ -11,6 +11,7 @@ from sanguo_governance_loader import (
     SanguoGovernanceError,
     expected_governance_files,
     load_evidence_seed_extraction_policy,
+    load_evidence_seed_direction_denoise_rules,
     load_evidence_seed_keyword_cue_rules,
     load_full_roster_runner_governance,
     load_progress_runner_governance,
@@ -54,6 +55,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     source_event_packets = load_source_event_packet_policy(root)
     evidence_seed_extraction = load_evidence_seed_extraction_policy(root)
     evidence_keyword_cues = load_evidence_seed_keyword_cue_rules(root)
+    relationship_direction_denoise_rules = load_evidence_seed_direction_denoise_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -112,6 +114,55 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
             raise SanguoGovernanceError(f"rule-evidence-seed-keyword-cues blank keyword: {extractor}.{constant_name}")
         if len(set(normalized)) != len(normalized):
             raise SanguoGovernanceError(f"rule-evidence-seed-keyword-cues duplicate keyword: {extractor}.{constant_name}")
+    required_denoise_rules = {
+        "RELATIONSHIP_DIRECTION_HINTS",
+        "AMBIGUOUS_RELATION_ANCHORS",
+        "RELATION_DENSE_WINDOW_LIMIT",
+        "STRICT_KINSHIP_RELATION_LABELS",
+        "STRICT_KINSHIP_RELATION_RAW",
+    }
+    direction_by_name: dict[str, dict[str, Any]] = {}
+    for row in relationship_direction_denoise_rules:
+        row_id = str(row.get("id") or "").strip()
+        extractor = str(row.get("extractor") or "").strip()
+        constant_name = str(row.get("constantName") or "").strip()
+        if extractor and extractor != "genericPassage":
+            raise SanguoGovernanceError(f"rule-relationship-direction-denoise invalid extractor: {row_id or '<missing-id>'}")
+        if not constant_name:
+            raise SanguoGovernanceError("rule-relationship-direction-denoise requires constantName")
+        if constant_name in direction_by_name:
+            raise SanguoGovernanceError(
+                f"rule-relationship-direction-denoise duplicate constantName: {constant_name} ({row_id})"
+            )
+        direction_by_name[constant_name] = row
+    missing = sorted(required_denoise_rules - direction_by_name.keys())
+    if missing:
+        raise SanguoGovernanceError(
+            f"rule-relationship-direction-denoise missing constants: {', '.join(missing)}"
+        )
+    for constant_name in required_denoise_rules:
+        row = direction_by_name[constant_name]
+        kind = str(row.get("kind") or "").strip()
+        value = row.get("value")
+        row_id = str(row.get("id") or constant_name)
+        if kind == "pair":
+            if not isinstance(value, list) or not value:
+                raise SanguoGovernanceError(f"rule-relationship-direction-denoise {row_id} pair value must be non-empty list")
+            for pair in value:
+                if not isinstance(pair, list) or len(pair) != 2:
+                    raise SanguoGovernanceError(f"rule-relationship-direction-denoise {row_id} invalid pair entry: {pair}")
+                if not all(str(item).strip() for item in pair):
+                    raise SanguoGovernanceError(f"rule-relationship-direction-denoise {row_id} pair entry has blank item")
+        elif kind == "set":
+            if not isinstance(value, list) or not value:
+                raise SanguoGovernanceError(f"rule-relationship-direction-denoise {row_id} set value must be non-empty list")
+            if any(not str(item).strip() for item in value):
+                raise SanguoGovernanceError(f"rule-relationship-direction-denoise {row_id} set value has blank item")
+        elif kind == "int":
+            if not isinstance(value, int) or value <= 0:
+                raise SanguoGovernanceError(f"rule-relationship-direction-denoise {row_id} int value must be positive")
+        else:
+            raise SanguoGovernanceError(f"rule-relationship-direction-denoise {row_id} unsupported kind: {kind}")
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -131,6 +182,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "evidenceSeedRequiredSourceFieldCount": len(required_source_fields or []),
         "evidenceSeedGenericSourceClassCount": len(generic.get("sourceClasses") or []),
         "evidenceSeedKeywordCueRuleCount": len(evidence_keyword_cues),
+        "relationshipDirectionDenoiseRuleCount": len(relationship_direction_denoise_rules),
     }
 
 

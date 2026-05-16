@@ -21,6 +21,7 @@ from extract_harvested_page_evidence_seeds import (
 from repo_layout import pipeline_config_path, resolve_repo_root
 from sanguo_governance_loader import (
     default_governance_root,
+    load_evidence_seed_direction_denoise_rules,
     load_evidence_seed_extraction_policy,
     load_evidence_seed_keyword_cue_rules,
 )
@@ -120,6 +121,10 @@ RELATION_ANCHOR_DISTANCE_LIMIT = 24
 STRICT_KINSHIP_RELATION_LABELS = {"親屬", "手足", "族親", "宗親", "旁系親屬", "義親", "父子", "父女"}
 STRICT_KINSHIP_RELATION_RAW = {"父子", "父女", "兄", "弟", "姊", "妹", "族", "子", "父", "brother of", "sister of"}
 RELATION_DENSE_WINDOW_LIMIT = 6
+RELATIONSHIP_DIRECTION_HINTS: tuple[tuple[str, str], ...] = ()
+AMBIGUOUS_RELATION_ANCHORS: frozenset[str] = frozenset()
+STRICT_KINSHIP_RELATION_LABELS: frozenset[str] = frozenset()
+STRICT_KINSHIP_RELATION_RAW: frozenset[str] = frozenset()
 COMPOUND_SURNAMES = (
     "司馬",
     "诸葛",
@@ -316,6 +321,50 @@ def apply_evidence_seed_keyword_cue_rules(
         raise ValueError(f"missing generic-passage keyword cue rules: {', '.join(missing)}")
     for name in required_constants:
         globals()[name] = by_name[name]
+
+
+def apply_evidence_seed_direction_denoise_rules(
+    governance_root: str | Path | None,
+    *,
+    relationship_direction_rules: str | Path | None = None,
+) -> None:
+    required_constants = (
+        "RELATIONSHIP_DIRECTION_HINTS",
+        "AMBIGUOUS_RELATION_ANCHORS",
+        "STRICT_KINSHIP_RELATION_LABELS",
+        "STRICT_KINSHIP_RELATION_RAW",
+        "RELATION_DENSE_WINDOW_LIMIT",
+    )
+    rows = load_evidence_seed_direction_denoise_rules(
+        governance_root,
+        relationship_direction_denoise_rules=relationship_direction_rules,
+    )
+    by_name = {}
+    for row in rows:
+        if str(row.get("extractor") or "").strip() not in {"", "genericPassage"}:
+            continue
+        by_name[str(row.get("constantName") or "").strip()] = row
+    missing = [name for name in required_constants if name not in by_name]
+    if missing:
+        raise ValueError(f"missing generic-passage direction denoise rules: {', '.join(missing)}")
+    for row in rows:
+        constant_name = str(row.get("constantName") or "").strip()
+        kind = str(row.get("kind") or "").strip()
+        value = row.get("value")
+        if kind == "pair":
+            tuples = [tuple(map(str, item)) for item in (value or []) if isinstance(item, list)]
+            if not tuples:
+                raise ValueError(f"invalid relation direction pair value for {constant_name}")
+            globals()[constant_name] = tuple(tuples)
+        elif kind == "set":
+            values = tuple(sorted({str(value).strip() for value in (value or []) if str(value).strip()}))
+            if not values:
+                raise ValueError(f"invalid relation direction set value for {constant_name}")
+            globals()[constant_name] = frozenset(values)
+        elif kind == "int":
+            globals()[constant_name] = int(value)
+        else:
+            raise ValueError(f"invalid relation direction rule kind={kind} for {constant_name}")
 
 
 def load_scoreboard_rows(path: Path) -> list[dict[str, Any]]:
@@ -1203,6 +1252,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
     parser.add_argument("--evidence-seed-policy", default=None)
     parser.add_argument("--keyword-cue-rules", default=None)
+    parser.add_argument("--relationship-direction-rules", default=None)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -1211,6 +1261,10 @@ def main() -> int:
     args = parse_args()
     apply_evidence_seed_extraction_policy(args.governance_root, evidence_seed_policy=args.evidence_seed_policy)
     apply_evidence_seed_keyword_cue_rules(args.governance_root, keyword_cue_rules=args.keyword_cue_rules)
+    apply_evidence_seed_direction_denoise_rules(
+        args.governance_root,
+        relationship_direction_rules=args.relationship_direction_rules,
+    )
     if args.source_class not in SOURCE_CLASSES:
         raise SystemExit(f"source-class not allowed by evidence seed governance policy: {args.source_class}")
     pages_path = resolve_path(args.pages_jsonl)
@@ -1305,6 +1359,7 @@ def main() -> int:
             "governanceRoot": repo_relative(governance_root),
             "evidenceSeedPolicy": str(args.evidence_seed_policy or "policy-evidence-seed-extraction.json"),
             "keywordCueRules": str(args.keyword_cue_rules or "rule-evidence-seed-keyword-cues.jsonl"),
+            "relationshipDirectionRules": str(args.relationship_direction_rules or "rule-relationship-direction-denoise.jsonl"),
             "aliasNoiseDenylist": sorted(alias_noise_denylist),
         },
         "outputs": {
