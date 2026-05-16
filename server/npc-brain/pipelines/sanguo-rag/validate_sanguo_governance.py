@@ -10,6 +10,7 @@ from typing import Any
 
 from sanguo_governance_loader import (
     SanguoGovernanceError,
+    load_core_person_completion_policy,
     expected_governance_files,
     load_evidence_seed_extraction_policy,
     load_evidence_seed_direction_denoise_rules,
@@ -17,6 +18,7 @@ from sanguo_governance_loader import (
     load_evidence_seed_page_text_cleanup_rules,
     load_evidence_seed_text_normalization_rules,
     load_full_roster_runner_governance,
+    load_knowledge_completion_policy,
     load_progress_runner_governance,
     load_relationship_runtime_canon_policy,
     load_source_event_packet_policy,
@@ -50,6 +52,61 @@ def validate_expected_files(root: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def require_weight_sum(policy: dict[str, Any], field: str, expected_keys: set[str], label: str) -> dict[str, float]:
+    weights = policy.get(field)
+    if not isinstance(weights, dict):
+        raise SanguoGovernanceError(f"{label}.{field} must be object")
+    actual_keys = set(str(key) for key in weights)
+    if actual_keys != expected_keys:
+        missing = sorted(expected_keys - actual_keys)
+        extra = sorted(actual_keys - expected_keys)
+        raise SanguoGovernanceError(f"{label}.{field} key mismatch missing={missing} extra={extra}")
+    normalized = {str(key): float(value) for key, value in weights.items()}
+    total = round(sum(normalized.values()), 6)
+    if total != 100.0:
+        raise SanguoGovernanceError(f"{label}.{field} must sum to 100.0, actual={total}")
+    if any(value < 0 for value in normalized.values()):
+        raise SanguoGovernanceError(f"{label}.{field} cannot contain negative weight")
+    return normalized
+
+
+def require_ratio_weights(policy: dict[str, Any], field: str, expected_keys: set[str], label: str) -> dict[str, float]:
+    weights = policy.get(field)
+    if not isinstance(weights, dict):
+        raise SanguoGovernanceError(f"{label}.{field} must be object")
+    actual_keys = set(str(key) for key in weights)
+    if actual_keys != expected_keys:
+        missing = sorted(expected_keys - actual_keys)
+        extra = sorted(actual_keys - expected_keys)
+        raise SanguoGovernanceError(f"{label}.{field} key mismatch missing={missing} extra={extra}")
+    normalized = {str(key): float(value) for key, value in weights.items()}
+    if any(value < 0 for value in normalized.values()):
+        raise SanguoGovernanceError(f"{label}.{field} cannot contain negative weight")
+    return normalized
+
+
+def require_confidence_tiers(policy: dict[str, Any], field: str, label: str) -> list[dict[str, float]]:
+    tiers = policy.get(field)
+    if not isinstance(tiers, list) or not tiers:
+        raise SanguoGovernanceError(f"{label}.{field} must be non-empty list")
+    previous = 2.0
+    normalized: list[dict[str, float]] = []
+    for index, tier in enumerate(tiers):
+        if not isinstance(tier, dict):
+            raise SanguoGovernanceError(f"{label}.{field}[{index}] must be object")
+        min_confidence = float(tier.get("minConfidence"))
+        unit_weight = float(tier.get("unitWeight"))
+        if min_confidence <= 0 or min_confidence > 1:
+            raise SanguoGovernanceError(f"{label}.{field}[{index}].minConfidence must be within (0, 1]")
+        if unit_weight < 0:
+            raise SanguoGovernanceError(f"{label}.{field}[{index}].unitWeight cannot be negative")
+        if min_confidence >= previous:
+            raise SanguoGovernanceError(f"{label}.{field} must be sorted from high confidence to low confidence")
+        previous = min_confidence
+        normalized.append({"minConfidence": min_confidence, "unitWeight": unit_weight})
+    return normalized
+
+
 def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     stable = load_stable_bootstrap_governance(root)
     full = load_full_roster_runner_governance(root)
@@ -61,6 +118,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     relationship_direction_denoise_rules = load_evidence_seed_direction_denoise_rules(root)
     page_text_cleanup_rules = load_evidence_seed_page_text_cleanup_rules(root)
     text_normalization_rules = load_evidence_seed_text_normalization_rules(root)
+    knowledge_completion = load_knowledge_completion_policy(root)
+    core_person_completion = load_core_person_completion_policy(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -270,6 +329,79 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if missing_cleanup:
         missing_text = ", ".join(f"{extractor}.{name}" for extractor, name in missing_cleanup)
         raise SanguoGovernanceError(f"rule-page-text-cleanup missing rules: {missing_text}")
+    knowledge_component_keys = {
+        "sourceResolution",
+        "personFoundation",
+        "relationshipGraph",
+        "eventQuestionCoverage",
+        "taxonomyAngles",
+        "reviewValidation",
+        "femalePriority",
+        "pipelineReliability",
+    }
+    core_component_keys = {
+        "sourcePresence",
+        "profileFoundation",
+        "angleSeedCoverage",
+        "sourceEventPackets",
+        "relationshipEvidence",
+        "previewValidation",
+        "readyEvents",
+    }
+    knowledge_weights = require_weight_sum(
+        knowledge_completion,
+        "componentWeights",
+        knowledge_component_keys,
+        "policy-knowledge-completion-scoring",
+    )
+    core_weights = require_weight_sum(
+        core_person_completion,
+        "componentWeights",
+        core_component_keys,
+        "policy-core-person-completion-scoring",
+    )
+    angle_families = knowledge_completion.get("angleFamilies")
+    if not isinstance(angle_families, list) or not angle_families:
+        raise SanguoGovernanceError("policy-knowledge-completion-scoring angleFamilies must be non-empty list")
+    normalized_angle_families = [str(value).strip() for value in angle_families]
+    if any(not value for value in normalized_angle_families):
+        raise SanguoGovernanceError("policy-knowledge-completion-scoring angleFamilies cannot contain blank value")
+    if len(set(normalized_angle_families)) != len(normalized_angle_families):
+        raise SanguoGovernanceError("policy-knowledge-completion-scoring angleFamilies cannot contain duplicate value")
+    if int(knowledge_completion.get("relationshipTypeTarget") or 0) <= 0:
+        raise SanguoGovernanceError("policy-knowledge-completion-scoring relationshipTypeTarget must be positive")
+    require_confidence_tiers(knowledge_completion, "relationshipEvidenceTiers", "policy-knowledge-completion-scoring")
+    require_confidence_tiers(core_person_completion, "relationshipEvidenceTiers", "policy-core-person-completion-scoring")
+    require_ratio_weights(
+        knowledge_completion,
+        "personFoundationWeights",
+        {"identityCoverage", "basicProfileDepth", "roleCoverage", "missingCoverageScore"},
+        "policy-knowledge-completion-scoring",
+    )
+    require_ratio_weights(
+        knowledge_completion,
+        "relationshipGraphWeights",
+        {"volume", "breadth", "plainProposalWeight"},
+        "policy-knowledge-completion-scoring",
+    )
+    event_weights = require_ratio_weights(
+        knowledge_completion,
+        "eventQuestionCoverageWeights",
+        {"previewA", "previewB", "candidate", "seedUnitCap", "packetUnitCap"},
+        "policy-knowledge-completion-scoring",
+    )
+    if event_weights["seedUnitCap"] <= 0 or event_weights["packetUnitCap"] <= 0:
+        raise SanguoGovernanceError("policy-knowledge-completion-scoring event caps must be positive")
+    if int(core_person_completion.get("angleFamilyTarget") or 0) <= 0:
+        raise SanguoGovernanceError("policy-core-person-completion-scoring angleFamilyTarget must be positive")
+    denominators = core_person_completion.get("componentDenominators")
+    if not isinstance(denominators, dict) or any(float(value) <= 0 for value in denominators.values()):
+        raise SanguoGovernanceError("policy-core-person-completion-scoring componentDenominators must be positive")
+    profile_depth = core_person_completion.get("profileDepth")
+    if not isinstance(profile_depth, dict) or not profile_depth.get("fields") or float(profile_depth.get("perFieldIncrement") or 0) <= 0:
+        raise SanguoGovernanceError("policy-core-person-completion-scoring profileDepth must define fields and positive increment")
+    if set((core_person_completion.get("recommendedActionByComponent") or {}).keys()) != core_component_keys:
+        raise SanguoGovernanceError("policy-core-person-completion-scoring recommendedActionByComponent key mismatch")
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -292,6 +424,10 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "relationshipDirectionDenoiseRuleCount": len(relationship_direction_denoise_rules),
         "textNormalizationReplacementRuleCount": len(text_normalization_rules),
         "pageTextCleanupRuleCount": len(page_text_cleanup_rules),
+        "knowledgeCompletionComponentWeightCount": len(knowledge_weights),
+        "knowledgeCompletionAngleFamilyCount": len(normalized_angle_families),
+        "corePersonCompletionComponentWeightCount": len(core_weights),
+        "corePersonCompletionActionCount": len(core_person_completion.get("recommendedActionByComponent") or {}),
     }
 
 

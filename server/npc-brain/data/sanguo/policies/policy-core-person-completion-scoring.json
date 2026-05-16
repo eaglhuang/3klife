@@ -1,0 +1,89 @@
+{
+  "id": "Policy_CorePersonCompletionScoring_P2",
+  "description": "Sanguo core-person completion scoring, boost queue, and candidate confidence policy.",
+  "angleFamilyTarget": 11,
+  "profileCoverageScore": {
+    "plain-rich": 1.0,
+    "observed-only": 0.65,
+    "identity-only": 0.3
+  },
+  "componentWeights": {
+    "sourcePresence": 10.0,
+    "profileFoundation": 10.0,
+    "angleSeedCoverage": 20.0,
+    "sourceEventPackets": 20.0,
+    "relationshipEvidence": 15.0,
+    "previewValidation": 15.0,
+    "readyEvents": 10.0
+  },
+  "relationshipEvidenceTiers": [
+    {
+      "minConfidence": 0.8,
+      "unitWeight": 0.7
+    },
+    {
+      "minConfidence": 0.7,
+      "unitWeight": 0.45
+    },
+    {
+      "minConfidence": 0.6,
+      "unitWeight": 0.2
+    }
+  ],
+  "profileDepth": {
+    "fields": [
+      "roleActivityTags",
+      "aptitudeTags",
+      "affectTags",
+      "personalityTags",
+      "activitySeedHints",
+      "decisionWeightHints"
+    ],
+    "perFieldIncrement": 0.04
+  },
+  "componentDenominators": {
+    "seedTargetUnit": 0.35,
+    "sourceEventPackets": 120.0,
+    "relationshipEvidence": 8.0,
+    "previewValidation": 20.0,
+    "readyEvents": 5.0
+  },
+  "previewAnswerWeights": {
+    "A": 0.75,
+    "B": 0.25
+  },
+  "coreScoreWeights": {
+    "mentionLog": 3.0,
+    "seedSlot": 1.5,
+    "packetCount": 0.25,
+    "relationshipCount": 2.0,
+    "angleFamily": 2.0
+  },
+  "packetPriorityWeights": {
+    "strength": 10.0,
+    "angleFamily": 1.5,
+    "relationshipBonus": 4.0,
+    "relationshipBonusCap": 3
+  },
+  "packetStrengthPriority": {
+    "strong": 3.0,
+    "rich": 2.0,
+    "thin": 1.0
+  },
+  "packetStrengthConfidence": {
+    "strong": 0.72,
+    "rich": 0.62,
+    "thin": 0.52,
+    "default": 0.5
+  },
+  "recommendedActionByComponent": {
+    "previewValidation": "run_core_packet_review",
+    "readyEvents": "promote_reviewed_A_to_ready_events",
+    "relationshipEvidence": "extract_targeted_relationship_edges",
+    "sourceEventPackets": "expand_source_event_packet_coverage",
+    "angleSeedCoverage": "fill_missing_angle_seed_slots",
+    "profileFoundation": "enrich_basic_profile_sidecar",
+    "sourcePresence": "resolve_more_mentions"
+  },
+  "fallbackRecommendedAction": "maintain_current_pipeline"
+}

@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from sanguo_governance_loader import load_knowledge_completion_policy
+
 
 DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
 DEFAULT_OBSERVED_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-label-summary.json")
@@ -21,34 +23,37 @@ DEFAULT_SOURCE_EVENT_PACKETS_PATH = Path("artifacts/data-pipeline/sanguo-rag/ext
 DEFAULT_ROUNDS_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress")
 
-ANGLE_FAMILIES = [
-    "battle",
-    "relationship",
-    "female_interaction",
-    "affect_story",
-    "aptitude_talent",
-    "work_role",
-    "activity_seed",
-    "item_equipment",
-    "decision_weight",
-    "location_context",
-    "faction_timeline",
-]
-
-RELATIONSHIP_TYPE_TARGET = 11
-DEFAULT_WEIGHTS = {
-    "sourceResolution": 6.0,
-    "personFoundation": 12.0,
-    "relationshipGraph": 22.0,
-    "eventQuestionCoverage": 32.0,
-    "taxonomyAngles": 13.0,
-    "reviewValidation": 6.0,
-    "femalePriority": 5.0,
-    "pipelineReliability": 4.0,
-}
+ANGLE_FAMILIES: list[str] = []
+RELATIONSHIP_TYPE_TARGET = 0
+DEFAULT_WEIGHTS: dict[str, float] = {}
+SCORING_POLICY: dict[str, Any] = {}
 
 ROUND_PASS_PATTERN = re.compile(r"^(?P<prefix>.+)-a(?P<pass>\d+)$")
 ROUND_RERUN_PATTERN = re.compile(r"^(?P<base>.+)-rerun(?P<rerun>\d+)$")
+
+
+def apply_scoring_policy(policy: dict[str, Any]) -> None:
+    global ANGLE_FAMILIES, RELATIONSHIP_TYPE_TARGET, DEFAULT_WEIGHTS, SCORING_POLICY
+    SCORING_POLICY = policy
+    ANGLE_FAMILIES = [str(value) for value in policy.get("angleFamilies", [])]
+    RELATIONSHIP_TYPE_TARGET = int(policy.get("relationshipTypeTarget") or 0)
+    DEFAULT_WEIGHTS = {str(key): float(value) for key, value in (policy.get("componentWeights") or {}).items()}
+
+
+def policy_section(name: str) -> dict[str, Any]:
+    value = SCORING_POLICY.get(name)
+    return value if isinstance(value, dict) else {}
+
+
+def ratio_weight(section: str, key: str) -> float:
+    return float(policy_section(section).get(key) or 0.0)
+
+
+def confidence_unit(confidence: float) -> float:
+    for tier in SCORING_POLICY.get("relationshipEvidenceTiers") or []:
+        if confidence >= float(tier.get("minConfidence") or 0.0):
+            return float(tier.get("unitWeight") or 0.0)
+    return 0.0
 
 
 def parse_args() -> argparse.Namespace:
@@ -69,6 +74,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--target-event-slots", type=int, default=None, help="Full target event/question slots. Defaults to people * angle families.")
     parser.add_argument("--target-relationship-edges", type=int, default=None, help="Full target source-grounded relationship edges. Defaults to people * 3.")
     parser.add_argument("--target-female-profiles", type=int, default=None, help="High-priority female target. Defaults to current female profile count.")
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--knowledge-completion-policy", default=None, help="Override knowledge completion scoring policy JSON.")
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -299,12 +306,7 @@ def relationship_evidence_units(records: list[dict[str, Any]]) -> float:
     units = 0.0
     for record in records:
         confidence = float(record.get("edgeConfidence") or 0.0)
-        if confidence >= 0.8:
-            units += 0.7
-        elif confidence >= 0.7:
-            units += 0.45
-        elif confidence >= 0.6:
-            units += 0.2
+        units += confidence_unit(confidence)
     return units
 
 
@@ -330,7 +332,7 @@ def event_question_seed_units(records: list[dict[str, Any]]) -> float:
             continue
         seen_slots.add(slot_key)
         weight = float(record.get("eventQuestionUnitWeight") or 0.0)
-        units += min(0.35, max(0.0, weight))
+        units += min(ratio_weight("eventQuestionCoverageWeights", "seedUnitCap"), max(0.0, weight))
     return units
 
 
@@ -343,7 +345,7 @@ def source_event_packet_units(records: list[dict[str, Any]]) -> float:
             continue
         seen_packets.add(packet_id)
         weight = float(record.get("eventPacketUnitWeight") or 0.0)
-        units += min(0.4, max(0.0, weight))
+        units += min(ratio_weight("eventQuestionCoverageWeights", "packetUnitCap"), max(0.0, weight))
     return units
 
 
@@ -362,7 +364,10 @@ def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[
 
     people_count = int(stable_summary.get("identitySeedCount") or len(stable.get("identitySeeds") or []) or 0)
     target_event_slots = int(args.target_event_slots or max(1, people_count * len(ANGLE_FAMILIES)))
-    target_relationship_edges = int(args.target_relationship_edges or max(1, people_count * 3))
+    target_relationship_edges = int(
+        args.target_relationship_edges
+        or max(1, people_count * int(policy_section("targetDefaults").get("relationshipEdgesPerPerson") or 1))
+    )
     target_female_profiles = int(args.target_female_profiles or max(1, int(stable_summary.get("femalePriorityProfileCount") or 0)))
 
     resolved = float(observed.get("resolvedMentionCount") or 0)
@@ -375,11 +380,22 @@ def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[
     observed_only = float(coverage_counts.get("observed-only") or 0)
     identity_only = float(coverage_counts.get("identity-only") or 0)
     identity_coverage = safe_ratio(stable_summary.get("identitySeedCount") or 0, people_count)
-    basic_depth = safe_ratio(plain_rich + observed_only * 0.55 + identity_only * 0.20, people_count)
+    depth_weights = policy_section("basicProfileDepthWeights")
+    basic_depth = safe_ratio(
+        plain_rich * float(depth_weights.get("plainRich") or 0.0)
+        + observed_only * float(depth_weights.get("observedOnly") or 0.0)
+        + identity_only * float(depth_weights.get("identityOnly") or 0.0),
+        people_count,
+    )
     role_seed_count = float(stable_summary.get("socialRoleSeedCount") or 0) + float(stable_summary.get("autoSocialRoleSeedCount") or 0)
     role_coverage = safe_ratio(role_seed_count, people_count)
     missing_score = 1.0 - safe_ratio(stable_summary.get("missingCoverageCount") or 0, people_count)
-    person_foundation = clamp(identity_coverage * 0.25 + basic_depth * 0.45 + role_coverage * 0.20 + missing_score * 0.10)
+    person_foundation = clamp(
+        identity_coverage * ratio_weight("personFoundationWeights", "identityCoverage")
+        + basic_depth * ratio_weight("personFoundationWeights", "basicProfileDepth")
+        + role_coverage * ratio_weight("personFoundationWeights", "roleCoverage")
+        + missing_score * ratio_weight("personFoundationWeights", "missingCoverageScore")
+    )
 
     ready_relationships = float(stable_summary.get("relationshipEdgeCount") or 0)
     plain_relationships = float(stable_summary.get("plainRelationshipProposalCount") or 0)
@@ -387,10 +403,16 @@ def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[
     evidence_type_counts = relationship_evidence_type_counts(relationship_evidence)
     stable_relationship_types = set((stable_summary.get("relationshipTypeCounts") or {}).keys())
     relationship_types = stable_relationship_types | set(evidence_type_counts.keys())
-    relationship_volume = safe_ratio(ready_relationships + evidence_units + plain_relationships * 0.25, target_relationship_edges)
+    relationship_volume = safe_ratio(
+        ready_relationships + evidence_units + plain_relationships * ratio_weight("relationshipGraphWeights", "plainProposalWeight"),
+        target_relationship_edges,
+    )
     relationship_type_count = len(relationship_types)
     relationship_breadth = safe_ratio(relationship_type_count, RELATIONSHIP_TYPE_TARGET)
-    relationship_graph = clamp(relationship_volume * 0.75 + relationship_breadth * 0.25)
+    relationship_graph = clamp(
+        relationship_volume * ratio_weight("relationshipGraphWeights", "volume")
+        + relationship_breadth * ratio_weight("relationshipGraphWeights", "breadth")
+    )
 
     candidate_count = len(generic_candidates) + len(female_candidates)
     accepted_a = float(round_summary.get("acceptedA") or 0)
@@ -398,7 +420,14 @@ def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[
     ready_event_count = float(max(int(events_summary.get("readyEventCount") or 0), len(ready_events)))
     seed_units = event_question_seed_units(event_question_seeds)
     packet_units = source_event_packet_units(source_event_packets)
-    event_question_units = ready_event_count + accepted_a * 0.75 + review_b * 0.25 + candidate_count * 0.15 + seed_units + packet_units
+    event_question_units = (
+        ready_event_count
+        + accepted_a * ratio_weight("eventQuestionCoverageWeights", "previewA")
+        + review_b * ratio_weight("eventQuestionCoverageWeights", "previewB")
+        + candidate_count * ratio_weight("eventQuestionCoverageWeights", "candidate")
+        + seed_units
+        + packet_units
+    )
     event_question_coverage = safe_ratio(event_question_units, target_event_slots)
 
     ready_families = event_angle_families(ready_events)
@@ -409,9 +438,9 @@ def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[
     source_grounded_families = ready_families | candidate_families | seed_families | packet_families
     all_observed_families = source_grounded_families | sidecar_families
     taxonomy_angles = clamp(
-        safe_ratio(len(all_observed_families), len(ANGLE_FAMILIES)) * 0.20
-        + safe_ratio(len(source_grounded_families), len(ANGLE_FAMILIES)) * 0.35
-        + event_question_coverage * 0.45
+        safe_ratio(len(all_observed_families), len(ANGLE_FAMILIES)) * ratio_weight("taxonomyAngleWeights", "allObservedAngleBreadth")
+        + safe_ratio(len(source_grounded_families), len(ANGLE_FAMILIES)) * ratio_weight("taxonomyAngleWeights", "sourceGroundedAngleBreadth")
+        + event_question_coverage * ratio_weight("taxonomyAngleWeights", "eventQuestionCoverage")
     )
 
     total_answers = float(round_summary.get("totalAnswers") or 0)
@@ -422,7 +451,11 @@ def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[
         (round_summary.get("rawErrorCount") or 0) + (round_summary.get("timedOutStepCount") or 0),
         max(1.0, total_answer_attempts),
     )
-    review_validation = clamp(a_rate * 0.65 + sample_coverage * 0.25 + reliability_in_review * 0.10)
+    review_validation = clamp(
+        a_rate * ratio_weight("reviewValidationWeights", "previewARate")
+        + sample_coverage * ratio_weight("reviewValidationWeights", "sampledGeneralCoverage")
+        + reliability_in_review * ratio_weight("reviewValidationWeights", "reviewReliability")
+    )
 
     female_profile_count = float(stable_summary.get("femalePriorityProfileCount") or 0)
     female_profile_coverage = safe_ratio(female_profile_count, target_female_profiles)
@@ -433,13 +466,17 @@ def score_components(args: argparse.Namespace, round_paths: list[Path]) -> dict[
         female_counts.update(item.get("answerCounts") or {})
     female_total = sum(female_counts.values())
     female_a_rate = safe_ratio(float(female_counts.get("A") or 0), float(female_total))
-    female_priority = clamp(female_profile_coverage * 0.35 + female_validated_coverage * 0.35 + female_a_rate * 0.30)
+    female_priority = clamp(
+        female_profile_coverage * ratio_weight("femalePriorityWeights", "femaleProfileCoverage")
+        + female_validated_coverage * ratio_weight("femalePriorityWeights", "femaleValidatedCoverage")
+        + female_a_rate * ratio_weight("femalePriorityWeights", "femalePreviewARate")
+    )
 
     pipeline_reliability = clamp(
-        (1.0 if Path(args.stable_knowledge).exists() else 0.0) * 0.20
-        + (1.0 if Path(args.events_summary).exists() else 0.0) * 0.20
-        + reliability_in_review * 0.40
-        + (1.0 if round_paths else 0.0) * 0.20
+        (1.0 if Path(args.stable_knowledge).exists() else 0.0) * ratio_weight("pipelineReliabilityWeights", "stableKnowledgePresent")
+        + (1.0 if Path(args.events_summary).exists() else 0.0) * ratio_weight("pipelineReliabilityWeights", "eventsSummaryPresent")
+        + reliability_in_review * ratio_weight("pipelineReliabilityWeights", "reviewReliability")
+        + (1.0 if round_paths else 0.0) * ratio_weight("pipelineReliabilityWeights", "hasRoundPaths")
     )
 
     raw_scores = {
@@ -553,6 +590,12 @@ def render_markdown(report: dict[str, Any]) -> str:
 
 def main() -> None:
     args = parse_args()
+    apply_scoring_policy(
+        load_knowledge_completion_policy(
+            args.governance_root,
+            knowledge_completion_policy=args.knowledge_completion_policy,
+        )
+    )
     round_id = args.round_id or default_round_id()
     round_paths = [Path(path) for path in args.round_json] if args.round_json else latest_rounds(Path(args.rounds_root))
     completion = score_components(args, round_paths)

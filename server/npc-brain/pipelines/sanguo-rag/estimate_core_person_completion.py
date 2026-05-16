@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from sanguo_governance_loader import load_core_person_completion_policy
+
 
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
@@ -19,21 +21,30 @@ DEFAULT_READY_EVENTS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/e
 DEFAULT_ROUNDS_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress")
 
-ANGLE_FAMILY_TARGET = 11
-PROFILE_COVERAGE_SCORE = {
-    "plain-rich": 1.0,
-    "observed-only": 0.65,
-    "identity-only": 0.3,
-}
-COMPONENT_WEIGHTS = {
-    "sourcePresence": 10.0,
-    "profileFoundation": 10.0,
-    "angleSeedCoverage": 20.0,
-    "sourceEventPackets": 20.0,
-    "relationshipEvidence": 15.0,
-    "previewValidation": 15.0,
-    "readyEvents": 10.0,
-}
+ANGLE_FAMILY_TARGET = 0
+PROFILE_COVERAGE_SCORE: dict[str, float] = {}
+COMPONENT_WEIGHTS: dict[str, float] = {}
+SCORING_POLICY: dict[str, Any] = {}
+
+
+def apply_scoring_policy(policy: dict[str, Any]) -> None:
+    global ANGLE_FAMILY_TARGET, PROFILE_COVERAGE_SCORE, COMPONENT_WEIGHTS, SCORING_POLICY
+    SCORING_POLICY = policy
+    ANGLE_FAMILY_TARGET = int(policy.get("angleFamilyTarget") or 0)
+    PROFILE_COVERAGE_SCORE = {str(key): float(value) for key, value in (policy.get("profileCoverageScore") or {}).items()}
+    COMPONENT_WEIGHTS = {str(key): float(value) for key, value in (policy.get("componentWeights") or {}).items()}
+
+
+def policy_section(name: str) -> dict[str, Any]:
+    value = SCORING_POLICY.get(name)
+    return value if isinstance(value, dict) else {}
+
+
+def confidence_unit(confidence: float) -> float:
+    for tier in SCORING_POLICY.get("relationshipEvidenceTiers") or []:
+        if confidence >= float(tier.get("minConfidence") or 0.0):
+            return float(tier.get("unitWeight") or 0.0)
+    return 0.0
 
 
 def parse_args() -> argparse.Namespace:
@@ -50,6 +61,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--rounds-root", default=str(DEFAULT_ROUNDS_ROOT))
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--boost-per-person", type=int, default=12)
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--core-person-completion-policy", default=None, help="Override core person completion scoring policy JSON.")
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -174,7 +187,7 @@ def collect_metrics(args: argparse.Namespace) -> dict[str, Any]:
     relationships_by_source: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for edge in relationships:
         confidence = float(edge.get("edgeConfidence") or 0.0)
-        unit = 0.7 if confidence >= 0.8 else 0.45 if confidence >= 0.7 else 0.2 if confidence >= 0.6 else 0.0
+        unit = confidence_unit(confidence)
         refs = list(edge.get("evidenceRefs") or [])
         if refs:
             relationships_by_source[str(refs[0])].append(edge)
@@ -215,7 +228,14 @@ def core_score(general_id: str, metrics: dict[str, Any]) -> float:
     packet_count = metrics["packetCounts"][general_id]
     relationship_count = metrics["relationshipCounts"][general_id]
     family_count = len(metrics["seedFamilies"].get(general_id) or set())
-    return math.log1p(mentions) * 3.0 + seed_slots * 1.5 + packet_count * 0.25 + relationship_count * 2.0 + family_count * 2.0
+    weights = policy_section("coreScoreWeights")
+    return (
+        math.log1p(mentions) * float(weights.get("mentionLog") or 0.0)
+        + seed_slots * float(weights.get("seedSlot") or 0.0)
+        + packet_count * float(weights.get("packetCount") or 0.0)
+        + relationship_count * float(weights.get("relationshipCount") or 0.0)
+        + family_count * float(weights.get("angleFamily") or 0.0)
+    )
 
 
 def select_core_people(args: argparse.Namespace, metrics: dict[str, Any]) -> list[str]:
@@ -230,27 +250,30 @@ def profile_score(general_id: str, profiles: dict[str, dict[str, Any]]) -> float
     profile = profiles.get(general_id) or {}
     base = PROFILE_COVERAGE_SCORE.get(str(profile.get("coverageLevel") or ""), 0.0)
     depth = 0.0
-    for field in ["roleActivityTags", "aptitudeTags", "affectTags", "personalityTags", "activitySeedHints", "decisionWeightHints"]:
+    profile_depth = policy_section("profileDepth")
+    for field in profile_depth.get("fields") or []:
         if profile.get(field):
-            depth += 0.04
+            depth += float(profile_depth.get("perFieldIncrement") or 0.0)
     return min(1.0, base + depth)
 
 
 def preview_units(general_id: str, preview: dict[str, dict[str, Any]]) -> float:
     counts = (preview.get(general_id) or {}).get("answerCounts") or {}
-    return float(counts.get("A") or 0) * 0.75 + float(counts.get("B") or 0) * 0.25
+    answer_weights = policy_section("previewAnswerWeights")
+    return sum(float(counts.get(key) or 0) * float(weight or 0.0) for key, weight in answer_weights.items())
 
 
 def component_scores(general_id: str, metrics: dict[str, Any], max_mentions: int) -> dict[str, float]:
-    seed_target = ANGLE_FAMILY_TARGET * 0.35
+    denominators = policy_section("componentDenominators")
+    seed_target = ANGLE_FAMILY_TARGET * float(denominators.get("seedTargetUnit") or 0.0)
     return {
         "sourcePresence": min(1.0, math.log1p(metrics["mentionCounts"][general_id]) / max(1.0, math.log1p(max_mentions))),
         "profileFoundation": profile_score(general_id, metrics["profiles"]),
         "angleSeedCoverage": min(1.0, metrics["seedUnits"][general_id] / seed_target),
-        "sourceEventPackets": min(1.0, metrics["packetUnits"][general_id] / 120.0),
-        "relationshipEvidence": min(1.0, metrics["relationshipUnits"][general_id] / 8.0),
-        "previewValidation": min(1.0, preview_units(general_id, metrics["preview"]) / 20.0),
-        "readyEvents": min(1.0, metrics["readyEventCounts"][general_id] / 5.0),
+        "sourceEventPackets": min(1.0, metrics["packetUnits"][general_id] / float(denominators.get("sourceEventPackets") or 1.0)),
+        "relationshipEvidence": min(1.0, metrics["relationshipUnits"][general_id] / float(denominators.get("relationshipEvidence") or 1.0)),
+        "previewValidation": min(1.0, preview_units(general_id, metrics["preview"]) / float(denominators.get("previewValidation") or 1.0)),
+        "readyEvents": min(1.0, metrics["readyEventCounts"][general_id] / float(denominators.get("readyEvents") or 1.0)),
     }
 
 
@@ -262,26 +285,16 @@ def weighted_completion(scores: dict[str, float]) -> tuple[float, dict[str, floa
 def recommended_actions(scores: dict[str, float]) -> list[str]:
     gaps = sorted(((COMPONENT_WEIGHTS[key] * (1.0 - value), key) for key, value in scores.items()), reverse=True)
     actions = []
+    action_by_component = policy_section("recommendedActionByComponent")
     for gap, key in gaps:
         if gap < 1.0:
             continue
-        if key == "previewValidation":
-            actions.append("run_core_packet_review")
-        elif key == "readyEvents":
-            actions.append("promote_reviewed_A_to_ready_events")
-        elif key == "relationshipEvidence":
-            actions.append("extract_targeted_relationship_edges")
-        elif key == "sourceEventPackets":
-            actions.append("expand_source_event_packet_coverage")
-        elif key == "angleSeedCoverage":
-            actions.append("fill_missing_angle_seed_slots")
-        elif key == "profileFoundation":
-            actions.append("enrich_basic_profile_sidecar")
-        elif key == "sourcePresence":
-            actions.append("resolve_more_mentions")
+        action = str(action_by_component.get(key) or "").strip()
+        if action:
+            actions.append(action)
         if len(actions) >= 3:
             break
-    return actions or ["maintain_current_pipeline"]
+    return actions or [str(SCORING_POLICY.get("fallbackRecommendedAction") or "maintain_current_pipeline")]
 
 
 def build_person_reports(core_people: list[str], metrics: dict[str, Any]) -> list[dict[str, Any]]:
@@ -316,11 +329,17 @@ def build_person_reports(core_people: list[str], metrics: dict[str, Any]) -> lis
 
 
 def packet_priority(packet: dict[str, Any], person_report: dict[str, Any]) -> float:
-    strength = {"strong": 3.0, "rich": 2.0, "thin": 1.0}.get(str(packet.get("packetStrength") or ""), 0.0)
+    strength = policy_section("packetStrengthPriority").get(str(packet.get("packetStrength") or ""), 0.0)
     angle_count = len(packet.get("angleFamilies") or [])
-    relationship_bonus = min(3, int(packet.get("relationshipEdgeCount") or 0))
+    priority_weights = policy_section("packetPriorityWeights")
+    relationship_bonus = min(int(priority_weights.get("relationshipBonusCap") or 0), int(packet.get("relationshipEdgeCount") or 0))
     completion_gap = max(0.0, 100.0 - float(person_report.get("completionPercent") or 0.0)) / 100.0
-    return strength * 10.0 + angle_count * 1.5 + relationship_bonus * 4.0 + completion_gap
+    return (
+        float(strength or 0.0) * float(priority_weights.get("strength") or 0.0)
+        + angle_count * float(priority_weights.get("angleFamily") or 0.0)
+        + relationship_bonus * float(priority_weights.get("relationshipBonus") or 0.0)
+        + completion_gap
+    )
 
 
 def packet_candidate(packet: dict[str, Any], focus_general_id: str, focus_name: str, relationships: list[dict[str, Any]]) -> dict[str, Any]:
@@ -356,7 +375,10 @@ def packet_candidate(packet: dict[str, Any], focus_general_id: str, focus_name: 
         "roleActivityTags": ["source-role-candidate"] if "work_role" in angle_families else [],
         "activitySeedHints": ["source-activity-candidate"] if "activity_seed" in angle_families else [],
         "decisionWeightHints": ["source-decision-candidate"] if "decision_weight" in angle_families else [],
-        "confidence": {"strong": 0.72, "rich": 0.62, "thin": 0.52}.get(str(packet.get("packetStrength") or ""), 0.5),
+        "confidence": policy_section("packetStrengthConfidence").get(
+            str(packet.get("packetStrength") or ""),
+            policy_section("packetStrengthConfidence").get("default", 0.5),
+        ),
         "sourceRefs": [source_ref],
         "extractionMode": "core-source-event-packet-v1",
         "reviewStatus": "needs-review",
@@ -426,6 +448,12 @@ def render_markdown(report: dict[str, Any]) -> str:
 
 def main() -> None:
     args = parse_args()
+    apply_scoring_policy(
+        load_core_person_completion_policy(
+            args.governance_root,
+            core_person_completion_policy=args.core_person_completion_policy,
+        )
+    )
     output_root = Path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
     json_path = output_root / f"{args.round_id}.json"

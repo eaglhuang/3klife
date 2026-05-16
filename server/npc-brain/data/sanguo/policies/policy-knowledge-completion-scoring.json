@@ -1,0 +1,89 @@
+{
+  "id": "Policy_KnowledgeCompletionScoring_P2",
+  "description": "Sanguo knowledge-growth completion scoring weights, caps, and confidence tiers.",
+  "angleFamilies": [
+    "battle",
+    "relationship",
+    "female_interaction",
+    "affect_story",
+    "aptitude_talent",
+    "work_role",
+    "activity_seed",
+    "item_equipment",
+    "decision_weight",
+    "location_context",
+    "faction_timeline"
+  ],
+  "relationshipTypeTarget": 11,
+  "targetDefaults": {
+    "relationshipEdgesPerPerson": 3
+  },
+  "componentWeights": {
+    "sourceResolution": 6.0,
+    "personFoundation": 12.0,
+    "relationshipGraph": 22.0,
+    "eventQuestionCoverage": 32.0,
+    "taxonomyAngles": 13.0,
+    "reviewValidation": 6.0,
+    "femalePriority": 5.0,
+    "pipelineReliability": 4.0
+  },
+  "basicProfileDepthWeights": {
+    "plainRich": 1.0,
+    "observedOnly": 0.55,
+    "identityOnly": 0.2
+  },
+  "personFoundationWeights": {
+    "identityCoverage": 0.25,
+    "basicProfileDepth": 0.45,
+    "roleCoverage": 0.2,
+    "missingCoverageScore": 0.1
+  },
+  "relationshipEvidenceTiers": [
+    {
+      "minConfidence": 0.8,
+      "unitWeight": 0.7
+    },
+    {
+      "minConfidence": 0.7,
+      "unitWeight": 0.45
+    },
+    {
+      "minConfidence": 0.6,
+      "unitWeight": 0.2
+    }
+  ],
+  "relationshipGraphWeights": {
+    "volume": 0.75,
+    "breadth": 0.25,
+    "plainProposalWeight": 0.25
+  },
+  "eventQuestionCoverageWeights": {
+    "previewA": 0.75,
+    "previewB": 0.25,
+    "candidate": 0.15,
+    "seedUnitCap": 0.35,
+    "packetUnitCap": 0.4
+  },
+  "taxonomyAngleWeights": {
+    "allObservedAngleBreadth": 0.2,
+    "sourceGroundedAngleBreadth": 0.35,
+    "eventQuestionCoverage": 0.45
+  },
+  "reviewValidationWeights": {
+    "previewARate": 0.65,
+    "sampledGeneralCoverage": 0.25,
+    "reviewReliability": 0.1
+  },
+  "femalePriorityWeights": {
+    "femaleProfileCoverage": 0.35,
+    "femaleValidatedCoverage": 0.35,
+    "femalePreviewARate": 0.3
+  },
+  "pipelineReliabilityWeights": {
+    "stableKnowledgePresent": 0.2,
+    "eventsSummaryPresent": 0.2,
+    "reviewReliability": 0.4,
+    "hasRoundPaths": 0.2
+  }
+}

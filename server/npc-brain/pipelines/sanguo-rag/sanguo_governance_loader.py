@@ -250,6 +250,34 @@ def load_evidence_seed_page_text_cleanup_rules(
     )
 
 
+def load_knowledge_completion_policy(
+    root: str | Path | None = None,
+    *,
+    knowledge_completion_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(knowledge_completion_policy).resolve()
+        if knowledge_completion_policy
+        else _path(base, "policies", "policy-knowledge-completion-scoring.json")
+    )
+    return read_governance_json(path, required_id="Policy_KnowledgeCompletionScoring_P2")
+
+
+def load_core_person_completion_policy(
+    root: str | Path | None = None,
+    *,
+    core_person_completion_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(core_person_completion_policy).resolve()
+        if core_person_completion_policy
+        else _path(base, "policies", "policy-core-person-completion-scoring.json")
+    )
+    return read_governance_json(path, required_id="Policy_CorePersonCompletionScoring_P2")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
@@ -266,6 +294,8 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-relationship-runtime-canon.json", "consumer": "relationship runtime canon consumers"},
         {"section": "policies", "file": "policy-source-event-packets.json", "consumer": "build_source_event_packets.py"},
         {"section": "policies", "file": "policy-evidence-seed-extraction.json", "consumer": "extract_*_evidence_seeds.py"},
+        {"section": "policies", "file": "policy-knowledge-completion-scoring.json", "consumer": "estimate_knowledge_completion.py"},
+        {"section": "policies", "file": "policy-core-person-completion-scoring.json", "consumer": "estimate_core_person_completion.py"},
         {"section": "rules", "file": "rule-basic-profile-cues.json", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "rules", "file": "rule-location-extraction.json", "consumer": "run_progress_advancement_loop.py"},
         {"section": "rules", "file": "rule-evidence-seed-keyword-cues.jsonl", "consumer": "extract_*_evidence_seeds.py"},
