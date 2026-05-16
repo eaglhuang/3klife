@@ -12,7 +12,11 @@ from typing import Any, Iterable
 from urllib.parse import urlparse
 
 from repo_layout import pipeline_config_path, resolve_repo_root
-from sanguo_governance_loader import default_governance_root, load_evidence_seed_extraction_policy
+from sanguo_governance_loader import (
+    default_governance_root,
+    load_evidence_seed_extraction_policy,
+    load_evidence_seed_keyword_cue_rules,
+)
 
 REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_PAGES_JSONL = Path("local/codex-smoke/knowledge-growth/lishirenwu-page-harvest-r1/pages.jsonl")
@@ -34,309 +38,27 @@ SEED_ROW_DEFAULTS: dict[str, Any] = {
     "canonicalWrites": False,
 }
 
-RELATIONSHIP_KEYWORDS = (
-    "之女",
-    "之子",
-    "之妻",
-    "夫人",
-    "皇后",
-    "长女",
-    "長女",
-    "次女",
-    "长子",
-    "長子",
-    "之妹",
-    "之弟",
-    "之兄",
-    "之父",
-    "之母",
-    "父",
-    "母",
-    "妻",
-    "嫁给",
-    "嫁給",
-    "嫁",
-    "配偶",
-    "妻子",
-    "女儿",
-    "女兒",
-    "儿子",
-    "兒子",
-)
+RELATIONSHIP_KEYWORDS: tuple[str, ...] = ()
 
-TITLE_KEYWORDS = (
-    "皇帝",
-    "皇后",
-    "丞相",
-    "太守",
-    "将军",
-    "將軍",
-    "大将军",
-    "大將軍",
-    "谋士",
-    "謀士",
-    "名将",
-    "名將",
-    "军阀",
-    "軍閥",
-    "刺史",
-    "太傅",
-    "侍中",
-    "王后",
-    "妃",
-    "名医",
-    "名醫",
-    "学者",
-    "學者",
-    "战略家",
-    "戰略家",
-    "外交家",
-    "文学家",
-    "文學家",
-)
+TITLE_KEYWORDS: tuple[str, ...] = ()
 
-TRAIT_KEYWORDS = (
-    "第一美人",
-    "四大美女",
-    "美女",
-    "猛将",
-    "猛將",
-    "鬼才",
-    "神医",
-    "神醫",
-    "五虎上将",
-    "五虎上將",
-    "宠妃",
-    "寵妃",
-    "名臣",
-    "名士",
-    "过目不忘",
-    "過目不忘",
-    "记忆力",
-    "記憶力",
-    "聪明机智",
-    "聰明機智",
-    "头脑灵活",
-    "頭腦靈活",
-    "见识通达",
-    "見識通達",
-    "其貌不扬",
-    "其貌不揚",
-    "才华",
-    "才華",
-    "善辩",
-    "善辯",
-    "口才",
-    "短小放荡",
-    "短小放蕩",
-)
+TRAIT_KEYWORDS: tuple[str, ...] = ()
 
-EVENT_KEYWORDS = (
-    "之战",
-    "之戰",
-    "兵败",
-    "兵敗",
-    "攻打",
-    "攻擊",
-    "征讨",
-    "征討",
-    "讨伐",
-    "討伐",
-    "出使",
-    "入蜀",
-    "入益州",
-    "献图",
-    "獻圖",
-    "密谋",
-    "密謀",
-    "斩杀",
-    "斬殺",
-    "被杀",
-    "被殺",
-    "推荐",
-    "推薦",
-    "劝",
-    "勸",
-    "迎备",
-    "迎備",
-    "倒背如流",
-    "烧了",
-    "燒了",
-    "投靠",
-    "投奔",
-)
+EVENT_KEYWORDS: tuple[str, ...] = ()
 
-ROLE_KEYWORDS = (
-    "軍師",
-    "军师",
-    "謀士",
-    "谋士",
-    "重臣",
-    "名臣",
-    "后宮",
-    "后宫",
-    "寵妃",
-    "宠妃",
-    "公主",
-    "皇妃",
-    "侍女",
-    "養女",
-    "养女",
-    "族人",
-    "族親",
-    "族亲",
-    "門客",
-    "门客",
-    "洞主",
-    "部將",
-    "部将",
-)
+ROLE_KEYWORDS: tuple[str, ...] = ()
 
-LOCATION_KEYWORDS = (
-    "潁川",
-    "颖川",
-    "許昌",
-    "许昌",
-    "洛陽",
-    "洛阳",
-    "長安",
-    "长安",
-    "鄴城",
-    "邺城",
-    "荊州",
-    "荆州",
-    "益州",
-    "江東",
-    "江东",
-    "城",
-    "郡",
-    "州",
-    "縣",
-    "县",
-    "關",
-    "关",
-    "山",
-    "江",
-    "河",
-    "谷",
-    "寨",
-    "營",
-    "营",
-    "渡",
-)
+LOCATION_KEYWORDS: tuple[str, ...] = ()
 
-HABIT_KEYWORDS = (
-    "常常",
-    "常以",
-    "素來",
-    "素来",
-    "平日",
-    "向來",
-    "向来",
-    "喜歡",
-    "喜欢",
-    "喜好",
-    "嗜酒",
-    "好讀書",
-    "好读书",
-    "善飲",
-    "善饮",
-    "每每",
-)
+HABIT_KEYWORDS: tuple[str, ...] = ()
 
-ACTIVITY_KEYWORDS = (
-    "遊說",
-    "游说",
-    "出使",
-    "守城",
-    "赴宴",
-    "設宴",
-    "设宴",
-    "會盟",
-    "会盟",
-    "巡察",
-    "勸降",
-    "劝降",
-    "讀書",
-    "读书",
-    "作詩",
-    "作诗",
-    "狩獵",
-    "狩猎",
-    "彈琴",
-    "弹琴",
-    "講學",
-    "讲学",
-    "行醫",
-    "行医",
-)
+ACTIVITY_KEYWORDS: tuple[str, ...] = ()
 
-DIALOGUE_KEYWORDS = (
-    "曰",
-    "云",
-    "言",
-    "道",
-    "說",
-    "说",
-    "問",
-    "问",
-    "答",
-    "笑曰",
-    "怒曰",
-    "說道",
-    "说道",
-    "「",
-    "」",
-    "“",
-    "”",
-)
+DIALOGUE_KEYWORDS: tuple[str, ...] = ()
 
-SOURCE_CONFLICT_KEYWORDS = (
-    "一作",
-    "亦作",
-    "又作",
-    "一說",
-    "一说",
-    "另有說法",
-    "另有说法",
-    "後人所創",
-    "后人所创",
-    "後世附會",
-    "后世附会",
-    "傳說",
-    "传说",
-    "小說",
-    "小说",
-    "非史實",
-    "非史实",
-)
+SOURCE_CONFLICT_KEYWORDS: tuple[str, ...] = ()
 
-WORLDBUILDING_KEYWORDS = (
-    "长得",
-    "長得",
-    "样子",
-    "樣子",
-    "额",
-    "額",
-    "鼻",
-    "齿",
-    "齒",
-    "外露",
-    "人物形象",
-    "文學形象",
-    "文学形象",
-    "电视剧",
-    "電視劇",
-    "演义",
-    "演義",
-    "传说",
-    "傳說",
-    "特点",
-    "特點",
-    "好友",
-    "個人介紹",
-    "个人介绍",
-)
+WORLDBUILDING_KEYWORDS: tuple[str, ...] = ()
 
 BODY_NOISE_MARKERS = (
     "历史人物网",
@@ -791,6 +513,37 @@ def validate_source_policy_metadata(source_policy: dict[str, Any], *, expected_c
     source_class = str(source_policy.get("sourceClass") or "").strip()
     if expected_classes and source_class not in expected_classes:
         raise ValueError(f"source policy {source_policy.get('sourceId')} sourceClass={source_class} not allowed for harvested-page extractor")
+
+
+def apply_evidence_seed_keyword_cue_rules(
+    governance_root: str | Path | None,
+    *,
+    keyword_cue_rules: str | Path | None = None,
+) -> None:
+    required_constants = (
+        "RELATIONSHIP_KEYWORDS",
+        "TITLE_KEYWORDS",
+        "TRAIT_KEYWORDS",
+        "EVENT_KEYWORDS",
+        "ROLE_KEYWORDS",
+        "LOCATION_KEYWORDS",
+        "HABIT_KEYWORDS",
+        "ACTIVITY_KEYWORDS",
+        "DIALOGUE_KEYWORDS",
+        "SOURCE_CONFLICT_KEYWORDS",
+        "WORLDBUILDING_KEYWORDS",
+    )
+    rows = load_evidence_seed_keyword_cue_rules(governance_root, keyword_cue_rules=keyword_cue_rules)
+    by_name = {
+        str(row.get("constantName") or ""): tuple(str(value) for value in row.get("keywords") or [])
+        for row in rows
+        if str(row.get("extractor") or "") == "harvestedPage"
+    }
+    missing = [name for name in required_constants if not by_name.get(name)]
+    if missing:
+        raise ValueError(f"missing harvested-page keyword cue rules: {', '.join(missing)}")
+    for name in required_constants:
+        globals()[name] = by_name[name]
 
 
 def load_scoreboard_rows(path: Path) -> list[dict[str, Any]]:
@@ -1477,6 +1230,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
     parser.add_argument("--evidence-seed-policy", default=None)
+    parser.add_argument("--keyword-cue-rules", default=None)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -1484,6 +1238,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     apply_evidence_seed_extraction_policy(args.governance_root, evidence_seed_policy=args.evidence_seed_policy)
+    apply_evidence_seed_keyword_cue_rules(args.governance_root, keyword_cue_rules=args.keyword_cue_rules)
     pages_path = resolve_path(args.pages_jsonl)
     output_root = resolve_path(args.output_root)
     source_config_path = resolve_path(args.source_config)
@@ -1557,6 +1312,7 @@ def main() -> int:
             "scoreboardJson": repo_relative(scoreboard_path),
             "governanceRoot": repo_relative(governance_root),
             "evidenceSeedPolicy": str(args.evidence_seed_policy or "policy-evidence-seed-extraction.json"),
+            "keywordCueRules": str(args.keyword_cue_rules or "rule-evidence-seed-keyword-cues.jsonl"),
         },
         "outputs": {
             "manualSeedsJsonl": repo_relative(seeds_path),

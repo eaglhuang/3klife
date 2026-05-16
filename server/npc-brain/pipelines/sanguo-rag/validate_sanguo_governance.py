@@ -11,6 +11,7 @@ from sanguo_governance_loader import (
     SanguoGovernanceError,
     expected_governance_files,
     load_evidence_seed_extraction_policy,
+    load_evidence_seed_keyword_cue_rules,
     load_full_roster_runner_governance,
     load_progress_runner_governance,
     load_relationship_runtime_canon_policy,
@@ -52,6 +53,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     relationship = load_relationship_runtime_canon_policy(root)
     source_event_packets = load_source_event_packet_policy(root)
     evidence_seed_extraction = load_evidence_seed_extraction_policy(root)
+    evidence_keyword_cues = load_evidence_seed_keyword_cue_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -91,6 +93,25 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         defaults = section.get("seedRowDefaults") if isinstance(section.get("seedRowDefaults"), dict) else {}
         if defaults.get("canonicalWrites") is not False:
             raise SanguoGovernanceError(f"policy-evidence-seed-extraction {section_name}.seedRowDefaults.canonicalWrites must be false")
+    cue_keys: set[tuple[str, str]] = set()
+    for row in evidence_keyword_cues:
+        extractor = str(row.get("extractor") or "").strip()
+        constant_name = str(row.get("constantName") or "").strip()
+        keywords = row.get("keywords")
+        if extractor not in {"harvestedPage", "genericPassage"}:
+            raise SanguoGovernanceError(f"rule-evidence-seed-keyword-cues invalid extractor: {extractor}")
+        if not constant_name.endswith("_KEYWORDS"):
+            raise SanguoGovernanceError(f"rule-evidence-seed-keyword-cues invalid constantName: {constant_name}")
+        if (extractor, constant_name) in cue_keys:
+            raise SanguoGovernanceError(f"rule-evidence-seed-keyword-cues duplicate cue constant: {extractor}.{constant_name}")
+        cue_keys.add((extractor, constant_name))
+        if not isinstance(keywords, list) or not keywords:
+            raise SanguoGovernanceError(f"rule-evidence-seed-keyword-cues empty keywords: {extractor}.{constant_name}")
+        normalized = [str(value).strip() for value in keywords]
+        if any(not value for value in normalized):
+            raise SanguoGovernanceError(f"rule-evidence-seed-keyword-cues blank keyword: {extractor}.{constant_name}")
+        if len(set(normalized)) != len(normalized):
+            raise SanguoGovernanceError(f"rule-evidence-seed-keyword-cues duplicate keyword: {extractor}.{constant_name}")
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -109,6 +130,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "sourceEventPacketStrengthRuleCount": len(source_event_packets.get("packetStrengthRules") or []),
         "evidenceSeedRequiredSourceFieldCount": len(required_source_fields or []),
         "evidenceSeedGenericSourceClassCount": len(generic.get("sourceClasses") or []),
+        "evidenceSeedKeywordCueRuleCount": len(evidence_keyword_cues),
     }
 
 

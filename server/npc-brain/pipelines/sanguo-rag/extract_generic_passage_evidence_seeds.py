@@ -19,7 +19,11 @@ from extract_harvested_page_evidence_seeds import (
     translate_seed_text_to_traditional,
 )
 from repo_layout import pipeline_config_path, resolve_repo_root
-from sanguo_governance_loader import default_governance_root, load_evidence_seed_extraction_policy
+from sanguo_governance_loader import (
+    default_governance_root,
+    load_evidence_seed_extraction_policy,
+    load_evidence_seed_keyword_cue_rules,
+)
 
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -50,329 +54,29 @@ DEFAULT_ALIAS_NOISE_DENYLIST = frozenset(
     )
 )
 
-TITLE_KEYWORDS = (
-    "字",
-    "號",
-    "官至",
-    "官拜",
-    "封",
-    "拜",
-    "任",
-    "太守",
-    "刺史",
-    "州牧",
-    "將軍",
-    "校尉",
-    "侯",
-    "王",
-    "帝",
-    "后",
-    "皇后",
-    "貴人",
-    "courtesy name",
-    "style name",
-    "administrator",
-    "general",
-    "governor",
-    "strategist",
-    "adviser",
-    "advisor",
-    "emperor",
-    "empress",
-    "princess",
-    "minister",
-)
+TITLE_KEYWORDS: tuple[str, ...] = ()
 
-RELATIONSHIP_KEYWORDS = (
-    "父",
-    "母",
-    "妻",
-    "妾",
-    "嫁",
-    "娶",
-    "子",
-    "女",
-    "兄",
-    "弟",
-    "姊",
-    "妹",
-    "族",
-    "從妹",
-    "從子",
-    "從弟",
-    "之女",
-    "之子",
-    "部下",
-    "麾下",
-    "daughter of",
-    "son of",
-    "wife of",
-    "married",
-    "father of",
-    "mother of",
-    "brother of",
-    "sister of",
-    "served under",
-    "family",
-    "kinsman",
-)
+RELATIONSHIP_KEYWORDS: tuple[str, ...] = ()
 
-EVENT_KEYWORDS = (
-    "攻",
-    "擊",
-    "討",
-    "戰",
-    "伐",
-    "殺",
-    "降",
-    "守",
-    "迎",
-    "屯",
-    "據",
-    "奔",
-    "叛",
-    "反",
-    "卒",
-    "死",
-    "敗",
-    "破",
-    "擒",
-    "即位",
-    "稱帝",
-    "入朝",
-    "起兵",
-    "遷",
-    "徙",
-    "killed",
-    "defeated",
-    "surrendered",
-    "attacked",
-    "defended",
-    "captured",
-    "joined",
-    "served",
-    "rebelled",
-    "entered",
-    "appointed",
-    "ruled",
-)
+EVENT_KEYWORDS: tuple[str, ...] = ()
 
-TRAIT_KEYWORDS = (
-    "為人",
-    "性",
-    "姿貌",
-    "容貌",
-    "身長",
-    "溫厚",
-    "偉壯",
-    "仁厚",
-    "多疑",
-    "驍勇",
-    "勇",
-    "智",
-    "機敏",
-    "剛愎",
-    "果毅",
-    "過目不忘",
-    "善",
-    "好",
-    "長於",
-    "brave",
-    "wise",
-    "clever",
-    "beautiful",
-    "loyal",
-    "ambitious",
-    "talented",
-    "memory",
-    "noted for",
-    "known for",
-)
+TRAIT_KEYWORDS: tuple[str, ...] = ()
 
-WORLDBUILDING_KEYWORDS = (
-    "演義",
-    "傳說",
-    "民間",
-    "小說",
-    "戲曲",
-    "野史",
-    "後人",
-    "常被",
-    "一說",
-    "形象",
-    "設定",
-    "虛構",
-    "novel",
-    "legend",
-    "folklore",
-    "fictional",
-    "portrayal",
-    "depicted",
-    "apocryphal",
-)
+WORLDBUILDING_KEYWORDS: tuple[str, ...] = ()
 
-IDENTITY_KEYWORDS = (
-    "本姓",
-    "本名",
-    "即",
-    "又名",
-    "亦作",
-    "一作",
-    "courtesy name",
-    "style name",
-    "born",
-    "daughter of",
-    "son of",
-)
+IDENTITY_KEYWORDS: tuple[str, ...] = ()
 
-ROLE_KEYWORDS = (
-    "重臣",
-    "門客",
-    "门客",
-    "軍師",
-    "军师",
-    "謀士",
-    "谋士",
-    "族人",
-    "公主",
-    "妃",
-    "后宮",
-    "后宫",
-    "洞主",
-    "使者",
-    "advisor",
-    "adviser",
-    "strategist",
-    "consort",
-    "princess",
-    "official",
-)
+ROLE_KEYWORDS: tuple[str, ...] = ()
 
-LOCATION_KEYWORDS = (
-    "城",
-    "郡",
-    "州",
-    "縣",
-    "县",
-    "關",
-    "关",
-    "山",
-    "江",
-    "河",
-    "谷",
-    "寨",
-    "營",
-    "营",
-    "渡",
-    "commandery",
-    "province",
-    "county",
-    "fortress",
-    "castle",
-    "pass",
-    "river",
-    "mount",
-    "hill",
-)
+LOCATION_KEYWORDS: tuple[str, ...] = ()
 
-HABIT_KEYWORDS = (
-    "常常",
-    "素來",
-    "素来",
-    "向來",
-    "向来",
-    "平日",
-    "喜好",
-    "喜歡",
-    "喜欢",
-    "嗜酒",
-    "好讀書",
-    "好读书",
-    "每每",
-    "often",
-    "frequently",
-    "liked to",
-    "fond of",
-    "enjoyed",
-    "habitually",
-)
+HABIT_KEYWORDS: tuple[str, ...] = ()
 
-ACTIVITY_KEYWORDS = (
-    "赴宴",
-    "設宴",
-    "设宴",
-    "遊說",
-    "游说",
-    "出使",
-    "守城",
-    "巡察",
-    "勸降",
-    "劝降",
-    "讀書",
-    "读书",
-    "作詩",
-    "作诗",
-    "狩獵",
-    "狩猎",
-    "彈琴",
-    "弹琴",
-    "講學",
-    "讲学",
-    "行醫",
-    "行医",
-    "banquet",
-    "feast",
-    "study",
-    "read",
-    "wrote",
-    "played",
-    "negotiated",
-    "envoy",
-    "hunted",
-)
+ACTIVITY_KEYWORDS: tuple[str, ...] = ()
 
-DIALOGUE_KEYWORDS = (
-    "曰",
-    "云",
-    "言",
-    "道",
-    "問",
-    "问",
-    "答",
-    "說",
-    "说",
-    "「",
-    "」",
-    "“",
-    "”",
-    "said",
-    "asked",
-    "replied",
-    "shouted",
-)
+DIALOGUE_KEYWORDS: tuple[str, ...] = ()
 
-SOURCE_CONFLICT_KEYWORDS = (
-    "一作",
-    "亦作",
-    "又作",
-    "一說",
-    "一说",
-    "另有說法",
-    "另有说法",
-    "後人所創",
-    "后人所创",
-    "後世附會",
-    "后世附会",
-    "非史實",
-    "非史实",
-    "sometimes called",
-    "also known as",
-    "one source says",
-    "another source",
-    "later invention",
-    "disputed",
-    "fictional",
-)
+SOURCE_CONFLICT_KEYWORDS: tuple[str, ...] = ()
 
 RELATIONSHIP_DIRECTION_HINTS: tuple[tuple[str, str], ...] = (
     ("父子", "父子"),
@@ -580,6 +284,38 @@ def validate_source_policy_metadata(source_policy: dict[str, Any], *, expected_c
     source_class = str(source_policy.get("sourceClass") or "").strip()
     if expected_classes and source_class not in expected_classes:
         raise ValueError(f"source policy {source_policy.get('sourceId')} sourceClass={source_class} not allowed for generic-passage extractor")
+
+
+def apply_evidence_seed_keyword_cue_rules(
+    governance_root: str | Path | None,
+    *,
+    keyword_cue_rules: str | Path | None = None,
+) -> None:
+    required_constants = (
+        "IDENTITY_KEYWORDS",
+        "RELATIONSHIP_KEYWORDS",
+        "TITLE_KEYWORDS",
+        "TRAIT_KEYWORDS",
+        "EVENT_KEYWORDS",
+        "ROLE_KEYWORDS",
+        "LOCATION_KEYWORDS",
+        "HABIT_KEYWORDS",
+        "ACTIVITY_KEYWORDS",
+        "DIALOGUE_KEYWORDS",
+        "SOURCE_CONFLICT_KEYWORDS",
+        "WORLDBUILDING_KEYWORDS",
+    )
+    rows = load_evidence_seed_keyword_cue_rules(governance_root, keyword_cue_rules=keyword_cue_rules)
+    by_name = {
+        str(row.get("constantName") or ""): tuple(str(value) for value in row.get("keywords") or [])
+        for row in rows
+        if str(row.get("extractor") or "") == "genericPassage"
+    }
+    missing = [name for name in required_constants if not by_name.get(name)]
+    if missing:
+        raise ValueError(f"missing generic-passage keyword cue rules: {', '.join(missing)}")
+    for name in required_constants:
+        globals()[name] = by_name[name]
 
 
 def load_scoreboard_rows(path: Path) -> list[dict[str, Any]]:
@@ -1466,6 +1202,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
     parser.add_argument("--evidence-seed-policy", default=None)
+    parser.add_argument("--keyword-cue-rules", default=None)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -1473,6 +1210,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     apply_evidence_seed_extraction_policy(args.governance_root, evidence_seed_policy=args.evidence_seed_policy)
+    apply_evidence_seed_keyword_cue_rules(args.governance_root, keyword_cue_rules=args.keyword_cue_rules)
     if args.source_class not in SOURCE_CLASSES:
         raise SystemExit(f"source-class not allowed by evidence seed governance policy: {args.source_class}")
     pages_path = resolve_path(args.pages_jsonl)
@@ -1566,6 +1304,7 @@ def main() -> int:
             "scoreboardJson": repo_relative(scoreboard_path),
             "governanceRoot": repo_relative(governance_root),
             "evidenceSeedPolicy": str(args.evidence_seed_policy or "policy-evidence-seed-extraction.json"),
+            "keywordCueRules": str(args.keyword_cue_rules or "rule-evidence-seed-keyword-cues.jsonl"),
             "aliasNoiseDenylist": sorted(alias_noise_denylist),
         },
         "outputs": {
