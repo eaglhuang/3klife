@@ -16,6 +16,7 @@ from sanguo_governance_loader import (
     default_governance_root,
     load_evidence_seed_extraction_policy,
     load_evidence_seed_keyword_cue_rules,
+    load_evidence_seed_text_normalization_rules,
 )
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -94,206 +95,20 @@ BODY_TAIL_MARKERS = (
     "版權聲明:",
 )
 
-SIMPLIFIED_TO_TRADITIONAL = str.maketrans(
-    {
-        "东": "東",
-        "汉": "漢",
-        "刘": "劉",
-        "备": "備",
-        "关": "關",
-        "张": "張",
-        "马": "馬",
-        "吕": "呂",
-        "孙": "孫",
-        "吴": "吳",
-        "国": "國",
-        "师": "師",
-        "诸": "諸",
-        "赵": "趙",
-        "陈": "陳",
-        "许": "許",
-        "黄": "黃",
-        "钟": "鍾",
-        "陆": "陸",
-        "鲁": "魯",
-        "乔": "喬",
-        "妇": "婦",
-        "后": "後",
-        "练": "練",
-        "县": "縣",
-        "严": "嚴",
-        "邹": "鄒",
-        "卢": "盧",
-        "贾": "賈",
-        "韦": "韋",
-        "邓": "鄧",
-        "颜": "顏",
-        "谯": "譙",
-        "庞": "龐",
-        "异": "異",
-        "宝": "寶",
-        "权": "權",
-        "肃": "肅",
-        "宠": "寵",
-        "凤": "鳳",
-        "云": "雲",
-        "蝉": "蟬",
-        "琦": "琦",
-        "睿": "叡",
-        "莹": "瑩",
-        "宁": "寧",
-        "桓": "桓",
-    }
-)
+SIMPLIFIED_TO_TRADITIONAL = str.maketrans({})
 
-TRADITIONAL_TO_SIMPLIFIED = str.maketrans(
-    {
-        traditional: simplified
-        for simplified, traditional in SIMPLIFIED_TO_TRADITIONAL.items()
-        if isinstance(traditional, str) and len(traditional) == 1
-    }
-)
+TRADITIONAL_TO_SIMPLIFIED = str.maketrans({})
 
 LOCATION_RE = re.compile(r"[\u4e00-\u9fff]{1,8}(?:城|郡|州|縣|县|關|关|山|江|河|谷|寨|營|营|渡|口|津|坡|原)")
 LATIN_RE = re.compile(r"[A-Za-z]")
 
-ENGLISH_TEMPLATE_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
-    (re.compile(r"^(?:daughter\s+of)\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之女"),
-    (re.compile(r"^(?:son\s+of)\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之子"),
-    (re.compile(r"^(?:wife\s+of)\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之妻"),
-    (re.compile(r"^(?:husband\s+of)\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之夫"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+the\s+daughter\s+of\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之女"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+the\s+son\s+of\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之子"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+the\s+wife\s+of\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之妻"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+the\s+husband\s+of\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}之夫"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+(?:was\s+)?married\s+to\s+(?P<object>.+)$", re.IGNORECASE), "{subject}與{object}成婚"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+served\s+under\s+(?P<object>.+)$", re.IGNORECASE), "{subject}曾仕於{object}麾下"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+(?:later\s+)?served\s+as\s+(?P<object>.+)$", re.IGNORECASE), "{subject}曾任{object}"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+affiliated\s+with\s+(?P<object>.+)$", re.IGNORECASE), "{subject}隸屬於{object}"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+lived\s+during\s+(?P<object>.+)$", re.IGNORECASE), "{subject}活躍於{object}"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+born\s+in\s+(?P<object>.+)$", re.IGNORECASE), "{subject}生於{object}"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+best\s+known\s+for\s+(?P<object>.+)$", re.IGNORECASE), "{subject}最以{object}聞名"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+killed\s+by\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}所殺"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+defeated\s+by\s+(?P<object>.+)$", re.IGNORECASE), "{subject}為{object}所敗"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+known\s+for\s+(?P<object>.+)$", re.IGNORECASE), "{subject}以{object}聞名"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+a\s+fictional\s+character(?:\s+in\s+(?P<object>.+))?$", re.IGNORECASE), "{subject}是{object}中的虛構人物"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+a\s+historical\s+figure(?:\s+of\s+(?P<object>.+))?$", re.IGNORECASE), "{subject}是{object}的歷史人物"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+was\s+an?\s+(?P<object>.+?)\s+of\s+(?P<object2>.+)$", re.IGNORECASE), "{subject}是{object2}的{object}"),
-    (re.compile(r"^(?P<subject>[A-Z][A-Za-z' .-]+?)\s+often\s+(?P<object>.+)$", re.IGNORECASE), "{subject}常{object}"),
-)
+ENGLISH_TEMPLATE_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = ()
 
-ENGLISH_PHRASE_REPLACEMENTS: tuple[tuple[str, str], ...] = (
-    ("A Romance of the Three Kingdoms Encyclopedia officer profile", "《三國演義》人物整理條目"),
-    ("Romance of the Three Kingdoms Encyclopedia officer profile", "《三國演義》人物整理條目"),
-    ("Encyclopedia officer profile", "人物整理條目"),
-    ("Romance of the Three Kingdoms", "《三國演義》"),
-    ("Records of the Three Kingdoms", "《三國志》"),
-    ("Three Kingdoms period", "三國時期"),
-    ("Three Kingdoms", "三國"),
-    ("the Three Kingdoms", "三國時期"),
-    ("late Han dynasty", "東漢末年"),
-    ("Later Han dynasty", "東漢"),
-    ("Eastern Han dynasty", "東漢"),
-    ("Cao Wei", "曹魏"),
-    ("Shu Han", "蜀漢"),
-    ("Shu Kingdom", "蜀漢"),
-    ("the Shu Kingdom", "蜀漢"),
-    ("Eastern Wu", "東吳"),
-    ("Wu Kingdom", "東吳"),
-    ("the Wu Kingdom", "東吳"),
-    ("Western Jin", "西晉"),
-    ("Jin dynasty", "晉朝"),
-    ("historical figure", "歷史人物"),
-    ("historical person", "歷史人物"),
-    ("fictional character", "虛構人物"),
-    ("military general", "軍事將領"),
-    ("scholar-official", "士人官員"),
-    ("politician", "政治人物"),
-    ("warlord", "軍閥"),
-    ("affiliated with", "隸屬於"),
-    ("lived during", "活躍於"),
-    ("best known for", "最以"),
-    ("known for", "以"),
-    ("served as", "曾任"),
-    ("served under", "曾仕於"),
-    ("Bao Family Manor", "鮑氏家族莊園"),
-    ("Bao Family", "鮑氏家族"),
-)
+ENGLISH_PHRASE_REPLACEMENTS: tuple[tuple[str, str], ...] = ()
 
-ENGLISH_NAME_REPLACEMENTS: tuple[tuple[str, str], ...] = (
-    ("Cao Cao", "曹操"),
-    ("Liu Bei", "劉備"),
-    ("Sun Quan", "孫權"),
-    ("Liu Shan", "劉禪"),
-    ("A Dou", "阿斗"),
-    ("Adou", "阿斗"),
-    ("Zhuge Liang", "諸葛亮"),
-    ("Sima Yi", "司馬懿"),
-    ("Guan Yu", "關羽"),
-    ("Zhang Fei", "張飛"),
-    ("Lu Bu", "呂布"),
-    ("Dong Zhuo", "董卓"),
-    ("Diaochan", "貂蟬"),
-    ("Diao Chan", "貂蟬"),
-    ("Huang Yueying", "黃月英"),
-    ("Sun Shangxiang", "孫尚香"),
-    ("Da Qiao", "大喬"),
-    ("Xiao Qiao", "小喬"),
-    ("Wang Yi", "王異"),
-    ("Xin Xianying", "辛憲英"),
-    ("Wang Yuanji", "王元姬"),
-    ("Zhang Chunhua", "張春華"),
-    ("Bao Sanniang", "鮑三娘"),
-    ("Guan Suo", "關索"),
-    ("Cai Yan", "蔡琰"),
-    ("Zhen Ji", "甄宓"),
-)
+ENGLISH_NAME_REPLACEMENTS: tuple[tuple[str, str], ...] = ()
 
-ENGLISH_TOKEN_REPLACEMENTS: tuple[tuple[str, str], ...] = (
-    ("courtesy name", "字"),
-    ("style name", "字"),
-    ("daughter of", "之女"),
-    ("son of", "之子"),
-    ("wife of", "之妻"),
-    ("husband of", "之夫"),
-    ("father of", "之父"),
-    ("mother of", "之母"),
-    ("brother of", "之兄弟"),
-    ("sister of", "之姊妹"),
-    ("general", "將領"),
-    ("governor", "太守"),
-    ("administrator", "太守"),
-    ("strategist", "軍師"),
-    ("advisor", "謀士"),
-    ("adviser", "謀士"),
-    ("emperor", "皇帝"),
-    ("empress", "皇后"),
-    ("princess", "公主"),
-    ("lady", "夫人"),
-    ("minister", "大臣"),
-    ("novel", "小說"),
-    ("legend", "傳說"),
-    ("fictional", "虛構"),
-    ("historical", "史實"),
-    ("relationship", "關係"),
-    ("family", "家族"),
-    ("married", "成婚"),
-    ("killed", "殺"),
-    ("defeated", "擊敗"),
-    ("served", "侍奉"),
-    ("often", "常"),
-    ("liked", "喜愛"),
-    ("enjoyed", "喜歡"),
-    ("habit", "習性"),
-    ("activity", "活動"),
-    ("location", "地點"),
-    ("battle", "戰役"),
-    ("Wei", "魏"),
-    ("Shu", "蜀"),
-    ("Wu", "吳"),
-    ("Jin", "晉"),
-    ("Han", "漢"),
-)
+ENGLISH_TOKEN_REPLACEMENTS: tuple[tuple[str, str], ...] = ()
 
 
 def utc_now() -> str:
@@ -544,6 +359,74 @@ def apply_evidence_seed_keyword_cue_rules(
         raise ValueError(f"missing harvested-page keyword cue rules: {', '.join(missing)}")
     for name in required_constants:
         globals()[name] = by_name[name]
+
+
+def apply_evidence_seed_text_normalization_rules(
+    governance_root: str | Path | None,
+    *,
+    text_normalization_rules: str | Path | None = None,
+) -> None:
+    global SIMPLIFIED_TO_TRADITIONAL, TRADITIONAL_TO_SIMPLIFIED
+    global ENGLISH_TEMPLATE_PATTERNS, ENGLISH_PHRASE_REPLACEMENTS, ENGLISH_NAME_REPLACEMENTS, ENGLISH_TOKEN_REPLACEMENTS
+
+    required_constants = (
+        "SIMPLIFIED_TO_TRADITIONAL",
+        "ENGLISH_TEMPLATE_PATTERNS",
+        "ENGLISH_PHRASE_REPLACEMENTS",
+        "ENGLISH_NAME_REPLACEMENTS",
+        "ENGLISH_TOKEN_REPLACEMENTS",
+    )
+    rows = load_evidence_seed_text_normalization_rules(
+        governance_root,
+        text_normalization_rules=text_normalization_rules,
+    )
+    by_name = {
+        str(row.get("constantName") or ""): row
+        for row in rows
+        if str(row.get("extractor") or "") == "harvestedPage"
+    }
+    missing = [name for name in required_constants if name not in by_name]
+    if missing:
+        raise ValueError(f"missing harvested-page text normalization rules: {', '.join(missing)}")
+
+    char_pairs = by_name["SIMPLIFIED_TO_TRADITIONAL"].get("value") or []
+    simplified_map = {
+        str(source): str(target)
+        for source, target in char_pairs
+        if str(source) and str(target)
+    }
+    SIMPLIFIED_TO_TRADITIONAL = str.maketrans(simplified_map)
+    TRADITIONAL_TO_SIMPLIFIED = str.maketrans(
+        {
+            traditional: simplified
+            for simplified, traditional in SIMPLIFIED_TO_TRADITIONAL.items()
+            if isinstance(traditional, str) and len(traditional) == 1
+        }
+    )
+
+    template_rows = by_name["ENGLISH_TEMPLATE_PATTERNS"].get("value") or []
+    ENGLISH_TEMPLATE_PATTERNS = tuple(
+        (
+            re.compile(
+                str(entry.get("pattern") or ""),
+                re.IGNORECASE if entry.get("ignoreCase", True) else 0,
+            ),
+            str(entry.get("template") or ""),
+        )
+        for entry in template_rows
+        if isinstance(entry, dict)
+    )
+
+    def pairs_for(constant_name: str) -> tuple[tuple[str, str], ...]:
+        return tuple(
+            (str(source), str(target))
+            for source, target in (by_name[constant_name].get("value") or [])
+            if str(source) and str(target)
+        )
+
+    ENGLISH_PHRASE_REPLACEMENTS = pairs_for("ENGLISH_PHRASE_REPLACEMENTS")
+    ENGLISH_NAME_REPLACEMENTS = pairs_for("ENGLISH_NAME_REPLACEMENTS")
+    ENGLISH_TOKEN_REPLACEMENTS = pairs_for("ENGLISH_TOKEN_REPLACEMENTS")
 
 
 def load_scoreboard_rows(path: Path) -> list[dict[str, Any]]:
@@ -1231,6 +1114,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
     parser.add_argument("--evidence-seed-policy", default=None)
     parser.add_argument("--keyword-cue-rules", default=None)
+    parser.add_argument("--text-normalization-rules", default=None)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -1239,6 +1123,10 @@ def main() -> int:
     args = parse_args()
     apply_evidence_seed_extraction_policy(args.governance_root, evidence_seed_policy=args.evidence_seed_policy)
     apply_evidence_seed_keyword_cue_rules(args.governance_root, keyword_cue_rules=args.keyword_cue_rules)
+    apply_evidence_seed_text_normalization_rules(
+        args.governance_root,
+        text_normalization_rules=args.text_normalization_rules,
+    )
     pages_path = resolve_path(args.pages_jsonl)
     output_root = resolve_path(args.output_root)
     source_config_path = resolve_path(args.source_config)
@@ -1313,6 +1201,7 @@ def main() -> int:
             "governanceRoot": repo_relative(governance_root),
             "evidenceSeedPolicy": str(args.evidence_seed_policy or "policy-evidence-seed-extraction.json"),
             "keywordCueRules": str(args.keyword_cue_rules or "rule-evidence-seed-keyword-cues.jsonl"),
+            "textNormalizationRules": str(args.text_normalization_rules or "rule-text-normalization-replacements.jsonl"),
         },
         "outputs": {
             "manualSeedsJsonl": repo_relative(seeds_path),

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -13,6 +14,7 @@ from sanguo_governance_loader import (
     load_evidence_seed_extraction_policy,
     load_evidence_seed_direction_denoise_rules,
     load_evidence_seed_keyword_cue_rules,
+    load_evidence_seed_text_normalization_rules,
     load_full_roster_runner_governance,
     load_progress_runner_governance,
     load_relationship_runtime_canon_policy,
@@ -56,6 +58,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     evidence_seed_extraction = load_evidence_seed_extraction_policy(root)
     evidence_keyword_cues = load_evidence_seed_keyword_cue_rules(root)
     relationship_direction_denoise_rules = load_evidence_seed_direction_denoise_rules(root)
+    text_normalization_rules = load_evidence_seed_text_normalization_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -163,6 +166,74 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
                 raise SanguoGovernanceError(f"rule-relationship-direction-denoise {row_id} int value must be positive")
         else:
             raise SanguoGovernanceError(f"rule-relationship-direction-denoise {row_id} unsupported kind: {kind}")
+    required_text_normalization_rules = {
+        "SIMPLIFIED_TO_TRADITIONAL",
+        "ENGLISH_TEMPLATE_PATTERNS",
+        "ENGLISH_PHRASE_REPLACEMENTS",
+        "ENGLISH_NAME_REPLACEMENTS",
+        "ENGLISH_TOKEN_REPLACEMENTS",
+    }
+    text_by_name: dict[str, dict[str, Any]] = {}
+    for row in text_normalization_rules:
+        row_id = str(row.get("id") or "").strip()
+        extractor = str(row.get("extractor") or "").strip()
+        constant_name = str(row.get("constantName") or "").strip()
+        if extractor != "harvestedPage":
+            raise SanguoGovernanceError(f"rule-text-normalization-replacements invalid extractor: {row_id or '<missing-id>'}")
+        if not constant_name:
+            raise SanguoGovernanceError("rule-text-normalization-replacements requires constantName")
+        if constant_name in text_by_name:
+            raise SanguoGovernanceError(
+                f"rule-text-normalization-replacements duplicate constantName: {constant_name} ({row_id})"
+            )
+        text_by_name[constant_name] = row
+    missing = sorted(required_text_normalization_rules - text_by_name.keys())
+    if missing:
+        raise SanguoGovernanceError(
+            f"rule-text-normalization-replacements missing constants: {', '.join(missing)}"
+        )
+    for constant_name in required_text_normalization_rules:
+        row = text_by_name[constant_name]
+        kind = str(row.get("kind") or "").strip()
+        value = row.get("value")
+        row_id = str(row.get("id") or constant_name)
+        if kind == "charMap":
+            if not isinstance(value, list) or not value:
+                raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} charMap value must be non-empty list")
+            for pair in value:
+                if not isinstance(pair, list) or len(pair) != 2:
+                    raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} invalid charMap entry: {pair}")
+                if not all(isinstance(item, str) and item for item in pair):
+                    raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} charMap entry has blank item")
+        elif kind == "pair":
+            if not isinstance(value, list) or not value:
+                raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} pair value must be non-empty list")
+            seen_sources: set[str] = set()
+            for pair in value:
+                if not isinstance(pair, list) or len(pair) != 2:
+                    raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} invalid pair entry: {pair}")
+                source, target = str(pair[0]), str(pair[1])
+                if not source.strip() or not target.strip():
+                    raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} pair entry has blank item")
+                if source.lower() in seen_sources:
+                    raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} duplicate source: {source}")
+                seen_sources.add(source.lower())
+        elif kind == "regexTemplate":
+            if not isinstance(value, list) or not value:
+                raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} regexTemplate value must be non-empty list")
+            for entry in value:
+                if not isinstance(entry, dict):
+                    raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} regexTemplate entry must be object")
+                pattern = str(entry.get("pattern") or "")
+                template = str(entry.get("template") or "")
+                if not pattern.strip() or not template.strip():
+                    raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} regexTemplate entry has blank field")
+                try:
+                    re.compile(pattern)
+                except re.error as exc:
+                    raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} invalid regex: {exc}") from exc
+        else:
+            raise SanguoGovernanceError(f"rule-text-normalization-replacements {row_id} unsupported kind: {kind}")
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -183,6 +254,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "evidenceSeedGenericSourceClassCount": len(generic.get("sourceClasses") or []),
         "evidenceSeedKeywordCueRuleCount": len(evidence_keyword_cues),
         "relationshipDirectionDenoiseRuleCount": len(relationship_direction_denoise_rules),
+        "textNormalizationReplacementRuleCount": len(text_normalization_rules),
     }
 
 

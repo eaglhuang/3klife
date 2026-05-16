@@ -216,6 +216,23 @@ def load_evidence_seed_direction_denoise_rules(
     )
 
 
+def load_evidence_seed_text_normalization_rules(
+    root: str | Path | None = None,
+    *,
+    text_normalization_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(text_normalization_rules).resolve()
+        if text_normalization_rules
+        else _path(base, "rules", "rule-text-normalization-replacements.jsonl")
+    )
+    return read_governance_jsonl(
+        path,
+        required_fields=("id", "extractor", "constantName", "kind", "value"),
+    )
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
@@ -236,6 +253,7 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "rules", "file": "rule-location-extraction.json", "consumer": "run_progress_advancement_loop.py"},
         {"section": "rules", "file": "rule-evidence-seed-keyword-cues.jsonl", "consumer": "extract_*_evidence_seeds.py"},
         {"section": "rules", "file": "rule-relationship-direction-denoise.jsonl", "consumer": "extract_generic_passage_evidence_seeds.py"},
+        {"section": "rules", "file": "rule-text-normalization-replacements.jsonl", "consumer": "extract_harvested_page_evidence_seeds.py"},
         {"section": "schemas", "file": "schema-stable-bootstrap-payload.json", "consumer": "validate_sanguo_governance.py"},
         {"section": "schemas", "file": "schema-governance-bundle.json", "consumer": "validate_sanguo_governance.py"},
     ]
