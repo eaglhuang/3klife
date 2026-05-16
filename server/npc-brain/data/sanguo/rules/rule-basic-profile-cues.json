@@ -1,0 +1,814 @@
+{
+  "id": "Rule_BasicProfileCues_P0",
+  "roleClassRules": [
+    {
+      "role": "Commander",
+      "roleActivityTags": [
+        "general_commander",
+        "warlord_ruler"
+      ],
+      "decisionWeightHints": [
+        "prefers_battle"
+      ],
+      "minInt": 0,
+      "minPol": 0
+    },
+    {
+      "role": "Combat",
+      "roleActivityTags": [
+        "general_commander",
+        "soldier_guard"
+      ],
+      "decisionWeightHints": [
+        "prefers_battle"
+      ],
+      "minInt": 0,
+      "minPol": 0
+    },
+    {
+      "role": "Support",
+      "roleActivityTags": [
+        "strategist_advisor"
+      ],
+      "decisionWeightHints": [
+        "prefers_strategy"
+      ],
+      "minInt": 75,
+      "minPol": 75,
+      "thresholdMode": "any"
+    }
+  ],
+  "roleTagRules": [
+    {
+      "tag": "warlord_ruler",
+      "decisionHint": "prefers_governance",
+      "terms": [
+        "皇帝",
+        "開國",
+        "君主",
+        "諸侯",
+        "割據",
+        "最高掌權者"
+      ]
+    },
+    {
+      "tag": "general_commander",
+      "decisionHint": "prefers_battle",
+      "terms": [
+        "名將",
+        "將領",
+        "統帥",
+        "大都督",
+        "將軍",
+        "鎮守"
+      ]
+    },
+    {
+      "tag": "strategist_advisor",
+      "decisionHint": "prefers_strategy",
+      "terms": [
+        "謀士",
+        "軍師",
+        "幕僚",
+        "智囊",
+        "軍事家",
+        "戰略家"
+      ]
+    },
+    {
+      "tag": "official_bureaucrat",
+      "decisionHint": "prefers_governance",
+      "terms": [
+        "政治家",
+        "丞相",
+        "太守",
+        "刺史",
+        "尚書",
+        "官吏",
+        "治理"
+      ]
+    },
+    {
+      "tag": "civil_governance",
+      "decisionHint": "prefers_governance",
+      "terms": [
+        "治世",
+        "民事",
+        "行政",
+        "法令",
+        "賑",
+        "屯田"
+      ]
+    },
+    {
+      "tag": "diplomacy_speech",
+      "decisionHint": "prefers_diplomacy",
+      "terms": [
+        "外交",
+        "使者",
+        "辯",
+        "說客",
+        "談判",
+        "聯盟"
+      ]
+    },
+    {
+      "tag": "scholar_literati",
+      "decisionHint": "prefers_governance",
+      "terms": [
+        "文學家",
+        "詩人",
+        "儒",
+        "散文家",
+        "文章"
+      ]
+    },
+    {
+      "tag": "craft_engineering",
+      "decisionHint": "prefers_strategy",
+      "terms": [
+        "發明",
+        "木牛流馬",
+        "連弩",
+        "器械",
+        "造船"
+      ]
+    },
+    {
+      "tag": "medicine_ritual",
+      "decisionHint": null,
+      "terms": [
+        "醫",
+        "方士",
+        "占卜",
+        "祭祀"
+      ]
+    },
+    {
+      "tag": "outlaw_mercenary",
+      "decisionHint": "seeks_revenge",
+      "terms": [
+        "盜賊",
+        "山賊",
+        "亡命",
+        "傭兵"
+      ]
+    }
+  ],
+  "statTagRules": [
+    {
+      "statKey": "str",
+      "threshold": 78,
+      "aptitudeTag": "martial_weapon",
+      "decisionHint": "prefers_battle",
+      "personalityTag": "direct_force",
+      "choiceHint": "chooses_frontline_action"
+    },
+    {
+      "statKey": "lea",
+      "threshold": 78,
+      "aptitudeTag": "command_strategy",
+      "decisionHint": "prefers_battle",
+      "personalityTag": "commanding",
+      "choiceHint": "chooses_deployment_or_drill"
+    },
+    {
+      "statKey": "int",
+      "threshold": 78,
+      "aptitudeTag": "command_strategy",
+      "decisionHint": "prefers_strategy",
+      "personalityTag": "analytical",
+      "choiceHint": "chooses_planning_or_trap"
+    },
+    {
+      "statKey": "pol",
+      "threshold": 78,
+      "aptitudeTag": "civil_governance",
+      "decisionHint": "prefers_governance",
+      "personalityTag": "administrative",
+      "choiceHint": "chooses_office_or_policy"
+    },
+    {
+      "statKey": "cha",
+      "threshold": 78,
+      "aptitudeTag": "diplomacy_speech",
+      "decisionHint": "prefers_diplomacy",
+      "personalityTag": "persuasive",
+      "choiceHint": "chooses_negotiation_or_recruitment"
+    },
+    {
+      "statKey": "luk",
+      "threshold": 82,
+      "aptitudeTag": "opportunistic_survival",
+      "decisionHint": "prefers_risk",
+      "personalityTag": "opportunistic",
+      "choiceHint": "chooses_gamble_or_escape"
+    }
+  ],
+  "affectActivityCueRules": [
+    {
+      "target": "affect_tags",
+      "tag": "friendship_loyalty",
+      "terms": [
+        "忠",
+        "義",
+        "報恩",
+        "追隨",
+        "核心幕僚",
+        "禮遇器重"
+      ]
+    },
+    {
+      "target": "affect_tags",
+      "tag": "family_affection",
+      "terms": [
+        "父",
+        "母",
+        "子",
+        "家族",
+        "宗室",
+        "血脈",
+        "家門"
+      ]
+    },
+    {
+      "target": "affect_tags",
+      "tag": "romance_love",
+      "terms": [
+        "妻",
+        "夫",
+        "婚",
+        "嫁",
+        "聯姻"
+      ]
+    },
+    {
+      "target": "affect_tags",
+      "tag": "grief_regret",
+      "terms": [
+        "亡",
+        "死",
+        "敗亡",
+        "哀",
+        "流離",
+        "孤燈"
+      ]
+    },
+    {
+      "target": "affect_tags",
+      "tag": "anger_revenge",
+      "terms": [
+        "復仇",
+        "報仇",
+        "雪讎",
+        "仇",
+        "反擊"
+      ]
+    },
+    {
+      "target": "affect_tags",
+      "tag": "mercy_compassion",
+      "terms": [
+        "仁",
+        "賑",
+        "安民",
+        "救",
+        "體恤"
+      ]
+    },
+    {
+      "target": "affect_tags",
+      "tag": "ambition_pride",
+      "terms": [
+        "開國",
+        "稱帝",
+        "霸",
+        "野心",
+        "功名",
+        "最高掌權者"
+      ]
+    },
+    {
+      "target": "affect_tags",
+      "tag": "fear_shame",
+      "terms": [
+        "猜忌",
+        "避禍",
+        "危險",
+        "壓力",
+        "怯"
+      ]
+    },
+    {
+      "target": "personality_tags",
+      "tag": "martial",
+      "terms": [
+        "武勇",
+        "猛",
+        "虎",
+        "槍",
+        "騎",
+        "上陣",
+        "戰"
+      ]
+    },
+    {
+      "target": "personality_tags",
+      "tag": "strategic",
+      "terms": [
+        "謀",
+        "軍師",
+        "策",
+        "智囊",
+        "落子",
+        "奇計"
+      ]
+    },
+    {
+      "target": "personality_tags",
+      "tag": "governance-minded",
+      "terms": [
+        "治",
+        "政",
+        "丞相",
+        "行政",
+        "法令",
+        "安民"
+      ]
+    },
+    {
+      "target": "personality_tags",
+      "tag": "literary",
+      "terms": [
+        "文學",
+        "詩",
+        "文章",
+        "音律",
+        "琴",
+        "書"
+      ]
+    },
+    {
+      "target": "personality_tags",
+      "tag": "survival-minded",
+      "terms": [
+        "流離",
+        "俘",
+        "避禍",
+        "危險",
+        "敗亡"
+      ]
+    },
+    {
+      "target": "personality_tags",
+      "tag": "family-bound",
+      "terms": [
+        "父",
+        "母",
+        "子",
+        "家族",
+        "宗室",
+        "血脈"
+      ]
+    },
+    {
+      "target": "activity_hints",
+      "tag": "serve_army",
+      "terms": [
+        "將軍",
+        "統帥",
+        "守城",
+        "鎮守",
+        "從軍",
+        "宿衛"
+      ]
+    },
+    {
+      "target": "activity_hints",
+      "tag": "appoint_office",
+      "terms": [
+        "丞相",
+        "太守",
+        "刺史",
+        "官",
+        "封",
+        "任"
+      ]
+    },
+    {
+      "target": "activity_hints",
+      "tag": "negotiate_surrender",
+      "terms": [
+        "外交",
+        "使者",
+        "談判",
+        "說降",
+        "聯盟"
+      ]
+    },
+    {
+      "target": "activity_hints",
+      "tag": "teach_train",
+      "terms": [
+        "教",
+        "門生",
+        "訓",
+        "傳授"
+      ]
+    },
+    {
+      "target": "activity_hints",
+      "tag": "craft_build",
+      "terms": [
+        "發明",
+        "器械",
+        "造船",
+        "連弩",
+        "木牛流馬"
+      ]
+    },
+    {
+      "target": "activity_hints",
+      "tag": "host_banquet",
+      "terms": [
+        "宴",
+        "酒",
+        "會",
+        "席"
+      ]
+    },
+    {
+      "target": "activity_hints",
+      "tag": "family_duty",
+      "terms": [
+        "父",
+        "母",
+        "子",
+        "家族",
+        "宗室",
+        "婚"
+      ]
+    },
+    {
+      "target": "activity_hints",
+      "tag": "recruitment_visit",
+      "terms": [
+        "拜訪",
+        "三顧",
+        "投奔",
+        "招募",
+        "禮遇"
+      ]
+    },
+    {
+      "target": "activity_hints",
+      "tag": "raid_plunder",
+      "terms": [
+        "盜賊",
+        "山賊",
+        "劫",
+        "掠"
+      ]
+    },
+    {
+      "target": "activity_hints",
+      "tag": "suppress_unrest",
+      "terms": [
+        "平亂",
+        "剿",
+        "黃巾",
+        "亂"
+      ]
+    }
+  ],
+  "plainRelationshipRules": [
+    {
+      "terms": [
+        "父親",
+        "父亲",
+        "父：",
+        "母親",
+        "母亲",
+        "母："
+      ],
+      "fromExpr": "target_id",
+      "toExpr": "source_id",
+      "proposedType": "parent_child_candidate",
+      "reason": "family_plain_field"
+    },
+    {
+      "terms": [
+        "其子",
+        "兒子",
+        "儿子",
+        "長子",
+        "次子",
+        "之子",
+        "其女",
+        "女兒"
+      ],
+      "fromExpr": "source_id",
+      "toExpr": "target_id",
+      "proposedType": "parent_child_candidate",
+      "reason": "family_plain_field"
+    },
+    {
+      "terms": [
+        "妻",
+        "夫人",
+        "丈夫",
+        "嫁",
+        "娶",
+        "婚",
+        "聯姻"
+      ],
+      "fromExpr": "source_id",
+      "toExpr": "target_id",
+      "proposedType": "spouse_candidate",
+      "reason": "marriage_plain_field"
+    },
+    {
+      "terms": [
+        "兄",
+        "弟",
+        "姊",
+        "妹",
+        "同族",
+        "族兄",
+        "族弟"
+      ],
+      "fromExpr": "source_id",
+      "toExpr": "target_id",
+      "proposedType": "sibling_candidate",
+      "reason": "kinship_plain_field"
+    },
+    {
+      "terms": [
+        "麾下",
+        "幕僚",
+        "臣",
+        "主上",
+        "禮遇",
+        "器重",
+        "效力",
+        "追隨"
+      ],
+      "fromExpr": "target_id",
+      "toExpr": "source_id",
+      "proposedType": "ruler_subject_candidate",
+      "reason": "service_plain_field"
+    },
+    {
+      "terms": [
+        "仇",
+        "敵",
+        "討",
+        "攻",
+        "殺",
+        "擊敗",
+        "大敗",
+        "復仇"
+      ],
+      "fromExpr": "source_id",
+      "toExpr": "target_id",
+      "proposedType": "enemy_rival_candidate",
+      "reason": "conflict_plain_field"
+    },
+    {
+      "terms": [
+        "好友",
+        "知己",
+        "同鄉",
+        "結義",
+        "盟",
+        "同盟"
+      ],
+      "fromExpr": "source_id",
+      "toExpr": "target_id",
+      "proposedType": "friend_or_ally_candidate",
+      "reason": "affinity_plain_field"
+    }
+  ],
+  "femaleProfileCueRules": [
+    {
+      "target": "affect_tags",
+      "tag": "romance_love",
+      "terms": [
+        "夫",
+        "妻",
+        "嫁",
+        "婚",
+        "寵愛",
+        "聯姻"
+      ]
+    },
+    {
+      "target": "affect_tags",
+      "tag": "family_affection",
+      "terms": [
+        "母",
+        "父",
+        "子",
+        "女",
+        "家門",
+        "宗室",
+        "家族"
+      ]
+    },
+    {
+      "target": "affect_tags",
+      "tag": "grief_regret",
+      "terms": [
+        "流離",
+        "哀",
+        "亡",
+        "死",
+        "犧牲",
+        "惋惜",
+        "破碎"
+      ]
+    },
+    {
+      "target": "affect_tags",
+      "tag": "anger_revenge",
+      "terms": [
+        "復仇",
+        "報仇",
+        "雪讎",
+        "烈",
+        "不肯",
+        "拒絕"
+      ]
+    },
+    {
+      "target": "affect_tags",
+      "tag": "fear_shame",
+      "terms": [
+        "宮",
+        "後宮",
+        "壓力",
+        "危險",
+        "猜忌",
+        "禪讓"
+      ]
+    },
+    {
+      "target": "affect_tags",
+      "tag": "ambition_pride",
+      "terms": [
+        "公主",
+        "皇后",
+        "女將",
+        "武勇",
+        "自主",
+        "權勢"
+      ]
+    },
+    {
+      "target": "personality_tags",
+      "tag": "martial",
+      "terms": [
+        "女將",
+        "飛刀",
+        "騎射",
+        "上陣",
+        "武勇",
+        "守城",
+        "雙刀"
+      ]
+    },
+    {
+      "target": "personality_tags",
+      "tag": "political",
+      "terms": [
+        "政治",
+        "宮",
+        "後宮",
+        "繼承",
+        "禪讓",
+        "內廷",
+        "權門",
+        "謀"
+      ]
+    },
+    {
+      "target": "personality_tags",
+      "tag": "literary",
+      "terms": [
+        "文學",
+        "詩",
+        "文字",
+        "樂聲",
+        "胡笳"
+      ]
+    },
+    {
+      "target": "personality_tags",
+      "tag": "protective",
+      "terms": [
+        "守",
+        "護",
+        "穩住",
+        "家門",
+        "孩子"
+      ]
+    },
+    {
+      "target": "personality_tags",
+      "tag": "vengeful",
+      "terms": [
+        "復仇",
+        "報仇",
+        "雪讎"
+      ]
+    },
+    {
+      "target": "personality_tags",
+      "tag": "autonomous",
+      "terms": [
+        "自主",
+        "不肯",
+        "決絕",
+        "親自"
+      ]
+    },
+    {
+      "target": "interaction_priorities",
+      "tag": "romance_or_marriage_scene",
+      "terms": [
+        "夫",
+        "妻",
+        "嫁",
+        "婚",
+        "聯姻"
+      ]
+    },
+    {
+      "target": "interaction_priorities",
+      "tag": "family_or_lineage_scene",
+      "terms": [
+        "母",
+        "父",
+        "子",
+        "宗室",
+        "家門"
+      ]
+    },
+    {
+      "target": "interaction_priorities",
+      "tag": "palace_or_household_politics",
+      "terms": [
+        "宮",
+        "後宮",
+        "內廷",
+        "權門",
+        "繼承"
+      ]
+    },
+    {
+      "target": "interaction_priorities",
+      "tag": "grief_or_exile_memory",
+      "terms": [
+        "流離",
+        "哀",
+        "亡",
+        "犧牲"
+      ]
+    },
+    {
+      "target": "interaction_priorities",
+      "tag": "revenge_or_refusal_scene",
+      "terms": [
+        "復仇",
+        "報仇",
+        "雪讎",
+        "不肯",
+        "拒絕"
+      ]
+    },
+    {
+      "target": "interaction_priorities",
+      "tag": "battle_or_training_scene",
+      "terms": [
+        "女將",
+        "飛刀",
+        "騎射",
+        "上陣",
+        "守城",
+        "武勇"
+      ]
+    }
+  ],
+  "femaleProfileEventHookTerms": [
+    "連環計",
+    "長坂",
+    "赤壁",
+    "南征",
+    "禪讓",
+    "復仇",
+    "聯姻",
+    "流離",
+    "後宮",
+    "守城"
+  ]
+}

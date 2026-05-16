@@ -1,0 +1,39 @@
+{"decisionWeightHints": ["prefers_battle", "prefers_governance"], "id": "Catalog_SocialRoleSeed_0001", "name": "曹操", "roleActivityTags": ["warlord_ruler", "general_commander", "strategist_advisor"]}
+{"decisionWeightHints": ["values_loyalty", "protects_family"], "id": "Catalog_SocialRoleSeed_0002", "name": "劉備", "roleActivityTags": ["warlord_ruler", "general_commander"]}
+{"decisionWeightHints": ["prefers_battle", "values_loyalty"], "id": "Catalog_SocialRoleSeed_0003", "name": "關羽", "roleActivityTags": ["general_commander", "soldier_guard"]}
+{"decisionWeightHints": ["prefers_battle", "values_loyalty"], "id": "Catalog_SocialRoleSeed_0004", "name": "張飛", "roleActivityTags": ["general_commander", "soldier_guard"]}
+{"decisionWeightHints": ["prefers_diplomacy", "prefers_governance"], "id": "Catalog_SocialRoleSeed_0005", "name": "孫權", "roleActivityTags": ["warlord_ruler", "diplomacy_speech"]}
+{"decisionWeightHints": ["prefers_battle"], "id": "Catalog_SocialRoleSeed_0006", "name": "孫堅", "roleActivityTags": ["warlord_ruler", "general_commander"]}
+{"decisionWeightHints": ["prefers_battle"], "id": "Catalog_SocialRoleSeed_0007", "name": "孫策", "roleActivityTags": ["warlord_ruler", "general_commander"]}
+{"decisionWeightHints": ["prefers_battle"], "id": "Catalog_SocialRoleSeed_0008", "name": "袁紹", "roleActivityTags": ["warlord_ruler"]}
+{"decisionWeightHints": ["prefers_battle"], "id": "Catalog_SocialRoleSeed_0009", "name": "袁術", "roleActivityTags": ["warlord_ruler"]}
+{"decisionWeightHints": ["prefers_battle"], "id": "Catalog_SocialRoleSeed_0010", "name": "董卓", "roleActivityTags": ["warlord_ruler", "general_commander"]}
+{"decisionWeightHints": ["prefers_battle", "seeks_revenge"], "id": "Catalog_SocialRoleSeed_0011", "name": "呂布", "roleActivityTags": ["general_commander", "outlaw_mercenary"]}
+{"decisionWeightHints": ["prefers_governance", "prefers_diplomacy"], "id": "Catalog_SocialRoleSeed_0012", "name": "諸葛亮", "roleActivityTags": ["strategist_advisor", "civil_governance", "craft_engineering"]}
+{"decisionWeightHints": ["prefers_battle"], "id": "Catalog_SocialRoleSeed_0013", "name": "周瑜", "roleActivityTags": ["general_commander", "strategist_advisor"]}
+{"decisionWeightHints": ["prefers_diplomacy"], "id": "Catalog_SocialRoleSeed_0014", "name": "魯肅", "roleActivityTags": ["strategist_advisor", "diplomacy_speech"]}
+{"decisionWeightHints": ["prefers_strategy", "avoids_risk"], "id": "Catalog_SocialRoleSeed_0015", "name": "司馬懿", "roleActivityTags": ["strategist_advisor", "general_commander"]}
+{"decisionWeightHints": ["prefers_governance"], "id": "Catalog_SocialRoleSeed_0016", "name": "司馬炎", "roleActivityTags": ["warlord_ruler", "official_bureaucrat"]}
+{"decisionWeightHints": ["values_loyalty", "protects_family"], "id": "Catalog_SocialRoleSeed_0017", "name": "趙雲", "roleActivityTags": ["general_commander", "soldier_guard"]}
+{"decisionWeightHints": ["prefers_battle"], "id": "Catalog_SocialRoleSeed_0018", "name": "黃忠", "roleActivityTags": ["general_commander", "soldier_guard"]}
+{"decisionWeightHints": ["prefers_battle", "seeks_revenge"], "id": "Catalog_SocialRoleSeed_0019", "name": "馬超", "roleActivityTags": ["general_commander", "outlaw_mercenary"]}
+{"decisionWeightHints": ["prefers_battle"], "id": "Catalog_SocialRoleSeed_0020", "name": "魏延", "roleActivityTags": ["general_commander", "soldier_guard"]}
+{"decisionWeightHints": ["prefers_strategy", "prefers_diplomacy"], "id": "Catalog_SocialRoleSeed_0021", "name": "龐統", "roleActivityTags": ["strategist_advisor", "diplomacy_speech"]}
+{"decisionWeightHints": ["prefers_battle", "values_loyalty"], "id": "Catalog_SocialRoleSeed_0022", "name": "姜維", "roleActivityTags": ["general_commander", "strategist_advisor"]}
+{"decisionWeightHints": ["prefers_strategy", "prefers_governance"], "id": "Catalog_SocialRoleSeed_0023", "name": "陸遜", "roleActivityTags": ["general_commander", "strategist_advisor"]}
+{"decisionWeightHints": ["prefers_battle", "values_loyalty"], "id": "Catalog_SocialRoleSeed_0024", "name": "呂蒙", "roleActivityTags": ["general_commander", "soldier_guard"]}
+{"decisionWeightHints": ["prefers_governance"], "id": "Catalog_SocialRoleSeed_0025", "name": "荀彧", "roleActivityTags": ["strategist_advisor", "official_bureaucrat"]}
+{"decisionWeightHints": ["prefers_strategy"], "id": "Catalog_SocialRoleSeed_0026", "name": "郭嘉", "roleActivityTags": ["strategist_advisor"]}
+{"decisionWeightHints": ["prefers_strategy", "prefers_diplomacy"], "id": "Catalog_SocialRoleSeed_0027", "name": "法正", "roleActivityTags": ["strategist_advisor", "diplomacy_speech"]}
+{"decisionWeightHints": ["prefers_strategy", "prefers_diplomacy"], "id": "Catalog_SocialRoleSeed_0028", "name": "許攸", "roleActivityTags": ["strategist_advisor", "diplomacy_speech"]}
+{"decisionWeightHints": ["prefers_strategy"], "id": "Catalog_SocialRoleSeed_0029", "name": "陳宮", "roleActivityTags": ["strategist_advisor", "official_bureaucrat"]}
+{"decisionWeightHints": ["prefers_governance", "prefers_strategy"], "id": "Catalog_SocialRoleSeed_0030", "name": "王允", "roleActivityTags": ["official_bureaucrat", "strategist_advisor"]}
+{"decisionWeightHints": ["prefers_battle", "values_autonomy"], "id": "Catalog_SocialRoleSeed_0031", "name": "孟獲", "roleActivityTags": ["warlord_ruler", "general_commander"]}
+{"decisionWeightHints": ["prefers_strategy"], "id": "Catalog_SocialRoleSeed_0032", "name": "馬謖", "roleActivityTags": ["strategist_advisor", "general_commander"]}
+{"decisionWeightHints": ["prefers_governance"], "id": "Catalog_SocialRoleSeed_0033", "name": "劉禪", "roleActivityTags": ["warlord_ruler", "official_bureaucrat"]}
+{"decisionWeightHints": ["prefers_governance"], "id": "Catalog_SocialRoleSeed_0034", "name": "曹睿", "roleActivityTags": ["warlord_ruler", "official_bureaucrat"]}
+{"decisionWeightHints": ["protects_family"], "id": "Catalog_SocialRoleSeed_0035", "name": "劉琦", "roleActivityTags": ["official_bureaucrat"]}
+{"decisionWeightHints": ["avoids_risk"], "id": "Catalog_SocialRoleSeed_0036", "name": "劉琮", "roleActivityTags": ["official_bureaucrat"]}
+{"decisionWeightHints": ["values_loyalty", "protects_family"], "id": "Catalog_SocialRoleSeed_0037", "name": "關平", "roleActivityTags": ["general_commander", "soldier_guard"]}
+{"decisionWeightHints": ["values_loyalty", "prefers_battle"], "id": "Catalog_SocialRoleSeed_0038", "name": "高順", "roleActivityTags": ["general_commander", "soldier_guard"]}
+{"decisionWeightHints": ["prefers_governance"], "id": "Catalog_SocialRoleSeed_0039", "name": "丁原", "roleActivityTags": ["warlord_ruler", "official_bureaucrat"]}

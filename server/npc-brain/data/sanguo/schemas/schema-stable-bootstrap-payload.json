@@ -1,0 +1,23 @@
+{
+  "id": "Schema_StableBootstrapPayload_Minimal",
+  "requiredTopLevelKeys": [
+    "version",
+    "generatedAt",
+    "inputs",
+    "sourceCandidates",
+    "identitySeeds",
+    "basicProfileSeeds",
+    "femalePriorityProfiles",
+    "relationshipEdges",
+    "plainRelationshipProposals",
+    "eventLocationSeeds",
+    "factionTimelines",
+    "socialRoleSeeds",
+    "autoSocialRoleSeeds",
+    "plainFactProposals",
+    "timeScopedAliasHints",
+    "missingCoverage",
+    "summary",
+    "qualityGates"
+  ]
+}

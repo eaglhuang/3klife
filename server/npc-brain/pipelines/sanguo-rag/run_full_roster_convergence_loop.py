@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from repo_layout import pipeline_config_path, pipeline_root, resolve_npc_brain_root, resolve_repo_root
+from sanguo_governance_loader import default_governance_root, load_full_roster_runner_governance
 
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -28,35 +29,20 @@ DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extra
 DEFAULT_ROUND_JSON_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds")
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_OBSERVED_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-label-summary.json")
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 PROFILE_CHOICES = ("all", "female-priority", "history-romance")
-DEFAULT_PRECISION_POLICY = {
-    "laneAllowlist": ["deterministic-repair", "skill-preview", "human-review", "seed-to-card"],
-    "laneWeights": {
-        "deterministic-repair": 0.35,
-        "skill-preview": 0.35,
-        "human-review": 0.20,
-        "seed-to-card": 0.10,
-    },
-    "maxPerCluster": 2,
-    "minPerLane": 1,
-    "genericCandidateBucketSize": 3,
-}
-AUTO_RETIRED_VERDICTS = {"auto-retired", "auto-retired-reject", "auto-retired-low-roi"}
-TRANSIENT_HTTP_STATUS = {408, 425, 429, 500, 502, 503, 504, 520, 522, 524}
-TRANSIENT_REASON_KEYWORDS = (
-    "timeout",
-    "timed out",
-    "gateway timeout",
-    "gateway time-out",
-    "connection reset",
-    "connection refused",
-    "socket hang up",
-    "econnreset",
-    "econnrefused",
-    "etimedout",
-    "eai_again",
-    "network error",
-)
+DEFAULT_PRECISION_POLICY: dict[str, Any] = {}
+AUTO_RETIRED_VERDICTS: set[str] = set()
+TRANSIENT_HTTP_STATUS: set[int] = set()
+TRANSIENT_REASON_KEYWORDS: tuple[str, ...] = ()
+
+
+def apply_full_roster_runner_governance(governance_root: str | Path | None, runner_policy: str | Path | None = None) -> None:
+    policy = load_full_roster_runner_governance(governance_root, runner_policy=runner_policy)
+    globals()["DEFAULT_PRECISION_POLICY"] = dict(policy.get("defaultPrecisionPolicy") or {})
+    globals()["AUTO_RETIRED_VERDICTS"] = {str(item).strip().lower() for item in policy.get("autoRetiredVerdicts") or []}
+    globals()["TRANSIENT_HTTP_STATUS"] = {int(item) for item in policy.get("transientHttpStatus") or []}
+    globals()["TRANSIENT_REASON_KEYWORDS"] = tuple(str(item).strip().lower() for item in policy.get("transientReasonKeywords") or [])
 
 
 def utc_now() -> str:
@@ -3796,6 +3782,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run full roster convergence loop for Sanguo ETL/RAG external evidence highway.")
     parser.add_argument("--run-id", default=None)
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance data root.")
+    parser.add_argument("--runner-policy", default=None, help="Optional runner policy JSON override.")
     parser.add_argument("--source-config", default=str(DEFAULT_SOURCE_CONFIG))
     parser.add_argument("--lane-policy-config", default=str(DEFAULT_LANE_POLICY_CONFIG))
     parser.add_argument("--baseline-manifest", default=None)
@@ -4011,6 +3999,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    apply_full_roster_runner_governance(args.governance_root, args.runner_policy)
     args.run_id = args.run_id or f"full-roster-convergence-{utc_stamp()}"
     run_root_base = resolve_existing_path(Path(args.output_root))
     run_root = run_root_base / args.run_id

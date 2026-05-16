@@ -1,0 +1,52 @@
+{
+  "id": "Policy_StableBootstrap_P0",
+  "stableBootstrapSourceLayer": "stable-bootstrap-seed",
+  "historyProfileBaselineSourceLayer": "stable-history-profile-baseline",
+  "aCanonRelationshipGrades": [
+    "A-history",
+    "A-history-cross-source",
+    "A-romance"
+  ],
+  "historyProfileAuthorityTerms": [
+    "麾下",
+    "效忠",
+    "亲信",
+    "親信",
+    "侍衛",
+    "侍卫",
+    "部下",
+    "部將",
+    "部将",
+    "大將",
+    "大将",
+    "幕僚",
+    "投奔",
+    "投靠",
+    "歸降",
+    "归降",
+    "歸順",
+    "归顺",
+    "追隨",
+    "追随",
+    "侍奉"
+  ],
+  "historyProfileTransientTerms": [
+    "一度",
+    "曾",
+    "短暫",
+    "短暂",
+    "先",
+    "後",
+    "后"
+  ],
+  "basicProfileSourceFields": [
+    "title",
+    "role",
+    "source",
+    "notes",
+    "historicalAnecdote",
+    "parentsSummary",
+    "ancestorsSummary",
+    "storyStripCells"
+  ]
+}

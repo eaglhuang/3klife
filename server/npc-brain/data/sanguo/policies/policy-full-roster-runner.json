@@ -1,0 +1,56 @@
+{
+  "id": "Policy_FullRosterRunner_P0",
+  "profileChoices": [
+    "all",
+    "female-priority",
+    "history-romance"
+  ],
+  "defaultPrecisionPolicy": {
+    "laneAllowlist": [
+      "deterministic-repair",
+      "skill-preview",
+      "human-review",
+      "seed-to-card"
+    ],
+    "laneWeights": {
+      "deterministic-repair": 0.35,
+      "skill-preview": 0.35,
+      "human-review": 0.2,
+      "seed-to-card": 0.1
+    },
+    "maxPerCluster": 2,
+    "minPerLane": 1,
+    "genericCandidateBucketSize": 3
+  },
+  "autoRetiredVerdicts": [
+    "auto-retired",
+    "auto-retired-low-roi",
+    "auto-retired-reject"
+  ],
+  "transientHttpStatus": [
+    408,
+    425,
+    429,
+    500,
+    502,
+    503,
+    504,
+    520,
+    522,
+    524
+  ],
+  "transientReasonKeywords": [
+    "timeout",
+    "timed out",
+    "gateway timeout",
+    "gateway time-out",
+    "connection reset",
+    "connection refused",
+    "socket hang up",
+    "econnreset",
+    "econnrefused",
+    "etimedout",
+    "eai_again",
+    "network error"
+  ]
+}

@@ -1,0 +1,29 @@
+{"confidence": 0.98, "eventTags": ["taoyuan_oath"], "id": "Catalog_HardRelationshipSpec_0001", "names": ["劉備", "關羽", "張飛"], "sourceRefs": ["001#taoyuan-oath"], "status": "ready", "type": "sworn_sibling", "validFromChapter": 1}
+{"confidence": 0.95, "fromName": "曹操", "id": "Catalog_HardRelationshipSpec_0002", "sourceRefs": ["068#succession"], "toName": "曹丕", "type": "parent_child"}
+{"confidence": 0.95, "fromName": "曹操", "id": "Catalog_HardRelationshipSpec_0003", "sourceRefs": ["079#succession"], "toName": "曹植", "type": "parent_child"}
+{"confidence": 0.93, "fromName": "曹操", "id": "Catalog_HardRelationshipSpec_0004", "sourceRefs": ["079#succession"], "toName": "曹彰", "type": "parent_child"}
+{"confidence": 0.93, "fromName": "曹操", "id": "Catalog_HardRelationshipSpec_0005", "sourceRefs": ["016#wan-cheng"], "toName": "曹昂", "type": "parent_child"}
+{"confidence": 0.9, "fromName": "曹丕", "id": "Catalog_HardRelationshipSpec_0006", "sourceRefs": ["086#wei-succession"], "toName": "曹睿", "type": "parent_child"}
+{"confidence": 0.96, "fromName": "孫堅", "id": "Catalog_HardRelationshipSpec_0007", "sourceRefs": ["007#jiangdong"], "toName": "孫策", "type": "parent_child"}
+{"confidence": 0.96, "fromName": "孫堅", "id": "Catalog_HardRelationshipSpec_0008", "sourceRefs": ["029#jiangdong"], "toName": "孫權", "type": "parent_child"}
+{"confidence": 0.95, "fromName": "孫策", "id": "Catalog_HardRelationshipSpec_0009", "sourceRefs": ["029#jiangdong"], "toName": "孫權", "type": "sibling"}
+{"confidence": 0.94, "fromName": "劉備", "id": "Catalog_HardRelationshipSpec_0010", "sourceRefs": ["041#changban-a-dou"], "toName": "劉禪", "type": "parent_child"}
+{"confidence": 0.93, "fromName": "劉備", "id": "Catalog_HardRelationshipSpec_0011", "sourceRefs": ["041#changban-a-dou", "054#zhao-yun-guards"], "toName": "趙雲", "type": "ruler_subject"}
+{"confidence": 0.94, "fromName": "劉備", "id": "Catalog_HardRelationshipSpec_0012", "sourceRefs": ["054#marriage-alliance"], "toName": "孫尚香", "type": "spouse"}
+{"confidence": 0.9, "fromName": "關羽", "id": "Catalog_HardRelationshipSpec_0013", "sourceRefs": ["077#next-generation"], "toName": "關興", "type": "parent_child"}
+{"confidence": 0.88, "fromName": "關羽", "id": "Catalog_HardRelationshipSpec_0014", "sourceRefs": ["077#maicheng"], "toName": "關平", "type": "parent_child"}
+{"confidence": 0.9, "fromName": "張飛", "id": "Catalog_HardRelationshipSpec_0015", "sourceRefs": ["081#next-generation"], "toName": "張苞", "type": "parent_child"}
+{"confidence": 0.9, "fromName": "劉表", "id": "Catalog_HardRelationshipSpec_0016", "sourceRefs": ["034#jingzhou-family"], "toName": "劉琦", "type": "parent_child"}
+{"confidence": 0.9, "fromName": "劉表", "id": "Catalog_HardRelationshipSpec_0017", "sourceRefs": ["040#jingzhou-succession"], "toName": "劉琮", "type": "parent_child"}
+{"confidence": 0.86, "fromName": "劉琦", "id": "Catalog_HardRelationshipSpec_0018", "sourceRefs": ["040#jingzhou-succession"], "toName": "劉琮", "type": "sibling"}
+{"confidence": 0.84, "fromName": "丁原", "id": "Catalog_HardRelationshipSpec_0019", "sourceRefs": ["003#ding-yuan"], "toName": "呂布", "type": "parent_child", "validToChapter": 3}
+{"confidence": 0.84, "fromName": "董卓", "id": "Catalog_HardRelationshipSpec_0020", "sourceRefs": ["003#dong-zhuo-lu-bu"], "toName": "呂布", "type": "parent_child", "validFromChapter": 3, "validToChapter": 9}
+{"confidence": 0.94, "fromName": "司馬懿", "id": "Catalog_HardRelationshipSpec_0021", "sourceRefs": ["107#sima-family"], "toName": "司馬師", "type": "parent_child"}
+{"confidence": 0.94, "fromName": "司馬懿", "id": "Catalog_HardRelationshipSpec_0022", "sourceRefs": ["107#sima-family"], "toName": "司馬昭", "type": "parent_child"}
+{"confidence": 0.92, "fromName": "司馬師", "id": "Catalog_HardRelationshipSpec_0023", "sourceRefs": ["107#sima-family"], "toName": "司馬昭", "type": "sibling"}
+{"confidence": 0.94, "fromName": "司馬昭", "id": "Catalog_HardRelationshipSpec_0024", "sourceRefs": ["119#jin-succession"], "toName": "司馬炎", "type": "parent_child"}
+{"confidence": 0.92, "fromName": "諸葛亮", "id": "Catalog_HardRelationshipSpec_0025", "sourceRefs": ["117#zhuge-family"], "toName": "諸葛瞻", "type": "parent_child"}
+{"confidence": 0.9, "fromName": "袁紹", "id": "Catalog_HardRelationshipSpec_0026", "sourceRefs": ["032#yuan-family"], "toName": "袁譚", "type": "parent_child"}
+{"confidence": 0.9, "fromName": "袁紹", "id": "Catalog_HardRelationshipSpec_0027", "sourceRefs": ["032#yuan-family"], "toName": "袁尚", "type": "parent_child"}
+{"confidence": 0.88, "fromName": "袁譚", "id": "Catalog_HardRelationshipSpec_0028", "sourceRefs": ["032#yuan-family"], "toName": "袁尚", "type": "sibling"}
+{"confidence": 0.88, "fromName": "孫權", "id": "Catalog_HardRelationshipSpec_0029", "sourceRefs": ["108#wu-succession"], "toName": "孫亮", "type": "parent_child"}

@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from repo_layout import pipeline_root, resolve_repo_root
+from sanguo_governance_loader import default_governance_root, load_progress_runner_governance
 
 REPO_ROOT = resolve_repo_root(__file__)
 PIPELINE_ROOT = pipeline_root(REPO_ROOT)
@@ -35,57 +36,28 @@ DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extract
 DEFAULT_EVENTS_SUMMARY_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/events-summary.json")
 DEFAULT_GENERIC_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl")
 DEFAULT_FEMALE_CANDIDATES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl")
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 
-ROOT_CAUSE_GROUPS = [
-    "identity ambiguity",
-    "location gap",
-    "relationship edge/type",
-    "event boundary",
-    "missing source evidence",
-    "schema/tool gap",
-    "external source needed",
-]
-
-EVENT_REVIEW_SYNONYMS = {
-    "A": "A",
-    "ACCEPT": "A",
-    "B": "B",
-    "ACCEPT-WITH-EDITS": "B",
-    "ACCEPT_WITH_EDITS": "B",
-    "C": "C",
-    "REJECT": "C",
-    "D": "D",
-    "DEFER": "D",
-}
-
-LOCATION_FROM_CUE_PATTERN = re.compile(
-    r"(?:於|在|至|攻打|圍攻|駐守|屯於|赴|入|到)([一-龥]{1,4}(?:州|郡|縣|城|關|渡|津|寨|山|江|河|口))"
-)
-LOCATION_STRONG_PATTERN = re.compile(r"([一-龥]{1,4}(?:州|郡|縣|城|關|渡|津|寨))")
-LOCATION_BAD_PREFIX = {"上", "下", "出", "入", "攻", "守", "聞", "戰", "至", "在", "於"}
+ROOT_CAUSE_GROUPS: list[str] = []
+EVENT_REVIEW_SYNONYMS: dict[str, str] = {}
+LOCATION_SUFFIX_PATTERN = re.compile(r"$^")
+LOCATION_FROM_CUE_PATTERN = re.compile(r"$^")
+LOCATION_STRONG_PATTERN = re.compile(r"$^")
+LOCATION_BAD_PREFIX: set[str] = set()
+LOCATION_STOP_TOKENS: set[str] = set()
 
 
-LOCATION_FROM_CUE_PATTERN = re.compile(
-    r"(?:在|於|至|屯於|駐於|守於|戰於|會於|攻克|進軍|退守)"
-    r"([\u4e00-\u9fff]{1,8}(?:州|郡|縣|城|關|渡|津|寨|山|水|口|原|川|都|京)?)"
-)
-LOCATION_STRONG_PATTERN = re.compile(
-    r"([\u4e00-\u9fff]{2,8}(?:州|郡|縣|城|關|渡|津|寨|山|水|口|原|川|都|京))"
-)
-LOCATION_BAD_PREFIX = {"上", "下", "出", "入", "攻", "守", "聞", "戰", "至", "在", "於"}
-LOCATION_STOP_TOKENS = {"人物", "事件", "關係", "武將", "候選", "段落"}
-
-# Canonical deterministic location heuristics (override any legacy/mojibake patterns above).
-LOCATION_SUFFIX_PATTERN = re.compile(r"(州|郡|縣|城|關|渡|津|寨|山|水|口|原|川|都|京)$")
-LOCATION_FROM_CUE_PATTERN = re.compile(
-    r"(?:在|於|至|屯於|駐於|守於|戰於|會於|攻克|進軍|退守)"
-    r"([\u4e00-\u9fff]{1,8}(?:州|郡|縣|城|關|渡|津|寨|山|水|口|原|川|都|京)?)"
-)
-LOCATION_STRONG_PATTERN = re.compile(
-    r"([\u4e00-\u9fff]{2,8}(?:州|郡|縣|城|關|渡|津|寨|山|水|口|原|川|都|京))"
-)
-LOCATION_BAD_PREFIX = {"上", "下", "出", "入", "攻", "守", "聞", "戰", "至", "在", "於"}
-LOCATION_STOP_TOKENS = {"人物", "事件", "關係", "武將", "候選", "段落", "入城", "出城"}
+def apply_progress_runner_governance(governance_root: str | Path | None, runner_policy: str | Path | None = None) -> None:
+    bundle = load_progress_runner_governance(governance_root, runner_policy=runner_policy)
+    policy = bundle["policy"]
+    location_rule = bundle["locationRule"]
+    globals()["ROOT_CAUSE_GROUPS"] = [str(item) for item in policy.get("rootCauseGroups") or []]
+    globals()["EVENT_REVIEW_SYNONYMS"] = {str(key).upper(): str(value) for key, value in (policy.get("eventReviewSynonyms") or {}).items()}
+    globals()["LOCATION_SUFFIX_PATTERN"] = re.compile(str(location_rule.get("suffixPattern") or r"$^"))
+    globals()["LOCATION_FROM_CUE_PATTERN"] = re.compile(str(location_rule.get("fromCuePattern") or r"$^"))
+    globals()["LOCATION_STRONG_PATTERN"] = re.compile(str(location_rule.get("strongPattern") or r"$^"))
+    globals()["LOCATION_BAD_PREFIX"] = {str(item) for item in location_rule.get("badPrefix") or []}
+    globals()["LOCATION_STOP_TOKENS"] = {str(item) for item in location_rule.get("stopTokens") or []}
 
 
 def utc_stamp() -> str:
@@ -226,6 +198,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--run-id", default=None, help="Progress advancement run id. Defaults to progress-advancement-<UTC>.")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Progress advancement output root.")
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance data root.")
+    parser.add_argument("--runner-policy", default=None, help="Optional runner policy JSON override.")
     parser.add_argument("--baseline-manifest", default=None, help="Optional baseline manifest JSON to resume from the current best paths.")
     parser.add_argument("--profile", choices=["sweep", "precision", "promotion-eval"], default="precision", help="Execution profile for coverage, precision, or promotion evaluation.")
     parser.add_argument("--optimization-target", default="safe-local-readiness", help="Human-readable target recorded in summary and baseline manifest.")
@@ -2666,6 +2640,7 @@ def render_residual_dossier(summary: dict[str, Any]) -> str:
 
 def main() -> None:
     args = parse_args()
+    apply_progress_runner_governance(args.governance_root, args.runner_policy)
     apply_profile_defaults(args)
     args.run_id = args.run_id or f"progress-advancement-{utc_stamp()}"
     started_monotonic = time.monotonic()

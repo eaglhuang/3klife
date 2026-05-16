@@ -1,0 +1,23 @@
+{
+  "id": "Policy_ProgressAdvancementRunner_P0",
+  "rootCauseGroups": [
+    "identity ambiguity",
+    "location gap",
+    "relationship edge/type",
+    "event boundary",
+    "missing source evidence",
+    "schema/tool gap",
+    "external source needed"
+  ],
+  "eventReviewSynonyms": {
+    "A": "A",
+    "ACCEPT": "A",
+    "B": "B",
+    "ACCEPT-WITH-EDITS": "B",
+    "ACCEPT_WITH_EDITS": "B",
+    "C": "C",
+    "REJECT": "C",
+    "D": "D",
+    "DEFER": "D"
+  }
+}
