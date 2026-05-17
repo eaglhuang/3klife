@@ -11,6 +11,8 @@ from typing import Any
 from sanguo_governance_loader import (
     SanguoGovernanceError,
     load_core_person_completion_policy,
+    load_dialogue_mention_resolution_cue_rules,
+    load_dialogue_mention_resolution_policy,
     expected_governance_files,
     load_evidence_seed_extraction_policy,
     load_evidence_seed_direction_denoise_rules,
@@ -154,6 +156,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     npc_dialogue_presets = load_npc_dialogue_llm_model_presets(root)
     npc_dialogue_cues = load_npc_dialogue_runtime_cue_rules(root)
     runtime_readiness_policy = load_runtime_readiness_matrix_policy(root)
+    dialogue_mention_policy = load_dialogue_mention_resolution_policy(root)
+    dialogue_mention_cues = load_dialogue_mention_resolution_cue_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -826,6 +830,55 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if not warn_gates or warn_gates - allowed_warn_gates:
         raise SanguoGovernanceError(f"policy-runtime-readiness-matrix invalid warn gates: {sorted(warn_gates - allowed_warn_gates)}")
 
+
+
+    dialogue_confidence_defaults = dialogue_mention_policy.get("confidenceDefaults") if isinstance(dialogue_mention_policy.get("confidenceDefaults"), dict) else {}
+    required_dialogue_confidences = {
+        "speakerSceneParticipant",
+        "speakerHint",
+        "speakerUnresolved",
+        "addressSceneTitle",
+        "addressSingleOtherParticipant",
+        "addressUnresolvedTitle",
+        "itemLexicalHint",
+        "entityFallback",
+    }
+    missing_dialogue_confidences = sorted(required_dialogue_confidences - set(dialogue_confidence_defaults.keys()))
+    if missing_dialogue_confidences:
+        raise SanguoGovernanceError(f"policy-dialogue-mention-resolution missing confidence defaults: {missing_dialogue_confidences}")
+    for key in required_dialogue_confidences:
+        value = float(dialogue_confidence_defaults.get(key))
+        if value < 0.0 or value > 1.0:
+            raise SanguoGovernanceError(f"policy-dialogue-mention-resolution confidence {key} must be between 0 and 1")
+    dialogue_modes = dialogue_mention_policy.get("resolutionModes") if isinstance(dialogue_mention_policy.get("resolutionModes"), dict) else {}
+    for key in ("dialogue", "addressSceneTitle", "addressSingleOtherParticipant", "addressUnresolvedTitle", "itemLexicalHint"):
+        if not str(dialogue_modes.get(key) or "").strip():
+            raise SanguoGovernanceError(f"policy-dialogue-mention-resolution resolutionModes.{key} cannot be blank")
+    if int(dialogue_mention_policy.get("defaultChapter") or 0) <= 0:
+        raise SanguoGovernanceError("policy-dialogue-mention-resolution defaultChapter must be positive")
+    dialogue_required_cues = {"ADDRESS_TITLE_HINTS", "ITEM_HINTS", "SPEAKER_HINTS", "ADDRESS_TARGET_HINTS"}
+    dialogue_cue_by_name: dict[str, dict[str, Any]] = {}
+    dialogue_cue_entry_count = 0
+    for row in dialogue_mention_cues:
+        if str(row.get("consumer") or "") != "resolve_dialogue_mentions.py":
+            raise SanguoGovernanceError("rule-dialogue-mention-resolution-cues invalid consumer")
+        constant_name = str(row.get("constantName") or "").strip()
+        if constant_name in dialogue_cue_by_name:
+            raise SanguoGovernanceError(f"rule-dialogue-mention-resolution-cues duplicate constantName: {constant_name}")
+        dialogue_cue_by_name[constant_name] = row
+        if str(row.get("kind") or "") != "mapping":
+            raise SanguoGovernanceError(f"rule-dialogue-mention-resolution-cues {constant_name} unsupported kind")
+        value = row.get("value")
+        if not isinstance(value, dict) or not value:
+            raise SanguoGovernanceError(f"rule-dialogue-mention-resolution-cues {constant_name} value must be non-empty object")
+        for key, target in value.items():
+            if not str(key).strip() or not str(target).strip():
+                raise SanguoGovernanceError(f"rule-dialogue-mention-resolution-cues {constant_name} has blank mapping")
+        dialogue_cue_entry_count += len(value)
+    missing_dialogue_cues = sorted(dialogue_required_cues - dialogue_cue_by_name.keys())
+    if missing_dialogue_cues:
+        raise SanguoGovernanceError(f"rule-dialogue-mention-resolution-cues missing rules: {', '.join(missing_dialogue_cues)}")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -868,6 +921,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "npcDialogueRuntimeCueValueCount": npc_dialogue_term_count,
         "runtimeReadinessDefaultGeneralCount": len(readiness_general_ids),
         "runtimeReadinessStatusGateCount": len(fail_gates) + len(warn_gates),
+        "dialogueMentionCueRuleCount": len(dialogue_mention_cues),
+        "dialogueMentionCueEntryCount": dialogue_cue_entry_count,
     }
 
 

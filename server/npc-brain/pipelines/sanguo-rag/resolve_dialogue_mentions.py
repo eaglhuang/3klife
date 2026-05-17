@@ -3,11 +3,18 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
 from pydantic import BaseModel, Field
+
+from sanguo_governance_loader import (
+    SanguoGovernanceError,
+    load_dialogue_mention_resolution_cue_rules,
+    load_dialogue_mention_resolution_policy,
+)
 
 
 DEFAULT_CHAPTERS_ROOT = Path("artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-04-28/body/chapters")
@@ -50,6 +57,47 @@ ADDRESS_TARGET_HINTS = {
 }
 
 
+DIALOGUE_MENTION_RESOLUTION_POLICY: dict[str, object] = {}
+
+
+def apply_dialogue_mention_resolution_governance(policy: dict[str, object], cue_rules: list[dict[str, object]]) -> None:
+    global DIALOGUE_MENTION_RESOLUTION_POLICY
+    global ADDRESS_TITLE_HINTS, ITEM_HINTS, SPEAKER_HINTS, ADDRESS_TARGET_HINTS
+    DIALOGUE_MENTION_RESOLUTION_POLICY = dict(policy)
+    by_name = {str(row.get("constantName") or ""): row for row in cue_rules}
+    for constant_name in ("ADDRESS_TITLE_HINTS", "ITEM_HINTS", "SPEAKER_HINTS", "ADDRESS_TARGET_HINTS"):
+        value = by_name.get(constant_name, {}).get("value")
+        if not isinstance(value, dict) or not value:
+            continue
+        normalized = {str(key): str(target) for key, target in value.items() if str(key).strip() and str(target).strip()}
+        if constant_name == "ADDRESS_TITLE_HINTS" and normalized:
+            ADDRESS_TITLE_HINTS = normalized
+        elif constant_name == "ITEM_HINTS" and normalized:
+            ITEM_HINTS = normalized
+        elif constant_name == "SPEAKER_HINTS" and normalized:
+            SPEAKER_HINTS = normalized
+        elif constant_name == "ADDRESS_TARGET_HINTS" and normalized:
+            ADDRESS_TARGET_HINTS = normalized
+
+
+def dialogue_confidence(key: str, fallback: float) -> float:
+    defaults = DIALOGUE_MENTION_RESOLUTION_POLICY.get("confidenceDefaults")
+    if not isinstance(defaults, dict):
+        return fallback
+    try:
+        return float(defaults.get(key, fallback))
+    except (TypeError, ValueError):
+        return fallback
+
+
+def dialogue_resolution_mode(key: str, fallback: str) -> str:
+    modes = DIALOGUE_MENTION_RESOLUTION_POLICY.get("resolutionModes")
+    if not isinstance(modes, dict):
+        return fallback
+    return str(modes.get(key) or fallback)
+
+
+
 class EntityMention(BaseModel):
     label: str = Field(description="Mention label in utterance")
     entityType: str = Field(description="address-title or item")
@@ -84,7 +132,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--chapters-root", default=str(DEFAULT_CHAPTERS_ROOT), help="Directory containing chapter markdown files")
     parser.add_argument("--observed-mentions", default=str(DEFAULT_OBSERVED_MENTIONS_PATH), help="observed-mentions.json path")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory")
-    parser.add_argument("--chapter", type=int, default=42, help="Pilot chapter number")
+    parser.add_argument("--chapter", type=int, default=None, help="Pilot chapter number. Defaults to governance policy.")
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--dialogue-mention-policy", default=None, help="Override policy-dialogue-mention-resolution.json path")
+    parser.add_argument("--dialogue-mention-cue-rules", default=None, help="Override rule-dialogue-mention-resolution-cues.jsonl path")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting outputs")
     return parser.parse_args()
 
@@ -132,20 +183,20 @@ def resolve_speaker(prefix: str, scene_participants: list[str]) -> tuple[str | N
     label = candidates[-1]
     general_id = SPEAKER_HINTS.get(label)
     if general_id and general_id in scene_participants:
-        return label, general_id, 0.78
+        return label, general_id, dialogue_confidence("speakerSceneParticipant", 0.78)
     if general_id:
-        return label, general_id, 0.66
-    return label, None, 0.35
+        return label, general_id, dialogue_confidence("speakerHint", 0.66)
+    return label, None, dialogue_confidence("speakerUnresolved", 0.35)
 
 
 def resolve_address_title(label: str, speaker_general_id: str | None, scene_participants: list[str]) -> tuple[str | None, float, str]:
     hinted = ADDRESS_TARGET_HINTS.get(label)
     if hinted and hinted in scene_participants and hinted != speaker_general_id:
-        return hinted, 0.82, "scene-address-title"
+        return hinted, dialogue_confidence("addressSceneTitle", 0.82), dialogue_resolution_mode("addressSceneTitle", "scene-address-title")
     candidates = [general_id for general_id in scene_participants if general_id != speaker_general_id]
     if len(candidates) == 1:
-        return candidates[0], 0.72, "single-other-participant"
-    return None, 0.35, "unresolved-address-title"
+        return candidates[0], dialogue_confidence("addressSingleOtherParticipant", 0.72), dialogue_resolution_mode("addressSingleOtherParticipant", "single-other-participant")
+    return None, dialogue_confidence("addressUnresolvedTitle", 0.35), dialogue_resolution_mode("addressUnresolvedTitle", "unresolved-address-title")
 
 
 def entity_mentions_for_text(text: str, speaker_general_id: str | None, scene_participants: list[str]) -> tuple[str | None, str | None, list[EntityMention]]:
@@ -173,8 +224,8 @@ def entity_mentions_for_text(text: str, speaker_general_id: str | None, scene_pa
                     label=label,
                     entityType="item",
                     resolvedItemKey=item_key,
-                    confidence=0.76,
-                    resolutionMode="lexical-item-hint",
+                    confidence=dialogue_confidence("itemLexicalHint", 0.76),
+                    resolutionMode=dialogue_resolution_mode("itemLexicalHint", "lexical-item-hint"),
                 )
             )
     return addressee_label, addressee_general_id, entity_mentions
@@ -194,7 +245,7 @@ def resolve_paragraph(source_ref: str, chapter_no: int, paragraph: str, observed
         prefix = paragraph[: match.start()]
         speaker_label, speaker_general_id, speaker_confidence = resolve_speaker(prefix, scene_participants)
         addressee_label, addressee_general_id, entity_mentions = entity_mentions_for_text(text, speaker_general_id, scene_participants)
-        confidence = max(speaker_confidence, 0.5 if entity_mentions else 0.0)
+        confidence = max(speaker_confidence, dialogue_confidence("entityFallback", 0.5) if entity_mentions else 0.0)
         utterances.append(
             UtteranceResolution(
                 sourceRef=source_ref,
@@ -277,23 +328,33 @@ def render_markdown(payload: dict) -> str:
 
 def main() -> None:
     args = parse_args()
+    policy = load_dialogue_mention_resolution_policy(
+        args.governance_root,
+        dialogue_mention_policy=args.dialogue_mention_policy,
+    )
+    cue_rules = load_dialogue_mention_resolution_cue_rules(
+        args.governance_root,
+        dialogue_mention_cue_rules=args.dialogue_mention_cue_rules,
+    )
+    apply_dialogue_mention_resolution_governance(policy, cue_rules)
+    chapter_no = args.chapter if args.chapter is not None else int(policy.get("defaultChapter") or 42)
     chapters_root = Path(args.chapters_root)
     output_root = Path(args.output_root)
     ensure_output_root(output_root, args.overwrite)
     observed_by_source_ref = load_observed_by_source_ref(Path(args.observed_mentions))
-    path = chapter_path(chapters_root, args.chapter)
+    path = chapter_path(chapters_root, chapter_no)
     paragraphs = split_paragraphs(path.read_text(encoding="utf-8"))
     data: list[DialogueParagraphResolution] = []
     for index, paragraph in enumerate(paragraphs, start=1):
-        source_ref = f"{args.chapter:03d}#p{index}"
-        resolved = resolve_paragraph(source_ref, args.chapter, paragraph, observed_by_source_ref.get(source_ref, []))
+        source_ref = f"{chapter_no:03d}#p{index}"
+        resolved = resolve_paragraph(source_ref, chapter_no, paragraph, observed_by_source_ref.get(source_ref, []))
         if resolved:
             data.append(resolved)
     data.append(build_smoke_fixture())
     payload = {
         "version": "1.0.0",
         "generatedAt": utc_now(),
-        "chapterNo": args.chapter,
+        "chapterNo": chapter_no,
         "chaptersRoot": str(chapters_root),
         "observedMentionsPath": args.observed_mentions,
         "data": [item.model_dump() for item in data],
@@ -308,4 +369,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SanguoGovernanceError as exc:
+        print(f"[resolve_dialogue_mentions] {exc}", file=sys.stderr)
+        raise SystemExit(1)

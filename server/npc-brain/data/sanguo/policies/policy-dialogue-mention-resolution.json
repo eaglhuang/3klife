@@ -1,0 +1,22 @@
+{
+  "id": "Policy_DialogueMentionResolution_P1",
+  "description": "Externalized deterministic confidence defaults and resolution mode labels for resolve_dialogue_mentions.py. Values are copied from Phase 12 baseline.",
+  "defaultChapter": 42,
+  "confidenceDefaults": {
+    "speakerSceneParticipant": 0.78,
+    "speakerHint": 0.66,
+    "speakerUnresolved": 0.35,
+    "addressSceneTitle": 0.82,
+    "addressSingleOtherParticipant": 0.72,
+    "addressUnresolvedTitle": 0.35,
+    "itemLexicalHint": 0.76,
+    "entityFallback": 0.5
+  },
+  "resolutionModes": {
+    "dialogue": "deterministic-dialogue",
+    "addressSceneTitle": "scene-address-title",
+    "addressSingleOtherParticipant": "single-other-participant",
+    "addressUnresolvedTitle": "unresolved-address-title",
+    "itemLexicalHint": "lexical-item-hint"
+  }
+}
