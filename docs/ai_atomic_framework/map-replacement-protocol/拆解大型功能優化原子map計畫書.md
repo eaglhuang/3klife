@@ -341,7 +341,7 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 - [x] 新增 0.1.0 / 0.2.0 fixture 回歸測試，並確認既有 0.1.0 generator 行為仍通過
 - [x] `atomic-registry.json` map entry 序列化新欄位
 
-執行狀態（2026-05-17）：M2 core slice 已完成並通過 `atomic-map-schema.test.ts`、`map-generator.test.ts`、`validate-schemas.ts --mode validate`。`CHANGELOG.md` 目前有既有 dirty work，本輪未碰，避免混入非本任務改動；TASK-MRP-0002 仍保留 `in-progress` 直到 changelog / release note 補齊。
+執行狀態（2026-05-17）：TASK-MRP-0002 已完成。M2 core slice 已完成並通過 `atomic-map-schema.test.ts`、`map-generator.test.ts`、`validate-schemas.ts --mode validate`；ATM `CHANGELOG.md` 已補記 map replacement schema 0.2.0。
 
 ### Milestone 3：Map Equivalence Report Schema（M3）
 

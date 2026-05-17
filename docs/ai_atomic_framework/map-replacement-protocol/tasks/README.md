@@ -19,7 +19,7 @@ public_tracking: false
 |---|---|---|---|---|
 | [TASK-MRP-0000](./TASK-MRP-0000-doc-finalize.task.md) | 文件定稿與 cross-link | M1 | done | — |
 | [TASK-MRP-0001](./TASK-MRP-0001-architecture-crosslink.task.md) | Replacement Protocol 概念對齊 ARCHITECTURE | M1 | done | 0000 |
-| [TASK-MRP-0002](./TASK-MRP-0002-schema-0.2.0.task.md) | Atomic Map Schema 0.2.0 | M2 | in-progress | 0000 |
+| [TASK-MRP-0002](./TASK-MRP-0002-schema-0.2.0.task.md) | Atomic Map Schema 0.2.0 | M2 | done | 0000 |
 | [TASK-MRP-0003](./TASK-MRP-0003-equivalence-schema.task.md) | Map Equivalence Report Schema | M3 | pending | 0002 |
 | [TASK-MRP-0004](./TASK-MRP-0004-equivalence-cli.task.md) | Map Equivalence Test CLI | M4 | pending | 0003 |
 | [TASK-MRP-0005](./TASK-MRP-0005-upgrade-gates.task.md) | Upgrade Gates: equivalence + rollback | M5 | pending | 0003 / 0004 |

@@ -3,7 +3,7 @@ doc_id: doc_other_0136
 task_id: TASK-MRP-0002
 title: Atomic Map Schema 0.2.0
 milestone: M2
-status: in-progress
+status: done
 blocked_by: [TASK-MRP-0000]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md
@@ -11,6 +11,8 @@ upstream_repo: AI-Atomic-Framework
 public_tracking: false
 started_at: 2026-05-17T02:44:13.6757334+08:00
 started_by_agent: vs-insiders-github-copilot
+completed_at: 2026-05-17T13:11:07.4980237+08:00
+completed_by_agent: vs-insiders-github-copilot
 ---
 
 # TASK-MRP-0002 — Atomic Map Schema 0.2.0
@@ -73,8 +75,8 @@ started_by_agent: vs-insiders-github-copilot
 - [x] hash payload 邊界測試
 - [x] generator 雙版本支援
 - [x] fixture / round-trip 測試
-- [ ] CHANGELOG 補一句
+- [x] CHANGELOG 補一句
 
 ## Notes
 
-2026-05-17 | 狀態: in-progress | 驗證: atomic-map-schema.test.ts / map-generator.test.ts / validate-schemas.ts --mode validate pass | 變更: 完成 0.2.0 schema/type/hash/generator/registry 最小切片；新增 0.1/0.2 fixture 回歸測試 | 阻塞: CHANGELOG.md 已有非本任務 dirty work，本輪不混入
+2026-05-17 | 狀態: done | 驗證: atomic-map-schema.test.ts / map-generator.test.ts / validate-schemas.ts --mode validate pass；CHANGELOG 補記完成 | 變更: 完成 0.2.0 schema/type/hash/generator/registry 最小切片；新增 0.1/0.2 fixture 回歸測試；補 ATM CHANGELOG | 阻塞: none
