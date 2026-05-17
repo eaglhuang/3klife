@@ -1,6 +1,6 @@
 # 文件代號 Registry (doc-id-registry)
 
-> 生成日期: 2026-05-16
+> 生成日期: 2026-05-17
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成，請勿手動編輯。
 > **唯一真相來源。** 文件移動後 doc_id 不變，Agent 可用 doc_id 搜尋定位文件。
 > `docs/doc-id-registry.json` 現在是 index stub；實際 machine-readable 內容位於 `docs/doc-id-registry-shards/registry-*.json`。
@@ -21,9 +21,9 @@
 | 任務卡類 | `doc_task` | 366 |
 | AI Agent 專用 | `doc_ai` | 31 |
 | Agent Skill 專用 | `doc_agentskill` | 80 |
-| Server 文件類 | `doc_server_<subtype>` | 13316 |
-| 其它類 | `doc_other` | 133 |
-| **合計** | — | **14198** |
+| Server 文件類 | `doc_server_<subtype>` | 13318 |
+| 其它類 | `doc_other` | 136 |
+| **合計** | — | **14203** |
 
 ---
 
@@ -10830,8 +10830,8 @@
 | `doc_server_other_9997` | other | server/npc-brain/local/codex-smoke/knowledge-growth/full-roster-global-repush-r13-evidence-recovery/full-roster-global-repush-r13-evidence-recovery-r1/source-benchmarks/full-roster-global-repush-r13-evidence-recovery-r1-gutenberg-sanguozhi/extracted-seeds/manual-evidence-seeds-summary.zh-TW.md | Generic Passage Evidence Seed Extraction |
 | `doc_server_other_9998` | other | server/npc-brain/local/codex-smoke/knowledge-growth/full-roster-global-repush-r13-evidence-recovery/full-roster-global-repush-r13-evidence-recovery-r1/source-benchmarks/full-roster-global-repush-r13-evidence-recovery-r1-gutenberg-sanguozhi/harvest/harvest-summary.zh-TW.md | Web Page Harvest Summary |
 | `doc_server_other_9999` | other | server/npc-brain/local/codex-smoke/knowledge-growth/full-roster-global-repush-r13-evidence-recovery/full-roster-global-repush-r13-evidence-recovery-r1/source-benchmarks/full-roster-global-repush-r13-evidence-recovery-r1-gutenberg-sanguozhi/standard-pipeline/candidate-evidence-card-summary.zh-TW.md | Seed -> Candidate Evidence Card Promotion |
-| `doc_server_other_10000` | other | server/npc-brain/local/codex-smoke/knowledge-growth/full-roster-global-repush-r13-evidence-recovery/full-roster-global-repush-r13-evidence-recovery-r1/source-benchmarks/full-roster-global-repush-r13-evidence-recovery-r1-gutenberg-sanguozhi/standard-pipeline/external-evidence-seed-ranking.zh-TW.md | 外部證據 Seed 排行榜 v3 |
-| `doc_server_other_10001` | other | server/npc-brain/local/codex-smoke/knowledge-growth/full-roster-global-repush-r13-evidence-recovery/full-roster-global-repush-r13-evidence-recovery-r1/source-benchmarks/full-roster-global-repush-r13-evidence-recovery-r1-wikisource-houhanshu/benchmark-summary.zh-TW.md | 外部網站採證 Benchmark |
+| `doc_server_other_10000` | other | server/npc-brain/local/codex-smoke/phase8-after/benchmark/phase8-smoke/benchmark-summary.zh-TW.md | 外部網站採證 Benchmark |
+| `doc_server_other_10001` | other | server/npc-brain/local/codex-smoke/phase8-baseline/benchmark/phase8-smoke/benchmark-summary.zh-TW.md | 外部網站採證 Benchmark |
 | `doc_server_other_10002` | other | server/npc-brain/local/codex-smoke/knowledge-growth/full-roster-global-repush-r13-evidence-recovery/full-roster-global-repush-r13-evidence-recovery-r1/source-benchmarks/full-roster-global-repush-r13-evidence-recovery-r1-wikisource-houhanshu/extracted-seeds/manual-evidence-seeds-summary.zh-TW.md | Generic Passage Evidence Seed Extraction |
 | `doc_server_other_10003` | other | server/npc-brain/local/codex-smoke/knowledge-growth/full-roster-global-repush-r13-evidence-recovery/full-roster-global-repush-r13-evidence-recovery-r1/source-benchmarks/full-roster-global-repush-r13-evidence-recovery-r1-wikisource-houhanshu/harvest/harvest-summary.zh-TW.md | Web Page Harvest Summary |
 | `doc_server_other_10004` | other | server/npc-brain/local/codex-smoke/knowledge-growth/full-roster-global-repush-r13-evidence-recovery/full-roster-global-repush-r13-evidence-recovery-r1/source-benchmarks/full-roster-global-repush-r13-evidence-recovery-r1-wikisource-houhanshu/standard-pipeline/candidate-evidence-card-summary.zh-TW.md | Seed -> Candidate Evidence Card Promotion |
@@ -14018,6 +14018,8 @@
 | `doc_server_pipeline_0015` | pipeline | server/npc-brain/pipelines/sanguo-rag/refactor-phase4-plan.zh-TW.md | NPC-brain / Sanguo-RAG 第四階段重構計畫書：P1 Rule 外部化與 JSONL 正規化 |
 | `doc_server_pipeline_0016` | pipeline | server/npc-brain/pipelines/sanguo-rag/refactor-phase6-plan.zh-TW.md | NPC-brain / Sanguo-RAG 第六階段重構計畫：Completion Scoring Policy 外部化 |
 | `doc_server_pipeline_0017` | pipeline | server/npc-brain/pipelines/sanguo-rag/refactor-phase7-plan.zh-TW.md | NPC-brain / Sanguo-RAG 第七階段重構計畫：Event Candidate / Question Seed Governance 外部化 |
+| `doc_server_pipeline_0018` | pipeline | server/npc-brain/pipelines/sanguo-rag/refactor-phase8-plan.zh-TW.md | NPC-brain / Sanguo-RAG ??????????Review Context ? External Source Governance ??? |
+| `doc_server_pipeline_0019` | pipeline | server/npc-brain/pipelines/sanguo-rag/refactor-phase9-plan.zh-TW.md | NPC-brain / Sanguo-RAG Phase 9 Runtime General Profile Governance |
 | `doc_server_pipeline_0012` | pipeline | server/npc-brain/pipelines/sanguo-rag/runtime-fail-ref-blitz-r3a2.report.zh-TW.md | Runtime Fail Evidence-Ref Blitz（r3a2）執行報告 |
 | `doc_server_service_0001` | service | server/npc-brain/README.md | NPC Brain Service |
 | `doc_server_other_13172` | other | server/npc-brain/server/npc-brain/local/codex-smoke/knowledge-growth/full-roster-deterministic-r48/final-carry-round-summaries/full-roster-bottleneck-delta.zh-TW.md | Full Roster Bottleneck Delta |
@@ -14163,6 +14165,7 @@
 | `doc_other_0036` | docs/ai_atomic_framework/3klife-tooling-fate.md | 3KLife 既有治理工具命運表（Tooling Fate） |
 | `doc_other_0045` | docs/ai_atomic_framework/原子行為參考手冊.md | 原子行為參考手冊（Atom Behavior Reference） |
 | `doc_other_0044` | docs/ai_atomic_framework/關於進化版的原子提案.md | ATM 框架穩定性保護分析 + ATM-1 全卡檢核報告 |
+| `doc_other_0145` | docs/ai_atomic_framework/agent-pack-onboarding/ATM_agent_pack_onboarding計畫書.md | ATM Agent Pack / Onboarding 計畫書 |
 | `doc_other_0031` | docs/ai_atomic_framework/AI_Atomic_Framework_Optimized_Roadmap_v0.2.md | AI Atomic Framework 優化藍圖 v0.2 |
 | `doc_other_0029` | docs/ai_atomic_framework/AI_Atomic_Framework_Roadmap.md | AI Atomic Framework：可獨立開源的 AI Vibe Coding 原子化治理框架 Roadmap |
 | `doc_other_0028` | docs/ai_atomic_framework/AI原子框架開發計畫書.md | AI 原子框架（ATM）開發計畫書 |
@@ -14216,6 +14219,8 @@
 | `doc_other_0140` | docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0006-replacement-lane.task.md | TASK-MRP-0006 — Replacement Lane Transition |
 | `doc_other_0141` | docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0007-decomposition-plan.task.md | TASK-MRP-0007 — Decomposition Plan → Map |
 | `doc_other_0142` | docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0008-scopelock-polymorph.task.md | TASK-MRP-0008 — ScopeLock 0.2.0 + Polymorph Impact |
+| `doc_other_0143` | docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0009-create-map-from-spec-next-hints.task.md | TASK-MRP-0009 — Create Map From Spec + Replacement Next Hints |
+| `doc_other_0144` | docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0010-evidence-closure-retirement-proof.task.md | TASK-MRP-0010 — Replacement Evidence Closure + Retirement Proof |
 | `doc_other_0034` | docs/ai_atomic_framework/multi-agent-compatibility-matrix.md | Multi-AI Agent 兼容性測試矩陣 |
 | `doc_other_0030` | docs/ai_atomic_framework/open-source-extraction-plan.md | AI Atomic Framework 開源拆出計畫 |
 | `doc_other_0070` | docs/ai_atomic_framework/optimized-roadmap-v02-shards/optimized-roadmap-ecosystem.md | AI Atomic Framework Optimized Roadmap v0.2 — 生態、風險、結構（§5–§7） |

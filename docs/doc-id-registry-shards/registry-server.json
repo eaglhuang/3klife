@@ -7008,14 +7008,14 @@
   },
   {
     "id": "doc_server_other_10000",
-    "path": "server/npc-brain/local/codex-smoke/knowledge-growth/full-roster-global-repush-r13-evidence-recovery/full-roster-global-repush-r13-evidence-recovery-r1/source-benchmarks/full-roster-global-repush-r13-evidence-recovery-r1-gutenberg-sanguozhi/standard-pipeline/external-evidence-seed-ranking.zh-TW.md",
-    "title": "外部證據 Seed 排行榜 v3",
+    "path": "server/npc-brain/local/codex-smoke/phase8-after/benchmark/phase8-smoke/benchmark-summary.zh-TW.md",
+    "title": "外部網站採證 Benchmark",
     "category": "server",
     "subtype": "other"
   },
   {
     "id": "doc_server_other_10001",
-    "path": "server/npc-brain/local/codex-smoke/knowledge-growth/full-roster-global-repush-r13-evidence-recovery/full-roster-global-repush-r13-evidence-recovery-r1/source-benchmarks/full-roster-global-repush-r13-evidence-recovery-r1-wikisource-houhanshu/benchmark-summary.zh-TW.md",
+    "path": "server/npc-brain/local/codex-smoke/phase8-baseline/benchmark/phase8-smoke/benchmark-summary.zh-TW.md",
     "title": "外部網站採證 Benchmark",
     "category": "server",
     "subtype": "other"
@@ -93145,6 +93145,20 @@
     "id": "doc_server_pipeline_0017",
     "path": "server/npc-brain/pipelines/sanguo-rag/refactor-phase7-plan.zh-TW.md",
     "title": "NPC-brain / Sanguo-RAG 第七階段重構計畫：Event Candidate / Question Seed Governance 外部化",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0018",
+    "path": "server/npc-brain/pipelines/sanguo-rag/refactor-phase8-plan.zh-TW.md",
+    "title": "NPC-brain / Sanguo-RAG ??????????Review Context ? External Source Governance ???",
+    "category": "server",
+    "subtype": "pipeline"
+  },
+  {
+    "id": "doc_server_pipeline_0019",
+    "path": "server/npc-brain/pipelines/sanguo-rag/refactor-phase9-plan.zh-TW.md",
+    "title": "NPC-brain / Sanguo-RAG Phase 9 Runtime General Profile Governance",
     "category": "server",
     "subtype": "pipeline"
   },
