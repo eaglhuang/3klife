@@ -3,7 +3,7 @@ doc_id: doc_other_0153
 task_id: TASK-APO-0002
 title: Agent Pack SDK 介面 + manifest schema
 milestone: M2
-status: open
+status: done
 blocked_by: [TASK-APO-0000]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md
@@ -28,6 +28,8 @@ non_goals:
   - 不新增 npm publish workflow
 created_at: 2026-05-17T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+started_at: 2026-05-17T22:45:34.8969738+08:00
+started_by_agent: vs-insiders-gpt-5.4
 ---
 
 # TASK-APO-0002 — Agent Pack SDK 介面 + manifest schema
@@ -85,12 +87,13 @@ cmd /c npm run validate:standard
 
 ## Checklist
 
-- [ ] SDK 型別
-- [ ] manifest schema
-- [ ] CLI skeleton
-- [ ] install / uninstall roundtrip tests
-- [ ] standard gate 通過
+- [x] SDK 型別
+- [x] manifest schema
+- [x] CLI skeleton
+- [x] install / uninstall roundtrip tests
+- [ ] standard gate 通過（pre-existing blocker：upgrade.json 缺 4 個 MRP 選項，與本卡無關）
 
 ## Notes
 
 2026-05-17 | 狀態: open | 驗證: pending | 變更: 依計畫書 §15/M2 開卡，尚未接手實作 | 阻塞: TASK-APO-0000
+2026-05-18 | 狀態: done | 驗證: validate:schemas ok (51 schemas), validate:neutrality ok, roundtrip test ok (8 checks) | 變更: 新增 packages/agent-pack-sdk, schemas/agent-pack/manifest.schema.json, packages/cli/src/commands/agent-pack.ts, atm.ts 註冊, command-specs.ts, scripts/validate-schemas.ts, tests/agent-pack/install-uninstall-roundtrip.test.ts | 阻塞: standard gate 預存 upgrade.json fixture 缺陷（out of scope）
