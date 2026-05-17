@@ -13,7 +13,12 @@ from pathlib import Path
 from typing import Any
 
 from repo_layout import pipeline_config_path, pipeline_root, resolve_npc_brain_root, resolve_repo_root
-from sanguo_governance_loader import default_governance_root, load_full_roster_runner_governance
+from sanguo_governance_loader import (
+    SanguoGovernanceError,
+    default_governance_root,
+    load_convergence_loop_state_policy,
+    load_full_roster_runner_governance,
+)
 
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -35,6 +40,7 @@ DEFAULT_PRECISION_POLICY: dict[str, Any] = {}
 AUTO_RETIRED_VERDICTS: set[str] = set()
 TRANSIENT_HTTP_STATUS: set[int] = set()
 TRANSIENT_REASON_KEYWORDS: tuple[str, ...] = ()
+CONVERGENCE_LOOP_STATE_POLICY: dict[str, Any] = {}
 
 
 def apply_full_roster_runner_governance(governance_root: str | Path | None, runner_policy: str | Path | None = None) -> None:
@@ -43,6 +49,17 @@ def apply_full_roster_runner_governance(governance_root: str | Path | None, runn
     globals()["AUTO_RETIRED_VERDICTS"] = {str(item).strip().lower() for item in policy.get("autoRetiredVerdicts") or []}
     globals()["TRANSIENT_HTTP_STATUS"] = {int(item) for item in policy.get("transientHttpStatus") or []}
     globals()["TRANSIENT_REASON_KEYWORDS"] = tuple(str(item).strip().lower() for item in policy.get("transientReasonKeywords") or [])
+
+
+def apply_convergence_loop_state_governance(
+    governance_root: str | Path | None,
+    convergence_state_policy: str | Path | None = None,
+) -> None:
+    policy = load_convergence_loop_state_policy(
+        governance_root,
+        convergence_state_policy=convergence_state_policy,
+    )
+    globals()["CONVERGENCE_LOOP_STATE_POLICY"] = dict(policy)
 
 
 def utc_now() -> str:
@@ -3784,6 +3801,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance data root.")
     parser.add_argument("--runner-policy", default=None, help="Optional runner policy JSON override.")
+    parser.add_argument("--convergence-state-policy", default=None, help="Optional convergence loop state policy JSON override.")
     parser.add_argument("--source-config", default=str(DEFAULT_SOURCE_CONFIG))
     parser.add_argument("--lane-policy-config", default=str(DEFAULT_LANE_POLICY_CONFIG))
     parser.add_argument("--baseline-manifest", default=None)
@@ -3999,7 +4017,12 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    apply_full_roster_runner_governance(args.governance_root, args.runner_policy)
+    try:
+        apply_full_roster_runner_governance(args.governance_root, args.runner_policy)
+        apply_convergence_loop_state_governance(args.governance_root, args.convergence_state_policy)
+    except SanguoGovernanceError as exc:
+        print(f"[run_full_roster_convergence_loop] governance error: {exc}")
+        return 2
     args.run_id = args.run_id or f"full-roster-convergence-{utc_stamp()}"
     run_root_base = resolve_existing_path(Path(args.output_root))
     run_root = run_root_base / args.run_id

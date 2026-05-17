@@ -757,6 +757,34 @@ def load_runtime_batch_keyword_readiness_policy(
     return read_governance_json(path, required_id="Policy_RuntimeBatchKeywordReadiness_P1")
 
 
+def load_convergence_loop_state_policy(
+    root: str | Path | None = None,
+    *,
+    convergence_state_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(convergence_state_policy).resolve()
+        if convergence_state_policy
+        else _path(base, "policies", "policy-convergence-loop-state.json")
+    )
+    return read_governance_json(path, required_id="Policy_ConvergenceLoopState_P1")
+
+
+def load_governance_regression_harness_policy(
+    root: str | Path | None = None,
+    *,
+    regression_harness_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(regression_harness_policy).resolve()
+        if regression_harness_policy
+        else _path(base, "policies", "policy-governance-regression-harness.json")
+    )
+    return read_governance_json(path, required_id="Policy_GovernanceRegressionHarness_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "policies", "file": "policy-full-roster-scoreboard.json", "consumer": "build_full_roster_scoreboard.py"},
@@ -764,6 +792,8 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-external-evidence-scoring.json", "consumer": "score_external_evidence_seeds.py"},
         {"section": "policies", "file": "policy-source-browser-vector-readiness.json", "consumer": "universal_source_crawler.py / run_two_layer_browser_gate.py / run_vector_ingestion_gate.py"},
         {"section": "policies", "file": "policy-runtime-batch-keyword-readiness.json", "consumer": "export_runtime_profiles_batch.py / build_keyword_options.py / build_api_readiness_index.py"},
+        {"section": "policies", "file": "policy-convergence-loop-state.json", "consumer": "run_full_roster_convergence_loop.py / run_progress_advancement_loop.py"},
+        {"section": "policies", "file": "policy-governance-regression-harness.json", "consumer": "run_sanguo_governance_regression_harness.py"},
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-faction-timeline-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-event-location-seeds.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

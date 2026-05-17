@@ -12,7 +12,12 @@ from pathlib import Path
 from typing import Any
 
 from repo_layout import pipeline_root, resolve_repo_root
-from sanguo_governance_loader import default_governance_root, load_progress_runner_governance
+from sanguo_governance_loader import (
+    SanguoGovernanceError,
+    default_governance_root,
+    load_convergence_loop_state_policy,
+    load_progress_runner_governance,
+)
 
 REPO_ROOT = resolve_repo_root(__file__)
 PIPELINE_ROOT = pipeline_root(REPO_ROOT)
@@ -45,6 +50,7 @@ LOCATION_FROM_CUE_PATTERN = re.compile(r"$^")
 LOCATION_STRONG_PATTERN = re.compile(r"$^")
 LOCATION_BAD_PREFIX: set[str] = set()
 LOCATION_STOP_TOKENS: set[str] = set()
+CONVERGENCE_LOOP_STATE_POLICY: dict[str, Any] = {}
 
 
 def apply_progress_runner_governance(governance_root: str | Path | None, runner_policy: str | Path | None = None) -> None:
@@ -58,6 +64,17 @@ def apply_progress_runner_governance(governance_root: str | Path | None, runner_
     globals()["LOCATION_STRONG_PATTERN"] = re.compile(str(location_rule.get("strongPattern") or r"$^"))
     globals()["LOCATION_BAD_PREFIX"] = {str(item) for item in location_rule.get("badPrefix") or []}
     globals()["LOCATION_STOP_TOKENS"] = {str(item) for item in location_rule.get("stopTokens") or []}
+
+
+def apply_convergence_loop_state_governance(
+    governance_root: str | Path | None,
+    convergence_state_policy: str | Path | None = None,
+) -> None:
+    policy = load_convergence_loop_state_policy(
+        governance_root,
+        convergence_state_policy=convergence_state_policy,
+    )
+    globals()["CONVERGENCE_LOOP_STATE_POLICY"] = dict(policy)
 
 
 def utc_stamp() -> str:
@@ -200,6 +217,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Progress advancement output root.")
     parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance data root.")
     parser.add_argument("--runner-policy", default=None, help="Optional runner policy JSON override.")
+    parser.add_argument("--convergence-state-policy", default=None, help="Optional convergence loop state policy JSON override.")
     parser.add_argument("--baseline-manifest", default=None, help="Optional baseline manifest JSON to resume from the current best paths.")
     parser.add_argument("--profile", choices=["sweep", "precision", "promotion-eval"], default="precision", help="Execution profile for coverage, precision, or promotion evaluation.")
     parser.add_argument("--optimization-target", default="safe-local-readiness", help="Human-readable target recorded in summary and baseline manifest.")
@@ -2640,7 +2658,12 @@ def render_residual_dossier(summary: dict[str, Any]) -> str:
 
 def main() -> None:
     args = parse_args()
-    apply_progress_runner_governance(args.governance_root, args.runner_policy)
+    try:
+        apply_progress_runner_governance(args.governance_root, args.runner_policy)
+        apply_convergence_loop_state_governance(args.governance_root, args.convergence_state_policy)
+    except SanguoGovernanceError as exc:
+        print(f"[run_progress_advancement_loop] governance error: {exc}")
+        raise SystemExit(2) from None
     apply_profile_defaults(args)
     args.run_id = args.run_id or f"progress-advancement-{utc_stamp()}"
     started_monotonic = time.monotonic()

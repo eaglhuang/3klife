@@ -1,0 +1,65 @@
+{
+  "id": "Policy_ConvergenceLoopState_P1",
+  "description": "Externalized deterministic state, resume, stop reason, and ROI governance for Sanguo convergence runners.",
+  "resumePolicy": {
+    "stateMode": "jsonl-manifest",
+    "missingBaselineAction": "fail-fast",
+    "manifestPathKeys": [
+      "baselineManifestPath",
+      "progressBaselineManifestPath",
+      "precisionBaselineManifestPath",
+      "threeLaneFinalBaselineManifest",
+      "initialBaselineManifest",
+      "finalThreeLaneBaselineManifest"
+    ],
+    "progressPathKeys": [
+      "progressPath",
+      "progressJsonPath",
+      "baseProgress",
+      "baselineProgressPath"
+    ],
+    "visitedSetNames": [
+      "visitedManifestPaths",
+      "visitedProgressPaths"
+    ]
+  },
+  "stopReasonPolicy": {
+    "allowedStopReasons": [
+      "completed",
+      "max-rounds",
+      "wall-time-limit",
+      "no-progress",
+      "quality-gate-failed",
+      "manual-stop",
+      "timeout",
+      "error"
+    ],
+    "terminalStatuses": [
+      "completed",
+      "failed",
+      "timeout"
+    ]
+  },
+  "roiStatePolicy": {
+    "defaultAction": "keep",
+    "actions": [
+      "manual-keep",
+      "keep",
+      "retry-stale-auto-retire",
+      "retry-transient-reject",
+      "auto-retired-reject",
+      "downsample-low-roi"
+    ],
+    "lowRoiSampleFactorRange": [
+      0.05,
+      1.0
+    ],
+    "manualEvidenceSourceClasses": [
+      "manual_quote"
+    ]
+  },
+  "runnerConsumers": [
+    "run_full_roster_convergence_loop.py",
+    "run_progress_advancement_loop.py"
+  ]
+}

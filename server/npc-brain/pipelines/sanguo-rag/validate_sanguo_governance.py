@@ -12,6 +12,7 @@ from sanguo_governance_loader import (
     SanguoGovernanceError,
     load_alias_mention_intake_cue_rules,
     load_alias_mention_intake_policy,
+    load_convergence_loop_state_policy,
     load_core_person_completion_policy,
     load_external_evidence_scoring_policy,
     load_dialogue_mention_resolution_cue_rules,
@@ -39,6 +40,7 @@ from sanguo_governance_loader import (
     load_external_source_benchmark_policy,
     load_evidence_seed_text_normalization_rules,
     load_full_roster_runner_governance,
+    load_governance_regression_harness_policy,
     load_full_roster_scoreboard_policy,
     load_knowledge_completion_policy,
     load_npc_dialogue_llm_model_presets,
@@ -188,6 +190,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     external_evidence_scoring_policy = load_external_evidence_scoring_policy(root)
     source_browser_vector_policy = load_source_browser_vector_readiness_policy(root)
     runtime_batch_keyword_policy = load_runtime_batch_keyword_readiness_policy(root)
+    convergence_loop_state_policy = load_convergence_loop_state_policy(root)
+    governance_regression_harness_policy = load_governance_regression_harness_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
     relationship_evidence_extraction_rules = load_relationship_evidence_extraction_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
@@ -1322,6 +1326,32 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if not str(api_policy.get("defaultGeneralId") or "").strip() or not str(api_policy.get("personaNamespace") or "").strip():
         raise SanguoGovernanceError("policy-runtime-batch-keyword-readiness apiReadiness fields cannot be empty")
 
+    convergence_resume = convergence_loop_state_policy.get("resumePolicy") if isinstance(convergence_loop_state_policy.get("resumePolicy"), dict) else {}
+    manifest_keys = [str(item).strip() for item in convergence_resume.get("manifestPathKeys") or []]
+    progress_keys = [str(item).strip() for item in convergence_resume.get("progressPathKeys") or []]
+    if not manifest_keys or any(not item for item in manifest_keys):
+        raise SanguoGovernanceError("policy-convergence-loop-state resumePolicy.manifestPathKeys cannot be empty")
+    if not progress_keys or any(not item for item in progress_keys):
+        raise SanguoGovernanceError("policy-convergence-loop-state resumePolicy.progressPathKeys cannot be empty")
+    stop_policy = convergence_loop_state_policy.get("stopReasonPolicy") if isinstance(convergence_loop_state_policy.get("stopReasonPolicy"), dict) else {}
+    allowed_stop_reasons = [str(item).strip() for item in stop_policy.get("allowedStopReasons") or []]
+    if not allowed_stop_reasons or any(not item for item in allowed_stop_reasons):
+        raise SanguoGovernanceError("policy-convergence-loop-state stopReasonPolicy.allowedStopReasons cannot be empty")
+    roi_policy = convergence_loop_state_policy.get("roiStatePolicy") if isinstance(convergence_loop_state_policy.get("roiStatePolicy"), dict) else {}
+    roi_actions = [str(item).strip() for item in roi_policy.get("actions") or []]
+    if not roi_actions or "keep" not in roi_actions:
+        raise SanguoGovernanceError("policy-convergence-loop-state roiStatePolicy.actions must include keep")
+
+    harness_phases = governance_regression_harness_policy.get("phaseMatrix") if isinstance(governance_regression_harness_policy.get("phaseMatrix"), list) else []
+    if not harness_phases:
+        raise SanguoGovernanceError("policy-governance-regression-harness phaseMatrix cannot be empty")
+    phase_numbers = [int(row.get("phase")) for row in harness_phases if isinstance(row, dict) and row.get("phase") is not None]
+    if sorted(set(phase_numbers)) != phase_numbers:
+        raise SanguoGovernanceError("policy-governance-regression-harness phaseMatrix phases must be unique and sorted")
+    harness_sensors = [str(item).strip() for item in governance_regression_harness_policy.get("requiredSensorNames") or []]
+    if not harness_sensors or any(not item for item in harness_sensors):
+        raise SanguoGovernanceError("policy-governance-regression-harness requiredSensorNames cannot be empty")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -1468,6 +1498,10 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "sourceBrowserFallbackRuleCount": len(fallback_rules),
         "runtimeKeywordCategoryLimitCount": len(category_limits),
         "runtimeKeywordKnownItemCount": len(item_keywords),
+        "convergenceResumeManifestKeyCount": len(manifest_keys),
+        "convergenceStopReasonCount": len(allowed_stop_reasons),
+        "governanceRegressionPhaseCount": len(harness_phases),
+        "governanceRegressionSensorCount": len(harness_sensors),
     }
 
 

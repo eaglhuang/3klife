@@ -1,0 +1,21 @@
+{
+  "id": "Policy_GovernanceRegressionHarness_P1",
+  "description": "Defines the reusable Sanguo governance regression harness coverage matrix and required deterministic sensors.",
+  "requiredSensorNames": [
+    "expected-files",
+    "minimum-shapes",
+    "phase-plan-matrix",
+    "encoding"
+  ],
+  "defaultOutputRoot": "local/codex-smoke/governance-regression",
+  "phaseMatrix": [
+    {"phase": 20, "name": "Full Roster Scoreboard Scoring Governance", "plan": "refactor-phase20-plan.zh-TW.md"},
+    {"phase": 21, "name": "Relationship Extraction / Refinement Governance", "plan": "refactor-phase21-plan.zh-TW.md"},
+    {"phase": 22, "name": "Alias / Mention Intake Governance", "plan": "refactor-phase22-plan.zh-TW.md"},
+    {"phase": 23, "name": "External Evidence Scoring Governance", "plan": "refactor-phase23-plan.zh-TW.md"},
+    {"phase": 24, "name": "Source Browser / Vector Readiness Governance", "plan": "refactor-phase24-plan.zh-TW.md"},
+    {"phase": 25, "name": "Runtime Profile Batch / Keyword Governance", "plan": "refactor-phase25-plan.zh-TW.md"},
+    {"phase": 26, "name": "Convergence Loop State Governance", "plan": "refactor-phase26-plan.zh-TW.md"},
+    {"phase": 27, "name": "Governance Regression Harness", "plan": "refactor-phase27-plan.zh-TW.md"}
+  ]
+}
