@@ -5,9 +5,16 @@
     "expected-files",
     "minimum-shapes",
     "phase-plan-matrix",
+    "fixture-manifests",
     "encoding"
   ],
   "defaultOutputRoot": "local/codex-smoke/governance-regression",
+  "fixtureManifests": [
+    {
+      "id": "Fixture_SanguoGovernanceRegression_Minimal_P1",
+      "path": "fixtures/governance-regression/fixture-manifest.json"
+    }
+  ],
   "phaseMatrix": [
     {"phase": 20, "name": "Full Roster Scoreboard Scoring Governance", "plan": "refactor-phase20-plan.zh-TW.md"},
     {"phase": 21, "name": "Relationship Extraction / Refinement Governance", "plan": "refactor-phase21-plan.zh-TW.md"},
@@ -18,6 +25,8 @@
     {"phase": 26, "name": "Convergence Loop State Governance", "plan": "refactor-phase26-plan.zh-TW.md"},
     {"phase": 27, "name": "Governance Regression Harness", "plan": "refactor-phase27-plan.zh-TW.md"},
     {"phase": 28, "name": "PostgreSQL State Store Evaluation", "plan": "refactor-phase28-plan.zh-TW.md"},
-    {"phase": 29, "name": "Production Vector Ingestion Hardening", "plan": "refactor-phase29-plan.zh-TW.md"}
+    {"phase": 29, "name": "Production Vector Ingestion Hardening", "plan": "refactor-phase29-plan.zh-TW.md"},
+    {"phase": 30, "name": "Governance Validation Stabilization", "plan": "refactor-phase30-plan.zh-TW.md"},
+    {"phase": 31, "name": "Regression Fixture Consolidation", "plan": "refactor-phase31-plan.zh-TW.md"}
   ]
 }

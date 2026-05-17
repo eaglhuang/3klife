@@ -1,0 +1,16 @@
+{
+  "summary": {
+    "fixture": true,
+    "generalCount": 3
+  },
+  "femalePriorityProfiles": [],
+  "canonicalClaims": [
+    {
+      "claimId": "fixture-guan-yu-liu-bei-relationship",
+      "generalId": "guan-yu",
+      "claimType": "relationship",
+      "sourceLayer": "romance",
+      "grade": "A-romance"
+    }
+  ]
+}

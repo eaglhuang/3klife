@@ -1,0 +1,33 @@
+{
+  "id": "Policy_GovernanceValidationStabilization_P1",
+  "description": "Defines the stable validation coverage expectations for Sanguo governance regression runs.",
+  "requiredHarnessStatus": "ok",
+  "requiredMinimumShapeSummaryKeys": [
+    "hardRelationshipSpecCount",
+    "fullRosterScoreboardScoringWeightCount",
+    "eventCandidateCueRuleCount",
+    "eventQuestionAngleCueRuleCount",
+    "externalSourceBenchmarkCueRuleCount",
+    "eventReviewContextCueRuleCount",
+    "runtimeVoicePresetCount",
+    "npcDialogueRuntimeCueRuleCount",
+    "runtimeReadinessDefaultGeneralCount",
+    "dialogueMentionCueRuleCount",
+    "resolutionLoopCueRuleCount",
+    "fullRosterScoreboardLaneThresholdCount",
+    "relationshipTypeRefinementRuleCount",
+    "aliasMentionCueRuleCount",
+    "externalEvidenceScoreTableValueCount",
+    "sourceBrowserCrawlerClassCount",
+    "runtimeKeywordCategoryLimitCount",
+    "convergenceResumeManifestKeyCount",
+    "governanceRegressionPhaseCount",
+    "postgresStateThresholdCount",
+    "vectorIngestionProviderCount"
+  ],
+  "coverageReport": {
+    "failOnMissingSummaryKey": true,
+    "includeExpectedFiles": true,
+    "includeFixtureMatrix": true
+  }
+}

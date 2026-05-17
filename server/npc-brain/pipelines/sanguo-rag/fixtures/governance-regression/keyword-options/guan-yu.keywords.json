@@ -1,0 +1,11 @@
+{
+  "generalId": "guan-yu",
+  "categories": {
+    "person": [
+      {"keywordKey": "person.liu-bei", "label": "劉備", "confidence": 0.9}
+    ],
+    "relationship": [
+      {"keywordKey": "relationship.sworn-brother", "label": "結義兄弟", "confidence": 0.9}
+    ]
+  }
+}

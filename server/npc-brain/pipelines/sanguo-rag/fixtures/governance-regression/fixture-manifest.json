@@ -1,0 +1,12 @@
+{
+  "id": "Fixture_SanguoGovernanceRegression_Minimal_P1",
+  "description": "Minimal committed fixture set for Sanguo governance regression smoke runs.",
+  "files": [
+    {"path": "observed-mentions.json", "kind": "observedMentions", "format": "json"},
+    {"path": "stable-knowledge-bootstrap.json", "kind": "stableKnowledgeBootstrap", "format": "json"},
+    {"path": "relationship-evidence.jsonl", "kind": "relationshipEvidence", "format": "jsonl"},
+    {"path": "events.jsonl", "kind": "events", "format": "jsonl"},
+    {"path": "keyword-options/guan-yu.keywords.json", "kind": "keywordOptions", "format": "json"},
+    {"path": "persona-cards/guan-yu.persona.json", "kind": "personaCard", "format": "json"}
+  ]
+}

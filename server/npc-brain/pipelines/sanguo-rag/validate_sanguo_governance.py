@@ -41,6 +41,7 @@ from sanguo_governance_loader import (
     load_evidence_seed_text_normalization_rules,
     load_full_roster_runner_governance,
     load_governance_regression_harness_policy,
+    load_governance_validation_stabilization_policy,
     load_full_roster_scoreboard_policy,
     load_knowledge_completion_policy,
     load_npc_dialogue_llm_model_presets,
@@ -194,6 +195,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     runtime_batch_keyword_policy = load_runtime_batch_keyword_readiness_policy(root)
     convergence_loop_state_policy = load_convergence_loop_state_policy(root)
     governance_regression_harness_policy = load_governance_regression_harness_policy(root)
+    governance_validation_policy = load_governance_validation_stabilization_policy(root)
     postgres_state_policy = load_postgres_state_store_evaluation_policy(root)
     vector_ingestion_hardening_policy = load_vector_ingestion_hardening_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
@@ -1355,6 +1357,19 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     harness_sensors = [str(item).strip() for item in governance_regression_harness_policy.get("requiredSensorNames") or []]
     if not harness_sensors or any(not item for item in harness_sensors):
         raise SanguoGovernanceError("policy-governance-regression-harness requiredSensorNames cannot be empty")
+    fixture_manifests = governance_regression_harness_policy.get("fixtureManifests")
+    if not isinstance(fixture_manifests, list) or not fixture_manifests:
+        raise SanguoGovernanceError("policy-governance-regression-harness fixtureManifests cannot be empty")
+    for row in fixture_manifests:
+        if not isinstance(row, dict):
+            raise SanguoGovernanceError("policy-governance-regression-harness fixtureManifests rows must be objects")
+        if not str(row.get("id") or "").strip() or not str(row.get("path") or "").strip():
+            raise SanguoGovernanceError("policy-governance-regression-harness fixtureManifests rows require id/path")
+    validation_summary_keys = [str(item).strip() for item in governance_validation_policy.get("requiredMinimumShapeSummaryKeys") or []]
+    if not validation_summary_keys or any(not item for item in validation_summary_keys):
+        raise SanguoGovernanceError("policy-governance-validation-stabilization requiredMinimumShapeSummaryKeys cannot be empty")
+    if len(set(validation_summary_keys)) != len(validation_summary_keys):
+        raise SanguoGovernanceError("policy-governance-validation-stabilization requiredMinimumShapeSummaryKeys must be unique")
 
     postgres_thresholds = postgres_state_policy.get("recommendationThresholds") if isinstance(postgres_state_policy.get("recommendationThresholds"), dict) else {}
     if not postgres_thresholds or any(float(value) <= 0 for value in postgres_thresholds.values()):
@@ -1530,6 +1545,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "convergenceStopReasonCount": len(allowed_stop_reasons),
         "governanceRegressionPhaseCount": len(harness_phases),
         "governanceRegressionSensorCount": len(harness_sensors),
+        "governanceRegressionFixtureManifestCount": len(fixture_manifests),
+        "governanceValidationRequiredSummaryKeyCount": len(validation_summary_keys),
         "postgresStateThresholdCount": len(postgres_thresholds),
         "postgresStateDomainCount": len(postgres_domains),
         "vectorIngestionProviderCount": len(allowed_vector_providers),

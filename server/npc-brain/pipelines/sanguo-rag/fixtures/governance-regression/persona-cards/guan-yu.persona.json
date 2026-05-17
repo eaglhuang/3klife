@@ -1,0 +1,14 @@
+{
+  "generalId": "guan-yu",
+  "personaVersion": "fixture-v1",
+  "faction": "Shu",
+  "manualReviewRequired": false,
+  "relationshipAnchors": [
+    {
+      "targetId": "liu-bei",
+      "type": "sworn_brother",
+      "edgeConfidence": 0.9,
+      "edgeStrength": 0.85
+    }
+  ]
+}

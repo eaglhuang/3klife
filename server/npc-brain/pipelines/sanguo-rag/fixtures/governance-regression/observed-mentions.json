@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "matchStatus": "resolved",
+      "sourceRef": "fixture.chapter-001",
+      "chapterNo": 1,
+      "textSnippet": "劉備、關羽、張飛在桃園結義，兄弟情義明確。",
+      "matchedGeneralIds": ["liu-bei", "guan-yu", "zhang-fei"],
+      "mentionType": "generic-passage",
+      "sourceLayer": "romance"
+    },
+    {
+      "matchStatus": "resolved",
+      "sourceRef": "fixture.external-relationship",
+      "chapterNo": 5,
+      "textSnippet": "關羽護送劉備家眷，忠義與主從關係清楚。",
+      "matchedGeneralIds": ["guan-yu", "liu-bei"],
+      "mentionType": "external-evidence-seed",
+      "sourceLayer": "romance",
+      "seedConfidenceScore": 82,
+      "crossSiteSourceFamilyCount": 3,
+      "claimType": "relationship"
+    }
+  ]
+}
