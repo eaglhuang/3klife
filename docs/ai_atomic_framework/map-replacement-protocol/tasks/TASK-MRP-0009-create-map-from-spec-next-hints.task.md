@@ -3,12 +3,16 @@ doc_id: doc_other_0143
 task_id: TASK-MRP-0009
 title: Create Map From Spec + Replacement Next Hints
 milestone: M9
-status: pending
+status: done
 blocked_by: [TASK-MRP-0002]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+started_at: 2026-05-17T20:56:40.1303430+08:00
+started_by_agent: vs-insiders-gpt-5.4
+completed_at: 2026-05-17T21:02:56.9087336+08:00
+completed_by_agent: vs-insiders-gpt-5.4
 ---
 
 # TASK-MRP-0009 — Create Map From Spec + Replacement Next Hints
@@ -46,17 +50,21 @@ public_tracking: false
 
 ## 驗收條件
 
-- [ ] valid 0.1.0 spec 生成 canonical map workspace
-- [ ] valid 0.2.0 replacement spec 生成 canonical map workspace，registry entry 保留 replacement 欄位
-- [ ] invalid spec 回傳非零 exit code 與 `ATM_MAP_SPEC_INVALID`
-- [ ] `--help` 列出 `--spec <path>` 並說明與既有 JSON input 的關係
-- [ ] JSON output 至少含一個可機器讀取的 `nextActionHint`
-- [ ] Windows PowerShell 空白路徑 smoke 通過
+- [x] valid 0.1.0 spec 生成 canonical map workspace
+- [x] valid 0.2.0 replacement spec 生成 canonical map workspace，registry entry 保留 replacement 欄位
+- [x] invalid spec 回傳非零 exit code 與 `ATM_MAP_SPEC_INVALID`
+- [x] `--help` 列出 `--spec <path>` 並說明與既有 JSON input 的關係
+- [x] JSON output 至少含一個可機器讀取的 `nextActionHint`
+- [x] Windows PowerShell 空白路徑 smoke 通過
 
 ## 影響檔案
 
 - `packages/cli/src/commands/create-map.ts`
-- `packages/core/src/manager/map-generator.ts`
+- `packages/cli/src/commands/test.ts`
+- `packages/cli/src/commands/upgrade.ts`
+- `packages/cli/src/commands/spec-shared.ts`
+- `packages/cli/src/commands/shared.ts`
+- `packages/cli/src/commands/command-specs.ts`
 - `tests/cli/create-map-from-spec.test.ts`
 - `tests/schema-fixtures/positive/atomic-map-0.2-replacement.json`
 - `docs/MAP_REPLACEMENT_PROTOCOL.md`（若需補 CLI usage，一律英文）
@@ -67,13 +75,13 @@ public_tracking: false
 
 ## Checklist
 
-- [ ] `--spec` 旗標完成
-- [ ] schema validate / error code 完成
-- [ ] 0.1.0 / 0.2.0 smoke 完成
-- [ ] nextActionHint contract 完成
-- [ ] Windows path smoke 完成
-- [ ] CHANGELOG 補一句
+- [x] `--spec` 旗標完成
+- [x] schema validate / error code 完成
+- [x] 0.1.0 / 0.2.0 smoke 完成
+- [x] nextActionHint contract 完成
+- [x] Windows path smoke 完成
+- [x] CHANGELOG 補一句
 
 ## Notes
 
-2026-05-17 | 狀態: pending | 驗證: pending | 變更: 由任務覆蓋性盤點補開，補齊 `create-map --spec` 與 replacement next hints 缺口 | 阻塞: TASK-MRP-0002
+2026-05-17 | 狀態: done | 驗證: create-map-from-spec.test.ts / create-map.test.ts / create-map-from-plan.test.ts / validate-cli.ts pass | 變更: `create-map --spec` 改為先走 `atomic-map.schema.json` 驗證，補上 0.1.0 / 0.2.0 canonical map smoke、Windows PowerShell 空白路徑 smoke，並讓 `create-map` / `test --map` / `upgrade --propose` JSON output 帶 `nextActionHint` | 阻塞: none

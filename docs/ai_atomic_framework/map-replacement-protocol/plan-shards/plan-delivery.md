@@ -115,12 +115,14 @@
 
 對應任務卡：TASK-MRP-0009
 
-- [ ] `create-map --spec <path>` 可讀取完整 draft map spec 並建立 canonical map workspace
-- [ ] spec 輸入通過 `atomic-map.schema.json` 驗證，invalid spec 回傳非零 exit code 與 `ATM_MAP_SPEC_INVALID`
-- [ ] `--spec` 支援 0.1.0 / 0.2.0 map，且 0.2.0 replacement 欄位不丟失
-- [ ] replacement 相關 CLI JSON output 提供 `nextActionHint`，指向下一個 deterministic command
-- [ ] `nextActionHint` 只引導 `atm next --json` 或既有 CLI，不引入 slash command runtime
-- [ ] Windows PowerShell 空白路徑 smoke test 通過
+- [x] `create-map --spec <path>` 可讀取完整 draft map spec 並建立 canonical map workspace
+- [x] spec 輸入通過 `atomic-map.schema.json` 驗證，invalid spec 回傳非零 exit code 與 `ATM_MAP_SPEC_INVALID`
+- [x] `--spec` 支援 0.1.0 / 0.2.0 map，且 0.2.0 replacement 欄位不丟失
+- [x] replacement 相關 CLI JSON output 提供 `nextActionHint`，指向下一個 deterministic command
+- [x] `nextActionHint` 只引導 `atm next --json` 或既有 CLI，不引入 slash command runtime
+- [x] Windows PowerShell 空白路徑 smoke test 通過
+
+已完成 M9 收口：`create-map --spec` 會先走 `atomic-map.schema.json` 驗證，再建立 canonical map workspace；成功時輸出 `nextActionHint` 指向 `test --map`，`test --map --equivalence-fixtures` 會指向 `replacement-lane transition --to canary`，而 blocked 的 `upgrade --propose --replacement-mode active` 會輸出 machine-readable hint，指出缺的是 `map-equivalence` 並提供 deterministic CLI 模板。`create-map-from-spec.test.ts` 也補上 Windows PowerShell 空白路徑 smoke。
 
 ### Milestone 10：Replacement Evidence Closure + Retirement Proof（M10）
 
