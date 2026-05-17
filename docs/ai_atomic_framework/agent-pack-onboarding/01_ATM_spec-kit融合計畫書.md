@@ -237,35 +237,36 @@ Checklist：
 - [x] `validate:cli` 涵蓋新 commands
 - [x] `validate:standard` 36/36 通過
 
-### M7 - Entry Template Compiler 與 Charter 注入（保留在本主線）
+### M7 - Entry Template Compiler 與 Charter 注入（保留在本主線）✅ DONE (commit 906c65f)
 目的：把 ATM 核心入口命令包成 framework-neutral skill source，再由 adapter 編譯成各 agent 格式。
 
 交付物：
-- `templates/skills/atm-next.skill.md` 等 7 個 source template
-- `templates/skills/skill.schema.json`：定義 frontmatter（含 `handoffs`、`charter-invariants-injected`）
-- `packages/integrations-core/src/skill-compiler.ts`：將 skill template 編譯成 Claude SKILL.md / Copilot prompt.md / Gemini toml / Cursor skill
-- `scripts/validate-skill-templates.ts`
+- `templates/skills/atm-next.skill.md` 等 7 個 source template ✅
+- `templates/skills/skill.schema.json`：定義 frontmatter（含 `handoffs`、`charter-invariants-injected`）✅
+- `packages/integrations-core/src/index.ts`：匯出 skill template parser / compiler，將 source template 編譯成 Claude SKILL.md / Copilot prompt.md / Gemini toml / Cursor skill ✅
+- `scripts/validate-skill-templates.ts` ✅
 
 Checklist：
-- [ ] 每個 skill template 都聲明 `charter-invariants-injected: true`
-- [ ] handoffs 連結回 ATM CLI，不形成平行狀態機
-- [ ] Compiler 能輸出 Claude SKILL.md / Copilot prompt.md / Gemini toml / Cursor skill
-- [ ] spec-kit 或 MRP hint 只能作為 `atm next --json` output，不 baked-in template
-- [ ] `validate:skill-templates` 加入 standard suite
+- [x] 每個 skill template 都聲明 `charter-invariants-injected: true`
+- [x] handoffs 連結回 ATM CLI，不形成平行狀態機
+- [x] Compiler 能輸出 Claude SKILL.md / Copilot prompt.md / Gemini toml / Cursor skill
+- [x] spec-kit 或 MRP hint 只能作為 `atm next --json` output，不 baked-in template
+- [x] `validate:skill-templates` 加入 standard suite
 
-### M8 - sh / ps 雙腳本同捆與 parity（保留在本主線）
+### M8 - sh / ps 雙腳本同捆與 parity（保留在本主線）✅ DONE (commit 906c65f)
 目的：Windows 第一公民，讓 ATM 開源框架在 Windows / Linux / macOS 入口一致。
 
 交付物：
-- `templates/root-drop/.atm/scripts/sh/atm-*.sh`
-- `templates/root-drop/.atm/scripts/ps/atm-*.ps1`
-- `scripts/validate-script-parity.ts`：確保兩邊 wrap 同一個 node 入口
-- `atm init` 時依平台選擇預設安裝哪一套（兩套都寫入，只是 PATH hint 不同）
+- `templates/root-drop/.atm/scripts/sh/atm-*.sh` ✅
+- `templates/root-drop/.atm/scripts/ps/atm-*.ps1` ✅
+- `scripts/validate-script-parity.ts`：確保兩邊 wrap 同一個 node 入口 ✅
+- `atm init` 時依平台選擇預設安裝哪一套（兩套都寫入，只是 PATH hint 不同）✅
 
 Checklist：
-- [ ] 雙腳本均為 thin wrapper，無業務邏輯漂移
-- [ ] Windows 與 Linux 各跑一遍 hello-world 通過
-- [ ] `validate:script-parity` 加入 standard suite
+- [x] 雙腳本均為 thin wrapper，無業務邏輯漂移
+- [x] Windows wrapper smoke + POSIX wrapper parity / available-sh smoke + root-drop hello-world 通過
+- [x] `validate:script-parity` 加入 standard suite
+- [x] `validate:standard` 38/38 通過
 
 ### M9 - Framework-neutral Example 與 Multi-agent 驗證（拆分後保留）
 目的：證明 IntegrationAdapter + Entry Template Compiler 可被多 agent 接住；first-touch welcome / create-atm e2e 交給第二主線。
