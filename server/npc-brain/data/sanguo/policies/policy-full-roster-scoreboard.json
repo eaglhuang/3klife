@@ -1,0 +1,25 @@
+{
+  "id": "Policy_FullRosterScoreboard_P1",
+  "description": "Externalized deterministic defaults for full roster scoreboard paths and lane routing thresholds. Values are copied from build_full_roster_scoreboard.py Phase 19 baseline.",
+  "defaultProfile": "all",
+  "profileChoices": [
+    "all",
+    "female-priority",
+    "history-romance"
+  ],
+  "defaultPaths": {
+    "generals": "assets/resources/data/generals.json",
+    "events": "artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl",
+    "genericCandidates": "artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl",
+    "pilotReport": "artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/etl-quality-pilot-report.json",
+    "relationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/relationship-evidence/source-grounded-relationship-edges.jsonl",
+    "eventQuestionSeeds": "artifacts/data-pipeline/sanguo-rag/extracted/event-question-seeds/event-question-seeds.jsonl",
+    "outputRoot": "artifacts/data-pipeline/sanguo-rag/extracted/full-roster-scoreboard",
+    "lanePolicyConfig": "server/npc-brain/config/sanguo-rag/full-roster-lane-policy.json"
+  },
+  "laneThresholds": {
+    "aRuminationHistoricalMax": 75.0,
+    "cHumanReviewGenericMin": 3,
+    "femalePriorityCToSkillPreview": true
+  }
+}

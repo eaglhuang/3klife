@@ -654,6 +654,21 @@ def load_deepseek_reasoning_trial_policy(
     return read_governance_json(path, required_id="Policy_DeepSeekReasoningTrial_P1")
 
 
+
+def load_full_roster_scoreboard_policy(
+    root: str | Path | None = None,
+    *,
+    full_roster_scoreboard_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(full_roster_scoreboard_policy).resolve()
+        if full_roster_scoreboard_policy
+        else _path(base, "policies", "policy-full-roster-scoreboard.json")
+    )
+    return read_governance_json(path, required_id="Policy_FullRosterScoreboard_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

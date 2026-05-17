@@ -8,7 +8,12 @@ from pathlib import Path
 from typing import Any
 
 from repo_layout import pipeline_config_path, resolve_repo_root
-from sanguo_governance_loader import default_governance_root, load_relationship_runtime_canon_policy
+from sanguo_governance_loader import (
+    SanguoGovernanceError,
+    default_governance_root,
+    load_full_roster_scoreboard_policy,
+    load_relationship_runtime_canon_policy,
+)
 
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -26,6 +31,62 @@ DEFAULT_EVENT_QUESTION_SEEDS_PATH = Path(
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/full-roster-scoreboard")
 DEFAULT_LANE_POLICY_CONFIG = pipeline_config_path(REPO_ROOT, "full-roster-lane-policy.json")
 DEFAULT_GOVERNANCE_ROOT = default_governance_root()
+
+FULL_ROSTER_SCOREBOARD_POLICY: dict[str, Any] = {}
+
+
+def _scoreboard_policy_section(policy: dict[str, Any], key: str) -> dict[str, Any]:
+    value = policy.get(key)
+    return value if isinstance(value, dict) else {}
+
+
+def _scoreboard_policy_path(policy: dict[str, Any], key: str, fallback: Path) -> Path:
+    value = _scoreboard_policy_section(policy, "defaultPaths").get(key)
+    return Path(str(value)) if value else fallback
+
+
+def apply_full_roster_scoreboard_policy(
+    governance_root: str | Path | None,
+    full_roster_scoreboard_policy: str | Path | None = None,
+) -> None:
+    global FULL_ROSTER_SCOREBOARD_POLICY
+    global DEFAULT_GENERALS_PATH, DEFAULT_EVENTS_PATH, DEFAULT_GENERIC_CANDIDATES_PATH, DEFAULT_PILOT_REPORT_PATH
+    global DEFAULT_RELATIONSHIP_EVIDENCE_PATH, DEFAULT_EVENT_QUESTION_SEEDS_PATH, DEFAULT_OUTPUT_ROOT
+    global DEFAULT_LANE_POLICY_CONFIG, DEFAULT_LANE_THRESHOLDS
+
+    policy = load_full_roster_scoreboard_policy(
+        governance_root,
+        full_roster_scoreboard_policy=full_roster_scoreboard_policy,
+    )
+    FULL_ROSTER_SCOREBOARD_POLICY = dict(policy)
+    DEFAULT_GENERALS_PATH = _scoreboard_policy_path(policy, "generals", DEFAULT_GENERALS_PATH)
+    DEFAULT_EVENTS_PATH = _scoreboard_policy_path(policy, "events", DEFAULT_EVENTS_PATH)
+    DEFAULT_GENERIC_CANDIDATES_PATH = _scoreboard_policy_path(policy, "genericCandidates", DEFAULT_GENERIC_CANDIDATES_PATH)
+    DEFAULT_PILOT_REPORT_PATH = _scoreboard_policy_path(policy, "pilotReport", DEFAULT_PILOT_REPORT_PATH)
+    DEFAULT_RELATIONSHIP_EVIDENCE_PATH = _scoreboard_policy_path(policy, "relationshipEvidence", DEFAULT_RELATIONSHIP_EVIDENCE_PATH)
+    DEFAULT_EVENT_QUESTION_SEEDS_PATH = _scoreboard_policy_path(policy, "eventQuestionSeeds", DEFAULT_EVENT_QUESTION_SEEDS_PATH)
+    DEFAULT_OUTPUT_ROOT = _scoreboard_policy_path(policy, "outputRoot", DEFAULT_OUTPUT_ROOT)
+    DEFAULT_LANE_POLICY_CONFIG = _scoreboard_policy_path(policy, "lanePolicyConfig", DEFAULT_LANE_POLICY_CONFIG)
+    lane_thresholds = policy.get("laneThresholds")
+    if isinstance(lane_thresholds, dict):
+        DEFAULT_LANE_THRESHOLDS = dict(lane_thresholds)
+
+
+def apply_full_roster_scoreboard_arg_defaults(args: argparse.Namespace) -> None:
+    if args.generals is None:
+        args.generals = str(DEFAULT_GENERALS_PATH)
+    if args.events is None:
+        args.events = str(DEFAULT_EVENTS_PATH)
+    if args.generic_candidates is None:
+        args.generic_candidates = str(DEFAULT_GENERIC_CANDIDATES_PATH)
+    if args.pilot_report is None:
+        args.pilot_report = str(DEFAULT_PILOT_REPORT_PATH)
+    if args.lane_policy_config is None:
+        args.lane_policy_config = str(DEFAULT_LANE_POLICY_CONFIG)
+    if args.output_root is None:
+        args.output_root = str(DEFAULT_OUTPUT_ROOT)
+    if args.profile is None:
+        args.profile = str(FULL_ROSTER_SCOREBOARD_POLICY.get("defaultProfile") or "all")
 
 PROFILE_CHOICES = ("all", "female-priority", "history-romance")
 DEFAULT_LANE_THRESHOLDS = {
@@ -860,19 +921,20 @@ def render_markdown(payload: dict[str, Any]) -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build full roster scorecard from pilot/events/external evidence artifacts.")
-    parser.add_argument("--generals", default=str(DEFAULT_GENERALS_PATH))
-    parser.add_argument("--events", default=str(DEFAULT_EVENTS_PATH))
-    parser.add_argument("--generic-candidates", default=str(DEFAULT_GENERIC_CANDIDATES_PATH))
-    parser.add_argument("--pilot-report", default=str(DEFAULT_PILOT_REPORT_PATH))
+    parser.add_argument("--generals", default=None)
+    parser.add_argument("--events", default=None)
+    parser.add_argument("--generic-candidates", default=None)
+    parser.add_argument("--pilot-report", default=None)
     parser.add_argument("--relationship-evidence", action="append", default=[])
     parser.add_argument("--event-question-seeds", action="append", default=[])
     parser.add_argument("--candidate-evidence-cards", action="append", default=[])
     parser.add_argument("--seed-ranking-json", action="append", default=[])
-    parser.add_argument("--lane-policy-config", default=str(DEFAULT_LANE_POLICY_CONFIG))
+    parser.add_argument("--lane-policy-config", default=None)
     parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
     parser.add_argument("--relationship-policy", default=None)
-    parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
-    parser.add_argument("--profile", choices=PROFILE_CHOICES, default="all")
+    parser.add_argument("--scoreboard-policy", default=None)
+    parser.add_argument("--output-root", default=None)
+    parser.add_argument("--profile", choices=PROFILE_CHOICES, default=None)
     parser.add_argument("--pilot-only", action="store_true")
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
@@ -880,7 +942,13 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    apply_relationship_runtime_canon_policy(args.governance_root, args.relationship_policy)
+    try:
+        apply_full_roster_scoreboard_policy(args.governance_root, args.scoreboard_policy)
+        apply_full_roster_scoreboard_arg_defaults(args)
+        apply_relationship_runtime_canon_policy(args.governance_root, args.relationship_policy)
+    except SanguoGovernanceError as exc:
+        print(f"[build_full_roster_scoreboard] governance error: {exc}")
+        return 2
     output_root = resolve_path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
 

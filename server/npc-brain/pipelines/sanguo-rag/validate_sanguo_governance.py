@@ -1111,7 +1111,38 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
+
+    scoreboard_default_paths = full_roster_scoreboard.get("defaultPaths")
+    if not isinstance(scoreboard_default_paths, dict) or not scoreboard_default_paths:
+        raise SanguoGovernanceError("policy-full-roster-scoreboard defaultPaths cannot be empty")
+    required_scoreboard_paths = {
+        "generals",
+        "events",
+        "genericCandidates",
+        "pilotReport",
+        "relationshipEvidence",
+        "eventQuestionSeeds",
+        "outputRoot",
+        "lanePolicyConfig",
+    }
+    missing_scoreboard_paths = sorted(required_scoreboard_paths - set(scoreboard_default_paths.keys()))
+    if missing_scoreboard_paths:
+        raise SanguoGovernanceError(f"policy-full-roster-scoreboard missing defaultPaths: {', '.join(missing_scoreboard_paths)}")
+    if any(not str(scoreboard_default_paths.get(key) or "").strip() for key in required_scoreboard_paths):
+        raise SanguoGovernanceError("policy-full-roster-scoreboard defaultPaths values cannot be blank")
+    scoreboard_lane_thresholds = full_roster_scoreboard.get("laneThresholds")
+    if not isinstance(scoreboard_lane_thresholds, dict) or not scoreboard_lane_thresholds:
+        raise SanguoGovernanceError("policy-full-roster-scoreboard laneThresholds cannot be empty")
+    if float(scoreboard_lane_thresholds.get("aRuminationHistoricalMax") or 0.0) <= 0.0:
+        raise SanguoGovernanceError("policy-full-roster-scoreboard aRuminationHistoricalMax must be positive")
+    if int(scoreboard_lane_thresholds.get("cHumanReviewGenericMin") or 0) <= 0:
+        raise SanguoGovernanceError("policy-full-roster-scoreboard cHumanReviewGenericMin must be positive")
+    if not isinstance(scoreboard_lane_thresholds.get("femalePriorityCToSkillPreview"), bool):
+        raise SanguoGovernanceError("policy-full-roster-scoreboard femalePriorityCToSkillPreview must be boolean")
+
     return {
+        "fullRosterScoreboardPathDefaultCount": len(scoreboard_default_paths),
+        "fullRosterScoreboardLaneThresholdCount": len(scoreboard_lane_thresholds),
         "hardRelationshipSpecCount": len(stable["hardRelationshipSpecs"]),
         "factionTimelineSpecCount": len(stable["factionTimelineSpecs"]),
         "eventLocationSeedCount": len(stable["eventLocationSeeds"]),
