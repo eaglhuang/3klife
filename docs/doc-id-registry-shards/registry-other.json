@@ -916,5 +916,11 @@
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0012-version-compatibility-gate.task.md",
     "title": "TASK-APO-0012 — Version compatibility 與 breaking-change gate",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0165",
+    "path": "docs/ai_atomic_framework/default-governance/ATM預設治理能力計畫書.md",
+    "title": "ATM 預設治理能力計畫書",
+    "category": "other"
   }
 ]

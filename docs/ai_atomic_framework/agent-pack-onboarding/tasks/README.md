@@ -31,7 +31,19 @@ created_by_agent: vs-insiders-gpt-5.4
 | [TASK-APO-0009](./TASK-APO-0009-next-action-hint-mrp.task.md) | Slash Command nextActionHint 對接 MRP | M8 | done | 0003 / TASK-MRP-0009 |
 | [TASK-APO-0010](./TASK-APO-0010-agent-matrix-generator.task.md) | 多 agent 矩陣自動生成 | M5 | done | 0006 |
 | [TASK-APO-0011](./TASK-APO-0011-framework-chart-version-contract.task.md) | Framework / ATMChart 版本契約 | M6 | done | — |
-| [TASK-APO-0012](./TASK-APO-0012-version-compatibility-gate.task.md) | Version compatibility 與 breaking-change gate | M7 | open | 0011 |
+| [TASK-APO-0012](./TASK-APO-0012-version-compatibility-gate.task.md) | Version compatibility 與 breaking-change gate | M7 | done | 0011 |
+| [TASK-APO-0013](./TASK-APO-0013-migration-tooling-contract.task.md) | Migration tooling contract + fixture 庫 | M8 | open | 0012 |
+| [TASK-APO-0014](./TASK-APO-0014-release-trust-chain.task.md) | Release trust chain（provenance + SBOM + integrity） | M8 | open | 0012 |
+| [TASK-APO-0015](./TASK-APO-0015-release-incident-response.task.md) | Release incident response + known-bad-versions | M8 | open | 0014 |
+| [TASK-APO-0016](./TASK-APO-0016-version-skew-matrix-ci.task.md) | Version skew matrix CI | M8 | open | 0012 |
+| [TASK-APO-0017](./TASK-APO-0017-longtail-user-safeguards.task.md) | Long-tail user safeguards | M9 | open | 0012 |
+| [TASK-APO-0018](./TASK-APO-0018-security-policy.task.md) | Security policy + advisory branch | M8 | open | — |
+| [TASK-APO-0019](./TASK-APO-0019-dist-tag-policy.task.md) | Dist-tag policy + pre-release 規則 | M8 | open | — |
+| [TASK-APO-0020](./TASK-APO-0020-telemetry-sentinel-dashboard.task.md) | Telemetry + adopter sentinel + deprecation dashboard | M10 | open | 0018 |
+| [TASK-APO-0021](./TASK-APO-0021-meta-schema-versioning.task.md) | Meta-schema versioning（invariants / manifest / chart frontmatter） | M9 | open | 0012 |
+| [TASK-APO-0022](./TASK-APO-0022-bridge-minor-experimental.task.md) | Bridge minor + `@experimental` API 通道 | M9 | open | 0013 |
+| [TASK-APO-0023](./TASK-APO-0023-policy-self-versioning.task.md) | Policy self-versioning + auto matrix PR | M10 | open | — |
+| [TASK-APO-0024](./TASK-APO-0024-time-minor-deprecation-canary.task.md) | Time+minor deprecation + canary rollout | M10 | open | 0013 |
 
 ## 共通驗收
 
