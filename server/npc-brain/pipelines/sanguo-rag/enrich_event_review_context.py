@@ -28,195 +28,105 @@ DEFAULT_MANUAL_ROSTER_PATH = pipeline_config_path(REPO_ROOT, "manual-roster-seed
 DEFAULT_WIKI_COURTESY_ALIASES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/romance-courtesy-aliases.json")
 DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
 SOURCE_REF_RE = re.compile(r"^(?P<chapter>\d{3})#p(?P<paragraph>\d+)$")
-ALLOWED_ANSWERS = {"A", "B", "C", "D"}
-RELATION_TYPE_ALIASES = {
-    "attack": "confronts",
-    "attacks": "confronts",
-    "battle": "confronts",
-    "beats": "confronts",
-    "opponent": "confronts",
-    "enemy": "confronts",
-    "rival": "confronts",
-    "fight": "confronts",
-    "fights": "confronts",
-    "ally": "allies",
-    "allied": "allies",
-    "serve": "serves",
-    "served": "serves",
-    "command": "commands",
-    "commanded": "commands",
-}
-LOCATION_TERMS = [
-    "虎牢關",
-    "汜水關",
-    "大興山下",
-    "大興山",
-    "青州",
-    "廣宗",
-    "潁川",
-    "長社",
-    "曲陽",
-    "陽城",
-    "宛城",
-    "平原縣",
-    "平原",
-    "涿郡",
-    "洛陽",
-    "長安",
-    "下邳",
-    "小沛",
-    "徐州",
-    "荊州",
-    "襄陽",
-    "江夏",
-    "南徐",
-    "甘露寺",
-    "長坂坡",
-    "長阪坡",
-    "長坂橋",
-    "白門樓",
-    "盤河橋",
-    "界橋",
-    "梁東",
-    "溫明園",
-    "園門外",
-    "園門",
-    "丞相府",
-    "相府",
-    "都門",
-    "城外",
-    "關下",
-    "關前",
-    "關上",
-    "西寨",
-    "大寨",
-    "陣前",
-    "寨",
-]
-GENERIC_LOCATION_TERMS = {"寨", "城外", "關下", "關前", "關上", "園門", "相府", "都門", "陣前"}
-LOCATION_ALIASES = {
-    "园门外": "園門外",
-    "园门": "園門",
-    "虎牢关": "虎牢關",
-    "汜水关": "汜水關",
-    "涿郡": "涿郡",
-    "青州": "青州",
-}
-BATTLE_VERBS = ["搦戰", "迎敵", "迎戰", "廝殺", "殺", "戰", "刺", "斬", "攻", "追", "敗", "趕"]
-DIRECT_BATTLE_PAIR_TERMS = ["交鋒", "廝殺", "交戰", "親戰", "敵住", "大戰", "搦戰", "迎敵", "迎戰", "便戰", "酣戰", "直取", "截住", "追襲", "追趕", "殺敗", "攻打", "刺", "斬"]
-INTERNAL_CONFLICT_TERMS = ["反", "叛", "背", "內訌", "自相", "攻殺", "謀害", "殺主", "降而復叛"]
-COMMAND_VERBS = ["令", "領", "將", "同", "守", "屯", "紮", "撥", "引軍"]
-BROTHERHOOD_IDS = {"liu-bei", "guan-yu", "zhang-fei"}
-COOPERATIVE_TERMS = ["同", "共", "一齊", "三人", "我等", "引軍", "親赴血戰", "救了", "急止", "連夜"]
-APPOINTMENT_TERMS = ["薦爲", "表陳", "前功", "司馬", "縣令", "現居何職", "白身"]
-DECLARATIVE_BATTLE_TERMS = ["不就這裏", "更待何時", "活拿", "斬了", "已斬", "要斬", "便要提刀"]
-COACTION_BATTLE_TERMS = ["斬關入內", "各選精兵", "使一弓手出戰", "必被華雄所笑", "不見了曹操", "復殺入城來", "特來求救"]
-COMMAND_FALSE_POSITIVE_TERMS = [
-    "各選精兵",
-    "同舍兄弟",
-    "平原令",
-    "呼玄德出",
-    "具道來意",
-    "將玄德功勞",
-    "功勞，并其出身",
-    "遣兵追襲",
-    "星夜來趕董卓",
-    "趕董卓",
-    "留夏侯惇、曹仁守",
-    "令許褚、典韋爲先鋒",
-    "操先令許褚、曹仁、典韋",
-    "便令許褚出馬與徐晃交鋒",
-    "使張飛奪了我好馬",
-    "同救起曹操",
-    "接著，言呂佈勢大",
-    "傲慢袁紹手下將士",
-    "令其另領一軍在後",
-    "另領一軍在後",
-    "來投曹操",
-    "回兵已過滕縣",
-    "召副將",
-    "勸令解和",
-    "遺書於曹操",
-    "領徐州牧",
-    "情願送還馬匹",
-    "兩相罷兵",
-    "約會曹操",
-    "先差夏侯惇",
-    "前來保駕",
-    "特來相投",
-    "來相投",
-    "前奔許都",
-    "先使孫乾",
-    "遣人至",
-    "喚入問之",
-]
-INTENT_ONLY_BATTLE_TERMS = ["便欲殺之", "要便住在此", "自投別處", "正可乘勢追襲"]
-REPORTED_BATTLE_TERMS = ["近聞", "欲往助之", "昔曾師事", "奪了我好馬", "尚自抵賴", "流矢所中而死", "青州之兵", "劫掠民家", "送還馬匹", "兩相罷兵", "情願送還馬匹"]
-REVIEW_ONLY_SUMMARY_TERMS = ["送還馬匹", "兩相罷兵", "情願送還馬匹", "勸令解和", "解和", "特來相投", "來相投", "前奔許都", "遣人至"]
-DELEGATED_COMBAT_TERMS = ["遣副將", "副將高升", "使張飛擊之"]
-SIEGE_ASSIGNMENT_TERMS = ["攻打南門", "打北門", "打西門", "留東門", "攻城西南角", "率三軍掩殺", "一齊趕上", "賊兵大敗"]
-ALLY_ATTACK_TERMS = ["自跟", "同", "與", "合兵一處"]
-PEER_DEPLOYMENT_TERMS = [
-    "領夏侯惇",
-    "星夜來趕董卓",
-    "撥夏侯惇引軍在左",
-    "爲左軍",
-    "爲右軍",
-    "爲合後",
-    "皆爲將軍",
-    "留夏侯惇、曹仁守",
-    "領三百鐵騎",
-    "帶曹洪",
-    "選馬步",
-    "領兵左出",
-    "領兵右出",
-    "自領中軍沖陣",
-    "保護老小",
-    "爲首三員大將",
-    "引軍刺斜殺來",
-    "接應周瑜",
-    "領軍襲取曲阿",
-    "各引兵千餘來助",
-    "皆走",
-    "同玄德、關、張",
-    "領軍四千",
-    "在公部下相助",
-    "救出曹操",
-    "來救援",
-    "引軍來救援",
-    "殺入曹兵寨邊",
-]
-ALLIED_PEER_GROUPS = [
-    {"cao-cao", "cao-hong", "cao-ren", "xiahou-dun", "xiahou-yuan", "li-dian", "le-jin", "xu-zhu", "dian-wei", "yu-jin", "lv-qian", "cheng-yu", "xun-yu"},
-    {"liu-bei", "guan-yu", "zhang-fei", "zhao-yun"},
-    {"sun-quan", "zhou-yu", "cheng-pu", "chen-wu"},
-]
-DIRECTED_COMMAND_VERBS = ["使", "令", "遣", "撥"]
-GENERAL_ALIASES = {
-    "cao-cao": ["曹操", "操", "孟德"],
-    "dong-zhuo": ["董卓", "卓", "丞相"],
-    "gongsun-zan": ["公孫瓚", "瓚"],
-    "guan-yu": ["關羽", "關公", "雲長"],
-    "hua-xiong": ["華雄", "雄"],
-    "huangfu-song": ["皇甫嵩"],
-    "li-jue": ["李傕", "李催"],
-    "li-ru": ["李儒", "儒"],
-    "li-su": ["李肅", "肅"],
-    "liu-bei": ["劉備", "玄德", "備"],
-    "zhao-yun": ["趙雲", "子龍"],
-    "liu-yan": ["劉焉"],
-    "lu-bu": ["呂布", "布", "奉先", "溫侯"],
-    "sun-jian": ["孫堅", "堅", "文臺"],
-    "yuan-shao": ["袁紹", "紹"],
-    "yuan-shu": ["袁術", "術", "公路"],
-    "zhang-bao-enemy": ["張寶"],
-    "zhang-fei": ["張飛", "飛"],
-    "zhang-ji": ["張濟"],
-    "zhang-jue": ["張角"],
-    "zhang-liang-enemy": ["張梁"],
-    "zhu-jun-han": ["朱雋", "朱儁", "雋"],
-}
-SINGLE_CHAR_ALIAS_ALLOWED = {"dong-zhuo", "gongsun-zan", "li-ru", "li-su", "lu-bu", "zhu-jun-han"}
+from sanguo_governance_loader import (
+    SanguoGovernanceError,
+    load_event_review_context_cue_rules,
+    load_event_review_context_policy,
+)
+
+ALLOWED_ANSWERS: set[str] = set()
+RELATION_TYPE_ALIASES: dict[str, str] = {}
+LOCATION_TERMS: list[str] = []
+GENERIC_LOCATION_TERMS: set[str] = set()
+LOCATION_ALIASES: dict[str, str] = {}
+BATTLE_VERBS: list[str] = []
+DIRECT_BATTLE_PAIR_TERMS: list[str] = []
+INTERNAL_CONFLICT_TERMS: list[str] = []
+COMMAND_VERBS: list[str] = []
+BROTHERHOOD_IDS: set[str] = set()
+COOPERATIVE_TERMS: list[str] = []
+APPOINTMENT_TERMS: list[str] = []
+DECLARATIVE_BATTLE_TERMS: list[str] = []
+COACTION_BATTLE_TERMS: list[str] = []
+COMMAND_FALSE_POSITIVE_TERMS: list[str] = []
+INTENT_ONLY_BATTLE_TERMS: list[str] = []
+REPORTED_BATTLE_TERMS: list[str] = []
+REVIEW_ONLY_SUMMARY_TERMS: list[str] = []
+DELEGATED_COMBAT_TERMS: list[str] = []
+SIEGE_ASSIGNMENT_TERMS: list[str] = []
+ALLY_ATTACK_TERMS: list[str] = []
+PEER_DEPLOYMENT_TERMS: list[str] = []
+ALLIED_PEER_GROUPS: list[set[str]] = []
+DIRECTED_COMMAND_VERBS: list[str] = []
+GENERAL_ALIASES: dict[str, list[str]] = {}
+SINGLE_CHAR_ALIAS_ALLOWED: set[str] = set()
+
+EVENT_REVIEW_CONTEXT_POLICY: dict[str, Any] = {}
+
+
+def _review_context_rule_by_name(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return {str(row.get("constantName") or ""): row for row in rows}
+
+
+def _string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value]
+
+
+def _string_set(value: Any) -> set[str]:
+    return set(_string_list(value))
+
+
+def _string_mapping(value: Any) -> dict[str, str]:
+    if not isinstance(value, dict):
+        return {}
+    return {str(key): str(val) for key, val in value.items()}
+
+
+def _string_mapping_list(value: Any) -> dict[str, list[str]]:
+    if not isinstance(value, dict):
+        return {}
+    return {str(key): _string_list(val) for key, val in value.items()}
+
+
+def apply_event_review_context_governance(policy: dict[str, Any], cue_rules: list[dict[str, Any]]) -> None:
+    global EVENT_REVIEW_CONTEXT_POLICY, ALLOWED_ANSWERS, BROTHERHOOD_IDS, SINGLE_CHAR_ALIAS_ALLOWED
+    global RELATION_TYPE_ALIASES, LOCATION_TERMS, GENERIC_LOCATION_TERMS, LOCATION_ALIASES
+    global BATTLE_VERBS, DIRECT_BATTLE_PAIR_TERMS, INTERNAL_CONFLICT_TERMS, COMMAND_VERBS
+    global COOPERATIVE_TERMS, APPOINTMENT_TERMS, DECLARATIVE_BATTLE_TERMS, COACTION_BATTLE_TERMS
+    global COMMAND_FALSE_POSITIVE_TERMS, INTENT_ONLY_BATTLE_TERMS, REPORTED_BATTLE_TERMS
+    global REVIEW_ONLY_SUMMARY_TERMS, DELEGATED_COMBAT_TERMS, SIEGE_ASSIGNMENT_TERMS
+    global ALLY_ATTACK_TERMS, PEER_DEPLOYMENT_TERMS, ALLIED_PEER_GROUPS, DIRECTED_COMMAND_VERBS, GENERAL_ALIASES
+
+    EVENT_REVIEW_CONTEXT_POLICY = dict(policy)
+    ALLOWED_ANSWERS = _string_set(policy.get("allowedAnswers"))
+    BROTHERHOOD_IDS = _string_set(policy.get("brotherhoodIds"))
+    SINGLE_CHAR_ALIAS_ALLOWED = _string_set(policy.get("singleCharAliasAllowed"))
+    by_name = _review_context_rule_by_name(cue_rules)
+    RELATION_TYPE_ALIASES = _string_mapping(by_name.get("RELATION_TYPE_ALIASES", {}).get("value"))
+    LOCATION_TERMS = _string_list(by_name.get("LOCATION_TERMS", {}).get("value"))
+    GENERIC_LOCATION_TERMS = _string_set(by_name.get("GENERIC_LOCATION_TERMS", {}).get("value"))
+    LOCATION_ALIASES = _string_mapping(by_name.get("LOCATION_ALIASES", {}).get("value"))
+    BATTLE_VERBS = _string_list(by_name.get("BATTLE_VERBS", {}).get("value"))
+    DIRECT_BATTLE_PAIR_TERMS = _string_list(by_name.get("DIRECT_BATTLE_PAIR_TERMS", {}).get("value"))
+    INTERNAL_CONFLICT_TERMS = _string_list(by_name.get("INTERNAL_CONFLICT_TERMS", {}).get("value"))
+    COMMAND_VERBS = _string_list(by_name.get("COMMAND_VERBS", {}).get("value"))
+    COOPERATIVE_TERMS = _string_list(by_name.get("COOPERATIVE_TERMS", {}).get("value"))
+    APPOINTMENT_TERMS = _string_list(by_name.get("APPOINTMENT_TERMS", {}).get("value"))
+    DECLARATIVE_BATTLE_TERMS = _string_list(by_name.get("DECLARATIVE_BATTLE_TERMS", {}).get("value"))
+    COACTION_BATTLE_TERMS = _string_list(by_name.get("COACTION_BATTLE_TERMS", {}).get("value"))
+    COMMAND_FALSE_POSITIVE_TERMS = _string_list(by_name.get("COMMAND_FALSE_POSITIVE_TERMS", {}).get("value"))
+    INTENT_ONLY_BATTLE_TERMS = _string_list(by_name.get("INTENT_ONLY_BATTLE_TERMS", {}).get("value"))
+    REPORTED_BATTLE_TERMS = _string_list(by_name.get("REPORTED_BATTLE_TERMS", {}).get("value"))
+    REVIEW_ONLY_SUMMARY_TERMS = _string_list(by_name.get("REVIEW_ONLY_SUMMARY_TERMS", {}).get("value"))
+    DELEGATED_COMBAT_TERMS = _string_list(by_name.get("DELEGATED_COMBAT_TERMS", {}).get("value"))
+    SIEGE_ASSIGNMENT_TERMS = _string_list(by_name.get("SIEGE_ASSIGNMENT_TERMS", {}).get("value"))
+    ALLY_ATTACK_TERMS = _string_list(by_name.get("ALLY_ATTACK_TERMS", {}).get("value"))
+    PEER_DEPLOYMENT_TERMS = _string_list(by_name.get("PEER_DEPLOYMENT_TERMS", {}).get("value"))
+    ALLIED_PEER_GROUPS = [set(group) for group in by_name.get("ALLIED_PEER_GROUPS", {}).get("value") or [] if isinstance(group, list)]
+    DIRECTED_COMMAND_VERBS = _string_list(by_name.get("DIRECTED_COMMAND_VERBS", {}).get("value"))
+    GENERAL_ALIASES = _string_mapping_list(by_name.get("GENERAL_ALIASES", {}).get("value"))
 
 
 def parse_args() -> argparse.Namespace:
@@ -242,6 +152,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--repeat-penalty", type=float, default=None, help=f"Override reviewer preset repeat penalty. Legacy default was {DEFAULT_REASONING_REPEAT_PENALTY}.")
     parser.add_argument("--batch", action="store_true", help="Send all questions in one request. Default is one request per question for better quality.")
     parser.add_argument("--prompt-only", action="store_true", help="Only write expanded context bundle; do not call DeepSeek")
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--event-review-context-policy", default=None, help="Override policy-event-review-context.json path")
+    parser.add_argument("--event-review-context-cue-rules", default=None, help="Override rule-event-review-context-cues.jsonl path")
     parser.add_argument("--fill-answers", action="store_true", help="Fill answer and edits in enriched todo when proposal passes gates")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting outputs")
     return parser.parse_args()
@@ -1739,6 +1652,18 @@ def compact_candidate_hints_for_llm(candidate_hints: dict) -> dict:
 
 def main() -> None:
     args = parse_args()
+    try:
+        event_review_context_policy = load_event_review_context_policy(
+            args.governance_root,
+            event_review_context_policy=args.event_review_context_policy,
+        )
+        event_review_context_cue_rules = load_event_review_context_cue_rules(
+            args.governance_root,
+            event_review_context_cue_rules=args.event_review_context_cue_rules,
+        )
+        apply_event_review_context_governance(event_review_context_policy, event_review_context_cue_rules)
+    except SanguoGovernanceError as exc:
+        raise SystemExit(f"[enrich_event_review_context] FAIL {exc}") from None
     answers_path = Path(args.answers)
     output_root = Path(args.output_root) if args.output_root else answers_path.parent
     paths = output_paths(output_root, answers_path)

@@ -364,6 +364,35 @@ def load_external_source_benchmark_cue_rules(
     return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind"))
 
 
+
+def load_event_review_context_policy(
+    root: str | Path | None = None,
+    *,
+    event_review_context_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(event_review_context_policy).resolve()
+        if event_review_context_policy
+        else _path(base, "policies", "policy-event-review-context.json")
+    )
+    return read_governance_json(path, required_id="Policy_EventReviewContext_P1")
+
+
+def load_event_review_context_cue_rules(
+    root: str | Path | None = None,
+    *,
+    event_review_context_cue_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(event_review_context_cue_rules).resolve()
+        if event_review_context_cue_rules
+        else _path(base, "rules", "rule-event-review-context-cues.jsonl")
+    )
+    return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "value"))
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
@@ -384,6 +413,8 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-core-person-completion-scoring.json", "consumer": "estimate_core_person_completion.py"},
         {"section": "policies", "file": "policy-event-candidate-extraction.json", "consumer": "extract_event_candidates.py"},
         {"section": "policies", "file": "policy-event-question-seed-bank.json", "consumer": "build_event_question_seed_bank.py"},
+        {"section": "policies", "file": "policy-external-source-benchmark.json", "consumer": "benchmark_external_source.py"},
+        {"section": "policies", "file": "policy-event-review-context.json", "consumer": "enrich_event_review_context.py"},
         {"section": "rules", "file": "rule-basic-profile-cues.json", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "rules", "file": "rule-location-extraction.json", "consumer": "run_progress_advancement_loop.py"},
         {"section": "rules", "file": "rule-evidence-seed-keyword-cues.jsonl", "consumer": "extract_*_evidence_seeds.py"},
@@ -392,6 +423,8 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "rules", "file": "rule-page-text-cleanup.jsonl", "consumer": "extract_*_evidence_seeds.py"},
         {"section": "rules", "file": "rule-event-candidate-cues.jsonl", "consumer": "extract_event_candidates.py"},
         {"section": "rules", "file": "rule-event-question-angle-cues.jsonl", "consumer": "build_event_question_seed_bank.py"},
+        {"section": "rules", "file": "rule-external-source-benchmark-cues.jsonl", "consumer": "benchmark_external_source.py"},
+        {"section": "rules", "file": "rule-event-review-context-cues.jsonl", "consumer": "enrich_event_review_context.py"},
         {"section": "schemas", "file": "schema-stable-bootstrap-payload.json", "consumer": "validate_sanguo_governance.py"},
         {"section": "schemas", "file": "schema-governance-bundle.json", "consumer": "validate_sanguo_governance.py"},
     ]

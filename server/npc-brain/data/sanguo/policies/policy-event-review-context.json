@@ -1,0 +1,26 @@
+{
+  "id": "Policy_EventReviewContext_P1",
+  "description": "Externalized deterministic review context defaults copied from enrich_event_review_context.py Phase 8 baseline.",
+  "allowedAnswers": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "brotherhoodIds": [
+    "guan-yu",
+    "liu-bei",
+    "zhang-fei"
+  ],
+  "singleCharAliasAllowed": [
+    "dong-zhuo",
+    "gongsun-zan",
+    "li-ru",
+    "li-su",
+    "lu-bu",
+    "zhu-jun-han"
+  ],
+  "reviewOnlyCanonicalWriteGuard": {
+    "canonicalWrites": false
+  }
+}

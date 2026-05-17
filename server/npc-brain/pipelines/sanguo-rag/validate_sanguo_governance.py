@@ -20,6 +20,8 @@ from sanguo_governance_loader import (
     load_event_candidate_extraction_policy,
     load_event_question_angle_cue_rules,
     load_event_question_seed_bank_policy,
+    load_event_review_context_cue_rules,
+    load_event_review_context_policy,
     load_external_source_benchmark_cue_rules,
     load_external_source_benchmark_policy,
     load_evidence_seed_text_normalization_rules,
@@ -132,6 +134,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     event_question_angle_cues = load_event_question_angle_cue_rules(root)
     external_source_benchmark_policy = load_external_source_benchmark_policy(root)
     external_source_benchmark_cues = load_external_source_benchmark_cue_rules(root)
+    event_review_context_policy = load_event_review_context_policy(root)
+    event_review_context_cues = load_event_review_context_cue_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -548,6 +552,86 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if "DEFAULT_TERM_HIT_KEYWORDS" not in external_source_by_name:
         raise SanguoGovernanceError("rule-external-source-benchmark-cues missing DEFAULT_TERM_HIT_KEYWORDS")
 
+
+    allowed_answers = [str(item).strip() for item in event_review_context_policy.get("allowedAnswers") or []]
+    if sorted(allowed_answers) != ["A", "B", "C", "D"]:
+        raise SanguoGovernanceError("policy-event-review-context allowedAnswers must be A/B/C/D")
+    for key in ("brotherhoodIds", "singleCharAliasAllowed"):
+        values = [str(item).strip() for item in event_review_context_policy.get(key) or []]
+        if any(not item for item in values):
+            raise SanguoGovernanceError(f"policy-event-review-context {key} has blank value")
+        if len(set(values)) != len(values):
+            raise SanguoGovernanceError(f"policy-event-review-context {key} has duplicate value")
+    review_required = {
+        "RELATION_TYPE_ALIASES",
+        "LOCATION_TERMS",
+        "GENERIC_LOCATION_TERMS",
+        "LOCATION_ALIASES",
+        "BATTLE_VERBS",
+        "DIRECT_BATTLE_PAIR_TERMS",
+        "INTERNAL_CONFLICT_TERMS",
+        "COMMAND_VERBS",
+        "COOPERATIVE_TERMS",
+        "APPOINTMENT_TERMS",
+        "DECLARATIVE_BATTLE_TERMS",
+        "COACTION_BATTLE_TERMS",
+        "COMMAND_FALSE_POSITIVE_TERMS",
+        "INTENT_ONLY_BATTLE_TERMS",
+        "REPORTED_BATTLE_TERMS",
+        "REVIEW_ONLY_SUMMARY_TERMS",
+        "DELEGATED_COMBAT_TERMS",
+        "SIEGE_ASSIGNMENT_TERMS",
+        "ALLY_ATTACK_TERMS",
+        "PEER_DEPLOYMENT_TERMS",
+        "ALLIED_PEER_GROUPS",
+        "DIRECTED_COMMAND_VERBS",
+        "GENERAL_ALIASES",
+    }
+    review_by_name: dict[str, dict[str, Any]] = {}
+    alias_count = 0
+    for row in event_review_context_cues:
+        consumer = str(row.get("consumer") or "").strip()
+        constant_name = str(row.get("constantName") or "").strip()
+        if consumer != "enrich_event_review_context.py":
+            raise SanguoGovernanceError(f"rule-event-review-context-cues invalid consumer: {consumer}")
+        if constant_name in review_by_name:
+            raise SanguoGovernanceError(f"rule-event-review-context-cues duplicate constantName: {constant_name}")
+        review_by_name[constant_name] = row
+        value = row.get("value")
+        kind = str(row.get("kind") or "").strip()
+        if kind in {"termList", "termSet"}:
+            if not isinstance(value, list) or not value:
+                raise SanguoGovernanceError(f"rule-event-review-context-cues {constant_name} value must be non-empty list")
+            normalized = [str(item).strip() for item in value]
+            if any(not item for item in normalized):
+                raise SanguoGovernanceError(f"rule-event-review-context-cues {constant_name} has blank cue")
+            if len(set(normalized)) != len(normalized):
+                raise SanguoGovernanceError(f"rule-event-review-context-cues {constant_name} has duplicate cue")
+        elif kind == "mapping":
+            if not isinstance(value, dict) or not value:
+                raise SanguoGovernanceError(f"rule-event-review-context-cues {constant_name} value must be non-empty mapping")
+            alias_count += len(value)
+            if any(not str(key).strip() or not str(val).strip() for key, val in value.items()):
+                raise SanguoGovernanceError(f"rule-event-review-context-cues {constant_name} has blank mapping entry")
+        elif kind == "mappingList":
+            if not isinstance(value, dict) or not value:
+                raise SanguoGovernanceError(f"rule-event-review-context-cues {constant_name} value must be non-empty mapping list")
+            for key, vals in value.items():
+                if not str(key).strip() or not isinstance(vals, list) or not vals:
+                    raise SanguoGovernanceError(f"rule-event-review-context-cues {constant_name} invalid alias row")
+                alias_count += len(vals)
+        elif kind == "listOfSets":
+            if not isinstance(value, list) or not value:
+                raise SanguoGovernanceError(f"rule-event-review-context-cues {constant_name} value must be non-empty list")
+            for group in value:
+                if not isinstance(group, list) or not group:
+                    raise SanguoGovernanceError(f"rule-event-review-context-cues {constant_name} invalid set row")
+        else:
+            raise SanguoGovernanceError(f"rule-event-review-context-cues {constant_name} unsupported kind: {kind}")
+    missing_review_context = sorted(review_required - review_by_name.keys())
+    if missing_review_context:
+        raise SanguoGovernanceError(f"rule-event-review-context-cues missing rules: {', '.join(missing_review_context)}")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -579,6 +663,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "eventQuestionClaimMappingCount": len(claim_to_angle),
         "externalSourceBenchmarkCueRuleCount": len(external_source_benchmark_cues),
         "externalSourceBenchmarkSourceClassCount": len(external_source_classes),
+        "eventReviewContextCueRuleCount": len(event_review_context_cues),
+        "eventReviewContextAliasCount": alias_count,
     }
 
 
