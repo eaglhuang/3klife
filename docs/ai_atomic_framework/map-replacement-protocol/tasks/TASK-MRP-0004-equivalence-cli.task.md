@@ -3,12 +3,16 @@ doc_id: doc_other_0138
 task_id: TASK-MRP-0004
 title: Map Equivalence Test CLI
 milestone: M4
-status: pending
+status: done
 blocked_by: [TASK-MRP-0003]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+started_at: 2026-05-17T14:07:27.5766827+08:00
+started_by_agent: vs-insiders-github-copilot
+completed_at: 2026-05-17T14:07:27.5766827+08:00
+completed_by_agent: vs-insiders-github-copilot
 ---
 
 # TASK-MRP-0004 — Map Equivalence Test CLI
@@ -30,24 +34,25 @@ public_tracking: false
 ## 輸出
 
 1. CLI 旗標 `--equivalence-fixtures <path>`：必須與 `--map` 搭配；與 `--propagate`、`--spec`、`--atom` 互斥。
-2. Runner：讀 fixtures → 對 map executor 跑 → 對 legacy URI 收集既有結果 → 比對 → 寫報告。
+2. Runner：讀 fixtures → 分別呼叫 `mapExecutor` 與 `legacyExecutor` → 比對 → 寫報告；`legacyUris` 由 map spec 的 `replacement.legacyUris` 提供 lineage/evidence 來源。
 3. `case.passed=false` 且未列入 `knownDivergences` → CLI exit code ≠ 0。
 4. 報告檔案路徑：`atomic_workbench/maps/<mapId>/map.equivalence.report.json`。
 
 ## 驗收條件
 
-- [ ] 對 sample map（建議 checkout-mini）跑通 happy path
-- [ ] 對 negative fixture 跑出 `passed:false` 且 exit code = 1
-- [ ] `knownDivergences` 允許列舉時 exit code = 0
-- [ ] `--help` 列出新旗標與互斥規則
-- [ ] 報告通過 `atm spec --validate`
+- [x] 對 sample map（建議 checkout-mini）跑通 happy path
+- [x] 對 negative fixture 跑出 `passed:false` 且 exit code = 1
+- [x] `knownDivergences` 允許列舉時 exit code = 0
+- [x] `--help` 列出新旗標與互斥規則
+- [x] 報告通過 `atm spec --validate`
 
 ## 影響檔案
 
 - `packages/cli/src/commands/test.ts`
 - `packages/core/src/equivalence/run-map-equivalence.ts`（新）
 - `tests/cli/test-map-equivalence.test.ts`
-- `atomic_workbench/maps/<sample>/map.equivalence.report.json`
+- `CHANGELOG.md`
+- `atomic_workbench/maps/<mapId>/map.equivalence.report.json`（runtime generated artifact）
 
 ## 回滾策略
 
@@ -55,8 +60,12 @@ public_tracking: false
 
 ## Checklist
 
-- [ ] CLI 旗標 + mutual exclusion
-- [ ] runner 實作
-- [ ] exit code 行為
-- [ ] sample 報告落地
-- [ ] CHANGELOG 補一句
+- [x] CLI 旗標 + mutual exclusion
+- [x] runner 實作
+- [x] exit code 行為
+- [x] sample 報告落地
+- [x] CHANGELOG 補一句
+
+## Notes
+
+2026-05-17 | 狀態: done | 驗證: test-map-equivalence.test.ts / test-map.test.ts / map-equivalence-report.test.ts / validate-schemas.ts --mode validate pass | 變更: 新增 delegated `run-map-equivalence` runner、`test --map --equivalence-fixtures` CLI 分支、known divergence gate、canonical report output 與 CLI acceptance coverage | 阻塞: none

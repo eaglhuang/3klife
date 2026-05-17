@@ -361,11 +361,13 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 
 對應任務卡：TASK-MRP-0004
 
-- [ ] `node atm.mjs test --map <id> --equivalence-fixtures <path> --json` 可執行
-- [ ] 與 `--map`、`--propagate`、`--spec`、`--atom` 的 mutual exclusion 已明列在 usage
-- [ ] 產出檔案符合 `atm.mapEquivalenceReport` schema
-- [ ] 任何 `case.passed=false` 且未列入 `knownDivergences` 時 CLI 回傳非零 exit code
-- [ ] 報告寫入 `atomic_workbench/maps/<mapId>/map.equivalence.report.json`
+- [x] `node atm.mjs test --map <id> --equivalence-fixtures <path> --json` 可執行
+- [x] 與 `--map`、`--propagate`、`--spec`、`--atom` 的 mutual exclusion 已明列在 usage
+- [x] 產出檔案符合 `atm.mapEquivalenceReport` schema
+- [x] 任何 `case.passed=false` 且未列入 `knownDivergences` 時 CLI 回傳非零 exit code
+- [x] 報告寫入 `atomic_workbench/maps/<mapId>/map.equivalence.report.json`
+
+已完成 delegated execution 版本：fixture 直接指定 `mapExecutor` / `legacyExecutor`，CLI 會比對雙方輸出並將 `knownDivergences` 納入 pass/fail gate。
 
 ### Milestone 5：Upgrade Gates（M5）
 
@@ -519,7 +521,7 @@ ATM 下一步應優先完成 Atom Map Replacement Protocol，而不是新增抽�
 
 ### 17.6 後續另案建議
 
-建議另開一份獨立計畫書：`docs/ai_atomic_framework/agent-pack-onboarding/ATM_agent_pack_onboarding計畫書.md`。該計畫才適合承接：
+建議另開一份獨立計畫書：`docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md`。該計畫才適合承接：
 
 1. Agent Pack SDK。
 2. Claude Code / Cursor / Copilot / Gemini / Windsurf pack。
