@@ -6,6 +6,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from sanguo_governance_loader import SanguoGovernanceError, load_deepseek_reasoning_trial_policy
+
 from ollama_reasoning_client import (
     DEFAULT_REASONING_NUM_CTX,
     DEFAULT_REASONING_NUM_PREDICT,
@@ -28,24 +30,96 @@ DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/deepsee
 DEFAULT_GENERAL_ID = "zhang-fei"
 
 
+DEEPSEEK_REASONING_TRIAL_POLICY: dict[str, Any] = {}
+
+
+def deepseek_reasoning_section(name: str) -> dict[str, Any]:
+    section = DEEPSEEK_REASONING_TRIAL_POLICY.get(name)
+    return section if isinstance(section, dict) else {}
+
+
+def deepseek_text_arg(cli_value: str | None, section: dict[str, Any], key: str, fallback: str | Path) -> str:
+    if cli_value is not None and str(cli_value).strip():
+        return str(cli_value)
+    value = str(section.get(key) or "").strip()
+    return value or str(fallback)
+
+
+def deepseek_optional_text_arg(cli_value: str | None, section: dict[str, Any], key: str) -> str | None:
+    if cli_value is not None and str(cli_value).strip():
+        return str(cli_value)
+    value = str(section.get(key) or "").strip()
+    return value or None
+
+
+def deepseek_int_arg(cli_value: int | None, section: dict[str, Any], key: str, fallback: int) -> int:
+    if cli_value is not None:
+        return int(cli_value)
+    try:
+        return int(section.get(key, fallback))
+    except (TypeError, ValueError):
+        return int(fallback)
+
+
+def deepseek_float_arg(cli_value: float | None, section: dict[str, Any], key: str, fallback: float) -> float:
+    if cli_value is not None:
+        return float(cli_value)
+    try:
+        return float(section.get(key, fallback))
+    except (TypeError, ValueError):
+        return float(fallback)
+
+
+def apply_deepseek_reasoning_trial_governance(policy: dict[str, Any]) -> None:
+    global DEEPSEEK_REASONING_TRIAL_POLICY, DEFAULT_KEYWORD_ROOT
+    DEEPSEEK_REASONING_TRIAL_POLICY = dict(policy)
+    paths = deepseek_reasoning_section("defaultPaths")
+    keyword_root = str(paths.get("keywordRoot") or "").strip()
+    if keyword_root:
+        DEFAULT_KEYWORD_ROOT = Path(keyword_root)
+
+
+def apply_deepseek_reasoning_trial_arg_defaults(args: argparse.Namespace) -> None:
+    paths = deepseek_reasoning_section("defaultPaths")
+    limits = deepseek_reasoning_section("promptLimits")
+    reasoning = deepseek_reasoning_section("reasoningDefaults")
+    args.events = deepseek_text_arg(args.events, paths, "events", DEFAULT_EVENTS_PATH)
+    args.generic_candidates = deepseek_text_arg(args.generic_candidates, paths, "genericCandidates", DEFAULT_GENERIC_CANDIDATES_PATH)
+    args.output_root = deepseek_text_arg(args.output_root, paths, "outputRoot", DEFAULT_OUTPUT_ROOT)
+    args.general_id = deepseek_text_arg(args.general_id, DEEPSEEK_REASONING_TRIAL_POLICY, "defaultGeneralId", DEFAULT_GENERAL_ID)
+    args.api_url = deepseek_optional_text_arg(args.api_url, reasoning, "apiUrl")
+    args.model = deepseek_optional_text_arg(args.model, reasoning, "model")
+    args.top_events = deepseek_int_arg(args.top_events, limits, "topEvents", 8)
+    args.top_generic = deepseek_int_arg(args.top_generic, limits, "topGeneric", 8)
+    args.top_keywords_per_category = deepseek_int_arg(args.top_keywords_per_category, limits, "topKeywordsPerCategory", 6)
+    args.timeout_ms = deepseek_int_arg(args.timeout_ms, reasoning, "timeoutMs", DEFAULT_REASONING_TIMEOUT_MS)
+    args.num_ctx = deepseek_int_arg(args.num_ctx, reasoning, "numCtx", DEFAULT_REASONING_NUM_CTX)
+    args.num_predict = deepseek_int_arg(args.num_predict, reasoning, "numPredict", DEFAULT_REASONING_NUM_PREDICT)
+    args.temperature = deepseek_float_arg(args.temperature, reasoning, "temperature", DEFAULT_REASONING_TEMPERATURE)
+    args.top_p = deepseek_float_arg(args.top_p, reasoning, "topP", DEFAULT_REASONING_TOP_P)
+    args.repeat_penalty = deepseek_float_arg(args.repeat_penalty, reasoning, "repeatPenalty", DEFAULT_REASONING_REPEAT_PENALTY)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run DeepSeek R1 as a non-canonical ETL reasoning sidecar for events and keyword options.")
-    parser.add_argument("--events", default=str(DEFAULT_EVENTS_PATH), help="Canonical events.jsonl path")
-    parser.add_argument("--generic-candidates", default=str(DEFAULT_GENERIC_CANDIDATES_PATH), help="Review-only generic battle candidates JSONL path")
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--deepseek-reasoning-policy", default=None, help="Override policy-deepseek-reasoning-trial.json path")
+    parser.add_argument("--events", default=None, help="Canonical events.jsonl path. Defaults to governance policy.")
+    parser.add_argument("--generic-candidates", default=None, help="Review-only generic battle candidates JSONL path. Defaults to governance policy.")
     parser.add_argument("--keyword-pack", default=None, help="Keyword pack JSON path. Defaults to output-root/general-id convention.")
-    parser.add_argument("--general-id", default=DEFAULT_GENERAL_ID, help="General id for keyword pack context")
-    parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory for DeepSeek sidecar artifacts")
+    parser.add_argument("--general-id", default=None, help="General id for keyword pack context. Defaults to governance policy.")
+    parser.add_argument("--output-root", default=None, help="Output directory for DeepSeek sidecar artifacts. Defaults to governance policy.")
     parser.add_argument("--api-url", default=None, help="Ollama /api/chat URL. Defaults to NPC_LLM_DEEPSEEK_API_URL or 127.0.0.1:11434")
     parser.add_argument("--model", default=None, help="Ollama model. Defaults to NPC_LLM_MODEL_DEEPSEEK_REASONER or deepseek-r1:7b")
-    parser.add_argument("--top-events", type=int, default=8, help="Max canonical events to include")
-    parser.add_argument("--top-generic", type=int, default=8, help="Max generic candidates to include")
-    parser.add_argument("--top-keywords-per-category", type=int, default=6, help="Max keywords per category to include")
-    parser.add_argument("--timeout-ms", type=int, default=DEFAULT_REASONING_TIMEOUT_MS)
-    parser.add_argument("--num-ctx", type=int, default=DEFAULT_REASONING_NUM_CTX)
-    parser.add_argument("--num-predict", type=int, default=DEFAULT_REASONING_NUM_PREDICT)
-    parser.add_argument("--temperature", type=float, default=DEFAULT_REASONING_TEMPERATURE)
-    parser.add_argument("--top-p", type=float, default=DEFAULT_REASONING_TOP_P)
-    parser.add_argument("--repeat-penalty", type=float, default=DEFAULT_REASONING_REPEAT_PENALTY)
+    parser.add_argument("--top-events", type=int, default=None, help="Max canonical events to include. Defaults to governance policy.")
+    parser.add_argument("--top-generic", type=int, default=None, help="Max generic candidates to include. Defaults to governance policy.")
+    parser.add_argument("--top-keywords-per-category", type=int, default=None, help="Max keywords per category to include. Defaults to governance policy.")
+    parser.add_argument("--timeout-ms", type=int, default=None, help="Reasoning timeout in milliseconds. Defaults to governance policy.")
+    parser.add_argument("--num-ctx", type=int, default=None, help="Ollama num_ctx. Defaults to governance policy.")
+    parser.add_argument("--num-predict", type=int, default=None, help="Ollama num_predict. Defaults to governance policy.")
+    parser.add_argument("--temperature", type=float, default=None, help="Reasoning temperature. Defaults to governance policy.")
+    parser.add_argument("--top-p", type=float, default=None, help="Reasoning top_p. Defaults to governance policy.")
+    parser.add_argument("--repeat-penalty", type=float, default=None, help="Reasoning repeat penalty. Defaults to governance policy.")
     parser.add_argument("--prompt-only", action="store_true", help="Only write prompt bundle; do not call Ollama")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting output files")
     return parser.parse_args()
@@ -245,6 +319,12 @@ def render_markdown(report: dict) -> str:
 
 def main() -> None:
     args = parse_args()
+    deepseek_policy = load_deepseek_reasoning_trial_policy(
+        args.governance_root,
+        deepseek_reasoning_policy=args.deepseek_reasoning_policy,
+    )
+    apply_deepseek_reasoning_trial_governance(deepseek_policy)
+    apply_deepseek_reasoning_trial_arg_defaults(args)
     output_root = Path(args.output_root)
     ensure_output_root(output_root, args.overwrite, args.prompt_only)
     prompt_bundle = build_prompt_bundle(args)

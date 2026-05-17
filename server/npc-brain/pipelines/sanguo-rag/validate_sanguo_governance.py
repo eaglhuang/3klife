@@ -18,6 +18,7 @@ from sanguo_governance_loader import (
     load_three_lane_progress_scheduler_policy,
     load_three_kweb_check_cue_rules,
     load_three_kweb_check_runner_policy,
+    load_deepseek_reasoning_trial_policy,
     load_repair_review_campaign_policy,
     load_knowledge_growth_round_runner_policy,
     expected_governance_files,
@@ -172,6 +173,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     knowledge_growth_round_policy = load_knowledge_growth_round_runner_policy(root)
     three_kweb_check_policy = load_three_kweb_check_runner_policy(root)
     three_kweb_check_cues = load_three_kweb_check_cue_rules(root)
+    deepseek_reasoning_policy = load_deepseek_reasoning_trial_policy(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -1083,6 +1085,29 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if not three_kweb_keywords or any(not item for item in three_kweb_keywords) or len(set(three_kweb_keywords)) != len(three_kweb_keywords):
         raise SanguoGovernanceError("rule-3kweb-check-cues keyword value must be non-empty and unique")
 
+
+    deepseek_paths = deepseek_reasoning_policy.get("defaultPaths") if isinstance(deepseek_reasoning_policy.get("defaultPaths"), dict) else {}
+    for key in ("events", "genericCandidates", "keywordRoot", "outputRoot"):
+        if not str(deepseek_paths.get(key) or "").strip():
+            raise SanguoGovernanceError(f"policy-deepseek-reasoning-trial defaultPaths.{key} cannot be empty")
+    if not str(deepseek_reasoning_policy.get("defaultGeneralId") or "").strip():
+        raise SanguoGovernanceError("policy-deepseek-reasoning-trial defaultGeneralId cannot be empty")
+    deepseek_limits = deepseek_reasoning_policy.get("promptLimits") if isinstance(deepseek_reasoning_policy.get("promptLimits"), dict) else {}
+    for key in ("topEvents", "topGeneric", "topKeywordsPerCategory"):
+        if int(deepseek_limits.get(key) or 0) < 0:
+            raise SanguoGovernanceError(f"policy-deepseek-reasoning-trial promptLimits.{key} cannot be negative")
+    deepseek_reasoning = deepseek_reasoning_policy.get("reasoningDefaults") if isinstance(deepseek_reasoning_policy.get("reasoningDefaults"), dict) else {}
+    for key in ("timeoutMs", "numCtx", "numPredict"):
+        if int(deepseek_reasoning.get(key) or 0) <= 0:
+            raise SanguoGovernanceError(f"policy-deepseek-reasoning-trial reasoningDefaults.{key} must be positive")
+    if float(deepseek_reasoning.get("temperature") or -1.0) < 0.0:
+        raise SanguoGovernanceError("policy-deepseek-reasoning-trial reasoningDefaults.temperature cannot be negative")
+    top_p = float(deepseek_reasoning.get("topP") or 0.0)
+    if top_p <= 0.0 or top_p > 1.0:
+        raise SanguoGovernanceError("policy-deepseek-reasoning-trial reasoningDefaults.topP must be within (0, 1]")
+    if float(deepseek_reasoning.get("repeatPenalty") or 0.0) <= 0.0:
+        raise SanguoGovernanceError("policy-deepseek-reasoning-trial reasoningDefaults.repeatPenalty must be positive")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -1141,6 +1166,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "knowledgeGrowthRoundGateDefaultCount": len(knowledge_growth_gates),
         "threeKwebCheckCueRuleCount": len(three_kweb_check_cues),
         "threeKwebCheckTermKeywordCount": len(three_kweb_keywords),
+        "deepseekReasoningPathDefaultCount": len(deepseek_paths),
+        "deepseekReasoningPromptLimitCount": len(deepseek_limits),
+        "deepseekReasoningSamplingParamCount": len(deepseek_reasoning),
     }
 
 

@@ -639,6 +639,21 @@ def load_three_kweb_check_cue_rules(
     return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "value"))
 
 
+
+def load_deepseek_reasoning_trial_policy(
+    root: str | Path | None = None,
+    *,
+    deepseek_reasoning_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(deepseek_reasoning_policy).resolve()
+        if deepseek_reasoning_policy
+        else _path(base, "policies", "policy-deepseek-reasoning-trial.json")
+    )
+    return read_governance_json(path, required_id="Policy_DeepSeekReasoningTrial_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

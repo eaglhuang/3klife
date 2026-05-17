@@ -1,0 +1,26 @@
+{
+  "id": "Policy_DeepSeekReasoningTrial_P1",
+  "description": "Externalized deterministic defaults for run_deepseek_reasoning_trial.py. apiUrl/model remain nullable so existing environment fallback behavior is preserved.",
+  "defaultPaths": {
+    "events": "artifacts/data-pipeline/sanguo-rag/extracted/events/events.jsonl",
+    "genericCandidates": "artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl",
+    "keywordRoot": "artifacts/data-pipeline/sanguo-rag/extracted/keyword-options",
+    "outputRoot": "artifacts/data-pipeline/sanguo-rag/extracted/deepseek-reasoning"
+  },
+  "defaultGeneralId": "zhang-fei",
+  "promptLimits": {
+    "topEvents": 8,
+    "topGeneric": 8,
+    "topKeywordsPerCategory": 6
+  },
+  "reasoningDefaults": {
+    "apiUrl": null,
+    "model": null,
+    "timeoutMs": 30000,
+    "numCtx": 8192,
+    "numPredict": 900,
+    "temperature": 0.2,
+    "topP": 0.8,
+    "repeatPenalty": 1.08
+  }
+}
