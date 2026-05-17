@@ -3,7 +3,7 @@ doc_id: doc_other_0151
 task_id: TASK-APO-0000
 title: 文件定稿與 cross-link
 milestone: M1
-status: in-progress
+status: done
 blocked_by: []
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md

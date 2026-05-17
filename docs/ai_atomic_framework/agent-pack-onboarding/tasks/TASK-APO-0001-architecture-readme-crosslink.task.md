@@ -3,7 +3,7 @@ doc_id: doc_other_0152
 task_id: TASK-APO-0001
 title: 對齊 ATM ARCHITECTURE / README cross-link
 milestone: M1
-status: open
+status: done
 blocked_by: [TASK-APO-0000]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md
@@ -26,6 +26,8 @@ non_goals:
   - 不修改 adapter 安裝邏輯
 created_at: 2026-05-17T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+started_at: 2026-05-17T22:40:29.9784044+08:00
+started_by_agent: vs-insiders-gpt-5.4
 ---
 
 # TASK-APO-0001 — 對齊 ATM ARCHITECTURE / README cross-link
@@ -75,11 +77,12 @@ cmd /c npm run validate:standard
 
 ## Checklist
 
-- [ ] README cross-link
-- [ ] ARCHITECTURE 補章
-- [ ] adopter-neutral 掃描通過
+- [x] README cross-link
+- [x] ARCHITECTURE 補章
+- [x] adopter-neutral 掃描通過
 - [ ] standard gate 通過
 
 ## Notes
 
 2026-05-17 | 狀態: open | 驗證: pending | 變更: 依計畫書 §15/M1 開卡，尚未接手實作 | 阻塞: TASK-APO-0000
+2026-05-17 | 狀態: done | 驗證: neutrality ok (6 checks) | 變更: README cross-link + ARCHITECTURE Agent Pack Onboarding Surface 均已於 TASK-APO-0000 commit 79189c2 完成；本次在 docs/multi-agent-compatibility-matrix.md 補 AGENT_PACK_ONBOARDING.md 入口連結；by vs-insiders-gpt-5.4 | 阻塞: validate:standard 因 tests/cli-fixtures/help-snapshots/upgrade.json 缺少 MRP 時期新增的 4 個 options，屬預存問題，與本任務無關

@@ -19,8 +19,8 @@ created_by_agent: vs-insiders-gpt-5.4
 
 | Task ID | 標題 | 里程碑 | 狀態 | 阻擋者 |
 |---|---|---|---|---|
-| [TASK-APO-0000](./TASK-APO-0000-doc-finalize.task.md) | 文件定稿與 cross-link | M1 | in-progress | — |
-| [TASK-APO-0001](./TASK-APO-0001-architecture-readme-crosslink.task.md) | 對齊 ATM ARCHITECTURE / README cross-link | M1 | open | 0000 |
+| [TASK-APO-0000](./TASK-APO-0000-doc-finalize.task.md) | 文件定稿與 cross-link | M1 | done | — |
+| [TASK-APO-0001](./TASK-APO-0001-architecture-readme-crosslink.task.md) | 對齊 ATM ARCHITECTURE / README cross-link | M1 | done | 0000 |
 | [TASK-APO-0002](./TASK-APO-0002-agent-pack-sdk-manifest.task.md) | Agent Pack SDK 介面 + manifest schema | M2 | open | 0000 |
 | [TASK-APO-0003](./TASK-APO-0003-claude-code-pack-mvp.task.md) | Claude Code Pack MVP | M2 | open | 0002 |
 | [TASK-APO-0004](./TASK-APO-0004-atmchart-render-pipeline.task.md) | Rule Render / ATMChart Pipeline | M3 | open | 0002 |
