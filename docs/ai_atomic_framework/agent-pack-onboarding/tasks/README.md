@@ -24,7 +24,7 @@ created_by_agent: vs-insiders-gpt-5.4
 | [TASK-APO-0002](./TASK-APO-0002-agent-pack-sdk-manifest.task.md) | Agent Pack SDK 介面 + manifest schema | M2 | done | 0000 |
 | [TASK-APO-0003](./TASK-APO-0003-claude-code-pack-mvp.task.md) | Claude Code Pack MVP | M2 | done | 0002 |
 | [TASK-APO-0004](./TASK-APO-0004-atmchart-render-pipeline.task.md) | Rule Render / ATMChart Pipeline | M3 | open | 0002 |
-| [TASK-APO-0005](./TASK-APO-0005-rule-justification-gate.task.md) | Rule Justification Gate | M4 | open | 0004 |
+| [TASK-APO-0005](./TASK-APO-0005-rule-justification-gate.task.md) | Rule Justification Gate | M4 | done | 0004 |
 | [TASK-APO-0006](./TASK-APO-0006-multi-agent-pack-expansion.task.md) | Multi-Agent Pack 擴張 | M5 | open | 0003 |
 | [TASK-APO-0007](./TASK-APO-0007-npm-create-atm.task.md) | npm publish + create-atm | M6 | open | 0003 / 0004 |
 | [TASK-APO-0008](./TASK-APO-0008-atm-welcome-entry.task.md) | atm welcome 一鍵入口 | M7 | open | 0003 / 0004 |
