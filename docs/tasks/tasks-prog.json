@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 20,
+    "done": 22,
     "in_progress": 0,
-    "open": 21,
-    "total": 41
+    "open": 30,
+    "total": 52
   },
   "tasks": [
     {
@@ -1423,6 +1423,554 @@
         "tools_node/lib/html-to-ucuf/rule-checkers.js"
       ],
       "notes": "2026-05-13 | 狀態: done | 變更: 已新增 css-coverage-trace 並串接 compare/zone-ownership，補上 H2U-P5-011 checker；gacha top20 traced=true、pending=0，rule-guard pass | 阻塞: compute-gate standard 受既有大型 docs/html_skill_rule-evolution2.md（非本卡變更）阻擋 doc-shard-health"
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-DGB-0000",
+      "title": "Default Governance Profile 計畫定稿與中立性掃描",
+      "owner": "ClaudeCode_Haiku",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-17",
+      "created_by_agent": "codex-gpt-5.5",
+      "started_at": "",
+      "started_by_agent": "codex-gpt-5.5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "完成計畫書內容定稿、驗證所有術語中立性、確認 capability matrix 與 migration 策略。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "計畫書簽核、中立性掃描報告、capability matrix 驗證"
+      ],
+      "deliverables": [
+        "最終計畫書 / ATM預設治理能力計畫書.md / 中立性檢查清單"
+      ],
+      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-DGB-0001",
+      "title": "Profile schema 與 compatibility matrix 接線",
+      "owner": "ClaudeCode_Haiku",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-17",
+      "created_by_agent": "codex-gpt-5.5",
+      "started_at": "",
+      "started_by_agent": "codex-gpt-5.5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "建立 default governance profile schema JSON 與 compatibility mapping，對齊 ATMChart 與 framework version。",
+      "related": [],
+      "depends": [
+        "TASK-DGB-0000"
+      ],
+      "acceptance": [
+        "Schema 通過 JSON schema validation / compatibility matrix 與實際版本同步"
+      ],
+      "deliverables": [
+        ".atm/schema/governance-profile.schema.json / compatibility-matrix.json"
+      ],
+      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-DGB-0002",
+      "title": "Encoding Guard profile 升級",
+      "owner": "ClaudeCode_Haiku",
+      "priority": "P0",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-17",
+      "created_by_agent": "codex-gpt-5.5",
+      "started_at": "",
+      "started_by_agent": "codex-gpt-5.5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把現有 encoding guard 邏輯轉化為可設定的 default profile capability，補足 policy parameters 與 validator。",
+      "related": [],
+      "depends": [
+        "TASK-DGB-0001"
+      ],
+      "acceptance": [
+        "Encoding guard 規則可從 profile config 讀取 / 驗證能鑑出 BOM/U+FFFD/mojibake"
+      ],
+      "deliverables": [
+        "encoding-guard-profile.json / encoding-guard-validator.js"
+      ],
+      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-DGB-0003",
+      "title": "Context Budget policy 配置化",
+      "owner": "ClaudeCode_Haiku",
+      "priority": "P0",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-17",
+      "created_by_agent": "codex-gpt-5.5",
+      "started_at": "",
+      "started_by_agent": "codex-gpt-5.5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把現有 token / artifact / image 節流閾值萃取成 policy 參數，支援 host 調整而不改代碼。",
+      "related": [],
+      "depends": [
+        "TASK-DGB-0001"
+      ],
+      "acceptance": [
+        "Context budget 所有數值都來自 profile config / policy 可調參不落 hardcode"
+      ],
+      "deliverables": [
+        "context-budget-policy.json / thresholds configuration"
+      ],
+      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-DGB-0004",
+      "title": "Document Identity registry schema / resolver",
+      "owner": "ClaudeCode_Haiku",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-17",
+      "created_by_agent": "codex-gpt-5.5",
+      "started_at": "",
+      "started_by_agent": "codex-gpt-5.5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "建立 document identity registry schema、assign 工具、resolve 與 search 函式，確保文件 ID 穩定不重複。",
+      "related": [],
+      "depends": [
+        "TASK-DGB-0001"
+      ],
+      "acceptance": [
+        "新文件能自動分配 ID / resolver 能快速定位 / rebuild 不改既有 ID"
+      ],
+      "deliverables": [
+        "document-id.schema.json / assign-doc-id.js / resolve-doc-id.js"
+      ],
+      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-DGB-0005",
+      "title": "Document Sharding manager / health check",
+      "owner": "ClaudeCode_Haiku",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-17",
+      "created_by_agent": "codex-gpt-5.5",
+      "started_at": "",
+      "started_by_agent": "codex-gpt-5.5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "實作 shard manager 與 health check，支援 markdown-heading / json-array / json-object 分片模式，檢測 shard 新鮮度與索引一致性。",
+      "related": [],
+      "depends": [
+        "TASK-DGB-0001"
+      ],
+      "acceptance": [
+        "Shard index 能自動重建 / health check 鑑出 stale/missing shard / auto-parts 自動分割超出 threshold 的大片段"
+      ],
+      "deliverables": [
+        "shard-manager.js / shard-health-check.js / shard config schema"
+      ],
+      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-DGB-0006",
+      "title": "Markdown task card adapter",
+      "owner": "ClaudeCode_Haiku",
+      "priority": "P2",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-17",
+      "created_by_agent": "codex-gpt-5.5",
+      "started_at": "",
+      "started_by_agent": "codex-gpt-5.5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "建立 Markdown task card ↔ JSON WorkItem 雙向 adapter，支援 frontmatter 映射與 notes 協作欄位轉換。",
+      "related": [],
+      "depends": [
+        "TASK-DGB-0001"
+      ],
+      "acceptance": [
+        "Task card frontmatter 能正確映射到 WorkItem 欄位 / notes 事件日誌能正向反向轉換"
+      ],
+      "deliverables": [
+        "markdown-task-adapter.js / frontmatter-mapping.json / notes-protocol-converter.js"
+      ],
+      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-DGB-0007",
+      "title": "Scope Guard / dirty tree validator",
+      "owner": "ClaudeCode_Haiku",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-17",
+      "created_by_agent": "codex-gpt-5.5",
+      "started_at": "",
+      "started_by_agent": "codex-gpt-5.5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "實作 scope policy validator、file ownership overlap checker、allowed/forbidden files validator 與 dirty tree separator。",
+      "related": [],
+      "depends": [
+        "TASK-DGB-0001"
+      ],
+      "acceptance": [
+        "Scope guard 能檢測檔案所有權衝突 / 鎖定可防止 cross-shard duplicate task / dirty tree 能正確分離工作區域"
+      ],
+      "deliverables": [
+        "scope-guard-validator.js / file-ownership-checker.js / dirty-tree-separator.js"
+      ],
+      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-DGB-0008",
+      "title": "Handoff / turn artifact schema",
+      "owner": "ClaudeCode_Haiku",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-17",
+      "created_by_agent": "codex-gpt-5.5",
+      "started_at": "",
+      "started_by_agent": "codex-gpt-5.5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "建立 context summary / turn report schema，記錄 workItemId / summary / changedFiles / validationEvidence / remainingRisks 等交接資訊。",
+      "related": [],
+      "depends": [
+        "TASK-DGB-0001"
+      ],
+      "acceptance": [
+        "Handoff record 能完整記錄交接點與繼續線索 / validation evidence 能回溯到 EvidenceStore"
+      ],
+      "deliverables": [
+        "handoff-schema.json / turn-report-generator.js / context-summary-schema.json"
+      ],
+      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-DGB-0009",
+      "title": "Project Memory optional capability 與 conflict finder",
+      "owner": "ClaudeCode_Haiku",
+      "priority": "P2",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-17",
+      "created_by_agent": "codex-gpt-5.5",
+      "started_at": "",
+      "started_by_agent": "codex-gpt-5.5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "建立 host consensus memory schema、摘要策略與衝突檢測，確保 Project Memory 不覆蓋 ATMChart / AtomicCharter。",
+      "related": [],
+      "depends": [
+        "TASK-DGB-0001"
+      ],
+      "acceptance": [
+        "Memory 若啟用需通過 conflict detection / 摘要優先讀取策略可配置 / 衝突時能清楚報告並要求修正"
+      ],
+      "deliverables": [
+        "project-memory-schema.json / conflict-finder.js / memory-authority-boundary-validator.js"
+      ],
+      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "TASK-DGB-0010",
+      "title": "Upgrade plan / backup / rollback validation",
+      "owner": "ClaudeCode_Haiku",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-05-17",
+      "created_by_agent": "codex-gpt-5.5",
+      "started_at": "",
+      "started_by_agent": "codex-gpt-5.5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "實作 governance profile upgrade planner、dry-run plan generator、backup creation 與 rollback validation，確保升級可追溯可回滾。",
+      "related": [],
+      "depends": [
+        "TASK-DGB-0001"
+      ],
+      "acceptance": [
+        "Upgrade plan 列出版本 drift / 影響檔案 / backup 可復原到任意版本 / rollback 有清晰驗證步驟"
+      ],
+      "deliverables": [
+        "upgrade-planner.js / backup-validator.js / rollback-test-fixtures.json"
+      ],
+      "notes": "2026-05-17 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
