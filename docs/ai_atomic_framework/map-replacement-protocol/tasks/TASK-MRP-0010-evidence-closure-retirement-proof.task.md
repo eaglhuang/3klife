@@ -3,12 +3,16 @@ doc_id: doc_other_0144
 task_id: TASK-MRP-0010
 title: Replacement Evidence Closure + Retirement Proof
 milestone: M10
-status: pending
+status: done
 blocked_by: [TASK-MRP-0003, TASK-MRP-0004, TASK-MRP-0005, TASK-MRP-0006]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+started_at: 2026-05-17T21:50:21.7118521+08:00
+started_by_agent: vs-insiders-gpt-5.4
+completed_at: 2026-05-17T22:07:40.7734045+08:00
+completed_by_agent: vs-insiders-gpt-5.4
 ---
 
 # TASK-MRP-0010 — Replacement Evidence Closure + Retirement Proof
@@ -55,12 +59,12 @@ public_tracking: false
 
 ## 驗收條件
 
-- [ ] 缺 propagation report 時 `canary → active` 被擋
-- [ ] 缺 review-advisory 或 human-review 時 `canary → active` 被擋
-- [ ] 完整 evidence 時 `canary → active` 通過
-- [ ] 缺 rollback-proof / retirement-proof 時 `active → legacy-retired` 被擋
-- [ ] valid retirement-proof 且 caller / entrypoint risk cleared 時 `active → legacy-retired` 通過
-- [ ] blocked JSON 同時包含 `blockedGateNames`、`requiredJustification`、`nextActionHint`
+- [x] 缺 propagation report 時 `canary → active` 被擋
+- [x] 缺 review-advisory 或 human-review 時 `canary → active` 被擋
+- [x] 完整 evidence 時 `canary → active` 通過
+- [x] 缺 rollback-proof / retirement-proof 時 `active → legacy-retired` 被擋
+- [x] valid retirement-proof 且 caller / entrypoint risk cleared 時 `active → legacy-retired` 通過
+- [x] blocked JSON 同時包含 `blockedGateNames`、`requiredJustification`、`nextActionHint`
 
 ## 影響檔案
 
@@ -77,13 +81,13 @@ public_tracking: false
 
 ## Checklist
 
-- [ ] evidence input kind 決策完成
-- [ ] active gate evidence closure 完成
-- [ ] legacy-retired retirement proof path 完成
-- [ ] blocked output contract 完成
-- [ ] 正反 fixtures 完成
-- [ ] CHANGELOG 補一句
+- [x] evidence input kind 決策完成
+- [x] active gate evidence closure 完成
+- [x] legacy-retired retirement proof path 完成
+- [x] blocked output contract 完成
+- [x] 正反 fixtures 完成
+- [x] CHANGELOG 補一句
 
 ## Notes
 
-2026-05-17 | 狀態: pending | 驗證: pending | 變更: 由任務覆蓋性盤點補開，補齊 propagation / review / human / retirement evidence 缺口 | 阻塞: TASK-MRP-0003, TASK-MRP-0004, TASK-MRP-0005, TASK-MRP-0006
+2026-05-17 | 狀態: done | 驗證: propose-map-evidence-closure.test.ts / propose-map-rollback.test.ts / replacement-lane-evidence.test.ts / replacement-lane.test.ts / validate-schemas.ts / compute-gate standard pass | 變更: 新增 `atm.propagationReport` 與 `atm.retirementProof` schema，讓 `upgrade --propose` 正式接入 `propagation-report` / `review-advisory` / `human-review` / `retirement-proof` input kind，並讓 `replacement-lane transition` 在 `active` / `legacy-retired` 讀取 machine-readable evidence 做 gate 驗證，同步補齊 focused regression、protocol doc 與 CHANGELOG | 阻塞: none

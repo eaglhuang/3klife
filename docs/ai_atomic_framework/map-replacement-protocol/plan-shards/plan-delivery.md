@@ -130,11 +130,11 @@
 
 對應任務卡：TASK-MRP-0010
 
-- [ ] 定義或正式接入 `propagation-report` / `review-advisory` / `human-review` / `retirement-proof` input kind
-- [ ] `canary→active` gate 需要 map equivalence pass、propagation pass、review-advisory pass、human review approved
-- [ ] `active→legacy-retired` gate 接受 valid rollback-proof 或 valid retirement-proof，且需 caller / entrypoint risk cleared
-- [ ] 缺任一 evidence 時 proposal 或 transition `status:"blocked"`，並列出缺口名稱
-- [ ] positive / negative fixture 覆蓋 active 與 legacy-retired 兩條路徑
+- [x] 定義或正式接入 `propagation-report` / `review-advisory` / `human-review` / `retirement-proof` input kind
+- [x] `canary→active` gate 需要 map equivalence pass、propagation pass、review-advisory pass、human review approved
+- [x] `active→legacy-retired` gate 接受 valid rollback-proof 或 valid retirement-proof，且需 caller / entrypoint risk cleared
+- [x] 缺任一 evidence 時 proposal 或 transition `status:"blocked"`，並列出缺口名稱
+- [x] positive / negative fixture 覆蓋 active 與 legacy-retired 兩條路徑
 - [ ] 若最終決策不新增 retirement-proof，必須回改本計畫與 TASK-MRP-0005，明確收斂為只接受 rollback-proof
 
 ## 16. 任務卡索引
