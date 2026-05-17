@@ -393,6 +393,35 @@ def load_event_review_context_cue_rules(
     return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "value"))
 
 
+
+def load_runtime_profile_label_catalog(
+    root: str | Path | None = None,
+    *,
+    runtime_profile_label_catalog: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(runtime_profile_label_catalog).resolve()
+        if runtime_profile_label_catalog
+        else _path(base, "catalogs", "catalog-runtime-profile-labels.json")
+    )
+    return read_governance_json(path, required_id="Catalog_RuntimeProfileLabels_P1")
+
+
+def load_runtime_voice_presets(
+    root: str | Path | None = None,
+    *,
+    runtime_voice_presets: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(runtime_voice_presets).resolve()
+        if runtime_voice_presets
+        else _path(base, "catalogs", "catalog-runtime-voice-presets.jsonl")
+    )
+    return read_governance_jsonl(path, required_fields=("id", "generalId", "voiceStyle", "safeFallbackLine", "taboos"))
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

@@ -8,7 +8,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from sanguo_governance_loader import default_governance_root, load_relationship_runtime_canon_policy
+from sanguo_governance_loader import (
+    SanguoGovernanceError,
+    default_governance_root,
+    load_relationship_runtime_canon_policy,
+    load_runtime_profile_label_catalog,
+    load_runtime_voice_presets,
+)
 
 DEFAULT_STABLE_KNOWLEDGE_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json")
 DEFAULT_EVENT_QUESTION_SEEDS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/event-question-seeds/event-question-seeds.jsonl")
@@ -20,65 +26,9 @@ DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/runtime
 DEFAULT_GENERAL_ID = "guan-yu"
 DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 
-TYPE_LABELS = {
-    "sworn_sibling": "結義兄弟",
-    "protects_family": "守護家眷",
-    "intimidates_enemy": "戰場威懾",
-    "battlefield_opponent": "戰場對手",
-    "battle_ally": "戰場同袍",
-    "strategy_pressure": "策略牽制",
-    "loyal_oath": "忠義盟約",
-    "battlefield_contact": "戰場接觸",
-    "spouse": "夫妻姻親",
-    "parent_child": "親子",
-    "sibling": "手足",
-    "protects": "守護",
-    "ruler_subject": "君臣主從",
-    "patron_client": "提攜投靠",
-    "mentor_student": "師友教導",
-    "betrayal_surrender": "背叛投降",
-    "enemy_rival": "敵對競爭",
-    "alliance_oath": "盟約同盟",
-}
-BOOTSTRAP_EVENT_LABELS = {
-    "sworn_sibling": "結義兄弟",
-    "spouse": "夫妻",
-    "parent_child": "親子",
-    "battle_ally": "戰場同袍",
-    "battlefield_opponent": "戰場對手",
-    "enemy_rival": "敵對競爭",
-    "patron_client": "提攜投靠",
-    "mentor_student": "師友教導",
-    "ruler_subject": "君臣主從",
-    "betrayal_surrender": "背叛投降",
-    "alliance_oath": "盟約同盟",
-}
-TAG_LABELS = {
-    "martial": "武勇",
-    "family-bound": "重家族與結義",
-    "direct_force": "直接用武",
-    "commanding": "統率威嚴",
-    "persuasive": "能言勸說",
-    "opportunistic": "臨機應變",
-    "friendship_loyalty": "忠義友情",
-    "family_affection": "家族情感",
-    "mercy_compassion": "仁義憐憫",
-    "martial_weapon": "武器戰鬥",
-    "command_strategy": "軍事統率",
-    "diplomacy_speech": "外交言辭",
-    "opportunistic_survival": "危局求生",
-    "appoint_office": "任官受封",
-    "host_banquet": "宴飲社交",
-    "family_duty": "家族責任",
-    "recruitment_visit": "拜訪招攬",
-    "prefers_battle": "偏好戰鬥",
-    "prefers_diplomacy": "偏好外交",
-    "prefers_risk": "願承風險",
-    "chooses_frontline_action": "親赴前線",
-    "chooses_deployment_or_drill": "部署操練",
-    "chooses_negotiation_or_recruitment": "談判招募",
-    "chooses_gamble_or_escape": "冒險突圍",
-}
+TYPE_LABELS: dict[str, str] = {}
+BOOTSTRAP_EVENT_LABELS: dict[str, str] = {}
+TAG_LABELS: dict[str, str] = {}
 ITEM_TERMS = {
     "寶刀": ("treasured-saber", "寶刀"),
     "青龍寶刀": ("green-dragon-blade", "青龍刀"),
@@ -129,58 +79,23 @@ RULER_SUBJECT_AUTHORITY_TERMS = (
     "臣",
     "君",
 )
-VOICE_PRESETS = {
-    "cao-cao": {
-        "voiceStyle": ["雄猜", "果決", "權謀", "冷靜", "帶詩性"],
-        "safeFallbackLine": "孤用人用兵，皆要看真憑實據；無證之事，不可妄斷。",
-        "taboos": ["不可自稱關某", "不可寫成莽撞武夫", "不可新增無 evidence 的重大史實"],
-    },
-    "guan-yu": {
-        "voiceStyle": ["沉穩", "重義", "威嚴", "少言", "不輕浮"],
-        "safeFallbackLine": "關某行事，但求義字當先，不負故人。",
-        "taboos": ["不可輕浮", "不可失義", "不可口吻粗俗", "不可新增無 evidence 的重大史實"],
-    },
-    "liu-bei": {
-        "voiceStyle": ["仁厚", "克制", "重情義", "憂民", "善納諫"],
-        "safeFallbackLine": "備不敢妄言功過，只願先守住人心與故義。",
-        "taboos": ["不可自稱關某", "不可冷酷殘暴", "不可新增無 evidence 的重大史實"],
-    },
-    "lu-bu": {
-        "voiceStyle": ["驍勇", "自負", "直接", "好勝", "不受拘束"],
-        "safeFallbackLine": "奉先一身武勇，不憑空說大話；要論勝負，且看實證。",
-        "taboos": ["不可自稱關某", "不可過度謙卑", "不可新增無 evidence 的重大史實"],
-    },
-    "sun-quan": {
-        "voiceStyle": ["審勢", "江東氣度", "年少主君", "務實", "穩住人心"],
-        "safeFallbackLine": "權守江東，凡事須看形勢與人心，不可憑空決斷。",
-        "taboos": ["不可自稱關某", "不可莽撞求戰", "不可新增無 evidence 的重大史實"],
-    },
-    "wei-yan": {
-        "voiceStyle": ["桀驁", "勇悍", "求戰", "不甘居後", "直言"],
-        "safeFallbackLine": "魏延願當前鋒，但無憑之事，俺也不拿來亂說。",
-        "taboos": ["不可自稱關某", "不可寫成軟弱畏戰", "不可新增無 evidence 的重大史實"],
-    },
-    "yuan-shao": {
-        "voiceStyle": ["名門自重", "審慎", "重聲望", "好議事", "帶矜持"],
-        "safeFallbackLine": "本初出言須合名分與證據，不可因一時傳聞失了分寸。",
-        "taboos": ["不可自稱關某", "不可粗鄙莽撞", "不可新增無 evidence 的重大史實"],
-    },
-    "zhang-fei": {
-        "voiceStyle": ["豪烈", "直率", "重義", "戰場威壓", "不拖泥帶水"],
-        "safeFallbackLine": "俺張飛說話直，沒憑沒據的事不亂講；要緊的是先護住自家兄弟。",
-        "taboos": ["不可自稱關某", "不可文弱迂緩", "不可新增無 evidence 的重大史實"],
-    },
-    "zhao-yun": {
-        "voiceStyle": ["忠勇", "沉穩", "克己", "護主", "清正"],
-        "safeFallbackLine": "雲只願守住本分與主命；無憑的話，不該輕出口。",
-        "taboos": ["不可自稱關某", "不可輕浮自誇", "不可新增無 evidence 的重大史實"],
-    },
-    "zhuge-liang": {
-        "voiceStyle": ["清雅", "謹慎", "謀略", "冷靜", "善觀大勢"],
-        "safeFallbackLine": "亮觀事須憑脈絡與證據；若資料不足，寧可暫緩其論。",
-        "taboos": ["不可自稱關某", "不可莽撞斷言", "不可新增無 evidence 的重大史實"],
-    },
-}
+VOICE_PRESETS: dict[str, dict[str, Any]] = {}
+
+
+def apply_runtime_profile_label_and_voice_governance(label_catalog: dict[str, Any], voice_presets: list[dict[str, Any]]) -> None:
+    global TYPE_LABELS, BOOTSTRAP_EVENT_LABELS, TAG_LABELS, VOICE_PRESETS
+    TYPE_LABELS = {str(key): str(value) for key, value in (label_catalog.get("relationshipTypeLabels") or {}).items()}
+    BOOTSTRAP_EVENT_LABELS = {str(key): str(value) for key, value in (label_catalog.get("bootstrapEventLabels") or {}).items()}
+    TAG_LABELS = {str(key): str(value) for key, value in (label_catalog.get("tagLabels") or {}).items()}
+    VOICE_PRESETS = {
+        str(row.get("generalId") or ""): {
+            "voiceStyle": [str(item) for item in row.get("voiceStyle") or []],
+            "safeFallbackLine": str(row.get("safeFallbackLine") or ""),
+            "taboos": [str(item) for item in row.get("taboos") or []],
+        }
+        for row in voice_presets
+        if row.get("generalId")
+    }
 
 
 def parse_args() -> argparse.Namespace:
@@ -196,6 +111,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
     parser.add_argument("--relationship-policy", default=None)
+    parser.add_argument("--runtime-profile-label-catalog", default=None)
+    parser.add_argument("--runtime-voice-presets", default=None)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -932,7 +849,19 @@ def render_summary(general_id: str, persona: dict[str, Any], keywords: dict[str,
 
 def main() -> None:
     args = parse_args()
-    apply_relationship_runtime_canon_policy(args.governance_root, args.relationship_policy)
+    try:
+        runtime_label_catalog = load_runtime_profile_label_catalog(
+            args.governance_root,
+            runtime_profile_label_catalog=args.runtime_profile_label_catalog,
+        )
+        runtime_voice_presets = load_runtime_voice_presets(
+            args.governance_root,
+            runtime_voice_presets=args.runtime_voice_presets,
+        )
+        apply_runtime_profile_label_and_voice_governance(runtime_label_catalog, runtime_voice_presets)
+        apply_relationship_runtime_canon_policy(args.governance_root, args.relationship_policy)
+    except SanguoGovernanceError as exc:
+        raise SystemExit(f"[export_general_runtime_profile] FAIL {exc}") from None
     general_id = args.general_id
     output_dir = Path(args.output_root) / general_id
     outputs = [output_dir / f"{general_id}.{suffix}.json" for suffix in ["persona", "keywords", "relationships"]]

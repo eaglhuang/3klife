@@ -29,6 +29,8 @@ from sanguo_governance_loader import (
     load_knowledge_completion_policy,
     load_progress_runner_governance,
     load_relationship_runtime_canon_policy,
+    load_runtime_profile_label_catalog,
+    load_runtime_voice_presets,
     load_source_event_packet_policy,
     load_stable_bootstrap_governance,
     read_governance_json,
@@ -136,6 +138,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     external_source_benchmark_cues = load_external_source_benchmark_cue_rules(root)
     event_review_context_policy = load_event_review_context_policy(root)
     event_review_context_cues = load_event_review_context_cue_rules(root)
+    runtime_label_catalog = load_runtime_profile_label_catalog(root)
+    runtime_voice_presets = load_runtime_voice_presets(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -632,6 +636,34 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if missing_review_context:
         raise SanguoGovernanceError(f"rule-event-review-context-cues missing rules: {', '.join(missing_review_context)}")
 
+
+    runtime_label_maps = [
+        runtime_label_catalog.get("relationshipTypeLabels"),
+        runtime_label_catalog.get("bootstrapEventLabels"),
+        runtime_label_catalog.get("tagLabels"),
+    ]
+    if any(not isinstance(label_map, dict) or not label_map for label_map in runtime_label_maps):
+        raise SanguoGovernanceError("catalog-runtime-profile-labels must include non-empty relationship/bootstrap/tag label maps")
+    runtime_label_count = sum(len(label_map) for label_map in runtime_label_maps if isinstance(label_map, dict))
+    for label_map in runtime_label_maps:
+        for key, value in label_map.items():
+            if not str(key).strip() or not str(value).strip():
+                raise SanguoGovernanceError("catalog-runtime-profile-labels has blank key or label")
+    voice_general_ids: set[str] = set()
+    for row in runtime_voice_presets:
+        general_id = str(row.get("generalId") or "").strip()
+        if not general_id:
+            raise SanguoGovernanceError("catalog-runtime-voice-presets generalId cannot be blank")
+        if general_id in voice_general_ids:
+            raise SanguoGovernanceError(f"catalog-runtime-voice-presets duplicate generalId: {general_id}")
+        voice_general_ids.add(general_id)
+        if not str(row.get("safeFallbackLine") or "").strip():
+            raise SanguoGovernanceError(f"catalog-runtime-voice-presets {general_id} missing safeFallbackLine")
+        for key in ("voiceStyle", "taboos"):
+            values = row.get(key)
+            if not isinstance(values, list) or not values or any(not str(item).strip() for item in values):
+                raise SanguoGovernanceError(f"catalog-runtime-voice-presets {general_id} {key} must be non-empty strings")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -665,6 +697,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "externalSourceBenchmarkSourceClassCount": len(external_source_classes),
         "eventReviewContextCueRuleCount": len(event_review_context_cues),
         "eventReviewContextAliasCount": alias_count,
+        "runtimeProfileLabelCount": runtime_label_count,
+        "runtimeVoicePresetCount": len(runtime_voice_presets),
     }
 
 
