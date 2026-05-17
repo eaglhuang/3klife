@@ -104,12 +104,14 @@
 
 對應任務卡：TASK-MRP-0008
 
-- [ ] `schemas/governance/scope-lock.schema.json` 升級 0.2.0：新增 `selectors`
-- [ ] `selectors` 包含 `mapId` / `mapMembers[]` / `mapEdges[]` / `mapEntrypoints[]` / `legacyUris[]`
-- [ ] `ScopeLockRecord` 同步擴充
-- [ ] polymorph impact gate：對 replacement map 的 member atoms 掃描 template
-- [ ] 產出 `polymorph-impact-report.json` 且 active gate 在報告未通過時 block
-- [ ] 既有 0.1.0 lock 仍能 round-trip
+- [x] `schemas/governance/scope-lock.schema.json` 升級 0.2.0：新增 `selectors`
+- [x] `selectors` 包含 `mapId` / `mapMembers[]` / `mapEdges[]` / `mapEntrypoints[]` / `legacyUris[]`
+- [x] `ScopeLockRecord` 同步擴充
+- [x] polymorph impact gate：對 replacement map 的 member atoms 掃描 template
+- [x] 產出 `polymorph-impact-report.json` 且 active gate 在報告未通過時 block
+- [x] 既有 0.1.0 lock 仍能 round-trip
+
+已完成 M8 收口：`scope-lock` 目前同時接受 `0.1.0` 與帶 `selectors` 的 `0.2.0`，`packages/core/src/governance/scope-lock.ts` 會對 map selector 做 deterministic normalize。另一側新增 `atm.polymorphImpactReport` 與 `packages/core/src/polymorph/impact.ts`，會掃描 replacement map member atoms 的 template / instance 關係、列出 impacted instance maps、跑 template propagation，並在 `upgrade --propose --replacement-mode active` 上要求 `polymorph-impact` 證據，避免 template-bound members 未盤點就直接進 active。
 
 ### Milestone 9：Create Map From Spec + Replacement Next Hints（M9）
 

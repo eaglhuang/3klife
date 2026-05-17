@@ -3,12 +3,16 @@ doc_id: doc_other_0142
 task_id: TASK-MRP-0008
 title: ScopeLock 0.2.0 + Polymorph Impact
 milestone: M8
-status: deferred
+status: done
 blocked_by: [TASK-MRP-0006]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+started_at: 2026-05-17T21:14:09.1021640+08:00
+started_by_agent: vs-insiders-gpt-5.4
+completed_at: 2026-05-17T21:26:39.0106386+08:00
+completed_by_agent: vs-insiders-gpt-5.4
 ---
 
 # TASK-MRP-0008 — ScopeLock 0.2.0 + Polymorph Impact
@@ -41,11 +45,11 @@ public_tracking: false
 
 ## 驗收條件
 
-- [ ] 0.1.0 lock round-trip 綠
-- [ ] 0.2.0 lock 接受 map-selector
-- [ ] polymorph 掃描在 sample template/instance 上回報正確 instance set
-- [ ] 缺報告時 active gate 被擋
-- [ ] 報告通過 schema 驗證
+- [x] 0.1.0 lock round-trip 綠
+- [x] 0.2.0 lock 接受 map-selector
+- [x] polymorph 掃描在 sample template/instance 上回報正確 instance set
+- [x] 缺報告時 active gate 被擋
+- [x] 報告通過 schema 驗證
 
 ## 影響檔案
 
@@ -62,8 +66,12 @@ public_tracking: false
 
 ## Checklist
 
-- [ ] scope-lock schema bump
-- [ ] selector 行為測試
-- [ ] polymorph impact runner
-- [ ] upgrade gate 整合
-- [ ] CHANGELOG 補一句
+- [x] scope-lock schema bump
+- [x] selector 行為測試
+- [x] polymorph impact runner
+- [x] upgrade gate 整合
+- [x] CHANGELOG 補一句
+
+## Notes
+
+2026-05-17 | 狀態: done | 驗證: scope-lock-0.2.0.test.ts / impact.test.ts / propose-map-equivalence.test.ts / propose-map-rollback.test.ts / validate-schemas.ts pass | 變更: `scope-lock` 升成 `0.1.0`+`0.2.0` dual-version schema，新增 `selectors` 與 `ScopeLockRecord` 對應 helper；新增 `atm.polymorphImpactReport` schema、sample report fixture、`packages/core/src/polymorph/impact.ts` 掃描/propagation runner，並讓 `upgrade --propose --replacement-mode active` 在 template-bound member maps 上要求 `--polymorph-impact-report` | 阻塞: none
