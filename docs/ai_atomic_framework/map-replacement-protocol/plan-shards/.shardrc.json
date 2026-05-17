@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "source": "../拆解大型功能優化原子map計畫書.md",
+  "indexTitle": "拆解大型功能優化原子map計畫書",
+  "indexPath": "docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md",
+  "type": "markdown-h2",
+  "preambleShard": "plan-foundation",
+  "defaultShard": "plan-delivery",
+  "shards": [
+    {
+      "name": "plan-foundation",
+      "title": "基礎與原則（§0–§5）",
+      "pattern": "^(0|1|2|3|4|5)\\."
+    },
+    {
+      "name": "plan-workflow",
+      "title": "Workflow 與 Lifecycle（§6–§10）",
+      "pattern": "^(6|7|8|9|10)\\."
+    },
+    {
+      "name": "plan-strategy",
+      "title": "成功標準與策略分析（§11–§14）",
+      "pattern": "^(11|12|13|14)\\."
+    },
+    {
+      "name": "plan-delivery",
+      "title": "里程碑與任務索引（§15–§17）",
+      "pattern": "^(15|16|17)\\."
+    }
+  ]
+}

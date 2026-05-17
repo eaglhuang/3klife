@@ -3,12 +3,16 @@ doc_id: doc_other_0141
 task_id: TASK-MRP-0007
 title: Decomposition Plan → Map
 milestone: M7
-status: pending
-blocked_by: [TASK-MRP-0002, TASK-MRP-0006, TASK-MRP-0009]
+status: done
+blocked_by: [TASK-MRP-0002, TASK-MRP-0006]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/map-replacement-protocol/拆解大型功能優化原子map計畫書.md
 upstream_repo: AI-Atomic-Framework
 public_tracking: false
+started_at: 2026-05-17T20:39:07.4267792+08:00
+started_by_agent: vs-insiders-gpt-5.4
+completed_at: 2026-05-17T20:48:50.9607822+08:00
+completed_by_agent: vs-insiders-gpt-5.4
 ---
 
 # TASK-MRP-0007 — Decomposition Plan → Map
@@ -42,12 +46,12 @@ public_tracking: false
 
 ## 驗收條件
 
-- [ ] schema 通過 AJV
-- [ ] CLI 對 valid plan 生成 0.2.0 map
-- [ ] CLI 對 invalid plan 回非零 exit 並輸出 ATM_DECOMP_PLAN_INVALID
-- [ ] 示範 plan 走完 e2e smoke
-- [ ] map registry entry 包含 `replacement.legacyUris`
-- [ ] plan 產生的 draft map 可再由 `create-map --spec` 路徑 round-trip
+- [x] schema 通過 AJV
+- [x] CLI 對 valid plan 生成 0.2.0 map
+- [x] CLI 對 invalid plan 回非零 exit 並輸出 ATM_DECOMP_PLAN_INVALID
+- [x] 示範 plan 走完 e2e smoke
+- [x] map registry entry 包含 `replacement.legacyUris`
+- [x] plan 產生的 draft map 可再由 `create-map --spec` 路徑 round-trip
 
 ## 影響檔案
 
@@ -63,8 +67,12 @@ public_tracking: false
 
 ## Checklist
 
-- [ ] schema 完成
-- [ ] CLI 旗標完成
-- [ ] sample plan 完成
-- [ ] e2e smoke 綠
-- [ ] CHANGELOG 補一句
+- [x] schema 完成
+- [x] CLI 旗標完成
+- [x] sample plan 完成
+- [x] e2e smoke 綠
+- [x] CHANGELOG 補一句
+
+## Notes
+
+2026-05-17 | 狀態: done | 驗證: create-map-from-plan.test.ts / create-map.test.ts / validate-schemas.ts --mode validate pass | 變更: 新增 `atm.decompositionPlan` schema、`packages/core/src/registry/decomposition-plan.ts`、`create-map --from-plan`、sample `samples/checkout-mini.plan.json`，並補最小 `create-map --spec` round-trip slice 供 M7 smoke 使用 | 阻塞: none

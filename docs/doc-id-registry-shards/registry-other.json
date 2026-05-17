@@ -820,5 +820,29 @@
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/01_ATM_spec-kit融合計畫書.md",
     "title": "ATM × spec-kit 融合計畫（最終版）",
     "category": "other"
+  },
+  {
+    "id": "doc_other_0147",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/plan-shards/plan-foundation.md",
+    "title": "拆解大型功能優化原子map計畫書 — 基礎與原則（§0–§5）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0148",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/plan-shards/plan-workflow.md",
+    "title": "拆解大型功能優化原子map計畫書 — Workflow 與 Lifecycle（§6–§10）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0149",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/plan-shards/plan-strategy.md",
+    "title": "拆解大型功能優化原子map計畫書 — 成功標準與策略分析（§11–§14）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0150",
+    "path": "docs/ai_atomic_framework/map-replacement-protocol/plan-shards/plan-delivery.md",
+    "title": "拆解大型功能優化原子map計畫書 — 里程碑與任務索引（§15–§17）",
+    "category": "other"
   }
 ]
