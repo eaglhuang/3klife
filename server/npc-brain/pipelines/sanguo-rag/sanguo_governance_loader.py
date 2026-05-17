@@ -610,6 +610,35 @@ def load_knowledge_growth_round_runner_policy(
     return read_governance_json(path, required_id="Policy_KnowledgeGrowthRoundRunner_P1")
 
 
+
+def load_three_kweb_check_runner_policy(
+    root: str | Path | None = None,
+    *,
+    three_kweb_check_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(three_kweb_check_policy).resolve()
+        if three_kweb_check_policy
+        else _path(base, "policies", "policy-3kweb-check-runner.json")
+    )
+    return read_governance_json(path, required_id="Policy_ThreeKWebCheckRunner_P1")
+
+
+def load_three_kweb_check_cue_rules(
+    root: str | Path | None = None,
+    *,
+    three_kweb_check_cue_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(three_kweb_check_cue_rules).resolve()
+        if three_kweb_check_cue_rules
+        else _path(base, "rules", "rule-3kweb-check-cues.jsonl")
+    )
+    return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "value"))
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
@@ -638,6 +667,11 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-npc-dialogue-runtime-service.json", "consumer": "npc_dialogue_service.py"},
         {"section": "policies", "file": "policy-runtime-readiness-matrix.json", "consumer": "build_runtime_readiness_matrix.py"},
         {"section": "policies", "file": "policy-dialogue-mention-resolution.json", "consumer": "resolve_dialogue_mentions.py"},
+        {"section": "policies", "file": "policy-resolution-loop-runner.json", "consumer": "run_sanguo_resolution_loop.py"},
+        {"section": "policies", "file": "policy-three-lane-progress-scheduler.json", "consumer": "run_three_lane_progress_scheduler.py"},
+        {"section": "policies", "file": "policy-repair-review-campaign.json", "consumer": "run_repair_review_campaign.py"},
+        {"section": "policies", "file": "policy-knowledge-growth-round-runner.json", "consumer": "run_knowledge_growth_round.py"},
+        {"section": "policies", "file": "policy-3kweb-check-runner.json", "consumer": "run_3kweb_check.py"},
         {"section": "rules", "file": "rule-basic-profile-cues.json", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "rules", "file": "rule-location-extraction.json", "consumer": "run_progress_advancement_loop.py"},
         {"section": "rules", "file": "rule-evidence-seed-keyword-cues.jsonl", "consumer": "extract_*_evidence_seeds.py"},
@@ -650,6 +684,8 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "rules", "file": "rule-event-review-context-cues.jsonl", "consumer": "enrich_event_review_context.py"},
         {"section": "rules", "file": "rule-npc-dialogue-runtime-cues.jsonl", "consumer": "npc_dialogue_service.py"},
         {"section": "rules", "file": "rule-dialogue-mention-resolution-cues.jsonl", "consumer": "resolve_dialogue_mentions.py"},
+        {"section": "rules", "file": "rule-resolution-loop-recommendation-cues.jsonl", "consumer": "run_sanguo_resolution_loop.py"},
+        {"section": "rules", "file": "rule-3kweb-check-cues.jsonl", "consumer": "run_3kweb_check.py"},
         {"section": "schemas", "file": "schema-stable-bootstrap-payload.json", "consumer": "validate_sanguo_governance.py"},
         {"section": "schemas", "file": "schema-governance-bundle.json", "consumer": "validate_sanguo_governance.py"},
     ]

@@ -1,0 +1,26 @@
+{
+  "id": "Policy_ThreeKWebCheckRunner_P1",
+  "description": "Externalized deterministic defaults for run_3kweb_check.py. Values are copied from the Phase 17 baseline.",
+  "defaultPaths": {
+    "outputRoot": "local/codex-smoke/knowledge-growth",
+    "sourcesConfig": "server/npc-brain/pipelines/sanguo-rag/config/external-evidence-sources.json",
+    "scoreboardJson": "artifacts/data-pipeline/sanguo-rag/extracted/full-roster-scoreboard/full-roster-scoreboard.json",
+    "sourceHealthCli": "tools_node/agent-clis/3klife-source-health.js"
+  },
+  "precheckDefaults": {
+    "likelyThreshold": 3,
+    "possibleThreshold": 1,
+    "minimumTermHitCount": 1,
+    "hintKeywords": [
+      "歷史",
+      "历史",
+      "演義",
+      "演义"
+    ]
+  },
+  "fetchDefaults": {
+    "fetchBackend": "auto",
+    "timeoutSeconds": 12.0,
+    "maxGapGenerals": 60
+  }
+}

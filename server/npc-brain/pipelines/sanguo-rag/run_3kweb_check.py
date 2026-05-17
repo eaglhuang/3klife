@@ -15,6 +15,11 @@ from pathlib import Path
 from typing import Any
 
 from repo_layout import pipeline_config_path, resolve_repo_root
+from sanguo_governance_loader import (
+    SanguoGovernanceError,
+    load_three_kweb_check_cue_rules,
+    load_three_kweb_check_runner_policy,
+)
 
 REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth")
@@ -22,27 +27,75 @@ DEFAULT_SOURCES_CONFIG = pipeline_config_path(REPO_ROOT, "external-evidence-sour
 DEFAULT_SCOREBOARD_JSON = Path("artifacts/data-pipeline/sanguo-rag/extracted/full-roster-scoreboard/full-roster-scoreboard.json")
 DEFAULT_SOURCE_HEALTH_CLI = Path("tools_node/agent-clis/3klife-source-health.js")
 
-DEFAULT_TERM_HIT_KEYWORDS = (
-    "三國",
-    "三国",
-    "曹操",
-    "劉備",
-    "刘备",
-    "孫權",
-    "孙权",
-    "關羽",
-    "关羽",
-    "諸葛亮",
-    "诸葛亮",
-    "司馬懿",
-    "司马懿",
-)
-DEFAULT_PRECHECK_POLICY = {
-    "likelyThreshold": 3,
-    "possibleThreshold": 1,
-    "minimumTermHitCount": 1,
-    "hintKeywords": ["歷史", "历史", "演義", "演义"],
-}
+DEFAULT_TERM_HIT_KEYWORDS: tuple[str, ...] = ()
+DEFAULT_PRECHECK_POLICY: dict[str, Any] = {}
+THREE_KWEB_CHECK_RUNNER_POLICY: dict[str, Any] = {}
+
+
+def _three_kweb_section(name: str) -> dict[str, Any]:
+    section = THREE_KWEB_CHECK_RUNNER_POLICY.get(name)
+    return section if isinstance(section, dict) else {}
+
+
+def _three_kweb_path_arg(cli_value: str | None, section: dict[str, Any], key: str, fallback: str | Path) -> str:
+    if cli_value is not None and str(cli_value).strip():
+        return str(cli_value)
+    value = str(section.get(key) or "").strip()
+    return value or str(fallback)
+
+
+def _three_kweb_text_arg(cli_value: str | None, section: dict[str, Any], key: str, fallback: str) -> str:
+    if cli_value is not None and str(cli_value).strip():
+        return str(cli_value)
+    value = str(section.get(key) or "").strip()
+    return value or fallback
+
+
+def _three_kweb_float_arg(cli_value: float | None, section: dict[str, Any], key: str, fallback: float) -> float:
+    if cli_value is not None:
+        return float(cli_value)
+    try:
+        return float(section.get(key, fallback))
+    except (TypeError, ValueError):
+        return float(fallback)
+
+
+def _three_kweb_int_arg(cli_value: int | None, section: dict[str, Any], key: str, fallback: int) -> int:
+    if cli_value is not None:
+        return int(cli_value)
+    try:
+        return int(section.get(key, fallback))
+    except (TypeError, ValueError):
+        return int(fallback)
+
+
+def apply_three_kweb_check_governance(policy: dict[str, Any], cue_rules: list[dict[str, Any]]) -> None:
+    global THREE_KWEB_CHECK_RUNNER_POLICY, DEFAULT_OUTPUT_ROOT, DEFAULT_SOURCES_CONFIG, DEFAULT_SCOREBOARD_JSON
+    global DEFAULT_SOURCE_HEALTH_CLI, DEFAULT_TERM_HIT_KEYWORDS, DEFAULT_PRECHECK_POLICY
+
+    THREE_KWEB_CHECK_RUNNER_POLICY = dict(policy)
+    paths = _three_kweb_section("defaultPaths")
+    DEFAULT_OUTPUT_ROOT = Path(str(paths.get("outputRoot") or DEFAULT_OUTPUT_ROOT))
+    DEFAULT_SOURCES_CONFIG = Path(str(paths.get("sourcesConfig") or DEFAULT_SOURCES_CONFIG))
+    DEFAULT_SCOREBOARD_JSON = Path(str(paths.get("scoreboardJson") or DEFAULT_SCOREBOARD_JSON))
+    DEFAULT_SOURCE_HEALTH_CLI = Path(str(paths.get("sourceHealthCli") or DEFAULT_SOURCE_HEALTH_CLI))
+    DEFAULT_PRECHECK_POLICY = dict(_three_kweb_section("precheckDefaults"))
+    for row in cue_rules:
+        if str(row.get("constantName") or "") == "DEFAULT_TERM_HIT_KEYWORDS":
+            DEFAULT_TERM_HIT_KEYWORDS = tuple(str(item) for item in row.get("value") or [] if str(item).strip())
+            break
+
+
+def apply_three_kweb_check_arg_defaults(args: argparse.Namespace) -> None:
+    paths = _three_kweb_section("defaultPaths")
+    fetch = _three_kweb_section("fetchDefaults")
+    args.output_root = _three_kweb_path_arg(args.output_root, paths, "outputRoot", DEFAULT_OUTPUT_ROOT)
+    args.sources_config = _three_kweb_path_arg(args.sources_config, paths, "sourcesConfig", DEFAULT_SOURCES_CONFIG)
+    args.scoreboard_json = _three_kweb_path_arg(args.scoreboard_json, paths, "scoreboardJson", DEFAULT_SCOREBOARD_JSON)
+    args.source_health_cli = _three_kweb_path_arg(args.source_health_cli, paths, "sourceHealthCli", DEFAULT_SOURCE_HEALTH_CLI)
+    args.fetch_backend = _three_kweb_text_arg(args.fetch_backend, fetch, "fetchBackend", "auto")
+    args.timeout_seconds = _three_kweb_float_arg(args.timeout_seconds, fetch, "timeoutSeconds", 12.0)
+    args.max_gap_generals = _three_kweb_int_arg(args.max_gap_generals, fetch, "maxGapGenerals", 60)
 
 
 def utc_now() -> str:
@@ -524,28 +577,41 @@ def render_markdown(summary: dict[str, Any]) -> str:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Deterministic external source health check for Sanguo ETL/RAG.")
     parser.add_argument("--run-id", default=None, help="Run id. Defaults to 3kweb-check-<UTC>.")
-    parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output root path.")
-    parser.add_argument("--sources-config", default=str(DEFAULT_SOURCES_CONFIG), help="External sources JSON config.")
-    parser.add_argument("--scoreboard-json", default=str(DEFAULT_SCOREBOARD_JSON), help="Scoreboard JSON for gap analysis.")
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--three-kweb-check-policy", default=None, help="Override policy-3kweb-check-runner.json path")
+    parser.add_argument("--three-kweb-check-cue-rules", default=None, help="Override rule-3kweb-check-cues.jsonl path")
+    parser.add_argument("--output-root", default=None, help="Output root path. Defaults to governance policy.")
+    parser.add_argument("--sources-config", default=None, help="External sources JSON config. Defaults to governance policy.")
+    parser.add_argument("--scoreboard-json", default=None, help="Scoreboard JSON for gap analysis. Defaults to governance policy.")
     parser.add_argument("--approved-only", action="store_true", help="Include only status=approved sources.")
     parser.add_argument("--fetch-live", action="store_true", help="Execute live fetch for http urls.")
     parser.add_argument("--dry-run", action="store_true", help="Skip live network fetch.")
-    parser.add_argument("--fetch-backend", choices=("auto", "node-cli", "python"), default="auto")
-    parser.add_argument("--source-health-cli", default=str(DEFAULT_SOURCE_HEALTH_CLI), help="Source health node CLI path.")
+    parser.add_argument("--fetch-backend", choices=("auto", "node-cli", "python"), default=None, help="Fetch backend. Defaults to governance policy.")
+    parser.add_argument("--source-health-cli", default=None, help="Source health node CLI path. Defaults to governance policy.")
     parser.add_argument(
         "--term-hit-keyword",
         action="append",
         default=[],
         help="Optional precheck keyword override (repeatable). When provided, applies to all sources.",
     )
-    parser.add_argument("--timeout-seconds", type=float, default=12.0, help="HTTP timeout in seconds.")
-    parser.add_argument("--max-gap-generals", type=int, default=60, help="Reserved for future gap analysis.")
+    parser.add_argument("--timeout-seconds", type=float, default=None, help="HTTP timeout in seconds. Defaults to governance policy.")
+    parser.add_argument("--max-gap-generals", type=int, default=None, help="Reserved for future gap analysis. Defaults to governance policy.")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting existing outputs.")
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
+    three_kweb_policy = load_three_kweb_check_runner_policy(
+        args.governance_root,
+        three_kweb_check_policy=args.three_kweb_check_policy,
+    )
+    three_kweb_cue_rules = load_three_kweb_check_cue_rules(
+        args.governance_root,
+        three_kweb_check_cue_rules=args.three_kweb_check_cue_rules,
+    )
+    apply_three_kweb_check_governance(three_kweb_policy, three_kweb_cue_rules)
+    apply_three_kweb_check_arg_defaults(args)
     run_id = args.run_id or f"3kweb-check-{utc_stamp()}"
     run_root = resolve_path(Path(args.output_root) / run_id)
     run_root.mkdir(parents=True, exist_ok=True)
@@ -682,4 +748,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SanguoGovernanceError as exc:
+        raise SystemExit(f"[run_3kweb_check] governance error: {exc}") from None

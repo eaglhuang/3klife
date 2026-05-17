@@ -16,6 +16,8 @@ from sanguo_governance_loader import (
     load_resolution_loop_recommendation_cue_rules,
     load_resolution_loop_runner_policy,
     load_three_lane_progress_scheduler_policy,
+    load_three_kweb_check_cue_rules,
+    load_three_kweb_check_runner_policy,
     load_repair_review_campaign_policy,
     load_knowledge_growth_round_runner_policy,
     expected_governance_files,
@@ -168,6 +170,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     three_lane_scheduler_policy = load_three_lane_progress_scheduler_policy(root)
     repair_review_campaign_policy = load_repair_review_campaign_policy(root)
     knowledge_growth_round_policy = load_knowledge_growth_round_runner_policy(root)
+    three_kweb_check_policy = load_three_kweb_check_runner_policy(root)
+    three_kweb_check_cues = load_three_kweb_check_cue_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -1051,6 +1055,34 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         if int(knowledge_growth_gates.get(key) or 0) <= 0:
             raise SanguoGovernanceError(f"policy-knowledge-growth-round-runner gateDefaults.{key} must be positive")
 
+
+    three_kweb_paths = three_kweb_check_policy.get("defaultPaths") if isinstance(three_kweb_check_policy.get("defaultPaths"), dict) else {}
+    for key in ("outputRoot", "sourcesConfig", "scoreboardJson", "sourceHealthCli"):
+        if not str(three_kweb_paths.get(key) or "").strip():
+            raise SanguoGovernanceError(f"policy-3kweb-check-runner defaultPaths.{key} cannot be empty")
+    three_kweb_precheck = three_kweb_check_policy.get("precheckDefaults") if isinstance(three_kweb_check_policy.get("precheckDefaults"), dict) else {}
+    likely_threshold = int(three_kweb_precheck.get("likelyThreshold") or 0)
+    possible_threshold = int(three_kweb_precheck.get("possibleThreshold") or 0)
+    if likely_threshold <= 0 or possible_threshold <= 0 or likely_threshold < possible_threshold:
+        raise SanguoGovernanceError("policy-3kweb-check-runner precheck thresholds must be positive and likely >= possible")
+    if int(three_kweb_precheck.get("minimumTermHitCount") or -1) < 0:
+        raise SanguoGovernanceError("policy-3kweb-check-runner minimumTermHitCount cannot be negative")
+    hint_keywords = [str(item).strip() for item in three_kweb_precheck.get("hintKeywords") or []]
+    if not hint_keywords or any(not item for item in hint_keywords) or len(set(hint_keywords)) != len(hint_keywords):
+        raise SanguoGovernanceError("policy-3kweb-check-runner hintKeywords must be non-empty and unique")
+    three_kweb_fetch = three_kweb_check_policy.get("fetchDefaults") if isinstance(three_kweb_check_policy.get("fetchDefaults"), dict) else {}
+    if str(three_kweb_fetch.get("fetchBackend") or "") not in {"auto", "node-cli", "python"}:
+        raise SanguoGovernanceError("policy-3kweb-check-runner fetchDefaults.fetchBackend is invalid")
+    if float(three_kweb_fetch.get("timeoutSeconds") or 0.0) <= 0.0:
+        raise SanguoGovernanceError("policy-3kweb-check-runner timeoutSeconds must be positive")
+    if int(three_kweb_fetch.get("maxGapGenerals") or 0) <= 0:
+        raise SanguoGovernanceError("policy-3kweb-check-runner maxGapGenerals must be positive")
+    if len(three_kweb_check_cues) != 1:
+        raise SanguoGovernanceError("rule-3kweb-check-cues must contain exactly one row")
+    three_kweb_keywords = [str(item).strip() for item in three_kweb_check_cues[0].get("value") or []]
+    if not three_kweb_keywords or any(not item for item in three_kweb_keywords) or len(set(three_kweb_keywords)) != len(three_kweb_keywords):
+        raise SanguoGovernanceError("rule-3kweb-check-cues keyword value must be non-empty and unique")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -1107,6 +1139,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "knowledgeGrowthRoundPathDefaultCount": len(knowledge_growth_paths),
         "knowledgeGrowthRoundCohortDefaultCount": len(knowledge_growth_cohort),
         "knowledgeGrowthRoundGateDefaultCount": len(knowledge_growth_gates),
+        "threeKwebCheckCueRuleCount": len(three_kweb_check_cues),
+        "threeKwebCheckTermKeywordCount": len(three_kweb_keywords),
     }
 
 
