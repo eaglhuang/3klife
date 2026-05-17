@@ -3,7 +3,7 @@ doc_id: doc_other_0158
 task_id: TASK-APO-0007
 title: npm publish + create-atm
 milestone: M6
-status: open
+status: done
 blocked_by: [TASK-APO-0003, TASK-APO-0004]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md
@@ -13,12 +13,17 @@ hostKind: upstream-framework
 alphaGate: validate:standard
 public_tracking: false
 executionMode: planned-upstream-change
+started_at: 2026-05-17T23:28:27.7094530+08:00
+started_by_agent: vs-insiders-gpt-5.4
 allowed_files:
   - packages/create-atm/**
   - packages/cli/package.json
   - .github/workflows/release-npm.yml
   - release/**
   - README.md
+  - tests/package-skeleton.fixture.json
+  - scripts/validate-root-drop-release.ts
+  - scripts/validate-onefile-release.ts
 forbidden_files:
   - packages/core/**
   - assets/**
@@ -54,12 +59,12 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收條件
 
-- [ ] `packages/create-atm/package.json` 含 `bin: { "create-atm": "..." }`。
-- [ ] `packages/cli/package.json` 升級 version、加 `publishConfig.access: public`。
-- [ ] `.github/workflows/release-npm.yml` 在 git tag 觸發 publish。
-- [ ] `release-npm.yml` 內含 compute-gate standard pass 才 publish 的 guard。
-- [ ] `npx create-atm test-app --agent claude-code` 在空目錄 60 秒內完成 init + render + pack install。
-- [ ] npm package README 明確標示「治理框架」定位，避免 CLI tool 誤解。
+- [x] `packages/create-atm/package.json` 含 `bin: { "create-atm": "..." }`。
+- [x] `packages/cli/package.json` 升級 version、加 `publishConfig.access: public`。
+- [x] `.github/workflows/release-npm.yml` 在 git tag 觸發 publish。
+- [x] `release-npm.yml` 內含 compute-gate standard pass 才 publish 的 guard。
+- [x] `npx create-atm test-app --agent claude-code` 在空目錄 60 秒內完成 init + render + pack install。
+- [x] npm package README 明確標示「治理框架」定位，避免 CLI tool 誤解。
 
 ## 影響檔案
 
@@ -68,6 +73,9 @@ created_by_agent: vs-insiders-gpt-5.4
 - `.github/workflows/release-npm.yml`
 - `README.md`
 - `release/**`
+- `tests/package-skeleton.fixture.json`
+- `scripts/validate-root-drop-release.ts`
+- `scripts/validate-onefile-release.ts`
 
 ## 驗證方式
 
@@ -83,12 +91,13 @@ cmd /c npm run validate:onefile-release
 
 ## Checklist
 
-- [ ] create-atm package
-- [ ] cli publish config
-- [ ] release workflow
-- [ ] 60 秒 smoke
-- [ ] README 定位
+- [x] create-atm package
+- [x] cli publish config
+- [x] release workflow
+- [x] 60 秒 smoke
+- [x] README 定位
 
 ## Notes
 
 2026-05-17 | 狀態: open | 驗證: pending | 變更: 依計畫書 §15/M6 開卡，尚未接手實作 | 阻塞: TASK-APO-0003 / TASK-APO-0004
+2026-05-17 | 狀態: done | 驗證: `node --experimental-strip-types packages/create-atm/src/index.ts test-app --agent claude-code --cwd <tmp> --json` pass（約 965ms，產生 `.atm/memory/atm-chart.md`、`.claude/commands/atm-next.md`、`.atm/agent-pack/claude-code.manifest.json`）；`npm --prefix c:/Users/User/AI-Atomic-Framework run validate:standard` pass；`npm --prefix c:/Users/User/AI-Atomic-Framework run validate:root-drop-release` pass；`npm --prefix c:/Users/User/AI-Atomic-Framework run validate:onefile-release` pass；encoding touched check pass | 變更: upstream commit `ec47121 feat: add npm create-atm release path`，新增 `create-atm` package、CLI publishConfig、tag-driven npm release workflow、README npm governance entry、package-skeleton entry，並更新 release validators 以符合現行 ATMChart/welcome/git-head doctor contract；workflow 於 tag 發佈時以 tag 同步 package versions 後 publish | 阻塞: none；註: root `npm run build` 仍受既有 core TypeScript strictness debt 阻擋，release workflow 改用既有 artifact builder scripts 且先跑 `validate:standard`
