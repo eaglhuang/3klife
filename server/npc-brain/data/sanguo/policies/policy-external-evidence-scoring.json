@@ -1,0 +1,96 @@
+{
+  "angleSpecificityScore": {
+    "activity": 76.0,
+    "dialogue_seed": 70.0,
+    "event": 88.0,
+    "habit": 72.0,
+    "identity": 92.0,
+    "location": 84.0,
+    "relationship": 90.0,
+    "role": 80.0,
+    "source_conflict": 62.0,
+    "title": 84.0,
+    "trait": 82.0,
+    "worldbuilding_note": 68.0
+  },
+  "crossSiteSignal": {
+    "perMatchScore": 45.0
+  },
+  "description": "Externalized external evidence seed scoring policy. Values are copied from Phase 23 baseline Python constants and formulas.",
+  "extractionReliabilityScore": {
+    "deterministic": 90.0,
+    "hybrid": 75.0,
+    "llm": 60.0,
+    "manual": 85.0
+  },
+  "freshnessScore": {
+    "default": 80.0,
+    "fetch-error": 55.0,
+    "http-error": 55.0,
+    "manual-only": 100.0,
+    "ok": 100.0,
+    "timeout": 55.0,
+    "url-error": 55.0
+  },
+  "id": "Policy_ExternalEvidenceScoring_P1",
+  "promotionTargets": {
+    "candidateCard": {
+      "minScore": 70.0
+    },
+    "default": "seed-only",
+    "humanReview": {
+      "minScore": 80.0
+    },
+    "preview": {
+      "minScore": 55.0
+    },
+    "sourceConflict": {
+      "angleType": "source_conflict",
+      "target": "human-review"
+    }
+  },
+  "rawSeedScoreWeights": {
+    "angleSpecificityScore": 0.2,
+    "crossSiteSignalScore": 0.1,
+    "extractionReliabilityScore": 0.1,
+    "freshnessAndReachabilityScore": 0.05,
+    "personMatchScore": 0.25,
+    "sourceLayerScore": 0.15,
+    "textSupportScore": 0.15
+  },
+  "scoreFallbacks": {
+    "angleSpecificityScore": 68.0,
+    "extractionReliabilityScore": 65.0,
+    "sourceLayerDefault": "worldbuilding",
+    "sourceLayerGameFamily": "game",
+    "sourceLayerSecondaryOrResearch": "research"
+  },
+  "siteReliability": {
+    "acceptedSeedMinRawScore": 60.0,
+    "acceptedSeedWeight": 0.15,
+    "baseMultiplier": 0.7,
+    "brokenLiveStatuses": [
+      "http-error",
+      "timeout",
+      "fetch-error",
+      "url-error"
+    ],
+    "cardPromotionWeight": 0.1,
+    "conflictPenaltyWeight": 0.15,
+    "crossSiteAgreementWeight": 0.1,
+    "maxMultiplier": 1.2,
+    "minMultiplier": 0.7,
+    "staleOrBrokenPenaltyWeight": 0.05
+  },
+  "sourceLayerScore": {
+    "blocked": 15.0,
+    "fiction": 35.0,
+    "folklore": 55.0,
+    "game": 45.0,
+    "history": 80.0,
+    "manual": 35.0,
+    "research": 70.0,
+    "romance": 85.0,
+    "worldbuilding": 45.0
+  }
+}

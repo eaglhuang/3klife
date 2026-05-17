@@ -698,9 +698,42 @@ def load_relationship_evidence_extraction_rules(
     return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "value"))
 
 
+
+def load_alias_mention_intake_policy(
+    root: str | Path | None = None,
+    *,
+    alias_mention_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = Path(alias_mention_policy).resolve() if alias_mention_policy else _path(base, "policies", "policy-alias-mention-intake.json")
+    return read_governance_json(path, required_id="Policy_AliasMentionIntake_P1")
+
+
+def load_alias_mention_intake_cue_rules(
+    root: str | Path | None = None,
+    *,
+    alias_mention_cue_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = Path(alias_mention_cue_rules).resolve() if alias_mention_cue_rules else _path(base, "rules", "rule-alias-mention-intake-cues.jsonl")
+    return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "value"))
+
+
+def load_external_evidence_scoring_policy(
+    root: str | Path | None = None,
+    *,
+    external_evidence_scoring_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = Path(external_evidence_scoring_policy).resolve() if external_evidence_scoring_policy else _path(base, "policies", "policy-external-evidence-scoring.json")
+    return read_governance_json(path, required_id="Policy_ExternalEvidenceScoring_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "policies", "file": "policy-full-roster-scoreboard.json", "consumer": "build_full_roster_scoreboard.py"},
+        {"section": "policies", "file": "policy-alias-mention-intake.json", "consumer": "build_alias_dict.py / collect_observed_mentions.py"},
+        {"section": "policies", "file": "policy-external-evidence-scoring.json", "consumer": "score_external_evidence_seeds.py"},
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-faction-timeline-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-event-location-seeds.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

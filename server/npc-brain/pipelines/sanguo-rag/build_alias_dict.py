@@ -9,6 +9,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 from repo_layout import pipeline_config_path, resolve_repo_root
+from sanguo_governance_loader import SanguoGovernanceError, default_governance_root, load_alias_mention_intake_cue_rules, load_alias_mention_intake_policy
 
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -18,15 +19,30 @@ DEFAULT_MANUAL_ROSTER_PATH = pipeline_config_path(REPO_ROOT, "manual-roster-seed
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary")
 DEFAULT_OBSERVED_MENTIONS_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json")
 DEFAULT_WIKI_COURTESY_ALIASES_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/romance-courtesy-aliases.json")
-DECORATIVE_WRAPPER_CHARS = "【】[]()（）「」『』《》〈〉"
-SOURCE_PRIORITY = {"name": 0, "override": 1, "alias": 2, "courtesy": 3, "title": 4}
-SOURCE_LABELS = {
-    "name": "roster-name",
-    "alias": "roster-alias",
-    "courtesy": "wiki-courtesy-alias",
-    "title": "title-derived",
-    "override": "manual-override",
-}
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
+DECORATIVE_WRAPPER_CHARS = ""
+SOURCE_PRIORITY: dict[str, int] = {}
+SOURCE_LABELS: dict[str, str] = {}
+
+
+def _alias_intake_rule_value(rows: list[dict], consumer: str, constant_name: str):
+    for row in rows:
+        if row.get("consumer") == consumer and row.get("constantName") == constant_name:
+            return row.get("value")
+    raise SanguoGovernanceError(f"rule-alias-mention-intake-cues missing {consumer}.{constant_name}")
+
+
+def apply_alias_mention_intake_governance(
+    governance_root: str | Path | None = None,
+    alias_mention_policy: str | Path | None = None,
+    alias_mention_cue_rules: str | Path | None = None,
+) -> None:
+    global DECORATIVE_WRAPPER_CHARS, SOURCE_PRIORITY, SOURCE_LABELS
+    policy = load_alias_mention_intake_policy(governance_root, alias_mention_policy=alias_mention_policy)
+    cue_rules = load_alias_mention_intake_cue_rules(governance_root, alias_mention_cue_rules=alias_mention_cue_rules)
+    DECORATIVE_WRAPPER_CHARS = str(_alias_intake_rule_value(cue_rules, "build_alias_dict.py", "DECORATIVE_WRAPPER_CHARS") or "")
+    SOURCE_PRIORITY = {str(key): int(value) for key, value in (policy.get("aliasSourcePriority") or {}).items()}
+    SOURCE_LABELS = {str(key): str(value) for key, value in (policy.get("aliasSourceLabels") or {}).items()}
 
 
 class AliasOverrideEntry(BaseModel):
@@ -173,6 +189,9 @@ def parse_args() -> argparse.Namespace:
         default=str(DEFAULT_WIKI_COURTESY_ALIASES_PATH),
         help="Optional romance-courtesy-aliases.json generated from Wikipedia character-list courtesy names",
     )
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance root")
+    parser.add_argument("--alias-mention-policy", default=None, help="Override policy-alias-mention-intake.json path")
+    parser.add_argument("--alias-mention-cue-rules", default=None, help="Override rule-alias-mention-intake-cues.jsonl path")
     parser.add_argument("--top-unresolved", type=int, default=50, help="Number of unresolved labels to keep in review report")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting existing output files")
     return parser.parse_args()
@@ -557,6 +576,11 @@ def build_alias_map(records: list[GeneralAliasRecord]) -> tuple[list[AliasMapEnt
 
 def main() -> None:
     args = parse_args()
+    try:
+        apply_alias_mention_intake_governance(args.governance_root, args.alias_mention_policy, args.alias_mention_cue_rules)
+    except SanguoGovernanceError as exc:
+        print(f"[build_alias_dict] governance error: {exc}")
+        raise SystemExit(2) from None
     generals_path = Path(args.generals)
     overrides_path = Path(args.overrides)
     manual_roster_path = Path(args.manual_roster)

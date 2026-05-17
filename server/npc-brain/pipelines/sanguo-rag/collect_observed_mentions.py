@@ -6,9 +6,11 @@ import re
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 from pydantic import BaseModel, Field
 from repo_layout import pipeline_config_path, resolve_repo_root
+from sanguo_governance_loader import SanguoGovernanceError, default_governance_root, load_alias_mention_intake_cue_rules
 
 
 REPO_ROOT = resolve_repo_root(__file__)
@@ -16,53 +18,54 @@ DEFAULT_CHAPTERS_ROOT = Path("artifacts/data-pipeline/sanguoyanyi-mao-hant-2026-
 DEFAULT_FORMAL_MAP_PATH = Path("artifacts/data-pipeline/sanguo-rag/extracted/alias-dictionary/formal-mention-map.json")
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions")
 DEFAULT_TRIAGE_DECISIONS_PATH = pipeline_config_path(REPO_ROOT, "unresolved-triage-decisions.json")
-DECORATIVE_WRAPPER_CHARS = "【】[]()（）「」『』《》〈〉"
-ADDRESS_TITLES = ["將軍", "軍師", "先生", "大人", "主公", "縣令", "太守", "都督", "丞相"]
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
+DECORATIVE_WRAPPER_CHARS = ""
+ADDRESS_TITLES: list[str] = []
 CJK_CANDIDATE_RE = re.compile(r"[\u4e00-\u9fff]{2,4}")
-COMPOUND_SURNAMES = ("諸葛", "司馬", "夏侯", "皇甫", "公孫", "歐陽")
-COMMON_SINGLE_SURNAMES = set("趙錢孫李周吳鄭王馮陳褚衛蔣沈韓楊朱秦尤許何呂施張孔曹嚴華金魏陶姜戚謝鄒喻柏水竇章雲蘇潘葛奚范彭郎魯韋昌馬苗鳳花方俞任袁柳鮑史唐費廉岑薛雷賀倪湯滕殷羅畢郝鄔安常樂于時傅皮卞齊康伍余元卜顧孟平黃和穆蕭尹夏侯")
+COMPOUND_SURNAMES: tuple[str, ...] = ()
+COMMON_SINGLE_SURNAMES: set[str] = set()
 COMMON_SINGLE_SURNAMES -= set("安方時常史郎水花畢金")
-NOISE_LABELS = {
-    "後人有詩",
-    "後人贊曰",
-    "贊曰",
-    "正是",
-    "次日",
-    "卻說",
-    "且說",
-    "分解",
-    "下文",
-    "且看下文",
-    "如之奈何",
-    "言未畢",
-    "喊聲大震",
-    "共議大事",
-    "又名",
-    "大名",
-    "姓名",
-    "姓劉",
-    "姓曹",
-    "名備",
-    "名操",
-    "名羽",
-    "名飛",
-    "吳王",
-    "水陸",
-    "畢竟",
-    "花開",
-    "諸葛扁舟",
-    "金鼓",
-    "馬似",
-    "馬匹",
-    "馬尾",
-    "黃巾",
-}
-NOISE_SUBSTRINGS = ["後人", "下文", "分解", "喊聲", "不知", "正是", "詩曰", "贊曰"]
-NOISE_CHARS = set("之其此何如不無有與於而以為爲乃即便皆各等甚已亦卻說曰云雲")
-NON_NAME_SECOND_CHARS = set("兵軍主臣民欲纔分將下前出年得肯能地昏侍義路寨營陣聲日夜時刻處處公母父子兒人城州郡縣山江河橋谷口王賊冊末可天排敢資來引縱過鉅習皇升似匹尾巾二")
-NON_NAME_THIRD_CHARS = set("生來引縱過習孫皇鉅座喪寧計")
-LOCATION_SUFFIXES = ("城", "郡", "州", "縣", "寨", "關", "橋", "山", "江", "河", "谷", "口", "營", "陣")
-PERSON_PREFIXES = ("姓", "名", "字", "一名", "小字", "呼為", "號為", "乃是", "吳將", "蜀將", "魏將", "賊將", "太守", "縣令", "校尉", "中郎將", "其黨", "叔父")
+NOISE_LABELS: set[str] = set()
+NOISE_SUBSTRINGS: list[str] = []
+NOISE_CHARS: set[str] = set()
+NON_NAME_SECOND_CHARS: set[str] = set()
+NON_NAME_THIRD_CHARS: set[str] = set()
+LOCATION_SUFFIXES: tuple[str, ...] = ()
+PERSON_PREFIXES: tuple[str, ...] = ()
+
+
+def _mention_intake_rule_value(rows: list[dict[str, Any]], constant_name: str) -> Any:
+    for row in rows:
+        if row.get("consumer") == "collect_observed_mentions.py" and row.get("constantName") == constant_name:
+            return row.get("value")
+    raise SanguoGovernanceError(f"rule-alias-mention-intake-cues missing collect_observed_mentions.py.{constant_name}")
+
+
+def _string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value if str(item)]
+
+
+def apply_alias_mention_collection_governance(
+    governance_root: str | Path | None = None,
+    alias_mention_cue_rules: str | Path | None = None,
+) -> None:
+    global DECORATIVE_WRAPPER_CHARS, ADDRESS_TITLES, COMPOUND_SURNAMES, COMMON_SINGLE_SURNAMES
+    global NOISE_LABELS, NOISE_SUBSTRINGS, NOISE_CHARS, NON_NAME_SECOND_CHARS, NON_NAME_THIRD_CHARS
+    global LOCATION_SUFFIXES, PERSON_PREFIXES
+    rows = load_alias_mention_intake_cue_rules(governance_root, alias_mention_cue_rules=alias_mention_cue_rules)
+    DECORATIVE_WRAPPER_CHARS = str(_mention_intake_rule_value(rows, "DECORATIVE_WRAPPER_CHARS") or "")
+    ADDRESS_TITLES = _string_list(_mention_intake_rule_value(rows, "ADDRESS_TITLES"))
+    COMPOUND_SURNAMES = tuple(_string_list(_mention_intake_rule_value(rows, "COMPOUND_SURNAMES")))
+    COMMON_SINGLE_SURNAMES = set(_string_list(_mention_intake_rule_value(rows, "COMMON_SINGLE_SURNAMES")))
+    NOISE_LABELS = set(_string_list(_mention_intake_rule_value(rows, "NOISE_LABELS")))
+    NOISE_SUBSTRINGS = _string_list(_mention_intake_rule_value(rows, "NOISE_SUBSTRINGS"))
+    NOISE_CHARS = set(_string_list(_mention_intake_rule_value(rows, "NOISE_CHARS")))
+    NON_NAME_SECOND_CHARS = set(_string_list(_mention_intake_rule_value(rows, "NON_NAME_SECOND_CHARS")))
+    NON_NAME_THIRD_CHARS = set(_string_list(_mention_intake_rule_value(rows, "NON_NAME_THIRD_CHARS")))
+    LOCATION_SUFFIXES = tuple(_string_list(_mention_intake_rule_value(rows, "LOCATION_SUFFIXES")))
+    PERSON_PREFIXES = tuple(_string_list(_mention_intake_rule_value(rows, "PERSON_PREFIXES")))
 
 
 class FormalMentionEntry(BaseModel):
@@ -146,6 +149,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--chapters-root", default=str(DEFAULT_CHAPTERS_ROOT), help="Directory containing ch_###.md files")
     parser.add_argument("--formal-map", default=str(DEFAULT_FORMAL_MAP_PATH), help="formal-mention-map.json path")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory for observed mention files")
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance root")
+    parser.add_argument("--alias-mention-cue-rules", default=None, help="Override rule-alias-mention-intake-cues.jsonl path")
     parser.add_argument(
         "--triage-decisions",
         default=str(DEFAULT_TRIAGE_DECISIONS_PATH),
@@ -523,6 +528,11 @@ def summarize_labels(mentions: list[ObservedMention], match_status: str, limit: 
 
 def main() -> None:
     args = parse_args()
+    try:
+        apply_alias_mention_collection_governance(args.governance_root, args.alias_mention_cue_rules)
+    except SanguoGovernanceError as exc:
+        print(f"[collect_observed_mentions] governance error: {exc}")
+        raise SystemExit(2) from None
     chapters_root = Path(args.chapters_root)
     formal_map_path = Path(args.formal_map)
     output_root = Path(args.output_root)

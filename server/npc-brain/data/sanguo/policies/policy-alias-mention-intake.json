@@ -1,0 +1,26 @@
+{
+  "aliasReviewStatus": {
+    "accepted": "accepted",
+    "collision": "collision"
+  },
+  "aliasSourceLabels": {
+    "alias": "roster-alias",
+    "courtesy": "wiki-courtesy-alias",
+    "name": "roster-name",
+    "override": "manual-override",
+    "title": "title-derived"
+  },
+  "aliasSourcePriority": {
+    "alias": 2,
+    "courtesy": 3,
+    "name": 0,
+    "override": 1,
+    "title": 4
+  },
+  "description": "Externalized alias source and mention intake policy. Values are copied from Phase 22 baseline Python constants.",
+  "generalReviewStatus": {
+    "needsMoreCoverage": "needs-more-coverage",
+    "ready": "ready"
+  },
+  "id": "Policy_AliasMentionIntake_P1"
+}

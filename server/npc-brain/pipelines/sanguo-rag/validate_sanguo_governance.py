@@ -10,7 +10,10 @@ from typing import Any
 
 from sanguo_governance_loader import (
     SanguoGovernanceError,
+    load_alias_mention_intake_cue_rules,
+    load_alias_mention_intake_policy,
     load_core_person_completion_policy,
+    load_external_evidence_scoring_policy,
     load_dialogue_mention_resolution_cue_rules,
     load_dialogue_mention_resolution_policy,
     load_resolution_loop_recommendation_cue_rules,
@@ -178,6 +181,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     three_kweb_check_policy = load_three_kweb_check_runner_policy(root)
     three_kweb_check_cues = load_three_kweb_check_cue_rules(root)
     deepseek_reasoning_policy = load_deepseek_reasoning_trial_policy(root)
+    alias_mention_policy = load_alias_mention_intake_policy(root)
+    alias_mention_cues = load_alias_mention_intake_cue_rules(root)
+    external_evidence_scoring_policy = load_external_evidence_scoring_policy(root)
     relationship_type_refinement_rules = load_relationship_type_refinement_rules(root)
     relationship_evidence_extraction_rules = load_relationship_evidence_extraction_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
@@ -1215,6 +1221,71 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if missing_relationship_evidence:
         raise SanguoGovernanceError(f"rule-relationship-evidence-extraction-cues missing rules: {', '.join(missing_relationship_evidence)}")
 
+
+
+    alias_policy_priority = alias_mention_policy.get("aliasSourcePriority") if isinstance(alias_mention_policy.get("aliasSourcePriority"), dict) else {}
+    alias_policy_labels = alias_mention_policy.get("aliasSourceLabels") if isinstance(alias_mention_policy.get("aliasSourceLabels"), dict) else {}
+    if not alias_policy_priority or not alias_policy_labels:
+        raise SanguoGovernanceError("policy-alias-mention-intake aliasSourcePriority/aliasSourceLabels cannot be empty")
+    alias_required = {
+        ("build_alias_dict.py", "DECORATIVE_WRAPPER_CHARS"),
+        ("collect_observed_mentions.py", "DECORATIVE_WRAPPER_CHARS"),
+        ("collect_observed_mentions.py", "ADDRESS_TITLES"),
+        ("collect_observed_mentions.py", "COMPOUND_SURNAMES"),
+        ("collect_observed_mentions.py", "COMMON_SINGLE_SURNAMES"),
+        ("collect_observed_mentions.py", "NOISE_LABELS"),
+        ("collect_observed_mentions.py", "NOISE_SUBSTRINGS"),
+        ("collect_observed_mentions.py", "NOISE_CHARS"),
+        ("collect_observed_mentions.py", "NON_NAME_SECOND_CHARS"),
+        ("collect_observed_mentions.py", "NON_NAME_THIRD_CHARS"),
+        ("collect_observed_mentions.py", "LOCATION_SUFFIXES"),
+        ("collect_observed_mentions.py", "PERSON_PREFIXES"),
+    }
+    alias_seen: set[tuple[str, str]] = set()
+    alias_cue_value_count = 0
+    for row in alias_mention_cues:
+        consumer = str(row.get("consumer") or "").strip()
+        constant_name = str(row.get("constantName") or "").strip()
+        key = (consumer, constant_name)
+        if key in alias_seen:
+            raise SanguoGovernanceError(f"rule-alias-mention-intake-cues duplicate row: {consumer}.{constant_name}")
+        alias_seen.add(key)
+        value = row.get("value")
+        kind = str(row.get("kind") or "").strip()
+        if kind == "string":
+            if not isinstance(value, str) or not value:
+                raise SanguoGovernanceError(f"rule-alias-mention-intake-cues {consumer}.{constant_name} string cannot be empty")
+            alias_cue_value_count += len(value)
+        elif kind in {"sequence", "set"}:
+            if not isinstance(value, list) or not value:
+                raise SanguoGovernanceError(f"rule-alias-mention-intake-cues {consumer}.{constant_name} list cannot be empty")
+            normalized = [str(item).strip() for item in value]
+            if any(not item for item in normalized):
+                raise SanguoGovernanceError(f"rule-alias-mention-intake-cues {consumer}.{constant_name} has blank cue")
+            alias_cue_value_count += len(normalized)
+        else:
+            raise SanguoGovernanceError(f"rule-alias-mention-intake-cues {consumer}.{constant_name} unsupported kind: {kind}")
+    missing_alias_cues = sorted(alias_required - alias_seen)
+    if missing_alias_cues:
+        raise SanguoGovernanceError(f"rule-alias-mention-intake-cues missing rows: {missing_alias_cues}")
+
+    external_score_tables = [
+        external_evidence_scoring_policy.get("sourceLayerScore"),
+        external_evidence_scoring_policy.get("angleSpecificityScore"),
+        external_evidence_scoring_policy.get("extractionReliabilityScore"),
+    ]
+    if any(not isinstance(table, dict) or not table for table in external_score_tables):
+        raise SanguoGovernanceError("policy-external-evidence-scoring score tables cannot be empty")
+    external_score_value_count = 0
+    for table in external_score_tables:
+        for key, value in table.items():
+            if not str(key).strip() or not isinstance(value, (int, float)) or float(value) < 0:
+                raise SanguoGovernanceError("policy-external-evidence-scoring score table contains invalid value")
+            external_score_value_count += 1
+    external_raw_weights = external_evidence_scoring_policy.get("rawSeedScoreWeights") if isinstance(external_evidence_scoring_policy.get("rawSeedScoreWeights"), dict) else {}
+    if abs(sum(float(value) for value in external_raw_weights.values()) - 1.0) > 0.000001:
+        raise SanguoGovernanceError("policy-external-evidence-scoring rawSeedScoreWeights must sum to 1.0")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -1352,6 +1423,11 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "relationshipTypeRefinementTermCount": relationship_type_refinement_term_count,
         "relationshipEvidenceExtractionRuleCount": len(relationship_evidence_extraction_rules),
         "relationshipEvidenceExtractionCueCount": relationship_evidence_extraction_cue_count,
+        "aliasMentionCueRuleCount": len(alias_mention_cues),
+        "aliasMentionCueValueCount": alias_cue_value_count,
+        "aliasMentionSourceLabelCount": len(alias_policy_labels),
+        "externalEvidenceScoreTableValueCount": external_score_value_count,
+        "externalEvidenceRawWeightCount": len(external_raw_weights),
     }
 
 

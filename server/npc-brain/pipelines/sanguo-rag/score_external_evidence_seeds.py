@@ -8,44 +8,65 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from repo_layout import resolve_repo_root
+from sanguo_governance_loader import SanguoGovernanceError, default_governance_root, load_external_evidence_scoring_policy
 
 REPO_ROOT = resolve_repo_root(__file__)
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/knowledge-growth/external-evidence-seeds-v3-r1")
 DEFAULT_SEEDS_JSONL = DEFAULT_OUTPUT_ROOT / "external-evidence-seeds.jsonl"
+DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 
-SOURCE_LAYER_SCORE = {
-    "romance": 85.0,
-    "history": 80.0,
-    "research": 70.0,
-    "folklore": 55.0,
-    "worldbuilding": 45.0,
-    "game": 45.0,
-    "fiction": 35.0,
-    "manual": 35.0,
-    "blocked": 15.0,
-}
+SOURCE_LAYER_SCORE: dict[str, float] = {}
 
-ANGLE_SPECIFICITY_SCORE = {
-    "identity": 92.0,
-    "relationship": 90.0,
-    "event": 88.0,
-    "location": 84.0,
-    "title": 84.0,
-    "trait": 82.0,
-    "role": 80.0,
-    "activity": 76.0,
-    "habit": 72.0,
-    "dialogue_seed": 70.0,
-    "worldbuilding_note": 68.0,
-    "source_conflict": 62.0,
-}
+ANGLE_SPECIFICITY_SCORE: dict[str, float] = {}
 
-EXTRACTION_RELIABILITY_SCORE = {
-    "deterministic": 90.0,
-    "manual": 85.0,
-    "hybrid": 75.0,
-    "llm": 60.0,
-}
+EXTRACTION_RELIABILITY_SCORE: dict[str, float] = {}
+EXTERNAL_EVIDENCE_SCORING_POLICY: dict[str, Any] = {}
+_EXTERNAL_EVIDENCE_SCORING_POLICY_LOADED = False
+
+
+def apply_external_evidence_scoring_governance(
+    governance_root: str | Path | None = None,
+    external_evidence_scoring_policy: str | Path | None = None,
+) -> None:
+    global EXTERNAL_EVIDENCE_SCORING_POLICY, _EXTERNAL_EVIDENCE_SCORING_POLICY_LOADED
+    global SOURCE_LAYER_SCORE, ANGLE_SPECIFICITY_SCORE, EXTRACTION_RELIABILITY_SCORE
+    policy = load_external_evidence_scoring_policy(governance_root, external_evidence_scoring_policy=external_evidence_scoring_policy)
+    EXTERNAL_EVIDENCE_SCORING_POLICY = dict(policy)
+    SOURCE_LAYER_SCORE = {str(key): float(value) for key, value in (policy.get("sourceLayerScore") or {}).items()}
+    ANGLE_SPECIFICITY_SCORE = {str(key): float(value) for key, value in (policy.get("angleSpecificityScore") or {}).items()}
+    EXTRACTION_RELIABILITY_SCORE = {str(key): float(value) for key, value in (policy.get("extractionReliabilityScore") or {}).items()}
+    _EXTERNAL_EVIDENCE_SCORING_POLICY_LOADED = True
+
+
+def ensure_external_evidence_scoring_governance_loaded() -> None:
+    if not _EXTERNAL_EVIDENCE_SCORING_POLICY_LOADED:
+        apply_external_evidence_scoring_governance()
+
+
+def scoring_fallbacks() -> dict[str, Any]:
+    ensure_external_evidence_scoring_governance_loaded()
+    fallbacks = EXTERNAL_EVIDENCE_SCORING_POLICY.get("scoreFallbacks")
+    return fallbacks if isinstance(fallbacks, dict) else {}
+
+
+def raw_seed_score_weights() -> dict[str, float]:
+    ensure_external_evidence_scoring_governance_loaded()
+    weights = EXTERNAL_EVIDENCE_SCORING_POLICY.get("rawSeedScoreWeights")
+    if isinstance(weights, dict) and weights:
+        return {str(key): float(value) for key, value in weights.items()}
+    return {}
+
+
+def site_reliability_policy() -> dict[str, Any]:
+    ensure_external_evidence_scoring_governance_loaded()
+    policy = EXTERNAL_EVIDENCE_SCORING_POLICY.get("siteReliability")
+    return policy if isinstance(policy, dict) else {}
+
+
+def promotion_policy() -> dict[str, Any]:
+    ensure_external_evidence_scoring_governance_loaded()
+    policy = EXTERNAL_EVIDENCE_SCORING_POLICY.get("promotionTargets")
+    return policy if isinstance(policy, dict) else {}
 
 
 def utc_now() -> str:
@@ -115,6 +136,7 @@ def angle_type(seed: dict[str, Any]) -> str:
 
 
 def source_layer_score(seed: dict[str, Any]) -> float:
+    ensure_external_evidence_scoring_governance_loaded()
     layer = str(seed.get("sourceLayer") or "").strip().lower()
     family = source_family(seed).lower()
     trust_tier = str(seed.get("trustTier") or "").strip().lower()
@@ -126,11 +148,12 @@ def source_layer_score(seed: dict[str, Any]) -> float:
         return SOURCE_LAYER_SCORE["history"]
     if layer in SOURCE_LAYER_SCORE:
         return SOURCE_LAYER_SCORE[layer]
+    fallbacks = scoring_fallbacks()
     if "secondary" in trust_tier or "research" in trust_tier:
-        return SOURCE_LAYER_SCORE["research"]
+        return SOURCE_LAYER_SCORE[str(fallbacks.get("sourceLayerSecondaryOrResearch") or "research")]
     if "game" in family or "koei" in family or "musou" in family:
-        return SOURCE_LAYER_SCORE["game"]
-    return SOURCE_LAYER_SCORE["worldbuilding"]
+        return SOURCE_LAYER_SCORE[str(fallbacks.get("sourceLayerGameFamily") or "game")]
+    return SOURCE_LAYER_SCORE[str(fallbacks.get("sourceLayerDefault") or "worldbuilding")]
 
 
 def person_match_score(seed: dict[str, Any]) -> float:
@@ -158,12 +181,12 @@ def text_support_score(seed: dict[str, Any]) -> float:
 
 
 def freshness_score(seed: dict[str, Any]) -> float:
+    ensure_external_evidence_scoring_governance_loaded()
     status = str(seed.get("sourceLiveStatus") or "").strip()
-    if status in {"ok", "manual-only"}:
-        return 100.0
-    if status in {"http-error", "timeout", "fetch-error", "url-error"}:
-        return 55.0
-    return 80.0
+    score_by_status = EXTERNAL_EVIDENCE_SCORING_POLICY.get("freshnessScore") if isinstance(EXTERNAL_EVIDENCE_SCORING_POLICY.get("freshnessScore"), dict) else {}
+    if status in score_by_status:
+        return float(score_by_status[status])
+    return float(score_by_status.get("default", 80.0))
 
 
 def cross_site_groups(seeds: list[dict[str, Any]]) -> dict[tuple[str, str], set[str]]:
@@ -192,57 +215,58 @@ def apply_cross_site_counts(seeds: list[dict[str, Any]]) -> list[dict[str, Any]]
 
 
 def raw_seed_score(seed: dict[str, Any]) -> tuple[float, dict[str, float]]:
+    ensure_external_evidence_scoring_governance_loaded()
     cross_count = int(seed.get("crossSiteMatchCount") or 0)
     breakdown = {
         "personMatchScore": person_match_score(seed),
-        "angleSpecificityScore": ANGLE_SPECIFICITY_SCORE.get(angle_type(seed), 68.0),
+        "angleSpecificityScore": ANGLE_SPECIFICITY_SCORE.get(angle_type(seed), float(scoring_fallbacks().get("angleSpecificityScore", 68.0))),
         "sourceLayerScore": source_layer_score(seed),
         "textSupportScore": text_support_score(seed),
-        "extractionReliabilityScore": EXTRACTION_RELIABILITY_SCORE.get(str(seed.get("extractionMethod") or "").strip(), 65.0),
-        "crossSiteSignalScore": clamp(cross_count * 45.0),
+        "extractionReliabilityScore": EXTRACTION_RELIABILITY_SCORE.get(str(seed.get("extractionMethod") or "").strip(), float(scoring_fallbacks().get("extractionReliabilityScore", 65.0))),
+        "crossSiteSignalScore": clamp(cross_count * float((EXTERNAL_EVIDENCE_SCORING_POLICY.get("crossSiteSignal") or {}).get("perMatchScore", 45.0))),
         "freshnessAndReachabilityScore": freshness_score(seed),
     }
-    score = (
-        breakdown["personMatchScore"] * 0.25
-        + breakdown["angleSpecificityScore"] * 0.20
-        + breakdown["sourceLayerScore"] * 0.15
-        + breakdown["textSupportScore"] * 0.15
-        + breakdown["extractionReliabilityScore"] * 0.10
-        + breakdown["crossSiteSignalScore"] * 0.10
-        + breakdown["freshnessAndReachabilityScore"] * 0.05
-    )
+    weights = raw_seed_score_weights()
+    score = sum(breakdown[key] * float(weights.get(key, 0.0)) for key in breakdown)
     return clamp(score), breakdown
 
 
 def promotion_target(seed: dict[str, Any], score: float) -> str:
+    ensure_external_evidence_scoring_governance_loaded()
+    policy = promotion_policy()
     has_quote = bool(seed.get("hasQuote") or seed.get("quote"))
     has_locator_or_hash = bool(seed.get("hasLocator") or seed.get("locator") or seed.get("textHash"))
     cross_count = int(seed.get("crossSiteMatchCount") or 0)
-    if score >= 70.0 and has_quote and has_locator_or_hash:
+    candidate_card = policy.get("candidateCard") if isinstance(policy.get("candidateCard"), dict) else {}
+    if score >= float(candidate_card.get("minScore", 70.0)) and has_quote and has_locator_or_hash:
         return "candidate-card"
-    if angle_type(seed) == "source_conflict" or (score >= 80.0 and not has_locator_or_hash):
-        return "human-review"
-    if score >= 55.0 or cross_count > 0:
+    source_conflict = policy.get("sourceConflict") if isinstance(policy.get("sourceConflict"), dict) else {}
+    human_review = policy.get("humanReview") if isinstance(policy.get("humanReview"), dict) else {}
+    if angle_type(seed) == str(source_conflict.get("angleType") or "source_conflict") or (score >= float(human_review.get("minScore", 80.0)) and not has_locator_or_hash):
+        return str(source_conflict.get("target") or "human-review")
+    preview = policy.get("preview") if isinstance(policy.get("preview"), dict) else {}
+    if score >= float(preview.get("minScore", 55.0)) or cross_count > 0:
         return "preview"
-    return "seed-only"
+    return str(policy.get("default") or "seed-only")
 
 
 def site_multiplier(source_rows: list[dict[str, Any]]) -> tuple[float, dict[str, float]]:
+    ensure_external_evidence_scoring_governance_loaded()
+    policy = site_reliability_policy()
     total = max(len(source_rows), 1)
-    accepted_seed_rate = sum(1 for row in source_rows if row.get("_rawSeedScore", 0.0) >= 60.0) / total
+    broken_statuses = set(str(item) for item in policy.get("brokenLiveStatuses") or ["http-error", "timeout", "fetch-error", "url-error"])
+    accepted_seed_rate = sum(1 for row in source_rows if row.get("_rawSeedScore", 0.0) >= float(policy.get("acceptedSeedMinRawScore", 60.0))) / total
     card_promotion_rate = sum(1 for row in source_rows if row.get("_candidateCardReady")) / total
     cross_site_agreement_rate = sum(1 for row in source_rows if int(row.get("crossSiteMatchCount") or 0) > 0) / total
     conflict_rate = sum(1 for row in source_rows if angle_type(row) == "source_conflict") / total
-    stale_or_broken_rate = sum(
-        1 for row in source_rows if str(row.get("sourceLiveStatus") or "") in {"http-error", "timeout", "fetch-error", "url-error"}
-    ) / total
+    stale_or_broken_rate = sum(1 for row in source_rows if str(row.get("sourceLiveStatus") or "") in broken_statuses) / total
     multiplier = (
-        0.70
-        + accepted_seed_rate * 0.15
-        + card_promotion_rate * 0.10
-        + cross_site_agreement_rate * 0.10
-        - conflict_rate * 0.15
-        - stale_or_broken_rate * 0.05
+        float(policy.get("baseMultiplier", 0.70))
+        + accepted_seed_rate * float(policy.get("acceptedSeedWeight", 0.15))
+        + card_promotion_rate * float(policy.get("cardPromotionWeight", 0.10))
+        + cross_site_agreement_rate * float(policy.get("crossSiteAgreementWeight", 0.10))
+        - conflict_rate * float(policy.get("conflictPenaltyWeight", 0.15))
+        - stale_or_broken_rate * float(policy.get("staleOrBrokenPenaltyWeight", 0.05))
     )
     metrics = {
         "acceptedSeedRate": round(accepted_seed_rate, 4),
@@ -251,7 +275,7 @@ def site_multiplier(source_rows: list[dict[str, Any]]) -> tuple[float, dict[str,
         "conflictRate": round(conflict_rate, 4),
         "staleOrBrokenRate": round(stale_or_broken_rate, 4),
     }
-    return round(clamp(multiplier, 0.70, 1.20), 4), metrics
+    return round(clamp(multiplier, float(policy.get("minMultiplier", 0.70)), float(policy.get("maxMultiplier", 1.20))), 4), metrics
 
 
 def score_seeds(seeds: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -412,12 +436,19 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Score EvidenceSeed rows and produce ranking/report artifacts.")
     parser.add_argument("--seeds-jsonl", default=str(DEFAULT_SEEDS_JSONL), help="Input external-evidence-seeds.jsonl.")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output directory.")
+    parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT), help="Sanguo governance root")
+    parser.add_argument("--external-evidence-scoring-policy", default=None, help="Override policy-external-evidence-scoring.json path")
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting existing outputs.")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
+    try:
+        apply_external_evidence_scoring_governance(args.governance_root, args.external_evidence_scoring_policy)
+    except SanguoGovernanceError as exc:
+        print(f"[score_external_evidence_seeds] governance error: {exc}")
+        return 2
     seeds_path = resolve_path(args.seeds_jsonl)
     output_root = resolve_path(args.output_root)
     ranking_path = output_root / "external-evidence-seed-ranking.json"
