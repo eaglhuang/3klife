@@ -14,6 +14,10 @@ if str(NPC_BRAIN_ROOT) not in sys.path:
     sys.path.insert(0, str(NPC_BRAIN_ROOT))
 
 from app.npc_dialogue_service import DialogueRequest, NpcDialogueService  # noqa: E402
+SANGUO_RAG_ROOT = Path(__file__).resolve().parent
+if str(SANGUO_RAG_ROOT) not in sys.path:
+    sys.path.insert(0, str(SANGUO_RAG_ROOT))
+from sanguo_governance_loader import SanguoGovernanceError, load_runtime_readiness_matrix_policy  # noqa: E402
 
 
 DEFAULT_OUTPUT_ROOT = Path("artifacts/data-pipeline/sanguo-rag/extracted/api-readiness")
@@ -31,12 +35,61 @@ DEFAULT_GENERAL_IDS = [
 ]
 
 
+RUNTIME_READINESS_MATRIX_POLICY: dict[str, object] = {}
+
+
+def apply_runtime_readiness_matrix_policy(policy: dict[str, object]) -> None:
+    global DEFAULT_GENERAL_IDS, RUNTIME_READINESS_MATRIX_POLICY
+    RUNTIME_READINESS_MATRIX_POLICY = dict(policy)
+    default_general_ids = policy.get("defaultGeneralIds")
+    if isinstance(default_general_ids, list) and default_general_ids:
+        DEFAULT_GENERAL_IDS = [str(general_id) for general_id in default_general_ids if str(general_id).strip()]
+
+
+def dialogue_smoke_defaults() -> dict[str, object]:
+    defaults = RUNTIME_READINESS_MATRIX_POLICY.get("dialogueSmokeDefaults")
+    if isinstance(defaults, dict):
+        return defaults
+    return {
+        "providerOrderEnv": "deterministic",
+        "limitKeywords": 3,
+        "locale": "zh-TW",
+        "speechContextMode": "life_chat",
+        "llmModelPreset": "fallback_chain",
+        "maxChars": 90,
+    }
+
+
+def readiness_status_policy() -> dict[str, object]:
+    policy = RUNTIME_READINESS_MATRIX_POLICY.get("statusPolicy")
+    if isinstance(policy, dict):
+        return policy
+    return {
+        "failStatus": "fail",
+        "warnStatus": "warn",
+        "passStatus": "pass",
+        "failIf": ["missingPersona", "noContext", "noKeywordCategory", "noUsedEvidenceRef"],
+        "warnIf": ["fallbackUsed", "qualityWarnings"],
+    }
+
+
+def effective_limit_keywords(cli_value: int | None) -> int:
+    if cli_value is not None:
+        return cli_value
+    try:
+        return int(dialogue_smoke_defaults().get("limitKeywords", 3))
+    except (TypeError, ValueError):
+        return 3
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build multi-general runtime readiness matrix from NPC brain facade.")
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--general-id", action="append", default=[])
     parser.add_argument("--general-id-file", default=None)
-    parser.add_argument("--limit-keywords", type=int, default=3)
+    parser.add_argument("--limit-keywords", type=int, default=None)
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--runtime-readiness-policy", default=None, help="Override policy-runtime-readiness-matrix.json path")
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -125,11 +178,22 @@ def classify_status(
     fallback_used: bool,
     quality_warnings: list[str],
 ) -> str:
-    if not persona_ready or context_count <= 0 or keyword_category_count <= 0 or used_evidence_ref_count <= 0:
-        return "fail"
-    if fallback_used or quality_warnings:
-        return "warn"
-    return "pass"
+    policy = readiness_status_policy()
+    fail_flags = {
+        "missingPersona": not persona_ready,
+        "noContext": context_count <= 0,
+        "noKeywordCategory": keyword_category_count <= 0,
+        "noUsedEvidenceRef": used_evidence_ref_count <= 0,
+    }
+    warn_flags = {
+        "fallbackUsed": fallback_used,
+        "qualityWarnings": bool(quality_warnings),
+    }
+    if any(fail_flags.get(str(key), False) for key in policy.get("failIf", [])):
+        return str(policy.get("failStatus") or "fail")
+    if any(warn_flags.get(str(key), False) for key in policy.get("warnIf", [])):
+        return str(policy.get("warnStatus") or "warn")
+    return str(policy.get("passStatus") or "pass")
 
 
 def row_for_general(service: NpcDialogueService, general_id: str, limit_keywords: int) -> dict:
@@ -150,10 +214,10 @@ def row_for_general(service: NpcDialogueService, general_id: str, limit_keywords
             generalId=general_id,
             contextKey=selected_context.contextKey if selected_context else None,
             selectedKeywordKeys=selected_keyword_keys,
-            locale="zh-TW",
-            speechContextMode="life_chat",
-            llmModelPreset="fallback_chain",
-            maxChars=90,
+            locale=str(dialogue_smoke_defaults().get("locale") or "zh-TW"),
+            speechContextMode=str(dialogue_smoke_defaults().get("speechContextMode") or "life_chat"),
+            llmModelPreset=str(dialogue_smoke_defaults().get("llmModelPreset") or "fallback_chain"),
+            maxChars=int(dialogue_smoke_defaults().get("maxChars") or 90),
         )
     )
     quality_warnings = list(response.qualityWarnings or [])
@@ -250,7 +314,14 @@ def render_report(payload: dict) -> str:
 
 def main() -> None:
     args = parse_args()
-    os.environ["NPC_LLM_PROVIDER_ORDER"] = "deterministic"
+    policy = load_runtime_readiness_matrix_policy(
+        args.governance_root,
+        runtime_readiness_policy=args.runtime_readiness_policy,
+    )
+    apply_runtime_readiness_matrix_policy(policy)
+    provider_order = str(dialogue_smoke_defaults().get("providerOrderEnv") or "deterministic")
+    if provider_order:
+        os.environ["NPC_LLM_PROVIDER_ORDER"] = provider_order
     output_root = Path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
     output_json = output_root / "multi-general-readiness.json"
@@ -261,7 +332,7 @@ def main() -> None:
     general_ids = unique([*(read_general_ids(Path(args.general_id_file)) if args.general_id_file else []), *args.general_id])
     if not general_ids:
         general_ids = DEFAULT_GENERAL_IDS
-    rows = [row_for_general(service, general_id, args.limit_keywords) for general_id in general_ids]
+    rows = [row_for_general(service, general_id, effective_limit_keywords(args.limit_keywords)) for general_id in general_ids]
     status_counts: dict[str, int] = {}
     for row in rows:
         status_counts[row["status"]] = status_counts.get(row["status"], 0) + 1
@@ -283,4 +354,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SanguoGovernanceError as exc:
+        print(f"[build_runtime_readiness_matrix] {exc}", file=sys.stderr)
+        raise SystemExit(1)

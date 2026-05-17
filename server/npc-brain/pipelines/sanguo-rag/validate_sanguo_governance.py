@@ -35,6 +35,7 @@ from sanguo_governance_loader import (
     load_runtime_general_profile_export_policy,
     load_runtime_profile_item_cue_rules,
     load_runtime_profile_label_catalog,
+    load_runtime_readiness_matrix_policy,
     load_runtime_relationship_refinement_rules,
     load_runtime_voice_presets,
     load_source_event_packet_policy,
@@ -152,6 +153,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     npc_dialogue_policy = load_npc_dialogue_runtime_service_policy(root)
     npc_dialogue_presets = load_npc_dialogue_llm_model_presets(root)
     npc_dialogue_cues = load_npc_dialogue_runtime_cue_rules(root)
+    runtime_readiness_policy = load_runtime_readiness_matrix_policy(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -798,6 +800,32 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if missing_npc_cues:
         raise SanguoGovernanceError(f"rule-npc-dialogue-runtime-cues missing rules: {', '.join(missing_npc_cues)}")
 
+
+
+    readiness_general_ids = [str(item).strip() for item in runtime_readiness_policy.get("defaultGeneralIds") or []]
+    if not readiness_general_ids or any(not item for item in readiness_general_ids):
+        raise SanguoGovernanceError("policy-runtime-readiness-matrix defaultGeneralIds must be non-empty strings")
+    if len(set(readiness_general_ids)) != len(readiness_general_ids):
+        raise SanguoGovernanceError("policy-runtime-readiness-matrix defaultGeneralIds cannot contain duplicates")
+    readiness_dialogue_defaults = runtime_readiness_policy.get("dialogueSmokeDefaults") if isinstance(runtime_readiness_policy.get("dialogueSmokeDefaults"), dict) else {}
+    for key in ("providerOrderEnv", "locale", "speechContextMode", "llmModelPreset"):
+        if not str(readiness_dialogue_defaults.get(key) or "").strip():
+            raise SanguoGovernanceError(f"policy-runtime-readiness-matrix dialogueSmokeDefaults.{key} cannot be blank")
+    if int(readiness_dialogue_defaults.get("limitKeywords") or 0) <= 0 or int(readiness_dialogue_defaults.get("maxChars") or 0) <= 0:
+        raise SanguoGovernanceError("policy-runtime-readiness-matrix dialogueSmokeDefaults limits must be positive")
+    readiness_status_policy = runtime_readiness_policy.get("statusPolicy") if isinstance(runtime_readiness_policy.get("statusPolicy"), dict) else {}
+    for key in ("failStatus", "warnStatus", "passStatus"):
+        if not str(readiness_status_policy.get(key) or "").strip():
+            raise SanguoGovernanceError(f"policy-runtime-readiness-matrix statusPolicy.{key} cannot be blank")
+    allowed_fail_gates = {"missingPersona", "noContext", "noKeywordCategory", "noUsedEvidenceRef"}
+    allowed_warn_gates = {"fallbackUsed", "qualityWarnings"}
+    fail_gates = {str(item).strip() for item in readiness_status_policy.get("failIf") or []}
+    warn_gates = {str(item).strip() for item in readiness_status_policy.get("warnIf") or []}
+    if not fail_gates or fail_gates - allowed_fail_gates:
+        raise SanguoGovernanceError(f"policy-runtime-readiness-matrix invalid fail gates: {sorted(fail_gates - allowed_fail_gates)}")
+    if not warn_gates or warn_gates - allowed_warn_gates:
+        raise SanguoGovernanceError(f"policy-runtime-readiness-matrix invalid warn gates: {sorted(warn_gates - allowed_warn_gates)}")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -838,6 +866,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "npcDialogueLlmModelPresetCount": len(npc_dialogue_presets),
         "npcDialogueRuntimeCueRuleCount": len(npc_dialogue_cues),
         "npcDialogueRuntimeCueValueCount": npc_dialogue_term_count,
+        "runtimeReadinessDefaultGeneralCount": len(readiness_general_ids),
+        "runtimeReadinessStatusGateCount": len(fail_gates) + len(warn_gates),
     }
 
 

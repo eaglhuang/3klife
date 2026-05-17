@@ -496,6 +496,21 @@ def load_npc_dialogue_runtime_cue_rules(
     return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "value"))
 
 
+
+def load_runtime_readiness_matrix_policy(
+    root: str | Path | None = None,
+    *,
+    runtime_readiness_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(runtime_readiness_policy).resolve()
+        if runtime_readiness_policy
+        else _path(base, "policies", "policy-runtime-readiness-matrix.json")
+    )
+    return read_governance_json(path, required_id="Policy_RuntimeReadinessMatrix_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
@@ -522,6 +537,7 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-external-source-benchmark.json", "consumer": "benchmark_external_source.py"},
         {"section": "policies", "file": "policy-event-review-context.json", "consumer": "enrich_event_review_context.py"},
         {"section": "policies", "file": "policy-npc-dialogue-runtime-service.json", "consumer": "npc_dialogue_service.py"},
+        {"section": "policies", "file": "policy-runtime-readiness-matrix.json", "consumer": "build_runtime_readiness_matrix.py"},
         {"section": "rules", "file": "rule-basic-profile-cues.json", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "rules", "file": "rule-location-extraction.json", "consumer": "run_progress_advancement_loop.py"},
         {"section": "rules", "file": "rule-evidence-seed-keyword-cues.jsonl", "consumer": "extract_*_evidence_seeds.py"},

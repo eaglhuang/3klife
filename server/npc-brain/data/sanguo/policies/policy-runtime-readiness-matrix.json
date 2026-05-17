@@ -1,0 +1,39 @@
+{
+  "id": "Policy_RuntimeReadinessMatrix_P1",
+  "description": "Externalized deterministic smoke defaults for build_runtime_readiness_matrix.py. Values are copied from Phase 11 baseline.",
+  "defaultGeneralIds": [
+    "cao-cao",
+    "guan-yu",
+    "liu-bei",
+    "lu-bu",
+    "sun-quan",
+    "wei-yan",
+    "yuan-shao",
+    "zhang-fei",
+    "zhao-yun",
+    "zhuge-liang"
+  ],
+  "dialogueSmokeDefaults": {
+    "providerOrderEnv": "deterministic",
+    "limitKeywords": 3,
+    "locale": "zh-TW",
+    "speechContextMode": "life_chat",
+    "llmModelPreset": "fallback_chain",
+    "maxChars": 90
+  },
+  "statusPolicy": {
+    "failStatus": "fail",
+    "warnStatus": "warn",
+    "passStatus": "pass",
+    "failIf": [
+      "missingPersona",
+      "noContext",
+      "noKeywordCategory",
+      "noUsedEvidenceRef"
+    ],
+    "warnIf": [
+      "fallbackUsed",
+      "qualityWarnings"
+    ]
+  }
+}
