@@ -3,7 +3,7 @@ doc_id: doc_other_0159
 task_id: TASK-APO-0008
 title: atm welcome 一鍵入口
 milestone: M7
-status: open
+status: done
 blocked_by: [TASK-APO-0003, TASK-APO-0004]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md
@@ -27,6 +27,8 @@ non_goals:
   - 不處理 npm publish
 created_at: 2026-05-17T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+started_at: 2026-05-17T15:00:00+08:00
+started_by_agent: vs-insiders-claude-sonnet-4.6
 ---
 
 # TASK-APO-0008 — atm welcome 一鍵入口
@@ -54,11 +56,11 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收條件
 
-- [ ] `packages/cli/src/commands/welcome.ts` 存在。
-- [ ] `atm welcome` 印出 ATMChart 摘要 + agent-pack 狀態 + `atm next --json` 建議。
-- [ ] `--dry-run` 不寫入任何檔案。
-- [ ] `.atm/runtime/welcome.lineage.json` 記錄首次 welcome 時間戳。
-- [ ] welcome 不取代 `atm next`：印完摘要後仍提示 agent 呼叫 `atm next --json`。
+- [x] `packages/cli/src/commands/welcome.ts` 存在。
+- [x] `atm welcome` 印出 ATMChart 摘要 + agent-pack 狀態 + `atm next --json` 建議。
+- [x] `--dry-run` 不寫入任何檔案。
+- [x] `.atm/runtime/welcome.lineage.json` 記錄首次 welcome 時間戳。
+- [x] welcome 不取代 `atm next`：印完摘要後仍提示 agent 呼叫 `atm next --json`。
 
 ## 影響檔案
 
@@ -82,12 +84,13 @@ cmd /c npm run validate:standard
 
 ## Checklist
 
-- [ ] command
-- [ ] dry-run
-- [ ] lineage schema
-- [ ] next action prompt
-- [ ] e2e example
+- [x] command
+- [x] dry-run
+- [x] lineage schema
+- [x] next action prompt
+- [x] e2e example
 
 ## Notes
 
 2026-05-17 | 狀態: open | 驗證: pending | 變更: 依計畫書 §15/M7 開卡，採 ATMChart 新命名 | 阻塞: TASK-APO-0003 / TASK-APO-0004
+2026-05-17 | 狀態: done | 驗證: validate:standard 38/38 pass | 變更: 實作已存在於 upstream commit 809723a (Add ATM onboarding constitution flow)； welcome.ts, welcome-lineage.schema.json, command-spec, validate-cli.ts tests, examples/agent-onboarding-flow/run.ts 全間完整 | 阻塞: none
