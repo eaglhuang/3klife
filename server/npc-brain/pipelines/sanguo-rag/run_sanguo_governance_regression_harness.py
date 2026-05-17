@@ -8,6 +8,7 @@ from typing import Any
 
 from sanguo_governance_loader import (
     SanguoGovernanceError,
+    load_governance_release_readiness_policy,
     load_governance_regression_harness_policy,
     load_governance_validation_stabilization_policy,
     resolve_governance_root,
@@ -27,10 +28,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
     parser.add_argument("--regression-harness-policy", default=None, help="Override policy-governance-regression-harness.json path")
     parser.add_argument("--validation-policy", default=None, help="Override policy-governance-validation-stabilization.json path")
+    parser.add_argument("--release-readiness-policy", default=None, help="Override policy-governance-release-readiness.json path")
     parser.add_argument("--output-root", default=None, help="Output root for harness reports")
     parser.add_argument("--strict-phase-plans", action="store_true", help="Fail if a planned phase document is missing")
     parser.add_argument("--strict-validation-coverage", action="store_true", help="Fail if required validation summary keys are missing")
     parser.add_argument("--strict-fixtures", action="store_true", help="Fail if fixture manifests or referenced files are missing")
+    parser.add_argument("--strict-release-readiness", action="store_true", help="Fail if release readiness checks are not satisfied")
     parser.add_argument("--no-write", action="store_true", help="Print JSON payload without writing report files")
     return parser.parse_args()
 
@@ -106,6 +109,57 @@ def fixture_matrix(policy: dict[str, Any]) -> list[dict[str, Any]]:
     return rows
 
 
+def handoff_index(expected_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    sections: dict[str, list[dict[str, str]]] = {}
+    consumers: dict[str, list[dict[str, str]]] = {}
+    for row in expected_rows:
+        section = str(row.get("section") or "")
+        consumer = str(row.get("consumer") or "")
+        file_ref = f"{section}/{row.get('file')}"
+        sections.setdefault(section, []).append(
+            {"file": str(row.get("file") or ""), "consumer": consumer}
+        )
+        consumers.setdefault(consumer, []).append(
+            {"section": section, "file": str(row.get("file") or ""), "fileRef": file_ref}
+        )
+    return {
+        "sectionCount": len(sections),
+        "consumerCount": len(consumers),
+        "sections": {key: sorted(value, key=lambda item: item["file"]) for key, value in sorted(sections.items())},
+        "consumers": {key: sorted(value, key=lambda item: item["fileRef"]) for key, value in sorted(consumers.items())},
+    }
+
+
+def release_readiness(policy: dict[str, Any], summary: dict[str, Any], handoff: dict[str, Any]) -> dict[str, Any]:
+    checks: list[dict[str, Any]] = []
+    for key in policy.get("requiredHarnessSummaryKeys") or []:
+        key_text = str(key).strip()
+        if not key_text:
+            continue
+        max_allowed = float((policy.get("maxAllowed") or {}).get(key_text, 0))
+        actual = float(summary.get(key_text, 0))
+        checks.append(
+            {
+                "key": key_text,
+                "actual": actual,
+                "maxAllowed": max_allowed,
+                "ok": actual <= max_allowed,
+            }
+        )
+    required_sections = [str(item).strip() for item in policy.get("requiredHandoffSections") or [] if str(item).strip()]
+    present_sections = set((handoff.get("sections") or {}).keys())
+    missing_sections = [section for section in required_sections if section not in present_sections]
+    failed_checks = [row for row in checks if not row["ok"]]
+    return {
+        "status": "ok" if not failed_checks and not missing_sections else "failed",
+        "checkCount": len(checks),
+        "failureCount": len(failed_checks),
+        "missingSections": missing_sections,
+        "missingSectionCount": len(missing_sections),
+        "checks": checks,
+    }
+
+
 def render_markdown(payload: dict[str, Any]) -> str:
     lines = [
         "# Sanguo Governance Regression Harness",
@@ -118,6 +172,8 @@ def render_markdown(payload: dict[str, Any]) -> str:
         f"- Missing Validation Summary Keys: `{payload['summary']['missingValidationSummaryKeyCount']}`",
         f"- Fixture Manifests: `{payload['summary']['fixtureManifestCount']}`",
         f"- Missing Fixture Files: `{payload['summary']['missingFixtureFileCount']}`",
+        f"- Handoff Consumers: `{payload['summary']['handoffConsumerCount']}`",
+        f"- Release Readiness: `{payload['releaseReadiness']['status']}`",
         "",
         "## Phase Matrix",
         "",
@@ -143,6 +199,19 @@ def render_markdown(payload: dict[str, Any]) -> str:
             lines.append(f"- Manifest Error: `{row['manifestError']}`")
         for missing in row["missingFiles"]:
             lines.append(f"- Missing Fixture File: `{missing}`")
+    lines.extend(["", "## Handoff Index", ""])
+    for section, rows in payload["handoffIndex"]["sections"].items():
+        lines.append(f"- Section `{section}`: `{len(rows)}` files")
+    lines.extend(["", "## Release Readiness", ""])
+    readiness = payload["releaseReadiness"]
+    lines.append(f"- Status: `{readiness['status']}`")
+    lines.append(f"- Checks: `{readiness['checkCount']}`")
+    lines.append(f"- Failures: `{readiness['failureCount']}`")
+    if readiness["missingSections"]:
+        for section in readiness["missingSections"]:
+            lines.append(f"- Missing Handoff Section: `{section}`")
+    else:
+        lines.append("- Missing Handoff Section: `none`")
     lines.extend(["", "## Governance Consumers", ""])
     for row in payload["expectedGovernanceFiles"]:
         lines.append(f"- `{row['section']}/{row['file']}` -> {row['consumer']}")
@@ -162,6 +231,10 @@ def main() -> None:
             root,
             governance_validation_policy=args.validation_policy,
         )
+        release_policy = load_governance_release_readiness_policy(
+            root,
+            governance_release_readiness_policy=args.release_readiness_policy,
+        )
         expected_rows = validate_expected_files(root)
         shape_summary = validate_minimum_shapes(root)
     except SanguoGovernanceError as exc:
@@ -174,6 +247,23 @@ def main() -> None:
     fixture_rows = fixture_matrix(policy)
     missing_fixture_count = sum(len(row["missingFiles"]) for row in fixture_rows)
     fixture_error_count = sum(1 for row in fixture_rows if row.get("manifestError"))
+    handoff = handoff_index(expected_rows)
+    summary = {
+        "expectedFileCount": len(expected_rows),
+        "phasePlanCount": len(phase_rows),
+        "missingPhasePlanCount": len(missing_phase_plans),
+        "missingValidationSummaryKeyCount": coverage["missingSummaryKeyCount"],
+        "fixtureManifestCount": len(fixture_rows),
+        "missingFixtureFileCount": missing_fixture_count,
+        "fixtureManifestErrorCount": fixture_error_count,
+        "minimumShapeMetricCount": len(shape_summary),
+        "handoffConsumerCount": handoff["consumerCount"],
+        "handoffSectionCount": handoff["sectionCount"],
+    }
+    readiness = release_readiness(release_policy, summary, handoff)
+    summary["releaseReadinessCheckCount"] = readiness["checkCount"]
+    summary["releaseReadinessFailureCount"] = readiness["failureCount"]
+    summary["releaseReadinessMissingSectionCount"] = readiness["missingSectionCount"]
     status = "ok"
     if args.strict_phase_plans and missing_phase_plans:
         status = "failed"
@@ -181,23 +271,18 @@ def main() -> None:
         status = "failed"
     if args.strict_fixtures and (missing_fixture_count or fixture_error_count):
         status = "failed"
+    if args.strict_release_readiness and readiness["status"] != "ok":
+        status = "failed"
     payload = {
         "generatedAt": utc_now(),
         "status": status,
-        "summary": {
-            "expectedFileCount": len(expected_rows),
-            "phasePlanCount": len(phase_rows),
-            "missingPhasePlanCount": len(missing_phase_plans),
-            "missingValidationSummaryKeyCount": coverage["missingSummaryKeyCount"],
-            "fixtureManifestCount": len(fixture_rows),
-            "missingFixtureFileCount": missing_fixture_count,
-            "fixtureManifestErrorCount": fixture_error_count,
-            "minimumShapeMetricCount": len(shape_summary),
-        },
+        "summary": summary,
         "sensors": policy.get("requiredSensorNames") or [],
         "phaseMatrix": phase_rows,
         "validationCoverage": coverage,
         "fixtureMatrix": fixture_rows,
+        "handoffIndex": handoff,
+        "releaseReadiness": readiness,
         "expectedGovernanceFiles": expected_rows,
         "minimumShapeSummary": shape_summary,
     }

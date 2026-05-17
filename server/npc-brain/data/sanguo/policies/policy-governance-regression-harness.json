@@ -6,6 +6,8 @@
     "minimum-shapes",
     "phase-plan-matrix",
     "fixture-manifests",
+    "handoff-index",
+    "release-readiness",
     "encoding"
   ],
   "defaultOutputRoot": "local/codex-smoke/governance-regression",
@@ -27,6 +29,8 @@
     {"phase": 28, "name": "PostgreSQL State Store Evaluation", "plan": "refactor-phase28-plan.zh-TW.md"},
     {"phase": 29, "name": "Production Vector Ingestion Hardening", "plan": "refactor-phase29-plan.zh-TW.md"},
     {"phase": 30, "name": "Governance Validation Stabilization", "plan": "refactor-phase30-plan.zh-TW.md"},
-    {"phase": 31, "name": "Regression Fixture Consolidation", "plan": "refactor-phase31-plan.zh-TW.md"}
+    {"phase": 31, "name": "Regression Fixture Consolidation", "plan": "refactor-phase31-plan.zh-TW.md"},
+    {"phase": 32, "name": "Governance Handoff Index", "plan": "refactor-phase32-plan.zh-TW.md"},
+    {"phase": 33, "name": "Governance Release Readiness Gate", "plan": "refactor-phase33-plan.zh-TW.md"}
   ]
 }

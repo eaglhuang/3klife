@@ -1,0 +1,28 @@
+{
+  "id": "Policy_GovernanceReleaseReadiness_P1",
+  "description": "Defines non-runtime release readiness gates for the Sanguo governance regression harness.",
+  "requiredHarnessSummaryKeys": [
+    "missingPhasePlanCount",
+    "missingValidationSummaryKeyCount",
+    "missingFixtureFileCount",
+    "fixtureManifestErrorCount"
+  ],
+  "maxAllowed": {
+    "missingPhasePlanCount": 0,
+    "missingValidationSummaryKeyCount": 0,
+    "missingFixtureFileCount": 0,
+    "fixtureManifestErrorCount": 0
+  },
+  "requiredHandoffSections": [
+    "policies",
+    "rules",
+    "catalogs",
+    "schemas"
+  ],
+  "recommendedStrictFlags": [
+    "strict-phase-plans",
+    "strict-validation-coverage",
+    "strict-fixtures",
+    "strict-release-readiness"
+  ]
+}
