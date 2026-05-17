@@ -1,0 +1,8 @@
+{"id": "Rule_RuntimeProfileItemCues_P1_001", "consumer": "export_general_runtime_profile.py", "term": "寶刀", "keywordKey": "treasured-saber", "displayLabel": "寶刀"}
+{"id": "Rule_RuntimeProfileItemCues_P1_002", "consumer": "export_general_runtime_profile.py", "term": "青龍寶刀", "keywordKey": "green-dragon-blade", "displayLabel": "青龍刀"}
+{"id": "Rule_RuntimeProfileItemCues_P1_003", "consumer": "export_general_runtime_profile.py", "term": "青龍刀", "keywordKey": "green-dragon-blade", "displayLabel": "青龍刀"}
+{"id": "Rule_RuntimeProfileItemCues_P1_004", "consumer": "export_general_runtime_profile.py", "term": "青龍偃月刀", "keywordKey": "green-dragon-blade", "displayLabel": "青龍刀"}
+{"id": "Rule_RuntimeProfileItemCues_P1_005", "consumer": "export_general_runtime_profile.py", "term": "赤兔", "keywordKey": "red-hare", "displayLabel": "赤兔馬"}
+{"id": "Rule_RuntimeProfileItemCues_P1_006", "consumer": "export_general_runtime_profile.py", "term": "赤兔馬", "keywordKey": "red-hare", "displayLabel": "赤兔馬"}
+{"id": "Rule_RuntimeProfileItemCues_P1_007", "consumer": "export_general_runtime_profile.py", "term": "鸚鵡戰袍", "keywordKey": "parrot-battle-robe", "displayLabel": "鸚鵡戰袍"}
+{"id": "Rule_RuntimeProfileItemCues_P1_008", "consumer": "export_general_runtime_profile.py", "term": "戰袍", "keywordKey": "battle-robe", "displayLabel": "戰袍"}

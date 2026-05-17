@@ -1,0 +1,1 @@
+{"id": "Rule_RuntimeRelationshipRefinement_P1_RULER_SUBJECT_AUTHORITY_TERMS", "consumer": "export_general_runtime_profile.py", "constantName": "RULER_SUBJECT_AUTHORITY_TERMS", "kind": "termList", "terms": ["麾下", "效忠", "親信", "亲信", "侍衛", "侍卫", "部下", "部將", "部将", "主公", "臣", "君"]}

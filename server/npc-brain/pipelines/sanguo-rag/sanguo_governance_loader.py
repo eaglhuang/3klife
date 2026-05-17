@@ -422,6 +422,49 @@ def load_runtime_voice_presets(
     return read_governance_jsonl(path, required_fields=("id", "generalId", "voiceStyle", "safeFallbackLine", "taboos"))
 
 
+
+def load_runtime_general_profile_export_policy(
+    root: str | Path | None = None,
+    *,
+    runtime_profile_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(runtime_profile_policy).resolve()
+        if runtime_profile_policy
+        else _path(base, "policies", "policy-runtime-general-profile-export.json")
+    )
+    return read_governance_json(path, required_id="Policy_RuntimeGeneralProfileExport_P1")
+
+
+def load_runtime_profile_item_cue_rules(
+    root: str | Path | None = None,
+    *,
+    runtime_profile_item_cue_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(runtime_profile_item_cue_rules).resolve()
+        if runtime_profile_item_cue_rules
+        else _path(base, "rules", "rule-runtime-profile-item-cues.jsonl")
+    )
+    return read_governance_jsonl(path, required_fields=("id", "consumer", "term", "keywordKey", "displayLabel"))
+
+
+def load_runtime_relationship_refinement_rules(
+    root: str | Path | None = None,
+    *,
+    runtime_relationship_refinement_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(runtime_relationship_refinement_rules).resolve()
+        if runtime_relationship_refinement_rules
+        else _path(base, "rules", "rule-runtime-relationship-refinement.jsonl")
+    )
+    return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "terms"))
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

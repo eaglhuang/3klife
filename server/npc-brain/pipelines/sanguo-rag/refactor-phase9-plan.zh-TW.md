@@ -16,3 +16,10 @@ Phase 9 externalizes deterministic runtime profile export governance from `expor
 - governance validator dry-run summary includes Phase 9 counts.
 - smoke regression compares persona, keywords, relationships, and summary markdown while ignoring generatedAt/output path text.
 - missing governance override paths fail fast without Python traceback.
+
+
+## Slice 2 Completion
+
+- Externalizes runtime profile item cue rules.
+- Externalizes relationship export/refinement policy.
+- Keeps runtime persona, keywords, relationships, and markdown output schema unchanged.

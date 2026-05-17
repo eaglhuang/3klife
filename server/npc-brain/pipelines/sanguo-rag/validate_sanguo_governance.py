@@ -29,7 +29,10 @@ from sanguo_governance_loader import (
     load_knowledge_completion_policy,
     load_progress_runner_governance,
     load_relationship_runtime_canon_policy,
+    load_runtime_general_profile_export_policy,
+    load_runtime_profile_item_cue_rules,
     load_runtime_profile_label_catalog,
+    load_runtime_relationship_refinement_rules,
     load_runtime_voice_presets,
     load_source_event_packet_policy,
     load_stable_bootstrap_governance,
@@ -140,6 +143,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     event_review_context_cues = load_event_review_context_cue_rules(root)
     runtime_label_catalog = load_runtime_profile_label_catalog(root)
     runtime_voice_presets = load_runtime_voice_presets(root)
+    runtime_profile_policy = load_runtime_general_profile_export_policy(root)
+    runtime_profile_item_cues = load_runtime_profile_item_cue_rules(root)
+    runtime_relationship_refinement_rules = load_runtime_relationship_refinement_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -664,6 +670,49 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
             if not isinstance(values, list) or not values or any(not str(item).strip() for item in values):
                 raise SanguoGovernanceError(f"catalog-runtime-voice-presets {general_id} {key} must be non-empty strings")
 
+
+    graph_types = [str(item).strip() for item in runtime_profile_policy.get("graphRelationshipTypes") or []]
+    semantic_types = [str(item).strip() for item in runtime_profile_policy.get("semanticRelationshipTypes") or []]
+    if not graph_types or not semantic_types:
+        raise SanguoGovernanceError("policy-runtime-general-profile-export graph/semantic relationship types cannot be empty")
+    if any(not item for item in [*graph_types, *semantic_types]):
+        raise SanguoGovernanceError("policy-runtime-general-profile-export has blank relationship type")
+    if len(set(graph_types)) != len(graph_types) or len(set(semantic_types)) != len(semantic_types):
+        raise SanguoGovernanceError("policy-runtime-general-profile-export has duplicate relationship type")
+    missing_semantic_graph_types = sorted(set(graph_types) - set(semantic_types))
+    if missing_semantic_graph_types:
+        raise SanguoGovernanceError(f"policy-runtime-general-profile-export graph types missing from semantic set: {missing_semantic_graph_types}")
+    taxonomy_policy = runtime_profile_policy.get("relationshipTaxonomyPolicy")
+    if not isinstance(taxonomy_policy, dict) or any(not str(value).strip() for value in taxonomy_policy.values()):
+        raise SanguoGovernanceError("policy-runtime-general-profile-export relationshipTaxonomyPolicy must be non-empty strings")
+    item_terms: set[str] = set()
+    for row in runtime_profile_item_cues:
+        if str(row.get("consumer") or "") != "export_general_runtime_profile.py":
+            raise SanguoGovernanceError("rule-runtime-profile-item-cues invalid consumer")
+        values = [str(row.get(key) or "").strip() for key in ("term", "keywordKey", "displayLabel")]
+        if any(not value for value in values):
+            raise SanguoGovernanceError("rule-runtime-profile-item-cues has blank field")
+        if values[0] in item_terms:
+            raise SanguoGovernanceError(f"rule-runtime-profile-item-cues duplicate term: {values[0]}")
+        item_terms.add(values[0])
+    if not item_terms:
+        raise SanguoGovernanceError("rule-runtime-profile-item-cues cannot be empty")
+    refinement_by_name: dict[str, dict[str, Any]] = {}
+    for row in runtime_relationship_refinement_rules:
+        if str(row.get("consumer") or "") != "export_general_runtime_profile.py":
+            raise SanguoGovernanceError("rule-runtime-relationship-refinement invalid consumer")
+        constant_name = str(row.get("constantName") or "").strip()
+        if constant_name in refinement_by_name:
+            raise SanguoGovernanceError(f"rule-runtime-relationship-refinement duplicate constantName: {constant_name}")
+        refinement_by_name[constant_name] = row
+        terms = [str(term).strip() for term in row.get("terms") or []]
+        if str(row.get("kind") or "") != "termList" or not terms or any(not term for term in terms):
+            raise SanguoGovernanceError(f"rule-runtime-relationship-refinement {constant_name} terms must be non-empty strings")
+        if len(set(terms)) != len(terms):
+            raise SanguoGovernanceError(f"rule-runtime-relationship-refinement {constant_name} has duplicate terms")
+    if "RULER_SUBJECT_AUTHORITY_TERMS" not in refinement_by_name:
+        raise SanguoGovernanceError("rule-runtime-relationship-refinement missing RULER_SUBJECT_AUTHORITY_TERMS")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -699,6 +748,8 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "eventReviewContextAliasCount": alias_count,
         "runtimeProfileLabelCount": runtime_label_count,
         "runtimeVoicePresetCount": len(runtime_voice_presets),
+        "runtimeProfileItemCueRuleCount": len(runtime_profile_item_cues),
+        "runtimeRelationshipRefinementRuleCount": len(runtime_relationship_refinement_rules),
     }
 
 

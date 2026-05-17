@@ -12,7 +12,10 @@ from sanguo_governance_loader import (
     SanguoGovernanceError,
     default_governance_root,
     load_relationship_runtime_canon_policy,
+    load_runtime_general_profile_export_policy,
+    load_runtime_profile_item_cue_rules,
     load_runtime_profile_label_catalog,
+    load_runtime_relationship_refinement_rules,
     load_runtime_voice_presets,
 )
 
@@ -29,34 +32,9 @@ DEFAULT_GOVERNANCE_ROOT = default_governance_root()
 TYPE_LABELS: dict[str, str] = {}
 BOOTSTRAP_EVENT_LABELS: dict[str, str] = {}
 TAG_LABELS: dict[str, str] = {}
-ITEM_TERMS = {
-    "寶刀": ("treasured-saber", "寶刀"),
-    "青龍寶刀": ("green-dragon-blade", "青龍刀"),
-    "青龍刀": ("green-dragon-blade", "青龍刀"),
-    "青龍偃月刀": ("green-dragon-blade", "青龍刀"),
-    "赤兔": ("red-hare", "赤兔馬"),
-    "赤兔馬": ("red-hare", "赤兔馬"),
-    "鸚鵡戰袍": ("parrot-battle-robe", "鸚鵡戰袍"),
-    "戰袍": ("battle-robe", "戰袍"),
-}
-GRAPH_RELATIONSHIP_TYPES = {
-    "ruler_subject",
-    "patron_client",
-    "mentor_student",
-    "betrayal_surrender",
-    "enemy_rival",
-    "alliance_oath",
-}
-SEMANTIC_RELATIONSHIP_TYPES = GRAPH_RELATIONSHIP_TYPES | {
-    "battlefield_contact",
-    "political_contact",
-    "battlefield_opponent",
-    "intimidates_enemy",
-    "protects_family",
-    "strategy_pressure",
-    "battle_ally",
-    "loyal_oath",
-}
+ITEM_TERMS: dict[str, tuple[str, str]] = {}
+GRAPH_RELATIONSHIP_TYPES: set[str] = set()
+SEMANTIC_RELATIONSHIP_TYPES: set[str] = set()
 STABLE_RELATIONSHIP_SOURCE_LAYER = "stable-bootstrap-seed"
 STABLE_RELATIONSHIP_SOURCE_LAYERS = {
     STABLE_RELATIONSHIP_SOURCE_LAYER,
@@ -65,20 +43,44 @@ STABLE_RELATIONSHIP_SOURCE_LAYERS = {
     "claim-graph-a-romance",
 }
 A_CANON_RELATIONSHIP_GRADES = {"A-history", "A-history-cross-source", "A-romance"}
-RULER_SUBJECT_AUTHORITY_TERMS = (
-    "麾下",
-    "效忠",
-    "親信",
-    "亲信",
-    "侍衛",
-    "侍卫",
-    "部下",
-    "部將",
-    "部将",
-    "主公",
-    "臣",
-    "君",
-)
+RULER_SUBJECT_AUTHORITY_TERMS: tuple[str, ...] = ()
+
+RUNTIME_GENERAL_PROFILE_EXPORT_POLICY: dict[str, Any] = {}
+
+
+def apply_runtime_profile_relationship_and_keyword_governance(
+    policy: dict[str, Any],
+    item_cue_rules: list[dict[str, Any]],
+    relationship_refinement_rules: list[dict[str, Any]],
+) -> None:
+    global RUNTIME_GENERAL_PROFILE_EXPORT_POLICY, GRAPH_RELATIONSHIP_TYPES, SEMANTIC_RELATIONSHIP_TYPES
+    global ITEM_TERMS, RULER_SUBJECT_AUTHORITY_TERMS
+    RUNTIME_GENERAL_PROFILE_EXPORT_POLICY = dict(policy)
+    GRAPH_RELATIONSHIP_TYPES = {str(item).strip() for item in policy.get("graphRelationshipTypes") or [] if str(item).strip()}
+    SEMANTIC_RELATIONSHIP_TYPES = {str(item).strip() for item in policy.get("semanticRelationshipTypes") or [] if str(item).strip()}
+    ITEM_TERMS = {
+        str(row.get("term") or ""): (str(row.get("keywordKey") or ""), str(row.get("displayLabel") or ""))
+        for row in item_cue_rules
+        if row.get("term") and row.get("keywordKey") and row.get("displayLabel")
+    }
+    by_name = {str(row.get("constantName") or ""): row for row in relationship_refinement_rules}
+    RULER_SUBJECT_AUTHORITY_TERMS = tuple(
+        str(term) for term in by_name.get("RULER_SUBJECT_AUTHORITY_TERMS", {}).get("terms") or []
+    )
+
+
+def relationship_taxonomy_policy() -> dict[str, str]:
+    policy = RUNTIME_GENERAL_PROFILE_EXPORT_POLICY.get("relationshipTaxonomyPolicy")
+    if isinstance(policy, dict):
+        return {str(key): str(value) for key, value in policy.items()}
+    return {
+        "commands": "not exported as final type; refined into semantic runtime labels when possible",
+        "fallbackType": "battlefield_contact",
+        "directPairGate": "semantic relationship edges must mention both endpoints unless they come from stable bootstrap",
+        "stableConflictPolicy": "stable relationship baseline types cannot be overwritten by indirect short evidence",
+        "commandPolicy": "command or dispatch evidence is battlefield contact unless a stable authority baseline or explicit lordship terms exist",
+    }
+
 VOICE_PRESETS: dict[str, dict[str, Any]] = {}
 
 
@@ -111,6 +113,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
     parser.add_argument("--governance-root", default=str(DEFAULT_GOVERNANCE_ROOT))
     parser.add_argument("--relationship-policy", default=None)
+    parser.add_argument("--runtime-profile-policy", default=None)
+    parser.add_argument("--runtime-profile-item-cue-rules", default=None)
+    parser.add_argument("--runtime-relationship-refinement-rules", default=None)
     parser.add_argument("--runtime-profile-label-catalog", default=None)
     parser.add_argument("--runtime-voice-presets", default=None)
     parser.add_argument("--overwrite", action="store_true")
@@ -594,13 +599,7 @@ def build_relationships(
         "typeCounts": dict(sorted(counts.items())),
         "anchors": anchors,
         "rejectedRelationshipEdges": rejected,
-        "taxonomyPolicy": {
-            "commands": "not exported as final type; refined into semantic runtime labels when possible",
-            "fallbackType": "battlefield_contact",
-            "directPairGate": "semantic relationship edges must mention both endpoints unless they come from stable bootstrap",
-            "stableConflictPolicy": "stable relationship baseline types cannot be overwritten by indirect short evidence",
-            "commandPolicy": "command or dispatch evidence is battlefield contact unless a stable authority baseline or explicit lordship terms exist",
-        },
+        "taxonomyPolicy": relationship_taxonomy_policy(),
     }
 
 
@@ -859,6 +858,23 @@ def main() -> None:
             runtime_voice_presets=args.runtime_voice_presets,
         )
         apply_runtime_profile_label_and_voice_governance(runtime_label_catalog, runtime_voice_presets)
+        runtime_profile_policy = load_runtime_general_profile_export_policy(
+            args.governance_root,
+            runtime_profile_policy=args.runtime_profile_policy,
+        )
+        runtime_profile_item_cue_rules = load_runtime_profile_item_cue_rules(
+            args.governance_root,
+            runtime_profile_item_cue_rules=args.runtime_profile_item_cue_rules,
+        )
+        runtime_relationship_refinement_rules = load_runtime_relationship_refinement_rules(
+            args.governance_root,
+            runtime_relationship_refinement_rules=args.runtime_relationship_refinement_rules,
+        )
+        apply_runtime_profile_relationship_and_keyword_governance(
+            runtime_profile_policy,
+            runtime_profile_item_cue_rules,
+            runtime_relationship_refinement_rules,
+        )
         apply_relationship_runtime_canon_policy(args.governance_root, args.relationship_policy)
     except SanguoGovernanceError as exc:
         raise SystemExit(f"[export_general_runtime_profile] FAIL {exc}") from None

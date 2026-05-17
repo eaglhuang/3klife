@@ -1,0 +1,35 @@
+{
+  "id": "Policy_RuntimeGeneralProfileExport_P1",
+  "description": "Runtime profile relationship export policy copied from export_general_runtime_profile.py Phase 9 baseline.",
+  "graphRelationshipTypes": [
+    "alliance_oath",
+    "betrayal_surrender",
+    "enemy_rival",
+    "mentor_student",
+    "patron_client",
+    "ruler_subject"
+  ],
+  "semanticRelationshipTypes": [
+    "alliance_oath",
+    "battle_ally",
+    "battlefield_contact",
+    "battlefield_opponent",
+    "betrayal_surrender",
+    "enemy_rival",
+    "intimidates_enemy",
+    "loyal_oath",
+    "mentor_student",
+    "patron_client",
+    "political_contact",
+    "protects_family",
+    "ruler_subject",
+    "strategy_pressure"
+  ],
+  "relationshipTaxonomyPolicy": {
+    "commands": "not exported as final type; refined into semantic runtime labels when possible",
+    "fallbackType": "battlefield_contact",
+    "directPairGate": "semantic relationship edges must mention both endpoints unless they come from stable bootstrap",
+    "stableConflictPolicy": "stable relationship baseline types cannot be overwritten by indirect short evidence",
+    "commandPolicy": "command or dispatch evidence is battlefield contact unless a stable authority baseline or explicit lordship terms exist"
+  }
+}
