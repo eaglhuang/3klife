@@ -3,7 +3,7 @@ doc_id: doc_other_0154
 task_id: TASK-APO-0003
 title: Claude Code Pack MVP
 milestone: M2
-status: open
+status: done
 blocked_by: [TASK-APO-0002]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md
@@ -26,6 +26,8 @@ non_goals:
   - 不寫死 MRP phase 狀態機
 created_at: 2026-05-17T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+started_at: 2026-05-17T23:30:00+08:00
+started_by_agent: vs-insiders-claude-sonnet-4.6
 ---
 
 # TASK-APO-0003 — Claude Code Pack MVP
@@ -52,11 +54,11 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收條件
 
-- [ ] `packages/agent-pack-claude-code/` 存在，包含 6 個 `*.md.tmpl`。
-- [ ] `node atm.mjs agent-pack install --id claude-code` 在乾淨 repo 產出 6 個 .md + 1 個 manifest。
-- [ ] `node atm.mjs agent-pack uninstall --id claude-code` 後 `git status` 為空（乾淨卸載）。
-- [ ] user-modified fixture 不會被 uninstall 誤刪。
-- [ ] 模板內容只導向 `node atm.mjs next --json` 或 deterministic CLI。
+- [x] `packages/agent-pack-claude-code/` 存在，包含 6 個 `*.md.tmpl`。
+- [x] `node atm.mjs agent-pack install --id claude-code` 在乾淨 repo 產出 6 個 .md + 1 個 manifest。
+- [x] `node atm.mjs agent-pack uninstall --id claude-code` 後 `git status` 為空（乾淨卸載）。
+- [x] user-modified fixture 不會被 uninstall 誤刪。
+- [x] 模板內容只導向 `node atm.mjs next --json` 或 deterministic CLI。
 
 ## 影響檔案
 
@@ -79,12 +81,13 @@ cmd /c npm run validate:standard
 
 ## Checklist
 
-- [ ] pack package
-- [ ] 6 個 templates
-- [ ] install happy path
-- [ ] uninstall clean path
-- [ ] user-modified 保護 fixture
+- [x] pack package
+- [x] 6 個 templates
+- [x] install happy path
+- [x] uninstall clean path
+- [x] user-modified 保護 fixture
 
 ## Notes
 
 2026-05-17 | 狀態: open | 驗證: pending | 變更: 依計畫書 §15/M2 開卡，尚未接手實作 | 阻塞: TASK-APO-0002
+2026-05-18 | 狀態: done | 驗證: schemas ok (51), roundtrip ok (8+11 checks), validate:cli ok (22 commands) | 變更: packages/agent-pack-claude-code (6 templates), install/uninstall disk I/O, diff, pack registry, guardsHash null fallback for non-bootstrapped repos | 阻塞: validate:standard upgrade.json 預存缺陷（out of scope）

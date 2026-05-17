@@ -22,7 +22,7 @@ created_by_agent: vs-insiders-gpt-5.4
 | [TASK-APO-0000](./TASK-APO-0000-doc-finalize.task.md) | 文件定稿與 cross-link | M1 | done | — |
 | [TASK-APO-0001](./TASK-APO-0001-architecture-readme-crosslink.task.md) | 對齊 ATM ARCHITECTURE / README cross-link | M1 | done | 0000 |
 | [TASK-APO-0002](./TASK-APO-0002-agent-pack-sdk-manifest.task.md) | Agent Pack SDK 介面 + manifest schema | M2 | done | 0000 |
-| [TASK-APO-0003](./TASK-APO-0003-claude-code-pack-mvp.task.md) | Claude Code Pack MVP | M2 | open | 0002 |
+| [TASK-APO-0003](./TASK-APO-0003-claude-code-pack-mvp.task.md) | Claude Code Pack MVP | M2 | done | 0002 |
 | [TASK-APO-0004](./TASK-APO-0004-atmchart-render-pipeline.task.md) | Rule Render / ATMChart Pipeline | M3 | open | 0002 |
 | [TASK-APO-0005](./TASK-APO-0005-rule-justification-gate.task.md) | Rule Justification Gate | M4 | open | 0004 |
 | [TASK-APO-0006](./TASK-APO-0006-multi-agent-pack-expansion.task.md) | Multi-Agent Pack 擴張 | M5 | open | 0003 |
