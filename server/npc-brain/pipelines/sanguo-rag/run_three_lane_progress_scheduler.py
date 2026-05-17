@@ -10,12 +10,14 @@ from pathlib import Path
 from typing import Any
 
 from repo_layout import pipeline_root, resolve_repo_root
+from sanguo_governance_loader import SanguoGovernanceError, load_three_lane_progress_scheduler_policy
 
 REPO_ROOT = resolve_repo_root(__file__)
 PIPELINE_ROOT = pipeline_root(REPO_ROOT)
 DEFAULT_OUTPUT_ROOT = Path("local/codex-smoke/progress-advancement")
-HUMAN_STOP_REASONS = {"pending-review-limit", "review-batch-ready"}
-FATAL_STOP_REASONS = {"failure-rate-limit", "runtime-readiness-fail"}
+HUMAN_STOP_REASONS: set[str] = set()
+FATAL_STOP_REASONS: set[str] = set()
+THREE_LANE_SCHEDULER_POLICY: dict[str, Any] = {}
 
 
 @dataclass(frozen=True)
@@ -25,6 +27,98 @@ class LaneConfig:
     profile: str
     max_rounds: int
     max_ab_cycles: int
+
+
+def apply_three_lane_scheduler_governance(policy: dict[str, Any]) -> None:
+    global THREE_LANE_SCHEDULER_POLICY, HUMAN_STOP_REASONS, FATAL_STOP_REASONS
+    THREE_LANE_SCHEDULER_POLICY = dict(policy)
+    stop_policy = policy.get("stopReasonPolicy") if isinstance(policy.get("stopReasonPolicy"), dict) else {}
+    HUMAN_STOP_REASONS = {
+        str(item)
+        for item in stop_policy.get("humanStopReasons") or []
+        if str(item).strip()
+    }
+    FATAL_STOP_REASONS = {
+        str(item)
+        for item in stop_policy.get("fatalStopReasons") or []
+        if str(item).strip()
+    }
+
+
+def scheduler_default_limits() -> dict[str, Any]:
+    value = THREE_LANE_SCHEDULER_POLICY.get("defaultLimits")
+    return value if isinstance(value, dict) else {}
+
+
+def scheduler_default_reviewer() -> dict[str, Any]:
+    value = THREE_LANE_SCHEDULER_POLICY.get("defaultReviewer")
+    return value if isinstance(value, dict) else {}
+
+
+def scheduler_stop_policy() -> dict[str, Any]:
+    value = THREE_LANE_SCHEDULER_POLICY.get("stopReasonPolicy")
+    return value if isinstance(value, dict) else {}
+
+
+def scheduler_int(cli_value: int | None, key: str, fallback: int) -> int:
+    if cli_value is not None:
+        return cli_value
+    try:
+        return int(scheduler_default_limits().get(key, fallback))
+    except (TypeError, ValueError):
+        return fallback
+
+
+def scheduler_text(cli_value: str | None, section: dict[str, Any], key: str, fallback: str) -> str:
+    if cli_value is not None and str(cli_value).strip():
+        return str(cli_value)
+    value = str(section.get(key) or "").strip()
+    return value or fallback
+
+
+def scheduler_next_action(key: str, fallback: str) -> str:
+    value = str(scheduler_stop_policy().get(key) or "").strip()
+    return value or fallback
+
+
+def scheduler_completed_stop_reason() -> str:
+    value = str(scheduler_stop_policy().get("completedStopReason") or "").strip()
+    return value or "completed-three-lanes"
+
+
+def apply_scheduler_arg_defaults(args: argparse.Namespace) -> None:
+    args.output_root = str(args.output_root or THREE_LANE_SCHEDULER_POLICY.get("defaultOutputRoot") or DEFAULT_OUTPUT_ROOT)
+    args.pending_review_limit = scheduler_int(args.pending_review_limit, "pendingReviewLimit", 20)
+    args.step_timeout_seconds = scheduler_int(args.step_timeout_seconds, "stepTimeoutSeconds", 30)
+    args.reviewer_preset = scheduler_text(args.reviewer_preset, scheduler_default_reviewer(), "preset", "agent")
+    args.reviewer_provider = scheduler_text(args.reviewer_provider, scheduler_default_reviewer(), "provider", "agent-reviewer")
+
+
+def scheduler_lane_rows() -> list[dict[str, Any]]:
+    rows = THREE_LANE_SCHEDULER_POLICY.get("laneOrder")
+    if isinstance(rows, list) and rows:
+        return [row for row in rows if isinstance(row, dict)]
+    return [
+        {"laneId": "bulk", "laneName": "Bulk Coverage Lane", "profile": "sweep", "maxRounds": 2, "maxAbCycles": 1},
+        {"laneId": "precision", "laneName": "ABAB Precision Lane", "profile": "precision", "maxRounds": 2, "maxAbCycles": 2},
+        {"laneId": "promotion", "laneName": "Promotion Lane", "profile": "promotion-eval", "maxRounds": 1, "maxAbCycles": 1},
+    ]
+
+
+def lane_cli_override(args: argparse.Namespace, lane_id: str, field: str) -> int | None:
+    key = f"{lane_id}_{field}"
+    value = getattr(args, key, None)
+    return value if value is not None else None
+
+
+def lane_int(row: dict[str, Any], args: argparse.Namespace, field: str, fallback: int) -> int:
+    cli_value = lane_cli_override(args, str(row.get("laneId") or ""), "max_rounds" if field == "maxRounds" else "max_ab_cycles")
+    if cli_value is not None:
+        return max(int(cli_value), 1)
+    try:
+        return max(int(row.get(field, fallback)), 1)
+    except (TypeError, ValueError):
+        return fallback
 
 
 def utc_now() -> str:
@@ -43,22 +137,24 @@ def parse_args() -> argparse.Namespace:
         )
     )
     parser.add_argument("--run-id", default=None, help="Scheduler run id. Defaults to three-lane-<UTC>.")
-    parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT), help="Output root shared by all lane runs.")
+    parser.add_argument("--output-root", default=None, help="Output root shared by all lane runs. Defaults to governance policy.")
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--three-lane-scheduler-policy", default=None, help="Override policy-three-lane-progress-scheduler.json path")
     parser.add_argument("--baseline-manifest", default=None, help="Initial baseline manifest path.")
-    parser.add_argument("--pending-review-limit", type=int, default=20, help="Human gate threshold for pending review.")
-    parser.add_argument("--reviewer-preset", default="agent", help="Reviewer preset passed to lane runs.")
-    parser.add_argument("--reviewer-provider", default="agent-reviewer", help="Reviewer provider passed to lane runs.")
-    parser.add_argument("--step-timeout-seconds", type=int, default=30, help="Step timeout passed to lane runs.")
+    parser.add_argument("--pending-review-limit", type=int, default=None, help="Human gate threshold for pending review. Defaults to governance policy.")
+    parser.add_argument("--reviewer-preset", default=None, help="Reviewer preset passed to lane runs. Defaults to governance policy.")
+    parser.add_argument("--reviewer-provider", default=None, help="Reviewer provider passed to lane runs. Defaults to governance policy.")
+    parser.add_argument("--step-timeout-seconds", type=int, default=None, help="Step timeout passed to lane runs. Defaults to governance policy.")
     parser.add_argument("--top-generals", type=int, default=None, help="Optional override passed to lane runs.")
     parser.add_argument("--top-per-general", type=int, default=None, help="Optional override passed to lane runs.")
     parser.add_argument("--max-wall-time-minutes", type=float, default=None, help="Optional per-lane wall-time limit.")
     parser.add_argument("--general-id", action="append", default=[], help="Optional focus general id; repeatable.")
-    parser.add_argument("--bulk-max-rounds", type=int, default=2, help="Bulk lane max rounds.")
-    parser.add_argument("--bulk-max-ab-cycles", type=int, default=1, help="Bulk lane max AB cycles.")
-    parser.add_argument("--precision-max-rounds", type=int, default=2, help="Precision lane max rounds.")
-    parser.add_argument("--precision-max-ab-cycles", type=int, default=2, help="Precision lane max AB cycles.")
-    parser.add_argument("--promotion-max-rounds", type=int, default=1, help="Promotion lane max rounds.")
-    parser.add_argument("--promotion-max-ab-cycles", type=int, default=1, help="Promotion lane max AB cycles.")
+    parser.add_argument("--bulk-max-rounds", type=int, default=None, help="Bulk lane max rounds. Defaults to governance policy.")
+    parser.add_argument("--bulk-max-ab-cycles", type=int, default=None, help="Bulk lane max AB cycles. Defaults to governance policy.")
+    parser.add_argument("--precision-max-rounds", type=int, default=None, help="Precision lane max rounds. Defaults to governance policy.")
+    parser.add_argument("--precision-max-ab-cycles", type=int, default=None, help="Precision lane max AB cycles. Defaults to governance policy.")
+    parser.add_argument("--promotion-max-rounds", type=int, default=None, help="Promotion lane max rounds. Defaults to governance policy.")
+    parser.add_argument("--promotion-max-ab-cycles", type=int, default=None, help="Promotion lane max AB cycles. Defaults to governance policy.")
     parser.add_argument("--continue-on-failure", action="store_true", help="Continue to next lane even if current lane fails.")
     parser.add_argument("--overwrite", action="store_true", help="Pass --overwrite to lane runs.")
     parser.add_argument("--dry-run", action="store_true", help="Pass --dry-run to lane runs.")
@@ -89,29 +185,23 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
 
 
 def lane_configs(args: argparse.Namespace) -> list[LaneConfig]:
-    return [
-        LaneConfig(
-            lane_id="bulk",
-            lane_name="Bulk Coverage Lane",
-            profile="sweep",
-            max_rounds=max(args.bulk_max_rounds, 1),
-            max_ab_cycles=max(args.bulk_max_ab_cycles, 1),
-        ),
-        LaneConfig(
-            lane_id="precision",
-            lane_name="ABAB Precision Lane",
-            profile="precision",
-            max_rounds=max(args.precision_max_rounds, 1),
-            max_ab_cycles=max(args.precision_max_ab_cycles, 1),
-        ),
-        LaneConfig(
-            lane_id="promotion",
-            lane_name="Promotion Lane",
-            profile="promotion-eval",
-            max_rounds=max(args.promotion_max_rounds, 1),
-            max_ab_cycles=max(args.promotion_max_ab_cycles, 1),
-        ),
-    ]
+    lanes: list[LaneConfig] = []
+    for row in scheduler_lane_rows():
+        lane_id = str(row.get("laneId") or "").strip()
+        lane_name = str(row.get("laneName") or lane_id).strip()
+        profile = str(row.get("profile") or "").strip()
+        if not lane_id or not profile:
+            continue
+        lanes.append(
+            LaneConfig(
+                lane_id=lane_id,
+                lane_name=lane_name or lane_id,
+                profile=profile,
+                max_rounds=lane_int(row, args, "maxRounds", 1),
+                max_ab_cycles=lane_int(row, args, "maxAbCycles", 1),
+            )
+        )
+    return lanes
 
 
 def lane_command(args: argparse.Namespace, lane: LaneConfig, lane_run_id: str, baseline_manifest: str | None) -> list[str]:
@@ -262,6 +352,12 @@ def render_markdown(report: dict[str, Any]) -> str:
 
 def main() -> None:
     args = parse_args()
+    scheduler_policy = load_three_lane_progress_scheduler_policy(
+        args.governance_root,
+        three_lane_scheduler_policy=args.three_lane_scheduler_policy,
+    )
+    apply_three_lane_scheduler_governance(scheduler_policy)
+    apply_scheduler_arg_defaults(args)
     args.run_id = args.run_id or f"three-lane-{utc_stamp()}"
     output_root = Path(args.output_root)
     scheduler_root = (REPO_ROOT / output_root / args.run_id).resolve()
@@ -270,7 +366,7 @@ def main() -> None:
     current_baseline_manifest = args.baseline_manifest
     lanes_report: list[dict[str, Any]] = []
     stop_reason: str | None = None
-    next_action = "completed all lanes"
+    next_action = scheduler_next_action("completedNextAction", "completed all lanes")
 
     for lane in lane_configs(args):
         lane_result = run_lane(args, lane, current_baseline_manifest)
@@ -282,17 +378,17 @@ def main() -> None:
 
         if should_stop_for_human_gate(lane_result, args.pending_review_limit):
             stop_reason = f"{lane.lane_id}-human-gate"
-            next_action = "pending review reached threshold; switch to human MCQ batch first"
+            next_action = scheduler_next_action("humanGateNextAction", "pending review reached threshold; switch to human MCQ batch first")
             break
 
         if should_stop_for_fatal(lane_result):
             stop_reason = f"{lane.lane_id}-fatal-stop"
-            next_action = "lane failed or fatal stop reason detected; inspect lane summary stderr before continuing"
+            next_action = scheduler_next_action("fatalStopNextAction", "lane failed or fatal stop reason detected; inspect lane summary stderr before continuing")
             if not args.continue_on_failure:
                 break
 
     if stop_reason is None:
-        stop_reason = "completed-three-lanes"
+        stop_reason = scheduler_completed_stop_reason()
 
     payload = {
         "version": "1.0.0",
@@ -324,4 +420,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SanguoGovernanceError as exc:
+        print(f"[run_three_lane_progress_scheduler] governance error: {exc}", file=sys.stderr)
+        raise SystemExit(2) from None

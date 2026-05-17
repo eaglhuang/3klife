@@ -1,0 +1,50 @@
+{
+  "id": "Policy_ThreeLaneProgressScheduler_P1",
+  "description": "Externalized deterministic three-lane progress scheduler defaults copied from run_three_lane_progress_scheduler.py Phase 14 baseline.",
+  "defaultOutputRoot": "local/codex-smoke/progress-advancement",
+  "defaultReviewer": {
+    "preset": "agent",
+    "provider": "agent-reviewer"
+  },
+  "defaultLimits": {
+    "pendingReviewLimit": 20,
+    "stepTimeoutSeconds": 30
+  },
+  "laneOrder": [
+    {
+      "laneId": "bulk",
+      "laneName": "Bulk Coverage Lane",
+      "profile": "sweep",
+      "maxRounds": 2,
+      "maxAbCycles": 1
+    },
+    {
+      "laneId": "precision",
+      "laneName": "ABAB Precision Lane",
+      "profile": "precision",
+      "maxRounds": 2,
+      "maxAbCycles": 2
+    },
+    {
+      "laneId": "promotion",
+      "laneName": "Promotion Lane",
+      "profile": "promotion-eval",
+      "maxRounds": 1,
+      "maxAbCycles": 1
+    }
+  ],
+  "stopReasonPolicy": {
+    "humanStopReasons": [
+      "pending-review-limit",
+      "review-batch-ready"
+    ],
+    "fatalStopReasons": [
+      "failure-rate-limit",
+      "runtime-readiness-fail"
+    ],
+    "completedStopReason": "completed-three-lanes",
+    "completedNextAction": "completed all lanes",
+    "humanGateNextAction": "pending review reached threshold; switch to human MCQ batch first",
+    "fatalStopNextAction": "lane failed or fatal stop reason detected; inspect lane summary stderr before continuing"
+  }
+}

@@ -565,6 +565,21 @@ def load_resolution_loop_recommendation_cue_rules(
     return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind"))
 
 
+
+def load_three_lane_progress_scheduler_policy(
+    root: str | Path | None = None,
+    *,
+    three_lane_scheduler_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(three_lane_scheduler_policy).resolve()
+        if three_lane_scheduler_policy
+        else _path(base, "policies", "policy-three-lane-progress-scheduler.json")
+    )
+    return read_governance_json(path, required_id="Policy_ThreeLaneProgressScheduler_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

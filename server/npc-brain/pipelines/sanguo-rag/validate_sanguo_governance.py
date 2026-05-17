@@ -15,6 +15,7 @@ from sanguo_governance_loader import (
     load_dialogue_mention_resolution_policy,
     load_resolution_loop_recommendation_cue_rules,
     load_resolution_loop_runner_policy,
+    load_three_lane_progress_scheduler_policy,
     expected_governance_files,
     load_evidence_seed_extraction_policy,
     load_evidence_seed_direction_denoise_rules,
@@ -162,6 +163,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     dialogue_mention_cues = load_dialogue_mention_resolution_cue_rules(root)
     resolution_loop_policy = load_resolution_loop_runner_policy(root)
     resolution_loop_cues = load_resolution_loop_recommendation_cue_rules(root)
+    three_lane_scheduler_policy = load_three_lane_progress_scheduler_policy(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -933,6 +935,48 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if missing_resolution_loop_cues:
         raise SanguoGovernanceError(f"rule-resolution-loop-recommendation-cues missing rules: {', '.join(missing_resolution_loop_cues)}")
 
+
+    three_lane_limits = three_lane_scheduler_policy.get("defaultLimits") if isinstance(three_lane_scheduler_policy.get("defaultLimits"), dict) else {}
+    for key in ("pendingReviewLimit", "stepTimeoutSeconds"):
+        if int(three_lane_limits.get(key) or 0) <= 0:
+            raise SanguoGovernanceError(f"policy-three-lane-progress-scheduler defaultLimits.{key} must be positive")
+    three_lane_reviewer = three_lane_scheduler_policy.get("defaultReviewer") if isinstance(three_lane_scheduler_policy.get("defaultReviewer"), dict) else {}
+    for key in ("preset", "provider"):
+        if not str(three_lane_reviewer.get(key) or "").strip():
+            raise SanguoGovernanceError(f"policy-three-lane-progress-scheduler defaultReviewer.{key} cannot be blank")
+    three_lane_lanes = three_lane_scheduler_policy.get("laneOrder")
+    if not isinstance(three_lane_lanes, list) or not three_lane_lanes:
+        raise SanguoGovernanceError("policy-three-lane-progress-scheduler laneOrder cannot be empty")
+    lane_ids: set[str] = set()
+    profile_count = 0
+    for row in three_lane_lanes:
+        if not isinstance(row, dict):
+            raise SanguoGovernanceError("policy-three-lane-progress-scheduler laneOrder row must be object")
+        lane_id = str(row.get("laneId") or "").strip()
+        profile = str(row.get("profile") or "").strip()
+        lane_name = str(row.get("laneName") or "").strip()
+        if not lane_id or not profile or not lane_name:
+            raise SanguoGovernanceError("policy-three-lane-progress-scheduler lane row has blank field")
+        if lane_id in lane_ids:
+            raise SanguoGovernanceError(f"policy-three-lane-progress-scheduler duplicate laneId: {lane_id}")
+        lane_ids.add(lane_id)
+        profile_count += 1
+        for key in ("maxRounds", "maxAbCycles"):
+            if int(row.get(key) or 0) <= 0:
+                raise SanguoGovernanceError(f"policy-three-lane-progress-scheduler {lane_id}.{key} must be positive")
+    three_lane_stop_policy = three_lane_scheduler_policy.get("stopReasonPolicy") if isinstance(three_lane_scheduler_policy.get("stopReasonPolicy"), dict) else {}
+    stop_reason_count = 0
+    for key in ("humanStopReasons", "fatalStopReasons"):
+        values = [str(item).strip() for item in three_lane_stop_policy.get(key) or []]
+        if not values or any(not item for item in values):
+            raise SanguoGovernanceError(f"policy-three-lane-progress-scheduler stopReasonPolicy.{key} cannot be blank")
+        if len(set(values)) != len(values):
+            raise SanguoGovernanceError(f"policy-three-lane-progress-scheduler stopReasonPolicy.{key} cannot contain duplicates")
+        stop_reason_count += len(values)
+    for key in ("completedStopReason", "completedNextAction", "humanGateNextAction", "fatalStopNextAction"):
+        if not str(three_lane_stop_policy.get(key) or "").strip():
+            raise SanguoGovernanceError(f"policy-three-lane-progress-scheduler stopReasonPolicy.{key} cannot be blank")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -980,6 +1024,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "resolutionLoopCueRuleCount": len(resolution_loop_cues),
         "resolutionLoopCueValueCount": resolution_loop_cue_value_count,
         "resolutionLoopRecommendationScoreCount": len(resolution_scoring),
+        "threeLaneSchedulerLaneCount": len(three_lane_lanes),
+        "threeLaneSchedulerProfileCount": profile_count,
+        "threeLaneSchedulerStopReasonCount": stop_reason_count,
     }
 
 
