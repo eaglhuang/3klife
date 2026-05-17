@@ -3,7 +3,7 @@ doc_id: doc_other_0157
 task_id: TASK-APO-0006
 title: Multi-Agent Pack 擴張
 milestone: M5
-status: open
+status: done
 blocked_by: [TASK-APO-0003]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md
@@ -13,13 +13,22 @@ hostKind: upstream-framework
 alphaGate: validate:standard
 public_tracking: false
 executionMode: planned-upstream-change
+started_at: 2026-05-17T23:16:29.8932947+08:00
+started_by_agent: vs-insiders-gpt-5.4
 allowed_files:
+  - packages/cli/package.json
+  - packages/cli/src/commands/agent-pack.ts
+  - packages/plugin-rule-guard/src/index.ts
+  - packages/agent-pack-sdk/README.md
+  - packages/agent-pack-claude-code/package.json
+  - packages/agent-pack-claude-code/README.md
   - packages/agent-pack-cursor/**
   - packages/agent-pack-copilot/**
   - packages/agent-pack-gemini/**
   - packages/agent-pack-windsurf/**
   - templates/**
   - tests/agent-pack/**
+  - tests/package-skeleton.fixture.json
 forbidden_files:
   - packages/core/**
   - assets/**
@@ -53,11 +62,11 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收條件
 
-- [ ] `packages/agent-pack-cursor/` 存在，注入 `.cursor/rules/skills/`。
-- [ ] `packages/agent-pack-copilot/` 存在，注入 `.github/` + `.github/prompts/*.prompt.md`。
-- [ ] `packages/agent-pack-gemini/` 存在，注入 `.gemini/commands/*.toml`。
-- [ ] `packages/agent-pack-windsurf/` 存在，注入 `.windsurf/workflows/*.md`。
-- [ ] 每個 pack 通過 install / uninstall / diff / verify-fresh 一輪 e2e。
+- [x] `packages/agent-pack-cursor/` 存在，注入 `.cursor/rules/skills/`。
+- [x] `packages/agent-pack-copilot/` 存在，注入 `.github/` + `.github/prompts/*.prompt.md`。
+- [x] `packages/agent-pack-gemini/` 存在，注入 `.gemini/commands/*.toml`。
+- [x] `packages/agent-pack-windsurf/` 存在，注入 `.windsurf/workflows/*.md`。
+- [x] 每個 pack 通過 install / uninstall / diff / verify-fresh 一輪 e2e。
 
 ## 影響檔案
 
@@ -65,6 +74,10 @@ created_by_agent: vs-insiders-gpt-5.4
 - `packages/agent-pack-copilot/**`
 - `packages/agent-pack-gemini/**`
 - `packages/agent-pack-windsurf/**`
+- `packages/agent-pack-sdk/README.md`
+- `packages/agent-pack-claude-code/package.json`
+- `packages/agent-pack-claude-code/README.md`
+- `packages/plugin-rule-guard/src/index.ts`
 - `templates/**`
 - `tests/agent-pack/**`
 
@@ -80,12 +93,13 @@ cmd /c npm run validate:standard
 
 ## Checklist
 
-- [ ] Cursor pack
-- [ ] Copilot pack
-- [ ] Gemini pack
-- [ ] Windsurf pack
-- [ ] e2e roundtrip
+- [x] Cursor pack
+- [x] Copilot pack
+- [x] Gemini pack
+- [x] Windsurf pack
+- [x] e2e roundtrip
 
 ## Notes
 
 2026-05-17 | 狀態: open | 驗證: pending | 變更: 依計畫書 §15/M5 開卡，尚未接手實作 | 阻塞: TASK-APO-0003
+2026-05-17 | 狀態: done | 驗證: `node --experimental-strip-types c:/Users/User/AI-Atomic-Framework/tests/agent-pack/multi-agent-pack-roundtrip.test.ts` pass；`npm --prefix c:/Users/User/AI-Atomic-Framework run validate:standard` pass；encoding touched check pass；`node c:/Users/User/3KLife/tools_node/compute-gate.js --profile standard --agent-feedback` pass | 變更: upstream commit `8dbb372 feat: add multi-agent pack expansion`，新增 Cursor/Copilot/Gemini/Windsurf agent-pack packages、CLI pack registry entries、package-skeleton fixture entries、multi-agent roundtrip e2e，並補齊 agent-pack SDK / Claude pack README 與 Claude pack package skeleton | 阻塞: none
