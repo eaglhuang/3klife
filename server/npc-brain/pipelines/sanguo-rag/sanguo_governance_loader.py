@@ -580,6 +580,21 @@ def load_three_lane_progress_scheduler_policy(
     return read_governance_json(path, required_id="Policy_ThreeLaneProgressScheduler_P1")
 
 
+
+def load_repair_review_campaign_policy(
+    root: str | Path | None = None,
+    *,
+    repair_review_campaign_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = (
+        Path(repair_review_campaign_policy).resolve()
+        if repair_review_campaign_policy
+        else _path(base, "policies", "policy-repair-review-campaign.json")
+    )
+    return read_governance_json(path, required_id="Policy_RepairReviewCampaign_P1")
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

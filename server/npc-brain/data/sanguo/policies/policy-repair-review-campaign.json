@@ -1,0 +1,41 @@
+{
+  "id": "Policy_RepairReviewCampaign_P1",
+  "description": "Externalized deterministic repair review campaign defaults copied from run_repair_review_campaign.py Phase 15 baseline.",
+  "defaultRoundId": "repair-review-r2",
+  "defaultPaths": {
+    "editBacklog": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-refine-r1-reviewed-b-edit-backlog.jsonl",
+    "baseEvents": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-ready-events.jsonl",
+    "baseRelationshipEvidence": "artifacts/data-pipeline/sanguo-rag/extracted/core-person-progress/repair-review-r1-merged-staged-relationship-evidence.jsonl",
+    "baseProgress": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress/repair-review-r1-merged.json",
+    "repairOutputRoot": "artifacts/data-pipeline/sanguo-rag/extracted/backlog-repair-tasks",
+    "roundsRoot": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-rounds",
+    "eventSeedRoot": "artifacts/data-pipeline/sanguo-rag/extracted/event-question-seeds",
+    "packetRoot": "artifacts/data-pipeline/sanguo-rag/extracted/source-event-packets",
+    "progressRoot": "artifacts/data-pipeline/sanguo-rag/extracted/knowledge-growth-progress"
+  },
+  "fallbackInputs": {
+    "observedMentions": "artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-mentions.json",
+    "observedSummary": "artifacts/data-pipeline/sanguo-rag/extracted/observed-mentions/observed-label-summary.json",
+    "stableKnowledge": "artifacts/data-pipeline/sanguo-rag/extracted/stable-knowledge-bootstrap/stable-knowledge-bootstrap.json",
+    "eventsSummary": "artifacts/data-pipeline/sanguo-rag/extracted/events/events-summary.json",
+    "genericCandidates": "artifacts/data-pipeline/sanguo-rag/extracted/events/generic-battle-candidates.jsonl",
+    "femaleCandidates": "artifacts/data-pipeline/sanguo-rag/extracted/events/female-interaction-candidates.jsonl",
+    "pilotReport": "artifacts/data-pipeline/sanguo-rag/extracted/etl-quality-pilot/etl-quality-pilot-report.json"
+  },
+  "selectionDefaults": {
+    "topGenerals": 10,
+    "topPerGeneral": 5
+  },
+  "reviewerDefaults": {
+    "preset": "agent",
+    "provider": "agent-reviewer"
+  },
+  "gateDefaults": {
+    "humanQuestionThreshold": 20,
+    "stepTimeoutSeconds": 30
+  },
+  "roundSelectionPatterns": {
+    "pass": "^(?P<prefix>.+)-a(?P<pass>\\d+)$",
+    "rerun": "^(?P<base>.+)-rerun(?P<rerun>\\d+)$"
+  }
+}

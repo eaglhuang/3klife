@@ -16,6 +16,7 @@ from sanguo_governance_loader import (
     load_resolution_loop_recommendation_cue_rules,
     load_resolution_loop_runner_policy,
     load_three_lane_progress_scheduler_policy,
+    load_repair_review_campaign_policy,
     expected_governance_files,
     load_evidence_seed_extraction_policy,
     load_evidence_seed_direction_denoise_rules,
@@ -164,6 +165,7 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     resolution_loop_policy = load_resolution_loop_runner_policy(root)
     resolution_loop_cues = load_resolution_loop_recommendation_cue_rules(root)
     three_lane_scheduler_policy = load_three_lane_progress_scheduler_policy(root)
+    repair_review_campaign_policy = load_repair_review_campaign_policy(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -977,6 +979,49 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         if not str(three_lane_stop_policy.get(key) or "").strip():
             raise SanguoGovernanceError(f"policy-three-lane-progress-scheduler stopReasonPolicy.{key} cannot be blank")
 
+
+    repair_paths = repair_review_campaign_policy.get("defaultPaths") if isinstance(repair_review_campaign_policy.get("defaultPaths"), dict) else {}
+    required_repair_paths = {
+        "editBacklog",
+        "baseEvents",
+        "baseRelationshipEvidence",
+        "baseProgress",
+        "repairOutputRoot",
+        "roundsRoot",
+        "eventSeedRoot",
+        "packetRoot",
+        "progressRoot",
+    }
+    if required_repair_paths - set(repair_paths.keys()):
+        missing_repair_paths = sorted(required_repair_paths - set(repair_paths.keys()))
+        raise SanguoGovernanceError(f"policy-repair-review-campaign missing defaultPaths: {', '.join(missing_repair_paths)}")
+    if any(not str(value or "").strip() for value in repair_paths.values()):
+        raise SanguoGovernanceError("policy-repair-review-campaign defaultPaths cannot contain blank value")
+    repair_inputs = repair_review_campaign_policy.get("fallbackInputs") if isinstance(repair_review_campaign_policy.get("fallbackInputs"), dict) else {}
+    if not repair_inputs or any(not str(value or "").strip() for value in repair_inputs.values()):
+        raise SanguoGovernanceError("policy-repair-review-campaign fallbackInputs cannot contain blank value")
+    repair_selection = repair_review_campaign_policy.get("selectionDefaults") if isinstance(repair_review_campaign_policy.get("selectionDefaults"), dict) else {}
+    for key in ("topGenerals", "topPerGeneral"):
+        if int(repair_selection.get(key) or 0) <= 0:
+            raise SanguoGovernanceError(f"policy-repair-review-campaign selectionDefaults.{key} must be positive")
+    repair_reviewer = repair_review_campaign_policy.get("reviewerDefaults") if isinstance(repair_review_campaign_policy.get("reviewerDefaults"), dict) else {}
+    for key in ("preset", "provider"):
+        if not str(repair_reviewer.get(key) or "").strip():
+            raise SanguoGovernanceError(f"policy-repair-review-campaign reviewerDefaults.{key} cannot be blank")
+    repair_gates = repair_review_campaign_policy.get("gateDefaults") if isinstance(repair_review_campaign_policy.get("gateDefaults"), dict) else {}
+    for key in ("humanQuestionThreshold", "stepTimeoutSeconds"):
+        if int(repair_gates.get(key) or 0) <= 0:
+            raise SanguoGovernanceError(f"policy-repair-review-campaign gateDefaults.{key} must be positive")
+    repair_patterns = repair_review_campaign_policy.get("roundSelectionPatterns") if isinstance(repair_review_campaign_policy.get("roundSelectionPatterns"), dict) else {}
+    for key in ("pass", "rerun"):
+        pattern = str(repair_patterns.get(key) or "")
+        if not pattern:
+            raise SanguoGovernanceError(f"policy-repair-review-campaign roundSelectionPatterns.{key} cannot be blank")
+        try:
+            __import__("re").compile(pattern)
+        except Exception as exc:
+            raise SanguoGovernanceError(f"policy-repair-review-campaign invalid roundSelectionPatterns.{key}: {exc}") from exc
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -1027,6 +1072,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "threeLaneSchedulerLaneCount": len(three_lane_lanes),
         "threeLaneSchedulerProfileCount": profile_count,
         "threeLaneSchedulerStopReasonCount": stop_reason_count,
+        "repairReviewCampaignPathDefaultCount": len(repair_paths),
+        "repairReviewCampaignFallbackInputCount": len(repair_inputs),
+        "repairReviewCampaignRoundPatternCount": len(repair_patterns),
     }
 
 

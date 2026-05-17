@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from repo_layout import pipeline_root, resolve_repo_root
+from sanguo_governance_loader import SanguoGovernanceError, load_repair_review_campaign_policy
 
 REPO_ROOT = resolve_repo_root(__file__)
 PIPELINE_ROOT = pipeline_root(REPO_ROOT)
@@ -42,36 +43,101 @@ ROUND_PASS_PATTERN = re.compile(r"^(?P<prefix>.+)-a(?P<pass>\d+)$")
 ROUND_RERUN_PATTERN = re.compile(r"^(?P<base>.+)-rerun(?P<rerun>\d+)$")
 
 
+REPAIR_REVIEW_CAMPAIGN_POLICY: dict[str, Any] = {}
+
+
+def apply_repair_review_campaign_governance(policy: dict[str, Any]) -> None:
+    global REPAIR_REVIEW_CAMPAIGN_POLICY, ROUND_PASS_PATTERN, ROUND_RERUN_PATTERN
+    REPAIR_REVIEW_CAMPAIGN_POLICY = dict(policy)
+    patterns = policy.get("roundSelectionPatterns") if isinstance(policy.get("roundSelectionPatterns"), dict) else {}
+    ROUND_PASS_PATTERN = re.compile(str(patterns.get("pass") or r"^(?P<prefix>.+)-a(?P<pass>\d+)$"))
+    ROUND_RERUN_PATTERN = re.compile(str(patterns.get("rerun") or r"^(?P<base>.+)-rerun(?P<rerun>\d+)$"))
+
+
+def repair_campaign_section(name: str) -> dict[str, Any]:
+    section = REPAIR_REVIEW_CAMPAIGN_POLICY.get(name)
+    return section if isinstance(section, dict) else {}
+
+
+def repair_campaign_text_arg(cli_value: str | None, section: dict[str, Any], key: str, fallback: str | Path) -> str:
+    if cli_value is not None and str(cli_value).strip():
+        return str(cli_value)
+    value = str(section.get(key) or "").strip()
+    return str(Path(value)) if value else str(fallback)
+
+
+def repair_campaign_int_arg(cli_value: int | None, section: dict[str, Any], key: str, fallback: int) -> int:
+    if cli_value is not None:
+        return cli_value
+    try:
+        return int(section.get(key, fallback))
+    except (TypeError, ValueError):
+        return fallback
+
+
+def apply_repair_review_campaign_arg_defaults(args: argparse.Namespace) -> None:
+    paths = repair_campaign_section("defaultPaths")
+    fallback_inputs = repair_campaign_section("fallbackInputs")
+    selection = repair_campaign_section("selectionDefaults")
+    reviewer = repair_campaign_section("reviewerDefaults")
+    gates = repair_campaign_section("gateDefaults")
+    args.round_id = repair_campaign_text_arg(args.round_id, REPAIR_REVIEW_CAMPAIGN_POLICY, "defaultRoundId", "repair-review-r2")
+    args.edit_backlog = repair_campaign_text_arg(args.edit_backlog, paths, "editBacklog", DEFAULT_EDIT_BACKLOG_PATH)
+    args.base_events = repair_campaign_text_arg(args.base_events, paths, "baseEvents", DEFAULT_BASE_EVENTS_PATH)
+    args.base_relationship_evidence = repair_campaign_text_arg(args.base_relationship_evidence, paths, "baseRelationshipEvidence", DEFAULT_BASE_RELATIONSHIP_EVIDENCE_PATH)
+    args.base_progress = repair_campaign_text_arg(args.base_progress, paths, "baseProgress", DEFAULT_BASE_PROGRESS_PATH)
+    args.repair_output_root = repair_campaign_text_arg(args.repair_output_root, paths, "repairOutputRoot", DEFAULT_REPAIR_OUTPUT_ROOT)
+    args.rounds_root = repair_campaign_text_arg(args.rounds_root, paths, "roundsRoot", DEFAULT_ROUNDS_ROOT)
+    args.event_seed_root = repair_campaign_text_arg(args.event_seed_root, paths, "eventSeedRoot", DEFAULT_EVENT_SEED_ROOT)
+    args.packet_root = repair_campaign_text_arg(args.packet_root, paths, "packetRoot", DEFAULT_PACKET_ROOT)
+    args.progress_root = repair_campaign_text_arg(args.progress_root, paths, "progressRoot", DEFAULT_PROGRESS_ROOT)
+    args.observed_mentions_default = repair_campaign_text_arg(None, fallback_inputs, "observedMentions", DEFAULT_OBSERVED_MENTIONS_PATH)
+    args.observed_summary_default = repair_campaign_text_arg(None, fallback_inputs, "observedSummary", DEFAULT_OBSERVED_SUMMARY_PATH)
+    args.stable_knowledge_default = repair_campaign_text_arg(None, fallback_inputs, "stableKnowledge", DEFAULT_STABLE_KNOWLEDGE_PATH)
+    args.events_summary_default = repair_campaign_text_arg(None, fallback_inputs, "eventsSummary", DEFAULT_EVENTS_SUMMARY_PATH)
+    args.generic_candidates_default = repair_campaign_text_arg(None, fallback_inputs, "genericCandidates", DEFAULT_GENERIC_CANDIDATES_PATH)
+    args.female_candidates_default = repair_campaign_text_arg(None, fallback_inputs, "femaleCandidates", DEFAULT_FEMALE_CANDIDATES_PATH)
+    args.pilot_report_default = repair_campaign_text_arg(None, fallback_inputs, "pilotReport", DEFAULT_PILOT_REPORT_PATH)
+    args.top_generals = repair_campaign_int_arg(args.top_generals, selection, "topGenerals", 10)
+    args.top_per_general = repair_campaign_int_arg(args.top_per_general, selection, "topPerGeneral", 5)
+    args.reviewer_preset = repair_campaign_text_arg(args.reviewer_preset, reviewer, "preset", "agent")
+    args.reviewer_provider = repair_campaign_text_arg(args.reviewer_provider, reviewer, "provider", "agent-reviewer")
+    args.human_question_threshold = repair_campaign_int_arg(args.human_question_threshold, gates, "humanQuestionThreshold", 20)
+    args.step_timeout_seconds = repair_campaign_int_arg(args.step_timeout_seconds, gates, "stepTimeoutSeconds", 30)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run a high-yield repair-review campaign over top backlog generals and merge the result into the current baseline."
     )
-    parser.add_argument("--round-id", default="repair-review-r2", help="Repair campaign round id")
-    parser.add_argument("--edit-backlog", default=str(DEFAULT_EDIT_BACKLOG_PATH), help="Reviewed B backlog JSONL path")
-    parser.add_argument("--base-events", default=str(DEFAULT_BASE_EVENTS_PATH), help="Baseline ready-events JSONL path")
+    parser.add_argument("--round-id", default=None, help="Repair campaign round id. Defaults to governance policy.")
+    parser.add_argument("--edit-backlog", default=None, help="Reviewed B backlog JSONL path. Defaults to governance policy.")
+    parser.add_argument("--base-events", default=None, help="Baseline ready-events JSONL path. Defaults to governance policy.")
     parser.add_argument(
         "--base-relationship-evidence",
-        default=str(DEFAULT_BASE_RELATIONSHIP_EVIDENCE_PATH),
-        help="Baseline relationship-evidence JSONL path",
+        default=None,
+        help="Baseline relationship-evidence JSONL path. Defaults to governance policy.",
     )
-    parser.add_argument("--base-progress", default=str(DEFAULT_BASE_PROGRESS_PATH), help="Baseline progress JSON path")
-    parser.add_argument("--repair-output-root", default=str(DEFAULT_REPAIR_OUTPUT_ROOT), help="Repair task output root")
-    parser.add_argument("--rounds-root", default=str(DEFAULT_ROUNDS_ROOT), help="Knowledge growth rounds root")
-    parser.add_argument("--event-seed-root", default=str(DEFAULT_EVENT_SEED_ROOT), help="Event question seed output root")
-    parser.add_argument("--packet-root", default=str(DEFAULT_PACKET_ROOT), help="Source packet output root")
-    parser.add_argument("--progress-root", default=str(DEFAULT_PROGRESS_ROOT), help="Knowledge progress output root")
+    parser.add_argument("--base-progress", default=None, help="Baseline progress JSON path. Defaults to governance policy.")
+    parser.add_argument("--repair-output-root", default=None, help="Repair task output root. Defaults to governance policy.")
+    parser.add_argument("--rounds-root", default=None, help="Knowledge growth rounds root. Defaults to governance policy.")
+    parser.add_argument("--event-seed-root", default=None, help="Event question seed output root. Defaults to governance policy.")
+    parser.add_argument("--packet-root", default=None, help="Source packet output root. Defaults to governance policy.")
+    parser.add_argument("--progress-root", default=None, help="Knowledge progress output root. Defaults to governance policy.")
     parser.add_argument("--general-id", action="append", default=[], help="Explicit general id to include; can be repeated")
-    parser.add_argument("--top-generals", type=int, default=10, help="Top repair backlog generals to include when --general-id is omitted")
-    parser.add_argument("--top-per-general", type=int, default=5, help="Maximum questions per general")
-    parser.add_argument("--reviewer-preset", default="agent", help="Reviewer preset passed to run_knowledge_growth_round.py")
-    parser.add_argument("--reviewer-provider", default="agent-reviewer", help="Reviewer provider passed to run_knowledge_growth_round.py")
+    parser.add_argument("--governance-root", default=None, help="Sanguo governance root. Defaults to server/npc-brain/data/sanguo.")
+    parser.add_argument("--repair-review-campaign-policy", default=None, help="Override policy-repair-review-campaign.json path")
+    parser.add_argument("--top-generals", type=int, default=None, help="Top repair backlog generals to include when --general-id is omitted. Defaults to governance policy.")
+    parser.add_argument("--top-per-general", type=int, default=None, help="Maximum questions per general. Defaults to governance policy.")
+    parser.add_argument("--reviewer-preset", default=None, help="Reviewer preset passed to run_knowledge_growth_round.py. Defaults to governance policy.")
+    parser.add_argument("--reviewer-provider", default=None, help="Reviewer provider passed to run_knowledge_growth_round.py. Defaults to governance policy.")
     parser.add_argument(
         "--human-question-threshold",
         type=int,
-        default=20,
-        help="Surface human MCQ only when the manual review count reaches this threshold.",
+        default=None,
+        help="Surface human MCQ only when the manual review count reaches this threshold. Defaults to governance policy.",
     )
-    parser.add_argument("--step-timeout-seconds", type=int, default=30, help="Step timeout passed to run_knowledge_growth_round.py")
+    parser.add_argument("--step-timeout-seconds", type=int, default=None, help="Step timeout passed to run_knowledge_growth_round.py. Defaults to governance policy.")
     parser.add_argument(
         "--emit-ready-eval",
         action="store_true",
@@ -310,6 +376,12 @@ def render_markdown(summary: dict[str, Any]) -> str:
 
 def main() -> None:
     args = parse_args()
+    repair_policy = load_repair_review_campaign_policy(
+        args.governance_root,
+        repair_review_campaign_policy=args.repair_review_campaign_policy,
+    )
+    apply_repair_review_campaign_governance(repair_policy)
+    apply_repair_review_campaign_arg_defaults(args)
     round_id = args.round_id
     merged_round_id = f"{round_id}-merged"
     repair_output_root = Path(args.repair_output_root)
@@ -334,23 +406,23 @@ def main() -> None:
         base_progress_inputs,
         "observedMentionsPath",
         "mergedObservedMentionsPath",
-        default=DEFAULT_OBSERVED_MENTIONS_PATH,
+        default=Path(args.observed_mentions_default),
     )
     observed_summary_path = path_from_progress_inputs(
         base_progress_inputs,
         "observedSummaryPath",
         "mergedObservedSummaryPath",
-        default=DEFAULT_OBSERVED_SUMMARY_PATH,
+        default=Path(args.observed_summary_default),
     )
     stable_knowledge_path = path_from_progress_inputs(
         base_progress_inputs,
         "stableKnowledgePath",
-        default=DEFAULT_STABLE_KNOWLEDGE_PATH,
+        default=Path(args.stable_knowledge_default),
     )
     events_summary_path = path_from_progress_inputs(
         base_progress_inputs,
         "eventsSummaryPath",
-        default=DEFAULT_EVENTS_SUMMARY_PATH,
+        default=Path(args.events_summary_default),
     )
     ready_events_path = path_from_progress_inputs(
         base_progress_inputs,
@@ -360,12 +432,12 @@ def main() -> None:
     generic_candidates_path = path_from_progress_inputs(
         base_progress_inputs,
         "genericCandidatesPath",
-        default=DEFAULT_GENERIC_CANDIDATES_PATH,
+        default=Path(args.generic_candidates_default),
     )
     female_candidates_path = path_from_progress_inputs(
         base_progress_inputs,
         "femaleCandidatesPath",
-        default=DEFAULT_FEMALE_CANDIDATES_PATH,
+        default=Path(args.female_candidates_default),
     )
     baseline_event_seed_path = path_from_progress_inputs(
         base_progress_inputs,
@@ -381,7 +453,7 @@ def main() -> None:
         base_progress_inputs,
         "pilotReportPath",
         "pilotReport",
-        default=DEFAULT_PILOT_REPORT_PATH,
+        default=Path(args.pilot_report_default),
     )
 
     commands.append(
@@ -603,4 +675,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SanguoGovernanceError as exc:
+        print(f"[run_repair_review_campaign] governance error: {exc}", file=sys.stderr)
+        raise SystemExit(2) from None
