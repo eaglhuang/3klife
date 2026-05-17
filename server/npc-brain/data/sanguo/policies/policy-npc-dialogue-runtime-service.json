@@ -1,0 +1,22 @@
+{
+  "id": "Policy_NpcDialogueRuntimeService_P1",
+  "description": "Externalized deterministic runtime service defaults for npc_dialogue_service.py. Values are copied from Phase 10 baseline and preserve Python fallback behavior.",
+  "defaultLlmModelPreset": "fallback_chain",
+  "llmHistoryProviders": [
+    "gemini",
+    "gemini_flash",
+    "gemini_flash_lite",
+    "local_llama"
+  ],
+  "stableRelationshipSourceLayers": [
+    "claim-graph-a-history",
+    "claim-graph-a-romance",
+    "generals-parent-summary",
+    "stable-bootstrap-seed"
+  ],
+  "aCanonRelationshipGrades": [
+    "A-history",
+    "A-history-cross-source",
+    "A-romance"
+  ]
+}

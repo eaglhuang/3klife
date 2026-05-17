@@ -465,6 +465,37 @@ def load_runtime_relationship_refinement_rules(
     return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "terms"))
 
 
+
+def load_npc_dialogue_runtime_service_policy(
+    root: str | Path | None = None,
+    *,
+    npc_dialogue_runtime_service_policy: str | Path | None = None,
+) -> dict[str, Any]:
+    base = resolve_governance_root(root)
+    path = Path(npc_dialogue_runtime_service_policy).resolve() if npc_dialogue_runtime_service_policy else _path(base, "policies", "policy-npc-dialogue-runtime-service.json")
+    return read_governance_json(path, required_id="Policy_NpcDialogueRuntimeService_P1")
+
+
+def load_npc_dialogue_llm_model_presets(
+    root: str | Path | None = None,
+    *,
+    npc_dialogue_llm_model_presets: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = Path(npc_dialogue_llm_model_presets).resolve() if npc_dialogue_llm_model_presets else _path(base, "catalogs", "catalog-npc-dialogue-llm-model-presets.jsonl")
+    return read_governance_jsonl(path, required_fields=("id", "consumer", "preset", "label", "providerOrder", "modelOverrides", "allowDeterministicFallback"))
+
+
+def load_npc_dialogue_runtime_cue_rules(
+    root: str | Path | None = None,
+    *,
+    npc_dialogue_runtime_cue_rules: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    base = resolve_governance_root(root)
+    path = Path(npc_dialogue_runtime_cue_rules).resolve() if npc_dialogue_runtime_cue_rules else _path(base, "rules", "rule-npc-dialogue-runtime-cues.jsonl")
+    return read_governance_jsonl(path, required_fields=("id", "consumer", "constantName", "kind", "value"))
+
+
 def expected_governance_files() -> list[dict[str, str]]:
     return [
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
@@ -475,6 +506,9 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "catalogs", "file": "catalog-known-female-names.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-common-relation-labels.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-female-profile-overrides.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
+        {"section": "catalogs", "file": "catalog-runtime-profile-labels.json", "consumer": "export_general_runtime_profile.py"},
+        {"section": "catalogs", "file": "catalog-runtime-voice-presets.jsonl", "consumer": "export_general_runtime_profile.py"},
+        {"section": "catalogs", "file": "catalog-npc-dialogue-llm-model-presets.jsonl", "consumer": "npc_dialogue_service.py"},
         {"section": "policies", "file": "policy-stable-bootstrap.json", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "policies", "file": "policy-full-roster-runner.json", "consumer": "run_full_roster_convergence_loop.py"},
         {"section": "policies", "file": "policy-progress-advancement-runner.json", "consumer": "run_progress_advancement_loop.py"},
@@ -487,6 +521,7 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "policies", "file": "policy-event-question-seed-bank.json", "consumer": "build_event_question_seed_bank.py"},
         {"section": "policies", "file": "policy-external-source-benchmark.json", "consumer": "benchmark_external_source.py"},
         {"section": "policies", "file": "policy-event-review-context.json", "consumer": "enrich_event_review_context.py"},
+        {"section": "policies", "file": "policy-npc-dialogue-runtime-service.json", "consumer": "npc_dialogue_service.py"},
         {"section": "rules", "file": "rule-basic-profile-cues.json", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "rules", "file": "rule-location-extraction.json", "consumer": "run_progress_advancement_loop.py"},
         {"section": "rules", "file": "rule-evidence-seed-keyword-cues.jsonl", "consumer": "extract_*_evidence_seeds.py"},
@@ -497,6 +532,7 @@ def expected_governance_files() -> list[dict[str, str]]:
         {"section": "rules", "file": "rule-event-question-angle-cues.jsonl", "consumer": "build_event_question_seed_bank.py"},
         {"section": "rules", "file": "rule-external-source-benchmark-cues.jsonl", "consumer": "benchmark_external_source.py"},
         {"section": "rules", "file": "rule-event-review-context-cues.jsonl", "consumer": "enrich_event_review_context.py"},
+        {"section": "rules", "file": "rule-npc-dialogue-runtime-cues.jsonl", "consumer": "npc_dialogue_service.py"},
         {"section": "schemas", "file": "schema-stable-bootstrap-payload.json", "consumer": "validate_sanguo_governance.py"},
         {"section": "schemas", "file": "schema-governance-bundle.json", "consumer": "validate_sanguo_governance.py"},
     ]

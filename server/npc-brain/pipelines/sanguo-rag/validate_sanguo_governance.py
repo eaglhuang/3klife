@@ -27,6 +27,9 @@ from sanguo_governance_loader import (
     load_evidence_seed_text_normalization_rules,
     load_full_roster_runner_governance,
     load_knowledge_completion_policy,
+    load_npc_dialogue_llm_model_presets,
+    load_npc_dialogue_runtime_cue_rules,
+    load_npc_dialogue_runtime_service_policy,
     load_progress_runner_governance,
     load_relationship_runtime_canon_policy,
     load_runtime_general_profile_export_policy,
@@ -146,6 +149,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     runtime_profile_policy = load_runtime_general_profile_export_policy(root)
     runtime_profile_item_cues = load_runtime_profile_item_cue_rules(root)
     runtime_relationship_refinement_rules = load_runtime_relationship_refinement_rules(root)
+    npc_dialogue_policy = load_npc_dialogue_runtime_service_policy(root)
+    npc_dialogue_presets = load_npc_dialogue_llm_model_presets(root)
+    npc_dialogue_cues = load_npc_dialogue_runtime_cue_rules(root)
     schema = read_governance_json(root / "schemas/schema-stable-bootstrap-payload.json")
 
     if not stable["hardRelationshipSpecs"]:
@@ -713,6 +719,85 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if "RULER_SUBJECT_AUTHORITY_TERMS" not in refinement_by_name:
         raise SanguoGovernanceError("rule-runtime-relationship-refinement missing RULER_SUBJECT_AUTHORITY_TERMS")
 
+
+
+    npc_default_preset = str(npc_dialogue_policy.get("defaultLlmModelPreset") or "").strip()
+    npc_history_providers = [str(item).strip() for item in npc_dialogue_policy.get("llmHistoryProviders") or []]
+    npc_source_layers = [str(item).strip() for item in npc_dialogue_policy.get("stableRelationshipSourceLayers") or []]
+    npc_a_canon_grades = [str(item).strip() for item in npc_dialogue_policy.get("aCanonRelationshipGrades") or []]
+    for label, values in (("llmHistoryProviders", npc_history_providers), ("stableRelationshipSourceLayers", npc_source_layers), ("aCanonRelationshipGrades", npc_a_canon_grades)):
+        if not values or any(not value for value in values):
+            raise SanguoGovernanceError(f"policy-npc-dialogue-runtime-service {label} must be non-empty strings")
+        if len(set(values)) != len(values):
+            raise SanguoGovernanceError(f"policy-npc-dialogue-runtime-service {label} cannot contain duplicates")
+    npc_preset_names: set[str] = set()
+    for row in npc_dialogue_presets:
+        if str(row.get("consumer") or "") != "npc_dialogue_service.py":
+            raise SanguoGovernanceError("catalog-npc-dialogue-llm-model-presets invalid consumer")
+        preset = str(row.get("preset") or "").strip()
+        if not preset:
+            raise SanguoGovernanceError("catalog-npc-dialogue-llm-model-presets preset cannot be blank")
+        if preset in npc_preset_names:
+            raise SanguoGovernanceError(f"catalog-npc-dialogue-llm-model-presets duplicate preset: {preset}")
+        npc_preset_names.add(preset)
+        if not str(row.get("label") or "").strip():
+            raise SanguoGovernanceError(f"catalog-npc-dialogue-llm-model-presets {preset} missing label")
+        provider_order = row.get("providerOrder")
+        if provider_order is not None and (not isinstance(provider_order, list) or any(not str(item).strip() for item in provider_order)):
+            raise SanguoGovernanceError(f"catalog-npc-dialogue-llm-model-presets {preset} providerOrder must be null or non-empty strings")
+        if not isinstance(row.get("modelOverrides"), dict):
+            raise SanguoGovernanceError(f"catalog-npc-dialogue-llm-model-presets {preset} modelOverrides must be object")
+        if not isinstance(row.get("allowDeterministicFallback"), bool):
+            raise SanguoGovernanceError(f"catalog-npc-dialogue-llm-model-presets {preset} allowDeterministicFallback must be bool")
+    if npc_default_preset not in npc_preset_names:
+        raise SanguoGovernanceError("policy-npc-dialogue-runtime-service defaultLlmModelPreset must exist in catalog-npc-dialogue-llm-model-presets")
+    npc_required_cues = {"HARD_RELATIONSHIP_PAIR_TYPES", "TARGET_ID_NAME_COLLISIONS", "YELLOW_TURBAN_TARGET_IDS", "YELLOW_TURBAN_CONTEXT_TERMS"}
+    npc_cue_by_name: dict[str, dict[str, Any]] = {}
+    npc_dialogue_term_count = 0
+    for row in npc_dialogue_cues:
+        if str(row.get("consumer") or "") != "npc_dialogue_service.py":
+            raise SanguoGovernanceError("rule-npc-dialogue-runtime-cues invalid consumer")
+        constant_name = str(row.get("constantName") or "").strip()
+        if constant_name in npc_cue_by_name:
+            raise SanguoGovernanceError(f"rule-npc-dialogue-runtime-cues duplicate constantName: {constant_name}")
+        npc_cue_by_name[constant_name] = row
+        kind = str(row.get("kind") or "").strip()
+        value = row.get("value")
+        if kind == "relationshipPairTypes":
+            if not isinstance(value, list) or not value:
+                raise SanguoGovernanceError("rule-npc-dialogue-runtime-cues relationshipPairTypes must be non-empty list")
+            seen_pairs: set[tuple[str, ...]] = set()
+            for entry in value:
+                ids = tuple(sorted(str(item).strip() for item in (entry.get("generalIds") if isinstance(entry, dict) else []) or [] if str(item).strip()))
+                if not isinstance(entry, dict) or len(ids) < 2 or not str(entry.get("relationshipType") or "").strip():
+                    raise SanguoGovernanceError("rule-npc-dialogue-runtime-cues relationshipPairTypes entry missing ids/type")
+                if ids in seen_pairs:
+                    raise SanguoGovernanceError(f"rule-npc-dialogue-runtime-cues duplicate relationship pair: {ids}")
+                seen_pairs.add(ids)
+        elif kind == "nestedMapping":
+            if not isinstance(value, dict) or not value:
+                raise SanguoGovernanceError("rule-npc-dialogue-runtime-cues nestedMapping value must be object")
+            for key, mapping in value.items():
+                if not str(key).strip() or not isinstance(mapping, dict) or not mapping:
+                    raise SanguoGovernanceError("rule-npc-dialogue-runtime-cues nestedMapping has invalid row")
+                for source, target in mapping.items():
+                    if not str(source).strip() or not str(target).strip():
+                        raise SanguoGovernanceError("rule-npc-dialogue-runtime-cues nestedMapping has blank mapping")
+        elif kind in {"idSet", "termList"}:
+            if not isinstance(value, list) or not value:
+                raise SanguoGovernanceError(f"rule-npc-dialogue-runtime-cues {constant_name} value must be non-empty list")
+            normalized = [str(item).strip() for item in value]
+            if any(not item for item in normalized):
+                raise SanguoGovernanceError(f"rule-npc-dialogue-runtime-cues {constant_name} has blank value")
+            if len(set(normalized)) != len(normalized):
+                raise SanguoGovernanceError(f"rule-npc-dialogue-runtime-cues {constant_name} has duplicate value")
+            npc_dialogue_term_count += len(normalized)
+        else:
+            raise SanguoGovernanceError(f"rule-npc-dialogue-runtime-cues {constant_name} unsupported kind: {kind}")
+    missing_npc_cues = sorted(npc_required_cues - npc_cue_by_name.keys())
+    if missing_npc_cues:
+        raise SanguoGovernanceError(f"rule-npc-dialogue-runtime-cues missing rules: {', '.join(missing_npc_cues)}")
+
     if "summary" not in (schema.get("requiredTopLevelKeys") or []):
         raise SanguoGovernanceError("schema-stable-bootstrap-payload must require summary")
 
@@ -750,6 +835,9 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
         "runtimeVoicePresetCount": len(runtime_voice_presets),
         "runtimeProfileItemCueRuleCount": len(runtime_profile_item_cues),
         "runtimeRelationshipRefinementRuleCount": len(runtime_relationship_refinement_rules),
+        "npcDialogueLlmModelPresetCount": len(npc_dialogue_presets),
+        "npcDialogueRuntimeCueRuleCount": len(npc_dialogue_cues),
+        "npcDialogueRuntimeCueValueCount": npc_dialogue_term_count,
     }
 
 

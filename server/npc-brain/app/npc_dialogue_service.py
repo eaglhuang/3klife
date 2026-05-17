@@ -182,6 +182,140 @@ LLM_MODEL_PRESETS = {
 SUPPORTED_LLM_MODEL_PRESETS = set(LLM_MODEL_PRESETS.keys())
 
 
+def _governance_candidates(repo_root: Path, relative_path: str) -> list[Path]:
+    return [
+        repo_root / "server/npc-brain/data/sanguo" / relative_path,
+        repo_root / "data/sanguo" / relative_path,
+    ]
+
+
+def _resolve_optional_governance_path(repo_root: Path, env_name: str, relative_path: str) -> Path | None:
+    override = os.environ.get(env_name)
+    if override and override.strip():
+        path = Path(override)
+        resolved = path if path.is_absolute() else repo_root / path
+        if not resolved.exists():
+            raise ValueError(f"NPC dialogue governance file not found: {resolved}")
+        return resolved
+    for candidate in _governance_candidates(repo_root, relative_path):
+        if candidate.exists():
+            return candidate
+    return None
+
+
+def _read_optional_governance_json(repo_root: Path, env_name: str, relative_path: str, required_id: str) -> dict[str, Any] | None:
+    path = _resolve_optional_governance_path(repo_root, env_name, relative_path)
+    if path is None:
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"NPC dialogue governance JSON parse failed: {path}:{exc.lineno}:{exc.colno}") from exc
+    if not isinstance(payload, dict):
+        raise ValueError(f"NPC dialogue governance JSON must be object: {path}")
+    if payload.get("id") != required_id:
+        raise ValueError(f"NPC dialogue governance JSON id mismatch: {path}")
+    return payload
+
+
+def _read_optional_governance_jsonl(repo_root: Path, env_name: str, relative_path: str) -> list[dict[str, Any]] | None:
+    path = _resolve_optional_governance_path(repo_root, env_name, relative_path)
+    if path is None:
+        return None
+    rows: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    with path.open("r", encoding="utf-8-sig") as handle:
+        for line_no, line in enumerate(handle, 1):
+            text = line.strip()
+            if not text:
+                continue
+            try:
+                row = json.loads(text)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"NPC dialogue governance JSONL parse failed: {path}:{line_no}:{exc.colno}") from exc
+            if not isinstance(row, dict):
+                raise ValueError(f"NPC dialogue governance JSONL row must be object: {path}:{line_no}")
+            row_id = str(row.get("id") or "").strip()
+            if not row_id:
+                raise ValueError(f"NPC dialogue governance JSONL missing id: {path}:{line_no}")
+            if row_id in seen_ids:
+                raise ValueError(f"NPC dialogue governance JSONL duplicate id: {path}:{line_no} id={row_id}")
+            seen_ids.add(row_id)
+            rows.append(row)
+    return rows
+
+
+def _non_empty_string_set(values: Any, fallback: set[str]) -> set[str]:
+    if not isinstance(values, list):
+        return set(fallback)
+    normalized = {str(value).strip() for value in values if str(value).strip()}
+    return normalized or set(fallback)
+
+
+def _npc_dialogue_rule_by_name(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return {str(row.get("constantName") or ""): row for row in rows}
+
+
+def apply_npc_dialogue_runtime_service_governance(repo_root: Path) -> None:
+    global DEFAULT_LLM_MODEL_PRESET, LLM_HISTORY_PROVIDERS
+    global DEFAULT_STABLE_RELATIONSHIP_SOURCE_LAYERS, DEFAULT_A_CANON_RELATIONSHIP_GRADES
+    global LLM_MODEL_PRESETS, SUPPORTED_LLM_MODEL_PRESETS
+    global HARD_RELATIONSHIP_PAIR_TYPES, TARGET_ID_NAME_COLLISIONS
+    global YELLOW_TURBAN_TARGET_IDS, YELLOW_TURBAN_CONTEXT_TERMS
+
+    policy = _read_optional_governance_json(repo_root, "NPC_DIALOGUE_RUNTIME_SERVICE_POLICY", "policies/policy-npc-dialogue-runtime-service.json", "Policy_NpcDialogueRuntimeService_P1")
+    preset_rows = _read_optional_governance_jsonl(repo_root, "NPC_DIALOGUE_LLM_MODEL_PRESETS", "catalogs/catalog-npc-dialogue-llm-model-presets.jsonl")
+    cue_rows = _read_optional_governance_jsonl(repo_root, "NPC_DIALOGUE_RUNTIME_CUE_RULES", "rules/rule-npc-dialogue-runtime-cues.jsonl")
+
+    if policy:
+        DEFAULT_LLM_MODEL_PRESET = str(policy.get("defaultLlmModelPreset") or DEFAULT_LLM_MODEL_PRESET)
+        LLM_HISTORY_PROVIDERS = _non_empty_string_set(policy.get("llmHistoryProviders"), LLM_HISTORY_PROVIDERS)
+        DEFAULT_STABLE_RELATIONSHIP_SOURCE_LAYERS = _non_empty_string_set(policy.get("stableRelationshipSourceLayers"), DEFAULT_STABLE_RELATIONSHIP_SOURCE_LAYERS)
+        DEFAULT_A_CANON_RELATIONSHIP_GRADES = _non_empty_string_set(policy.get("aCanonRelationshipGrades"), DEFAULT_A_CANON_RELATIONSHIP_GRADES)
+    if preset_rows:
+        presets: dict[str, dict[str, Any]] = {}
+        for row in preset_rows:
+            preset = str(row.get("preset") or "").strip()
+            if not preset:
+                continue
+            provider_order = row.get("providerOrder")
+            if provider_order is not None:
+                provider_order = [str(item) for item in provider_order]
+            model_overrides = row.get("modelOverrides") if isinstance(row.get("modelOverrides"), dict) else {}
+            presets[preset] = {
+                "label": str(row.get("label") or preset),
+                "description": str(row.get("description") or ""),
+                "providerOrder": provider_order,
+                "modelOverrides": {str(key): str(value) for key, value in model_overrides.items()},
+                "allowDeterministicFallback": bool(row.get("allowDeterministicFallback")),
+            }
+        if presets:
+            LLM_MODEL_PRESETS = presets
+            SUPPORTED_LLM_MODEL_PRESETS = set(LLM_MODEL_PRESETS.keys())
+    if cue_rows:
+        by_name = _npc_dialogue_rule_by_name(cue_rows)
+        pair_values = by_name.get("HARD_RELATIONSHIP_PAIR_TYPES", {}).get("value")
+        if isinstance(pair_values, list) and pair_values:
+            HARD_RELATIONSHIP_PAIR_TYPES = {
+                frozenset(str(item) for item in row.get("generalIds") or []): str(row.get("relationshipType") or "")
+                for row in pair_values
+                if isinstance(row, dict) and len(row.get("generalIds") or []) >= 2 and row.get("relationshipType")
+            }
+        collision_value = by_name.get("TARGET_ID_NAME_COLLISIONS", {}).get("value")
+        if isinstance(collision_value, dict) and collision_value:
+            TARGET_ID_NAME_COLLISIONS = {
+                str(target_id): {str(name): str(mapped_id) for name, mapped_id in mapping.items()}
+                for target_id, mapping in collision_value.items()
+                if isinstance(mapping, dict)
+            }
+        target_ids = by_name.get("YELLOW_TURBAN_TARGET_IDS", {}).get("value")
+        if isinstance(target_ids, list) and target_ids:
+            YELLOW_TURBAN_TARGET_IDS = {str(item) for item in target_ids if str(item).strip()}
+        context_terms = by_name.get("YELLOW_TURBAN_CONTEXT_TERMS", {}).get("value")
+        if isinstance(context_terms, list) and context_terms:
+            YELLOW_TURBAN_CONTEXT_TERMS = tuple(str(item) for item in context_terms if str(item).strip())
+
+
 class ContextOption(BaseModel):
     contextKey: str
     label: str
@@ -449,6 +583,7 @@ class NpcDialogueService:
     ) -> None:
         self.repo_root = repo_root or find_repo_root(Path.cwd())
         load_local_env(self.repo_root)
+        apply_npc_dialogue_runtime_service_governance(self.repo_root)
         artifact_root_path = artifact_root or Path(os.environ.get("NPC_ARTIFACT_ROOT") or DEFAULT_ARTIFACT_ROOT)
         persona_root_path = persona_root or Path(os.environ.get("NPC_PERSONA_ROOT") or DEFAULT_PERSONA_ROOT)
         runtime_profile_root_path = runtime_profile_root or Path(
