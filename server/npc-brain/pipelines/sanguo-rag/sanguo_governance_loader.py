@@ -671,6 +671,7 @@ def load_full_roster_scoreboard_policy(
 
 def expected_governance_files() -> list[dict[str, str]]:
     return [
+        {"section": "policies", "file": "policy-full-roster-scoreboard.json", "consumer": "build_full_roster_scoreboard.py"},
         {"section": "catalogs", "file": "catalog-hard-relationship-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-faction-timeline-specs.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},
         {"section": "catalogs", "file": "catalog-event-location-seeds.jsonl", "consumer": "build_stable_knowledge_bootstrap.py"},

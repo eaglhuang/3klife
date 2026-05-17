@@ -94,6 +94,48 @@ DEFAULT_LANE_THRESHOLDS = {
     "cHumanReviewGenericMin": 3,
     "femalePriorityCToSkillPreview": True,
 }
+DEFAULT_SCOREBOARD_SCORING_POLICY: dict[str, dict[str, float | int]] = {
+    "historicalTrustScoreWeights": {
+        "sourceStrengthScore": 0.30,
+        "crossEvidenceScore": 0.25,
+        "quoteLocatorScore": 0.15,
+        "claimSpecificityScore": 0.10,
+        "extractorAgreementScore": 0.10,
+        "reviewerAgreementScore": 0.10,
+    },
+    "historicalTrustPenaltyWeights": {
+        "conflictPenalty": 1.0,
+        "duplicateFamilyPenalty": 1.0,
+        "staleEvidencePenalty": 1.0,
+    },
+    "worldbuildingUsabilityWeights": {
+        "historicalScore": 0.45,
+        "romanceFolkloreSupportScore": 0.20,
+        "profileCompletenessScore": 0.15,
+        "relationshipPlayableScore": 0.10,
+        "activityDialogueSeedScore": 0.10,
+        "femalePriorityBoost": 1.0,
+        "contradictionPenalty": 1.0,
+    },
+    "worldbuildingUsabilityLimits": {
+        "maxWithFemaleBoost": 95.0,
+        "maxDefault": 100.0,
+    },
+    "gradeFallbackThresholds": {
+        "bMinHistoricalScore": 50.0,
+        "bMinWorldbuildingScore": 50.0,
+    },
+    "priorityScoreWeights": {
+        "worldbuildingScore": 0.40,
+        "historicalScore": 0.30,
+        "completeness": 0.20,
+        "genericCandidateUnitWeight": 2.5,
+        "genericCandidateCap": 8,
+        "femaleBoost": 1.0,
+        "missingFieldPenaltyWeight": 2.0,
+        "missingFieldPenaltyCap": 4,
+    },
+}
 FEMALE_TOKENS = {"female", "f", "woman", "女", "女性"}
 MALE_TOKENS = {"male", "m", "man", "男", "男性"}
 A_HISTORY_GRADE_TYPE = "A-history"
@@ -118,6 +160,36 @@ def apply_relationship_runtime_canon_policy(governance_root: str | Path | None, 
         READY_EVAL_GRADE_TYPES = {str(item).strip() for item in ready_types if str(item).strip()}
     A_HISTORY_MIN_HISTORICAL_SCORE = float(policy.get("scoreboardHistoryMinHistoricalScore") or A_HISTORY_MIN_HISTORICAL_SCORE)
     A_ROMANCE_MIN_WORLDBUILDING_SCORE = float(policy.get("scoreboardRomanceMinWorldbuildingScore") or A_ROMANCE_MIN_WORLDBUILDING_SCORE)
+
+
+
+
+def scoreboard_scoring_section(section_name: str) -> dict[str, float | int]:
+    defaults = DEFAULT_SCOREBOARD_SCORING_POLICY.get(section_name) or {}
+    policy = FULL_ROSTER_SCOREBOARD_POLICY.get("scoring")
+    section = policy.get(section_name) if isinstance(policy, dict) else None
+    merged: dict[str, float | int] = dict(defaults)
+    if isinstance(section, dict):
+        for key, value in section.items():
+            if isinstance(value, (int, float)):
+                merged[str(key)] = value
+    return merged
+
+
+def scoreboard_float(section_name: str, key: str, fallback: float) -> float:
+    value = scoreboard_scoring_section(section_name).get(key, fallback)
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return fallback
+
+
+def scoreboard_int(section_name: str, key: str, fallback: int) -> int:
+    value = scoreboard_scoring_section(section_name).get(key, fallback)
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return fallback
 
 
 def utc_now() -> str:
@@ -548,31 +620,35 @@ def confidence_breakdown(
 
 
 def historical_trust_score(breakdown: dict[str, float]) -> float:
+    weights = scoreboard_scoring_section("historicalTrustScoreWeights")
+    penalties = scoreboard_scoring_section("historicalTrustPenaltyWeights")
     value = (
-        breakdown["sourceStrengthScore"] * 0.30
-        + breakdown["crossEvidenceScore"] * 0.25
-        + breakdown["quoteLocatorScore"] * 0.15
-        + breakdown["claimSpecificityScore"] * 0.10
-        + breakdown["extractorAgreementScore"] * 0.10
-        + breakdown["reviewerAgreementScore"] * 0.10
-        - breakdown["conflictPenalty"]
-        - breakdown["duplicateFamilyPenalty"]
-        - breakdown["staleEvidencePenalty"]
+        breakdown["sourceStrengthScore"] * float(weights.get("sourceStrengthScore", 0.30))
+        + breakdown["crossEvidenceScore"] * float(weights.get("crossEvidenceScore", 0.25))
+        + breakdown["quoteLocatorScore"] * float(weights.get("quoteLocatorScore", 0.15))
+        + breakdown["claimSpecificityScore"] * float(weights.get("claimSpecificityScore", 0.10))
+        + breakdown["extractorAgreementScore"] * float(weights.get("extractorAgreementScore", 0.10))
+        + breakdown["reviewerAgreementScore"] * float(weights.get("reviewerAgreementScore", 0.10))
+        - breakdown["conflictPenalty"] * float(penalties.get("conflictPenalty", 1.0))
+        - breakdown["duplicateFamilyPenalty"] * float(penalties.get("duplicateFamilyPenalty", 1.0))
+        - breakdown["staleEvidencePenalty"] * float(penalties.get("staleEvidencePenalty", 1.0))
     )
     return round(clamp(value), 2)
 
 
 def worldbuilding_usability_score(*, historical_score: float, breakdown: dict[str, float], has_female_boost: bool) -> float:
+    weights = scoreboard_scoring_section("worldbuildingUsabilityWeights")
+    limits = scoreboard_scoring_section("worldbuildingUsabilityLimits")
     value = (
-        historical_score * 0.45
-        + breakdown["romanceFolkloreSupportScore"] * 0.20
-        + breakdown["profileCompletenessScore"] * 0.15
-        + breakdown["relationshipPlayableScore"] * 0.10
-        + breakdown["activityDialogueSeedScore"] * 0.10
-        + breakdown["femalePriorityBoost"]
-        - breakdown["contradictionPenalty"]
+        historical_score * float(weights.get("historicalScore", 0.45))
+        + breakdown["romanceFolkloreSupportScore"] * float(weights.get("romanceFolkloreSupportScore", 0.20))
+        + breakdown["profileCompletenessScore"] * float(weights.get("profileCompletenessScore", 0.15))
+        + breakdown["relationshipPlayableScore"] * float(weights.get("relationshipPlayableScore", 0.10))
+        + breakdown["activityDialogueSeedScore"] * float(weights.get("activityDialogueSeedScore", 0.10))
+        + breakdown["femalePriorityBoost"] * float(weights.get("femalePriorityBoost", 1.0))
+        - breakdown["contradictionPenalty"] * float(weights.get("contradictionPenalty", 1.0))
     )
-    max_value = 95.0 if has_female_boost else 100.0
+    max_value = float(limits.get("maxWithFemaleBoost", 95.0)) if has_female_boost else float(limits.get("maxDefault", 100.0))
     return round(clamp(value, 0.0, max_value), 2)
 
 
@@ -594,7 +670,9 @@ def review_grade(
         return "A", A_HISTORY_GRADE_TYPE
     if worldbuilding_score >= A_ROMANCE_MIN_WORLDBUILDING_SCORE and external_romance_count > 0:
         return "A", A_ROMANCE_GRADE_TYPE
-    if historical_score >= 50.0 or worldbuilding_score >= 50.0:
+    b_min_historical = scoreboard_float("gradeFallbackThresholds", "bMinHistoricalScore", 50.0)
+    b_min_worldbuilding = scoreboard_float("gradeFallbackThresholds", "bMinWorldbuildingScore", 50.0)
+    if historical_score >= b_min_historical or worldbuilding_score >= b_min_worldbuilding:
         return "B", "B"
     if generic_candidate_count > 0 or missing_fields:
         return "C", "C"
@@ -686,13 +764,16 @@ def priority_score(
     female_boost: float,
     missing_field_count: int,
 ) -> float:
+    weights = scoreboard_scoring_section("priorityScoreWeights")
     value = (
-        worldbuilding_score * 0.40
-        + historical_score * 0.30
-        + completeness * 0.20
-        + min(generic_candidate_count, 8) * 2.5
-        + female_boost
-        - min(missing_field_count, 4) * 2.0
+        worldbuilding_score * float(weights.get("worldbuildingScore", 0.40))
+        + historical_score * float(weights.get("historicalScore", 0.30))
+        + completeness * float(weights.get("completeness", 0.20))
+        + min(generic_candidate_count, int(weights.get("genericCandidateCap", 8)))
+        * float(weights.get("genericCandidateUnitWeight", 2.5))
+        + female_boost * float(weights.get("femaleBoost", 1.0))
+        - min(missing_field_count, int(weights.get("missingFieldPenaltyCap", 4)))
+        * float(weights.get("missingFieldPenaltyWeight", 2.0))
     )
     return round(clamp(value), 2)
 

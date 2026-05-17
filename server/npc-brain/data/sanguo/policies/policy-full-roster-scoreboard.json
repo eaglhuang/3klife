@@ -1,6 +1,6 @@
 {
   "id": "Policy_FullRosterScoreboard_P1",
-  "description": "Externalized deterministic defaults for full roster scoreboard paths and lane routing thresholds. Values are copied from build_full_roster_scoreboard.py Phase 19 baseline.",
+  "description": "Externalized deterministic defaults for full roster scoreboard paths, lane routing thresholds, and scoring weights. Values are copied from build_full_roster_scoreboard.py Phase 20 baseline.",
   "defaultProfile": "all",
   "profileChoices": [
     "all",
@@ -21,5 +21,47 @@
     "aRuminationHistoricalMax": 75.0,
     "cHumanReviewGenericMin": 3,
     "femalePriorityCToSkillPreview": true
+  },
+  "scoring": {
+    "historicalTrustScoreWeights": {
+      "sourceStrengthScore": 0.3,
+      "crossEvidenceScore": 0.25,
+      "quoteLocatorScore": 0.15,
+      "claimSpecificityScore": 0.1,
+      "extractorAgreementScore": 0.1,
+      "reviewerAgreementScore": 0.1
+    },
+    "historicalTrustPenaltyWeights": {
+      "conflictPenalty": 1.0,
+      "duplicateFamilyPenalty": 1.0,
+      "staleEvidencePenalty": 1.0
+    },
+    "worldbuildingUsabilityWeights": {
+      "historicalScore": 0.45,
+      "romanceFolkloreSupportScore": 0.2,
+      "profileCompletenessScore": 0.15,
+      "relationshipPlayableScore": 0.1,
+      "activityDialogueSeedScore": 0.1,
+      "femalePriorityBoost": 1.0,
+      "contradictionPenalty": 1.0
+    },
+    "worldbuildingUsabilityLimits": {
+      "maxWithFemaleBoost": 95.0,
+      "maxDefault": 100.0
+    },
+    "gradeFallbackThresholds": {
+      "bMinHistoricalScore": 50.0,
+      "bMinWorldbuildingScore": 50.0
+    },
+    "priorityScoreWeights": {
+      "worldbuildingScore": 0.4,
+      "historicalScore": 0.3,
+      "completeness": 0.2,
+      "genericCandidateUnitWeight": 2.5,
+      "genericCandidateCap": 8,
+      "femaleBoost": 1.0,
+      "missingFieldPenaltyWeight": 2.0,
+      "missingFieldPenaltyCap": 4
+    }
   }
 }

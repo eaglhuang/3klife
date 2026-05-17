@@ -36,6 +36,7 @@ from sanguo_governance_loader import (
     load_external_source_benchmark_policy,
     load_evidence_seed_text_normalization_rules,
     load_full_roster_runner_governance,
+    load_full_roster_scoreboard_policy,
     load_knowledge_completion_policy,
     load_npc_dialogue_llm_model_presets,
     load_npc_dialogue_runtime_cue_rules,
@@ -137,6 +138,7 @@ def require_confidence_tiers(policy: dict[str, Any], field: str, label: str) -> 
 def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     stable = load_stable_bootstrap_governance(root)
     full = load_full_roster_runner_governance(root)
+    full_roster_scoreboard = load_full_roster_scoreboard_policy(root)
     progress = load_progress_runner_governance(root)
     relationship = load_relationship_runtime_canon_policy(root)
     source_event_packets = load_source_event_packet_policy(root)
@@ -1140,9 +1142,50 @@ def validate_minimum_shapes(root: Path) -> dict[str, Any]:
     if not isinstance(scoreboard_lane_thresholds.get("femalePriorityCToSkillPreview"), bool):
         raise SanguoGovernanceError("policy-full-roster-scoreboard femalePriorityCToSkillPreview must be boolean")
 
+    scoreboard_scoring = full_roster_scoreboard.get("scoring")
+    if not isinstance(scoreboard_scoring, dict) or not scoreboard_scoring:
+        raise SanguoGovernanceError("policy-full-roster-scoreboard scoring cannot be empty")
+    required_scoreboard_scoring_sections = {
+        "historicalTrustScoreWeights",
+        "historicalTrustPenaltyWeights",
+        "worldbuildingUsabilityWeights",
+        "worldbuildingUsabilityLimits",
+        "gradeFallbackThresholds",
+        "priorityScoreWeights",
+    }
+    missing_scoreboard_scoring = sorted(required_scoreboard_scoring_sections - set(scoreboard_scoring.keys()))
+    if missing_scoreboard_scoring:
+        raise SanguoGovernanceError(
+            f"policy-full-roster-scoreboard missing scoring sections: {', '.join(missing_scoreboard_scoring)}"
+        )
+    scoreboard_scoring_weight_count = 0
+    for section_name in sorted(required_scoreboard_scoring_sections):
+        section = scoreboard_scoring.get(section_name)
+        if not isinstance(section, dict) or not section:
+            raise SanguoGovernanceError(f"policy-full-roster-scoreboard scoring.{section_name} cannot be empty")
+        for key, value in section.items():
+            if not isinstance(value, (int, float)):
+                raise SanguoGovernanceError(
+                    f"policy-full-roster-scoreboard scoring.{section_name}.{key} must be numeric"
+                )
+            if value < 0:
+                raise SanguoGovernanceError(
+                    f"policy-full-roster-scoreboard scoring.{section_name}.{key} cannot be negative"
+                )
+        scoreboard_scoring_weight_count += len(section)
+    if float(scoreboard_scoring["gradeFallbackThresholds"].get("bMinHistoricalScore") or 0.0) <= 0.0:
+        raise SanguoGovernanceError("policy-full-roster-scoreboard bMinHistoricalScore must be positive")
+    if float(scoreboard_scoring["gradeFallbackThresholds"].get("bMinWorldbuildingScore") or 0.0) <= 0.0:
+        raise SanguoGovernanceError("policy-full-roster-scoreboard bMinWorldbuildingScore must be positive")
+    limits = scoreboard_scoring["worldbuildingUsabilityLimits"]
+    if float(limits.get("maxDefault") or 0.0) < float(limits.get("maxWithFemaleBoost") or 0.0):
+        raise SanguoGovernanceError("policy-full-roster-scoreboard maxDefault must be >= maxWithFemaleBoost")
+
     return {
         "fullRosterScoreboardPathDefaultCount": len(scoreboard_default_paths),
         "fullRosterScoreboardLaneThresholdCount": len(scoreboard_lane_thresholds),
+        "fullRosterScoreboardScoringSectionCount": len(required_scoreboard_scoring_sections),
+        "fullRosterScoreboardScoringWeightCount": scoreboard_scoring_weight_count,
         "hardRelationshipSpecCount": len(stable["hardRelationshipSpecs"]),
         "factionTimelineSpecCount": len(stable["factionTimelineSpecs"]),
         "eventLocationSeedCount": len(stable["eventLocationSeeds"]),
