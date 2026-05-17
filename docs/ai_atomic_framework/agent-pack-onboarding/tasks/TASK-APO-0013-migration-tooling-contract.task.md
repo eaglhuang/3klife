@@ -3,7 +3,9 @@ doc_id: doc_other_0166
 task_id: TASK-APO-0013
 title: Migration tooling contract + fixture 庫 + migration guide 模板
 milestone: M8
-status: open
+status: done
+started_at: 2026-05-18T10:00:00+08:00
+started_by_agent: claude-sonnet-4.6
 blocked_by: [TASK-APO-0012]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
@@ -28,6 +30,9 @@ non_goals:
   - 重寫既有 upgrade plan / rollback（屬 TASK-APO-0012 範疇）
   - 提供具體 0.x → 1.0 migration 內容（本卡只定契約與工具）
 created_at: 2026-05-18T00:00:00+08:00
+completed_at: 2026-05-18T10:30:00+08:00
+completed_by_agent: claude-sonnet-4.6
+commit: 89515a4 (AI-Atomic-Framework main)
 created_by_agent: vs-insiders-gpt-5.4
 ---
 
