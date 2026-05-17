@@ -61,13 +61,13 @@
       "name": "registry-server",
       "title": "Server 文件類（server）",
       "path": "docs/doc-id-registry-shards/registry-server.json",
-      "count": 13318
+      "count": 13338
     },
     {
       "name": "registry-other",
       "title": "其它類（other）",
       "path": "docs/doc-id-registry-shards/registry-other.json",
-      "count": 152
+      "count": 153
     }
   ]
 }

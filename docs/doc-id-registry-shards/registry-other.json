@@ -810,18 +810,6 @@
     "category": "other"
   },
   {
-    "id": "doc_other_0145",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md",
-    "title": "ATM Agent Pack / Onboarding 計畫書",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_0146",
-    "path": "docs/ai_atomic_framework/agent-pack-onboarding/01_ATM_spec-kit融合計畫書.md",
-    "title": "ATM × spec-kit 融合計畫（最終版）",
-    "category": "other"
-  },
-  {
     "id": "doc_other_0147",
     "path": "docs/ai_atomic_framework/map-replacement-protocol/plan-shards/plan-foundation.md",
     "title": "拆解大型功能優化原子map計畫書 — 基礎與原則（§0–§5）",
@@ -909,6 +897,24 @@
     "id": "doc_other_0161",
     "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0010-agent-matrix-generator.task.md",
     "title": "TASK-APO-0010 — 多 agent 矩陣自動生成",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0162",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md",
+    "title": "ATM 引導工程計畫書",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0163",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0011-framework-chart-version-contract.task.md",
+    "title": "TASK-APO-0011 — Framework / ATMChart 版本契約",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_0164",
+    "path": "docs/ai_atomic_framework/agent-pack-onboarding/tasks/TASK-APO-0012-version-compatibility-gate.task.md",
+    "title": "TASK-APO-0012 — Version compatibility 與 breaking-change gate",
     "category": "other"
   }
 ]

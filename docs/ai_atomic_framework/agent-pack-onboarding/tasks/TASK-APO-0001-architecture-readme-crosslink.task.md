@@ -6,7 +6,7 @@ milestone: M1
 status: done
 blocked_by: [TASK-APO-0000]
 owner: atm-core
-related_plan: docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md
+related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
 hostKind: upstream-framework
@@ -34,7 +34,7 @@ started_by_agent: vs-insiders-gpt-5.4
 
 ## 目標
 
-在 AI-Atomic-Framework 的公開文件面建立 Agent Pack / Onboarding 的英文入口，讓開源使用者能理解這是 first-touch 與 agent entry enforcement 能力，而不是 3KLife 私有流程。
+在 upstream framework 的公開文件面建立 Agent Pack / Onboarding 的英文入口，讓開源使用者能理解這是 first-touch 與 agent entry enforcement 能力，而不是採用者私有流程。
 
 ## 前置依賴
 
@@ -49,13 +49,13 @@ started_by_agent: vs-insiders-gpt-5.4
 
 1. `README.md` 增加 Agent Pack / Onboarding 入口連結。
 2. `docs/ARCHITECTURE.md` 增加 Agent Operating Layer / Onboarding 邊界說明。
-3. 若新增 `docs/AGENT_PACK_ONBOARDING.md`，內容需是英文、adopter-neutral，不包含 3KLife 內部任務卡。
+3. 若新增 `docs/AGENT_PACK_ONBOARDING.md`，內容需是英文、adopter-neutral，不包含內部任務卡。
 
 ## 驗收條件
 
 - [ ] README 有公開入口連結。
 - [ ] ARCHITECTURE 有 Agent Operating Layer / Onboarding 段落。
-- [ ] 公開文件不引用 3KLife 私有路徑或中文任務卡。
+- [ ] 公開文件不引用採用者私有路徑或中文任務卡。
 - [ ] 文件通過 product-charter / neutrality 檢查。
 
 ## 影響檔案

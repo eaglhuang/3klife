@@ -6,7 +6,7 @@ milestone: M1
 status: done
 blocked_by: []
 owner: atm-core
-related_plan: docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md
+related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
 hostKind: upstream-framework
@@ -24,7 +24,7 @@ forbidden_files:
   - temp/**
 non_goals:
   - 不實作 agent-pack runtime
-  - 不修改 3KLife 遊戲 runtime
+  - 不修改任何採用者 runtime
 created_at: 2026-05-17T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
 started_at: 2026-05-17T22:29:42.7500081+08:00
@@ -35,7 +35,7 @@ started_by_agent: vs-insiders-gpt-5.4
 
 ## 目標
 
-把 `ATM Agent Pack / Onboarding 計畫書` 收斂為 AI-Atomic-Framework onboarding 主線的內部規劃真相來源，並確認它和 MRP、ATM × spec-kit 融合計畫的邊界清楚。
+把 `ATM 引導工程計畫書` 收斂為 ATM onboarding 主線的內部規劃真相來源，並確認它和 replacement / upgrade 類 protocol 的邊界清楚。
 
 ## 前置依賴
 
@@ -49,7 +49,7 @@ started_by_agent: vs-insiders-gpt-5.4
 ## 輸出
 
 1. 計畫書保持完整，並以 `ATMChart` / `atm-chart` 作為 rule render artifact 命名。
-2. ATM repo 端只保留英文公開說明，不保存 3KLife 內部任務卡。
+2. ATM repo 端只保留英文公開說明，不保存本目錄的內部任務卡。
 3. README / ARCHITECTURE 或同等公開文件建立 cross-link。
 
 ## 驗收條件
@@ -63,7 +63,7 @@ started_by_agent: vs-insiders-gpt-5.4
 
 ## 影響檔案
 
-- `docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md`
+- `docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md`
 - `README.md`
 - `docs/ARCHITECTURE.md`
 - `docs/AGENT_PACK_ONBOARDING.md`
@@ -71,7 +71,7 @@ started_by_agent: vs-insiders-gpt-5.4
 ## 驗證方式
 
 ```bash
-node tools_node/check-encoding-touched.js --files docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md
+node tools_node/check-encoding-touched.js --files docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
 cmd /c npm run validate:standard
 ```
 

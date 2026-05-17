@@ -6,7 +6,7 @@ milestone: M4
 status: done
 blocked_by: [TASK-APO-0004]
 owner: atm-core
-related_plan: docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md
+related_plan: docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md
 upstream_repo: AI-Atomic-Framework
 targetRepo: AI-Atomic-Framework
 hostKind: upstream-framework

@@ -139,7 +139,7 @@
 
 ## 16. 任務卡索引
 
-所有任務卡放在 3KLife 內部工作台的 `docs/ai_atomic_framework/map-replacement-protocol/tasks/` 下。ATM repo 不保存這批內部執行卡；ATM repo 只保留英文、開源友善的 protocol 解釋文件。任務卡格式為 Markdown + YAML frontmatter，欄位與 `governance-bundle` 的 `taskStorePath` 兼容（不強制存到 `.atm/history/tasks`，避免污染現有 governance 紀錄）。
+所有任務卡放在本地內部工作台的 `docs/ai_atomic_framework/map-replacement-protocol/tasks/` 下。ATM repo 不保存這批內部執行卡；ATM repo 只保留英文、開源友善的 protocol 解釋文件。任務卡格式為 Markdown + YAML frontmatter，欄位與 `governance-bundle` 的 `taskStorePath` 兼容（不強制存到 `.atm/history/tasks`，避免污染現有 governance 紀錄）。
 
 | Task ID | 標題 | 對應里程碑 | 阻擋者 | 主要交付 |
 |---|---|---|---|---|
@@ -163,14 +163,14 @@
 
 原因很清楚：本計畫的主題是 **Map Replacement Protocol**，目標是讓 map 成為新功能 / legacy 大功能的正式替代表面；外部五機制導入的主題則是 **ATM 無痛導入與 Agent Operating Layer 強化**，目標是讓 agent 一進專案就自動遵守 ATM 精神。兩者高度互補，但責任邊界不同。
 
-因此，本計畫只吸收與 map replacement 直接相關的「Agent 入口與規則注入原則」，其餘應另開「ATM Agent Pack / Onboarding」計畫，不阻塞 M3–M10。
+因此，本計畫只吸收與 map replacement 直接相關的「Agent 入口與規則注入原則」，其餘應另開「ATM 引導工程」計畫，不阻塞 M3–M10。
 
 ### 17.1 總判斷
 
 | 外部導入機制 | 是否值得加 | 是否放入本計畫主線 | 判斷 |
 |---|---|---|---|
 | Agent Pack SDK + Claude Code Pack | 值得 | 不放入 M3–M10，另案 | 解決 ATM 規則靠 agent 自願讀的摩擦，但屬於 onboarding / agent integration，不是 map replacement 核心 |
-| Constitution Render Pipeline | 部分值得 | 不放入 M3–M10，另案；M5 可借鑑 gate 思路 | `guards.json` → markdown constitution 的渲染可改善規則可見性，但 ATM 仍應以 machine-readable contract 為 source of truth |
+| Charter Render Pipeline | 部分值得 | 不放入 M3–M10，另案；M5 可借鑑 gate 思路 | `guards.json` → markdown charter 的渲染可改善規則可見性，但 ATM 仍應以 machine-readable contract 為 source of truth |
 | Slash command 模板 + `atm next` 動態槽位 | 值得 | 可作為 M7 後的 optional UX layer | 與 ATM 哲學相容，前提是模板只引導呼叫 `atm next --json`，不可 baked-in 完整流程 |
 | npm publish + `npx create-atm` | 值得 | 不放入本計畫 | 是 ATM 開源採用策略，不影響 replacement map schema / equivalence / rollout gate |
 | `atm welcome` + next chain | 值得 | 不放入本計畫；可列為後續入口體驗 | 可幫助 agent 進入 ATM，但不應變成 replacement protocol 的前置條件 |
@@ -187,13 +187,13 @@
 
 ### 17.3 不應放入本計畫主線的部分
 
-以下內容有價值，但應另開「ATM Agent Pack / Onboarding」計畫，不應污染 Map Replacement Protocol：
+以下內容有價值，但應另開「ATM 引導工程」計畫，不應污染 Map Replacement Protocol：
 
 1. `packages/agent-pack-sdk/` 與多 agent pack 套件。
 2. `packages/create-atm/`、npm publish、`npx create-atm`。
 3. `atm welcome` 一鍵入門命令。
 4. 自動生成 `docs/multi-agent-compatibility-matrix.md`。
-5. 通用 constitution render pipeline。
+5. 通用 charter render pipeline。
 
 這些屬於 ATM 開源採用與 agent operating layer 的橫向能力。若把它們塞進本計畫，M3–M10 的 replacement protocol 會被 onboarding 工程拖慢，且驗收邊界會混亂。
 
@@ -203,7 +203,7 @@
 
 1. **不採用完整 baked-in slash command 流程**：ATM 的核心優勢是 `atm next --json` 動態路由。若把完整步驟寫進 prompt，ATM 會退化成靜態 prompt 框架，且與 registry / evidence / upgrade gate 脫節。
 2. **不採用外部專案工作目錄取代 `.atm/`**：ATM 已有 `.atm/runtime`、`.atm/tasks`、`.atm/locks`、`.atm/evidence`、`.atm/history/handoff` 等治理樹。新增另一套隱含工作目錄會造成雙狀態源。
-3. **不把 `constitution.md` 當唯一真相來源**：ATM 的 source of truth 應保持 JSON Schema / machine-readable guards / registry contracts。Markdown constitution 可以是渲染產物，不應反過來變成權威。
+3. **不把 `charter.md` 當唯一真相來源**：ATM 的 source of truth 應保持 JSON Schema / machine-readable guards / registry contracts。Markdown charter 可以是渲染產物，不應反過來變成權威。
 4. **不把 agent-pack 命名成 adapter**：ATM adapter 是 I/O / host integration 抽象；agent-pack 是 agent 視角的檔案注入與 prompt 包。兩者混名會破壞架構語意。
 5. **不讓 onboarding 成為 replacement 的 gate 前置**：map replacement 應可在沒有 agent-pack、沒有 slash command 的情況下用 CLI / schema / tests 完成。Agent-pack 只能改善體驗，不能成為 protocol 正確性的必要條件。
 
@@ -211,7 +211,7 @@
 
 本章不新增 M3–M10 的硬依賴，但建議在後續實作時套用以下微調：
 
-1. **M3 Map Equivalence Report Schema**：新增 `justification` / `knownDivergences[].reviewRef` 欄位時，可參考 constitution gate 的「違規必須說明」模式。
+1. **M3 Map Equivalence Report Schema**：新增 `justification` / `knownDivergences[].reviewRef` 欄位時，可參考 charter gate 的「違規必須說明」模式。
 2. **M4 Map Equivalence Test CLI**：CLI help 與 JSON output 可提供 `nextActionHint`，但不要引入 slash command runtime。
 3. **M5 Upgrade Gates**：blocked proposal 應要求 evidence 或 human review justification，這是分段閘門思想在 ATM contract 世界中的正確落點。
 4. **M6 Replacement Rollout Lane**：lineage log 可記錄 transition 的 `reason` / `evidenceRefs` / `actor`，避免 shadow→canary→active 變成口頭流程。
@@ -221,15 +221,15 @@
 
 ### 17.6 後續另案建議
 
-建議另開一份獨立計畫書：`docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md`。該計畫才適合承接：
+建議由獨立計畫書 `docs/ai_atomic_framework/agent-pack-onboarding/ATM引導工程計畫書.md` 承接：
 
 1. Agent Pack SDK。
 2. Claude Code / Cursor / Copilot / Gemini / Windsurf pack。
-3. Constitution Render Pipeline。
+3. Charter Render Pipeline。
 4. npm publish / `npx create-atm`。
 5. `atm welcome`。
 
-該另案應以「無痛引入 ATM」為主題，而不是以「map replacement」為主題。兩案的關係是：Agent Pack / Onboarding 讓 agent 更容易正確使用 ATM；Map Replacement Protocol 則定義大型功能拆解後 map 如何正式接管 legacy / new feature。前者是入口體驗，後者是治理語義，不能互相取代。
+該另案應以「無痛引入 ATM」為主題，而不是以「map replacement」為主題。兩案的關係是：ATM 引導工程讓 agent 更容易正確使用 ATM；Map Replacement Protocol 則定義大型功能拆解後 map 如何正式接管 legacy / new feature。前者是入口體驗，後者是治理語義，不能互相取代。
 
 ## 18. 目標 A / B 達成判斷驗收（2026-05-17）
 
@@ -283,4 +283,4 @@ proposal 同時引用 `map-equivalence` + `rollback-proof` 由 [`tests/upgrade/p
 - **目標 A** 的核心 CLI 鏈在 `create-map-from-plan.test.ts` 跑到 canary；後續 `canary→active→legacy-retired` 由 `replacement-lane.test.ts` 接續完成。兩者合併等同走完 §14.1 的完整流程。
 - **目標 B** 的五段 lineage 由 `replacement-lane.test.ts` 單一測試完整還原，artifact 為真實的 `atomic_workbench/maps/ATM-MAP-9701/lineage-log.json`。
 - 所有測試以 `node --experimental-strip-types` 直接執行 TypeScript，不需要預先 build，可重現性高。
-- 後續若要把這條鏈接到 CI pipeline 上作為 release smoke，建議於「ATM Agent Pack / Onboarding 計畫書」（§17.6）一併規劃。
+- 後續若要把這條鏈接到 CI pipeline 上作為 release smoke，建議於「ATM 引導工程計畫書」一併規劃。
