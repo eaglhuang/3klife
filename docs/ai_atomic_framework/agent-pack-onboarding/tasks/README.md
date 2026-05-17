@@ -28,7 +28,7 @@ created_by_agent: vs-insiders-gpt-5.4
 | [TASK-APO-0006](./TASK-APO-0006-multi-agent-pack-expansion.task.md) | Multi-Agent Pack 擴張 | M5 | open | 0003 |
 | [TASK-APO-0007](./TASK-APO-0007-npm-create-atm.task.md) | npm publish + create-atm | M6 | open | 0003 / 0004 |
 | [TASK-APO-0008](./TASK-APO-0008-atm-welcome-entry.task.md) | atm welcome 一鍵入口 | M7 | done | 0003 / 0004 |
-| [TASK-APO-0009](./TASK-APO-0009-next-action-hint-mrp.task.md) | Slash Command nextActionHint 對接 MRP | M8 | open | 0003 / TASK-MRP-0009 |
+| [TASK-APO-0009](./TASK-APO-0009-next-action-hint-mrp.task.md) | Slash Command nextActionHint 對接 MRP | M8 | done | 0003 / TASK-MRP-0009 |
 | [TASK-APO-0010](./TASK-APO-0010-agent-matrix-generator.task.md) | 多 agent 矩陣自動生成 | M5 | open | 0006 |
 
 ## 共通驗收

@@ -3,7 +3,7 @@ doc_id: doc_other_0160
 task_id: TASK-APO-0009
 title: Slash Command nextActionHint 對接 MRP
 milestone: M8
-status: open
+status: done
 blocked_by: [TASK-APO-0003, TASK-MRP-0009]
 owner: atm-core
 related_plan: docs/ai_atomic_framework/agent-pack-onboarding/02_ATM_agent-pack-onboarding計畫書.md
@@ -26,6 +26,10 @@ non_goals:
   - 不讓 prompt 自建狀態機
 created_at: 2026-05-17T00:00:00+08:00
 created_by_agent: vs-insiders-gpt-5.4
+started_at: 2026-05-17T21:30:00+08:00
+started_by_agent: vs-insiders-claude-sonnet-4.6
+completed_at: 2026-05-17T22:30:00+08:00
+completed_by_agent: vs-insiders-claude-sonnet-4.6
 ---
 
 # TASK-APO-0009 — Slash Command nextActionHint 對接 MRP
@@ -52,11 +56,11 @@ created_by_agent: vs-insiders-gpt-5.4
 
 ## 驗收條件
 
-- [ ] `packages/cli/src/commands/next.ts` output JSON 新增 `agent_pack_hint` 欄位。
-- [ ] `agent_pack_hint` 內容指向下一個建議的 slash command id（例如 `atm-map-equivalence`）。
-- [ ] `schemas/agent-prompt.schema.json` 同步擴充 `agent_pack_hint` 與 `handoff_chain[]`。
-- [ ] 與 MRP TASK-MRP-0009 的 `nextActionHint` 共用 schema 欄位（避免雙頭命名）。
-- [ ] agent-pack 模板能讀 `agent_pack_hint` 並引導使用者進入下一個 slash command。
+- [x] `packages/cli/src/commands/next.ts` output JSON 新增 `agent_pack_hint` 欄位。
+- [x] `agent_pack_hint` 內容指向下一個建議的 slash command id（例如 `atm-map-equivalence`）。
+- [x] `schemas/agent-prompt.schema.json` 同步擴充 `agent_pack_hint` 與 `handoff_chain[]`。
+- [x] 與 MRP TASK-MRP-0009 的 `nextActionHint` 共用 schema 欄位（避免雙頭命名）。
+- [x] agent-pack 模板能讀 `agent_pack_hint` 並引導使用者進入下一個 slash command。
 
 ## 影響檔案
 
